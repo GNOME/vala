@@ -9,6 +9,9 @@
 				<parameter name="micro" type="guint"/>
 			</parameters>
 		</function>
+		<function name="get_cache_model" symbol="webkit_get_cache_model">
+			<return-type type="WebKitCacheModel"/>
+		</function>
 		<function name="get_default_session" symbol="webkit_get_default_session">
 			<return-type type="SoupSession*"/>
 		</function>
@@ -39,6 +42,12 @@
 		<function name="remove_all_web_databases" symbol="webkit_remove_all_web_databases">
 			<return-type type="void"/>
 		</function>
+		<function name="set_cache_model" symbol="webkit_set_cache_model">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="cache_model" type="WebKitCacheModel"/>
+			</parameters>
+		</function>
 		<function name="set_default_web_database_quota" symbol="webkit_set_default_web_database_quota">
 			<return-type type="void"/>
 			<parameters>
@@ -51,6 +60,10 @@
 				<parameter name="path" type="gchar*"/>
 			</parameters>
 		</function>
+		<enum name="WebKitCacheModel" type-name="WebKitCacheModel" get-type="webkit_cache_model_get_type">
+			<member name="WEBKIT_CACHE_MODEL_DOCUMENT_VIEWER" value="1"/>
+			<member name="WEBKIT_CACHE_MODEL_WEB_BROWSER" value="2"/>
+		</enum>
 		<enum name="WebKitDownloadError" type-name="WebKitDownloadError" get-type="webkit_download_error_get_type">
 			<member name="WEBKIT_DOWNLOAD_ERROR_CANCELLED_BY_USER" value="0"/>
 			<member name="WEBKIT_DOWNLOAD_ERROR_DESTINATION" value="1"/>
@@ -72,6 +85,7 @@
 			<member name="WEBKIT_LOAD_COMMITTED" value="1"/>
 			<member name="WEBKIT_LOAD_FINISHED" value="2"/>
 			<member name="WEBKIT_LOAD_FIRST_VISUALLY_NON_EMPTY_LAYOUT" value="3"/>
+			<member name="WEBKIT_LOAD_FAILED" value="4"/>
 		</enum>
 		<enum name="WebKitNavigationResponse" type-name="WebKitNavigationResponse" get-type="webkit_navigation_response_get_type">
 			<member name="WEBKIT_NAVIGATION_RESPONSE_ACCEPT" value="0"/>
@@ -115,6 +129,14 @@
 			<member name="WEBKIT_WEB_VIEW_TARGET_INFO_URI_LIST" value="3"/>
 			<member name="WEBKIT_WEB_VIEW_TARGET_INFO_NETSCAPE_URL" value="4"/>
 		</enum>
+		<flags name="WebKitHitTestResultContext" type-name="WebKitHitTestResultContext" get-type="webkit_hit_test_result_context_get_type">
+			<member name="WEBKIT_HIT_TEST_RESULT_CONTEXT_DOCUMENT" value="2"/>
+			<member name="WEBKIT_HIT_TEST_RESULT_CONTEXT_LINK" value="4"/>
+			<member name="WEBKIT_HIT_TEST_RESULT_CONTEXT_IMAGE" value="8"/>
+			<member name="WEBKIT_HIT_TEST_RESULT_CONTEXT_MEDIA" value="16"/>
+			<member name="WEBKIT_HIT_TEST_RESULT_CONTEXT_SELECTION" value="32"/>
+			<member name="WEBKIT_HIT_TEST_RESULT_CONTEXT_EDITABLE" value="64"/>
+		</flags>
 		<object name="WebKitDownload" parent="GObject" type-name="WebKitDownload" get-type="webkit_download_get_type">
 			<method name="cancel" symbol="webkit_download_cancel">
 				<return-type type="void"/>
@@ -142,6 +164,12 @@
 			</method>
 			<method name="get_network_request" symbol="webkit_download_get_network_request">
 				<return-type type="WebKitNetworkRequest*"/>
+				<parameters>
+					<parameter name="download" type="WebKitDownload*"/>
+				</parameters>
+			</method>
+			<method name="get_network_response" symbol="webkit_download_get_network_response">
+				<return-type type="WebKitNetworkResponse*"/>
 				<parameters>
 					<parameter name="download" type="WebKitDownload*"/>
 				</parameters>
@@ -198,6 +226,7 @@
 			<property name="current-size" type="guint64" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="destination-uri" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="network-request" type="WebKitNetworkRequest*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="network-response" type="WebKitNetworkResponse*" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="progress" type="gdouble" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="status" type="WebKitDownloadStatus" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="suggested-filename" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
@@ -211,6 +240,12 @@
 					<parameter name="p2" type="char*"/>
 				</parameters>
 			</signal>
+		</object>
+		<object name="WebKitHitTestResult" parent="GObject" type-name="WebKitHitTestResult" get-type="webkit_hit_test_result_get_type">
+			<property name="context" type="WebKitHitTestResultContext" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="image-uri" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="link-uri" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="media-uri" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
 		</object>
 		<object name="WebKitNetworkRequest" parent="GObject" type-name="WebKitNetworkRequest" get-type="webkit_network_request_get_type">
 			<method name="get_message" symbol="webkit_network_request_get_message">
@@ -468,6 +503,12 @@
 					<parameter name="data_source" type="WebKitWebDataSource*"/>
 				</parameters>
 			</method>
+			<method name="get_subresources" symbol="webkit_web_data_source_get_subresources">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="data_source" type="WebKitWebDataSource*"/>
+				</parameters>
+			</method>
 			<method name="get_unreachable_uri" symbol="webkit_web_data_source_get_unreachable_uri">
 				<return-type type="gchar*"/>
 				<parameters>
@@ -580,6 +621,12 @@
 			</method>
 			<method name="get_name" symbol="webkit_web_frame_get_name">
 				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="frame" type="WebKitWebFrame*"/>
+				</parameters>
+			</method>
+			<method name="get_network_response" symbol="webkit_web_frame_get_network_response">
+				<return-type type="WebKitNetworkResponse*"/>
 				<parameters>
 					<parameter name="frame" type="WebKitWebFrame*"/>
 				</parameters>
@@ -740,6 +787,12 @@
 			</signal>
 		</object>
 		<object name="WebKitWebHistoryItem" parent="GObject" type-name="WebKitWebHistoryItem" get-type="webkit_web_history_item_get_type">
+			<method name="copy" symbol="webkit_web_history_item_copy">
+				<return-type type="WebKitWebHistoryItem*"/>
+				<parameters>
+					<parameter name="web_history_item" type="WebKitWebHistoryItem*"/>
+				</parameters>
+			</method>
 			<method name="get_alternate_title" symbol="webkit_web_history_item_get_alternate_title">
 				<return-type type="gchar*"/>
 				<parameters>
@@ -794,6 +847,12 @@
 			<property name="uri" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 		</object>
 		<object name="WebKitWebInspector" parent="GObject" type-name="WebKitWebInspector" get-type="webkit_web_inspector_get_type">
+			<method name="close" symbol="webkit_web_inspector_close">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="webInspector" type="WebKitWebInspector*"/>
+				</parameters>
+			</method>
 			<method name="get_inspected_uri" symbol="webkit_web_inspector_get_inspected_uri">
 				<return-type type="gchar*"/>
 				<parameters>
@@ -806,8 +865,23 @@
 					<parameter name="web_inspector" type="WebKitWebInspector*"/>
 				</parameters>
 			</method>
+			<method name="inspect_coordinates" symbol="webkit_web_inspector_inspect_coordinates">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="web_inspector" type="WebKitWebInspector*"/>
+					<parameter name="x" type="gdouble"/>
+					<parameter name="y" type="gdouble"/>
+				</parameters>
+			</method>
+			<method name="show" symbol="webkit_web_inspector_show">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="webInspector" type="WebKitWebInspector*"/>
+				</parameters>
+			</method>
 			<property name="inspected-uri" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="javascript-profiling-enabled" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="timeline-profiling-enabled" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="web-view" type="WebKitWebView*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<signal name="attach-window" when="LAST">
 				<return-type type="gboolean"/>
@@ -982,6 +1056,7 @@
 				<return-type type="WebKitWebSettings*"/>
 			</constructor>
 			<property name="auto-load-images" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="auto-resize-window" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="auto-shrink-images" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="cursive-font-family" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="default-encoding" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
@@ -990,13 +1065,19 @@
 			<property name="default-monospace-font-size" type="gint" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="editing-behavior" type="WebKitEditingBehavior" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-caret-browsing" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="enable-default-context-menu" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-developer-extras" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="enable-dom-paste" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="enable-file-access-from-file-uris" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-html5-database" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-html5-local-storage" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="enable-java-applet" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-offline-web-application-cache" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="enable-page-cache" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-plugins" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-private-browsing" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-scripts" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="enable-site-specific-quirks" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-spell-checking" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-universal-access-from-file-uris" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-xss-auditor" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
@@ -1011,6 +1092,7 @@
 			<property name="sans-serif-font-family" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="serif-font-family" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="spell-checking-languages" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="tab-key-cycles-through-elements" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="user-agent" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="user-stylesheet-uri" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="zoom-step" type="gfloat" readable="1" writable="1" construct="1" construct-only="0"/>
@@ -1141,6 +1223,19 @@
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="web_view" type="WebKitWebView*"/>
+				</parameters>
+			</method>
+			<method name="get_hit_test_result" symbol="webkit_web_view_get_hit_test_result">
+				<return-type type="WebKitHitTestResult*"/>
+				<parameters>
+					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="event" type="GdkEventButton*"/>
+				</parameters>
+			</method>
+			<method name="get_icon_uri" symbol="webkit_web_view_get_icon_uri">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="webView" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="get_inspector" symbol="webkit_web_view_get_inspector">
@@ -1444,6 +1539,8 @@
 			<property name="editable" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="encoding" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="full-content-zoom" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="icon-uri" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="im-context" type="GtkIMContext*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="load-status" type="WebKitLoadStatus" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="paste-target-list" type="GtkTargetList*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="progress" type="gdouble" readable="1" writable="0" construct="0" construct-only="0"/>
@@ -1524,6 +1621,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="object" type="WebKitWebView*"/>
+					<parameter name="p0" type="char*"/>
 				</parameters>
 			</signal>
 			<signal name="load-committed" when="LAST">
@@ -1760,9 +1858,8 @@
 			<property name="y" type="gint" readable="1" writable="1" construct="1" construct-only="0"/>
 		</object>
 		<constant name="WEBKIT_MAJOR_VERSION" type="int" value="1"/>
-		<constant name="WEBKIT_MICRO_VERSION" type="int" value="14"/>
+		<constant name="WEBKIT_MICRO_VERSION" type="int" value="22"/>
 		<constant name="WEBKIT_MINOR_VERSION" type="int" value="1"/>
-		<constant name="WEBKIT_SOUP_AUTH_DIALOG_H" type="int" value="1"/>
 		<constant name="WEBKIT_USER_AGENT_MAJOR_VERSION" type="int" value="531"/>
 		<constant name="WEBKIT_USER_AGENT_MINOR_VERSION" type="int" value="2"/>
 	</namespace>

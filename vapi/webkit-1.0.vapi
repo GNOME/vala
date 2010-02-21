@@ -11,6 +11,7 @@ namespace WebKit {
 		public unowned string get_destination_uri ();
 		public double get_elapsed_time ();
 		public unowned WebKit.NetworkRequest get_network_request ();
+		public unowned WebKit.NetworkResponse get_network_response ();
 		public double get_progress ();
 		public WebKit.DownloadStatus get_status ();
 		public unowned string get_suggested_filename ();
@@ -21,11 +22,23 @@ namespace WebKit {
 		public uint64 current_size { get; }
 		public string destination_uri { get; set; }
 		public WebKit.NetworkRequest network_request { get; construct; }
+		public WebKit.NetworkResponse network_response { get; construct; }
 		public double progress { get; }
 		public WebKit.DownloadStatus status { get; }
 		public string suggested_filename { get; }
 		public uint64 total_size { get; }
 		public virtual signal bool error (int p0, int p1, string p2);
+	}
+	[CCode (cheader_filename = "webkit/webkit.h")]
+	public class HitTestResult : GLib.Object {
+		[NoAccessorMethod]
+		public WebKit.HitTestResultContext context { get; construct; }
+		[NoAccessorMethod]
+		public string image_uri { owned get; construct; }
+		[NoAccessorMethod]
+		public string link_uri { owned get; construct; }
+		[NoAccessorMethod]
+		public string media_uri { owned get; construct; }
 	}
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public class NetworkRequest : GLib.Object {
@@ -95,6 +108,7 @@ namespace WebKit {
 		public unowned WebKit.NetworkRequest get_initial_request ();
 		public unowned WebKit.WebResource get_main_resource ();
 		public unowned WebKit.NetworkRequest get_request ();
+		public unowned GLib.List get_subresources ();
 		public unowned string get_unreachable_uri ();
 		public unowned WebKit.WebFrame get_web_frame ();
 		public bool is_loading ();
@@ -126,6 +140,7 @@ namespace WebKit {
 		public Gtk.PolicyType get_horizontal_scrollbar_policy ();
 		public WebKit.LoadStatus get_load_status ();
 		public unowned string get_name ();
+		public unowned WebKit.NetworkResponse get_network_response ();
 		public unowned WebKit.WebFrame get_parent ();
 		public unowned WebKit.WebDataSource get_provisional_data_source ();
 		public unowned WebKit.SecurityOrigin get_security_origin ();
@@ -158,6 +173,7 @@ namespace WebKit {
 	public class WebHistoryItem : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public WebHistoryItem ();
+		public unowned WebKit.WebHistoryItem copy ();
 		public unowned string get_alternate_title ();
 		public double get_last_visited_time ();
 		public unowned string get_original_uri ();
@@ -174,11 +190,16 @@ namespace WebKit {
 	}
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public class WebInspector : GLib.Object {
+		public void close ();
 		public unowned string get_inspected_uri ();
 		public unowned WebKit.WebView get_web_view ();
+		public void inspect_coordinates (double x, double y);
+		public void show ();
 		public string inspected_uri { get; }
 		[NoAccessorMethod]
 		public bool javascript_profiling_enabled { get; set; }
+		[NoAccessorMethod]
+		public bool timeline_profiling_enabled { get; set; }
 		public WebKit.WebView web_view { get; }
 		public virtual signal bool attach_window ();
 		public virtual signal bool close_window ();
@@ -231,6 +252,8 @@ namespace WebKit {
 		[NoAccessorMethod]
 		public bool auto_load_images { get; set construct; }
 		[NoAccessorMethod]
+		public bool auto_resize_window { get; set construct; }
+		[NoAccessorMethod]
 		public bool auto_shrink_images { get; set construct; }
 		[NoAccessorMethod]
 		public string cursive_font_family { owned get; set construct; }
@@ -247,19 +270,31 @@ namespace WebKit {
 		[NoAccessorMethod]
 		public bool enable_caret_browsing { get; set construct; }
 		[NoAccessorMethod]
+		public bool enable_default_context_menu { get; set construct; }
+		[NoAccessorMethod]
 		public bool enable_developer_extras { get; set construct; }
+		[NoAccessorMethod]
+		public bool enable_dom_paste { get; set construct; }
+		[NoAccessorMethod]
+		public bool enable_file_access_from_file_uris { get; set construct; }
 		[NoAccessorMethod]
 		public bool enable_html5_database { get; set construct; }
 		[NoAccessorMethod]
 		public bool enable_html5_local_storage { get; set construct; }
 		[NoAccessorMethod]
+		public bool enable_java_applet { get; set construct; }
+		[NoAccessorMethod]
 		public bool enable_offline_web_application_cache { get; set construct; }
+		[NoAccessorMethod]
+		public bool enable_page_cache { get; set construct; }
 		[NoAccessorMethod]
 		public bool enable_plugins { get; set construct; }
 		[NoAccessorMethod]
 		public bool enable_private_browsing { get; set construct; }
 		[NoAccessorMethod]
 		public bool enable_scripts { get; set construct; }
+		[NoAccessorMethod]
+		public bool enable_site_specific_quirks { get; set construct; }
 		[NoAccessorMethod]
 		public bool enable_spell_checking { get; set construct; }
 		[NoAccessorMethod]
@@ -288,6 +323,8 @@ namespace WebKit {
 		public string serif_font_family { owned get; set construct; }
 		[NoAccessorMethod]
 		public string spell_checking_languages { owned get; set construct; }
+		[NoAccessorMethod]
+		public bool tab_key_cycles_through_elements { get; set construct; }
 		[NoAccessorMethod]
 		public string user_agent { owned get; set construct; }
 		[NoAccessorMethod]
@@ -319,6 +356,8 @@ namespace WebKit {
 		public unowned string get_encoding ();
 		public unowned WebKit.WebFrame get_focused_frame ();
 		public bool get_full_content_zoom ();
+		public unowned WebKit.HitTestResult get_hit_test_result (Gdk.EventButton event);
+		public unowned string get_icon_uri ();
 		public unowned WebKit.WebInspector get_inspector ();
 		public WebKit.LoadStatus get_load_status ();
 		public unowned WebKit.WebFrame get_main_frame ();
@@ -363,6 +402,9 @@ namespace WebKit {
 		public bool editable { get; set; }
 		public string encoding { get; }
 		public bool full_content_zoom { get; set; }
+		public string icon_uri { get; }
+		[NoAccessorMethod]
+		public Gtk.IMContext im_context { owned get; }
 		public WebKit.LoadStatus load_status { get; }
 		public Gtk.TargetList paste_target_list { get; }
 		public double progress { get; }
@@ -386,7 +428,7 @@ namespace WebKit {
 		public virtual signal void database_quota_exceeded (GLib.Object p0, GLib.Object p1);
 		public virtual signal bool download_requested (GLib.Object p0);
 		public virtual signal void hovering_over_link (string? p0, string p1);
-		public virtual signal void icon_loaded ();
+		public virtual signal void icon_loaded (string p0);
 		public virtual signal void load_committed (WebKit.WebFrame p0);
 		public virtual signal bool load_error (WebKit.WebFrame p0, string p1, void* p2);
 		public virtual signal void load_finished (WebKit.WebFrame p0);
@@ -445,6 +487,11 @@ namespace WebKit {
 		[NoAccessorMethod]
 		public int y { get; set construct; }
 	}
+	[CCode (cprefix = "WEBKIT_CACHE_MODEL_", cheader_filename = "webkit/webkit.h")]
+	public enum CacheModel {
+		DOCUMENT_VIEWER,
+		WEB_BROWSER
+	}
 	[CCode (cprefix = "WEBKIT_DOWNLOAD_ERROR_", cheader_filename = "webkit/webkit.h")]
 	public enum DownloadError {
 		CANCELLED_BY_USER,
@@ -464,12 +511,23 @@ namespace WebKit {
 		MAC,
 		WINDOWS
 	}
+	[CCode (cprefix = "WEBKIT_HIT_TEST_RESULT_CONTEXT_", cheader_filename = "webkit/webkit.h")]
+	[Flags]
+	public enum HitTestResultContext {
+		DOCUMENT,
+		LINK,
+		IMAGE,
+		MEDIA,
+		SELECTION,
+		EDITABLE
+	}
 	[CCode (cprefix = "WEBKIT_LOAD_", cheader_filename = "webkit/webkit.h")]
 	public enum LoadStatus {
 		PROVISIONAL,
 		COMMITTED,
 		FINISHED,
-		FIRST_VISUALLY_NON_EMPTY_LAYOUT
+		FIRST_VISUALLY_NON_EMPTY_LAYOUT,
+		FAILED
 	}
 	[CCode (cprefix = "WEBKIT_NAVIGATION_RESPONSE_", cheader_filename = "webkit/webkit.h")]
 	public enum NavigationResponse {
@@ -526,13 +584,13 @@ namespace WebKit {
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public const int MINOR_VERSION;
 	[CCode (cheader_filename = "webkit/webkit.h")]
-	public const int SOUP_AUTH_DIALOG_H;
-	[CCode (cheader_filename = "webkit/webkit.h")]
 	public const int USER_AGENT_MAJOR_VERSION;
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public const int USER_AGENT_MINOR_VERSION;
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public static bool check_version (uint major, uint minor, uint micro);
+	[CCode (cheader_filename = "webkit/webkit.h")]
+	public static WebKit.CacheModel get_cache_model ();
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public static unowned Soup.Session get_default_session ();
 	[CCode (cheader_filename = "webkit/webkit.h")]
@@ -553,6 +611,8 @@ namespace WebKit {
 	public static GLib.Quark policy_error_quark ();
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public static void remove_all_web_databases ();
+	[CCode (cheader_filename = "webkit/webkit.h")]
+	public static void set_cache_model (WebKit.CacheModel cache_model);
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public static void set_default_web_database_quota (uint64 defaultQuota);
 	[CCode (cheader_filename = "webkit/webkit.h")]
