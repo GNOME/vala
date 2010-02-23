@@ -106,15 +106,6 @@ namespace Valadoc.Html {
 	public const string css_namespace_note = "namespace_note";
 	public const string css_package_note = "package_note";
 
-	public delegate string? HtmlLink (Settings settings, Documentation element, Documentation? pos);
-	public HtmlLink get_html_link_imp;
-
-	public string? get_html_link ( Settings settings, Documentation element, Documentation? pos ) {
-		if (get_html_link_imp == null) {
-			return null;
-		}
-		return get_html_link_imp(settings, element, pos);
-	}
 
 	public string get_html_type_link (Settings settings, Documentation element, Documentation? pos) {
 		string prefix = "";
@@ -132,6 +123,7 @@ namespace Valadoc.Html {
 
 		return prefix + "/" + ((Api.Node)element).full_name() + ".html" + tmp;
 	}
+
 
 	public string get_html_css_class (Valadoc.Api.Item element) {
 		if ( element is Api.Namespace ) {

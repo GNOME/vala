@@ -28,8 +28,10 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 	protected BasicDoclet _doclet;
 	protected Documentation? _container;
 	protected unowned MarkupWriter writer;
+	protected LinkHelper linker;
 
 	public HtmlRenderer (BasicDoclet doclet) {
+		linker = LinkHelper.get_instance ();
 		_doclet = doclet;
 	}
 
@@ -50,7 +52,7 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 	}
 
 	private string get_url (Api.Node symbol) {
-		return get_html_link (_doclet.settings, symbol, _container);
+		return linker.get_relative_link (_container, symbol, _doclet.settings);
 	}
 
 	private void write_symbol_link (Api.Node symbol, string? label) {

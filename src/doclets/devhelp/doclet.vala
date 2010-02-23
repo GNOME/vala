@@ -26,83 +26,6 @@ using Valadoc.Html;
 using Gee;
 
 
-namespace Valadoc.Devhelp {
-	public string? get_html_link ( Settings settings, Documentation element, Documentation? pos ) {
-		if ( element is Visitable ) {
-			if ( ((Visitable)element).is_visitor_accessible (settings) == false ) {
-				return null;
-			}
-		}
-
-		if ( element is Api.Node ) {
-			if ( ((Api.Node)element).package.is_visitor_accessible (settings) == false ) {
-				return null;
-			}
-		}
-
-		if ( pos == null || ((pos!=null)?(pos is WikiPage)? ((WikiPage)pos).name=="index.valadoc": false : false) ) {
-			if ( element is Package ) {
-				return Path.build_filename(((Package)element).name, "index.htm");
-			}
-			else if ( element is Api.Node ) {
-				return Path.build_filename("..", ((Api.Node)element).package.name, ((Api.Node)element).full_name()+".html" );
-			}
-			else if ( element is WikiPage ) {
-				if ( pos == element ) {
-					return "#";
-				}
-				else {
-					string wikiname = ((WikiPage)element).name;
-					wikiname = wikiname.ndup ( wikiname.len()-8 );
-					wikiname = wikiname.replace("/", ".") + ".html";
-					return Path.build_filename( "content", wikiname );
-				}
-			}
-		}
-		else if ( pos is Api.Node ) {
-			if ( element is Package ) {
-				return Path.build_filename("..", ((Package)element).name, "index.htm");
-			}
-			else if ( element is Api.Node ) {
-				return Path.build_filename( "..", ((Api.Node)element).package.name, ((Api.Node)element).full_name()+".html" );
-			}
-			else if ( element is WikiPage ) {
-				string wikiname = ((WikiPage)element).name;
-				wikiname = wikiname.ndup ( wikiname.len()-8 );
-				wikiname = wikiname.replace("/", ".")+".html";
-				if ( wikiname == "index.html" ) {
-					return Path.build_filename( "..", wikiname );
-				}
-				else {
-					return Path.build_filename( "..", "content", wikiname );
-				}
-			}
-		}
-		else if ( pos is WikiPage ) {
-			if ( element is Package ) {
-				return Path.build_filename("..", ((Package)element).name, "index.htm");
-			}
-			else if ( element is Api.Node ) {
-				return Path.build_filename( "..", ((Api.Node)element).package.name, ((Api.Node)element).full_name()+".html" );
-			}
-			else if ( element is WikiPage ) {
-				string wikiname = ((WikiPage)element).name;
-				wikiname = wikiname.ndup ( wikiname.len()-8 );
-				wikiname = wikiname.replace("/", ".")+".html";
-
-				if ( wikiname == "index.html" ) {
-					return Path.build_filename("..", wikiname);
-				}
-				else {
-					return wikiname;
-				}
-			}
-		}
-		return null;
-	}
-}
-
-
 
 public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 	private const string css_path_wiki = "../devhelpstyle.css";
@@ -114,12 +37,12 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 
 	private ArrayList<Api.Node> nodes = new ArrayList<Api.Node> ();
 	private string package_dir_name = ""; // remove
-	private Api.Tree tree;
 
 	private Devhelp.MarkupWriter _devhelpwriter;
 
 	construct {
 		_renderer = new HtmlRenderer (this);
+		icon_directory = "";
 	}
 
 	private string get_path (Api.Node element) {
@@ -131,11 +54,8 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 	}
 
 	public override void process (Settings settings, Api.Tree tree) {
-		this.settings = settings;
-		this.tree = tree;
-
+		base.process (settings, tree);
 		DirUtils.create (this.settings.path, 0777);
-
 		write_wiki_pages (tree, css_path_wiki, js_path_wiki, Path.build_filename (this.settings.path, this.settings.pkg_name, "content"));
 		tree.accept (this);
 	}
@@ -151,7 +71,6 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		string filepath = GLib.Path.build_filename (path, "index.htm");
 		string imgpath = GLib.Path.build_filename (path, "img");
 		string devpath = GLib.Path.build_filename (path, pkg_name + ".devhelp2");
-
 
 		WikiPage wikipage = null;
 		if (this.settings.pkg_name == package.name && this.tree.wikitree != null) {
@@ -169,6 +88,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 
 		_devhelpwriter.start_book (pkg_name+" Reference Manual", "vala", "index.htm", "", "", "");
 
+
 		GLib.FileStream file = GLib.FileStream.open (filepath, "w");
 		writer = new Html.MarkupWriter (file);
 		_renderer.set_writer (writer);
@@ -181,7 +101,6 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		_devhelpwriter.start_chapters ();
 		package.accept_all_children (this);
 		_devhelpwriter.end_chapters ();
-
 
 		_devhelpwriter.start_functions ();
 		foreach (Api.Node node in this.nodes) {
@@ -202,7 +121,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 				typekeyword = "struct";
 			}
 
-			_devhelpwriter.simple_tag ("keyword", {"type", typekeyword, "name", node.name, "link", get_html_link_imp (settings, node, null)});
+			_devhelpwriter.simple_tag ("keyword", {"type", typekeyword, "name", node.name, "link", get_link (node, node.package)});
 		}
 		_devhelpwriter.end_functions ();
 
@@ -287,9 +206,11 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 	}
 
 	public override void visit_error_code (ErrorCode item) {
+		process_node (item);
 	}
 
 	public override void visit_enum_value (Api.EnumValue item) {
+		process_node (item);
 	}
 
 	public override void visit_delegate (Delegate item) {
@@ -307,7 +228,6 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 
 [ModuleInit]
 public Type register_plugin () {
-	Valadoc.Html.get_html_link_imp = Valadoc.Devhelp.get_html_link;
 	return typeof (Valadoc.Devhelp.Doclet);
 }
 

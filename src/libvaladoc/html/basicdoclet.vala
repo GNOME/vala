@@ -23,18 +23,29 @@
 using Valadoc.Content;
 using Valadoc.Api;
 
+
+
 public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	public Settings settings { protected set; get; }
+	protected Api.Tree tree;
 	protected HtmlRenderer _renderer;
 	protected Html.MarkupWriter writer;
+	protected Html.LinkHelper linker;
 
 	protected string chart_directory = "img";
 	protected string icon_directory = "..";
 
-	public abstract void process (Settings settings, Api.Tree tree);
+	construct {
+		this.linker = LinkHelper.get_instance ();
+	}
 
-	protected string? get_link (Api.Node element, Api.Node? pos) {
-		return get_html_link (this.settings, element, pos);
+	public virtual void process (Settings settings, Api.Tree tree) {
+		this.settings = settings;
+		this.tree = tree;
+	}
+
+	protected string? get_link (Api.Node to, Api.Node from) {
+		return linker.get_relative_link (from, to, settings);
 	}
 
 	protected void write_navi_entry_html_template (string style, string content) {
@@ -318,7 +329,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		foreach (Package pkg in tree.get_package_list()) {
 			if (pkg.is_visitor_accessible (settings)) {
 				writer.start_tag ("li", {"class", get_html_css_class (pkg)});
-				writer.link (get_link (pkg, null), pkg.name);
+				writer.link (linker.get_package_link (pkg, settings), pkg.name);
 				// brief description
 				writer.end_tag ("li");
 			}
@@ -344,7 +355,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 		WikiPage? wikiindex = (tree.wikitree == null)? null : tree.wikitree.search ("index.valadoc");
 		if (wikiindex != null) {
-			_renderer.set_container (null);
+			_renderer.set_container (wikiindex);
 			_renderer.render (wikiindex.documentation);
 		}
 
@@ -431,8 +442,8 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 		if (node.parent is Namespace) {
 			writer.simple_tag ("br");
-			this.write_namespace_note (node);
-			this.write_package_note (node);
+			write_namespace_note (node);
+			write_package_note (node);
 		}
 
 		if (node.has_children ({

@@ -119,6 +119,7 @@ libvaladoc_la_VALASOURCES = \
 	taglets/tagletsince.vala \
 	taglets/tagletthrows.vala \
 	html/basicdoclet.vala \
+	html/linkhelper.vala \
 	html/globals.vala \
 	html/htmlmarkupwriter.vala \
 	html/htmlrenderer.vala \

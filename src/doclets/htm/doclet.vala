@@ -26,82 +26,6 @@ using Valadoc.Html;
 using Gee;
 
 
-namespace Valadoc {
-	public string? get_html_link ( Settings settings, Documentation element, Documentation? pos ) {
-		if ( element is Visitable ) {
-			if (! ((Visitable) element).is_visitor_accessible (settings)) {
-				return null;
-			}
-		}
-
-		if ( element is Api.Node ) {
-			if (! ((Api.Node) element).package.is_visitor_accessible (settings)) {
-				return null;
-			}
-		}
-
-		if ( pos == null || ((pos!=null)?(pos is WikiPage)? ((WikiPage)pos).name=="index.valadoc": false : false) ) {
-			if ( element is Package ) {
-				return Path.build_filename(((Package)element).name, "index.htm");
-			}
-			else if ( element is Api.Node ) {
-				return Path.build_filename( ((Api.Node)element).package.name, ((Api.Node)element).full_name()+".html" );
-			}
-			else if ( element is WikiPage ) {
-				if ( pos == element ) {
-					return "#";
-				}
-				else {
-					string wikiname = ((WikiPage)element).name;
-					wikiname = wikiname.ndup ( wikiname.len()-8 );
-					wikiname = wikiname.replace("/", ".") + ".html";
-					return Path.build_filename( "content", wikiname );
-				}
-			}
-		}
-		else if ( pos is Api.Node ) {
-			if ( element is Package ) {
-				return Path.build_filename("..", ((Package)element).name, "index.htm");
-			}
-			else if ( element is Api.Node ) {
-				return Path.build_filename( "..", ((Api.Node)element).package.name, ((Api.Node)element).full_name()+".html" );
-			}
-			else if ( element is WikiPage ) {
-				string wikiname = ((WikiPage)element).name;
-				wikiname = wikiname.ndup ( wikiname.len()-8 );
-				wikiname = wikiname.replace("/", ".")+".html";
-				if ( wikiname == "index.html" ) {
-					return Path.build_filename( "..", wikiname );
-				}
-				else {
-					return Path.build_filename( "..", "content", wikiname );
-				}
-			}
-		}
-		else if ( pos is WikiPage ) {
-			if ( element is Package ) {
-				return Path.build_filename("..", ((Package)element).name, "index.htm");
-			}
-			else if ( element is Api.Node ) {
-				return Path.build_filename( "..", ((Api.Node)element).package.name, ((Api.Node)element).full_name()+".html" );
-			}
-			else if ( element is WikiPage ) {
-				string wikiname = ((WikiPage)element).name;
-				wikiname = wikiname.ndup ( wikiname.len()-8 );
-				wikiname = wikiname.replace("/", ".")+".html";
-
-				if ( wikiname == "index.html" ) {
-					return Path.build_filename("..", wikiname);
-				}
-				else {
-					return wikiname;
-				}
-			}
-		}
-		return null;
-	}
-}
-
 
 public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 	private const string css_path_package = "style.css";
@@ -122,7 +46,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 	}
 
 	public override void process (Settings settings, Api.Tree tree) {
-		this.settings = settings;
+		base.process (settings, tree);
 
 		DirUtils.create (this.settings.path, 0777);
 		copy_directory (icons_dir, settings.path);
@@ -254,7 +178,6 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 
 [ModuleInit]
 public Type register_plugin ( ) {
-	Valadoc.Html.get_html_link_imp = Valadoc.get_html_link;
 	return typeof ( Valadoc.HtmlDoclet );
 }
 

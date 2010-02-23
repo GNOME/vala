@@ -492,3 +492,41 @@ ul.no_bullet > li {
 	text-decoration: underline;
 }
 
+.box {
+}
+.box .headline {
+	background-color: #eeeeff;
+	border-color: #aaaaff;
+	border-style: solid;
+	border-width: 1px;
+	margin: auto;
+	width: 90%;
+	margin-top: 20px;
+}
+.box .text {
+	font-weight: bold;  
+	float: left;
+}
+.box .toggle {
+	text-align: right;
+	float: clear;
+}
+.box .content {
+	border-color: #aaaaff;
+	border-width: 0 1 1 1;
+	border-style: solid;
+	overflow: auto;
+	display: none;
+	margin: auto;
+	width: 90%;
+}
+.box .column {
+	float: left;
+	width: 33%;
+}
+
+.namespace_note {
+}
+.package_note {
+}
+

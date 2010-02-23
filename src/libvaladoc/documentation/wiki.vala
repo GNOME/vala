@@ -43,11 +43,21 @@ public class Valadoc.WikiPage : Object, Documentation {
 		get;
 	}
 
+
+	public Api.Package? package {
+		get {
+			return _package;
+		}
+	}
+
+	private Api.Package _package;
+
 	public string? get_filename () {
 		return Path.get_basename(this.path);
 	}
 
-	public WikiPage (string name, string path) {
+	public WikiPage (string name, string path, Api.Package package) {
+		this._package = package;
 		this.name = name;
 		this.path = path;
 	}
@@ -81,7 +91,7 @@ public class Valadoc.WikiPageTree : Object {
 	}
 
 	public Collection<WikiPage> get_pages () {
-		return this.wikipages == null ? Collection.empty<WikiPage> () : this.wikipages.read_only_view;
+		return this.wikipages == null? Collection.empty<WikiPage> () : this.wikipages.read_only_view;
 	}
 
 	public WikiPage? search (string name) {
@@ -97,22 +107,22 @@ public class Valadoc.WikiPageTree : Object {
 		return null;
 	}
 
-	private void create_tree_from_path (DocumentationParser docparser, string path, string? nameoffset = null) throws GLib.FileError {
+	private void create_tree_from_path (DocumentationParser docparser, Api.Package package, string path, string? nameoffset = null) throws GLib.FileError {
 		Dir dir = Dir.open (path);
 
-		for (string? curname = dir.read_name(); curname!=null ; curname = dir.read_name()) {
+		for (string? curname = dir.read_name (); curname!=null ; curname = dir.read_name ()) {
 			string filename = Path.build_filename (path, curname);
-			if ( curname.has_suffix(".valadoc") && FileUtils.test(filename, FileTest.IS_REGULAR) ) {
-				WikiPage wikipage = new WikiPage( (nameoffset!=null)?Path.build_filename (nameoffset, curname):curname, filename );
+			if (curname.has_suffix (".valadoc") && FileUtils.test (filename, FileTest.IS_REGULAR)) {
+				WikiPage wikipage = new WikiPage ((nameoffset!=null)? Path.build_filename (nameoffset, curname) : curname, filename, package);
 				this.wikipages.add(wikipage);
 				wikipage.read ();
-			} else if (FileUtils.test(filename, FileTest.IS_DIR)) {
-				this.create_tree_from_path (docparser, filename, (nameoffset!=null)?Path.build_filename (nameoffset, curname):curname);
+			} else if (FileUtils.test (filename, FileTest.IS_DIR)) {
+				this.create_tree_from_path (docparser, package, filename, (nameoffset!=null)? Path.build_filename (nameoffset, curname) : curname);
 			}
 		}
 	}
 
-	public void create_tree (DocumentationParser docparser, Api.Package pkg) throws GLib.FileError {
+	public void create_tree (DocumentationParser docparser, Api.Package package) throws GLib.FileError {
 		try {
 			weak string path = this.settings.wiki_directory;
 			if (path == null) {
@@ -120,13 +130,12 @@ public class Valadoc.WikiPageTree : Object {
 			}
 
 			this.wikipages = new ArrayList<WikiPage> ();
-			this.create_tree_from_path (docparser, path);
+			this.create_tree_from_path (docparser, package, path);
 
 			foreach (WikiPage page in this.wikipages) {
-				page.parse (docparser, pkg);
+				page.parse (docparser, package);
 			}
-		}
-		catch (FileError err) {
+		} catch (FileError err) {
 			throw err;
 		}
 	}

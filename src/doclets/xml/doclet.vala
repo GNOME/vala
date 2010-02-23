@@ -25,6 +25,7 @@ using Valadoc.Api;
 using Gee;
 
 
+
 public class Valadoc.Xml.Doclet : Api.Visitor, Valadoc.Doclet {
 	private Renderer _renderer = new Xml.Renderer ();
 	private Xml.MarkupWriter _writer;
