@@ -531,15 +531,18 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 						break;
 					}
 
-					var t = param.parameter_type.data_type;
-					if (t != null && t.is_reference_type ()) {
-						if (param.direction != ParameterDirection.OUT) {
+					if (param.direction != ParameterDirection.OUT) {
+						var t = param.parameter_type.data_type;
+						if (t != null && t.is_reference_type ()) {
 							var type_check = create_method_type_check_statement (m, creturn_type, t, !param.parameter_type.nullable, get_variable_cname (param.name));
 							if (type_check != null) {
 								type_check.line = function.line;
 								cinit.append (type_check);
 							}
-						} else if (!m.coroutine) {
+						}
+					} else if (!m.coroutine) {
+						var t = param.parameter_type.data_type;
+						if ((t != null && t.is_reference_type ()) || param.parameter_type is ArrayType) {
 							// ensure that the passed reference for output parameter is cleared
 							var a = new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (param.name)), new CCodeConstant ("NULL"));
 							var cblock = new CCodeBlock ();
