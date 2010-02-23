@@ -28,9 +28,11 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 	protected BasicDoclet _doclet;
 	protected Documentation? _container;
 	protected unowned MarkupWriter writer;
+	protected Html.CssClassResolver cssresolver;
 	protected LinkHelper linker;
 
 	public HtmlRenderer (BasicDoclet doclet) {
+		cssresolver = CssClassResolver.get_instance ();
 		linker = LinkHelper.get_instance ();
 		_doclet = doclet;
 	}
@@ -59,7 +61,7 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 		var url = get_url (symbol);
 		writer.link (url,
 		             (label == null || label == "") ? symbol.full_name () : label,
-		             get_html_css_class (symbol));
+		             cssresolver.resolve (symbol));
 	}
 
 	private delegate void Write ();

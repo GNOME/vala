@@ -120,7 +120,7 @@ libvaladoc_la_VALASOURCES = \
 	taglets/tagletthrows.vala \
 	html/basicdoclet.vala \
 	html/linkhelper.vala \
-	html/globals.vala \
+	html/cssclassresolver.vala \
 	html/htmlmarkupwriter.vala \
 	html/htmlrenderer.vala \
 	$(NULL)

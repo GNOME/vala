@@ -31,11 +31,76 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	protected HtmlRenderer _renderer;
 	protected Html.MarkupWriter writer;
 	protected Html.LinkHelper linker;
+	protected Html.CssClassResolver cssresolver;
 
+
+	// paths:
 	protected string chart_directory = "img";
 	protected string icon_directory = "..";
 
+
+	// CSS:
+	private const string css_inline_navigation = "navi_inline";
+	private const string css_package_index = "package_index";
+	private const string css_brief_description = "brief_description";
+	private const string css_description = "description";
+	private const string css_known_list = "known_nodes";
+	private const string css_leaf_brief_description = "leaf_brief_description";
+	private const string css_leaf_code_definition = "leaf_code_definition";
+
+	private const string css_box_headline_text = "text";
+	private const string css_box_headline_toggle = "toggle";
+	private const string css_box_headline = "headline";
+	private const string css_box_content = "content";
+	private const string css_box_column = "column";
+	private const string css_box = "box";
+
+	private const string css_namespace_note = "namespace_note";
+	private const string css_package_note = "package_note";
+
+	private const string css_site_header = "site_header";
+	private const string css_navi = "navi_main";
+	private const string css_navi_hr = "navi_hr";
+	private const string css_errordomain_table_name = "main_errordomain_table_name";
+	private const string css_errordomain_table_text = "main_errordomain_table_text";
+	private const string css_errordomain_table = "main_errordomain_table";
+	private const string css_enum_table_name = "main_enum_table_name";
+	private const string css_enum_table_text = "main_enum_table_text";
+	private const string css_enum_table = "main_enum_table";
+	private const string css_diagram = "main_diagram";
+	private const string css_see_list = "main_see_list";
+	private const string css_wiki_table = "main_table";
+	private const string css_notification_area = "main_notification";
+	private const string css_source_sample = "main_sourcesample";
+	private const string css_exception_table = "main_parameter_table";
+	private const string css_parameter_table_text = "main_parameter_table_text";
+	private const string css_parameter_table_name = "main_parameter_table_name";
+	private const string css_parameter_table = "main_parameter_table";
+	private const string css_title = "main_title";
+	private const string css_other_type = "main_other_type";
+	private const string css_basic_type  = "main_basic_type";
+	private const string css_keyword  = "main_keyword";
+	private const string css_optional_parameter  = "main_optional_parameter";
+	private const string css_code_definition = "main_code_definition";
+	private const string css_headline_hr = "main_hr";
+	private const string css_hr = "main_hr";
+	private const string css_list_errdom = "main_list_errdom";
+	private const string css_list_en = "main_list_en";
+	private const string css_list_ns = "main_list_ns";
+	private const string css_list_cl = "main_list_cl";
+	private const string css_list_iface = "main_list_iface";
+	private const string css_list_stru = "main_list_stru";
+	private const string css_list_field = "main_list_field";
+	private const string css_list_prop = "main_list_prop";
+	private const string css_list_del = "main_list_del";
+	private const string css_list_sig = "main_list_sig";
+	private const string css_list_m = "main_list_m";
+	private const string css_style_navigation = "site_navigation";
+	private const string css_style_content = "site_content";
+	private const string css_style_body = "site_body";
+
 	construct {
+		this.cssresolver = CssClassResolver.get_instance ();
 		this.linker = LinkHelper.get_instance ();
 	}
 
@@ -115,7 +180,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	}
 
 	protected void write_navi_top_entry (Api.Node element, Api.Node? parent) {
-		string style = get_html_css_class (element);
+		string style = cssresolver.resolve (element);
 
 		writer.start_tag ("ul", {"class", css_navi});
 
@@ -179,7 +244,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			if (ns.name == null) {
 				globals = ns;
 			} else {
-				this.write_navi_entry (ns, package, css_namespace, true, true);
+				this.write_navi_entry (ns, package, cssresolver.resolve (ns), true, true);
 			}
 		}
 
@@ -242,7 +307,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		var children = node.get_children_by_type (type);
 		children.sort ();
 		foreach (Api.Node child in children) {
-			write_navi_entry (child, parent, get_html_css_class (child), child != parent);
+			write_navi_entry (child, parent, cssresolver.resolve (child), child != parent);
 		}
 	}
 
@@ -328,13 +393,13 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		writer.start_tag ("ul", {"class", css_navi});
 		foreach (Package pkg in tree.get_package_list()) {
 			if (pkg.is_visitor_accessible (settings)) {
-				writer.start_tag ("li", {"class", get_html_css_class (pkg)});
+				writer.start_tag ("li", {"class", cssresolver.resolve (pkg)});
 				writer.link (linker.get_package_link (pkg, settings), pkg.name);
 				// brief description
 				writer.end_tag ("li");
 			}
 			else {
-				writer.start_tag ("li", {"class", get_html_css_class (pkg)});
+				writer.start_tag ("li", {"class", cssresolver.resolve (pkg)});
 				writer.text (pkg.name);
 				writer.end_tag ("li");
 			}
@@ -403,7 +468,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 				for (int p = 0; p < list_sizes[i] && iter.next (); p++) {
 					var node = iter.get ();
-					writer.start_tag ("li", {"class", get_html_css_class (node)});
+					writer.start_tag ("li", {"class", cssresolver.resolve (node)});
 					writer.link (get_link (node, container), node.name);
 					writer.end_tag ("li");
 				}
@@ -500,7 +565,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		writer.start_tag ("ul", {"class", css_inline_navigation});
 		foreach (Namespace child in namespaces) {
 			if (child.name != null) {
-				writer.start_tag ("li", {"class", css_namespace});
+				writer.start_tag ("li", {"class", cssresolver.resolve (child)});
 				writer.link (get_link (child, parent), child.name);
 				this.write_brief_description (child, parent);
 				writer.end_tag ("li");
@@ -529,11 +594,11 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		writer.start_tag ("h2", {"class", css_title}).text ("Dependencies:").end_tag ("h2");
 		writer.start_tag ("ul", {"class", css_inline_navigation});
 		foreach (Package p in deps) {
-			string link = this.get_link(p, parent);
+			string link = this.get_link (p, parent);
 			if (link == null) {
-				writer.start_tag ("li", {"class", css_package, "id", p.name}).text (p.name).end_tag ("li");
+				writer.start_tag ("li", {"class", cssresolver.resolve (p), "id", p.name}).text (p.name).end_tag ("li");
 			} else {
-				writer.start_tag ("li", {"class", css_package});
+				writer.start_tag ("li", {"class", cssresolver.resolve (p)});
 				writer.link (get_link (p, parent), p.name);
 				writer.end_tag ("li");
 			}
@@ -555,7 +620,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			writer.start_tag ("h3", {"class", css_title}).text (type_string).text (":").end_tag ("h3");
 			writer.start_tag ("ul", {"class", css_inline_navigation});
 			foreach (Api.Node child in children) {
-				writer.start_tag ("li", {"class", get_html_css_class (child)});
+				writer.start_tag ("li", {"class", cssresolver.resolve (child)});
 				if (is_internal_node (child)) {
 					writer.link (get_link (child, container), child.name);
 					writer.text (" - ");
