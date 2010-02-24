@@ -792,6 +792,12 @@ public class Vala.Struct : TypeSymbol {
 				Report.error (f.source_reference, "Recursive value types are not allowed");
 				return false;
 			}
+
+			if (f.binding == MemberBinding.INSTANCE && f.initializer != null) {
+				error = true;
+				Report.error (f.source_reference, "Instance field initializers not supported");
+				return false;
+			}
 		}
 
 		foreach (Constant c in constants) {
