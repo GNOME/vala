@@ -55,7 +55,7 @@ coverage:
 coverage-report: coverage
 	lcov --directory $(top_srcdir) --capture --output-file $(top_builddir)/lcov.info
 	lcov --directory $(top_srcdir) --output-file $(top_builddir)/lcov.info --remove $(top_builddir)/lcov.info "*.c" "*.h" "*.vapi"
-	rm -r $(top_builddir)/coverage
+	rm -rf $(top_builddir)/coverage
 	$(mkdir_p) $(top_builddir)/coverage
 	genhtml --title "@PACKAGE_STRING@" --output-directory $(top_builddir)/coverage $(top_builddir)/lcov.info
 #endif
