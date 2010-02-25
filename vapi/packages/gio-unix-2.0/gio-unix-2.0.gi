@@ -213,6 +213,45 @@
 				</parameters>
 			</method>
 		</object>
+		<object name="GUnixConnection" parent="GSocketConnection" type-name="GUnixConnection" get-type="g_unix_connection_get_type">
+			<method name="receive_fd" symbol="g_unix_connection_receive_fd">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="connection" type="GUnixConnection*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="send_fd" symbol="g_unix_connection_send_fd">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="connection" type="GUnixConnection*"/>
+					<parameter name="fd" type="gint"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+		</object>
+		<object name="GUnixFDMessage" parent="GSocketControlMessage" type-name="GUnixFDMessage" get-type="g_unix_fd_message_get_type">
+			<method name="append_fd" symbol="g_unix_fd_message_append_fd">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="message" type="GUnixFDMessage*"/>
+					<parameter name="fd" type="gint"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="g_unix_fd_message_new">
+				<return-type type="GSocketControlMessage*"/>
+			</constructor>
+			<method name="steal_fds" symbol="g_unix_fd_message_steal_fds">
+				<return-type type="gint*"/>
+				<parameters>
+					<parameter name="message" type="GUnixFDMessage*"/>
+					<parameter name="length" type="gint*"/>
+				</parameters>
+			</method>
+		</object>
 		<object name="GUnixInputStream" parent="GInputStream" type-name="GUnixInputStream" get-type="g_unix_input_stream_get_type">
 			<method name="get_close_fd" symbol="g_unix_input_stream_get_close_fd">
 				<return-type type="gboolean"/>
@@ -301,13 +340,43 @@
 			<implements>
 				<interface name="GSocketConnectable"/>
 			</implements>
+			<method name="abstract_names_supported" symbol="g_unix_socket_address_abstract_names_supported">
+				<return-type type="gboolean"/>
+			</method>
+			<method name="get_is_abstract" symbol="g_unix_socket_address_get_is_abstract">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="address" type="GUnixSocketAddress*"/>
+				</parameters>
+			</method>
+			<method name="get_path" symbol="g_unix_socket_address_get_path">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="address" type="GUnixSocketAddress*"/>
+				</parameters>
+			</method>
+			<method name="get_path_len" symbol="g_unix_socket_address_get_path_len">
+				<return-type type="gsize"/>
+				<parameters>
+					<parameter name="address" type="GUnixSocketAddress*"/>
+				</parameters>
+			</method>
 			<constructor name="new" symbol="g_unix_socket_address_new">
 				<return-type type="GSocketAddress*"/>
 				<parameters>
 					<parameter name="path" type="gchar*"/>
 				</parameters>
 			</constructor>
+			<constructor name="new_abstract" symbol="g_unix_socket_address_new_abstract">
+				<return-type type="GSocketAddress*"/>
+				<parameters>
+					<parameter name="path" type="gchar*"/>
+					<parameter name="path_len" type="int"/>
+				</parameters>
+			</constructor>
+			<property name="abstract" type="gboolean" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="path" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="path-as-array" type="GByteArray*" readable="1" writable="1" construct="0" construct-only="1"/>
 		</object>
 		<interface name="GDesktopAppInfoLookup" type-name="GDesktopAppInfoLookup" get-type="g_desktop_app_info_lookup_get_type">
 			<requires>

@@ -20,4 +20,4 @@ g_unix_mount_is_system_internal hidden="1"
 g_unix_mount_points_changed_since name="mount_points_changed_since"
 g_unix_mount_points_get hidden="1"
 GUnixOutputStream cheader_filename="gio/gunixoutputstream.h"
-
+g_unix_socket_address_new_abstract name="as_abstract"

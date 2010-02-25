@@ -13,6 +13,18 @@ namespace GLib {
 		public bool get_is_hidden ();
 		public static void set_desktop_env (string desktop_env);
 	}
+	[CCode (cheader_filename = "gio/gunixmounts.h")]
+	public class UnixConnection : GLib.SocketConnection {
+		public int receive_fd (GLib.Cancellable cancellable) throws GLib.Error;
+		public bool send_fd (int fd, GLib.Cancellable cancellable) throws GLib.Error;
+	}
+	[CCode (cheader_filename = "gio/gunixmounts.h")]
+	public class UnixFDMessage : GLib.SocketControlMessage {
+		[CCode (type = "GSocketControlMessage*", has_construct_function = false)]
+		public UnixFDMessage ();
+		public bool append_fd (int fd) throws GLib.Error;
+		public int steal_fds (int length);
+	}
 	[CCode (cheader_filename = "gio/gunixinputstream.h")]
 	public class UnixInputStream : GLib.InputStream {
 		[CCode (type = "GInputStream*", has_construct_function = false)]
@@ -91,8 +103,17 @@ namespace GLib {
 	public class UnixSocketAddress : GLib.SocketAddress, GLib.SocketConnectable {
 		[CCode (type = "GSocketAddress*", has_construct_function = false)]
 		public UnixSocketAddress (string path);
+		public static bool abstract_names_supported ();
+		[CCode (cname = "g_unix_socket_address_new_abstract", type = "GSocketAddress*", has_construct_function = false)]
+		public UnixSocketAddress.as_abstract (string path, int path_len);
+		public bool get_is_abstract ();
+		public unowned string get_path ();
+		public size_t get_path_len ();
 		[NoAccessorMethod]
-		public string path { owned get; construct; }
+		public bool @abstract { get; construct; }
+		public string path { get; construct; }
+		[NoAccessorMethod]
+		public GLib.ByteArray path_as_array { owned get; construct; }
 	}
 	[CCode (cheader_filename = "gio/gunixmounts.h")]
 	public interface DesktopAppInfoLookup : GLib.Object {
