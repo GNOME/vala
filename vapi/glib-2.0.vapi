@@ -2930,14 +2930,14 @@ namespace GLib {
 		public bool has_key (string group_name, string key) throws KeyFileError;
 		public string get_value (string group_name, string key) throws KeyFileError;
 		public string get_string (string group_name, string key) throws KeyFileError;
-		public string get_locale_string (string group_name, string key, string locale) throws KeyFileError;
+		public string get_locale_string (string group_name, string key, string? locale = null) throws KeyFileError;
 		public bool get_boolean (string group_name, string key) throws KeyFileError;
 		public int get_integer (string group_name, string key) throws KeyFileError;
 		public double get_double (string group_name, string key) throws KeyFileError;
 		[CCode (array_length_type = "gsize")]
 		public string[] get_string_list (string group_name, string key) throws KeyFileError;
 		[CCode (array_length_type = "gsize")]
-		public string[] get_locale_string_list (string group_name, string key, string locale) throws KeyFileError;
+		public string[] get_locale_string_list (string group_name, string key, string? locale = null) throws KeyFileError;
 		[CCode (array_length_type = "gsize")]
 		public bool[] get_boolean_list (string group_name, string key) throws KeyFileError;
 		[CCode (array_length_type = "gsize")]
