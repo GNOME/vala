@@ -1,6 +1,6 @@
 /* valaerrordomain.vala
  *
- * Copyright (C) 2008-2009  Jürg Billeter
+ * Copyright (C) 2008-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -59,7 +59,7 @@ public class Vala.ErrorDomain : TypeSymbol {
 	 *
 	 * @param m a method
 	 */
-	public void add_method (Method m) {
+	public override void add_method (Method m) {
 		if (m is CreationMethod) {
 			Report.error (m.source_reference, "construction methods may only be declared within classes and structs");
 		

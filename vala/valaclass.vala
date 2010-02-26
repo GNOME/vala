@@ -274,7 +274,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	 *
 	 * @param c a constant
 	 */
-	public void add_constant (Constant c) {
+	public override void add_constant (Constant c) {
 		constants.add (c);
 		scope.add (c.name, c);
 	}
@@ -284,7 +284,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	 *
 	 * @param f a field
 	 */
-	public void add_field (Field f) {
+	public override void add_field (Field f) {
 		if (CodeContext.get ().profile == Profile.DOVA &&
 		    f.binding == MemberBinding.INSTANCE &&
 		    (f.access == SymbolAccessibility.PUBLIC || f.access == SymbolAccessibility.PROTECTED) &&
@@ -343,7 +343,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	 *
 	 * @param m a method
 	 */
-	public void add_method (Method m) {
+	public override void add_method (Method m) {
 		if (m.binding == MemberBinding.INSTANCE || m is CreationMethod) {
 			if (m.this_parameter != null) {
 				m.scope.remove (m.this_parameter.name);
@@ -391,7 +391,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	 *
 	 * @param prop a property
 	 */
-	public void add_property (Property prop) {
+	public override void add_property (Property prop) {
 		properties.add (prop);
 		scope.add (prop.name, prop);
 
@@ -417,7 +417,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	 *
 	 * @param sig a signal
 	 */
-	public void add_signal (Signal sig) {
+	public override void add_signal (Signal sig) {
 		signals.add (sig);
 		scope.add (sig.name, sig);
 	}
@@ -436,7 +436,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	 *
 	 * @param cl a class
 	 */
-	public void add_class (Class cl) {
+	public override void add_class (Class cl) {
 		classes.add (cl);
 		scope.add (cl.name, cl);
 	}
@@ -446,7 +446,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	 *
 	 * @param st a struct
 	 */
-	public void add_struct (Struct st) {
+	public override void add_struct (Struct st) {
 		structs.add (st);
 		scope.add (st.name, st);
 	}
@@ -456,7 +456,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	 *
 	 * @param en an enum
 	 */
-	public void add_enum (Enum en) {
+	public override void add_enum (Enum en) {
 		enums.add (en);
 		scope.add (en.name, en);
 	}
@@ -466,9 +466,47 @@ public class Vala.Class : ObjectTypeSymbol {
 	 *
 	 * @param d a delegate
 	 */
-	public void add_delegate (Delegate d) {
+	public override void add_delegate (Delegate d) {
 		delegates.add (d);
 		scope.add (d.name, d);
+	}
+
+	public override void add_constructor (Constructor c) {
+		if (c.binding == MemberBinding.INSTANCE) {
+			if (constructor != null) {
+				Report.error (c.source_reference, "class already contains a constructor");
+			}
+			constructor = c;
+		} else if (c.binding == MemberBinding.CLASS) {
+			if (class_constructor != null) {
+				Report.error (c.source_reference, "class already contains a class constructor");
+			}
+			class_constructor = c;
+		} else {
+			if (static_constructor != null) {
+				Report.error (c.source_reference, "class already contains a static constructor");
+			}
+			static_constructor = c;
+		}
+	}
+
+	public override void add_destructor (Destructor d) {
+		if (d.binding == MemberBinding.INSTANCE) {
+			if (destructor != null) {
+				Report.error (d.source_reference, "class already contains a destructor");
+			}
+			destructor = d;
+		} else if (d.binding == MemberBinding.CLASS) {
+			if (class_destructor != null) {
+				Report.error (d.source_reference, "class already contains a class destructor");
+			}
+			class_destructor = d;
+		} else {
+			if (static_destructor != null) {
+				Report.error (d.source_reference, "class already contains a static destructor");
+			}
+			static_destructor = d;
+		}
 	}
 
 	public override void accept (CodeVisitor visitor) {

@@ -2528,7 +2528,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 		} else {
 			Report.error (sym.source_reference, "unexpected declaration in namespace");
 		}
-		scanner.source_file.add_node (sym);
 	}
 
 
@@ -2631,7 +2630,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 				ns.add_namespace ((Namespace) result);
 			} else {
 				ns.add_class ((Class) result);
-				scanner.source_file.add_node (result);
 			}
 			result = ns;
 		}
@@ -3256,7 +3254,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 				ns.add_namespace ((Namespace) result);
 			} else {
 				ns.add_struct ((Struct) result);
-				scanner.source_file.add_node (result);
 			}
 			result = ns;
 		}
@@ -3322,7 +3319,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 				ns.add_namespace ((Namespace) result);
 			} else {
 				ns.add_interface ((Interface) result);
-				scanner.source_file.add_node (result);
 			}
 			result = ns;
 		}
@@ -3405,7 +3401,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 				ns.add_namespace ((Namespace) result);
 			} else {
 				ns.add_enum ((Enum) result);
-				scanner.source_file.add_node (result);
 			}
 			result = ns;
 		}
@@ -3460,7 +3455,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 				ns.add_namespace ((Namespace) result);
 			} else {
 				ns.add_error_domain ((ErrorDomain) result);
-				scanner.source_file.add_node (result);
 			}
 			result = ns;
 		}
@@ -3712,7 +3706,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 				ns.add_namespace ((Namespace) result);
 			} else {
 				ns.add_delegate ((Delegate) result);
-				scanner.source_file.add_node (result);
 			}
 			result = ns;
 		}

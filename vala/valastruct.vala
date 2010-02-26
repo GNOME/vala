@@ -134,7 +134,7 @@ public class Vala.Struct : TypeSymbol {
 	 *
 	 * @param c a constant
 	 */
-	public void add_constant (Constant c) {
+	public override void add_constant (Constant c) {
 		constants.add (c);
 		scope.add (c.name, c);
 	}
@@ -144,7 +144,7 @@ public class Vala.Struct : TypeSymbol {
 	 *
 	 * @param f a field
 	 */
-	public void add_field (Field f) {
+	public override void add_field (Field f) {
 		// TODO report error when `private' or `protected' has been specified
 		f.access = SymbolAccessibility.PUBLIC;
 
@@ -175,7 +175,7 @@ public class Vala.Struct : TypeSymbol {
 	 *
 	 * @param m a method
 	 */
-	public void add_method (Method m) {
+	public override void add_method (Method m) {
 		return_if_fail (m != null);
 		
 		if (m.binding == MemberBinding.INSTANCE || m is CreationMethod) {
@@ -219,7 +219,7 @@ public class Vala.Struct : TypeSymbol {
 	 *
 	 * @param prop a property
 	 */
-	public void add_property (Property prop) {
+	public override void add_property (Property prop) {
 		properties.add (prop);
 		scope.add (prop.name, prop);
 

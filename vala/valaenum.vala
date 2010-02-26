@@ -71,7 +71,7 @@ public class Vala.Enum : TypeSymbol {
 	 *
 	 * @param m a method
 	 */
-	public void add_method (Method m) {
+	public override void add_method (Method m) {
 		if (m is CreationMethod) {
 			Report.error (m.source_reference, "construction methods may only be declared within classes and structs");
 		
@@ -96,7 +96,7 @@ public class Vala.Enum : TypeSymbol {
 	 *
 	 * @param c a constant
 	 */
-	public void add_constant (Constant c) {
+	public override void add_constant (Constant c) {
 		constants.add (c);
 		scope.add (c.name, c);
 	}

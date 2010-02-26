@@ -2007,7 +2007,7 @@ public class Vala.Parser : CodeVisitor {
 		}
 	}
 
-	Method parse_main_block () throws ParseError {
+	void parse_main_block (Symbol parent) throws ParseError {
 		var begin = get_location ();
 
 		var method = new Method ("main", new VoidType (), get_src (begin));
@@ -2024,10 +2024,10 @@ public class Vala.Parser : CodeVisitor {
 			Report.warning (method.source_reference, "main blocks are experimental");
 		}
 
-		return method;
+		parent.add_method (method);
 	}
 
-	Symbol parse_declaration (bool root = false) throws ParseError {
+	void parse_declaration (Symbol parent, bool root = false) throws ParseError {
 		comment = scanner.pop_comment ();
 		var attrs = parse_attributes ();
 		
@@ -2044,12 +2044,14 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.CONSTRUCT:
 			if (context.profile == Profile.GOBJECT) {
 				rollback (begin);
-				return parse_constructor_declaration (attrs);
+				parse_constructor_declaration (parent, attrs);
+				return;
 			}
 			break;
 		case TokenType.TILDE:
 			rollback (begin);
-			return parse_destructor_declaration (attrs);
+			parse_destructor_declaration (parent, attrs);
+			return;
 		case TokenType.OPEN_BRACE:
 		case TokenType.SEMICOLON:
 		case TokenType.IF:
@@ -2083,13 +2085,15 @@ public class Vala.Parser : CodeVisitor {
 				throw new ParseError.SYNTAX (get_error ("statements outside blocks allowed only in root namespace"));
 			}
 			rollback (begin);
-			return parse_main_block ();
+			parse_main_block (parent);
+			return;
 		default:
 			if (root) {
 				bool is_expr = is_expression ();
 				if (is_expr) {
 					rollback (begin);
-					return parse_main_block ();
+					parse_main_block (parent);
+					return;
 				}
 			}
 
@@ -2100,39 +2104,64 @@ public class Vala.Parser : CodeVisitor {
 			case TokenType.COLON:
 				rollback (begin);
 				switch (last_keyword) {
-				case TokenType.CLASS:       return parse_class_declaration (attrs);
-				case TokenType.ENUM:        return parse_enum_declaration (attrs);
-				case TokenType.ERRORDOMAIN: return parse_errordomain_declaration (attrs);
-				case TokenType.INTERFACE:   return parse_interface_declaration (attrs);
-				case TokenType.NAMESPACE:   return parse_namespace_declaration (attrs);
-				case TokenType.STRUCT:      return parse_struct_declaration (attrs);
-				default:                    break;
+				case TokenType.CLASS:
+					parse_class_declaration (parent, attrs);
+					return;
+				case TokenType.ENUM:
+					parse_enum_declaration (parent, attrs);
+					return;
+				case TokenType.ERRORDOMAIN:
+					parse_errordomain_declaration (parent, attrs);
+					return;
+				case TokenType.INTERFACE:
+					parse_interface_declaration (parent, attrs);
+					return;
+				case TokenType.NAMESPACE:
+					parse_namespace_declaration (parent, attrs);
+					return;
+				case TokenType.STRUCT:
+					parse_struct_declaration (parent, attrs);
+					return;
+				default:
+					break;
 				}
 				break;
 			case TokenType.OPEN_PARENS:
 				rollback (begin);
-				return parse_creation_method_declaration (attrs);
+				parse_creation_method_declaration (parent, attrs);
+				return;
 			default:
 				skip_type (); // might contain type parameter list
 				switch (current ()) {
 				case TokenType.OPEN_PARENS:
 					rollback (begin);
 					switch (last_keyword) {
-					case TokenType.DELEGATE: return parse_delegate_declaration (attrs);
-					case TokenType.SIGNAL:   return parse_signal_declaration (attrs);
-					default:                 return parse_method_declaration (attrs);
+					case TokenType.DELEGATE:
+						parse_delegate_declaration (parent, attrs);
+						return;
+					case TokenType.SIGNAL:
+						parse_signal_declaration (parent, attrs);
+						return;
+					default:
+						parse_method_declaration (parent, attrs);
+						return;
 					}
 				case TokenType.ASSIGN:
 				case TokenType.SEMICOLON:
 					rollback (begin);
 					switch (last_keyword) {
-					case TokenType.CONST: return parse_constant_declaration (attrs);
-					default:              return parse_field_declaration (attrs);
+					case TokenType.CONST:
+						parse_constant_declaration (parent, attrs);
+						return;
+					default:
+						parse_field_declaration (parent, attrs);
+						return;
 					}
 				case TokenType.OPEN_BRACE:
 				case TokenType.THROWS:
 					rollback (begin);
-					return parse_property_declaration (attrs);
+					parse_property_declaration (parent, attrs);
+					return;
 				default:
 					break;
 				}
@@ -2152,15 +2181,7 @@ public class Vala.Parser : CodeVisitor {
 		}
 		while (current () != TokenType.CLOSE_BRACE && current () != TokenType.EOF) {
 			try {
-				if (parent is Namespace) {
-					parse_namespace_member ((Namespace) parent, (parent == context.root));
-				} else if (parent is Class) {
-					parse_class_member ((Class) parent);
-				} else if (parent is Struct) {
-					parse_struct_member ((Struct) parent);
-				} else if (parent is Interface) {
-					parse_interface_member ((Interface) parent);
-				}
+				parse_declaration (parent, (parent == context.root));
 			} catch (ParseError e) {
 				int r;
 				do {
@@ -2243,7 +2264,7 @@ public class Vala.Parser : CodeVisitor {
 		return RecoveryState.EOF;
 	}
 
-	Namespace parse_namespace_declaration (List<Attribute>? attrs) throws ParseError {
+	void parse_namespace_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		expect (TokenType.NAMESPACE);
 		var sym = parse_symbol_name ();
@@ -2271,53 +2292,14 @@ public class Vala.Parser : CodeVisitor {
 			}
 		}
 
-		Namespace result = ns;
-		while (sym.inner != null) {
+		Symbol result = ns;
+		while (sym != null) {
 			sym = sym.inner;
-			ns = new Namespace (sym.name, result.source_reference);
-			ns.add_namespace ((Namespace) result);
-			result = ns;
-		}
-		return result;
-	}
 
-	void parse_namespace_member (Namespace ns, bool root = false) throws ParseError {
-		var sym = parse_declaration (root);
-
-		if (sym is Namespace) {
-			ns.add_namespace ((Namespace) sym);
-		} else if (sym is Class) {
-			ns.add_class ((Class) sym);
-		} else if (sym is Interface) {
-			ns.add_interface ((Interface) sym);
-		} else if (sym is Struct) {
-			ns.add_struct ((Struct) sym);
-		} else if (sym is Enum) {
-			ns.add_enum ((Enum) sym);
-		} else if (sym is ErrorDomain) {
-			ns.add_error_domain ((ErrorDomain) sym);
-		} else if (sym is Delegate) {
-			ns.add_delegate ((Delegate) sym);
-		} else if (sym is Method) {
-			var method = (Method) sym;
-			if (method.binding == MemberBinding.INSTANCE) {
-				// default to static member binding
-				method.binding = MemberBinding.STATIC;
-			}
-			ns.add_method (method);
-		} else if (sym is Field) {
-			var field = (Field) sym;
-			if (field.binding == MemberBinding.INSTANCE) {
-				// default to static member binding
-				field.binding = MemberBinding.STATIC;
-			}
-			ns.add_field (field);
-		} else if (sym is Constant) {
-			ns.add_constant ((Constant) sym);
-		} else {
-			Report.error (sym.source_reference, "unexpected declaration in namespace");
+			Symbol next = (sym != null ? new Namespace (sym.name, ns.source_reference) : parent);
+			next.add_namespace ((Namespace) result);
+			result = next;
 		}
-		scanner.source_file.add_node (sym);
 	}
 
 	void parse_using_directives (Namespace ns) throws ParseError {
@@ -2333,7 +2315,7 @@ public class Vala.Parser : CodeVisitor {
 		}
 	}
 
-	Symbol parse_class_declaration (List<Attribute>? attrs) throws ParseError {
+	void parse_class_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
 		var flags = parse_type_declaration_modifiers ();
@@ -2375,82 +2357,20 @@ public class Vala.Parser : CodeVisitor {
 		}
 
 		Symbol result = cl;
-		while (sym.inner != null) {
+		while (sym != null) {
 			sym = sym.inner;
-			var ns = new Namespace (sym.name, cl.source_reference);
+
+			Symbol next = (sym != null ? new Namespace (sym.name, cl.source_reference) : parent);
 			if (result is Namespace) {
-				ns.add_namespace ((Namespace) result);
+				next.add_namespace ((Namespace) result);
 			} else {
-				ns.add_class ((Class) result);
-				scanner.source_file.add_node (result);
+				next.add_class ((Class) result);
 			}
-			result = ns;
-		}
-		return result;
-	}
-
-	void parse_class_member (Class cl) throws ParseError {
-		var sym = parse_declaration ();
-		if (sym is Class) {
-			cl.add_class ((Class) sym);
-		} else if (sym is Struct) {
-			cl.add_struct ((Struct) sym);
-		} else if (sym is Enum) {
-			cl.add_enum ((Enum) sym);
-		} else if (sym is Delegate) {
-			cl.add_delegate ((Delegate) sym);
-		} else if (sym is Method) {
-			cl.add_method ((Method) sym);
-		} else if (sym is Signal) {
-			cl.add_signal ((Signal) sym);
-		} else if (sym is Field) {
-			cl.add_field ((Field) sym);
-		} else if (sym is Constant) {
-			cl.add_constant ((Constant) sym);
-		} else if (sym is Property) {
-			cl.add_property ((Property) sym);
-		} else if (sym is Constructor) {
-			var c = (Constructor) sym;
-			if (c.binding == MemberBinding.INSTANCE) {
-				if (cl.constructor != null) {
-					Report.error (c.source_reference, "class already contains a constructor");
-				}
-				cl.constructor = c;
-			} else if (c.binding == MemberBinding.CLASS) {
-				if (cl.class_constructor != null) {
-					Report.error (c.source_reference, "class already contains a class constructor");
-				}
-				cl.class_constructor = c;
-			} else {
-				if (cl.static_constructor != null) {
-					Report.error (c.source_reference, "class already contains a static constructor");
-				}
-				cl.static_constructor = c;
-			}
-		} else if (sym is Destructor) {
-			var d = (Destructor) sym;
-			if (d.binding == MemberBinding.STATIC) {
-				if (cl.static_destructor != null) {
-					Report.error (d.source_reference, "class already contains a static destructor");
-				}
-				cl.static_destructor = (Destructor) d;
-			} else if (d.binding == MemberBinding.CLASS) {
-				if (cl.class_destructor != null) {
-					Report.error (d.source_reference, "class already contains a class destructor");
-				}
-				cl.class_destructor = (Destructor) d;
-			} else {
-				if (cl.destructor != null) {
-					Report.error (d.source_reference, "class already contains a destructor");
-				}
-				cl.destructor = (Destructor) d;
-			}
-		} else {
-			Report.error (sym.source_reference, "unexpected declaration in class");
+			result = next;
 		}
 	}
 
-	Constant parse_constant_declaration (List<Attribute>? attrs) throws ParseError {
+	void parse_constant_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
 		var flags = parse_member_declaration_modifiers ();
@@ -2481,10 +2401,11 @@ public class Vala.Parser : CodeVisitor {
 			c.hides = true;
 		}
 		set_attributes (c, attrs);
-		return c;
+
+		parent.add_constant (c);
 	}
 
-	Field parse_field_declaration (List<Attribute>? attrs) throws ParseError {
+	void parse_field_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
 		var flags = parse_member_declaration_modifiers ();
@@ -2519,7 +2440,8 @@ public class Vala.Parser : CodeVisitor {
 			f.initializer = parse_expression ();
 		}
 		expect (TokenType.SEMICOLON);
-		return f;
+
+		parent.add_field (f);
 	}
 
 	InitializerList parse_initializer () throws ParseError {
@@ -2588,7 +2510,7 @@ public class Vala.Parser : CodeVisitor {
 		return map;
 	}
 
-	Method parse_method_declaration (List<Attribute>? attrs) throws ParseError {
+	void parse_method_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
 		var flags = parse_member_declaration_modifiers ();
@@ -2681,10 +2603,11 @@ public class Vala.Parser : CodeVisitor {
 		} else if (scanner.source_file.external_package) {
 			method.external = true;
 		}
-		return method;
+
+		parent.add_method (method);
 	}
 
-	Property parse_property_declaration (List<Attribute>? attrs) throws ParseError {
+	void parse_property_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
 		var flags = parse_member_declaration_modifiers ();
@@ -2823,10 +2746,10 @@ public class Vala.Parser : CodeVisitor {
 			}
 		}
 
-		return prop;
+		parent.add_property (prop);
 	}
 
-	Signal parse_signal_declaration (List<Attribute>? attrs) throws ParseError {
+	void parse_signal_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
 		var flags = parse_member_declaration_modifiers ();
@@ -2859,10 +2782,10 @@ public class Vala.Parser : CodeVisitor {
 			sig.body = parse_block ();
 		}
 
-		return sig;
+		parent.add_signal (sig);
 	}
 
-	Constructor parse_constructor_declaration (List<Attribute>? attrs) throws ParseError {
+	void parse_constructor_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var flags = parse_member_declaration_modifiers ();
 		expect (TokenType.CONSTRUCT);
@@ -2876,10 +2799,11 @@ public class Vala.Parser : CodeVisitor {
 			c.binding = MemberBinding.CLASS;
 		}
 		c.body = parse_block ();
-		return c;
+
+		parent.add_constructor (c);
 	}
 
-	Destructor parse_destructor_declaration (List<Attribute>? attrs) throws ParseError {
+	void parse_destructor_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var flags = parse_member_declaration_modifiers ();
 		expect (TokenType.TILDE);
@@ -2896,10 +2820,11 @@ public class Vala.Parser : CodeVisitor {
 			d.binding = MemberBinding.CLASS;
 		}
 		d.body = parse_block ();
-		return d;
+
+		parent.add_destructor (d);
 	}
 
-	Symbol parse_struct_declaration (List<Attribute>? attrs) throws ParseError {
+	void parse_struct_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
 		var flags = parse_type_declaration_modifiers ();
@@ -2926,37 +2851,20 @@ public class Vala.Parser : CodeVisitor {
 		parse_declarations (st);
 
 		Symbol result = st;
-		while (sym.inner != null) {
+		while (sym != null) {
 			sym = sym.inner;
 
-			var ns = new Namespace (sym.name, st.source_reference);
+			Symbol next = (sym != null ? new Namespace (sym.name, st.source_reference) : parent);
 			if (result is Namespace) {
-				ns.add_namespace ((Namespace) result);
+				next.add_namespace ((Namespace) result);
 			} else {
-				ns.add_struct ((Struct) result);
-				scanner.source_file.add_node (result);
+				next.add_struct ((Struct) result);
 			}
-			result = ns;
-		}
-		return result;
-	}
-
-	void parse_struct_member (Struct st) throws ParseError {
-		var sym = parse_declaration ();
-		if (sym is Method) {
-			st.add_method ((Method) sym);
-		} else if (sym is Field) {
-			st.add_field ((Field) sym);
-		} else if (sym is Constant) {
-			st.add_constant ((Constant) sym);
-		} else if (sym is Property) {
-			st.add_property ((Property) sym);
-		} else {
-			Report.error (sym.source_reference, "unexpected declaration in struct");
+			result = next;
 		}
 	}
 
-	Symbol parse_interface_declaration (List<Attribute>? attrs) throws ParseError {
+	void parse_interface_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
 		var flags = parse_type_declaration_modifiers ();
@@ -2986,46 +2894,20 @@ public class Vala.Parser : CodeVisitor {
 		parse_declarations (iface);
 
 		Symbol result = iface;
-		while (sym.inner != null) {
+		while (sym != null) {
 			sym = sym.inner;
-			var ns = new Namespace (sym.name, iface.source_reference);
+
+			Symbol next = (sym != null ? new Namespace (sym.name, iface.source_reference) : parent);
 			if (result is Namespace) {
-				ns.add_namespace ((Namespace) result);
+				next.add_namespace ((Namespace) result);
 			} else {
-				ns.add_interface ((Interface) result);
-				scanner.source_file.add_node (result);
+				next.add_interface ((Interface) result);
 			}
-			result = ns;
-		}
-		return result;
-	}
-
-	void parse_interface_member (Interface iface) throws ParseError {
-		var sym = parse_declaration ();
-		if (sym is Class) {
-			iface.add_class ((Class) sym);
-		} else if (sym is Struct) {
-			iface.add_struct ((Struct) sym);
-		} else if (sym is Enum) {
-			iface.add_enum ((Enum) sym);
-		} else if (sym is Delegate) {
-			iface.add_delegate ((Delegate) sym);
-		} else if (sym is Method) {
-			iface.add_method ((Method) sym);
-		} else if (sym is Signal) {
-			iface.add_signal ((Signal) sym);
-		} else if (sym is Field) {
-			iface.add_field ((Field) sym);
-		} else if (sym is Constant) {
-			iface.add_constant ((Constant) sym);
-		} else if (sym is Property) {
-			iface.add_property ((Property) sym);
-		} else {
-			Report.error (sym.source_reference, "unexpected declaration in interface");
+			result = next;
 		}
 	}
 
-	Symbol parse_enum_declaration (List<Attribute>? attrs) throws ParseError {
+	void parse_enum_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
 		var flags = parse_type_declaration_modifiers ();
@@ -3062,34 +2944,26 @@ public class Vala.Parser : CodeVisitor {
 		if (accept (TokenType.SEMICOLON)) {
 			// enum methods
 			while (current () != TokenType.CLOSE_BRACE) {
-				var member_sym = parse_declaration ();
-				if (member_sym is Method) {
-					en.add_method ((Method) member_sym);
-				} else if (member_sym is Constant) {
-					en.add_constant ((Constant) member_sym);
-				} else {
-					Report.error (member_sym.source_reference, "unexpected declaration in enum");
-				}
+				parse_declaration (en);
 			}
 		}
 		expect (TokenType.CLOSE_BRACE);
 
 		Symbol result = en;
-		while (sym.inner != null) {
+		while (sym != null) {
 			sym = sym.inner;
-			var ns = new Namespace (sym.name, en.source_reference);
+
+			Symbol next = (sym != null ? new Namespace (sym.name, en.source_reference) : parent);
 			if (result is Namespace) {
-				ns.add_namespace ((Namespace) result);
+				next.add_namespace ((Namespace) result);
 			} else {
-				ns.add_enum ((Enum) result);
-				scanner.source_file.add_node (result);
+				next.add_enum ((Enum) result);
 			}
-			result = ns;
+			result = next;
 		}
-		return result;
 	}
 
-	Symbol parse_errordomain_declaration (List<Attribute>? attrs) throws ParseError {
+	void parse_errordomain_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
 		var flags = parse_type_declaration_modifiers ();
@@ -3123,29 +2997,23 @@ public class Vala.Parser : CodeVisitor {
 		if (accept (TokenType.SEMICOLON)) {
 			// errordomain methods
 			while (current () != TokenType.CLOSE_BRACE) {
-				var member_sym = parse_declaration ();
-				if (member_sym is Method) {
-					ed.add_method ((Method) member_sym);
-				} else {
-					Report.error (member_sym.source_reference, "unexpected declaration in errordomain");
-				}
+				parse_declaration (ed);
 			}
 		}
 		expect (TokenType.CLOSE_BRACE);
 
 		Symbol result = ed;
-		while (sym.inner != null) {
+		while (sym != null) {
 			sym = sym.inner;
-			var ns = new Namespace (sym.name, ed.source_reference);
+
+			Symbol next = (sym != null ? new Namespace (sym.name, ed.source_reference) : parent);
 			if (result is Namespace) {
-				ns.add_namespace ((Namespace) result);
+				next.add_namespace ((Namespace) result);
 			} else {
-				ns.add_error_domain ((ErrorDomain) result);
-				scanner.source_file.add_node (result);
+				next.add_error_domain ((ErrorDomain) result);
 			}
-			result = ns;
+			result = next;
 		}
-		return result;
 	}
 
 	SymbolAccessibility parse_access_modifier (SymbolAccessibility default_access = SymbolAccessibility.PRIVATE) {
@@ -3286,7 +3154,7 @@ public class Vala.Parser : CodeVisitor {
 		return param;
 	}
 
-	CreationMethod parse_creation_method_declaration (List<Attribute>? attrs) throws ParseError {
+	void parse_creation_method_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
 		var flags = parse_member_declaration_modifiers ();
@@ -3352,10 +3220,11 @@ public class Vala.Parser : CodeVisitor {
 		} else if (scanner.source_file.external_package) {
 			method.external = true;
 		}
-		return method;
+
+		parent.add_method (method);
 	}
 
-	Symbol parse_delegate_declaration (List<Attribute>? attrs) throws ParseError {
+	void parse_delegate_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
 		var flags = parse_member_declaration_modifiers ();
@@ -3410,18 +3279,17 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.SEMICOLON);
 
 		Symbol result = d;
-		while (sym.inner != null) {
+		while (sym != null) {
 			sym = sym.inner;
-			var ns = new Namespace (sym.name, d.source_reference);
+
+			Symbol next = (sym != null ? new Namespace (sym.name, d.source_reference) : parent);
 			if (result is Namespace) {
-				ns.add_namespace ((Namespace) result);
+				next.add_namespace ((Namespace) result);
 			} else {
-				ns.add_delegate ((Delegate) result);
-				scanner.source_file.add_node (result);
+				next.add_delegate ((Delegate) result);
 			}
-			result = ns;
+			result = next;
 		}
-		return result;
 	}
 
 	List<TypeParameter> parse_type_parameter_list () throws ParseError {

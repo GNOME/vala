@@ -1,6 +1,6 @@
 /* valanamespace.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -84,7 +84,11 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @param ns a namespace
 	 */
-	public void add_namespace (Namespace ns) {
+	public override void add_namespace (Namespace ns) {
+		if (ns.owner == null) {
+			ns.source_reference.file.add_node (ns);
+		}
+
 		if (scope.lookup (ns.name) is Namespace) {
 			// merge if namespace already exists
 			var old_ns = (Namespace) scope.lookup (ns.name);
@@ -148,10 +152,14 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @param cl a class
 	 */
-	public void add_class (Class cl) {
+	public override void add_class (Class cl) {
 		// namespaces do not support private memebers
 		if (cl.access == SymbolAccessibility.PRIVATE) {
 			cl.access = SymbolAccessibility.INTERNAL;
+		}
+
+		if (cl.owner == null) {
+			cl.source_reference.file.add_node (cl);
 		}
 
 		classes.add (cl);
@@ -163,14 +171,19 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @param iface an interface
 	 */
-	public void add_interface (Interface iface) {
+	public override void add_interface (Interface iface) {
 		// namespaces do not support private memebers
 		if (iface.access == SymbolAccessibility.PRIVATE) {
 			iface.access = SymbolAccessibility.INTERNAL;
 		}
 
+		if (iface.owner == null) {
+			iface.source_reference.file.add_node (iface);
+		}
+
 		interfaces.add (iface);
 		scope.add (iface.name, iface);
+
 	}
 	
 	/**
@@ -178,10 +191,14 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @param st a struct
 	 */
-	public void add_struct (Struct st) {
+	public override void add_struct (Struct st) {
 		// namespaces do not support private memebers
 		if (st.access == SymbolAccessibility.PRIVATE) {
 			st.access = SymbolAccessibility.INTERNAL;
+		}
+
+		if (st.owner == null) {
+			st.source_reference.file.add_node (st);
 		}
 
 		structs.add (st);
@@ -203,10 +220,14 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @param en an enum
 	 */
-	public void add_enum (Enum en) {
+	public override void add_enum (Enum en) {
 		// namespaces do not support private memebers
 		if (en.access == SymbolAccessibility.PRIVATE) {
 			en.access = SymbolAccessibility.INTERNAL;
+		}
+
+		if (en.owner == null) {
+			en.source_reference.file.add_node (en);
 		}
 
 		enums.add (en);
@@ -218,10 +239,14 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @param edomain an error domain
 	 */
-	public void add_error_domain (ErrorDomain edomain) {
+	public override void add_error_domain (ErrorDomain edomain) {
 		// namespaces do not support private memebers
 		if (edomain.access == SymbolAccessibility.PRIVATE) {
 			edomain.access = SymbolAccessibility.INTERNAL;
+		}
+
+		if (edomain.owner == null) {
+			edomain.source_reference.file.add_node (edomain);
 		}
 
 		error_domains.add (edomain);
@@ -233,10 +258,14 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @param d a delegate
 	 */
-	public void add_delegate (Delegate d) {
+	public override void add_delegate (Delegate d) {
 		// namespaces do not support private memebers
 		if (d.access == SymbolAccessibility.PRIVATE) {
 			d.access = SymbolAccessibility.INTERNAL;
+		}
+
+		if (d.owner == null) {
+			d.source_reference.file.add_node (d);
 		}
 
 		delegates.add (d);
@@ -329,10 +358,14 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @param constant a constant
 	 */
-	public void add_constant (Constant constant) {
+	public override void add_constant (Constant constant) {
 		// namespaces do not support private memebers
 		if (constant.access == SymbolAccessibility.PRIVATE) {
 			constant.access = SymbolAccessibility.INTERNAL;
+		}
+
+		if (constant.owner == null) {
+			constant.source_reference.file.add_node (constant);
 		}
 
 		constants.add (constant);
@@ -344,7 +377,12 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @param f a field
 	 */
-	public void add_field (Field f) {
+	public override void add_field (Field f) {
+		if (f.binding == MemberBinding.INSTANCE) {
+			// default to static member binding
+			f.binding = MemberBinding.STATIC;
+		}
+
 		// namespaces do not support private memebers
 		if (f.access == SymbolAccessibility.PRIVATE) {
 			f.access = SymbolAccessibility.INTERNAL;
@@ -360,6 +398,10 @@ public class Vala.Namespace : Symbol {
 			return;
 		}
 
+		if (f.owner == null) {
+			f.source_reference.file.add_node (f);
+		}
+
 		fields.add (f);
 		scope.add (f.name, f);
 	}
@@ -369,7 +411,12 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @param m a method
 	 */
-	public void add_method (Method m) {
+	public override void add_method (Method m) {
+		if (m.binding == MemberBinding.INSTANCE) {
+			// default to static member binding
+			m.binding = MemberBinding.STATIC;
+		}
+
 		// namespaces do not support private memebers
 		if (m.access == SymbolAccessibility.PRIVATE) {
 			m.access = SymbolAccessibility.INTERNAL;
@@ -392,6 +439,10 @@ public class Vala.Namespace : Symbol {
 		if (!(m.return_type is VoidType) && (CodeContext.get ().profile == Profile.DOVA || m.get_postconditions ().size > 0)) {
 			m.result_var = new LocalVariable (m.return_type.copy (), "result", null, source_reference);
 			m.result_var.is_result = true;
+		}
+
+		if (m.owner == null) {
+			m.source_reference.file.add_node (m);
 		}
 
 		methods.add (m);

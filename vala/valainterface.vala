@@ -127,7 +127,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 *
 	 * @param m a method
 	 */
-	public void add_method (Method m) {
+	public override void add_method (Method m) {
 		if (m is CreationMethod) {
 			Report.error (m.source_reference, "construction methods may only be declared within classes and structs");
 		
@@ -162,7 +162,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 *
 	 * @param f a field
 	 */
-	public void add_field (Field f) {
+	public override void add_field (Field f) {
 		fields.add (f);
 		scope.add (f.name, f);
 	}
@@ -181,7 +181,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 *
 	 * @param c a constant
 	 */
-	public void add_constant (Constant c) {
+	public override void add_constant (Constant c) {
 		constants.add (c);
 		scope.add (c.name, c);
 	}
@@ -200,7 +200,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 *
 	 * @param prop a property
 	 */
-	public void add_property (Property prop) {
+	public override void add_property (Property prop) {
 		properties.add (prop);
 		scope.add (prop.name, prop);
 
@@ -222,7 +222,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 *
 	 * @param sig a signal
 	 */
-	public void add_signal (Signal sig) {
+	public override void add_signal (Signal sig) {
 		signals.add (sig);
 		scope.add (sig.name, sig);
 	}
@@ -241,7 +241,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 *
 	 * @param cl a class
 	 */
-	public void add_class (Class cl) {
+	public override void add_class (Class cl) {
 		classes.add (cl);
 		scope.add (cl.name, cl);
 	}
@@ -251,7 +251,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 *
 	 * @param st a struct
 	 */
-	public void add_struct (Struct st) {
+	public override void add_struct (Struct st) {
 		structs.add (st);
 		scope.add (st.name, st);
 	}
@@ -261,7 +261,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 *
 	 * @param en an enum
 	 */
-	public void add_enum (Enum en) {
+	public override void add_enum (Enum en) {
 		enums.add (en);
 		scope.add (en.name, en);
 	}
@@ -271,7 +271,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 *
 	 * @param d a delegate
 	 */
-	public void add_delegate (Delegate d) {
+	public override void add_delegate (Delegate d) {
 		delegates.add (d);
 		scope.add (d.name, d);
 	}
