@@ -39,7 +39,6 @@ public class Valadoc.Html.LinkHelper : Object {
 		return _singleton;
 	}
 
-	// done
 	public string? get_package_link (Api.Package package, Settings settings) {
 		if (!package.is_visitor_accessible (settings)) {
 			return null;

@@ -28,6 +28,12 @@ public class Valadoc.Html.MarkupWriter : Valadoc.MarkupWriter {
 		base (stream, xml_declaration);
 	}
 
+	public MarkupWriter add_usemap (Charts.Chart chart) {
+		stream.putc ('\n');
+		chart.write (stream, "cmapx");
+		return this;
+	}
+
 	// edit
 	public MarkupWriter link (string url, string label, string? css_class = null) {
 		if (css_class == null) {

@@ -23,7 +23,7 @@
 
 
 public class Valadoc.MarkupWriter {
-	private unowned FileStream stream;
+	protected unowned FileStream stream;
 	protected int indent;
 	private long current_column = 0;
 	private bool last_was_tag;

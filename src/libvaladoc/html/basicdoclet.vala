@@ -32,11 +32,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	protected Html.MarkupWriter writer;
 	protected Html.LinkHelper linker;
 	protected Html.CssClassResolver cssresolver;
-
-
-	// paths:
-	protected string chart_directory = "img";
-	protected string icon_directory = "..";
+	protected Charts.Factory image_factory;
 
 
 	// CSS:
@@ -105,13 +101,30 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	}
 
 	public virtual void process (Settings settings, Api.Tree tree) {
+		this.image_factory = new SimpleChartFactory (settings);
 		this.settings = settings;
 		this.tree = tree;
 	}
 
+
+	// paths:
 	protected string? get_link (Api.Node to, Api.Node from) {
 		return linker.get_relative_link (from, to, settings);
 	}
+
+	protected virtual string get_img_path_html (Api.Node element, string type) {
+		return Path.build_filename ("img", element.full_name () + "." + type);
+	}
+
+	protected virtual string get_img_path (Api.Node element, string type) {
+		return Path.build_filename (settings.path, element.package.name, "img", element.full_name () + "." + type);
+	}
+
+	protected virtual string get_icon_directory () {
+		return "..";
+	}
+
+
 
 	protected void write_navi_entry_html_template (string style, string content) {
 		writer.start_tag ("li", {"class", style});
@@ -138,8 +151,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 		if (link == true) {
 			this.write_navi_entry_html_template_with_link (style, this.get_link (element, pos), name);
-		}
-		else {
+		} else {
 			this.write_navi_entry_html_template (style, name);
 		}
 	}
@@ -444,7 +456,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			writer.start_tag ("div", {"class", css_box_headline});
 			writer.start_tag ("div", {"class", css_box_headline_text}).text (headline).end_tag ("div");
 			writer.start_tag ("div", {"class", css_box_headline_toggle});
-			writer.start_tag ("img", {"onclick", "toggle_box  (this, '" + html_id + "')", "src", Path.build_filename (icon_directory, "coll_open.png")});
+			writer.start_tag ("img", {"onclick", "toggle_box  (this, '" + html_id + "')", "src", Path.build_filename (get_icon_directory (), "coll_open.png")});
 			writer.raw_text ("&nbsp;");
 			writer.end_tag ("div");
 			writer.end_tag ("div");
@@ -606,14 +618,6 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		writer.end_tag ("ul");
 	}
 
-	protected string get_img_path (Api.Node element) {
-		return Path.build_filename (chart_directory, element.full_name () + ".png");
-	}
-
-	protected string get_img_real_path (Api.Node element) {
-		return Path.build_filename (settings.path, element.package.name, chart_directory, element.full_name () + ".png");
-	}
-
 	protected void write_children (Api.Node node, Api.NodeType type, string type_string, Api.Node? container) {
 		var children = node.get_children_by_type (type);
 		if (children.size > 0) {
@@ -641,25 +645,15 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	}
 
 	protected void write_image_block (Api.Node element) {
-		if (!(element is Class || element is Interface || element is Struct)) {
-			return;
-		}
+		if (element is Class || element is Interface || element is Struct) {
+			var chart = new Charts.Hierarchy (image_factory, element);
+			chart.save (this.get_img_path (element, "png"), "png");
 
-		string realimgpath = this.get_img_real_path (element);
-		string imgpath = this.get_img_path (element);
+			writer.start_tag ("h2", {"class", css_title}).text ("Object Hierarchy:").end_tag ("h2");
 
-		if (element is Class) {
-			Diagrams.write_class_diagram ((Class)element, realimgpath);
+			writer.simple_tag ("img", {"class", css_diagram, "usemap", "#"+element.full_name (),"alt", "Object hierarchy for %s".printf (element.name), "src", this.get_img_path_html (element, "png")});
+			writer.add_usemap (chart);
 		}
-		else if (element is Interface) {
-			Diagrams.write_interface_diagram ((Interface)element, realimgpath);
-		}
-		else if (element is Struct) {
-			Diagrams.write_struct_diagram ((Struct)element, realimgpath);
-		}
-
-		writer.start_tag ("h2", {"class", css_title}).text ("Object Hierarchy:").end_tag ("h2");
-		writer.image (imgpath, "Object hierarchy for %s".printf (element.name), css_diagram);
 	}
 
 	public void write_namespace_content (Namespace node, Api.Node? parent) {

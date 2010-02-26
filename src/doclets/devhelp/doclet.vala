@@ -42,7 +42,6 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 
 	construct {
 		_renderer = new HtmlRenderer (this);
-		icon_directory = "";
 	}
 
 	private string get_path (Api.Node element) {
@@ -52,6 +51,11 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 	private string get_real_path (Api.Node element) {
 		return GLib.Path.build_filename (this.settings.path, this.package_dir_name, element.full_name () + ".html");
 	}
+
+	protected override string get_icon_directory () {
+		return "";
+	}
+
 
 	public override void process (Settings settings, Api.Tree tree) {
 		base.process (settings, tree);

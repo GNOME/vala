@@ -24,7 +24,6 @@ lib_LTLIBRARIES = \
 
 libvaladoc_la_VALASOURCES = \
 	doclet.vala \
-	drawer.vala \
 	errorreporter.vala \
 	filehelper.vala \
 	moduleloader.vala \
@@ -97,6 +96,10 @@ libvaladoc_la_VALASOURCES = \
 	content/tablerow.vala \
 	content/taglet.vala \
 	content/text.vala \
+	charts/chart.vala \
+	charts/chartfactory.vala \
+	charts/hierarchychart.vala \
+	charts/simplechartfactory.vala \
 	parser/manyrule.vala \
 	parser/oneofrule.vala \
 	parser/optionalrule.vala \
@@ -119,6 +122,7 @@ libvaladoc_la_VALASOURCES = \
 	taglets/tagletsince.vala \
 	taglets/tagletthrows.vala \
 	html/basicdoclet.vala \
+	html/htmlchartfactory.vala \
 	html/linkhelper.vala \
 	html/cssclassresolver.vala \
 	html/htmlmarkupwriter.vala \
@@ -141,7 +145,7 @@ libvaladocincludedir = $(includedir)/
 
 
 libvaladoc.vala.stamp: $(libvaladoc_la_VALASOURCES)
-	$(VALAC) $(VALAFLAGS) -C -H valadoc-1.0.h --pkg gee-1.0 --pkg vala-1.0 --pkg libgvc --pkg gmodule-2.0 --vapidir $(top_srcdir)/src/vapi --pkg libgvc --pkg config --library valadoc-1.0 --basedir $(top_srcdir)/src/libvaladoc/ --save-temps $^
+	$(VALAC) $(VALAFLAGS) -C -H valadoc-1.0.h --pkg gee-1.0 --pkg vala-1.0 --pkg libgvc --pkg gmodule-2.0 --pkg libgvc --vapidir $(top_srcdir)/src/vapi --pkg config --library valadoc-1.0 --basedir $(top_srcdir)/src/libvaladoc/ --save-temps $^
 	touch $@
 
 

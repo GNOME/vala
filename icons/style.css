@@ -10,6 +10,7 @@ ul.external_link {
 }
 
 .main_diagram {
+	border-style: none;
 	display: block;
 	margin: 0px auto;
 }
