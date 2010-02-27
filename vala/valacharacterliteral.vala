@@ -78,6 +78,10 @@ public class Vala.CharacterLiteral : Literal {
 		return true;
 	}
 
+	public override string to_string () {
+		return value;
+	}
+
 	public override bool check (SemanticAnalyzer analyzer) {
 		if (checked) {
 			return !error;
