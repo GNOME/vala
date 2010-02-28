@@ -713,23 +713,44 @@ internal class Vala.GObjectModule : GTypeModule {
 	}
 
 	public override void visit_method_call (MethodCall expr) {
-		if (expr.call is MemberAccess && expr.call.symbol_reference == gobject_type) {
-			// Object (...) chain up
-			// check it's only used with valid properties
-			foreach (var arg in expr.get_argument_list ()) {
-				var named_argument = arg as NamedArgument;
-				if (named_argument == null) {
-					Report.error (arg.source_reference, "Named argument expected");
-					break;
-				}
-				var prop = SemanticAnalyzer.symbol_lookup_inherited (current_class, named_argument.name) as Property;
-				if (prop == null) {
-					Report.error (arg.source_reference, "Property `%s' not found in `%s'".printf (named_argument.name, current_class.get_full_name ()));
-					break;
-				}
-				if (!arg.value_type.compatible (prop.property_type)) {
-					Report.error (arg.source_reference, "Cannot convert from `%s' to `%s'".printf (arg.value_type.to_string (), prop.property_type.to_string ()));
-					break;
+		if (expr.call is MemberAccess) {
+			var ma = expr.call as MemberAccess;
+			if (ma.inner != null && ma.inner.symbol_reference == gobject_type && ma.member_name == "new") {
+				// Object.new (...) creation
+				// runtime check to ref_sink the instance if it's a floating type
+				base.visit_method_call (expr);
+
+				var ccomma = new CCodeCommaExpression ();
+				var temp_var = get_temp_variable (expr.value_type, false, expr, false);
+				temp_vars.insert (0, temp_var);
+				ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), (CCodeExpression) expr.ccodenode));
+
+				var is_floating_ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_is_floating"));
+				is_floating_ccall.add_argument (get_variable_cexpression (temp_var.name));
+				var sink_ref_ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_ref_sink"));
+				sink_ref_ccall.add_argument (get_variable_cexpression (temp_var.name));
+				ccomma.append_expression (new CCodeConditionalExpression (is_floating_ccall, sink_ref_ccall, get_variable_cexpression (temp_var.name)));
+
+				expr.ccodenode = ccomma;
+				return;
+			} else if (ma.symbol_reference == gobject_type) {
+				// Object (...) chain up
+				// check it's only used with valid properties
+				foreach (var arg in expr.get_argument_list ()) {
+					var named_argument = arg as NamedArgument;
+					if (named_argument == null) {
+						Report.error (arg.source_reference, "Named argument expected");
+						break;
+					}
+					var prop = SemanticAnalyzer.symbol_lookup_inherited (current_class, named_argument.name) as Property;
+					if (prop == null) {
+						Report.error (arg.source_reference, "Property `%s' not found in `%s'".printf (named_argument.name, current_class.get_full_name ()));
+						break;
+					}
+					if (!arg.value_type.compatible (prop.property_type)) {
+						Report.error (arg.source_reference, "Cannot convert from `%s' to `%s'".printf (arg.value_type.to_string (), prop.property_type.to_string ()));
+						break;
+					}
 				}
 			}
 		}
