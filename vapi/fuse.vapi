@@ -58,7 +58,7 @@ namespace Fuse {
 	[CCode (has_target = false)]
 	public delegate int ReadLink (string path, char* buf, size_t size);
 	[CCode (has_target = false)]
-	public delegate int ReadDir (string path, void* buf, FillDir filler, Posix.off_t offset, FileInfo fi);
+	public delegate int ReadDir (string path, void* buf, FillDir filler, Posix.off_t offset, ref FileInfo fi);
 	[CCode (has_target = false)]
 	public delegate int MkNod (string path, Posix.mode_t mode, Posix.dev_t rdev);
 	[CCode (has_target = false)]
@@ -82,17 +82,19 @@ namespace Fuse {
 	[CCode (has_target = false)]
 	public delegate int Utimens (string path, Posix.timespec[] ts);
 	[CCode (has_target = false)]
-	public delegate int Open (string path, FileInfo fi);
+	public delegate int Create(string path, mode_t mode, ref FileInfo fi);
 	[CCode (has_target = false)]
-	public delegate int Read (string path, char* buf, size_t size, Posix.off_t offset, FileInfo fi);
+	public delegate int Open (string path, ref FileInfo fi);
 	[CCode (has_target = false)]
-	public delegate int Write (string path, char* buf, size_t size, Posix.off_t offset, FileInfo fi);
+	public delegate int Read (string path, char* buf, size_t size, Posix.off_t offset, ref FileInfo fi);
+	[CCode (has_target = false)]
+	public delegate int Write (string path, char* buf, size_t size, Posix.off_t offset, ref FileInfo fi);
 	[CCode (has_target = false)]
 	public delegate int StatFs (string path, Posix.statvfs *stbuf);
 	[CCode (has_target = false)]
-	public delegate int Release (string path, FileInfo fi);
+	public delegate int Release (string path, ref FileInfo fi);
 	[CCode (has_target = false)]
-	public delegate int Fsync (string path, int isdatasync, FileInfo fi);
+	public delegate int Fsync (string path, int isdatasync, ref FileInfo fi);
 
 	[CCode (has_target = false)]
 	public delegate int SetXAttr (string path, string name, char* value, size_t size, int flags);
@@ -120,6 +122,7 @@ namespace Fuse {
 		public Chown chown;
 		public Truncate truncate;
 		public Utimens utimens;
+		public Create create;
 		public Open open;
 		public Read read;
 		public Write write;
