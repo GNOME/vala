@@ -1,6 +1,6 @@
 /* valaobjectcreationexpression.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -200,7 +200,11 @@ public class Vala.ObjectCreationExpression : Expression {
 
 			if (type_sym is Class) {
 				type = (TypeSymbol) type_sym;
-				type_reference = new ObjectType ((Class) type);
+				if (((Class) type).is_error_base) {
+					type_reference = new ErrorType (null, null, source_reference);
+				} else {
+					type_reference = new ObjectType ((Class) type);
+				}
 			} else if (type_sym is Struct) {
 				type = (TypeSymbol) type_sym;
 				type_reference = new StructValueType ((Struct) type);
