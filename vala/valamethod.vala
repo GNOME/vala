@@ -367,7 +367,7 @@ public class Vala.Method : Member {
 	public virtual string get_default_cname () {
 		if (name == "main" && parent_symbol.name == null) {
 			// avoid conflict with generated main function
-			return "_main";
+			return "_vala_main";
 		} else if (name.has_prefix ("_")) {
 			return "_%s%s".printf (parent_symbol.get_lower_case_cprefix (), name.offset (1));
 		} else {
