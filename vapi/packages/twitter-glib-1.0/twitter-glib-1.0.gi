@@ -295,7 +295,7 @@
 					<parameter name="client" type="TwitterClient*"/>
 					<parameter name="handle" type="gulong"/>
 					<parameter name="status" type="TwitterStatus*"/>
-					<parameter name="error" type="gpointer"/>
+					<parameter name="error" type="GError*"/>
 				</parameters>
 			</signal>
 			<signal name="timeline-complete" when="LAST">
@@ -310,7 +310,7 @@
 					<parameter name="client" type="TwitterClient*"/>
 					<parameter name="handle" type="gulong"/>
 					<parameter name="user" type="TwitterUser*"/>
-					<parameter name="error" type="gpointer"/>
+					<parameter name="error" type="GError*"/>
 				</parameters>
 			</signal>
 			<signal name="user-verified" when="LAST">
@@ -319,7 +319,7 @@
 					<parameter name="client" type="TwitterClient*"/>
 					<parameter name="handle" type="gulong"/>
 					<parameter name="is_verified" type="gboolean"/>
-					<parameter name="error" type="gpointer"/>
+					<parameter name="error" type="GError*"/>
 				</parameters>
 			</signal>
 		</object>

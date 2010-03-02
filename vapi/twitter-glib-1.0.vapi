@@ -50,10 +50,10 @@ namespace Twitter {
 		public string user_agent { owned get; construct; }
 		public virtual signal bool authenticate (Twitter.AuthState state);
 		public virtual signal void session_ended ();
-		public virtual signal void status_received (ulong handle, Twitter.Status status, void* error);
+		public virtual signal void status_received (ulong handle, Twitter.Status status, GLib.Error error);
 		public virtual signal void timeline_complete ();
-		public virtual signal void user_received (ulong handle, Twitter.User user, void* error);
-		public virtual signal void user_verified (ulong handle, bool is_verified, void* error);
+		public virtual signal void user_received (ulong handle, Twitter.User user, GLib.Error error);
+		public virtual signal void user_verified (ulong handle, bool is_verified, GLib.Error error);
 	}
 	[CCode (cheader_filename = "twitter-glib/twitter-glib.h")]
 	public class Status : GLib.InitiallyUnowned {
