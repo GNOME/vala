@@ -3791,7 +3791,7 @@ namespace GLib {
 		public VariantIter iterator ();
 	}
 
-        [Compact]
+	[Compact]
 	[CCode (copy_func = "g_variant_iter_copy", free_func = "g_variant_iter_free")]
 	public class VariantIter {
 		public VariantIter (Variant value);
@@ -3804,30 +3804,12 @@ namespace GLib {
 	[CCode (ref_function = "g_variant_builder_ref", unref_function = "g_variant_builder_unref")]
 	public class VariantBuilder {
 		public VariantBuilder (VariantType type);
-
-                [CCode (cname = "g_variant_builder_end")]
-		private static Variant end_ (owned VariantBuilder self);
-                [CCode (cname = "_vapi_g_variant_builder_end")]
-		public Variant end () {
-			return end_ (this);
-		}
-
-                [CCode (cname = "g_variant_builder_open")]
-		private static VariantBuilder open_ (owned VariantBuilder self, VariantType type);
-                [CCode (cname = "_vapi_g_variant_builder_open")]
-		public VariantBuilder open (VariantType type) {
-			return open_ (this, type);
-		}
-
-                [CCode (cname = "g_variant_builder_close")]
-		private static VariantBuilder close_ (owned VariantBuilder self);
-                [CCode (cname = "_vapi_g_variant_builder_close")]
-		public VariantBuilder close () {
-			return close_ (this);
-		}
-
+		public void open (VariantType type);
+		public void close ();
 		public void add_value (Variant value);
 		public void add (string format_string, ...);
+		[CCode (returns_floating_reference = true)]
+		public Variant end ();
 	}
 
 	[CCode (cname = "G_LIKELY", cheader_filename = "glib.h")]
