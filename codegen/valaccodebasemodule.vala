@@ -3163,11 +3163,19 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 		var local_vars = b.get_local_variables ();
 		foreach (LocalVariable local in local_vars) {
-			if (local.active && !local.floating && requires_destroy (local.variable_type)) {
+			if (local.active && !local.floating && !local.captured && requires_destroy (local.variable_type)) {
 				var ma = new MemberAccess.simple (local.name);
 				ma.symbol_reference = local;
 				cfrag.append (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma)));
 			}
+		}
+
+		if (b.captured) {
+			int block_id = get_block_id (b);
+
+			var data_unref = new CCodeFunctionCall (new CCodeIdentifier ("block%d_data_unref".printf (block_id)));
+			data_unref.add_argument (get_variable_cexpression ("_data%d_".printf (block_id)));
+			cfrag.append (new CCodeExpressionStatement (data_unref));
 		}
 
 		if (sym == current_try.body) {
