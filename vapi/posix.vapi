@@ -902,6 +902,14 @@ namespace Posix {
 	[CCode (cname = "pid_t", default_value = "0", cheader_filename = "sys/types.h")]
 	public struct pid_t {
 	}
+
+	[CCode (cname = "struct sigaction", cheader_filename = "signal.h")]
+	public struct sigaction_t {
+		sighandler_t sa_handler;
+		sigset_t     sa_mask;
+		int          sa_flags;
+	}
+
 	[CCode (cheader_filename = "signal.h")]
 	public int kill (pid_t pid, int signum);
 	[CCode (cheader_filename = "signal.h")]
@@ -926,6 +934,8 @@ namespace Posix {
 	public int sigpending (sigset_t sigset);
 	[CCode (cheader_filename = "signal.h")]
 	public int sigwait (sigset_t sigset, out int sig);
+	[CCode (cheader_filename = "signal.h")]
+	public int sigaction (int signum, sigaction_t? act, out sigaction_t? oldact);
 
 	[CCode (has_target = false, cheader_filename = "signal.h")]
 	public delegate void sighandler_t (int signal);
