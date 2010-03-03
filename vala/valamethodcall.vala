@@ -1,6 +1,6 @@
 /* valamethodcall.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -510,6 +510,9 @@ public class Vala.MethodCall : Expression {
 
 					add_error_type (call_error_type);
 				}
+			}
+			if (m.returns_floating_reference) {
+				value_type.floating_reference = true;
 			}
 		} else if (mtype is DelegateType) {
 			var d = ((DelegateType) mtype).delegate_symbol;

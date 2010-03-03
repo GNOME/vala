@@ -1,6 +1,6 @@
 /* valamethod.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
@@ -118,6 +118,8 @@ public class Vala.Method : Member {
 	 * Specifies whether this method should be inlined.
 	 */
 	public bool is_inline { get; set; }
+
+	public bool returns_floating_reference { get; set; }
 
 	/**
 	 * Specifies whether the C method returns a new instance pointer which
@@ -457,6 +459,9 @@ public class Vala.Method : Member {
 		if (a.has_argument ("generic_type_pos")) {
 			has_generic_type_parameter = true;
 			generic_type_parameter_position = a.get_double ("generic_type_pos");
+		}
+		if (a.has_argument ("returns_floating_reference")) {
+			returns_floating_reference = a.get_bool ("returns_floating_reference");
 		}
 	}
 	
