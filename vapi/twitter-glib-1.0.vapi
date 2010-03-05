@@ -157,8 +157,14 @@ namespace Twitter {
 		FAILED,
 		SUCCESS
 	}
+	[CCode (cprefix = "TWITTER_", cheader_filename = "twitter-glib/twitter-glib.h")]
+	public enum Provider {
+		CUSTOM_PROVIDER,
+		DEFAULT_PROVIDER,
+		IDENTI_CA
+	}
 	[CCode (cprefix = "TWITTER_ERROR_", cheader_filename = "twitter-glib/twitter-glib.h")]
-	public enum Error {
+	public errordomain Error {
 		HOST_NOT_FOUND,
 		CANCELLED,
 		PERMISSION_DENIED,
@@ -166,13 +172,7 @@ namespace Twitter {
 		TIMED_OUT,
 		FAILED,
 		NOT_MODIFIED,
-		PARSE_ERROR
-	}
-	[CCode (cprefix = "TWITTER_", cheader_filename = "twitter-glib/twitter-glib.h")]
-	public enum Provider {
-		CUSTOM_PROVIDER,
-		DEFAULT_PROVIDER,
-		IDENTI_CA
+		PARSE_ERROR,
 	}
 	[CCode (cheader_filename = "twitter-glib/twitter-glib.h")]
 	public const string GLIB_API_VERSION_S;
@@ -189,7 +189,7 @@ namespace Twitter {
 	[CCode (cheader_filename = "twitter-glib/twitter-glib.h")]
 	public static bool date_to_time_val (string date, out GLib.TimeVal time_);
 	[CCode (cheader_filename = "twitter-glib/twitter-glib.h")]
-	public static Twitter.Error error_from_status (uint status);
+	public static unowned Twitter.Error error_from_status (uint status);
 	[CCode (cheader_filename = "twitter-glib/twitter-glib.h")]
 	public static GLib.Quark error_quark ();
 	[CCode (cheader_filename = "twitter-glib/twitter-glib.h")]
