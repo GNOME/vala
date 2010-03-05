@@ -88,6 +88,9 @@ namespace Gvc {
 
 		[CCode (cname = "gvRenderJobs")]
 		public int render_jobs (Graph graph);
+
+		[CCode (cname = "gvRenderData")]
+		public int render_data (Graph graph, [CCode (type = "char*")] string file_type, [CCode (type = "char**")] out uint8[] output_data);
 	}
 
 	[Compact]
@@ -124,6 +127,9 @@ namespace Gvc {
 
 		[CCode (cname = "agread")]
 		public static Graph read (GLib.FileStream file);
+
+		[CCode (cname = "agmemread")]
+		public static Graph read_string (string str);
 
 		[CCode (cname = "agnode")]
 		public Node create_node ([CCode (type = "char*")] string node_name);
