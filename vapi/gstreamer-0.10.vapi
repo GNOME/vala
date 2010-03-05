@@ -64,15 +64,14 @@ namespace Gst {
 	[CCode (ref_function = "gst_buffer_ref", unref_function = "gst_buffer_unref", cheader_filename = "gst/gst.h")]
 	public class Buffer : Gst.MiniObject {
 		public weak Gst.Caps caps;
-		[CCode (array_length = false)]
-		public weak uchar[] data;
+		[CCode (array_length_cname = "size")]
+		public weak uint8[] data;
 		public Gst.ClockTime duration;
 		public weak GLib.FreeFunc free_func;
 		public uchar malloc_data;
 		public uint64 offset;
 		public uint64 offset_end;
 		public weak Gst.Buffer parent;
-		public uint size;
 		public Gst.ClockTime timestamp;
 		public Buffer ();
 		[CCode (has_construct_function = false)]
