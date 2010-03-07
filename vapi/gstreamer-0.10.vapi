@@ -883,7 +883,7 @@ namespace Gst {
 		public void set_query_function (Gst.PadQueryFunction query);
 		public void set_setcaps_function (Gst.PadSetCapsFunction setcaps);
 		public void set_unlink_function (Gst.PadUnlinkFunction unlink);
-		public bool start_task (Gst.TaskFunction func, void* data);
+		public bool start_task (Gst.TaskFunction func);
 		public bool stop_task ();
 		public bool unlink (Gst.Pad sinkpad);
 		public void use_fixed_caps ();
