@@ -190,6 +190,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	public TypeSymbol gptrarray_type;
 	public TypeSymbol gthreadpool_type;
 	public DataType gquark_type;
+	public DataType genumvalue_type;
 	public Struct gvalue_type;
 	public Struct mutex_type;
 	public TypeSymbol type_module_type;
@@ -332,6 +333,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			gthreadpool_type = (TypeSymbol) glib_ns.scope.lookup ("ThreadPool");
 
 			gquark_type = new IntegerType ((Struct) glib_ns.scope.lookup ("Quark"));
+			genumvalue_type = new ObjectType ((Class) glib_ns.scope.lookup ("EnumValue"));
 			gvalue_type = (Struct) glib_ns.scope.lookup ("Value");
 			mutex_type = (Struct) glib_ns.scope.lookup ("StaticRecMutex");
 

@@ -1934,13 +1934,19 @@ internal class Vala.GTypeModule : GErrorModule {
 			return;
 		}
 
+		var ccomma = new CCodeCommaExpression ();
+		var temp_var = get_temp_variable (genumvalue_type, false, expr, false);
+		temp_vars.insert (0, temp_var);
+
 		var class_ref = new CCodeFunctionCall (new CCodeIdentifier ("g_type_class_ref"));
 		class_ref.add_argument (new CCodeIdentifier (ma.inner.value_type.get_type_id ()));
-
 		var get_value = new CCodeFunctionCall (new CCodeIdentifier ("g_enum_get_value"));
 		get_value.add_argument (class_ref);
 		get_value.add_argument ((CCodeExpression) get_ccodenode (((MemberAccess) expr.call).inner));
-		var value_name = new CCodeMemberAccess.pointer (get_value, "value_name");
-		expr.ccodenode = value_name;
+
+		ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), get_value));
+		var is_null_value = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_variable_cexpression (temp_var.name), new CCodeIdentifier ("NULL"));
+		ccomma.append_expression (new CCodeConditionalExpression (is_null_value, new CCodeMemberAccess.pointer (get_variable_cexpression (temp_var.name), "value_name"), new CCodeIdentifier ("NULL")));
+		expr.ccodenode = ccomma;
 	}
 }
