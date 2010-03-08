@@ -116,9 +116,24 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 		// ensure that possibly owned (string) expression stays alive
 		expression.target_type = expression.value_type.copy ();
 
+		var labelset = new HashSet<string> (str_hash, str_equal);
 		foreach (SwitchSection section in sections) {
 			section.check (analyzer);
 
+			// check for duplicate literal case labels
+			// FIXME: make it work for all constant expressions
+			foreach (SwitchLabel label in section.get_labels ()) {
+				string? value = null;
+				if (label.expression is StringLiteral) {
+					value = ((StringLiteral)label.expression).eval ();
+				} else if (label.expression is Literal) {
+					value = ((Literal)label.expression).to_string ();
+				}
+
+				if (value != null && !labelset.add (value)) {
+					Report.error (label.expression.source_reference, "Switch statement already contains this label");
+				}
+			}
 			add_error_types (section.get_error_types ());
 		}
 
