@@ -2663,6 +2663,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		// declaration
 
 		var function = new CCodeFunction (destroy_func, "void");
+		function.modifiers = CCodeModifiers.STATIC;
 		function.add_parameter (new CCodeFormalParameter ("self", type.get_cname ()));
 
 		// definition
