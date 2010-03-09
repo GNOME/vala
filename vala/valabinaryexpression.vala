@@ -97,7 +97,7 @@ public class Vala.BinaryExpression : Expression {
 		}
 	}
 
-	private string get_operator_string () {
+	public string get_operator_string () {
 		switch (_operator) {
 		case BinaryOperator.PLUS: return "+";
 		case BinaryOperator.MINUS: return "-";
