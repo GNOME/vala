@@ -196,6 +196,7 @@ namespace GData {
 		public unowned string get_extended_property (string name);
 		public unowned GLib.List get_groups ();
 		public unowned GLib.List get_im_addresses ();
+		public unowned GData.GDName get_name ();
 		public unowned GLib.List get_organizations ();
 		public unowned GLib.List get_phone_numbers ();
 		public unowned string get_photo (GData.ContactsService service, size_t length, string content_type, GLib.Cancellable cancellable) throws GLib.Error;
@@ -207,6 +208,11 @@ namespace GData {
 		public unowned GData.GDPostalAddress get_primary_postal_address ();
 		public bool is_deleted ();
 		public bool is_group_deleted (string href);
+		public void remove_all_email_addresses ();
+		public void remove_all_im_addresses ();
+		public void remove_all_organizations ();
+		public void remove_all_phone_numbers ();
+		public void remove_all_postal_addresses ();
 		public void remove_group (string href);
 		public bool set_extended_property (string name, string value);
 		public bool set_photo (GData.Service service, string data, size_t length, GLib.Cancellable cancellable) throws GLib.Error;
@@ -215,6 +221,7 @@ namespace GData {
 		public GLib.TimeVal edited { get; }
 		[NoAccessorMethod]
 		public bool has_photo { get; }
+		public GData.GDName name { get; }
 	}
 	[CCode (cheader_filename = "gdata/gdata.h")]
 	public class ContactsQuery : GData.Query {
@@ -245,6 +252,107 @@ namespace GData {
 		public unowned GData.ContactsContact update_contact (GData.ContactsContact contact, GLib.Cancellable cancellable) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gdata/gdata.h")]
+	public class DocumentsEntry : GData.Entry, GData.AccessHandler {
+		public unowned string get_document_id ();
+		public void get_edited (GLib.TimeVal edited);
+		public unowned GData.Author get_last_modified_by ();
+		public void get_last_viewed (GLib.TimeVal last_viewed);
+		public unowned string get_path ();
+		public void set_writers_can_invite (bool writers_can_invite);
+		public string document_id { get; }
+		public GLib.TimeVal edited { get; }
+		[NoAccessorMethod]
+		public bool is_deleted { get; set; }
+		public GData.Author last_modified_by { get; }
+		public GLib.TimeVal last_viewed { get; }
+		[NoAccessorMethod]
+		public bool writers_can_invite { get; set; }
+	}
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public class DocumentsFeed : GData.Feed {
+	}
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public class DocumentsFolder : GData.DocumentsEntry, GData.AccessHandler {
+		[CCode (has_construct_function = false)]
+		public DocumentsFolder (string id);
+	}
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public class DocumentsPresentation : GData.DocumentsEntry, GData.AccessHandler {
+		[CCode (has_construct_function = false)]
+		public DocumentsPresentation (string id);
+		public unowned GLib.File download_document (GData.DocumentsService service, string content_type, GData.DocumentsPresentationFormat export_format, GLib.File destination_file, bool replace_file_if_exists, GLib.Cancellable cancellable) throws GLib.Error;
+		public unowned string get_download_uri (GData.DocumentsPresentationFormat export_format);
+	}
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public class DocumentsQuery : GData.Query {
+		[CCode (has_construct_function = false)]
+		public DocumentsQuery (string q);
+		public void add_collaborator (string email_address);
+		public void add_reader (string email_address);
+		public unowned GLib.List get_collaborator_addresses ();
+		public bool get_exact_title ();
+		public unowned string get_folder_id ();
+		public unowned GLib.List get_reader_addresses ();
+		public unowned string get_title ();
+		public void set_folder_id (string folder_id);
+		public void set_show_deleted (bool show_deleted);
+		public void set_show_folders (bool show_folders);
+		public void set_title (string title, bool exact_title);
+		[CCode (has_construct_function = false)]
+		public DocumentsQuery.with_limits (string q, int start_index, int max_results);
+		[NoAccessorMethod]
+		public bool exact_title { get; set; }
+		public string folder_id { get; set; }
+		[NoAccessorMethod]
+		public bool show_deleted { get; set; }
+		[NoAccessorMethod]
+		public bool show_folders { get; set; }
+		public string title { get; set; }
+	}
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public class DocumentsService : GData.Service {
+		[CCode (has_construct_function = false)]
+		public DocumentsService (string client_id);
+		public static GLib.Quark error_quark ();
+		public static unowned string get_upload_uri (GData.DocumentsFolder folder);
+		public unowned GData.DocumentsEntry move_document_to_folder (GData.DocumentsEntry document, GData.DocumentsFolder folder, GLib.Cancellable cancellable) throws GLib.Error;
+		public unowned GData.DocumentsFeed query_documents (GData.DocumentsQuery query, GLib.Cancellable cancellable, GData.QueryProgressCallback progress_callback, void* progress_user_data) throws GLib.Error;
+		public async void query_documents_async (GData.DocumentsQuery query, GLib.Cancellable cancellable, GData.QueryProgressCallback progress_callback, void* progress_user_data);
+		public unowned GData.DocumentsEntry query_single_document (GLib.Type document_type, string document_id, GLib.Cancellable cancellable) throws GLib.Error;
+		public unowned GData.DocumentsEntry remove_document_from_folder (GData.DocumentsEntry document, GData.DocumentsFolder folder, GLib.Cancellable cancellable) throws GLib.Error;
+		public unowned GData.DocumentsEntry update_document (GData.DocumentsEntry document, GLib.File document_file, GLib.Cancellable cancellable) throws GLib.Error;
+		public unowned GData.DocumentsEntry upload_document (GData.DocumentsEntry document, GLib.File document_file, GData.DocumentsFolder folder, GLib.Cancellable cancellable) throws GLib.Error;
+		[NoAccessorMethod]
+		public GData.Service spreadsheet_service { owned get; }
+	}
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public class DocumentsSpreadsheet : GData.DocumentsEntry, GData.AccessHandler {
+		[CCode (has_construct_function = false)]
+		public DocumentsSpreadsheet (string id);
+		public unowned GLib.File download_document (GData.DocumentsService service, string content_type, GData.DocumentsSpreadsheetFormat export_format, int gid, GLib.File destination_file, bool replace_file_if_exists, GLib.Cancellable cancellable) throws GLib.Error;
+		public unowned string get_download_uri (GData.DocumentsSpreadsheetFormat export_format, int gid);
+	}
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public class DocumentsText : GData.DocumentsEntry, GData.AccessHandler {
+		[CCode (has_construct_function = false)]
+		public DocumentsText (string id);
+		public unowned GLib.File download_document (GData.DocumentsService service, string content_type, GData.DocumentsTextFormat export_format, GLib.File destination_file, bool replace_file_if_exists, GLib.Cancellable cancellable) throws GLib.Error;
+		public unowned string get_download_uri (GData.DocumentsTextFormat export_format);
+	}
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public class DownloadStream : GLib.InputStream, GLib.Seekable {
+		[CCode (type = "GInputStream*", has_construct_function = false)]
+		public DownloadStream (GData.Service service, string download_uri);
+		public ssize_t get_content_length ();
+		public unowned string get_content_type ();
+		public unowned string get_download_uri ();
+		public unowned GData.Service get_service ();
+		public long content_length { get; }
+		public string content_type { get; }
+		public string download_uri { get; construct; }
+		public GData.Service service { get; construct; }
+	}
+	[CCode (cheader_filename = "gdata/gdata.h")]
 	public class Entry : GData.Parsable {
 		[CCode (has_construct_function = false)]
 		public Entry (string id);
@@ -256,11 +364,14 @@ namespace GData {
 		public unowned string get_etag ();
 		public unowned string get_id ();
 		public void get_published (GLib.TimeVal published);
+		public unowned string get_rights ();
 		public unowned string get_summary ();
 		public unowned string get_title ();
 		public void get_updated (GLib.TimeVal updated);
 		public unowned GData.Link look_up_link (string rel);
+		public unowned GLib.List look_up_links (string rel);
 		public void set_content (string content);
+		public void set_rights (string rights);
 		public void set_summary (string summary);
 		public void set_title (string title);
 		public string content { get; set; }
@@ -269,17 +380,19 @@ namespace GData {
 		[NoAccessorMethod]
 		public bool is_inserted { get; }
 		public GLib.TimeVal published { get; }
+		public string rights { get; set; }
 		public string summary { get; set; }
 		public string title { get; set; }
 		public GLib.TimeVal updated { get; }
 	}
 	[CCode (cheader_filename = "gdata/gdata.h")]
 	public class Feed : GData.Parsable {
-		public unowned GLib.List get_authors ();
-		public unowned GLib.List get_categories ();
-		public unowned GLib.List get_entries ();
+		public unowned GLib.List<GData.Author> get_authors ();
+		public unowned GLib.List<GData.Category> get_categories ();
+		public unowned GLib.List<GData.Entry> get_entries ();
 		public unowned string get_etag ();
 		public unowned GData.Generator get_generator ();
+		public unowned string get_icon ();
 		public unowned string get_id ();
 		public uint get_items_per_page ();
 		public unowned GLib.List get_links ();
@@ -293,6 +406,7 @@ namespace GData {
 		public unowned GData.Link look_up_link (string rel);
 		public string etag { get; }
 		public GData.Generator generator { get; }
+		public string icon { get; }
 		public string id { get; }
 		public uint items_per_page { get; }
 		public string logo { get; }
@@ -308,17 +422,31 @@ namespace GData {
 		public GDEmailAddress (string address, string relation_type, string label, bool is_primary);
 		public int compare (GData.GDEmailAddress b);
 		public unowned string get_address ();
+		public unowned string get_display_name ();
 		public unowned string get_label ();
 		public unowned string get_relation_type ();
 		public void set_address (string address);
+		public void set_display_name (string display_name);
 		public void set_is_primary (bool is_primary);
 		public void set_label (string label);
 		public void set_relation_type (string relation_type);
 		public string address { get; set; }
+		public string display_name { get; set; }
 		[NoAccessorMethod]
 		public bool is_primary { get; set; }
 		public string label { get; set; }
 		public string relation_type { get; set; }
+	}
+	[Compact]
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public class GDFeedLink {
+		public uint count_hint;
+		public weak string href;
+		public bool read_only;
+		public weak string rel;
+		[CCode (has_construct_function = false)]
+		public GDFeedLink (string href, string rel, uint count_hint, bool read_only);
+		public int compare (GData.GDFeedLink b);
 	}
 	[CCode (cheader_filename = "gdata/gdata.h")]
 	public class GDIMAddress : GData.Parsable {
@@ -352,24 +480,60 @@ namespace GData {
 		public string relation_type { get; set; }
 	}
 	[CCode (cheader_filename = "gdata/gdata.h")]
+	public class GDName : GData.Parsable {
+		[CCode (has_construct_function = false)]
+		public GDName (string given_name, string family_name);
+		public int compare (GData.GDName b);
+		public unowned string get_additional_name ();
+		public unowned string get_family_name ();
+		public unowned string get_full_name ();
+		public unowned string get_given_name ();
+		public unowned string get_prefix ();
+		public unowned string get_suffix ();
+		public void set_additional_name (string additional_name);
+		public void set_family_name (string family_name);
+		public void set_full_name (string full_name);
+		public void set_given_name (string given_name);
+		public void set_prefix (string prefix);
+		public void set_suffix (string suffix);
+		public string additional_name { get; set; }
+		public string family_name { get; set; }
+		public string full_name { get; set; }
+		public string given_name { get; set; }
+		public string prefix { get; set; }
+		public string suffix { get; set; }
+	}
+	[CCode (cheader_filename = "gdata/gdata.h")]
 	public class GDOrganization : GData.Parsable {
 		[CCode (has_construct_function = false)]
 		public GDOrganization (string name, string title, string relation_type, string label, bool is_primary);
 		public int compare (GData.GDOrganization b);
+		public unowned string get_department ();
+		public unowned string get_job_description ();
 		public unowned string get_label ();
+		public unowned GData.GDWhere get_location ();
 		public unowned string get_name ();
 		public unowned string get_relation_type ();
+		public unowned string get_symbol ();
 		public unowned string get_title ();
+		public void set_department (string department);
 		public void set_is_primary (bool is_primary);
+		public void set_job_description (string job_description);
 		public void set_label (string label);
+		public void set_location (GData.GDWhere location);
 		public void set_name (string name);
 		public void set_relation_type (string relation_type);
+		public void set_symbol (string symbol);
 		public void set_title (string title);
+		public string department { get; set; }
 		[NoAccessorMethod]
 		public bool is_primary { get; set; }
+		public string job_description { get; set; }
 		public string label { get; set; }
+		public GData.GDWhere location { get; set; }
 		public string name { get; set; }
 		public string relation_type { get; set; }
+		public string symbol { get; set; }
 		public string title { get; set; }
 	}
 	[CCode (cheader_filename = "gdata/gdata.h")]
@@ -396,20 +560,69 @@ namespace GData {
 	[CCode (cheader_filename = "gdata/gdata.h")]
 	public class GDPostalAddress : GData.Parsable {
 		[CCode (has_construct_function = false)]
-		public GDPostalAddress (string address, string relation_type, string label, bool is_primary);
+		public GDPostalAddress (string relation_type, string label, bool is_primary);
 		public int compare (GData.GDPostalAddress b);
 		public unowned string get_address ();
+		public unowned string get_agent ();
+		public unowned string get_city ();
+		public unowned string get_country ();
+		public unowned string get_country_code ();
+		public unowned string get_house_name ();
 		public unowned string get_label ();
+		public unowned string get_mail_class ();
+		public unowned string get_neighborhood ();
+		public unowned string get_po_box ();
+		public unowned string get_postcode ();
+		public unowned string get_region ();
 		public unowned string get_relation_type ();
+		public unowned string get_street ();
+		public unowned string get_subregion ();
+		public unowned string get_usage ();
 		public void set_address (string address);
+		public void set_agent (string agent);
+		public void set_city (string city);
+		public void set_country (string country, string country_code);
+		public void set_house_name (string house_name);
 		public void set_is_primary (bool is_primary);
 		public void set_label (string label);
+		public void set_mail_class (string mail_class);
+		public void set_neighborhood (string neighborhood);
+		public void set_po_box (string po_box);
+		public void set_postcode (string postcode);
+		public void set_region (string region);
 		public void set_relation_type (string relation_type);
+		public void set_street (string street);
+		public void set_subregion (string subregion);
+		public void set_usage (string usage);
 		public string address { get; set; }
+		public string agent { get; set; }
+		public string city { get; set; }
+		public string country { get; }
+		public string country_code { get; }
+		public string house_name { get; set; }
 		[NoAccessorMethod]
 		public bool is_primary { get; set; }
 		public string label { get; set; }
+		public string mail_class { get; set; }
+		public string neighborhood { get; set; }
+		public string po_box { get; set; }
+		public string postcode { get; set; }
+		public string region { get; set; }
 		public string relation_type { get; set; }
+		public string street { get; set; }
+		public string subregion { get; set; }
+		public string usage { get; set; }
+	}
+	[Compact]
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public class GDRating {
+		public double average;
+		public uint max;
+		public uint min;
+		public uint num_raters;
+		[CCode (has_construct_function = false)]
+		public GDRating (uint min, uint max, uint num_raters, double average);
+		public int compare (GData.GDRating b);
 	}
 	[CCode (cheader_filename = "gdata/gdata.h")]
 	public class GDReminder : GData.Parsable {
@@ -483,6 +696,8 @@ namespace GData {
 	}
 	[CCode (cheader_filename = "gdata/gdata.h")]
 	public class Generator : GData.Parsable {
+		[CCode (has_construct_function = false)]
+		public Generator (string name, string uri, string version);
 		public int compare (GData.Generator b);
 		public unowned string get_name ();
 		public unowned string get_uri ();
@@ -531,6 +746,9 @@ namespace GData {
 	}
 	[CCode (cheader_filename = "gdata/gdata.h")]
 	public class MediaContent : GData.Parsable {
+		[CCode (has_construct_function = false)]
+		public MediaContent (string uri, string type, bool is_default, GData.MediaExpression expression, int duration, int format);
+		public unowned GLib.File download (GData.Service service, string default_filename, GLib.File target_dest_file, bool replace_file_if_exists, GLib.Cancellable cancellable) throws GLib.Error;
 		public unowned string get_content_type ();
 		public int64 get_duration ();
 		public GData.MediaExpression get_expression ();
@@ -552,6 +770,8 @@ namespace GData {
 	}
 	[CCode (cheader_filename = "gdata/gdata.h")]
 	public class MediaCredit : GData.Parsable {
+		[CCode (has_construct_function = false)]
+		public MediaCredit (string credit, bool partner);
 		public unowned string get_credit ();
 		public unowned string get_role ();
 		public unowned string get_scheme ();
@@ -559,12 +779,33 @@ namespace GData {
 		public string role { get; }
 		public string scheme { get; }
 	}
+	[Compact]
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public class MediaRating {
+		public weak string country;
+		public weak string scheme;
+		[CCode (has_construct_function = false)]
+		public MediaRating (string scheme, string country);
+	}
+	[Compact]
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public class MediaRestriction {
+		public weak string countries;
+		public bool relationship;
+		[CCode (has_construct_function = false)]
+		public MediaRestriction (string countries, bool relationship);
+	}
 	[CCode (cheader_filename = "gdata/gdata.h")]
 	public class MediaThumbnail : GData.Parsable {
+		[CCode (has_construct_function = false)]
+		public MediaThumbnail (string uri, uint width, uint height, int64 _time);
+		public static unowned string build_time (int64 _time);
+		public unowned GLib.File download (GData.Service service, string default_filename, GLib.File target_dest_file, bool replace_file_if_exists, GLib.Cancellable cancellable) throws GLib.Error;
 		public uint get_height ();
 		public int64 get_time ();
 		public unowned string get_uri ();
 		public uint get_width ();
+		public static int64 parse_time (string time_string);
 		public uint height { get; }
 		public int64 time { get; }
 		public string uri { get; }
@@ -586,7 +827,7 @@ namespace GData {
 		[NoWrapper]
 		public virtual bool pre_parse_xml (Xml.Doc doc, Xml.Node root_node) throws GLib.Error;
 	}
-	[CCode (type_check_function = "GDATA_IS_PICASAWEB_ALBUM", cheader_filename = "gdata/gdata.h")]
+	[CCode (type_check_function = "GDATA_IS_PICASAWEB_ALBUM",lower_case_cprefix="gdata_picasaweb_album_", cheader_filename = "gdata/gdata.h")]
 	public class PicasaWebAlbum : GData.Entry {
 		[CCode (cname = "gdata_picasaweb_album_new", has_construct_function = false)]
 		public PicasaWebAlbum (string id);
@@ -596,14 +837,12 @@ namespace GData {
 		public uint get_comment_count ();
 		[CCode (cname = "gdata_picasaweb_album_get_contents")]
 		public unowned GLib.List get_contents ();
-		[CCode (cname = "gdata_picasaweb_album_get_description")]
-		public unowned string get_description ();
+		[CCode (cname = "gdata_picasaweb_album_get_coordinates")]
+		public void get_coordinates (double latitude, double longitude);
 		[CCode (cname = "gdata_picasaweb_album_get_edited")]
 		public void get_edited (GLib.TimeVal edited);
 		[CCode (cname = "gdata_picasaweb_album_get_location")]
 		public unowned string get_location ();
-		[CCode (cname = "gdata_picasaweb_album_get_name")]
-		public unowned string get_name ();
 		[CCode (cname = "gdata_picasaweb_album_get_nickname")]
 		public unowned string get_nickname ();
 		[CCode (cname = "gdata_picasaweb_album_get_num_photos")]
@@ -620,8 +859,8 @@ namespace GData {
 		public unowned string get_user ();
 		[CCode (cname = "gdata_picasaweb_album_get_visibility")]
 		public GData.PicasaWebVisibility get_visibility ();
-		[CCode (cname = "gdata_picasaweb_album_set_description")]
-		public void set_description (string description);
+		[CCode (cname = "gdata_picasaweb_album_set_coordinates")]
+		public void set_coordinates (double latitude, double longitude);
 		[CCode (cname = "gdata_picasaweb_album_set_is_commenting_enabled")]
 		public void set_is_commenting_enabled (bool is_commenting_enabled);
 		[CCode (cname = "gdata_picasaweb_album_set_location")]
@@ -634,12 +873,14 @@ namespace GData {
 		public void set_visibility (GData.PicasaWebVisibility visibility);
 		public long bytes_used { get; }
 		public uint comment_count { get; }
-		public string description { get; set; }
 		public GLib.TimeVal edited { get; }
 		[NoAccessorMethod]
 		public bool is_commenting_enabled { get; set; }
+		[NoAccessorMethod]
+		public double latitude { get; set; }
 		public string location { get; set; }
-		public string name { get; }
+		[NoAccessorMethod]
+		public double longitude { get; set; }
 		public string nickname { get; }
 		public uint num_photos { get; }
 		public uint num_photos_remaining { get; }
@@ -648,7 +889,10 @@ namespace GData {
 		public string user { get; }
 		public GData.PicasaWebVisibility visibility { get; set; }
 	}
-	[CCode (type_check_function = "GDATA_IS_PICASAWEB_FILE", cheader_filename = "gdata/gdata.h")]
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public class PicasaWebFeed : GData.Feed {
+	}
+	[CCode (type_check_function = "GDATA_IS_PICASAWEB_FILE",lower_case_cprefix="gdata_picasaweb_file_", cheader_filename = "gdata/gdata.h")]
 	public class PicasaWebFile : GData.Entry {
 		[CCode (cname = "gdata_picasaweb_file_new", has_construct_function = false)]
 		public PicasaWebFile (string id);
@@ -664,12 +908,32 @@ namespace GData {
 		public uint get_comment_count ();
 		[CCode (cname = "gdata_picasaweb_file_get_contents")]
 		public unowned GLib.List get_contents ();
+		[CCode (cname = "gdata_picasaweb_file_get_coordinates")]
+		public void get_coordinates (double latitude, double longitude);
 		[CCode (cname = "gdata_picasaweb_file_get_credit")]
 		public unowned string get_credit ();
+		[CCode (cname = "gdata_picasaweb_file_get_distance")]
+		public double get_distance ();
 		[CCode (cname = "gdata_picasaweb_file_get_edited")]
 		public void get_edited (GLib.TimeVal edited);
+		[CCode (cname = "gdata_picasaweb_file_get_exposure")]
+		public double get_exposure ();
+		[CCode (cname = "gdata_picasaweb_file_get_flash")]
+		public bool get_flash ();
+		[CCode (cname = "gdata_picasaweb_file_get_focal_length")]
+		public double get_focal_length ();
+		[CCode (cname = "gdata_picasaweb_file_get_fstop")]
+		public double get_fstop ();
 		[CCode (cname = "gdata_picasaweb_file_get_height")]
 		public uint get_height ();
+		[CCode (cname = "gdata_picasaweb_file_get_image_unique_id")]
+		public unowned string get_image_unique_id ();
+		[CCode (cname = "gdata_picasaweb_file_get_iso")]
+		public int get_iso ();
+		[CCode (cname = "gdata_picasaweb_file_get_make")]
+		public unowned string get_make ();
+		[CCode (cname = "gdata_picasaweb_file_get_model")]
+		public unowned string get_model ();
 		[CCode (cname = "gdata_picasaweb_file_get_position")]
 		public double get_position ();
 		[CCode (cname = "gdata_picasaweb_file_get_rotation")]
@@ -696,6 +960,8 @@ namespace GData {
 		public void set_checksum (string checksum);
 		[CCode (cname = "gdata_picasaweb_file_set_client")]
 		public void set_client (string client);
+		[CCode (cname = "gdata_picasaweb_file_set_coordinates")]
+		public void set_coordinates (double latitude, double longitude);
 		[CCode (cname = "gdata_picasaweb_file_set_is_commenting_enabled")]
 		public void set_is_commenting_enabled (bool is_commenting_enabled);
 		[CCode (cname = "gdata_picasaweb_file_set_position")]
@@ -712,10 +978,23 @@ namespace GData {
 		public string client { get; set; }
 		public uint comment_count { get; }
 		public string credit { get; }
+		public double distance { get; }
 		public GLib.TimeVal edited { get; }
+		public double exposure { get; }
+		public bool flash { get; }
+		public double focal_length { get; }
+		public double fstop { get; }
 		public uint height { get; }
+		public string image_unique_id { get; }
 		[NoAccessorMethod]
 		public bool is_commenting_enabled { get; set; }
+		public long iso { get; }
+		[NoAccessorMethod]
+		public double latitude { get; set; }
+		[NoAccessorMethod]
+		public double longitude { get; set; }
+		public string make { get; }
+		public string model { get; }
 		public double position { get; set; }
 		public uint rotation { get; set; }
 		public ulong size { get; }
@@ -753,6 +1032,8 @@ namespace GData {
 		public void set_thumbnail_size (string thumbnail_size);
 		[CCode (cname = "gdata_picasaweb_query_set_visibility")]
 		public void set_visibility (GData.PicasaWebVisibility visibility);
+		[CCode (cname = "gdata_picasaweb_query_new_with_limits", has_construct_function = false)]
+		public PicasaWebQuery.with_limits (string q, int start_index, int max_results);
 		public string image_size { get; set; }
 		public string location { get; set; }
 		public string tag { get; set; }
@@ -763,14 +1044,41 @@ namespace GData {
 	public class PicasaWebService : GData.Service {
 		[CCode (cname = "gdata_picasaweb_service_new", has_construct_function = false)]
 		public PicasaWebService (string client_id);
+		[CCode (cname = "gdata_picasaweb_service_get_user")]
+		public unowned GData.PicasaWebUser get_user (string username, GLib.Cancellable cancellable) throws GLib.Error;
+		[CCode (cname = "gdata_picasaweb_service_insert_album")]
+		public unowned GData.PicasaWebAlbum insert_album (GData.PicasaWebAlbum album, GLib.Cancellable cancellable) throws GLib.Error;
 		[CCode (cname = "gdata_picasaweb_service_query_all_albums")]
 		public unowned GData.Feed query_all_albums (GData.Query? query, string? username, GLib.Cancellable? cancellable, GData.QueryProgressCallback? progress_callback) throws GLib.Error;
 		[CCode (cname = "gdata_picasaweb_service_query_all_albums_async")]
-		public async void query_all_albums_async (GData.Query query, string username, GLib.Cancellable cancellable, GData.QueryProgressCallback progress_callback, void* progress_user_data);
+		public async void query_all_albums_async (GData.Query? query, string username, GLib.Cancellable? cancellable, GData.QueryProgressCallback progress_callback);
 		[CCode (cname = "gdata_picasaweb_service_query_files")]
-		public unowned GData.Feed query_files (GData.PicasaWebAlbum album, GData.Query query, GLib.Cancellable cancellable, GData.QueryProgressCallback progress_callback, void* progress_user_data) throws GLib.Error;
+		public unowned GData.Feed query_files (GData.PicasaWebAlbum album, GData.Query? query, GLib.Cancellable? cancellable, GData.QueryProgressCallback? progress_callback) throws GLib.Error;
 		[CCode (cname = "gdata_picasaweb_service_upload_file")]
-		public unowned GData.PicasaWebFile upload_file (GData.PicasaWebAlbum album, GData.PicasaWebFile file, GLib.File actual_file, GLib.Cancellable cancellable) throws GLib.Error;
+		public unowned GData.PicasaWebFile upload_file (GData.PicasaWebAlbum album, GData.PicasaWebFile file_entry, GLib.File file_data, GLib.Cancellable cancellable) throws GLib.Error;
+		[CCode (cname = "gdata_picasaweb_service_upload_file_async")]
+		public async GData.PicasaWebFile upload_file_async (GData.PicasaWebAlbum album, GData.PicasaWebFile file_entry, GLib.File file_data, GLib.Cancellable? cancellable = null) throws GLib.Error;
+	}
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public class PicasaWebUser : GData.Entry {
+		[CCode (cname = "gdata_picasaweb_user_get_max_photos_per_album")]
+		public int get_max_photos_per_album ();
+		[CCode (cname = "gdata_picasaweb_user_get_nickname")]
+		public unowned string get_nickname ();
+		[CCode (cname = "gdata_picasaweb_user_get_quota_current")]
+		public int64 get_quota_current ();
+		[CCode (cname = "gdata_picasaweb_user_get_quota_limit")]
+		public int64 get_quota_limit ();
+		[CCode (cname = "gdata_picasaweb_user_get_thumbnail_uri")]
+		public unowned string get_thumbnail_uri ();
+		[CCode (cname = "gdata_picasaweb_user_get_user")]
+		public unowned string get_user ();
+		public int max_photos_per_album { get; }
+		public string nickname { get; }
+		public int64 quota_current { get; }
+		public int64 quota_limit { get; }
+		public string thumbnail_uri { get; }
+		public string user { get; }
 	}
 	[CCode (cheader_filename = "gdata/gdata.h")]
 	public class Query : GLib.Object {
@@ -824,8 +1132,8 @@ namespace GData {
 	public class Service : GLib.Object {
 		[NoWrapper]
 		public virtual void append_query_headers (Soup.Message message);
-		public bool authenticate (string username, string password, GLib.Cancellable cancellable) throws GLib.Error;
-		public async bool authenticate_async (string username, string password, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool authenticate (string username, string password, GLib.Cancellable? cancellable) throws GLib.Error;
+		public async bool authenticate_async (string username, string password, GLib.Cancellable cancellable) throws GLib.Error;
 		public bool authenticate_finish (GLib.AsyncResult async_result) throws GLib.Error;
 		public bool delete_entry (GData.Entry entry, GLib.Cancellable cancellable) throws GLib.Error;
 		public async bool delete_entry_async (GData.Entry entry, GLib.Cancellable cancellable) throws GLib.Error;
@@ -842,7 +1150,7 @@ namespace GData {
 		[NoWrapper]
 		public virtual bool parse_authentication_response (uint status, string response_body, int length) throws GLib.Error;
 		[NoWrapper]
-		public virtual void parse_error_response (GData.ServiceError error_type, uint status, string reason_phrase, string response_body, int length) throws GLib.Error;
+		public virtual void parse_error_response (GData.OperationType operation_type, uint status, string reason_phrase, string response_body, int length) throws GLib.Error;
 		public unowned GData.Feed query (string feed_uri, GData.Query query, GLib.Type entry_type, GLib.Cancellable cancellable, GData.QueryProgressCallback progress_callback, void* progress_user_data) throws GLib.Error;
 		public async unowned GData.Feed query_async (string feed_uri, GData.Query query, GLib.Type entry_type, GLib.Cancellable cancellable, GData.QueryProgressCallback progress_callback, void* progress_user_data) throws GLib.Error;
 		public unowned GData.Feed query_finish (GLib.AsyncResult async_result) throws GLib.Error;
@@ -857,6 +1165,22 @@ namespace GData {
 		public Soup.URI proxy_uri { get; set; }
 		public string username { get; }
 		public virtual signal unowned string captcha_challenge (string p0);
+	}
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public class UploadStream : GLib.OutputStream {
+		[CCode (type = "GOutputStream*", has_construct_function = false)]
+		public UploadStream (GData.Service service, string method, string upload_uri, GData.Entry entry, string slug, string content_type);
+		public unowned string get_content_type ();
+		public unowned GData.Entry get_entry ();
+		public unowned string get_response (ssize_t length);
+		public unowned GData.Service get_service ();
+		public unowned string get_slug ();
+		public unowned string get_upload_uri ();
+		public string content_type { get; construct; }
+		public GData.Entry entry { get; construct; }
+		public GData.Service service { get; construct; }
+		public string slug { get; construct; }
+		public string upload_uri { get; construct; }
 	}
 	[CCode (type_check_function = "GDATA_IS_YOUTUBE_CONTENT", cheader_filename = "gdata/gdata.h")]
 	public class YouTubeContent : GData.MediaContent {
@@ -962,6 +1286,8 @@ namespace GData {
 	}
 	[CCode (type_check_function = "GDATA_IS_YOUTUBE_STATE", cheader_filename = "gdata/gdata.h")]
 	public class YouTubeState : GData.Parsable {
+		[CCode (cname = "gdata_youtube_state_new", has_construct_function = false)]
+		public YouTubeState (string name, string message, string reason_code, string help_uri);
 		[CCode (cname = "gdata_youtube_state_get_help_uri")]
 		public unowned string get_help_uri ();
 		[CCode (cname = "gdata_youtube_state_get_message")]
@@ -1007,8 +1333,6 @@ namespace GData {
 		public unowned GData.YouTubeState get_state ();
 		[CCode (cname = "gdata_youtube_video_get_thumbnails")]
 		public unowned GLib.List get_thumbnails ();
-		[CCode (cname = "gdata_youtube_video_get_title")]
-		public unowned string get_title ();
 		[CCode (cname = "gdata_youtube_video_get_uploaded")]
 		public void get_uploaded (GLib.TimeVal uploaded);
 		[CCode (cname = "gdata_youtube_video_get_video_id")]
@@ -1039,8 +1363,6 @@ namespace GData {
 		public void set_no_embed (bool no_embed);
 		[CCode (cname = "gdata_youtube_video_set_recorded")]
 		public void set_recorded (GLib.TimeVal recorded);
-		[CCode (cname = "gdata_youtube_video_set_title")]
-		public void set_title (string title);
 		public GData.YouTubeAspectRatio aspect_ratio { get; set; }
 		[NoAccessorMethod]
 		public double average_rating { get; }
@@ -1065,7 +1387,6 @@ namespace GData {
 		public uint rating_count { get; }
 		public GLib.TimeVal recorded { get; set; }
 		public GData.YouTubeState state { get; }
-		public string title { get; set; }
 		public GLib.TimeVal uploaded { get; }
 		public string video_id { get; }
 		public uint view_count { get; }
@@ -1089,6 +1410,38 @@ namespace GData {
 		ACCOUNT_DISABLED,
 		SERVICE_DISABLED
 	}
+	[CCode (cprefix = "GDATA_DOCUMENTS_PRESENTATION_", cheader_filename = "gdata/gdata.h")]
+	public enum DocumentsPresentationFormat {
+		PDF,
+		PNG,
+		PPT,
+		SWF,
+		TXT
+	}
+	[CCode (cprefix = "GDATA_DOCUMENTS_SERVICE_ERROR_INVALID_CONTENT_", cheader_filename = "gdata/gdata.h")]
+	public enum DocumentsServiceError {
+		TYPE
+	}
+	[CCode (cprefix = "GDATA_DOCUMENTS_SPREADSHEET_", cheader_filename = "gdata/gdata.h")]
+	public enum DocumentsSpreadsheetFormat {
+		XLS,
+		CSV,
+		PDF,
+		ODS,
+		TSV,
+		HTML
+	}
+	[CCode (cprefix = "GDATA_DOCUMENTS_TEXT_", cheader_filename = "gdata/gdata.h")]
+	public enum DocumentsTextFormat {
+		DOC,
+		HTML,
+		ODT,
+		PDF,
+		PNG,
+		RTF,
+		TXT,
+		ZIP
+	}
 	[CCode (cprefix = "GDATA_MEDIA_EXPRESSION_", cheader_filename = "gdata/gdata.h")]
 	public enum MediaExpression {
 		SAMPLE,
@@ -1104,6 +1457,15 @@ namespace GData {
 		DOCUMENT,
 		EXECUTABLE
 	}
+	[CCode (cprefix = "GDATA_OPERATION_", cheader_filename = "gdata/gdata.h")]
+	public enum OperationType {
+		QUERY,
+		INSERTION,
+		UPDATE,
+		DELETION,
+		DOWNLOAD,
+		UPLOAD
+	}
 	[CCode (cprefix = "GDATA_PARSER_ERROR_", cheader_filename = "gdata/gdata.h")]
 	public enum ParserError {
 		PARSING_STRING,
@@ -1118,15 +1480,12 @@ namespace GData {
 	public enum ServiceError {
 		UNAVAILABLE,
 		PROTOCOL_ERROR,
-		WITH_QUERY,
 		ENTRY_ALREADY_INSERTED,
-		WITH_INSERTION,
 		AUTHENTICATION_REQUIRED,
-		WITH_UPDATE,
-		WITH_DELETION,
 		NOT_FOUND,
 		CONFLICT,
-		FORBIDDEN
+		FORBIDDEN,
+		BAD_QUERY_PARAMETER
 	}
 	[CCode (cprefix = "GDATA_YOUTUBE_AGE_", cheader_filename = "gdata/gdata.h")]
 	public enum YouTubeAge {
@@ -1182,8 +1541,20 @@ namespace GData {
 		ALL,
 		PARTNER
 	}
-	[CCode (cheader_filename = "gdata/gdata.h")]
+	[CCode (cheader_filename = "gdata/gdata.h", instance_pos = -2)]
 	public delegate void QueryProgressCallback (GData.Entry entry, uint entry_key, uint entry_count);
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_ADDRESS_USAGE_GENERAL;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_ADDRESS_USAGE_LOCAL;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_MAIL_CLASS_BOTH;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_MAIL_CLASS_LETTERS;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_MAIL_CLASS_NEITHER;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_MAIL_CLASS_PARCELS;
 	[CCode (cheader_filename = "gdata/gdata.h")]
 	public const string LINK_ALTERNATE;
 	[CCode (cheader_filename = "gdata/gdata.h")]
