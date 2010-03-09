@@ -894,7 +894,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 	}
 
-	public void generate_constant_declaration (Constant c, CCodeDeclarationSpace decl_space) {
+	public void generate_constant_declaration (Constant c, CCodeDeclarationSpace decl_space, bool definition = false) {
 		if (decl_space.add_symbol_declaration (c, c.get_cname ())) {
 			return;
 		}
@@ -912,7 +912,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				}
 
 				var cinitializer = (CCodeExpression) c.initializer.ccodenode;
-				if (decl_space != source_declarations) {
+				if (!definition) {
 					// never output value in header
 					// special case needed as this method combines declaration and definition
 					cinitializer = null;
@@ -934,7 +934,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_constant (Constant c) {
-		generate_constant_declaration (c, source_declarations);
+		generate_constant_declaration (c, source_declarations, true);
 
 		if (!c.is_internal_symbol ()) {
 			generate_constant_declaration (c, header_declarations);
