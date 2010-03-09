@@ -1,6 +1,6 @@
 /* valaclass.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -693,6 +693,8 @@ public class Vala.Class : ObjectTypeSymbol {
 		if (marshaller_type_name == null) {
 			if (base_class != null) {
 				marshaller_type_name = base_class.get_marshaller_type_name ();
+			} else if (!is_compact) {
+				marshaller_type_name = get_upper_case_cname ();
 			} else {
 				marshaller_type_name = "POINTER";
 			}
