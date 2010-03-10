@@ -135,6 +135,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	// code nodes to be inserted before the current statement
 	// used by async method calls in coroutines
 	public CCodeFragment pre_statement_fragment;
+	// case statements to be inserted for the couroutine state
+	public CCodeSwitchStatement state_switch_statement;
 
 	/* all temporary variables */
 	public ArrayList<LocalVariable> temp_vars = new ArrayList<LocalVariable> ();

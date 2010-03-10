@@ -715,12 +715,14 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 			// set state before calling async function to support immediate callbacks
 			int state = next_coroutine_state++;
+
+			state_switch_statement.add_statement (new CCodeCaseStatement (new CCodeConstant (state.to_string ())));
+			state_switch_statement.add_statement (new CCodeGotoStatement ("_state_%d".printf (state)));
+
 			pre_statement_fragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_state_"), new CCodeConstant (state.to_string ()))));
-
 			pre_statement_fragment.append (new CCodeExpressionStatement (async_call));
-
 			pre_statement_fragment.append (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
-			pre_statement_fragment.append (new CCodeCaseStatement (new CCodeConstant (state.to_string ())));
+			pre_statement_fragment.append (new CCodeLabel ("_state_%d".printf (state)));
 		}
 
 		if (m is ArrayResizeMethod) {

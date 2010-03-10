@@ -519,9 +519,12 @@ internal class Vala.GAsyncModule : GSignalModule {
 
 			int state = next_coroutine_state++;
 
+			state_switch_statement.add_statement (new CCodeCaseStatement (new CCodeConstant (state.to_string ())));
+			state_switch_statement.add_statement (new CCodeGotoStatement ("_state_%d".printf (state)));
+
 			cfrag.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_state_"), new CCodeConstant (state.to_string ()))));
 			cfrag.append (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
-			cfrag.append (new CCodeCaseStatement (new CCodeConstant (state.to_string ())));
+			cfrag.append (new CCodeLabel ("_state_%d".printf (state)));
 			cfrag.append (new CCodeEmptyStatement ());
 
 			return;

@@ -268,6 +268,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 		var old_temp_ref_vars = temp_ref_vars;
 		var old_variable_name_map = variable_name_map;
 		var old_try = current_try;
+		var old_state_switch_statement = state_switch_statement;
 		current_symbol = m;
 		current_method_inner_error = false;
 		next_temp_var_id = 0;
@@ -275,6 +276,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 		temp_ref_vars = new ArrayList<LocalVariable> ();
 		variable_name_map = new HashMap<string,string> (str_hash, str_equal);
 		current_try = null;
+		state_switch_statement = null;
 
 		bool in_gobject_creation_method = false;
 		bool in_fundamental_creation_method = false;
@@ -291,6 +293,15 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 				}
 			}
 		}
+
+		if (m.coroutine) {
+			state_switch_statement = new CCodeSwitchStatement (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_state_"));
+
+			// initial coroutine state
+			state_switch_statement.add_statement (new CCodeCaseStatement (new CCodeConstant ("0")));
+			state_switch_statement.add_statement (new CCodeGotoStatement ("_state_0"));
+		}
+		var current_state_switch = state_switch_statement;
 
 		var creturn_type = m.return_type;
 		if (m.return_type.is_real_non_null_struct_type ()) {
@@ -390,6 +401,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 		temp_ref_vars = old_temp_ref_vars;
 		variable_name_map = old_variable_name_map;
 		current_try = old_try;
+		state_switch_statement = old_state_switch_statement;
 
 		// do not declare overriding methods and interface implementations
 		if (m.is_abstract || m.is_virtual
@@ -446,23 +458,19 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 					co_function.modifiers |= CCodeModifiers.STATIC;
 					source_declarations.add_type_member_declaration (co_function.copy ());
 
-					var cswitch = new CCodeSwitchStatement (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_state_"));
-
 					// let gcc know that this can't happen
-					cswitch.add_statement (new CCodeLabel ("default"));
-					cswitch.add_statement (new CCodeExpressionStatement (new CCodeFunctionCall (new CCodeIdentifier ("g_assert_not_reached"))));
-
-					// initial coroutine state
-					cswitch.add_statement (new CCodeCaseStatement (new CCodeConstant ("0")));
-
-					// coroutine body
-					cswitch.add_statement (function.block);
-
-					// epilogue
-					cswitch.add_statement (complete_async ());
+					current_state_switch.add_statement (new CCodeLabel ("default"));
+					current_state_switch.add_statement (new CCodeExpressionStatement (new CCodeFunctionCall (new CCodeIdentifier ("g_assert_not_reached"))));
 
 					co_function.block = new CCodeBlock ();
-					co_function.block.add_statement (cswitch);
+					co_function.block.add_statement (current_state_switch);
+
+					// coroutine body
+					co_function.block.add_statement (new CCodeLabel ("_state_0"));
+					co_function.block.add_statement (function.block);
+
+					// epilogue
+					co_function.block.add_statement (complete_async ());
 
 					source_type_member_definition.append (co_function);
 				}
