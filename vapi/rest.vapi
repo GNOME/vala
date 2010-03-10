@@ -128,7 +128,7 @@ namespace Rest {
 		public void remove_param (string param);
 		public bool run (out unowned GLib.MainLoop loop) throws GLib.Error;
 		[CCode (cname = "rest_proxy_call_async")]
-		public bool run_async (Rest.ProxyCallAsyncCallback callback, GLib.Object weak_object) throws GLib.Error;
+		public bool run_async (Rest.ProxyCallAsyncCallback callback, GLib.Object? weak_object) throws GLib.Error;
 		public void set_function (string function);
 		public void set_method (string method);
 		public bool sync () throws GLib.Error;
