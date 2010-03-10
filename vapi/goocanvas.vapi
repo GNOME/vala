@@ -285,7 +285,7 @@ namespace Goo {
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public class CanvasImage : Goo.CanvasItemSimple, Goo.CanvasItem {
-		[CCode (cname = "goo_image_group_new")]
+		[CCode (cname = "goo_canvas_image_new")]
 		public static unowned Goo.CanvasImage create (Goo.CanvasItem? parent, Gdk.Pixbuf pixbuf, double x, double y, ...);
 		[NoAccessorMethod]
 		public double height { get; set; }

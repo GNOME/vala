@@ -85,7 +85,7 @@ namespace Goo
 
 	public class CanvasImage
 	{
-		[CCode (cname="goo_image_group_new", type="GooCanvasItem*")]
+		[CCode (cname="goo_canvas_image_new", type="GooCanvasItem*")]
 		public static weak CanvasImage create (Goo.CanvasItem? parent, Gdk.Pixbuf pixbuf, double x, double y, ...);
 	}
 
