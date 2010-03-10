@@ -375,7 +375,7 @@ namespace Soup {
 		public virtual void cancel_message (Soup.Message msg, uint status_code);
 		public unowned GLib.MainContext get_async_context ();
 		public void pause_message (Soup.Message msg);
-		public virtual void queue_message (owned Soup.Message msg, Soup.SessionCallback callback);
+		public virtual void queue_message (owned Soup.Message msg, Soup.SessionCallback? callback);
 		public void remove_feature (Soup.SessionFeature feature);
 		public virtual void requeue_message (Soup.Message msg);
 		public virtual uint send_message (Soup.Message msg);
