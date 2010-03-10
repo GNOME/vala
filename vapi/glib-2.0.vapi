@@ -3675,8 +3675,8 @@ namespace GLib {
 		public static VariantType MAYBE;
 		[CCode (cname = "G_VARIANT_TYPE_ARRAY")]
 		public static VariantType ARRAY;
-		[CCode (cname = "G_VARIANT_TYPE_STRUCT")]
-		public static VariantType STRUCT;
+		[CCode (cname = "G_VARIANT_TYPE_TUPLE")]
+		public static VariantType TUPLE;
 		[CCode (cname = "G_VARIANT_TYPE_DICT_ENTRY")]
 		public static VariantType DICT_ENTRY;
 		[CCode (cname = "G_VARIANT_TYPE_DICTIONARY")]
@@ -3765,6 +3765,9 @@ namespace GLib {
 		public string*[] get_strv ();
 		[CCode (array_length_type = "size_t")]
 		public string[] dup_strv ();
+
+		public Variant (string format, ...);
+		public void get (string format, ...);
 
 		public Variant.variant (Variant value);
 		public Variant.maybe (VariantType? child_type, Variant? child);
