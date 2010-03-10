@@ -1,6 +1,6 @@
 /* valaflowanalyzer.vala
  *
- * Copyright (C) 2008-2009  Jürg Billeter
+ * Copyright (C) 2008-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -832,10 +832,20 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 						    || (jump_target.error_domain == error_type.error_domain
 						        && (jump_target.error_code == null
 						            || jump_target.error_code == error_type.error_code))) {
+							// error can always be caught by this catch clause
+							// following catch clauses cannot be reached by this error
 							current_block.connect (jump_target.basic_block);
 							current_block = null;
 							unreachable_reported = false;
 							break;
+						} else if (error_type.error_domain == null
+						           || (error_type.error_domain == jump_target.error_domain
+						               && (error_type.error_code == null
+						                   || error_type.error_code == jump_target.error_code))) {
+							// error might be caught by this catch clause
+							// unknown at compile time
+							// following catch clauses might still be reached by this error
+							current_block.connect (jump_target.basic_block);
 						}
 					} else if (jump_target.is_finally_clause) {
 						current_block.connect (jump_target.basic_block);
