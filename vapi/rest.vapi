@@ -153,7 +153,7 @@ namespace Rest {
 		public XmlParser ();
 		public unowned Rest.XmlNode parse_from_data (string data, int64 len);
 	}
-	[CCode (cprefix = "", has_type_id = "0", cheader_filename = "rest/oauth-proxy.h")]
+	[CCode (cprefix = "", has_type_id = false, cheader_filename = "rest/oauth-proxy.h")]
 	public enum OAuthSignatureMethod {
 		PLAINTEXT,
 		HMAC_SHA1
@@ -203,8 +203,8 @@ namespace Rest {
 		HTTP_GATEWAY_TIMEOUT,
 		HTTP_HTTP_VERSION_NOT_SUPPORTED,
 	}
-	[CCode (cheader_filename = "rest/oauth-proxy.h")]
-	public delegate void OAuthProxyAuthCallback (Rest.OAuthProxy proxy, GLib.Error error, GLib.Object weak_object);
-	[CCode (cheader_filename = "rest/rest-proxy-call.h")]
-	public delegate void ProxyCallAsyncCallback (Rest.ProxyCall call, GLib.Error error, GLib.Object weak_object);
+	[CCode (cheader_filename = "rest/oauth-proxy.h", instance_pos = -2)]
+	public delegate void OAuthProxyAuthCallback (Rest.OAuthProxy proxy, GLib.Error? error, GLib.Object? weak_object);
+	[CCode (cheader_filename = "rest/rest-proxy-call.h", instance_pos = -2)]
+	public delegate void ProxyCallAsyncCallback (Rest.ProxyCall call, GLib.Error? error, GLib.Object? weak_object);
 }
