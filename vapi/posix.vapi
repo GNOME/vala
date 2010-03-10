@@ -985,7 +985,7 @@ namespace Posix {
 	[CCode (cheader_filename = "stdlib.h")]
 	public int system (string command);
 
-	[CCode (has_target = false, cheader_filename = "stdlib.h")]
+	[CCode (has_target = false, cheader_filename = "stdlib.h", cname = "__compar_fn_t")]
 	public delegate int compar_fn_t (void* key1, void* key2);
 
 	[CCode (cheader_filename = "stdlib.h")]
