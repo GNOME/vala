@@ -4311,12 +4311,6 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_cast_expression (CastExpression expr) {
-		if (expr.is_non_null_cast) {
-			// TODO add NULL runtime check
-			expr.ccodenode = expr.inner.ccodenode;
-			return;
-		}
-
 		var valuecast = try_cast_value_to_type ((CCodeExpression) expr.inner.ccodenode, expr.inner.value_type, expr.type_reference, expr);
 		if (valuecast != null) {
 			expr.ccodenode = valuecast;

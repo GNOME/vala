@@ -1,6 +1,6 @@
 /* valacastexpression.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -127,12 +127,8 @@ public class Vala.CastExpression : Expression {
 
 		if (is_non_null_cast) {
 			// (!) non-null cast
-			value_type = inner.value_type.copy ();
-			value_type.nullable = false;
-
-			inner.target_type = inner.value_type.copy ();
-
-			return !error;
+			type_reference = inner.value_type.copy ();
+			type_reference.nullable = false;
 		}
 
 		type_reference.check (analyzer);
