@@ -138,6 +138,10 @@ public class Vala.CastExpression : Expression {
 		value_type = type_reference;
 		value_type.value_owned = inner.value_type.value_owned;
 
+		if (is_silent_cast) {
+			value_type.nullable = true;
+		}
+
 		inner.target_type = inner.value_type.copy ();
 
 		return !error;
