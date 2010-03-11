@@ -4415,7 +4415,23 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		} else if (expr.operator == BinaryOperator.DIV) {
 			op = CCodeBinaryOperator.DIV;
 		} else if (expr.operator == BinaryOperator.MOD) {
-			op = CCodeBinaryOperator.MOD;
+			if (expr.value_type.equals (double_type)) {
+				source_declarations.add_include ("math.h");
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("fmod"));
+				ccall.add_argument (cleft);
+				ccall.add_argument (cright);
+				expr.ccodenode = ccall;
+				return;
+			} else if (expr.value_type.equals (float_type)) {
+				source_declarations.add_include ("math.h");
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("fmodf"));
+				ccall.add_argument (cleft);
+				ccall.add_argument (cright);
+				expr.ccodenode = ccall;
+				return;
+			} else {
+				op = CCodeBinaryOperator.MOD;
+			}
 		} else if (expr.operator == BinaryOperator.SHIFT_LEFT) {
 			op = CCodeBinaryOperator.SHIFT_LEFT;
 		} else if (expr.operator == BinaryOperator.SHIFT_RIGHT) {
