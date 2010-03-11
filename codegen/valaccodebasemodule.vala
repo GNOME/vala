@@ -3065,26 +3065,15 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 		stmt.ccodenode = new CCodeExpressionStatement ((CCodeExpression) stmt.expression.ccodenode);
 
-		if (stmt.tree_can_fail && stmt.expression.tree_can_fail) {
-			// simple case, no node breakdown necessary
-
-			var cfrag = new CCodeFragment ();
-
-			cfrag.append (stmt.ccodenode);
-
-			head.add_simple_check (stmt.expression, cfrag);
-
-			stmt.ccodenode = cfrag;
-		}
-
-		/* free temporary objects */
+		/* free temporary objects and handle errors */
 
 		if (((List<LocalVariable>) temp_vars).size == 0
-		     && pre_statement_fragment == null) {
-			/* nothing to do without temporary variables */
+		     && pre_statement_fragment == null
+		     && (!stmt.tree_can_fail || !stmt.expression.tree_can_fail)) {
+			/* nothing to do without temporary variables and errors */
 			return;
 		}
-		
+
 		var cfrag = new CCodeFragment ();
 		append_temp_decl (cfrag, temp_vars);
 
@@ -3101,9 +3090,14 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			ma.value_type = local.variable_type.copy ();
 			cfrag.append (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma)));
 		}
-		
+
+		if (stmt.tree_can_fail && stmt.expression.tree_can_fail) {
+			// simple case, no node breakdown necessary
+			head.add_simple_check (stmt.expression, cfrag);
+		}
+
 		stmt.ccodenode = cfrag;
-		
+
 		temp_vars.clear ();
 		temp_ref_vars.clear ();
 	}
