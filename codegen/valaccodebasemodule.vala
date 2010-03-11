@@ -904,11 +904,12 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		if (!c.external) {
 			generate_type_declaration (c.type_reference, decl_space);
 
-			if (c.initializer is InitializerList) {
+			var initializer_list = c.initializer as InitializerList;
+			if (initializer_list != null) {
 				var cdecl = new CCodeDeclaration (c.type_reference.get_const_cname ());
 				var arr = "";
 				if (c.type_reference is ArrayType) {
-					arr = "[]";
+					arr = "[%d]".printf (initializer_list.size);
 				}
 
 				var cinitializer = (CCodeExpression) c.initializer.ccodenode;
