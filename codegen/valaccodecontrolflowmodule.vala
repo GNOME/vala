@@ -152,8 +152,10 @@ internal class Vala.CCodeControlFlowModule : CCodeMethodModule {
 				}
 			}
 
-			var cdo = new CCodeDoStatement (cblock, new CCodeConstant ("0"));
-			var cif = new CCodeIfStatement (cor, cdo);
+			var cswitch = new CCodeSwitchStatement (new CCodeConstant ("0"));
+			cswitch.add_statement (new CCodeLabel ("default"));
+			cswitch.add_statement (cblock);
+			var cif = new CCodeIfStatement (cor, cswitch);
 
 			if (coldif != null) {
 				coldif.false_statement = cif;
@@ -169,15 +171,17 @@ internal class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			foreach (CodeNode body_stmt in default_statements) {
 				cblock.add_statement (body_stmt.ccodenode);
 			}
-		
-			var cdo = new CCodeDoStatement (cblock, new CCodeConstant ("0"));
+
+			var cswitch = new CCodeSwitchStatement (new CCodeConstant ("0"));
+			cswitch.add_statement (new CCodeLabel ("default"));
+			cswitch.add_statement (cblock);
 
 			if (coldif == null) {
 				// there is only one section and that section
 				// contains a default label
-				ctopstmt = cdo;
+				ctopstmt = cswitch;
 			} else {
-				coldif.false_statement = cdo;
+				coldif.false_statement = cswitch;
 			}
 		}
 	
