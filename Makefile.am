@@ -66,7 +66,7 @@ gen_start_date = 2009-02-25
 .PHONY: gen-ChangeLog
 gen-ChangeLog:
 	if test -d .git; then						\
-	  $(top_srcdir)/gitlog-to-changelog				\
+	  $(top_srcdir)/build-aux/gitlog-to-changelog			\
 	    --since=$(gen_start_date) > $(distdir)/cl-t;		\
 	  rm -f $(distdir)/ChangeLog;					\
 	  mv $(distdir)/cl-t $(distdir)/ChangeLog;			\
@@ -75,8 +75,8 @@ gen-ChangeLog:
 EXTRA_DIST = \
 	ChangeLog.pre-0-4 \
 	ChangeLog.pre-0-5-7 \
-	gitlog-to-changelog \
 	MAINTAINERS \
 	vala-1.0.pc.in \
+	build-aux/gitlog-to-changelog \
 	$(NULL)
 
