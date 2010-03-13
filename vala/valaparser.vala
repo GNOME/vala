@@ -400,12 +400,12 @@ public class Vala.Parser : CodeVisitor {
 		bool value_owned = owned_by_default;
 
 		if (owned_by_default) {
-			if (accept (TokenType.UNOWNED)
+			if ((context.profile != Profile.DOVA && accept (TokenType.UNOWNED))
 			    || accept (TokenType.WEAK)) {
 				value_owned = false;
 			}
 		} else {
-			value_owned = accept (TokenType.OWNED);
+			value_owned = (context.profile != Profile.DOVA && accept (TokenType.OWNED));
 		}
 
 		var sym = parse_symbol_name ();
@@ -458,7 +458,7 @@ public class Vala.Parser : CodeVisitor {
 		}
 
 		if (!owned_by_default) {
-			if (accept (TokenType.HASH)) {
+			if (context.profile != Profile.DOVA && accept (TokenType.HASH)) {
 				if (!context.deprecated) {
 					Report.warning (get_last_src (), "deprecated syntax, use `owned` modifier");
 				}
@@ -2400,7 +2400,9 @@ public class Vala.Parser : CodeVisitor {
 		var type = parse_type ();
 
 		bool getter_owned = false;
-		if (accept (TokenType.HASH)) {
+		if (context.profile == Profile.DOVA) {
+			getter_owned = true;
+		} else if (accept (TokenType.HASH)) {
 			if (!context.deprecated) {
 				Report.warning (get_last_src (), "deprecated syntax, use `owned` modifier before `get'");
 			}
