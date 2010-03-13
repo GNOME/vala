@@ -93,6 +93,11 @@ public class Vala.Field : Member, Lockable {
 		get { return (array_length_cexpr != null); }
 	}
 
+	/**
+	 * Specifies a custom type for the array length.
+	 */
+	public string? array_length_type { get; set; default = null; }
+
 	private string? array_length_cname;
 
 	private string? array_length_cexpr;
@@ -228,6 +233,9 @@ public class Vala.Field : Member, Lockable {
 		}
 		if (a.has_argument ("array_length_cexpr")) {
 			set_array_length_cexpr (a.get_string ("array_length_cexpr"));
+		}
+		if (a.has_argument ("array_length_type")) {
+			array_length_type = a.get_string ("array_length_type");
 		}
 		if (a.has_argument ("delegate_target")) {
 			no_delegate_target = !a.get_bool ("delegate_target");

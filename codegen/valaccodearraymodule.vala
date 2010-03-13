@@ -311,6 +311,10 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 						} else {
 							length_expr = new CCodeMemberAccess (inst, length_cname);
 						}
+
+						if (field.array_length_type != null) {
+							length_expr = new CCodeCastExpression (length_expr, "gint");
+						}
 					} else {
 						length_expr = new CCodeIdentifier (get_array_length_cname (field.get_cname (), dim));
 					}
