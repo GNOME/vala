@@ -577,7 +577,7 @@ namespace SDL {
 		public static void get_repeat(ref int delay, ref int interval);
 
 		[CCode (cname="SDL_GetKeyState")]
-		public static weak uchar[] get_keys(ref int numkeys);
+		public static weak uchar[] get_keys();
 
 		[CCode (cname="SDL_GetModState")]
 		public static KeyModifier get_modifiers();
