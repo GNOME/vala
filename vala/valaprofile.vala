@@ -1,6 +1,6 @@
 /* valaprofile.vala
  *
- * Copyright (C) 2009  Jürg Billeter
+ * Copyright (C) 2009-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,5 +22,6 @@
 
 public enum Vala.Profile {
 	POSIX,
-	GOBJECT
+	GOBJECT,
+	DOVA
 }

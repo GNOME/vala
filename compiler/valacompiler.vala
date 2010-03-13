@@ -1,6 +1,6 @@
 /* valacompiler.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  * Copyright (C) 1996-2002, 2004, 2005, 2006 Free Software Foundation, Inc.
  *
  * This library is free software; you can redistribute it and/or
@@ -241,6 +241,9 @@ class Vala.Compiler {
 			context.profile = Profile.GOBJECT;
 			context.add_define ("GOBJECT");
 			context.add_define ("VALA_0_7_6_NEW_METHODS");
+		} else if (profile == "dova") {
+			context.profile = Profile.DOVA;
+			context.add_define ("DOVA");
 		} else {
 			Report.error (null, "Unknown profile %s".printf (profile));
 		}
@@ -278,6 +281,11 @@ class Vala.Compiler {
 			if (!add_package (context, "gobject-2.0")) {
 				Report.error (null, "gobject-2.0 not found in specified Vala API directories");
 			}
+		} else if (context.profile == Profile.DOVA) {
+			/* default package */
+			if (!add_package (context, "dova-core-0.1")) {
+				Report.error (null, "dova-core-0.1 not found in specified Vala API directories");
+			}
 		}
 
 		context.codegen = new CCodeGenerator ();
@@ -311,6 +319,11 @@ class Vala.Compiler {
 					} else if (context.profile == Profile.GOBJECT) {
 						// import the GLib namespace by default (namespace of backend-specific standard library)
 						var ns_ref = new UsingDirective (new UnresolvedSymbol (null, "GLib", null));
+						source_file.add_using_directive (ns_ref);
+						context.root.add_using_directive (ns_ref);
+					} else if (context.profile == Profile.DOVA) {
+						// import the Dova namespace by default (namespace of backend-specific standard library)
+						var ns_ref = new UsingDirective (new UnresolvedSymbol (null, "Dova", null));
 						source_file.add_using_directive (ns_ref);
 						context.root.add_using_directive (ns_ref);
 					}
