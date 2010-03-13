@@ -1,6 +1,6 @@
 /* valatuple.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,7 +28,8 @@ using GLib;
 public class Vala.Tuple : Expression {
 	private List<Expression> expression_list = new ArrayList<Expression> ();
 
-	public Tuple () {
+	public Tuple (SourceReference? source_reference = null) {
+		this.source_reference = source_reference;
 	}
 
 	public void add_expression (Expression expr) {
@@ -40,6 +41,18 @@ public class Vala.Tuple : Expression {
 	}
 
 	public override bool is_pure () {
+		return false;
+	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		Report.error (source_reference, "tuples are not supported");
+		error = true;
 		return false;
 	}
 }

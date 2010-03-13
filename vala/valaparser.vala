@@ -1,6 +1,6 @@
 /* valaparser.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -632,6 +632,8 @@ public class Vala.Parser : CodeVisitor {
 	}
 
 	Expression parse_tuple () throws ParseError {
+		var begin = get_location ();
+
 		expect (TokenType.OPEN_PARENS);
 		var expr_list = new ArrayList<Expression> ();
 		if (current () != TokenType.CLOSE_PARENS) {
@@ -641,7 +643,7 @@ public class Vala.Parser : CodeVisitor {
 		}
 		expect (TokenType.CLOSE_PARENS);
 		if (expr_list.size != 1) {
-			var tuple = new Tuple ();
+			var tuple = new Tuple (get_src (begin));
 			foreach (Expression expr in expr_list) {
 				tuple.add_expression (expr);
 			}
