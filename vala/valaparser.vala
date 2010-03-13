@@ -550,7 +550,11 @@ public class Vala.Parser : CodeVisitor {
 			expr = parse_literal ();
 			break;
 		case TokenType.OPEN_BRACE:
-			expr = parse_initializer ();
+			if (context.profile == Profile.DOVA) {
+				expr = parse_simple_name ();
+			} else {
+				expr = parse_initializer ();
+			}
 			break;
 		case TokenType.OPEN_PARENS:
 			expr = parse_tuple ();
@@ -830,7 +834,7 @@ public class Vala.Parser : CodeVisitor {
 		} while (accept (TokenType.OPEN_BRACKET));
 
 		InitializerList initializer = null;
-		if (current () == TokenType.OPEN_BRACE) {
+		if (context.profile != Profile.DOVA && current () == TokenType.OPEN_BRACE) {
 			initializer = parse_initializer ();
 		}
 		var expr = new ArrayCreationExpression (element_type, size_specifier_list.size, initializer, get_src (begin));
@@ -844,7 +848,7 @@ public class Vala.Parser : CodeVisitor {
 
 	List<MemberInitializer> parse_object_initializer () throws ParseError {
 		var list = new ArrayList<MemberInitializer> ();
-		if (accept (TokenType.OPEN_BRACE)) {
+		if (context.profile != Profile.DOVA && accept (TokenType.OPEN_BRACE)) {
 			do {
 				list.add (parse_member_initializer ());
 			} while (accept (TokenType.COMMA));
