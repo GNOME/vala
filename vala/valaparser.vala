@@ -2546,7 +2546,7 @@ public class Vala.Parser : CodeVisitor {
 				var accessor_access = parse_access_modifier (SymbolAccessibility.PUBLIC);
 
 				var value_type = type.copy ();
-				value_type.value_owned = accept (TokenType.OWNED);
+				value_type.value_owned = (context.profile != Profile.DOVA && accept (TokenType.OWNED));
 
 				if (accept (TokenType.GET)) {
 					if (prop.get_accessor != null) {
