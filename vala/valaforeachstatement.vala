@@ -167,14 +167,14 @@ public class Vala.ForeachStatement : Block {
 		var collection_type = collection.value_type.copy ();
 		collection.target_type = collection_type.copy ();
 		
-		if (collection_type.is_array ()) {
+		if (analyzer.context.profile != Profile.DOVA && collection_type.is_array ()) {
 			var array_type = (ArrayType) collection_type;
 
 			// can't use inline-allocated array for temporary variable
 			array_type.inline_allocated = false;
 
 			return check_without_iterator (analyzer, collection_type, array_type.element_type);
-		} else if (collection_type.compatible (analyzer.glist_type) || collection_type.compatible (analyzer.gslist_type)) {
+		} else if (analyzer.context.profile == Profile.GOBJECT && (collection_type.compatible (analyzer.glist_type) || collection_type.compatible (analyzer.gslist_type))) {
 			if (collection_type.get_type_arguments ().size != 1) {
 				error = true;
 				Report.error (collection.source_reference, "missing type argument for collection");
@@ -182,7 +182,7 @@ public class Vala.ForeachStatement : Block {
 			}
 
 			return check_without_iterator (analyzer, collection_type, collection_type.get_type_arguments ().get (0));
-		} else if (collection_type.compatible (analyzer.gvaluearray_type)) {
+		} else if (analyzer.context.profile == Profile.GOBJECT && collection_type.compatible (analyzer.gvaluearray_type)) {
 			return check_without_iterator (analyzer, collection_type, analyzer.gvalue_type);
 		} else {
 			return check_with_iterator (analyzer, collection_type);
