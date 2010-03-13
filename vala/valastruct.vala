@@ -639,6 +639,9 @@ public class Vala.Struct : TypeSymbol {
 			// used by time_t
 			return false;
 		}
+		if (CodeContext.get ().profile == Profile.DOVA) {
+			return true;
+		}
 		return (boolean_type || integer_type || floating_type
 		        || get_attribute ("SimpleType") != null);
 	}
