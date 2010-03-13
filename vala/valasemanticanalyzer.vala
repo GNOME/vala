@@ -159,15 +159,18 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		bool_type = new BooleanType ((Struct) root_symbol.scope.lookup ("bool"));
 		string_type = new ObjectType ((Class) root_symbol.scope.lookup ("string"));
 
-		uchar_type = new IntegerType ((Struct) root_symbol.scope.lookup ("uchar"));
 		short_type = new IntegerType ((Struct) root_symbol.scope.lookup ("short"));
 		ushort_type = new IntegerType ((Struct) root_symbol.scope.lookup ("ushort"));
 		int_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int"));
 		uint_type = new IntegerType ((Struct) root_symbol.scope.lookup ("uint"));
 		long_type = new IntegerType ((Struct) root_symbol.scope.lookup ("long"));
 		ulong_type = new IntegerType ((Struct) root_symbol.scope.lookup ("ulong"));
-		int8_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int8"));
 		double_type = new FloatingType ((Struct) root_symbol.scope.lookup ("double"));
+
+		if (context.profile != Profile.DOVA) {
+			uchar_type = new IntegerType ((Struct) root_symbol.scope.lookup ("uchar"));
+			int8_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int8"));
+		}
 
 		var unichar_struct = (Struct) root_symbol.scope.lookup ("unichar");
 		if (unichar_struct != null) {
@@ -195,6 +198,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			gvaluearray_type = new ObjectType ((Class) glib_ns.scope.lookup ("ValueArray"));
 
 			gerror_type = (Class) glib_ns.scope.lookup ("Error");
+		} else if (context.profile == Profile.DOVA) {
+			var dova_ns = root_symbol.scope.lookup ("Dova");
+
+			object_type = (Class) dova_ns.scope.lookup ("Object");
+			type_type = new ObjectType ((Class) dova_ns.scope.lookup ("Type"));
 		}
 
 		current_symbol = root_symbol;
