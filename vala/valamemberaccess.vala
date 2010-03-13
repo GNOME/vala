@@ -371,6 +371,20 @@ public class Vala.MemberAccess : Expression {
 						dynamic_object_type.type_symbol.scope.add (null, prop);
 						symbol_reference = prop;
 					}
+				} else if (parent_node is MemberAccess && inner is MemberAccess && parent_node.parent_node is MethodCall) {
+					var ma = (MemberAccess) parent_node;
+					if (ma.member_name == "connect" || ma.member_name == "connect_after") {
+						// dynamic signal
+						var s = new DynamicSignal (inner.value_type, member_name, new VoidType (), source_reference);
+						var mcall = (MethodCall) parent_node.parent_node;
+						// the first argument is the handler
+						if (mcall.get_argument_list().size > 0) {
+							s.handler = mcall.get_argument_list()[0];
+						}
+						s.access = SymbolAccessibility.PUBLIC;
+						dynamic_object_type.type_symbol.scope.add (null, s);
+						symbol_reference = s;
+					}
 				}
 				if (symbol_reference == null) {
 					// dynamic property read access

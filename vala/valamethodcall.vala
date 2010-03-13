@@ -514,6 +514,20 @@ public class Vala.MethodCall : Expression {
 			if (m.returns_floating_reference) {
 				value_type.floating_reference = true;
 			}
+
+			var dynamic_sig = m.parent_symbol as DynamicSignal;
+			if (dynamic_sig != null && dynamic_sig.handler != null) {
+				bool first = true;
+				foreach (FormalParameter param in dynamic_sig.handler.value_type.get_parameters ()) {
+					if (first) {
+						// skip sender parameter
+						first = false;
+					} else {
+						dynamic_sig.add_parameter (param.copy ());
+					}
+				}
+				dynamic_sig.handler.target_type = new DelegateType (dynamic_sig.get_delegate (new ObjectType ((ObjectTypeSymbol) dynamic_sig.parent_symbol), this));
+			}
 		} else if (mtype is DelegateType) {
 			var d = ((DelegateType) mtype).delegate_symbol;
 			foreach (DataType error_type in d.get_error_types ()) {
