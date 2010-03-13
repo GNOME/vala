@@ -94,6 +94,13 @@ public class Vala.IntegerLiteral : Literal {
 			} else {
 				return "long";
 			}
+		} else if (CodeContext.get ().profile == Profile.DOVA) {
+			// long is 64-bit in Dova profile
+			if (u) {
+				return "ulong";
+			} else {
+				return "long";
+			}
 		} else {
 			if (u) {
 				return "uint64";
