@@ -1,6 +1,6 @@
-/* valatuple.vala
+/* valasetliteral.vala
  *
- * Copyright (C) 2006-2010  Jürg Billeter
+ * Copyright (C) 2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,15 +20,12 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-using GLib;
-
-/**
- * Represents a fixed-length sequence of expressions in the source code.
- */
-public class Vala.Tuple : Expression {
+public class Vala.SetLiteral : Literal {
 	private List<Expression> expression_list = new ArrayList<Expression> ();
 
-	public Tuple (SourceReference? source_reference = null) {
+	public DataType element_type { get; private set; }
+
+	public SetLiteral (SourceReference? source_reference = null) {
 		this.source_reference = source_reference;
 	}
 
@@ -39,11 +36,12 @@ public class Vala.Tuple : Expression {
 	}
 
 	public override void accept (CodeVisitor visitor) {
-		visitor.visit_tuple (this);
+		visitor.visit_set_literal (this);
 	}
 
 	public void add_expression (Expression expr) {
 		expression_list.add (expr);
+		expr.parent_node = this;
 	}
 
 	public List<Expression> get_expressions () {
@@ -69,21 +67,30 @@ public class Vala.Tuple : Expression {
 
 		checked = true;
 
-		if (analyzer.context.profile != Profile.DOVA) {
-			Report.error (source_reference, "tuples are not supported");
-			error = true;
-			return false;
+		var set_type = new ObjectType ((Class) analyzer.context.root.scope.lookup ("Dova").scope.lookup ("Set"));
+		set_type.value_owned = true;
+
+		bool fixed_element_type = false;
+		if (target_type != null && target_type.data_type == set_type.data_type && target_type.get_type_arguments ().size == 1) {
+			element_type = target_type.get_type_arguments ().get (0).copy ();
+			fixed_element_type = true;
 		}
 
-		value_type = new ObjectType ((Class) analyzer.context.root.scope.lookup ("Dova").scope.lookup ("Tuple"));
-		value_type.value_owned = true;
-
 		foreach (var expr in expression_list) {
+			if (fixed_element_type) {
+				expr.target_type = element_type;
+			}
 			if (!expr.check (analyzer)) {
 				return false;
 			}
-			value_type.add_type_argument (expr.value_type.copy ());
+			if (element_type == null) {
+				element_type = expr.value_type.copy ();
+			}
 		}
+
+		element_type.value_owned = true;
+		set_type.add_type_argument (element_type);
+		value_type = set_type;
 
 		return !error;
 	}

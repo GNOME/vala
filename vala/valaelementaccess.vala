@@ -152,6 +152,40 @@ public class Vala.ElementAccess : Expression {
 			}
 
 			value_type = analyzer.unichar_type;
+		} else if (analyzer.context.profile == Profile.DOVA && container_type == analyzer.tuple_type.data_type) {
+			if (get_indices ().size != 1) {
+				error = true;
+				Report.error (source_reference, "Element access with more than one dimension is not supported for tuples");
+				return false;
+			}
+			var index = get_indices ().get (0) as IntegerLiteral;
+			if (index == null) {
+				error = true;
+				Report.error (source_reference, "Element access with non-literal index is not supported for tuples");
+				return false;
+			}
+			int i = index.value.to_int ();
+			if (container.value_type.get_type_arguments ().size == 0) {
+				error = true;
+				Report.error (source_reference, "Element access is not supported for untyped tuples");
+				return false;
+			}
+			if (i < 0 || i >= container.value_type.get_type_arguments ().size) {
+				error = true;
+				Report.error (source_reference, "Index out of range");
+				return false;
+			}
+
+			value_type = container.value_type.get_type_arguments ().get (i);
+
+			// replace element access by call to generic get method
+			var ma = new MemberAccess (container, "get");
+			ma.add_type_argument (value_type);
+			var get_call = new MethodCall (ma);
+			get_call.add_argument (index);
+			get_call.target_type = this.target_type;
+			parent_node.replace_expression (this, get_call);
+			return get_call.check (analyzer);
 		} else if (container is MemberAccess && container.symbol_reference is Signal) {
 			index_int_type_check = false;
 

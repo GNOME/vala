@@ -260,6 +260,22 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		head.visit_string_literal (expr);
 	}
 
+	public override void visit_list_literal (ListLiteral expr) {
+		head.visit_list_literal (expr);
+	}
+
+	public override void visit_set_literal (SetLiteral expr) {
+		head.visit_set_literal (expr);
+	}
+
+	public override void visit_map_literal (MapLiteral expr) {
+		head.visit_map_literal (expr);
+	}
+
+	public override void visit_tuple (Tuple expr) {
+		head.visit_tuple (expr);
+	}
+
 	public override void visit_null_literal (NullLiteral expr) {
 		head.visit_null_literal (expr);
 	}

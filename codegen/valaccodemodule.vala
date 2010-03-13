@@ -239,6 +239,22 @@ public abstract class Vala.CCodeModule {
 		next.visit_string_literal (expr);
 	}
 
+	public virtual void visit_list_literal (ListLiteral expr) {
+		next.visit_list_literal (expr);
+	}
+
+	public virtual void visit_set_literal (SetLiteral expr) {
+		next.visit_set_literal (expr);
+	}
+
+	public virtual void visit_map_literal (MapLiteral expr) {
+		next.visit_map_literal (expr);
+	}
+
+	public virtual void visit_tuple (Tuple expr) {
+		next.visit_tuple (expr);
+	}
+
 	public virtual void visit_null_literal (NullLiteral expr) {
 		next.visit_null_literal (expr);
 	}

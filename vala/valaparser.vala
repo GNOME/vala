@@ -551,9 +551,16 @@ public class Vala.Parser : CodeVisitor {
 			break;
 		case TokenType.OPEN_BRACE:
 			if (context.profile == Profile.DOVA) {
-				expr = parse_simple_name ();
+				expr = parse_set_literal ();
 			} else {
 				expr = parse_initializer ();
+			}
+			break;
+		case TokenType.OPEN_BRACKET:
+			if (context.profile == Profile.DOVA) {
+				expr = parse_list_literal ();
+			} else {
+				expr = parse_simple_name ();
 			}
 			break;
 		case TokenType.OPEN_PARENS:
@@ -1526,6 +1533,32 @@ public class Vala.Parser : CodeVisitor {
 			variable_type = parse_type ();
 		}
 		do {
+			if (variable_type == null && accept (TokenType.OPEN_PARENS)) {
+				// tuple
+				var begin = get_location ();
+
+				string[] identifiers = {};
+				do {
+					identifiers += parse_identifier ();
+				} while (accept (TokenType.COMMA));
+				expect (TokenType.CLOSE_PARENS);
+
+				expect (TokenType.ASSIGN);
+				var tuple = parse_expression ();
+				var tuple_local = new LocalVariable (null, CodeNode.get_temp_name (), tuple, get_src (begin));
+				block.add_statement (new DeclarationStatement (tuple_local, tuple_local.source_reference));
+
+				for (int i = 0; i < identifiers.length; i++) {
+					var temp_access = new MemberAccess.simple (tuple_local.name, tuple_local.source_reference);
+					var ea = new ElementAccess (temp_access, tuple_local.source_reference);
+					ea.append_index (new IntegerLiteral (i.to_string ()));
+					var local = new LocalVariable (null, identifiers[i], ea, tuple_local.source_reference);
+					block.add_statement (new DeclarationStatement (local, local.source_reference));
+				}
+
+				continue;
+			}
+
 			DataType type_copy = null;
 			if (variable_type != null) {
 				type_copy = variable_type.copy ();
@@ -2310,6 +2343,58 @@ public class Vala.Parser : CodeVisitor {
 		}
 		expect (TokenType.CLOSE_BRACE);
 		return initializer;
+	}
+
+	ListLiteral parse_list_literal () throws ParseError {
+		var begin = get_location ();
+		expect (TokenType.OPEN_BRACKET);
+		var initializer = new ListLiteral (get_src (begin));
+		if (current () != TokenType.CLOSE_BRACKET) {
+			do {
+				var init = parse_expression ();
+				initializer.add_expression (init);
+			} while (accept (TokenType.COMMA));
+		}
+		expect (TokenType.CLOSE_BRACKET);
+		return initializer;
+	}
+
+	Expression parse_set_literal () throws ParseError {
+		var begin = get_location ();
+		expect (TokenType.OPEN_BRACE);
+		var set = new SetLiteral (get_src (begin));
+		bool first = true;
+		if (current () != TokenType.CLOSE_BRACE) {
+			do {
+				var expr = parse_expression ();
+				if (first && accept (TokenType.COLON)) {
+					// found colon after expression, it's a map
+					rollback (begin);
+					return parse_map_literal ();
+				}
+				first = false;
+				set.add_expression (expr);
+			} while (accept (TokenType.COMMA));
+		}
+		expect (TokenType.CLOSE_BRACE);
+		return set;
+	}
+
+	Expression parse_map_literal () throws ParseError {
+		var begin = get_location ();
+		expect (TokenType.OPEN_BRACE);
+		var map = new MapLiteral (get_src (begin));
+		if (current () != TokenType.CLOSE_BRACE) {
+			do {
+				var key = parse_expression ();
+				map.add_key (key);
+				expect (TokenType.COLON);
+				var value = parse_expression ();
+				map.add_value (value);
+			} while (accept (TokenType.COMMA));
+		}
+		expect (TokenType.CLOSE_BRACE);
+		return map;
 	}
 
 	Method parse_method_declaration (List<Attribute>? attrs) throws ParseError {

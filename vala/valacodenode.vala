@@ -189,7 +189,7 @@ public abstract class Vala.CodeNode {
 	public virtual void get_used_variables (Collection<LocalVariable> collection) {
 	}
 
-	public string get_temp_name () {
+	public static string get_temp_name () {
 		return "." + (++last_temp_nr).to_string ();
 	}
 }
