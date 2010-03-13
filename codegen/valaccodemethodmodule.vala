@@ -172,7 +172,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 
 		var function = new CCodeFunction (m.get_cname ());
 
-		if (m.is_private_symbol ()) {
+		if (m.is_private_symbol () && !m.external) {
 			function.modifiers |= CCodeModifiers.STATIC;
 			if (m.is_inline) {
 				function.modifiers |= CCodeModifiers.INLINE;
