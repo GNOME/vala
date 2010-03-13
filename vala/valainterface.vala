@@ -138,8 +138,8 @@ public class Vala.Interface : ObjectTypeSymbol {
 			m.this_parameter = new FormalParameter ("this", get_this_type ());
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
-		if (!(m.return_type is VoidType) && m.get_postconditions ().size > 0) {
-			m.result_var = new LocalVariable (m.return_type.copy (), "result");
+		if (!(m.return_type is VoidType) && (CodeContext.get ().profile == Profile.DOVA || m.get_postconditions ().size > 0)) {
+			m.result_var = new LocalVariable (m.return_type.copy (), "result", null, source_reference);
 			m.result_var.is_result = true;
 		}
 

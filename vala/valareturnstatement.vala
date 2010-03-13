@@ -93,6 +93,11 @@ public class Vala.ReturnStatement : CodeNode, Statement {
 			return false;
 		}
 
+		if (analyzer.context.profile == Profile.DOVA) {
+			// no return expressions in Dova profile
+			return !error;
+		}
+
 		if (return_expression == null) {
 			if (!(analyzer.current_return_type is VoidType)) {
 				error = true;

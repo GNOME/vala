@@ -1418,6 +1418,19 @@ public class Vala.Parser : CodeVisitor {
 				}
 
 				if (!is_decl) {
+					if (context.profile == Profile.DOVA && stmt is ReturnStatement) {
+						// split
+						//     return foo;
+						// into
+						//     result = foo;
+						//     return;
+						var ret_stmt = (ReturnStatement) stmt;
+						if (ret_stmt.return_expression != null) {
+							var assignment = new Assignment (new MemberAccess.simple ("result"), ret_stmt.return_expression);
+							ret_stmt.return_expression = null;
+							block.add_statement (new ExpressionStatement (assignment));
+						}
+					}
 					block.add_statement (stmt);
 				}
 			} catch (ParseError e) {
@@ -1475,7 +1488,23 @@ public class Vala.Parser : CodeVisitor {
 		comment = scanner.pop_comment ();
 
 		var block = new Block (get_src (get_location ()));
-		block.add_statement (parse_embedded_statement_without_block ());
+
+		var stmt = parse_embedded_statement_without_block ();
+		if (context.profile == Profile.DOVA && stmt is ReturnStatement) {
+			// split
+			//     return foo;
+			// into
+			//     result = foo;
+			//     return;
+			var ret_stmt = (ReturnStatement) stmt;
+			if (ret_stmt.return_expression != null) {
+				var assignment = new Assignment (new MemberAccess.simple ("result"), ret_stmt.return_expression);
+				ret_stmt.return_expression = null;
+				block.add_statement (new ExpressionStatement (assignment));
+			}
+		}
+		block.add_statement (stmt);
+
 		return block;
 
 	}

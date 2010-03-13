@@ -90,6 +90,11 @@ public class Vala.PropertyAccessor : Symbol {
 	public FormalParameter value_parameter { get; set; }
 
 	/**
+	 * Specifies the generated `result' variable in a get accessor.
+	 */
+	public LocalVariable? result_var { get; set; }
+
+	/**
 	 * The publicly accessible name of the function that performs the
 	 * access in C code.
 	 */
@@ -136,6 +141,10 @@ public class Vala.PropertyAccessor : Symbol {
 
 	public override void accept_children (CodeVisitor visitor) {
 		value_type.accept (visitor);
+
+		if (result_var != null) {
+			result_var.accept (visitor);
+		}
 
 		if (body != null) {
 			body.accept (visitor);
@@ -186,7 +195,12 @@ public class Vala.PropertyAccessor : Symbol {
 				body = new Block (source_reference);
 				var ma = new MemberAccess.simple ("_%s".printf (prop.name), source_reference);
 				if (readable) {
-					body.add_statement (new ReturnStatement (ma, source_reference));
+					if (analyzer.context.profile == Profile.DOVA) {
+						body.add_statement (new ExpressionStatement (new Assignment (new MemberAccess.simple ("result", source_reference), ma, AssignmentOperator.SIMPLE, source_reference), source_reference));
+						body.add_statement (new ReturnStatement (null, source_reference));
+					} else {
+						body.add_statement (new ReturnStatement (ma, source_reference));
+					}
 				} else {
 					var assignment = new Assignment (ma, new MemberAccess.simple ("value", source_reference), AssignmentOperator.SIMPLE, source_reference);
 					body.add_statement (new ExpressionStatement (assignment));
@@ -195,7 +209,12 @@ public class Vala.PropertyAccessor : Symbol {
 		}
 
 		if (body != null) {
-			if (writable || construction) {
+			if (readable && analyzer.context.profile == Profile.DOVA) {
+				result_var = new LocalVariable (value_type.copy (), "result", null, source_reference);
+				result_var.is_result = true;
+
+				result_var.check (analyzer);
+			} else if (writable || construction) {
 				value_parameter = new FormalParameter ("value", value_type, source_reference);
 				body.scope.add (value_parameter.name, value_parameter);
 			}

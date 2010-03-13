@@ -168,6 +168,13 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		m.entry_block = new BasicBlock.entry ();
 		m.exit_block = new BasicBlock.exit ();
 
+		if (context.profile == Profile.DOVA && !(m.return_type is VoidType)) {
+			// ensure result is defined at end of method
+			var result_ma = new MemberAccess.simple ("result", m.source_reference);
+			result_ma.symbol_reference = m.result_var;
+			m.exit_block.add_node (result_ma);
+		}
+
 		current_block = new BasicBlock ();
 		m.entry_block.connect (current_block);
 		current_block.add_node (m);
@@ -181,7 +188,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		if (current_block != null) {
 			// end of method body reachable
 
-			if (!(m.return_type is VoidType)) {
+			if (context.profile != Profile.DOVA && !(m.return_type is VoidType)) {
 				Report.error (m.source_reference, "missing return statement at end of method or lambda body");
 				m.error = true;
 			}
@@ -483,6 +490,13 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		acc.entry_block = new BasicBlock.entry ();
 		acc.exit_block = new BasicBlock.exit ();
 
+		if (context.profile == Profile.DOVA && acc.readable) {
+			// ensure result is defined at end of method
+			var result_ma = new MemberAccess.simple ("result", acc.source_reference);
+			result_ma.symbol_reference = acc.result_var;
+			acc.exit_block.add_node (result_ma);
+		}
+
 		current_block = new BasicBlock ();
 		acc.entry_block.connect (current_block);
 
@@ -495,7 +509,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		if (current_block != null) {
 			// end of property accessor body reachable
 
-			if (acc.readable) {
+			if (context.profile != Profile.DOVA && acc.readable) {
 				Report.error (acc.source_reference, "missing return statement at end of property getter body");
 				acc.error = true;
 			}

@@ -200,7 +200,12 @@ public class Vala.LambdaExpression : Expression {
 			block.scope.parent_scope = method.scope;
 
 			if (method.return_type.data_type != null) {
-				block.add_statement (new ReturnStatement (expression_body, source_reference));
+				if (analyzer.context.profile == Profile.DOVA) {
+					block.add_statement (new ExpressionStatement (new Assignment (new MemberAccess.simple ("result", source_reference), expression_body, AssignmentOperator.SIMPLE, source_reference), source_reference));
+					block.add_statement (new ReturnStatement (null, source_reference));
+				} else {
+					block.add_statement (new ReturnStatement (expression_body, source_reference));
+				}
 			} else {
 				block.add_statement (new ExpressionStatement (expression_body, source_reference));
 			}
