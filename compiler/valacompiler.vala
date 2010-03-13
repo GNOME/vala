@@ -69,6 +69,7 @@ class Vala.Compiler {
 	static bool quiet_mode;
 	static bool verbose_mode;
 	static string profile;
+	static bool nostdpkg;
 
 	static string entry_point;
 
@@ -98,6 +99,7 @@ class Vala.Compiler {
 		{ "enable-mem-profiler", 0, 0, OptionArg.NONE, ref mem_profiler, "Enable GLib memory profiler", null },
 		{ "define", 'D', 0, OptionArg.STRING_ARRAY, ref defines, "Define SYMBOL", "SYMBOL..." },
 		{ "main", 0, 0, OptionArg.STRING, ref entry_point, "Use SYMBOL as entry point", "SYMBOL..." },
+		{ "nostdpkg", 0, 0, OptionArg.NONE, ref nostdpkg, "Do not include standard packages", null },
 		{ "disable-assert", 0, 0, OptionArg.NONE, ref disable_assert, "Disable assertions", null },
 		{ "enable-checking", 0, 0, OptionArg.NONE, ref enable_checking, "Enable additional run-time checks", null },
 		{ "enable-deprecated", 0, 0, OptionArg.NONE, ref deprecated, "Enable deprecated features", null },
@@ -257,9 +259,11 @@ class Vala.Compiler {
 		}
 
 		if (context.profile == Profile.POSIX) {
-			/* default package */
-			if (!add_package (context, "posix")) {
-				Report.error (null, "posix not found in specified Vala API directories");
+			if (!nostdpkg) {
+				/* default package */
+				if (!add_package (context, "posix")) {
+					Report.error (null, "posix not found in specified Vala API directories");
+				}
 			}
 		} else if (context.profile == Profile.GOBJECT) {
 			int glib_major = 2;
@@ -274,17 +278,21 @@ class Vala.Compiler {
 				Report.error (null, "This version of valac only supports GLib 2");
 			}
 
-			/* default packages */
-			if (!add_package (context, "glib-2.0")) {
-				Report.error (null, "glib-2.0 not found in specified Vala API directories");
-			}
-			if (!add_package (context, "gobject-2.0")) {
-				Report.error (null, "gobject-2.0 not found in specified Vala API directories");
+			if (!nostdpkg) {
+				/* default packages */
+				if (!add_package (context, "glib-2.0")) {
+					Report.error (null, "glib-2.0 not found in specified Vala API directories");
+				}
+				if (!add_package (context, "gobject-2.0")) {
+					Report.error (null, "gobject-2.0 not found in specified Vala API directories");
+				}
 			}
 		} else if (context.profile == Profile.DOVA) {
-			/* default package */
-			if (!add_package (context, "dova-core-0.1")) {
-				Report.error (null, "dova-core-0.1 not found in specified Vala API directories");
+			if (!nostdpkg) {
+				/* default package */
+				if (!add_package (context, "dova-core-0.1")) {
+					Report.error (null, "dova-core-0.1 not found in specified Vala API directories");
+				}
 			}
 		}
 
