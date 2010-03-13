@@ -1,6 +1,6 @@
 /* valacodewriter.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
@@ -822,7 +822,7 @@ public class Vala.CodeWriter : CodeVisitor {
 
 		if (!cb.has_target) {
 			write_string (", has_target = false");
-		} else if (!float_equal (cb.cinstance_parameter_position, 0)) {
+		} else if (!float_equal (cb.cinstance_parameter_position, -2)) {
 			write_string (", instance_pos = %g".printf (cb.cinstance_parameter_position));
 		}
 
