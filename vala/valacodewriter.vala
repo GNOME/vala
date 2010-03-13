@@ -1042,7 +1042,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		write_identifier (prop.name);
 		write_string (" {");
 		if (prop.get_accessor != null) {
-			if (prop.get_accessor.value_type.is_disposable ()) {
+			if (context.profile != Profile.DOVA && prop.get_accessor.value_type.is_disposable ()) {
 				write_string (" owned");
 			}
 
@@ -1050,8 +1050,8 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_code_block (prop.get_accessor.body);
 		}
 		if (prop.set_accessor != null) {
-			if (prop.set_accessor.value_type.value_owned) {
-				write_string ("owned ");
+			if (context.profile != Profile.DOVA && prop.set_accessor.value_type.value_owned) {
+				write_string (" owned");
 			}
 
 			if (prop.set_accessor.writable) {
