@@ -1,6 +1,6 @@
 /* valasymbolresolver.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
@@ -70,6 +70,17 @@ public class Vala.SymbolResolver : CodeVisitor {
 					cl.error = true;
 					Report.error (type.source_reference, "Base class cycle (`%s' and `%s')".printf (cl.get_full_name (), cl.base_class.get_full_name ()));
 					return;
+				}
+			}
+		}
+
+		if (context.profile == Profile.DOVA) {
+			// classes derive from Object by default
+			if (cl.base_class == null) {
+				var object_class = (Class) root_symbol.scope.lookup ("Dova").scope.lookup ("Object");
+				if (cl != object_class) {
+					cl.add_base_type (new ObjectType (object_class));
+					cl.base_class = object_class;
 				}
 			}
 		}
