@@ -1,6 +1,6 @@
 /* gobject-2.0.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  * Copyright (C) 2007  Mathias Hasselmann
  *
@@ -295,9 +295,7 @@ namespace GLib {
 		[CCode (has_new_function = false, construct_function = "g_object_new")]
 		public Object (...);
 
-#if VALA_0_7_6_NEW_METHODS
 		public static Object @new (Type type, ...);
-#endif
 		public static Object newv (Type type, [CCode (array_length_pos = 1.9)] Parameter[] parameters);
 
 		[CCode (cname = "G_TYPE_FROM_INSTANCE")]
