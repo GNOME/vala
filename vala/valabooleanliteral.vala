@@ -38,7 +38,7 @@ public class Vala.BooleanLiteral : Literal {
 	 * @param source reference to source code
 	 * @return       newly created boolean literal
 	 */
-	public BooleanLiteral (bool b, SourceReference source) {
+	public BooleanLiteral (bool b, SourceReference? source = null) {
 		value = b;
 		source_reference = source;
 	}

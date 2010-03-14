@@ -38,7 +38,7 @@ public class Vala.RealLiteral : Literal {
 	 * @param source reference to source code
 	 * @return       newly created real literal
 	 */
-	public RealLiteral (string r, SourceReference source) {
+	public RealLiteral (string r, SourceReference? source = null) {
 		value = r;
 		source_reference = source;
 	}
