@@ -72,7 +72,7 @@ namespace Gnome {
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public Hint (string hintfile, string title, string background_image, string logo_image, string startupkey);
 	}
-	[CCode (cprefix = "GNOME_DESKTOP_ITEM_ERROR_", has_type_id = "0", cheader_filename = "libgnome/gnome-desktop-item.h")]
+	[CCode (cprefix = "GNOME_DESKTOP_ITEM_ERROR_", has_type_id = false, cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public enum DesktopItemError {
 		NO_FILENAME,
 		UNKNOWN_ENCODING,
@@ -83,11 +83,11 @@ namespace Gnome {
 		NOT_LAUNCHABLE,
 		INVALID_TYPE
 	}
-	[CCode (cprefix = "GNOME_DESKTOP_ITEM_ICON_NO_", has_type_id = "0", cheader_filename = "libgnome/gnome-desktop-item.h")]
+	[CCode (cprefix = "GNOME_DESKTOP_ITEM_ICON_NO_", has_type_id = false, cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public enum DesktopItemIconFlags {
 		KDE
 	}
-	[CCode (cprefix = "GNOME_DESKTOP_ITEM_LAUNCH_", has_type_id = "0", cheader_filename = "libgnome/gnome-desktop-item.h")]
+	[CCode (cprefix = "GNOME_DESKTOP_ITEM_LAUNCH_", has_type_id = false, cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public enum DesktopItemLaunchFlags {
 		ONLY_ONE,
 		USE_CURRENT_DIR,
@@ -95,18 +95,18 @@ namespace Gnome {
 		APPEND_PATHS,
 		DO_NOT_REAP_CHILD
 	}
-	[CCode (cprefix = "GNOME_DESKTOP_ITEM_LOAD_", has_type_id = "0", cheader_filename = "libgnome/gnome-desktop-item.h")]
+	[CCode (cprefix = "GNOME_DESKTOP_ITEM_LOAD_", has_type_id = false, cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public enum DesktopItemLoadFlags {
 		ONLY_IF_EXISTS,
 		NO_TRANSLATIONS
 	}
-	[CCode (cprefix = "GNOME_DESKTOP_ITEM_", has_type_id = "0", cheader_filename = "libgnome/gnome-desktop-item.h")]
+	[CCode (cprefix = "GNOME_DESKTOP_ITEM_", has_type_id = false, cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public enum DesktopItemStatus {
 		UNCHANGED,
 		CHANGED,
 		DISAPPEARED
 	}
-	[CCode (cprefix = "GNOME_DESKTOP_ITEM_TYPE_", has_type_id = "0", cheader_filename = "libgnome/gnome-desktop-item.h")]
+	[CCode (cprefix = "GNOME_DESKTOP_ITEM_TYPE_", has_type_id = false, cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public enum DesktopItemType {
 		NULL,
 		OTHER,

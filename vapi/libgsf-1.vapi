@@ -472,12 +472,12 @@ namespace Gsf {
 		[NoAccessorMethod]
 		public bool pretty_print { get; set; }
 	}
-	[CCode (cheader_filename = "gsf/gsf.h")]
+	[CCode (cname = "gint64", cheader_filename = "glib.h")]
 	[SimpleType]
-	[IntegerType (rank = 0)]
+	[IntegerType (rank = 10)]
 	public struct off_t : int64 {
 	}
-	[CCode (cprefix = "GSF_CLIP_FORMAT_", has_type_id = "0", cheader_filename = "gsf/gsf-clip-data.h")]
+	[CCode (cprefix = "GSF_CLIP_FORMAT_", has_type_id = false, cheader_filename = "gsf/gsf-clip-data.h")]
 	public enum ClipFormat {
 		WINDOWS_CLIPBOARD,
 		MACINTOSH_CLIPBOARD,
@@ -486,7 +486,7 @@ namespace Gsf {
 		CLIPBOARD_FORMAT_NAME,
 		UNKNOWN
 	}
-	[CCode (cprefix = "GSF_CLIP_FORMAT_WINDOWS_", has_type_id = "0", cheader_filename = "gsf/gsf-clip-data.h")]
+	[CCode (cprefix = "GSF_CLIP_FORMAT_WINDOWS_", has_type_id = false, cheader_filename = "gsf/gsf-clip-data.h")]
 	public enum ClipFormatWindows {
 		ERROR,
 		UNKNOWN,
@@ -500,13 +500,13 @@ namespace Gsf {
 		AUTO,
 		ALWAYS
 	}
-	[CCode (cprefix = "GSF_XML_", has_type_id = "0", cheader_filename = "gsf/gsf-libxml.h")]
+	[CCode (cprefix = "GSF_XML_", has_type_id = false, cheader_filename = "gsf/gsf-libxml.h")]
 	public enum XMLContent {
 		NO_CONTENT,
 		CONTENT,
 		SHARED_CONTENT
 	}
-	[CCode (cprefix = "GSF_ZIP_", has_type_id = "0", cheader_filename = "gsf/gsf-outfile-zip.h")]
+	[CCode (cprefix = "GSF_ZIP_", has_type_id = false, cheader_filename = "gsf/gsf-outfile-zip.h")]
 	public enum ZipCompressionMethod {
 		STORED,
 		SHRUNK,

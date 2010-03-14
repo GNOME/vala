@@ -508,6 +508,8 @@ namespace Gnome {
 	public delegate void StringCallback (string str);
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h", has_target = false)]
 	public delegate void UISignalConnectFunc (Gnome.UIInfo uiinfo, string signal_name, Gnome.UIBuilderData uibdata);
+	[CCode (cname = "LIBGNOMEUI_MODULE", cheader_filename = "libgnomeui/libgnomeui.h")]
+	public static Gnome.ModuleInfo libgnomeui_module;
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string APP_MENUBAR_NAME;
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]

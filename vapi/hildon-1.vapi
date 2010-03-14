@@ -994,7 +994,7 @@ namespace Hildon {
 		INVALID_DATE,
 		INVALID_TIME
 	}
-	[CCode (cprefix = "HILDON_GTK_INPUT_MODE_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
+	[CCode (cprefix = "HILDON_GTK_INPUT_MODE_", has_type_id = false, cheader_filename = "gtk/gtk.h")]
 	public enum GtkInputMode {
 		ALPHA,
 		NUMERIC,
@@ -1007,7 +1007,7 @@ namespace Hildon {
 		AUTOCAP,
 		DICTIONARY
 	}
-	[CCode (cprefix = "HILDON_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
+	[CCode (cprefix = "HILDON_", has_type_id = false, cheader_filename = "gtk/gtk.h")]
 	public enum Mode {
 		DIABLO,
 		FREMANTLE
@@ -1057,7 +1057,7 @@ namespace Hildon {
 		MINIMUM,
 		CHILDREN
 	}
-	[CCode (cprefix = "HILDON_SIZE_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
+	[CCode (cprefix = "HILDON_SIZE_", has_type_id = false, cheader_filename = "gtk/gtk.h")]
 	public enum SizeType {
 		AUTO_WIDTH,
 		HALFSCREEN_WIDTH,
@@ -1078,7 +1078,7 @@ namespace Hildon {
 		SINGLE,
 		MULTIPLE
 	}
-	[CCode (cprefix = "HILDON_UI_MODE_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
+	[CCode (cprefix = "HILDON_UI_MODE_", has_type_id = false, cheader_filename = "gtk/gtk.h")]
 	public enum UIMode {
 		NORMAL,
 		EDIT

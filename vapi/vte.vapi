@@ -161,13 +161,13 @@ namespace Vte {
 		[CCode (type = "AtkObjectFactory*", has_construct_function = false)]
 		public TerminalAccessibleFactory ();
 	}
-	[CCode (cprefix = "VTE_ANTI_ALIAS_", has_type_id = "0", cheader_filename = "vte/vte.h")]
+	[CCode (cprefix = "VTE_ANTI_ALIAS_", has_type_id = false, cheader_filename = "vte/vte.h")]
 	public enum TerminalAntiAlias {
 		USE_DEFAULT,
 		FORCE_ENABLE,
 		FORCE_DISABLE
 	}
-	[CCode (cprefix = "VTE_ERASE_", has_type_id = "0", cheader_filename = "vte/vte.h")]
+	[CCode (cprefix = "VTE_ERASE_", has_type_id = false, cheader_filename = "vte/vte.h")]
 	public enum TerminalEraseBinding {
 		AUTO,
 		ASCII_BACKSPACE,

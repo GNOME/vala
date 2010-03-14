@@ -279,7 +279,7 @@ namespace Poppler {
 		public double x2;
 		public double y2;
 	}
-	[CCode (cprefix = "POPPLER_ACTION_", has_type_id = "0", cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_ACTION_", has_type_id = false, cheader_filename = "poppler.h")]
 	public enum ActionType {
 		UNKNOWN,
 		GOTO_DEST,
@@ -289,13 +289,13 @@ namespace Poppler {
 		NAMED,
 		MOVIE
 	}
-	[CCode (cprefix = "POPPLER_BACKEND_", has_type_id = "0", cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_BACKEND_", has_type_id = false, cheader_filename = "poppler.h")]
 	public enum Backend {
 		UNKNOWN,
 		SPLASH,
 		CAIRO
 	}
-	[CCode (cprefix = "POPPLER_DEST_", has_type_id = "0", cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_DEST_", has_type_id = false, cheader_filename = "poppler.h")]
 	public enum DestType {
 		UNKNOWN,
 		XYZ,
@@ -308,12 +308,12 @@ namespace Poppler {
 		FITBV,
 		NAMED
 	}
-	[CCode (cprefix = "POPPLER_ERROR_", has_type_id = "0", cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_ERROR_", has_type_id = false, cheader_filename = "poppler.h")]
 	public enum Error {
 		INVALID,
 		ENCRYPTED
 	}
-	[CCode (cprefix = "POPPLER_FONT_TYPE_", has_type_id = "0", cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_FONT_TYPE_", has_type_id = false, cheader_filename = "poppler.h")]
 	public enum FontType {
 		UNKNOWN,
 		TYPE1,
@@ -328,18 +328,18 @@ namespace Poppler {
 		CID_TYPE2,
 		CID_TYPE2OT
 	}
-	[CCode (cprefix = "POPPLER_FORM_BUTTON_", has_type_id = "0", cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_FORM_BUTTON_", has_type_id = false, cheader_filename = "poppler.h")]
 	public enum FormButtonType {
 		PUSH,
 		CHECK,
 		RADIO
 	}
-	[CCode (cprefix = "POPPLER_FORM_CHOICE_", has_type_id = "0", cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_FORM_CHOICE_", has_type_id = false, cheader_filename = "poppler.h")]
 	public enum FormChoiceType {
 		COMBO,
 		LIST
 	}
-	[CCode (cprefix = "POPPLER_FORM_FIELD_", has_type_id = "0", cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_FORM_FIELD_", has_type_id = false, cheader_filename = "poppler.h")]
 	public enum FormFieldType {
 		UNKNOWN,
 		BUTTON,
@@ -347,20 +347,20 @@ namespace Poppler {
 		CHOICE,
 		SIGNATURE
 	}
-	[CCode (cprefix = "POPPLER_FORM_TEXT_", has_type_id = "0", cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_FORM_TEXT_", has_type_id = false, cheader_filename = "poppler.h")]
 	public enum FormTextType {
 		NORMAL,
 		MULTILINE,
 		FILE_SELECT
 	}
-	[CCode (cprefix = "POPPLER_ORIENTATION_", has_type_id = "0", cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_ORIENTATION_", has_type_id = false, cheader_filename = "poppler.h")]
 	public enum Orientation {
 		PORTRAIT,
 		LANDSCAPE,
 		UPSIDEDOWN,
 		SEASCAPE
 	}
-	[CCode (cprefix = "POPPLER_PAGE_LAYOUT_", has_type_id = "0", cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_PAGE_LAYOUT_", has_type_id = false, cheader_filename = "poppler.h")]
 	public enum PageLayout {
 		UNSET,
 		SINGLE_PAGE,
@@ -370,7 +370,7 @@ namespace Poppler {
 		TWO_PAGE_LEFT,
 		TWO_PAGE_RIGHT
 	}
-	[CCode (cprefix = "POPPLER_PAGE_MODE_", has_type_id = "0", cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_PAGE_MODE_", has_type_id = false, cheader_filename = "poppler.h")]
 	public enum PageMode {
 		UNSET,
 		NONE,
@@ -380,17 +380,17 @@ namespace Poppler {
 		USE_OC,
 		USE_ATTACHMENTS
 	}
-	[CCode (cprefix = "POPPLER_PAGE_TRANSITION_", has_type_id = "0", cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_PAGE_TRANSITION_", has_type_id = false, cheader_filename = "poppler.h")]
 	public enum PageTransitionAlignment {
 		HORIZONTAL,
 		VERTICAL
 	}
-	[CCode (cprefix = "POPPLER_PAGE_TRANSITION_", has_type_id = "0", cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_PAGE_TRANSITION_", has_type_id = false, cheader_filename = "poppler.h")]
 	public enum PageTransitionDirection {
 		INWARD,
 		OUTWARD
 	}
-	[CCode (cprefix = "POPPLER_PAGE_TRANSITION_", has_type_id = "0", cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_PAGE_TRANSITION_", has_type_id = false, cheader_filename = "poppler.h")]
 	public enum PageTransitionType {
 		REPLACE,
 		SPLIT,
@@ -405,7 +405,7 @@ namespace Poppler {
 		UNCOVER,
 		FADE
 	}
-	[CCode (cprefix = "POPPLER_PERMISSIONS_", has_type_id = "0", cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_PERMISSIONS_", has_type_id = false, cheader_filename = "poppler.h")]
 	[Flags]
 	public enum Permissions {
 		OK_TO_PRINT,
@@ -414,13 +414,13 @@ namespace Poppler {
 		OK_TO_ADD_NOTES,
 		FULL
 	}
-	[CCode (cprefix = "POPPLER_SELECTION_", has_type_id = "0", cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_SELECTION_", has_type_id = false, cheader_filename = "poppler.h")]
 	public enum SelectionStyle {
 		GLYPH,
 		WORD,
 		LINE
 	}
-	[CCode (cprefix = "POPPLER_VIEWER_PREFERENCES_", has_type_id = "0", cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_VIEWER_PREFERENCES_", has_type_id = false, cheader_filename = "poppler.h")]
 	[Flags]
 	public enum ViewerPreferences {
 		UNSET,

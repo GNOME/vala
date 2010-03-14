@@ -176,7 +176,7 @@ namespace Gdk {
 		UPSIDEDOWN,
 		CLOCKWISE
 	}
-	[CCode (cprefix = "GDK_PIXDATA_DUMP_", has_type_id = "0", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
+	[CCode (cprefix = "GDK_PIXDATA_DUMP_", has_type_id = false, cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public enum PixdataDumpType {
 		PIXDATA_STREAM,
 		PIXDATA_STRUCT,
@@ -187,7 +187,7 @@ namespace Gdk {
 		CONST,
 		RLE_DECODER
 	}
-	[CCode (cprefix = "GDK_PIXDATA_", has_type_id = "0", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
+	[CCode (cprefix = "GDK_PIXDATA_", has_type_id = false, cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public enum PixdataType {
 		COLOR_TYPE_RGB,
 		COLOR_TYPE_RGBA,

@@ -410,12 +410,12 @@ namespace Oobs {
 		[NoAccessorMethod]
 		public bool use_md5 { get; }
 	}
-	[CCode (cprefix = "OOBS_DIAL_TYPE_", has_type_id = "0", cheader_filename = "oobs/oobs.h")]
+	[CCode (cprefix = "OOBS_DIAL_TYPE_", has_type_id = false, cheader_filename = "oobs/oobs.h")]
 	public enum DialType {
 		TONES,
 		PULSES
 	}
-	[CCode (cprefix = "OOBS_IFACE_TYPE_", has_type_id = "0", cheader_filename = "oobs/oobs.h")]
+	[CCode (cprefix = "OOBS_IFACE_TYPE_", has_type_id = false, cheader_filename = "oobs/oobs.h")]
 	public enum IfaceType {
 		ETHERNET,
 		WIRELESS,
@@ -423,14 +423,14 @@ namespace Oobs {
 		PLIP,
 		PPP
 	}
-	[CCode (cprefix = "OOBS_MODEM_VOLUME_", has_type_id = "0", cheader_filename = "oobs/oobs.h")]
+	[CCode (cprefix = "OOBS_MODEM_VOLUME_", has_type_id = false, cheader_filename = "oobs/oobs.h")]
 	public enum ModemVolume {
 		SILENT,
 		LOW,
 		MEDIUM,
 		LOUD
 	}
-	[CCode (cprefix = "OOBS_RESULT_", has_type_id = "0", cheader_filename = "oobs/oobs.h")]
+	[CCode (cprefix = "OOBS_RESULT_", has_type_id = false, cheader_filename = "oobs/oobs.h")]
 	public enum Result {
 		OK,
 		ACCESS_DENIED,
@@ -438,20 +438,20 @@ namespace Oobs {
 		MALFORMED_DATA,
 		ERROR
 	}
-	[CCode (cprefix = "OOBS_RUNLEVEL_", has_type_id = "0", cheader_filename = "oobs/oobs.h")]
+	[CCode (cprefix = "OOBS_RUNLEVEL_", has_type_id = false, cheader_filename = "oobs/oobs.h")]
 	public enum RunlevelRole {
 		HALT,
 		REBOOT,
 		MONOUSER,
 		MULTIUSER
 	}
-	[CCode (cprefix = "OOBS_SERVICE_", has_type_id = "0", cheader_filename = "oobs/oobs.h")]
+	[CCode (cprefix = "OOBS_SERVICE_", has_type_id = false, cheader_filename = "oobs/oobs.h")]
 	public enum ServiceStatus {
 		START,
 		STOP,
 		IGNORE
 	}
-	[CCode (cprefix = "OOBS_SHARE_SMB_", has_type_id = "0", cheader_filename = "oobs/oobs.h")]
+	[CCode (cprefix = "OOBS_SHARE_SMB_", has_type_id = false, cheader_filename = "oobs/oobs.h")]
 	[Flags]
 	public enum ShareSMBFlags {
 		ENABLED,

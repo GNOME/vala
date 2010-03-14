@@ -185,7 +185,7 @@ namespace Gst {
 		NONE,
 		NUM
 	}
-	[CCode (cprefix = "GST_AUDIO_FIELD_", has_type_id = "0", cheader_filename = "gst/audio/audio.h")]
+	[CCode (cprefix = "GST_AUDIO_FIELD_", has_type_id = false, cheader_filename = "gst/audio/audio.h")]
 	public enum AudioFieldFlag {
 		RATE,
 		CHANNELS,

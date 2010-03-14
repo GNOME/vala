@@ -38,7 +38,7 @@ namespace Notify {
 		public string summary { owned get; set construct; }
 		public virtual signal void closed ();
 	}
-	[CCode (cprefix = "NOTIFY_URGENCY_", has_type_id = "0", cheader_filename = "libnotify/notify.h")]
+	[CCode (cprefix = "NOTIFY_URGENCY_", has_type_id = false, cheader_filename = "libnotify/notify.h")]
 	public enum Urgency {
 		LOW,
 		NORMAL,

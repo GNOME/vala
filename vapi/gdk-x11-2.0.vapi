@@ -33,7 +33,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static unowned X.Display x11_drawable_get_xdisplay (Gdk.Drawable drawable);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static uint32 x11_drawable_get_xid (Gdk.Drawable drawable);
+	public static X.ID x11_drawable_get_xid (Gdk.Drawable drawable);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static unowned X.Display x11_gc_get_xdisplay (Gdk.GC gc);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
@@ -91,7 +91,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static Gdk.Atom x11_xatom_to_atom_for_display (Gdk.Display display, X.Atom xatom);
 	[CCode (cname = "gdk_xid_table_lookup", cheader_filename = "gdk/gdkx.h")]
-	public static void* x11_xid_table_lookup (uint32 xid);
+	public static void* x11_xid_table_lookup (X.ID xid);
 	[CCode (cname = "gdk_xid_table_lookup_for_display", cheader_filename = "gdk/gdkx.h")]
-	public static void* x11_xid_table_lookup_for_display (Gdk.Display display, uint32 xid);
+	public static void* x11_xid_table_lookup_for_display (Gdk.Display display, X.ID xid);
 }

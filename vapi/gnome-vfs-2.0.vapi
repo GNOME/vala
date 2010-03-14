@@ -565,12 +565,12 @@ namespace GnomeVFS {
 	[IntegerType (rank = 0)]
 	public struct FileSize : uint64 {
 	}
-	[CCode (cprefix = "GNOME_VFS_DNS_SD_SERVICE_", has_type_id = "0", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cprefix = "GNOME_VFS_DNS_SD_SERVICE_", has_type_id = false, cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public enum DNSSDServiceStatus {
 		ADDED,
 		REMOVED
 	}
-	[CCode (cprefix = "GNOME_VFS_DEVICE_TYPE_", has_type_id = "0", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cprefix = "GNOME_VFS_DEVICE_TYPE_", has_type_id = false, cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public enum DeviceType {
 		UNKNOWN,
 		AUDIO_CD,
@@ -591,7 +591,7 @@ namespace GnomeVFS {
 		LOOPBACK,
 		NETWORK
 	}
-	[CCode (cprefix = "GNOME_VFS_DIRECTORY_VISIT_", has_type_id = "0", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cprefix = "GNOME_VFS_DIRECTORY_VISIT_", has_type_id = false, cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	[Flags]
 	public enum DirectoryVisitOptions {
 		DEFAULT,
@@ -599,14 +599,14 @@ namespace GnomeVFS {
 		LOOPCHECK,
 		IGNORE_RECURSE_ERROR
 	}
-	[CCode (cprefix = "GNOME_VFS_FILE_FLAGS_", has_type_id = "0", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cprefix = "GNOME_VFS_FILE_FLAGS_", has_type_id = false, cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	[Flags]
 	public enum FileFlags {
 		NONE,
 		SYMLINK,
 		LOCAL
 	}
-	[CCode (cprefix = "GNOME_VFS_FILE_INFO_FIELDS_", has_type_id = "0", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cprefix = "GNOME_VFS_FILE_INFO_FIELDS_", has_type_id = false, cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	[Flags]
 	public enum FileInfoFields {
 		NONE,
@@ -629,7 +629,7 @@ namespace GnomeVFS {
 		ACL,
 		SELINUX_CONTEXT
 	}
-	[CCode (cprefix = "GNOME_VFS_FILE_INFO_", has_type_id = "0", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cprefix = "GNOME_VFS_FILE_INFO_", has_type_id = false, cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	[Flags]
 	public enum FileInfoOptions {
 		DEFAULT,
@@ -642,7 +642,7 @@ namespace GnomeVFS {
 		GET_ACL,
 		GET_SELINUX_CONTEXT
 	}
-	[CCode (cprefix = "GNOME_VFS_PERM_", has_type_id = "0", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cprefix = "GNOME_VFS_PERM_", has_type_id = false, cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	[Flags]
 	public enum FilePermissions {
 		SUID,
@@ -664,7 +664,7 @@ namespace GnomeVFS {
 		ACCESS_WRITABLE,
 		ACCESS_EXECUTABLE
 	}
-	[CCode (cprefix = "GNOME_VFS_FILE_TYPE_", has_type_id = "0", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cprefix = "GNOME_VFS_FILE_TYPE_", has_type_id = false, cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public enum FileType {
 		UNKNOWN,
 		REGULAR,
@@ -675,42 +675,42 @@ namespace GnomeVFS {
 		BLOCK_DEVICE,
 		SYMBOLIC_LINK
 	}
-	[CCode (cprefix = "GNOME_VFS_DIRECTORY_KIND_", has_type_id = "0", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cprefix = "GNOME_VFS_DIRECTORY_KIND_", has_type_id = false, cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public enum FindDirectoryKind {
 		DESKTOP,
 		TRASH
 	}
-	[CCode (cprefix = "GNOME_VFS_MAKE_URI_DIR_", has_type_id = "0", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cprefix = "GNOME_VFS_MAKE_URI_DIR_", has_type_id = false, cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	[Flags]
 	public enum MakeURIDirs {
 		NONE,
 		HOMEDIR,
 		CURRENT
 	}
-	[CCode (cprefix = "GNOME_VFS_MIME_ACTION_TYPE_", has_type_id = "0", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cprefix = "GNOME_VFS_MIME_ACTION_TYPE_", has_type_id = false, cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public enum MimeActionType {
 		NONE,
 		APPLICATION,
 		COMPONENT
 	}
-	[CCode (cprefix = "GNOME_VFS_MIME_APPLICATION_ARGUMENT_TYPE_", has_type_id = "0", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cprefix = "GNOME_VFS_MIME_APPLICATION_ARGUMENT_TYPE_", has_type_id = false, cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public enum MimeApplicationArgumentType {
 		URIS,
 		PATHS,
 		URIS_FOR_NON_FILES
 	}
-	[CCode (cprefix = "GNOME_VFS_MIME_", has_type_id = "0", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cprefix = "GNOME_VFS_MIME_", has_type_id = false, cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public enum MimeEquivalence {
 		UNRELATED,
 		IDENTICAL,
 		PARENT
 	}
-	[CCode (cprefix = "", has_type_id = "0", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cprefix = "", has_type_id = false, cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public enum ModuleCallbackAuthenticationAuthType {
 		AuthTypeBasic,
 		AuthTypeDigest
 	}
-	[CCode (cprefix = "GNOME_VFS_MODULE_CALLBACK_FULL_AUTHENTICATION_", has_type_id = "0", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cprefix = "GNOME_VFS_MODULE_CALLBACK_FULL_AUTHENTICATION_", has_type_id = false, cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	[Flags]
 	public enum ModuleCallbackFullAuthenticationFlags {
 		PREVIOUS_ATTEMPT_FAILED,
@@ -720,12 +720,12 @@ namespace GnomeVFS {
 		SAVING_SUPPORTED,
 		ANON_SUPPORTED
 	}
-	[CCode (cprefix = "GNOME_VFS_MODULE_CALLBACK_FULL_AUTHENTICATION_OUT_ANON_", has_type_id = "0", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cprefix = "GNOME_VFS_MODULE_CALLBACK_FULL_AUTHENTICATION_OUT_ANON_", has_type_id = false, cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	[Flags]
 	public enum ModuleCallbackFullAuthenticationOutFlags {
 		SELECTED
 	}
-	[CCode (cprefix = "GNOME_VFS_MONITOR_EVENT_", has_type_id = "0", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cprefix = "GNOME_VFS_MONITOR_EVENT_", has_type_id = false, cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public enum MonitorEventType {
 		CHANGED,
 		DELETED,
@@ -734,12 +734,12 @@ namespace GnomeVFS {
 		CREATED,
 		METADATA_CHANGED
 	}
-	[CCode (cprefix = "GNOME_VFS_MONITOR_", has_type_id = "0", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cprefix = "GNOME_VFS_MONITOR_", has_type_id = false, cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public enum MonitorType {
 		FILE,
 		DIRECTORY
 	}
-	[CCode (cprefix = "GNOME_VFS_OPEN_", has_type_id = "0", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cprefix = "GNOME_VFS_OPEN_", has_type_id = false, cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	[Flags]
 	public enum OpenMode {
 		NONE,
@@ -748,7 +748,7 @@ namespace GnomeVFS {
 		RANDOM,
 		TRUNCATE
 	}
-	[CCode (cprefix = "GNOME_VFS_", has_type_id = "0", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cprefix = "GNOME_VFS_", has_type_id = false, cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public enum Result {
 		OK,
 		ERROR_NOT_FOUND,
@@ -804,13 +804,13 @@ namespace GnomeVFS {
 		ERROR_NOT_A_SYMBOLIC_LINK,
 		NUM_ERRORS
 	}
-	[CCode (cprefix = "GNOME_VFS_SEEK_", has_type_id = "0", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cprefix = "GNOME_VFS_SEEK_", has_type_id = false, cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public enum SeekPosition {
 		START,
 		CURRENT,
 		END
 	}
-	[CCode (cprefix = "GNOME_VFS_SET_FILE_INFO_", has_type_id = "0", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cprefix = "GNOME_VFS_SET_FILE_INFO_", has_type_id = false, cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	[Flags]
 	public enum SetFileInfoMask {
 		NONE,
@@ -822,7 +822,7 @@ namespace GnomeVFS {
 		SELINUX_CONTEXT,
 		SYMLINK_NAME
 	}
-	[CCode (cprefix = "GNOME_VFS_URI_HIDE_", has_type_id = "0", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cprefix = "GNOME_VFS_URI_HIDE_", has_type_id = false, cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	[Flags]
 	public enum URIHideOptions {
 		NONE,
@@ -833,24 +833,24 @@ namespace GnomeVFS {
 		TOPLEVEL_METHOD,
 		FRAGMENT_IDENTIFIER
 	}
-	[CCode (cprefix = "GNOME_VFS_VOLUME_TYPE_", has_type_id = "0", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cprefix = "GNOME_VFS_VOLUME_TYPE_", has_type_id = false, cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public enum VolumeType {
 		MOUNTPOINT,
 		VFS_MOUNT,
 		CONNECTED_SERVER
 	}
-	[CCode (cprefix = "GNOME_VFS_XFER_ERROR_ACTION_", has_type_id = "0", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cprefix = "GNOME_VFS_XFER_ERROR_ACTION_", has_type_id = false, cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public enum XferErrorAction {
 		ABORT,
 		RETRY,
 		SKIP
 	}
-	[CCode (cprefix = "GNOME_VFS_XFER_ERROR_MODE_", has_type_id = "0", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cprefix = "GNOME_VFS_XFER_ERROR_MODE_", has_type_id = false, cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public enum XferErrorMode {
 		ABORT,
 		QUERY
 	}
-	[CCode (cprefix = "GNOME_VFS_XFER_", has_type_id = "0", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cprefix = "GNOME_VFS_XFER_", has_type_id = false, cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	[Flags]
 	public enum XferOptions {
 		DEFAULT,
@@ -868,7 +868,7 @@ namespace GnomeVFS {
 		FOLLOW_LINKS_RECURSIVE,
 		TARGET_DEFAULT_PERMS
 	}
-	[CCode (cprefix = "GNOME_VFS_XFER_OVERWRITE_ACTION_", has_type_id = "0", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cprefix = "GNOME_VFS_XFER_OVERWRITE_ACTION_", has_type_id = false, cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public enum XferOverwriteAction {
 		ABORT,
 		REPLACE,
@@ -876,14 +876,14 @@ namespace GnomeVFS {
 		SKIP,
 		SKIP_ALL
 	}
-	[CCode (cprefix = "GNOME_VFS_XFER_OVERWRITE_MODE_", has_type_id = "0", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cprefix = "GNOME_VFS_XFER_OVERWRITE_MODE_", has_type_id = false, cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public enum XferOverwriteMode {
 		ABORT,
 		QUERY,
 		REPLACE,
 		SKIP
 	}
-	[CCode (cprefix = "GNOME_VFS_XFER_", has_type_id = "0", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cprefix = "GNOME_VFS_XFER_", has_type_id = false, cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public enum XferPhase {
 		PHASE_INITIAL,
 		CHECKING_DESTINATION,
@@ -904,7 +904,7 @@ namespace GnomeVFS {
 		PHASE_COMPLETED,
 		NUM_PHASES
 	}
-	[CCode (cprefix = "GNOME_VFS_XFER_PROGRESS_STATUS_", has_type_id = "0", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cprefix = "GNOME_VFS_XFER_PROGRESS_STATUS_", has_type_id = false, cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public enum XferProgressStatus {
 		OK,
 		VFSERROR,

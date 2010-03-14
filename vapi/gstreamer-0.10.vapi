@@ -64,7 +64,7 @@ namespace Gst {
 	[CCode (ref_function = "gst_buffer_ref", unref_function = "gst_buffer_unref", cheader_filename = "gst/gst.h")]
 	public class Buffer : Gst.MiniObject {
 		public weak Gst.Caps caps;
-		[CCode (array_length_cname = "size")]
+		[CCode (array_length_cname = "size", array_length_type = "guint")]
 		public weak uint8[] data;
 		public Gst.ClockTime duration;
 		public weak GLib.FreeFunc free_func;
@@ -2188,35 +2188,35 @@ namespace Gst {
 		DISABLED,
 		NUM_ERRORS,
 	}
-	[CCode (cheader_filename = "gst/gst.h", instance_pos = -2)]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate unowned Gst.Buffer BufferListDoFunction (Gst.Buffer buffer);
-	[CCode (cheader_filename = "gst/gst.h", instance_pos = -2)]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate Gst.BufferListItem BufferListFunc (out unowned Gst.Buffer buffer, uint group, uint idx);
-	[CCode (cheader_filename = "gst/gst.h", instance_pos = -2)]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate bool BufferProbeCallback (Gst.Pad pad, Gst.Buffer buffer);
-	[CCode (cheader_filename = "gst/gst.h", instance_pos = -2)]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate bool BusFunc (Gst.Bus bus, Gst.Message message);
-	[CCode (cheader_filename = "gst/gst.h", instance_pos = -2)]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate Gst.BusSyncReply BusSyncHandler (Gst.Bus bus, Gst.Message message);
-	[CCode (cheader_filename = "gst/gst.h", instance_pos = -2)]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate bool ClockCallback (Gst.Clock clock, Gst.ClockTime time, Gst.ClockID id);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate void* CopyFunction (void* object);
-	[CCode (cheader_filename = "gst/gst.h", instance_pos = -2)]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate bool DataProbeCallback (Gst.Pad pad, Gst.MiniObject data);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate void DebugFuncPtr ();
-	[CCode (cheader_filename = "gst/gst.h", instance_pos = -2)]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate bool EventProbeCallback (Gst.Pad pad, Gst.Event event);
-	[CCode (cheader_filename = "gst/gst.h", instance_pos = -2)]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate bool FilterFunc (void* obj);
-	[CCode (cheader_filename = "gst/gst.h", instance_pos = -2)]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate bool IndexFilter (Gst.Index index, Gst.IndexEntry entry);
-	[CCode (cheader_filename = "gst/gst.h", instance_pos = -2)]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate bool IndexResolver (Gst.Index index, Gst.Object writer, string writer_string);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate void IteratorDisposeFunction (void* owner);
-	[CCode (cheader_filename = "gst/gst.h", instance_pos = -2)]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate bool IteratorFoldFunction (void* item, Gst.Value ret);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate void IteratorFreeFunction (Gst.Iterator it);
@@ -2226,7 +2226,7 @@ namespace Gst {
 	public delegate Gst.IteratorResult IteratorNextFunction (Gst.Iterator it, void* result);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate void IteratorResyncFunction (Gst.Iterator it);
-	[CCode (cheader_filename = "gst/gst.h", instance_pos = -2)]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate void LogFunction (Gst.DebugCategory category, Gst.DebugLevel level, string file, string function, int line, GLib.Object object, Gst.DebugMessage message);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate unowned Gst.MiniObject MiniObjectCopyFunction (Gst.MiniObject obj);
@@ -2238,7 +2238,7 @@ namespace Gst {
 	public delegate bool PadActivateFunction (Gst.Pad pad);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate bool PadActivateModeFunction (Gst.Pad pad, bool active);
-	[CCode (cheader_filename = "gst/gst.h", instance_pos = -2)]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate void PadBlockCallback (Gst.Pad pad, bool blocked);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate Gst.FlowReturn PadBufferAllocFunction (Gst.Pad pad, uint64 offset, uint size, Gst.Caps caps, out Gst.Buffer buf);
@@ -2248,7 +2248,7 @@ namespace Gst {
 	public delegate Gst.FlowReturn PadChainListFunction (Gst.Pad pad, Gst.BufferList list);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate bool PadCheckGetRangeFunction (Gst.Pad pad);
-	[CCode (cheader_filename = "gst/gst.h", instance_pos = -2)]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate bool PadDispatcherFunction (Gst.Pad pad);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate bool PadEventFunction (Gst.Pad pad, owned Gst.Event event);
@@ -2272,27 +2272,27 @@ namespace Gst {
 	public delegate bool PadSetCapsFunction (Gst.Pad pad, Gst.Caps caps);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate void PadUnlinkFunction (Gst.Pad pad);
-	[CCode (cheader_filename = "gst/gst.h", instance_pos = -2)]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate bool PluginFeatureFilter (Gst.PluginFeature feature);
-	[CCode (cheader_filename = "gst/gst.h", instance_pos = -2)]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate bool PluginFilter (Gst.Plugin plugin);
-	[CCode (cheader_filename = "gst/gst.h", instance_pos = -2)]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate bool PluginInitFullFunc (Gst.Plugin plugin);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate bool PluginInitFunc (Gst.Plugin plugin);
-	[CCode (cheader_filename = "gst/gst.h", instance_pos = -2)]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate bool StructureForeachFunc (GLib.Quark field_id, Gst.Value value);
-	[CCode (cheader_filename = "gst/gst.h", instance_pos = -2)]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate bool StructureMapFunc (GLib.Quark field_id, Gst.Value value);
-	[CCode (cheader_filename = "gst/gst.h", instance_pos = -2)]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate void TagForeachFunc (Gst.TagList list, string tag);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate void TagMergeFunc (Gst.Value dest, Gst.Value src);
-	[CCode (cheader_filename = "gst/gst.h", instance_pos = -2)]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate void TaskFunction ();
-	[CCode (cheader_filename = "gst/gst.h", instance_pos = -2)]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate void TaskPoolFunction ();
-	[CCode (cheader_filename = "gst/gst.h", instance_pos = -2)]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate void TypeFindFunction (Gst.TypeFind find);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate int ValueCompareFunc (Gst.Value value1, Gst.Value value2);

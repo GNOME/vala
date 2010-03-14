@@ -10,11 +10,6 @@ namespace Gst {
 		[CCode (cname = "gst_netbuffer_new", has_construct_function = false)]
 		public NetBuffer ();
 	}
-	[Compact]
-	[CCode (cheader_filename = "gst/netbuffer/gstnetbuffer.h")]
-	public class NetBufferClass {
-		public weak Gst.BufferClass buffer_class;
-	}
 	[CCode (type_id = "GST_TYPE_NET_ADDRESS", cheader_filename = "gst/netbuffer/gstnetbuffer.h")]
 	public struct NetAddress {
 		public Gst.NetType type;
@@ -39,7 +34,7 @@ namespace Gst {
 		[CCode (cname = "gst_netaddress_to_string")]
 		public int to_string (string dest, ulong len);
 	}
-	[CCode (cprefix = "GST_NET_TYPE_", has_type_id = "0", cheader_filename = "gst/netbuffer/gstnetbuffer.h")]
+	[CCode (cprefix = "GST_NET_TYPE_", has_type_id = false, cheader_filename = "gst/netbuffer/gstnetbuffer.h")]
 	public enum NetType {
 		UNKNOWN,
 		IP4,

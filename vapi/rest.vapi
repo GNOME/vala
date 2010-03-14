@@ -203,8 +203,8 @@ namespace Rest {
 		HTTP_GATEWAY_TIMEOUT,
 		HTTP_HTTP_VERSION_NOT_SUPPORTED,
 	}
-	[CCode (cheader_filename = "rest/oauth-proxy.h", instance_pos = -2)]
+	[CCode (cheader_filename = "rest/oauth-proxy.h")]
 	public delegate void OAuthProxyAuthCallback (Rest.OAuthProxy proxy, GLib.Error? error, GLib.Object? weak_object);
-	[CCode (cheader_filename = "rest/rest-proxy-call.h", instance_pos = -2)]
+	[CCode (cheader_filename = "rest/rest-proxy-call.h")]
 	public delegate void ProxyCallAsyncCallback (Rest.ProxyCall call, GLib.Error? error, GLib.Object? weak_object);
 }

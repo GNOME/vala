@@ -752,13 +752,6 @@ namespace Purple {
 	}
 	[Compact]
 	[CCode (cheader_filename = "purple.h")]
-	public class DBusBinding {
-		public weak GLib.Callback handler;
-		public weak string name;
-		public weak string parameters;
-	}
-	[Compact]
-	[CCode (cheader_filename = "purple.h")]
 	public class DBusType {
 		public weak Purple.DBusType parent;
 	}
@@ -1127,11 +1120,6 @@ namespace Purple {
 		public void set_label (string label);
 		public void set_type (Purple.NotifyUserInfoEntryType type);
 		public void set_value (string value);
-	}
-	[Compact]
-	[CCode (cheader_filename = "purple.h")]
-	public class OrigFn {
-		public uint nraddr;
 	}
 	[Compact]
 	[CCode (free_function = "purple_plugin_destroy", cheader_filename = "purple.h")]
@@ -2191,15 +2179,15 @@ namespace Purple {
 		[CCode (cname = "xmlnode_to_str")]
 		public static unowned string to_str (Purple.xmlnode node, int len);
 	}
-	[CCode (cprefix = "PURPLE_ACCOUNT_REQUEST_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_ACCOUNT_REQUEST_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum AccountRequestType {
 		AUTHORIZATION
 	}
-	[CCode (cprefix = "PURPLE_BLIST_NODE_FLAG_NO_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_BLIST_NODE_FLAG_NO_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum BlistNodeFlags {
 		SAVE
 	}
-	[CCode (cprefix = "PURPLE_BLIST_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_BLIST_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum BlistNodeType {
 		GROUP_NODE,
 		CONTACT_NODE,
@@ -2207,17 +2195,17 @@ namespace Purple {
 		CHAT_NODE,
 		OTHER_NODE
 	}
-	[CCode (cprefix = "PURPLE_CERTIFICATE_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_CERTIFICATE_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum CertificateVerificationStatus {
 		INVALID,
 		VALID
 	}
-	[CCode (cprefix = "PURPLE_CIPHER_BATCH_MODE_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_CIPHER_BATCH_MODE_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum CipherBatchMode {
 		ECB,
 		CBC
 	}
-	[CCode (cprefix = "PURPLE_CIPHER_CAPS_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_CIPHER_CAPS_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum CipherCaps {
 		SET_OPT,
 		GET_OPT,
@@ -2239,14 +2227,14 @@ namespace Purple {
 		SET_KEY_WITH_LEN,
 		UNKNOWN
 	}
-	[CCode (cprefix = "PURPLE_CMD_FLAG_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_CMD_FLAG_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum CmdFlag {
 		IM,
 		CHAT,
 		PRPL_ONLY,
 		ALLOW_WRONG_ARGS
 	}
-	[CCode (cprefix = "PURPLE_CMD_P_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_CMD_P_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum CmdPriority {
 		VERY_LOW,
 		LOW,
@@ -2257,13 +2245,13 @@ namespace Purple {
 		HIGH,
 		VERY_HIGH
 	}
-	[CCode (cprefix = "PURPLE_CMD_RET_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_CMD_RET_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum CmdRet {
 		OK,
 		FAILED,
 		CONTINUE
 	}
-	[CCode (cprefix = "PURPLE_CMD_STATUS_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_CMD_STATUS_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum CmdStatus {
 		OK,
 		FAILED,
@@ -2272,7 +2260,7 @@ namespace Purple {
 		WRONG_PRPL,
 		WRONG_TYPE
 	}
-	[CCode (cprefix = "PURPLE_CONNECTION_ERROR_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_CONNECTION_ERROR_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum ConnectionError {
 		NETWORK_ERROR,
 		INVALID_USERNAME,
@@ -2292,7 +2280,7 @@ namespace Purple {
 		CERT_OTHER_ERROR,
 		OTHER_ERROR
 	}
-	[CCode (cprefix = "PURPLE_CONNECTION_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_CONNECTION_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum ConnectionFlags {
 		HTML,
 		NO_BGCOLOR,
@@ -2304,13 +2292,13 @@ namespace Purple {
 		NO_IMAGES,
 		ALLOW_CUSTOM_SMILEY
 	}
-	[CCode (cprefix = "PURPLE_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum ConnectionState {
 		DISCONNECTED,
 		CONNECTED,
 		CONNECTING
 	}
-	[CCode (cprefix = "PURPLE_CBFLAGS_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_CBFLAGS_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum ConvChatBuddyFlags {
 		NONE,
 		VOICE,
@@ -2319,7 +2307,7 @@ namespace Purple {
 		FOUNDER,
 		TYPING
 	}
-	[CCode (cprefix = "PURPLE_CONV_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_CONV_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum ConvUpdateType {
 		UPDATE_ADD,
 		UPDATE_REMOVE,
@@ -2336,7 +2324,7 @@ namespace Purple {
 		UPDATE_CHATLEFT,
 		UPDATE_FEATURES
 	}
-	[CCode (cprefix = "PURPLE_CONV_TYPE_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_CONV_TYPE_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum ConversationType {
 		UNKNOWN,
 		IM,
@@ -2344,7 +2332,7 @@ namespace Purple {
 		MISC,
 		ANY
 	}
-	[CCode (cprefix = "PURPLE_DEBUG_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_DEBUG_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum DebugLevel {
 		ALL,
 		MISC,
@@ -2353,7 +2341,7 @@ namespace Purple {
 		ERROR,
 		FATAL
 	}
-	[CCode (cprefix = "PURPLE_DESKTOP_ITEM_TYPE_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_DESKTOP_ITEM_TYPE_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum DesktopItemType {
 		NULL,
 		OTHER,
@@ -2365,27 +2353,27 @@ namespace Purple {
 		SERVICE,
 		SERVICE_TYPE
 	}
-	[CCode (cprefix = "PURPLE_ICON_SCALE_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_ICON_SCALE_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum IconScaleRules {
 		DISPLAY,
 		SEND
 	}
-	[CCode (cprefix = "PURPLE_INPUT_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_INPUT_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum InputCondition {
 		READ,
 		WRITE
 	}
-	[CCode (cprefix = "PURPLE_LOG_READ_NO_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_LOG_READ_NO_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum LogReadFlags {
 		NEWLINE
 	}
-	[CCode (cprefix = "PURPLE_LOG_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_LOG_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum LogType {
 		IM,
 		CHAT,
 		SYSTEM
 	}
-	[CCode (cprefix = "PURPLE_MEDIA_CANDIDATE_TYPE_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_MEDIA_CANDIDATE_TYPE_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum MediaCandidateType {
 		HOST,
 		SRFLX,
@@ -2393,7 +2381,7 @@ namespace Purple {
 		RELAY,
 		MULTICAST
 	}
-	[CCode (cprefix = "PURPLE_MEDIA_CAPS_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_MEDIA_CAPS_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum MediaCaps {
 		NONE,
 		AUDIO,
@@ -2404,13 +2392,13 @@ namespace Purple {
 		MODIFY_SESSION,
 		CHANGE_DIRECTION
 	}
-	[CCode (cprefix = "PURPLE_MEDIA_COMPONENT_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_MEDIA_COMPONENT_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum MediaComponentType {
 		NONE,
 		RTP,
 		RTCP
 	}
-	[CCode (cprefix = "PURPLE_MEDIA_ELEMENT_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_MEDIA_ELEMENT_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum MediaElementType {
 		NONE,
 		AUDIO,
@@ -2428,7 +2416,7 @@ namespace Purple {
 		SRC,
 		SINK
 	}
-	[CCode (cprefix = "PURPLE_MEDIA_INFO_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_MEDIA_INFO_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum MediaInfoType {
 		HANGUP,
 		ACCEPT,
@@ -2440,12 +2428,12 @@ namespace Purple {
 		HOLD,
 		UNHOLD
 	}
-	[CCode (cprefix = "PURPLE_MEDIA_NETWORK_PROTOCOL_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_MEDIA_NETWORK_PROTOCOL_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum MediaNetworkProtocol {
 		UDP,
 		TCP
 	}
-	[CCode (cprefix = "PURPLE_MEDIA_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_MEDIA_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum MediaSessionType {
 		NONE,
 		RECV_AUDIO,
@@ -2455,13 +2443,13 @@ namespace Purple {
 		AUDIO,
 		VIDEO
 	}
-	[CCode (cprefix = "PURPLE_MEDIA_STATE_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_MEDIA_STATE_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum MediaState {
 		NEW,
 		CONNECTED,
 		END
 	}
-	[CCode (cprefix = "PURPLE_MESSAGE_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_MESSAGE_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum MessageFlags {
 		SEND,
 		RECV,
@@ -2479,13 +2467,13 @@ namespace Purple {
 		NO_LINKIFY,
 		INVISIBLE
 	}
-	[CCode (cprefix = "PURPLE_NOTIFY_MSG_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_NOTIFY_MSG_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum NotifyMsgType {
 		ERROR,
 		WARNING,
 		INFO
 	}
-	[CCode (cprefix = "PURPLE_NOTIFY_BUTTON_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_NOTIFY_BUTTON_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum NotifySearchButtonType {
 		LABELED,
 		CONTINUE,
@@ -2495,7 +2483,7 @@ namespace Purple {
 		JOIN,
 		INVITE
 	}
-	[CCode (cprefix = "PURPLE_NOTIFY_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_NOTIFY_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum NotifyType {
 		MESSAGE,
 		EMAIL,
@@ -2505,32 +2493,32 @@ namespace Purple {
 		USERINFO,
 		URI
 	}
-	[CCode (cprefix = "PURPLE_NOTIFY_USER_INFO_ENTRY_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_NOTIFY_USER_INFO_ENTRY_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum NotifyUserInfoEntryType {
 		PAIR,
 		SECTION_BREAK,
 		SECTION_HEADER
 	}
-	[CCode (cprefix = "PURPLE_PLUGIN_PREF_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_PLUGIN_PREF_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum PluginPrefType {
 		NONE,
 		CHOICE,
 		INFO,
 		STRING_FORMAT
 	}
-	[CCode (cprefix = "PURPLE_PLUGIN_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_PLUGIN_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum PluginType {
 		UNKNOWN,
 		STANDARD,
 		LOADER,
 		PROTOCOL
 	}
-	[CCode (cprefix = "PURPLE_PMP_TYPE_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_PMP_TYPE_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum PmpType {
 		UDP,
 		TCP
 	}
-	[CCode (cprefix = "PURPLE_POUNCE_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_POUNCE_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum PounceEvent {
 		NONE,
 		SIGNON,
@@ -2544,12 +2532,12 @@ namespace Purple {
 		TYPING_STOPPED,
 		MESSAGE_RECEIVED
 	}
-	[CCode (cprefix = "PURPLE_POUNCE_OPTION_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_POUNCE_OPTION_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum PounceOption {
 		NONE,
 		AWAY
 	}
-	[CCode (cprefix = "PURPLE_PREF_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_PREF_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum PrefType {
 		NONE,
 		BOOLEAN,
@@ -2559,14 +2547,14 @@ namespace Purple {
 		PATH,
 		PATH_LIST
 	}
-	[CCode (cprefix = "PURPLE_PRESENCE_CONTEXT_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_PRESENCE_CONTEXT_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum PresenceContext {
 		UNSET,
 		ACCOUNT,
 		CONV,
 		BUDDY
 	}
-	[CCode (cprefix = "PURPLE_PRIVACY_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_PRIVACY_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum PrivacyType {
 		ALLOW_ALL,
 		DENY_ALL,
@@ -2574,7 +2562,7 @@ namespace Purple {
 		DENY_USERS,
 		ALLOW_BUDDYLIST
 	}
-	[CCode (cprefix = "OPT_PROTO_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "OPT_PROTO_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum ProtocolOptions {
 		UNIQUE_CHATNAME,
 		CHAT_TOPIC,
@@ -2586,7 +2574,7 @@ namespace Purple {
 		REGISTER_NOSCREENNAME,
 		SLASH_COMMANDS_NATIVE
 	}
-	[CCode (cprefix = "PURPLE_PROXY_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_PROXY_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum ProxyType {
 		USE_GLOBAL,
 		NONE,
@@ -2595,7 +2583,7 @@ namespace Purple {
 		SOCKS5,
 		USE_ENVVAR
 	}
-	[CCode (cprefix = "PURPLE_REQUEST_FIELD_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_REQUEST_FIELD_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum RequestFieldType {
 		NONE,
 		STRING,
@@ -2607,7 +2595,7 @@ namespace Purple {
 		IMAGE,
 		ACCOUNT
 	}
-	[CCode (cprefix = "PURPLE_REQUEST_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_REQUEST_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum RequestType {
 		INPUT,
 		CHOICE,
@@ -2616,18 +2604,18 @@ namespace Purple {
 		FILE,
 		FOLDER
 	}
-	[CCode (cprefix = "PURPLE_ROOMLIST_FIELD_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_ROOMLIST_FIELD_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum RoomlistFieldType {
 		BOOL,
 		INT,
 		STRING
 	}
-	[CCode (cprefix = "PURPLE_ROOMLIST_ROOMTYPE_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_ROOMLIST_ROOMTYPE_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum RoomlistRoomType {
 		CATEGORY,
 		ROOM
 	}
-	[CCode (cprefix = "PURPLE_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum SoundEventID {
 		SOUND_BUDDY_ARRIVE,
 		SOUND_BUDDY_LEAVE,
@@ -2642,13 +2630,13 @@ namespace Purple {
 		SOUND_CHAT_NICK,
 		NUM_SOUNDS
 	}
-	[CCode (cprefix = "PURPLE_SSL_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_SSL_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum SslErrorType {
 		HANDSHAKE_FAILED,
 		CONNECT_FAILED,
 		CERTIFICATE_INVALID
 	}
-	[CCode (cprefix = "PURPLE_STATUS_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_STATUS_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum StatusPrimitive {
 		UNSET,
 		OFFLINE,
@@ -2661,13 +2649,13 @@ namespace Purple {
 		TUNE,
 		NUM_PRIMITIVES
 	}
-	[CCode (cprefix = "PURPLE_STRING_FORMAT_TYPE_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_STRING_FORMAT_TYPE_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum StringFormatType {
 		NONE,
 		MULTILINE,
 		HTML
 	}
-	[CCode (cprefix = "PURPLE_STUN_NAT_TYPE_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_STUN_NAT_TYPE_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum StunNatType {
 		PUBLIC_IP,
 		UNKNOWN_NAT,
@@ -2676,14 +2664,14 @@ namespace Purple {
 		PORT_RESTRICTED_CONE,
 		SYMMETRIC
 	}
-	[CCode (cprefix = "PURPLE_STUN_STATUS_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_STUN_STATUS_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum StunStatus {
 		UNDISCOVERED,
 		UNKNOWN,
 		DISCOVERING,
 		DISCOVERED
 	}
-	[CCode (cprefix = "PURPLE_SUBTYPE_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_SUBTYPE_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum SubType {
 		UNKNOWN,
 		ACCOUNT,
@@ -2706,7 +2694,7 @@ namespace Purple {
 		STORED_IMAGE,
 		CERTIFICATEPOOL
 	}
-	[CCode (cprefix = "PURPLE_TYPE_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_TYPE_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum Type {
 		UNKNOWN,
 		SUBTYPE,
@@ -2727,44 +2715,19 @@ namespace Purple {
 		ENUM,
 		BOXED
 	}
-	[CCode (cprefix = "PURPLE_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum TypingState {
 		NOT_TYPING,
 		TYPING,
 		TYPED
 	}
-	[CCode (cprefix = "VG_USERREQ__", has_type_id = "0", cheader_filename = "purple.h")]
-	public enum Vg_ClientRequest {
-		RUNNING_ON_VALGRIND,
-		DISCARD_TRANSLATIONS,
-		CLIENT_CALL0,
-		CLIENT_CALL1,
-		CLIENT_CALL2,
-		CLIENT_CALL3,
-		COUNT_ERRORS,
-		MALLOCLIKE_BLOCK,
-		FREELIKE_BLOCK,
-		CREATE_MEMPOOL,
-		DESTROY_MEMPOOL,
-		MEMPOOL_ALLOC,
-		MEMPOOL_FREE,
-		MEMPOOL_TRIM,
-		MOVE_MEMPOOL,
-		MEMPOOL_CHANGE,
-		MEMPOOL_EXISTS,
-		PRINTF,
-		PRINTF_BACKTRACE,
-		STACK_REGISTER,
-		STACK_DEREGISTER,
-		STACK_CHANGE
-	}
-	[CCode (cprefix = "XMLNODE_TYPE_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "XMLNODE_TYPE_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum XMLNodeType {
 		TAG,
 		ATTRIB,
 		DATA
 	}
-	[CCode (cprefix = "PURPLE_XFER_STATUS_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_XFER_STATUS_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum XferStatusType {
 		UNKNOWN,
 		NOT_STARTED,
@@ -2774,7 +2737,7 @@ namespace Purple {
 		CANCEL_LOCAL,
 		CANCEL_REMOTE
 	}
-	[CCode (cprefix = "PURPLE_XFER_", has_type_id = "0", cheader_filename = "purple.h")]
+	[CCode (cprefix = "PURPLE_XFER_", has_type_id = false, cheader_filename = "purple.h")]
 	public enum XferType {
 		UNKNOWN,
 		SEND,
@@ -2984,20 +2947,6 @@ namespace Purple {
 	public const int MINOR_VERSION;
 	[CCode (cheader_filename = "purple.h")]
 	public const int NO_TZ_OFF;
-	[CCode (cheader_filename = "purple.h")]
-	public const int NVALGRIND;
-	[CCode (cheader_filename = "purple.h")]
-	public const int PLAT_amd64_linux;
-	[CCode (cheader_filename = "purple.h")]
-	public const int PLAT_ppc32_aix5;
-	[CCode (cheader_filename = "purple.h")]
-	public const int PLAT_ppc32_linux;
-	[CCode (cheader_filename = "purple.h")]
-	public const int PLAT_ppc64_aix5;
-	[CCode (cheader_filename = "purple.h")]
-	public const int PLAT_ppc64_linux;
-	[CCode (cheader_filename = "purple.h")]
-	public const int PLAT_x86_linux;
 	[CCode (cheader_filename = "purple.h")]
 	public const int PLUGINS;
 	[CCode (cheader_filename = "purple.h")]
@@ -3284,8 +3233,6 @@ namespace Purple {
 	public static void dnsquery_uninit ();
 	[CCode (cheader_filename = "purple.h")]
 	public static bool email_is_valid (string address);
-	[CCode (cname = "empty_to_null", cheader_filename = "purple.h")]
-	public static unowned string empty_to_null (string str);
 	[CCode (cheader_filename = "purple.h")]
 	public static unowned string escape_filename (string str);
 	[CCode (cheader_filename = "purple.h")]
@@ -3568,8 +3515,6 @@ namespace Purple {
 	public static unowned string ntlm_gen_type3 (string username, string passw, string hostname, string domain, uchar nonce, uint32 flags);
 	[CCode (cheader_filename = "purple.h")]
 	public static uchar ntlm_parse_type2 (string type2, uint32 flags);
-	[CCode (cname = "null_to_empty", cheader_filename = "purple.h")]
-	public static unowned string null_to_empty (string s);
 	[CCode (cheader_filename = "purple.h")]
 	public static void plugins_add_search_path (string path);
 	[CCode (cheader_filename = "purple.h")]

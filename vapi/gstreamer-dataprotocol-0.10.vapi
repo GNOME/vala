@@ -12,14 +12,14 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public DPPacketizer (Gst.DPVersion version);
 	}
-	[CCode (cprefix = "GST_DP_HEADER_FLAG_", has_type_id = "0", cheader_filename = "gst/dataprotocol/dataprotocol.h")]
+	[CCode (cprefix = "GST_DP_HEADER_FLAG_", has_type_id = false, cheader_filename = "gst/dataprotocol/dataprotocol.h")]
 	public enum DPHeaderFlag {
 		NONE,
 		CRC_HEADER,
 		CRC_PAYLOAD,
 		CRC
 	}
-	[CCode (cprefix = "GST_DP_PAYLOAD_", has_type_id = "0", cheader_filename = "gst/dataprotocol/dataprotocol.h")]
+	[CCode (cprefix = "GST_DP_PAYLOAD_", has_type_id = false, cheader_filename = "gst/dataprotocol/dataprotocol.h")]
 	public enum DPPayloadType {
 		NONE,
 		BUFFER,

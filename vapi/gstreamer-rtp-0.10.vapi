@@ -155,7 +155,7 @@ namespace Gst {
 		public void sr_get_sender_info (uint32 ssrc, uint64 ntptime, uint32 rtptime, uint32 packet_count, uint32 octet_count);
 		public void sr_set_sender_info (uint32 ssrc, uint64 ntptime, uint32 rtptime, uint32 packet_count, uint32 octet_count);
 	}
-	[CCode (cprefix = "GST_RTCP_", has_type_id = "0", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_RTCP_", has_type_id = false, cheader_filename = "gst/gst.h")]
 	public enum RTCPFBType {
 		FB_TYPE_INVALID,
 		RTPFB_TYPE_NACK,
@@ -164,7 +164,7 @@ namespace Gst {
 		PSFB_TYPE_RPSI,
 		PSFB_TYPE_AFB
 	}
-	[CCode (cprefix = "GST_RTCP_SDES_", has_type_id = "0", cheader_filename = "gst/rtp/gstrtcpbuffer.h")]
+	[CCode (cprefix = "GST_RTCP_SDES_", has_type_id = false, cheader_filename = "gst/rtp/gstrtcpbuffer.h")]
 	public enum RTCPSDESType {
 		INVALID,
 		END,
@@ -177,7 +177,7 @@ namespace Gst {
 		NOTE,
 		PRIV
 	}
-	[CCode (cprefix = "GST_RTCP_TYPE_", has_type_id = "0", cheader_filename = "gst/rtp/gstrtcpbuffer.h")]
+	[CCode (cprefix = "GST_RTCP_TYPE_", has_type_id = false, cheader_filename = "gst/rtp/gstrtcpbuffer.h")]
 	public enum RTCPType {
 		INVALID,
 		SR,
@@ -188,7 +188,7 @@ namespace Gst {
 		RTPFB,
 		PSFB
 	}
-	[CCode (cprefix = "GST_RTP_PAYLOAD_", has_type_id = "0", cheader_filename = "gst/rtp/gstbasertpaudiopayload.h")]
+	[CCode (cprefix = "GST_RTP_PAYLOAD_", has_type_id = false, cheader_filename = "gst/rtp/gstbasertpaudiopayload.h")]
 	public enum RTPPayload {
 		PCMU,
 		@1016,

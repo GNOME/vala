@@ -169,31 +169,31 @@ namespace Hildon {
 		public FileSystemStorageDialog (Gtk.Window parent, string uri_str);
 		public static void set_uri (Gtk.Widget widget, string uri_str);
 	}
-	[CCode (cprefix = "HILDON_FILE_SELECTION_MODE_", has_type_id = "0", cheader_filename = "hildon/hildon-file-selection.h")]
+	[CCode (cprefix = "HILDON_FILE_SELECTION_MODE_", has_type_id = false, cheader_filename = "hildon/hildon-file-selection.h")]
 	public enum FileSelectionMode {
 		LIST,
 		THUMBNAILS
 	}
-	[CCode (cprefix = "HILDON_FILE_SELECTION_PANE_", has_type_id = "0", cheader_filename = "hildon/hildon-file-selection.h")]
+	[CCode (cprefix = "HILDON_FILE_SELECTION_PANE_", has_type_id = false, cheader_filename = "hildon/hildon-file-selection.h")]
 	public enum FileSelectionPane {
 		NAVIGATION,
 		CONTENT
 	}
-	[CCode (cprefix = "HILDON_FILE_SELECTION_SORT_", has_type_id = "0", cheader_filename = "hildon/hildon-file-selection.h")]
+	[CCode (cprefix = "HILDON_FILE_SELECTION_SORT_", has_type_id = false, cheader_filename = "hildon/hildon-file-selection.h")]
 	public enum FileSelectionSortKey {
 		NAME,
 		TYPE,
 		MODIFIED,
 		SIZE
 	}
-	[CCode (cprefix = "HILDON_FILE_SELECTION_SHOW_", has_type_id = "0", cheader_filename = "hildon/hildon-file-selection.h")]
+	[CCode (cprefix = "HILDON_FILE_SELECTION_SHOW_", has_type_id = false, cheader_filename = "hildon/hildon-file-selection.h")]
 	public enum FileSelectionVisibleColumns {
 		NAME,
 		MODIFIED,
 		SIZE,
 		ALL
 	}
-	[CCode (cprefix = "HILDON_FILE_SYSTEM_MODEL_", has_type_id = "0", cheader_filename = "hildon/hildon-file-system-model.h")]
+	[CCode (cprefix = "HILDON_FILE_SYSTEM_MODEL_", has_type_id = false, cheader_filename = "hildon/hildon-file-system-model.h")]
 	public enum FileSystemModelColumns {
 		COLUMN_GTK_PATH_INTERNAL,
 		COLUMN_LOCAL_PATH,
@@ -224,7 +224,7 @@ namespace Hildon {
 		COLUMN_IS_DRIVE,
 		NUM_COLUMNS
 	}
-	[CCode (cprefix = "HILDON_FILE_SYSTEM_MODEL_", has_type_id = "0", cheader_filename = "hildon/hildon-file-system-model.h")]
+	[CCode (cprefix = "HILDON_FILE_SYSTEM_MODEL_", has_type_id = false, cheader_filename = "hildon/hildon-file-system-model.h")]
 	public enum FileSystemModelItemType {
 		UNKNOWN,
 		FILE,

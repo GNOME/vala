@@ -424,7 +424,7 @@ namespace Gst {
 		[NoWrapper]
 		public virtual Gst.FlowReturn create (out unowned Gst.Buffer buf);
 	}
-	[CCode (cprefix = "GST_BASE_SRC_", has_type_id = "0", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_BASE_SRC_", has_type_id = false, cheader_filename = "gst/gst.h")]
 	public enum BaseSrcFlags {
 		STARTED,
 		FLAG_LAST

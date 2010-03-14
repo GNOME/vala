@@ -63,7 +63,7 @@ namespace GMenu {
 	[CCode (cheader_filename = "gnome-menus/gmenu-tree.h")]
 	public class TreeSeparator : GMenu.TreeItem {
 	}
-	[CCode (cprefix = "GMENU_TREE_FLAGS_", has_type_id = "0", cheader_filename = "gnome-menus/gmenu-tree.h")]
+	[CCode (cprefix = "GMENU_TREE_FLAGS_", has_type_id = false, cheader_filename = "gnome-menus/gmenu-tree.h")]
 	public enum TreeFlags {
 		NONE,
 		INCLUDE_EXCLUDED,
@@ -71,7 +71,7 @@ namespace GMenu {
 		INCLUDE_NODISPLAY,
 		MASK
 	}
-	[CCode (cprefix = "GMENU_TREE_ITEM_", has_type_id = "0", cheader_filename = "gnome-menus/gmenu-tree.h")]
+	[CCode (cprefix = "GMENU_TREE_ITEM_", has_type_id = false, cheader_filename = "gnome-menus/gmenu-tree.h")]
 	public enum TreeItemType {
 		INVALID,
 		DIRECTORY,

@@ -211,7 +211,7 @@ namespace Gst {
 		HARDWARE,
 		SOFTWARE
 	}
-	[CCode (cprefix = "GST_PHOTOGRAPHY_COLOUR_TONE_MODE_", has_type_id = "0", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_PHOTOGRAPHY_COLOUR_TONE_MODE_", has_type_id = false, cheader_filename = "gst/gst.h")]
 	public enum ColourToneMode {
 		NORMAL,
 		SEPIA,
@@ -223,7 +223,7 @@ namespace Gst {
 		SOLARIZE,
 		OUT_OF_FOCUS
 	}
-	[CCode (cprefix = "GST_PHOTOGRAPHY_FLASH_MODE_", has_type_id = "0", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_PHOTOGRAPHY_FLASH_MODE_", has_type_id = false, cheader_filename = "gst/gst.h")]
 	public enum FlashMode {
 		AUTO,
 		OFF,
@@ -231,7 +231,7 @@ namespace Gst {
 		FILL_IN,
 		RED_EYE
 	}
-	[CCode (cprefix = "GST_PHOTOGRAPHY_FOCUS_STATUS_", has_type_id = "0", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_PHOTOGRAPHY_FOCUS_STATUS_", has_type_id = false, cheader_filename = "gst/gst.h")]
 	public enum FocusStatus {
 		NONE,
 		RUNNING,
@@ -315,7 +315,7 @@ namespace Gst {
 		COMMANDS,
 		ANGLES
 	}
-	[CCode (cprefix = "GST_PHOTOGRAPHY_CAPS_", has_type_id = "0", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_PHOTOGRAPHY_CAPS_", has_type_id = false, cheader_filename = "gst/gst.h")]
 	public enum PhotoCaps {
 		NONE,
 		EV_COMP,
@@ -330,13 +330,13 @@ namespace Gst {
 		EXPOSURE,
 		SHAKE
 	}
-	[CCode (cprefix = "GST_PHOTOGRAPHY_SHAKE_RISK_", has_type_id = "0", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_PHOTOGRAPHY_SHAKE_RISK_", has_type_id = false, cheader_filename = "gst/gst.h")]
 	public enum PhotoShakeRisk {
 		LOW,
 		MEDIUM,
 		HIGH
 	}
-	[CCode (cprefix = "GST_PHOTOGRAPHY_SCENE_MODE_", has_type_id = "0", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_PHOTOGRAPHY_SCENE_MODE_", has_type_id = false, cheader_filename = "gst/gst.h")]
 	public enum SceneMode {
 		MANUAL,
 		CLOSEUP,
@@ -354,7 +354,7 @@ namespace Gst {
 		FREQUENCY,
 		AUDIO
 	}
-	[CCode (cprefix = "GST_PHOTOGRAPHY_WB_MODE_", has_type_id = "0", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_PHOTOGRAPHY_WB_MODE_", has_type_id = false, cheader_filename = "gst/gst.h")]
 	public enum WhiteBalanceMode {
 		AUTO,
 		DAYLIGHT,

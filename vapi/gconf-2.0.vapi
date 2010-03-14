@@ -245,19 +245,19 @@ namespace GConf {
 		public void set_string (string the_str);
 		public unowned string to_string ();
 	}
-	[CCode (cprefix = "GCONF_CLIENT_HANDLE_", has_type_id = "0", cheader_filename = "gconf/gconf.h")]
+	[CCode (cprefix = "GCONF_CLIENT_HANDLE_", has_type_id = false, cheader_filename = "gconf/gconf.h")]
 	public enum ClientErrorHandlingMode {
 		NONE,
 		UNRETURNED,
 		ALL
 	}
-	[CCode (cprefix = "GCONF_CLIENT_PRELOAD_", has_type_id = "0", cheader_filename = "gconf/gconf.h")]
+	[CCode (cprefix = "GCONF_CLIENT_PRELOAD_", has_type_id = false, cheader_filename = "gconf/gconf.h")]
 	public enum ClientPreloadType {
 		NONE,
 		ONELEVEL,
 		RECURSIVE
 	}
-	[CCode (cprefix = "GCONF_ERROR_", has_type_id = "0", cheader_filename = "gconf/gconf.h")]
+	[CCode (cprefix = "GCONF_ERROR_", has_type_id = false, cheader_filename = "gconf/gconf.h")]
 	public enum Error {
 		SUCCESS,
 		FAILED,
@@ -277,12 +277,12 @@ namespace GConf {
 		NO_WRITABLE_DATABASE,
 		IN_SHUTDOWN
 	}
-	[CCode (cprefix = "GCONF_UNSET_INCLUDING_SCHEMA_", has_type_id = "0", cheader_filename = "gconf/gconf.h")]
+	[CCode (cprefix = "GCONF_UNSET_INCLUDING_SCHEMA_", has_type_id = false, cheader_filename = "gconf/gconf.h")]
 	[Flags]
 	public enum UnsetFlags {
 		NAMES
 	}
-	[CCode (cprefix = "GCONF_VALUE_", has_type_id = "0", cheader_filename = "gconf/gconf.h")]
+	[CCode (cprefix = "GCONF_VALUE_", has_type_id = false, cheader_filename = "gconf/gconf.h")]
 	public enum ValueType {
 		INVALID,
 		STRING,

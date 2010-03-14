@@ -1541,7 +1541,7 @@ namespace GData {
 		ALL,
 		PARTNER
 	}
-	[CCode (cheader_filename = "gdata/gdata.h", instance_pos = -2)]
+	[CCode (cheader_filename = "gdata/gdata.h")]
 	public delegate void QueryProgressCallback (GData.Entry entry, uint entry_key, uint entry_count);
 	[CCode (cheader_filename = "gdata/gdata.h")]
 	public const string GD_ADDRESS_USAGE_GENERAL;

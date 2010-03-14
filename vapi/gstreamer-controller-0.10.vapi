@@ -85,7 +85,7 @@ namespace Gst {
 		public Gst.ClockTime sample_interval;
 		public void* values;
 	}
-	[CCode (cprefix = "GST_INTERPOLATE_", has_type_id = "0", cheader_filename = "gst/controller/gstcontroller.h")]
+	[CCode (cprefix = "GST_INTERPOLATE_", has_type_id = false, cheader_filename = "gst/controller/gstcontroller.h")]
 	public enum InterpolateMode {
 		NONE,
 		TRIGGER,

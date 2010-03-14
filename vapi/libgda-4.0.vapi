@@ -1817,7 +1817,7 @@ namespace Gda {
 		VIEW_DEPENDENCIES,
 		ALL
 	}
-	[CCode (cprefix = "GDA_", has_type_id = "0", cheader_filename = "libgda/libgda.h")]
+	[CCode (cprefix = "GDA_", has_type_id = false, cheader_filename = "libgda/libgda.h")]
 	public enum PrefixDir {
 		NO_DIR,
 		BIN_DIR,

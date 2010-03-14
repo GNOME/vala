@@ -158,7 +158,7 @@ namespace Gst {
 		public weak string time;
 		public weak string typed_time;
 	}
-	[CCode (cprefix = "GST_SDP_", has_type_id = "0", cheader_filename = "gst/sdp/gstsdp.h")]
+	[CCode (cprefix = "GST_SDP_", has_type_id = false, cheader_filename = "gst/sdp/gstsdp.h")]
 	public enum SDPResult {
 		OK,
 		EINVAL

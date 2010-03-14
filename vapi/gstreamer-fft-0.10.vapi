@@ -74,7 +74,7 @@ namespace Gst {
 		public int32 i;
 		public int32 r;
 	}
-	[CCode (cprefix = "GST_FFT_WINDOW_", has_type_id = "0", cheader_filename = "gst/fft/gstfft.h")]
+	[CCode (cprefix = "GST_FFT_WINDOW_", has_type_id = false, cheader_filename = "gst/fft/gstfft.h")]
 	public enum FFTWindow {
 		RECTANGULAR,
 		HAMMING,

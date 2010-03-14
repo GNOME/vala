@@ -78,7 +78,7 @@ namespace Gnome {
 		public Gnome.TriggerType type;
 		public void* u;
 	}
-	[CCode (cprefix = "GNOME_FILE_DOMAIN_", has_type_id = "0", cheader_filename = "libgnome/libgnome.h")]
+	[CCode (cprefix = "GNOME_FILE_DOMAIN_", has_type_id = false, cheader_filename = "libgnome/libgnome.h")]
 	public enum FileDomain {
 		UNKNOWN,
 		LIBDIR,
@@ -94,19 +94,19 @@ namespace Gnome {
 		APP_CONFIG,
 		APP_HELP
 	}
-	[CCode (cprefix = "GNOME_HELP_ERROR_", has_type_id = "0", cheader_filename = "libgnome/libgnome.h")]
+	[CCode (cprefix = "GNOME_HELP_ERROR_", has_type_id = false, cheader_filename = "libgnome/libgnome.h")]
 	public enum HelpError {
 		INTERNAL,
 		NOT_FOUND
 	}
-	[CCode (cprefix = "GTRIG_", has_type_id = "0", cheader_filename = "libgnome/libgnome.h")]
+	[CCode (cprefix = "GTRIG_", has_type_id = false, cheader_filename = "libgnome/libgnome.h")]
 	public enum TriggerType {
 		NONE,
 		FUNCTION,
 		COMMAND,
 		MEDIAPLAY
 	}
-	[CCode (cprefix = "GNOME_URL_ERROR_", has_type_id = "0", cheader_filename = "libgnome/libgnome.h")]
+	[CCode (cprefix = "GNOME_URL_ERROR_", has_type_id = false, cheader_filename = "libgnome/libgnome.h")]
 	public enum URLError {
 		PARSE,
 		LAUNCH,

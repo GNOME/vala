@@ -257,7 +257,7 @@ namespace Gst {
 		X_STARTUPPROFILE,
 		TIMESTAMP
 	}
-	[CCode (cprefix = "GST_RTSP_LOWER_TRANS_", has_type_id = "0", cheader_filename = "gst/rtsp/gstrtspextension.h")]
+	[CCode (cprefix = "GST_RTSP_LOWER_TRANS_", has_type_id = false, cheader_filename = "gst/rtsp/gstrtspextension.h")]
 	public enum RTSPLowerTrans {
 		UNKNOWN,
 		UDP,
@@ -281,20 +281,20 @@ namespace Gst {
 		SET_PARAMETER,
 		TEARDOWN
 	}
-	[CCode (cprefix = "GST_RTSP_MESSAGE_", has_type_id = "0", cheader_filename = "gst/rtsp/gstrtspmessage.h")]
+	[CCode (cprefix = "GST_RTSP_MESSAGE_", has_type_id = false, cheader_filename = "gst/rtsp/gstrtspmessage.h")]
 	public enum RTSPMsgType {
 		INVALID,
 		REQUEST,
 		RESPONSE,
 		DATA
 	}
-	[CCode (cprefix = "GST_RTSP_PROFILE_", has_type_id = "0", cheader_filename = "gst/rtsp/gstrtsptransport.h")]
+	[CCode (cprefix = "GST_RTSP_PROFILE_", has_type_id = false, cheader_filename = "gst/rtsp/gstrtsptransport.h")]
 	public enum RTSPProfile {
 		UNKNOWN,
 		AVP,
 		SAVP
 	}
-	[CCode (cprefix = "GST_RTSP_RANGE_", has_type_id = "0", cheader_filename = "gst/rtsp/gstrtsprange.h")]
+	[CCode (cprefix = "GST_RTSP_RANGE_", has_type_id = false, cheader_filename = "gst/rtsp/gstrtsprange.h")]
 	public enum RTSPRangeUnit {
 		SMPTE,
 		SMPTE_30_DROP,
@@ -380,13 +380,13 @@ namespace Gst {
 		RTSP_VERSION_NOT_SUPPORTED,
 		OPTION_NOT_SUPPORTED
 	}
-	[CCode (cprefix = "GST_RTSP_TIME_", has_type_id = "0", cheader_filename = "gst/rtsp/gstrtsprange.h")]
+	[CCode (cprefix = "GST_RTSP_TIME_", has_type_id = false, cheader_filename = "gst/rtsp/gstrtsprange.h")]
 	public enum RTSPTimeType {
 		SECONDS,
 		NOW,
 		END
 	}
-	[CCode (cprefix = "GST_RTSP_TRANS_", has_type_id = "0", cheader_filename = "gst/rtsp/gstrtsptransport.h")]
+	[CCode (cprefix = "GST_RTSP_TRANS_", has_type_id = false, cheader_filename = "gst/rtsp/gstrtsptransport.h")]
 	public enum RTSPTransMode {
 		UNKNOWN,
 		RTP,

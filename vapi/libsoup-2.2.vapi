@@ -386,34 +386,34 @@ namespace Soup {
 		public string body;
 		public uint length;
 	}
-	[CCode (cprefix = "SOUP_ADDRESS_FAMILY_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
+	[CCode (cprefix = "SOUP_ADDRESS_FAMILY_", has_type_id = false, cheader_filename = "libsoup/soup.h")]
 	public enum AddressFamily {
 		IPV4,
 		IPV6
 	}
-	[CCode (cprefix = "SOUP_AUTH_TYPE_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
+	[CCode (cprefix = "SOUP_AUTH_TYPE_", has_type_id = false, cheader_filename = "libsoup/soup.h")]
 	public enum AuthType {
 		BASIC,
 		DIGEST
 	}
-	[CCode (cprefix = "SOUP_ALGORITHM_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
+	[CCode (cprefix = "SOUP_ALGORITHM_", has_type_id = false, cheader_filename = "libsoup/soup.h")]
 	public enum DigestAlgorithm {
 		MD5,
 		MD5_SESS
 	}
-	[CCode (cprefix = "SOUP_HANDLER_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
+	[CCode (cprefix = "SOUP_HANDLER_", has_type_id = false, cheader_filename = "libsoup/soup.h")]
 	public enum HandlerPhase {
 		POST_REQUEST,
 		PRE_BODY,
 		BODY_CHUNK,
 		POST_BODY
 	}
-	[CCode (cprefix = "SOUP_HTTP_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
+	[CCode (cprefix = "SOUP_HTTP_", has_type_id = false, cheader_filename = "libsoup/soup.h")]
 	public enum HttpVersion {
 		@1_0,
 		@1_1
 	}
-	[CCode (cprefix = "SOUP_STATUS_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
+	[CCode (cprefix = "SOUP_STATUS_", has_type_id = false, cheader_filename = "libsoup/soup.h")]
 	public enum KnownStatusCode {
 		NONE,
 		CANCELLED,
@@ -477,13 +477,13 @@ namespace Soup {
 		INSUFFICIENT_STORAGE,
 		NOT_EXTENDED
 	}
-	[CCode (cprefix = "SOUP_MESSAGE_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
+	[CCode (cprefix = "SOUP_MESSAGE_", has_type_id = false, cheader_filename = "libsoup/soup.h")]
 	public enum MessageFlags {
 		NO_REDIRECT,
 		OVERWRITE_CHUNKS,
 		EXPECT_CONTINUE
 	}
-	[CCode (cprefix = "SOUP_MESSAGE_STATUS_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
+	[CCode (cprefix = "SOUP_MESSAGE_STATUS_", has_type_id = false, cheader_filename = "libsoup/soup.h")]
 	public enum MessageStatus {
 		IDLE,
 		QUEUED,
@@ -491,7 +491,7 @@ namespace Soup {
 		RUNNING,
 		FINISHED
 	}
-	[CCode (cprefix = "SOUP_METHOD_ID_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
+	[CCode (cprefix = "SOUP_METHOD_ID_", has_type_id = false, cheader_filename = "libsoup/soup.h")]
 	public enum MethodId {
 		UNKNOWN,
 		POST,
@@ -511,20 +511,20 @@ namespace Soup {
 		LOCK,
 		UNLOCK
 	}
-	[CCode (cprefix = "SOUP_BUFFER_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
+	[CCode (cprefix = "SOUP_BUFFER_", has_type_id = false, cheader_filename = "libsoup/soup.h")]
 	public enum Ownership {
 		SYSTEM_OWNED,
 		USER_OWNED,
 		STATIC
 	}
-	[CCode (cprefix = "SOUP_SOCKET_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
+	[CCode (cprefix = "SOUP_SOCKET_", has_type_id = false, cheader_filename = "libsoup/soup.h")]
 	public enum SocketIOStatus {
 		OK,
 		WOULD_BLOCK,
 		EOF,
 		ERROR
 	}
-	[CCode (cprefix = "SOUP_STATUS_CLASS_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
+	[CCode (cprefix = "SOUP_STATUS_CLASS_", has_type_id = false, cheader_filename = "libsoup/soup.h")]
 	public enum StatusClass {
 		TRANSPORT_ERROR,
 		INFORMATIONAL,
@@ -533,7 +533,7 @@ namespace Soup {
 		CLIENT_ERROR,
 		SERVER_ERROR
 	}
-	[CCode (cprefix = "SOUP_TRANSFER_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
+	[CCode (cprefix = "SOUP_TRANSFER_", has_type_id = false, cheader_filename = "libsoup/soup.h")]
 	public enum TransferEncoding {
 		UNKNOWN,
 		CHUNKED,
@@ -542,7 +542,7 @@ namespace Soup {
 		NONE,
 		EOF
 	}
-	[CCode (cprefix = "SOUP_XMLRPC_VALUE_TYPE_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
+	[CCode (cprefix = "SOUP_XMLRPC_VALUE_TYPE_", has_type_id = false, cheader_filename = "libsoup/soup.h")]
 	public enum XmlrpcValueType {
 		BAD,
 		INT,
