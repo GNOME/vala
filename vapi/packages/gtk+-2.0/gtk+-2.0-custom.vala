@@ -29,7 +29,6 @@ namespace Gtk {
 	}
 
 	public class Container {
-		public GLib.List<weak Gtk.Widget> get_children ();
 		[CCode (vfunc_name = "forall")]
 		public virtual void forall_internal(bool include_internal, Gtk.Callback callback);
 	}
@@ -41,10 +40,6 @@ namespace Gtk {
 	public class StatusIcon {
 		[CCode (instance_pos = -1)]
 		public void position_menu (Gtk.Menu menu, out int x, out int y, out bool push_in);
-	}
-
-	public class TreeView {
-		public GLib.List<weak Gtk.TreeViewColumn> get_columns ();
 	}
 
 	public class UIManager {
