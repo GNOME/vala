@@ -117,7 +117,7 @@ namespace Json {
 		public uint get_current_pos ();
 		public unowned Json.Node get_root ();
 		public bool has_assignment (out unowned string variable_name);
-		public bool load_from_data (string data, ssize_t length) throws GLib.Error;
+		public bool load_from_data (string data, ssize_t length = -1) throws GLib.Error;
 		public bool load_from_file (string filename) throws GLib.Error;
 		public virtual signal void array_element (Json.Array array, int index_);
 		public virtual signal void array_end (Json.Array array);

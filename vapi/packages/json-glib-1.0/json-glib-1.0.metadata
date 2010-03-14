@@ -26,4 +26,4 @@ json_object_get_values type_arguments="unowned Node" transfer_ownership="1"
 json_object_add_member.node transfer_ownership="1"
 json_object_set_array_member.value transfer_ownership="1"
 json_object_set_object_member.value transfer_ownership="1"
-
+json_parser_load_from_data.length default_value="-1"
