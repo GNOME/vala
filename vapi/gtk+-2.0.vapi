@@ -1712,8 +1712,8 @@ namespace Gtk {
 		public virtual bool filter_keypress (Gdk.EventKey event);
 		public virtual void focus_in ();
 		public virtual void focus_out ();
-		public virtual void get_preedit_string (string str, out unowned Pango.AttrList attrs, int cursor_pos);
-		public virtual bool get_surrounding (string text, int cursor_index);
+		public virtual void get_preedit_string (out unowned string str, out Pango.AttrList attrs, out int cursor_pos);
+		public virtual bool get_surrounding (out unowned string text, out int cursor_index);
 		public virtual void reset ();
 		public virtual void set_client_window (Gdk.Window window);
 		public virtual void set_cursor_location (Gdk.Rectangle area);
@@ -1726,15 +1726,6 @@ namespace Gtk {
 		public virtual signal void preedit_end ();
 		public virtual signal void preedit_start ();
 		public virtual signal bool retrieve_surrounding ();
-	}
-	[Compact]
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public class IMContextInfo {
-		public weak string context_id;
-		public weak string context_name;
-		public weak string default_locales;
-		public weak string domain;
-		public weak string domain_dirname;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class IMContextSimple : Gtk.IMContext {
@@ -5857,6 +5848,14 @@ namespace Gtk {
 		public Border ();
 		public Gtk.Border copy ();
 		public void free ();
+	}
+	[CCode (type_id = "GTK_TYPE_IM_CONTEXT_INFO", cheader_filename = "gtk/gtk.h")]
+	public struct IMContextInfo {
+		public weak string context_id;
+		public weak string context_name;
+		public weak string domain;
+		public weak string domain_dirname;
+		public weak string default_locales;
 	}
 	[CCode (type_id = "GTK_TYPE_RADIO_ACTION_ENTRY", cheader_filename = "gtk/gtk.h")]
 	public struct RadioActionEntry {
