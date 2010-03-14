@@ -3,7 +3,7 @@
 [CCode (cprefix = "Json", lower_case_cprefix = "json_")]
 namespace Json {
 	[Compact]
-	[CCode (ref_function = "json_array_ref", unref_function = "json_array_unref", cheader_filename = "json-glib/json-glib.h")]
+	[CCode (ref_function = "json_array_ref", unref_function = "json_array_unref", type_id = "JSON_TYPE_ARRAY", cheader_filename = "json-glib/json-glib.h")]
 	public class Array {
 		[CCode (has_construct_function = false)]
 		public Array ();
@@ -79,7 +79,7 @@ namespace Json {
 		public unowned string type_name ();
 	}
 	[Compact]
-	[CCode (ref_function = "json_object_ref", unref_function = "json_object_unref", cheader_filename = "json-glib/json-glib.h")]
+	[CCode (ref_function = "json_object_ref", unref_function = "json_object_unref", type_id = "JSON_TYPE_OBJECT", cheader_filename = "json-glib/json-glib.h")]
 	public class Object {
 		[CCode (has_construct_function = false)]
 		public Object ();
