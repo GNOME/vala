@@ -3820,5 +3820,5 @@ namespace GLib {
 	[CCode (cname = "G_UNLIKELY", cheader_filename = "glib.h")]
 	public static bool unlikely (bool expression);
 	[CCode (cname = "G_STATIC_ASSERT", cheader_filename = "glib.h")]
-	public static bool static_assert (bool expression);
+	public static void static_assert (bool expression);
 }
