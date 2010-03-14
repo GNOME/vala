@@ -1101,7 +1101,7 @@ namespace Gtk {
 		[HasEmitter]
 		public virtual signal void remove (Gtk.Widget widget);
 		[HasEmitter]
-		public virtual signal void set_focus_child (Gtk.Widget widget);
+		public virtual signal void set_focus_child (Gtk.Widget? widget);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Curve : Gtk.DrawingArea, Atk.Implementor, Gtk.Buildable {
