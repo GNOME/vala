@@ -376,6 +376,11 @@ public class Vala.GIdlParser : CodeVisitor {
 							if (eval (nv[1]) == "1") {
 								param_type.nullable = true;
 							}
+						} else if (nv[0] == "type_arguments") {
+							var type_args = eval (nv[1]).split (",");
+							foreach (string type_arg in type_args) {
+								param_type.add_type_argument (get_type_from_string (type_arg));
+							}
 						}
 					}
 				}
@@ -1462,7 +1467,26 @@ public class Vala.GIdlParser : CodeVisitor {
 		
 		return type;
 	}
-	
+
+	public UnresolvedType? get_type_from_string (string type_arg) {
+		bool is_unowned = false;
+		UnresolvedSymbol? sym = null;
+
+		if ( type_arg.has_prefix ("unowned ") ) {
+			type_arg = type_arg.offset ("unowned ".len ());
+			is_unowned = true;
+		}
+
+		foreach (unowned string s in type_arg.split (".")) {
+			sym = new UnresolvedSymbol (sym, s);
+		}
+
+		var arg_type = new UnresolvedType.from_symbol (sym);
+		arg_type.value_owned = !is_unowned;
+
+		return arg_type;
+     }
+
 	private Method? create_method (string name, string symbol, IdlNodeParam? res, GLib.List<IdlNodeParam>? parameters, bool is_constructor, bool is_interface) {
 		DataType return_type = null;
 		if (res != null) {
@@ -1570,9 +1594,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				} else if (nv[0] == "type_arguments") {
 					var type_args = eval (nv[1]).split (",");
 					foreach (string type_arg in type_args) {
-						var arg_type = new UnresolvedType.from_symbol (new UnresolvedSymbol (null, type_arg));
-						arg_type.value_owned = true;
-						return_type.add_type_argument (arg_type);
+						return_type.add_type_argument (get_type_from_string (type_arg));
 					}
 				} else if (nv[0] == "cheader_filename") {
 					m.add_cheader_filename (eval (nv[1]));
@@ -1735,9 +1757,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					} else if (nv[0] == "type_arguments") {
 						var type_args = eval (nv[1]).split (",");
 						foreach (string type_arg in type_args) {
-							var arg_type = new UnresolvedType.from_symbol (new UnresolvedSymbol (null, type_arg));
-							arg_type.value_owned = true;
-							param_type.add_type_argument (arg_type);
+							param_type.add_type_argument (get_type_from_string (type_arg));
 						}
 					}
 				}
@@ -1909,9 +1929,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				} else if (nv[0] == "type_arguments") {
 					var type_args = eval (nv[1]).split (",");
 					foreach (string type_arg in type_args) {
-						var arg_type = new UnresolvedType.from_symbol (new UnresolvedSymbol (null, type_arg));
-						arg_type.value_owned = true;
-						prop.property_type.add_type_argument (arg_type);
+						prop.property_type.add_type_argument (get_type_from_string (type_arg));
 					}
 				} else if (nv[0] == "accessor_method") {
 					if (eval (nv[1]) == "0") {
@@ -2005,9 +2023,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				} else if (nv[0] == "type_arguments") {
 					var type_args = eval (nv[1]).split (",");
 					foreach (string type_arg in type_args) {
-						var arg_type = new UnresolvedType.from_symbol (new UnresolvedSymbol (null, type_arg));
-						arg_type.value_owned = true;
-						type.add_type_argument (arg_type);
+						type.add_type_argument (get_type_from_string (type_arg));
 					}
 				} else if (nv[0] == "cheader_filename") {
 					cheader_filename = eval (nv[1]);
@@ -2097,8 +2113,46 @@ public class Vala.GIdlParser : CodeVisitor {
 		if (attributes == null) {
 			return null;
 		}
-		
-		return attributes.split (" ");
+
+		GLib.SList<string> attr_list = new GLib.SList<string> ();
+		var attr = new GLib.StringBuilder.sized (attributes.size ());
+		var attributes_len = attributes.len ();
+		unowned string remaining = attributes;
+		bool quoted = false, escaped = false;
+		for (int b = 0 ; b < attributes_len ; b++) {
+			unichar c = remaining.get_char ();
+
+			if (escaped) {
+				escaped = false;
+				attr.append_unichar (c);
+			} else {
+				if (c == '"') {
+					attr.append_unichar (c);
+					quoted = !quoted;
+				} else if (c == '\\') {
+					escaped = true;
+				} else if (!quoted && (c == ' ')) {
+					attr_list.prepend (attr.str);
+					attr.truncate (0);
+				} else {
+					attr.append_unichar (c);
+				}
+			}
+
+			remaining = remaining.offset (1);
+		}
+
+		if (attr.len > 0) {
+			attr_list.prepend (attr.str);
+		}
+
+		var attrs = new string[attr_list.length ()];
+		unowned GLib.SList<string>? attr_i = attr_list;
+		for (int a = 0 ; a < attrs.length ; a++, attr_i = attr_i.next) {
+			attrs[(attrs.length - 1) - a] = attr_i.data;
+		}
+
+		return attrs;
 	}
 	
 	private string eval (string s) {
