@@ -232,7 +232,7 @@
 			<field name="data" type="gpointer"/>
 			<field name="is_interp" type="gboolean"/>
 			<field name="relay_func" type="GtkCallbackMarshal"/>
-			<field name="destroy_func" type="GtkDestroyNotify"/>
+			<field name="destroy_func" type="GDestroyNotify"/>
 		</struct>
 		<struct name="GnomeUIInfo">
 			<field name="type" type="GnomeUIInfoType"/>
@@ -247,7 +247,7 @@
 			<field name="ac_mods" type="GdkModifierType"/>
 			<field name="widget" type="GtkWidget*"/>
 		</struct>
-		<enum name="GnomeClientState">
+		<enum name="GnomeClientState" type-name="GnomeClientState" get-type="gnome_client_state_get_type">
 			<member name="GNOME_CLIENT_IDLE" value="0"/>
 			<member name="GNOME_CLIENT_SAVING_PHASE_1" value="1"/>
 			<member name="GNOME_CLIENT_WAITING_FOR_PHASE_2" value="2"/>
@@ -256,64 +256,64 @@
 			<member name="GNOME_CLIENT_DISCONNECTED" value="5"/>
 			<member name="GNOME_CLIENT_REGISTERING" value="6"/>
 		</enum>
-		<enum name="GnomeDialogType">
+		<enum name="GnomeDialogType" type-name="GnomeDialogType" get-type="gnome_dialog_type_get_type">
 			<member name="GNOME_DIALOG_ERROR" value="0"/>
 			<member name="GNOME_DIALOG_NORMAL" value="1"/>
 		</enum>
-		<enum name="GnomeEdgePosition">
+		<enum name="GnomeEdgePosition" type-name="GnomeEdgePosition" get-type="gnome_edge_position_get_type">
 			<member name="GNOME_EDGE_START" value="0"/>
 			<member name="GNOME_EDGE_FINISH" value="1"/>
 			<member name="GNOME_EDGE_OTHER" value="2"/>
 			<member name="GNOME_EDGE_LAST" value="3"/>
 		</enum>
-		<enum name="GnomeFontPickerMode">
+		<enum name="GnomeFontPickerMode" type-name="GnomeFontPickerMode" get-type="gnome_font_picker_mode_get_type">
 			<member name="GNOME_FONT_PICKER_MODE_PIXMAP" value="0"/>
 			<member name="GNOME_FONT_PICKER_MODE_FONT_INFO" value="1"/>
 			<member name="GNOME_FONT_PICKER_MODE_USER_WIDGET" value="2"/>
 			<member name="GNOME_FONT_PICKER_MODE_UNKNOWN" value="3"/>
 		</enum>
-		<enum name="GnomeIconListMode">
+		<enum name="GnomeIconListMode" type-name="GnomeIconListMode" get-type="gnome_icon_list_mode_get_type">
 			<member name="GNOME_ICON_LIST_ICONS" value="0"/>
 			<member name="GNOME_ICON_LIST_TEXT_BELOW" value="1"/>
 			<member name="GNOME_ICON_LIST_TEXT_RIGHT" value="2"/>
 		</enum>
-		<enum name="GnomeInteractStyle">
+		<enum name="GnomeInteractStyle" type-name="GnomeInteractStyle" get-type="gnome_interact_style_get_type">
 			<member name="GNOME_INTERACT_NONE" value="0"/>
 			<member name="GNOME_INTERACT_ERRORS" value="1"/>
 			<member name="GNOME_INTERACT_ANY" value="2"/>
 		</enum>
-		<enum name="GnomeMDIMode">
+		<enum name="GnomeMDIMode" type-name="GnomeMDIMode" get-type="gnome_mdi_mode_get_type">
 			<member name="GNOME_MDI_NOTEBOOK" value="0"/>
 			<member name="GNOME_MDI_TOPLEVEL" value="1"/>
 			<member name="GNOME_MDI_MODAL" value="2"/>
 			<member name="GNOME_MDI_DEFAULT_MODE" value="42"/>
 		</enum>
-		<enum name="GnomePasswordDialogRemember">
+		<enum name="GnomePasswordDialogRemember" type-name="GnomePasswordDialogRemember" get-type="gnome_password_dialog_remember_get_type">
 			<member name="GNOME_PASSWORD_DIALOG_REMEMBER_NOTHING" value="0"/>
 			<member name="GNOME_PASSWORD_DIALOG_REMEMBER_SESSION" value="1"/>
 			<member name="GNOME_PASSWORD_DIALOG_REMEMBER_FOREVER" value="2"/>
 		</enum>
-		<enum name="GnomePreferencesType">
+		<enum name="GnomePreferencesType" type-name="GnomePreferencesType" get-type="gnome_preferences_type_get_type">
 			<member name="GNOME_PREFERENCES_NEVER" value="0"/>
 			<member name="GNOME_PREFERENCES_USER" value="1"/>
 			<member name="GNOME_PREFERENCES_ALWAYS" value="2"/>
 		</enum>
-		<enum name="GnomeRestartStyle">
+		<enum name="GnomeRestartStyle" type-name="GnomeRestartStyle" get-type="gnome_restart_style_get_type">
 			<member name="GNOME_RESTART_IF_RUNNING" value="0"/>
 			<member name="GNOME_RESTART_ANYWAY" value="1"/>
 			<member name="GNOME_RESTART_IMMEDIATELY" value="2"/>
 			<member name="GNOME_RESTART_NEVER" value="3"/>
 		</enum>
-		<enum name="GnomeSaveStyle">
+		<enum name="GnomeSaveStyle" type-name="GnomeSaveStyle" get-type="gnome_save_style_get_type">
 			<member name="GNOME_SAVE_GLOBAL" value="0"/>
 			<member name="GNOME_SAVE_LOCAL" value="1"/>
 			<member name="GNOME_SAVE_BOTH" value="2"/>
 		</enum>
-		<enum name="GnomeThumbnailSize">
+		<enum name="GnomeThumbnailSize" type-name="GnomeThumbnailSize" get-type="gnome_thumbnail_size_get_type">
 			<member name="GNOME_THUMBNAIL_SIZE_NORMAL" value="0"/>
 			<member name="GNOME_THUMBNAIL_SIZE_LARGE" value="1"/>
 		</enum>
-		<enum name="GnomeUIInfoConfigurableTypes">
+		<enum name="GnomeUIInfoConfigurableTypes" type-name="GnomeUIInfoConfigurableTypes" get-type="gnome_ui_info_configurable_types_get_type">
 			<member name="GNOME_APP_CONFIGURABLE_ITEM_NEW" value="0"/>
 			<member name="GNOME_APP_CONFIGURABLE_ITEM_OPEN" value="1"/>
 			<member name="GNOME_APP_CONFIGURABLE_ITEM_SAVE" value="2"/>
@@ -347,7 +347,7 @@
 			<member name="GNOME_APP_CONFIGURABLE_ITEM_SCORES" value="30"/>
 			<member name="GNOME_APP_CONFIGURABLE_ITEM_END_GAME" value="31"/>
 		</enum>
-		<enum name="GnomeUIInfoType">
+		<enum name="GnomeUIInfoType" type-name="GnomeUIInfoType" get-type="gnome_ui_info_type_get_type">
 			<member name="GNOME_APP_UI_ENDOFINFO" value="0"/>
 			<member name="GNOME_APP_UI_ITEM" value="1"/>
 			<member name="GNOME_APP_UI_TOGGLEITEM" value="2"/>
@@ -360,37 +360,37 @@
 			<member name="GNOME_APP_UI_SUBTREE_STOCK" value="9"/>
 			<member name="GNOME_APP_UI_INCLUDE" value="10"/>
 		</enum>
-		<enum name="GnomeUIPixmapType">
+		<enum name="GnomeUIPixmapType" type-name="GnomeUIPixmapType" get-type="gnome_ui_pixmap_type_get_type">
 			<member name="GNOME_APP_PIXMAP_NONE" value="0"/>
 			<member name="GNOME_APP_PIXMAP_STOCK" value="1"/>
 			<member name="GNOME_APP_PIXMAP_DATA" value="2"/>
 			<member name="GNOME_APP_PIXMAP_FILENAME" value="3"/>
 		</enum>
-		<flags name="GnomeClientFlags">
+		<flags name="GnomeClientFlags" type-name="GnomeClientFlags" get-type="gnome_client_flags_get_type">
 			<member name="GNOME_CLIENT_IS_CONNECTED" value="1"/>
 			<member name="GNOME_CLIENT_RESTARTED" value="2"/>
 			<member name="GNOME_CLIENT_RESTORED" value="4"/>
 		</flags>
-		<flags name="GnomeDateEditFlags">
+		<flags name="GnomeDateEditFlags" type-name="GnomeDateEditFlags" get-type="gnome_date_edit_flags_get_type">
 			<member name="GNOME_DATE_EDIT_SHOW_TIME" value="1"/>
 			<member name="GNOME_DATE_EDIT_24_HR" value="2"/>
 			<member name="GNOME_DATE_EDIT_WEEK_STARTS_ON_MONDAY" value="4"/>
 			<member name="GNOME_DATE_EDIT_DISPLAY_SECONDS" value="8"/>
 		</flags>
-		<flags name="GnomeIconLookupFlags">
+		<flags name="GnomeIconLookupFlags" type-name="GnomeIconLookupFlags" get-type="gnome_icon_lookup_flags_get_type">
 			<member name="GNOME_ICON_LOOKUP_FLAGS_NONE" value="0"/>
 			<member name="GNOME_ICON_LOOKUP_FLAGS_EMBEDDING_TEXT" value="1"/>
 			<member name="GNOME_ICON_LOOKUP_FLAGS_SHOW_SMALL_IMAGES_AS_THEMSELVES" value="2"/>
 			<member name="GNOME_ICON_LOOKUP_FLAGS_ALLOW_SVG_AS_THEMSELVES" value="4"/>
 		</flags>
-		<flags name="GnomeIconLookupResultFlags">
+		<flags name="GnomeIconLookupResultFlags" type-name="GnomeIconLookupResultFlags" get-type="gnome_icon_lookup_result_flags_get_type">
 			<member name="GNOME_ICON_LOOKUP_RESULT_FLAGS_NONE" value="0"/>
 			<member name="GNOME_ICON_LOOKUP_RESULT_FLAGS_THUMBNAIL" value="1"/>
 		</flags>
 		<object name="GnomeApp" parent="GtkWindow" type-name="GnomeApp" get-type="gnome_app_get_type">
 			<implements>
-				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
+				<interface name="AtkImplementor"/>
 			</implements>
 			<method name="add_dock_item" symbol="gnome_app_add_dock_item">
 				<return-type type="void"/>
@@ -459,7 +459,7 @@
 					<parameter name="uiinfo" type="GnomeUIInfo*"/>
 					<parameter name="relay_func" type="GtkCallbackMarshal"/>
 					<parameter name="data" type="gpointer"/>
-					<parameter name="destroy_func" type="GtkDestroyNotify"/>
+					<parameter name="destroy_func" type="GDestroyNotify"/>
 				</parameters>
 			</method>
 			<method name="create_menus_with_data" symbol="gnome_app_create_menus_with_data">
@@ -492,7 +492,7 @@
 					<parameter name="uiinfo" type="GnomeUIInfo*"/>
 					<parameter name="relay_func" type="GtkCallbackMarshal"/>
 					<parameter name="data" type="gpointer"/>
-					<parameter name="destroy_func" type="GtkDestroyNotify"/>
+					<parameter name="destroy_func" type="GDestroyNotify"/>
 				</parameters>
 			</method>
 			<method name="create_toolbar_with_data" symbol="gnome_app_create_toolbar_with_data">
@@ -620,7 +620,7 @@
 					<parameter name="menuinfo" type="GnomeUIInfo*"/>
 					<parameter name="relay_func" type="GtkCallbackMarshal"/>
 					<parameter name="data" type="gpointer"/>
-					<parameter name="destroy_func" type="GtkDestroyNotify"/>
+					<parameter name="destroy_func" type="GDestroyNotify"/>
 				</parameters>
 			</method>
 			<method name="insert_menus_with_data" symbol="gnome_app_insert_menus_with_data">
@@ -740,8 +740,9 @@
 		</object>
 		<object name="GnomeAppBar" parent="GtkHBox" type-name="GnomeAppBar" get-type="gnome_appbar_get_type">
 			<implements>
-				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
+				<interface name="GtkOrientable"/>
+				<interface name="AtkImplementor"/>
 			</implements>
 			<method name="clear_prompt" symbol="gnome_appbar_clear_prompt">
 				<return-type type="void"/>
@@ -931,7 +932,7 @@
 					<parameter name="dialog_type" type="GnomeDialogType"/>
 					<parameter name="function" type="GtkCallbackMarshal"/>
 					<parameter name="data" type="gpointer"/>
-					<parameter name="destroy" type="GtkDestroyNotify"/>
+					<parameter name="destroy" type="GDestroyNotify"/>
 				</parameters>
 			</method>
 			<method name="request_phase_2" symbol="gnome_client_request_phase_2">
@@ -1142,8 +1143,9 @@
 		</object>
 		<object name="GnomeDateEdit" parent="GtkHBox" type-name="GnomeDateEdit" get-type="gnome_date_edit_get_type">
 			<implements>
-				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
+				<interface name="GtkOrientable"/>
+				<interface name="AtkImplementor"/>
 			</implements>
 			<method name="construct" symbol="gnome_date_edit_construct">
 				<return-type type="void"/>
@@ -1228,8 +1230,9 @@
 		</object>
 		<object name="GnomeIconEntry" parent="GtkVBox" type-name="GnomeIconEntry" get-type="gnome_icon_entry_get_type">
 			<implements>
-				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
+				<interface name="GtkOrientable"/>
+				<interface name="AtkImplementor"/>
 			</implements>
 			<method name="construct" symbol="gnome_icon_entry_construct">
 				<return-type type="void"/>
@@ -1338,8 +1341,9 @@
 		</object>
 		<object name="GnomeIconSelection" parent="GtkVBox" type-name="GnomeIconSelection" get-type="gnome_icon_selection_get_type">
 			<implements>
-				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
+				<interface name="GtkOrientable"/>
+				<interface name="AtkImplementor"/>
 			</implements>
 			<method name="add_defaults" symbol="gnome_icon_selection_add_defaults">
 				<return-type type="void"/>
@@ -1405,8 +1409,8 @@
 		</object>
 		<object name="GnomePasswordDialog" parent="GtkDialog" type-name="GnomePasswordDialog" get-type="gnome_password_dialog_get_type">
 			<implements>
-				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
+				<interface name="AtkImplementor"/>
 			</implements>
 			<method name="anon_selected" symbol="gnome_password_dialog_anon_selected">
 				<return-type type="gboolean"/>

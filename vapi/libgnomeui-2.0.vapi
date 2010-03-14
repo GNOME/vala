@@ -3,7 +3,7 @@
 [CCode (cprefix = "Gnome", lower_case_cprefix = "gnome_")]
 namespace Gnome {
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public class App : Gtk.Window, Atk.Implementor, Gtk.Buildable {
+	public class App : Gtk.Window, Gtk.Buildable, Atk.Implementor {
 		public weak Gtk.AccelGroup accel_group;
 		public weak Gtk.Widget contents;
 		public weak Gtk.Widget dock;
@@ -51,7 +51,7 @@ namespace Gnome {
 		public string app_id { owned get; set construct; }
 	}
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public class AppBar : Gtk.HBox, Atk.Implementor, Gtk.Buildable {
+	public class AppBar : Gtk.HBox, Gtk.Buildable, Gtk.Orientable, Atk.Implementor {
 		[CCode (cname = "gnome_appbar_new", type = "GtkWidget*", has_construct_function = false)]
 		public AppBar (bool has_progress, bool has_status, Gnome.PreferencesType interactivity);
 		[CCode (cname = "gnome_appbar_clear_stack")]
@@ -163,7 +163,7 @@ namespace Gnome {
 		public virtual signal void shutdown_cancelled ();
 	}
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public class DateEdit : Gtk.HBox, Atk.Implementor, Gtk.Buildable {
+	public class DateEdit : Gtk.HBox, Gtk.Buildable, Gtk.Orientable, Atk.Implementor {
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public DateEdit (ulong the_time, bool show_time, bool use_24_format);
 		public void @construct (ulong the_time, Gnome.DateEditFlags flags);
@@ -192,7 +192,7 @@ namespace Gnome {
 	public class GdkPixbufAsyncHandle {
 	}
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public class IconEntry : Gtk.VBox, Atk.Implementor, Gtk.Buildable {
+	public class IconEntry : Gtk.VBox, Gtk.Buildable, Gtk.Orientable, Atk.Implementor {
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public IconEntry (string history_id, string browse_dialog_title);
 		public void @construct (string history_id, string browse_dialog_title);
@@ -221,7 +221,7 @@ namespace Gnome {
 		public virtual signal void changed ();
 	}
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public class IconSelection : Gtk.VBox, Atk.Implementor, Gtk.Buildable {
+	public class IconSelection : Gtk.VBox, Gtk.Buildable, Gtk.Orientable, Atk.Implementor {
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public IconSelection ();
 		public void add_defaults ();
@@ -235,7 +235,7 @@ namespace Gnome {
 		public void stop_loading ();
 	}
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public class PasswordDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
+	public class PasswordDialog : Gtk.Dialog, Gtk.Buildable, Atk.Implementor {
 		public weak Gnome.PasswordDialogDetails details;
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public PasswordDialog (string dialog_title, string message, string username, string password, bool readonly_username);
@@ -331,14 +331,14 @@ namespace Gnome {
 		public void* user_data;
 		public weak Gtk.Widget widget;
 	}
-	[CCode (cprefix = "GNOME_CLIENT_", has_type_id = "0", cheader_filename = "libgnomeui/libgnomeui.h")]
+	[CCode (cprefix = "GNOME_CLIENT_", cheader_filename = "libgnomeui/libgnomeui.h")]
 	[Flags]
 	public enum ClientFlags {
 		IS_CONNECTED,
 		RESTARTED,
 		RESTORED
 	}
-	[CCode (cprefix = "GNOME_CLIENT_", has_type_id = "0", cheader_filename = "libgnomeui/libgnomeui.h")]
+	[CCode (cprefix = "GNOME_CLIENT_", cheader_filename = "libgnomeui/libgnomeui.h")]
 	public enum ClientState {
 		IDLE,
 		SAVING_PHASE_1,
@@ -348,7 +348,7 @@ namespace Gnome {
 		DISCONNECTED,
 		REGISTERING
 	}
-	[CCode (cprefix = "GNOME_DATE_EDIT_", has_type_id = "0", cheader_filename = "libgnomeui/libgnomeui.h")]
+	[CCode (cprefix = "GNOME_DATE_EDIT_", cheader_filename = "libgnomeui/libgnomeui.h")]
 	[Flags]
 	public enum DateEditFlags {
 		SHOW_TIME,
@@ -356,32 +356,32 @@ namespace Gnome {
 		WEEK_STARTS_ON_MONDAY,
 		DISPLAY_SECONDS
 	}
-	[CCode (cprefix = "GNOME_DIALOG_", has_type_id = "0", cheader_filename = "libgnomeui/libgnomeui.h")]
+	[CCode (cprefix = "GNOME_DIALOG_", cheader_filename = "libgnomeui/libgnomeui.h")]
 	public enum DialogType {
 		ERROR,
 		NORMAL
 	}
-	[CCode (cprefix = "GNOME_EDGE_", has_type_id = "0", cheader_filename = "libgnomeui/libgnomeui.h")]
+	[CCode (cprefix = "GNOME_EDGE_", cheader_filename = "libgnomeui/libgnomeui.h")]
 	public enum EdgePosition {
 		START,
 		FINISH,
 		OTHER,
 		LAST
 	}
-	[CCode (cprefix = "GNOME_FONT_PICKER_MODE_", has_type_id = "0", cheader_filename = "libgnomeui/libgnomeui.h")]
+	[CCode (cprefix = "GNOME_FONT_PICKER_MODE_", cheader_filename = "libgnomeui/libgnomeui.h")]
 	public enum FontPickerMode {
 		PIXMAP,
 		FONT_INFO,
 		USER_WIDGET,
 		UNKNOWN
 	}
-	[CCode (cprefix = "GNOME_ICON_LIST_", has_type_id = "0", cheader_filename = "libgnomeui/libgnomeui.h")]
+	[CCode (cprefix = "GNOME_ICON_LIST_", cheader_filename = "libgnomeui/libgnomeui.h")]
 	public enum IconListMode {
 		ICONS,
 		TEXT_BELOW,
 		TEXT_RIGHT
 	}
-	[CCode (cprefix = "GNOME_ICON_LOOKUP_FLAGS_", has_type_id = "0", cheader_filename = "libgnomeui/libgnomeui.h")]
+	[CCode (cprefix = "GNOME_ICON_LOOKUP_FLAGS_", cheader_filename = "libgnomeui/libgnomeui.h")]
 	[Flags]
 	public enum IconLookupFlags {
 		NONE,
@@ -389,56 +389,56 @@ namespace Gnome {
 		SHOW_SMALL_IMAGES_AS_THEMSELVES,
 		ALLOW_SVG_AS_THEMSELVES
 	}
-	[CCode (cprefix = "GNOME_ICON_LOOKUP_RESULT_FLAGS_", has_type_id = "0", cheader_filename = "libgnomeui/libgnomeui.h")]
+	[CCode (cprefix = "GNOME_ICON_LOOKUP_RESULT_FLAGS_", cheader_filename = "libgnomeui/libgnomeui.h")]
 	[Flags]
 	public enum IconLookupResultFlags {
 		NONE,
 		THUMBNAIL
 	}
-	[CCode (cprefix = "GNOME_INTERACT_", has_type_id = "0", cheader_filename = "libgnomeui/libgnomeui.h")]
+	[CCode (cprefix = "GNOME_INTERACT_", cheader_filename = "libgnomeui/libgnomeui.h")]
 	public enum InteractStyle {
 		NONE,
 		ERRORS,
 		ANY
 	}
-	[CCode (cprefix = "GNOME_MDI_", has_type_id = "0", cheader_filename = "libgnomeui/libgnomeui.h")]
+	[CCode (cprefix = "GNOME_MDI_", cheader_filename = "libgnomeui/libgnomeui.h")]
 	public enum MDIMode {
 		NOTEBOOK,
 		TOPLEVEL,
 		MODAL,
 		DEFAULT_MODE
 	}
-	[CCode (cprefix = "GNOME_PASSWORD_DIALOG_REMEMBER_", has_type_id = "0", cheader_filename = "libgnomeui/libgnomeui.h")]
+	[CCode (cprefix = "GNOME_PASSWORD_DIALOG_REMEMBER_", cheader_filename = "libgnomeui/libgnomeui.h")]
 	public enum PasswordDialogRemember {
 		NOTHING,
 		SESSION,
 		FOREVER
 	}
-	[CCode (cprefix = "GNOME_PREFERENCES_", has_type_id = "0", cheader_filename = "libgnomeui/libgnomeui.h")]
+	[CCode (cprefix = "GNOME_PREFERENCES_", cheader_filename = "libgnomeui/libgnomeui.h")]
 	public enum PreferencesType {
 		NEVER,
 		USER,
 		ALWAYS
 	}
-	[CCode (cprefix = "GNOME_RESTART_", has_type_id = "0", cheader_filename = "libgnomeui/libgnomeui.h")]
+	[CCode (cprefix = "GNOME_RESTART_", cheader_filename = "libgnomeui/libgnomeui.h")]
 	public enum RestartStyle {
 		IF_RUNNING,
 		ANYWAY,
 		IMMEDIATELY,
 		NEVER
 	}
-	[CCode (cprefix = "GNOME_SAVE_", has_type_id = "0", cheader_filename = "libgnomeui/libgnomeui.h")]
+	[CCode (cprefix = "GNOME_SAVE_", cheader_filename = "libgnomeui/libgnomeui.h")]
 	public enum SaveStyle {
 		GLOBAL,
 		LOCAL,
 		BOTH
 	}
-	[CCode (cprefix = "GNOME_THUMBNAIL_SIZE_", has_type_id = "0", cheader_filename = "libgnomeui/libgnomeui.h")]
+	[CCode (cprefix = "GNOME_THUMBNAIL_SIZE_", cheader_filename = "libgnomeui/libgnomeui.h")]
 	public enum ThumbnailSize {
 		NORMAL,
 		LARGE
 	}
-	[CCode (cprefix = "GNOME_APP_CONFIGURABLE_ITEM_", has_type_id = "0", cheader_filename = "libgnomeui/libgnomeui.h")]
+	[CCode (cprefix = "GNOME_APP_CONFIGURABLE_ITEM_", cheader_filename = "libgnomeui/libgnomeui.h")]
 	public enum UIInfoConfigurableTypes {
 		NEW,
 		OPEN,
@@ -473,7 +473,7 @@ namespace Gnome {
 		SCORES,
 		END_GAME
 	}
-	[CCode (cprefix = "GNOME_APP_UI_", has_type_id = "0", cheader_filename = "libgnomeui/libgnomeui.h")]
+	[CCode (cprefix = "GNOME_APP_UI_", cheader_filename = "libgnomeui/libgnomeui.h")]
 	public enum UIInfoType {
 		ENDOFINFO,
 		ITEM,
@@ -487,7 +487,7 @@ namespace Gnome {
 		SUBTREE_STOCK,
 		INCLUDE
 	}
-	[CCode (cprefix = "GNOME_APP_PIXMAP_", has_type_id = "0", cheader_filename = "libgnomeui/libgnomeui.h")]
+	[CCode (cprefix = "GNOME_APP_PIXMAP_", cheader_filename = "libgnomeui/libgnomeui.h")]
 	public enum UIPixmapType {
 		NONE,
 		STOCK,
@@ -508,8 +508,6 @@ namespace Gnome {
 	public delegate void StringCallback (string str);
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h", has_target = false)]
 	public delegate void UISignalConnectFunc (Gnome.UIInfo uiinfo, string signal_name, Gnome.UIBuilderData uibdata);
-	[CCode (cname = "LIBGNOMEUI_MODULE", cheader_filename = "libgnomeui/libgnomeui.h")]
-	public static Gnome.ModuleInfo libgnomeui_module;
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string APP_MENUBAR_NAME;
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
