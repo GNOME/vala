@@ -415,7 +415,7 @@ namespace Gdk {
 		public bool empty ();
 		public bool equal (Gdk.Region region2);
 		public void get_clipbox (out Gdk.Rectangle rectangle);
-		public void get_rectangles (Gdk.Rectangle[] rectangles);
+		public void get_rectangles (out Gdk.Rectangle[] rectangles);
 		public void intersect (Gdk.Region source2);
 		public void offset (int dx, int dy);
 		public bool point_in (int x, int y);
