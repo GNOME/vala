@@ -911,8 +911,8 @@ public class string {
 	
 	[CCode (cname = "atoi")]
 	public int to_int ();
-	[CCode (cname = "atol")]
-	public long to_long ();
+	[CCode (cname = "strtol")]
+	public long to_long (out weak string endptr = null, int _base = 0);
 	[CCode (cname = "g_ascii_strtod")]
 	public double to_double (out weak string endptr = null);
 	[CCode (cname = "strtoul")]
