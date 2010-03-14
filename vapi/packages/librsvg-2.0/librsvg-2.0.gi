@@ -202,6 +202,21 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</constructor>
+			<method name="render_cairo" symbol="rsvg_handle_render_cairo">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="handle" type="RsvgHandle*"/>
+					<parameter name="cr" type="cairo_t*"/>
+				</parameters>
+			</method>
+			<method name="render_cairo_sub" symbol="rsvg_handle_render_cairo_sub">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="handle" type="RsvgHandle*"/>
+					<parameter name="cr" type="cairo_t*"/>
+					<parameter name="id" type="char*"/>
+				</parameters>
+			</method>
 			<method name="set_base_uri" symbol="rsvg_handle_set_base_uri">
 				<return-type type="void"/>
 				<parameters>

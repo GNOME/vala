@@ -4,6 +4,8 @@
 namespace Rsvg {
 	[CCode (cheader_filename = "librsvg/rsvg.h")]
 	public class Handle : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public Handle ();
 		public bool close () throws GLib.Error;
 		public void free ();
 		[CCode (has_construct_function = false)]
@@ -20,8 +22,6 @@ namespace Rsvg {
 		public bool get_position_sub (ref Rsvg.PositionData position_data, string id);
 		public unowned string get_title ();
 		public bool has_sub (string id);
-		[CCode (has_construct_function = false)]
-		public Handle ();
 		public bool render_cairo (Cairo.Context cr);
 		public bool render_cairo_sub (Cairo.Context cr, string id);
 		public void set_base_uri (string base_uri);
@@ -46,14 +46,14 @@ namespace Rsvg {
 		[NoAccessorMethod]
 		public int width { get; }
 	}
-	[CCode (cheader_filename = "librsvg/rsvg.h")]
+	[CCode (has_type_id = false, cheader_filename = "librsvg/rsvg.h")]
 	public struct DimensionData {
 		public int width;
 		public int height;
 		public double em;
 		public double ex;
 	}
-	[CCode (cheader_filename = "librsvg/rsvg.h")]
+	[CCode (has_type_id = false, cheader_filename = "librsvg/rsvg.h")]
 	public struct PositionData {
 		public int x;
 		public int y;
