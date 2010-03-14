@@ -1759,6 +1759,30 @@ public class Vala.GIdlParser : CodeVisitor {
 						foreach (string type_arg in type_args) {
 							param_type.add_type_argument (get_type_from_string (type_arg));
 						}
+					} else if (nv[0] == "default_value") {
+						var val = eval (nv[1]);
+						if (val == "null") {
+							p.default_expression = new NullLiteral (param_type.source_reference);
+						} else if (val == "true") {
+							p.default_expression = new BooleanLiteral (true, param_type.source_reference);
+						} else if (val == "false") {
+							p.default_expression = new BooleanLiteral (false, param_type.source_reference);
+						} else {
+							unowned string endptr;
+							unowned string val_end = val.offset (val.len ());
+
+							val.to_long (out endptr);
+							if ((long)endptr == (long)val_end) {
+								p.default_expression = new IntegerLiteral (val, param_type.source_reference);
+							} else {
+								val.to_double (out endptr);
+								if ((long)endptr == (long)val_end) {
+									p.default_expression = new RealLiteral (val, param_type.source_reference);
+								} else {
+									p.default_expression = new StringLiteral ("\"%s\"".printf (val), param_type.source_reference);
+								}
+							}
+						}
 					}
 				}
 			}
