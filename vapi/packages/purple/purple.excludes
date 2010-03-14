@@ -1,1 +1,4 @@
 dbus-define-api.h
+dbus-bindings.h
+dbus-types.h
+valgrind.h
