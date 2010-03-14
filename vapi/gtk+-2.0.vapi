@@ -221,7 +221,7 @@ namespace Gtk {
 		public GLib.List<weak Gtk.Action> list_actions ();
 		public void remove_action (Gtk.Action action);
 		public void set_sensitive (bool sensitive);
-		public void set_translate_func (Gtk.TranslateFunc func, void* data, GLib.DestroyNotify notify);
+		public void set_translate_func (owned Gtk.TranslateFunc func);
 		public void set_translation_domain (string domain);
 		public void set_visible (bool visible);
 		public unowned string translate_string (string str);
@@ -1476,7 +1476,7 @@ namespace Gtk {
 	public class FileFilter : Gtk.Object {
 		[CCode (has_construct_function = false)]
 		public FileFilter ();
-		public void add_custom (Gtk.FileFilterFlags needed, Gtk.FileFilterFunc func, void* data, GLib.DestroyNotify notify);
+		public void add_custom (Gtk.FileFilterFlags needed, owned Gtk.FileFilterFunc func);
 		public void add_mime_type (string mime_type);
 		public void add_pattern (string pattern);
 		public void add_pixbuf_formats ();
@@ -2574,7 +2574,7 @@ namespace Gtk {
 		public void set_tab_label_text (Gtk.Widget child, string tab_text);
 		public void set_tab_pos (Gtk.PositionType pos);
 		public void set_tab_reorderable (Gtk.Widget child, bool reorderable);
-		public static void set_window_creation_hook (Gtk.NotebookWindowCreationFunc func, void* data, GLib.DestroyNotify destroy);
+		public static void set_window_creation_hook (owned Gtk.NotebookWindowCreationFunc func);
 		[NoAccessorMethod]
 		public bool enable_popup { get; set; }
 		public void* group { get; set; }
@@ -3184,7 +3184,7 @@ namespace Gtk {
 		public RecentFilter ();
 		public void add_age (int days);
 		public void add_application (string application);
-		public void add_custom (Gtk.RecentFilterFlags needed, Gtk.RecentFilterFunc func, void* data, GLib.DestroyNotify data_destroy);
+		public void add_custom (Gtk.RecentFilterFlags needed, owned Gtk.RecentFilterFunc func);
 		public void add_group (string group);
 		public void add_mime_type (string mime_type);
 		public void add_pattern (string pattern);
@@ -4057,9 +4057,9 @@ namespace Gtk {
 		public void move_mark_by_name (string name, Gtk.TextIter where);
 		public void paste_clipboard (Gtk.Clipboard clipboard, Gtk.TextIter? override_location, bool default_editable);
 		public void place_cursor (Gtk.TextIter where);
-		public Gdk.Atom register_deserialize_format (string mime_type, Gtk.TextBufferDeserializeFunc function, GLib.DestroyNotify user_data_destroy);
+		public Gdk.Atom register_deserialize_format (string mime_type, owned Gtk.TextBufferDeserializeFunc function);
 		public Gdk.Atom register_deserialize_tagset (string tagset_name);
-		public Gdk.Atom register_serialize_format (string mime_type, Gtk.TextBufferSerializeFunc function, GLib.DestroyNotify user_data_destroy);
+		public Gdk.Atom register_serialize_format (string mime_type, owned Gtk.TextBufferSerializeFunc function);
 		public Gdk.Atom register_serialize_tagset (string tagset_name);
 		public void remove_all_tags (Gtk.TextIter start, Gtk.TextIter end);
 		public void remove_selection_clipboard (Gtk.Clipboard clipboard);
@@ -4592,7 +4592,7 @@ namespace Gtk {
 		public unowned Gtk.TreePath convert_path_to_child_path (Gtk.TreePath filter_path);
 		public unowned Gtk.TreeModel get_model ();
 		public void refilter ();
-		public void set_modify_func (int n_columns, GLib.Type[] types, Gtk.TreeModelFilterModifyFunc func, void* data, GLib.DestroyNotify destroy);
+		public void set_modify_func (int n_columns, GLib.Type[] types, owned Gtk.TreeModelFilterModifyFunc func);
 		public void set_visible_column (int column);
 		public void set_visible_func (owned Gtk.TreeModelFilterVisibleFunc func);
 		[NoAccessorMethod]
@@ -4695,7 +4695,7 @@ namespace Gtk {
 		public void select_range (Gtk.TreePath start_path, Gtk.TreePath end_path);
 		public void selected_foreach (Gtk.TreeSelectionForeachFunc func);
 		public void set_mode (Gtk.SelectionMode type);
-		public void set_select_function (Gtk.TreeSelectionFunc func, GLib.DestroyNotify? destroy);
+		public void set_select_function (owned Gtk.TreeSelectionFunc func);
 		public void unselect_all ();
 		public void unselect_iter (Gtk.TreeIter iter);
 		public void unselect_path (Gtk.TreePath path);
@@ -4812,10 +4812,10 @@ namespace Gtk {
 		public int remove_column (Gtk.TreeViewColumn column);
 		public void scroll_to_cell (Gtk.TreePath? path, Gtk.TreeViewColumn? column, bool use_align, float row_align, float col_align);
 		public void scroll_to_point (int tree_x, int tree_y);
-		public void set_column_drag_function (Gtk.TreeViewColumnDropFunc func, GLib.DestroyNotify destroy);
+		public void set_column_drag_function (owned Gtk.TreeViewColumnDropFunc func);
 		public void set_cursor (Gtk.TreePath path, Gtk.TreeViewColumn? focus_column, bool start_editing);
 		public void set_cursor_on_cell (Gtk.TreePath path, Gtk.TreeViewColumn focus_column, Gtk.CellRenderer focus_cell, bool start_editing);
-		public void set_destroy_count_func (Gtk.TreeDestroyCountFunc func, void* data, GLib.DestroyNotify destroy);
+		public void set_destroy_count_func (owned Gtk.TreeDestroyCountFunc func);
 		public void set_drag_dest_row (Gtk.TreePath? path, Gtk.TreeViewDropPosition pos);
 		public void set_enable_search (bool enable_search);
 		public void set_enable_tree_lines (bool enabled);
@@ -4836,7 +4836,7 @@ namespace Gtk {
 		public void set_search_column (int column);
 		public void set_search_entry (Gtk.Entry entry);
 		public void set_search_equal_func (owned Gtk.TreeViewSearchEqualFunc search_equal_func);
-		public void set_search_position_func (Gtk.TreeViewSearchPositionFunc func, void* data, GLib.DestroyNotify destroy);
+		public void set_search_position_func (owned Gtk.TreeViewSearchPositionFunc func);
 		public void set_show_expanders (bool enabled);
 		public void set_tooltip_cell (Gtk.Tooltip tooltip, Gtk.TreePath path, Gtk.TreeViewColumn column, Gtk.CellRenderer cell);
 		public void set_tooltip_column (int column);
@@ -5741,7 +5741,7 @@ namespace Gtk {
 		public void set_show_not_found (bool show_not_found);
 		public void set_show_private (bool show_private);
 		public void set_show_tips (bool show_tips);
-		public abstract void set_sort_func (Gtk.RecentSortFunc sort_func, void* sort_data, GLib.DestroyNotify data_destroy);
+		public abstract void set_sort_func (owned Gtk.RecentSortFunc sort_func);
 		public void set_sort_type (Gtk.RecentSortType sort_type);
 		public abstract void unselect_all ();
 		public abstract void unselect_uri (string uri);
@@ -7059,16 +7059,16 @@ namespace Gtk {
 	public delegate bool RecentFilterFunc (Gtk.RecentFilterInfo filter_info);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate int RecentSortFunc (Gtk.RecentInfo a, Gtk.RecentInfo b);
-	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
-	public delegate bool TextBufferDeserializeFunc (Gtk.TextBuffer register_buffer, Gtk.TextBuffer content_buffer, Gtk.TextIter iter, uchar data, size_t length, bool create_tags, void* user_data, GLib.Error error);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public delegate bool TextBufferDeserializeFunc (Gtk.TextBuffer register_buffer, Gtk.TextBuffer content_buffer, Gtk.TextIter iter, uchar data, size_t length, bool create_tags, GLib.Error error);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate uchar TextBufferSerializeFunc (Gtk.TextBuffer register_buffer, Gtk.TextBuffer content_buffer, Gtk.TextIter start, Gtk.TextIter end, size_t length);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate bool TextCharPredicate (unichar ch);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void TextTagTableForeach (Gtk.TextTag tag);
-	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
-	public delegate unowned string TranslateFunc (string path, void* func_data);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public delegate unowned string TranslateFunc (string path);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void TreeCellDataFunc (Gtk.TreeViewColumn tree_column, Gtk.CellRenderer cell, Gtk.TreeModel tree_model, Gtk.TreeIter iter);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -7708,7 +7708,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool stock_lookup (string stock_id, Gtk.StockItem item);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void stock_set_translate_func (string domain, Gtk.TranslateFunc func, void* data, GLib.DestroyNotify notify);
+	public static void stock_set_translate_func (string domain, owned Gtk.TranslateFunc func);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void target_table_free (Gtk.TargetEntry[] targets);
 	[CCode (cheader_filename = "gtk/gtk.h")]
