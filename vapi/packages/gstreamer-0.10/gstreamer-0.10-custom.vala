@@ -50,6 +50,7 @@ namespace Gst {
 
 	[CCode (ref_function = "gst_buffer_ref", unref_function = "gst_buffer_unref")]
 	public class Buffer : Gst.MiniObject {
+		[CCode (has_construct_function = false)]
 		public Buffer ();
 		public weak Buffer @ref ();
 		public void unref ();
