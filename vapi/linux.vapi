@@ -35,6 +35,299 @@ namespace Linux {
     public int eventfd_write (int fd, uint64 value);
 
     /*
+     * Framebuffer
+     */
+    [CCode (cprefix = "", lower_case_cprefix = "")]
+    namespace Framebuffer {
+
+        /* ioctls */
+        [CCode (cheader_filename = "linux/fb.h")]
+        public const int FBIOGET_VSCREENINFO;
+        [CCode (cheader_filename = "linux/fb.h")]
+        public const int FBIOPUT_VSCREENINFO;
+        [CCode (cheader_filename = "linux/fb.h")]
+        public const int FBIOGET_FSCREENINFO;
+        [CCode (cheader_filename = "linux/fb.h")]
+        public const int FBIOGETCMAP;
+        [CCode (cheader_filename = "linux/fb.h")]
+        public const int FBIOPUTCMAP;
+        [CCode (cheader_filename = "linux/fb.h")]
+        public const int FBIOPAN_DISPLAY;
+        [CCode (cheader_filename = "linux/fb.h")]
+        public const int FBIO_CURSOR;
+        [CCode (cheader_filename = "linux/fb.h")]
+        public const int FBIOGET_MONITORSPEC;
+        [CCode (cheader_filename = "linux/fb.h")]
+        public const int FBIOPUT_MONITORSPEC;
+        [CCode (cheader_filename = "linux/fb.h")]
+        public const int FBIOSWITCH_MONIBIT;
+        [CCode (cheader_filename = "linux/fb.h")]
+        public const int FBIOGET_CON2FBMAP;
+        [CCode (cheader_filename = "linux/fb.h")]
+        public const int FBIOPUT_CON2FBMAP;
+        [CCode (cheader_filename = "linux/fb.h")]
+        public const int FBIOBLANK;
+        [CCode (cheader_filename = "linux/fb.h")]
+        public const int FBIOGET_VBLANK;
+        [CCode (cheader_filename = "linux/fb.h")]
+        public const int FBIO_ALLOC;
+        [CCode (cheader_filename = "linux/fb.h")]
+        public const int FBIO_FREE;
+        [CCode (cheader_filename = "linux/fb.h")]
+        public const int FBIOGET_GLYPH;
+        [CCode (cheader_filename = "linux/fb.h")]
+        public const int FBIOGET_HWCINFO;
+        [CCode (cheader_filename = "linux/fb.h")]
+        public const int FBIOPUT_MODEINFO;
+        [CCode (cheader_filename = "linux/fb.h")]
+        public const int FBIOGET_DISPINFO;
+
+        /* enums */
+
+        [CCode (cname = "guint32", cprefix = "FB_TYPE_", has_type_id = false, cheader_filename = "linux/fb.h")]
+        public enum Type {
+            PACKED_PIXELS,
+            PLANES,
+            INTERLEAVED_PLANES,
+            TEXT,
+            VGA_PLANES
+        }
+
+        [CCode (cname = "guint32", cprefix = "FB_ACTIVATE_", has_type_id = false, cheader_filename = "linux/fb.h")]
+        public enum Activate {
+            NOW,
+            NXTOPEN,
+            TEST,
+            MASK,
+            VBL,
+            [CCode (cname = "FB_CHANGE_CMAP_VBL")]
+            CHANGE_CMAP_VBL,
+            ALL,
+            FORCE,
+            INV_MODE
+        }
+
+        [CCode (cname = "guint32", cprefix = "FB_ACCEL_", has_type_id = false, cheader_filename = "linux/fb.h")]
+        public enum Accel {
+            NONE
+        }
+
+        [CCode (cname = "guint32", cprefix = "FB_AUX_", has_type_id = false, cheader_filename = "linux/fb.h")]
+        public enum Aux {
+             TEXT_MDA,
+             TEXT_CGA,
+             TEXT_S3_MMIO,
+             TEXT_MGA_STEP16,
+             TEXT_MGA_STEP8,
+             TEXT_SVGA_GROUP,
+             TEXT_SVGA_MASK,
+             TEXT_SVGA_STEP2,
+             TEXT_SVGA_STEP4,
+             TEXT_SVGA_STEP8,
+             TEXT_SVGA_STEP16,
+             TEXT_SVGA_LAST,
+             VGA_PLANES_VGA4,
+             VGA_PLANES_CFB4,
+             VGA_PLANES_CFB8
+        }
+
+        [CCode (cprefix = "FB_BLANK_", has_type_id = false, cheader_filename = "linux/fb.h")]
+        public enum Blank {
+            UNBLANK,
+            NORMAL,
+            VSYNC_SUSPEND,
+            HSYNC_SUSPEND,
+            POWERDOWN
+        }
+
+        [CCode (cprefix = "FB_CUR_", has_type_id = false, cheader_filename = "linux/fb.h")]
+        public enum Cur {
+            SETIMAGE,
+            SETPOS,
+            SETHOT,
+            SETCMAP,
+            SETSHAPE,
+            SETSIZE,
+            SETALL
+        }
+
+        [CCode (cname = "guint32", cprefix = "ROP_", has_type_id = false, cheader_filename = "linux/fb.h")]
+        public enum Rop {
+            COPY,
+            XOR
+        }
+
+        [CCode (cprefix = "FB_ROTATE_", has_type_id = false, cheader_filename = "linux/fb.h")]
+        public enum Rotate {
+            UR,
+            CW,
+            UD,
+            CCW
+        }
+
+        [CCode (cname = "guint32", cprefix = "FB_SYNC_", has_type_id = false, cheader_filename = "linux/fb.h")]
+        public enum Sync {
+            HOR_HIGH_ACT,
+            VERT_HIGH_ACT,
+            EXT,
+            COMP_HIGH_ACT,
+            BROADCAST,
+            ON_GREEN
+        }
+
+        [CCode (cname = "guint32", cprefix = "FB_VISUAL_", has_type_id = false, cheader_filename = "linux/fb.h")]
+        public enum Visual {
+            MONO01,
+            MONO10,
+            TRUECOLOR,
+            PSEUDOCOLOR,
+            DIRECTCOLOR,
+            STATIC_PSEUDOCOLOR
+        }
+
+        [CCode (cname = "guint32", cprefix = "FB_VMODE_", has_type_id = false, cheader_filename = "linux/fb.h")]
+        public enum Vmode {
+            NONINTERLACED,
+            INTERLACED,
+            DOUBLE,
+            ODD_FLD_FIRST,
+            MASK,
+            YWRAP,
+            SMOOTH_XPAN,
+            CONUPDATE
+        }
+
+        /* structures */
+
+        [CCode (cname = "struct fb_bitfield", cheader_filename = "linux/fb.h")]
+        public struct BitField {
+            public uint32 offset;
+            public uint32 length;
+            public uint32 msb_right;
+        }
+
+        [CCode (cname = "struct fb_cmap", cheader_filename = "linux/fb.h")]
+        public struct Cmap {
+            public uint32 start;
+            public uint32 len;
+            public uint16* red;
+            public uint16* green;
+            public uint16* blue;
+            public uint16* transp;
+        }
+
+        [CCode (cname = "struct fb_con2fbmap", cheader_filename = "linux/fb.h")]
+        public struct Con2FbMap {
+            public uint32 console;
+            public uint32 framebuffer;
+        }
+
+        [CCode (cname = "struct fbcurpos", cheader_filename = "linux/fb.h")]
+        public struct CurPos {
+            public uint16 x;
+            public uint16 y;
+        }
+
+        [CCode (cname = "struct fb_cursor", cheader_filename = "linux/fb.h")]
+        public struct Cursor {
+            public uint16 set;
+            public uint16 enable;
+            public uint16 rop;
+            string mask;
+            public CurPos hot;
+            public Image image;
+        }
+
+        [CCode (cname = "struct fb_copyarea", cheader_filename = "linux/fb.h")]
+        public struct CopyArea {
+            public uint32 dx;
+            public uint32 dy;
+            public uint32 width;
+            public uint32 height;
+            public uint32 sx;
+            public uint32 sy;
+        }
+
+        [CCode (cname = "struct fb_fillrect", cheader_filename = "linux/fb.h")]
+        public struct FillRect {
+            public uint32 dx;
+            public uint32 dy;
+            public uint32 width;
+            public uint32 height;
+            public uint32 color;
+            public Rop rop;
+        }
+
+        [CCode (cname = "struct fb_image", cheader_filename = "linux/fb.h")]
+        public struct Image {
+            public uint32 dx;
+            public uint32 dy;
+            public uint32 width;
+            public uint32 height;
+            public uint32 fg_color;
+            public uint32 bg_color;
+            public uint8 depth;
+            public char* data;
+            public Cmap cmap;
+        }
+
+        [CCode (cname = "struct fb_fix_screeninfo", cheader_filename = "linux/fb.h")]
+        public struct FixScreenInfo {
+            public char id[16];
+            public long smem_start;
+            public uint32 smem_len;
+            public Type type;
+            public Aux type_aux;
+            public Visual visual;
+            public uint16 xpanstep;
+            public uint16 ypanstep;
+            public uint16 ywrapstep;
+            public uint32 line_length;
+            public long mmio_start;
+            public uint32 mmio_len;
+            public Accel accel;
+        }
+
+        [CCode (cname = "struct fb_var_screeninfo", cheader_filename = "linux/fb.h")]
+        public struct VarScreenInfo {
+            public uint32 xres;
+            public uint32 yres;
+            public uint32 xres_virtual;
+            public uint32 yres_virtual;
+            public uint32 xoffset;
+            public uint32 yoffset;
+            public uint32 bits_per_pixel;
+            public uint32 grayscale;
+            public BitField red;
+            public BitField green;
+            public BitField blue;
+            public BitField transp;
+            public uint32 nonstd;
+            public Activate activate;
+            public uint32 height;
+            public uint32 width;
+            public uint32 pixclock;
+            public uint32 left_margin;
+            public uint32 right_margin;
+            public uint32 upper_margin;
+            public uint32 lower_margin;
+            public uint32 hsync_len;
+            public uint32 vsync_len;
+            public Sync sync;
+            public Vmode vmode;
+            public uint32 rotate;
+        }
+
+        [CCode (cname = "struct fb_vblank", cheader_filename = "linux/fb.h")]
+        public struct Vblank {
+            public uint32 flags;
+            public uint32 count;
+            public uint32 vcount;
+            public uint32 hcount;
+        }
+    }
+
+    /*
      * Inotify
      */
     [CCode (cname = "struct inotify_event", cheader_filename = "sys/inotify.h")]
