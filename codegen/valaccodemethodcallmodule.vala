@@ -152,7 +152,7 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			}
 		} else if (m is CreationMethod && m.parent_symbol is Struct) {
 			ccall.add_argument (new CCodeIdentifier ("self"));
-		} else if (m != null && m.get_type_parameters ().size > 0 && !m.has_generic_type_parameter) {
+		} else if (m != null && m.get_type_parameters ().size > 0 && !m.has_generic_type_parameter && !m.simple_generics) {
 			// generic method
 			add_generic_type_arguments (in_arg_map, ma.get_type_arguments (), expr);
 		}
@@ -370,6 +370,17 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 						CCodeExpression delegate_target_destroy_notify;
 						carg_map.set (get_param_pos (param.cdelegate_target_parameter_position), get_delegate_target_cexpression (arg, out delegate_target_destroy_notify));
 						multiple_cargs = true;
+					} else if (param.parameter_type is GenericType) {
+						if (m != null && m.simple_generics) {
+							var generic_type = (GenericType) param.parameter_type;
+							int type_param_index = m.get_type_parameter_index (generic_type.type_parameter.name);
+							var type_arg = ma.get_type_arguments ().get (type_param_index);
+							if (requires_copy (type_arg)) {
+								carg_map.set (get_param_pos (param.cparameter_position + 0.1), get_destroy_func_expression (type_arg));
+							} else {
+								carg_map.set (get_param_pos (param.cparameter_position + 0.1), new CCodeConstant ("NULL"));
+							}
+						}
 					}
 
 					cexpr = handle_struct_argument (param, arg, cexpr);

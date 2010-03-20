@@ -221,6 +221,8 @@ public class Vala.Method : Member {
 
 	public double generic_type_parameter_position { get; set; }
 
+	public bool simple_generics { get; set; }
+
 	public weak Signal signal_reference { get; set; }
 
 	public bool closure { get; set; }
@@ -459,6 +461,9 @@ public class Vala.Method : Member {
 		if (a.has_argument ("generic_type_pos")) {
 			has_generic_type_parameter = true;
 			generic_type_parameter_position = a.get_double ("generic_type_pos");
+		}
+		if (a.has_argument ("simple_generics")) {
+			simple_generics = a.get_bool ("simple_generics");
 		}
 		if (a.has_argument ("returns_floating_reference")) {
 			returns_floating_reference = a.get_bool ("returns_floating_reference");

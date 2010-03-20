@@ -313,14 +313,20 @@ namespace GLib {
 		public void set (string first_property_name, ...);
 		public void get_property (string property_name, ref Value value);
 		public void set_property (string property_name, Value value);
-		public void* get_data (string key);
-		public void set_data (string key, void* data);
+		[CCode (simple_generics = true)]
+		public unowned T get_data<T> (string key);
+		[CCode (cname = "g_object_set_data_full", simple_generics = true)]
+		public void set_data<T> (string key, owned T data);
 		public void set_data_full (string key, void* data, DestroyNotify? destroy);
-		public void* steal_data (string key);
-		public void* get_qdata (Quark quark);
-		public void set_qdata (Quark quark, void* data);
+		[CCode (simple_generics = true)]
+		public T steal_data<T> (string key);
+		[CCode (simple_generics = true)]
+		public unowned T get_qdata<T> (Quark quark);
+		[CCode (cname = "g_object_set_qdata_full", simple_generics = true)]
+		public void set_qdata<T> (Quark quark, owned T data);
 		public void set_qdata_full (Quark quark, void* data, DestroyNotify? destroy);
-		public void* steal_qdata (Quark quark);
+		[CCode (simple_generics = true)]
+		public T steal_qdata<T> (Quark quark);
 		public void freeze_notify ();
 		public void thaw_notify ();
 		[CCode (cname = "g_object_run_dispose")]
