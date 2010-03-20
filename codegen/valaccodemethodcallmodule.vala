@@ -152,7 +152,7 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			}
 		} else if (m is CreationMethod && m.parent_symbol is Struct) {
 			ccall.add_argument (new CCodeIdentifier ("self"));
-		} else if (m != null && m.get_type_parameters ().size > 0) {
+		} else if (m != null && m.get_type_parameters ().size > 0 && !m.has_generic_type_parameter) {
 			// generic method
 			add_generic_type_arguments (in_arg_map, ma.get_type_arguments (), expr);
 		}
@@ -240,10 +240,20 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 		if (m != null && m.has_generic_type_parameter) {
 			// insert type argument for macros
-			int type_param_index = 0;
-			foreach (var type_arg in ma.inner.value_type.get_type_arguments ()) {
-				in_arg_map.set (get_param_pos (m.generic_type_parameter_position + 0.01 * type_param_index), new CCodeIdentifier (type_arg.get_cname ()));
-				type_param_index++;
+			if (m.get_type_parameters ().size > 0) {
+				// generic method
+				int type_param_index = 0;
+				foreach (var type_arg in ma.get_type_arguments ()) {
+					in_arg_map.set (get_param_pos (m.generic_type_parameter_position + 0.01 * type_param_index), new CCodeIdentifier (type_arg.get_cname ()));
+					type_param_index++;
+				}
+			} else {
+				// method in generic type
+				int type_param_index = 0;
+				foreach (var type_arg in ma.inner.value_type.get_type_arguments ()) {
+					in_arg_map.set (get_param_pos (m.generic_type_parameter_position + 0.01 * type_param_index), new CCodeIdentifier (type_arg.get_cname ()));
+					type_param_index++;
+				}
 			}
 		}
 

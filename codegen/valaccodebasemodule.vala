@@ -1298,7 +1298,9 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_formal_parameter (FormalParameter p) {
-		check_type (p.parameter_type);
+		if (!p.ellipsis) {
+			check_type (p.parameter_type);
+		}
 	}
 
 	public override void visit_property (Property prop) {
@@ -1949,7 +1951,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		if (b.parent_symbol is Method) {
 			var m = (Method) b.parent_symbol;
 			foreach (FormalParameter param in m.get_parameters ()) {
-				if (!param.captured && requires_destroy (param.parameter_type) && param.direction == ParameterDirection.IN) {
+				if (!param.captured && !param.ellipsis && requires_destroy (param.parameter_type) && param.direction == ParameterDirection.IN) {
 					var ma = new MemberAccess.simple (param.name);
 					ma.symbol_reference = param;
 					ma.value_type = param.parameter_type.copy ();
@@ -2172,7 +2174,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		} else {
 			CCodeStatement post_stmt = null;
 			var st = local.variable_type.data_type as Struct;
-			if (st != null && !st.is_simple_type () && !local.variable_type.nullable && local.initializer is ObjectCreationExpression) {
+			if (st != null && (!st.is_simple_type () || st.get_cname () == "va_list") && !local.variable_type.nullable && local.initializer is ObjectCreationExpression) {
 				post_stmt = new CCodeExpressionStatement (rhs);
 				rhs = null;
 			}
@@ -2850,7 +2852,13 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 		if (type is ValueType && !type.nullable) {
 			// normal value type, no null check
-			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cvar));
+			var st = type.data_type as Struct;
+			if (st != null && st.is_simple_type ()) {
+				// used for va_list
+				ccall.add_argument (cvar);
+			} else {
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cvar));
+			}
 
 			if (gvalue_type != null && type.data_type == gvalue_type) {
 				// g_value_unset must not be called for already unset values
@@ -3200,7 +3208,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 	private void append_param_free (Method m, CCodeFragment cfrag) {
 		foreach (FormalParameter param in m.get_parameters ()) {
-			if (requires_destroy (param.parameter_type) && param.direction == ParameterDirection.IN) {
+			if (!param.ellipsis && requires_destroy (param.parameter_type) && param.direction == ParameterDirection.IN) {
 				var ma = new MemberAccess.simple (param.name);
 				ma.symbol_reference = param;
 				ma.value_type = param.parameter_type.copy ();
@@ -3436,8 +3444,9 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	public override void visit_expression (Expression expr) {
 		if (expr.ccodenode != null && !expr.lvalue) {
 			if (expr.formal_value_type is GenericType && !(expr.value_type is GenericType)) {
-				if (expr.formal_value_type.type_parameter.parent_symbol != garray_type) {
-					// GArray doesn't use pointer-based generics
+				if (expr.formal_value_type.type_parameter.parent_symbol != garray_type /*&&
+				    expr.formal_value_type.type_parameter.parent_symbol != va_list_type*/) {
+					// GArray and va_list don't use pointer-based generics
 					expr.ccodenode = convert_from_generic_pointer ((CCodeExpression) expr.ccodenode, expr.value_type);
 				}
 			}
@@ -3952,7 +3961,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		check_type (expr.type_reference);
 
 		var st = expr.type_reference.data_type as Struct;
-		if ((st != null && !st.is_simple_type ()) || expr.get_object_initializer ().size > 0) {
+		if ((st != null && (!st.is_simple_type () || st.get_cname () == "va_list")) || expr.get_object_initializer ().size > 0) {
 			// value-type initialization or object creation expression with object initializer
 
 			var local = expr.parent_node as LocalVariable;
@@ -4002,6 +4011,18 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 			if ((st != null && !st.is_simple_type ()) && !(m.cinstance_parameter_position < 0)) {
 				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance));
+			} else if (st != null && st.get_cname () == "va_list") {
+				creation_call.add_argument (instance);
+				if (m.get_cname () == "va_start") {
+					FormalParameter last_param = null;
+					foreach (var param in current_method.get_parameters ()) {
+						if (param.ellipsis) {
+							break;
+						}
+						last_param = param;
+					}
+					creation_call.add_argument (new CCodeIdentifier (get_variable_cname (last_param.name)));
+				}
 			}
 
 			generate_type_declaration (expr.type_reference, source_declarations);
@@ -4150,7 +4171,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 
 		var local = expr.parent_node as LocalVariable;
-		if (st != null && !st.is_simple_type () && local != null && !local.variable_type.nullable) {
+		if (st != null && (!st.is_simple_type () || st.get_cname () == "va_list") && local != null && !local.variable_type.nullable) {
 			// no comma expression necessary
 			expr.ccodenode = creation_expr;
 		} else if (instance != null) {

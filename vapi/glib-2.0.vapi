@@ -680,6 +680,17 @@ public struct time_t {
 }
 
 [SimpleType]
+[CCode (cheader_filename="stdarg.h", cprefix="va_", has_type_id = false, destroy_function = "va_end")]
+public struct va_list {
+	[CCode (cname = "va_start")]
+	public va_list ();
+	[CCode (cname = "va_copy")]
+	public va_list.copy (va_list src);
+	[CCode (generic_type_pos = 1.1)]
+	public unowned G arg<G> ();
+}
+
+[SimpleType]
 [CCode (cname = "gunichar", cprefix = "g_unichar_", cheader_filename = "glib.h", type_id = "G_TYPE_UINT", marshaller_type_name = "UINT", get_value_function = "g_value_get_uint", set_value_function = "g_value_set_uint", default_value = "0U", type_signature = "u")]
 [IntegerType (rank = 7)]
 public struct unichar {
