@@ -129,10 +129,12 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				ccall.add_argument (new CCodeIdentifier ("self"));
 			}
 
-			foreach (DataType base_type in current_class.get_base_types ()) {
-				if (base_type.data_type is Class) {
-					add_generic_type_arguments (in_arg_map, base_type.get_type_arguments (), expr, true);
-					break;
+			if (!current_class.is_compact) {
+				foreach (DataType base_type in current_class.get_base_types ()) {
+					if (base_type.data_type is Class) {
+						add_generic_type_arguments (in_arg_map, base_type.get_type_arguments (), expr, true);
+						break;
+					}
 				}
 			}
 		} else if (m is CreationMethod && m.parent_symbol is Struct) {
