@@ -812,6 +812,10 @@ public class Vala.Method : Member {
 
 		foreach (FormalParameter param in parameters) {
 			param.check (analyzer);
+			if (coroutine && param.direction == ParameterDirection.REF) {
+				error = true;
+				Report.error (param.source_reference, "Reference parameters are not supported for async methods");
+			}
 		}
 
 		foreach (DataType error_type in get_error_types ()) {
