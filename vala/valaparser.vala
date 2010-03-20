@@ -384,7 +384,7 @@ public class Vala.Parser : CodeVisitor {
 		accept (TokenType.HASH);
 	}
 
-	DataType parse_type (bool owned_by_default = true) throws ParseError {
+	DataType parse_type (bool owned_by_default, bool can_weak_ref) throws ParseError {
 		var begin = get_location ();
 
 		if (accept (TokenType.VOID)) {
@@ -400,8 +400,16 @@ public class Vala.Parser : CodeVisitor {
 		bool value_owned = owned_by_default;
 
 		if (owned_by_default) {
-			if ((context.profile != Profile.DOVA && accept (TokenType.UNOWNED))
-			    || accept (TokenType.WEAK)) {
+			if (context.profile == Profile.DOVA) {
+				if (can_weak_ref && accept (TokenType.WEAK)) {
+					value_owned = false;
+				}
+			} else if (accept (TokenType.UNOWNED)) {
+				value_owned = false;
+			} else if (accept (TokenType.WEAK)) {
+				if (!can_weak_ref && !context.deprecated) {
+					Report.warning (get_last_src (), "deprecated syntax, use `unowned` modifier");
+				}
 				value_owned = false;
 			}
 		} else {
@@ -891,7 +899,7 @@ public class Vala.Parser : CodeVisitor {
 		var begin = get_location ();
 		expect (TokenType.SIZEOF);
 		expect (TokenType.OPEN_PARENS);
-		var type = parse_type ();
+		var type = parse_type (true, false);
 		expect (TokenType.CLOSE_PARENS);
 
 		return new SizeofExpression (type, get_src (begin));
@@ -901,7 +909,7 @@ public class Vala.Parser : CodeVisitor {
 		var begin = get_location ();
 		expect (TokenType.TYPEOF);
 		expect (TokenType.OPEN_PARENS);
-		var type = parse_type ();
+		var type = parse_type (true, false);
 		expect (TokenType.CLOSE_PARENS);
 
 		return new TypeofExpression (type, get_src (begin));
@@ -949,7 +957,7 @@ public class Vala.Parser : CodeVisitor {
 			case TokenType.VOID:
 			case TokenType.DYNAMIC:
 			case TokenType.IDENTIFIER:
-				var type = parse_type ();
+				var type = parse_type (true, false);
 				if (accept (TokenType.CLOSE_PARENS)) {
 					// check follower to decide whether to create cast expression
 					switch (current ()) {
@@ -1131,12 +1139,12 @@ public class Vala.Parser : CodeVisitor {
 				switch (current ()) {
 				case TokenType.IS:
 					next ();
-					var type = parse_type ();
+					var type = parse_type (true, false);
 					left = new TypeCheck (left, type, get_src (begin));
 					break;
 				case TokenType.AS:
 					next ();
-					var type = parse_type ();
+					var type = parse_type (true, false);
 					left = new CastExpression (left, type, get_src (begin), true);
 					break;
 				default:
@@ -1559,7 +1567,7 @@ public class Vala.Parser : CodeVisitor {
 		if (accept (TokenType.VAR)) {
 			variable_type = null;
 		} else {
-			variable_type = parse_type ();
+			variable_type = parse_type (true, true);
 		}
 		do {
 			if (variable_type == null && accept (TokenType.OPEN_PARENS)) {
@@ -1755,7 +1763,7 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.OPEN_PARENS);
 		DataType type = null;
 		if (!accept (TokenType.VAR)) {
-			type = parse_type ();
+			type = parse_type (true, true);
 		}
 		string id = parse_identifier ();
 		expect (TokenType.IN);
@@ -1842,7 +1850,7 @@ public class Vala.Parser : CodeVisitor {
 			DataType type = null;
 			string id = null;
 			if (accept (TokenType.OPEN_PARENS)) {
-				type = parse_type ();
+				type = parse_type (true, true);
 				id = parse_identifier ();
 				expect (TokenType.CLOSE_PARENS);
 			}
@@ -2184,7 +2192,7 @@ public class Vala.Parser : CodeVisitor {
 		var base_types = new ArrayList<DataType> ();
 		if (accept (TokenType.COLON)) {
 			do {
-				base_types.add (parse_type ());
+				base_types.add (parse_type (true, false));
 			} while (accept (TokenType.COMMA));
 		}
 
@@ -2296,7 +2304,7 @@ public class Vala.Parser : CodeVisitor {
 		var access = parse_access_modifier ();
 		var flags = parse_member_declaration_modifiers ();
 		expect (TokenType.CONST);
-		var type = parse_type (false);
+		var type = parse_type (false, false);
 		string id = parse_identifier ();
 
 		type = parse_inline_array_type (type);
@@ -2329,7 +2337,7 @@ public class Vala.Parser : CodeVisitor {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
 		var flags = parse_member_declaration_modifiers ();
-		var type = parse_type ();
+		var type = parse_type (true, true);
 		string id = parse_identifier ();
 
 		type = parse_inline_array_type (type);
@@ -2430,7 +2438,7 @@ public class Vala.Parser : CodeVisitor {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
 		var flags = parse_member_declaration_modifiers ();
-		var type = parse_type ();
+		var type = parse_type (true, false);
 		string id = parse_identifier ();
 		var type_param_list = parse_type_parameter_list ();
 		var method = new Method (id, type, get_src (begin), comment);
@@ -2490,7 +2498,7 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.CLOSE_PARENS);
 		if (accept (TokenType.THROWS)) {
 			do {
-				method.add_error_type (parse_type ());
+				method.add_error_type (parse_type (true, false));
 			} while (accept (TokenType.COMMA));
 		}
 		while (accept (TokenType.REQUIRES)) {
@@ -2515,7 +2523,7 @@ public class Vala.Parser : CodeVisitor {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
 		var flags = parse_member_declaration_modifiers ();
-		var type = parse_type ();
+		var type = parse_type (true, true);
 
 		bool getter_owned = false;
 		if (context.profile == Profile.DOVA) {
@@ -2556,7 +2564,7 @@ public class Vala.Parser : CodeVisitor {
 		}
 		if (accept (TokenType.THROWS)) {
 			do {
-				prop.add_error_type (parse_type ());
+				prop.add_error_type (parse_type (true, false));
 			} while (accept (TokenType.COMMA));
 			Report.error (prop.source_reference, "properties throwing errors are not supported yet");
 		}
@@ -2653,7 +2661,7 @@ public class Vala.Parser : CodeVisitor {
 		var access = parse_access_modifier ();
 		var flags = parse_member_declaration_modifiers ();
 		expect (TokenType.SIGNAL);
-		var type = parse_type ();
+		var type = parse_type (true, false);
 		string id = parse_identifier ();
 		var sig = new Signal (id, type, get_src (begin), comment);
 		sig.access = access;
@@ -2730,7 +2738,7 @@ public class Vala.Parser : CodeVisitor {
 		var type_param_list = parse_type_parameter_list ();
 		DataType base_type = null;
 		if (accept (TokenType.COLON)) {
-			base_type = parse_type ();
+			base_type = parse_type (true, false);
 		}
 		var st = new Struct (sym.name, get_src (begin), comment);
 		st.access = access;
@@ -2788,7 +2796,7 @@ public class Vala.Parser : CodeVisitor {
 		var base_types = new ArrayList<DataType> ();
 		if (accept (TokenType.COLON)) {
 			do {
-				var type = parse_type ();
+				var type = parse_type (true, false);
 				base_types.add (type);
 			} while (accept (TokenType.COMMA));
 		}
@@ -3069,11 +3077,14 @@ public class Vala.Parser : CodeVisitor {
 
 		DataType type;
 		if (direction == ParameterDirection.IN) {
-			// in parameters are weak by default
-			type = parse_type (false);
+			// in parameters are unowned by default
+			type = parse_type (false, false);
+		} else if (direction == ParameterDirection.REF) {
+			// ref parameters own the value by default
+			type = parse_type (true, true);
 		} else {
 			// out parameters own the value by default
-			type = parse_type (true);
+			type = parse_type (true, false);
 		}
 		string id = parse_identifier ();
 		var param = new FormalParameter (id, type, get_src (begin));
@@ -3121,7 +3132,7 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.CLOSE_PARENS);
 		if (accept (TokenType.THROWS)) {
 			do {
-				method.add_error_type (parse_type ());
+				method.add_error_type (parse_type (true, false));
 			} while (accept (TokenType.COMMA));
 		}
 		while (accept (TokenType.REQUIRES)) {
@@ -3152,7 +3163,7 @@ public class Vala.Parser : CodeVisitor {
 		if (ModifierFlags.NEW in flags) {
 			throw new ParseError.SYNTAX (get_error ("`new' modifier not allowed on delegates"));
 		}
-		var type = parse_type ();
+		var type = parse_type (true, false);
 		var sym = parse_symbol_name ();
 		var type_param_list = parse_type_parameter_list ();
 		var d = new Delegate (sym.name, type, get_src (begin), comment);
@@ -3182,7 +3193,7 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.CLOSE_PARENS);
 		if (accept (TokenType.THROWS)) {
 			do {
-				d.add_error_type (parse_type ());
+				d.add_error_type (parse_type (true, false));
 			} while (accept (TokenType.COMMA));
 		}
 		expect (TokenType.SEMICOLON);
@@ -3236,7 +3247,7 @@ public class Vala.Parser : CodeVisitor {
 				case TokenType.UNOWNED:
 				case TokenType.WEAK:
 				case TokenType.IDENTIFIER:
-					var type = parse_type ();
+					var type = parse_type (true, true);
 					list.add (type);
 					break;
 				default:
