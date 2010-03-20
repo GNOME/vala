@@ -1,6 +1,6 @@
 /* valalocalvariable.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -148,7 +148,7 @@ public class Vala.LocalVariable : Symbol {
 			initializer.target_type = variable_type;
 		}
 
-		if (initializer != null) {
+		if (initializer != null && !initializer.error) {
 			if (initializer.value_type == null) {
 				if (!(initializer is MemberAccess) && !(initializer is LambdaExpression)) {
 					error = true;
