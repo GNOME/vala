@@ -611,6 +611,8 @@ internal class Vala.GSignalModule : GObjectModule {
 			ccall.add_argument (get_result_cexpression ("self"));
 		}
 
+		CCodeCommaExpression? ccomma = null;
+
 		if (sig is DynamicSignal) {
 			// dynamic_signal_connect or dynamic_signal_disconnect
 
@@ -632,7 +634,7 @@ internal class Vala.GSignalModule : GObjectModule {
 			}
 
 			// get signal id
-			var ccomma = new CCodeCommaExpression ();
+			ccomma = new CCodeCommaExpression ();
 			var temp_decl = get_temp_variable (uint_type);
 			temp_vars.insert (0, temp_decl);
 			var parse_call = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_parse_name"));
@@ -640,22 +642,27 @@ internal class Vala.GSignalModule : GObjectModule {
 			var decl_type = (TypeSymbol) sig.parent_symbol;
 			parse_call.add_argument (new CCodeIdentifier (decl_type.get_type_id ()));
 			parse_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_decl.name)));
+			LocalVariable? detail_temp_decl = null;
 			if (signal_detail == null) {
 				parse_call.add_argument (new CCodeConstant ("NULL"));
+				parse_call.add_argument (new CCodeConstant ("FALSE"));
 			} else {
-				var detail_temp_decl = get_temp_variable (gquark_type);
+				detail_temp_decl = get_temp_variable (gquark_type);
 				temp_vars.insert (0, detail_temp_decl);
 				parse_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (detail_temp_decl.name)));
+				parse_call.add_argument (new CCodeConstant ("TRUE"));
 			}
-			parse_call.add_argument (new CCodeConstant ("FALSE"));
 			ccomma.append_expression (parse_call);
-			ccomma.append_expression (get_variable_cexpression (temp_decl.name));
 
 			// third argument: signal_id
-			ccall.add_argument (ccomma);
+			ccall.add_argument (get_variable_cexpression (temp_decl.name));
 
 			// fourth argument: detail
-			ccall.add_argument (new CCodeConstant ("0"));
+			if (detail_temp_decl == null) {
+				ccall.add_argument (new CCodeConstant ("0"));
+			} else {
+				ccall.add_argument (get_variable_cexpression (detail_temp_decl.name));
+			}
 			// fifth argument: closure
 			ccall.add_argument (new CCodeConstant ("NULL"));
 		}
@@ -711,7 +718,12 @@ internal class Vala.GSignalModule : GObjectModule {
 			ccall.add_argument (new CCodeConstant ("NULL"));
 		}
 
-		return ccall;
+		if (ccomma != null) {
+			ccomma.append_expression (ccall);
+			return ccomma;
+		} else {
+			return ccall;
+		}
 	}
 }
 
