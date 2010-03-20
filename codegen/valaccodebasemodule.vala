@@ -1452,6 +1452,10 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			Report.error (acc.source_reference, "construct properties require GLib.Object");
 			acc.error = true;
 			return;
+		} else if (acc.construction && !is_gobject_property (prop)) {
+			Report.error (acc.source_reference, "construct properties not supported for specified property type");
+			acc.error = true;
+			return;
 		}
 
 		// do not declare overriding properties and interface implementations
