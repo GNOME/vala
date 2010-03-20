@@ -570,7 +570,8 @@ public class Vala.MethodCall : Expression {
 
 								var generic_type = param.parameter_type as GenericType;
 								if (generic_type != null && generic_type.type_parameter == type_param) {
-									type_arg = arg.value_type;
+									type_arg = arg.value_type.copy ();
+									type_arg.value_owned = true;
 									break;
 								}
 
@@ -582,7 +583,8 @@ public class Vala.MethodCall : Expression {
 						if (type_arg == null) {
 							var generic_type = m.return_type as GenericType;
 							if (generic_type != null && generic_type.type_parameter == type_param) {
-								type_arg = target_type;
+								type_arg = target_type.copy ();
+								type_arg.value_owned = true;
 							}
 						}
 
