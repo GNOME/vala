@@ -72,6 +72,7 @@ namespace Gst {
 		public uint64 offset;
 		public uint64 offset_end;
 		public weak Gst.Buffer parent;
+		public uint size;
 		public Gst.ClockTime timestamp;
 		[CCode (has_construct_function = false)]
 		public Buffer ();
