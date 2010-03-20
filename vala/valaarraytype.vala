@@ -1,6 +1,6 @@
 /* valaarraytype.vala
  *
- * Copyright (C) 2007-2009  Jürg Billeter
+ * Copyright (C) 2007-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -192,6 +192,10 @@ public class Vala.ArrayType : ReferenceType {
 
 		var target_array_type = target_type as ArrayType;
 		if (target_array_type == null) {
+			return false;
+		}
+
+		if (target_array_type.rank != rank) {
 			return false;
 		}
 
