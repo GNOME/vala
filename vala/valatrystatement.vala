@@ -83,7 +83,7 @@ public class Vala.TryStatement : CodeNode, Statement {
 	 * @return list of catch clauses
 	 */
 	public List<CatchClause> get_catch_clauses () {
-		return new ReadOnlyList<CatchClause> (catch_clauses);
+		return catch_clauses;
 	}
 
 	public override void accept (CodeVisitor visitor) {

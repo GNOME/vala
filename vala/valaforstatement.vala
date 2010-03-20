@@ -90,7 +90,7 @@ public class Vala.ForStatement : CodeNode, Statement {
 	 * @return initializer list
 	 */
 	public List<Expression> get_initializer () {
-		return new ReadOnlyList<Expression> (initializer);
+		return initializer;
 	}
 	
 	/**
@@ -109,7 +109,7 @@ public class Vala.ForStatement : CodeNode, Statement {
 	 * @return iterator
 	 */
 	public List<Expression> get_iterator () {
-		return new ReadOnlyList<Expression> (iterator);
+		return iterator;
 	}
 	
 	public override void accept (CodeVisitor visitor) {

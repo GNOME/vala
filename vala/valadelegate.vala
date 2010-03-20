@@ -130,7 +130,7 @@ public class Vala.Delegate : TypeSymbol {
 	 * @return parameter list
 	 */
 	public List<FormalParameter> get_parameters () {
-		return new ReadOnlyList<FormalParameter> (parameters);
+		return parameters;
 	}
 	
 	/**

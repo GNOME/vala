@@ -42,7 +42,7 @@ public class Vala.CCodeCommaExpression : CCodeExpression {
 	}
 
 	public List<CCodeExpression> get_inner () {
-		return new ReadOnlyList<CCodeExpression> (inner);
+		return inner;
 	}
 
 	public override void write (CCodeWriter writer) {

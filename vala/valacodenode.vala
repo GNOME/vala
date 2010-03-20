@@ -96,7 +96,7 @@ public abstract class Vala.CodeNode {
 			return _error_types;
 		}
 		if (_empty_type_list == null) {
-			_empty_type_list = new ReadOnlyList<DataType> (new ArrayList<DataType> ());
+			_empty_type_list = new ArrayList<DataType> ();
 		}
 		return _empty_type_list;
 	}

@@ -104,7 +104,7 @@ public class Vala.SourceFile {
 	 * @return list of comments
 	 */
 	public List<Comment> get_comments () {
-		return new ReadOnlyList<Comment> (comments);
+		return comments;
 	}
 
 	/**
@@ -142,7 +142,7 @@ public class Vala.SourceFile {
 	 * @return code node list
 	 */
 	public List<CodeNode> get_nodes () {
-		return new ReadOnlyList<CodeNode> (nodes);
+		return nodes;
 	}
 
 	public void accept (CodeVisitor visitor) {

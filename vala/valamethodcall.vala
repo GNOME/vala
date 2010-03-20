@@ -73,7 +73,7 @@ public class Vala.MethodCall : Expression {
 	 * @return argument list
 	 */
 	public List<Expression> get_argument_list () {
-		return new ReadOnlyList<Expression> (argument_list);
+		return argument_list;
 	}
 
 	public override void accept (CodeVisitor visitor) {

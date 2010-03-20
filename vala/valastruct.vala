@@ -125,7 +125,7 @@ public class Vala.Struct : TypeSymbol {
 	 * @return list of type parameters
 	 */
 	public List<TypeParameter> get_type_parameters () {
-		return new ReadOnlyList<TypeParameter> (type_parameters);
+		return type_parameters;
 	}
 
 	/**
@@ -157,7 +157,7 @@ public class Vala.Struct : TypeSymbol {
 	 * @return list of fields
 	 */
 	public List<Field> get_fields () {
-		return new ReadOnlyList<Field> (fields);
+		return fields;
 	}
 
 	/**
@@ -166,7 +166,7 @@ public class Vala.Struct : TypeSymbol {
 	 * @return list of constants
 	 */
 	public List<Constant> get_constants () {
-		return new ReadOnlyList<Constant> (constants);
+		return constants;
 	}
 
 	/**
@@ -210,7 +210,7 @@ public class Vala.Struct : TypeSymbol {
 	 * @return list of methods
 	 */
 	public List<Method> get_methods () {
-		return new ReadOnlyList<Method> (methods);
+		return methods;
 	}
 
 	/**
@@ -236,7 +236,7 @@ public class Vala.Struct : TypeSymbol {
 	 * @return list of properties
 	 */
 	public List<Property> get_properties () {
-		return new ReadOnlyList<Property> (properties);
+		return properties;
 	}
 
 	public override void accept (CodeVisitor visitor) {

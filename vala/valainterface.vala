@@ -51,7 +51,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 * @return list of classes
 	 */
 	public List<Class> get_classes () {
-		return new ReadOnlyList<Class> (classes);
+		return classes;
 	}
 
 	/**
@@ -60,7 +60,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 * @return list of structs
 	 */
 	public List<Struct> get_structs () {
-		return new ReadOnlyList<Struct> (structs);
+		return structs;
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 * @return list of enums
 	 */
 	public List<Enum> get_enums () {
-		return new ReadOnlyList<Enum> (enums);
+		return enums;
 	}
 
 	/**
@@ -78,7 +78,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 * @return list of delegates
 	 */
 	public List<Delegate> get_delegates () {
-		return new ReadOnlyList<Delegate> (delegates);
+		return delegates;
 	}
 
 	/**
@@ -119,7 +119,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 * @return list of base types
 	 */
 	public List<DataType> get_prerequisites () {
-		return new ReadOnlyList<DataType> (prerequisites);
+		return prerequisites;
 	}
 	
 	/**
@@ -153,7 +153,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 * @return list of methods
 	 */
 	public override List<Method> get_methods () {
-		return new ReadOnlyList<Method> (methods);
+		return methods;
 	}
 	
 	/**
@@ -173,7 +173,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 * @return list of fields
 	 */
 	public List<Field> get_fields () {
-		return new ReadOnlyList<Field> (fields);
+		return fields;
 	}
 
 	/**
@@ -192,7 +192,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 * @return list of constants
 	 */
 	public List<Constant> get_constants () {
-		return new ReadOnlyList<Constant> (constants);
+		return constants;
 	}
 
 	/**
@@ -214,7 +214,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 * @return list of properties
 	 */
 	public override List<Property> get_properties () {
-		return new ReadOnlyList<Property> (properties);
+		return properties;
 	}
 	
 	/**
@@ -233,7 +233,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 * @return list of signals
 	 */
 	public override List<Signal> get_signals () {
-		return new ReadOnlyList<Signal> (signals);
+		return signals;
 	}
 
 	/**

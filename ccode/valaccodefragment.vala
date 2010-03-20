@@ -43,7 +43,7 @@ public class Vala.CCodeFragment : CCodeNode {
 	 * @return children list
 	 */
 	public List<CCodeNode> get_children () {
-		return new ReadOnlyList<CCodeNode> (children);
+		return children;
 	}
 
 	public override void write (CCodeWriter writer) {

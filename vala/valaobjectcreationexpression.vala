@@ -85,7 +85,7 @@ public class Vala.ObjectCreationExpression : Expression {
 	 * @return argument list
 	 */
 	public List<Expression> get_argument_list () {
-		return new ReadOnlyList<Expression> (argument_list);
+		return argument_list;
 	}
 
 	/**
@@ -104,7 +104,7 @@ public class Vala.ObjectCreationExpression : Expression {
 	 * @return member initializer list
 	 */
 	public List<MemberInitializer> get_object_initializer () {
-		return new ReadOnlyList<MemberInitializer> (object_initializer);
+		return object_initializer;
 	}
 
 	public override void accept (CodeVisitor visitor) {

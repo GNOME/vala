@@ -70,11 +70,11 @@ public class Vala.BasicBlock {
 	}
 
 	public List<weak BasicBlock> get_predecessors () {
-		return new ReadOnlyList<weak BasicBlock> (predecessors);
+		return predecessors;
 	}
 
 	public List<weak BasicBlock> get_successors () {
-		return new ReadOnlyList<weak BasicBlock> (successors);
+		return successors;
 	}
 
 	public void add_child (BasicBlock block) {

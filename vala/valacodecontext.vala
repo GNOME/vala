@@ -229,7 +229,7 @@ public class Vala.CodeContext {
 	 * @return list of source files
 	 */
 	public List<SourceFile> get_source_files () {
-		return new ReadOnlyList<SourceFile> (source_files);
+		return source_files;
 	}
 
 	/**
@@ -238,7 +238,7 @@ public class Vala.CodeContext {
 	 * @return list of C source files
 	 */
 	public List<string> get_c_source_files () {
-		return new ReadOnlyList<string> (c_source_files);
+		return c_source_files;
 	}
 	
 	/**
@@ -265,7 +265,7 @@ public class Vala.CodeContext {
 	 * @return list of used packages
 	 */
 	public List<string> get_packages () {
-		return new ReadOnlyList<string> (packages);
+		return packages;
 	}
 
 	/**

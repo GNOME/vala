@@ -108,7 +108,7 @@ public class Vala.Block : Symbol, Statement {
 	 * @return variable declarator list
 	 */
 	public List<LocalVariable> get_local_variables () {
-		return new ReadOnlyList<LocalVariable> (local_variables);
+		return local_variables;
 	}
 
 	public override void accept (CodeVisitor visitor) {

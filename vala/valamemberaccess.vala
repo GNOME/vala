@@ -112,7 +112,7 @@ public class Vala.MemberAccess : Expression {
 	 * @return type argument list
 	 */
 	public List<DataType> get_type_arguments () {
-		return new ReadOnlyList<DataType> (type_argument_list);
+		return type_argument_list;
 	}
 
 	public override void accept (CodeVisitor visitor) {

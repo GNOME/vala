@@ -56,7 +56,7 @@ public class Vala.CCodeFunctionCall : CCodeExpression {
 	 * @return list of arguments
 	 */
 	public List<CCodeExpression> get_arguments () {
-		return new ReadOnlyList<CCodeExpression> (arguments);
+		return arguments;
 	}
 
 	public override void write (CCodeWriter writer) {

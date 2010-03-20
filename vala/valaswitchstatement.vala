@@ -70,7 +70,7 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 	 * @return section list
 	 */
 	public List<SwitchSection> get_sections () {
-		return new ReadOnlyList<SwitchSection> (sections);
+		return sections;
 	}
 
 	public override void accept (CodeVisitor visitor) {

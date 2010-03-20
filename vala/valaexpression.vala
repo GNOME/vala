@@ -101,7 +101,7 @@ public abstract class Vala.Expression : CodeNode {
 	 * ascending from left to right.
 	 */
 	public List<CCodeExpression> get_array_sizes () {
-		return new ReadOnlyList<CCodeExpression> (array_sizes);
+		return array_sizes;
 	}
 
 	public Statement? parent_statement {

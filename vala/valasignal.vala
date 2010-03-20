@@ -101,7 +101,7 @@ public class Vala.Signal : Member, Lockable {
 	}
 
 	public List<FormalParameter> get_parameters () {
-		return new ReadOnlyList<FormalParameter> (parameters);
+		return parameters;
 	}
 
 	/**

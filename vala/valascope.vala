@@ -123,7 +123,7 @@ public class Vala.Scope {
 	}
 
 	public Map<string,Symbol> get_symbol_table () {
-		return new ReadOnlyMap<string,Symbol> (symbol_table);
+		return symbol_table;
 	}
 }
 

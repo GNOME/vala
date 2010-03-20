@@ -232,7 +232,7 @@ public abstract class Vala.TypeSymbol : Symbol {
 				cheader_filenames.add (source_reference.file.get_cinclude_filename ());
 			}
 		}
-		return new ReadOnlyList<string> (cheader_filenames);
+		return cheader_filenames;
 	}
 
 	/**

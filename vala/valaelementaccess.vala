@@ -54,7 +54,7 @@ public class Vala.ElementAccess : Expression {
 	}
 
 	public List<Expression> get_indices () {
-		return new ReadOnlyList<Expression> (indices);
+		return indices;
 	}
 	
 	public ElementAccess (Expression container, SourceReference source_reference) {

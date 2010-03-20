@@ -281,7 +281,7 @@ public class Vala.Method : Member {
 	}
 	
 	public List<FormalParameter> get_parameters () {
-		return new ReadOnlyList<FormalParameter> (parameters);
+		return parameters;
 	}
 
 	/**
@@ -579,7 +579,7 @@ public class Vala.Method : Member {
 	 * @return list of type parameters
 	 */
 	public List<TypeParameter> get_type_parameters () {
-		return new ReadOnlyList<TypeParameter> (type_parameters);
+		return type_parameters;
 	}
 
 	public int get_type_parameter_index (string name) {
@@ -609,7 +609,7 @@ public class Vala.Method : Member {
 	 * @return list of preconditions
 	 */
 	public List<Expression> get_preconditions () {
-		return new ReadOnlyList<Expression> (preconditions);
+		return preconditions;
 	}
 
 	/**
@@ -628,7 +628,7 @@ public class Vala.Method : Member {
 	 * @return list of postconditions
 	 */
 	public List<Expression> get_postconditions () {
-		return new ReadOnlyList<Expression> (postconditions);
+		return postconditions;
 	}
 
 	public override void replace_type (DataType old_type, DataType new_type) {

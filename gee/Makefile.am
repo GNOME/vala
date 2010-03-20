@@ -21,10 +21,6 @@ libgee_la_VALASOURCES = \
 	iterator.vala \
 	list.vala \
 	map.vala \
-	readonlycollection.vala \
-	readonlylist.vala \
-	readonlymap.vala \
-	readonlyset.vala \
 	set.vala \
 	$(NULL)
 

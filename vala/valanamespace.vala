@@ -78,7 +78,7 @@ public class Vala.Namespace : Symbol {
 	 * @return comment list
 	 */
 	public List<Comment> get_comments () {
-		return new ReadOnlyList<Comment> (comments);
+		return comments;
 	}
 
 	/**
@@ -142,7 +142,7 @@ public class Vala.Namespace : Symbol {
 	 * @return namespace list
 	 */
 	public List<Namespace> get_namespaces () {
-		return new ReadOnlyList<Namespace> (namespaces);
+		return namespaces;
 	}
 	
 	/**
@@ -251,7 +251,7 @@ public class Vala.Namespace : Symbol {
 	 * @return struct list
 	 */
 	public List<Struct> get_structs () {
-		return new ReadOnlyList<Struct> (structs);
+		return structs;
 	}
 
 	/**
@@ -260,7 +260,7 @@ public class Vala.Namespace : Symbol {
 	 * @return class list
 	 */
 	public List<Class> get_classes () {
-		return new ReadOnlyList<Class> (classes);
+		return classes;
 	}
 	
 	/**
@@ -269,7 +269,7 @@ public class Vala.Namespace : Symbol {
 	 * @return interface list
 	 */
 	public List<Interface> get_interfaces () {
-		return new ReadOnlyList<Interface> (interfaces);
+		return interfaces;
 	}
 	
 	/**
@@ -278,7 +278,7 @@ public class Vala.Namespace : Symbol {
 	 * @return enum list
 	 */
 	public List<Enum> get_enums () {
-		return new ReadOnlyList<Enum> (enums);
+		return enums;
 	}
 	
 	/**
@@ -287,7 +287,7 @@ public class Vala.Namespace : Symbol {
 	 * @return error domain list
 	 */
 	public List<ErrorDomain> get_error_domains () {
-		return new ReadOnlyList<ErrorDomain> (error_domains);
+		return error_domains;
 	}
 	
 	/**
@@ -296,7 +296,7 @@ public class Vala.Namespace : Symbol {
 	 * @return field list
 	 */
 	public List<Field> get_fields () {
-		return new ReadOnlyList<Field> (fields);
+		return fields;
 	}
 	
 	/**
@@ -305,7 +305,7 @@ public class Vala.Namespace : Symbol {
 	 * @return constant list
 	 */
 	public List<Constant> get_constants () {
-		return new ReadOnlyList<Constant> (constants);
+		return constants;
 	}
 	
 	/**
@@ -314,7 +314,7 @@ public class Vala.Namespace : Symbol {
 	 * @return delegate list
 	 */
 	public List<Delegate> get_delegates () {
-		return new ReadOnlyList<Delegate> (delegates);
+		return delegates;
 	}
 	
 	/**
@@ -323,7 +323,7 @@ public class Vala.Namespace : Symbol {
 	 * @return method list
 	 */
 	public List<Method> get_methods () {
-		return new ReadOnlyList<Method> (methods);
+		return methods;
 	}
 	
 	/**
@@ -518,7 +518,7 @@ public class Vala.Namespace : Symbol {
 	}
 
 	public override List<string> get_cheader_filenames () {
-		return new ReadOnlyList<string> (cheader_filenames);
+		return cheader_filenames;
 	}
 
 	/**

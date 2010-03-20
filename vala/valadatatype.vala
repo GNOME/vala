@@ -85,7 +85,7 @@ public abstract class Vala.DataType : CodeNode {
 			return type_argument_list;
 		}
 		if (_empty_type_list == null) {
-			_empty_type_list = new ReadOnlyList<DataType> (new ArrayList<DataType> ());
+			_empty_type_list = new ArrayList<DataType> ();
 		}
 		return _empty_type_list;
 	}

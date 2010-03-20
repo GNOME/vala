@@ -55,7 +55,7 @@ public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 	 * @return list of type parameters
 	 */
 	public List<TypeParameter> get_type_parameters () {
-		return new ReadOnlyList<TypeParameter> (type_parameters);
+		return type_parameters;
 	}
 
 	public override int get_type_parameter_index (string name) {
