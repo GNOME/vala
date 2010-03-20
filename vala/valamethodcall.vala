@@ -208,6 +208,13 @@ public class Vala.MethodCall : Expression {
 		    ((call.symbol_reference is CreationMethod
 		      && call.symbol_reference.parent_symbol is Struct)
 		     || call.symbol_reference is Struct)) {
+			var st = call.symbol_reference as Struct;
+			if (st != null && (st.is_boolean_type () || st.is_integer_type () || st.is_floating_type ())) {
+				error = true;
+				Report.error (source_reference, "invocation not supported in this context");
+				return false;
+			}
+
 			if (is_chainup ()) {
 				var cm = analyzer.find_current_method () as CreationMethod;
 				if (cm != null) {
