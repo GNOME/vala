@@ -130,10 +130,23 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			}
 
 			if (!current_class.is_compact) {
-				foreach (DataType base_type in current_class.get_base_types ()) {
-					if (base_type.data_type is Class) {
-						add_generic_type_arguments (in_arg_map, base_type.get_type_arguments (), expr, true);
-						break;
+				if (current_class != m.parent_symbol) {
+					// chain up to base class
+					foreach (DataType base_type in current_class.get_base_types ()) {
+						if (base_type.data_type is Class) {
+							add_generic_type_arguments (in_arg_map, base_type.get_type_arguments (), expr, true);
+							break;
+						}
+					}
+				} else {
+					// chain up to other constructor in same class
+					int type_param_index = 0;
+					var cl = (Class) m.parent_symbol;
+					foreach (TypeParameter type_param in cl.get_type_parameters ()) {
+						in_arg_map.set (get_param_pos (0.1 * type_param_index + 0.01), new CCodeIdentifier ("%s_type".printf (type_param.name.down ())));
+						in_arg_map.set (get_param_pos (0.1 * type_param_index + 0.02), new CCodeIdentifier ("%s_dup_func".printf (type_param.name.down ())));
+						in_arg_map.set (get_param_pos (0.1 * type_param_index + 0.03), new CCodeIdentifier ("%s_destroy_func".printf (type_param.name.down ())));
+						type_param_index++;
 					}
 				}
 			}
