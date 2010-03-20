@@ -1949,4 +1949,14 @@ internal class Vala.GTypeModule : GErrorModule {
 		ccomma.append_expression (new CCodeConditionalExpression (is_null_value, new CCodeMemberAccess.pointer (get_variable_cexpression (temp_var.name), "value_name"), new CCodeIdentifier ("NULL")));
 		expr.ccodenode = ccomma;
 	}
+
+	public override void visit_property (Property prop) {
+		var cl = current_type_symbol as Class;
+		var st = current_type_symbol as Struct;
+		if (prop.name == "type" && ((cl != null && !cl.is_compact) || (st != null && st.has_type_id))) {
+			Report.error (prop.source_reference, "Property 'type' not allowed");
+			return;
+		}
+		base.visit_property (prop);
+	}
 }
