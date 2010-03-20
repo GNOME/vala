@@ -168,7 +168,7 @@ internal class Vala.DBusClientModule : DBusModule {
 					cb_fun.block.add_statement (cdecl);
 					cend_call.add_argument (get_dbus_g_type (array_type));
 					cend_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
-					creply_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), dbus_use_ptr_array (array_type) ? "pdata" : "data"));
+					creply_call.add_argument (new CCodeCastExpression (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), dbus_use_ptr_array (array_type) ? "pdata" : "data"), array_type.get_cname ()));
 					creply_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), "len"));
 				} else {
 					var cdecl = new CCodeDeclaration (param.parameter_type.get_cname ());
