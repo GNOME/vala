@@ -1,6 +1,6 @@
 /* valanamedargument.vala
  *
- * Copyright (C) 2009  Jürg Billeter
+ * Copyright (C) 2009-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -75,6 +75,7 @@ public class Vala.NamedArgument : Expression {
 			return false;
 		}
 
+		inner.target_type = inner.value_type;
 		value_type = inner.value_type;
 
 		return !error;
