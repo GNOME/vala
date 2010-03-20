@@ -1,6 +1,6 @@
 /* valaassignment.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -355,6 +355,12 @@ public class Vala.Assignment : Expression {
 						 * increment calls */
 					}
 				}
+			}
+
+			var right_ma = right as MemberAccess;
+			if (right_ma != null && ma.symbol_reference == right_ma.symbol_reference &&
+			    (ma.symbol_reference is LocalVariable || ma.symbol_reference is Field || ma.symbol_reference is FormalParameter)) {
+				Report.warning (source_reference, "Assignment to same variable");
 			}
 		} else if (left is ElementAccess) {
 			var ea = (ElementAccess) left;
