@@ -3444,8 +3444,9 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	public override void visit_expression (Expression expr) {
 		if (expr.ccodenode != null && !expr.lvalue) {
 			if (expr.formal_value_type is GenericType && !(expr.value_type is GenericType)) {
-				if (expr.formal_value_type.type_parameter.parent_symbol != garray_type /*&&
-				    expr.formal_value_type.type_parameter.parent_symbol != va_list_type*/) {
+				var st = expr.formal_value_type.type_parameter.parent_symbol.parent_symbol as Struct;
+				if (expr.formal_value_type.type_parameter.parent_symbol != garray_type &&
+				    (st == null || st.get_cname () != "va_list")) {
 					// GArray and va_list don't use pointer-based generics
 					expr.ccodenode = convert_from_generic_pointer ((CCodeExpression) expr.ccodenode, expr.value_type);
 				}
