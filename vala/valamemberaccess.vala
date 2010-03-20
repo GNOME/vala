@@ -420,8 +420,8 @@ public class Vala.MemberAccess : Expression {
 
 		if (member is LocalVariable) {
 			var local = (LocalVariable) member;
-			var block = (Block) local.parent_symbol;
-			if (analyzer.find_parent_method (block) != analyzer.current_method) {
+			var block = local.parent_symbol as Block;
+			if (block != null && analyzer.find_parent_method (block) != analyzer.current_method) {
 				// mark all methods between current method and the captured
 				// block as closures (to support nested closures)
 				Symbol sym = analyzer.current_method;
