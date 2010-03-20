@@ -6024,8 +6024,6 @@ namespace Gtk {
 		public void* user_data;
 		public void* user_data2;
 		public void* user_data3;
-		public Gtk.TreeIter copy ();
-		public void free ();
 	}
 	[CCode (cprefix = "GTK_ACCEL_", cheader_filename = "gtk/gtk.h")]
 	[Flags]
