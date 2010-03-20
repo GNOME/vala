@@ -325,7 +325,6 @@ namespace GLib {
 		public void thaw_notify ();
 		[CCode (cname = "g_object_run_dispose")]
 		public virtual void dispose ();
-		public virtual void finalize ();
 		public virtual void constructed ();
 
 		public signal void notify (ParamSpec pspec);
