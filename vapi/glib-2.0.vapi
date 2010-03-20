@@ -843,7 +843,6 @@ public class string {
 	[CCode (cname = "g_utf8_get_char_validated")]
 	public unichar get_char_validated (ssize_t max_len = -1);
 	[CCode (cname = "g_utf8_offset_to_pointer")]
-	[PlusOperator ()]
 	public unowned string offset (long offset);
 	[CCode (cname = "g_utf8_pointer_to_offset")]
 	public long pointer_to_offset (string pos);
