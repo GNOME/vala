@@ -831,6 +831,11 @@ public class Vala.Parser : CodeVisitor {
 		do {
 			if (!first) {
 				// array of arrays: new T[][42]
+
+				if (size_specified) {
+					throw new ParseError.SYNTAX (get_error ("size of inner arrays must not be specified in array creation expression"));
+				}
+
 				element_type = new ArrayType (element_type, size_specifier_list.size, element_type.source_reference);
 			} else {
 				first = false;
