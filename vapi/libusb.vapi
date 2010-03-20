@@ -212,7 +212,7 @@ namespace USB {
 	}
 
 	[CCode (array_length = false)]
-	public static weak char[] strerror ();
+	public static unowned char[] strerror ();
 	public static void init ();
 	public static void set_debug (int level);
 	public static int find_busses ();
