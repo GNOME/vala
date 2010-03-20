@@ -358,9 +358,22 @@ public class Vala.Assignment : Expression {
 			}
 
 			var right_ma = right as MemberAccess;
-			if (right_ma != null && ma.symbol_reference == right_ma.symbol_reference &&
-			    (ma.symbol_reference is LocalVariable || ma.symbol_reference is Field || ma.symbol_reference is FormalParameter)) {
-				Report.warning (source_reference, "Assignment to same variable");
+			if (right_ma != null && ma.symbol_reference == right_ma.symbol_reference) {
+				if (ma.symbol_reference is LocalVariable || ma.symbol_reference is FormalParameter) {
+					Report.warning (source_reference, "Assignment to same variable");
+				} else if (ma.symbol_reference is Field) {
+					var f = (Field) ma.symbol_reference;
+					if (f.binding == MemberBinding.STATIC) {
+						Report.warning (source_reference, "Assignment to same variable");
+					} else {
+						var ma_inner = ma.inner as MemberAccess;
+						var right_ma_inner = right_ma.inner as MemberAccess;
+						if (ma_inner != null && ma_inner.member_name == "this" && ma_inner.inner == null &&
+						    right_ma_inner != null && right_ma_inner.member_name == "this" && right_ma_inner.inner == null) {
+							Report.warning (source_reference, "Assignment to same variable");
+						}
+					}
+				}
 			}
 		} else if (left is ElementAccess) {
 			var ea = (ElementAccess) left;
