@@ -250,6 +250,16 @@ public class Vala.MemberAccess : Expression {
 				}
 
 				symbol_reference = analyzer.symbol_lookup_inherited (sym, member_name);
+
+				if (symbol_reference == null) {
+					if (sym is TypeSymbol) {
+						// do not allow instance access to outer classes
+						this_parameter = null;
+						may_access_instance_members = false;
+						may_access_klass_members = false;
+					}
+				}
+
 				sym = sym.parent_symbol;
 			}
 
