@@ -288,6 +288,21 @@ public class Vala.MethodCall : Expression {
 					params = m.get_async_end_parameters ();
 				}
 			}
+
+			if (m != null && m.get_type_parameters ().size > 0) {
+				var ma = (MemberAccess) call;
+				int n_type_params = m.get_type_parameters ().size;
+				int n_type_args = ma.get_type_arguments ().size;
+				if (n_type_args > 0 && n_type_args < n_type_params) {
+					error = true;
+					Report.error (ma.source_reference, "too few type arguments");
+					return false;
+				} else if (n_type_args > 0 && n_type_args > n_type_params) {
+					error = true;
+					Report.error (ma.source_reference, "too many type arguments");
+					return false;
+				}
+			}
 		}
 
 		Expression last_arg = null;
@@ -534,6 +549,67 @@ public class Vala.MethodCall : Expression {
 					}
 				}
 				dynamic_sig.handler.target_type = new DelegateType (dynamic_sig.get_delegate (new ObjectType ((ObjectTypeSymbol) dynamic_sig.parent_symbol), this));
+			}
+
+			if (m != null && m.get_type_parameters ().size > 0) {
+				var ma = (MemberAccess) call;
+				if (ma.get_type_arguments ().size == 0) {
+					// infer type arguments
+					foreach (var type_param in m.get_type_parameters ()) {
+						DataType type_arg = null;
+
+						// infer type arguments from arguments
+						arg_it = args.iterator ();
+						foreach (FormalParameter param in params) {
+							if (param.ellipsis || param.params_array) {
+								break;
+							}
+
+							if (arg_it.next ()) {
+								Expression arg = arg_it.get ();
+
+								var generic_type = param.parameter_type as GenericType;
+								if (generic_type != null && generic_type.type_parameter == type_param) {
+									type_arg = arg.value_type;
+									break;
+								}
+
+								arg.target_type = arg.formal_target_type.get_actual_type (target_object_type, call as MemberAccess, this);
+							}
+						}
+
+						// infer type arguments from expected return type
+						if (type_arg == null) {
+							var generic_type = m.return_type as GenericType;
+							if (generic_type != null && generic_type.type_parameter == type_param) {
+								type_arg = target_type;
+							}
+						}
+
+						if (type_arg == null) {
+							Report.error (ma.source_reference, "cannot infer generic type argument for type parameter `%s'".printf (type_param.get_full_name ()));
+						}
+
+						ma.add_type_argument (type_arg);
+					}
+
+					// recalculate argument target types with new information
+					arg_it = args.iterator ();
+					foreach (FormalParameter param in params) {
+						if (param.ellipsis || param.params_array) {
+							break;
+						}
+
+						if (arg_it.next ()) {
+							Expression arg = arg_it.get ();
+
+							arg.target_type = arg.formal_target_type.get_actual_type (target_object_type, call as MemberAccess, this);
+						}
+					}
+
+					// recalculate return value type with new information
+					value_type = formal_value_type.get_actual_type (target_object_type, call as MemberAccess, this);
+				}
 			}
 		} else if (mtype is DelegateType) {
 			var d = ((DelegateType) mtype).delegate_symbol;
