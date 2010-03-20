@@ -2170,6 +2170,13 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				cfrag.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_variable_cname (local.name)), rhs)));
 			}
 		} else {
+			CCodeStatement post_stmt = null;
+			var st = local.variable_type.data_type as Struct;
+			if (st != null && !st.is_simple_type () && !local.variable_type.nullable && local.initializer is ObjectCreationExpression) {
+				post_stmt = new CCodeExpressionStatement (rhs);
+				rhs = null;
+			}
+
 			var cvar = new CCodeVariableDeclarator (get_variable_cname (local.name), rhs, local.variable_type.get_cdeclarator_suffix ());
 			if (rhs != null) {
 				cvar.line = rhs.line;
@@ -2184,6 +2191,10 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			if (cvar.initializer == null) {
 				cvar.initializer = default_value_for_type (local.variable_type, true);
 				cvar.init0 = true;
+			}
+
+			if (post_stmt != null) {
+				cfrag.append (post_stmt);
 			}
 		}
 
@@ -3943,10 +3954,16 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		var st = expr.type_reference.data_type as Struct;
 		if ((st != null && !st.is_simple_type ()) || expr.get_object_initializer ().size > 0) {
 			// value-type initialization or object creation expression with object initializer
-			var temp_decl = get_temp_variable (expr.type_reference, false, expr);
-			temp_vars.add (temp_decl);
 
-			instance = get_variable_cexpression (get_variable_cname (temp_decl.name));
+			var local = expr.parent_node as LocalVariable;
+			if (local != null && !local.variable_type.nullable) {
+				instance = get_variable_cexpression (get_variable_cname (local.name));
+			} else {
+				var temp_decl = get_temp_variable (expr.type_reference, false, expr);
+				temp_vars.add (temp_decl);
+
+				instance = get_variable_cexpression (get_variable_cname (temp_decl.name));
+			}
 		}
 
 		if (expr.symbol_reference == null) {
@@ -4131,8 +4148,12 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		} else {
 			assert (false);
 		}
-			
-		if (instance != null) {
+
+		var local = expr.parent_node as LocalVariable;
+		if (st != null && !st.is_simple_type () && local != null && !local.variable_type.nullable) {
+			// no comma expression necessary
+			expr.ccodenode = creation_expr;
+		} else if (instance != null) {
 			var ccomma = new CCodeCommaExpression ();
 
 			if (expr.type_reference.data_type is Struct) {
