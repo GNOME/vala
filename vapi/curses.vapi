@@ -266,7 +266,7 @@ namespace Curses {
 	public class Screen {
 		[CCode (cname = "newterm")]
 		public Screen(string str, GLib.FileStream outfd, GLib.FileStream infd);
-		public weak Screen set_term();
+		public unowned Screen set_term();
 	}
 
 	public int addch(ulong ch);
@@ -321,7 +321,7 @@ namespace Curses {
 	public ulong inch();
 	public int inchnstr([CCode (array_length = false)] ulong[] chstr, int n);
 	public int inchstr([CCode (array_length = false)] ulong[] chstr);
-	public weak Window initscr();
+	public unowned Window initscr();
 	public int init_color(short color, short r, short g, short b);
 	public int init_pair(short pair, Color f, Color b);
 	public int innstr(string str, int n);

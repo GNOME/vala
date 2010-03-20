@@ -32,7 +32,7 @@ namespace GLib {
 		public static string build_path (string? directory, string module_name);
 		public static Module? open (string? file_name, ModuleFlags flags);
 		public bool symbol (string symbol_name, out void* symbol);
-		public weak string name ();
+		public unowned string name ();
 		public void make_resident ();
 		public static weak string error ();
 	}

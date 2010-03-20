@@ -82,8 +82,8 @@ namespace Gtk {
 		public void load_url (string url);
 	
 		public void stop_load ();
-		public weak bool can_go_back ();
-		public weak bool can_go_forward ();
+		public unowned bool can_go_back ();
+		public unowned bool can_go_forward ();
 		public void go_back ();
 		public void go_forward ();
 
@@ -92,10 +92,10 @@ namespace Gtk {
 		public void append_data (string data, uint32 len);
 
 		public void close_stream ();
-		public weak string get_link_message ();
-		public weak string get_js_status ();
-		public weak string get_title ();
-		public weak string get_location ();
+		public unowned string get_link_message ();
+		public unowned string get_js_status ();
+		public unowned string get_title ();
+		public unowned string get_location ();
 
 		public void reload (MozEmbedReloadFlags flags);
 		public void set_chrome_mask (MozEmbedChromeFlags flags);

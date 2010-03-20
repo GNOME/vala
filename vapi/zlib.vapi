@@ -175,7 +175,7 @@ namespace ZLib {
 		[PrintfFormat]
 		public int printf (string format, ...);
 		public int puts (string s);
-		public weak string gets (char[] buf);
+		public unowned string gets (char[] buf);
 		public int flush (int flush);
 		public int rewind ();
 		public bool eof ();

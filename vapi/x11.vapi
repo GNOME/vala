@@ -82,7 +82,7 @@ namespace X {
 		public int flush ();
 
 		[CCode (cname = "XGetKeyboardMapping", array_length = false)]
-		public weak uint[] get_keyboard_mapping (uint first_keycode, int keycode_count, ref int keysyms_per_keycode_return);
+		public unowned uint[] get_keyboard_mapping (uint first_keycode, int keycode_count, ref int keysyms_per_keycode_return);
 
 		[CCode (cname = "XGetModifierMapping")]
 		public ModifierKeymap get_modifier_mapping ();
@@ -184,7 +184,7 @@ namespace X {
 		public int screen_count ();
 
 		[CCode (cname = "XScreenOfDisplay")]
-		public weak Screen screen_of_display (int screen_number);
+		public unowned Screen screen_of_display (int screen_number);
 
 		[CCode (cname = "XSelectInput")]
 		public int select_input (Window w, long event_mask);

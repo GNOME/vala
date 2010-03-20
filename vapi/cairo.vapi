@@ -31,18 +31,18 @@ namespace Cairo {
 		public void save ();
 		public void restore ();
 		
-		public weak Surface get_target ();
+		public unowned Surface get_target ();
 		public void push_group ();
 		public void push_group_with_content (Content content);
 		public Pattern pop_group ();
 		public void pop_group_to_source ();
-		public weak Surface get_group_target ();
+		public unowned Surface get_group_target ();
 		
 		public void set_source_rgb (double red, double green, double blue);
 		public void set_source_rgba (double red, double green, double blue, double alpha);
 		public void set_source (Pattern source);
 		public void set_source_surface (Surface surface, double x, double y);
-		public weak Pattern get_source ();
+		public unowned Pattern get_source ();
 
 		public void set_matrix (Matrix matrix);
 		public void get_matrix (out Matrix matrix);
@@ -145,7 +145,7 @@ namespace Cairo {
 		public void show_text (string utf8);
 		public void show_glyphs (Glyph[] glyphs);
 		
-		public weak FontFace get_font_face ();
+		public unowned FontFace get_font_face ();
 		public void font_extents (out FontExtents extents);
 		public void set_font_face (FontFace font_face);
 		public void set_scaled_font (ScaledFont font);
@@ -330,7 +330,7 @@ namespace Cairo {
 		public void extents (out FontExtents extents);
 		public void text_extents (string utf8, out TextExtents extents);
 		public void glyph_extents (Glyph[] glyphs, out TextExtents extents);
-		public weak FontFace get_font_face ();
+		public unowned FontFace get_font_face ();
 		public void get_font_options (out FontOptions options);
 		public void get_font_matrix (out Matrix font_matrix);
 		public void get_ctm (out Matrix ctm);
@@ -460,7 +460,7 @@ namespace Cairo {
 		[CCode (cname = "cairo_image_surface_create_for_data")]
 		public ImageSurface.for_data ([CCode (array_length = false)] uchar[] data, Format format, int width, int height, int stride);
 		[CCode (array_length = false)]
-		public weak uchar[] get_data ();
+		public unowned uchar[] get_data ();
 		public Format get_format ();
 		public int get_width ();
 		public int get_height ();
@@ -586,5 +586,5 @@ namespace Cairo {
 	}
 	
 	public int version ();
-	public weak string version_string ();
+	public unowned string version_string ();
 }

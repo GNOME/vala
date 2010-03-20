@@ -227,7 +227,7 @@ public enum Vala.MarkupTokenType {
 	TEXT,
 	EOF;
 
-	public weak string to_string () {
+	public unowned string to_string () {
 		switch (this) {
 		case START_ELEMENT: return "start element";
 		case END_ELEMENT: return "end element";

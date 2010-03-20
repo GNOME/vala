@@ -3902,7 +3902,7 @@ namespace Gsl
 		public RootFsolver (RootFsolverType* T);
 		public int @set (Function* f, double x_lower, double x_upper);
 		public int iterate ();
-		public weak string name ();
+		public unowned string name ();
 	}
 	
 	[SimpleType]
@@ -3928,7 +3928,7 @@ namespace Gsl
 		public RootFdfsolver (RootFdfsolverType* T);
 		public int @set (FunctionFdf* fdf, double root);
 		public int iterate ();
-		public weak string name ();
+		public unowned string name ();
 	}
 	
 	[CCode (lower_case_cprefix="gsl_root_test_", cheader_filename="gsl/gsl_roots.h")]
@@ -3995,7 +3995,7 @@ namespace Gsl
 		public int @set (Function* f, double x_minimum, double x_lower, double x_upper);
 		public int set_with_values (Function* f, double x_minimum, double f_minimum, double x_lower, double f_lower, double x_upper, double f_upper);
 		public int iterate ();
-		public weak string name ();
+		public unowned string name ();
 	}
 	
 	[CCode (lower_case_cprefix="gsl_min_test_", cheader_filename="gsl/gsl_min.h")]
@@ -4080,7 +4080,7 @@ namespace Gsl
 		public MultirootFsolver (MultirootFsolverType* T, size_t n); 
 		public int @set (MultirootFunction* f, Vector x);
 		public int iterate ();
-		public weak string name ();
+		public unowned string name ();
 		public Vector root ();
 	}
 	
@@ -4123,7 +4123,7 @@ namespace Gsl
 		public MultirootFdfsolver (MultirootFdfsolverType* T, size_t n);
 		public int @set (MultirootFunctionFdf* fdf, Vector x);
 		public int iterate ();
-		public weak string name ();
+		public unowned string name ();
 		public Vector root ();
 	}
 	
@@ -4220,7 +4220,7 @@ namespace Gsl
 		[CCode (cname="gsl_multimin_fminimizer_alloc")]
 		public MultiminFminimizer (MultiminFminimizerType* T, size_t n);
 		public int @set (MultiminFunction* f, Vector x, Vector step_size);
-		public weak string name ();
+		public unowned string name ();
 		public int iterate ();
 		public double minimum ();
 	}
@@ -4271,7 +4271,7 @@ namespace Gsl
 		[CCode (cname="gsl_multimin_fdfminimizer_alloc")]
 		public MultiminFdfminimizer (MultiminFdfminimizerType* T, size_t n);
 		public int @set (MultiminFunctionFdf* fdf, Vector x, double step_size, double tol);
-		public weak string name ();
+		public unowned string name ();
 		public int iterate ();
 		public int restart ();
 		public double minimum ();
@@ -4408,7 +4408,7 @@ namespace Gsl
 		public MultifitFsolver (MultifitFsolverType* T,  size_t n, size_t p);
 		public int @set (MultifitFunction* f, Vector x);
 		public int iterate ();
-		public weak string name ();
+		public unowned string name ();
 		public Vector position ();
 	}
 	
@@ -4452,7 +4452,7 @@ namespace Gsl
 		public MultifitFdfsolver (MultifitFdfsolverType* T, size_t n, size_t p);
 		public int @set (MultifitFunctionFdf* fdf, Vector x);
 		public int iterate ();
-		public weak string name ();
+		public unowned string name ();
 		public Vector position ();
 	}
 	

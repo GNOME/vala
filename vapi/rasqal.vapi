@@ -37,7 +37,7 @@ namespace Rasqal {
 		}
 
 		public Operator get_operator ();
-		public weak Triple get_triple (int idx);
+		public unowned Triple get_triple (int idx);
 		public void print (GLib.FileStream fh);
 	}
 
@@ -85,8 +85,8 @@ namespace Rasqal {
 
 		public Type type;
 
-		public weak string? as_string ();
-		public weak Variable? as_variable ();
+		public unowned string? as_string ();
+		public unowned Variable? as_variable ();
 	}
 
 	[Compact]
@@ -97,10 +97,10 @@ namespace Rasqal {
 		public bool get_distinct ();
 		public int get_limit ();
 		public int get_offset ();
-		public weak Expression? get_group_condition (int idx);
-		public weak Expression? get_order_condition (int idx);
-		public weak GraphPattern get_query_graph_pattern ();
-		public weak Variable? get_variable (int idx);
+		public unowned Expression? get_group_condition (int idx);
+		public unowned Expression? get_order_condition (int idx);
+		public unowned GraphPattern get_query_graph_pattern ();
+		public unowned Variable? get_variable (int idx);
 		public int prepare (string? query_string, Raptor.Uri? base_uri);
 	}
 

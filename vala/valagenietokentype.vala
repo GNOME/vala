@@ -165,7 +165,7 @@ public enum Vala.Genie.TokenType {
 	WRITEONLY,
 	YIELD;
 
-	public weak string to_string () {
+	public unowned string to_string () {
 		switch (this) {
 		case ABSTRACT: return "`abstract'";
 		case ARRAY: return "`array'";

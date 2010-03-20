@@ -106,7 +106,7 @@ namespace Xml {
 	[CCode (cname = "void", cheader_filename = "libxml/nanohttp.h")]
 	public class NanoHTTP {
 		[CCode (cname = "xmlNanoHTTPAuthHeader")]
-		public weak string auth_header ();
+		public unowned string auth_header ();
 
 		[CCode (cname = "xmlNanoHTTPCleanup")]
 		public static void cleanup ();
@@ -118,7 +118,7 @@ namespace Xml {
 		public int content_length ();
 
 		[CCode (cname = "xmlNanoHTTPEncoding")]
-		public weak string http_encoding ();
+		public unowned string http_encoding ();
 
 		[CCode (cname = "xmlNanoHTTPFetch")]
 		public static int fetch (string url, string filename, out string content_type);
@@ -145,7 +145,7 @@ namespace Xml {
 		public int read (void* dest, int len);
 
 		[CCode (cname = "xmlNanoHTTPRedir")]
-		public weak string redir ();
+		public unowned string redir ();
 
 		[CCode (cname = "xmlNanoHTTPReturnCode")]
 		public int return_code ();
@@ -976,34 +976,34 @@ namespace Xml {
 		public int close ();
 
 		[CCode (cname = "xmlTextReaderConstBaseUri")]
-		public weak string const_base_uri ();
+		public unowned string const_base_uri ();
 
 		[CCode (cname = "xmlTextReaderConstEncoding")]
-		public weak string const_encoding ();
+		public unowned string const_encoding ();
 
 		[CCode (cname = "xmlTextReaderConstLocalName")]
-		public weak string const_local_name ();
+		public unowned string const_local_name ();
 
 		[CCode (cname = "xmlTextReaderConstName")]
-		public weak string const_name ();
+		public unowned string const_name ();
 
 		[CCode (cname = "xmlTextReaderConstNamespaceUri")]
-		public weak string const_namespace_uri ();
+		public unowned string const_namespace_uri ();
 
 		[CCode (cname = "xmlTextReaderConstPrefix")]
-		public weak string const_prefix ();
+		public unowned string const_prefix ();
 
 		[CCode (cname = "xmlTextReaderConstString")]
-		public weak string const_string (string str);
+		public unowned string const_string (string str);
 
 		[CCode (cname = "xmlTextReaderConstValue")]
-		public weak string const_value ();
+		public unowned string const_value ();
 
 		[CCode (cname = "xmlTextReaderConstXmlLang")]
-		public weak string const_xml_lang ();
+		public unowned string const_xml_lang ();
 
 		[CCode (cname = "xmlTextReaderConstXmlVersion")]
-		public weak string const_xml_version ();
+		public unowned string const_xml_version ();
 
 		[CCode (cname = "xmlTextReaderCurrentDoc")]
 		public Doc* current_doc ();
@@ -1618,10 +1618,10 @@ namespace Html {
 		public Status status_here (ElemDesc* child);
 
 		[Ccode (cname = "htmlDefaultSubelement")]
-		public weak string default_subelement ();
+		public unowned string default_subelement ();
 
 		[Ccode (cname = "htmlRequiredAttrs")]
-		public weak string[] required_attrs ();
+		public unowned string[] required_attrs ();
 	}
 
 	[Compact]

@@ -630,10 +630,10 @@ namespace Readline {
 	public void list_funmap_names ();
 
 	[CCode (cname = "rl_invoking_keyseqs_in_map")]
-	public weak string[] invoking_keyseqs_in_map (CommandFunc func, KeyMap map);
+	public unowned string[] invoking_keyseqs_in_map (CommandFunc func, KeyMap map);
 
 	[CCode (cname = "rl_invoking_keyseqs")]
-	public weak string[] invoking_keyseqs (CommandFunc func);
+	public unowned string[] invoking_keyseqs (CommandFunc func);
 
 	[CCode (cname = "rl_function_dumper")]
 	public void function_dumper (int readable);
@@ -684,7 +684,7 @@ namespace Readline {
 	public int add_funmap_entry (string name, CommandFunc func);
 
 	[CCode (cname = "rl_funmap_names")]
-	public weak string[] funmap_names ();
+	public unowned string[] funmap_names ();
 
 	[CCode (cname = "rl_initialize_funmap")]
 	public void initialize_funmap ();
@@ -852,7 +852,7 @@ namespace Readline {
 	public void display_match_list (string[] matches, int len, int max);
 
 	[CCode (cname = "rl_completion_matches")]
-	public weak string[] completion_matches (string text, CompentryFunc func);
+	public unowned string[] completion_matches (string text, CompentryFunc func);
 
 	[CCode (cname = "rl_username_completion_function")]
 	public string username_completion_function (string text, int state);

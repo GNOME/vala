@@ -235,7 +235,7 @@ namespace DBus {
 		[CCode (cname = "dbus_g_connection_register_g_object")]
 		public void register_object (string at_path, GLib.Object object);
 		[CCode (cname = "dbus_g_connection_lookup_g_object")]
-		public weak GLib.Object lookup_object (string at_path);
+		public unowned GLib.Object lookup_object (string at_path);
 		[CCode (cname = "dbus_g_connection_get_connection")]
 		public RawConnection get_connection ();
 	}
@@ -243,12 +243,12 @@ namespace DBus {
 	[CCode (cname = "DBusGProxy", lower_case_csuffix = "g_proxy")]
 	public class Object : GLib.Object {
 		public bool call (string method, out GLib.Error error, GLib.Type first_arg_type, ...);
-		public weak ProxyCall begin_call (string method, ProxyCallNotify notify, GLib.DestroyNotify destroy, GLib.Type first_arg_type, ...);
+		public unowned ProxyCall begin_call (string method, ProxyCallNotify notify, GLib.DestroyNotify destroy, GLib.Type first_arg_type, ...);
 		public bool end_call (ProxyCall call, out GLib.Error error, GLib.Type first_arg_type, ...);
 		public void cancel_call (ProxyCall call);
-		public weak string get_path ();
-		public weak string get_bus_name ();
-		public weak string get_interface ();
+		public unowned string get_path ();
+		public unowned string get_bus_name ();
+		public unowned string get_interface ();
 		public GLib.HashTable<string,GLib.Value?> get_all (string interface_name) throws DBus.Error;
 
 		public signal void destroy ();

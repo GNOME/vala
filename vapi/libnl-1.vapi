@@ -66,7 +66,7 @@ namespace Netlink {
         public void     set_ifindex (int index );
         public int      get_ifindex ();
 
-        public weak RouteAddress get_local();
+        public unowned RouteAddress get_local();
     }
 
     [Compact]

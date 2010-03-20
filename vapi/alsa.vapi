@@ -21,7 +21,7 @@
 [CCode (lower_case_cprefix = "snd_", cheader_filename = "alsa/asoundlib.h")]
 namespace Alsa {
 
-    public weak string strerror (int error);
+    public unowned string strerror (int error);
 
     [CCode (cname = "snd_aes_iec958_t", destroy_function = "")]
     public struct AesIec958
@@ -47,11 +47,11 @@ namespace Alsa {
         [CCode (cname = "snd_ctl_card_info_malloc")]
         public static int alloc (out CardInfo info);
 
-        public weak string get_id();
-        public weak string get_longname();
+        public unowned string get_id();
+        public unowned string get_longname();
 
-        public weak string get_mixername();
-        public weak string get_components();
+        public unowned string get_mixername();
+        public unowned string get_components();
     }
 
     [Compact]
@@ -74,7 +74,7 @@ namespace Alsa {
         [CCode (cname = "snd_ctl_elem_id_malloc")]
         public static int alloc (out ElemId eid);
 
-        public weak string get_name();
+        public unowned string get_name();
         public uint get_numid();
         public uint get_index();
         public uint get_device();
@@ -190,7 +190,7 @@ namespace Alsa {
         [CCode (cname = "snd_mixer_selem_id_malloc")]
         public static int alloc (out SimpleElementId eid);
 
-        public weak string get_name();
+        public unowned string get_name();
         public uint get_index();
     }
 

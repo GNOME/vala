@@ -41,7 +41,7 @@ namespace Sqlite {
 		public static int open (string filename, out Database db);
 		public static int open_v2 (string filename, out Database db, int flags = OPEN_READWRITE | OPEN_CREATE, string? zVfs = null);
 		public int errcode ();
-		public weak string errmsg ();
+		public unowned string errmsg ();
 		public int prepare (string sql, int n_bytes, out Statement stmt, out string tail = null);
 		public int prepare_v2 (string sql, int n_bytes, out Statement stmt, out string tail = null);
 		public void trace (TraceCallback? xtrace);
@@ -74,7 +74,7 @@ namespace Sqlite {
 		[CCode (cname = "sqlite3_value_int64")]
 		public int64 to_int64 ();
 		[CCode (cname = "sqlite3_value_text")]
-		public weak string to_text ();
+		public unowned string to_text ();
 		[CCode (cname = "sqlite3_value_type")]
 		public int to_type ();
 		[CCode (cname = "sqlite3_value_numeric_type")]
@@ -169,11 +169,11 @@ namespace Sqlite {
 	public class Statement {
 		public int bind_parameter_count ();
 		public int bind_parameter_index (string name);
-		public weak string bind_parameter_name (int index);
+		public unowned string bind_parameter_name (int index);
 		public int clear_bindings ();
 		public int column_count ();
 		public int data_count ();
-		public weak Database db_handle ();
+		public unowned Database db_handle ();
 		public int reset ();
 		public int step ();
 		public int bind_blob (int index, void* value, int n, GLib.DestroyNotify destroy_notify);
@@ -189,11 +189,11 @@ namespace Sqlite {
 		public double column_double (int col);
 		public int column_int (int col);
 		public int64 column_int64 (int col);
-		public weak string column_text (int col);
+		public unowned string column_text (int col);
 		public int column_type (int col);
-		public weak Value column_value (int col);
-		public weak string column_name (int index);
-		public weak string sql ();
+		public unowned Value column_value (int col);
+		public unowned string column_name (int index);
+		public unowned string sql ();
 	}
 
 	[Compact]

@@ -63,7 +63,7 @@ namespace SDLNet {
 		 * is returned.  
 		 */
 		[CCode (cname="SDLNet_ResolveIP")]
-		public weak string? lookup();
+		public unowned string? lookup();
 	}// IPAddress
 
 	[CCode (cname="UDPpacket", free_function="SDLNet_FreePacket")]

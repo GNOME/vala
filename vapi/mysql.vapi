@@ -32,17 +32,17 @@ namespace Mysql {
 		public ulong affected_rows ();
 		public bool autocommit (bool mode);
 		public bool change_user (string username, string passwd, string dbname);
-		public weak string character_set_name ();
+		public unowned string character_set_name ();
 		public bool commit ();
 		public int dump_debug_info ();
 		public uint errno ();
-		public weak string error ();
-		public weak string get_host_info ();
+		public unowned string error ();
+		public unowned string get_host_info ();
 		public uint get_proto_info ();
-		public weak string get_server_info ();
+		public unowned string get_server_info ();
 		public ulong get_server_version ();
-		public weak string get_ssl_cipher ();
-		public weak string info ();
+		public unowned string get_ssl_cipher ();
+		public unowned string info ();
 		public ulong insert_id ();
 		public int kill (ulong pid);
 		public Result list_dbs (string wild);
@@ -63,10 +63,10 @@ namespace Mysql {
 		public int set_character_set (string csname);
 		public void set_local_infile_default ();
 		public int set_server_option (int option);
-		public weak string sqlstate ();
+		public unowned string sqlstate ();
 		public int shutdown (int shutdown_level);
 		public bool ssl_set (string key, string cert, string ca, string capath, string cipher);
-		public weak string stat ();
+		public unowned string stat ();
 		public Result? store_result ();
 		public ulong thread_id ();
 		public Result use_result ();
@@ -81,7 +81,7 @@ namespace Mysql {
 		public Field[] fetch_fields ();
 		public ulong[] fetch_lengths ();
 		[CCode (array_length = false)]
-		public weak string[]? fetch_row ();		
+		public unowned string[]? fetch_row ();		
 		public uint fetch_count ();
 		public uint num_fields ();
 		public uint num_rows ();
@@ -92,7 +92,7 @@ namespace Mysql {
 	public struct Field {
 	}
 	
-	public weak string get_client_info ();
+	public unowned string get_client_info ();
 	public ulong get_client_version ();
 	public void debug (string msg);
 	public ulong hex_string (string to, string from, ulong length);

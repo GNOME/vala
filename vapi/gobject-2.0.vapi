@@ -57,14 +57,14 @@ namespace GLib {
 		public static Type from_name (string name);
 		public Type[] interfaces ();
 		public bool is_a (Type is_a_type);
-		public weak string name ();
+		public unowned string name ();
 		public Quark qname ();
 		public Type parent ();
 
 		public void query (out TypeQuery query);
 
 		public TypeClass class_ref ();
-		public weak TypeClass class_peek ();
+		public unowned TypeClass class_peek ();
 
 		public const Type INVALID;
 		public const Type INTERFACE;
@@ -75,7 +75,7 @@ namespace GLib {
 
 	public struct TypeQuery {
 		public Type type;
-		public weak string type_name;
+		public unowned string type_name;
 		public uint class_size;
 		public uint instance_size;
 	}
@@ -130,9 +130,9 @@ namespace GLib {
 		public bool value_convert (Value src_value, Value dest_value, bool strict_validation);
 		[CCode (cname = "g_param_values_cmp")]
 		public int values_cmp (Value value1, Value value2);
-		public weak string get_blurb ();
-		public weak string get_name ();
-		public weak string get_nick ();
+		public unowned string get_blurb ();
+		public unowned string get_name ();
+		public unowned string get_nick ();
 		public void* get_qdata (Quark quark);
 		public void set_qdata (Quark quark, void* data);
 		public void set_qdata_full (Quark quark, void* data, DestroyNotify destroy);
@@ -229,14 +229,14 @@ namespace GLib {
 	public class ParamSpecEnum : ParamSpec {
 		[CCode (cname = "g_param_spec_enum")]
 		public ParamSpecEnum (string name, string nick, string blurb, Type enum_type, int default_value, ParamFlags flags);
-		public weak EnumClass enum_class;
+		public unowned EnumClass enum_class;
 		public int default_value;
 	}
 
 	public class ParamSpecFlags : ParamSpec {
 		[CCode (cname = "g_param_spec_flags")]
 		public ParamSpecFlags (string name, string nick, string blurb, Type flags_type, uint default_value, ParamFlags flags);
-		public weak FlagsClass flags_class;
+		public unowned FlagsClass flags_class;
 		public uint default_value;
 	}
 
@@ -272,9 +272,9 @@ namespace GLib {
 
 	[CCode (lower_case_csuffix = "object_class")]
 	public class ObjectClass : TypeClass {
-		public weak ParamSpec? find_property (string property_name);
+		public unowned ParamSpec? find_property (string property_name);
 		[CCode (array_length_type = "guint")]
-		public weak ParamSpec[] list_properties ();
+		public unowned ParamSpec[] list_properties ();
 		public void install_property (uint property_id, ParamSpec pspec);
 	}
 	
@@ -302,7 +302,7 @@ namespace GLib {
 		public Type get_type ();
 		[CCode (cname = "G_OBJECT_GET_CLASS")]
 		public unowned ObjectClass get_class ();
-		public weak Object @ref ();
+		public unowned Object @ref ();
 		public void unref ();
 		public Object ref_sink ();
 		public void weak_ref (WeakNotify notify);
@@ -332,7 +332,7 @@ namespace GLib {
 		[CCode (cname = "g_object_notify")]
 		public void notify_property (string property_name);
 
-		public weak Object connect (string signal_spec, ...);
+		public unowned Object connect (string signal_spec, ...);
 		[CCode (cname = "g_signal_handler_disconnect")]
 		public void disconnect (ulong handler_id);
 
@@ -360,27 +360,27 @@ namespace GLib {
 
 	[CCode (lower_case_csuffix = "enum")]
 	public class EnumClass : TypeClass {
-		public weak EnumValue? get_value (int value);
-		public weak EnumValue? get_value_by_name (string name);
-		public weak EnumValue? get_value_by_nick (string name);
+		public unowned EnumValue? get_value (int value);
+		public unowned EnumValue? get_value_by_name (string name);
+		public unowned EnumValue? get_value_by_nick (string name);
 		public int minimum;
 		public int maximum;
 		public uint n_values;
-		public weak EnumValue[] values;
+		public unowned EnumValue[] values;
 	}
 
 	[Compact]
 	public class EnumValue {
 		public int value;
-		public weak string value_name;
-		public weak string value_nick;
+		public unowned string value_name;
+		public unowned string value_nick;
 	}
 
 	[CCode (lower_case_csuffix = "flags")]
 	public class FlagsClass : TypeClass {
-		public weak FlagsValue? get_first_value (uint value);
-		public weak FlagsValue? get_value_by_name (string name);
-		public weak FlagsValue? get_value_by_nick (string name);
+		public unowned FlagsValue? get_first_value (uint value);
+		public unowned FlagsValue? get_value_by_name (string name);
+		public unowned FlagsValue? get_value_by_nick (string name);
 		public uint mask;
 		public uint n_values;
 		public FlagsValue[] values;
@@ -389,8 +389,8 @@ namespace GLib {
 	[Compact]
 	public class FlagsValue {
 		public int value;
-		public weak string value_name;
-		public weak string value_nick;
+		public unowned string value_name;
+		public unowned string value_nick;
 	}
 
 	[CCode (has_target = false)]
@@ -403,11 +403,11 @@ namespace GLib {
 		[CCode (cname = "G_VALUE_TYPE")]
 		public Type type ();
 		[CCode (cname = "G_VALUE_TYPE_NAME")]
-		public weak string type_name ();
+		public unowned string type_name ();
 
 		public Value (Type g_type);
 		public void copy (ref Value dest_value);
-		public weak Value? reset ();
+		public unowned Value? reset ();
 		public void init (Type g_type);
 		public void unset ();
 		public void set_instance (void* instance);
@@ -448,7 +448,7 @@ namespace GLib {
 		public void set_string (string v_string);
 		public void set_static_string (string v_string);
 		public void take_string (owned string v_string);
-		public weak string get_string ();
+		public unowned string get_string ();
 		public string dup_string ();
 		public void set_pointer (void* v_pointer);
 		public void* get_pointer ();
@@ -457,7 +457,7 @@ namespace GLib {
 		public void* dup_boxed ();
 		public void set_object (Object v_object);
 		public void take_object (owned Object v_object);
-		public weak Object get_object ();
+		public unowned Object get_object ();
 		public Object dup_object ();
 		public void set_gtype (Type v_gtype);
 		public Type get_gtype ();
@@ -510,7 +510,7 @@ namespace GLib {
 		public Value[] values;
 		public ValueArray (uint n_prealloced);
 		public ValueArray copy ();
-		public weak Value? get_nth (uint index_);
+		public unowned Value? get_nth (uint index_);
 		public void append (Value value);
 		public void prepend (Value value);
 		public void insert (uint index_, Value value);
@@ -522,7 +522,7 @@ namespace GLib {
 	namespace Signal {
 		public static void query (uint signal_id, out SignalQuery query);
 		public static uint lookup (string name, Type itype);
-		public static weak string name (uint signal_id);
+		public static unowned string name (uint signal_id);
 		public static uint[] list_ids (Type itype);
 		public static void emit (void* instance, uint signal_id, Quark detail, ...);
 		public static void emit_by_name (void* instance, string detailed_signal, ...);
@@ -566,13 +566,13 @@ namespace GLib {
 
 	public struct SignalQuery {
 		public uint signal_id;
-		public weak string signal_name;
+		public unowned string signal_name;
 		public Type itype;
 		public SignalFlags signal_flags;
 		public Type return_type;
 		public uint n_params;
 		[CCode (array_length = false)]
-		public weak Type[] param_types;
+		public unowned Type[] param_types;
 	}
 
 	[CCode (cprefix = "G_SIGNAL_MATCH_", has_type_id = false)]

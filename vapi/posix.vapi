@@ -473,7 +473,7 @@ namespace Posix {
 	[CCode (cheader_filename = "arpa/inet.h")]
 	public uint32 inet_addr (string host);
 	[CCode (cheader_filename = "arpa/inet.h")]
-	public weak string inet_ntoa (InAddr addr);
+	public unowned string inet_ntoa (InAddr addr);
 	[CCode (cheader_filename = "arpa/inet.h")]
 	public uint32 htonl (uint32 hostlong);
 	[CCode (cheader_filename = "arpa/inet.h")]
@@ -2040,7 +2040,7 @@ namespace Posix {
 		[CCode (cname = "fgetc")]
 		public int getc ();
 		[CCode (cname = "fgets", instance_pos = -1)]
-		public weak string gets (char[] s);
+		public unowned string gets (char[] s);
 		[CCode (cname = "feof")]
 		public bool eof ();
 		[CCode (cname = "fscanf"), ScanfFormat]

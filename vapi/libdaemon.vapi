@@ -99,7 +99,7 @@ namespace Daemon {
 	public static string log_ident;
 
 	public void log (int prio, string t, ...);
-	public weak string ident_from_argv0 (string argv0);
+	public unowned string ident_from_argv0 (string argv0);
 
 	public int nonblock (int fd, int b);
 
@@ -108,7 +108,7 @@ namespace Daemon {
 	public static string pid_file_ident;
 	public static PidFileProc pid_file_proc;
 
-	public weak string pid_file_proc_default ();
+	public unowned string pid_file_proc_default ();
 	public int pid_file_create ();
 	public int pid_file_remove ();
 	public int pid_file_is_running ();

@@ -62,7 +62,7 @@ namespace Raptor {
 		[CCode (cname = "raptor_new_uri")]
 		public Uri (string uri_string);
 		public static string filename_to_uri_string (string filename);
-		public weak string as_string ();
+		public unowned string as_string ();
 	}
 }
 

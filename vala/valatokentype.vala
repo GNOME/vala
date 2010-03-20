@@ -150,7 +150,7 @@ public enum Vala.TokenType {
 	WHILE,
 	YIELD;
 
-	public weak string to_string () {
+	public unowned string to_string () {
 		switch (this) {
 		case ABSTRACT: return "`abstract'";
 		case AS: return "`as'";
