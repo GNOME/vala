@@ -123,6 +123,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	private string marshaller_type_name;
 	private string get_value_function;
 	private string set_value_function;
+	private string take_value_function;
 	private bool _is_compact;
 	private bool _is_immutable;
 
@@ -633,6 +634,9 @@ public class Vala.Class : ObjectTypeSymbol {
 		if (a.has_argument ("set_value_function")) {
 			set_value_function = a.get_string ("set_value_function");
 		}
+		if (a.has_argument ("take_value_function")) {
+			take_value_function = a.get_string ("take_value_function");
+		}
 
 		if (a.has_argument ("const_cname")) {
 			const_cname = a.get_string ("const_cname");
@@ -753,6 +757,22 @@ public class Vala.Class : ObjectTypeSymbol {
 		}
 
 		return set_value_function;
+	}
+
+	public override string? get_take_value_function () {
+		if (take_value_function == null) {
+			if (is_fundamental ()) {
+				take_value_function = get_lower_case_cname ("value_take_");
+			} else if (base_class != null) {
+				take_value_function = base_class.get_take_value_function ();
+			} else if (get_type_id () == "G_TYPE_POINTER") {
+				take_value_function = "g_value_set_pointer";
+			} else {
+				take_value_function = "g_value_take_boxed";
+			}
+		}
+
+		return take_value_function;
 	}
 
 	public override bool is_reference_counting () {

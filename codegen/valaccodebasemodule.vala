@@ -478,6 +478,18 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 	}
 
+	public override CCodeIdentifier get_value_taker_function (DataType type_reference) {
+		var array_type = type_reference as ArrayType;
+		if (type_reference.data_type != null) {
+			return new CCodeIdentifier (type_reference.data_type.get_take_value_function ());
+		} else if (array_type != null && array_type.element_type.data_type == string_type.data_type) {
+			// G_TYPE_STRV
+			return new CCodeIdentifier ("g_value_take_boxed");
+		} else {
+			return new CCodeIdentifier ("g_value_set_pointer");
+		}
+	}
+
 	CCodeIdentifier get_value_getter_function (DataType type_reference) {
 		var array_type = type_reference as ArrayType;
 		if (type_reference.data_type != null) {

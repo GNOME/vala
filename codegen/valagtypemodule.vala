@@ -136,6 +136,18 @@ internal class Vala.GTypeModule : GErrorModule {
 
 			decl_space.add_type_member_declaration (function);
 
+			function = new CCodeFunction (cl.get_take_value_function (), "void");
+			function.add_parameter (new CCodeFormalParameter ("value", "GValue*"));
+			function.add_parameter (new CCodeFormalParameter ("v_object", "gpointer"));
+
+			if (cl.access == SymbolAccessibility.PRIVATE) {
+				function.modifiers = CCodeModifiers.STATIC;
+				// avoid C warning as this function is not always used
+				function.attributes = "G_GNUC_UNUSED";
+			}
+
+			decl_space.add_type_member_declaration (function);
+
 			function = new CCodeFunction (cl.get_get_value_function (), "gpointer");
 			function.add_parameter (new CCodeFormalParameter ("value", "const GValue*"));
 
@@ -537,6 +549,7 @@ internal class Vala.GTypeModule : GErrorModule {
 				add_g_param_spec_type_function (cl);
 				add_g_value_get_function (cl);
 				add_g_value_set_function (cl);
+				add_g_value_take_function (cl);
 
 				var ref_count = new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "ref_count"), new CCodeConstant ("1"));
 				instance_init_fragment.append (new CCodeExpressionStatement (ref_count));
@@ -988,6 +1001,76 @@ internal class Vala.GTypeModule : GErrorModule {
 		if_statement = new CCodeIfStatement (new CCodeIdentifier ("old"), true_stmt);
 		init_block.add_statement (if_statement);
 		
+		ccall = new CCodeFunctionCall (new CCodeIdentifier (cl.get_unref_function ()));
+		ccall.add_argument (new CCodeIdentifier ("old"));
+		true_stmt.add_statement (new CCodeExpressionStatement (ccall));
+		source_type_member_definition.append (function);
+	}
+
+	private void add_g_value_take_function (Class cl) {
+		var function = new CCodeFunction (cl.get_take_value_function (), "void");
+		function.add_parameter (new CCodeFormalParameter ("value", "GValue*"));
+		function.add_parameter (new CCodeFormalParameter ("v_object", "gpointer"));
+
+		if (cl.access == SymbolAccessibility.PRIVATE) {
+			function.modifiers = CCodeModifiers.STATIC;
+		}
+
+		var vpointer = new CCodeMemberAccess(new CCodeMemberAccess.pointer (new CCodeIdentifier ("value"), "data[0]"),"v_pointer");
+
+		var init_block = new CCodeBlock ();
+		function.block = init_block;
+
+		var ctypedecl = new CCodeDeclaration (cl.get_cname()+"*");
+		ctypedecl.add_declarator ( new CCodeVariableDeclarator ("old"));
+		init_block.add_statement (ctypedecl);
+
+		var ccall_typecheck = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_CHECK_VALUE_TYPE"));
+		ccall_typecheck.add_argument (new CCodeIdentifier ( "value" ));
+		ccall_typecheck.add_argument (new CCodeIdentifier ( cl.get_type_id() ));
+
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_return_if_fail"));
+		ccall.add_argument (ccall_typecheck);
+		init_block.add_statement (new CCodeExpressionStatement (ccall));
+
+		init_block.add_statement(new CCodeExpressionStatement (new CCodeAssignment (new CCodeConstant ("old"), vpointer, CCodeAssignmentOperator.SIMPLE)));
+
+		var true_stmt = new CCodeBlock ();
+		var false_stmt = new CCodeBlock ();
+		var if_statement = new CCodeIfStatement (new CCodeIdentifier ("v_object"), true_stmt, false_stmt);
+		init_block.add_statement (if_statement);
+
+
+		ccall_typecheck = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_CHECK_INSTANCE_TYPE"));
+		ccall_typecheck.add_argument (new CCodeIdentifier ( "v_object" ));
+		ccall_typecheck.add_argument (new CCodeIdentifier ( cl.get_type_id() ));
+
+		ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_return_if_fail"));
+		ccall.add_argument (ccall_typecheck);
+		true_stmt.add_statement (new CCodeExpressionStatement (ccall));
+
+		var ccall_typefrominstance = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_FROM_INSTANCE"));
+		ccall_typefrominstance.add_argument (new CCodeIdentifier ( "v_object" ));
+
+		var ccall_gvaluetype = new CCodeFunctionCall (new CCodeIdentifier ("G_VALUE_TYPE"));
+		ccall_gvaluetype.add_argument (new CCodeIdentifier ( "value" ));
+
+		var ccall_typecompatible = new CCodeFunctionCall (new CCodeIdentifier ("g_value_type_compatible"));
+		ccall_typecompatible.add_argument (ccall_typefrominstance);
+		ccall_typecompatible.add_argument (ccall_gvaluetype);
+
+		ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_return_if_fail"));
+		ccall.add_argument (ccall_typecompatible);
+		true_stmt.add_statement (new CCodeExpressionStatement (ccall));
+
+		true_stmt.add_statement(new CCodeExpressionStatement (new CCodeAssignment (vpointer, new CCodeConstant ("v_object"), CCodeAssignmentOperator.SIMPLE)));
+
+		false_stmt.add_statement(new CCodeExpressionStatement (new CCodeAssignment (vpointer, new CCodeConstant ("NULL"), CCodeAssignmentOperator.SIMPLE)));
+
+		true_stmt = new CCodeBlock ();
+		if_statement = new CCodeIfStatement (new CCodeIdentifier ("old"), true_stmt);
+		init_block.add_statement (if_statement);
+
 		ccall = new CCodeFunctionCall (new CCodeIdentifier (cl.get_unref_function ()));
 		ccall.add_argument (new CCodeIdentifier ("old"));
 		true_stmt.add_statement (new CCodeExpressionStatement (ccall));

@@ -351,6 +351,10 @@ public abstract class Vala.CCodeModule {
 		return next.get_value_setter_function (type_reference);
 	}
 
+	public virtual CCodeIdentifier get_value_taker_function (DataType type_reference) {
+		return next.get_value_taker_function (type_reference);
+	}
+
 	public virtual CCodeExpression get_construct_property_assignment (CCodeConstant canonical_cconstant, DataType property_type, CCodeExpression value) {
 		return next.get_construct_property_assignment (canonical_cconstant, property_type, value);
 	}

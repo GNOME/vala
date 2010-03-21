@@ -1,6 +1,7 @@
 /* valatypesymbol.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2010  Jürg Billeter
+ * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -195,7 +196,14 @@ public abstract class Vala.TypeSymbol : Symbol {
 	public virtual string? get_set_value_function () {
 		return null;
 	}
-	
+
+	/**
+	 * Returns the cname of the GValue taker function.
+	 */
+	public virtual string? get_take_value_function () {
+		return null;
+	}
+
 	/**
 	 * Returns the C name of this data type in upper case. Words are
 	 * separated by underscores. The upper case C name of the namespace is

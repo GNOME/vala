@@ -243,7 +243,11 @@ internal class Vala.GObjectModule : GTypeModule {
 				ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_get_%s".printf (prefix, prop.name)));
 				ccall.add_argument (cself);
 				var csetcall = new CCodeFunctionCall ();
-				csetcall.call = head.get_value_setter_function (prop.property_type);
+				if (prop.get_accessor.value_type.value_owned) {
+					csetcall.call = head.get_value_taker_function (prop.property_type);
+				} else {
+					csetcall.call = head.get_value_setter_function (prop.property_type);
+				}
 				csetcall.add_argument (new CCodeIdentifier ("value"));
 				csetcall.add_argument (ccall);
 				cswitch.add_statement (new CCodeExpressionStatement (csetcall));

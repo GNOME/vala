@@ -109,7 +109,7 @@ namespace GLib {
 		public virtual void unload ();
 	}
 
-	[CCode (type_id = "G_TYPE_PARAM", ref_function = "g_param_spec_ref", unref_function = "g_param_spec_unref", param_spec_function = "g_param_spec_param", get_value_function = "g_value_get_param", set_value_function = "g_value_set_param")]
+	[CCode (type_id = "G_TYPE_PARAM", ref_function = "g_param_spec_ref", unref_function = "g_param_spec_unref", param_spec_function = "g_param_spec_param", get_value_function = "g_value_get_param", set_value_function = "g_value_set_param", take_value_function = "g_value_take_param")]
 	public class ParamSpec {
 		public string name;
 		public ParamFlags flags;
@@ -288,7 +288,7 @@ namespace GLib {
 	[CCode (instance_pos = 0)]
 	public delegate void WeakNotify (Object object);
 
-	[CCode (ref_function = "g_object_ref", unref_function = "g_object_unref", marshaller_type_name = "OBJECT", get_value_function = "g_value_get_object", set_value_function = "g_value_set_object", param_spec_function = "g_param_spec_object", cheader_filename = "glib-object.h")]
+	[CCode (ref_function = "g_object_ref", unref_function = "g_object_unref", marshaller_type_name = "OBJECT", get_value_function = "g_value_get_object", set_value_function = "g_value_set_object", take_value_function = "g_value_take_object", param_spec_function = "g_param_spec_object", cheader_filename = "glib-object.h")]
 	public class Object {
 		public uint ref_count;
 
@@ -401,7 +401,7 @@ namespace GLib {
 	[CCode (has_target = false)]
 	public delegate void ValueTransform (Value src_value, out Value dest_value);
 
-	[CCode (copy_function = "g_value_copy", destroy_function = "g_value_unset", type_id = "G_TYPE_VALUE", marshaller_type_name = "BOXED", get_value_function = "g_value_get_boxed", set_value_function = "g_value_set_boxed", type_signature = "v")]
+	[CCode (copy_function = "g_value_copy", destroy_function = "g_value_unset", type_id = "G_TYPE_VALUE", marshaller_type_name = "BOXED", get_value_function = "g_value_get_boxed", set_value_function = "g_value_set_boxed", take_value_function = "g_value_take_boxed", type_signature = "v")]
 	public struct Value {
 		[CCode (cname = "G_VALUE_HOLDS")]
 		public bool holds (Type type);
