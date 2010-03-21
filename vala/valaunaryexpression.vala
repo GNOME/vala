@@ -87,9 +87,8 @@ public class Vala.UnaryExpression : Expression {
 		case UnaryOperator.DECREMENT: return "--";
 		case UnaryOperator.REF: return "ref ";
 		case UnaryOperator.OUT: return "out ";
+		default: assert_not_reached ();
 		}
-
-		assert_not_reached ();
 	}
 
 	public override string to_string () {

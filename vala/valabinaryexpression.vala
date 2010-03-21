@@ -119,9 +119,8 @@ public class Vala.BinaryExpression : Expression {
 		case BinaryOperator.OR: return "||";
 		case BinaryOperator.IN: return "in";
 		case BinaryOperator.COALESCE: return "??";
+		default: assert_not_reached ();
 		}
-
-		assert_not_reached ();
 	}
 
 	public override string to_string () {
