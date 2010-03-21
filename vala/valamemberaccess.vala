@@ -657,7 +657,11 @@ public class Vala.MemberAccess : Expression {
 				instance_type = pointer_type.base_type;
 			}
 
-			if (instance_type.get_type_arguments ().size == 0) {
+			// instance type might be a subtype of the parent symbol of the member
+			// that subtype might not be generic, so do not report an error in that case
+			var object_type = instance_type as ObjectType;
+			if (object_type != null && object_type.type_symbol.get_type_parameters ().size > 0 &&
+			    instance_type.get_type_arguments ().size == 0) {
 				error = true;
 				Report.error (inner.source_reference, "missing generic type arguments");
 				return false;
