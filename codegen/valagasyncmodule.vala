@@ -1,6 +1,6 @@
 /* valagasyncmodule.vala
  *
- * Copyright (C) 2008-2009  Jürg Billeter
+ * Copyright (C) 2008-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -219,6 +219,8 @@ internal class Vala.GAsyncModule : GSignalModule {
 					var ma = new MemberAccess.simple (param.name);
 					ma.symbol_reference = param;
 					cparam = get_ref_cexpression (param.parameter_type, cparam, ma, param);
+				} else if (param.parameter_type.is_real_non_null_struct_type ()) {
+					cparam = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, cparam);
 				}
 
 				asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, get_variable_cname (param.name)), cparam)));
