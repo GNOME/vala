@@ -58,8 +58,8 @@ namespace Soup {
 		public bool covers (Soup.Message msg);
 		public unowned string get_realm ();
 		public void remove_path (string path);
-		public void set_filter (Soup.AuthDomainFilter filter, void* filter_data, GLib.DestroyNotify dnotify);
-		public void set_generic_auth_callback (Soup.AuthDomainGenericAuthCallback auth_callback, void* auth_data, GLib.DestroyNotify dnotify);
+		public void set_filter (owned Soup.AuthDomainFilter filter);
+		public void set_generic_auth_callback (owned Soup.AuthDomainGenericAuthCallback auth_callback);
 		public bool try_generic_auth_callback (Soup.Message msg, string username);
 		[NoAccessorMethod]
 		public void* filter { get; set; }
@@ -77,7 +77,7 @@ namespace Soup {
 	public class AuthDomainBasic : Soup.AuthDomain {
 		[CCode (type = "SoupAuthDomain*", has_construct_function = false)]
 		public AuthDomainBasic (string optname1);
-		public static void set_auth_callback (Soup.AuthDomain domain, Soup.AuthDomainBasicAuthCallback callback, GLib.DestroyNotify dnotify);
+		public static void set_auth_callback (Soup.AuthDomain domain, owned Soup.AuthDomainBasicAuthCallback callback);
 		[NoAccessorMethod]
 		public void* auth_callback { get; set; }
 		[NoAccessorMethod]
@@ -88,7 +88,7 @@ namespace Soup {
 		[CCode (type = "SoupAuthDomain*", has_construct_function = false)]
 		public AuthDomainDigest (string optname1);
 		public static unowned string encode_password (string username, string realm, string password);
-		public static void set_auth_callback (Soup.AuthDomain domain, Soup.AuthDomainDigestAuthCallback callback, GLib.DestroyNotify dnotify);
+		public static void set_auth_callback (Soup.AuthDomain domain, owned Soup.AuthDomainDigestAuthCallback callback);
 		[NoAccessorMethod]
 		public void* auth_callback { get; set; }
 		[NoAccessorMethod]
@@ -198,9 +198,9 @@ namespace Soup {
 	public class Logger : GLib.Object, Soup.SessionFeature {
 		[CCode (has_construct_function = false)]
 		public Logger (Soup.LoggerLogLevel level, int max_body_size);
-		public void set_printer (Soup.LoggerPrinter printer, void* printer_data, GLib.DestroyNotify destroy);
-		public void set_request_filter (Soup.LoggerFilter request_filter, void* filter_data, GLib.DestroyNotify destroy);
-		public void set_response_filter (Soup.LoggerFilter response_filter, void* filter_data, GLib.DestroyNotify destroy);
+		public void set_printer (owned Soup.LoggerPrinter printer);
+		public void set_request_filter (owned Soup.LoggerFilter request_filter);
+		public void set_response_filter (owned Soup.LoggerFilter response_filter);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class Message : GLib.Object {
@@ -219,7 +219,7 @@ namespace Soup {
 		public Soup.HTTPVersion get_http_version ();
 		public unowned Soup.URI get_uri ();
 		public bool is_keepalive ();
-		public void set_chunk_allocator (Soup.ChunkAllocator allocator, GLib.DestroyNotify destroy_notify);
+		public void set_chunk_allocator (owned Soup.ChunkAllocator allocator);
 		public void set_flags (Soup.MessageFlags flags);
 		public void set_http_version (Soup.HTTPVersion version);
 		public void set_request (string content_type, Soup.MemoryUse req_use, string req_body, size_t req_length);
