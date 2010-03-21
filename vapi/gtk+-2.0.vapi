@@ -3015,7 +3015,7 @@ namespace Gtk {
 		public void set_group (GLib.SList<Gtk.RadioToolButton> group);
 		[CCode (type = "GtkToolItem*", has_construct_function = false)]
 		public RadioToolButton.with_stock_from_widget (Gtk.RadioToolButton group, string stock_id);
-		public Gtk.RadioToolButton<Gtk.RadioMenuItem> group { set; }
+		public Gtk.RadioToolButton group { set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Range : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
