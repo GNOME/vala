@@ -207,7 +207,7 @@ public class Vala.CodeContext {
 	 * Push the specified context to the context stack.
 	 */
 	public static void push (CodeContext context) {
-		List<CodeContext>* context_stack = context_stack_key.get ();
+		ArrayList<CodeContext>* context_stack = context_stack_key.get ();
 		if (context_stack == null) {
 			context_stack = new ArrayList<CodeContext> ();
 			context_stack_key.set (context_stack, null);
