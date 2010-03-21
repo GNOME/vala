@@ -772,6 +772,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 		if (en.access == SymbolAccessibility.PRIVATE) {
 			regfun.modifiers = CCodeModifiers.STATIC;
+			// avoid C warning as this function is not always used
+			regfun.attributes = "G_GNUC_UNUSED";
 		}
 
 		decl_space.add_type_member_declaration (regfun);

@@ -118,6 +118,8 @@ internal class Vala.GTypeModule : GErrorModule {
 
 			if (cl.access == SymbolAccessibility.PRIVATE) {
 				function.modifiers = CCodeModifiers.STATIC;
+				// avoid C warning as this function is not always used
+				function.attributes = "G_GNUC_UNUSED";
 			}
 
 			decl_space.add_type_member_declaration (function);
@@ -128,6 +130,8 @@ internal class Vala.GTypeModule : GErrorModule {
 
 			if (cl.access == SymbolAccessibility.PRIVATE) {
 				function.modifiers = CCodeModifiers.STATIC;
+				// avoid C warning as this function is not always used
+				function.attributes = "G_GNUC_UNUSED";
 			}
 
 			decl_space.add_type_member_declaration (function);
@@ -137,6 +141,8 @@ internal class Vala.GTypeModule : GErrorModule {
 
 			if (cl.access == SymbolAccessibility.PRIVATE) {
 				function.modifiers = CCodeModifiers.STATIC;
+				// avoid C warning as this function is not always used
+				function.attributes = "G_GNUC_UNUSED";
 			}
 
 			decl_space.add_type_member_declaration (function);

@@ -1,6 +1,6 @@
 /* valaccodefunction.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -41,6 +41,8 @@ public class Vala.CCodeFunction : CCodeNode {
 	 */
 	public string return_type { get; set; }
 
+	public string attributes { get; set; }
+
 	/**
 	 * The function body.
 	 */
@@ -70,6 +72,7 @@ public class Vala.CCodeFunction : CCodeNode {
 	public CCodeFunction copy () {
 		var func = new CCodeFunction (name, return_type);
 		func.modifiers = modifiers;
+		func.attributes = attributes;
 
 		/* no deep copy for lists available yet
 		 * func.parameters = parameters.copy ();
@@ -109,7 +112,13 @@ public class Vala.CCodeFunction : CCodeNode {
 		}
 		
 		writer.write_string (")");
+
 		if (block == null) {
+			if (attributes != null) {
+				writer.write_string (" ");
+				writer.write_string (attributes);
+			}
+
 			writer.write_string (";");
 		} else {
 			block.write (writer);

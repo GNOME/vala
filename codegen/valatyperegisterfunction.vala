@@ -1,6 +1,6 @@
 /* valatyperegisterfunction.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -71,6 +71,8 @@ public abstract class Vala.TypeRegisterFunction {
 			/* Function will not be prototyped anyway */
 			if (get_accessibility () == SymbolAccessibility.PRIVATE) {
 				fun.modifiers = CCodeModifiers.STATIC;
+				// avoid C warning as this function is not always used
+				fun.attributes = "G_GNUC_UNUSED";
 			}
 		} else {
 			fun = new CCodeFunction ("%s_register_type".printf (get_type_declaration ().get_lower_case_cname (null)), "GType");
@@ -79,6 +81,8 @@ public abstract class Vala.TypeRegisterFunction {
 			var get_fun = new CCodeFunction ("%s_get_type".printf (get_type_declaration ().get_lower_case_cname (null)), "GType");
 			if (get_accessibility () == SymbolAccessibility.PRIVATE) {
 				fun.modifiers = CCodeModifiers.STATIC;
+				// avoid C warning as this function is not always used
+				fun.attributes = "G_GNUC_UNUSED";
 			}
 
 			declaration_fragment.append (get_fun.copy ());
