@@ -1,6 +1,6 @@
 /* valablock.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -88,7 +88,7 @@ public class Vala.Block : Symbol, Statement {
 	 */
 	public void add_local_variable (LocalVariable local) {
 		var parent_block = parent_symbol;
-		while (parent_block is Block || parent_block is Method) {
+		while (parent_block is Block || parent_block is Method || parent_block is PropertyAccessor) {
 			if (parent_block.scope.lookup (local.name) != null) {
 				Report.error (local.source_reference, "Local variable `%s' conflicts with another local variable declared in a parent scope".printf (local.name));
 				break;
