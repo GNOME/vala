@@ -2208,7 +2208,12 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			closure_struct.add_field (local.variable_type.get_cname (), get_variable_cname (local.name) + local.variable_type.get_cdeclarator_suffix ());
 
 			if (local.initializer != null) {
-				cfrag.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_variable_cname (local.name)), rhs)));
+				var st = local.variable_type.data_type as Struct;
+				if (st != null && (!st.is_simple_type () || st.get_cname () == "va_list") && !local.variable_type.nullable && local.initializer is ObjectCreationExpression) {
+					cfrag.append (new CCodeExpressionStatement (rhs));
+				} else {
+					cfrag.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_variable_cname (local.name)), rhs)));
+				}
 			}
 		} else {
 			CCodeStatement post_stmt = null;
