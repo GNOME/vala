@@ -580,7 +580,7 @@ public class Vala.MethodCall : Expression {
 						}
 
 						// infer type arguments from expected return type
-						if (type_arg == null) {
+						if (type_arg == null && target_type != null) {
 							var generic_type = m.return_type as GenericType;
 							if (generic_type != null && generic_type.type_parameter == type_param) {
 								type_arg = target_type.copy ();
@@ -589,7 +589,9 @@ public class Vala.MethodCall : Expression {
 						}
 
 						if (type_arg == null) {
+							error = true;
 							Report.error (ma.source_reference, "cannot infer generic type argument for type parameter `%s'".printf (type_param.get_full_name ()));
+							return false;
 						}
 
 						ma.add_type_argument (type_arg);
