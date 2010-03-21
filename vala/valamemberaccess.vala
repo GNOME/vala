@@ -437,6 +437,7 @@ public class Vala.MemberAccess : Expression {
 		var access = SymbolAccessibility.PUBLIC;
 		bool instance = false;
 		bool klass = false;
+		bool generics = false;
 
 		if (!member.check (analyzer)) {
 			return false;
@@ -491,6 +492,12 @@ public class Vala.MemberAccess : Expression {
 			access = f.access;
 			instance = (f.binding == MemberBinding.INSTANCE);
 			klass = (f.binding == MemberBinding.CLASS);
+
+			// do not allow access to fields of generic types
+			// if instance type does not specify type arguments
+			if (f.field_type is GenericType) {
+				generics = true;
+			}
 		} else if (member is Method) {
 			var m = (Method) member;
 			if (m.is_async_callback) {
@@ -537,6 +544,20 @@ public class Vala.MemberAccess : Expression {
 				instance = (m.binding == MemberBinding.INSTANCE);
 			}
 			klass = (m.binding == MemberBinding.CLASS);
+
+			// do not allow access to methods using generic type parameters
+			// if instance type does not specify type arguments
+			foreach (var param in m.get_parameters ()) {
+				var generic_type = param.parameter_type as GenericType;
+				if (generic_type != null && generic_type.type_parameter.parent_symbol is TypeSymbol) {
+					generics = true;
+					break;
+				}
+			}
+			var generic_type = m.return_type as GenericType;
+			if (generic_type != null && generic_type.type_parameter.parent_symbol is TypeSymbol) {
+				generics = true;
+			}
 		} else if (member is Property) {
 			var prop = (Property) member;
 			if (!prop.check (analyzer)) {
@@ -581,6 +602,12 @@ public class Vala.MemberAccess : Expression {
 				}
 			}
 			instance = (prop.binding == MemberBinding.INSTANCE);
+
+			// do not allow access to properties of generic types
+			// if instance type does not specify type arguments
+			if (prop.property_type is GenericType) {
+				generics = true;
+			}
 		} else if (member is Signal) {
 			instance = true;
 			access = member.access;
@@ -622,6 +649,21 @@ public class Vala.MemberAccess : Expression {
 				return false;
 			}
 		}
+
+		if (generics && inner != null) {
+			var instance_type = inner.value_type;
+			var pointer_type = inner.value_type as PointerType;
+			if (pointer_type != null) {
+				instance_type = pointer_type.base_type;
+			}
+
+			if (instance_type.get_type_arguments ().size == 0) {
+				error = true;
+				Report.error (inner.source_reference, "missing generic type arguments");
+				return false;
+			}
+		}
+
 		if ((instance && !may_access_instance_members) ||
 		    (klass && !may_access_klass_members)) {
 			prototype_access = true;
