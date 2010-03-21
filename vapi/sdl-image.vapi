@@ -1,7 +1,7 @@
 [CCode (cheader_filename="SDL_image.h")]
 namespace SDLImage {
 	[CCode (cname="IMG_Linked_Version")]
-	public static weak SDL.Version linked();
+	public static unowned SDL.Version linked();
 
 	[CCode (cname="IMG_LoadTyped_RW")]
 	public static SDL.Surface load_rw_typed(SDL.RWops src, int freesrc=0, string type);

@@ -818,11 +818,11 @@ namespace Tiff {
 		[CCode (cname = "TIFFFdOpen")]
 		public static TIFF FdOpen (int p1, string p2, string p3);
 		[CCode (cname = "TIFFGetVersion")]
-		public static weak string GetVersion ();
+		public static unowned string GetVersion ();
 		[CCode (cname = "TIFFFindCODEC")]
-		public static weak Codec FindCODEC (ushort p1);
+		public static unowned Codec FindCODEC (ushort p1);
 		[CCode (cname = "TIFFGetBitRevTable")]
-		public static weak string GetBitRevTable (int p1);
+		public static unowned string GetBitRevTable (int p1);
 		[CCode (cname = "TIFFGetConfiguredCODECs")]
 		public static Codec GetConfiguredCODECs ();
 		[CCode (cname = "TIFFRGBAImageBegin")]

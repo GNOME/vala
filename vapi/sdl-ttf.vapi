@@ -1,7 +1,7 @@
 [CCode (cheader_filename="SDL_ttf.h")]
 namespace SDLTTF {
 	[CCode (cname="TTF_Linked_Version")]
-	public static weak SDL.Version linked();
+	public static unowned SDL.Version linked();
 
 	[CCode (cname="TTF_ByteSwappedUNICODE")]
 	public static void byteswap_unicode(int swapped);

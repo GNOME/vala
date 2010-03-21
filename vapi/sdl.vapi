@@ -31,7 +31,7 @@ namespace SDL {
 		public uchar patch;
 
 		[CCode (cheader_filename="SDL_version.h", cname="SDL_Linked_Version")]
-		public static weak Version linked();
+		public static unowned Version linked();
 	}// Version
 
 
@@ -48,7 +48,7 @@ namespace SDL {
 	public static void set_error(string format, ...);
 
 	[CCode (cname="SDL_GetError")]
-	public static weak string get_error();
+	public static unowned string get_error();
 
 	[CCode (cname="SDL_ClearError")]
 	public static void clear_error();
@@ -68,7 +68,7 @@ namespace SDL {
 	[Compact]
 	public class Video {
 		[CCode (cname="SDL_VideoDriverName")]
-		public static weak string? driver_name(string namebuf, int maxlen);
+		public static unowned string? driver_name(string namebuf, int maxlen);
 
 		[CCode (cname="SDL_SetGamma")]
 		public static int set_gamma(float red, float green, float blue);
@@ -163,10 +163,10 @@ namespace SDL {
 	[Compact]
 	public class Screen : Surface {
 		[CCode (cname="SDL_GetVideoSurface")]
-		public static weak Screen instance();
+		public static unowned Screen instance();
 
 		[CCode (cname="SDL_SetVideoMode")]
-		public static weak Screen? set_video_mode(int width, int height, int bpp, uint32 flags);
+		public static unowned Screen? set_video_mode(int width, int height, int bpp, uint32 flags);
 
 		[CCode (cname="SDL_VideoModeOK")]
 		public static int check_video_mode(int width, int height, int bpp, uint32 flags);
@@ -258,7 +258,7 @@ namespace SDL {
 		public int	current_h;
 
 		[CCode (cname="SDL_GetVideoInfo")]
-		public static weak VideoInfo get();
+		public static unowned VideoInfo get();
 	}// VideoInfo
 
 	[CCode (cname="int", cprefix="SDL_")]
@@ -577,7 +577,7 @@ namespace SDL {
 		public static void get_repeat(ref int delay, ref int interval);
 
 		[CCode (cname="SDL_GetKeyState")]
-		public static weak uchar[] get_keys();
+		public static unowned uchar[] get_keys();
 
 		[CCode (cname="SDL_GetModState")]
 		public static KeyModifier get_modifiers();
@@ -586,7 +586,7 @@ namespace SDL {
 		public static void set_modifiers(KeyModifier modstate);
 
 		[CCode (cname="SDL_GetKeyName")]
-		public static weak string get_name(KeySymbol key);
+		public static unowned string get_name(KeySymbol key);
 	}// Key
 
 	[CCode (cname="int", cprefix="SDLK_", cheader_filename="SDL_keysym.h")]
@@ -915,7 +915,7 @@ namespace SDL {
 	[Compact]
 	public class Joystick {
 		[CCode (cname="SDL_JoystickName")]
-		public static weak string get_name(int device_index);
+		public static unowned string get_name(int device_index);
 
 		[CCode (cname="SDL_JoystickOpened")]
 		public static int is_open(int device_index);
@@ -1016,7 +1016,7 @@ namespace SDL {
 	[Compact]
 	public class Audio {
 		[CCode (cname="SDL_AudioDriverName")]
-		public static weak string driver_name(string namebuf, int maxlen);
+		public static unowned string driver_name(string namebuf, int maxlen);
 		
 		[CCode (cname="SDL_OpenAudio")]
 		public static int open(AudioSpec desired, AudioSpec obtained);

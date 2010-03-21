@@ -1,7 +1,7 @@
 [CCode (cheader_filename="SDL_mixer.h")]
 namespace SDLMixer {
 	[CCode (cname="Mix_Linked_Version")]
-	public static weak SDL.Version linked();
+	public static unowned SDL.Version linked();
 
 	[CCode (cname="Mix_OpenAudio")]
 	public static int open(int frequency, uint16 format, int channels, int chunksize);
