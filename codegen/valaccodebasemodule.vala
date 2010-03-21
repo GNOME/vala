@@ -3019,16 +3019,25 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			return;
 		}
 
-		var expr_type = expr.value_type;
-		if (expr.target_type != null) {
-			expr_type = expr.target_type;
-		}
-
-		var full_expr_var = get_temp_variable (expr_type, true, expr, false);
-		expr.temp_vars.add (full_expr_var);
-		
 		var expr_list = new CCodeCommaExpression ();
-		expr_list.append_expression (new CCodeAssignment (get_variable_cexpression (full_expr_var.name), (CCodeExpression) expr.ccodenode));
+
+		LocalVariable full_expr_var = null;
+
+		var local_decl = expr.parent_node as LocalVariable;
+		var st = local_decl != null ? local_decl.variable_type.data_type as Struct : null;
+		if (st != null && !st.is_simple_type () && !local_decl.variable_type.nullable) {
+			expr_list.append_expression ((CCodeExpression) expr.ccodenode);
+		} else {
+			var expr_type = expr.value_type;
+			if (expr.target_type != null) {
+				expr_type = expr.target_type;
+			}
+
+			full_expr_var = get_temp_variable (expr_type, true, expr, false);
+			expr.temp_vars.add (full_expr_var);
+		
+			expr_list.append_expression (new CCodeAssignment (get_variable_cexpression (full_expr_var.name), (CCodeExpression) expr.ccodenode));
+		}
 		
 		foreach (LocalVariable local in temp_ref_vars) {
 			var ma = new MemberAccess.simple (local.name);
@@ -3036,9 +3045,11 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			ma.value_type = local.variable_type.copy ();
 			expr_list.append_expression (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma));
 		}
-		
-		expr_list.append_expression (get_variable_cexpression (full_expr_var.name));
-		
+
+		if (full_expr_var != null) {
+			expr_list.append_expression (get_variable_cexpression (full_expr_var.name));
+		}
+
 		expr.ccodenode = expr_list;
 		
 		temp_ref_vars.clear ();
