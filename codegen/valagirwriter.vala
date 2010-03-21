@@ -951,7 +951,7 @@ public class Vala.GIRWriter : CodeVisitor {
 				return Markup.escape_text (lit.eval ());
 			}
 		} else if (literal is CharacterLiteral) {
-			return "%lc".printf (((CharacterLiteral) literal).get_char ());
+			return "%c".printf ((char) ((CharacterLiteral) literal).get_char ());
 		} else if (literal is BooleanLiteral) {
 			return ((BooleanLiteral) literal).value ? "true" : "false";
 		} else if (literal is RealLiteral) {
