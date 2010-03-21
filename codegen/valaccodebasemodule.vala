@@ -962,7 +962,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 
 		var cdecl = new CCodeDeclaration (field_ctype);
-		cdecl.add_declarator (new CCodeVariableDeclarator (f.get_cname ()));
+		cdecl.add_declarator (new CCodeVariableDeclarator (f.get_cname (), null, f.field_type.get_cdeclarator_suffix ()));
 		if (f.is_private_symbol ()) {
 			cdecl.modifiers = CCodeModifiers.STATIC;
 		} else {
@@ -987,17 +987,19 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		if (f.field_type is ArrayType && !f.no_array_length) {
 			var array_type = (ArrayType) f.field_type;
 
-			for (int dim = 1; dim <= array_type.rank; dim++) {
-				var len_type = int_type.copy ();
+			if (!array_type.fixed_length) {
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					var len_type = int_type.copy ();
 
-				cdecl = new CCodeDeclaration (len_type.get_cname ());
-				cdecl.add_declarator (new CCodeVariableDeclarator (head.get_array_length_cname (f.get_cname (), dim)));
-				if (f.is_private_symbol ()) {
-					cdecl.modifiers = CCodeModifiers.STATIC;
-				} else {
-					cdecl.modifiers = CCodeModifiers.EXTERN;
+					cdecl = new CCodeDeclaration (len_type.get_cname ());
+					cdecl.add_declarator (new CCodeVariableDeclarator (head.get_array_length_cname (f.get_cname (), dim)));
+					if (f.is_private_symbol ()) {
+						cdecl.modifiers = CCodeModifiers.STATIC;
+					} else {
+						cdecl.modifiers = CCodeModifiers.EXTERN;
+					}
+					decl_space.add_type_member_declaration (cdecl);
 				}
-				decl_space.add_type_member_declaration (cdecl);
 			}
 		} else if (f.field_type is DelegateType) {
 			var delegate_type = (DelegateType) f.field_type;
@@ -1124,7 +1126,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 			lhs = new CCodeIdentifier (f.get_cname ());
 
-			var var_decl = new CCodeVariableDeclarator (f.get_cname ());
+			var var_decl = new CCodeVariableDeclarator (f.get_cname (), null, f.field_type.get_cdeclarator_suffix ());
 			var_decl.initializer = default_value_for_type (f.field_type, true);
 
 			if (f.initializer != null) {
@@ -1147,26 +1149,28 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			if (f.field_type is ArrayType && !f.no_array_length) {
 				var array_type = (ArrayType) f.field_type;
 
-				for (int dim = 1; dim <= array_type.rank; dim++) {
-					var len_type = int_type.copy ();
+				if (!array_type.fixed_length) {
+					for (int dim = 1; dim <= array_type.rank; dim++) {
+						var len_type = int_type.copy ();
 
-					var len_def = new CCodeDeclaration (len_type.get_cname ());
-					len_def.add_declarator (new CCodeVariableDeclarator (head.get_array_length_cname (f.get_cname (), dim), new CCodeConstant ("0")));
-					if (!f.is_private_symbol ()) {
-						len_def.modifiers = CCodeModifiers.EXTERN;
-					} else {
-						len_def.modifiers = CCodeModifiers.STATIC;
+						var len_def = new CCodeDeclaration (len_type.get_cname ());
+						len_def.add_declarator (new CCodeVariableDeclarator (head.get_array_length_cname (f.get_cname (), dim), new CCodeConstant ("0")));
+						if (!f.is_private_symbol ()) {
+							len_def.modifiers = CCodeModifiers.EXTERN;
+						} else {
+							len_def.modifiers = CCodeModifiers.STATIC;
+						}
+						source_declarations.add_type_member_declaration (len_def);
 					}
-					source_declarations.add_type_member_declaration (len_def);
-				}
 
-				if (array_type.rank == 1 && f.is_internal_symbol ()) {
-					var len_type = int_type.copy ();
+					if (array_type.rank == 1 && f.is_internal_symbol ()) {
+						var len_type = int_type.copy ();
 
-					var cdecl = new CCodeDeclaration (len_type.get_cname ());
-					cdecl.add_declarator (new CCodeVariableDeclarator (head.get_array_size_cname (f.get_cname ()), new CCodeConstant ("0")));
-					cdecl.modifiers = CCodeModifiers.STATIC;
-					source_declarations.add_type_member_declaration (cdecl);
+						var cdecl = new CCodeDeclaration (len_type.get_cname ());
+						cdecl.add_declarator (new CCodeVariableDeclarator (head.get_array_size_cname (f.get_cname ()), new CCodeConstant ("0")));
+						cdecl.modifiers = CCodeModifiers.STATIC;
+						source_declarations.add_type_member_declaration (cdecl);
+					}
 				}
 			} else if (f.field_type is DelegateType) {
 				var delegate_type = (DelegateType) f.field_type;
