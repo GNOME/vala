@@ -263,7 +263,7 @@ namespace Xml {
 	}
 
 	[Compact]
-	[CCode (cname = "xmlAttr", cheader_filename = "libxml/tree.h")]
+	[CCode (cname = "xmlAttr", free_function = "xmlFreeProp", cheader_filename = "libxml/tree.h")]
 	public class Attr {
 		public ElementType type;
 		public weak string name;
@@ -458,7 +458,7 @@ namespace Xml {
 	}
 
 	[Compact]
-	[CCode (cname = "xmlDtd", cheader_filename = "libxml/tree.h")]
+	[CCode (cname = "xmlDtd", free_function="xmlFreeDtd", cheader_filename = "libxml/tree.h")]
 	public class Dtd {
 		public ElementType type;
 		public string name;
@@ -777,7 +777,7 @@ namespace Xml {
 	}
 
 	[Compact]
-	[CCode (cname = "xmlNs", cheader_filename = "libxml/tree.h")]
+	[CCode (cname = "xmlNs", free_function= "xmlFreeNs", cheader_filename = "libxml/tree.h")]
 	public class Ns {
 		[CCode (cname = "xmlNewNs")]
 		public Ns (Xml.Node* node, string href, string prefix);
@@ -1177,7 +1177,7 @@ namespace Xml {
 		public static long order_doc_elements (Doc* doc);
 
 		[Compact]
-		[CCode (cname = "xmlNodeSet", cheader_filename = "libxml/xpath.h")]
+		[CCode (cname = "xmlNodeSet", free_function="xmlXPathFreeNodeSet", cheader_filename = "libxml/xpath.h")]
 		public class NodeSet {
 			[CCode (cname = "xmlXPathNodeSetGetLength")]
 			public int length ();
@@ -1242,7 +1242,7 @@ namespace Xml {
 		}
 
 		[Compact]
-		[CCode (cname = "xmlXPathObject", cheader_filename = "libxml/xpath.h")]
+		[CCode (cname = "xmlXPathObject", free_function="xmlXPathFreeObject", cheader_filename = "libxml/xpath.h")]
 		public class Object {
 			public ObjectType type;
 			public NodeSet* nodesetval;
