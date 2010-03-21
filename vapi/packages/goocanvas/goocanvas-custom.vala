@@ -50,49 +50,49 @@ namespace Goo
 	public class CanvasEllipse
 	{
 		[CCode (cname="goo_canvas_ellipse_new", type="GooCanvasItem*")]
-		public static weak CanvasEllipse create (Goo.CanvasItem? parent, double center_x, double center_y, double radius_x, double radius_y, ...);
+		public static unowned CanvasEllipse create (Goo.CanvasItem? parent, double center_x, double center_y, double radius_x, double radius_y, ...);
 	}
 
 	public class CanvasEllipseModel
 	{
 		[CCode (cname="goo_canvas_ellipse_model_new", type="GooCanvasItemModel*")]
-		public static weak CanvasEllipseModel create (Goo.CanvasItemModel? parent, double center_x, double center_y, double radius_x, double radius_y, ...);
+		public static unowned CanvasEllipseModel create (Goo.CanvasItemModel? parent, double center_x, double center_y, double radius_x, double radius_y, ...);
 	}
 
 	public class CanvasGrid
 	{
 		[CCode (cname="goo_canvas_grid_new", type="GooCanvasItemModel*")]
-		public static weak CanvasGrid create(Goo.CanvasItem? parent, double x, double y, double width, double height, double x_step, double y_step, double x_offset, double y_offset, ...);
+		public static unowned CanvasGrid create(Goo.CanvasItem? parent, double x, double y, double width, double height, double x_step, double y_step, double x_offset, double y_offset, ...);
 	}
 
 	public class CanvasGridModel
 	{
 		[CCode (cname="goo_canvas_grid_model_new", type="GooCanvasItemModel*")]
-		public static weak CanvasGridModel create(CanvasItemModel? parent, double x, double y, double width, double height, double x_step, double y_step, double x_offset, double y_offset, ...);
+		public static unowned CanvasGridModel create(CanvasItemModel? parent, double x, double y, double width, double height, double x_step, double y_step, double x_offset, double y_offset, ...);
 	}
 
 	public class CanvasGroup
 	{
 		[CCode (cname="goo_canvas_group_new", type="GooCanvasItem*")]
-		public static weak CanvasGroup create (Goo.CanvasItem? parent, ...);
+		public static unowned CanvasGroup create (Goo.CanvasItem? parent, ...);
 	}
 
 	public class CanvasGroupModel
 	{
 		[CCode (cname="goo_canvas_group_model_new", type="GooCanvasItemModel*")]
-		public static weak CanvasGroupModel create (Goo.CanvasItemModel? parent, ...);
+		public static unowned CanvasGroupModel create (Goo.CanvasItemModel? parent, ...);
 	}
 
 	public class CanvasImage
 	{
 		[CCode (cname="goo_canvas_image_new", type="GooCanvasItem*")]
-		public static weak CanvasImage create (Goo.CanvasItem? parent, Gdk.Pixbuf pixbuf, double x, double y, ...);
+		public static unowned CanvasImage create (Goo.CanvasItem? parent, Gdk.Pixbuf pixbuf, double x, double y, ...);
 	}
 
 	public class CanvasImageModel
 	{
 		[CCode (cname="goo_canvas_image_model_new", type="GooCanvasItemModel*")]
-		public static weak CanvasImageModel create (Goo.CanvasItemModel? parent, Gdk.Pixbuf pixbuf, double x, double y, ...);
+		public static unowned CanvasImageModel create (Goo.CanvasItemModel? parent, Gdk.Pixbuf pixbuf, double x, double y, ...);
 	}
 
 	[Compact]
@@ -106,13 +106,13 @@ namespace Goo
 	public class CanvasPath
 	{
 		[CCode (cname="goo_canvas_path_new", type="GooCanvasItem*")]
-		public static weak CanvasPath create (Goo.CanvasItem? parent, string path_data, ...);
+		public static unowned CanvasPath create (Goo.CanvasItem? parent, string path_data, ...);
 	}
 
 	public class CanvasPathModel
 	{
 		[CCode (cname="goo_canvas_path_model_new", type="GooCanvasItemModel*")]
-		public static weak CanvasPathModel create (Goo.CanvasItemModel? parent, string path_data, ...);
+		public static unowned CanvasPathModel create (Goo.CanvasItemModel? parent, string path_data, ...);
 	}
 
 	[Compact]
@@ -124,65 +124,65 @@ namespace Goo
 	public class CanvasPolyline
 	{
 		[CCode (cname="goo_canvas_polyline_new", type="GooCanvasItem*")]
-		public static weak CanvasPolyline create (Goo.CanvasItem? parent, bool close_path, int num_points, ...);
+		public static unowned CanvasPolyline create (Goo.CanvasItem? parent, bool close_path, int num_points, ...);
 		[CCode (cname="goo_canvas_polyline_new_line", type="GooCanvasItem*")]
-		public static weak CanvasPolyline create_line (Goo.CanvasItem? parent, double x1, double y1, double x2, double y2, ...);
+		public static unowned CanvasPolyline create_line (Goo.CanvasItem? parent, double x1, double y1, double x2, double y2, ...);
 	}
 
 	public class CanvasPolylineModel
 	{
 		[CCode (cname="goo_canvas_polyline_model_new", type="GooCanvasItemModel*")]
-		public static weak CanvasPolylineModel create (Goo.CanvasItemModel? parent, bool close_path, int num_points, ...);
+		public static unowned CanvasPolylineModel create (Goo.CanvasItemModel? parent, bool close_path, int num_points, ...);
 		[CCode (cname="goo_canvas_polyline_model_new_line", type="GooCanvasItemModel*")]
-		public static weak CanvasPolylineModel create_line (Goo.CanvasItemModel? parent, double x1, double y1, double x2, double y2, ...);
+		public static unowned CanvasPolylineModel create_line (Goo.CanvasItemModel? parent, double x1, double y1, double x2, double y2, ...);
 	}
 
 	public class CanvasRect
 	{
 		[CCode (cname = "goo_canvas_rect_new", type="GooCanvasItem*")]
-		public static weak CanvasRect create (Goo.CanvasItem? parent, double x, double y, double width, double height, ...);
+		public static unowned CanvasRect create (Goo.CanvasItem? parent, double x, double y, double width, double height, ...);
 	}
 
 	public class CanvasRectModel
 	{
 		[CCode (cname = "goo_canvas_rect_model_new", type="GooCanvasItemModel*")]
-		public static weak CanvasRectModel create (Goo.CanvasItemModel? parent, double x, double y, double width, double height, ...);
+		public static unowned CanvasRectModel create (Goo.CanvasItemModel? parent, double x, double y, double width, double height, ...);
 	}
 
 	public class CanvasStyle
 	{
-		public weak Goo.CanvasStyle? parent;
-		public weak GLib.Array<CanvasStyleProperty> properties;
+		public unowned Goo.CanvasStyle? parent;
+		public unowned GLib.Array<CanvasStyleProperty> properties;
 	}
 
 	public class CanvasTable
 	{
 		[CCode (cname="goo_canvas_table_new", type="GooCanvasItem*")]
-		public static weak CanvasTable create (Goo.CanvasItem? parent, ...);
+		public static unowned CanvasTable create (Goo.CanvasItem? parent, ...);
 	}
 
 	public class CanvasTableModel
 	{
 		[CCode (cname="goo_canvas_table_model_new", type="GooCanvasItemModel*")]
-		public static weak CanvasTableModel create (Goo.CanvasItemModel? parent, ...);
+		public static unowned CanvasTableModel create (Goo.CanvasItemModel? parent, ...);
 	}
 
 	public class CanvasText
 	{
 		[CCode (cname="goo_canvas_text_new", type="GooCanvasItem*")]
-		public static weak CanvasText create (Goo.CanvasItem? parent, string str, double x, double y, double width, Gtk.AnchorType anchor, ...);
+		public static unowned CanvasText create (Goo.CanvasItem? parent, string str, double x, double y, double width, Gtk.AnchorType anchor, ...);
 	}
 
 	public class CanvasTextModel
 	{
 		[CCode (cname="goo_canvas_text_model_new", type="GooCanvasItemModel*")]
-		public static weak CanvasTextModel create (Goo.CanvasItemModel? parent, string str, double x, double y, double width, Gtk.AnchorType anchor, ...);
+		public static unowned CanvasTextModel create (Goo.CanvasItemModel? parent, string str, double x, double y, double width, Gtk.AnchorType anchor, ...);
 	}
 
 	public class CanvasWidget
 	{
 		[CCode (cname="goo_canvas_widget_new", type="GooCanvasItem*")]
-		public static weak CanvasWidget create (Goo.CanvasItem? parent, Gtk.Widget widget, double x, double y, double width, double height, ...);
+		public static unowned CanvasWidget create (Goo.CanvasItem? parent, Gtk.Widget widget, double x, double y, double width, double height, ...);
 	}
 
 	public interface CanvasItem : GLib.Object

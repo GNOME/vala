@@ -20,11 +20,11 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 namespace Gst {
-	public extern void init ([CCode (array_length_pos = 0.9)] ref weak string[] args);
+	public extern void init ([CCode (array_length_pos = 0.9)] ref unowned string[] args);
 
 	public struct ClockTime : uint64 {
 		[CCode (cname="GST_TIME_ARGS")]
-		public weak string args ();
+		public unowned string args ();
 		[CCode (cname="GST_CLOCK_TIME_IS_VALID")]
 		public bool is_valid ();
 	}
@@ -38,7 +38,7 @@ namespace Gst {
 
 	[CCode (ref_function = "gst_object_ref", unref_function = "gst_object_unref")]
 	public class Object {
-		public weak Object @ref ();
+		public unowned Object @ref ();
 		public void unref ();
 		public void sink ();
 		public static void replace (ref Gst.Object oldobj, Gst.Object newobj);
@@ -52,7 +52,7 @@ namespace Gst {
 	public class Buffer : Gst.MiniObject {
 		[CCode (has_construct_function = false)]
 		public Buffer ();
-		public weak Buffer @ref ();
+		public unowned Buffer @ref ();
 		public void unref ();
 		[CCode (cname = "GST_BUFFER_FLAG_SET")]
 		public void flag_set (BufferFlag flag);
@@ -92,7 +92,7 @@ namespace Gst {
 	public delegate bool DataProbeCallback (Gst.Pad pad, Gst.MiniObject data);
 
 	public class Caps {
-		public weak Caps @ref ();
+		public unowned Caps @ref ();
 		public void unref ();
 		[ReturnsModifiedPointer]
 		public void make_writable ();
@@ -190,7 +190,7 @@ namespace Gst {
 		public void  list_prepend_value (Gst.Value prepend_value);
 		public void list_concat (Gst.Value value1, Gst.Value value2);
 		public uint list_get_size ();
-		public weak Gst.Value? list_get_value (uint index);
+		public unowned Gst.Value? list_get_value (uint index);
 
 		public void set_fraction (int numerator, int denominator);
 		public int get_fraction_numerator ();
@@ -199,8 +199,8 @@ namespace Gst {
 		public static bool fraction_subtract (GLib.Value dest, GLib.Value minuend, GLib.Value subtrahend);
 
 		public void set_fraction_range (Gst.Value start, Gst.Value end);
-		public weak Gst.Value? get_fraction_range_min ();
-		public weak Gst.Value? get_fraction_range_max ();
+		public unowned Gst.Value? get_fraction_range_min ();
+		public unowned Gst.Value? get_fraction_range_max ();
 		public void set_fraction_range_full (int numerator_start, int denominator_start, int numerator_end, int denominator_end);
 
 		public void set_date (GLib.Date date);
@@ -210,9 +210,9 @@ namespace Gst {
 		public Caps get_caps ();
 
 		public void set_structure (Structure structure);
-		public weak Structure get_structure ();
+		public unowned Structure get_structure ();
 
-		public weak Buffer get_buffer ();
+		public unowned Buffer get_buffer ();
 		public void set_buffer (Buffer b);
 		public void take_buffer (Buffer b);
 
@@ -242,7 +242,7 @@ namespace Gst {
 
 		public void array_append_value (Gst.Value append_value);
 		public uint array_get_size ();
-		public weak Gst.Value? array_get_value (uint index);
+		public unowned Gst.Value? array_get_value (uint index);
 		public void array_prepend_value (Gst.Value prepend_value);
 	}
 
