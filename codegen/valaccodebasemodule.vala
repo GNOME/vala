@@ -4860,7 +4860,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		                      && expression_type.get_type_id () != "G_TYPE_VALUE");
 
 		if (expression_type.value_owned
-		    && (target_type == null || !target_type.value_owned || boxing || unboxing || gvalue_boxing)) {
+		    && (target_type == null || !target_type.value_owned || boxing || unboxing)) {
 			// value leaked, destroy it
 			var pointer_type = target_type as PointerType;
 			if (pointer_type != null && !(pointer_type.base_type is VoidType)) {
@@ -4930,7 +4930,11 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			ccall.add_argument (new CCodeIdentifier (expression_type.get_type_id ()));
 			ccomma.append_expression (ccall);
 
-			ccall = new CCodeFunctionCall (get_value_setter_function (expression_type));
+			if (expression_type.value_owned) {
+				ccall = new CCodeFunctionCall (get_value_taker_function (expression_type));
+			} else {
+				ccall = new CCodeFunctionCall (get_value_setter_function (expression_type));
+			}
 			if (target_type.nullable) {
 				ccall.add_argument (get_variable_cexpression (decl.name));
 			} else {
