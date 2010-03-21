@@ -31,6 +31,7 @@ TESTS = \
 	methods/bug597426.vala \
 	methods/bug598738.vala \
 	methods/bug599892.vala \
+	methods/bug613483.vala \
 	control-flow/break.vala \
 	control-flow/expressions-conditional.vala \
 	control-flow/for.vala \

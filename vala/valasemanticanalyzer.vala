@@ -58,7 +58,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	public Method? current_method {
 		get {
-			var sym = current_symbol;
+			unowned Symbol sym = current_symbol;
 			while (sym is Block) {
 				sym = sym.parent_symbol;
 			}
@@ -68,7 +68,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	public Method? current_async_method {
 		get {
-			var sym = current_symbol;
+			unowned Symbol sym = current_symbol;
 			while (sym is Block || sym is Method) {
 				var m = sym as Method;
 				if (m != null && m.coroutine) {
@@ -83,11 +83,27 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	public PropertyAccessor? current_property_accessor {
 		get {
-			var sym = current_symbol;
+			unowned Symbol sym = current_symbol;
 			while (sym is Block) {
 				sym = sym.parent_symbol;
 			}
 			return sym as PropertyAccessor;
+		}
+	}
+
+	public Symbol? current_method_or_property_accessor {
+		get {
+			unowned Symbol sym = current_symbol;
+			while (sym is Block) {
+				sym = sym.parent_symbol;
+			}
+			if (sym is Method) {
+				return sym;
+			} else if (sym is PropertyAccessor) {
+				return sym;
+			} else {
+				return null;
+			}
 		}
 	}
 
@@ -807,6 +823,19 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			sym = sym.parent_symbol;
 		}
 		return sym as Method;
+	}
+
+	public Symbol? find_parent_method_or_property_accessor (Symbol sym) {
+		while (sym is Block) {
+			sym = sym.parent_symbol;
+		}
+		if (sym is Method) {
+			return sym;
+		} else if (sym is PropertyAccessor) {
+			return sym;
+		} else {
+			return null;
+		}
 	}
 
 	public bool is_in_constructor () {

@@ -446,10 +446,10 @@ public class Vala.MemberAccess : Expression {
 		if (member is LocalVariable) {
 			var local = (LocalVariable) member;
 			var block = local.parent_symbol as Block;
-			if (block != null && analyzer.find_parent_method (block) != analyzer.current_method) {
+			if (block != null && analyzer.find_parent_method_or_property_accessor (block) != analyzer.current_method_or_property_accessor) {
 				// mark all methods between current method and the captured
 				// block as closures (to support nested closures)
-				Symbol sym = analyzer.current_method;
+				Symbol sym = analyzer.current_method_or_property_accessor;
 				while (sym != block) {
 					var method = sym as Method;
 					if (method != null) {
@@ -467,10 +467,10 @@ public class Vala.MemberAccess : Expression {
 		} else if (member is FormalParameter) {
 			var param = (FormalParameter) member;
 			var m = param.parent_symbol as Method;
-			if (m != null && m != analyzer.current_method && param != m.this_parameter) {
+			if (m != null && m != analyzer.current_method_or_property_accessor && param != m.this_parameter) {
 				// mark all methods between current method and the captured
 				// parameter as closures (to support nested closures)
-				Symbol sym = analyzer.current_method;
+				Symbol sym = analyzer.current_method_or_property_accessor;
 				while (sym != m) {
 					var method = sym as Method;
 					if (method != null) {
@@ -485,6 +485,23 @@ public class Vala.MemberAccess : Expression {
 				if (param.direction != ParameterDirection.IN) {
 					error = true;
 					Report.error (source_reference, "Cannot capture reference or output parameter `%s'".printf (param.get_full_name ()));
+				}
+			} else {
+				var acc = param.parent_symbol.parent_symbol as PropertyAccessor;
+				if (acc != null && acc != analyzer.current_method_or_property_accessor && param != acc.prop.this_parameter) {
+					// mark all methods between current method and the captured
+					// parameter as closures (to support nested closures)
+					Symbol sym = analyzer.current_method_or_property_accessor;
+					while (sym != m) {
+						var method = sym as Method;
+						if (method != null) {
+							method.closure = true;
+						}
+						sym = sym.parent_symbol;
+					}
+
+					param.captured = true;
+					acc.body.captured = true;
 				}
 			}
 		} else if (member is Field) {

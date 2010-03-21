@@ -380,7 +380,10 @@ internal class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			} else {
 				if (p.captured) {
 					// captured variables are stored on the heap
-					var block = ((Method) p.parent_symbol).body;
+					var block = p.parent_symbol as Block;
+					if (block == null) {
+						block = ((Method) p.parent_symbol).body;
+					}
 					expr.ccodenode = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_variable_cname (p.name));
 				} else if (current_method != null && current_method.coroutine) {
 					// use closure

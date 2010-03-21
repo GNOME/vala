@@ -1728,6 +1728,60 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		return result;
 	}
 
+	void capture_parameter (FormalParameter param, CCodeStruct data, CCodeBlock cblock, int block_id, CCodeBlock free_block) {
+		var param_type = param.parameter_type.copy ();
+		param_type.value_owned = true;
+		data.add_field (param_type.get_cname (), get_variable_cname (param.name));
+
+		bool is_unowned_delegate = param.parameter_type is DelegateType && !param.parameter_type.value_owned;
+
+		// create copy if necessary as captured variables may need to be kept alive
+		CCodeExpression cparam = get_variable_cexpression (param.name);
+		if (requires_copy (param_type) && !param.parameter_type.value_owned && !is_unowned_delegate)  {
+			var ma = new MemberAccess.simple (param.name);
+			ma.symbol_reference = param;
+			ma.value_type = param.parameter_type.copy ();
+			// directly access parameters in ref expressions
+			param.captured = false;
+			cparam = get_ref_cexpression (param.parameter_type, cparam, ma, param);
+			param.captured = true;
+		}
+
+		cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_variable_cname (param.name)), cparam)));
+
+		if (param.parameter_type is ArrayType) {
+			var array_type = (ArrayType) param.parameter_type;
+			for (int dim = 1; dim <= array_type.rank; dim++) {
+				data.add_field ("gint", get_array_length_cname (get_variable_cname (param.name), dim));
+				cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_array_length_cname (get_variable_cname (param.name), dim)), new CCodeIdentifier (get_array_length_cname (get_variable_cname (param.name), dim)))));
+			}
+		} else if (param.parameter_type is DelegateType) {
+			data.add_field ("gpointer", get_delegate_target_cname (get_variable_cname (param.name)));
+			cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_delegate_target_cname (get_variable_cname (param.name))), new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (param.name))))));
+			if (param.parameter_type.value_owned) {
+				data.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
+				cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_delegate_target_destroy_notify_cname (get_variable_cname (param.name))), new CCodeIdentifier (get_delegate_target_destroy_notify_cname (get_variable_cname (param.name))))));
+			}
+		}
+
+		if (requires_destroy (param_type) && !is_unowned_delegate) {
+			bool old_coroutine = false;
+			if (current_method != null) {
+				old_coroutine = current_method.coroutine;
+				current_method.coroutine = false;
+			}
+
+			var ma = new MemberAccess.simple (param.name);
+			ma.symbol_reference = param;
+			ma.value_type = param_type.copy ();
+			free_block.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), get_variable_cname (param.name)), param.parameter_type, ma)));
+
+			if (old_coroutine) {
+				current_method.coroutine = true;
+			}
+		}
+	}
+
 	public override void visit_block (Block b) {
 		var old_symbol = current_symbol;
 		current_symbol = b;
@@ -1759,7 +1813,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				var unref_call = new CCodeFunctionCall (new CCodeIdentifier ("block%d_data_unref".printf (parent_block_id)));
 				unref_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "_data%d_".printf (parent_block_id)));
 				free_block.add_statement (new CCodeExpressionStatement (unref_call));
-			} else if (in_constructor || (current_method != null && current_method.binding == MemberBinding.INSTANCE)) {
+			} else if (in_constructor || (current_method != null && current_method.binding == MemberBinding.INSTANCE) ||
+			           (current_property_accessor != null && current_property_accessor.prop.binding == MemberBinding.INSTANCE)) {
 				data.add_field ("%s *".printf (current_class.get_cname ()), "self");
 
 				var ma = new MemberAccess.simple ("this");
@@ -1828,7 +1883,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 				cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), "_data%d_".printf (parent_block_id)), ref_call)));
 			} else if (in_constructor || (current_method != null && current_method.binding == MemberBinding.INSTANCE &&
-			                              (!(current_method is CreationMethod) || current_method.body != b))) {
+			                              (!(current_method is CreationMethod) || current_method.body != b)) ||
+			           (current_property_accessor != null && current_property_accessor.prop.binding == MemberBinding.INSTANCE)) {
 				var ref_call = new CCodeFunctionCall (get_dup_func_expression (new ObjectType (current_class), b.source_reference));
 				ref_call.add_argument (get_result_cexpression ("self"));
 
@@ -1841,57 +1897,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				// parameters are captured with the top-level block of the method
 				foreach (var param in m.get_parameters ()) {
 					if (param.captured) {
-						var param_type = param.parameter_type.copy ();
-						param_type.value_owned = true;
-						data.add_field (param_type.get_cname (), get_variable_cname (param.name));
-
-						bool is_unowned_delegate = param.parameter_type is DelegateType && !param.parameter_type.value_owned;
-
-						// create copy if necessary as captured variables may need to be kept alive
-						CCodeExpression cparam = get_variable_cexpression (param.name);
-						if (requires_copy (param_type) && !param.parameter_type.value_owned && !is_unowned_delegate)  {
-							var ma = new MemberAccess.simple (param.name);
-							ma.symbol_reference = param;
-							ma.value_type = param.parameter_type.copy ();
-							// directly access parameters in ref expressions
-							param.captured = false;
-							cparam = get_ref_cexpression (param.parameter_type, cparam, ma, param);
-							param.captured = true;
-						}
-
-						cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_variable_cname (param.name)), cparam)));
-
-						if (param.parameter_type is ArrayType) {
-							var array_type = (ArrayType) param.parameter_type;
-							for (int dim = 1; dim <= array_type.rank; dim++) {
-								data.add_field ("gint", get_array_length_cname (get_variable_cname (param.name), dim));
-								cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_array_length_cname (get_variable_cname (param.name), dim)), new CCodeIdentifier (get_array_length_cname (get_variable_cname (param.name), dim)))));
-							}
-						} else if (param.parameter_type is DelegateType) {
-							data.add_field ("gpointer", get_delegate_target_cname (get_variable_cname (param.name)));
-							cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_delegate_target_cname (get_variable_cname (param.name))), new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (param.name))))));
-							if (param.parameter_type.value_owned) {
-								data.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
-								cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_delegate_target_destroy_notify_cname (get_variable_cname (param.name))), new CCodeIdentifier (get_delegate_target_destroy_notify_cname (get_variable_cname (param.name))))));
-							}
-						}
-
-						if (requires_destroy (param_type) && !is_unowned_delegate) {
-							bool old_coroutine = false;
-							if (current_method != null) {
-								old_coroutine = current_method.coroutine;
-								current_method.coroutine = false;
-							}
-
-							var ma = new MemberAccess.simple (param.name);
-							ma.symbol_reference = param;
-							ma.value_type = param_type.copy ();
-							free_block.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), get_variable_cname (param.name)), param.parameter_type, ma)));
-
-							if (old_coroutine) {
-								current_method.coroutine = true;
-							}
-						}
+						capture_parameter (param, data, cblock, block_id, free_block);
 					}
 				}
 
@@ -1902,6 +1908,17 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 					// async method is suspended while waiting for callback,
 					// so we never need to care about memory management of async data
 					cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), "_async_data_"), new CCodeIdentifier ("data"))));
+				}
+
+				var cfrag = new CCodeFragment ();
+				append_temp_decl (cfrag, temp_vars);
+				temp_vars.clear ();
+				cblock.add_statement (cfrag);
+			} else if (b.parent_symbol is PropertyAccessor) {
+				var acc = (PropertyAccessor) b.parent_symbol;
+
+				if (!acc.readable && acc.value_parameter.captured) {
+					capture_parameter (acc.value_parameter, data, cblock, block_id, free_block);
 				}
 
 				var cfrag = new CCodeFragment ();
