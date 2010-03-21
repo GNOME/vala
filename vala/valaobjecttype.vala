@@ -1,6 +1,6 @@
 /* valaobjecttype.vala
  *
- * Copyright (C) 2007-2008  Jürg Billeter
+ * Copyright (C) 2007-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -100,6 +100,19 @@ public class Vala.ObjectType : ReferenceType {
 	}
 
 	public override bool check (SemanticAnalyzer analyzer) {
-		return type_symbol.check (analyzer);
+		if (!type_symbol.check (analyzer)) {
+			return false;
+		}
+
+		int n_type_args = get_type_arguments ().size;
+		if (n_type_args > 0 && n_type_args < type_symbol.get_type_parameters ().size) {
+			Report.error (source_reference, "too few type arguments");
+			return false;
+		} else if (n_type_args > 0 && n_type_args > type_symbol.get_type_parameters ().size) {
+			Report.error (source_reference, "too many type arguments");
+			return false;
+		}
+
+		return true;
 	}
 }
