@@ -83,6 +83,7 @@ TESTS = \
 	dbus/arrays.test \
 	dbus/structs.test \
 	dbus/async.test \
+	dbus/signals.test \
 	dbus/bug596862.vala \
 	$(NULL)
 
