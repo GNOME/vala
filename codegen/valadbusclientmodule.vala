@@ -416,37 +416,44 @@ internal class Vala.DBusClientModule : DBusModule {
 				// structs are returned via out parameter
 				var st = (Struct) method.return_type.data_type;
 
-				var cdecl = new CCodeDeclaration ("GValueArray*");
-				cdecl.add_declarator (new CCodeVariableDeclarator ("dbus_result"));
-				block.add_statement (cdecl);
+				if (st.get_full_name () == "GLib.Value") {
+					ccall.add_argument (new CCodeIdentifier ("result"));
+					ccall.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));
 
-				int i = 0;
-				foreach (Field f in st.get_fields ()) {
-					if (f.binding != MemberBinding.INSTANCE) {
-						continue;
+					block.add_statement (new CCodeExpressionStatement (ccall));
+				} else {
+					var cdecl = new CCodeDeclaration ("GValueArray*");
+					cdecl.add_declarator (new CCodeVariableDeclarator ("dbus_result"));
+					block.add_statement (cdecl);
+
+					int i = 0;
+					foreach (Field f in st.get_fields ()) {
+						if (f.binding != MemberBinding.INSTANCE) {
+							continue;
+						}
+
+						var cget_call = new CCodeFunctionCall (new CCodeIdentifier (f.field_type.data_type.get_get_value_function ()));
+						cget_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeElementAccess (new CCodeMemberAccess.pointer (new CCodeIdentifier ("dbus_result"), "values"), new CCodeConstant (i.to_string ()))));
+
+						var converted_value = cget_call;
+
+						if (requires_copy (f.field_type)) {
+							var dupexpr = get_dup_func_expression (f.field_type, expr.source_reference);
+							converted_value = new CCodeFunctionCall (dupexpr);
+							converted_value.add_argument (cget_call);
+						}
+
+						var assign = new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("result"), f.name), converted_value);
+						out_marshalling_fragment.append (new CCodeExpressionStatement (assign));
+
+						i++;
 					}
 
-					var cget_call = new CCodeFunctionCall (new CCodeIdentifier (f.field_type.data_type.get_get_value_function ()));
-					cget_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeElementAccess (new CCodeMemberAccess.pointer (new CCodeIdentifier ("dbus_result"), "values"), new CCodeConstant (i.to_string ()))));
+					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("dbus_result")));
+					ccall.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));
 
-					var converted_value = cget_call;
-
-					if (requires_copy (f.field_type)) {
-						var dupexpr = get_dup_func_expression (f.field_type, expr.source_reference);
-						converted_value = new CCodeFunctionCall (dupexpr);
-						converted_value.add_argument (cget_call);
-					}
-
-					var assign = new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("result"), f.name), converted_value);
-					out_marshalling_fragment.append (new CCodeExpressionStatement (assign));
-
-					i++;
+					block.add_statement (new CCodeExpressionStatement (ccall));
 				}
-
-				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("dbus_result")));
-				ccall.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));
-
-				block.add_statement (new CCodeExpressionStatement (ccall));
 
 				// don't access result when error occured
 				var creturnblock = new CCodeBlock ();
