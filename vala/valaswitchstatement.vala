@@ -131,6 +131,7 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 				}
 
 				if (value != null && !labelset.add (value)) {
+					error = true;
 					Report.error (label.expression.source_reference, "Switch statement already contains this label");
 				}
 			}
