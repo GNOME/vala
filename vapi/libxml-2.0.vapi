@@ -872,6 +872,29 @@ namespace Xml {
 	[CCode (has_target = false, cname = "xmlInputReadCallback", cheader_filename = "libxml/xmlIO.h")]
 	public delegate int InputReadCallback (void* context, [CCode (array_length = false)] char[] buffer, int len);
 
+	[CCode (has_target = false, cname = "xmlInputMatchCallback", cheader_filename = "libxml/xmlIO.h")]
+	public static delegate int InputMatchCallback (string filename);
+
+	[CCode (has_target = false, cname = "xmlInputOpenCallback", cheader_filename = "libxml/xmlIO.h")]
+	public static delegate void* InputOpenCallback (string filename);
+
+	[CCode (has_target = false, cname = "xmlOutputMatchCallback", cheader_filename = "libxml/xmlIO.h")]
+	public static delegate int OutputMatchCallback (string filename);
+
+	[CCode (has_target = false, cname = "xmlOutputOpenCallback", cheader_filename = "libxml/xmlIO.h")]
+	public static delegate void* OutputOpenCallback (string filename);
+
+	[CCode (has_target = false, cname = "xmlOutputWriteCallback", cheader_filename = "libxml/xmlIO.h")]
+	public static delegate int OutputWriteCallback ([CCode (array_length = false)] char[] buffer, int len);
+
+	[CCode (has_target = false, cname = "xmlOutputCloseCallback", cheader_filename = "libxml/xmlIO.h")]
+	public static delegate int OutputCloseCallback (void * context);
+
+	[CCode (cname = "xmlRegisterInputCallbacks", cheader_filename = "libxml/xmlIO.h")]
+	public int registerInputCallbacks (InputMatchCallback matchFunc, InputOpenCallback openFunc, InputReadCallback readFunc, InputCloseCallback closeFunc);
+
+	[CCode (cname = "xmlRegisterOutputCallbacks", cheader_filename = "libxml/xmlIO.h")]
+	public int registerOutputCallbacks(OutputMatchCallback matchFunc, OutputOpenCallback openFunc, OutputWriteCallback writeFunc, OutputCloseCallback closeFunc);
 
 	/* xmlschemas - incomplete XML Schemas structure implementation */
 
