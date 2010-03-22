@@ -1682,6 +1682,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			bool set_delegate_target_pos = false;
 			double delegate_target_pos = 0;
 			bool array_requested = false;
+			bool out_requested = false;
 			attributes = get_attributes ("%s.%s".printf (symbol, param_node.name));
 			if (attributes != null) {
 				foreach (string attr in attributes) {
@@ -1690,12 +1691,15 @@ public class Vala.GIdlParser : CodeVisitor {
 						if (eval (nv[1]) == "1") {
 							param_type = new ArrayType (param_type, 1, param_type.source_reference);
 							p.parameter_type = param_type;
-							p.direction = ParameterDirection.IN;
+							if (!out_requested) {
+								p.direction = ParameterDirection.IN;
+							}
 							array_requested = true;
 						}
 					} else if (nv[0] == "is_out") {
 						if (eval (nv[1]) == "1") {
 							p.direction = ParameterDirection.OUT;
+							out_requested = true;
 							if (!array_requested && param_type is ArrayType) {
 								var array_type = (ArrayType) param_type;
 								param_type = array_type.element_type;

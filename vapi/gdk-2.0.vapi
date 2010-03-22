@@ -1774,7 +1774,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void property_delete (Gdk.Window window, Gdk.Atom property);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static bool property_get (Gdk.Window window, Gdk.Atom property, Gdk.Atom type, ulong offset, ulong length, int pdelete, out Gdk.Atom actual_property_type, int actual_format, int actual_length, uchar[] data);
+	public static bool property_get (Gdk.Window window, Gdk.Atom property, Gdk.Atom type, ulong offset, ulong length, int pdelete, out Gdk.Atom actual_property_type, out int actual_format, [CCode (array_length_pos = 8.9)] out uchar[] data);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void query_depths (int depths, int count);
 	[CCode (cheader_filename = "gdk/gdk.h")]
