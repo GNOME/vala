@@ -154,10 +154,6 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		jump_stack = old_jump_stack;
 	}
 
-	public override void visit_method_call (MethodCall mc) {
-		mc.accept_children (this);
-	}
-
 	public override void visit_method (Method m) {
 		if (m.is_internal_symbol () && !m.used && !m.entry_point
 		    && !m.overrides && (m.base_interface_method == null || m.base_interface_method == m)
@@ -1016,6 +1012,13 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		}
 
 		stmt.body.accept (this);
+	}
+
+	public override void visit_expression (Expression expr) {
+		// lambda expression is handled separately
+		if (!(expr is LambdaExpression)) {
+			expr.accept_children (this);
+		}
 	}
 
 	private bool unreachable (CodeNode node) {
