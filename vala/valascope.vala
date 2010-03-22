@@ -1,6 +1,6 @@
 /* valascope.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -61,7 +61,11 @@ public class Vala.Scope {
 				symbol_table = new HashMap<string,Symbol> (str_hash, str_equal);
 			} else if (lookup (name) != null) {
 				owner.error = true;
-				Report.error (sym.source_reference, "`%s' already contains a definition for `%s'".printf (owner.get_full_name (), name));
+				if (owner.name == null && owner.parent_symbol == null) {
+					Report.error (sym.source_reference, "The root namespace already contains a definition for `%s'".printf (name));
+				} else {
+					Report.error (sym.source_reference, "`%s' already contains a definition for `%s'".printf (owner.get_full_name (), name));
+				}
 				return;
 			}
 
