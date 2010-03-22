@@ -413,18 +413,20 @@ internal class Vala.GTypeModule : GErrorModule {
 				if (f.access == SymbolAccessibility.PRIVATE)  {
 					generate_type_declaration (f.field_type, decl_space);
 
-					instance_priv_struct.add_field (field_ctype, f.get_cname ());
+					instance_priv_struct.add_field (field_ctype, f.get_cname (), f.field_type.get_cdeclarator_suffix ());
 					if (f.field_type is ArrayType && !f.no_array_length) {
 						// create fields to store array dimensions
 						var array_type = (ArrayType) f.field_type;
 						var len_type = int_type.copy ();
 
-						for (int dim = 1; dim <= array_type.rank; dim++) {
-							instance_priv_struct.add_field (len_type.get_cname (), head.get_array_length_cname (f.name, dim));
-						}
+						if (!array_type.fixed_length) {
+							for (int dim = 1; dim <= array_type.rank; dim++) {
+								instance_priv_struct.add_field (len_type.get_cname (), head.get_array_length_cname (f.name, dim));
+							}
 
-						if (array_type.rank == 1 && f.is_internal_symbol ()) {
-							instance_priv_struct.add_field (len_type.get_cname (), head.get_array_size_cname (f.name));
+							if (array_type.rank == 1 && f.is_internal_symbol ()) {
+								instance_priv_struct.add_field (len_type.get_cname (), head.get_array_size_cname (f.name));
+							}
 						}
 					} else if (f.field_type is DelegateType) {
 						var delegate_type = (DelegateType) f.field_type;
