@@ -357,7 +357,7 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 	}
 
 	public override string get_array_size_cname (string array_cname) {
-		return "%s_size".printf (array_cname);
+		return "_%s_size_".printf (array_cname);
 	}
 
 	public override CCodeExpression get_array_size_cexpression (Expression array_expr) {
