@@ -1897,7 +1897,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 
 		foreach (CodeNode stmt in b.get_statements ()) {
-			if (stmt.error) {
+			if (stmt.error || stmt.unreachable) {
 				continue;
 			}
 			

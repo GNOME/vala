@@ -1023,6 +1023,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 
 	private bool unreachable (CodeNode node) {
 		if (current_block == null) {
+			node.unreachable = true;
 			if (!unreachable_reported) {
 				Report.warning (node.source_reference, "unreachable code detected");
 				unreachable_reported = true;
