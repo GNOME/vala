@@ -91,6 +91,7 @@ dist_vapi_DATA = \
 	gtkmozembed.vapi \
 	gtksourceview-2.0.deps \
 	gtksourceview-2.0.vapi \
+	gudev-1.0.vapi \
 	hal.deps \
 	hal.vapi \
 	hildon-1.deps \
