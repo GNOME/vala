@@ -1,6 +1,6 @@
 /* valareport.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -93,6 +93,27 @@ public class Vala.Report : Object {
 	}
 
 	/**
+	 * Reports the specified message as note.
+	 *
+	 * @param source  reference to source code
+	 * @param message note message
+	 */
+	public virtual void note (SourceReference? source, string message) {
+		if (!enable_warnings) {
+			return;
+		}
+
+		if (source == null) {
+			stderr.printf ("note: %s\n", message);
+		} else {
+			stderr.printf ("%s: note: %s\n", source.to_string (), message);
+			if (verbose_errors) {
+				report_source (source);
+			}
+		}
+	}
+
+	/**
 	 * Reports the specified message as warning.
 	 *
 	 * @param source  reference to source code
@@ -133,6 +154,9 @@ public class Vala.Report : Object {
 	}
 
 	/* Convenience methods calling warn and err on correct instance */
+	public static void notice (SourceReference? source, string message) {
+		CodeContext.get ().report.note (source, message);
+	}
 	public static void warning (SourceReference? source, string message) {
 		CodeContext.get ().report.warn (source, message);
 	}

@@ -66,6 +66,7 @@ public class Vala.Scope {
 				} else {
 					Report.error (sym.source_reference, "`%s' already contains a definition for `%s'".printf (owner.get_full_name (), name));
 				}
+				Report.notice (lookup (name).source_reference, "previous definition of `%s' was here".printf (name));
 				return;
 			}
 
