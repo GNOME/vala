@@ -821,8 +821,10 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				finalize_fragment = instance_finalize_fragment;
 			} else if (m.is_class_member ()) {
 				TypeSymbol parent = (TypeSymbol)m.parent_symbol;
-				l = new CCodeIdentifier ("%s_GET_CLASS_PRIVATE(%s)".printf(parent.get_upper_case_cname (), parent.get_type_id ()));
-				l = new CCodeMemberAccess.pointer (l, get_symbol_lock_name (m.name));
+
+				var get_class_private_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS_PRIVATE".printf(parent.get_upper_case_cname ())));
+				get_class_private_call.add_argument (new CCodeIdentifier ("klass"));
+				l = new CCodeMemberAccess.pointer (get_class_private_call, get_symbol_lock_name (m.name));
 			} else {
 				l = new CCodeIdentifier (get_symbol_lock_name ("%s_%s".printf(m.parent_symbol.get_lower_case_cname (), m.name)));
 			}
@@ -3390,8 +3392,21 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 			l = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (l, "priv"), get_symbol_lock_name (stmt.resource.symbol_reference.name));
 		} else if (member.is_class_member ()) {
-			l = new CCodeIdentifier ("%s_GET_CLASS_PRIVATE(%s)".printf(parent.get_upper_case_cname (), parent.get_type_id ()));
-			l = new CCodeMemberAccess.pointer (l, get_symbol_lock_name (stmt.resource.symbol_reference.name));
+			CCodeExpression klass;
+
+		        if (current_method != null && current_method.binding == MemberBinding.INSTANCE ||
+			    current_property_accessor != null && current_property_accessor.prop.binding == MemberBinding.INSTANCE ||
+			    (in_constructor && !in_static_or_class_context)) {
+				var k = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_GET_CLASS"));
+				k.add_argument (new CCodeIdentifier ("self"));
+				klass = k;
+			} else {
+				klass = new CCodeIdentifier ("klass");
+			}
+
+			var get_class_private_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS_PRIVATE".printf(parent.get_upper_case_cname ())));
+			get_class_private_call.add_argument (klass);
+			l = new CCodeMemberAccess.pointer (get_class_private_call, get_symbol_lock_name (stmt.resource.symbol_reference.name));
 		} else {
 			string lock_name = "%s_%s".printf(parent.get_lower_case_cname (), stmt.resource.symbol_reference.name);
 			l = new CCodeIdentifier (get_symbol_lock_name (lock_name));

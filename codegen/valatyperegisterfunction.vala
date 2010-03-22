@@ -124,7 +124,7 @@ public abstract class Vala.TypeRegisterFunction {
 
 		type_init.add_statement (get_type_interface_init_declaration ());
 
-		if (cl != null && cl.has_class_private_fields) {
+		if (cl != null && cl.has_class_private_fields && !context.require_glib_version (2, 24)) {
 			CCodeFunctionCall quark_reg_call;
 
 			if (plugin) {
@@ -211,6 +211,15 @@ public abstract class Vala.TypeRegisterFunction {
 			type_init.add_statement (temp_decl);
 		} else {
 			type_init.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier (type_id_name), reg_call)));
+		}
+
+		 if (cl != null && cl.has_class_private_fields && context.require_glib_version (2, 24)) {
+			CCodeFunctionCall add_class_private_call;
+
+			add_class_private_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_add_class_private"));
+			add_class_private_call.add_argument (new CCodeIdentifier (type_id_name));
+			add_class_private_call.add_argument (new CCodeIdentifier ("sizeof (%sClassPrivate)".printf (get_type_declaration ().get_cname ())));
+			type_init.add_statement (new CCodeExpressionStatement (add_class_private_call));
 		}
 
 		type_init.add_statement (get_type_interface_init_statements (plugin));

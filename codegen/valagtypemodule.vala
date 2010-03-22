@@ -448,10 +448,12 @@ internal class Vala.GTypeModule : GErrorModule {
 		if (is_gtypeinstance) {
 			if (cl.has_class_private_fields || has_class_locks) {
 				decl_space.add_type_declaration (new CCodeTypeDefinition ("struct %s".printf (type_priv_struct.name), new CCodeVariableDeclarator ("%sClassPrivate".printf (cl.get_cname ()))));
-				var cdecl = new CCodeDeclaration ("GQuark");
-				cdecl.add_declarator (new CCodeVariableDeclarator ("_vala_%s_class_private_quark".printf (cl.get_lower_case_cname ()), new CCodeConstant ("0")));
-				cdecl.modifiers = CCodeModifiers.STATIC;
-				decl_space.add_type_declaration (cdecl);
+				if (!context.require_glib_version (2, 24)) {
+					var cdecl = new CCodeDeclaration ("GQuark");
+					cdecl.add_declarator (new CCodeVariableDeclarator ("_vala_%s_class_private_quark".printf (cl.get_lower_case_cname ()), new CCodeConstant ("0")));
+					cdecl.modifiers = CCodeModifiers.STATIC;
+					decl_space.add_type_declaration (cdecl);
+				}
 			}
 
 			/* only add the *Private struct if it is not empty, i.e. we actually have private data */
@@ -464,8 +466,13 @@ internal class Vala.GTypeModule : GErrorModule {
 			if (cl.has_class_private_fields || has_class_locks) {
 				decl_space.add_type_member_declaration (type_priv_struct);
 
-				var macro = "((%sClassPrivate *) g_type_get_qdata (type, _vala_%s_class_private_quark))".printf (cl.get_cname(), cl.get_lower_case_cname ());
-				decl_space.add_type_member_declaration (new CCodeMacroReplacement ("%s_GET_CLASS_PRIVATE(type)".printf (cl.get_upper_case_cname (null)), macro));
+				string macro;
+				if (context.require_glib_version (2, 24)) {
+					macro = "(G_TYPE_CLASS_GET_PRIVATE (klass, %s, %sClassPrivate))".printf (cl.get_type_id (), cl.get_cname ());
+				} else {
+					macro = "((%sClassPrivate *) g_type_get_qdata (G_TYPE_FROM_CLASS (klass), _vala_%s_class_private_quark))".printf (cl.get_cname(), cl.get_lower_case_cname ());
+				}
+				decl_space.add_type_member_declaration (new CCodeMacroReplacement ("%s_GET_CLASS_PRIVATE(klass)".printf (cl.get_upper_case_cname (null)), macro));
 			}
 			decl_space.add_type_member_declaration (prop_enum);
 		} else {
@@ -556,12 +563,12 @@ internal class Vala.GTypeModule : GErrorModule {
 			}
 
 
-			if (cl.class_constructor != null || cl.has_class_private_fields) {
+			if (cl.class_constructor != null || (!context.require_glib_version (2, 24) && cl.has_class_private_fields)) {
 				add_base_init_function (cl);
 			}
 			add_class_init_function (cl);
 
-			if (cl.class_destructor != null || cl.has_class_private_fields) {
+			if (cl.class_destructor != null || (!context.require_glib_version (2, 24) && cl.has_class_private_fields)) {
 				add_base_finalize_function (cl);
 			}
 
@@ -1111,7 +1118,7 @@ internal class Vala.GTypeModule : GErrorModule {
 		var init_block = new CCodeBlock ();
 		base_init.block = init_block;
 
-		if (cl.has_class_private_fields) {
+		if (!context.require_glib_version (2, 24) && cl.has_class_private_fields) {
 			var block = new CCodeBlock ();
 			var cdecl = new CCodeDeclaration ("%sClassPrivate *".printf (cl.get_cname ()));
 			cdecl.add_declarator (new CCodeVariableDeclarator ("priv"));
@@ -1131,7 +1138,9 @@ internal class Vala.GTypeModule : GErrorModule {
 
 			var iftrue = new CCodeBlock ();
 			ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS_PRIVATE".printf (cl.get_upper_case_cname (null))));
-			ccall.add_argument (new CCodeIdentifier ("parent_type"));
+			ccall2 = new CCodeFunctionCall (new CCodeIdentifier ("g_type_class_peek"));
+			ccall2.add_argument (new CCodeIdentifier ("parent_type"));
+			ccall.add_argument (ccall2);
 			iftrue.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("parent_priv"), ccall)));
 			block.add_statement (new CCodeIfStatement (new CCodeIdentifier ("parent_type"), iftrue));
 
@@ -1167,9 +1176,7 @@ internal class Vala.GTypeModule : GErrorModule {
 			block.add_statement (cdecl);
 
 			ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS_PRIVATE".printf (cl.get_upper_case_cname (null))));
-			ccall2 = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_FROM_CLASS"));
-			ccall2.add_argument (new CCodeIdentifier ("klass"));
-			ccall.add_argument (ccall2);
+			ccall.add_argument (new CCodeConstant ("klass"));
 			block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("priv"), ccall)));
 
 			ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_free"));
@@ -1292,9 +1299,7 @@ internal class Vala.GTypeModule : GErrorModule {
 
 			if (field.access == SymbolAccessibility.PRIVATE) {
 				ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS_PRIVATE".printf (cl.get_upper_case_cname ())));
-				var ccall2 = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_FROM_CLASS"));
-				ccall2.add_argument (new CCodeIdentifier ("klass"));
-				ccall.add_argument (ccall2);
+				ccall.add_argument (new CCodeIdentifier ("klass"));
 				left = new CCodeMemberAccess (ccall, field.get_cname (), true);
 			} else {
 				left = new CCodeMemberAccess (new CCodeIdentifier ("klass"), field.get_cname (), true);
