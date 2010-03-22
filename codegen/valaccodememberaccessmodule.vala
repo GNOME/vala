@@ -1,6 +1,6 @@
 /* valaccodememberaccessmodule.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
@@ -232,6 +232,7 @@ internal class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			if (prop.binding == MemberBinding.INSTANCE &&
 			    prop.get_accessor.automatic_body &&
 			    current_type_symbol == prop.parent_symbol &&
+			    current_type_symbol is Class &&
 			    prop.base_property == null &&
 			    prop.base_interface_property == null &&
 			    !(prop.property_type is ArrayType || prop.property_type is DelegateType)) {
