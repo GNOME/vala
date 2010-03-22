@@ -1,6 +1,6 @@
 /* valawhilestatement.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -86,11 +86,20 @@ public class Vala.WhileStatement : CodeNode, Statement {
 		return (literal != null && literal.value);
 	}
 
+	bool always_false (Expression condition) {
+		var literal = condition as BooleanLiteral;
+		return (literal != null && !literal.value);
+	}
+
 	public override bool check (SemanticAnalyzer analyzer) {
 		// convert to simple loop
 
-		// do not generate if block if condition is always true
-		if (!always_true (condition)) {
+		if (always_true (condition)) {
+			// do not generate if block if condition is always true
+		} else if (always_false (condition)) {
+			// do not generate if block if condition is always false
+			body.insert_statement (0, new BreakStatement (condition.source_reference));
+		} else {
 			var if_condition = new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, condition, condition.source_reference);
 			var true_block = new Block (condition.source_reference);
 			true_block.add_statement (new BreakStatement (condition.source_reference));
