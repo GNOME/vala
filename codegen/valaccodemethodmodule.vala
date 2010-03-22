@@ -564,11 +564,15 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 				}
 
 				if (!(m.return_type is VoidType) && !m.return_type.is_real_non_null_struct_type () && !m.coroutine) {
-					// do not declare result variable if exit block is known to be unreachable
-					if (m.exit_block == null || m.exit_block.get_predecessors ().size > 0) {
-						var cdecl = new CCodeDeclaration (m.return_type.get_cname ());
-						cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
-						cinit.append (cdecl);
+					var cdecl = new CCodeDeclaration (m.return_type.get_cname ());
+					var vardecl =  new CCodeVariableDeclarator ("result", default_value_for_type (m.return_type, true));
+					vardecl.init0 = true;
+					cdecl.add_declarator (vardecl);
+					cinit.append (cdecl);
+
+					// add dummy return if exit block is known to be unreachable to silence C compiler
+					if (m.exit_block != null && m.exit_block.get_predecessors ().size == 0) {
+						function.block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("result")));
 					}
 				}
 
