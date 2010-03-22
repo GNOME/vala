@@ -158,6 +158,17 @@ internal class Vala.GTypeModule : GErrorModule {
 			}
 
 			decl_space.add_type_member_declaration (function);
+		} else if (!is_gtypeinstance) {
+			if (cl.base_class == null) {
+				var function = new CCodeFunction (cl.get_lower_case_cprefix () + "free", "void");
+				if (cl.access == SymbolAccessibility.PRIVATE) {
+					function.modifiers = CCodeModifiers.STATIC;
+				}
+
+				function.add_parameter (new CCodeFormalParameter ("self", cl.get_cname () + "*"));
+
+				decl_space.add_type_member_declaration (function);
+			}
 		}
 
 		if (is_gtypeinstance) {
@@ -478,17 +489,6 @@ internal class Vala.GTypeModule : GErrorModule {
 		} else {
 			if (cl.has_private_fields) {
 				Report.error (cl.source_reference, "Private fields not supported in compact classes");
-			}
-
-			if (cl.base_class == null) {
-				var function = new CCodeFunction (cl.get_lower_case_cprefix () + "free", "void");
-				if (cl.access == SymbolAccessibility.PRIVATE) {
-					function.modifiers = CCodeModifiers.STATIC;
-				}
-
-				function.add_parameter (new CCodeFormalParameter ("self", cl.get_cname () + "*"));
-
-				decl_space.add_type_member_declaration (function);
 			}
 		}
 	}
