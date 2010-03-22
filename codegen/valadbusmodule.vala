@@ -256,10 +256,11 @@ internal class Vala.DBusModule : GAsyncModule {
 		var error_block = new CCodeBlock ();
 		error_block.suppress_newline = true;
 
-		var set_error_call = new CCodeFunctionCall (new CCodeIdentifier ("g_set_error_literal"));
+		var set_error_call = new CCodeFunctionCall (new CCodeIdentifier ("g_set_error"));
 		set_error_call.add_argument (new CCodeIdentifier ("error"));
 		set_error_call.add_argument (new CCodeIdentifier ("DBUS_GERROR"));
 		set_error_call.add_argument (new CCodeIdentifier ("DBUS_GERROR_INVALID_ARGS"));
+		set_error_call.add_argument (new CCodeConstant ("\"%s\""));
 		set_error_call.add_argument (new CCodeConstant ("\"Invalid enumeration value\""));
 		error_block.add_statement (new CCodeExpressionStatement (set_error_call));
 

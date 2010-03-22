@@ -1703,10 +1703,11 @@ internal class Vala.DBusClientModule : DBusModule {
 
 		generate_client_error_cases (error_block, error_types, new CCodeMemberAccess (new CCodeIdentifier ("_dbus_error"), "name"), new CCodeIdentifier ("_edomain"), new CCodeIdentifier ("_ecode"));
 
-		var g_set_error = new CCodeFunctionCall (new CCodeIdentifier ("g_set_error_literal"));
+		var g_set_error = new CCodeFunctionCall (new CCodeIdentifier ("g_set_error"));
 		g_set_error.add_argument (new CCodeIdentifier ("error"));
 		g_set_error.add_argument (new CCodeIdentifier ("_edomain"));
 		g_set_error.add_argument (new CCodeIdentifier ("_ecode"));
+		g_set_error.add_argument (new CCodeConstant ("\"%s\""));
 		g_set_error.add_argument (new CCodeMemberAccess (new CCodeIdentifier ("_dbus_error"), "message"));
 		error_block.add_statement (new CCodeExpressionStatement (g_set_error));
 
@@ -1746,10 +1747,11 @@ internal class Vala.DBusClientModule : DBusModule {
 		// throw error and return if proxy is disposed
 		var dispose_return_block = new CCodeBlock ();
 		if (m.get_error_types ().size > 0) {
-			var set_error_call = new CCodeFunctionCall (new CCodeIdentifier ("g_set_error_literal"));
+			var set_error_call = new CCodeFunctionCall (new CCodeIdentifier ("g_set_error"));
 			set_error_call.add_argument (new CCodeIdentifier ("error"));
 			set_error_call.add_argument (new CCodeIdentifier ("DBUS_GERROR"));
 			set_error_call.add_argument (new CCodeIdentifier ("DBUS_GERROR_DISCONNECTED"));
+			set_error_call.add_argument (new CCodeConstant ("\"%s\""));
 			set_error_call.add_argument (new CCodeConstant ("\"Connection is closed\""));
 			dispose_return_block.add_statement (new CCodeExpressionStatement (set_error_call));
 		}
