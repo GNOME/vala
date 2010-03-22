@@ -3482,7 +3482,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_integer_literal (IntegerLiteral expr) {
-		expr.ccodenode = new CCodeConstant (expr.value);
+		expr.ccodenode = new CCodeConstant (expr.value + expr.type_suffix);
 	}
 
 	public override void visit_real_literal (RealLiteral expr) {

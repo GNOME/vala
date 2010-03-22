@@ -1,6 +1,6 @@
 /* valaintegerliteral.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -31,6 +31,8 @@ public class Vala.IntegerLiteral : Literal {
 	 */
 	public string value { get; set; }
 
+	public string type_suffix { get; set; }
+
 	/**
 	 * Creates a new integer literal.
 	 *
@@ -52,63 +54,6 @@ public class Vala.IntegerLiteral : Literal {
 	public override string to_string () {
 		return value;
 	}
-	
-	/**
-	 * Returns the type name of the value this literal represents.
-	 *
-	 * @return the name of literal type
-	 */
-	public string get_type_name () {
-		string number = value;
-	
-		int l = 0;
-		while (number.has_suffix ("l") || number.has_suffix ("L")) {
-			l++;
-			number = number.ndup (number.size () - 1);
-		}
-
-		bool u = false;
-		if (number.has_suffix ("u") || number.has_suffix ("U")) {
-			u = true;
-			number = number.ndup (number.size () - 1);
-		}
-		
-		int64 n = number.to_int64 ();
-		if (!u && n > 0x7fffffff) {
-			// value doesn't fit into signed 32-bit
-			l = 2;
-		} else if (u && n > 0xffffffff) {
-			// value doesn't fit into unsigned 32-bit
-			l = 2;
-		}
-
-		if (l == 0) {
-			if (u) {
-				return "uint";
-			} else {
-				return "int";
-			}
-		} else if (l == 1) {
-			if (u) {
-				return "ulong";
-			} else {
-				return "long";
-			}
-		} else if (CodeContext.get ().profile == Profile.DOVA) {
-			// long is 64-bit in Dova profile
-			if (u) {
-				return "ulong";
-			} else {
-				return "long";
-			}
-		} else {
-			if (u) {
-				return "uint64";
-			} else {
-				return "int64";
-			}
-		}
-	}
 
 	public override bool is_pure () {
 		return true;
@@ -121,7 +66,64 @@ public class Vala.IntegerLiteral : Literal {
 
 		checked = true;
 
-		value_type = new IntegerType ((Struct) analyzer.root_symbol.scope.lookup (get_type_name ()), value, get_type_name ());
+		int l = 0;
+		while (value.has_suffix ("l") || value.has_suffix ("L")) {
+			l++;
+			value = value.ndup (value.size () - 1);
+		}
+
+		bool u = false;
+		if (value.has_suffix ("u") || value.has_suffix ("U")) {
+			u = true;
+			value = value.ndup (value.size () - 1);
+		}
+		
+		int64 n = value.to_int64 ();
+		if (!u && n > 0x7fffffff) {
+			// value doesn't fit into signed 32-bit
+			l = 2;
+		} else if (u && n > 0xffffffff) {
+			// value doesn't fit into unsigned 32-bit
+			l = 2;
+		}
+
+		string type_name;
+		if (l == 0) {
+			if (u) {
+				type_suffix = "U";
+				type_name = "uint";
+			} else {
+				type_suffix = "";
+				type_name = "int";
+			}
+		} else if (l == 1) {
+			if (u) {
+				type_suffix = "UL";
+				type_name = "ulong";
+			} else {
+				type_suffix = "L";
+				type_name = "long";
+			}
+		} else if (CodeContext.get ().profile == Profile.DOVA) {
+			// long is 64-bit in Dova profile
+			if (u) {
+				type_suffix = "UL";
+				type_name = "ulong";
+			} else {
+				type_suffix = "L";
+				type_name = "long";
+			}
+		} else {
+			if (u) {
+				type_suffix = "ULL";
+				type_name = "uint64";
+			} else {
+				type_suffix = "LL";
+				type_name = "int64";
+			}
+		}
+
+		value_type = new IntegerType ((Struct) analyzer.root_symbol.scope.lookup (type_name), value, type_name);
 
 		return !error;
 	}
