@@ -218,34 +218,43 @@ public class Vala.MemberAccess : Expression {
 
 			base_symbol = analyzer.current_symbol;
 
+			// track whether method has been found to make sure that access
+			// to instance member is denied from within static lambda expressions
+			bool method_found = false;
+
 			var sym = analyzer.current_symbol;
 			while (sym != null && symbol_reference == null) {
-				if (this_parameter == null) {
+				if (!method_found) {
 					if (sym is CreationMethod) {
 						var cm = (CreationMethod) sym;
 						this_parameter = cm.this_parameter;
 						may_access_instance_members = true;
 						may_access_klass_members = true;
+						method_found = true;
 					} else if (sym is Property) {
 						var prop = (Property) sym;
 						this_parameter = prop.this_parameter;
 						may_access_instance_members = (prop.binding == MemberBinding.INSTANCE);
 						may_access_klass_members = (prop.binding != MemberBinding.STATIC);
+						method_found = true;
 					} else if (sym is Constructor) {
 						var c = (Constructor) sym;
 						this_parameter = c.this_parameter;
 						may_access_instance_members = (c.binding == MemberBinding.INSTANCE);
 						may_access_klass_members = true;
+						method_found = true;
 					} else if (sym is Destructor) {
 						var d = (Destructor) sym;
 						this_parameter = d.this_parameter;
 						may_access_instance_members = (d.binding == MemberBinding.INSTANCE);
 						may_access_klass_members = true;
+						method_found = true;
 					} else if (sym is Method) {
 						var m = (Method) sym;
 						this_parameter = m.this_parameter;
 						may_access_instance_members = (m.binding == MemberBinding.INSTANCE);
 						may_access_klass_members = (m.binding != MemberBinding.STATIC);
+						method_found = true;
 					}
 				}
 
