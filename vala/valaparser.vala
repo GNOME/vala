@@ -159,7 +159,15 @@ public class Vala.Parser : CodeVisitor {
 
 	void rollback (SourceLocation location) {
 		while (tokens[index].begin.pos != location.pos) {
-			prev ();
+			index = (index - 1 + BUFFER_SIZE) % BUFFER_SIZE;
+			size++;
+			if (size > BUFFER_SIZE) {
+				scanner.seek (location);
+				size = 0;
+				index = 0;
+
+				next ();
+			}
 		}
 	}
 

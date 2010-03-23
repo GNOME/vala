@@ -1,6 +1,6 @@
 /* valascanner.vala
  *
- * Copyright (C) 2008-2009  Jürg Billeter
+ * Copyright (C) 2008-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -64,6 +64,15 @@ public class Vala.Scanner {
 
 		line = 1;
 		column = 1;
+	}
+
+	public void seek (SourceLocation location) {
+		current = location.pos;
+		line = location.line;
+		column = location.column;
+
+		conditional_stack = null;
+		state_stack = null;
 	}
 
 	bool in_template () {
