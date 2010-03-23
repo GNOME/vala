@@ -397,7 +397,7 @@ namespace Xml {
 		public Node* new_char_ref (string name);
 
 		[CCode (cname = "xmlNewDoc")]
-		public Doc (string version);
+		public Doc (string? version = null);
 
 		[CCode (cname = "xmlNewDocComment")]
 		public Node* new_comment (string content);
@@ -903,6 +903,108 @@ namespace Xml {
 	public class SchemaValidCtxt {
 	}
 
+	/* xmlwriter - the XMLWriter implementation */
+
+	[Compact]
+	[CCode (cname = "xmlTextWriter", free_function = "xmlFreeTextWriter", cheader_filename = "libxml/xmlwriter.h")]
+	public class TextWriter {
+		[CCode (cname = "xmlNewTextWriterFilename")]
+		public TextWriter.filename (string uri, bool compression = false);
+
+		[CCode (cname = "xmlTextWriterFlush")]
+		public int flush ();
+
+		[CCode (cname = "xmlTextWriterSetIndent")]
+		public int set_indent (bool indent);
+
+		[CCode (cname = "xmlTextWriterSetIndentString")]
+		public int set_indent_string (string str);
+
+		/* End */
+		[CCode (cname = "xmlTextWriterEndCDATA")]
+		public int end_cdata ();
+
+		[CCode (cname = "xmlTextWriterEndComment")]
+		public int end_comment ();
+
+		[CCode (cname = "xmlTextWriterEndDocument")]
+		public int end_document ();
+
+		[CCode (cname = "xmlTextWriterEndElement")]
+		public int end_element ();
+
+		[CCode (cname = "xmlTextWriterEndAttribute")]
+		public int end_attribute ();
+
+		/* Start */
+
+		[CCode (cname = "xmlTextWriterStartCDATA")]
+		public int start_cdata ();
+
+		[CCode (cname = "xmlTextWriterStartComment")]
+		public int start_comment ();
+
+		[CCode (cname = "xmlTextWriterStartDocument")]
+		public int start_document (string? version = null, string? encoding = null, string? standalone = null);
+
+		[CCode (cname = "xmlTextWriterStartElement")]
+		public int start_element (string name);
+
+		[CCode (cname = "xmlTextWriterStartElementNS")]
+		public int start_element_ns (string prefix, string name, string namespaceURI);
+
+		[CCode (cname = "xmlTextWriterStartAttribute")]
+		public int start_attribute (string name);
+
+		[CCode (cname = "xmlTextWriterStartAttributeNS")]
+		public int start_attribute_ns (string prefix, string name, string namespaceURI);
+
+		/* write */
+
+		[CCode (cname = "xmlTextWriterWriteAttribute")]
+		public int write_attribute (string name, string content);
+
+		[CCode (cname = "xmlTextWriterWriteAttributeNS")]
+		public int write_attribute_ns (string prefix, string name, string namespaceURI, string content);
+
+		[CCode (cname = "xmlTextWriterWriteElement")]
+		public int write_element (string name, string content);
+
+		[CCode (cname = "xmlTextWriterWriteElementNS")]
+		public int write_element_ns (string prefix, string name, string namespaceURI, string content);
+
+		[CCode (cname = "xmlTextWriterWriteBase64")]
+		public int write_base64 (void* data, int start, int length);
+
+		[CCode (cname = "xmlTextWriterWriteComment")]
+		public int write_comment (string content);
+
+		[CCode (cname = "xmlTextWriterWriteString")]
+		public int write_string (string content);
+
+		/* formatted */
+
+		[CCode (cname = "xmlTextWriterWriteFormatAttribute")]
+		public int format_attribute (string name, string format, ...);
+
+		[CCode (cname = "xmlTextWriterWriteFormatAttributeNS")]
+		public int format_attribute_ns (string prefix, string name, string namespaceURI, string format, ...);
+
+		[CCode (cname = "xmlTextWriterWriteFormatCDATA")]
+		public int format_cdata (string format, ...);
+
+		[CCode (cname = "xmlTextWriterWriteFormatComment")]
+		public int format_comment (string format, ...);
+
+		[CCode (cname = "xmlTextWriterWriteFormatElement")]
+		public int format_element (string name, string format, ...);
+
+		[CCode (cname = "xmlTextWriterWriteFormatElementNS")]
+		public int format_element_ns (string prefix, string name, string namespaceURI, string format, ...);
+
+		[CCode (cname = "xmlTextWriterWriteFormatString")]
+		public int format_string (string format, ...);
+	}
 
 	/* xmlreader - the XMLReader implementation */
 
