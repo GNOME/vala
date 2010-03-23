@@ -218,8 +218,8 @@ namespace Gda {
 		public static unowned Gda.DataModelArray copy_model (Gda.DataModel src) throws GLib.Error;
 		public unowned Gda.Row get_row (int row) throws GLib.Error;
 		public void set_n_columns (int cols);
-		[CCode (type = "GdaDataModel*", has_construct_function = false)]
-		public DataModelArray.with_g_types (int cols);
+		[CCode (sentinel = "", type = "GdaDataModel*", has_construct_function = false)]
+		public DataModelArray.with_g_types (int cols, ...);
 		[NoAccessorMethod]
 		public uint n_columns { get; set; }
 		[NoAccessorMethod]
