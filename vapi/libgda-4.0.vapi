@@ -108,19 +108,14 @@ namespace Gda {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public class Connection : GLib.Object, Gda.Lockable {
-		public void add_event (Gda.ConnectionEvent event);
-		public unowned Gda.ConnectionEvent add_event_string (string str);
-		public void add_prepared_statement (Gda.Statement gda_stmt, Gda.PStmt prepared_stmt);
 		public bool add_savepoint (string name) throws GLib.Error;
 		public unowned GLib.SList batch_execute (Gda.Batch batch, Gda.Set @params, Gda.StatementModelUsage model_usage) throws GLib.Error;
 		public bool begin_transaction (string name, Gda.TransactionIsolation level) throws GLib.Error;
-		public void clear_events_list ();
 		public void close ();
 		public void close_no_warning ();
 		public bool commit_transaction (string name) throws GLib.Error;
 		public unowned Gda.ServerOperation create_operation (Gda.ServerOperationType type, Gda.Set options) throws GLib.Error;
 		public unowned Gda.SqlParser create_parser ();
-		public void del_prepared_statement (Gda.Statement gda_stmt);
 		public bool delete_savepoint (string name) throws GLib.Error;
 		public static GLib.Quark error_quark ();
 		public unowned string get_authentication ();
@@ -131,20 +126,9 @@ namespace Gda {
 		public unowned Gda.DataModel get_meta_store_data (Gda.ConnectionMetaType meta_type, int nb_filters) throws GLib.Error;
 		public unowned Gda.DataModel get_meta_store_data_v (Gda.ConnectionMetaType meta_type, GLib.List filters) throws GLib.Error;
 		public Gda.ConnectionOptions get_options ();
-		public unowned Gda.PStmt get_prepared_statement (Gda.Statement gda_stmt);
 		public unowned Gda.ServerProvider get_provider ();
 		public unowned string get_provider_name ();
 		public unowned Gda.TransactionStatus get_transaction_status ();
-		public void internal_change_transaction_state (Gda.TransactionStatusState newstate);
-		public void* internal_get_provider_data ();
-		public void internal_savepoint_added (string parent_trans, string svp_name);
-		public void internal_savepoint_removed (string svp_name);
-		public void internal_savepoint_rolledback (string svp_name);
-		public void internal_set_provider_data (void* data, GLib.DestroyNotify destroy_func);
-		public void internal_statement_executed (Gda.Statement stmt, Gda.Set @params, Gda.ConnectionEvent error);
-		public void internal_transaction_committed (string trans_name);
-		public void internal_transaction_rolledback (string trans_name);
-		public void internal_transaction_started (string parent_trans, string trans_name, Gda.TransactionIsolation isol_level);
 		public bool is_opened ();
 		public bool open () throws GLib.Error;
 		public static unowned Gda.Connection open_from_dsn (string dsn, string auth_string, Gda.ConnectionOptions options) throws GLib.Error;
@@ -882,6 +866,8 @@ namespace Gda {
 		public weak GLib.Callback domains;
 		public weak GLib.Callback el_types;
 		public weak GLib.Callback enums;
+		public weak GLib.Callback index_cols;
+		public weak GLib.Callback indexes_tab;
 		public weak GLib.Callback key_columns;
 		public weak GLib.Callback routine_col;
 		public weak GLib.Callback routine_par;
@@ -1392,12 +1378,6 @@ namespace Gda {
 		public Gda.TransactionStatusState state;
 		[CCode (has_construct_function = false)]
 		public TransactionStatus (string name);
-		public unowned Gda.TransactionStatusEvent add_event_sql (string sql, Gda.ConnectionEvent conn_event);
-		public unowned Gda.TransactionStatusEvent add_event_sub (Gda.TransactionStatus sub_trans);
-		public unowned Gda.TransactionStatusEvent add_event_svp (string svp_name);
-		public unowned Gda.TransactionStatus find (string str, out unowned Gda.TransactionStatusEvent destev);
-		public unowned Gda.TransactionStatus find_current (out unowned Gda.TransactionStatusEvent destev, bool unnamed_only);
-		public void free_events (Gda.TransactionStatusEvent event, bool free_after);
 	}
 	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
@@ -1492,7 +1472,6 @@ namespace Gda {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public interface DataModel : GLib.Object {
-		public bool add_data_from_xml_node (Xml.Node node) throws GLib.Error;
 		public int append_row () throws GLib.Error;
 		public int append_values (GLib.List values) throws GLib.Error;
 		public unowned Gda.DataModelIter create_iter ();
@@ -1655,7 +1634,8 @@ namespace Gda {
 		TYPES,
 		TABLES,
 		VIEWS,
-		FIELDS
+		FIELDS,
+		INDEXES
 	}
 	[CCode (cprefix = "GDA_CONNECTION_OPTIONS_", cheader_filename = "libgda/libgda.h")]
 	[Flags]

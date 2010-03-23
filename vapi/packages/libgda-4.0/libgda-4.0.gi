@@ -1074,10 +1074,10 @@
 			<field name="routine_col" type="GCallback"/>
 			<field name="_routine_par" type="GCallback"/>
 			<field name="routine_par" type="GCallback"/>
-			<field name="_gda_reserved1" type="GCallback"/>
-			<field name="_gda_reserved2" type="GCallback"/>
-			<field name="_gda_reserved3" type="GCallback"/>
-			<field name="_gda_reserved4" type="GCallback"/>
+			<field name="_indexes_tab" type="GCallback"/>
+			<field name="indexes_tab" type="GCallback"/>
+			<field name="_index_cols" type="GCallback"/>
+			<field name="index_cols" type="GCallback"/>
 			<field name="_gda_reserved5" type="GCallback"/>
 			<field name="_gda_reserved6" type="GCallback"/>
 			<field name="_gda_reserved7" type="GCallback"/>
@@ -2349,6 +2349,7 @@
 			<member name="GDA_CONNECTION_META_TABLES" value="2"/>
 			<member name="GDA_CONNECTION_META_VIEWS" value="3"/>
 			<member name="GDA_CONNECTION_META_FIELDS" value="4"/>
+			<member name="GDA_CONNECTION_META_INDEXES" value="5"/>
 		</enum>
 		<enum name="GdaConnectionSchema" type-name="GdaConnectionSchema" get-type="gda_connection_schema_get_type">
 			<member name="GDA_CONNECTION_SCHEMA_AGGREGATES" value="0"/>
@@ -3091,28 +3092,6 @@
 			<implements>
 				<interface name="GdaLockable"/>
 			</implements>
-			<method name="add_event" symbol="gda_connection_add_event">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="cnc" type="GdaConnection*"/>
-					<parameter name="event" type="GdaConnectionEvent*"/>
-				</parameters>
-			</method>
-			<method name="add_event_string" symbol="gda_connection_add_event_string">
-				<return-type type="GdaConnectionEvent*"/>
-				<parameters>
-					<parameter name="cnc" type="GdaConnection*"/>
-					<parameter name="str" type="gchar*"/>
-				</parameters>
-			</method>
-			<method name="add_prepared_statement" symbol="gda_connection_add_prepared_statement">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="cnc" type="GdaConnection*"/>
-					<parameter name="gda_stmt" type="GdaStatement*"/>
-					<parameter name="prepared_stmt" type="GdaPStmt*"/>
-				</parameters>
-			</method>
 			<method name="add_savepoint" symbol="gda_connection_add_savepoint">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -3138,12 +3117,6 @@
 					<parameter name="name" type="gchar*"/>
 					<parameter name="level" type="GdaTransactionIsolation"/>
 					<parameter name="error" type="GError**"/>
-				</parameters>
-			</method>
-			<method name="clear_events_list" symbol="gda_connection_clear_events_list">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="cnc" type="GdaConnection*"/>
 				</parameters>
 			</method>
 			<method name="close" symbol="gda_connection_close">
@@ -3179,13 +3152,6 @@
 				<return-type type="GdaSqlParser*"/>
 				<parameters>
 					<parameter name="cnc" type="GdaConnection*"/>
-				</parameters>
-			</method>
-			<method name="del_prepared_statement" symbol="gda_connection_del_prepared_statement">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="cnc" type="GdaConnection*"/>
-					<parameter name="gda_stmt" type="GdaStatement*"/>
 				</parameters>
 			</method>
 			<method name="delete_savepoint" symbol="gda_connection_delete_savepoint">
@@ -3253,13 +3219,6 @@
 					<parameter name="cnc" type="GdaConnection*"/>
 				</parameters>
 			</method>
-			<method name="get_prepared_statement" symbol="gda_connection_get_prepared_statement">
-				<return-type type="GdaPStmt*"/>
-				<parameters>
-					<parameter name="cnc" type="GdaConnection*"/>
-					<parameter name="gda_stmt" type="GdaStatement*"/>
-				</parameters>
-			</method>
 			<method name="get_provider" symbol="gda_connection_get_provider">
 				<return-type type="GdaServerProvider*"/>
 				<parameters>
@@ -3276,81 +3235,6 @@
 				<return-type type="GdaTransactionStatus*"/>
 				<parameters>
 					<parameter name="cnc" type="GdaConnection*"/>
-				</parameters>
-			</method>
-			<method name="internal_change_transaction_state" symbol="gda_connection_internal_change_transaction_state">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="cnc" type="GdaConnection*"/>
-					<parameter name="newstate" type="GdaTransactionStatusState"/>
-				</parameters>
-			</method>
-			<method name="internal_get_provider_data" symbol="gda_connection_internal_get_provider_data">
-				<return-type type="gpointer"/>
-				<parameters>
-					<parameter name="cnc" type="GdaConnection*"/>
-				</parameters>
-			</method>
-			<method name="internal_savepoint_added" symbol="gda_connection_internal_savepoint_added">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="cnc" type="GdaConnection*"/>
-					<parameter name="parent_trans" type="gchar*"/>
-					<parameter name="svp_name" type="gchar*"/>
-				</parameters>
-			</method>
-			<method name="internal_savepoint_removed" symbol="gda_connection_internal_savepoint_removed">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="cnc" type="GdaConnection*"/>
-					<parameter name="svp_name" type="gchar*"/>
-				</parameters>
-			</method>
-			<method name="internal_savepoint_rolledback" symbol="gda_connection_internal_savepoint_rolledback">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="cnc" type="GdaConnection*"/>
-					<parameter name="svp_name" type="gchar*"/>
-				</parameters>
-			</method>
-			<method name="internal_set_provider_data" symbol="gda_connection_internal_set_provider_data">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="cnc" type="GdaConnection*"/>
-					<parameter name="data" type="gpointer"/>
-					<parameter name="destroy_func" type="GDestroyNotify"/>
-				</parameters>
-			</method>
-			<method name="internal_statement_executed" symbol="gda_connection_internal_statement_executed">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="cnc" type="GdaConnection*"/>
-					<parameter name="stmt" type="GdaStatement*"/>
-					<parameter name="params" type="GdaSet*"/>
-					<parameter name="error" type="GdaConnectionEvent*"/>
-				</parameters>
-			</method>
-			<method name="internal_transaction_committed" symbol="gda_connection_internal_transaction_committed">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="cnc" type="GdaConnection*"/>
-					<parameter name="trans_name" type="gchar*"/>
-				</parameters>
-			</method>
-			<method name="internal_transaction_rolledback" symbol="gda_connection_internal_transaction_rolledback">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="cnc" type="GdaConnection*"/>
-					<parameter name="trans_name" type="gchar*"/>
-				</parameters>
-			</method>
-			<method name="internal_transaction_started" symbol="gda_connection_internal_transaction_started">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="cnc" type="GdaConnection*"/>
-					<parameter name="parent_trans" type="gchar*"/>
-					<parameter name="trans_name" type="gchar*"/>
-					<parameter name="isol_level" type="GdaTransactionIsolation"/>
 				</parameters>
 			</method>
 			<method name="is_opened" symbol="gda_connection_is_opened">
@@ -6101,52 +5985,6 @@
 			</signal>
 		</object>
 		<object name="GdaTransactionStatus" parent="GObject" type-name="GdaTransactionStatus" get-type="gda_transaction_status_get_type">
-			<method name="add_event_sql" symbol="gda_transaction_status_add_event_sql">
-				<return-type type="GdaTransactionStatusEvent*"/>
-				<parameters>
-					<parameter name="tstatus" type="GdaTransactionStatus*"/>
-					<parameter name="sql" type="gchar*"/>
-					<parameter name="conn_event" type="GdaConnectionEvent*"/>
-				</parameters>
-			</method>
-			<method name="add_event_sub" symbol="gda_transaction_status_add_event_sub">
-				<return-type type="GdaTransactionStatusEvent*"/>
-				<parameters>
-					<parameter name="tstatus" type="GdaTransactionStatus*"/>
-					<parameter name="sub_trans" type="GdaTransactionStatus*"/>
-				</parameters>
-			</method>
-			<method name="add_event_svp" symbol="gda_transaction_status_add_event_svp">
-				<return-type type="GdaTransactionStatusEvent*"/>
-				<parameters>
-					<parameter name="tstatus" type="GdaTransactionStatus*"/>
-					<parameter name="svp_name" type="gchar*"/>
-				</parameters>
-			</method>
-			<method name="find" symbol="gda_transaction_status_find">
-				<return-type type="GdaTransactionStatus*"/>
-				<parameters>
-					<parameter name="tstatus" type="GdaTransactionStatus*"/>
-					<parameter name="str" type="gchar*"/>
-					<parameter name="destev" type="GdaTransactionStatusEvent**"/>
-				</parameters>
-			</method>
-			<method name="find_current" symbol="gda_transaction_status_find_current">
-				<return-type type="GdaTransactionStatus*"/>
-				<parameters>
-					<parameter name="tstatus" type="GdaTransactionStatus*"/>
-					<parameter name="destev" type="GdaTransactionStatusEvent**"/>
-					<parameter name="unnamed_only" type="gboolean"/>
-				</parameters>
-			</method>
-			<method name="free_events" symbol="gda_transaction_status_free_events">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="tstatus" type="GdaTransactionStatus*"/>
-					<parameter name="event" type="GdaTransactionStatusEvent*"/>
-					<parameter name="free_after" type="gboolean"/>
-				</parameters>
-			</method>
 			<constructor name="new" symbol="gda_transaction_status_new">
 				<return-type type="GdaTransactionStatus*"/>
 				<parameters>
@@ -6462,14 +6300,6 @@
 			<requires>
 				<interface name="GObject"/>
 			</requires>
-			<method name="add_data_from_xml_node" symbol="gda_data_model_add_data_from_xml_node">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="model" type="GdaDataModel*"/>
-					<parameter name="node" type="xmlNodePtr"/>
-					<parameter name="error" type="GError**"/>
-				</parameters>
-			</method>
 			<method name="append_row" symbol="gda_data_model_append_row">
 				<return-type type="gint"/>
 				<parameters>
