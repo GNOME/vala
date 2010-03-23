@@ -1290,27 +1290,6 @@ internal class Vala.GTypeModule : GErrorModule {
 			}
 		}
 
-		/* initialize class fields */
-		var fields = cl.get_fields ();
-		foreach (Field field in fields) {
-			if (field.binding != MemberBinding.CLASS || field.initializer == null) {
-				continue;
-			}
-
-			CCodeExpression left;
-
-			if (field.access == SymbolAccessibility.PRIVATE) {
-				ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS_PRIVATE".printf (cl.get_upper_case_cname ())));
-				ccall.add_argument (new CCodeIdentifier ("klass"));
-				left = new CCodeMemberAccess (ccall, field.get_cname (), true);
-			} else {
-				left = new CCodeMemberAccess (new CCodeIdentifier ("klass"), field.get_cname (), true);
-			}
-			CCodeExpression right = (CCodeExpression) field.initializer.ccodenode;
-			CCodeAssignment assign = new CCodeAssignment (left, right);
-			init_block.add_statement (new CCodeExpressionStatement (assign));
-		}
-
 		generate_class_init (cl, init_block);
 
 		if (!cl.is_compact) {

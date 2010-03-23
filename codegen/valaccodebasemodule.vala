@@ -1057,6 +1057,32 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				f.error = true;
 				return;
 			}
+
+			if (f.access == SymbolAccessibility.PRIVATE) {
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS_PRIVATE".printf (cl.get_upper_case_cname ())));
+				ccall.add_argument (new CCodeIdentifier ("klass"));
+				lhs = new CCodeMemberAccess (ccall, f.get_cname (), true);
+			} else {
+				lhs = new CCodeMemberAccess (new CCodeIdentifier ("klass"), f.get_cname (), true);
+			}
+
+			if (f.initializer != null) {
+				var rhs = (CCodeExpression) f.initializer.ccodenode;
+
+				class_init_fragment.append (new CCodeExpressionStatement (new CCodeAssignment (lhs, rhs)));
+
+				append_temp_decl (class_init_fragment, temp_vars);
+
+				foreach (LocalVariable local in temp_ref_vars) {
+					var ma = new MemberAccess.simple (local.name);
+					ma.symbol_reference = local;
+					ma.value_type = local.variable_type.copy ();
+					class_init_fragment.append (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma)));
+				}
+
+				temp_vars.clear ();
+				temp_ref_vars.clear ();
+			}
 		} else {
 			generate_field_declaration (f, source_declarations);
 
