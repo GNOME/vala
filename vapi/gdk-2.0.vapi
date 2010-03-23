@@ -668,13 +668,13 @@ namespace Gdk {
 		public uint keyval;
 		public Gdk.ModifierType modifiers;
 	}
-	[CCode (type_id = "GDK_TYPE_EVENT_ANY", cheader_filename = "gdk/gdk.h")]
+	[CCode (has_type_id = false, cheader_filename = "gdk/gdk.h")]
 	public struct EventAny {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
 		public char send_event;
 	}
-	[CCode (type_id = "GDK_TYPE_EVENT_BUTTON", cheader_filename = "gdk/gdk.h")]
+	[CCode (has_type_id = false, cheader_filename = "gdk/gdk.h")]
 	public struct EventButton {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
@@ -689,7 +689,7 @@ namespace Gdk {
 		public double x_root;
 		public double y_root;
 	}
-	[CCode (type_id = "GDK_TYPE_EVENT_CLIENT", cheader_filename = "gdk/gdk.h")]
+	[CCode (has_type_id = false, cheader_filename = "gdk/gdk.h")]
 	public struct EventClient {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
@@ -698,7 +698,7 @@ namespace Gdk {
 		public ushort data_format;
 		public void* data;
 	}
-	[CCode (type_id = "GDK_TYPE_EVENT_CONFIGURE", cheader_filename = "gdk/gdk.h")]
+	[CCode (has_type_id = false, cheader_filename = "gdk/gdk.h")]
 	public struct EventConfigure {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
@@ -708,7 +708,7 @@ namespace Gdk {
 		public int width;
 		public int height;
 	}
-	[CCode (type_id = "GDK_TYPE_EVENT_CROSSING", cheader_filename = "gdk/gdk.h")]
+	[CCode (has_type_id = false, cheader_filename = "gdk/gdk.h")]
 	public struct EventCrossing {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
@@ -724,7 +724,7 @@ namespace Gdk {
 		public bool focus;
 		public Gdk.ModifierType state;
 	}
-	[CCode (type_id = "GDK_TYPE_EVENT_DND", cheader_filename = "gdk/gdk.h")]
+	[CCode (has_type_id = false, cheader_filename = "gdk/gdk.h")]
 	public struct EventDND {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
@@ -734,7 +734,7 @@ namespace Gdk {
 		public short x_root;
 		public short y_root;
 	}
-	[CCode (type_id = "GDK_TYPE_EVENT_EXPOSE", cheader_filename = "gdk/gdk.h")]
+	[CCode (has_type_id = false, cheader_filename = "gdk/gdk.h")]
 	public struct EventExpose {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
@@ -743,14 +743,14 @@ namespace Gdk {
 		public weak Gdk.Region region;
 		public int count;
 	}
-	[CCode (type_id = "GDK_TYPE_EVENT_FOCUS", cheader_filename = "gdk/gdk.h")]
+	[CCode (has_type_id = false, cheader_filename = "gdk/gdk.h")]
 	public struct EventFocus {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
 		public char send_event;
 		public int16 @in;
 	}
-	[CCode (type_id = "GDK_TYPE_EVENT_GRAB_BROKEN", cheader_filename = "gdk/gdk.h")]
+	[CCode (has_type_id = false, cheader_filename = "gdk/gdk.h")]
 	public struct EventGrabBroken {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
@@ -759,7 +759,7 @@ namespace Gdk {
 		public bool implicit;
 		public weak Gdk.Window grab_window;
 	}
-	[CCode (type_id = "GDK_TYPE_EVENT_KEY", cheader_filename = "gdk/gdk.h")]
+	[CCode (has_type_id = false, cheader_filename = "gdk/gdk.h")]
 	public struct EventKey {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
@@ -774,7 +774,7 @@ namespace Gdk {
 		public uchar group;
 		public uint is_modifier;
 	}
-	[CCode (type_id = "GDK_TYPE_EVENT_MOTION", cheader_filename = "gdk/gdk.h")]
+	[CCode (has_type_id = false, cheader_filename = "gdk/gdk.h")]
 	public struct EventMotion {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
@@ -789,13 +789,13 @@ namespace Gdk {
 		public double x_root;
 		public double y_root;
 	}
-	[CCode (type_id = "GDK_TYPE_EVENT_NO_EXPOSE", cheader_filename = "gdk/gdk.h")]
+	[CCode (has_type_id = false, cheader_filename = "gdk/gdk.h")]
 	public struct EventNoExpose {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
 		public char send_event;
 	}
-	[CCode (type_id = "GDK_TYPE_EVENT_OWNER_CHANGE", cheader_filename = "gdk/gdk.h")]
+	[CCode (has_type_id = false, cheader_filename = "gdk/gdk.h")]
 	public struct EventOwnerChange {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
@@ -806,7 +806,7 @@ namespace Gdk {
 		public uint32 time;
 		public uint32 selection_time;
 	}
-	[CCode (type_id = "GDK_TYPE_EVENT_PROPERTY", cheader_filename = "gdk/gdk.h")]
+	[CCode (has_type_id = false, cheader_filename = "gdk/gdk.h")]
 	public struct EventProperty {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
@@ -815,7 +815,7 @@ namespace Gdk {
 		public uint32 time;
 		public Gdk.PropertyState state;
 	}
-	[CCode (type_id = "GDK_TYPE_EVENT_PROXIMITY", cheader_filename = "gdk/gdk.h")]
+	[CCode (has_type_id = false, cheader_filename = "gdk/gdk.h")]
 	public struct EventProximity {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
@@ -823,7 +823,7 @@ namespace Gdk {
 		public uint32 time;
 		public weak Gdk.Device device;
 	}
-	[CCode (type_id = "GDK_TYPE_EVENT_SCROLL", cheader_filename = "gdk/gdk.h")]
+	[CCode (has_type_id = false, cheader_filename = "gdk/gdk.h")]
 	public struct EventScroll {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
@@ -837,7 +837,7 @@ namespace Gdk {
 		public double x_root;
 		public double y_root;
 	}
-	[CCode (type_id = "GDK_TYPE_EVENT_SELECTION", cheader_filename = "gdk/gdk.h")]
+	[CCode (has_type_id = false, cheader_filename = "gdk/gdk.h")]
 	public struct EventSelection {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
@@ -848,7 +848,7 @@ namespace Gdk {
 		public uint32 time;
 		public Gdk.NativeWindow requestor;
 	}
-	[CCode (type_id = "GDK_TYPE_EVENT_SETTING", cheader_filename = "gdk/gdk.h")]
+	[CCode (has_type_id = false, cheader_filename = "gdk/gdk.h")]
 	public struct EventSetting {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
@@ -856,14 +856,14 @@ namespace Gdk {
 		public Gdk.SettingAction action;
 		public weak string name;
 	}
-	[CCode (type_id = "GDK_TYPE_EVENT_VISIBILITY", cheader_filename = "gdk/gdk.h")]
+	[CCode (has_type_id = false, cheader_filename = "gdk/gdk.h")]
 	public struct EventVisibility {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
 		public char send_event;
 		public Gdk.VisibilityState state;
 	}
-	[CCode (type_id = "GDK_TYPE_EVENT_WINDOW_STATE", cheader_filename = "gdk/gdk.h")]
+	[CCode (has_type_id = false, cheader_filename = "gdk/gdk.h")]
 	public struct EventWindowState {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
