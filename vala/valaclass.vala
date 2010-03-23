@@ -699,8 +699,10 @@ public class Vala.Class : ObjectTypeSymbol {
 				marshaller_type_name = base_class.get_marshaller_type_name ();
 			} else if (!is_compact) {
 				marshaller_type_name = get_upper_case_cname ();
-			} else {
+			} else if (get_type_id () == "G_TYPE_POINTER") {
 				marshaller_type_name = "POINTER";
+			} else {
+				marshaller_type_name = "BOXED";
 			}
 		}
 
