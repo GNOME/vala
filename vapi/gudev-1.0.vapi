@@ -38,7 +38,7 @@ namespace GUdev {
 		public unowned string? get_device_file ();
 		[CCode (array_length = false)]
 		public unowned string[] get_device_file_symlinks ();
-		public unowned GUdev.DeviceNumber get_device_number ();
+		public GUdev.DeviceNumber get_device_number ();
 		public GUdev.DeviceType get_device_type ();
 		public unowned string get_devtype ();
 		public unowned string? get_driver ();
@@ -83,9 +83,10 @@ namespace GUdev {
 		[NoWrapper]
 		public virtual void reserved8 ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "gudev/gudev.h")]
-	public class DeviceNumber {
+	[SimpleType]
+	[IntegerType (rank = 9)]
+	public struct DeviceNumber : Posix.dev_t {
 	}
 	[CCode (cprefix = "G_UDEV_DEVICE_TYPE_", cheader_filename = "gudev/gudev.h")]
 	public enum DeviceType {
