@@ -418,6 +418,13 @@ public struct uint16 {
 	public static uint16 from_big_endian (uint16 val);
 	[CCode (cname = "GUINT16_FROM_LE")]
 	public static uint16 from_little_endian (uint16 val);
+
+	[CCode (cname = "GUINT16_SWAP_BE_PDP")]
+	public uint16 swap_big_endian_pdp ();
+	[CCode (cname = "GUINT16_SWAP_LE_BE")]
+	public uint16 swap_little_endian_big_endian ();
+	[CCode (cname = "GUINT16_SWAP_LE_PDP")]
+	public uint16 swap_little_endian_pdp ();
 }
 
 [SimpleType]
@@ -488,6 +495,13 @@ public struct uint32 {
 	public static uint32 from_big_endian (uint32 val);
 	[CCode (cname = "GUINT32_FROM_LE")]
 	public static uint32 from_little_endian (uint32 val);
+
+	[CCode (cname = "GUINT32_SWAP_BE_PDP")]
+	public uint32 swap_big_endian_pdp ();
+	[CCode (cname = "GUINT32_SWAP_LE_BE")]
+	public uint32 swap_little_endian_big_endian ();
+	[CCode (cname = "GUINT32_SWAP_LE_PDP")]
+	public uint32 swap_little_endian_pdp ();
 }
 
 [SimpleType]
@@ -525,6 +539,9 @@ public struct int64 {
 	public static int64 from_big_endian (int64 val);
 	[CCode (cname = "GINT64_FROM_LE")]
 	public static int64 from_little_endian (int64 val);
+
+	[CCode (cname = "GUINT64_SWAP_LE_BE")]
+	public uint64 swap_little_endian_big_endian ();
 }
 
 [SimpleType]
@@ -1242,6 +1259,8 @@ namespace GLib {
 		BIG_ENDIAN,
 		PDP_ENDIAN
 	}
+
+	public const ByteOrder BYTE_ORDER;
 
 	/* Atomic Operations */
 
