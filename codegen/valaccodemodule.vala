@@ -207,6 +207,10 @@ public abstract class Vala.CCodeModule {
 		next.visit_lock_statement (stmt);
 	}
 
+	public virtual void visit_unlock_statement (UnlockStatement stmt) {
+		next.visit_unlock_statement (stmt);
+	}
+
 	public virtual void visit_delete_statement (DeleteStatement stmt) {
 		next.visit_delete_statement (stmt);
 	}

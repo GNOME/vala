@@ -3400,28 +3400,26 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		return "__lock_%s".printf (symname);
 	}
 
-	public override void visit_lock_statement (LockStatement stmt) {
-		var cn = new CCodeFragment ();
+	private CCodeExpression get_lock_expression (Statement stmt, Expression resource) {
 		CCodeExpression l = null;
-		CCodeFunctionCall fc;
-		var inner_node = ((MemberAccess)stmt.resource).inner;
-		var member = (Member)stmt.resource.symbol_reference;
-		var parent = (TypeSymbol) stmt.resource.symbol_reference.parent_symbol;
+		var inner_node = ((MemberAccess)resource).inner;
+		var member = (Member)resource.symbol_reference;
+		var parent = (TypeSymbol)resource.symbol_reference.parent_symbol;
 		
 		if (member.is_instance_member ()) {
 			if (inner_node  == null) {
 				l = new CCodeIdentifier ("self");
-			} else if (stmt.resource.symbol_reference.parent_symbol != current_type_symbol) {
-				 l = generate_instance_cast ((CCodeExpression) inner_node.ccodenode, parent);
+			} else if (resource.symbol_reference.parent_symbol != current_type_symbol) {
+				l = generate_instance_cast ((CCodeExpression) inner_node.ccodenode, parent);
 			} else {
 				l = (CCodeExpression) inner_node.ccodenode;
 			}
 
-			l = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (l, "priv"), get_symbol_lock_name (stmt.resource.symbol_reference.name));
+			l = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (l, "priv"), get_symbol_lock_name (resource.symbol_reference.name));
 		} else if (member.is_class_member ()) {
 			CCodeExpression klass;
 
-		        if (current_method != null && current_method.binding == MemberBinding.INSTANCE ||
+			if (current_method != null && current_method.binding == MemberBinding.INSTANCE ||
 			    current_property_accessor != null && current_property_accessor.prop.binding == MemberBinding.INSTANCE ||
 			    (in_constructor && !in_static_or_class_context)) {
 				var k = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_GET_CLASS"));
@@ -3433,23 +3431,33 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 			var get_class_private_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS_PRIVATE".printf(parent.get_upper_case_cname ())));
 			get_class_private_call.add_argument (klass);
-			l = new CCodeMemberAccess.pointer (get_class_private_call, get_symbol_lock_name (stmt.resource.symbol_reference.name));
+			l = new CCodeMemberAccess.pointer (get_class_private_call, get_symbol_lock_name (resource.symbol_reference.name));
 		} else {
-			string lock_name = "%s_%s".printf(parent.get_lower_case_cname (), stmt.resource.symbol_reference.name);
+			string lock_name = "%s_%s".printf(parent.get_lower_case_cname (), resource.symbol_reference.name);
 			l = new CCodeIdentifier (get_symbol_lock_name (lock_name));
 		}
+		return l;
+	}
 		
-		fc = new CCodeFunctionCall (new CCodeIdentifier (((Method) mutex_type.scope.lookup ("lock")).get_cname ()));
+	public override void visit_lock_statement (LockStatement stmt) {
+		var l = get_lock_expression (stmt, stmt.resource);
+
+		var fc = new CCodeFunctionCall (new CCodeIdentifier (((Method) mutex_type.scope.lookup ("lock")).get_cname ()));
 		fc.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, l));
 
+		var cn = new CCodeFragment ();
 		cn.append (new CCodeExpressionStatement (fc));
+		stmt.ccodenode = cn;
+	}
 		
-		cn.append (stmt.body.ccodenode);
+	public override void visit_unlock_statement (UnlockStatement stmt) {
+		var l = get_lock_expression (stmt, stmt.resource);
 		
-		fc = new CCodeFunctionCall (new CCodeIdentifier (((Method) mutex_type.scope.lookup ("unlock")).get_cname ()));
+		var fc = new CCodeFunctionCall (new CCodeIdentifier (((Method) mutex_type.scope.lookup ("unlock")).get_cname ()));
 		fc.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, l));
-		cn.append (new CCodeExpressionStatement (fc));
 		
+		var cn = new CCodeFragment ();
+		cn.append (new CCodeExpressionStatement (fc));
 		stmt.ccodenode = cn;
 	}
 

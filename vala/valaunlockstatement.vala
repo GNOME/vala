@@ -1,7 +1,6 @@
-/* valalockstatement.vala
+/* valaunlockstatement.vala
  *
- * Copyright (C) 2009  Jiří Zárevúcky
- * Copyright (C) 2006-2007  Raffaele Sandrini, Jürg Billeter
+ * Copyright (C) 2009  Jiří Zárevúcky, Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -17,62 +16,30 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
  *
- * Authors:
- * 	Raffaele Sandrini <raffaele@sandrini.ch>
+ * Author:
  * 	Jiří Zárevúcky <zarevucky.jiri@gmail.com>
  */
 
-using GLib;
-
 /**
- * Represents a lock statement e.g. {{{ lock (a); }}} or {{{ lock (a) { f(a); } }}}.
- *
- * If the statement is empty, the mutex remains locked until a corresponding UnlockStatement
- * occurs. Otherwise it's translated into a try/finally statement which unlocks the mutex
- * after the block is finished.
+ * Represents an unlock statement e.g. {{{ unlock (a); }}}.
  */
-public class Vala.LockStatement : CodeNode, Statement {
+public class Vala.UnlockStatement : CodeNode, Statement {
 	/**
-	 * Expression representing the resource to be locked.
+	 * Expression representing the resource to be unlocked.
 	 */
 	public Expression resource { get; set; }
-	
-	/**
-	 * The statement during its execution the resource is locked.
-	 */
-	public Block? body { get; set; }
-	
-	public LockStatement (Expression resource, Block? body, SourceReference? source_reference = null) {
-		this.body = body;
+
+	public UnlockStatement (Expression resource, SourceReference? source_reference = null) {
 		this.source_reference = source_reference;
 		this.resource = resource;
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
 		resource.accept (visitor);
-		if (body != null) {
-			body.accept (visitor);
-		}
-		visitor.visit_lock_statement (this);
+		visitor.visit_unlock_statement (this);
 	}
 
 	public override bool check (SemanticAnalyzer analyzer) {
-		if (body != null) {
-			// if the statement isn't empty, it is converted into a try statement
-
-			var fin_body = new Block (source_reference);
-			fin_body.add_statement (new UnlockStatement (resource, source_reference));
-
-			var block = new Block (source_reference);
-			block.add_statement (new LockStatement (resource, null, source_reference));
-			block.add_statement (new TryStatement (body, fin_body, source_reference));
-
-			var parent_block = (Block) parent_node;
-			parent_block.replace_statement (this, block);
-
-			return block.check (analyzer);
-		}
-
 		if (checked) {
 			return !error;
 		}

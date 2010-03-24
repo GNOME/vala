@@ -1010,8 +1010,12 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		if (unreachable (stmt)) {
 			return;
 		}
+	}
 
-		stmt.body.accept (this);
+	public override void visit_unlock_statement (UnlockStatement stmt) {
+		if (unreachable (stmt)) {
+			return;
+		}
 	}
 
 	public override void visit_expression (Expression expr) {

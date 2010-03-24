@@ -405,6 +405,14 @@ public abstract class Vala.CodeVisitor {
 	}
 
 	/**
+	 * Visit operation called for unlock statements.
+	 *
+	 * @param stmt an unlock statement
+	 */
+	public virtual void visit_unlock_statement (UnlockStatement stmt) {
+	}
+
+	/**
 	 * Visit operation called for delete statements.
 	 *
 	 * @param stmt a delete statement

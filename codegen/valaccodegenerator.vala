@@ -228,6 +228,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		head.visit_lock_statement (stmt);
 	}
 
+	public override void visit_unlock_statement (UnlockStatement stmt) {
+		head.visit_unlock_statement (stmt);
+	}
+
 	public override void visit_delete_statement (DeleteStatement stmt) {
 		head.visit_delete_statement (stmt);
 	}
