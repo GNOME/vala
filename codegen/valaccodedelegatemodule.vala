@@ -254,6 +254,10 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 
 				CCodeExpression target_expr = null;
 
+				if (field.no_delegate_target) {
+					return new CCodeConstant ("NULL");
+				}
+
 				if (field.binding == MemberBinding.INSTANCE) {
 					var instance_expression_type = ma.inner.value_type;
 					var instance_target_type = get_data_type_for_symbol ((TypeSymbol) field.parent_symbol);
