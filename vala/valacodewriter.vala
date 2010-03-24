@@ -1691,8 +1691,9 @@ public class Vala.CodeWriter : CodeVisitor {
 	private void write_identifier (string s) {
 		char* id = (char*)s;
 		int id_length = (int)s.length;
-		if ( Vala.Scanner.get_identifier_or_keyword (id, id_length) != Vala.TokenType.IDENTIFIER ||
-                     s.get_char ().isdigit ()) {
+		if (context.profile != Profile.DOVA &&
+		    (Vala.Scanner.get_identifier_or_keyword (id, id_length) != Vala.TokenType.IDENTIFIER ||
+		     s.get_char ().isdigit ())) {
 			stream.putc ('@'); 
 		}
 		write_string (s);
