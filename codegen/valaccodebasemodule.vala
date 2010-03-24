@@ -2022,6 +2022,17 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 	}
 
+	bool has_simple_struct_initializer (LocalVariable local) {
+		var st = local.variable_type.data_type as Struct;
+		var initializer = local.initializer as ObjectCreationExpression;
+		if (st != null && (!st.is_simple_type () || st.get_cname () == "va_list") && !local.variable_type.nullable &&
+		    initializer != null && initializer.get_object_initializer ().size == 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public override void visit_local_variable (LocalVariable local) {
 		check_type (local.variable_type);
 
@@ -2166,8 +2177,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			closure_struct.add_field (local.variable_type.get_cname (), get_variable_cname (local.name) + local.variable_type.get_cdeclarator_suffix ());
 
 			if (local.initializer != null) {
-				var st = local.variable_type.data_type as Struct;
-				if (st != null && (!st.is_simple_type () || st.get_cname () == "va_list") && !local.variable_type.nullable && local.initializer is ObjectCreationExpression) {
+				if (has_simple_struct_initializer (local)) {
 					cfrag.append (new CCodeExpressionStatement (rhs));
 				} else {
 					cfrag.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_variable_cname (local.name)), rhs)));
@@ -2175,8 +2185,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			}
 		} else {
 			CCodeStatement post_stmt = null;
-			var st = local.variable_type.data_type as Struct;
-			if (st != null && (!st.is_simple_type () || st.get_cname () == "va_list") && !local.variable_type.nullable && local.initializer is ObjectCreationExpression) {
+			if (has_simple_struct_initializer (local)) {
 				post_stmt = new CCodeExpressionStatement (rhs);
 				rhs = null;
 			}
@@ -2999,8 +3008,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		LocalVariable full_expr_var = null;
 
 		var local_decl = expr.parent_node as LocalVariable;
-		var st = local_decl != null ? local_decl.variable_type.data_type as Struct : null;
-		if (st != null && !st.is_simple_type () && !local_decl.variable_type.nullable) {
+		if (local_decl != null && has_simple_struct_initializer (local_decl)) {
 			expr_list.append_expression ((CCodeExpression) expr.ccodenode);
 		} else {
 			var expr_type = expr.value_type;
@@ -4000,7 +4008,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			// value-type initialization or object creation expression with object initializer
 
 			var local = expr.parent_node as LocalVariable;
-			if (local != null && !local.variable_type.nullable) {
+			if (local != null && has_simple_struct_initializer (local)) {
 				instance = get_variable_cexpression (get_variable_cname (local.name));
 			} else {
 				var temp_decl = get_temp_variable (expr.type_reference, false, expr);
@@ -4206,7 +4214,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 
 		var local = expr.parent_node as LocalVariable;
-		if (st != null && (!st.is_simple_type () || st.get_cname () == "va_list") && local != null && !local.variable_type.nullable) {
+		if (local != null && has_simple_struct_initializer (local)) {
 			// no comma expression necessary
 			expr.ccodenode = creation_expr;
 		} else if (instance != null) {
