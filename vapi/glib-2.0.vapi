@@ -1963,6 +1963,7 @@ namespace GLib {
 		public void set_year (DateYear year);
 		public void set_dmy (DateDay day, int month, DateYear y);
 		public void set_julian (uint julian_day);
+		public void set_time_t (time_t timet);
 		public void set_time_val (TimeVal timeval);
 		public void set_parse (string str);
 		public void add_days (uint n_days);
