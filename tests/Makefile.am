@@ -55,6 +55,7 @@ TESTS = \
 	objects/interfaces.vala \
 	objects/methods.vala \
 	objects/properties.vala \
+	objects/regex.vala \
 	objects/signals.vala \
 	objects/test-025.vala \
 	objects/test-026.vala \

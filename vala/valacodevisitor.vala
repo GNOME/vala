@@ -469,6 +469,15 @@ public abstract class Vala.CodeVisitor {
 	}
 
 	/**
+	 * Visit operation called for regex literals.
+	 *
+	 * @param lit a regex literal
+	 */
+	public virtual void visit_regex_literal (RegexLiteral lit) {
+	}
+
+
+	/**
 	 * Visit operation called for string literals.
 	 *
 	 * @param lit a string literal

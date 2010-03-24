@@ -150,6 +150,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	Set<string> reserved_identifiers;
 	
 	public int next_temp_var_id = 0;
+	public int next_regex_id = 0;
 	public bool in_creation_method { get { return current_method is CreationMethod; } }
 	public bool in_constructor = false;
 	public bool in_static_or_class_context = false;
@@ -178,6 +179,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	public DataType int64_type;
 	public DataType uint64_type;
 	public DataType string_type;
+	public DataType regex_type;
 	public DataType float_type;
 	public DataType double_type;
 	public TypeSymbol gtype_type;
@@ -313,6 +315,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		float_type = new FloatingType ((Struct) root_symbol.scope.lookup ("float"));
 		double_type = new FloatingType ((Struct) root_symbol.scope.lookup ("double"));
 		string_type = new ObjectType ((Class) root_symbol.scope.lookup ("string"));
+		regex_type = new ObjectType ((Class) root_symbol.scope.lookup ("GLib").scope.lookup ("Regex"));
 
 		var unichar_struct = (Struct) root_symbol.scope.lookup ("unichar");
 		if (unichar_struct != null) {
@@ -3546,6 +3549,42 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 	public override void visit_string_literal (StringLiteral expr) {
 		expr.ccodenode = new CCodeConstant.string (expr.value);
+	}
+
+	public override void visit_regex_literal (RegexLiteral expr) {
+		string[] parts = expr.value.split ("/", 3);
+		string re = parts[2].escape ("");
+		string flags = "0";
+
+		if (parts[1].contains ("i")) {
+			flags += " | G_REGEX_CASELESS";
+		}
+		if (parts[1].contains ("m")) {
+			flags += " | G_REGEX_MULTILINE";
+		}
+		if (parts[1].contains ("s")) {
+			flags += " | G_REGEX_DOTALL";
+		}
+		if (parts[1].contains ("x")) {
+			flags += " | G_REGEX_EXTENDED";
+		}
+
+		var regex_var = get_temp_variable (regex_type, true, expr, false);
+		expr.temp_vars.add (regex_var);
+
+		var cdecl = new CCodeDeclaration ("GRegex*");
+
+		var cname = regex_var.name + "regex_" + next_regex_id.to_string ();
+		this.next_regex_id++;
+
+		cdecl.add_declarator (new CCodeVariableDeclarator (cname + " = NULL"));
+		cdecl.modifiers = CCodeModifiers.STATIC;
+
+		var regex_const = new CCodeConstant ("(%s == NULL) ? (%s = g_regex_new (\"".printf (cname, cname)
+			+ re + "\", " + flags + ", 0, NULL)) : %s".printf (cname));
+
+		source_declarations.add_constant_declaration (cdecl);
+		expr.ccodenode = regex_const;
 	}
 
 	public override void visit_null_literal (NullLiteral expr) {

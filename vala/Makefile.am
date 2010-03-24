@@ -118,6 +118,7 @@ libvalacore_la_VALASOURCES = \
 	valarealliteral.vala \
 	valareferencetransferexpression.vala \
 	valareferencetype.vala \
+	valaregexliteral.vala \
 	valareport.vala \
 	valareturnstatement.vala \
 	valascanner.vala \

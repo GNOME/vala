@@ -280,6 +280,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		head.visit_tuple (expr);
 	}
 
+	public override void visit_regex_literal (RegexLiteral expr) {
+		head.visit_regex_literal (expr);
+	}
+
+
 	public override void visit_null_literal (NullLiteral expr) {
 		head.visit_null_literal (expr);
 	}

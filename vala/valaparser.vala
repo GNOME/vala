@@ -290,6 +290,13 @@ public class Vala.Parser : CodeVisitor {
 				Report.error (lit.source_reference, "invalid character literal");
 			}
 			return lit;
+		case TokenType.REGEX_LITERAL:
+			next ();
+			string match_part = get_last_string ();
+			SourceReference src_begin = get_src (begin);
+			expect (TokenType.CLOSE_REGEX_LITERAL);
+			string close_token = get_last_string ();
+			return new RegexLiteral ("%s/%s".printf (close_token, match_part), src_begin);
 		case TokenType.STRING_LITERAL:
 			next ();
 			return new StringLiteral (get_last_string (), get_src (begin));
@@ -560,6 +567,7 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.REAL_LITERAL:
 		case TokenType.CHARACTER_LITERAL:
 		case TokenType.STRING_LITERAL:
+		case TokenType.REGEX_LITERAL:
 		case TokenType.TEMPLATE_STRING_LITERAL:
 		case TokenType.VERBATIM_STRING_LITERAL:
 		case TokenType.NULL:
@@ -584,6 +592,9 @@ public class Vala.Parser : CodeVisitor {
 			break;
 		case TokenType.OPEN_TEMPLATE:
 			expr = parse_template ();
+			break;
+		case TokenType.OPEN_REGEX_LITERAL:
+			expr = parse_regex_literal ();
 			break;
 		case TokenType.THIS:
 			expr = parse_this_access ();
@@ -692,6 +703,14 @@ public class Vala.Parser : CodeVisitor {
 
 		template.source_reference = get_src (begin);
 		return template;
+	}
+
+	Expression parse_regex_literal () throws ParseError {
+		expect (TokenType.OPEN_REGEX_LITERAL);
+
+		var expr = parse_literal ();
+
+		return expr;
 	}
 
 	Expression parse_member_access (SourceLocation begin, Expression inner) throws ParseError {
@@ -985,6 +1004,7 @@ public class Vala.Parser : CodeVisitor {
 					case TokenType.STRING_LITERAL:
 					case TokenType.TEMPLATE_STRING_LITERAL:
 					case TokenType.VERBATIM_STRING_LITERAL:
+					case TokenType.REGEX_LITERAL:
 					case TokenType.NULL:
 					case TokenType.THIS:
 					case TokenType.BASE:

@@ -132,6 +132,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public DataType void_type = new VoidType ();
 	public DataType bool_type;
 	public DataType string_type;
+	public DataType regex_type;
 	public DataType uchar_type;
 	public DataType short_type;
 	public DataType ushort_type;
@@ -176,6 +177,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		bool_type = new BooleanType ((Struct) root_symbol.scope.lookup ("bool"));
 		string_type = new ObjectType ((Class) root_symbol.scope.lookup ("string"));
+		regex_type = new ObjectType ((Class) root_symbol.scope.lookup ("GLib").scope.lookup ("Regex"));
 
 		short_type = new IntegerType ((Struct) root_symbol.scope.lookup ("short"));
 		ushort_type = new IntegerType ((Struct) root_symbol.scope.lookup ("ushort"));

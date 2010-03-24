@@ -259,6 +259,10 @@ public abstract class Vala.CCodeModule {
 		next.visit_tuple (expr);
 	}
 
+	public virtual void visit_regex_literal (RegexLiteral re) {
+		next.visit_regex_literal (re);
+	}
+
 	public virtual void visit_null_literal (NullLiteral expr) {
 		next.visit_null_literal (expr);
 	}

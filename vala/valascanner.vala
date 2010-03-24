@@ -18,6 +18,7 @@
  *
  * Author:
  * 	Jürg Billeter <j@bitron.ch>
+ * 	Jukka-Pekka Iivonen <jp0409@jippii.fi>
  */
 
 using GLib;
@@ -28,6 +29,7 @@ using GLib;
 public class Vala.Scanner {
 	public SourceFile source_file { get; private set; }
 
+	TokenType previous;
 	char* current;
 	char* end;
 
@@ -51,7 +53,8 @@ public class Vala.Scanner {
 		BRACE,
 		BRACKET,
 		TEMPLATE,
-		TEMPLATE_PART
+		TEMPLATE_PART,
+		REGEX_LITERAL
 	}
 
 	public Scanner (SourceFile source_file) {
@@ -83,8 +86,176 @@ public class Vala.Scanner {
 		return (state_stack.length > 0 && state_stack[state_stack.length - 1] == State.TEMPLATE_PART);
 	}
 
+	bool in_regex_literal () {
+		return (state_stack.length > 0 && state_stack[state_stack.length - 1] == State.REGEX_LITERAL);
+	}
+
 	bool is_ident_char (char c) {
 		return (c.isalnum () || c == '_');
+	}
+
+	public TokenType read_regex_token (out SourceLocation token_begin, out SourceLocation token_end) {
+		TokenType type;
+		char* begin = current;
+		token_begin.pos = begin;
+		token_begin.line = line;
+		token_begin.column = column;
+
+		int token_length_in_chars = -1;
+
+		if (current >= end) {
+			type = TokenType.EOF;
+		} else {
+			switch (current[0]) {
+			case '/':
+				type = TokenType.CLOSE_REGEX_LITERAL;
+				current++;
+				state_stack.length--;
+				var fl_i = false;
+				var fl_s = false;
+				var fl_m = false;
+				var fl_x = false;
+				while (current[0] == 'i' || current[0] == 's' || current[0] == 'm' || current[0] == 'x') {
+					switch (current[0]) {
+					case 'i':
+						if (fl_i) {
+							Report.error (new SourceReference (source_file, line, column + token_length_in_chars, line, column + token_length_in_chars), "modifier 'i' used more than once");
+						}
+						fl_i = true;
+						break;
+					case 's':
+						if (fl_s) {
+							Report.error (new SourceReference (source_file, line, column + token_length_in_chars, line, column + token_length_in_chars), "modifier 's' used more than once");
+						}
+						fl_s = true;
+						break;
+					case 'm':
+						if (fl_m) {
+							Report.error (new SourceReference (source_file, line, column + token_length_in_chars, line, column + token_length_in_chars), "modifier 'm' used more than once");
+						}
+						fl_m = true;
+						break;
+					case 'x':
+						if (fl_x) {
+							Report.error (new SourceReference (source_file, line, column + token_length_in_chars, line, column + token_length_in_chars), "modifier 'x' used more than once");
+						}
+						fl_x = true;
+						break;
+					}
+					current++;
+					token_length_in_chars++;
+				}
+				break;
+			default:
+				type = TokenType.REGEX_LITERAL;
+				token_length_in_chars = 0;
+				while (current < end && current[0] != '/') {
+					if (current[0] == '\\') {
+						current++;
+						token_length_in_chars++;
+						if (current >= end) {
+							break;
+						}
+
+						switch (current[0]) {
+						case '\'':
+						case '"':
+						case '\\':
+						case '/':
+						case '^':
+						case '$':
+						case '.':
+						case '[':
+						case ']':
+						case '{':
+						case '}':
+						case '(':
+						case ')':
+						case '?':
+						case '*':
+						case '+':
+						case '-':
+						case '#':
+						case '&':
+						case '~':
+						case ':':
+						case ';':
+						case '<':
+						case '>':
+						case '|':
+						case '%':
+						case '=':
+						case '@':
+						case '0':
+						case 'b':
+						case 'B':
+						case 'f':
+						case 'n':
+						case 'r':
+						case 't':
+						case 'a':
+						case 'A':
+						case 'p':
+						case 'P':
+						case 'e':
+						case 'd':
+						case 'D':
+						case 's':
+						case 'S':
+						case 'w':
+						case 'W':
+						case 'G':
+						case 'z':
+						case 'Z':
+							current++;
+							token_length_in_chars++;
+							break;
+						case 'x':
+							// hexadecimal escape character
+							current++;
+							token_length_in_chars++;
+							while (current < end && current[0].isxdigit ()) {
+								current++;
+								token_length_in_chars++;
+							}
+							break;
+						default:
+							Report.error (new SourceReference (source_file, line, column + token_length_in_chars, line, column + token_length_in_chars), "invalid escape sequence");
+							break;
+						}
+					} else if (current[0] == '\n') {
+						break;
+					} else {
+						unichar u = ((string) current).get_char_validated ((long) (end - current));
+						if (u != (unichar) (-1)) {
+							current += u.to_utf8 (null);
+							token_length_in_chars++;
+						} else {
+							current++;
+							Report.error (new SourceReference (source_file, line, column + token_length_in_chars, line, column + token_length_in_chars), "invalid UTF-8 character");
+						}
+					}
+				}
+				if (current >= end || current[0] == '\n') {
+					Report.error (new SourceReference (source_file, line, column + token_length_in_chars, line, column + token_length_in_chars), "syntax error, expected \"");
+					state_stack.length--;
+					return read_token (out token_begin, out token_end);
+				}
+				break;
+			}
+		}
+
+		if (token_length_in_chars < 0) {
+			column += (int) (current - begin);
+		} else {
+			column += token_length_in_chars;
+		}
+
+		token_end.pos = current;
+		token_end.line = line;
+		token_end.column = column - 1;
+
+		return type;
 	}
 
 	public static TokenType get_identifier_or_keyword (char* begin, int len) {
@@ -585,6 +756,8 @@ public class Vala.Scanner {
 			token_end.column = column - 1;
 
 			return TokenType.COMMA;
+		} else if (in_regex_literal ()) {
+			return read_regex_token (out token_begin, out token_end);
 		}
 
 		space ();
@@ -843,11 +1016,18 @@ public class Vala.Scanner {
 				}
 				break;
 			case '/':
-				type = TokenType.DIV;
-				current++;
-				if (current < end && current[0] == '=') {
-					type = TokenType.ASSIGN_DIV;
+				if (previous == TokenType.OPEN_PARENS || previous == TokenType.ASSIGN || previous == TokenType.OP_COALESCING
+				    || previous == TokenType.COMMA || previous == TokenType.RETURN || previous == TokenType.OPEN_BRACE) {
+					type = TokenType.OPEN_REGEX_LITERAL;
+					state_stack += State.REGEX_LITERAL;
 					current++;
+				} else {
+					type = TokenType.DIV;
+					current++;
+					if (current < end && current[0] == '=') {
+						type = TokenType.ASSIGN_DIV;
+						current++;
+					}
 				}
 				break;
 			case '%':
@@ -979,6 +1159,7 @@ public class Vala.Scanner {
 		token_end.pos = current;
 		token_end.line = line;
 		token_end.column = column - 1;
+		previous = type;
 
 		return type;
 	}
