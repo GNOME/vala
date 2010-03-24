@@ -775,6 +775,11 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		function.add_parameter (new CCodeFormalParameter ("self", array_type.get_cname ()));
 		// total length over all dimensions
 		function.add_parameter (new CCodeFormalParameter ("length", "int"));
+		if (array_type.element_type is GenericType) {
+			// dup function array elements
+			string func_name = "%s_dup_func".printf (array_type.element_type.type_parameter.name.down ());
+			function.add_parameter (new CCodeFormalParameter (func_name, "GBoxedCopyFunc"));
+		}
 
 		// definition
 

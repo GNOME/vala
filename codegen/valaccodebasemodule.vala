@@ -2333,7 +2333,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	bool is_in_generic_type (DataType type) {
-		if (type.type_parameter.parent_symbol is TypeSymbol
+		if (current_symbol != null && type.type_parameter.parent_symbol is TypeSymbol
 		    && (current_method == null || current_method.binding == MemberBinding.INSTANCE)) {
 			return true;
 		} else {
@@ -3832,6 +3832,14 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				}
 
 				ccall.add_argument (csizeexpr);
+
+				if (array_type.element_type is GenericType) {
+					var elem_dupexpr = get_dup_func_expression (array_type.element_type, node.source_reference);
+					if (elem_dupexpr == null) {
+						elem_dupexpr = new CCodeConstant ("NULL");
+					}
+					ccall.add_argument (elem_dupexpr);
+				}
 			}
 
 			var ccomma = new CCodeCommaExpression ();
