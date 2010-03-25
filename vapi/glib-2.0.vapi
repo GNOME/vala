@@ -3468,7 +3468,7 @@ namespace GLib {
 
 	[Compact]
 #if GLIB_2_22
-	[CCode (ref_function = "g_ptr_array_ref", unref_function = "g_ptr_array_unref", type_id = "G_TYPE_BYTE_ARRAY")]
+	[CCode (ref_function = "g_ptr_array_ref", unref_function = "g_ptr_array_unref", type_id = "G_TYPE_PTR_ARRAY")]
 #else
 	[CCode (free_function = "g_ptr_array_free")]
 #endif
