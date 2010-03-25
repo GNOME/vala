@@ -23,17 +23,27 @@
 [CCode (lower_case_cprefix = "xcb_", cheader_filename = "xcb/xcb.h")]
 namespace Xcb {
 	[Compact]
-	[CCode (cname = "xcb_connection_t", cprefix = "xcb_", ref_function = "", unref_function = "")]
+	[CCode (cname = "xcb_connection_t", cprefix = "xcb_", ref_function = "", unref_function = "xcb_disconnect")]
 	public class Connection {
-		public void disconnect ();
+		[CCode (cname = "xcb_connect")]
+		public Connection (string? display = null, out int screen = null);
+
 		public void flush ();
 		public uint32 generate_id ();
 		public Setup get_setup ();
+		public GenericEvent wait_for_event ();
+		public int get_file_descriptor ();
+		public VoidCookie create_window (uint8 depth, Window wid, Window parent, int16 x, int16 y, uint16 width, uint16 height, uint16 border_width, uint16 _class, VisualID visual, uint32 value_mask, [CCode (array_length = false)] uint32[]? value_list);
+		public VoidCookie map_window (Window wid);
+		public VoidCookie change_window_attributes (Window wid, uint32 value_mask, [CCode (array_length = false)] uint32[]? value_list);
+		public QueryTreeCookie query_tree (Window wid);
+		public QueryTreeReply query_tree_reply (QueryTreeCookie cookie, out GenericError? e);
 	}
 
 	[Compact]
 	[CCode (cname = "xcb_setup_t", ref_function = "", unref_function = "")]
 	public class Setup {
+		public int roots_length ();
 		public ScreenIterator roots_iterator ();
 	}
 
@@ -50,6 +60,17 @@ namespace Xcb {
 	[CCode (cname = "xcb_generic_event_t", ref_function = "", unref_function = "")]
 	public class GenericEvent {
 		public uint8 response_type;
+	}
+
+	[Compact]
+	[CCode (cname = "xcb_generic_error_t", ref_function = "", unref_function = "")]
+	public class GenericError {
+		public uint8 response_type;
+		public uint8 error_code;
+		public uint16 sequence;
+		public uint32 resource_id;
+		public uint16 minor_code;
+		public uint8 major_code;
 	}
 
 	public const uint8 BUTTON_PRESS;
@@ -158,15 +179,21 @@ namespace Xcb {
 		public Window root;
 		public uint32 white_pixel;
 		public uint32 black_pixel;
+		public uint16 width_in_pixels;
+		public uint16 height_in_pixels;
+		public uint16 width_in_millimeters;
+		public uint16 height_in_millimeters;
 		public VisualID root_visual;
 		public DepthIterator allowed_depths_iterator ();
 	}
 
+	[SimpleType]
 	[CCode (cname = "xcb_screen_iterator_t")]
 	public struct ScreenIterator {
 		public unowned Screen data;
 		public int rem;
-		public int next;
+		public int index;
+		public static void next (ref ScreenIterator iter);
 	}
 
 	[Compact]
@@ -174,6 +201,16 @@ namespace Xcb {
 	public class Depth {
 		public uint8 depth;
 		public VisualTypeIterator visuals_iterator ();
+	}
+
+	[Compact]
+	[CCode (cname = "xcb_query_tree_reply_t", ref_function = "", unref_function = "")]
+	public class QueryTreeReply {
+		public Window root;
+		public Window parent;
+		public uint16 children_len;
+		[CCode (cname = "xcb_query_tree_children", array_length = false)]
+		public Window* children();
 	}
 
 	[CCode (cname = "xcb_depth_iterator_t")]
@@ -192,11 +229,29 @@ namespace Xcb {
 		public void next ();
 	}
 
+	[Deprecated (since = "vala-0.14", replacement = "Xcb.Connection")]
 	public Connection connect (string? display = null, out int screen = null);
+	[Deprecated (since = "vala-0.14", replacement = "Xcb.Connection.create_window")]
 	public VoidCookie create_window (Connection connection, uint8 depth, Window wid, Window parent, int16 x, int16 y, uint16 width, uint16 height, uint16 border_width, uint16 _class, VisualID visual, uint32 value_mask, [CCode (array_length = false)] uint32[] value_list);
+	[Deprecated (since = "vala-0.14", replacement = "Xcb.Connection.map_window")]
 	public VoidCookie map_window (Connection connection, Window wid);
 
+	[SimpleType]
+	[CCode (cname = "xcb_void_cookie_t")]
 	public struct VoidCookie {
+	}
+
+	[SimpleType]
+	[CCode (cname = "xcb_query_tree_cookie_t")]
+	public struct QueryTreeCookie {
+	}
+
+	[CCode (cname = "xcb_rectangle_t")]
+	public struct Rectangle {
+		public int16 x;
+		public int16 y;
+		public uint16 width;
+		public uint16 height;
 	}
 
 	public struct VisualID : uint32 {
@@ -205,11 +260,23 @@ namespace Xcb {
 	public struct Button : uint8 {
 	}
 
-	[CCode (cname = "xcb_drawable_t")]
+	[SimpleType]
+	[IntegerType (rank = 9)]
+	[CCode (cname = "xcb_drawable_t", type_id = "G_TYPE_INT",
+			marshaller_type_name = "INT",
+			get_value_function = "g_value_get_int",
+			set_value_function = "g_value_set_int", default_value = "0",
+			type_signature = "i")]
 	public struct Drawable : uint32 {
 	}
 
-	[CCode (cname = "xcb_window_t")]
+	[SimpleType]
+	[IntegerType (rank = 9)]
+	[CCode (cname = "xcb_window_t", type_id = "G_TYPE_INT",
+			marshaller_type_name = "INT",
+			get_value_function = "g_value_get_int",
+			set_value_function = "g_value_set_int", default_value = "0",
+			type_signature = "i")]
 	public struct Window : Drawable {
 	}
 
