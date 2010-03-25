@@ -160,15 +160,6 @@ namespace Gdk {
 		BILEVEL,
 		FULL
 	}
-	[CCode (cprefix = "GDK_PIXBUF_ERROR_", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
-	public enum PixbufError {
-		CORRUPT_IMAGE,
-		INSUFFICIENT_MEMORY,
-		BAD_OPTION,
-		UNKNOWN_TYPE,
-		UNSUPPORTED_OPERATION,
-		FAILED
-	}
 	[CCode (cprefix = "GDK_PIXBUF_ROTATE_", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public enum PixbufRotation {
 		NONE,
@@ -197,6 +188,15 @@ namespace Gdk {
 		ENCODING_RAW,
 		ENCODING_RLE,
 		ENCODING_MASK
+	}
+	[CCode (cprefix = "GDK_PIXBUF_ERROR_", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
+	public errordomain PixbufError {
+		CORRUPT_IMAGE,
+		INSUFFICIENT_MEMORY,
+		BAD_OPTION,
+		UNKNOWN_TYPE,
+		UNSUPPORTED_OPERATION,
+		FAILED,
 	}
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public delegate void PixbufDestroyNotify ([CCode (array_length = false)] uchar[] pixels);
