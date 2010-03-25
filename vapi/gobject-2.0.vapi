@@ -508,7 +508,7 @@ namespace GLib {
 	public delegate void ClosureNotify (void* data, Closure closure);
 
 	[Compact]
-	[CCode (type_id = "G_TYPE_VALUE_ARRAY", copy_function = "g_value_array_copy")]
+	[CCode (type_id = "G_TYPE_VALUE_ARRAY", copy_function = "g_value_array_copy", free_function = "g_value_array_free")]
 	public class ValueArray {
 		public uint n_values;
 		[CCode (array_length_cname = "n_values", array_length_type = "guint")]
