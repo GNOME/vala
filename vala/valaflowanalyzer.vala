@@ -1001,6 +1001,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		if (after_try_block.get_predecessors ().size > 0) {
 			current_block = after_try_block;
 		} else {
+			stmt.after_try_block_reachable = false;
 			current_block = null;
 			unreachable_reported = false;
 		}

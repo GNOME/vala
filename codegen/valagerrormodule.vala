@@ -94,7 +94,7 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 		var cassign = new CCodeAssignment (get_variable_cexpression ("_inner_error_"), (CCodeExpression) stmt.error_expression.ccodenode);
 		cfrag.append (new CCodeExpressionStatement (cassign));
 
-		head.add_simple_check (stmt, cfrag);
+		head.add_simple_check (stmt, cfrag, true);
 
 		stmt.ccodenode = cfrag;
 
@@ -188,7 +188,7 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 		return false;
 	}
 
-	public override void add_simple_check (CodeNode node, CCodeFragment cfrag) {
+	public override void add_simple_check (CodeNode node, CCodeFragment cfrag, bool always_fails = false) {
 		current_method_inner_error = true;
 
 		var inner_error = get_variable_cexpression ("_inner_error_");
@@ -309,7 +309,7 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 			cerror_handler = uncaught_error_statement (inner_error);
 		}
 
-		if (node is ThrowStatement) {
+		if (always_fails) {
 			// inner_error is always set, avoid unnecessary if statement
 			// eliminates C warnings
 			cfrag.append (cerror_handler);
@@ -364,7 +364,7 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 
 		// check for errors not handled by this try statement
 		// may be handled by outer try statements or propagated
-		add_simple_check (stmt, cfrag);
+		add_simple_check (stmt, cfrag, !stmt.after_try_block_reachable);
 
 		stmt.ccodenode = cfrag;
 	}

@@ -1,6 +1,6 @@
 /* valatrystatement.vala
  *
- * Copyright (C) 2007-2008  Jürg Billeter
+ * Copyright (C) 2007-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -48,6 +48,8 @@ public class Vala.TryStatement : CodeNode, Statement {
 				_finally_body.parent_node = this;
 		}
 	}
+
+	public bool after_try_block_reachable { get; set; default = true; }
 
 	private Block _body;
 	private Block _finally_body;

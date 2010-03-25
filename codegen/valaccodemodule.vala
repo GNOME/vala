@@ -431,7 +431,7 @@ public abstract class Vala.CCodeModule {
 		return next.get_array_size_cexpression (array_expr);
 	}
 
-	public virtual void add_simple_check (CodeNode node, CCodeFragment cfrag) {
-		next.add_simple_check (node, cfrag);
+	public virtual void add_simple_check (CodeNode node, CCodeFragment cfrag, bool always_fails = false) {
+		next.add_simple_check (node, cfrag, always_fails);
 	}
 }
