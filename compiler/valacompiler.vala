@@ -282,6 +282,10 @@ class Vala.Compiler {
 				Report.error (null, "This version of valac only supports GLib 2");
 			}
 
+			for (int i = 16; i <= glib_minor; i += 2) {
+				context.add_define ("GLIB_2_%d".printf (i));
+			}
+
 			if (!nostdpkg) {
 				/* default packages */
 				if (!add_package (context, "glib-2.0")) {
