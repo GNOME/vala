@@ -13,12 +13,12 @@ namespace GLib {
 		public bool get_is_hidden ();
 		public static void set_desktop_env (string desktop_env);
 	}
-	[CCode (cheader_filename = "gio/gunixmounts.h")]
+	[CCode (cheader_filename = "gio/gunixconnection.h")]
 	public class UnixConnection : GLib.SocketConnection {
 		public int receive_fd (GLib.Cancellable cancellable) throws GLib.Error;
 		public bool send_fd (int fd, GLib.Cancellable cancellable) throws GLib.Error;
 	}
-	[CCode (cheader_filename = "gio/gunixmounts.h")]
+	[CCode (cheader_filename = "gio/gunixfdmessage.h")]
 	public class UnixFDMessage : GLib.SocketControlMessage {
 		[CCode (type = "GSocketControlMessage*", has_construct_function = false)]
 		public UnixFDMessage ();
@@ -99,7 +99,7 @@ namespace GLib {
 		public bool close_fd { get; set; }
 		public int fd { get; construct; }
 	}
-	[CCode (cheader_filename = "gio/gunixmounts.h")]
+	[CCode (cheader_filename = "gio/gunixsocketaddress.h")]
 	public class UnixSocketAddress : GLib.SocketAddress, GLib.SocketConnectable {
 		[CCode (type = "GSocketAddress*", has_construct_function = false)]
 		public UnixSocketAddress (string path);
