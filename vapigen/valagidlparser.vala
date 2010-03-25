@@ -381,6 +381,10 @@ public class Vala.GIdlParser : CodeVisitor {
 							foreach (string type_arg in type_args) {
 								param_type.add_type_argument (get_type_from_string (type_arg));
 							}
+						} else if (nv[0] == "no_array_length") {
+							if (eval (nv[1]) == "1") {
+								p.no_array_length = true;
+							}
 						}
 					}
 				}
