@@ -2642,10 +2642,13 @@ namespace GLib {
 	}
 
 	[Compact]
+#if GLIB_2_22
+	[CCode (ref_function = "g_mapped_file_ref", unref_function = "g_mapped_file_unref")]
+#else
 	[CCode (free_function = "g_mapped_file_free")]
+#endif
 	public class MappedFile {
 		public MappedFile (string filename, bool writable) throws FileError;
-		public void free ();
 		public size_t get_length ();
 		public char* get_contents ();
 	}
@@ -3463,7 +3466,11 @@ namespace GLib {
 	/* Pointer Arrays */
 
 	[Compact]
+#if GLIB_2_22
+	[CCode (ref_function = "g_ptr_array_ref", unref_function = "g_ptr_array_unref")]
+#else
 	[CCode (free_function = "g_ptr_array_free")]
+#endif
 	public class PtrArray {
 		public PtrArray ();
 		[CCode (cname = "g_ptr_array_sized_new")]
@@ -3486,7 +3493,11 @@ namespace GLib {
 	/* Byte Arrays */
 
 	[Compact]
+#if GLIB_2_22
+	[CCode (cprefix = "g_byte_array_", ref_function = "g_byte_array_ref", unref_function = "g_byte_array_unref")]
+#else
 	[CCode (cprefix = "g_byte_array_", free_function = "g_byte_array_free")]
+#endif
 	public class ByteArray {
 		public ByteArray ();
 		[CCode (cname = "g_byte_array_sized_new")]
@@ -3550,6 +3561,11 @@ namespace GLib {
 	/* GArray */
 
 	[Compact]
+#if GLIB_2_22
+	[CCode (ref_function = "g_array_ref", unref_function = "g_array_unref")]
+#else
+	[CCode (free_function = "g_array_free")]
+#endif
 	public class Array<G> {
 		[CCode (cname = "len")]
 		public uint length;
