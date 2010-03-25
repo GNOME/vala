@@ -67,9 +67,14 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			head = new CCodeDelegateModule (this, head);
 		}
 
+		head = add_modules (head);
 		head.emit (context);
 
 		head = null;
+	}
+
+	public virtual CCodeModule add_modules (CCodeModule head) {
+		return head;
 	}
 
 	public override void visit_source_file (SourceFile source_file) {
