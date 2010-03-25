@@ -199,7 +199,7 @@ namespace Gdk {
 		ENCODING_MASK
 	}
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
-	public delegate void PixbufDestroyNotify (uchar[] pixels);
+	public delegate void PixbufDestroyNotify ([CCode (array_length = false)] uchar[] pixels);
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public delegate bool PixbufSaveFunc (string buf, size_t count, GLib.Error error);
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
