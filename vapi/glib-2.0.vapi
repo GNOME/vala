@@ -1975,6 +1975,7 @@ namespace GLib {
 		YEAR
 	}
 
+	[CCode (type_id = "G_TYPE_DATE")]
 	public struct Date {
 		public void clear (uint n_dates = 1);
 		public void set_day (DateDay day);
@@ -2819,7 +2820,7 @@ namespace GLib {
 	}
 
 	[Compact]
-	[CCode (ref_function = "g_regex_ref", unref_function = "g_regex_unref")]
+	[CCode (ref_function = "g_regex_ref", unref_function = "g_regex_unref", type_id = "G_TYPE_REGEX")]
 	public class Regex {
 		public Regex (string pattern, RegexCompileFlags compile_options = 0, RegexMatchFlags match_options = 0) throws RegexError;
 		public unowned string get_pattern ();
@@ -3467,7 +3468,7 @@ namespace GLib {
 
 	[Compact]
 #if GLIB_2_22
-	[CCode (ref_function = "g_ptr_array_ref", unref_function = "g_ptr_array_unref")]
+	[CCode (ref_function = "g_ptr_array_ref", unref_function = "g_ptr_array_unref", type_id = "G_TYPE_BYTE_ARRAY")]
 #else
 	[CCode (free_function = "g_ptr_array_free")]
 #endif
@@ -3494,7 +3495,7 @@ namespace GLib {
 
 	[Compact]
 #if GLIB_2_22
-	[CCode (cprefix = "g_byte_array_", ref_function = "g_byte_array_ref", unref_function = "g_byte_array_unref")]
+	[CCode (cprefix = "g_byte_array_", ref_function = "g_byte_array_ref", unref_function = "g_byte_array_unref", type_id = "G_TYPE_BYTE_ARRAY")]
 #else
 	[CCode (cprefix = "g_byte_array_", free_function = "g_byte_array_free")]
 #endif
@@ -3562,7 +3563,7 @@ namespace GLib {
 
 	[Compact]
 #if GLIB_2_22
-	[CCode (ref_function = "g_array_ref", unref_function = "g_array_unref")]
+	[CCode (ref_function = "g_array_ref", unref_function = "g_array_unref", type_id = "G_TYPE_ARRAY")]
 #else
 	[CCode (free_function = "g_array_free")]
 #endif
@@ -3683,7 +3684,7 @@ namespace GLib {
 	}
 
 	[Compact]
-	[CCode (copy_function = "g_variant_type_copy", free_function = "g_variant_type_free")]
+	[CCode (copy_function = "g_variant_type_copy", free_function = "g_variant_type_free", type_id = "G_TYPE_VARIANT_TYPE")]
 	public class VariantType {
 		[CCode (cname = "G_VARIANT_TYPE_BOOLEAN")]
 		public static VariantType BOOLEAN;
