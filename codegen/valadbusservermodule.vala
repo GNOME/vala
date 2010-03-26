@@ -432,6 +432,11 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		foreach (DataType error_type in error_types) {
 			var edomain = ((ErrorType) error_type).error_domain;
 
+			if (edomain == null) {
+				Report.error (error_type.source_reference, "Generic errors cannot be serialized over DBus");
+				continue;
+			}
+
 			var edomain_dbus_name = get_dbus_name (edomain);
 			if (edomain_dbus_name == null) {
 				Report.error (edomain.source_reference, "Errordomain must have a DBus.name annotation to be serialized over DBus");
