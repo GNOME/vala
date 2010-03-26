@@ -4991,7 +4991,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			ccall.add_argument (new CCodeIdentifier (expression_type.get_type_id ()));
 			ccomma.append_expression (ccall);
 
-			if (expression_type.value_owned) {
+			if (requires_destroy (expression_type)) {
 				ccall = new CCodeFunctionCall (get_value_taker_function (expression_type));
 			} else {
 				ccall = new CCodeFunctionCall (get_value_setter_function (expression_type));

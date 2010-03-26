@@ -48,9 +48,17 @@ void test_nullable_value_array () {
 	}
 }
 
+void take_value (Value v) {
+}
+
+bool make_bool () {
+	return true;
+}
+
 void main () {
 	test_value ();
 	test_value_array ();
 	test_nullable_value ();
 	test_nullable_value_array ();
+	take_value (make_bool ());
 }
