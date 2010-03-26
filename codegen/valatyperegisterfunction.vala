@@ -36,7 +36,7 @@ public abstract class Vala.TypeRegisterFunction {
 	 * Constructs the C function from the specified type.
 	 */
 	public void init_from_type (bool plugin) {
-		bool use_thread_safe = context.require_glib_version (2, 14);
+		bool use_thread_safe = context.require_glib_version (2, 14) && !plugin;
 
 		bool fundamental = false;
 		Class cl = get_type_declaration () as Class;
