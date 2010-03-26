@@ -315,6 +315,7 @@ TESTS = \
 	annotations/deprecated.vala \
 	annotations/description.vala \
 	annotations/noaccessormethod.test \
+	parser/switch-statement.vala \
 	$(NULL)
 
 NON_NULL_TESTS = \

@@ -1907,6 +1907,10 @@ public class Vala.Parser : CodeVisitor {
 			do {
 				if (accept (TokenType.CASE)) {
 					section.add_label (new SwitchLabel (parse_expression (), get_src (begin)));
+					while (current () == TokenType.COMMA) {
+						expect (TokenType.COMMA);
+						section.add_label (new SwitchLabel (parse_expression (), get_src (begin)));
+					}
 				} else {
 					expect (TokenType.DEFAULT);
 					section.add_label (new SwitchLabel.with_default (get_src (begin)));
