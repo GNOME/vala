@@ -420,6 +420,7 @@
 			</method>
 			<property name="buffer-time" type="gint64" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="can-activate-pull" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="drift-tolerance" type="gint64" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="latency-time" type="gint64" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="provide-clock" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="slave-method" type="GstBaseAudioSinkSlaveMethod" readable="1" writable="1" construct="0" construct-only="0"/>

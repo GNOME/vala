@@ -32,10 +32,29 @@
 				<parameter name="prob" type="GstTypeFindProbability*"/>
 			</parameters>
 		</function>
+		<function name="type_find_helper_get_range_ext" symbol="gst_type_find_helper_get_range_ext">
+			<return-type type="GstCaps*"/>
+			<parameters>
+				<parameter name="obj" type="GstObject*"/>
+				<parameter name="func" type="GstTypeFindHelperGetRangeFunction"/>
+				<parameter name="size" type="guint64"/>
+				<parameter name="extension" type="gchar*"/>
+				<parameter name="prob" type="GstTypeFindProbability*"/>
+			</parameters>
+		</function>
 		<callback name="GstCollectDataDestroyNotify">
 			<return-type type="void"/>
 			<parameters>
 				<parameter name="data" type="GstCollectData*"/>
+			</parameters>
+		</callback>
+		<callback name="GstCollectPadsClipFunction">
+			<return-type type="GstBuffer*"/>
+			<parameters>
+				<parameter name="pads" type="GstCollectPads*"/>
+				<parameter name="data" type="GstCollectData*"/>
+				<parameter name="buffer" type="GstBuffer*"/>
+				<parameter name="user_data" type="gpointer"/>
 			</parameters>
 		</callback>
 		<callback name="GstCollectPadsFunction">
@@ -52,6 +71,20 @@
 				<parameter name="visible" type="guint"/>
 				<parameter name="bytes" type="guint"/>
 				<parameter name="time" type="guint64"/>
+				<parameter name="checkdata" type="gpointer"/>
+			</parameters>
+		</callback>
+		<callback name="GstDataQueueEmptyCallback">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="queue" type="GstDataQueue*"/>
+				<parameter name="checkdata" type="gpointer"/>
+			</parameters>
+		</callback>
+		<callback name="GstDataQueueFullCallback">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="queue" type="GstDataQueue*"/>
 				<parameter name="checkdata" type="gpointer"/>
 			</parameters>
 		</callback>
@@ -110,6 +143,12 @@
 				</parameters>
 			</method>
 			<method name="get_remaining" symbol="gst_bit_reader_get_remaining">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="reader" type="GstBitReader*"/>
+				</parameters>
+			</method>
+			<method name="get_size" symbol="gst_bit_reader_get_size">
 				<return-type type="guint"/>
 				<parameters>
 					<parameter name="reader" type="GstBitReader*"/>
@@ -342,6 +381,12 @@
 				</parameters>
 			</method>
 			<method name="get_remaining" symbol="gst_byte_reader_get_remaining">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+				</parameters>
+			</method>
+			<method name="get_size" symbol="gst_byte_reader_get_size">
 				<return-type type="guint"/>
 				<parameters>
 					<parameter name="reader" type="GstByteReader*"/>
@@ -659,6 +704,308 @@
 			<field name="data" type="guint8*"/>
 			<field name="size" type="guint"/>
 			<field name="byte" type="guint"/>
+		</struct>
+		<struct name="GstByteWriter">
+			<method name="ensure_free_space" symbol="gst_byte_writer_ensure_free_space">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+					<parameter name="size" type="guint"/>
+				</parameters>
+			</method>
+			<method name="fill" symbol="gst_byte_writer_fill">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+					<parameter name="value" type="guint8"/>
+					<parameter name="size" type="guint"/>
+				</parameters>
+			</method>
+			<method name="free" symbol="gst_byte_writer_free">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+				</parameters>
+			</method>
+			<method name="free_and_get_buffer" symbol="gst_byte_writer_free_and_get_buffer">
+				<return-type type="GstBuffer*"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+				</parameters>
+			</method>
+			<method name="free_and_get_data" symbol="gst_byte_writer_free_and_get_data">
+				<return-type type="guint8*"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+				</parameters>
+			</method>
+			<method name="get_remaining" symbol="gst_byte_writer_get_remaining">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+				</parameters>
+			</method>
+			<method name="init" symbol="gst_byte_writer_init">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+				</parameters>
+			</method>
+			<method name="init_with_buffer" symbol="gst_byte_writer_init_with_buffer">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+					<parameter name="buffer" type="GstBuffer*"/>
+					<parameter name="initialized" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="init_with_data" symbol="gst_byte_writer_init_with_data">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+					<parameter name="data" type="guint8*"/>
+					<parameter name="size" type="guint"/>
+					<parameter name="initialized" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="init_with_size" symbol="gst_byte_writer_init_with_size">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+					<parameter name="size" type="guint"/>
+					<parameter name="fixed" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="new" symbol="gst_byte_writer_new">
+				<return-type type="GstByteWriter*"/>
+			</method>
+			<method name="new_with_buffer" symbol="gst_byte_writer_new_with_buffer">
+				<return-type type="GstByteWriter*"/>
+				<parameters>
+					<parameter name="buffer" type="GstBuffer*"/>
+					<parameter name="initialized" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="new_with_data" symbol="gst_byte_writer_new_with_data">
+				<return-type type="GstByteWriter*"/>
+				<parameters>
+					<parameter name="data" type="guint8*"/>
+					<parameter name="size" type="guint"/>
+					<parameter name="initialized" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="new_with_size" symbol="gst_byte_writer_new_with_size">
+				<return-type type="GstByteWriter*"/>
+				<parameters>
+					<parameter name="size" type="guint"/>
+					<parameter name="fixed" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="put_data" symbol="gst_byte_writer_put_data">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+					<parameter name="data" type="guint8*"/>
+					<parameter name="size" type="guint"/>
+				</parameters>
+			</method>
+			<method name="put_float32_be" symbol="gst_byte_writer_put_float32_be">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+					<parameter name="val" type="gfloat"/>
+				</parameters>
+			</method>
+			<method name="put_float32_le" symbol="gst_byte_writer_put_float32_le">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+					<parameter name="val" type="gfloat"/>
+				</parameters>
+			</method>
+			<method name="put_float64_be" symbol="gst_byte_writer_put_float64_be">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+					<parameter name="val" type="gdouble"/>
+				</parameters>
+			</method>
+			<method name="put_float64_le" symbol="gst_byte_writer_put_float64_le">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+					<parameter name="val" type="gdouble"/>
+				</parameters>
+			</method>
+			<method name="put_int16_be" symbol="gst_byte_writer_put_int16_be">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+					<parameter name="val" type="gint16"/>
+				</parameters>
+			</method>
+			<method name="put_int16_le" symbol="gst_byte_writer_put_int16_le">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+					<parameter name="val" type="gint16"/>
+				</parameters>
+			</method>
+			<method name="put_int24_be" symbol="gst_byte_writer_put_int24_be">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+					<parameter name="val" type="gint32"/>
+				</parameters>
+			</method>
+			<method name="put_int24_le" symbol="gst_byte_writer_put_int24_le">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+					<parameter name="val" type="gint32"/>
+				</parameters>
+			</method>
+			<method name="put_int32_be" symbol="gst_byte_writer_put_int32_be">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+					<parameter name="val" type="gint32"/>
+				</parameters>
+			</method>
+			<method name="put_int32_le" symbol="gst_byte_writer_put_int32_le">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+					<parameter name="val" type="gint32"/>
+				</parameters>
+			</method>
+			<method name="put_int64_be" symbol="gst_byte_writer_put_int64_be">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+					<parameter name="val" type="gint64"/>
+				</parameters>
+			</method>
+			<method name="put_int64_le" symbol="gst_byte_writer_put_int64_le">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+					<parameter name="val" type="gint64"/>
+				</parameters>
+			</method>
+			<method name="put_int8" symbol="gst_byte_writer_put_int8">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+					<parameter name="val" type="gint8"/>
+				</parameters>
+			</method>
+			<method name="put_string_utf16" symbol="gst_byte_writer_put_string_utf16">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+					<parameter name="data" type="guint16*"/>
+				</parameters>
+			</method>
+			<method name="put_string_utf32" symbol="gst_byte_writer_put_string_utf32">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+					<parameter name="data" type="guint32*"/>
+				</parameters>
+			</method>
+			<method name="put_string_utf8" symbol="gst_byte_writer_put_string_utf8">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+					<parameter name="data" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="put_uint16_be" symbol="gst_byte_writer_put_uint16_be">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+					<parameter name="val" type="guint16"/>
+				</parameters>
+			</method>
+			<method name="put_uint16_le" symbol="gst_byte_writer_put_uint16_le">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+					<parameter name="val" type="guint16"/>
+				</parameters>
+			</method>
+			<method name="put_uint24_be" symbol="gst_byte_writer_put_uint24_be">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+					<parameter name="val" type="guint32"/>
+				</parameters>
+			</method>
+			<method name="put_uint24_le" symbol="gst_byte_writer_put_uint24_le">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+					<parameter name="val" type="guint32"/>
+				</parameters>
+			</method>
+			<method name="put_uint32_be" symbol="gst_byte_writer_put_uint32_be">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+					<parameter name="val" type="guint32"/>
+				</parameters>
+			</method>
+			<method name="put_uint32_le" symbol="gst_byte_writer_put_uint32_le">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+					<parameter name="val" type="guint32"/>
+				</parameters>
+			</method>
+			<method name="put_uint64_be" symbol="gst_byte_writer_put_uint64_be">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+					<parameter name="val" type="guint64"/>
+				</parameters>
+			</method>
+			<method name="put_uint64_le" symbol="gst_byte_writer_put_uint64_le">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+					<parameter name="val" type="guint64"/>
+				</parameters>
+			</method>
+			<method name="put_uint8" symbol="gst_byte_writer_put_uint8">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+					<parameter name="val" type="guint8"/>
+				</parameters>
+			</method>
+			<method name="reset" symbol="gst_byte_writer_reset">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+				</parameters>
+			</method>
+			<method name="reset_and_get_buffer" symbol="gst_byte_writer_reset_and_get_buffer">
+				<return-type type="GstBuffer*"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+				</parameters>
+			</method>
+			<method name="reset_and_get_data" symbol="gst_byte_writer_reset_and_get_data">
+				<return-type type="guint8*"/>
+				<parameters>
+					<parameter name="writer" type="GstByteWriter*"/>
+				</parameters>
+			</method>
+			<field name="parent" type="GstByteReader"/>
+			<field name="alloc_size" type="guint"/>
+			<field name="fixed" type="gboolean"/>
+			<field name="owned" type="gboolean"/>
 		</struct>
 		<struct name="GstCollectData">
 			<field name="collect" type="GstCollectPads*"/>
@@ -1073,6 +1420,15 @@
 					<parameter name="src" type="GstBaseSrc*"/>
 				</parameters>
 			</method>
+			<constructor name="new_seamless_segment" symbol="gst_base_src_new_seamless_segment">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="src" type="GstBaseSrc*"/>
+					<parameter name="start" type="gint64"/>
+					<parameter name="stop" type="gint64"/>
+					<parameter name="position" type="gint64"/>
+				</parameters>
+			</constructor>
 			<method name="query_latency" symbol="gst_base_src_query_latency">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -1545,6 +1901,14 @@
 					<parameter name="pad" type="GstPad*"/>
 				</parameters>
 			</method>
+			<method name="set_clip_function" symbol="gst_collect_pads_set_clip_function">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="pads" type="GstCollectPads*"/>
+					<parameter name="clipfunc" type="GstCollectPadsClipFunction"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
 			<method name="set_flushing" symbol="gst_collect_pads_set_flushing">
 				<return-type type="void"/>
 				<parameters>
@@ -1637,6 +2001,15 @@
 					<parameter name="checkdata" type="gpointer"/>
 				</parameters>
 			</constructor>
+			<constructor name="new_full" symbol="gst_data_queue_new_full">
+				<return-type type="GstDataQueue*"/>
+				<parameters>
+					<parameter name="checkfull" type="GstDataQueueCheckFullFunction"/>
+					<parameter name="fullcallback" type="GstDataQueueFullCallback"/>
+					<parameter name="emptycallback" type="GstDataQueueEmptyCallback"/>
+					<parameter name="checkdata" type="gpointer"/>
+				</parameters>
+			</constructor>
 			<method name="pop" symbol="gst_data_queue_pop">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -1681,6 +2054,8 @@
 			<field name="item_add" type="GCond*"/>
 			<field name="item_del" type="GCond*"/>
 			<field name="flushing" type="gboolean"/>
+			<field name="fullcallback" type="GstDataQueueFullCallback"/>
+			<field name="emptycallback" type="GstDataQueueEmptyCallback"/>
 		</object>
 		<object name="GstPushSrc" parent="GstBaseSrc" type-name="GstPushSrc" get-type="gst_push_src_get_type">
 			<vfunc name="create">

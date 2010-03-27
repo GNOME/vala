@@ -27,6 +27,12 @@
 				<parameter name="method" type="gchar*"/>
 			</parameters>
 		</function>
+		<function name="rtsp_header_allow_multiple" symbol="gst_rtsp_header_allow_multiple">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="field" type="GstRTSPHeaderField"/>
+			</parameters>
+		</function>
 		<function name="rtsp_header_as_text" symbol="gst_rtsp_header_as_text">
 			<return-type type="gchar*"/>
 			<parameters>
@@ -94,6 +100,16 @@
 				<return-type type="GstRTSPResult"/>
 				<parameters>
 					<parameter name="url" type="GstRTSPUrl*"/>
+					<parameter name="conn" type="GstRTSPConnection**"/>
+				</parameters>
+			</method>
+			<method name="create_from_fd" symbol="gst_rtsp_connection_create_from_fd">
+				<return-type type="GstRTSPResult"/>
+				<parameters>
+					<parameter name="fd" type="gint"/>
+					<parameter name="ip" type="gchar*"/>
+					<parameter name="port" type="guint16"/>
+					<parameter name="initial_buffer" type="gchar*"/>
 					<parameter name="conn" type="GstRTSPConnection**"/>
 				</parameters>
 			</method>
@@ -215,6 +231,13 @@
 					<parameter name="conn" type="GstRTSPConnection*"/>
 					<parameter name="param" type="gchar*"/>
 					<parameter name="value" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_http_mode" symbol="gst_rtsp_connection_set_http_mode">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="conn" type="GstRTSPConnection*"/>
+					<parameter name="enable" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="set_ip" symbol="gst_rtsp_connection_set_ip">
@@ -571,10 +594,27 @@
 					<parameter name="watch" type="GstRTSPWatch*"/>
 				</parameters>
 			</method>
+			<method name="send_message" symbol="gst_rtsp_watch_send_message">
+				<return-type type="GstRTSPResult"/>
+				<parameters>
+					<parameter name="watch" type="GstRTSPWatch*"/>
+					<parameter name="message" type="GstRTSPMessage*"/>
+					<parameter name="id" type="guint*"/>
+				</parameters>
+			</method>
 			<method name="unref" symbol="gst_rtsp_watch_unref">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="watch" type="GstRTSPWatch*"/>
+				</parameters>
+			</method>
+			<method name="write_data" symbol="gst_rtsp_watch_write_data">
+				<return-type type="GstRTSPResult"/>
+				<parameters>
+					<parameter name="watch" type="GstRTSPWatch*"/>
+					<parameter name="data" type="guint8*"/>
+					<parameter name="size" type="guint"/>
+					<parameter name="id" type="guint*"/>
 				</parameters>
 			</method>
 		</struct>
@@ -585,6 +625,7 @@
 			<field name="error" type="GCallback"/>
 			<field name="tunnel_start" type="GCallback"/>
 			<field name="tunnel_complete" type="GCallback"/>
+			<field name="error_full" type="GCallback"/>
 			<field name="_gst_reserved" type="gpointer[]"/>
 		</struct>
 		<boxed name="GstRTSPUrl" type-name="GstRTSPUrl" get-type="gst_rtsp_url_get_type">
@@ -723,6 +764,12 @@
 			<member name="GST_RTSP_HDR_X_RTP_INFO" value="73"/>
 			<member name="GST_RTSP_HDR_X_STARTUPPROFILE" value="74"/>
 			<member name="GST_RTSP_HDR_TIMESTAMP" value="75"/>
+			<member name="GST_RTSP_HDR_AUTHENTICATION_INFO" value="76"/>
+			<member name="GST_RTSP_HDR_HOST" value="77"/>
+			<member name="GST_RTSP_HDR_PRAGMA" value="78"/>
+			<member name="GST_RTSP_HDR_X_SERVER_IP_ADDRESS" value="79"/>
+			<member name="GST_RTSP_HDR_X_SESSIONCOOKIE" value="80"/>
+			<member name="GST_RTSP_HDR_LAST" value="81"/>
 		</enum>
 		<enum name="GstRTSPLowerTrans">
 			<member name="GST_RTSP_LOWER_TRANS_UNKNOWN" value="0"/>
@@ -735,7 +782,9 @@
 			<member name="GST_RTSP_MESSAGE_INVALID" value="0"/>
 			<member name="GST_RTSP_MESSAGE_REQUEST" value="1"/>
 			<member name="GST_RTSP_MESSAGE_RESPONSE" value="2"/>
-			<member name="GST_RTSP_MESSAGE_DATA" value="3"/>
+			<member name="GST_RTSP_MESSAGE_HTTP_REQUEST" value="3"/>
+			<member name="GST_RTSP_MESSAGE_HTTP_RESPONSE" value="4"/>
+			<member name="GST_RTSP_MESSAGE_DATA" value="5"/>
 		</enum>
 		<enum name="GstRTSPProfile">
 			<member name="GST_RTSP_PROFILE_UNKNOWN" value="0"/>
@@ -837,6 +886,7 @@
 		<enum name="GstRTSPVersion" type-name="GstRTSPVersion" get-type="gst_rtsp_version_get_type">
 			<member name="GST_RTSP_VERSION_INVALID" value="0"/>
 			<member name="GST_RTSP_VERSION_1_0" value="16"/>
+			<member name="GST_RTSP_VERSION_1_1" value="17"/>
 		</enum>
 		<flags name="GstRTSPEvent" type-name="GstRTSPEvent" get-type="gst_rtsp_event_get_type">
 			<member name="GST_RTSP_EV_READ" value="1"/>
@@ -855,6 +905,8 @@
 			<member name="GST_RTSP_SETUP" value="256"/>
 			<member name="GST_RTSP_SET_PARAMETER" value="512"/>
 			<member name="GST_RTSP_TEARDOWN" value="1024"/>
+			<member name="GST_RTSP_GET" value="2048"/>
+			<member name="GST_RTSP_POST" value="4096"/>
 		</flags>
 		<interface name="GstRTSPExtension" type-name="GstRTSPExtension" get-type="gst_rtsp_extension_get_type">
 			<method name="after_send" symbol="gst_rtsp_extension_after_send">

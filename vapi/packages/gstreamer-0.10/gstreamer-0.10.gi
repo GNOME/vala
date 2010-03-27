@@ -8988,7 +8988,7 @@
 		<constant name="GST_VALUE_LESS_THAN" type="int" value="-1"/>
 		<constant name="GST_VALUE_UNORDERED" type="int" value="2"/>
 		<constant name="GST_VERSION_MAJOR" type="int" value="0"/>
-		<constant name="GST_VERSION_MICRO" type="int" value="26"/>
+		<constant name="GST_VERSION_MICRO" type="int" value="28"/>
 		<constant name="GST_VERSION_MINOR" type="int" value="10"/>
 		<constant name="GST_VERSION_NANO" type="int" value="0"/>
 	</namespace>

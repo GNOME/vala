@@ -28,6 +28,33 @@
 				<parameter name="vorbis_tag" type="gchar*"/>
 			</parameters>
 		</function>
+		<function name="tag_get_language_code_iso_639_1" symbol="gst_tag_get_language_code_iso_639_1">
+			<return-type type="gchar*"/>
+			<parameters>
+				<parameter name="lang_code" type="gchar*"/>
+			</parameters>
+		</function>
+		<function name="tag_get_language_code_iso_639_2B" symbol="gst_tag_get_language_code_iso_639_2B">
+			<return-type type="gchar*"/>
+			<parameters>
+				<parameter name="lang_code" type="gchar*"/>
+			</parameters>
+		</function>
+		<function name="tag_get_language_code_iso_639_2T" symbol="gst_tag_get_language_code_iso_639_2T">
+			<return-type type="gchar*"/>
+			<parameters>
+				<parameter name="lang_code" type="gchar*"/>
+			</parameters>
+		</function>
+		<function name="tag_get_language_codes" symbol="gst_tag_get_language_codes">
+			<return-type type="gchar**"/>
+		</function>
+		<function name="tag_get_language_name" symbol="gst_tag_get_language_name">
+			<return-type type="gchar*"/>
+			<parameters>
+				<parameter name="language_code" type="gchar*"/>
+			</parameters>
+		</function>
 		<function name="tag_id3_genre_count" symbol="gst_tag_id3_genre_count">
 			<return-type type="guint"/>
 		</function>

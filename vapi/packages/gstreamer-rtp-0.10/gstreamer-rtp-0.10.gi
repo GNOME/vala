@@ -67,6 +67,18 @@
 				<parameter name="ntptime" type="guint64"/>
 			</parameters>
 		</function>
+		<function name="rtcp_sdes_name_to_type" symbol="gst_rtcp_sdes_name_to_type">
+			<return-type type="GstRTCPSDESType"/>
+			<parameters>
+				<parameter name="name" type="gchar*"/>
+			</parameters>
+		</function>
+		<function name="rtcp_sdes_type_to_name" symbol="gst_rtcp_sdes_type_to_name">
+			<return-type type="gchar*"/>
+			<parameters>
+				<parameter name="type" type="GstRTCPSDESType"/>
+			</parameters>
+		</function>
 		<function name="rtcp_unix_to_ntp" symbol="gst_rtcp_unix_to_ntp">
 			<return-type type="guint64"/>
 			<parameters>
@@ -784,6 +796,14 @@
 			<member name="GST_RTP_PAYLOAD_H263" value="34"/>
 		</enum>
 		<object name="GstBaseRTPAudioPayload" parent="GstBaseRTPPayload" type-name="GstBaseRTPAudioPayload" get-type="gst_base_rtp_audio_payload_get_type">
+			<method name="flush" symbol="gst_base_rtp_audio_payload_flush">
+				<return-type type="GstFlowReturn"/>
+				<parameters>
+					<parameter name="baseaudiopayload" type="GstBaseRTPAudioPayload*"/>
+					<parameter name="payload_len" type="guint"/>
+					<parameter name="timestamp" type="GstClockTime"/>
+				</parameters>
+			</method>
 			<method name="get_adapter" symbol="gst_base_rtp_audio_payload_get_adapter">
 				<return-type type="GstAdapter*"/>
 				<parameters>
@@ -833,6 +853,7 @@
 					<parameter name="sample_size" type="gint"/>
 				</parameters>
 			</method>
+			<property name="buffer-list" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<field name="base_ts" type="GstClockTime"/>
 			<field name="frame_size" type="gint"/>
 			<field name="frame_duration" type="gint"/>
@@ -945,6 +966,7 @@
 			<property name="max-ptime" type="gint64" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="min-ptime" type="gint64" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="mtu" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="perfect-rtptime" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="pt" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="seqnum" type="guint" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="seqnum-offset" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -1001,6 +1023,7 @@
 			<field name="mtu" type="guint"/>
 			<field name="segment" type="GstSegment"/>
 			<field name="min_ptime" type="guint64"/>
+			<field name="abidata" type="gpointer"/>
 		</object>
 		<constant name="GST_RTCP_MAX_BYE_SSRC_COUNT" type="int" value="31"/>
 		<constant name="GST_RTCP_MAX_RB_COUNT" type="int" value="31"/>

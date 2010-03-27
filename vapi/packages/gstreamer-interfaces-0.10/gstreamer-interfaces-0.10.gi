@@ -1,263 +1,9 @@
 <?xml version="1.0"?>
 <api version="1.0">
 	<namespace name="Gst">
-		<function name="colour_tone_mode_get_type" symbol="gst_colour_tone_mode_get_type">
-			<return-type type="GType"/>
-		</function>
-		<function name="flash_mode_get_type" symbol="gst_flash_mode_get_type">
-			<return-type type="GType"/>
-		</function>
-		<function name="focus_status_get_type" symbol="gst_focus_status_get_type">
-			<return-type type="GType"/>
-		</function>
-		<function name="photo_caps_get_type" symbol="gst_photo_caps_get_type">
-			<return-type type="GType"/>
-		</function>
-		<function name="photo_shake_risk_get_type" symbol="gst_photo_shake_risk_get_type">
-			<return-type type="GType"/>
-		</function>
-		<function name="scene_mode_get_type" symbol="gst_scene_mode_get_type">
-			<return-type type="GType"/>
-		</function>
-		<function name="white_balance_mode_get_type" symbol="gst_white_balance_mode_get_type">
-			<return-type type="GType"/>
-		</function>
-		<callback name="GstPhotoCapturePrepared">
-			<return-type type="void"/>
-			<parameters>
-				<parameter name="data" type="gpointer"/>
-				<parameter name="configured_caps" type="GstCaps*"/>
-			</parameters>
-		</callback>
-		<struct name="GstPhotoSettings">
-			<field name="wb_mode" type="GstWhiteBalanceMode"/>
-			<field name="tone_mode" type="GstColourToneMode"/>
-			<field name="scene_mode" type="GstSceneMode"/>
-			<field name="flash_mode" type="GstFlashMode"/>
-			<field name="exposure" type="guint32"/>
-			<field name="aperture" type="guint"/>
-			<field name="ev_compensation" type="gfloat"/>
-			<field name="iso_speed" type="guint"/>
-			<field name="zoom" type="gfloat"/>
-		</struct>
-		<struct name="GstPhotography">
-			<method name="get_aperture" symbol="gst_photography_get_aperture">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="photo" type="GstPhotography*"/>
-					<parameter name="aperture" type="guint*"/>
-				</parameters>
-			</method>
-			<method name="get_capabilities" symbol="gst_photography_get_capabilities">
-				<return-type type="GstPhotoCaps"/>
-				<parameters>
-					<parameter name="photo" type="GstPhotography*"/>
-				</parameters>
-			</method>
-			<method name="get_colour_tone_mode" symbol="gst_photography_get_colour_tone_mode">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="photo" type="GstPhotography*"/>
-					<parameter name="tone_mode" type="GstColourToneMode*"/>
-				</parameters>
-			</method>
-			<method name="get_config" symbol="gst_photography_get_config">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="photo" type="GstPhotography*"/>
-					<parameter name="config" type="GstPhotoSettings*"/>
-				</parameters>
-			</method>
-			<method name="get_ev_compensation" symbol="gst_photography_get_ev_compensation">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="photo" type="GstPhotography*"/>
-					<parameter name="ev_comp" type="gfloat*"/>
-				</parameters>
-			</method>
-			<method name="get_exposure" symbol="gst_photography_get_exposure">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="photo" type="GstPhotography*"/>
-					<parameter name="exposure" type="guint32*"/>
-				</parameters>
-			</method>
-			<method name="get_flash_mode" symbol="gst_photography_get_flash_mode">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="photo" type="GstPhotography*"/>
-					<parameter name="flash_mode" type="GstFlashMode*"/>
-				</parameters>
-			</method>
-			<method name="get_iso_speed" symbol="gst_photography_get_iso_speed">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="photo" type="GstPhotography*"/>
-					<parameter name="iso_speed" type="guint*"/>
-				</parameters>
-			</method>
-			<method name="get_scene_mode" symbol="gst_photography_get_scene_mode">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="photo" type="GstPhotography*"/>
-					<parameter name="scene_mode" type="GstSceneMode*"/>
-				</parameters>
-			</method>
-			<method name="get_white_balance_mode" symbol="gst_photography_get_white_balance_mode">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="photo" type="GstPhotography*"/>
-					<parameter name="wb_mode" type="GstWhiteBalanceMode*"/>
-				</parameters>
-			</method>
-			<method name="get_zoom" symbol="gst_photography_get_zoom">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="photo" type="GstPhotography*"/>
-					<parameter name="zoom" type="gfloat*"/>
-				</parameters>
-			</method>
-			<method name="prepare_for_capture" symbol="gst_photography_prepare_for_capture">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="photo" type="GstPhotography*"/>
-					<parameter name="func" type="GstPhotoCapturePrepared"/>
-					<parameter name="capture_caps" type="GstCaps*"/>
-					<parameter name="user_data" type="gpointer"/>
-				</parameters>
-			</method>
-			<method name="set_aperture" symbol="gst_photography_set_aperture">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="photo" type="GstPhotography*"/>
-					<parameter name="aperture" type="guint"/>
-				</parameters>
-			</method>
-			<method name="set_autofocus" symbol="gst_photography_set_autofocus">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="photo" type="GstPhotography*"/>
-					<parameter name="on" type="gboolean"/>
-				</parameters>
-			</method>
-			<method name="set_colour_tone_mode" symbol="gst_photography_set_colour_tone_mode">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="photo" type="GstPhotography*"/>
-					<parameter name="tone_mode" type="GstColourToneMode"/>
-				</parameters>
-			</method>
-			<method name="set_config" symbol="gst_photography_set_config">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="photo" type="GstPhotography*"/>
-					<parameter name="config" type="GstPhotoSettings*"/>
-				</parameters>
-			</method>
-			<method name="set_ev_compensation" symbol="gst_photography_set_ev_compensation">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="photo" type="GstPhotography*"/>
-					<parameter name="ev_comp" type="gfloat"/>
-				</parameters>
-			</method>
-			<method name="set_exposure" symbol="gst_photography_set_exposure">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="photo" type="GstPhotography*"/>
-					<parameter name="exposure" type="guint"/>
-				</parameters>
-			</method>
-			<method name="set_flash_mode" symbol="gst_photography_set_flash_mode">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="photo" type="GstPhotography*"/>
-					<parameter name="flash_mode" type="GstFlashMode"/>
-				</parameters>
-			</method>
-			<method name="set_iso_speed" symbol="gst_photography_set_iso_speed">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="photo" type="GstPhotography*"/>
-					<parameter name="iso_speed" type="guint"/>
-				</parameters>
-			</method>
-			<method name="set_scene_mode" symbol="gst_photography_set_scene_mode">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="photo" type="GstPhotography*"/>
-					<parameter name="scene_mode" type="GstSceneMode"/>
-				</parameters>
-			</method>
-			<method name="set_white_balance_mode" symbol="gst_photography_set_white_balance_mode">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="photo" type="GstPhotography*"/>
-					<parameter name="wb_mode" type="GstWhiteBalanceMode"/>
-				</parameters>
-			</method>
-			<method name="set_zoom" symbol="gst_photography_set_zoom">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="photo" type="GstPhotography*"/>
-					<parameter name="zoom" type="gfloat"/>
-				</parameters>
-			</method>
-		</struct>
-		<struct name="GstPhotographyInterface">
-			<field name="parent" type="GTypeInterface"/>
-			<field name="get_ev_compensation" type="GCallback"/>
-			<field name="get_iso_speed" type="GCallback"/>
-			<field name="get_aperture" type="GCallback"/>
-			<field name="get_exposure" type="GCallback"/>
-			<field name="get_white_balance_mode" type="GCallback"/>
-			<field name="get_colour_tone_mode" type="GCallback"/>
-			<field name="get_scene_mode" type="GCallback"/>
-			<field name="get_flash_mode" type="GCallback"/>
-			<field name="get_zoom" type="GCallback"/>
-			<field name="set_ev_compensation" type="GCallback"/>
-			<field name="set_iso_speed" type="GCallback"/>
-			<field name="set_aperture" type="GCallback"/>
-			<field name="set_exposure" type="GCallback"/>
-			<field name="set_white_balance_mode" type="GCallback"/>
-			<field name="set_colour_tone_mode" type="GCallback"/>
-			<field name="set_scene_mode" type="GCallback"/>
-			<field name="set_flash_mode" type="GCallback"/>
-			<field name="set_zoom" type="GCallback"/>
-			<field name="get_capabilities" type="GCallback"/>
-			<field name="prepare_for_capture" type="GCallback"/>
-			<field name="set_autofocus" type="GCallback"/>
-			<field name="set_config" type="GCallback"/>
-			<field name="get_config" type="GCallback"/>
-			<field name="_gst_reserved" type="gpointer[]"/>
-		</struct>
 		<enum name="GstColorBalanceType" type-name="GstColorBalanceType" get-type="gst_color_balance_type_get_type">
 			<member name="GST_COLOR_BALANCE_HARDWARE" value="0"/>
 			<member name="GST_COLOR_BALANCE_SOFTWARE" value="1"/>
-		</enum>
-		<enum name="GstColourToneMode">
-			<member name="GST_PHOTOGRAPHY_COLOUR_TONE_MODE_NORMAL" value="0"/>
-			<member name="GST_PHOTOGRAPHY_COLOUR_TONE_MODE_SEPIA" value="1"/>
-			<member name="GST_PHOTOGRAPHY_COLOUR_TONE_MODE_NEGATIVE" value="2"/>
-			<member name="GST_PHOTOGRAPHY_COLOUR_TONE_MODE_GRAYSCALE" value="3"/>
-			<member name="GST_PHOTOGRAPHY_COLOUR_TONE_MODE_NATURAL" value="4"/>
-			<member name="GST_PHOTOGRAPHY_COLOUR_TONE_MODE_VIVID" value="5"/>
-			<member name="GST_PHOTOGRAPHY_COLOUR_TONE_MODE_COLORSWAP" value="6"/>
-			<member name="GST_PHOTOGRAPHY_COLOUR_TONE_MODE_SOLARIZE" value="7"/>
-			<member name="GST_PHOTOGRAPHY_COLOUR_TONE_MODE_OUT_OF_FOCUS" value="8"/>
-		</enum>
-		<enum name="GstFlashMode">
-			<member name="GST_PHOTOGRAPHY_FLASH_MODE_AUTO" value="0"/>
-			<member name="GST_PHOTOGRAPHY_FLASH_MODE_OFF" value="1"/>
-			<member name="GST_PHOTOGRAPHY_FLASH_MODE_ON" value="2"/>
-			<member name="GST_PHOTOGRAPHY_FLASH_MODE_FILL_IN" value="3"/>
-			<member name="GST_PHOTOGRAPHY_FLASH_MODE_RED_EYE" value="4"/>
-		</enum>
-		<enum name="GstFocusStatus">
-			<member name="GST_PHOTOGRAPHY_FOCUS_STATUS_NONE" value="0"/>
-			<member name="GST_PHOTOGRAPHY_FOCUS_STATUS_RUNNING" value="1"/>
-			<member name="GST_PHOTOGRAPHY_FOCUS_STATUS_FAIL" value="2"/>
-			<member name="GST_PHOTOGRAPHY_FOCUS_STATUS_SUCCESS" value="3"/>
 		</enum>
 		<enum name="GstMixerMessageType" type-name="GstMixerMessageType" get-type="gst_mixer_message_type_get_type">
 			<member name="GST_MIXER_MESSAGE_INVALID" value="0"/>
@@ -309,41 +55,10 @@
 			<member name="GST_NAVIGATION_QUERY_COMMANDS" value="1"/>
 			<member name="GST_NAVIGATION_QUERY_ANGLES" value="2"/>
 		</enum>
-		<enum name="GstPhotoCaps">
-			<member name="GST_PHOTOGRAPHY_CAPS_NONE" value="0"/>
-			<member name="GST_PHOTOGRAPHY_CAPS_EV_COMP" value="1"/>
-			<member name="GST_PHOTOGRAPHY_CAPS_ISO_SPEED" value="2"/>
-			<member name="GST_PHOTOGRAPHY_CAPS_WB_MODE" value="4"/>
-			<member name="GST_PHOTOGRAPHY_CAPS_TONE" value="8"/>
-			<member name="GST_PHOTOGRAPHY_CAPS_SCENE" value="16"/>
-			<member name="GST_PHOTOGRAPHY_CAPS_FLASH" value="32"/>
-			<member name="GST_PHOTOGRAPHY_CAPS_ZOOM" value="64"/>
-			<member name="GST_PHOTOGRAPHY_CAPS_FOCUS" value="128"/>
-			<member name="GST_PHOTOGRAPHY_CAPS_APERTURE" value="256"/>
-			<member name="GST_PHOTOGRAPHY_CAPS_EXPOSURE" value="512"/>
-			<member name="GST_PHOTOGRAPHY_CAPS_SHAKE" value="1024"/>
-		</enum>
-		<enum name="GstPhotoShakeRisk">
-			<member name="GST_PHOTOGRAPHY_SHAKE_RISK_LOW" value="0"/>
-			<member name="GST_PHOTOGRAPHY_SHAKE_RISK_MEDIUM" value="1"/>
-			<member name="GST_PHOTOGRAPHY_SHAKE_RISK_HIGH" value="2"/>
-		</enum>
-		<enum name="GstSceneMode">
-			<member name="GST_PHOTOGRAPHY_SCENE_MODE_MANUAL" value="0"/>
-			<member name="GST_PHOTOGRAPHY_SCENE_MODE_CLOSEUP" value="1"/>
-			<member name="GST_PHOTOGRAPHY_SCENE_MODE_PORTRAIT" value="2"/>
-			<member name="GST_PHOTOGRAPHY_SCENE_MODE_LANDSCAPE" value="3"/>
-			<member name="GST_PHOTOGRAPHY_SCENE_MODE_SPORT" value="4"/>
-			<member name="GST_PHOTOGRAPHY_SCENE_MODE_NIGHT" value="5"/>
-			<member name="GST_PHOTOGRAPHY_SCENE_MODE_AUTO" value="6"/>
-		</enum>
-		<enum name="GstWhiteBalanceMode">
-			<member name="GST_PHOTOGRAPHY_WB_MODE_AUTO" value="0"/>
-			<member name="GST_PHOTOGRAPHY_WB_MODE_DAYLIGHT" value="1"/>
-			<member name="GST_PHOTOGRAPHY_WB_MODE_CLOUDY" value="2"/>
-			<member name="GST_PHOTOGRAPHY_WB_MODE_SUNSET" value="3"/>
-			<member name="GST_PHOTOGRAPHY_WB_MODE_TUNGSTEN" value="4"/>
-			<member name="GST_PHOTOGRAPHY_WB_MODE_FLUORESCENT" value="5"/>
+		<enum name="GstStreamVolumeFormat" type-name="GstStreamVolumeFormat" get-type="gst_stream_volume_format_get_type">
+			<member name="GST_STREAM_VOLUME_FORMAT_LINEAR" value="0"/>
+			<member name="GST_STREAM_VOLUME_FORMAT_CUBIC" value="1"/>
+			<member name="GST_STREAM_VOLUME_FORMAT_DB" value="2"/>
 		</enum>
 		<flags name="GstMixerFlags" type-name="GstMixerFlags" get-type="gst_mixer_flags_get_type">
 			<member name="GST_MIXER_FLAG_NONE" value="0"/>
@@ -361,6 +76,8 @@
 			<member name="GST_MIXER_TRACK_NO_RECORD" value="64"/>
 			<member name="GST_MIXER_TRACK_NO_MUTE" value="128"/>
 			<member name="GST_MIXER_TRACK_WHITELIST" value="256"/>
+			<member name="GST_MIXER_TRACK_READONLY" value="512"/>
+			<member name="GST_MIXER_TRACK_WRITEONLY" value="1024"/>
 		</flags>
 		<flags name="GstTunerChannelFlags" type-name="GstTunerChannelFlags" get-type="gst_tuner_channel_flags_get_type">
 			<member name="GST_TUNER_CHANNEL_INPUT" value="1"/>
@@ -1059,6 +776,49 @@
 				</parameters>
 			</vfunc>
 		</interface>
+		<interface name="GstStreamVolume" type-name="GstStreamVolume" get-type="gst_stream_volume_get_type">
+			<requires>
+				<interface name="GObject"/>
+			</requires>
+			<method name="convert_volume" symbol="gst_stream_volume_convert_volume">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="from" type="GstStreamVolumeFormat"/>
+					<parameter name="to" type="GstStreamVolumeFormat"/>
+					<parameter name="val" type="gdouble"/>
+				</parameters>
+			</method>
+			<method name="get_mute" symbol="gst_stream_volume_get_mute">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="volume" type="GstStreamVolume*"/>
+				</parameters>
+			</method>
+			<method name="get_volume" symbol="gst_stream_volume_get_volume">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="volume" type="GstStreamVolume*"/>
+					<parameter name="format" type="GstStreamVolumeFormat"/>
+				</parameters>
+			</method>
+			<method name="set_mute" symbol="gst_stream_volume_set_mute">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="volume" type="GstStreamVolume*"/>
+					<parameter name="mute" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_volume" symbol="gst_stream_volume_set_volume">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="volume" type="GstStreamVolume*"/>
+					<parameter name="format" type="GstStreamVolumeFormat"/>
+					<parameter name="val" type="gdouble"/>
+				</parameters>
+			</method>
+			<property name="mute" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="volume" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+		</interface>
 		<interface name="GstTuner" type-name="GstTuner" get-type="gst_tuner_get_type">
 			<requires>
 				<interface name="GstImplementsInterface"/>
@@ -1422,7 +1182,5 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GST_PHOTOGRAPHY_AUTOFOCUS_DONE" type="char*" value="autofocus-done"/>
-		<constant name="GST_PHOTOGRAPHY_SHAKE_RISK" type="char*" value="shake-risk"/>
 	</namespace>
 </api>
