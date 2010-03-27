@@ -79,6 +79,16 @@ namespace Gst {
 		public bool async_signal_func (Gst.Bus bus, Gst.Message message);
 	}
 
+	public interface ChildProxy : Gst.Object {
+		public void @get (string first_property_name, ...);
+		public void get_property (string name, ref Gst.Value value);
+		public void get_valist (string first_property_name, void* var_args);
+		public bool lookup (string name, out Gst.Object target, out unowned GLib.ParamSpec pspec);
+		public void @set (string first_property_name, ...);
+		public void set_property (string name, Gst.Value value);
+		public void set_valist (string first_property_name, void* var_args);
+	}
+
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Pad {
 		[CCode (array_length_pos = 0, delegate_target_pos = 0)]

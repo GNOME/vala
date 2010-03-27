@@ -1414,16 +1414,16 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public interface ChildProxy : Gst.Object {
-		public static void @get (Gst.Object object, ...);
-		public abstract unowned Gst.Object get_child_by_index (uint index);
-		public unowned Gst.Object get_child_by_name (string name);
+		public void @get (string first_property_name, ...);
+		public abstract Gst.Object get_child_by_index (uint index);
+		public Gst.Object get_child_by_name (string name);
 		public abstract uint get_children_count ();
-		public static void get_property (Gst.Object object, string name, Gst.Value value);
-		public static void get_valist (Gst.Object object, string first_property_name, void* var_args);
-		public static bool lookup (Gst.Object object, string name, out unowned Gst.Object target, out unowned GLib.ParamSpec pspec);
-		public static void @set (Gst.Object object, ...);
-		public static void set_property (Gst.Object object, string name, Gst.Value value);
-		public static void set_valist (Gst.Object object, string first_property_name, void* var_args);
+		public void get_property (string name, ref Gst.Value value);
+		public void get_valist (string first_property_name, void* var_args);
+		public bool lookup (string name, out Gst.Object target, out unowned GLib.ParamSpec pspec);
+		public void @set (string first_property_name, ...);
+		public void set_property (string name, Gst.Value value);
+		public void set_valist (string first_property_name, void* var_args);
 		[HasEmitter]
 		public signal void child_added (GLib.Object child);
 		[HasEmitter]
