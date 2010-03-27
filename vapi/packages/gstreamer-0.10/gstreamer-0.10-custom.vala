@@ -100,10 +100,14 @@ namespace Gst {
 	public delegate bool DataProbeCallback (Gst.Pad pad, Gst.MiniObject data);
 
 	public class Caps {
-		public unowned Caps @ref ();
+		public Caps @ref ();
 		public void unref ();
+
 		[ReturnsModifiedPointer]
 		public void make_writable ();
+
+		[CCode (cname = "GST_CAPS_IS_SIMPLE")]
+		public bool is_simple ();
 	}
 
 	public class MiniObject {

@@ -159,12 +159,9 @@ namespace Gst {
 	[CCode (ref_function = "gst_caps_ref", unref_function = "gst_caps_unref", cheader_filename = "gst/gst.h")]
 	public class Caps {
 		public Gst.CapsFlags flags;
-		public int refcount;
-		public weak GLib.PtrArray structs;
-		public GLib.Type type;
 		[CCode (has_construct_function = false)]
 		public Caps.any ();
-		public void append (Gst.Caps caps2);
+		public void append (owned Gst.Caps caps2);
 		public void append_structure (owned Gst.Structure structure);
 		public bool can_intersect (Gst.Caps caps2);
 		public Gst.Caps copy ();
@@ -179,30 +176,31 @@ namespace Gst {
 		public Caps.full_valist (Gst.Structure structure, void* var_args);
 		public uint get_size ();
 		public unowned Gst.Structure get_structure (uint index);
-		public unowned Gst.Caps intersect (Gst.Caps caps2);
+		public Gst.Caps intersect (Gst.Caps caps2);
 		public bool is_always_compatible (Gst.Caps caps2);
 		public bool is_any ();
 		public bool is_empty ();
 		public bool is_equal (Gst.Caps caps2);
 		public bool is_equal_fixed (Gst.Caps caps2);
 		public bool is_fixed ();
+		[CCode (cname = "GST_CAPS_IS_SIMPLE")]
+		public bool is_simple ();
 		public bool is_subset (Gst.Caps superset);
-		public static unowned Gst.Caps load_thyself (void* parent);
+		public static Gst.Caps load_thyself (void* parent);
 		[ReturnsModifiedPointer]
 		public void make_writable ();
-		public void merge (Gst.Caps caps2);
-		public void merge_structure (Gst.Structure structure);
-		public unowned Gst.Caps normalize ();
-		public unowned Gst.Caps @ref ();
+		public void merge (owned Gst.Caps caps2);
+		public void merge_structure (owned Gst.Structure structure);
+		public Gst.Caps normalize ();
+		public Gst.Caps @ref ();
 		public void remove_structure (uint idx);
-		public void replace (Gst.Caps newcaps);
 		public void* save_thyself (void* parent);
 		public void set_simple (string field, ...);
 		public void set_simple_valist (string field, void* varargs);
 		public void set_value (string field, Gst.Value value);
 		[CCode (has_construct_function = false)]
 		public Caps.simple (string media_type, string fieldname, ...);
-		public unowned Gst.Caps subtract (Gst.Caps subtrahend);
+		public Gst.Caps subtract (Gst.Caps subtrahend);
 		public string to_string ();
 		public void truncate ();
 		public Gst.Caps union (Gst.Caps caps2);
