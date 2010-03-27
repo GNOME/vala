@@ -339,7 +339,7 @@ namespace Gst {
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/base/gstbytewriter.h")]
-	public class ByteWriter {
+	public class ByteWriter : Gst.ByteReader {
 		public uint alloc_size;
 		public bool fixed;
 		public bool @owned;
