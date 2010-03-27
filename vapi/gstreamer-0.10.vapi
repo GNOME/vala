@@ -7,11 +7,11 @@ namespace Gst {
 	public class AllocTrace {
 		public int flags;
 		public int live;
-		public weak GLib.SList mem_live;
+		public weak GLib.SList<weak void*> mem_live;
 		public weak string name;
 		public static bool available ();
 		public static unowned Gst.AllocTrace @get (string name);
-		public static unowned GLib.List list ();
+		public static unowned GLib.List<Gst.AllocTrace> list ();
 		public static int live_all ();
 		public void print ();
 		public static void print_all ();

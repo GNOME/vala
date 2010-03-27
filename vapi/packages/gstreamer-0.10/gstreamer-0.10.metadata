@@ -1,4 +1,6 @@
 Gst cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/gst.h"
+GstAllocTrace.mem_live type_arguments="pointer"
+gst_alloc_trace_list type_arguments="AllocTrace"
 GstBin.priv hidden="1"
 GstBin.children type_arguments="Pad"
 GstBin.messages type_arguments="Message"
