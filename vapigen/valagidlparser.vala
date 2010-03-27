@@ -1472,11 +1472,15 @@ public class Vala.GIdlParser : CodeVisitor {
 		return type;
 	}
 
-	public UnresolvedType? get_type_from_string (string type_arg) {
+	public DataType get_type_from_string (string type_arg) {
 		bool is_unowned = false;
 		UnresolvedSymbol? sym = null;
 
-		if ( type_arg.has_prefix ("unowned ") ) {
+		if (type_arg == "pointer") {
+			return new PointerType (new VoidType ());
+		}
+
+		if (type_arg.has_prefix ("unowned ")) {
 			type_arg = type_arg.offset ("unowned ".len ());
 			is_unowned = true;
 		}
@@ -1489,7 +1493,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		arg_type.value_owned = !is_unowned;
 
 		return arg_type;
-     }
+	}
 
 	private Method? create_method (string name, string symbol, IdlNodeParam? res, GLib.List<IdlNodeParam>? parameters, bool is_constructor, bool is_interface) {
 		DataType return_type = null;
@@ -2046,11 +2050,15 @@ public class Vala.GIdlParser : CodeVisitor {
 						type.value_owned = true;
 					}
 				} else if (nv[0] == "type_name") {
-					var unresolved_sym = new UnresolvedSymbol (null, eval (nv[1]));
-					if (type is ArrayType) {
-						((UnresolvedType) ((ArrayType) type).element_type).unresolved_symbol = unresolved_sym;
+					if (eval (nv[1]) == "pointer") {
+						type = new PointerType (new VoidType ());
 					} else {
-						((UnresolvedType) type).unresolved_symbol = unresolved_sym;
+						var unresolved_sym = new UnresolvedSymbol (null, eval (nv[1]));
+						if (type is ArrayType) {
+							((UnresolvedType) ((ArrayType) type).element_type).unresolved_symbol = unresolved_sym;
+						} else {
+							((UnresolvedType) type).unresolved_symbol = unresolved_sym;
+						}
 					}
 				} else if (nv[0] == "type_arguments") {
 					var type_args = eval (nv[1]).split (",");
