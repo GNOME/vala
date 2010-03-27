@@ -59,6 +59,8 @@ dist_vapi_DATA = \
 	gstreamer-audio-0.10.vapi \
 	gstreamer-base-0.10.deps \
 	gstreamer-base-0.10.vapi \
+	gstreamer-cdda-0.10.deps \
+	gstreamer-cdda-0.10.vapi \
 	gstreamer-check-0.10.deps \
 	gstreamer-check-0.10.vapi \
 	gstreamer-controller-0.10.deps \
