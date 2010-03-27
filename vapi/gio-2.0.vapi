@@ -6,8 +6,8 @@ namespace GLib {
 	public class AppLaunchContext : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public AppLaunchContext ();
-		public virtual unowned string get_display (GLib.AppInfo info, GLib.List files);
-		public virtual unowned string get_startup_notify_id (GLib.AppInfo info, GLib.List files);
+		public virtual unowned string get_display (GLib.AppInfo info, GLib.List<GLib.File> files);
+		public virtual unowned string get_startup_notify_id (GLib.AppInfo info, GLib.List<GLib.File> files);
 		public virtual void launch_failed (string startup_notify_id);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
@@ -117,7 +117,7 @@ namespace GLib {
 		[CCode (type = "GIcon*", has_construct_function = false)]
 		public EmblemedIcon (GLib.Icon icon, GLib.Emblem emblem);
 		public void add_emblem (GLib.Emblem emblem);
-		public unowned GLib.List get_emblems ();
+		public unowned GLib.List<GLib.Emblem> get_emblems ();
 		public unowned GLib.Icon get_icon ();
 	}
 	[Compact]
@@ -342,7 +342,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class IOExtensionPoint {
 		public unowned GLib.IOExtension get_extension_by_name (string name);
-		public unowned GLib.List get_extensions ();
+		public unowned GLib.List<GLib.IOExtension> get_extensions ();
 		public GLib.Type get_required_type ();
 		public static unowned GLib.IOExtension implement (string extension_point_name, GLib.Type type, string extension_name, int priority);
 		public static unowned GLib.IOExtensionPoint lookup (string name);
@@ -562,8 +562,6 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class Resolver : GLib.Object {
 		public static GLib.Quark error_quark ();
-		public static void free_addresses (GLib.List addresses);
-		public static void free_targets (GLib.List targets);
 		public static unowned GLib.Resolver get_default ();
 		public virtual unowned string lookup_by_address (GLib.InetAddress address, GLib.Cancellable? cancellable) throws GLib.Error;
 		public virtual async unowned string lookup_by_address_async (GLib.InetAddress address, GLib.Cancellable? cancellable) throws GLib.Error;
@@ -813,7 +811,7 @@ namespace GLib {
 		public uint16 get_port ();
 		public uint16 get_priority ();
 		public uint16 get_weight ();
-		public static unowned GLib.List list_sort (GLib.List targets);
+		public static GLib.List<GLib.SrvTarget> list_sort (owned GLib.List<GLib.SrvTarget> targets);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class TcpConnection : GLib.SocketConnection {
@@ -875,11 +873,11 @@ namespace GLib {
 	public class VolumeMonitor : GLib.Object {
 		public virtual unowned GLib.Volume adopt_orphan_mount (GLib.Mount mount);
 		public static GLib.VolumeMonitor @get ();
-		public virtual GLib.List get_connected_drives ();
+		public virtual GLib.List<GLib.Drive> get_connected_drives ();
 		public virtual GLib.Mount get_mount_for_uuid (string uuid);
-		public virtual GLib.List get_mounts ();
+		public virtual GLib.List<GLib.Mount> get_mounts ();
 		public virtual GLib.Volume get_volume_for_uuid (string uuid);
-		public virtual GLib.List get_volumes ();
+		public virtual GLib.List<GLib.Volume> get_volumes ();
 		[NoWrapper]
 		public virtual bool is_supported ();
 		public virtual signal void drive_changed (GLib.Drive drive);
@@ -906,8 +904,8 @@ namespace GLib {
 		public abstract bool do_delete ();
 		public abstract unowned GLib.AppInfo dup ();
 		public abstract bool equal (GLib.AppInfo appinfo2);
-		public static unowned GLib.List get_all ();
-		public static unowned GLib.List get_all_for_type (string content_type);
+		public static GLib.List<GLib.AppInfo> get_all ();
+		public static GLib.List<GLib.AppInfo> get_all_for_type (string content_type);
 		public abstract unowned string get_commandline ();
 		public static unowned GLib.AppInfo get_default_for_type (string content_type, bool must_support_uris);
 		public static unowned GLib.AppInfo get_default_for_uri_scheme (string uri_scheme);
@@ -916,9 +914,9 @@ namespace GLib {
 		public abstract unowned GLib.Icon get_icon ();
 		public abstract unowned string get_id ();
 		public abstract unowned string get_name ();
-		public abstract bool launch (GLib.List? files, GLib.AppLaunchContext? launch_context) throws GLib.Error;
+		public abstract bool launch (GLib.List<GLib.File>? files, GLib.AppLaunchContext? launch_context) throws GLib.Error;
 		public static bool launch_default_for_uri (string uri, GLib.AppLaunchContext? launch_context) throws GLib.Error;
-		public abstract bool launch_uris (GLib.List? uris, GLib.AppLaunchContext launch_context) throws GLib.Error;
+		public abstract bool launch_uris (GLib.List<string>? uris, GLib.AppLaunchContext launch_context) throws GLib.Error;
 		public abstract bool remove_supports_type (string content_type) throws GLib.Error;
 		public static void reset_type_associations (string content_type);
 		public abstract bool set_as_default_for_extension (string extension) throws GLib.Error;
@@ -957,7 +955,7 @@ namespace GLib {
 		public abstract unowned string get_identifier (string kind);
 		public abstract unowned string get_name ();
 		public abstract GLib.DriveStartStopType get_start_stop_type ();
-		public abstract unowned GLib.List get_volumes ();
+		public abstract GLib.List<GLib.Volume> get_volumes ();
 		public abstract bool has_media ();
 		public abstract bool has_volumes ();
 		public abstract bool is_media_check_automatic ();
@@ -1619,13 +1617,13 @@ namespace GLib {
 	[CCode (cname = "g_content_type_is_unknown", cheader_filename = "gio/gio.h")]
 	public static bool g_content_type_is_unknown (string type);
 	[CCode (cname = "g_content_types_get_registered", cheader_filename = "gio/gio.h")]
-	public static unowned GLib.List g_content_types_get_registered ();
+	public static GLib.List<string> g_content_types_get_registered ();
 	[CCode (cname = "g_io_error_from_errno", cheader_filename = "gio/gio.h")]
 	public static unowned GLib.IOError g_io_error_from_errno (int err_no);
 	[CCode (cname = "g_io_error_quark", cheader_filename = "gio/gio.h")]
 	public static GLib.Quark g_io_error_quark ();
 	[CCode (cname = "g_io_modules_load_all_in_directory", cheader_filename = "gio/gio.h")]
-	public static unowned GLib.List g_io_modules_load_all_in_directory (string dirname);
+	public static GLib.List<weak GLib.TypeModule> g_io_modules_load_all_in_directory (string dirname);
 	[CCode (cname = "g_io_scheduler_cancel_all_jobs", cheader_filename = "gio/gio.h")]
 	public static void g_io_scheduler_cancel_all_jobs ();
 	[CCode (cname = "g_io_scheduler_push_job", cheader_filename = "gio/gio.h")]
