@@ -22,7 +22,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Bin : Gst.Element, Gst.ChildProxy {
 		public weak Gst.Bus child_bus;
-		public weak GLib.List<Gst.Pad> children;
+		public weak GLib.List<Gst.Element> children;
 		public uint32 children_cookie;
 		public bool clock_dirty;
 		public weak Gst.Element clock_provider;
@@ -37,11 +37,11 @@ namespace Gst {
 		[NoWrapper]
 		public virtual bool add_element (Gst.Element element);
 		public void add_many (params owned Gst.Element[] elements);
-		public Gst.Pad find_unconnected_pad (Gst.PadDirection direction);
-		public unowned Gst.Pad find_unlinked_pad (Gst.PadDirection direction);
-		public Gst.Element get_by_interface (GLib.Type iface);
-		public Gst.Element get_by_name (string name);
-		public Gst.Element get_by_name_recurse_up (string name);
+		public Gst.Pad? find_unconnected_pad (Gst.PadDirection direction);
+		public Gst.Pad? find_unlinked_pad (Gst.PadDirection direction);
+		public Gst.Element? get_by_interface (GLib.Type iface);
+		public Gst.Element? get_by_name (string name);
+		public Gst.Element? get_by_name_recurse_up (string name);
 		[NoWrapper]
 		public virtual void handle_message (Gst.Message message);
 		public Gst.Iterator iterate_all_by_interface (GLib.Type iface);
@@ -51,10 +51,10 @@ namespace Gst {
 		public Gst.Iterator iterate_sorted ();
 		public Gst.Iterator iterate_sources ();
 		public bool recalculate_latency ();
-		public bool remove (Gst.Element element);
+		public bool remove (owned Gst.Element element);
 		[NoWrapper]
 		public virtual bool remove_element (Gst.Element element);
-		public void remove_many (Gst.Element element_1, ...);
+		public void remove_many (params owned Gst.Element[] elements);
 		[NoAccessorMethod]
 		public bool async_handling { get; set; }
 		public virtual signal bool do_latency ();
