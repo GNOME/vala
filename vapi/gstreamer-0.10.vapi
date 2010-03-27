@@ -429,25 +429,19 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class ElementFactory : Gst.PluginFeature {
-		public Gst.ElementDetails details;
-		public weak GLib.List interfaces;
-		public uint numpadtemplates;
-		public weak GLib.List staticpadtemplates;
-		public GLib.Type type;
-		public weak string uri_protocols;
-		public uint uri_type;
 		public bool can_sink_caps (Gst.Caps caps);
 		public bool can_src_caps (Gst.Caps caps);
 		public Gst.Element? create (string? name);
-		public static unowned Gst.ElementFactory find (string name);
+		public static Gst.ElementFactory? find (string name);
 		public unowned string get_author ();
 		public unowned string get_description ();
 		public GLib.Type get_element_type ();
 		public unowned string get_klass ();
 		public unowned string get_longname ();
 		public uint get_num_pad_templates ();
-		public unowned GLib.List get_static_pad_templates ();
-		public unowned string get_uri_protocols ();
+		public unowned GLib.List<Gst.StaticPadTemplate> get_static_pad_templates ();
+		[CCode (array_length = false, array_null_terminated = true)]
+		public string[]? get_uri_protocols ();
 		public int get_uri_type ();
 		public bool has_interface (string interfacename);
 		public static Gst.Element? make (string factoryname, string? name);
