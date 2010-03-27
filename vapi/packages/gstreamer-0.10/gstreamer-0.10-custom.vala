@@ -34,14 +34,18 @@ namespace Gst {
 
 	[CCode (ref_function = "gst_event_ref", unref_function = "gst_event_unref")]
 	public class Event : MiniObject {
+		public Event @ref ();
+		public void unref ();
+		public static void replace (ref Event? oldobj, Event? newobj);
 	}
 
-	[CCode (ref_function = "gst_object_ref", unref_function = "gst_object_unref")]
+	[CCode (ref_function = "gst_object_ref", unref_function = "gst_object_unref", ref_sink_function = "gst_object_ref_sink")]
 	public class Object {
-		public unowned Object @ref ();
+		public Gst.Object @ref ();
 		public void unref ();
 		public void sink ();
-		public static void replace (ref Gst.Object oldobj, Gst.Object newobj);
+		public void ref_sink ();
+		public static void replace (ref Gst.Object? oldobj, Gst.Object? newobj);
 	}
 
 	public class Bin {
@@ -67,12 +71,18 @@ namespace Gst {
 		public bool duration_is_valid ();
 		[ReturnsModifiedPointer]
 		public void join (owned Buffer buf2);
+
+		public Buffer @ref ();
+		public void unref ();
+		public static void replace (ref Buffer? oldobj, Buffer? newobj);
 	}
 
 	[CCode (ref_function = "gst_buffer_list_ref", unref_function = "gst_buffer_list_unref")]
 	public class BufferList : Gst.MiniObject {
 		[ReturnsModifiedPointer]
 		public void make_writable ();
+		public BufferList @ref ();
+		public void unref ();
 	}
 
 	public class Bus {
@@ -124,6 +134,8 @@ namespace Gst {
 
 		[CCode (cname = "GST_CAPS_IS_SIMPLE")]
 		public bool is_simple ();
+
+		public static void replace (ref Caps? oldobj, Caps? newobj);
 	}
 
 	public class MiniObject {
@@ -132,18 +144,23 @@ namespace Gst {
 
         	public virtual MiniObject copy ();
 		public virtual void finalize ();
+		public static void replace (ref MiniObject? oldobj, MiniObject? newobj);
 	}
 
 	[CCode (ref_function = "gst_message_ref", unref_function = "gst_message_unref")]
 	public class Message : MiniObject {
 		[ReturnsModifiedPointer]
 		public void make_writable ();
+		public Message @ref ();
+		public void unref ();
 	}
 
 	[CCode (ref_function = "gst_query_ref", unref_function = "gst_query_unref")]
 	public class Query : MiniObject {
 		[ReturnsModifiedPointer]
 		public void make_writable ();
+		public Query @ref ();
+		public void unref ();
 	}
 
 	[Compact]

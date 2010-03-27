@@ -96,12 +96,15 @@ namespace Gst {
 		[ReturnsModifiedPointer]
 		public void make_writable ();
 		public Gst.Buffer merge (Gst.Buffer buf2);
+		public Gst.Buffer @ref ();
+		public static void replace (ref Gst.Buffer? oldobj, Gst.Buffer? newobj);
 		public void set_caps (Gst.Caps caps);
 		public Gst.Buffer span (uint32 offset, Gst.Buffer buf2, uint32 len);
 		public void stamp (Gst.Buffer src);
 		[CCode (cname = "GST_BUFFER_TIMESTAMP_IS_VALID")]
 		public bool timestamp_is_valid ();
 		public static Gst.Buffer? try_new_and_alloc (uint size);
+		public void unref ();
 	}
 	[CCode (ref_function = "gst_buffer_list_ref", unref_function = "gst_buffer_list_unref", cheader_filename = "gst/gst.h")]
 	public class BufferList : Gst.MiniObject {
@@ -113,6 +116,8 @@ namespace Gst {
 		[ReturnsModifiedPointer]
 		public void make_writable ();
 		public uint n_groups ();
+		public Gst.BufferList @ref ();
+		public void unref ();
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -196,6 +201,7 @@ namespace Gst {
 		public Gst.Caps normalize ();
 		public Gst.Caps @ref ();
 		public void remove_structure (uint idx);
+		public static void replace (ref Gst.Caps? oldobj, Gst.Caps? newobj);
 		public void* save_thyself (void* parent);
 		public void set_simple (string field, ...);
 		public void set_simple_valist (string field, void* varargs);
@@ -490,6 +496,8 @@ namespace Gst {
 		public void parse_tag (out Gst.TagList taglist);
 		[CCode (has_construct_function = false)]
 		public Event.qos (double proportion, Gst.ClockTimeDiff diff, Gst.ClockTime timestamp);
+		public Gst.Event @ref ();
+		public static void replace (ref Gst.Event? oldobj, Gst.Event? newobj);
 		[CCode (has_construct_function = false)]
 		public Event.seek (double rate, Gst.Format format, Gst.SeekFlags flags, Gst.SeekType start_type, int64 start, Gst.SeekType stop_type, int64 stop);
 		public void set_seqnum (uint32 seqnum);
@@ -501,6 +509,7 @@ namespace Gst {
 		public Event.tag (Gst.TagList taglist);
 		public static Gst.EventTypeFlags type_get_flags (Gst.EventType type);
 		public static GLib.Quark type_to_quark (Gst.EventType type);
+		public void unref ();
 	}
 	[Compact]
 	[CCode (type_id = "GST_TYPE_GERROR", cheader_filename = "gst/gst.h")]
@@ -678,6 +687,7 @@ namespace Gst {
 		public void parse_tag (out Gst.TagList tag_list);
 		public void parse_tag_full (out unowned Gst.Pad pad, out unowned Gst.TagList tag_list);
 		public void parse_warning (out GLib.Error gerror, out string debug);
+		public Gst.Message @ref ();
 		[CCode (has_construct_function = false)]
 		public Message.request_state (Gst.Object src, Gst.State state);
 		[CCode (has_construct_function = false)]
@@ -704,6 +714,7 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public Message.tag_full (Gst.Object src, Gst.Pad pad, Gst.TagList tag_list);
 		public static GLib.Quark type_to_quark (Gst.MessageType type);
+		public void unref ();
 		[CCode (has_construct_function = false)]
 		public Message.warning (Gst.Object src, GLib.Error error, string debug);
 	}
@@ -718,7 +729,7 @@ namespace Gst {
 		public bool is_writable ();
 		[ReturnsModifiedPointer]
 		public void make_writable ();
-		public void replace (Gst.MiniObject newdata);
+		public static void replace (ref Gst.MiniObject? oldobj, Gst.MiniObject? newobj);
 	}
 	[CCode (ref_function = "gst_object_ref", unref_function = "gst_object_unref", cheader_filename = "gst/gst.h")]
 	public class Object : GLib.Object {
@@ -735,9 +746,9 @@ namespace Gst {
 		public Gst.Object get_parent ();
 		public string get_path_string ();
 		public bool has_ancestor (Gst.Object ancestor);
-		public unowned Gst.Object @ref ();
-		public static void ref_sink (void* object);
-		public static void replace (ref Gst.Object oldobj, Gst.Object newobj);
+		public Gst.Object @ref ();
+		public void ref_sink ();
+		public static void replace (ref Gst.Object? oldobj, Gst.Object? newobj);
 		public virtual void restore_thyself (void* self);
 		public virtual void* save_thyself (void* parent);
 		public bool set_name (string name);
@@ -1066,6 +1077,7 @@ namespace Gst {
 		public void parse_uri (string uri);
 		[CCode (has_construct_function = false)]
 		public Query.position (Gst.Format format);
+		public Gst.Query @ref ();
 		[CCode (has_construct_function = false)]
 		public Query.seeking (Gst.Format format);
 		[CCode (has_construct_function = false)]
@@ -1088,6 +1100,7 @@ namespace Gst {
 		public static Gst.QueryType type_register (string nick, string description);
 		public static GLib.Quark type_to_quark (Gst.QueryType query);
 		public static bool types_contains (Gst.QueryType types, Gst.QueryType type);
+		public void unref ();
 		[CCode (has_construct_function = false)]
 		public Query.uri ();
 	}
