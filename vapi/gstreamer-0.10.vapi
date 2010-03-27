@@ -103,13 +103,15 @@ namespace Gst {
 		public bool timestamp_is_valid ();
 		public static Gst.Buffer? try_new_and_alloc (uint size);
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (ref_function = "gst_buffer_list_ref", unref_function = "gst_buffer_list_unref", cheader_filename = "gst/gst.h")]
 	public class BufferList : Gst.MiniObject {
 		[CCode (has_construct_function = false)]
 		public BufferList ();
 		public void @foreach (Gst.BufferListFunc func);
 		public unowned Gst.Buffer? @get (uint group, uint idx);
 		public Gst.BufferListIterator iterate ();
+		[ReturnsModifiedPointer]
+		public void make_writable ();
 		public uint n_groups ();
 	}
 	[Compact]
@@ -450,7 +452,7 @@ namespace Gst {
 		public static Gst.Element? make (string factoryname, string? name);
 	}
 	[CCode (ref_function = "gst_event_ref", unref_function = "gst_event_unref", cheader_filename = "gst/gst.h")]
-	public class Event {
+	public class Event : Gst.MiniObject {
 		public void* abidata;
 		public weak Gst.Object src;
 		public weak Gst.Structure structure;
@@ -615,7 +617,7 @@ namespace Gst {
 		public Iterator.single (GLib.Type type, void* object, Gst.CopyFunction copy, GLib.FreeFunc free);
 	}
 	[CCode (ref_function = "gst_message_ref", unref_function = "gst_message_unref", cheader_filename = "gst/gst.h")]
-	public class Message {
+	public class Message : Gst.MiniObject {
 		public void* abidata;
 		public weak GLib.Cond cond;
 		public weak GLib.Mutex @lock;
@@ -1032,7 +1034,7 @@ namespace Gst {
 	public class ProxyPad : Gst.Pad {
 	}
 	[CCode (ref_function = "gst_query_ref", unref_function = "gst_query_unref", cheader_filename = "gst/gst.h")]
-	public class Query {
+	public class Query : Gst.MiniObject {
 		public weak Gst.Structure structure;
 		public Gst.QueryType type;
 		[CCode (has_construct_function = false)]

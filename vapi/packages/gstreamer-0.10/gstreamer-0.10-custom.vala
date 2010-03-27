@@ -33,7 +33,7 @@ namespace Gst {
 	}
 
 	[CCode (ref_function = "gst_event_ref", unref_function = "gst_event_unref")]
-	public class Event {
+	public class Event : MiniObject {
 	}
 
 	[CCode (ref_function = "gst_object_ref", unref_function = "gst_object_unref")]
@@ -67,6 +67,12 @@ namespace Gst {
 		public bool duration_is_valid ();
 		[ReturnsModifiedPointer]
 		public void join (owned Buffer buf2);
+	}
+
+	[CCode (ref_function = "gst_buffer_list_ref", unref_function = "gst_buffer_list_unref")]
+	public class BufferList : Gst.MiniObject {
+		[ReturnsModifiedPointer]
+		public void make_writable ();
 	}
 
 	public class Bus {
@@ -124,16 +130,18 @@ namespace Gst {
 		[ReturnsModifiedPointer]
 		public void make_writable ();
 
-        public virtual MiniObject copy ();
-        public virtual void finalize ();
+        	public virtual MiniObject copy ();
+		public virtual void finalize ();
 	}
 
-	public class Message {
+	[CCode (ref_function = "gst_message_ref", unref_function = "gst_message_unref")]
+	public class Message : MiniObject {
 		[ReturnsModifiedPointer]
 		public void make_writable ();
 	}
 
-	public class Query {
+	[CCode (ref_function = "gst_query_ref", unref_function = "gst_query_unref")]
+	public class Query : MiniObject {
 		[ReturnsModifiedPointer]
 		public void make_writable ();
 	}
