@@ -325,8 +325,7 @@ namespace Gst {
 		public unowned string @get ();
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
-	public class Element : Gst.Object {
-		public void* abidata;
+	public abstract class Element : Gst.Object {
 		public Gst.ClockTimeDiff base_time;
 		public weak Gst.Bus bus;
 		public weak Gst.Clock clock;
@@ -344,6 +343,8 @@ namespace Gst {
 		public weak GLib.Cond state_cond;
 		public uint32 state_cookie;
 		public void* state_lock;
+		[CCode (cname = "abidata.ABI.target_state")]
+		public Gst.State target_state;
 		public void abort_state ();
 		public bool add_pad (owned Gst.Pad pad);
 		[CCode (cname = "gst_element_class_add_pad_template")]
@@ -354,19 +355,20 @@ namespace Gst {
 		public void found_tags (owned Gst.TagList list);
 		public void found_tags_for_pad (Gst.Pad pad, owned Gst.TagList list);
 		public Gst.ClockTime get_base_time ();
-		public Gst.Bus get_bus ();
-		public unowned Gst.Clock get_clock ();
-		public unowned Gst.Pad get_compatible_pad (Gst.Pad pad, Gst.Caps? caps);
-		public unowned Gst.PadTemplate get_compatible_pad_template (Gst.PadTemplate compattempl);
-		public unowned Gst.ElementFactory get_factory ();
-		public virtual unowned Gst.Index get_index ();
-		public unowned Gst.Pad get_pad (string name);
+		public Gst.Bus? get_bus ();
+		public Gst.Clock? get_clock ();
+		public Gst.Pad? get_compatible_pad (Gst.Pad pad, Gst.Caps? caps);
+		public unowned Gst.PadTemplate? get_compatible_pad_template (Gst.PadTemplate compattempl);
+		public unowned Gst.ElementFactory? get_factory ();
+		public virtual Gst.Index? get_index ();
+		public Gst.Pad? get_pad (string name);
 		[CCode (cname = "gst_element_class_get_pad_template")]
-		public class unowned Gst.PadTemplate get_pad_template (string name);
+		public class unowned Gst.PadTemplate? get_pad_template (string name);
 		[CCode (cname = "gst_element_class_get_pad_template_list")]
 		public class unowned GLib.List<Gst.PadTemplate> get_pad_template_list ();
-		public virtual Gst.QueryType get_query_types ();
-		public unowned Gst.Pad get_request_pad (string name);
+		[CCode (array_length = false)]
+		public virtual unowned Gst.QueryType[]? get_query_types ();
+		public Gst.Pad? get_request_pad (string name);
 		public Gst.ClockTime get_start_time ();
 		public virtual Gst.StateChangeReturn get_state (out Gst.State state, out Gst.State pending, Gst.ClockTime timeout);
 		public Gst.Pad? get_static_pad (string name);
@@ -375,9 +377,9 @@ namespace Gst {
 		public class void install_std_props (...);
 		public bool is_indexable ();
 		public bool is_locked_state ();
-		public unowned Gst.Iterator iterate_pads ();
-		public unowned Gst.Iterator iterate_sink_pads ();
-		public unowned Gst.Iterator iterate_src_pads ();
+		public Gst.Iterator iterate_pads ();
+		public Gst.Iterator iterate_sink_pads ();
+		public Gst.Iterator iterate_src_pads ();
 		public bool link (Gst.Element dest);
 		public bool link_filtered (Gst.Element dest, Gst.Caps filter);
 		public bool link_many (Gst.Element element_2, ...);
@@ -386,15 +388,15 @@ namespace Gst {
 		public void lost_state ();
 		public void lost_state_full (bool new_base_time);
 		public static Gst.Element? make_from_uri (Gst.URIType type, string uri, string? elementname);
-		public void message_full (Gst.MessageType type, GLib.Quark domain, int code, string text, string debug, string file, string function, int line);
+		public void message_full (Gst.MessageType type, GLib.Quark domain, int code, string? text, string? debug, string file, string function, int line);
 		public bool post_message (owned Gst.Message message);
-		public virtual unowned Gst.Clock provide_clock ();
+		public virtual Gst.Clock? provide_clock ();
 		public bool provides_clock ();
 		public virtual bool query (Gst.Query query);
-		public bool query_convert (Gst.Format src_format, int64 src_val, Gst.Format dest_format, int64 dest_val);
+		public bool query_convert (Gst.Format src_format, int64 src_val, ref Gst.Format dest_format, out int64 dest_val);
 		public bool query_duration (ref Gst.Format format, out int64 duration);
 		public bool query_position (ref Gst.Format format, out int64 cur);
-		public static bool register (Gst.Plugin plugin, string name, uint rank, GLib.Type type);
+		public static bool register (Gst.Plugin? plugin, string name, uint rank, GLib.Type type);
 		[NoWrapper]
 		public virtual void release_pad (Gst.Pad pad);
 		public void release_request_pad (Gst.Pad pad);
@@ -407,12 +409,12 @@ namespace Gst {
 		public virtual bool send_event (owned Gst.Event event);
 		public void set_base_time (Gst.ClockTime time);
 		public virtual void set_bus (Gst.Bus? bus);
-		public virtual bool set_clock (Gst.Clock clock);
+		public virtual bool set_clock (Gst.Clock? clock);
 		[CCode (cname = "gst_element_class_set_details")]
 		public class void set_details (Gst.ElementDetails details);
 		[CCode (cname = "gst_element_class_set_details_simple")]
 		public class void set_details_simple (string longname, string classification, string description, string author);
-		public virtual void set_index (Gst.Index index);
+		public virtual void set_index (Gst.Index? index);
 		public bool set_locked_state (bool locked_state);
 		public void set_start_time (Gst.ClockTime time);
 		public virtual Gst.StateChangeReturn set_state (Gst.State state);

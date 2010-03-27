@@ -110,6 +110,11 @@ namespace Gst {
 		public void set_valist (string first_property_name, void* var_args);
 	}
 
+	public abstract class Element {
+		[CCode (cname = "abidata.ABI.target_state")]
+		public State target_state;
+	}
+
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Pad {
 		[CCode (array_length_pos = 0, delegate_target_pos = 0)]
