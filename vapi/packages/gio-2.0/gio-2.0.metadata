@@ -160,3 +160,10 @@ g_settings_list_list.n_items hidden="1"
 g_simple_async_result_new.source_object nullable="1"
 
 GSocketService::incoming.source_object nullable="1"
+
+g_volume_monitor_get transfer_ownership="1"
+g_volume_monitor_get_connected_drives transfer_ownership="1"
+g_volume_monitor_get_mount_for_uuid transfer_ownership="1"
+g_volume_monitor_get_mounts transfer_ownership="1"
+g_volume_monitor_get_volume_for_uuid transfer_ownership="1"
+g_volume_monitor_get_volumes transfer_ownership="1"

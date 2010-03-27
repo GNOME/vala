@@ -874,12 +874,12 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class VolumeMonitor : GLib.Object {
 		public virtual unowned GLib.Volume adopt_orphan_mount (GLib.Mount mount);
-		public static unowned GLib.VolumeMonitor @get ();
-		public virtual unowned GLib.List get_connected_drives ();
-		public virtual unowned GLib.Mount get_mount_for_uuid (string uuid);
-		public virtual unowned GLib.List get_mounts ();
-		public virtual unowned GLib.Volume get_volume_for_uuid (string uuid);
-		public virtual unowned GLib.List get_volumes ();
+		public static GLib.VolumeMonitor @get ();
+		public virtual GLib.List get_connected_drives ();
+		public virtual GLib.Mount get_mount_for_uuid (string uuid);
+		public virtual GLib.List get_mounts ();
+		public virtual GLib.Volume get_volume_for_uuid (string uuid);
+		public virtual GLib.List get_volumes ();
 		[NoWrapper]
 		public virtual bool is_supported ();
 		public virtual signal void drive_changed (GLib.Drive drive);
