@@ -68,7 +68,7 @@ namespace Gst {
 		public weak uint8[] data;
 		public Gst.ClockTime duration;
 		public weak GLib.FreeFunc free_func;
-		public uchar malloc_data;
+		public void* malloc_data;
 		public uint64 offset;
 		public uint64 offset_end;
 		public weak Gst.Buffer parent;
@@ -80,25 +80,28 @@ namespace Gst {
 		public Buffer.and_alloc (uint size);
 		public void copy_metadata (Gst.Buffer src, Gst.BufferCopyFlags flags);
 		public Gst.Buffer create_sub (uint offset, uint size);
+		[CCode (cname = "GST_BUFFER_DURATION_IS_VALID")]
+		public bool duration_is_valid ();
 		[CCode (cname = "GST_BUFFER_FLAG_SET")]
 		public void flag_set (Gst.BufferFlag flag);
 		[CCode (cname = "GST_BUFFER_FLAG_UNSET")]
 		public void flag_unset (Gst.BufferFlag flag);
-		public unowned Gst.Caps get_caps ();
+		public Gst.Caps get_caps ();
 		public bool is_metadata_writable ();
 		public bool is_span_fast (Gst.Buffer buf2);
-		public unowned Gst.Buffer join (Gst.Buffer buf2);
+		[ReturnsModifiedPointer]
+		public void join (owned Gst.Buffer buf2);
 		[ReturnsModifiedPointer]
 		public void make_metadata_writable ();
 		[ReturnsModifiedPointer]
 		public void make_writable ();
-		public unowned Gst.Buffer merge (Gst.Buffer buf2);
-		public unowned Gst.Buffer @ref ();
+		public Gst.Buffer merge (Gst.Buffer buf2);
 		public void set_caps (Gst.Caps caps);
-		public unowned Gst.Buffer span (uint32 offset, Gst.Buffer buf2, uint32 len);
+		public Gst.Buffer span (uint32 offset, Gst.Buffer buf2, uint32 len);
 		public void stamp (Gst.Buffer src);
-		public static Gst.Buffer try_new_and_alloc (uint size);
-		public void unref ();
+		[CCode (cname = "GST_BUFFER_TIMESTAMP_IS_VALID")]
+		public bool timestamp_is_valid ();
+		public static Gst.Buffer? try_new_and_alloc (uint size);
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/gst.h")]

@@ -52,8 +52,6 @@ namespace Gst {
 	public class Buffer : Gst.MiniObject {
 		[CCode (has_construct_function = false)]
 		public Buffer ();
-		public unowned Buffer @ref ();
-		public void unref ();
 		[CCode (cname = "GST_BUFFER_FLAG_SET")]
 		public void flag_set (BufferFlag flag);
 		[CCode (cname = "GST_BUFFER_FLAG_UNSET")]
@@ -62,6 +60,12 @@ namespace Gst {
 		public void make_metadata_writable ();
 		[ReturnsModifiedPointer]
 		public void make_writable ();
+		[CCode (cname = "GST_BUFFER_TIMESTAMP_IS_VALID")]
+		public bool timestamp_is_valid ();
+		[CCode (cname = "GST_BUFFER_DURATION_IS_VALID")]
+		public bool duration_is_valid ();
+		[ReturnsModifiedPointer]
+		public void join (owned Buffer buf2);
 	}
 
 	public class Bus {
