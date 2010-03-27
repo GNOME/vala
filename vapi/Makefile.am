@@ -53,6 +53,8 @@ dist_vapi_DATA = \
 	gsl.vapi \
 	gstreamer-0.10.deps \
 	gstreamer-0.10.vapi \
+	gstreamer-app-0.10.deps \
+	gstreamer-app-0.10.vapi \
 	gstreamer-audio-0.10.deps \
 	gstreamer-audio-0.10.vapi \
 	gstreamer-base-0.10.deps \
