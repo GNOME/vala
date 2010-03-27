@@ -31,46 +31,6 @@ namespace Gst {
 		[NoAccessorMethod]
 		public string untranslated_label { owned get; construct; }
 	}
-	[Compact]
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class PhotoSettings {
-		public uint aperture;
-		public float ev_compensation;
-		public uint32 exposure;
-		public Gst.FlashMode flash_mode;
-		public uint iso_speed;
-		public Gst.SceneMode scene_mode;
-		public Gst.ColourToneMode tone_mode;
-		public Gst.WhiteBalanceMode wb_mode;
-		public float zoom;
-	}
-	[Compact]
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class Photography {
-		public bool get_aperture (uint aperture);
-		public Gst.PhotoCaps get_capabilities ();
-		public bool get_colour_tone_mode (Gst.ColourToneMode tone_mode);
-		public bool get_config (Gst.PhotoSettings config);
-		public bool get_ev_compensation (float ev_comp);
-		public bool get_exposure (uint32 exposure);
-		public bool get_flash_mode (Gst.FlashMode flash_mode);
-		public bool get_iso_speed (uint iso_speed);
-		public bool get_scene_mode (Gst.SceneMode scene_mode);
-		public bool get_white_balance_mode (Gst.WhiteBalanceMode wb_mode);
-		public bool get_zoom (float zoom);
-		public bool prepare_for_capture (Gst.PhotoCapturePrepared func, Gst.Caps capture_caps);
-		public bool set_aperture (uint aperture);
-		public void set_autofocus (bool on);
-		public bool set_colour_tone_mode (Gst.ColourToneMode tone_mode);
-		public bool set_config (Gst.PhotoSettings config);
-		public bool set_ev_compensation (float ev_comp);
-		public bool set_exposure (uint exposure);
-		public bool set_flash_mode (Gst.FlashMode flash_mode);
-		public bool set_iso_speed (uint iso_speed);
-		public bool set_scene_mode (Gst.SceneMode scene_mode);
-		public bool set_white_balance_mode (Gst.WhiteBalanceMode wb_mode);
-		public bool set_zoom (float zoom);
-	}
 	[CCode (cheader_filename = "gst/interfaces/tuner.h")]
 	public class TunerChannel : GLib.Object {
 		public Gst.TunerChannelFlags flags;
@@ -167,6 +127,16 @@ namespace Gst {
 		public void probe_property_name (string name);
 		public signal void probe_needed (void* pspec);
 	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public interface StreamVolume : GLib.Object {
+		public static double convert_volume (Gst.StreamVolumeFormat from, Gst.StreamVolumeFormat to, double val);
+		public bool get_mute ();
+		public double get_volume (Gst.StreamVolumeFormat format);
+		public void set_mute (bool mute);
+		public void set_volume (Gst.StreamVolumeFormat format, double val);
+		public bool mute { get; set; }
+		public double volume { get; set; }
+	}
 	[CCode (cheader_filename = "gst/interfaces/tuner.h")]
 	public interface Tuner : Gst.ImplementsInterface, Gst.Element {
 		public unowned Gst.TunerChannel find_channel_by_name (string channel);
@@ -211,33 +181,6 @@ namespace Gst {
 		HARDWARE,
 		SOFTWARE
 	}
-	[CCode (cprefix = "GST_PHOTOGRAPHY_COLOUR_TONE_MODE_", has_type_id = false, cheader_filename = "gst/gst.h")]
-	public enum ColourToneMode {
-		NORMAL,
-		SEPIA,
-		NEGATIVE,
-		GRAYSCALE,
-		NATURAL,
-		VIVID,
-		COLORSWAP,
-		SOLARIZE,
-		OUT_OF_FOCUS
-	}
-	[CCode (cprefix = "GST_PHOTOGRAPHY_FLASH_MODE_", has_type_id = false, cheader_filename = "gst/gst.h")]
-	public enum FlashMode {
-		AUTO,
-		OFF,
-		ON,
-		FILL_IN,
-		RED_EYE
-	}
-	[CCode (cprefix = "GST_PHOTOGRAPHY_FOCUS_STATUS_", has_type_id = false, cheader_filename = "gst/gst.h")]
-	public enum FocusStatus {
-		NONE,
-		RUNNING,
-		FAIL,
-		SUCCESS
-	}
 	[CCode (cprefix = "GST_MIXER_FLAG_", cheader_filename = "gst/interfaces/mixer.h")]
 	[Flags]
 	public enum MixerFlags {
@@ -267,7 +210,9 @@ namespace Gst {
 		SOFTWARE,
 		NO_RECORD,
 		NO_MUTE,
-		WHITELIST
+		WHITELIST,
+		READONLY,
+		WRITEONLY
 	}
 	[CCode (cprefix = "GST_MIXER_", cheader_filename = "gst/interfaces/mixer.h")]
 	public enum MixerType {
@@ -315,36 +260,11 @@ namespace Gst {
 		COMMANDS,
 		ANGLES
 	}
-	[CCode (cprefix = "GST_PHOTOGRAPHY_CAPS_", has_type_id = false, cheader_filename = "gst/gst.h")]
-	public enum PhotoCaps {
-		NONE,
-		EV_COMP,
-		ISO_SPEED,
-		WB_MODE,
-		TONE,
-		SCENE,
-		FLASH,
-		ZOOM,
-		FOCUS,
-		APERTURE,
-		EXPOSURE,
-		SHAKE
-	}
-	[CCode (cprefix = "GST_PHOTOGRAPHY_SHAKE_RISK_", has_type_id = false, cheader_filename = "gst/gst.h")]
-	public enum PhotoShakeRisk {
-		LOW,
-		MEDIUM,
-		HIGH
-	}
-	[CCode (cprefix = "GST_PHOTOGRAPHY_SCENE_MODE_", has_type_id = false, cheader_filename = "gst/gst.h")]
-	public enum SceneMode {
-		MANUAL,
-		CLOSEUP,
-		PORTRAIT,
-		LANDSCAPE,
-		SPORT,
-		NIGHT,
-		AUTO
+	[CCode (cprefix = "GST_STREAM_VOLUME_FORMAT_", cheader_filename = "gst/gst.h")]
+	public enum StreamVolumeFormat {
+		LINEAR,
+		CUBIC,
+		DB
 	}
 	[CCode (cprefix = "GST_TUNER_CHANNEL_", cheader_filename = "gst/interfaces/tuner.h")]
 	[Flags]
@@ -354,33 +274,4 @@ namespace Gst {
 		FREQUENCY,
 		AUDIO
 	}
-	[CCode (cprefix = "GST_PHOTOGRAPHY_WB_MODE_", has_type_id = false, cheader_filename = "gst/gst.h")]
-	public enum WhiteBalanceMode {
-		AUTO,
-		DAYLIGHT,
-		CLOUDY,
-		SUNSET,
-		TUNGSTEN,
-		FLUORESCENT
-	}
-	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
-	public delegate void PhotoCapturePrepared (void* data, Gst.Caps configured_caps);
-	[CCode (cheader_filename = "gst/gst.h")]
-	public const string PHOTOGRAPHY_AUTOFOCUS_DONE;
-	[CCode (cheader_filename = "gst/gst.h")]
-	public const string PHOTOGRAPHY_SHAKE_RISK;
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static GLib.Type colour_tone_mode_get_type ();
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static GLib.Type flash_mode_get_type ();
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static GLib.Type focus_status_get_type ();
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static GLib.Type photo_caps_get_type ();
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static GLib.Type photo_shake_risk_get_type ();
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static GLib.Type scene_mode_get_type ();
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static GLib.Type white_balance_mode_get_type ();
 }

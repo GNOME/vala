@@ -74,6 +74,16 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public static unowned string tag_from_vorbis_tag (string vorbis_tag);
 	[CCode (cheader_filename = "gst/tag/tag.h")]
+	public static unowned string tag_get_language_code_iso_639_1 (string lang_code);
+	[CCode (cheader_filename = "gst/tag/tag.h")]
+	public static unowned string tag_get_language_code_iso_639_2B (string lang_code);
+	[CCode (cheader_filename = "gst/tag/tag.h")]
+	public static unowned string tag_get_language_code_iso_639_2T (string lang_code);
+	[CCode (cheader_filename = "gst/tag/tag.h")]
+	public static unowned string tag_get_language_codes ();
+	[CCode (cheader_filename = "gst/tag/tag.h")]
+	public static unowned string tag_get_language_name (string language_code);
+	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public static uint tag_id3_genre_count ();
 	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public static unowned string tag_id3_genre_get (uint id);

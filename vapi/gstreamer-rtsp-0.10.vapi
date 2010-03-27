@@ -10,6 +10,7 @@ namespace Gst {
 		public Gst.RTSPResult close ();
 		public Gst.RTSPResult connect (GLib.TimeVal timeout);
 		public static Gst.RTSPResult create (Gst.RTSPUrl url, out Gst.RTSPConnection conn);
+		public static Gst.RTSPResult create_from_fd (int fd, string ip, uint16 port, string initial_buffer, out unowned Gst.RTSPConnection conn);
 		public Gst.RTSPResult do_tunnel (Gst.RTSPConnection conn2);
 		public Gst.RTSPResult flush (bool flush);
 		public unowned string get_ip ();
@@ -26,6 +27,7 @@ namespace Gst {
 		public Gst.RTSPResult send (Gst.RTSPMessage message, GLib.TimeVal timeout);
 		public Gst.RTSPResult set_auth (Gst.RTSPAuthMethod method, string user, string pass);
 		public void set_auth_param (string param, string value);
+		public void set_http_mode (bool enable);
 		public void set_ip (string ip);
 		public Gst.RTSPResult set_proxy (string host, uint port);
 		public Gst.RTSPResult set_qos_dscp (uint qos_dscp);
@@ -127,7 +129,7 @@ namespace Gst {
 		public Gst.RTSPResult set_port (uint16 port);
 	}
 	[Compact]
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/rtsp/gstrtspconnection.h")]
 	public class RTSPWatch {
 		[CCode (has_construct_function = false)]
 		public RTSPWatch (Gst.RTSPConnection conn, Gst.RTSPWatchFuncs funcs, GLib.DestroyNotify notify);
@@ -135,12 +137,15 @@ namespace Gst {
 		public uint queue_data (uchar data, uint size);
 		public uint queue_message (Gst.RTSPMessage message);
 		public void reset ();
+		public Gst.RTSPResult send_message (Gst.RTSPMessage message, uint id);
+		public Gst.RTSPResult write_data (uchar data, uint size, uint id);
 	}
 	[Compact]
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/rtsp/gstrtspconnection.h")]
 	public class RTSPWatchFuncs {
 		public weak GLib.Callback closed;
 		public weak GLib.Callback error;
+		public weak GLib.Callback error_full;
 		public weak GLib.Callback message_received;
 		public weak GLib.Callback message_sent;
 		public weak GLib.Callback tunnel_complete;
@@ -255,7 +260,13 @@ namespace Gst {
 		X_RECEDING_PLAYLISTCHANGE,
 		X_RTP_INFO,
 		X_STARTUPPROFILE,
-		TIMESTAMP
+		TIMESTAMP,
+		AUTHENTICATION_INFO,
+		HOST,
+		PRAGMA,
+		X_SERVER_IP_ADDRESS,
+		X_SESSIONCOOKIE,
+		LAST
 	}
 	[CCode (cprefix = "GST_RTSP_LOWER_TRANS_", has_type_id = false, cheader_filename = "gst/rtsp/gstrtspextension.h")]
 	public enum RTSPLowerTrans {
@@ -279,13 +290,17 @@ namespace Gst {
 		REDIRECT,
 		SETUP,
 		SET_PARAMETER,
-		TEARDOWN
+		TEARDOWN,
+		GET,
+		POST
 	}
 	[CCode (cprefix = "GST_RTSP_MESSAGE_", has_type_id = false, cheader_filename = "gst/rtsp/gstrtspmessage.h")]
 	public enum RTSPMsgType {
 		INVALID,
 		REQUEST,
 		RESPONSE,
+		HTTP_REQUEST,
+		HTTP_RESPONSE,
 		DATA
 	}
 	[CCode (cprefix = "GST_RTSP_PROFILE_", has_type_id = false, cheader_filename = "gst/rtsp/gstrtsptransport.h")]
@@ -395,7 +410,8 @@ namespace Gst {
 	[CCode (cprefix = "GST_RTSP_VERSION_", cheader_filename = "gst/rtsp/gstrtspdefs.h")]
 	public enum RTSPVersion {
 		INVALID,
-		@1_0
+		@1_0,
+		@1_1
 	}
 	[CCode (cheader_filename = "gst/rtsp/gstrtspurl.h")]
 	public const int RTSP_DEFAULT_PORT;
@@ -408,10 +424,12 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/rtsp/gstrtspdefs.h")]
 	public static Gst.RTSPMethod rtsp_find_method (string method);
 	[CCode (cheader_filename = "gst/rtsp/gstrtspdefs.h")]
+	public static bool rtsp_header_allow_multiple (Gst.RTSPHeaderField field);
+	[CCode (cheader_filename = "gst/rtsp/gstrtspdefs.h")]
 	public static unowned string rtsp_header_as_text (Gst.RTSPHeaderField field);
 	[CCode (cheader_filename = "gst/rtsp/gstrtspdefs.h")]
 	public static unowned string rtsp_method_as_text (Gst.RTSPMethod method);
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/rtsp/gstrtspdefs")]
 	public static string rtsp_options_as_text (Gst.RTSPMethod options);
 	[CCode (cheader_filename = "gst/rtsp/gstrtspdefs.h")]
 	public static unowned string rtsp_status_as_text (Gst.RTSPStatusCode code);

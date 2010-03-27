@@ -153,6 +153,8 @@ namespace Gst {
 		[NoWrapper]
 		public virtual bool query (Gst.Query query);
 		public bool query_latency (bool live, out Gst.ClockTime min_latency, out Gst.ClockTime max_latency);
+		[CCode (type = "gboolean", has_construct_function = false)]
+		public BaseSrc.seamless_segment (Gst.BaseSrc src, int64 start, int64 stop, int64 position);
 		public void set_blocksize (ulong blocksize);
 		[NoWrapper]
 		public virtual bool set_caps (Gst.Caps caps);
@@ -234,7 +236,7 @@ namespace Gst {
 		public bool qos { get; set; }
 	}
 	[Compact]
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/base/gstbitreader.h")]
 	public class BitReader {
 		public uint bit;
 		public uint byte;
@@ -250,6 +252,7 @@ namespace Gst {
 		public bool get_bits_uint8 (out uchar val, uint nbits);
 		public uint get_pos ();
 		public uint get_remaining ();
+		public uint get_size ();
 		public void init (uchar data, uint size);
 		public void init_from_buffer (Gst.Buffer buffer);
 		public bool peek_bits_uint16 (out uint16 val, uint nbits);
@@ -261,7 +264,7 @@ namespace Gst {
 		public bool skip_to_byte ();
 	}
 	[Compact]
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/base/gstbytereader.h")]
 	public class ByteReader {
 		public uint byte;
 		public uchar data;
@@ -290,6 +293,7 @@ namespace Gst {
 		public bool get_int8 (out char val);
 		public uint get_pos ();
 		public uint get_remaining ();
+		public uint get_size ();
 		public bool get_string_utf8 (string str);
 		public bool get_uint16_be (out uint16 val);
 		public bool get_uint16_le (out uint16 val);
@@ -334,6 +338,59 @@ namespace Gst {
 		public bool skip_string_utf8 ();
 	}
 	[Compact]
+	[CCode (cheader_filename = "gst/base/gstbytewriter.h")]
+	public class ByteWriter {
+		public uint alloc_size;
+		public bool fixed;
+		public bool @owned;
+		[CCode (has_construct_function = false)]
+		public ByteWriter ();
+		public bool ensure_free_space (uint size);
+		public bool fill (uchar value, uint size);
+		public unowned Gst.Buffer free_and_get_buffer ();
+		public uchar free_and_get_data ();
+		public uint get_remaining ();
+		public void init ();
+		public void init_with_buffer (Gst.Buffer buffer, bool initialized);
+		public void init_with_data (uchar data, uint size, bool initialized);
+		public void init_with_size (uint size, bool fixed);
+		public bool put_data (uchar data, uint size);
+		public bool put_float32_be (float val);
+		public bool put_float32_le (float val);
+		public bool put_float64_be (double val);
+		public bool put_float64_le (double val);
+		public bool put_int16_be (int16 val);
+		public bool put_int16_le (int16 val);
+		public bool put_int24_be (int32 val);
+		public bool put_int24_le (int32 val);
+		public bool put_int32_be (int32 val);
+		public bool put_int32_le (int32 val);
+		public bool put_int64_be (int64 val);
+		public bool put_int64_le (int64 val);
+		public bool put_int8 (char val);
+		public bool put_string_utf16 (uint16 data);
+		public bool put_string_utf32 (uint32 data);
+		public bool put_string_utf8 (string data);
+		public bool put_uint16_be (uint16 val);
+		public bool put_uint16_le (uint16 val);
+		public bool put_uint24_be (uint32 val);
+		public bool put_uint24_le (uint32 val);
+		public bool put_uint32_be (uint32 val);
+		public bool put_uint32_le (uint32 val);
+		public bool put_uint64_be (uint64 val);
+		public bool put_uint64_le (uint64 val);
+		public bool put_uint8 (uchar val);
+		public void reset ();
+		public unowned Gst.Buffer reset_and_get_buffer ();
+		public uchar reset_and_get_data ();
+		[CCode (has_construct_function = false)]
+		public ByteWriter.with_buffer (Gst.Buffer buffer, bool initialized);
+		[CCode (has_construct_function = false)]
+		public ByteWriter.with_data (uchar data, uint size, bool initialized);
+		[CCode (has_construct_function = false)]
+		public ByteWriter.with_size (uint size, bool fixed);
+	}
+	[Compact]
 	[CCode (cheader_filename = "gst/base/gstcollectpads.h")]
 	public class CollectData {
 		public Gst.Buffer buffer;
@@ -367,6 +424,7 @@ namespace Gst {
 		public uint read (Gst.CollectData data, uchar bytes, uint size);
 		public unowned Gst.Buffer read_buffer (Gst.CollectData data, uint size);
 		public bool remove_pad (Gst.Pad pad);
+		public void set_clip_function (Gst.CollectPadsClipFunction clipfunc);
 		public void set_flushing (bool flushing);
 		public void set_function (Gst.CollectPadsFunction func);
 		public void start ();
@@ -378,7 +436,9 @@ namespace Gst {
 		public void* checkdata;
 		public weak Gst.DataQueueCheckFullFunction checkfull;
 		public weak Gst.DataQueueSize cur_level;
+		public weak Gst.DataQueueEmptyCallback emptycallback;
 		public bool flushing;
+		public weak Gst.DataQueueFullCallback fullcallback;
 		public weak GLib.Cond item_add;
 		public weak GLib.Cond item_del;
 		public weak GLib.Mutex qlock;
@@ -391,6 +451,8 @@ namespace Gst {
 		public bool is_empty ();
 		public bool is_full ();
 		public void limits_changed ();
+		[CCode (cname = "gst_data_queue_new_full", has_construct_function = false)]
+		public DataQueue.new_with_callbacks (Gst.DataQueueCheckFullFunction checkfull, Gst.DataQueueFullCallback fullcallback, Gst.DataQueueEmptyCallback emptycallback, void* checkdata);
 		public bool pop (out unowned Gst.DataQueueItem item);
 		public bool push (Gst.DataQueueItem item);
 		public void set_flushing (bool flushing);
@@ -424,25 +486,33 @@ namespace Gst {
 		[NoWrapper]
 		public virtual Gst.FlowReturn create (out unowned Gst.Buffer buf);
 	}
-	[CCode (cprefix = "GST_BASE_SRC_", has_type_id = false, cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_BASE_SRC_", has_type_id = false, cheader_filename = "gst/base/gstbasesrc.h")]
 	public enum BaseSrcFlags {
 		STARTED,
 		FLAG_LAST
 	}
 	[CCode (cheader_filename = "gst/base/gstcollectpads.h")]
 	public delegate void CollectDataDestroyNotify ();
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/base/gstcollectpads.h")]
+	public delegate unowned Gst.Buffer CollectPadsClipFunction (Gst.CollectPads pads, Gst.CollectData data, Gst.Buffer buffer);
+	[CCode (cheader_filename = "gst/base/gstcollectpads.h")]
 	public delegate Gst.FlowReturn CollectPadsFunction (Gst.CollectPads pads);
 	[CCode (cheader_filename = "gst/base/gstdataqueue.h", has_target = false)]
 	public delegate bool DataQueueCheckFullFunction (Gst.DataQueue queue, uint visible, uint bytes, uint64 time, void* checkdata);
+	[CCode (cheader_filename = "gst/base/gstdataqueue.h", has_target = false)]
+	public delegate void DataQueueEmptyCallback (Gst.DataQueue queue, void* checkdata);
+	[CCode (cheader_filename = "gst/base/gstdataqueue.h", has_target = false)]
+	public delegate void DataQueueFullCallback (Gst.DataQueue queue, void* checkdata);
 	[CCode (cheader_filename = "gst/base/gsttypefindhelper.h", has_target = false)]
 	public delegate Gst.FlowReturn TypeFindHelperGetRangeFunction (Gst.Object obj, uint64 offset, uint length, out unowned Gst.Buffer buffer);
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/base/gsttypefindhelper.h")]
 	public static unowned Gst.Caps type_find_helper (Gst.Pad src, uint64 size);
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/base/gsttypefindhelper.h")]
 	public static unowned Gst.Caps type_find_helper_for_buffer (Gst.Object obj, Gst.Buffer buf, Gst.TypeFindProbability prob);
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/base/gsttypefindhelper.h")]
 	public static Gst.Caps type_find_helper_for_extension (Gst.Object obj, string extension);
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/base/gsttypefindhelper.h")]
 	public static unowned Gst.Caps type_find_helper_get_range (Gst.Object obj, Gst.TypeFindHelperGetRangeFunction func, uint64 size, Gst.TypeFindProbability prob);
+	[CCode (cheader_filename = "gst/base/gsttypefindhelper.h")]
+	public static unowned Gst.Caps type_find_helper_get_range_ext (Gst.Object obj, Gst.TypeFindHelperGetRangeFunction func, uint64 size, string extension, Gst.TypeFindProbability prob);
 }

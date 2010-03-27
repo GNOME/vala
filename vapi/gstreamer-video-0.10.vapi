@@ -106,140 +106,9 @@ namespace Gst {
 		[CCode (cname = "GST_VIDEO_SIZE_RANGE", cheader_filename = "gst/video/video.h")]
 		public const string SIZE;
 	}
-	[CCode (cheader_filename = "gst/video/video.h")]
-	public class BaseVideoCodec : Gst.Element {
-		public weak Gst.Element element;
-		public weak Gst.Adapter input_adapter;
-		public weak Gst.Adapter output_adapter;
-		public weak Gst.Pad sinkpad;
-		public weak Gst.Pad srcpad;
-		public uint64 system_frame_number;
-		public Gst.ClockTime timestamp_offset;
-		[CCode (type = "GstVideoFrame*", has_construct_function = false)]
-		public BaseVideoCodec.frame (Gst.BaseVideoCodec base_video_codec);
-		public static void free_frame (Gst.VideoFrame frame);
-	}
-	[CCode (cheader_filename = "gst/video/video.h")]
-	public class BaseVideoDecoder : Gst.BaseVideoCodec {
-		public uint64 base_picture_number;
-		public weak Gst.BaseVideoCodec base_video_codec;
-		public Gst.ClockTime buffer_timestamp;
-		public weak Gst.Caps caps;
-		public weak Gst.Buffer codec_data;
-		public weak Gst.VideoFrame current_frame;
-		public bool discont;
-		public int distance_from_sync;
-		public Gst.ClockTime earliest_time;
-		public int field_index;
-		public weak GLib.List frames;
-		public bool have_src_caps;
-		public bool have_sync;
-		public weak Gst.Adapter input_adapter;
-		public Gst.ClockTime last_sink_offset_end;
-		public Gst.ClockTime last_sink_timestamp;
-		public Gst.ClockTime last_timestamp;
-		public uint64 offset;
-		public weak Gst.Adapter output_adapter;
-		public uint64 presentation_frame_number;
-		public double proportion;
-		public int reorder_depth;
-		public bool sink_clipping;
-		public bool started;
-		public weak Gst.VideoState state;
-		public uint64 system_frame_number;
-		public Gst.ClockTime timestamp_offset;
-		public void add_to_frame (int n_bytes);
-		public Gst.FlowReturn end_of_stream (Gst.Buffer buffer);
-		public Gst.FlowReturn finish_frame (Gst.VideoFrame frame);
-		public unowned Gst.VideoFrame get_frame (int frame_number);
-		public int get_height ();
-		public unowned Gst.VideoState get_state ();
-		public uint64 get_timestamp_offset ();
-		public int get_width ();
-		public Gst.FlowReturn have_frame ();
-		public void lost_sync ();
-		public void set_src_caps ();
-		public void set_state (Gst.VideoState state);
-		public void set_sync_point ();
-	}
-	[CCode (cheader_filename = "gst/video/video.h")]
-	public class BaseVideoEncoder : Gst.BaseVideoCodec {
-		public weak Gst.BaseVideoCodec base_video_codec;
-		public weak Gst.Caps caps;
-		public int distance_from_sync;
-		public weak GLib.List frames;
-		public int64 max_latency;
-		public int64 min_latency;
-		public uint64 presentation_frame_number;
-		public bool set_output_caps;
-		public bool sink_clipping;
-		public weak Gst.VideoState state;
-		public uint64 system_frame_number;
-		public Gst.FlowReturn end_of_stream (Gst.Buffer buffer);
-		public Gst.FlowReturn finish_frame (Gst.VideoFrame frame);
-		public unowned Gst.VideoFrame get_frame (int frame_number);
-		public int get_height ();
-		public unowned Gst.VideoState get_state ();
-		public uint64 get_timestamp_offset ();
-		public int get_width ();
-		public void set_latency (Gst.ClockTime min_latency, Gst.ClockTime max_latency);
-		public void set_latency_fields (int n_fields);
-	}
-	[CCode (cheader_filename = "gst/video/video.h")]
-	public class BaseVideoParse : Gst.BaseVideoCodec {
-		public weak Gst.BaseVideoCodec base_video_codec;
-		public weak Gst.Caps caps;
-		public weak Gst.VideoFrame current_frame;
-		public bool discont;
-		public int distance_from_sync;
-		public bool have_sync;
-		public weak Gst.Adapter input_adapter;
-		public Gst.ClockTime last_timestamp;
-		public weak Gst.Adapter output_adapter;
-		public uint64 presentation_frame_number;
-		public int reorder_depth;
-		public bool set_output_caps;
-		public bool sink_clipping;
-		public bool started;
-		public weak Gst.VideoState state;
-		public uint64 system_frame_number;
-		public int64 timestamp_offset;
-		public void add_to_frame (int n_bytes);
-		public Gst.FlowReturn end_of_stream (Gst.Buffer buffer);
-		public Gst.FlowReturn finish_frame ();
-		public unowned Gst.VideoFrame get_frame ();
-		public int get_height ();
-		public unowned Gst.VideoState get_state ();
-		public uint64 get_timestamp_offset ();
-		public int get_width ();
-		public void lost_sync ();
-		public Gst.FlowReturn push (Gst.Buffer buffer);
-		public bool set_src_caps (Gst.Caps caps);
-		public void set_state (Gst.VideoState state);
-		public void set_sync_point ();
-	}
 	[CCode (cheader_filename = "gst/video/gstvideofilter.h")]
 	public class VideoFilter : Gst.BaseTransform {
 		public bool inited;
-	}
-	[Compact]
-	[CCode (cheader_filename = "gst/video/video.h")]
-	public class VideoFrame {
-		public void* coder_hook;
-		public int decode_frame_number;
-		public uint64 decode_timestamp;
-		public int distance_from_sync;
-		public int field_index;
-		public bool is_eos;
-		public bool is_sync_point;
-		public int n_fields;
-		public uint64 presentation_duration;
-		public int presentation_frame_number;
-		public uint64 presentation_timestamp;
-		public weak Gst.Buffer sink_buffer;
-		public weak Gst.Buffer src_buffer;
-		public int system_frame_number;
-		public static Gst.Value rate (Gst.Pad pad);
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/video/gstvideosink.h")]
@@ -254,27 +123,10 @@ namespace Gst {
 		public int height;
 		public int width;
 		public static void center_rect (Gst.VideoRectangle src, Gst.VideoRectangle dst, Gst.VideoRectangle _result, bool scaling);
-	}
-	[Compact]
-	[CCode (cheader_filename = "gst/video/video.h")]
-	public class VideoState {
-		public int bytes_per_picture;
-		public int clean_height;
-		public int clean_offset_left;
-		public int clean_offset_top;
-		public int clean_width;
-		public Gst.VideoFormat format;
-		public int fps_d;
-		public int fps_n;
-		public int height;
-		public bool interlaced;
-		public int par_d;
-		public int par_n;
-		public int picture_number;
-		public weak Gst.Segment segment;
-		public bool top_field_first;
-		public int width;
-		public Gst.ClockTime get_timestamp (int frame_number);
+		[NoWrapper]
+		public virtual Gst.FlowReturn show_frame (Gst.Buffer buf);
+		[NoAccessorMethod]
+		public bool show_preroll_frame { get; set construct; }
 	}
 	[CCode (cprefix = "GST_VIDEO_FORMAT_", cheader_filename = "gst/video/video.h")]
 	public enum VideoFormat {
@@ -299,32 +151,16 @@ namespace Gst {
 		YVYU,
 		Y444,
 		v210,
-		v216
+		v216,
+		NV12,
+		NV21
 	}
 	[CCode (cheader_filename = "gst/video/video.h")]
-	public const string BASE_VIDEO_CODEC_SINK_NAME;
-	[CCode (cheader_filename = "gst/video/video.h")]
-	public const string BASE_VIDEO_CODEC_SRC_NAME;
-	[CCode (cheader_filename = "gst/video/video.h")]
-	public const string BASE_VIDEO_DECODER_SINK_NAME;
-	[CCode (cheader_filename = "gst/video/video.h")]
-	public const string BASE_VIDEO_DECODER_SRC_NAME;
-	[CCode (cheader_filename = "gst/video/video.h")]
-	public const string BASE_VIDEO_ENCODER_SINK_NAME;
-	[CCode (cheader_filename = "gst/video/video.h")]
-	public const string BASE_VIDEO_ENCODER_SRC_NAME;
-	[CCode (cheader_filename = "gst/video/video.h")]
-	public const string BASE_VIDEO_PARSE_SINK_NAME;
-	[CCode (cheader_filename = "gst/video/video.h")]
-	public const string BASE_VIDEO_PARSE_SRC_NAME;
-	[CCode (cheader_filename = "gst/video/video.h")]
-	public static bool base_video_encoded_video_convert (Gst.VideoState state, Gst.Format src_format, int64 src_value, Gst.Format dest_format, int64 dest_value);
-	[CCode (cheader_filename = "gst/video/video.h")]
-	public static bool base_video_rawvideo_convert (Gst.VideoState state, Gst.Format src_format, int64 src_value, Gst.Format dest_format, int64 dest_value);
-	[CCode (cheader_filename = "gst/video/video.h")]
-	public static bool base_video_state_from_caps (Gst.VideoState state, Gst.Caps caps);
-	[CCode (cheader_filename = "gst/video/video.h")]
 	public static bool video_calculate_display_ratio (ref uint dar_n, ref uint dar_d, uint video_width, uint video_height, uint video_par_n, uint video_par_d, uint display_par_n, uint display_par_d);
+	[CCode (cheader_filename = "gst/video/video.h")]
+	public static unowned Gst.Event video_event_new_still_frame (bool in_still);
+	[CCode (cheader_filename = "gst/video/video.h")]
+	public static bool video_event_parse_still_frame (Gst.Event event, bool in_still);
 	[CCode (cheader_filename = "gst/video/video.h")]
 	public static bool video_format_convert (Gst.VideoFormat format, int width, int height, int fps_n, int fps_d, Gst.Format src_format, int64 src_value, Gst.Format dest_format, ref int64 dest_value);
 	[CCode (cheader_filename = "gst/video/video.h")]
@@ -357,6 +193,8 @@ namespace Gst {
 	public static bool video_format_parse_caps_interlaced (Gst.Caps caps, bool interlaced);
 	[CCode (cheader_filename = "gst/video/video.h")]
 	public static uint32 video_format_to_fourcc (Gst.VideoFormat format);
+	[CCode (cheader_filename = "gst/video/video.h")]
+	public static Gst.Value video_frame_rate (Gst.Pad pad);
 	[CCode (cheader_filename = "gst/video/video.h")]
 	public static bool video_get_size (Gst.Pad pad, ref int width, ref int height);
 	[CCode (cheader_filename = "gst/video/video.h")]

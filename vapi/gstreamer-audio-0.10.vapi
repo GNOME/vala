@@ -73,6 +73,8 @@ namespace Gst {
 		[NoAccessorMethod]
 		public bool can_activate_pull { get; set; }
 		[NoAccessorMethod]
+		public int64 drift_tolerance { get; set; }
+		[NoAccessorMethod]
 		public int64 latency_time { get; set; }
 		public bool provide_clock { get; set; }
 		public Gst.BaseAudioSinkSlaveMethod slave_method { get; set; }
