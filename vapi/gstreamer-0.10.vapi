@@ -103,29 +103,28 @@ namespace Gst {
 		public bool timestamp_is_valid ();
 		public static Gst.Buffer? try_new_and_alloc (uint size);
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public class BufferList {
+	public class BufferList : Gst.MiniObject {
 		[CCode (has_construct_function = false)]
 		public BufferList ();
 		public void @foreach (Gst.BufferListFunc func);
-		public unowned Gst.Buffer @get (uint group, uint idx);
-		public unowned Gst.BufferListIterator iterate ();
+		public unowned Gst.Buffer? @get (uint group, uint idx);
+		public Gst.BufferListIterator iterate ();
 		public uint n_groups ();
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class BufferListIterator {
-		public void add (Gst.Buffer buffer);
+		public void add (owned Gst.Buffer buffer);
 		public void add_group ();
-		public unowned Gst.Buffer @do (Gst.BufferListDoFunction do_func);
-		public unowned Gst.Buffer merge_group ();
+		public unowned Gst.Buffer? @do (Gst.BufferListDoFunction do_func);
+		public Gst.Buffer? merge_group ();
 		public uint n_buffers ();
-		public unowned Gst.Buffer next ();
+		public unowned Gst.Buffer? next ();
 		public bool next_group ();
 		public void remove ();
-		public unowned Gst.Buffer steal ();
-		public void take (Gst.Buffer buffer);
+		public unowned Gst.Buffer? steal ();
+		public void take (owned Gst.Buffer buffer);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Bus : Gst.Object {
