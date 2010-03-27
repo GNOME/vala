@@ -81,7 +81,7 @@ internal class Vala.DBusModule : GAsyncModule {
 
 	public string get_dbus_name_for_member (Symbol symbol) {
 		var dbus = symbol.get_attribute ("DBus");
-		if (dbus != null) {
+		if (dbus != null && dbus.has_argument ("name")) {
 			return dbus.get_string ("name");
 		}
 

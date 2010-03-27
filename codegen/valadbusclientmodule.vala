@@ -44,6 +44,19 @@ internal class Vala.DBusClientModule : DBusModule {
 		}
 	}
 
+	public CCodeConstant get_dbus_timeout (Symbol symbol) {
+		int timeout = -1;
+
+		var dbus = symbol.get_attribute ("DBus");
+		if (dbus != null && dbus.has_argument ("timeout")) {
+			timeout = dbus.get_integer ("timeout");
+		} else if (symbol.parent_symbol != null) {
+			return get_dbus_timeout (symbol.parent_symbol);
+		}
+
+		return new CCodeConstant (timeout.to_string ());
+	}
+
 	bool has_dbus_error (List<DataType> error_types) {
 		foreach (DataType error_type in error_types) {
 			if (((ErrorType) error_type).error_domain.get_full_name () == "DBus.Error") {
@@ -1304,7 +1317,7 @@ internal class Vala.DBusClientModule : DBusModule {
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_connection_send_with_reply_and_block"));
 		ccall.add_argument (connection);
 		ccall.add_argument (new CCodeIdentifier ("_message"));
-		ccall.add_argument (new CCodeConstant ("-1"));
+		ccall.add_argument (get_dbus_timeout (m));
 		ccall.add_argument (dbus_error);
 		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_reply"), ccall)));
 
@@ -1802,7 +1815,7 @@ internal class Vala.DBusClientModule : DBusModule {
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_connection_send_with_reply_and_block"));
 		ccall.add_argument (connection);
 		ccall.add_argument (new CCodeIdentifier ("_message"));
-		ccall.add_argument (new CCodeConstant ("-1"));
+		ccall.add_argument (get_dbus_timeout (m));
 		ccall.add_argument (dbus_error);
 		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_reply"), ccall)));
 
@@ -1976,7 +1989,7 @@ internal class Vala.DBusClientModule : DBusModule {
 		ccall.add_argument (connection);
 		ccall.add_argument (new CCodeIdentifier ("_message"));
 		ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_pending")));
-		ccall.add_argument (new CCodeConstant ("-1"));
+		ccall.add_argument (get_dbus_timeout (m));
 		block.add_statement (new CCodeExpressionStatement (ccall));
 
 		var conn_unref = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_connection_unref"));
@@ -2450,7 +2463,7 @@ internal class Vala.DBusClientModule : DBusModule {
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_connection_send_with_reply_and_block"));
 		ccall.add_argument (connection);
 		ccall.add_argument (new CCodeIdentifier ("_message"));
-		ccall.add_argument (new CCodeConstant ("-1"));
+		ccall.add_argument (get_dbus_timeout (prop));
 		ccall.add_argument (dbus_error);
 		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_reply"), ccall)));
 
@@ -2603,7 +2616,7 @@ internal class Vala.DBusClientModule : DBusModule {
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_connection_send_with_reply_and_block"));
 		ccall.add_argument (connection);
 		ccall.add_argument (new CCodeIdentifier ("_message"));
-		ccall.add_argument (new CCodeConstant ("-1"));
+		ccall.add_argument (get_dbus_timeout (prop));
 		ccall.add_argument (dbus_error);
 		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_reply"), ccall)));
 
