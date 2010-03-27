@@ -32,6 +32,11 @@ namespace Gst {
 	public struct ClockTimeDiff : int64 {
 	}
 
+	public class ClockID {
+		public ClockID.single_shot (Gst.Clock clock, Gst.ClockTime time);
+		public ClockID.periodic (Gst.Clock clock, Gst.ClockTime start_time, Gst.ClockTime interval);
+	}
+
 	[CCode (ref_function = "gst_event_ref", unref_function = "gst_event_unref")]
 	public class Event : MiniObject {
 		public Event @ref ();

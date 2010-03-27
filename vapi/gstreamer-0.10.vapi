@@ -215,10 +215,9 @@ namespace Gst {
 		public void unref ();
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
-	public class Clock : Gst.Object {
-		public void* ABI;
+	public abstract class Clock : Gst.Object {
 		public weak Gst.ClockID clockid;
-		public weak GLib.List entries;
+		public weak GLib.List<Gst.ClockEntry> entries;
 		public weak GLib.Cond entries_changed;
 		public Gst.ClockTime external_calibration;
 		public bool filling;
@@ -230,23 +229,20 @@ namespace Gst {
 		public Gst.ClockTime resolution;
 		public weak GLib.Mutex slave_lock;
 		public int time_index;
-		public Gst.ClockTime times;
-		public bool add_observation (Gst.ClockTime slave, Gst.ClockTime master, double r_squared);
+		[CCode (array_length = false)]
+		public weak Gst.ClockTime[] times;
+		public bool add_observation (Gst.ClockTime slave, Gst.ClockTime master, out double r_squared);
 		public Gst.ClockTime adjust_unlocked (Gst.ClockTime @internal);
 		[NoWrapper]
 		public virtual Gst.ClockTime change_resolution (Gst.ClockTime old_resolution, Gst.ClockTime new_resolution);
-		public void get_calibration (Gst.ClockTime @internal, Gst.ClockTime external, Gst.ClockTime rate_num, Gst.ClockTime rate_denom);
+		public void get_calibration (out Gst.ClockTime @internal, out Gst.ClockTime external, out Gst.ClockTime rate_num, out Gst.ClockTime rate_denom);
 		public virtual Gst.ClockTime get_internal_time ();
-		public unowned Gst.Clock get_master ();
+		public Gst.Clock? get_master ();
 		public virtual Gst.ClockTime get_resolution ();
 		public Gst.ClockTime get_time ();
-		[CCode (type = "GstClockID", has_construct_function = false)]
-		public Clock.periodic_id (Gst.Clock clock, Gst.ClockTime start_time, Gst.ClockTime interval);
 		public void set_calibration (Gst.ClockTime @internal, Gst.ClockTime external, Gst.ClockTime rate_num, Gst.ClockTime rate_denom);
-		public bool set_master (Gst.Clock master);
+		public bool set_master (Gst.Clock? master);
 		public Gst.ClockTime set_resolution (Gst.ClockTime resolution);
-		[CCode (type = "GstClockID", has_construct_function = false)]
-		public Clock.single_shot_id (Gst.Clock clock, Gst.ClockTime time);
 		public Gst.ClockTime unadjust_unlocked (Gst.ClockTime external);
 		[NoWrapper]
 		public virtual void unschedule (Gst.ClockEntry entry);
@@ -255,7 +251,7 @@ namespace Gst {
 		[NoWrapper]
 		public virtual Gst.ClockReturn wait_async (Gst.ClockEntry entry);
 		[NoWrapper]
-		public virtual Gst.ClockReturn wait_jitter (Gst.ClockEntry entry, Gst.ClockTimeDiff jitter);
+		public virtual Gst.ClockReturn wait_jitter (Gst.ClockEntry entry, out Gst.ClockTimeDiff jitter);
 		[NoAccessorMethod]
 		public bool stats { get; set; }
 		[NoAccessorMethod]
@@ -277,11 +273,12 @@ namespace Gst {
 		public Gst.ClockEntryType type;
 		public void* user_data;
 	}
-	[Compact]
 	[CCode (ref_function = "gst_clock_id_ref", unref_function = "gst_clock_id_unref", cheader_filename = "gst/gst.h")]
 	public class ClockID {
 		public static int compare_func (void* id1, void* id2);
 		public Gst.ClockTime get_time ();
+		public ClockID.periodic (Gst.Clock clock, Gst.ClockTime start_time, Gst.ClockTime interval);
+		public ClockID.single_shot (Gst.Clock clock, Gst.ClockTime time);
 		public void unschedule ();
 		public Gst.ClockReturn wait (Gst.ClockTimeDiff jitter);
 		public Gst.ClockReturn wait_async (Gst.ClockCallback func);
