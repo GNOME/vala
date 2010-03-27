@@ -290,10 +290,6 @@ namespace Gst {
 	[Compact]
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class DebugCategory {
-		public uint color;
-		public weak string description;
-		public weak string name;
-		public int threshold;
 		[CCode (cname = "GST_CAT_DEBUG")]
 		public void debug (string format, ...);
 		[CCode (cname = "GST_CAT_DEBUG_OBJECT")]
@@ -2525,7 +2521,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static int debug_construct_win_color (uint colorinfo);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static unowned GLib.SList debug_get_all_categories ();
+	public static GLib.SList<Gst.DebugCategory> debug_get_all_categories ();
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static Gst.DebugLevel debug_get_default_threshold ();
 	[CCode (cheader_filename = "gst/gst.h")]
