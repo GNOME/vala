@@ -128,12 +128,6 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Bus : Gst.Object {
-		public uint num_signal_watchers;
-		public weak GLib.Queue queue;
-		public weak GLib.Mutex queue_lock;
-		public uint signal_watch_id;
-		public weak Gst.BusSyncHandler sync_handler;
-		public void* sync_handler_data;
 		[CCode (has_construct_function = false)]
 		public Bus ();
 		public void add_signal_watch ();
@@ -141,23 +135,24 @@ namespace Gst {
 		[CCode (cname = "gst_bus_add_watch_full")]
 		public uint add_watch (owned Gst.BusFunc func, [CCode (pos = 0.1)] int priority = GLib.Priority.DEFAULT);
 		public uint add_watch_full (int priority, owned Gst.BusFunc func);
-		public bool async_signal_func (Gst.Message message, void* data);
-		public unowned GLib.TimeoutSource create_watch ();
+		[CCode (instance_pos = -1)]
+		public bool async_signal_func (Gst.Bus bus, Gst.Message message);
+		public GLib.TimeoutSource create_watch ();
 		public void disable_sync_message_emission ();
 		public void enable_sync_message_emission ();
 		public bool have_pending ();
-		public Gst.Message peek ();
+		public Gst.Message? peek ();
 		public Gst.Message? poll (Gst.MessageType events, Gst.ClockTimeDiff timeout);
-		public Gst.Message pop ();
-		public Gst.Message pop_filtered (Gst.MessageType types);
+		public Gst.Message? pop ();
+		public Gst.Message? pop_filtered (Gst.MessageType types);
 		public bool post (owned Gst.Message message);
 		public void remove_signal_watch ();
 		public void set_flushing (bool flushing);
-		public void set_sync_handler (Gst.BusSyncHandler func);
+		public void set_sync_handler (Gst.BusSyncHandler? func);
 		[CCode (instance_pos = -1)]
 		public Gst.BusSyncReply sync_signal_handler (Gst.Bus bus, Gst.Message message);
-		public Gst.Message timed_pop (Gst.ClockTime timeout);
-		public Gst.Message timed_pop_filtered (Gst.ClockTime timeout, Gst.MessageType types);
+		public Gst.Message? timed_pop (Gst.ClockTime timeout);
+		public Gst.Message? timed_pop_filtered (Gst.ClockTime timeout, Gst.MessageType types);
 		public virtual signal void message (Gst.Message message);
 		public virtual signal void sync_message (Gst.Message message);
 	}

@@ -74,6 +74,9 @@ namespace Gst {
 		public uint add_watch (owned Gst.BusFunc func, [CCode (pos = 0.1)] int priority = GLib.Priority.DEFAULT);
 		[CCode (instance_pos = -1)]
 		public Gst.BusSyncReply sync_signal_handler (Gst.Bus bus, Gst.Message message);
+
+		[CCode (instance_pos = -1)]
+		public bool async_signal_func (Gst.Bus bus, Gst.Message message);
 	}
 
 	[CCode (cheader_filename = "gst/gst.h")]
