@@ -3837,6 +3837,12 @@ namespace GLib {
 		public uint hash ();
 		public bool equal (Variant other);
 
+		public Variant byteswap ();
+		public Variant get_normal_form ();
+		public bool is_normal_form ();
+		[CCode (returns_floating_reference = true, simple_generics = true)]
+		public static Variant new_from_data<T> (uchar[] data, [CCode (destroy_notify_pos = 37.5)] owned T? owner);
+
 		[CCode (cname = "g_variant_iter_new")]
 		public VariantIter iterator ();
 	}
