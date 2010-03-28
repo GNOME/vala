@@ -3841,7 +3841,7 @@ namespace GLib {
 		public Variant get_normal_form ();
 		public bool is_normal_form ();
 		[CCode (returns_floating_reference = true, simple_generics = true)]
-		public static Variant new_from_data<T> (uchar[] data, [CCode (destroy_notify_pos = 37.5)] owned T? owner);
+		public static Variant new_from_data<T> (VariantType type, uchar[] data, bool trusted, [CCode (destroy_notify_pos = 3.9)] owned T? owner = null);
 
 		[CCode (cname = "g_variant_iter_new")]
 		public VariantIter iterator ();
