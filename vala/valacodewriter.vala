@@ -1134,6 +1134,18 @@ public class Vala.CodeWriter : CodeVisitor {
 		write_identifier (prop.name);
 		write_string (" {");
 		if (prop.get_accessor != null) {
+			var ccode_params = new StringBuilder ();
+			var separator = "";
+
+			if (prop.get_accessor.get_cname () != prop.get_accessor.get_default_cname ()) {
+				ccode_params.append_printf ("%scname = \"%s\"", separator, prop.get_accessor.get_cname ());
+				separator = ", ";
+			}
+			if (ccode_params.len > 0) {
+				write_indent ();
+				write_string ("[CCode (%s)]".printf (ccode_params.str));
+			}
+
 			if (context.profile != Profile.DOVA && prop.get_accessor.value_type.is_disposable ()) {
 				write_string (" owned");
 			}
@@ -1142,6 +1154,18 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_code_block (prop.get_accessor.body);
 		}
 		if (prop.set_accessor != null) {
+			var ccode_params = new StringBuilder ();
+			var separator = "";
+
+			if (prop.set_accessor.get_cname () != prop.set_accessor.get_default_cname ()) {
+				ccode_params.append_printf ("%scname = \"%s\"", separator, prop.set_accessor.get_cname ());
+				separator = ", ";
+			}
+			if (ccode_params.len > 0) {
+				write_indent ();
+				write_string ("[CCode (%s)]".printf (ccode_params.str));
+			}
+
 			if (context.profile != Profile.DOVA && prop.set_accessor.value_type.value_owned) {
 				write_string (" owned");
 			}

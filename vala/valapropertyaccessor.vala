@@ -96,6 +96,16 @@ public class Vala.PropertyAccessor : Symbol {
 	 */
 	public LocalVariable? result_var { get; set; }
 
+	public virtual string get_default_cname () {
+		var t = (TypeSymbol) prop.parent_symbol;
+
+		if (readable) {
+			return "%sget_%s".printf (t.get_lower_case_cprefix (), prop.name);
+		} else {
+			return "%sset_%s".printf (t.get_lower_case_cprefix (), prop.name);
+		}
+	}
+
 	/**
 	 * The publicly accessible name of the function that performs the
 	 * access in C code.
@@ -104,14 +114,7 @@ public class Vala.PropertyAccessor : Symbol {
 		if (_cname != null) {
 			return _cname;
 		}
-
-		var t = (TypeSymbol) prop.parent_symbol;
-
-		if (readable) {
-			return "%sget_%s".printf (t.get_lower_case_cprefix (), prop.name);
-		} else {
-			return "%sset_%s".printf (t.get_lower_case_cprefix (), prop.name);
-		}
+		return get_default_cname ();
 	}
 
 	private DataType _value_type;
