@@ -864,7 +864,7 @@ namespace Readline {
 	public int completion_mode (CommandFunc func);
 
 	[CCode (cname = "rl_library_version")]
-	public weak string library_version;
+	public unowned string library_version;
 
 	[CCode (cname = "rl_readline_version")]
 	public int readline_version;
@@ -882,7 +882,7 @@ namespace Readline {
 	public int insert_mode;
 
 	[CCode (cname = "rl_readline_name")]
-	public weak string readline_name;
+	public unowned string readline_name;
 
 	[CCode (cname = "rl_prompt")]
 	public string? prompt;
@@ -918,7 +918,7 @@ namespace Readline {
 	public CommandFunc last_func;
 
 	[CCode (cname = "rl_terminal_name")]
-	public weak string terminal_name;
+	public unowned string terminal_name;
 
 	[CCode (cname = "rl_instream")]
 	public GLib.FileStream? instream;
@@ -1209,7 +1209,7 @@ namespace Readline {
 
 		[CCode (cname = "HISTORY_STATE")]
 		public struct State {
-			public weak History.Entry[]? entries;
+			public unowned History.Entry[]? entries;
 			public int offset;
 			public int length;
 			public int size;
