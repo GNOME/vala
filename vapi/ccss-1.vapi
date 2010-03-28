@@ -3,7 +3,7 @@ namespace CCss {
 	[Compact]
 	[CCode (cprefix = "ccss_background_attachment_", cname = "ccss_background_attachment_t")]
 	public class BackgroundAttachment: Property {
-		[CCode (cprefix = "CCSS_BACKGROUND_", has_type_id = "0", cname = "ccss_background_attachment_type_t")]
+		[CCode (cprefix = "CCSS_BACKGROUND_", has_type_id = false, cname = "ccss_background_attachment_type_t")]
 		public enum Type {
 			SCROLL,
 			FIXED
@@ -32,7 +32,7 @@ namespace CCss {
 	[Compact]
 	[CCode (cprefix = "ccss_background_repeat_", cname = "ccss_background_repeat_t")]
 	public class BackgroundRepeat: Property {
-		[CCode (cprefix = "CCSS_BACKGROUND_", has_type_id = "0", cname = "ccss_background_repeat_type_t")]
+		[CCode (cprefix = "CCSS_BACKGROUND_", has_type_id = false, cname = "ccss_background_repeat_type_t")]
 		public enum Type {
 			REPEAT,
 			REPEAT_X,
@@ -83,7 +83,7 @@ namespace CCss {
 	[Compact]
 	[CCode (cprefix = "ccss_border_image_", cname = "ccss_border_image_t")]
 	public class BorderImage: Property {
-		[CCode (cprefix = "CCSS_BORDER_IMAGE_TILING_", has_type_id = "0", cname = "ccss_border_image_tiling_t")]
+		[CCode (cprefix = "CCSS_BORDER_IMAGE_TILING_", has_type_id = false, cname = "ccss_border_image_tiling_t")]
 		public enum Tiling {
 			REPEAT,
 			ROUND,
@@ -128,7 +128,7 @@ namespace CCss {
 	[Compact]
 	[CCode (cprefix = "ccss_border_style_", cname = "ccss_border_style_t")]
 	public class BorderStyle: Property {
-		[CCode (cprefix = "CCSS_BORDER_STYLE_", has_type_id = "0", cname = "ccss_border_style_type_t")]
+		[CCode (cprefix = "CCSS_BORDER_STYLE_", has_type_id = false, cname = "ccss_border_style_type_t")]
 		public enum Type {
 			HIDDEN,
 			DOTTED,
@@ -252,7 +252,7 @@ namespace CCss {
 	[Compact]
 	[CCode (cprefix = "ccss_position_", cname = "ccss_position_t")]
 	public class Position: Property {
-		[CCode (cprefix = "CCSS_POSITION_", has_type_id = "0", cname = "ccss_position_type_t")]
+		[CCode (cprefix = "CCSS_POSITION_", has_type_id = false, cname = "ccss_position_type_t")]
 		public enum Type {
 			LENGTH,
 			PERCENTAGE,
@@ -297,7 +297,7 @@ namespace CCss {
 	[Compact]
 	[CCode (cprefix = "ccss_property_", cname = "ccss_property_t", free_function = "ccss_property_destroy")]
 	public class Property {
-		[CCode (cprefix = "CCSS_PROPERTY_STATE_", has_type_id = "0", cname = "ccss_property_state_t")]
+		[CCode (cprefix = "CCSS_PROPERTY_STATE_", has_type_id = false, cname = "ccss_property_state_t")]
 		public enum State {
 			INVALID,
 			NONE,
@@ -310,7 +310,7 @@ namespace CCss {
 			[CCode (cname = "ccss_property_state_serialize")]
 			public unowned string serialize ();
 		}
-		[CCode (cprefix = "CCSS_PROPERTY_TYPE_", has_type_id = "0", cname = "ccss_property_type_t")]
+		[CCode (cprefix = "CCSS_PROPERTY_TYPE_", has_type_id = false, cname = "ccss_property_type_t")]
 		public enum Type {
 			DOUBLE,
 			STRING
@@ -355,7 +355,7 @@ namespace CCss {
 	[Compact]
 	[CCode (cprefix = "ccss_stylesheet_", cname = "ccss_stylesheet_t", ref_function = "ccss_stylesheet_reference", unref_function = "ccss_stylesheet_destroy")]
 	public class Stylesheet {
-		[CCode (cprefix = "CCSS_STYLESHEET_", has_type_id = "0", cname = "ccss_stylesheet_precedence_t")]
+		[CCode (cprefix = "CCSS_STYLESHEET_", has_type_id = false, cname = "ccss_stylesheet_precedence_t")]
 		public enum Precedence {
 			USER_AGENT,
 			USER,

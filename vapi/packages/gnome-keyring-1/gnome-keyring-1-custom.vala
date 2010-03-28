@@ -19,7 +19,7 @@ namespace GnomeKeyring
 		public uint len;
 	}
 
-	[CCode (cprefix = "GNOME_KEYRING_ITEM_", has_type_id = "0", cheader_filename = "gnome-keyring.h")]
+	[CCode (cprefix = "GNOME_KEYRING_ITEM_", has_type_id = false, cheader_filename = "gnome-keyring.h")]
 	public enum ItemType {
 		APPLICATION_SECRET,
 		ITEM_TYPE_MASK,
@@ -32,7 +32,7 @@ namespace GnomeKeyring
 		LAST_TYPE
 	}
 
-	[CCode (cprefix = "GNOME_KEYRING_ITEM_INFO_", has_type_id = "0", cheader_filename = "gnome-keyring.h")]
+	[CCode (cprefix = "GNOME_KEYRING_ITEM_INFO_", has_type_id = false, cheader_filename = "gnome-keyring.h")]
 	public enum ItemInfoFlags {
 		ALL,
 		BASICS,

@@ -249,7 +249,7 @@ namespace Osso {
 		DIMMED
 	}
 
-	[CCode (cprefix = "GDK_", has_type_id = "0", cheader_filename = "gdk/gdkkeysyms.h")]
+	[CCode (cprefix = "GDK_", has_type_id = false, cheader_filename = "gdk/gdkkeysyms.h")]
 	public enum KeySym {
 		Up,
 		Down,

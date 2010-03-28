@@ -787,7 +787,7 @@ namespace X {
 		public ClientMessageEventData data;
 	}
 
-	[CCode (cname = "RECTANGLE", has_type_id = "false")]
+	[CCode (cname = "RECTANGLE", has_type_id = false)]
 	public struct Rectangle {
 		public short x;
 		public short y;
