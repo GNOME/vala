@@ -1,6 +1,6 @@
 /* valasignal.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -107,6 +107,7 @@ public class Vala.Signal : Member, Lockable {
 		param.cparameter_position = parameters.size + 1;
 		param.carray_length_parameter_position = param.cparameter_position + 0.1;
 		param.cdelegate_target_parameter_position = param.cparameter_position + 0.1;
+		param.cdestroy_notify_parameter_position = param.cparameter_position + 0.1;
 
 		parameters.add (param);
 		scope.add (param.name, param);

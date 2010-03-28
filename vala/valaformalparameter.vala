@@ -1,6 +1,6 @@
 /* valaformalparameter.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
@@ -95,6 +95,8 @@ public class Vala.FormalParameter : Symbol {
 	 */
 	public double cdelegate_target_parameter_position { get; set; }
 
+	public double cdestroy_notify_parameter_position { get; set; }
+
 	/**
 	 * Specifies the type of the parameter in the C function.
 	 */
@@ -175,6 +177,9 @@ public class Vala.FormalParameter : Symbol {
 		}
 		if (a.has_argument ("delegate_target_pos")) {
 			cdelegate_target_parameter_position = a.get_double ("delegate_target_pos");
+		}
+		if (a.has_argument ("destroy_notify_pos")) {
+			cdestroy_notify_parameter_position = a.get_double ("destroy_notify_pos");
 		}
 	}
 

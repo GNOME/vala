@@ -275,6 +275,7 @@ public class Vala.Method : Member {
 		param.cparameter_position = parameters.size + 1;
 		param.carray_length_parameter_position = param.cparameter_position + 0.1;
 		param.cdelegate_target_parameter_position = param.cparameter_position + 0.1;
+		param.cdestroy_notify_parameter_position = param.cparameter_position + 0.1;
 
 		parameters.add (param);
 		if (!param.ellipsis) {
