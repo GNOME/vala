@@ -298,6 +298,8 @@ namespace Gst {
 		public void error (string format, ...);
 		[CCode (cname = "GST_CAT_ERROR_OBJECT")]
 		public void error_object (GLib.Object obj, string format, ...);
+		[CCode (cname = "GST_DEBUG_CATEGORY_GET")]
+		public static unowned Gst.DebugCategory @get (string name);
 		public uint get_color ();
 		public unowned string get_description ();
 		public unowned string get_name ();

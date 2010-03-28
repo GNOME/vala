@@ -207,6 +207,8 @@ namespace Gst {
 		public void warning_object (GLib.Object obj, string format, ...);
 		[CCode (cname="GST_CAT_ERROR_OBJECT")]
 		public void error_object (GLib.Object obj, string format, ...);
+		[CCode (cname="GST_DEBUG_CATEGORY_GET")]
+		public static unowned DebugCategory @get (string name);
 	}
 
 	[CCode (cname="GST_DEBUG_BIN_TO_DOT_FILE")]
