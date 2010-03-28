@@ -2555,7 +2555,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static GLib.Type double_range_get_type ();
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static unowned string error_get_message (GLib.Quark domain, int code);
+	public static string error_get_message (GLib.Quark domain, int code);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static unowned GLib.List filter_run (GLib.List list, Gst.FilterFunc func, bool first);
 	[CCode (cheader_filename = "gst/gst.h")]
