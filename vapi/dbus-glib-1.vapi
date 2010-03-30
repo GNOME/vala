@@ -62,6 +62,12 @@ namespace DBus {
 		public void add_match (string rule, ref RawError error);
 		[CCode (cname = "dbus_bus_remove_match")]
 		public void remove_match (string rule, ref RawError error);
+		[CCode (cname = "dbus_bus_get_unique_name")]
+		public unowned string get_unique_name();
+		[CCode (cname = "dbus_bus_request_name")]
+		public int request_name(string name, uint flags, ref RawError error);
+		[CCode (cname="dbus_bus_release_name")]
+		public int release_name(string name, ref RawError error);
 	}
 
 	[CCode (cname = "DBusError", cprefix = "dbus_error_", destroy_function = "dbus_error_free")]
@@ -230,6 +236,8 @@ namespace DBus {
 	public class Connection {
 		[CCode (cname = "dbus_g_proxy_new_for_name")]
 		public Object get_object (string name, string path, string? interface_ = null);
+		[CCode (cname="dbus_g_proxy_new_for_name_owner")]
+		public Object get_object_for_name_owner (string name, string path, string? interface_ = null) throws Error;
 		[CCode (cname = "dbus_g_proxy_new_from_type")]
 		public GLib.Object get_object_from_type (string name, string path, string interface_, GLib.Type type);
 		[CCode (cname = "dbus_g_connection_register_g_object")]
@@ -237,7 +245,7 @@ namespace DBus {
 		[CCode (cname = "dbus_g_connection_lookup_g_object")]
 		public unowned GLib.Object lookup_object (string at_path);
 		[CCode (cname = "dbus_g_connection_get_connection")]
-		public RawConnection get_connection ();
+		public unowned RawConnection get_connection ();
 	}
 
 	[CCode (cname = "DBusGProxy", lower_case_csuffix = "g_proxy")]
@@ -274,12 +282,14 @@ namespace DBus {
 	}
 
 	[Flags]
+	[CCode (cname = "uint")]
 	public enum NameFlag {
 		ALLOW_REPLACEMENT,
 		REPLACE_EXISTING,
 		DO_NOT_QUEUE
 	}
 
+	[CCode (cname = "int")]
 	public enum RequestNameReply {
 		PRIMARY_OWNER,
 		IN_QUEUE,
