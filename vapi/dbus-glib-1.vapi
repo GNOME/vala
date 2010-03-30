@@ -52,7 +52,7 @@ namespace DBus {
 		[CCode (cname = "dbus_connection_register_g_object")]
 		public void register_object (string at_path, GLib.Object object);
 
-		public bool send (RawMessage message, uint32 client_serial);
+		public bool send (RawMessage message, uint32? client_serial);
 		public RawMessage send_with_reply_and_block (RawMessage message, int timeout_milliseconds, ref RawError error);
 
 		public bool add_filter (RawHandleMessageFunction function, RawFreeFunction? free_data_function = null);
@@ -101,6 +101,9 @@ namespace DBus {
 		public int get_element_type ();
 		public void recurse (RawMessageIter sub);
 		public void get_basic (void* value);
+		public bool open_container (RawType arg_type, string? signature, RawMessageIter sub);
+		public bool close_container (RawMessageIter sub);
+		public bool append_basic (RawType arg_type, void* value);
 
 		[CCode (cname = "dbus_message_type_from_string")]
 		public static int type_from_string (string type);
@@ -115,7 +118,9 @@ namespace DBus {
 		[CCode (sentinel = "DBUS_TYPE_INVALID")]
 		public bool append_args (RawType first_arg_type, ...);
 		[CCode (cname = "dbus_message_iter_init")]
-		public bool iter_init( RawMessageIter iter );
+		public bool iter_init (RawMessageIter iter);
+		[CCode (cname = "dbus_message_iter_init_append")]
+		public bool iter_init_append (RawMessageIter iter);
 
 		public RawMessageType get_type ();
 		public bool   set_path (string object_path);
