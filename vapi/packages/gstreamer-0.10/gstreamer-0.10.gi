@@ -2106,7 +2106,7 @@
 			<method name="new_sink_message" symbol="gst_event_new_sink_message">
 				<return-type type="GstEvent*"/>
 				<parameters>
-					<parameter name="msg" type="struct _GstMessage*"/>
+					<parameter name="msg" type="GstMessage*"/>
 				</parameters>
 			</method>
 			<method name="new_step" symbol="gst_event_new_step">
@@ -2193,7 +2193,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="event" type="GstEvent*"/>
-					<parameter name="msg" type="struct _GstMessage**"/>
+					<parameter name="msg" type="GstMessage**"/>
 				</parameters>
 			</method>
 			<method name="parse_step" symbol="gst_event_parse_step">

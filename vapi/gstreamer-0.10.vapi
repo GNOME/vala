@@ -450,11 +450,7 @@ namespace Gst {
 	}
 	[CCode (ref_function = "gst_event_ref", unref_function = "gst_event_unref", cheader_filename = "gst/gst.h")]
 	public class Event : Gst.MiniObject {
-		public void* abidata;
-		public weak Gst.Object src;
-		public weak Gst.Structure structure;
 		public uint64 timestamp;
-		public Gst.EventType type;
 		[CCode (has_construct_function = false)]
 		public Event.buffer_size (Gst.Format format, int64 minsize, int64 maxsize, bool @async);
 		[CCode (has_construct_function = false)]
@@ -468,6 +464,12 @@ namespace Gst {
 		public uint32 get_seqnum ();
 		public unowned Gst.Structure get_structure ();
 		public bool has_name (string name);
+		[CCode (cname = "GST_EVENT_IS_DOWNSTREAM")]
+		public bool is_downstream ();
+		[CCode (cname = "GST_EVENT_IS_SERIALIZED")]
+		public bool is_serialized ();
+		[CCode (cname = "GST_EVENT_IS_UPSTREAM")]
+		public bool is_upstream ();
 		[CCode (has_construct_function = false)]
 		public Event.latency (Gst.ClockTime latency);
 		[CCode (has_construct_function = false)]
@@ -482,9 +484,9 @@ namespace Gst {
 		public void parse_new_segment_full (out bool update, out double rate, out double applied_rate, out Gst.Format format, out int64 start, out int64 stop, out int64 position);
 		public void parse_qos (out double proportion, out Gst.ClockTimeDiff diff, out Gst.ClockTime timestamp);
 		public void parse_seek (out double rate, out Gst.Format format, out Gst.SeekFlags flags, out Gst.SeekType start_type, out int64 start, out Gst.SeekType stop_type, out int64 stop);
-		public void parse_sink_message (void* msg);
-		public void parse_step (Gst.Format format, uint64 amount, double rate, bool flush, bool intermediate);
-		public void parse_tag (out Gst.TagList taglist);
+		public void parse_sink_message (out unowned Gst.Message msg);
+		public void parse_step (out Gst.Format format, out uint64 amount, out double rate, out bool flush, out bool intermediate);
+		public void parse_tag (out unowned Gst.TagList taglist);
 		[CCode (has_construct_function = false)]
 		public Event.qos (double proportion, Gst.ClockTimeDiff diff, Gst.ClockTime timestamp);
 		public Gst.Event @ref ();
@@ -493,12 +495,17 @@ namespace Gst {
 		public Event.seek (double rate, Gst.Format format, Gst.SeekFlags flags, Gst.SeekType start_type, int64 start, Gst.SeekType stop_type, int64 stop);
 		public void set_seqnum (uint32 seqnum);
 		[CCode (has_construct_function = false)]
-		public Event.sink_message (void* msg);
+		public Event.sink_message (owned Gst.Message msg);
+		[CCode (cname = "GST_EVENT_SRC")]
+		public unowned Gst.Object src ();
 		[CCode (has_construct_function = false)]
 		public Event.step (Gst.Format format, uint64 amount, double rate, bool flush, bool intermediate);
 		[CCode (has_construct_function = false)]
-		public Event.tag (Gst.TagList taglist);
+		public Event.tag (owned Gst.TagList taglist);
+		[CCode (cname = "GST_EVENT_TYPE")]
+		public Gst.EventType type ();
 		public static Gst.EventTypeFlags type_get_flags (Gst.EventType type);
+		public static unowned string type_get_name (Gst.EventType type);
 		public static GLib.Quark type_to_quark (Gst.EventType type);
 		public void unref ();
 	}

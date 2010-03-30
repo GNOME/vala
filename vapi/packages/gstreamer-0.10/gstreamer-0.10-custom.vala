@@ -42,7 +42,36 @@ namespace Gst {
 		public Event @ref ();
 		public void unref ();
 		public static void replace (ref Event? oldobj, Event? newobj);
+
+		[CCode (cname = "GST_EVENT_SRC")]
+		public unowned Gst.Object src ();
+		[CCode (cname = "GST_EVENT_TYPE")]
+		public EventType type ();
+		[CCode (cname = "GST_EVENT_IS_UPSTREAM")]
+		public bool is_upstream ();
+		[CCode (cname = "GST_EVENT_IS_DOWNSTREAM")]
+		public bool is_downstream ();
+		[CCode (cname = "GST_EVENT_IS_SERIALIZED")]
+		public bool is_serialized ();
+
+		// Deprecated, should be in Gst.EventType
+		public static Gst.EventTypeFlags type_get_flags (Gst.EventType type);
+		public static unowned string type_get_name (Gst.EventType type);
+		public static GLib.Quark type_to_quark (Gst.EventType type);
 	}
+
+#if 0
+	// FIXME: This can't be parsed by vapigen, see bug #614543
+	public enum EventType {
+		;
+		[CCode (cname = "gst_event_type_get_flags")]
+		public Gst.EventTypeFlags get_flags ();
+		[CCode (cname = "gst_event_type_to_quark")]
+		public GLib.Quark to_quark ();
+		[CCode (cname = "gst_event_type_get_name")]
+		public unowned string get_name ();
+	}
+#endif
 
 	[CCode (ref_function = "gst_object_ref", unref_function = "gst_object_unref", ref_sink_function = "gst_object_ref_sink")]
 	public class Object {
