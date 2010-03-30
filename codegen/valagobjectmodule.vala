@@ -189,6 +189,7 @@ internal class Vala.GObjectModule : GTypeModule {
 		block.add_statement (cdecl);
 
 		bool boxed_declared = false;
+		bool length_declared = false;
 
 		var cswitch = new CCodeSwitchStatement (new CCodeIdentifier ("property_id"));
 		var props = cl.get_properties ();
@@ -242,6 +243,17 @@ internal class Vala.GObjectModule : GTypeModule {
 			} else {
 				ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_get_%s".printf (prefix, prop.name)));
 				ccall.add_argument (cself);
+				var array_type = prop.property_type as ArrayType;
+				if (array_type != null && array_type.element_type.data_type == string_type.data_type) {
+					// G_TYPE_STRV
+					if (!length_declared) {
+						cdecl = new CCodeDeclaration ("int");
+						cdecl.add_declarator (new CCodeVariableDeclarator ("length"));
+						block.add_statement (cdecl);
+						length_declared = true;
+					}
+					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("length")));
+				}
 				var csetcall = new CCodeFunctionCall ();
 				if (prop.get_accessor.value_type.value_owned) {
 					csetcall.call = head.get_value_taker_function (prop.property_type);
@@ -281,7 +293,9 @@ internal class Vala.GObjectModule : GTypeModule {
 		var cdecl = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
 		cdecl.add_declarator (new CCodeVariableDeclarator ("self", ccall));
 		block.add_statement (cdecl);
-		
+
+		var boxed_declared = false;
+
 		var cswitch = new CCodeSwitchStatement (new CCodeIdentifier ("property_id"));
 		var props = cl.get_properties ();
 		foreach (Property prop in props) {
@@ -311,14 +325,31 @@ internal class Vala.GObjectModule : GTypeModule {
 			cswitch.add_statement (new CCodeCaseStatement (new CCodeIdentifier (prop.get_upper_case_cname ())));
 			ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_set_%s".printf (prefix, prop.name)));
 			ccall.add_argument (cself);
-			var cgetcall = new CCodeFunctionCall ();
-			if (prop.property_type.data_type != null) {
-				cgetcall.call = new CCodeIdentifier (prop.property_type.data_type.get_get_value_function ());
+			if (prop.property_type is ArrayType && ((ArrayType)prop.property_type).element_type.data_type == string_type.data_type) {
+				if (!boxed_declared) {
+					cdecl = new CCodeDeclaration ("gpointer");
+					cdecl.add_declarator (new CCodeVariableDeclarator ("boxed"));
+					block.add_statement (cdecl);
+					boxed_declared = true;
+				}
+				var cgetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_get_boxed"));
+				cgetcall.add_argument (new CCodeIdentifier ("value"));
+				cswitch.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("boxed"), cgetcall)));
+				ccall.add_argument (new CCodeIdentifier ("boxed"));
+
+				var cstrvlen = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
+				cstrvlen.add_argument (new CCodeIdentifier ("boxed"));
+				ccall.add_argument (cstrvlen);
 			} else {
-				cgetcall.call = new CCodeIdentifier ("g_value_get_pointer");
+				var cgetcall = new CCodeFunctionCall ();
+				if (prop.property_type.data_type != null) {
+					cgetcall.call = new CCodeIdentifier (prop.property_type.data_type.get_get_value_function ());
+				} else {
+					cgetcall.call = new CCodeIdentifier ("g_value_get_pointer");
+				}
+				cgetcall.add_argument (new CCodeIdentifier ("value"));
+				ccall.add_argument (cgetcall);
 			}
-			cgetcall.add_argument (new CCodeIdentifier ("value"));
-			ccall.add_argument (cgetcall);
 			cswitch.add_statement (new CCodeExpressionStatement (ccall));
 			cswitch.add_statement (new CCodeBreakStatement ());
 		}
@@ -721,7 +752,7 @@ internal class Vala.GObjectModule : GTypeModule {
 			return false;
 		}
 
-		if (prop.property_type is ArrayType) {
+		if (prop.property_type is ArrayType && ((ArrayType)prop.property_type).element_type.data_type != string_type.data_type) {
 			return false;
 		}
 

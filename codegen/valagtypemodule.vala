@@ -1774,6 +1774,9 @@ internal class Vala.GTypeModule : GErrorModule {
 				cspec.call = new CCodeIdentifier ("g_param_spec_boxed");
 				cspec.add_argument (new CCodeIdentifier (st.get_type_id ()));
 			}
+		} else if (prop.property_type is ArrayType && ((ArrayType)prop.property_type).element_type.data_type == string_type.data_type) {
+			cspec.call = new CCodeIdentifier ("g_param_spec_boxed");
+			cspec.add_argument (new CCodeIdentifier ("G_TYPE_STRV"));
 		} else {
 			cspec.call = new CCodeIdentifier ("g_param_spec_pointer");
 		}
