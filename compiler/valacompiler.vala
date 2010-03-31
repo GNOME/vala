@@ -208,7 +208,7 @@ class Vala.Compiler {
 		context.checking = enable_checking;
 		context.deprecated = deprecated;
 		context.experimental = experimental;
-		context.experimental_non_null = experimental || experimental_non_null;
+		context.experimental_non_null = experimental_non_null;
 		context.dbus_transformation = !disable_dbus_transformation;
 		context.report.enable_warnings = !disable_warnings;
 		context.report.set_verbose_errors (!quiet_mode);
