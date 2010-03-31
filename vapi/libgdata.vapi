@@ -6,10 +6,12 @@ namespace GData {
 	public class AccessRule : GData.Entry {
 		[CCode (has_construct_function = false)]
 		public AccessRule (string id);
+		public void get_edited (GLib.TimeVal edited);
 		public unowned string get_role ();
 		public void get_scope (string type, string value);
 		public void set_role (string role);
 		public void set_scope (string type, string value);
+		public GLib.TimeVal edited { get; }
 		public string role { get; set; }
 		[NoAccessorMethod]
 		public string scope_type { owned get; set; }
@@ -184,44 +186,70 @@ namespace GData {
 	public class ContactsContact : GData.Entry {
 		[CCode (has_construct_function = false)]
 		public ContactsContact (string id);
+		public void add_calendar (GData.GContactCalendar calendar);
 		public void add_email_address (GData.GDEmailAddress email_address);
+		public void add_event (GData.GContactEvent event);
 		public void add_group (string href);
 		public void add_im_address (GData.GDIMAddress im_address);
+		public void add_jot (GData.GContactJot jot);
 		public void add_organization (GData.GDOrganization organization);
 		public void add_phone_number (GData.GDPhoneNumber phone_number);
 		public void add_postal_address (GData.GDPostalAddress postal_address);
+		public void add_relation (GData.GContactRelation relation);
+		public void add_website (GData.GContactWebsite website);
+		public bool get_birthday (GLib.Date birthday);
+		public unowned GLib.List get_calendars ();
 		public void get_edited (GLib.TimeVal edited);
 		public unowned GLib.List get_email_addresses ();
+		public unowned GLib.List get_events ();
 		public unowned GLib.HashTable get_extended_properties ();
 		public unowned string get_extended_property (string name);
 		public unowned GLib.List get_groups ();
 		public unowned GLib.List get_im_addresses ();
+		public unowned GLib.List get_jots ();
 		public unowned GData.GDName get_name ();
+		public unowned string get_nickname ();
 		public unowned GLib.List get_organizations ();
 		public unowned GLib.List get_phone_numbers ();
 		public unowned string get_photo (GData.ContactsService service, size_t length, string content_type, GLib.Cancellable cancellable) throws GLib.Error;
 		public unowned GLib.List get_postal_addresses ();
+		public unowned GData.GContactCalendar get_primary_calendar ();
 		public unowned GData.GDEmailAddress get_primary_email_address ();
 		public unowned GData.GDIMAddress get_primary_im_address ();
 		public unowned GData.GDOrganization get_primary_organization ();
 		public unowned GData.GDPhoneNumber get_primary_phone_number ();
 		public unowned GData.GDPostalAddress get_primary_postal_address ();
+		public unowned GData.GContactWebsite get_primary_website ();
+		public unowned GLib.List get_relations ();
+		public unowned GLib.List get_websites ();
 		public bool is_deleted ();
 		public bool is_group_deleted (string href);
+		public void remove_all_calendars ();
 		public void remove_all_email_addresses ();
+		public void remove_all_events ();
 		public void remove_all_im_addresses ();
+		public void remove_all_jots ();
 		public void remove_all_organizations ();
 		public void remove_all_phone_numbers ();
 		public void remove_all_postal_addresses ();
+		public void remove_all_relations ();
+		public void remove_all_websites ();
 		public void remove_group (string href);
+		public void set_birthday (GLib.Date birthday, bool birthday_has_year);
 		public bool set_extended_property (string name, string value);
+		public void set_name (GData.GDName name);
+		public void set_nickname (string nickname);
 		public bool set_photo (GData.Service service, string data, size_t length, GLib.Cancellable cancellable) throws GLib.Error;
+		public GLib.Date birthday { get; set; }
+		[NoAccessorMethod]
+		public bool birthday_has_year { get; set; }
 		[NoAccessorMethod]
 		public bool deleted { get; }
 		public GLib.TimeVal edited { get; }
 		[NoAccessorMethod]
 		public bool has_photo { get; }
-		public GData.GDName name { get; }
+		public GData.GDName name { get; set; }
+		public string nickname { get; set; }
 	}
 	[CCode (cheader_filename = "gdata/gdata.h")]
 	public class ContactsQuery : GData.Query {
@@ -318,7 +346,6 @@ namespace GData {
 		public unowned GData.DocumentsEntry move_document_to_folder (GData.DocumentsEntry document, GData.DocumentsFolder folder, GLib.Cancellable cancellable) throws GLib.Error;
 		public unowned GData.DocumentsFeed query_documents (GData.DocumentsQuery query, GLib.Cancellable cancellable, GData.QueryProgressCallback progress_callback, void* progress_user_data) throws GLib.Error;
 		public async void query_documents_async (GData.DocumentsQuery query, GLib.Cancellable cancellable, GData.QueryProgressCallback progress_callback, void* progress_user_data);
-		public unowned GData.DocumentsEntry query_single_document (GLib.Type document_type, string document_id, GLib.Cancellable cancellable) throws GLib.Error;
 		public unowned GData.DocumentsEntry remove_document_from_folder (GData.DocumentsEntry document, GData.DocumentsFolder folder, GLib.Cancellable cancellable) throws GLib.Error;
 		public unowned GData.DocumentsEntry update_document (GData.DocumentsEntry document, GLib.File document_file, GLib.Cancellable cancellable) throws GLib.Error;
 		public unowned GData.DocumentsEntry upload_document (GData.DocumentsEntry document, GLib.File document_file, GData.DocumentsFolder folder, GLib.Cancellable cancellable) throws GLib.Error;
@@ -361,6 +388,8 @@ namespace GData {
 		public void add_link (GData.Link link);
 		public unowned GLib.List get_categories ();
 		public unowned string get_content ();
+		[NoWrapper]
+		public virtual unowned string get_entry_uri (string id);
 		public unowned string get_etag ();
 		public unowned string get_id ();
 		public void get_published (GLib.TimeVal published);
@@ -415,6 +444,81 @@ namespace GData {
 		public string title { get; }
 		public uint total_results { get; }
 		public GLib.TimeVal updated { get; }
+	}
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public class GContactCalendar : GData.Parsable {
+		[CCode (has_construct_function = false)]
+		public GContactCalendar (string uri, string relation_type, string label, bool is_primary);
+		public int compare (GData.GContactCalendar b);
+		public unowned string get_label ();
+		public unowned string get_relation_type ();
+		public unowned string get_uri ();
+		public void set_is_primary (bool is_primary);
+		public void set_label (string label);
+		public void set_relation_type (string relation_type);
+		public void set_uri (string uri);
+		[NoAccessorMethod]
+		public bool is_primary { get; set; }
+		public string label { get; set; }
+		public string relation_type { get; set; }
+		public string uri { get; set; }
+	}
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public class GContactEvent : GData.Parsable {
+		[CCode (has_construct_function = false)]
+		public GContactEvent (GLib.Date date, string relation_type, string label);
+		public void get_date (GLib.Date date);
+		public unowned string get_label ();
+		public unowned string get_relation_type ();
+		public void set_date (GLib.Date date);
+		public void set_label (string label);
+		public void set_relation_type (string relation_type);
+		public GLib.Date date { get; set; }
+		public string label { get; set; }
+		public string relation_type { get; set; }
+	}
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public class GContactJot : GData.Parsable {
+		[CCode (has_construct_function = false)]
+		public GContactJot (string content, string relation_type);
+		public unowned string get_content ();
+		public unowned string get_relation_type ();
+		public void set_content (string content);
+		public void set_relation_type (string relation_type);
+		public string content { get; set; }
+		public string relation_type { get; set; }
+	}
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public class GContactRelation : GData.Parsable {
+		[CCode (has_construct_function = false)]
+		public GContactRelation (string name, string relation_type, string label);
+		public unowned string get_label ();
+		public unowned string get_name ();
+		public unowned string get_relation_type ();
+		public void set_label (string label);
+		public void set_name (string name);
+		public void set_relation_type (string relation_type);
+		public string label { get; set; }
+		public string name { get; set; }
+		public string relation_type { get; set; }
+	}
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public class GContactWebsite : GData.Parsable {
+		[CCode (has_construct_function = false)]
+		public GContactWebsite (string uri, string relation_type, string label, bool is_primary);
+		public int compare (GData.GContactWebsite b);
+		public unowned string get_label ();
+		public unowned string get_relation_type ();
+		public unowned string get_uri ();
+		public void set_is_primary (bool is_primary);
+		public void set_label (string label);
+		public void set_relation_type (string relation_type);
+		public void set_uri (string uri);
+		[NoAccessorMethod]
+		public bool is_primary { get; set; }
+		public string label { get; set; }
+		public string relation_type { get; set; }
+		public string uri { get; set; }
 	}
 	[CCode (cheader_filename = "gdata/gdata.h")]
 	public class GDEmailAddress : GData.Parsable {
@@ -645,6 +749,7 @@ namespace GData {
 	public class GDWhen : GData.Parsable {
 		[CCode (has_construct_function = false)]
 		public GDWhen (GLib.TimeVal start_time, GLib.TimeVal end_time, bool is_date);
+		public void add_reminder (GData.GDReminder reminder);
 		public int compare (GData.GDWhen b);
 		public void get_end_time (GLib.TimeVal end_time);
 		public unowned GLib.List get_reminders ();
@@ -841,6 +946,8 @@ namespace GData {
 		public void get_coordinates (double latitude, double longitude);
 		[CCode (cname = "gdata_picasaweb_album_get_edited")]
 		public void get_edited (GLib.TimeVal edited);
+		[CCode (cname = "gdata_picasaweb_album_get_id")]
+		public unowned string get_id ();
 		[CCode (cname = "gdata_picasaweb_album_get_location")]
 		public unowned string get_location ();
 		[CCode (cname = "gdata_picasaweb_album_get_nickname")]
@@ -871,6 +978,8 @@ namespace GData {
 		public void set_timestamp (GLib.TimeVal timestamp);
 		[CCode (cname = "gdata_picasaweb_album_set_visibility")]
 		public void set_visibility (GData.PicasaWebVisibility visibility);
+		[NoAccessorMethod]
+		public string album_id { owned get; construct; }
 		public long bytes_used { get; }
 		public uint comment_count { get; }
 		public GLib.TimeVal edited { get; }
@@ -884,7 +993,8 @@ namespace GData {
 		public string nickname { get; }
 		public uint num_photos { get; }
 		public uint num_photos_remaining { get; }
-		public string tags { get; set; }
+		[CCode (array_length = false, array_null_terminated = true)]
+		public string[] tags { get; set; }
 		public GLib.TimeVal timestamp { get; set; }
 		public string user { get; }
 		public GData.PicasaWebVisibility visibility { get; set; }
@@ -926,6 +1036,8 @@ namespace GData {
 		public double get_fstop ();
 		[CCode (cname = "gdata_picasaweb_file_get_height")]
 		public uint get_height ();
+		[CCode (cname = "gdata_picasaweb_file_get_id")]
+		public unowned string get_id ();
 		[CCode (cname = "gdata_picasaweb_file_get_image_unique_id")]
 		public unowned string get_image_unique_id ();
 		[CCode (cname = "gdata_picasaweb_file_get_iso")]
@@ -981,6 +1093,8 @@ namespace GData {
 		public double distance { get; }
 		public GLib.TimeVal edited { get; }
 		public double exposure { get; }
+		[NoAccessorMethod]
+		public string file_id { owned get; construct; }
 		public bool flash { get; }
 		public double focal_length { get; }
 		public double fstop { get; }
@@ -998,7 +1112,8 @@ namespace GData {
 		public double position { get; set; }
 		public uint rotation { get; set; }
 		public ulong size { get; }
-		public string tags { get; set; }
+		[CCode (array_length = false, array_null_terminated = true)]
+		public string[] tags { get; set; }
 		public GLib.TimeVal timestamp { get; set; }
 		public string version { get; construct; }
 		public string video_status { get; }
@@ -1084,11 +1199,8 @@ namespace GData {
 	public class Query : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Query (string q);
-		[CCode (has_construct_function = false)]
-		public Query.for_id (string entry_id);
 		public unowned string get_author ();
 		public unowned string get_categories ();
-		public unowned string get_entry_id ();
 		public unowned string get_etag ();
 		public int get_max_results ();
 		public void get_published_max (GLib.TimeVal published_max);
@@ -1102,7 +1214,6 @@ namespace GData {
 		public bool previous_page ();
 		public void set_author (string author);
 		public void set_categories (string categories);
-		public void set_entry_id (string entry_id);
 		public void set_etag (string etag);
 		public void set_is_strict (bool is_strict);
 		public void set_max_results (int max_results);
@@ -1116,7 +1227,6 @@ namespace GData {
 		public Query.with_limits (string q, int start_index, int max_results);
 		public string author { get; set; }
 		public string categories { get; set; }
-		public string entry_id { get; set; }
 		public string etag { get; set; }
 		[NoAccessorMethod]
 		public bool is_strict { get; set; }
@@ -1154,6 +1264,9 @@ namespace GData {
 		public unowned GData.Feed query (string feed_uri, GData.Query query, GLib.Type entry_type, GLib.Cancellable cancellable, GData.QueryProgressCallback progress_callback, void* progress_user_data) throws GLib.Error;
 		public async unowned GData.Feed query_async (string feed_uri, GData.Query query, GLib.Type entry_type, GLib.Cancellable cancellable, GData.QueryProgressCallback progress_callback, void* progress_user_data) throws GLib.Error;
 		public unowned GData.Feed query_finish (GLib.AsyncResult async_result) throws GLib.Error;
+		public unowned GData.Entry query_single_entry (string entry_id, GData.Query query, GLib.Type entry_type, GLib.Cancellable cancellable) throws GLib.Error;
+		public async unowned GData.Entry query_single_entry_async (string entry_id, GData.Query query, GLib.Type entry_type, GLib.Cancellable cancellable) throws GLib.Error;
+		public unowned GData.Entry query_single_entry_finish (GLib.AsyncResult async_result) throws GLib.Error;
 		public void set_proxy_uri (Soup.URI proxy_uri);
 		public unowned GData.Entry update_entry (GData.Entry entry, GLib.Cancellable cancellable) throws GLib.Error;
 		public async unowned GData.Entry update_entry_async (GData.Entry entry, GLib.Cancellable cancellable) throws GLib.Error;
@@ -1265,12 +1378,6 @@ namespace GData {
 		public unowned GData.Feed query_related (GData.YouTubeVideo video, GData.Query query, GLib.Cancellable cancellable, GData.QueryProgressCallback progress_callback, void* progress_user_data) throws GLib.Error;
 		[CCode (cname = "gdata_youtube_service_query_related_async")]
 		public async void query_related_async (GData.YouTubeVideo video, GData.Query query, GLib.Cancellable cancellable, GData.QueryProgressCallback progress_callback, void* progress_user_data);
-		[CCode (cname = "gdata_youtube_service_query_single_video")]
-		public unowned GData.YouTubeVideo query_single_video (GData.Query query, string video_id, GLib.Cancellable cancellable) throws GLib.Error;
-		[CCode (cname = "gdata_youtube_service_query_single_video_async")]
-		public async unowned GData.YouTubeVideo query_single_video_async (GData.Query query, string video_id, GLib.Cancellable cancellable) throws GLib.Error;
-		[CCode (cname = "gdata_youtube_service_query_single_video_finish")]
-		public unowned GData.YouTubeVideo query_single_video_finish (GLib.AsyncResult async_result) throws GLib.Error;
 		[CCode (cname = "gdata_youtube_service_query_standard_feed")]
 		public unowned GData.Feed query_standard_feed (GData.YouTubeStandardFeedType feed_type, GData.Query query, GLib.Cancellable cancellable, GData.QueryProgressCallback progress_callback, void* progress_user_data) throws GLib.Error;
 		[CCode (cname = "gdata_youtube_service_query_standard_feed_async")]
@@ -1305,8 +1412,10 @@ namespace GData {
 	public class YouTubeVideo : GData.Entry {
 		[CCode (cname = "gdata_youtube_video_new", has_construct_function = false)]
 		public YouTubeVideo (string id);
+		[CCode (cname = "gdata_youtube_video_get_access_control")]
+		public GData.YouTubePermission get_access_control (string action);
 		[CCode (cname = "gdata_youtube_video_get_aspect_ratio")]
-		public GData.YouTubeAspectRatio get_aspect_ratio ();
+		public unowned string get_aspect_ratio ();
 		[CCode (cname = "gdata_youtube_video_get_category")]
 		public unowned GData.MediaCategory get_category ();
 		[CCode (cname = "gdata_youtube_video_get_credit")]
@@ -1321,8 +1430,6 @@ namespace GData {
 		public unowned string get_keywords ();
 		[CCode (cname = "gdata_youtube_video_get_location")]
 		public unowned string get_location ();
-		[CCode (cname = "gdata_youtube_video_get_no_embed")]
-		public bool get_no_embed ();
 		[CCode (cname = "gdata_youtube_video_get_player_uri")]
 		public unowned string get_player_uri ();
 		[CCode (cname = "gdata_youtube_video_get_rating")]
@@ -1345,8 +1452,10 @@ namespace GData {
 		public bool is_restricted_in_country (string country);
 		[CCode (cname = "gdata_youtube_video_look_up_content")]
 		public unowned GData.YouTubeContent look_up_content (string type);
+		[CCode (cname = "gdata_youtube_video_set_access_control")]
+		public void set_access_control (string action, GData.YouTubePermission permission);
 		[CCode (cname = "gdata_youtube_video_set_aspect_ratio")]
-		public void set_aspect_ratio (GData.YouTubeAspectRatio aspect_ratio);
+		public void set_aspect_ratio (string aspect_ratio);
 		[CCode (cname = "gdata_youtube_video_set_category")]
 		public void set_category (GData.MediaCategory category);
 		[CCode (cname = "gdata_youtube_video_set_description")]
@@ -1359,11 +1468,9 @@ namespace GData {
 		public void set_keywords (string keywords);
 		[CCode (cname = "gdata_youtube_video_set_location")]
 		public void set_location (string location);
-		[CCode (cname = "gdata_youtube_video_set_no_embed")]
-		public void set_no_embed (bool no_embed);
 		[CCode (cname = "gdata_youtube_video_set_recorded")]
 		public void set_recorded (GLib.TimeVal recorded);
-		public GData.YouTubeAspectRatio aspect_ratio { get; set; }
+		public string aspect_ratio { get; set; }
 		[NoAccessorMethod]
 		public double average_rating { get; }
 		public GData.MediaCategory category { get; set; }
@@ -1375,13 +1482,13 @@ namespace GData {
 		public bool is_draft { get; set; }
 		[NoAccessorMethod]
 		public bool is_private { get; set; }
-		public string keywords { get; set; }
+		[CCode (array_length = false, array_null_terminated = true)]
+		public string[] keywords { get; set; }
 		public string location { get; set; }
 		[NoAccessorMethod]
 		public uint max_rating { get; }
 		[NoAccessorMethod]
 		public uint min_rating { get; }
-		public bool no_embed { get; set; }
 		public string player_uri { get; }
 		[NoAccessorMethod]
 		public uint rating_count { get; }
@@ -1464,7 +1571,8 @@ namespace GData {
 		UPDATE,
 		DELETION,
 		DOWNLOAD,
-		UPLOAD
+		UPLOAD,
+		AUTHENTICATION
 	}
 	[CCode (cprefix = "GDATA_PARSER_ERROR_", cheader_filename = "gdata/gdata.h")]
 	public enum ParserError {
@@ -1485,7 +1593,9 @@ namespace GData {
 		NOT_FOUND,
 		CONFLICT,
 		FORBIDDEN,
-		BAD_QUERY_PARAMETER
+		BAD_QUERY_PARAMETER,
+		NETWORK_ERROR,
+		PROXY_ERROR
 	}
 	[CCode (cprefix = "GDATA_YOUTUBE_AGE_", cheader_filename = "gdata/gdata.h")]
 	public enum YouTubeAge {
@@ -1494,17 +1604,18 @@ namespace GData {
 		THIS_WEEK,
 		THIS_MONTH
 	}
-	[CCode (cprefix = "GDATA_YOUTUBE_ASPECT_RATIO_", cheader_filename = "gdata/gdata.h")]
-	public enum YouTubeAspectRatio {
-		UNKNOWN,
-		WIDESCREEN
-	}
 	[CCode (cprefix = "GDATA_YOUTUBE_FORMAT_", cheader_filename = "gdata/gdata.h")]
 	public enum YouTubeFormat {
 		UNKNOWN,
 		RTSP_H263_AMR,
 		HTTP_SWF,
 		RTSP_MPEG4_AAC
+	}
+	[CCode (cprefix = "GDATA_YOUTUBE_PERMISSION_", cheader_filename = "gdata/gdata.h")]
+	public enum YouTubePermission {
+		ALLOWED,
+		DENIED,
+		MODERATED
 	}
 	[CCode (cprefix = "GDATA_YOUTUBE_SAFE_SEARCH_", cheader_filename = "gdata/gdata.h")]
 	public enum YouTubeSafeSearch {
@@ -1544,9 +1655,143 @@ namespace GData {
 	[CCode (cheader_filename = "gdata/gdata.h")]
 	public delegate void QueryProgressCallback (GData.Entry entry, uint entry_key, uint entry_count);
 	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string ACCESS_ROLE_NONE;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string ACCESS_SCOPE_DEFAULT;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string ACCESS_SCOPE_DOMAIN;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string ACCESS_SCOPE_USER;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string CALENDAR_ACCESS_ROLE_EDITOR;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string CALENDAR_ACCESS_ROLE_FREE_BUSY;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string CALENDAR_ACCESS_ROLE_OWNER;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string CALENDAR_ACCESS_ROLE_READ;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string CALENDAR_ACCESS_ROLE_ROOT;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string DOCUMENTS_ACCESS_ROLE_OWNER;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string DOCUMENTS_ACCESS_ROLE_READER;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string DOCUMENTS_ACCESS_ROLE_WRITER;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GCONTACT_CALENDAR_FREE_BUSY;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GCONTACT_CALENDAR_HOME;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GCONTACT_CALENDAR_WORK;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GCONTACT_EVENT_ANNIVERSARY;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GCONTACT_EVENT_OTHER;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GCONTACT_JOT_HOME;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GCONTACT_JOT_KEYWORDS;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GCONTACT_JOT_OTHER;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GCONTACT_JOT_USER;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GCONTACT_JOT_WORK;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GCONTACT_RELATION_ASSISTANT;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GCONTACT_RELATION_BROTHER;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GCONTACT_RELATION_CHILD;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GCONTACT_RELATION_DOMESTIC_PARTNER;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GCONTACT_RELATION_FATHER;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GCONTACT_RELATION_FRIEND;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GCONTACT_RELATION_MANAGER;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GCONTACT_RELATION_MOTHER;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GCONTACT_RELATION_PARENT;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GCONTACT_RELATION_PARTNER;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GCONTACT_RELATION_REFERRER;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GCONTACT_RELATION_RELATIVE;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GCONTACT_RELATION_SISTER;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GCONTACT_RELATION_SPOUSE;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GCONTACT_WEBSITE_BLOG;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GCONTACT_WEBSITE_FTP;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GCONTACT_WEBSITE_HOME;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GCONTACT_WEBSITE_HOME_PAGE;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GCONTACT_WEBSITE_OTHER;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GCONTACT_WEBSITE_PROFILE;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GCONTACT_WEBSITE_WORK;
+	[CCode (cheader_filename = "gdata/gdata.h")]
 	public const string GD_ADDRESS_USAGE_GENERAL;
 	[CCode (cheader_filename = "gdata/gdata.h")]
 	public const string GD_ADDRESS_USAGE_LOCAL;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_EMAIL_ADDRESS_HOME;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_EMAIL_ADDRESS_OTHER;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_EMAIL_ADDRESS_WORK;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_EVENT_STATUS_CANCELED;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_EVENT_STATUS_CONFIRMED;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_EVENT_STATUS_TENTATIVE;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_EVENT_TRANSPARENCY_OPAQUE;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_EVENT_TRANSPARENCY_TRANSPARENT;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_EVENT_VISIBILITY_CONFIDENTIAL;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_EVENT_VISIBILITY_DEFAULT;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_EVENT_VISIBILITY_PRIVATE;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_EVENT_VISIBILITY_PUBLIC;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_IM_ADDRESS_HOME;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_IM_ADDRESS_NETMEETING;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_IM_ADDRESS_OTHER;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_IM_ADDRESS_WORK;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_IM_PROTOCOL_AIM;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_IM_PROTOCOL_GOOGLE_TALK;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_IM_PROTOCOL_ICQ;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_IM_PROTOCOL_JABBER;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_IM_PROTOCOL_LIVE_MESSENGER;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_IM_PROTOCOL_QQ;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_IM_PROTOCOL_SKYPE;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_IM_PROTOCOL_YAHOO_MESSENGER;
 	[CCode (cheader_filename = "gdata/gdata.h")]
 	public const string GD_MAIL_CLASS_BOTH;
 	[CCode (cheader_filename = "gdata/gdata.h")]
@@ -1555,6 +1800,76 @@ namespace GData {
 	public const string GD_MAIL_CLASS_NEITHER;
 	[CCode (cheader_filename = "gdata/gdata.h")]
 	public const string GD_MAIL_CLASS_PARCELS;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_ORGANIZATION_OTHER;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_ORGANIZATION_WORK;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_PHONE_NUMBER_ASSISTANT;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_PHONE_NUMBER_CALLBACK;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_PHONE_NUMBER_CAR;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_PHONE_NUMBER_COMPANY_MAIN;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_PHONE_NUMBER_FAX;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_PHONE_NUMBER_HOME;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_PHONE_NUMBER_HOME_FAX;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_PHONE_NUMBER_ISDN;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_PHONE_NUMBER_MAIN;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_PHONE_NUMBER_MOBILE;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_PHONE_NUMBER_OTHER;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_PHONE_NUMBER_OTHER_FAX;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_PHONE_NUMBER_PAGER;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_PHONE_NUMBER_RADIO;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_PHONE_NUMBER_TELEX;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_PHONE_NUMBER_TTY_TDD;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_PHONE_NUMBER_WORK;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_PHONE_NUMBER_WORK_FAX;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_PHONE_NUMBER_WORK_MOBILE;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_PHONE_NUMBER_WORK_PAGER;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_POSTAL_ADDRESS_HOME;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_POSTAL_ADDRESS_OTHER;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_POSTAL_ADDRESS_WORK;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_REMINDER_ALERT;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_REMINDER_EMAIL;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_REMINDER_SMS;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_WHERE_EVENT;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_WHERE_EVENT_ALTERNATE;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_WHERE_EVENT_PARKING;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_WHO_EVENT_ATTENDEE;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_WHO_EVENT_ORGANIZER;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_WHO_EVENT_PERFORMER;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string GD_WHO_EVENT_SPEAKER;
 	[CCode (cheader_filename = "gdata/gdata.h")]
 	public const string LINK_ALTERNATE;
 	[CCode (cheader_filename = "gdata/gdata.h")]
@@ -1569,6 +1884,30 @@ namespace GData {
 	public const string LINK_SELF;
 	[CCode (cheader_filename = "gdata/gdata.h")]
 	public const string LINK_VIA;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string PICASAWEB_VIDEO_STATUS_FAILED;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string PICASAWEB_VIDEO_STATUS_FINAL;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string PICASAWEB_VIDEO_STATUS_PENDING;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string PICASAWEB_VIDEO_STATUS_READY;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string YOUTUBE_ACTION_COMMENT;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string YOUTUBE_ACTION_COMMENT_VOTE;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string YOUTUBE_ACTION_EMBED;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string YOUTUBE_ACTION_RATE;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string YOUTUBE_ACTION_SYNDICATE;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string YOUTUBE_ACTION_VIDEO_RESPOND;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string YOUTUBE_ASPECT_RATIO_WIDESCREEN;
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	public const string YOUTUBE_CREDIT_ENTITY_PARTNER;
 	[CCode (cheader_filename = "gdata/gdata.h")]
 	public static GLib.Quark authentication_error_quark ();
 	[CCode (cheader_filename = "gdata/gdata.h")]

@@ -183,6 +183,7 @@
 			<member name="GDATA_OPERATION_DELETION" value="4"/>
 			<member name="GDATA_OPERATION_DOWNLOAD" value="5"/>
 			<member name="GDATA_OPERATION_UPLOAD" value="6"/>
+			<member name="GDATA_OPERATION_AUTHENTICATION" value="7"/>
 		</enum>
 		<enum name="GDataParserError" type-name="GDataParserError" get-type="gdata_parser_error_get_type">
 			<member name="GDATA_PARSER_ERROR_PARSING_STRING" value="1"/>
@@ -201,6 +202,8 @@
 			<member name="GDATA_SERVICE_ERROR_CONFLICT" value="6"/>
 			<member name="GDATA_SERVICE_ERROR_FORBIDDEN" value="7"/>
 			<member name="GDATA_SERVICE_ERROR_BAD_QUERY_PARAMETER" value="8"/>
+			<member name="GDATA_SERVICE_ERROR_NETWORK_ERROR" value="9"/>
+			<member name="GDATA_SERVICE_ERROR_PROXY_ERROR" value="10"/>
 		</enum>
 		<enum name="GDataYouTubeAge" type-name="GDataYouTubeAge" get-type="gdata_youtube_age_get_type">
 			<member name="GDATA_YOUTUBE_AGE_ALL_TIME" value="0"/>
@@ -208,15 +211,16 @@
 			<member name="GDATA_YOUTUBE_AGE_THIS_WEEK" value="2"/>
 			<member name="GDATA_YOUTUBE_AGE_THIS_MONTH" value="3"/>
 		</enum>
-		<enum name="GDataYouTubeAspectRatio" type-name="GDataYouTubeAspectRatio" get-type="gdata_youtube_aspect_ratio_get_type">
-			<member name="GDATA_YOUTUBE_ASPECT_RATIO_UNKNOWN" value="0"/>
-			<member name="GDATA_YOUTUBE_ASPECT_RATIO_WIDESCREEN" value="1"/>
-		</enum>
 		<enum name="GDataYouTubeFormat" type-name="GDataYouTubeFormat" get-type="gdata_youtube_format_get_type">
 			<member name="GDATA_YOUTUBE_FORMAT_UNKNOWN" value="0"/>
 			<member name="GDATA_YOUTUBE_FORMAT_RTSP_H263_AMR" value="1"/>
 			<member name="GDATA_YOUTUBE_FORMAT_HTTP_SWF" value="5"/>
 			<member name="GDATA_YOUTUBE_FORMAT_RTSP_MPEG4_AAC" value="6"/>
+		</enum>
+		<enum name="GDataYouTubePermission" type-name="GDataYouTubePermission" get-type="gdata_youtube_permission_get_type">
+			<member name="GDATA_YOUTUBE_PERMISSION_ALLOWED" value="0"/>
+			<member name="GDATA_YOUTUBE_PERMISSION_DENIED" value="1"/>
+			<member name="GDATA_YOUTUBE_PERMISSION_MODERATED" value="2"/>
 		</enum>
 		<enum name="GDataYouTubeSafeSearch" type-name="GDataYouTubeSafeSearch" get-type="gdata_youtube_safe_search_get_type">
 			<member name="GDATA_YOUTUBE_SAFE_SEARCH_NONE" value="0"/>
@@ -249,6 +253,13 @@
 			<member name="GDATA_YOUTUBE_UPLOADER_PARTNER" value="1"/>
 		</enum>
 		<object name="GDataAccessRule" parent="GDataEntry" type-name="GDataAccessRule" get-type="gdata_access_rule_get_type">
+			<method name="get_edited" symbol="gdata_access_rule_get_edited">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GDataAccessRule*"/>
+					<parameter name="edited" type="GTimeVal*"/>
+				</parameters>
+			</method>
 			<method name="get_role" symbol="gdata_access_rule_get_role">
 				<return-type type="gchar*"/>
 				<parameters>
@@ -284,6 +295,7 @@
 					<parameter name="value" type="gchar*"/>
 				</parameters>
 			</method>
+			<property name="edited" type="GTimeVal*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="role" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="scope-type" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="scope-value" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -966,11 +978,25 @@
 			<property name="term" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="GDataContactsContact" parent="GDataEntry" type-name="GDataContactsContact" get-type="gdata_contacts_contact_get_type">
+			<method name="add_calendar" symbol="gdata_contacts_contact_add_calendar">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GDataContactsContact*"/>
+					<parameter name="calendar" type="GDataGContactCalendar*"/>
+				</parameters>
+			</method>
 			<method name="add_email_address" symbol="gdata_contacts_contact_add_email_address">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="GDataContactsContact*"/>
 					<parameter name="email_address" type="GDataGDEmailAddress*"/>
+				</parameters>
+			</method>
+			<method name="add_event" symbol="gdata_contacts_contact_add_event">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GDataContactsContact*"/>
+					<parameter name="event" type="GDataGContactEvent*"/>
 				</parameters>
 			</method>
 			<method name="add_group" symbol="gdata_contacts_contact_add_group">
@@ -985,6 +1011,13 @@
 				<parameters>
 					<parameter name="self" type="GDataContactsContact*"/>
 					<parameter name="im_address" type="GDataGDIMAddress*"/>
+				</parameters>
+			</method>
+			<method name="add_jot" symbol="gdata_contacts_contact_add_jot">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GDataContactsContact*"/>
+					<parameter name="jot" type="GDataGContactJot*"/>
 				</parameters>
 			</method>
 			<method name="add_organization" symbol="gdata_contacts_contact_add_organization">
@@ -1008,6 +1041,33 @@
 					<parameter name="postal_address" type="GDataGDPostalAddress*"/>
 				</parameters>
 			</method>
+			<method name="add_relation" symbol="gdata_contacts_contact_add_relation">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GDataContactsContact*"/>
+					<parameter name="relation" type="GDataGContactRelation*"/>
+				</parameters>
+			</method>
+			<method name="add_website" symbol="gdata_contacts_contact_add_website">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GDataContactsContact*"/>
+					<parameter name="website" type="GDataGContactWebsite*"/>
+				</parameters>
+			</method>
+			<method name="get_birthday" symbol="gdata_contacts_contact_get_birthday">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="GDataContactsContact*"/>
+					<parameter name="birthday" type="GDate*"/>
+				</parameters>
+			</method>
+			<method name="get_calendars" symbol="gdata_contacts_contact_get_calendars">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="self" type="GDataContactsContact*"/>
+				</parameters>
+			</method>
 			<method name="get_edited" symbol="gdata_contacts_contact_get_edited">
 				<return-type type="void"/>
 				<parameters>
@@ -1016,6 +1076,12 @@
 				</parameters>
 			</method>
 			<method name="get_email_addresses" symbol="gdata_contacts_contact_get_email_addresses">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="self" type="GDataContactsContact*"/>
+				</parameters>
+			</method>
+			<method name="get_events" symbol="gdata_contacts_contact_get_events">
 				<return-type type="GList*"/>
 				<parameters>
 					<parameter name="self" type="GDataContactsContact*"/>
@@ -1046,8 +1112,20 @@
 					<parameter name="self" type="GDataContactsContact*"/>
 				</parameters>
 			</method>
+			<method name="get_jots" symbol="gdata_contacts_contact_get_jots">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="self" type="GDataContactsContact*"/>
+				</parameters>
+			</method>
 			<method name="get_name" symbol="gdata_contacts_contact_get_name">
 				<return-type type="GDataGDName*"/>
+				<parameters>
+					<parameter name="self" type="GDataContactsContact*"/>
+				</parameters>
+			</method>
+			<method name="get_nickname" symbol="gdata_contacts_contact_get_nickname">
+				<return-type type="gchar*"/>
 				<parameters>
 					<parameter name="self" type="GDataContactsContact*"/>
 				</parameters>
@@ -1077,6 +1155,12 @@
 			</method>
 			<method name="get_postal_addresses" symbol="gdata_contacts_contact_get_postal_addresses">
 				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="self" type="GDataContactsContact*"/>
+				</parameters>
+			</method>
+			<method name="get_primary_calendar" symbol="gdata_contacts_contact_get_primary_calendar">
+				<return-type type="GDataGContactCalendar*"/>
 				<parameters>
 					<parameter name="self" type="GDataContactsContact*"/>
 				</parameters>
@@ -1111,6 +1195,24 @@
 					<parameter name="self" type="GDataContactsContact*"/>
 				</parameters>
 			</method>
+			<method name="get_primary_website" symbol="gdata_contacts_contact_get_primary_website">
+				<return-type type="GDataGContactWebsite*"/>
+				<parameters>
+					<parameter name="self" type="GDataContactsContact*"/>
+				</parameters>
+			</method>
+			<method name="get_relations" symbol="gdata_contacts_contact_get_relations">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="self" type="GDataContactsContact*"/>
+				</parameters>
+			</method>
+			<method name="get_websites" symbol="gdata_contacts_contact_get_websites">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="self" type="GDataContactsContact*"/>
+				</parameters>
+			</method>
 			<method name="has_photo" symbol="gdata_contacts_contact_has_photo">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -1136,13 +1238,31 @@
 					<parameter name="id" type="gchar*"/>
 				</parameters>
 			</constructor>
+			<method name="remove_all_calendars" symbol="gdata_contacts_contact_remove_all_calendars">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GDataContactsContact*"/>
+				</parameters>
+			</method>
 			<method name="remove_all_email_addresses" symbol="gdata_contacts_contact_remove_all_email_addresses">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="GDataContactsContact*"/>
 				</parameters>
 			</method>
+			<method name="remove_all_events" symbol="gdata_contacts_contact_remove_all_events">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GDataContactsContact*"/>
+				</parameters>
+			</method>
 			<method name="remove_all_im_addresses" symbol="gdata_contacts_contact_remove_all_im_addresses">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GDataContactsContact*"/>
+				</parameters>
+			</method>
+			<method name="remove_all_jots" symbol="gdata_contacts_contact_remove_all_jots">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="GDataContactsContact*"/>
@@ -1166,11 +1286,31 @@
 					<parameter name="self" type="GDataContactsContact*"/>
 				</parameters>
 			</method>
+			<method name="remove_all_relations" symbol="gdata_contacts_contact_remove_all_relations">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GDataContactsContact*"/>
+				</parameters>
+			</method>
+			<method name="remove_all_websites" symbol="gdata_contacts_contact_remove_all_websites">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GDataContactsContact*"/>
+				</parameters>
+			</method>
 			<method name="remove_group" symbol="gdata_contacts_contact_remove_group">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="GDataContactsContact*"/>
 					<parameter name="href" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_birthday" symbol="gdata_contacts_contact_set_birthday">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GDataContactsContact*"/>
+					<parameter name="birthday" type="GDate*"/>
+					<parameter name="birthday_has_year" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="set_extended_property" symbol="gdata_contacts_contact_set_extended_property">
@@ -1179,6 +1319,20 @@
 					<parameter name="self" type="GDataContactsContact*"/>
 					<parameter name="name" type="gchar*"/>
 					<parameter name="value" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_name" symbol="gdata_contacts_contact_set_name">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GDataContactsContact*"/>
+					<parameter name="name" type="GDataGDName*"/>
+				</parameters>
+			</method>
+			<method name="set_nickname" symbol="gdata_contacts_contact_set_nickname">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GDataContactsContact*"/>
+					<parameter name="nickname" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="set_photo" symbol="gdata_contacts_contact_set_photo">
@@ -1192,10 +1346,13 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<property name="birthday" type="GDate*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="birthday-has-year" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="deleted" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="edited" type="GTimeVal*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="has-photo" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="name" type="GDataGDName*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="name" type="GDataGDName*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="nickname" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="GDataContactsQuery" parent="GDataQuery" type-name="GDataContactsQuery" get-type="gdata_contacts_query_get_type">
 			<method name="get_group" symbol="gdata_contacts_query_get_group">
@@ -1579,16 +1736,6 @@
 					<parameter name="user_data" type="gpointer"/>
 				</parameters>
 			</method>
-			<method name="query_single_document" symbol="gdata_documents_service_query_single_document">
-				<return-type type="GDataDocumentsEntry*"/>
-				<parameters>
-					<parameter name="self" type="GDataDocumentsService*"/>
-					<parameter name="document_type" type="GType"/>
-					<parameter name="document_id" type="gchar*"/>
-					<parameter name="cancellable" type="GCancellable*"/>
-					<parameter name="error" type="GError**"/>
-				</parameters>
-			</method>
 			<method name="remove_document_from_folder" symbol="gdata_documents_service_remove_document_from_folder">
 				<return-type type="GDataDocumentsEntry*"/>
 				<parameters>
@@ -1867,6 +2014,12 @@
 			<property name="summary" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="title" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="updated" type="GTimeVal*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<vfunc name="get_entry_uri">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="id" type="gchar*"/>
+				</parameters>
+			</vfunc>
 		</object>
 		<object name="GDataFeed" parent="GDataParsable" type-name="GDataFeed" get-type="gdata_feed_get_type">
 			<method name="get_authors" symbol="gdata_feed_get_authors">
@@ -1985,6 +2138,296 @@
 			<property name="title" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="total-results" type="guint" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="updated" type="GTimeVal*" readable="1" writable="0" construct="0" construct-only="0"/>
+		</object>
+		<object name="GDataGContactCalendar" parent="GDataParsable" type-name="GDataGContactCalendar" get-type="gdata_gcontact_calendar_get_type">
+			<method name="compare" symbol="gdata_gcontact_calendar_compare">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="a" type="GDataGContactCalendar*"/>
+					<parameter name="b" type="GDataGContactCalendar*"/>
+				</parameters>
+			</method>
+			<method name="get_label" symbol="gdata_gcontact_calendar_get_label">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="GDataGContactCalendar*"/>
+				</parameters>
+			</method>
+			<method name="get_relation_type" symbol="gdata_gcontact_calendar_get_relation_type">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="GDataGContactCalendar*"/>
+				</parameters>
+			</method>
+			<method name="get_uri" symbol="gdata_gcontact_calendar_get_uri">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="GDataGContactCalendar*"/>
+				</parameters>
+			</method>
+			<method name="is_primary" symbol="gdata_gcontact_calendar_is_primary">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="GDataGContactCalendar*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gdata_gcontact_calendar_new">
+				<return-type type="GDataGContactCalendar*"/>
+				<parameters>
+					<parameter name="uri" type="gchar*"/>
+					<parameter name="relation_type" type="gchar*"/>
+					<parameter name="label" type="gchar*"/>
+					<parameter name="is_primary" type="gboolean"/>
+				</parameters>
+			</constructor>
+			<method name="set_is_primary" symbol="gdata_gcontact_calendar_set_is_primary">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GDataGContactCalendar*"/>
+					<parameter name="is_primary" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_label" symbol="gdata_gcontact_calendar_set_label">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GDataGContactCalendar*"/>
+					<parameter name="label" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_relation_type" symbol="gdata_gcontact_calendar_set_relation_type">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GDataGContactCalendar*"/>
+					<parameter name="relation_type" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_uri" symbol="gdata_gcontact_calendar_set_uri">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GDataGContactCalendar*"/>
+					<parameter name="uri" type="gchar*"/>
+				</parameters>
+			</method>
+			<property name="is-primary" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="label" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="relation-type" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="uri" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+		</object>
+		<object name="GDataGContactEvent" parent="GDataParsable" type-name="GDataGContactEvent" get-type="gdata_gcontact_event_get_type">
+			<method name="get_date" symbol="gdata_gcontact_event_get_date">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GDataGContactEvent*"/>
+					<parameter name="date" type="GDate*"/>
+				</parameters>
+			</method>
+			<method name="get_label" symbol="gdata_gcontact_event_get_label">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="GDataGContactEvent*"/>
+				</parameters>
+			</method>
+			<method name="get_relation_type" symbol="gdata_gcontact_event_get_relation_type">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="GDataGContactEvent*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gdata_gcontact_event_new">
+				<return-type type="GDataGContactEvent*"/>
+				<parameters>
+					<parameter name="date" type="GDate*"/>
+					<parameter name="relation_type" type="gchar*"/>
+					<parameter name="label" type="gchar*"/>
+				</parameters>
+			</constructor>
+			<method name="set_date" symbol="gdata_gcontact_event_set_date">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GDataGContactEvent*"/>
+					<parameter name="date" type="GDate*"/>
+				</parameters>
+			</method>
+			<method name="set_label" symbol="gdata_gcontact_event_set_label">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GDataGContactEvent*"/>
+					<parameter name="label" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_relation_type" symbol="gdata_gcontact_event_set_relation_type">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GDataGContactEvent*"/>
+					<parameter name="relation_type" type="gchar*"/>
+				</parameters>
+			</method>
+			<property name="date" type="GDate*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="label" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="relation-type" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+		</object>
+		<object name="GDataGContactJot" parent="GDataParsable" type-name="GDataGContactJot" get-type="gdata_gcontact_jot_get_type">
+			<method name="get_content" symbol="gdata_gcontact_jot_get_content">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="GDataGContactJot*"/>
+				</parameters>
+			</method>
+			<method name="get_relation_type" symbol="gdata_gcontact_jot_get_relation_type">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="GDataGContactJot*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gdata_gcontact_jot_new">
+				<return-type type="GDataGContactJot*"/>
+				<parameters>
+					<parameter name="content" type="gchar*"/>
+					<parameter name="relation_type" type="gchar*"/>
+				</parameters>
+			</constructor>
+			<method name="set_content" symbol="gdata_gcontact_jot_set_content">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GDataGContactJot*"/>
+					<parameter name="content" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_relation_type" symbol="gdata_gcontact_jot_set_relation_type">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GDataGContactJot*"/>
+					<parameter name="relation_type" type="gchar*"/>
+				</parameters>
+			</method>
+			<property name="content" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="relation-type" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+		</object>
+		<object name="GDataGContactRelation" parent="GDataParsable" type-name="GDataGContactRelation" get-type="gdata_gcontact_relation_get_type">
+			<method name="get_label" symbol="gdata_gcontact_relation_get_label">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="GDataGContactRelation*"/>
+				</parameters>
+			</method>
+			<method name="get_name" symbol="gdata_gcontact_relation_get_name">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="GDataGContactRelation*"/>
+				</parameters>
+			</method>
+			<method name="get_relation_type" symbol="gdata_gcontact_relation_get_relation_type">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="GDataGContactRelation*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gdata_gcontact_relation_new">
+				<return-type type="GDataGContactRelation*"/>
+				<parameters>
+					<parameter name="name" type="gchar*"/>
+					<parameter name="relation_type" type="gchar*"/>
+					<parameter name="label" type="gchar*"/>
+				</parameters>
+			</constructor>
+			<method name="set_label" symbol="gdata_gcontact_relation_set_label">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GDataGContactRelation*"/>
+					<parameter name="label" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_name" symbol="gdata_gcontact_relation_set_name">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GDataGContactRelation*"/>
+					<parameter name="name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_relation_type" symbol="gdata_gcontact_relation_set_relation_type">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GDataGContactRelation*"/>
+					<parameter name="relation_type" type="gchar*"/>
+				</parameters>
+			</method>
+			<property name="label" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="relation-type" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+		</object>
+		<object name="GDataGContactWebsite" parent="GDataParsable" type-name="GDataGContactWebsite" get-type="gdata_gcontact_website_get_type">
+			<method name="compare" symbol="gdata_gcontact_website_compare">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="a" type="GDataGContactWebsite*"/>
+					<parameter name="b" type="GDataGContactWebsite*"/>
+				</parameters>
+			</method>
+			<method name="get_label" symbol="gdata_gcontact_website_get_label">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="GDataGContactWebsite*"/>
+				</parameters>
+			</method>
+			<method name="get_relation_type" symbol="gdata_gcontact_website_get_relation_type">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="GDataGContactWebsite*"/>
+				</parameters>
+			</method>
+			<method name="get_uri" symbol="gdata_gcontact_website_get_uri">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="GDataGContactWebsite*"/>
+				</parameters>
+			</method>
+			<method name="is_primary" symbol="gdata_gcontact_website_is_primary">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="GDataGContactWebsite*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gdata_gcontact_website_new">
+				<return-type type="GDataGContactWebsite*"/>
+				<parameters>
+					<parameter name="uri" type="gchar*"/>
+					<parameter name="relation_type" type="gchar*"/>
+					<parameter name="label" type="gchar*"/>
+					<parameter name="is_primary" type="gboolean"/>
+				</parameters>
+			</constructor>
+			<method name="set_is_primary" symbol="gdata_gcontact_website_set_is_primary">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GDataGContactWebsite*"/>
+					<parameter name="is_primary" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_label" symbol="gdata_gcontact_website_set_label">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GDataGContactWebsite*"/>
+					<parameter name="label" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_relation_type" symbol="gdata_gcontact_website_set_relation_type">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GDataGContactWebsite*"/>
+					<parameter name="relation_type" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_uri" symbol="gdata_gcontact_website_set_uri">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GDataGContactWebsite*"/>
+					<parameter name="uri" type="gchar*"/>
+				</parameters>
+			</method>
+			<property name="is-primary" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="label" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="relation-type" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="uri" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="GDataGDEmailAddress" parent="GDataParsable" type-name="GDataGDEmailAddress" get-type="gdata_gd_email_address_get_type">
 			<method name="compare" symbol="gdata_gd_email_address_compare">
@@ -2850,6 +3293,13 @@
 			<property name="relative-time" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="GDataGDWhen" parent="GDataParsable" type-name="GDataGDWhen" get-type="gdata_gd_when_get_type">
+			<method name="add_reminder" symbol="gdata_gd_when_add_reminder">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GDataGDWhen*"/>
+					<parameter name="reminder" type="GDataGDReminder*"/>
+				</parameters>
+			</method>
 			<method name="compare" symbol="gdata_gd_when_compare">
 				<return-type type="gint"/>
 				<parameters>
@@ -3573,6 +4023,12 @@
 					<parameter name="edited" type="GTimeVal*"/>
 				</parameters>
 			</method>
+			<method name="get_id" symbol="gdata_picasaweb_album_get_id">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="GDataPicasaWebAlbum*"/>
+				</parameters>
+			</method>
 			<method name="get_location" symbol="gdata_picasaweb_album_get_location">
 				<return-type type="gchar*"/>
 				<parameters>
@@ -3598,7 +4054,7 @@
 				</parameters>
 			</method>
 			<method name="get_tags" symbol="gdata_picasaweb_album_get_tags">
-				<return-type type="gchar*"/>
+				<return-type type="gchar**"/>
 				<parameters>
 					<parameter name="self" type="GDataPicasaWebAlbum*"/>
 				</parameters>
@@ -3666,7 +4122,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="GDataPicasaWebAlbum*"/>
-					<parameter name="tags" type="gchar*"/>
+					<parameter name="tags" type="gchar**"/>
 				</parameters>
 			</method>
 			<method name="set_timestamp" symbol="gdata_picasaweb_album_set_timestamp">
@@ -3683,6 +4139,7 @@
 					<parameter name="visibility" type="GDataPicasaWebVisibility"/>
 				</parameters>
 			</method>
+			<property name="album-id" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="bytes-used" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="comment-count" type="guint" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="edited" type="GTimeVal*" readable="1" writable="0" construct="0" construct-only="0"/>
@@ -3693,7 +4150,7 @@
 			<property name="nickname" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="num-photos" type="guint" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="num-photos-remaining" type="guint" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="tags" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="tags" type="GStrv*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="timestamp" type="GTimeVal*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="user" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="visibility" type="GDataPicasaWebVisibility" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -3795,6 +4252,12 @@
 					<parameter name="self" type="GDataPicasaWebFile*"/>
 				</parameters>
 			</method>
+			<method name="get_id" symbol="gdata_picasaweb_file_get_id">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="GDataPicasaWebFile*"/>
+				</parameters>
+			</method>
 			<method name="get_image_unique_id" symbol="gdata_picasaweb_file_get_image_unique_id">
 				<return-type type="gchar*"/>
 				<parameters>
@@ -3838,7 +4301,7 @@
 				</parameters>
 			</method>
 			<method name="get_tags" symbol="gdata_picasaweb_file_get_tags">
-				<return-type type="gchar*"/>
+				<return-type type="gchar**"/>
 				<parameters>
 					<parameter name="self" type="GDataPicasaWebFile*"/>
 				</parameters>
@@ -3947,7 +4410,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="GDataPicasaWebFile*"/>
-					<parameter name="tags" type="gchar*"/>
+					<parameter name="tags" type="gchar**"/>
 				</parameters>
 			</method>
 			<method name="set_timestamp" symbol="gdata_picasaweb_file_set_timestamp">
@@ -3966,6 +4429,7 @@
 			<property name="distance" type="gdouble" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="edited" type="GTimeVal*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="exposure" type="gdouble" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="file-id" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="flash" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="focal-length" type="gdouble" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="fstop" type="gdouble" readable="1" writable="0" construct="0" construct-only="0"/>
@@ -3980,7 +4444,7 @@
 			<property name="position" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="rotation" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="size" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="tags" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="tags" type="GStrv*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="timestamp" type="GTimeVal*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="version" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="video-status" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
@@ -4243,12 +4707,6 @@
 					<parameter name="self" type="GDataQuery*"/>
 				</parameters>
 			</method>
-			<method name="get_entry_id" symbol="gdata_query_get_entry_id">
-				<return-type type="gchar*"/>
-				<parameters>
-					<parameter name="self" type="GDataQuery*"/>
-				</parameters>
-			</method>
 			<method name="get_etag" symbol="gdata_query_get_etag">
 				<return-type type="gchar*"/>
 				<parameters>
@@ -4320,12 +4778,6 @@
 					<parameter name="q" type="gchar*"/>
 				</parameters>
 			</constructor>
-			<constructor name="new_for_id" symbol="gdata_query_new_for_id">
-				<return-type type="GDataQuery*"/>
-				<parameters>
-					<parameter name="entry_id" type="gchar*"/>
-				</parameters>
-			</constructor>
 			<constructor name="new_with_limits" symbol="gdata_query_new_with_limits">
 				<return-type type="GDataQuery*"/>
 				<parameters>
@@ -4358,13 +4810,6 @@
 				<parameters>
 					<parameter name="self" type="GDataQuery*"/>
 					<parameter name="categories" type="gchar*"/>
-				</parameters>
-			</method>
-			<method name="set_entry_id" symbol="gdata_query_set_entry_id">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="self" type="GDataQuery*"/>
-					<parameter name="entry_id" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="set_etag" symbol="gdata_query_set_etag">
@@ -4432,7 +4877,6 @@
 			</method>
 			<property name="author" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="categories" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="entry-id" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="etag" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="is-strict" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="max-results" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -4600,6 +5044,37 @@
 			</method>
 			<method name="query_finish" symbol="gdata_service_query_finish">
 				<return-type type="GDataFeed*"/>
+				<parameters>
+					<parameter name="self" type="GDataService*"/>
+					<parameter name="async_result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="query_single_entry" symbol="gdata_service_query_single_entry">
+				<return-type type="GDataEntry*"/>
+				<parameters>
+					<parameter name="self" type="GDataService*"/>
+					<parameter name="entry_id" type="gchar*"/>
+					<parameter name="query" type="GDataQuery*"/>
+					<parameter name="entry_type" type="GType"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="query_single_entry_async" symbol="gdata_service_query_single_entry_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GDataService*"/>
+					<parameter name="entry_id" type="gchar*"/>
+					<parameter name="query" type="GDataQuery*"/>
+					<parameter name="entry_type" type="GType"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="query_single_entry_finish" symbol="gdata_service_query_single_entry_finish">
+				<return-type type="GDataEntry*"/>
 				<parameters>
 					<parameter name="self" type="GDataService*"/>
 					<parameter name="async_result" type="GAsyncResult*"/>
@@ -4947,35 +5422,6 @@
 					<parameter name="user_data" type="gpointer"/>
 				</parameters>
 			</method>
-			<method name="query_single_video" symbol="gdata_youtube_service_query_single_video">
-				<return-type type="GDataYouTubeVideo*"/>
-				<parameters>
-					<parameter name="self" type="GDataYouTubeService*"/>
-					<parameter name="query" type="GDataQuery*"/>
-					<parameter name="video_id" type="gchar*"/>
-					<parameter name="cancellable" type="GCancellable*"/>
-					<parameter name="error" type="GError**"/>
-				</parameters>
-			</method>
-			<method name="query_single_video_async" symbol="gdata_youtube_service_query_single_video_async">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="self" type="GDataYouTubeService*"/>
-					<parameter name="query" type="GDataQuery*"/>
-					<parameter name="video_id" type="gchar*"/>
-					<parameter name="cancellable" type="GCancellable*"/>
-					<parameter name="callback" type="GAsyncReadyCallback"/>
-					<parameter name="user_data" type="gpointer"/>
-				</parameters>
-			</method>
-			<method name="query_single_video_finish" symbol="gdata_youtube_service_query_single_video_finish">
-				<return-type type="GDataYouTubeVideo*"/>
-				<parameters>
-					<parameter name="self" type="GDataYouTubeService*"/>
-					<parameter name="async_result" type="GAsyncResult*"/>
-					<parameter name="error" type="GError**"/>
-				</parameters>
-			</method>
 			<method name="query_standard_feed" symbol="gdata_youtube_service_query_standard_feed">
 				<return-type type="GDataFeed*"/>
 				<parameters>
@@ -5083,8 +5529,15 @@
 			<property name="reason-code" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 		</object>
 		<object name="GDataYouTubeVideo" parent="GDataEntry" type-name="GDataYouTubeVideo" get-type="gdata_youtube_video_get_type">
+			<method name="get_access_control" symbol="gdata_youtube_video_get_access_control">
+				<return-type type="GDataYouTubePermission"/>
+				<parameters>
+					<parameter name="self" type="GDataYouTubeVideo*"/>
+					<parameter name="action" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="get_aspect_ratio" symbol="gdata_youtube_video_get_aspect_ratio">
-				<return-type type="GDataYouTubeAspectRatio"/>
+				<return-type type="gchar*"/>
 				<parameters>
 					<parameter name="self" type="GDataYouTubeVideo*"/>
 				</parameters>
@@ -5120,19 +5573,13 @@
 				</parameters>
 			</method>
 			<method name="get_keywords" symbol="gdata_youtube_video_get_keywords">
-				<return-type type="gchar*"/>
+				<return-type type="gchar**"/>
 				<parameters>
 					<parameter name="self" type="GDataYouTubeVideo*"/>
 				</parameters>
 			</method>
 			<method name="get_location" symbol="gdata_youtube_video_get_location">
 				<return-type type="gchar*"/>
-				<parameters>
-					<parameter name="self" type="GDataYouTubeVideo*"/>
-				</parameters>
-			</method>
-			<method name="get_no_embed" symbol="gdata_youtube_video_get_no_embed">
-				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="self" type="GDataYouTubeVideo*"/>
 				</parameters>
@@ -5229,11 +5676,19 @@
 					<parameter name="id" type="gchar*"/>
 				</parameters>
 			</constructor>
+			<method name="set_access_control" symbol="gdata_youtube_video_set_access_control">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GDataYouTubeVideo*"/>
+					<parameter name="action" type="gchar*"/>
+					<parameter name="permission" type="GDataYouTubePermission"/>
+				</parameters>
+			</method>
 			<method name="set_aspect_ratio" symbol="gdata_youtube_video_set_aspect_ratio">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="GDataYouTubeVideo*"/>
-					<parameter name="aspect_ratio" type="GDataYouTubeAspectRatio"/>
+					<parameter name="aspect_ratio" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="set_category" symbol="gdata_youtube_video_set_category">
@@ -5268,7 +5723,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="GDataYouTubeVideo*"/>
-					<parameter name="keywords" type="gchar*"/>
+					<parameter name="keywords" type="gchar**"/>
 				</parameters>
 			</method>
 			<method name="set_location" symbol="gdata_youtube_video_set_location">
@@ -5278,13 +5733,6 @@
 					<parameter name="location" type="gchar*"/>
 				</parameters>
 			</method>
-			<method name="set_no_embed" symbol="gdata_youtube_video_set_no_embed">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="self" type="GDataYouTubeVideo*"/>
-					<parameter name="no_embed" type="gboolean"/>
-				</parameters>
-			</method>
 			<method name="set_recorded" symbol="gdata_youtube_video_set_recorded">
 				<return-type type="void"/>
 				<parameters>
@@ -5292,7 +5740,7 @@
 					<parameter name="recorded" type="GTimeVal*"/>
 				</parameters>
 			</method>
-			<property name="aspect-ratio" type="GDataYouTubeAspectRatio" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="aspect-ratio" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="average-rating" type="gdouble" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="category" type="GDataMediaCategory*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="credit" type="GDataYouTubeCredit*" readable="1" writable="0" construct="0" construct-only="0"/>
@@ -5301,11 +5749,10 @@
 			<property name="favorite-count" type="guint" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="is-draft" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="is-private" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="keywords" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="keywords" type="GStrv*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="location" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="max-rating" type="guint" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="min-rating" type="guint" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="no-embed" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="player-uri" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="rating-count" type="guint" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="recorded" type="GTimeVal*" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -5366,12 +5813,114 @@
 				</parameters>
 			</vfunc>
 		</interface>
+		<constant name="GDATA_ACCESS_ROLE_NONE" type="char*" value="none"/>
+		<constant name="GDATA_ACCESS_SCOPE_DEFAULT" type="char*" value="default"/>
+		<constant name="GDATA_ACCESS_SCOPE_DOMAIN" type="char*" value="domain"/>
+		<constant name="GDATA_ACCESS_SCOPE_USER" type="char*" value="user"/>
+		<constant name="GDATA_CALENDAR_ACCESS_ROLE_EDITOR" type="char*" value="http://schemas.google.com/gCal/2005#editor"/>
+		<constant name="GDATA_CALENDAR_ACCESS_ROLE_FREE_BUSY" type="char*" value="http://schemas.google.com/gCal/2005#freebusy"/>
+		<constant name="GDATA_CALENDAR_ACCESS_ROLE_OWNER" type="char*" value="http://schemas.google.com/gCal/2005#owner"/>
+		<constant name="GDATA_CALENDAR_ACCESS_ROLE_READ" type="char*" value="http://schemas.google.com/gCal/2005#read"/>
+		<constant name="GDATA_CALENDAR_ACCESS_ROLE_ROOT" type="char*" value="http://schemas.google.com/gCal/2005#root"/>
+		<constant name="GDATA_DOCUMENTS_ACCESS_ROLE_OWNER" type="char*" value="owner"/>
+		<constant name="GDATA_DOCUMENTS_ACCESS_ROLE_READER" type="char*" value="reader"/>
+		<constant name="GDATA_DOCUMENTS_ACCESS_ROLE_WRITER" type="char*" value="writer"/>
+		<constant name="GDATA_GCONTACT_CALENDAR_FREE_BUSY" type="char*" value="free-busy"/>
+		<constant name="GDATA_GCONTACT_CALENDAR_HOME" type="char*" value="home"/>
+		<constant name="GDATA_GCONTACT_CALENDAR_WORK" type="char*" value="work"/>
+		<constant name="GDATA_GCONTACT_EVENT_ANNIVERSARY" type="char*" value="anniversary"/>
+		<constant name="GDATA_GCONTACT_EVENT_OTHER" type="char*" value="other"/>
+		<constant name="GDATA_GCONTACT_JOT_HOME" type="char*" value="home"/>
+		<constant name="GDATA_GCONTACT_JOT_KEYWORDS" type="char*" value="keywords"/>
+		<constant name="GDATA_GCONTACT_JOT_OTHER" type="char*" value="other"/>
+		<constant name="GDATA_GCONTACT_JOT_USER" type="char*" value="user"/>
+		<constant name="GDATA_GCONTACT_JOT_WORK" type="char*" value="work"/>
+		<constant name="GDATA_GCONTACT_RELATION_ASSISTANT" type="char*" value="assistant"/>
+		<constant name="GDATA_GCONTACT_RELATION_BROTHER" type="char*" value="brother"/>
+		<constant name="GDATA_GCONTACT_RELATION_CHILD" type="char*" value="child"/>
+		<constant name="GDATA_GCONTACT_RELATION_DOMESTIC_PARTNER" type="char*" value="domestic-partner"/>
+		<constant name="GDATA_GCONTACT_RELATION_FATHER" type="char*" value="father"/>
+		<constant name="GDATA_GCONTACT_RELATION_FRIEND" type="char*" value="friend"/>
+		<constant name="GDATA_GCONTACT_RELATION_MANAGER" type="char*" value="manager"/>
+		<constant name="GDATA_GCONTACT_RELATION_MOTHER" type="char*" value="mother"/>
+		<constant name="GDATA_GCONTACT_RELATION_PARENT" type="char*" value="parent"/>
+		<constant name="GDATA_GCONTACT_RELATION_PARTNER" type="char*" value="partner"/>
+		<constant name="GDATA_GCONTACT_RELATION_REFERRER" type="char*" value="referred-by"/>
+		<constant name="GDATA_GCONTACT_RELATION_RELATIVE" type="char*" value="relative"/>
+		<constant name="GDATA_GCONTACT_RELATION_SISTER" type="char*" value="sister"/>
+		<constant name="GDATA_GCONTACT_RELATION_SPOUSE" type="char*" value="spouse"/>
+		<constant name="GDATA_GCONTACT_WEBSITE_BLOG" type="char*" value="blog"/>
+		<constant name="GDATA_GCONTACT_WEBSITE_FTP" type="char*" value="ftp"/>
+		<constant name="GDATA_GCONTACT_WEBSITE_HOME" type="char*" value="home"/>
+		<constant name="GDATA_GCONTACT_WEBSITE_HOME_PAGE" type="char*" value="home-page"/>
+		<constant name="GDATA_GCONTACT_WEBSITE_OTHER" type="char*" value="other"/>
+		<constant name="GDATA_GCONTACT_WEBSITE_PROFILE" type="char*" value="profile"/>
+		<constant name="GDATA_GCONTACT_WEBSITE_WORK" type="char*" value="work"/>
 		<constant name="GDATA_GD_ADDRESS_USAGE_GENERAL" type="char*" value="http://schemas.google.com/g/2005#general"/>
 		<constant name="GDATA_GD_ADDRESS_USAGE_LOCAL" type="char*" value="http://schemas.google.com/g/2005#local"/>
+		<constant name="GDATA_GD_EMAIL_ADDRESS_HOME" type="char*" value="http://schemas.google.com/g/2005#home"/>
+		<constant name="GDATA_GD_EMAIL_ADDRESS_OTHER" type="char*" value="http://schemas.google.com/g/2005#other"/>
+		<constant name="GDATA_GD_EMAIL_ADDRESS_WORK" type="char*" value="http://schemas.google.com/g/2005#work"/>
+		<constant name="GDATA_GD_EVENT_STATUS_CANCELED" type="char*" value="http://schemas.google.com/g/2005#event.canceled"/>
+		<constant name="GDATA_GD_EVENT_STATUS_CONFIRMED" type="char*" value="http://schemas.google.com/g/2005#event.confirmed"/>
+		<constant name="GDATA_GD_EVENT_STATUS_TENTATIVE" type="char*" value="http://schemas.google.com/g/2005#event.tentative"/>
+		<constant name="GDATA_GD_EVENT_TRANSPARENCY_OPAQUE" type="char*" value="http://schemas.google.com/g/2005#event.opaque"/>
+		<constant name="GDATA_GD_EVENT_TRANSPARENCY_TRANSPARENT" type="char*" value="http://schemas.google.com/g/2005#event.transparent"/>
+		<constant name="GDATA_GD_EVENT_VISIBILITY_CONFIDENTIAL" type="char*" value="http://schemas.google.com/g/2005#event.confidential"/>
+		<constant name="GDATA_GD_EVENT_VISIBILITY_DEFAULT" type="char*" value="http://schemas.google.com/g/2005#event.default"/>
+		<constant name="GDATA_GD_EVENT_VISIBILITY_PRIVATE" type="char*" value="http://schemas.google.com/g/2005#event.private"/>
+		<constant name="GDATA_GD_EVENT_VISIBILITY_PUBLIC" type="char*" value="http://schemas.google.com/g/2005#event.public"/>
+		<constant name="GDATA_GD_IM_ADDRESS_HOME" type="char*" value="http://schemas.google.com/g/2005#home"/>
+		<constant name="GDATA_GD_IM_ADDRESS_NETMEETING" type="char*" value="http://schemas.google.com/g/2005#netmeeting"/>
+		<constant name="GDATA_GD_IM_ADDRESS_OTHER" type="char*" value="http://schemas.google.com/g/2005#other"/>
+		<constant name="GDATA_GD_IM_ADDRESS_WORK" type="char*" value="http://schemas.google.com/g/2005#work"/>
+		<constant name="GDATA_GD_IM_PROTOCOL_AIM" type="char*" value="http://schemas.google.com/g/2005#AIM"/>
+		<constant name="GDATA_GD_IM_PROTOCOL_GOOGLE_TALK" type="char*" value="http://schemas.google.com/g/2005#GOOGLE_TALK"/>
+		<constant name="GDATA_GD_IM_PROTOCOL_ICQ" type="char*" value="http://schemas.google.com/g/2005#ICQ"/>
+		<constant name="GDATA_GD_IM_PROTOCOL_JABBER" type="char*" value="http://schemas.google.com/g/2005#JABBER"/>
+		<constant name="GDATA_GD_IM_PROTOCOL_LIVE_MESSENGER" type="char*" value="http://schemas.google.com/g/2005#MSN"/>
+		<constant name="GDATA_GD_IM_PROTOCOL_QQ" type="char*" value="http://schemas.google.com/g/2005#QQ"/>
+		<constant name="GDATA_GD_IM_PROTOCOL_SKYPE" type="char*" value="http://schemas.google.com/g/2005#SKYPE"/>
+		<constant name="GDATA_GD_IM_PROTOCOL_YAHOO_MESSENGER" type="char*" value="http://schemas.google.com/g/2005#YAHOO"/>
 		<constant name="GDATA_GD_MAIL_CLASS_BOTH" type="char*" value="http://schemas.google.com/g/2005#both"/>
 		<constant name="GDATA_GD_MAIL_CLASS_LETTERS" type="char*" value="http://schemas.google.com/g/2005#letters"/>
 		<constant name="GDATA_GD_MAIL_CLASS_NEITHER" type="char*" value="http://schemas.google.com/g/2005#neither"/>
 		<constant name="GDATA_GD_MAIL_CLASS_PARCELS" type="char*" value="http://schemas.google.com/g/2005#parcels"/>
+		<constant name="GDATA_GD_ORGANIZATION_OTHER" type="char*" value="http://schemas.google.com/g/2005#other"/>
+		<constant name="GDATA_GD_ORGANIZATION_WORK" type="char*" value="http://schemas.google.com/g/2005#work"/>
+		<constant name="GDATA_GD_PHONE_NUMBER_ASSISTANT" type="char*" value="http://schemas.google.com/g/2005#assistant"/>
+		<constant name="GDATA_GD_PHONE_NUMBER_CALLBACK" type="char*" value="http://schemas.google.com/g/2005#callback"/>
+		<constant name="GDATA_GD_PHONE_NUMBER_CAR" type="char*" value="http://schemas.google.com/g/2005#car"/>
+		<constant name="GDATA_GD_PHONE_NUMBER_COMPANY_MAIN" type="char*" value="http://schemas.google.com/g/2005#company_main"/>
+		<constant name="GDATA_GD_PHONE_NUMBER_FAX" type="char*" value="http://schemas.google.com/g/2005#fax"/>
+		<constant name="GDATA_GD_PHONE_NUMBER_HOME" type="char*" value="http://schemas.google.com/g/2005#home"/>
+		<constant name="GDATA_GD_PHONE_NUMBER_HOME_FAX" type="char*" value="http://schemas.google.com/g/2005#home_fax"/>
+		<constant name="GDATA_GD_PHONE_NUMBER_ISDN" type="char*" value="http://schemas.google.com/g/2005#isdn"/>
+		<constant name="GDATA_GD_PHONE_NUMBER_MAIN" type="char*" value="http://schemas.google.com/g/2005#main"/>
+		<constant name="GDATA_GD_PHONE_NUMBER_MOBILE" type="char*" value="http://schemas.google.com/g/2005#mobile"/>
+		<constant name="GDATA_GD_PHONE_NUMBER_OTHER" type="char*" value="http://schemas.google.com/g/2005#other"/>
+		<constant name="GDATA_GD_PHONE_NUMBER_OTHER_FAX" type="char*" value="http://schemas.google.com/g/2005#other_fax"/>
+		<constant name="GDATA_GD_PHONE_NUMBER_PAGER" type="char*" value="http://schemas.google.com/g/2005#pager"/>
+		<constant name="GDATA_GD_PHONE_NUMBER_RADIO" type="char*" value="http://schemas.google.com/g/2005#radio"/>
+		<constant name="GDATA_GD_PHONE_NUMBER_TELEX" type="char*" value="http://schemas.google.com/g/2005#telex"/>
+		<constant name="GDATA_GD_PHONE_NUMBER_TTY_TDD" type="char*" value="http://schemas.google.com/g/2005#tty_tdd"/>
+		<constant name="GDATA_GD_PHONE_NUMBER_WORK" type="char*" value="http://schemas.google.com/g/2005#work"/>
+		<constant name="GDATA_GD_PHONE_NUMBER_WORK_FAX" type="char*" value="http://schemas.google.com/g/2005#work_fax"/>
+		<constant name="GDATA_GD_PHONE_NUMBER_WORK_MOBILE" type="char*" value="http://schemas.google.com/g/2005#work_mobile"/>
+		<constant name="GDATA_GD_PHONE_NUMBER_WORK_PAGER" type="char*" value="http://schemas.google.com/g/2005#work_pager"/>
+		<constant name="GDATA_GD_POSTAL_ADDRESS_HOME" type="char*" value="http://schemas.google.com/g/2005#home"/>
+		<constant name="GDATA_GD_POSTAL_ADDRESS_OTHER" type="char*" value="http://schemas.google.com/g/2005#other"/>
+		<constant name="GDATA_GD_POSTAL_ADDRESS_WORK" type="char*" value="http://schemas.google.com/g/2005#work"/>
+		<constant name="GDATA_GD_REMINDER_ALERT" type="char*" value="alert"/>
+		<constant name="GDATA_GD_REMINDER_EMAIL" type="char*" value="email"/>
+		<constant name="GDATA_GD_REMINDER_SMS" type="char*" value="sms"/>
+		<constant name="GDATA_GD_WHERE_EVENT" type="char*" value="http://schemas.google.com/g/2005#event"/>
+		<constant name="GDATA_GD_WHERE_EVENT_ALTERNATE" type="char*" value="http://schemas.google.com/g/2005#event.alternate"/>
+		<constant name="GDATA_GD_WHERE_EVENT_PARKING" type="char*" value="http://schemas.google.com/g/2005#event.parking"/>
+		<constant name="GDATA_GD_WHO_EVENT_ATTENDEE" type="char*" value="http://schemas.google.com/g/2005#event.attendee"/>
+		<constant name="GDATA_GD_WHO_EVENT_ORGANIZER" type="char*" value="http://schemas.google.com/g/2005#event.organizer"/>
+		<constant name="GDATA_GD_WHO_EVENT_PERFORMER" type="char*" value="http://schemas.google.com/g/2005#event.performer"/>
+		<constant name="GDATA_GD_WHO_EVENT_SPEAKER" type="char*" value="http://schemas.google.com/g/2005#event.speaker"/>
 		<constant name="GDATA_LINK_ALTERNATE" type="char*" value="http://www.iana.org/assignments/relation/alternate"/>
 		<constant name="GDATA_LINK_EDIT" type="char*" value="http://www.iana.org/assignments/relation/edit"/>
 		<constant name="GDATA_LINK_EDIT_MEDIA" type="char*" value="http://www.iana.org/assignments/relation/edit-media"/>
@@ -5379,5 +5928,17 @@
 		<constant name="GDATA_LINK_RELATED" type="char*" value="http://www.iana.org/assignments/relation/related"/>
 		<constant name="GDATA_LINK_SELF" type="char*" value="http://www.iana.org/assignments/relation/self"/>
 		<constant name="GDATA_LINK_VIA" type="char*" value="http://www.iana.org/assignments/relation/via"/>
+		<constant name="GDATA_PICASAWEB_VIDEO_STATUS_FAILED" type="char*" value="failed"/>
+		<constant name="GDATA_PICASAWEB_VIDEO_STATUS_FINAL" type="char*" value="final"/>
+		<constant name="GDATA_PICASAWEB_VIDEO_STATUS_PENDING" type="char*" value="pending"/>
+		<constant name="GDATA_PICASAWEB_VIDEO_STATUS_READY" type="char*" value="ready"/>
+		<constant name="GDATA_YOUTUBE_ACTION_COMMENT" type="char*" value="comment"/>
+		<constant name="GDATA_YOUTUBE_ACTION_COMMENT_VOTE" type="char*" value="commentVote"/>
+		<constant name="GDATA_YOUTUBE_ACTION_EMBED" type="char*" value="embed"/>
+		<constant name="GDATA_YOUTUBE_ACTION_RATE" type="char*" value="rate"/>
+		<constant name="GDATA_YOUTUBE_ACTION_SYNDICATE" type="char*" value="syndicate"/>
+		<constant name="GDATA_YOUTUBE_ACTION_VIDEO_RESPOND" type="char*" value="videoRespond"/>
+		<constant name="GDATA_YOUTUBE_ASPECT_RATIO_WIDESCREEN" type="char*" value="widescreen"/>
+		<constant name="GDATA_YOUTUBE_CREDIT_ENTITY_PARTNER" type="char*" value="partner"/>
 	</namespace>
 </api>
