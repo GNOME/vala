@@ -15,8 +15,10 @@ dist_vapi_DATA = \
 	cairo-xcb.deps \
 	cairo-xcb.vapi \
 	ccss-1.vapi \
-	clutter-1.0.vapi \
 	clutter-1.0.deps \
+	clutter-1.0.vapi \
+	clutter-gtk-0.10.deps \
+	clutter-gtk-0.10.vapi \
 	clutter-json-1.0.vapi \
 	cogl-1.0.vapi \
 	cogl-1.0.deps \
