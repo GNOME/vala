@@ -3575,13 +3575,43 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		var cdecl = new CCodeDeclaration ("GRegex*");
 
 		var cname = regex_var.name + "regex_" + next_regex_id.to_string ();
+		if (this.next_regex_id == 0) {
+			var fun = new CCodeFunction ("_thread_safe_regex_init", "GRegex*");
+			fun.modifiers = CCodeModifiers.STATIC | CCodeModifiers.INLINE;
+			fun.add_parameter (new CCodeFormalParameter ("re", "GRegex**"));
+			fun.add_parameter (new CCodeFormalParameter ("pattern", "const gchar *"));
+			fun.add_parameter (new CCodeFormalParameter ("match_options", "GRegexMatchFlags"));
+			fun.block = new CCodeBlock ();
+
+			var once_enter_call = new CCodeFunctionCall (new CCodeIdentifier ("g_once_init_enter"));
+			once_enter_call.add_argument (new CCodeConstant ("(volatile gsize*) re"));
+
+			var if_block = new CCodeBlock ();
+
+			var regex_new_call = new CCodeFunctionCall (new CCodeIdentifier ("g_regex_new"));
+			regex_new_call.add_argument (new CCodeConstant ("pattern"));
+			regex_new_call.add_argument (new CCodeConstant ("match_options"));
+			regex_new_call.add_argument (new CCodeConstant ("0"));
+			regex_new_call.add_argument (new CCodeConstant ("NULL"));
+			if_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("GRegex* val"), regex_new_call)));
+
+			var once_leave_call = new CCodeFunctionCall (new CCodeIdentifier ("g_once_init_leave"));
+			once_leave_call.add_argument (new CCodeConstant ("(volatile gsize*) re"));
+			once_leave_call.add_argument (new CCodeConstant ("(gsize) val"));
+			if_block.add_statement (new CCodeExpressionStatement (once_leave_call));
+
+			var if_stat = new CCodeIfStatement (once_enter_call, if_block);
+			fun.block.add_statement (if_stat);
+			fun.block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("*re")));
+
+			source_type_member_definition.append (fun);
+		}
 		this.next_regex_id++;
 
 		cdecl.add_declarator (new CCodeVariableDeclarator (cname + " = NULL"));
 		cdecl.modifiers = CCodeModifiers.STATIC;
 
-		var regex_const = new CCodeConstant ("(%s == NULL) ? (%s = g_regex_new (\"".printf (cname, cname)
-			+ re + "\", " + flags + ", 0, NULL)) : %s".printf (cname));
+		var regex_const = new CCodeConstant ("_thread_safe_regex_init (&%s, \"%s\", %s)".printf (cname, re, flags));
 
 		source_declarations.add_constant_declaration (cdecl);
 		expr.ccodenode = regex_const;
