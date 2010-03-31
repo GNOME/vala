@@ -84,6 +84,12 @@
 				<parameter name="dirname" type="gchar*"/>
 			</parameters>
 		</function>
+		<function name="g_io_modules_scan_all_in_directory" symbol="g_io_modules_scan_all_in_directory">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="dirname" type="char*"/>
+			</parameters>
+		</function>
 		<function name="g_io_scheduler_cancel_all_jobs" symbol="g_io_scheduler_cancel_all_jobs">
 			<return-type type="void"/>
 		</function>
@@ -227,6 +233,8 @@
 					<parameter name="matcher" type="GFileAttributeMatcher*"/>
 				</parameters>
 			</method>
+		</struct>
+		<struct name="GFileDescriptorBased">
 		</struct>
 		<struct name="GFileIconClass">
 		</struct>
@@ -429,6 +437,12 @@
 				</parameters>
 			</constructor>
 		</boxed>
+		<enum name="GConverterResult" type-name="GConverterResult" get-type="g_converter_result_get_type">
+			<member name="G_CONVERTER_ERROR" value="0"/>
+			<member name="G_CONVERTER_CONVERTED" value="1"/>
+			<member name="G_CONVERTER_FINISHED" value="2"/>
+			<member name="G_CONVERTER_FLUSHED" value="3"/>
+		</enum>
 		<enum name="GDataStreamByteOrder" type-name="GDataStreamByteOrder" get-type="g_data_stream_byte_order_get_type">
 			<member name="G_DATA_STREAM_BYTE_ORDER_BIG_ENDIAN" value="0"/>
 			<member name="G_DATA_STREAM_BYTE_ORDER_LITTLE_ENDIAN" value="1"/>
@@ -481,6 +495,7 @@
 			<member name="G_FILE_MONITOR_EVENT_ATTRIBUTE_CHANGED" value="4"/>
 			<member name="G_FILE_MONITOR_EVENT_PRE_UNMOUNT" value="5"/>
 			<member name="G_FILE_MONITOR_EVENT_UNMOUNTED" value="6"/>
+			<member name="G_FILE_MONITOR_EVENT_MOVED" value="7"/>
 		</enum>
 		<enum name="GFileType" type-name="GFileType" get-type="g_file_type_get_type">
 			<member name="G_FILE_TYPE_UNKNOWN" value="0"/>
@@ -531,6 +546,8 @@
 			<member name="G_IO_ERROR_TOO_MANY_OPEN_FILES" value="31"/>
 			<member name="G_IO_ERROR_NOT_INITIALIZED" value="32"/>
 			<member name="G_IO_ERROR_ADDRESS_IN_USE" value="33"/>
+			<member name="G_IO_ERROR_PARTIAL_INPUT" value="34"/>
+			<member name="G_IO_ERROR_INVALID_DATA" value="35"/>
 		</enum>
 		<enum name="GMountMountFlags" type-name="GMountMountFlags" get-type="g_mount_mount_flags_get_type">
 			<member name="G_MOUNT_MOUNT_NONE" value="0"/>
@@ -575,6 +592,11 @@
 			<member name="G_SOCKET_TYPE_DATAGRAM" value="2"/>
 			<member name="G_SOCKET_TYPE_SEQPACKET" value="3"/>
 		</enum>
+		<enum name="GZlibCompressorFormat" type-name="GZlibCompressorFormat" get-type="g_zlib_compressor_format_get_type">
+			<member name="G_ZLIB_COMPRESSOR_FORMAT_ZLIB" value="0"/>
+			<member name="G_ZLIB_COMPRESSOR_FORMAT_GZIP" value="1"/>
+			<member name="G_ZLIB_COMPRESSOR_FORMAT_RAW" value="2"/>
+		</enum>
 		<flags name="GAppInfoCreateFlags" type-name="GAppInfoCreateFlags" get-type="g_app_info_create_flags_get_type">
 			<member name="G_APP_INFO_CREATE_NONE" value="0"/>
 			<member name="G_APP_INFO_CREATE_NEEDS_TERMINAL" value="1"/>
@@ -586,6 +608,11 @@
 			<member name="G_ASK_PASSWORD_NEED_DOMAIN" value="4"/>
 			<member name="G_ASK_PASSWORD_SAVING_SUPPORTED" value="8"/>
 			<member name="G_ASK_PASSWORD_ANONYMOUS_SUPPORTED" value="16"/>
+		</flags>
+		<flags name="GConverterFlags" type-name="GConverterFlags" get-type="g_converter_flags_get_type">
+			<member name="G_CONVERTER_NO_FLAGS" value="0"/>
+			<member name="G_CONVERTER_INPUT_AT_END" value="1"/>
+			<member name="G_CONVERTER_FLUSH" value="2"/>
 		</flags>
 		<flags name="GFileAttributeInfoFlags" type-name="GFileAttributeInfoFlags" get-type="g_file_attribute_info_flags_get_type">
 			<member name="G_FILE_ATTRIBUTE_INFO_NONE" value="0"/>
@@ -609,6 +636,7 @@
 		<flags name="GFileMonitorFlags" type-name="GFileMonitorFlags" get-type="g_file_monitor_flags_get_type">
 			<member name="G_FILE_MONITOR_NONE" value="0"/>
 			<member name="G_FILE_MONITOR_WATCH_MOUNTS" value="1"/>
+			<member name="G_FILE_MONITOR_SEND_MOVED" value="2"/>
 		</flags>
 		<flags name="GFileQueryInfoFlags" type-name="GFileQueryInfoFlags" get-type="g_file_query_info_flags_get_type">
 			<member name="G_FILE_QUERY_INFO_NONE" value="0"/>
@@ -871,7 +899,7 @@
 				</parameters>
 			</method>
 			<method name="make_pollfd" symbol="g_cancellable_make_pollfd">
-				<return-type type="void"/>
+				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="pollfd" type="GPollFD*"/>
@@ -887,6 +915,12 @@
 				</parameters>
 			</method>
 			<method name="push_current" symbol="g_cancellable_push_current">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="cancellable" type="GCancellable*"/>
+				</parameters>
+			</method>
+			<method name="release_fd" symbol="g_cancellable_release_fd">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="cancellable" type="GCancellable*"/>
@@ -911,6 +945,74 @@
 					<parameter name="cancellable" type="GCancellable*"/>
 				</parameters>
 			</signal>
+		</object>
+		<object name="GCharsetConverter" parent="GObject" type-name="GCharsetConverter" get-type="g_charset_converter_get_type">
+			<implements>
+				<interface name="GConverter"/>
+				<interface name="GInitable"/>
+			</implements>
+			<method name="get_num_fallbacks" symbol="g_charset_converter_get_num_fallbacks">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="converter" type="GCharsetConverter*"/>
+				</parameters>
+			</method>
+			<method name="get_use_fallback" symbol="g_charset_converter_get_use_fallback">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="converter" type="GCharsetConverter*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="g_charset_converter_new">
+				<return-type type="GCharsetConverter*"/>
+				<parameters>
+					<parameter name="to_charset" type="gchar*"/>
+					<parameter name="from_charset" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</constructor>
+			<method name="set_use_fallback" symbol="g_charset_converter_set_use_fallback">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="converter" type="GCharsetConverter*"/>
+					<parameter name="use_fallback" type="gboolean"/>
+				</parameters>
+			</method>
+			<property name="from-charset" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="to-charset" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="use-fallback" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+		</object>
+		<object name="GConverterInputStream" parent="GFilterInputStream" type-name="GConverterInputStream" get-type="g_converter_input_stream_get_type">
+			<method name="get_converter" symbol="g_converter_input_stream_get_converter">
+				<return-type type="GConverter*"/>
+				<parameters>
+					<parameter name="converter_stream" type="GConverterInputStream*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="g_converter_input_stream_new">
+				<return-type type="GInputStream*"/>
+				<parameters>
+					<parameter name="base_stream" type="GInputStream*"/>
+					<parameter name="converter" type="GConverter*"/>
+				</parameters>
+			</constructor>
+			<property name="converter" type="GConverter*" readable="1" writable="1" construct="0" construct-only="1"/>
+		</object>
+		<object name="GConverterOutputStream" parent="GFilterOutputStream" type-name="GConverterOutputStream" get-type="g_converter_output_stream_get_type">
+			<method name="get_converter" symbol="g_converter_output_stream_get_converter">
+				<return-type type="GConverter*"/>
+				<parameters>
+					<parameter name="converter_stream" type="GConverterOutputStream*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="g_converter_output_stream_new">
+				<return-type type="GOutputStream*"/>
+				<parameters>
+					<parameter name="base_stream" type="GOutputStream*"/>
+					<parameter name="converter" type="GConverter*"/>
+				</parameters>
+			</constructor>
+			<property name="converter" type="GConverter*" readable="1" writable="1" construct="0" construct-only="1"/>
 		</object>
 		<object name="GDataInputStream" parent="GBufferedInputStream" type-name="GDataInputStream" get-type="g_data_input_stream_get_type">
 			<method name="get_byte_order" symbol="g_data_input_stream_get_byte_order">
@@ -2253,6 +2355,9 @@
 					<parameter name="filename" type="gchar*"/>
 				</parameters>
 			</constructor>
+			<method name="query" symbol="g_io_module_query">
+				<return-type type="char**"/>
+			</method>
 			<method name="unload" symbol="g_io_module_unload">
 				<return-type type="void"/>
 				<parameters>
@@ -2784,11 +2889,16 @@
 				<return-type type="GOutputStream*"/>
 				<parameters>
 					<parameter name="data" type="gpointer"/>
-					<parameter name="len" type="gsize"/>
-					<parameter name="realloc_fn" type="GReallocFunc"/>
-					<parameter name="destroy" type="GDestroyNotify"/>
+					<parameter name="size" type="gsize"/>
+					<parameter name="realloc_function" type="GReallocFunc"/>
+					<parameter name="destroy_function" type="GDestroyNotify"/>
 				</parameters>
 			</constructor>
+			<property name="data" type="gpointer" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="data-size" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="destroy-function" type="gpointer" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="realloc-function" type="gpointer" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="size" type="gulong" readable="1" writable="1" construct="0" construct-only="1"/>
 		</object>
 		<object name="GMountOperation" parent="GObject" type-name="GMountOperation" get-type="g_mount_operation_get_type">
 			<method name="get_anonymous" symbol="g_mount_operation_get_anonymous">
@@ -3069,6 +3179,12 @@
 				</parameters>
 			</method>
 			<method name="is_closed" symbol="g_output_stream_is_closed">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="stream" type="GOutputStream*"/>
+				</parameters>
+			</method>
+			<method name="is_closing" symbol="g_output_stream_is_closing">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="stream" type="GOutputStream*"/>
@@ -3375,6 +3491,12 @@
 					<parameter name="resolver" type="GResolver*"/>
 				</parameters>
 			</method>
+			<signal name="reload" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="resolver" type="GResolver*"/>
+				</parameters>
+			</signal>
 			<vfunc name="lookup_by_address">
 				<return-type type="gchar*"/>
 				<parameters>
@@ -5072,6 +5194,32 @@
 				<return-type type="gboolean"/>
 			</vfunc>
 		</object>
+		<object name="GZlibCompressor" parent="GObject" type-name="GZlibCompressor" get-type="g_zlib_compressor_get_type">
+			<implements>
+				<interface name="GConverter"/>
+			</implements>
+			<constructor name="new" symbol="g_zlib_compressor_new">
+				<return-type type="GZlibCompressor*"/>
+				<parameters>
+					<parameter name="format" type="GZlibCompressorFormat"/>
+					<parameter name="level" type="int"/>
+				</parameters>
+			</constructor>
+			<property name="format" type="GZlibCompressorFormat" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="level" type="gint" readable="1" writable="1" construct="0" construct-only="1"/>
+		</object>
+		<object name="GZlibDecompressor" parent="GObject" type-name="GZlibDecompressor" get-type="g_zlib_decompressor_get_type">
+			<implements>
+				<interface name="GConverter"/>
+			</implements>
+			<constructor name="new" symbol="g_zlib_decompressor_new">
+				<return-type type="GZlibDecompressor*"/>
+				<parameters>
+					<parameter name="format" type="GZlibCompressorFormat"/>
+				</parameters>
+			</constructor>
+			<property name="format" type="GZlibCompressorFormat" readable="1" writable="1" construct="0" construct-only="1"/>
+		</object>
 		<interface name="GAppInfo" type-name="GAppInfo" get-type="g_app_info_get_type">
 			<requires>
 				<interface name="GObject"/>
@@ -5153,6 +5301,12 @@
 				</parameters>
 			</method>
 			<method name="get_description" symbol="g_app_info_get_description">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="appinfo" type="GAppInfo*"/>
+				</parameters>
+			</method>
+			<method name="get_display_name" symbol="g_app_info_get_display_name">
 				<return-type type="char*"/>
 				<parameters>
 					<parameter name="appinfo" type="GAppInfo*"/>
@@ -5302,6 +5456,12 @@
 				</parameters>
 			</vfunc>
 			<vfunc name="get_description">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="appinfo" type="GAppInfo*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_display_name">
 				<return-type type="char*"/>
 				<parameters>
 					<parameter name="appinfo" type="GAppInfo*"/>
@@ -5502,6 +5662,51 @@
 				<return-type type="gpointer"/>
 				<parameters>
 					<parameter name="async_result" type="GAsyncResult*"/>
+				</parameters>
+			</vfunc>
+		</interface>
+		<interface name="GConverter" type-name="GConverter" get-type="g_converter_get_type">
+			<requires>
+				<interface name="GObject"/>
+			</requires>
+			<method name="convert" symbol="g_converter_convert">
+				<return-type type="GConverterResult"/>
+				<parameters>
+					<parameter name="converter" type="GConverter*"/>
+					<parameter name="inbuf" type="void*"/>
+					<parameter name="inbuf_size" type="gsize"/>
+					<parameter name="outbuf" type="void*"/>
+					<parameter name="outbuf_size" type="gsize"/>
+					<parameter name="flags" type="GConverterFlags"/>
+					<parameter name="bytes_read" type="gsize*"/>
+					<parameter name="bytes_written" type="gsize*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="reset" symbol="g_converter_reset">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="converter" type="GConverter*"/>
+				</parameters>
+			</method>
+			<vfunc name="convert">
+				<return-type type="GConverterResult"/>
+				<parameters>
+					<parameter name="converter" type="GConverter*"/>
+					<parameter name="inbuf" type="void*"/>
+					<parameter name="inbuf_size" type="gsize"/>
+					<parameter name="outbuf" type="void*"/>
+					<parameter name="outbuf_size" type="gsize"/>
+					<parameter name="flags" type="GConverterFlags"/>
+					<parameter name="bytes_read" type="gsize*"/>
+					<parameter name="bytes_written" type="gsize*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="reset">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="converter" type="GConverter*"/>
 				</parameters>
 			</vfunc>
 		</interface>
@@ -6202,6 +6407,13 @@
 				<return-type type="char*"/>
 				<parameters>
 					<parameter name="file" type="GFile*"/>
+				</parameters>
+			</method>
+			<method name="has_parent" symbol="g_file_has_parent">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="parent" type="GFile*"/>
 				</parameters>
 			</method>
 			<method name="has_prefix" symbol="g_file_has_prefix">
@@ -7881,6 +8093,12 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<method name="get_default_location" symbol="g_mount_get_default_location">
+				<return-type type="GFile*"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+				</parameters>
+			</method>
 			<method name="get_drive" symbol="g_mount_get_drive">
 				<return-type type="GDrive*"/>
 				<parameters>
@@ -8083,6 +8301,12 @@
 					<parameter name="mount" type="GMount*"/>
 					<parameter name="result" type="GAsyncResult*"/>
 					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_default_location">
+				<return-type type="GFile*"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
 				</parameters>
 			</vfunc>
 			<vfunc name="get_drive">
@@ -8626,7 +8850,9 @@
 		<constant name="G_FILE_ATTRIBUTE_TIME_CREATED_USEC" type="char*" value="time::created-usec"/>
 		<constant name="G_FILE_ATTRIBUTE_TIME_MODIFIED" type="char*" value="time::modified"/>
 		<constant name="G_FILE_ATTRIBUTE_TIME_MODIFIED_USEC" type="char*" value="time::modified-usec"/>
+		<constant name="G_FILE_ATTRIBUTE_TRASH_DELETION_DATE" type="char*" value="trash::deletion-date"/>
 		<constant name="G_FILE_ATTRIBUTE_TRASH_ITEM_COUNT" type="char*" value="trash::item-count"/>
+		<constant name="G_FILE_ATTRIBUTE_TRASH_ORIG_PATH" type="char*" value="trash::orig-path"/>
 		<constant name="G_FILE_ATTRIBUTE_UNIX_BLOCKS" type="char*" value="unix::blocks"/>
 		<constant name="G_FILE_ATTRIBUTE_UNIX_BLOCK_SIZE" type="char*" value="unix::block-size"/>
 		<constant name="G_FILE_ATTRIBUTE_UNIX_DEVICE" type="char*" value="unix::device"/>

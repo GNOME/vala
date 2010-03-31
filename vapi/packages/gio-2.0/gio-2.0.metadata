@@ -132,7 +132,7 @@ g_file_*.etag nullable="1"
 g_file_*.progress_callback nullable="1"
 g_io_scheduler_*.notify nullable="1"
 g_memory_input_stream_*.destroy nullable="1"
-g_memory_output_stream_*.destroy nullable="1"
+g_memory_output_stream_*.destroy_function nullable="1"
 
 g_file_mount_mountable.callback nullable="1"
 g_file_unmount_mountable.callback nullable="1"

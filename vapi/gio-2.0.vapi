@@ -50,12 +50,40 @@ namespace GLib {
 		public static unowned GLib.Cancellable get_current ();
 		public int get_fd ();
 		public bool is_cancelled ();
-		public void make_pollfd (GLib.PollFD pollfd);
+		public bool make_pollfd (GLib.PollFD pollfd);
 		public void pop_current ();
 		public void push_current ();
+		public void release_fd ();
 		public void reset ();
 		public bool set_error_if_cancelled () throws GLib.Error;
 		public virtual signal void cancelled ();
+	}
+	[CCode (cheader_filename = "gio/gio.h")]
+	public class CharsetConverter : GLib.Object, GLib.Converter, GLib.Initable {
+		[CCode (has_construct_function = false)]
+		public CharsetConverter (string to_charset, string from_charset) throws GLib.Error;
+		public uint get_num_fallbacks ();
+		public bool get_use_fallback ();
+		public void set_use_fallback (bool use_fallback);
+		[NoAccessorMethod]
+		public string from_charset { owned get; construct; }
+		[NoAccessorMethod]
+		public string to_charset { owned get; construct; }
+		public bool use_fallback { get; set construct; }
+	}
+	[CCode (cheader_filename = "gio/gio.h")]
+	public class ConverterInputStream : GLib.FilterInputStream {
+		[CCode (type = "GInputStream*", has_construct_function = false)]
+		public ConverterInputStream (GLib.InputStream base_stream, GLib.Converter converter);
+		public unowned GLib.Converter get_converter ();
+		public GLib.Converter converter { get; construct; }
+	}
+	[CCode (cheader_filename = "gio/gio.h")]
+	public class ConverterOutputStream : GLib.FilterOutputStream {
+		[CCode (type = "GOutputStream*", has_construct_function = false)]
+		public ConverterOutputStream (GLib.OutputStream base_stream, GLib.Converter converter);
+		public unowned GLib.Converter get_converter ();
+		public GLib.Converter converter { get; construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class DataInputStream : GLib.BufferedInputStream {
@@ -151,6 +179,10 @@ namespace GLib {
 		public unowned string enumerate_next ();
 		public bool matches (string attribute);
 		public bool matches_only (string attribute);
+	}
+	[Compact]
+	[CCode (cheader_filename = "gio/gio.h")]
+	public class FileDescriptorBased {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class FileEnumerator : GLib.Object {
@@ -354,6 +386,7 @@ namespace GLib {
 		[CCode (has_construct_function = false)]
 		public IOModule (string filename);
 		public void load ();
+		public static unowned string query ();
 		public void unload ();
 	}
 	[Compact]
@@ -469,10 +502,17 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class MemoryOutputStream : GLib.OutputStream, GLib.Seekable {
 		[CCode (type = "GOutputStream*", has_construct_function = false)]
-		public MemoryOutputStream (void* data, size_t len, GLib.ReallocFunc realloc_fn, GLib.DestroyNotify? destroy);
+		public MemoryOutputStream (void* data, size_t size, GLib.ReallocFunc realloc_function, GLib.DestroyNotify? destroy_function);
 		public void* get_data ();
 		public size_t get_data_size ();
 		public size_t get_size ();
+		public void* data { get; construct; }
+		public ulong data_size { get; }
+		[NoAccessorMethod]
+		public void* destroy_function { get; construct; }
+		[NoAccessorMethod]
+		public void* realloc_function { get; construct; }
+		public ulong size { get; construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class MountOperation : GLib.Object {
@@ -542,6 +582,7 @@ namespace GLib {
 		public virtual bool flush_finish (GLib.AsyncResult _result) throws GLib.Error;
 		public bool has_pending ();
 		public bool is_closed ();
+		public bool is_closing ();
 		public bool set_pending () throws GLib.Error;
 		public virtual ssize_t splice (GLib.InputStream source, GLib.OutputStreamSpliceFlags flags, GLib.Cancellable? cancellable) throws GLib.Error;
 		public virtual async ssize_t splice_async (GLib.InputStream source, GLib.OutputStreamSpliceFlags flags, int io_priority, GLib.Cancellable? cancellable) throws GLib.Error;
@@ -573,6 +614,7 @@ namespace GLib {
 		public virtual async GLib.List<GLib.SrvTarget> lookup_service_async (string service, string protocol, string domain, GLib.Cancellable? cancellable) throws GLib.Error;
 		public virtual GLib.List<GLib.SrvTarget> lookup_service_finish (GLib.AsyncResult _result) throws GLib.Error;
 		public void set_default ();
+		public virtual signal void reload ();
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class Settings : GLib.Object {
@@ -894,6 +936,22 @@ namespace GLib {
 		public virtual signal void volume_removed (GLib.Volume volume);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
+	public class ZlibCompressor : GLib.Object, GLib.Converter {
+		[CCode (has_construct_function = false)]
+		public ZlibCompressor (GLib.ZlibCompressorFormat format, int level);
+		[NoAccessorMethod]
+		public GLib.ZlibCompressorFormat format { get; construct; }
+		[NoAccessorMethod]
+		public int level { get; construct; }
+	}
+	[CCode (cheader_filename = "gio/gio.h")]
+	public class ZlibDecompressor : GLib.Object, GLib.Converter {
+		[CCode (has_construct_function = false)]
+		public ZlibDecompressor (GLib.ZlibCompressorFormat format);
+		[NoAccessorMethod]
+		public GLib.ZlibCompressorFormat format { get; construct; }
+	}
+	[CCode (cheader_filename = "gio/gio.h")]
 	public interface AppInfo : GLib.Object {
 		public abstract bool add_supports_type (string content_type) throws GLib.Error;
 		public abstract bool can_delete ();
@@ -910,6 +968,7 @@ namespace GLib {
 		public static unowned GLib.AppInfo get_default_for_type (string content_type, bool must_support_uris);
 		public static unowned GLib.AppInfo get_default_for_uri_scheme (string uri_scheme);
 		public abstract unowned string get_description ();
+		public abstract unowned string get_display_name ();
 		public abstract unowned string get_executable ();
 		public abstract unowned GLib.Icon get_icon ();
 		public abstract unowned string get_id ();
@@ -938,6 +997,11 @@ namespace GLib {
 	public interface AsyncResult : GLib.Object {
 		public abstract unowned GLib.Object get_source_object ();
 		public abstract void* get_user_data ();
+	}
+	[CCode (cheader_filename = "gio/gio.h")]
+	public interface Converter : GLib.Object {
+		public abstract GLib.ConverterResult convert (void* inbuf, size_t inbuf_size, void* outbuf, size_t outbuf_size, GLib.ConverterFlags flags, size_t bytes_read, size_t bytes_written) throws GLib.Error;
+		public abstract void reset ();
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface Drive : GLib.Object {
@@ -1010,6 +1074,7 @@ namespace GLib {
 		public abstract string? get_relative_path (GLib.File descendant);
 		public abstract string get_uri ();
 		public abstract string get_uri_scheme ();
+		public bool has_parent (GLib.File parent);
 		public bool has_prefix (GLib.File prefix);
 		public abstract bool has_uri_scheme (string uri_scheme);
 		public abstract uint hash ();
@@ -1124,6 +1189,7 @@ namespace GLib {
 		public abstract bool eject_finish (GLib.AsyncResult _result) throws GLib.Error;
 		public abstract async bool eject_with_operation (GLib.MountUnmountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract bool eject_with_operation_finish (GLib.AsyncResult _result) throws GLib.Error;
+		public abstract unowned GLib.File get_default_location ();
 		public abstract unowned GLib.Drive get_drive ();
 		public abstract unowned GLib.Icon get_icon ();
 		public abstract unowned string get_name ();
@@ -1198,6 +1264,20 @@ namespace GLib {
 		NEED_DOMAIN,
 		SAVING_SUPPORTED,
 		ANONYMOUS_SUPPORTED
+	}
+	[CCode (cprefix = "G_CONVERTER_", cheader_filename = "gio/gio.h")]
+	[Flags]
+	public enum ConverterFlags {
+		NO_FLAGS,
+		INPUT_AT_END,
+		FLUSH
+	}
+	[CCode (cprefix = "G_CONVERTER_", cheader_filename = "gio/gio.h")]
+	public enum ConverterResult {
+		ERROR,
+		CONVERTED,
+		FINISHED,
+		FLUSHED
 	}
 	[CCode (cprefix = "G_DATA_STREAM_BYTE_ORDER_", cheader_filename = "gio/gio.h")]
 	public enum DataStreamByteOrder {
@@ -1283,13 +1363,15 @@ namespace GLib {
 		CREATED,
 		ATTRIBUTE_CHANGED,
 		PRE_UNMOUNT,
-		UNMOUNTED
+		UNMOUNTED,
+		MOVED
 	}
 	[CCode (cprefix = "G_FILE_MONITOR_", cheader_filename = "gio/gio.h")]
 	[Flags]
 	public enum FileMonitorFlags {
 		NONE,
-		WATCH_MOUNTS
+		WATCH_MOUNTS,
+		SEND_MOVED
 	}
 	[CCode (cprefix = "G_FILE_QUERY_INFO_", cheader_filename = "gio/gio.h")]
 	[Flags]
@@ -1377,6 +1459,12 @@ namespace GLib {
 		DATAGRAM,
 		SEQPACKET
 	}
+	[CCode (cprefix = "G_ZLIB_COMPRESSOR_FORMAT_", cheader_filename = "gio/gio.h")]
+	public enum ZlibCompressorFormat {
+		ZLIB,
+		GZIP,
+		RAW
+	}
 	[CCode (cprefix = "G_IO_ERROR_", cheader_filename = "gio/gio.h")]
 	public errordomain IOError {
 		FAILED,
@@ -1413,6 +1501,8 @@ namespace GLib {
 		TOO_MANY_OPEN_FILES,
 		NOT_INITIALIZED,
 		ADDRESS_IN_USE,
+		PARTIAL_INPUT,
+		INVALID_DATA,
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public delegate void AsyncReadyCallback (GLib.Object? source_object, GLib.AsyncResult res);
@@ -1557,7 +1647,11 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_TIME_MODIFIED_USEC;
 	[CCode (cheader_filename = "gio/gio.h")]
+	public const string FILE_ATTRIBUTE_TRASH_DELETION_DATE;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_TRASH_ITEM_COUNT;
+	[CCode (cheader_filename = "gio/gio.h")]
+	public const string FILE_ATTRIBUTE_TRASH_ORIG_PATH;
 	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_UNIX_BLOCKS;
 	[CCode (cheader_filename = "gio/gio.h")]
@@ -1624,6 +1718,8 @@ namespace GLib {
 	public static GLib.Quark g_io_error_quark ();
 	[CCode (cname = "g_io_modules_load_all_in_directory", cheader_filename = "gio/gio.h")]
 	public static GLib.List<weak GLib.TypeModule> g_io_modules_load_all_in_directory (string dirname);
+	[CCode (cname = "g_io_modules_scan_all_in_directory", cheader_filename = "gio/gio.h")]
+	public static void g_io_modules_scan_all_in_directory (string dirname);
 	[CCode (cname = "g_io_scheduler_cancel_all_jobs", cheader_filename = "gio/gio.h")]
 	public static void g_io_scheduler_cancel_all_jobs ();
 	[CCode (cname = "g_io_scheduler_push_job", cheader_filename = "gio/gio.h")]
