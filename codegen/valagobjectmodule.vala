@@ -188,7 +188,7 @@ internal class Vala.GObjectModule : GTypeModule {
 		cdecl.add_declarator (new CCodeVariableDeclarator ("self", ccall));
 		block.add_statement (cdecl);
 
-		bool boxed_declared = false;
+		int boxed_name_id = 0;
 		bool length_declared = false;
 
 		var cswitch = new CCodeSwitchStatement (new CCodeIdentifier ("property_id"));
@@ -220,26 +220,28 @@ internal class Vala.GObjectModule : GTypeModule {
 
 			cswitch.add_statement (new CCodeCaseStatement (new CCodeIdentifier (prop.get_upper_case_cname ())));
 			if (prop.property_type.is_real_struct_type ()) {
-				if (!boxed_declared) {
-					cdecl = new CCodeDeclaration ("gpointer");
-					cdecl.add_declarator (new CCodeVariableDeclarator ("boxed"));
-					block.add_statement (cdecl);
-					boxed_declared = true;
-				}
-
 				var st = prop.property_type.data_type as Struct;
-				var struct_creation = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
-				struct_creation.add_argument (new CCodeIdentifier (st.get_cname ()));
-				struct_creation.add_argument (new CCodeConstant ("1"));
-				cswitch.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("boxed"), struct_creation)));
+				var boxed = "boxed%d".printf (boxed_name_id++);
+
+				cdecl = new CCodeDeclaration (st.get_cname ());
+				cdecl.add_declarator (new CCodeVariableDeclarator (boxed));
+				block.add_statement (cdecl);
+
 				ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_get_%s".printf (prefix, prop.name)));
 				ccall.add_argument (cself);
-				ccall.add_argument (new CCodeIdentifier ("boxed"));
+				var boxed_addr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (boxed));
+				ccall.add_argument (boxed_addr);
 				cswitch.add_statement (new CCodeExpressionStatement (ccall));
-				var csetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_boxed"));
+
+				var csetcall = new CCodeFunctionCall ();
+				csetcall.call = head.get_value_setter_function (prop.property_type);
 				csetcall.add_argument (new CCodeIdentifier ("value"));
-				csetcall.add_argument (new CCodeIdentifier ("boxed"));
+				csetcall.add_argument (boxed_addr);
 				cswitch.add_statement (new CCodeExpressionStatement (csetcall));
+
+				if (requires_destroy (prop.get_accessor.value_type)) {
+					cswitch.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (boxed), prop.get_accessor.value_type, null)));
+				}
 			} else {
 				ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_get_%s".printf (prefix, prop.name)));
 				ccall.add_argument (cself);

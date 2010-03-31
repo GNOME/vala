@@ -2843,7 +2843,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		return null;
 	}
 
-	public virtual CCodeExpression get_unref_expression (CCodeExpression cvar, DataType type, Expression expr, bool is_macro_definition = false) {
+	public virtual CCodeExpression get_unref_expression (CCodeExpression cvar, DataType type, Expression? expr, bool is_macro_definition = false) {
 		if (type is DelegateType) {
 			CCodeExpression delegate_target_destroy_notify;
 			var delegate_target = get_delegate_target_cexpression (expr, out delegate_target_destroy_notify);

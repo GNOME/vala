@@ -736,7 +736,7 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		}
 	}
 
-	public override CCodeExpression get_unref_expression (CCodeExpression cvar, DataType type, Expression expr, bool is_macro_definition) {
+	public override CCodeExpression get_unref_expression (CCodeExpression cvar, DataType type, Expression? expr, bool is_macro_definition) {
 		if (type is ArrayType) {
 			var array_type = (ArrayType) type;
 
