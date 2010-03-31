@@ -598,9 +598,9 @@ namespace Cogl {
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static void path_new ();
 	[CCode (cheader_filename = "cogl/cogl.h")]
-	public static void path_polygon (float coords, int num_points);
+	public static void path_polygon ([CCode (array_length = false)] float[] coords, int num_points);
 	[CCode (cheader_filename = "cogl/cogl.h")]
-	public static void path_polyline (float coords, int num_points);
+	public static void path_polyline ([CCode (array_length = false)] float[] coords, int num_points);
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static void path_rectangle (float x_1, float y_1, float x_2, float y_2);
 	[CCode (cheader_filename = "cogl/cogl.h")]

@@ -111,4 +111,7 @@ cogl_material_layer_get_type hidden="1"
 
 cogl_offscreen_* hidden="1"
 
+cogl_path_polygon.coords is_array="1" no_array_length="1"
+cogl_path_polyline.coords is_array="1" no_array_length="1"
+
 cogl_vertex_buffer_* hidden="1"
