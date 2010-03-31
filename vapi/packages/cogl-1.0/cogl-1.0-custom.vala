@@ -8,12 +8,31 @@ namespace Cogl {
 	}
 
 	[Compact]
+	[CCode (cname = "CoglHandle")]
+	public class Buffer: Handle {
+		public uint get_size ();
+		public Cogl.BufferUpdateHint get_update_hint ();
+		public Cogl.BufferUsageHint get_usage_hint ();
+		public uchar map (Cogl.BufferAccess access);
+		public bool set_data (size_t offset, uchar data, size_t size);
+		public void set_update_hint (Cogl.BufferUpdateHint hint);
+		public void set_usage_hint (Cogl.BufferUsageHint hint);
+		public void unmap ();
+	}
+
+	[Compact]
 	[CCode (ref_function = "cogl_handle_ref", unref_function = "cogl_handle_unref")]
 	public class Handle {
+		[CCode (cname = "cogl_is_bitmap")]
+		public bool is_bitmap ();
+		[CCode (cname = "cogl_is_buffer")]
+		public bool is_buffer ();
 		[CCode (cname = "cogl_is_material")]
 		public bool is_material ();
 		[CCode (cname = "cogl_is_offscreen")]
 		public bool is_offscreen ();
+		[CCode (cname = "cogl_is_pixel_buffer")]
+		public bool is_pixel_buffer ();
 		[CCode (cname = "cogl_is_program")]
 		public bool is_program ();
 		[CCode (cname = "cogl_is_shader")]
@@ -29,6 +48,8 @@ namespace Cogl {
 	public class Material: Handle {
 		[CCode (type = "CoglHandle*", has_construct_function = false)]
 		public Material ();
+		public Material copy();
+
 		public void get_ambient (out Cogl.Color ambient);
 		public void get_color (out Cogl.Color color);
 		public void get_diffuse (out Cogl.Color diffuse);
@@ -81,6 +102,12 @@ namespace Cogl {
 	}
 
 	[Compact]
+	public class PixelBuffer: Handle {
+		public PixelBuffer (uint size);
+		public PixelBuffer.for_size (uint width, uint height, Cogl.PixelFormat format, uint stride);
+	}
+
+	[Compact]
 	[CCode (cname = "CoglHandle", ref_function = "cogl_program_ref", unref_function = "cogl_program_unref")]
 	public class Program: Handle {
 		[CCode (cname = "cogl_create_program", type = "CoglHandle*", has_construct_function = false)]
@@ -106,7 +133,6 @@ namespace Cogl {
 		public Cogl.ShaderType get_type ();
 		public bool is_compiled ();
 		public void source (string source);
-
 	}
 
 	[Compact]
