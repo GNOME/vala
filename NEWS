@@ -1,3 +1,21 @@
+Vala 0.8.0
+==========
+
+ * Infer type arguments when calling generic methods.
+ * Support `in' operator for arrays.
+ * Add experimental support for regular expression literals.
+ * Add experimental support for chained relational expressions.
+ * Add va_list support.
+ * Add clutter-gtk-0.10 bindings (Gordon Allott).
+ * Add gdl-1.0 bindings (Nicolas Joseph).
+ * Add gstreamer-app-0.10 bindings (Sebastian Dröge).
+ * Add gstreamer-cdda-0.10 bindings (Sebastian Dröge).
+ * Add gudev-1.0 bindings (Jim Nelson).
+ * Add libgda-report-4.0 bindings (Shawn Ferris).
+ * Add libgvc (graphviz) bindings (Martin Olsson).
+ * Add purple bindings (Adrien Bustany).
+ * Many bug fixes and binding updates.
+
 Vala 0.7.10
 ===========
 
