@@ -121,6 +121,9 @@ namespace Gdk {
 		[CCode (has_construct_function = false)]
 		public PixbufSimpleAnim (int width, int height, float rate);
 		public void add_frame (Gdk.Pixbuf pixbuf);
+		public bool get_loop ();
+		public void set_loop (bool loop);
+		public bool loop { get; set; }
 	}
 	[Compact]
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]

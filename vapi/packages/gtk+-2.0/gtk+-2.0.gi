@@ -831,6 +831,22 @@
 				<parameter name="orientation" type="GtkOrientation"/>
 			</parameters>
 		</function>
+		<function name="paint_spinner" symbol="gtk_paint_spinner">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="style" type="GtkStyle*"/>
+				<parameter name="window" type="GdkWindow*"/>
+				<parameter name="state_type" type="GtkStateType"/>
+				<parameter name="area" type="GdkRectangle*"/>
+				<parameter name="widget" type="GtkWidget*"/>
+				<parameter name="detail" type="gchar*"/>
+				<parameter name="step" type="guint"/>
+				<parameter name="x" type="gint"/>
+				<parameter name="y" type="gint"/>
+				<parameter name="width" type="gint"/>
+				<parameter name="height" type="gint"/>
+			</parameters>
+		</function>
 		<function name="paint_tab" symbol="gtk_paint_tab">
 			<return-type type="void"/>
 			<parameters>
@@ -1290,6 +1306,14 @@
 			<parameters>
 				<parameter name="widget" type="GtkWidget*"/>
 				<parameter name="percentage" type="double"/>
+			</parameters>
+		</function>
+		<function name="test_spin_button_click" symbol="gtk_test_spin_button_click">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="spinner" type="GtkSpinButton*"/>
+				<parameter name="button" type="guint"/>
+				<parameter name="upwards" type="gboolean"/>
 			</parameters>
 		</function>
 		<function name="test_text_get" symbol="gtk_test_text_get">
@@ -4703,6 +4727,10 @@
 			<member name="GTK_TEXT_SEARCH_VISIBLE_ONLY" value="1"/>
 			<member name="GTK_TEXT_SEARCH_TEXT_ONLY" value="2"/>
 		</flags>
+		<flags name="GtkToolPaletteDragTargets" type-name="GtkToolPaletteDragTargets" get-type="gtk_tool_palette_drag_targets_get_type">
+			<member name="GTK_TOOL_PALETTE_DRAG_ITEMS" value="1"/>
+			<member name="GTK_TOOL_PALETTE_DRAG_GROUPS" value="2"/>
+		</flags>
 		<flags name="GtkTreeModelFlags" type-name="GtkTreeModelFlags" get-type="gtk_tree_model_flags_get_type">
 			<member name="GTK_TREE_MODEL_ITERS_PERSIST" value="1"/>
 			<member name="GTK_TREE_MODEL_LIST_ONLY" value="2"/>
@@ -5314,6 +5342,12 @@
 					<parameter name="action" type="GtkAction*"/>
 				</parameters>
 			</method>
+			<method name="get_always_show_image" symbol="gtk_action_get_always_show_image">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="action" type="GtkAction*"/>
+				</parameters>
+			</method>
 			<method name="get_gicon" symbol="gtk_action_get_gicon">
 				<return-type type="GIcon*"/>
 				<parameters>
@@ -5427,6 +5461,13 @@
 					<parameter name="accel_path" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="set_always_show_image" symbol="gtk_action_set_always_show_image">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="action" type="GtkAction*"/>
+					<parameter name="always_show" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="set_gicon" symbol="gtk_action_set_gicon">
 				<return-type type="void"/>
 				<parameters>
@@ -5511,6 +5552,7 @@
 				</parameters>
 			</method>
 			<property name="action-group" type="GtkActionGroup*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="always-show-image" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="gicon" type="GIcon*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="hide-if-empty" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="icon-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -7187,6 +7229,14 @@
 			<property name="climb-rate" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="digits" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
+		<object name="GtkCellRendererSpinner" parent="GtkCellRenderer" type-name="GtkCellRendererSpinner" get-type="gtk_cell_renderer_spinner_get_type">
+			<constructor name="new" symbol="gtk_cell_renderer_spinner_new">
+				<return-type type="GtkCellRenderer*"/>
+			</constructor>
+			<property name="active" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="pulse" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="size" type="GtkIconSize" readable="1" writable="1" construct="0" construct-only="0"/>
+		</object>
 		<object name="GtkCellRendererText" parent="GtkCellRenderer" type-name="GtkCellRendererText" get-type="gtk_cell_renderer_text_get_type">
 			<constructor name="new" symbol="gtk_cell_renderer_text_new">
 				<return-type type="GtkCellRenderer*"/>
@@ -8714,6 +8764,13 @@
 					<parameter name="widget" type="GtkWidget*"/>
 				</parameters>
 			</method>
+			<method name="get_widget_for_response" symbol="gtk_dialog_get_widget_for_response">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="dialog" type="GtkDialog*"/>
+					<parameter name="response_id" type="gint"/>
+				</parameters>
+			</method>
 			<constructor name="new" symbol="gtk_dialog_new">
 				<return-type type="GtkWidget*"/>
 			</constructor>
@@ -8924,6 +8981,13 @@
 					<parameter name="icon_pos" type="GtkEntryIconPosition"/>
 				</parameters>
 			</method>
+			<method name="get_icon_window" symbol="gtk_entry_get_icon_window">
+				<return-type type="GdkWindow*"/>
+				<parameters>
+					<parameter name="entry" type="GtkEntry*"/>
+					<parameter name="icon_pos" type="GtkEntryIconPosition"/>
+				</parameters>
+			</method>
 			<method name="get_inner_border" symbol="gtk_entry_get_inner_border">
 				<return-type type="GtkBorder*"/>
 				<parameters>
@@ -8982,6 +9046,12 @@
 			</method>
 			<method name="get_text_length" symbol="gtk_entry_get_text_length">
 				<return-type type="guint16"/>
+				<parameters>
+					<parameter name="entry" type="GtkEntry*"/>
+				</parameters>
+			</method>
+			<method name="get_text_window" symbol="gtk_entry_get_text_window">
+				<return-type type="GdkWindow*"/>
 				<parameters>
 					<parameter name="entry" type="GtkEntry*"/>
 				</parameters>
@@ -9327,6 +9397,13 @@
 				<parameters>
 					<parameter name="entry" type="GtkEntry*"/>
 					<parameter name="menu" type="GtkMenu*"/>
+				</parameters>
+			</signal>
+			<signal name="preedit-changed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkEntry*"/>
+					<parameter name="p0" type="char*"/>
 				</parameters>
 			</signal>
 			<signal name="toggle-overwrite" when="LAST">
@@ -13442,6 +13519,7 @@
 			<field name="ignore_leave" type="guint"/>
 			<field name="menu_flag" type="guint"/>
 			<field name="ignore_enter" type="guint"/>
+			<field name="keyboard_mode" type="guint"/>
 		</object>
 		<object name="GtkMenuToolButton" parent="GtkToolButton" type-name="GtkMenuToolButton" get-type="gtk_menu_tool_button_get_type">
 			<implements>
@@ -13677,6 +13755,13 @@
 					<parameter name="menu_label" type="GtkWidget*"/>
 				</parameters>
 			</method>
+			<method name="get_action_widget" symbol="gtk_notebook_get_action_widget">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="notebook" type="GtkNotebook*"/>
+					<parameter name="pack_type" type="GtkPackType"/>
+				</parameters>
+			</method>
 			<method name="get_current_page" symbol="gtk_notebook_get_current_page">
 				<return-type type="gint"/>
 				<parameters>
@@ -13854,6 +13939,14 @@
 					<parameter name="notebook" type="GtkNotebook*"/>
 					<parameter name="child" type="GtkWidget*"/>
 					<parameter name="position" type="gint"/>
+				</parameters>
+			</method>
+			<method name="set_action_widget" symbol="gtk_notebook_set_action_widget">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="notebook" type="GtkNotebook*"/>
+					<parameter name="widget" type="GtkWidget*"/>
+					<parameter name="pack_type" type="GtkPackType"/>
 				</parameters>
 			</method>
 			<method name="set_current_page" symbol="gtk_notebook_set_current_page">
@@ -14121,6 +14214,27 @@
 			</vfunc>
 			<field name="flags" type="guint32"/>
 		</object>
+		<object name="GtkOffscreenWindow" parent="GtkWindow" type-name="GtkOffscreenWindow" get-type="gtk_offscreen_window_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+			</implements>
+			<method name="get_pixbuf" symbol="gtk_offscreen_window_get_pixbuf">
+				<return-type type="GdkPixbuf*"/>
+				<parameters>
+					<parameter name="offscreen" type="GtkOffscreenWindow*"/>
+				</parameters>
+			</method>
+			<method name="get_pixmap" symbol="gtk_offscreen_window_get_pixmap">
+				<return-type type="GdkPixmap*"/>
+				<parameters>
+					<parameter name="offscreen" type="GtkOffscreenWindow*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gtk_offscreen_window_new">
+				<return-type type="GtkWidget*"/>
+			</constructor>
+		</object>
 		<object name="GtkPageSetup" parent="GObject" type-name="GtkPageSetup" get-type="gtk_page_setup_get_type">
 			<method name="copy" symbol="gtk_page_setup_copy">
 				<return-type type="GtkPageSetup*"/>
@@ -14333,6 +14447,12 @@
 					<parameter name="paned" type="GtkPaned*"/>
 				</parameters>
 			</method>
+			<method name="get_handle_window" symbol="gtk_paned_get_handle_window">
+				<return-type type="GdkWindow*"/>
+				<parameters>
+					<parameter name="paned" type="GtkPaned*"/>
+				</parameters>
+			</method>
 			<method name="get_position" symbol="gtk_paned_get_position">
 				<return-type type="gint"/>
 				<parameters>
@@ -14525,6 +14645,16 @@
 				<return-type type="gdouble"/>
 				<parameters>
 					<parameter name="context" type="GtkPrintContext*"/>
+				</parameters>
+			</method>
+			<method name="get_hard_margins" symbol="gtk_print_context_get_hard_margins">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="context" type="GtkPrintContext*"/>
+					<parameter name="top" type="gdouble*"/>
+					<parameter name="bottom" type="gdouble*"/>
+					<parameter name="left" type="gdouble*"/>
+					<parameter name="right" type="gdouble*"/>
 				</parameters>
 			</method>
 			<method name="get_height" symbol="gtk_print_context_get_height">
@@ -15745,6 +15875,19 @@
 					<parameter name="range" type="GtkRange*"/>
 				</parameters>
 			</method>
+			<method name="get_min_slider_size" symbol="gtk_range_get_min_slider_size">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="range" type="GtkRange*"/>
+				</parameters>
+			</method>
+			<method name="get_range_rect" symbol="gtk_range_get_range_rect">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="range" type="GtkRange*"/>
+					<parameter name="range_rect" type="GdkRectangle*"/>
+				</parameters>
+			</method>
 			<method name="get_restrict_to_fill_level" symbol="gtk_range_get_restrict_to_fill_level">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -15752,6 +15895,20 @@
 				</parameters>
 			</method>
 			<method name="get_show_fill_level" symbol="gtk_range_get_show_fill_level">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="range" type="GtkRange*"/>
+				</parameters>
+			</method>
+			<method name="get_slider_range" symbol="gtk_range_get_slider_range">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="range" type="GtkRange*"/>
+					<parameter name="slider_start" type="gint*"/>
+					<parameter name="slider_end" type="gint*"/>
+				</parameters>
+			</method>
+			<method name="get_slider_size_fixed" symbol="gtk_range_get_slider_size_fixed">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="range" type="GtkRange*"/>
@@ -15818,6 +15975,13 @@
 					<parameter name="sensitivity" type="GtkSensitivityType"/>
 				</parameters>
 			</method>
+			<method name="set_min_slider_size" symbol="gtk_range_set_min_slider_size">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="range" type="GtkRange*"/>
+					<parameter name="min_size" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="set_range" symbol="gtk_range_set_range">
 				<return-type type="void"/>
 				<parameters>
@@ -15838,6 +16002,13 @@
 				<parameters>
 					<parameter name="range" type="GtkRange*"/>
 					<parameter name="show_fill_level" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_slider_size_fixed" symbol="gtk_range_set_slider_size_fixed">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="range" type="GtkRange*"/>
+					<parameter name="size_fixed" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="set_update_policy" symbol="gtk_range_set_update_policy">
@@ -16800,6 +16971,7 @@
 			<property name="color-hash" type="GHashTable*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="gtk-alternative-button-order" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-alternative-sort-arrows" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-auto-mnemonics" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-color-scheme" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-cursor-blink" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-cursor-blink-time" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -16840,6 +17012,8 @@
 			<property name="gtk-timeout-expand" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-timeout-initial" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-timeout-repeat" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-toolbar-icon-size" type="GtkIconSize" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-toolbar-style" type="GtkToolbarStyle" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-tooltip-browse-mode-timeout" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-tooltip-browse-timeout" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-tooltip-timeout" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -17205,6 +17379,28 @@
 			<field name="wrap" type="guint"/>
 			<field name="snap_to_ticks" type="guint"/>
 		</object>
+		<object name="GtkSpinner" parent="GtkDrawingArea" type-name="GtkSpinner" get-type="gtk_spinner_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+			</implements>
+			<constructor name="new" symbol="gtk_spinner_new">
+				<return-type type="GtkWidget*"/>
+			</constructor>
+			<method name="start" symbol="gtk_spinner_start">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="spinner" type="GtkSpinner*"/>
+				</parameters>
+			</method>
+			<method name="stop" symbol="gtk_spinner_stop">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="spinner" type="GtkSpinner*"/>
+				</parameters>
+			</method>
+			<property name="active" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+		</object>
 		<object name="GtkStatusIcon" parent="GObject" type-name="GtkStatusIcon" get-type="gtk_status_icon_get_type">
 			<method name="get_blinking" symbol="gtk_status_icon_get_blinking">
 				<return-type type="gboolean"/>
@@ -17397,6 +17593,13 @@
 					<parameter name="has_tooltip" type="gboolean"/>
 				</parameters>
 			</method>
+			<method name="set_name" symbol="gtk_status_icon_set_name">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="status_icon" type="GtkStatusIcon*"/>
+					<parameter name="name" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="set_screen" symbol="gtk_status_icon_set_screen">
 				<return-type type="void"/>
 				<parameters>
@@ -17516,6 +17719,12 @@
 			</method>
 			<method name="get_has_resize_grip" symbol="gtk_statusbar_get_has_resize_grip">
 				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="statusbar" type="GtkStatusbar*"/>
+				</parameters>
+			</method>
+			<method name="get_message_area" symbol="gtk_statusbar_get_message_area">
+				<return-type type="GtkWidget*"/>
 				<parameters>
 					<parameter name="statusbar" type="GtkStatusbar*"/>
 				</parameters>
@@ -17992,6 +18201,22 @@
 					<parameter name="width" type="gint"/>
 					<parameter name="height" type="gint"/>
 					<parameter name="orientation" type="GtkOrientation"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="draw_spinner">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="style" type="GtkStyle*"/>
+					<parameter name="window" type="GdkWindow*"/>
+					<parameter name="state_type" type="GtkStateType"/>
+					<parameter name="area" type="GdkRectangle*"/>
+					<parameter name="widget" type="GtkWidget*"/>
+					<parameter name="detail" type="gchar*"/>
+					<parameter name="step" type="guint"/>
+					<parameter name="x" type="gint"/>
+					<parameter name="y" type="gint"/>
+					<parameter name="width" type="gint"/>
+					<parameter name="height" type="gint"/>
 				</parameters>
 			</vfunc>
 			<vfunc name="draw_string">
@@ -19695,6 +19920,13 @@
 					<parameter name="menu" type="GtkMenu*"/>
 				</parameters>
 			</signal>
+			<signal name="preedit-changed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkTextView*"/>
+					<parameter name="p0" type="char*"/>
+				</parameters>
+			</signal>
 			<signal name="select-all" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -20068,6 +20300,12 @@
 				<interface name="GtkBuildable"/>
 				<interface name="GtkActivatable"/>
 			</implements>
+			<method name="get_ellipsize_mode" symbol="gtk_tool_item_get_ellipsize_mode">
+				<return-type type="PangoEllipsizeMode"/>
+				<parameters>
+					<parameter name="tool_item" type="GtkToolItem*"/>
+				</parameters>
+			</method>
 			<method name="get_expand" symbol="gtk_tool_item_get_expand">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -20107,6 +20345,24 @@
 			</method>
 			<method name="get_relief_style" symbol="gtk_tool_item_get_relief_style">
 				<return-type type="GtkReliefStyle"/>
+				<parameters>
+					<parameter name="tool_item" type="GtkToolItem*"/>
+				</parameters>
+			</method>
+			<method name="get_text_alignment" symbol="gtk_tool_item_get_text_alignment">
+				<return-type type="gfloat"/>
+				<parameters>
+					<parameter name="tool_item" type="GtkToolItem*"/>
+				</parameters>
+			</method>
+			<method name="get_text_orientation" symbol="gtk_tool_item_get_text_orientation">
+				<return-type type="GtkOrientation"/>
+				<parameters>
+					<parameter name="tool_item" type="GtkToolItem*"/>
+				</parameters>
+			</method>
+			<method name="get_text_size_group" symbol="gtk_tool_item_get_text_size_group">
+				<return-type type="GtkSizeGroup*"/>
 				<parameters>
 					<parameter name="tool_item" type="GtkToolItem*"/>
 				</parameters>
@@ -20245,12 +20501,248 @@
 				</parameters>
 			</signal>
 		</object>
-		<object name="GtkToolbar" parent="GtkContainer" type-name="GtkToolbar" get-type="gtk_toolbar_get_type">
+		<object name="GtkToolItemGroup" parent="GtkContainer" type-name="GtkToolItemGroup" get-type="gtk_tool_item_group_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+				<interface name="GtkToolShell"/>
+			</implements>
+			<method name="get_collapsed" symbol="gtk_tool_item_group_get_collapsed">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="group" type="GtkToolItemGroup*"/>
+				</parameters>
+			</method>
+			<method name="get_drop_item" symbol="gtk_tool_item_group_get_drop_item">
+				<return-type type="GtkToolItem*"/>
+				<parameters>
+					<parameter name="group" type="GtkToolItemGroup*"/>
+					<parameter name="x" type="gint"/>
+					<parameter name="y" type="gint"/>
+				</parameters>
+			</method>
+			<method name="get_ellipsize" symbol="gtk_tool_item_group_get_ellipsize">
+				<return-type type="PangoEllipsizeMode"/>
+				<parameters>
+					<parameter name="group" type="GtkToolItemGroup*"/>
+				</parameters>
+			</method>
+			<method name="get_header_relief" symbol="gtk_tool_item_group_get_header_relief">
+				<return-type type="GtkReliefStyle"/>
+				<parameters>
+					<parameter name="group" type="GtkToolItemGroup*"/>
+				</parameters>
+			</method>
+			<method name="get_item_position" symbol="gtk_tool_item_group_get_item_position">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="group" type="GtkToolItemGroup*"/>
+					<parameter name="item" type="GtkToolItem*"/>
+				</parameters>
+			</method>
+			<method name="get_label" symbol="gtk_tool_item_group_get_label">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="group" type="GtkToolItemGroup*"/>
+				</parameters>
+			</method>
+			<method name="get_label_widget" symbol="gtk_tool_item_group_get_label_widget">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="group" type="GtkToolItemGroup*"/>
+				</parameters>
+			</method>
+			<method name="get_n_items" symbol="gtk_tool_item_group_get_n_items">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="group" type="GtkToolItemGroup*"/>
+				</parameters>
+			</method>
+			<method name="get_nth_item" symbol="gtk_tool_item_group_get_nth_item">
+				<return-type type="GtkToolItem*"/>
+				<parameters>
+					<parameter name="group" type="GtkToolItemGroup*"/>
+					<parameter name="index" type="guint"/>
+				</parameters>
+			</method>
+			<method name="insert" symbol="gtk_tool_item_group_insert">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="group" type="GtkToolItemGroup*"/>
+					<parameter name="item" type="GtkToolItem*"/>
+					<parameter name="position" type="gint"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gtk_tool_item_group_new">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="label" type="gchar*"/>
+				</parameters>
+			</constructor>
+			<method name="set_collapsed" symbol="gtk_tool_item_group_set_collapsed">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="group" type="GtkToolItemGroup*"/>
+					<parameter name="collapsed" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_ellipsize" symbol="gtk_tool_item_group_set_ellipsize">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="group" type="GtkToolItemGroup*"/>
+					<parameter name="ellipsize" type="PangoEllipsizeMode"/>
+				</parameters>
+			</method>
+			<method name="set_header_relief" symbol="gtk_tool_item_group_set_header_relief">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="group" type="GtkToolItemGroup*"/>
+					<parameter name="style" type="GtkReliefStyle"/>
+				</parameters>
+			</method>
+			<method name="set_item_position" symbol="gtk_tool_item_group_set_item_position">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="group" type="GtkToolItemGroup*"/>
+					<parameter name="item" type="GtkToolItem*"/>
+					<parameter name="position" type="gint"/>
+				</parameters>
+			</method>
+			<method name="set_label" symbol="gtk_tool_item_group_set_label">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="group" type="GtkToolItemGroup*"/>
+					<parameter name="label" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_label_widget" symbol="gtk_tool_item_group_set_label_widget">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="group" type="GtkToolItemGroup*"/>
+					<parameter name="label_widget" type="GtkWidget*"/>
+				</parameters>
+			</method>
+			<property name="collapsed" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="ellipsize" type="PangoEllipsizeMode" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="header-relief" type="GtkReliefStyle" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="label" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="label-widget" type="GtkWidget*" readable="1" writable="1" construct="0" construct-only="0"/>
+		</object>
+		<object name="GtkToolPalette" parent="GtkContainer" type-name="GtkToolPalette" get-type="gtk_tool_palette_get_type">
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
 				<interface name="GtkOrientable"/>
+			</implements>
+			<method name="add_drag_dest" symbol="gtk_tool_palette_add_drag_dest">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="palette" type="GtkToolPalette*"/>
+					<parameter name="widget" type="GtkWidget*"/>
+					<parameter name="flags" type="GtkDestDefaults"/>
+					<parameter name="targets" type="GtkToolPaletteDragTargets"/>
+					<parameter name="actions" type="GdkDragAction"/>
+				</parameters>
+			</method>
+			<method name="get_drag_item" symbol="gtk_tool_palette_get_drag_item">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="palette" type="GtkToolPalette*"/>
+					<parameter name="selection" type="GtkSelectionData*"/>
+				</parameters>
+			</method>
+			<method name="get_drag_target_group" symbol="gtk_tool_palette_get_drag_target_group">
+				<return-type type="GtkTargetEntry*"/>
+			</method>
+			<method name="get_drag_target_item" symbol="gtk_tool_palette_get_drag_target_item">
+				<return-type type="GtkTargetEntry*"/>
+			</method>
+			<method name="get_drop_item" symbol="gtk_tool_palette_get_drop_item">
+				<return-type type="GtkToolItem*"/>
+				<parameters>
+					<parameter name="palette" type="GtkToolPalette*"/>
+					<parameter name="x" type="gint"/>
+					<parameter name="y" type="gint"/>
+				</parameters>
+			</method>
+			<method name="get_hadjustment" symbol="gtk_tool_palette_get_hadjustment">
+				<return-type type="GtkAdjustment*"/>
+				<parameters>
+					<parameter name="palette" type="GtkToolPalette*"/>
+				</parameters>
+			</method>
+			<method name="get_icon_size" symbol="gtk_tool_palette_get_icon_size">
+				<return-type type="GtkIconSize"/>
+				<parameters>
+					<parameter name="palette" type="GtkToolPalette*"/>
+				</parameters>
+			</method>
+			<method name="get_style" symbol="gtk_tool_palette_get_style">
+				<return-type type="GtkToolbarStyle"/>
+				<parameters>
+					<parameter name="palette" type="GtkToolPalette*"/>
+				</parameters>
+			</method>
+			<method name="get_vadjustment" symbol="gtk_tool_palette_get_vadjustment">
+				<return-type type="GtkAdjustment*"/>
+				<parameters>
+					<parameter name="palette" type="GtkToolPalette*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gtk_tool_palette_new">
+				<return-type type="GtkWidget*"/>
+			</constructor>
+			<method name="set_drag_source" symbol="gtk_tool_palette_set_drag_source">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="palette" type="GtkToolPalette*"/>
+					<parameter name="targets" type="GtkToolPaletteDragTargets"/>
+				</parameters>
+			</method>
+			<method name="set_icon_size" symbol="gtk_tool_palette_set_icon_size">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="palette" type="GtkToolPalette*"/>
+					<parameter name="icon_size" type="GtkIconSize"/>
+				</parameters>
+			</method>
+			<method name="set_style" symbol="gtk_tool_palette_set_style">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="palette" type="GtkToolPalette*"/>
+					<parameter name="style" type="GtkToolbarStyle"/>
+				</parameters>
+			</method>
+			<method name="unset_icon_size" symbol="gtk_tool_palette_unset_icon_size">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="palette" type="GtkToolPalette*"/>
+				</parameters>
+			</method>
+			<method name="unset_style" symbol="gtk_tool_palette_unset_style">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="palette" type="GtkToolPalette*"/>
+				</parameters>
+			</method>
+			<property name="icon-size" type="GtkIconSize" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="icon-size-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="toolbar-style" type="GtkToolbarStyle" readable="1" writable="1" construct="0" construct-only="0"/>
+			<signal name="set-scroll-adjustments" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="widget" type="GtkToolPalette*"/>
+					<parameter name="hadjustment" type="GtkAdjustment*"/>
+					<parameter name="vadjustment" type="GtkAdjustment*"/>
+				</parameters>
+			</signal>
+		</object>
+		<object name="GtkToolbar" parent="GtkContainer" type-name="GtkToolbar" get-type="gtk_toolbar_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 				<interface name="GtkToolShell"/>
+				<interface name="GtkOrientable"/>
 			</implements>
 			<method name="get_drop_index" symbol="gtk_toolbar_get_drop_index">
 				<return-type type="gint"/>
@@ -20414,6 +20906,14 @@
 				<parameters>
 					<parameter name="tooltip" type="GtkTooltip*"/>
 					<parameter name="pixbuf" type="GdkPixbuf*"/>
+				</parameters>
+			</method>
+			<method name="set_icon_from_gicon" symbol="gtk_tooltip_set_icon_from_gicon">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="tooltip" type="GtkTooltip*"/>
+					<parameter name="gicon" type="GIcon*"/>
+					<parameter name="size" type="GtkIconSize"/>
 				</parameters>
 			</method>
 			<method name="set_icon_from_icon_name" symbol="gtk_tooltip_set_icon_from_icon_name">
@@ -22534,6 +23034,12 @@
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
 			</implements>
+			<method name="get_bin_window" symbol="gtk_viewport_get_bin_window">
+				<return-type type="GdkWindow*"/>
+				<parameters>
+					<parameter name="viewport" type="GtkViewport*"/>
+				</parameters>
+			</method>
 			<method name="get_hadjustment" symbol="gtk_viewport_get_hadjustment">
 				<return-type type="GtkAdjustment*"/>
 				<parameters>
@@ -22878,6 +23384,12 @@
 					<parameter name="widget" type="GtkWidget*"/>
 				</parameters>
 			</method>
+			<method name="get_mapped" symbol="gtk_widget_get_mapped">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+				</parameters>
+			</method>
 			<method name="get_modifier_style" symbol="gtk_widget_get_modifier_style">
 				<return-type type="GtkRcStyle*"/>
 				<parameters>
@@ -22922,10 +23434,23 @@
 					<parameter name="y" type="gint*"/>
 				</parameters>
 			</method>
+			<method name="get_realized" symbol="gtk_widget_get_realized">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+				</parameters>
+			</method>
 			<method name="get_receives_default" symbol="gtk_widget_get_receives_default">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="widget" type="GtkWidget*"/>
+				</parameters>
+			</method>
+			<method name="get_requisition" symbol="gtk_widget_get_requisition">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+					<parameter name="requisition" type="GtkRequisition*"/>
 				</parameters>
 			</method>
 			<method name="get_root_window" symbol="gtk_widget_get_root_window">
@@ -23046,6 +23571,12 @@
 				</parameters>
 			</method>
 			<method name="has_grab" symbol="gtk_widget_has_grab">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+				</parameters>
+			</method>
+			<method name="has_rc_style" symbol="gtk_widget_has_rc_style">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="widget" type="GtkWidget*"/>
@@ -23449,6 +23980,13 @@
 					<parameter name="has_window" type="gboolean"/>
 				</parameters>
 			</method>
+			<method name="set_mapped" symbol="gtk_widget_set_mapped">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+					<parameter name="mapped" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="set_name" symbol="gtk_widget_set_name">
 				<return-type type="void"/>
 				<parameters>
@@ -23475,6 +24013,13 @@
 				<parameters>
 					<parameter name="widget" type="GtkWidget*"/>
 					<parameter name="parent_window" type="GdkWindow*"/>
+				</parameters>
+			</method>
+			<method name="set_realized" symbol="gtk_widget_set_realized">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+					<parameter name="realized" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="set_receives_default" symbol="gtk_widget_set_receives_default">
@@ -23602,6 +24147,12 @@
 				<parameters>
 					<parameter name="widget" type="GtkWidget*"/>
 					<parameter name="requisition" type="GtkRequisition*"/>
+				</parameters>
+			</method>
+			<method name="style_attach" symbol="gtk_widget_style_attach">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="style" type="GtkWidget*"/>
 				</parameters>
 			</method>
 			<method name="style_get" symbol="gtk_widget_style_get">
@@ -24401,6 +24952,12 @@
 					<parameter name="window" type="GtkWindow*"/>
 				</parameters>
 			</method>
+			<method name="get_mnemonics_visible" symbol="gtk_window_get_mnemonics_visible">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="window" type="GtkWindow*"/>
+				</parameters>
+			</method>
 			<method name="get_modal" symbol="gtk_window_get_modal">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -24479,6 +25036,12 @@
 			</method>
 			<method name="get_urgency_hint" symbol="gtk_window_get_urgency_hint">
 				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="window" type="GtkWindow*"/>
+				</parameters>
+			</method>
+			<method name="get_window_type" symbol="gtk_window_get_window_type">
+				<return-type type="GtkWindowType"/>
 				<parameters>
 					<parameter name="window" type="GtkWindow*"/>
 				</parameters>
@@ -24766,6 +25329,13 @@
 					<parameter name="modifier" type="GdkModifierType"/>
 				</parameters>
 			</method>
+			<method name="set_mnemonics_visible" symbol="gtk_window_set_mnemonics_visible">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="window" type="GtkWindow*"/>
+					<parameter name="setting" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="set_modal" symbol="gtk_window_set_modal">
 				<return-type type="void"/>
 				<parameters>
@@ -24903,6 +25473,7 @@
 			<property name="icon" type="GdkPixbuf*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="icon-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="is-active" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="mnemonics-visible" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="modal" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="opacity" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="resizable" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -25022,6 +25593,9 @@
 			<field name="grabs" type="GSList*"/>
 		</object>
 		<interface name="GtkActivatable" type-name="GtkActivatable" get-type="gtk_activatable_get_type">
+			<requires>
+				<interface name="GObject"/>
+			</requires>
 			<method name="do_set_related_action" symbol="gtk_activatable_do_set_related_action">
 				<return-type type="void"/>
 				<parameters>
@@ -25062,6 +25636,8 @@
 					<parameter name="action" type="GtkAction*"/>
 				</parameters>
 			</method>
+			<property name="related-action" type="GtkAction*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="use-action-appearance" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<vfunc name="sync_action_properties">
 				<return-type type="void"/>
 				<parameters>
@@ -25273,6 +25849,7 @@
 					<parameter name="event" type="GdkEvent*"/>
 				</parameters>
 			</method>
+			<property name="editing-canceled" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="editing-done" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -26431,6 +27008,12 @@
 			<requires>
 				<interface name="GtkWidget"/>
 			</requires>
+			<method name="get_ellipsize_mode" symbol="gtk_tool_shell_get_ellipsize_mode">
+				<return-type type="PangoEllipsizeMode"/>
+				<parameters>
+					<parameter name="shell" type="GtkToolShell*"/>
+				</parameters>
+			</method>
 			<method name="get_icon_size" symbol="gtk_tool_shell_get_icon_size">
 				<return-type type="GtkIconSize"/>
 				<parameters>
@@ -26455,12 +27038,36 @@
 					<parameter name="shell" type="GtkToolShell*"/>
 				</parameters>
 			</method>
+			<method name="get_text_alignment" symbol="gtk_tool_shell_get_text_alignment">
+				<return-type type="gfloat"/>
+				<parameters>
+					<parameter name="shell" type="GtkToolShell*"/>
+				</parameters>
+			</method>
+			<method name="get_text_orientation" symbol="gtk_tool_shell_get_text_orientation">
+				<return-type type="GtkOrientation"/>
+				<parameters>
+					<parameter name="shell" type="GtkToolShell*"/>
+				</parameters>
+			</method>
+			<method name="get_text_size_group" symbol="gtk_tool_shell_get_text_size_group">
+				<return-type type="GtkSizeGroup*"/>
+				<parameters>
+					<parameter name="shell" type="GtkToolShell*"/>
+				</parameters>
+			</method>
 			<method name="rebuild_menu" symbol="gtk_tool_shell_rebuild_menu">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="shell" type="GtkToolShell*"/>
 				</parameters>
 			</method>
+			<vfunc name="get_ellipsize_mode">
+				<return-type type="PangoEllipsizeMode"/>
+				<parameters>
+					<parameter name="shell" type="GtkToolShell*"/>
+				</parameters>
+			</vfunc>
 			<vfunc name="get_icon_size">
 				<return-type type="GtkIconSize"/>
 				<parameters>
@@ -26481,6 +27088,24 @@
 			</vfunc>
 			<vfunc name="get_style">
 				<return-type type="GtkToolbarStyle"/>
+				<parameters>
+					<parameter name="shell" type="GtkToolShell*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_text_alignment">
+				<return-type type="gfloat"/>
+				<parameters>
+					<parameter name="shell" type="GtkToolShell*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_text_orientation">
+				<return-type type="GtkOrientation"/>
+				<parameters>
+					<parameter name="shell" type="GtkToolShell*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_text_size_group">
+				<return-type type="GtkSizeGroup*"/>
 				<parameters>
 					<parameter name="shell" type="GtkToolShell*"/>
 				</parameters>
@@ -27009,14 +27634,14 @@
 			</vfunc>
 		</interface>
 		<constant name="GTK_ARG_READWRITE" type="int" value="0"/>
-		<constant name="GTK_BINARY_AGE" type="int" value="1803"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="2000"/>
 		<constant name="GTK_BUTTONBOX_DEFAULT" type="int" value="-1"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
-		<constant name="GTK_INTERFACE_AGE" type="int" value="3"/>
+		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="2"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="3"/>
-		<constant name="GTK_MINOR_VERSION" type="int" value="18"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="0"/>
+		<constant name="GTK_MINOR_VERSION" type="int" value="20"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
 		<constant name="GTK_PAPER_NAME_A5" type="char*" value="iso_a5"/>

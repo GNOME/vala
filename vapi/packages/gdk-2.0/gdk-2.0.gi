@@ -3818,6 +3818,13 @@
 			<field name="windowing_data" type="gpointer"/>
 		</object>
 		<object name="GdkKeymap" parent="GObject" type-name="GdkKeymap" get-type="gdk_keymap_get_type">
+			<method name="add_virtual_modifiers" symbol="gdk_keymap_add_virtual_modifiers">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="keymap" type="GdkKeymap*"/>
+					<parameter name="state" type="GdkModifierType*"/>
+				</parameters>
+			</method>
 			<method name="get_caps_lock_state" symbol="gdk_keymap_get_caps_lock_state">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -3869,6 +3876,13 @@
 				<parameters>
 					<parameter name="keymap" type="GdkKeymap*"/>
 					<parameter name="key" type="GdkKeymapKey*"/>
+				</parameters>
+			</method>
+			<method name="map_virtual_modifiers" symbol="gdk_keymap_map_virtual_modifiers">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="keymap" type="GdkKeymap*"/>
+					<parameter name="state" type="GdkModifierType*"/>
 				</parameters>
 			</method>
 			<method name="translate_keyboard_state" symbol="gdk_keymap_translate_keyboard_state">
@@ -4144,6 +4158,12 @@
 				</parameters>
 			</method>
 			<method name="get_number" symbol="gdk_screen_get_number">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="screen" type="GdkScreen*"/>
+				</parameters>
+			</method>
+			<method name="get_primary_monitor" symbol="gdk_screen_get_primary_monitor">
 				<return-type type="gint"/>
 				<parameters>
 					<parameter name="screen" type="GdkScreen*"/>
