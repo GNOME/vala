@@ -530,6 +530,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 
 	public override void visit_declaration_statement (DeclarationStatement stmt) {
 		if (unreachable (stmt)) {
+			stmt.declaration.unreachable = true;
 			return;
 		}
 

@@ -1940,7 +1940,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 
 		foreach (LocalVariable local in local_vars) {
-			if (!local.floating && !local.captured && requires_destroy (local.variable_type)) {
+			if (!local.unreachable && !local.floating && !local.captured && requires_destroy (local.variable_type)) {
 				var ma = new MemberAccess.simple (local.name);
 				ma.symbol_reference = local;
 				ma.value_type = local.variable_type.copy ();
@@ -3168,7 +3168,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 		var local_vars = b.get_local_variables ();
 		foreach (LocalVariable local in local_vars) {
-			if (local.active && !local.floating && !local.captured && requires_destroy (local.variable_type)) {
+			if (!local.unreachable && local.active && !local.floating && !local.captured && requires_destroy (local.variable_type)) {
 				var ma = new MemberAccess.simple (local.name);
 				ma.symbol_reference = local;
 				ma.value_type = local.variable_type.copy ();
@@ -3204,7 +3204,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 		var local_vars = b.get_local_variables ();
 		foreach (LocalVariable local in local_vars) {
-			if (local.active && !local.floating && !local.captured && requires_destroy (local.variable_type)) {
+			if (!local.unreachable && local.active && !local.floating && !local.captured && requires_destroy (local.variable_type)) {
 				var ma = new MemberAccess.simple (local.name);
 				ma.symbol_reference = local;
 				cfrag.append (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma)));
