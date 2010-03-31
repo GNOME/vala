@@ -1165,13 +1165,13 @@ namespace GData {
 		public unowned GData.PicasaWebAlbum insert_album (GData.PicasaWebAlbum album, GLib.Cancellable cancellable) throws GLib.Error;
 		[CCode (cname = "gdata_picasaweb_service_query_all_albums")]
 		public unowned GData.Feed query_all_albums (GData.Query? query, string? username, GLib.Cancellable? cancellable, GData.QueryProgressCallback? progress_callback) throws GLib.Error;
-		[CCode (cname = "gdata_picasaweb_service_query_all_albums_async")]
+		[CCode (cname = "gdata_picasaweb_service_query_all_albums_async", finish_name = "gdata_picasa_web_service_query_all_albums_finish")]
 		public async void query_all_albums_async (GData.Query? query, string username, GLib.Cancellable? cancellable, GData.QueryProgressCallback progress_callback);
 		[CCode (cname = "gdata_picasaweb_service_query_files")]
 		public unowned GData.Feed query_files (GData.PicasaWebAlbum album, GData.Query? query, GLib.Cancellable? cancellable, GData.QueryProgressCallback? progress_callback) throws GLib.Error;
 		[CCode (cname = "gdata_picasaweb_service_upload_file")]
 		public unowned GData.PicasaWebFile upload_file (GData.PicasaWebAlbum album, GData.PicasaWebFile file_entry, GLib.File file_data, GLib.Cancellable cancellable) throws GLib.Error;
-		[CCode (cname = "gdata_picasaweb_service_upload_file_async")]
+		[CCode (cname = "gdata_picasaweb_service_upload_file_async", finish_name = "gdata_picasa_web_service_upload_file_finish")]
 		public async GData.PicasaWebFile upload_file_async (GData.PicasaWebAlbum album, GData.PicasaWebFile file_entry, GLib.File file_data, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gdata/gdata.h")]
@@ -1244,10 +1244,8 @@ namespace GData {
 		public virtual void append_query_headers (Soup.Message message);
 		public bool authenticate (string username, string password, GLib.Cancellable? cancellable) throws GLib.Error;
 		public async bool authenticate_async (string username, string password, GLib.Cancellable cancellable) throws GLib.Error;
-		public bool authenticate_finish (GLib.AsyncResult async_result) throws GLib.Error;
 		public bool delete_entry (GData.Entry entry, GLib.Cancellable cancellable) throws GLib.Error;
 		public async bool delete_entry_async (GData.Entry entry, GLib.Cancellable cancellable) throws GLib.Error;
-		public bool delete_entry_finish (GLib.AsyncResult async_result) throws GLib.Error;
 		public static GLib.Quark error_quark ();
 		public unowned string get_client_id ();
 		public unowned string get_password ();
@@ -1255,7 +1253,6 @@ namespace GData {
 		public unowned string get_username ();
 		public unowned GData.Entry insert_entry (string upload_uri, GData.Entry entry, GLib.Cancellable cancellable) throws GLib.Error;
 		public async unowned GData.Entry insert_entry_async (string upload_uri, GData.Entry entry, GLib.Cancellable cancellable) throws GLib.Error;
-		public unowned GData.Entry insert_entry_finish (GLib.AsyncResult async_result) throws GLib.Error;
 		public bool is_authenticated ();
 		[NoWrapper]
 		public virtual bool parse_authentication_response (uint status, string response_body, int length) throws GLib.Error;
@@ -1263,14 +1260,11 @@ namespace GData {
 		public virtual void parse_error_response (GData.OperationType operation_type, uint status, string reason_phrase, string response_body, int length) throws GLib.Error;
 		public unowned GData.Feed query (string feed_uri, GData.Query query, GLib.Type entry_type, GLib.Cancellable cancellable, GData.QueryProgressCallback progress_callback, void* progress_user_data) throws GLib.Error;
 		public async unowned GData.Feed query_async (string feed_uri, GData.Query query, GLib.Type entry_type, GLib.Cancellable cancellable, GData.QueryProgressCallback progress_callback, void* progress_user_data) throws GLib.Error;
-		public unowned GData.Feed query_finish (GLib.AsyncResult async_result) throws GLib.Error;
 		public unowned GData.Entry query_single_entry (string entry_id, GData.Query query, GLib.Type entry_type, GLib.Cancellable cancellable) throws GLib.Error;
 		public async unowned GData.Entry query_single_entry_async (string entry_id, GData.Query query, GLib.Type entry_type, GLib.Cancellable cancellable) throws GLib.Error;
-		public unowned GData.Entry query_single_entry_finish (GLib.AsyncResult async_result) throws GLib.Error;
 		public void set_proxy_uri (Soup.URI proxy_uri);
 		public unowned GData.Entry update_entry (GData.Entry entry, GLib.Cancellable cancellable) throws GLib.Error;
 		public async unowned GData.Entry update_entry_async (GData.Entry entry, GLib.Cancellable cancellable) throws GLib.Error;
-		public unowned GData.Entry update_entry_finish (GLib.AsyncResult async_result) throws GLib.Error;
 		[NoAccessorMethod]
 		public bool authenticated { get; }
 		public string client_id { get; construct; }
