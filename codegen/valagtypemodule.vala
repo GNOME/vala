@@ -279,9 +279,9 @@ internal class Vala.GTypeModule : GErrorModule {
 			if (prop.set_accessor != null) {
 				CCodeFormalParameter cvalueparam;
 				if (prop.property_type.is_real_non_null_struct_type ()) {
-					cvalueparam = new CCodeFormalParameter ("value", prop.get_accessor.value_type.get_cname () + "*");
+					cvalueparam = new CCodeFormalParameter ("value", prop.set_accessor.value_type.get_cname () + "*");
 				} else {
-					cvalueparam = new CCodeFormalParameter ("value", prop.get_accessor.value_type.get_cname ());
+					cvalueparam = new CCodeFormalParameter ("value", prop.set_accessor.value_type.get_cname ());
 				}
 
 				var vdeclarator = new CCodeFunctionDeclarator ("set_%s".printf (prop.name));
