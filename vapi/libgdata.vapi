@@ -932,7 +932,7 @@ namespace GData {
 		[NoWrapper]
 		public virtual bool pre_parse_xml (Xml.Doc doc, Xml.Node root_node) throws GLib.Error;
 	}
-	[CCode (type_check_function = "GDATA_IS_PICASAWEB_ALBUM",lower_case_cprefix="gdata_picasaweb_album_", cheader_filename = "gdata/gdata.h")]
+	[CCode (type_check_function = "GDATA_IS_PICASAWEB_ALBUM",cprefix="gdata_picasaweb_album_", cheader_filename = "gdata/gdata.h")]
 	public class PicasaWebAlbum : GData.Entry {
 		[CCode (cname = "gdata_picasaweb_album_new", has_construct_function = false)]
 		public PicasaWebAlbum (string id);
@@ -1002,7 +1002,7 @@ namespace GData {
 	[CCode (cheader_filename = "gdata/gdata.h")]
 	public class PicasaWebFeed : GData.Feed {
 	}
-	[CCode (type_check_function = "GDATA_IS_PICASAWEB_FILE",lower_case_cprefix="gdata_picasaweb_file_",type_id="GDATA_TYPE_PICASAWEB_FILE", cheader_filename = "gdata/gdata.h")]
+	[CCode (type_check_function = "GDATA_IS_PICASAWEB_FILE",cprefix="gdata_picasaweb_file_",type_id="GDATA_TYPE_PICASAWEB_FILE", cheader_filename = "gdata/gdata.h")]
 	public class PicasaWebFile : GData.Entry {
 		[CCode (cname = "gdata_picasaweb_file_new", has_construct_function = false)]
 		public PicasaWebFile (string id);
