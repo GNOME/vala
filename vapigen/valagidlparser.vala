@@ -1764,7 +1764,14 @@ public class Vala.GIdlParser : CodeVisitor {
 						set_delegate_target_pos = true;
 						delegate_target_pos = eval (nv[1]).to_double ();
 					} else if (nv[0] == "type_name") {
-						((UnresolvedType) param_type).unresolved_symbol = new UnresolvedSymbol (null, eval (nv[1]));
+						var sym = new UnresolvedSymbol (null, eval (nv[1]));
+						if (param_type is UnresolvedType) {
+							((UnresolvedType) param_type).unresolved_symbol = sym;
+						} else {
+							// Overwrite old param_type, so "type_name" must be before any
+							// other param type modifying metadata
+							p.parameter_type = param_type = new UnresolvedType.from_symbol (sym, return_type.source_reference);
+						}
 					} else if (nv[0] == "ctype") {
 						p.ctype = eval (nv[1]);
 					} else if (nv[0] == "type_arguments") {
