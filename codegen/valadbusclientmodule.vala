@@ -987,7 +987,7 @@ internal class Vala.DBusClientModule : DBusModule {
 				continue;
 			}
 
-			if (prop.property_type is ArrayType) {
+			if (!is_gobject_property (prop)) {
 				continue;
 			}
 
