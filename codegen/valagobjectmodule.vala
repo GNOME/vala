@@ -1,6 +1,6 @@
 /* valagobjectmodule.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
@@ -730,14 +730,14 @@ internal class Vala.GObjectModule : GTypeModule {
 	public override void visit_property (Property prop) {
 		base.visit_property (prop);
 
-		if (is_gobject_property (prop)) {
+		if (is_gobject_property (prop) && prop.parent_symbol is Class) {
 			prop_enum.add_value (new CCodeEnumValue (prop.get_upper_case_cname ()));
 		}
 	}
 
 	public override bool is_gobject_property (Property prop) {
-		var cl = prop.parent_symbol as Class;
-		if (cl == null || !cl.is_subtype_of (gobject_type)) {
+		var type_sym = prop.parent_symbol as ObjectTypeSymbol;
+		if (type_sym == null || !type_sym.is_subtype_of (gobject_type)) {
 			return false;
 		}
 

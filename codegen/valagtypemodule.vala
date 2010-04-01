@@ -1963,8 +1963,7 @@ internal class Vala.GTypeModule : GErrorModule {
 			var props = iface.get_properties ();
 			foreach (Property prop in props) {
 				if (prop.is_abstract) {
-
-					if (prop.property_type is ArrayType) {
+					if (!is_gobject_property (prop)) {
 						continue;
 					}
 
