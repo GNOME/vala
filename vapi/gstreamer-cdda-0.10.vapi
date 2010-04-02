@@ -48,10 +48,10 @@ namespace Gst {
 		public uint start;
 		public weak Gst.TagList tags;
 	}
-	[CCode (cprefix = "", cheader_filename = "gst/cdda/gstcddabasesrc.h")]
+	[CCode (cprefix = "GST_CDDA_BASE_SRC_MODE_", cheader_filename = "gst/cdda/gstcddabasesrc.h")]
 	public enum CddaBaseSrcMode {
-		Stream consists of a single track,
-		Stream consists of the whole disc
+		NORMAL,
+		CONTINUOUS
 	}
 	[CCode (cheader_filename = "gst/cdda/gstcddabasesrc.h")]
 	public const string TAG_CDDA_TRACK_TAGS;

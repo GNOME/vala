@@ -1,1 +1,2 @@
 Gst cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/cdda/gstcddabasesrc.h"
+GstCddaBaseSrcMode hidden="1"

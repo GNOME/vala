@@ -26,10 +26,10 @@ namespace Gst {
 		CAPS,
 		EVENT_NONE
 	}
-	[CCode (cprefix = "", cheader_filename = "gst/dataprotocol/dataprotocol.h")]
+	[CCode (cprefix = "GST_DP_VERSION_", cheader_filename = "gst/dataprotocol/dataprotocol.h")]
 	public enum DPVersion {
-		GDP Version 0.2,
-		GDP Version 1.0
+		@0_2,
+		@1_0
 	}
 	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h", has_target = false)]
 	public delegate bool DPHeaderFromBufferFunction (Gst.Buffer buffer, Gst.DPHeaderFlag flags, uint length, uchar header);
