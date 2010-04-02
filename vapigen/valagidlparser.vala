@@ -1779,6 +1779,8 @@ public class Vala.GIdlParser : CodeVisitor {
 							p.default_expression = new BooleanLiteral (true, param_type.source_reference);
 						} else if (val == "false") {
 							p.default_expression = new BooleanLiteral (false, param_type.source_reference);
+						} else if (val == "") {
+							p.default_expression = new StringLiteral ("\"\"", param_type.source_reference);
 						} else {
 							unowned string endptr;
 							unowned string val_end = val.offset (val.len ());
@@ -1791,7 +1793,13 @@ public class Vala.GIdlParser : CodeVisitor {
 								if ((long)endptr == (long)val_end) {
 									p.default_expression = new RealLiteral (val, param_type.source_reference);
 								} else {
-									p.default_expression = new StringLiteral ("\"%s\"".printf (val), param_type.source_reference);
+									if (val.has_prefix ("\"") && val.has_suffix ("\"")) {
+										p.default_expression = new StringLiteral (val, param_type.source_reference);
+									} else {
+										foreach (var member in val.split (".")) {
+											p.default_expression = new MemberAccess (p.default_expression, member, param_type.source_reference);
+										}
+									}
 								}
 							}
 						}
