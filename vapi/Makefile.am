@@ -130,6 +130,7 @@ dist_vapi_DATA = \
 	libgvc.vapi \
 	libmagic.vapi \
 	libnl-1.vapi \
+	libnl-2.0.deps \
 	libnl-2.0.vapi \
 	libnotify.deps \
 	libnotify.vapi \
