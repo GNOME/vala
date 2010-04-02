@@ -33,11 +33,10 @@ namespace Soup {
 		[CCode (has_construct_function = false)]
 		public Auth (GLib.Type type, Soup.Message msg, string auth_header);
 		public virtual void authenticate (string username, string password);
-		public void free_protection_space (GLib.SList space);
 		public virtual unowned string get_authorization (Soup.Message msg);
 		public unowned string get_host ();
 		public unowned string get_info ();
-		public virtual unowned GLib.SList get_protection_space (Soup.URI source_uri);
+		public virtual GLib.SList<string> get_protection_space (Soup.URI source_uri);
 		public unowned string get_realm ();
 		public unowned string get_scheme_name ();
 		public virtual bool update (Soup.Message msg, string auth_header);
@@ -153,7 +152,7 @@ namespace Soup {
 		[CCode (has_construct_function = false)]
 		public CookieJar ();
 		public void add_cookie (Soup.Cookie cookie);
-		public unowned GLib.SList all_cookies ();
+		public GLib.SList<Soup.Cookie> all_cookies ();
 		public void delete_cookie (Soup.Cookie cookie);
 		public unowned string get_cookies (Soup.URI uri, bool for_http);
 		public virtual void save ();
@@ -299,10 +298,10 @@ namespace Soup {
 		public bool get_ranges (int64 total_length, out unowned Soup.Range ranges, int length);
 		public void remove (string name);
 		public void replace (string name, string value);
-		public void set_content_disposition (string disposition, GLib.HashTable @params);
+		public void set_content_disposition (string disposition, GLib.HashTable<string,string>? @params);
 		public void set_content_length (int64 content_length);
 		public void set_content_range (int64 start, int64 end, int64 total_length);
-		public void set_content_type (string content_type, GLib.HashTable @params);
+		public void set_content_type (string content_type, GLib.HashTable<string,string>? @params);
 		public void set_encoding (Soup.Encoding encoding);
 		public void set_expectations (Soup.Expectation expectations);
 		public void set_range (int64 start, int64 end);
@@ -481,7 +480,7 @@ namespace Soup {
 		public void set_port (uint port);
 		public void set_query (string query);
 		public void set_query_from_fields (...);
-		public void set_query_from_form (GLib.HashTable form);
+		public void set_query_from_form (GLib.HashTable<string,string> form);
 		public void set_scheme (string scheme);
 		public void set_user (string user);
 		public string to_string (bool just_path_and_query);
@@ -683,7 +682,7 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h", has_target = false)]
 	public delegate void ProxyResolverCallback (Soup.ProxyResolver p1, Soup.Message p2, uint p3, Soup.Address p4, void* p5);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public delegate void ServerCallback (Soup.Server server, Soup.Message msg, string path, GLib.HashTable query, Soup.ClientContext client);
+	public delegate void ServerCallback (Soup.Server server, Soup.Message msg, string path, GLib.HashTable<string,string> query, Soup.ClientContext client);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate void SessionCallback (Soup.Session session, Soup.Message msg);
 	[CCode (cheader_filename = "libsoup/soup.h")]
@@ -885,27 +884,25 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static unowned GLib.TimeoutSource add_timeout (GLib.MainContext async_context, uint interval, GLib.SourceFunc function, void* data);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static void cookies_free (GLib.SList cookies);
+	public static GLib.SList<Soup.Cookie> cookies_from_request (Soup.Message msg);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static unowned GLib.SList cookies_from_request (Soup.Message msg);
+	public static GLib.SList<Soup.Cookie> cookies_from_response (Soup.Message msg);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static unowned GLib.SList cookies_from_response (Soup.Message msg);
+	public static unowned string cookies_to_cookie_header (GLib.SList<Soup.Cookie> cookies);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static unowned string cookies_to_cookie_header (GLib.SList cookies);
+	public static void cookies_to_request (GLib.SList<Soup.Cookie> cookies, Soup.Message msg);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static void cookies_to_request (GLib.SList cookies, Soup.Message msg);
+	public static void cookies_to_response (GLib.SList<Soup.Cookie> cookies, Soup.Message msg);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static void cookies_to_response (GLib.SList cookies, Soup.Message msg);
+	public static GLib.HashTable<string,string> form_decode (string encoded_form);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static unowned GLib.HashTable form_decode (string encoded_form);
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static unowned GLib.HashTable form_decode_multipart (Soup.Message msg, string file_control_name, out unowned string filename, out unowned string content_type, out unowned Soup.Buffer file);
+	public static GLib.HashTable<string,string> form_decode_multipart (Soup.Message msg, string file_control_name, out string filename, out string content_type, out Soup.Buffer file);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static unowned string form_encode (...);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static unowned string form_encode_datalist (void* form_data_set);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static unowned string form_encode_hash (GLib.HashTable form_data_set);
+	public static unowned string form_encode_hash (GLib.HashTable<string,string> form_data_set);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static unowned string form_encode_valist (string first_field, void* args);
 	[CCode (cheader_filename = "libsoup/soup.h")]
@@ -913,25 +910,21 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static unowned Soup.Message form_request_new_from_datalist (string method, string uri, void* form_data_set);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static unowned Soup.Message form_request_new_from_hash (string method, string uri, GLib.HashTable form_data_set);
+	public static unowned Soup.Message form_request_new_from_hash (string method, string uri, GLib.HashTable<string,string> form_data_set);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static unowned Soup.Message form_request_new_from_multipart (string uri, Soup.Multipart multipart);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static bool header_contains (string header, string token);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static void header_free_list (GLib.SList list);
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static void header_free_param_list (GLib.HashTable param_list);
-	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static void header_g_string_append_param (GLib.StringBuilder str, string name, string value);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static unowned GLib.SList header_parse_list (string header);
+	public static GLib.SList<string> header_parse_list (string header);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static unowned GLib.HashTable header_parse_param_list (string header);
+	public static GLib.HashTable<string,string> header_parse_param_list (string header);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static unowned GLib.SList header_parse_quality_list (string header, GLib.SList unacceptable);
+	public static GLib.SList<string> header_parse_quality_list (string header, GLib.SList<string> unacceptable);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static unowned GLib.HashTable header_parse_semi_param_list (string header);
+	public static GLib.HashTable<string,string> header_parse_semi_param_list (string header);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static bool headers_parse (string str, int len, Soup.MessageHeaders dest);
 	[CCode (cheader_filename = "libsoup/soup.h")]
@@ -969,19 +962,19 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static bool value_array_to_args (GLib.ValueArray array, void* args);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static void value_hash_insert (GLib.HashTable hash, string key, GLib.Type type);
+	public static void value_hash_insert (GLib.HashTable<string,GLib.Value> hash, string key, GLib.Type type, ...);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static void value_hash_insert_vals (GLib.HashTable hash, ...);
+	public static void value_hash_insert_vals (GLib.HashTable<string,GLib.Value> hash, ...);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static void value_hash_insert_value (GLib.HashTable hash, string key, GLib.Value value);
+	public static void value_hash_insert_value (GLib.HashTable<string,GLib.Value> hash, string key, GLib.Value value);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static bool value_hash_lookup (GLib.HashTable hash, string key, GLib.Type type);
+	public static bool value_hash_lookup (GLib.HashTable<string,GLib.Value> hash, string key, GLib.Type type);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static bool value_hash_lookup_vals (GLib.HashTable hash, ...);
+	public static bool value_hash_lookup_vals (GLib.HashTable<string,GLib.Value> hash, ...);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static unowned GLib.HashTable value_hash_new ();
+	public static GLib.HashTable<string,GLib.Value> value_hash_new ();
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static unowned GLib.HashTable value_hash_new_with_vals (...);
+	public static GLib.HashTable<string,GLib.Value> value_hash_new_with_vals (...);
 	[PrintfFormat]
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static unowned string xmlrpc_build_fault (int fault_code, string fault_format, ...);
