@@ -527,7 +527,7 @@ namespace Gsl
 	namespace Error
 	{
 		public static void error (string reason, string file, int line, int errno);
-		public static weak string strerror (int errno);
+		public static unowned string strerror (int errno);
 		public static ErrorHandler set_error_handler (ErrorHandler? new_handler);
 		public static ErrorHandler set_error_handler_off ();
 	}
