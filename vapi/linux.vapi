@@ -2537,4 +2537,89 @@ namespace Linux {
         [CCode (cheader_filename = "sys/ioctl.h")]
         public const int TIOCSER_TEMT;
     }
+
+    /*
+     * Virtual Terminal
+     */
+    [CCode (cprefix = "", lower_case_cprefix = "")]
+    namespace VirtualTerminal {
+
+        /* constants */
+
+        [CCode (cheader_filename = "linux/vt.h")]
+        public const int MIN_NR_CONSOLES;
+        [CCode (cheader_filename = "linux/vt.h")]
+        public const int MAX_NR_CONSOLES;
+        [CCode (cheader_filename = "linux/vt.h")]
+        public const int MAX_NR_USER_CONSOLES;
+        [CCode (cheader_filename = "linux/vt.h")]
+        public const int VT_OPENQRY;
+        [CCode (cheader_filename = "linux/vt.h")]
+        public const int VT_GETMODE;
+        [CCode (cheader_filename = "linux/vt.h")]
+        public const int VT_SETMODE;
+        [CCode (cheader_filename = "linux/vt.h")]
+        public const int VT_AUTO;
+        [CCode (cheader_filename = "linux/vt.h")]
+        public const int VT_PROCESS;
+        [CCode (cheader_filename = "linux/vt.h")]
+        public const int VT_ACKACQ;
+        [CCode (cheader_filename = "linux/vt.h")]
+        public const int VT_GETSTATE;
+        [CCode (cheader_filename = "linux/vt.h")]
+        public const int VT_SENDSIG;
+        [CCode (cheader_filename = "linux/vt.h")]
+        public const int VT_RELDISP;
+        [CCode (cheader_filename = "linux/vt.h")]
+        public const int VT_ACTIVATE;
+        [CCode (cheader_filename = "linux/vt.h")]
+        public const int VT_WAITACTIVE;
+        [CCode (cheader_filename = "linux/vt.h")]
+        public const int VT_DISALLOCATE;
+        [CCode (cheader_filename = "linux/vt.h")]
+        public const int VT_RESIZE;
+        [CCode (cheader_filename = "linux/vt.h")]
+        public const int VT_RESIZEX;
+        [CCode (cheader_filename = "linux/vt.h")]
+        public const int VT_LOCKSWITCH;
+        [CCode (cheader_filename = "linux/vt.h")]
+        public const int VT_UNLOCKSWITCH;
+        [CCode (cheader_filename = "linux/vt.h")]
+        public const int VT_GETHIFONTMASK;
+
+        /* structs */
+
+        [CCode (cname = "struct vt_mode", cheader_filename = "linux/vt.h")]
+        public struct Mode {
+            public char mode;
+            public char waitv;
+            public int16 relsig;
+            public int16 acqsig;
+            public int16 frsig;
+        }
+
+        [CCode (cname = "struct vt_stat", cheader_filename = "linux/vt.h")]
+        public struct Stat {
+            public uint16 v_active;
+            public uint16 v_signal;
+            public uint16 v_state;
+        }
+
+        [CCode (cname = "struct vt_sizes", cheader_filename = "linux/vt.h")]
+        public struct Sizes {
+            public uint16 v_rows;
+            public uint16 v_cols;
+            public uint16 v_scrollsize;
+        }
+
+        [CCode (cname = "struct vt_consize", cheader_filename = "linux/vt.h")]
+        public struct Consize {
+            public uint16 v_rows;
+            public uint16 v_cols;
+            public uint16 v_vlin;
+            public uint16 v_clin;
+            public uint16 v_vcol;
+            public uint16 v_ccol;
+        }
+    }
 }
