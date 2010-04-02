@@ -21,6 +21,267 @@
 namespace Linux {
 
     /*
+     * Console
+     */
+    [CCode (cprefix = "", lower_case_cprefix = "")]
+    namespace Console {
+
+        /* constants */
+
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int GIO_FONT;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int PIO_FONT;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int GIO_FONTX;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int PIO_FONTX;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int PIO_FONTRESET;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int GIO_CMAP;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int PIO_CMAP;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int KIOCSOUND;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int KDMKTONE;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int KDGETLED;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int KDSETLED;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int KDGKBTYPE;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int KB_84;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int KB_101;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int KB_OTHER;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int KDADDIO;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int KDDELIO;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int KDENABIO;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int KDDISABIO;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int KDSETMODE;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int KDGETMODE;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int KDMAPDISP;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int KDUNMAPDISP;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int E_TABSZ;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int GIO_SCRNMAP;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int PIO_SCRNMAP;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int GIO_UNISCRNMAP;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int PIO_UNISCRNMAP;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int GIO_UNIMAP;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int PIO_UNIMAP;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int PIO_UNIMAPCLR;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int UNI_DIRECT_BASE;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int UNI_DIRECT_MASK;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int KDGKBMODE;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int KDSKBMODE;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int KDGKBMETA;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int KDSKBMETA;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int KDGKBLED;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int KDSKBLED;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int K_NORMTAB;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int K_SHIFTTAB;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int K_ALTTAB;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int K_ALTSHIFTTAB;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int KDGKBSENT;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int KDSKBSENT;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int KDGKBDIACR;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int KDSKBDIACR;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int KDGKBDIACRUC;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int KDSKBDIACRUC;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int KDGETKEYCODE;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int KDSETKEYCODE;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int KDSIGACCEPT;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int KDKBDREP;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int KDFONTOP;
+        [CCode (cheader_filename = "linux/kd.h")]
+        public const int KD_FONT_FLAG_DONT_RECALC;
+
+        /* enums */
+
+        [CCode (cprefix = "KD_FONT_OP_", cheader_filename = "linux/kd.h")]
+        public enum FontOperationCode {
+            SET,
+            GET,
+            SET_DEFAULT,
+            COPY
+        }
+
+        [CCode (cprefix = "K_", cheader_filename = "linux/kd.h")]
+        public enum KeyboardMode {
+            RAW,
+            XLATE,
+            MEDIUMRAW,
+            UNICODE
+        }
+
+        [CCode (cprefix = "K_", cheader_filename = "linux/kd.h")]
+        public enum LedMode {
+            SCROLLLOCK,
+            NUMLOCK,
+            CAPSLOCK
+        }
+
+        [CCode (cprefix = "LED_", cheader_filename = "linux/kd.h")]
+        public enum LedType {
+            SCR,
+            NUM,
+            CAP
+        }
+
+        [CCode (cprefix = "KD_", cheader_filename = "linux/kd.h")]
+        public enum TerminalMode {
+            TEXT,
+            GRAPHICS
+        }
+
+        [CCode (cprefix = "K_", cheader_filename = "linux/kd.h")]
+        public enum MetaMode {
+            METABIT,
+            ESCPREFIX
+        }
+
+        /* structs */
+
+        [CCode (cname = "struct kbdiacr", cheader_filename = "linux/kd.h")]
+        public struct Diacritic {
+            public uchar diacr;
+            public uchar base;
+            public uchar result;
+        }
+
+        [CCode (cname = "struct kbdiacrs", cheader_filename = "linux/kd.h")]
+        public struct Diacritics {
+            public uint kb_cnt;
+            public Diacritic kbdiacr[256];
+        }
+
+        [CCode (cname = "struct kbdiacruc", cheader_filename = "linux/kd.h")]
+        public struct Diacruc {
+            public uint diacr;
+            public uint base;
+            public uint result;
+        }
+
+        [CCode (cname = "struct kbdiacrsuc", cheader_filename = "linux/kd.h")]
+        public struct Diacrucs {
+            public uint kb_cnt;
+            public Diacruc kbdiacruc[256];
+        }
+
+        [CCode (cname = "struct console_font", cheader_filename = "linux/kd.h")]
+        public struct Font {
+            public uint width;
+            public uint height;
+            public uint charcount;
+            public uchar* data;
+        }
+
+        [CCode (cname = "struct consolefontdesc", cheader_filename = "linux/kd.h")]
+        public struct FontDescription {
+            public uint16 charcount;
+            public uint16 charheight;
+            public string chardata;
+        }
+
+        [CCode (cname = "struct console_font_op", cheader_filename = "linux/kd.h")]
+        public struct FontOperation {
+            public FontOperationCode op;
+            public uint flags;
+            public uint width;
+            public uint height;
+            public uint charcount;
+            public uchar* data;
+        }
+
+        [CCode (cname = "struct kbkeycode", cheader_filename = "linux/kd.h")]
+        public struct KeyCode {
+            public uint scancode;
+            public uint keycode;
+        }
+
+        [CCode (cname = "struct kbentry", cheader_filename = "linux/kd.h")]
+        public struct KeyboardEntry {
+            public uchar kb_table;
+            public uchar kb_index;
+            public uint16 kb_value;
+        }
+
+        [CCode (cname = "struct kbsentry", cheader_filename = "linux/kd.h")]
+        public struct KeyboardEntries {
+            public uchar kb_func;
+            public uchar kb_string[512];
+        }
+
+        [CCode (cname = "struct kbd_repeat", cheader_filename = "linux/kd.h")]
+        public struct KeyRepeat {
+            public int delay;
+            public int period;
+        }
+
+        [CCode (cname = "struct unipair", cheader_filename = "linux/kd.h")]
+        public struct UniPair {
+            public uint16 unicode;
+            public uint16 fontpos;
+        }
+
+        [CCode (cname = "struct unimapdesc", cheader_filename = "linux/kd.h")]
+        public struct UniMapDesc {
+            public uint16 entry_ct;
+            UniPair entries;
+        }
+
+        [CCode (cname = "struct unimapinit", cheader_filename = "linux/kd.h")]
+        public struct UniMapInit {
+            public uint16 advised_hashsize;
+            public uint16 advised_hashstep;
+            public uint16 advised_hashlevel;
+        }
+    }
+
+    /*
      * EventFd
      */
     [CCode (cprefix = "EFD_", cheader_filename = "sys/eventfd.h")]
