@@ -1,0 +1,3 @@
+Gdu cheader_filename="gdu-gtk/gdu-gtk.h"
+GduGError name="Error"
+GduTimeLabelBoxedGTimeVal namespace="GLib" name="TimeVal"

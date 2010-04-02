@@ -1,0 +1,2 @@
+include/gnome-disk-utility/gdu
+lib/libgdu.so
