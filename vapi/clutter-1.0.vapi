@@ -324,7 +324,7 @@ namespace Clutter {
 		public Animator ();
 		public bool compute_value (GLib.Object object, string property_name, double progress, GLib.Value value);
 		public uint get_duration ();
-		public unowned GLib.List get_keys (GLib.Object object, string property_name, double progress);
+		public GLib.List<weak Clutter.AnimatorKey> get_keys (GLib.Object object, string property_name, double progress);
 		public unowned Clutter.Timeline get_timeline ();
 		public bool property_get_ease_in (GLib.Object object, string property_name);
 		public Clutter.Interpolation property_get_interpolation (GLib.Object object, string property_name);
@@ -606,9 +606,9 @@ namespace Clutter {
 		public static unowned Clutter.DeviceManager get_default ();
 		public virtual unowned Clutter.InputDevice get_device (int device_id);
 		[NoWrapper]
-		public virtual unowned GLib.SList get_devices ();
-		public unowned GLib.SList list_devices ();
-		public unowned GLib.SList peek_devices ();
+		public virtual unowned GLib.SList<Clutter.InputDevice> get_devices ();
+		public GLib.SList<weak Clutter.InputDevice> list_devices ();
+		public unowned GLib.SList<Clutter.InputDevice> peek_devices ();
 		[NoWrapper]
 		public virtual void remove_device (Clutter.InputDevice device);
 		[NoAccessorMethod]
@@ -870,7 +870,7 @@ namespace Clutter {
 		public void @foreach (Clutter.PathCallback callback);
 		public uint get_n_nodes ();
 		public void get_node (uint index_, Clutter.PathNode node);
-		public unowned GLib.SList get_nodes ();
+		public GLib.SList<weak Clutter.PathNode> get_nodes ();
 		public uint get_position (double progress, Clutter.Knot position);
 		public void insert_node (int index_, Clutter.PathNode node);
 		public void remove_node (uint index_);
@@ -903,7 +903,7 @@ namespace Clutter {
 		public bool get_loop ();
 		public unowned Clutter.Timeline get_timeline (ulong id);
 		public bool is_playing ();
-		public unowned GLib.SList list_timelines ();
+		public GLib.SList<weak Clutter.Timeline> list_timelines ();
 		public void pause ();
 		public void remove (ulong id);
 		public void remove_all ();
@@ -930,7 +930,7 @@ namespace Clutter {
 		public unowned GLib.Object get_object (string name);
 		public int get_objects (...);
 		public virtual GLib.Type get_type_from_name (string type_name);
-		public unowned GLib.List list_objects ();
+		public GLib.List<weak GLib.Object> list_objects ();
 		public uint load_from_data (string data, ssize_t length) throws GLib.Error;
 		public uint load_from_file (string filename) throws GLib.Error;
 		public unowned string lookup_filename (string filename);
