@@ -5512,7 +5512,7 @@ namespace Gtk {
 		public weak string wmclass_class;
 		public weak string wmclass_name;
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
-		public Window (Gtk.WindowType type);
+		public Window (Gtk.WindowType type = Gtk.WindowType.TOPLEVEL);
 		public bool activate_default ();
 		public bool activate_focus ();
 		public bool activate_key (Gdk.EventKey event);
