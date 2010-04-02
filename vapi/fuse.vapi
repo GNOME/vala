@@ -82,7 +82,7 @@ namespace Fuse {
 	[CCode (has_target = false)]
 	public delegate int Utimens (string path, Posix.timespec[] ts);
 	[CCode (has_target = false)]
-	public delegate int Create(string path, mode_t mode, ref FileInfo fi);
+	public delegate int Create(string path, Posix.mode_t mode, ref FileInfo fi);
 	[CCode (has_target = false)]
 	public delegate int Open (string path, ref FileInfo fi);
 	[CCode (has_target = false)]
