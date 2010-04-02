@@ -35,6 +35,10 @@ public class Valadoc.ValadocOrg.Doclet : Valadoc.Html.BasicDoclet {
 		_renderer = new ValadocOrg.HtmlRenderer (this);
 	}
 
+	protected override string get_icon_directory () {
+		return "/images";
+	}
+
 	protected override string get_img_path_html (Api.Node element, string type) {
 		return Path.build_filename ("/doc", element.package.name,"img", element.full_name () + "." + type);
 	}
