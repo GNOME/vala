@@ -117,7 +117,7 @@ namespace Gdk {
 		public virtual unowned Gdk.Screen get_screen (int screen_num);
 		public unowned Gdk.Window get_window_at_pointer (int win_x, int win_y);
 		public void keyboard_ungrab (uint32 time_);
-		public unowned GLib.List list_devices ();
+		public unowned GLib.List<Gdk.Device> list_devices ();
 		public static unowned Gdk.Display open (string display_name);
 		public static unowned Gdk.Display open_default_libgtk_only ();
 		public Gdk.Event peek_event ();
@@ -144,7 +144,7 @@ namespace Gdk {
 	public class DisplayManager : GLib.Object {
 		public static unowned Gdk.DisplayManager @get ();
 		public unowned Gdk.Display get_default_display ();
-		public unowned GLib.SList list_displays ();
+		public GLib.SList<weak Gdk.Display> list_displays ();
 		public void set_default_display (Gdk.Display display);
 		public Gdk.Display default_display { get; set; }
 		public virtual signal void display_opened (Gdk.Display display);
@@ -467,14 +467,14 @@ namespace Gdk {
 		public bool get_setting (string name, GLib.Value value);
 		public unowned Gdk.Colormap get_system_colormap ();
 		public unowned Gdk.Visual get_system_visual ();
-		public unowned GLib.List get_toplevel_windows ();
+		public GLib.List<weak Gdk.Window> get_toplevel_windows ();
 		public int get_width ();
 		public int get_width_mm ();
-		public unowned GLib.List get_window_stack ();
+		public GLib.List<Gdk.Window>? get_window_stack ();
 		public static int height ();
 		public static int height_mm ();
 		public bool is_composited ();
-		public unowned GLib.List list_visuals ();
+		public GLib.List<weak Gdk.Visual> list_visuals ();
 		public unowned string make_display_name ();
 		public void set_default_colormap (Gdk.Colormap colormap);
 		public void set_font_options (Cairo.FontOptions options);
@@ -541,7 +541,7 @@ namespace Gdk {
 		public void freeze_updates ();
 		public void fullscreen ();
 		public void geometry_changed ();
-		public unowned GLib.List get_children ();
+		public GLib.List<weak Gdk.Window> get_children ();
 		public unowned Gdk.Cursor? get_cursor ();
 		public bool get_decorations (out Gdk.WMDecoration decorations);
 		public bool get_deskrelative_origin (out int x, out int y);
@@ -581,7 +581,7 @@ namespace Gdk {
 		public void move (int x, int y);
 		public void move_region (Gdk.Region region, int dx, int dy);
 		public void move_resize (int x, int y, int width, int height);
-		public unowned GLib.List peek_children ();
+		public unowned GLib.List<Gdk.Window> peek_children ();
 		public static void process_all_updates ();
 		public void process_updates (bool update_children);
 		public void raise ();
@@ -607,7 +607,7 @@ namespace Gdk {
 		public void set_geometry_hints (Gdk.Geometry geometry, Gdk.WindowHints geom_mask);
 		public void set_group (Gdk.Window leader);
 		public void set_icon (Gdk.Window icon_window, Gdk.Pixmap pixmap, Gdk.Bitmap mask);
-		public void set_icon_list (GLib.List pixbufs);
+		public void set_icon_list (GLib.List<Gdk.Pixbuf> pixbufs);
 		public void set_icon_name (string name);
 		public void set_keep_above (bool setting);
 		public void set_keep_below (bool setting);
@@ -1601,7 +1601,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void colors_free (Gdk.Colormap colormap, ulong pixels, int npixels, ulong planes);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static unowned GLib.List devices_list ();
+	public static unowned GLib.List<Gdk.Device> devices_list ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void drag_abort (Gdk.DragContext context, uint32 time_);
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -1731,7 +1731,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static uint keyval_to_upper (uint keyval);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static unowned GLib.List list_visuals ();
+	public static GLib.List<weak Gdk.Visual> list_visuals ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void notify_startup_complete ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
