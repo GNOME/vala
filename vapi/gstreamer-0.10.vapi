@@ -83,11 +83,15 @@ namespace Gst {
 		public Gst.Buffer create_sub (uint offset, uint size);
 		[CCode (cname = "GST_BUFFER_DURATION_IS_VALID")]
 		public bool duration_is_valid ();
+		[CCode (cname = "GST_BUFFER_FLAG_IS_SET")]
+		public bool flag_is_set (Gst.BufferFlag flag);
 		[CCode (cname = "GST_BUFFER_FLAG_SET")]
 		public void flag_set (Gst.BufferFlag flag);
 		[CCode (cname = "GST_BUFFER_FLAG_UNSET")]
 		public void flag_unset (Gst.BufferFlag flag);
 		public Gst.Caps get_caps ();
+		[CCode (cname = "GST_BUFFER_IS_DISCONT")]
+		public bool is_discont ();
 		public bool is_metadata_writable ();
 		public bool is_span_fast (Gst.Buffer buf2);
 		[ReturnsModifiedPointer]
@@ -97,6 +101,10 @@ namespace Gst {
 		[ReturnsModifiedPointer]
 		public void make_writable ();
 		public Gst.Buffer merge (Gst.Buffer buf2);
+		[CCode (cname = "GST_BUFFER_OFFSET_END_IS_VALID")]
+		public bool offset_end_is_valid ();
+		[CCode (cname = "GST_BUFFER_OFFSET_IS_VALID")]
+		public bool offset_is_valid ();
 		public Gst.Buffer @ref ();
 		public static void replace (ref Gst.Buffer? oldobj, Gst.Buffer? newobj);
 		public void set_caps (Gst.Caps caps);

@@ -97,6 +97,10 @@ namespace Gst {
 		public void flag_set (BufferFlag flag);
 		[CCode (cname = "GST_BUFFER_FLAG_UNSET")]
 		public void flag_unset (BufferFlag flag);
+		[CCode (cname = "GST_BUFFER_FLAG_IS_SET")]
+		public bool flag_is_set (BufferFlag flag);
+		[CCode (cname = "GST_BUFFER_IS_DISCONT")]
+		public bool is_discont ();
 		[ReturnsModifiedPointer]
 		public void make_metadata_writable ();
 		[ReturnsModifiedPointer]
@@ -105,6 +109,10 @@ namespace Gst {
 		public bool timestamp_is_valid ();
 		[CCode (cname = "GST_BUFFER_DURATION_IS_VALID")]
 		public bool duration_is_valid ();
+		[CCode (cname = "GST_BUFFER_OFFSET_IS_VALID")]
+		public bool offset_is_valid ();
+		[CCode (cname = "GST_BUFFER_OFFSET_END_IS_VALID")]
+		public bool offset_end_is_valid ();
 		[ReturnsModifiedPointer]
 		public void join (owned Buffer buf2);
 
