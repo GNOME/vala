@@ -78,6 +78,7 @@ namespace Gst {
 		public Buffer ();
 		[CCode (has_construct_function = false)]
 		public Buffer.and_alloc (uint size);
+		public Gst.Buffer copy ();
 		public void copy_metadata (Gst.Buffer src, Gst.BufferCopyFlags flags);
 		public Gst.Buffer create_sub (uint offset, uint size);
 		[CCode (cname = "GST_BUFFER_DURATION_IS_VALID")]
@@ -110,6 +111,7 @@ namespace Gst {
 	public class BufferList : Gst.MiniObject {
 		[CCode (has_construct_function = false)]
 		public BufferList ();
+		public Gst.BufferList copy ();
 		public void @foreach (Gst.BufferListFunc func);
 		public unowned Gst.Buffer? @get (uint group, uint idx);
 		public Gst.BufferListIterator iterate ();
@@ -453,6 +455,7 @@ namespace Gst {
 		public uint64 timestamp;
 		[CCode (has_construct_function = false)]
 		public Event.buffer_size (Gst.Format format, int64 minsize, int64 maxsize, bool @async);
+		public Gst.Event copy ();
 		[CCode (has_construct_function = false)]
 		public Event.custom (Gst.EventType type, owned Gst.Structure structure);
 		[CCode (has_construct_function = false)]
@@ -644,6 +647,7 @@ namespace Gst {
 		public Message.clock_lost (Gst.Object src, Gst.Clock clock);
 		[CCode (has_construct_function = false)]
 		public Message.clock_provide (Gst.Object src, Gst.Clock clock, bool ready);
+		public Gst.Message copy ();
 		[CCode (has_construct_function = false)]
 		public Message.custom (Gst.MessageType type, Gst.Object src, owned Gst.Structure structure);
 		[CCode (has_construct_function = false)]
@@ -1052,6 +1056,7 @@ namespace Gst {
 		public Query.buffering (Gst.Format format);
 		[CCode (has_construct_function = false)]
 		public Query.convert (Gst.Format src_format, int64 value, Gst.Format dest_format);
+		public Gst.Query copy ();
 		[CCode (has_construct_function = false)]
 		public Query.duration (Gst.Format format);
 		[CCode (has_construct_function = false)]

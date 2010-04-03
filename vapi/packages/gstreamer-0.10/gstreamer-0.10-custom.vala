@@ -42,6 +42,7 @@ namespace Gst {
 		public Event @ref ();
 		public void unref ();
 		public static void replace (ref Event? oldobj, Event? newobj);
+        	public Event copy ();
 
 		[CCode (cname = "GST_EVENT_SRC")]
 		public unowned Gst.Object src ();
@@ -109,6 +110,7 @@ namespace Gst {
 		public Buffer @ref ();
 		public void unref ();
 		public static void replace (ref Buffer? oldobj, Buffer? newobj);
+        	public Buffer copy ();
 	}
 
 	[CCode (ref_function = "gst_buffer_list_ref", unref_function = "gst_buffer_list_unref")]
@@ -117,6 +119,7 @@ namespace Gst {
 		public void make_writable ();
 		public BufferList @ref ();
 		public void unref ();
+        	public BufferList copy ();
 	}
 
 	public class Bus {
@@ -192,6 +195,7 @@ namespace Gst {
 		public void make_writable ();
 		public Message @ref ();
 		public void unref ();
+        	public Message copy ();
 	}
 
 	[CCode (ref_function = "gst_query_ref", unref_function = "gst_query_unref")]
@@ -200,6 +204,7 @@ namespace Gst {
 		public void make_writable ();
 		public Query @ref ();
 		public void unref ();
+        	public Query copy ();
 	}
 
 	[Compact]
