@@ -226,6 +226,25 @@ namespace Gst {
 		public Structure.id_empty (GLib.Quark quark);
 	}
 
+#if 0
+	// FIXME: vapigen can't extend enums, see EventType
+	public enum State {
+		;
+		[CCode (cname = "GST_STATE_GET_NEXT")]
+		public State get_next (State pending);
+	}
+
+	public enum StateChange {
+		;
+		[CCode (cname = "GST_STATE_TRANSITION")]
+		public static StateChange transition (State cur, State next);
+		[CCode (cname = "GST_STATE_TRANSITION_CURRENT")]
+		public static State transition_current ();
+		[CCode (cname = "GST_STATE_TRANSITION_NEXT")]
+		public static State transition_next ();
+	}
+#endif
+
 	[Compact]
 	public class DebugCategory {
 		[CCode (cname="GST_DEBUG_CATEGORY_INIT")]
