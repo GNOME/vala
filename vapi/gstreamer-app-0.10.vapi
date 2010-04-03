@@ -29,7 +29,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/app/gstappsrc.h")]
 	public class AppSrc : Gst.BaseSrc, Gst.URIHandler {
 		public Gst.FlowReturn end_of_stream ();
-		public Gst.FlowReturn push_buffer (Gst.Buffer buffer);
+		public Gst.FlowReturn push_buffer (owned Gst.Buffer buffer);
 		public void set_callbacks (Gst.AppSrcCallbacks callbacks, GLib.DestroyNotify notify);
 		[NoAccessorMethod]
 		public bool block { get; set; }
