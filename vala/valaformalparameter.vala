@@ -79,6 +79,11 @@ public class Vala.FormalParameter : Symbol {
 	public bool array_null_terminated { get; set; }
 
 	/**
+	 * Specifies a custom type for the array length.
+	 */
+	public string? array_length_type { get; set; default = null; }
+
+	/**
 	 * Specifies the position of the parameter in the C function.
 	 */
 	public double cparameter_position { get; set; }
@@ -168,6 +173,9 @@ public class Vala.FormalParameter : Symbol {
 		}
 		if (a.has_argument ("array_length")) {
 			no_array_length = !a.get_bool ("array_length");
+		}
+		if (a.has_argument ("array_length_type")) {
+			array_length_type = a.get_string ("array_length_type");
 		}
 		if (a.has_argument ("array_null_terminated")) {
 			array_null_terminated = a.get_bool ("array_null_terminated");

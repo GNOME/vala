@@ -350,7 +350,35 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					if (!param.no_array_length && param.parameter_type is ArrayType) {
 						var array_type = (ArrayType) param.parameter_type;
 						for (int dim = 1; dim <= array_type.rank; dim++) {
-							carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), head.get_array_length_cexpression (arg, dim));
+							CCodeExpression? array_length_expr = null;
+							if (param.array_length_type != null) {
+								if (param.direction == ParameterDirection.OUT) {
+									var temp_array_length = get_temp_variable (new CType (param.array_length_type));
+									temp_vars.insert (0, temp_array_length);
+									array_length_expr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_array_length.name));
+
+									var comma = new CCodeCommaExpression ();
+									LocalVariable? temp_result = null;
+									if (!(m.return_type is VoidType)) {
+										temp_result = get_temp_variable (m.return_type);
+										temp_vars.insert (0, temp_result);
+										ccall_expr = new CCodeAssignment (get_variable_cexpression (temp_result.name), ccall_expr);
+									}
+
+									comma.append_expression (ccall_expr);
+									comma.append_expression (new CCodeAssignment (get_variable_cexpression (head.get_array_length_cname (((UnaryExpression) arg).inner.to_string (), dim)), new CCodeCastExpression (get_variable_cexpression (temp_array_length.name), int_type.get_cname ())));
+
+									if (temp_result != null) {
+										comma.append_expression (get_variable_cexpression (temp_result.name));
+									}
+									ccall_expr = comma;
+								} else {
+									array_length_expr = new CCodeCastExpression (head.get_array_length_cexpression (arg, dim), param.array_length_type);
+								}
+							} else {
+								array_length_expr = head.get_array_length_cexpression (arg, dim);
+							}
+							carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), array_length_expr);
 						}
 						multiple_cargs = true;
 					} else if (param.parameter_type is DelegateType) {
