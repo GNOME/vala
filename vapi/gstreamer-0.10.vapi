@@ -51,10 +51,10 @@ namespace Gst {
 		public Gst.Iterator iterate_sorted ();
 		public Gst.Iterator iterate_sources ();
 		public bool recalculate_latency ();
-		public bool remove (owned Gst.Element element);
+		public bool remove (Gst.Element element);
 		[NoWrapper]
 		public virtual bool remove_element (Gst.Element element);
-		public void remove_many (params owned Gst.Element[] elements);
+		public void remove_many (params Gst.Element[] elements);
 		[NoAccessorMethod]
 		public bool async_handling { get; set; }
 		public virtual signal bool do_latency ();
@@ -275,6 +275,7 @@ namespace Gst {
 		public Gst.ClockEntryType type;
 		public void* user_data;
 	}
+	[Compact]
 	[CCode (ref_function = "gst_clock_id_ref", unref_function = "gst_clock_id_unref", cheader_filename = "gst/gst.h")]
 	public class ClockID {
 		public static int compare_func (void* id1, void* id2);
@@ -1433,12 +1434,12 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public interface ChildProxy : Gst.Object {
 		public void @get (string first_property_name, ...);
-		public abstract Gst.Object get_child_by_index (uint index);
-		public Gst.Object get_child_by_name (string name);
+		public abstract Gst.Object? get_child_by_index (uint index);
+		public Gst.Object? get_child_by_name (string name);
 		public abstract uint get_children_count ();
 		public void get_property (string name, ref Gst.Value value);
 		public void get_valist (string first_property_name, void* var_args);
-		public bool lookup (string name, out Gst.Object target, out unowned GLib.ParamSpec pspec);
+		public bool lookup (string name, out Gst.Object? target, out unowned GLib.ParamSpec? pspec);
 		public void @set (string first_property_name, ...);
 		public void set_property (string name, Gst.Value value);
 		public void set_valist (string first_property_name, void* var_args);

@@ -32,6 +32,7 @@ namespace Gst {
 	public struct ClockTimeDiff : int64 {
 	}
 
+	[Compact]
 	public class ClockID {
 		public ClockID.single_shot (Gst.Clock clock, Gst.ClockTime time);
 		public ClockID.periodic (Gst.Clock clock, Gst.ClockTime start_time, Gst.ClockTime interval);
@@ -85,7 +86,7 @@ namespace Gst {
 
 	public class Bin {
 		public void add_many (params owned Gst.Element[] elements);
-		public void remove_many (params owned Gst.Element[] elements);
+		public void remove_many (params Gst.Element[] elements);
 	}
 
 	[CCode (ref_function = "gst_buffer_ref", unref_function = "gst_buffer_unref")]
@@ -136,7 +137,7 @@ namespace Gst {
 		public void @get (string first_property_name, ...);
 		public void get_property (string name, ref Gst.Value value);
 		public void get_valist (string first_property_name, void* var_args);
-		public bool lookup (string name, out Gst.Object target, out unowned GLib.ParamSpec pspec);
+		public bool lookup (string name, out Gst.Object? target, out unowned GLib.ParamSpec? pspec);
 		public void @set (string first_property_name, ...);
 		public void set_property (string name, Gst.Value value);
 		public void set_valist (string first_property_name, void* var_args);
