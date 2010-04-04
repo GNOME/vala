@@ -2578,7 +2578,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static string error_get_message (GLib.Quark domain, int code);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static unowned GLib.List filter_run (GLib.List list, Gst.FilterFunc func, bool first);
+	public static GLib.List filter_run (GLib.List list, Gst.FilterFunc func, bool first);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static GLib.Quark flow_to_quark (Gst.FlowReturn ret);
 	[CCode (cheader_filename = "gst/gst.h")]
