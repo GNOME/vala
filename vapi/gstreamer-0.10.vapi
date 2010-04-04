@@ -529,14 +529,13 @@ namespace Gst {
 	public class GhostPad : Gst.Pad {
 		[CCode (type = "GstPad*", has_construct_function = false)]
 		public GhostPad (string? name, Gst.Pad target);
-		public bool @construct ();
 		[CCode (type = "GstPad*", has_construct_function = false)]
-		public GhostPad.from_template (string name, Gst.Pad target, Gst.PadTemplate templ);
-		public unowned Gst.Pad get_target ();
+		public GhostPad.from_template (string? name, Gst.Pad target, Gst.PadTemplate templ);
+		public Gst.Pad? get_target ();
 		[CCode (type = "GstPad*", has_construct_function = false)]
-		public GhostPad.no_target (string name, Gst.PadDirection dir);
+		public GhostPad.no_target (string? name, Gst.PadDirection dir);
 		[CCode (type = "GstPad*", has_construct_function = false)]
-		public GhostPad.no_target_from_template (string name, Gst.PadTemplate templ);
+		public GhostPad.no_target_from_template (string? name, Gst.PadTemplate templ);
 		public bool set_target (Gst.Pad? newtarget);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
