@@ -98,6 +98,11 @@ namespace Gst {
 	}
 #endif
 
+	public interface ImplementsInterface : Gst.Element {
+		public unowned Gst.Element? cast (GLib.Type type);
+		public bool check (GLib.Type type);
+	}
+
 	[CCode (ref_function = "gst_object_ref", unref_function = "gst_object_unref", ref_sink_function = "gst_object_ref_sink")]
 	public class Object {
 		public Gst.Object @ref ();

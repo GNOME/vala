@@ -1457,8 +1457,8 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public interface ImplementsInterface : Gst.Element {
-		public static void* cast (void* from, GLib.Type type);
-		public static bool check (void* from, GLib.Type type);
+		public unowned Gst.Element? cast (GLib.Type type);
+		public bool check (GLib.Type type);
 		[NoWrapper]
 		public abstract bool supported (GLib.Type iface_type);
 	}
