@@ -43,7 +43,7 @@ public enum Valadoc.Content.HorizontalAlign {
 		return null;
 	}
 
-	public weak string to_string () {
+	public unowned string to_string () {
 		switch (this) {
 		case HorizontalAlign.LEFT:
 			return "left";
@@ -80,7 +80,7 @@ public enum Valadoc.Content.VerticalAlign {
 		return null;
 	}
 
-	public weak string to_string () {
+	public unowned string to_string () {
 		switch (this) {
 		case VerticalAlign.TOP:
 			return "top";

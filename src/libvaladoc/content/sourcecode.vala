@@ -41,7 +41,7 @@ public class Valadoc.Content.SourceCode : ContentElement, Inline{
 			return null;
 		}
 
-		public weak string to_string () {
+		public unowned string to_string () {
 			switch (this) {
 			case Language.GENIE:
 				return "Genie";
