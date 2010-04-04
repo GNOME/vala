@@ -75,6 +75,29 @@ namespace Gst {
 	}
 #endif
 
+#if 0
+	// FIXME: This can't be parsed by vapigen
+	public enum Format {
+		;
+		[CCode (cname = "gst_format_get_details")]
+		public unowned FormatDefination get_details ();
+		[CCode (cname = "gst_format_to_quark")]
+		public GLib.Quark to_quark ();
+		[CCode (cname = "gst_format_get_name")]
+		public unowned string get_name ();
+
+		[CCode (cname = "gst_format_register")]
+		static Format register (string nick, string description);
+		[CCode (cname = "gst_format_get_by_nick")]
+		static Format get_by_nick (string nick);
+	
+		[CCode (cname = "GST_FORMAT_PERCENT_MAX")]
+		public const int64 PERCENT_MAX;
+		[CCode (cname = "GST_FORMAT_PERCENT_SCALE")]
+		public const int64 PERCENT_SCALE;
+	}
+#endif
+
 	[CCode (ref_function = "gst_object_ref", unref_function = "gst_object_unref", ref_sink_function = "gst_object_ref_sink")]
 	public class Object {
 		public Gst.Object @ref ();

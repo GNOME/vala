@@ -1848,7 +1848,9 @@ namespace Gst {
 		BYTES,
 		TIME,
 		BUFFERS,
-		PERCENT
+		PERCENT;
+		[CCode (cname = "gst_format_get_name")]
+		public unowned string to_string ();
 	}
 	[CCode (cprefix = "GST_INDEX_", cheader_filename = "gst/gst.h")]
 	public enum IndexCertainty {
