@@ -597,14 +597,10 @@ namespace Gst {
 		public GLib.Type type;
 		[CCode (has_construct_function = false)]
 		public IndexFactory (string name, string longdesc, GLib.Type type);
-		public unowned Gst.Index create ();
+		public Gst.Index create ();
 		public void destroy ();
-		public static unowned Gst.IndexFactory find (string name);
-		public static unowned Gst.Index make (string name);
-	}
-	[Compact]
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class IndexGroup {
+		public static Gst.IndexFactory find (string name);
+		public static Gst.Index make (string name);
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/gst.h")]
