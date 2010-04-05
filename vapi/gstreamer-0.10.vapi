@@ -540,58 +540,56 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Index : Gst.Object {
-		public weak Gst.IndexGroup curgroup;
-		public weak Gst.IndexFilter filter;
-		public void* filter_user_data;
-		public weak GLib.DestroyNotify filter_user_data_destroy;
-		public weak GLib.List groups;
-		public int last_id;
-		public int maxgroup;
-		public Gst.IndexResolverMethod method;
-		public void* resolver_user_data;
-		public weak GLib.DestroyNotify resolver_user_data_destroy;
-		public weak GLib.HashTable writers;
 		[CCode (has_construct_function = false)]
 		public Index ();
-		public unowned Gst.IndexEntry add_association (int id, Gst.AssocFlags flags, Gst.Format format, int64 value);
-		public unowned Gst.IndexEntry add_associationv (int id, Gst.AssocFlags flags, int n, Gst.IndexAssociation list);
+		public unowned Gst.IndexEntry add_association (int id, Gst.AssocFlags flags, Gst.Format format, int64 value, ...);
+		public unowned Gst.IndexEntry? add_associationv (int id, Gst.AssocFlags flags, [CCode (array_length_pos = 2.9)] Gst.IndexAssociation[] list);
 		[NoWrapper]
 		public virtual void add_entry (Gst.IndexEntry entry);
-		public unowned Gst.IndexEntry add_format (int id, Gst.Format format);
-		public unowned Gst.IndexEntry add_id (int id, string description);
-		public unowned Gst.IndexEntry add_object (int id, string key, GLib.Type type, void* object);
+		public unowned Gst.IndexEntry? add_format (int id, Gst.Format format);
+		public unowned Gst.IndexEntry? add_id (int id, string description);
+		public unowned Gst.IndexEntry? add_object (int id, string key, GLib.Type type, void* object);
 		public virtual void commit (int id);
-		public virtual unowned Gst.IndexEntry get_assoc_entry (int id, Gst.IndexLookupMethod method, Gst.AssocFlags flags, Gst.Format format, int64 value);
-		public unowned Gst.IndexEntry get_assoc_entry_full (int id, Gst.IndexLookupMethod method, Gst.AssocFlags flags, Gst.Format format, int64 value, GLib.CompareDataFunc func);
+		public virtual unowned Gst.IndexEntry? get_assoc_entry (int id, Gst.IndexLookupMethod method, Gst.AssocFlags flags, Gst.Format format, int64 value);
+		public unowned Gst.IndexEntry? get_assoc_entry_full (int id, Gst.IndexLookupMethod method, Gst.AssocFlags flags, Gst.Format format, int64 value, GLib.CompareDataFunc func);
 		public Gst.IndexCertainty get_certainty ();
 		public int get_group ();
-		public virtual bool get_writer_id (Gst.Object writer, int id);
-		[CCode (type = "gint", has_construct_function = false)]
-		public Index.group (Gst.Index index);
+		public virtual bool get_writer_id (Gst.Object writer, out int id);
+		[CCode (cname = "GST_INDEX_IS_READABLE")]
+		public bool is_readable ();
+		[CCode (cname = "GST_INDEX_IS_WRITABLE")]
+		public bool is_writable ();
+		public int new_group ();
 		public void set_certainty (Gst.IndexCertainty certainty);
-		public void set_filter (Gst.IndexFilter filter);
-		public void set_filter_full (Gst.IndexFilter filter, GLib.DestroyNotify user_data_destroy);
+		[CCode (cname = "gst_index_set_filter_full")]
+		public void set_filter (owned Gst.IndexFilter filter);
 		public bool set_group (int groupnum);
-		public void set_resolver (Gst.IndexResolver resolver);
-		public void set_resolver_full (Gst.IndexResolver resolver, GLib.DestroyNotify user_data_destroy);
+		[CCode (cname = "gst_index_set_resolver_full")]
+		public void set_resolver (owned Gst.IndexResolver resolver);
 		[NoAccessorMethod]
 		public Gst.IndexResolver resolver { owned get; set; }
 		public virtual signal void entry_added (Gst.IndexEntry entry);
 	}
 	[Compact]
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class IndexAssociation {
-		public Gst.Format format;
-		public int64 value;
-	}
-	[Compact]
-	[CCode (copy_function = "gst_index_entry_copy", type_id = "GST_TYPE_INDEX_ENTRY", cheader_filename = "gst/gst.h")]
+	[CCode (copy_function = "gst_index_entry_copy", cheader_filename = "gst/gst.h")]
 	public class IndexEntry {
-		public void* data;
-		public int id;
 		public Gst.IndexEntryType type;
-		public bool assoc_map (Gst.Format format, int64 value);
+		[CCode (cname = "GST_INDEX_ASSOC_FLAGS")]
+		public Gst.AssocFlags assoc_flags ();
+		[CCode (cname = "GST_INDEX_ASSOC_FORMAT")]
+		public Gst.Format assoc_format (int i);
+		public bool assoc_map (Gst.Format format, out int64 value);
+		[CCode (cname = "GST_INDEX_ASSOC_VALUE")]
+		public Gst.IndexAssociation assoc_value (int i);
 		public Gst.IndexEntry copy ();
+		[CCode (cname = "GST_INDEX_FORMAT_FORMAT")]
+		public Gst.Format format_format ();
+		[CCode (cname = "GST_INDEX_FORMAT_KEY")]
+		public unowned string format_key ();
+		[CCode (cname = "GST_INDEX_ID_DESCRIPTION")]
+		public unowned string id_description ();
+		[CCode (cname = "GST_INDEX_NASSOCS")]
+		public int n_assocs ();
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class IndexFactory : Gst.PluginFeature {
@@ -607,10 +605,6 @@ namespace Gst {
 	[Compact]
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class IndexGroup {
-		public Gst.IndexCertainty certainty;
-		public weak GLib.List entries;
-		public int groupnum;
-		public int peergroup;
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -1541,6 +1535,11 @@ namespace Gst {
 	[CCode (type_id = "GST_TYPE_FRACTION_RANGE", cheader_filename = "gst/gst.h")]
 	public struct FractionRange {
 	}
+	[CCode (type_id = "GST_TYPE_INDEX_ASSOCIATION", cheader_filename = "gst/gst.h")]
+	public struct IndexAssociation {
+		public Gst.Format format;
+		public int64 value;
+	}
 	[CCode (type_id = "GST_TYPE_INT_RANGE", cheader_filename = "gst/gst.h")]
 	public struct IntRange {
 	}
@@ -2356,8 +2355,6 @@ namespace Gst {
 	public const int EVENT_TYPE_SHIFT;
 	[CCode (cheader_filename = "gst/gst.h")]
 	public const string FOURCC_FORMAT;
-	[CCode (cheader_filename = "gst/gst.h")]
-	public const int INDEX_ID_INVALID;
 	[CCode (cheader_filename = "gst/gst.h")]
 	public const string LICENSE_UNKNOWN;
 	[CCode (cheader_filename = "gst/gst.h")]

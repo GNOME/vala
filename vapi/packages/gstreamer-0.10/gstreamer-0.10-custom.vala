@@ -103,6 +103,40 @@ namespace Gst {
 		public bool check (GLib.Type type);
 	}
 
+	public class Index {
+		public int new_group ();
+		[CCode (cname = "GST_INDEX_IS_WRITABLE")]
+		public bool is_writable ();
+		[CCode (cname = "GST_INDEX_IS_READABLE")]
+		public bool is_readable ();
+	}
+
+	public struct IndexAssociation {
+		public Gst.Format format;
+		public int64 value;
+	}
+
+	[Compact]
+	public class IndexEntry {
+		public IndexEntryType type;
+		[CCode (cname = "GST_INDEX_NASSOCS")]
+		public int n_assocs ();
+		[CCode (cname = "GST_INDEX_ASSOC_FLAGS")]
+		public AssocFlags assoc_flags ();
+		[CCode (cname = "GST_INDEX_ASSOC_FORMAT")]
+		public Gst.Format assoc_format (int i);
+		[CCode (cname = "GST_INDEX_ASSOC_VALUE")]
+		public unowned IndexAssociation assoc_value (int i);
+		[CCode (cname = "GST_INDEX_FORMAT_FORMAT")]
+		public Gst.Format format_format ();
+		[CCode (cname = "GST_INDEX_FORMAT_KEY")]
+		public unowned string format_key ();
+		[CCode (cname = "GST_INDEX_ID_INVALID")]
+		static const int ID_INVALID;
+		[CCode (cname = "GST_INDEX_ID_DESCRIPTION")]
+		public unowned string id_description ();
+	}
+
 	[CCode (ref_function = "gst_object_ref", unref_function = "gst_object_unref", ref_sink_function = "gst_object_ref_sink")]
 	public class Object {
 		public Gst.Object @ref ();
