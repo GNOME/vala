@@ -792,6 +792,7 @@ namespace Xml {
 	[CCode (cname = "xmlParserCtxt")]
 	public class ParserCtxt {
 		public SAXHandler* sax;
+		[CCode (cname = "userData")]
 		public void* user_data;
 
 		[CCode (cname = "xmlParseDocument")]
@@ -1476,10 +1477,10 @@ namespace Xml {
 	public delegate void startDocumentSAXFunc (void* ctx);
 
 	[CCode (cname = "startElementNsSAX2Func", has_target = false)]
-	public delegate void startElementNsSAX2Func (void* ctx, string localname, string prefix, string URI, int nb_namespaces, [CCode (array_length = false)] string[] namespaces, int nb_attributes, int nb_defaulted, [CCode (array_length = false)] string[] attributes);
+	public delegate void startElementNsSAX2Func (void* ctx, string localname, string prefix, string URI, int nb_namespaces, [CCode (array_length = false, array_null_terminated = true)] string[] namespaces, int nb_attributes, int nb_defaulted, [CCode (array_length = false)] string[] attributes);
 
 	[CCode (cname = "startElementSAXFunc", has_target = false)]
-	public delegate void startElementSAXFunc (void* ctx, string name, [CCode (array_length = false)] string[] atts);
+	public delegate void startElementSAXFunc (void* ctx, string name, [CCode (array_length = false, array_null_terminated = true)] string[] atts);
 
 	[CCode (cname = "unparsedEntityDeclSAXFunc", has_target = false)]
 	public delegate void unparsedEntityDeclSAXFunc (void* ctx, string name, string publicId, string systemId, string notationName);
@@ -1491,7 +1492,7 @@ namespace Xml {
 	public delegate void xmlStructuredErrorFunc (void* ctx, Error* error);
 
 	[Compact]
-	[CCode (cname = "xmlSAXHandler")]
+	[CCode (cname = "xmlSAXHandler", cheader_filename = "libxml/parser.h")]
 	public struct SAXHandler {
 		[CCode (cname = "internalSubset")]
 		public internalSubsetSAXFunc internalSubset;
@@ -1547,9 +1548,9 @@ namespace Xml {
 		public endElementNsSAX2Func endElementNs;
 		public xmlStructuredErrorFunc serror;
 
-		[CCode (cname = "UserParseMemory")]
+		[CCode (cname = "xmlSAXUserParseMemory")]
 		public int user_parse_memory (void* user_data, string buffer, int size);
-		[CCode (cname = "UserParseFile")]
+		[CCode (cname = "xmlSAXUserParseFile")]
 		public int user_parse_file (void* user_data, string filename);
 	}
 
