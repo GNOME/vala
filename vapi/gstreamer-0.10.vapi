@@ -599,8 +599,8 @@ namespace Gst {
 		public IndexFactory (string name, string longdesc, GLib.Type type);
 		public Gst.Index create ();
 		public void destroy ();
-		public static Gst.IndexFactory find (string name);
-		public static Gst.Index make (string name);
+		public static Gst.IndexFactory? find (string name);
+		public static Gst.Index? make (string name);
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/gst.h")]
