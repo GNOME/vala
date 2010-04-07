@@ -117,6 +117,7 @@ dist_vapi_DATA = \
 	libbonoboui-2.0.vapi \
 	libdaemon.vapi \
 	libepc-1.0.vapi \
+	libesmtp.vapi \
 	libftdi.deps \
 	libftdi.vapi \
 	libgda-report-4.0.deps \
