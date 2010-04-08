@@ -525,6 +525,10 @@ public class Vala.GIdlParser : CodeVisitor {
 							if (eval (nv[1]) == "1") {
 								ref_function_void = true;
 							}
+						} else if (nv[0] == "type_parameters") {
+							foreach (string type_param_name in eval (nv[1]).split (",")) {
+								cl.add_type_parameter (new TypeParameter (type_param_name, current_source_reference));
+							}
 						}
 					}
 				}
