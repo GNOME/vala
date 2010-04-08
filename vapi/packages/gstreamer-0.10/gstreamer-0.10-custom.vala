@@ -249,9 +249,18 @@ namespace Gst {
 		[ReturnsModifiedPointer]
 		public void make_writable ();
 
+		public MiniObject @ref ();
+		public void unref ();
         	public virtual MiniObject copy ();
 		public virtual void finalize ();
 		public static void replace (ref MiniObject? oldobj, MiniObject? newobj);
+
+		[CCode (cname = "GST_MINI_OBJECT_FLAG_SET")]
+		public void flag_set (MiniObjectFlags flag);
+		[CCode (cname = "GST_MINI_OBJECT_FLAG_UNSET")]
+		public void flag_unset (MiniObjectFlags flag);
+		[CCode (cname = "GST_MINI_OBJECT_FLAG_IS_SET")]
+		public bool flag_is_set (MiniObjectFlags flag);
 	}
 
 	[CCode (ref_function = "gst_message_ref", unref_function = "gst_message_unref")]

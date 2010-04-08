@@ -717,16 +717,23 @@ namespace Gst {
 	}
 	[CCode (ref_function = "gst_mini_object_ref", unref_function = "gst_mini_object_unref", cheader_filename = "gst/gst.h")]
 	public class MiniObject {
-		public uint flags;
-		public int refcount;
+		public Gst.MiniObjectFlags flags;
 		[CCode (has_construct_function = false)]
 		public MiniObject (GLib.Type type);
 		public virtual Gst.MiniObject copy ();
 		public virtual void finalize ();
+		[CCode (cname = "GST_MINI_OBJECT_FLAG_IS_SET")]
+		public bool flag_is_set (Gst.MiniObjectFlags flag);
+		[CCode (cname = "GST_MINI_OBJECT_FLAG_SET")]
+		public void flag_set (Gst.MiniObjectFlags flag);
+		[CCode (cname = "GST_MINI_OBJECT_FLAG_UNSET")]
+		public void flag_unset (Gst.MiniObjectFlags flag);
 		public bool is_writable ();
 		[ReturnsModifiedPointer]
 		public void make_writable ();
+		public Gst.MiniObject @ref ();
 		public static void replace (ref Gst.MiniObject? oldobj, Gst.MiniObject? newobj);
+		public void unref ();
 	}
 	[CCode (ref_function = "gst_object_ref", unref_function = "gst_object_unref", cheader_filename = "gst/gst.h")]
 	public class Object : GLib.Object {
