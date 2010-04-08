@@ -625,15 +625,9 @@ namespace Gst {
 	}
 	[CCode (ref_function = "gst_message_ref", unref_function = "gst_message_unref", cheader_filename = "gst/gst.h")]
 	public class Message : Gst.MiniObject {
-		public void* abidata;
-		public weak GLib.Cond cond;
-		public weak GLib.Mutex @lock;
-		public weak Gst.Object src;
-		public weak Gst.Structure structure;
 		public uint64 timestamp;
-		public Gst.MessageType type;
 		[CCode (has_construct_function = false)]
-		public Message.application (Gst.Object src, owned Gst.Structure structure);
+		public Message.application (Gst.Object src, owned Gst.Structure? structure);
 		[CCode (has_construct_function = false)]
 		public Message.async_done (Gst.Object src);
 		[CCode (has_construct_function = false)]
@@ -646,20 +640,20 @@ namespace Gst {
 		public Message.clock_provide (Gst.Object src, Gst.Clock clock, bool ready);
 		public Gst.Message copy ();
 		[CCode (has_construct_function = false)]
-		public Message.custom (Gst.MessageType type, Gst.Object src, owned Gst.Structure structure);
+		public Message.custom (Gst.MessageType type, Gst.Object src, owned Gst.Structure? structure);
 		[CCode (has_construct_function = false)]
 		public Message.duration (Gst.Object src, Gst.Format format, int64 duration);
 		[CCode (has_construct_function = false)]
-		public Message.element (Gst.Object src, owned Gst.Structure structure);
+		public Message.element (Gst.Object src, owned Gst.Structure? structure);
 		[CCode (has_construct_function = false)]
 		public Message.eos (Gst.Object src);
 		[CCode (has_construct_function = false)]
-		public Message.error (Gst.Object src, GLib.Error error, string debug);
+		public Message.error (Gst.Object src, GLib.Error error, string? debug);
 		public uint32 get_seqnum ();
-		public Gst.Value get_stream_status_object ();
-		public unowned Gst.Structure get_structure ();
+		public unowned Gst.Value? get_stream_status_object ();
+		public unowned Gst.Structure? get_structure ();
 		[CCode (has_construct_function = false)]
-		public Message.info (Gst.Object src, GLib.Error error, string debug);
+		public Message.info (Gst.Object src, GLib.Error error, string? debug);
 		[CCode (has_construct_function = false)]
 		public Message.latency (Gst.Object src);
 		[ReturnsModifiedPointer]
@@ -668,24 +662,24 @@ namespace Gst {
 		public Message.new_clock (Gst.Object src, Gst.Clock clock);
 		public void parse_async_start (out bool new_base_time);
 		public void parse_buffering (out int percent);
-		public void parse_buffering_stats (Gst.BufferingMode mode, int avg_in, int avg_out, int64 buffering_left);
+		public void parse_buffering_stats (out Gst.BufferingMode mode, out int avg_in, out int avg_out, out int64 buffering_left);
 		public void parse_clock_lost (out unowned Gst.Clock clock);
 		public void parse_clock_provide (out unowned Gst.Clock clock, out bool ready);
 		public void parse_duration (out Gst.Format format, out int64 duration);
-		public void parse_error (out GLib.Error gerror, out string debug);
-		public void parse_info (out GLib.Error gerror, out string debug);
+		public void parse_error (out GLib.Error gerror, out string? debug);
+		public void parse_info (out GLib.Error gerror, out string? debug);
 		public void parse_new_clock (out unowned Gst.Clock clock);
-		public void parse_request_state (Gst.State state);
+		public void parse_request_state (out Gst.State state);
 		public void parse_segment_done (out Gst.Format format, out int64 position);
 		public void parse_segment_start (out Gst.Format format, out int64 position);
 		public void parse_state_changed (out Gst.State oldstate, out Gst.State newstate, out Gst.State pending);
-		public void parse_step_done (Gst.Format format, uint64 amount, double rate, bool flush, bool intermediate, uint64 duration, bool eos);
-		public void parse_step_start (bool active, Gst.Format format, uint64 amount, double rate, bool flush, bool intermediate);
-		public void parse_stream_status (Gst.StreamStatusType type, out unowned Gst.Element owner);
-		public void parse_structure_change (Gst.StructureChangeType type, out unowned Gst.Element owner, bool busy);
+		public void parse_step_done (out Gst.Format format, out uint64 amount, out double rate, out bool flush, out bool intermediate, out uint64 duration, out bool eos);
+		public void parse_step_start (out bool active, out Gst.Format format, out uint64 amount, out double rate, out bool flush, out bool intermediate);
+		public void parse_stream_status (out Gst.StreamStatusType type, out unowned Gst.Element owner);
+		public void parse_structure_change (out Gst.StructureChangeType type, out unowned Gst.Element owner, out bool busy);
 		public void parse_tag (out Gst.TagList tag_list);
 		public void parse_tag_full (out unowned Gst.Pad pad, out unowned Gst.TagList tag_list);
-		public void parse_warning (out GLib.Error gerror, out string debug);
+		public void parse_warning (out GLib.Error gerror, out string? debug);
 		public Gst.Message @ref ();
 		[CCode (has_construct_function = false)]
 		public Message.request_state (Gst.Object src, Gst.State state);
@@ -695,7 +689,9 @@ namespace Gst {
 		public Message.segment_start (Gst.Object src, Gst.Format format, int64 position);
 		public void set_buffering_stats (Gst.BufferingMode mode, int avg_in, int avg_out, int64 buffering_left);
 		public void set_seqnum (uint32 seqnum);
-		public void set_stream_status_object (Gst.Value object);
+		public void set_stream_status_object (ref unowned Gst.Value? object);
+		[CCode (cname = "GST_MESSAGE_SRC")]
+		public unowned Gst.Object src ();
 		[CCode (has_construct_function = false)]
 		public Message.state_changed (Gst.Object src, Gst.State oldstate, Gst.State newstate, Gst.State pending);
 		[CCode (has_construct_function = false)]
@@ -712,10 +708,12 @@ namespace Gst {
 		public Message.tag (Gst.Object src, Gst.TagList tag_list);
 		[CCode (has_construct_function = false)]
 		public Message.tag_full (Gst.Object src, Gst.Pad pad, Gst.TagList tag_list);
+		[CCode (cname = "GST_MESSAGE_TYPE")]
+		public Gst.MessageType type ();
 		public static GLib.Quark type_to_quark (Gst.MessageType type);
 		public void unref ();
 		[CCode (has_construct_function = false)]
-		public Message.warning (Gst.Object src, GLib.Error error, string debug);
+		public Message.warning (Gst.Object src, GLib.Error error, string? debug);
 	}
 	[CCode (ref_function = "gst_mini_object_ref", unref_function = "gst_mini_object_unref", cheader_filename = "gst/gst.h")]
 	public class MiniObject {
@@ -1937,6 +1935,8 @@ namespace Gst {
 		REQUEST_STATE,
 		STEP_START,
 		ANY;
+		public GLib.Quark to_quark ();
+		public unowned string get_name ();
 		[CCode (cname = "gst_message_type_get_name")]
 		public unowned string to_string ();
 	}

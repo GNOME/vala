@@ -261,6 +261,20 @@ namespace Gst {
 		public Message @ref ();
 		public void unref ();
         	public Message copy ();
+
+		[CCode (cname = "GST_MESSAGE_TYPE")]
+		public Gst.MessageType type ();
+		[CCode (cname = "GST_MESSAGE_SRC")]
+		public unowned Gst.Object src ();
+
+		// Deprecated, real method is in MessageType
+		public static GLib.Quark type_to_quark (Gst.MessageType type);
+	}
+
+	public enum MessageType {
+		SOME_RANDOM_VALUE_FOR_VAPIGEN;
+		public GLib.Quark to_quark ();
+		public unowned string get_name ();
 	}
 
 	[CCode (ref_function = "gst_query_ref", unref_function = "gst_query_unref")]
