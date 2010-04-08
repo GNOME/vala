@@ -243,26 +243,9 @@ public class Vala.GIdlParser : CodeVisitor {
 			} else if (node.type == IdlNodeTypeId.BOXED) {
 				parse_boxed ((IdlNodeBoxed) node, ns, module);
 			} else if (node.type == IdlNodeTypeId.ENUM) {
-				var en = parse_enum ((IdlNodeEnum) node);
-				if (en == null) {
-					continue;
-				}
-				en.name = fix_type_name (en.name, ns);
-				if (en is ErrorDomain) {
-					ns.add_error_domain (en as ErrorDomain);
-				} else {
-					ns.add_enum (en as Enum);
-				}
-				current_source_file.add_node (en);
+				parse_enum ((IdlNodeEnum) node, ns, module, false);
 			} else if (node.type == IdlNodeTypeId.FLAGS) {
-				var en = parse_enum ((IdlNodeEnum) node) as Enum;
-				if (en == null) {
-					continue;
-				}
-				en.name = fix_type_name (en.name, ns);
-				en.is_flags = true;
-				ns.add_enum (en);
-				current_source_file.add_node (en);
+				parse_enum ((IdlNodeEnum) node, ns, module, true);
 			} else if (node.type == IdlNodeTypeId.OBJECT) {
 				parse_object ((IdlNodeInterface) node, ns, module);
 			} else if (node.type == IdlNodeTypeId.INTERFACE) {
@@ -891,11 +874,22 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 	}
 	
-	private TypeSymbol? parse_enum (IdlNodeEnum en_node) {
+	private void parse_enum (IdlNodeEnum en_node, Namespace ns, IdlModule module, bool is_flags) {
 		weak IdlNode node = (IdlNode) en_node;
+		string name = fix_type_name (node.name, ns);
+		bool existing = true;
 
-		var en = new Enum (node.name, current_source_reference);
-		en.access = SymbolAccessibility.PUBLIC;
+		var en = ns.scope.lookup (name) as Enum;
+		if (en == null) {
+			en = new Enum (name, current_source_reference);
+			en.access = SymbolAccessibility.PUBLIC;
+			existing = false;
+		} else {
+			// ignore dummy enum values in -custom.vala files
+			// they exist for syntactical reasons
+			en.remove_all_values ();
+		}
+
 		en.has_type_id = (en_node.gtype_name != null && en_node.gtype_name != "");
 		
 		string common_prefix = null;
@@ -949,7 +943,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					en.add_cheader_filename (eval (nv[1]));
 				} else if (nv[0] == "hidden") {
 					if (eval (nv[1]) == "1") {
-						return null;
+						return;
 					}
 				} else if (nv[0] == "rename_to") {
 					en.name = eval (nv[1]);
@@ -1002,10 +996,17 @@ public class Vala.GIdlParser : CodeVisitor {
 				ed.add_code (new ErrorCode (ev.name));
 			}
 
-			return ed;
+			current_source_file.add_node (ed);
+			if (!existing) {
+				ns.add_error_domain (ed);
+			}
+		} else {
+			en.is_flags = is_flags;
+			current_source_file.add_node (en);
+			if (!existing) {
+				ns.add_enum (en);
+			}
 		}
-
-		return en;
 	}
 	
 	private void parse_object (IdlNodeInterface node, Namespace ns, IdlModule module) {

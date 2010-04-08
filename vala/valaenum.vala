@@ -99,6 +99,11 @@ public class Vala.Enum : TypeSymbol {
 		return values;
 	}
 
+	// used by vapigen
+	public void remove_all_values () {
+		values.clear ();
+	}
+
 	/**
 	 * Returns a copy of the list of methods.
 	 *
