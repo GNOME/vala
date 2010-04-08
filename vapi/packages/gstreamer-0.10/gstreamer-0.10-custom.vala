@@ -62,10 +62,8 @@ namespace Gst {
 		public static GLib.Quark type_to_quark (Gst.EventType type);
 	}
 
-#if 0
-	// FIXME: This can't be parsed by vapigen, see bug #614543
 	public enum EventType {
-		;
+		SOME_RANDOM_VALUE_FOR_VAPIGEN;
 		[CCode (cname = "gst_event_type_get_flags")]
 		public Gst.EventTypeFlags get_flags ();
 		[CCode (cname = "gst_event_type_to_quark")]
@@ -73,14 +71,11 @@ namespace Gst {
 		[CCode (cname = "gst_event_type_get_name")]
 		public unowned string get_name ();
 	}
-#endif
 
-#if 0
-	// FIXME: This can't be parsed by vapigen
 	public enum Format {
-		;
+		SOME_RANDOM_VALUE_FOR_VAPIGEN;
 		[CCode (cname = "gst_format_get_details")]
-		public unowned FormatDefination get_details ();
+		public unowned FormatDefinition get_details ();
 		[CCode (cname = "gst_format_to_quark")]
 		public GLib.Quark to_quark ();
 		[CCode (cname = "gst_format_get_name")]
@@ -96,7 +91,6 @@ namespace Gst {
 		[CCode (cname = "GST_FORMAT_PERCENT_SCALE")]
 		public const int64 PERCENT_SCALE;
 	}
-#endif
 
 	public interface ImplementsInterface : Gst.Element {
 		public unowned Gst.Element? cast (GLib.Type type);
@@ -288,16 +282,14 @@ namespace Gst {
 		public Structure.id_empty (GLib.Quark quark);
 	}
 
-#if 0
-	// FIXME: vapigen can't extend enums, see EventType
 	public enum State {
-		;
+		SOME_RANDOM_VALUE_FOR_VAPIGEN;
 		[CCode (cname = "GST_STATE_GET_NEXT")]
 		public State get_next (State pending);
 	}
 
 	public enum StateChange {
-		;
+		SOME_RANDOM_VALUE_FOR_VAPIGEN;
 		[CCode (cname = "GST_STATE_TRANSITION")]
 		public static StateChange transition (State cur, State next);
 		[CCode (cname = "GST_STATE_TRANSITION_CURRENT")]
@@ -305,7 +297,6 @@ namespace Gst {
 		[CCode (cname = "GST_STATE_TRANSITION_NEXT")]
 		public static State transition_next ();
 	}
-#endif
 
 	[Compact]
 	public class DebugCategory {

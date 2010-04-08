@@ -1809,6 +1809,9 @@ namespace Gst {
 		CUSTOM_DOWNSTREAM_OOB,
 		CUSTOM_BOTH,
 		CUSTOM_BOTH_OOB;
+		public Gst.EventTypeFlags get_flags ();
+		public GLib.Quark to_quark ();
+		public unowned string get_name ();
 		[CCode (cname = "gst_event_type_get_name")]
 		public unowned string to_string ();
 	}
@@ -1842,8 +1845,13 @@ namespace Gst {
 		TIME,
 		BUFFERS,
 		PERCENT;
+		public Gst.FormatDefinition get_details ();
+		public GLib.Quark to_quark ();
+		public unowned string get_name ();
 		[CCode (cname = "gst_format_get_name")]
 		public unowned string to_string ();
+		public const int64 PERCENT_MAX;
+		public const int64 PERCENT_SCALE;
 	}
 	[CCode (cprefix = "GST_INDEX_", cheader_filename = "gst/gst.h")]
 	public enum IndexCertainty {
@@ -2098,6 +2106,8 @@ namespace Gst {
 		READY,
 		PAUSED,
 		PLAYING;
+		[CCode (cname = "GST_STATE_GET_NEXT")]
+		public Gst.State get_next (Gst.State pending);
 		[CCode (cname = "gst_element_state_get_name")]
 		public unowned string to_string ();
 	}
@@ -2108,7 +2118,13 @@ namespace Gst {
 		PAUSED_TO_PLAYING,
 		PLAYING_TO_PAUSED,
 		PAUSED_TO_READY,
-		READY_TO_NULL
+		READY_TO_NULL;
+		[CCode (cname = "GST_STATE_TRANSITION")]
+		public static Gst.StateChange transition (Gst.State cur, Gst.State next);
+		[CCode (cname = "GST_STATE_TRANSITION_CURRENT")]
+		public static Gst.State transition_current ();
+		[CCode (cname = "GST_STATE_TRANSITION_NEXT")]
+		public static Gst.State transition_next ();
 	}
 	[CCode (cprefix = "GST_STATE_CHANGE_", cheader_filename = "gst/gst.h")]
 	public enum StateChangeReturn {
