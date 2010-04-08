@@ -6,6 +6,17 @@ enum Maman.Foo {
 	VAL5 = 5
 }
 
+enum Maman.Fooish {
+	VAL1,
+	VAL2;
+
+	public int something () {
+		return (int) this;
+	}
+
+	public const int FOO = 2;
+}
+
 class Maman.Bar : Object {
 	public void run () {
 		stdout.printf (" %d", Foo.VAL2);
@@ -21,6 +32,12 @@ class Maman.Bar : Object {
 		Foo foo = 0;
 	}
 
+	static void test_enum_methods_constants () {
+		Fooish x = Fooish.VAL1;
+		stdout.printf ("%d", x.something ());
+		stdout.printf ("%d", Fooish.FOO);
+	}
+
 	public static int main () {
 		stdout.printf ("Enum Test: 1");
 		
@@ -30,6 +47,7 @@ class Maman.Bar : Object {
 		stdout.printf (" 6\n");
 
 		test_enums_0_conversion ();
+		test_enum_methods_constants ();
 
 		return 0;
 	}
