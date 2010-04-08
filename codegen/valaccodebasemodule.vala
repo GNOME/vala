@@ -1701,6 +1701,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	void capture_parameter (FormalParameter param, CCodeStruct data, CCodeBlock cblock, int block_id, CCodeBlock free_block) {
+		generate_type_declaration (param.parameter_type, source_declarations);
+
 		var param_type = param.parameter_type.copy ();
 		param_type.value_owned = true;
 		data.add_field (param_type.get_cname (), get_variable_cname (param.name));
@@ -1795,6 +1797,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			}
 			foreach (var local in local_vars) {
 				if (local.captured) {
+					generate_type_declaration (local.variable_type, source_declarations);
+
 					data.add_field (local.variable_type.get_cname (), get_variable_cname (local.name) + local.variable_type.get_cdeclarator_suffix ());
 
 					if (local.variable_type is ArrayType) {
@@ -1828,10 +1832,6 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 					}
 				}
 			}
-
-			var typedef = new CCodeTypeDefinition ("struct _" + struct_name, new CCodeVariableDeclarator (struct_name));
-			source_declarations.add_type_declaration (typedef);
-			source_declarations.add_type_definition (data);
 
 			var data_alloc = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_new0"));
 			data_alloc.add_argument (new CCodeIdentifier (struct_name));
@@ -1899,6 +1899,10 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				temp_vars.clear ();
 				cblock.add_statement (cfrag);
 			}
+
+			var typedef = new CCodeTypeDefinition ("struct _" + struct_name, new CCodeVariableDeclarator (struct_name));
+			source_declarations.add_type_declaration (typedef);
+			source_declarations.add_type_definition (data);
 
 			var data_free = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_free"));
 			data_free.add_argument (new CCodeIdentifier (struct_name));
