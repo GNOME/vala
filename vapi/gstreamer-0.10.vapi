@@ -716,7 +716,7 @@ namespace Gst {
 		public Message.warning (Gst.Object src, GLib.Error error, string? debug);
 	}
 	[CCode (ref_function = "gst_mini_object_ref", unref_function = "gst_mini_object_unref", cheader_filename = "gst/gst.h")]
-	public class MiniObject {
+	public abstract class MiniObject {
 		public Gst.MiniObjectFlags flags;
 		[CCode (has_construct_function = false)]
 		public MiniObject (GLib.Type type);
@@ -736,20 +736,29 @@ namespace Gst {
 		public void unref ();
 	}
 	[CCode (ref_function = "gst_object_ref", unref_function = "gst_object_unref", cheader_filename = "gst/gst.h")]
-	public class Object : GLib.Object {
-		public uint32 flags;
+	public abstract class Object : GLib.Object {
+		public Gst.ObjectFlags flags;
 		public weak GLib.Mutex @lock;
 		public weak string name_prefix;
 		public weak Gst.Object parent;
-		public int refcount;
-		public static bool check_uniqueness (GLib.List list, string name);
-		public static void default_deep_notify (GLib.Object object, Gst.Object orig, GLib.ParamSpec pspec, string excluded_props);
-		public void default_error (GLib.Error error, string debug);
+		public static bool check_uniqueness (GLib.List<Gst.Object> list, string name);
+		public static void default_deep_notify (GLib.Object object, Gst.Object orig, GLib.ParamSpec pspec, string? excluded_props);
+		public void default_error (GLib.Error error, string? debug);
+		[CCode (cname = "GST_OBJECT_FLAG_IS_SET")]
+		public bool flag_is_set (Gst.ObjectFlags flag);
+		[CCode (cname = "GST_OBJECT_FLAG_SET")]
+		public void flag_set (Gst.ObjectFlags flag);
+		[CCode (cname = "GST_OBJECT_FLAG_UNSET")]
+		public void flag_unset (Gst.ObjectFlags flag);
 		public string get_name ();
 		public string get_name_prefix ();
 		public Gst.Object get_parent ();
 		public string get_path_string ();
 		public bool has_ancestor (Gst.Object ancestor);
+		[CCode (cname = "GST_OBJECT_IS_DISPOSING")]
+		public bool is_disposing ();
+		[CCode (cname = "GST_OBJECT_IS_FLOATING")]
+		public bool is_floating ();
 		public Gst.Object @ref ();
 		public void ref_sink ();
 		public static void replace (ref Gst.Object? oldobj, Gst.Object? newobj);

@@ -132,12 +132,23 @@ namespace Gst {
 	}
 
 	[CCode (ref_function = "gst_object_ref", unref_function = "gst_object_unref", ref_sink_function = "gst_object_ref_sink")]
-	public class Object {
+	public abstract class Object {
 		public Gst.Object @ref ();
 		public void unref ();
 		public void sink ();
 		public void ref_sink ();
 		public static void replace (ref Gst.Object? oldobj, Gst.Object? newobj);
+
+		[CCode (cname = "GST_OBJECT_FLAG_IS_SET")]
+		public bool flag_is_set (Gst.ObjectFlags flag);
+		[CCode (cname = "GST_OBJECT_FLAG_SET")]
+		public void flag_set (Gst.ObjectFlags flag);
+		[CCode (cname = "GST_OBJECT_FLAG_UNSET")]
+		public void flag_unset (Gst.ObjectFlags flag);
+		[CCode (cname = "GST_OBJECT_IS_FLOATING")]
+		public bool is_floating ();
+		[CCode (cname = "GST_OBJECT_IS_DISPOSING")]
+		public bool is_disposing ();
 	}
 
 	public class Bin {
@@ -245,7 +256,7 @@ namespace Gst {
 		public static void replace (ref Caps? oldobj, Caps? newobj);
 	}
 
-	public class MiniObject {
+	public abstract class MiniObject {
 		[ReturnsModifiedPointer]
 		public void make_writable ();
 
