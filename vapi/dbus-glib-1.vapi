@@ -286,6 +286,10 @@ namespace DBus {
 	public class ProxyCall {
 	}
 
+	[CCode (cname = "DBusGMethodInvocation")]
+	public class MethodInvocation {
+	}
+
 	[Flags]
 	[CCode (cname = "uint")]
 	public enum NameFlag {
