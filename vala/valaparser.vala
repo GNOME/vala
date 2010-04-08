@@ -2943,6 +2943,8 @@ public class Vala.Parser : CodeVisitor {
 				var member_sym = parse_declaration ();
 				if (member_sym is Method) {
 					en.add_method ((Method) member_sym);
+				} else if (member_sym is Constant) {
+					en.add_constant ((Constant) member_sym);
 				} else {
 					Report.error (member_sym.source_reference, "unexpected declaration in enum");
 				}

@@ -38,6 +38,7 @@ public class Vala.Enum : TypeSymbol {
 
 	private List<EnumValue> values = new ArrayList<EnumValue> ();
 	private List<Method> methods = new ArrayList<Method> ();
+	private List<Constant> constants = new ArrayList<Constant> ();
 	private string cname;
 	private string cprefix;
 	private string lower_case_cprefix;
@@ -91,6 +92,16 @@ public class Vala.Enum : TypeSymbol {
 	}
 
 	/**
+	 * Adds the specified constant as a member to this enum.
+	 *
+	 * @param c a constant
+	 */
+	public void add_constant (Constant c) {
+		constants.add (c);
+		scope.add (c.name, c);
+	}
+
+	/**
 	 * Returns a copy of the list of enum values.
 	 *
 	 * @return list of enum values
@@ -108,6 +119,15 @@ public class Vala.Enum : TypeSymbol {
 		return methods;
 	}
 
+	/**
+	 * Returns a copy of the list of constants.
+	 *
+	 * @return list of constants
+	 */
+	public List<Constant> get_constants () {
+		return constants;
+	}
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_enum (this);
 	}
@@ -119,6 +139,10 @@ public class Vala.Enum : TypeSymbol {
 
 		foreach (Method m in methods) {
 			m.accept (visitor);
+		}
+
+		foreach (Constant c in constants) {
+			c.accept (visitor);
 		}
 	}
 
@@ -310,6 +334,10 @@ public class Vala.Enum : TypeSymbol {
 
 		foreach (Method m in methods) {
 			m.check (analyzer);
+		}
+
+		foreach (Constant c in constants) {
+			c.check (analyzer);
 		}
 
 		analyzer.current_source_file = old_source_file;
