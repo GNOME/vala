@@ -32,7 +32,7 @@ namespace Gst {
 		public weak Gst.Clock provided_clock;
 		public bool state_dirty;
 		[CCode (type = "GstElement*", has_construct_function = false)]
-		public Bin (string name);
+		public Bin (string? name);
 		public bool add (owned Gst.Element element);
 		[NoWrapper]
 		public virtual bool add_element (Gst.Element element);
@@ -945,7 +945,7 @@ namespace Gst {
 		public weak Gst.Clock fixed_clock;
 		public Gst.ClockTime stream_time;
 		[CCode (type = "GstElement*", has_construct_function = false)]
-		public Pipeline (string name);
+		public Pipeline (string? name);
 		public void auto_clock ();
 		public bool get_auto_flush_bus ();
 		public Gst.Bus get_bus ();
