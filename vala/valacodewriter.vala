@@ -526,7 +526,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		}
 
 		if (!first) {
-			if (en.get_methods ().size > 0) {
+			if (en.get_methods ().size > 0 || en.get_constants ().size > 0) {
 				write_string (";");
 			}
 			write_newline ();
@@ -535,6 +535,9 @@ public class Vala.CodeWriter : CodeVisitor {
 		current_scope = en.scope;
 		foreach (Method m in en.get_methods ()) {
 			m.accept (this);
+		}
+		foreach (Constant c in en.get_constants ()) {
+			c.accept (this);
 		}
 		current_scope = current_scope.parent_scope;
 
