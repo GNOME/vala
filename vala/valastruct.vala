@@ -1,6 +1,6 @@
 /* valastruct.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -739,12 +739,9 @@ public class Vala.Struct : TypeSymbol {
 
 	bool is_recursive_value_type (DataType type) {
 		var struct_type = type as StructValueType;
-		if (struct_type != null) {
+		if (struct_type != null && !struct_type.nullable) {
 			var st = (Struct) struct_type.type_symbol;
 			if (st == this) {
-				if (type.nullable) {
-					return false;
-				}
 				return true;
 			}
 			foreach (Field f in st.fields) {
