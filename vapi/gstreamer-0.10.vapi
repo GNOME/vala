@@ -44,12 +44,12 @@ namespace Gst {
 		public Gst.Element? get_by_name_recurse_up (string name);
 		[NoWrapper]
 		public virtual void handle_message (Gst.Message message);
-		public Gst.Iterator iterate_all_by_interface (GLib.Type iface);
-		public Gst.Iterator iterate_elements ();
-		public Gst.Iterator iterate_recurse ();
-		public Gst.Iterator iterate_sinks ();
-		public Gst.Iterator iterate_sorted ();
-		public Gst.Iterator iterate_sources ();
+		public Gst.Iterator<Gst.Element> iterate_all_by_interface (GLib.Type iface);
+		public Gst.Iterator<Gst.Element> iterate_elements ();
+		public Gst.Iterator<Gst.Element> iterate_recurse ();
+		public Gst.Iterator<Gst.Element> iterate_sinks ();
+		public Gst.Iterator<Gst.Element> iterate_sorted ();
+		public Gst.Iterator<Gst.Element> iterate_sources ();
 		public bool recalculate_latency ();
 		public bool remove (Gst.Element element);
 		[NoWrapper]
@@ -391,8 +391,8 @@ namespace Gst {
 		public bool is_indexable ();
 		public bool is_locked_state ();
 		public Gst.Iterator<Gst.Pad> iterate_pads ();
-		public Gst.Iterator iterate_sink_pads ();
-		public Gst.Iterator iterate_src_pads ();
+		public Gst.Iterator<Gst.Pad> iterate_sink_pads ();
+		public Gst.Iterator<Gst.Pad> iterate_src_pads ();
 		public bool link (Gst.Element dest);
 		public bool link_filtered (Gst.Element dest, Gst.Caps filter);
 		public bool link_many (Gst.Element element_2, ...);
@@ -855,8 +855,8 @@ namespace Gst {
 		public bool is_blocked ();
 		public bool is_blocking ();
 		public bool is_linked ();
-		public unowned Gst.Iterator iterate_internal_links ();
-		public unowned Gst.Iterator iterate_internal_links_default ();
+		public Gst.Iterator<Gst.Pad> iterate_internal_links ();
+		public Gst.Iterator<Gst.Pad> iterate_internal_links_default ();
 		public Gst.PadLinkReturn link (Gst.Pad sinkpad);
 		public void load_and_link (Gst.Object parent);
 		public bool pause_task ();
@@ -1110,7 +1110,7 @@ namespace Gst {
 		public void set_uri (string uri);
 		public static Gst.QueryType type_get_by_nick (string nick);
 		public static unowned Gst.QueryTypeDefinition type_get_details (Gst.QueryType type);
-		public static unowned Gst.Iterator type_iterate_definitions ();
+		public static Gst.Iterator<Gst.QueryTypeDefinition> type_iterate_definitions ();
 		public static Gst.QueryType type_register (string nick, string description);
 		public static GLib.Quark type_to_quark (Gst.QueryType query);
 		public static bool types_contains (Gst.QueryType types, Gst.QueryType type);
@@ -2611,7 +2611,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static Gst.FormatDefinition format_get_details (Gst.Format format);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static unowned Gst.Iterator format_iterate_definitions ();
+	public static Gst.Iterator<Gst.FormatDefinition> format_iterate_definitions ();
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static Gst.Format format_register (string nick, string description);
 	[CCode (cheader_filename = "gst/gst.h")]
