@@ -313,7 +313,16 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 						}
 
 						if (field.array_length_type != null) {
-							length_expr = new CCodeCastExpression (length_expr, "gint");
+							// cast if field does not use int for array length
+							var parent_expr = array_expr.parent_node as Expression;
+							if (array_expr.lvalue) {
+								// don't cast if array is used as lvalue
+							} else if (parent_expr != null && parent_expr.symbol_reference is ArrayLengthField &&
+								   parent_expr.lvalue) {
+								// don't cast if array length is used as lvalue
+							} else {
+								length_expr = new CCodeCastExpression (length_expr, "gint");
+							}
 						}
 					} else {
 						length_expr = new CCodeIdentifier (get_array_length_cname (field.get_cname (), dim));
