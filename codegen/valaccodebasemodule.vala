@@ -315,8 +315,6 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		float_type = new FloatingType ((Struct) root_symbol.scope.lookup ("float"));
 		double_type = new FloatingType ((Struct) root_symbol.scope.lookup ("double"));
 		string_type = new ObjectType ((Class) root_symbol.scope.lookup ("string"));
-		regex_type = new ObjectType ((Class) root_symbol.scope.lookup ("GLib").scope.lookup ("Regex"));
-
 		var unichar_struct = (Struct) root_symbol.scope.lookup ("unichar");
 		if (unichar_struct != null) {
 			unichar_type = new IntegerType (unichar_struct);
@@ -343,6 +341,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			mutex_type = (Struct) glib_ns.scope.lookup ("StaticRecMutex");
 
 			type_module_type = (TypeSymbol) glib_ns.scope.lookup ("TypeModule");
+
+			regex_type = new ObjectType ((Class) root_symbol.scope.lookup ("GLib").scope.lookup ("Regex"));
 
 			if (context.module_init_method != null) {
 				foreach (FormalParameter parameter in context.module_init_method.get_parameters ()) {

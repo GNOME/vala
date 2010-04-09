@@ -177,8 +177,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		bool_type = new BooleanType ((Struct) root_symbol.scope.lookup ("bool"));
 		string_type = new ObjectType ((Class) root_symbol.scope.lookup ("string"));
-		regex_type = new ObjectType ((Class) root_symbol.scope.lookup ("GLib").scope.lookup ("Regex"));
-
 		short_type = new IntegerType ((Struct) root_symbol.scope.lookup ("short"));
 		ushort_type = new IntegerType ((Struct) root_symbol.scope.lookup ("ushort"));
 		int_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int"));
@@ -218,6 +216,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			gvaluearray_type = new ObjectType ((Class) glib_ns.scope.lookup ("ValueArray"));
 
 			gerror_type = (Class) glib_ns.scope.lookup ("Error");
+			regex_type = new ObjectType ((Class) root_symbol.scope.lookup ("GLib").scope.lookup ("Regex"));
 		} else if (context.profile == Profile.DOVA) {
 			var dova_ns = root_symbol.scope.lookup ("Dova");
 
