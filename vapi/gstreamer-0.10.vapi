@@ -390,7 +390,7 @@ namespace Gst {
 		public class void install_std_props (...);
 		public bool is_indexable ();
 		public bool is_locked_state ();
-		public Gst.Iterator iterate_pads ();
+		public Gst.Iterator<Gst.Pad> iterate_pads ();
 		public Gst.Iterator iterate_sink_pads ();
 		public Gst.Iterator iterate_src_pads ();
 		public bool link (Gst.Element dest);
@@ -604,7 +604,7 @@ namespace Gst {
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public class Iterator {
+	public class Iterator<T> {
 		public uint32 cookie;
 		public weak GLib.Mutex @lock;
 		public void* master_cookie;
@@ -612,16 +612,16 @@ namespace Gst {
 		public GLib.Type type;
 		[CCode (has_construct_function = false)]
 		public Iterator (uint size, GLib.Type type, GLib.Mutex @lock, ref uint32 master_cookie, Gst.IteratorNextFunction next, Gst.IteratorItemFunction item, Gst.IteratorResyncFunction resync, Gst.IteratorFreeFunction free);
-		public void* find_custom (GLib.CompareFunc func);
+		public T find_custom (GLib.CompareFunc func, T user_data);
 		public Gst.IteratorResult fold ([CCode (delegate_target_pos = 2.1)] Gst.IteratorFoldFunction func, Gst.Value? ret);
 		public Gst.IteratorResult @foreach (GLib.Func func);
 		[CCode (has_construct_function = false)]
-		public Iterator.list (GLib.Type type, GLib.Mutex @lock, ref uint32 master_cookie, GLib.List list, void* owner, Gst.IteratorItemFunction item, Gst.IteratorDisposeFunction free);
-		public Gst.IteratorResult next (out void* elem);
+		public Iterator.list (GLib.Type type, GLib.Mutex @lock, ref uint32 master_cookie, GLib.List<T> list, void* owner, Gst.IteratorItemFunction item, Gst.IteratorDisposeFunction free);
+		public Gst.IteratorResult next (out T elem);
 		public void push (Gst.Iterator other);
 		public void resync ();
 		[CCode (has_construct_function = false)]
-		public Iterator.single (GLib.Type type, void* object, Gst.CopyFunction copy, GLib.FreeFunc free);
+		public Iterator.single (GLib.Type type, T object, Gst.CopyFunction copy, GLib.FreeFunc free);
 	}
 	[CCode (ref_function = "gst_message_ref", unref_function = "gst_message_unref", cheader_filename = "gst/gst.h")]
 	public class Message : Gst.MiniObject {
