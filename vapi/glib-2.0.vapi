@@ -72,7 +72,7 @@ public struct char {
 }
 
 [SimpleType]
-[CCode (cname = "guchar", cheader_filename = "glib.h", type_id = "G_TYPE_UCHAR", marshaller_type_name = "UCHAR", get_value_function = "g_value_get_uchar", set_value_function = "g_value_set_uchar", default_value = "\'\\0\'")]
+[CCode (cname = "guchar", cheader_filename = "glib.h", type_id = "G_TYPE_UCHAR", marshaller_type_name = "UCHAR", get_value_function = "g_value_get_uchar", set_value_function = "g_value_set_uchar", default_value = "\'\\0\'", type_signature = "y")]
 [IntegerType (rank = 3, min = 0, max = 255)]
 public struct uchar {
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
