@@ -277,18 +277,18 @@ namespace Alsa {
     [CCode (cprefix = "SND_MIXER_SCHN_", cname = "snd_mixer_selem_channel_id_t")]
     public enum SimpleChannelId
     {
-        SND_MIXER_SCHN_UNKNOWN,
-        SND_MIXER_SCHN_MONO,
-        SND_MIXER_SCHN_FRONT_LEFT,
-        SND_MIXER_SCHN_FRONT_RIGHT,
-        SND_MIXER_SCHN_REAR_LEFT,
-        SND_MIXER_SCHN_REAR_RIGHT,
-        SND_MIXER_SCHN_FRONT_CENTER,
-        SND_MIXER_SCHN_WOOFER,
-        SND_MIXER_SCHN_SIDE_LEFT,
-        SND_MIXER_SCHN_SIDE_RIGHT,
-        SND_MIXER_SCHN_REAR_CENTER,
-        SND_MIXER_SCHN_LAST,
+        UNKNOWN,
+        MONO,
+        FRONT_LEFT,
+        FRONT_RIGHT,
+        REAR_LEFT,
+        REAR_RIGHT,
+        FRONT_CENTER,
+        WOOFER,
+        SIDE_LEFT,
+        SIDE_RIGHT,
+        REAR_CENTER,
+        LAST
     }
 
     [Compact]
