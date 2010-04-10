@@ -28,22 +28,52 @@ namespace Sqlite {
 	public class Database {
 		public int busy_timeout (int ms);
 		public int changes ();
-		public int exec (string sql, Callback? sqlite3_callback = null, out string errmsg = null);
+		[CCode (cname = "sqlite3_exec")]
+		private int _exec (string sql, Callback? sqlite3_callback = null, out unowned string errmsg = null);
+		[CCode (cname = "_vala_sqlite3_exec")]
+		public int exec (string sql, Callback? sqlite3_callback = null, out string errmsg = null) {
+			unowned string sqlite_errmsg;
+			var ec = this._exec (sql, sqlite3_callback, out sqlite_errmsg);
+			if (sqlite_errmsg != null) {
+				errmsg = sqlite_errmsg;
+				Sqlite.Memory.free ((void*) sqlite_errmsg);
+			}
+			return ec;
+		}
 		public int extended_result_codes (int onoff);
 		public int get_autocommit ();
 		public void interrupt ();
 		public int64 last_insert_rowid ();
 		public int total_changes ();
-
 		public int complete (string sql);
-		public int get_table (string sql, [CCode (array_length = false)] out unowned string[] resultp, out int nrow, out int ncolumn, out string errmsg);
-		public static void free_table ([CCode (array_length = false)] string[] result);
+		[CCode (cname = "sqlite3_get_table")]
+		private int _get_table (string sql, [CCode (array_length = false)] out unowned string[] resultp, out int nrow, out int ncolumn, out unowned string? errmsg = null);
+		private static void free_table ([CCode (array_length = false)] string[] result);
+		[CCode (cname = "_vala_sqlite3_get_table")]
+		public int get_table (string sql, out string[] resultp, out int nrow, out int ncolumn, out string? errmsg = null) {
+			unowned string sqlite_errmsg;
+			unowned string[] sqlite_resultp;
+
+			var ec = this._get_table (sql, out sqlite_resultp, out nrow, out ncolumn, out sqlite_errmsg);
+
+			resultp = new string[(nrow + 1) * ncolumn];
+			for (var entry = 0 ; entry < resultp.length ; entry++ ) {
+				resultp[entry] = sqlite_resultp[entry];
+			}
+			Sqlite.Database.free_table (sqlite_resultp);
+
+			if (sqlite_errmsg != null) {
+				errmsg = sqlite_errmsg;
+				Sqlite.Memory.free ((void*) sqlite_errmsg);
+			}
+			return ec;
+		}
 		public static int open (string filename, out Database db);
 		public static int open_v2 (string filename, out Database db, int flags = OPEN_READWRITE | OPEN_CREATE, string? zVfs = null);
 		public int errcode ();
 		public unowned string errmsg ();
-		public int prepare (string sql, int n_bytes, out Statement stmt, out string tail = null);
-		public int prepare_v2 (string sql, int n_bytes, out Statement stmt, out string tail = null);
+		public int prepare (string sql, int n_bytes, out Statement stmt, out unowned string tail = null);
+		public int prepare_v2 (string sql, int n_bytes, out Statement stmt, out unowned string tail = null);
 		public void trace (TraceCallback? xtrace);
 		public void profile (ProfileCallback? xprofile);
 		public void progress_handler (int n_opcodes, Sqlite.ProgressCallback? progress_handler);
@@ -232,6 +262,15 @@ namespace Sqlite {
 		public unowned Value column_value (int col);
 		public unowned string column_name (int index);
 		public unowned string sql ();
+	}
+
+	namespace Memory {
+		[CCode (cname = "sqlite3_malloc")]
+		public static void* malloc (int n_bytes);
+		[CCode (cname = "sqlite3_realloc")]
+		public static void* realloc (void* mem, int n_bytes);
+		[CCode (cname = "sqlite3_free")]
+		public static void free (void* mem);
 	}
 
 	[Compact]
