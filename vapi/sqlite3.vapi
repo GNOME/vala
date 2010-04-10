@@ -49,6 +49,8 @@ namespace Sqlite {
 		public void progress_handler (int n_opcodes, Sqlite.ProgressCallback? progress_handler);
 		public void commit_hook (CommitCallback? commit_hook);
 		public void rollback_hook (RollbackCallback? rollback_hook);
+		[CCode (simple_generics = true)]
+		public int create_function (string zFunctionName, int nArg, int eTextRep, void * user_data, UserFuncCallback? xFunc, UserFuncCallback? xStep, UserFuncFinishCallback? xFinal);
 	}
 
 	[CCode (instance_pos = 0)]
@@ -58,6 +60,10 @@ namespace Sqlite {
 	public delegate int ProgressCallback ();
 	public delegate int CommitCallback ();
 	public delegate void RollbackCallback ();
+	[CCode (has_target = false)]
+	public delegate void UserFuncCallback (Sqlite.Context context, [CCode (array_length_pos = 1.1)] Sqlite.Value[] values);
+	[CCode (has_target = false)]
+	public delegate void UserFuncFinishCallback (Sqlite.Context context);
 
 	/* Dynamically Typed Value Object */
 	[Compact]
@@ -162,6 +168,36 @@ namespace Sqlite {
 	public const int MUTEX_FAST;
 	[CCode (cname = "SQLITE_MUTEX_RECURSIVE")]
 	public const int MUTEX_RECURSIVE;
+	[CCode (cname = "SQLITE_UTF8")]
+	public const int UTF8;
+	[CCode (cname = "SQLITE_UTF16LE")]
+	public const int UTF16LE;
+	[CCode (cname = "SQLITE_UTF16BE")]
+	public const int UTF16BE;
+	[CCode (cname = "SQLITE_UTF16")]
+	public const int UTF16;
+	[CCode (cname = "SQLITE_ANY")]
+	public const int ANY;
+	[CCode (cname = "SQLITE_UTF16_ALIGNED")]
+	public const int UTF16_ALIGNED;
+
+	[CCode (cname = "int", cprefix = "SQLITE_STATUS_")]
+	public enum Status {
+		MEMORY_USED,
+		PAGECACHE_USED,
+		PAGECACHE_OVERFLOW,
+		SCRATCH_USED,
+		SCRATCH_OVERFLOW,
+		MALLOC_SIZE,
+		PARSER_STACK,
+		PAGECACHE_SIZE,
+		SCRATCH_SIZE,
+
+		[CCode (cname = "SQLITE_STMTSTATUS_FULLSCAN_STEP")]
+		STMT_FULLSCAN_STEP,
+		[CCode (cname = "SQLITE_STMTSTATUS_SORT")]
+		STMT_SORT
+	}
 
 	/* SQL Statement Object */
 	[Compact]
@@ -175,6 +211,8 @@ namespace Sqlite {
 		public int data_count ();
 		public unowned Database db_handle ();
 		public int reset ();
+		[CCode (cname = "sqlite3_stmt_status")]
+		public int status (Sqlite.Status op, int resetFlg);
 		public int step ();
 		public int bind_blob (int index, void* value, int n, GLib.DestroyNotify destroy_notify);
 		public int bind_double (int index, double value);
@@ -204,6 +242,33 @@ namespace Sqlite {
 		public void enter ();
 		public int @try ();
 		public void leave ();
+	}
+
+	[Compact, CCode (cname = "sqlite3_context", cprefix = "sqlite3_")]
+	public class Context {
+		public void result_blob (uint8[] data, GLib.DestroyNotify? destroy_notify = GLib.g_free);
+		public void result_double (double value);
+		public void result_error (string value, int error_code);
+		public void result_error_toobig ();
+		public void result_error_nomem ();
+		public void result_error_code (int error_code);
+		public void result_int (int value);
+		public void result_int64 (int64 value);
+		public void result_null ();
+		public void result_text (string value, int length = -1, GLib.DestroyNotify? destroy_notify = GLib.g_free);
+		public void result_value (Sqlite.Value value);
+		public void result_zeroblob (int n);
+
+		[CCode (simple_generics = true)]
+		public unowned T user_data<T> ();
+		[CCode (simple_generics = true)]
+		public void set_auxdata<T> (int N, owned T data);
+		[CCode (simple_generics = true)]
+		public unowned T get_auxdata<T> (int N);
+		[CCode (cname = "sqlite3_context_db_handle")]
+		public unowned Database db_handle ();
+		[CCode (cname = "sqlite3_aggregate_context")]
+		public void * aggregate (int n_bytes);
 	}
 }
 
