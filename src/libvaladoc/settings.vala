@@ -25,6 +25,7 @@ public class Valadoc.Settings : Object {
 	public string pkg_name = null;
 	public string pkg_version;
 	public string wiki_directory;
+	public string[] pluginargs;
 
 	public bool _private = false;
 	public bool _protected = false;

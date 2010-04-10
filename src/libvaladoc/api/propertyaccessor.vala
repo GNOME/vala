@@ -33,6 +33,10 @@ public class Valadoc.Api.PropertyAccessor : Symbol {
 
 	public override NodeType node_type { get { return NodeType.PROPERTY_ACCESSOR; } }
 
+	public string? get_cname () {
+		return vpropacc.get_cname ();
+	}
+
 	public override void accept (Visitor visitor) {
 	}
 

@@ -33,6 +33,10 @@ public class Valadoc.Api.Method : Member {
 		return ((Vala.Method) symbol).get_cname ();
 	}
 
+	public string? get_finish_function_cname () {
+		return ((Vala.Method) symbol).get_finish_cname ();
+	}
+
 	public Method? base_method { private set; get; }
 
 	public TypeReference? return_type { private set; get; }

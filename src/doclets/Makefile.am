@@ -7,6 +7,7 @@ SUBDIRS = htm \
           xml \
           devhelp \
           valadoc.org \
+          gtkdoc \
           $(NULL)
 
 

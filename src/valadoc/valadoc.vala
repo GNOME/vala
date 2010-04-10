@@ -31,6 +31,8 @@ public class ValaDoc : Object {
 	private static string wikidirectory = null;
 	private static string pkg_version = null;
 	private static string pluginpath = null;
+	[CCode (array_length = false, array_null_terminated = true)]
+	private static string[] pluginargs;
 	private static string directory = null;
 	private static string pkg_name = null;
 
@@ -80,6 +82,7 @@ public class ValaDoc : Object {
 
 		{ "wiki", 0, 0, OptionArg.FILENAME, ref wikidirectory, "Wiki directory", "DIRECTORY" },
 		{ "deps", 0, 0, OptionArg.NONE, ref with_deps, "Adds packages to the documentation", null },
+		{ "doclet-arg", 'X', 0, OptionArg.STRING_ARRAY, ref pluginargs, "Pass arguments to the doclet", "ARG" },
 		{ "doclet", 0, 0, OptionArg.STRING, ref pluginpath, "plugin", "Name of an included doclet or path to custom doclet" },
 
 		{ "no-protected", 0, OptionFlags.REVERSE, OptionArg.NONE, ref _protected, "Removes protected elements from documentation", null },
@@ -143,6 +146,7 @@ public class ValaDoc : Object {
 		settings.path = realpath (this.directory);
 		settings.verbose = this.verbose;
 		settings.wiki_directory = this.wikidirectory;
+		settings.pluginargs = this.pluginargs;
 
 		settings.enable_checking = enable_checking;
 		settings.deprecated = deprecated;

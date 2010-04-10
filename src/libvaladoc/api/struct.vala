@@ -34,6 +34,14 @@ public class Valadoc.Api.Struct : TypeSymbol {
 		return ((Vala.Struct) symbol).get_cname();
 	}
 
+	public string? get_dup_function_cname () {
+		return ((Vala.Struct) symbol).get_dup_function ();
+	}
+
+	public string? get_free_function_cname () {
+		return ((Vala.Struct) symbol).get_free_function ();
+	}
+
 	public override NodeType node_type { get { return NodeType.STRUCT; } }
 
 	public override void accept (Visitor visitor) {

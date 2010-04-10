@@ -49,6 +49,30 @@ public class Valadoc.Api.Class : TypeSymbol {
 		return this.vclass.get_cname();
 	}
 
+	public string? get_ref_function_cname () {
+		return this.vclass.get_ref_function ();
+	}
+
+	public string? get_unref_function_cname () {
+		return this.vclass.get_unref_function ();
+	}
+
+	public string? get_param_spec_function_cname () {
+		return this.vclass.get_param_spec_function ();
+	}
+
+	public string? get_set_value_function_cname () {
+		return this.vclass.get_set_value_function ();
+	}
+
+	public string? get_get_value_function_cname () {
+		return this.vclass.get_get_value_function ();
+	}
+
+	public string? get_take_value_function_cname () {
+		return this.vclass.get_take_value_function ();
+	}
+
 	public Collection<TypeReference> get_implemented_interface_list () {
 		return this.interfaces;
 	}
@@ -71,6 +95,12 @@ public class Valadoc.Api.Class : TypeSymbol {
 	public bool is_abstract {
 		get {
 			return this.vclass.is_abstract;
+		}
+	}
+
+	public bool is_fundamental {
+		get {
+			return this.vclass.is_fundamental ();
 		}
 	}
 
