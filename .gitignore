@@ -16,8 +16,9 @@ autom4te.cache
 ChangeLog
 configure
 depcomp
-libtool
+INSTALL
 install-sh
+libtool
 m4
 missing
 ltmain.sh
