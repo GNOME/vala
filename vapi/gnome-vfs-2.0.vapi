@@ -127,7 +127,7 @@ namespace GnomeVFS {
 		public unowned string get_icon ();
 		public ulong get_id ();
 		public unowned GnomeVFS.Volume get_mounted_volume ();
-		public unowned GLib.List get_mounted_volumes ();
+		public GLib.List<GnomeVFS.Volume> get_mounted_volumes ();
 		public bool is_connected ();
 		public bool is_mounted ();
 		public bool is_user_visible ();
@@ -527,10 +527,10 @@ namespace GnomeVFS {
 	}
 	[CCode (type_check_function = "GNOME_IS_VFS_VOLUME_MONITOR", cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class VolumeMonitor : GLib.Object {
-		public unowned GLib.List get_connected_drives ();
+		public GLib.List<GnomeVFS.Drive> get_connected_drives ();
 		public unowned GnomeVFS.Drive get_drive_by_id (ulong id);
 		public unowned GLib.List get_mounted_volumes ();
-		public unowned GnomeVFS.Volume get_volume_by_id (ulong id);
+		public GnomeVFS.Volume get_volume_by_id (ulong id);
 		public unowned GnomeVFS.Volume get_volume_for_path (string path);
 		public unowned GnomeVFS.VolumeMonitor @ref ();
 		public void unref ();
