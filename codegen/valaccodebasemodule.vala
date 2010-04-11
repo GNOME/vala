@@ -2855,10 +2855,14 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			var ccall = new CCodeFunctionCall (delegate_target_destroy_notify);
 			ccall.add_argument (delegate_target);
 
+			var destroy_call = new CCodeCommaExpression ();
+			destroy_call.append_expression (ccall);
+			destroy_call.append_expression (new CCodeConstant ("NULL"));
+
 			var cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, delegate_target_destroy_notify, new CCodeConstant ("NULL"));
 
 			var ccomma = new CCodeCommaExpression ();
-			ccomma.append_expression (new CCodeConditionalExpression (cisnull, new CCodeConstant ("NULL"), ccall));
+			ccomma.append_expression (new CCodeConditionalExpression (cisnull, new CCodeConstant ("NULL"), destroy_call));
 			ccomma.append_expression (new CCodeAssignment (cvar, new CCodeConstant ("NULL")));
 			ccomma.append_expression (new CCodeAssignment (delegate_target, new CCodeConstant ("NULL")));
 			ccomma.append_expression (new CCodeAssignment (delegate_target_destroy_notify, new CCodeConstant ("NULL")));
