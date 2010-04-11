@@ -3804,7 +3804,7 @@ namespace GLib {
 		public uint64 get_uint64 ();
 		public int32 get_handle ();
 		public double get_double ();
-		public unowned string get_string ();
+		public unowned string get_string (out size_t length = null);
 		public string dup_string ();
 
 		public Variant.strv (string[] value);
