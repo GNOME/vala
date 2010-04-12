@@ -61,7 +61,7 @@ namespace Gst {
 	}
 
 	public enum EventType {
-		SOME_RANDOM_VALUE_FOR_VAPIGEN;
+		__DUMMY__;
 		[CCode (cname = "gst_event_type_get_flags")]
 		public Gst.EventTypeFlags get_flags ();
 		[CCode (cname = "gst_event_type_to_quark")]
@@ -71,7 +71,7 @@ namespace Gst {
 	}
 
 	public enum Format {
-		SOME_RANDOM_VALUE_FOR_VAPIGEN;
+		__DUMMY__;
 		[CCode (cname = "gst_format_get_details")]
 		public unowned FormatDefinition get_details ();
 		[CCode (cname = "gst_format_to_quark")]
@@ -312,7 +312,7 @@ namespace Gst {
 	}
 
 	public enum MessageType {
-		SOME_RANDOM_VALUE_FOR_VAPIGEN;
+		__DUMMY__;
 		public GLib.Quark to_quark ();
 		public unowned string get_name ();
 	}
@@ -357,13 +357,13 @@ namespace Gst {
 	}
 
 	public enum State {
-		SOME_RANDOM_VALUE_FOR_VAPIGEN;
+		__DUMMY__;
 		[CCode (cname = "GST_STATE_GET_NEXT")]
 		public State get_next (State pending);
 	}
 
 	public enum StateChange {
-		SOME_RANDOM_VALUE_FOR_VAPIGEN;
+		__DUMMY__;
 		[CCode (cname = "GST_STATE_TRANSITION")]
 		public static StateChange transition (State cur, State next);
 		[CCode (cname = "GST_STATE_TRANSITION_CURRENT")]

@@ -981,7 +981,11 @@ public class Vala.GIdlParser : CodeVisitor {
 		} else {
 			// ignore dummy enum values in -custom.vala files
 			// they exist for syntactical reasons
-			en.remove_all_values ();
+			var dummy = (EnumValue) en.scope.lookup ("__DUMMY__");
+			if (dummy != null) {
+				en.get_values ().remove (dummy);
+				en.scope.remove ("__DUMMY__");
+			}
 		}
 
 		en.has_type_id = (en_node.gtype_name != null && en_node.gtype_name != "");
