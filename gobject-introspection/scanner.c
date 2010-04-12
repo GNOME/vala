@@ -1582,7 +1582,7 @@ g_igenerator_start_preprocessor (GIGenerator *igenerator,
   tmp = g_file_open_tmp (NULL, &tmpname, &error);
   if (error != NULL)
     {
-      g_error (error->message);
+      g_error ("%s", error->message);
       return NULL;
     }
 
@@ -1617,7 +1617,7 @@ g_igenerator_start_preprocessor (GIGenerator *igenerator,
   f = fdopen (tmp, "r");
   if (!f)
     {
-      g_error (strerror (errno));
+      g_error ("%s", strerror (errno));
       unlink (tmpname);
       g_free (tmpname);
       return NULL;
