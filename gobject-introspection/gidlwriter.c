@@ -138,12 +138,14 @@ function_generate (GIdlWriter * writer, GIdlNodeFunction * node)
 			  "%s name=\"%s\"",
 			  tag_name, node->node.name);
 
-  if (node->node.type != G_IDL_NODE_CALLBACK)
-    g_string_append_printf (markup_s,
-			    g_markup_printf_escaped (" symbol=\"%s\"", node->symbol));
+  if (node->node.type != G_IDL_NODE_CALLBACK) {
+    gchar *tmp = g_markup_printf_escaped (" symbol=\"%s\"", node->symbol);
+    markup_s = g_string_append (markup_s, tmp);
+    g_free (tmp);
+  }
 
   if (node->deprecated)
-    g_string_append_printf (markup_s, " deprecated=\"1\"");
+    markup_s = g_string_append (markup_s, " deprecated=\"1\"");
 
   g_string_append (markup_s, ">\n");
 
@@ -388,18 +390,21 @@ enum_generate (GIdlWriter * writer, GIdlNodeEnum * node)
 			  "%s name=\"%s\"",
 			  tag_name, node->node.name);
 
-  if (node->gtype_name != NULL)
-    g_string_append_printf (markup_s,
-			    g_markup_printf_escaped (" type-name=\"%s\"", node->gtype_name));
-
-  if (node->gtype_init != NULL)
-    g_string_append_printf (markup_s,
-			    g_markup_printf_escaped (" get-type=\"%s\"", node->gtype_init));
+  if (node->gtype_name != NULL) {
+    gchar *tmp = g_markup_printf_escaped (" type-name=\"%s\"", node->gtype_name);
+    markup_s = g_string_append (markup_s, tmp);
+    g_free (tmp);
+  }
+  if (node->gtype_init != NULL) {
+    gchar *tmp = g_markup_printf_escaped (" get-type=\"%s\"", node->gtype_init);
+    markup_s = g_string_append (markup_s, tmp);
+    g_free(tmp);
+  }
 
   if (node->deprecated)
-    g_string_append_printf (markup_s, " deprecated=\"1\"");
+    markup_s = g_string_append (markup_s, " deprecated=\"1\"");
 
-  g_string_append (markup_s, ">\n");
+  markup_s = g_string_append (markup_s, ">\n");
 
   g_writer_write_indent (writer, markup_s->str);
   g_string_free (markup_s, TRUE);
