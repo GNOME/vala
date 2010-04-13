@@ -677,15 +677,19 @@ public class Vala.Class : ObjectTypeSymbol {
 		}
 	}
 
+	public string? get_default_type_id () {
+		if (is_compact) {
+			return "G_TYPE_POINTER";
+		}
+
+		return get_upper_case_cname ("TYPE_");
+	}
+
 	public override string? get_type_id () {
 		if (type_id == null) {
-			if (!is_compact) {
-				type_id = get_upper_case_cname ("TYPE_");
-			} else {
-				type_id = "G_TYPE_POINTER";
-			}
+			type_id = get_default_type_id ();
 		}
-		
+
 		return type_id;
 	}
 

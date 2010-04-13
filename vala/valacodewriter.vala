@@ -215,7 +215,7 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_string ("type_check_function = \"%s\", ".printf (cl.type_check_function ));
 		}
 
-		if (cl.is_compact && cl.get_type_id () != "G_TYPE_POINTER") {
+		if (cl.get_type_id () != cl.get_default_type_id ()) {
 			write_string ("type_id = \"%s\", ".printf (cl.get_type_id ()));
 		}
 

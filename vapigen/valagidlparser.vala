@@ -1066,6 +1066,8 @@ public class Vala.GIdlParser : CodeVisitor {
 						}
 					} else if (nv[0] == "type_check_function") {
 						cl.type_check_function = eval (nv[1]);
+					} else if (nv[0] == "type_id") {
+						cl.set_type_id (eval (nv[1]));
 					} else if (nv[0] == "abstract") {
 						if (eval (nv[1]) == "1") {
 							cl.is_abstract = true;
