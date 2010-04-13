@@ -21,7 +21,7 @@
  */
 
 
-class Vala.CCodeDeclarationSpace {
+public class Vala.CCodeDeclarationSpace {
 	public bool is_header { get; set; }
 
 	Set<string> declarations = new HashSet<string> (str_hash, str_equal);

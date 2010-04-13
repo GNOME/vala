@@ -27,7 +27,7 @@ using GLib;
 /**
  * The link between a dynamic method and generated code.
  */
-internal class Vala.DBusClientModule : DBusModule {
+public class Vala.DBusClientModule : DBusModule {
 	int dynamic_property_id;
 
 	public DBusClientModule (CCodeGenerator codegen, CCodeModule? next) {

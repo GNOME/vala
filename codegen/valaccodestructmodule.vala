@@ -24,7 +24,7 @@
 
 using GLib;
 
-internal class Vala.CCodeStructModule : CCodeBaseModule {
+public class Vala.CCodeStructModule : CCodeBaseModule {
 	public CCodeStructModule (CCodeGenerator codegen, CCodeModule? next) {
 		base (codegen, next);
 	}

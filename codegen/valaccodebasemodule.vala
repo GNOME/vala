@@ -26,7 +26,7 @@
 /**
  * Code visitor generating C Code.
  */
-internal class Vala.CCodeBaseModule : CCodeModule {
+public class Vala.CCodeBaseModule : CCodeModule {
 	public CodeContext context { get; set; }
 
 	public Symbol root_symbol;

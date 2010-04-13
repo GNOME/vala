@@ -26,7 +26,7 @@
 /**
  * The link between an assignment and generated code.
  */
-internal class Vala.CCodeDelegateModule : CCodeArrayModule {
+public class Vala.CCodeDelegateModule : CCodeArrayModule {
 	public CCodeDelegateModule (CCodeGenerator codegen, CCodeModule? next) {
 		base (codegen, next);
 	}

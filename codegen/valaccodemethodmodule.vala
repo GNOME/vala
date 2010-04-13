@@ -26,7 +26,7 @@ using GLib;
 /**
  * The link between a method and generated code.
  */
-internal class Vala.CCodeMethodModule : CCodeStructModule {
+public class Vala.CCodeMethodModule : CCodeStructModule {
 	public CCodeMethodModule (CCodeGenerator codegen, CCodeModule? next) {
 		base (codegen, next);
 	}
