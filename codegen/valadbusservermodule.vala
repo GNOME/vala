@@ -27,12 +27,12 @@ using GLib;
 /**
  * The link between a dynamic method and generated code.
  */
-internal class Vala.DBusServerModule : DBusClientModule {
+public class Vala.DBusServerModule : DBusClientModule {
 	public DBusServerModule (CCodeGenerator codegen, CCodeModule? next) {
 		base (codegen, next);
 	}
 
-	bool is_dbus_visible (CodeNode node) {
+	public static bool is_dbus_visible (CodeNode node) {
 		var dbus_attribute = node.get_attribute ("DBus");
 		if (dbus_attribute != null
 		    && dbus_attribute.has_argument ("visible")
@@ -43,7 +43,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		return true;
 	}
 
-	string dbus_result_name (Method m) {
+	public static string dbus_result_name (Method m) {
 		var dbus_attribute = m.get_attribute ("DBus");
 		if (dbus_attribute != null
 		    && dbus_attribute.has_argument ("result")) {

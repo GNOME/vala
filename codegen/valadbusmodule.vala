@@ -20,7 +20,7 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-internal class Vala.DBusModule : GAsyncModule {
+public class Vala.DBusModule : GAsyncModule {
 	struct BasicTypeInfo {
 		public weak string signature;
 		public weak string type_name;
@@ -70,7 +70,7 @@ internal class Vala.DBusModule : GAsyncModule {
 			return dbus_value;
 	}
 
-	public string? get_dbus_name (TypeSymbol symbol) {
+	public static string? get_dbus_name (TypeSymbol symbol) {
 		var dbus = symbol.get_attribute ("DBus");
 		if (dbus == null) {
 			return null;
@@ -79,7 +79,7 @@ internal class Vala.DBusModule : GAsyncModule {
 		return dbus.get_string ("name");
 	}
 
-	public string get_dbus_name_for_member (Symbol symbol) {
+	public static string get_dbus_name_for_member (Symbol symbol) {
 		var dbus = symbol.get_attribute ("DBus");
 		if (dbus != null && dbus.has_argument ("name")) {
 			return dbus.get_string ("name");

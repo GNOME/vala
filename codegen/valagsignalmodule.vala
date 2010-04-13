@@ -23,7 +23,7 @@
  */
 
 
-internal class Vala.GSignalModule : GObjectModule {
+public class Vala.GSignalModule : GObjectModule {
 	public GSignalModule (CCodeGenerator codegen, CCodeModule? next) {
 		base (codegen, next);
 	}

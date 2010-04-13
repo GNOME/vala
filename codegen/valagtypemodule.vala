@@ -23,7 +23,7 @@
  */
 
 
-internal class Vala.GTypeModule : GErrorModule {
+public class Vala.GTypeModule : GErrorModule {
 	public GTypeModule (CCodeGenerator codegen, CCodeModule? next) {
 		base (codegen, next);
 	}

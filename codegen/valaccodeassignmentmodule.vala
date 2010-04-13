@@ -27,7 +27,7 @@ using GLib;
 /**
  * The link between an assignment and generated code.
  */
-internal class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
+public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 	public CCodeAssignmentModule (CCodeGenerator codegen, CCodeModule? next) {
 		base (codegen, next);
 	}
