@@ -1,9 +1,9 @@
-.TH "valac" 1
+.TH valac 1 "13 April 2010" "vala-0.8.0" "Vala"
 .SH NAME
 valac \- compiler that translates Vala source code into C source and header files
 .SH SYNOPSIS
 .B valac
-[OPTION...] FILE...
+[\fIOPTION\fR]... [\fIFILE\fR]...
 .SH DESCRIPTION
 Vala  is  a  new  programming  language  that  aims  to  bring  modern
 programming language features to GNOME developers without imposing any
@@ -17,34 +17,60 @@ source code.
 .SH OPTIONS
 .TP
 .B \--help
-Show help options
 .TP
-.B \--vapidir=DIRECTORY...
-Look for package bindings in DIRECTORY
+.B \--girdir=\fIDIRECTORY\fR...
+Look for .gir files in \fIDIRECTORY\fR
 .TP
-.B \--pkg=PACKAGE...
-Include binding for PACKAGE
+.B \--vapidir=\fIDIRECTORY\fR...
+Look for package bindings in \fIDIRECTORY\fR
 .TP
-.B \--library=NAME                  
+.B \--pkg=\fIPACKAGE\fR...
+Include binding for \fIPACKAGE\fR
+.TP
+.B \--vapi=\fIFILE\fR
+Output VAPI file name
+.TP
+.B \--library=\fINAME\fR
 Library name
 .TP
-.B \-d, --directory=DIRECTORY       
+.B \--gir=\fINAME\fR-\fIVERSION\fR.gir
+GObject-Introspection repository file name
+.TP
+.B \-b, --basedir=\fIDIRECTORY\fR
+Base source directory
+.TP
+.B \-d, --directory=\fIDIRECTORY\fR
 Output directory
 .TP
-.B \--version                       
+.B \--version
 Display version number
 .TP
 .B \-C, --ccode
 Output C code
 .TP
-.B \-H, --header=FILE
+.B \-H, --header=\fIFILE\fR
 Output C header file
+.TP
+.B \--use-header
+Use C header file
+.TP
+.B \--includedir=\fIDIRECTORY\fR
+Directory used to include the C header file
+.TP
+.B \-h, --internal-header=\fIFILE\fR
+Output internal C header file
+.TP
+.B \--internal-vapi=\fIFILE\fR
+Output vapi with internal api
+.TP
+.B \--symbols=\fIFILE\fR
+Output symbols file
 .TP
 .B \-c, --compile
 Compile but do not link
 .TP
-.B \-o, --output=FILE
-Place output in file FILE
+.B \-o, --output=\fIFILE\fR
+Place output in file \fIFILE\fR
 .TP
 .B \-g, --debug
 Produce debug information
@@ -52,8 +78,17 @@ Produce debug information
 .B \--thread
 Enable multithreading support
 .TP
+.B \--enable-mem-profiler
+Enable GLib memory profiler
+.TP
 .B \-D, --define=SYMBOL...
 Define SYMBOL
+.TP
+.B \--main=SYMBOL...
+Use SYMBOL as entry point
+.TP
+.B \--nostdpkg
+Do not include standard packages
 .TP
 .B \--disable-assert
 Disable assertions
@@ -67,17 +102,44 @@ Enable deprecated features
 .B \--enable-experimental
 Enable experimental features
 .TP
-.B \--cc=COMMAND
-Use COMMAND as C compiler command
+.B \--disable-warnings
+Disable warnings
 .TP
-.B \-X, --Xcc=OPTION...
-Pass OPTION to the C compiler
+.B \--enable-experimental-non-null
+Enable experimental enhancements for non-null types
+.TP
+.B \--disable-dbus-transformation
+Disable transformation of D-Bus member names
+.TP
+.B \--cc=\fICOMMAND\fR
+Use \fICOMMAND\fR as C compiler command
+.TP
+.B \-X, --Xcc=\fIOPTION\fR...
+Pass \fIOPTION\fR. to the C compiler
+.TP
+.B \--dump-tree=\fIFILE\fR
+Write code tree to \fIFILE\fR
+.TP
+.B \--save-temps
+Keep temporary files
+.TP
+.B \--profile=\fIPROFILE\fR
+Use the given profile instead of the default
 .TP
 .B \-q, --quiet
 Do not print messages to the console
 .TP
-.B \--target-glib=MAJOR.MINOR
+.B \-v, --verbose
+Print additional messages to the console
+.TP
+.B \--target-glib=\fIMAJOR\fR.\fIMINOR\fR
 Target version of glib for code generation
+.TP
+.B \--enable-version-header
+Write vala build version in generated files
+.TP
+.B \--disable-version-header
+Do not write vala build version in generated files
 .SH FEATURES
 Interfaces, properties, signals, foreach, lambda expressions, type
 inference for local variables, generics, non-null types, assisted memory
@@ -85,7 +147,7 @@ management, exception handling
 .SH HOMEPAGE AND BUG REPORT
 http://www.vala-project.org/
 .SH AUTHORS
-Jurg Billeter, Raffaele Sandrini.
+Jürg Billeter, Raffaele Sandrini.
 
 Man page written to conform with Debian by Marc-Andre Lureau.
 

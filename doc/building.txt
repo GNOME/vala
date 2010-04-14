@@ -30,7 +30,7 @@ Step four:
 
 Compiling the newest Vala from the repository:
 
-svn co svn co svn+ssh://[user]@svn.gnome.org/svn/vala/trunk vala
+git clone git://git.gnome.org/vala
 cd vala
 export VALAC=/opt/vala-release/bin/vala
 ./autogen.sh --prefix=/opt/vala
