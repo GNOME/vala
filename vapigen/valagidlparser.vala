@@ -2302,6 +2302,11 @@ public class Vala.GIdlParser : CodeVisitor {
 							p.parameter_type = param_type;
 						}
 						((UnresolvedType) param_type).unresolved_symbol = new UnresolvedSymbol (null, eval (nv[1]));
+					} else if (nv[0] == "type_arguments") {
+						var type_args = eval (nv[1]).split (",");
+						foreach (string type_arg in type_args) {
+							p.parameter_type.add_type_argument (get_type_from_string (type_arg));
+						}
 					} else if (nv[0] == "namespace_name") {
 						ns_name = eval (nv[1]);
 					}
