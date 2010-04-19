@@ -609,6 +609,7 @@ namespace Xml {
 		public Ns* ns;
 		public string content;
 		public Attr* properties;
+		[CCode (cname = "nsDef")]
 		public Ns* ns_def;
 		public ushort line;
 		public ushort extra;
