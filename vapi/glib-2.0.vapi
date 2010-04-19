@@ -2651,7 +2651,7 @@ namespace GLib {
 	public class MappedFile {
 		public MappedFile (string filename, bool writable) throws FileError;
 		public size_t get_length ();
-		public char* get_contents ();
+		public unowned char* get_contents ();
 	}
 
 	[CCode (cname = "stdin", cheader_filename = "stdio.h")]
