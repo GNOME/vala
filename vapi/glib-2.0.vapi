@@ -3634,6 +3634,14 @@ namespace GLib {
 	public static unowned string N_ (string str);
 	[CCode (cname = "ngettext", cheader_filename = "glib.h,glib/gi18n-lib.h")]
 	public static unowned string ngettext (string msgid, string msgid_plural, ulong n);
+	[CCode (cname = "g_dgettext", cheader_filename = "glib/gi18n-lib.h")]
+	public static unowned string dgettext (string? domain, string msgid);
+	[CCode (cname = "g_dngettext", cheader_filename = "glib/gi18n-lib.h")]
+	public static unowned string dngettext (string? domain, string msgid, string msgid_plural, ulong n);
+	[CCode (cname = "g_dpgettext", cheader_filename = "glib/gi18n-lib.h")]
+	public static unowned string dpgettext (string? domain, string msgctxid, size_t msgidoffset);
+	[CCode (cname = "g_dpgettext2", cheader_filename = "glib/gi18n-lib.h")]
+	public static unowned string dpgettext2 (string? domain, string context, string msgid);
 	
 	[CCode (cname = "int", cprefix = "LC_", cheader_filename = "locale.h", has_type_id = false)]
 	public enum LocaleCategory {
@@ -3657,6 +3665,8 @@ namespace GLib {
 		public static unowned string? bind_textdomain_codeset (string domainname, string? codeset);
 		[CCode (cname = "g_get_language_names", array_length = false, array_null_terminated = true)]
 		public static unowned string[] get_language_names ();
+		[CCode (cname = "g_strip_context", cheader_filename = "glib/gi18n-lib.h")]
+		public static unowned string strip_context (string msgid, string msgval);
 	}
 
 	[Compact]
