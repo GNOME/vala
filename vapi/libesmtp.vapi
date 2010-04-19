@@ -74,7 +74,7 @@ namespace Smtp {
 		public Smtp.Recipient add_recipient (string mailbox);
 		[CCode (cname="smtp_enumerate_recipients")]
 		public int enumerate_recipients (EnumerateRecipientCb cb);
-		[CCode (cname="smtp_set_header")]
+		[CCode (cname="smtp_set_header", sentinel="")]
 		public int set_header (string header, ...);
 		[CCode (cname="smtp_set_header_option")]
 		public int set_header_option (string header, Smtp.HeaderOption option, ...);
