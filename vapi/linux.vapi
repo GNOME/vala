@@ -772,6 +772,18 @@ namespace Linux {
                         Posix.termios? termp,
                         winsize? winp);
 
+    [CCode (cprefix = "RB_", cheader_filename = "unistd.h,sys/reboot.h")]
+    public enum RebootCommands {
+         AUTOBOOT,
+         HALT_SYSTEM,
+         ENABLE_CAD,
+         DISABLE_CAD,
+         POWER_OFF
+    }
+
+    [CCode (cheader_filename = "unistd.h,sys/reboot.h")]
+    public int reboot (RebootCommands cmd);
+
     [CCode (cprefix = "CLONE_", cheader_filename = "sched.h")]
     public enum CloneFlags {
         FILES,
