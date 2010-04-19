@@ -305,6 +305,11 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "1") {
 						return_type.value_owned = true;
 					}
+				} else if (nv[0] == "type_arguments") {
+					var type_args = eval (nv[1]).split (",");
+					foreach (string type_arg in type_args) {
+						return_type.add_type_argument (get_type_from_string (type_arg));
+					}
 				} else if (nv[0] == "instance_pos") {
 					cb.cinstance_parameter_position = eval (nv[1]).to_double ();
 				}
@@ -2247,6 +2252,11 @@ public class Vala.GIdlParser : CodeVisitor {
 				} else if (nv[0] == "transfer_ownership") {
 					if (eval (nv[1]) == "1") {
 						sig.return_type.value_owned = true;
+					}
+				} else if (nv[0] == "type_arguments") {
+					var type_args = eval (nv[1]).split (",");
+					foreach (string type_arg in type_args) {
+						sig.return_type.add_type_argument (get_type_from_string (type_arg));
 					}
 				}
 			}
