@@ -340,6 +340,8 @@ public class Vala.GIdlParser : CodeVisitor {
 
 				bool hide_param = false;
 				bool show_param = false;
+				bool array_requested = false;
+				bool out_requested = false;
 				attributes = get_attributes ("%s.%s".printf (node.name, param_node.name));
 				if (attributes != null) {
 					foreach (string attr in attributes) {
@@ -350,13 +352,33 @@ public class Vala.GIdlParser : CodeVisitor {
 							} else if (eval (nv[1]) == "0") {
 								show_param = true;
 							}
+						} else if (nv[0] == "is_array") {
+							if (eval (nv[1]) == "1") {
+								param_type = new ArrayType (param_type, 1, param_type.source_reference);
+								p.parameter_type = param_type;
+								if (!out_requested) {
+									p.direction = ParameterDirection.IN;
+								}
+								array_requested = true;
+							}
 						} else if (nv[0] == "is_out") {
 							if (eval (nv[1]) == "1") {
 								p.direction = ParameterDirection.OUT;
+								out_requested = true;
+								if (!array_requested && param_type is ArrayType) {
+									var array_type = (ArrayType) param_type;
+									param_type = array_type.element_type;
+									p.parameter_type = param_type;
+								}
 							}
 						} else if (nv[0] == "is_ref") {
 							if (eval (nv[1]) == "1") {
 								p.direction = ParameterDirection.REF;
+								if (!array_requested && param_type is ArrayType) {
+									var array_type = (ArrayType) param_type;
+									param_type = array_type.element_type;
+									p.parameter_type = param_type;
+								}
 							}
 						} else if (nv[0] == "takes_ownership") {
 							if (eval (nv[1]) == "1") {
