@@ -5699,6 +5699,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface CellEditable : Gtk.Widget {
+		public abstract void start_editing (Gdk.Event event);
 		public bool editing_canceled { get; set; }
 		[HasEmitter]
 		public signal void editing_done ();
