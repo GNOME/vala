@@ -1,3 +1,11 @@
+Vala 0.8.1
+==========
+
+ * Support constants in enums.
+ * Add clutter-gst-1.0 bindings (Ali Sabil).
+ * Add gdu and gdu-gtk bindings.
+ * Many bug fixes and binding updates.
+
 Vala 0.8.0
 ==========
 
