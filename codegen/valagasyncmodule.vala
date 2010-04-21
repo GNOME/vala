@@ -51,8 +51,11 @@ public class Vala.GAsyncModule : GSignalModule {
 					data.add_field ("gint", get_array_length_cname (get_variable_cname (param.name), dim));
 				}
 			} else if (param.parameter_type is DelegateType) {
-				data.add_field ("gpointer", get_delegate_target_cname (get_variable_cname (param.name)));
-				data.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
+				var deleg_type = (DelegateType) param.parameter_type;
+				if (deleg_type.delegate_symbol.has_target) {
+					data.add_field ("gpointer", get_delegate_target_cname (get_variable_cname (param.name)));
+					data.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
+				}
 			}
 		}
 
@@ -64,8 +67,11 @@ public class Vala.GAsyncModule : GSignalModule {
 					data.add_field ("gint", get_array_length_cname ("result", dim));
 				}
 			} else if (m.return_type is DelegateType) {
-				data.add_field ("gpointer", get_delegate_target_cname ("result"));
-				data.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname ("result"));
+				var deleg_type = (DelegateType) m.return_type;
+				if (deleg_type.delegate_symbol.has_target) {
+					data.add_field ("gpointer", get_delegate_target_cname ("result"));
+					data.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname ("result"));
+				}
 			}
 		}
 
@@ -240,9 +246,11 @@ public class Vala.GAsyncModule : GSignalModule {
 					}
 				} else if (param.parameter_type is DelegateType) {
 					var deleg_type = (DelegateType) param.parameter_type;
-					asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, get_delegate_target_cname (get_variable_cname (param.name))), new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (param.name))))));
-					if (deleg_type.value_owned) {
-						asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, get_delegate_target_destroy_notify_cname (get_variable_cname (param.name))), new CCodeIdentifier (get_delegate_target_destroy_notify_cname (get_variable_cname (param.name))))));
+					if (deleg_type.delegate_symbol.has_target) {
+						asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, get_delegate_target_cname (get_variable_cname (param.name))), new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (param.name))))));
+						if (deleg_type.value_owned) {
+							asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, get_delegate_target_destroy_notify_cname (get_variable_cname (param.name))), new CCodeIdentifier (get_delegate_target_destroy_notify_cname (get_variable_cname (param.name))))));
+						}
 					}
 				}
 			}
@@ -434,7 +442,7 @@ public class Vala.GAsyncModule : GSignalModule {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					finishblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (get_array_length_cname ("result", dim))), new CCodeMemberAccess.pointer (data_var, get_array_length_cname ("result", dim)))));
 				}
-			} else if (return_type is DelegateType) {
+			} else if (return_type is DelegateType && ((DelegateType) return_type).delegate_symbol.has_target) {
 				finishblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (get_delegate_target_cname ("result"))), new CCodeMemberAccess.pointer (data_var, get_delegate_target_cname ("result")))));
 			}
 			if (!(return_type is ValueType) || return_type.nullable) {
