@@ -2522,6 +2522,45 @@ namespace Linux {
         [CCode (cheader_filename = "sys/socket.h", sentinel = "")]
         public int bind (int sockfd, SockAddrNl addr, ulong length);
         */
+
+        // rtnetlink routing / discovery messages
+        [CCode (cprefix = "RTM_", cheader_filename = "linux/rtnetlink.h")]
+        public enum RtMessageType {
+            NEWLINK,
+            DELLINK,
+            GETLINK,
+            SETLINK,
+            NEWADDR,
+            DELADDR,
+            GETADDR,
+            NEWROUTE,
+            DELROUTE,
+            GETROUTE,
+            NEWNEIGH,
+            DELNEIGH,
+            GETNEIGH,
+            NEWRULE,
+            DELRULE,
+            GETRULE,
+            NEWQDISC,
+            DELQDISC,
+            GETQDISC,
+            NEWTCLASS,
+            DELTCLASS,
+            GETTCLASS,
+            NEWTFILTER,
+            DELTFILTER,
+            GETTFILTER,
+            NEWACTION,
+            DELACTION,
+            GETACTION,
+            NEWPREFIX,
+            GETMULTICAST,
+            GETANYCAST,
+            NEWNEIGHTBL,
+            GETNEIGHTBL,
+            SETNEIGHTBL,
+        }
     }
 
     /*
