@@ -1,4 +1,4 @@
-/**
+/*
  * libnl-2.0.vapi
  *
  * Copyright (C) 2009-2010 Michael 'Mickey' Lauer <mlauer@vanille-media.de>
@@ -67,8 +67,21 @@ namespace Netlink {
         }
     }
 
+    [Compact]
     [CCode (cprefix = "nla_", cname = "struct nlattr", free_function = "", cheader_filename = "netlink/netlink.h")]
-    public struct Attribute {
+    public class Attribute {
+        public static int       attr_size (int payload);
+        public static int       total_size (int payload);
+        public static int       padlen (int payload);
+
+        public int              type();
+        public void*            data();
+        public int              len();
+        public int              ok (int remaining);
+        public Attribute        next (out int remaining);
+        public static int       parse (Attribute[] attributes, Attribute head, int len, AttributePolicy? policy = null);
+        public int              validate (int len, int maxtype, AttributePolicy? policy = null);
+        public Attribute        find (int len, int attrtype);
     }
 
     [Compact]
@@ -122,6 +135,9 @@ namespace Netlink {
 
         public void @foreach (CallbackFunc cb);
         public void foreach_filter (Object obj, CallbackFunc cb);
+
+        public void  mngt_provide();
+        public void  mngt_unprovide();
     }
 
     [Compact]
@@ -213,8 +229,8 @@ namespace Netlink {
         public bool             valid_hdr (int hdrlen);
         public bool             ok (int remaining);
         public MessageHeader    next (out int remaining);
-        public int              parse (int hdrlen, [CCode (array_length = "false")] out Attribute[] attributes, AttributeType maxtype, AttributePolicy policy);
-        public Attribute        find_attr (int hdrlen, AttributeType type);
+        public int              parse (int hdrlen, [CCode (array_length = "false")] out Attribute[] attributes, AttributeType maxtype, AttributePolicy? policy = null);
+        public Attribute?       find_attr (int hdrlen, AttributeType type);
         public int              validate (int hdrlen, AttributeType maxtype, AttributePolicy policy);
     }
 
@@ -278,8 +294,31 @@ namespace Netlink {
     }
 
     [Compact]
-    [CCode (cname = "struct nl_object", free_function = "nl_object_free", cheader_filename = "netlink/object.h")]
+    [CCode (cprefix = "nl_object_", cname = "struct nl_object", free_function = "nl_object_free", cheader_filename = "netlink/object.h")]
     public class Object {
+
+        public unowned string attrs2str	(uint32 attrs, char[] buf);
+        public unowned string attr_list (char[] buf);
+        public void dump (DumpParams params);
+
     }
 
+    [CCode (cprefix = "NL_DUMP_", cname = "int", cheader_filename = "netlink/types.h")]
+    public enum DumpType {
+        LINE,           /**< Dump object briefly on one line */
+        DETAILS,        /**< Dump all attributes but no statistics */
+        STATS,          /**< Dump all attributes including statistics */
+        ENV,            /**< Dump all attribtues as env variables */
+    }
+
+    [CCode (cname = "struct nl_dump_params", free_function = "", cheader_filename = "netlink/types.h")]
+    public struct DumpParams {
+        public DumpType dp_type;
+        public int dp_prefix;
+        public bool dp_print_index;
+        public bool dp_dump_msgtype;
+        public unowned Posix.FILE dp_fd;
+        public unowned string dp_buf;
+        public size_t dp_buflen;
+    }
 }
