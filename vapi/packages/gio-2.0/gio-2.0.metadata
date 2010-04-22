@@ -180,3 +180,5 @@ g_volume_monitor_get_mount_for_uuid transfer_ownership="1"
 g_volume_monitor_get_mounts type_arguments="Mount" transfer_ownership="1"
 g_volume_monitor_get_volume_for_uuid transfer_ownership="1"
 g_volume_monitor_get_volumes type_arguments="Volume" transfer_ownership="1"
+
+g_zlib_compressor_new.level default_value="-1"

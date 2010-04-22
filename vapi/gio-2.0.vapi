@@ -938,7 +938,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class ZlibCompressor : GLib.Object, GLib.Converter {
 		[CCode (has_construct_function = false)]
-		public ZlibCompressor (GLib.ZlibCompressorFormat format, int level);
+		public ZlibCompressor (GLib.ZlibCompressorFormat format, int level = -1);
 		[NoAccessorMethod]
 		public GLib.ZlibCompressorFormat format { get; construct; }
 		[NoAccessorMethod]
