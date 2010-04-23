@@ -136,7 +136,11 @@ public class Vala.ErrorType : ReferenceType {
 	}
 
 	public override string? get_type_id () {
-		return "G_TYPE_POINTER";
+		if (source_reference != null && source_reference.file.context.require_glib_version (2, 26)) {
+			return "G_TYPE_ERROR";
+		} else {
+			return "G_TYPE_POINTER";
+		}
 	}
 
 	public override bool is_reference_type_or_type_parameter () {
