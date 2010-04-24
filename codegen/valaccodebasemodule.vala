@@ -2178,7 +2178,11 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 		if (local.captured) {
 			if (local.initializer != null) {
-				cfrag.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id ((Block) local.parent_symbol))), get_variable_cname (local.name)), rhs)));
+				if (has_simple_struct_initializer (local)) {
+					cfrag.append (new CCodeExpressionStatement (rhs));
+				} else {
+					cfrag.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id ((Block) local.parent_symbol))), get_variable_cname (local.name)), rhs)));
+				}
 			}
 		} else if (current_method != null && current_method.coroutine) {
 			closure_struct.add_field (local.variable_type.get_cname (), get_variable_cname (local.name) + local.variable_type.get_cdeclarator_suffix ());
@@ -4094,7 +4098,12 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 			var local = expr.parent_node as LocalVariable;
 			if (local != null && has_simple_struct_initializer (local)) {
-				instance = get_variable_cexpression (get_variable_cname (local.name));
+				if (local.captured) {
+					var block = (Block) local.parent_symbol;
+					instance = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_variable_cname (local.name));
+				} else {
+					instance = get_variable_cexpression (get_variable_cname (local.name));
+				}
 			} else {
 				var temp_decl = get_temp_variable (expr.type_reference, false, expr);
 				temp_vars.add (temp_decl);
