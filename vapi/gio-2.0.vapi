@@ -1000,7 +1000,7 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface Converter : GLib.Object {
-		public abstract GLib.ConverterResult convert (void* inbuf, size_t inbuf_size, void* outbuf, size_t outbuf_size, GLib.ConverterFlags flags, size_t bytes_read, size_t bytes_written) throws GLib.Error;
+		public abstract GLib.ConverterResult convert (void* inbuf, size_t inbuf_size, void* outbuf, size_t outbuf_size, GLib.ConverterFlags flags, out size_t bytes_read, out size_t bytes_written) throws GLib.Error;
 		public abstract void reset ();
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
