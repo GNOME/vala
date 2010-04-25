@@ -54,7 +54,7 @@ namespace Mysql {
 		public int options (int option, string arg);
 		public int ping ();
 		public int query (string stmt_str);
-		public bool real_connect (string host, string username, string passwd, string dbname, uint port, string? unix_socket, ulong client_flag);
+		public bool real_connect (string? host = null, string? username = null, string? passwd = null, string? dbname = null, uint port = 0, string? unix_socket = null, ulong client_flag = 0);
 		public ulong real_escape_string (string to, string from, ulong length);
 		public int real_query (string query, ulong len);
 		public int reload ();
@@ -80,7 +80,7 @@ namespace Mysql {
 		public Field fetch_field_direct (uint field_nbr);
 		public Field[] fetch_fields ();
 		public ulong[] fetch_lengths ();
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[]? fetch_row ();		
 		public uint fetch_count ();
 		public uint num_fields ();
@@ -97,9 +97,9 @@ namespace Mysql {
 	public void debug (string msg);
 	public ulong hex_string (string to, string from, ulong length);
 	public void library_end ();
-	public int library_init (int argc, string[] argv, string[] groups);
+	public int library_init ([CCode (array_length_pos = 0.1)] string[] argv, [CCode (array_length = false, array_null_terminated = true)] string[]? groups = null);
 	public void server_end ();
-	public int server_init (int argc, string[] argv, string[] groups);
+	public int server_init ([CCode (array_length_pos = 0.1)] string[] argv, [CCode (array_length = false, array_null_terminated = true)] string[]? groups = null);
 	public void thread_end ();
 	public bool thread_init ();
 	public uint thread_safe ();
