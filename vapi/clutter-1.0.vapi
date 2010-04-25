@@ -984,7 +984,8 @@ namespace Clutter {
 		public void hide_cursor ();
 		public bool is_default ();
 		public void queue_redraw ();
-		public unowned uchar[] read_pixels (int x, int y, int width, int height);
+		[CCode (array_length = false)]
+		public uchar[] read_pixels (int x, int y, int width = -1, int height = -1);
 		[CCode (cname = "clutter_redraw")]
 		public void redraw ();
 		public void set_fullscreen (bool fullscreen);
