@@ -508,19 +508,43 @@ public class Vala.Interface : ObjectTypeSymbol {
 	}
 
 	public override string? get_marshaller_type_name () {
-		return "OBJECT";
+		foreach (DataType prerequisite in prerequisites) {
+			string type_name = prerequisite.data_type.get_marshaller_type_name ();
+			if (type_name != null) {
+				return type_name;
+			}
+		}
+		return null;
 	}
 
 	public override string? get_get_value_function () {
-		return "g_value_get_object";
+		foreach (DataType prerequisite in prerequisites) {
+			string get_value_func = prerequisite.data_type.get_get_value_function ();
+			if (get_value_func != null) {
+				return get_value_func;
+			}
+		}
+		return null;
 	}
 	
 	public override string? get_set_value_function () {
-		return "g_value_set_object";
+		foreach (DataType prerequisite in prerequisites) {
+			string set_value_func = prerequisite.data_type.get_set_value_function ();
+			if (set_value_func != null) {
+				return set_value_func;
+			}
+		}
+		return null;
 	}
 
 	public override string? get_take_value_function () {
-		return "g_value_take_object";
+		foreach (DataType prerequisite in prerequisites) {
+			string take_value_func = prerequisite.data_type.get_take_value_function ();
+			if (take_value_func != null) {
+				return take_value_func;
+			}
+		}
+		return null;
 	}
 
 	public override string? get_type_id () {
