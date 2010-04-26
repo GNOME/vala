@@ -350,11 +350,11 @@ namespace GnuTLS
 	[Compact]
 	[CCode (cname = "struct gnutls_dh_params_int", free_function = "gnutls_dh_params_deinit", lower_case_cprefix = "gnutls_dh_params_")]
 	public class DHParams {
-		private static int init (DHParams* dh_params);
+		private static int init (out DHParams dh_params);
 		public static DHParams create ()
 		{
-			DHParams result = null;
-			var ret = init (&result);
+			DHParams result;
+			var ret = init (out result);
 			if (ret != 0)
 				GLib.error ("%s", ((ErrorCode)ret).to_string ());
 			return result;
@@ -374,11 +374,11 @@ namespace GnuTLS
 	[Compact]
 	[CCode (cname = "struct gnutls_x509_privkey_int", free_function = "gnutls_rsa_params_deinit", lower_case_cprefix = "gnutls_rsa_params_")]
 	public class RSAParams {
-		private static int init (RSAParams* dh_params);
+		private static int init (out RSAParams dh_params);
 		public static RSAParams create ()
 		{
 			RSAParams result = null;
-			var ret = init (&result);
+			var ret = init (out result);
 			if (ret != 0)
 				GLib.error ("%s", ((ErrorCode)ret).to_string ());
 			return result;
@@ -397,11 +397,11 @@ namespace GnuTLS
 	[Compact]
 	[CCode (cname = "struct gnutls_priority_st", free_function = "gnutls_priority_deinit")]
 	public class Priority {
-		private static int init (Priority* self, string priority, out char* err_pos);
+		private static int init (out Priority self, string priority, out char* err_pos);
 		public static Priority create (string priority, out ErrorCode err = null, out char* err_pos = null)
 		{
-			Priority result = null;
-			var ret = init (&result, priority, out err_pos);
+			Priority result;
+			var ret = init (out result, priority, out err_pos);
 			if (&err != null)
 				err = (ErrorCode) ret;
 			return result;
@@ -470,12 +470,11 @@ namespace GnuTLS
 	[CCode (cname = "struct gnutls_session_int", free_function = "gnutls_deinit")]
 	public class Session {
 		[CCode (cname = "gnutls_init")]
-		private static int init (Session* session, int con_end);
-
-		protected static Session create (int con_end)
+		private static int init (out Session session, int con_end);
+		protected static Session? create (int con_end)
 		{
-			Session result = null;
-			var ret = init (&result, con_end);
+			Session result;
+			var ret = init (out result, con_end);
 			if (ret != 0)
 				GLib.error ("%s", ((ErrorCode)ret).to_string ());
 			return result;
@@ -716,11 +715,11 @@ namespace GnuTLS
 	public class AnonServerCredentials
 	{
 		[CCode (cname = "gnutls_anon_allocate_server_credentials")]
-		private static int allocate (AnonServerCredentials* credentials);
+		private static int allocate (out AnonServerCredentials credentials);
 		public static AnonServerCredentials create ()
 		{
-			AnonServerCredentials result = null;
-			var ret = allocate (&result);
+			AnonServerCredentials result;
+			var ret = allocate (out result);
 			if (ret != 0)
 				GLib.error ("%s", ((ErrorCode)ret).to_string ());
 			return result;
@@ -742,11 +741,11 @@ namespace GnuTLS
 	public class AnonClientCredentials
 	{
 		[CCode (cname = "gnutls_anon_allocate_client_credentials")]
-		private static int allocate (AnonClientCredentials* credentials);
+		private static int allocate (out AnonClientCredentials credentials);
 		public static AnonClientCredentials create ()
 		{
-			AnonClientCredentials result = null;
-			var ret = allocate (&result);
+			AnonClientCredentials result;
+			var ret = allocate (out result);
 			if (ret != 0)
 				GLib.error ("%s", ((ErrorCode)ret).to_string ());
 			return result;
@@ -875,11 +874,11 @@ namespace GnuTLS
 		[CCode (cname = "void", cprefix = "gnutls_x509_dn_", free_function = "gnutls_x509_dn_deinit")]
 		public class DN
 		{
-			private static int init (DN* dn);
+			private static int init (out DN dn);
 			public static DN create ()
 			{
-				DN result = null;
-				var ret = init (&result);
+				DN result;
+				var ret = init (out result);
 				if (ret != 0)
 					GLib.error ("%s", ((ErrorCode)ret).to_string ());
 				return result;
@@ -912,12 +911,11 @@ namespace GnuTLS
 		[CCode (cname = "struct gnutls_x509_crt_int", cprefix = "gnutls_x509_crt_", free_function = "gnutls_x509_crt_deinit ")]
 		public class Certificate
 		{
-			private static int init (Certificate* cert);
-
+			private static int init (out Certificate cert);
 			public static Certificate create ()
 			{
-				Certificate result = null;
-				var ret = init (&result);
+				Certificate result;
+				var ret = init (out result);
 				if (ret != 0)
 					GLib.error ("%s", ((ErrorCode)ret).to_string ());
 				return result;
@@ -1038,12 +1036,11 @@ namespace GnuTLS
 		[CCode (cname = "struct gnutls_x509_crl_int", free_function = "gnutls_x509_crl_deinit", cprefix = "gnutls_x509_crl_")]
 		public class CRL
 		{
-			private static int init (CRL* crl);
-
+			private static int init (out CRL crl);
 			public static CRL create ()
 			{
-				CRL result = null;
-				var ret = init (&result);
+				CRL result;
+				var ret = init (out result);
 				if (ret != 0)
 					GLib.error ("%s", ((ErrorCode)ret).to_string ());
 				return result;
@@ -1094,11 +1091,11 @@ namespace GnuTLS
 		[CCode (cname = "struct gnutls_pkcs7_int", cprefix = "gnutls_pkcs7_", free_function = "gnutls_pkcs7_deinit")]
 		public class PKCS7
 		{
-			private static int init (PKCS7* pkcs7);
+			private static int init (out PKCS7 pkcs7);
 			public static PKCS7 create ()
 			{
-				PKCS7 result = null;
-				var ret = init (&result);
+				PKCS7 result;
+				var ret = init (out result);
 				if (ret != 0)
 					GLib.error ("%s", ((ErrorCode)ret).to_string ());
 				return result;
@@ -1135,11 +1132,11 @@ namespace GnuTLS
 		[CCode (cname = "struct gnutls_x509_privkey_int", cprefix = "gnutls_x509_privkey_", free_function = "gnutls_x509_privkey_deinit")]
 		public class PrivateKey
 		{
-			private static int init (PrivateKey* key);
+			private static int init (out PrivateKey key);
 			public static PrivateKey create ()
 			{
-				PrivateKey result = null;
-				var ret = init (&result);
+				PrivateKey result;
+				var ret = init (out result);
 				if (ret != 0)
 					GLib.error ("%s", ((ErrorCode)ret).to_string ());
 				return result;
@@ -1174,11 +1171,11 @@ namespace GnuTLS
 		[CCode (cname = "struct gnutls_x509_crq_int", cprefix = "gnutls_x509_crq_", free_function = "gnutls_x509_crq_deinit")]
 		public class CertificateRequest
 		{
-			private static int init (CertificateRequest* request);
+			private static int init (out CertificateRequest request);
 			public static CertificateRequest create ()
 			{
-				CertificateRequest result = null;
-				var ret = init (&result);
+				CertificateRequest result;
+				var ret = init (out result);
 				if (ret != 0)
 					GLib.error ("%s", ((ErrorCode)ret).to_string ());
 				return result;
@@ -1211,11 +1208,11 @@ namespace GnuTLS
 		[CCode (cheader_filename = "gnutls/pkcs12.h", cname = "struct gnutls_pkcs12_int", cprefix = "gnutls_pkcs12_", free_function = "gnutls_pkcs12_deinit")]
 		public class PKCS12
 		{
-			private static int init (PKCS12* request);
+			private static int init (out PKCS12 request);
 			public static PKCS12 create ()
 			{
-				PKCS12 result = null;
-				var ret = init (&result);
+				PKCS12 result;
+				var ret = init (out result);
 				if (ret != 0)
 					GLib.error ("%s", ((ErrorCode)ret).to_string ());
 				return result;
@@ -1245,11 +1242,11 @@ namespace GnuTLS
 		[Compact]
 		[CCode (cheader_filename = "gnutls/pkcs12.h", cname = "struct gnutls_pkcs12_bag_int", cprefix = "gnutls_pkcs12_bag_", free_function = "gnutls_pkcs12_bag_deinit")]
 		public class PKCS12Bag {
-			private static int init (PKCS12Bag* request);
+			private static int init (out PKCS12Bag request);
 			public static PKCS12Bag create ()
 			{
-				PKCS12Bag result = null;
-				var ret = init (&result);
+				PKCS12Bag result;
+				var ret = init (out result);
 				if (ret != 0)
 					GLib.error ("%s", ((ErrorCode)ret).to_string ());
 				return result;
@@ -1303,11 +1300,11 @@ namespace GnuTLS
 		[CCode (cname = "struct gnutls_openpgp_crt_int", cprefix = "gnutls_openpgp_crt_", free_function = "gnutls_openpgp_crt_deinit")]
 		public class Certificate
 		{
-			private static int init (Certificate* crt);
+			private static int init (out Certificate crt);
 			public static Certificate create ()
 			{
-				Certificate result = null;
-				var ret = init (&result);
+				Certificate result;
+				var ret = init (out result);
 				if (ret != 0)
 					GLib.error ("%s", ((ErrorCode)ret).to_string ());
 				return result;
@@ -1367,11 +1364,11 @@ namespace GnuTLS
 		[CCode (cname = "struct gnutls_openpgp_privkey_int", cprefix = "gnutls_openpgp_privkey_", free_function = "gnutls_openpgp_privkey_deinit")]
 		public class PrivateKey
 		{
-			private static int init (PrivateKey* key);
+			private static int init (out PrivateKey key);
 			public static PrivateKey create ()
 			{
 				PrivateKey result = null;
-				var ret = init (&result);
+				var ret = init (out result);
 				if (ret != 0)
 					GLib.error ("%s", ((ErrorCode)ret).to_string ());
 				return result;
@@ -1416,11 +1413,11 @@ namespace GnuTLS
 		[CCode (cname = "struct gnutls_openpgp_keyring_int", cprefix = "gnutls_openpgp_keyring_", free_function = "gnutls_openpgp_keyring_deinit")]
 		public class Keyring
 		{
-			private static int init (Keyring* keyring);
+			private static int init (out Keyring keyring);
 			public static Keyring create ()
 			{
-				Keyring result = null;
-				var ret = init (&result);
+				Keyring result;
+				var ret = init (out result);
 				if (ret != 0)
 					GLib.error ("%s", ((ErrorCode)ret).to_string ());
 				return result;
@@ -1447,11 +1444,11 @@ namespace GnuTLS
 	public class CertificateCredentials
 	{
 		[CCode (cname = "gnutls_certificate_allocate_credentials")]
-		private static int allocate (CertificateCredentials* credentials);
+		private static int allocate (out CertificateCredentials credentials);
 		public static CertificateCredentials create ()
 		{
-			CertificateCredentials result = null;
-			var ret = allocate (&result);
+			CertificateCredentials result;
+			var ret = allocate (out result);
 			if (ret != 0)
 				GLib.error ("%s", ((ErrorCode)ret).to_string ());
 			return result;
@@ -1566,11 +1563,11 @@ namespace GnuTLS
 	public class SRPServerCredentials
 	{
 		[CCode (cname = "gnutls_srp_allocate_server_credentials")]
-		private static int allocate (SRPServerCredentials* sc);
+		private static int allocate (out SRPServerCredentials sc);
 		public static SRPServerCredentials create ()
 		{
 			SRPServerCredentials result = null;
-			var ret = allocate (&result);
+			var ret = allocate (out result);
 			if (ret != 0)
 				GLib.error ("%s", ((ErrorCode)ret).to_string ());
 			return result;
@@ -1594,11 +1591,11 @@ namespace GnuTLS
 	public class SRPClientCredentials
 	{
 		[CCode (cname = "gnutls_srp_allocate_client_credentials")]
-		private static int allocate (SRPClientCredentials* sc);
+		private static int allocate (out SRPClientCredentials sc);
 		public static SRPClientCredentials create ()
 		{
-			SRPClientCredentials result = null;
-			var ret = allocate (&result);
+			SRPClientCredentials result;
+			var ret = allocate (out result);
 			if (ret != 0)
 				GLib.error ("%s", ((ErrorCode)ret).to_string ());
 			return result;
@@ -1660,11 +1657,11 @@ namespace GnuTLS
 	public class PSKServerCredentials
 	{
 		[CCode (cname = "gnutls_psk_allocate_server_credentials")]
-		private static int allocate (PSKServerCredentials* sc);
+		private static int allocate (out PSKServerCredentials sc);
 		public static PSKServerCredentials create ()
 		{
-			PSKServerCredentials result = null;
-			var ret = allocate (&result);
+			PSKServerCredentials result;
+			var ret = allocate (out result);
 			if (ret != 0)
 				GLib.error ("%s", ((ErrorCode)ret).to_string ());
 			return result;
@@ -1694,11 +1691,11 @@ namespace GnuTLS
 	public class PSKClientCredentials
 	{
 		[CCode (cname = "gnutls_psk_allocate_client_credentials")]
-		private static int allocate (PSKClientCredentials* sc);
+		private static int allocate (out PSKClientCredentials sc);
 		public static PSKClientCredentials create ()
 		{
-			PSKClientCredentials result = null;
-			var ret = allocate (&result);
+			PSKClientCredentials result;
+			var ret = allocate (out result);
 			if (ret != 0)
 				GLib.error ("%s", ((ErrorCode)ret).to_string ());
 			return result;
