@@ -2945,10 +2945,11 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		var ccomma = new CCodeCommaExpression ();
 
 		if (context.profile == Profile.GOBJECT) {
-			if (type.data_type == gstringbuilder_type
-			    || type.data_type == garray_type
-			    || type.data_type == gbytearray_type
-			    || type.data_type == gptrarray_type) {
+			if (type.data_type != null && !type.data_type.is_reference_counting () &&
+			    (type.data_type == gstringbuilder_type
+			     || type.data_type == garray_type
+			     || type.data_type == gbytearray_type
+			     || type.data_type == gptrarray_type)) {
 				ccall.add_argument (new CCodeConstant ("TRUE"));
 			} else if (type.data_type == gthreadpool_type) {
 				ccall.add_argument (new CCodeConstant ("FALSE"));
