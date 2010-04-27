@@ -158,10 +158,11 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			return invocation_expr.delegate_target;
 		} else if (delegate_expr is LambdaExpression) {
 			var lambda = (LambdaExpression) delegate_expr;
+			var delegate_type = (DelegateType) delegate_expr.target_type;
 			if (lambda.method.closure) {
 				int block_id = get_block_id (current_closure_block);
 				var delegate_target = get_variable_cexpression ("_data%d_".printf (block_id));
-				if (expr_owned) {
+				if (expr_owned || delegate_type.is_called_once) {
 					var ref_call = new CCodeFunctionCall (new CCodeIdentifier ("block%d_data_ref".printf (block_id)));
 					ref_call.add_argument (delegate_target);
 					delegate_target = ref_call;
@@ -170,7 +171,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 				return delegate_target;
 			} else if (get_this_type () != null || in_constructor) {
 				CCodeExpression delegate_target = get_result_cexpression ("self");
-				if (expr_owned) {
+				if (expr_owned || delegate_type.is_called_once) {
 					if (get_this_type () != null) {
 						var ref_call = new CCodeFunctionCall (get_dup_func_expression (get_this_type (), delegate_expr.source_reference));
 						ref_call.add_argument (delegate_target);
@@ -308,7 +309,8 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 					}
 				} else {
 					var delegate_target = (CCodeExpression) get_ccodenode (ma.inner);
-					if (expr_owned && ma.inner.value_type.data_type != null && ma.inner.value_type.data_type.is_reference_counting ()) {
+					var delegate_type = (DelegateType) delegate_expr.target_type;
+					if ((expr_owned || delegate_type.is_called_once) && ma.inner.value_type.data_type != null && ma.inner.value_type.data_type.is_reference_counting ()) {
 						var ref_call = new CCodeFunctionCall (get_dup_func_expression (ma.inner.value_type, delegate_expr.source_reference));
 						ref_call.add_argument (delegate_target);
 						delegate_target = ref_call;
@@ -340,13 +342,14 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 				method = method.base_interface_method;
 			}
 
-			return new CCodeIdentifier (generate_delegate_wrapper (method, dt.delegate_symbol, expr));
+			return new CCodeIdentifier (generate_delegate_wrapper (method, dt, expr));
 		}
 
 		return base.get_implicit_cast_expression (source_cexpr, expression_type, target_type, expr);
 	}
 
-	private string generate_delegate_wrapper (Method m, Delegate d, CodeNode? node) {
+	private string generate_delegate_wrapper (Method m, DelegateType dt, Expression? expr) {
+		var d = dt.delegate_symbol;
 		string delegate_name;
 		var sig = d.parent_symbol as Signal;
 		var dynamic_sig = sig as DynamicSignal;
@@ -458,7 +461,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			} else {
 				// use first delegate parameter as instance
 				if (d_params.size == 0) {
-					Report.error (node != null ? node.source_reference : null, "Cannot create delegate without target for instance method or closure");
+					Report.error (expr != null ? expr.source_reference : null, "Cannot create delegate without target for instance method or closure");
 					arg = new CCodeConstant ("NULL");
 				} else {
 					arg = new CCodeIdentifier ((d_params.get (0).ccodenode as CCodeFormalParameter).name);
@@ -559,7 +562,42 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 		if (m.return_type is VoidType || m.return_type.is_real_non_null_struct_type ()) {
 			block.add_statement (new CCodeExpressionStatement (ccall));
 		} else {
-			block.add_statement (new CCodeReturnStatement (ccall));
+			var cdecl = new CCodeDeclaration (return_type_cname);
+			cdecl.add_declarator (new CCodeVariableDeclarator ("result", ccall));
+			block.add_statement (cdecl);
+		}
+
+		if (d.has_target && !dt.value_owned && dt.is_called_once && expr != null) {
+			// destroy notify "self" after the call, only support lambda expressions and methods
+			CCodeExpression? destroy_notify = null;
+			if (expr is LambdaExpression) {
+				var lambda = (LambdaExpression) expr;
+				if (lambda.method.closure) {
+					int block_id = get_block_id (current_closure_block);
+					destroy_notify = new CCodeIdentifier ("block%d_data_unref".printf (block_id));
+				} else if (get_this_type () != null) {
+					destroy_notify = get_destroy_func_expression (get_this_type ());
+				} else if (in_constructor) {
+					destroy_notify = new CCodeIdentifier ("g_object_unref");
+				}
+			} else if (expr.symbol_reference is Method) {
+				var ma = (MemberAccess) expr;
+				if (m.binding != MemberBinding.STATIC &&
+				    !m.is_async_callback &&
+				    ma.inner.value_type.data_type != null && ma.inner.value_type.data_type.is_reference_counting ()) {
+					destroy_notify = get_destroy_func_expression (ma.inner.value_type);
+				}
+			}
+
+			if (destroy_notify != null) {
+				var unref_call = new CCodeFunctionCall (destroy_notify);
+				unref_call.add_argument (new CCodeIdentifier ("self"));
+				block.add_statement (new CCodeExpressionStatement (unref_call));
+			}
+		}
+
+		if (!(m.return_type is VoidType || m.return_type.is_real_non_null_struct_type ())) {
+			block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("result")));
 		}
 
 		// append to file

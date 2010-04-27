@@ -1033,6 +1033,7 @@ public class Vala.Method : Member {
 
 		var callback_type = new DelegateType ((Delegate) glib_ns.scope.lookup ("AsyncReadyCallback"));
 		callback_type.nullable = true;
+		callback_type.is_called_once = true;
 
 		var callback_param = new FormalParameter ("_callback_", callback_type);
 		callback_param.default_expression = new NullLiteral (source_reference);

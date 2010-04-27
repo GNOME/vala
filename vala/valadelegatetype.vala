@@ -28,6 +28,8 @@ using GLib;
 public class Vala.DelegateType : DataType {
 	public Delegate delegate_symbol { get; set; }
 
+	public bool is_called_once { get; set; }
+
 	public DelegateType (Delegate delegate_symbol) {
 		this.delegate_symbol = delegate_symbol;
 	}
