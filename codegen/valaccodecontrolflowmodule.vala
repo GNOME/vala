@@ -214,11 +214,7 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 				cswitch.add_statement (new CCodeCaseStatement ((CCodeExpression) label.expression.ccodenode));
 			}
 
-			var cblock = new CCodeBlock ();
-			cswitch.add_statement (cblock);
-			foreach (CodeNode body_stmt in section.get_statements ()) {
-				cblock.add_statement (body_stmt.ccodenode);
-			}
+			cswitch.add_statement (section.ccodenode);
 		}
 		
 		create_temp_decl (stmt, stmt.expression.temp_vars);
