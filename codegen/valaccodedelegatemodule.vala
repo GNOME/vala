@@ -157,9 +157,9 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			}
 			return invocation_expr.delegate_target;
 		} else if (delegate_expr is LambdaExpression) {
-			var closure_block = current_closure_block;
-			if (closure_block != null) {
-				int block_id = get_block_id (closure_block);
+			var lambda = (LambdaExpression) delegate_expr;
+			if (lambda.method.closure) {
+				int block_id = get_block_id (current_closure_block);
 				var delegate_target = get_variable_cexpression ("_data%d_".printf (block_id));
 				if (expr_owned) {
 					var ref_call = new CCodeFunctionCall (new CCodeIdentifier ("block%d_data_ref".printf (block_id)));
