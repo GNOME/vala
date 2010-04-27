@@ -291,7 +291,7 @@ namespace Gdk {
 		public void copy (Gdk.GC src_gc);
 		public unowned Gdk.Colormap get_colormap ();
 		public unowned Gdk.Screen get_screen ();
-		public virtual void get_values (Gdk.GCValues values);
+		public virtual void get_values (out Gdk.GCValues values);
 		public void offset (int x_offset, int y_offset);
 		public void set_background (Gdk.Color color);
 		public void set_clip_mask (Gdk.Bitmap mask);
