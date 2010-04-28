@@ -1274,6 +1274,8 @@ public class Vala.GIdlParser : CodeVisitor {
 
 				if (finish_method != null) {
 					m.return_type = finish_method.return_type.copy ();
+					m.no_array_length = finish_method.no_array_length;
+					m.array_null_terminated = finish_method.array_null_terminated;
 					foreach (var param in finish_method.get_parameters ()) {
 						if (param.direction == ParameterDirection.OUT) {
 							var async_param = param.copy ();
