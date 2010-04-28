@@ -563,6 +563,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		user_marshal_set = new HashSet<string> (str_hash, str_equal);
 		
 		next_temp_var_id = 0;
+		next_regex_id = 0;
 		variable_name_map.clear ();
 		
 		gvaluecollector_h_needed = false;
