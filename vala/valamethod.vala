@@ -233,6 +233,7 @@ public class Vala.Method : Member {
 
 	private List<FormalParameter> parameters = new ArrayList<FormalParameter> ();
 	private string cname;
+	private string finish_name;
 	private string _vfunc_name;
 	private string _sentinel;
 	private List<Expression> preconditions = new ArrayList<Expression> ();
@@ -351,12 +352,14 @@ public class Vala.Method : Member {
 
 	public string get_finish_cname () {
 		assert (coroutine);
-		string result = get_cname ();
-		if (result.has_suffix ("_async")) {
-			result = result.substring (0, result.length - "_async".length);
+		if (finish_name == null) {
+			finish_name = get_default_finish_cname ();
 		}
-		result += "_finish";
-		return result;
+		return finish_name;
+	}
+
+	public void set_finish_cname (string name) {
+		finish_name = name;
 	}
 
 	/**
@@ -390,9 +393,8 @@ public class Vala.Method : Member {
 		}
 	}
 
-	public string get_finish_real_cname () {
-		assert (coroutine);
-		string result = get_real_cname ();
+	protected string get_finish_name_for_basename (string basename) {
+		string result = basename;
 		if (result.has_suffix ("_async")) {
 			result = result.substring (0, result.length - "_async".length);
 		}
@@ -400,14 +402,18 @@ public class Vala.Method : Member {
 		return result;
 	}
 
+	public string get_finish_real_cname () {
+		assert (coroutine);
+		return get_finish_name_for_basename (get_real_cname ());
+	}
+
 	public string get_finish_vfunc_name () {
 		assert (coroutine);
-		string result = vfunc_name;
-		if (result.has_suffix ("_async")) {
-			result = result.substring (0, result.length - "_async".length);
-		}
-		result += "_finish";
-		return result;
+		return get_finish_name_for_basename (vfunc_name);
+	}
+
+	public string get_default_finish_cname () {
+		return get_finish_name_for_basename (get_cname ());
 	}
 	
 	/**
@@ -431,6 +437,9 @@ public class Vala.Method : Member {
 		}
 		if (a.has_argument ("vfunc_name")) {
 			this.vfunc_name = a.get_string ("vfunc_name");
+		}
+		if (a.has_argument ("finish_name")) {
+			this.finish_name = a.get_string ("finish_name");
 		}
 		if (a.has_argument ("sentinel")) {
 			this.sentinel = a.get_string ("sentinel");

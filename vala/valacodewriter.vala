@@ -928,6 +928,10 @@ public class Vala.CodeWriter : CodeVisitor {
 			ccode_params.append_printf ("%svfunc_name = \"%s\"", separator, m.vfunc_name);
 			separator = ", ";
 		}
+		if (m.coroutine && m.get_finish_cname () != m.get_default_finish_cname ()) {
+			ccode_params.append_printf ("%sfinish_name = \"%s\"", separator, m.get_finish_cname ());
+			separator = ", ";
+		}
 		if (m.sentinel != m.DEFAULT_SENTINEL) {
 			ccode_params.append_printf ("%ssentinel = \"%s\"", separator, m.sentinel);
 			separator = ", ";

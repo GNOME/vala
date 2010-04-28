@@ -1260,6 +1260,18 @@ public class Vala.GIdlParser : CodeVisitor {
 					finish_method_base = m.name;
 				}
 				var finish_method = type_symbol.scope.lookup (finish_method_base + "_finish") as Method;
+
+				// check if the method is using non-standard finish method name
+				if (finish_method == null) {
+					var method_cname = m.get_finish_cname ();
+					foreach (Method method in type_symbol.get_methods ()) {
+						if (method.get_cname () == method_cname) {
+							finish_method = method;
+							break;
+						}
+					}
+				}
+
 				if (finish_method != null) {
 					m.return_type = finish_method.return_type.copy ();
 					foreach (var param in finish_method.get_parameters ()) {
@@ -1652,6 +1664,8 @@ public class Vala.GIdlParser : CodeVisitor {
 					}
 				} else if (nv[0] == "vfunc_name") {
 					m.vfunc_name = eval (nv[1]);
+				} else if (nv[0] == "finish_name") {
+					m.set_finish_cname (eval (nv[1]));
 				} else if (nv[0] == "async") {
 					if (eval (nv[1]) == "1") {
 						// force async function, even if it doesn't end in _async
