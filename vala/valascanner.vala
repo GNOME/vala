@@ -1016,18 +1016,38 @@ public class Vala.Scanner {
 				}
 				break;
 			case '/':
-				if (previous == TokenType.OPEN_PARENS || previous == TokenType.ASSIGN || previous == TokenType.OP_COALESCING
-				    || previous == TokenType.COMMA || previous == TokenType.RETURN || previous == TokenType.OPEN_BRACE) {
+				switch (previous) {
+				case TokenType.ASSIGN:
+				case TokenType.COMMA:
+				case TokenType.MINUS:
+				case TokenType.OP_AND:
+				case TokenType.OP_COALESCING:
+				case TokenType.OP_DEC:
+				case TokenType.OP_EQ:
+				case TokenType.OP_GE:
+				case TokenType.OP_GT:
+				case TokenType.OP_INC:
+				case TokenType.OP_LE:
+				case TokenType.OP_LT:
+				case TokenType.OP_NE:
+				case TokenType.OP_NEG:
+				case TokenType.OP_OR:
+				case TokenType.OPEN_BRACE:
+				case TokenType.OPEN_PARENS:
+				case TokenType.PLUS:
+				case TokenType.RETURN:
 					type = TokenType.OPEN_REGEX_LITERAL;
 					state_stack += State.REGEX_LITERAL;
 					current++;
-				} else {
+					break;
+				default:
 					type = TokenType.DIV;
 					current++;
 					if (current < end && current[0] == '=') {
 						type = TokenType.ASSIGN_DIV;
 						current++;
 					}
+					break;
 				}
 				break;
 			case '%':
