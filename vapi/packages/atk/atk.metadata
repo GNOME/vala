@@ -1,3 +1,4 @@
 Atk cheader_filename="atk/atk.h" gir_namespace="Atk" gir_version="1.0"
+AtkState is_value_type="1" simple_type="1" base_type="uint64" rank="11"
 AtkRectangle is_value_type="1"
 

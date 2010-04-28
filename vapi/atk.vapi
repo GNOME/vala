@@ -186,13 +186,6 @@ namespace Atk {
 		public unowned Atk.Relation get_relation_by_type (Atk.RelationType relationship);
 		public void remove (Atk.Relation relation);
 	}
-	[Compact]
-	[CCode (cheader_filename = "atk/atk.h")]
-	public class State {
-		public static Atk.StateType type_for_name (string name);
-		public static unowned string type_get_name (Atk.StateType type);
-		public static Atk.StateType type_register (string name);
-	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class StateSet : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -424,6 +417,14 @@ namespace Atk {
 		public int y;
 		public int width;
 		public int height;
+	}
+	[CCode (cheader_filename = "atk/atk.h")]
+	[SimpleType]
+	[IntegerType (rank = 11)]
+	public struct State : uint64 {
+		public static Atk.StateType type_for_name (string name);
+		public static unowned string type_get_name (Atk.StateType type);
+		public static Atk.StateType type_register (string name);
 	}
 	[CCode (cprefix = "ATK_XY_", cheader_filename = "atk/atk.h")]
 	public enum CoordType {
