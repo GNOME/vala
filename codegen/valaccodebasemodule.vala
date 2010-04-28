@@ -352,6 +352,9 @@ public class Vala.CCodeBaseModule : CCodeModule {
 						break;
 					}
 				}
+				if (!in_plugin) {
+					Report.error (context.module_init_method.source_reference, "[ModuleInit] requires a parameter of type `GLib.TypeModule'");
+				}
 			}
 
 			var dbus_ns = root_symbol.scope.lookup ("DBus");
