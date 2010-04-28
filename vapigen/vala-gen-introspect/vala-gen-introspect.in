@@ -16,8 +16,14 @@ PKGBASE=$2/$1
 PKGPREFIX=`pkg-config --variable=prefix $PKGNAME`
 
 PKGFILES=`cat $PKGBASE.files | grep ^[/.]`
+
+# This is to avoid adding a leading / in case the prefix is ""
+if [ "x$PKGPREFIX" != "x" ]; then
+        PKGPREFIXPLUSDELIMIT="$PKGPREFIX/"
+fi
+
 PKGFILES="${PKGFILES}\
-	 `cat $PKGBASE.files | grep ^[a-zA-Z] | sed -e "s@^@$PKGPREFIX/@"`"
+	`cat $PKGBASE.files | grep ^[a-zA-Z.] | sed -e "s@^@$PKGPREFIXPLUSDELIMIT@"`"
 
 if [ -e $PKGBASE.excludes ]
 then
