@@ -816,6 +816,12 @@ public class Vala.Method : Member {
 			return_type.check (analyzer);
 		}
 
+		if (parameters.size == 1 && parameters[0].ellipsis && body != null) {
+			// accept just `...' for external methods for convenience
+			error = true;
+			Report.error (parameters[0].source_reference, "Named parameter required before `...'");
+		}
+
 		foreach (FormalParameter param in parameters) {
 			param.check (analyzer);
 			if (coroutine && param.direction == ParameterDirection.REF) {
