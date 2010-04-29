@@ -351,7 +351,7 @@ public struct uint8 {
 }
 
 [SimpleType]
-[CCode (cname = "gint16", cheader_filename = "glib.h", default_value = "0", type_signature = "n")]
+[CCode (cname = "gint16", cheader_filename = "glib.h", default_value = "0", type_signature = "n", has_type_id = false)]
 [IntegerType (rank = 4, min = -32768, max = 32767)]
 public struct int16 {
 	[CCode (cname = "G_MININT16")]
@@ -386,7 +386,7 @@ public struct int16 {
 }
 
 [SimpleType]
-[CCode (cname = "guint16", cheader_filename = "glib.h", default_value = "0U", type_signature = "q")]
+[CCode (cname = "guint16", cheader_filename = "glib.h", default_value = "0U", type_signature = "q", has_type_id = false)]
 [IntegerType (rank = 5, min = 0, max = 65535)]
 public struct uint16 {
 	[CCode (cname = "0U")]
