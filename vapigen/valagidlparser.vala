@@ -1803,6 +1803,8 @@ public class Vala.GIdlParser : CodeVisitor {
 						if (eval (nv[1]) == "1") {
 							p.no_array_length = true;
 						}
+					} else if (nv[0] == "array_length_type") {
+						p.array_length_type = eval (nv[1]);
 					} else if (nv[0] == "array_null_terminated") {
 						if (eval (nv[1]) == "1") {
 							p.no_array_length = true;
