@@ -431,7 +431,9 @@ public class Vala.GAsyncModule : GSignalModule {
 		foreach (FormalParameter param in m.get_parameters ()) {
 			if (param.direction != ParameterDirection.IN) {
 				finishblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (param.name)), new CCodeMemberAccess.pointer (data_var, get_variable_cname (param.name)))));
-				finishblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, get_variable_cname (param.name)), new CCodeConstant ("NULL"))));
+				if (!(param.parameter_type is ValueType) || param.parameter_type.nullable) {
+					finishblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, get_variable_cname (param.name)), new CCodeConstant ("NULL"))));
+				}
 			}
 		}
 
