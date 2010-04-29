@@ -2989,7 +2989,7 @@ namespace GLib {
 		public void set_boolean (string group_name, string key, bool value);
 		public void set_integer (string group_name, string key, int value);
 		public void set_double (string group_name, string key, double value);
-		public void set_string_list (string group_name, string key, string[] list);
+		public void set_string_list (string group_name, string key, [CCode (type = "const gchar* const*")] string[] list);
 		public void set_locale_string_list (string group_name, string key, string locale, string[] list);
 		public void set_boolean_list (string group_name, string key, bool[] list);
 		public void set_integer_list (string group_name, string key, int[] list);
