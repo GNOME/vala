@@ -3134,7 +3134,7 @@ namespace GLib {
 	[CCode (cname = "GTestCase", ref_function = "", unref_function = "")]
 	public class TestCase {
 		[CCode (cname = "g_test_create_case")]
-		public TestCase (string test_name, [CCode (delegate_target_pos = 1.9, type = "void (*) ()")] TestFunc data_setup, [CCode (delegate_target_pos = 1.9, type = "void (*) ()")] TestFunc data_func, [CCode (delegate_target_pos = 1.9, type = "void (*) ()")] TestFunc data_teardown, [CCode (pos = 1.8)] size_t data_size = 0);
+		public TestCase (string test_name, [CCode (delegate_target_pos = 1.9, type = "void (*) (void)")] TestFunc data_setup, [CCode (delegate_target_pos = 1.9, type = "void (*) (void)")] TestFunc data_func, [CCode (delegate_target_pos = 1.9, type = "void (*) (void)")] TestFunc data_teardown, [CCode (pos = 1.8)] size_t data_size = 0);
 	}
 
 	[Compact]
