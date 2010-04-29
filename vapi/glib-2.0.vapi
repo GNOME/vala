@@ -2600,6 +2600,10 @@ namespace GLib {
 	namespace FileUtils {
 		public static bool get_contents (string filename, out string contents, out size_t length = null) throws FileError;
 		public static bool set_contents (string filename, string contents, ssize_t length = -1) throws FileError;
+		[CCode (cname = "g_file_get_contents")]
+		public static bool get_data (string filename, [CCode (type = "gchar**", array_length_type = "size_t")] out uint8[] contents) throws FileError;
+		[CCode (cname = "g_file_set_contents")]
+		public static bool set_data (string filename, [CCode (type = "const char*", array_length_type = "size_t")] uint8[] contents) throws FileError;
 		public static bool test (string filename, FileTest test);
 		public static int open_tmp (string tmpl, out string name_used) throws FileError;
 		public static string read_link (string filename) throws FileError;
