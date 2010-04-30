@@ -491,6 +491,8 @@ public class Vala.GirParser : CodeVisitor {
 				type_name = "unichar";
 			} else if (type_name == "GLib.Data") {
 				type_name = "GLib.Datalist";
+			} else if (type_name == "Atk.ImplementorIface") {
+				type_name = "Atk.Implementor";
 			}
 			string[] type_components = type_name.split (".");
 			if (type_components[1] != null) {
