@@ -365,6 +365,9 @@ namespace Sqlite {
 		public int column_type (int col);
 		public unowned Value column_value (int col);
 		public unowned string column_name (int index);
+		public unowned string column_database_name (int col);
+		public unowned string column_table_name (int col);
+		public unowned string column_origin_name (int col);
 		public unowned string sql ();
 	}
 
