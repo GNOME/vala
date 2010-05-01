@@ -3444,7 +3444,7 @@ namespace GLib {
 		public unowned StringBuilder prepend_len (string val, ssize_t len);
 		public unowned StringBuilder insert (ssize_t pos, string val);
 		public unowned StringBuilder erase (ssize_t pos = 0, ssize_t len = -1);
-		public unowned StringBuilder truncate (size_t len);
+		public unowned StringBuilder truncate (size_t len = 0);
 
 		[PrintfFormat]
 		public void printf (string format, ...);
