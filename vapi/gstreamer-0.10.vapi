@@ -1185,7 +1185,7 @@ namespace Gst {
 		public static Gst.Structure? from_string (string str, out unowned string end);
 		public bool @get (...);
 		public bool get_boolean (string fieldname, out bool value);
-		public bool get_clock_time (string fieldname, Gst.ClockTime value);
+		public bool get_clock_time (string fieldname, out Gst.ClockTime value);
 		public bool get_date (string fieldname, out GLib.Date value);
 		public bool get_double (string fieldname, out double value);
 		public bool get_enum (string fieldname, GLib.Type enumtype, out int value);
