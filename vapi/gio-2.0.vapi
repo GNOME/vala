@@ -715,7 +715,7 @@ namespace GLib {
 		public GLib.IOCondition condition_check (GLib.IOCondition condition);
 		public bool condition_wait (GLib.IOCondition condition, GLib.Cancellable? cancellable) throws GLib.Error;
 		public bool connect (GLib.SocketAddress address, GLib.Cancellable? cancellable) throws GLib.Error;
-		public unowned GLib.TimeoutSource create_source (GLib.IOCondition condition, GLib.Cancellable? cancellable);
+		public GLib.SocketSource create_source (GLib.IOCondition condition, GLib.Cancellable? cancellable);
 		[CCode (has_construct_function = false)]
 		public Socket.from_fd (int fd) throws GLib.Error;
 		public bool get_blocking ();
@@ -842,6 +842,12 @@ namespace GLib {
 		public void start ();
 		public void stop ();
 		public virtual signal bool incoming (GLib.SocketConnection connection, GLib.Object? source_object);
+	}
+	[Compact]
+	[CCode (cname = "GSource", cheader_filename = "gio/gio.h")]
+	public class SocketSource : GLib.Source {
+		[CCode (cname = "g_source_set_callback")]
+		public void set_callback ([CCode (type = "GSourceFunc")] owned GLib.SocketSourceFunc func);
 	}
 	[Compact]
 	[CCode (copy_function = "g_srv_target_copy", type_id = "G_TYPE_SRV_TARGET", cheader_filename = "gio/gio.h")]

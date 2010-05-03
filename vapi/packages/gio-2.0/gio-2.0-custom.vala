@@ -34,6 +34,13 @@ namespace GLib {
 		public abstract GLib.FileMonitor monitor_file (GLib.FileMonitorFlags flags, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 	}
 
+	[Compact]
+	[CCode (cname = "GSource", ref_function = "g_source_ref", unref_function = "g_source_unref")]
+	public class SocketSource : GLib.Source {
+		[CCode (cname = "g_source_set_callback")]
+		public void set_callback ([CCode (type = "GSourceFunc")] owned SocketSourceFunc func);
+	}
+
 	[CCode (cname = "g_file_hash", cheader_filename = "gio/gio.h")]
 	public static GLib.HashFunc file_hash;
 	[CCode (cname = "g_file_equal", cheader_filename = "gio/gio.h")]
