@@ -35,6 +35,8 @@ public class Gtkdoc.Generator : Api.Visitor {
 	private string current_cname;
 	private Gee.List<Header> current_headers;
 	private Class current_class;
+	private Method current_method;
+	private Delegate current_delegate;
 
 	public bool execute (Settings settings, Api.Tree tree) {
 		tree.accept (this);
@@ -176,6 +178,17 @@ public class Gtkdoc.Generator : Api.Visitor {
 		}
 	}
 
+	private void add_manual_header (string name, string? comment, string[]? annotations = null) {
+		if (comment == null && annotations == null) {
+			return;
+		}
+
+		var header = new Header ("@"+name);
+		header.annotations = annotations;
+		header.value = comment;
+		current_headers.add (header);
+	}
+
 	private void add_header (string name, Comment? comment, string[]? annotations = null) {
 		if (comment == null && annotations == null) {
 			return;
@@ -274,13 +287,25 @@ public class Gtkdoc.Generator : Api.Visitor {
 	}
 
 	public override void visit_error_domain (Api.ErrorDomain edomain) {
-		var old_headers = current_headers;
-		current_headers = new Gee.LinkedList<Header>();
+		if (current_method != null || current_delegate != null) {
+			// method throws error
+			foreach (var header in current_headers) {
+				if (header.name == "error") {
+					// we already commented the error parameter
+					return;
+				}
+			}
+			add_manual_header ("error", "location to store the error occuring, or NULL to ignore", {"out"});
+		} else {
+			// error domain definition
+			var old_headers = current_headers;
+			current_headers = new Gee.LinkedList<Header>();
 
-		edomain.accept_all_children (this);
-		add_symbol (edomain.get_filename(), edomain.get_cname(), edomain.documentation);
+			edomain.accept_all_children (this);
+			add_symbol (edomain.get_filename(), edomain.get_cname(), edomain.documentation);
 
-		current_headers = old_headers;
+			current_headers = old_headers;
+		}
 	}
 
 	public override void visit_error_code (Api.ErrorCode ecode) {
@@ -341,12 +366,15 @@ public class Gtkdoc.Generator : Api.Visitor {
 
 	public override void visit_delegate (Api.Delegate d) {
 		var old_headers = current_headers;
+		var old_delegate = current_delegate;
 		current_headers = new Gee.LinkedList<Header>();
+		current_delegate = d;
 
 		d.accept_all_children (this);
 		add_symbol (d.get_filename(), d.get_cname(), d.documentation);
 
 		current_headers = old_headers;
+		current_delegate = old_delegate;
 	}
 
 	public override void visit_signal (Api.Signal sig) {
@@ -376,15 +404,19 @@ public class Gtkdoc.Generator : Api.Visitor {
 		}
 
 		var old_headers = current_headers;
+		var old_method = current_method;
 		current_headers = new Gee.LinkedList<Header>();
+		current_method = m;
 
 		m.accept_all_children (this);
 		if (m.is_yields) {
-			add_header ("_callback_", null, {"scope async"});
+			add_manual_header ("_callback_", "callback to call when the request is satisfied", {"scope async"});
+			add_manual_header ("user_data", "the data to pass to callback function", {"closure"});
 		}
 		add_symbol (m.get_filename(), m.get_cname (), m.documentation, null, false, false, annotations);
 
 		current_headers = old_headers;
+		current_method = old_method;
 
 		if (m.is_yields) {
 			add_symbol (m.get_filename(), m.get_finish_function_cname ());
