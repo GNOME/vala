@@ -38,7 +38,9 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 
 	public void convert (Comment comment) {
 		comment.accept (this);
-		brief_comment = brief_comment.strip ();
+        if (brief_comment != null) {
+          brief_comment = brief_comment.strip ();
+        }
 		long_comment = current_builder.str.strip ();
 		if (long_comment == "") {
 			long_comment = null;
