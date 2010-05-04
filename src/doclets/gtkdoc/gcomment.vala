@@ -45,11 +45,8 @@ public class Gtkdoc.GComment {
 		var builder = new StringBuilder ();
 
 		builder.append_printf ("/**\n * %s", symbol);
-		if (symbol_annotations != null) {
-			if (symbol_annotations.length > 0) {
-				builder.append_c (':');
-			}
-
+		if (symbol_annotations != null && symbol_annotations.length > 0) {
+			builder.append_c (':');
 			foreach (var annotation in symbol_annotations) {
 				builder.append_printf (" (%s)", annotation);
 			}
@@ -57,14 +54,11 @@ public class Gtkdoc.GComment {
 
 		foreach (var header in headers) {
 			builder.append_printf ("\n * %s:", header.name);
-			if (header.annotations != null) {
+			if (header.annotations != null && header.annotations.length > 0) {
 				foreach (var annotation in header.annotations) {
 					builder.append_printf (" (%s)", annotation);
 				}
-
-				if (header.annotations.length > 0) {
-					builder.append_c (':');
-				}
+				builder.append_c (':');
 			}
 
 			if (header.value != null) {

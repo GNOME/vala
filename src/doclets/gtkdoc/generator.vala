@@ -179,20 +179,21 @@ public class Gtkdoc.Generator : Api.Visitor {
 		}
 	}
 
-	private void add_manual_header (string name, string? comment, string[]? annotations = null) {
+	private Header? add_manual_header (string name, string? comment, string[]? annotations = null) {
 		if (comment == null && annotations == null) {
-			return;
+			return null;
 		}
 
 		var header = new Header ("@"+name);
 		header.annotations = annotations;
 		header.value = comment;
 		current_headers.add (header);
+		return header;
 	}
 
-	private void add_header (string name, Comment? comment, string[]? annotations = null) {
+	private Header? add_header (string name, Comment? comment, string[]? annotations = null) {
 		if (comment == null) {
-			return;
+			return null;
 		}
 
 		var converter = new Gtkdoc.CommentConverter ();
@@ -209,6 +210,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 
 		header.annotations = annotations;
 		current_headers.add (header);
+		return header;
 	}
 
 	public override void visit_tree (Api.Tree tree) {
@@ -290,13 +292,21 @@ public class Gtkdoc.Generator : Api.Visitor {
 	public override void visit_error_domain (Api.ErrorDomain edomain) {
 		if (current_method != null || current_delegate != null) {
 			// method throws error
+			Header? param_header = null;
 			foreach (var header in current_headers) {
 				if (header.name == "error") {
-					// we already commented the error parameter
-					return;
+					param_header = header;
+					break;
 				}
 			}
-			add_manual_header ("error", "location to store the error occuring, or %NULL to ignore", {"out"});
+			if (param_header == null) {
+				add_manual_header ("error", "location to store the error occuring, or %NULL to ignore", {"error-domains %s".printf (edomain.get_cname ())});
+			} else {
+				// assume the only annotation is error-domains
+				var annotation = param_header.annotations[0];
+				annotation += " %s".printf (edomain.get_cname ());
+				param_header.annotations[0] = annotation;
+			}
 		} else {
 			// error domain definition
 			var old_headers = current_headers;
@@ -387,7 +397,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 		// gtkdoc maps parameters by their ordering, so let's manually add the first parameter
 		add_manual_header (to_lower_case (((Api.Node)sig.parent).name), "", null);
 		sig.accept_all_children (this);
-		var name = sig.get_cname ().replace ("_", "-");
+		var name = sig.get_cname().replace ("_", "-");
 		add_comment (sig.get_filename(), "%s::%s".printf (current_cname, name), sig.documentation);
 
 		current_headers = old_headers;
@@ -457,7 +467,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 
 		if (param.parameter_type.data_type is Api.Array) {
 			annotations += "array length=%s".printf (param.name+"_length1");
-		} 
+		}
 
 		if (param.documentation != null) {
 			add_header (param.name, param.documentation, annotations);
