@@ -325,7 +325,12 @@ public class Gtkdoc.Generator : Api.Visitor {
 			return;
 		}
 
-		add_header (f.get_cname (), f.documentation);
+		if (current_headers == null) {
+			// field not in class/struct/interface
+			add_symbol (f.get_filename(), f.get_cname(), f.documentation);
+		} else {
+			add_header (f.get_cname (), f.documentation);
+		}
 		f.accept_all_children (this);
 	}
 
@@ -335,8 +340,13 @@ public class Gtkdoc.Generator : Api.Visitor {
 	}
 
 	public override void visit_delegate (Api.Delegate d) {
-		add_symbol (d.get_filename(), d.get_cname(), d.documentation);
+		var old_headers = current_headers;
+		current_headers = new Gee.LinkedList<Header>();
+
 		d.accept_all_children (this);
+		add_symbol (d.get_filename(), d.get_cname(), d.documentation);
+
+		current_headers = old_headers;
 	}
 
 	public override void visit_signal (Api.Signal sig) {

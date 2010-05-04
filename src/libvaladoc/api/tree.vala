@@ -265,11 +265,11 @@ public class Valadoc.Api.Tree {
 
 	// copied from valacodecontext.vala
 	private string? get_external_documentation_path (string pkg) {
-		var path = get_file_path (Path.build_filename (pkg, pkg + ".valadoc"), "vala/vapi/documentation", settings.docu_directories);
+		var path = get_file_path (Path.build_filename (pkg, "documentation.xml"), "vala/vapi/documentation", settings.docu_directories);
 
 		if (path == null) {
 			/* last chance: try the package compiled-in vapi dir */
-			var filename = Path.build_filename (Config.vapi_dir, "vapi", "documentation", pkg, pkg + ".valadoc");
+			var filename = Path.build_filename (Config.vapi_dir, "vapi", "documentation", pkg, "documentation.xml");
 			if (FileUtils.test (filename, FileTest.EXISTS)) {
 				path = filename;
 			}
