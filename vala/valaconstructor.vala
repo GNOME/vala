@@ -47,7 +47,7 @@ public class Vala.Constructor : Symbol {
 	 * @param source reference to source code
 	 * @return       newly created constructor
 	 */
-	public Constructor (SourceReference source) {
+	public Constructor (SourceReference? source) {
 		base (null, source);
 	}
 
