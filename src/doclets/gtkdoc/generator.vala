@@ -190,7 +190,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 	}
 
 	private void add_header (string name, Comment? comment, string[]? annotations = null) {
-		if (comment == null && annotations == null) {
+		if (comment == null) {
 			return;
 		}
 
@@ -446,7 +446,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 		if (param.parameter_type.data_type is Api.Array) {
 			annotations += "array length=%s".printf (param.name+"_length1");
 		} 
-		  
+
 		add_header (param.name, param.documentation, annotations);
 		param.accept_all_children (this);
 	}
