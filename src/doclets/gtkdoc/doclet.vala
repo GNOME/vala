@@ -247,11 +247,15 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 							  "--types", "%s.types".printf (settings.pkg_name),
 							  "--output-dir", settings.path };
 
-			string[] env = { "CFLAGS=%s".printf (cflags),
-							 "LDFLAGS=%s %s".printf (libs, library) };
-
+			string[] env = { "CFLAGS=%s %s".printf (cflags,
+													Environment.get_variable ("CFLAGS") ?? ""),
+							 "LDFLAGS=%s %s %s".printf (libs, library,
+														Environment.get_variable ("LDFLAGS") ?? ""),
+							 "LD_LIBRARY_PATH=%s:%s".printf (Path.get_dirname (library),
+															 Environment.get_variable ("LD_LIBRARY_PATH") ?? "")};
 			foreach (var evar in Environment.list_variables()) {
-				env += "%s=%s".printf (evar, Environment.get_variable(evar));
+				if (evar != "CFLAGS" && evar != "LDFLAGS" && evar != "LD_LIBRARY_PATH")
+					env += "%s=%s".printf (evar, Environment.get_variable(evar));
 			}
 
 			Process.spawn_sync (settings.path, args, env, SpawnFlags.SEARCH_PATH, null, null, null);
