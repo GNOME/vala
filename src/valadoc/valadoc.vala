@@ -83,7 +83,7 @@ public class ValaDoc : Object {
 		{ "wiki", 0, 0, OptionArg.FILENAME, ref wikidirectory, "Wiki directory", "DIRECTORY" },
 		{ "deps", 0, 0, OptionArg.NONE, ref with_deps, "Adds packages to the documentation", null },
 		{ "doclet-arg", 'X', 0, OptionArg.STRING_ARRAY, ref pluginargs, "Pass arguments to the doclet", "ARG" },
-		{ "doclet", 0, 0, OptionArg.STRING, ref pluginpath, "plugin", "Name of an included doclet or path to custom doclet" },
+		{ "doclet", 0, 0, OptionArg.STRING, ref pluginpath, "Name of an included doclet or path to custom doclet", "PLUGIN"},
 
 		{ "no-protected", 0, OptionFlags.REVERSE, OptionArg.NONE, ref _protected, "Removes protected elements from documentation", null },
 		{ "internal", 0, 0, OptionArg.NONE, ref _internal, "Adds internal elements to documentation", null },
