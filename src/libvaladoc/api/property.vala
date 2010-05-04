@@ -42,6 +42,10 @@ public class Valadoc.Api.Property : Member {
 		return ((Vala.Property) symbol).nick;
 	}
 
+	public string get_dbus_name () {
+		return Vala.DBusModule.get_dbus_name_for_member (symbol);
+	}
+
 	public TypeReference? property_type { private set; get;}
 
 	public bool is_virtual {
@@ -59,6 +63,12 @@ public class Valadoc.Api.Property : Member {
 	public bool is_override {
 		get {
 			return ((Vala.Property) symbol).overrides;
+		}
+	}
+
+	public bool is_dbus_visible {
+		get {
+			return Vala.DBusServerModule.is_dbus_visible (symbol);
 		}
 	}
 

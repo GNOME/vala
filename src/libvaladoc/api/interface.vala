@@ -54,6 +54,10 @@ public class Valadoc.Api.Interface : TypeSymbol {
 		return ((Vala.Interface) symbol).get_cname ();
 	}
 
+	public string? get_dbus_name () {
+		return Vala.DBusModule.get_dbus_name ((Vala.TypeSymbol) symbol);
+	}
+
 	public TypeReference? base_type { private set; get; }
 
 	public override NodeType node_type { get { return NodeType.INTERFACE; } }

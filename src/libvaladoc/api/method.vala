@@ -37,6 +37,14 @@ public class Valadoc.Api.Method : Member {
 		return ((Vala.Method) symbol).get_finish_cname ();
 	}
 
+	public string get_dbus_name () {
+		return Vala.DBusModule.get_dbus_name_for_member (symbol);
+	}
+
+	public string get_dbus_result_name () {
+		return Vala.DBusServerModule.dbus_result_name ((Vala.Method) symbol);
+	}
+
 	public Method? base_method { private set; get; }
 
 	public TypeReference? return_type { private set; get; }
@@ -83,6 +91,12 @@ public class Valadoc.Api.Method : Member {
 	public bool is_inline {
 		get {
 			return ((Vala.Method) symbol).is_inline;
+		}
+	}
+
+	public bool is_dbus_visible {
+		get {
+			return Vala.DBusServerModule.is_dbus_visible (symbol);
 		}
 	}
 

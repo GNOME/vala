@@ -174,6 +174,10 @@ public class Valadoc.Api.TypeReference : Item {
 		}
 	}
 
+	public string? get_dbus_type_signature () {
+		return Vala.DBusModule.get_type_signature (vtyperef);
+	}
+
 	internal override void resolve_type_references (Tree root) {
 		if ( this.vtyperef is Vala.PointerType) {
 			this.data_type = new Pointer ((Vala.PointerType) this.vtyperef, this);

@@ -33,6 +33,10 @@ public class Valadoc.Api.ErrorDomain : TypeSymbol {
 		return ((Vala.ErrorDomain) symbol).get_cname();
 	}
 
+	public string? get_dbus_name () {
+		return Vala.DBusModule.get_dbus_name ((Vala.TypeSymbol) symbol);
+	}
+
 	public override NodeType node_type { get { return NodeType.ERROR_DOMAIN; } }
 
 	public override void accept (Visitor visitor) {

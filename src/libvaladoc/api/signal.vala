@@ -33,6 +33,10 @@ public class Valadoc.Api.Signal : Member {
 		return ((Vala.Signal) symbol).get_cname();
 	}
 
+	public string get_dbus_name () {
+		return Vala.DBusModule.get_dbus_name_for_member (symbol);
+	}
+
 	public TypeReference? return_type { protected set; get; }
 
 	internal override void resolve_type_references (Tree root) {
@@ -44,6 +48,12 @@ public class Valadoc.Api.Signal : Member {
 	public bool is_virtual {
 		get {
 			return ((Vala.Signal) symbol).is_virtual;
+		}
+	}
+
+	public bool is_dbus_visible {
+		get {
+			return Vala.DBusServerModule.is_dbus_visible (symbol);
 		}
 	}
 

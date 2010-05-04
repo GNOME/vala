@@ -73,6 +73,10 @@ public class Valadoc.Api.Class : TypeSymbol {
 		return this.vclass.get_take_value_function ();
 	}
 
+	public string? get_dbus_name () {
+		return Vala.DBusModule.get_dbus_name ((Vala.TypeSymbol) symbol);
+	}
+
 	public Collection<TypeReference> get_implemented_interface_list () {
 		return this.interfaces;
 	}

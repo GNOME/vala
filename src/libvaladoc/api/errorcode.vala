@@ -56,6 +56,10 @@ public class Valadoc.Api.ErrorCode : TypeSymbol {
 		return ((Vala.ErrorCode) symbol).get_cname ();
 	}
 
+	public string get_dbus_name () {
+		return Vala.DBusModule.get_dbus_name_for_member (symbol);
+	}
+
 	public override NodeType node_type { get { return NodeType.ERROR_CODE; } }
 
 	public override void accept (Visitor visitor) {
