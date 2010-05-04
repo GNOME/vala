@@ -295,7 +295,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 					return;
 				}
 			}
-			add_manual_header ("error", "location to store the error occuring, or NULL to ignore", {"out"});
+			add_manual_header ("error", "location to store the error occuring, or %NULL to ignore", {"out"});
 		} else {
 			// error domain definition
 			var old_headers = current_headers;
