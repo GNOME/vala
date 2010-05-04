@@ -3375,6 +3375,7 @@ namespace GLib {
 		public void insert (owned K key, owned V value);
 		public void replace (owned K key, owned V value);
 		public unowned V lookup (K key);
+		public bool lookup_extended (K lookup_key, out unowned K orig_key, out unowned V value);
 		public bool remove (K key);
 		public void remove_all ();
 		public List<unowned K> get_keys ();
