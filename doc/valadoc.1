@@ -1,0 +1,88 @@
+.TH valadoc 1 "26 April 2010" "valadoc-0.2" "Valadoc"
+.SH NAME
+valadoc \- Vala Documentation Tool
+.SH SYNOPSIS
+.B valadoc
+[\fIOPTION\fR]... \fIFILE\fR...
+.SH DESCRIPTION
+Valadoc is a documentation generator for generating API documentation
+from Vala source code based on libvala.
+.SH OPTIONS
+.TP
+.B --help
+.TP
+.B -b, --basedir=\fIDIRECTORY\fR
+Base source directory
+.TP
+.B -D, --define=\fISYMBOL\fR
+Define SYMBOL
+.TP
+.B --enable-checking
+Enable additional run-time checks
+.TP
+.B --enable-deprecated
+Enable deprecated features
+.TP
+.B --enable-experimental
+Enable experimental features
+.TP
+.B --enable-experimental-non-null
+Enable experimental enhancements for non-null types
+.TP
+.B --disable-dbus-transformation
+Disable transformation of D-Bus member names
+.TP
+.B --vapidir=\fIDIRECTORY\fR
+Look for package bindings in \fIDIRECTORY\fR
+.TP
+.B --docudir=\fIDIRECTORY\fR
+Look for external documentation in \fIDIRECTORY\fR
+.TP
+.B --profile=\fIPROFILE\fR
+Use the given profile instead of the default
+.TP
+.B --pkg=\fIPACKAGE\fR
+Include binding for \fIPACKAGE\fR
+.TP
+.B -o, --directory=\fIDIRECTORY\fR
+Output directory
+.TP
+.B --wiki=\fIDIRECTORY\fR
+Wiki directory
+.TP
+.B --deps
+Adds packages to the documentation
+.TP
+.B -X, --doclet-arg=\fIARG\fR
+Pass arguments to the doclet
+.TP
+.B --doclet=\fIPLUGIN\fR
+Name of an included doclet or path to custom doclet
+.TP
+.B --no-protected
+Removes protected elements from documentation
+.TP
+.B --internal
+Adds internal elements to documentation
+.TP
+.B --private
+Adds private elements to documentation
+.TP
+.B --package-name=\fINAME\fR
+Package name
+.TP
+.B --package-version=\fIVERSION\fR
+Package version
+.TP
+.B --force
+Force
+.TP
+.B --verbose
+Show all warnings
+.SH HOMEPAGE AND BUG REPORT
+http://live.gnome.org/Valadoc
+.SH AUTHORS
+Florian Brosch
+
+Man page written to conform with Debian by Evan Nemerson.
+

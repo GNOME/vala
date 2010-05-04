@@ -61,6 +61,7 @@ AC_CONFIG_FILES([Makefile
                  src/libvaladoc/valadoc-1.0.pc
                  src/Makefile
                  icons/Makefile
+                 doc/Makefile
                  src/libvaladoc/Makefile
                  src/doclets/Makefile
                  src/doclets/htm/Makefile
