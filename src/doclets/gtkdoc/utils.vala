@@ -42,6 +42,8 @@ namespace Gtkdoc {
 			return ((Api.FormalParameter)item).name;
 		} else if (item is Api.Constant) {
 			return ((Api.Constant)item).get_cname ();
+		} else if (item is Api.Property) {
+			return ((Api.Property)item).get_cname ();
 		} else if (item is Api.Signal) {
 			var name = ((Api.Signal)item).get_cname ();
 			return name.replace ("_", "-");
@@ -70,6 +72,8 @@ namespace Gtkdoc {
 			return "@%s".printf (((Api.FormalParameter)item).name);
 		} else if (item is Api.Constant) {
 			return "%%%s".printf (((Api.Constant)item).get_cname ());
+		} else if (item is Api.Property) {
+			return "#%s:%s".printf (get_cname (item.parent), ((Api.Property)item).get_cname ());
 		} else if (item is Api.Signal) {
 			var name = ((Api.Signal)item).get_cname ();
 			name = name.replace ("_", "-");
