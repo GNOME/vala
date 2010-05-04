@@ -123,7 +123,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 				}
 			}
 
-			if (!found) {
+			if (!found && lang_header.value != null) {
 				headers.add (lang_header);
 			}
 		}
@@ -192,7 +192,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 	}
 
 	private Header? add_header (string name, Comment? comment, string[]? annotations = null) {
-		if (comment == null) {
+		if (comment == null && annotations == null) {
 			return null;
 		}
 
@@ -454,7 +454,6 @@ public class Gtkdoc.Generator : Api.Visitor {
 		} else if (param.is_ref) {
 			direction = "inout";
 		}
-
 		annotations += direction;
 
 		if (param.parameter_type.is_nullable) {
@@ -469,13 +468,15 @@ public class Gtkdoc.Generator : Api.Visitor {
 			annotations += "array length=%s".printf (param.name+"_length1");
 		}
 
-		if (param.documentation != null) {
-			add_header (param.name, param.documentation, annotations);
+		if (get_cname (param.parameter_type.data_type) == "GError") {
+			annotations += "not-error";
 		}
-		else if (current_signal != null && param.documentation == null) {
+
+		if (current_signal != null && param.documentation == null) {
 			// gtkdoc writes arg0, arg1 which is ugly. As a workaround, we always add an header for them.
 			add_manual_header (param.name, "", null);
-			return;
+		} else {
+			add_header (param.name, param.documentation, annotations);
 		}
 		param.accept_all_children (this);
 	}
