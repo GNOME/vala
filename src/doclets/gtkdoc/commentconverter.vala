@@ -35,12 +35,18 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 
 	private StringBuilder current_builder = new StringBuilder ();
 	private bool in_brief_comment = true;
+	private string[] see_also = new string[]{};
 
 	public void convert (Comment comment) {
 		comment.accept (this);
-        if (brief_comment != null) {
-          brief_comment = brief_comment.strip ();
-        }
+		if (brief_comment != null) {
+			brief_comment = brief_comment.strip ();
+		}
+
+		if (see_also.length > 0) {
+			current_builder.append_printf ("\n<emphasis>See Also</emphasis>: %s",
+										   string.joinv (", ", see_also));
+		}
 		long_comment = current_builder.str.strip ();
 		if (long_comment == "") {
 			long_comment = null;
@@ -227,7 +233,7 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 			versioning.add (header);
 		} else if (t is Taglets.See) {
 			var see = (Taglets.See)t;
-			old_builder.append_printf ("\n<emphasis>See Also</emphasis>: %s\n", get_creference (see.symbol) ?? see.symbol_name);
+			see_also += get_creference (see.symbol) ?? see.symbol_name;
 		} else if (t is Taglets.Link) {
 			((Taglets.Link)t).produce_content().accept (this);
 		} else {
