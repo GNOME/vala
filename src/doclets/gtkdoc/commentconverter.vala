@@ -83,7 +83,7 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 	}
 
 	public override void visit_symbol_link (SymbolLink sl) {
-		current_builder.append (get_reference (sl.symbol) ?? sl.label);
+		current_builder.append (get_creference (sl.symbol) ?? sl.label);
 	}
   
 	public override void visit_list (Content.List list) {
@@ -227,7 +227,7 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 			versioning.add (header);
 		} else if (t is Taglets.See) {
 			var see = (Taglets.See)t;
-			old_builder.append_printf ("\n<emphasis>See Also</emphasis>: %s\n", get_reference (see.symbol) ?? see.symbol_name);
+			old_builder.append_printf ("\n<emphasis>See Also</emphasis>: %s\n", get_creference (see.symbol) ?? see.symbol_name);
 		} else if (t is Taglets.Link) {
 			((Taglets.Link)t).produce_content().accept (this);
 		} else {

@@ -34,31 +34,71 @@ namespace Gtkdoc {
 		return string.joinv ("\n * ", comment.split ("\n"));
 	}
 
-	private string? get_reference (Api.Node symbol) {
-		if (symbol is Api.Method) {
-			return "%s()".printf (((Api.Method)symbol).get_cname ());
-		} else if (symbol is Api.FormalParameter) {
-			return "@%s".printf (((Api.FormalParameter)symbol).name);
-		} else if (symbol is Api.Constant) {
-			return "%%%s".printf (((Api.Constant)symbol).get_cname ());
-		} else if (symbol is Api.Signal) {
-			return "::%s".printf (((Api.Signal)symbol).get_cname ());
-		} else if (symbol is Api.Class) {
-			return "#%s".printf (((Api.Class)symbol).get_cname ());
-		} else if (symbol is Api.Struct) {
-			return "#%s".printf (((Api.Struct)symbol).get_cname ());
-		} else if (symbol is Api.Interface) {
-			return "#%s".printf (((Api.Interface)symbol).get_cname ());
-		} else if (symbol is Api.ErrorDomain) {
-			return "#%s".printf (((Api.ErrorDomain)symbol).get_cname ());
-		} else if (symbol is Api.ErrorCode) {
-			return "#%s".printf (((Api.ErrorCode)symbol).get_cname ());
-		} else if (symbol is Api.Delegate) {
-			return "#%s".printf (((Api.Delegate)symbol).get_cname ());
-		} else if (symbol is Api.Enum) {
-			return "#%s".printf (((Api.Enum)symbol).get_cname ());
+	public string? get_cname (Api.Item item)
+	{
+		if (item is Api.Method) {
+			return ((Api.Method)item).get_cname ();
+		} else if (item is Api.FormalParameter) {
+			return ((Api.FormalParameter)item).name;
+		} else if (item is Api.Constant) {
+			return ((Api.Constant)item).get_cname ();
+		} else if (item is Api.Signal) {
+			var name = ((Api.Signal)item).get_cname ();
+			return name.replace ("_", "-");
+		} else if (item is Api.Class) {
+			return ((Api.Class)item).get_cname ();
+		} else if (item is Api.Struct) {
+			return ((Api.Struct)item).get_cname ();
+		} else if (item is Api.Interface) {
+			return ((Api.Interface)item).get_cname ();
+		} else if (item is Api.ErrorDomain) {
+			return ((Api.ErrorDomain)item).get_cname ();
+		} else if (item is Api.ErrorCode) {
+			return ((Api.ErrorCode)item).get_cname ();
+		} else if (item is Api.Delegate) {
+			return ((Api.Delegate)item).get_cname ();
+		} else if (item is Api.Enum) {
+			return ((Api.Enum)item).get_cname ();
 		}
 		return null;
+	}
+
+	public string? get_creference (Api.Item item) {
+		if (item is Api.Method) {
+			return "%s()".printf (((Api.Method)item).get_cname ());
+		} else if (item is Api.FormalParameter) {
+			return "@%s".printf (((Api.FormalParameter)item).name);
+		} else if (item is Api.Constant) {
+			return "%%%s".printf (((Api.Constant)item).get_cname ());
+		} else if (item is Api.Signal) {
+			var name = ((Api.Signal)item).get_cname ();
+			name = name.replace ("_", "-");
+			return "#%s::%s".printf (get_cname (item.parent), name);
+		} else {
+			var cname = get_cname (item);
+			if (cname != null) {
+				return "#%s".printf (cname);
+			}
+		}
+		return null;
+	}
+
+	public string to_lower_case (string camel) {
+		var builder = new StringBuilder ();
+		bool last_upper = true;
+		for (int i=0; i < camel.length; i++) {
+			if (camel[i].isupper ()) {
+				if (!last_upper) {
+					builder.append_c ('_');
+				}
+				builder.append_unichar (camel[i].tolower ());
+				last_upper = true;
+			} else {
+				builder.append_unichar (camel[i]);
+				last_upper = false;
+			}
+		}
+		return builder.str;
 	}
 }
 

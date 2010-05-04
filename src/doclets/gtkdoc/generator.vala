@@ -37,6 +37,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 	private Class current_class;
 	private Method current_method;
 	private Delegate current_delegate;
+	private Api.Signal current_signal;
 
 	public bool execute (Settings settings, Api.Tree tree) {
 		tree.accept (this);
@@ -378,8 +379,19 @@ public class Gtkdoc.Generator : Api.Visitor {
 	}
 
 	public override void visit_signal (Api.Signal sig) {
-		add_comment (sig.get_filename(), "%s::%s".printf (current_cname, sig.get_cname ()), sig.documentation);
+		var old_headers = current_headers;
+		var old_signal = current_signal;
+		current_headers = new Gee.LinkedList<Header>();
+		current_signal = sig;
+
+		// gtkdoc maps parameters by their ordering, so let's manually add the first parameter
+		add_manual_header (to_lower_case (((Api.Node)sig.parent).name), "", null);
 		sig.accept_all_children (this);
+		var name = sig.get_cname ().replace ("_", "-");
+		add_comment (sig.get_filename(), "%s::%s".printf (current_cname, name), sig.documentation);
+
+		current_headers = old_headers;
+		current_signal = old_signal;
 	}
 
 	public override void visit_creation_method (Api.Method m) {
@@ -447,7 +459,14 @@ public class Gtkdoc.Generator : Api.Visitor {
 			annotations += "array length=%s".printf (param.name+"_length1");
 		} 
 
-		add_header (param.name, param.documentation, annotations);
+		if (param.documentation != null) {
+			add_header (param.name, param.documentation, annotations);
+		}
+		else if (current_signal != null && param.documentation == null) {
+			// gtkdoc writes arg0, arg1 which is ugly. As a workaround, we always add an header for them.
+			add_manual_header (param.name, "", null);
+			return;
+		}
 		param.accept_all_children (this);
 	}
 }
