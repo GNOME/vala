@@ -336,12 +336,12 @@ public class Gtkdoc.Generator : Api.Visitor {
 		add_comment (prop.get_filename(), "%s:%s".printf (current_cname, prop.get_cname ()), prop.documentation);
 		prop.accept_all_children (this);
 
-		if (prop.getter != null && !prop.getter.is_private) {
+		if (prop.getter != null && !prop.getter.is_private && prop.getter.is_get) {
 			add_symbol (prop.get_filename(), prop.getter.get_cname ());
 		}
 
-		if (prop.setter != null && !prop.setter.is_private) {
-		  add_symbol (prop.get_filename(), prop.setter.get_cname ());
+		if (prop.setter != null && !prop.setter.is_private && prop.setter.is_set) {
+			add_symbol (prop.get_filename(), prop.setter.get_cname ());
 		}
 	}
 
