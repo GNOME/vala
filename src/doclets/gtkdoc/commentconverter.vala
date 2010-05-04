@@ -24,29 +24,37 @@ using Valadoc;
 using Valadoc.Api;
 using Valadoc.Content;
 
+public class Gtkdoc.Header {
+	public string name;
+	public string[]? annotations;
+	public string? value;
 
+	public Header (string name, string? value = null) {
+		this.name = name;
+		this.value = value;
+	}
+}
 
 public class Gtkdoc.CommentConverter : ContentVisitor {
+	public bool is_dbus;
 	public string brief_comment;
 	public string long_comment;
-	public Gee.List<Header> headers = new Gee.LinkedList<Header> ();
 	public string returns;
+	public Gee.List<Header> headers = new Gee.LinkedList<Header> ();
 	public Gee.List<Header> versioning = new Gee.LinkedList<Header> ();
 
 	private StringBuilder current_builder = new StringBuilder ();
 	private bool in_brief_comment = true;
 	private string[] see_also = new string[]{};
 
-	public void convert (Comment comment) {
+	public void convert (Comment comment, bool is_dbus = false) {
+		this.is_dbus = is_dbus;
 		comment.accept (this);
-		if (brief_comment != null) {
-			brief_comment = brief_comment.strip ();
-		}
 
 		if (see_also.length > 0) {
-			current_builder.append_printf ("\n<emphasis>See Also</emphasis>: %s",
-										   string.joinv (", ", see_also));
+			current_builder.append_printf ("<para><emphasis>See also</emphasis>: %s</para>", string.joinv (", ", see_also));
 		}
+
 		long_comment = current_builder.str.strip ();
 		if (long_comment == "") {
 			long_comment = null;
@@ -89,7 +97,7 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 	}
 
 	public override void visit_symbol_link (SymbolLink sl) {
-		current_builder.append (get_creference (sl.symbol) ?? sl.label);
+		current_builder.append (get_docbook_link (sl.symbol, is_dbus) ?? sl.label);
 	}
   
 	public override void visit_list (Content.List list) {
@@ -133,7 +141,7 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 			warning ("GtkDoc: unsupported list type: %s", list.bullet.to_string ());
 			break;
 		}
-		
+
 		list.accept_children (this);
 		current_builder.append_printf ("</%s>", tag);
 	}
@@ -145,13 +153,17 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 	}
   
 	public override void visit_paragraph (Paragraph para) {
-		current_builder.append ("\n");
+		if (!in_brief_comment) {
+			current_builder.append ("<para>");
+		}
 		para.accept_children (this);
-		current_builder.append ("\n");
+
 		if (in_brief_comment) {
 			brief_comment = current_builder.str;
 			current_builder = new StringBuilder ();
 			in_brief_comment = false;
+		} else {
+			current_builder.append ("</para>");
 		}
 	}
   
@@ -233,7 +245,7 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 			versioning.add (header);
 		} else if (t is Taglets.See) {
 			var see = (Taglets.See)t;
-			see_also += get_creference (see.symbol) ?? see.symbol_name;
+			see_also += get_docbook_link (see.symbol, is_dbus) ?? see.symbol_name;
 		} else if (t is Taglets.Link) {
 			((Taglets.Link)t).produce_content().accept (this);
 		} else {

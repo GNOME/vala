@@ -31,6 +31,9 @@ public class Gtkdoc.Generator : Api.Visitor {
 		public Gee.List<string> section_lines;
 	}
 
+	public Gee.List<DBus.Interface> dbus_interfaces = new Gee.LinkedList<DBus.Interface>();
+
+	private Settings settings;
 	private Gee.Map<string, FileData> files_data = new Gee.HashMap<string, FileData>();
 	private string current_cname;
 	private Gee.List<Header> current_headers;
@@ -38,8 +41,11 @@ public class Gtkdoc.Generator : Api.Visitor {
 	private Method current_method;
 	private Delegate current_delegate;
 	private Api.Signal current_signal;
+	private DBus.Interface current_dbus_interface;
+	private DBus.Member current_dbus_member;
 
 	public bool execute (Settings settings, Api.Tree tree) {
+		this.settings = settings;
 		tree.accept (this);
 		var code_dir = Path.build_filename (settings.path, "ccomments");
 		var sections = Path.build_filename (settings.path, "%s-sections.txt".printf (settings.pkg_name));
@@ -80,6 +86,10 @@ public class Gtkdoc.Generator : Api.Visitor {
 		return true;
 	}
 
+	public Gee.Set<string> get_filenames () {
+		return files_data.keys.read_only_view;
+	}
+
 	private FileData get_file_data (string filename) {
 		var file_data = files_data[filename];
 		if (file_data == null) {
@@ -97,7 +107,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 			return doc_headers;
 		}
 
-		var headers = new Gee.LinkedList<Header> ();
+		var headers = new Gee.LinkedList<Header>();
 
 		foreach (var doc_header in doc_headers) {
 			var header = doc_header;
@@ -130,31 +140,28 @@ public class Gtkdoc.Generator : Api.Visitor {
 		return headers;
 	}
 
-	private string format_comment (string symbol, Comment? comment, bool short_description = false, string[]? returns_annotations = null) {
+	private GComment create_gcomment (string symbol, Comment? comment, bool short_description = false, string[]? returns_annotations = null, bool is_dbus = false) {
 		var converter = new Gtkdoc.CommentConverter ();
 		if (comment != null) {
-			converter.convert (comment);
+			converter.convert (comment, is_dbus);
 		}
 
 		var gcomment = new GComment ();
 		gcomment.symbol = symbol;
 		gcomment.returns = converter.returns;
 		gcomment.returns_annotations = returns_annotations;
-		if (converter.brief_comment != null) {
-			if (short_description) {
-				var header = new Header ("@short_description", converter.brief_comment);
-				gcomment.headers.add (header);
-				gcomment.body = converter.long_comment;
-			} else if (converter.long_comment == null) {
-				gcomment.body = converter.brief_comment;
-			} else {
-			  gcomment.body = "%s\n\n%s".printf (converter.brief_comment, converter.long_comment);
-			}
+
+		if (converter.brief_comment != null && short_description) {
+			var header = new Header ("@short_description", converter.brief_comment);
+			gcomment.headers.add (header);
+		} else {
+			gcomment.brief_comment = converter.brief_comment;
 		}
+		gcomment.long_comment = converter.long_comment;
 
 		gcomment.headers.add_all (merge_headers (converter.headers, current_headers));
 		gcomment.versioning.add_all (converter.versioning);
-		return gcomment.to_string ();
+		return gcomment;
 	}
 
 	private void add_comment (string filename, string symbol, Comment? comment, bool short_description = false) {
@@ -163,10 +170,10 @@ public class Gtkdoc.Generator : Api.Visitor {
 		}
 
 		var file_data = get_file_data (filename);
-		file_data.comments.add (format_comment (symbol, comment, short_description));
+		file_data.comments.add (create_gcomment(symbol, comment, short_description).to_string ());
 	}
 
-	private void add_symbol (string filename, string cname, Comment? comment = null, string? symbol = null, bool title = false, bool short_description = false, string[]? returns_annotations = null) {
+	private GComment? add_symbol (string filename, string cname, Comment? comment = null, string? symbol = null, bool title = false, bool short_description = false, string[]? returns_annotations = null) {
 		var file_data = get_file_data (filename);
 		if (title) {
 			file_data.section_lines.add ("<TITLE>%s</TITLE>".printf (cname));
@@ -175,11 +182,14 @@ public class Gtkdoc.Generator : Api.Visitor {
 		file_data.section_lines.add (cname);
 
 		if (comment != null || (current_headers != null && current_headers.size > 0)) {
-			file_data.comments.add (format_comment (symbol ?? cname, comment, short_description, returns_annotations));
+			var gcomment = create_gcomment(symbol ?? cname, comment, short_description, returns_annotations);
+			file_data.comments.add (gcomment.to_string ());
+			return gcomment;
 		}
+		return null;
 	}
 
-	private Header? add_manual_header (string name, string? comment, string[]? annotations = null) {
+	private Header? add_custom_header (string name, string? comment, string[]? annotations = null) {
 		if (comment == null && annotations == null) {
 			return null;
 		}
@@ -189,6 +199,18 @@ public class Gtkdoc.Generator : Api.Visitor {
 		header.value = comment;
 		current_headers.add (header);
 		return header;
+	}
+
+	private void remove_custom_header (string name) {
+		var header_name = "@%s".printf (name);
+		var it = current_headers.iterator();
+		while (it.next ()) {
+			var header = it.@get ();
+			if (header.name == header_name) {
+				it.remove ();
+				break;
+			}
+		}
 	}
 
 	private Header? add_header (string name, Comment? comment, string[]? annotations = null) {
@@ -201,10 +223,11 @@ public class Gtkdoc.Generator : Api.Visitor {
 
 		if (comment != null) {
 			converter.convert (comment);
-			if (converter.long_comment != null) {
-			  header.value = "%s<para>%s</para>".printf (converter.brief_comment, converter.long_comment);
-			} else {
-			  header.value = converter.brief_comment;
+			if (converter.brief_comment != null) {
+				header.value = converter.brief_comment;
+				if (converter.long_comment != null) {
+					header.value += converter.long_comment;
+				}
 			}
 		}
 
@@ -237,30 +260,50 @@ public class Gtkdoc.Generator : Api.Visitor {
 	public override void visit_interface (Api.Interface iface) {
 		var old_cname = current_cname;
 		var old_headers = current_headers;
+		var old_dbus_interface = current_dbus_interface;
 		current_cname = iface.get_cname ();
 		current_headers = new Gee.LinkedList<Header>();
+		current_dbus_interface = null;
 
+		if (iface.get_dbus_name () != null) {
+			current_dbus_interface = new DBus.Interface (settings.pkg_name, iface.get_dbus_name ());
+		}
 		iface.accept_all_children (this);
 		add_symbol (iface.get_filename(), iface.get_cname(), iface.documentation, null, true);
+		if (current_dbus_interface != null) {
+			current_dbus_interface.write (settings);
+			dbus_interfaces.add (current_dbus_interface);
+		}
 
 		current_cname = old_cname;
 		current_headers = old_headers;
+		current_dbus_interface = old_dbus_interface;
 	}
 
 	public override void visit_class (Api.Class cl) {
 		var old_cname = current_cname;
 		var old_headers = current_headers;
 		var old_class = current_class;
+		var old_dbus_interface = current_dbus_interface;
 		current_cname = cl.get_cname ();
 		current_headers = new Gee.LinkedList<Header>();
 		current_class = cl;
+		current_dbus_interface = null;
 
+		if (cl.get_dbus_name () != null) {
+			current_dbus_interface = new DBus.Interface (settings.pkg_name, cl.get_dbus_name ());
+		}
 		cl.accept_all_children (this);
 		add_symbol (cl.get_filename(), cl.get_cname(), cl.documentation, null, true);
+		if (current_dbus_interface != null) {
+			current_dbus_interface.write (settings);
+			dbus_interfaces.add (current_dbus_interface);
+		}
 
 		current_cname = old_cname;
 		current_headers = old_headers;
 		current_class = old_class;
+		current_dbus_interface = old_dbus_interface;
 
 		if (cl.is_fundamental && cl.base_type == null) {
 			var filename = cl.get_filename ();
@@ -300,7 +343,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 				}
 			}
 			if (param_header == null) {
-				add_manual_header ("error", "location to store the error occuring, or %NULL to ignore", {"error-domains %s".printf (edomain.get_cname ())});
+				add_custom_header ("error", "location to store the error occuring, or %NULL to ignore", {"error-domains %s".printf (edomain.get_cname ())});
 			} else {
 				// assume the only annotation is error-domains
 				var annotation = param_header.annotations[0];
@@ -391,17 +434,32 @@ public class Gtkdoc.Generator : Api.Visitor {
 	public override void visit_signal (Api.Signal sig) {
 		var old_headers = current_headers;
 		var old_signal = current_signal;
+		var old_dbus_member = current_dbus_member;
 		current_headers = new Gee.LinkedList<Header>();
 		current_signal = sig;
+		current_dbus_member = null;
 
-		// gtkdoc maps parameters by their ordering, so let's manually add the first parameter
-		add_manual_header (to_lower_case (((Api.Node)sig.parent).name), "", null);
+		if (current_dbus_interface != null && sig.is_dbus_visible) {
+			current_dbus_member = new DBus.Member (sig.get_dbus_name ());
+		}
+		// gtkdoc maps parameters by their ordering, so let's customly add the first parameter
+		add_custom_header (to_lower_case (((Api.Node)sig.parent).name), "", null);
+
 		sig.accept_all_children (this);
+
 		var name = sig.get_cname().replace ("_", "-");
 		add_comment (sig.get_filename(), "%s::%s".printf (current_cname, name), sig.documentation);
+		if (current_dbus_interface != null && sig.is_dbus_visible) {
+			// remove the custom header
+			remove_custom_header (to_lower_case (((Api.Node)sig.parent).name));
+			var gcomment = create_gcomment (sig.get_dbus_name (), sig.documentation, false, null, true);
+			current_dbus_member.comment = gcomment;
+			current_dbus_interface.add_signal (current_dbus_member);
+		}
 
 		current_headers = old_headers;
 		current_signal = old_signal;
+		current_dbus_member = old_dbus_member;
 	}
 
 	public override void visit_creation_method (Api.Method m) {
@@ -413,7 +471,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 			return;
 		}
 
-		var annotations = new string[] {};
+		var annotations = new string[]{};
 
 		if (m.return_type != null) {
 			if (m.return_type.data_type is Api.Array) {
@@ -427,18 +485,35 @@ public class Gtkdoc.Generator : Api.Visitor {
 
 		var old_headers = current_headers;
 		var old_method = current_method;
+		var old_dbus_member = current_dbus_member;
 		current_headers = new Gee.LinkedList<Header>();
 		current_method = m;
+		current_dbus_member = null;
+
+		if (current_dbus_interface != null && m.is_dbus_visible && !m.is_constructor) {
+			current_dbus_member = new DBus.Member (m.get_dbus_name ());
+		}
 
 		m.accept_all_children (this);
+
 		if (m.is_yields) {
-			add_manual_header ("_callback_", "callback to call when the request is satisfied", {"scope async"});
-			add_manual_header ("user_data", "the data to pass to callback function", {"closure"});
+			add_custom_header ("_callback_", "callback to call when the request is satisfied", {"scope async"});
+			add_custom_header ("user_data", "the data to pass to callback function", {"closure"});
 		}
 		add_symbol (m.get_filename(), m.get_cname (), m.documentation, null, false, false, annotations);
+		if (current_dbus_interface != null && m.is_dbus_visible && !m.is_constructor) {
+			if (m.return_type != null && m.return_type.data_type != null) {
+				var dresult = new DBus.Parameter (m.get_dbus_result_name (), m.return_type.get_dbus_type_signature (), DBus.Parameter.Direction.OUT);
+				current_dbus_member.add_parameter (dresult);
+			}
+			var gcomment = create_gcomment (m.get_dbus_name (), m.documentation, false, null, true);
+			current_dbus_member.comment = gcomment;
+			current_dbus_interface.add_method (current_dbus_member);
+		}
 
 		current_headers = old_headers;
 		current_method = old_method;
+		current_dbus_member = old_dbus_member;
 
 		if (m.is_yields) {
 			add_symbol (m.get_filename(), m.get_finish_function_cname ());
@@ -474,9 +549,20 @@ public class Gtkdoc.Generator : Api.Visitor {
 
 		if (current_signal != null && param.documentation == null) {
 			// gtkdoc writes arg0, arg1 which is ugly. As a workaround, we always add an header for them.
-			add_manual_header (param.name, "", null);
+			add_custom_header (param.name, "", null);
 		} else {
 			add_header (param.name, param.documentation, annotations);
+		}
+
+		if (current_dbus_member != null) {
+			var ddirection = DBus.Parameter.Direction.IN;
+			if (current_signal != null) {
+				ddirection = DBus.Parameter.Direction.NONE;
+			} else if (param.is_out) {
+				ddirection = DBus.Parameter.Direction.OUT;
+			}
+			var dparam = new DBus.Parameter (param.name, param.parameter_type.get_dbus_type_signature (), ddirection);
+			current_dbus_member.add_parameter (dparam);
 		}
 		param.accept_all_children (this);
 	}

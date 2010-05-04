@@ -66,17 +66,18 @@ namespace Gtkdoc.Config {
 public class Gtkdoc.Director : Valadoc.Doclet, Object {
 	private Settings settings;
 	private Api.Tree tree;
+	private Gtkdoc.Generator generator;
 	private string[] vala_headers;
 	private string[] c_headers;
 
 	/*
-	1) Scan normal code, this generates -decl.txt for both C and Vala.
-	2) Scan C code into a temp cscan directory. This generates C sections.
-	Move C -sections.txt file to the real output -sections.txt.
-	3) Generate and append Vala sections to -sections.txt.
-	Done. Now we have -decl.txt of the whole code and -sections.txt containing C sections
-	and Vala sections.
-	*/
+	 * 1) Scan normal code, this generates -decl.txt for both C and Vala.
+	 * 2) Scan C code into a temp cscan directory. This generates C sections.
+	 *    Move C -sections.txt file to the real output -sections.txt.
+	 * 3) Generate and append Vala sections to -sections.txt.
+	 * Done. Now we have -decl.txt of the whole code and -sections.txt containing C sections
+	 * and Vala sections.
+	 */
 	public void process (Settings settings, Api.Tree tree) {
 		this.settings = settings;
 		if (!Config.parse (settings.pluginargs)) {
@@ -91,7 +92,7 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 			warning ("GtkDoc: No vala header found");
 			return;
 		}
-	   
+
 		if (!scan (settings.path)) {
 			return;
 		}
@@ -104,11 +105,12 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 		}
 
 		FileUtils.rename (Path.build_filename (cscan_dir, "%s-sections.txt".printf (settings.pkg_name)),
-						Path.build_filename (settings.path, "%s-sections.txt".printf (settings.pkg_name)));
+						  Path.build_filename (settings.path, "%s-sections.txt".printf (settings.pkg_name)));
 
-		var generator = new Gtkdoc.Generator ();
-		if (!generator.execute (settings, tree))
-		return;
+		generator = new Gtkdoc.Generator ();
+		if (!generator.execute (settings, tree)) {
+			return;
+		}
 
 		if (!scangobj ()) {
 			return;
@@ -212,8 +214,9 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 
 		string[] pc = { "pkg-config" };
 		foreach (var package in tree.get_package_list()) {
-			if (package.is_package)
-			pc += package.name;
+			if (package.is_package) {
+				pc += package.name;
+			}
 		}
 
 		var pc_cflags = pc;
@@ -268,21 +271,67 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 	}
 
 	private bool mkdb () {
+		var main_file = Path.build_filename (settings.path, "%s-docs.xml".printf (settings.pkg_name));
 		var code_dir = Path.build_filename (settings.path, "ccomments");
+		var must_update_main_file = !FileUtils.test (main_file, FileTest.EXISTS);
+
+		var args = new string[] { "gtkdoc-mkdb",
+								  "--module", settings.pkg_name,
+								  "--source-dir", code_dir,
+								  "--output-format", "xml",
+								  "--sgml-mode",
+								  "--main-sgml-file", "%s-docs.xml".printf (settings.pkg_name),
+								  "--name-space", settings.pkg_name };
 
 		try {
-			Process.spawn_sync (settings.path,
-								{ "gtkdoc-mkdb",
-									"--module", settings.pkg_name,
-									"--source-dir", code_dir,
-									"--output-format", "xml",
-									"--sgml-mode",
-									"--main-sgml-file", "%s-docs.xml".printf (settings.pkg_name),
-									"--name-space", settings.pkg_name },
+			Process.spawn_sync (settings.path, args,
 								null, SpawnFlags.SEARCH_PATH, null, null, null);
 		} catch (Error e) {
 			warning ("gtkdoc-mkdb: %s", e.message);
 			return false;
+		}
+
+		if (must_update_main_file) {
+			// gtkdoc-mkdb created a template main file, but users expect it to be a bit more complete
+			string contents;
+			try {
+				FileUtils.get_contents (main_file, out contents);
+			} catch (Error e) {
+				warning ("GtkDoc: Error while reading main file '%s' contents: %s", main_file, e.message);
+				return false;
+			}
+
+			if (settings.pkg_version != null) {
+				contents = contents.replace ("[VERSION]", settings.pkg_version);
+			}
+			contents = contents.replace ("[Insert title here]", "%s API Reference".printf (settings.pkg_name));
+
+			if (generator.dbus_interfaces.size > 0) {
+				// hackish but prevents us from re-creating the whole main file,
+				// which would more even more hackish
+				var builder = new StringBuilder ();
+				builder.append_printf ("\n<chapter>\n<title>%s D-Bus API Reference</title>\n", settings.pkg_name);
+				foreach (var iface in generator.dbus_interfaces) {
+					builder.append_printf ("<xi:include href=\"xml/%s.xml\"/>\n", to_docbook_id (iface.name));
+				}
+
+				var hierarchy_file = Path.build_filename (settings.path, "%s.hierarchy".printf (settings.pkg_name));
+				if (FileUtils.test (hierarchy_file, FileTest.EXISTS)) {
+					// if hierarchy exists, gtkdoc-mkdb will output it
+					builder.append ("</chapter>\n<chapter id=\"object-tree\">");
+					contents = contents.replace ("<chapter id=\"object-tree\">", builder.str);
+				} else {
+					builder.append ("</chapter>\n<index id=\"api-index-full\">");
+					contents = contents.replace ("<index id=\"api-index-full\">", builder.str);
+				}
+			}
+
+			try {
+				FileUtils.set_contents (main_file, contents);
+			} catch (Error e) {
+				warning ("GtkDoc: Error while writing main file '%s' contents: %s", main_file, e.message);
+				return false;
+			}
 		}
 
 		return true;

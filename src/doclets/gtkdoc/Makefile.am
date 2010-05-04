@@ -27,6 +27,7 @@ doclet_LTLIBRARIES =  \
 
 libdoclet_la_VALASOURCES = \
 	commentconverter.vala	\
+	dbus.vala		\
 	doclet.vala           	\
 	gcomment.vala		\
 	generator.vala		\

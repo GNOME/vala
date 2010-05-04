@@ -65,23 +65,59 @@ namespace Gtkdoc {
 		return null;
 	}
 
-	public string? get_creference (Api.Item item) {
+	public string? get_dbus_interface (Api.Item item) {
+		if (item is Api.Class) {
+			return ((Api.Class)item).get_dbus_name ();
+		} else if (item is Api.Interface) {
+			return ((Api.Interface)item).get_dbus_name ();
+		}
+		return null;
+	}
+
+	public string? get_docbook_link (Api.Item item, bool is_dbus = false) {
 		if (item is Api.Method) {
-			return "%s()".printf (((Api.Method)item).get_cname ());
+			string name;
+			string parent;
+			if (is_dbus) {
+				name = ((Api.Method)item).get_dbus_name ();
+				parent = "%s-".printf (get_dbus_interface (item.parent));
+			} else {
+				name = ((Api.Method)item).get_cname ();
+				parent = "";
+			}
+			return """<link linkend="%s%s"><function>%s()</function></link>""".printf (to_docbook_id (parent), to_docbook_id (name), name);
 		} else if (item is Api.FormalParameter) {
-			return "@%s".printf (((Api.FormalParameter)item).name);
+			return "<parameter>%s</parameter>".printf (((Api.FormalParameter)item).name);
 		} else if (item is Api.Constant) {
-			return "%%%s".printf (((Api.Constant)item).get_cname ());
+			var cname = ((Api.Constant)item).get_cname ();
+			return """<link linkend="%s:CAPS"><literal>%s</literal></link>""".printf (to_docbook_id (cname), cname);
 		} else if (item is Api.Property) {
-			return "#%s:%s".printf (get_cname (item.parent), ((Api.Property)item).get_cname ());
+			string name;
+			string parent;
+			if (is_dbus) {
+				name = ((Api.Property)item).get_dbus_name ();
+				parent = get_dbus_interface (item.parent);
+			} else {
+				name = ((Api.Property)item).get_cname ();
+				parent = get_cname (item.parent);
+			}
+			return """<link linkend="%s--%s"><type>"%s"</type></link>""".printf (to_docbook_id (parent), to_docbook_id (name), name);
 		} else if (item is Api.Signal) {
-			var name = ((Api.Signal)item).get_cname ();
-			name = name.replace ("_", "-");
-			return "#%s::%s".printf (get_cname (item.parent), name);
+			string name;
+			string parent;
+			if (is_dbus) {
+				name = ((Api.Signal)item).get_dbus_name ();
+				parent = get_dbus_interface (item.parent);
+			} else {
+				name = ((Api.Signal)item).get_cname ();
+				name = name.replace ("_", "-");
+				parent = get_cname (item.parent);
+			}
+			return """<link linkend="%s-%s"><type>"%s"</type></link>""".printf (to_docbook_id (parent), to_docbook_id (name), name);
 		} else {
 			var cname = get_cname (item);
 			if (cname != null) {
-				return "#%s".printf (cname);
+				return """<link linkend="%s"><type>%s</type></link>""".printf (to_docbook_id (cname), cname);
 			}
 		}
 		return null;
@@ -104,6 +140,10 @@ namespace Gtkdoc {
 		}
 		return builder.str;
 	}
+
+	public string to_docbook_id (string name) {
+		return name.replace(".", "-").replace("_", "-");
+	}
 }
 
 
@@ -113,7 +153,7 @@ public class Gtkdoc.TextWriter {
 
 	private FileStream? stream;
 
-  public TextWriter (string filename, string mode) {
+	public TextWriter (string filename, string mode) {
 		this.filename = filename;
 		this.mode = mode;
 	}
@@ -132,4 +172,3 @@ public class Gtkdoc.TextWriter {
 		stream.putc ('\n');
 	}
 }
-
