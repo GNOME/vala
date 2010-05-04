@@ -129,8 +129,9 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 		vala_headers = new string[]{};
 		c_headers = new string[]{};
 		Dir dir;
+		string dirname = settings.basedir ?? ".";
 		try {
-			dir = Dir.open (settings.basedir ?? ".");
+			dir = Dir.open (dirname);
 		} catch (Error e) {
 			warning ("GtkDoc: Can't open %s: %s", settings.basedir, e.message);
 			return;
@@ -140,7 +141,7 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 
 		while ((filename = dir.read_name()) != null) {
 			if (filename.has_suffix (".h")) {
-				var stream = FileStream.open (filename, "r");
+				var stream = FileStream.open (Path.build_filename (dirname, filename), "r");
 				if (stream != null) {
 					var line = stream.read_line ();
 					if (line != null) {
