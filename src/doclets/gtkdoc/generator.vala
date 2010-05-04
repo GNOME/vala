@@ -44,7 +44,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 		var sections = Path.build_filename (settings.path, "%s-sections.txt".printf (settings.pkg_name));
 		DirUtils.create_with_parents (code_dir, 0777);
 
-		var sections_writer = new TextWriter (sections);
+		var sections_writer = new TextWriter (sections, "a");
 		if (!sections_writer.open ()) {
 			warning ("GtkDoc: unable to open %s for writing", sections_writer.filename);
 			return false;
@@ -53,7 +53,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 		foreach (var file_data in files_data.values) {
 			// C comments
 			var basename = get_section (file_data.filename);
-			var cwriter = new TextWriter (Path.build_filename (code_dir, "%s.c".printf (basename)));
+			var cwriter = new TextWriter (Path.build_filename (code_dir, "%s.c".printf (basename)), "w");
 
 			if (!cwriter.open ()) {
 				warning ("GtkDoc: unable to open %s for writing", cwriter.filename);

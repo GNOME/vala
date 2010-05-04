@@ -65,15 +65,17 @@ namespace Gtkdoc {
 
 public class Gtkdoc.TextWriter {
 	public string filename;
+	public string mode;
 
 	private FileStream? stream;
 
-	public TextWriter (string filename) {
+  public TextWriter (string filename, string mode) {
 		this.filename = filename;
+		this.mode = mode;
 	}
 
 	public bool open () {
-		stream = FileStream.open (filename, "a");
+		stream = FileStream.open (filename, mode);
 		return stream != null;
 	}
 
