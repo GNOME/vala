@@ -85,6 +85,7 @@ namespace Sqlite {
 		public void progress_handler (int n_opcodes, Sqlite.ProgressCallback? progress_handler);
 		public void commit_hook (CommitCallback? commit_hook);
 		public void rollback_hook (RollbackCallback? rollback_hook);
+		public void update_hook (UpdateCallback? update_hook);
 		public int create_function (string zFunctionName, int nArg, int eTextRep, void * user_data, UserFuncCallback? xFunc, UserFuncCallback? xStep, UserFuncFinishCallback? xFinal);
 	}
 
@@ -101,6 +102,8 @@ namespace Sqlite {
 	public delegate void UserFuncCallback (Sqlite.Context context, [CCode (array_length_pos = 1.1)] Sqlite.Value[] values);
 	[CCode (has_target = false)]
 	public delegate void UserFuncFinishCallback (Sqlite.Context context);
+	[CCode (instance_pos = 0)]
+	public delegate void UpdateCallback (Sqlite.Action action, string dbname, string table, int64 rowid);
 
 	public unowned string? compileoption_get (int n);
 	public int compileoption_used (string option_name);
