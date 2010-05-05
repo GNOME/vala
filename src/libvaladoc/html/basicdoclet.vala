@@ -442,57 +442,73 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		writer.end_tag ("div");
 	}
 
-	private int html_id_counter = 0;
+	private uint html_id_counter = 0;
 
-	private void write_known_symbols_node (Gee.Collection<Api.Node> nodes, Api.Node container, string headline) {
-		if (nodes.size > 0) {
-			var html_id = "box-content-" + html_id_counter.to_string ();
-			html_id_counter++;
+	private inline Gee.Collection<Api.Node> get_accessible_nodes_from_list (Gee.Collection<Api.Node> nodes) {
+		var list = new Gee.ArrayList<Api.Node> ();
+
+		foreach (var node in nodes) {
+			if (node.is_visitor_accessible(_settings)) {
+				list.add (node);
+			}
+		}
+
+		return list;
+	}
+
+	private void write_known_symbols_node (Gee.Collection<Api.Node> nodes2, Api.Node container, string headline) {
+		var nodes = get_accessible_nodes_from_list (nodes2);
+		if (nodes.size == 0) {
+			return ;
+		}
+
+		// Box:
+		var html_id = "box-content-" + html_id_counter.to_string ();
+		html_id_counter++;
 
 
-			writer.start_tag ("div", {"class", css_box});
+		writer.start_tag ("div", {"class", css_box});
 
-			// headline:
-			writer.start_tag ("div", {"class", css_box_headline});
-			writer.start_tag ("div", {"class", css_box_headline_text}).text (headline).end_tag ("div");
-			writer.start_tag ("div", {"class", css_box_headline_toggle});
-			writer.start_tag ("img", {"onclick", "toggle_box  (this, '" + html_id + "')", "src", Path.build_filename (get_icon_directory (), "coll_open.png")});
-			writer.raw_text ("&nbsp;");
-			writer.end_tag ("div");
-			writer.end_tag ("div");
+		// headline:
+		writer.start_tag ("div", {"class", css_box_headline});
+		writer.start_tag ("div", {"class", css_box_headline_text}).text (headline).end_tag ("div");
+		writer.start_tag ("div", {"class", css_box_headline_toggle});
+		writer.start_tag ("img", {"onclick", "toggle_box  (this, '" + html_id + "')", "src", Path.build_filename (get_icon_directory (), "coll_open.png")});
+		writer.raw_text ("&nbsp;");
+		writer.end_tag ("div");
+		writer.end_tag ("div");
 
 
-			// content:
-			int[] list_sizes = {0, 0, 0};
-			list_sizes[0] = nodes.size;
-			list_sizes[2] = list_sizes[0]/3;
-			list_sizes[0] -= list_sizes[2];
-			list_sizes[1] = list_sizes[0]/2;
-			list_sizes[0] -= list_sizes[1];
+		// content:
+		int[] list_sizes = {0, 0, 0};
+		list_sizes[0] = nodes.size;
+		list_sizes[2] = list_sizes[0]/3;
+		list_sizes[0] -= list_sizes[2];
+		list_sizes[1] = list_sizes[0]/2;
+		list_sizes[0] -= list_sizes[1];
 
-			writer.start_tag ("div", {"class", css_box_content, "id", html_id});
+		writer.start_tag ("div", {"class", css_box_content, "id", html_id});
 
-			var iter = nodes.iterator ();
+		var iter = nodes.iterator ();
 
-			for (int i = 0; i < list_sizes.length; i++) {
-				writer.start_tag ("div", {"class", css_box_column});
-				writer.start_tag ("ul", {"class", css_inline_navigation});
+		for (int i = 0; i < list_sizes.length; i++) {
+			writer.start_tag ("div", {"class", css_box_column});
+			writer.start_tag ("ul", {"class", css_inline_navigation});
 
-				for (int p = 0; p < list_sizes[i] && iter.next (); p++) {
-					var node = iter.get ();
-					writer.start_tag ("li", {"class", cssresolver.resolve (node)});
-					writer.link (get_link (node, container), node.name);
-					writer.end_tag ("li");
-				}
-
-				writer.end_tag ("ul");
-				writer.end_tag ("div");
+			for (int p = 0; p < list_sizes[i] && iter.next (); p++) {
+				var node = iter.get ();
+				writer.start_tag ("li", {"class", cssresolver.resolve (node)});
+				writer.link (get_link (node, container), node.name);
+				writer.end_tag ("li");
 			}
 
-			writer.end_tag ("div"); // end content
-
-			writer.end_tag ("div"); // end box
+			writer.end_tag ("ul");
+			writer.end_tag ("div");
 		}
+
+		writer.end_tag ("div"); // end content
+
+		writer.end_tag ("div"); // end box
 	}
 
 	public void write_symbol_content (Api.Node node) {
