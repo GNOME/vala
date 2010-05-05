@@ -1633,11 +1633,11 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_glyphs_transformed (Gdk.Drawable drawable, Gdk.GC gc, Pango.Matrix matrix, Pango.Font font, int x, int y, Pango.GlyphString glyphs);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static void draw_gray_image (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar[] buf, int rowstride);
+	public static void draw_gray_image (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, [CCode (array_length = false)] uchar[] buf, int rowstride);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_image (Gdk.Drawable drawable, Gdk.GC gc, Gdk.Image image, int xsrc, int ysrc, int xdest, int ydest, int width, int height);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static void draw_indexed_image (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar[] buf, int rowstride, Gdk.RgbCmap cmap);
+	public static void draw_indexed_image (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, [CCode (array_length = false)] uchar[] buf, int rowstride, Gdk.RgbCmap cmap);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_layout (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, Pango.Layout layout);
 	[CCode (cheader_filename = "gdk/gdk.h")]
