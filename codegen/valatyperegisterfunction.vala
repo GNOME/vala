@@ -79,11 +79,6 @@ public abstract class Vala.TypeRegisterFunction {
 			fun.add_parameter (new CCodeFormalParameter ("module", "GTypeModule *"));
 
 			var get_fun = new CCodeFunction ("%s_get_type".printf (get_type_declaration ().get_lower_case_cname (null)), "GType");
-			if (get_accessibility () == SymbolAccessibility.PRIVATE) {
-				fun.modifiers = CCodeModifiers.STATIC;
-				// avoid C warning as this function is not always used
-				fun.attributes = "G_GNUC_UNUSED";
-			}
 
 			declaration_fragment.append (get_fun.copy ());
 
