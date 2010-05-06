@@ -182,7 +182,7 @@ public class ValaDoc : Object {
 
 		ModuleLoader modules = new ModuleLoader ();
 		Taglets.init (modules);
-		bool tmp = modules.load (fulldirpath);
+		bool tmp = modules.load_doclet (fulldirpath);
 		if (tmp == false) {
 			reporter.simple_error ("failed to load plugin");
 			return quit (reporter);

@@ -177,7 +177,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 }
 
 [ModuleInit]
-public Type register_plugin ( ) {
+public Type register_plugin (GLib.TypeModule module) {
 	return typeof ( Valadoc.HtmlDoclet );
 }
 

@@ -374,7 +374,7 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 }
 
 [ModuleInit]
-public Type register_plugin ( ) {
+public Type register_plugin (GLib.TypeModule module) {
 	return typeof ( Gtkdoc.Director );
 }
 

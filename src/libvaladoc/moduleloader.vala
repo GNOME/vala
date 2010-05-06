@@ -27,7 +27,7 @@ using Gee;
 public delegate  void Valadoc.TagletRegisterFunction (ModuleLoader loader);
 
 
-public class Valadoc.ModuleLoader : Object {
+public class Valadoc.ModuleLoader : TypeModule {
 	public Doclet doclet;
 
 	public HashMap<string, GLib.Type> taglets = new HashMap<string, Type> (GLib.str_hash, GLib.str_equal);
@@ -35,22 +35,21 @@ public class Valadoc.ModuleLoader : Object {
 	private Module docletmodule;
 	private Type doclettype;
 
-	public bool load (string path) {
-		bool tmp = this.load_doclet (path);
-		if (tmp == false) {
-			return false;
-		}
+	public override bool load () {
 		return true;
+	}
+
+	public override void unload() {
 	}
 
 	public Content.Taglet? create_taglet (string keyword) {
 		return (taglets.has_key (keyword))? (Content.Taglet) GLib.Object.new (taglets.get (keyword)) : null;
 	}
 
-	private bool load_doclet (string path) {
+	public bool load_doclet (string path) {
 		void* function;
 
-		docletmodule = Module.open (Module.build_path (path, "libdoclet"), ModuleFlags.BIND_LAZY);
+		docletmodule = Module.open (Module.build_path (path, "libdoclet"), ModuleFlags.BIND_LAZY | ModuleFlags.BIND_LOCAL);
 		if (docletmodule == null) {
 			return false;
 		}
@@ -61,7 +60,7 @@ public class Valadoc.ModuleLoader : Object {
 		}
 
 		Valadoc.DocletRegisterFunction doclet_register_function = (Valadoc.DocletRegisterFunction) function;
-		doclettype = doclet_register_function ();
+		doclettype = doclet_register_function (this);
 		this.doclet = (Doclet)GLib.Object.new (doclettype);
 		return true;
 	}
