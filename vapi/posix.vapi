@@ -1628,6 +1628,8 @@ namespace Posix {
 	[CCode (cheader_filename = "unistd.h")]
 	public int dup2 (int fd1, int fd2);
 	[CCode (cheader_filename = "unistd.h")]
+	public int gethostname (char[] name);
+	[CCode (cheader_filename = "unistd.h")]
 	public pid_t getpid ();
 	[CCode (cheader_filename = "unistd.h")]
 	public pid_t getppid ();
