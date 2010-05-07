@@ -712,6 +712,9 @@ namespace Linux {
     [CCode (cheader_filename = "execinfo.h")]
     public void backtrace_symbols_fd (void* buffer, int size, int fd);
 
+    [CCode (cheader_filename = "unistd.h")]
+    public int sethostname (char[] name);
+
     [CCode (cheader_filename = "arpa/inet.h")]
     public int inet_aton (string cp, out Posix.InAddr addr);
 
