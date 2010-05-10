@@ -718,6 +718,9 @@ namespace Linux {
     [CCode (cheader_filename = "arpa/inet.h")]
     public int inet_aton (string cp, out Posix.InAddr addr);
 
+    [CCode (cheader_filename = "sys/ioctl.h", sentinel = "")]
+    public int ioctl (int fd, int request, ...);
+
     [CCode (cname = "long", cprefix = "", cheader_filename = "sys/mount.h,linux/fs.h")]
     public enum MountFlags {
         MS_BIND,
