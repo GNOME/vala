@@ -713,7 +713,7 @@ namespace Linux {
     public void backtrace_symbols_fd (void* buffer, int size, int fd);
 
     [CCode (cheader_filename = "unistd.h")]
-    public int sethostname (char[] name);
+    public int sethostname (string name, size_t len);
 
     [CCode (cheader_filename = "arpa/inet.h")]
     public int inet_aton (string cp, out Posix.InAddr addr);
