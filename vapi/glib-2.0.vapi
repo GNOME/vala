@@ -839,6 +839,10 @@ public enum NormalizeMode {
 public class string {
 	[CCode (cname = "strstr")]
 	public unowned string? str (string needle);
+	[CCode (cname = "g_strrstr")]
+	public unowned string? rstr (string needle);
+	[CCode (cname = "g_strrstr_len")]
+	public unowned string? rstr_len (ssize_t haystack_len, string needle);
 	[CCode (cname = "g_str_has_prefix")]
 	public bool has_prefix (string prefix);
 	[CCode (cname = "g_str_has_suffix")]
