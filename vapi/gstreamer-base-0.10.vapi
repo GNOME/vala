@@ -226,7 +226,7 @@ namespace Gst {
 		[NoWrapper]
 		public virtual Gst.FlowReturn transform (Gst.Buffer inbuf, Gst.Buffer outbuf);
 		[NoWrapper]
-		public virtual unowned Gst.Caps transform_caps (Gst.PadDirection direction, Gst.Caps caps);
+		public virtual Gst.Caps transform_caps (Gst.PadDirection direction, Gst.Caps caps);
 		[NoWrapper]
 		public virtual Gst.FlowReturn transform_ip (Gst.Buffer buf);
 		[NoWrapper]
