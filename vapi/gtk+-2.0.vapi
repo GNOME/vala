@@ -66,7 +66,7 @@ namespace Gtk {
 		public void connect_by_path (string accel_path, GLib.Closure closure);
 		public bool disconnect (GLib.Closure closure);
 		public bool disconnect_key (uint accel_key, Gdk.ModifierType accel_mods);
-		public unowned Gtk.AccelKey find (Gtk.AccelGroupFindFunc find_func, void* data);
+		public Gtk.AccelKey find (Gtk.AccelGroupFindFunc find_func, void* data);
 		public static unowned Gtk.AccelGroup from_accel_closure (GLib.Closure closure);
 		public bool get_is_locked ();
 		public Gdk.ModifierType get_modifier_mask ();
@@ -83,14 +83,7 @@ namespace Gtk {
 	public class AccelGroupEntry {
 		public GLib.Quark accel_path_quark;
 		public weak GLib.Closure closure;
-		public weak Gtk.AccelKey key;
-	}
-	[Compact]
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public class AccelKey {
-		public uint accel_flags;
-		public uint accel_key;
-		public Gdk.ModifierType accel_mods;
+		public Gtk.AccelKey key;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class AccelLabel : Gtk.Label, Atk.Implementor, Gtk.Buildable {
@@ -5952,6 +5945,12 @@ namespace Gtk {
 		public abstract void set_sort_func (int sort_column_id, owned Gtk.TreeIterCompareFunc sort_func);
 		[HasEmitter]
 		public signal void sort_column_changed ();
+	}
+	[CCode (type_id = "GTK_TYPE_ACCEL_KEY", cheader_filename = "gtk/gtk.h")]
+	public struct AccelKey {
+		public uint accel_key;
+		public Gdk.ModifierType accel_mods;
+		public uint accel_flags;
 	}
 	[CCode (type_id = "GTK_TYPE_ACTION_ENTRY", cheader_filename = "gtk/gtk.h")]
 	public struct ActionEntry {
