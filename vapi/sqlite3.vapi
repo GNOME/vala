@@ -34,10 +34,10 @@ namespace Sqlite {
 		public int exec (string sql, Callback? sqlite3_callback = null, out string errmsg = null) {
 			unowned string sqlite_errmsg;
 			var ec = this._exec (sql, sqlite3_callback, out sqlite_errmsg);
-			if (sqlite_errmsg != null) {
+			if (&errmsg != null) {
 				errmsg = sqlite_errmsg;
-				Sqlite.Memory.free ((void*) sqlite_errmsg);
 			}
+			Sqlite.Memory.free ((void*) sqlite_errmsg);
 			return ec;
 		}
 		public int extended_result_codes (int onoff);
@@ -63,10 +63,10 @@ namespace Sqlite {
 			}
 			Sqlite.Database.free_table (sqlite_resultp);
 
-			if (sqlite_errmsg != null) {
+			if (&errmsg != null) {
 				errmsg = sqlite_errmsg;
-				Sqlite.Memory.free ((void*) sqlite_errmsg);
 			}
+			Sqlite.Memory.free ((void*) sqlite_errmsg);
 			return ec;
 		}
 		public static int open (string filename, out Database db);
