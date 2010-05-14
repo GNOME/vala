@@ -87,6 +87,7 @@ namespace Sqlite {
 		public void rollback_hook (RollbackCallback? rollback_hook);
 		public void update_hook (UpdateCallback? update_hook);
 		public int create_function (string zFunctionName, int nArg, int eTextRep, void * user_data, UserFuncCallback? xFunc, UserFuncCallback? xStep, UserFuncFinishCallback? xFinal);
+		public int create_collation (string zName, int eTextRep, [CCode (delegate_target_pos = 2.9, type = "int (*)(void *, int,  const void *, int,  const void *)")] CompareCallback xCompare);
 	}
 
 	[CCode (instance_pos = 0)]
@@ -104,6 +105,8 @@ namespace Sqlite {
 	public delegate void UserFuncFinishCallback (Sqlite.Context context);
 	[CCode (instance_pos = 0)]
 	public delegate void UpdateCallback (Sqlite.Action action, string dbname, string table, int64 rowid);
+	[CCode (instance_pos = 0)]
+	public delegate int CompareCallback (int alen, void* a, int blen, void* b);
 
 	public unowned string? compileoption_get (int n);
 	public int compileoption_used (string option_name);
