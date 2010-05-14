@@ -1080,7 +1080,7 @@ namespace GLib {
 		public abstract string? get_relative_path (GLib.File descendant);
 		public abstract string get_uri ();
 		public abstract string get_uri_scheme ();
-		public bool has_parent (GLib.File parent);
+		public bool has_parent (GLib.File? parent);
 		public bool has_prefix (GLib.File prefix);
 		public abstract bool has_uri_scheme (string uri_scheme);
 		public abstract uint hash ();
