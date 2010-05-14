@@ -115,7 +115,7 @@ namespace Gtk {
 		public static void load_fd (int fd);
 		public static void load_scanner (GLib.Scanner scanner);
 		public static void lock_path (string accel_path);
-		public static bool lookup_entry (string accel_path, Gtk.AccelKey key);
+		public static bool lookup_entry (string accel_path, out Gtk.AccelKey key);
 		public static void save (string file_name);
 		public static void save_fd (int fd);
 		public static void unlock_path (string accel_path);
