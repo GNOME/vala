@@ -1837,7 +1837,7 @@ namespace Gtk {
 		public IconTheme ();
 		public static void add_builtin_icon (string icon_name, int size, Gdk.Pixbuf pixbuf);
 		public void append_search_path (string path);
-		public Gtk.IconInfo choose_icon (string[] icon_names, int size, Gtk.IconLookupFlags flags);
+		public Gtk.IconInfo choose_icon ([CCode (array_length = false)] string[] icon_names, int size, Gtk.IconLookupFlags flags);
 		public static GLib.Quark error_quark ();
 		public static unowned Gtk.IconTheme get_default ();
 		public unowned string get_example_icon_name ();
