@@ -735,6 +735,7 @@ public struct unichar {
 	public int xdigit_value ();
 	public UnicodeType type ();
 	public UnicodeBreakType break_type ();
+	public UnicodeScript get_script();
 
 	public int to_utf8 (string? outbuf);
 
@@ -744,6 +745,93 @@ public struct unichar {
 	public static unichar max (unichar a, unichar b);
 	[CCode (cname = "CLAMP")]
 	public unichar clamp (unichar low, unichar high);
+}
+
+[CCode (cname = "GUnicodeScript", cprefix = "G_UNICODE_SCRIPT_", has_type_id = false)]
+public enum UnicodeScript {
+	INVALID_CODE,
+	COMMON,
+	INHERITED,
+	ARABIC,
+	ARMENIAN,
+	BENGALI,
+	BOPOMOFO,
+	CHEROKEE,
+	COPTIC,
+	CYRILLIC,
+	DESERET,
+	DEVANAGARI,
+	ETHIOPIC,
+	GEORGIAN,
+	GOTHIC,
+	GREEK,
+	GUJARATI,
+	GURMUKHI,
+	HAN,
+	HANGUL,
+	HEBREW,
+	HIRAGANA,
+	KANNADA,
+	KATAKANA,
+	KHMER,
+	LAO,
+	LATIN,
+	MALAYALAM,
+	MONGOLIAN,
+	MYANMAR,
+	OGHAM,
+	OLD_ITALIC,
+	ORIYA,
+	RUNIC,
+	SINHALA,
+	SYRIAC,
+	TAMIL,
+	TELUGU,
+	THAANA,
+	THAI,
+	TIBETAN,
+	CANADIAN_ABORIGINAL,
+	YI,
+	TAGALOG,
+	HANUNOO,
+	BUHID,
+	TAGBANWA,
+
+	BRAILLE,
+	CYPRIOT,
+	LIMBU,
+	OSMANYA,
+	SHAVIAN,
+	LINEAR_B,
+	TAI_LE,
+	UGARITIC,
+
+	NEW_TAI_LUE,
+	BUGINESE,
+	GLAGOLITIC,
+	TIFINAGH,
+	SYLOTI_NAGRI,
+	OLD_PERSIAN,
+	KHAROSHTHI,
+
+	UNKNOWN,
+	BALINESE,
+	CUNEIFORM,
+	PHOENICIAN,
+	PHAGS_PA,
+	NKO,
+
+	KAYAH_LI,
+	LEPCHA,
+	REJANG,
+	SUNDANESE,
+	SAURASHTRA,
+	CHAM,
+	OL_CHIKI,
+	VAI,
+	CARIAN,
+	LYCIAN,
+	LYDIAN
 }
 
 [CCode (cname = "GUnicodeType", cprefix = "G_UNICODE_", has_type_id = false)]
