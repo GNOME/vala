@@ -29,7 +29,7 @@ namespace Sqlite {
 		public int busy_timeout (int ms);
 		public int changes ();
 		[CCode (cname = "sqlite3_exec")]
-		public int _exec (string sql, Callback? sqlite3_callback = null, out unowned string errmsg = null);
+		public int _exec (string sql, Callback? sqlite3_callback = null, [CCode (type = "char**")] out unowned string errmsg = null);
 		[CCode (cname = "_sqlite3_exec")]
 		public int exec (string sql, Callback? sqlite3_callback = null, out string errmsg = null) {
 			unowned string sqlite_errmsg;
@@ -48,7 +48,7 @@ namespace Sqlite {
 		public int total_changes ();
 		public int complete (string sql);
 		[CCode (cname = "sqlite3_get_table")]
-		public int _get_table (string sql, [CCode (array_length = false)] out unowned string[] resultp, out int nrow, out int ncolumn, out unowned string? errmsg = null);
+		public int _get_table (string sql, [CCode (array_length = false)] out unowned string[] resultp, out int nrow, out int ncolumn, [CCode (type = "char**")] out unowned string? errmsg = null);
 		private static void free_table ([CCode (array_length = false)] string[] result);
 		[CCode (cname = "_sqlite3_get_table")]
 		public int get_table (string sql, out string[] resultp, out int nrow, out int ncolumn, out string? errmsg = null) {
