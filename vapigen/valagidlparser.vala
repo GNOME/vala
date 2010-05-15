@@ -305,6 +305,14 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "1") {
 						return_type.value_owned = true;
 					}
+				} else if (nv[0] == "deprecated") {
+					if (eval (nv[1]) == "1") {
+						cb.deprecated = true;
+					}
+				} else if (nv[0] == "replacement") {
+					cb.replacement = eval (nv[1]);
+				} else if (nv[0] == "deprecated_since") {
+					cb.deprecated_since = eval (nv[1]);
 				} else if (nv[0] == "type_arguments") {
 					var type_args = eval (nv[1]).split (",");
 					foreach (string type_arg in type_args) {
@@ -472,6 +480,14 @@ public class Vala.GIdlParser : CodeVisitor {
 							if (eval (nv[1]) == "0") {
 								st.has_copy_function = false;
 							}
+						} else if (nv[0] == "deprecated") {
+							if (eval (nv[1]) == "1") {
+								st.deprecated = true;
+							}
+						} else if (nv[0] == "replacement") {
+							st.replacement = eval (nv[1]);
+						} else if (nv[0] == "deprecated_since") {
+							st.deprecated_since = eval (nv[1]);
 						} else if (nv[0] == "has_destroy_function") {
 							if (eval (nv[1]) == "0") {
 								st.has_destroy_function = false;
@@ -554,6 +570,14 @@ public class Vala.GIdlParser : CodeVisitor {
 							if (eval (nv[1]) == "1") {
 								ref_function_void = true;
 							}
+						} else if (nv[0] == "deprecated") {
+							if (eval (nv[1]) == "1") {
+								cl.deprecated = true;
+							}
+						} else if (nv[0] == "replacement") {
+							cl.replacement = eval (nv[1]);
+						} else if (nv[0] == "deprecated_since") {
+							cl.deprecated_since = eval (nv[1]);
 						} else if (nv[0] == "type_parameters") {
 							foreach (string type_param_name in eval (nv[1]).split (",")) {
 								cl.add_type_parameter (new TypeParameter (type_param_name, current_source_reference));
@@ -637,6 +661,14 @@ public class Vala.GIdlParser : CodeVisitor {
 						var nv = attr.split ("=", 2);
 						if (nv[0] == "cheader_filename") {
 							st.add_cheader_filename (eval (nv[1]));
+						} else if (nv[0] == "deprecated") {
+							if (eval (nv[1]) == "1") {
+								st.deprecated = true;
+							}
+						} else if (nv[0] == "replacement") {
+							st.replacement = eval (nv[1]);
+						} else if (nv[0] == "deprecated_since") {
+							st.deprecated_since = eval (nv[1]);
 						} else if (nv[0] == "hidden") {
 							if (eval (nv[1]) == "1") {
 								return;
@@ -769,6 +801,14 @@ public class Vala.GIdlParser : CodeVisitor {
 						var nv = attr.split ("=", 2);
 						if (nv[0] == "cheader_filename") {
 							st.add_cheader_filename (eval (nv[1]));
+						} else if (nv[0] == "deprecated") {
+							if (eval (nv[1]) == "1") {
+								st.deprecated = true;
+							}
+						} else if (nv[0] == "replacement") {
+							st.replacement = eval (nv[1]);
+						} else if (nv[0] == "deprecated_since") {
+							st.deprecated_since = eval (nv[1]);
 						} else if (nv[0] == "immutable") {
 							if (eval (nv[1]) == "1") {
 								st.is_immutable = true;
@@ -834,6 +874,14 @@ public class Vala.GIdlParser : CodeVisitor {
 							if (eval (nv[1]) == "1") {
 								cl.is_immutable = true;
 							}
+						} else if (nv[0] == "deprecated") {
+							if (eval (nv[1]) == "1") {
+								cl.deprecated = true;
+							}
+						} else if (nv[0] == "replacement") {
+							cl.replacement = eval (nv[1]);
+						} else if (nv[0] == "deprecated_since") {
+							cl.deprecated_since = eval (nv[1]);
 						} else if (nv[0] == "const_cname") {
 							cl.const_cname = eval (nv[1]);
 						} else if (nv[0] == "free_function") {
@@ -978,6 +1026,14 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "1") {
 						return;
 					}
+				} else if (nv[0] == "deprecated") {
+					if (eval (nv[1]) == "1") {
+						en.deprecated = true;
+					}
+				} else if (nv[0] == "replacement") {
+					en.replacement = eval (nv[1]);
+				} else if (nv[0] == "deprecated_since") {
+					en.deprecated_since = eval (nv[1]);
 				} else if (nv[0] == "rename_to") {
 					en.name = eval (nv[1]);
 				} else if (nv[0] == "errordomain") {
@@ -1066,6 +1122,14 @@ public class Vala.GIdlParser : CodeVisitor {
 						}
 					} else if (nv[0] == "type_check_function") {
 						cl.type_check_function = eval (nv[1]);
+					} else if (nv[0] == "deprecated") {
+						if (eval (nv[1]) == "1") {
+							cl.deprecated = true;
+						}
+					} else if (nv[0] == "replacement") {
+						cl.replacement = eval (nv[1]);
+					} else if (nv[0] == "deprecated_since") {
+						cl.deprecated_since = eval (nv[1]);
 					} else if (nv[0] == "type_id") {
 						cl.set_type_id (eval (nv[1]));
 					} else if (nv[0] == "abstract") {
@@ -1654,6 +1718,14 @@ public class Vala.GIdlParser : CodeVisitor {
 					foreach (string type_arg in type_args) {
 						return_type.add_type_argument (get_type_from_string (type_arg));
 					}
+				} else if (nv[0] == "deprecated") {
+					if (eval (nv[1]) == "1") {
+						m.deprecated = true;
+					}
+				} else if (nv[0] == "replacement") {
+					m.replacement = eval (nv[1]);
+				} else if (nv[0] == "deprecated_since") {
+					m.deprecated_since = eval (nv[1]);
 				} else if (nv[0] == "cheader_filename") {
 					m.add_cheader_filename (eval (nv[1]));
 				} else if (nv[0] == "abstract") {
@@ -2036,6 +2108,14 @@ public class Vala.GIdlParser : CodeVisitor {
 					foreach (string type_arg in type_args) {
 						prop.property_type.add_type_argument (get_type_from_string (type_arg));
 					}
+				} else if (nv[0] == "deprecated") {
+					if (eval (nv[1]) == "1") {
+						prop.deprecated = true;
+					}
+				} else if (nv[0] == "replacement") {
+					prop.replacement = eval (nv[1]);
+				} else if (nv[0] == "deprecated_since") {
+					prop.deprecated_since = eval (nv[1]);
 				} else if (nv[0] == "accessor_method") {
 					if (eval (nv[1]) == "0") {
 						prop.no_accessor_method = true;
@@ -2072,6 +2152,14 @@ public class Vala.GIdlParser : CodeVisitor {
 				var nv = attr.split ("=", 2);
 				if (nv[0] == "cheader_filename") {
 					c.add_cheader_filename (eval (nv[1]));
+				} else if (nv[0] == "deprecated") {
+					if (eval (nv[1]) == "1") {
+						c.deprecated = true;
+					}
+				} else if (nv[0] == "replacement") {
+					c.replacement = eval (nv[1]);
+				} else if (nv[0] == "deprecated_since") {
+					c.deprecated_since = eval (nv[1]);
 				} else if (nv[0] == "hidden") {
 					if (eval (nv[1]) == "1") {
 						return null;
@@ -2099,6 +2187,9 @@ public class Vala.GIdlParser : CodeVisitor {
 		string array_length_cname = null;
 		string array_length_type = null;
 		bool array_null_terminated = false;
+		bool deprecated = false;
+		string deprecated_since = null;
+		string replacement = null;
 
 		var attributes = get_attributes ("%s.%s".printf (current_data_type.get_cname (), node.name));
 		if (attributes != null) {
@@ -2134,6 +2225,14 @@ public class Vala.GIdlParser : CodeVisitor {
 					foreach (string type_arg in type_args) {
 						type.add_type_argument (get_type_from_string (type_arg));
 					}
+				} else if (nv[0] == "deprecated") {
+					if (eval (nv[1]) == "1") {
+						deprecated = true;
+					}
+				} else if (nv[0] == "replacement") {
+					replacement = eval (nv[1]);
+				} else if (nv[0] == "deprecated_since") {
+					deprecated_since = eval (nv[1]);
 				} else if (nv[0] == "cheader_filename") {
 					cheader_filename = eval (nv[1]);
 				} else if (nv[0] == "ctype") {
@@ -2169,6 +2268,18 @@ public class Vala.GIdlParser : CodeVisitor {
 
 		if (field_name != node.name) {
 			field.set_cname (node.name);
+		}
+
+		if (deprecated) {
+			field.deprecated = true;
+
+			if (deprecated_since != null) {
+				field.deprecated_since = deprecated_since;
+			}
+
+			if (replacement != null) {
+				field.replacement = replacement;
+			}
 		}
 
 		if (ctype != null) {
@@ -2291,6 +2402,14 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "1") {
 						return null;
 					}
+				} else if (nv[0] == "deprecated") {
+					if (eval (nv[1]) == "1") {
+						sig.deprecated = true;
+					}
+				} else if (nv[0] == "replacement") {
+					sig.replacement = eval (nv[1]);
+				} else if (nv[0] == "deprecated_since") {
+					sig.deprecated_since = eval (nv[1]);
 				} else if (nv[0] == "transfer_ownership") {
 					if (eval (nv[1]) == "1") {
 						sig.return_type.value_owned = true;
