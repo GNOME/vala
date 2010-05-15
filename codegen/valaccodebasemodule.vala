@@ -767,13 +767,18 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 		var cenum = new CCodeEnum (en.get_cname ());
 
+		cenum.deprecated = en.deprecated;
+
 		foreach (EnumValue ev in en.get_values ()) {
+			CCodeEnumValue c_ev;
 			if (ev.value == null) {
-				cenum.add_value (new CCodeEnumValue (ev.get_cname ()));
+				c_ev = new CCodeEnumValue (ev.get_cname ());
 			} else {
 				ev.value.accept (codegen);
-				cenum.add_value (new CCodeEnumValue (ev.get_cname (), (CCodeExpression) ev.value.ccodenode));
+				c_ev = new CCodeEnumValue (ev.get_cname (), (CCodeExpression) ev.value.ccodenode);
 			}
+			c_ev.deprecated = ev.deprecated;
+			cenum.add_value (c_ev);
 		}
 
 		decl_space.add_type_definition (cenum);
@@ -879,7 +884,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				} else {
 					cdecl.modifiers = CCodeModifiers.EXTERN;
 				}
-		
+
 				decl_space.add_constant_declaration (cdecl);
 			} else {
 				var cdefine = new CCodeMacroReplacement.with_expression (c.get_cname (), (CCodeExpression) c.initializer.ccodenode);
@@ -917,6 +922,9 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			cdecl.modifiers = CCodeModifiers.STATIC;
 		} else {
 			cdecl.modifiers = CCodeModifiers.EXTERN;
+		}
+		if (f.deprecated) {
+			cdecl.modifiers |= CCodeModifiers.DEPRECATED;
 		}
 		decl_space.add_type_member_declaration (cdecl);
 

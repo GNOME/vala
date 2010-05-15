@@ -179,6 +179,10 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 			}
 		}
 
+		if (m.deprecated) {
+			function.modifiers |= CCodeModifiers.DEPRECATED;
+		}
+
 		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 		var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
 

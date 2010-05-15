@@ -30,6 +30,11 @@ public class Vala.CCodeEnum : CCodeNode {
 	 * The name of this enum.
 	 */
 	public string name { get; set; }
+
+	/**
+	 * Whether the enum is deprecated.
+	 */
+	public bool deprecated { get; set; default = false; }
 	
 	private List<CCodeEnumValue> values = new ArrayList<CCodeEnumValue> ();
 	
@@ -70,6 +75,9 @@ public class Vala.CCodeEnum : CCodeNode {
 		if (name != null) {
 			writer.write_string (" ");
 			writer.write_string (name);
+		}
+		if (deprecated) {
+			writer.write_string (" G_GNUC_DEPRECATED");
 		}
 		writer.write_string (";");
 		writer.write_newline ();

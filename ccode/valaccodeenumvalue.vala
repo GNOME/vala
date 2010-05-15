@@ -32,6 +32,11 @@ public class Vala.CCodeEnumValue : CCodeNode {
 	public string name { get; set; }
 
 	/**
+	 * Whether this enum value is deprecated.
+	 */
+	public bool deprecated { get; set; default = false; }
+
+	/**
 	 * The numerical representation of this enum value.
 	 */
 	public CCodeExpression? value { get; set; }

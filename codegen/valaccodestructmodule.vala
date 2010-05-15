@@ -63,6 +63,7 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 		}
 
 		var instance_struct = new CCodeStruct ("_%s".printf (st.get_cname ()));
+		instance_struct.deprecated = st.deprecated;
 
 		foreach (Field f in st.get_fields ()) {
 			string field_ctype = f.field_type.get_cname ();
@@ -73,7 +74,7 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 			if (f.binding == MemberBinding.INSTANCE)  {
 				generate_type_declaration (f.field_type, decl_space);
 
-				instance_struct.add_field (field_ctype, f.get_cname () + f.field_type.get_cdeclarator_suffix ());
+				instance_struct.add_field (field_ctype, f.get_cname () + f.field_type.get_cdeclarator_suffix (), f.deprecated ? " G_GNUC_DEPRECATED" : null);
 				if (f.field_type is ArrayType && !f.no_array_length) {
 					// create fields to store array dimensions
 					var array_type = (ArrayType) f.field_type;

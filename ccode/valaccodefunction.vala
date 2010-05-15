@@ -117,6 +117,10 @@ public class Vala.CCodeFunction : CCodeNode {
 		
 		writer.write_string (")");
 
+		if (CCodeModifiers.DEPRECATED in modifiers) {
+			writer.write_string (" G_GNUC_DEPRECATED");
+		}
+
 		if (block == null) {
 			if (attributes != null) {
 				writer.write_string (" ");

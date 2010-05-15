@@ -30,7 +30,7 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 	 * The type of the local variable.
 	 */
 	public string type_name { get; set; }
-	
+
 	/**
 	 * The declaration modifier.
 	 */
@@ -93,6 +93,10 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 					first = false;
 				}
 				decl.write (writer);
+			}
+
+			if (CCodeModifiers.DEPRECATED in modifiers) {
+				writer.write_string (" G_GNUC_DEPRECATED");
 			}
 
 			writer.write_string (";");

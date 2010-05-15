@@ -35,6 +35,11 @@ public class Vala.CCodeTypeDefinition : CCodeNode {
 	 * The type declarator.
 	 */
 	public CCodeDeclarator declarator { get; set; }
+
+	/**
+	 * Whether the type is deprecated.
+	 */
+	public bool deprecated { get; set; default = false; }
 	
 	public CCodeTypeDefinition (string type, CCodeDeclarator decl) {
 		type_name = type;
@@ -53,7 +58,11 @@ public class Vala.CCodeTypeDefinition : CCodeNode {
 		writer.write_string (" ");
 		
 		declarator.write_declaration (writer);
-		
+
+		if (deprecated) {
+			writer.write_string (" G_GNUC_DEPRECATED");
+		}
+
 		writer.write_string (";");
 		writer.write_newline ();
 	}

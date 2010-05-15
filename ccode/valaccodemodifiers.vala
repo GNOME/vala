@@ -30,5 +30,6 @@ public enum Vala.CCodeModifiers {
 	REGISTER = 1 << 1,
 	EXTERN = 1 << 2,
 	INLINE = 1 << 3,
-	VOLATILE = 1 << 4
+	VOLATILE = 1 << 4,
+	DEPRECATED = 1 << 5
 }
