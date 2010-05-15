@@ -795,7 +795,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			buffer.append_printf (" direction=\"out\"");
 		}
 
-		Delegate delegate_type = type.data_type as Delegate;
+		DelegateType delegate_type = type as DelegateType;
 
 		if ((type.value_owned && delegate_type == null) || constructor) {
 			buffer.append_printf (" transfer-ownership=\"full\"");
@@ -806,7 +806,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			buffer.append_printf (" allow-none=\"1\"");
 		}
 
-		if (delegate_type != null && delegate_type.has_target) {
+		if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
 			buffer.append_printf (" closure=\"%i\"", index + 1);
 			if (type.value_owned) {
 				buffer.append_printf (" destroy=\"%i\"", index + 2);
