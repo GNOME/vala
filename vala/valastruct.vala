@@ -497,6 +497,8 @@ public class Vala.Struct : TypeSymbol {
 				process_floating_type_attribute (a);
 			} else if (a.name == "Immutable") {
 				is_immutable = true;
+			} else if (a.name == "Deprecated") {
+				process_deprecated_attribute (a);
 			}
 		}
 	}

@@ -498,6 +498,8 @@ public class Vala.Method : Member {
 			} else if (a.name == "NoArrayLength") {
 				Report.warning (source_reference, "NoArrayLength attribute is deprecated, use [CCode (array_length = false)] instead.");
 				no_array_length = true;
+			} else if (a.name == "Deprecated") {
+				process_deprecated_attribute (a);
 			}
 		}
 	}

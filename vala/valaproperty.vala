@@ -294,6 +294,8 @@ public class Vala.Property : Member, Lockable {
 				if (a.has_argument ("blurb")) {
 					blurb = a.get_string ("blurb");
 				}
+			} else if (a.name == "Deprecated") {
+				process_deprecated_attribute (a);
 			}			
 		}
 	}

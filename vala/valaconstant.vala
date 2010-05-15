@@ -153,6 +153,8 @@ public class Vala.Constant : Member, Lockable {
 		foreach (Attribute a in attributes) {
 			if (a.name == "CCode") {
 				process_ccode_attribute (a);
+			} else if (a.name == "Deprecated") {
+				process_deprecated_attribute (a);
 			}
 		}
 	}

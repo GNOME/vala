@@ -102,6 +102,8 @@ public class Vala.EnumValue : Symbol {
 		foreach (Attribute a in attributes) {
 			if (a.name == "CCode" && a.has_argument("cname")) {
 				cname = a.get_string ("cname");
+			} else if (a.name == "Deprecated") {
+				process_deprecated_attribute (a);
 			}
 		}
 	}

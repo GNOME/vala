@@ -160,6 +160,30 @@ public class Vala.CodeWriter : CodeVisitor {
 		return cheaders;
 	}
 
+	private void emit_deprecated_attribute (Symbol symbol) {
+		if (symbol.deprecated) {
+			write_indent ();
+			write_string ("[Deprecated");
+			var since = symbol.deprecated_since;
+			var replacement = symbol.replacement;
+
+			if (since != null || replacement != null) {
+				write_string (" (");
+				if (since != null) {
+					write_string ("since = \"%s\"".printf (since));
+				}
+				if (since != null && replacement != null) {
+					write_string (", ");
+				}
+				if (replacement != null) {
+					write_string ("replacement = \"%s\"".printf (since));
+				}
+				write_string (")");
+			}
+			write_string ("]");
+		}
+	}
+
 	public override void visit_class (Class cl) {
 		if (cl.external_package) {
 			return;
@@ -180,6 +204,8 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_string ("[Immutable]");
 			write_newline ();
 		}
+
+		emit_deprecated_attribute (cl);
 
 		write_indent ();
 		
@@ -330,6 +356,8 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_newline ();
 		}
 
+		emit_deprecated_attribute (st);
+
 		write_indent ();
 
 		write_string ("[CCode (");
@@ -411,6 +439,8 @@ public class Vala.CodeWriter : CodeVisitor {
 			return;
 		}
 
+		emit_deprecated_attribute (iface);
+
 		write_indent ();
 
 		write_string ("[CCode (cheader_filename = \"%s\"".printf (get_cheaders(iface)));
@@ -485,6 +515,8 @@ public class Vala.CodeWriter : CodeVisitor {
 			return;
 		}
 
+		emit_deprecated_attribute (en);
+
 		write_indent ();
 
 		write_string ("[CCode (cprefix = \"%s\", ".printf (en.get_cprefix ()));
@@ -554,6 +586,8 @@ public class Vala.CodeWriter : CodeVisitor {
 			return;
 		}
 
+		emit_deprecated_attribute (edomain);
+
 		write_indent ();
 
 		write_string ("[CCode (cprefix = \"%s\", cheader_filename = \"%s\")]".printf (edomain.get_cprefix (), get_cheaders(edomain)));
@@ -587,6 +621,8 @@ public class Vala.CodeWriter : CodeVisitor {
 		if (!check_accessibility (c)) {
 			return;
 		}
+
+		emit_deprecated_attribute (c);
 
 		bool custom_cname = (c.get_cname () != c.get_default_cname ());
 		bool custom_cheaders = (c.parent_symbol is Namespace);
@@ -629,6 +665,8 @@ public class Vala.CodeWriter : CodeVisitor {
 		if (!check_accessibility (f)) {
 			return;
 		}
+
+		emit_deprecated_attribute (f);
 
 		bool custom_cname = (f.get_cname () != f.get_default_cname ());
 		bool custom_ctype = (f.get_ctype () != null);
@@ -826,6 +864,8 @@ public class Vala.CodeWriter : CodeVisitor {
 			return;
 		}
 
+		emit_deprecated_attribute (cb);
+
 		write_indent ();
 
 		write_string ("[CCode (cheader_filename = \"%s\"".printf (get_cheaders(cb)));
@@ -896,6 +936,8 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_indent ();
 			write_string ("[ScanfFormat]");
 		}
+
+		emit_deprecated_attribute (m);
 
 		var ccode_params = new StringBuilder ();
 		var separator = "";
@@ -1022,6 +1064,8 @@ public class Vala.CodeWriter : CodeVisitor {
 			return;
 		}
 
+		emit_deprecated_attribute (prop);
+
 		if (prop.no_accessor_method) {
 			write_indent ();
 			write_string ("[NoAccessorMethod]");
@@ -1089,6 +1133,8 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_indent ();
 			write_string ("[HasEmitter]");
 		}
+
+		emit_deprecated_attribute (sig);
 		
 		write_indent ();
 		write_accessibility (sig);

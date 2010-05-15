@@ -68,6 +68,21 @@ public abstract class Vala.Symbol : CodeNode {
 	public bool active { get; set; default = true; }
 
 	/**
+	 * Specifies whether this symbol has been deprecated.
+	 */
+	public bool deprecated { get; set; default = false; }
+
+	/**
+	 * Specifies what version this symbol has been deprecated since.
+	 */
+	public string? deprecated_since { get; set; default = null; }
+
+	/**
+	 * Specifies the replacement if this symbol has been deprecated.
+	 */
+	public string? replacement { get; set; default = null; }
+
+	/**
 	 * Specifies whether this symbol has been accessed.
 	 */
 	public bool used { get; set; }
@@ -364,6 +379,39 @@ public abstract class Vala.Symbol : CodeNode {
 		}
 
 		return isclass;
+	}
+
+	/**
+	 * Process a [Deprecated] attribute
+	 */
+	public virtual void process_deprecated_attribute (Attribute attr) {
+		if (attr.name != "Deprecated") {
+			return;
+		}
+
+		deprecated = true;
+
+		if (attr.has_argument ("since")) {
+			deprecated_since = attr.get_string ("since");
+		}
+		if (attr.has_argument ("replacement")) {
+			replacement = attr.get_string ("replacement");
+		}
+	}
+
+	/**
+	 * Check to see if the symbol has been deprecated, and emit a warning
+	 * if it has.
+	 */
+	public bool check_deprecated (SourceReference? source_ref = null) {
+		if (deprecated) {
+			if (!CodeContext.get ().deprecated) {
+				Report.warning (source_ref, "%s %s%s".printf (get_full_name (), (deprecated_since == null) ? "is deprecated" : "has been deprecated since %s".printf (deprecated_since), (replacement == null) ? "" : ". Use %s".printf (replacement)));
+			}
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
 

@@ -673,6 +673,8 @@ public class Vala.Class : ObjectTypeSymbol {
 				is_compact = true;
 			} else if (a.name == "Immutable") {
 				is_immutable = true;
+			} else if (a.name == "Deprecated") {
+				process_deprecated_attribute (a);
 			}
 		}
 	}
@@ -1115,6 +1117,7 @@ public class Vala.Class : ObjectTypeSymbol {
 							}
 							if (sym is Method) {
 								// method is used as interface implementation, so it is not unused
+								sym.check_deprecated (source_reference);
 								sym.used = true;
 							} else {
 								error = true;
@@ -1134,6 +1137,7 @@ public class Vala.Class : ObjectTypeSymbol {
 							}
 							if (sym is Property) {
 								// property is used as interface implementation, so it is not unused
+								sym.check_deprecated (source_reference);
 								sym.used = true;
 							} else {
 								error = true;

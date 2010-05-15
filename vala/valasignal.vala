@@ -246,9 +246,10 @@ public class Vala.Signal : Member, Lockable {
 		foreach (Attribute a in attributes) {
 			if (a.name == "HasEmitter") {
 				has_emitter = true;
-			}
-			if (a.name == "Signal") {
+			} else if (a.name == "Signal") {
 				process_signal_attribute (a);
+			} else if (a.name == "Deprecated") {
+				process_deprecated_attribute (a);
 			}
 		}
 	}

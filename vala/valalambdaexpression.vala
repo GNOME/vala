@@ -136,6 +136,7 @@ public class Vala.LambdaExpression : Expression {
 		method = new Method (get_lambda_name (analyzer), cb.return_type, source_reference);
 		// track usage for flow analyzer
 		method.used = true;
+		method.check_deprecated (source_reference);
 
 		if (!cb.has_target || !analyzer.is_in_instance_method ()) {
 			method.binding = MemberBinding.STATIC;
