@@ -1462,72 +1462,44 @@ namespace Gda {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public interface DataModel : GLib.Object {
-		public int append_row () throws GLib.Error;
-		public int append_values (GLib.List values) throws GLib.Error;
-		public unowned Gda.DataModelIter create_iter ();
-		public unowned Gda.Column describe_column (int col);
+		[CCode (vfunc_name = "i_append_row")]
+		public virtual int append_row () throws GLib.Error;
+		[CCode (vfunc_name = "i_append_values")]
+		public virtual int append_values (GLib.List values) throws GLib.Error;
+		[CCode (vfunc_name = "i_create_iter")]
+		public virtual unowned Gda.DataModelIter create_iter ();
+		[CCode (vfunc_name = "i_describe_column")]
+		public virtual unowned Gda.Column describe_column (int col);
 		public void dump (GLib.FileStream to_stream);
 		public unowned string dump_as_string ();
 		public static GLib.Quark error_quark ();
 		public bool export_to_file (Gda.DataModelIOFormat format, string file, int cols, int nb_cols, int rows, int nb_rows, Gda.Set options) throws GLib.Error;
 		public unowned string export_to_string (Gda.DataModelIOFormat format, int cols, int nb_cols, int rows, int nb_rows, Gda.Set options);
 		public void freeze ();
-		public Gda.DataModelAccessFlags get_access_flags ();
-		public Gda.ValueAttribute get_attributes_at (int col, int row);
+		[CCode (vfunc_name = "i_get_access_flags")]
+		public virtual Gda.DataModelAccessFlags get_access_flags ();
+		[CCode (vfunc_name = "i_get_attributes_at")]
+		public virtual Gda.ValueAttribute get_attributes_at (int col, int row);
 		public int get_column_index (string name);
 		public unowned string get_column_name (int col);
 		public unowned string get_column_title (int col);
-		public int get_n_columns ();
-		public int get_n_rows ();
+		[CCode (vfunc_name = "i_get_n_columns")]
+		public virtual int get_n_columns ();
+		[CCode (vfunc_name = "i_get_n_rows")]
+		public virtual int get_n_rows ();
 		public int get_row_from_values (GLib.SList values, int cols_index);
 		public unowned GLib.Value? get_typed_value_at (int col, int row, GLib.Type expected_type, bool nullok) throws GLib.Error;
 		public unowned GLib.Value? get_value_at (int col, int row) throws GLib.Error;
-		[NoWrapper]
-		public abstract int i_append_row () throws GLib.Error;
-		[NoWrapper]
-		public abstract int i_append_values (GLib.List values) throws GLib.Error;
-		[NoWrapper]
-		public abstract unowned Gda.DataModelIter i_create_iter ();
-		[NoWrapper]
-		public abstract unowned Gda.Column i_describe_column (int col);
-		[NoWrapper]
-		public abstract int i_find_row (GLib.SList values, int cols_index);
-		[NoWrapper]
-		public abstract Gda.DataModelAccessFlags i_get_access_flags ();
-		[NoWrapper]
-		public abstract Gda.ValueAttribute i_get_attributes_at (int col, int row);
-		[NoWrapper]
-		public abstract int i_get_n_columns ();
-		[NoWrapper]
-		public abstract int i_get_n_rows ();
-		[NoWrapper]
-		public abstract bool i_get_notify ();
-		[NoWrapper]
-		public abstract GLib.Value i_get_value_at (int col, int row) throws GLib.Error;
-		[NoWrapper]
-		public abstract bool i_iter_at_row (Gda.DataModelIter iter, int row);
-		[NoWrapper]
-		public abstract bool i_iter_next (Gda.DataModelIter iter);
-		[NoWrapper]
-		public abstract bool i_iter_prev (Gda.DataModelIter iter);
-		[NoWrapper]
-		public abstract bool i_iter_set_value (Gda.DataModelIter iter, int col, GLib.Value value) throws GLib.Error;
-		[NoWrapper]
-		public abstract bool i_remove_row (int row) throws GLib.Error;
-		[NoWrapper]
-		public abstract void i_send_hint (Gda.DataModelHint hint, GLib.Value hint_value);
-		[NoWrapper]
-		public abstract void i_set_notify (bool do_notify_changes);
-		[NoWrapper]
-		public abstract bool i_set_value_at (int col, int row, GLib.Value value) throws GLib.Error;
-		[NoWrapper]
-		public abstract bool i_set_values (int row, GLib.List values) throws GLib.Error;
-		public bool remove_row (int row) throws GLib.Error;
-		public void send_hint (Gda.DataModelHint hint, GLib.Value hint_value);
+		[CCode (vfunc_name = "i_remove_row")]
+		public virtual bool remove_row (int row) throws GLib.Error;
+		[CCode (vfunc_name = "i_send_hint")]
+		public virtual void send_hint (Gda.DataModelHint hint, GLib.Value hint_value);
 		public void set_column_name (int col, string name);
 		public void set_column_title (int col, string title);
-		public bool set_value_at (int col, int row, GLib.Value value) throws GLib.Error;
-		public bool set_values (int row, GLib.List values) throws GLib.Error;
+		[CCode (vfunc_name = "i_set_value_at")]
+		public virtual bool set_value_at (int col, int row, GLib.Value value) throws GLib.Error;
+		[CCode (vfunc_name = "i_set_values")]
+		public virtual bool set_values (int row, GLib.List values) throws GLib.Error;
 		public void thaw ();
 		public signal void changed ();
 		public signal void reset ();
@@ -1537,15 +1509,12 @@ namespace Gda {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public interface Lockable : GLib.Object {
-		[NoWrapper]
-		public abstract void i_lock ();
-		[NoWrapper]
-		public abstract bool i_trylock ();
-		[NoWrapper]
-		public abstract void i_unlock ();
-		public void @lock ();
-		public bool trylock ();
-		public void unlock ();
+		[CCode (vfunc_name = "i_lock")]
+		public virtual void @lock ();
+		[CCode (vfunc_name = "i_trylock")]
+		public virtual bool trylock ();
+		[CCode (vfunc_name = "i_unlock")]
+		public virtual void unlock ();
 	}
 	[CCode (type_id = "GDA_TYPE_DSN_INFO", cheader_filename = "libgda/libgda.h")]
 	public struct DsnInfo {
