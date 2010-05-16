@@ -3981,4 +3981,7 @@ namespace GLib {
 	public static bool unlikely (bool expression);
 	[CCode (cname = "G_STATIC_ASSERT", cheader_filename = "glib.h")]
 	public static void static_assert (bool expression);
+
+	[CCode (simple_generics = true)]
+	private static void qsort_with_data<T> (T[] elems, size_t size, [CCode (type = "GCompareDataFunc")] GLib.CompareDataFunc compare_func);
 }
