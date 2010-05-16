@@ -88,8 +88,8 @@ namespace GConf {
 	[Compact]
 	[CCode (ref_function = "gconf_engine_ref", ref_function_void = true, unref_function = "gconf_engine_unref", cheader_filename = "gconf/gconf.h")]
 	public class Engine {
-		public unowned GLib.SList all_dirs (string dir) throws GLib.Error;
-		public unowned GLib.SList all_entries (string dir) throws GLib.Error;
+		public GLib.SList<string> all_dirs (string dir) throws GLib.Error;
+		public GLib.SList<GConf.Entry> all_entries (string dir) throws GLib.Error;
 		public bool associate_schema (string key, string schema_key) throws GLib.Error;
 		public unowned GConf.ChangeSet change_set_from_current (...) throws GLib.Error;
 		public unowned GConf.ChangeSet change_set_from_currentv (string keys) throws GLib.Error;
@@ -102,9 +102,9 @@ namespace GConf {
 		public unowned GConf.Entry get_entry (string key, string locale, bool use_schema_default) throws GLib.Error;
 		public double get_float (string key) throws GLib.Error;
 		public static unowned GConf.Engine get_for_address (string address) throws GLib.Error;
-		public static unowned GConf.Engine get_for_addresses (GLib.SList addresses) throws GLib.Error;
+		public static unowned GConf.Engine get_for_addresses (GLib.SList<string> addresses) throws GLib.Error;
 		public int get_int (string key) throws GLib.Error;
-		public unowned GLib.SList get_list (string key, GConf.ValueType list_type) throws GLib.Error;
+		public GLib.SList get_list (string key, GConf.ValueType list_type) throws GLib.Error;
 		public bool get_pair (string key, GConf.ValueType car_type, GConf.ValueType cdr_type, void* car_retloc, void* cdr_retloc) throws GLib.Error;
 		public unowned GConf.Schema get_schema (string key) throws GLib.Error;
 		public unowned string get_string (string key) throws GLib.Error;
@@ -226,7 +226,7 @@ namespace GConf {
 		public unowned GConf.Value get_cdr ();
 		public double get_float ();
 		public int get_int ();
-		public unowned GLib.SList get_list ();
+		public unowned GLib.SList<GConf.Value> get_list ();
 		public GConf.ValueType get_list_type ();
 		public unowned GConf.Schema get_schema ();
 		public unowned string get_string ();
@@ -237,8 +237,8 @@ namespace GConf {
 		public void set_cdr_nocopy (GConf.Value cdr);
 		public void set_float (double the_float);
 		public void set_int (int the_int);
-		public void set_list (GLib.SList list);
-		public void set_list_nocopy (GLib.SList list);
+		public void set_list (GLib.SList<GConf.Value> list);
+		public void set_list_nocopy (owned GLib.SList<GConf.Value> list);
 		public void set_list_type (GConf.ValueType type);
 		public void set_schema (GConf.Schema sc);
 		public void set_schema_nocopy (GConf.Schema sc);
