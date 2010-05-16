@@ -163,6 +163,7 @@ dist_vapi_DATA = \
 	loudmouth-1.0.vapi \
 	lua.vapi \
 	mysql.vapi \
+	orc-0.4.vapi \
 	pango.deps \
 	pango.vapi \
 	pangocairo.deps \
