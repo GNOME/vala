@@ -94,7 +94,7 @@ namespace X {
 		public void get_window_attributes (Window w, out WindowAttributes window_attributes_return);
 
 		[CCode (cname = "XGetWindowProperty")]
-		public int get_window_property (Window w, Atom property, long long_offset, long long_length, bool delete, Atom req_type, out Atom actual_type_return, out int actual_format_return, out ulong nitems_return, out ulong bytes_after_return, out void* prop_return);
+		public int get_window_property (Window w, Atom property, long long_offset, long long_length, bool delete, Atom req_type, out Atom actual_type_return, out int actual_format_return, out ulong nitems_return, out ulong bytes_after_return, [CCode (type = "unsigned char **")] out void* prop_return);
 
 		[CCode (cname = "XGrabButton")]
 		public int grab_button (uint button, uint modifiers, Window grab_window, bool owner_events, uint event_mask, int pointer_mode, int keyboard_mode, Window confine_to, uint cursor);
