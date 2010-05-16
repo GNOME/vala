@@ -3,7 +3,7 @@
 [CCode (cprefix = "Gdl", lower_case_cprefix = "gdl_")]
 namespace Gdl {
 	[CCode (cheader_filename = "gdl/gdl.h")]
-	public class Dock : Gdl.DockObject, Gtk.Buildable, Atk.Implementor {
+	public class Dock : Gdl.DockObject, Atk.Implementor, Gtk.Buildable {
 		public weak Gdl.DockObject root;
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public Dock ();
@@ -31,7 +31,7 @@ namespace Gdl {
 		public virtual signal void layout_changed ();
 	}
 	[CCode (cheader_filename = "gdl/gdl.h")]
-	public class DockBar : Gtk.Box, Gtk.Buildable, Atk.Implementor, Gtk.Orientable {
+	public class DockBar : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
 		public weak Gdl.Dock dock;
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public DockBar (Gdl.Dock dock);
@@ -45,7 +45,7 @@ namespace Gdl {
 		public Gdl.DockMaster master { owned get; set; }
 	}
 	[CCode (cheader_filename = "gdl/gdl.h")]
-	public class DockItem : Gdl.DockObject, Gtk.Buildable, Atk.Implementor {
+	public class DockItem : Gdl.DockObject, Atk.Implementor, Gtk.Buildable {
 		public weak Gtk.Widget child;
 		public int dragoff_x;
 		public int dragoff_y;
@@ -59,6 +59,7 @@ namespace Gdl {
 		public void hide_item ();
 		public void iconify_item ();
 		public void @lock ();
+		public void notify_selected ();
 		public void preferred_size (Gtk.Requisition req);
 		public void set_default_position (Gdl.DockObject reference);
 		public virtual void set_orientation (Gtk.Orientation orientation);
@@ -84,9 +85,10 @@ namespace Gdl {
 		public virtual signal void dock_drag_begin ();
 		public virtual signal void dock_drag_end (bool cancelled);
 		public virtual signal void dock_drag_motion (int x, int y);
+		public virtual signal void selected ();
 	}
 	[CCode (cheader_filename = "gdl/gdl.h")]
-	public class DockItemGrip : Gtk.Container, Gtk.Buildable, Atk.Implementor {
+	public class DockItemGrip : Gtk.Container, Atk.Implementor, Gtk.Buildable {
 		public weak Gdk.Window title_window;
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public DockItemGrip (Gdl.DockItem item);
@@ -138,7 +140,7 @@ namespace Gdl {
 		public virtual signal void layout_changed ();
 	}
 	[CCode (cheader_filename = "gdl/gdl.h")]
-	public class DockObject : Gtk.Container, Gtk.Buildable, Atk.Implementor {
+	public class DockObject : Gtk.Container, Atk.Implementor, Gtk.Buildable {
 		public Gdl.DockObjectFlags flags;
 		public int freeze_count;
 		public bool reduce_pending;
@@ -150,8 +152,22 @@ namespace Gdl {
 		public void freeze ();
 		public unowned Gdl.DockObject get_parent_object ();
 		public unowned Gdl.Dock get_toplevel ();
+		[CCode (cname = "GDL_DOCK_OBJECT_ATTACHED")]
+		public bool is_attached ();
+		[CCode (cname = "GDL_DOCK_OBJECT_AUTOMATIC")]
+		public bool is_automatic ();
 		public bool is_bound ();
 		public bool is_compound ();
+		[CCode (cname = "GDL_DOCK_OBJECT_FROZEN")]
+		public bool is_frozen ();
+		[CCode (cname = "GDL_DOCK_OBJECT_IN_DETACH")]
+		public bool is_in_detach ();
+		[CCode (cname = "GDL_DOCK_OBJECT_IN_REFLOW")]
+		public bool is_in_reflow ();
+		[CCode (cname = "GDL_DOCK_OBJECT_SET_FLAGS")]
+		public bool is_set_flags (Gdl.DockObjectFlags flags);
+		[CCode (cname = "GDL_DOCK_OBJECT_UNSET_FLAGS")]
+		public bool is_unset_flags (Gdl.DockObjectFlags flags);
 		public static unowned string nick_from_type (GLib.Type type);
 		public virtual void present (Gdl.DockObject child);
 		public virtual void reduce ();
@@ -172,7 +188,7 @@ namespace Gdl {
 		public virtual signal void docked (Gdl.DockObject requestor, Gdl.DockPlacement position, GLib.Value other_data);
 	}
 	[CCode (cheader_filename = "gdl/gdl.h")]
-	public class DockPlaceholder : Gdl.DockObject, Gtk.Buildable, Atk.Implementor {
+	public class DockPlaceholder : Gdl.DockObject, Atk.Implementor, Gtk.Buildable {
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public DockPlaceholder (string name, Gdl.DockObject object, Gdl.DockPlacement position, bool sticky);
 		public void attach (Gdl.DockObject object);

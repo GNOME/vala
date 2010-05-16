@@ -69,8 +69,8 @@
 		</flags>
 		<object name="GdlDock" parent="GdlDockObject" type-name="GdlDock" get-type="gdl_dock_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<method name="add_floating_item" symbol="gdl_dock_add_floating_item">
 				<return-type type="void"/>
@@ -147,8 +147,8 @@
 		</object>
 		<object name="GdlDockBar" parent="GtkBox" type-name="GdlDockBar" get-type="gdl_dock_bar_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 				<interface name="GtkOrientable"/>
 			</implements>
 			<method name="get_orientation" symbol="gdl_dock_bar_get_orientation">
@@ -189,8 +189,8 @@
 		</object>
 		<object name="GdlDockItem" parent="GdlDockObject" type-name="GdlDockItem" get-type="gdl_dock_item_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<method name="bind" symbol="gdl_dock_item_bind">
 				<return-type type="void"/>
@@ -261,6 +261,12 @@
 					<parameter name="behavior" type="GdlDockItemBehavior"/>
 				</parameters>
 			</constructor>
+			<method name="notify_selected" symbol="gdl_dock_item_notify_selected">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="item" type="GdlDockItem*"/>
+				</parameters>
+			</method>
 			<method name="preferred_size" symbol="gdl_dock_item_preferred_size">
 				<return-type type="void"/>
 				<parameters>
@@ -340,6 +346,12 @@
 					<parameter name="y" type="gint"/>
 				</parameters>
 			</signal>
+			<signal name="selected" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GdlDockItem*"/>
+				</parameters>
+			</signal>
 			<vfunc name="set_orientation">
 				<return-type type="void"/>
 				<parameters>
@@ -356,8 +368,8 @@
 		</object>
 		<object name="GdlDockItemGrip" parent="GtkContainer" type-name="GdlDockItemGrip" get-type="gdl_dock_item_grip_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<method name="hide_handle" symbol="gdl_dock_item_grip_hide_handle">
 				<return-type type="void"/>
@@ -547,8 +559,8 @@
 		</object>
 		<object name="GdlDockObject" parent="GtkContainer" type-name="GdlDockObject" get-type="gdl_dock_object_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<method name="bind" symbol="gdl_dock_object_bind">
 				<return-type type="void"/>
@@ -742,8 +754,8 @@
 		</object>
 		<object name="GdlDockPlaceholder" parent="GdlDockObject" type-name="GdlDockPlaceholder" get-type="gdl_dock_placeholder_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<method name="attach" symbol="gdl_dock_placeholder_attach">
 				<return-type type="void"/>
