@@ -35,7 +35,6 @@ namespace GnomeKeyring {
 		public uint item_id;
 		public weak string keyring;
 		public weak string secret;
-		public static void list_free (GLib.List found_list);
 	}
 	[Compact]
 	[CCode (copy_function = "gnome_keyring_info_copy", cheader_filename = "gnome-keyring.h")]
@@ -151,7 +150,7 @@ namespace GnomeKeyring {
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public delegate void OperationGetKeyringInfoCallback (GnomeKeyring.Result result, GnomeKeyring.Info info);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public delegate void OperationGetListCallback (GnomeKeyring.Result result, GLib.List list);
+	public delegate void OperationGetListCallback (GnomeKeyring.Result result, GLib.List<GnomeKeyring.NetworkPasswordData> list);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public delegate void OperationGetStringCallback (GnomeKeyring.Result result, string str);
 	[CCode (cheader_filename = "gnome-keyring.h")]
@@ -161,9 +160,7 @@ namespace GnomeKeyring {
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public const string SESSION;
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static unowned GLib.List acl_copy (GLib.List list);
-	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static void acl_free (GLib.List acl);
+	public static GLib.List<GnomeKeyring.AccessControl> acl_copy (GLib.List<GnomeKeyring.AccessControl> list);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static void cancel_request (void* request);
 	[CCode (cheader_filename = "gnome-keyring.h")]
@@ -189,15 +186,15 @@ namespace GnomeKeyring {
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static void* find_items (GnomeKeyring.ItemType type, GnomeKeyring.AttributeList attributes, owned GnomeKeyring.OperationGetListCallback callback);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static GnomeKeyring.Result find_items_sync (GnomeKeyring.ItemType type, GnomeKeyring.AttributeList attributes, out GLib.List found);
+	public static GnomeKeyring.Result find_items_sync (GnomeKeyring.ItemType type, GnomeKeyring.AttributeList attributes, out GLib.List<GnomeKeyring.Found> found);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static void* find_itemsv (GnomeKeyring.ItemType type, owned GnomeKeyring.OperationGetListCallback callback, ...);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static GnomeKeyring.Result find_itemsv_sync (GnomeKeyring.ItemType type, out GLib.List found, ...);
+	public static GnomeKeyring.Result find_itemsv_sync (GnomeKeyring.ItemType type, out GLib.List<GnomeKeyring.Found> found, ...);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static void* find_network_password (string? user, string? domain, string? server, string? object, string? protocol, string? authtype, uint32 port, owned GnomeKeyring.OperationGetListCallback callback);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static GnomeKeyring.Result find_network_password_sync (string? user, string? domain, string? server, string? object, string? protocol, string? authtype, uint32 port, out unowned GLib.List results);
+	public static GnomeKeyring.Result find_network_password_sync (string? user, string? domain, string? server, string? object, string? protocol, string? authtype, uint32 port, out GLib.List<GnomeKeyring.NetworkPasswordData> results);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static void* find_password (GnomeKeyring.PasswordSchema schema, owned GnomeKeyring.OperationGetStringCallback callback, ...);
 	[CCode (cheader_filename = "gnome-keyring.h")]
@@ -237,7 +234,7 @@ namespace GnomeKeyring {
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static void* item_get_acl (string? keyring, uint32 id, owned GnomeKeyring.OperationGetListCallback callback);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static GnomeKeyring.Result item_get_acl_sync (string? keyring, uint32 id, out GLib.List acl);
+	public static GnomeKeyring.Result item_get_acl_sync (string? keyring, uint32 id, out GLib.List<GnomeKeyring.AccessControl> acl);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static void* item_get_attributes (string? keyring, uint32 id, owned GnomeKeyring.OperationGetAttributesCallback callback);
 	[CCode (cheader_filename = "gnome-keyring.h")]
@@ -255,9 +252,9 @@ namespace GnomeKeyring {
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result item_grant_access_rights_sync (string? keyring, string display_name, string full_path, uint32 id, GnomeKeyring.AccessType rights);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static void* item_set_acl (string? keyring, uint32 id, GLib.List acl, owned GnomeKeyring.OperationDoneCallback callback);
+	public static void* item_set_acl (string? keyring, uint32 id, GLib.List<GnomeKeyring.AccessControl> acl, owned GnomeKeyring.OperationDoneCallback callback);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static GnomeKeyring.Result item_set_acl_sync (string? keyring, uint32 id, GLib.List acl);
+	public static GnomeKeyring.Result item_set_acl_sync (string? keyring, uint32 id, GLib.List<GnomeKeyring.AccessControl> acl);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static void* item_set_attributes (string? keyring, uint32 id, GnomeKeyring.AttributeList attributes, owned GnomeKeyring.OperationDoneCallback callback);
 	[CCode (cheader_filename = "gnome-keyring.h")]
@@ -273,7 +270,7 @@ namespace GnomeKeyring {
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static void* list_keyring_names (owned GnomeKeyring.OperationGetListCallback callback);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static GnomeKeyring.Result list_keyring_names_sync (GLib.List keyrings);
+	public static GnomeKeyring.Result list_keyring_names_sync (out GLib.List<string> keyrings);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static void* @lock (string keyring, GnomeKeyring.OperationDoneCallback callback, void* data, GLib.DestroyNotify destroy_data);
 	[CCode (cheader_filename = "gnome-keyring.h")]
@@ -299,8 +296,6 @@ namespace GnomeKeyring {
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static void network_password_free (GnomeKeyring.NetworkPasswordData data);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static void network_password_list_free (GLib.List list);
-	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static unowned string result_to_message (GnomeKeyring.Result res);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static void* set_default_keyring (string keyring, owned GnomeKeyring.OperationDoneCallback callback);
@@ -318,8 +313,6 @@ namespace GnomeKeyring {
 	public static void* store_password (GnomeKeyring.PasswordSchema schema, string? keyring, string display_name, string password, owned GnomeKeyring.OperationDoneCallback callback, ...);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result store_password_sync (GnomeKeyring.PasswordSchema schema, string keyring, string display_name, string password, ...);
-	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static void string_list_free (GLib.List strings);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static void* unlock (string? keyring, string? password, owned GnomeKeyring.OperationDoneCallback callback);
 	[CCode (cheader_filename = "gnome-keyring.h")]
