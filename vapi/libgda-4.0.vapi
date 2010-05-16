@@ -88,8 +88,8 @@ namespace Gda {
 		public static bool dsn_needs_authentication (string dsn_name);
 		public static GLib.Quark error_quark ();
 		public static unowned Gda.Config @get ();
-		public static unowned Gda.DsnInfo get_dsn_info (string dsn_name);
-		public static unowned Gda.DsnInfo get_dsn_info_at_index (int index);
+		public static Gda.DsnInfo get_dsn_info (string dsn_name);
+		public static Gda.DsnInfo get_dsn_info_at_index (int index);
 		public static int get_dsn_info_index (string dsn_name);
 		public static int get_nb_dsn ();
 		public static unowned Gda.ServerProvider get_provider (string provider_name) throws GLib.Error;
@@ -131,7 +131,7 @@ namespace Gda {
 		public unowned Gda.TransactionStatus get_transaction_status ();
 		public bool is_opened ();
 		public bool open () throws GLib.Error;
-		public static unowned Gda.Connection open_from_dsn (string dsn, string auth_string, Gda.ConnectionOptions options) throws GLib.Error;
+		public static unowned Gda.Connection open_from_dsn (string dsn, string? auth_string, Gda.ConnectionOptions options) throws GLib.Error;
 		public static unowned Gda.Connection open_from_string (string provider_name, string? cnc_string, string? auth_string, Gda.ConnectionOptions options) throws GLib.Error;
 		public bool perform_operation (Gda.ServerOperation op) throws GLib.Error;
 		public unowned string quote_sql_identifier (string id);
@@ -286,8 +286,8 @@ namespace Gda {
 		public static GLib.Quark error_quark ();
 		public unowned Gda.Holder get_holder_for_field (int col);
 		public int get_row ();
-		public GLib.Value get_value_at (int col);
-		public GLib.Value get_value_for_field (string field_name);
+		public unowned GLib.Value? get_value_at (int col);
+		public unowned GLib.Value? get_value_for_field (string field_name);
 		public void invalidate_contents ();
 		public bool is_valid ();
 		public bool move_next ();
@@ -411,16 +411,6 @@ namespace Gda {
 		public int old_row;
 		public Gda.DiffType type;
 		public weak GLib.HashTable values;
-	}
-	[Compact]
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	public class DsnInfo {
-		public weak string auth_string;
-		public weak string cnc_string;
-		public weak string description;
-		public bool is_system;
-		public weak string name;
-		public weak string provider;
 	}
 	[Compact]
 	[CCode (copy_function = "gda_geometricpoint_copy", free_function = "gda_geometricpoint_free", type_id = "GDA_TYPE_GEOMETRIC_POINT", cheader_filename = "libgda/libgda.h")]
@@ -1556,6 +1546,15 @@ namespace Gda {
 		public void @lock ();
 		public bool trylock ();
 		public void unlock ();
+	}
+	[CCode (type_id = "GDA_TYPE_DSN_INFO", cheader_filename = "libgda/libgda.h")]
+	public struct DsnInfo {
+		public weak string name;
+		public weak string provider;
+		public weak string description;
+		public weak string cnc_string;
+		public weak string auth_string;
+		public bool is_system;
 	}
 	[CCode (type_id = "GDA_TYPE_SQL_PARSER_IFACE", cheader_filename = "libgda/libgda.h")]
 	protected struct SqlParserIface {
