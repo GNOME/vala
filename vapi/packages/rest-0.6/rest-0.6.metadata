@@ -12,6 +12,8 @@ RestProxyCallError RestProxyCall cheader_filename="rest/rest-proxy-call.h" error
 RestProxyError cheader_filename="rest/rest-proxy.h" errordomain="1"
 OAuthProxyAuthCallback cheader_filename="rest/oauth-proxy.h" has_target="1"
 RestProxyCallAsyncCallback cheader_filename="rest/rest-proxy-call.h" has_target="1"
+*.priv hidden="1"
+*Class hidden="1"
 
 rest_proxy_call_get_params type_arguments="string,string"
 rest_proxy_bind ellipsis="1"

@@ -176,8 +176,8 @@ dist_vapi_DATA = \
 	raptor.vapi \
 	rasqal.vapi \
 	readline.vapi \
-	rest.deps \
-	rest.vapi \
+	rest-0.6.deps \
+	rest-0.6.vapi \
 	sdl.vapi \
 	sdl-gfx.vapi \
 	sdl-image.vapi \
