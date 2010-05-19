@@ -140,23 +140,27 @@ public class Valadoc.Api.Method : Member {
 		var signature = new SignatureBuilder ();
 
 		signature.append_keyword (get_accessibility_modifier ());
-		if (is_static) {
-			signature.append_keyword ("static");
-		} else if (is_abstract) {
-			signature.append_keyword ("abstract");
-		} else if (is_override) {
-			signature.append_keyword ("override");
-		} else if (is_virtual) {
-			signature.append_keyword ("virtual");
-		}
-		if (is_inline) {
-			signature.append_keyword ("inline");
-		}
-		if (is_yields) {
-			signature.append_keyword ("async");
+
+		if (!is_constructor) {
+			if (is_static) {
+				signature.append_keyword ("static");
+			} else if (is_abstract) {
+				signature.append_keyword ("abstract");
+			} else if (is_override) {
+				signature.append_keyword ("override");
+			} else if (is_virtual) {
+				signature.append_keyword ("virtual");
+			}
+			if (is_inline) {
+				signature.append_keyword ("inline");
+			}
+			if (is_yields) {
+				signature.append_keyword ("async");
+			}
+
+			signature.append_content (return_type.signature);
 		}
 
-		signature.append_content (return_type.signature);
 		signature.append_symbol (this);
 
 		var type_parameters = get_children_by_type (NodeType.TYPE_PARAMETER, false);
