@@ -563,7 +563,7 @@ namespace GnuTLS
 		[CCode (cname = "gnutls_priority_set")]
 		public int set_priority (Priority priority);
 		[CCode (cname = "gnutls_priority_set_direct")]
-		public int set_priority_from_string (string priority, out char* err_pos = null);
+		public int set_priority_from_string (string priority, out unowned string err_pos = null);
 		[CCode (cname = "gnutls_set_default_priority")]
 		public int set_default_priority ();
 		[CCode (cname = "gnutls_set_default_export_priority")]
@@ -1888,7 +1888,9 @@ namespace GnuTLS
 		APPLICATION_ERROR_MAX, // -65000
 		APPLICATION_ERROR_MIN;  // -65500
 
+		[CCode (cname = "gnutls_error_is_fatal")]
 		public bool is_fatal ();
+		[CCode (cname = "gnutls_error_to_alert")]
 		public AlertDescription to_alert (out AlertLevel level);
 		[CCode (cname = "gnutls_perror")]
 		public void print ();
