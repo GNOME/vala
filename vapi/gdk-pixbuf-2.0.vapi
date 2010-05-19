@@ -48,8 +48,8 @@ namespace Gdk {
 		public Gdk.Pixbuf rotate_simple (Gdk.PixbufRotation angle);
 		public void saturate_and_pixelate (Gdk.Pixbuf dest, float saturation, bool pixelate);
 		public bool save (string filename, string type, ...) throws GLib.Error;
-		public bool save_to_buffer (string buffer, size_t buffer_size, string type, ...) throws GLib.Error;
-		public bool save_to_bufferv (string buffer, size_t buffer_size, string type, string[] option_keys, string[] option_values) throws GLib.Error;
+		public bool save_to_buffer ([CCode (array_length_type = "gsize")] out char[] buffer, string type, ...) throws GLib.Error;
+		public bool save_to_bufferv ([CCode (array_length_type = "gsize")] out char[] buffer, string type, string[] option_keys, string[] option_values) throws GLib.Error;
 		public bool save_to_callback (Gdk.PixbufSaveFunc save_func, string type) throws GLib.Error;
 		public bool save_to_callbackv (Gdk.PixbufSaveFunc save_func, string type, string[] option_keys, string[] option_values) throws GLib.Error;
 		public bool save_to_stream (GLib.OutputStream stream, string type, GLib.Cancellable cancellable) throws GLib.Error;
