@@ -3366,10 +3366,10 @@ namespace GLib {
 	public delegate int CompareFunc (void* a, void* b);
 
 	public delegate int CompareDataFunc (void* a, void* b);
-	
-	[CCode (cname = "strcmp")]
+
+	[CCode (cname = "g_strcmp0")]
 	public static GLib.CompareFunc strcmp;
-	
+
 	/* Double-ended Queues */
 
 	[Compact]
