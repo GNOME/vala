@@ -401,8 +401,8 @@ namespace Gtk {
 		public weak GLib.List<Gtk.Widget> children;
 		public bool get_homogeneous ();
 		public int get_spacing ();
-		public void pack_end (Gtk.Widget child, bool expand, bool fill, uint padding);
-		public void pack_start (Gtk.Widget child, bool expand, bool fill, uint padding);
+		public void pack_end (Gtk.Widget child, bool expand = true, bool fill = true, uint padding = 0);
+		public void pack_start (Gtk.Widget child, bool expand = true, bool fill = true, uint padding = 0);
 		public void query_child_packing (Gtk.Widget child, out bool expand, out bool fill, out uint padding, out Gtk.PackType pack_type);
 		public void reorder_child (Gtk.Widget child, int position);
 		public void set_child_packing (Gtk.Widget child, bool expand, bool fill, uint padding, Gtk.PackType pack_type);
