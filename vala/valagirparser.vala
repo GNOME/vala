@@ -348,8 +348,9 @@ public class Vala.GirParser : CodeVisitor {
 		string transfer = reader.get_attribute ("transfer-ownership");
 		string allow_none = reader.get_attribute ("allow-none");
 		next ();
-		var type = &ctype != null ? parse_type(out ctype) : parse_type ();
-		if (transfer == "full") {
+		var transfer_elements = transfer == "full";
+		var type = &ctype != null ? parse_type(out ctype, null, transfer_elements) : parse_type (null, null, transfer_elements);
+		if (transfer == "full" || transfer == "container") {
 			type.value_owned = true;
 		}
 		if (allow_none == "1") {
@@ -394,8 +395,8 @@ public class Vala.GirParser : CodeVisitor {
 			param = new FormalParameter.with_ellipsis (get_current_src ());
 			end_element ("varargs");
 		} else {
-			var type = parse_type (null, out array_length_idx);
-			if (transfer == "full") {
+			var type = parse_type (null, out array_length_idx, transfer == "full");
+			if (transfer == "full" || transfer == "container") {
 				type.value_owned = true;
 			}
 			if (allow_none == "1") {
@@ -412,7 +413,7 @@ public class Vala.GirParser : CodeVisitor {
 		return param;
 	}
 
-	DataType parse_type (out string? ctype = null, out int array_length_index = null) {
+	DataType parse_type (out string? ctype = null, out int array_length_index = null, bool transfer_elements = false) {
 		if (reader.name == "array") {
 			start_element ("array");
 			if (reader.get_attribute ("length") != null
@@ -436,7 +437,9 @@ public class Vala.GirParser : CodeVisitor {
 
 			// type arguments / element types
 			while (current_token == MarkupTokenType.START_ELEMENT) {
-				parse_type ();
+				var element_type = parse_type ();
+				element_type.value_owned = transfer_elements;
+				type.add_type_argument (element_type);
 			}
 
 			end_element ("type");
