@@ -162,6 +162,8 @@ dist_vapi_DATA = \
 	linux.vapi \
 	loudmouth-1.0.vapi \
 	lua.vapi \
+	mx-1.0.deps \
+	mx-1.0.vapi \
 	mysql.vapi \
 	orc-0.4.vapi \
 	pango.deps \

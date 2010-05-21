@@ -1,0 +1,12 @@
+Mx* cheader_filename="mx/mx.h"
+mx_application_new.argc hidden="1"
+mx_application_new.argv is_array="1" is_ref="1" array_length_pos="0.9"
+mx_button_group_foreach.userdata hidden="1"
+mx_button_group_set_active_button.button nullable="1"
+MxStylable::style_changed has_emitter="1"
+mx_stylable_iface_install_property hidden="1"
+mx_stylable_notify name="emit_notify"
+
+# Should be removed when bug #614686 is resolved
+mx_table_add_actor hidden="1"
+mx_box_layout_add_actor hidden="1"

@@ -1,0 +1,2 @@
+include/mx-1.0/mx/mx-*.h
+lib/libmx-1.0.so
