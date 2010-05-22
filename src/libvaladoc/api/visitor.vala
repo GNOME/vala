@@ -54,9 +54,6 @@ public abstract class Valadoc.Api.Visitor : GLib.Object {
 	public virtual void visit_signal (Signal item) {
 	}
 
-	public virtual void visit_creation_method (Method item) {
-	}
-
 	public virtual void visit_method (Method item) {
 	}
 

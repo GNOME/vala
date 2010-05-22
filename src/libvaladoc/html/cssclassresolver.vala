@@ -93,10 +93,6 @@ namespace Valadoc.Html {
 			css_class = "signal";
 		}
 
-		public override void visit_creation_method (Api.Method item) {
-			css_class = "creation_method";
-		}
-
 		public override void visit_method (Api.Method item) {
 			if (item.is_static) {
 				css_class = "static_method";
@@ -104,6 +100,8 @@ namespace Valadoc.Html {
 				css_class = "abstract_method";
 			} else if (item.is_virtual || item.is_override) {
 				css_class = "virtual_method";
+			} else if (item.is_constructor) {
+				css_class = "creation_method";
 			} else {
 				css_class = "method";
 			}

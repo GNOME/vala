@@ -462,10 +462,6 @@ public class Gtkdoc.Generator : Api.Visitor {
 		current_dbus_member = old_dbus_member;
 	}
 
-	public override void visit_creation_method (Api.Method m) {
-		// never called
-	}
-
 	public override void visit_method (Api.Method m) {
 		if ((m.is_constructor && current_class.is_abstract) || m.is_override || m.is_private || (!m.is_abstract && !m.is_virtual && m.base_method != null)) {
 			return;
