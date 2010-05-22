@@ -70,6 +70,10 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 	}
 
 	public override void visit_package (Package package) {
+		if (!package.is_browsable (settings)) {
+			return ;
+		}
+
 		string pkg_name = package.name;
 		string path = GLib.Path.build_filename ( this.settings.path, pkg_name );
 

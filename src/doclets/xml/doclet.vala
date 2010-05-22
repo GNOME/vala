@@ -66,6 +66,10 @@ public class Valadoc.Xml.Doclet : Api.Visitor, Valadoc.Doclet {
 	}
 
 	public override void visit_package (Api.Package package) {
+		if (!package.is_browsable (settings)) {
+			return ;
+		}
+
 		string path = GLib.Path.build_filename (this.settings.path, package.name);
 		DirUtils.create (path, 0777);
 
