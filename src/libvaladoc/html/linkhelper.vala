@@ -123,9 +123,9 @@ public class Valadoc.Html.LinkHelper : Object {
 		}
 
 		if (from == to.package) {
-			return Path.build_filename (to.full_name () + ".html");
+			return Path.build_filename (to.get_full_name () + ".html");
 		} else {
-			return Path.build_filename ("..", to.package.name, to.full_name () + ".html");
+			return Path.build_filename ("..", to.package.name, to.get_full_name () + ".html");
 		}
 	}
 
@@ -161,9 +161,9 @@ public class Valadoc.Html.LinkHelper : Object {
 		}
 
 		if (from.name == "index.valadoc") {
-			return Path.build_filename (to.package.name, to.full_name() + ".html");
+			return Path.build_filename (to.package.name, to.get_full_name() + ".html");
 		} else {
-			return Path.build_filename ("..", to.package.name, to.full_name() + ".html");
+			return Path.build_filename ("..", to.package.name, to.get_full_name() + ".html");
 		}
 	}
 
@@ -195,9 +195,9 @@ public class Valadoc.Html.LinkHelper : Object {
 		}
 
 		if (from.package == to.package) {
-			return Path.build_filename (to.full_name() + ".html");
+			return Path.build_filename (to.get_full_name() + ".html");
 		} else {
-			return Path.build_filename ("..", to.package.name, to.full_name() + ".html");
+			return Path.build_filename ("..", to.package.name, to.get_full_name() + ".html");
 		}
 	}
  }

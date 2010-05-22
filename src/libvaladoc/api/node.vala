@@ -240,8 +240,7 @@ public abstract class Valadoc.Api.Node : Item, Visitable, Documentation, Compara
 		get;
 	}
 
-	// rename to get_full_name
-	public string? full_name () {
+	public string? get_full_name () {
 		if (this._full_name == null) {
 			if (this.name == null)
 				return null;

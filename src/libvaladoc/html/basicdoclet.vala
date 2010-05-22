@@ -113,11 +113,11 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	}
 
 	protected virtual string get_img_path_html (Api.Node element, string type) {
-		return Path.build_filename ("img", element.full_name () + "." + type);
+		return Path.build_filename ("img", element.get_full_name () + "." + type);
 	}
 
 	protected virtual string get_img_path (Api.Node element, string type) {
-		return Path.build_filename (settings.path, element.package.name, "img", element.full_name () + "." + type);
+		return Path.build_filename (settings.path, element.package.name, "img", element.get_full_name () + "." + type);
 	}
 
 	protected virtual string get_icon_directory () {
@@ -142,7 +142,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		string name;
 
 		if (full_name == true && element is Namespace) {
-			string tmp = element.full_name();
+			string tmp = element.get_full_name();
 			name = (tmp == null)? "Global Namespace" : tmp;
 		} else {
 			string tmp = element.name;
@@ -347,7 +347,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 		writer.start_tag ("div", {"class", css_namespace_note});
 		writer.start_tag ("b").text ("Namespace:").end_tag ("b");
-		writer.text (" ").text (ns.full_name());
+		writer.text (" ").text (ns.get_full_name());
 		writer.end_tag ("div");
 	}
 
@@ -512,7 +512,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	}
 
 	public void write_symbol_content (Api.Node node) {
-		string full_name = node.full_name ();
+		string full_name = node.get_full_name ();
 		writer.start_tag ("div", {"class", css_style_content});
 		writer.start_tag ("h1", {"class", css_title}).text (node.name).end_tag ("h1");
 		writer.simple_tag ("hr", {"class", css_headline_hr});
@@ -667,14 +667,14 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 			writer.start_tag ("h2", {"class", css_title}).text ("Object Hierarchy:").end_tag ("h2");
 
-			writer.simple_tag ("img", {"class", css_diagram, "usemap", "#"+element.full_name (),"alt", "Object hierarchy for %s".printf (element.name), "src", this.get_img_path_html (element, "png")});
+			writer.simple_tag ("img", {"class", css_diagram, "usemap", "#"+element.get_full_name (),"alt", "Object hierarchy for %s".printf (element.name), "src", this.get_img_path_html (element, "png")});
 			writer.add_usemap (chart);
 		}
 	}
 
 	public void write_namespace_content (Namespace node, Api.Node? parent) {
 		writer.start_tag ("div", {"class", css_style_content});
-		writer.start_tag ("h1", {"class", css_title}).text (node.name == null ? "Global Namespace" : node.full_name ()).end_tag ("h1");
+		writer.start_tag ("h1", {"class", css_title}).text (node.name == null ? "Global Namespace" : node.get_full_name ()).end_tag ("h1");
 		writer.simple_tag ("hr", {"class", css_hr});
 		writer.start_tag ("h2", {"class", css_title}).text ("Description:").end_tag ("h2");
 

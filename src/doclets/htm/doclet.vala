@@ -42,7 +42,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 	}
 
 	private string get_real_path ( Api.Node element ) {
-		return GLib.Path.build_filename ( this.settings.path, element.package.name, element.full_name () + ".html" );
+		return GLib.Path.build_filename ( this.settings.path, element.package.name, element.get_full_name () + ".html" );
 	}
 
 	public override void process (Settings settings, Api.Tree tree) {
@@ -95,7 +95,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 			GLib.FileStream file = GLib.FileStream.open (rpath, "w");
 			writer = new Html.MarkupWriter (file);
 			_renderer.set_writer (writer);
-			write_file_header (this.css_path, this.js_path, ns.full_name ());
+			write_file_header (this.css_path, this.js_path, ns.get_full_name ());
 			write_navi_symbol (ns);
 			write_namespace_content (ns, ns);
 			write_file_footer ();
@@ -111,7 +111,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		GLib.FileStream file = GLib.FileStream.open (rpath, "w");
 		writer = new Html.MarkupWriter (file);
 		_renderer.set_writer (writer);
-		write_file_header (css_path, js_path, node.full_name());
+		write_file_header (css_path, js_path, node.get_full_name());
 		if (is_internal_node (node)) {
 			write_navi_symbol (node);
 		} else {

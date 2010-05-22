@@ -34,7 +34,7 @@ public class Valadoc.Api.Class : TypeSymbol {
 		this.vclass = symbol;
 
 		if (glib_error == null) {
-			if (this.full_name () == "GLib.Error") {
+			if (this.get_full_name () == "GLib.Error") {
 				glib_error = this;
 			}
 		}

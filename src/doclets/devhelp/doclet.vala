@@ -45,11 +45,11 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 	}
 
 	private string get_path (Api.Node element) {
-		return element.full_name () + ".html";
+		return element.get_full_name () + ".html";
 	}
 
 	private string get_real_path (Api.Node element) {
-		return GLib.Path.build_filename (this.settings.path, this.package_dir_name, element.full_name () + ".html");
+		return GLib.Path.build_filename (this.settings.path, this.package_dir_name, element.get_full_name () + ".html");
 	}
 
 	protected override string get_icon_directory () {
@@ -140,7 +140,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 			GLib.FileStream file = GLib.FileStream.open (rpath, "w");
 			writer = new Html.MarkupWriter (file);
 			_renderer.set_writer (writer);
-			write_file_header (css_path, js_path, node.full_name ());
+			write_file_header (css_path, js_path, node.get_full_name ());
 			write_symbol_content (node);
 			write_file_footer ();
 			file = null;
@@ -163,7 +163,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		GLib.FileStream file = GLib.FileStream.open (rpath, "w");
 		writer = new Html.MarkupWriter (file);
 		_renderer.set_writer (writer);
-		write_file_header (css_path, js_path, node.full_name());
+		write_file_header (css_path, js_path, node.get_full_name());
 		write_symbol_content (node);
 		write_file_footer ();
 		file = null;

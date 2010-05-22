@@ -106,7 +106,7 @@ public class Valadoc.Xml.Renderer : ContentRenderer {
 			taglets,
 			(taglet) => {
 				var see = taglet as Taglets.See;
-				_writer.simple_tag ("taglet", {"name", "see", "type", see.symbol.full_name ()});
+				_writer.simple_tag ("taglet", {"name", "see", "type", see.symbol.get_full_name ()});
 			});
 
 		_writer.end_tag ("taglets");
@@ -134,7 +134,7 @@ public class Valadoc.Xml.Renderer : ContentRenderer {
 	}
 
 	public override void visit_symbol_link (SymbolLink element) {
-		_writer.simple_tag ("inline-taglet", {"name", "symbol-link", "type", element.symbol.full_name ()});
+		_writer.simple_tag ("inline-taglet", {"name", "symbol-link", "type", element.symbol.get_full_name ()});
 	}
 
 	public override void visit_list (Content.List element) {

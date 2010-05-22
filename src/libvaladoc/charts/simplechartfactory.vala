@@ -26,12 +26,12 @@ public class Valadoc.Charts.SimpleFactory : Charts.Factory {
 	protected virtual Gvc.Node configure_type (Gvc.Node node, Api.Node item) {
  		node.safe_set ("shape", "box", "");
 		node.safe_set ("fontname", "Times", "");
-		node.safe_set ("label", item.full_name (), "");
+		node.safe_set ("label", item.get_full_name (), "");
 		return node;
 	}
 
 	public override Gvc.Graph create_graph (Api.Node item) {
-		var graph = new Gvc.Graph (item.full_name (), Gvc.GraphKind.AGDIGRAPH);
+		var graph = new Gvc.Graph (item.get_full_name (), Gvc.GraphKind.AGDIGRAPH);
 		return graph;
 	}
 

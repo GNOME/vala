@@ -23,7 +23,7 @@
 
 public abstract class Valadoc.Charts.Factory : Object {
 	protected Gvc.Node create_type (Gvc.Graph graph, Api.Node item) {
-		return graph.create_node (item.full_name ());
+		return graph.create_node (item.get_full_name ());
 	}
 
 	public abstract Gvc.Graph create_graph (Api.Node item);

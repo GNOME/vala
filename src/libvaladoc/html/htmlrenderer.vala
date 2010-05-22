@@ -60,7 +60,7 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 	private void write_symbol_link (Api.Node symbol, string? label) {
 		var url = get_url (symbol);
 		writer.link (url,
-		             (label == null || label == "") ? symbol.full_name () : label,
+		             (label == null || label == "") ? symbol.get_full_name () : label,
 		             cssresolver.resolve (symbol));
 	}
 
