@@ -1723,6 +1723,10 @@ namespace GLib {
 		public int unix_get_fd ();
 		[CCode (cname = "g_io_channel_win32_new_fd")]
 		public IOChannel.win32_new_fd (int fd);
+		[CCode (cname = "g_io_channel_win32_new_socket")]
+		public IOChannel.win32_socket (int socket);
+		[CCode (cname = "g_io_channel_win32_new_messages")]
+		public IOChannel.win32_messages (size_t hwnd);
 		public void init ();
 		public IOChannel.file (string filename, string mode) throws FileError;
 		public IOStatus read_chars (char[] buf, out size_t bytes_read) throws ConvertError, IOChannelError;
