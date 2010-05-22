@@ -1,6 +1,7 @@
 namespace GnomeKeyring
 {
 	public const string DEFAULT;
+	[CCode (cname = "GNOME_KEYRING_NETWORK_PASSWORD")]
 	public GnomeKeyring.PasswordSchema NETWORK_PASSWORD;
 
 	[Compact]

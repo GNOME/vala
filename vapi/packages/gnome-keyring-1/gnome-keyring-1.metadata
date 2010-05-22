@@ -21,6 +21,7 @@ gnome_keyring_delete_password.callback transfer_ownership="1"
 gnome_keyring_delete_password.data hidden="1"
 gnome_keyring_delete_password.destroy_data hidden="1"
 gnome_keyring_delete_password_sync ellipsis="1"
+GnomeKeyringOperationGetStringCallback.string nullable="1"
 
 #keyrings
 gnome_keyring_@lock.callback transfer_ownership="1"

@@ -152,8 +152,8 @@ namespace GnomeKeyring {
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public delegate void OperationGetListCallback (GnomeKeyring.Result result, GLib.List<GnomeKeyring.NetworkPasswordData> list);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public delegate void OperationGetStringCallback (GnomeKeyring.Result result, string str);
-	[CCode (cheader_filename = "gnome-keyring.h")]
+	public delegate void OperationGetStringCallback (GnomeKeyring.Result result, string? str);
+	[CCode (cname = "GNOME_KEYRING_NETWORK_PASSWORD", cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.PasswordSchema NETWORK_PASSWORD;
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public const string DEFAULT;
