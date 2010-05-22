@@ -134,7 +134,7 @@ public class Valadoc.Xml.Renderer : ContentRenderer {
 	}
 
 	public override void visit_symbol_link (SymbolLink element) {
-		_writer.simple_tag ("inline-taglet", {"name", "symbol-link", "type", element.symbol.get_full_name ()});
+		_writer.simple_tag ("inline-taglet", {"name", "link", "type", element.symbol.get_full_name ()});
 	}
 
 	public override void visit_list (Content.List element) {

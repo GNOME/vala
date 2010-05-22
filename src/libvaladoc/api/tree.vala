@@ -22,8 +22,9 @@
 
 using Gee;
 
-// private
+
 private Valadoc.Api.Class glib_error = null;
+
 
 public class Valadoc.Api.Tree {
 	private ArrayList<Package> packages = new ArrayList<Package>();
