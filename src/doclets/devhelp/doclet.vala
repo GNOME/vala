@@ -160,7 +160,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		}
 	}
 
-	private void process_node (Api.Node node) {
+	private void process_node (Api.Node node, bool accept_all_children) {
 		string rpath = this.get_real_path (node);
 		string path = this.get_path (node);
 
@@ -172,9 +172,11 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		write_file_footer ();
 		file = null;
 
-		_devhelpwriter.start_sub (node.name, path);
-		node.accept_all_children (this);
-		_devhelpwriter.end_sub ();
+		if (accept_all_children) {
+			_devhelpwriter.start_sub (node.name, path);
+			node.accept_all_children (this);
+			_devhelpwriter.end_sub ();
+		}
 	}
 
 	public override void visit_namespace (Namespace item) {
@@ -194,43 +196,43 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 	}
 
 	public override void visit_error_domain (ErrorDomain item) {
-		process_node (item);
+		process_node (item, true);
 	}
 
 	public override void visit_enum (Api.Enum item) {
-		process_node (item);
+		process_node (item, true);
 	}
 
 	public override void visit_property (Property item) {
-		process_node (item);
+		process_node (item, false);
 	}
 
 	public override void visit_constant (Constant item) {
-		process_node (item);
+		process_node (item, false);
 	}
 
 	public override void visit_field (Field item) {
-		process_node (item);
+		process_node (item, false);
 	}
 
 	public override void visit_error_code (ErrorCode item) {
-		process_node (item);
+		process_node (item, false);
 	}
 
 	public override void visit_enum_value (Api.EnumValue item) {
-		process_node (item);
+		process_node (item, false);
 	}
 
 	public override void visit_delegate (Delegate item) {
-		process_node (item);
+		process_node (item, false);
 	}
 
 	public override void visit_signal (Api.Signal item) {
-		process_node (item);
+		process_node (item, false);
 	}
 
 	public override void visit_method (Method item) {
-		process_node (item);
+		process_node (item, false);
 	}
 }
 

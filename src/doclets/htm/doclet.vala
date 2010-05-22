@@ -109,7 +109,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		ns.accept_all_children (this);
 	}
 
-	private void process_node (Api.Node node) {
+	private void process_node (Api.Node node, bool accept_all_children) {
 		string rpath = this.get_real_path (node);
 
 		GLib.FileStream file = GLib.FileStream.open (rpath, "w");
@@ -124,59 +124,62 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		write_symbol_content (node);
 		write_file_footer ();
 		file = null;
-		node.accept_all_children (this);
+
+		if (accept_all_children) {
+			node.accept_all_children (this);
+		}
 	}
 
 	public override void visit_interface (Interface item) {
-		process_node (item);
+		process_node (item, true);
 	}
 
 	public override void visit_class (Api.Class item) {
-		process_node (item);
+		process_node (item, true);
 	}
 
 	public override void visit_struct (Api.Struct item) {
-		process_node (item);
+		process_node (item, true);
 	}
 
 	public override void visit_error_domain (Api.ErrorDomain item) {
-		process_node (item);
+		process_node (item, true);
 	}
 
 	public override void visit_enum (Api.Enum item) {
-		process_node (item);
+		process_node (item, true);
 	}
 
 	public override void visit_property (Api.Property item) {
-		process_node (item);
+		process_node (item, false);
 	}
 
 	public override void visit_constant (Api.Constant item) {
-		process_node (item);
+		process_node (item, false);
 	}
 
 	public override void visit_field (Api.Field item) {
-		process_node (item);
+		process_node (item, false);
 	}
 
 	public override void visit_error_code (Api.ErrorCode item) {
-		process_node (item);
+		process_node (item, false);
 	}
 
 	public override void visit_enum_value (Api.EnumValue item) {
-		process_node (item);
+		process_node (item, false);
 	}
 
 	public override void visit_delegate (Api.Delegate item) {
-		process_node (item);
+		process_node (item, false);
 	}
 
 	public override void visit_signal (Api.Signal item) {
-		process_node (item);
+		process_node (item, false);
 	}
 
 	public override void visit_method (Api.Method item) {
-		process_node (item);
+		process_node (item, false);
 	}
 }
 
