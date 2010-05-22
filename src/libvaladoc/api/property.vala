@@ -98,11 +98,11 @@ public class Valadoc.Api.Property : Member {
 	}
 
 	internal override void process_comments (Settings settings, DocumentationParser parser) {
-		if (getter != null && getter.is_visitor_accessible (settings)) {
+		if (getter != null && getter.is_browsable (settings)) {
 			getter.process_comments (settings, parser);
 		}
 
-		if (setter != null && setter.is_visitor_accessible (settings)) {
+		if (setter != null && setter.is_browsable (settings)) {
 			setter.process_comments (settings, parser);
 		}
 

@@ -23,7 +23,7 @@
 using Gee;
 
 // private
-public Valadoc.Api.Class glib_error = null;
+private Valadoc.Api.Class glib_error = null;
 
 public class Valadoc.Api.Tree {
 	private ArrayList<Package> packages = new ArrayList<Package>();
@@ -408,7 +408,7 @@ public class Valadoc.Api.Tree {
 		process_wiki (docparser);
 
 		foreach (Package pkg in this.packages) {
-			if (pkg.is_visitor_accessible (settings)) {
+			if (pkg.is_browsable (settings)) {
 				pkg.process_comments(settings, docparser);
 			}
 		}
@@ -418,7 +418,7 @@ public class Valadoc.Api.Tree {
 		foreach (Package pkg in this.packages) {
 			string? path = (pkg.is_package)? get_external_documentation_path (pkg.name) : null;
 
-			if (pkg.is_visitor_accessible (settings) && path != null) {
+			if (pkg.is_browsable (settings) && path != null) {
 				pkg.import_documentation (path, settings, importer);
 			}
 		}

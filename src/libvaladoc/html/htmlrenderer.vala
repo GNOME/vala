@@ -231,8 +231,8 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 
 	public override void visit_symbol_link (SymbolLink element) {
 		if (element.symbol == _container
-		    || !element.symbol.is_visitor_accessible (_doclet.settings)
-		    || !element.symbol.package.is_visitor_accessible (_doclet.settings)) {
+		    || !element.symbol.is_browsable (_doclet.settings)
+		    || !element.symbol.package.is_browsable (_doclet.settings)) {
 			writer.text (element.label);
 		} else {
 			write_symbol_link (element.symbol, element.label);

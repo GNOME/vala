@@ -52,7 +52,7 @@ public abstract class Valadoc.Api.Symbol : Node {
 		return GLib.Path.get_basename (path);
 	}
 
-	public override bool is_visitor_accessible (Settings settings) {
+	public override bool is_browsable (Settings settings) {
 		if (!settings._private && this.is_private) {
 			return false;
 		}

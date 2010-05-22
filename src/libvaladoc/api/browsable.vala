@@ -1,4 +1,4 @@
-/* visitable.vala
+/* browsable.vala
  *
  * Copyright (C) 2008  Florian Brosch
  *
@@ -23,7 +23,6 @@
 using Gee;
 
 
-// Rename to Browsable // Visitable
 public interface Valadoc.Api.Browsable : Item {
 
 	public abstract bool is_browsable (Settings settings);

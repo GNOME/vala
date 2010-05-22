@@ -93,7 +93,7 @@ public class Valadoc.Api.Package : Node {
 		return this.vfiles.contains (source_file);
 	}
 
-	public override bool is_visitor_accessible (Settings settings) {
+	public override bool is_browsable (Settings settings) {
 		return !(this.is_package && settings.with_deps == false);
 	}
 

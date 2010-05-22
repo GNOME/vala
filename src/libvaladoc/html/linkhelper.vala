@@ -40,7 +40,7 @@ public class Valadoc.Html.LinkHelper : Object {
 	}
 
 	public string? get_package_link (Api.Package package, Settings settings) {
-		if (!package.is_visitor_accessible (settings)) {
+		if (!package.is_browsable (settings)) {
 			return null;
 		}
 
@@ -98,7 +98,7 @@ public class Valadoc.Html.LinkHelper : Object {
 
 
 	protected virtual string? from_package_to_package (Api.Package from, Api.Package to) {
-		if (!to.is_visitor_accessible(_settings)) {
+		if (!to.is_browsable(_settings)) {
 			return null;
 		}
 
@@ -118,7 +118,7 @@ public class Valadoc.Html.LinkHelper : Object {
 	}
 
 	protected virtual string? from_package_to_node (Api.Package from, Api.Node to) {
-		if (!to.is_visitor_accessible(_settings) || !to.package.is_visitor_accessible (_settings)) {
+		if (!to.is_browsable(_settings) || !to.package.is_browsable (_settings)) {
 			return null;
 		}
 
@@ -132,7 +132,7 @@ public class Valadoc.Html.LinkHelper : Object {
 
 
 	protected virtual string? from_wiki_to_package (WikiPage from, Api.Package to) {
-		if (!to.is_visitor_accessible(_settings)) {
+		if (!to.is_browsable(_settings)) {
 			return null;
 		}
 
@@ -156,7 +156,7 @@ public class Valadoc.Html.LinkHelper : Object {
 	}
 
 	protected virtual string? from_wiki_to_node (WikiPage from, Api.Node to) {
-		if (!to.is_visitor_accessible(_settings) || !to.package.is_visitor_accessible (_settings)) {
+		if (!to.is_browsable(_settings) || !to.package.is_browsable (_settings)) {
 			return null;
 		}
 
@@ -170,7 +170,7 @@ public class Valadoc.Html.LinkHelper : Object {
 
 
 	protected virtual string? from_node_to_package (Api.Node from, Api.Package to) {
-		if (!to.is_visitor_accessible (_settings)) {
+		if (!to.is_browsable (_settings)) {
 			return null;
 		}
 
@@ -190,7 +190,7 @@ public class Valadoc.Html.LinkHelper : Object {
 	}
 
 	protected virtual string? from_node_to_node (Api.Node from, Api.Node to) {
-		if (!to.is_visitor_accessible(_settings) || !to.package.is_visitor_accessible (_settings)) {
+		if (!to.is_browsable(_settings) || !to.package.is_browsable (_settings)) {
 			return null;
 		}
 

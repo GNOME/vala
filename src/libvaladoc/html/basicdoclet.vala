@@ -404,7 +404,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	public void write_navi_packages_inline (Api.Tree tree) {
 		writer.start_tag ("ul", {"class", css_navi});
 		foreach (Package pkg in tree.get_package_list()) {
-			if (pkg.is_visitor_accessible (settings)) {
+			if (pkg.is_browsable (settings)) {
 				writer.start_tag ("li", {"class", cssresolver.resolve (pkg)});
 				writer.link (linker.get_package_link (pkg, settings), pkg.name);
 				// brief description
@@ -448,7 +448,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		var list = new Gee.ArrayList<Api.Node> ();
 
 		foreach (var node in nodes) {
-			if (node.is_visitor_accessible(_settings)) {
+			if (node.is_browsable(_settings)) {
 				list.add (node);
 			}
 		}

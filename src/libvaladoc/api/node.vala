@@ -45,7 +45,7 @@ public enum Valadoc.Api.NodeType {
 	TYPE_PARAMETER
 }
 
-public abstract class Valadoc.Api.Node : Item, Visitable, Documentation, Comparable<Node> {
+public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Comparable<Node> {
 	protected bool do_document { private set; get; default = false; }
 
 	public abstract string? name { owned get; }
@@ -66,7 +66,7 @@ public abstract class Valadoc.Api.Node : Item, Visitable, Documentation, Compara
 
 	public abstract void accept (Visitor visitor);
 
-	public abstract bool is_visitor_accessible (Settings settings);
+	public abstract bool is_browsable (Settings settings);
 
 	public virtual string? get_filename () {
 		return null;
@@ -131,7 +131,7 @@ public abstract class Valadoc.Api.Node : Item, Visitable, Documentation, Compara
 		do_document = true;
 
 		foreach (Node node in per_symbol_children.values) {
-			if (node.is_visitor_accessible (settings)) {
+			if (node.is_browsable (settings)) {
 				node.process_comments (settings, parser);
 			}
 		}
