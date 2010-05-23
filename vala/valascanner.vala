@@ -1469,7 +1469,8 @@ public class Vala.Scanner {
 	}
 
 	bool comment (bool file_comment = false) {
-		if (current > end - 2
+		if (current == null
+		    || current > end - 2
 		    || current[0] != '/'
 		    || (current[1] != '/' && current[1] != '*')) {
 			return false;
