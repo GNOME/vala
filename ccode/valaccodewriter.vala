@@ -77,6 +77,12 @@ public class Vala.CCodeWriter {
 			temp_filename = "%s.valatmp".printf (filename);
 			stream = FileStream.open (temp_filename, "w");
 		} else {
+			/*
+			 * File doesn't exist. In case of a particular destination (-d flag),
+			 * check and create the directory structure.
+			 */
+			var dirname = Path.get_dirname (filename);
+			DirUtils.create_with_parents (dirname, 0755);
 			stream = FileStream.open (filename, "w");
 		}
 
