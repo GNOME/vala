@@ -1209,6 +1209,15 @@ public class Vala.Genie.Parser : CodeVisitor {
 					}
 				}
 				break;
+			case TokenType.OP_NEG:
+				next ();
+				if (accept (TokenType.CLOSE_PARENS)) {
+					// (!) non-null cast
+					var inner = parse_unary_expression ();
+					return new CastExpression.non_null (inner, get_src (begin));
+				}
+				break;
+	
 			default:
 				break;
 			}
