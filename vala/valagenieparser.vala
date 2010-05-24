@@ -200,7 +200,15 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 	void rollback (SourceLocation location) {
 		while (tokens[index].begin.pos != location.pos) {
-			prev ();
+			index = (index - 1 + BUFFER_SIZE) % BUFFER_SIZE;
+			size++;
+			if (size > BUFFER_SIZE) {
+				scanner.seek (location);
+				size = 0;
+				index = 0;
+
+				next ();
+			}
 		}
 	}
 
@@ -1012,6 +1020,11 @@ public class Vala.Genie.Parser : CodeVisitor {
 		do {
 			if (!first) {
  				// array of arrays: new T[][42]
+ 				
+ 				if (size_specified) {
+					throw new ParseError.SYNTAX (get_error ("size of inner arrays must not be specified in array creation expression"));
+				}
+ 				
 				etype = new ArrayType (etype, size_specifier_list.size, etype.source_reference);
 			} else {
 				first = false;

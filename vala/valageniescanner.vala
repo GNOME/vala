@@ -103,6 +103,15 @@ public class Vala.Genie.Scanner {
 	bool is_ident_char (char c) {
 		return (c.isalnum () || c == '_');
 	}
+	
+	public void seek (SourceLocation location) {
+		current = location.pos;
+		line = location.line;
+		column = location.column;
+
+		conditional_stack = null;
+		state_stack = null;
+	}
 
 	TokenType get_identifier_or_keyword (char* begin, int len) {
 		switch (len) {
