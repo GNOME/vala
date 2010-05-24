@@ -342,6 +342,9 @@ public class Vala.Genie.Parser : CodeVisitor {
 		case TokenType.STRING_LITERAL:
 			next ();
 			return new StringLiteral (get_last_string (), get_src (begin));
+		case TokenType.TEMPLATE_STRING_LITERAL:
+			next ();
+			return new StringLiteral ("\"%s\"".printf (get_last_string ()), get_src (begin));
 		case TokenType.VERBATIM_STRING_LITERAL:
 			next ();
 			string raw_string = get_last_string ();
@@ -623,6 +626,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		case TokenType.REAL_LITERAL:
 		case TokenType.CHARACTER_LITERAL:
 		case TokenType.STRING_LITERAL:
+		case TokenType.TEMPLATE_STRING_LITERAL:
 		case TokenType.VERBATIM_STRING_LITERAL:
 		case TokenType.NULL:
 			expr = parse_literal ();
@@ -634,6 +638,9 @@ public class Vala.Genie.Parser : CodeVisitor {
 			break;
 		case TokenType.OPEN_PARENS:
 			expr = parse_tuple ();
+			break;
+		case TokenType.OPEN_TEMPLATE:
+			expr = parse_template ();
 			break;
 		case TokenType.THIS:
 			expr = parse_this_access ();
@@ -703,6 +710,21 @@ public class Vala.Genie.Parser : CodeVisitor {
 			}
 		}
 		return expr;
+	}
+
+	Expression parse_template () throws ParseError {
+		var begin = get_location ();
+		var template = new Template ();
+
+		expect (TokenType.OPEN_TEMPLATE);
+		while (current () != TokenType.CLOSE_TEMPLATE) {
+			template.add_expression (parse_expression ());
+			expect (TokenType.COMMA);
+		}
+		expect (TokenType.CLOSE_TEMPLATE);
+
+		template.source_reference = get_src (begin);
+		return template;
 	}
 
 	Expression parse_tuple () throws ParseError {
@@ -1170,6 +1192,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 					case TokenType.REAL_LITERAL:
 					case TokenType.CHARACTER_LITERAL:
 					case TokenType.STRING_LITERAL:
+					case TokenType.TEMPLATE_STRING_LITERAL:
 					case TokenType.VERBATIM_STRING_LITERAL:
 					case TokenType.NULL:
 					case TokenType.THIS:
@@ -3063,14 +3086,15 @@ public class Vala.Genie.Parser : CodeVisitor {
 		if (ModifierFlags.NEW in flags) {
 			sig.hides = true;
 		}
-		set_attributes (sig, attrs);
 		
 		if (ModifierFlags.STATIC in flags) {
 			throw new ParseError.SYNTAX (get_error ("`static' modifier not allowed on signals"));
 		} else if (ModifierFlags.CLASS in flags) {
 			throw new ParseError.SYNTAX (get_error ("`class' modifier not allowed on signals"));
 		}
-		
+
+		set_attributes (sig, attrs);
+
 		foreach (FormalParameter formal_param in params) {
 			sig.add_parameter (formal_param);
 		}
