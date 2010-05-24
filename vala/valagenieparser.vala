@@ -347,6 +347,13 @@ public class Vala.Genie.Parser : CodeVisitor {
 				Report.error (lit.source_reference, "invalid character literal");
 			}
 			return lit;
+		case TokenType.REGEX_LITERAL:
+			next ();
+			string match_part = get_last_string ();
+			SourceReference src_begin = get_src (begin);
+			expect (TokenType.CLOSE_REGEX_LITERAL);
+			string close_token = get_last_string ();
+			return new RegexLiteral ("%s/%s".printf (close_token, match_part), src_begin);	
 		case TokenType.STRING_LITERAL:
 			next ();
 			return new StringLiteral (get_last_string (), get_src (begin));
@@ -443,6 +450,15 @@ public class Vala.Genie.Parser : CodeVisitor {
 		accept (TokenType.OP_NEG);
 		accept (TokenType.INTERR);
 		accept (TokenType.HASH);
+	}
+	
+	
+	Expression parse_regex_literal () throws ParseError {
+		expect (TokenType.OPEN_REGEX_LITERAL);
+
+		var expr = parse_literal ();
+
+		return expr;
 	}
 
 	DataType parse_type (bool owned_by_default = true) throws ParseError {
@@ -642,6 +658,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		case TokenType.INTEGER_LITERAL:
 		case TokenType.REAL_LITERAL:
 		case TokenType.CHARACTER_LITERAL:
+		case TokenType.REGEX_LITERAL:
 		case TokenType.STRING_LITERAL:
 		case TokenType.TEMPLATE_STRING_LITERAL:
 		case TokenType.VERBATIM_STRING_LITERAL:
@@ -655,6 +672,9 @@ public class Vala.Genie.Parser : CodeVisitor {
 			break;
 		case TokenType.OPEN_PARENS:
 			expr = parse_tuple ();
+			break;
+		case TokenType.OPEN_REGEX_LITERAL:
+			expr = parse_regex_literal ();
 			break;
 		case TokenType.OPEN_TEMPLATE:
 			expr = parse_template ();
@@ -1227,6 +1247,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 					case TokenType.INTEGER_LITERAL:
 					case TokenType.REAL_LITERAL:
 					case TokenType.CHARACTER_LITERAL:
+					case TokenType.REGEX_LITERAL:
 					case TokenType.STRING_LITERAL:
 					case TokenType.TEMPLATE_STRING_LITERAL:
 					case TokenType.VERBATIM_STRING_LITERAL:

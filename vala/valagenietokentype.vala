@@ -50,6 +50,7 @@ public enum Vala.Genie.TokenType {
 	CLOSE_BRACE,
 	CLOSE_BRACKET,
 	CLOSE_PARENS,
+	CLOSE_REGEX_LITERAL,
 	CLOSE_TEMPLATE,
 	COLON,
 	COMMA,
@@ -121,6 +122,7 @@ public enum Vala.Genie.TokenType {
 	OPEN_BRACE,
 	OPEN_BRACKET,
 	OPEN_PARENS,
+	OPEN_REGEX_LITERAL,
 	OPEN_TEMPLATE,
 	OVERRIDE,
 	OWNED,
@@ -138,6 +140,7 @@ public enum Vala.Genie.TokenType {
 	REAL_LITERAL,
 	READONLY,
 	REF,
+	REGEX_LITERAL,
 	REQUIRES,
 	RETURN,
 	SEMICOLON,
@@ -195,6 +198,7 @@ public enum Vala.Genie.TokenType {
 		case CLOSE_BRACE: return "`}'";
 		case CLOSE_BRACKET: return "`]'";
 		case CLOSE_PARENS: return "`)'";
+		case CLOSE_REGEX_LITERAL: return "`/'";
 		case COLON: return "`:'";
 		case COMMA: return "`,'";
 		case CONST: return "`const'";
@@ -265,6 +269,7 @@ public enum Vala.Genie.TokenType {
 		case OPEN_BRACE: return "`{'";
 		case OPEN_BRACKET: return "`['";
 		case OPEN_PARENS: return "`('";
+		case OPEN_REGEX_LITERAL: return "`/'";
 		case OVERRIDE: return "`override'";
 		case OWNED: return "`owned'";
 		case PARAMS: return "`params'";
@@ -281,6 +286,7 @@ public enum Vala.Genie.TokenType {
 		case READONLY: return "`readonly'";
 		case REAL_LITERAL: return "real literal";
 		case REF: return "`ref'";
+		case REGEX_LITERAL: return "regex literal";
 		case REQUIRES: return "`requires'";
 		case RETURN: return "`return'";
 		case SEMICOLON: return "`;'";
