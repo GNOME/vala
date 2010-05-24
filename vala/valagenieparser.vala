@@ -1120,7 +1120,12 @@ public class Vala.Genie.Parser : CodeVisitor {
 	Expression parse_yield_expression () throws ParseError {
 		var begin = get_location ();
 		expect (TokenType.YIELD);
-		var member = parse_member_name ();
+		Expression base_expr = null;
+		if (current () == TokenType.SUPER) {
+			base_expr = parse_base_access ();
+			expect (TokenType.DOT);
+		}
+		var member = parse_member_name (base_expr);
 		var call = (MethodCall) parse_method_call (begin, member);
 		call.is_yield_expression = true;
 		return call;
@@ -3696,13 +3701,13 @@ public class Vala.Genie.Parser : CodeVisitor {
 		return null;
 	}
 
-	MemberAccess parse_member_name () throws ParseError {
+	MemberAccess parse_member_name (Expression? base_expr = null) throws ParseError {
 		var begin = get_location ();
 		MemberAccess expr = null;
 		do {
 			string id = parse_identifier ();
 			List<DataType> type_arg_list = parse_type_argument_list (false);
-			expr = new MemberAccess (expr, id, get_src (begin));
+			expr = new MemberAccess (expr != null ? expr : base_expr, id, get_src (begin));
 			if (type_arg_list != null) {
 				foreach (DataType type_arg in type_arg_list) {
 					expr.add_type_argument (type_arg);
