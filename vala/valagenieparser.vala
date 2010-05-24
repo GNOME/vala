@@ -610,7 +610,16 @@ public class Vala.Genie.Parser : CodeVisitor {
 			var inner = parse_expression ();
 			return new UnaryExpression (UnaryOperator.OUT, inner, get_src (begin));
 		} else {
-			return parse_expression ();
+			var expr = parse_expression ();
+			var ma = expr as MemberAccess;
+			if (ma != null && ma.inner == null && accept (TokenType.COLON)) {
+				// named argument
+				expr = parse_expression ();
+				return new NamedArgument (ma.member_name, expr, get_src (begin));
+			} else {
+				return expr;
+			}
+
 		}
 	}
 
