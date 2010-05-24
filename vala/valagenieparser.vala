@@ -2627,21 +2627,41 @@ public class Vala.Genie.Parser : CodeVisitor {
 		} else if (sym is Constructor) {
 			var c = (Constructor) sym;
 			if (c.binding == MemberBinding.INSTANCE) {
+				if (cl.constructor != null) {
+					Report.error (c.source_reference, "class already contains a constructor");
+				}
 				cl.constructor = c;
-			 } else if (c.binding == MemberBinding.CLASS) {
+			} else if (c.binding == MemberBinding.CLASS) {
+				if (cl.class_constructor != null) {
+					Report.error (c.source_reference, "class already contains a class constructor");
+				}
 				cl.class_constructor = c;
-			 } else {
-			 	cl.static_constructor = c;
-			 }
+			} else {
+				if (cl.static_constructor != null) {
+					Report.error (c.source_reference, "class already contains a static constructor");
+				}
+				cl.static_constructor = c;
+			}
+
 		} else if (sym is Destructor) {
 			var d = (Destructor) sym;
 			if (d.binding == MemberBinding.STATIC) {
+				if (cl.static_destructor != null) {
+					Report.error (d.source_reference, "class already contains a static destructor");
+				}
 				cl.static_destructor = (Destructor) d;
 			} else if (d.binding == MemberBinding.CLASS) {
+				if (cl.class_destructor != null) {
+					Report.error (d.source_reference, "class already contains a class destructor");
+				}
 				cl.class_destructor = (Destructor) d;
 			} else {
+				if (cl.destructor != null) {
+					Report.error (d.source_reference, "class already contains a destructor");
+				}
 				cl.destructor = (Destructor) d;
 			}
+
 		} else {
 			Report.error (sym.source_reference, "unexpected declaration in class");
 		}
