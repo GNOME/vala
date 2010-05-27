@@ -1,7 +1,3 @@
-FacebookProxy cheader_filename="rest/facebook-proxy.h"
-FacebookProxyCall cheader_filename="rest/facebook-proxy-call.h"
-FlickrProxy cheader_filename="rest/flickr-proxy.h"
-FlickrProxyCall cheader_filename="rest/flickr-proxy-call.h"
 OAuthProxy cheader_filename="rest/oauth-proxy.h"
 OAuthProxyCall cheader_filename="rest/oauth-proxy-call.h"
 RestProxy cheader_filename="rest/rest-proxy.h"

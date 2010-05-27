@@ -38,8 +38,8 @@ namespace Rest {
 	public class OAuthProxyCall {
 		public weak Rest.ProxyCall parent;
 	}
-	[CCode (ref_function = "rest_proxy_ref", unref_function = "rest_proxy_unref", cheader_filename = "rest/rest-proxy.h")]
-	public class Proxy {
+	[CCode (cheader_filename = "rest/rest-proxy.h")]
+	public class Proxy : GLib.Object {
 		public weak GLib.Object parent;
 		[CCode (has_construct_function = false)]
 		public Proxy (string url_format, bool binding_required);
