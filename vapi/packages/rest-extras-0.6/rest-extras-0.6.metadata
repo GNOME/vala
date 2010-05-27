@@ -1,0 +1,7 @@
+FacebookProxy cheader_filename="rest-extras/facebook-proxy.h"
+FacebookProxyCall cheader_filename="rest-extras/facebook-proxy-call.h"
+FlickrProxy cheader_filename="rest-extras/flickr-proxy.h"
+FlickrProxyCall cheader_filename="rest-extras/flickr-proxy-call.h"
+*.parent hidden="1"
+*.priv hidden="1"
+*Class hidden="1"
