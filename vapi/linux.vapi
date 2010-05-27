@@ -715,6 +715,16 @@ namespace Linux {
     [CCode (cheader_filename = "unistd.h")]
     public int sethostname (string name, size_t len);
 
+    // additional sysconf(3) constants
+    [CCode (cheader_filename = "unistd.h")]
+    public const int _SC_PHYS_PAGES;
+    [CCode (cheader_filename = "unistd.h")]
+    public const int _SC_AVPHYS_PAGES;
+    [CCode (cheader_filename = "unistd.h")]
+    public const int _SC_NPROCESSORS_CONF;
+    [CCode (cheader_filename = "unistd.h")]
+    public const int _SC_NPROCESSORS_ONLN;
+
     [CCode (cheader_filename = "arpa/inet.h")]
     public int inet_aton (string cp, out Posix.InAddr addr);
 
