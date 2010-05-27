@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
- * 
+ *
  * Author:
  * 	Jürg Billeter <j@bitron.ch>
  */
@@ -1553,6 +1553,8 @@ namespace Posix {
 	[CCode (cheader_filename = "unistd.h")]
 	public int symlink (string from, string to);
 	[CCode (cheader_filename = "unistd.h")]
+	public long sysconf (int name);
+	[CCode (cheader_filename = "unistd.h")]
 	public int rmdir (string path);
 	[CCode (cheader_filename = "unistd.h")]
 	public pid_t tcgetpgrp (int fd);
@@ -1580,6 +1582,59 @@ namespace Posix {
 	public int getpagesize ();
 	[CCode (cheader_filename = "unistd.h")]
 	public int getdtablesize ();
+
+	[CCode (cheader_filename = "unistd.h")]
+	public const int _SC_ARG_MAX;
+	[CCode (cheader_filename = "unistd.h")]
+	public const int _SC_CHILD_MAX;
+	[CCode (cheader_filename = "unistd.h")]
+	public const int _SC_HOST_NAME_MAX;
+	[CCode (cheader_filename = "unistd.h")]
+	public const int _SC_LOGIN_NAME_MAX;
+	[CCode (cheader_filename = "unistd.h")]
+	public const int _SC_CLK_TCK;
+	[CCode (cheader_filename = "unistd.h")]
+	public const int _SC_OPEN_MAX;
+	[CCode (cheader_filename = "unistd.h")]
+	public const int _SC_PAGESIZE;
+	[CCode (cheader_filename = "unistd.h")]
+	public const int _SC_RE_DUP_MAX;
+	[CCode (cheader_filename = "unistd.h")]
+	public const int _SC_STREAM_MAX;
+	[CCode (cheader_filename = "unistd.h")]
+	public const int _SC_SYMLOOP_MAX;
+	[CCode (cheader_filename = "unistd.h")]
+	public const int _SC_TTY_NAME_MAX;
+	[CCode (cheader_filename = "unistd.h")]
+	public const int _SC_TZNAME_MAX;
+	[CCode (cheader_filename = "unistd.h")]
+	public const int _SC_VERSION;
+	[CCode (cheader_filename = "unistd.h")]
+	public const int _SC_BASE_MAX;
+	[CCode (cheader_filename = "unistd.h")]
+	public const int _SC_BC_DIM_MAX;
+	[CCode (cheader_filename = "unistd.h")]
+	public const int _SC_BC_SCALE_MAX;
+	[CCode (cheader_filename = "unistd.h")]
+	public const int _SC_BC_STRING_MAX;
+	[CCode (cheader_filename = "unistd.h")]
+	public const int _SC_COLL_WEIGHTS_MAX;
+	[CCode (cheader_filename = "unistd.h")]
+	public const int _SC_EXRP_NEST_MAX;
+	[CCode (cheader_filename = "unistd.h")]
+	public const int _SC_LINE_MAX;
+	[CCode (cheader_filename = "unistd.h")]
+	public const int _SC_2_VERSION;
+	[CCode (cheader_filename = "unistd.h")]
+	public const int _SC_2_C_DEV;
+	[CCode (cheader_filename = "unistd.h")]
+	public const int _SC_2_FORT_DEV;
+	[CCode (cheader_filename = "unistd.h")]
+	public const int _SC_2_FORT_RUN;
+	[CCode (cheader_filename = "unistd.h")]
+	public const int _SC_2_LOCALEDEF;
+	[CCode (cheader_filename = "unistd.h")]
+	public const int _SC_2_SW_DEV;
 
 	[CCode (cheader_filename = "unistd.h")]
 	public const int STDIN_FILENO;
