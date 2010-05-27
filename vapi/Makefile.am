@@ -181,6 +181,8 @@ dist_vapi_DATA = \
 	readline.vapi \
 	rest-0.6.deps \
 	rest-0.6.vapi \
+	rest-extras-0.6.deps \
+	rest-extras-0.6.vapi \
 	sdl.vapi \
 	sdl-gfx.vapi \
 	sdl-image.vapi \
