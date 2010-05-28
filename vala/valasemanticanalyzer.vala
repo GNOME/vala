@@ -573,8 +573,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			var deleg_type = arg.target_type as DelegateType;
 			if (deleg_type == null || deleg_type.delegate_symbol.has_target) {
 				Report.error (arg.source_reference, "Access to instance member `%s' denied".printf (arg.symbol_reference.get_full_name ()));
+				return false;
 			}
-			return false;
 		}
 		return true;
 	}
