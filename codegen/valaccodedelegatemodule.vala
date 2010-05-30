@@ -309,8 +309,8 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 					}
 				} else {
 					var delegate_target = (CCodeExpression) get_ccodenode (ma.inner);
-					var delegate_type = (DelegateType) delegate_expr.target_type;
-					if ((expr_owned || delegate_type.is_called_once) && ma.inner.value_type.data_type != null && ma.inner.value_type.data_type.is_reference_counting ()) {
+					var delegate_type = delegate_expr.target_type as DelegateType;
+					if ((expr_owned || (delegate_type != null && delegate_type.is_called_once)) && ma.inner.value_type.data_type != null && ma.inner.value_type.data_type.is_reference_counting ()) {
 						var ref_call = new CCodeFunctionCall (get_dup_func_expression (ma.inner.value_type, delegate_expr.source_reference));
 						ref_call.add_argument (delegate_target);
 						delegate_target = ref_call;
