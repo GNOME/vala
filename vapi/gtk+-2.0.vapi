@@ -5191,7 +5191,7 @@ namespace Gtk {
 		public class unowned GLib.ParamSpec find_style_property (string property_name);
 		public void freeze_child_notify ();
 		public virtual unowned Atk.Object get_accessible ();
-		public void get_allocation (Gtk.Allocation allocation);
+		public void get_allocation (out Gtk.Allocation allocation);
 		public unowned Gtk.Widget get_ancestor (GLib.Type widget_type);
 		public bool get_app_paintable ();
 		public bool get_can_default ();
