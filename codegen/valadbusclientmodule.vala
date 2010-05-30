@@ -204,13 +204,27 @@ public class Vala.DBusClientModule : DBusModule {
 			creply_call.add_argument (new CCodeIdentifier ("error"));
 			cb_fun.block.add_statement (new CCodeExpressionStatement (creply_call));
 
+			CCodeExpression target = new CCodeConstant ("param%d_target".printf (callback_index));
+			var ma = (MemberAccess) callback;
+			if (reply_method.binding != MemberBinding.STATIC && ma.inner.value_type.data_type != null && ma.inner.value_type.data_type.is_reference_counting ()) {
+				// unref user_data after creply_call
+				var unref_call = new CCodeFunctionCall (get_destroy_func_expression (ma.inner.value_type));
+				unref_call.add_argument (new CCodeIdentifier ("user_data"));
+				cb_fun.block.add_statement (new CCodeExpressionStatement (unref_call));
+
+				// ref target for ccall
+				var ref_call = new CCodeFunctionCall (get_dup_func_expression (ma.inner.value_type, callback.source_reference));
+				ref_call.add_argument (target);
+				target = ref_call;
+			}
+
 			if (!source_declarations.add_declaration (cb_fun.name)) {
 				// avoid duplicate function definition
 				source_type_member_definition.append (cb_fun);
 			}
 
 			ccall.add_argument (new CCodeIdentifier (cb_fun.name));
-			ccall.add_argument (new CCodeConstant ("param%d_target".printf (callback_index)));
+			ccall.add_argument (target);
 			ccall.add_argument (new CCodeConstant ("NULL"));
 		} else { 
 			ccall.call = new CCodeIdentifier ("dbus_g_proxy_call");
