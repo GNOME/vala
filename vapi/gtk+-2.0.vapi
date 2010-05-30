@@ -2286,8 +2286,8 @@ namespace Gtk {
 		public void insert_with_values (out Gtk.TreeIter iter, int position, ...);
 		public void insert_with_valuesv (out Gtk.TreeIter iter, int position, int columns, GLib.Value[] values);
 		public bool iter_is_valid (Gtk.TreeIter iter);
-		public void move_after (Gtk.TreeIter iter, Gtk.TreeIter? position);
-		public void move_before (Gtk.TreeIter iter, Gtk.TreeIter? position);
+		public void move_after (ref Gtk.TreeIter iter, Gtk.TreeIter? position);
+		public void move_before (ref Gtk.TreeIter iter, Gtk.TreeIter? position);
 		[CCode (cname = "gtk_list_store_newv", has_construct_function = false)]
 		public ListStore.newv ([CCode (array_length_pos = 0.9)] GLib.Type[] types);
 		public void prepend (out Gtk.TreeIter iter);
@@ -4835,8 +4835,8 @@ namespace Gtk {
 		public bool is_ancestor (Gtk.TreeIter iter, Gtk.TreeIter descendant);
 		public int iter_depth (Gtk.TreeIter iter);
 		public bool iter_is_valid (Gtk.TreeIter iter);
-		public void move_after (Gtk.TreeIter iter, Gtk.TreeIter? position);
-		public void move_before (Gtk.TreeIter iter, Gtk.TreeIter? position);
+		public void move_after (ref Gtk.TreeIter iter, Gtk.TreeIter? position);
+		public void move_before (ref Gtk.TreeIter iter, Gtk.TreeIter? position);
 		[CCode (cname = "gtk_tree_store_newv", has_construct_function = false)]
 		public TreeStore.newv ([CCode (array_length_pos = 0.9)] GLib.Type[] types);
 		public void prepend (out Gtk.TreeIter iter, Gtk.TreeIter? parent);
