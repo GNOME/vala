@@ -58,6 +58,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 
 		cl.accept_children (this);
 
+		cl.base_class = null;
 		foreach (DataType type in cl.get_base_types ()) {
 			if (type.data_type is Class) {
 				if (cl.base_class != null) {
