@@ -164,7 +164,13 @@ public class Vala.Assignment : Expression {
 
 			if (ma.symbol_reference is DynamicSignal) {
 				// target_type not available for dynamic signals
+				if (!analyzer.context.deprecated) {
+					Report.warning (source_reference, "deprecated syntax, use `connect' method instead");
+				}
 			} else if (ma.symbol_reference is Signal) {
+				if (!analyzer.context.deprecated) {
+					Report.warning (source_reference, "deprecated syntax, use `connect' method instead");
+				}
 				var sig = (Signal) ma.symbol_reference;
 				right.target_type = new DelegateType (sig.get_delegate (ma.inner.value_type, this));
 			} else {
