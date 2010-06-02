@@ -43,7 +43,7 @@ public class Valadoc.Api.Delegate : TypeSymbol {
 
 	public bool is_static {
 		get {
-			return ((Vala.Delegate) symbol).has_target;
+			return !((Vala.Delegate) symbol).has_target;
 		}
 	}
 
