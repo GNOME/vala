@@ -34,7 +34,9 @@ namespace Gst {
 
 	[Compact]
 	public class ClockID {
+		[CCode (cname="gst_clock_new_single_shot_id")]
 		public ClockID.single_shot (Gst.Clock clock, Gst.ClockTime time);
+		[CCode (cname="gst_clock_new_periodic_id")]
 		public ClockID.periodic (Gst.Clock clock, Gst.ClockTime start_time, Gst.ClockTime interval);
 	}
 

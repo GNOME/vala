@@ -288,7 +288,9 @@ namespace Gst {
 	public class ClockID {
 		public static int compare_func (void* id1, void* id2);
 		public Gst.ClockTime get_time ();
+		[CCode (cname = "gst_clock_new_periodic_id")]
 		public ClockID.periodic (Gst.Clock clock, Gst.ClockTime start_time, Gst.ClockTime interval);
+		[CCode (cname = "gst_clock_new_single_shot_id")]
 		public ClockID.single_shot (Gst.Clock clock, Gst.ClockTime time);
 		public void unschedule ();
 		public Gst.ClockReturn wait (Gst.ClockTimeDiff jitter);
