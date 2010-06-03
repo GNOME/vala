@@ -51,11 +51,13 @@ public class Vala.PostfixExpression : Expression {
 	}
 	
 	public override void accept (CodeVisitor visitor) {
-		inner.accept (visitor);
-
 		visitor.visit_postfix_expression (this);
 
 		visitor.visit_expression (this);
+	}
+
+	public override void accept_children (CodeVisitor visitor) {
+		inner.accept (visitor);
 	}
 
 	public override bool is_pure () {

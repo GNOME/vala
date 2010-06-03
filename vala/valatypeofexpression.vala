@@ -52,11 +52,13 @@ public class Vala.TypeofExpression : Expression {
 	}
 	
 	public override void accept (CodeVisitor visitor) {
-		type_reference.accept (visitor);
-	
 		visitor.visit_typeof_expression (this);
 
 		visitor.visit_expression (this);
+	}
+
+	public override void accept_children (CodeVisitor visitor) {
+		type_reference.accept (visitor);
 	}
 
 	public override bool is_pure () {

@@ -85,13 +85,15 @@ public class Vala.ConditionalExpression : Expression {
 	}
 	
 	public override void accept (CodeVisitor visitor) {
-		condition.accept (visitor);
-		true_expression.accept (visitor);
-		false_expression.accept (visitor);			
-
 		visitor.visit_conditional_expression (this);
 
 		visitor.visit_expression (this);
+	}
+
+	public override void accept_children (CodeVisitor visitor) {
+		condition.accept (visitor);
+		true_expression.accept (visitor);
+		false_expression.accept (visitor);
 	}
 
 	public override bool is_pure () {

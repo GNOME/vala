@@ -66,13 +66,15 @@ public class Vala.TypeCheck : Expression {
 	}
 	
 	public override void accept (CodeVisitor visitor) {
-		expression.accept (visitor);
-		
-		type_reference.accept (visitor);
-	
 		visitor.visit_type_check (this);
 
 		visitor.visit_expression (this);
+	}
+
+	public override void accept_children (CodeVisitor visitor) {
+		expression.accept (visitor);
+
+		type_reference.accept (visitor);
 	}
 
 	public override bool is_pure () {
