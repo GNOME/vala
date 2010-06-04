@@ -174,7 +174,7 @@ valainclude_HEADERS = \
 	$(NULL)
 
 vala.vapi vala.vala.stamp: $(libvalacore_la_VALASOURCES)
-	$(VALA_V)$(VALAC) $(COVERAGE_VALAFLAGS) $(VALAFLAGS) -C --vapidir $(srcdir)/../vapi --pkg gobject-2.0 --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --pkg config -H vala.h --library vala $^
+	$(VALA_V)$(VALAC) $(COVERAGE_VALAFLAGS) $(VALAFLAGS) -C --vapidir $(srcdir)/../vapi --pkg gobject-2.0 --vapidir $(srcdir)/../gee --pkg gee --vapidir $(srcdir)/../ccode --pkg ccode --pkg config -H vala.h --library vala $^
 	@touch $@
 
 libvalacore_la_LIBADD = \

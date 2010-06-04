@@ -77,7 +77,7 @@ ccodeinclude_HEADERS = \
 	$(NULL)
 
 ccode.vapi ccode.vala.stamp: $(libvalaccode_la_VALASOURCES)
-	$(VALA_V)$(VALAC) $(COVERAGE_VALAFLAGS) $(VALAFLAGS) -C --vapidir $(srcdir)/../vapi --pkg gobject-2.0 --vapidir ../gee --pkg gee --pkg config -H valaccode.h --library ccode $^
+	$(VALA_V)$(VALAC) $(COVERAGE_VALAFLAGS) $(VALAFLAGS) -C --vapidir $(srcdir)/../vapi --pkg gobject-2.0 --vapidir $(srcdir)/../gee --pkg gee --pkg config -H valaccode.h --library ccode $^
 	touch $@
 
 libvalaccode_la_LIBADD = \
