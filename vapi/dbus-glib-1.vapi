@@ -247,6 +247,8 @@ namespace DBus {
 		public GLib.Object get_object_from_type (string name, string path, string interface_, GLib.Type type);
 		[CCode (cname = "dbus_g_connection_register_g_object")]
 		public void register_object (string at_path, GLib.Object object);
+		[CCode (cname = "dbus_g_connection_unregister_g_object")]
+		public void unregister_object (GLib.Object object);
 		[CCode (cname = "dbus_g_connection_lookup_g_object")]
 		public unowned GLib.Object lookup_object (string at_path);
 		[CCode (cname = "dbus_g_connection_get_connection")]
