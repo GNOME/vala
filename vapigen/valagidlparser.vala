@@ -1683,6 +1683,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		
 		bool add_ellipsis = false;
 		bool suppress_throws = false;
+		string? error_types = null;
 
 		var attributes = get_attributes (symbol);
 		if (attributes != null) {
@@ -1722,6 +1723,8 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "0") {
 						suppress_throws = true;
 					}
+				} else if (nv[0] == "error_types") {
+					error_types = eval (nv[1]);
 				} else if (nv[0] == "no_array_length") {
 					if (eval (nv[1]) == "1") {
 						m.no_array_length = true;
@@ -1819,7 +1822,8 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 
 			if (suppress_throws == false && param_is_exception (param)) {
-				m.add_error_type (parse_type (param.type));
+				if (error_types == null)
+					m.add_error_type (parse_type (param.type));
 				continue;
 			}
 
@@ -1999,7 +2003,14 @@ public class Vala.GIdlParser : CodeVisitor {
 			last_param = p;
 			last_param_type = param_type;
 		}
-		
+
+		if (suppress_throws == false && error_types != null) {
+			var type_args = eval (error_types).split (",");
+			foreach (string type_arg in type_args) {
+				m.add_error_type (get_type_from_string (type_arg));
+			}
+		}
+
 		if (first) {
 			// no parameters => static method
 			m.binding = MemberBinding.STATIC;
