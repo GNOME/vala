@@ -319,7 +319,11 @@ public class Vala.BinaryExpression : Expression {
 					}
 				} else if (right.value_type is PointerType) {
 					// pointer arithmetic: pointer - pointer
-					value_type = analyzer.size_t_type;
+					if (analyzer.context.profile == Profile.DOVA) {
+						value_type = analyzer.long_type;
+					} else {
+						value_type = analyzer.size_t_type;
+					}
 				}
 			}
 
