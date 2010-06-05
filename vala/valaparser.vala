@@ -3141,6 +3141,9 @@ public class Vala.Parser : CodeVisitor {
 			type = parse_type (true, false);
 		}
 		string id = parse_identifier ();
+
+		type = parse_inline_array_type (type);
+
 		var param = new FormalParameter (id, type, get_src (begin));
 		set_attributes (param, attrs);
 		param.direction = direction;
