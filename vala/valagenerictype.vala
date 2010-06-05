@@ -61,4 +61,13 @@ public class Vala.GenericType : DataType {
 	public override string to_qualified_string (Scope? scope = null) {
 		return type_parameter.name;
 	}
+
+	public override Symbol? get_member (string member_name) {
+		if (CodeContext.get ().profile == Profile.DOVA) {
+			if (member_name == "hash") {
+				return CodeContext.get ().root.scope.lookup ("Dova").scope.lookup ("Object").scope.lookup ("hash");
+			}
+		}
+		return null;
+	}
 }
