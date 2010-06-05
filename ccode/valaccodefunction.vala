@@ -63,7 +63,11 @@ public class Vala.CCodeFunction : CCodeNode {
 	public void add_parameter (CCodeFormalParameter param) {
 		parameters.add (param);
 	}
-	
+
+	public void insert_parameter (int position, CCodeFormalParameter param) {
+		parameters.insert (position, param);
+	}
+
 	/**
 	 * Returns a copy of this function.
 	 *

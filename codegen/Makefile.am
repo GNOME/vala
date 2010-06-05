@@ -34,6 +34,17 @@ libvala_la_VALASOURCES = \
 	valadbusinterfaceregisterfunction.vala \
 	valadbusmodule.vala \
 	valadbusservermodule.vala \
+	valadovaarraymodule.vala \
+	valadovaassignmentmodule.vala \
+	valadovabasemodule.vala \
+	valadovacontrolflowmodule.vala \
+	valadovadelegatemodule.vala \
+	valadovamemberaccessmodule.vala \
+	valadovamethodcallmodule.vala \
+	valadovamethodmodule.vala \
+	valadovaobjectmodule.vala \
+	valadovastructmodule.vala \
+	valadovavaluemodule.vala \
 	valaenumregisterfunction.vala \
 	valagerrormodule.vala \
 	valagirwriter.vala \

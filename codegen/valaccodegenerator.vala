@@ -53,6 +53,20 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			head = new DBusClientModule (this, head);
 			*/
 			head = new DBusServerModule (this, head);
+		} else if (context.profile == Profile.DOVA) {
+			/* included by inheritance
+			head = new DovaBaseModule (this, head);
+			head = new DovaStructModule (this, head);
+			head = new DovaMethodModule (this, head);
+			head = new DovaControlFlowModule (this, head);
+			head = new DovaMemberAccessModule (this, head);
+			head = new DovaAssignmentModule (this, head);
+			head = new DovaMethodCallModule (this, head);
+			head = new DovaArrayModule (this, head);
+			head = new DovaObjectModule (this, head);
+			head = new DovaValueModule (this, head);
+			*/
+			head = new DovaDelegateModule (this, head);
 		} else {
 			/* included by inheritance
 			head = new CCodeBaseModule (this, head);
