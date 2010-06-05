@@ -228,6 +228,17 @@ public class Vala.Delegate : TypeSymbol {
 		this.cname = cname;
 	}
 
+	public override string? get_lower_case_cname (string? infix) {
+		if (infix == null) {
+			infix = "";
+		}
+		return "%s%s%s".printf (parent_symbol.get_lower_case_cprefix (), infix, camel_case_to_lower_case (name));
+	}
+
+	public override string? get_upper_case_cname (string? infix) {
+		return get_lower_case_cname (infix).up ();
+	}
+
 	private void process_ccode_attribute (Attribute a) {
 		if (a.has_argument ("cname")) {
 			set_cname (a.get_string ("cname"));

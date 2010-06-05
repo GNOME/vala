@@ -68,7 +68,11 @@ public class Vala.DelegateType : DataType {
 	}
 
 	public override string? get_cname () {
-		return delegate_symbol.get_cname ();
+		if (CodeContext.get ().profile == Profile.DOVA) {
+			return "%s*".printf (delegate_symbol.get_cname ());
+		} else {
+			return delegate_symbol.get_cname ();
+		}
 	}
 
 	public override List<Symbol> get_symbols () {
