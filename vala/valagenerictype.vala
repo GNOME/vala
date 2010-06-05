@@ -1,6 +1,6 @@
 /* valagenerictype.vala
  *
- * Copyright (C) 2008  Jürg Billeter
+ * Copyright (C) 2008-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -43,10 +43,14 @@ public class Vala.GenericType : DataType {
 	}
 
 	public override string? get_cname () {
-		if (value_owned) {
-			return "gpointer";
+		if (CodeContext.get ().profile == Profile.GOBJECT) {
+			if (value_owned) {
+				return "gpointer";
+			} else {
+				return "gconstpointer";
+			}
 		} else {
-			return "gconstpointer";
+			return "void *";
 		}
 	}
 
