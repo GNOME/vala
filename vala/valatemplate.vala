@@ -71,11 +71,18 @@ public class Vala.Template : Expression {
 		} else {
 			expr = stringify (expression_list[0]);
 			if (expression_list.size > 1) {
-				var concat = new MethodCall (new MemberAccess (expr, "concat", source_reference), source_reference);
-				for (int i = 1; i < expression_list.size; i++) {
-					concat.add_argument (stringify (expression_list[i]));
+				if (analyzer.context.profile == Profile.DOVA) {
+					// varargs concat not yet supported
+					for (int i = 1; i < expression_list.size; i++) {
+						expr = new BinaryExpression (BinaryOperator.PLUS, expr, stringify (expression_list[i]), source_reference);
+					}
+				} else {
+					var concat = new MethodCall (new MemberAccess (expr, "concat", source_reference), source_reference);
+					for (int i = 1; i < expression_list.size; i++) {
+						concat.add_argument (stringify (expression_list[i]));
+					}
+					expr = concat;
 				}
-				expr = concat;
 			}
 		}
 		expr.target_type = target_type;
