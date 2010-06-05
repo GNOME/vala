@@ -282,7 +282,16 @@ public class Vala.BinaryExpression : Expression {
 			} else {
 				value_type.value_owned = true;
 			}
-		} else if (left.value_type is ArrayType && operator == BinaryOperator.PLUS) {
+		} else if (analyzer.context.profile == Profile.DOVA && left.value_type.data_type == analyzer.list_type.data_type
+		    && operator == BinaryOperator.PLUS) {
+			// list concatenation
+
+			var concat_call = new MethodCall (new MemberAccess (left, "concat"));
+			concat_call.add_argument (right);
+			concat_call.target_type = target_type;
+			parent_node.replace_expression (this, concat_call);
+			return concat_call.check (analyzer);
+		} else if (analyzer.context.profile != Profile.DOVA && left.value_type is ArrayType && operator == BinaryOperator.PLUS) {
 			// array concatenation
 
 			var array_type = (ArrayType) left.value_type;
