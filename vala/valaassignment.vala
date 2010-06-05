@@ -104,6 +104,36 @@ public class Vala.Assignment : Expression {
 
 		checked = true;
 
+		if (left is Tuple && operator == AssignmentOperator.SIMPLE && parent_node is ExpressionStatement) {
+			var tuple = (Tuple) left;
+
+			var local = new LocalVariable (null, get_temp_name (), right, right.source_reference);
+			var decl = new DeclarationStatement (local, source_reference);
+			decl.check (analyzer);
+			insert_statement (analyzer.insert_block, decl);
+
+			int i = 0;
+			ExpressionStatement stmt = null;
+			foreach (var expr in tuple.get_expressions ()) {
+				if (stmt != null) {
+					stmt.check (analyzer);
+					insert_statement (analyzer.insert_block, stmt);
+				}
+
+				var temp_access = new MemberAccess.simple (local.name, right.source_reference);
+				var ea = new ElementAccess (temp_access, expr.source_reference);
+				ea.append_index (new IntegerLiteral (i.to_string (), expr.source_reference));
+				var assign = new Assignment (expr, ea, operator, expr.source_reference);
+				stmt = new ExpressionStatement (assign, expr.source_reference);
+
+				i++;
+			}
+
+			analyzer.replaced_nodes.add (this);
+			parent_node.replace_expression (this, stmt.expression);
+			return stmt.expression.check (analyzer);
+		}
+
 		left.lvalue = true;
 
 		if (!left.check (analyzer)) {
