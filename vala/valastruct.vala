@@ -41,6 +41,7 @@ public class Vala.Struct : TypeSymbol {
 	private bool boolean_type;
 	private bool integer_type;
 	private bool floating_type;
+	private bool decimal_floating_type;
 	private int rank;
 	private string marshaller_type_name;
 	private string get_value_function;
@@ -377,7 +378,17 @@ public class Vala.Struct : TypeSymbol {
 		}
 		return floating_type;
 	}
-	
+
+	public bool is_decimal_floating_type () {
+		if (base_type != null) {
+			var st = base_struct;
+			if (st != null && st.is_decimal_floating_type ()) {
+				return true;
+			}
+		}
+		return decimal_floating_type;
+	}
+
 	/**
 	 * Returns the rank of this integer or floating point type.
 	 *
@@ -462,6 +473,9 @@ public class Vala.Struct : TypeSymbol {
 		floating_type = true;
 		if (a.has_argument ("rank")) {
 			rank = a.get_integer ("rank");
+		}
+		if (a.has_argument ("decimal")) {
+			decimal_floating_type = a.get_bool ("decimal");
 		}
 		if (a.has_argument ("width")) {
 			width = a.get_integer ("width");
