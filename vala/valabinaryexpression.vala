@@ -262,6 +262,14 @@ public class Vala.BinaryExpression : Expression {
 		    && operator == BinaryOperator.PLUS) {
 			// string concatenation
 
+			if (analyzer.context.profile == Profile.DOVA) {
+				var concat_call = new MethodCall (new MemberAccess (left, "concat"));
+				concat_call.add_argument (right);
+				concat_call.target_type = target_type;
+				parent_node.replace_expression (this, concat_call);
+				return concat_call.check (analyzer);
+			}
+
 			if (right.value_type == null || right.value_type.data_type != analyzer.string_type.data_type) {
 				error = true;
 				Report.error (source_reference, "Operands must be strings");
