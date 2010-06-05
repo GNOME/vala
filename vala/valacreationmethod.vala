@@ -97,7 +97,18 @@ public class Vala.CreationMethod : Method {
 		var parent = parent_symbol as TypeSymbol;
 
 		string infix = "new";
-		if (parent is Struct) {
+		var st = parent as Struct;
+		if (st != null) {
+			if (CodeContext.get ().profile == Profile.DOVA) {
+				if (st.is_boolean_type () || st.is_integer_type () || st.is_floating_type ()) {
+					// don't use any infix for basic types
+					if (name == ".new") {
+						return parent.get_lower_case_cname ();
+					} else {
+						return "%s%s".printf (parent.get_lower_case_cprefix (), name);
+					}
+				}
+			}
 			infix = "init";
 		}
 
@@ -121,6 +132,10 @@ public class Vala.CreationMethod : Method {
 		}
 
 		string infix = "construct";
+
+		if (CodeContext.get ().profile == Profile.DOVA) {
+			infix = "init";
+		}
 
 		if (name == ".new") {
 			return "%s%s".printf (parent.get_lower_case_cprefix (), infix);
