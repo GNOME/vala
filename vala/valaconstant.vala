@@ -122,6 +122,12 @@ public class Vala.Constant : Member, Lockable {
 		lock_used = used;
 	}
 
+	public override void replace_expression (Expression old_node, Expression new_node) {
+		if (initializer == old_node) {
+			initializer = new_node;
+		}
+	}
+
 	public override void replace_type (DataType old_type, DataType new_type) {
 		if (type_reference == old_type) {
 			type_reference = new_type;
