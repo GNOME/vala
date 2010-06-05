@@ -66,7 +66,9 @@ public class Vala.ArrayType : ReferenceType {
 	}
 
 	public override Symbol? get_member (string member_name) {
-		if (member_name == "length") {
+		if (CodeContext.get ().profile == Profile.DOVA) {
+			return SemanticAnalyzer.symbol_lookup_inherited (CodeContext.get ().root.scope.lookup ("Dova").scope.lookup ("Array"), member_name);
+		} else if (member_name == "length") {
 			return get_length_field ();
 		} else if (member_name == "move") {
 			return get_move_method ();
@@ -152,7 +154,11 @@ public class Vala.ArrayType : ReferenceType {
 		if (inline_allocated) {
 			return element_type.get_cname ();
 		} else {
-			return element_type.get_cname () + "*";
+			if (CodeContext.get ().profile == Profile.DOVA) {
+				return "DovaArray*";
+			} else {
+				return element_type.get_cname () + "*";
+			}
 		}
 	}
 

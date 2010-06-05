@@ -603,6 +603,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			instance_type = instance_pointer_type.base_type;
 		}
 
+		if (CodeContext.get ().profile == Profile.DOVA) {
+			while (instance_type is ArrayType) {
+				var instance_array_type = (ArrayType) instance_type;
+				instance_type = new ObjectType ((Class) CodeContext.get ().root.scope.lookup ("Dova").scope.lookup ("Array"));
+				instance_type.add_type_argument (instance_array_type.element_type);
+			}
+		}
+
 		if (instance_type.data_type == type_symbol) {
 			return instance_type;
 		}
