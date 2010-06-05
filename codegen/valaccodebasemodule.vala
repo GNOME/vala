@@ -2563,7 +2563,17 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			cblock.add_statement (cif);
 		}
 
-		cblock.add_statement (new CCodeReturnStatement (new CCodeConstant ("TRUE")));
+		if (st.get_fields().size == 0) {
+			// either opaque structure or simple type
+			if (st.is_simple_type ()) {
+				var cexp = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("s1")), new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("s2")));
+				cblock.add_statement (new CCodeReturnStatement (cexp));
+			} else {
+				cblock.add_statement (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
+			}
+		} else {
+			cblock.add_statement (new CCodeReturnStatement (new CCodeConstant ("TRUE")));
+		}
 
 		// append to file
 
