@@ -2389,6 +2389,9 @@ public class Vala.Parser : CodeVisitor {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
 		var flags = parse_member_declaration_modifiers ();
+		if (context.profile == Profile.DOVA) {
+			accept (TokenType.VOLATILE);
+		}
 		var type = parse_type (true, true);
 		string id = parse_identifier ();
 
@@ -3129,6 +3132,9 @@ public class Vala.Parser : CodeVisitor {
 			direction = ParameterDirection.REF;
 		}
 
+		if (context.profile == Profile.DOVA) {
+			accept (TokenType.VOLATILE);
+		}
 		DataType type;
 		if (direction == ParameterDirection.IN) {
 			// in parameters are unowned by default
