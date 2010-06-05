@@ -175,7 +175,9 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 		} else if (expr.symbol_reference is Constant) {
 			var c = (Constant) expr.symbol_reference;
 
-			generate_constant_declaration (c, source_declarations);
+			generate_constant_declaration (c, source_declarations,
+				c.source_reference != null && expr.source_reference != null &&
+				c.source_reference.file == expr.source_reference.file);
 
 			string fn = c.get_full_name ();
 			if (fn == "GLib.Log.FILE") {
