@@ -50,7 +50,7 @@ namespace Gdk {
 		public bool save (string filename, string type, ...) throws GLib.Error;
 		public bool save_to_buffer ([CCode (array_length_type = "gsize")] out char[] buffer, string type, ...) throws GLib.Error;
 		public bool save_to_bufferv ([CCode (array_length_type = "gsize")] out char[] buffer, string type, string[] option_keys, string[] option_values) throws GLib.Error;
-		public bool save_to_callback (Gdk.PixbufSaveFunc save_func, string type) throws GLib.Error;
+		public bool save_to_callback (Gdk.PixbufSaveFunc save_func, string type, ...) throws GLib.Error;
 		public bool save_to_callbackv (Gdk.PixbufSaveFunc save_func, string type, string[] option_keys, string[] option_values) throws GLib.Error;
 		public bool save_to_stream (GLib.OutputStream stream, string type, GLib.Cancellable cancellable) throws GLib.Error;
 		public bool savev (string filename, string type, out unowned string option_keys, out unowned string option_values) throws GLib.Error;
