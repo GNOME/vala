@@ -439,7 +439,8 @@ namespace GLib {
 		public size_t get_native_size ();
 		[CCode (has_construct_function = false)]
 		public InetAddress.loopback (GLib.SocketFamily family);
-		public virtual uchar to_bytes ();
+		[CCode (array_length = false)]
+		public virtual unowned uint8[] to_bytes ();
 		public virtual string to_string ();
 		[NoAccessorMethod]
 		public void* bytes { get; construct; }
