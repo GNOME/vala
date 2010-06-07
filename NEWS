@@ -1,3 +1,19 @@
+Vala 0.9.1
+==========
+
+ * Support constants in enums.
+ * Deprecate +=/-= syntax to connect/disconnect signal handlers.
+ * Add experimental support for Dova profile.
+ * Update Genie parser (Jamie McCracken).
+ * Add clutter-gst-1.0 bindings (Ali Sabil).
+ * Add gdu and gdu-gtk bindings.
+ * Add libesmtp bindings (Adrien Bustany).
+ * Add mx-1.0 bindings (Evan Nemerson).
+ * Add orc-0.4 bindings (Fabian Deutsch).
+ * Add rest-extras-0.6 bindings (Adrien Bustany).
+ * Updates to the GLib, GStreamer, Linux, SQLite, and other bindings.
+ * Many bug fixes.
+
 Vala 0.8.0
 ==========
 
