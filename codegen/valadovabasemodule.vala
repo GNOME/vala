@@ -2075,10 +2075,6 @@ internal class Vala.DovaBaseModule : CCodeModule {
 			}
 		} else if (sym is Enum) {
 			type = new EnumValueType ((Enum) sym);
-		} else if (sym is ErrorDomain) {
-			type = new ErrorType ((ErrorDomain) sym, null);
-		} else if (sym is ErrorCode) {
-			type = new ErrorType ((ErrorDomain) sym.parent_symbol, (ErrorCode) sym);
 		} else {
 			Report.error (null, "internal error: `%s' is not a supported type".printf (sym.get_full_name ()));
 			return new InvalidType ();

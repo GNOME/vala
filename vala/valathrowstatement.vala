@@ -79,7 +79,11 @@ public class Vala.ThrowStatement : CodeNode, Statement {
 
 		checked = true;
 
-		error_expression.target_type = new ErrorType (null, null, source_reference);
+		if (analyzer.context.profile == Profile.GOBJECT) {
+			error_expression.target_type = new ErrorType (null, null, source_reference);
+		} else {
+			error_expression.target_type = analyzer.error_type.copy ();
+		}
 		error_expression.target_type.value_owned = true;
 
 		if (error_expression != null) {
