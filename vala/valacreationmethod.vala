@@ -207,7 +207,8 @@ public class Vala.CreationMethod : Method {
 
 			// ensure we chain up to base constructor
 			if (!chain_up && cl != null && cl.base_class != null) {
-				if (cl.base_class.default_construction_method != null
+				if (analyzer.context.profile == Profile.GOBJECT
+				    && cl.base_class.default_construction_method != null
 				    && !cl.base_class.default_construction_method.has_construct_function) {
 					// chain up impossible
 				} else if (analyzer.context.profile == Profile.GOBJECT
@@ -216,9 +217,17 @@ public class Vala.CreationMethod : Method {
 					// no chain up when using GObject construct properties or constructor
 				} else if (cl.base_class.default_construction_method == null
 				    || cl.base_class.default_construction_method.access == SymbolAccessibility.PRIVATE) {
-					Report.warning (source_reference, "unable to chain up to private base constructor");
+					if (analyzer.context.profile == Profile.GOBJECT) {
+						Report.warning (source_reference, "unable to chain up to private base constructor");
+					} else {
+						Report.error (source_reference, "unable to chain up to private base constructor");
+					}
 				} else if (cl.base_class.default_construction_method.get_required_arguments () > 0) {
-					Report.warning (source_reference, "unable to chain up to base constructor requiring arguments");
+					if (analyzer.context.profile == Profile.GOBJECT) {
+						Report.warning (source_reference, "unable to chain up to base constructor requiring arguments");
+					} else {
+						Report.error (source_reference, "unable to chain up to base constructor requiring arguments");
+					}
 				} else {
 					var old_insert_block = analyzer.insert_block;
 					analyzer.current_symbol = body;
