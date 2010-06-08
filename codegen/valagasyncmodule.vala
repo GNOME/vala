@@ -395,7 +395,7 @@ public class Vala.GAsyncModule : GSignalModule {
 		var finishblock = new CCodeBlock ();
 
 		var return_type = m.return_type;
-		if (!(return_type is VoidType)) {
+		if (!(return_type is VoidType) && !return_type.is_real_non_null_struct_type ()) {
 			var cdecl = new CCodeDeclaration (m.return_type.get_cname ());
 			cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
 			finishblock.add_statement (cdecl);
@@ -437,7 +437,14 @@ public class Vala.GAsyncModule : GSignalModule {
 			}
 		}
 
-		if (!(return_type is VoidType)) {
+		if (return_type.is_real_non_null_struct_type ()) {
+			// structs are returned via out parameter
+			CCodeExpression cexpr = new CCodeMemberAccess.pointer (data_var, "result");
+			if (requires_copy (return_type)) {
+				cexpr = get_ref_cexpression (return_type, cexpr, null, return_type);
+			}
+			finishblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result")), cexpr)));
+		} else if (!(return_type is VoidType)) {
 			finishblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("result"), new CCodeMemberAccess.pointer (data_var, "result"))));
 			if (return_type is ArrayType) {
 				var array_type = (ArrayType) return_type;
@@ -452,6 +459,11 @@ public class Vala.GAsyncModule : GSignalModule {
 			}
 			finishblock.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("result")));
 		}
+
+		var cfrag = new CCodeFragment ();
+		append_temp_decl (cfrag, temp_vars);
+		temp_vars.clear ();
+		finishblock.add_statement (cfrag);
 
 		cparam_map.set (get_param_pos (0.1), new CCodeFormalParameter ("_res_", "GAsyncResult*"));
 
