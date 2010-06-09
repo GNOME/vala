@@ -989,6 +989,10 @@ public class string {
 	public string casefold (ssize_t len = -1);
 	[CCode (cname = "g_utf8_collate")]
 	public int collate (string str2);
+	[CCode (cname = "g_utf8_collate_key")]
+	public string collate_key (ssize_t len = -1);
+	[CCode (cname = "g_utf8_collate_key_for_filename")]
+	public string collate_key_for_filename (ssize_t len = -1);
 
 	[CCode (cname = "g_locale_to_utf8")]
 	public string locale_to_utf8 (ssize_t len, out size_t bytes_read, out size_t bytes_written, out GLib.Error error = null);
