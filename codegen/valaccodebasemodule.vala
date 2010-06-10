@@ -5484,6 +5484,11 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 	 * from a vala to C point of view all expressions denoting locals, fields and
 	 * parameters are eligable to an ADDRESS_OF operator */
 	public bool is_address_of_possible (Expression e) {
+		if (gvalue_type != null && e.target_type.data_type == gvalue_type && e.value_type.data_type != gvalue_type) {
+			// implicit conversion to GValue is not addressable
+			return false;
+		}
+
 		var ma = e as MemberAccess;
 
 		if (ma == null) {
@@ -5502,7 +5507,14 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		}
 
 		var ccomma = new CCodeCommaExpression ();
-		var temp_decl = get_temp_variable (e.value_type, true, null, false);
+		DataType address_of_type;
+		if (gvalue_type != null && e.target_type != null && e.target_type.data_type == gvalue_type) {
+			// implicit conversion to GValue
+			address_of_type = e.target_type;
+		} else {
+			address_of_type = e.value_type;
+		}
+		var temp_decl = get_temp_variable (address_of_type, true, null, false);
 		var ctemp = get_variable_cexpression (temp_decl.name);
 		temp_vars.add (temp_decl);
 		ccomma.append_expression (new CCodeAssignment (ctemp, ce));
