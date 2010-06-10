@@ -182,6 +182,12 @@
 			<implements>
 				<interface name="GAppInfo"/>
 			</implements>
+			<method name="get_filename" symbol="g_desktop_app_info_get_filename">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="info" type="GDesktopAppInfo*"/>
+				</parameters>
+			</method>
 			<method name="get_is_hidden" symbol="g_desktop_app_info_get_is_hidden">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -214,8 +220,24 @@
 			</method>
 		</object>
 		<object name="GUnixConnection" parent="GSocketConnection" type-name="GUnixConnection" get-type="g_unix_connection_get_type">
+			<method name="receive_credentials" symbol="g_unix_connection_receive_credentials">
+				<return-type type="GCredentials*"/>
+				<parameters>
+					<parameter name="connection" type="GUnixConnection*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<method name="receive_fd" symbol="g_unix_connection_receive_fd">
 				<return-type type="gint"/>
+				<parameters>
+					<parameter name="connection" type="GUnixConnection*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="send_credentials" symbol="g_unix_connection_send_credentials">
+				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="connection" type="GUnixConnection*"/>
 					<parameter name="cancellable" type="GCancellable*"/>
@@ -232,6 +254,75 @@
 				</parameters>
 			</method>
 		</object>
+		<object name="GUnixCredentialsMessage" parent="GSocketControlMessage" type-name="GUnixCredentialsMessage" get-type="g_unix_credentials_message_get_type">
+			<method name="get_credentials" symbol="g_unix_credentials_message_get_credentials">
+				<return-type type="GCredentials*"/>
+				<parameters>
+					<parameter name="message" type="GUnixCredentialsMessage*"/>
+				</parameters>
+			</method>
+			<method name="is_supported" symbol="g_unix_credentials_message_is_supported">
+				<return-type type="gboolean"/>
+			</method>
+			<constructor name="new" symbol="g_unix_credentials_message_new">
+				<return-type type="GSocketControlMessage*"/>
+			</constructor>
+			<constructor name="new_with_credentials" symbol="g_unix_credentials_message_new_with_credentials">
+				<return-type type="GSocketControlMessage*"/>
+				<parameters>
+					<parameter name="credentials" type="GCredentials*"/>
+				</parameters>
+			</constructor>
+			<property name="credentials" type="GCredentials*" readable="1" writable="1" construct="0" construct-only="1"/>
+		</object>
+		<object name="GUnixFDList" parent="GObject" type-name="GUnixFDList" get-type="g_unix_fd_list_get_type">
+			<method name="append" symbol="g_unix_fd_list_append">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="list" type="GUnixFDList*"/>
+					<parameter name="fd" type="gint"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="get" symbol="g_unix_fd_list_get">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="list" type="GUnixFDList*"/>
+					<parameter name="index_" type="gint"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="get_length" symbol="g_unix_fd_list_get_length">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="list" type="GUnixFDList*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="g_unix_fd_list_new">
+				<return-type type="GUnixFDList*"/>
+			</constructor>
+			<constructor name="new_from_array" symbol="g_unix_fd_list_new_from_array">
+				<return-type type="GUnixFDList*"/>
+				<parameters>
+					<parameter name="fds" type="gint*"/>
+					<parameter name="n_fds" type="gint"/>
+				</parameters>
+			</constructor>
+			<method name="peek_fds" symbol="g_unix_fd_list_peek_fds">
+				<return-type type="gint*"/>
+				<parameters>
+					<parameter name="list" type="GUnixFDList*"/>
+					<parameter name="length" type="gint*"/>
+				</parameters>
+			</method>
+			<method name="steal_fds" symbol="g_unix_fd_list_steal_fds">
+				<return-type type="gint*"/>
+				<parameters>
+					<parameter name="list" type="GUnixFDList*"/>
+					<parameter name="length" type="gint*"/>
+				</parameters>
+			</method>
+		</object>
 		<object name="GUnixFDMessage" parent="GSocketControlMessage" type-name="GUnixFDMessage" get-type="g_unix_fd_message_get_type">
 			<method name="append_fd" symbol="g_unix_fd_message_append_fd">
 				<return-type type="gboolean"/>
@@ -241,8 +332,20 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<method name="get_fd_list" symbol="g_unix_fd_message_get_fd_list">
+				<return-type type="GUnixFDList*"/>
+				<parameters>
+					<parameter name="message" type="GUnixFDMessage*"/>
+				</parameters>
+			</method>
 			<constructor name="new" symbol="g_unix_fd_message_new">
 				<return-type type="GSocketControlMessage*"/>
+			</constructor>
+			<constructor name="new_with_fd_list" symbol="g_unix_fd_message_new_with_fd_list">
+				<return-type type="GSocketControlMessage*"/>
+				<parameters>
+					<parameter name="fd_list" type="GUnixFDList*"/>
+				</parameters>
 			</constructor>
 			<method name="steal_fds" symbol="g_unix_fd_message_steal_fds">
 				<return-type type="gint*"/>
@@ -251,6 +354,7 @@
 					<parameter name="length" type="gint*"/>
 				</parameters>
 			</method>
+			<property name="fd-list" type="GUnixFDList*" readable="1" writable="1" construct="0" construct-only="1"/>
 		</object>
 		<object name="GUnixInputStream" parent="GInputStream" type-name="GUnixInputStream" get-type="g_unix_input_stream_get_type">
 			<method name="get_close_fd" symbol="g_unix_input_stream_get_close_fd">
@@ -343,6 +447,12 @@
 			<method name="abstract_names_supported" symbol="g_unix_socket_address_abstract_names_supported">
 				<return-type type="gboolean"/>
 			</method>
+			<method name="get_address_type" symbol="g_unix_socket_address_get_address_type">
+				<return-type type="GUnixSocketAddressType"/>
+				<parameters>
+					<parameter name="address" type="GUnixSocketAddress*"/>
+				</parameters>
+			</method>
 			<method name="get_is_abstract" symbol="g_unix_socket_address_get_is_abstract">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -371,10 +481,19 @@
 				<return-type type="GSocketAddress*"/>
 				<parameters>
 					<parameter name="path" type="gchar*"/>
-					<parameter name="path_len" type="int"/>
+					<parameter name="path_len" type="gint"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_with_type" symbol="g_unix_socket_address_new_with_type">
+				<return-type type="GSocketAddress*"/>
+				<parameters>
+					<parameter name="path" type="gchar*"/>
+					<parameter name="path_len" type="gint"/>
+					<parameter name="type" type="GUnixSocketAddressType"/>
 				</parameters>
 			</constructor>
 			<property name="abstract" type="gboolean" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="address-type" type="GUnixSocketAddressType" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="path" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="path-as-array" type="GByteArray*" readable="1" writable="1" construct="0" construct-only="1"/>
 		</object>
@@ -394,6 +513,23 @@
 				<parameters>
 					<parameter name="lookup" type="GDesktopAppInfoLookup*"/>
 					<parameter name="uri_scheme" type="char*"/>
+				</parameters>
+			</vfunc>
+		</interface>
+		<interface name="GFileDescriptorBased" type-name="GFileDescriptorBased" get-type="g_file_descriptor_based_get_type">
+			<requires>
+				<interface name="GObject"/>
+			</requires>
+			<method name="get_fd" symbol="g_file_descriptor_based_get_fd">
+				<return-type type="int"/>
+				<parameters>
+					<parameter name="fd_based" type="GFileDescriptorBased*"/>
+				</parameters>
+			</method>
+			<vfunc name="get_fd">
+				<return-type type="int"/>
+				<parameters>
+					<parameter name="fd_based" type="GFileDescriptorBased*"/>
 				</parameters>
 			</vfunc>
 		</interface>

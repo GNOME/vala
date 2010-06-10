@@ -10,12 +10,15 @@ namespace GLib {
 		public DesktopAppInfo.from_filename (string filename);
 		[CCode (has_construct_function = false)]
 		public DesktopAppInfo.from_keyfile (GLib.KeyFile key_file);
+		public unowned string get_filename ();
 		public bool get_is_hidden ();
 		public static void set_desktop_env (string desktop_env);
 	}
 	[CCode (cheader_filename = "gio/gunixconnection.h")]
 	public class UnixConnection : GLib.SocketConnection {
+		public unowned GLib.Credentials receive_credentials (GLib.Cancellable cancellable) throws GLib.Error;
 		public int receive_fd (GLib.Cancellable cancellable) throws GLib.Error;
+		public bool send_credentials (GLib.Cancellable cancellable) throws GLib.Error;
 		public bool send_fd (int fd, GLib.Cancellable cancellable) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gio/gunixfdmessage.h")]
@@ -23,7 +26,11 @@ namespace GLib {
 		[CCode (type = "GSocketControlMessage*", has_construct_function = false)]
 		public UnixFDMessage ();
 		public bool append_fd (int fd) throws GLib.Error;
+		public unowned GLib.UnixFDList get_fd_list ();
 		public int steal_fds (int length);
+		[CCode (type = "GSocketControlMessage*", has_construct_function = false)]
+		public UnixFDMessage.with_fd_list (GLib.UnixFDList fd_list);
+		public GLib.UnixFDList fd_list { get; construct; }
 	}
 	[CCode (cheader_filename = "gio/gunixinputstream.h")]
 	public class UnixInputStream : GLib.InputStream {
@@ -106,11 +113,15 @@ namespace GLib {
 		public static bool abstract_names_supported ();
 		[CCode (cname = "g_unix_socket_address_new_abstract", type = "GSocketAddress*", has_construct_function = false)]
 		public UnixSocketAddress.as_abstract (string path, int path_len);
+		public GLib.UnixSocketAddressType get_address_type ();
 		public bool get_is_abstract ();
 		public unowned string get_path ();
 		public size_t get_path_len ();
+		[CCode (type = "GSocketAddress*", has_construct_function = false)]
+		public UnixSocketAddress.with_type (string path, int path_len, GLib.UnixSocketAddressType type);
 		[NoAccessorMethod]
 		public bool @abstract { get; construct; }
+		public GLib.UnixSocketAddressType address_type { get; construct; }
 		public string path { get; construct; }
 		[NoAccessorMethod]
 		public GLib.ByteArray path_as_array { owned get; construct; }
@@ -118,6 +129,10 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gunixmounts.h")]
 	public interface DesktopAppInfoLookup : GLib.Object {
 		public abstract unowned GLib.AppInfo get_default_for_uri_scheme (string uri_scheme);
+	}
+	[CCode (cheader_filename = "gio/gunixmounts.h")]
+	public interface FileDescriptorBased : GLib.Object {
+		public abstract int get_fd ();
 	}
 	[CCode (cheader_filename = "gio/gunixmounts.h")]
 	public const string DESKTOP_APP_INFO_LOOKUP_EXTENSION_POINT_NAME;

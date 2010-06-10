@@ -139,6 +139,14 @@ g_io_scheduler_*.notify nullable="1"
 g_memory_input_stream_*.destroy nullable="1"
 g_memory_output_stream_*.destroy_function nullable="1"
 
+g_application_is_remote hidden="1"
+GApplication::quit has_emitter="1"
+
+GDBusAuthObserver::authorize_authenticated_peer has_emitter="1"
+GDBusConnection:closed hidden="1"
+
+GFileDescriptorBased hidden="1"
+
 g_file_mount_mountable.callback nullable="1"
 g_file_unmount_mountable.callback nullable="1"
 g_file_eject_mountable.callback nullable="1"
@@ -187,3 +195,5 @@ g_volume_monitor_get_volume_for_uuid transfer_ownership="1"
 g_volume_monitor_get_volumes type_arguments="Volume" transfer_ownership="1"
 
 g_zlib_compressor_new.level default_value="-1"
+
+uid_t name="uint"
