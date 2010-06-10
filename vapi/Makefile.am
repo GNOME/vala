@@ -34,10 +34,16 @@ dist_vapi_DATA = \
 	glib-2.0.vapi \
 	gdk-2.0.deps \
 	gdk-2.0.vapi \
+	gdk-3.0.deps \
+	gdk-3.0.vapi \
 	gdk-pixbuf-2.0.deps \
 	gdk-pixbuf-2.0.vapi \
+	gdk-pixbuf-3.0.deps \
+	gdk-pixbuf-3.0.vapi \
 	gdk-x11-2.0.deps \
 	gdk-x11-2.0.vapi \
+	gdk-x11-3.0.deps \
+	gdk-x11-3.0.vapi \
 	gdl-1.0.deps \
 	gdl-1.0.vapi \
 	gdu.deps \
@@ -99,6 +105,8 @@ dist_vapi_DATA = \
 	gstreamer-video-0.10.vapi \
 	gtk+-2.0.deps \
 	gtk+-2.0.vapi \
+	gtk+-3.0.deps \
+	gtk+-3.0.vapi \
 	gtkmozembed.deps \
 	gtkmozembed.vapi \
 	gtksourceview-2.0.deps \

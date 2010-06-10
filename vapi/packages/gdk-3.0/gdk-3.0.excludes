@@ -1,0 +1,6 @@
+gdkalias.h
+gdkkeysyms.h
+gdkx.h
+gdkdirectfb.h
+gdkprivate.h
+gdkprivate-directfb.h

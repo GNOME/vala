@@ -1,0 +1,2 @@
+include/gtk-3.0/gtk
+lib/libgtk-x11-3.0.so

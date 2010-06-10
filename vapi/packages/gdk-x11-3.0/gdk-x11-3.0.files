@@ -1,0 +1,2 @@
+include/gtk-3.0/gdk/gdkx.h
+lib/libgdk-x11-3.0.so
