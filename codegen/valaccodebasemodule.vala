@@ -4173,6 +4173,16 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 			if (cl != null && !cl.is_compact) {
 				add_generic_type_arguments (carg_map, expr.type_reference.get_type_arguments (), expr);
+			} else if (cl != null && m.simple_generics) {
+				int type_param_index = 0;
+				foreach (var type_arg in expr.type_reference.get_type_arguments ()) {
+					if (requires_copy (type_arg)) {
+						carg_map.set (get_param_pos (-1 + 0.1 * type_param_index + 0.03), get_destroy_func_expression (type_arg));
+					} else {
+						carg_map.set (get_param_pos (-1 + 0.1 * type_param_index + 0.03), new CCodeConstant ("NULL"));
+					}
+					type_param_index++;
+				}
 			}
 
 			bool ellipsis = false;
