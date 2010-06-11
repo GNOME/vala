@@ -8,7 +8,7 @@ namespace GUdev {
 		public Client ([CCode (array_length = false)] string[]? subsystems);
 		public unowned GUdev.Device? query_by_device_file (string device_file);
 		public unowned GUdev.Device? query_by_device_number (GUdev.DeviceType type, GUdev.DeviceNumber number);
-		public GLib.List query_by_subsystem (string? subsystem);
+		public GLib.List<GUdev.Device> query_by_subsystem (string? subsystem);
 		public unowned GUdev.Device? query_by_subsystem_and_name (string subsystem, string name);
 		public unowned GUdev.Device? query_by_sysfs_path (string sysfs_path);
 		[NoWrapper]
@@ -53,7 +53,7 @@ namespace GUdev {
 		[CCode (array_length = false)]
 		public unowned string?[] get_property_as_strv (string key);
 		public uint64 get_property_as_uint64 (string key);
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string?[] get_property_keys ();
 		public uint64 get_seqnum ();
 		public unowned string get_subsystem ();
