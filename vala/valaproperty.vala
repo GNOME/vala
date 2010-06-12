@@ -430,6 +430,48 @@ public class Vala.Property : Member, Lockable {
 
 		process_attributes ();
 
+		if (is_abstract) {
+			if (parent_symbol is Class) {
+				var cl = (Class) parent_symbol;
+				if (!cl.is_abstract) {
+					error = true;
+					Report.error (source_reference, "Abstract properties may not be declared in non-abstract classes");
+					return false;
+				}
+			} else if (!(parent_symbol is Interface)) {
+				error = true;
+				Report.error (source_reference, "Abstract properties may not be declared outside of classes and interfaces");
+				return false;
+			}
+		} else if (is_virtual) {
+			if (!(parent_symbol is Class) && !(parent_symbol is Interface)) {
+				error = true;
+				Report.error (source_reference, "Virtual properties may not be declared outside of classes and interfaces");
+				return false;
+			}
+
+			if (parent_symbol is Class) {
+				var cl = (Class) parent_symbol;
+				if (cl.is_compact) {
+					error = true;
+					Report.error (source_reference, "Virtual properties may not be declared in compact classes");
+					return false;
+				}
+			}
+		} else if (overrides) {
+			if (!(parent_symbol is Class)) {
+				error = true;
+				Report.error (source_reference, "Properties may not be overridden outside of classes");
+				return false;
+			}
+		} else if (access == SymbolAccessibility.PROTECTED) {
+			if (!(parent_symbol is Class) && !(parent_symbol is Interface)) {
+				error = true;
+				Report.error (source_reference, "Protected properties may not be declared outside of classes and interfaces");
+				return false;
+			}
+		}
+
 		var old_source_file = analyzer.current_source_file;
 		var old_symbol = analyzer.current_symbol;
 
