@@ -52,9 +52,8 @@ namespace Rest {
 		public bool simple_run (string payload, int64 len) throws GLib.Error;
 		public bool simple_run_valist (string payload, int64 len, void* @params) throws GLib.Error;
 	}
-	[Compact]
 	[CCode (cheader_filename = "rest/rest-proxy-call.h")]
-	public class ProxyCall {
+	public class ProxyCall : GLib.Object {
 		public weak GLib.Object parent;
 		public void add_header (string header, string value);
 		public void add_headers (...);
@@ -102,11 +101,6 @@ namespace Rest {
 		[CCode (has_construct_function = false)]
 		public XmlParser ();
 		public unowned Rest.XmlNode parse_from_data (string data, int64 len);
-	}
-	[Compact]
-	[CCode (cheader_filename = "rest/rest-xml-parser.h")]
-	public class XmlParserClass {
-		public weak GLib.ObjectClass parent_class;
 	}
 	[CCode (cprefix = "", has_type_id = false, cheader_filename = "rest/oauth-proxy.h")]
 	public enum OAuthSignatureMethod {
