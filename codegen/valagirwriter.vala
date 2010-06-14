@@ -691,7 +691,8 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		write_indent ();
 
-		if (m == ((Class)m.parent_symbol).default_construction_method) {
+		if (m.parent_symbol is Class && m == ((Class)m.parent_symbol).default_construction_method ||
+			m.parent_symbol is Struct && m == ((Struct)m.parent_symbol).default_construction_method) {
 			buffer.append_printf ("<constructor name=\"new\" c:identifier=\"%s\"", m.get_cname ());
 		} else {
 			buffer.append_printf ("<constructor name=\"%s\" c:identifier=\"%s\"", m.name, m.get_cname ());
