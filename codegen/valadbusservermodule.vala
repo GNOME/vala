@@ -171,7 +171,7 @@ public class Vala.DBusServerModule : DBusClientModule {
 		CCodeFunctionCall finish_ccall = null;
 		if (m.coroutine) {
 			finish_ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_finish_cname ()));
-			finish_ccall.add_argument (new CCodeIdentifier ("source_object"));
+			finish_ccall.add_argument (new CCodeCastExpression (new CCodeIdentifier ("source_object"), sym.get_cname () + "*"));
 			finish_ccall.add_argument (new CCodeIdentifier ("_res_"));
 		}
 
@@ -347,7 +347,7 @@ public class Vala.DBusServerModule : DBusClientModule {
 		}
 
 		if (m.coroutine) {
-			ccall.add_argument (new CCodeIdentifier (wrapper_name + "_ready"));
+			ccall.add_argument (new CCodeCastExpression (new CCodeIdentifier (wrapper_name + "_ready"), "GAsyncReadyCallback"));
 
 			var new_call = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
 			new_call.add_argument (new CCodeIdentifier ("gpointer"));
