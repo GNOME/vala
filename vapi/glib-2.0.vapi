@@ -3576,21 +3576,50 @@ namespace GLib {
 #endif
 	public class PtrArray {
 		public PtrArray ();
+		public PtrArray.with_free_func (GLib.DestroyNotify? element_free_func);
 		[CCode (cname = "g_ptr_array_sized_new")]
 		public PtrArray.sized (uint reserved_size);
 		public void add (void* data);
+		public void foreach (GLib.Func func);
 		[CCode (cname = "g_ptr_array_index")]
 		public void* index(uint index);
 		public bool remove (void* data);
 		public void* remove_index (uint index);
 		public bool remove_fast (void *data);
+		public void remove_index_fast (uint index);
 		public void remove_range (uint index, uint length);
 		public void sort (CompareFunc compare_func);
 		public void sort_with_data (CompareDataFunc compare_func);
+		public void set_free_func (GLib.DestroyNotify? element_free_function);
 		public void set_size (uint length);
 
 		public uint len;
 		public void** pdata;
+	}
+
+	[Compact]
+	[CCode (cname = "GPtrArray", cprefix = "g_ptr_array_", ref_function = "g_ptr_array_ref", unref_function = "g_ptr_array_unref", type_id = "G_TYPE_PTR_ARRAY")]
+	public class GenericArray<G> {
+		[CCode (cname = "g_ptr_array_new_with_free_func", simple_generics = true)]
+		public GenericArray ();
+		public void add (owned G data);
+		public void foreach (GLib.Func func);
+		[CCode (cname = "g_ptr_array_index")]
+		public unowned G get (uint index);
+		public bool remove (G data);
+		public void remove_index (uint index);
+		public bool remove_fast (G data);
+		public void remove_index_fast (uint index);
+		public void remove_range (uint index, uint length);
+		public void set (uint index, owned G data) {
+			this.pdata[index] = (owned) data;
+		}
+		public void sort (GLib.CompareFunc compare_func);
+		public void sort_with_data (GLib.CompareDataFunc compare_func);
+		public void set_size (uint length);
+
+		[CCode (array_length_cname = "len", array_length_type = "uint")]
+		G[] pdata;
 	}
 
 	/* Byte Arrays */
