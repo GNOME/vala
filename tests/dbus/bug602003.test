@@ -1,0 +1,58 @@
+Packages: dbus-glib-1
+
+Program: client
+
+[DBus (name = "org.example.Test")]
+interface Test : Object {
+	public abstract Value test_string () throws DBus.Error;
+}
+
+void main () {
+	var conn = DBus.Bus.get (DBus.BusType.SESSION);
+
+	// client
+	var test = (Test) conn.get_object ("org.example.Test", "/org/example/test");
+
+	Value v = test.test_string ();
+	string[] s = (string[]) v;
+	assert (s.length == 1 && s[0] == "hello");
+}
+
+Program: server
+
+[DBus (name = "org.example.Test")]
+class Test : Object {
+	public Value test_string () {
+		string[] s = { "hello" };
+		return s;
+	}
+}
+
+MainLoop main_loop;
+
+void client_exit (Pid pid, int status) {
+	// client finished, terminate server
+	assert (status == 0);
+	main_loop.quit ();
+}
+
+void main () {
+	var conn = DBus.Bus.get (DBus.BusType.SESSION);
+	dynamic DBus.Object bus = conn.get_object ("org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus");
+
+	// try to register service in session bus
+	uint request_name_result = bus.request_name ("org.example.Test", (uint) 0);
+	assert (request_name_result == DBus.RequestNameReply.PRIMARY_OWNER);
+
+	// start server
+	var server = new Test ();
+	conn.register_object ("/org/example/test", server);
+
+	// server ready, spawn client
+	Pid client_pid;
+	Process.spawn_async (null, { "test", "/dbus/bug602003/client" }, null, SpawnFlags.DO_NOT_REAP_CHILD, null, out client_pid);
+	ChildWatch.add (client_pid, client_exit);
+
+	main_loop = new MainLoop (null, false);
+	main_loop.run ();
+}

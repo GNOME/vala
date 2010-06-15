@@ -193,8 +193,12 @@ public class Vala.DBusModule : GAsyncModule {
 			} else {
 				return new CCodeMemberAccess (ma.inner, "%s_length%d".printf (ma.member_name, dim));
 			}
+		} else {
+			// must be NULL-terminated
+			var len_call = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
+			len_call.add_argument (expr);
+			return len_call;
 		}
-		return null;
 	}
 
 	CCodeExpression? generate_enum_value_from_string (CCodeFragment fragment, EnumValueType type, CCodeExpression? expr) {
@@ -473,6 +477,41 @@ public class Vala.DBusModule : GAsyncModule {
 
 			clastif = cif;
 		}
+
+		// handle string arrays
+		var type_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_get_arg_type"));
+		type_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
+		var type_check = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, type_call, new CCodeIdentifier ("DBUS_TYPE_ARRAY"));
+
+		type_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_get_element_type"));
+		type_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
+		var element_type_check = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, type_call, new CCodeIdentifier ("DBUS_TYPE_STRING"));
+
+		type_check = new CCodeBinaryExpression (CCodeBinaryOperator.AND, type_check, element_type_check);
+
+		var type_block = new CCodeBlock ();
+		var type_fragment = new CCodeFragment ();
+		type_block.add_statement (type_fragment);
+		var result = read_array (type_fragment, new ArrayType (string_type, 1, null), new CCodeIdentifier (subiter_name), null);
+
+		var value_init = new CCodeFunctionCall (new CCodeIdentifier ("g_value_init"));
+		value_init.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_name)));
+		value_init.add_argument (new CCodeIdentifier ("G_TYPE_STRV"));
+		type_fragment.append (new CCodeExpressionStatement (value_init));
+
+		var value_set = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_boxed"));
+		value_set.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_name)));
+		value_set.add_argument (result);
+		type_fragment.append (new CCodeExpressionStatement (value_set));
+
+		var cif = new CCodeIfStatement (type_check, type_block);
+		if (clastif == null) {
+			fragment.append (cif);
+		} else {
+			clastif.false_statement = cif;
+		}
+
+		clastif = cif;
 
 		return new CCodeIdentifier (temp_name);
 	}
@@ -802,6 +841,41 @@ public class Vala.DBusModule : GAsyncModule {
 
 			clastif = cif;
 		}
+
+		// handle string arrays
+		var type_call = new CCodeFunctionCall (new CCodeIdentifier ("G_VALUE_TYPE"));
+		type_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, expr));
+		var type_check = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, type_call, new CCodeIdentifier ("G_TYPE_STRV"));
+
+		var type_block = new CCodeBlock ();
+		var type_fragment = new CCodeFragment ();
+		type_block.add_statement (type_fragment);
+
+		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_open_container"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, iter_expr));
+		iter_call.add_argument (new CCodeIdentifier ("DBUS_TYPE_VARIANT"));
+		iter_call.add_argument (new CCodeConstant ("\"as\""));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
+		type_fragment.append (new CCodeExpressionStatement (iter_call));
+
+		var value_get = new CCodeFunctionCall (new CCodeIdentifier ("g_value_get_boxed"));
+		value_get.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, expr));
+
+		write_array (type_fragment, new ArrayType (string_type, 1, null), new CCodeIdentifier (subiter_name), value_get);
+
+		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_close_container"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, iter_expr));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
+		type_fragment.append (new CCodeExpressionStatement (iter_call));
+
+		var cif = new CCodeIfStatement (type_check, type_block);
+		if (clastif == null) {
+			fragment.append (cif);
+		} else {
+			clastif.false_statement = cif;
+		}
+
+		clastif = cif;
 	}
 
 	void write_hash_table (CCodeFragment fragment, ObjectType type, CCodeExpression iter_expr, CCodeExpression hash_table_expr) {

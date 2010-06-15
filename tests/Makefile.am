@@ -87,6 +87,7 @@ TESTS = \
 	dbus/async.test \
 	dbus/signals.test \
 	dbus/bug596862.vala \
+	dbus/bug602003.test \
 	$(NULL)
 
 check-TESTS: $(TESTS)
