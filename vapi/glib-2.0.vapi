@@ -3612,14 +3612,12 @@ namespace GLib {
 		public void remove_index_fast (uint index);
 		public void remove_range (uint index, uint length);
 		public void set (uint index, owned G data) {
-			this.pdata[index] = (owned) data;
+			this.add ((owned) data);
+			this.remove_index_fast (index);
 		}
 		public void sort (GLib.CompareFunc compare_func);
 		public void sort_with_data (GLib.CompareDataFunc compare_func);
 		public void set_size (uint length);
-
-		[CCode (array_length_cname = "len", array_length_type = "uint")]
-		G[] pdata;
 	}
 
 	/* Byte Arrays */
