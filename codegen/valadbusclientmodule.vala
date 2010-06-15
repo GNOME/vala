@@ -1017,6 +1017,29 @@ public class Vala.DBusClientModule : DBusModule {
 		}
 	}
 
+	public override void generate_interface_declaration (Interface iface, CCodeDeclarationSpace decl_space) {
+		base.generate_interface_declaration (iface, decl_space);
+
+		string dbus_iface_name = get_dbus_name (iface);
+		if (dbus_iface_name == null) {
+			return;
+		}
+
+		string lower_cname = iface.get_lower_case_cprefix () + "dbus_proxy";
+
+		if (decl_space.add_symbol_declaration (iface, lower_cname + "_new")) {
+			return;
+		}
+
+		// declare proxy_new function
+		var proxy_new = new CCodeFunction (lower_cname + "_new", iface.get_cname () + "*");
+		proxy_new.add_parameter (new CCodeFormalParameter ("connection", "DBusGConnection*"));
+		proxy_new.add_parameter (new CCodeFormalParameter ("name", "const char*"));
+		proxy_new.add_parameter (new CCodeFormalParameter ("path", "const char*"));
+
+		decl_space.add_type_member_declaration (proxy_new);
+	}
+
 	public override void visit_interface (Interface iface) {
 		base.visit_interface (iface);
 
@@ -1081,7 +1104,6 @@ public class Vala.DBusClientModule : DBusModule {
 		new_block.add_statement (cdecl);
 		new_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("self")));
 
-		source_declarations.add_type_member_declaration (proxy_new.copy ());
 		proxy_new.block = new_block;
 		source_type_member_definition.append (proxy_new);
 
