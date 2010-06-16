@@ -278,7 +278,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Application : GLib.Application {
 		[CCode (has_construct_function = false)]
-		public Application (int argc, string argv, string appid);
+		public Application ([CCode (array_length_pos = 0.9)] ref unowned string[] argv, string appid);
 		public void add_window (Gtk.Window window);
 		public unowned Gtk.Window get_window ();
 		public void quit ();
