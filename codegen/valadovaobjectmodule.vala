@@ -54,14 +54,14 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 
 			source_declarations.add_type_member_declaration (value_copy_function);
 
-			var value_equal_function = new CCodeFunction ("dova_type_value_equal", "bool");
-			value_equal_function.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
-			value_equal_function.add_parameter (new CCodeFormalParameter ("value", "void *"));
-			value_equal_function.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
-			value_equal_function.add_parameter (new CCodeFormalParameter ("other", "void *"));
-			value_equal_function.add_parameter (new CCodeFormalParameter ("other_index", "int32_t"));
+			var value_equals_function = new CCodeFunction ("dova_type_value_equals", "bool");
+			value_equals_function.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
+			value_equals_function.add_parameter (new CCodeFormalParameter ("value", "void *"));
+			value_equals_function.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
+			value_equals_function.add_parameter (new CCodeFormalParameter ("other", "void *"));
+			value_equals_function.add_parameter (new CCodeFormalParameter ("other_index", "int32_t"));
 
-			source_declarations.add_type_member_declaration (value_equal_function);
+			source_declarations.add_type_member_declaration (value_equals_function);
 
 			var value_hash_function = new CCodeFunction ("dova_type_value_hash", "int32_t");
 			value_hash_function.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
@@ -136,7 +136,7 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			vdecl.add_declarator (vdeclarator);
 			instance_priv_struct.add_declaration (vdecl);
 
-			vdeclarator = new CCodeFunctionDeclarator ("value_equal");
+			vdeclarator = new CCodeFunctionDeclarator ("value_equals");
 			vdeclarator.add_parameter (new CCodeFormalParameter ("value", "void *"));
 			vdeclarator.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
 			vdeclarator.add_parameter (new CCodeFormalParameter ("other", "void *"));
@@ -247,8 +247,8 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 		decl_space.add_type_member_declaration (create_set_value_copy_function (true));
 	}
 
-	CCodeFunction create_set_value_equal_function (bool decl_only = false) {
-		var result = new CCodeFunction ("dova_type_set_value_equal");
+	CCodeFunction create_set_value_equals_function (bool decl_only = false) {
+		var result = new CCodeFunction ("dova_type_set_value_equals");
 		result.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
 		result.add_parameter (new CCodeFormalParameter ("(*function) (void *value, int32_t value_index, void *other, int32_t other_index)", "bool"));
 		if (decl_only) {
@@ -260,15 +260,15 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 		var priv_call = new CCodeFunctionCall (new CCodeIdentifier ("DOVA_TYPE_GET_PRIVATE"));
 		priv_call.add_argument (new CCodeIdentifier ("type"));
 
-		result.block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (priv_call, "value_equal"), new CCodeIdentifier ("function"))));
+		result.block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (priv_call, "value_equals"), new CCodeIdentifier ("function"))));
 		return result;
 	}
 
-	public void declare_set_value_equal_function (CCodeDeclarationSpace decl_space) {
-		if (decl_space.add_symbol_declaration (type_class, "dova_type_set_value_equal")) {
+	public void declare_set_value_equals_function (CCodeDeclarationSpace decl_space) {
+		if (decl_space.add_symbol_declaration (type_class, "dova_type_set_value_equals")) {
 			return;
 		}
-		decl_space.add_type_member_declaration (create_set_value_equal_function (true));
+		decl_space.add_type_member_declaration (create_set_value_equals_function (true));
 	}
 
 	CCodeFunction create_set_value_hash_function (bool decl_only = false) {
@@ -646,28 +646,28 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			declare_set_value_copy_function (internal_header_declarations);
 			source_type_member_definition.append (create_set_value_copy_function ());
 
-			var value_equal_function = new CCodeFunction ("dova_type_value_equal", "bool");
-			value_equal_function.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
-			value_equal_function.add_parameter (new CCodeFormalParameter ("value", "void *"));
-			value_equal_function.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
-			value_equal_function.add_parameter (new CCodeFormalParameter ("other", "void *"));
-			value_equal_function.add_parameter (new CCodeFormalParameter ("other_index", "int32_t"));
+			var value_equals_function = new CCodeFunction ("dova_type_value_equals", "bool");
+			value_equals_function.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
+			value_equals_function.add_parameter (new CCodeFormalParameter ("value", "void *"));
+			value_equals_function.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
+			value_equals_function.add_parameter (new CCodeFormalParameter ("other", "void *"));
+			value_equals_function.add_parameter (new CCodeFormalParameter ("other_index", "int32_t"));
 
-			value_equal_function.block = new CCodeBlock ();
+			value_equals_function.block = new CCodeBlock ();
 
-			ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (priv_call, "value_equal"));
+			ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (priv_call, "value_equals"));
 			ccall.add_argument (new CCodeIdentifier ("value"));
 			ccall.add_argument (new CCodeIdentifier ("value_index"));
 			ccall.add_argument (new CCodeIdentifier ("other"));
 			ccall.add_argument (new CCodeIdentifier ("other_index"));
-			value_equal_function.block.add_statement (new CCodeExpressionStatement (ccall));
+			value_equals_function.block.add_statement (new CCodeExpressionStatement (ccall));
 
-			source_type_member_definition.append (value_equal_function);
+			source_type_member_definition.append (value_equals_function);
 
-			declare_set_value_equal_function (source_declarations);
-			declare_set_value_equal_function (header_declarations);
-			declare_set_value_equal_function (internal_header_declarations);
-			source_type_member_definition.append (create_set_value_equal_function ());
+			declare_set_value_equals_function (source_declarations);
+			declare_set_value_equals_function (header_declarations);
+			declare_set_value_equals_function (internal_header_declarations);
+			source_type_member_definition.append (create_set_value_equals_function ());
 
 			var value_hash_function = new CCodeFunction ("dova_type_value_hash", "int32_t");
 			value_hash_function.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
