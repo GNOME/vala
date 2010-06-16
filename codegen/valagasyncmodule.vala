@@ -517,6 +517,12 @@ public class Vala.GAsyncModule : GSignalModule {
 			return;
 		}
 
+		var creturn_type = m.return_type;
+		if (m.return_type.is_real_non_null_struct_type ()) {
+			// structs are returned via out parameter
+			creturn_type = new VoidType ();
+		}
+
 		// add vfunc field to the type struct
 		var vdeclarator = new CCodeFunctionDeclarator (m.vfunc_name);
 		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
@@ -533,7 +539,7 @@ public class Vala.GAsyncModule : GSignalModule {
 
 		generate_cparameters (m, decl_space, cparam_map, new CCodeFunction ("fake"), vdeclarator, null, null, 2);
 
-		vdecl = new CCodeDeclaration (m.return_type.get_cname ());
+		vdecl = new CCodeDeclaration (creturn_type.get_cname ());
 		vdecl.add_declarator (vdeclarator);
 		type_struct.add_declaration (vdecl);
 	}
