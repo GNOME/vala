@@ -25,6 +25,13 @@ namespace Gdk {
 	public const Atom SELECTION_SECONDARY;
 	public const Atom SELECTION_CLIPBOARD;
 
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	[SimpleType]
+	public struct Atom {
+		[CCode (cname="GDK_NONE")]
+		public static Atom NONE;
+	}
+
 	[CCode (ref_function = "g_object_ref", unref_function = "g_object_unref")]
 	public class Bitmap {
 	}

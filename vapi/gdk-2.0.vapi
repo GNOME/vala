@@ -643,6 +643,8 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	[SimpleType]
 	public struct Atom {
+		[CCode (cname = "GDK_NONE")]
+		public static Gdk.Atom NONE;
 		public static Gdk.Atom intern (string atom_name, bool only_if_exists);
 		public static Gdk.Atom intern_static_string (string atom_name);
 		public unowned string name ();
@@ -1809,7 +1811,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool selection_owner_set_for_display (Gdk.Display display, Gdk.Window owner, Gdk.Atom selection, uint32 time_, bool send_event);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static int selection_property_get (Gdk.Window requestor, uchar[] data, Gdk.Atom prop_type, int prop_format);
+	public static int selection_property_get (Gdk.Window requestor, uchar[] data, out Gdk.Atom prop_type, int prop_format);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void selection_send_notify (Gdk.NativeWindow requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint32 time_);
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -1835,9 +1837,9 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool spawn_on_screen_with_pipes (Gdk.Screen screen, string? working_directory, [CCode (array_length = false)] string[] argv, [CCode (array_length = false)] string[] envp, GLib.SpawnFlags flags, GLib.SpawnChildSetupFunc? child_setup, out int child_pid, out int standard_input, out int standard_output, out int standard_error) throws GLib.Error;
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static int string_to_compound_text (string str, Gdk.Atom encoding, int format, uchar[] ctext, int length);
+	public static int string_to_compound_text (string str, out Gdk.Atom encoding, int format, uchar[] ctext, int length);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static int string_to_compound_text_for_display (Gdk.Display display, string str, Gdk.Atom encoding, int format, uchar[] ctext, int length);
+	public static int string_to_compound_text_for_display (Gdk.Display display, string str, out Gdk.Atom encoding, int format, uchar[] ctext, int length);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void test_render_sync (Gdk.Window window);
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -1875,9 +1877,9 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static uint unicode_to_keyval (uint32 wc);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static bool utf8_to_compound_text (string str, Gdk.Atom encoding, int format, uchar[] ctext, int length);
+	public static bool utf8_to_compound_text (string str, out Gdk.Atom encoding, int format, uchar[] ctext, int length);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static bool utf8_to_compound_text_for_display (Gdk.Display display, string str, Gdk.Atom encoding, int format, uchar[] ctext, int length);
+	public static bool utf8_to_compound_text_for_display (Gdk.Display display, string str, out Gdk.Atom encoding, int format, uchar[] ctext, int length);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static unowned string utf8_to_string_target (string str);
 }
