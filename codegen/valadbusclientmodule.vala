@@ -1048,6 +1048,9 @@ public class Vala.DBusClientModule : DBusModule {
 			return;
 		}
 
+		// strcmp
+		source_declarations.add_include ("string.h");
+
 		// create proxy class
 		string cname = iface.get_cname () + "DBusProxy";
 		string lower_cname = iface.get_lower_case_cprefix () + "dbus_proxy";

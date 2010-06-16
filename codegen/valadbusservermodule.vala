@@ -564,6 +564,9 @@ public class Vala.DBusServerModule : DBusClientModule {
 	}
 
 	void generate_register_function (ObjectType object_type) {
+		// strcmp
+		source_declarations.add_include ("string.h");
+
 		var sym = object_type.type_symbol;
 
 		var cfunc = new CCodeFunction (sym.get_lower_case_cprefix () + "dbus_register_object", "void");
