@@ -65,7 +65,7 @@ internal class Vala.DovaErrorModule : DovaDelegateModule {
 			var unref_call = new CCodeFunctionCall (new CCodeIdentifier (cl.get_unref_function ()));
 			unref_call.add_argument (new CCodeIdentifier ("this"));
 			cerror_block.add_statement (new CCodeExpressionStatement (unref_call));
-			cerror_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("NULL")));
+			cerror_block.add_statement (new CCodeReturnStatement ());
 		} else if (current_return_type is VoidType) {
 			cerror_block.add_statement (new CCodeReturnStatement ());
 		} else {
@@ -89,7 +89,7 @@ internal class Vala.DovaErrorModule : DovaDelegateModule {
 		// TODO log uncaught error as critical warning
 
 		if (current_method is CreationMethod) {
-			cerror_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("NULL")));
+			cerror_block.add_statement (new CCodeReturnStatement ());
 		} else if (current_return_type is VoidType) {
 			cerror_block.add_statement (new CCodeReturnStatement ());
 		} else if (current_return_type != null) {
