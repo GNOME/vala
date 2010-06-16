@@ -63,7 +63,7 @@ internal class Vala.DovaErrorModule : DovaDelegateModule {
 		if (current_method is CreationMethod) {
 			var cl = current_method.parent_symbol as Class;
 			var unref_call = new CCodeFunctionCall (new CCodeIdentifier (cl.get_unref_function ()));
-			unref_call.add_argument (new CCodeIdentifier ("self"));
+			unref_call.add_argument (new CCodeIdentifier ("this"));
 			cerror_block.add_statement (new CCodeExpressionStatement (unref_call));
 			cerror_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("NULL")));
 		} else if (current_return_type is VoidType) {
