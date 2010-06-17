@@ -619,6 +619,23 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			}
 		}
 
+		foreach (Property prop in cl.get_properties ()) {
+			if (prop.is_virtual || prop.overrides) {
+				if (prop.get_accessor != null) {
+					var override_call = new CCodeFunctionCall (new CCodeIdentifier ("%soverride_get_%s".printf (prop.base_property.parent_symbol.get_lower_case_cprefix (), prop.name)));
+					override_call.add_argument (new CCodeIdentifier ("type"));
+					override_call.add_argument (new CCodeIdentifier (prop.get_accessor.get_cname ()));
+					type_init_block.add_statement (new CCodeExpressionStatement (override_call));
+				}
+				if (prop.set_accessor != null) {
+					var override_call = new CCodeFunctionCall (new CCodeIdentifier ("%soverride_set_%s".printf (prop.base_property.parent_symbol.get_lower_case_cprefix (), prop.name)));
+					override_call.add_argument (new CCodeIdentifier ("type"));
+					override_call.add_argument (new CCodeIdentifier (prop.set_accessor.get_cname ()));
+					type_init_block.add_statement (new CCodeExpressionStatement (override_call));
+				}
+			}
+		}
+
 		if (cl == type_class) {
 			var priv_call = new CCodeFunctionCall (new CCodeIdentifier ("DOVA_TYPE_GET_PRIVATE"));
 			priv_call.add_argument (new CCodeIdentifier ("type"));
@@ -830,6 +847,21 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			function.modifiers |= CCodeModifiers.STATIC;
 		}
 		decl_space.add_type_member_declaration (function);
+
+		if (prop.is_abstract || prop.is_virtual) {
+			string param_list = "(%s *this".printf (((ObjectTypeSymbol) prop.parent_symbol).get_cname ());
+			if (!acc.readable) {
+				param_list += ", ";
+				param_list += acc.value_type.get_cname ();
+			}
+			param_list += ")";
+
+			var override_func = new CCodeFunction ("%soverride_%s_%s".printf (prop.parent_symbol.get_lower_case_cprefix (), acc.readable ? "get" : "set", prop.name));
+			override_func.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
+			override_func.add_parameter (new CCodeFormalParameter ("(*function) %s".printf (param_list), acc.readable ? acc.value_type.get_cname () : "void"));
+
+			decl_space.add_type_member_declaration (override_func);
+		}
 	}
 
 	public override void visit_property_accessor (PropertyAccessor acc) {
@@ -902,6 +934,25 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			}
 
 			source_type_member_definition.append (function);
+
+
+			string param_list = "(%s *this".printf (((ObjectTypeSymbol) prop.parent_symbol).get_cname ());
+			if (!acc.readable) {
+				param_list += ", ";
+				param_list += acc.value_type.get_cname ();
+			}
+			param_list += ")";
+
+			var override_func = new CCodeFunction ("%soverride_%s_%s".printf (prop.parent_symbol.get_lower_case_cprefix (), acc.readable ? "get" : "set", prop.name));
+			override_func.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
+			override_func.add_parameter (new CCodeFormalParameter ("(*function) %s".printf (param_list), acc.readable ? acc.value_type.get_cname () : "void"));
+			override_func.block = new CCodeBlock ();
+
+			vcast = get_type_private_from_type ((ObjectTypeSymbol) prop.parent_symbol, new CCodeIdentifier ("type"));
+
+			override_func.block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (vcast, "%s_%s".printf (acc.readable ? "get" : "set", prop.name)), new CCodeIdentifier ("function"))));
+
+			source_type_member_definition.append (override_func);
 		}
 
 		if (!prop.is_abstract) {
