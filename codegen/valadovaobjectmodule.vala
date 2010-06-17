@@ -1014,6 +1014,9 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			if (m.return_type is GenericType) {
 				param_list += ", void *";
 			}
+			if (m.get_error_types ().size > 0) {
+				param_list += ", DovaError **";
+			}
 			param_list += ")";
 
 			var override_func = new CCodeFunction ("%soverride_%s".printf (m.parent_symbol.get_lower_case_cprefix (), m.name));
@@ -1163,6 +1166,10 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			if (m.return_type is GenericType) {
 				vfunc.add_parameter (new CCodeFormalParameter ("result", "void *"));
 			}
+			if (m.get_error_types ().size > 0) {
+				var cparam = new CCodeFormalParameter ("error", "DovaError**");
+				vfunc.add_parameter (cparam);
+			}
 
 			var vcast = get_type_private_from_type ((ObjectTypeSymbol) m.parent_symbol, get_type_from_instance (new CCodeIdentifier ("this")));
 
@@ -1173,8 +1180,12 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			}
 			if (m.return_type is GenericType) {
 				vcall.add_argument (new CCodeIdentifier ("result"));
-				vfunc.block.add_statement (new CCodeExpressionStatement (vcall));
-			} else if (m.return_type is VoidType) {
+			}
+			if (m.get_error_types ().size > 0) {
+				vcall.add_argument (new CCodeIdentifier ("error"));
+			}
+
+			if (m.return_type is VoidType || m.return_type is GenericType) {
 				vfunc.block.add_statement (new CCodeExpressionStatement (vcall));
 			} else {
 				vfunc.block.add_statement (new CCodeReturnStatement (vcall));
@@ -1198,6 +1209,10 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			if (m.return_type is GenericType) {
 				vfunc.add_parameter (new CCodeFormalParameter ("result", "void *"));
 			}
+			if (m.get_error_types ().size > 0) {
+				var cparam = new CCodeFormalParameter ("error", "DovaError**");
+				vfunc.add_parameter (cparam);
+			}
 
 			var base_type = new CCodeIdentifier ("base_type");
 
@@ -1210,8 +1225,12 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			}
 			if (m.return_type is GenericType) {
 				vcall.add_argument (new CCodeIdentifier ("result"));
-				vfunc.block.add_statement (new CCodeExpressionStatement (vcall));
-			} else if (m.return_type is VoidType) {
+			}
+			if (m.get_error_types ().size > 0) {
+				vcall.add_argument (new CCodeIdentifier ("error"));
+			}
+
+			if (m.return_type is VoidType || m.return_type is GenericType) {
 				vfunc.block.add_statement (new CCodeExpressionStatement (vcall));
 			} else {
 				vfunc.block.add_statement (new CCodeReturnStatement (vcall));
@@ -1227,6 +1246,9 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			}
 			if (m.return_type is GenericType) {
 				param_list += ", void *";
+			}
+			if (m.get_error_types ().size > 0) {
+				param_list += ", DovaError **";
 			}
 			param_list += ")";
 
