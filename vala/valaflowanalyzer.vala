@@ -30,6 +30,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		public bool is_break_target { get; set; }
 		public bool is_continue_target { get; set; }
 		public bool is_return_target { get; set; }
+		public bool is_exit_target { get; set; }
 		public bool is_error_target { get; set; }
 		public ErrorDomain? error_domain { get; set; }
 		public ErrorCode? error_code { get; set; }
@@ -54,6 +55,11 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			is_return_target = true;
 		}
 
+		public JumpTarget.exit_target (BasicBlock basic_block) {
+			this.basic_block = basic_block;
+			is_exit_target = true;
+		}
+
 		public JumpTarget.error_target (BasicBlock basic_block, CatchClause catch_clause, ErrorDomain? error_domain, ErrorCode? error_code, Class? error_class) {
 			this.basic_block = basic_block;
 			this.catch_clause = catch_clause;
@@ -68,6 +74,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			is_break_target = true;
 			is_continue_target = true;
 			is_return_target = true;
+			is_exit_target = true;
 			is_error_target = true;
 		}
 
@@ -172,20 +179,24 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		}
 
 		m.entry_block = new BasicBlock.entry ();
+		m.return_block = new BasicBlock ();
 		m.exit_block = new BasicBlock.exit ();
+
+		m.return_block.connect (m.exit_block);
 
 		if (context.profile == Profile.DOVA && !(m.return_type is VoidType)) {
 			// ensure result is defined at end of method
 			var result_ma = new MemberAccess.simple ("result", m.source_reference);
 			result_ma.symbol_reference = m.result_var;
-			m.exit_block.add_node (result_ma);
+			m.return_block.add_node (result_ma);
 		}
 
 		current_block = new BasicBlock ();
 		m.entry_block.connect (current_block);
 		current_block.add_node (m);
 
-		jump_stack.add (new JumpTarget.return_target (m.exit_block));
+		jump_stack.add (new JumpTarget.return_target (m.return_block));
+		jump_stack.add (new JumpTarget.exit_target (m.exit_block));
 
 		m.accept_children (this);
 
@@ -199,7 +210,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 				m.error = true;
 			}
 
-			current_block.connect (m.exit_block);
+			current_block.connect (m.return_block);
 		}
 
 		analyze_body (m.entry_block);
@@ -494,19 +505,23 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		}
 
 		acc.entry_block = new BasicBlock.entry ();
+		acc.return_block = new BasicBlock ();
 		acc.exit_block = new BasicBlock.exit ();
+
+		acc.return_block.connect (acc.exit_block);
 
 		if (context.profile == Profile.DOVA && acc.readable) {
 			// ensure result is defined at end of method
 			var result_ma = new MemberAccess.simple ("result", acc.source_reference);
 			result_ma.symbol_reference = acc.result_var;
-			acc.exit_block.add_node (result_ma);
+			acc.return_block.add_node (result_ma);
 		}
 
 		current_block = new BasicBlock ();
 		acc.entry_block.connect (current_block);
 
-		jump_stack.add (new JumpTarget.return_target (acc.exit_block));
+		jump_stack.add (new JumpTarget.return_target (acc.return_block));
+		jump_stack.add (new JumpTarget.exit_target (acc.exit_block));
 
 		acc.accept_children (this);
 
@@ -520,7 +535,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 				acc.error = true;
 			}
 
-			current_block.connect (acc.exit_block);
+			current_block.connect (acc.return_block);
 		}
 
 		analyze_body (acc.entry_block);
@@ -844,7 +859,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 
 				for (int i = jump_stack.size - 1; i >= 0; i--) {
 					var jump_target = jump_stack[i];
-					if (jump_target.is_return_target) {
+					if (jump_target.is_exit_target) {
 						current_block.connect (jump_target.basic_block);
 						current_block = null;
 						unreachable_reported = false;

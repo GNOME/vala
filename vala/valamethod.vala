@@ -55,6 +55,8 @@ public class Vala.Method : Member {
 
 	public BasicBlock entry_block { get; set; }
 
+	public BasicBlock return_block { get; set; }
+
 	public BasicBlock exit_block { get; set; }
 
 	/**

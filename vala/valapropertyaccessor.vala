@@ -77,6 +77,8 @@ public class Vala.PropertyAccessor : Symbol {
 
 	public BasicBlock entry_block { get; set; }
 
+	public BasicBlock return_block { get; set; }
+
 	public BasicBlock exit_block { get; set; }
 
 	/**

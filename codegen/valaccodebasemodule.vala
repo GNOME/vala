@@ -1634,7 +1634,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 			if (acc.readable && !returns_real_struct) {
 				// do not declare result variable if exit block is known to be unreachable
-				if (acc.exit_block == null || acc.exit_block.get_predecessors ().size > 0) {
+				if (acc.return_block == null || acc.return_block.get_predecessors ().size > 0) {
 					var cdecl = new CCodeDeclaration (acc.value_type.get_cname ());
 					cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
 					function.block.prepend_statement (cdecl);

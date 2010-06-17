@@ -575,7 +575,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 					cinit.append (cdecl);
 
 					// add dummy return if exit block is known to be unreachable to silence C compiler
-					if (m.exit_block != null && m.exit_block.get_predecessors ().size == 0) {
+					if (m.return_block != null && m.return_block.get_predecessors ().size == 0) {
 						function.block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("result")));
 					}
 				}
