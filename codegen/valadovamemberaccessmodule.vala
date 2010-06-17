@@ -109,7 +109,7 @@ internal class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 
 				var cl = instance_target_type.data_type as Class;
 				bool dova_priv = false;
-				if (f.access == SymbolAccessibility.PRIVATE &&
+				if ((f.access == SymbolAccessibility.PRIVATE || f.access == SymbolAccessibility.INTERNAL) &&
 				    (cl.base_class == null || cl.base_class.get_full_name () != "Dova.Value")) {
 					dova_priv = true;
 				}
