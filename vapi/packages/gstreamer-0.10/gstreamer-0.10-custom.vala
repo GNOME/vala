@@ -47,10 +47,6 @@ namespace Gst {
 		public static void replace (ref Event? oldobj, Event? newobj);
         	public Event copy ();
 
-		[CCode (cname = "GST_EVENT_SRC")]
-		public unowned Gst.Object src ();
-		[CCode (cname = "GST_EVENT_TYPE")]
-		public EventType type ();
 		[CCode (cname = "GST_EVENT_IS_UPSTREAM")]
 		public bool is_upstream ();
 		[CCode (cname = "GST_EVENT_IS_DOWNSTREAM")]
@@ -283,11 +279,6 @@ namespace Gst {
 		public Message @ref ();
 		public void unref ();
         	public Message copy ();
-
-		[CCode (cname = "GST_MESSAGE_TYPE")]
-		public Gst.MessageType type ();
-		[CCode (cname = "GST_MESSAGE_SRC")]
-		public unowned Gst.Object src ();
 
 		// Deprecated, real method is in MessageType
 		public static GLib.Quark type_to_quark (Gst.MessageType type);

@@ -463,7 +463,9 @@ namespace Gst {
 	}
 	[CCode (ref_function = "gst_event_ref", unref_function = "gst_event_unref", cheader_filename = "gst/gst.h")]
 	public class Event : Gst.MiniObject {
+		public weak Gst.Object src;
 		public uint64 timestamp;
+		public Gst.EventType type;
 		[CCode (has_construct_function = false)]
 		public Event.buffer_size (Gst.Format format, int64 minsize, int64 maxsize, bool @async);
 		public Gst.Event copy ();
@@ -510,14 +512,10 @@ namespace Gst {
 		public void set_seqnum (uint32 seqnum);
 		[CCode (has_construct_function = false)]
 		public Event.sink_message (owned Gst.Message msg);
-		[CCode (cname = "GST_EVENT_SRC")]
-		public unowned Gst.Object src ();
 		[CCode (has_construct_function = false)]
 		public Event.step (Gst.Format format, uint64 amount, double rate, bool flush, bool intermediate);
 		[CCode (has_construct_function = false)]
 		public Event.tag (owned Gst.TagList taglist);
-		[CCode (cname = "GST_EVENT_TYPE")]
-		public Gst.EventType type ();
 		public static Gst.EventTypeFlags type_get_flags (Gst.EventType type);
 		public static unowned string type_get_name (Gst.EventType type);
 		public static GLib.Quark type_to_quark (Gst.EventType type);
@@ -627,7 +625,9 @@ namespace Gst {
 	}
 	[CCode (ref_function = "gst_message_ref", unref_function = "gst_message_unref", cheader_filename = "gst/gst.h")]
 	public class Message : Gst.MiniObject {
+		public weak Gst.Object src;
 		public uint64 timestamp;
+		public Gst.MessageType type;
 		[CCode (has_construct_function = false)]
 		public Message.application (Gst.Object src, owned Gst.Structure? structure);
 		[CCode (has_construct_function = false)]
@@ -692,8 +692,6 @@ namespace Gst {
 		public void set_buffering_stats (Gst.BufferingMode mode, int avg_in, int avg_out, int64 buffering_left);
 		public void set_seqnum (uint32 seqnum);
 		public void set_stream_status_object (ref unowned Gst.Value? object);
-		[CCode (cname = "GST_MESSAGE_SRC")]
-		public unowned Gst.Object src ();
 		[CCode (has_construct_function = false)]
 		public Message.state_changed (Gst.Object src, Gst.State oldstate, Gst.State newstate, Gst.State pending);
 		[CCode (has_construct_function = false)]
@@ -710,8 +708,6 @@ namespace Gst {
 		public Message.tag (Gst.Object src, Gst.TagList tag_list);
 		[CCode (has_construct_function = false)]
 		public Message.tag_full (Gst.Object src, Gst.Pad pad, Gst.TagList tag_list);
-		[CCode (cname = "GST_MESSAGE_TYPE")]
-		public Gst.MessageType type ();
 		public static GLib.Quark type_to_quark (Gst.MessageType type);
 		public void unref ();
 		[CCode (has_construct_function = false)]
