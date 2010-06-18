@@ -1043,7 +1043,7 @@ namespace Clutter {
 		public unowned string get_selection ();
 		public void insert_text (string text, ssize_t position);
 		public void insert_unichar (unichar wc);
-		public bool position_to_coords (int position, float x, float y, float line_height);
+		public bool position_to_coords (int position, out float? x = null, out float? y = null, out float? line_height = null);
 		public void set_attributes (Pango.AttrList attrs);
 		public void set_cursor_position (int position);
 		public void set_font_description (Pango.FontDescription font_desc);
