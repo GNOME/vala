@@ -360,7 +360,7 @@ public class Vala.GirParser : CodeVisitor {
 		return type;
 	}
 
-	FormalParameter parse_parameter (out int array_length_idx = null, out int closure_idx = null, out int destroy_idx = null) {
+	FormalParameter parse_parameter (out int array_length_idx = null, out int closure_idx = null, out int destroy_idx = null, out string? scope = null) {
 		FormalParameter param;
 
 		if (&array_length_idx != null) {
@@ -378,6 +378,10 @@ public class Vala.GirParser : CodeVisitor {
 		string direction = reader.get_attribute ("direction");
 		string transfer = reader.get_attribute ("transfer-ownership");
 		string allow_none = reader.get_attribute ("allow-none");
+
+		if (&scope != null) {
+			scope = reader.get_attribute ("scope");
+		}
 
 		string closure = reader.get_attribute ("closure");
 		string destroy = reader.get_attribute ("destroy");
@@ -871,7 +875,7 @@ public class Vala.GirParser : CodeVisitor {
 			this.closure_idx = closure_idx;
 			this.destroy_idx = destroy_idx;
 			this.vala_idx = 0.0F;
-			this.keep = false;
+			this.keep = true;
 		}
 
 		public FormalParameter param;
@@ -921,7 +925,8 @@ public class Vala.GirParser : CodeVisitor {
 			bool first = true;
 			while (current_token == MarkupTokenType.START_ELEMENT) {
 				int array_length_idx, closure_idx, destroy_idx;
-				var param = parse_parameter (out array_length_idx, out closure_idx, out destroy_idx);
+				string scope;
+				var param = parse_parameter (out array_length_idx, out closure_idx, out destroy_idx, out scope);
 				if (array_length_idx != -1) {
 					array_length_parameters.add (array_length_idx);
 				}
@@ -931,9 +936,17 @@ public class Vala.GirParser : CodeVisitor {
 				if (destroy_idx != -1) {
 					destroy_parameters.add (destroy_idx);
 				}
+
 				// first parameter is instance pointer in virtual methods, ignore
 				if (element_name != "callback" || !first) {
-					parameters.add (new MethodInfo(param, array_length_idx, closure_idx, destroy_idx));
+					var info = new MethodInfo(param, array_length_idx, closure_idx, destroy_idx);
+
+					if (scope == "async") {
+						m.coroutine = true;
+						info.keep = false;
+					}
+
+					parameters.add (info);
 				} else {
 					first = false;
 				}
@@ -949,7 +962,8 @@ public class Vala.GirParser : CodeVisitor {
 
 		int last = -1;
 		foreach (MethodInfo info in parameters) {
-			if (!array_length_parameters.contains (i+add)
+			if (info.keep
+			    && !array_length_parameters.contains (i+add)
 			    && !closure_parameters.contains (i+add)
 			    && !destroy_parameters.contains (i+add)) {
 				info.vala_idx = (float) j;
@@ -965,6 +979,8 @@ public class Vala.GirParser : CodeVisitor {
 				}
 				last = i+1;
 				j++;
+			} else {
+				info.keep = false;
 			}
 			i++;
 		}
