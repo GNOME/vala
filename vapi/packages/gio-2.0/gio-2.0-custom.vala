@@ -51,5 +51,20 @@ namespace GLib {
 		[CCode (cname = "g_application_quit_with_data")]
 		public bool quit (GLib.Variant? platform_data = null);
 	}
-}
 
+	[CCode (cheader_filename = "gio/gio.h")]
+	namespace Bus {
+		public async GLib.DBusConnection get (GLib.BusType bus_type, GLib.Cancellable? cancellable = null) throws GLib.IOError;
+		public GLib.DBusConnection get_sync (GLib.BusType bus_type, GLib.Cancellable? cancellable = null) throws GLib.IOError;
+		public uint own_name (GLib.BusType bus_type, string name, GLib.BusNameOwnerFlags flags, GLib.BusAcquiredCallback bus_acquired_handler, GLib.BusNameAcquiredCallback name_acquired_handler, GLib.BusNameLostCallback name_lost_handler);
+		public uint own_name_on_connection (GLib.DBusConnection connection, string name, GLib.BusNameOwnerFlags flags, GLib.BusNameAcquiredCallback name_acquired_handler, GLib.BusNameLostCallback name_lost_handler);
+		public uint own_name_on_connection_with_closures (GLib.DBusConnection connection, string name, GLib.BusNameOwnerFlags flags, GLib.Closure name_acquired_closure, GLib.Closure name_lost_closure);
+		public uint own_name_with_closures (GLib.BusType bus_type, string name, GLib.BusNameOwnerFlags flags, GLib.Closure bus_acquired_closure, GLib.Closure name_acquired_closure, GLib.Closure name_lost_closure);
+		public void unown_name (uint owner_id);
+		public void unwatch_name (uint watcher_id);
+		public uint watch_name (GLib.BusType bus_type, string name, GLib.BusNameWatcherFlags flags, GLib.BusNameAppearedCallback name_appeared_handler, GLib.BusNameVanishedCallback name_vanished_handler);
+		public uint watch_name_on_connection (GLib.DBusConnection connection, string name, GLib.BusNameWatcherFlags flags, GLib.BusNameAppearedCallback name_appeared_handler, GLib.BusNameVanishedCallback name_vanished_handler);
+		public uint watch_name_on_connection_with_closures (GLib.DBusConnection connection, string name, GLib.BusNameWatcherFlags flags, GLib.Closure name_appeared_closure, GLib.Closure name_vanished_closure);
+		public uint watch_name_with_closures (GLib.BusType bus_type, string name, GLib.BusNameWatcherFlags flags, GLib.Closure name_appeared_closure, GLib.Closure name_vanished_closure);
+	}
+}

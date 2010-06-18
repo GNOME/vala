@@ -200,3 +200,5 @@ g_volume_monitor_get_volumes type_arguments="Volume" transfer_ownership="1"
 g_zlib_compressor_new.level default_value="-1"
 
 uid_t name="uint"
+
+g_bus_* hidden="1"

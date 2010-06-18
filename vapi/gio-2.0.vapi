@@ -2,6 +2,33 @@
 
 [CCode (cprefix = "G", lower_case_cprefix = "g_", gir_namespace = "Gio", gir_version = "2.0")]
 namespace GLib {
+	[CCode (cprefix = "GBus", lower_case_cprefix = "g_bus_")]
+	namespace Bus {
+		[CCode (cheader_filename = "gio/gio.h")]
+		public static async GLib.DBusConnection @get (GLib.BusType bus_type, GLib.Cancellable? cancellable = null) throws GLib.IOError;
+		[CCode (cheader_filename = "gio/gio.h")]
+		public static GLib.DBusConnection get_sync (GLib.BusType bus_type, GLib.Cancellable? cancellable = null) throws GLib.IOError;
+		[CCode (cheader_filename = "gio/gio.h")]
+		public static uint own_name (GLib.BusType bus_type, string name, GLib.BusNameOwnerFlags flags, GLib.BusAcquiredCallback bus_acquired_handler, GLib.BusNameAcquiredCallback name_acquired_handler, GLib.BusNameLostCallback name_lost_handler);
+		[CCode (cheader_filename = "gio/gio.h")]
+		public static uint own_name_on_connection (GLib.DBusConnection connection, string name, GLib.BusNameOwnerFlags flags, GLib.BusNameAcquiredCallback name_acquired_handler, GLib.BusNameLostCallback name_lost_handler);
+		[CCode (cheader_filename = "gio/gio.h")]
+		public static uint own_name_on_connection_with_closures (GLib.DBusConnection connection, string name, GLib.BusNameOwnerFlags flags, GLib.Closure name_acquired_closure, GLib.Closure name_lost_closure);
+		[CCode (cheader_filename = "gio/gio.h")]
+		public static uint own_name_with_closures (GLib.BusType bus_type, string name, GLib.BusNameOwnerFlags flags, GLib.Closure bus_acquired_closure, GLib.Closure name_acquired_closure, GLib.Closure name_lost_closure);
+		[CCode (cheader_filename = "gio/gio.h")]
+		public static void unown_name (uint owner_id);
+		[CCode (cheader_filename = "gio/gio.h")]
+		public static void unwatch_name (uint watcher_id);
+		[CCode (cheader_filename = "gio/gio.h")]
+		public static uint watch_name (GLib.BusType bus_type, string name, GLib.BusNameWatcherFlags flags, GLib.BusNameAppearedCallback name_appeared_handler, GLib.BusNameVanishedCallback name_vanished_handler);
+		[CCode (cheader_filename = "gio/gio.h")]
+		public static uint watch_name_on_connection (GLib.DBusConnection connection, string name, GLib.BusNameWatcherFlags flags, GLib.BusNameAppearedCallback name_appeared_handler, GLib.BusNameVanishedCallback name_vanished_handler);
+		[CCode (cheader_filename = "gio/gio.h")]
+		public static uint watch_name_on_connection_with_closures (GLib.DBusConnection connection, string name, GLib.BusNameWatcherFlags flags, GLib.Closure name_appeared_closure, GLib.Closure name_vanished_closure);
+		[CCode (cheader_filename = "gio/gio.h")]
+		public static uint watch_name_with_closures (GLib.BusType bus_type, string name, GLib.BusNameWatcherFlags flags, GLib.Closure name_appeared_closure, GLib.Closure name_vanished_closure);
+	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class AppLaunchContext : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -2273,32 +2300,6 @@ namespace GLib {
 	public const string VOLUME_IDENTIFIER_KIND_UUID;
 	[CCode (cheader_filename = "gio/gio.h")]
 	public const string VOLUME_MONITOR_EXTENSION_POINT_NAME;
-	[CCode (cname = "g_bus_get", cheader_filename = "gio/gio.h")]
-	public static void g_bus_get (GLib.BusType bus_type, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
-	[CCode (cname = "g_bus_get_finish", cheader_filename = "gio/gio.h")]
-	public static unowned GLib.DBusConnection g_bus_get_finish (GLib.AsyncResult res) throws GLib.Error;
-	[CCode (cname = "g_bus_get_sync", cheader_filename = "gio/gio.h")]
-	public static unowned GLib.DBusConnection g_bus_get_sync (GLib.BusType bus_type, GLib.Cancellable? cancellable) throws GLib.Error;
-	[CCode (cname = "g_bus_own_name", cheader_filename = "gio/gio.h")]
-	public static uint g_bus_own_name (GLib.BusType bus_type, string name, GLib.BusNameOwnerFlags flags, GLib.BusAcquiredCallback bus_acquired_handler, GLib.BusNameAcquiredCallback name_acquired_handler, GLib.BusNameLostCallback name_lost_handler, GLib.DestroyNotify user_data_free_func);
-	[CCode (cname = "g_bus_own_name_on_connection", cheader_filename = "gio/gio.h")]
-	public static uint g_bus_own_name_on_connection (GLib.DBusConnection connection, string name, GLib.BusNameOwnerFlags flags, GLib.BusNameAcquiredCallback name_acquired_handler, GLib.BusNameLostCallback name_lost_handler, GLib.DestroyNotify user_data_free_func);
-	[CCode (cname = "g_bus_own_name_on_connection_with_closures", cheader_filename = "gio/gio.h")]
-	public static uint g_bus_own_name_on_connection_with_closures (GLib.DBusConnection connection, string name, GLib.BusNameOwnerFlags flags, GLib.Closure name_acquired_closure, GLib.Closure name_lost_closure);
-	[CCode (cname = "g_bus_own_name_with_closures", cheader_filename = "gio/gio.h")]
-	public static uint g_bus_own_name_with_closures (GLib.BusType bus_type, string name, GLib.BusNameOwnerFlags flags, GLib.Closure bus_acquired_closure, GLib.Closure name_acquired_closure, GLib.Closure name_lost_closure);
-	[CCode (cname = "g_bus_unown_name", cheader_filename = "gio/gio.h")]
-	public static void g_bus_unown_name (uint owner_id);
-	[CCode (cname = "g_bus_unwatch_name", cheader_filename = "gio/gio.h")]
-	public static void g_bus_unwatch_name (uint watcher_id);
-	[CCode (cname = "g_bus_watch_name", cheader_filename = "gio/gio.h")]
-	public static uint g_bus_watch_name (GLib.BusType bus_type, string name, GLib.BusNameWatcherFlags flags, GLib.BusNameAppearedCallback name_appeared_handler, GLib.BusNameVanishedCallback name_vanished_handler, GLib.DestroyNotify user_data_free_func);
-	[CCode (cname = "g_bus_watch_name_on_connection", cheader_filename = "gio/gio.h")]
-	public static uint g_bus_watch_name_on_connection (GLib.DBusConnection connection, string name, GLib.BusNameWatcherFlags flags, GLib.BusNameAppearedCallback name_appeared_handler, GLib.BusNameVanishedCallback name_vanished_handler, GLib.DestroyNotify user_data_free_func);
-	[CCode (cname = "g_bus_watch_name_on_connection_with_closures", cheader_filename = "gio/gio.h")]
-	public static uint g_bus_watch_name_on_connection_with_closures (GLib.DBusConnection connection, string name, GLib.BusNameWatcherFlags flags, GLib.Closure name_appeared_closure, GLib.Closure name_vanished_closure);
-	[CCode (cname = "g_bus_watch_name_with_closures", cheader_filename = "gio/gio.h")]
-	public static uint g_bus_watch_name_with_closures (GLib.BusType bus_type, string name, GLib.BusNameWatcherFlags flags, GLib.Closure name_appeared_closure, GLib.Closure name_vanished_closure);
 	[CCode (cname = "g_content_type_can_be_executable", cheader_filename = "gio/gio.h")]
 	public static bool g_content_type_can_be_executable (string type);
 	[CCode (cname = "g_content_type_equals", cheader_filename = "gio/gio.h")]
