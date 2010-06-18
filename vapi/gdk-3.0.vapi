@@ -70,31 +70,21 @@ namespace Gdk {
 		public Gdk.DeviceType get_device_type ();
 		public unowned Gdk.Display get_display ();
 		public bool get_has_cursor ();
-		public virtual bool get_history (Gdk.Window window, uint32 start, uint32 stop, Gdk.TimeCoord[] events);
+		public bool get_history (Gdk.Window window, uint32 start, uint32 stop, Gdk.TimeCoord[] events);
 		public bool get_key (uint index_, uint keyval, Gdk.ModifierType modifiers);
 		public Gdk.InputMode get_mode ();
 		public uint get_n_axes ();
 		public unowned string get_name ();
 		public Gdk.InputSource get_source ();
-		public virtual void get_state (Gdk.Window window, double axes, Gdk.ModifierType mask);
-		public virtual Gdk.GrabStatus grab (Gdk.Window window, Gdk.GrabOwnership grab_ownership, bool owner_events, Gdk.EventMask event_mask, Gdk.Cursor cursor, uint32 time_);
+		public void get_state (Gdk.Window window, double axes, Gdk.ModifierType mask);
+		public Gdk.GrabStatus grab (Gdk.Window window, Gdk.GrabOwnership grab_ownership, bool owner_events, Gdk.EventMask event_mask, Gdk.Cursor cursor, uint32 time_);
 		public static bool grab_info_libgtk_only (Gdk.Display display, Gdk.Device device, out unowned Gdk.Window grab_window, bool owner_events);
 		public unowned GLib.List list_axes ();
-		[NoWrapper]
-		public virtual bool query_state (Gdk.Window window, out unowned Gdk.Window root_window, out unowned Gdk.Window child_window, int root_x, int root_y, int win_x, int win_y, Gdk.ModifierType mask);
-		[NoWrapper]
-		public virtual void select_window_events (Gdk.Window window, Gdk.EventMask event_mask);
 		public void set_axis_use (uint index_, Gdk.AxisUse use);
 		public void set_key (uint index_, uint keyval, Gdk.ModifierType modifiers);
 		public bool set_mode (Gdk.InputMode mode);
 		public void set_source (Gdk.InputSource source);
-		[NoWrapper]
-		public virtual void set_window_cursor (Gdk.Window window, Gdk.Cursor cursor);
-		public virtual void ungrab (uint32 time_);
-		[NoWrapper]
-		public virtual void warp (Gdk.Screen screen, int x, int y);
-		[NoWrapper]
-		public virtual unowned Gdk.Window window_at_position (int win_x, int win_y, Gdk.ModifierType mask, bool get_toplevel);
+		public void ungrab (uint32 time_);
 		public Gdk.Device associated_device { get; }
 		[NoAccessorMethod]
 		public Gdk.DeviceManager device_manager { owned get; construct; }
@@ -220,6 +210,7 @@ namespace Gdk {
 		public Gdk.DragAction get_actions ();
 		public unowned Gdk.Device get_device ();
 		public Gdk.DragAction get_selected_action ();
+		public unowned Gdk.Window get_source_window ();
 		public Gdk.DragAction get_suggested_action ();
 		public unowned GLib.List list_targets ();
 		public void set_device (Gdk.Device device);
@@ -1945,9 +1936,9 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool spawn_command_line_on_screen (Gdk.Screen screen, string command_line) throws GLib.Error;
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static bool spawn_on_screen (Gdk.Screen screen, string? working_directory, [CCode (array_length = false)] string[] argv, [CCode (array_length = false)] string[]? envp, GLib.SpawnFlags flags, GLib.SpawnChildSetupFunc? child_setup, out int child_pid) throws GLib.Error;
+	public static bool spawn_on_screen (Gdk.Screen screen, string? working_directory, [CCode (array_length = false)] string[] argv, [CCode (array_length = false)] string[]? envp, GLib.SpawnFlags flags, GLib.SpawnChildSetupFunc? child_setup, out GLib.Pid child_pid) throws GLib.Error;
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static bool spawn_on_screen_with_pipes (Gdk.Screen screen, string? working_directory, [CCode (array_length = false)] string[] argv, [CCode (array_length = false)] string[] envp, GLib.SpawnFlags flags, GLib.SpawnChildSetupFunc? child_setup, out int child_pid, out int standard_input, out int standard_output, out int standard_error) throws GLib.Error;
+	public static bool spawn_on_screen_with_pipes (Gdk.Screen screen, string? working_directory, [CCode (array_length = false)] string[] argv, [CCode (array_length = false)] string[] envp, GLib.SpawnFlags flags, GLib.SpawnChildSetupFunc? child_setup, out GLib.Pid child_pid, out int standard_input, out int standard_output, out int standard_error) throws GLib.Error;
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static int string_to_compound_text (string str, Gdk.Atom encoding, int format, uchar[] ctext, int length);
 	[CCode (cheader_filename = "gdk/gdk.h")]

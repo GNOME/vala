@@ -2046,27 +2046,6 @@
 			<field name="start" type="gint"/>
 			<field name="end" type="gint"/>
 		</struct>
-		<struct name="GtkProgress">
-			<field name="widget" type="GtkWidget"/>
-			<field name="adjustment" type="GtkAdjustment*"/>
-			<field name="offscreen_pixmap" type="GdkPixmap*"/>
-			<field name="format" type="gchar*"/>
-			<field name="x_align" type="gfloat"/>
-			<field name="y_align" type="gfloat"/>
-			<field name="show_text" type="guint"/>
-			<field name="activity_mode" type="guint"/>
-			<field name="use_text_format" type="guint"/>
-		</struct>
-		<struct name="GtkProgressClass">
-			<field name="parent_class" type="GtkWidgetClass"/>
-			<field name="paint" type="GCallback"/>
-			<field name="update" type="GCallback"/>
-			<field name="act_mode_enter" type="GCallback"/>
-			<field name="_gtk_reserved1" type="GCallback"/>
-			<field name="_gtk_reserved2" type="GCallback"/>
-			<field name="_gtk_reserved3" type="GCallback"/>
-			<field name="_gtk_reserved4" type="GCallback"/>
-		</struct>
 		<struct name="GtkRadioActionEntry">
 			<field name="name" type="gchar*"/>
 			<field name="stock_id" type="gchar*"/>
@@ -2351,6 +2330,16 @@
 					<parameter name="success_color" type="GdkColor*"/>
 					<parameter name="warning_color" type="GdkColor*"/>
 					<parameter name="error_color" type="GdkColor*"/>
+					<parameter name="was_symbolic" type="gboolean*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="load_symbolic_for_style" symbol="gtk_icon_info_load_symbolic_for_style">
+				<return-type type="GdkPixbuf*"/>
+				<parameters>
+					<parameter name="icon_info" type="GtkIconInfo*"/>
+					<parameter name="style" type="GtkStyle*"/>
+					<parameter name="state" type="GtkStateType"/>
 					<parameter name="was_symbolic" type="gboolean*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
@@ -4437,6 +4426,10 @@
 			<member name="GTK_SIZE_GROUP_VERTICAL" value="2"/>
 			<member name="GTK_SIZE_GROUP_BOTH" value="3"/>
 		</enum>
+		<enum name="GtkSizeRequestMode" type-name="GtkSizeRequestMode" get-type="gtk_size_request_mode_get_type">
+			<member name="GTK_SIZE_REQUEST_HEIGHT_FOR_WIDTH" value="0"/>
+			<member name="GTK_SIZE_REQUEST_WIDTH_FOR_HEIGHT" value="1"/>
+		</enum>
 		<enum name="GtkSortType" type-name="GtkSortType" get-type="gtk_sort_type_get_type">
 			<member name="GTK_SORT_ASCENDING" value="0"/>
 			<member name="GTK_SORT_DESCENDING" value="1"/>
@@ -4708,7 +4701,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="get_artists" symbol="gtk_about_dialog_get_artists">
 				<return-type type="gchar**"/>
@@ -5045,7 +5038,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="get_accel_widget" symbol="gtk_accel_label_get_accel_widget">
 				<return-type type="GtkWidget*"/>
@@ -5891,7 +5884,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="get_padding" symbol="gtk_alignment_get_padding">
 				<return-type type="void"/>
@@ -5946,11 +5939,20 @@
 			<field name="yscale" type="gfloat"/>
 		</object>
 		<object name="GtkApplication" parent="GApplication" type-name="GtkApplication" get-type="gtk_application_get_type">
+			<implements>
+				<interface name="GInitable"/>
+			</implements>
 			<method name="add_window" symbol="gtk_application_add_window">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="app" type="GtkApplication*"/>
 					<parameter name="window" type="GtkWindow*"/>
+				</parameters>
+			</method>
+			<method name="create_window" symbol="gtk_application_create_window">
+				<return-type type="GtkWindow*"/>
+				<parameters>
+					<parameter name="app" type="GtkApplication*"/>
 				</parameters>
 			</method>
 			<method name="get_window" symbol="gtk_application_get_window">
@@ -5962,9 +5964,9 @@
 			<constructor name="new" symbol="gtk_application_new">
 				<return-type type="GtkApplication*"/>
 				<parameters>
+					<parameter name="appid" type="gchar*"/>
 					<parameter name="argc" type="gint*"/>
 					<parameter name="argv" type="gchar***"/>
-					<parameter name="appid" type="gchar*"/>
 				</parameters>
 			</constructor>
 			<method name="quit" symbol="gtk_application_quit">
@@ -5986,19 +5988,38 @@
 					<parameter name="group" type="GtkActionGroup*"/>
 				</parameters>
 			</method>
+			<signal name="action" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="application" type="GtkApplication*"/>
+					<parameter name="action_name" type="char*"/>
+				</parameters>
+			</signal>
 			<signal name="activated" when="LAST">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="application" type="GtkApplication*"/>
-					<parameter name="args" type="GVariant*"/>
+					<parameter name="args" type="GVariant"/>
 				</parameters>
 			</signal>
+			<signal name="quit" when="LAST">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="application" type="GtkApplication*"/>
+				</parameters>
+			</signal>
+			<vfunc name="create_window">
+				<return-type type="GtkWindow*"/>
+				<parameters>
+					<parameter name="application" type="GtkApplication*"/>
+				</parameters>
+			</vfunc>
 		</object>
 		<object name="GtkArrow" parent="GtkMisc" type-name="GtkArrow" get-type="gtk_arrow_get_type">
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<constructor name="new" symbol="gtk_arrow_new">
 				<return-type type="GtkWidget*"/>
@@ -6024,7 +6045,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<constructor name="new" symbol="gtk_aspect_frame_new">
 				<return-type type="GtkWidget*"/>
@@ -6060,7 +6081,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="add_action_widget" symbol="gtk_assistant_add_action_widget">
 				<return-type type="void"/>
@@ -6259,7 +6280,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="get_child" symbol="gtk_bin_get_child">
 				<return-type type="GtkWidget*"/>
@@ -6273,7 +6294,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkOrientable"/>
 			</implements>
 			<method name="get_homogeneous" symbol="gtk_box_get_homogeneous">
@@ -6490,7 +6511,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkActivatable"/>
 			</implements>
 			<method name="clicked" symbol="gtk_button_clicked">
@@ -6689,7 +6710,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkOrientable"/>
 			</implements>
 			<method name="get_child_secondary" symbol="gtk_button_box_get_child_secondary">
@@ -6737,7 +6758,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="clear_marks" symbol="gtk_calendar_clear_marks">
 				<return-type type="void"/>
@@ -6773,7 +6794,7 @@
 				</parameters>
 			</method>
 			<method name="mark_day" symbol="gtk_calendar_mark_day">
-				<return-type type="gboolean"/>
+				<return-type type="void"/>
 				<parameters>
 					<parameter name="calendar" type="GtkCalendar*"/>
 					<parameter name="day" type="guint"/>
@@ -6790,7 +6811,7 @@
 				</parameters>
 			</method>
 			<method name="select_month" symbol="gtk_calendar_select_month">
-				<return-type type="gboolean"/>
+				<return-type type="void"/>
 				<parameters>
 					<parameter name="calendar" type="GtkCalendar*"/>
 					<parameter name="month" type="guint"/>
@@ -6828,7 +6849,7 @@
 				</parameters>
 			</method>
 			<method name="unmark_day" symbol="gtk_calendar_unmark_day">
-				<return-type type="gboolean"/>
+				<return-type type="void"/>
 				<parameters>
 					<parameter name="calendar" type="GtkCalendar*"/>
 					<parameter name="day" type="guint"/>
@@ -7369,7 +7390,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkCellLayout"/>
 			</implements>
 			<method name="get_displayed_row" symbol="gtk_cell_view_get_displayed_row">
@@ -7443,7 +7464,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkActivatable"/>
 			</implements>
 			<constructor name="new" symbol="gtk_check_button_new">
@@ -7473,7 +7494,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkActivatable"/>
 			</implements>
 			<method name="get_active" symbol="gtk_check_menu_item_get_active">
@@ -7776,7 +7797,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkActivatable"/>
 			</implements>
 			<method name="get_alpha" symbol="gtk_color_button_get_alpha">
@@ -7856,7 +7877,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkOrientable"/>
 			</implements>
 			<method name="get_current_alpha" symbol="gtk_color_selection_get_current_alpha">
@@ -7984,7 +8005,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="get_color_selection" symbol="gtk_color_selection_dialog_get_color_selection">
 				<return-type type="GtkWidget*"/>
@@ -8011,7 +8032,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkCellLayout"/>
 				<interface name="GtkCellEditable"/>
 			</implements>
@@ -8280,7 +8301,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkCellLayout"/>
 				<interface name="GtkCellEditable"/>
 			</implements>
@@ -8316,7 +8337,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="add" symbol="gtk_container_add">
 				<return-type type="void"/>
@@ -8637,7 +8658,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="add_action_widget" symbol="gtk_dialog_add_action_widget">
 				<return-type type="void"/>
@@ -8778,7 +8799,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<constructor name="new" symbol="gtk_drawing_area_new">
 				<return-type type="GtkWidget*"/>
@@ -8789,7 +8810,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkEditable"/>
 				<interface name="GtkCellEditable"/>
 			</implements>
@@ -9745,7 +9766,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="get_above_child" symbol="gtk_event_box_get_above_child">
 				<return-type type="gboolean"/>
@@ -9783,7 +9804,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="get_expanded" symbol="gtk_expander_get_expanded">
 				<return-type type="gboolean"/>
@@ -9892,7 +9913,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkOrientable"/>
 				<interface name="GtkFileChooser"/>
 			</implements>
@@ -9963,7 +9984,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkFileChooser"/>
 			</implements>
 			<constructor name="new" symbol="gtk_file_chooser_dialog_new">
@@ -9980,7 +10001,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkOrientable"/>
 				<interface name="GtkFileChooser"/>
 				<interface name="GtkFileChooserEmbed"/>
@@ -10057,7 +10078,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="move" symbol="gtk_fixed_move">
 				<return-type type="void"/>
@@ -10086,7 +10107,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkActivatable"/>
 			</implements>
 			<method name="get_font_name" symbol="gtk_font_button_get_font_name">
@@ -10193,7 +10214,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkOrientable"/>
 			</implements>
 			<method name="get_face" symbol="gtk_font_selection_get_face">
@@ -10295,7 +10316,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="get_cancel_button" symbol="gtk_font_selection_dialog_get_cancel_button">
 				<return-type type="GtkWidget*"/>
@@ -10354,7 +10375,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="get_label" symbol="gtk_frame_get_label">
 				<return-type type="gchar*"/>
@@ -10440,7 +10461,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkOrientable"/>
 			</implements>
 			<constructor name="new" symbol="gtk_hbox_new">
@@ -10455,7 +10476,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkOrientable"/>
 			</implements>
 			<constructor name="new" symbol="gtk_hbutton_box_new">
@@ -10466,7 +10487,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkOrientable"/>
 			</implements>
 			<constructor name="new" symbol="gtk_hpaned_new">
@@ -10477,7 +10498,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkOrientable"/>
 			</implements>
 			<constructor name="new" symbol="gtk_hruler_new">
@@ -10488,7 +10509,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="get_color" symbol="gtk_hsv_get_color">
 				<return-type type="void"/>
@@ -10562,7 +10583,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkOrientable"/>
 			</implements>
 			<constructor name="new" symbol="gtk_hscale_new">
@@ -10584,7 +10605,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkOrientable"/>
 			</implements>
 			<constructor name="new" symbol="gtk_hscrollbar_new">
@@ -10598,7 +10619,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkOrientable"/>
 			</implements>
 			<constructor name="new" symbol="gtk_hseparator_new">
@@ -10609,7 +10630,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="get_child_detached" symbol="gtk_handle_box_get_child_detached">
 				<return-type type="gboolean"/>
@@ -11130,7 +11151,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkCellLayout"/>
 			</implements>
 			<method name="convert_widget_to_bin_window_coords" symbol="gtk_icon_view_convert_widget_to_bin_window_coords">
@@ -11640,7 +11661,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="clear" symbol="gtk_image_clear">
 				<return-type type="void"/>
@@ -11881,7 +11902,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkActivatable"/>
 			</implements>
 			<method name="get_always_show_image" symbol="gtk_image_menu_item_get_always_show_image">
@@ -11962,7 +11983,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkOrientable"/>
 			</implements>
 			<method name="add_action_widget" symbol="gtk_info_bar_add_action_widget">
@@ -12063,7 +12084,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="get_screen" symbol="gtk_invisible_get_screen">
 				<return-type type="GdkScreen*"/>
@@ -12095,7 +12116,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="deselect" symbol="gtk_item_deselect">
 				<return-type type="void"/>
@@ -12138,7 +12159,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="get_angle" symbol="gtk_label_get_angle">
 				<return-type type="gdouble"/>
@@ -12509,7 +12530,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="get_bin_window" symbol="gtk_layout_get_bin_window">
 				<return-type type="GdkWindow*"/>
@@ -12611,7 +12632,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkActivatable"/>
 			</implements>
 			<method name="get_uri" symbol="gtk_link_button_get_uri">
@@ -12852,7 +12873,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="attach" symbol="gtk_menu_attach">
 				<return-type type="void"/>
@@ -13085,7 +13106,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="get_child_pack_direction" symbol="gtk_menu_bar_get_child_pack_direction">
 				<return-type type="GtkPackDirection"/>
@@ -13123,7 +13144,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkActivatable"/>
 			</implements>
 			<method name="activate" symbol="gtk_menu_item_activate">
@@ -13299,7 +13320,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="activate_item" symbol="gtk_menu_shell_activate_item">
 				<return-type type="void"/>
@@ -13461,7 +13482,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkActivatable"/>
 			</implements>
 			<method name="get_menu" symbol="gtk_menu_tool_button_get_menu">
@@ -13516,7 +13537,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="format_secondary_markup" symbol="gtk_message_dialog_format_secondary_markup">
 				<return-type type="void"/>
@@ -13586,7 +13607,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="get_alignment" symbol="gtk_misc_get_alignment">
 				<return-type type="void"/>
@@ -13676,7 +13697,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="append_page" symbol="gtk_notebook_append_page">
 				<return-type type="gint"/>
@@ -14116,7 +14137,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="get_pixbuf" symbol="gtk_offscreen_window_get_pixbuf">
 				<return-type type="GdkPixbuf*"/>
@@ -14318,7 +14339,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkOrientable"/>
 			</implements>
 			<method name="add1" symbol="gtk_paned_add1">
@@ -14461,7 +14482,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="construct" symbol="gtk_plug_construct">
 				<return-type type="void"/>
@@ -15415,7 +15436,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="get_ellipsize" symbol="gtk_progress_bar_get_ellipsize">
 				<return-type type="PangoEllipsizeMode"/>
@@ -15604,7 +15625,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkActivatable"/>
 			</implements>
 			<method name="get_group" symbol="gtk_radio_button_get_group">
@@ -15673,7 +15694,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkActivatable"/>
 			</implements>
 			<method name="get_group" symbol="gtk_radio_menu_item_get_group">
@@ -15742,7 +15763,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkActivatable"/>
 			</implements>
 			<method name="get_group" symbol="gtk_radio_tool_button_get_group">
@@ -15790,7 +15811,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkOrientable"/>
 			</implements>
 			<method name="get_adjustment" symbol="gtk_range_get_adjustment">
@@ -16143,7 +16164,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkRecentChooser"/>
 			</implements>
 			<constructor name="new" symbol="gtk_recent_chooser_dialog_new">
@@ -16168,7 +16189,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkRecentChooser"/>
 				<interface name="GtkActivatable"/>
 			</implements>
@@ -16212,7 +16233,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkOrientable"/>
 				<interface name="GtkRecentChooser"/>
 			</implements>
@@ -16405,7 +16426,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkOrientable"/>
 			</implements>
 			<method name="draw_pos" symbol="gtk_ruler_draw_pos">
@@ -16491,7 +16512,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkOrientable"/>
 			</implements>
 			<method name="add_mark" symbol="gtk_scale_add_mark">
@@ -16610,7 +16631,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkActivatable"/>
 				<interface name="GtkOrientable"/>
 			</implements>
@@ -16705,7 +16726,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkOrientable"/>
 			</implements>
 			<constructor name="new" symbol="gtk_scrollbar_new">
@@ -16720,7 +16741,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="add_with_viewport" symbol="gtk_scrolled_window_add_with_viewport">
 				<return-type type="void"/>
@@ -16858,7 +16879,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkOrientable"/>
 			</implements>
 			<constructor name="new" symbol="gtk_separator_new">
@@ -16872,7 +16893,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkActivatable"/>
 			</implements>
 			<constructor name="new" symbol="gtk_separator_menu_item_new">
@@ -16883,7 +16904,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkActivatable"/>
 			</implements>
 			<method name="get_draw" symbol="gtk_separator_tool_item_get_draw">
@@ -17092,7 +17113,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="add_id" symbol="gtk_socket_add_id">
 				<return-type type="void"/>
@@ -17148,7 +17169,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkEditable"/>
 				<interface name="GtkCellEditable"/>
 			</implements>
@@ -17380,7 +17401,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<constructor name="new" symbol="gtk_spinner_new">
 				<return-type type="GtkWidget*"/>
@@ -17706,7 +17727,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkOrientable"/>
 			</implements>
 			<method name="get_context_id" symbol="gtk_statusbar_get_context_id">
@@ -18318,7 +18339,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="attach" symbol="gtk_table_attach">
 				<return-type type="void"/>
@@ -18449,7 +18470,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkActivatable"/>
 			</implements>
 			<constructor name="new" symbol="gtk_tearoff_menu_item_new">
@@ -19415,7 +19436,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="add_child_at_anchor" symbol="gtk_text_view_add_child_at_anchor">
 				<return-type type="void"/>
@@ -20093,7 +20114,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkActivatable"/>
 			</implements>
 			<method name="get_active" symbol="gtk_toggle_button_get_active">
@@ -20173,7 +20194,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkActivatable"/>
 			</implements>
 			<method name="get_active" symbol="gtk_toggle_tool_button_get_active">
@@ -20210,7 +20231,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkActivatable"/>
 			</implements>
 			<method name="get_icon_name" symbol="gtk_tool_button_get_icon_name">
@@ -20321,7 +20342,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkActivatable"/>
 			</implements>
 			<method name="get_ellipsize_mode" symbol="gtk_tool_item_get_ellipsize_mode">
@@ -20520,7 +20541,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkToolShell"/>
 			</implements>
 			<method name="get_collapsed" symbol="gtk_tool_item_group_get_collapsed">
@@ -20648,7 +20669,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkOrientable"/>
 			</implements>
 			<method name="add_drag_dest" symbol="gtk_tool_palette_add_drag_dest">
@@ -20811,7 +20832,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkToolShell"/>
 				<interface name="GtkOrientable"/>
 			</implements>
@@ -21586,7 +21607,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="append_column" symbol="gtk_tree_view_append_column">
 				<return-type type="gint"/>
@@ -23034,7 +23055,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkOrientable"/>
 			</implements>
 			<constructor name="new" symbol="gtk_vbox_new">
@@ -23049,7 +23070,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkOrientable"/>
 			</implements>
 			<constructor name="new" symbol="gtk_vbutton_box_new">
@@ -23060,7 +23081,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkOrientable"/>
 			</implements>
 			<constructor name="new" symbol="gtk_vpaned_new">
@@ -23071,7 +23092,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkOrientable"/>
 			</implements>
 			<constructor name="new" symbol="gtk_vruler_new">
@@ -23082,7 +23103,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkOrientable"/>
 			</implements>
 			<constructor name="new" symbol="gtk_vscale_new">
@@ -23104,7 +23125,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkOrientable"/>
 			</implements>
 			<constructor name="new" symbol="gtk_vscrollbar_new">
@@ -23118,7 +23139,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkOrientable"/>
 			</implements>
 			<constructor name="new" symbol="gtk_vseparator_new">
@@ -23129,7 +23150,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="get_bin_window" symbol="gtk_viewport_get_bin_window">
 				<return-type type="GdkWindow*"/>
@@ -23210,7 +23231,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 				<interface name="GtkActivatable"/>
 				<interface name="GtkOrientable"/>
 			</implements>
@@ -23222,7 +23243,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="activate" symbol="gtk_widget_activate">
 				<return-type type="gboolean"/>
@@ -24932,7 +24953,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
-				<interface name="GtkExtendedLayout"/>
+				<interface name="GtkSizeRequest"/>
 			</implements>
 			<method name="activate_default" symbol="gtk_window_activate_default">
 				<return-type type="gboolean"/>
@@ -26356,100 +26377,6 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<interface name="GtkExtendedLayout" type-name="GtkExtendedLayout" get-type="gtk_extended_layout_get_type">
-			<requires>
-				<interface name="GtkObject"/>
-			</requires>
-			<method name="get_desired_height" symbol="gtk_extended_layout_get_desired_height">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="layout" type="GtkExtendedLayout*"/>
-					<parameter name="minimum_height" type="gint*"/>
-					<parameter name="natural_height" type="gint*"/>
-				</parameters>
-			</method>
-			<method name="get_desired_size" symbol="gtk_extended_layout_get_desired_size">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="layout" type="GtkExtendedLayout*"/>
-					<parameter name="request_natural" type="gboolean"/>
-					<parameter name="minimum_size" type="GtkRequisition*"/>
-					<parameter name="natural_size" type="GtkRequisition*"/>
-				</parameters>
-			</method>
-			<method name="get_desired_width" symbol="gtk_extended_layout_get_desired_width">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="layout" type="GtkExtendedLayout*"/>
-					<parameter name="minimum_width" type="gint*"/>
-					<parameter name="natural_width" type="gint*"/>
-				</parameters>
-			</method>
-			<method name="get_height_for_width" symbol="gtk_extended_layout_get_height_for_width">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="layout" type="GtkExtendedLayout*"/>
-					<parameter name="width" type="gint"/>
-					<parameter name="minimum_height" type="gint*"/>
-					<parameter name="natural_height" type="gint*"/>
-				</parameters>
-			</method>
-			<method name="get_width_for_height" symbol="gtk_extended_layout_get_width_for_height">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="layout" type="GtkExtendedLayout*"/>
-					<parameter name="height" type="gint"/>
-					<parameter name="minimum_width" type="gint*"/>
-					<parameter name="natural_width" type="gint*"/>
-				</parameters>
-			</method>
-			<method name="is_height_for_width" symbol="gtk_extended_layout_is_height_for_width">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="layout" type="GtkExtendedLayout*"/>
-				</parameters>
-			</method>
-			<vfunc name="get_desired_height">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="layout" type="GtkExtendedLayout*"/>
-					<parameter name="minimum_height" type="gint*"/>
-					<parameter name="natural_height" type="gint*"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="get_desired_width">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="layout" type="GtkExtendedLayout*"/>
-					<parameter name="minimum_width" type="gint*"/>
-					<parameter name="natural_width" type="gint*"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="get_height_for_width">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="layout" type="GtkExtendedLayout*"/>
-					<parameter name="width" type="gint"/>
-					<parameter name="minimum_height" type="gint*"/>
-					<parameter name="natural_height" type="gint*"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="get_width_for_height">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="layout" type="GtkExtendedLayout*"/>
-					<parameter name="height" type="gint"/>
-					<parameter name="minimum_width" type="gint*"/>
-					<parameter name="natural_width" type="gint*"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="is_height_for_width">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="layout" type="GtkExtendedLayout*"/>
-				</parameters>
-			</vfunc>
-		</interface>
 		<interface name="GtkFileChooser" type-name="GtkFileChooser" get-type="gtk_file_chooser_get_type">
 			<requires>
 				<interface name="GtkWidget"/>
@@ -27281,6 +27208,99 @@
 				</parameters>
 			</vfunc>
 		</interface>
+		<interface name="GtkSizeRequest" type-name="GtkSizeRequest" get-type="gtk_size_request_get_type">
+			<requires>
+				<interface name="GtkObject"/>
+			</requires>
+			<method name="get_height" symbol="gtk_size_request_get_height">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="layout" type="GtkSizeRequest*"/>
+					<parameter name="minimum_height" type="gint*"/>
+					<parameter name="natural_height" type="gint*"/>
+				</parameters>
+			</method>
+			<method name="get_height_for_width" symbol="gtk_size_request_get_height_for_width">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="layout" type="GtkSizeRequest*"/>
+					<parameter name="width" type="gint"/>
+					<parameter name="minimum_height" type="gint*"/>
+					<parameter name="natural_height" type="gint*"/>
+				</parameters>
+			</method>
+			<method name="get_request_mode" symbol="gtk_size_request_get_request_mode">
+				<return-type type="GtkSizeRequestMode"/>
+				<parameters>
+					<parameter name="layout" type="GtkSizeRequest*"/>
+				</parameters>
+			</method>
+			<method name="get_size" symbol="gtk_size_request_get_size">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="layout" type="GtkSizeRequest*"/>
+					<parameter name="minimum_size" type="GtkRequisition*"/>
+					<parameter name="natural_size" type="GtkRequisition*"/>
+				</parameters>
+			</method>
+			<method name="get_width" symbol="gtk_size_request_get_width">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="layout" type="GtkSizeRequest*"/>
+					<parameter name="minimum_width" type="gint*"/>
+					<parameter name="natural_width" type="gint*"/>
+				</parameters>
+			</method>
+			<method name="get_width_for_height" symbol="gtk_size_request_get_width_for_height">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="layout" type="GtkSizeRequest*"/>
+					<parameter name="height" type="gint"/>
+					<parameter name="minimum_width" type="gint*"/>
+					<parameter name="natural_width" type="gint*"/>
+				</parameters>
+			</method>
+			<vfunc name="get_height">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="layout" type="GtkSizeRequest*"/>
+					<parameter name="minimum_height" type="gint*"/>
+					<parameter name="natural_height" type="gint*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_height_for_width">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="layout" type="GtkSizeRequest*"/>
+					<parameter name="width" type="gint"/>
+					<parameter name="minimum_height" type="gint*"/>
+					<parameter name="natural_height" type="gint*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_request_mode">
+				<return-type type="GtkSizeRequestMode"/>
+				<parameters>
+					<parameter name="layout" type="GtkSizeRequest*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_width">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="layout" type="GtkSizeRequest*"/>
+					<parameter name="minimum_width" type="gint*"/>
+					<parameter name="natural_width" type="gint*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_width_for_height">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="layout" type="GtkSizeRequest*"/>
+					<parameter name="height" type="gint"/>
+					<parameter name="minimum_width" type="gint*"/>
+					<parameter name="natural_width" type="gint*"/>
+				</parameters>
+			</vfunc>
+		</interface>
 		<interface name="GtkToolShell" type-name="GtkToolShell" get-type="gtk_tool_shell_get_type">
 			<requires>
 				<interface name="GtkWidget"/>
@@ -27910,13 +27930,13 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="9003"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="9004"/>
 		<constant name="GTK_BUTTONBOX_DEFAULT" type="int" value="-1"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="2"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="3"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="4"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="90"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>

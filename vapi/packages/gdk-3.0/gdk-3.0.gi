@@ -1015,7 +1015,7 @@
 				<parameter name="flags" type="GSpawnFlags"/>
 				<parameter name="child_setup" type="GSpawnChildSetupFunc"/>
 				<parameter name="user_data" type="gpointer"/>
-				<parameter name="child_pid" type="gint*"/>
+				<parameter name="child_pid" type="GPid*"/>
 				<parameter name="error" type="GError**"/>
 			</parameters>
 		</function>
@@ -1029,7 +1029,7 @@
 				<parameter name="flags" type="GSpawnFlags"/>
 				<parameter name="child_setup" type="GSpawnChildSetupFunc"/>
 				<parameter name="user_data" type="gpointer"/>
-				<parameter name="child_pid" type="gint*"/>
+				<parameter name="child_pid" type="GPid*"/>
 				<parameter name="standard_input" type="gint*"/>
 				<parameter name="standard_output" type="gint*"/>
 				<parameter name="standard_error" type="gint*"/>
@@ -2940,94 +2940,6 @@
 			<property name="n-axes" type="guint" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="name" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="type" type="GdkDeviceType" readable="1" writable="1" construct="0" construct-only="1"/>
-			<vfunc name="get_history">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="device" type="GdkDevice*"/>
-					<parameter name="window" type="GdkWindow*"/>
-					<parameter name="start" type="guint32"/>
-					<parameter name="stop" type="guint32"/>
-					<parameter name="events" type="GdkTimeCoord***"/>
-					<parameter name="n_events" type="guint*"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="get_state">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="device" type="GdkDevice*"/>
-					<parameter name="window" type="GdkWindow*"/>
-					<parameter name="axes" type="gdouble*"/>
-					<parameter name="mask" type="GdkModifierType*"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="grab">
-				<return-type type="GdkGrabStatus"/>
-				<parameters>
-					<parameter name="device" type="GdkDevice*"/>
-					<parameter name="window" type="GdkWindow*"/>
-					<parameter name="owner_events" type="gboolean"/>
-					<parameter name="event_mask" type="GdkEventMask"/>
-					<parameter name="confine_to" type="GdkWindow*"/>
-					<parameter name="cursor" type="GdkCursor*"/>
-					<parameter name="time_" type="guint32"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="query_state">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="device" type="GdkDevice*"/>
-					<parameter name="window" type="GdkWindow*"/>
-					<parameter name="root_window" type="GdkWindow**"/>
-					<parameter name="child_window" type="GdkWindow**"/>
-					<parameter name="root_x" type="gint*"/>
-					<parameter name="root_y" type="gint*"/>
-					<parameter name="win_x" type="gint*"/>
-					<parameter name="win_y" type="gint*"/>
-					<parameter name="mask" type="GdkModifierType*"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="select_window_events">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="device" type="GdkDevice*"/>
-					<parameter name="window" type="GdkWindow*"/>
-					<parameter name="event_mask" type="GdkEventMask"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="set_window_cursor">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="device" type="GdkDevice*"/>
-					<parameter name="window" type="GdkWindow*"/>
-					<parameter name="cursor" type="GdkCursor*"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="ungrab">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="device" type="GdkDevice*"/>
-					<parameter name="time_" type="guint32"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="warp">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="device" type="GdkDevice*"/>
-					<parameter name="screen" type="GdkScreen*"/>
-					<parameter name="x" type="gint"/>
-					<parameter name="y" type="gint"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="window_at_position">
-				<return-type type="GdkWindow*"/>
-				<parameters>
-					<parameter name="device" type="GdkDevice*"/>
-					<parameter name="win_x" type="gint*"/>
-					<parameter name="win_y" type="gint*"/>
-					<parameter name="mask" type="GdkModifierType*"/>
-					<parameter name="get_toplevel" type="gboolean"/>
-				</parameters>
-			</vfunc>
 			<field name="name" type="gchar*"/>
 			<field name="source" type="GdkInputSource"/>
 			<field name="mode" type="GdkInputMode"/>
@@ -3468,6 +3380,12 @@
 			</method>
 			<method name="get_selected_action" symbol="gdk_drag_context_get_selected_action">
 				<return-type type="GdkDragAction"/>
+				<parameters>
+					<parameter name="context" type="GdkDragContext*"/>
+				</parameters>
+			</method>
+			<method name="get_source_window" symbol="gdk_drag_context_get_source_window">
+				<return-type type="GdkWindow*"/>
 				<parameters>
 					<parameter name="context" type="GdkDragContext*"/>
 				</parameters>
