@@ -140,7 +140,8 @@ g_memory_input_stream_*.destroy nullable="1"
 g_memory_output_stream_*.destroy_function nullable="1"
 
 g_application_is_remote hidden="1"
-GApplication::quit has_emitter="1"
+GApplication::quit_with_data has_emitter="1"
+g_application_register hidden="1"
 
 GDBusAuthObserver::authorize_authenticated_peer has_emitter="1"
 GDBusConnection:closed hidden="1"

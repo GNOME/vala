@@ -11,33 +11,37 @@ namespace GLib {
 		public virtual void launch_failed (string startup_notify_id);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
-	public class Application : GLib.Object {
+	public class Application : GLib.Object, GLib.Initable {
 		[CCode (has_construct_function = false)]
-		public Application (string appid);
+		public Application (string appid, int argc, out unowned string argv);
 		public void add_action (string name, string description);
-		[CCode (has_construct_function = false)]
-		public Application.and_register (string appid, int argc, string argv);
-		public virtual void format_activation_data (GLib.VariantBuilder builder);
 		public unowned string get_action_description (string name);
 		public bool get_action_enabled (string name);
 		public unowned string get_id ();
 		public static unowned GLib.Application get_instance ();
-		public void invoke_action (string name, uint timestamp);
+		public void invoke_action (string name, GLib.Variant platform_data);
 		public unowned string list_actions ();
-		public void register_with_data (int argc, string argv, GLib.Variant platform_data);
 		public void remove_action (string name);
 		public virtual void run ();
 		public void set_action_enabled (string name, bool enabled);
+		public static unowned GLib.Application try_new (string appid, int argc, out unowned string argv) throws GLib.Error;
+		public static unowned GLib.Application unregistered_try_new (string appid, int argc, out unowned string argv) throws GLib.Error;
 		[NoAccessorMethod]
 		public string application_id { owned get; construct; }
+		[NoAccessorMethod]
+		public GLib.Variant argv { owned get; construct; }
 		[NoAccessorMethod]
 		public bool default_quit { get; construct; }
 		[NoAccessorMethod]
 		public bool is_remote { get; }
-		public virtual signal void action (string action_name, uint timestamp);
+		[NoAccessorMethod]
+		public GLib.Variant platform_data { owned get; construct; }
+		[NoAccessorMethod]
+		public bool register { get; construct; }
+		public virtual signal void action_with_data (string action_name, GLib.Variant platform_data);
 		public virtual signal void prepare_activation (GLib.Variant arguments, GLib.Variant platform_data);
 		[HasEmitter]
-		public virtual signal bool quit (uint timestamp);
+		public virtual signal bool quit_with_data (GLib.Variant platform_data);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class BufferedInputStream : GLib.FilterInputStream {
@@ -334,12 +338,18 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class DBusProxy : GLib.Object, GLib.Initable, GLib.AsyncInitable {
 		[CCode (type = "void", has_construct_function = false)]
-		public DBusProxy (GLib.DBusConnection connection, GLib.Type object_type, GLib.DBusProxyFlags flags, GLib.DBusInterfaceInfo info, string unique_bus_name, string object_path, string interface_name, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
+		public DBusProxy (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, GLib.DBusInterfaceInfo info, string name, string object_path, string interface_name, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
 		public void call (string method_name, GLib.Variant parameters, GLib.DBusCallFlags flags, int timeout_msec, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
 		public unowned GLib.Variant call_finish (GLib.AsyncResult res) throws GLib.Error;
 		public unowned GLib.Variant call_sync (string method_name, GLib.Variant parameters, GLib.DBusCallFlags flags, int timeout_msec, GLib.Cancellable? cancellable) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public DBusProxy.finish (GLib.AsyncResult res) throws GLib.Error;
+		[CCode (type = "void", has_construct_function = false)]
+		public DBusProxy.for_bus (GLib.BusType bus_type, GLib.DBusProxyFlags flags, GLib.DBusInterfaceInfo info, string name, string object_path, string interface_name, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
+		[CCode (has_construct_function = false)]
+		public DBusProxy.for_bus_finish (GLib.AsyncResult res) throws GLib.Error;
+		[CCode (has_construct_function = false)]
+		public DBusProxy.for_bus_sync (GLib.BusType bus_type, GLib.DBusProxyFlags flags, GLib.DBusInterfaceInfo info, string name, string object_path, string interface_name, GLib.Cancellable? cancellable) throws GLib.Error;
 		public unowned GLib.Variant get_cached_property (string property_name);
 		public unowned string get_cached_property_names ();
 		public unowned GLib.DBusConnection get_connection ();
@@ -347,13 +357,15 @@ namespace GLib {
 		public GLib.DBusProxyFlags get_flags ();
 		public unowned GLib.DBusInterfaceInfo get_interface_info ();
 		public unowned string get_interface_name ();
+		public unowned string get_name ();
+		public unowned string get_name_owner ();
 		public unowned string get_object_path ();
-		public unowned string get_unique_bus_name ();
 		public void set_cached_property (string property_name, GLib.Variant value);
 		public void set_default_timeout (int timeout_msec);
 		public void set_interface_info (GLib.DBusInterfaceInfo info);
 		[CCode (has_construct_function = false)]
-		public DBusProxy.sync (GLib.DBusConnection connection, GLib.Type object_type, GLib.DBusProxyFlags flags, GLib.DBusInterfaceInfo info, string unique_bus_name, string object_path, string interface_name, GLib.Cancellable? cancellable) throws GLib.Error;
+		public DBusProxy.sync (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, GLib.DBusInterfaceInfo info, string name, string object_path, string interface_name, GLib.Cancellable? cancellable) throws GLib.Error;
+		public GLib.BusType g_bus_type { construct; }
 		[NoAccessorMethod]
 		public GLib.DBusConnection g_connection { owned get; construct; }
 		[NoAccessorMethod]
@@ -365,9 +377,11 @@ namespace GLib {
 		[NoAccessorMethod]
 		public string g_interface_name { owned get; construct; }
 		[NoAccessorMethod]
-		public string g_object_path { owned get; construct; }
+		public string g_name { owned get; construct; }
 		[NoAccessorMethod]
-		public string g_unique_bus_name { owned get; construct; }
+		public string g_name_owner { owned get; }
+		[NoAccessorMethod]
+		public string g_object_path { owned get; construct; }
 		public virtual signal void g_properties_changed (GLib.Variant changed_properties, string[] invalidated_properties);
 		public virtual signal void g_signal (string sender_name, string signal_name, GLib.Variant parameters);
 	}
@@ -964,6 +978,7 @@ namespace GLib {
 		public bool get_boolean (string key);
 		public unowned GLib.Settings get_child (string name);
 		public double get_double (string key);
+		public int get_enum (string key);
 		public bool get_has_unapplied ();
 		public int get_int (string key);
 		public unowned string get_string (string key);
@@ -974,20 +989,21 @@ namespace GLib {
 		public bool @set (string key, string format);
 		public bool set_boolean (string key, bool value);
 		public bool set_double (string key, double value);
+		public bool set_enum (string key, int value);
 		public bool set_int (string key, int value);
 		public bool set_string (string key, string value);
 		public bool set_strv (string key, string value);
 		public bool set_value (string key, GLib.Variant value);
-		public static bool supports_context (string context);
+		public static void sync ();
 		public static void unbind (void* object, string property);
 		[CCode (has_construct_function = false)]
-		public Settings.with_context (string schema, string context);
+		public Settings.with_backend (string schema, GLib.SettingsBackend backend);
 		[CCode (has_construct_function = false)]
-		public Settings.with_context_and_path (string schema, string context, string path);
+		public Settings.with_backend_and_path (string schema, GLib.SettingsBackend backend, string path);
 		[CCode (has_construct_function = false)]
 		public Settings.with_path (string schema, string path);
 		[NoAccessorMethod]
-		public string context { owned get; construct; }
+		public GLib.SettingsBackend backend { owned get; construct; }
 		public bool has_unapplied { get; }
 		[NoAccessorMethod]
 		public string path { owned get; construct; }
@@ -1017,12 +1033,8 @@ namespace GLib {
 		public virtual void reset (string key, void* origin_tag);
 		[NoWrapper]
 		public virtual void reset_path (string path, void* origin_tag);
-		public static void setup (string context, GLib.SettingsBackend backend);
-		public static void setup_keyfile (string context, string filename);
 		[NoWrapper]
 		public virtual void subscribe (string name);
-		[NoWrapper]
-		public virtual bool supports_context (string context);
 		[NoWrapper]
 		public virtual void sync ();
 		[NoWrapper]
@@ -1032,8 +1044,6 @@ namespace GLib {
 		public virtual bool write (string key, GLib.Variant value, void* origin_tag);
 		[NoWrapper]
 		public virtual bool write_keys (GLib.Tree tree, void* origin_tag);
-		[NoAccessorMethod]
-		public string context { owned get; construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class SimpleAsyncResult : GLib.Object, GLib.AsyncResult {
@@ -1549,7 +1559,7 @@ namespace GLib {
 		public static unowned GLib.Icon new_for_string (string str) throws GLib.Error;
 		public unowned string to_string ();
 		[NoWrapper]
-		public abstract bool to_tokens (GLib.PtrArray tokens, int out_version);
+		public abstract bool to_tokens (GLib.GenericArray tokens, int out_version);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface Initable : GLib.Object {
@@ -1664,6 +1674,7 @@ namespace GLib {
 	[CCode (cprefix = "G_BUS_TYPE_", cheader_filename = "gio/gio.h")]
 	public enum BusType {
 		STARTER,
+		NONE,
 		SYSTEM,
 		SESSION
 	}
@@ -1786,7 +1797,8 @@ namespace GLib {
 	public enum DBusProxyFlags {
 		NONE,
 		DO_NOT_LOAD_PROPERTIES,
-		DO_NOT_CONNECT_SIGNALS
+		DO_NOT_CONNECT_SIGNALS,
+		DO_NOT_AUTO_START
 	}
 	[CCode (cprefix = "G_DBUS_SERVER_FLAGS_", cheader_filename = "gio/gio.h")]
 	[Flags]
@@ -2057,10 +2069,6 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public delegate void BusNameVanishedCallback (GLib.DBusConnection connection, string name);
 	[CCode (cheader_filename = "gio/gio.h")]
-	public delegate void BusProxyAppearedCallback (GLib.DBusConnection connection, string name, string name_owner, GLib.DBusProxy proxy);
-	[CCode (cheader_filename = "gio/gio.h")]
-	public delegate void BusProxyVanishedCallback (GLib.DBusConnection connection, string name);
-	[CCode (cheader_filename = "gio/gio.h")]
 	public delegate unowned GLib.Variant DBusInterfaceGetPropertyFunc (GLib.DBusConnection connection, string sender, string object_path, string interface_name, string property_name, GLib.Error error);
 	[CCode (cheader_filename = "gio/gio.h")]
 	public delegate void DBusInterfaceMethodCallFunc (GLib.DBusConnection connection, string sender, string object_path, string interface_name, string method_name, GLib.Variant parameters, GLib.DBusMethodInvocation invocation);
@@ -2075,7 +2083,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public delegate unowned string DBusSubtreeEnumerateFunc (GLib.DBusConnection connection, string sender, string object_path);
 	[CCode (cheader_filename = "gio/gio.h")]
-	public delegate unowned GLib.PtrArray DBusSubtreeIntrospectFunc (GLib.DBusConnection connection, string sender, string object_path, string node);
+	public delegate unowned GLib.GenericArray DBusSubtreeIntrospectFunc (GLib.DBusConnection connection, string sender, string object_path, string node);
 	[CCode (cheader_filename = "gio/gio.h")]
 	public delegate void FileProgressCallback (int64 current_num_bytes, int64 total_num_bytes);
 	[CCode (cheader_filename = "gio/gio.h", has_target = false)]
@@ -2274,20 +2282,22 @@ namespace GLib {
 	public static uint g_bus_own_name (GLib.BusType bus_type, string name, GLib.BusNameOwnerFlags flags, GLib.BusAcquiredCallback bus_acquired_handler, GLib.BusNameAcquiredCallback name_acquired_handler, GLib.BusNameLostCallback name_lost_handler, GLib.DestroyNotify user_data_free_func);
 	[CCode (cname = "g_bus_own_name_on_connection", cheader_filename = "gio/gio.h")]
 	public static uint g_bus_own_name_on_connection (GLib.DBusConnection connection, string name, GLib.BusNameOwnerFlags flags, GLib.BusNameAcquiredCallback name_acquired_handler, GLib.BusNameLostCallback name_lost_handler, GLib.DestroyNotify user_data_free_func);
+	[CCode (cname = "g_bus_own_name_on_connection_with_closures", cheader_filename = "gio/gio.h")]
+	public static uint g_bus_own_name_on_connection_with_closures (GLib.DBusConnection connection, string name, GLib.BusNameOwnerFlags flags, GLib.Closure name_acquired_closure, GLib.Closure name_lost_closure);
+	[CCode (cname = "g_bus_own_name_with_closures", cheader_filename = "gio/gio.h")]
+	public static uint g_bus_own_name_with_closures (GLib.BusType bus_type, string name, GLib.BusNameOwnerFlags flags, GLib.Closure bus_acquired_closure, GLib.Closure name_acquired_closure, GLib.Closure name_lost_closure);
 	[CCode (cname = "g_bus_unown_name", cheader_filename = "gio/gio.h")]
 	public static void g_bus_unown_name (uint owner_id);
 	[CCode (cname = "g_bus_unwatch_name", cheader_filename = "gio/gio.h")]
 	public static void g_bus_unwatch_name (uint watcher_id);
-	[CCode (cname = "g_bus_unwatch_proxy", cheader_filename = "gio/gio.h")]
-	public static void g_bus_unwatch_proxy (uint watcher_id);
 	[CCode (cname = "g_bus_watch_name", cheader_filename = "gio/gio.h")]
 	public static uint g_bus_watch_name (GLib.BusType bus_type, string name, GLib.BusNameWatcherFlags flags, GLib.BusNameAppearedCallback name_appeared_handler, GLib.BusNameVanishedCallback name_vanished_handler, GLib.DestroyNotify user_data_free_func);
 	[CCode (cname = "g_bus_watch_name_on_connection", cheader_filename = "gio/gio.h")]
 	public static uint g_bus_watch_name_on_connection (GLib.DBusConnection connection, string name, GLib.BusNameWatcherFlags flags, GLib.BusNameAppearedCallback name_appeared_handler, GLib.BusNameVanishedCallback name_vanished_handler, GLib.DestroyNotify user_data_free_func);
-	[CCode (cname = "g_bus_watch_proxy", cheader_filename = "gio/gio.h")]
-	public static uint g_bus_watch_proxy (GLib.BusType bus_type, string name, GLib.BusNameWatcherFlags flags, string object_path, string interface_name, GLib.Type interface_type, GLib.DBusProxyFlags proxy_flags, GLib.BusProxyAppearedCallback proxy_appeared_handler, GLib.BusProxyVanishedCallback proxy_vanished_handler, GLib.DestroyNotify user_data_free_func);
-	[CCode (cname = "g_bus_watch_proxy_on_connection", cheader_filename = "gio/gio.h")]
-	public static uint g_bus_watch_proxy_on_connection (GLib.DBusConnection connection, string name, GLib.BusNameWatcherFlags flags, string object_path, string interface_name, GLib.Type interface_type, GLib.DBusProxyFlags proxy_flags, GLib.BusProxyAppearedCallback proxy_appeared_handler, GLib.BusProxyVanishedCallback proxy_vanished_handler, GLib.DestroyNotify user_data_free_func);
+	[CCode (cname = "g_bus_watch_name_on_connection_with_closures", cheader_filename = "gio/gio.h")]
+	public static uint g_bus_watch_name_on_connection_with_closures (GLib.DBusConnection connection, string name, GLib.BusNameWatcherFlags flags, GLib.Closure name_appeared_closure, GLib.Closure name_vanished_closure);
+	[CCode (cname = "g_bus_watch_name_with_closures", cheader_filename = "gio/gio.h")]
+	public static uint g_bus_watch_name_with_closures (GLib.BusType bus_type, string name, GLib.BusNameWatcherFlags flags, GLib.Closure name_appeared_closure, GLib.Closure name_vanished_closure);
 	[CCode (cname = "g_content_type_can_be_executable", cheader_filename = "gio/gio.h")]
 	public static bool g_content_type_can_be_executable (string type);
 	[CCode (cname = "g_content_type_equals", cheader_filename = "gio/gio.h")]
@@ -2368,6 +2378,8 @@ namespace GLib {
 	public static void g_io_scheduler_cancel_all_jobs ();
 	[CCode (cname = "g_io_scheduler_push_job", cheader_filename = "gio/gio.h")]
 	public static void g_io_scheduler_push_job (GLib.IOSchedulerJobFunc job_func, GLib.DestroyNotify? notify, int io_priority, GLib.Cancellable? cancellable);
+	[CCode (cname = "g_keyfile_settings_backend_new", cheader_filename = "gio/gio.h")]
+	public static unowned GLib.SettingsBackend g_keyfile_settings_backend_new (string filename);
 	[CCode (cname = "g_simple_async_report_error_in_idle", cheader_filename = "gio/gio.h")]
 	public static void g_simple_async_report_error_in_idle (GLib.Object object, GLib.AsyncReadyCallback callback, GLib.Quark domain, int code, string format);
 	[CCode (cname = "g_simple_async_report_gerror_in_idle", cheader_filename = "gio/gio.h")]
