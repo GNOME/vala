@@ -414,37 +414,52 @@ public class Vala.GirParser : CodeVisitor {
 	}
 
 	DataType parse_type (out string? ctype = null, out int array_length_index = null, bool transfer_elements = false) {
+		bool is_array = false;
+		string type_name = reader.get_attribute ("name");
+
 		if (reader.name == "array") {
+			is_array = true;
 			start_element ("array");
-			if (reader.get_attribute ("length") != null
-			    && &array_length_index != null) {
-				array_length_index = reader.get_attribute ("length").to_int ();
+
+			if (!(type_name == "GLib.Array" || type_name == "GLib.PtrArray")) {
+				if (reader.get_attribute ("length") != null
+				    && &array_length_index != null) {
+					array_length_index = reader.get_attribute ("length").to_int ();
+				}
+				next ();
+				var element_type = parse_type ();
+				end_element ("array");
+				return new ArrayType (element_type, 1, null);
 			}
-			next ();
-			var element_type = parse_type ();
-			end_element ("array");
-			return new ArrayType (element_type, 1, null);
 		} else if (reader.name == "callback"){
 			var callback = parse_callback ();
 			return new DelegateType (callback);
 		} else {
 			start_element ("type");
-			DataType type = parse_type_from_name (reader.get_attribute ("name"));
-			if (&ctype != null) {
-				ctype = reader.get_attribute("c:type");
-			}
-			next ();
-
-			// type arguments / element types
-			while (current_token == MarkupTokenType.START_ELEMENT) {
-				var element_type = parse_type ();
-				element_type.value_owned = transfer_elements;
-				type.add_type_argument (element_type);
-			}
-
-			end_element ("type");
-			return type;
 		}
+
+		if (&ctype != null) {
+			ctype = reader.get_attribute("c:type");
+		}
+
+		next ();
+
+		if (type_name == "GLib.PtrArray"
+		    && current_token == MarkupTokenType.START_ELEMENT) {
+			type_name = "GLib.GenericArray";
+		}
+
+		DataType type = parse_type_from_name (type_name);
+
+		// type arguments / element types
+		while (current_token == MarkupTokenType.START_ELEMENT) {
+			var element_type = parse_type ();
+			element_type.value_owned = transfer_elements;
+			type.add_type_argument (element_type);
+		}
+
+		end_element (is_array ? "array" : "type");
+		return type;
 	}
 
 	DataType parse_type_from_name (string type_name) {
