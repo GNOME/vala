@@ -196,8 +196,10 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	public DataType gquark_type;
 	public DataType genumvalue_type;
 	public Struct gvalue_type;
+	public Class gvariant_type;
 	public Struct mutex_type;
 	public TypeSymbol type_module_type;
+	public TypeSymbol dbus_proxy_type;
 	public TypeSymbol dbus_object_type;
 
 	public bool in_plugin = false;
@@ -336,6 +338,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			gquark_type = new IntegerType ((Struct) glib_ns.scope.lookup ("Quark"));
 			genumvalue_type = new ObjectType ((Class) glib_ns.scope.lookup ("EnumValue"));
 			gvalue_type = (Struct) glib_ns.scope.lookup ("Value");
+			gvariant_type = (Class) glib_ns.scope.lookup ("Variant");
 			mutex_type = (Struct) glib_ns.scope.lookup ("StaticRecMutex");
 
 			type_module_type = (TypeSymbol) glib_ns.scope.lookup ("TypeModule");
@@ -354,6 +357,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 					Report.error (context.module_init_method.source_reference, "[ModuleInit] requires a parameter of type `GLib.TypeModule'");
 				}
 			}
+
+			dbus_proxy_type = (TypeSymbol) glib_ns.scope.lookup ("DBusProxy");
 
 			var dbus_ns = root_symbol.scope.lookup ("DBus");
 			if (dbus_ns != null) {
@@ -4428,10 +4433,76 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		return rv;
 	}
 
+	int next_variant_function_id = 0;
+
+	public CCodeExpression? try_cast_variant_to_type (CCodeExpression ccodeexpr, DataType from, DataType to, Expression? expr = null) {
+		if (from == null || gvariant_type == null || from.data_type != gvariant_type) {
+			return null;
+		}
+
+		string variant_func = "_variant_get%d".printf (++next_variant_function_id);
+
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier (variant_func));
+		ccall.add_argument (ccodeexpr);
+
+		var cfunc = new CCodeFunction (variant_func);
+		cfunc.modifiers = CCodeModifiers.STATIC;
+		cfunc.add_parameter (new CCodeFormalParameter ("value", "GVariant*"));
+
+		if (!to.is_real_non_null_struct_type ()) {
+			cfunc.return_type = to.get_cname ();
+		}
+
+		if (to.is_real_non_null_struct_type ()) {
+			// structs are returned via out parameter
+			cfunc.add_parameter (new CCodeFormalParameter ("result", to.get_cname () + "*"));
+		} else if (to is ArrayType) {
+			// return array length if appropriate
+			var array_type = (ArrayType) to;
+
+			for (int dim = 1; dim <= array_type.rank; dim++) {
+				var temp_decl = get_temp_variable (int_type, false, expr);
+				temp_vars.add (temp_decl);
+
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_decl.name)));
+				cfunc.add_parameter (new CCodeFormalParameter (head.get_array_length_cname ("result", dim), "int*"));
+				expr.append_array_size (new CCodeIdentifier (temp_decl.name));
+			}
+		}
+
+		var block = new CCodeBlock ();
+		var fragment = new CCodeFragment ();
+		var result = deserialize_expression (fragment, to, new CCodeIdentifier ("value"), new CCodeIdentifier ("*result"));
+
+		block.add_statement (fragment);
+		block.add_statement (new CCodeReturnStatement (result));
+
+		source_declarations.add_type_member_declaration (cfunc.copy ());
+
+		cfunc.block = block;
+		source_type_member_definition.append (cfunc);
+
+		return ccall;
+	}
+
+	public virtual CCodeExpression? deserialize_expression (CCodeFragment fragment, DataType type, CCodeExpression variant_expr, CCodeExpression? expr) {
+		return null;
+	}
+
+	public virtual CCodeExpression? serialize_expression (CCodeFragment fragment, DataType type, CCodeExpression expr) {
+		return null;
+	}
+
 	public override void visit_cast_expression (CastExpression expr) {
 		var valuecast = try_cast_value_to_type ((CCodeExpression) expr.inner.ccodenode, expr.inner.value_type, expr.type_reference, expr);
 		if (valuecast != null) {
 			expr.ccodenode = valuecast;
+			return;
+		}
+
+		var variantcast = try_cast_variant_to_type ((CCodeExpression) expr.inner.ccodenode, expr.inner.value_type, expr.type_reference, expr);
+		if (variantcast != null) {
+			expr.ccodenode = variantcast;
 			return;
 		}
 
@@ -4908,6 +4979,10 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		                      && target_type.data_type == gvalue_type
 		                      && !(expression_type is NullType)
 		                      && expression_type.get_type_id () != "G_TYPE_VALUE");
+		bool gvariant_boxing = (context.profile == Profile.GOBJECT
+		                        && target_type != null
+		                        && target_type.data_type == gvariant_type
+		                        && expression_type.data_type != gvariant_type);
 
 		if (expression_type.value_owned
 		    && (target_type == null || !target_type.value_owned || boxing || unboxing)) {
@@ -5002,6 +5077,44 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			cexpr = ccomma;
 
 			return cexpr;
+		} else if (gvariant_boxing) {
+			// implicit conversion to GVariant
+			string variant_func = "_variant_new%d".printf (++next_variant_function_id);
+
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier (variant_func));
+			ccall.add_argument (cexpr);
+
+			var cfunc = new CCodeFunction (variant_func, "GVariant*");
+			cfunc.modifiers = CCodeModifiers.STATIC;
+			cfunc.add_parameter (new CCodeFormalParameter ("value", expression_type.get_cname ()));
+
+			if (expression_type is ArrayType) {
+				// return array length if appropriate
+				var array_type = (ArrayType) expression_type;
+
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					ccall.add_argument (head.get_array_length_cexpression (expr, dim));
+					cfunc.add_parameter (new CCodeFormalParameter (head.get_array_length_cname ("value", dim), "gint"));
+				}
+			}
+
+			var block = new CCodeBlock ();
+			var fragment = new CCodeFragment ();
+			var result = serialize_expression (fragment, expression_type, new CCodeIdentifier ("value"));
+
+			// sink floating reference
+			var sink = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_ref_sink"));
+			sink.add_argument (result);
+
+			block.add_statement (fragment);
+			block.add_statement (new CCodeReturnStatement (sink));
+
+			source_declarations.add_type_member_declaration (cfunc.copy ());
+
+			cfunc.block = block;
+			source_type_member_definition.append (cfunc);
+
+			return ccall;
 		} else if (boxing) {
 			// value needs to be boxed
 

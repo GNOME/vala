@@ -7,6 +7,8 @@ namespace GLib {
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static async GLib.DBusConnection @get (GLib.BusType bus_type, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		[CCode (cheader_filename = "gio/gio.h")]
+		public static T get_proxy_sync<T> (GLib.BusType bus_type, string name, string object_path, GLib.Cancellable? cancellable = null) throws GLib.IOError;
+		[CCode (cheader_filename = "gio/gio.h")]
 		public static GLib.DBusConnection get_sync (GLib.BusType bus_type, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static uint own_name (GLib.BusType bus_type, string name, GLib.BusNameOwnerFlags flags, GLib.BusAcquiredCallback bus_acquired_handler, GLib.BusNameAcquiredCallback name_acquired_handler, GLib.BusNameLostCallback name_lost_handler);
@@ -206,7 +208,7 @@ namespace GLib {
 		public unowned GLib.IOStream get_stream ();
 		public unowned string get_unique_name ();
 		public bool is_closed ();
-		public uint register_object (string object_path, GLib.DBusInterfaceInfo introspection_data, GLib.DBusInterfaceVTable vtable, GLib.DestroyNotify user_data_free_func) throws GLib.Error;
+		public uint register_object<T> (string object_path, T object) throws GLib.IOError;
 		public uint register_subtree (string object_path, GLib.DBusSubtreeVTable vtable, GLib.DBusSubtreeFlags flags, GLib.DestroyNotify user_data_free_func) throws GLib.Error;
 		public void remove_filter (uint filter_id);
 		public bool send_message (GLib.DBusMessage message, uint32 out_serial) throws GLib.Error;

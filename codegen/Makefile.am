@@ -47,12 +47,16 @@ libvala_la_VALASOURCES = \
 	valadovastructmodule.vala \
 	valadovavaluemodule.vala \
 	valaenumregisterfunction.vala \
+	valagasyncmodule.vala \
+	valagdbusclientmodule.vala \
+	valagdbusmodule.vala \
+	valagdbusservermodule.vala \
 	valagerrormodule.vala \
 	valagirwriter.vala \
 	valagobjectmodule.vala \
 	valagsignalmodule.vala \
 	valagtypemodule.vala \
-	valagasyncmodule.vala \
+	valagvariantmodule.vala \
 	valainterfaceregisterfunction.vala \
 	valastructregisterfunction.vala \
 	valatyperegisterfunction.vala \

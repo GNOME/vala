@@ -1,6 +1,6 @@
 /* valadatatype.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
@@ -311,6 +311,11 @@ public abstract class Vala.DataType : CodeNode {
 
 		if (target_type.get_type_id () == "G_TYPE_VALUE" && get_type_id () != null) {
 			// allow implicit conversion to GValue
+			return true;
+		}
+
+		if (target_type.get_type_id () == "G_TYPE_VARIANT") {
+			// allow implicit conversion to GVariant
 			return true;
 		}
 

@@ -202,3 +202,4 @@ g_zlib_compressor_new.level default_value="-1"
 uid_t name="uint"
 
 g_bus_* hidden="1"
+g_dbus_connection_register_object hidden="1"

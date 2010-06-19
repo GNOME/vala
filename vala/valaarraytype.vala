@@ -186,6 +186,11 @@ public class Vala.ArrayType : ReferenceType {
 			return true;
 		}
 
+		if (target_type.get_type_id () == "G_TYPE_VARIANT") {
+			// allow implicit conversion to GVariant
+			return true;
+		}
+
 		if (target_type is PointerType || (target_type.data_type != null && target_type.data_type.get_attribute ("PointerType") != null)) {
 			/* any array type can be cast to a generic pointer */
 			return true;

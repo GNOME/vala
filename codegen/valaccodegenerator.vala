@@ -1,6 +1,6 @@
 /* valaccodegenerator.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
@@ -50,9 +50,20 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			head = new GObjectModule (this, head);
 			head = new GSignalModule (this, head);
 			head = new GAsyncModule (this, head);
-			head = new DBusClientModule (this, head);
 			*/
-			head = new DBusServerModule (this, head);
+			if (context.has_package ("dbus-glib-1")) {
+				/*
+				head = new DBusModule (this, head);
+				head = new DBusClientModule (this, head);
+				*/
+				head = new DBusServerModule (this, head);
+			} else {
+				/*
+				head = new GVariantModule (this, head);
+				head = new GDBusClientModule (this, head);
+				*/
+				head = new GDBusServerModule (this, head);
+			}
 		} else if (context.profile == Profile.DOVA) {
 			/* included by inheritance
 			head = new DovaBaseModule (this, head);
