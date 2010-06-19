@@ -269,12 +269,6 @@ namespace DBus {
 		public signal void destroy ();
 	}
 
-	[CCode (cname = "char", const_cname = "const char", copy_function = "g_strdup", free_function = "g_free", cheader_filename = "stdlib.h,string.h,glib.h", type_id = "DBUS_TYPE_G_OBJECT_PATH", marshaller_type_name = "BOXED", get_value_function = "g_value_get_boxed", set_value_function = "g_value_set_boxed", type_signature = "o")]
-	public class ObjectPath : string {
-		[CCode (cname = "g_strdup")]
-		public ObjectPath (string path);
-	}
-
 	[CCode (cname = "char", const_cname = "const char", copy_function = "g_strdup", free_function = "g_free", cheader_filename = "stdlib.h,string.h,glib.h", type_id = "G_TYPE_STRING", marshaller_type_name = "STRING", get_value_function = "g_value_get_string", set_value_function = "g_value_set_string")]
 	public class BusName : string {
 		[CCode (cname = "g_strdup")]
