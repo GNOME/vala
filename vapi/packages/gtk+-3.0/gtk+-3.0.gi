@@ -3000,13 +3000,13 @@
 					<parameter name="selection_data" type="GtkSelectionData*"/>
 				</parameters>
 			</method>
-			<field name="selection" type="GdkAtom"/>
-			<field name="target" type="GdkAtom"/>
-			<field name="type" type="GdkAtom"/>
-			<field name="format" type="gint"/>
-			<field name="data" type="guchar*"/>
-			<field name="length" type="gint"/>
-			<field name="display" type="GdkDisplay*"/>
+			<field name="_g_sealed__selection" type="GdkAtom"/>
+			<field name="_g_sealed__target" type="GdkAtom"/>
+			<field name="_g_sealed__type" type="GdkAtom"/>
+			<field name="_g_sealed__format" type="gint"/>
+			<field name="_g_sealed__data" type="guchar*"/>
+			<field name="_g_sealed__length" type="gint"/>
+			<field name="_g_sealed__display" type="GdkDisplay*"/>
 		</boxed>
 		<boxed name="GtkTargetList" type-name="GtkTargetList" get-type="gtk_target_list_get_type">
 			<method name="add" symbol="gtk_target_list_add">
@@ -5200,7 +5200,6 @@
 					<parameter name="accessible" type="GtkAccessible*"/>
 				</parameters>
 			</vfunc>
-			<field name="widget" type="GtkWidget*"/>
 		</object>
 		<object name="GtkAction" parent="GObject" type-name="GtkAction" get-type="gtk_action_get_type">
 			<implements>
@@ -5873,12 +5872,6 @@
 					<parameter name="adjustment" type="GtkAdjustment*"/>
 				</parameters>
 			</signal>
-			<field name="lower" type="gdouble"/>
-			<field name="upper" type="gdouble"/>
-			<field name="value" type="gdouble"/>
-			<field name="step_increment" type="gdouble"/>
-			<field name="page_increment" type="gdouble"/>
-			<field name="page_size" type="gdouble"/>
 		</object>
 		<object name="GtkAlignment" parent="GtkBin" type-name="GtkAlignment" get-type="gtk_alignment_get_type">
 			<implements>
@@ -5933,10 +5926,6 @@
 			<property name="xscale" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="yalign" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="yscale" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
-			<field name="xalign" type="gfloat"/>
-			<field name="yalign" type="gfloat"/>
-			<field name="xscale" type="gfloat"/>
-			<field name="yscale" type="gfloat"/>
 		</object>
 		<object name="GtkApplication" parent="GApplication" type-name="GtkApplication" get-type="gtk_application_get_type">
 			<implements>
@@ -6038,8 +6027,6 @@
 			</method>
 			<property name="arrow-type" type="GtkArrowType" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="shadow-type" type="GtkShadowType" readable="1" writable="1" construct="0" construct-only="0"/>
-			<field name="arrow_type" type="gint16"/>
-			<field name="shadow_type" type="gint16"/>
 		</object>
 		<object name="GtkAspectFrame" parent="GtkFrame" type-name="GtkAspectFrame" get-type="gtk_aspect_frame_get_type">
 			<implements>
@@ -6071,11 +6058,6 @@
 			<property name="ratio" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="xalign" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="yalign" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
-			<field name="xalign" type="gfloat"/>
-			<field name="yalign" type="gfloat"/>
-			<field name="ratio" type="gfloat"/>
-			<field name="obey_child" type="gboolean"/>
-			<field name="center_allocation" type="GtkAllocation"/>
 		</object>
 		<object name="GtkAssistant" parent="GtkWindow" type-name="GtkAssistant" get-type="gtk_assistant_get_type">
 			<implements>
@@ -6269,12 +6251,6 @@
 					<parameter name="page" type="GtkWidget*"/>
 				</parameters>
 			</signal>
-			<field name="cancel" type="GtkWidget*"/>
-			<field name="forward" type="GtkWidget*"/>
-			<field name="back" type="GtkWidget*"/>
-			<field name="apply" type="GtkWidget*"/>
-			<field name="close" type="GtkWidget*"/>
-			<field name="last" type="GtkWidget*"/>
 		</object>
 		<object name="GtkBin" parent="GtkContainer" type-name="GtkBin" get-type="gtk_bin_get_type">
 			<implements>
@@ -6288,7 +6264,6 @@
 					<parameter name="bin" type="GtkBin*"/>
 				</parameters>
 			</method>
-			<field name="child" type="GtkWidget*"/>
 		</object>
 		<object name="GtkBox" parent="GtkContainer" type-name="GtkBox" get-type="gtk_box_get_type">
 			<implements>
@@ -6383,9 +6358,6 @@
 			</method>
 			<property name="homogeneous" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="spacing" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
-			<field name="children" type="GList*"/>
-			<field name="spacing" type="gint16"/>
-			<field name="homogeneous" type="guint"/>
 		</object>
 		<object name="GtkBuilder" parent="GObject" type-name="GtkBuilder" get-type="gtk_builder_get_type">
 			<method name="add_from_file" symbol="gtk_builder_add_from_file">
@@ -6693,18 +6665,6 @@
 					<parameter name="button" type="GtkButton*"/>
 				</parameters>
 			</signal>
-			<field name="event_window" type="GdkWindow*"/>
-			<field name="label_text" type="gchar*"/>
-			<field name="activate_timeout" type="guint"/>
-			<field name="constructed" type="guint"/>
-			<field name="in_button" type="guint"/>
-			<field name="button_down" type="guint"/>
-			<field name="relief" type="guint"/>
-			<field name="use_underline" type="guint"/>
-			<field name="use_stock" type="guint"/>
-			<field name="depressed" type="guint"/>
-			<field name="depress_on_activate" type="guint"/>
-			<field name="focus_on_click" type="guint"/>
 		</object>
 		<object name="GtkButtonBox" parent="GtkBox" type-name="GtkButtonBox" get-type="gtk_button_box_get_type">
 			<implements>
@@ -6748,11 +6708,6 @@
 				</parameters>
 			</method>
 			<property name="layout-style" type="GtkButtonBoxStyle" readable="1" writable="1" construct="0" construct-only="0"/>
-			<field name="child_min_width" type="gint"/>
-			<field name="child_min_height" type="gint"/>
-			<field name="child_ipad_x" type="gint"/>
-			<field name="child_ipad_y" type="gint"/>
-			<field name="layout_style" type="GtkButtonBoxStyle"/>
 		</object>
 		<object name="GtkCalendar" parent="GtkWidget" type-name="GtkCalendar" get-type="gtk_calendar_get_type">
 			<implements>
@@ -6907,24 +6862,6 @@
 					<parameter name="calendar" type="GtkCalendar*"/>
 				</parameters>
 			</signal>
-			<field name="header_style" type="GtkStyle*"/>
-			<field name="label_style" type="GtkStyle*"/>
-			<field name="month" type="gint"/>
-			<field name="year" type="gint"/>
-			<field name="selected_day" type="gint"/>
-			<field name="day_month" type="gint[][]"/>
-			<field name="day" type="gint[][]"/>
-			<field name="num_marked_dates" type="gint"/>
-			<field name="marked_date" type="gint[]"/>
-			<field name="display_flags" type="GtkCalendarDisplayOptions"/>
-			<field name="marked_date_color" type="GdkColor[]"/>
-			<field name="gc" type="GdkGC*"/>
-			<field name="xor_gc" type="GdkGC*"/>
-			<field name="focus_row" type="gint"/>
-			<field name="focus_col" type="gint"/>
-			<field name="highlight_row" type="gint"/>
-			<field name="highlight_col" type="gint"/>
-			<field name="grow_space" type="gchar[]"/>
 		</object>
 		<object name="GtkCellRenderer" parent="GtkObject" type-name="GtkCellRenderer" get-type="gtk_cell_renderer_get_type">
 			<method name="activate" symbol="gtk_cell_renderer_activate">
@@ -7133,19 +7070,6 @@
 					<parameter name="flags" type="GtkCellRendererState"/>
 				</parameters>
 			</vfunc>
-			<field name="xalign" type="gfloat"/>
-			<field name="yalign" type="gfloat"/>
-			<field name="width" type="gint"/>
-			<field name="height" type="gint"/>
-			<field name="xpad" type="guint16"/>
-			<field name="ypad" type="guint16"/>
-			<field name="mode" type="guint"/>
-			<field name="visible" type="guint"/>
-			<field name="is_expander" type="guint"/>
-			<field name="is_expanded" type="guint"/>
-			<field name="cell_background_set" type="guint"/>
-			<field name="sensitive" type="guint"/>
-			<field name="editing" type="guint"/>
 		</object>
 		<object name="GtkCellRendererAccel" parent="GtkCellRendererText" type-name="GtkCellRendererAccel" get-type="gtk_cell_renderer_accel_get_type">
 			<constructor name="new" symbol="gtk_cell_renderer_accel_new">
@@ -7172,13 +7096,6 @@
 					<parameter name="hardware_keycode" type="guint"/>
 				</parameters>
 			</signal>
-			<field name="accel_key" type="guint"/>
-			<field name="accel_mods" type="GdkModifierType"/>
-			<field name="keycode" type="guint"/>
-			<field name="accel_mode" type="GtkCellRendererAccelMode"/>
-			<field name="edit_widget" type="GtkWidget*"/>
-			<field name="grab_widget" type="GtkWidget*"/>
-			<field name="sizing_label" type="GtkWidget*"/>
 		</object>
 		<object name="GtkCellRendererCombo" parent="GtkCellRendererText" type-name="GtkCellRendererCombo" get-type="gtk_cell_renderer_combo_get_type">
 			<constructor name="new" symbol="gtk_cell_renderer_combo_new">
@@ -7195,10 +7112,6 @@
 					<parameter name="p1" type="GtkTreeIter*"/>
 				</parameters>
 			</signal>
-			<field name="model" type="GtkTreeModel*"/>
-			<field name="text_column" type="gint"/>
-			<field name="has_entry" type="gboolean"/>
-			<field name="focus_out_id" type="guint"/>
 		</object>
 		<object name="GtkCellRendererPixbuf" parent="GtkCellRenderer" type-name="GtkCellRendererPixbuf" get-type="gtk_cell_renderer_pixbuf_get_type">
 			<constructor name="new" symbol="gtk_cell_renderer_pixbuf_new">
@@ -7213,9 +7126,6 @@
 			<property name="stock-detail" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="stock-id" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="stock-size" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
-			<field name="pixbuf" type="GdkPixbuf*"/>
-			<field name="pixbuf_expander_open" type="GdkPixbuf*"/>
-			<field name="pixbuf_expander_closed" type="GdkPixbuf*"/>
 		</object>
 		<object name="GtkCellRendererProgress" parent="GtkCellRenderer" type-name="GtkCellRendererProgress" get-type="gtk_cell_renderer_progress_get_type">
 			<constructor name="new" symbol="gtk_cell_renderer_progress_new">
@@ -7307,25 +7217,6 @@
 					<parameter name="new_text" type="char*"/>
 				</parameters>
 			</signal>
-			<field name="text" type="gchar*"/>
-			<field name="font" type="PangoFontDescription*"/>
-			<field name="font_scale" type="gdouble"/>
-			<field name="foreground" type="PangoColor"/>
-			<field name="background" type="PangoColor"/>
-			<field name="extra_attrs" type="PangoAttrList*"/>
-			<field name="underline_style" type="PangoUnderline"/>
-			<field name="rise" type="gint"/>
-			<field name="fixed_height_rows" type="gint"/>
-			<field name="strikethrough" type="guint"/>
-			<field name="editable" type="guint"/>
-			<field name="scale_set" type="guint"/>
-			<field name="foreground_set" type="guint"/>
-			<field name="background_set" type="guint"/>
-			<field name="underline_set" type="guint"/>
-			<field name="rise_set" type="guint"/>
-			<field name="strikethrough_set" type="guint"/>
-			<field name="editable_set" type="guint"/>
-			<field name="calc_fixed_height" type="guint"/>
 		</object>
 		<object name="GtkCellRendererToggle" parent="GtkCellRenderer" type-name="GtkCellRendererToggle" get-type="gtk_cell_renderer_toggle_get_type">
 			<method name="get_activatable" symbol="gtk_cell_renderer_toggle_get_activatable">
@@ -7382,9 +7273,6 @@
 					<parameter name="path" type="char*"/>
 				</parameters>
 			</signal>
-			<field name="active" type="guint"/>
-			<field name="activatable" type="guint"/>
-			<field name="radio" type="guint"/>
 		</object>
 		<object name="GtkCellView" parent="GtkWidget" type-name="GtkCellView" get-type="gtk_cell_view_get_type">
 			<implements>
@@ -7573,10 +7461,6 @@
 					<parameter name="area" type="GdkRectangle*"/>
 				</parameters>
 			</vfunc>
-			<field name="active" type="guint"/>
-			<field name="always_show_toggle" type="guint"/>
-			<field name="inconsistent" type="guint"/>
-			<field name="draw_as_radio" type="guint"/>
 		</object>
 		<object name="GtkClipboard" parent="GObject" type-name="GtkClipboard" get-type="gtk_clipboard_get_type">
 			<method name="clear" symbol="gtk_clipboard_clear">
@@ -8023,10 +7907,6 @@
 			<property name="color-selection" type="GtkWidget*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="help-button" type="GtkWidget*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="ok-button" type="GtkWidget*" readable="1" writable="0" construct="0" construct-only="0"/>
-			<field name="colorsel" type="GtkWidget*"/>
-			<field name="ok_button" type="GtkWidget*"/>
-			<field name="cancel_button" type="GtkWidget*"/>
-			<field name="help_button" type="GtkWidget*"/>
 		</object>
 		<object name="GtkComboBox" parent="GtkBin" type-name="GtkComboBox" get-type="gtk_combo_box_get_type">
 			<implements>
@@ -8647,12 +8527,6 @@
 					<parameter name="pspec" type="GParamSpec*"/>
 				</parameters>
 			</vfunc>
-			<field name="focus_child" type="GtkWidget*"/>
-			<field name="border_width" type="guint"/>
-			<field name="need_resize" type="guint"/>
-			<field name="resize_mode" type="guint"/>
-			<field name="reallocate_redraws" type="guint"/>
-			<field name="has_focus_chain" type="guint"/>
 		</object>
 		<object name="GtkDialog" parent="GtkWindow" type-name="GtkDialog" get-type="gtk_dialog_get_type">
 			<implements>
@@ -8791,9 +8665,6 @@
 					<parameter name="response_id" type="gint"/>
 				</parameters>
 			</signal>
-			<field name="vbox" type="GtkWidget*"/>
-			<field name="action_area" type="GtkWidget*"/>
-			<field name="separator" type="GtkWidget*"/>
 		</object>
 		<object name="GtkDrawingArea" parent="GtkWidget" type-name="GtkDrawingArea" get-type="gtk_drawing_area_get_type">
 			<implements>
@@ -8804,7 +8675,6 @@
 			<constructor name="new" symbol="gtk_drawing_area_new">
 				<return-type type="GtkWidget*"/>
 			</constructor>
-			<field name="draw_data" type="gpointer"/>
 		</object>
 		<object name="GtkEntry" parent="GtkWidget" type-name="GtkEntry" get-type="gtk_entry_get_type">
 			<implements>
@@ -9381,47 +9251,6 @@
 					<parameter name="height" type="gint*"/>
 				</parameters>
 			</vfunc>
-			<field name="text" type="gchar*"/>
-			<field name="editable" type="guint"/>
-			<field name="visible" type="guint"/>
-			<field name="overwrite_mode" type="guint"/>
-			<field name="in_drag" type="guint"/>
-			<field name="text_length" type="guint16"/>
-			<field name="text_max_length" type="guint16"/>
-			<field name="text_area" type="GdkWindow*"/>
-			<field name="im_context" type="GtkIMContext*"/>
-			<field name="popup_menu" type="GtkWidget*"/>
-			<field name="current_pos" type="gint"/>
-			<field name="selection_bound" type="gint"/>
-			<field name="cached_layout" type="PangoLayout*"/>
-			<field name="cache_includes_preedit" type="guint"/>
-			<field name="need_im_reset" type="guint"/>
-			<field name="has_frame" type="guint"/>
-			<field name="activates_default" type="guint"/>
-			<field name="cursor_visible" type="guint"/>
-			<field name="in_click" type="guint"/>
-			<field name="is_cell_renderer" type="guint"/>
-			<field name="editing_canceled" type="guint"/>
-			<field name="mouse_cursor_obscured" type="guint"/>
-			<field name="select_words" type="guint"/>
-			<field name="select_lines" type="guint"/>
-			<field name="resolved_dir" type="guint"/>
-			<field name="truncate_multiline" type="guint"/>
-			<field name="button" type="guint"/>
-			<field name="blink_timeout" type="guint"/>
-			<field name="recompute_idle" type="guint"/>
-			<field name="scroll_offset" type="gint"/>
-			<field name="ascent" type="gint"/>
-			<field name="descent" type="gint"/>
-			<field name="x_text_size" type="guint16"/>
-			<field name="x_n_bytes" type="guint16"/>
-			<field name="preedit_length" type="guint16"/>
-			<field name="preedit_cursor" type="guint16"/>
-			<field name="dnd_position" type="gint"/>
-			<field name="drag_start_x" type="gint"/>
-			<field name="drag_start_y" type="gint"/>
-			<field name="invisible_char" type="gunichar"/>
-			<field name="width_chars" type="gint"/>
 		</object>
 		<object name="GtkEntryBuffer" parent="GObject" type-name="GtkEntryBuffer" get-type="gtk_entry_buffer_get_type">
 			<method name="delete_text" symbol="gtk_entry_buffer_delete_text">
@@ -10101,7 +9930,6 @@
 					<parameter name="y" type="gint"/>
 				</parameters>
 			</method>
-			<field name="children" type="GList*"/>
 		</object>
 		<object name="GtkFontButton" parent="GtkButton" type-name="GtkFontButton" get-type="gtk_font_button_get_type">
 			<implements>
@@ -10297,20 +10125,6 @@
 			<property name="font" type="GdkFont*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="font-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="preview-text" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<field name="font_entry" type="GtkWidget*"/>
-			<field name="family_list" type="GtkWidget*"/>
-			<field name="font_style_entry" type="GtkWidget*"/>
-			<field name="face_list" type="GtkWidget*"/>
-			<field name="size_entry" type="GtkWidget*"/>
-			<field name="size_list" type="GtkWidget*"/>
-			<field name="pixels_button" type="GtkWidget*"/>
-			<field name="points_button" type="GtkWidget*"/>
-			<field name="filter_button" type="GtkWidget*"/>
-			<field name="preview_entry" type="GtkWidget*"/>
-			<field name="family" type="PangoFontFamily*"/>
-			<field name="face" type="PangoFontFace*"/>
-			<field name="size" type="gint"/>
-			<field name="font" type="GdkFont*"/>
 		</object>
 		<object name="GtkFontSelectionDialog" parent="GtkDialog" type-name="GtkFontSelectionDialog" get-type="gtk_font_selection_dialog_get_type">
 			<implements>
@@ -10362,14 +10176,6 @@
 					<parameter name="text" type="gchar*"/>
 				</parameters>
 			</method>
-			<field name="fontsel" type="GtkWidget*"/>
-			<field name="main_vbox" type="GtkWidget*"/>
-			<field name="action_area" type="GtkWidget*"/>
-			<field name="ok_button" type="GtkWidget*"/>
-			<field name="apply_button" type="GtkWidget*"/>
-			<field name="cancel_button" type="GtkWidget*"/>
-			<field name="dialog_width" type="gint"/>
-			<field name="auto_resize" type="gboolean"/>
 		</object>
 		<object name="GtkFrame" parent="GtkBin" type-name="GtkFrame" get-type="gtk_frame_get_type">
 			<implements>
@@ -10451,11 +10257,6 @@
 					<parameter name="allocation" type="GtkAllocation*"/>
 				</parameters>
 			</vfunc>
-			<field name="label_widget" type="GtkWidget*"/>
-			<field name="shadow_type" type="gint16"/>
-			<field name="label_xalign" type="gfloat"/>
-			<field name="label_yalign" type="gfloat"/>
-			<field name="child_allocation" type="GtkAllocation"/>
 		</object>
 		<object name="GtkHBox" parent="GtkBox" type-name="GtkHBox" get-type="gtk_hbox_get_type">
 			<implements>
@@ -10700,19 +10501,6 @@
 					<parameter name="child" type="GtkWidget*"/>
 				</parameters>
 			</signal>
-			<field name="bin_window" type="GdkWindow*"/>
-			<field name="float_window" type="GdkWindow*"/>
-			<field name="shadow_type" type="GtkShadowType"/>
-			<field name="handle_position" type="guint"/>
-			<field name="float_window_mapped" type="guint"/>
-			<field name="child_detached" type="guint"/>
-			<field name="in_drag" type="guint"/>
-			<field name="shrink_on_detach" type="guint"/>
-			<field name="snap_edge" type="signed"/>
-			<field name="deskoff_x" type="gint"/>
-			<field name="deskoff_y" type="gint"/>
-			<field name="attach_allocation" type="GtkAllocation"/>
-			<field name="float_allocation" type="GtkAllocation"/>
 		</object>
 		<object name="GtkIMContext" parent="GObject" type-name="GtkIMContext" get-type="gtk_im_context_get_type">
 			<method name="delete_surrounding" symbol="gtk_im_context_delete_surrounding">
@@ -10920,12 +10708,6 @@
 			<constructor name="new" symbol="gtk_im_context_simple_new">
 				<return-type type="GtkIMContext*"/>
 			</constructor>
-			<field name="tables" type="GSList*"/>
-			<field name="compose_buffer" type="guint[]"/>
-			<field name="tentative_match" type="gunichar"/>
-			<field name="tentative_match_len" type="gint"/>
-			<field name="in_hex_sequence" type="guint"/>
-			<field name="modifiers_dropped" type="guint"/>
 		</object>
 		<object name="GtkIMMulticontext" parent="GtkIMContext" type-name="GtkIMMulticontext" get-type="gtk_im_multicontext_get_type">
 			<method name="append_menuitems" symbol="gtk_im_multicontext_append_menuitems">
@@ -10951,8 +10733,6 @@
 					<parameter name="context_id" type="char*"/>
 				</parameters>
 			</method>
-			<field name="slave" type="GtkIMContext*"/>
-			<field name="context_id" type="gchar*"/>
 		</object>
 		<object name="GtkIconFactory" parent="GObject" type-name="GtkIconFactory" get-type="gtk_icon_factory_get_type">
 			<implements>
@@ -10994,7 +10774,6 @@
 					<parameter name="factory" type="GtkIconFactory*"/>
 				</parameters>
 			</method>
-			<field name="icons" type="GHashTable*"/>
 		</object>
 		<object name="GtkIconTheme" parent="GObject" type-name="GtkIconTheme" get-type="gtk_icon_theme_get_type">
 			<method name="add_builtin_icon" symbol="gtk_icon_theme_add_builtin_icon">
@@ -11893,10 +11672,6 @@
 			<property name="pixmap" type="GdkPixmap*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="stock" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="storage-type" type="GtkImageType" readable="1" writable="0" construct="0" construct-only="0"/>
-			<field name="storage_type" type="GtkImageType"/>
-			<field name="data" type="gpointer"/>
-			<field name="mask" type="GdkBitmap*"/>
-			<field name="icon_size" type="GtkIconSize"/>
 		</object>
 		<object name="GtkImageMenuItem" parent="GtkMenuItem" type-name="GtkImageMenuItem" get-type="gtk_image_menu_item_get_type">
 			<implements>
@@ -11977,7 +11752,6 @@
 			<property name="always-show-image" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="image" type="GtkWidget*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="use-stock" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
-			<field name="image" type="GtkWidget*"/>
 		</object>
 		<object name="GtkInfoBar" parent="GtkHBox" type-name="GtkInfoBar" get-type="gtk_info_bar_get_type">
 			<implements>
@@ -12109,8 +11883,6 @@
 				</parameters>
 			</method>
 			<property name="screen" type="GdkScreen*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<field name="has_user_ref_count" type="gboolean"/>
-			<field name="screen" type="GdkScreen*"/>
 		</object>
 		<object name="GtkItem" parent="GtkBin" type-name="GtkItem" get-type="gtk_item_get_type">
 			<implements>
@@ -12505,26 +12277,6 @@
 					<parameter name="menu" type="GtkMenu*"/>
 				</parameters>
 			</signal>
-			<field name="label" type="gchar*"/>
-			<field name="jtype" type="guint"/>
-			<field name="wrap" type="guint"/>
-			<field name="use_underline" type="guint"/>
-			<field name="use_markup" type="guint"/>
-			<field name="ellipsize" type="guint"/>
-			<field name="single_line_mode" type="guint"/>
-			<field name="have_transform" type="guint"/>
-			<field name="in_click" type="guint"/>
-			<field name="wrap_mode" type="guint"/>
-			<field name="pattern_set" type="guint"/>
-			<field name="track_links" type="guint"/>
-			<field name="mnemonic_keyval" type="guint"/>
-			<field name="text" type="gchar*"/>
-			<field name="attrs" type="PangoAttrList*"/>
-			<field name="effective_attrs" type="PangoAttrList*"/>
-			<field name="layout" type="PangoLayout*"/>
-			<field name="mnemonic_widget" type="GtkWidget*"/>
-			<field name="mnemonic_window" type="GtkWindow*"/>
-			<field name="select_info" type="GtkLabelSelectionInfo*"/>
 		</object>
 		<object name="GtkLayout" parent="GtkContainer" type-name="GtkLayout" get-type="gtk_layout_get_type">
 			<implements>
@@ -12617,16 +12369,6 @@
 					<parameter name="vadjustment" type="GtkAdjustment*"/>
 				</parameters>
 			</signal>
-			<field name="children" type="GList*"/>
-			<field name="width" type="guint"/>
-			<field name="height" type="guint"/>
-			<field name="hadjustment" type="GtkAdjustment*"/>
-			<field name="vadjustment" type="GtkAdjustment*"/>
-			<field name="bin_window" type="GdkWindow*"/>
-			<field name="visibility" type="GdkVisibilityState"/>
-			<field name="scroll_x" type="gint"/>
-			<field name="scroll_y" type="gint"/>
-			<field name="freeze_count" type="guint"/>
 		</object>
 		<object name="GtkLinkButton" parent="GtkButton" type-name="GtkLinkButton" get-type="gtk_link_button_get_type">
 			<implements>
@@ -12856,18 +12598,6 @@
 					<parameter name="b" type="GtkTreeIter*"/>
 				</parameters>
 			</method>
-			<field name="stamp" type="gint"/>
-			<field name="seq" type="gpointer"/>
-			<field name="sort_list" type="GList*"/>
-			<field name="n_columns" type="gint"/>
-			<field name="sort_column_id" type="gint"/>
-			<field name="order" type="GtkSortType"/>
-			<field name="column_headers" type="GType*"/>
-			<field name="length" type="gint"/>
-			<field name="default_sort_func" type="GtkTreeIterCompareFunc"/>
-			<field name="default_sort_data" type="gpointer"/>
-			<field name="default_sort_destroy" type="GDestroyNotify"/>
-			<field name="columns_dirty" type="guint"/>
 		</object>
 		<object name="GtkMenu" parent="GtkMenuShell" type-name="GtkMenu" get-type="gtk_menu_get_type">
 			<implements>
@@ -13073,34 +12803,6 @@
 					<parameter name="p0" type="GtkScrollType"/>
 				</parameters>
 			</signal>
-			<field name="parent_menu_item" type="GtkWidget*"/>
-			<field name="old_active_menu_item" type="GtkWidget*"/>
-			<field name="accel_group" type="GtkAccelGroup*"/>
-			<field name="accel_path" type="gchar*"/>
-			<field name="position_func" type="GtkMenuPositionFunc"/>
-			<field name="position_func_data" type="gpointer"/>
-			<field name="toggle_size" type="guint"/>
-			<field name="toplevel" type="GtkWidget*"/>
-			<field name="tearoff_window" type="GtkWidget*"/>
-			<field name="tearoff_hbox" type="GtkWidget*"/>
-			<field name="tearoff_scrollbar" type="GtkWidget*"/>
-			<field name="tearoff_adjustment" type="GtkAdjustment*"/>
-			<field name="view_window" type="GdkWindow*"/>
-			<field name="bin_window" type="GdkWindow*"/>
-			<field name="scroll_offset" type="gint"/>
-			<field name="saved_scroll_offset" type="gint"/>
-			<field name="scroll_step" type="gint"/>
-			<field name="timeout_id" type="guint"/>
-			<field name="navigation_region" type="GdkRegion*"/>
-			<field name="navigation_timeout" type="guint"/>
-			<field name="needs_destruction_ref_count" type="guint"/>
-			<field name="torn_off" type="guint"/>
-			<field name="tearoff_active" type="guint"/>
-			<field name="scroll_fast" type="guint"/>
-			<field name="upper_arrow_visible" type="guint"/>
-			<field name="lower_arrow_visible" type="guint"/>
-			<field name="upper_arrow_prelight" type="guint"/>
-			<field name="lower_arrow_prelight" type="guint"/>
 		</object>
 		<object name="GtkMenuBar" parent="GtkMenuShell" type-name="GtkMenuBar" get-type="gtk_menu_bar_get_type">
 			<implements>
@@ -13303,18 +13005,6 @@
 					<parameter name="label" type="gchar*"/>
 				</parameters>
 			</vfunc>
-			<field name="submenu" type="GtkWidget*"/>
-			<field name="event_window" type="GdkWindow*"/>
-			<field name="toggle_size" type="guint16"/>
-			<field name="accelerator_width" type="guint16"/>
-			<field name="accel_path" type="gchar*"/>
-			<field name="show_submenu_indicator" type="guint"/>
-			<field name="submenu_placement" type="guint"/>
-			<field name="submenu_direction" type="guint"/>
-			<field name="right_justify" type="guint"/>
-			<field name="timer_from_keypress" type="guint"/>
-			<field name="from_menubar" type="guint"/>
-			<field name="timer" type="guint"/>
 		</object>
 		<object name="GtkMenuShell" parent="GtkContainer" type-name="GtkMenuShell" get-type="gtk_menu_shell_get_type">
 			<implements>
@@ -13465,18 +13155,6 @@
 					<parameter name="menu_item" type="GtkWidget*"/>
 				</parameters>
 			</vfunc>
-			<field name="children" type="GList*"/>
-			<field name="active_menu_item" type="GtkWidget*"/>
-			<field name="parent_menu_shell" type="GtkWidget*"/>
-			<field name="button" type="guint"/>
-			<field name="activate_time" type="guint32"/>
-			<field name="active" type="guint"/>
-			<field name="have_grab" type="guint"/>
-			<field name="have_xgrab" type="guint"/>
-			<field name="ignore_leave" type="guint"/>
-			<field name="menu_flag" type="guint"/>
-			<field name="ignore_enter" type="guint"/>
-			<field name="keyboard_mode" type="guint"/>
 		</object>
 		<object name="GtkMenuToolButton" parent="GtkToolButton" type-name="GtkMenuToolButton" get-type="gtk_menu_tool_button_get_type">
 			<implements>
@@ -13600,8 +13278,6 @@
 			<property name="secondary-use-markup" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="text" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="use-markup" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
-			<field name="image" type="GtkWidget*"/>
-			<field name="label" type="GtkWidget*"/>
 		</object>
 		<object name="GtkMisc" parent="GtkWidget" type-name="GtkMisc" get-type="gtk_misc_get_type">
 			<implements>
@@ -13645,10 +13321,6 @@
 			<property name="xpad" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="yalign" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="ypad" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
-			<field name="xalign" type="gfloat"/>
-			<field name="yalign" type="gfloat"/>
-			<field name="xpad" type="guint16"/>
-			<field name="ypad" type="guint16"/>
 		</object>
 		<object name="GtkMountOperation" parent="GMountOperation" type-name="GtkMountOperation" get-type="gtk_mount_operation_get_type">
 			<method name="get_parent" symbol="gtk_mount_operation_get_parent">
@@ -14092,31 +13764,6 @@
 					<parameter name="position" type="gint"/>
 				</parameters>
 			</vfunc>
-			<field name="cur_page" type="GtkNotebookPage*"/>
-			<field name="children" type="GList*"/>
-			<field name="first_tab" type="GList*"/>
-			<field name="focus_tab" type="GList*"/>
-			<field name="menu" type="GtkWidget*"/>
-			<field name="event_window" type="GdkWindow*"/>
-			<field name="timer" type="guint32"/>
-			<field name="tab_hborder" type="guint16"/>
-			<field name="tab_vborder" type="guint16"/>
-			<field name="show_tabs" type="guint"/>
-			<field name="homogeneous" type="guint"/>
-			<field name="show_border" type="guint"/>
-			<field name="tab_pos" type="guint"/>
-			<field name="scrollable" type="guint"/>
-			<field name="in_child" type="guint"/>
-			<field name="click_child" type="guint"/>
-			<field name="button" type="guint"/>
-			<field name="need_timer" type="guint"/>
-			<field name="child_has_focus" type="guint"/>
-			<field name="have_visible_child" type="guint"/>
-			<field name="focus_out" type="guint"/>
-			<field name="has_before_previous" type="guint"/>
-			<field name="has_before_next" type="guint"/>
-			<field name="has_after_previous" type="guint"/>
-			<field name="has_after_next" type="guint"/>
 		</object>
 		<object name="GtkObject" parent="GInitiallyUnowned" type-name="GtkObject" get-type="gtk_object_get_type">
 			<method name="destroy" symbol="gtk_object_destroy">
@@ -14131,7 +13778,6 @@
 					<parameter name="object" type="GtkObject*"/>
 				</parameters>
 			</signal>
-			<field name="flags" type="guint32"/>
 		</object>
 		<object name="GtkOffscreenWindow" parent="GtkWindow" type-name="GtkOffscreenWindow" get-type="gtk_offscreen_window_get_type">
 			<implements>
@@ -14454,29 +14100,6 @@
 					<parameter name="paned" type="GtkPaned*"/>
 				</parameters>
 			</signal>
-			<field name="child1" type="GtkWidget*"/>
-			<field name="child2" type="GtkWidget*"/>
-			<field name="handle" type="GdkWindow*"/>
-			<field name="xor_gc" type="GdkGC*"/>
-			<field name="cursor_type" type="GdkCursorType"/>
-			<field name="handle_pos" type="GdkRectangle"/>
-			<field name="child1_size" type="gint"/>
-			<field name="last_allocation" type="gint"/>
-			<field name="min_position" type="gint"/>
-			<field name="max_position" type="gint"/>
-			<field name="position_set" type="guint"/>
-			<field name="in_drag" type="guint"/>
-			<field name="child1_shrink" type="guint"/>
-			<field name="child1_resize" type="guint"/>
-			<field name="child2_shrink" type="guint"/>
-			<field name="child2_resize" type="guint"/>
-			<field name="orientation" type="guint"/>
-			<field name="in_recursion" type="guint"/>
-			<field name="handle_prelit" type="guint"/>
-			<field name="last_child1_focus" type="GtkWidget*"/>
-			<field name="last_child2_focus" type="GtkWidget*"/>
-			<field name="drag_pos" type="gint"/>
-			<field name="original_position" type="gint"/>
 		</object>
 		<object name="GtkPlug" parent="GtkWindow" type-name="GtkPlug" get-type="gtk_plug_get_type">
 			<implements>
@@ -14538,11 +14161,6 @@
 					<parameter name="plug" type="GtkPlug*"/>
 				</parameters>
 			</signal>
-			<field name="socket_window" type="GdkWindow*"/>
-			<field name="modality_window" type="GtkWidget*"/>
-			<field name="modality_group" type="GtkWindowGroup*"/>
-			<field name="grabbed_keys" type="GHashTable*"/>
-			<field name="same_app" type="guint"/>
 		</object>
 		<object name="GtkPrintContext" parent="GObject" type-name="GtkPrintContext" get-type="gtk_print_context_get_type">
 			<method name="create_pango_context" symbol="gtk_print_context_create_pango_context">
@@ -15549,19 +15167,6 @@
 					<parameter name="progress" type="GtkProgressBar*"/>
 				</parameters>
 			</vfunc>
-			<field name="offscreen_pixmap" type="GdkPixmap*"/>
-			<field name="orientation" type="GtkProgressBarOrientation"/>
-			<field name="blocks" type="guint"/>
-			<field name="in_block" type="gint"/>
-			<field name="activity_pos" type="gint"/>
-			<field name="activity_step" type="guint"/>
-			<field name="activity_blocks" type="guint"/>
-			<field name="pulse_fraction" type="gdouble"/>
-			<field name="activity_dir" type="guint"/>
-			<field name="ellipsize" type="guint"/>
-			<field name="dirty" type="guint"/>
-			<field name="activity_mode" type="guint"/>
-			<field name="show_text" type="guint"/>
 		</object>
 		<object name="GtkRadioAction" parent="GtkToggleAction" type-name="GtkRadioAction" get-type="gtk_radio_action_get_type">
 			<implements>
@@ -15688,7 +15293,6 @@
 					<parameter name="radio_button" type="GtkRadioButton*"/>
 				</parameters>
 			</signal>
-			<field name="group" type="GSList*"/>
 		</object>
 		<object name="GtkRadioMenuItem" parent="GtkCheckMenuItem" type-name="GtkRadioMenuItem" get-type="gtk_radio_menu_item_get_type">
 			<implements>
@@ -15757,7 +15361,6 @@
 					<parameter name="radio_menu_item" type="GtkRadioMenuItem*"/>
 				</parameters>
 			</signal>
-			<field name="group" type="GSList*"/>
 		</object>
 		<object name="GtkRadioToolButton" parent="GtkToggleToolButton" type-name="GtkRadioToolButton" get-type="gtk_radio_tool_button_get_type">
 			<implements>
@@ -16044,30 +15647,6 @@
 					<parameter name="border_" type="GtkBorder*"/>
 				</parameters>
 			</vfunc>
-			<field name="adjustment" type="GtkAdjustment*"/>
-			<field name="update_policy" type="GtkUpdateType"/>
-			<field name="inverted" type="guint"/>
-			<field name="flippable" type="guint"/>
-			<field name="has_stepper_a" type="guint"/>
-			<field name="has_stepper_b" type="guint"/>
-			<field name="has_stepper_c" type="guint"/>
-			<field name="has_stepper_d" type="guint"/>
-			<field name="need_recalc" type="guint"/>
-			<field name="slider_size_fixed" type="guint"/>
-			<field name="min_slider_size" type="gint"/>
-			<field name="orientation" type="GtkOrientation"/>
-			<field name="range_rect" type="GdkRectangle"/>
-			<field name="slider_start" type="gint"/>
-			<field name="slider_end" type="gint"/>
-			<field name="round_digits" type="gint"/>
-			<field name="trough_click_forward" type="guint"/>
-			<field name="update_pending" type="guint"/>
-			<field name="layout" type="GtkRangeLayout*"/>
-			<field name="timer" type="GtkRangeStepTimer*"/>
-			<field name="slide_initial_slider_position" type="gint"/>
-			<field name="slide_initial_coordinate" type="gint"/>
-			<field name="update_timeout_id" type="guint"/>
-			<field name="event_window" type="GdkWindow*"/>
 		</object>
 		<object name="GtkRcStyle" parent="GObject" type-name="GtkRcStyle" get-type="gtk_rc_style_get_type">
 			<method name="copy" symbol="gtk_rc_style_copy">
@@ -16497,16 +16076,6 @@
 					<parameter name="ruler" type="GtkRuler*"/>
 				</parameters>
 			</vfunc>
-			<field name="backing_store" type="GdkPixmap*"/>
-			<field name="non_gr_exp_gc" type="GdkGC*"/>
-			<field name="metric" type="GtkRulerMetric*"/>
-			<field name="xsrc" type="gint"/>
-			<field name="ysrc" type="gint"/>
-			<field name="slider_size" type="gint"/>
-			<field name="lower" type="gdouble"/>
-			<field name="upper" type="gdouble"/>
-			<field name="position" type="gdouble"/>
-			<field name="max_size" type="gdouble"/>
 		</object>
 		<object name="GtkScale" parent="GtkRange" type-name="GtkScale" get-type="gtk_scale_get_type">
 			<implements>
@@ -16623,9 +16192,6 @@
 					<parameter name="y" type="gint*"/>
 				</parameters>
 			</vfunc>
-			<field name="digits" type="gint"/>
-			<field name="draw_value" type="guint"/>
-			<field name="value_pos" type="guint"/>
 		</object>
 		<object name="GtkScaleButton" parent="GtkButton" type-name="GtkScaleButton" get-type="gtk_scale_button_get_type">
 			<implements>
@@ -16719,8 +16285,6 @@
 					<parameter name="value" type="gdouble"/>
 				</parameters>
 			</signal>
-			<field name="plus_button" type="GtkWidget*"/>
-			<field name="minus_button" type="GtkWidget*"/>
 		</object>
 		<object name="GtkScrollbar" parent="GtkRange" type-name="GtkScrollbar" get-type="gtk_scrollbar_get_type">
 			<implements>
@@ -16865,15 +16429,6 @@
 					<parameter name="horizontal" type="gboolean"/>
 				</parameters>
 			</signal>
-			<field name="hscrollbar" type="GtkWidget*"/>
-			<field name="vscrollbar" type="GtkWidget*"/>
-			<field name="hscrollbar_policy" type="guint"/>
-			<field name="vscrollbar_policy" type="guint"/>
-			<field name="hscrollbar_visible" type="guint"/>
-			<field name="vscrollbar_visible" type="guint"/>
-			<field name="window_placement" type="guint"/>
-			<field name="focus_out" type="guint"/>
-			<field name="shadow_type" type="guint16"/>
 		</object>
 		<object name="GtkSeparator" parent="GtkWidget" type-name="GtkSeparator" get-type="gtk_separator_get_type">
 			<implements>
@@ -17039,10 +16594,6 @@
 			<property name="gtk-xft-hinting" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-xft-hintstyle" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-xft-rgba" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<field name="queued_settings" type="GData*"/>
-			<field name="property_values" type="GtkSettingsPropertyValue*"/>
-			<field name="rc_context" type="GtkRcContext*"/>
-			<field name="screen" type="GdkScreen*"/>
 		</object>
 		<object name="GtkSizeGroup" parent="GObject" type-name="GtkSizeGroup" get-type="gtk_size_group_get_type">
 			<implements>
@@ -17102,12 +16653,6 @@
 			</method>
 			<property name="ignore-hidden" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="mode" type="GtkSizeGroupMode" readable="1" writable="1" construct="0" construct-only="0"/>
-			<field name="widgets" type="GSList*"/>
-			<field name="mode" type="guint8"/>
-			<field name="have_width" type="guint"/>
-			<field name="have_height" type="guint"/>
-			<field name="ignore_hidden" type="guint"/>
-			<field name="requisition" type="GtkRequisition"/>
 		</object>
 		<object name="GtkSocket" parent="GtkContainer" type-name="GtkSocket" get-type="gtk_socket_get_type">
 			<implements>
@@ -17149,21 +16694,6 @@
 					<parameter name="socket_" type="GtkSocket*"/>
 				</parameters>
 			</signal>
-			<field name="request_width" type="guint16"/>
-			<field name="request_height" type="guint16"/>
-			<field name="current_width" type="guint16"/>
-			<field name="current_height" type="guint16"/>
-			<field name="plug_window" type="GdkWindow*"/>
-			<field name="plug_widget" type="GtkWidget*"/>
-			<field name="xembed_version" type="gshort"/>
-			<field name="same_app" type="guint"/>
-			<field name="focus_in" type="guint"/>
-			<field name="have_size" type="guint"/>
-			<field name="need_map" type="guint"/>
-			<field name="is_mapped" type="guint"/>
-			<field name="active" type="guint"/>
-			<field name="accel_group" type="GtkAccelGroup*"/>
-			<field name="toplevel" type="GtkWidget*"/>
 		</object>
 		<object name="GtkSpinButton" parent="GtkEntry" type-name="GtkSpinButton" get-type="gtk_spin_button_get_type">
 			<implements>
@@ -17381,21 +16911,6 @@
 					<parameter name="spin_button" type="GtkSpinButton*"/>
 				</parameters>
 			</signal>
-			<field name="adjustment" type="GtkAdjustment*"/>
-			<field name="panel" type="GdkWindow*"/>
-			<field name="timer" type="guint32"/>
-			<field name="climb_rate" type="gdouble"/>
-			<field name="timer_step" type="gdouble"/>
-			<field name="update_policy" type="GtkSpinButtonUpdatePolicy"/>
-			<field name="in_child" type="guint"/>
-			<field name="click_child" type="guint"/>
-			<field name="button" type="guint"/>
-			<field name="need_timer" type="guint"/>
-			<field name="timer_calls" type="guint"/>
-			<field name="digits" type="guint"/>
-			<field name="numeric" type="guint"/>
-			<field name="wrap" type="guint"/>
-			<field name="snap_to_ticks" type="guint"/>
 		</object>
 		<object name="GtkSpinner" parent="GtkDrawingArea" type-name="GtkSpinner" get-type="gtk_spinner_get_type">
 			<implements>
@@ -17806,14 +17321,6 @@
 					<parameter name="text" type="char*"/>
 				</parameters>
 			</signal>
-			<field name="frame" type="GtkWidget*"/>
-			<field name="label" type="GtkWidget*"/>
-			<field name="messages" type="GSList*"/>
-			<field name="keys" type="GSList*"/>
-			<field name="seq_context_id" type="guint"/>
-			<field name="seq_message_id" type="guint"/>
-			<field name="grip_window" type="GdkWindow*"/>
-			<field name="has_resize_grip" type="guint"/>
 		</object>
 		<object name="GtkStyle" parent="GObject" type-name="GtkStyle" get-type="gtk_style_get_type">
 			<method name="apply_default_background" symbol="gtk_style_apply_default_background">
@@ -18457,14 +17964,6 @@
 			<property name="n-columns" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="n-rows" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="row-spacing" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
-			<field name="children" type="GList*"/>
-			<field name="rows" type="GtkTableRowCol*"/>
-			<field name="cols" type="GtkTableRowCol*"/>
-			<field name="nrows" type="guint16"/>
-			<field name="ncols" type="guint16"/>
-			<field name="column_spacing" type="guint16"/>
-			<field name="row_spacing" type="guint16"/>
-			<field name="homogeneous" type="guint"/>
 		</object>
 		<object name="GtkTearoffMenuItem" parent="GtkMenuItem" type-name="GtkTearoffMenuItem" get-type="gtk_tearoff_menu_item_get_type">
 			<implements>
@@ -18476,7 +17975,6 @@
 			<constructor name="new" symbol="gtk_tearoff_menu_item_new">
 				<return-type type="GtkWidget*"/>
 			</constructor>
-			<field name="torn_off" type="guint"/>
 		</object>
 		<object name="GtkTextBuffer" parent="GObject" type-name="GtkTextBuffer" get-type="gtk_text_buffer_get_type">
 			<method name="add_mark" symbol="gtk_text_buffer_add_mark">
@@ -19158,14 +18656,6 @@
 					<parameter name="end_char" type="GtkTextIter*"/>
 				</parameters>
 			</signal>
-			<field name="tag_table" type="GtkTextTagTable*"/>
-			<field name="btree" type="GtkTextBTree*"/>
-			<field name="clipboard_contents_buffers" type="GSList*"/>
-			<field name="selection_clipboards" type="GSList*"/>
-			<field name="log_attr_cache" type="GtkTextLogAttrCache*"/>
-			<field name="user_action_count" type="guint"/>
-			<field name="modified" type="guint"/>
-			<field name="has_selection" type="guint"/>
 		</object>
 		<object name="GtkTextChildAnchor" parent="GObject" type-name="GtkTextChildAnchor" get-type="gtk_text_child_anchor_get_type">
 			<method name="get_deleted" symbol="gtk_text_child_anchor_get_deleted">
@@ -19183,7 +18673,6 @@
 			<constructor name="new" symbol="gtk_text_child_anchor_new">
 				<return-type type="GtkTextChildAnchor*"/>
 			</constructor>
-			<field name="segment" type="gpointer"/>
 		</object>
 		<object name="GtkTextMark" parent="GObject" type-name="GtkTextMark" get-type="gtk_text_mark_get_type">
 			<method name="get_buffer" symbol="gtk_text_mark_get_buffer">
@@ -19232,7 +18721,6 @@
 			</method>
 			<property name="left-gravity" type="gboolean" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="name" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
-			<field name="segment" type="gpointer"/>
 		</object>
 		<object name="GtkTextTag" parent="GObject" type-name="GtkTextTag" get-type="gtk_text_tag_get_type">
 			<method name="event" symbol="gtk_text_tag_event">
@@ -19337,34 +18825,6 @@
 					<parameter name="iter" type="GtkTextIter*"/>
 				</parameters>
 			</signal>
-			<field name="table" type="GtkTextTagTable*"/>
-			<field name="name" type="char*"/>
-			<field name="priority" type="int"/>
-			<field name="values" type="GtkTextAttributes*"/>
-			<field name="bg_color_set" type="guint"/>
-			<field name="bg_stipple_set" type="guint"/>
-			<field name="fg_color_set" type="guint"/>
-			<field name="scale_set" type="guint"/>
-			<field name="fg_stipple_set" type="guint"/>
-			<field name="justification_set" type="guint"/>
-			<field name="left_margin_set" type="guint"/>
-			<field name="indent_set" type="guint"/>
-			<field name="rise_set" type="guint"/>
-			<field name="strikethrough_set" type="guint"/>
-			<field name="right_margin_set" type="guint"/>
-			<field name="pixels_above_lines_set" type="guint"/>
-			<field name="pixels_below_lines_set" type="guint"/>
-			<field name="pixels_inside_wrap_set" type="guint"/>
-			<field name="tabs_set" type="guint"/>
-			<field name="underline_set" type="guint"/>
-			<field name="wrap_mode_set" type="guint"/>
-			<field name="bg_full_height_set" type="guint"/>
-			<field name="invisible_set" type="guint"/>
-			<field name="editable_set" type="guint"/>
-			<field name="language_set" type="guint"/>
-			<field name="pg_bg_color_set" type="guint"/>
-			<field name="accumulative_margin" type="guint"/>
-			<field name="pad1" type="guint"/>
 		</object>
 		<object name="GtkTextTagTable" parent="GObject" type-name="GtkTextTagTable" get-type="gtk_text_tag_table_get_type">
 			<method name="add" symbol="gtk_text_tag_table_add">
@@ -19427,10 +18887,6 @@
 					<parameter name="tag" type="GtkTextTag*"/>
 				</parameters>
 			</signal>
-			<field name="hash" type="GHashTable*"/>
-			<field name="anonymous" type="GSList*"/>
-			<field name="anon_count" type="gint"/>
-			<field name="buffers" type="GSList*"/>
 		</object>
 		<object name="GtkTextView" parent="GtkContainer" type-name="GtkTextView" get-type="gtk_text_view_get_type">
 			<implements>
@@ -20008,53 +19464,6 @@
 					<parameter name="direction" type="GtkDirectionType"/>
 				</parameters>
 			</vfunc>
-			<field name="layout" type="struct _GtkTextLayout*"/>
-			<field name="buffer" type="GtkTextBuffer*"/>
-			<field name="selection_drag_handler" type="guint"/>
-			<field name="scroll_timeout" type="guint"/>
-			<field name="pixels_above_lines" type="gint"/>
-			<field name="pixels_below_lines" type="gint"/>
-			<field name="pixels_inside_wrap" type="gint"/>
-			<field name="wrap_mode" type="GtkWrapMode"/>
-			<field name="justify" type="GtkJustification"/>
-			<field name="left_margin" type="gint"/>
-			<field name="right_margin" type="gint"/>
-			<field name="indent" type="gint"/>
-			<field name="tabs" type="PangoTabArray*"/>
-			<field name="editable" type="guint"/>
-			<field name="overwrite_mode" type="guint"/>
-			<field name="cursor_visible" type="guint"/>
-			<field name="need_im_reset" type="guint"/>
-			<field name="accepts_tab" type="guint"/>
-			<field name="width_changed" type="guint"/>
-			<field name="onscreen_validated" type="guint"/>
-			<field name="mouse_cursor_obscured" type="guint"/>
-			<field name="text_window" type="GtkTextWindow*"/>
-			<field name="left_window" type="GtkTextWindow*"/>
-			<field name="right_window" type="GtkTextWindow*"/>
-			<field name="top_window" type="GtkTextWindow*"/>
-			<field name="bottom_window" type="GtkTextWindow*"/>
-			<field name="hadjustment" type="GtkAdjustment*"/>
-			<field name="vadjustment" type="GtkAdjustment*"/>
-			<field name="xoffset" type="gint"/>
-			<field name="yoffset" type="gint"/>
-			<field name="width" type="gint"/>
-			<field name="height" type="gint"/>
-			<field name="virtual_cursor_x" type="gint"/>
-			<field name="virtual_cursor_y" type="gint"/>
-			<field name="first_para_mark" type="GtkTextMark*"/>
-			<field name="first_para_pixels" type="gint"/>
-			<field name="dnd_mark" type="GtkTextMark*"/>
-			<field name="blink_timeout" type="guint"/>
-			<field name="first_validate_idle" type="guint"/>
-			<field name="incremental_validate_idle" type="guint"/>
-			<field name="im_context" type="GtkIMContext*"/>
-			<field name="popup_menu" type="GtkWidget*"/>
-			<field name="drag_start_x" type="gint"/>
-			<field name="drag_start_y" type="gint"/>
-			<field name="children" type="GSList*"/>
-			<field name="pending_scroll" type="GtkTextPendingScroll*"/>
-			<field name="pending_place_cursor_button" type="gint"/>
 		</object>
 		<object name="GtkToggleAction" parent="GtkAction" type-name="GtkToggleAction" get-type="gtk_toggle_action_get_type">
 			<implements>
@@ -20186,9 +19595,6 @@
 					<parameter name="toggle_button" type="GtkToggleButton*"/>
 				</parameters>
 			</signal>
-			<field name="active" type="guint"/>
-			<field name="draw_indicator" type="guint"/>
-			<field name="inconsistent" type="guint"/>
 		</object>
 		<object name="GtkToggleToolButton" parent="GtkToolButton" type-name="GtkToggleToolButton" get-type="gtk_toggle_tool_button_get_type">
 			<implements>
@@ -20974,15 +20380,6 @@
 					<parameter name="style" type="GtkToolbarStyle"/>
 				</parameters>
 			</signal>
-			<field name="num_children" type="gint"/>
-			<field name="children" type="GList*"/>
-			<field name="orientation" type="GtkOrientation"/>
-			<field name="style" type="GtkToolbarStyle"/>
-			<field name="icon_size" type="GtkIconSize"/>
-			<field name="button_maxw" type="gint"/>
-			<field name="button_maxh" type="gint"/>
-			<field name="style_set" type="guint"/>
-			<field name="icon_size_set" type="guint"/>
 		</object>
 		<object name="GtkTooltip" parent="GObject" type-name="GtkTooltip" get-type="gtk_tooltip_get_type">
 			<method name="set_custom" symbol="gtk_tooltip_set_custom">
@@ -21227,22 +20624,6 @@
 				</parameters>
 			</method>
 			<property name="model" type="GtkTreeModel*" readable="1" writable="1" construct="0" construct-only="1"/>
-			<field name="root" type="gpointer"/>
-			<field name="stamp" type="gint"/>
-			<field name="child_flags" type="guint"/>
-			<field name="child_model" type="GtkTreeModel*"/>
-			<field name="zero_ref_count" type="gint"/>
-			<field name="sort_list" type="GList*"/>
-			<field name="sort_column_id" type="gint"/>
-			<field name="order" type="GtkSortType"/>
-			<field name="default_sort_func" type="GtkTreeIterCompareFunc"/>
-			<field name="default_sort_data" type="gpointer"/>
-			<field name="default_sort_destroy" type="GDestroyNotify"/>
-			<field name="changed_id" type="guint"/>
-			<field name="inserted_id" type="guint"/>
-			<field name="has_child_toggled_id" type="guint"/>
-			<field name="deleted_id" type="guint"/>
-			<field name="reordered_id" type="guint"/>
 		</object>
 		<object name="GtkTreeSelection" parent="GObject" type-name="GtkTreeSelection" get-type="gtk_tree_selection_get_type">
 			<method name="count_selected_rows" symbol="gtk_tree_selection_count_selected_rows">
@@ -21390,11 +20771,6 @@
 					<parameter name="selection" type="GtkTreeSelection*"/>
 				</parameters>
 			</signal>
-			<field name="tree_view" type="GtkTreeView*"/>
-			<field name="type" type="GtkSelectionMode"/>
-			<field name="user_func" type="GtkTreeSelectionFunc"/>
-			<field name="user_data" type="gpointer"/>
-			<field name="destroy" type="GDestroyNotify"/>
 		</object>
 		<object name="GtkTreeStore" parent="GObject" type-name="GtkTreeStore" get-type="gtk_tree_store_get_type">
 			<implements>
@@ -21590,18 +20966,6 @@
 					<parameter name="b" type="GtkTreeIter*"/>
 				</parameters>
 			</method>
-			<field name="stamp" type="gint"/>
-			<field name="root" type="gpointer"/>
-			<field name="last" type="gpointer"/>
-			<field name="n_columns" type="gint"/>
-			<field name="sort_column_id" type="gint"/>
-			<field name="sort_list" type="GList*"/>
-			<field name="order" type="GtkSortType"/>
-			<field name="column_headers" type="GType*"/>
-			<field name="default_sort_func" type="GtkTreeIterCompareFunc"/>
-			<field name="default_sort_data" type="gpointer"/>
-			<field name="default_sort_destroy" type="GDestroyNotify"/>
-			<field name="columns_dirty" type="guint"/>
 		</object>
 		<object name="GtkTreeView" parent="GtkContainer" type-name="GtkTreeView" get-type="gtk_tree_view_get_type">
 			<implements>
@@ -22833,41 +22197,6 @@
 					<parameter name="tree_column" type="GtkTreeViewColumn*"/>
 				</parameters>
 			</signal>
-			<field name="tree_view" type="GtkWidget*"/>
-			<field name="button" type="GtkWidget*"/>
-			<field name="child" type="GtkWidget*"/>
-			<field name="arrow" type="GtkWidget*"/>
-			<field name="alignment" type="GtkWidget*"/>
-			<field name="window" type="GdkWindow*"/>
-			<field name="editable_widget" type="GtkCellEditable*"/>
-			<field name="xalign" type="gfloat"/>
-			<field name="property_changed_signal" type="guint"/>
-			<field name="spacing" type="gint"/>
-			<field name="column_type" type="GtkTreeViewColumnSizing"/>
-			<field name="requested_width" type="gint"/>
-			<field name="button_request" type="gint"/>
-			<field name="resized_width" type="gint"/>
-			<field name="width" type="gint"/>
-			<field name="fixed_width" type="gint"/>
-			<field name="min_width" type="gint"/>
-			<field name="max_width" type="gint"/>
-			<field name="drag_x" type="gint"/>
-			<field name="drag_y" type="gint"/>
-			<field name="title" type="gchar*"/>
-			<field name="cell_list" type="GList*"/>
-			<field name="sort_clicked_signal" type="guint"/>
-			<field name="sort_column_changed_signal" type="guint"/>
-			<field name="sort_column_id" type="gint"/>
-			<field name="sort_order" type="GtkSortType"/>
-			<field name="visible" type="guint"/>
-			<field name="resizable" type="guint"/>
-			<field name="clickable" type="guint"/>
-			<field name="dirty" type="guint"/>
-			<field name="show_sort_indicator" type="guint"/>
-			<field name="maybe_reordered" type="guint"/>
-			<field name="reorderable" type="guint"/>
-			<field name="use_resized_width" type="guint"/>
-			<field name="expand" type="guint"/>
 		</object>
 		<object name="GtkUIManager" parent="GObject" type-name="GtkUIManager" get-type="gtk_ui_manager_get_type">
 			<implements>
@@ -23221,11 +22550,6 @@
 					<parameter name="vadjustment" type="GtkAdjustment*"/>
 				</parameters>
 			</signal>
-			<field name="shadow_type" type="GtkShadowType"/>
-			<field name="view_window" type="GdkWindow*"/>
-			<field name="bin_window" type="GdkWindow*"/>
-			<field name="hadjustment" type="GtkAdjustment*"/>
-			<field name="vadjustment" type="GtkAdjustment*"/>
 		</object>
 		<object name="GtkVolumeButton" parent="GtkScaleButton" type-name="GtkVolumeButton" get-type="gtk_volume_button_get_type">
 			<implements>
@@ -24940,14 +24264,6 @@
 					<parameter name="widget" type="GtkWidget*"/>
 				</parameters>
 			</vfunc>
-			<field name="state" type="guint8"/>
-			<field name="saved_state" type="guint8"/>
-			<field name="name" type="gchar*"/>
-			<field name="style" type="GtkStyle*"/>
-			<field name="requisition" type="GtkRequisition"/>
-			<field name="allocation" type="GtkAllocation"/>
-			<field name="window" type="GdkWindow*"/>
-			<field name="parent" type="GtkWidget*"/>
 		</object>
 		<object name="GtkWindow" parent="GtkBin" type-name="GtkWindow" get-type="gtk_window_get_type">
 			<implements>
@@ -25718,44 +25034,6 @@
 					<parameter name="direction" type="GtkDirectionType"/>
 				</parameters>
 			</vfunc>
-			<field name="title" type="gchar*"/>
-			<field name="wmclass_name" type="gchar*"/>
-			<field name="wmclass_class" type="gchar*"/>
-			<field name="wm_role" type="gchar*"/>
-			<field name="focus_widget" type="GtkWidget*"/>
-			<field name="default_widget" type="GtkWidget*"/>
-			<field name="transient_parent" type="GtkWindow*"/>
-			<field name="geometry_info" type="GtkWindowGeometryInfo*"/>
-			<field name="frame" type="GdkWindow*"/>
-			<field name="group" type="GtkWindowGroup*"/>
-			<field name="configure_request_count" type="guint16"/>
-			<field name="allow_shrink" type="guint"/>
-			<field name="allow_grow" type="guint"/>
-			<field name="configure_notify_received" type="guint"/>
-			<field name="need_default_position" type="guint"/>
-			<field name="need_default_size" type="guint"/>
-			<field name="position" type="guint"/>
-			<field name="type" type="guint"/>
-			<field name="has_user_ref_count" type="guint"/>
-			<field name="has_focus" type="guint"/>
-			<field name="modal" type="guint"/>
-			<field name="destroy_with_parent" type="guint"/>
-			<field name="has_frame" type="guint"/>
-			<field name="iconify_initially" type="guint"/>
-			<field name="stick_initially" type="guint"/>
-			<field name="maximize_initially" type="guint"/>
-			<field name="decorated" type="guint"/>
-			<field name="type_hint" type="guint"/>
-			<field name="gravity" type="guint"/>
-			<field name="is_active" type="guint"/>
-			<field name="has_toplevel_focus" type="guint"/>
-			<field name="frame_left" type="guint"/>
-			<field name="frame_top" type="guint"/>
-			<field name="frame_right" type="guint"/>
-			<field name="frame_bottom" type="guint"/>
-			<field name="keys_changed_handler" type="guint"/>
-			<field name="mnemonic_modifier" type="GdkModifierType"/>
-			<field name="screen" type="GdkScreen*"/>
 		</object>
 		<object name="GtkWindowGroup" parent="GObject" type-name="GtkWindowGroup" get-type="gtk_window_group_get_type">
 			<method name="add_window" symbol="gtk_window_group_add_window">
@@ -25788,7 +25066,6 @@
 					<parameter name="window" type="GtkWindow*"/>
 				</parameters>
 			</method>
-			<field name="grabs" type="GSList*"/>
 		</object>
 		<interface name="GtkActivatable" type-name="GtkActivatable" get-type="gtk_activatable_get_type">
 			<requires>

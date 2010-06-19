@@ -1578,8 +1578,8 @@
 		</struct>
 		<struct name="GdkPixmapObject">
 			<field name="parent_instance" type="GdkDrawable"/>
-			<field name="impl" type="GdkDrawable*"/>
-			<field name="depth" type="gint"/>
+			<field name="_g_sealed__impl" type="GdkDrawable*"/>
+			<field name="_g_sealed__depth" type="gint"/>
 		</struct>
 		<struct name="GdkPixmapObjectClass">
 			<field name="parent_class" type="GdkDrawableClass"/>
@@ -1936,8 +1936,8 @@
 					<parameter name="cursor" type="GdkCursor*"/>
 				</parameters>
 			</method>
-			<field name="type" type="GdkCursorType"/>
-			<field name="ref_count" type="guint"/>
+			<field name="_g_sealed__type" type="GdkCursorType"/>
+			<field name="_g_sealed__ref_count" type="guint"/>
 		</boxed>
 		<boxed name="GdkEvent" type-name="GdkEvent" get-type="gdk_event_get_type">
 			<method name="copy" symbol="gdk_event_copy">
@@ -2751,10 +2751,6 @@
 					<parameter name="result" type="GdkColor*"/>
 				</parameters>
 			</method>
-			<field name="size" type="gint"/>
-			<field name="colors" type="GdkColor*"/>
-			<field name="visual" type="GdkVisual*"/>
-			<field name="windowing_data" type="gpointer"/>
 		</object>
 		<object name="GdkDevice" parent="GObject" type-name="GdkDevice" get-type="gdk_device_get_type">
 			<method name="free_history" symbol="gdk_device_free_history">
@@ -2940,14 +2936,6 @@
 			<property name="n-axes" type="guint" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="name" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="type" type="GdkDeviceType" readable="1" writable="1" construct="0" construct-only="1"/>
-			<field name="name" type="gchar*"/>
-			<field name="source" type="GdkInputSource"/>
-			<field name="mode" type="GdkInputMode"/>
-			<field name="has_cursor" type="gboolean"/>
-			<field name="num_axes" type="gint"/>
-			<field name="axes" type="GdkDeviceAxis*"/>
-			<field name="num_keys" type="gint"/>
-			<field name="keys" type="GdkDeviceKey*"/>
 		</object>
 		<object name="GdkDeviceManager" parent="GObject" type-name="GdkDeviceManager" get-type="gdk_device_manager_get_type">
 			<method name="get_display" symbol="gdk_device_manager_get_display">
@@ -3318,20 +3306,6 @@
 					<parameter name="screen_num" type="gint"/>
 				</parameters>
 			</vfunc>
-			<field name="queued_events" type="GList*"/>
-			<field name="queued_tail" type="GList*"/>
-			<field name="multiple_click_info" type="GHashTable*"/>
-			<field name="double_click_time" type="guint"/>
-			<field name="core_pointer" type="GdkDevice*"/>
-			<field name="device_hooks" type="GdkDisplayDeviceHooks*"/>
-			<field name="closed" type="guint"/>
-			<field name="ignore_core_events" type="guint"/>
-			<field name="double_click_distance" type="guint"/>
-			<field name="device_grabs" type="GHashTable*"/>
-			<field name="motion_hint_info" type="GHashTable*"/>
-			<field name="pointers_info" type="GHashTable*"/>
-			<field name="last_event_time" type="guint32"/>
-			<field name="device_manager" type="GdkDeviceManager*"/>
 		</object>
 		<object name="GdkDisplayManager" parent="GObject" type-name="GdkDisplayManager" get-type="gdk_display_manager_get_type">
 			<method name="get" symbol="gdk_display_manager_get">
@@ -3412,16 +3386,6 @@
 					<parameter name="device" type="GdkDevice*"/>
 				</parameters>
 			</method>
-			<field name="protocol" type="GdkDragProtocol"/>
-			<field name="is_source" type="gboolean"/>
-			<field name="source_window" type="GdkWindow*"/>
-			<field name="dest_window" type="GdkWindow*"/>
-			<field name="targets" type="GList*"/>
-			<field name="actions" type="GdkDragAction"/>
-			<field name="suggested_action" type="GdkDragAction"/>
-			<field name="action" type="GdkDragAction"/>
-			<field name="start_time" type="guint32"/>
-			<field name="windowing_data" type="gpointer"/>
 		</object>
 		<object name="GdkDrawable" parent="GObject" type-name="GdkDrawable" get-type="gdk_drawable_get_type">
 			<method name="copy_to_image" symbol="gdk_drawable_copy_to_image">
@@ -4006,11 +3970,6 @@
 					<parameter name="mask" type="GdkGCValuesMask"/>
 				</parameters>
 			</vfunc>
-			<field name="clip_x_origin" type="gint"/>
-			<field name="clip_y_origin" type="gint"/>
-			<field name="ts_x_origin" type="gint"/>
-			<field name="ts_y_origin" type="gint"/>
-			<field name="colormap" type="GdkColormap*"/>
 		</object>
 		<object name="GdkImage" parent="GObject" type-name="GdkImage" get-type="gdk_image_get_type">
 			<method name="get_bits_per_pixel" symbol="gdk_image_get_bits_per_pixel">
@@ -4106,18 +4065,6 @@
 					<parameter name="colormap" type="GdkColormap*"/>
 				</parameters>
 			</method>
-			<field name="type" type="GdkImageType"/>
-			<field name="visual" type="GdkVisual*"/>
-			<field name="byte_order" type="GdkByteOrder"/>
-			<field name="width" type="gint"/>
-			<field name="height" type="gint"/>
-			<field name="depth" type="guint16"/>
-			<field name="bpp" type="guint16"/>
-			<field name="bpl" type="guint16"/>
-			<field name="bits_per_pixel" type="guint16"/>
-			<field name="mem" type="gpointer"/>
-			<field name="colormap" type="GdkColormap*"/>
-			<field name="windowing_data" type="gpointer"/>
 		</object>
 		<object name="GdkKeymap" parent="GObject" type-name="GdkKeymap" get-type="gdk_keymap_get_type">
 			<method name="add_virtual_modifiers" symbol="gdk_keymap_add_virtual_modifiers">
@@ -4218,7 +4165,6 @@
 					<parameter name="keymap" type="GdkKeymap*"/>
 				</parameters>
 			</signal>
-			<field name="display" type="GdkDisplay*"/>
 		</object>
 		<object name="GdkPangoRenderer" parent="PangoRenderer" type-name="GdkPangoRenderer" get-type="gdk_pango_renderer_get_type">
 			<method name="get_default" symbol="gdk_pango_renderer_get_default">
@@ -4622,12 +4568,6 @@
 					<parameter name="screen" type="GdkScreen*"/>
 				</parameters>
 			</signal>
-			<field name="closed" type="guint"/>
-			<field name="normal_gcs" type="GdkGC*[]"/>
-			<field name="exposure_gcs" type="GdkGC*[]"/>
-			<field name="subwindow_gcs" type="GdkGC*[]"/>
-			<field name="font_options" type="cairo_font_options_t*"/>
-			<field name="resolution" type="double"/>
 		</object>
 		<object name="GdkVisual" parent="GObject" type-name="GdkVisual" get-type="gdk_visual_get_type">
 			<method name="get_best" symbol="gdk_visual_get_best">
@@ -4724,20 +4664,6 @@
 					<parameter name="visual" type="GdkVisual*"/>
 				</parameters>
 			</method>
-			<field name="type" type="GdkVisualType"/>
-			<field name="depth" type="gint"/>
-			<field name="byte_order" type="GdkByteOrder"/>
-			<field name="colormap_size" type="gint"/>
-			<field name="bits_per_rgb" type="gint"/>
-			<field name="red_mask" type="guint32"/>
-			<field name="red_shift" type="gint"/>
-			<field name="red_prec" type="gint"/>
-			<field name="green_mask" type="guint32"/>
-			<field name="green_shift" type="gint"/>
-			<field name="green_prec" type="gint"/>
-			<field name="blue_mask" type="guint32"/>
-			<field name="blue_shift" type="gint"/>
-			<field name="blue_prec" type="gint"/>
 		</object>
 		<object name="GdkWindow" parent="GdkDrawable" type-name="GdkWindow" get-type="gdk_window_object_get_type">
 			<method name="add_filter" symbol="gdk_window_add_filter">

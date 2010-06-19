@@ -20,10 +20,6 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Colormap : GLib.Object {
-		public Gdk.Color colors;
-		public int size;
-		public weak Gdk.Visual visual;
-		public void* windowing_data;
 		[CCode (has_construct_function = false)]
 		public Colormap (Gdk.Visual visual, bool allocate);
 		public bool alloc_color (Gdk.Color color, bool writeable, bool best_match);
@@ -37,8 +33,6 @@ namespace Gdk {
 	[Compact]
 	[CCode (ref_function = "gdk_cursor_ref", unref_function = "gdk_cursor_unref", type_id = "GDK_TYPE_CURSOR", cheader_filename = "gdk/gdk.h")]
 	public class Cursor {
-		public uint ref_count;
-		public Gdk.CursorType type;
 		[CCode (has_construct_function = false)]
 		public Cursor (Gdk.CursorType cursor_type);
 		[CCode (has_construct_function = false)]
@@ -54,14 +48,6 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Device : GLib.Object {
-		[CCode (array_length = false)]
-		public weak Gdk.DeviceAxis[] axes;
-		[CCode (array_length = false)]
-		public weak Gdk.DeviceKey[] keys;
-		public Gdk.InputMode mode;
-		public int num_axes;
-		public int num_keys;
-		public Gdk.InputSource source;
 		public static void free_history (Gdk.TimeCoord[] events);
 		public unowned Gdk.Device get_associated_device ();
 		public bool get_axis ([CCode (array_length = false)] double[] axes, Gdk.AxisUse use, out double value);
@@ -110,19 +96,6 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Display : GLib.Object {
-		public weak Gdk.Device core_pointer;
-		public weak GLib.HashTable device_grabs;
-		public weak Gdk.DisplayDeviceHooks device_hooks;
-		public weak Gdk.DeviceManager device_manager;
-		public uint double_click_distance;
-		public uint double_click_time;
-		public uint ignore_core_events;
-		public uint32 last_event_time;
-		public weak GLib.HashTable motion_hint_info;
-		public weak GLib.HashTable multiple_click_info;
-		public weak GLib.HashTable pointers_info;
-		public weak GLib.List queued_events;
-		public weak GLib.List queued_tail;
 		public void add_client_message_filter (Gdk.Atom message_type, Gdk.FilterFunc func);
 		public void beep ();
 		public void close ();
@@ -195,16 +168,6 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class DragContext : GLib.Object {
-		public Gdk.DragAction action;
-		public Gdk.DragAction actions;
-		public weak Gdk.Window dest_window;
-		public bool is_source;
-		public Gdk.DragProtocol protocol;
-		public weak Gdk.Window source_window;
-		public uint32 start_time;
-		public Gdk.DragAction suggested_action;
-		public weak GLib.List targets;
-		public void* windowing_data;
 		[CCode (has_construct_function = false)]
 		public DragContext ();
 		public Gdk.DragAction get_actions ();
@@ -327,11 +290,6 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class GC : GLib.Object {
-		public int clip_x_origin;
-		public int clip_y_origin;
-		public weak Gdk.Colormap colormap;
-		public int ts_x_origin;
-		public int ts_y_origin;
 		[CCode (has_construct_function = false)]
 		public GC (Gdk.Drawable drawable);
 		public void copy (Gdk.GC src_gc);
@@ -363,18 +321,6 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Image : GLib.Object {
-		public uint16 bits_per_pixel;
-		public uint16 bpl;
-		public uint16 bpp;
-		public Gdk.ByteOrder byte_order;
-		public weak Gdk.Colormap colormap;
-		public uint16 depth;
-		public int height;
-		public void* mem;
-		public Gdk.ImageType type;
-		public weak Gdk.Visual visual;
-		public int width;
-		public void* windowing_data;
 		[CCode (has_construct_function = false)]
 		public Image (Gdk.ImageType type, Gdk.Visual visual, int width, int height);
 		public uint16 get_bits_per_pixel ();
@@ -402,7 +348,6 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Keymap : GLib.Object {
-		public weak Gdk.Display display;
 		public void add_virtual_modifiers (Gdk.ModifierType state);
 		public bool get_caps_lock_state ();
 		public static unowned Gdk.Keymap get_default ();
@@ -501,13 +446,6 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Screen : GLib.Object {
-		public uint closed;
-		[CCode (array_length = false)]
-		public weak Gdk.GC[] exposure_gcs;
-		[CCode (array_length = false)]
-		public weak Gdk.GC[] normal_gcs;
-		[CCode (array_length = false)]
-		public weak Gdk.GC[] subwindow_gcs;
 		public void broadcast_client_message (Gdk.Event event);
 		public unowned Gdk.Window get_active_window ();
 		public static unowned Gdk.Screen get_default ();
@@ -556,20 +494,6 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Visual : GLib.Object {
-		public int bits_per_rgb;
-		public uint32 blue_mask;
-		public int blue_prec;
-		public int blue_shift;
-		public Gdk.ByteOrder byte_order;
-		public int colormap_size;
-		public int depth;
-		public uint32 green_mask;
-		public int green_prec;
-		public int green_shift;
-		public uint32 red_mask;
-		public int red_prec;
-		public int red_shift;
-		public Gdk.VisualType type;
 		public static unowned Gdk.Visual get_best ();
 		public static int get_best_depth ();
 		public static Gdk.VisualType get_best_type ();

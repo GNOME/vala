@@ -837,7 +837,6 @@ GtkWidget::has_default has_emitter="1"
 GtkWidget::has_focus has_emitter="1"
 GtkWidget::has_grab has_emitter="1"
 GtkWidget::is_drawable has_emitter="1"
-GtkWidget::is_toplevel has_emitter="1"
 GtkWidget::motion_notify_event.event namespace_name="Gdk" type_name="EventMotion"
 GtkWidget::focus_out_event.event namespace_name="Gdk" type_name="EventFocus"
 GtkWidget::parent_set.previous_parent nullable="1"
@@ -850,3 +849,5 @@ GtkWidget::selection_notify_event.event namespace_name="Gdk" type_name="EventSel
 GtkWidget::selection_request_event.event namespace_name="Gdk" type_name="EventSelection"
 GtkWidget::visibility_event.event namespace_name="Gdk" type_name="EventVisibility"
 GtkWidget::window_state_event.event namespace_name="Gdk" type_name="EventWindowState"
+
+*._g_sealed__* hidden="1"
