@@ -35,12 +35,9 @@ function testheader() {
 	if [ "$1" = "Packages:" ]; then
 		shift
 		PACKAGES="$PACKAGES $@"
-		for pkg in "$@"; do
-			if [ "$pkg" = "dbus-glib-1" ]; then
-				echo 'eval `dbus-launch --sh-syntax`' >> prepare
-				echo 'trap "kill $DBUS_SESSION_BUS_PID" INT TERM EXIT' >> prepare
-			fi
-		done
+	elif [ "$1" = "D-Bus" ]; then
+		echo 'eval `dbus-launch --sh-syntax`' >> prepare
+		echo 'trap "kill $DBUS_SESSION_BUS_PID" INT TERM EXIT' >> prepare
 	fi
 }
 

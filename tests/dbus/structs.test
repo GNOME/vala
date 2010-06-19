@@ -1,4 +1,5 @@
-Packages: dbus-glib-1
+Packages: gio-2.0
+D-Bus
 
 Program: client
 
@@ -16,14 +17,12 @@ struct FooStruct {
 interface Test : Object {
 	public abstract FooStruct test_property { owned get; set; }
 
-	public abstract FooStruct test_struct (FooStruct f, out FooStruct g) throws DBus.Error;
+	public abstract FooStruct test_struct (FooStruct f, out FooStruct g) throws IOError;
 }
 
 void main () {
-	var conn = DBus.Bus.get (DBus.BusType.SESSION);
-
 	// client
-	var test = (Test) conn.get_object ("org.example.Test", "/org/example/test");
+	Test test = Bus.get_proxy_sync (BusType.SESSION, "org.example.Test", "/org/example/test");
 
 	FooStruct f, g, h;
 	f = FooStruct (42, "hello");
@@ -63,31 +62,25 @@ class Test : Object {
 	}
 }
 
-MainLoop main_loop;
+Application app;
 
 void client_exit (Pid pid, int status) {
 	// client finished, terminate server
 	assert (status == 0);
-	main_loop.quit ();
+	app.quit ();
 }
 
 void main () {
-	var conn = DBus.Bus.get (DBus.BusType.SESSION);
-	dynamic DBus.Object bus = conn.get_object ("org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus");
+	var conn = Bus.get_sync (BusType.SESSION);
+	conn.register_object ("/org/example/test", new Test ());
 
 	// try to register service in session bus
-	uint request_name_result = bus.request_name ("org.example.Test", (uint) 0);
-	assert (request_name_result == DBus.RequestNameReply.PRIMARY_OWNER);
-
-	// start server
-	var server = new Test ();
-	conn.register_object ("/org/example/test", server);
+	app = new Application ("org.example.Test");
 
 	// server ready, spawn client
 	Pid client_pid;
 	Process.spawn_async (null, { "test", "/dbus/structs/client" }, null, SpawnFlags.DO_NOT_REAP_CHILD, null, out client_pid);
 	ChildWatch.add (client_pid, client_exit);
 
-	main_loop = new MainLoop (null, false);
-	main_loop.run ();
+	app.run ();
 }
