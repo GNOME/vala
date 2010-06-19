@@ -1055,11 +1055,7 @@ public class Vala.DBusClientModule : DBusModule {
 		string cname = iface.get_cname () + "DBusProxy";
 		string lower_cname = iface.get_lower_case_cprefix () + "dbus_proxy";
 
-		if (iface.access != SymbolAccessibility.PRIVATE) {
-			dbus_glib_h_needed_in_header = true;
-		} else {
-			dbus_glib_h_needed = true;
-		}
+		add_dbus_helpers ();
 
 		source_declarations.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (cname), new CCodeVariableDeclarator (cname)));
 		source_declarations.add_type_declaration (new CCodeTypeDefinition ("DBusGProxyClass", new CCodeVariableDeclarator (cname + "Class")));

@@ -574,11 +574,9 @@ public class Vala.DBusServerModule : DBusClientModule {
 		cfunc.add_parameter (new CCodeFormalParameter ("path", "const char*"));
 		cfunc.add_parameter (new CCodeFormalParameter ("object", "void*"));
 
-		if (!sym.is_private_symbol ()) {
-			dbus_glib_h_needed_in_header = true;
-		} else {
-			dbus_glib_h_needed = true;
+		add_dbus_helpers ();
 
+		if (sym.is_private_symbol ()) {
 			cfunc.modifiers |= CCodeModifiers.STATIC;
 		}
 
@@ -1504,7 +1502,7 @@ public class Vala.DBusServerModule : DBusClientModule {
 	void generate_message_function (ObjectType object_type) {
 		var sym = object_type.type_symbol;
 
-		dbus_glib_h_needed = true;
+		add_dbus_helpers ();
 
 		var cfunc = new CCodeFunction (sym.get_lower_case_cprefix () + "dbus_message", "DBusHandlerResult");
 		cfunc.add_parameter (new CCodeFormalParameter ("connection", "DBusConnection*"));
@@ -1637,7 +1635,7 @@ public class Vala.DBusServerModule : DBusClientModule {
 			return;
 		}
 
-		dbus_glib_h_needed = true;
+		add_dbus_helpers ();
 
 		expr.accept_children (codegen);
 

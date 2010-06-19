@@ -988,4 +988,94 @@ public class Vala.DBusModule : GAsyncModule {
 			Report.error (type.source_reference, "D-Bus serialization of type `%s' is not supported".printf (type.to_string ()));
 		}
 	}
+
+	public void add_dbus_helpers () {
+		if (source_declarations.add_declaration ("_vala_dbus_register_object")) {
+			return;
+		}
+
+		source_declarations.add_include ("dbus/dbus.h");
+		source_declarations.add_include ("dbus/dbus-glib.h");
+		source_declarations.add_include ("dbus/dbus-glib-lowlevel.h");
+
+		var dbusvtable = new CCodeStruct ("_DBusObjectVTable");
+		dbusvtable.add_field ("void", "(*register_object) (DBusConnection*, const char*, void*)");
+		source_declarations.add_type_definition (dbusvtable);
+
+		source_declarations.add_type_declaration (new CCodeTypeDefinition ("struct _DBusObjectVTable", new CCodeVariableDeclarator ("_DBusObjectVTable")));
+
+		var cfunc = new CCodeFunction ("_vala_dbus_register_object", "void");
+		cfunc.add_parameter (new CCodeFormalParameter ("connection", "DBusConnection*"));
+		cfunc.add_parameter (new CCodeFormalParameter ("path", "const char*"));
+		cfunc.add_parameter (new CCodeFormalParameter ("object", "void*"));
+
+		cfunc.modifiers |= CCodeModifiers.STATIC;
+		source_declarations.add_type_member_declaration (cfunc.copy ());
+
+		var block = new CCodeBlock ();
+		cfunc.block = block;
+
+		var cdecl = new CCodeDeclaration ("const _DBusObjectVTable *");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("vtable"));
+		block.add_statement (cdecl);
+
+		var quark = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_static_string"));
+		quark.add_argument (new CCodeConstant ("\"DBusObjectVTable\""));
+
+		var get_qdata = new CCodeFunctionCall (new CCodeIdentifier ("g_type_get_qdata"));
+		get_qdata.add_argument (new CCodeIdentifier ("G_TYPE_FROM_INSTANCE (object)"));
+		get_qdata.add_argument (quark);
+
+		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("vtable"), get_qdata)));
+
+		var cregister = new CCodeFunctionCall (new CCodeMemberAccess.pointer (new CCodeIdentifier ("vtable"), "register_object"));
+		cregister.add_argument (new CCodeIdentifier ("connection"));
+		cregister.add_argument (new CCodeIdentifier ("path"));
+		cregister.add_argument (new CCodeIdentifier ("object"));
+
+		var ifblock = new CCodeBlock ();
+		ifblock.add_statement (new CCodeExpressionStatement (cregister));
+
+		var elseblock = new CCodeBlock ();
+
+		var warn = new CCodeFunctionCall (new CCodeIdentifier ("g_warning"));
+		warn.add_argument (new CCodeConstant ("\"Object does not implement any D-Bus interface\""));
+
+		elseblock.add_statement (new CCodeExpressionStatement(warn));
+
+		block.add_statement (new CCodeIfStatement (new CCodeIdentifier ("vtable"), ifblock, elseblock));
+
+		source_type_member_definition.append (cfunc);
+
+		// unregister function
+		cfunc = new CCodeFunction ("_vala_dbus_unregister_object", "void");
+		cfunc.add_parameter (new CCodeFormalParameter ("connection", "gpointer"));
+		cfunc.add_parameter (new CCodeFormalParameter ("object", "GObject*"));
+
+		cfunc.modifiers |= CCodeModifiers.STATIC;
+		source_declarations.add_type_member_declaration (cfunc.copy ());
+
+		block = new CCodeBlock ();
+		cfunc.block = block;
+
+		cdecl = new CCodeDeclaration ("char*");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("path"));
+		block.add_statement (cdecl);
+
+		var path = new CCodeFunctionCall (new CCodeIdentifier ("g_object_steal_data"));
+		path.add_argument (new CCodeCastExpression (new CCodeIdentifier ("object"), "GObject*"));
+		path.add_argument (new CCodeConstant ("\"dbus_object_path\""));
+		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("path"), path)));
+
+		var unregister_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_connection_unregister_object_path"));
+		unregister_call.add_argument (new CCodeIdentifier ("connection"));
+		unregister_call.add_argument (new CCodeIdentifier ("path"));
+		block.add_statement (new CCodeExpressionStatement (unregister_call));
+
+		var path_free = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
+		path_free.add_argument (new CCodeIdentifier ("path"));
+		block.add_statement (new CCodeExpressionStatement (path_free));
+
+		source_type_member_definition.append (cfunc);
+	}
 }
