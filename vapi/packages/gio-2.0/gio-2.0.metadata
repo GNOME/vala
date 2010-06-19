@@ -139,9 +139,11 @@ g_io_scheduler_*.notify nullable="1"
 g_memory_input_stream_*.destroy nullable="1"
 g_memory_output_stream_*.destroy_function nullable="1"
 
+g_application_new.argc hidden="1"
+g_application_new.argv is_array="1" is_ref="1" array_length_pos="1.9" nullable="1" default_value="null"
 g_application_is_remote hidden="1"
 GApplication::quit_with_data has_emitter="1"
-g_application_register hidden="1"
+GApplication:register hidden="1"
 
 GDBusAuthObserver::authorize_authenticated_peer has_emitter="1"
 GDBusConnection:closed hidden="1"

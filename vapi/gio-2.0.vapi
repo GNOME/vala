@@ -13,7 +13,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class Application : GLib.Object, GLib.Initable {
 		[CCode (has_construct_function = false)]
-		public Application (string appid, int argc, out unowned string argv);
+		public Application (string appid, [CCode (array_length_pos = 1.9)] ref unowned string[]? argv = null);
 		public void add_action (string name, string description);
 		public unowned string get_action_description (string name);
 		public bool get_action_enabled (string name);
@@ -21,6 +21,9 @@ namespace GLib {
 		public static unowned GLib.Application get_instance ();
 		public void invoke_action (string name, GLib.Variant platform_data);
 		public unowned string list_actions ();
+		[CCode (cname = "g_application_quit_with_data")]
+		public bool quit (GLib.Variant? platform_data = null);
+		public bool register ();
 		public void remove_action (string name);
 		public virtual void run ();
 		public void set_action_enabled (string name, bool enabled);
@@ -36,8 +39,6 @@ namespace GLib {
 		public bool is_remote { get; }
 		[NoAccessorMethod]
 		public GLib.Variant platform_data { owned get; construct; }
-		[NoAccessorMethod]
-		public bool register { get; construct; }
 		public virtual signal void action_with_data (string action_name, GLib.Variant platform_data);
 		public virtual signal void prepare_activation (GLib.Variant arguments, GLib.Variant platform_data);
 		[HasEmitter]
