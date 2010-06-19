@@ -231,7 +231,7 @@ namespace Archive {
 #endif
 		public Result open_memory (void* buffer, size_t buff_size, out size_t used);
 
-		[CCode (cname="archive_write_entry")]
+		[CCode (cname="archive_write_header")]
 		public Result write_header (Entry entry);
 		[CCode (cname="archive_write_data")]
 		public ssize_t write_data (void* data, size_t size);
