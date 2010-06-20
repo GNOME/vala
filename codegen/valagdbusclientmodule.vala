@@ -245,6 +245,12 @@ public class Vala.GDBusClientModule : GDBusModule {
 		var type_arg = (ObjectType) ma.get_type_arguments ().get (0);
 		var iface = (Interface) type_arg.type_symbol;
 
+		string dbus_iface_name = get_dbus_name (iface);
+		if (dbus_iface_name == null) {
+			Report.error (expr.source_reference, "`%s' is not a D-Bus interface".printf (iface.get_full_name ()));
+			return;
+		}
+
 		var args = expr.get_argument_list ();
 		Expression bus_type = args.get (0);
 		Expression name = args.get (1);
