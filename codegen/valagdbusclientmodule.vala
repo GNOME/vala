@@ -341,7 +341,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 				}
 			}
 
-			read_expression (prefragment, param.parameter_type, new CCodeIdentifier ("_arguments_iter"), new CCodeIdentifier (param.name));
+			read_expression (prefragment, param.parameter_type, new CCodeIdentifier ("_arguments_iter"), new CCodeIdentifier (param.name), param);
 
 			if (requires_destroy (owned_type)) {
 				// keep local alive (symbol_reference is weak)
@@ -438,7 +438,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 				if (param.parameter_type.is_real_struct_type ()) {
 					expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, expr);
 				}
-				write_expression (prefragment, param.parameter_type, new CCodeIdentifier ("_arguments_builder"), expr);
+				write_expression (prefragment, param.parameter_type, new CCodeIdentifier ("_arguments_builder"), expr, param);
 			} else {
 				cdecl = new CCodeDeclaration (param.parameter_type.get_cname ());
 				cdecl.add_declarator (new CCodeVariableDeclarator ("_" + param.name));
@@ -455,7 +455,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 				}
 
 				var target = new CCodeIdentifier ("_" + param.name);
-				read_expression (postfragment, param.parameter_type, new CCodeIdentifier ("_reply_iter"), target);
+				read_expression (postfragment, param.parameter_type, new CCodeIdentifier ("_reply_iter"), target, param);
 
 				// TODO check that parameter is not NULL (out parameters are optional)
 				// free value if parameter is NULL
@@ -473,7 +473,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 		if (!(m.return_type is VoidType)) {
 			if (m.return_type.is_real_non_null_struct_type ()) {
 				var target = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result"));
-				read_expression (postfragment, m.return_type, new CCodeIdentifier ("_reply_iter"), target);
+				read_expression (postfragment, m.return_type, new CCodeIdentifier ("_reply_iter"), target, m);
 			} else {
 				cdecl = new CCodeDeclaration (m.return_type.get_cname ());
 				cdecl.add_declarator (new CCodeVariableDeclarator ("_result"));
@@ -489,7 +489,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 					}
 				}
 
-				read_expression (postfragment, m.return_type, new CCodeIdentifier ("_reply_iter"), new CCodeIdentifier ("_result"));
+				read_expression (postfragment, m.return_type, new CCodeIdentifier ("_reply_iter"), new CCodeIdentifier ("_result"), m);
 
 				if (array_type != null) {
 					for (int dim = 1; dim <= array_type.rank; dim++) {
@@ -725,9 +725,9 @@ public class Vala.GDBusClientModule : GDBusModule {
 		prefragment.append (new CCodeExpressionStatement (builder_init));
 
 		// interface name
-		write_expression (prefragment, string_type, new CCodeIdentifier ("_arguments_builder"), new CCodeConstant ("\"%s\"".printf (dbus_iface_name)));
+		write_expression (prefragment, string_type, new CCodeIdentifier ("_arguments_builder"), new CCodeConstant ("\"%s\"".printf (dbus_iface_name)), null);
 		// property name
-		write_expression (prefragment, string_type, new CCodeIdentifier ("_arguments_builder"), new CCodeConstant ("\"%s\"".printf (get_dbus_name_for_member (prop))));
+		write_expression (prefragment, string_type, new CCodeIdentifier ("_arguments_builder"), new CCodeConstant ("\"%s\"".printf (get_dbus_name_for_member (prop))), null);
 
 		var builder_end = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_end"));
 		builder_end.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_arguments_builder")));
@@ -749,7 +749,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		if (prop.property_type.is_real_non_null_struct_type ()) {
 			var target = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result"));
-			read_expression (postfragment, prop.get_accessor.value_type, new CCodeIdentifier ("_reply_iter"), target);
+			read_expression (postfragment, prop.get_accessor.value_type, new CCodeIdentifier ("_reply_iter"), target, prop);
 		} else {
 			cdecl = new CCodeDeclaration (prop.get_accessor.value_type.get_cname ());
 			cdecl.add_declarator (new CCodeVariableDeclarator ("_result"));
@@ -763,7 +763,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 				}
 			}
 
-			read_expression (postfragment, prop.get_accessor.value_type, new CCodeIdentifier ("_reply_iter"), new CCodeIdentifier ("_result"));
+			read_expression (postfragment, prop.get_accessor.value_type, new CCodeIdentifier ("_reply_iter"), new CCodeIdentifier ("_result"), prop);
 
 			if (array_type != null) {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
@@ -859,9 +859,9 @@ public class Vala.GDBusClientModule : GDBusModule {
 		prefragment.append (new CCodeExpressionStatement (builder_init));
 
 		// interface name
-		write_expression (prefragment, string_type, new CCodeIdentifier ("_arguments_builder"), new CCodeConstant ("\"%s\"".printf (dbus_iface_name)));
+		write_expression (prefragment, string_type, new CCodeIdentifier ("_arguments_builder"), new CCodeConstant ("\"%s\"".printf (dbus_iface_name)), null);
 		// property name
-		write_expression (prefragment, string_type, new CCodeIdentifier ("_arguments_builder"), new CCodeConstant ("\"%s\"".printf (get_dbus_name_for_member (prop))));
+		write_expression (prefragment, string_type, new CCodeIdentifier ("_arguments_builder"), new CCodeConstant ("\"%s\"".printf (get_dbus_name_for_member (prop))), null);
 
 		// property value (as variant)
 		var builder_open = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_open"));
@@ -870,9 +870,9 @@ public class Vala.GDBusClientModule : GDBusModule {
 		prefragment.append (new CCodeExpressionStatement (builder_open));
 
 		if (prop.property_type.is_real_non_null_struct_type ()) {
-			write_expression (prefragment, prop.set_accessor.value_type, new CCodeIdentifier ("_arguments_builder"), new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("value")));
+			write_expression (prefragment, prop.set_accessor.value_type, new CCodeIdentifier ("_arguments_builder"), new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("value")), prop);
 		} else {
-			write_expression (prefragment, prop.set_accessor.value_type, new CCodeIdentifier ("_arguments_builder"), new CCodeIdentifier ("value"));
+			write_expression (prefragment, prop.set_accessor.value_type, new CCodeIdentifier ("_arguments_builder"), new CCodeIdentifier ("value"), prop);
 		}
 
 		var builder_close = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_close"));

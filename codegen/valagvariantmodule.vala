@@ -55,16 +55,25 @@ public class Vala.GVariantModule : GAsyncModule {
 	}
 
 	string get_dbus_value (EnumValue value, string default_value) {
-			var dbus = value.get_attribute ("DBus");
-			if (dbus == null) {
-				return default_value;
-			}
+		var dbus = value.get_attribute ("DBus");
+		if (dbus == null) {
+			return default_value;
+		}
 
-			string dbus_value = dbus.get_string ("value");
-			if (dbus_value == null) {
-				return default_value;
-			}
-			return dbus_value;
+		string dbus_value = dbus.get_string ("value");
+		if (dbus_value == null) {
+			return default_value;
+		}
+		return dbus_value;
+	}
+
+	public static string? get_dbus_signature (Symbol symbol) {
+		var dbus = symbol.get_attribute ("DBus");
+		if (dbus == null) {
+			return null;
+		}
+
+		return dbus.get_string ("signature");
 	}
 
 	bool get_basic_type_info (string signature, out BasicTypeInfo basic_type) {
@@ -77,7 +86,15 @@ public class Vala.GVariantModule : GAsyncModule {
 		return false;
 	}
 
-	public static string? get_type_signature (DataType datatype) {
+	public static string? get_type_signature (DataType datatype, Symbol? symbol = null) {
+		if (symbol != null) {
+			string sig = get_dbus_signature (symbol);
+			if (sig != null) {
+				// allow overriding signature in attribute, used for raw GVariants
+				return sig;
+			}
+		}
+
 		var array_type = datatype as ArrayType;
 
 		if (array_type != null) {
@@ -380,7 +397,7 @@ public class Vala.GVariantModule : GAsyncModule {
 
 			field_found = true;
 
-			read_expression (fragment, f.field_type, new CCodeIdentifier (subiter_name), new CCodeMemberAccess (new CCodeIdentifier (temp_name), f.get_cname ()));
+			read_expression (fragment, f.field_type, new CCodeIdentifier (subiter_name), new CCodeMemberAccess (new CCodeIdentifier (temp_name), f.get_cname ()), f);
 		}
 
 		if (!field_found) {
@@ -506,7 +523,16 @@ public class Vala.GVariantModule : GAsyncModule {
 		return result;
 	}
 
-	public void read_expression (CCodeFragment fragment, DataType type, CCodeExpression iter_expr, CCodeExpression target_expr) {
+	public void read_expression (CCodeFragment fragment, DataType type, CCodeExpression iter_expr, CCodeExpression target_expr, Symbol? sym) {
+		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_iter_next_value"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, iter_expr));
+
+		if (sym != null && get_dbus_signature (sym) != null) {
+			// raw GVariant
+			fragment.append (new CCodeExpressionStatement (new CCodeAssignment (target_expr, iter_call)));
+			return;
+		}
+
 		string temp_name = "_tmp%d_".printf (next_temp_var_id++);
 
 		var cdecl = new CCodeDeclaration ("GVariant*");
@@ -515,8 +541,6 @@ public class Vala.GVariantModule : GAsyncModule {
 
 		var variant_expr = new CCodeIdentifier (temp_name);
 
-		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_iter_next_value"));
-		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, iter_expr));
 		fragment.append (new CCodeExpressionStatement (new CCodeAssignment (variant_expr, iter_call)));
 
 		var result = deserialize_expression (fragment, type, variant_expr, target_expr);
@@ -661,7 +685,7 @@ public class Vala.GVariantModule : GAsyncModule {
 
 			field_found = true;
 
-			write_expression (fragment, f.field_type, new CCodeIdentifier (builder_name), new CCodeMemberAccess (struct_expr, f.get_cname ()));
+			write_expression (fragment, f.field_type, new CCodeIdentifier (builder_name), new CCodeMemberAccess (struct_expr, f.get_cname ()), f);
 		}
 
 		if (!field_found) {
@@ -776,8 +800,12 @@ public class Vala.GVariantModule : GAsyncModule {
 		return result;
 	}
 
-	public void write_expression (CCodeFragment fragment, DataType type, CCodeExpression builder_expr, CCodeExpression expr) {
-		var variant_expr = serialize_expression (fragment, type, expr);
+	public void write_expression (CCodeFragment fragment, DataType type, CCodeExpression builder_expr, CCodeExpression expr, Symbol? sym) {
+		var variant_expr = expr;
+		if (sym == null || get_dbus_signature (sym) == null) {
+			// perform boxing
+			variant_expr = serialize_expression (fragment, type, expr);
+		}
 		if (variant_expr != null) {
 			var builder_add = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_add_value"));
 			builder_add.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, builder_expr));
