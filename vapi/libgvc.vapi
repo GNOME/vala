@@ -96,6 +96,9 @@ namespace Gvc {
 	[Compact]
 	[CCode (cname = "Agnode_t", ref_function = "", unref_function = "", free_function = "")]
 	public class Node {
+		[CCode (cname = "name")]
+		public string name;
+
 		[CCode (cname = "agget")]
 		public unowned string? get ([CCode (type = "char*")] string attribute_name);
 
@@ -136,6 +139,29 @@ namespace Gvc {
 
 		[CCode (cname = "agedge")]
 		public Edge create_edge (Node from, Node to);
+
+		/** Note: name set to "null" creates an anonymous subgraph. */
+		[CCode (cname = "agsubg")]
+		public unowned Graph create_subgraph ([CCode (type = "char*")] string? name);
+
+		[CCode (cname = "agfindsubg")]
+		public Graph find_subgraph ([CCode (type = "char*")] string name);
+
+		[CCode (cname = "agidsubg")]
+		public Graph create_subgraph_id (ulong id);
+
+		[CCode (cname = "agfstsubg")]
+		public Graph get_first_subgraph ();
+
+		[CCode (cname = "agnxtsubg")]
+		public Graph get_next_subgraph ();
+
+		[CCode (cname = "agparent")]
+		public Graph get_parent_graph ();
+
+		/** Note: agclose() is also allowed for subgraphs and has the same effect as agdelsubg(). */
+		[CCode (cname = "agdelsubg")]
+		public int delete_subgraph (Graph subgraph);
 
 		[CCode (cname = "agfindnode")]
 		public Node? find_node ([CCode (type = "char*")] string node_name);
