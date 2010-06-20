@@ -1022,11 +1022,9 @@ public class Vala.Scanner {
 				case TokenType.MINUS:
 				case TokenType.OP_AND:
 				case TokenType.OP_COALESCING:
-				case TokenType.OP_DEC:
 				case TokenType.OP_EQ:
 				case TokenType.OP_GE:
 				case TokenType.OP_GT:
-				case TokenType.OP_INC:
 				case TokenType.OP_LE:
 				case TokenType.OP_LT:
 				case TokenType.OP_NE:
