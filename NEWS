@@ -1,3 +1,14 @@
+Vala 0.9.2
+==========
+
+ * Initial support for GDBus-based clients and servers.
+ * Support implicit and explicit GVariant casts.
+ * Add support for [Deprecated] attribute.
+ * Add GenericArray as alternative binding to GPtrArray.
+ * Add gdk-pixbuf-3.0, gdk-3.0, gdk-x11-3.0, and gtk+-3.0 bindings.
+ * Updates to the GLib bindings.
+ * Many bug fixes.
+
 Vala 0.9.1
 ==========
 
