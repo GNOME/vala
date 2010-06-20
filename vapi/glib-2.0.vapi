@@ -3903,7 +3903,7 @@ namespace GLib {
 	}
 
 	[Compact]
-	[CCode (ref_function = "g_variant_ref", unref_function = "g_variant_unref", ref_sink_function = "g_variant_ref_sink", type_id = "G_TYPE_VARIANT", type_signature = "v")]
+	[CCode (ref_function = "g_variant_ref", unref_function = "g_variant_unref", ref_sink_function = "g_variant_ref_sink", type_id = "G_TYPE_VARIANT", marshaller_type_name = "VARIANT", param_spec_function = "g_param_spec_variant", get_value_function = "g_value_get_variant", set_value_function = "g_value_set_variant", take_value_function = "g_value_take_variant", type_signature = "v")]
 	public class Variant {
 		public enum Class {
 			BOOLEAN, BYTE, INT16, UINT16, INT32, UINT32, INT64,

@@ -1635,6 +1635,9 @@ public class Vala.GTypeModule : GErrorModule {
 			cspec.call = new CCodeIdentifier (param_spec_name);
 			if (param_spec_name == "g_param_spec_string") {
 				cspec.add_argument (new CCodeConstant ("NULL"));
+			} else if (param_spec_name == "g_param_spec_variant") {
+				cspec.add_argument (new CCodeConstant ("G_VARIANT_TYPE_ANY"));
+				cspec.add_argument (new CCodeConstant ("NULL"));
 			} else if (prop.property_type.data_type.get_type_id () != "G_TYPE_POINTER") {
 				cspec.add_argument (new CCodeIdentifier (prop.property_type.data_type.get_type_id ()));
 			}
