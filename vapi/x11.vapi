@@ -36,6 +36,9 @@ namespace X {
 		[CCode (cname = "XAllPlanes")]
 		public static ulong get_all_planes ();
 
+		[CCode (cname = "XActivateScreenSaver")]
+		public void activate_screensaver ();
+
 		[CCode (cname = "XAddToSaveSet")]
 		public int add_to_save_set (Window w);
 
@@ -81,11 +84,17 @@ namespace X {
 		[CCode (cname = "XFlush")]
 		public int flush ();
 
+		[CCode (cname = "XForceScreenSaver")]
+		public void force_screensaver (int mode);
+
 		[CCode (cname = "XGetKeyboardMapping", array_length = false)]
 		public unowned uint[] get_keyboard_mapping (uint first_keycode, int keycode_count, ref int keysyms_per_keycode_return);
 
 		[CCode (cname = "XGetModifierMapping")]
 		public ModifierKeymap get_modifier_mapping ();
+
+		[CCode (cname = "XGetScreenSaver")]
+		public void get_screensaver (out int timeout, out int interval, out int prefer_blanking, out int allow_exposures);
 
 		[CCode (cname = "XGetSelectionOwner")]
 		public Window get_selection_owner (Atom selection);
@@ -174,6 +183,9 @@ namespace X {
 		[CCode (cname = "XReparentWindow")]
 		public int reparent_window (Window w, Window parent, int x, int y);
 
+		[CCode (cname = "XResetScreenSaver")]
+		public void reset_screensaver ();
+
 		[CCode (cname = "XResizeWindow")]
 		public int resize_window (Window w, uint width, uint height);
 
@@ -194,6 +206,9 @@ namespace X {
 
 		[CCode (cname = "XSetCloseDownMode")]
 		public void set_close_down_mode (int close_mode);
+
+		[CCode (cname = "XSetScreenSaver")]
+		public void set_screensaver (int timeout, int interval, int prefer_blanking, int allow_exposures);
 
 		[CCode (cname = "XSetSelectionOwner")]
 		public Window set_selection_owner (Atom selection, Window owner, int time);
