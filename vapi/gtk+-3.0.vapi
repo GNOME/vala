@@ -2668,6 +2668,7 @@ namespace Gtk {
 		public void set_current_value (int current_value);
 		public void set_group (GLib.SList<Gtk.RadioAction> group);
 		public int current_value { get; set; }
+		[NoAccessorMethod]
 		public Gtk.RadioAction group { set; }
 		[NoAccessorMethod]
 		public int value { get; set; }
@@ -2689,6 +2690,7 @@ namespace Gtk {
 		public RadioButton.with_mnemonic (GLib.SList<Gtk.RadioButton>? group, string label);
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public RadioButton.with_mnemonic_from_widget (Gtk.RadioButton radio_group_member, string label);
+		[NoAccessorMethod]
 		public Gtk.RadioButton group { set; }
 		public virtual signal void group_changed ();
 	}
