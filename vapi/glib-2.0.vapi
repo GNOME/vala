@@ -3984,6 +3984,13 @@ namespace GLib {
 
 		[CCode (cname = "g_variant_iter_new")]
 		public VariantIter iterator ();
+
+		public static Variant parse (VariantType? type, string text, char *limit = null, char **endptr = null) throws GLib.VariantParseError;
+		public Variant.parsed (string format_string, ...);
+	}
+
+	public errordomain VariantParseError {
+		FAILED
 	}
 
 	[Compact]
