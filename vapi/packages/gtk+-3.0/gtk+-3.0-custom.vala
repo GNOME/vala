@@ -21,6 +21,10 @@
  */
 
 namespace Gtk {
+	public class AccelGroup {
+		public Gtk.AccelKey* find (Gtk.AccelGroupFindFunc find_func);
+	}
+
 	public struct Allocation {
 		public int x;
 		public int y;

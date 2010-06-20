@@ -66,7 +66,7 @@ namespace Gtk {
 		public void connect_by_path (string accel_path, GLib.Closure closure);
 		public bool disconnect (GLib.Closure closure);
 		public bool disconnect_key (uint accel_key, Gdk.ModifierType accel_mods);
-		public Gtk.AccelKey find (Gtk.AccelGroupFindFunc find_func, void* data);
+		public Gtk.AccelKey* find (Gtk.AccelGroupFindFunc find_func);
 		public static unowned Gtk.AccelGroup from_accel_closure (GLib.Closure closure);
 		public bool get_is_locked ();
 		public Gdk.ModifierType get_modifier_mask ();
