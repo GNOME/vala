@@ -877,7 +877,7 @@ public class Vala.DBusClientModule : DBusModule {
 
 		var call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_proxy_connect_signal"));
 		call.add_argument (new CCodeIdentifier ("obj"));
-		call.add_argument (new CCodeIdentifier ("signal_name"));
+		call.add_argument (new CCodeConstant ("\"%s\"".printf (get_dynamic_dbus_name (sig.name))));
 		call.add_argument (new CCodeIdentifier ("handler"));
 		call.add_argument (new CCodeIdentifier ("data"));
 		call.add_argument (new CCodeConstant ("NULL"));
@@ -887,7 +887,7 @@ public class Vala.DBusClientModule : DBusModule {
 	void generate_dbus_disconnect_wrapper (DynamicSignal sig, CCodeBlock block) {
 		var call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_proxy_disconnect_signal"));
 		call.add_argument (new CCodeIdentifier ("obj"));
-		call.add_argument (new CCodeIdentifier ("signal_name"));
+		call.add_argument (new CCodeConstant ("\"%s\"".printf (get_dynamic_dbus_name (sig.name))));
 		call.add_argument (new CCodeIdentifier ("handler"));
 		call.add_argument (new CCodeIdentifier ("data"));
 		block.add_statement (new CCodeExpressionStatement (call));
