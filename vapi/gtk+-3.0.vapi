@@ -4298,9 +4298,8 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public TreePath.from_string (string path);
 		public int get_depth ();
-		[CCode (array_length = false)]
+		[CCode (cname = "gtk_tree_path_get_indices_with_depth")]
 		public unowned int[] get_indices ();
-		public int get_indices_with_depth (int depth);
 		public bool is_ancestor (Gtk.TreePath descendant);
 		public bool is_descendant (Gtk.TreePath ancestor);
 		public void next ();
