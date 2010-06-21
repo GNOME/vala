@@ -739,6 +739,12 @@ public struct unichar {
 
 	public int to_utf8 (string? outbuf);
 
+	public string? to_string () {
+		string str = (string) new char[7];
+		this.to_utf8 (str);
+		return str;
+	}
+
 	[CCode (cname = "MIN")]
 	public static unichar min (unichar a, unichar b);
 	[CCode (cname = "MAX")]
