@@ -3595,7 +3595,7 @@ namespace GLib {
 		public void sort (CompareFunc compare_func);
 		public void sort_with_data (CompareDataFunc compare_func);
 		public void set_free_func (GLib.DestroyNotify? element_free_function);
-		public void set_size (uint length);
+		public void set_size (int length);
 
 		public uint len;
 		public void** pdata;
@@ -3621,7 +3621,14 @@ namespace GLib {
 		}
 		public void sort (GLib.CompareFunc compare_func);
 		public void sort_with_data (GLib.CompareDataFunc compare_func);
-		public void set_size (uint length);
+		private void set_size (int length);
+
+		public int length {
+			get { return (int) this.len; }
+			set { this.set_size (value); }
+		}
+
+		private uint len;
 	}
 
 	/* Byte Arrays */
