@@ -210,7 +210,7 @@ public class Vala.ForeachStatement : Block {
 			return false;
 		}
 
-		var iterator_call = new MethodCall (new MemberAccess (collection, "iterator"));
+		var iterator_call = new MethodCall (new MemberAccess (collection, "iterator", source_reference), source_reference);
 		add_statement (new DeclarationStatement (new LocalVariable (iterator_type, "_%s_it".printf (variable_name), iterator_call, source_reference), source_reference));
 
 		var next_value_method = iterator_type.get_member ("next_value") as Method;

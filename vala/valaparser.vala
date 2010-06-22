@@ -1486,9 +1486,9 @@ public class Vala.Parser : CodeVisitor {
 						//     return;
 						var ret_stmt = (ReturnStatement) stmt;
 						if (ret_stmt.return_expression != null) {
-							var assignment = new Assignment (new MemberAccess.simple ("result"), ret_stmt.return_expression);
+							var assignment = new Assignment (new MemberAccess.simple ("result", stmt.source_reference), ret_stmt.return_expression, AssignmentOperator.SIMPLE, stmt.source_reference);
 							ret_stmt.return_expression = null;
-							block.add_statement (new ExpressionStatement (assignment));
+							block.add_statement (new ExpressionStatement (assignment, stmt.source_reference));
 						}
 					}
 					block.add_statement (stmt);

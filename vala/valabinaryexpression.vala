@@ -263,7 +263,7 @@ public class Vala.BinaryExpression : Expression {
 			// string concatenation
 
 			if (analyzer.context.profile == Profile.DOVA) {
-				var concat_call = new MethodCall (new MemberAccess (left, "concat"));
+				var concat_call = new MethodCall (new MemberAccess (left, "concat", source_reference), source_reference);
 				concat_call.add_argument (right);
 				concat_call.target_type = target_type;
 				parent_node.replace_expression (this, concat_call);
@@ -286,7 +286,7 @@ public class Vala.BinaryExpression : Expression {
 		    && operator == BinaryOperator.PLUS) {
 			// list concatenation
 
-			var concat_call = new MethodCall (new MemberAccess (left, "concat"));
+			var concat_call = new MethodCall (new MemberAccess (left, "concat", source_reference), source_reference);
 			concat_call.add_argument (right);
 			concat_call.target_type = target_type;
 			parent_node.replace_expression (this, concat_call);
