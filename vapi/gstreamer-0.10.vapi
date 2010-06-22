@@ -950,21 +950,19 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Pipeline : Gst.Bin, Gst.ChildProxy {
-		public weak Gst.Clock fixed_clock;
-		public Gst.ClockTime stream_time;
 		[CCode (type = "GstElement*", has_construct_function = false)]
 		public Pipeline (string? name);
 		public void auto_clock ();
 		public bool get_auto_flush_bus ();
 		public Gst.Bus get_bus ();
-		public unowned Gst.Clock get_clock ();
+		public Gst.Clock? get_clock ();
 		public Gst.ClockTime get_delay ();
 		public Gst.ClockTime get_last_stream_time ();
 		public void set_auto_flush_bus (bool auto_flush);
-		public bool set_clock (Gst.Clock clock);
+		public bool set_clock (Gst.Clock? clock);
 		public void set_delay (Gst.ClockTime delay);
 		public void set_new_stream_time (Gst.ClockTime time);
-		public void use_clock (Gst.Clock clock);
+		public void use_clock (Gst.Clock? clock);
 		public bool auto_flush_bus { get; set; }
 		public uint64 delay { get; set; }
 	}
