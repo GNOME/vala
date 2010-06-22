@@ -223,15 +223,42 @@ namespace Gst {
 
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Pad {
-		[CCode (array_length_pos = 0, delegate_target_pos = 0)]
-		public Pad (string name, Gst.PadDirection direction);
+		[CCode (cname = "gst_pad_add_buffer_probe_full")]
+		public uint add_buffer_probe (owned BufferProbeCallback handler);
+		[CCode (cname = "gst_pad_add_data_probe_full")]
+		public uint add_data_probe (owned DataProbeCallback handler);
+		[CCode (cname = "gst_pad_add_event_probe_full")]
+		public uint add_event_probe (owned EventProbeCallback handler);
+		[CCode (instance_pos = -1)]
+		public Gst.Caps get_fixed_caps_func (Gst.Pad pad);
+		[CCode (instance_pos = -1)]
+		public Gst.Caps proxy_getcaps (Gst.Pad pad);
+		[CCode (instance_pos = -1)]
+		public bool proxy_setcaps (Gst.Caps caps);
+		[CCode (cname = "gst_pad_set_blocked_async_full")]
+		public bool set_blocked_async (bool blocked, owned Gst.PadBlockCallback callback);
 
-		public uint add_buffer_probe (BufferProbeCallback handler);
-		public uint add_buffer_probe_full (BufferProbeCallback handler, GLib.DestroyNotify notify);
-		public uint add_data_probe (DataProbeCallback handler);
-		public uint add_data_probe_full (DataProbeCallback handler, GLib.DestroyNotify notify);
-		public uint add_event_probe (EventProbeCallback handler);
-		public uint add_event_probe_full (EventProbeCallback handler, GLib.DestroyNotify notify);
+		[CCode (cname = "GST_PAD_STREAM_LOCK")]
+		public void stream_lock ();
+		[CCode (cname = "GST_PAD_STREAM_UNLOCK")]
+		public void stream_unlock ();
+	}
+
+	public enum FlowReturn {
+		SOME_RANDOM_VALUE_FOR_VAPIGEN;
+		[CCode (cname = "GST_FLOW_IS_FATAL")]
+		public bool is_fatal ();
+		[CCode (cname = "GST_FLOW_IS_SUCCESS")]
+		public bool is_success ();
+	}
+
+	public enum PadLinkReturn {
+		SOME_RANDOM_VALUE_FOR_VAPIGEN;
+		[CCode (cname = "GST_PAD_LINK_FAILED")]
+		public bool failed ();
+		[CCode (cname = "GST_PAD_LINK_SUCCESSFUL")]
+		public bool successful ();
+
 	}
 
 	[CCode (cname="GCallback")]

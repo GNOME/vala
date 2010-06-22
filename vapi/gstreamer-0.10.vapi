@@ -776,20 +776,13 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Pad : Gst.Object {
-		public void* abidata;
 		public weak Gst.PadAcceptCapsFunction acceptcapsfunc;
 		public weak Gst.PadActivateFunction activatefunc;
 		public weak Gst.PadActivateModeFunction activatepullfunc;
 		public weak Gst.PadActivateModeFunction activatepushfunc;
-		public weak Gst.PadBlockCallback block_callback;
-		public weak GLib.Cond block_cond;
-		public void* block_data;
-		public weak GLib.DestroyNotify block_destroy_data;
 		public weak Gst.PadBufferAllocFunction bufferallocfunc;
 		public weak Gst.PadChainFunction chainfunc;
 		public weak Gst.PadCheckGetRangeFunction checkgetrangefunc;
-		public int do_buffer_signals;
-		public int do_event_signals;
 		public void* element_private;
 		public weak Gst.PadEventFunction eventfunc;
 		public weak Gst.PadFixateCapsFunction fixatecapsfunc;
@@ -799,35 +792,29 @@ namespace Gst {
 		public weak Gst.PadIterIntLinkFunction iterintlinkfunc;
 		public weak Gst.PadLinkFunction linkfunc;
 		public Gst.ActivateMode mode;
-		public weak Gst.PadTemplate padtemplate;
-		public weak Gst.Pad peer;
-		public weak GLib.Cond preroll_cond;
-		public weak GLib.Mutex preroll_lock;
 		public weak Gst.PadQueryFunction queryfunc;
-		public void* sched_private;
+		public weak Gst.PadQueryTypeFunction querytypefunc;
 		public weak Gst.PadSetCapsFunction setcapsfunc;
-		public void* stream_rec_lock;
-		public weak Gst.Task task;
 		public weak Gst.PadUnlinkFunction unlinkfunc;
-		[CCode (array_length_pos = 0, delegate_target_pos = 0)]
+		[CCode (has_construct_function = false)]
 		public Pad (string name, Gst.PadDirection direction);
 		public bool accept_caps (Gst.Caps caps);
 		public bool activate_pull (bool active);
 		public bool activate_push (bool active);
-		public uint add_buffer_probe (Gst.BufferProbeCallback handler);
-		public uint add_buffer_probe_full (Gst.BufferProbeCallback handler, GLib.DestroyNotify notify);
-		public uint add_data_probe (Gst.DataProbeCallback handler);
-		public uint add_data_probe_full (Gst.DataProbeCallback handler, GLib.DestroyNotify notify);
-		public uint add_event_probe (Gst.EventProbeCallback handler);
-		public uint add_event_probe_full (Gst.EventProbeCallback handler, GLib.DestroyNotify notify);
-		public Gst.FlowReturn alloc_buffer (uint64 offset, int size, Gst.Caps caps, out unowned Gst.Buffer buf);
-		public Gst.FlowReturn alloc_buffer_and_set_caps (uint64 offset, int size, Gst.Caps caps, out unowned Gst.Buffer buf);
+		[CCode (cname = "gst_pad_add_buffer_probe_full")]
+		public uint add_buffer_probe (owned Gst.BufferProbeCallback handler);
+		[CCode (cname = "gst_pad_add_data_probe_full")]
+		public uint add_data_probe (owned Gst.DataProbeCallback handler);
+		[CCode (cname = "gst_pad_add_event_probe_full")]
+		public uint add_event_probe (owned Gst.EventProbeCallback handler);
+		public Gst.FlowReturn alloc_buffer (uint64 offset, int size, Gst.Caps caps, out Gst.Buffer buf);
+		public Gst.FlowReturn alloc_buffer_and_set_caps (uint64 offset, int size, Gst.Caps caps, out Gst.Buffer buf);
 		public bool can_link (Gst.Pad sinkpad);
 		public Gst.FlowReturn chain (owned Gst.Buffer buffer);
-		public Gst.FlowReturn chain_list (Gst.BufferList list);
+		public Gst.FlowReturn chain_list (owned Gst.BufferList list);
 		public bool check_pull_range ();
-		public bool dispatcher (Gst.PadDispatcherFunction dispatch, void* data);
-		public bool event_default (Gst.Event event);
+		public bool dispatcher (Gst.PadDispatcherFunction dispatch);
+		public bool event_default (owned Gst.Event event);
 		public void fixate_caps (Gst.Caps caps);
 		[CCode (has_construct_function = false)]
 		public Pad.from_static_template (Gst.StaticPadTemplate templ, string name);
@@ -835,20 +822,23 @@ namespace Gst {
 		public Pad.from_template (Gst.PadTemplate templ, string name);
 		public Gst.Caps get_allowed_caps ();
 		public Gst.Caps get_caps ();
-		public unowned Gst.Caps get_caps_reffed ();
+		public Gst.Caps get_caps_reffed ();
 		public Gst.PadDirection get_direction ();
 		public void* get_element_private ();
-		public unowned Gst.Caps get_fixed_caps_func ();
-		public unowned GLib.List get_internal_links ();
-		public unowned GLib.List get_internal_links_default ();
+		[CCode (instance_pos = -1)]
+		public Gst.Caps get_fixed_caps_func (Gst.Pad pad);
+		public GLib.List<Gst.Pad> get_internal_links ();
+		public GLib.List<Gst.Pad> get_internal_links_default ();
 		public Gst.Caps get_negotiated_caps ();
 		public unowned Gst.PadTemplate get_pad_template ();
 		public unowned Gst.Caps get_pad_template_caps ();
-		public unowned Gst.Element get_parent_element ();
+		public Gst.Element? get_parent_element ();
 		public Gst.Pad get_peer ();
-		public Gst.QueryType get_query_types ();
-		public Gst.QueryType get_query_types_default ();
-		public Gst.FlowReturn get_range (uint64 offset, uint size, out unowned Gst.Buffer buffer);
+		[CCode (array_length = false)]
+		public unowned Gst.QueryType[]? get_query_types ();
+		[CCode (array_length = false)]
+		public unowned Gst.QueryType[]? get_query_types_default ();
+		public Gst.FlowReturn get_range (uint64 offset, uint size, out Gst.Buffer buffer);
 		public bool is_active ();
 		public bool is_blocked ();
 		public bool is_blocking ();
@@ -860,14 +850,16 @@ namespace Gst {
 		public bool pause_task ();
 		public bool peer_accept_caps (Gst.Caps caps);
 		public Gst.Caps peer_get_caps ();
-		public unowned Gst.Caps peer_get_caps_reffed ();
+		public Gst.Caps peer_get_caps_reffed ();
 		public bool peer_query (Gst.Query query);
-		public unowned Gst.Caps proxy_getcaps ();
+		[CCode (instance_pos = -1)]
+		public Gst.Caps proxy_getcaps (Gst.Pad pad);
+		[CCode (instance_pos = -1)]
 		public bool proxy_setcaps (Gst.Caps caps);
-		public Gst.FlowReturn pull_range (uint64 offset, uint size, out unowned Gst.Buffer buffer);
+		public Gst.FlowReturn pull_range (uint64 offset, uint size, out Gst.Buffer buffer);
 		public Gst.FlowReturn push (owned Gst.Buffer buffer);
 		public bool push_event (owned Gst.Event event);
-		public Gst.FlowReturn push_list (Gst.BufferList list);
+		public Gst.FlowReturn push_list (owned Gst.BufferList list);
 		public bool query (Gst.Query query);
 		public bool query_convert (Gst.Format src_format, int64 src_val, ref Gst.Format dest_format, out int64 dest_val);
 		public bool query_default (Gst.Query query);
@@ -886,8 +878,8 @@ namespace Gst {
 		public void set_activatepush_function (Gst.PadActivateModeFunction activatepush);
 		public bool set_active (bool active);
 		public bool set_blocked (bool blocked);
-		public bool set_blocked_async (bool blocked, Gst.PadBlockCallback callback);
-		public bool set_blocked_async_full (bool blocked, Gst.PadBlockCallback callback, GLib.DestroyNotify destroy_data);
+		[CCode (cname = "gst_pad_set_blocked_async_full")]
+		public bool set_blocked_async (bool blocked, owned Gst.PadBlockCallback callback);
 		public void set_bufferalloc_function (Gst.PadBufferAllocFunction bufalloc);
 		public bool set_caps (Gst.Caps? caps);
 		public void set_chain_function (Gst.PadChainFunction chain);
@@ -906,6 +898,10 @@ namespace Gst {
 		public void set_unlink_function (Gst.PadUnlinkFunction unlink);
 		public bool start_task (Gst.TaskFunction func);
 		public bool stop_task ();
+		[CCode (cname = "GST_PAD_STREAM_LOCK")]
+		public void stream_lock ();
+		[CCode (cname = "GST_PAD_STREAM_UNLOCK")]
+		public void stream_unlock ();
 		public bool unlink (Gst.Pad sinkpad);
 		public void use_fixed_caps ();
 		[NoAccessorMethod]
@@ -1846,6 +1842,10 @@ namespace Gst {
 		ERROR,
 		NOT_SUPPORTED,
 		CUSTOM_ERROR;
+		[CCode (cname = "GST_FLOW_IS_FATAL")]
+		public bool is_fatal ();
+		[CCode (cname = "GST_FLOW_IS_SUCCESS")]
+		public bool is_success ();
 		[CCode (cname = "gst_flow_get_name")]
 		public unowned string to_string ();
 	}
@@ -1991,7 +1991,11 @@ namespace Gst {
 		WRONG_DIRECTION,
 		NOFORMAT,
 		NOSCHED,
-		REFUSED
+		REFUSED;
+		[CCode (cname = "GST_PAD_LINK_FAILED")]
+		public bool failed ();
+		[CCode (cname = "GST_PAD_LINK_SUCCESSFUL")]
+		public bool successful ();
 	}
 	[CCode (cprefix = "GST_PAD_", cheader_filename = "gst/gst.h")]
 	public enum PadPresence {
@@ -2295,7 +2299,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate Gst.FlowReturn PadChainFunction (Gst.Pad pad, owned Gst.Buffer buffer);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
-	public delegate Gst.FlowReturn PadChainListFunction (Gst.Pad pad, Gst.BufferList list);
+	public delegate Gst.FlowReturn PadChainListFunction (Gst.Pad pad, owned Gst.BufferList list);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate bool PadCheckGetRangeFunction (Gst.Pad pad);
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -2305,13 +2309,13 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate void PadFixateCapsFunction (Gst.Pad pad, Gst.Caps caps);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
-	public delegate unowned Gst.Caps PadGetCapsFunction (Gst.Pad pad);
+	public delegate Gst.Caps PadGetCapsFunction (Gst.Pad pad);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate Gst.FlowReturn PadGetRangeFunction (Gst.Pad pad, uint64 offset, uint length, out Gst.Buffer buffer);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
-	public delegate unowned GLib.List PadIntLinkFunction (Gst.Pad pad);
+	public delegate GLib.List<Gst.Pad> PadIntLinkFunction (Gst.Pad pad);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
-	public delegate unowned Gst.Iterator PadIterIntLinkFunction (Gst.Pad pad);
+	public delegate Gst.Iterator<Gst.Pad> PadIterIntLinkFunction (Gst.Pad pad);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate Gst.PadLinkReturn PadLinkFunction (Gst.Pad pad, Gst.Pad peer);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
