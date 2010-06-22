@@ -1082,7 +1082,9 @@ public class Vala.DBusClientModule : DBusModule {
 
 		source_declarations.add_type_definition (instance_struct);
 
-		source_declarations.add_type_member_declaration (new CCodeFunction(lower_cname + "_get_type", "GType"));
+		var type_fun = new CCodeFunction(lower_cname + "_get_type", "GType");
+		type_fun.attributes = "G_GNUC_CONST";
+		source_declarations.add_type_member_declaration (type_fun);
 
 		var define_type = new CCodeFunctionCall (new CCodeIdentifier ("G_DEFINE_TYPE_EXTENDED"));
 		define_type.add_argument (new CCodeIdentifier (cname));

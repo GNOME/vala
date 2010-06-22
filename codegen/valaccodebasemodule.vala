@@ -707,6 +707,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 		var fun_name = "%s_get_type".printf (en.get_lower_case_cname (null));
 		var regfun = new CCodeFunction (fun_name, "GType");
+		regfun.attributes = "G_GNUC_CONST";
 
 		if (en.access == SymbolAccessibility.PRIVATE) {
 			regfun.modifiers = CCodeModifiers.STATIC;
