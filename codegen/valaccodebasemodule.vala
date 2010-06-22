@@ -1841,7 +1841,10 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			ref_fun.modifiers = CCodeModifiers.STATIC;
 			source_declarations.add_type_member_declaration (ref_fun.copy ());
 			ref_fun.block = new CCodeBlock ();
-			ref_fun.block.add_statement (new CCodeExpressionStatement (new CCodeUnaryExpression (CCodeUnaryOperator.PREFIX_INCREMENT, new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "_ref_count_"))));
+
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_atomic_int_inc"));
+			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "_ref_count_")));
+			ref_fun.block.add_statement (new CCodeExpressionStatement (ccall));
 			ref_fun.block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("_data%d_".printf (block_id))));
 			source_type_member_definition.append (ref_fun);
 
@@ -1850,8 +1853,11 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			unref_fun.modifiers = CCodeModifiers.STATIC;
 			source_declarations.add_type_member_declaration (unref_fun.copy ());
 			unref_fun.block = new CCodeBlock ();
-			var dec = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeUnaryExpression (CCodeUnaryOperator.PREFIX_DECREMENT, new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "_ref_count_")), new CCodeConstant ("0"));
-			unref_fun.block.add_statement (new CCodeIfStatement (dec, free_block));
+			
+			ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_atomic_int_dec_and_test"));
+			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "_ref_count_")));
+			unref_fun.block.add_statement (new CCodeIfStatement (ccall, free_block));
+
 			source_type_member_definition.append (unref_fun);
 		}
 
