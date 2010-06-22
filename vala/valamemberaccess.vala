@@ -728,6 +728,11 @@ public class Vala.MemberAccess : Expression {
 				inner.symbol_reference = this_parameter;
 			}
 
+			if (analyzer.context.experimental_non_null && instance && inner.value_type.nullable &&
+			    !(inner.value_type is PointerType) && !(inner.value_type is GenericType)) {
+				Report.error (source_reference, "Access to instance member `%s' from nullable reference denied".printf (symbol_reference.get_full_name ()));
+			}
+
 			formal_value_type = analyzer.get_value_type_for_symbol (symbol_reference, lvalue);
 			if (inner != null && formal_value_type != null) {
 				value_type = formal_value_type.get_actual_type (inner.value_type, null, this);
