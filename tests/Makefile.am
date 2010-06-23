@@ -47,6 +47,7 @@ TESTS = \
 	structs/bug606202.vala \
 	structs/bug613513.vala \
 	structs/bug613825.vala \
+	structs/bug622422.vala \
 	delegates/delegates.vala \
 	delegates/bug595610.vala \
 	delegates/bug595639.vala \

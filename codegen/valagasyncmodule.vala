@@ -230,12 +230,13 @@ public class Vala.GAsyncModule : GSignalModule {
 
 				// create copy if necessary as variables in async methods may need to be kept alive
 				CCodeExpression cparam = get_variable_cexpression (param.name);
+				if (param.parameter_type.is_real_non_null_struct_type ()) {
+					cparam = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, cparam);
+				}
 				if (requires_copy (param_type) && !param.parameter_type.value_owned)  {
 					var ma = new MemberAccess.simple (param.name);
 					ma.symbol_reference = param;
 					cparam = get_ref_cexpression (param.parameter_type, cparam, ma, param);
-				} else if (param.parameter_type.is_real_non_null_struct_type ()) {
-					cparam = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, cparam);
 				}
 
 				asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, get_variable_cname (param.name)), cparam)));

@@ -1637,6 +1637,9 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 		// create copy if necessary as captured variables may need to be kept alive
 		CCodeExpression cparam = get_variable_cexpression (param.name);
+		if (param.parameter_type.is_real_non_null_struct_type ()) {
+			cparam = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, cparam);
+		}
 		if (requires_copy (param_type) && !param.parameter_type.value_owned && !is_unowned_delegate)  {
 			var ma = new MemberAccess.simple (param.name);
 			ma.symbol_reference = param;
