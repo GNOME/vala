@@ -946,7 +946,8 @@ namespace Gst {
 	public class ParseContext {
 		[CCode (has_construct_function = false)]
 		public ParseContext ();
-		public unowned string get_missing_elements ();
+		[CCode (array_length = false, array_null_terminated = true)]
+		public string[] get_missing_elements ();
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Pipeline : Gst.Bin, Gst.ChildProxy {
@@ -2675,17 +2676,17 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static Gst.Element? parse_bin_from_description (string bin_description, bool ghost_unlinked_pads) throws GLib.Error;
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static unowned Gst.Element parse_bin_from_description_full (string bin_description, bool ghost_unlinked_pads, Gst.ParseContext context, Gst.ParseFlags flags) throws GLib.Error;
+	public static Gst.Element? parse_bin_from_description_full (string bin_description, bool ghost_unlinked_pads, Gst.ParseContext? context, Gst.ParseFlags flags) throws GLib.Error;
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static GLib.Quark parse_error_quark ();
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static Gst.Element? parse_launch (string pipeline_description) throws GLib.Error;
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static unowned Gst.Element parse_launch_full (string pipeline_description, Gst.ParseContext context, Gst.ParseFlags flags) throws GLib.Error;
+	public static Gst.Element? parse_launch_full (string pipeline_description, Gst.ParseContext? context, Gst.ParseFlags flags) throws GLib.Error;
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static Gst.Element? parse_launchv ([CCode (array_length = false)] string[] argv) throws GLib.Error;
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static unowned Gst.Element parse_launchv_full (string argv, Gst.ParseContext context, Gst.ParseFlags flags) throws GLib.Error;
+	public static Gst.Element? parse_launchv_full ([CCode (array_length = false)] string[] argv, Gst.ParseContext? context, Gst.ParseFlags flags) throws GLib.Error;
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void print_element_args (GLib.StringBuilder buf, int indent, Gst.Element element);
 	[CCode (cheader_filename = "gst/gst.h")]
