@@ -969,17 +969,8 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Plugin : Gst.Object {
-		public weak string basename;
-		public Gst.PluginDesc desc;
-		public ulong file_mtime;
-		public int64 file_size;
-		public weak string filename;
-		public uint flags;
-		public weak GLib.Module module;
-		public Gst.PluginDesc orig_desc;
-		public bool registered;
-		public void add_dependency (string env_vars, string paths, string names, Gst.PluginDependencyFlags flags);
-		public void add_dependency_simple (string env_vars, string paths, string names, Gst.PluginDependencyFlags flags);
+		public void add_dependency ([CCode (array_length = false)] string?[] env_vars, [CCode (array_length = false)] string?[] paths, [CCode (array_length = false)] string?[] names, Gst.PluginDependencyFlags flags);
+		public void add_dependency_simple (string? env_vars, string? paths, string? names, Gst.PluginDependencyFlags flags);
 		public static GLib.Quark error_quark ();
 		public unowned Gst.Structure get_cache_data ();
 		public unowned string get_description ();
@@ -992,30 +983,25 @@ namespace Gst {
 		public unowned string get_source ();
 		public unowned string get_version ();
 		public bool is_loaded ();
-		public static void list_free (GLib.List list);
-		public unowned Gst.Plugin load ();
-		public static unowned Gst.Plugin load_by_name (string name);
-		public static unowned Gst.Plugin load_file (string filename) throws GLib.Error;
-		public bool name_filter (string name);
+		public Gst.Plugin? load ();
+		public static Gst.Plugin? load_by_name (string name);
+		public static Gst.Plugin? load_file (string filename) throws GLib.Error;
+		[CCode (instance_pos = -1)]
+		public bool name_filter (Gst.Plugin plugin, string name);
 		public static bool register_static (int major_version, int minor_version, string name, string description, Gst.PluginInitFunc init_func, string version, string license, string source, string package, string origin);
 		public static bool register_static_full (int major_version, int minor_version, string name, string description, Gst.PluginInitFullFunc init_full_func, string version, string license, string source, string package, string origin);
-		public void set_cache_data (Gst.Structure cache_data);
+		public void set_cache_data (owned Gst.Structure cache_data);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class PluginFeature : Gst.Object {
-		public bool loaded;
-		public weak string name;
-		public weak string plugin_name;
-		public uint rank;
 		public bool check_version (uint min_major, uint min_minor, uint min_micro);
 		public unowned string get_name ();
 		public uint get_rank ();
-		public static unowned GLib.List list_copy (GLib.List list);
-		public static void list_free (GLib.List list);
-		public unowned Gst.PluginFeature load ();
+		public Gst.PluginFeature? load ();
 		public void set_name (string name);
 		public void set_rank (uint rank);
-		public bool type_name_filter (Gst.TypeNameData data);
+		[CCode (instance_pos = -1)]
+		public bool type_name_filter (Gst.PluginFeature feature, Gst.TypeNameData data);
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/gst.h")]

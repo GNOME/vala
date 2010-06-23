@@ -494,4 +494,14 @@ namespace Gst {
 		public weak string origin;
 		void *_gst_reserved[];
 	}
+
+	public class Plugin {
+		[CCode (instance_pos = -1)]
+		public bool name_filter (Gst.Plugin plugin, string name);
+	}
+
+	public class PluginFeature {
+		[CCode (instance_pos = -1)]
+		public bool type_name_filter (Gst.PluginFeature feature, Gst.TypeNameData data);
+	}
 }
