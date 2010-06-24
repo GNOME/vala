@@ -1019,20 +1019,6 @@ namespace Gst {
 		public int wait (Gst.ClockTime timeout);
 		public bool write_control ();
 	}
-	[Compact]
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class PollFD {
-		public int fd;
-		public int idx;
-		public static bool can_read (Gst.Poll @set, Gst.PollFD fd);
-		public static bool can_write (Gst.Poll @set, Gst.PollFD fd);
-		public static bool ctl_read (Gst.Poll @set, Gst.PollFD fd, bool active);
-		public static bool ctl_write (Gst.Poll @set, Gst.PollFD fd, bool active);
-		public static bool has_closed (Gst.Poll @set, Gst.PollFD fd);
-		public static bool has_error (Gst.Poll @set, Gst.PollFD fd);
-		public static void ignored (Gst.Poll @set, Gst.PollFD fd);
-		public void init ();
-	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class ProxyPad : Gst.Pad {
 	}
@@ -1547,6 +1533,19 @@ namespace Gst {
 		public weak string package;
 		public weak string origin;
 		public weak void*[] _gst_reserved;
+	}
+	[CCode (type_id = "GST_TYPE_POLL_FD", cheader_filename = "gst/gst.h")]
+	public struct PollFD {
+		public int fd;
+		public int idx;
+		public static bool can_read (Gst.Poll @set, Gst.PollFD fd);
+		public static bool can_write (Gst.Poll @set, Gst.PollFD fd);
+		public static bool ctl_read (Gst.Poll @set, Gst.PollFD fd, bool active);
+		public static bool ctl_write (Gst.Poll @set, Gst.PollFD fd, bool active);
+		public static bool has_closed (Gst.Poll @set, Gst.PollFD fd);
+		public static bool has_error (Gst.Poll @set, Gst.PollFD fd);
+		public static void ignored (Gst.Poll @set, Gst.PollFD fd);
+		public void init ();
 	}
 	[CCode (type_id = "GST_TYPE_STATIC_CAPS", cheader_filename = "gst/gst.h")]
 	public struct StaticCaps {

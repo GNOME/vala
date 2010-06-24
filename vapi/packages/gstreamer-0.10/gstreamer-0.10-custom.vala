@@ -504,4 +504,17 @@ namespace Gst {
 		[CCode (instance_pos = -1)]
 		public bool type_name_filter (Gst.PluginFeature feature, Gst.TypeNameData data);
 	}
+
+	public struct PollFD {
+		public int fd;
+		public int idx;
+		public static bool can_read (Gst.Poll @set, Gst.PollFD fd);
+		public static bool can_write (Gst.Poll @set, Gst.PollFD fd);
+		public static bool ctl_read (Gst.Poll @set, Gst.PollFD fd, bool active);
+		public static bool ctl_write (Gst.Poll @set, Gst.PollFD fd, bool active);
+		public static bool has_closed (Gst.Poll @set, Gst.PollFD fd);
+		public static bool has_error (Gst.Poll @set, Gst.PollFD fd);
+		public static void ignored (Gst.Poll @set, Gst.PollFD fd);
+		public void init ();
+	}
 }
