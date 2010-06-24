@@ -95,7 +95,7 @@ namespace Gst {
 		public bool check (GLib.Type type);
 	}
 
-	public class Index {
+	public abstract class Index {
 		public int new_group ();
 		[CCode (cname = "GST_INDEX_IS_WRITABLE")]
 		public bool is_writable ();
@@ -520,7 +520,7 @@ namespace Gst {
 		public bool name_filter (Gst.Plugin plugin, string name);
 	}
 
-	public class PluginFeature {
+	public abstract class PluginFeature {
 		[CCode (instance_pos = -1)]
 		public bool type_name_filter (Gst.PluginFeature feature, Gst.TypeNameData data);
 	}

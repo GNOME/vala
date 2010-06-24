@@ -539,7 +539,7 @@ namespace Gst {
 		public bool set_target (Gst.Pad? newtarget);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
-	public class Index : Gst.Object {
+	public abstract class Index : Gst.Object {
 		[CCode (has_construct_function = false)]
 		public Index ();
 		public unowned Gst.IndexEntry add_association (int id, Gst.AssocFlags flags, Gst.Format format, int64 value, ...);
@@ -993,7 +993,7 @@ namespace Gst {
 		public void set_cache_data (owned Gst.Structure cache_data);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
-	public class PluginFeature : Gst.Object {
+	public abstract class PluginFeature : Gst.Object {
 		public bool check_version (uint min_major, uint min_minor, uint min_micro);
 		public unowned string get_name ();
 		public uint get_rank ();
