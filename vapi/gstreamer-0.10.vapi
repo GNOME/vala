@@ -1080,18 +1080,12 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Registry : Gst.Object {
-		public weak GLib.HashTable basename_hash;
-		public int cache_file;
-		public weak GLib.HashTable feature_hash;
-		public weak GLib.List features;
-		public weak GLib.List paths;
-		public weak GLib.List plugins;
-		public bool add_feature (Gst.PluginFeature feature);
+		public bool add_feature (owned Gst.PluginFeature feature);
 		public void add_path (string path);
-		public bool add_plugin (Gst.Plugin plugin);
+		public bool add_plugin (owned Gst.Plugin plugin);
 		public GLib.List<Gst.PluginFeature> feature_filter ([CCode (delegate_target_pos = 2.1)] Gst.PluginFeatureFilter filter, bool first);
-		public Gst.PluginFeature find_feature (string name, GLib.Type type);
-		public Gst.Plugin find_plugin (string name);
+		public Gst.PluginFeature? find_feature (string name, GLib.Type type);
+		public Gst.Plugin? find_plugin (string name);
 		public static bool fork_is_enabled ();
 		public static void fork_set_enabled (bool enabled);
 		public static unowned Gst.Registry get_default ();
@@ -1100,8 +1094,8 @@ namespace Gst {
 		public uint32 get_feature_list_cookie ();
 		public GLib.List<string> get_path_list ();
 		public GLib.List<Gst.Plugin> get_plugin_list ();
-		public Gst.Plugin lookup (string filename);
-		public Gst.PluginFeature lookup_feature (string name);
+		public Gst.Plugin? lookup (string filename);
+		public Gst.PluginFeature? lookup_feature (string name);
 		public GLib.List<Gst.Plugin> plugin_filter (Gst.PluginFilter filter, bool first);
 		public void remove_feature (Gst.PluginFeature feature);
 		public void remove_plugin (Gst.Plugin plugin);
