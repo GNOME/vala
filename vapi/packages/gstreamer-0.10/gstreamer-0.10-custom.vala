@@ -351,6 +351,9 @@ namespace Gst {
 		public Structure.empty (string name);
 		[CCode (cname = "gst_structure_id_empty_new", has_construct_function = false)]
 		public Structure.id_empty (GLib.Quark quark);
+
+		[CCode (cname = "gst_structure_id_new", has_construct_function = false)]
+		public Structure.id (GLib.Quark quark, GLib.Quark field_quark, ...);
 	}
 
 	public enum State {

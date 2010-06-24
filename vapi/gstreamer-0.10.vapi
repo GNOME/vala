@@ -1138,10 +1138,6 @@ namespace Gst {
 	[Immutable]
 	[CCode (copy_function = "gst_structure_copy", type_id = "GST_TYPE_STRUCTURE", cheader_filename = "gst/gst.h")]
 	public class Structure {
-		public weak GLib.Array fields;
-		public GLib.Quark name;
-		public int parent_refcount;
-		public GLib.Type type;
 		[CCode (has_construct_function = false)]
 		public Structure (string name, string firstfield, ...);
 		public Gst.Structure copy ();
@@ -1165,23 +1161,24 @@ namespace Gst {
 		public bool get_int (string fieldname, out int value);
 		public unowned string get_name ();
 		public GLib.Quark get_name_id ();
-		public unowned string get_string (string fieldname);
+		public unowned string? get_string (string fieldname);
 		public bool get_uint (string fieldname, out uint value);
-		public bool get_valist (string first_fieldname, void* args);
+		public bool get_valist (string first_fieldname, va_list args);
 		public unowned Gst.Value? get_value (string fieldname);
 		public bool has_field (string fieldname);
 		public bool has_field_typed (string fieldname, GLib.Type type);
 		public bool has_name (string name);
+		[CCode (cname = "gst_structure_id_new", has_construct_function = false)]
+		public Structure.id (GLib.Quark quark, GLib.Quark field_quark, ...);
 		[CCode (cname = "gst_structure_id_empty_new", has_construct_function = false)]
 		public Structure.id_empty (GLib.Quark quark);
 		public bool id_get (...);
-		public bool id_get_valist (GLib.Quark first_field_id, void* args);
+		public bool id_get_valist (GLib.Quark first_field_id, va_list args);
 		public unowned Gst.Value? id_get_value (GLib.Quark field);
 		public bool id_has_field (GLib.Quark field);
 		public bool id_has_field_typed (GLib.Quark field, GLib.Type type);
-		public static unowned Gst.Structure id_new (GLib.Quark name_quark, GLib.Quark field_quark);
 		public void id_set (GLib.Quark fieldname, ...);
-		public void id_set_valist (GLib.Quark fieldname, void* varargs);
+		public void id_set_valist (GLib.Quark fieldname, va_list varargs);
 		public void id_set_value (GLib.Quark field, Gst.Value value);
 		public bool map_in_place (Gst.StructureMapFunc func);
 		public int n_fields ();
@@ -1189,15 +1186,15 @@ namespace Gst {
 		public void remove_all_fields ();
 		public void remove_field (string fieldname);
 		public void remove_fields (string fieldname, ...);
-		public void remove_fields_valist (string fieldname, void* varargs);
+		public void remove_fields_valist (string fieldname, va_list varargs);
 		public void @set (string fieldname, ...);
 		public void set_name (string name);
-		public void set_parent_refcount (int refcount);
-		public void set_valist (string fieldname, void* varargs);
+		public void set_parent_refcount (ref int refcount);
+		public void set_valist (string fieldname, va_list varargs);
 		public void set_value (string fieldname, Gst.Value value);
 		public string to_string ();
 		[CCode (has_construct_function = false)]
-		public Structure.valist (string name, string firstfield, void* varargs);
+		public Structure.valist (string name, string firstfield, va_list varargs);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class SystemClock : Gst.Clock {
@@ -2317,7 +2314,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate bool StructureForeachFunc (GLib.Quark field_id, Gst.Value value);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public delegate bool StructureMapFunc (GLib.Quark field_id, Gst.Value value);
+	public delegate bool StructureMapFunc (GLib.Quark field_id, ref Gst.Value value);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate void TagForeachFunc (Gst.TagList list, string tag);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
