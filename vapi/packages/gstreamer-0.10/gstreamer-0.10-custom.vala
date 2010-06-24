@@ -42,7 +42,7 @@ namespace Gst {
 
 	[CCode (ref_function = "gst_event_ref", unref_function = "gst_event_unref")]
 	public class Event : MiniObject {
-		public Event @ref ();
+		public unowned Event @ref ();
 		public void unref ();
 		public static void replace (ref Event? oldobj, Event? newobj);
         	public Event copy ();
@@ -131,7 +131,7 @@ namespace Gst {
 
 	[CCode (ref_function = "gst_object_ref", unref_function = "gst_object_unref", ref_sink_function = "gst_object_ref_sink")]
 	public abstract class Object {
-		public Gst.Object @ref ();
+		public unowned Gst.Object @ref ();
 		public void unref ();
 		public void sink ();
 		public void ref_sink ();
@@ -181,7 +181,7 @@ namespace Gst {
 		[ReturnsModifiedPointer]
 		public void join (owned Buffer buf2);
 
-		public Buffer @ref ();
+		public unowned Buffer @ref ();
 		public void unref ();
 		public static void replace (ref Buffer? oldobj, Buffer? newobj);
         	public Buffer copy ();
@@ -191,7 +191,7 @@ namespace Gst {
 	public class BufferList : Gst.MiniObject {
 		[ReturnsModifiedPointer]
 		public void make_writable ();
-		public BufferList @ref ();
+		public unowned BufferList @ref ();
 		public void unref ();
         	public BufferList copy ();
 	}
@@ -269,7 +269,7 @@ namespace Gst {
 	public delegate bool DataProbeCallback (Gst.Pad pad, Gst.MiniObject data);
 
 	public class Caps {
-		public Caps @ref ();
+		public unowned Caps @ref ();
 		public void unref ();
 
 		[ReturnsModifiedPointer]
@@ -285,7 +285,7 @@ namespace Gst {
 		[ReturnsModifiedPointer]
 		public void make_writable ();
 
-		public MiniObject @ref ();
+		public unowned MiniObject @ref ();
 		public void unref ();
         	public virtual MiniObject copy ();
 		public virtual void finalize ();
@@ -303,7 +303,7 @@ namespace Gst {
 	public class Message : MiniObject {
 		[ReturnsModifiedPointer]
 		public void make_writable ();
-		public Message @ref ();
+		public unowned Message @ref ();
 		public void unref ();
         	public Message copy ();
 
@@ -321,7 +321,7 @@ namespace Gst {
 	public class Query : MiniObject {
 		[ReturnsModifiedPointer]
 		public void make_writable ();
-		public Query @ref ();
+		public unowned Query @ref ();
 		public void unref ();
         	public Query copy ();
 	}

@@ -105,7 +105,7 @@ namespace Gst {
 		public bool offset_end_is_valid ();
 		[CCode (cname = "GST_BUFFER_OFFSET_IS_VALID")]
 		public bool offset_is_valid ();
-		public Gst.Buffer @ref ();
+		public unowned Gst.Buffer @ref ();
 		public static void replace (ref Gst.Buffer? oldobj, Gst.Buffer? newobj);
 		public void set_caps (Gst.Caps caps);
 		public Gst.Buffer span (uint32 offset, Gst.Buffer buf2, uint32 len);
@@ -126,7 +126,7 @@ namespace Gst {
 		[ReturnsModifiedPointer]
 		public void make_writable ();
 		public uint n_groups ();
-		public Gst.BufferList @ref ();
+		public unowned Gst.BufferList @ref ();
 		public void unref ();
 	}
 	[Compact]
@@ -209,7 +209,7 @@ namespace Gst {
 		public void merge (owned Gst.Caps caps2);
 		public void merge_structure (owned Gst.Structure structure);
 		public Gst.Caps normalize ();
-		public Gst.Caps @ref ();
+		public unowned Gst.Caps @ref ();
 		public void remove_structure (uint idx);
 		public static void replace (ref Gst.Caps? oldobj, Gst.Caps? newobj);
 		public void* save_thyself (void* parent);
@@ -505,7 +505,7 @@ namespace Gst {
 		public void parse_tag (out unowned Gst.TagList taglist);
 		[CCode (has_construct_function = false)]
 		public Event.qos (double proportion, Gst.ClockTimeDiff diff, Gst.ClockTime timestamp);
-		public Gst.Event @ref ();
+		public unowned Gst.Event @ref ();
 		public static void replace (ref Gst.Event? oldobj, Gst.Event? newobj);
 		[CCode (has_construct_function = false)]
 		public Event.seek (double rate, Gst.Format format, Gst.SeekFlags flags, Gst.SeekType start_type, int64 start, Gst.SeekType stop_type, int64 stop);
@@ -682,7 +682,7 @@ namespace Gst {
 		public void parse_tag (out Gst.TagList tag_list);
 		public void parse_tag_full (out unowned Gst.Pad pad, out unowned Gst.TagList tag_list);
 		public void parse_warning (out GLib.Error gerror, out string? debug);
-		public Gst.Message @ref ();
+		public unowned Gst.Message @ref ();
 		[CCode (has_construct_function = false)]
 		public Message.request_state (Gst.Object src, Gst.State state);
 		[CCode (has_construct_function = false)]
@@ -729,7 +729,7 @@ namespace Gst {
 		public bool is_writable ();
 		[ReturnsModifiedPointer]
 		public void make_writable ();
-		public Gst.MiniObject @ref ();
+		public unowned Gst.MiniObject @ref ();
 		public static void replace (ref Gst.MiniObject? oldobj, Gst.MiniObject? newobj);
 		public void unref ();
 	}
@@ -757,7 +757,7 @@ namespace Gst {
 		public bool is_disposing ();
 		[CCode (cname = "GST_OBJECT_IS_FLOATING")]
 		public bool is_floating ();
-		public Gst.Object @ref ();
+		public unowned Gst.Object @ref ();
 		public void ref_sink ();
 		public static void replace (ref Gst.Object? oldobj, Gst.Object? newobj);
 		public virtual void restore_thyself (void* self);
@@ -1056,7 +1056,7 @@ namespace Gst {
 		public void parse_uri (out string uri);
 		[CCode (has_construct_function = false)]
 		public Query.position (Gst.Format format);
-		public Gst.Query @ref ();
+		public unowned Gst.Query @ref ();
 		[CCode (has_construct_function = false)]
 		public Query.seeking (Gst.Format format);
 		[CCode (has_construct_function = false)]
