@@ -2,10 +2,8 @@
 
 [CCode (cprefix = "Rest", lower_case_cprefix = "rest_")]
 namespace Rest {
-	[Compact]
 	[CCode (cheader_filename = "rest/oauth-proxy.h")]
-	public class OAuthProxy {
-		public weak Rest.Proxy parent;
+	public class OAuthProxy : Rest.Proxy {
 		[CCode (cname = "oauth_proxy_new", type = "RestProxy*", has_construct_function = false)]
 		public OAuthProxy (string consumer_key, string consumer_secret, string url_format, bool binding_required);
 		[CCode (cname = "oauth_proxy_access_token")]
@@ -36,11 +34,9 @@ namespace Rest {
 	[Compact]
 	[CCode (cheader_filename = "rest/oauth-proxy-call.h")]
 	public class OAuthProxyCall {
-		public weak Rest.ProxyCall parent;
 	}
 	[CCode (cheader_filename = "rest/rest-proxy.h")]
 	public class Proxy : GLib.Object {
-		public weak GLib.Object parent;
 		[CCode (has_construct_function = false)]
 		public Proxy (string url_format, bool binding_required);
 		public bool bind (...);
@@ -54,7 +50,6 @@ namespace Rest {
 	}
 	[CCode (cheader_filename = "rest/rest-proxy-call.h")]
 	public class ProxyCall : GLib.Object {
-		public weak GLib.Object parent;
 		public void add_header (string header, string value);
 		public void add_headers (...);
 		public void add_headers_from_valist (void* headers);
@@ -94,10 +89,8 @@ namespace Rest {
 		public unowned Rest.XmlNode find (string tag);
 		public unowned string get_attr (string attr_name);
 	}
-	[Compact]
 	[CCode (cheader_filename = "rest/rest-xml-parser.h")]
-	public class XmlParser {
-		public weak GLib.Object parent;
+	public class XmlParser : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public XmlParser ();
 		public unowned Rest.XmlNode parse_from_data (string data, int64 len);
