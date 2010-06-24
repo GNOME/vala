@@ -326,6 +326,23 @@ namespace Gst {
         	public Query copy ();
 	}
 
+	public enum QueryType {
+		SOME_RANDOM_VALUE_FOR_VAPIGEN;
+		public GLib.Quark to_quark ();
+		public unowned string get_name ();
+		public unowned QueryTypeDefinition get_details ();
+		public static QueryType get_by_nick ();
+		public static Iterator<QueryTypeDefinition> iterate_definitions ();
+		public static Gst.QueryType register (string nick, string description);
+	}
+
+	public struct QueryTypeDefinition {
+		public weak string description;
+		public weak string nick;
+		public GLib.Quark quark;
+		public Gst.QueryType value;
+	}
+
 	[Compact]
 	[Immutable]
 	[CCode (copy_function = "gst_structure_copy", type_id = "GST_TYPE_STRUCTURE", cheader_filename = "gst/gst.h")]

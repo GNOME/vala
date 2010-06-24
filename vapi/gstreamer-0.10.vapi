@@ -1027,7 +1027,7 @@ namespace Gst {
 		public weak Gst.Structure structure;
 		public Gst.QueryType type;
 		[CCode (has_construct_function = false)]
-		public Query.application (Gst.QueryType type, Gst.Structure structure);
+		public Query.application (Gst.QueryType type, owned Gst.Structure structure);
 		[CCode (has_construct_function = false)]
 		public Query.buffering (Gst.Format format);
 		[CCode (has_construct_function = false)]
@@ -1042,9 +1042,9 @@ namespace Gst {
 		public Query.latency ();
 		[ReturnsModifiedPointer]
 		public void make_writable ();
-		public void parse_buffering_percent (bool busy, int percent);
-		public void parse_buffering_range (Gst.Format format, int64 start, int64 stop, int64 estimated_total);
-		public void parse_buffering_stats (Gst.BufferingMode mode, int avg_in, int avg_out, int64 buffering_left);
+		public void parse_buffering_percent (out bool busy, out int percent);
+		public void parse_buffering_range (out Gst.Format format, out int64 start, out int64 stop, out int64 estimated_total);
+		public void parse_buffering_stats (out Gst.BufferingMode mode, out int avg_in, out int avg_out, out int64 buffering_left);
 		public void parse_convert (out Gst.Format src_format, out int64 src_value, out Gst.Format dest_format, out int64 dest_value);
 		public void parse_duration (out Gst.Format format, out int64 duration);
 		public void parse_formats_length (out uint n_formats);
@@ -1053,7 +1053,7 @@ namespace Gst {
 		public void parse_position (out Gst.Format format, out int64 cur);
 		public void parse_seeking (out Gst.Format format, out bool seekable, out int64 segment_start, out int64 segment_end);
 		public void parse_segment (out double rate, out Gst.Format format, out int64 start_value, out int64 stop_value);
-		public void parse_uri (string uri);
+		public void parse_uri (out string uri);
 		[CCode (has_construct_function = false)]
 		public Query.position (Gst.Format format);
 		public Gst.Query @ref ();
@@ -1066,30 +1066,17 @@ namespace Gst {
 		public void set_buffering_stats (Gst.BufferingMode mode, int avg_in, int avg_out, int64 buffering_left);
 		public void set_convert (Gst.Format src_format, int64 src_value, Gst.Format dest_format, int64 dest_value);
 		public void set_duration (Gst.Format format, int64 duration);
-		public void set_formats (int n_formats);
-		public void set_formatsv (int n_formats, Gst.Format formats);
+		public void set_formats (int n_formats, ...);
+		public void set_formatsv ([CCode (array_length_pos = 0.9)] Gst.Format[] formats);
 		public void set_latency (bool live, Gst.ClockTime min_latency, Gst.ClockTime max_latency);
 		public void set_position (Gst.Format format, int64 cur);
 		public void set_seeking (Gst.Format format, bool seekable, int64 segment_start, int64 segment_end);
 		public void set_segment (double rate, Gst.Format format, int64 start_value, int64 stop_value);
 		public void set_uri (string uri);
-		public static Gst.QueryType type_get_by_nick (string nick);
-		public static unowned Gst.QueryTypeDefinition type_get_details (Gst.QueryType type);
-		public static Gst.Iterator<Gst.QueryTypeDefinition> type_iterate_definitions ();
-		public static Gst.QueryType type_register (string nick, string description);
-		public static GLib.Quark type_to_quark (Gst.QueryType query);
 		public static bool types_contains (Gst.QueryType types, Gst.QueryType type);
 		public void unref ();
 		[CCode (has_construct_function = false)]
 		public Query.uri ();
-	}
-	[Compact]
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class QueryTypeDefinition {
-		public weak string description;
-		public weak string nick;
-		public GLib.Quark quark;
-		public Gst.QueryType value;
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Registry : Gst.Object {
@@ -1548,6 +1535,13 @@ namespace Gst {
 		public static bool has_error (Gst.Poll @set, Gst.PollFD fd);
 		public static void ignored (Gst.Poll @set, Gst.PollFD fd);
 		public void init ();
+	}
+	[CCode (type_id = "GST_TYPE_QUERY_TYPE_DEFINITION", cheader_filename = "gst/gst.h")]
+	public struct QueryTypeDefinition {
+		public weak string description;
+		public weak string nick;
+		public GLib.Quark quark;
+		public Gst.QueryType value;
 	}
 	[CCode (type_id = "GST_TYPE_STATIC_CAPS", cheader_filename = "gst/gst.h")]
 	public struct StaticCaps {
@@ -2052,6 +2046,12 @@ namespace Gst {
 		BUFFERING,
 		CUSTOM,
 		URI;
+		public GLib.Quark to_quark ();
+		public unowned string get_name ();
+		public Gst.QueryTypeDefinition get_details ();
+		public static Gst.QueryType get_by_nick ();
+		public static Gst.Iterator<Gst.QueryTypeDefinition> iterate_definitions ();
+		public static Gst.QueryType register (string nick, string description);
 		[CCode (cname = "gst_query_type_get_name")]
 		public unowned string to_string ();
 	}
