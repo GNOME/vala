@@ -1198,9 +1198,7 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class SystemClock : Gst.Clock {
-		public bool stopping;
-		public weak GLib.Thread thread;
-		public static unowned Gst.Clock obtain ();
+		public static Gst.Clock obtain ();
 		[NoAccessorMethod]
 		public Gst.ClockType clock_type { get; set; }
 	}
