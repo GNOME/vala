@@ -31,9 +31,8 @@ namespace Rest {
 		[CCode (cname = "oauth_proxy_new_with_token", type = "RestProxy*", has_construct_function = false)]
 		public OAuthProxy.with_token (string consumer_key, string consumer_secret, string token, string token_secret, string url_format, bool binding_required);
 	}
-	[Compact]
 	[CCode (cheader_filename = "rest/oauth-proxy-call.h")]
-	public class OAuthProxyCall {
+	public class OAuthProxyCall : Rest.ProxyCall {
 	}
 	[CCode (cheader_filename = "rest/rest-proxy.h")]
 	public class Proxy : GLib.Object {

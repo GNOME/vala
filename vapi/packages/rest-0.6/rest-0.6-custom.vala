@@ -13,7 +13,11 @@ namespace Rest {
 	}
 
 	[CCode (cheader_filename = "rest/oauth-proxy.h")]
-		public class OAuthProxy : Rest.Proxy {
-		}
+	public class OAuthProxy : Rest.Proxy {
+	}
+
+	[CCode (cheader_filename = "rest/oauth-proxy-call.h")]
+	public class OAuthProxyCall : Rest.ProxyCall {
+	}
 }
 
