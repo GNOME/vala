@@ -1433,9 +1433,11 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public interface Preset {
 		public abstract bool delete_preset (string name);
-		public abstract bool get_meta (string name, string tag, string value);
-		public abstract unowned string get_preset_names ();
-		public abstract unowned string get_property_names ();
+		public abstract bool get_meta (string name, string tag, out string value);
+		[CCode (array_length = false, array_null_terminated = true)]
+		public abstract string[] get_preset_names ();
+		[CCode (array_length = false, array_null_terminated = true)]
+		public abstract string[] get_property_names ();
 		public abstract bool load_preset (string name);
 		public abstract bool rename_preset (string old_name, string new_name);
 		public abstract bool save_preset (string name);
