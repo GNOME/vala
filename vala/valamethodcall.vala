@@ -276,16 +276,21 @@ public class Vala.MethodCall : Expression {
 
 		if (mtype is MethodType) {
 			var m = ((MethodType) mtype).method_symbol;
-			if (m != null && m.coroutine && !is_yield_expression) {
-				// begin or end call of async method
+			if (m != null && m.coroutine) {
 				var ma = (MemberAccess) call;
-				if (ma.member_name != "end") {
-					// begin (possibly implicit)
-					params = m.get_async_begin_parameters ();
-					ret_type = new VoidType ();
-				} else {
-					// end
-					params = m.get_async_end_parameters ();
+				if (!is_yield_expression) {
+					// begin or end call of async method
+					if (ma.member_name != "end") {
+						// begin (possibly implicit)
+						params = m.get_async_begin_parameters ();
+						ret_type = new VoidType ();
+					} else {
+						// end
+						params = m.get_async_end_parameters ();
+					}
+				} else if (ma.member_name == "begin" || ma.member_name == "end") {
+					error = true;
+					Report.error (ma.source_reference, "use of `%s' not allowed in yield statement".printf (ma.member_name));
 				}
 			}
 
