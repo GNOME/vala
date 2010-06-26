@@ -2234,21 +2234,23 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		if (target_type is DelegateType && expression_type is MethodType) {
 			var deleg_type = (DelegateType) target_type;
 			var method_type = (MethodType) expression_type;
-			CCodeExpression delegate_target = new CCodeConstant ("NULL");
-			if (method_type.method_symbol.binding == MemberBinding.INSTANCE) {
-				if (expr is LambdaExpression) {
-					var lambda = (LambdaExpression) expr;
-					if (lambda.method.closure) {
-						int block_id = get_block_id (current_closure_block);
-						delegate_target = get_variable_cexpression ("_data%d_".printf (block_id));
-					} else if (get_this_type () != null) {
-						delegate_target = new CCodeIdentifier ("this");
-					} else {
-						delegate_target = new CCodeConstant ("NULL");
-					}
+			CCodeExpression delegate_target;
+			if (expr is LambdaExpression) {
+				var lambda = (LambdaExpression) expr;
+				if (lambda.method.closure) {
+					int block_id = get_block_id (current_closure_block);
+					delegate_target = get_variable_cexpression ("_data%d_".printf (block_id));
+				} else if (get_this_type () != null) {
+					delegate_target = new CCodeIdentifier ("this");
 				} else {
+					delegate_target = new CCodeConstant ("NULL");
+				}
+			} else {
+				if (method_type.method_symbol.binding == MemberBinding.INSTANCE) {
 					var ma = (MemberAccess) expr;
 					delegate_target = (CCodeExpression) get_ccodenode (ma.inner);
+				} else {
+					delegate_target = new CCodeConstant ("NULL");
 				}
 			}
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_new".printf (deleg_type.delegate_symbol.get_lower_case_cname ())));
