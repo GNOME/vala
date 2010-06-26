@@ -1153,6 +1153,38 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 				var cinit = new CCodeFragment ();
 				function.block.prepend_statement (cinit);
 
+				if (m.closure) {
+					// add variables for parent closure blocks
+					// as closures only have one parameter for the innermost closure block
+					var closure_block = current_closure_block;
+					int block_id = get_block_id (closure_block);
+					while (true) {
+						var parent_closure_block = next_closure_block (closure_block.parent_symbol);
+						if (parent_closure_block == null) {
+							break;
+						}
+						int parent_block_id = get_block_id (parent_closure_block);
+
+						var parent_data = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "_data%d_".printf (parent_block_id));
+						var cdecl = new CCodeDeclaration ("Block%dData*".printf (parent_block_id));
+						cdecl.add_declarator (new CCodeVariableDeclarator ("_data%d_".printf (parent_block_id), parent_data));
+
+						cinit.append (cdecl);
+
+						closure_block = parent_closure_block;
+						block_id = parent_block_id;
+					}
+
+					// add self variable for closures
+					// as closures have block data parameter
+					if (m.binding == MemberBinding.INSTANCE) {
+						var cself = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "this");
+						var cdecl = new CCodeDeclaration ("%s *".printf (current_class.get_cname ()));
+						cdecl.add_declarator (new CCodeVariableDeclarator ("this", cself));
+
+						cinit.append (cdecl);
+					}
+				}
 				foreach (FormalParameter param in m.get_parameters ()) {
 					if (param.ellipsis) {
 						break;
@@ -1462,7 +1494,11 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 
 	public override void generate_cparameters (Method m, CCodeDeclarationSpace decl_space, CCodeFunction func, CCodeFunctionDeclarator? vdeclarator = null, CCodeFunctionCall? vcall = null) {
 		CCodeFormalParameter instance_param = null;
-		if (m.parent_symbol is Class && m is CreationMethod) {
+		if (m.closure) {
+			var closure_block = current_closure_block;
+			int block_id = get_block_id (closure_block);
+			instance_param = new CCodeFormalParameter ("_data%d_".printf (block_id), "Block%dData*".printf (block_id));
+		} else if (m.parent_symbol is Class && m is CreationMethod) {
 			if (vcall == null) {
 				instance_param = new CCodeFormalParameter ("this", ((Class) m.parent_symbol).get_cname () + "*");
 			}

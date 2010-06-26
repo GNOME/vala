@@ -89,6 +89,29 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		}
 	}
 
+	public Block? current_closure_block {
+		get {
+			return next_closure_block (current_symbol);
+		}
+	}
+
+	public unowned Block? next_closure_block (Symbol sym) {
+		unowned Block block = null;
+		while (true) {
+			block = sym as Block;
+			if (!(sym is Block || sym is Method)) {
+				// no closure block
+				break;
+			}
+			if (block != null && block.captured) {
+				// closure block found
+				break;
+			}
+			sym = sym.parent_symbol;
+		}
+		return block;
+	}
+
 	public CCodeDeclarationSpace header_declarations;
 	public CCodeDeclarationSpace internal_header_declarations;
 	public CCodeDeclarationSpace source_declarations;
@@ -112,6 +135,8 @@ internal class Vala.DovaBaseModule : CCodeModule {
 	public int next_string_const_id = 0;
 	public bool in_creation_method { get { return current_method is CreationMethod; } }
 	public bool current_method_inner_error = false;
+	int next_block_id = 0;
+	Map<Block,int> block_map = new HashMap<Block,int> ();
 
 	public DataType void_type = new VoidType ();
 	public DataType bool_type;
@@ -643,6 +668,44 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		current_method_inner_error = old_method_inner_error;
 	}
 
+	public int get_block_id (Block b) {
+		int result = block_map[b];
+		if (result == 0) {
+			result = ++next_block_id;
+			block_map[b] = result;
+		}
+		return result;
+	}
+
+	void capture_parameter (FormalParameter param, CCodeStruct data, CCodeBlock cblock, int block_id, CCodeBlock free_block) {
+		generate_type_declaration (param.parameter_type, source_declarations);
+
+		var param_type = param.parameter_type.copy ();
+		param_type.value_owned = true;
+		data.add_field (param_type.get_cname (), get_variable_cname (param.name));
+
+		// create copy if necessary as captured variables may need to be kept alive
+		CCodeExpression cparam = get_variable_cexpression (param.name);
+		if (requires_copy (param_type) && !param.parameter_type.value_owned)  {
+			var ma = new MemberAccess.simple (param.name);
+			ma.symbol_reference = param;
+			ma.value_type = param.parameter_type.copy ();
+			// directly access parameters in ref expressions
+			param.captured = false;
+			cparam = get_ref_cexpression (param.parameter_type, cparam, ma, param);
+			param.captured = true;
+		}
+
+		cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_variable_cname (param.name)), cparam)));
+
+		if (requires_destroy (param_type)) {
+			var ma = new MemberAccess.simple (param.name);
+			ma.symbol_reference = param;
+			ma.value_type = param_type.copy ();
+			free_block.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), get_variable_cname (param.name)), param.parameter_type, ma)));
+		}
+	}
+
 	public override void visit_block (Block b) {
 		var old_symbol = current_symbol;
 		current_symbol = b;
@@ -655,6 +718,154 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		}
 
 		var cblock = new CCodeBlock ();
+
+
+		if (b.captured) {
+			var parent_block = next_closure_block (b.parent_symbol);
+
+			int block_id = get_block_id (b);
+			string struct_name = "Block%dData".printf (block_id);
+
+			var free_block = new CCodeBlock ();
+
+			var data = new CCodeStruct ("_" + struct_name);
+			data.add_field ("DovaType*", "type");
+			data.add_field ("int", "_ref_count_");
+			if (parent_block != null) {
+				int parent_block_id = get_block_id (parent_block);
+
+				data.add_field ("Block%dData *".printf (parent_block_id), "_data%d_".printf (parent_block_id));
+
+				var unref_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_object_unref"));
+				unref_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "_data%d_".printf (parent_block_id)));
+				free_block.add_statement (new CCodeExpressionStatement (unref_call));
+			} else if ((current_method != null && current_method.binding == MemberBinding.INSTANCE) ||
+			           (current_property_accessor != null && current_property_accessor.prop.binding == MemberBinding.INSTANCE)) {
+				data.add_field ("%s *".printf (current_class.get_cname ()), "this");
+
+				var ma = new MemberAccess.simple ("this");
+				ma.symbol_reference = current_class;
+				free_block.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "this"), new ObjectType (current_class), ma)));
+			}
+			foreach (var local in local_vars) {
+				if (local.captured) {
+					generate_type_declaration (local.variable_type, source_declarations);
+
+					data.add_field (local.variable_type.get_cname (), get_variable_cname (local.name) + local.variable_type.get_cdeclarator_suffix ());
+
+					if (requires_destroy (local.variable_type)) {
+						var ma = new MemberAccess.simple (local.name);
+						ma.symbol_reference = local;
+						ma.value_type = local.variable_type.copy ();
+						free_block.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), get_variable_cname (local.name)), local.variable_type, ma)));
+					}
+				}
+			}
+
+			var data_alloc = new CCodeFunctionCall (new CCodeIdentifier ("dova_object_alloc"));
+			data_alloc.add_argument (new CCodeFunctionCall (new CCodeIdentifier ("block%d_data_type_get".printf (block_id))));
+
+			var data_decl = new CCodeDeclaration (struct_name + "*");
+			data_decl.add_declarator (new CCodeVariableDeclarator ("_data%d_".printf (block_id), data_alloc));
+			cblock.add_statement (data_decl);
+
+			if (parent_block != null) {
+				int parent_block_id = get_block_id (parent_block);
+
+				var ref_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_object_ref"));
+				ref_call.add_argument (get_variable_cexpression ("_data%d_".printf (parent_block_id)));
+
+				cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), "_data%d_".printf (parent_block_id)), ref_call)));
+			} else if ((current_method != null && current_method.binding == MemberBinding.INSTANCE &&
+			            (!(current_method is CreationMethod) || current_method.body != b)) ||
+			           (current_property_accessor != null && current_property_accessor.prop.binding == MemberBinding.INSTANCE)) {
+				var ref_call = new CCodeFunctionCall (get_dup_func_expression (new ObjectType (current_class), b.source_reference));
+				ref_call.add_argument (new CCodeIdentifier ("this"));
+
+				cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), "this"), ref_call)));
+			}
+
+			if (b.parent_symbol is Method) {
+				var m = (Method) b.parent_symbol;
+
+				// parameters are captured with the top-level block of the method
+				foreach (var param in m.get_parameters ()) {
+					if (param.captured) {
+						capture_parameter (param, data, cblock, block_id, free_block);
+					}
+				}
+
+				var cfrag = new CCodeFragment ();
+				append_temp_decl (cfrag, temp_vars);
+				temp_vars.clear ();
+				cblock.add_statement (cfrag);
+			} else if (b.parent_symbol is PropertyAccessor) {
+				var acc = (PropertyAccessor) b.parent_symbol;
+
+				if (!acc.readable && acc.value_parameter.captured) {
+					capture_parameter (acc.value_parameter, data, cblock, block_id, free_block);
+				}
+
+				var cfrag = new CCodeFragment ();
+				append_temp_decl (cfrag, temp_vars);
+				temp_vars.clear ();
+				cblock.add_statement (cfrag);
+			}
+
+			var typedef = new CCodeTypeDefinition ("struct _" + struct_name, new CCodeVariableDeclarator (struct_name));
+			source_declarations.add_type_declaration (typedef);
+			source_declarations.add_type_definition (data);
+
+			var data_free = new CCodeFunctionCall (new CCodeIdentifier ("free"));
+			data_free.add_argument (new CCodeIdentifier ("_data%d_".printf (block_id)));
+			free_block.add_statement (new CCodeExpressionStatement (data_free));
+
+			// create type_get/finalize functions
+			var type_get_fun = new CCodeFunction ("block%d_data_type_get".printf (block_id), "DovaType*");
+			type_get_fun.modifiers = CCodeModifiers.STATIC;
+			source_declarations.add_type_member_declaration (type_get_fun.copy ());
+			type_get_fun.block = new CCodeBlock ();
+
+			var cdecl = new CCodeDeclaration ("int");
+			cdecl.add_declarator (new CCodeVariableDeclarator ("_block%d_data_object_offset".printf (block_id), new CCodeConstant ("0")));
+			cdecl.modifiers = CCodeModifiers.STATIC;
+			source_declarations.add_type_member_declaration (cdecl);
+
+			cdecl = new CCodeDeclaration ("int");
+			cdecl.add_declarator (new CCodeVariableDeclarator ("_block%d_data_type_offset".printf (block_id), new CCodeConstant ("0")));
+			cdecl.modifiers = CCodeModifiers.STATIC;
+			source_declarations.add_type_member_declaration (cdecl);
+
+			cdecl = new CCodeDeclaration ("DovaType *");
+			cdecl.add_declarator (new CCodeVariableDeclarator ("block%d_data_type".printf (block_id), new CCodeConstant ("NULL")));
+			cdecl.modifiers = CCodeModifiers.STATIC;
+			source_declarations.add_type_member_declaration (cdecl);
+
+			var type_init_block = new CCodeBlock ();
+			var alloc_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_alloc"));
+			alloc_call.add_argument (new CCodeFunctionCall (new CCodeIdentifier ("dova_object_type_get")));
+			alloc_call.add_argument (new CCodeConstant ("sizeof (%s)".printf (struct_name)));
+			alloc_call.add_argument (new CCodeConstant ("0"));
+			alloc_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("block%d_data_type".printf (block_id))));
+			alloc_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_block%d_data_object_offset".printf (block_id))));
+			alloc_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_block%d_data_type_offset".printf (block_id))));
+			type_init_block.add_statement (new CCodeExpressionStatement (alloc_call));
+			var type_init_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_object_type_init"));
+			type_init_call.add_argument (new CCodeIdentifier ("block%d_data_type".printf (block_id)));
+			type_init_block.add_statement (new CCodeExpressionStatement (type_init_call));
+			type_get_fun.block.add_statement (new CCodeIfStatement (new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeIdentifier ("block%d_data_type".printf (block_id))), type_init_block));
+			type_get_fun.block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("block%d_data_type".printf (block_id))));
+
+			source_type_member_definition.append (type_get_fun);
+
+			var unref_fun = new CCodeFunction ("block%d_data_finalize".printf (block_id), "void");
+			unref_fun.add_parameter (new CCodeFormalParameter ("_data%d_".printf (block_id), struct_name + "*"));
+			unref_fun.modifiers = CCodeModifiers.STATIC;
+			source_declarations.add_type_member_declaration (unref_fun.copy ());
+			unref_fun.block = free_block;
+
+			source_type_member_definition.append (unref_fun);
+		}
 
 		foreach (CodeNode stmt in b.get_statements ()) {
 			if (stmt.error) {
@@ -671,7 +882,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		}
 
 		foreach (LocalVariable local in local_vars) {
-			if (!local.floating && requires_destroy (local.variable_type)) {
+			if (!local.floating && !local.captured && requires_destroy (local.variable_type)) {
 				var ma = new MemberAccess.simple (local.name);
 				ma.symbol_reference = local;
 				cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma)));
@@ -681,12 +892,20 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		if (b.parent_symbol is Method) {
 			var m = (Method) b.parent_symbol;
 			foreach (FormalParameter param in m.get_parameters ()) {
-				if (requires_destroy (param.parameter_type) && param.direction == ParameterDirection.IN) {
+				if (!param.captured && requires_destroy (param.parameter_type) && param.direction == ParameterDirection.IN) {
 					var ma = new MemberAccess.simple (param.name);
 					ma.symbol_reference = param;
 					cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (param.name), param.parameter_type, ma)));
 				}
 			}
+		}
+
+		if (b.captured) {
+			int block_id = get_block_id (b);
+
+			var data_unref = new CCodeFunctionCall (new CCodeIdentifier ("dova_object_unref"));
+			data_unref.add_argument (get_variable_cexpression ("_data%d_".printf (block_id)));
+			cblock.add_statement (new CCodeExpressionStatement (data_unref));
 		}
 
 		b.ccodenode = cblock;
@@ -748,17 +967,23 @@ internal class Vala.DovaBaseModule : CCodeModule {
 			pre_statement_fragment = null;
 		}
 
-		var cvar = new CCodeVariableDeclarator (get_variable_cname (local.name), rhs, local.variable_type.get_cdeclarator_suffix ());
+		if (local.captured) {
+			if (local.initializer != null) {
+				cfrag.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id ((Block) local.parent_symbol))), get_variable_cname (local.name)), rhs)));
+			}
+		} else {
+			var cvar = new CCodeVariableDeclarator (get_variable_cname (local.name), rhs, local.variable_type.get_cdeclarator_suffix ());
 
-		var cdecl = new CCodeDeclaration (local.variable_type.get_cname ());
-		cdecl.add_declarator (cvar);
-		cfrag.append (cdecl);
+			var cdecl = new CCodeDeclaration (local.variable_type.get_cname ());
+			cdecl.add_declarator (cvar);
+			cfrag.append (cdecl);
 
-		// try to initialize uninitialized variables
-		// initialization not necessary for variables stored in closure
-		if (cvar.initializer == null) {
-			cvar.initializer = default_value_for_type (local.variable_type, true);
-			cvar.init0 = true;
+			// try to initialize uninitialized variables
+			// initialization not necessary for variables stored in closure
+			if (cvar.initializer == null) {
+				cvar.initializer = default_value_for_type (local.variable_type, true);
+				cvar.init0 = true;
+			}
 		}
 
 		if (local.initializer != null && local.initializer.tree_can_fail) {
@@ -1162,11 +1387,19 @@ internal class Vala.DovaBaseModule : CCodeModule {
 
 		var local_vars = b.get_local_variables ();
 		foreach (LocalVariable local in local_vars) {
-			if (local.active && !local.floating && requires_destroy (local.variable_type)) {
+			if (local.active && !local.floating && !local.captured && requires_destroy (local.variable_type)) {
 				var ma = new MemberAccess.simple (local.name);
 				ma.symbol_reference = local;
 				cfrag.append (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma)));
 			}
+		}
+
+		if (b.captured) {
+			int block_id = get_block_id (b);
+
+			var data_unref = new CCodeFunctionCall (new CCodeIdentifier ("dova_object_unref"));
+			data_unref.add_argument (get_variable_cexpression ("_data%d_".printf (block_id)));
+			cfrag.append (new CCodeExpressionStatement (data_unref));
 		}
 
 		if (stop_at_loop) {
@@ -1189,11 +1422,19 @@ internal class Vala.DovaBaseModule : CCodeModule {
 
 		var local_vars = b.get_local_variables ();
 		foreach (LocalVariable local in local_vars) {
-			if (local.active && !local.floating && requires_destroy (local.variable_type)) {
+			if (local.active && !local.floating && !local.captured && requires_destroy (local.variable_type)) {
 				var ma = new MemberAccess.simple (local.name);
 				ma.symbol_reference = local;
 				cfrag.append (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma)));
 			}
+		}
+
+		if (b.captured) {
+			int block_id = get_block_id (b);
+
+			var data_unref = new CCodeFunctionCall (new CCodeIdentifier ("dova_object_unref"));
+			data_unref.add_argument (get_variable_cexpression ("_data%d_".printf (block_id)));
+			cfrag.append (new CCodeExpressionStatement (data_unref));
 		}
 
 		if (sym == current_try.body) {
@@ -1995,8 +2236,20 @@ internal class Vala.DovaBaseModule : CCodeModule {
 			var method_type = (MethodType) expression_type;
 			CCodeExpression delegate_target = new CCodeConstant ("NULL");
 			if (method_type.method_symbol.binding == MemberBinding.INSTANCE) {
-				var ma = (MemberAccess) expr;
-				delegate_target = (CCodeExpression) get_ccodenode (ma.inner);
+				if (expr is LambdaExpression) {
+					var lambda = (LambdaExpression) expr;
+					if (lambda.method.closure) {
+						int block_id = get_block_id (current_closure_block);
+						delegate_target = get_variable_cexpression ("_data%d_".printf (block_id));
+					} else if (get_this_type () != null) {
+						delegate_target = new CCodeIdentifier ("this");
+					} else {
+						delegate_target = new CCodeConstant ("NULL");
+					}
+				} else {
+					var ma = (MemberAccess) expr;
+					delegate_target = (CCodeExpression) get_ccodenode (ma.inner);
+				}
 			}
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_new".printf (deleg_type.delegate_symbol.get_lower_case_cname ())));
 			ccall.add_argument (delegate_target);
@@ -2130,6 +2383,15 @@ internal class Vala.DovaBaseModule : CCodeModule {
 	}
 
 	public override void visit_class (Class cl) {
+	}
+
+	public DataType? get_this_type () {
+		if (current_method != null && current_method.binding == MemberBinding.INSTANCE) {
+			return current_method.this_parameter.parameter_type;
+		} else if (current_property_accessor != null && current_property_accessor.prop.binding == MemberBinding.INSTANCE) {
+			return current_property_accessor.prop.this_parameter.parameter_type;
+		}
+		return null;
 	}
 
 	public CCodeFunctionCall generate_instance_cast (CCodeExpression expr, TypeSymbol type) {

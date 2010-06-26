@@ -1,6 +1,6 @@
 /* valadovamemberaccessmodule.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -204,6 +204,10 @@ internal class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 			if (local.is_result) {
 				// used in postconditions
 				expr.ccodenode = new CCodeIdentifier ("result");
+			} else if (local.captured) {
+				// captured variables are stored on the heap
+				var block = (Block) local.parent_symbol;
+				expr.ccodenode = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_variable_cname (local.name));
 			} else {
 				expr.ccodenode = get_variable_cexpression (local.name);
 			}
@@ -222,29 +226,38 @@ internal class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 					}
 				}
 			} else {
-				if (current_method != null && current_method.coroutine) {
-					// use closure
-					expr.ccodenode = get_variable_cexpression (p.name);
+				if (p.captured) {
+					// captured variables are stored on the heap
+					var block = p.parent_symbol as Block;
+					if (block == null) {
+						block = ((Method) p.parent_symbol).body;
+					}
+					expr.ccodenode = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_variable_cname (p.name));
 				} else {
-					var type_as_struct = p.parameter_type.data_type as Struct;
-					if (p.direction != ParameterDirection.IN
-					    || (type_as_struct != null && !type_as_struct.is_simple_type () && !p.parameter_type.nullable)) {
-						if (p.parameter_type is GenericType) {
-							expr.ccodenode = get_variable_cexpression (p.name);
-						} else {
-							expr.ccodenode = new CCodeIdentifier ("(*%s)".printf (get_variable_cname (p.name)));
-						}
+					if (current_method != null && current_method.coroutine) {
+						// use closure
+						expr.ccodenode = get_variable_cexpression (p.name);
 					} else {
-						// Property setters of non simple structs shall replace all occurences
-						// of the "value" formal parameter with a dereferencing version of that
-						// parameter.
-						if (current_property_accessor != null &&
-						    current_property_accessor.writable &&
-						    current_property_accessor.value_parameter == p &&
-						    current_property_accessor.prop.property_type.is_real_struct_type ()) {
-							expr.ccodenode = new CCodeIdentifier ("(*value)");
+						var type_as_struct = p.parameter_type.data_type as Struct;
+						if (p.direction != ParameterDirection.IN
+						    || (type_as_struct != null && !type_as_struct.is_simple_type () && !p.parameter_type.nullable)) {
+							if (p.parameter_type is GenericType) {
+								expr.ccodenode = get_variable_cexpression (p.name);
+							} else {
+								expr.ccodenode = new CCodeIdentifier ("(*%s)".printf (get_variable_cname (p.name)));
+							}
 						} else {
-							expr.ccodenode = get_variable_cexpression (p.name);
+							// Property setters of non simple structs shall replace all occurences
+							// of the "value" formal parameter with a dereferencing version of that
+							// parameter.
+							if (current_property_accessor != null &&
+							    current_property_accessor.writable &&
+							    current_property_accessor.value_parameter == p &&
+							    current_property_accessor.prop.property_type.is_real_struct_type ()) {
+								expr.ccodenode = new CCodeIdentifier ("(*value)");
+							} else {
+								expr.ccodenode = get_variable_cexpression (p.name);
+							}
 						}
 					}
 				}
