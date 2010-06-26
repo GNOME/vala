@@ -144,7 +144,7 @@ public class Vala.ElementAccess : Expression {
 			}
 		} else if (pointer_type != null && !pointer_type.base_type.is_reference_type_or_type_parameter ()) {
 			value_type = pointer_type.base_type.copy ();
-		} else if (container_type == analyzer.string_type.data_type) {
+		} else if (analyzer.context.profile == Profile.GOBJECT && container_type == analyzer.string_type.data_type) {
 			if (get_indices ().size != 1) {
 				error = true;
 				Report.error (source_reference, "Element access with more than one dimension is not supported for strings");
