@@ -1,3 +1,0 @@
-include/gtk-3.0/gdk-pixbuf/gdk-pixbuf.h
-include/gtk-3.0/gdk-pixbuf
-lib/libgdk_pixbuf-3.0.so
