@@ -113,7 +113,7 @@ public class Vala.BinaryExpression : Expression {
 		case BinaryOperator.LESS_THAN_OR_EQUAL: return "<=";
 		case BinaryOperator.GREATER_THAN_OR_EQUAL: return ">=";
 		case BinaryOperator.EQUALITY: return "==";
-		case BinaryOperator.INEQUALITY: return "!+";
+		case BinaryOperator.INEQUALITY: return "!=";
 		case BinaryOperator.BITWISE_AND: return "&";
 		case BinaryOperator.BITWISE_OR: return "|";
 		case BinaryOperator.BITWISE_XOR: return "^";
