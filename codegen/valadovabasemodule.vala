@@ -1539,7 +1539,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		var val = new CCodeInitializerList ();
 		val.append (new CCodeConstant ("0"));
 		// FIXME handle escaped characters in scanner/parser and escape them here again for C
-		val.append (new CCodeConstant ((expr.value.size () - 2).to_string ()));
+		val.append (new CCodeConstant ((expr.eval ().size ()).to_string ()));
 		val.append (new CCodeConstant (expr.value));
 
 		var cdecl = new CCodeDeclaration ("const string");
