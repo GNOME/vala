@@ -53,7 +53,7 @@ public class Vala.CCodeVariableDeclarator : CCodeDeclarator {
 		this.declarator_suffix = declarator_suffix;
 	}
 
-	public CCodeVariableDeclarator.zero (string name, CCodeExpression initializer, string? declarator_suffix = null) {
+	public CCodeVariableDeclarator.zero (string name, CCodeExpression? initializer, string? declarator_suffix = null) {
 		this.name = name;
 		this.initializer = initializer;
 		this.declarator_suffix = declarator_suffix;

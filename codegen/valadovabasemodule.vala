@@ -1294,7 +1294,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 				vardecl.initializer = memset_call;
 				vardecl.init0 = true;
 			} else if (!local.variable_type.nullable &&
-			           (st != null && !st.is_simple_type ()) ||
+			           (st != null && st.get_fields ().size > 0) ||
 			           (array_type != null && array_type.fixed_length)) {
 				// 0-initialize struct with struct initializer { 0 }
 				// necessary as they will be passed by reference
@@ -2359,7 +2359,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 
 			return memset_call;
 		} else if (initializer_expression && !type.nullable &&
-		    ((st != null && !st.is_simple_type ()) ||
+		    ((st != null && st.get_fields ().size > 0) ||
 		     (array_type != null && array_type.fixed_length))) {
 			// 0-initialize struct with struct initializer { 0 }
 			// only allowed as initializer expression in C

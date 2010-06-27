@@ -979,7 +979,7 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 
 			if (acc.readable) {
 				var cdecl = new CCodeDeclaration (acc.value_type.get_cname ());
-				cdecl.add_declarator (new CCodeVariableDeclarator ("result", default_value_for_type (acc.value_type, true)));
+				cdecl.add_declarator (new CCodeVariableDeclarator.zero ("result", default_value_for_type (acc.value_type, true)));
 				function.block.prepend_statement (cdecl);
 
 				function.block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("result")));
@@ -1207,7 +1207,7 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 
 				if (!(m.return_type is VoidType) && !(m.return_type is GenericType)) {
 					var cdecl = new CCodeDeclaration (m.return_type.get_cname ());
-					cdecl.add_declarator (new CCodeVariableDeclarator ("result", default_value_for_type (m.return_type, true)));
+					cdecl.add_declarator (new CCodeVariableDeclarator.zero ("result", default_value_for_type (m.return_type, true)));
 					cinit.append (cdecl);
 
 					function.block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("result")));
