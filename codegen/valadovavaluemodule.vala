@@ -386,6 +386,12 @@ internal class Vala.DovaValueModule : DovaObjectModule {
 		type_init_call.add_argument (new CCodeIdentifier ("%s_type".printf (st.get_lower_case_cname ())));
 		type_init_block.add_statement (new CCodeExpressionStatement (type_init_call));
 
+		// workaround: set value_size again as it is currently overwritten by dova_object_type_init
+		set_size = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_set_value_size"));
+		set_size.add_argument (new CCodeIdentifier ("%s_type".printf (st.get_lower_case_cname ())));
+		set_size.add_argument (sizeof_call);
+		type_init_block.add_statement (new CCodeExpressionStatement (set_size));
+
 		type_fun.block.add_statement (new CCodeIfStatement (new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeIdentifier ("%s_type".printf (st.get_lower_case_cname ()))), type_init_block));
 
 		type_fun.block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("%s_type".printf (st.get_lower_case_cname ()))));
