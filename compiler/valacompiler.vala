@@ -311,6 +311,9 @@ class Vala.Compiler {
 				if (!add_package (context, package) && !add_gir (context, package)) {
 					Report.error (null, "%s not found in specified Vala API directories or GObject-Introspection GIR directories".printf (package));
 				}
+				if (context.profile == Profile.GOBJECT && package == "dbus-glib-1") {
+					context.add_define ("DBUS_GLIB");
+				}
 			}
 			packages = null;
 		}
