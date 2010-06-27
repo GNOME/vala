@@ -31,6 +31,9 @@ namespace DBus {
 	public const string INTERFACE_PROPERTIES;
 	public const string INTERFACE_PEER;
 
+	[CCode (cname = "dbus_g_thread_init")]
+	public static void thread_init ();
+
 	[CCode (cprefix = "DBUS_BUS_")]
 	public enum BusType {
 		SESSION,
