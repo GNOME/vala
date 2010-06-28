@@ -828,10 +828,19 @@ public class Vala.Struct : TypeSymbol {
 			prop.check (analyzer);
 		}
 
-		if (!external && !external_package && base_type == null && get_fields ().size == 0
-		    && !is_boolean_type () && !is_integer_type () && !is_floating_type ()) {
-			error = true;
-			Report.error (source_reference, "structs cannot be empty: %s".printf(name));
+		if (!external && !external_package) {
+			if (base_type == null && get_fields ().size == 0 && !is_boolean_type () && !is_integer_type () && !is_floating_type ()) {
+				error = true;
+				Report.error (source_reference, "structs cannot be empty: %s".printf(name));
+			} else if (base_type != null) {
+				foreach (Field f in fields) {
+					if (f.binding == MemberBinding.INSTANCE) {
+						error = true;
+						Report.error (source_reference, "derived structs may not have instance fields");
+						break;
+					}
+				}
+			}
 		}
 
 		analyzer.current_source_file = old_source_file;

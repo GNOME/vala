@@ -103,9 +103,13 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 			}
 		}
 
-		decl_space.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (st.get_cname ()), new CCodeVariableDeclarator (st.get_cname ())));
+		if (st.base_struct == null) {
+			decl_space.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (st.get_cname ()), new CCodeVariableDeclarator (st.get_cname ())));
 
-		decl_space.add_type_definition (instance_struct);
+			decl_space.add_type_definition (instance_struct);
+		} else {
+			decl_space.add_type_declaration (new CCodeTypeDefinition (st.base_struct.get_cname (), new CCodeVariableDeclarator (st.get_cname ())));
+		}
 
 		var function = new CCodeFunction (st.get_dup_function (), st.get_cname () + "*");
 		if (st.is_private_symbol ()) {

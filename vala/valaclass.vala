@@ -1053,6 +1053,7 @@ public class Vala.Class : ObjectTypeSymbol {
 					if (f.binding == MemberBinding.INSTANCE) {
 						error = true;
 						Report.error (source_reference, "derived compact classes may not have instance fields");
+						break;
 					}
 				}
 			}
