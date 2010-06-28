@@ -387,11 +387,20 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 						if (d.has_target) {
 							CCodeExpression delegate_target_destroy_notify;
 							var delegate_target = get_delegate_target_cexpression (arg, out delegate_target_destroy_notify);
-							carg_map.set (get_param_pos (param.cdelegate_target_parameter_position), delegate_target);
-							if (deleg_type.value_owned) {
-								carg_map.set (get_param_pos (param.cdelegate_target_parameter_position + 0.01), delegate_target_destroy_notify);
+							if (param.ctype == "GClosure*") {
+								// one single GClosure parameter
+								var closure_new = new CCodeFunctionCall (new CCodeIdentifier ("g_cclosure_new"));
+								closure_new.add_argument (new CCodeCastExpression (cexpr, "GCallback"));
+								closure_new.add_argument (delegate_target);
+								closure_new.add_argument (delegate_target_destroy_notify);
+								cexpr = closure_new;
+							} else {
+								carg_map.set (get_param_pos (param.cdelegate_target_parameter_position), delegate_target);
+								if (deleg_type.value_owned) {
+									carg_map.set (get_param_pos (param.cdelegate_target_parameter_position + 0.01), delegate_target_destroy_notify);
+								}
+								multiple_cargs = true;
 							}
-							multiple_cargs = true;
 						}
 					} else if (param.parameter_type is MethodType) {
 						// callbacks in dynamic method calls
