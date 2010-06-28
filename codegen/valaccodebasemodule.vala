@@ -3896,7 +3896,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	bool is_reference_type_argument (DataType type_arg) {
-		if (type_arg.data_type != null && type_arg.data_type.is_reference_type ()) {
+		if (type_arg is ErrorType || (type_arg.data_type != null && type_arg.data_type.is_reference_type ())) {
 			return true;
 		} else {
 			return false;
