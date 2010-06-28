@@ -4991,6 +4991,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		bool gvariant_boxing = (context.profile == Profile.GOBJECT
 		                        && target_type != null
 		                        && target_type.data_type == gvariant_type
+		                        && !(expression_type is NullType)
 		                        && expression_type.data_type != gvariant_type);
 
 		if (expression_type.value_owned
