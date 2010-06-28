@@ -185,19 +185,14 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class DBusConnection : GLib.Object, GLib.Initable, GLib.AsyncInitable {
 		[CCode (type = "void", has_construct_function = false)]
-		public DBusConnection (GLib.IOStream stream, string guid, GLib.DBusConnectionFlags flags, GLib.DBusAuthObserver observer, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
+		public async DBusConnection (GLib.IOStream stream, string guid, GLib.DBusConnectionFlags flags, GLib.DBusAuthObserver observer, GLib.Cancellable? cancellable) throws GLib.Error;
 		public uint add_filter (GLib.DBusMessageFilterFunction filter_function, GLib.DestroyNotify user_data_free_func);
-		public void call (string bus_name, string object_path, string interface_name, string method_name, GLib.Variant parameters, GLib.VariantType reply_type, GLib.DBusCallFlags flags, int timeout_msec, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
-		public unowned GLib.Variant call_finish (GLib.AsyncResult res) throws GLib.Error;
-		public unowned GLib.Variant call_sync (string bus_name, string object_path, string interface_name, string method_name, GLib.Variant parameters, GLib.VariantType reply_type, GLib.DBusCallFlags flags, int timeout_msec, GLib.Cancellable? cancellable) throws GLib.Error;
+		public async GLib.Variant call (string bus_name, string object_path, string interface_name, string method_name, GLib.Variant parameters, GLib.VariantType reply_type, GLib.DBusCallFlags flags, int timeout_msec, GLib.Cancellable? cancellable) throws GLib.Error;
+		public GLib.Variant call_sync (string bus_name, string object_path, string interface_name, string method_name, GLib.Variant parameters, GLib.VariantType reply_type, GLib.DBusCallFlags flags, int timeout_msec, GLib.Cancellable? cancellable) throws GLib.Error;
 		public void close ();
 		public bool emit_signal (string destination_bus_name, string object_path, string interface_name, string signal_name, GLib.Variant parameters) throws GLib.Error;
-		[CCode (has_construct_function = false)]
-		public DBusConnection.finish (GLib.AsyncResult res) throws GLib.Error;
 		[CCode (type = "void", has_construct_function = false)]
-		public DBusConnection.for_address (string address, GLib.DBusConnectionFlags flags, GLib.DBusAuthObserver observer, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
-		[CCode (has_construct_function = false)]
-		public DBusConnection.for_address_finish (GLib.AsyncResult res) throws GLib.Error;
+		public async DBusConnection.for_address (string address, GLib.DBusConnectionFlags flags, GLib.DBusAuthObserver observer, GLib.Cancellable? cancellable) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public DBusConnection.for_address_sync (string address, GLib.DBusConnectionFlags flags, GLib.DBusAuthObserver observer, GLib.Cancellable? cancellable) throws GLib.Error;
 		public GLib.DBusCapabilityFlags get_capabilities ();
@@ -211,9 +206,8 @@ namespace GLib {
 		public uint register_subtree (string object_path, GLib.DBusSubtreeVTable vtable, GLib.DBusSubtreeFlags flags, GLib.DestroyNotify user_data_free_func) throws GLib.Error;
 		public void remove_filter (uint filter_id);
 		public bool send_message (GLib.DBusMessage message, uint32 out_serial) throws GLib.Error;
-		public void send_message_with_reply (GLib.DBusMessage message, int timeout_msec, uint32 out_serial, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
-		public unowned GLib.DBusMessage send_message_with_reply_finish (GLib.AsyncResult res) throws GLib.Error;
-		public unowned GLib.DBusMessage send_message_with_reply_sync (GLib.DBusMessage message, int timeout_msec, uint32 out_serial, GLib.Cancellable? cancellable) throws GLib.Error;
+		public async GLib.DBusMessage send_message_with_reply (GLib.DBusMessage message, int timeout_msec, uint32 out_serial, GLib.Cancellable? cancellable) throws GLib.Error;
+		public GLib.DBusMessage send_message_with_reply_sync (GLib.DBusMessage message, int timeout_msec, uint32 out_serial, GLib.Cancellable? cancellable) throws GLib.Error;
 		public void set_exit_on_close (bool exit_on_close);
 		public uint signal_subscribe (string sender, string interface_name, string member, string object_path, string arg0, GLib.DBusSignalCallback callback, GLib.DestroyNotify user_data_free_func);
 		public void signal_unsubscribe (uint subscription_id);
@@ -367,16 +361,11 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class DBusProxy : GLib.Object, GLib.Initable, GLib.AsyncInitable {
 		[CCode (type = "void", has_construct_function = false)]
-		public DBusProxy (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, GLib.DBusInterfaceInfo info, string name, string object_path, string interface_name, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
-		public void call (string method_name, GLib.Variant parameters, GLib.DBusCallFlags flags, int timeout_msec, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
-		public unowned GLib.Variant call_finish (GLib.AsyncResult res) throws GLib.Error;
-		public unowned GLib.Variant call_sync (string method_name, GLib.Variant parameters, GLib.DBusCallFlags flags, int timeout_msec, GLib.Cancellable? cancellable) throws GLib.Error;
-		[CCode (has_construct_function = false)]
-		public DBusProxy.finish (GLib.AsyncResult res) throws GLib.Error;
+		public async DBusProxy (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, GLib.DBusInterfaceInfo info, string name, string object_path, string interface_name, GLib.Cancellable? cancellable) throws GLib.Error;
+		public async GLib.Variant call (string method_name, GLib.Variant parameters, GLib.DBusCallFlags flags, int timeout_msec, GLib.Cancellable? cancellable) throws GLib.Error;
+		public GLib.Variant call_sync (string method_name, GLib.Variant parameters, GLib.DBusCallFlags flags, int timeout_msec, GLib.Cancellable? cancellable) throws GLib.Error;
 		[CCode (type = "void", has_construct_function = false)]
-		public DBusProxy.for_bus (GLib.BusType bus_type, GLib.DBusProxyFlags flags, GLib.DBusInterfaceInfo info, string name, string object_path, string interface_name, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
-		[CCode (has_construct_function = false)]
-		public DBusProxy.for_bus_finish (GLib.AsyncResult res) throws GLib.Error;
+		public async DBusProxy.for_bus (GLib.BusType bus_type, GLib.DBusProxyFlags flags, GLib.DBusInterfaceInfo info, string name, string object_path, string interface_name, GLib.Cancellable? cancellable) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public DBusProxy.for_bus_sync (GLib.BusType bus_type, GLib.DBusProxyFlags flags, GLib.DBusInterfaceInfo info, string name, string object_path, string interface_name, GLib.Cancellable? cancellable) throws GLib.Error;
 		public unowned GLib.Variant get_cached_property (string property_name);
@@ -2257,7 +2246,7 @@ namespace GLib {
 	[CCode (cname = "g_dbus_address_get_for_bus_sync", cheader_filename = "gio/gio.h")]
 	public static unowned string g_dbus_address_get_for_bus_sync (GLib.BusType bus_type, GLib.Cancellable? cancellable) throws GLib.Error;
 	[CCode (cname = "g_dbus_address_get_stream", cheader_filename = "gio/gio.h")]
-	public static void g_dbus_address_get_stream (string address, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
+	public static async void g_dbus_address_get_stream (string address, GLib.Cancellable? cancellable);
 	[CCode (cname = "g_dbus_address_get_stream_finish", cheader_filename = "gio/gio.h")]
 	public static unowned GLib.IOStream g_dbus_address_get_stream_finish (GLib.AsyncResult res, string out_guid) throws GLib.Error;
 	[CCode (cname = "g_dbus_address_get_stream_sync", cheader_filename = "gio/gio.h")]
