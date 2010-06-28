@@ -68,7 +68,7 @@ public class Vala.GDBusModule : GVariantModule {
 
 			var error_entry = new CCodeInitializerList ();
 			error_entry.append (new CCodeIdentifier (ecode.get_cname ()));
-			error_entry.append (new CCodeConstant ("\"%s\"".printf (ecode_dbus_name)));
+			error_entry.append (new CCodeConstant ("\"%s.%s\"".printf (edomain_dbus_name, ecode_dbus_name)));
 			error_entries.append (error_entry);
 		}
 
