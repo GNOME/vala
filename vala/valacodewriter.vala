@@ -1000,6 +1000,10 @@ public class Vala.CodeWriter : CodeVisitor {
 		write_accessibility (m);
 		
 		if (m is CreationMethod) {
+			if (m.coroutine) {
+				write_string ("async ");
+			}
+
 			var datatype = (TypeSymbol) m.parent_symbol;
 			write_identifier (datatype.name);
 			if (m.name != ".new") {
@@ -1007,23 +1011,23 @@ public class Vala.CodeWriter : CodeVisitor {
 				write_identifier (m.name);
 			}
 			write_string (" ");
-		} else if (m.binding == MemberBinding.STATIC) {
-			write_string ("static ");
-		} else if (m.binding == MemberBinding.CLASS) {
-			write_string ("class ");
-		} else if (m.is_abstract) {
-			write_string ("abstract ");
-		} else if (m.is_virtual) {
-			write_string ("virtual ");
-		} else if (m.overrides) {
-			write_string ("override ");
-		}
+		} else {
+			if (m.binding == MemberBinding.STATIC) {
+				write_string ("static ");
+			} else if (m.binding == MemberBinding.CLASS) {
+				write_string ("class ");
+			} else if (m.is_abstract) {
+				write_string ("abstract ");
+			} else if (m.is_virtual) {
+				write_string ("virtual ");
+			} else if (m.overrides) {
+				write_string ("override ");
+			}
 
-		if (m.coroutine) {
-			write_string ("async ");
-		}
+			if (m.coroutine) {
+				write_string ("async ");
+			}
 		
-		if (!(m is CreationMethod)) {
 			write_return_type (m.return_type);
 			write_string (" ");
 
