@@ -387,12 +387,6 @@
 				<parameter name="cancellable" type="GCancellable*"/>
 			</parameters>
 		</function>
-		<function name="g_keyfile_settings_backend_new" symbol="g_keyfile_settings_backend_new">
-			<return-type type="GSettingsBackend*"/>
-			<parameters>
-				<parameter name="filename" type="gchar*"/>
-			</parameters>
-		</function>
 		<function name="g_simple_async_report_error_in_idle" symbol="g_simple_async_report_error_in_idle">
 			<return-type type="void"/>
 			<parameters>
@@ -757,6 +751,8 @@
 		<struct name="GOutputVector">
 			<field name="buffer" type="gconstpointer"/>
 			<field name="size" type="gsize"/>
+		</struct>
+		<struct name="GSettingsBackend">
 		</struct>
 		<struct name="GSimpleAsyncResultClass">
 		</struct>
@@ -5994,150 +5990,6 @@
 				</parameters>
 			</signal>
 		</object>
-		<object name="GSettingsBackend" parent="GObject" type-name="GSettingsBackend" get-type="g_settings_backend_get_type">
-			<method name="changed" symbol="g_settings_backend_changed">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="backend" type="GSettingsBackend*"/>
-					<parameter name="key" type="gchar*"/>
-					<parameter name="origin_tag" type="gpointer"/>
-				</parameters>
-			</method>
-			<method name="changed_tree" symbol="g_settings_backend_changed_tree">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="backend" type="GSettingsBackend*"/>
-					<parameter name="tree" type="GTree*"/>
-					<parameter name="origin_tag" type="gpointer"/>
-				</parameters>
-			</method>
-			<method name="flatten_tree" symbol="g_settings_backend_flatten_tree">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="tree" type="GTree*"/>
-					<parameter name="path" type="gchar**"/>
-					<parameter name="keys" type="gchar***"/>
-					<parameter name="values" type="GVariant***"/>
-				</parameters>
-			</method>
-			<method name="keys_changed" symbol="g_settings_backend_keys_changed">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="backend" type="GSettingsBackend*"/>
-					<parameter name="path" type="gchar*"/>
-					<parameter name="items" type="gchar**"/>
-					<parameter name="origin_tag" type="gpointer"/>
-				</parameters>
-			</method>
-			<method name="path_changed" symbol="g_settings_backend_path_changed">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="backend" type="GSettingsBackend*"/>
-					<parameter name="path" type="gchar*"/>
-					<parameter name="origin_tag" type="gpointer"/>
-				</parameters>
-			</method>
-			<method name="path_writable_changed" symbol="g_settings_backend_path_writable_changed">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="backend" type="GSettingsBackend*"/>
-					<parameter name="path" type="gchar*"/>
-				</parameters>
-			</method>
-			<method name="writable_changed" symbol="g_settings_backend_writable_changed">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="backend" type="GSettingsBackend*"/>
-					<parameter name="key" type="gchar*"/>
-				</parameters>
-			</method>
-			<vfunc name="get_permission">
-				<return-type type="GPermission*"/>
-				<parameters>
-					<parameter name="backend" type="GSettingsBackend*"/>
-					<parameter name="path" type="gchar*"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="get_writable">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="backend" type="GSettingsBackend*"/>
-					<parameter name="key" type="gchar*"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="list">
-				<return-type type="gchar**"/>
-				<parameters>
-					<parameter name="backend" type="GSettingsBackend*"/>
-					<parameter name="path" type="gchar*"/>
-					<parameter name="resets" type="gchar**"/>
-					<parameter name="n_resets" type="gsize"/>
-					<parameter name="length" type="gsize*"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="read">
-				<return-type type="GVariant*"/>
-				<parameters>
-					<parameter name="backend" type="GSettingsBackend*"/>
-					<parameter name="key" type="gchar*"/>
-					<parameter name="expected_type" type="GVariantType*"/>
-					<parameter name="default_value" type="gboolean"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="reset">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="backend" type="GSettingsBackend*"/>
-					<parameter name="key" type="gchar*"/>
-					<parameter name="origin_tag" type="gpointer"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="reset_path">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="backend" type="GSettingsBackend*"/>
-					<parameter name="path" type="gchar*"/>
-					<parameter name="origin_tag" type="gpointer"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="subscribe">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="backend" type="GSettingsBackend*"/>
-					<parameter name="name" type="gchar*"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="sync">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="backend" type="GSettingsBackend*"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="unsubscribe">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="backend" type="GSettingsBackend*"/>
-					<parameter name="name" type="gchar*"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="write">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="backend" type="GSettingsBackend*"/>
-					<parameter name="key" type="gchar*"/>
-					<parameter name="value" type="GVariant*"/>
-					<parameter name="origin_tag" type="gpointer"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="write_keys">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="backend" type="GSettingsBackend*"/>
-					<parameter name="tree" type="GTree*"/>
-					<parameter name="origin_tag" type="gpointer"/>
-				</parameters>
-			</vfunc>
-		</object>
 		<object name="GSimpleAsyncResult" parent="GObject" type-name="GSimpleAsyncResult" get-type="g_simple_async_result_get_type">
 			<implements>
 				<interface name="GAsyncResult"/>
@@ -11140,7 +10992,6 @@
 		<constant name="G_FILE_ATTRIBUTE_UNIX_RDEV" type="char*" value="unix::rdev"/>
 		<constant name="G_FILE_ATTRIBUTE_UNIX_UID" type="char*" value="unix::uid"/>
 		<constant name="G_NATIVE_VOLUME_MONITOR_EXTENSION_POINT_NAME" type="char*" value="gio-native-volume-monitor"/>
-		<constant name="G_SETTINGS_BACKEND_EXTENSION_POINT_NAME" type="char*" value="gsettings-backend"/>
 		<constant name="G_VFS_EXTENSION_POINT_NAME" type="char*" value="gio-vfs"/>
 		<constant name="G_VOLUME_IDENTIFIER_KIND_HAL_UDI" type="char*" value="hal-udi"/>
 		<constant name="G_VOLUME_IDENTIFIER_KIND_LABEL" type="char*" value="label"/>

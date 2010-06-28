@@ -1014,34 +1014,6 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class SettingsBackend : GLib.Object {
-		public void changed_tree (GLib.Tree tree, void* origin_tag);
-		public static void flatten_tree (GLib.Tree tree, string path, string keys, out unowned GLib.Variant values);
-		[NoWrapper]
-		public virtual unowned GLib.Permission get_permission (string path);
-		[NoWrapper]
-		public virtual bool get_writable (string key);
-		public void keys_changed (string path, string items, void* origin_tag);
-		[NoWrapper]
-		public virtual unowned string list (string path, string[] resets, size_t length);
-		public void path_changed (string path, void* origin_tag);
-		public void path_writable_changed (string path);
-		[NoWrapper]
-		public virtual GLib.Variant read (string key, GLib.VariantType expected_type, bool default_value);
-		[NoWrapper]
-		public virtual void reset (string key, void* origin_tag);
-		[NoWrapper]
-		public virtual void reset_path (string path, void* origin_tag);
-		[NoWrapper]
-		public virtual void subscribe (string name);
-		[NoWrapper]
-		public virtual void sync ();
-		[NoWrapper]
-		public virtual void unsubscribe (string name);
-		public void writable_changed (string key);
-		[NoWrapper]
-		public virtual bool write (string key, GLib.Variant value, void* origin_tag);
-		[NoWrapper]
-		public virtual bool write_keys (GLib.Tree tree, void* origin_tag);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class SimpleAsyncResult : GLib.Object, GLib.AsyncResult {
@@ -2206,8 +2178,6 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public const string NATIVE_VOLUME_MONITOR_EXTENSION_POINT_NAME;
 	[CCode (cheader_filename = "gio/gio.h")]
-	public const string SETTINGS_BACKEND_EXTENSION_POINT_NAME;
-	[CCode (cheader_filename = "gio/gio.h")]
 	public const string VFS_EXTENSION_POINT_NAME;
 	[CCode (cheader_filename = "gio/gio.h")]
 	public const string VOLUME_IDENTIFIER_KIND_HAL_UDI;
@@ -2301,8 +2271,6 @@ namespace GLib {
 	public static void g_io_scheduler_cancel_all_jobs ();
 	[CCode (cname = "g_io_scheduler_push_job", cheader_filename = "gio/gio.h")]
 	public static void g_io_scheduler_push_job (GLib.IOSchedulerJobFunc job_func, GLib.DestroyNotify? notify, int io_priority, GLib.Cancellable? cancellable = null);
-	[CCode (cname = "g_keyfile_settings_backend_new", cheader_filename = "gio/gio.h")]
-	public static unowned GLib.SettingsBackend g_keyfile_settings_backend_new (string filename);
 	[CCode (cname = "g_simple_async_report_error_in_idle", cheader_filename = "gio/gio.h")]
 	public static void g_simple_async_report_error_in_idle (GLib.Object object, GLib.AsyncReadyCallback callback, GLib.Quark domain, int code, string format);
 	[CCode (cname = "g_simple_async_report_gerror_in_idle", cheader_filename = "gio/gio.h")]
