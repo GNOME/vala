@@ -303,6 +303,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			var return_error = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_method_invocation_return_gerror"));
 			return_error.add_argument (new CCodeIdentifier ("invocation"));
 			return_error.add_argument (new CCodeIdentifier ("error"));
+			error_block.add_statement (new CCodeExpressionStatement (return_error));
 
 			error_block.add_statement (new CCodeReturnStatement ());
 
