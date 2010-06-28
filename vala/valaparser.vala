@@ -463,7 +463,7 @@ public class Vala.Parser : CodeVisitor {
 					// only used for parsing, reject use as real type
 					invalid_array = true;
 				}
-			} while (accept (TokenType.COMMA));
+			} while (context.profile != Profile.DOVA && accept (TokenType.COMMA));
 			expect (TokenType.CLOSE_BRACKET);
 
 			// arrays contain strong references by default
@@ -877,7 +877,7 @@ public class Vala.Parser : CodeVisitor {
 					size_specified = true;
 				}
 				size_specifier_list.add (size);
-			} while (accept (TokenType.COMMA));
+			} while (context.profile != Profile.DOVA && accept (TokenType.COMMA));
 			expect (TokenType.CLOSE_BRACKET);
 		} while (accept (TokenType.OPEN_BRACKET));
 
