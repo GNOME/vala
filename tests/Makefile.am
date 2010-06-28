@@ -71,6 +71,7 @@ TESTS = \
 	errors/bug567181.vala \
 	errors/bug579101.vala \
 	errors/bug596228.vala \
+	errors/bug623049.vala \
 	asynchronous/bug595735.vala \
 	asynchronous/bug595755.vala \
 	asynchronous/bug596177.vala \

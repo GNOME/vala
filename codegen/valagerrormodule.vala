@@ -117,8 +117,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 
 		if (current_method is CreationMethod) {
 			var cl = current_method.parent_symbol as Class;
-			var unref_call = new CCodeFunctionCall (new CCodeIdentifier (cl.get_unref_function ()));
-			unref_call.add_argument (new CCodeIdentifier ("self"));
+			var unref_call = get_unref_expression (new CCodeIdentifier ("self"), new ObjectType (cl), null);
 			cerror_block.add_statement (new CCodeExpressionStatement (unref_call));
 			cerror_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("NULL")));
 		} else if (current_method != null && current_method.coroutine) {
