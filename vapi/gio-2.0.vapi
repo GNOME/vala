@@ -182,7 +182,7 @@ namespace GLib {
 		public async GLib.Variant call (string bus_name, string object_path, string interface_name, string method_name, GLib.Variant parameters, GLib.VariantType reply_type, GLib.DBusCallFlags flags, int timeout_msec, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public GLib.Variant call_sync (string bus_name, string object_path, string interface_name, string method_name, GLib.Variant parameters, GLib.VariantType reply_type, GLib.DBusCallFlags flags, int timeout_msec, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void close ();
-		public bool emit_signal (string destination_bus_name, string object_path, string interface_name, string signal_name, GLib.Variant parameters) throws GLib.Error;
+		public bool emit_signal (string? destination_bus_name, string object_path, string interface_name, string signal_name, GLib.Variant parameters) throws GLib.Error;
 		[CCode (type = "void", has_construct_function = false)]
 		public async DBusConnection.for_address (string address, GLib.DBusConnectionFlags flags, GLib.DBusAuthObserver observer, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (has_construct_function = false)]

@@ -226,5 +226,6 @@ uid_t name="uint"
 
 g_bus_* hidden="1"
 g_dbus_connection_register_object hidden="1"
+g_dbus_connection_emit_signal.destination_bus_name nullable="1"
 
 GSettingsBackend base_class="GObject"
