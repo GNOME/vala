@@ -913,7 +913,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			var info = new CCodeInitializerList ();
 			info.append (new CCodeConstant ("-1"));
 			info.append (new CCodeConstant ("\"%s\"".printf (get_dbus_name_for_member (sig))));
-			info.append (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_" + sym.get_lower_case_cprefix () + "dbus_arg_info_" + sig.get_cname ())));
+			info.append (new CCodeCastExpression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_" + sym.get_lower_case_cprefix () + "dbus_arg_info_" + sig.get_cname ())), "GDBusArgInfo **"));
 
 			cdecl = new CCodeDeclaration ("const GDBusSignalInfo");
 			cdecl.add_declarator (new CCodeVariableDeclarator ("_" + sym.get_lower_case_cprefix () + "dbus_signal_info_" + sig.get_cname (), info));
