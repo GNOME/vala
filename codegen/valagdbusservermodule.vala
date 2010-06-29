@@ -617,7 +617,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		cfunc.add_parameter (new CCodeFormalParameter ("method_name", "const gchar*"));
 		cfunc.add_parameter (new CCodeFormalParameter ("parameters", "GVariant*"));
 		cfunc.add_parameter (new CCodeFormalParameter ("invocation", "GDBusMethodInvocation*"));
-		cfunc.add_parameter (new CCodeFormalParameter ("data", "gpointer*"));
+		cfunc.add_parameter (new CCodeFormalParameter ("user_data", "gpointer"));
 
 		cfunc.modifiers |= CCodeModifiers.STATIC;
 
@@ -626,7 +626,11 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		var block = new CCodeBlock ();
 		cfunc.block = block;
 
-		var cdecl = new CCodeDeclaration ("gpointer");
+		var cdecl = new CCodeDeclaration ("gpointer*");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("data", new CCodeIdentifier ("user_data")));
+		block.add_statement (cdecl);
+
+		cdecl = new CCodeDeclaration ("gpointer");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("object", new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("0"))));
 		block.add_statement (cdecl);
 
@@ -675,7 +679,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		cfunc.add_parameter (new CCodeFormalParameter ("interface_name", "const gchar*"));
 		cfunc.add_parameter (new CCodeFormalParameter ("property_name", "const gchar*"));
 		cfunc.add_parameter (new CCodeFormalParameter ("error", "GError**"));
-		cfunc.add_parameter (new CCodeFormalParameter ("data", "gpointer*"));
+		cfunc.add_parameter (new CCodeFormalParameter ("user_data", "gpointer"));
 
 		cfunc.modifiers |= CCodeModifiers.STATIC;
 
@@ -684,7 +688,11 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		var block = new CCodeBlock ();
 		cfunc.block = block;
 
-		var cdecl = new CCodeDeclaration ("gpointer");
+		var cdecl = new CCodeDeclaration ("gpointer*");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("data", new CCodeIdentifier ("user_data")));
+		block.add_statement (cdecl);
+
+		cdecl = new CCodeDeclaration ("gpointer");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("object", new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("0"))));
 		block.add_statement (cdecl);
 
@@ -737,7 +745,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		cfunc.add_parameter (new CCodeFormalParameter ("property_name", "const gchar*"));
 		cfunc.add_parameter (new CCodeFormalParameter ("value", "GVariant*"));
 		cfunc.add_parameter (new CCodeFormalParameter ("error", "GError**"));
-		cfunc.add_parameter (new CCodeFormalParameter ("data", "gpointer*"));
+		cfunc.add_parameter (new CCodeFormalParameter ("user_data", "gpointer"));
 
 		cfunc.modifiers |= CCodeModifiers.STATIC;
 
@@ -746,7 +754,11 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		var block = new CCodeBlock ();
 		cfunc.block = block;
 
-		var cdecl = new CCodeDeclaration ("gpointer");
+		var cdecl = new CCodeDeclaration ("gpointer*");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("data", new CCodeIdentifier ("user_data")));
+		block.add_statement (cdecl);
+
+		cdecl = new CCodeDeclaration ("gpointer");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("object", new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("0"))));
 		block.add_statement (cdecl);
 
@@ -1159,12 +1171,16 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 
 		cfunc = new CCodeFunction ("_" + sym.get_lower_case_cprefix () + "unregister_object");
-		cfunc.add_parameter (new CCodeFormalParameter ("data", "gpointer*"));
+		cfunc.add_parameter (new CCodeFormalParameter ("user_data", "gpointer"));
 		cfunc.modifiers |= CCodeModifiers.STATIC;
 		source_declarations.add_type_member_declaration (cfunc.copy ());
 
 		block = new CCodeBlock ();
 		cfunc.block = block;
+
+		cdecl = new CCodeDeclaration ("gpointer*");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("data", new CCodeIdentifier ("user_data")));
+		block.add_statement (cdecl);
 
 		var unref_object = new CCodeFunctionCall (new CCodeIdentifier (sym.get_unref_function ()));
 		unref_object.add_argument (new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("0")));
