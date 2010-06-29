@@ -855,8 +855,8 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			var info = new CCodeInitializerList ();
 			info.append (new CCodeConstant ("-1"));
 			info.append (new CCodeConstant ("\"%s\"".printf (get_dbus_name_for_member (m))));
-			info.append (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_" + sym.get_lower_case_cprefix () + "dbus_arg_info_" + m.name + "_in")));
-			info.append (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_" + sym.get_lower_case_cprefix () + "dbus_arg_info_" + m.name + "_out")));
+			info.append (new CCodeCastExpression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_" + sym.get_lower_case_cprefix () + "dbus_arg_info_" + m.name + "_in")), "GDBusArgInfo **"));
+			info.append (new CCodeCastExpression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_" + sym.get_lower_case_cprefix () + "dbus_arg_info_" + m.name + "_out")), "GDBusArgInfo **"));
 
 			cdecl = new CCodeDeclaration ("const GDBusMethodInfo");
 			cdecl.add_declarator (new CCodeVariableDeclarator ("_" + sym.get_lower_case_cprefix () + "dbus_method_info_" + m.name, info));
@@ -981,9 +981,9 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		var info = new CCodeInitializerList ();
 		info.append (new CCodeConstant ("-1"));
 		info.append (new CCodeConstant ("\"%s\"".printf (get_dbus_name (sym))));
-		info.append (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_method_info (sym)));
-		info.append (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_signal_info (sym)));
-		info.append (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_property_info (sym)));
+		info.append (new CCodeCastExpression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_method_info (sym)), "GDBusMethodInfo **"));
+		info.append (new CCodeCastExpression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_signal_info (sym)), "GDBusSignalInfo **"));
+		info.append (new CCodeCastExpression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_property_info (sym)), "GDBusPropertyInfo **"));
 
 		var cdecl = new CCodeDeclaration ("const GDBusInterfaceInfo");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("_" + sym.get_lower_case_cprefix () + "dbus_interface_info", info));
