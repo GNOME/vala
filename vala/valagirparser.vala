@@ -968,7 +968,7 @@ public class Vala.GirParser : CodeVisitor {
 				for (int k=last+1; k < i; k++) {
 					parameters[k].vala_idx =  last_idx + (((j - last_idx) / (i-last)) * (k-last));
 				}
-				last = i+1;
+				last = i;
 				j++;
 			} else {
 				info.keep = false;
