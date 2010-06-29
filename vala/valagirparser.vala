@@ -178,7 +178,7 @@ public class Vala.GirParser : CodeVisitor {
 		string namespace_name = transform_namespace_name (reader.get_attribute ("name"));
 		var ns = context.root.scope.lookup (namespace_name) as Namespace;
 		if (ns == null) {
-			ns = new Namespace (namespace_name);
+			ns = new Namespace (namespace_name, get_current_src ());
 			new_namespace = true;
 		} else {
 			if (ns.external_package) {
