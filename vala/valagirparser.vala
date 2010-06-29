@@ -953,7 +953,12 @@ public class Vala.GirParser : CodeVisitor {
 
 		int last = -1;
 		foreach (MethodInfo info in parameters) {
-			if (info.keep
+			if (s is Delegate && info.closure_idx == i + add) {
+				var d = (Delegate) s;
+				d.has_target = true;
+				d.cinstance_parameter_position = (float) j - 0.1;
+				info.keep = false;
+			} else if (info.keep
 			    && !array_length_parameters.contains (i+add)
 			    && !closure_parameters.contains (i+add)
 			    && !destroy_parameters.contains (i+add)) {
