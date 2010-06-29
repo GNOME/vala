@@ -706,7 +706,10 @@ public class Vala.Scanner {
 							break;
 						}
 					} else if (current[0] == '\n') {
-						break;
+						current++;
+						line++;
+						column = 1;
+						token_length_in_chars = 1;
 					} else {
 						unichar u = ((string) current).get_char_validated ((long) (end - current));
 						if (u != (unichar) (-1)) {
@@ -718,7 +721,7 @@ public class Vala.Scanner {
 						}
 					}
 				}
-				if (current >= end || current[0] == '\n') {
+				if (current >= end) {
 					Report.error (new SourceReference (source_file, line, column + token_length_in_chars, line, column + token_length_in_chars), "syntax error, expected \"");
 					state_stack.length--;
 					return read_token (out token_begin, out token_end);
@@ -1129,7 +1132,10 @@ public class Vala.Scanner {
 							break;
 						}
 					} else if (current[0] == '\n') {
-						break;
+						current++;
+						line++;
+						column = 1;
+						token_length_in_chars = 1;
 					} else {
 						if (type == TokenType.STRING_LITERAL && source_file.context.profile == Profile.DOVA && current[0] == '$') {
 							// string template
@@ -1148,7 +1154,7 @@ public class Vala.Scanner {
 						}
 					}
 				}
-				if (current < end && current[0] != '\n') {
+				if (current < end) {
 					current++;
 				} else {
 					Report.error (new SourceReference (source_file, line, column + token_length_in_chars, line, column + token_length_in_chars), "syntax error, expected %c".printf (begin[0]));

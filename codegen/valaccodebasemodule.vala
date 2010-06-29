@@ -3506,7 +3506,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_string_literal (StringLiteral expr) {
-		expr.ccodenode = new CCodeConstant.string (expr.value);
+		expr.ccodenode = new CCodeConstant.string (expr.value.replace ("\n", "\\n"));
 	}
 
 	public override void visit_regex_literal (RegexLiteral expr) {
