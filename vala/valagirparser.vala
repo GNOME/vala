@@ -400,7 +400,7 @@ public class Vala.GirParser : CodeVisitor {
 			end_element ("varargs");
 		} else {
 			var type = parse_type (null, out array_length_idx, transfer == "full");
-			if (transfer == "full" || transfer == "container") {
+			if (transfer == "full" || transfer == "container" || destroy != null) {
 				type.value_owned = true;
 			}
 			if (allow_none == "1") {
@@ -1005,15 +1005,13 @@ public class Vala.GirParser : CodeVisitor {
 					}
 					info.param.cdelegate_target_parameter_position = parameters[info.closure_idx - add].vala_idx;
 				}
-/* Leaving this as a TODO, needs more testing
 				if (info.destroy_idx != -1) {
 					if (info.destroy_idx - add >= parameters.size) {
 						Report.error (get_current_src (), "invalid destroy index");
 						continue;
 					}
-					info.param.cdelegate_target_parameter_position = parameters[info.destroy_idx - add].vala_idx;
+					info.param.cdestroy_notify_parameter_position = parameters[info.destroy_idx - add].vala_idx;
 				}
-*/
 			}
 		}
 
