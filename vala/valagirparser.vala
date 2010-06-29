@@ -919,7 +919,6 @@ public class Vala.GirParser : CodeVisitor {
 			start_element ("parameters");
 			next ();
 
-			bool first = true;
 			while (current_token == MarkupTokenType.START_ELEMENT) {
 				int array_length_idx, closure_idx, destroy_idx;
 				string scope;
@@ -934,25 +933,20 @@ public class Vala.GirParser : CodeVisitor {
 					destroy_parameters.add (destroy_idx);
 				}
 
-				// first parameter is instance pointer in virtual methods, ignore
-				if (element_name != "callback" || !first) {
-					var info = new MethodInfo(param, array_length_idx, closure_idx, destroy_idx);
+				var info = new MethodInfo(param, array_length_idx, closure_idx, destroy_idx);
 
-					if (s is Method && scope == "async") {
-						((Method) s).coroutine = true;
-						info.keep = false;
-					}
-
-					parameters.add (info);
-				} else {
-					first = false;
+				if (s is Method && scope == "async") {
+					((Method) s).coroutine = true;
+					info.keep = false;
 				}
+
+				parameters.add (info);
 			}
 			end_element ("parameters");
 		}
 		int i = 0, j=1, add=0;
 
-		if (element_name == "method" || element_name == "virtual-method" || element_name == "callback") {
+		if (element_name == "method" || element_name == "virtual-method") {
 			// implicit instance parameter
 			add = 1;
 		}
