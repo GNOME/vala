@@ -1476,7 +1476,8 @@ namespace GLib {
 	}
 	
 	namespace ChildWatch {
-		public static uint add (Pid pid, ChildWatchFunc function);
+		[CCode (cname = "g_child_watch_add_full")]
+		public static uint add (Pid pid, owned ChildWatchFunc function, [CCode (pos = 0.1)] int priority = Priority.DEFAULT_IDLE);
 		public static uint add_full (int priority, Pid pid, owned ChildWatchFunc function);
 	}
 	
@@ -2727,6 +2728,9 @@ namespace GLib {
 		
 		[CCode (cname = "symlink")]
 		public static int symlink (string oldpath, string newpath);
+
+		[CCode (cname = "close", cheader_filename = "unistd.h")]
+		public static int close (int fd);
 	}
 
 	[CCode (cname = "stat")]

@@ -167,6 +167,8 @@ public class Vala.CodeContext {
 
 	public string entry_point_name { get; set; }
 
+	public bool run_output { get; set; }
+
 	private List<SourceFile> source_files = new ArrayList<SourceFile> ();
 	private List<string> c_source_files = new ArrayList<string> ();
 	private Namespace _root = new Namespace (null);

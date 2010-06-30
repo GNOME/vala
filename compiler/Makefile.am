@@ -37,6 +37,9 @@ valac_LDADD = \
 
 EXTRA_DIST = $(valac_VALASOURCES) valac.vala.stamp
 
+install-exec-hook:
+	cd $(DESTDIR)$(bindir) && $(LN_S) -f valac$(EXEEXT) vala$(EXEEXT)
+
 MAINTAINERCLEANFILES = \
 	$(valac_VALASOURCES:.vala=.c) \
 	$(NULL)

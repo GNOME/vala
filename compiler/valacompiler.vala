@@ -75,6 +75,8 @@ class Vala.Compiler {
 
 	static string entry_point;
 
+	static bool run_output;
+
 	private CodeContext context;
 
 	const OptionEntry[] options = {
@@ -256,6 +258,8 @@ class Vala.Compiler {
 
 		context.entry_point_name = entry_point;
 
+		context.run_output = run_output;
+
 		if (defines != null) {
 			foreach (string define in defines) {
 				context.add_define (define);
@@ -327,7 +331,7 @@ class Vala.Compiler {
 		foreach (string source in sources) {
 			if (FileUtils.test (source, FileTest.EXISTS)) {
 				var rpath = realpath (source);
-				if (source.has_suffix (".vala") || source.has_suffix (".gs")) {
+				if (run_output || source.has_suffix (".vala") || source.has_suffix (".gs")) {
 					var source_file = new SourceFile (context, rpath);
 
 					if (context.profile == Profile.POSIX) {
@@ -586,7 +590,90 @@ class Vala.Compiler {
 		return rpath;
 	}
 
+	static int run_source (string[] args) {
+		int i = 1;
+		if (args[i] != null && args[i].has_prefix ("-")) {
+			try {
+				string[] compile_args;
+				Shell.parse_argv ("valac " + args[1], out compile_args);
+
+				var opt_context = new OptionContext ("- Vala");
+				opt_context.set_help_enabled (true);
+				opt_context.add_main_entries (options, null);
+				opt_context.parse (ref compile_args);
+			} catch (ShellError e) {
+				stdout.printf ("%s\n", e.message);
+				return 1;
+			} catch (OptionError e) {
+				stdout.printf ("%s\n", e.message);
+				stdout.printf ("Run '%s --help' to see a full list of available command line options.\n", args[0]);
+				return 1;
+			}
+
+			i++;
+		}
+
+		if (args[i] == null) {
+			stderr.printf ("No source file specified.\n");
+			return 1;
+		}
+
+		sources = { args[i] };
+		output = "%s/%s.XXXXXX".printf (Environment.get_tmp_dir (), Path.get_basename (args[i]));
+		int outputfd = FileUtils.mkstemp (output);
+		if (outputfd < 0) {
+			return 1;
+		}
+
+		run_output = true;
+		disable_warnings = true;
+		quiet_mode = true;
+
+		var compiler = new Compiler ();
+		int ret = compiler.run ();
+		if (ret != 0) {
+			return ret;
+		}
+
+		FileUtils.close (outputfd);
+		if (FileUtils.chmod (output, 0700) != 0) {
+			FileUtils.unlink (output);
+			return 1;
+		}
+
+		string[] target_args = { output };
+		while (i < args.length) {
+			target_args += args[i];
+			i++;
+		}
+
+		try {
+			Pid pid;
+			var loop = new MainLoop ();
+			int child_status = 0;
+
+			Process.spawn_async (null, target_args, null, SpawnFlags.CHILD_INHERITS_STDIN | SpawnFlags.DO_NOT_REAP_CHILD | SpawnFlags.FILE_AND_ARGV_ZERO, null, out pid);
+
+			FileUtils.unlink (output);
+			ChildWatch.add (pid, (pid, status) => {
+				child_status = (status & 0xff00) >> 8;
+				loop.quit ();
+			});
+
+			loop.run ();
+
+			return child_status;
+		} catch (SpawnError e) {
+			stdout.printf ("%s\n", e.message);
+			return 1;
+		}
+	}
+
 	static int main (string[] args) {
+		if (Path.get_basename (args[0]) == "vala") {
+			return run_source (args);
+		}
+
 		try {
 			var opt_context = new OptionContext ("- Vala Compiler");
 			opt_context.set_help_enabled (true);
