@@ -171,6 +171,23 @@ public class Vala.GirParser : CodeVisitor {
 		end_element ("c:include");
 	}
 
+	void skip_element () {
+		next ();
+
+		int level = 1;
+		while (level > 0) {
+			if (current_token == MarkupTokenType.START_ELEMENT) {
+				level++;
+			} else if (current_token == MarkupTokenType.END_ELEMENT) {
+				level--;
+			} else if (current_token == MarkupTokenType.EOF) {
+				Report.error (get_current_src (), "unexpected end of file");
+				break;
+			}
+			next ();
+		}
+	}
+
 	Namespace? parse_namespace () {
 		start_element ("namespace");
 
@@ -198,6 +215,11 @@ public class Vala.GirParser : CodeVisitor {
 		}
 		next ();
 		while (current_token == MarkupTokenType.START_ELEMENT) {
+			if (reader.get_attribute ("introspectable") == "0") {
+				skip_element ();
+				continue;
+			}
+
 			Symbol sym = null;
 			if (reader.name == "alias") {
 				sym = parse_alias ();
@@ -283,6 +305,11 @@ public class Vala.GirParser : CodeVisitor {
 		string common_prefix = null;
 		
 		while (current_token == MarkupTokenType.START_ELEMENT) {
+			if (reader.get_attribute ("introspectable") == "0") {
+				skip_element ();
+				continue;
+			}
+
 			if (reader.name == "member") {
 				var ev = parse_enumeration_member ();
 				en.add_value (ev);
@@ -323,6 +350,11 @@ public class Vala.GirParser : CodeVisitor {
 		en.access = SymbolAccessibility.PUBLIC;
 		next ();
 		while (current_token == MarkupTokenType.START_ELEMENT) {
+			if (reader.get_attribute ("introspectable") == "0") {
+				skip_element ();
+				continue;
+			}
+
 			if (reader.name == "member") {
 				en.add_value (parse_enumeration_member ());
 			} else {
@@ -529,6 +561,11 @@ public class Vala.GirParser : CodeVisitor {
 		st.access = SymbolAccessibility.PUBLIC;
 		next ();
 		while (current_token == MarkupTokenType.START_ELEMENT) {
+			if (reader.get_attribute ("introspectable") == "0") {
+				skip_element ();
+				continue;
+			}
+
 			if (reader.name == "field") {
 				st.add_field (parse_field ());
 			} else if (reader.name == "callback") {
@@ -611,6 +648,11 @@ public class Vala.GirParser : CodeVisitor {
 		var vmethods = new ArrayList<Method> ();
 		var fields = new ArrayList<Field> ();
 		while (current_token == MarkupTokenType.START_ELEMENT) {
+			if (reader.get_attribute ("introspectable") == "0") {
+				skip_element ();
+				continue;
+			}
+
 			if (reader.name == "implements") {
 				start_element ("implements");
 				cl.add_base_type (parse_type_from_name (reader.get_attribute ("name")));
@@ -718,6 +760,11 @@ public class Vala.GirParser : CodeVisitor {
 		var methods = new ArrayList<Method> ();
 		var vmethods = new ArrayList<Method> ();
 		while (current_token == MarkupTokenType.START_ELEMENT) {
+			if (reader.get_attribute ("introspectable") == "0") {
+				skip_element ();
+				continue;
+			}
+
 			if (reader.name == "prerequisite") {
 				start_element ("prerequisite");
 				iface.add_prerequisite (parse_type_from_name (reader.get_attribute ("name")));
@@ -1070,6 +1117,11 @@ public class Vala.GirParser : CodeVisitor {
 		next ();
 
 		while (current_token == MarkupTokenType.START_ELEMENT) {
+			if (reader.get_attribute ("introspectable") == "0") {
+				skip_element ();
+				continue;
+			}
+
 			if (reader.name == "field") {
 				st.add_field (parse_field ());
 			} else if (reader.name == "constructor") {
@@ -1095,6 +1147,11 @@ public class Vala.GirParser : CodeVisitor {
 		next ();
 
 		while (current_token == MarkupTokenType.START_ELEMENT) {
+			if (reader.get_attribute ("introspectable") == "0") {
+				skip_element ();
+				continue;
+			}
+
 			if (reader.name == "field") {
 				st.add_field (parse_field ());
 			} else if (reader.name == "constructor") {
