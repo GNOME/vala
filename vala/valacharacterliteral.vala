@@ -1,6 +1,7 @@
 /* valacharacterliteral.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2010  Jürg Billeter
+ * Copyright (C) 2006-2009  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -89,10 +90,14 @@ public class Vala.CharacterLiteral : Literal {
 
 		checked = true;
 
-		if (get_char () < 128) {
-			value_type = new IntegerType ((Struct) analyzer.root_symbol.scope.lookup ("char"));
+		if (analyzer.context.profile == Profile.DOVA) {
+			value_type = new IntegerType ((Struct) analyzer.root_symbol.scope.lookup ("char"), get_char ().to_string (), "int");
 		} else {
-			value_type = new IntegerType ((Struct) analyzer.root_symbol.scope.lookup ("unichar"));
+			if (get_char () < 128) {
+				value_type = new IntegerType ((Struct) analyzer.root_symbol.scope.lookup ("char"));
+			} else {
+				value_type = new IntegerType ((Struct) analyzer.root_symbol.scope.lookup ("unichar"));
+			}
 		}
 
 		return !error;
