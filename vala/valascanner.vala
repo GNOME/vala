@@ -1214,6 +1214,15 @@ public class Vala.Scanner {
 		current++;
 		column++;
 
+		if (line == 1 && column == 2 && current < end && current[0] == '!') {
+			// hash bang: #!
+			// skip until end of line or end of file
+			while (current < end && current[0] != '\n') {
+				current++;
+			}
+			return;
+		}
+
 		pp_whitespace ();
 
 		char* begin = current;
