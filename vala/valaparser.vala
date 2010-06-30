@@ -1398,7 +1398,8 @@ public class Vala.Parser : CodeVisitor {
 	void parse_statements (Block block) throws ParseError {
 		while (current () != TokenType.CLOSE_BRACE
 		       && current () != TokenType.CASE
-		       && current () != TokenType.DEFAULT) {
+		       && current () != TokenType.DEFAULT
+		       && current () != TokenType.EOF) {
 			try {
 				Statement stmt = null;
 				bool is_decl = false;
@@ -1971,7 +1972,27 @@ public class Vala.Parser : CodeVisitor {
 		}
 	}
 
-	Symbol parse_declaration () throws ParseError {
+	Method parse_main_block () throws ParseError {
+		var begin = get_location ();
+
+		var method = new Method ("main", new VoidType (), get_src (begin));
+		method.body = new Block (get_src (begin));
+		parse_statements (method.body);
+		if (current () != TokenType.EOF) {
+			Report.error (get_current_src (), "expected end of file");
+		}
+
+		method.body.source_reference.last_line = get_current_src ().last_line;
+		method.body.source_reference.last_column = get_current_src ().last_column;
+
+		if (!context.experimental && context.profile != Profile.DOVA) {
+			Report.warning (method.source_reference, "main blocks are experimental");
+		}
+
+		return method;
+	}
+
+	Symbol parse_declaration (bool root = false) throws ParseError {
 		comment = scanner.pop_comment ();
 		var attrs = parse_attributes ();
 		
@@ -1994,7 +2015,49 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.TILDE:
 			rollback (begin);
 			return parse_destructor_declaration (attrs);
+		case TokenType.OPEN_BRACE:
+		case TokenType.SEMICOLON:
+		case TokenType.IF:
+		case TokenType.SWITCH:
+		case TokenType.WHILE:
+		case TokenType.DO:
+		case TokenType.FOR:
+		case TokenType.FOREACH:
+		case TokenType.BREAK:
+		case TokenType.CONTINUE:
+		case TokenType.RETURN:
+		case TokenType.YIELD:
+		case TokenType.THROW:
+		case TokenType.TRY:
+		case TokenType.LOCK:
+		case TokenType.DELETE:
+		case TokenType.VAR:
+		case TokenType.OP_INC:
+		case TokenType.OP_DEC:
+		case TokenType.BASE:
+		case TokenType.THIS:
+		case TokenType.OPEN_PARENS:
+		case TokenType.STAR:
+		case TokenType.NEW:
+			// statement
+			if (attrs != null) {
+				// no attributes allowed before statements
+				throw new ParseError.SYNTAX (get_error ("expected statement"));
+			}
+			if (!root) {
+				throw new ParseError.SYNTAX (get_error ("statements outside blocks allowed only in root namespace"));
+			}
+			rollback (begin);
+			return parse_main_block ();
 		default:
+			if (root) {
+				bool is_expr = is_expression ();
+				if (is_expr) {
+					rollback (begin);
+					return parse_main_block ();
+				}
+			}
+
 			skip_type ();
 			switch (current ()) {
 			case TokenType.OPEN_BRACE:
@@ -2055,7 +2118,7 @@ public class Vala.Parser : CodeVisitor {
 		while (current () != TokenType.CLOSE_BRACE && current () != TokenType.EOF) {
 			try {
 				if (parent is Namespace) {
-					parse_namespace_member ((Namespace) parent);
+					parse_namespace_member ((Namespace) parent, (parent == context.root));
 				} else if (parent is Class) {
 					parse_class_member ((Class) parent);
 				} else if (parent is Struct) {
@@ -2182,8 +2245,8 @@ public class Vala.Parser : CodeVisitor {
 		return result;
 	}
 
-	void parse_namespace_member (Namespace ns) throws ParseError {
-		var sym = parse_declaration ();
+	void parse_namespace_member (Namespace ns, bool root = false) throws ParseError {
+		var sym = parse_declaration (root);
 
 		if (sym is Namespace) {
 			ns.add_namespace ((Namespace) sym);
