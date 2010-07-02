@@ -936,6 +936,10 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_indent ();
 			write_string ("[ScanfFormat]");
 		}
+		if (m.get_attribute ("Print") != null) {
+			write_indent ();
+			write_string ("[Print]");
+		}
 
 		emit_deprecated_attribute (m);
 

@@ -1,6 +1,6 @@
 /* valatemplate.vala
  *
- * Copyright (C) 2009  Jürg Billeter
+ * Copyright (C) 2009-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,7 +24,8 @@
 public class Vala.Template : Expression {
 	private List<Expression> expression_list = new ArrayList<Expression> ();
 
-	public Template () {
+	public Template (SourceReference? source_reference = null) {
+		this.source_reference = source_reference;
 	}
 
 	public override void accept (CodeVisitor visitor) {

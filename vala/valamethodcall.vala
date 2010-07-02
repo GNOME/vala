@@ -342,6 +342,17 @@ public class Vala.MethodCall : Expression {
 			}
 		}
 
+		// concatenate stringified arguments for methods with attribute [Print]
+		if (mtype is MethodType && ((MethodType) mtype).method_symbol.get_attribute ("Print") != null) {
+			var template = new Template (source_reference);
+			foreach (Expression arg in argument_list) {
+				arg.parent_node = null;
+				template.add_expression (arg);
+			}
+			argument_list.clear ();
+			add_argument (template);
+		}
+
 		// printf arguments
 		if (mtype is MethodType && ((MethodType) mtype).method_symbol.printf_format) {
 			StringLiteral format_literal = null;
