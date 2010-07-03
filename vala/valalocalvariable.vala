@@ -168,7 +168,7 @@ public class Vala.LocalVariable : Symbol {
 					var cb = dt.delegate_symbol;
 
 					/* check whether method matches callback type */
-					if (!cb.matches_method (m)) {
+					if (!cb.matches_method (m, dt)) {
 						error = true;
 						Report.error (source_reference, "declaration of method `%s' doesn't match declaration of callback `%s'".printf (m.get_full_name (), cb.get_full_name ()));
 						return false;

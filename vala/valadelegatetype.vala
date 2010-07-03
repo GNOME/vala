@@ -1,6 +1,6 @@
 /* valadelegatetype.vala
  *
- * Copyright (C) 2007-2009  Jürg Billeter
+ * Copyright (C) 2007-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -48,6 +48,24 @@ public class Vala.DelegateType : DataType {
 
 	public override string to_qualified_string (Scope? scope) {
 		string s = delegate_symbol.get_full_name ();
+
+		var type_args = get_type_arguments ();
+		if (type_args.size > 0) {
+			s += "<";
+			bool first = true;
+			foreach (DataType type_arg in type_args) {
+				if (!first) {
+					s += ",";
+				} else {
+					first = false;
+				}
+				if (!type_arg.value_owned) {
+					s += "weak ";
+				}
+				s += type_arg.to_qualified_string (scope);
+			}
+			s += ">";
+		}
 		if (nullable) {
 			s += "?";
 		}

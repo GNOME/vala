@@ -887,7 +887,22 @@ public class Vala.CodeWriter : CodeVisitor {
 		
 		write_string (" ");
 		write_identifier (cb.name);
-		
+
+		var type_params = cb.get_type_parameters ();
+		if (type_params.size > 0) {
+			write_string ("<");
+			bool first = true;
+			foreach (TypeParameter type_param in type_params) {
+				if (first) {
+					first = false;
+				} else {
+					write_string (",");
+				}
+				write_identifier (type_param.name);
+			}
+			write_string (">");
+		}
+
 		write_string (" ");
 		
 		write_params (cb.get_parameters ());

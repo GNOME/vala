@@ -108,7 +108,22 @@ public class Vala.Delegate : TypeSymbol {
 		type_parameters.add (p);
 		scope.add (p.name, p);
 	}
-	
+
+	public List<TypeParameter> get_type_parameters () {
+		return type_parameters;
+	}
+
+	public override int get_type_parameter_index (string name) {
+		int i = 0;
+		foreach (TypeParameter parameter in type_parameters) {
+			if (parameter.name == name) {
+				return i;
+			}
+			i++;
+		}
+		return -1;
+	}
+
 	/**
 	 * Appends paramater to this callback function.
 	 *
@@ -141,9 +156,9 @@ public class Vala.Delegate : TypeSymbol {
 	 * @param m a method
 	 * @return  true if the specified method is compatible to this callback
 	 */
-	public bool matches_method (Method m) {
+	public bool matches_method (Method m, DataType dt) {
 		// method is allowed to ensure stricter return type (stronger postcondition)
-		if (!m.return_type.stricter (return_type)) {
+		if (!m.return_type.stricter (return_type.get_actual_type (dt, null, this))) {
 			return false;
 		}
 		
@@ -179,7 +194,7 @@ public class Vala.Delegate : TypeSymbol {
 
 			// method is allowed to accept arguments of looser types (weaker precondition)
 			var method_param = method_params_it.get ();
-			if (!param.parameter_type.stricter (method_param.parameter_type)) {
+			if (!param.parameter_type.get_actual_type (dt, null, this).stricter (method_param.parameter_type)) {
 				return false;
 			}
 		}

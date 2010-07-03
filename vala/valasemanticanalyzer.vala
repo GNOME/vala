@@ -613,7 +613,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		}
 
-		if (instance_type.data_type == type_symbol) {
+		if (instance_type is DelegateType && ((DelegateType) instance_type).delegate_symbol == type_symbol) {
+			return instance_type;
+		} else if (instance_type.data_type == type_symbol) {
 			return instance_type;
 		}
 
@@ -687,7 +689,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 				assert (instance_type != null);
 
-				int param_index = instance_type.data_type.get_type_parameter_index (generic_type.type_parameter.name);
+				int param_index;
+				if (instance_type is DelegateType) {
+					param_index = ((DelegateType) instance_type).delegate_symbol.get_type_parameter_index (generic_type.type_parameter.name);
+				} else {
+					param_index = instance_type.data_type.get_type_parameter_index (generic_type.type_parameter.name);
+				}
 				if (param_index == -1) {
 					Report.error (node_reference.source_reference, "internal error: unknown type parameter %s".printf (generic_type.type_parameter.name));
 					node_reference.error = true;
@@ -776,7 +783,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		}
 
-		init.initializer.target_type = member_type;
+		init.initializer.formal_target_type = member_type;
+		init.initializer.target_type = init.initializer.formal_target_type.get_actual_type (type, null, init);;
 
 		init.check (this);
 

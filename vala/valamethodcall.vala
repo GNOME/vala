@@ -144,7 +144,10 @@ public class Vala.MethodCall : Expression {
 		// type of target object
 		DataType target_object_type = null;
 
-		if (call is MemberAccess) {
+		if (call.value_type is DelegateType) {
+			// delegate invocation, resolve generic types relative to delegate
+			target_object_type = call.value_type;
+		} else if (call is MemberAccess) {
 			var ma = (MemberAccess) call;
 			if (ma.prototype_access) {
 				error = true;
