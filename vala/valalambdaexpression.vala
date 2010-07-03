@@ -162,6 +162,11 @@ public class Vala.LambdaExpression : Expression {
 		}
 		method.owner = analyzer.current_symbol.scope;
 
+		if (!(method.return_type is VoidType) && CodeContext.get ().profile == Profile.DOVA) {
+			method.result_var = new LocalVariable (method.return_type.copy (), "result", null, source_reference);
+			method.result_var.is_result = true;
+		}
+
 		var lambda_params = get_parameters ();
 		Iterator<string> lambda_param_it = lambda_params.iterator ();
 
