@@ -1348,6 +1348,8 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 		}
 
 		if (m.entry_point) {
+			generate_type_declaration (new ObjectType (array_class), source_declarations);
+
 			// m is possible entry point, add appropriate startup code
 			var cmain = new CCodeFunction ("main", "int");
 			cmain.line = function.line;
