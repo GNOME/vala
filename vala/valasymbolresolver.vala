@@ -474,6 +474,22 @@ public class Vala.SymbolResolver : CodeVisitor {
 		tmpl.accept_children (this);
 	}
 
+	public override void visit_list_literal (ListLiteral lit) {
+		lit.accept_children (this);
+	}
+
+	public override void visit_set_literal (SetLiteral lit) {
+		lit.accept_children (this);
+	}
+
+	public override void visit_map_literal (MapLiteral lit) {
+		lit.accept_children (this);
+	}
+
+	public override void visit_tuple (Tuple tuple) {
+		tuple.accept_children (this);
+	}
+
 	public override void visit_member_access (MemberAccess expr) {
 		expr.accept_children (this);
 	}
