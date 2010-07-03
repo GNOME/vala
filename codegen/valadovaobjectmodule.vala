@@ -1357,53 +1357,70 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			cmain.add_parameter (new CCodeFormalParameter ("argv", "char **"));
 			var main_block = new CCodeBlock ();
 
-			var array_creation = new CCodeFunctionCall (new CCodeIdentifier ("dova_array_new"));
-			array_creation.add_argument (new CCodeFunctionCall (new CCodeIdentifier ("string_type_get")));
-			array_creation.add_argument (new CCodeIdentifier ("argc"));
-
-			var cdecl = new CCodeDeclaration ("DovaArray*");
-			cdecl.add_declarator (new CCodeVariableDeclarator ("args", array_creation));
+			var cdecl = new CCodeDeclaration ("int");
+			cdecl.add_declarator (new CCodeVariableDeclarator ("result", new CCodeConstant ("0")));
 			main_block.add_statement (cdecl);
-
-			var array_data = new CCodeFunctionCall (new CCodeIdentifier ("dova_array_get_data"));
-			array_data.add_argument (new CCodeIdentifier ("args"));
-
-			cdecl = new CCodeDeclaration ("string**");
-			cdecl.add_declarator (new CCodeVariableDeclarator ("args_data", array_data));
-			main_block.add_statement (cdecl);
-
-			cdecl = new CCodeDeclaration ("int");
-			cdecl.add_declarator (new CCodeVariableDeclarator ("argi"));
-			main_block.add_statement (cdecl);
-
-			var string_creation = new CCodeFunctionCall (new CCodeIdentifier ("string_create_from_cstring"));
-			string_creation.add_argument (new CCodeElementAccess (new CCodeIdentifier ("argv"), new CCodeIdentifier ("argi")));
-
-			var loop_block = new CCodeBlock ();
-			loop_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeElementAccess (new CCodeIdentifier ("args_data"), new CCodeIdentifier ("argi")), string_creation)));
-
-			var for_stmt = new CCodeForStatement (new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier ("argi"), new CCodeIdentifier ("argc")), loop_block);
-			for_stmt.add_initializer (new CCodeAssignment (new CCodeIdentifier ("argi"), new CCodeConstant ("0")));
-			for_stmt.add_iterator (new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier ("argi")));
-			main_block.add_statement (for_stmt);
 
 			var main_call = new CCodeFunctionCall (new CCodeIdentifier (function.name));
+
 			if (m.get_parameters ().size == 1) {
+				// create Dova array from C array
+				// should be replaced by Dova list
+				var array_creation = new CCodeFunctionCall (new CCodeIdentifier ("dova_array_new"));
+				array_creation.add_argument (new CCodeFunctionCall (new CCodeIdentifier ("string_type_get")));
+				array_creation.add_argument (new CCodeIdentifier ("argc"));
+
+				cdecl = new CCodeDeclaration ("DovaArray*");
+				cdecl.add_declarator (new CCodeVariableDeclarator ("args", array_creation));
+				main_block.add_statement (cdecl);
+
+				var array_data = new CCodeFunctionCall (new CCodeIdentifier ("dova_array_get_data"));
+				array_data.add_argument (new CCodeIdentifier ("args"));
+
+				cdecl = new CCodeDeclaration ("string**");
+				cdecl.add_declarator (new CCodeVariableDeclarator ("args_data", array_data));
+				main_block.add_statement (cdecl);
+
+				cdecl = new CCodeDeclaration ("int");
+				cdecl.add_declarator (new CCodeVariableDeclarator ("argi"));
+				main_block.add_statement (cdecl);
+
+				var string_creation = new CCodeFunctionCall (new CCodeIdentifier ("string_create_from_cstring"));
+				string_creation.add_argument (new CCodeElementAccess (new CCodeIdentifier ("argv"), new CCodeIdentifier ("argi")));
+
+				var loop_block = new CCodeBlock ();
+				loop_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeElementAccess (new CCodeIdentifier ("args_data"), new CCodeIdentifier ("argi")), string_creation)));
+
+				var for_stmt = new CCodeForStatement (new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier ("argi"), new CCodeIdentifier ("argc")), loop_block);
+				for_stmt.add_initializer (new CCodeAssignment (new CCodeIdentifier ("argi"), new CCodeConstant ("0")));
+				for_stmt.add_iterator (new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier ("argi")));
+				main_block.add_statement (for_stmt);
+
 				main_call.add_argument (new CCodeIdentifier ("args"));
 			}
+
 			if (m.return_type is VoidType) {
 				// method returns void, always use 0 as exit code
 				var main_stmt = new CCodeExpressionStatement (main_call);
 				main_stmt.line = cmain.line;
 				main_block.add_statement (main_stmt);
-				var ret_stmt = new CCodeReturnStatement (new CCodeConstant ("0"));
-				ret_stmt.line = cmain.line;
-				main_block.add_statement (ret_stmt);
 			} else {
-				var main_stmt = new CCodeReturnStatement (main_call);
+				var main_stmt = new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("result"), main_call));
 				main_stmt.line = cmain.line;
 				main_block.add_statement (main_stmt);
 			}
+
+			if (m.get_parameters ().size == 1) {
+				// destroy Dova array
+				var unref = new CCodeFunctionCall (new CCodeIdentifier ("dova_object_unref"));
+				unref.add_argument (new CCodeIdentifier ("args"));
+				main_block.add_statement (new CCodeExpressionStatement (unref));
+			}
+
+			var ret_stmt = new CCodeReturnStatement (new CCodeIdentifier ("result"));
+			ret_stmt.line = cmain.line;
+			main_block.add_statement (ret_stmt);
+
 			cmain.block = main_block;
 			source_type_member_definition.append (cmain);
 		}
