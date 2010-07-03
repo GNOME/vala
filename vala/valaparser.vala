@@ -636,6 +636,14 @@ public class Vala.Parser : CodeVisitor {
 			case TokenType.OPEN_BRACKET:
 				expr = parse_element_access (begin, expr);
 				break;
+			case TokenType.OPEN_BRACE:
+				var ma = expr as MemberAccess;
+				if (context.profile == Profile.DOVA && ma != null) {
+					expr = parse_object_literal (begin, ma);
+				} else {
+					found = false;
+				}
+				break;
 			case TokenType.OP_INC:
 				expr = parse_post_increment_expression (begin, expr);
 				break;
@@ -848,6 +856,27 @@ public class Vala.Parser : CodeVisitor {
 		foreach (MemberInitializer initializer in init_list) {
 			expr.add_member_initializer (initializer);
 		}
+		return expr;
+	}
+
+	Expression parse_object_literal (SourceLocation begin, MemberAccess member) throws ParseError {
+		member.creation_member = true;
+
+		var expr = new ObjectCreationExpression (member, get_src (begin));
+
+		expect (TokenType.OPEN_BRACE);
+
+		do {
+			var member_begin = get_location ();
+			string id = parse_identifier ();
+			expect (TokenType.COLON);
+			var member_expr = parse_expression ();
+
+			expr.add_member_initializer (new MemberInitializer (id, member_expr, get_src (member_begin)));
+		} while (accept (TokenType.COMMA));
+
+		expect (TokenType.CLOSE_BRACE);
+
 		return expr;
 	}
 
@@ -3391,6 +3420,7 @@ public class Vala.Parser : CodeVisitor {
 				case TokenType.OPEN_PARENS:
 				case TokenType.CLOSE_PARENS:
 				case TokenType.CLOSE_BRACKET:
+				case TokenType.OPEN_BRACE:
 				case TokenType.COLON:
 				case TokenType.SEMICOLON:
 				case TokenType.COMMA:
