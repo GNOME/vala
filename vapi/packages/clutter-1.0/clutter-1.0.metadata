@@ -301,6 +301,7 @@ clutter_rectangle_set_color hidden="1"
 
 clutter_redraw hidden="1"
 
+clutter_score_append.parent nullable="1"
 clutter_score_list_timelines type_arguments="unowned Timeline" transfer_ownership="1"
 
 clutter_script_list_objects type_arguments="unowned GLib.Object" transfer_ownership="1"

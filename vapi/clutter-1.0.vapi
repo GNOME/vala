@@ -898,7 +898,7 @@ namespace Clutter {
 	public class Score : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Score ();
-		public ulong append (Clutter.Timeline parent, Clutter.Timeline timeline);
+		public ulong append (Clutter.Timeline? parent, Clutter.Timeline timeline);
 		public ulong append_at_marker (Clutter.Timeline parent, string marker_name, Clutter.Timeline timeline);
 		public bool get_loop ();
 		public unowned Clutter.Timeline get_timeline (ulong id);
