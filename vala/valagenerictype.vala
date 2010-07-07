@@ -64,7 +64,9 @@ public class Vala.GenericType : DataType {
 
 	public override Symbol? get_member (string member_name) {
 		if (CodeContext.get ().profile == Profile.DOVA) {
-			if (member_name == "hash") {
+			if (member_name == "equals") {
+				return CodeContext.get ().root.scope.lookup ("Dova").scope.lookup ("Object").scope.lookup ("equals");
+			} else if (member_name == "hash") {
 				return CodeContext.get ().root.scope.lookup ("Dova").scope.lookup ("Object").scope.lookup ("hash");
 			}
 		}
