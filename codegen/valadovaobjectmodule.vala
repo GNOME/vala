@@ -300,6 +300,16 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 		// calloc
 		source_declarations.add_include ("stdlib.h");
 
+		DataType? base_class_type = null;
+		if (base_class != null && cl is Class) {
+			foreach (DataType base_type in ((Class) cl).get_base_types ()) {
+				if (base_type.data_type == base_class) {
+					base_class_type = base_type;
+					break;
+				}
+			}
+		}
+
 		var cdecl = new CCodeDeclaration ("DovaType *");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("%s_type".printf (cl.get_lower_case_cname ()), new CCodeConstant ("NULL")));
 		cdecl.modifiers = CCodeModifiers.STATIC;
@@ -409,8 +419,10 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			generate_method_declaration ((Method) type_class.scope.lookup ("alloc"), source_declarations);
 
 			var base_type = new CCodeFunctionCall (new CCodeIdentifier ("%s_type_get".printf (base_class.get_lower_case_cname ())));
-			foreach (var type_param in base_class.get_type_parameters ()) {
-				base_type.add_argument (new CCodeIdentifier ("%s_type".printf (type_param.name.down ())));
+			if (base_class_type != null) {
+				foreach (var type_arg in base_class_type.get_type_arguments ()) {
+					base_type.add_argument (get_type_id_expression (type_arg, true));
+				}
 			}
 
 			var alloc_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_alloc"));
@@ -505,8 +517,10 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			type_init_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_type_init".printf (base_class.get_lower_case_cname ())));
 			type_init_call.add_argument (new CCodeIdentifier ("type"));
 
-			foreach (var type_param in base_class.get_type_parameters ()) {
-				type_init_call.add_argument (new CCodeIdentifier ("%s_type".printf (type_param.name.down ())));
+			if (base_class_type != null) {
+				foreach (var type_arg in base_class_type.get_type_arguments ()) {
+					type_init_call.add_argument (get_type_id_expression (type_arg, true));
+				}
 			}
 
 			type_init_fun.block.add_statement (new CCodeExpressionStatement (type_init_call));
