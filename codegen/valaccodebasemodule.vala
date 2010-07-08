@@ -1742,7 +1742,12 @@ public class Vala.CCodeBaseModule : CCodeModule {
 							data.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (get_variable_cname (local.name)));
 						}
 					}
-
+				}
+			}
+			// free in reverse order
+			for (int i = local_vars.size - 1; i >= 0; i--) {
+				var local = local_vars[i];
+				if (local.captured) {
 					if (requires_destroy (local.variable_type)) {
 						bool old_coroutine = false;
 						if (current_method != null) {
@@ -1878,7 +1883,9 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			}
 		}
 
-		foreach (LocalVariable local in local_vars) {
+		// free in reverse order
+		for (int i = local_vars.size - 1; i >= 0; i--) {
+			var local = local_vars[i];
 			if (!local.unreachable && !local.floating && !local.captured && requires_destroy (local.variable_type)) {
 				var ma = new MemberAccess.simple (local.name);
 				ma.symbol_reference = local;
@@ -3125,7 +3132,9 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		var b = (Block) sym;
 
 		var local_vars = b.get_local_variables ();
-		foreach (LocalVariable local in local_vars) {
+		// free in reverse order
+		for (int i = local_vars.size - 1; i >= 0; i--) {
+			var local = local_vars[i];
 			if (!local.unreachable && local.active && !local.floating && !local.captured && requires_destroy (local.variable_type)) {
 				var ma = new MemberAccess.simple (local.name);
 				ma.symbol_reference = local;
@@ -3161,7 +3170,9 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		var b = (Block) sym;
 
 		var local_vars = b.get_local_variables ();
-		foreach (LocalVariable local in local_vars) {
+		// free in reverse order
+		for (int i = local_vars.size - 1; i >= 0; i--) {
+			var local = local_vars[i];
 			if (!local.unreachable && local.active && !local.floating && !local.captured && requires_destroy (local.variable_type)) {
 				var ma = new MemberAccess.simple (local.name);
 				ma.symbol_reference = local;

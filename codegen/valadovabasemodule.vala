@@ -753,7 +753,12 @@ internal class Vala.DovaBaseModule : CCodeModule {
 					generate_type_declaration (local.variable_type, source_declarations);
 
 					data.add_field (local.variable_type.get_cname (), get_variable_cname (local.name) + local.variable_type.get_cdeclarator_suffix ());
-
+				}
+			}
+			// free in reverse order
+			for (int i = local_vars.size - 1; i >= 0; i--) {
+				var local = local_vars[i];
+				if (local.captured) {
 					if (requires_destroy (local.variable_type)) {
 						var ma = new MemberAccess.simple (local.name);
 						ma.symbol_reference = local;
@@ -881,7 +886,9 @@ internal class Vala.DovaBaseModule : CCodeModule {
 			}
 		}
 
-		foreach (LocalVariable local in local_vars) {
+		// free in reverse order
+		for (int i = local_vars.size - 1; i >= 0; i--) {
+			var local = local_vars[i];
 			if (!local.floating && !local.captured && requires_destroy (local.variable_type)) {
 				var ma = new MemberAccess.simple (local.name);
 				ma.symbol_reference = local;
@@ -1386,7 +1393,9 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		var b = (Block) sym;
 
 		var local_vars = b.get_local_variables ();
-		foreach (LocalVariable local in local_vars) {
+		// free in reverse order
+		for (int i = local_vars.size - 1; i >= 0; i--) {
+			var local = local_vars[i];
 			if (local.active && !local.floating && !local.captured && requires_destroy (local.variable_type)) {
 				var ma = new MemberAccess.simple (local.name);
 				ma.symbol_reference = local;
@@ -1421,7 +1430,9 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		var b = (Block) sym;
 
 		var local_vars = b.get_local_variables ();
-		foreach (LocalVariable local in local_vars) {
+		// free in reverse order
+		for (int i = local_vars.size - 1; i >= 0; i--) {
+			var local = local_vars[i];
 			if (local.active && !local.floating && !local.captured && requires_destroy (local.variable_type)) {
 				var ma = new MemberAccess.simple (local.name);
 				ma.symbol_reference = local;
