@@ -320,6 +320,10 @@ public class Vala.GIdlParser : CodeVisitor {
 					}
 				} else if (nv[0] == "instance_pos") {
 					cb.cinstance_parameter_position = eval (nv[1]).to_double ();
+				} else if (nv[0] == "type_parameters") {
+					foreach (string type_param_name in eval (nv[1]).split (",")) {
+						cb.add_type_parameter (new TypeParameter (type_param_name, current_source_reference));
+					}
 				}
 			}
 		}
@@ -404,6 +408,15 @@ public class Vala.GIdlParser : CodeVisitor {
 						} else if (nv[0] == "no_array_length") {
 							if (eval (nv[1]) == "1") {
 								p.no_array_length = true;
+							}
+						} else if (nv[0] == "type_name") {
+							var sym = new UnresolvedSymbol (null, eval (nv[1]));
+							if (param_type is UnresolvedType) {
+								((UnresolvedType) param_type).unresolved_symbol = sym;
+							} else {
+								// Overwrite old param_type, so "type_name" must be before any
+								// other param type modifying metadata
+								p.parameter_type = param_type = new UnresolvedType.from_symbol (sym, return_type.source_reference);
 							}
 						}
 					}
