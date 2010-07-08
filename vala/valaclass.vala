@@ -108,6 +108,8 @@ public class Vala.Class : ObjectTypeSymbol {
 	 */
 	public bool free_function_address_of { get; private set; }
 
+	public bool is_gboxed { get { return (free_function == "g_boxed_free"); } }
+
 	private string cname;
 	public string const_cname { get; set; }
 	private string lower_case_cprefix;

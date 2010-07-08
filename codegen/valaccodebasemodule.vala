@@ -2331,6 +2331,12 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				if (dup_function == null) {
 					dup_function = "";
 				}
+			} else if (cl != null && cl.is_gboxed) {
+				// allow duplicates of gboxed instances
+				dup_function = type.data_type.get_dup_function ();
+				if (dup_function == null) {
+					dup_function = "";
+				}
 			} else if (type is ValueType) {
 				dup_function = type.data_type.get_dup_function ();
 				if (dup_function == null && type.nullable) {
@@ -2642,6 +2648,43 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		return dup_func;
 	}
 
+	protected string generate_dup_func_wrapper (DataType type) {
+		string destroy_func = "_vala_%s_copy".printf (type.data_type.get_cname ());
+
+		if (!add_wrapper (destroy_func)) {
+			// wrapper already defined
+			return destroy_func;
+		}
+
+		// declaration
+
+		var function = new CCodeFunction (destroy_func, type.get_cname ());
+		function.modifiers = CCodeModifiers.STATIC;
+		function.add_parameter (new CCodeFormalParameter ("self", type.get_cname ()));
+
+		// definition
+
+		var block = new CCodeBlock ();
+
+		var cl = type.data_type as Class;
+		assert (cl != null && cl.is_gboxed);
+
+		var free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_boxed_copy"));
+		free_call.add_argument (new CCodeIdentifier (cl.get_type_id ()));
+		free_call.add_argument (new CCodeIdentifier ("self"));
+
+		block.add_statement (new CCodeReturnStatement (free_call));
+
+		// append to file
+
+		source_declarations.add_type_member_declaration (function.copy ());
+
+		function.block = block;
+		source_type_member_definition.append (function);
+
+		return destroy_func;
+	}
+
 	protected string generate_destroy_func_wrapper (DataType type) {
 		string destroy_func = "_vala_%s_free".printf (type.data_type.get_cname ());
 
@@ -2660,10 +2703,19 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 		var block = new CCodeBlock ();
 
-		var free_call = new CCodeFunctionCall (new CCodeIdentifier (type.data_type.get_free_function ()));
-		free_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("self")));
+		var cl = type.data_type as Class;
+		if (cl != null && cl.is_gboxed) {
+			var free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_boxed_free"));
+			free_call.add_argument (new CCodeIdentifier (cl.get_type_id ()));
+			free_call.add_argument (new CCodeIdentifier ("self"));
 
-		block.add_statement (new CCodeExpressionStatement (free_call));
+			block.add_statement (new CCodeExpressionStatement (free_call));
+		} else {
+			var free_call = new CCodeFunctionCall (new CCodeIdentifier (type.data_type.get_free_function ()));
+			free_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("self")));
+
+			block.add_statement (new CCodeExpressionStatement (free_call));
+		}
 
 		// append to file
 
@@ -2707,7 +2759,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 					}
 				} else {
 					var cl = type.data_type as Class;
-					if (cl != null && cl.free_function_address_of) {
+					if (cl != null && (cl.free_function_address_of || cl.is_gboxed)) {
 						unref_function = generate_destroy_func_wrapper (type);
 					} else {
 						unref_function = type.data_type.get_free_function ();
