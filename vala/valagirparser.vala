@@ -745,6 +745,8 @@ public class Vala.GirParser : CodeVisitor {
 			}
 		}
 
+		handle_async_methods (cl);
+
 		end_element ("class");
 		return cl;
 	}
@@ -821,8 +823,62 @@ public class Vala.GirParser : CodeVisitor {
 			}
 		}
 
+		handle_async_methods (iface);
+
 		end_element ("interface");
 		return iface;
+	}
+
+	void handle_async_methods (ObjectTypeSymbol type_symbol) {
+		var methods = type_symbol.get_methods ();
+		for (int method_n = 0 ; method_n < methods.size ; method_n++) {
+			var m = methods.get (method_n);
+
+			if (m.coroutine) {
+				string finish_method_base;
+				if (m.name.has_suffix ("_async")) {
+					finish_method_base = m.name.substring (0, m.name.length - "_async".length);
+				} else {
+					finish_method_base = m.name;
+				}
+				var finish_method = type_symbol.scope.lookup (finish_method_base + "_finish") as Method;
+
+				// check if the method is using non-standard finish method name
+				if (finish_method == null) {
+					var method_cname = m.get_finish_cname ();
+					foreach (Method method in type_symbol.get_methods ()) {
+						if (method.get_cname () == method_cname) {
+							finish_method = method;
+							break;
+						}
+					}
+				}
+
+				if (finish_method != null) {
+					m.return_type = finish_method.return_type.copy ();
+					m.no_array_length = finish_method.no_array_length;
+					m.array_null_terminated = finish_method.array_null_terminated;
+					foreach (var param in finish_method.get_parameters ()) {
+						if (param.direction == ParameterDirection.OUT) {
+							var async_param = param.copy ();
+							if (m.scope.lookup (param.name) != null) {
+								// parameter name conflict
+								async_param.name += "_out";
+							}
+							m.add_parameter (async_param);
+						}
+					}
+					foreach (DataType error_type in finish_method.get_error_types ()) {
+						m.add_error_type (error_type.copy ());
+					}
+					if (methods.index_of (finish_method) < method_n) {
+						method_n--;
+					}
+					type_symbol.scope.remove (finish_method.name);
+					methods.remove (finish_method);
+				}
+			}
+		}
 	}
 
 	Field parse_field () {
