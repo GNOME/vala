@@ -1671,8 +1671,18 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 
 				var ccontainer = new CCodeFunctionCall (new CCodeIdentifier ("dova_array_get_data"));
 				ccontainer.add_argument ((CCodeExpression) expr.container.ccodenode);
-				expr.ccodenode = new CCodeElementAccess (new CCodeCastExpression (ccontainer, "%s*".printf (array_type.element_type.get_cname ())), cindex);
+
+				if (array_type.element_type is GenericType) {
+					// generic array
+					// calculate offset in bytes based on value size
+					var value_size = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_get_value_size"));
+					value_size.add_argument (get_type_id_expression (array_type.element_type));
+					expr.ccodenode = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeCastExpression (ccontainer, "char*"), new CCodeBinaryExpression (CCodeBinaryOperator.MUL, value_size, cindex));
+				} else {
+					expr.ccodenode = new CCodeElementAccess (new CCodeCastExpression (ccontainer, "%s*".printf (array_type.element_type.get_cname ())), cindex);
+				}
 			}
+
 		} else {
 			base.visit_element_access (expr);
 		}

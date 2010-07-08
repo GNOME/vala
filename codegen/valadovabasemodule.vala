@@ -132,6 +132,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 	Set<string> reserved_identifiers;
 
 	public int next_temp_var_id = 0;
+	public int next_wrapper_id = 0;
 	public int next_string_const_id = 0;
 	public bool in_creation_method { get { return current_method is CreationMethod; } }
 	public bool current_method_inner_error = false;
@@ -2252,9 +2253,51 @@ internal class Vala.DovaBaseModule : CCodeModule {
 					delegate_target = new CCodeConstant ("NULL");
 				}
 			}
+
+			var d = deleg_type.delegate_symbol;
+
+			string wrapper_name = "_wrapper%d_".printf (next_wrapper_id++);
+			var wrapper = new CCodeFunction (wrapper_name);
+			var call = new CCodeFunctionCall (source_cexpr);
+
+			if (method_type.method_symbol.binding == MemberBinding.INSTANCE) {
+				wrapper.add_parameter (new CCodeFormalParameter ("this", "void *"));
+				call.add_argument (new CCodeIdentifier ("this"));
+			}
+
+			var method_param_iter = method_type.method_symbol.get_parameters ().iterator ();
+			foreach (FormalParameter param in d.get_parameters ()) {
+				method_param_iter.next ();
+				var method_param = method_param_iter.get ();
+				string ctype = param.parameter_type.get_cname ();
+				if (param.parameter_type is GenericType && !(method_param.parameter_type is GenericType)) {
+					ctype = method_param.parameter_type.get_cname () + "*";
+					call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (param.name)));
+				} else if (!(param.parameter_type is GenericType) && method_param.parameter_type is GenericType) {
+					call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
+				} else {
+					call.add_argument (new CCodeIdentifier (param.name));
+				}
+
+				wrapper.add_parameter (new CCodeFormalParameter (param.name, ctype));
+			}
+
+			wrapper.block = new CCodeBlock ();
+			if (d.return_type is GenericType) {
+				wrapper.add_parameter (new CCodeFormalParameter ("result", "void *"));
+				wrapper.block.add_statement (new CCodeExpressionStatement (call));
+			} else if (d.return_type is VoidType) {
+				wrapper.block.add_statement (new CCodeExpressionStatement (call));
+			} else {
+				wrapper.return_type = d.return_type.get_cname ();
+				wrapper.block.add_statement (new CCodeReturnStatement (call));
+			}
+
+			source_type_member_definition.append (wrapper);
+
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_new".printf (deleg_type.delegate_symbol.get_lower_case_cname ())));
 			ccall.add_argument (delegate_target);
-			ccall.add_argument (source_cexpr);
+			ccall.add_argument (new CCodeIdentifier (wrapper_name));
 			return ccall;
 		}
 
