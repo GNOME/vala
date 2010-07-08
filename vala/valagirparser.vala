@@ -232,7 +232,11 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (reader.name == "callback") {
 				sym = parse_callback ();
 			} else if (reader.name == "record") {
-				sym = parse_record ();
+				if (reader.get_attribute ("glib:get-type") != null) {
+					sym = parse_boxed ();
+				} else {
+					sym = parse_record ();
+				}
 			} else if (reader.name == "class") {
 				sym = parse_class ();
 			} else if (reader.name == "interface") {
@@ -1103,16 +1107,24 @@ public class Vala.GirParser : CodeVisitor {
 		return sig;
 	}
 
-	Struct parse_boxed () {
-		start_element ("glib:boxed");
-		var st = new Struct (reader.get_attribute ("glib:name"));
-		st.access = SymbolAccessibility.PUBLIC;
-		st.external = true;
+	Class parse_boxed () {
+		string name = reader.get_attribute ("name");
+		if (name == null) {
+			name = reader.get_attribute ("glib:name");
+		}
+		var cl = new Class (name);
+		cl.access = SymbolAccessibility.PUBLIC;
+		cl.external = true;
+		cl.is_compact = true;
 
 		string cname = reader.get_attribute ("c:type");
 		if (cname != null) {
-			st.set_cname (cname);
+			cl.set_cname (cname);
 		}
+
+		cl.set_type_id ("%s ()".printf (reader.get_attribute ("glib:get-type")));
+		cl.set_free_function ("g_boxed_free");
+		cl.set_dup_function ("g_boxed_copy");
 
 		next ();
 
@@ -1123,11 +1135,11 @@ public class Vala.GirParser : CodeVisitor {
 			}
 
 			if (reader.name == "field") {
-				st.add_field (parse_field ());
+				cl.add_field (parse_field ());
 			} else if (reader.name == "constructor") {
 				parse_constructor ();
 			} else if (reader.name == "method") {
-				st.add_method (parse_method ("method"));
+				cl.add_method (parse_method ("method"));
 			} else {
 				// error
 				Report.error (get_current_src (), "unknown child element `%s' in `class'".printf (reader.name));
@@ -1135,8 +1147,12 @@ public class Vala.GirParser : CodeVisitor {
 			}
 		}
 
-		end_element ("glib:boxed");
-		return st;
+		if (current_token != MarkupTokenType.END_ELEMENT) {
+			// error
+			Report.error (get_current_src (), "expected end element");
+		}
+		next ();
+		return cl;
 	}
 
 	Struct parse_union () {
