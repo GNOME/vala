@@ -611,12 +611,12 @@ namespace Gst {
 		public weak Gst.Iterator pushed;
 		public GLib.Type type;
 		[CCode (has_construct_function = false)]
-		public Iterator (uint size, GLib.Type type, GLib.Mutex @lock, ref uint32 master_cookie, Gst.IteratorNextFunction next, Gst.IteratorItemFunction item, Gst.IteratorResyncFunction resync, Gst.IteratorFreeFunction free);
+		public Iterator (uint size, GLib.Type type, GLib.Mutex @lock, ref uint32 master_cookie, Gst.IteratorNextFunction<T> next, Gst.IteratorItemFunction<T> item, Gst.IteratorResyncFunction resync, Gst.IteratorFreeFunction free);
 		public T find_custom (GLib.CompareFunc func, T user_data);
-		public Gst.IteratorResult fold ([CCode (delegate_target_pos = 2.1)] Gst.IteratorFoldFunction func, out Gst.Value ret);
+		public Gst.IteratorResult fold ([CCode (delegate_target_pos = 2.1)] Gst.IteratorFoldFunction<T> func, out Gst.Value ret);
 		public Gst.IteratorResult @foreach (GLib.Func func);
 		[CCode (has_construct_function = false)]
-		public Iterator.list (GLib.Type type, GLib.Mutex @lock, ref uint32 master_cookie, GLib.List<T> list, void* owner, Gst.IteratorItemFunction item, Gst.IteratorDisposeFunction free);
+		public Iterator.list (GLib.Type type, GLib.Mutex @lock, ref uint32 master_cookie, GLib.List<T> list, void* owner, Gst.IteratorItemFunction<T> item, Gst.IteratorDisposeFunction free);
 		public Gst.IteratorResult next (out T elem);
 		public void push (Gst.Iterator other);
 		public void resync ();
@@ -2246,13 +2246,13 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate void IteratorDisposeFunction (void* owner);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public delegate bool IteratorFoldFunction (void* item, ref Gst.Value ret);
+	public delegate bool IteratorFoldFunction<T> (T item, ref Gst.Value ret);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate void IteratorFreeFunction (Gst.Iterator it);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
-	public delegate Gst.IteratorItem IteratorItemFunction (Gst.Iterator it, void* item);
+	public delegate Gst.IteratorItem IteratorItemFunction<T> (Gst.Iterator it, out T item);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
-	public delegate Gst.IteratorResult IteratorNextFunction (Gst.Iterator it, out void* result);
+	public delegate Gst.IteratorResult IteratorNextFunction<T> (Gst.Iterator it, out T result);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate void IteratorResyncFunction (Gst.Iterator it);
 	[CCode (cheader_filename = "gst/gst.h")]
