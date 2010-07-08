@@ -3249,7 +3249,10 @@ namespace GLib {
 		public static int32 rand_int_range (int32 begin, int32 end);
 		public static double rand_double ();
 		public static double rand_double_range ();
+		public static void log_set_fatal_handler (LogFatalFunc log_func);
 	}
+
+	public delegate bool LogFatalFunc (string? log_domain, LogLevelFlags log_levels, string message);
 
 	[Compact]
 	[CCode (cname = "GTestCase", ref_function = "", unref_function = "")]
