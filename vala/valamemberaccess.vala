@@ -292,7 +292,7 @@ public class Vala.MemberAccess : Expression {
 				return false;
 			}
 
-			if (pointer_member_access) {
+			if (inner.value_type is PointerType) {
 				var pointer_type = inner.value_type as PointerType;
 				if (pointer_type != null && pointer_type.base_type is ValueType) {
 					// transform foo->bar to (*foo).bar

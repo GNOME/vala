@@ -628,7 +628,11 @@ public class Vala.Parser : CodeVisitor {
 				expr = parse_member_access (begin, expr);
 				break;
 			case TokenType.OP_PTR:
-				expr = parse_pointer_member_access (begin, expr);
+				if (context.profile == Profile.DOVA) {
+					found = false;
+				} else {
+					expr = parse_pointer_member_access (begin, expr);
+				}
 				break;
 			case TokenType.OPEN_PARENS:
 				expr = parse_method_call (begin, expr);
