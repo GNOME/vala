@@ -1,6 +1,6 @@
 /* valalistliteral.vala
  *
- * Copyright (C) 2009  Jürg Billeter
+ * Copyright (C) 2009-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -37,6 +37,8 @@ public class Vala.ListLiteral : Literal {
 
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_list_literal (this);
+
+		visitor.visit_expression (this);
 	}
 
 	public void add_expression (Expression expr) {

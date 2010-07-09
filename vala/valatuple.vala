@@ -40,6 +40,8 @@ public class Vala.Tuple : Expression {
 
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_tuple (this);
+
+		visitor.visit_expression (this);
 	}
 
 	public void add_expression (Expression expr) {
