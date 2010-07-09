@@ -1763,17 +1763,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 
 	public void add_generic_type_arguments (CCodeFunctionCall ccall, List<DataType> type_args, CodeNode expr, bool is_chainup = false) {
 		foreach (var type_arg in type_args) {
-			if (type_arg is GenericType) {
-				var generic_type = (GenericType) type_arg;
-				string var_name = "%s_type".printf (generic_type.type_parameter.name.down ());
-				if (is_in_generic_type (type_arg) && !is_chainup) {
-					ccall.add_argument (new CCodeMemberAccess.pointer (get_type_private_from_type ((ObjectTypeSymbol) generic_type.type_parameter.parent_symbol, new CCodeMemberAccess.pointer (new CCodeIdentifier ("this"), "type")), var_name));
-				} else {
-					ccall.add_argument (new CCodeIdentifier (var_name));
-				}
-			} else {
-				ccall.add_argument (new CCodeFunctionCall (new CCodeIdentifier ("%s_type_get".printf (type_arg.data_type.get_lower_case_cname ()))));
-			}
+			ccall.add_argument (get_type_id_expression (type_arg, is_chainup));
 		}
 	}
 
