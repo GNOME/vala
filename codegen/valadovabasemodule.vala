@@ -2269,6 +2269,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 
 			string wrapper_name = "_wrapper%d_".printf (next_wrapper_id++);
 			var wrapper = new CCodeFunction (wrapper_name);
+			wrapper.modifiers = CCodeModifiers.STATIC;
 			var call = new CCodeFunctionCall (source_cexpr);
 
 			if (method_type.method_symbol.binding == MemberBinding.INSTANCE) {
