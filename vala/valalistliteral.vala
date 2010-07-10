@@ -91,6 +91,7 @@ public class Vala.ListLiteral : Literal {
 		bool fixed_element_type = false;
 		if (target_type != null && target_type.data_type == list_type.data_type && target_type.get_type_arguments ().size == 1) {
 			element_type = target_type.get_type_arguments ().get (0).copy ();
+			element_type.value_owned = false;
 			fixed_element_type = true;
 		}
 
@@ -103,9 +104,11 @@ public class Vala.ListLiteral : Literal {
 			}
 			if (element_type == null) {
 				element_type = expr.value_type.copy ();
+				element_type.value_owned = false;
 			}
 		}
 
+		element_type = element_type.copy ();
 		element_type.value_owned = true;
 		list_type.add_type_argument (element_type);
 		value_type = list_type;

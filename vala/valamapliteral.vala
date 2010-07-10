@@ -90,7 +90,9 @@ public class Vala.MapLiteral : Literal {
 		bool fixed_element_type = false;
 		if (target_type != null && target_type.data_type == map_type.data_type && target_type.get_type_arguments ().size == 2) {
 			map_key_type = target_type.get_type_arguments ().get (0).copy ();
+			map_key_type.value_owned = false;
 			map_value_type = target_type.get_type_arguments ().get (1).copy ();
+			map_value_type.value_owned = false;
 			fixed_element_type = true;
 		}
 
@@ -107,11 +109,15 @@ public class Vala.MapLiteral : Literal {
 			}
 			if (map_key_type == null) {
 				map_key_type = keys[i].value_type.copy ();
+				map_key_type.value_owned = false;
 				map_value_type = values[i].value_type.copy ();
+				map_value_type.value_owned = false;
 			}
 		}
 
+		map_key_type = map_key_type.copy ();
 		map_key_type.value_owned = true;
+		map_value_type = map_value_type.copy ();
 		map_value_type.value_owned = true;
 		map_type.add_type_argument (map_key_type);
 		map_type.add_type_argument (map_value_type);
