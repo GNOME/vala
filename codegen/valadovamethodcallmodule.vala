@@ -1,6 +1,6 @@
 /* valadovamethodcallmodule.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -205,7 +205,7 @@ internal class Vala.DovaMethodCallModule : DovaAssignmentModule {
 			ellipsis = true;
 		}
 
-		if (m != null && m.return_type is GenericType) {
+		if (itype.get_return_type () is GenericType) {
 			var ccomma = new CCodeCommaExpression ();
 
 			var temp_var = get_temp_variable (expr.value_type);

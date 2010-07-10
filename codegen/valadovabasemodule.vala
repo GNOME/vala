@@ -2285,14 +2285,27 @@ internal class Vala.DovaBaseModule : CCodeModule {
 			}
 
 			wrapper.block = new CCodeBlock ();
-			if (d.return_type is GenericType) {
-				wrapper.add_parameter (new CCodeFormalParameter ("result", "void *"));
-				wrapper.block.add_statement (new CCodeExpressionStatement (call));
-			} else if (d.return_type is VoidType) {
+			if (d.return_type is VoidType) {
 				wrapper.block.add_statement (new CCodeExpressionStatement (call));
 			} else {
-				wrapper.return_type = d.return_type.get_cname ();
-				wrapper.block.add_statement (new CCodeReturnStatement (call));
+				var method_return_type = method_type.method_symbol.return_type;
+				if (d.return_type is GenericType && !(method_return_type is GenericType)) {
+					wrapper.add_parameter (new CCodeFormalParameter ("result", method_return_type.get_cname () + "*"));
+					wrapper.block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result")), call)));
+				} else if (!(d.return_type is GenericType) && method_return_type is GenericType) {
+					wrapper.return_type = d.return_type.get_cname ();
+					var cdecl = new CCodeDeclaration (d.return_type.get_cname ());
+					cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
+					call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("result")));
+					wrapper.block.add_statement (new CCodeExpressionStatement (call));
+					wrapper.block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("result")));
+				} else if (d.return_type is GenericType) {
+					wrapper.add_parameter (new CCodeFormalParameter ("result", "void *"));
+					wrapper.block.add_statement (new CCodeExpressionStatement (call));
+				} else {
+					wrapper.return_type = d.return_type.get_cname ();
+					wrapper.block.add_statement (new CCodeReturnStatement (call));
+				}
 			}
 
 			source_type_member_definition.append (wrapper);

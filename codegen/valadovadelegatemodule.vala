@@ -1,6 +1,6 @@
 /* valadovadelegatemodule.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -92,7 +92,7 @@ internal class Vala.DovaDelegateModule : DovaValueModule {
 	}
 
 	CCodeFunction generate_invoke_function (Delegate d, CCodeDeclarationSpace decl_space) {
-		var function = new CCodeFunction ("%s_invoke".printf (d.get_lower_case_cname ()), d.return_type.get_cname ());
+		var function = new CCodeFunction ("%s_invoke".printf (d.get_lower_case_cname ()));
 
 		if (d.is_private_symbol ()) {
 			function.modifiers |= CCodeModifiers.STATIC;
@@ -111,6 +111,17 @@ internal class Vala.DovaDelegateModule : DovaValueModule {
 				param_list += ", ";
 			}
 			param_list += param.parameter_type.get_cname ();
+		}
+
+		if (d.return_type is GenericType) {
+			function.add_parameter (new CCodeFormalParameter ("result", "void *"));
+
+			if (param_list != "") {
+				param_list += ", ";
+			}
+			param_list += "void *";
+		} else {
+			function.return_type = d.return_type.get_cname ();
 		}
 
 		function.block = new CCodeBlock ();
@@ -133,7 +144,7 @@ internal class Vala.DovaDelegateModule : DovaValueModule {
 		instance_param_list += ")";
 
 		var instance_block = new CCodeBlock ();
-		var instance_call = new CCodeFunctionCall (new CCodeCastExpression (new CCodeMemberAccess.pointer (priv, "method"), "%s (*) %s".printf (d.return_type.get_cname (), instance_param_list)));
+		var instance_call = new CCodeFunctionCall (new CCodeCastExpression (new CCodeMemberAccess.pointer (priv, "method"), "%s (*) %s".printf (function.return_type, instance_param_list)));
 
 		instance_call.add_argument (new CCodeIdentifier ("target"));
 
@@ -146,7 +157,7 @@ internal class Vala.DovaDelegateModule : DovaValueModule {
 		static_param_list += ")";
 
 		var static_block = new CCodeBlock ();
-		var static_call = new CCodeFunctionCall (new CCodeCastExpression (new CCodeMemberAccess.pointer (priv, "method"), "%s (*) %s".printf (d.return_type.get_cname (), static_param_list)));
+		var static_call = new CCodeFunctionCall (new CCodeCastExpression (new CCodeMemberAccess.pointer (priv, "method"), "%s (*) %s".printf (function.return_type, static_param_list)));
 
 		foreach (FormalParameter param in d.get_parameters ()) {
 			instance_call.add_argument (new CCodeIdentifier (param.name));
@@ -154,6 +165,11 @@ internal class Vala.DovaDelegateModule : DovaValueModule {
 		}
 
 		if (d.return_type is VoidType) {
+			instance_block.add_statement (new CCodeExpressionStatement (instance_call));
+			static_block.add_statement (new CCodeExpressionStatement (static_call));
+		} else if (d.return_type is GenericType) {
+			instance_call.add_argument (new CCodeIdentifier ("result"));
+			static_call.add_argument (new CCodeIdentifier ("result"));
 			instance_block.add_statement (new CCodeExpressionStatement (instance_call));
 			static_block.add_statement (new CCodeExpressionStatement (static_call));
 		} else {
