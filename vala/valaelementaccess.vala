@@ -1,6 +1,6 @@
 /* valaelementaccess.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
@@ -195,7 +195,7 @@ public class Vala.ElementAccess : Expression {
 			if (lvalue) {
 				var set_method = container.value_type.get_member ("set") as Method;
 				var assignment = parent_node as Assignment;
-				if (set_method != null && assignment != null) {
+				if (set_method != null && set_method.return_type is VoidType && assignment != null) {
 					return !error;
 				}
 			} else {
