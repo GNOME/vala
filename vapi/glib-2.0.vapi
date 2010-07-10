@@ -943,6 +943,8 @@ public class string {
 	public bool has_suffix (string suffix);
 	[CCode (cname = "g_strdup_printf"), PrintfFormat]
 	public string printf (...);
+	[CCode (cname = "g_strdup_vprintf")]
+	public string vprintf (va_list args);
 	[CCode (cname = "sscanf", cheader_filename = "stdio.h"), ScanfFormat]
 	public int scanf (...);
 	[CCode (cname = "g_strconcat")]
@@ -3042,6 +3044,7 @@ namespace GLib {
 		public static string escape_text (string text, ssize_t length = -1);
 		[PrintfFormat]
 		public static string printf_escaped (string format, ...);
+		public static string vprintf_escaped (string format, va_list args);
 		[CCode (sentinel = "G_MARKUP_COLLECT_INVALID")]
 		public static bool collect_attributes (string element_name, string[] attribute_names, string[] attribute_values, ...) throws MarkupError;
 	}
@@ -3561,6 +3564,8 @@ namespace GLib {
 		public void printf (string format, ...);
 		[PrintfFormat]
 		public void append_printf (string format, ...);
+		public void vprintf (string format, va_list args);
+		public void append_vprintf (string format, va_list args);
 
 		public string str;
 		public ssize_t len;
