@@ -1253,6 +1253,9 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			vfunc.block = new CCodeBlock ();
 
 			vfunc.add_parameter (new CCodeFormalParameter ("this", "%s *".printf (((ObjectTypeSymbol) m.parent_symbol).get_cname ())));
+			foreach (TypeParameter type_param in m.get_type_parameters ()) {
+				vfunc.add_parameter (new CCodeFormalParameter ("%s_type".printf (type_param.name.down ()), "DovaType*"));
+			}
 			foreach (FormalParameter param in m.get_parameters ()) {
 				string ctypename = param.parameter_type.get_cname ();
 				if (param.direction != ParameterDirection.IN) {
@@ -1272,6 +1275,9 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 
 			var vcall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, m.vfunc_name));
 			vcall.add_argument (new CCodeIdentifier ("this"));
+			foreach (TypeParameter type_param in m.get_type_parameters ()) {
+				vcall.add_argument (new CCodeIdentifier ("%s_type".printf (type_param.name.down ())));
+			}
 			foreach (FormalParameter param in m.get_parameters ()) {
 				vcall.add_argument (new CCodeIdentifier (param.name));
 			}
@@ -1296,6 +1302,9 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 
 			vfunc.add_parameter (new CCodeFormalParameter ("base_type", "DovaType *"));
 			vfunc.add_parameter (new CCodeFormalParameter ("this", "%s *".printf (((ObjectTypeSymbol) m.parent_symbol).get_cname ())));
+			foreach (TypeParameter type_param in m.get_type_parameters ()) {
+				vfunc.add_parameter (new CCodeFormalParameter ("%s_type".printf (type_param.name.down ()), "DovaType*"));
+			}
 			foreach (FormalParameter param in m.get_parameters ()) {
 				string ctypename = param.parameter_type.get_cname ();
 				if (param.direction != ParameterDirection.IN) {
@@ -1317,6 +1326,9 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 
 			vcall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, m.vfunc_name));
 			vcall.add_argument (new CCodeIdentifier ("this"));
+			foreach (TypeParameter type_param in m.get_type_parameters ()) {
+				vcall.add_argument (new CCodeIdentifier ("%s_type".printf (type_param.name.down ())));
+			}
 			foreach (FormalParameter param in m.get_parameters ()) {
 				vcall.add_argument (new CCodeIdentifier (param.name));
 			}
@@ -1572,18 +1584,15 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			generate_class_declaration ((Class) type_class, decl_space);
 
 			if (m.parent_symbol is Class) {
-				int type_param_index = 0;
 				var cl = (Class) m.parent_symbol;
 				foreach (TypeParameter type_param in cl.get_type_parameters ()) {
 					var cparam = new CCodeFormalParameter ("%s_type".printf (type_param.name.down ()), "DovaType*");
 					if (vcall != null) {
 						func.add_parameter (cparam);
 					}
-					type_param_index++;
 				}
 			}
 		} else {
-			int type_param_index = 0;
 			foreach (TypeParameter type_param in m.get_type_parameters ()) {
 				var cparam = new CCodeFormalParameter ("%s_type".printf (type_param.name.down ()), "DovaType*");
 				func.add_parameter (cparam);
@@ -1593,7 +1602,6 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 				if (vcall != null) {
 					vcall.add_argument (new CCodeIdentifier ("%s_type".printf (type_param.name.down ())));
 				}
-				type_param_index++;
 			}
 		}
 
