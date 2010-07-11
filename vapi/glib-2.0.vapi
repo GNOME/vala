@@ -2752,7 +2752,7 @@ namespace GLib {
 	[CCode (free_function = "g_dir_close")]
 	public class Dir {
 		public static Dir open (string filename, uint _flags = 0) throws FileError;
-		public unowned string read_name ();
+		public unowned string? read_name ();
 		public void rewind ();
 	}
 	
