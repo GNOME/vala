@@ -41,9 +41,15 @@ internal class Vala.DovaDelegateModule : DovaValueModule {
 		generate_method_declaration ((Method) object_class.scope.lookup ("unref"), decl_space);
 
 		var type_fun = new CCodeFunction ("%s_type_get".printf (d.get_lower_case_cname ()), "DovaType *");
+		if (d.is_internal_symbol ()) {
+			type_fun.modifiers = CCodeModifiers.STATIC;
+		}
 		decl_space.add_type_member_declaration (type_fun);
 
 		var type_init_fun = new CCodeFunction ("%s_type_init".printf (d.get_lower_case_cname ()));
+		if (d.is_internal_symbol ()) {
+			type_init_fun.modifiers = CCodeModifiers.STATIC;
+		}
 		type_init_fun.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
 		decl_space.add_type_member_declaration (type_init_fun);
 
