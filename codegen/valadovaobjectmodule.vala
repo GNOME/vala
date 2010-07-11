@@ -1185,6 +1185,10 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 				var cinit = new CCodeFragment ();
 				function.block.prepend_statement (cinit);
 
+				if (context.module_init_method == m) {
+					cinit.append (module_init_fragment);
+				}
+
 				if (m.closure) {
 					// add variables for parent closure blocks
 					// as closures only have one parameter for the innermost closure block
@@ -1400,6 +1404,8 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			cmain.add_parameter (new CCodeFormalParameter ("argc", "int"));
 			cmain.add_parameter (new CCodeFormalParameter ("argv", "char **"));
 			var main_block = new CCodeBlock ();
+
+			main_block.add_statement (new CCodeExpressionStatement (new CCodeFunctionCall (new CCodeIdentifier ("dova_init"))));
 
 			var cdecl = new CCodeDeclaration ("int");
 			cdecl.add_declarator (new CCodeVariableDeclarator ("result", new CCodeConstant ("0")));

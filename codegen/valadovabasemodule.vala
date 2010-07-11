@@ -118,6 +118,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 	string? csource_filename;
 
 	public CCodeFragment source_type_member_definition;
+	public CCodeFragment module_init_fragment;
 	public CCodeFragment instance_init_fragment;
 	public CCodeFragment instance_finalize_fragment;
 
@@ -242,6 +243,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 
 
 		source_declarations = new CCodeDeclarationSpace ();
+		module_init_fragment = new CCodeFragment ();
 		source_type_member_definition = new CCodeFragment ();
 
 		next_temp_var_id = 0;
@@ -503,10 +505,12 @@ internal class Vala.DovaBaseModule : CCodeModule {
 			var_decl.initializer = default_value_for_type (f.field_type, true);
 
 			if (f.initializer != null) {
-				var init = (CCodeExpression) f.initializer.ccodenode;
-				if (is_constant_ccode_expression (init)) {
-					var_decl.initializer = init;
-				}
+				var rhs = (CCodeExpression) f.initializer.ccodenode;
+
+				module_init_fragment.append (new CCodeExpressionStatement (new CCodeAssignment (lhs, rhs)));
+
+				append_temp_decl (module_init_fragment, temp_vars);
+				temp_vars.clear ();
 			}
 
 			var var_def = new CCodeDeclaration (field_ctype);
