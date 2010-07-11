@@ -1407,6 +1407,8 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 
 			main_block.add_statement (new CCodeExpressionStatement (new CCodeFunctionCall (new CCodeIdentifier ("dova_init"))));
 
+			main_block.add_statement (module_init_fragment);
+
 			var cdecl = new CCodeDeclaration ("int");
 			cdecl.add_declarator (new CCodeVariableDeclarator ("result", new CCodeConstant ("0")));
 			main_block.add_statement (cdecl);
