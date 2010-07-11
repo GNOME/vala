@@ -76,12 +76,18 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 		generate_method_declaration ((Method) object_class.scope.lookup ("unref"), decl_space);
 
 		var type_fun = new CCodeFunction ("%s_type_get".printf (cl.get_lower_case_cname ()), "DovaType *");
+		if (cl.is_internal_symbol ()) {
+			type_fun.modifiers = CCodeModifiers.STATIC;
+		}
 		foreach (var type_param in cl.get_type_parameters ()) {
 			type_fun.add_parameter (new CCodeFormalParameter ("%s_type".printf (type_param.name.down ()), "DovaType *"));
 		}
 		decl_space.add_type_member_declaration (type_fun);
 
 		var type_init_fun = new CCodeFunction ("%s_type_init".printf (cl.get_lower_case_cname ()));
+		if (cl.is_internal_symbol ()) {
+			type_init_fun.modifiers = CCodeModifiers.STATIC;
+		}
 		type_init_fun.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
 		foreach (var type_param in cl.get_type_parameters ()) {
 			type_init_fun.add_parameter (new CCodeFormalParameter ("%s_type".printf (type_param.name.down ()), "DovaType *"));
@@ -316,6 +322,9 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 		source_declarations.add_type_member_declaration (cdecl);
 
 		var type_fun = new CCodeFunction ("%s_type_get".printf (cl.get_lower_case_cname ()), "DovaType *");
+		if (cl.is_internal_symbol ()) {
+			type_fun.modifiers = CCodeModifiers.STATIC;
+		}
 
 		var object_type_symbol = cl as ObjectTypeSymbol;
 		if (object_type_symbol != null) {
@@ -461,6 +470,9 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 		source_type_member_definition.append (type_fun);
 
 		var type_init_fun = new CCodeFunction ("%s_type_init".printf (cl.get_lower_case_cname ()));
+		if (cl.is_internal_symbol ()) {
+			type_init_fun.modifiers = CCodeModifiers.STATIC;
+		}
 		type_init_fun.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
 		if (object_type_symbol != null) {
 			foreach (var type_param in object_type_symbol.get_type_parameters ()) {
@@ -587,7 +599,6 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 		if (!cl.is_internal_symbol ()) {
 			generate_class_declaration (cl, header_declarations);
 		}
-		generate_class_declaration (cl, internal_header_declarations);
 
 		cl.accept_children (codegen);
 
@@ -674,7 +685,6 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 
 			declare_set_value_copy_function (source_declarations);
 			declare_set_value_copy_function (header_declarations);
-			declare_set_value_copy_function (internal_header_declarations);
 			source_type_member_definition.append (create_set_value_copy_function ());
 
 			var value_equals_function = new CCodeFunction ("dova_type_value_equals", "bool");
@@ -697,7 +707,6 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 
 			declare_set_value_equals_function (source_declarations);
 			declare_set_value_equals_function (header_declarations);
-			declare_set_value_equals_function (internal_header_declarations);
 			source_type_member_definition.append (create_set_value_equals_function ());
 
 			var value_hash_function = new CCodeFunction ("dova_type_value_hash", "int32_t");
@@ -716,7 +725,6 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 
 			declare_set_value_hash_function (source_declarations);
 			declare_set_value_hash_function (header_declarations);
-			declare_set_value_hash_function (internal_header_declarations);
 			source_type_member_definition.append (create_set_value_hash_function ());
 		}
 
@@ -755,6 +763,9 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 		source_declarations.add_type_member_declaration (cdecl);
 
 		var type_fun = new CCodeFunction ("%s_type_get".printf (iface.get_lower_case_cname ()), "DovaType *");
+		if (iface.is_internal_symbol ()) {
+			type_fun.modifiers = CCodeModifiers.STATIC;
+		}
 		foreach (var type_param in iface.get_type_parameters ()) {
 			type_fun.add_parameter (new CCodeFormalParameter ("%s_type".printf (type_param.name.down ()), "DovaType *"));
 		}
@@ -782,6 +793,9 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 		source_type_member_definition.append (type_fun);
 
 		var type_init_fun = new CCodeFunction ("%s_type_init".printf (iface.get_lower_case_cname ()));
+		if (iface.is_internal_symbol ()) {
+			type_init_fun.modifiers = CCodeModifiers.STATIC;
+		}
 		type_init_fun.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
 		foreach (var type_param in iface.get_type_parameters ()) {
 			type_init_fun.add_parameter (new CCodeFormalParameter ("%s_type".printf (type_param.name.down ()), "DovaType *"));
@@ -857,7 +871,7 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			function.add_parameter (cvalueparam);
 		}
 
-		if (prop.is_private_symbol () || acc.access == SymbolAccessibility.PRIVATE) {
+		if (prop.is_internal_symbol () || acc.is_internal_symbol ()) {
 			function.modifiers |= CCodeModifiers.STATIC;
 		}
 		decl_space.add_type_member_declaration (function);
@@ -898,7 +912,6 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 				|| acc.access == SymbolAccessibility.PROTECTED)) {
 				generate_property_accessor_declaration (acc, header_declarations);
 			}
-			generate_property_accessor_declaration (acc, internal_header_declarations);
 		}
 
 		DataType this_type;
@@ -926,7 +939,7 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 				function.add_parameter (cvalueparam);
 			}
 
-			if (prop.is_private_symbol () || !(acc.readable || acc.writable) || acc.access == SymbolAccessibility.PRIVATE) {
+			if (prop.is_internal_symbol () || !(acc.readable || acc.writable) || acc.is_internal_symbol ()) {
 				// accessor function should be private if the property is an internal symbol
 				function.modifiers |= CCodeModifiers.STATIC;
 			}
@@ -984,7 +997,7 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 				function.add_parameter (cvalueparam);
 			}
 
-			if (prop.is_private_symbol () || !(acc.readable || acc.writable) || acc.access == SymbolAccessibility.PRIVATE) {
+			if (prop.is_internal_symbol () || !(acc.readable || acc.writable) || acc.is_internal_symbol ()) {
 				// accessor function should be private if the property is an internal symbol
 				function.modifiers |= CCodeModifiers.STATIC;
 			}
@@ -1018,12 +1031,18 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 		generate_class_declaration (type_class, decl_space);
 
 		var type_fun = new CCodeFunction ("%s_type_get".printf (iface.get_lower_case_cname ()), "DovaType *");
+		if (iface.is_internal_symbol ()) {
+			type_fun.modifiers = CCodeModifiers.STATIC;
+		}
 		foreach (var type_param in iface.get_type_parameters ()) {
 			type_fun.add_parameter (new CCodeFormalParameter ("%s_type".printf (type_param.name.down ()), "DovaType *"));
 		}
 		decl_space.add_type_member_declaration (type_fun);
 
 		var type_init_fun = new CCodeFunction ("%s_type_init".printf (iface.get_lower_case_cname ()));
+		if (iface.is_internal_symbol ()) {
+			type_init_fun.modifiers = CCodeModifiers.STATIC;
+		}
 		type_init_fun.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
 		foreach (var type_param in iface.get_type_parameters ()) {
 			type_init_fun.add_parameter (new CCodeFormalParameter ("%s_type".printf (type_param.name.down ()), "DovaType *"));
@@ -1054,7 +1073,7 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 
 		var function = new CCodeFunction (m.get_cname ());
 
-		if (m.is_private_symbol ()) {
+		if (m.is_internal_symbol ()) {
 			function.modifiers |= CCodeModifiers.STATIC;
 			if (m.is_inline) {
 				function.modifiers |= CCodeModifiers.INLINE;
@@ -1096,7 +1115,7 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			// _init function
 			function = new CCodeFunction (m.get_real_cname ());
 
-			if (m.is_private_symbol ()) {
+			if (m.is_internal_symbol ()) {
 				function.modifiers |= CCodeModifiers.STATIC;
 			}
 
@@ -1143,7 +1162,6 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 		if (!m.is_internal_symbol ()) {
 			generate_method_declaration (m, header_declarations);
 		}
-		generate_method_declaration (m, internal_header_declarations);
 
 		var function = new CCodeFunction (m.get_real_cname ());
 		m.ccodenode = function;
@@ -1156,7 +1174,7 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 				// declare *_real_* function
 				function.modifiers |= CCodeModifiers.STATIC;
 				source_declarations.add_type_member_declaration (function.copy ());
-			} else if (m.is_private_symbol ()) {
+			} else if (m.is_internal_symbol ()) {
 				function.modifiers |= CCodeModifiers.STATIC;
 			}
 
@@ -1453,7 +1471,7 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 	}
 
 	public override void visit_creation_method (CreationMethod m) {
-		bool visible = !m.is_private_symbol ();
+		bool visible = !m.is_internal_symbol ();
 
 		head.visit_method (m);
 

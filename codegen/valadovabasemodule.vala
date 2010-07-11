@@ -113,8 +113,9 @@ internal class Vala.DovaBaseModule : CCodeModule {
 	}
 
 	public CCodeDeclarationSpace header_declarations;
-	public CCodeDeclarationSpace internal_header_declarations;
 	public CCodeDeclarationSpace source_declarations;
+
+	string? csource_filename;
 
 	public CCodeFragment source_type_member_definition;
 	public CCodeFragment instance_init_fragment;
@@ -238,7 +239,16 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		error_class = (Class) dova_ns.scope.lookup ("Error");
 
 		header_declarations = new CCodeDeclarationSpace ();
-		internal_header_declarations = new CCodeDeclarationSpace ();
+
+
+		source_declarations = new CCodeDeclarationSpace ();
+		source_type_member_definition = new CCodeFragment ();
+
+		next_temp_var_id = 0;
+		variable_name_map.clear ();
+
+		generated_external_symbols = new HashSet<Symbol> ();
+
 
 		/* we're only interested in non-pkg source files */
 		var source_files = context.get_source_files ();
@@ -247,6 +257,36 @@ internal class Vala.DovaBaseModule : CCodeModule {
 				file.accept (codegen);
 			}
 		}
+
+		if (csource_filename != null) {
+			var writer = new CCodeWriter (csource_filename);
+			if (!writer.open (context.version_header)) {
+				Report.error (null, "unable to open `%s' for writing".printf (writer.filename));
+				return;
+			}
+			writer.line_directives = context.debug;
+
+			writer.write_newline ();
+			source_declarations.include_directives.write (writer);
+			writer.write_newline ();
+			source_declarations.type_declaration.write_combined (writer);
+			writer.write_newline ();
+			source_declarations.type_definition.write_combined (writer);
+			writer.write_newline ();
+			source_declarations.type_member_declaration.write_declaration (writer);
+			writer.write_newline ();
+			source_declarations.type_member_declaration.write (writer);
+			writer.write_newline ();
+			source_declarations.constant_declaration.write_combined (writer);
+			writer.write_newline ();
+			source_type_member_definition.write (writer);
+			writer.write_newline ();
+			writer.close ();
+		}
+
+		source_declarations = null;
+		source_type_member_definition = null;
+
 
 		// generate C header file for public API
 		if (context.header_filename != null) {
@@ -276,78 +316,25 @@ internal class Vala.DovaBaseModule : CCodeModule {
 			once.write (writer);
 			writer.close ();
 		}
+	}
 
-		// generate C header file for internal API
-		if (context.internal_header_filename != null) {
-			var writer = new CCodeWriter (context.internal_header_filename);
+	public override void visit_source_file (SourceFile source_file) {
+		if (csource_filename == null) {
+			csource_filename = source_file.get_csource_filename ();
+		} else {
+			var writer = new CCodeWriter (source_file.get_csource_filename ());
 			if (!writer.open (context.version_header)) {
 				Report.error (null, "unable to open `%s' for writing".printf (writer.filename));
 				return;
 			}
-			writer.write_newline ();
-
-			var once = new CCodeOnceSection (get_define_for_filename (writer.filename));
-			once.append (new CCodeNewline ());
-			once.append (internal_header_declarations.include_directives);
-			once.append (new CCodeNewline ());
-
-			once.append (new CCodeNewline ());
-			once.append (internal_header_declarations.type_declaration);
-			once.append (new CCodeNewline ());
-			once.append (internal_header_declarations.type_definition);
-			once.append (new CCodeNewline ());
-			once.append (internal_header_declarations.type_member_declaration);
-			once.append (new CCodeNewline ());
-			once.append (internal_header_declarations.constant_declaration);
-			once.append (new CCodeNewline ());
-
-			once.append (new CCodeNewline ());
-			once.write (writer);
 			writer.close ();
 		}
-	}
-
-	public override void visit_source_file (SourceFile source_file) {
-		source_declarations = new CCodeDeclarationSpace ();
-		source_type_member_definition = new CCodeFragment ();
-
-		next_temp_var_id = 0;
-		variable_name_map.clear ();
-
-		generated_external_symbols = new HashSet<Symbol> ();
 
 		source_file.accept_children (codegen);
 
 		if (context.report.get_errors () > 0) {
 			return;
 		}
-
-		var writer = new CCodeWriter (source_file.get_csource_filename ());
-		if (!writer.open (context.version_header)) {
-			Report.error (null, "unable to open `%s' for writing".printf (writer.filename));
-			return;
-		}
-		writer.line_directives = context.debug;
-
-		writer.write_newline ();
-		source_declarations.include_directives.write (writer);
-		writer.write_newline ();
-		source_declarations.type_declaration.write_combined (writer);
-		writer.write_newline ();
-		source_declarations.type_definition.write_combined (writer);
-		writer.write_newline ();
-		source_declarations.type_member_declaration.write_declaration (writer);
-		writer.write_newline ();
-		source_declarations.type_member_declaration.write (writer);
-		writer.write_newline ();
-		source_declarations.constant_declaration.write_combined (writer);
-		writer.write_newline ();
-		source_type_member_definition.write (writer);
-		writer.write_newline ();
-		writer.close ();
-
-		source_declarations = null;
-		source_type_member_definition = null;
 	}
 
 	private static string get_define_for_filename (string filename) {
@@ -398,7 +385,6 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		if (!en.is_internal_symbol ()) {
 			generate_enum_declaration (en, header_declarations);
 		}
-		generate_enum_declaration (en, internal_header_declarations);
 	}
 
 	public override void visit_member (Member m) {
@@ -435,7 +421,6 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		if (!c.is_internal_symbol ()) {
 			generate_constant_declaration (c, header_declarations);
 		}
-		generate_constant_declaration (c, internal_header_declarations);
 	}
 
 	public void generate_field_declaration (Field f, CCodeDeclarationSpace decl_space) {
@@ -452,7 +437,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 
 		var cdecl = new CCodeDeclaration (field_ctype);
 		cdecl.add_declarator (new CCodeVariableDeclarator (f.get_cname ()));
-		if (f.is_private_symbol ()) {
+		if (f.is_internal_symbol ()) {
 			cdecl.modifiers = CCodeModifiers.STATIC;
 		} else {
 			cdecl.modifiers = CCodeModifiers.EXTERN;
@@ -473,7 +458,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		}
 
 		if (f.binding == MemberBinding.INSTANCE)  {
-			if (cl != null && f.access == SymbolAccessibility.PRIVATE) {
+			if (cl != null && f.is_internal_symbol ()) {
 				var priv_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_PRIVATE".printf (cl.get_upper_case_cname (null))));
 				priv_call.add_argument (new CCodeIdentifier ("this"));
 				lhs = new CCodeMemberAccess.pointer (priv_call, f.get_cname ());
@@ -511,7 +496,6 @@ internal class Vala.DovaBaseModule : CCodeModule {
 			if (!f.is_internal_symbol ()) {
 				generate_field_declaration (f, header_declarations);
 			}
-			generate_field_declaration (f, internal_header_declarations);
 
 			lhs = new CCodeIdentifier (f.get_cname ());
 
@@ -527,7 +511,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 
 			var var_def = new CCodeDeclaration (field_ctype);
 			var_def.add_declarator (var_decl);
-			if (!f.is_private_symbol ()) {
+			if (!f.is_internal_symbol ()) {
 				var_def.modifiers = CCodeModifiers.EXTERN;
 			} else {
 				var_def.modifiers = CCodeModifiers.STATIC;

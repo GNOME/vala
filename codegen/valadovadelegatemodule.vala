@@ -60,7 +60,7 @@ internal class Vala.DovaDelegateModule : DovaValueModule {
 
 	CCodeFunction generate_new_function (Delegate d, CCodeDeclarationSpace decl_space) {
 		var function = new CCodeFunction ("%s_new".printf (d.get_lower_case_cname ()), "%s*".printf (d.get_cname ()));
-		if (d.is_private_symbol ()) {
+		if (d.is_internal_symbol ()) {
 			function.modifiers |= CCodeModifiers.STATIC;
 		}
 
@@ -94,7 +94,7 @@ internal class Vala.DovaDelegateModule : DovaValueModule {
 	CCodeFunction generate_invoke_function (Delegate d, CCodeDeclarationSpace decl_space) {
 		var function = new CCodeFunction ("%s_invoke".printf (d.get_lower_case_cname ()));
 
-		if (d.is_private_symbol ()) {
+		if (d.is_internal_symbol ()) {
 			function.modifiers |= CCodeModifiers.STATIC;
 		}
 
@@ -189,9 +189,6 @@ internal class Vala.DovaDelegateModule : DovaValueModule {
 
 		if (!d.is_internal_symbol ()) {
 			generate_delegate_declaration (d, header_declarations);
-		}
-		if (!d.is_private_symbol ()) {
-			generate_delegate_declaration (d, internal_header_declarations);
 		}
 
 		generate_type_get_function (d, delegate_class);

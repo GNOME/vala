@@ -37,14 +37,14 @@ internal class Vala.DovaValueModule : DovaObjectModule {
 		}
 
 		var type_fun = new CCodeFunction ("%s_type_get".printf (cl.get_lower_case_cname ()), "DovaType *");
-		if (cl.access == SymbolAccessibility.PRIVATE) {
+		if (cl.is_internal_symbol ()) {
 			type_fun.modifiers = CCodeModifiers.STATIC;
 		}
 		decl_space.add_type_member_declaration (type_fun);
 
 		var type_init_fun = new CCodeFunction ("%s_type_init".printf (cl.get_lower_case_cname ()));
 		type_init_fun.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
-		if (cl.access == SymbolAccessibility.PRIVATE) {
+		if (cl.is_internal_symbol ()) {
 			type_init_fun.modifiers = CCodeModifiers.STATIC;
 		}
 		decl_space.add_type_member_declaration (type_init_fun);
@@ -96,7 +96,6 @@ internal class Vala.DovaValueModule : DovaObjectModule {
 		if (!cl.is_internal_symbol ()) {
 			generate_class_declaration (cl, header_declarations);
 		}
-		generate_class_declaration (cl, internal_header_declarations);
 
 
 		var cdecl = new CCodeDeclaration ("DovaType *");
@@ -270,20 +269,20 @@ internal class Vala.DovaValueModule : DovaObjectModule {
 		generate_class_declaration (type_class, decl_space);
 
 		var type_fun = new CCodeFunction ("%s_type_get".printf (st.get_lower_case_cname ()), "DovaType *");
-		if (st.access == SymbolAccessibility.PRIVATE) {
+		if (st.is_internal_symbol ()) {
 			type_fun.modifiers = CCodeModifiers.STATIC;
 		}
 		decl_space.add_type_member_declaration (type_fun);
 
 		var type_init_fun = new CCodeFunction ("%s_type_init".printf (st.get_lower_case_cname ()));
 		type_init_fun.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
-		if (st.access == SymbolAccessibility.PRIVATE) {
+		if (st.is_internal_symbol ()) {
 			type_init_fun.modifiers = CCodeModifiers.STATIC;
 		}
 		decl_space.add_type_member_declaration (type_init_fun);
 
 		var function = new CCodeFunction (st.get_copy_function (), "void");
-		if (st.access == SymbolAccessibility.PRIVATE) {
+		if (st.is_internal_symbol ()) {
 			function.modifiers = CCodeModifiers.STATIC;
 		}
 
@@ -464,7 +463,7 @@ internal class Vala.DovaValueModule : DovaObjectModule {
 
 	void add_struct_copy_function (Struct st) {
 		var function = new CCodeFunction (st.get_copy_function (), "void");
-		if (st.access == SymbolAccessibility.PRIVATE) {
+		if (st.is_internal_symbol ()) {
 			function.modifiers = CCodeModifiers.STATIC;
 		}
 

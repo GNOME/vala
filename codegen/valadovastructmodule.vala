@@ -90,7 +90,6 @@ internal class Vala.DovaStructModule : DovaBaseModule {
 		if (!st.is_internal_symbol ()) {
 			generate_struct_declaration (st, header_declarations);
 		}
-		generate_struct_declaration (st, internal_header_declarations);
 
 		st.accept_children (codegen);
 
