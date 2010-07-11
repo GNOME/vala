@@ -127,7 +127,7 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 					field_ctype = "volatile " + field_ctype;
 				}
 
-				instance_priv_struct.add_field (field_ctype, f.get_cname ());
+				instance_priv_struct.add_field (field_ctype, f.get_cname () + f.field_type.get_cdeclarator_suffix ());
 			}
 		}
 
