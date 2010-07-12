@@ -371,6 +371,7 @@ namespace GLib {
 		public int minimum;
 		public int maximum;
 		public uint n_values;
+		[CCode (array_length_cname = "n_values")]
 		public unowned EnumValue[] values;
 	}
 
@@ -388,6 +389,7 @@ namespace GLib {
 		public unowned FlagsValue? get_value_by_nick (string name);
 		public uint mask;
 		public uint n_values;
+		[CCode (array_length_cname = "n_values")]
 		public FlagsValue[] values;
 	}
 
