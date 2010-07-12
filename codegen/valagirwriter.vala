@@ -882,6 +882,10 @@ public class Vala.GIRWriter : CodeVisitor {
 			var deleg_type = (DelegateType) type;
 			write_indent ();
 			buffer.append_printf ("<type name=\"%s\" c:type=\"%s\"/>\n", gi_type_name (deleg_type.delegate_symbol), type.get_cname ());
+		} else if (type is GenericType) {
+			// generic type parameters not supported in GIR
+			write_indent ();
+			buffer.append ("<type name=\"any\" c:type=\"gpointer\"/>\n");
 		} else {
 			write_indent ();
 			buffer.append_printf ("<type name=\"%s\"/>\n", type.to_string ());
