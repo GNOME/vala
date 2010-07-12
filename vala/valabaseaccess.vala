@@ -1,6 +1,6 @@
 /* valabaseaccess.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -78,7 +78,12 @@ public class Vala.BaseAccess : Expression {
 			Report.error (source_reference, "Base access invalid without base class");
 			return false;
 		} else {
-			value_type = new ObjectType (analyzer.current_class.base_class);
+			foreach (var base_type in analyzer.current_class.get_base_types ()) {
+				if (base_type.data_type is Class) {
+					value_type = base_type.copy ();
+					value_type.value_owned = false;
+				}
+			}
 		}
 
 		symbol_reference = value_type.data_type;
