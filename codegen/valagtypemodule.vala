@@ -2028,7 +2028,7 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 
 		var ccomma = new CCodeCommaExpression ();
-		var temp_var = get_temp_variable (genumvalue_type, false, expr, false);
+		var temp_var = get_temp_variable (new CType ("GEnumValue*"), false, expr, false);
 		temp_vars.insert (0, temp_var);
 
 		var class_ref = new CCodeFunctionCall (new CCodeIdentifier ("g_type_class_ref"));
