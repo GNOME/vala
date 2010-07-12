@@ -2188,17 +2188,17 @@ namespace GLib {
 	[CCode (cname = "g_content_type_equals", cheader_filename = "gio/gio.h")]
 	public static bool g_content_type_equals (string type1, string type2);
 	[CCode (cname = "g_content_type_from_mime_type", cheader_filename = "gio/gio.h")]
-	public static unowned string g_content_type_from_mime_type (string mime_type);
+	public static string g_content_type_from_mime_type (string mime_type);
 	[CCode (cname = "g_content_type_get_description", cheader_filename = "gio/gio.h")]
-	public static unowned string g_content_type_get_description (string type);
+	public static string g_content_type_get_description (string type);
 	[CCode (cname = "g_content_type_get_icon", cheader_filename = "gio/gio.h")]
-	public static unowned GLib.Icon g_content_type_get_icon (string type);
+	public static GLib.Icon g_content_type_get_icon (string type);
 	[CCode (cname = "g_content_type_get_mime_type", cheader_filename = "gio/gio.h")]
-	public static unowned string g_content_type_get_mime_type (string type);
+	public static string g_content_type_get_mime_type (string type);
 	[CCode (cname = "g_content_type_guess", cheader_filename = "gio/gio.h")]
-	public static unowned string g_content_type_guess (string filename, uchar[] data, out bool result_uncertain);
+	public static string g_content_type_guess (string filename, uchar[] data, out bool result_uncertain);
 	[CCode (cname = "g_content_type_guess_for_tree", cheader_filename = "gio/gio.h")]
-	public static unowned string g_content_type_guess_for_tree (GLib.File root);
+	public static string g_content_type_guess_for_tree (GLib.File root);
 	[CCode (cname = "g_content_type_is_a", cheader_filename = "gio/gio.h")]
 	public static bool g_content_type_is_a (string type, string supertype);
 	[CCode (cname = "g_content_type_is_unknown", cheader_filename = "gio/gio.h")]
