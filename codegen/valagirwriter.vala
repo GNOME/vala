@@ -94,7 +94,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		stream.printf ("<?xml version=\"1.0\"?>\n");
 
-		stream.printf ("<repository version=\"1.0\"");
+		stream.printf ("<repository version=\"1.1\"");
 		stream.printf (" xmlns=\"http://www.gtk.org/introspection/core/1.0\"");
 		stream.printf (" xmlns:c=\"http://www.gtk.org/introspection/c/1.0\"");
 		stream.printf (" xmlns:glib=\"http://www.gtk.org/introspection/glib/1.0\"");
