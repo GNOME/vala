@@ -220,7 +220,7 @@ internal class Vala.DovaValueModule : DovaObjectModule {
 		}
 
 		if (cl.scope.lookup ("hash") is Method) {
-			var value_hash_fun = new CCodeFunction ("%s_value_hash".printf (cl.get_lower_case_cname ()), "int32_t");
+			var value_hash_fun = new CCodeFunction ("%s_value_hash".printf (cl.get_lower_case_cname ()), "uint32_t");
 			value_hash_fun.modifiers = CCodeModifiers.STATIC;
 			value_hash_fun.add_parameter (new CCodeFormalParameter ("value", cl.get_cname () + "**"));
 			value_hash_fun.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
@@ -235,7 +235,7 @@ internal class Vala.DovaValueModule : DovaObjectModule {
 
 			var value_hash_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_set_value_hash"));
 			value_hash_call.add_argument (new CCodeIdentifier ("type"));
-			value_hash_call.add_argument (new CCodeCastExpression (new CCodeIdentifier ("%s_value_hash".printf (cl.get_lower_case_cname ())), "int32_t (*)(void *, int32_t)"));
+			value_hash_call.add_argument (new CCodeCastExpression (new CCodeIdentifier ("%s_value_hash".printf (cl.get_lower_case_cname ())), "uint32_t (*)(void *, int32_t)"));
 			type_init_fun.block.add_statement (new CCodeExpressionStatement (value_hash_call));
 		}
 
@@ -543,7 +543,7 @@ internal class Vala.DovaValueModule : DovaObjectModule {
 		}
 
 		if (st.scope.lookup ("hash") is Method) {
-			var value_hash_fun = new CCodeFunction ("%s_value_hash".printf (st.get_lower_case_cname ()), "int32_t");
+			var value_hash_fun = new CCodeFunction ("%s_value_hash".printf (st.get_lower_case_cname ()), "uint32_t");
 			value_hash_fun.modifiers = CCodeModifiers.STATIC;
 			value_hash_fun.add_parameter (new CCodeFormalParameter ("value", st.get_cname () + "*"));
 			value_hash_fun.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
@@ -558,7 +558,7 @@ internal class Vala.DovaValueModule : DovaObjectModule {
 
 			var value_hash_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_set_value_hash"));
 			value_hash_call.add_argument (new CCodeIdentifier ("type"));
-			value_hash_call.add_argument (new CCodeCastExpression (new CCodeIdentifier ("%s_value_hash".printf (st.get_lower_case_cname ())), "int32_t (*)(void *, int32_t)"));
+			value_hash_call.add_argument (new CCodeCastExpression (new CCodeIdentifier ("%s_value_hash".printf (st.get_lower_case_cname ())), "uint32_t (*)(void *, int32_t)"));
 			type_init_fun.block.add_statement (new CCodeExpressionStatement (value_hash_call));
 		}
 

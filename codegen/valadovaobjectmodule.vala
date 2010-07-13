@@ -63,7 +63,7 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 
 			source_declarations.add_type_member_declaration (value_equals_function);
 
-			var value_hash_function = new CCodeFunction ("dova_type_value_hash", "int32_t");
+			var value_hash_function = new CCodeFunction ("dova_type_value_hash", "uint32_t");
 			value_hash_function.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
 			value_hash_function.add_parameter (new CCodeFormalParameter ("value", "void *"));
 			value_hash_function.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
@@ -156,7 +156,7 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			vdeclarator.add_parameter (new CCodeFormalParameter ("value", "void *"));
 			vdeclarator.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
 
-			vdecl = new CCodeDeclaration ("int32_t");
+			vdecl = new CCodeDeclaration ("uint32_t");
 			vdecl.add_declarator (vdeclarator);
 			instance_priv_struct.add_declaration (vdecl);
 
@@ -297,7 +297,7 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 	CCodeFunction create_set_value_hash_function (bool decl_only = false) {
 		var result = new CCodeFunction ("dova_type_set_value_hash");
 		result.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
-		result.add_parameter (new CCodeFormalParameter ("(*function) (void *value, int32_t value_index)", "int32_t"));
+		result.add_parameter (new CCodeFormalParameter ("(*function) (void *value, int32_t value_index)", "uint32_t"));
 		if (decl_only) {
 			return result;
 		}
@@ -774,7 +774,7 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			declare_set_value_equals_function (header_declarations);
 			source_type_member_definition.append (create_set_value_equals_function ());
 
-			var value_hash_function = new CCodeFunction ("dova_type_value_hash", "int32_t");
+			var value_hash_function = new CCodeFunction ("dova_type_value_hash", "uint32_t");
 			value_hash_function.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
 			value_hash_function.add_parameter (new CCodeFormalParameter ("value", "void *"));
 			value_hash_function.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
