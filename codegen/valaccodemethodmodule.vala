@@ -977,7 +977,11 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 	}
 
 	public void generate_vfunc (Method m, DataType return_type, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression> carg_map, string suffix = "", int direction = 3) {
-		var vfunc = new CCodeFunction (m.get_cname () + suffix);
+		string cname = m.get_cname ();
+		if (suffix == "_finish" && cname.has_suffix ("_async")) {
+			cname = cname.substring (0, cname.length - "_async".length);
+		}
+		var vfunc = new CCodeFunction (cname + suffix);
 		if (function != null) {
 			vfunc.line = function.line;
 		}
@@ -1003,7 +1007,11 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		}
 		vcast.add_argument (new CCodeIdentifier ("self"));
 	
-		var vcall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, m.vfunc_name + suffix));
+		cname = m.vfunc_name;
+		if (suffix == "_finish" && cname.has_suffix ("_async")) {
+			cname = cname.substring (0, cname.length - "_async".length);
+		}
+		var vcall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, cname + suffix));
 		carg_map.set (get_param_pos (m.cinstance_parameter_position), new CCodeIdentifier ("self"));
 
 		generate_cparameters (m, source_declarations, cparam_map, vfunc, null, carg_map, vcall, direction);
