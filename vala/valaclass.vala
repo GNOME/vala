@@ -285,6 +285,32 @@ public class Vala.Class : ObjectTypeSymbol {
 	 * @param f a field
 	 */
 	public void add_field (Field f) {
+		if (CodeContext.get ().profile == Profile.DOVA &&
+		    f.binding == MemberBinding.INSTANCE &&
+		    (f.access == SymbolAccessibility.PUBLIC || f.access == SymbolAccessibility.PROTECTED) &&
+		    name != "string" /* temporary workaround */) {
+			// public/protected instance fields not supported, convert to automatic property
+
+			var prop = new Property (f.name, f.field_type.copy (), null, null, f.source_reference, comment);
+			prop.access = access;
+
+			var get_type = prop.property_type.copy ();
+			get_type.value_owned = true;
+
+			prop.get_accessor = new PropertyAccessor (true, false, false, get_type, null, f.source_reference);
+			prop.get_accessor.access = SymbolAccessibility.PUBLIC;
+
+			prop.set_accessor = new PropertyAccessor (false, true, false, prop.property_type.copy (), null, f.source_reference);
+			prop.set_accessor.access = SymbolAccessibility.PUBLIC;
+
+			f.name = "_%s".printf (f.name);
+			f.access = SymbolAccessibility.PRIVATE;
+			prop.field = f;
+
+			add_property (prop);
+			return;
+		}
+
 		fields.add (f);
 		if (f.access == SymbolAccessibility.PRIVATE && f.binding == MemberBinding.INSTANCE) {
 			has_private_fields = true;
