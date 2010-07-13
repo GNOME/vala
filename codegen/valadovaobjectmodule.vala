@@ -159,6 +159,23 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			vdecl = new CCodeDeclaration ("int32_t");
 			vdecl.add_declarator (vdeclarator);
 			instance_priv_struct.add_declaration (vdecl);
+
+			vdeclarator = new CCodeFunctionDeclarator ("value_to_any");
+			vdeclarator.add_parameter (new CCodeFormalParameter ("value", "void *"));
+			vdeclarator.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
+
+			vdecl = new CCodeDeclaration ("DovaObject *");
+			vdecl.add_declarator (vdeclarator);
+			instance_priv_struct.add_declaration (vdecl);
+
+			vdeclarator = new CCodeFunctionDeclarator ("value_from_any");
+			vdeclarator.add_parameter (new CCodeFormalParameter ("any", "DovaObject *"));
+			vdeclarator.add_parameter (new CCodeFormalParameter ("value", "void *"));
+			vdeclarator.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
+
+			vdecl = new CCodeDeclaration ("void");
+			vdecl.add_declarator (vdeclarator);
+			instance_priv_struct.add_declaration (vdecl);
 		}
 
 		foreach (var type_param in cl.get_type_parameters ()) {
@@ -299,6 +316,54 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			return;
 		}
 		decl_space.add_type_member_declaration (create_set_value_hash_function (true));
+	}
+
+	CCodeFunction create_set_value_to_any_function (bool decl_only = false) {
+		var result = new CCodeFunction ("dova_type_set_value_to_any");
+		result.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
+		result.add_parameter (new CCodeFormalParameter ("(*function) (void *value, int32_t value_index)", "DovaObject *"));
+		if (decl_only) {
+			return result;
+		}
+
+		result.block = new CCodeBlock ();
+
+		var priv_call = new CCodeFunctionCall (new CCodeIdentifier ("DOVA_TYPE_GET_PRIVATE"));
+		priv_call.add_argument (new CCodeIdentifier ("type"));
+
+		result.block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (priv_call, "value_to_any"), new CCodeIdentifier ("function"))));
+		return result;
+	}
+
+	public void declare_set_value_to_any_function (CCodeDeclarationSpace decl_space) {
+		if (decl_space.add_symbol_declaration (type_class, "dova_type_set_value_to_any")) {
+			return;
+		}
+		decl_space.add_type_member_declaration (create_set_value_to_any_function (true));
+	}
+
+	CCodeFunction create_set_value_from_any_function (bool decl_only = false) {
+		var result = new CCodeFunction ("dova_type_set_value_from_any");
+		result.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
+		result.add_parameter (new CCodeFormalParameter ("(*function) (DovaObject *any, void *value, int32_t value_index)", "void"));
+		if (decl_only) {
+			return result;
+		}
+
+		result.block = new CCodeBlock ();
+
+		var priv_call = new CCodeFunctionCall (new CCodeIdentifier ("DOVA_TYPE_GET_PRIVATE"));
+		priv_call.add_argument (new CCodeIdentifier ("type"));
+
+		result.block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (priv_call, "value_from_any"), new CCodeIdentifier ("function"))));
+		return result;
+	}
+
+	public void declare_set_value_from_any_function (CCodeDeclarationSpace decl_space) {
+		if (decl_space.add_symbol_declaration (type_class, "dova_type_set_value_from_any")) {
+			return;
+		}
+		decl_space.add_type_member_declaration (create_set_value_from_any_function (true));
 	}
 
 	public CCodeBlock generate_type_get_function (TypeSymbol cl, Class? base_class) {
@@ -701,7 +766,7 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			ccall.add_argument (new CCodeIdentifier ("value_index"));
 			ccall.add_argument (new CCodeIdentifier ("other"));
 			ccall.add_argument (new CCodeIdentifier ("other_index"));
-			value_equals_function.block.add_statement (new CCodeExpressionStatement (ccall));
+			value_equals_function.block.add_statement (new CCodeReturnStatement (ccall));
 
 			source_type_member_definition.append (value_equals_function);
 
@@ -719,13 +784,51 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (priv_call, "value_hash"));
 			ccall.add_argument (new CCodeIdentifier ("value"));
 			ccall.add_argument (new CCodeIdentifier ("value_index"));
-			value_hash_function.block.add_statement (new CCodeExpressionStatement (ccall));
+			value_hash_function.block.add_statement (new CCodeReturnStatement (ccall));
 
 			source_type_member_definition.append (value_hash_function);
 
 			declare_set_value_hash_function (source_declarations);
 			declare_set_value_hash_function (header_declarations);
 			source_type_member_definition.append (create_set_value_hash_function ());
+
+			var value_to_any_function = new CCodeFunction ("dova_type_value_to_any", "DovaObject *");
+			value_to_any_function.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
+			value_to_any_function.add_parameter (new CCodeFormalParameter ("value", "void *"));
+			value_to_any_function.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
+
+			value_to_any_function.block = new CCodeBlock ();
+
+			ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (priv_call, "value_to_any"));
+			ccall.add_argument (new CCodeIdentifier ("value"));
+			ccall.add_argument (new CCodeIdentifier ("value_index"));
+			value_to_any_function.block.add_statement (new CCodeReturnStatement (ccall));
+
+			source_type_member_definition.append (value_to_any_function);
+
+			declare_set_value_to_any_function (source_declarations);
+			declare_set_value_to_any_function (header_declarations);
+			source_type_member_definition.append (create_set_value_to_any_function ());
+
+			var value_from_any_function = new CCodeFunction ("dova_type_value_from_any", "void");
+			value_from_any_function.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
+			value_from_any_function.add_parameter (new CCodeFormalParameter ("any", "DovaObject *"));
+			value_from_any_function.add_parameter (new CCodeFormalParameter ("value", "void *"));
+			value_from_any_function.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
+
+			value_from_any_function.block = new CCodeBlock ();
+
+			ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (priv_call, "value_from_any"));
+			ccall.add_argument (new CCodeIdentifier ("any"));
+			ccall.add_argument (new CCodeIdentifier ("value"));
+			ccall.add_argument (new CCodeIdentifier ("value_index"));
+			value_from_any_function.block.add_statement (new CCodeReturnStatement (ccall));
+
+			source_type_member_definition.append (value_from_any_function);
+
+			declare_set_value_from_any_function (source_declarations);
+			declare_set_value_from_any_function (header_declarations);
+			source_type_member_definition.append (create_set_value_from_any_function ());
 		}
 
 		current_symbol = old_symbol;

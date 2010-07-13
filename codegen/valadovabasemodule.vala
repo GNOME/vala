@@ -1996,6 +1996,47 @@ internal class Vala.DovaBaseModule : CCodeModule {
 			return;
 		}
 
+		if (expr.type_reference.data_type != null && expr.type_reference.data_type.get_full_name () == "Dova.Value") {
+			// box value
+			var temp_decl = get_temp_variable (expr.inner.value_type, true, expr);
+			temp_vars.insert (0, temp_decl);
+			var cvar = get_variable_cexpression (temp_decl.name);
+
+			var ccomma = new CCodeCommaExpression ();
+			ccomma.append_expression (new CCodeAssignment (cvar, (CCodeExpression) expr.inner.ccodenode));
+
+			var to_any  = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_value_to_any"));
+			to_any.add_argument (get_type_id_expression (expr.inner.value_type));
+			to_any.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cvar));
+			to_any.add_argument (new CCodeConstant ("0"));
+			ccomma.append_expression (to_any);
+
+			expr.ccodenode = ccomma;
+			return;
+		} else if (expr.inner.value_type.data_type != null && expr.inner.value_type.data_type.get_full_name () == "Dova.Value") {
+			// unbox value
+			var temp_decl = get_temp_variable (expr.type_reference, true, expr);
+			temp_vars.insert (0, temp_decl);
+			var cvar = get_variable_cexpression (temp_decl.name);
+
+			var ccomma = new CCodeCommaExpression ();
+
+			var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+			sizeof_call.add_argument (new CCodeIdentifier (expr.type_reference.get_cname ()));
+
+			var to_any  = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_value_from_any"));
+			to_any.add_argument (get_type_id_expression (expr.type_reference));
+			to_any.add_argument ((CCodeExpression) expr.inner.ccodenode);
+			to_any.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cvar));
+			to_any.add_argument (new CCodeConstant ("0"));
+			ccomma.append_expression (to_any);
+
+			ccomma.append_expression (cvar);
+
+			expr.ccodenode = ccomma;
+			return;
+		}
+
 		generate_type_declaration (expr.type_reference, source_declarations);
 
 		if (expr.inner.value_type is GenericType && !(expr.type_reference is GenericType)) {

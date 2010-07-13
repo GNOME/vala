@@ -319,6 +319,11 @@ public abstract class Vala.DataType : CodeNode {
 			return true;
 		}
 
+		if (this is ValueType && target_type.data_type != null && target_type.data_type.get_full_name () == "Dova.Value") {
+			// allow implicit conversion to Dova.Value
+			return true;
+		}
+
 		if (target_type is DelegateType && this is DelegateType) {
 			return ((DelegateType) target_type).delegate_symbol == ((DelegateType) this).delegate_symbol;
 		}
