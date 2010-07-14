@@ -123,7 +123,11 @@ public class Vala.IntegerLiteral : Literal {
 			}
 		}
 
-		value_type = new IntegerType ((Struct) analyzer.root_symbol.scope.lookup (type_name), value, type_name);
+		var st = (Struct) analyzer.root_symbol.scope.lookup (type_name);
+		// ensure attributes are already processed in case of bootstrapping dova-core
+		st.check (analyzer);
+
+		value_type = new IntegerType (st, value, type_name);
 
 		return !error;
 	}

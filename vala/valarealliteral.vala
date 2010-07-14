@@ -1,6 +1,6 @@
 /* valarealliteral.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -77,7 +77,11 @@ public class Vala.RealLiteral : Literal {
 
 		checked = true;
 
-		value_type = new FloatingType ((Struct) analyzer.root_symbol.scope.lookup (get_type_name ()));
+		var st = (Struct) analyzer.root_symbol.scope.lookup (get_type_name ());
+		// ensure attributes are already processed in case of bootstrapping dova-core
+		st.check (analyzer);
+
+		value_type = new FloatingType (st);
 
 		return !error;
 	}
