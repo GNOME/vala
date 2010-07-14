@@ -1508,7 +1508,10 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			cmain.add_parameter (new CCodeFormalParameter ("argv", "char **"));
 			var main_block = new CCodeBlock ();
 
-			main_block.add_statement (new CCodeExpressionStatement (new CCodeFunctionCall (new CCodeIdentifier ("dova_init"))));
+			var dova_init_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_init"));
+			dova_init_call.add_argument (new CCodeIdentifier ("argc"));
+			dova_init_call.add_argument (new CCodeIdentifier ("argv"));
+			main_block.add_statement (new CCodeExpressionStatement (dova_init_call));
 
 			main_block.add_statement (module_init_fragment);
 
