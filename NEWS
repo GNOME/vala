@@ -1,3 +1,16 @@
+Vala 0.9.3
+==========
+
+ * Support newlines in double quoted string literals.
+ * Add experimental support for main blocks.
+ * Add experimental vala tool to compile and run code.
+ * Initial support for generic delegates.
+ * Support using GClosure for delegate parameters.
+ * Support GBoxed-based memory management.
+ * Improvements to the .gir reader and writer.
+ * Various improvements to the Dova profile.
+ * Many bug fixes and binding updates.
+
 Vala 0.9.2
 ==========
 
