@@ -1726,6 +1726,15 @@ namespace GLib {
 		public static void* dup (void* mem, uint n);
 	}
 
+	namespace Slice {
+		public static void* alloc (size_t block_size);
+		public static void* alloc0 (size_t block_size);
+		public static void* copy (size_t block_size, void* mem_block);
+		[CCode (cname = "g_slice_free1")]
+		public static void free (size_t block_size, void* mem_block);
+		public static void free_chain_with_offset (size_t block_size, void *mem_chain, size_t next_offset);
+	}
+
 	/* IO Channels */
 
 	[Compact]
