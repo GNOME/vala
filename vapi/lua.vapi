@@ -38,6 +38,15 @@ namespace Lua {
 	// option for multiple returns in `lua_pcall' and `lua_call'
 	public const int MULTRET;
 
+	[CCode (cheader_filename = "lauxlib.h")]
+	public enum Reference
+	{
+		[CCode (cname = "LUA_REFNIL")]
+		NIL,
+		[CCode (cname = "LUA_NOREF")]
+		NONE
+	}
+
 	// pseudo-indices
 
 	[CCode (cheader_filename = "lua.h")]
@@ -394,5 +403,9 @@ namespace Lua {
 		public bool do_file (string filename);
 		[CCode (cname = "luaL_dostring", cheader_filename = "lauxlib.h")]
 		public bool do_string (string str);
+		[CCode (cname = "luaL_ref", cheader_filename = "lauxlib.h")]
+		public int reference (int t);
+		[CCode (cname = "luaL_unref", cheader_filename = "lauxlib.h")]
+		public void unreference (int t);
 	}
 }
