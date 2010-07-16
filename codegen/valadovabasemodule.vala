@@ -136,7 +136,6 @@ internal class Vala.DovaBaseModule : CCodeModule {
 	public int next_temp_var_id = 0;
 	public int next_wrapper_id = 0;
 	public bool in_creation_method { get { return current_method is CreationMethod; } }
-	public bool current_method_inner_error = false;
 	int next_block_id = 0;
 	Map<Block,int> block_map = new HashMap<Block,int> ();
 
@@ -208,7 +207,6 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		reserved_identifiers.add ("while");
 
 		// reserved for Vala naming conventions
-		reserved_identifiers.add ("error");
 		reserved_identifiers.add ("result");
 		reserved_identifiers.add ("this");
 	}
@@ -659,9 +657,6 @@ internal class Vala.DovaBaseModule : CCodeModule {
 	}
 
 	public override void visit_destructor (Destructor d) {
-		bool old_method_inner_error = current_method_inner_error;
-		current_method_inner_error = false;
-
 		d.accept_children (codegen);
 
 		CCodeFragment cfrag = new CCodeFragment ();
@@ -669,8 +664,6 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		cfrag.append (d.body.ccodenode);
 
 		d.ccodenode = cfrag;
-
-		current_method_inner_error = old_method_inner_error;
 	}
 
 	public int get_block_id (Block b) {
@@ -1854,12 +1847,6 @@ internal class Vala.DovaBaseModule : CCodeModule {
 			if (struct_by_ref && m.cinstance_parameter_position < 0) {
 				// instance parameter is at the end in a struct creation method
 				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance));
-			}
-
-			if (expr.tree_can_fail) {
-				// method can fail
-				current_method_inner_error = true;
-				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_inner_error_")));
 			}
 
 			if (ellipsis) {

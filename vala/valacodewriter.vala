@@ -1075,7 +1075,10 @@ public class Vala.CodeWriter : CodeVisitor {
 		}
 		
 		write_params (m.get_parameters ());
-		write_error_domains (m.get_error_types ());
+
+		if (context.profile != Profile.DOVA) {
+			write_error_domains (m.get_error_types ());
+		}
 
 		write_code_block (m.body);
 

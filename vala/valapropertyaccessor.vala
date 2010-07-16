@@ -1,6 +1,6 @@
 /* valapropertyaccessor.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -223,9 +223,11 @@ public class Vala.PropertyAccessor : Symbol {
 
 			body.check (analyzer);
 
-			foreach (DataType body_error_type in body.get_error_types ()) {
-				if (!((ErrorType) body_error_type).dynamic_error) {
-					Report.warning (body_error_type.source_reference, "unhandled error `%s'".printf (body_error_type.to_string()));
+			if (analyzer.context.profile != Profile.DOVA) {
+				foreach (DataType body_error_type in body.get_error_types ()) {
+					if (!((ErrorType) body_error_type).dynamic_error) {
+						Report.warning (body_error_type.source_reference, "unhandled error `%s'".printf (body_error_type.to_string()));
+					}
 				}
 			}
 		}

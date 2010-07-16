@@ -2650,10 +2650,21 @@ public class Vala.Parser : CodeVisitor {
 			} while (accept (TokenType.COMMA));
 		}
 		expect (TokenType.CLOSE_PARENS);
-		if (accept (TokenType.THROWS)) {
-			do {
-				method.add_error_type (parse_type (true, false));
-			} while (accept (TokenType.COMMA));
+		if (context.profile == Profile.DOVA) {
+			var error_type = new UnresolvedType.from_symbol (new UnresolvedSymbol (new UnresolvedSymbol (null, "Dova"), "Error"), method.source_reference);
+			method.add_error_type (error_type);
+			if (accept (TokenType.THROWS)) {
+				do {
+					parse_type (true, false);
+				} while (accept (TokenType.COMMA));
+				Report.warning (method.source_reference, "`throws' is ignored in the Dova profile");
+			}
+		} else {
+			if (accept (TokenType.THROWS)) {
+				do {
+					method.add_error_type (parse_type (true, false));
+				} while (accept (TokenType.COMMA));
+			}
 		}
 		while (accept (TokenType.REQUIRES)) {
 			expect (TokenType.OPEN_PARENS);
@@ -2716,11 +2727,14 @@ public class Vala.Parser : CodeVisitor {
 		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
 			prop.external = true;
 		}
-		if (accept (TokenType.THROWS)) {
-			do {
-				prop.add_error_type (parse_type (true, false));
-			} while (accept (TokenType.COMMA));
-			Report.error (prop.source_reference, "properties throwing errors are not supported yet");
+		if (context.profile == Profile.DOVA) {
+		} else {
+			if (accept (TokenType.THROWS)) {
+				do {
+					prop.add_error_type (parse_type (true, false));
+				} while (accept (TokenType.COMMA));
+				Report.error (prop.source_reference, "properties throwing errors are not supported yet");
+			}
 		}
 		expect (TokenType.OPEN_BRACE);
 		while (current () != TokenType.CLOSE_BRACE) {
@@ -3300,10 +3314,21 @@ public class Vala.Parser : CodeVisitor {
 			} while (accept (TokenType.COMMA));
 		}
 		expect (TokenType.CLOSE_PARENS);
-		if (accept (TokenType.THROWS)) {
-			do {
-				method.add_error_type (parse_type (true, false));
-			} while (accept (TokenType.COMMA));
+		if (context.profile == Profile.DOVA) {
+			var error_type = new UnresolvedType.from_symbol (new UnresolvedSymbol (new UnresolvedSymbol (null, "Dova"), "Error"), method.source_reference);
+			method.add_error_type (error_type);
+			if (accept (TokenType.THROWS)) {
+				do {
+					parse_type (true, false);
+				} while (accept (TokenType.COMMA));
+				Report.warning (method.source_reference, "`throws' is ignored in the Dova profile");
+			}
+		} else {
+			if (accept (TokenType.THROWS)) {
+				do {
+					method.add_error_type (parse_type (true, false));
+				} while (accept (TokenType.COMMA));
+			}
 		}
 		while (accept (TokenType.REQUIRES)) {
 			expect (TokenType.OPEN_PARENS);
@@ -3361,10 +3386,21 @@ public class Vala.Parser : CodeVisitor {
 			} while (accept (TokenType.COMMA));
 		}
 		expect (TokenType.CLOSE_PARENS);
-		if (accept (TokenType.THROWS)) {
-			do {
-				d.add_error_type (parse_type (true, false));
-			} while (accept (TokenType.COMMA));
+		if (context.profile == Profile.DOVA) {
+			var error_type = new UnresolvedType.from_symbol (new UnresolvedSymbol (new UnresolvedSymbol (null, "Dova"), "Error"), d.source_reference);
+			d.add_error_type (error_type);
+			if (accept (TokenType.THROWS)) {
+				do {
+					parse_type (true, false);
+				} while (accept (TokenType.COMMA));
+				Report.warning (d.source_reference, "`throws' is ignored in the Dova profile");
+			}
+		} else {
+			if (accept (TokenType.THROWS)) {
+				do {
+					d.add_error_type (parse_type (true, false));
+				} while (accept (TokenType.COMMA));
+			}
 		}
 		expect (TokenType.SEMICOLON);
 

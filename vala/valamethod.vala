@@ -939,7 +939,7 @@ public class Vala.Method : Member {
 			entry_point = true;
 			analyzer.context.entry_point = this;
 
-			if (tree_can_fail) {
+			if (tree_can_fail && analyzer.context.profile != Profile.DOVA) {
 				Report.error (source_reference, "\"main\" method cannot throw errors");
 			}
 		}
