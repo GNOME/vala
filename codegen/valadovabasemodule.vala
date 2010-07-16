@@ -241,10 +241,17 @@ internal class Vala.DovaBaseModule : CCodeModule {
 
 		header_declarations = new CCodeDeclarationSpace ();
 
-
 		source_declarations = new CCodeDeclarationSpace ();
 		module_init_fragment = new CCodeFragment ();
 		source_type_member_definition = new CCodeFragment ();
+
+		if (context.nostdpkg) {
+			header_declarations.add_include ("dova-types.h");
+			source_declarations.add_include ("dova-types.h");
+		} else {
+			header_declarations.add_include ("dova-base.h");
+			source_declarations.add_include ("dova-base.h");
+		}
 
 		next_temp_var_id = 0;
 		variable_name_map.clear ();
@@ -1114,7 +1121,6 @@ internal class Vala.DovaBaseModule : CCodeModule {
 			var pointer_type = (PointerType) type;
 			return get_dup_func_expression (pointer_type.base_type, source_reference);
 		} else {
-			source_declarations.add_include ("stddef.h");
 			return new CCodeConstant ("NULL");
 		}
 	}
@@ -1140,7 +1146,6 @@ internal class Vala.DovaBaseModule : CCodeModule {
 				}
 			}
 			if (unref_function == null) {
-				source_declarations.add_include ("stddef.h");
 				return new CCodeConstant ("NULL");
 			}
 			return new CCodeIdentifier (unref_function);
@@ -1154,7 +1159,6 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		} else if (type is PointerType) {
 			return new CCodeIdentifier ("free");
 		} else {
-			source_declarations.add_include ("stddef.h");
 			return new CCodeConstant ("NULL");
 		}
 	}
@@ -1178,8 +1182,6 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		 * foo = (unref (foo), NULL)
 		 * if foo is of static type non-null
 		 */
-
-		source_declarations.add_include ("stddef.h");
 
 		var cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, cvar, new CCodeConstant ("NULL"));
 		if (type.type_parameter != null) {
@@ -1279,8 +1281,6 @@ internal class Vala.DovaBaseModule : CCodeModule {
 				var alloca_call = new CCodeFunctionCall (new CCodeIdentifier ("alloca"));
 				alloca_call.add_argument (value_size);
 
-				// memset needs string.h
-				source_declarations.add_include ("string.h");
 				var memset_call = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
 				memset_call.add_argument (alloca_call);
 				memset_call.add_argument (new CCodeConstant ("0"));
@@ -1300,7 +1300,6 @@ internal class Vala.DovaBaseModule : CCodeModule {
 				vardecl.init0 = true;
 			} else if (local.variable_type.is_reference_type_or_type_parameter () ||
 			       local.variable_type.nullable) {
-				source_declarations.add_include ("stddef.h");
 				vardecl.initializer = new CCodeConstant ("NULL");
 				vardecl.init0 = true;
 			}
@@ -1501,7 +1500,6 @@ internal class Vala.DovaBaseModule : CCodeModule {
 	}
 
 	public override void visit_boolean_literal (BooleanLiteral expr) {
-		source_declarations.add_include ("stdbool.h");
 		expr.ccodenode = new CCodeConstant (expr.value ? "true" : "false");
 	}
 
@@ -1552,7 +1550,6 @@ internal class Vala.DovaBaseModule : CCodeModule {
 	}
 
 	public override void visit_null_literal (NullLiteral expr) {
-		source_declarations.add_include ("stddef.h");
 		expr.ccodenode = new CCodeConstant ("NULL");
 	}
 
@@ -1711,7 +1708,6 @@ internal class Vala.DovaBaseModule : CCodeModule {
 
 			var ctemp = get_variable_cexpression (decl.name);
 
-			source_declarations.add_include ("stddef.h");
 			var cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ctemp, new CCodeConstant ("NULL"));
 			if (expression_type.type_parameter != null) {
 				// dup functions are optional for type parameters
@@ -1779,8 +1775,6 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		if (expr.symbol_reference == null) {
 			// no creation method
 			if (expr.type_reference.data_type is Struct) {
-				// memset needs string.h
-				source_declarations.add_include ("string.h");
 				var creation_call = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
 				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance));
 				creation_call.add_argument (new CCodeConstant ("0"));
@@ -2425,8 +2419,6 @@ internal class Vala.DovaBaseModule : CCodeModule {
 	}
 
 	public CCodeExpression? default_value_for_type (DataType type, bool initializer_expression) {
-		source_declarations.add_include ("stddef.h");
-
 		var st = type.data_type as Struct;
 		var array_type = type as ArrayType;
 		if (type is GenericType) {
@@ -2436,8 +2428,6 @@ internal class Vala.DovaBaseModule : CCodeModule {
 			var alloca_call = new CCodeFunctionCall (new CCodeIdentifier ("alloca"));
 			alloca_call.add_argument (value_size);
 
-			// memset needs string.h
-			source_declarations.add_include ("string.h");
 			var memset_call = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
 			memset_call.add_argument (alloca_call);
 			memset_call.add_argument (new CCodeConstant ("0"));

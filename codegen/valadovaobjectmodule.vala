@@ -43,8 +43,6 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			instance_struct.add_field ("DovaType *", "type");
 			decl_space.add_type_definition (instance_struct);
 		} else if (cl == type_class) {
-			decl_space.add_include ("stdbool.h");
-
 			var value_copy_function = new CCodeFunction ("dova_type_value_copy");
 			value_copy_function.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
 			value_copy_function.add_parameter (new CCodeFormalParameter ("dest", "void *"));
@@ -367,10 +365,6 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 	}
 
 	public CCodeBlock generate_type_get_function (TypeSymbol cl, Class? base_class) {
-		source_declarations.add_include ("stddef.h");
-		// calloc
-		source_declarations.add_include ("stdlib.h");
-
 		DataType? base_class_type = null;
 		if (base_class != null && cl is Class) {
 			foreach (DataType base_type in ((Class) cl).get_base_types ()) {
@@ -855,10 +849,6 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 
 		source_declarations.add_type_declaration (new CCodeTypeDefinition ("struct %s".printf (type_priv_struct.name), new CCodeVariableDeclarator ("%sTypePrivate".printf (iface.get_cname ()))));
 		source_declarations.add_type_definition (type_priv_struct);
-
-		source_declarations.add_include ("stddef.h");
-		// calloc
-		source_declarations.add_include ("stdlib.h");
 
 		var cdecl = new CCodeDeclaration ("DovaType *");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("%s_type".printf (iface.get_lower_case_cname ()), new CCodeConstant ("NULL")));
@@ -1605,8 +1595,6 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			var cdecl = new CCodeDeclaration ("%s *".printf (current_type_symbol.get_cname ()));
 			cdecl.add_declarator (new CCodeVariableDeclarator ("this"));
 			vblock.add_statement (cdecl);
-
-			source_declarations.add_include ("stddef.h");
 
 			var type_get = new CCodeFunctionCall (new CCodeIdentifier (current_class.get_lower_case_cname () + "_type_get"));
 			foreach (var type_param in current_class.get_type_parameters ()) {

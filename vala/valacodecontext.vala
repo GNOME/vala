@@ -149,6 +149,8 @@ public class Vala.CodeContext {
 
 	public bool version_header { get; set; }
 
+	public bool nostdpkg { get; set; }
+
 	/**
 	 * Returns true if the target version of glib is greater than or 
 	 * equal to the specified version.

@@ -358,8 +358,6 @@ internal class Vala.DovaValueModule : DovaObjectModule {
 			return;
 		}
 
-		decl_space.add_include ("stdint.h");
-
 		generate_class_declaration (type_class, decl_space);
 
 		var type_fun = new CCodeFunction ("%s_type_get".printf (st.get_lower_case_cname ()), "DovaType *");
@@ -409,11 +407,6 @@ internal class Vala.DovaValueModule : DovaObjectModule {
 
 	public override void visit_struct (Struct st) {
 		base.visit_struct (st);
-
-		source_declarations.add_include ("stddef.h");
-		// calloc
-		source_declarations.add_include ("stdlib.h");
-
 
 		var cdecl = new CCodeDeclaration ("int");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("_%s_object_offset".printf (st.get_lower_case_cname ()), new CCodeConstant ("0")));

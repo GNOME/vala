@@ -255,6 +255,7 @@ class Vala.Compiler {
 		} else {
 			Report.error (null, "Unknown profile %s".printf (profile));
 		}
+		context.nostdpkg = nostdpkg;
 
 		context.entry_point_name = entry_point;
 
