@@ -451,6 +451,11 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		} else {
 			cdecl.modifiers = CCodeModifiers.EXTERN;
 		}
+
+		if (f.get_attribute ("ThreadLocal") != null) {
+			cdecl.modifiers |= CCodeModifiers.THREAD_LOCAL;
+		}
+
 		decl_space.add_type_member_declaration (cdecl);
 	}
 
@@ -527,6 +532,11 @@ internal class Vala.DovaBaseModule : CCodeModule {
 			} else {
 				var_def.modifiers = CCodeModifiers.STATIC;
 			}
+
+			if (f.get_attribute ("ThreadLocal") != null) {
+				var_def.modifiers |= CCodeModifiers.THREAD_LOCAL;
+			}
+
 			source_declarations.add_type_member_declaration (var_def);
 		}
 	}

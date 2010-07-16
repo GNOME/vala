@@ -1,6 +1,6 @@
 /* valaccodedeclaration.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -81,6 +81,9 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 			}
 			if ((modifiers & CCodeModifiers.EXTERN) != 0 && !has_initializer ()) {
 				writer.write_string ("extern ");
+			}
+			if ((modifiers & CCodeModifiers.THREAD_LOCAL) != 0) {
+				writer.write_string ("thread_local ");
 			}
 			writer.write_string (type_name);
 			writer.write_string (" ");
