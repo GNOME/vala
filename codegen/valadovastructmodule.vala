@@ -49,7 +49,7 @@ internal class Vala.DovaStructModule : DovaBaseModule {
 			return;
 		} else if (st.is_decimal_floating_type ()) {
 			// typedef for decimal floating types
-			st.set_cname ("_Decimal%d".printf (st.width));
+			st.set_cname ("decimal%d".printf (st.width));
 			return;
 		} else if (st.is_floating_type ()) {
 			// typedef for generic floating types
