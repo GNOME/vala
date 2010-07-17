@@ -1515,6 +1515,8 @@ namespace Posix {
 	[CCode (cheader_filename = "unistd.h")]
 	public int execl (string path, params string[] arg);
 	[CCode (cheader_filename = "unistd.h")]
+	public int execlp (string path, params string[] arg);
+	[CCode (cheader_filename = "unistd.h")]
 	public int pipe ([CCode (array_length = false, null_terminated = false)] int[] pipefd);
 	[CCode (cheader_filename = "unistd.h")]
 	public ssize_t read (int fd, void* buf, size_t count);
