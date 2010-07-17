@@ -2983,7 +2983,7 @@ namespace Gtk {
 	public class Scale : Gtk.Range, Atk.Implementor, Gtk.Buildable, Gtk.SizeRequest, Gtk.Orientable {
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public Scale (Gtk.Orientation orientation, Gtk.Adjustment adjustment);
-		public void add_mark (double value, Gtk.PositionType position, string markup);
+		public void add_mark (double value, Gtk.PositionType position, string? markup);
 		public void clear_marks ();
 		public int get_digits ();
 		public bool get_draw_value ();

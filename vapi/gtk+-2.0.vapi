@@ -3320,7 +3320,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Scale : Gtk.Range, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
-		public void add_mark (double value, Gtk.PositionType position, string markup);
+		public void add_mark (double value, Gtk.PositionType position, string? markup);
 		public void clear_marks ();
 		public int get_digits ();
 		public bool get_draw_value ();
