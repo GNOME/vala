@@ -964,7 +964,8 @@ namespace GLib {
 		public void bind_with_mapping (string key, void* object, string property, GLib.SettingsBindFlags flags, GLib.SettingsBindGetMapping get_mapping, GLib.SettingsBindSetMapping set_mapping, GLib.DestroyNotify destroy);
 		public void bind_writable (string key, void* object, string property, bool inverted);
 		public void delay ();
-		public void @get (string key, string format);
+		[CCode (sentinel = "")]
+		public void @get (string key, string format, ...);
 		public bool get_boolean (string key);
 		public unowned GLib.Settings get_child (string name);
 		public double get_double (string key);
@@ -976,7 +977,8 @@ namespace GLib {
 		public GLib.Variant get_value (string key);
 		public bool is_writable (string name);
 		public void revert ();
-		public bool @set (string key, string format);
+		[CCode (sentinel = "")]
+		public bool @set (string key, string format, ...);
 		public bool set_boolean (string key, bool value);
 		public bool set_double (string key, double value);
 		public bool set_enum (string key, int value);
