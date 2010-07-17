@@ -1934,6 +1934,14 @@ namespace GLib {
 		public const string METHOD;
 	}
 
+	[CCode (has_type_id = false)]
+	public struct DebugKey {
+		unowned string key;
+		uint value;
+	}
+
+	public uint parse_debug_string (string? debug_string, DebugKey[] keys);
+
 	/* String Utility Functions */
 
 	public uint strv_length ([CCode (array_length = false, array_null_terminated = true)] string[] str_array);
