@@ -3,14 +3,14 @@ namespace SDL {
 	///
 	/// Initialization
 	///
-	[CCode (cname="int", cprefix="SDL_INIT_")]
+	[Flags, CCode (cname="int", cprefix="SDL_INIT_")]
 	public enum InitFlag {
 		TIMER, AUDIO, VIDEO, CDROM, JOYSTICK, 
 		NOPARACHUTE, EVENTTHREAD, EVERYTHING
 	}// InitFlag
 
 	[CCode (cname="SDL_Init")]
-	public static int init(uint32 flags);
+	public static int init(uint32 flags = SDL.InitFlag.EVERYTHING);
 
 	[CCode (cname="SDL_InitSubSystem")]
 	public static int init_subsystem(uint32 flags);
@@ -80,10 +80,17 @@ namespace SDL {
 		public static int get_gamma_ramp(uint16* red, uint16* green, uint16* blue);
 
 		[CCode (cname="SDL_ListModes")]
-		public static void* list_modes(PixelFormat? format, uint32 flags);
+		public static void* _list_modes(PixelFormat? format, uint32 flags);
+
+		[CCode (array_length = false, array_null_terminated = true)]
+		public static unowned SDL.Rect*[]? list_modes(SDL.PixelFormat? format, uint32 flags, out bool any) {
+			var p = SDL.Video._list_modes (format, flags);
+			any = ((int) p == -1);
+			return any ? null : (SDL.Rect*[]?) p;
+		}
 	}// Video
 
-	[CCode (cname="int", cprefix="SDL_")]
+	[Flags, CCode (cname="int", cprefix="SDL_")]
 	public enum SurfaceFlag {
 		SWSURFACE, HWSURFACE, ASYNCBLIT, ANYFORMAT, HWPALETTE, DOUBLEBUF, 
 		FULLSCREEN, OPENGL, OPENGLBLIT, RESIZABLE, NOFRAME, HWACCEL, 
