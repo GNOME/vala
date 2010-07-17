@@ -166,7 +166,7 @@ namespace Gdk {
 		public weak Gdk.Window source_window;
 		public uint32 start_time;
 		public Gdk.DragAction suggested_action;
-		public weak GLib.List targets;
+		public weak GLib.List<Gdk.Atom> targets;
 		public void* windowing_data;
 		[CCode (has_construct_function = false)]
 		public DragContext ();
@@ -1607,7 +1607,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void drag_abort (Gdk.DragContext context, uint32 time_);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static unowned Gdk.DragContext drag_begin (Gdk.Window window, GLib.List targets);
+	public static unowned Gdk.DragContext drag_begin (Gdk.Window window, GLib.List<Gdk.Atom> targets);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void drag_drop (Gdk.DragContext context, uint32 time_);
 	[CCode (cheader_filename = "gdk/gdk.h")]
