@@ -41,19 +41,15 @@ internal class Vala.DovaStructModule : DovaBaseModule {
 
 		if (st.is_boolean_type ()) {
 			// typedef for boolean types
-			st.set_cname ("bool");
 			return;
 		} else if (st.is_integer_type ()) {
 			// typedef for integral types
-			st.set_cname ("%sint%d_t".printf (st.signed ? "" : "u", st.width));
 			return;
 		} else if (st.is_decimal_floating_type ()) {
 			// typedef for decimal floating types
-			st.set_cname ("decimal%d".printf (st.width));
 			return;
 		} else if (st.is_floating_type ()) {
 			// typedef for generic floating types
-			st.set_cname (st.width == 64 ? "double" : "float");
 			return;
 		}
 
