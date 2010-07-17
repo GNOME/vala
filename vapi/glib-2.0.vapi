@@ -1840,6 +1840,7 @@ namespace GLib {
 	[ErrorBase]
 	[CCode (copy_function = "g_error_copy", free_function = "g_error_free")]
 	public class Error {
+		[PrintfFormat]
 		public Error (Quark domain, int code, string format, ...);
 		public Error copy ();
 		public bool matches (Quark domain, int code);
