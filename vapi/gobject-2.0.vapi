@@ -48,6 +48,10 @@ namespace GLib {
 		public bool is_interface ();
 		[CCode (cname = "G_TYPE_IS_VALUE_TYPE")]
 		public bool is_value_type ();
+		[CCode (cname = "G_TYPE_IS_ENUM")]
+		public bool is_enum ();
+		[CCode (cname = "G_TYPE_IS_FLAGS")]
+		public bool is_flags ();
 
 		[CCode (cname = "G_TYPE_FROM_INSTANCE")]
 		public static Type from_instance (void* instance);
