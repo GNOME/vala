@@ -288,7 +288,7 @@ public class Vala.Class : ObjectTypeSymbol {
 		if (CodeContext.get ().profile == Profile.DOVA &&
 		    f.binding == MemberBinding.INSTANCE &&
 		    (f.access == SymbolAccessibility.PUBLIC || f.access == SymbolAccessibility.PROTECTED) &&
-		    !CodeContext.get ().nostdpkg) {
+		    name != "string" && name != "Object" /* temporary workaround */) {
 			// public/protected instance fields not supported, convert to automatic property
 
 			var prop = new Property (f.name, f.field_type.copy (), null, null, f.source_reference, comment);
