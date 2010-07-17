@@ -294,7 +294,7 @@ namespace Soup {
 		public void append (Soup.MemoryUse use, void* data, size_t length);
 		public void append_buffer (Soup.Buffer buffer);
 		public void complete ();
-		public unowned Soup.Buffer flatten ();
+		public Soup.Buffer flatten ();
 		public bool get_accumulate ();
 		public unowned Soup.Buffer get_chunk (int64 offset);
 		public void got_chunk (Soup.Buffer chunk);
@@ -745,7 +745,7 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate Soup.LoggerLogLevel LoggerFilter (Soup.Logger logger, Soup.Message msg);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public delegate void LoggerPrinter (Soup.Logger logger, Soup.LoggerLogLevel level, string direction, string data);
+	public delegate void LoggerPrinter (Soup.Logger logger, Soup.LoggerLogLevel level, char direction, string data);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate void MessageHeadersForeachFunc (string name, string value);
 	[CCode (cheader_filename = "libsoup/soup.h", has_target = false)]
