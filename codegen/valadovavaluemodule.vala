@@ -272,12 +272,12 @@ internal class Vala.DovaValueModule : DovaObjectModule {
 		// generate method to unbox values
 		var value_from_any_fun = new CCodeFunction ("%s_value_from_any".printf (st.get_lower_case_cname ()));
 		value_from_any_fun.modifiers = CCodeModifiers.STATIC;
-		value_from_any_fun.add_parameter (new CCodeFormalParameter ("any", "DovaObject *"));
+		value_from_any_fun.add_parameter (new CCodeFormalParameter ("any_", "any *"));
 		value_from_any_fun.add_parameter (new CCodeFormalParameter ("value", st.get_cname () + "*"));
 		value_from_any_fun.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
 		value_from_any_fun.block = new CCodeBlock ();
 		priv_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_PRIVATE".printf (st.get_upper_case_cname (null))));
-		priv_call.add_argument (new CCodeIdentifier ("any"));
+		priv_call.add_argument (new CCodeIdentifier ("any_"));
 		copy_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_copy".printf (st.get_lower_case_cname ())));
 		copy_call.add_argument (new CCodeIdentifier ("value"));
 		copy_call.add_argument (new CCodeIdentifier ("value_index"));

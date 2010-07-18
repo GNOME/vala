@@ -170,7 +170,7 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			instance_priv_struct.add_declaration (vdecl);
 
 			vdeclarator = new CCodeFunctionDeclarator ("value_from_any");
-			vdeclarator.add_parameter (new CCodeFormalParameter ("any", "DovaObject *"));
+			vdeclarator.add_parameter (new CCodeFormalParameter ("any_", "any *"));
 			vdeclarator.add_parameter (new CCodeFormalParameter ("value", "void *"));
 			vdeclarator.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
 
@@ -546,8 +546,7 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 		}
 		type_init_fun.block = new CCodeBlock ();
 
-		if (base_class == null) {
-		} else if (cl == object_class || cl == value_class) {
+		if (base_class == null || cl == object_class || cl == value_class) {
 			var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
 			sizeof_call.add_argument (new CCodeIdentifier ("void *"));
 
@@ -658,12 +657,12 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			// generate method to unbox value
 			var value_from_any_fun = new CCodeFunction ("%s_value_from_any".printf (cl.get_lower_case_cname ()));
 			value_from_any_fun.modifiers = CCodeModifiers.STATIC;
-			value_from_any_fun.add_parameter (new CCodeFormalParameter ("any", "DovaObject *"));
+			value_from_any_fun.add_parameter (new CCodeFormalParameter ("any_", "any *"));
 			value_from_any_fun.add_parameter (new CCodeFormalParameter ("value", cl.get_cname () + "**"));
 			value_from_any_fun.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
 			value_from_any_fun.block = new CCodeBlock ();
 			ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_ref".printf (cl.get_lower_case_cname ())));
-			ccall.add_argument (new CCodeIdentifier ("any"));
+			ccall.add_argument (new CCodeIdentifier ("any_"));
 			value_from_any_fun.block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, val), ccall)));
 			value_from_any_fun.block.add_statement (new CCodeReturnStatement (ccall));
 			source_type_member_definition.append (value_from_any_fun);
@@ -896,14 +895,14 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 
 			var value_from_any_function = new CCodeFunction ("dova_type_value_from_any", "void");
 			value_from_any_function.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
-			value_from_any_function.add_parameter (new CCodeFormalParameter ("any", "DovaObject *"));
+			value_from_any_function.add_parameter (new CCodeFormalParameter ("any_", "any *"));
 			value_from_any_function.add_parameter (new CCodeFormalParameter ("value", "void *"));
 			value_from_any_function.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
 
 			value_from_any_function.block = new CCodeBlock ();
 
 			ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (priv_call, "value_from_any"));
-			ccall.add_argument (new CCodeIdentifier ("any"));
+			ccall.add_argument (new CCodeIdentifier ("any_"));
 			ccall.add_argument (new CCodeIdentifier ("value"));
 			ccall.add_argument (new CCodeIdentifier ("value_index"));
 			value_from_any_function.block.add_statement (new CCodeReturnStatement (ccall));
