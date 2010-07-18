@@ -2482,9 +2482,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		return null;
 	}
 
-	public CCodeFunctionCall generate_instance_cast (CCodeExpression expr, TypeSymbol type) {
-		var result = new CCodeFunctionCall (new CCodeIdentifier (type.get_upper_case_cname (null)));
-		result.add_argument (expr);
-		return result;
+	public CCodeExpression generate_instance_cast (CCodeExpression expr, TypeSymbol type) {
+		return new CCodeCastExpression (expr, type.get_cname () + "*");
 	}
 }
