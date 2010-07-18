@@ -1,6 +1,6 @@
 /* valatokentype.vala
  *
- * Copyright (C) 2008-2009  Jürg Billeter
+ * Copyright (C) 2008-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -125,6 +125,7 @@ public enum Vala.TokenType {
 	REGEX_LITERAL,
 	REQUIRES,
 	RETURN,
+	SEALED,
 	SEMICOLON,
 	SET,
 	SIGNAL,
@@ -250,6 +251,7 @@ public enum Vala.TokenType {
 		case REGEX_LITERAL: return "regex literal";
 		case REQUIRES: return "`requires'";
 		case RETURN: return "`return'";
+		case SEALED: return "`sealed'";
 		case SEMICOLON: return "`;'";
 		case SET: return "`set'";
 		case SIGNAL: return "`signal'";

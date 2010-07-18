@@ -57,7 +57,8 @@ public class Vala.Parser : CodeVisitor {
 		OVERRIDE = 1 << 5,
 		STATIC = 1 << 6,
 		VIRTUAL = 1 << 7,
-		ASYNC = 1 << 8
+		ASYNC = 1 << 8,
+		SEALED = 1 << 9
 	}
 
 	public Parser () {
@@ -221,6 +222,7 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.REF:
 		case TokenType.REQUIRES:
 		case TokenType.RETURN:
+		case TokenType.SEALED:
 		case TokenType.SET:
 		case TokenType.SIGNAL:
 		case TokenType.SIZEOF:
@@ -2210,6 +2212,7 @@ public class Vala.Parser : CodeVisitor {
 			case TokenType.PRIVATE:
 			case TokenType.PROTECTED:
 			case TokenType.PUBLIC:
+			case TokenType.SEALED:
 			case TokenType.SIGNAL:
 			case TokenType.STATIC:
 			case TokenType.STRUCT:
@@ -3157,6 +3160,10 @@ public class Vala.Parser : CodeVisitor {
 				next ();
 				flags |= ModifierFlags.EXTERN;
 				break;
+			case TokenType.SEALED:
+				next ();
+				flags |= ModifierFlags.SEALED;
+				break;
 			case TokenType.STATIC:
 				next ();
 				flags |= ModifierFlags.STATIC;
@@ -3198,6 +3205,10 @@ public class Vala.Parser : CodeVisitor {
 			case TokenType.OVERRIDE:
 				next ();
 				flags |= ModifierFlags.OVERRIDE;
+				break;
+			case TokenType.SEALED:
+				next ();
+				flags |= ModifierFlags.SEALED;
 				break;
 			case TokenType.STATIC:
 				next ();
@@ -3492,6 +3503,7 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.PRIVATE:
 		case TokenType.PROTECTED:
 		case TokenType.PUBLIC:
+		case TokenType.SEALED:
 		case TokenType.SIGNAL:
 		case TokenType.STATIC:
 		case TokenType.STRUCT:

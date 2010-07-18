@@ -417,6 +417,9 @@ public class Vala.Scanner {
 				break;
 			case 's':
 				switch (begin[1]) {
+				case 'e':
+					if (matches (begin, "sealed")) return TokenType.SEALED;
+					break;
 				case 'i':
 					switch (begin[2]) {
 					case 'g':
