@@ -135,7 +135,6 @@ internal class Vala.DovaBaseModule : CCodeModule {
 
 	public int next_temp_var_id = 0;
 	public int next_wrapper_id = 0;
-	public int next_string_const_id = 0;
 	public bool in_creation_method { get { return current_method is CreationMethod; } }
 	public bool current_method_inner_error = false;
 	int next_block_id = 0;
@@ -1543,20 +1542,11 @@ internal class Vala.DovaBaseModule : CCodeModule {
 	}
 
 	public override void visit_string_literal (StringLiteral expr) {
-		var val = new CCodeInitializerList ();
-		val.append (new CCodeConstant ("0"));
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("string_create_from_cstring"));
 		// FIXME handle escaped characters in scanner/parser and escape them here again for C
-		val.append (new CCodeConstant ((expr.eval ().size ()).to_string ()));
-		val.append (new CCodeConstant (expr.value));
+		ccall.add_argument (new CCodeConstant (expr.value));
 
-		var cdecl = new CCodeDeclaration ("const string");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("_string%d_".printf (next_string_const_id), val));
-		cdecl.modifiers = CCodeModifiers.STATIC;
-		source_declarations.add_constant_declaration (cdecl);
-
-		expr.ccodenode = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeConstant ("_string%d_".printf (next_string_const_id)));
-
-		next_string_const_id++;
+		expr.ccodenode = ccall;
 	}
 
 	public override void visit_null_literal (NullLiteral expr) {
@@ -1637,7 +1627,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		}
 
 		var array_type = type as ArrayType;
-		if (array_type != null && array_type.fixed_length) {
+		if (array_type != null && array_type.inline_allocated) {
 			return requires_destroy (array_type.element_type);
 		}
 
