@@ -78,8 +78,9 @@ public class Vala.SymbolResolver : CodeVisitor {
 		if (context.profile == Profile.DOVA) {
 			// classes derive from Object by default
 			if (cl.base_class == null) {
-				var object_class = (Class) root_symbol.scope.lookup ("Dova").scope.lookup ("Object");
-				if (cl != object_class) {
+				var any_class = (Class) root_symbol.scope.lookup ("any");
+				if (cl != any_class) {
+					var object_class = (Class) root_symbol.scope.lookup ("Dova").scope.lookup ("Object");
 					cl.add_base_type (new ObjectType (object_class));
 					cl.base_class = object_class;
 				}
