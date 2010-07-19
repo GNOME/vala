@@ -2635,11 +2635,11 @@
 		</boxed>
 		<boxed name="GnomeVfsGetFileInfoResult" type-name="GnomeVfsGetFileInfoResult" get-type="gnome_vfs_get_file_info_result_get_type">
 		</boxed>
-		<enum name="GnomeVFSDNSSDServiceStatus">
+		<enum name="GnomeVFSDNSSDServiceStatus" type-name="GnomeVFSDNSSDServiceStatus" get-type="gnome_vfs_dns_sd_service_status_get_type">
 			<member name="GNOME_VFS_DNS_SD_SERVICE_ADDED" value="0"/>
 			<member name="GNOME_VFS_DNS_SD_SERVICE_REMOVED" value="1"/>
 		</enum>
-		<enum name="GnomeVFSDeviceType">
+		<enum name="GnomeVFSDeviceType" type-name="GnomeVFSDeviceType" get-type="gnome_vfs_device_type_get_type">
 			<member name="GNOME_VFS_DEVICE_TYPE_UNKNOWN" value="0"/>
 			<member name="GNOME_VFS_DEVICE_TYPE_AUDIO_CD" value="1"/>
 			<member name="GNOME_VFS_DEVICE_TYPE_VIDEO_DVD" value="2"/>
@@ -2659,7 +2659,7 @@
 			<member name="GNOME_VFS_DEVICE_TYPE_LOOPBACK" value="16"/>
 			<member name="GNOME_VFS_DEVICE_TYPE_NETWORK" value="17"/>
 		</enum>
-		<enum name="GnomeVFSFileType">
+		<enum name="GnomeVFSFileType" type-name="GnomeVFSFileType" get-type="gnome_vfs_file_type_get_type">
 			<member name="GNOME_VFS_FILE_TYPE_UNKNOWN" value="0"/>
 			<member name="GNOME_VFS_FILE_TYPE_REGULAR" value="1"/>
 			<member name="GNOME_VFS_FILE_TYPE_DIRECTORY" value="2"/>
@@ -2669,30 +2669,30 @@
 			<member name="GNOME_VFS_FILE_TYPE_BLOCK_DEVICE" value="6"/>
 			<member name="GNOME_VFS_FILE_TYPE_SYMBOLIC_LINK" value="7"/>
 		</enum>
-		<enum name="GnomeVFSFindDirectoryKind">
+		<enum name="GnomeVFSFindDirectoryKind" type-name="GnomeVFSFindDirectoryKind" get-type="gnome_vfs_find_directory_kind_get_type">
 			<member name="GNOME_VFS_DIRECTORY_KIND_DESKTOP" value="1000"/>
 			<member name="GNOME_VFS_DIRECTORY_KIND_TRASH" value="1001"/>
 		</enum>
-		<enum name="GnomeVFSMimeActionType">
+		<enum name="GnomeVFSMimeActionType" type-name="GnomeVFSMimeActionType" get-type="gnome_vfs_mime_action_type_get_type">
 			<member name="GNOME_VFS_MIME_ACTION_TYPE_NONE" value="0"/>
 			<member name="GNOME_VFS_MIME_ACTION_TYPE_APPLICATION" value="1"/>
 			<member name="GNOME_VFS_MIME_ACTION_TYPE_COMPONENT" value="2"/>
 		</enum>
-		<enum name="GnomeVFSMimeApplicationArgumentType">
+		<enum name="GnomeVFSMimeApplicationArgumentType" type-name="GnomeVFSMimeApplicationArgumentType" get-type="gnome_vfs_mime_application_argument_type_get_type">
 			<member name="GNOME_VFS_MIME_APPLICATION_ARGUMENT_TYPE_URIS" value="0"/>
 			<member name="GNOME_VFS_MIME_APPLICATION_ARGUMENT_TYPE_PATHS" value="1"/>
 			<member name="GNOME_VFS_MIME_APPLICATION_ARGUMENT_TYPE_URIS_FOR_NON_FILES" value="2"/>
 		</enum>
-		<enum name="GnomeVFSMimeEquivalence">
+		<enum name="GnomeVFSMimeEquivalence" type-name="GnomeVFSMimeEquivalence" get-type="gnome_vfs_mime_equivalence_get_type">
 			<member name="GNOME_VFS_MIME_UNRELATED" value="0"/>
 			<member name="GNOME_VFS_MIME_IDENTICAL" value="1"/>
 			<member name="GNOME_VFS_MIME_PARENT" value="2"/>
 		</enum>
-		<enum name="GnomeVFSModuleCallbackAuthenticationAuthType">
+		<enum name="GnomeVFSModuleCallbackAuthenticationAuthType" type-name="GnomeVFSModuleCallbackAuthenticationAuthType" get-type="gnome_vfs_module_callback_authentication_auth_type_get_type">
 			<member name="AuthTypeBasic" value="0"/>
 			<member name="AuthTypeDigest" value="1"/>
 		</enum>
-		<enum name="GnomeVFSMonitorEventType">
+		<enum name="GnomeVFSMonitorEventType" type-name="GnomeVFSMonitorEventType" get-type="gnome_vfs_monitor_event_type_get_type">
 			<member name="GNOME_VFS_MONITOR_EVENT_CHANGED" value="0"/>
 			<member name="GNOME_VFS_MONITOR_EVENT_DELETED" value="1"/>
 			<member name="GNOME_VFS_MONITOR_EVENT_STARTEXECUTING" value="2"/>
@@ -2700,11 +2700,11 @@
 			<member name="GNOME_VFS_MONITOR_EVENT_CREATED" value="4"/>
 			<member name="GNOME_VFS_MONITOR_EVENT_METADATA_CHANGED" value="5"/>
 		</enum>
-		<enum name="GnomeVFSMonitorType">
+		<enum name="GnomeVFSMonitorType" type-name="GnomeVFSMonitorType" get-type="gnome_vfs_monitor_type_get_type">
 			<member name="GNOME_VFS_MONITOR_FILE" value="0"/>
 			<member name="GNOME_VFS_MONITOR_DIRECTORY" value="1"/>
 		</enum>
-		<enum name="GnomeVFSResult">
+		<enum name="GnomeVFSResult" type-name="GnomeVFSResult" get-type="gnome_vfs_result_get_type">
 			<member name="GNOME_VFS_OK" value="0"/>
 			<member name="GNOME_VFS_ERROR_NOT_FOUND" value="1"/>
 			<member name="GNOME_VFS_ERROR_GENERIC" value="2"/>
@@ -2759,39 +2759,39 @@
 			<member name="GNOME_VFS_ERROR_NOT_A_SYMBOLIC_LINK" value="51"/>
 			<member name="GNOME_VFS_NUM_ERRORS" value="52"/>
 		</enum>
-		<enum name="GnomeVFSSeekPosition">
+		<enum name="GnomeVFSSeekPosition" type-name="GnomeVFSSeekPosition" get-type="gnome_vfs_seek_position_get_type">
 			<member name="GNOME_VFS_SEEK_START" value="0"/>
 			<member name="GNOME_VFS_SEEK_CURRENT" value="1"/>
 			<member name="GNOME_VFS_SEEK_END" value="2"/>
 		</enum>
-		<enum name="GnomeVFSVolumeType">
+		<enum name="GnomeVFSVolumeType" type-name="GnomeVFSVolumeType" get-type="gnome_vfs_volume_type_get_type">
 			<member name="GNOME_VFS_VOLUME_TYPE_MOUNTPOINT" value="0"/>
 			<member name="GNOME_VFS_VOLUME_TYPE_VFS_MOUNT" value="1"/>
 			<member name="GNOME_VFS_VOLUME_TYPE_CONNECTED_SERVER" value="2"/>
 		</enum>
-		<enum name="GnomeVFSXferErrorAction">
+		<enum name="GnomeVFSXferErrorAction" type-name="GnomeVFSXferErrorAction" get-type="gnome_vfs_xfer_error_action_get_type">
 			<member name="GNOME_VFS_XFER_ERROR_ACTION_ABORT" value="0"/>
 			<member name="GNOME_VFS_XFER_ERROR_ACTION_RETRY" value="1"/>
 			<member name="GNOME_VFS_XFER_ERROR_ACTION_SKIP" value="2"/>
 		</enum>
-		<enum name="GnomeVFSXferErrorMode">
+		<enum name="GnomeVFSXferErrorMode" type-name="GnomeVFSXferErrorMode" get-type="gnome_vfs_xfer_error_mode_get_type">
 			<member name="GNOME_VFS_XFER_ERROR_MODE_ABORT" value="0"/>
 			<member name="GNOME_VFS_XFER_ERROR_MODE_QUERY" value="1"/>
 		</enum>
-		<enum name="GnomeVFSXferOverwriteAction">
+		<enum name="GnomeVFSXferOverwriteAction" type-name="GnomeVFSXferOverwriteAction" get-type="gnome_vfs_xfer_overwrite_action_get_type">
 			<member name="GNOME_VFS_XFER_OVERWRITE_ACTION_ABORT" value="0"/>
 			<member name="GNOME_VFS_XFER_OVERWRITE_ACTION_REPLACE" value="1"/>
 			<member name="GNOME_VFS_XFER_OVERWRITE_ACTION_REPLACE_ALL" value="2"/>
 			<member name="GNOME_VFS_XFER_OVERWRITE_ACTION_SKIP" value="3"/>
 			<member name="GNOME_VFS_XFER_OVERWRITE_ACTION_SKIP_ALL" value="4"/>
 		</enum>
-		<enum name="GnomeVFSXferOverwriteMode">
+		<enum name="GnomeVFSXferOverwriteMode" type-name="GnomeVFSXferOverwriteMode" get-type="gnome_vfs_xfer_overwrite_mode_get_type">
 			<member name="GNOME_VFS_XFER_OVERWRITE_MODE_ABORT" value="0"/>
 			<member name="GNOME_VFS_XFER_OVERWRITE_MODE_QUERY" value="1"/>
 			<member name="GNOME_VFS_XFER_OVERWRITE_MODE_REPLACE" value="2"/>
 			<member name="GNOME_VFS_XFER_OVERWRITE_MODE_SKIP" value="3"/>
 		</enum>
-		<enum name="GnomeVFSXferPhase">
+		<enum name="GnomeVFSXferPhase" type-name="GnomeVFSXferPhase" get-type="gnome_vfs_xfer_phase_get_type">
 			<member name="GNOME_VFS_XFER_PHASE_INITIAL" value="0"/>
 			<member name="GNOME_VFS_XFER_CHECKING_DESTINATION" value="1"/>
 			<member name="GNOME_VFS_XFER_PHASE_COLLECTING" value="2"/>
@@ -2811,24 +2811,24 @@
 			<member name="GNOME_VFS_XFER_PHASE_COMPLETED" value="16"/>
 			<member name="GNOME_VFS_XFER_NUM_PHASES" value="17"/>
 		</enum>
-		<enum name="GnomeVFSXferProgressStatus">
+		<enum name="GnomeVFSXferProgressStatus" type-name="GnomeVFSXferProgressStatus" get-type="gnome_vfs_xfer_progress_status_get_type">
 			<member name="GNOME_VFS_XFER_PROGRESS_STATUS_OK" value="0"/>
 			<member name="GNOME_VFS_XFER_PROGRESS_STATUS_VFSERROR" value="1"/>
 			<member name="GNOME_VFS_XFER_PROGRESS_STATUS_OVERWRITE" value="2"/>
 			<member name="GNOME_VFS_XFER_PROGRESS_STATUS_DUPLICATE" value="3"/>
 		</enum>
-		<flags name="GnomeVFSDirectoryVisitOptions">
+		<flags name="GnomeVFSDirectoryVisitOptions" type-name="GnomeVFSDirectoryVisitOptions" get-type="gnome_vfs_directory_visit_options_get_type">
 			<member name="GNOME_VFS_DIRECTORY_VISIT_DEFAULT" value="0"/>
 			<member name="GNOME_VFS_DIRECTORY_VISIT_SAMEFS" value="1"/>
 			<member name="GNOME_VFS_DIRECTORY_VISIT_LOOPCHECK" value="2"/>
 			<member name="GNOME_VFS_DIRECTORY_VISIT_IGNORE_RECURSE_ERROR" value="4"/>
 		</flags>
-		<flags name="GnomeVFSFileFlags">
+		<flags name="GnomeVFSFileFlags" type-name="GnomeVFSFileFlags" get-type="gnome_vfs_file_flags_get_type">
 			<member name="GNOME_VFS_FILE_FLAGS_NONE" value="0"/>
 			<member name="GNOME_VFS_FILE_FLAGS_SYMLINK" value="1"/>
 			<member name="GNOME_VFS_FILE_FLAGS_LOCAL" value="2"/>
 		</flags>
-		<flags name="GnomeVFSFileInfoFields">
+		<flags name="GnomeVFSFileInfoFields" type-name="GnomeVFSFileInfoFields" get-type="gnome_vfs_file_info_fields_get_type">
 			<member name="GNOME_VFS_FILE_INFO_FIELDS_NONE" value="0"/>
 			<member name="GNOME_VFS_FILE_INFO_FIELDS_TYPE" value="1"/>
 			<member name="GNOME_VFS_FILE_INFO_FIELDS_PERMISSIONS" value="2"/>
@@ -2849,7 +2849,7 @@
 			<member name="GNOME_VFS_FILE_INFO_FIELDS_ACL" value="65536"/>
 			<member name="GNOME_VFS_FILE_INFO_FIELDS_SELINUX_CONTEXT" value="131072"/>
 		</flags>
-		<flags name="GnomeVFSFileInfoOptions">
+		<flags name="GnomeVFSFileInfoOptions" type-name="GnomeVFSFileInfoOptions" get-type="gnome_vfs_file_info_options_get_type">
 			<member name="GNOME_VFS_FILE_INFO_DEFAULT" value="0"/>
 			<member name="GNOME_VFS_FILE_INFO_GET_MIME_TYPE" value="1"/>
 			<member name="GNOME_VFS_FILE_INFO_FORCE_FAST_MIME_TYPE" value="2"/>
@@ -2860,7 +2860,7 @@
 			<member name="GNOME_VFS_FILE_INFO_GET_ACL" value="64"/>
 			<member name="GNOME_VFS_FILE_INFO_GET_SELINUX_CONTEXT" value="128"/>
 		</flags>
-		<flags name="GnomeVFSFilePermissions">
+		<flags name="GnomeVFSFilePermissions" type-name="GnomeVFSFilePermissions" get-type="gnome_vfs_file_permissions_get_type">
 			<member name="GNOME_VFS_PERM_SUID" value="2048"/>
 			<member name="GNOME_VFS_PERM_SGID" value="1024"/>
 			<member name="GNOME_VFS_PERM_STICKY" value="512"/>
@@ -2880,12 +2880,12 @@
 			<member name="GNOME_VFS_PERM_ACCESS_WRITABLE" value="131072"/>
 			<member name="GNOME_VFS_PERM_ACCESS_EXECUTABLE" value="262144"/>
 		</flags>
-		<flags name="GnomeVFSMakeURIDirs">
+		<flags name="GnomeVFSMakeURIDirs" type-name="GnomeVFSMakeURIDirs" get-type="gnome_vfs_make_uri_dirs_get_type">
 			<member name="GNOME_VFS_MAKE_URI_DIR_NONE" value="0"/>
 			<member name="GNOME_VFS_MAKE_URI_DIR_HOMEDIR" value="1"/>
 			<member name="GNOME_VFS_MAKE_URI_DIR_CURRENT" value="2"/>
 		</flags>
-		<flags name="GnomeVFSModuleCallbackFullAuthenticationFlags">
+		<flags name="GnomeVFSModuleCallbackFullAuthenticationFlags" type-name="GnomeVFSModuleCallbackFullAuthenticationFlags" get-type="gnome_vfs_module_callback_full_authentication_flags_get_type">
 			<member name="GNOME_VFS_MODULE_CALLBACK_FULL_AUTHENTICATION_PREVIOUS_ATTEMPT_FAILED" value="1"/>
 			<member name="GNOME_VFS_MODULE_CALLBACK_FULL_AUTHENTICATION_NEED_PASSWORD" value="2"/>
 			<member name="GNOME_VFS_MODULE_CALLBACK_FULL_AUTHENTICATION_NEED_USERNAME" value="4"/>
@@ -2893,17 +2893,17 @@
 			<member name="GNOME_VFS_MODULE_CALLBACK_FULL_AUTHENTICATION_SAVING_SUPPORTED" value="16"/>
 			<member name="GNOME_VFS_MODULE_CALLBACK_FULL_AUTHENTICATION_ANON_SUPPORTED" value="32"/>
 		</flags>
-		<flags name="GnomeVFSModuleCallbackFullAuthenticationOutFlags">
+		<flags name="GnomeVFSModuleCallbackFullAuthenticationOutFlags" type-name="GnomeVFSModuleCallbackFullAuthenticationOutFlags" get-type="gnome_vfs_module_callback_full_authentication_out_flags_get_type">
 			<member name="GNOME_VFS_MODULE_CALLBACK_FULL_AUTHENTICATION_OUT_ANON_SELECTED" value="1"/>
 		</flags>
-		<flags name="GnomeVFSOpenMode">
+		<flags name="GnomeVFSOpenMode" type-name="GnomeVFSOpenMode" get-type="gnome_vfs_open_mode_get_type">
 			<member name="GNOME_VFS_OPEN_NONE" value="0"/>
 			<member name="GNOME_VFS_OPEN_READ" value="1"/>
 			<member name="GNOME_VFS_OPEN_WRITE" value="2"/>
 			<member name="GNOME_VFS_OPEN_RANDOM" value="4"/>
 			<member name="GNOME_VFS_OPEN_TRUNCATE" value="8"/>
 		</flags>
-		<flags name="GnomeVFSSetFileInfoMask">
+		<flags name="GnomeVFSSetFileInfoMask" type-name="GnomeVFSSetFileInfoMask" get-type="gnome_vfs_set_file_info_mask_get_type">
 			<member name="GNOME_VFS_SET_FILE_INFO_NONE" value="0"/>
 			<member name="GNOME_VFS_SET_FILE_INFO_NAME" value="1"/>
 			<member name="GNOME_VFS_SET_FILE_INFO_PERMISSIONS" value="2"/>
@@ -2913,7 +2913,7 @@
 			<member name="GNOME_VFS_SET_FILE_INFO_SELINUX_CONTEXT" value="32"/>
 			<member name="GNOME_VFS_SET_FILE_INFO_SYMLINK_NAME" value="64"/>
 		</flags>
-		<flags name="GnomeVFSURIHideOptions">
+		<flags name="GnomeVFSURIHideOptions" type-name="GnomeVFSURIHideOptions" get-type="gnome_vfs_uri_hide_options_get_type">
 			<member name="GNOME_VFS_URI_HIDE_NONE" value="0"/>
 			<member name="GNOME_VFS_URI_HIDE_USER_NAME" value="1"/>
 			<member name="GNOME_VFS_URI_HIDE_PASSWORD" value="2"/>
@@ -2922,7 +2922,7 @@
 			<member name="GNOME_VFS_URI_HIDE_TOPLEVEL_METHOD" value="16"/>
 			<member name="GNOME_VFS_URI_HIDE_FRAGMENT_IDENTIFIER" value="256"/>
 		</flags>
-		<flags name="GnomeVFSXferOptions">
+		<flags name="GnomeVFSXferOptions" type-name="GnomeVFSXferOptions" get-type="gnome_vfs_xfer_options_get_type">
 			<member name="GNOME_VFS_XFER_DEFAULT" value="0"/>
 			<member name="GNOME_VFS_XFER_UNUSED_1" value="1"/>
 			<member name="GNOME_VFS_XFER_FOLLOW_LINKS" value="2"/>
@@ -3474,9 +3474,9 @@
 		<constant name="GNOME_VFS_APPLICATION_REGISTRY_STARTUP_NOTIFY" type="char*" value="startup_notify"/>
 		<constant name="GNOME_VFS_APPLICATION_REGISTRY_USES_GNOMEVFS" type="char*" value="uses_gnomevfs"/>
 		<constant name="GNOME_VFS_MAJOR_VERSION" type="int" value="2"/>
-		<constant name="GNOME_VFS_MICRO_VERSION" type="int" value="1"/>
+		<constant name="GNOME_VFS_MICRO_VERSION" type="int" value="3"/>
 		<constant name="GNOME_VFS_MIME_TYPE_UNKNOWN" type="char*" value="application/octet-stream"/>
-		<constant name="GNOME_VFS_MINOR_VERSION" type="int" value="20"/>
+		<constant name="GNOME_VFS_MINOR_VERSION" type="int" value="24"/>
 		<constant name="GNOME_VFS_MODULE_CALLBACK_AUTHENTICATION" type="char*" value="simple-authentication"/>
 		<constant name="GNOME_VFS_MODULE_CALLBACK_FILL_AUTHENTICATION" type="char*" value="fill-authentication"/>
 		<constant name="GNOME_VFS_MODULE_CALLBACK_FULL_AUTHENTICATION" type="char*" value="full-authentication"/>

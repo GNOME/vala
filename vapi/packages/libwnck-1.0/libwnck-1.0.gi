@@ -75,26 +75,26 @@
 			<field name="current_row" type="int"/>
 			<field name="current_col" type="int"/>
 		</struct>
-		<enum name="WnckClientType">
+		<enum name="WnckClientType" type-name="WnckClientType" get-type="wnck_client_type_get_type">
 			<member name="WNCK_CLIENT_TYPE_APPLICATION" value="1"/>
 			<member name="WNCK_CLIENT_TYPE_PAGER" value="2"/>
 		</enum>
-		<enum name="WnckMotionDirection">
+		<enum name="WnckMotionDirection" type-name="WnckMotionDirection" get-type="wnck_motion_direction_get_type">
 			<member name="WNCK_MOTION_UP" value="-1"/>
 			<member name="WNCK_MOTION_DOWN" value="-2"/>
 			<member name="WNCK_MOTION_LEFT" value="-3"/>
 			<member name="WNCK_MOTION_RIGHT" value="-4"/>
 		</enum>
-		<enum name="WnckPagerDisplayMode">
+		<enum name="WnckPagerDisplayMode" type-name="WnckPagerDisplayMode" get-type="wnck_pager_display_mode_get_type">
 			<member name="WNCK_PAGER_DISPLAY_NAME" value="0"/>
 			<member name="WNCK_PAGER_DISPLAY_CONTENT" value="1"/>
 		</enum>
-		<enum name="WnckTasklistGroupingType">
+		<enum name="WnckTasklistGroupingType" type-name="WnckTasklistGroupingType" get-type="wnck_tasklist_grouping_type_get_type">
 			<member name="WNCK_TASKLIST_NEVER_GROUP" value="0"/>
 			<member name="WNCK_TASKLIST_AUTO_GROUP" value="1"/>
 			<member name="WNCK_TASKLIST_ALWAYS_GROUP" value="2"/>
 		</enum>
-		<enum name="WnckWindowGravity">
+		<enum name="WnckWindowGravity" type-name="WnckWindowGravity" get-type="wnck_window_gravity_get_type">
 			<member name="WNCK_WINDOW_GRAVITY_CURRENT" value="0"/>
 			<member name="WNCK_WINDOW_GRAVITY_NORTHWEST" value="1"/>
 			<member name="WNCK_WINDOW_GRAVITY_NORTH" value="2"/>
@@ -107,7 +107,7 @@
 			<member name="WNCK_WINDOW_GRAVITY_SOUTHEAST" value="9"/>
 			<member name="WNCK_WINDOW_GRAVITY_STATIC" value="10"/>
 		</enum>
-		<enum name="WnckWindowType">
+		<enum name="WnckWindowType" type-name="WnckWindowType" get-type="wnck_window_type_get_type">
 			<member name="WNCK_WINDOW_NORMAL" value="0"/>
 			<member name="WNCK_WINDOW_DESKTOP" value="1"/>
 			<member name="WNCK_WINDOW_DOCK" value="2"/>
@@ -117,7 +117,7 @@
 			<member name="WNCK_WINDOW_UTILITY" value="6"/>
 			<member name="WNCK_WINDOW_SPLASHSCREEN" value="7"/>
 		</enum>
-		<flags name="WnckWindowActions">
+		<flags name="WnckWindowActions" type-name="WnckWindowActions" get-type="wnck_window_actions_get_type">
 			<member name="WNCK_WINDOW_ACTION_MOVE" value="1"/>
 			<member name="WNCK_WINDOW_ACTION_RESIZE" value="2"/>
 			<member name="WNCK_WINDOW_ACTION_SHADE" value="4"/>
@@ -138,13 +138,13 @@
 			<member name="WNCK_WINDOW_ACTION_ABOVE" value="131072"/>
 			<member name="WNCK_WINDOW_ACTION_BELOW" value="262144"/>
 		</flags>
-		<flags name="WnckWindowMoveResizeMask">
+		<flags name="WnckWindowMoveResizeMask" type-name="WnckWindowMoveResizeMask" get-type="wnck_window_move_resize_mask_get_type">
 			<member name="WNCK_WINDOW_CHANGE_X" value="1"/>
 			<member name="WNCK_WINDOW_CHANGE_Y" value="2"/>
 			<member name="WNCK_WINDOW_CHANGE_WIDTH" value="4"/>
 			<member name="WNCK_WINDOW_CHANGE_HEIGHT" value="8"/>
 		</flags>
-		<flags name="WnckWindowState">
+		<flags name="WnckWindowState" type-name="WnckWindowState" get-type="wnck_window_state_get_type">
 			<member name="WNCK_WINDOW_STATE_MINIMIZED" value="1"/>
 			<member name="WNCK_WINDOW_STATE_MAXIMIZED_HORIZONTALLY" value="2"/>
 			<member name="WNCK_WINDOW_STATE_MAXIMIZED_VERTICALLY" value="4"/>
@@ -802,6 +802,13 @@
 				<parameters>
 					<parameter name="tasklist" type="WnckTasklist*"/>
 					<parameter name="size" type="gint"/>
+				</parameters>
+			</method>
+			<method name="set_orientation" symbol="wnck_tasklist_set_orientation">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="tasklist" type="WnckTasklist*"/>
+					<parameter name="orient" type="GtkOrientation"/>
 				</parameters>
 			</method>
 			<method name="set_screen" symbol="wnck_tasklist_set_screen">

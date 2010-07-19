@@ -130,51 +130,51 @@
 		<function name="g_content_type_can_be_executable" symbol="g_content_type_can_be_executable">
 			<return-type type="gboolean"/>
 			<parameters>
-				<parameter name="type" type="char*"/>
+				<parameter name="type" type="gchar*"/>
 			</parameters>
 		</function>
 		<function name="g_content_type_equals" symbol="g_content_type_equals">
 			<return-type type="gboolean"/>
 			<parameters>
-				<parameter name="type1" type="char*"/>
-				<parameter name="type2" type="char*"/>
+				<parameter name="type1" type="gchar*"/>
+				<parameter name="type2" type="gchar*"/>
 			</parameters>
 		</function>
 		<function name="g_content_type_from_mime_type" symbol="g_content_type_from_mime_type">
-			<return-type type="char*"/>
+			<return-type type="gchar*"/>
 			<parameters>
-				<parameter name="mime_type" type="char*"/>
+				<parameter name="mime_type" type="gchar*"/>
 			</parameters>
 		</function>
 		<function name="g_content_type_get_description" symbol="g_content_type_get_description">
-			<return-type type="char*"/>
+			<return-type type="gchar*"/>
 			<parameters>
-				<parameter name="type" type="char*"/>
+				<parameter name="type" type="gchar*"/>
 			</parameters>
 		</function>
 		<function name="g_content_type_get_icon" symbol="g_content_type_get_icon">
 			<return-type type="GIcon*"/>
 			<parameters>
-				<parameter name="type" type="char*"/>
+				<parameter name="type" type="gchar*"/>
 			</parameters>
 		</function>
 		<function name="g_content_type_get_mime_type" symbol="g_content_type_get_mime_type">
-			<return-type type="char*"/>
+			<return-type type="gchar*"/>
 			<parameters>
-				<parameter name="type" type="char*"/>
+				<parameter name="type" type="gchar*"/>
 			</parameters>
 		</function>
 		<function name="g_content_type_guess" symbol="g_content_type_guess">
-			<return-type type="char*"/>
+			<return-type type="gchar*"/>
 			<parameters>
-				<parameter name="filename" type="char*"/>
+				<parameter name="filename" type="gchar*"/>
 				<parameter name="data" type="guchar*"/>
 				<parameter name="data_size" type="gsize"/>
 				<parameter name="result_uncertain" type="gboolean*"/>
 			</parameters>
 		</function>
 		<function name="g_content_type_guess_for_tree" symbol="g_content_type_guess_for_tree">
-			<return-type type="char**"/>
+			<return-type type="gchar**"/>
 			<parameters>
 				<parameter name="root" type="GFile*"/>
 			</parameters>
@@ -182,14 +182,14 @@
 		<function name="g_content_type_is_a" symbol="g_content_type_is_a">
 			<return-type type="gboolean"/>
 			<parameters>
-				<parameter name="type" type="char*"/>
-				<parameter name="supertype" type="char*"/>
+				<parameter name="type" type="gchar*"/>
+				<parameter name="supertype" type="gchar*"/>
 			</parameters>
 		</function>
 		<function name="g_content_type_is_unknown" symbol="g_content_type_is_unknown">
 			<return-type type="gboolean"/>
 			<parameters>
-				<parameter name="type" type="char*"/>
+				<parameter name="type" type="gchar*"/>
 			</parameters>
 		</function>
 		<function name="g_content_types_get_registered" symbol="g_content_types_get_registered">
@@ -499,6 +499,7 @@
 			<parameters>
 				<parameter name="connection" type="GDBusConnection*"/>
 				<parameter name="message" type="GDBusMessage*"/>
+				<parameter name="incoming" type="gboolean"/>
 				<parameter name="user_data" type="gpointer"/>
 			</parameters>
 		</callback>
@@ -592,6 +593,14 @@
 				<parameter name="user_data" type="gpointer"/>
 			</parameters>
 		</callback>
+		<callback name="GSettingsGetMapping">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="value" type="GVariant*"/>
+				<parameter name="result" type="gpointer*"/>
+				<parameter name="user_data" type="gpointer"/>
+			</parameters>
+		</callback>
 		<callback name="GSimpleAsyncThreadFunc">
 			<return-type type="void"/>
 			<parameters>
@@ -616,14 +625,7 @@
 			<field name="method_call" type="GDBusInterfaceMethodCallFunc"/>
 			<field name="get_property" type="GDBusInterfaceGetPropertyFunc"/>
 			<field name="set_property" type="GDBusInterfaceSetPropertyFunc"/>
-			<field name="_g_reserved1" type="GCallback"/>
-			<field name="_g_reserved2" type="GCallback"/>
-			<field name="_g_reserved3" type="GCallback"/>
-			<field name="_g_reserved4" type="GCallback"/>
-			<field name="_g_reserved5" type="GCallback"/>
-			<field name="_g_reserved6" type="GCallback"/>
-			<field name="_g_reserved7" type="GCallback"/>
-			<field name="_g_reserved8" type="GCallback"/>
+			<field name="padding" type="gpointer[]"/>
 		</struct>
 		<struct name="GDBusSubtreeVTable">
 			<field name="enumerate" type="GDBusSubtreeEnumerateFunc"/>
@@ -1332,6 +1334,7 @@
 			<member name="G_APP_INFO_CREATE_NONE" value="0"/>
 			<member name="G_APP_INFO_CREATE_NEEDS_TERMINAL" value="1"/>
 			<member name="G_APP_INFO_CREATE_SUPPORTS_URIS" value="2"/>
+			<member name="G_APP_INFO_CREATE_SUPPORTS_STARTUP_NOTIFICATION" value="4"/>
 		</flags>
 		<flags name="GAskPasswordFlags" type-name="GAskPasswordFlags" get-type="g_ask_password_flags_get_type">
 			<member name="G_ASK_PASSWORD_NEED_PASSWORD" value="1"/>
@@ -1368,6 +1371,7 @@
 			<member name="G_DBUS_CONNECTION_FLAGS_AUTHENTICATION_SERVER" value="2"/>
 			<member name="G_DBUS_CONNECTION_FLAGS_AUTHENTICATION_ALLOW_ANONYMOUS" value="4"/>
 			<member name="G_DBUS_CONNECTION_FLAGS_MESSAGE_BUS_CONNECTION" value="8"/>
+			<member name="G_DBUS_CONNECTION_FLAGS_DELAY_MESSAGE_PROCESSING" value="16"/>
 		</flags>
 		<flags name="GDBusMessageFlags" type-name="GDBusMessageFlags" get-type="g_dbus_message_flags_get_type">
 			<member name="G_DBUS_MESSAGE_FLAGS_NONE" value="0"/>
@@ -2014,9 +2018,9 @@
 			<signal name="authorize-authenticated-peer" when="LAST">
 				<return-type type="gboolean"/>
 				<parameters>
-					<parameter name="observer" type="GDBusAuthObserver*"/>
-					<parameter name="stream" type="GIOStream*"/>
-					<parameter name="credentials" type="GCredentials*"/>
+					<parameter name="object" type="GDBusAuthObserver*"/>
+					<parameter name="p0" type="GIOStream*"/>
+					<parameter name="p1" type="GCredentials*"/>
 				</parameters>
 			</signal>
 		</object>
@@ -2090,6 +2094,31 @@
 					<parameter name="interface_name" type="gchar*"/>
 					<parameter name="signal_name" type="gchar*"/>
 					<parameter name="parameters" type="GVariant*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="flush" symbol="g_dbus_connection_flush">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="connection" type="GDBusConnection*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="flush_finish" symbol="g_dbus_connection_flush_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="connection" type="GDBusConnection*"/>
+					<parameter name="res" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="flush_sync" symbol="g_dbus_connection_flush_sync">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="connection" type="GDBusConnection*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -2198,7 +2227,7 @@
 				<parameters>
 					<parameter name="connection" type="GDBusConnection*"/>
 					<parameter name="object_path" type="gchar*"/>
-					<parameter name="introspection_data" type="GDBusInterfaceInfo*"/>
+					<parameter name="interface_info" type="GDBusInterfaceInfo*"/>
 					<parameter name="vtable" type="GDBusInterfaceVTable*"/>
 					<parameter name="user_data" type="gpointer"/>
 					<parameter name="user_data_free_func" type="GDestroyNotify"/>
@@ -2292,6 +2321,12 @@
 					<parameter name="subscription_id" type="guint"/>
 				</parameters>
 			</method>
+			<method name="start_message_processing" symbol="g_dbus_connection_start_message_processing">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="connection" type="GDBusConnection*"/>
+				</parameters>
+			</method>
 			<method name="unregister_object" symbol="g_dbus_connection_unregister_object">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -2318,9 +2353,9 @@
 			<signal name="closed" when="LAST">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="connection" type="GDBusConnection*"/>
-					<parameter name="remote_peer_vanished" type="gboolean"/>
-					<parameter name="error" type="GError*"/>
+					<parameter name="object" type="GDBusConnection*"/>
+					<parameter name="p0" type="gboolean"/>
+					<parameter name="p1" type="GError*"/>
 				</parameters>
 			</signal>
 		</object>
@@ -3022,8 +3057,8 @@
 			<signal name="new-connection" when="LAST">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="server" type="GDBusServer*"/>
-					<parameter name="connection" type="GDBusConnection*"/>
+					<parameter name="object" type="GDBusServer*"/>
+					<parameter name="p0" type="GDBusConnection*"/>
 				</parameters>
 			</signal>
 		</object>
@@ -5807,6 +5842,13 @@
 					<parameter name="key" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="get_flags" symbol="g_settings_get_flags">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="settings" type="GSettings*"/>
+					<parameter name="key" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="get_has_unapplied" symbol="g_settings_get_has_unapplied">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -5818,6 +5860,15 @@
 				<parameters>
 					<parameter name="settings" type="GSettings*"/>
 					<parameter name="key" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_mapped" symbol="g_settings_get_mapped">
+				<return-type type="gpointer"/>
+				<parameters>
+					<parameter name="settings" type="GSettings*"/>
+					<parameter name="key" type="gchar*"/>
+					<parameter name="mapping" type="GSettingsGetMapping"/>
+					<parameter name="user_data" type="gpointer"/>
 				</parameters>
 			</method>
 			<method name="get_string" symbol="g_settings_get_string">
@@ -5847,6 +5898,15 @@
 					<parameter name="settings" type="GSettings*"/>
 					<parameter name="name" type="gchar*"/>
 				</parameters>
+			</method>
+			<method name="list_items" symbol="g_settings_list_items">
+				<return-type type="gchar**"/>
+				<parameters>
+					<parameter name="settings" type="GSettings*"/>
+				</parameters>
+			</method>
+			<method name="list_schemas" symbol="g_settings_list_schemas">
+				<return-type type="gchar**"/>
 			</method>
 			<constructor name="new" symbol="g_settings_new">
 				<return-type type="GSettings*"/>
@@ -5912,6 +5972,14 @@
 					<parameter name="settings" type="GSettings*"/>
 					<parameter name="key" type="gchar*"/>
 					<parameter name="value" type="gint"/>
+				</parameters>
+			</method>
+			<method name="set_flags" symbol="g_settings_set_flags">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="settings" type="GSettings*"/>
+					<parameter name="key" type="gchar*"/>
+					<parameter name="value" type="guint"/>
 				</parameters>
 			</method>
 			<method name="set_int" symbol="g_settings_set_int">

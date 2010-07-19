@@ -619,6 +619,7 @@ namespace Soup {
 		IO_ERROR,
 		MALFORMED,
 		TRY_AGAIN,
+		TOO_MANY_REDIRECTS,
 		CONTINUE,
 		SWITCHING_PROTOCOLS,
 		PROCESSING,
@@ -703,7 +704,8 @@ namespace Soup {
 	public enum SSLError {
 		HANDSHAKE_NEEDS_READ,
 		HANDSHAKE_NEEDS_WRITE,
-		CERTIFICATE
+		CERTIFICATE,
+		HANDSHAKE_FAILED
 	}
 	[CCode (cprefix = "SOUP_SOCKET_", cheader_filename = "libsoup/soup.h")]
 	public enum SocketIOStatus {
@@ -812,6 +814,16 @@ namespace Soup {
 	public const string AUTH_REALM;
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string AUTH_SCHEME_NAME;
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public const int CHAR_HTTP_CTL;
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public const int CHAR_HTTP_SEPARATOR;
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public const int CHAR_URI_GEN_DELIMS;
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public const int CHAR_URI_PERCENT_ENCODED;
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public const int CHAR_URI_SUB_DELIMS;
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const int CONTENT_DECODER_H;
 	[CCode (cheader_filename = "libsoup/soup.h")]
@@ -1008,6 +1020,8 @@ namespace Soup {
 	public static bool header_contains (string header, string token);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static void header_g_string_append_param (GLib.StringBuilder str, string name, string value);
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public static void header_g_string_append_param_quoted (GLib.StringBuilder str, string name, string value);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static GLib.SList<string> header_parse_list (string header);
 	[CCode (cheader_filename = "libsoup/soup.h")]

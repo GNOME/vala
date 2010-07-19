@@ -36,6 +36,12 @@
 					<parameter name="tree" type="GMenuTree*"/>
 				</parameters>
 			</method>
+			<method name="get_sort_key" symbol="gmenu_tree_get_sort_key">
+				<return-type type="GMenuTreeSortKey"/>
+				<parameters>
+					<parameter name="tree" type="GMenuTree*"/>
+				</parameters>
+			</method>
 			<method name="get_user_data" symbol="gmenu_tree_get_user_data">
 				<return-type type="gpointer"/>
 				<parameters>
@@ -61,6 +67,13 @@
 					<parameter name="tree" type="GMenuTree*"/>
 					<parameter name="callback" type="GMenuTreeChangedFunc"/>
 					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="set_sort_key" symbol="gmenu_tree_set_sort_key">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="tree" type="GMenuTree*"/>
+					<parameter name="sort_key" type="GMenuTreeSortKey"/>
 				</parameters>
 			</method>
 			<method name="set_user_data" symbol="gmenu_tree_set_user_data">
@@ -168,7 +181,19 @@
 					<parameter name="entry" type="GMenuTreeEntry*"/>
 				</parameters>
 			</method>
+			<method name="get_display_name" symbol="gmenu_tree_entry_get_display_name">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="entry" type="GMenuTreeEntry*"/>
+				</parameters>
+			</method>
 			<method name="get_exec" symbol="gmenu_tree_entry_get_exec">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="entry" type="GMenuTreeEntry*"/>
+				</parameters>
+			</method>
+			<method name="get_generic_name" symbol="gmenu_tree_entry_get_generic_name">
 				<return-type type="char*"/>
 				<parameters>
 					<parameter name="entry" type="GMenuTreeEntry*"/>
@@ -254,7 +279,8 @@
 			<member name="GMENU_TREE_FLAGS_INCLUDE_EXCLUDED" value="1"/>
 			<member name="GMENU_TREE_FLAGS_SHOW_EMPTY" value="2"/>
 			<member name="GMENU_TREE_FLAGS_INCLUDE_NODISPLAY" value="4"/>
-			<member name="GMENU_TREE_FLAGS_MASK" value="7"/>
+			<member name="GMENU_TREE_FLAGS_SHOW_ALL_SEPARATORS" value="8"/>
+			<member name="GMENU_TREE_FLAGS_MASK" value="15"/>
 		</enum>
 		<enum name="GMenuTreeItemType">
 			<member name="GMENU_TREE_ITEM_INVALID" value="0"/>
@@ -263,6 +289,10 @@
 			<member name="GMENU_TREE_ITEM_SEPARATOR" value="3"/>
 			<member name="GMENU_TREE_ITEM_HEADER" value="4"/>
 			<member name="GMENU_TREE_ITEM_ALIAS" value="5"/>
+		</enum>
+		<enum name="GMenuTreeSortKey">
+			<member name="GMENU_TREE_SORT_NAME" value="0"/>
+			<member name="GMENU_TREE_SORT_DISPLAY_NAME" value="1"/>
 		</enum>
 	</namespace>
 </api>

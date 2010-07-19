@@ -56,7 +56,7 @@ namespace Atk {
 		public virtual void threads_leave ();
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
-	public class NoOpObject : Atk.Object, Atk.Value, Atk.Document, Atk.Component, Atk.Text, Atk.Action, Atk.Hypertext, Atk.Selection, Atk.Table, Atk.Image, Atk.EditableText {
+	public class NoOpObject : Atk.Object, Atk.Component, Atk.Action, Atk.EditableText, Atk.Image, Atk.Selection, Atk.Table, Atk.Text, Atk.Hypertext, Atk.Value, Atk.Document {
 		[CCode (type = "AtkObject*", has_construct_function = false)]
 		public NoOpObject (GLib.Object obj);
 	}
@@ -141,6 +141,14 @@ namespace Atk {
 		public virtual GLib.Type get_accessible_type ();
 		public virtual void invalidate ();
 	}
+	[CCode (cheader_filename = "atk/atk.h")]
+	public class Plug : Atk.Object {
+		[CCode (type = "AtkObject*", has_construct_function = false)]
+		public Plug ();
+		public unowned string get_id ();
+		[NoWrapper]
+		public virtual unowned string get_object_id ();
+	}
 	[Compact]
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class PropertyValues {
@@ -163,7 +171,7 @@ namespace Atk {
 		public Relation (Atk.Object[] targets, Atk.RelationType relationship);
 		public void add_target (Atk.Object target);
 		public Atk.RelationType get_relation_type ();
-		public unowned GLib.PtrArray get_target ();
+		public unowned GLib.GenericArray get_target ();
 		public bool remove_target (Atk.Object target);
 		public static Atk.RelationType type_for_name (string name);
 		public static unowned string type_get_name (Atk.RelationType type);
@@ -175,7 +183,7 @@ namespace Atk {
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class RelationSet : GLib.Object {
-		public weak GLib.PtrArray relations;
+		public weak GLib.GenericArray relations;
 		[CCode (has_construct_function = false)]
 		public RelationSet ();
 		public void add (Atk.Relation relation);
@@ -185,6 +193,14 @@ namespace Atk {
 		public unowned Atk.Relation get_relation (int i);
 		public unowned Atk.Relation get_relation_by_type (Atk.RelationType relationship);
 		public void remove (Atk.Relation relation);
+	}
+	[CCode (cheader_filename = "atk/atk.h")]
+	public class Socket : Atk.Object {
+		public weak string embedded_plug_id;
+		[CCode (type = "AtkObject*", has_construct_function = false)]
+		public Socket ();
+		public virtual void embed (string plug_id);
+		public bool is_occupied ();
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class StateSet : GLib.Object {
@@ -471,6 +487,7 @@ namespace Atk {
 		PARENT_WINDOW_OF,
 		DESCRIBED_BY,
 		DESCRIPTION_FOR,
+		NODE_PARENT_OF,
 		LAST_DEFINED
 	}
 	[CCode (cprefix = "ATK_ROLE_", cheader_filename = "atk/atk.h")]

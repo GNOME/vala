@@ -188,12 +188,25 @@
 				<parameter name="xdisplay" type="Display*"/>
 			</parameters>
 		</function>
+		<function name="x11_pixmap_get_drawable_impl" symbol="gdk_x11_pixmap_get_drawable_impl">
+			<return-type type="GdkDrawable*"/>
+			<parameters>
+				<parameter name="pixmap" type="GdkPixmap*"/>
+			</parameters>
+		</function>
 		<function name="x11_register_standard_event_type" symbol="gdk_x11_register_standard_event_type">
 			<return-type type="void"/>
 			<parameters>
 				<parameter name="display" type="GdkDisplay*"/>
 				<parameter name="event_base" type="gint"/>
 				<parameter name="n_events" type="gint"/>
+			</parameters>
+		</function>
+		<function name="x11_screen_get_monitor_output" symbol="gdk_x11_screen_get_monitor_output">
+			<return-type type="XID"/>
+			<parameters>
+				<parameter name="screen" type="GdkScreen*"/>
+				<parameter name="monitor_num" type="gint"/>
 			</parameters>
 		</function>
 		<function name="x11_screen_get_screen_number" symbol="gdk_x11_screen_get_screen_number">
@@ -235,6 +248,12 @@
 			<return-type type="Visual*"/>
 			<parameters>
 				<parameter name="visual" type="GdkVisual*"/>
+			</parameters>
+		</function>
+		<function name="x11_window_get_drawable_impl" symbol="gdk_x11_window_get_drawable_impl">
+			<return-type type="GdkDrawable*"/>
+			<parameters>
+				<parameter name="window" type="GdkWindow*"/>
 			</parameters>
 		</function>
 		<function name="x11_window_move_to_current_desktop" symbol="gdk_x11_window_move_to_current_desktop">

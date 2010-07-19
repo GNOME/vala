@@ -9,6 +9,18 @@
 				<parameter name="micro" type="guint"/>
 			</parameters>
 		</function>
+		<function name="geolocation_policy_allow" symbol="webkit_geolocation_policy_allow">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="decision" type="WebKitGeolocationPolicyDecision*"/>
+			</parameters>
+		</function>
+		<function name="geolocation_policy_deny" symbol="webkit_geolocation_policy_deny">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="decision" type="WebKitGeolocationPolicyDecision*"/>
+			</parameters>
+		</function>
 		<function name="get_cache_model" symbol="webkit_get_cache_model">
 			<return-type type="WebKitCacheModel"/>
 		</function>
@@ -241,6 +253,8 @@
 				</parameters>
 			</signal>
 		</object>
+		<object name="WebKitGeolocationPolicyDecision" parent="GObject" type-name="WebKitGeolocationPolicyDecision" get-type="webkit_geolocation_policy_decision_get_type">
+		</object>
 		<object name="WebKitHitTestResult" parent="GObject" type-name="WebKitHitTestResult" get-type="webkit_hit_test_result_get_type">
 			<property name="context" type="WebKitHitTestResultContext" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="image-uri" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
@@ -373,6 +387,12 @@
 				<parameters>
 					<parameter name="web_back_forward_list" type="WebKitWebBackForwardList*"/>
 					<parameter name="history_item" type="WebKitWebHistoryItem*"/>
+				</parameters>
+			</method>
+			<method name="clear" symbol="webkit_web_back_forward_list_clear">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="web_back_forward_list" type="WebKitWebBackForwardList*"/>
 				</parameters>
 			</method>
 			<method name="contains_item" symbol="webkit_web_back_forward_list_contains_item">
@@ -1078,11 +1098,13 @@
 			<property name="enable-private-browsing" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-scripts" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-site-specific-quirks" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="enable-spatial-navigation" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-spell-checking" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-universal-access-from-file-uris" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-xss-auditor" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enforce-96-dpi" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="fantasy-font-family" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="javascript-can-access-clipboard" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="javascript-can-open-windows-automatically" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="minimum-font-size" type="gint" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="minimum-logical-font-size" type="gint" readable="1" writable="1" construct="1" construct-only="0"/>
@@ -1602,11 +1624,33 @@
 					<parameter name="p1" type="GObject*"/>
 				</parameters>
 			</signal>
+			<signal name="document-load-finished" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="WebKitWebView*"/>
+					<parameter name="p0" type="WebKitWebFrame*"/>
+				</parameters>
+			</signal>
 			<signal name="download-requested" when="LAST">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="object" type="WebKitWebView*"/>
 					<parameter name="p0" type="GObject*"/>
+				</parameters>
+			</signal>
+			<signal name="geolocation-policy-decision-cancelled" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="WebKitWebView*"/>
+					<parameter name="p0" type="WebKitWebFrame*"/>
+				</parameters>
+			</signal>
+			<signal name="geolocation-policy-decision-requested" when="LAST">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="object" type="WebKitWebView*"/>
+					<parameter name="p0" type="WebKitWebFrame*"/>
+					<parameter name="p1" type="WebKitGeolocationPolicyDecision*"/>
 				</parameters>
 			</signal>
 			<signal name="hovering-over-link" when="LAST">
@@ -1858,8 +1902,8 @@
 			<property name="y" type="gint" readable="1" writable="1" construct="1" construct-only="0"/>
 		</object>
 		<constant name="WEBKIT_MAJOR_VERSION" type="int" value="1"/>
-		<constant name="WEBKIT_MICRO_VERSION" type="int" value="22"/>
-		<constant name="WEBKIT_MINOR_VERSION" type="int" value="1"/>
+		<constant name="WEBKIT_MICRO_VERSION" type="int" value="3"/>
+		<constant name="WEBKIT_MINOR_VERSION" type="int" value="2"/>
 		<constant name="WEBKIT_USER_AGENT_MAJOR_VERSION" type="int" value="531"/>
 		<constant name="WEBKIT_USER_AGENT_MINOR_VERSION" type="int" value="2"/>
 	</namespace>

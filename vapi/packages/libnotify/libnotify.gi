@@ -31,12 +31,12 @@
 		<callback name="NotifyActionCallback">
 			<return-type type="void"/>
 			<parameters>
-				<parameter name="p1" type="NotifyNotification*"/>
-				<parameter name="p2" type="gchar*"/>
-				<parameter name="p3" type="gpointer"/>
+				<parameter name="notification" type="NotifyNotification*"/>
+				<parameter name="action" type="char*"/>
+				<parameter name="user_data" type="gpointer"/>
 			</parameters>
 		</callback>
-		<enum name="NotifyUrgency">
+		<enum name="NotifyUrgency" type-name="NotifyUrgency" get-type="notify_urgency_get_type">
 			<member name="NOTIFY_URGENCY_LOW" value="0"/>
 			<member name="NOTIFY_URGENCY_NORMAL" value="1"/>
 			<member name="NOTIFY_URGENCY_CRITICAL" value="2"/>
@@ -86,21 +86,27 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<method name="get_closed_reason" symbol="notify_notification_get_closed_reason">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="notification" type="NotifyNotification*"/>
+				</parameters>
+			</method>
 			<constructor name="new" symbol="notify_notification_new">
 				<return-type type="NotifyNotification*"/>
 				<parameters>
-					<parameter name="summary" type="gchar*"/>
-					<parameter name="body" type="gchar*"/>
-					<parameter name="icon" type="gchar*"/>
+					<parameter name="summary" type="char*"/>
+					<parameter name="body" type="char*"/>
+					<parameter name="icon" type="char*"/>
 					<parameter name="attach" type="GtkWidget*"/>
 				</parameters>
 			</constructor>
 			<constructor name="new_with_status_icon" symbol="notify_notification_new_with_status_icon">
 				<return-type type="NotifyNotification*"/>
 				<parameters>
-					<parameter name="summary" type="gchar*"/>
-					<parameter name="body" type="gchar*"/>
-					<parameter name="icon" type="gchar*"/>
+					<parameter name="summary" type="char*"/>
+					<parameter name="body" type="char*"/>
+					<parameter name="icon" type="char*"/>
 					<parameter name="status_icon" type="GtkStatusIcon*"/>
 				</parameters>
 			</constructor>
@@ -124,7 +130,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="notification" type="NotifyNotification*"/>
-					<parameter name="key" type="gchar*"/>
+					<parameter name="key" type="char*"/>
 					<parameter name="value" type="guchar"/>
 				</parameters>
 			</method>
@@ -132,7 +138,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="notification" type="NotifyNotification*"/>
-					<parameter name="key" type="gchar*"/>
+					<parameter name="key" type="char*"/>
 					<parameter name="value" type="guchar*"/>
 					<parameter name="len" type="gsize"/>
 				</parameters>
@@ -141,7 +147,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="notification" type="NotifyNotification*"/>
-					<parameter name="key" type="gchar*"/>
+					<parameter name="key" type="char*"/>
 					<parameter name="value" type="gdouble"/>
 				</parameters>
 			</method>
@@ -149,7 +155,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="notification" type="NotifyNotification*"/>
-					<parameter name="key" type="gchar*"/>
+					<parameter name="key" type="char*"/>
 					<parameter name="value" type="gint"/>
 				</parameters>
 			</method>
@@ -157,8 +163,16 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="notification" type="NotifyNotification*"/>
-					<parameter name="key" type="gchar*"/>
-					<parameter name="value" type="gchar*"/>
+					<parameter name="key" type="char*"/>
+					<parameter name="value" type="char*"/>
+				</parameters>
+			</method>
+			<method name="set_hint_uint32" symbol="notify_notification_set_hint_uint32">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="notification" type="NotifyNotification*"/>
+					<parameter name="key" type="char*"/>
+					<parameter name="value" type="guint"/>
 				</parameters>
 			</method>
 			<method name="set_icon_from_pixbuf" symbol="notify_notification_set_icon_from_pixbuf">
@@ -166,6 +180,13 @@
 				<parameters>
 					<parameter name="notification" type="NotifyNotification*"/>
 					<parameter name="icon" type="GdkPixbuf*"/>
+				</parameters>
+			</method>
+			<method name="set_image_from_pixbuf" symbol="notify_notification_set_image_from_pixbuf">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="notification" type="NotifyNotification*"/>
+					<parameter name="image" type="GdkPixbuf*"/>
 				</parameters>
 			</method>
 			<method name="set_timeout" symbol="notify_notification_set_timeout">
@@ -193,14 +214,16 @@
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="notification" type="NotifyNotification*"/>
-					<parameter name="summary" type="gchar*"/>
-					<parameter name="body" type="gchar*"/>
-					<parameter name="icon" type="gchar*"/>
+					<parameter name="summary" type="char*"/>
+					<parameter name="body" type="char*"/>
+					<parameter name="icon" type="char*"/>
 				</parameters>
 			</method>
 			<property name="attach-widget" type="GtkWidget*" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="body" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="closed-reason" type="gint" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="icon-name" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="id" type="gint" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="status-icon" type="GtkStatusIcon*" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="summary" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
 			<signal name="closed" when="FIRST">

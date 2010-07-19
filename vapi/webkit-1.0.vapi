@@ -30,6 +30,9 @@ namespace WebKit {
 		public virtual signal bool error (int p0, int p1, string p2);
 	}
 	[CCode (cheader_filename = "webkit/webkit.h")]
+	public class GeolocationPolicyDecision : GLib.Object {
+	}
+	[CCode (cheader_filename = "webkit/webkit.h")]
 	public class HitTestResult : GLib.Object {
 		[NoAccessorMethod]
 		public WebKit.HitTestResultContext context { get; construct; }
@@ -82,6 +85,7 @@ namespace WebKit {
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public class WebBackForwardList : GLib.Object {
 		public void add_item (WebKit.WebHistoryItem history_item);
+		public void clear ();
 		public bool contains_item (WebKit.WebHistoryItem history_item);
 		public unowned WebKit.WebHistoryItem get_back_item ();
 		public int get_back_length ();
@@ -296,6 +300,8 @@ namespace WebKit {
 		[NoAccessorMethod]
 		public bool enable_site_specific_quirks { get; set construct; }
 		[NoAccessorMethod]
+		public bool enable_spatial_navigation { get; set construct; }
+		[NoAccessorMethod]
 		public bool enable_spell_checking { get; set construct; }
 		[NoAccessorMethod]
 		public bool enable_universal_access_from_file_uris { get; set construct; }
@@ -305,6 +311,8 @@ namespace WebKit {
 		public bool enforce_96_dpi { get; set construct; }
 		[NoAccessorMethod]
 		public string fantasy_font_family { owned get; set construct; }
+		[NoAccessorMethod]
+		public bool javascript_can_access_clipboard { get; set construct; }
 		[NoAccessorMethod]
 		public bool javascript_can_open_windows_automatically { get; set construct; }
 		[NoAccessorMethod]
@@ -426,7 +434,10 @@ namespace WebKit {
 		[HasEmitter]
 		public virtual signal void cut_clipboard ();
 		public virtual signal void database_quota_exceeded (GLib.Object p0, GLib.Object p1);
+		public virtual signal void document_load_finished (WebKit.WebFrame p0);
 		public virtual signal bool download_requested (GLib.Object p0);
+		public virtual signal void geolocation_policy_decision_cancelled (WebKit.WebFrame p0);
+		public virtual signal bool geolocation_policy_decision_requested (WebKit.WebFrame p0, WebKit.GeolocationPolicyDecision p1);
 		public virtual signal void hovering_over_link (string? p0, string p1);
 		public virtual signal void icon_loaded (string p0);
 		public virtual signal void load_committed (WebKit.WebFrame p0);
@@ -589,6 +600,10 @@ namespace WebKit {
 	public const int USER_AGENT_MINOR_VERSION;
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public static bool check_version (uint major, uint minor, uint micro);
+	[CCode (cheader_filename = "webkit/webkit.h")]
+	public static void geolocation_policy_allow (WebKit.GeolocationPolicyDecision decision);
+	[CCode (cheader_filename = "webkit/webkit.h")]
+	public static void geolocation_policy_deny (WebKit.GeolocationPolicyDecision decision);
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public static WebKit.CacheModel get_cache_model ();
 	[CCode (cheader_filename = "webkit/webkit.h")]

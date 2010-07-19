@@ -146,6 +146,10 @@ namespace Json {
 	[CCode (cprefix = "JSON_PARSER_ERROR_", cheader_filename = "json-glib/json-glib.h")]
 	public enum ParserError {
 		PARSE,
+		TRAILING_COMMA,
+		MISSING_COMMA,
+		MISSING_COLON,
+		INVALID_BAREWORD,
 		UNKNOWN
 	}
 	[CCode (cheader_filename = "json-glib/json-glib.h")]

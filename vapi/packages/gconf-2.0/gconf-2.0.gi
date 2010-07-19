@@ -865,6 +865,18 @@
 					<parameter name="src" type="GConfValue*"/>
 				</parameters>
 			</method>
+			<method name="decode" symbol="gconf_value_decode">
+				<return-type type="GConfValue*"/>
+				<parameters>
+					<parameter name="encoded" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="encode" symbol="gconf_value_encode">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="val" type="GConfValue*"/>
+				</parameters>
+			</method>
 			<method name="free" symbol="gconf_value_free">
 				<return-type type="void"/>
 				<parameters>
@@ -1187,17 +1199,17 @@
 				</parameters>
 			</method>
 		</boxed>
-		<enum name="GConfClientErrorHandlingMode">
+		<enum name="GConfClientErrorHandlingMode" type-name="GConfClientErrorHandlingMode" get-type="gconf_client_error_handling_mode_get_type">
 			<member name="GCONF_CLIENT_HANDLE_NONE" value="0"/>
 			<member name="GCONF_CLIENT_HANDLE_UNRETURNED" value="1"/>
 			<member name="GCONF_CLIENT_HANDLE_ALL" value="2"/>
 		</enum>
-		<enum name="GConfClientPreloadType">
+		<enum name="GConfClientPreloadType" type-name="GConfClientPreloadType" get-type="gconf_client_preload_type_get_type">
 			<member name="GCONF_CLIENT_PRELOAD_NONE" value="0"/>
 			<member name="GCONF_CLIENT_PRELOAD_ONELEVEL" value="1"/>
 			<member name="GCONF_CLIENT_PRELOAD_RECURSIVE" value="2"/>
 		</enum>
-		<enum name="GConfError">
+		<enum name="GConfError" type-name="GConfError" get-type="gconf_error_get_type">
 			<member name="GCONF_ERROR_SUCCESS" value="0"/>
 			<member name="GCONF_ERROR_FAILED" value="1"/>
 			<member name="GCONF_ERROR_NO_SERVER" value="2"/>
@@ -1216,7 +1228,7 @@
 			<member name="GCONF_ERROR_NO_WRITABLE_DATABASE" value="15"/>
 			<member name="GCONF_ERROR_IN_SHUTDOWN" value="16"/>
 		</enum>
-		<enum name="GConfValueType">
+		<enum name="GConfValueType" type-name="GConfValueType" get-type="gconf_value_type_get_type">
 			<member name="GCONF_VALUE_INVALID" value="0"/>
 			<member name="GCONF_VALUE_STRING" value="1"/>
 			<member name="GCONF_VALUE_INT" value="2"/>
@@ -1226,7 +1238,7 @@
 			<member name="GCONF_VALUE_LIST" value="6"/>
 			<member name="GCONF_VALUE_PAIR" value="7"/>
 		</enum>
-		<flags name="GConfUnsetFlags">
+		<flags name="GConfUnsetFlags" type-name="GConfUnsetFlags" get-type="gconf_unset_flags_get_type">
 			<member name="GCONF_UNSET_INCLUDING_SCHEMA_NAMES" value="1"/>
 		</flags>
 		<object name="GConfClient" parent="GObject" type-name="GConfClient" get-type="gconf_client_get_type">
@@ -1621,7 +1633,7 @@
 			<field name="notify_list" type="GSList*"/>
 			<field name="notify_handler" type="guint"/>
 			<field name="pending_notify_count" type="int"/>
-			<field name="pad1" type="gpointer"/>
+			<field name="cache_dirs" type="GHashTable*"/>
 			<field name="pad2" type="int"/>
 		</object>
 	</namespace>

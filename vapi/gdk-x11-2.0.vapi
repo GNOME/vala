@@ -65,7 +65,11 @@ namespace Gdk {
 	[CCode (cname = "gdk_net_wm_supports", cheader_filename = "gdk/gdkx.h")]
 	public static bool x11_net_wm_supports (Gdk.Atom property);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
+	public static unowned Gdk.Drawable x11_pixmap_get_drawable_impl (Gdk.Pixmap pixmap);
+	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static void x11_register_standard_event_type (Gdk.Display display, int event_base, int n_events);
+	[CCode (cheader_filename = "gdk/gdkx.h")]
+	public static X.ID x11_screen_get_monitor_output (Gdk.Screen screen, int monitor_num);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static int x11_screen_get_screen_number (Gdk.Screen screen);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
@@ -82,6 +86,8 @@ namespace Gdk {
 	public static unowned Gdk.Visual x11_visual_get (uint32 xvisualid);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static unowned Gdk.Visual x11_visual_get_xvisual (Gdk.Visual visual);
+	[CCode (cheader_filename = "gdk/gdkx.h")]
+	public static unowned Gdk.Drawable x11_window_get_drawable_impl (Gdk.Window window);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static void x11_window_move_to_current_desktop (Gdk.Window window);
 	[CCode (cheader_filename = "gdk/gdkx.h")]

@@ -229,7 +229,8 @@
 			<member name="ATK_RELATION_PARENT_WINDOW_OF" value="13"/>
 			<member name="ATK_RELATION_DESCRIBED_BY" value="14"/>
 			<member name="ATK_RELATION_DESCRIPTION_FOR" value="15"/>
-			<member name="ATK_RELATION_LAST_DEFINED" value="16"/>
+			<member name="ATK_RELATION_NODE_PARENT_OF" value="16"/>
+			<member name="ATK_RELATION_LAST_DEFINED" value="17"/>
 		</enum>
 		<enum name="AtkRole" type-name="AtkRole" get-type="atk_role_get_type">
 			<member name="ATK_ROLE_INVALID" value="0"/>
@@ -573,16 +574,16 @@
 		</object>
 		<object name="AtkNoOpObject" parent="AtkObject" type-name="AtkNoOpObject" get-type="atk_no_op_object_get_type">
 			<implements>
-				<interface name="AtkValue"/>
-				<interface name="AtkDocument"/>
 				<interface name="AtkComponent"/>
-				<interface name="AtkText"/>
 				<interface name="AtkAction"/>
-				<interface name="AtkHypertext"/>
+				<interface name="AtkEditableText"/>
+				<interface name="AtkImage"/>
 				<interface name="AtkSelection"/>
 				<interface name="AtkTable"/>
-				<interface name="AtkImage"/>
-				<interface name="AtkEditableText"/>
+				<interface name="AtkText"/>
+				<interface name="AtkHypertext"/>
+				<interface name="AtkValue"/>
+				<interface name="AtkDocument"/>
 			</implements>
 			<constructor name="new" symbol="atk_no_op_object_new">
 				<return-type type="AtkObject*"/>
@@ -966,6 +967,23 @@
 				</parameters>
 			</vfunc>
 		</object>
+		<object name="AtkPlug" parent="AtkObject" type-name="AtkPlug" get-type="atk_plug_get_type">
+			<method name="get_id" symbol="atk_plug_get_id">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="plug" type="AtkPlug*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="atk_plug_new">
+				<return-type type="AtkObject*"/>
+			</constructor>
+			<vfunc name="get_object_id">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="obj" type="AtkPlug*"/>
+				</parameters>
+			</vfunc>
+		</object>
 		<object name="AtkRegistry" parent="GObject" type-name="AtkRegistry" get-type="atk_registry_get_type">
 			<method name="get_factory" symbol="atk_registry_get_factory">
 				<return-type type="AtkObjectFactory*"/>
@@ -1104,6 +1122,32 @@
 				</parameters>
 			</method>
 			<field name="relations" type="GPtrArray*"/>
+		</object>
+		<object name="AtkSocket" parent="AtkObject" type-name="AtkSocket" get-type="atk_socket_get_type">
+			<method name="embed" symbol="atk_socket_embed">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="obj" type="AtkSocket*"/>
+					<parameter name="plug_id" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="is_occupied" symbol="atk_socket_is_occupied">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="obj" type="AtkSocket*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="atk_socket_new">
+				<return-type type="AtkObject*"/>
+			</constructor>
+			<vfunc name="embed">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="obj" type="AtkSocket*"/>
+					<parameter name="plug_id" type="gchar*"/>
+				</parameters>
+			</vfunc>
+			<field name="embedded_plug_id" type="gchar*"/>
 		</object>
 		<object name="AtkStateSet" parent="GObject" type-name="AtkStateSet" get-type="atk_state_set_get_type">
 			<method name="add_state" symbol="atk_state_set_add_state">

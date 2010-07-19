@@ -668,7 +668,11 @@
 		</enum>
 		<enum name="JsonParserError" type-name="JsonParserError" get-type="json_parser_error_get_type">
 			<member name="JSON_PARSER_ERROR_PARSE" value="0"/>
-			<member name="JSON_PARSER_ERROR_UNKNOWN" value="1"/>
+			<member name="JSON_PARSER_ERROR_TRAILING_COMMA" value="1"/>
+			<member name="JSON_PARSER_ERROR_MISSING_COMMA" value="2"/>
+			<member name="JSON_PARSER_ERROR_MISSING_COLON" value="3"/>
+			<member name="JSON_PARSER_ERROR_INVALID_BAREWORD" value="4"/>
+			<member name="JSON_PARSER_ERROR_UNKNOWN" value="5"/>
 		</enum>
 		<object name="JsonGenerator" parent="GObject" type-name="JsonGenerator" get-type="json_generator_get_type">
 			<constructor name="new" symbol="json_generator_new">
@@ -872,9 +876,9 @@
 			</vfunc>
 		</interface>
 		<constant name="JSON_MAJOR_VERSION" type="int" value="0"/>
-		<constant name="JSON_MICRO_VERSION" type="int" value="0"/>
-		<constant name="JSON_MINOR_VERSION" type="int" value="10"/>
+		<constant name="JSON_MICRO_VERSION" type="int" value="1"/>
+		<constant name="JSON_MINOR_VERSION" type="int" value="11"/>
 		<constant name="JSON_VERSION_HEX" type="int" value="0"/>
-		<constant name="JSON_VERSION_S" type="char*" value="0.10.0"/>
+		<constant name="JSON_VERSION_S" type="char*" value="0.11.1"/>
 	</namespace>
 </api>

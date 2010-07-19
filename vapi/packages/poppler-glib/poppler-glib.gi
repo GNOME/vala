@@ -1,6 +1,13 @@
 <?xml version="1.0"?>
 <api version="1.0">
 	<namespace name="Poppler">
+		<function name="date_parse" symbol="poppler_date_parse">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="date" type="gchar*"/>
+				<parameter name="timet" type="time_t*"/>
+			</parameters>
+		</function>
 		<function name="error_quark" symbol="poppler_error_quark">
 			<return-type type="GQuark"/>
 		</function>
@@ -75,6 +82,69 @@
 			<field name="uri" type="PopplerActionUri"/>
 			<field name="named" type="PopplerActionNamed"/>
 			<field name="movie" type="PopplerActionMovie"/>
+		</boxed>
+		<boxed name="PopplerAnnotCalloutLine" type-name="PopplerAnnotCalloutLine" get-type="poppler_annot_callout_line_get_type">
+			<method name="copy" symbol="poppler_annot_callout_line_copy">
+				<return-type type="PopplerAnnotCalloutLine*"/>
+				<parameters>
+					<parameter name="callout" type="PopplerAnnotCalloutLine*"/>
+				</parameters>
+			</method>
+			<method name="free" symbol="poppler_annot_callout_line_free">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="callout" type="PopplerAnnotCalloutLine*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="poppler_annot_callout_line_new">
+				<return-type type="PopplerAnnotCalloutLine*"/>
+			</constructor>
+			<field name="multiline" type="gboolean"/>
+			<field name="x1" type="gdouble"/>
+			<field name="y1" type="gdouble"/>
+			<field name="x2" type="gdouble"/>
+			<field name="y2" type="gdouble"/>
+			<field name="x3" type="gdouble"/>
+			<field name="y3" type="gdouble"/>
+		</boxed>
+		<boxed name="PopplerAnnotMapping" type-name="PopplerAnnotMapping" get-type="poppler_annot_mapping_get_type">
+			<method name="copy" symbol="poppler_annot_mapping_copy">
+				<return-type type="PopplerAnnotMapping*"/>
+				<parameters>
+					<parameter name="mapping" type="PopplerAnnotMapping*"/>
+				</parameters>
+			</method>
+			<method name="free" symbol="poppler_annot_mapping_free">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="mapping" type="PopplerAnnotMapping*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="poppler_annot_mapping_new">
+				<return-type type="PopplerAnnotMapping*"/>
+			</constructor>
+			<field name="area" type="PopplerRectangle"/>
+			<field name="annot" type="PopplerAnnot*"/>
+		</boxed>
+		<boxed name="PopplerColor" type-name="PopplerColor" get-type="poppler_color_get_type">
+			<method name="copy" symbol="poppler_color_copy">
+				<return-type type="PopplerColor*"/>
+				<parameters>
+					<parameter name="color" type="PopplerColor*"/>
+				</parameters>
+			</method>
+			<method name="free" symbol="poppler_color_free">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="color" type="PopplerColor*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="poppler_color_new">
+				<return-type type="PopplerColor*"/>
+			</constructor>
+			<field name="red" type="guint16"/>
+			<field name="green" type="guint16"/>
+			<field name="blue" type="guint16"/>
 		</boxed>
 		<boxed name="PopplerDest" type-name="PopplerDest" get-type="poppler_dest_get_type">
 			<method name="copy" symbol="poppler_dest_copy">
@@ -193,7 +263,7 @@
 				<return-type type="PopplerImageMapping*"/>
 			</constructor>
 			<field name="area" type="PopplerRectangle"/>
-			<field name="image" type="GdkPixbuf*"/>
+			<field name="image_id" type="gint"/>
 		</boxed>
 		<boxed name="PopplerIndexIter" type-name="PopplerIndexIter" get-type="poppler_index_iter_get_type">
 			<method name="copy" symbol="poppler_index_iter_copy">
@@ -236,6 +306,50 @@
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="iter" type="PopplerIndexIter*"/>
+				</parameters>
+			</method>
+		</boxed>
+		<boxed name="PopplerLayersIter" type-name="PopplerLayersIter" get-type="poppler_layers_iter_get_type">
+			<method name="copy" symbol="poppler_layers_iter_copy">
+				<return-type type="PopplerLayersIter*"/>
+				<parameters>
+					<parameter name="iter" type="PopplerLayersIter*"/>
+				</parameters>
+			</method>
+			<method name="free" symbol="poppler_layers_iter_free">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="iter" type="PopplerLayersIter*"/>
+				</parameters>
+			</method>
+			<method name="get_child" symbol="poppler_layers_iter_get_child">
+				<return-type type="PopplerLayersIter*"/>
+				<parameters>
+					<parameter name="parent" type="PopplerLayersIter*"/>
+				</parameters>
+			</method>
+			<method name="get_layer" symbol="poppler_layers_iter_get_layer">
+				<return-type type="PopplerLayer*"/>
+				<parameters>
+					<parameter name="iter" type="PopplerLayersIter*"/>
+				</parameters>
+			</method>
+			<method name="get_title" symbol="poppler_layers_iter_get_title">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="iter" type="PopplerLayersIter*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="poppler_layers_iter_new">
+				<return-type type="PopplerLayersIter*"/>
+				<parameters>
+					<parameter name="document" type="PopplerDocument*"/>
+				</parameters>
+			</constructor>
+			<method name="next" symbol="poppler_layers_iter_next">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="iter" type="PopplerLayersIter*"/>
 				</parameters>
 			</method>
 		</boxed>
@@ -303,21 +417,73 @@
 			<field name="x2" type="gdouble"/>
 			<field name="y2" type="gdouble"/>
 		</boxed>
-		<enum name="PopplerActionType">
+		<enum name="PopplerActionType" type-name="PopplerActionType" get-type="poppler_action_type_get_type">
 			<member name="POPPLER_ACTION_UNKNOWN" value="0"/>
-			<member name="POPPLER_ACTION_GOTO_DEST" value="1"/>
-			<member name="POPPLER_ACTION_GOTO_REMOTE" value="2"/>
-			<member name="POPPLER_ACTION_LAUNCH" value="3"/>
-			<member name="POPPLER_ACTION_URI" value="4"/>
-			<member name="POPPLER_ACTION_NAMED" value="5"/>
-			<member name="POPPLER_ACTION_MOVIE" value="6"/>
+			<member name="POPPLER_ACTION_NONE" value="1"/>
+			<member name="POPPLER_ACTION_GOTO_DEST" value="2"/>
+			<member name="POPPLER_ACTION_GOTO_REMOTE" value="3"/>
+			<member name="POPPLER_ACTION_LAUNCH" value="4"/>
+			<member name="POPPLER_ACTION_URI" value="5"/>
+			<member name="POPPLER_ACTION_NAMED" value="6"/>
+			<member name="POPPLER_ACTION_MOVIE" value="7"/>
 		</enum>
-		<enum name="PopplerBackend">
+		<enum name="PopplerAnnotExternalDataType" type-name="PopplerAnnotExternalDataType" get-type="poppler_annot_external_data_type_get_type">
+			<member name="POPPLER_ANNOT_EXTERNAL_DATA_MARKUP_3D" value="0"/>
+			<member name="POPPLER_ANNOT_EXTERNAL_DATA_MARKUP_UNKNOWN" value="1"/>
+		</enum>
+		<enum name="PopplerAnnotFreeTextQuadding" type-name="PopplerAnnotFreeTextQuadding" get-type="poppler_annot_free_text_quadding_get_type">
+			<member name="POPPLER_ANNOT_FREE_TEXT_QUADDING_LEFT_JUSTIFIED" value="0"/>
+			<member name="POPPLER_ANNOT_FREE_TEXT_QUADDING_CENTERED" value="1"/>
+			<member name="POPPLER_ANNOT_FREE_TEXT_QUADDING_RIGHT_JUSTIFIED" value="2"/>
+		</enum>
+		<enum name="PopplerAnnotMarkupReplyType" type-name="PopplerAnnotMarkupReplyType" get-type="poppler_annot_markup_reply_type_get_type">
+			<member name="POPPLER_ANNOT_MARKUP_REPLY_TYPE_R" value="0"/>
+			<member name="POPPLER_ANNOT_MARKUP_REPLY_TYPE_GROUP" value="1"/>
+		</enum>
+		<enum name="PopplerAnnotTextState" type-name="PopplerAnnotTextState" get-type="poppler_annot_text_state_get_type">
+			<member name="POPPLER_ANNOT_TEXT_STATE_MARKED" value="0"/>
+			<member name="POPPLER_ANNOT_TEXT_STATE_UNMARKED" value="1"/>
+			<member name="POPPLER_ANNOT_TEXT_STATE_ACCEPTED" value="2"/>
+			<member name="POPPLER_ANNOT_TEXT_STATE_REJECTED" value="3"/>
+			<member name="POPPLER_ANNOT_TEXT_STATE_CANCELLED" value="4"/>
+			<member name="POPPLER_ANNOT_TEXT_STATE_COMPLETED" value="5"/>
+			<member name="POPPLER_ANNOT_TEXT_STATE_NONE" value="6"/>
+			<member name="POPPLER_ANNOT_TEXT_STATE_UNKNOWN" value="7"/>
+		</enum>
+		<enum name="PopplerAnnotType" type-name="PopplerAnnotType" get-type="poppler_annot_type_get_type">
+			<member name="POPPLER_ANNOT_UNKNOWN" value="0"/>
+			<member name="POPPLER_ANNOT_TEXT" value="1"/>
+			<member name="POPPLER_ANNOT_LINK" value="2"/>
+			<member name="POPPLER_ANNOT_FREE_TEXT" value="3"/>
+			<member name="POPPLER_ANNOT_LINE" value="4"/>
+			<member name="POPPLER_ANNOT_SQUARE" value="5"/>
+			<member name="POPPLER_ANNOT_CIRCLE" value="6"/>
+			<member name="POPPLER_ANNOT_POLYGON" value="7"/>
+			<member name="POPPLER_ANNOT_POLY_LINE" value="8"/>
+			<member name="POPPLER_ANNOT_HIGHLIGHT" value="9"/>
+			<member name="POPPLER_ANNOT_UNDERLINE" value="10"/>
+			<member name="POPPLER_ANNOT_SQUIGGLY" value="11"/>
+			<member name="POPPLER_ANNOT_STRIKE_OUT" value="12"/>
+			<member name="POPPLER_ANNOT_STAMP" value="13"/>
+			<member name="POPPLER_ANNOT_CARET" value="14"/>
+			<member name="POPPLER_ANNOT_INK" value="15"/>
+			<member name="POPPLER_ANNOT_POPUP" value="16"/>
+			<member name="POPPLER_ANNOT_FILE_ATTACHMENT" value="17"/>
+			<member name="POPPLER_ANNOT_SOUND" value="18"/>
+			<member name="POPPLER_ANNOT_MOVIE" value="19"/>
+			<member name="POPPLER_ANNOT_WIDGET" value="20"/>
+			<member name="POPPLER_ANNOT_SCREEN" value="21"/>
+			<member name="POPPLER_ANNOT_PRINTER_MARK" value="22"/>
+			<member name="POPPLER_ANNOT_TRAP_NET" value="23"/>
+			<member name="POPPLER_ANNOT_WATERMARK" value="24"/>
+			<member name="POPPLER_ANNOT_3D" value="25"/>
+		</enum>
+		<enum name="PopplerBackend" type-name="PopplerBackend" get-type="poppler_backend_get_type">
 			<member name="POPPLER_BACKEND_UNKNOWN" value="0"/>
 			<member name="POPPLER_BACKEND_SPLASH" value="1"/>
 			<member name="POPPLER_BACKEND_CAIRO" value="2"/>
 		</enum>
-		<enum name="PopplerDestType">
+		<enum name="PopplerDestType" type-name="PopplerDestType" get-type="poppler_dest_type_get_type">
 			<member name="POPPLER_DEST_UNKNOWN" value="0"/>
 			<member name="POPPLER_DEST_XYZ" value="1"/>
 			<member name="POPPLER_DEST_FIT" value="2"/>
@@ -329,11 +495,14 @@
 			<member name="POPPLER_DEST_FITBV" value="8"/>
 			<member name="POPPLER_DEST_NAMED" value="9"/>
 		</enum>
-		<enum name="PopplerError">
+		<enum name="PopplerError" type-name="PopplerError" get-type="poppler_error_get_type">
 			<member name="POPPLER_ERROR_INVALID" value="0"/>
 			<member name="POPPLER_ERROR_ENCRYPTED" value="1"/>
+			<member name="POPPLER_ERROR_OPEN_FILE" value="2"/>
+			<member name="POPPLER_ERROR_BAD_CATALOG" value="3"/>
+			<member name="POPPLER_ERROR_DAMAGED" value="4"/>
 		</enum>
-		<enum name="PopplerFontType">
+		<enum name="PopplerFontType" type-name="PopplerFontType" get-type="poppler_font_type_get_type">
 			<member name="POPPLER_FONT_TYPE_UNKNOWN" value="0"/>
 			<member name="POPPLER_FONT_TYPE_TYPE1" value="1"/>
 			<member name="POPPLER_FONT_TYPE_TYPE1C" value="2"/>
@@ -347,34 +516,34 @@
 			<member name="POPPLER_FONT_TYPE_CID_TYPE2" value="10"/>
 			<member name="POPPLER_FONT_TYPE_CID_TYPE2OT" value="11"/>
 		</enum>
-		<enum name="PopplerFormButtonType">
+		<enum name="PopplerFormButtonType" type-name="PopplerFormButtonType" get-type="poppler_form_button_type_get_type">
 			<member name="POPPLER_FORM_BUTTON_PUSH" value="0"/>
 			<member name="POPPLER_FORM_BUTTON_CHECK" value="1"/>
 			<member name="POPPLER_FORM_BUTTON_RADIO" value="2"/>
 		</enum>
-		<enum name="PopplerFormChoiceType">
+		<enum name="PopplerFormChoiceType" type-name="PopplerFormChoiceType" get-type="poppler_form_choice_type_get_type">
 			<member name="POPPLER_FORM_CHOICE_COMBO" value="0"/>
 			<member name="POPPLER_FORM_CHOICE_LIST" value="1"/>
 		</enum>
-		<enum name="PopplerFormFieldType">
+		<enum name="PopplerFormFieldType" type-name="PopplerFormFieldType" get-type="poppler_form_field_type_get_type">
 			<member name="POPPLER_FORM_FIELD_UNKNOWN" value="0"/>
 			<member name="POPPLER_FORM_FIELD_BUTTON" value="1"/>
 			<member name="POPPLER_FORM_FIELD_TEXT" value="2"/>
 			<member name="POPPLER_FORM_FIELD_CHOICE" value="3"/>
 			<member name="POPPLER_FORM_FIELD_SIGNATURE" value="4"/>
 		</enum>
-		<enum name="PopplerFormTextType">
+		<enum name="PopplerFormTextType" type-name="PopplerFormTextType" get-type="poppler_form_text_type_get_type">
 			<member name="POPPLER_FORM_TEXT_NORMAL" value="0"/>
 			<member name="POPPLER_FORM_TEXT_MULTILINE" value="1"/>
 			<member name="POPPLER_FORM_TEXT_FILE_SELECT" value="2"/>
 		</enum>
-		<enum name="PopplerOrientation">
+		<enum name="PopplerOrientation" type-name="PopplerOrientation" get-type="poppler_orientation_get_type">
 			<member name="POPPLER_ORIENTATION_PORTRAIT" value="0"/>
 			<member name="POPPLER_ORIENTATION_LANDSCAPE" value="1"/>
 			<member name="POPPLER_ORIENTATION_UPSIDEDOWN" value="2"/>
 			<member name="POPPLER_ORIENTATION_SEASCAPE" value="3"/>
 		</enum>
-		<enum name="PopplerPageLayout">
+		<enum name="PopplerPageLayout" type-name="PopplerPageLayout" get-type="poppler_page_layout_get_type">
 			<member name="POPPLER_PAGE_LAYOUT_UNSET" value="0"/>
 			<member name="POPPLER_PAGE_LAYOUT_SINGLE_PAGE" value="1"/>
 			<member name="POPPLER_PAGE_LAYOUT_ONE_COLUMN" value="2"/>
@@ -383,7 +552,7 @@
 			<member name="POPPLER_PAGE_LAYOUT_TWO_PAGE_LEFT" value="5"/>
 			<member name="POPPLER_PAGE_LAYOUT_TWO_PAGE_RIGHT" value="6"/>
 		</enum>
-		<enum name="PopplerPageMode">
+		<enum name="PopplerPageMode" type-name="PopplerPageMode" get-type="poppler_page_mode_get_type">
 			<member name="POPPLER_PAGE_MODE_UNSET" value="0"/>
 			<member name="POPPLER_PAGE_MODE_NONE" value="1"/>
 			<member name="POPPLER_PAGE_MODE_USE_OUTLINES" value="2"/>
@@ -392,15 +561,15 @@
 			<member name="POPPLER_PAGE_MODE_USE_OC" value="5"/>
 			<member name="POPPLER_PAGE_MODE_USE_ATTACHMENTS" value="6"/>
 		</enum>
-		<enum name="PopplerPageTransitionAlignment">
+		<enum name="PopplerPageTransitionAlignment" type-name="PopplerPageTransitionAlignment" get-type="poppler_page_transition_alignment_get_type">
 			<member name="POPPLER_PAGE_TRANSITION_HORIZONTAL" value="0"/>
 			<member name="POPPLER_PAGE_TRANSITION_VERTICAL" value="1"/>
 		</enum>
-		<enum name="PopplerPageTransitionDirection">
+		<enum name="PopplerPageTransitionDirection" type-name="PopplerPageTransitionDirection" get-type="poppler_page_transition_direction_get_type">
 			<member name="POPPLER_PAGE_TRANSITION_INWARD" value="0"/>
 			<member name="POPPLER_PAGE_TRANSITION_OUTWARD" value="1"/>
 		</enum>
-		<enum name="PopplerPageTransitionType">
+		<enum name="PopplerPageTransitionType" type-name="PopplerPageTransitionType" get-type="poppler_page_transition_type_get_type">
 			<member name="POPPLER_PAGE_TRANSITION_REPLACE" value="0"/>
 			<member name="POPPLER_PAGE_TRANSITION_SPLIT" value="1"/>
 			<member name="POPPLER_PAGE_TRANSITION_BLINDS" value="2"/>
@@ -414,19 +583,33 @@
 			<member name="POPPLER_PAGE_TRANSITION_UNCOVER" value="10"/>
 			<member name="POPPLER_PAGE_TRANSITION_FADE" value="11"/>
 		</enum>
-		<enum name="PopplerSelectionStyle">
+		<enum name="PopplerSelectionStyle" type-name="PopplerSelectionStyle" get-type="poppler_selection_style_get_type">
 			<member name="POPPLER_SELECTION_GLYPH" value="0"/>
 			<member name="POPPLER_SELECTION_WORD" value="1"/>
 			<member name="POPPLER_SELECTION_LINE" value="2"/>
 		</enum>
-		<flags name="PopplerPermissions">
+		<flags name="PopplerAnnotFlag" type-name="PopplerAnnotFlag" get-type="poppler_annot_flag_get_type">
+			<member name="POPPLER_ANNOT_FLAG_UNKNOWN" value="0"/>
+			<member name="POPPLER_ANNOT_FLAG_INVISIBLE" value="1"/>
+			<member name="POPPLER_ANNOT_FLAG_HIDDEN" value="2"/>
+			<member name="POPPLER_ANNOT_FLAG_PRINT" value="4"/>
+			<member name="POPPLER_ANNOT_FLAG_NO_ZOOM" value="8"/>
+			<member name="POPPLER_ANNOT_FLAG_NO_ROTATE" value="16"/>
+			<member name="POPPLER_ANNOT_FLAG_NO_VIEW" value="32"/>
+			<member name="POPPLER_ANNOT_FLAG_READ_ONLY" value="64"/>
+			<member name="POPPLER_ANNOT_FLAG_LOCKED" value="128"/>
+			<member name="POPPLER_ANNOT_FLAG_TOGGLE_NO_VIEW" value="256"/>
+			<member name="POPPLER_ANNOT_FLAG_LOCKED_CONTENTS" value="512"/>
+		</flags>
+		<flags name="PopplerPermissions" type-name="PopplerPermissions" get-type="poppler_permissions_get_type">
 			<member name="POPPLER_PERMISSIONS_OK_TO_PRINT" value="1"/>
 			<member name="POPPLER_PERMISSIONS_OK_TO_MODIFY" value="2"/>
 			<member name="POPPLER_PERMISSIONS_OK_TO_COPY" value="4"/>
 			<member name="POPPLER_PERMISSIONS_OK_TO_ADD_NOTES" value="8"/>
-			<member name="POPPLER_PERMISSIONS_FULL" value="15"/>
+			<member name="POPPLER_PERMISSIONS_OK_TO_FILL_FORM" value="16"/>
+			<member name="POPPLER_PERMISSIONS_FULL" value="31"/>
 		</flags>
-		<flags name="PopplerViewerPreferences">
+		<flags name="PopplerViewerPreferences" type-name="PopplerViewerPreferences" get-type="poppler_viewer_preferences_get_type">
 			<member name="POPPLER_VIEWER_PREFERENCES_UNSET" value="0"/>
 			<member name="POPPLER_VIEWER_PREFERENCES_HIDE_TOOLBAR" value="1"/>
 			<member name="POPPLER_VIEWER_PREFERENCES_HIDE_MENUBAR" value="2"/>
@@ -436,6 +619,142 @@
 			<member name="POPPLER_VIEWER_PREFERENCES_DISPLAY_DOC_TITLE" value="32"/>
 			<member name="POPPLER_VIEWER_PREFERENCES_DIRECTION_RTL" value="64"/>
 		</flags>
+		<object name="PopplerAnnot" parent="GObject" type-name="PopplerAnnot" get-type="poppler_annot_get_type">
+			<method name="get_annot_type" symbol="poppler_annot_get_annot_type">
+				<return-type type="PopplerAnnotType"/>
+				<parameters>
+					<parameter name="poppler_annot" type="PopplerAnnot*"/>
+				</parameters>
+			</method>
+			<method name="get_color" symbol="poppler_annot_get_color">
+				<return-type type="PopplerColor*"/>
+				<parameters>
+					<parameter name="poppler_annot" type="PopplerAnnot*"/>
+				</parameters>
+			</method>
+			<method name="get_contents" symbol="poppler_annot_get_contents">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="poppler_annot" type="PopplerAnnot*"/>
+				</parameters>
+			</method>
+			<method name="get_flags" symbol="poppler_annot_get_flags">
+				<return-type type="PopplerAnnotFlag"/>
+				<parameters>
+					<parameter name="poppler_annot" type="PopplerAnnot*"/>
+				</parameters>
+			</method>
+			<method name="get_modified" symbol="poppler_annot_get_modified">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="poppler_annot" type="PopplerAnnot*"/>
+				</parameters>
+			</method>
+			<method name="get_name" symbol="poppler_annot_get_name">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="poppler_annot" type="PopplerAnnot*"/>
+				</parameters>
+			</method>
+			<method name="set_contents" symbol="poppler_annot_set_contents">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="poppler_annot" type="PopplerAnnot*"/>
+					<parameter name="contents" type="gchar*"/>
+				</parameters>
+			</method>
+		</object>
+		<object name="PopplerAnnotFreeText" parent="PopplerAnnotMarkup" type-name="PopplerAnnotFreeText" get-type="poppler_annot_free_text_get_type">
+			<method name="get_callout_line" symbol="poppler_annot_free_text_get_callout_line">
+				<return-type type="PopplerAnnotCalloutLine*"/>
+				<parameters>
+					<parameter name="poppler_annot" type="PopplerAnnotFreeText*"/>
+				</parameters>
+			</method>
+			<method name="get_quadding" symbol="poppler_annot_free_text_get_quadding">
+				<return-type type="PopplerAnnotFreeTextQuadding"/>
+				<parameters>
+					<parameter name="poppler_annot" type="PopplerAnnotFreeText*"/>
+				</parameters>
+			</method>
+		</object>
+		<object name="PopplerAnnotMarkup" parent="PopplerAnnot" type-name="PopplerAnnotMarkup" get-type="poppler_annot_markup_get_type">
+			<method name="get_date" symbol="poppler_annot_markup_get_date">
+				<return-type type="GDate*"/>
+				<parameters>
+					<parameter name="poppler_annot" type="PopplerAnnotMarkup*"/>
+				</parameters>
+			</method>
+			<method name="get_external_data" symbol="poppler_annot_markup_get_external_data">
+				<return-type type="PopplerAnnotExternalDataType"/>
+				<parameters>
+					<parameter name="poppler_annot" type="PopplerAnnotMarkup*"/>
+				</parameters>
+			</method>
+			<method name="get_label" symbol="poppler_annot_markup_get_label">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="poppler_annot" type="PopplerAnnotMarkup*"/>
+				</parameters>
+			</method>
+			<method name="get_opacity" symbol="poppler_annot_markup_get_opacity">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="poppler_annot" type="PopplerAnnotMarkup*"/>
+				</parameters>
+			</method>
+			<method name="get_popup_is_open" symbol="poppler_annot_markup_get_popup_is_open">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="poppler_annot" type="PopplerAnnotMarkup*"/>
+				</parameters>
+			</method>
+			<method name="get_popup_rectangle" symbol="poppler_annot_markup_get_popup_rectangle">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="poppler_annot" type="PopplerAnnotMarkup*"/>
+					<parameter name="poppler_rect" type="PopplerRectangle*"/>
+				</parameters>
+			</method>
+			<method name="get_reply_to" symbol="poppler_annot_markup_get_reply_to">
+				<return-type type="PopplerAnnotMarkupReplyType"/>
+				<parameters>
+					<parameter name="poppler_annot" type="PopplerAnnotMarkup*"/>
+				</parameters>
+			</method>
+			<method name="get_subject" symbol="poppler_annot_markup_get_subject">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="poppler_annot" type="PopplerAnnotMarkup*"/>
+				</parameters>
+			</method>
+			<method name="has_popup" symbol="poppler_annot_markup_has_popup">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="poppler_annot" type="PopplerAnnotMarkup*"/>
+				</parameters>
+			</method>
+		</object>
+		<object name="PopplerAnnotText" parent="PopplerAnnotMarkup" type-name="PopplerAnnotText" get-type="poppler_annot_text_get_type">
+			<method name="get_icon" symbol="poppler_annot_text_get_icon">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="poppler_annot" type="PopplerAnnotText*"/>
+				</parameters>
+			</method>
+			<method name="get_is_open" symbol="poppler_annot_text_get_is_open">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="poppler_annot" type="PopplerAnnotText*"/>
+				</parameters>
+			</method>
+			<method name="get_state" symbol="poppler_annot_text_get_state">
+				<return-type type="PopplerAnnotTextState"/>
+				<parameters>
+					<parameter name="poppler_annot" type="PopplerAnnotText*"/>
+				</parameters>
+			</method>
+		</object>
 		<object name="PopplerAttachment" parent="GObject" type-name="PopplerAttachment" get-type="poppler_attachment_get_type">
 			<method name="save" symbol="poppler_attachment_save">
 				<return-type type="gboolean"/>
@@ -533,10 +852,20 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<method name="save_a_copy" symbol="poppler_document_save_a_copy">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="document" type="PopplerDocument*"/>
+					<parameter name="uri" type="char*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<property name="author" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="creation-date" type="gint" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="creator" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="format" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="format-major" type="guint" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="format-minor" type="guint" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="keywords" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="linearized" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="metadata" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
@@ -748,6 +1077,44 @@
 				</parameters>
 			</method>
 		</object>
+		<object name="PopplerLayer" parent="GObject" type-name="PopplerLayer" get-type="poppler_layer_get_type">
+			<method name="get_radio_button_group_id" symbol="poppler_layer_get_radio_button_group_id">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="layer" type="PopplerLayer*"/>
+				</parameters>
+			</method>
+			<method name="get_title" symbol="poppler_layer_get_title">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="layer" type="PopplerLayer*"/>
+				</parameters>
+			</method>
+			<method name="hide" symbol="poppler_layer_hide">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="layer" type="PopplerLayer*"/>
+				</parameters>
+			</method>
+			<method name="is_parent" symbol="poppler_layer_is_parent">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="layer" type="PopplerLayer*"/>
+				</parameters>
+			</method>
+			<method name="is_visible" symbol="poppler_layer_is_visible">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="layer" type="PopplerLayer*"/>
+				</parameters>
+			</method>
+			<method name="show" symbol="poppler_layer_show">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="layer" type="PopplerLayer*"/>
+				</parameters>
+			</method>
+		</object>
 		<object name="PopplerPSFile" parent="GObject" type-name="PopplerPSFile" get-type="poppler_ps_file_get_type">
 			<method name="free" symbol="poppler_ps_file_free">
 				<return-type type="void"/>
@@ -788,6 +1155,12 @@
 					<parameter name="text" type="char*"/>
 				</parameters>
 			</method>
+			<method name="free_annot_mapping" symbol="poppler_page_free_annot_mapping">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="list" type="GList*"/>
+				</parameters>
+			</method>
 			<method name="free_form_field_mapping" symbol="poppler_page_free_form_field_mapping">
 				<return-type type="void"/>
 				<parameters>
@@ -804,6 +1177,12 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="list" type="GList*"/>
+				</parameters>
+			</method>
+			<method name="get_annot_mapping" symbol="poppler_page_get_annot_mapping">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="page" type="PopplerPage*"/>
 				</parameters>
 			</method>
 			<method name="get_crop_box" symbol="poppler_page_get_crop_box">
@@ -825,6 +1204,13 @@
 					<parameter name="page" type="PopplerPage*"/>
 				</parameters>
 			</method>
+			<method name="get_image" symbol="poppler_page_get_image">
+				<return-type type="cairo_surface_t*"/>
+				<parameters>
+					<parameter name="page" type="PopplerPage*"/>
+					<parameter name="image_id" type="gint"/>
+				</parameters>
+			</method>
 			<method name="get_image_mapping" symbol="poppler_page_get_image_mapping">
 				<return-type type="GList*"/>
 				<parameters>
@@ -844,7 +1230,7 @@
 				</parameters>
 			</method>
 			<method name="get_selection_region" symbol="poppler_page_get_selection_region">
-				<return-type type="GdkRegion*"/>
+				<return-type type="GList*"/>
 				<parameters>
 					<parameter name="page" type="PopplerPage*"/>
 					<parameter name="scale" type="gdouble"/>
@@ -869,6 +1255,12 @@
 				</parameters>
 			</method>
 			<method name="get_thumbnail" symbol="poppler_page_get_thumbnail">
+				<return-type type="cairo_surface_t*"/>
+				<parameters>
+					<parameter name="page" type="PopplerPage*"/>
+				</parameters>
+			</method>
+			<method name="get_thumbnail_pixbuf" symbol="poppler_page_get_thumbnail_pixbuf">
 				<return-type type="GdkPixbuf*"/>
 				<parameters>
 					<parameter name="page" type="PopplerPage*"/>
@@ -895,6 +1287,13 @@
 					<parameter name="cairo" type="cairo_t*"/>
 				</parameters>
 			</method>
+			<method name="render_for_printing" symbol="poppler_page_render_for_printing">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="page" type="PopplerPage*"/>
+					<parameter name="cairo" type="cairo_t*"/>
+				</parameters>
+			</method>
 			<method name="render_selection" symbol="poppler_page_render_selection">
 				<return-type type="void"/>
 				<parameters>
@@ -903,8 +1302,8 @@
 					<parameter name="selection" type="PopplerRectangle*"/>
 					<parameter name="old_selection" type="PopplerRectangle*"/>
 					<parameter name="style" type="PopplerSelectionStyle"/>
-					<parameter name="glyph_color" type="GdkColor*"/>
-					<parameter name="background_color" type="GdkColor*"/>
+					<parameter name="glyph_color" type="PopplerColor*"/>
+					<parameter name="background_color" type="PopplerColor*"/>
 				</parameters>
 			</method>
 			<method name="render_selection_to_pixbuf" symbol="poppler_page_render_selection_to_pixbuf">
@@ -934,6 +1333,19 @@
 					<parameter name="pixbuf" type="GdkPixbuf*"/>
 				</parameters>
 			</method>
+			<method name="render_to_pixbuf_for_printing" symbol="poppler_page_render_to_pixbuf_for_printing">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="page" type="PopplerPage*"/>
+					<parameter name="src_x" type="int"/>
+					<parameter name="src_y" type="int"/>
+					<parameter name="src_width" type="int"/>
+					<parameter name="src_height" type="int"/>
+					<parameter name="scale" type="double"/>
+					<parameter name="rotation" type="int"/>
+					<parameter name="pixbuf" type="GdkPixbuf*"/>
+				</parameters>
+			</method>
 			<method name="render_to_ps" symbol="poppler_page_render_to_ps">
 				<return-type type="void"/>
 				<parameters>
@@ -941,8 +1353,18 @@
 					<parameter name="ps_file" type="PopplerPSFile*"/>
 				</parameters>
 			</method>
+			<method name="selection_region_free" symbol="poppler_page_selection_region_free">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="region" type="GList*"/>
+				</parameters>
+			</method>
 			<property name="label" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 		</object>
 		<constant name="POPPLER_HAS_CAIRO" type="int" value="1"/>
+		<constant name="POPPLER_MAJOR_VERSION" type="int" value="0"/>
+		<constant name="POPPLER_MICRO_VERSION" type="int" value="4"/>
+		<constant name="POPPLER_MINOR_VERSION" type="int" value="12"/>
+		<constant name="POPPLER_WITH_GDK" type="int" value="1"/>
 	</namespace>
 </api>

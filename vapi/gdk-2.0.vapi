@@ -67,8 +67,14 @@ namespace Gdk {
 		public Gdk.InputSource source;
 		public static void free_history (Gdk.TimeCoord[] events);
 		public bool get_axis ([CCode (array_length = false)] double[] axes, Gdk.AxisUse use, out double value);
+		public Gdk.AxisUse get_axis_use (uint index);
 		public static unowned Gdk.Device get_core_pointer ();
+		public bool get_has_cursor ();
 		public bool get_history (Gdk.Window window, uint32 start, uint32 stop, Gdk.TimeCoord[] events);
+		public void get_key (uint index, uint keyval, Gdk.ModifierType modifiers);
+		public Gdk.InputMode get_mode ();
+		public unowned string get_name ();
+		public Gdk.InputSource get_source ();
 		public void get_state (Gdk.Window window, double axes, Gdk.ModifierType mask);
 		public void set_axis_use (uint index_, Gdk.AxisUse use);
 		public void set_key (uint index_, uint keyval, Gdk.ModifierType modifiers);
@@ -170,6 +176,11 @@ namespace Gdk {
 		public void* windowing_data;
 		[CCode (has_construct_function = false)]
 		public DragContext ();
+		public Gdk.DragAction get_actions ();
+		public Gdk.DragAction get_selected_action ();
+		public unowned Gdk.Window get_source_window ();
+		public Gdk.DragAction get_suggested_action ();
+		public unowned GLib.List list_targets ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Drawable : GLib.Object {
@@ -331,8 +342,17 @@ namespace Gdk {
 		public void* windowing_data;
 		[CCode (has_construct_function = false)]
 		public Image (Gdk.ImageType type, Gdk.Visual visual, int width, int height);
+		public uint16 get_bits_per_pixel ();
+		public Gdk.ByteOrder get_byte_order ();
+		public uint16 get_bytes_per_line ();
+		public uint16 get_bytes_per_pixel ();
 		public unowned Gdk.Colormap get_colormap ();
+		public uint16 get_depth ();
+		public int get_height ();
+		public Gdk.ImageType get_image_type ();
 		public uint32 get_pixel (int x, int y);
+		public unowned Gdk.Visual get_visual ();
+		public int get_width ();
 		public void put_pixel (int x, int y, uint32 pixel);
 		public void set_colormap (Gdk.Colormap colormap);
 	}
@@ -509,8 +529,16 @@ namespace Gdk {
 		public static unowned Gdk.Visual get_best_with_both (int depth, Gdk.VisualType visual_type);
 		public static unowned Gdk.Visual get_best_with_depth (int depth);
 		public static unowned Gdk.Visual get_best_with_type (Gdk.VisualType visual_type);
+		public int get_bits_per_rgb ();
+		public void get_blue_pixel_details (uint32 mask, int shift, int precision);
+		public Gdk.ByteOrder get_byte_order ();
+		public int get_colormap_size ();
+		public int get_depth ();
+		public void get_green_pixel_details (uint32 mask, int shift, int precision);
+		public void get_red_pixel_details (uint32 mask, int shift, int precision);
 		public unowned Gdk.Screen get_screen ();
 		public static unowned Gdk.Visual get_system ();
+		public Gdk.VisualType get_visual_type ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Window : Gdk.Drawable {
@@ -528,6 +556,8 @@ namespace Gdk {
 		public void clear_area_e (int x, int y, int width, int height);
 		public void configure_finished ();
 		public static void constrain_size (Gdk.Geometry geometry, uint flags, int width, int height, out int new_width, out int new_height);
+		public void coords_from_parent (double parent_x, double parent_y, double x, double y);
+		public void coords_to_parent (double x, double y, double parent_x, double parent_y);
 		public void deiconify ();
 		public void destroy ();
 		public void enable_synchronized_configure ();
@@ -541,15 +571,23 @@ namespace Gdk {
 		public void freeze_updates ();
 		public void fullscreen ();
 		public void geometry_changed ();
+		public bool get_accept_focus ();
+		public void get_back_pixmap (out unowned Gdk.Pixmap pixmap, bool parent_relative);
+		public void get_background (Gdk.Color color);
 		public GLib.List<weak Gdk.Window> get_children ();
+		public bool get_composited ();
 		public unowned Gdk.Cursor? get_cursor ();
 		public bool get_decorations (out Gdk.WMDecoration decorations);
 		public bool get_deskrelative_origin (out int x, out int y);
+		public unowned Gdk.Window get_effective_parent ();
+		public unowned Gdk.Window get_effective_toplevel ();
 		public Gdk.EventMask get_events ();
+		public bool get_focus_on_map ();
 		public void get_frame_extents (out Gdk.Rectangle rect);
 		public void get_geometry (out int x, out int y, out int width, out int height, out int depth);
 		public unowned Gdk.Window get_group ();
 		public void get_internal_paint_info (out unowned Gdk.Drawable real_drawable, out int x_offset, out int y_offset);
+		public bool get_modal_hint ();
 		public int get_origin (out int x, out int y);
 		public unowned Gdk.Window get_parent ();
 		public unowned Gdk.Window get_pointer (out int x, out int y, out Gdk.ModifierType mask);
@@ -570,6 +608,8 @@ namespace Gdk {
 		public void invalidate_rect (Gdk.Rectangle? rect, bool invalidate_children);
 		public void invalidate_region (Gdk.Region region, bool invalidate_children);
 		public bool is_destroyed ();
+		public bool is_input_only ();
+		public bool is_shaped ();
 		public bool is_viewable ();
 		public bool is_visible ();
 		public static unowned Gdk.Window lookup (Gdk.NativeWindow anid);

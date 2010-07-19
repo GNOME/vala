@@ -27,6 +27,7 @@ namespace GConf {
 	}
 	[CCode (cheader_filename = "gconf/gconf-client.h")]
 	public class Client : GLib.Object {
+		public weak GLib.HashTable cache_dirs;
 		public weak GLib.HashTable cache_hash;
 		public weak GLib.HashTable dir_hash;
 		public weak GConf.Engine engine;
@@ -34,7 +35,6 @@ namespace GConf {
 		public weak GConf.Listeners listeners;
 		public uint notify_handler;
 		public weak GLib.SList notify_list;
-		public void* pad1;
 		public int pad2;
 		public int pending_notify_count;
 		public void add_dir (string dir, GConf.ClientPreloadType preload) throws GLib.Error;
@@ -219,6 +219,8 @@ namespace GConf {
 		public Value (GConf.ValueType type);
 		public int compare (GConf.Value value_b);
 		public GConf.Value copy ();
+		public static unowned GConf.Value decode (string encoded);
+		public unowned string encode ();
 		[CCode (has_construct_function = false)]
 		public Value.from_string (GConf.ValueType type, string str) throws GLib.Error;
 		public bool get_bool ();
@@ -245,19 +247,19 @@ namespace GConf {
 		public void set_string (string the_str);
 		public unowned string to_string ();
 	}
-	[CCode (cprefix = "GCONF_CLIENT_HANDLE_", has_type_id = false, cheader_filename = "gconf/gconf.h")]
+	[CCode (cprefix = "GCONF_CLIENT_HANDLE_", cheader_filename = "gconf/gconf.h")]
 	public enum ClientErrorHandlingMode {
 		NONE,
 		UNRETURNED,
 		ALL
 	}
-	[CCode (cprefix = "GCONF_CLIENT_PRELOAD_", has_type_id = false, cheader_filename = "gconf/gconf.h")]
+	[CCode (cprefix = "GCONF_CLIENT_PRELOAD_", cheader_filename = "gconf/gconf.h")]
 	public enum ClientPreloadType {
 		NONE,
 		ONELEVEL,
 		RECURSIVE
 	}
-	[CCode (cprefix = "GCONF_ERROR_", has_type_id = false, cheader_filename = "gconf/gconf.h")]
+	[CCode (cprefix = "GCONF_ERROR_", cheader_filename = "gconf/gconf.h")]
 	public enum Error {
 		SUCCESS,
 		FAILED,
@@ -277,12 +279,12 @@ namespace GConf {
 		NO_WRITABLE_DATABASE,
 		IN_SHUTDOWN
 	}
-	[CCode (cprefix = "GCONF_UNSET_INCLUDING_SCHEMA_", has_type_id = false, cheader_filename = "gconf/gconf.h")]
+	[CCode (cprefix = "GCONF_UNSET_INCLUDING_SCHEMA_", cheader_filename = "gconf/gconf.h")]
 	[Flags]
 	public enum UnsetFlags {
 		NAMES
 	}
-	[CCode (cprefix = "GCONF_VALUE_", has_type_id = false, cheader_filename = "gconf/gconf.h")]
+	[CCode (cprefix = "GCONF_VALUE_", cheader_filename = "gconf/gconf.h")]
 	public enum ValueType {
 		INVALID,
 		STRING,

@@ -173,6 +173,14 @@
 				<parameter name="value" type="char*"/>
 			</parameters>
 		</function>
+		<function name="header_g_string_append_param_quoted" symbol="soup_header_g_string_append_param_quoted">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="string" type="GString*"/>
+				<parameter name="name" type="char*"/>
+				<parameter name="value" type="char*"/>
+			</parameters>
+		</function>
 		<function name="header_parse_list" symbol="soup_header_parse_list">
 			<return-type type="GSList*"/>
 			<parameters>
@@ -1439,6 +1447,7 @@
 			<member name="SOUP_STATUS_IO_ERROR" value="7"/>
 			<member name="SOUP_STATUS_MALFORMED" value="8"/>
 			<member name="SOUP_STATUS_TRY_AGAIN" value="9"/>
+			<member name="SOUP_STATUS_TOO_MANY_REDIRECTS" value="10"/>
 			<member name="SOUP_STATUS_CONTINUE" value="100"/>
 			<member name="SOUP_STATUS_SWITCHING_PROTOCOLS" value="101"/>
 			<member name="SOUP_STATUS_PROCESSING" value="102"/>
@@ -1512,6 +1521,7 @@
 			<member name="SOUP_SSL_ERROR_HANDSHAKE_NEEDS_READ" value="0"/>
 			<member name="SOUP_SSL_ERROR_HANDSHAKE_NEEDS_WRITE" value="1"/>
 			<member name="SOUP_SSL_ERROR_CERTIFICATE" value="2"/>
+			<member name="SOUP_SSL_ERROR_HANDSHAKE_FAILED" value="3"/>
 		</enum>
 		<enum name="SoupSocketIOStatus" type-name="SoupSocketIOStatus" get-type="soup_socket_io_status_get_type">
 			<member name="SOUP_SOCKET_OK" value="0"/>
@@ -3144,6 +3154,11 @@
 		<constant name="SOUP_AUTH_IS_FOR_PROXY" type="char*" value="is-for-proxy"/>
 		<constant name="SOUP_AUTH_REALM" type="char*" value="realm"/>
 		<constant name="SOUP_AUTH_SCHEME_NAME" type="char*" value="scheme-name"/>
+		<constant name="SOUP_CHAR_HTTP_CTL" type="int" value="16"/>
+		<constant name="SOUP_CHAR_HTTP_SEPARATOR" type="int" value="8"/>
+		<constant name="SOUP_CHAR_URI_GEN_DELIMS" type="int" value="2"/>
+		<constant name="SOUP_CHAR_URI_PERCENT_ENCODED" type="int" value="1"/>
+		<constant name="SOUP_CHAR_URI_SUB_DELIMS" type="int" value="4"/>
 		<constant name="SOUP_CONTENT_DECODER_H" type="int" value="1"/>
 		<constant name="SOUP_CONTENT_SNIFFER_H" type="int" value="1"/>
 		<constant name="SOUP_COOKIE_H" type="int" value="1"/>

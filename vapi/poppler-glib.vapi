@@ -65,6 +65,62 @@ namespace Poppler {
 		public weak string uri;
 	}
 	[CCode (cheader_filename = "poppler.h")]
+	public class Annot : GLib.Object {
+		public Poppler.AnnotType get_annot_type ();
+		public unowned Poppler.Color get_color ();
+		public unowned string get_contents ();
+		public Poppler.AnnotFlag get_flags ();
+		public unowned string get_modified ();
+		public unowned string get_name ();
+		public void set_contents (string contents);
+	}
+	[Compact]
+	[CCode (copy_function = "poppler_annot_callout_line_copy", type_id = "POPPLER_TYPE_ANNOT_CALLOUT_LINE", cheader_filename = "poppler.h")]
+	public class AnnotCalloutLine {
+		public bool multiline;
+		public double x1;
+		public double x2;
+		public double x3;
+		public double y1;
+		public double y2;
+		public double y3;
+		[CCode (has_construct_function = false)]
+		public AnnotCalloutLine ();
+		public unowned Poppler.AnnotCalloutLine copy ();
+	}
+	[CCode (cheader_filename = "poppler.h")]
+	public class AnnotFreeText : Poppler.AnnotMarkup {
+		public unowned Poppler.AnnotCalloutLine get_callout_line ();
+		public Poppler.AnnotFreeTextQuadding get_quadding ();
+	}
+	[Compact]
+	[CCode (copy_function = "poppler_annot_mapping_copy", type_id = "POPPLER_TYPE_ANNOT_MAPPING", cheader_filename = "poppler.h")]
+	public class AnnotMapping {
+		public weak Poppler.Annot annot;
+		public Poppler.Rectangle area;
+		[CCode (has_construct_function = false)]
+		public AnnotMapping ();
+		public unowned Poppler.AnnotMapping copy ();
+	}
+	[CCode (cheader_filename = "poppler.h")]
+	public class AnnotMarkup : Poppler.Annot {
+		public GLib.Date get_date ();
+		public Poppler.AnnotExternalDataType get_external_data ();
+		public unowned string get_label ();
+		public double get_opacity ();
+		public bool get_popup_is_open ();
+		public bool get_popup_rectangle (Poppler.Rectangle poppler_rect);
+		public Poppler.AnnotMarkupReplyType get_reply_to ();
+		public unowned string get_subject ();
+		public bool has_popup ();
+	}
+	[CCode (cheader_filename = "poppler.h")]
+	public class AnnotText : Poppler.AnnotMarkup {
+		public unowned string get_icon ();
+		public bool get_is_open ();
+		public Poppler.AnnotTextState get_state ();
+	}
+	[CCode (cheader_filename = "poppler.h")]
 	public class Attachment : GLib.Object {
 		public weak GLib.StringBuilder checksum;
 		public GLib.Time ctime;
@@ -74,6 +130,16 @@ namespace Poppler {
 		public size_t size;
 		public bool save (string filename) throws GLib.Error;
 		public bool save_to_callback (Poppler.AttachmentSaveFunc save_func) throws GLib.Error;
+	}
+	[Compact]
+	[CCode (copy_function = "poppler_color_copy", type_id = "POPPLER_TYPE_COLOR", cheader_filename = "poppler.h")]
+	public class Color {
+		public uint16 blue;
+		public uint16 green;
+		public uint16 red;
+		[CCode (has_construct_function = false)]
+		public Color ();
+		public unowned Poppler.Color copy ();
 	}
 	[Compact]
 	[CCode (copy_function = "poppler_dest_copy", type_id = "POPPLER_TYPE_DEST", cheader_filename = "poppler.h")]
@@ -105,6 +171,7 @@ namespace Poppler {
 		public unowned Poppler.Page get_page_by_label (string label);
 		public bool has_attachments ();
 		public bool save (string uri) throws GLib.Error;
+		public bool save_a_copy (string uri) throws GLib.Error;
 		[NoAccessorMethod]
 		public string author { owned get; }
 		[NoAccessorMethod]
@@ -113,6 +180,10 @@ namespace Poppler {
 		public string creator { owned get; }
 		[NoAccessorMethod]
 		public string format { owned get; }
+		[NoAccessorMethod]
+		public uint format_major { get; }
+		[NoAccessorMethod]
+		public uint format_minor { get; }
 		[NoAccessorMethod]
 		public string keywords { owned get; }
 		[NoAccessorMethod]
@@ -199,7 +270,7 @@ namespace Poppler {
 	[CCode (copy_function = "poppler_image_mapping_copy", type_id = "POPPLER_TYPE_IMAGE_MAPPING", cheader_filename = "poppler.h")]
 	public class ImageMapping {
 		public Poppler.Rectangle area;
-		public weak Gdk.Pixbuf image;
+		public int image_id;
 		[CCode (has_construct_function = false)]
 		public ImageMapping ();
 		public Poppler.ImageMapping copy ();
@@ -213,6 +284,26 @@ namespace Poppler {
 		public unowned Poppler.Action get_action ();
 		public unowned Poppler.IndexIter get_child ();
 		public bool is_open ();
+		public bool next ();
+	}
+	[CCode (cheader_filename = "poppler.h")]
+	public class Layer : GLib.Object {
+		public int get_radio_button_group_id ();
+		public unowned string get_title ();
+		public void hide ();
+		public bool is_parent ();
+		public bool is_visible ();
+		public void show ();
+	}
+	[Compact]
+	[CCode (copy_function = "poppler_layers_iter_copy", type_id = "POPPLER_TYPE_LAYERS_ITER", cheader_filename = "poppler.h")]
+	public class LayersIter {
+		[CCode (has_construct_function = false)]
+		public LayersIter (Poppler.Document document);
+		public unowned Poppler.LayersIter copy ();
+		public unowned Poppler.LayersIter get_child ();
+		public unowned Poppler.Layer get_layer ();
+		public unowned string get_title ();
 		public bool next ();
 	}
 	[Compact]
@@ -235,26 +326,33 @@ namespace Poppler {
 	[CCode (cheader_filename = "poppler.h")]
 	public class Page : GLib.Object {
 		public unowned GLib.List find_text (string text);
+		public static void free_annot_mapping (GLib.List list);
 		public static void free_form_field_mapping (GLib.List list);
 		public static void free_image_mapping (GLib.List list);
 		public static void free_link_mapping (GLib.List list);
+		public unowned GLib.List get_annot_mapping ();
 		public void get_crop_box (out Poppler.Rectangle rect);
 		public double get_duration ();
 		public unowned GLib.List get_form_field_mapping ();
+		public unowned Cairo.Surface get_image (int image_id);
 		public unowned GLib.List get_image_mapping ();
 		public int get_index ();
 		public unowned GLib.List get_link_mapping ();
-		public unowned Gdk.Region get_selection_region (double scale, Poppler.SelectionStyle style, Poppler.Rectangle selection);
+		public unowned GLib.List get_selection_region (double scale, Poppler.SelectionStyle style, Poppler.Rectangle selection);
 		public void get_size (out double width, out double height);
 		public unowned string get_text (Poppler.SelectionStyle style, Poppler.Rectangle rect);
-		public unowned Gdk.Pixbuf get_thumbnail ();
+		public unowned Cairo.Surface get_thumbnail ();
+		public unowned Gdk.Pixbuf get_thumbnail_pixbuf ();
 		public bool get_thumbnail_size (int width, int height);
 		public unowned Poppler.PageTransition get_transition ();
 		public void render (Cairo.Context cairo);
-		public void render_selection (Cairo.Context cairo, Poppler.Rectangle selection, Poppler.Rectangle old_selection, Poppler.SelectionStyle style, Gdk.Color glyph_color, Gdk.Color background_color);
+		public void render_for_printing (Cairo.Context cairo);
+		public void render_selection (Cairo.Context cairo, Poppler.Rectangle selection, Poppler.Rectangle old_selection, Poppler.SelectionStyle style, Poppler.Color glyph_color, Poppler.Color background_color);
 		public void render_selection_to_pixbuf (double scale, int rotation, Gdk.Pixbuf pixbuf, Poppler.Rectangle selection, Poppler.Rectangle old_selection, Poppler.SelectionStyle style, Gdk.Color glyph_color, Gdk.Color background_color);
 		public void render_to_pixbuf (int src_x, int src_y, int src_width, int src_height, double scale, int rotation, Gdk.Pixbuf pixbuf);
+		public void render_to_pixbuf_for_printing (int src_x, int src_y, int src_width, int src_height, double scale, int rotation, Gdk.Pixbuf pixbuf);
 		public void render_to_ps (Poppler.PSFile ps_file);
+		public static void selection_region_free (GLib.List region);
 		[NoAccessorMethod]
 		public string label { owned get; }
 	}
@@ -279,9 +377,10 @@ namespace Poppler {
 		public double x2;
 		public double y2;
 	}
-	[CCode (cprefix = "POPPLER_ACTION_", has_type_id = false, cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_ACTION_", cheader_filename = "poppler.h")]
 	public enum ActionType {
 		UNKNOWN,
+		NONE,
 		GOTO_DEST,
 		GOTO_REMOTE,
 		LAUNCH,
@@ -289,13 +388,84 @@ namespace Poppler {
 		NAMED,
 		MOVIE
 	}
-	[CCode (cprefix = "POPPLER_BACKEND_", has_type_id = false, cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_ANNOT_EXTERNAL_DATA_MARKUP_", cheader_filename = "poppler.h")]
+	public enum AnnotExternalDataType {
+		@3D,
+		UNKNOWN
+	}
+	[CCode (cprefix = "POPPLER_ANNOT_FLAG_", cheader_filename = "poppler.h")]
+	[Flags]
+	public enum AnnotFlag {
+		UNKNOWN,
+		INVISIBLE,
+		HIDDEN,
+		PRINT,
+		NO_ZOOM,
+		NO_ROTATE,
+		NO_VIEW,
+		READ_ONLY,
+		LOCKED,
+		TOGGLE_NO_VIEW,
+		LOCKED_CONTENTS
+	}
+	[CCode (cprefix = "POPPLER_ANNOT_FREE_TEXT_QUADDING_", cheader_filename = "poppler.h")]
+	public enum AnnotFreeTextQuadding {
+		LEFT_JUSTIFIED,
+		CENTERED,
+		RIGHT_JUSTIFIED
+	}
+	[CCode (cprefix = "POPPLER_ANNOT_MARKUP_REPLY_TYPE_", cheader_filename = "poppler.h")]
+	public enum AnnotMarkupReplyType {
+		R,
+		GROUP
+	}
+	[CCode (cprefix = "POPPLER_ANNOT_TEXT_STATE_", cheader_filename = "poppler.h")]
+	public enum AnnotTextState {
+		MARKED,
+		UNMARKED,
+		ACCEPTED,
+		REJECTED,
+		CANCELLED,
+		COMPLETED,
+		NONE,
+		UNKNOWN
+	}
+	[CCode (cprefix = "POPPLER_ANNOT_", cheader_filename = "poppler.h")]
+	public enum AnnotType {
+		UNKNOWN,
+		TEXT,
+		LINK,
+		FREE_TEXT,
+		LINE,
+		SQUARE,
+		CIRCLE,
+		POLYGON,
+		POLY_LINE,
+		HIGHLIGHT,
+		UNDERLINE,
+		SQUIGGLY,
+		STRIKE_OUT,
+		STAMP,
+		CARET,
+		INK,
+		POPUP,
+		FILE_ATTACHMENT,
+		SOUND,
+		MOVIE,
+		WIDGET,
+		SCREEN,
+		PRINTER_MARK,
+		TRAP_NET,
+		WATERMARK,
+		@3D
+	}
+	[CCode (cprefix = "POPPLER_BACKEND_", cheader_filename = "poppler.h")]
 	public enum Backend {
 		UNKNOWN,
 		SPLASH,
 		CAIRO
 	}
-	[CCode (cprefix = "POPPLER_DEST_", has_type_id = false, cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_DEST_", cheader_filename = "poppler.h")]
 	public enum DestType {
 		UNKNOWN,
 		XYZ,
@@ -308,12 +478,15 @@ namespace Poppler {
 		FITBV,
 		NAMED
 	}
-	[CCode (cprefix = "POPPLER_ERROR_", has_type_id = false, cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_ERROR_", cheader_filename = "poppler.h")]
 	public enum Error {
 		INVALID,
-		ENCRYPTED
+		ENCRYPTED,
+		OPEN_FILE,
+		BAD_CATALOG,
+		DAMAGED
 	}
-	[CCode (cprefix = "POPPLER_FONT_TYPE_", has_type_id = false, cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_FONT_TYPE_", cheader_filename = "poppler.h")]
 	public enum FontType {
 		UNKNOWN,
 		TYPE1,
@@ -328,18 +501,18 @@ namespace Poppler {
 		CID_TYPE2,
 		CID_TYPE2OT
 	}
-	[CCode (cprefix = "POPPLER_FORM_BUTTON_", has_type_id = false, cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_FORM_BUTTON_", cheader_filename = "poppler.h")]
 	public enum FormButtonType {
 		PUSH,
 		CHECK,
 		RADIO
 	}
-	[CCode (cprefix = "POPPLER_FORM_CHOICE_", has_type_id = false, cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_FORM_CHOICE_", cheader_filename = "poppler.h")]
 	public enum FormChoiceType {
 		COMBO,
 		LIST
 	}
-	[CCode (cprefix = "POPPLER_FORM_FIELD_", has_type_id = false, cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_FORM_FIELD_", cheader_filename = "poppler.h")]
 	public enum FormFieldType {
 		UNKNOWN,
 		BUTTON,
@@ -347,20 +520,20 @@ namespace Poppler {
 		CHOICE,
 		SIGNATURE
 	}
-	[CCode (cprefix = "POPPLER_FORM_TEXT_", has_type_id = false, cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_FORM_TEXT_", cheader_filename = "poppler.h")]
 	public enum FormTextType {
 		NORMAL,
 		MULTILINE,
 		FILE_SELECT
 	}
-	[CCode (cprefix = "POPPLER_ORIENTATION_", has_type_id = false, cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_ORIENTATION_", cheader_filename = "poppler.h")]
 	public enum Orientation {
 		PORTRAIT,
 		LANDSCAPE,
 		UPSIDEDOWN,
 		SEASCAPE
 	}
-	[CCode (cprefix = "POPPLER_PAGE_LAYOUT_", has_type_id = false, cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_PAGE_LAYOUT_", cheader_filename = "poppler.h")]
 	public enum PageLayout {
 		UNSET,
 		SINGLE_PAGE,
@@ -370,7 +543,7 @@ namespace Poppler {
 		TWO_PAGE_LEFT,
 		TWO_PAGE_RIGHT
 	}
-	[CCode (cprefix = "POPPLER_PAGE_MODE_", has_type_id = false, cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_PAGE_MODE_", cheader_filename = "poppler.h")]
 	public enum PageMode {
 		UNSET,
 		NONE,
@@ -380,17 +553,17 @@ namespace Poppler {
 		USE_OC,
 		USE_ATTACHMENTS
 	}
-	[CCode (cprefix = "POPPLER_PAGE_TRANSITION_", has_type_id = false, cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_PAGE_TRANSITION_", cheader_filename = "poppler.h")]
 	public enum PageTransitionAlignment {
 		HORIZONTAL,
 		VERTICAL
 	}
-	[CCode (cprefix = "POPPLER_PAGE_TRANSITION_", has_type_id = false, cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_PAGE_TRANSITION_", cheader_filename = "poppler.h")]
 	public enum PageTransitionDirection {
 		INWARD,
 		OUTWARD
 	}
-	[CCode (cprefix = "POPPLER_PAGE_TRANSITION_", has_type_id = false, cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_PAGE_TRANSITION_", cheader_filename = "poppler.h")]
 	public enum PageTransitionType {
 		REPLACE,
 		SPLIT,
@@ -405,22 +578,23 @@ namespace Poppler {
 		UNCOVER,
 		FADE
 	}
-	[CCode (cprefix = "POPPLER_PERMISSIONS_", has_type_id = false, cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_PERMISSIONS_", cheader_filename = "poppler.h")]
 	[Flags]
 	public enum Permissions {
 		OK_TO_PRINT,
 		OK_TO_MODIFY,
 		OK_TO_COPY,
 		OK_TO_ADD_NOTES,
+		OK_TO_FILL_FORM,
 		FULL
 	}
-	[CCode (cprefix = "POPPLER_SELECTION_", has_type_id = false, cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_SELECTION_", cheader_filename = "poppler.h")]
 	public enum SelectionStyle {
 		GLYPH,
 		WORD,
 		LINE
 	}
-	[CCode (cprefix = "POPPLER_VIEWER_PREFERENCES_", has_type_id = false, cheader_filename = "poppler.h")]
+	[CCode (cprefix = "POPPLER_VIEWER_PREFERENCES_", cheader_filename = "poppler.h")]
 	[Flags]
 	public enum ViewerPreferences {
 		UNSET,
@@ -436,6 +610,16 @@ namespace Poppler {
 	public delegate bool AttachmentSaveFunc (string buf, size_t count, void* data, GLib.Error error);
 	[CCode (cheader_filename = "poppler.h")]
 	public const int HAS_CAIRO;
+	[CCode (cheader_filename = "poppler.h")]
+	public const int MAJOR_VERSION;
+	[CCode (cheader_filename = "poppler.h")]
+	public const int MICRO_VERSION;
+	[CCode (cheader_filename = "poppler.h")]
+	public const int MINOR_VERSION;
+	[CCode (cheader_filename = "poppler.h")]
+	public const int WITH_GDK;
+	[CCode (cheader_filename = "poppler.h")]
+	public static bool date_parse (string date, ulong timet);
 	[CCode (cheader_filename = "poppler.h")]
 	public static GLib.Quark error_quark ();
 	[CCode (cheader_filename = "poppler.h")]

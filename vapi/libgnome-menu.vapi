@@ -9,9 +9,11 @@ namespace GMenu {
 		public unowned GMenu.TreeDirectory get_directory_from_path (string path);
 		public unowned string get_menu_file ();
 		public unowned GMenu.TreeDirectory get_root_directory ();
+		public GMenu.TreeSortKey get_sort_key ();
 		public void* get_user_data ();
 		public static unowned GMenu.Tree lookup (string menu_file, GMenu.TreeFlags flags);
 		public void remove_monitor (GMenu.TreeChangedFunc callback);
+		public void set_sort_key (GMenu.TreeSortKey sort_key);
 		public void set_user_data (void* user_data, GLib.DestroyNotify dnotify);
 	}
 	[Compact]
@@ -39,7 +41,9 @@ namespace GMenu {
 		public unowned string get_comment ();
 		public unowned string get_desktop_file_id ();
 		public unowned string get_desktop_file_path ();
+		public unowned string get_display_name ();
 		public unowned string get_exec ();
+		public unowned string get_generic_name ();
 		public unowned string get_icon ();
 		public bool get_is_excluded ();
 		public bool get_is_nodisplay ();
@@ -69,6 +73,7 @@ namespace GMenu {
 		INCLUDE_EXCLUDED,
 		SHOW_EMPTY,
 		INCLUDE_NODISPLAY,
+		SHOW_ALL_SEPARATORS,
 		MASK
 	}
 	[CCode (cprefix = "GMENU_TREE_ITEM_", has_type_id = false, cheader_filename = "gnome-menus/gmenu-tree.h")]
@@ -79,6 +84,11 @@ namespace GMenu {
 		SEPARATOR,
 		HEADER,
 		ALIAS
+	}
+	[CCode (cprefix = "GMENU_TREE_SORT_", has_type_id = false, cheader_filename = "gnome-menus/gmenu-tree.h")]
+	public enum TreeSortKey {
+		NAME,
+		DISPLAY_NAME
 	}
 	[CCode (cheader_filename = "gnome-menus/gmenu-tree.h")]
 	public delegate void TreeChangedFunc (GMenu.Tree tree);

@@ -272,6 +272,7 @@ namespace Pango {
 		public weak Pango.Item item;
 		public unowned GLib.SList apply_attrs (string text, Pango.AttrList list);
 		public Pango.GlyphItem copy ();
+		public void get_logical_widths (string text, int logical_widths);
 		public void letter_space (string text, Pango.LogAttr[] log_attrs, int letter_spacing);
 		public unowned Pango.GlyphItem split (string text, int split_index);
 	}
@@ -896,6 +897,8 @@ namespace Pango {
 	public static Pango.Gravity gravity_get_for_matrix (Pango.Matrix matrix);
 	[CCode (cheader_filename = "pango/pango.h")]
 	public static Pango.Gravity gravity_get_for_script (Pango.Script script, Pango.Gravity base_gravity, Pango.GravityHint hint);
+	[CCode (cheader_filename = "pango/pango.h")]
+	public static Pango.Gravity gravity_get_for_script_and_width (Pango.Script script, bool wide, Pango.Gravity base_gravity, Pango.GravityHint hint);
 	[CCode (cheader_filename = "pango/pango.h")]
 	public static double gravity_to_rotation (Pango.Gravity gravity);
 	[CCode (cheader_filename = "pango/pango.h")]

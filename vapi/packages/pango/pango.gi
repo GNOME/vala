@@ -187,6 +187,15 @@
 				<parameter name="hint" type="PangoGravityHint"/>
 			</parameters>
 		</function>
+		<function name="gravity_get_for_script_and_width" symbol="pango_gravity_get_for_script_and_width">
+			<return-type type="PangoGravity"/>
+			<parameters>
+				<parameter name="script" type="PangoScript"/>
+				<parameter name="wide" type="gboolean"/>
+				<parameter name="base_gravity" type="PangoGravity"/>
+				<parameter name="hint" type="PangoGravityHint"/>
+			</parameters>
+		</function>
 		<function name="gravity_to_rotation" symbol="pango_gravity_to_rotation">
 			<return-type type="double"/>
 			<parameters>
@@ -1111,6 +1120,14 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="glyph_item" type="PangoGlyphItem*"/>
+				</parameters>
+			</method>
+			<method name="get_logical_widths" symbol="pango_glyph_item_get_logical_widths">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="glyph_item" type="PangoGlyphItem*"/>
+					<parameter name="text" type="char*"/>
+					<parameter name="logical_widths" type="int*"/>
 				</parameters>
 			</method>
 			<method name="letter_space" symbol="pango_glyph_item_letter_space">
@@ -2860,8 +2877,8 @@
 		<constant name="PANGO_UNKNOWN_GLYPH_HEIGHT" type="int" value="14"/>
 		<constant name="PANGO_UNKNOWN_GLYPH_WIDTH" type="int" value="10"/>
 		<constant name="PANGO_VERSION_MAJOR" type="int" value="1"/>
-		<constant name="PANGO_VERSION_MICRO" type="int" value="0"/>
-		<constant name="PANGO_VERSION_MINOR" type="int" value="24"/>
-		<constant name="PANGO_VERSION_STRING" type="char*" value="1.24.0"/>
+		<constant name="PANGO_VERSION_MICRO" type="int" value="1"/>
+		<constant name="PANGO_VERSION_MINOR" type="int" value="28"/>
+		<constant name="PANGO_VERSION_STRING" type="char*" value="1.28.1"/>
 	</namespace>
 </api>
