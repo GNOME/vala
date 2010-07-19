@@ -325,7 +325,7 @@ namespace Cairo {
 	[CCode (ref_function = "cairo_scaled_font_reference", unref_function = "cairo_scaled_font_destroy", cname = "cairo_scaled_font_t")]
 	public class ScaledFont {
 		[CCode (cname = "cairo_scaled_font_create")]
-		public ScaledFont (Matrix font_matrix, Matrix ctm, FontOptions options);
+		public ScaledFont (FontFace font_face, Matrix font_matrix, Matrix ctm, FontOptions options);
 		public Status status ();
 		public void extents (out FontExtents extents);
 		public void text_extents (string utf8, out TextExtents extents);
