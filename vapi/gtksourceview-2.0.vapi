@@ -5,7 +5,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public class SourceBuffer : Gtk.TextBuffer {
 		[CCode (has_construct_function = false)]
-		public SourceBuffer (Gtk.TextTagTable table);
+		public SourceBuffer (Gtk.TextTagTable? table);
 		public bool backward_iter_to_source_mark (Gtk.TextIter iter, string category);
 		public void begin_not_undoable_action ();
 		public unowned Gtk.SourceMark create_source_mark (string name, string category, Gtk.TextIter where);
