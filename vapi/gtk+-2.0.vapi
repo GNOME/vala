@@ -62,8 +62,8 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public AccelGroup ();
 		public bool activate (GLib.Quark accel_quark, GLib.Object acceleratable, uint accel_key, Gdk.ModifierType accel_mods);
-		public void connect (uint accel_key, Gdk.ModifierType accel_mods, Gtk.AccelFlags accel_flags, GLib.Closure closure);
-		public void connect_by_path (string accel_path, GLib.Closure closure);
+		public void connect (uint accel_key, Gdk.ModifierType accel_mods, Gtk.AccelFlags accel_flags, [CCode (type = "GClosure*")] owned Gtk.AccelGroupActivate closure);
+		public void connect_by_path (string accel_path, [CCode (type = "GClosure*")] owned Gtk.AccelGroupActivate closure);
 		public bool disconnect (GLib.Closure closure);
 		public bool disconnect_key (uint accel_key, Gdk.ModifierType accel_mods);
 		public Gtk.AccelKey* find (Gtk.AccelGroupFindFunc find_func);
@@ -97,7 +97,7 @@ namespace Gtk {
 		public unowned Gtk.Widget get_accel_widget ();
 		public uint get_accel_width ();
 		public bool refetch ();
-		public void set_accel_closure (GLib.Closure accel_closure);
+		public void set_accel_closure ([CCode (type = "GClosure*")] owned Gtk.AccelGroupActivate accel_closure);
 		public void set_accel_widget (Gtk.Widget accel_widget);
 		[NoAccessorMethod]
 		public GLib.Closure accel_closure { owned get; set; }
@@ -7122,7 +7122,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void AboutDialogActivateLinkFunc (Gtk.AboutDialog about, string link_);
-	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate bool AccelGroupActivate (Gtk.AccelGroup accel_group, GLib.Object acceleratable, uint keyval, Gdk.ModifierType modifier);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate bool AccelGroupFindFunc (Gtk.AccelKey key, GLib.Closure closure);
