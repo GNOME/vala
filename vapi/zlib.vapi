@@ -144,10 +144,10 @@ namespace ZLib {
 	[CCode (lower_case_cprefix = "")]
 	namespace Utility {
 		[CCode (cname = "compress2")]
-		public static int compress ([CCode (array_length_type = "gulong")] uchar[] dest, [CCode (array_length_type = "gulong")] uchar[] source, int level = Level.DEFAULT_COMPRESSION);
+		public static int compress ([CCode (array_length = false)] uchar[] dest, ref ulong dest_length, [CCode (array_length_type = "gulong")] uchar[] source, int level = Level.DEFAULT_COMPRESSION);
 		[CCode (cname = "compressBound")]
 		public static int compress_bound (ulong sourceLen);
-		public static int uncompress ([CCode (array_length_type = "gulong")] uchar[] dest, [CCode (array_length_type = "gulong")] uchar[] source);
+		public static int uncompress ([CCode (array_length = false)] uchar[] dest, ref ulong dest_length, [CCode (array_length_type = "gulong")] uchar[] source);
 		public static ulong adler32 (ulong crc = 0, [CCode (array_length_type = "guint")] uint8[]? buf = null);
 		public static ulong crc32 (ulong crc = 0, [CCode (array_length_type = "guint")] uint8[]? buf = null);
 	}
