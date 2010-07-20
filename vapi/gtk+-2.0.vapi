@@ -3242,23 +3242,25 @@ namespace Gtk {
 		public bool exists ();
 		public ulong get_added ();
 		public int get_age ();
-		public bool get_application_info (string app_name, string app_exec, uint count, ulong time_);
-		public unowned string get_applications (size_t length);
+		public bool get_application_info (string app_name, out unowned string app_exec, out uint count, out ulong time_);
+		[CCode (array_length_type = "gsize")]
+		public string[] get_applications ();
 		public unowned string get_description ();
 		public unowned string get_display_name ();
-		public unowned string get_groups (size_t length);
-		public unowned Gdk.Pixbuf get_icon (int size);
+		[CCode (array_length_type = "gsize")]
+		public string[] get_groups ();
+		public Gdk.Pixbuf? get_icon (int size);
 		public unowned string get_mime_type ();
 		public ulong get_modified ();
 		public bool get_private_hint ();
-		public unowned string get_short_name ();
+		public string get_short_name ();
 		public unowned string get_uri ();
-		public unowned string get_uri_display ();
+		public string? get_uri_display ();
 		public ulong get_visited ();
 		public bool has_application (string app_name);
 		public bool has_group (string group_name);
 		public bool is_local ();
-		public unowned string last_application ();
+		public string last_application ();
 		public bool match (Gtk.RecentInfo info_b);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
