@@ -343,7 +343,7 @@ public class Vala.GAsyncModule : GSignalModule {
 				header_declarations.add_include ("gio/gio.h");
 			}
 
-			if (!m.is_abstract) {
+			if (!m.is_abstract && m.body != null) {
 				var data = generate_data_struct (m);
 
 				append_function (generate_free_function (m));
