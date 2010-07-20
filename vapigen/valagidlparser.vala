@@ -1729,6 +1729,8 @@ public class Vala.GIdlParser : CodeVisitor {
 						m.no_array_length = true;
 						m.array_null_terminated = true;
 					}
+				} else if (nv[0] == "array_length_type") {
+					m.array_length_type = eval (nv[1]);
 				} else if (nv[0] == "type_name") {
 					var sym = new UnresolvedSymbol (null, eval (nv[1]));
 					if (return_type is UnresolvedType) {
