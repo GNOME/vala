@@ -69,25 +69,6 @@ internal class Vala.DovaValueModule : DovaObjectModule {
 		function.add_parameter (new CCodeFormalParameter ("src_index", "int32_t"));
 
 		decl_space.add_type_member_declaration (function);
-
-		add_value_assert (st, decl_space);
-	}
-
-	void add_value_assert (TypeSymbol sym, CCodeDeclarationSpace decl_space) {
-		string cname = sym.get_cname ();
-		if (sym is Class) {
-			cname += "*";
-		}
-
-		string assert_body;
-		var compare_method = sym.scope.lookup ("compare") as Method;
-		if (compare_method != null) {
-			assert_body = "do { %s __v1 = (v1); %s __v2 = (v2); if (%s (__v1, __v2) cmp 0); else dova_assert_compare (string_create_from_cstring (#v1 \" \" #cmp \" \" #v2), %s_to_string (v1), string_create_from_cstring (#cmp), %s_to_string (v2)); } while (0)".printf (cname, cname, compare_method.get_cname (), sym.get_lower_case_cname (), sym.get_lower_case_cname ());
-		} else {
-			assert_body = "do { %s __v1 = (v1); %s __v2 = (v2); if (__v1 cmp __v2); else dova_assert_compare (string_create_from_cstring (#v1 \" \" #cmp \" \" #v2), %s_to_string (v1), string_create_from_cstring (#cmp), %s_to_string (v2)); } while (0)".printf (cname, cname, sym.get_lower_case_cname (), sym.get_lower_case_cname ());
-		}
-		var assert_macro = new CCodeMacroReplacement ("%s_assert(v1, cmp, v2)".printf (sym.get_lower_case_cname ()), assert_body);
-		decl_space.add_type_member_declaration (assert_macro);
 	}
 
 	public override void visit_struct (Struct st) {
@@ -518,55 +499,7 @@ internal class Vala.DovaValueModule : DovaObjectModule {
 		}
 	}
 
-	bool is_comparison (Expression expr) {
-		var binary_expression = expr as BinaryExpression;
-		if (binary_expression != null) {
-			switch (binary_expression.operator) {
-			case BinaryOperator.LESS_THAN:
-			case BinaryOperator.GREATER_THAN:
-			case BinaryOperator.LESS_THAN_OR_EQUAL:
-			case BinaryOperator.GREATER_THAN_OR_EQUAL:
-			case BinaryOperator.EQUALITY:
-			case BinaryOperator.INEQUALITY:
-				return true;
-			default:
-				return false;
-			}
-		}
-		return false;
-	}
-
-	bool handle_assert (MethodCall expr) {
-		var args = expr.get_argument_list ();
-		var mtype = expr.call.value_type as MethodType;
-		if (mtype == null || mtype.method_symbol.get_cname () != "dova_assert" ||
-		    !(args.get (1) is NullLiteral) ||
-		    !is_comparison (args.get (0))) {
-			return false;
-		}
-
-		expr.accept_children (codegen);
-
-		var binary_expression = (BinaryExpression) args.get (0);
-		var op1 = binary_expression.left;
-		var op2 = binary_expression.right;
-
-		var type = op1.value_type.data_type;
-
-		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_assert".printf (type.get_lower_case_cname ())));
-		ccall.add_argument ((CCodeExpression) get_ccodenode (op1));
-		ccall.add_argument (new CCodeConstant (binary_expression.get_operator_string ()));
-		ccall.add_argument ((CCodeExpression) get_ccodenode (op2));
-		expr.ccodenode = ccall;
-
-		return true;
-	}
-
 	public override void visit_method_call (MethodCall expr) {
-		if (handle_assert (expr)) {
-			return;
-		}
-
 		var ma = expr.call as MemberAccess;
 		if (ma == null || ma.inner == null || !(ma.inner.value_type is GenericType)) {
 			base.visit_method_call (expr);
