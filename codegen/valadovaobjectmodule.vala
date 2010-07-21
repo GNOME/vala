@@ -961,6 +961,11 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 
 		type_init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("%s_type".printf (iface.get_lower_case_cname ())), calloc_call)));
 
+		// call any_type_init to set value_copy and similar functions
+		var any_type_init_call = new CCodeFunctionCall (new CCodeIdentifier ("any_type_init"));
+		any_type_init_call.add_argument (new CCodeIdentifier ("%s_type".printf (iface.get_lower_case_cname ())));
+		type_init_block.add_statement (new CCodeExpressionStatement (any_type_init_call));
+
 		var type_init_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_type_init".printf (iface.get_lower_case_cname ())));
 		type_init_call.add_argument (new CCodeIdentifier ("%s_type".printf (iface.get_lower_case_cname ())));
 		foreach (var type_param in iface.get_type_parameters ()) {
