@@ -2754,8 +2754,12 @@ namespace GLib {
 		public static int close (int fd);
 	}
 
-	[CCode (cname = "stat")]
+	[CCode (cname = "struct stat", cheader_filename = "sys/stat.h")]
 	public struct Stat {
+		[CCode (cname = "g_stat", instance_pos = -1)]
+		public Stat (string filename);
+		[CCode (cname = "g_lstat", instance_pos = -1)]
+		public Stat.l (string filename);
 	}
 
 	[Compact]

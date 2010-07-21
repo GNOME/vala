@@ -1381,6 +1381,8 @@ namespace Posix {
 	int fstat( int fd, out Stat buf);
 	[CCode (cheader_filename = "sys/stat.h")]
 	int stat (string filename, out Stat buf);
+	[CCode (cheader_filename = "sys/stat.h")]
+	int lstat (string filename, out Stat buf);
 
 	[CCode (cheader_filename = "sys/stat.h")]
 	public int chmod (string filename, mode_t mode);
