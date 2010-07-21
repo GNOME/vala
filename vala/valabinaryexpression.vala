@@ -413,6 +413,18 @@ public class Vala.BinaryExpression : Expression {
 			if (left.value_type.compatible (analyzer.string_type)
 			    && right.value_type.compatible (analyzer.string_type)) {
 				// string comparison
+				if (analyzer.context.profile == Profile.DOVA) {
+					var equals_call = new MethodCall (new MemberAccess (left, "equals", source_reference), source_reference);
+					equals_call.add_argument (right);
+					if (operator == BinaryOperator.EQUALITY) {
+						parent_node.replace_expression (this, equals_call);
+						return equals_call.check (analyzer);
+					} else {
+						var not = new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, equals_call, source_reference);
+						parent_node.replace_expression (this, not);
+						return not.check (analyzer);
+					}
+				}
 			}
 
 			value_type = analyzer.bool_type;
