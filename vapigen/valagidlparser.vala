@@ -1332,10 +1332,10 @@ public class Vala.GIdlParser : CodeVisitor {
 	}
 
 	void handle_async_methods (ObjectTypeSymbol type_symbol) {
+		Set<Method> finish_methods = new HashSet<Method> ();
 		var methods = type_symbol.get_methods ();
-		for (int method_n = 0 ; method_n < methods.size ; method_n++) {
-			var m = methods.get (method_n);
 
+		foreach (Method m in methods) {
 			if (m.coroutine) {
 				string finish_method_base;
 				if (m.name.has_suffix ("_async")) {
@@ -1373,13 +1373,15 @@ public class Vala.GIdlParser : CodeVisitor {
 					foreach (DataType error_type in finish_method.get_error_types ()) {
 						m.add_error_type (error_type.copy ());
 					}
-					if (methods.index_of (finish_method) < method_n) {
-						method_n--;
-					}
-					type_symbol.scope.remove (finish_method.name);
-					methods.remove (finish_method);
+					finish_methods.add (finish_method);
 				}
 			}
+		}
+
+		foreach (Method m in finish_methods)
+		{
+			type_symbol.scope.remove (m.name);
+			methods.remove (m);
 		}
 	}
 	
