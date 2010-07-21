@@ -521,6 +521,8 @@ public class Vala.GirParser : CodeVisitor {
 				type_name = "bool";
 			} else if (type_name == "GLib.offset") {
 				type_name = "int64";
+			} else if (type_name == "gsize") {
+				type_name = "size_t";
 			} else if (type_name == "GType") {
 				type_name = "GLib.Type";
 			} else if (type_name == "GLib.String") {
