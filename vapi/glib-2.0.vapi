@@ -2734,6 +2734,7 @@ namespace GLib {
 		public static bool test (string filename, FileTest test);
 		public static int open_tmp (string tmpl, out string name_used) throws FileError;
 		public static string read_link (string filename) throws FileError;
+		public static int error_from_errno (int err_no);
 		
 		[CCode (cname = "g_mkstemp")]
 		public static int mkstemp (string tmpl);
