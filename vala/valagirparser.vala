@@ -106,6 +106,10 @@ public class Vala.GirParser : CodeVisitor {
 
 	void next () {
 		current_token = reader.read_token (out begin, out end);
+
+		// Skip *all* <doc> tags
+		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "doc")
+			skip_element();
 	}
 
 	void start_element (string name) {
