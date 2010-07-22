@@ -7,7 +7,7 @@ namespace Clutter {
 		[CCode (cheader_filename = "clutter/clutter.h")]
 		public static uint add (uint fps, GLib.SourceFunc func);
 		[CCode (cheader_filename = "clutter/clutter.h")]
-		public static uint add_full (int priority, uint fps, GLib.SourceFunc func, GLib.DestroyNotify? notify = null);
+		public static uint add_full (int priority, uint fps, owned GLib.SourceFunc func);
 	}
 	[CCode (cprefix = "ClutterThreads", lower_case_cprefix = "clutter_threads_")]
 	namespace Threads {
@@ -16,21 +16,21 @@ namespace Clutter {
 			[CCode (cname = "clutter_threads_add_frame_source", cheader_filename = "clutter/clutter.h")]
 			public static uint add (uint fps, GLib.SourceFunc func);
 			[CCode (cname = "clutter_threads_add_frame_source_full", cheader_filename = "clutter/clutter.h")]
-			public static uint add_full (int priority, uint fps, GLib.SourceFunc func, GLib.DestroyNotify? notify = null);
+			public static uint add_full (int priority, uint fps, owned GLib.SourceFunc func);
 		}
 		[CCode (cprefix = "ClutterThreadsIdle", lower_case_cprefix = "clutter_threads_idle_")]
 		namespace Idle {
 			[CCode (cname = "clutter_threads_add_idle", cheader_filename = "clutter/clutter.h")]
 			public static uint add (GLib.SourceFunc func);
 			[CCode (cname = "clutter_threads_add_idle_full", cheader_filename = "clutter/clutter.h")]
-			public static uint add_full (int priority, GLib.SourceFunc func, GLib.DestroyNotify? notify = null);
+			public static uint add_full (int priority, owned GLib.SourceFunc func);
 		}
 		[CCode (cprefix = "ClutterThreadsTimeout", lower_case_cprefix = "clutter_threads_timeout_")]
 		namespace Timeout {
 			[CCode (cname = "clutter_threads_add_timeout", cheader_filename = "clutter/clutter.h")]
 			public static uint add (uint interval, GLib.SourceFunc func);
 			[CCode (cname = "clutter_threads_add_timeout_full", cheader_filename = "clutter/clutter.h")]
-			public static uint add_full (int priority, uint interval, GLib.SourceFunc func, GLib.DestroyNotify? notify = null);
+			public static uint add_full (int priority, uint interval, owned GLib.SourceFunc func);
 		}
 		[CCode (cheader_filename = "clutter/clutter.h")]
 		public static void enter ();

@@ -52,7 +52,7 @@ namespace Clutter {
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	namespace FrameSource {
 		public static uint add (uint fps, GLib.SourceFunc func);
-		public static uint add_full (int priority, uint fps, GLib.SourceFunc func, GLib.DestroyNotify? notify = null);
+		public static uint add_full (int priority, uint fps, owned GLib.SourceFunc func);
 	}
 
 	public class InputDevice {
@@ -103,7 +103,7 @@ namespace Clutter {
 			[CCode (cname = "clutter_threads_add_frame_source")]
 			public static uint add (uint fps, GLib.SourceFunc func);
 			[CCode (cname = "clutter_threads_add_frame_source_full")]
-			public static uint add_full (int priority, uint fps, GLib.SourceFunc func, GLib.DestroyNotify? notify = null);
+			public static uint add_full (int priority, uint fps, owned GLib.SourceFunc func);
 		}
 
 		[CCode (cheader_filename = "clutter/clutter.h")]
@@ -111,7 +111,7 @@ namespace Clutter {
 			[CCode (cname = "clutter_threads_add_idle")]
 			public static uint add (GLib.SourceFunc func);
 			[CCode (cname = "clutter_threads_add_idle_full")]
-			public static uint add_full (int priority, GLib.SourceFunc func, GLib.DestroyNotify? notify = null);
+			public static uint add_full (int priority, owned GLib.SourceFunc func);
 		}
 
 		[CCode (cheader_filename = "clutter/clutter.h")]
@@ -119,7 +119,7 @@ namespace Clutter {
 			[CCode (cname = "clutter_threads_add_timeout")]
 			public static uint add (uint interval, GLib.SourceFunc func);
 			[CCode (cname = "clutter_threads_add_timeout_full")]
-			public static uint add_full (int priority, uint interval, GLib.SourceFunc func, GLib.DestroyNotify? notify = null);
+			public static uint add_full (int priority, uint interval, owned GLib.SourceFunc func);
 		}
 
 		public static void enter ();
