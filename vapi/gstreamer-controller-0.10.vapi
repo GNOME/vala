@@ -15,16 +15,16 @@ namespace Gst {
 		public weak GLib.Object object;
 		public weak GLib.List properties;
 		[CCode (has_construct_function = false)]
-		public Controller (GLib.Object object);
+		public Controller (GLib.Object object, ...);
 		public Gst.Value @get (string property_name, Gst.ClockTime timestamp);
 		public unowned GLib.List get_all (string property_name);
 		public unowned Gst.ControlSource get_control_source (string property_name);
 		public bool get_value_array (Gst.ClockTime timestamp, Gst.ValueArray value_array);
 		public bool get_value_arrays (Gst.ClockTime timestamp, GLib.SList value_arrays);
-		public static bool init (int argc, out unowned string argv);
+		public static bool init ([CCode (array_length_pos = 0.9)] ref unowned string[] argv);
 		[CCode (has_construct_function = false)]
 		public Controller.list (GLib.Object object, GLib.List list);
-		public bool remove_properties ();
+		public bool remove_properties (...);
 		public bool remove_properties_list (GLib.List list);
 		public bool remove_properties_valist (void* var_args);
 		public bool @set (string property_name, Gst.ClockTime timestamp, Gst.Value value);
@@ -109,7 +109,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h", has_target = false)]
 	public delegate bool ControlSourceGetValueArray (Gst.ControlSource _self, Gst.ClockTime timestamp, Gst.ValueArray value_array);
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
-	public static unowned Gst.Controller object_control_properties (GLib.Object object);
+	public static unowned Gst.Controller object_control_properties (GLib.Object object, ...);
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public static Gst.ClockTime object_get_control_rate (GLib.Object object);
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
@@ -131,5 +131,5 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public static bool object_sync_values (GLib.Object object, Gst.ClockTime timestamp);
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
-	public static bool object_uncontrol_properties (GLib.Object object);
+	public static bool object_uncontrol_properties (GLib.Object object, ...);
 }

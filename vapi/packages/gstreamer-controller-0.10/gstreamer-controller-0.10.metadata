@@ -2,4 +2,9 @@ Gst cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/controller/gst
 GstLFOControlSource cheader_filename="gst/controller/gstlfocontrolsource.h"
 GstLFOWaveform hidden="1"
 GST_PARAM_CONTROLLABLE hidden="1"
-
+gst_controller_init.argc hidden="1"
+gst_controller_init.argv is_array="1" is_ref="1" array_length_pos="0.9"
+gst_controller_new ellipsis="1"
+gst_controller_remove_properties ellipsis="1"
+gst_object_control_properties ellipsis="1"
+gst_object_uncontrol_properties ellipsis="1"
