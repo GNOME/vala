@@ -26,11 +26,11 @@ namespace Clutter {
 	}
 
 	public interface Container : GLib.Object {
-		public void add (...);
+		public void add (params Clutter.Actor[] actors);
 		[CCode (vfunc_name = "add")]
 		public abstract void add_actor (Clutter.Actor actor);
 
-		public void remove (...);
+		public void remove (params Clutter.Actor[] actors);
 		[CCode (vfunc_name = "remove")]
 		public abstract void remove_actor (Clutter.Actor actor);
 

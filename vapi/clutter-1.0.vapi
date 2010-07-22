@@ -1169,7 +1169,7 @@ namespace Clutter {
 	}
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public interface Container : GLib.Object {
-		public void add (...);
+		public void add (params Clutter.Actor[] actors);
 		[CCode (vfunc_name = "add")]
 		public abstract void add_actor (Clutter.Actor actor);
 		public void add_valist (Clutter.Actor first_actor, void* var_args);
@@ -1194,7 +1194,7 @@ namespace Clutter {
 		public virtual void lower_child (Clutter.Actor actor, Clutter.Actor? sibling = null);
 		[CCode (vfunc_name = "raise")]
 		public virtual void raise_child (Clutter.Actor actor, Clutter.Actor? sibling = null);
-		public void remove (...);
+		public void remove (params Clutter.Actor[] actors);
 		[CCode (vfunc_name = "remove")]
 		public abstract void remove_actor (Clutter.Actor actor);
 		public void remove_valist (Clutter.Actor first_actor, void* var_args);
