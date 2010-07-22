@@ -516,8 +516,8 @@ namespace Clutter {
 		public static unowned Clutter.BindingPool find (string name);
 		public unowned string find_action (uint key_val, Clutter.ModifierType modifiers);
 		public static unowned Clutter.BindingPool get_for_class (void* klass);
-		public void install_action (string action_name, uint key_val, Clutter.ModifierType modifiers, owned GLib.Callback callback);
-		public void install_closure (string action_name, uint key_val, Clutter.ModifierType modifiers, GLib.Closure closure);
+		public void install_action (string action_name, uint key_val, Clutter.ModifierType modifiers, [CCode (type = "GCallback")] owned Clutter.BindingActionFunc callback);
+		public void install_closure (string action_name, uint key_val, Clutter.ModifierType modifiers, [CCode (type = "GClosure*")] owned Clutter.BindingActionFunc closure);
 		public void override_action (uint key_val, Clutter.ModifierType modifiers, owned GLib.Callback callback);
 		public void override_closure (uint key_val, Clutter.ModifierType modifiers, GLib.Closure closure);
 		public void remove_action (uint key_val, Clutter.ModifierType modifiers);
@@ -1756,7 +1756,7 @@ namespace Clutter {
 	public delegate double AlphaFunc (Clutter.Alpha alpha);
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public delegate void BehaviourForeachFunc (Clutter.Behaviour behaviour, Clutter.Actor actor);
-	[CCode (cheader_filename = "clutter/clutter.h", has_target = false)]
+	[CCode (cheader_filename = "clutter/clutter.h")]
 	public delegate bool BindingActionFunc (GLib.Object gobject, string action_name, uint key_val, Clutter.ModifierType modifiers);
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public delegate void Callback (Clutter.Actor actor);

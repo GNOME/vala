@@ -151,12 +151,15 @@ clutter_behaviour_rotate_set_direction hidden="1"
 clutter_behaviour_scale_get_bounds.* is_out="1"
 
 clutter_binding_pool_install_action.data hidden="1"
-clutter_binding_pool_install_action.callback transfer_ownership="1"
+clutter_binding_pool_install_action.callback transfer_ownership="1" type_name="BindingActionFunc" ctype="GCallback"
 clutter_binding_pool_install_action.notify hidden="1"
+clutter_binding_pool_install_closure.closure transfer_ownership="1" type_name="BindingActionFunc" ctype="GClosure*"
 
 clutter_binding_pool_override_action.data hidden="1"
 clutter_binding_pool_override_action.callback transfer_ownership="1"
 clutter_binding_pool_override_action.notify hidden="1"
+
+ClutterBindingActionFunc has_target="1"
 
 clutter_box_clutter_padding_* hidden="1"
 
