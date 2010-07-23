@@ -1459,6 +1459,25 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 				vfunc.add_parameter (new CCodeFormalParameter ("result", "void *"));
 			}
 
+			if (m.get_full_name () == "any.equals") {
+				// make this null-safe
+				var null_block = new CCodeBlock ();
+				null_block.add_statement (new CCodeReturnStatement (new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeIdentifier ("other"))));
+				vfunc.block.add_statement (new CCodeIfStatement (new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeIdentifier ("this")), null_block));
+			} else if (m.get_full_name () == "any.hash") {
+				// make this null-safe
+				var null_block = new CCodeBlock ();
+				null_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("0")));
+				vfunc.block.add_statement (new CCodeIfStatement (new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeIdentifier ("this")), null_block));
+			} else if (m.get_full_name () == "any.to_string") {
+				// make this null-safe
+				var null_string = new CCodeFunctionCall (new CCodeIdentifier ("string_create_from_cstring"));
+				null_string.add_argument (new CCodeConstant ("\"(null)\""));
+				var null_block = new CCodeBlock ();
+				null_block.add_statement (new CCodeReturnStatement (null_string));
+				vfunc.block.add_statement (new CCodeIfStatement (new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeIdentifier ("this")), null_block));
+			}
+
 			var vcast = get_type_private_from_type ((ObjectTypeSymbol) m.parent_symbol, get_type_from_instance (new CCodeIdentifier ("this")));
 
 			var vcall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, m.vfunc_name));
