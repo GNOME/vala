@@ -1886,6 +1886,7 @@
 			<field name="status" type="GstClockReturn"/>
 			<field name="func" type="GstClockCallback"/>
 			<field name="user_data" type="gpointer"/>
+			<field name="destroy_data" type="GDestroyNotify"/>
 		</struct>
 		<struct name="GstClockID">
 			<method name="compare_func" symbol="gst_clock_id_compare_func">
@@ -1932,6 +1933,15 @@
 					<parameter name="id" type="GstClockID"/>
 					<parameter name="func" type="GstClockCallback"/>
 					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="wait_async_full" symbol="gst_clock_id_wait_async_full">
+				<return-type type="GstClockReturn"/>
+				<parameters>
+					<parameter name="id" type="GstClockID"/>
+					<parameter name="func" type="GstClockCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+					<parameter name="destroy_data" type="GDestroyNotify"/>
 				</parameters>
 			</method>
 		</struct>
@@ -2490,6 +2500,17 @@
 					<parameter name="clock" type="GstClock*"/>
 				</parameters>
 			</method>
+			<method name="new_qos" symbol="gst_message_new_qos">
+				<return-type type="GstMessage*"/>
+				<parameters>
+					<parameter name="src" type="GstObject*"/>
+					<parameter name="live" type="gboolean"/>
+					<parameter name="running_time" type="guint64"/>
+					<parameter name="stream_time" type="guint64"/>
+					<parameter name="timestamp" type="guint64"/>
+					<parameter name="duration" type="guint64"/>
+				</parameters>
+			</method>
 			<method name="new_request_state" symbol="gst_message_new_request_state">
 				<return-type type="GstMessage*"/>
 				<parameters>
@@ -2663,6 +2684,35 @@
 					<parameter name="clock" type="GstClock**"/>
 				</parameters>
 			</method>
+			<method name="parse_qos" symbol="gst_message_parse_qos">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="message" type="GstMessage*"/>
+					<parameter name="live" type="gboolean*"/>
+					<parameter name="running_time" type="guint64*"/>
+					<parameter name="stream_time" type="guint64*"/>
+					<parameter name="timestamp" type="guint64*"/>
+					<parameter name="duration" type="guint64*"/>
+				</parameters>
+			</method>
+			<method name="parse_qos_stats" symbol="gst_message_parse_qos_stats">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="message" type="GstMessage*"/>
+					<parameter name="format" type="GstFormat*"/>
+					<parameter name="processed" type="guint64*"/>
+					<parameter name="dropped" type="guint64*"/>
+				</parameters>
+			</method>
+			<method name="parse_qos_values" symbol="gst_message_parse_qos_values">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="message" type="GstMessage*"/>
+					<parameter name="jitter" type="gint64*"/>
+					<parameter name="proportion" type="gdouble*"/>
+					<parameter name="quality" type="gint*"/>
+				</parameters>
+			</method>
 			<method name="parse_request_state" symbol="gst_message_parse_request_state">
 				<return-type type="void"/>
 				<parameters>
@@ -2768,6 +2818,24 @@
 					<parameter name="avg_in" type="gint"/>
 					<parameter name="avg_out" type="gint"/>
 					<parameter name="buffering_left" type="gint64"/>
+				</parameters>
+			</method>
+			<method name="set_qos_stats" symbol="gst_message_set_qos_stats">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="message" type="GstMessage*"/>
+					<parameter name="format" type="GstFormat"/>
+					<parameter name="processed" type="guint64"/>
+					<parameter name="dropped" type="guint64"/>
+				</parameters>
+			</method>
+			<method name="set_qos_values" symbol="gst_message_set_qos_values">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="message" type="GstMessage*"/>
+					<parameter name="jitter" type="gint64"/>
+					<parameter name="proportion" type="gdouble"/>
+					<parameter name="quality" type="gint"/>
 				</parameters>
 			</method>
 			<method name="set_seqnum" symbol="gst_message_set_seqnum">
@@ -3772,6 +3840,15 @@
 					<parameter name="var_args" type="va_list"/>
 				</parameters>
 			</method>
+			<method name="peek_string_index" symbol="gst_tag_list_peek_string_index">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="list" type="GstTagList*"/>
+					<parameter name="tag" type="gchar*"/>
+					<parameter name="index" type="guint"/>
+					<parameter name="value" type="gchar**"/>
+				</parameters>
+			</method>
 			<method name="remove_tag" symbol="gst_tag_list_remove_tag">
 				<return-type type="void"/>
 				<parameters>
@@ -4121,6 +4198,13 @@
 					<parameter name="value" type="GValue*"/>
 				</parameters>
 			</method>
+			<method name="steal_structure" symbol="gst_caps_steal_structure">
+				<return-type type="GstStructure*"/>
+				<parameters>
+					<parameter name="caps" type="GstCaps*"/>
+					<parameter name="index" type="guint"/>
+				</parameters>
+			</method>
 			<method name="subtract" symbol="gst_caps_subtract">
 				<return-type type="GstCaps*"/>
 				<parameters>
@@ -4366,6 +4450,14 @@
 					<parameter name="structure" type="GstStructure*"/>
 					<parameter name="field_name" type="char*"/>
 					<parameter name="target" type="int"/>
+				</parameters>
+			</method>
+			<method name="fixate_field_string" symbol="gst_structure_fixate_field_string">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="structure" type="GstStructure*"/>
+					<parameter name="field_name" type="char*"/>
+					<parameter name="target" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="foreach" symbol="gst_structure_foreach">
@@ -4804,6 +4896,7 @@
 			<member name="GST_LEVEL_DEBUG" value="4"/>
 			<member name="GST_LEVEL_LOG" value="5"/>
 			<member name="GST_LEVEL_FIXME" value="6"/>
+			<member name="GST_LEVEL_TRACE" value="7"/>
 			<member name="GST_LEVEL_MEMDUMP" value="9"/>
 			<member name="GST_LEVEL_COUNT" value="10"/>
 		</enum>
@@ -4828,6 +4921,8 @@
 			<member name="GST_EVENT_CUSTOM_BOTH_OOB" value="515"/>
 		</enum>
 		<enum name="GstFlowReturn" type-name="GstFlowReturn" get-type="gst_flow_return_get_type">
+			<member name="GST_FLOW_CUSTOM_SUCCESS_2" value="102"/>
+			<member name="GST_FLOW_CUSTOM_SUCCESS_1" value="101"/>
 			<member name="GST_FLOW_CUSTOM_SUCCESS" value="100"/>
 			<member name="GST_FLOW_RESEND" value="1"/>
 			<member name="GST_FLOW_OK" value="0"/>
@@ -4838,6 +4933,8 @@
 			<member name="GST_FLOW_ERROR" value="-5"/>
 			<member name="GST_FLOW_NOT_SUPPORTED" value="-6"/>
 			<member name="GST_FLOW_CUSTOM_ERROR" value="-100"/>
+			<member name="GST_FLOW_CUSTOM_ERROR_1" value="-101"/>
+			<member name="GST_FLOW_CUSTOM_ERROR_2" value="-102"/>
 		</enum>
 		<enum name="GstFormat" type-name="GstFormat" get-type="gst_format_get_type">
 			<member name="GST_FORMAT_UNDEFINED" value="0"/>
@@ -5149,6 +5246,7 @@
 			<member name="GST_MESSAGE_ASYNC_DONE" value="2097152"/>
 			<member name="GST_MESSAGE_REQUEST_STATE" value="4194304"/>
 			<member name="GST_MESSAGE_STEP_START" value="8388608"/>
+			<member name="GST_MESSAGE_QOS" value="16777216"/>
 			<member name="GST_MESSAGE_ANY" value="-1"/>
 		</flags>
 		<flags name="GstMiniObjectFlags" type-name="GstMiniObjectFlags" get-type="gst_mini_object_flags_get_type">
@@ -5167,6 +5265,12 @@
 			<member name="GST_PAD_IN_SETCAPS" value="128"/>
 			<member name="GST_PAD_BLOCKING" value="256"/>
 			<member name="GST_PAD_FLAG_LAST" value="4096"/>
+		</flags>
+		<flags name="GstPadLinkCheck" type-name="GstPadLinkCheck" get-type="gst_pad_link_check_get_type">
+			<member name="GST_PAD_LINK_CHECK_NOTHING" value="0"/>
+			<member name="GST_PAD_LINK_CHECK_HIERARCHY" value="1"/>
+			<member name="GST_PAD_LINK_CHECK_TEMPLATE_CAPS" value="2"/>
+			<member name="GST_PAD_LINK_CHECK_CAPS" value="4"/>
 		</flags>
 		<flags name="GstPadTemplateFlags" type-name="GstPadTemplateFlags" get-type="gst_pad_template_flags_get_type">
 			<member name="GST_PAD_TEMPLATE_FIXED" value="16"/>
@@ -5959,6 +6063,16 @@
 					<parameter name="dest" type="GstElement*"/>
 					<parameter name="destpadname" type="gchar*"/>
 					<parameter name="filter" type="GstCaps*"/>
+				</parameters>
+			</method>
+			<method name="link_pads_full" symbol="gst_element_link_pads_full">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="src" type="GstElement*"/>
+					<parameter name="srcpadname" type="gchar*"/>
+					<parameter name="dest" type="GstElement*"/>
+					<parameter name="destpadname" type="gchar*"/>
+					<parameter name="flags" type="GstPadLinkCheck"/>
 				</parameters>
 			</method>
 			<method name="lost_state" symbol="gst_element_lost_state">
@@ -7194,6 +7308,14 @@
 				<parameters>
 					<parameter name="srcpad" type="GstPad*"/>
 					<parameter name="sinkpad" type="GstPad*"/>
+				</parameters>
+			</method>
+			<method name="link_full" symbol="gst_pad_link_full">
+				<return-type type="GstPadLinkReturn"/>
+				<parameters>
+					<parameter name="srcpad" type="GstPad*"/>
+					<parameter name="sinkpad" type="GstPad*"/>
+					<parameter name="flags" type="GstPadLinkCheck"/>
 				</parameters>
 			</method>
 			<method name="load_and_link" symbol="gst_pad_load_and_link">
@@ -8911,6 +9033,7 @@
 		<constant name="GST_MESSAGE_TRACE_NAME" type="char*" value="GstMessage"/>
 		<constant name="GST_MSECOND" type="int" value="0"/>
 		<constant name="GST_NSECOND" type="int" value="0"/>
+		<constant name="GST_PAD_LINK_CHECK_DEFAULT" type="int" value="0"/>
 		<constant name="GST_PARAM_CONTROLLABLE" type="int" value="2"/>
 		<constant name="GST_PARAM_MUTABLE_PAUSED" type="int" value="8"/>
 		<constant name="GST_PARAM_MUTABLE_PLAYING" type="int" value="16"/>
@@ -8941,18 +9064,27 @@
 		<constant name="GST_TAG_COPYRIGHT_URI" type="char*" value="copyright-uri"/>
 		<constant name="GST_TAG_DATE" type="char*" value="date"/>
 		<constant name="GST_TAG_DESCRIPTION" type="char*" value="description"/>
+		<constant name="GST_TAG_DEVICE_MANUFACTURER" type="char*" value="device-manufacturer"/>
+		<constant name="GST_TAG_DEVICE_MODEL" type="char*" value="device-model"/>
 		<constant name="GST_TAG_DURATION" type="char*" value="duration"/>
 		<constant name="GST_TAG_ENCODER" type="char*" value="encoder"/>
 		<constant name="GST_TAG_ENCODER_VERSION" type="char*" value="encoder-version"/>
 		<constant name="GST_TAG_EXTENDED_COMMENT" type="char*" value="extended-comment"/>
 		<constant name="GST_TAG_GENRE" type="char*" value="genre"/>
+		<constant name="GST_TAG_GEO_LOCATION_CAPTURE_DIRECTION" type="char*" value="geo-location-capture-direction"/>
+		<constant name="GST_TAG_GEO_LOCATION_CITY" type="char*" value="geo-location-city"/>
+		<constant name="GST_TAG_GEO_LOCATION_COUNTRY" type="char*" value="geo-location-country"/>
 		<constant name="GST_TAG_GEO_LOCATION_ELEVATION" type="char*" value="geo-location-elevation"/>
 		<constant name="GST_TAG_GEO_LOCATION_LATITUDE" type="char*" value="geo-location-latitude"/>
 		<constant name="GST_TAG_GEO_LOCATION_LONGITUDE" type="char*" value="geo-location-longitude"/>
+		<constant name="GST_TAG_GEO_LOCATION_MOVEMENT_DIRECTION" type="char*" value="geo-location-movement-direction"/>
+		<constant name="GST_TAG_GEO_LOCATION_MOVEMENT_SPEED" type="char*" value="geo-location-movement-speed"/>
 		<constant name="GST_TAG_GEO_LOCATION_NAME" type="char*" value="geo-location-name"/>
+		<constant name="GST_TAG_GEO_LOCATION_SUBLOCATION" type="char*" value="geo-location-sublocation"/>
 		<constant name="GST_TAG_GROUPING" type="char*" value="grouping"/>
 		<constant name="GST_TAG_HOMEPAGE" type="char*" value="homepage"/>
 		<constant name="GST_TAG_IMAGE" type="char*" value="image"/>
+		<constant name="GST_TAG_IMAGE_ORIENTATION" type="char*" value="image-orientation"/>
 		<constant name="GST_TAG_ISRC" type="char*" value="isrc"/>
 		<constant name="GST_TAG_KEYWORDS" type="char*" value="keywords"/>
 		<constant name="GST_TAG_LANGUAGE_CODE" type="char*" value="language-code"/>
@@ -8979,6 +9111,7 @@
 		<constant name="GST_TAG_TRACK_GAIN" type="char*" value="replaygain-track-gain"/>
 		<constant name="GST_TAG_TRACK_NUMBER" type="char*" value="track-number"/>
 		<constant name="GST_TAG_TRACK_PEAK" type="char*" value="replaygain-track-peak"/>
+		<constant name="GST_TAG_USER_RATING" type="char*" value="user-rating"/>
 		<constant name="GST_TAG_VERSION" type="char*" value="version"/>
 		<constant name="GST_TAG_VIDEO_CODEC" type="char*" value="video-codec"/>
 		<constant name="GST_TIME_FORMAT" type="char*" value="u:%02u:%02u.%09u"/>
@@ -8988,8 +9121,8 @@
 		<constant name="GST_VALUE_LESS_THAN" type="int" value="-1"/>
 		<constant name="GST_VALUE_UNORDERED" type="int" value="2"/>
 		<constant name="GST_VERSION_MAJOR" type="int" value="0"/>
-		<constant name="GST_VERSION_MICRO" type="int" value="28"/>
+		<constant name="GST_VERSION_MICRO" type="int" value="30"/>
 		<constant name="GST_VERSION_MINOR" type="int" value="10"/>
-		<constant name="GST_VERSION_NANO" type="int" value="0"/>
+		<constant name="GST_VERSION_NANO" type="int" value="1"/>
 	</namespace>
 </api>

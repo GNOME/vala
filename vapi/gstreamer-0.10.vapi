@@ -218,6 +218,7 @@ namespace Gst {
 		public void set_value (string field, Gst.Value value);
 		[CCode (has_construct_function = false)]
 		public Caps.simple (string media_type, string fieldname, ...);
+		public unowned Gst.Structure steal_structure (uint index);
 		public Gst.Caps subtract (Gst.Caps subtrahend);
 		public string to_string ();
 		public void truncate ();
@@ -275,6 +276,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class ClockEntry {
 		public weak Gst.Clock clock;
+		public weak GLib.DestroyNotify destroy_data;
 		public weak Gst.ClockCallback func;
 		public Gst.ClockTime interval;
 		public int refcount;
@@ -295,6 +297,7 @@ namespace Gst {
 		public void unschedule ();
 		public Gst.ClockReturn wait (Gst.ClockTimeDiff jitter);
 		public Gst.ClockReturn wait_async (Gst.ClockCallback func);
+		public Gst.ClockReturn wait_async_full (Gst.ClockCallback func, GLib.DestroyNotify destroy_data);
 	}
 	[Compact]
 	[CCode (type_id = "GST_TYPE_DATE", cheader_filename = "gst/gst.h")]
@@ -400,6 +403,7 @@ namespace Gst {
 		public bool link_many (Gst.Element element_2, ...);
 		public bool link_pads (string srcpadname, Gst.Element dest, string destpadname);
 		public bool link_pads_filtered (string srcpadname, Gst.Element dest, string destpadname, Gst.Caps filter);
+		public bool link_pads_full (string srcpadname, Gst.Element dest, string destpadname, Gst.PadLinkCheck flags);
 		public void lost_state ();
 		public void lost_state_full (bool new_base_time);
 		public static Gst.Element? make_from_uri (Gst.URIType type, string uri, string? elementname);
@@ -671,6 +675,9 @@ namespace Gst {
 		public void parse_error (out GLib.Error gerror, out string? debug);
 		public void parse_info (out GLib.Error gerror, out string? debug);
 		public void parse_new_clock (out unowned Gst.Clock clock);
+		public void parse_qos (bool live, uint64 running_time, uint64 stream_time, uint64 timestamp, uint64 duration);
+		public void parse_qos_stats (Gst.Format format, uint64 processed, uint64 dropped);
+		public void parse_qos_values (int64 jitter, double proportion, int quality);
 		public void parse_request_state (out Gst.State state);
 		public void parse_segment_done (out Gst.Format format, out int64 position);
 		public void parse_segment_start (out Gst.Format format, out int64 position);
@@ -682,6 +689,8 @@ namespace Gst {
 		public void parse_tag (out Gst.TagList tag_list);
 		public void parse_tag_full (out unowned Gst.Pad pad, out unowned Gst.TagList tag_list);
 		public void parse_warning (out GLib.Error gerror, out string? debug);
+		[CCode (has_construct_function = false)]
+		public Message.qos (Gst.Object src, bool live, uint64 running_time, uint64 stream_time, uint64 timestamp, uint64 duration);
 		public unowned Gst.Message @ref ();
 		[CCode (has_construct_function = false)]
 		public Message.request_state (Gst.Object src, Gst.State state);
@@ -690,6 +699,8 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public Message.segment_start (Gst.Object src, Gst.Format format, int64 position);
 		public void set_buffering_stats (Gst.BufferingMode mode, int avg_in, int avg_out, int64 buffering_left);
+		public void set_qos_stats (Gst.Format format, uint64 processed, uint64 dropped);
+		public void set_qos_values (int64 jitter, double proportion, int quality);
 		public void set_seqnum (uint32 seqnum);
 		public void set_stream_status_object (ref unowned Gst.Value? object);
 		[CCode (has_construct_function = false)]
@@ -846,6 +857,7 @@ namespace Gst {
 		public Gst.Iterator<Gst.Pad> iterate_internal_links ();
 		public Gst.Iterator<Gst.Pad> iterate_internal_links_default ();
 		public Gst.PadLinkReturn link (Gst.Pad sinkpad);
+		public Gst.PadLinkReturn link_full (Gst.Pad sinkpad, Gst.PadLinkCheck flags);
 		public void load_and_link (Gst.Object parent);
 		public bool pause_task ();
 		public bool peer_accept_caps (Gst.Caps caps);
@@ -1147,6 +1159,7 @@ namespace Gst {
 		public bool fixate_field_nearest_double (string field_name, double target);
 		public bool fixate_field_nearest_fraction (string field_name, int target_numerator, int target_denominator);
 		public bool fixate_field_nearest_int (string field_name, int target);
+		public bool fixate_field_string (string field_name, string target);
 		public bool @foreach (Gst.StructureForeachFunc func);
 		public static Gst.Structure? from_string (string str, out unowned string end);
 		public bool @get (...);
@@ -1254,6 +1267,7 @@ namespace Gst {
 		public void insert (Gst.TagList from, Gst.TagMergeMode mode);
 		public bool is_empty ();
 		public Gst.TagList merge (Gst.TagList list2, Gst.TagMergeMode mode);
+		public bool peek_string_index (string tag, uint index, string value);
 		public void remove_tag (string tag);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -1753,6 +1767,7 @@ namespace Gst {
 		DEBUG,
 		LOG,
 		FIXME,
+		TRACE,
 		MEMDUMP,
 		COUNT;
 		[CCode (cname = "gst_debug_level_get_name")]
@@ -1801,6 +1816,8 @@ namespace Gst {
 	}
 	[CCode (cprefix = "GST_FLOW_", cheader_filename = "gst/gst.h")]
 	public enum FlowReturn {
+		CUSTOM_SUCCESS_2,
+		CUSTOM_SUCCESS_1,
 		CUSTOM_SUCCESS,
 		RESEND,
 		OK,
@@ -1810,7 +1827,9 @@ namespace Gst {
 		NOT_NEGOTIATED,
 		ERROR,
 		NOT_SUPPORTED,
-		CUSTOM_ERROR;
+		CUSTOM_ERROR,
+		CUSTOM_ERROR_1,
+		CUSTOM_ERROR_2;
 		[CCode (cname = "GST_FLOW_IS_FATAL")]
 		public bool is_fatal ();
 		[CCode (cname = "GST_FLOW_IS_SUCCESS")]
@@ -1917,6 +1936,7 @@ namespace Gst {
 		ASYNC_DONE,
 		REQUEST_STATE,
 		STEP_START,
+		QOS,
 		ANY;
 		public GLib.Quark to_quark ();
 		public unowned string get_name ();
@@ -1951,6 +1971,14 @@ namespace Gst {
 		IN_SETCAPS,
 		BLOCKING,
 		FLAG_LAST
+	}
+	[CCode (cprefix = "GST_PAD_LINK_CHECK_", cheader_filename = "gst/gst.h")]
+	[Flags]
+	public enum PadLinkCheck {
+		NOTHING,
+		HIERARCHY,
+		TEMPLATE_CAPS,
+		CAPS
 	}
 	[CCode (cprefix = "GST_PAD_LINK_", cheader_filename = "gst/gst.h")]
 	public enum PadLinkReturn {
@@ -2368,6 +2396,8 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public const int NSECOND;
 	[CCode (cheader_filename = "gst/gst.h")]
+	public const int PAD_LINK_CHECK_DEFAULT;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int PARAM_CONTROLLABLE;
 	[CCode (cheader_filename = "gst/gst.h")]
 	public const int PARAM_MUTABLE_PAUSED;
@@ -2428,6 +2458,10 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_DESCRIPTION;
 	[CCode (cheader_filename = "gst/gst.h")]
+	public const string TAG_DEVICE_MANUFACTURER;
+	[CCode (cheader_filename = "gst/gst.h")]
+	public const string TAG_DEVICE_MODEL;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_DURATION;
 	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_ENCODER;
@@ -2438,19 +2472,33 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_GENRE;
 	[CCode (cheader_filename = "gst/gst.h")]
+	public const string TAG_GEO_LOCATION_CAPTURE_DIRECTION;
+	[CCode (cheader_filename = "gst/gst.h")]
+	public const string TAG_GEO_LOCATION_CITY;
+	[CCode (cheader_filename = "gst/gst.h")]
+	public const string TAG_GEO_LOCATION_COUNTRY;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_GEO_LOCATION_ELEVATION;
 	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_GEO_LOCATION_LATITUDE;
 	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_GEO_LOCATION_LONGITUDE;
 	[CCode (cheader_filename = "gst/gst.h")]
+	public const string TAG_GEO_LOCATION_MOVEMENT_DIRECTION;
+	[CCode (cheader_filename = "gst/gst.h")]
+	public const string TAG_GEO_LOCATION_MOVEMENT_SPEED;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_GEO_LOCATION_NAME;
+	[CCode (cheader_filename = "gst/gst.h")]
+	public const string TAG_GEO_LOCATION_SUBLOCATION;
 	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_GROUPING;
 	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_HOMEPAGE;
 	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_IMAGE;
+	[CCode (cheader_filename = "gst/gst.h")]
+	public const string TAG_IMAGE_ORIENTATION;
 	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_ISRC;
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -2503,6 +2551,8 @@ namespace Gst {
 	public const string TAG_TRACK_NUMBER;
 	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_TRACK_PEAK;
+	[CCode (cheader_filename = "gst/gst.h")]
+	public const string TAG_USER_RATING;
 	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_VERSION;
 	[CCode (cheader_filename = "gst/gst.h")]
