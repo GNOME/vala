@@ -1,6 +1,6 @@
 /* valanulltype.vala
  *
- * Copyright (C) 2007-2009  Jürg Billeter
+ * Copyright (C) 2007-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -63,7 +63,11 @@ public class Vala.NullType : ReferenceType {
 	}
 
 	public override string? get_cname () {
-		return "gpointer";
+		if (CodeContext.get ().profile == Profile.GOBJECT) {
+			return "gpointer";
+		} else {
+			return "void *";
+		}
 	}
 
 	public override bool is_disposable () {
