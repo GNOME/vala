@@ -458,6 +458,22 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 		}
 
+		foreach (Property prop in cl.get_properties ()) {
+			if (prop.binding == MemberBinding.INSTANCE) {
+				if (prop.get_lock_used ()) {
+					has_instance_locks = true;
+					// add field for mutex
+					instance_priv_struct.add_field (mutex_type.get_cname (), get_symbol_lock_name (prop.name));
+				}
+			} else if (prop.binding == MemberBinding.CLASS) {
+				if (prop.get_lock_used ()) {
+					has_class_locks = true;
+					// add field for mutex
+					type_priv_struct.add_field (mutex_type.get_cname (), get_symbol_lock_name (prop.name));
+				}
+			}
+		}
+
 		if (is_gtypeinstance) {
 			if (cl.has_class_private_fields || has_class_locks) {
 				decl_space.add_type_declaration (new CCodeTypeDefinition ("struct %s".printf (type_priv_struct.name), new CCodeVariableDeclarator ("%sClassPrivate".printf (cl.get_cname ()))));
