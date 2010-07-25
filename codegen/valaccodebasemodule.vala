@@ -901,6 +901,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_field (Field f) {
+		visit_member (f);
+
 		check_type (f.field_type);
 
 		f.accept_children (codegen);
@@ -1207,6 +1209,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_property (Property prop) {
+		visit_member (prop);
+
 		check_type (prop.property_type);
 
 		int old_next_temp_var_id = next_temp_var_id;

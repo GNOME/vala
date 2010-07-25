@@ -131,10 +131,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		head.visit_delegate (d);
 	}
 	
-	public override void visit_member (Member m) {
-		head.visit_member (m);
-	}
-
 	public override void visit_constant (Constant c) {
 		head.visit_constant (c);
 	}

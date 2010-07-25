@@ -207,8 +207,6 @@ public class Vala.Property : Member, Lockable {
 	}
 
 	public override void accept (CodeVisitor visitor) {
-		visitor.visit_member (this);
-
 		visitor.visit_property (this);
 	}
 

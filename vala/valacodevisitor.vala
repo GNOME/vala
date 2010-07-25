@@ -1,6 +1,6 @@
 /* valacodevisitor.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
@@ -106,14 +106,6 @@ public abstract class Vala.CodeVisitor {
 	 * @param d a delegate
 	 */
 	public virtual void visit_delegate (Delegate d) {
-	}
-	
-	/**
-	 * Visit operation called for members.
-	 *
-	 * @param m a member
-	 */
-	public virtual void visit_member (Member m) {
 	}
 
 	/**

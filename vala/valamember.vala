@@ -41,10 +41,6 @@ public abstract class Vala.Member : Symbol {
 		this.comment = comment;
 	}
 
-	public override void accept (CodeVisitor visitor) {
-		visitor.visit_member (this);
-	}
-
 	public override List<string> get_cheader_filenames () {
 		if (cheader_filenames.size == 0 && parent_symbol != null) {
 			/* default to header filenames of the namespace */

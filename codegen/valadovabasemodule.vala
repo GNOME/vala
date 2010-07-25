@@ -393,9 +393,6 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		}
 	}
 
-	public override void visit_member (Member m) {
-	}
-
 	public void generate_constant_declaration (Constant c, CCodeDeclarationSpace decl_space) {
 		if (decl_space.add_symbol_declaration (c, c.get_cname ())) {
 			return;

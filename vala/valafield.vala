@@ -126,8 +126,6 @@ public class Vala.Field : Member, Lockable {
 	}
 
 	public override void accept (CodeVisitor visitor) {
-		visitor.visit_member (this);
-		
 		visitor.visit_field (this);
 	}
 

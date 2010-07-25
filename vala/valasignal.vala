@@ -196,8 +196,6 @@ public class Vala.Signal : Member, Lockable {
 	}
 
 	public override void accept (CodeVisitor visitor) {
-		visitor.visit_member (this);
-		
 		visitor.visit_signal (this);
 	}
 
