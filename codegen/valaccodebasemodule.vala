@@ -5384,19 +5384,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		if (ma == null) {
 			return false;
 		}
-		if (ma.symbol_reference == null) {
-			return false;
-		}
-		if (ma.symbol_reference is FormalParameter) {
-			return true;
-		}
-		if (ma.symbol_reference is LocalVariable) {
-			return true;
-		}
-		if (ma.symbol_reference is Field) {
-			return true;
-		}
-		return false;
+
+		return (ma.symbol_reference is Variable);
 	}
 
 	/* retrieve the correct address_of expression for a give expression, creates temporary variables
