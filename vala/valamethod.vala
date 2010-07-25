@@ -27,7 +27,7 @@ using GLib;
 /**
  * Represents a type or namespace method.
  */
-public class Vala.Method : Member {
+public class Vala.Method : Symbol {
 	List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
 
 	public const string DEFAULT_SENTINEL = "NULL";

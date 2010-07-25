@@ -95,6 +95,16 @@ public abstract class Vala.Symbol : CodeNode {
 	 */
 	public SymbolAccessibility access { get; set; }
 
+	public Comment? comment { get; set; }
+
+	private List<string> cheader_filenames = new ArrayList<string> ();
+
+	/**
+	 * Specifies whether this method explicitly hides a member of a base
+	 * type.
+	 */
+	public bool hides { get; set; }
+
 	/**
 	 * Check if this symbol is just internal API (and therefore doesn't need 
 	 * to be listed in header files for instance) by traversing parent symbols
@@ -153,9 +163,10 @@ public abstract class Vala.Symbol : CodeNode {
 	private weak Scope _owner;
 	private Scope _scope;
 
-	public Symbol (string? name, SourceReference? source_reference) {
+	public Symbol (string? name, SourceReference? source_reference, Comment? comment = null) {
 		this.name = name;
 		this.source_reference = source_reference;
+		this.comment = comment;
 		_scope = new Scope (this);
 	}
 	
@@ -229,7 +240,19 @@ public abstract class Vala.Symbol : CodeNode {
 	 * @return list of C header filenames for this symbol
 	 */
 	public virtual List<string> get_cheader_filenames () {
-		return new ArrayList<string> ();
+		// parent_symbol can be null on incremental parsing
+		if (cheader_filenames.size == 0 && parent_symbol != null) {
+			/* default to header filenames of the namespace */
+			foreach (string filename in parent_symbol.get_cheader_filenames ()) {
+				add_cheader_filename (filename);
+			}
+
+			if (cheader_filenames.size == 0 && source_reference != null && !external_package) {
+				// don't add default include directives for VAPI files
+				cheader_filenames.add (source_reference.file.get_cinclude_filename ());
+			}
+		}
+		return cheader_filenames;
 	}
 
 	/**
@@ -413,6 +436,53 @@ public abstract class Vala.Symbol : CodeNode {
 			return false;
 		}
 	}
+
+	/**
+	 * Sets the C header filename of this namespace to the specified
+	 * filename.
+	 *
+	 * @param cheader_filename header filename
+	 */
+	public void set_cheader_filename (string cheader_filename) {
+		cheader_filenames = new ArrayList<string> ();
+		cheader_filenames.add (cheader_filename);
+	}
+
+	/**
+	 * Adds a filename to the list of C header filenames users of this data
+	 * type must include.
+	 *
+	 * @param filename a C header filename
+	 */
+	public void add_cheader_filename (string filename) {
+		cheader_filenames.add (filename);
+	}
+
+	public Symbol? get_hidden_member () {
+		Symbol sym = null;
+
+		if (parent_symbol is Class) {
+			var cl = ((Class) parent_symbol).base_class;
+			while (cl != null) {
+				sym = cl.scope.lookup (name);
+				if (sym != null && sym.access != SymbolAccessibility.PRIVATE) {
+					return sym;
+				}
+				cl = cl.base_class;
+			}
+		} else if (parent_symbol is Struct) {
+			var st = ((Struct) parent_symbol).base_struct;
+			while (st != null) {
+				sym = st.scope.lookup (name);
+				if (sym != null && sym.access != SymbolAccessibility.PRIVATE) {
+					return sym;
+				}
+				st = st.base_struct;
+			}
+		}
+
+		return null;
+	}
 }
 
 public enum Vala.SymbolAccessibility {
@@ -422,3 +492,8 @@ public enum Vala.SymbolAccessibility {
 	PUBLIC
 }
 
+public enum MemberBinding {
+	INSTANCE,
+	CLASS,
+	STATIC
+}

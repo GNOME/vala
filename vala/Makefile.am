@@ -94,7 +94,6 @@ libvalacore_la_VALASOURCES = \
 	valaloop.vala \
 	valamapliteral.vala \
 	valamarkupreader.vala \
-	valamember.vala \
 	valamemberaccess.vala \
 	valamemberinitializer.vala \
 	valamethod.vala \

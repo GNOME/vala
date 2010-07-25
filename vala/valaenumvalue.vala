@@ -31,8 +31,6 @@ public class Vala.EnumValue : Symbol {
 	 */
 	public Expression value { get; set; }
 
-	public Comment comment { get; set; }
-
 	private string cname;
 
 	/**

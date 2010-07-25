@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents an object signal. Signals enable objects to provide notifications.
  */
-public class Vala.Signal : Member, Lockable {
+public class Vala.Signal : Symbol, Lockable {
 	/**
 	 * The return type of handlers of this signal.
 	 */

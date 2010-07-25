@@ -29,13 +29,8 @@ using GLib;
  * code or imported from an external library with a Vala API file.
  */
 public abstract class Vala.TypeSymbol : Symbol {
-	public Comment? comment { get; set; }
-
-	private List<string> cheader_filenames = new ArrayList<string> ();
-
 	public TypeSymbol (string? name, SourceReference? source_reference = null, Comment? comment = null) {
-		base (name, source_reference);
-		this.comment = comment;
+		base (name, source_reference, comment);
 	}
 
 	/**
@@ -225,32 +220,6 @@ public abstract class Vala.TypeSymbol : Symbol {
 	 */
 	public virtual string? get_default_value () {
 		return null;
-	}
-
-	public override List<string> get_cheader_filenames () {
-		// parent_symbol can be null on incremental parsing
-		if (cheader_filenames.size == 0 && parent_symbol != null) {
-			/* default to header filenames of the namespace */
-			foreach (string filename in parent_symbol.get_cheader_filenames ()) {
-				add_cheader_filename (filename);
-			}
-
-			if (cheader_filenames.size == 0 && source_reference != null && !external_package) {
-				// don't add default include directives for VAPI files
-				cheader_filenames.add (source_reference.file.get_cinclude_filename ());
-			}
-		}
-		return cheader_filenames;
-	}
-
-	/**
-	 * Adds a filename to the list of C header filenames users of this data
-	 * type must include.
-	 *
-	 * @param filename a C header filename
-	 */
-	public void add_cheader_filename (string filename) {
-		cheader_filenames.add (filename);
 	}
 
 	/**

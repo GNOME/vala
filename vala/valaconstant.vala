@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a type member with a constant value.
  */
-public class Vala.Constant : Member, Lockable {
+public class Vala.Constant : Symbol, Lockable {
 	/**
 	 * The data type of this constant.
 	 */

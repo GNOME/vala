@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a type or namespace field.
  */
-public class Vala.Field : Member, Lockable {
+public class Vala.Field : Symbol, Lockable {
 	/**
 	 * The data type of this field.
 	 */

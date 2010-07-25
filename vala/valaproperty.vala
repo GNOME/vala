@@ -26,7 +26,7 @@ using GLib;
 /**
  * Represents a property declaration in the source code.
  */
-public class Vala.Property : Member, Lockable {
+public class Vala.Property : Symbol, Lockable {
 	/**
 	 * The property type.
 	 */

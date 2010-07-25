@@ -733,7 +733,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		}
 	}
 
-	public override void visit_member (Member m) {
+	public override void visit_member (Symbol m) {
 		/* stuff meant for all lockable members */
 		if (m is Lockable && ((Lockable) m).get_lock_used ()) {
 			CCodeExpression l = new CCodeIdentifier ("self");
@@ -3438,7 +3438,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	private CCodeExpression get_lock_expression (Statement stmt, Expression resource) {
 		CCodeExpression l = null;
 		var inner_node = ((MemberAccess)resource).inner;
-		var member = (Member)resource.symbol_reference;
+		var member = resource.symbol_reference;
 		var parent = (TypeSymbol)resource.symbol_reference.parent_symbol;
 		
 		if (member.is_instance_member ()) {

@@ -41,8 +41,6 @@ public class Vala.Namespace : Symbol {
 	private List<string> cprefixes = new ArrayList<string> ();
 	private string lower_case_cprefix;
 	
-	private List<string> cheader_filenames = new ArrayList<string> ();
-
 	private List<Namespace> namespaces = new ArrayList<Namespace> ();
 
 	private List<UsingDirective> using_directives = new ArrayList<UsingDirective> ();
@@ -517,30 +515,6 @@ public class Vala.Namespace : Symbol {
 		this.lower_case_cprefix = cprefix;
 	}
 
-	public override List<string> get_cheader_filenames () {
-		return cheader_filenames;
-	}
-
-	/**
-	 * Sets the C header filename of this namespace to the specified
-	 * filename.
-	 *
-	 * @param cheader_filename header filename
-	 */
-	public void set_cheader_filename (string cheader_filename) {
-		cheader_filenames = new ArrayList<string> ();
-		cheader_filenames.add (cheader_filename);
-	}
-	
-	/**
-	 * Adds a C header filename of this namespace.
-	 *
-	 * @param cheader_filename header filename
-	 */
-	public void add_cheader_filename (string cheader_filename) {
-		cheader_filenames.add (cheader_filename);
-	}
-
 	private void process_ccode_attribute (Attribute a) {
 		if (a.has_argument ("cprefix")) {
 			string value = a.get_string ("cprefix");
@@ -559,7 +533,7 @@ public class Vala.Namespace : Symbol {
 		if (a.has_argument ("cheader_filename")) {
 			var val = a.get_string ("cheader_filename");
 			foreach (string filename in val.split (",")) {
-				cheader_filenames.add (filename);
+				add_cheader_filename (filename);
 			}
 		}
 		if (a.has_argument ("gir_namespace")) {

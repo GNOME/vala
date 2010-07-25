@@ -79,7 +79,7 @@ public abstract class Vala.CCodeModule {
 		next.visit_delegate (d);
 	}
 	
-	public virtual void visit_member (Member m) {
+	public virtual void visit_member (Symbol m) {
 		next.visit_member (m);
 	}
 
