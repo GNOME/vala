@@ -3047,11 +3047,14 @@ public class Vala.Parser : CodeVisitor {
 			var value_begin = get_location ();
 			string id = parse_identifier ();
 			comment = scanner.pop_comment ();
-			var ev = new EnumValue (id, get_src (value_begin), comment);
-			set_attributes (ev, value_attrs);
+
+			Expression value = null;
 			if (accept (TokenType.ASSIGN)) {
-				ev.value = parse_expression ();
+				value = parse_expression ();
 			}
+
+			var ev = new EnumValue (id, value, get_src (value_begin), comment);
+			set_attributes (ev, value_attrs);
 			en.add_value (ev);
 		} while (accept (TokenType.COMMA));
 		if (accept (TokenType.SEMICOLON)) {

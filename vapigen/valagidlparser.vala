@@ -1084,7 +1084,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 
 			if (!is_hidden) {
-				var ev = new EnumValue (value2.name.offset (common_prefix.len ()));
+				var ev = new EnumValue (value2.name.offset (common_prefix.len ()), null);
 				en.add_value (ev);
 			}
 		}

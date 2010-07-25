@@ -261,6 +261,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				type.value_owned = false;
 			}
 			return type;
+		} else if (sym is EnumValue) {
+			return new EnumValueType ((Enum) sym.parent_symbol);
 		} else if (sym is Constant) {
 			var c = (Constant) sym;
 			return c.type_reference;
@@ -289,8 +291,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				type.value_owned = false;
 			}
 			return type;
-		} else if (sym is EnumValue) {
-			return new EnumValueType ((Enum) sym.parent_symbol);
 		} else if (sym is Method) {
 			return new MethodType ((Method) sym);
 		} else if (sym is Signal) {

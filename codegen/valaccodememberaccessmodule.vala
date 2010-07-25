@@ -172,6 +172,12 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 
 				expr.ccodenode = new CCodeIdentifier (f.get_cname ());
 			}
+		} else if (expr.symbol_reference is EnumValue) {
+			var ev = (EnumValue) expr.symbol_reference;
+
+			generate_enum_declaration ((Enum) ev.parent_symbol, source_declarations);
+
+			expr.ccodenode = new CCodeConstant (ev.get_cname ());
 		} else if (expr.symbol_reference is Constant) {
 			var c = (Constant) expr.symbol_reference;
 
@@ -346,12 +352,6 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				ccomma.append_expression (ctemp);
 				expr.ccodenode = ccomma;
 			}
-		} else if (expr.symbol_reference is EnumValue) {
-			var ev = (EnumValue) expr.symbol_reference;
-
-			generate_enum_declaration ((Enum) ev.parent_symbol, source_declarations);
-
-			expr.ccodenode = new CCodeConstant (ev.get_cname ());
 		} else if (expr.symbol_reference is LocalVariable) {
 			var local = (LocalVariable) expr.symbol_reference;
 			if (local.is_result) {

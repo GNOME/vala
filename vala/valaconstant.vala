@@ -67,9 +67,11 @@ public class Vala.Constant : Symbol, Lockable {
 	 * @param source_reference reference to source code
 	 * @return                 newly created constant
 	 */
-	public Constant (string name, DataType type_reference, Expression? value, SourceReference? source_reference, Comment? comment = null) {
+	public Constant (string name, DataType? type_reference, Expression? value, SourceReference? source_reference, Comment? comment = null) {
 		base (name, source_reference, comment);
-		this.type_reference = type_reference;
+		if (type_reference != null) {
+			this.type_reference = type_reference;
+		}
 		this.value = value;
 	}
 
@@ -103,13 +105,17 @@ public class Vala.Constant : Symbol, Lockable {
 	 *
 	 * @return the name to be used in C code by default
 	 */
-	public string get_default_cname () {
+	public virtual string get_default_cname () {
 		if (parent_symbol == null) {
 			// global constant
 			return name;
 		} else {
 			return "%s%s".printf (parent_symbol.get_lower_case_cprefix ().up (), name);
 		}
+	}
+
+	public void set_cname (string value) {
+		this.cname = value;
 	}
 
 	public bool get_lock_used () {

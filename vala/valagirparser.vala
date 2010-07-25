@@ -376,7 +376,7 @@ public class Vala.GirParser : CodeVisitor {
 
 	EnumValue parse_enumeration_member () {
 		start_element ("member");
-		var ev = new EnumValue (string.joinv ("_", reader.get_attribute ("name").up ().split ("-")));
+		var ev = new EnumValue (string.joinv ("_", reader.get_attribute ("name").up ().split ("-")), null);
 		ev.set_cname (reader.get_attribute ("c:identifier"));
 		next ();
 		end_element ("member");
