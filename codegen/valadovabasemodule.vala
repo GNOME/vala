@@ -401,18 +401,18 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		c.accept_children (codegen);
 
 		if (!c.external) {
-			if (c.initializer is InitializerList) {
+			if (c.value is InitializerList) {
 				var cdecl = new CCodeDeclaration (c.type_reference.get_const_cname ());
 				var arr = "";
 				if (c.type_reference is ArrayType) {
 					arr = "[]";
 				}
-				cdecl.add_declarator (new CCodeVariableDeclarator ("%s%s".printf (c.get_cname (), arr), (CCodeExpression) c.initializer.ccodenode));
+				cdecl.add_declarator (new CCodeVariableDeclarator ("%s%s".printf (c.get_cname (), arr), (CCodeExpression) c.value.ccodenode));
 				cdecl.modifiers = CCodeModifiers.STATIC;
 
 				decl_space.add_constant_declaration (cdecl);
 			} else {
-				var cdefine = new CCodeMacroReplacement.with_expression (c.get_cname (), (CCodeExpression) c.initializer.ccodenode);
+				var cdefine = new CCodeMacroReplacement.with_expression (c.get_cname (), (CCodeExpression) c.value.ccodenode);
 				decl_space.add_type_member_declaration (cdefine);
 			}
 		}

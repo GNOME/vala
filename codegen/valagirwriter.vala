@@ -487,7 +487,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 
 		//TODO Add better constant evaluation
-		var initializer = c.initializer;
+		var initializer = c.value;
 		string value = literal_expression_to_value_string (initializer);
 
 		write_indent ();

@@ -1,6 +1,6 @@
 /* valaconstant.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -40,12 +40,12 @@ public class Vala.Constant : Symbol, Lockable {
 	/**
 	 * The value of this constant.
 	 */
-	public Expression? initializer { 
-		get { return _initializer; }
+	public Expression? value {
+		get { return _value; }
 		set {
-			_initializer = value;
-			if (_initializer != null) {
-				_initializer.parent_node = this;
+			_value = value;
+			if (_value != null) {
+				_value.parent_node = this;
 			}
 		}
 	}
@@ -56,21 +56,21 @@ public class Vala.Constant : Symbol, Lockable {
 
 	private DataType _data_type;
 
-	private Expression _initializer;
+	private Expression _value;
 
 	/**
 	 * Creates a new constant.
 	 *
 	 * @param name             constant name
 	 * @param type_reference   constant type
-	 * @param initializer      constant value
+	 * @param value            constant value
 	 * @param source_reference reference to source code
 	 * @return                 newly created constant
 	 */
-	public Constant (string name, DataType type_reference, Expression? initializer, SourceReference? source_reference, Comment? comment = null) {
+	public Constant (string name, DataType type_reference, Expression? value, SourceReference? source_reference, Comment? comment = null) {
 		base (name, source_reference, comment);
 		this.type_reference = type_reference;
-		this.initializer = initializer;
+		this.value = value;
 	}
 
 	public override void accept (CodeVisitor visitor) {
@@ -80,8 +80,8 @@ public class Vala.Constant : Symbol, Lockable {
 	public override void accept_children (CodeVisitor visitor) {
 		type_reference.accept (visitor);
 
-		if (initializer != null) {		
-			initializer.accept (visitor);
+		if (value != null) {
+			value.accept (visitor);
 		}
 	}
 
@@ -121,8 +121,8 @@ public class Vala.Constant : Symbol, Lockable {
 	}
 
 	public override void replace_expression (Expression old_node, Expression new_node) {
-		if (initializer == old_node) {
-			initializer = new_node;
+		if (value == old_node) {
+			value = new_node;
 		}
 	}
 
@@ -183,24 +183,24 @@ public class Vala.Constant : Symbol, Lockable {
 		}
 
 		if (!external) {
-			if (initializer == null) {
+			if (value == null) {
 				error = true;
-				Report.error (source_reference, "A const field requires a initializer to be provided");
+				Report.error (source_reference, "A const field requires a value to be provided");
 			} else {
-				initializer.target_type = type_reference;
+				value.target_type = type_reference;
 
-				initializer.check (analyzer);
+				value.check (analyzer);
 
-				if (!initializer.value_type.compatible (type_reference)) {
+				if (!value.value_type.compatible (type_reference)) {
 					error = true;
-					Report.error (source_reference, "Cannot convert from `%s' to `%s'".printf (initializer.value_type.to_string (), type_reference.to_string ()));
+					Report.error (source_reference, "Cannot convert from `%s' to `%s'".printf (value.value_type.to_string (), type_reference.to_string ()));
 					return false;
 				}
 			}
 		} else {
-			if (initializer != null) {
+			if (value != null) {
 				error = true;
-				Report.error (source_reference, "External constants cannot use initializers");
+				Report.error (source_reference, "External constants cannot use values");
 			}
 		}
 

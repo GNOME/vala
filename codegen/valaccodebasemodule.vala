@@ -776,7 +776,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		if (!c.external) {
 			generate_type_declaration (c.type_reference, decl_space);
 
-			var initializer_list = c.initializer as InitializerList;
+			var initializer_list = c.value as InitializerList;
 			if (initializer_list != null) {
 				var cdecl = new CCodeDeclaration (c.type_reference.get_const_cname ());
 				var arr = "";
@@ -784,7 +784,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 					arr = "[%d]".printf (initializer_list.size);
 				}
 
-				var cinitializer = (CCodeExpression) c.initializer.ccodenode;
+				var cinitializer = (CCodeExpression) c.value.ccodenode;
 				if (!definition) {
 					// never output value in header
 					// special case needed as this method combines declaration and definition
@@ -800,7 +800,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 				decl_space.add_constant_declaration (cdecl);
 			} else {
-				var cdefine = new CCodeMacroReplacement.with_expression (c.get_cname (), (CCodeExpression) c.initializer.ccodenode);
+				var cdefine = new CCodeMacroReplacement.with_expression (c.get_cname (), (CCodeExpression) c.value.ccodenode);
 				decl_space.add_type_member_declaration (cdefine);
 			}
 		}
