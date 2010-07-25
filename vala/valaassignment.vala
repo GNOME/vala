@@ -321,13 +321,13 @@ public class Vala.Assignment : Expression {
 						Report.warning (ma.source_reference, "assigning to construct-only properties is deprecated, use Object (property: value) constructor chain up");
 					}
 				}
-			} else if (ma.symbol_reference is LocalVariable && right.value_type == null) {
-				var local = (LocalVariable) ma.symbol_reference;
+			} else if (ma.symbol_reference is Variable && right.value_type == null) {
+				var variable = (Variable) ma.symbol_reference;
 
 				if (right.symbol_reference is Method &&
-				    local.variable_type is DelegateType) {
+				    variable.variable_type is DelegateType) {
 					var m = (Method) right.symbol_reference;
-					var dt = (DelegateType) local.variable_type;
+					var dt = (DelegateType) variable.variable_type;
 					var cb = dt.delegate_symbol;
 
 					/* check whether method matches callback type */
@@ -337,29 +337,7 @@ public class Vala.Assignment : Expression {
 						return false;
 					}
 
-					right.value_type = local.variable_type;
-				} else {
-					error = true;
-					Report.error (source_reference, "Assignment: Invalid callback assignment attempt");
-					return false;
-				}
-			} else if (ma.symbol_reference is Field && right.value_type == null) {
-				var f = (Field) ma.symbol_reference;
-
-				if (right.symbol_reference is Method &&
-				    f.variable_type is DelegateType) {
-					var m = (Method) right.symbol_reference;
-					var dt = (DelegateType) f.variable_type;
-					var cb = dt.delegate_symbol;
-
-					/* check whether method matches callback type */
-					if (!cb.matches_method (m, dt)) {
-						f.error = true;
-						Report.error (source_reference, "declaration of method `%s' doesn't match declaration of callback `%s'".printf (m.get_full_name (), cb.get_full_name ()));
-						return false;
-					}
-
-					right.value_type = f.variable_type;
+					right.value_type = variable.variable_type;
 				} else {
 					error = true;
 					Report.error (source_reference, "Assignment: Invalid callback assignment attempt");
