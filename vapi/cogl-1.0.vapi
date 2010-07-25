@@ -257,6 +257,7 @@ namespace Cogl {
 		public uint flags;
 		public Matrix.from_array (float[] array);
 		public void frustum (float left, float right, float bottom, float top, float z_near, float z_far);
+		[CCode (array_length = false)]
 		public unowned float[] get_array ();
 		public bool get_inverse (Cogl.Matrix inverse);
 		public Matrix.identity ();

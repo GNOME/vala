@@ -38,7 +38,7 @@ cogl_is_texture hidden="1"
 cogl_is_vertex_buffer hidden="1"
 
 CoglMatrix is_value_type="1"
-cogl_matrix_get_array is_array="1"
+cogl_matrix_get_array is_array="1" no_array_length="1"
 cogl_matrix_multiply hidden="1"
 cogl_matrix_init_from_array hidden="1"
 cogl_matrix_init_identity hidden="1"
