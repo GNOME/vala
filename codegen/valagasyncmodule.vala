@@ -41,17 +41,17 @@ public class Vala.GAsyncModule : GSignalModule {
 		}
 
 		foreach (FormalParameter param in m.get_parameters ()) {
-			var param_type = param.parameter_type.copy ();
+			var param_type = param.variable_type.copy ();
 			param_type.value_owned = true;
 			data.add_field (param_type.get_cname (), get_variable_cname (param.name));
 
-			if (param.parameter_type is ArrayType) {
-				var array_type = (ArrayType) param.parameter_type;
+			if (param.variable_type is ArrayType) {
+				var array_type = (ArrayType) param.variable_type;
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					data.add_field ("gint", get_array_length_cname (get_variable_cname (param.name), dim));
 				}
-			} else if (param.parameter_type is DelegateType) {
-				var deleg_type = (DelegateType) param.parameter_type;
+			} else if (param.variable_type is DelegateType) {
+				var deleg_type = (DelegateType) param.variable_type;
 				if (deleg_type.delegate_symbol.has_target) {
 					data.add_field ("gpointer", get_delegate_target_cname (get_variable_cname (param.name)));
 					data.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
@@ -97,14 +97,14 @@ public class Vala.GAsyncModule : GSignalModule {
 
 		foreach (FormalParameter param in m.get_parameters ()) {
 			if (param.direction != ParameterDirection.OUT) {
-				var param_type = param.parameter_type.copy ();
+				var param_type = param.variable_type.copy ();
 				param_type.value_owned = true;
 
 				if (requires_destroy (param_type)) {
 					var ma = new MemberAccess.simple (param.name);
 					ma.symbol_reference = param;
-					ma.value_type = param.parameter_type.copy ();
-					freeblock.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_variable_cname (param.name)), param.parameter_type, ma)));
+					ma.value_type = param.variable_type.copy ();
+					freeblock.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_variable_cname (param.name)), param.variable_type, ma)));
 				}
 			}
 		}
@@ -225,28 +225,28 @@ public class Vala.GAsyncModule : GSignalModule {
 
 		foreach (FormalParameter param in m.get_parameters ()) {
 			if (param.direction != ParameterDirection.OUT) {
-				var param_type = param.parameter_type.copy ();
+				var param_type = param.variable_type.copy ();
 				param_type.value_owned = true;
 
 				// create copy if necessary as variables in async methods may need to be kept alive
 				CCodeExpression cparam = get_variable_cexpression (param.name);
-				if (param.parameter_type.is_real_non_null_struct_type ()) {
+				if (param.variable_type.is_real_non_null_struct_type ()) {
 					cparam = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, cparam);
 				}
-				if (requires_copy (param_type) && !param.parameter_type.value_owned)  {
+				if (requires_copy (param_type) && !param.variable_type.value_owned)  {
 					var ma = new MemberAccess.simple (param.name);
 					ma.symbol_reference = param;
-					cparam = get_ref_cexpression (param.parameter_type, cparam, ma, param);
+					cparam = get_ref_cexpression (param.variable_type, cparam, ma, param);
 				}
 
 				asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, get_variable_cname (param.name)), cparam)));
-				if (param.parameter_type is ArrayType) {
-					var array_type = (ArrayType) param.parameter_type;
+				if (param.variable_type is ArrayType) {
+					var array_type = (ArrayType) param.variable_type;
 					for (int dim = 1; dim <= array_type.rank; dim++) {
 						asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, get_array_length_cname (get_variable_cname (param.name), dim)), new CCodeIdentifier (get_array_length_cname (get_variable_cname (param.name), dim)))));
 					}
-				} else if (param.parameter_type is DelegateType) {
-					var deleg_type = (DelegateType) param.parameter_type;
+				} else if (param.variable_type is DelegateType) {
+					var deleg_type = (DelegateType) param.variable_type;
 					if (deleg_type.delegate_symbol.has_target) {
 						asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, get_delegate_target_cname (get_variable_cname (param.name))), new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (param.name))))));
 						if (deleg_type.value_owned) {
@@ -432,7 +432,7 @@ public class Vala.GAsyncModule : GSignalModule {
 		foreach (FormalParameter param in m.get_parameters ()) {
 			if (param.direction != ParameterDirection.IN) {
 				finishblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (param.name)), new CCodeMemberAccess.pointer (data_var, get_variable_cname (param.name)))));
-				if (!(param.parameter_type is ValueType) || param.parameter_type.nullable) {
+				if (!(param.variable_type is ValueType) || param.variable_type.nullable) {
 					finishblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, get_variable_cname (param.name)), new CCodeConstant ("NULL"))));
 				}
 			}

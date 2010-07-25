@@ -256,7 +256,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public DataType? get_value_type_for_symbol (Symbol sym, bool lvalue) {
 		if (sym is Field) {
 			var f = (Field) sym;
-			var type = f.field_type.copy ();
+			var type = f.variable_type.copy ();
 			if (!lvalue) {
 				type.value_owned = false;
 			}
@@ -279,7 +279,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		} else if (sym is FormalParameter) {
 			var p = (FormalParameter) sym;
-			var type = p.parameter_type.copy ();
+			var type = p.variable_type.copy ();
 			if (!lvalue) {
 				type.value_owned = false;
 			}
@@ -417,7 +417,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 
 			if (arg_it == null || !arg_it.next ()) {
-				if (param.default_expression == null) {
+				if (param.initializer == null) {
 					expr.error = true;
 					Report.error (expr.source_reference, "Too few arguments, method `%s' does not take %d arguments".printf (mtype.to_string (), args.size));
 					return false;
@@ -425,9 +425,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					var invocation_expr = expr as MethodCall;
 					var object_creation_expr = expr as ObjectCreationExpression;
 					if (invocation_expr != null) {
-						invocation_expr.add_argument (param.default_expression);
+						invocation_expr.add_argument (param.initializer);
 					} else if (object_creation_expr != null) {
-						object_creation_expr.add_argument (param.default_expression);
+						object_creation_expr.add_argument (param.initializer);
 					} else {
 						assert_not_reached ();
 					}
@@ -772,7 +772,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		DataType member_type = null;
 		if (init.symbol_reference is Field) {
 			var f = (Field) init.symbol_reference;
-			member_type = f.field_type;
+			member_type = f.variable_type;
 		} else if (init.symbol_reference is Property) {
 			var prop = (Property) init.symbol_reference;
 			member_type = prop.property_type;

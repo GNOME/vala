@@ -347,9 +347,9 @@ public class Vala.Assignment : Expression {
 				var f = (Field) ma.symbol_reference;
 
 				if (right.symbol_reference is Method &&
-				    f.field_type is DelegateType) {
+				    f.variable_type is DelegateType) {
 					var m = (Method) right.symbol_reference;
-					var dt = (DelegateType) f.field_type;
+					var dt = (DelegateType) f.variable_type;
 					var cb = dt.delegate_symbol;
 
 					/* check whether method matches callback type */
@@ -359,7 +359,7 @@ public class Vala.Assignment : Expression {
 						return false;
 					}
 
-					right.value_type = f.field_type;
+					right.value_type = f.variable_type;
 				} else {
 					error = true;
 					Report.error (source_reference, "Assignment: Invalid callback assignment attempt");

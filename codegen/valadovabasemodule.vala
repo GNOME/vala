@@ -431,9 +431,9 @@ internal class Vala.DovaBaseModule : CCodeModule {
 			return;
 		}
 
-		generate_type_declaration (f.field_type, decl_space);
+		generate_type_declaration (f.variable_type, decl_space);
 
-		string field_ctype = f.field_type.get_cname ();
+		string field_ctype = f.variable_type.get_cname ();
 		if (f.is_volatile) {
 			field_ctype = "volatile " + field_ctype;
 		}
@@ -460,7 +460,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 
 		CCodeExpression lhs = null;
 
-		string field_ctype = f.field_type.get_cname ();
+		string field_ctype = f.variable_type.get_cname ();
 		if (f.is_volatile) {
 			field_ctype = "volatile " + field_ctype;
 		}
@@ -483,7 +483,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 				temp_vars.clear ();
 			}
 
-			if (requires_destroy (f.field_type) && instance_finalize_fragment != null) {
+			if (requires_destroy (f.variable_type) && instance_finalize_fragment != null) {
 				var this_access = new MemberAccess.simple ("this");
 				this_access.value_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
 
@@ -496,7 +496,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 
 				var ma = new MemberAccess (this_access, f.name);
 				ma.symbol_reference = f;
-				instance_finalize_fragment.append (new CCodeExpressionStatement (get_unref_expression (lhs, f.field_type, ma)));
+				instance_finalize_fragment.append (new CCodeExpressionStatement (get_unref_expression (lhs, f.variable_type, ma)));
 			}
 		} else {
 			generate_field_declaration (f, source_declarations);
@@ -508,7 +508,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 			lhs = new CCodeIdentifier (f.get_cname ());
 
 			var var_decl = new CCodeVariableDeclarator (f.get_cname ());
-			var_decl.initializer = default_value_for_type (f.field_type, true);
+			var_decl.initializer = default_value_for_type (f.variable_type, true);
 
 			if (f.initializer != null) {
 				var rhs = (CCodeExpression) f.initializer.ccodenode;
@@ -673,21 +673,21 @@ internal class Vala.DovaBaseModule : CCodeModule {
 	}
 
 	void capture_parameter (FormalParameter param, CCodeStruct data, CCodeBlock cblock, int block_id, CCodeBlock free_block) {
-		generate_type_declaration (param.parameter_type, source_declarations);
+		generate_type_declaration (param.variable_type, source_declarations);
 
-		var param_type = param.parameter_type.copy ();
+		var param_type = param.variable_type.copy ();
 		param_type.value_owned = true;
 		data.add_field (param_type.get_cname (), get_variable_cname (param.name));
 
 		// create copy if necessary as captured variables may need to be kept alive
 		CCodeExpression cparam = get_variable_cexpression (param.name);
-		if (requires_copy (param_type) && !param.parameter_type.value_owned)  {
+		if (requires_copy (param_type) && !param.variable_type.value_owned)  {
 			var ma = new MemberAccess.simple (param.name);
 			ma.symbol_reference = param;
-			ma.value_type = param.parameter_type.copy ();
+			ma.value_type = param.variable_type.copy ();
 			// directly access parameters in ref expressions
 			param.captured = false;
-			cparam = get_ref_cexpression (param.parameter_type, cparam, ma, param);
+			cparam = get_ref_cexpression (param.variable_type, cparam, ma, param);
 			param.captured = true;
 		}
 
@@ -697,7 +697,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 			var ma = new MemberAccess.simple (param.name);
 			ma.symbol_reference = param;
 			ma.value_type = param_type.copy ();
-			free_block.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), get_variable_cname (param.name)), param.parameter_type, ma)));
+			free_block.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), get_variable_cname (param.name)), param.variable_type, ma)));
 		}
 	}
 
@@ -893,10 +893,10 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		if (b.parent_symbol is Method) {
 			var m = (Method) b.parent_symbol;
 			foreach (FormalParameter param in m.get_parameters ()) {
-				if (!param.captured && requires_destroy (param.parameter_type) && param.direction == ParameterDirection.IN) {
+				if (!param.captured && requires_destroy (param.variable_type) && param.direction == ParameterDirection.IN) {
 					var ma = new MemberAccess.simple (param.name);
 					ma.symbol_reference = param;
-					cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (param.name), param.parameter_type, ma)));
+					cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (param.name), param.variable_type, ma)));
 				}
 			}
 		}
@@ -1447,10 +1447,10 @@ internal class Vala.DovaBaseModule : CCodeModule {
 
 	private void append_param_free (Method m, CCodeFragment cfrag) {
 		foreach (FormalParameter param in m.get_parameters ()) {
-			if (requires_destroy (param.parameter_type) && param.direction == ParameterDirection.IN) {
+			if (requires_destroy (param.variable_type) && param.direction == ParameterDirection.IN) {
 				var ma = new MemberAccess.simple (param.name);
 				ma.symbol_reference = param;
-				cfrag.append (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (param.name), param.parameter_type, ma)));
+				cfrag.append (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (param.name), param.variable_type, ma)));
 			}
 		}
 	}
@@ -1827,7 +1827,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 					break;
 				}
 
-				if (param.default_expression == null) {
+				if (param.initializer == null) {
 					Report.error (expr.source_reference, "no default expression for argument %d".printf (i));
 					return;
 				}
@@ -1835,9 +1835,9 @@ internal class Vala.DovaBaseModule : CCodeModule {
 				/* evaluate default expression here as the code
 				 * generator might not have visited the formal
 				 * parameter yet */
-				param.default_expression.accept (codegen);
+				param.initializer.accept (codegen);
 
-				creation_call.add_argument ((CCodeExpression) param.default_expression.ccodenode);
+				creation_call.add_argument ((CCodeExpression) param.initializer.ccodenode);
 				i++;
 			}
 
@@ -2278,11 +2278,11 @@ internal class Vala.DovaBaseModule : CCodeModule {
 			foreach (FormalParameter param in d.get_parameters ()) {
 				method_param_iter.next ();
 				var method_param = method_param_iter.get ();
-				string ctype = param.parameter_type.get_cname ();
-				if (param.parameter_type is GenericType && !(method_param.parameter_type is GenericType)) {
-					ctype = method_param.parameter_type.get_cname () + "*";
+				string ctype = param.variable_type.get_cname ();
+				if (param.variable_type is GenericType && !(method_param.variable_type is GenericType)) {
+					ctype = method_param.variable_type.get_cname () + "*";
 					call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (param.name)));
-				} else if (!(param.parameter_type is GenericType) && method_param.parameter_type is GenericType) {
+				} else if (!(param.variable_type is GenericType) && method_param.variable_type is GenericType) {
 					call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
 				} else {
 					call.add_argument (new CCodeIdentifier (param.name));
@@ -2449,9 +2449,9 @@ internal class Vala.DovaBaseModule : CCodeModule {
 
 	public DataType? get_this_type () {
 		if (current_method != null && current_method.binding == MemberBinding.INSTANCE) {
-			return current_method.this_parameter.parameter_type;
+			return current_method.this_parameter.variable_type;
 		} else if (current_property_accessor != null && current_property_accessor.prop.binding == MemberBinding.INSTANCE) {
-			return current_property_accessor.prop.this_parameter.parameter_type;
+			return current_property_accessor.prop.this_parameter.variable_type;
 		}
 		return null;
 	}

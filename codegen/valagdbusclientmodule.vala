@@ -315,22 +315,22 @@ public class Vala.GDBusClientModule : GDBusModule {
 		ccall.add_argument (sig.get_canonical_cconstant ());
 
 		foreach (FormalParameter param in sig.get_parameters ()) {
-			var owned_type = param.parameter_type.copy ();
+			var owned_type = param.variable_type.copy ();
 			owned_type.value_owned = true;
 
 			cdecl = new CCodeDeclaration (owned_type.get_cname ());
-			cdecl.add_declarator (new CCodeVariableDeclarator.zero (param.name, default_value_for_type (param.parameter_type, true)));
+			cdecl.add_declarator (new CCodeVariableDeclarator.zero (param.name, default_value_for_type (param.variable_type, true)));
 			prefragment.append (cdecl);
 
-			var st = param.parameter_type.data_type as Struct;
+			var st = param.variable_type.data_type as Struct;
 			if (st != null && !st.is_simple_type ()) {
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
 			} else {
 				ccall.add_argument (new CCodeIdentifier (param.name));
 			}
 
-			if (param.parameter_type is ArrayType) {
-				var array_type = (ArrayType) param.parameter_type;
+			if (param.variable_type is ArrayType) {
+				var array_type = (ArrayType) param.variable_type;
 
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					string length_cname = get_array_length_cname (param.name, dim);
@@ -342,7 +342,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 				}
 			}
 
-			read_expression (prefragment, param.parameter_type, new CCodeIdentifier ("_arguments_iter"), new CCodeIdentifier (param.name), param);
+			read_expression (prefragment, param.variable_type, new CCodeIdentifier ("_arguments_iter"), new CCodeIdentifier (param.name), param);
 
 			if (requires_destroy (owned_type)) {
 				// keep local alive (symbol_reference is weak)
@@ -436,16 +436,16 @@ public class Vala.GDBusClientModule : GDBusModule {
 		foreach (FormalParameter param in m.get_parameters ()) {
 			if (param.direction == ParameterDirection.IN) {
 				CCodeExpression expr = new CCodeIdentifier (param.name);
-				if (param.parameter_type.is_real_struct_type ()) {
+				if (param.variable_type.is_real_struct_type ()) {
 					expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, expr);
 				}
-				write_expression (prefragment, param.parameter_type, new CCodeIdentifier ("_arguments_builder"), expr, param);
+				write_expression (prefragment, param.variable_type, new CCodeIdentifier ("_arguments_builder"), expr, param);
 			} else {
-				cdecl = new CCodeDeclaration (param.parameter_type.get_cname ());
+				cdecl = new CCodeDeclaration (param.variable_type.get_cname ());
 				cdecl.add_declarator (new CCodeVariableDeclarator ("_" + param.name));
 				postfragment.append (cdecl);
 
-				var array_type = param.parameter_type as ArrayType;
+				var array_type = param.variable_type as ArrayType;
 
 				if (array_type != null) {
 					for (int dim = 1; dim <= array_type.rank; dim++) {
@@ -456,7 +456,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 				}
 
 				var target = new CCodeIdentifier ("_" + param.name);
-				read_expression (postfragment, param.parameter_type, new CCodeIdentifier ("_reply_iter"), target, param);
+				read_expression (postfragment, param.variable_type, new CCodeIdentifier ("_reply_iter"), target, param);
 
 				// TODO check that parameter is not NULL (out parameters are optional)
 				// free value if parameter is NULL

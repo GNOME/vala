@@ -67,7 +67,7 @@ public class Vala.GSignalModule : GObjectModule {
 		if (param.direction != ParameterDirection.IN) {
 			return ("POINTER");
 		} else {
-			return get_marshaller_type_name (param.parameter_type, dbus);
+			return get_marshaller_type_name (param.variable_type, dbus);
 		}
 	}
 	
@@ -127,7 +127,7 @@ public class Vala.GSignalModule : GObjectModule {
 		if (p.direction != ParameterDirection.IN) {
 			return "gpointer";
 		} else {
-			return get_value_type_name_from_type_reference (p.parameter_type);
+			return get_value_type_name_from_type_reference (p.variable_type);
 		}
 	}
 	
@@ -212,7 +212,7 @@ public class Vala.GSignalModule : GObjectModule {
 		foreach (FormalParameter p in params) {
 			callback_decl.add_parameter (new CCodeFormalParameter ("arg_%d".printf (n_params), get_value_type_name_from_parameter (p)));
 			n_params++;
-			if (p.parameter_type.is_array () && !dbus) {
+			if (p.variable_type.is_array () && !dbus) {
 				callback_decl.add_parameter (new CCodeFormalParameter ("arg_%d".printf (n_params), "gint"));
 				n_params++;
 			}
@@ -272,34 +272,34 @@ public class Vala.GSignalModule : GObjectModule {
 		i = 1;
 		foreach (FormalParameter p in params) {
 			string get_value_function;
-			bool is_array = p.parameter_type.is_array ();
+			bool is_array = p.variable_type.is_array ();
 			if (p.direction != ParameterDirection.IN) {
 				get_value_function = "g_value_get_pointer";
 			} else if (is_array) {
 				if (dbus) {
 					get_value_function = "g_value_get_boxed";
 				} else {
-					if (((ArrayType) p.parameter_type).element_type.data_type == string_type.data_type) {
+					if (((ArrayType) p.variable_type).element_type.data_type == string_type.data_type) {
 						get_value_function = "g_value_get_boxed";
 					} else {
 						get_value_function = "g_value_get_pointer";
 					}
 				}
-			} else if (p.parameter_type is PointerType || p.parameter_type.type_parameter != null) {
+			} else if (p.variable_type is PointerType || p.variable_type.type_parameter != null) {
 				get_value_function = "g_value_get_pointer";
-			} else if (p.parameter_type is ErrorType) {
+			} else if (p.variable_type is ErrorType) {
 				get_value_function = "g_value_get_pointer";
-			} else if (dbus && DBusModule.get_type_signature (p.parameter_type).has_prefix ("(")) {
+			} else if (dbus && DBusModule.get_type_signature (p.variable_type).has_prefix ("(")) {
 				get_value_function = "g_value_get_boxed";
-			} else if (dbus && p.parameter_type.data_type is Enum) {
-				var en = (Enum) p.parameter_type.data_type;
+			} else if (dbus && p.variable_type.data_type is Enum) {
+				var en = (Enum) p.variable_type.data_type;
 				if (en.is_flags) {
 					get_value_function = "g_value_get_uint";
 				} else {
 					get_value_function = "g_value_get_int";
 				}
 			} else {
-				get_value_function = p.parameter_type.data_type.get_get_value_function ();
+				get_value_function = p.variable_type.data_type.get_get_value_function ();
 			}
 			var inner_fc = new CCodeFunctionCall (new CCodeIdentifier (get_value_function));
 			inner_fc.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("param_values"), new CCodeIdentifier (i.to_string ())));
@@ -423,26 +423,26 @@ public class Vala.GSignalModule : GObjectModule {
 		int params_len = 0;
 		foreach (FormalParameter param in params) {
 			params_len++;
-			if (param.parameter_type.is_array ()) {
+			if (param.variable_type.is_array ()) {
 				params_len++;
 			}
 		}
 
 		csignew.add_argument (new CCodeConstant ("%d".printf (params_len)));
 		foreach (FormalParameter param in params) {
-			if (param.parameter_type.is_array ()) {
-				if (((ArrayType) param.parameter_type).element_type.data_type == string_type.data_type) {
+			if (param.variable_type.is_array ()) {
+				if (((ArrayType) param.variable_type).element_type.data_type == string_type.data_type) {
 					csignew.add_argument (new CCodeConstant ("G_TYPE_STRV"));
 				} else {
 					csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
 				}
 				csignew.add_argument (new CCodeConstant ("G_TYPE_INT"));
-			} else if (param.parameter_type is PointerType || param.parameter_type.type_parameter != null || param.direction != ParameterDirection.IN) {
+			} else if (param.variable_type is PointerType || param.variable_type.type_parameter != null || param.direction != ParameterDirection.IN) {
 				csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
-			} else if (param.parameter_type is ErrorType) {
+			} else if (param.variable_type is ErrorType) {
 				csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
 			} else {
-				csignew.add_argument (new CCodeConstant (param.parameter_type.data_type.get_type_id ()));
+				csignew.add_argument (new CCodeConstant (param.variable_type.data_type.get_type_id ()));
 			}
 		}
 
@@ -478,7 +478,7 @@ public class Vala.GSignalModule : GObjectModule {
 	bool in_gobject_instance (Method m) {
 		bool result = false;
 		if (m.binding == MemberBinding.INSTANCE) {
-			result = m.this_parameter.parameter_type.data_type.is_subtype_of (gobject_type);
+			result = m.this_parameter.variable_type.data_type.is_subtype_of (gobject_type);
 		}
 		return result;
 	}

@@ -27,18 +27,7 @@ using GLib;
 /**
  * Represents a formal parameter in method and callback signatures.
  */
-public class Vala.FormalParameter : Symbol {
-	/**
-	 * The parameter type.
-	 */
-	public DataType parameter_type {
-		get { return _data_type; }
-		set {
-			_data_type = value;
-			_data_type.parent_node = this;
-		}
-	}
-
+public class Vala.FormalParameter : Variable {
 	public ParameterDirection direction { get; set; default = ParameterDirection.IN; }
 
 	/**
@@ -52,20 +41,6 @@ public class Vala.FormalParameter : Symbol {
 	 * parameters.
 	 */
 	public bool params_array { get; set; }
-	
-	/**
-	 * Specifies the expression used when the caller doesn't supply an
-	 * argument for this parameter.
-	 */
-	public Expression? default_expression {
-		get { return _default_expression; }
-		set {
-			_default_expression = value;
-			if (_default_expression != null) {
-				_default_expression.parent_node = this;
-			}
-		}
-	}
 	
 	/**
 	 * Specifies whether the array length should be passed implicitly
@@ -109,9 +84,6 @@ public class Vala.FormalParameter : Symbol {
 
 	public bool captured { get; set; }
 
-	private DataType _data_type;
-	private Expression? _default_expression;
-
 	/**
 	 * Creates a new formal parameter.
 	 *
@@ -120,9 +92,8 @@ public class Vala.FormalParameter : Symbol {
 	 * @param source reference to source code
 	 * @return       newly created formal parameter
 	 */
-	public FormalParameter (string name, DataType parameter_type, SourceReference? source_reference = null) {
-		base (name, source_reference);
-		this.parameter_type = parameter_type;
+	public FormalParameter (string name, DataType variable_type, SourceReference? source_reference = null) {
+		base (variable_type, name, null, source_reference);
 
 		access = SymbolAccessibility.PUBLIC;
 	}
@@ -132,7 +103,7 @@ public class Vala.FormalParameter : Symbol {
 	 * parameters.
 	 */
 	public FormalParameter.with_ellipsis (SourceReference? source_reference = null) {
-		base (null, source_reference);
+		base (null, null, null, source_reference);
 		ellipsis = true;
 
 		access = SymbolAccessibility.PUBLIC;
@@ -144,23 +115,23 @@ public class Vala.FormalParameter : Symbol {
 
 	public override void accept_children (CodeVisitor visitor) {
 		if (!ellipsis) {
-			parameter_type.accept (visitor);
+			variable_type.accept (visitor);
 			
-			if (default_expression != null) {
-				default_expression.accept (visitor);
+			if (initializer != null) {
+				initializer.accept (visitor);
 			}
 		}
 	}
 
 	public override void replace_type (DataType old_type, DataType new_type) {
-		if (parameter_type == old_type) {
-			parameter_type = new_type;
+		if (variable_type == old_type) {
+			variable_type = new_type;
 		}
 	}
 
 	public override void replace_expression (Expression old_node, Expression new_node) {
-		if (default_expression == old_node) {
-			default_expression = new_node;
+		if (initializer == old_node) {
+			initializer = new_node;
 		}
 	}
 
@@ -204,10 +175,10 @@ public class Vala.FormalParameter : Symbol {
 
 	public FormalParameter copy () {
 		if (!ellipsis) {
-			var result = new FormalParameter (name, parameter_type, source_reference);
+			var result = new FormalParameter (name, variable_type, source_reference);
 			result.params_array = params_array;
 			result.direction = this.direction;
-			result.default_expression = this.default_expression;
+			result.initializer = this.initializer;
 			return result;
 		} else {
 			return new FormalParameter.with_ellipsis ();
@@ -231,37 +202,37 @@ public class Vala.FormalParameter : Symbol {
 		}
 		analyzer.current_symbol = parent_symbol;
 
-		if (parameter_type != null) {
-			parameter_type.check (analyzer);
+		if (variable_type != null) {
+			variable_type.check (analyzer);
 		}
 
 		if (!ellipsis) {
-			parameter_type.check (analyzer);
+			variable_type.check (analyzer);
 			
-			if (params_array && !(parameter_type is ArrayType)) {
+			if (params_array && !(variable_type is ArrayType)) {
 				error = true;
 				Report.error (source_reference, "parameter array expected");
 				return false;
 			}
 
-			if (default_expression != null) {
-				default_expression.check (analyzer);
+			if (initializer != null) {
+				initializer.check (analyzer);
 			}
 		}
 
-		if (default_expression != null) {
-			if (default_expression is NullLiteral
-			    && !parameter_type.nullable
+		if (initializer != null) {
+			if (initializer is NullLiteral
+			    && !variable_type.nullable
 			    && direction != ParameterDirection.OUT) {
-				Report.warning (source_reference, "`null' incompatible with parameter type `%s`".printf (parameter_type.to_string ()));
+				Report.warning (source_reference, "`null' incompatible with parameter type `%s`".printf (variable_type.to_string ()));
 			}
 		}
 
 		if (!ellipsis) {
 			// check whether parameter type is at least as accessible as the method
-			if (!analyzer.is_type_accessible (this, parameter_type)) {
+			if (!analyzer.is_type_accessible (this, variable_type)) {
 				error = true;
-				Report.error (source_reference, "parameter type `%s` is less accessible than method `%s`".printf (parameter_type.to_string (), parent_symbol.get_full_name ()));
+				Report.error (source_reference, "parameter type `%s` is less accessible than method `%s`".printf (variable_type.to_string (), parent_symbol.get_full_name ()));
 			}
 		}
 

@@ -134,13 +134,13 @@ internal class Vala.DovaMethodCallModule : DovaAssignmentModule {
 					// disabled for arrays for now as that requires special handling
 					// (ret_tmp = call (&tmp), var1 = (assign_tmp = dup (tmp), free (var1), assign_tmp), ret_tmp)
 					if (param.direction != ParameterDirection.IN && requires_destroy (arg.value_type)
-					    && (param.direction == ParameterDirection.OUT || !param.parameter_type.value_owned)
-					    && !(param.parameter_type is ArrayType)) {
+					    && (param.direction == ParameterDirection.OUT || !param.variable_type.value_owned)
+					    && !(param.variable_type is ArrayType)) {
 						var unary = (UnaryExpression) arg;
 
 						var ccomma = new CCodeCommaExpression ();
 
-						var temp_var = get_temp_variable (param.parameter_type, param.parameter_type.value_owned);
+						var temp_var = get_temp_variable (param.variable_type, param.variable_type.value_owned);
 						temp_vars.insert (0, temp_var);
 						cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_var.name));
 
@@ -166,7 +166,7 @@ internal class Vala.DovaMethodCallModule : DovaAssignmentModule {
 						var assign_temp_var = get_temp_variable (unary.inner.value_type, unary.inner.value_type.value_owned);
 						temp_vars.insert (0, assign_temp_var);
 
-						cassign_comma.append_expression (new CCodeAssignment (get_variable_cexpression (assign_temp_var.name), transform_expression (get_variable_cexpression (temp_var.name), param.parameter_type, unary.inner.value_type, arg)));
+						cassign_comma.append_expression (new CCodeAssignment (get_variable_cexpression (assign_temp_var.name), transform_expression (get_variable_cexpression (temp_var.name), param.variable_type, unary.inner.value_type, arg)));
 
 						// unref old value
 						cassign_comma.append_expression (get_unref_expression ((CCodeExpression) unary.inner.ccodenode, arg.value_type, arg));

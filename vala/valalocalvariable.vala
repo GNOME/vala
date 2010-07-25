@@ -25,35 +25,7 @@ using GLib;
 /**
  * Represents a local variable declaration in the source code.
  */
-public class Vala.LocalVariable : Symbol {
-	/**
-	 * The optional initializer expression.
-	 */
-	public Expression? initializer {
-		get {
-			return _initializer;
-		}
-		set {
-			_initializer = value;
-			if (_initializer != null) {
-				_initializer.parent_node = this;
-			}
-		}
-	}
-	
-	/**
-	 * The variable type.
-	 */
-	public DataType? variable_type {
-		get { return _variable_type; }
-		set {
-			_variable_type = value;
-			if (_variable_type != null) {
-				_variable_type.parent_node = this;
-			}
-		}
-	}
-
+public class Vala.LocalVariable : Variable {
 	public bool is_result { get; set; }
 
 	/**
@@ -65,9 +37,6 @@ public class Vala.LocalVariable : Symbol {
 
 	public bool no_init { get; set; }
 
-	private Expression? _initializer;
-	private DataType? _variable_type;
-
 	/**
 	 * Creates a new local variable.
 	 *
@@ -77,9 +46,7 @@ public class Vala.LocalVariable : Symbol {
 	 * @return       newly created variable declarator
 	 */
 	public LocalVariable (DataType? variable_type, string name, Expression? initializer = null, SourceReference? source_reference = null) {
-		base (name, source_reference);
-		this.variable_type = variable_type;
-		this.initializer = initializer;
+		base (variable_type, name, initializer, source_reference);
 	}
 	
 	public override void accept (CodeVisitor visitor) {

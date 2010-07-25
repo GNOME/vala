@@ -237,10 +237,10 @@ internal class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 						// use closure
 						expr.ccodenode = get_variable_cexpression (p.name);
 					} else {
-						var type_as_struct = p.parameter_type.data_type as Struct;
+						var type_as_struct = p.variable_type.data_type as Struct;
 						if (p.direction != ParameterDirection.IN
-						    || (type_as_struct != null && !type_as_struct.is_simple_type () && !p.parameter_type.nullable)) {
-							if (p.parameter_type is GenericType) {
+						    || (type_as_struct != null && !type_as_struct.is_simple_type () && !p.variable_type.nullable)) {
+							if (p.variable_type is GenericType) {
 								expr.ccodenode = get_variable_cexpression (p.name);
 							} else {
 								expr.ccodenode = new CCodeIdentifier ("(*%s)".printf (get_variable_cname (p.name)));

@@ -109,14 +109,14 @@ internal class Vala.DovaDelegateModule : DovaValueModule {
 		string param_list = "";
 
 		foreach (FormalParameter param in d.get_parameters ()) {
-			generate_type_declaration (param.parameter_type, decl_space);
+			generate_type_declaration (param.variable_type, decl_space);
 
-			function.add_parameter (new CCodeFormalParameter (param.name, param.parameter_type.get_cname ()));
+			function.add_parameter (new CCodeFormalParameter (param.name, param.variable_type.get_cname ()));
 
 			if (param_list != "") {
 				param_list += ", ";
 			}
-			param_list += param.parameter_type.get_cname ();
+			param_list += param.variable_type.get_cname ();
 		}
 
 		if (d.return_type is GenericType) {

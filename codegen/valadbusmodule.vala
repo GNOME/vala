@@ -126,7 +126,7 @@ public class Vala.DBusModule : GAsyncModule {
 				str.append_c ('(');
 				foreach (Field f in st.get_fields ()) {
 					if (f.binding == MemberBinding.INSTANCE) {
-						str.append (get_type_signature (f.field_type));
+						str.append (get_type_signature (f.variable_type));
 					}
 				}
 				str.append_c (')');
@@ -418,7 +418,7 @@ public class Vala.DBusModule : GAsyncModule {
 				continue;
 			}
 
-			var field_expr = read_expression (fragment, f.field_type, new CCodeIdentifier (subiter_name), new CCodeMemberAccess (new CCodeIdentifier (temp_name), f.get_cname ()));
+			var field_expr = read_expression (fragment, f.variable_type, new CCodeIdentifier (subiter_name), new CCodeMemberAccess (new CCodeIdentifier (temp_name), f.get_cname ()));
 			fragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess (new CCodeIdentifier (temp_name), f.get_cname ()), field_expr)));
 		}
 
@@ -783,7 +783,7 @@ public class Vala.DBusModule : GAsyncModule {
 				continue;
 			}
 
-			write_expression (fragment, f.field_type, new CCodeIdentifier (subiter_name), new CCodeMemberAccess (struct_expr, f.get_cname ()));
+			write_expression (fragment, f.variable_type, new CCodeIdentifier (subiter_name), new CCodeMemberAccess (struct_expr, f.get_cname ()));
 		}
 
 		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_close_container"));

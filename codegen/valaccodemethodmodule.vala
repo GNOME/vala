@@ -544,17 +544,17 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 					}
 
 					if (param.direction != ParameterDirection.OUT) {
-						var t = param.parameter_type.data_type;
+						var t = param.variable_type.data_type;
 						if (t != null && t.is_reference_type ()) {
-							var type_check = create_method_type_check_statement (m, creturn_type, t, !param.parameter_type.nullable, get_variable_cname (param.name));
+							var type_check = create_method_type_check_statement (m, creturn_type, t, !param.variable_type.nullable, get_variable_cname (param.name));
 							if (type_check != null) {
 								type_check.line = function.line;
 								cinit.append (type_check);
 							}
 						}
 					} else if (!m.coroutine) {
-						var t = param.parameter_type.data_type;
-						if ((t != null && t.is_reference_type ()) || param.parameter_type is ArrayType) {
+						var t = param.variable_type.data_type;
+						if ((t != null && t.is_reference_type ()) || param.variable_type is ArrayType) {
 							// ensure that the passed reference for output parameter is cleared
 							var a = new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (param.name)), new CCodeConstant ("NULL"));
 							var cblock = new CCodeBlock ();
@@ -815,19 +815,19 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 
 	public virtual void generate_parameter (FormalParameter param, CCodeDeclarationSpace decl_space, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
 		if (!param.ellipsis) {
-			string ctypename = param.parameter_type.get_cname ();
+			string ctypename = param.variable_type.get_cname ();
 
-			generate_type_declaration (param.parameter_type, decl_space);
+			generate_type_declaration (param.variable_type, decl_space);
 
 			// pass non-simple structs always by reference
-			if (param.parameter_type.data_type is Struct) {
-				var st = (Struct) param.parameter_type.data_type;
+			if (param.variable_type.data_type is Struct) {
+				var st = (Struct) param.variable_type.data_type;
 				if (!st.is_simple_type () && param.direction == ParameterDirection.IN) {
-					if (st.is_immutable && !param.parameter_type.value_owned) {
+					if (st.is_immutable && !param.variable_type.value_owned) {
 						ctypename = "const " + ctypename;
 					}
 
-					if (!param.parameter_type.nullable) {
+					if (!param.variable_type.nullable) {
 						ctypename += "*";
 					}
 				}

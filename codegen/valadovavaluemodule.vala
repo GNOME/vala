@@ -301,7 +301,7 @@ internal class Vala.DovaValueModule : DovaObjectModule {
 			if (f.binding == MemberBinding.INSTANCE) {
 				var field = new CCodeMemberAccess.pointer (dest, f.name);
 
-				var array_type = f.field_type as ArrayType;
+				var array_type = f.variable_type as ArrayType;
 				if (array_type != null && array_type.fixed_length) {
 					for (int i = 0; i < array_type.length; i++) {
 						var element = new CCodeElementAccess (field, new CCodeConstant (i.to_string ()));
@@ -313,14 +313,14 @@ internal class Vala.DovaValueModule : DovaObjectModule {
 					continue;
 				}
 
-				if (requires_destroy (f.field_type))  {
+				if (requires_destroy (f.variable_type))  {
 					var this_access = new MemberAccess.simple ("this");
 					this_access.value_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
 					this_access.ccodenode = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, dest);
 					var ma = new MemberAccess (this_access, f.name);
 					ma.symbol_reference = f;
-					ma.value_type = f.field_type.copy ();
-					cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (field, f.field_type, ma)));
+					ma.value_type = f.variable_type.copy ();
+					cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (field, f.variable_type, ma)));
 				}
 			}
 		}
@@ -335,7 +335,7 @@ internal class Vala.DovaValueModule : DovaObjectModule {
 					CCodeExpression copy = new CCodeMemberAccess.pointer (src, f.name);
 					var dest_field = new CCodeMemberAccess.pointer (dest, f.name);
 
-					var array_type = f.field_type as ArrayType;
+					var array_type = f.variable_type as ArrayType;
 					if (array_type != null && array_type.fixed_length) {
 						for (int i = 0; i < array_type.length; i++) {
 							CCodeExpression copy_element = new CCodeElementAccess (copy, new CCodeConstant (i.to_string ()));
@@ -350,13 +350,13 @@ internal class Vala.DovaValueModule : DovaObjectModule {
 						continue;
 					}
 
-					if (requires_copy (f.field_type))  {
+					if (requires_copy (f.variable_type))  {
 						var this_access = new MemberAccess.simple ("this");
 						this_access.value_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
 						this_access.ccodenode = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, src);
 						var ma = new MemberAccess (this_access, f.name);
 						ma.symbol_reference = f;
-						copy = get_ref_cexpression (f.field_type, copy, ma, f);
+						copy = get_ref_cexpression (f.variable_type, copy, ma, f);
 					}
 
 					copy_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (dest_field, copy)));

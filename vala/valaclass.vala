@@ -291,7 +291,7 @@ public class Vala.Class : ObjectTypeSymbol {
 		    name != "any" /* temporary workaround */) {
 			// public/protected instance fields not supported, convert to automatic property
 
-			var prop = new Property (f.name, f.field_type.copy (), null, null, f.source_reference, comment);
+			var prop = new Property (f.name, f.variable_type.copy (), null, null, f.source_reference, comment);
 			prop.access = access;
 
 			var get_type = prop.property_type.copy ();

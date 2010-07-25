@@ -323,7 +323,7 @@ public class Vala.MethodCall : Expression {
 			}
 
 			if (param.params_array) {
-				var array_type = (ArrayType) param.parameter_type;
+				var array_type = (ArrayType) param.variable_type;
 				while (arg_it.next ()) {
 					Expression arg = arg_it.get ();
 
@@ -338,7 +338,7 @@ public class Vala.MethodCall : Expression {
 				Expression arg = arg_it.get ();
 
 				/* store expected type for callback parameters */
-				arg.formal_target_type = param.parameter_type;
+				arg.formal_target_type = param.variable_type;
 				arg.target_type = arg.formal_target_type.get_actual_type (target_object_type, call as MemberAccess, this);
 
 				last_arg = arg;
@@ -587,7 +587,7 @@ public class Vala.MethodCall : Expression {
 							if (arg_it.next ()) {
 								Expression arg = arg_it.get ();
 
-								var generic_type = param.parameter_type as GenericType;
+								var generic_type = param.variable_type as GenericType;
 								if (generic_type != null && generic_type.type_parameter == type_param) {
 									type_arg = arg.value_type.copy ();
 									type_arg.value_owned = true;

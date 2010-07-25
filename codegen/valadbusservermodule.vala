@@ -181,11 +181,11 @@ public class Vala.DBusServerModule : DBusClientModule {
 		string type_signature = "";
 
 		foreach (FormalParameter param in m.get_parameters ()) {
-			var owned_type = param.parameter_type.copy ();
+			var owned_type = param.variable_type.copy ();
 			owned_type.value_owned = true;
 
 			cdecl = new CCodeDeclaration (owned_type.get_cname ());
-			cdecl.add_declarator (new CCodeVariableDeclarator.zero (param.name, default_value_for_type (param.parameter_type, true)));
+			cdecl.add_declarator (new CCodeVariableDeclarator.zero (param.name, default_value_for_type (param.variable_type, true)));
 			if (param.direction == ParameterDirection.IN) {
 				in_prefragment.append (cdecl);
 			} else {
@@ -193,8 +193,8 @@ public class Vala.DBusServerModule : DBusClientModule {
 			}
 			if (type_signature == ""
 			    && param.direction == ParameterDirection.IN
-			    && param.parameter_type.data_type != null
-			    && param.parameter_type.data_type.get_full_name () == "DBus.BusName") {
+			    && param.variable_type.data_type != null
+			    && param.variable_type.data_type.get_full_name () == "DBus.BusName") {
 				// first parameter is a string parameter called 'sender'
 				// pass bus name of sender
 				var get_sender = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_get_sender"));
@@ -203,13 +203,13 @@ public class Vala.DBusServerModule : DBusClientModule {
 				continue;
 			}
 
-			if (get_type_signature (param.parameter_type) == null) {
-				Report.error (param.parameter_type.source_reference, "D-Bus serialization of type `%s' is not supported".printf (param.parameter_type.to_string ()));
+			if (get_type_signature (param.variable_type) == null) {
+				Report.error (param.variable_type.source_reference, "D-Bus serialization of type `%s' is not supported".printf (param.variable_type.to_string ()));
 				continue;
 			}
 
 			if (!m.coroutine || param.direction == ParameterDirection.IN) {
-				var st = param.parameter_type.data_type as Struct;
+				var st = param.variable_type.data_type as Struct;
 				if (param.direction != ParameterDirection.IN
 				    || (st != null && !st.is_simple_type ())) {
 					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
@@ -220,8 +220,8 @@ public class Vala.DBusServerModule : DBusClientModule {
 				finish_ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
 			}
 
-			if (param.parameter_type is ArrayType) {
-				var array_type = (ArrayType) param.parameter_type;
+			if (param.variable_type is ArrayType) {
+				var array_type = (ArrayType) param.variable_type;
 
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					string length_cname = get_array_length_cname (param.name, dim);
@@ -244,13 +244,13 @@ public class Vala.DBusServerModule : DBusClientModule {
 			}
 
 			if (param.direction == ParameterDirection.IN) {
-				type_signature += get_type_signature (param.parameter_type);
+				type_signature += get_type_signature (param.variable_type);
 
 				var target = new CCodeIdentifier (param.name);
-				var expr = read_expression (in_prefragment, param.parameter_type, new CCodeIdentifier ("iter"), target);
+				var expr = read_expression (in_prefragment, param.variable_type, new CCodeIdentifier ("iter"), target);
 				in_prefragment.append (new CCodeExpressionStatement (new CCodeAssignment (target, expr)));
 			} else {
-				write_expression (out_postfragment, param.parameter_type, new CCodeIdentifier ("iter"), new CCodeIdentifier (param.name));
+				write_expression (out_postfragment, param.variable_type, new CCodeIdentifier ("iter"), new CCodeIdentifier (param.name));
 			}
 
 			if (requires_destroy (owned_type)) {
@@ -496,8 +496,8 @@ public class Vala.DBusServerModule : DBusClientModule {
 			generate_parameter (param, source_declarations, new HashMap<int,CCodeFormalParameter> (), null);
 
 			function.add_parameter ((CCodeFormalParameter) get_ccodenode (param));
-			if (param.parameter_type is ArrayType) {
-				var array_type = (ArrayType) param.parameter_type;
+			if (param.variable_type is ArrayType) {
+				var array_type = (ArrayType) param.variable_type;
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					function.add_parameter (new CCodeFormalParameter (head.get_array_length_cname (param.name, dim), "int"));
 				}
@@ -540,10 +540,10 @@ public class Vala.DBusServerModule : DBusClientModule {
 
 		foreach (FormalParameter param in sig.get_parameters ()) {
 			CCodeExpression expr = new CCodeIdentifier (param.name);
-			if (param.parameter_type.is_real_struct_type ()) {
+			if (param.variable_type.is_real_struct_type ()) {
 				expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, expr);
 			}
-			write_expression (prefragment, param.parameter_type, new CCodeIdentifier ("_iter"), expr);
+			write_expression (prefragment, param.variable_type, new CCodeIdentifier ("_iter"), expr);
 		}
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_connection_send"));
@@ -1295,15 +1295,15 @@ public class Vala.DBusServerModule : DBusClientModule {
 			result += "  <method name=\"%s\">\n".printf (get_dbus_name_for_member (m));
 
 			foreach (var param in m.get_parameters ()) {
-				if (param.parameter_type.data_type != null
-				    && param.parameter_type.data_type.get_full_name () == "DBus.BusName") {
+				if (param.variable_type.data_type != null
+				    && param.variable_type.data_type.get_full_name () == "DBus.BusName") {
 					// skip sender parameter
 					// (implicit in D-Bus)
 					continue;
 				}
 
 				string direction = param.direction == ParameterDirection.IN ? "in" : "out";
-				result += "    <arg name=\"%s\" type=\"%s\" direction=\"%s\"/>\n".printf (param.name, get_type_signature (param.parameter_type), direction);
+				result += "    <arg name=\"%s\" type=\"%s\" direction=\"%s\"/>\n".printf (param.name, get_type_signature (param.variable_type), direction);
 			}
 			if (!(m.return_type is VoidType)) {
 				result += "    <arg name=\"%s\" type=\"%s\" direction=\"out\"/>\n".printf (dbus_result_name (m), get_type_signature (m.return_type));
@@ -1336,7 +1336,7 @@ public class Vala.DBusServerModule : DBusClientModule {
 			result += "  <signal name=\"%s\">\n".printf (get_dbus_name_for_member (sig));
 
 			foreach (var param in sig.get_parameters ()) {
-				result += "    <arg name=\"%s\" type=\"%s\"/>\n".printf (param.name, get_type_signature (param.parameter_type));
+				result += "    <arg name=\"%s\" type=\"%s\"/>\n".printf (param.name, get_type_signature (param.variable_type));
 			}
 
 			result += "  </signal>\n";

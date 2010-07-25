@@ -66,18 +66,18 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 		instance_struct.deprecated = st.deprecated;
 
 		foreach (Field f in st.get_fields ()) {
-			string field_ctype = f.field_type.get_cname ();
+			string field_ctype = f.variable_type.get_cname ();
 			if (f.is_volatile) {
 				field_ctype = "volatile " + field_ctype;
 			}
 
 			if (f.binding == MemberBinding.INSTANCE)  {
-				generate_type_declaration (f.field_type, decl_space);
+				generate_type_declaration (f.variable_type, decl_space);
 
-				instance_struct.add_field (field_ctype, f.get_cname () + f.field_type.get_cdeclarator_suffix (), f.deprecated ? " G_GNUC_DEPRECATED" : null);
-				if (f.field_type is ArrayType && !f.no_array_length) {
+				instance_struct.add_field (field_ctype, f.get_cname () + f.variable_type.get_cdeclarator_suffix (), f.deprecated ? " G_GNUC_DEPRECATED" : null);
+				if (f.variable_type is ArrayType && !f.no_array_length) {
 					// create fields to store array dimensions
-					var array_type = (ArrayType) f.field_type;
+					var array_type = (ArrayType) f.variable_type;
 
 					if (!array_type.fixed_length) {
 						var len_type = int_type.copy ();
@@ -90,8 +90,8 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 							instance_struct.add_field (len_type.get_cname (), head.get_array_size_cname (f.name));
 						}
 					}
-				} else if (f.field_type is DelegateType) {
-					var delegate_type = (DelegateType) f.field_type;
+				} else if (f.variable_type is DelegateType) {
+					var delegate_type = (DelegateType) f.variable_type;
 					if (delegate_type.delegate_symbol.has_target) {
 						// create field to store delegate target
 						instance_struct.add_field ("gpointer", get_delegate_target_cname (f.name));
@@ -259,17 +259,17 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 		foreach (var f in st.get_fields ()) {
 			if (f.binding == MemberBinding.INSTANCE) {
 				CCodeExpression copy = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), f.name);
-				if (requires_copy (f.field_type))  {
+				if (requires_copy (f.variable_type))  {
 					var this_access = new MemberAccess.simple ("this");
 					this_access.value_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
 					this_access.ccodenode = new CCodeIdentifier ("(*self)");
 					var ma = new MemberAccess (this_access, f.name);
 					ma.symbol_reference = f;
-					copy = get_ref_cexpression (f.field_type, copy, ma, f);
+					copy = get_ref_cexpression (f.variable_type, copy, ma, f);
 				}
 				var dest = new CCodeMemberAccess.pointer (new CCodeIdentifier ("dest"), f.name);
 
-				var array_type = f.field_type as ArrayType;
+				var array_type = f.variable_type as ArrayType;
 				if (array_type != null && array_type.fixed_length) {
 					// fixed-length (stack-allocated) arrays
 					source_declarations.add_include ("string.h");

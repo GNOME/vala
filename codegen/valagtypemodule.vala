@@ -29,14 +29,14 @@ public class Vala.GTypeModule : GErrorModule {
 	}
 
 	public override void generate_parameter (FormalParameter param, CCodeDeclarationSpace decl_space, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
-		if (!(param.parameter_type is ObjectType)) {
+		if (!(param.variable_type is ObjectType)) {
 			base.generate_parameter (param, decl_space, cparam_map, carg_map);
 			return;
 		}
 
-		generate_type_declaration (param.parameter_type, decl_space);
+		generate_type_declaration (param.variable_type, decl_space);
 
-		string ctypename = param.parameter_type.get_cname ();
+		string ctypename = param.variable_type.get_cname ();
 
 		if (param.direction != ParameterDirection.IN) {
 			ctypename += "*";
@@ -302,19 +302,19 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 
 		foreach (Field f in cl.get_fields ()) {
-			string field_ctype = f.field_type.get_cname ();
+			string field_ctype = f.variable_type.get_cname ();
 			if (f.is_volatile) {
 				field_ctype = "volatile " + field_ctype;
 			}
 
 			if (f.access != SymbolAccessibility.PRIVATE) {
 				if (f.binding == MemberBinding.INSTANCE) {
-					generate_type_declaration (f.field_type, decl_space);
+					generate_type_declaration (f.variable_type, decl_space);
 
-					instance_struct.add_field (field_ctype, f.get_cname (), f.field_type.get_cdeclarator_suffix ());
-					if (f.field_type is ArrayType && !f.no_array_length) {
+					instance_struct.add_field (field_ctype, f.get_cname (), f.variable_type.get_cdeclarator_suffix ());
+					if (f.variable_type is ArrayType && !f.no_array_length) {
 						// create fields to store array dimensions
-						var array_type = (ArrayType) f.field_type;
+						var array_type = (ArrayType) f.variable_type;
 
 						if (!array_type.fixed_length) {
 							var len_type = int_type.copy ();
@@ -327,8 +327,8 @@ public class Vala.GTypeModule : GErrorModule {
 								instance_struct.add_field (len_type.get_cname (), head.get_array_size_cname (f.name));
 							}
 						}
-					} else if (f.field_type is DelegateType) {
-						var delegate_type = (DelegateType) f.field_type;
+					} else if (f.variable_type is DelegateType) {
+						var delegate_type = (DelegateType) f.variable_type;
 						if (delegate_type.delegate_symbol.has_target) {
 							// create field to store delegate target
 							instance_struct.add_field ("gpointer", get_delegate_target_cname (f.name));
@@ -404,19 +404,19 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 
 		foreach (Field f in cl.get_fields ()) {
-			string field_ctype = f.field_type.get_cname ();
+			string field_ctype = f.variable_type.get_cname ();
 			if (f.is_volatile) {
 				field_ctype = "volatile " + field_ctype;
 			}
 
 			if (f.binding == MemberBinding.INSTANCE) {
 				if (f.access == SymbolAccessibility.PRIVATE)  {
-					generate_type_declaration (f.field_type, decl_space);
+					generate_type_declaration (f.variable_type, decl_space);
 
-					instance_priv_struct.add_field (field_ctype, f.get_cname (), f.field_type.get_cdeclarator_suffix ());
-					if (f.field_type is ArrayType && !f.no_array_length) {
+					instance_priv_struct.add_field (field_ctype, f.get_cname (), f.variable_type.get_cdeclarator_suffix ());
+					if (f.variable_type is ArrayType && !f.no_array_length) {
 						// create fields to store array dimensions
-						var array_type = (ArrayType) f.field_type;
+						var array_type = (ArrayType) f.variable_type;
 						var len_type = int_type.copy ();
 
 						if (!array_type.fixed_length) {
@@ -428,8 +428,8 @@ public class Vala.GTypeModule : GErrorModule {
 								instance_priv_struct.add_field (len_type.get_cname (), head.get_array_size_cname (f.name));
 							}
 						}
-					} else if (f.field_type is DelegateType) {
-						var delegate_type = (DelegateType) f.field_type;
+					} else if (f.variable_type is DelegateType) {
+						var delegate_type = (DelegateType) f.variable_type;
 						if (delegate_type.delegate_symbol.has_target) {
 							// create field to store delegate target
 							instance_priv_struct.add_field ("gpointer", get_delegate_target_cname (f.name));
@@ -1662,8 +1662,8 @@ public class Vala.GTypeModule : GErrorModule {
 				}
 			}
 
-			if (prop.default_expression != null) {
-				cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
+			if (prop.initializer != null) {
+				cspec.add_argument ((CCodeExpression) prop.initializer.ccodenode);
 			} else {
 				cspec.add_argument (new CCodeConstant (prop.property_type.data_type.get_default_value ()));
 			}
@@ -1673,8 +1673,8 @@ public class Vala.GTypeModule : GErrorModule {
 				cspec.call = new CCodeIdentifier ("g_param_spec_int");
 				cspec.add_argument (new CCodeConstant ("G_MININT"));
 				cspec.add_argument (new CCodeConstant ("G_MAXINT"));
-				if (prop.default_expression != null) {
-					cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
+				if (prop.initializer != null) {
+					cspec.add_argument ((CCodeExpression) prop.initializer.ccodenode);
 				} else {
 					cspec.add_argument (new CCodeConstant ("0"));
 				}
@@ -1682,8 +1682,8 @@ public class Vala.GTypeModule : GErrorModule {
 				cspec.call = new CCodeIdentifier ("g_param_spec_uint");
 				cspec.add_argument (new CCodeConstant ("0"));
 				cspec.add_argument (new CCodeConstant ("G_MAXUINT"));
-				if (prop.default_expression != null) {
-					cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
+				if (prop.initializer != null) {
+					cspec.add_argument ((CCodeExpression) prop.initializer.ccodenode);
 				} else {
 					cspec.add_argument (new CCodeConstant ("0U"));
 				}
@@ -1691,8 +1691,8 @@ public class Vala.GTypeModule : GErrorModule {
 				cspec.call = new CCodeIdentifier ("g_param_spec_int64");
 				cspec.add_argument (new CCodeConstant ("G_MININT64"));
 				cspec.add_argument (new CCodeConstant ("G_MAXINT64"));
-				if (prop.default_expression != null) {
-					cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
+				if (prop.initializer != null) {
+					cspec.add_argument ((CCodeExpression) prop.initializer.ccodenode);
 				} else {
 					cspec.add_argument (new CCodeConstant ("0"));
 				}
@@ -1700,8 +1700,8 @@ public class Vala.GTypeModule : GErrorModule {
 				cspec.call = new CCodeIdentifier ("g_param_spec_uint64");
 				cspec.add_argument (new CCodeConstant ("0"));
 				cspec.add_argument (new CCodeConstant ("G_MAXUINT64"));
-				if (prop.default_expression != null) {
-					cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
+				if (prop.initializer != null) {
+					cspec.add_argument ((CCodeExpression) prop.initializer.ccodenode);
 				} else {
 					cspec.add_argument (new CCodeConstant ("0U"));
 				}
@@ -1709,8 +1709,8 @@ public class Vala.GTypeModule : GErrorModule {
 				cspec.call = new CCodeIdentifier ("g_param_spec_long");
 				cspec.add_argument (new CCodeConstant ("G_MINLONG"));
 				cspec.add_argument (new CCodeConstant ("G_MAXLONG"));
-				if (prop.default_expression != null) {
-					cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
+				if (prop.initializer != null) {
+					cspec.add_argument ((CCodeExpression) prop.initializer.ccodenode);
 				} else {
 					cspec.add_argument (new CCodeConstant ("0L"));
 				}
@@ -1718,15 +1718,15 @@ public class Vala.GTypeModule : GErrorModule {
 				cspec.call = new CCodeIdentifier ("g_param_spec_ulong");
 				cspec.add_argument (new CCodeConstant ("0"));
 				cspec.add_argument (new CCodeConstant ("G_MAXULONG"));
-				if (prop.default_expression != null) {
-					cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
+				if (prop.initializer != null) {
+					cspec.add_argument ((CCodeExpression) prop.initializer.ccodenode);
 				} else {
 					cspec.add_argument (new CCodeConstant ("0UL"));
 				}
 			} else if (st.get_type_id () == "G_TYPE_BOOLEAN") {
 				cspec.call = new CCodeIdentifier ("g_param_spec_boolean");
-				if (prop.default_expression != null) {
-					cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
+				if (prop.initializer != null) {
+					cspec.add_argument ((CCodeExpression) prop.initializer.ccodenode);
 				} else {
 					cspec.add_argument (new CCodeConstant ("FALSE"));
 				}
@@ -1734,8 +1734,8 @@ public class Vala.GTypeModule : GErrorModule {
 				cspec.call = new CCodeIdentifier ("g_param_spec_char");
 				cspec.add_argument (new CCodeConstant ("G_MININT8"));
 				cspec.add_argument (new CCodeConstant ("G_MAXINT8"));
-				if (prop.default_expression != null) {
-					cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
+				if (prop.initializer != null) {
+					cspec.add_argument ((CCodeExpression) prop.initializer.ccodenode);
 				} else {
 					cspec.add_argument (new CCodeConstant ("0"));
 				}
@@ -1743,8 +1743,8 @@ public class Vala.GTypeModule : GErrorModule {
 				cspec.call = new CCodeIdentifier ("g_param_spec_uchar");
 				cspec.add_argument (new CCodeConstant ("0"));
 				cspec.add_argument (new CCodeConstant ("G_MAXUINT8"));
-				if (prop.default_expression != null) {
-					cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
+				if (prop.initializer != null) {
+					cspec.add_argument ((CCodeExpression) prop.initializer.ccodenode);
 				} else {
 					cspec.add_argument (new CCodeConstant ("0"));
 				}
@@ -1752,8 +1752,8 @@ public class Vala.GTypeModule : GErrorModule {
 				cspec.call = new CCodeIdentifier ("g_param_spec_float");
 				cspec.add_argument (new CCodeConstant ("-G_MAXFLOAT"));
 				cspec.add_argument (new CCodeConstant ("G_MAXFLOAT"));
-				if (prop.default_expression != null) {
-					cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
+				if (prop.initializer != null) {
+					cspec.add_argument ((CCodeExpression) prop.initializer.ccodenode);
 				} else {
 					cspec.add_argument (new CCodeConstant ("0.0F"));
 				}
@@ -1761,15 +1761,15 @@ public class Vala.GTypeModule : GErrorModule {
 				cspec.call = new CCodeIdentifier ("g_param_spec_double");
 				cspec.add_argument (new CCodeConstant ("-G_MAXDOUBLE"));
 				cspec.add_argument (new CCodeConstant ("G_MAXDOUBLE"));
-				if (prop.default_expression != null) {
-					cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
+				if (prop.initializer != null) {
+					cspec.add_argument ((CCodeExpression) prop.initializer.ccodenode);
 				} else {
 					cspec.add_argument (new CCodeConstant ("0.0"));
 				}
 			} else if (st.get_type_id () == "G_TYPE_GTYPE") {
 				cspec.call = new CCodeIdentifier ("g_param_spec_gtype");
-				if (prop.default_expression != null) {
-					cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
+				if (prop.initializer != null) {
+					cspec.add_argument ((CCodeExpression) prop.initializer.ccodenode);
 				} else {
 					cspec.add_argument (new CCodeConstant ("G_TYPE_NONE"));
 				}

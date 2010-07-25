@@ -171,7 +171,7 @@ public class Vala.Delegate : TypeSymbol {
 
 			// method is allowed to accept arguments of looser types (weaker precondition)
 			var method_param = method_params_it.get ();
-			if (!sender_type.stricter (method_param.parameter_type)) {
+			if (!sender_type.stricter (method_param.variable_type)) {
 				return false;
 			}
 		}
@@ -194,7 +194,7 @@ public class Vala.Delegate : TypeSymbol {
 
 			// method is allowed to accept arguments of looser types (weaker precondition)
 			var method_param = method_params_it.get ();
-			if (!param.parameter_type.get_actual_type (dt, null, this).stricter (method_param.parameter_type)) {
+			if (!param.variable_type.get_actual_type (dt, null, this).stricter (method_param.variable_type)) {
 				return false;
 			}
 		}
@@ -355,7 +355,7 @@ public class Vala.Delegate : TypeSymbol {
 			}
 
 			if (param.direction == ParameterDirection.IN) {
-				if (param.parameter_type.value_owned) {
+				if (param.variable_type.value_owned) {
 					str += "owned ";
 				}
 			} else {
@@ -364,12 +364,12 @@ public class Vala.Delegate : TypeSymbol {
 				} else if (param.direction == ParameterDirection.OUT) {
 					str += "out ";
 				}
-				if (!param.parameter_type.value_owned && param.parameter_type is ReferenceType) {
+				if (!param.variable_type.value_owned && param.variable_type is ReferenceType) {
 					str += "weak ";
 				}
 			}
 
-			str += param.parameter_type.to_string ();
+			str += param.variable_type.to_string ();
 
 			i++;
 		}

@@ -345,7 +345,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 			if (context.module_init_method != null) {
 				foreach (FormalParameter parameter in context.module_init_method.get_parameters ()) {
-					if (parameter.parameter_type.data_type == type_module_type) {
+					if (parameter.variable_type.data_type == type_module_type) {
 						in_plugin = true;
 						module_init_param_name = parameter.name;
 						break;
@@ -822,15 +822,15 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			return;
 		}
 
-		generate_type_declaration (f.field_type, decl_space);
+		generate_type_declaration (f.variable_type, decl_space);
 
-		string field_ctype = f.field_type.get_cname ();
+		string field_ctype = f.variable_type.get_cname ();
 		if (f.is_volatile) {
 			field_ctype = "volatile " + field_ctype;
 		}
 
 		var cdecl = new CCodeDeclaration (field_ctype);
-		cdecl.add_declarator (new CCodeVariableDeclarator (f.get_cname (), null, f.field_type.get_cdeclarator_suffix ()));
+		cdecl.add_declarator (new CCodeVariableDeclarator (f.get_cname (), null, f.variable_type.get_cdeclarator_suffix ()));
 		if (f.is_private_symbol ()) {
 			cdecl.modifiers = CCodeModifiers.STATIC;
 		} else {
@@ -855,8 +855,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			decl_space.add_type_member_declaration (flock);
 		}
 
-		if (f.field_type is ArrayType && !f.no_array_length) {
-			var array_type = (ArrayType) f.field_type;
+		if (f.variable_type is ArrayType && !f.no_array_length) {
+			var array_type = (ArrayType) f.variable_type;
 
 			if (!array_type.fixed_length) {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
@@ -872,8 +872,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 					decl_space.add_type_member_declaration (cdecl);
 				}
 			}
-		} else if (f.field_type is DelegateType) {
-			var delegate_type = (DelegateType) f.field_type;
+		} else if (f.variable_type is DelegateType) {
+			var delegate_type = (DelegateType) f.variable_type;
 			if (delegate_type.delegate_symbol.has_target) {
 				// create field to store delegate target
 
@@ -903,7 +903,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	public override void visit_field (Field f) {
 		visit_member (f);
 
-		check_type (f.field_type);
+		check_type (f.variable_type);
 
 		f.accept_children (codegen);
 
@@ -912,7 +912,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 		CCodeExpression lhs = null;
 
-		string field_ctype = f.field_type.get_cname ();
+		string field_ctype = f.variable_type.get_cname ();
 		if (f.is_volatile) {
 			field_ctype = "volatile " + field_ctype;
 		}
@@ -929,9 +929,9 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 				instance_init_fragment.append (new CCodeExpressionStatement (new CCodeAssignment (lhs, rhs)));
 
-				if (f.field_type is ArrayType && !f.no_array_length &&
+				if (f.variable_type is ArrayType && !f.no_array_length &&
 				    f.initializer is ArrayCreationExpression) {
-					var array_type = (ArrayType) f.field_type;
+					var array_type = (ArrayType) f.variable_type;
 					var this_access = new MemberAccess.simple ("this");
 					this_access.value_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
 					this_access.ccodenode = new CCodeIdentifier ("self");
@@ -965,7 +965,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				temp_ref_vars.clear ();
 			}
 			
-			if (requires_destroy (f.field_type) && instance_finalize_fragment != null) {
+			if (requires_destroy (f.variable_type) && instance_finalize_fragment != null) {
 				var this_access = new MemberAccess.simple ("this");
 				this_access.value_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
 
@@ -978,8 +978,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 				var ma = new MemberAccess (this_access, f.name);
 				ma.symbol_reference = f;
-				ma.value_type = f.field_type.copy ();
-				instance_finalize_fragment.append (new CCodeExpressionStatement (get_unref_expression (lhs, f.field_type, ma)));
+				ma.value_type = f.variable_type.copy ();
+				instance_finalize_fragment.append (new CCodeExpressionStatement (get_unref_expression (lhs, f.variable_type, ma)));
 			}
 		} else if (f.binding == MemberBinding.CLASS)  {
 			if (!is_gtypeinstance) {
@@ -1025,8 +1025,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 			lhs = new CCodeIdentifier (f.get_cname ());
 
-			var var_decl = new CCodeVariableDeclarator (f.get_cname (), null, f.field_type.get_cdeclarator_suffix ());
-			var_decl.initializer = default_value_for_type (f.field_type, true);
+			var var_decl = new CCodeVariableDeclarator (f.get_cname (), null, f.variable_type.get_cdeclarator_suffix ());
+			var_decl.initializer = default_value_for_type (f.variable_type, true);
 
 			if (f.initializer != null) {
 				var init = (CCodeExpression) f.initializer.ccodenode;
@@ -1045,8 +1045,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			source_declarations.add_type_member_declaration (var_def);
 
 			/* add array length fields where necessary */
-			if (f.field_type is ArrayType && !f.no_array_length) {
-				var array_type = (ArrayType) f.field_type;
+			if (f.variable_type is ArrayType && !f.no_array_length) {
+				var array_type = (ArrayType) f.variable_type;
 
 				if (!array_type.fixed_length) {
 					for (int dim = 1; dim <= array_type.rank; dim++) {
@@ -1071,8 +1071,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 						source_declarations.add_type_member_declaration (cdecl);
 					}
 				}
-			} else if (f.field_type is DelegateType) {
-				var delegate_type = (DelegateType) f.field_type;
+			} else if (f.variable_type is DelegateType) {
+				var delegate_type = (DelegateType) f.variable_type;
 				if (delegate_type.delegate_symbol.has_target) {
 					// create field to store delegate target
 
@@ -1107,7 +1107,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 							var block = new CCodeBlock ();
 							var frag = new CCodeFragment ();
 
-							var temp_decl = get_temp_variable (f.field_type);
+							var temp_decl = get_temp_variable (f.variable_type);
 							var cdecl = new CCodeDeclaration (temp_decl.variable_type.get_cname ());
 							var vardecl = new CCodeVariableDeclarator (temp_decl.name, rhs);
 							cdecl.add_declarator (vardecl);
@@ -1123,9 +1123,9 @@ public class Vala.CCodeBaseModule : CCodeModule {
 							class_init_fragment.append (new CCodeExpressionStatement (new CCodeAssignment (lhs, rhs)));
 						}
 
-						if (f.field_type is ArrayType && !f.no_array_length &&
+						if (f.variable_type is ArrayType && !f.no_array_length &&
 						    f.initializer is ArrayCreationExpression) {
-							var array_type = (ArrayType) f.field_type;
+							var array_type = (ArrayType) f.variable_type;
 							var ma = new MemberAccess.simple (f.name);
 							ma.symbol_reference = f;
 					
@@ -1204,7 +1204,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 	public override void visit_formal_parameter (FormalParameter p) {
 		if (!p.ellipsis) {
-			check_type (p.parameter_type);
+			check_type (p.variable_type);
 		}
 	}
 
@@ -1630,41 +1630,41 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	void capture_parameter (FormalParameter param, CCodeStruct data, CCodeBlock cblock, int block_id, CCodeBlock free_block) {
-		generate_type_declaration (param.parameter_type, source_declarations);
+		generate_type_declaration (param.variable_type, source_declarations);
 
-		var param_type = param.parameter_type.copy ();
+		var param_type = param.variable_type.copy ();
 		param_type.value_owned = true;
 		data.add_field (param_type.get_cname (), get_variable_cname (param.name));
 
-		bool is_unowned_delegate = param.parameter_type is DelegateType && !param.parameter_type.value_owned;
+		bool is_unowned_delegate = param.variable_type is DelegateType && !param.variable_type.value_owned;
 
 		// create copy if necessary as captured variables may need to be kept alive
 		CCodeExpression cparam = get_variable_cexpression (param.name);
-		if (param.parameter_type.is_real_non_null_struct_type ()) {
+		if (param.variable_type.is_real_non_null_struct_type ()) {
 			cparam = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, cparam);
 		}
-		if (requires_copy (param_type) && !param.parameter_type.value_owned && !is_unowned_delegate)  {
+		if (requires_copy (param_type) && !param.variable_type.value_owned && !is_unowned_delegate)  {
 			var ma = new MemberAccess.simple (param.name);
 			ma.symbol_reference = param;
-			ma.value_type = param.parameter_type.copy ();
+			ma.value_type = param.variable_type.copy ();
 			// directly access parameters in ref expressions
 			param.captured = false;
-			cparam = get_ref_cexpression (param.parameter_type, cparam, ma, param);
+			cparam = get_ref_cexpression (param.variable_type, cparam, ma, param);
 			param.captured = true;
 		}
 
 		cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_variable_cname (param.name)), cparam)));
 
-		if (param.parameter_type is ArrayType) {
-			var array_type = (ArrayType) param.parameter_type;
+		if (param.variable_type is ArrayType) {
+			var array_type = (ArrayType) param.variable_type;
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				data.add_field ("gint", get_array_length_cname (get_variable_cname (param.name), dim));
 				cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_array_length_cname (get_variable_cname (param.name), dim)), new CCodeIdentifier (get_array_length_cname (get_variable_cname (param.name), dim)))));
 			}
-		} else if (param.parameter_type is DelegateType) {
+		} else if (param.variable_type is DelegateType) {
 			data.add_field ("gpointer", get_delegate_target_cname (get_variable_cname (param.name)));
 			cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_delegate_target_cname (get_variable_cname (param.name))), new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (param.name))))));
-			if (param.parameter_type.value_owned) {
+			if (param.variable_type.value_owned) {
 				data.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
 				cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_delegate_target_destroy_notify_cname (get_variable_cname (param.name))), new CCodeIdentifier (get_delegate_target_destroy_notify_cname (get_variable_cname (param.name))))));
 			}
@@ -1680,7 +1680,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			var ma = new MemberAccess.simple (param.name);
 			ma.symbol_reference = param;
 			ma.value_type = param_type.copy ();
-			free_block.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), get_variable_cname (param.name)), param.parameter_type, ma)));
+			free_block.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), get_variable_cname (param.name)), param.variable_type, ma)));
 
 			if (old_coroutine) {
 				current_method.coroutine = true;
@@ -1900,11 +1900,11 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		if (b.parent_symbol is Method) {
 			var m = (Method) b.parent_symbol;
 			foreach (FormalParameter param in m.get_parameters ()) {
-				if (!param.captured && !param.ellipsis && requires_destroy (param.parameter_type) && param.direction == ParameterDirection.IN) {
+				if (!param.captured && !param.ellipsis && requires_destroy (param.variable_type) && param.direction == ParameterDirection.IN) {
 					var ma = new MemberAccess.simple (param.name);
 					ma.symbol_reference = param;
-					ma.value_type = param.parameter_type.copy ();
-					cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (param.name), param.parameter_type, ma)));
+					ma.value_type = param.variable_type.copy ();
+					cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (param.name), param.variable_type, ma)));
 				}
 			}
 		}
@@ -2477,17 +2477,17 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			var s1 = (CCodeExpression) new CCodeMemberAccess.pointer (new CCodeIdentifier ("s1"), f.name); // s1->f
 			var s2 = (CCodeExpression) new CCodeMemberAccess.pointer (new CCodeIdentifier ("s2"), f.name); // s2->f
 
-			var field_type = f.field_type.copy ();
-			make_comparable_cexpression (ref field_type, ref s1, ref field_type, ref s2);
+			var variable_type = f.variable_type.copy ();
+			make_comparable_cexpression (ref variable_type, ref s1, ref variable_type, ref s2);
 
-			if (!(f.field_type is NullType) && f.field_type.compatible (string_type)) {
+			if (!(f.variable_type is NullType) && f.variable_type.compatible (string_type)) {
 				requires_strcmp0 = true;
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("_vala_strcmp0"));
 				ccall.add_argument (s1);
 				ccall.add_argument (s2);
 				cexp = ccall;
-			} else if (f.field_type is StructValueType) {
-				var equalfunc = generate_struct_equal_function (f.field_type.data_type as Struct);
+			} else if (f.variable_type is StructValueType) {
+				var equalfunc = generate_struct_equal_function (f.variable_type.data_type as Struct);
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier (equalfunc));
 				ccall.add_argument (s1);
 				ccall.add_argument (s2);
@@ -3256,11 +3256,11 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 	private void append_param_free (Method m, CCodeFragment cfrag) {
 		foreach (FormalParameter param in m.get_parameters ()) {
-			if (!param.ellipsis && requires_destroy (param.parameter_type) && param.direction == ParameterDirection.IN) {
+			if (!param.ellipsis && requires_destroy (param.variable_type) && param.direction == ParameterDirection.IN) {
 				var ma = new MemberAccess.simple (param.name);
 				ma.symbol_reference = param;
-				ma.value_type = param.parameter_type.copy ();
-				cfrag.append (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (param.name), param.parameter_type, ma)));
+				ma.value_type = param.variable_type.copy ();
+				cfrag.append (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (param.name), param.variable_type, ma)));
 			}
 		}
 	}
@@ -4204,13 +4204,13 @@ public class Vala.CCodeBaseModule : CCodeModule {
 					param = params_it.get ();
 					ellipsis = param.ellipsis;
 					if (!ellipsis) {
-						if (!param.no_array_length && param.parameter_type is ArrayType) {
-							var array_type = (ArrayType) param.parameter_type;
+						if (!param.no_array_length && param.variable_type is ArrayType) {
+							var array_type = (ArrayType) param.variable_type;
 							for (int dim = 1; dim <= array_type.rank; dim++) {
 								carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), head.get_array_length_cexpression (arg, dim));
 							}
-						} else if (param.parameter_type is DelegateType) {
-							var deleg_type = (DelegateType) param.parameter_type;
+						} else if (param.variable_type is DelegateType) {
+							var deleg_type = (DelegateType) param.variable_type;
 							var d = deleg_type.delegate_symbol;
 							if (d.has_target) {
 								CCodeExpression delegate_target_destroy_notify;
@@ -4247,7 +4247,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 					break;
 				}
 				
-				if (param.default_expression == null) {
+				if (param.initializer == null) {
 					Report.error (expr.source_reference, "no default expression for argument %d".printf (i));
 					return;
 				}
@@ -4255,9 +4255,9 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				/* evaluate default expression here as the code
 				 * generator might not have visited the formal
 				 * parameter yet */
-				param.default_expression.accept (codegen);
+				param.initializer.accept (codegen);
 			
-				carg_map.set (get_param_pos (param.cparameter_position), (CCodeExpression) param.default_expression.ccodenode);
+				carg_map.set (get_param_pos (param.cparameter_position), (CCodeExpression) param.initializer.ccodenode);
 				i++;
 			}
 
@@ -4355,8 +4355,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 					}
 					ccomma.append_expression (new CCodeAssignment (lhs, (CCodeExpression) init.initializer.ccodenode));
 
-					if (f.field_type is ArrayType && !f.no_array_length) {
-						var array_type = (ArrayType) f.field_type;
+					if (f.variable_type is ArrayType && !f.no_array_length) {
+						var array_type = (ArrayType) f.variable_type;
 						for (int dim = 1; dim <= array_type.rank; dim++) {
 							if (expr.type_reference.data_type is Struct) {
 								lhs = new CCodeMemberAccess (typed_inst, head.get_array_length_cname (f.get_cname (), dim));
@@ -4366,7 +4366,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 							var rhs_array_len = head.get_array_length_cexpression (init.initializer, dim);
 							ccomma.append_expression (new CCodeAssignment (lhs, rhs_array_len));
 						}
-					} else if (f.field_type is DelegateType && !f.no_delegate_target) {
+					} else if (f.variable_type is DelegateType && !f.no_delegate_target) {
 						if (expr.type_reference.data_type is Struct) {
 							lhs = new CCodeMemberAccess (typed_inst, get_delegate_target_cname (f.get_cname ()));
 						} else {
@@ -4400,9 +4400,9 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 	public CCodeExpression? handle_struct_argument (FormalParameter param, Expression arg, CCodeExpression? cexpr) {
 		// pass non-simple struct instances always by reference
-		if (!(arg.value_type is NullType) && param.parameter_type.data_type is Struct && !((Struct) param.parameter_type.data_type).is_simple_type ()) {
+		if (!(arg.value_type is NullType) && param.variable_type.data_type is Struct && !((Struct) param.variable_type.data_type).is_simple_type ()) {
 			// we already use a reference for arguments of ref, out, and nullable parameters
-			if (param.direction == ParameterDirection.IN && !param.parameter_type.nullable) {
+			if (param.direction == ParameterDirection.IN && !param.variable_type.nullable) {
 				var unary = cexpr as CCodeUnaryExpression;
 				if (unary != null && unary.operator == CCodeUnaryOperator.POINTER_INDIRECTION) {
 					// *expr => expr
@@ -4414,7 +4414,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 					// (tmp = expr, &tmp)
 					var ccomma = new CCodeCommaExpression ();
 
-					var temp_var = get_temp_variable (param.parameter_type, true, null, false);
+					var temp_var = get_temp_variable (param.variable_type, true, null, false);
 					temp_vars.insert (0, temp_var);
 					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), cexpr));
 					ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_var.name)));
@@ -5577,9 +5577,9 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 	public DataType? get_this_type () {
 		if (current_method != null && current_method.binding == MemberBinding.INSTANCE) {
-			return current_method.this_parameter.parameter_type;
+			return current_method.this_parameter.variable_type;
 		} else if (current_property_accessor != null && current_property_accessor.prop.binding == MemberBinding.INSTANCE) {
-			return current_property_accessor.prop.this_parameter.parameter_type;
+			return current_property_accessor.prop.this_parameter.variable_type;
 		}
 		return null;
 	}
@@ -5603,7 +5603,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		var cblock = new CCodeBlock ();
 		foreach (Field f in st.get_fields ()) {
 			if (f.binding == MemberBinding.INSTANCE) {
-				if (requires_destroy (f.field_type)) {
+				if (requires_destroy (f.variable_type)) {
 					var lhs = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), f.get_cname ());
 
 					var this_access = new MemberAccess.simple ("this");
@@ -5612,7 +5612,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 					var ma = new MemberAccess (this_access, f.name);
 					ma.symbol_reference = f;
-					cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (lhs, f.field_type, ma)));
+					cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (lhs, f.variable_type, ma)));
 				}
 			}
 		}
@@ -5649,17 +5649,17 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		foreach (Field f in st.get_fields ()) {
 			if (f.binding == MemberBinding.INSTANCE) {
 				CCodeExpression copy = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), f.name);
-				if (requires_copy (f.field_type))  {
+				if (requires_copy (f.variable_type))  {
 					var this_access = new MemberAccess.simple ("this");
 					this_access.value_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
 					this_access.ccodenode = new CCodeIdentifier ("(*self)");
 					var ma = new MemberAccess (this_access, f.name);
 					ma.symbol_reference = f;
-					copy = get_ref_cexpression (f.field_type, copy, ma, f);
+					copy = get_ref_cexpression (f.variable_type, copy, ma, f);
 				}
 				var dest = new CCodeMemberAccess.pointer (new CCodeIdentifier ("dest"), f.name);
 
-				var array_type = f.field_type as ArrayType;
+				var array_type = f.variable_type as ArrayType;
 				if (array_type != null && array_type.fixed_length) {
 					// fixed-length (stack-allocated) arrays
 					source_declarations.add_include ("string.h");

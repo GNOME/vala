@@ -121,14 +121,14 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 
 		foreach (Field f in cl.get_fields ()) {
 			if (f.binding == MemberBinding.INSTANCE)  {
-				generate_type_declaration (f.field_type, decl_space);
+				generate_type_declaration (f.variable_type, decl_space);
 
-				string field_ctype = f.field_type.get_cname ();
+				string field_ctype = f.variable_type.get_cname ();
 				if (f.is_volatile) {
 					field_ctype = "volatile " + field_ctype;
 				}
 
-				instance_priv_struct.add_field (field_ctype, f.get_cname () + f.field_type.get_cdeclarator_suffix ());
+				instance_priv_struct.add_field (field_ctype, f.get_cname () + f.variable_type.get_cdeclarator_suffix ());
 			}
 		}
 
@@ -1277,7 +1277,7 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			string param_list = "(%s *this".printf (((ObjectTypeSymbol) m.parent_symbol).get_cname ());
 			foreach (var param in m.get_parameters ()) {
 				param_list += ", ";
-				param_list += param.parameter_type.get_cname ();
+				param_list += param.variable_type.get_cname ();
 			}
 			if (m.return_type is GenericType) {
 				param_list += ", void *";
@@ -1402,7 +1402,7 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 						break;
 					}
 
-					var t = param.parameter_type.data_type;
+					var t = param.variable_type.data_type;
 					if (t != null && t.is_reference_type ()) {
 						if (param.direction == ParameterDirection.OUT) {
 							// ensure that the passed reference for output parameter is cleared
@@ -1449,7 +1449,7 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 				vfunc.add_parameter (new CCodeFormalParameter ("%s_type".printf (type_param.name.down ()), "DovaType*"));
 			}
 			foreach (FormalParameter param in m.get_parameters ()) {
-				string ctypename = param.parameter_type.get_cname ();
+				string ctypename = param.variable_type.get_cname ();
 				if (param.direction != ParameterDirection.IN) {
 					ctypename += "*";
 				}
@@ -1510,7 +1510,7 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 				vfunc.add_parameter (new CCodeFormalParameter ("%s_type".printf (type_param.name.down ()), "DovaType*"));
 			}
 			foreach (FormalParameter param in m.get_parameters ()) {
-				string ctypename = param.parameter_type.get_cname ();
+				string ctypename = param.variable_type.get_cname ();
 				if (param.direction != ParameterDirection.IN) {
 					ctypename += "*";
 				}
@@ -1548,7 +1548,7 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			string param_list = "(%s *this".printf (((ObjectTypeSymbol) m.parent_symbol).get_cname ());
 			foreach (var param in m.get_parameters ()) {
 				param_list += ", ";
-				param_list += param.parameter_type.get_cname ();
+				param_list += param.variable_type.get_cname ();
 			}
 			if (m.return_type is GenericType) {
 				param_list += ", void *";
@@ -1688,11 +1688,11 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			// this is only a temporary measure until this can be allocated inline at the end of the instance
 			// this also won't work for subclasses of classes that have fields of generic types
 			foreach (var f in current_class.get_fields ()) {
-				if (f.binding != MemberBinding.INSTANCE || !(f.field_type is GenericType)) {
+				if (f.binding != MemberBinding.INSTANCE || !(f.variable_type is GenericType)) {
 					continue;
 				}
 
-				var generic_type = (GenericType) f.field_type;
+				var generic_type = (GenericType) f.variable_type;
 				var type_get_value_size = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_get_value_size"));
 				type_get_value_size.add_argument (new CCodeIdentifier ("%s_type".printf (generic_type.type_parameter.name.down ())));
 
@@ -1807,11 +1807,11 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 		foreach (FormalParameter param in m.get_parameters ()) {
 			CCodeFormalParameter cparam;
 			if (!param.ellipsis) {
-				string ctypename = param.parameter_type.get_cname ();
+				string ctypename = param.variable_type.get_cname ();
 
-				generate_type_declaration (param.parameter_type, decl_space);
+				generate_type_declaration (param.variable_type, decl_space);
 
-				if (param.direction != ParameterDirection.IN && !(param.parameter_type is GenericType)) {
+				if (param.direction != ParameterDirection.IN && !(param.variable_type is GenericType)) {
 					ctypename += "*";
 				}
 

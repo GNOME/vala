@@ -187,7 +187,7 @@ public class Vala.LambdaExpression : Expression {
 			}
 
 			string lambda_param = lambda_param_it.get ();
-			var param_type = cb_param.parameter_type.get_actual_type (target_type, null, this);
+			var param_type = cb_param.variable_type.get_actual_type (target_type, null, this);
 			var param = new FormalParameter (lambda_param, param_type);
 			method.add_parameter (param);
 		}

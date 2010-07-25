@@ -144,7 +144,7 @@ public class Vala.Property : Symbol, Lockable {
 	/**
 	 * Specifies the default value of this property.
 	 */
-	public Expression default_expression { get; set; }
+	public Expression initializer { get; set; }
 
 	public bool no_array_length { get; set; }
 
@@ -220,8 +220,8 @@ public class Vala.Property : Symbol, Lockable {
 			set_accessor.accept (visitor);
 		}
 
-		if (default_expression != null) {
-			default_expression.accept (visitor);
+		if (initializer != null) {
+			initializer.accept (visitor);
 		}
 	}
 
@@ -487,8 +487,8 @@ public class Vala.Property : Symbol, Lockable {
 			set_accessor.check (analyzer);
 		}
 
-		if (default_expression != null) {
-			default_expression.check (analyzer);
+		if (initializer != null) {
+			initializer.check (analyzer);
 		}
 
 		// check whether property type is at least as accessible as the property
@@ -513,9 +513,9 @@ public class Vala.Property : Symbol, Lockable {
 			}
 		}
 
-		if (default_expression != null && !default_expression.error && default_expression.value_type != null && !(default_expression.value_type.compatible (property_type))) {
+		if (initializer != null && !initializer.error && initializer.value_type != null && !(initializer.value_type.compatible (property_type))) {
 			error = true;
-			Report.error (default_expression.source_reference, "Expected initializer of type `%s' but got `%s'".printf (property_type.to_string (), default_expression.value_type.to_string ()));
+			Report.error (initializer.source_reference, "Expected initializer of type `%s' but got `%s'".printf (property_type.to_string (), initializer.value_type.to_string ()));
 		}
 
 		analyzer.current_source_file = old_source_file;

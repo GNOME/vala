@@ -139,7 +139,7 @@ public class Vala.Signal : Symbol, Lockable {
 
 		foreach (FormalParameter param in parameters) {
 			var actual_param = param.copy ();
-			actual_param.parameter_type = actual_param.parameter_type.get_actual_type (sender_type, null, node_reference);
+			actual_param.variable_type = actual_param.variable_type.get_actual_type (sender_type, null, node_reference);
 			generated_delegate.add_parameter (actual_param);
 		}
 

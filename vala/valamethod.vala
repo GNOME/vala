@@ -545,8 +545,8 @@ public class Vala.Method : Symbol {
 				return false;
 			}
 			
-			actual_base_type = base_param.parameter_type.get_actual_type (object_type, null, this);
-			if (!actual_base_type.equals (method_params_it.get ().parameter_type)) {
+			actual_base_type = base_param.variable_type.get_actual_type (object_type, null, this);
+			if (!actual_base_type.equals (method_params_it.get ().variable_type)) {
 				invalid_match = "incompatible type of parameter %d".printf (param_index);
 				return false;
 			}
@@ -996,12 +996,12 @@ public class Vala.Method : Symbol {
 			return false;
 		}
 		
-		if (!(param.parameter_type is ArrayType)) {
+		if (!(param.variable_type is ArrayType)) {
 			// parameter must be an array
 			return false;
 		}
 		
-		var array_type = (ArrayType) param.parameter_type;
+		var array_type = (ArrayType) param.variable_type;
 		if (array_type.element_type.data_type != analyzer.string_type.data_type) {
 			// parameter must be an array of strings
 			return false;
@@ -1013,7 +1013,7 @@ public class Vala.Method : Symbol {
 	public int get_required_arguments () {
 		int n = 0;
 		foreach (var param in parameters) {
-			if (param.default_expression != null || param.ellipsis) {
+			if (param.initializer != null || param.ellipsis) {
 				// optional argument
 				break;
 			}
@@ -1056,7 +1056,7 @@ public class Vala.Method : Symbol {
 		callback_type.is_called_once = true;
 
 		var callback_param = new FormalParameter ("_callback_", callback_type);
-		callback_param.default_expression = new NullLiteral (source_reference);
+		callback_param.initializer = new NullLiteral (source_reference);
 		callback_param.cparameter_position = -1;
 		callback_param.cdelegate_target_parameter_position = -0.9;
 

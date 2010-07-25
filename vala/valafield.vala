@@ -25,31 +25,7 @@ using GLib;
 /**
  * Represents a type or namespace field.
  */
-public class Vala.Field : Symbol, Lockable {
-	/**
-	 * The data type of this field.
-	 */
-	public DataType field_type {
-		get { return _data_type; }
-		set {
-			_data_type = value;
-			_data_type.parent_node = this;
-		}
-	}
-
-	/**
-	 * Specifies the expression to be used to initialize this field.
-	 */
-	public Expression? initializer { 
-		get { return _initializer; }
-		set {
-			_initializer = value;
-			if (_initializer != null) {
-				_initializer.parent_node = this;
-			}
-		}
-	}
-
+public class Vala.Field : Variable, Lockable {
 	/**
 	 * Specifies whether this field may only be accessed with an instance of
 	 * the contained type.
@@ -106,10 +82,6 @@ public class Vala.Field : Symbol, Lockable {
 	
 	private bool lock_used = false;
 
-	private Expression _initializer;
-
-	private DataType _data_type;
-
 	/**
 	 * Creates a new field.
 	 *
@@ -119,10 +91,8 @@ public class Vala.Field : Symbol, Lockable {
 	 * @param source reference to source code
 	 * @return       newly created field
 	 */
-	public Field (string name, DataType field_type, Expression? initializer, SourceReference? source_reference = null, Comment? comment = null) {
-		base (name, source_reference, comment);
-		this.field_type = field_type;
-		this.initializer = initializer;
+	public Field (string name, DataType variable_type, Expression? initializer, SourceReference? source_reference = null, Comment? comment = null) {
+		base (variable_type, name, initializer, source_reference, comment);
 	}
 
 	public override void accept (CodeVisitor visitor) {
@@ -130,7 +100,7 @@ public class Vala.Field : Symbol, Lockable {
 	}
 
 	public override void accept_children (CodeVisitor visitor) {
-		field_type.accept (visitor);
+		variable_type.accept (visitor);
 		
 		if (initializer != null) {
 			initializer.accept (visitor);
@@ -268,8 +238,8 @@ public class Vala.Field : Symbol, Lockable {
 	}
 
 	public override void replace_type (DataType old_type, DataType new_type) {
-		if (field_type == old_type) {
-			field_type = new_type;
+		if (variable_type == old_type) {
+			variable_type = new_type;
 		}
 	}
 
@@ -305,19 +275,19 @@ public class Vala.Field : Symbol, Lockable {
 		}
 		analyzer.current_symbol = this;
 
-		field_type.check (analyzer);
+		variable_type.check (analyzer);
 
 		// check whether field type is at least as accessible as the field
-		if (!analyzer.is_type_accessible (this, field_type)) {
+		if (!analyzer.is_type_accessible (this, variable_type)) {
 			error = true;
-			Report.error (source_reference, "field type `%s` is less accessible than field `%s`".printf (field_type.to_string (), get_full_name ()));
+			Report.error (source_reference, "field type `%s` is less accessible than field `%s`".printf (variable_type.to_string (), get_full_name ()));
 			return false;
 		}
 
 		process_attributes ();
 
 		if (initializer != null) {
-			initializer.target_type = field_type;
+			initializer.target_type = variable_type;
 
 			if (!initializer.check (analyzer)) {
 				error = true;
@@ -330,9 +300,9 @@ public class Vala.Field : Symbol, Lockable {
 				return false;
 			}
 
-			if (!initializer.value_type.compatible (field_type)) {
+			if (!initializer.value_type.compatible (variable_type)) {
 				error = true;
-				Report.error (source_reference, "Cannot convert from `%s' to `%s'".printf (initializer.value_type.to_string (), field_type.to_string ()));
+				Report.error (source_reference, "Cannot convert from `%s' to `%s'".printf (initializer.value_type.to_string (), variable_type.to_string ()));
 				return false;
 			}
 

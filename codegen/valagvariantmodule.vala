@@ -122,7 +122,7 @@ public class Vala.GVariantModule : GAsyncModule {
 				str.append_c ('(');
 				foreach (Field f in st.get_fields ()) {
 					if (f.binding == MemberBinding.INSTANCE) {
-						str.append (get_type_signature (f.field_type));
+						str.append (get_type_signature (f.variable_type));
 					}
 				}
 				str.append_c (')');
@@ -397,7 +397,7 @@ public class Vala.GVariantModule : GAsyncModule {
 
 			field_found = true;
 
-			read_expression (fragment, f.field_type, new CCodeIdentifier (subiter_name), new CCodeMemberAccess (new CCodeIdentifier (temp_name), f.get_cname ()), f);
+			read_expression (fragment, f.variable_type, new CCodeIdentifier (subiter_name), new CCodeMemberAccess (new CCodeIdentifier (temp_name), f.get_cname ()), f);
 		}
 
 		if (!field_found) {
@@ -685,7 +685,7 @@ public class Vala.GVariantModule : GAsyncModule {
 
 			field_found = true;
 
-			write_expression (fragment, f.field_type, new CCodeIdentifier (builder_name), new CCodeMemberAccess (struct_expr, f.get_cname ()), f);
+			write_expression (fragment, f.variable_type, new CCodeIdentifier (builder_name), new CCodeMemberAccess (struct_expr, f.get_cname ()), f);
 		}
 
 		if (!field_found) {

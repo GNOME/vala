@@ -395,9 +395,9 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					// use closure
 					expr.ccodenode = get_variable_cexpression (p.name);
 				} else {
-					var type_as_struct = p.parameter_type.data_type as Struct;
+					var type_as_struct = p.variable_type.data_type as Struct;
 					if (p.direction != ParameterDirection.IN
-					    || (type_as_struct != null && !type_as_struct.is_simple_type () && !p.parameter_type.nullable)) {
+					    || (type_as_struct != null && !type_as_struct.is_simple_type () && !p.variable_type.nullable)) {
 						expr.ccodenode = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (get_variable_cname (p.name)));
 					} else {
 						// Property setters of non simple structs shall replace all occurences

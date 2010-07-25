@@ -347,8 +347,8 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 						carg_map = out_arg_map;
 					}
 
-					if (!param.no_array_length && param.parameter_type is ArrayType) {
-						var array_type = (ArrayType) param.parameter_type;
+					if (!param.no_array_length && param.variable_type is ArrayType) {
+						var array_type = (ArrayType) param.variable_type;
 						for (int dim = 1; dim <= array_type.rank; dim++) {
 							CCodeExpression? array_length_expr = null;
 							if (param.array_length_type != null) {
@@ -381,8 +381,8 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 							carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), array_length_expr);
 						}
 						multiple_cargs = true;
-					} else if (param.parameter_type is DelegateType) {
-						var deleg_type = (DelegateType) param.parameter_type;
+					} else if (param.variable_type is DelegateType) {
+						var deleg_type = (DelegateType) param.variable_type;
 						var d = deleg_type.delegate_symbol;
 						if (d.has_target) {
 							CCodeExpression delegate_target_destroy_notify;
@@ -402,14 +402,14 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 								multiple_cargs = true;
 							}
 						}
-					} else if (param.parameter_type is MethodType) {
+					} else if (param.variable_type is MethodType) {
 						// callbacks in dynamic method calls
 						CCodeExpression delegate_target_destroy_notify;
 						carg_map.set (get_param_pos (param.cdelegate_target_parameter_position), get_delegate_target_cexpression (arg, out delegate_target_destroy_notify));
 						multiple_cargs = true;
-					} else if (param.parameter_type is GenericType) {
+					} else if (param.variable_type is GenericType) {
 						if (m != null && m.simple_generics) {
-							var generic_type = (GenericType) param.parameter_type;
+							var generic_type = (GenericType) param.variable_type;
 							int type_param_index = m.get_type_parameter_index (generic_type.type_parameter.name);
 							var type_arg = ma.get_type_arguments ().get (type_param_index);
 							if (requires_copy (type_arg)) {
@@ -445,13 +445,13 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					// disabled for arrays for now as that requires special handling
 					// (ret_tmp = call (&tmp), var1 = (assign_tmp = dup (tmp), free (var1), assign_tmp), ret_tmp)
 					if (param.direction != ParameterDirection.IN && requires_destroy (arg.value_type)
-					    && (param.direction == ParameterDirection.OUT || !param.parameter_type.value_owned)
-					    && !(param.parameter_type is ArrayType) && !(param.parameter_type is DelegateType)) {
+					    && (param.direction == ParameterDirection.OUT || !param.variable_type.value_owned)
+					    && !(param.variable_type is ArrayType) && !(param.variable_type is DelegateType)) {
 						var unary = (UnaryExpression) arg;
 
 						var ccomma = new CCodeCommaExpression ();
 
-						var temp_var = get_temp_variable (param.parameter_type, param.parameter_type.value_owned);
+						var temp_var = get_temp_variable (param.variable_type, param.variable_type.value_owned);
 						temp_vars.insert (0, temp_var);
 						cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_var.name));
 
@@ -478,7 +478,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 						var assign_temp_var = get_temp_variable (unary.inner.value_type, unary.inner.value_type.value_owned, null, false);
 						temp_vars.insert (0, assign_temp_var);
 
-						cassign_comma.append_expression (new CCodeAssignment (get_variable_cexpression (assign_temp_var.name), transform_expression (get_variable_cexpression (temp_var.name), param.parameter_type, unary.inner.value_type, arg)));
+						cassign_comma.append_expression (new CCodeAssignment (get_variable_cexpression (assign_temp_var.name), transform_expression (get_variable_cexpression (temp_var.name), param.variable_type, unary.inner.value_type, arg)));
 
 						// unref old value
 						cassign_comma.append_expression (get_unref_expression ((CCodeExpression) unary.inner.ccodenode, arg.value_type, arg));

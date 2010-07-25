@@ -521,7 +521,7 @@ public class Vala.MemberAccess : Expression {
 
 			// do not allow access to fields of generic types
 			// if instance type does not specify type arguments
-			if (f.field_type is GenericType) {
+			if (f.variable_type is GenericType) {
 				generics = true;
 			}
 		} else if (member is Method) {
@@ -574,7 +574,7 @@ public class Vala.MemberAccess : Expression {
 			// do not allow access to methods using generic type parameters
 			// if instance type does not specify type arguments
 			foreach (var param in m.get_parameters ()) {
-				var generic_type = param.parameter_type as GenericType;
+				var generic_type = param.variable_type as GenericType;
 				if (generic_type != null && generic_type.type_parameter.parent_symbol is TypeSymbol) {
 					generics = true;
 					break;
@@ -724,7 +724,7 @@ public class Vala.MemberAccess : Expression {
 			// implicit this access
 			if (instance && inner == null) {
 				inner = new MemberAccess (null, "this", source_reference);
-				inner.value_type = this_parameter.parameter_type.copy ();
+				inner.value_type = this_parameter.variable_type.copy ();
 				inner.symbol_reference = this_parameter;
 			}
 

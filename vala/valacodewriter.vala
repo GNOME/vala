@@ -673,7 +673,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		bool custom_cheaders = (f.parent_symbol is Namespace);
 		bool custom_array_length_cname = (f.get_array_length_cname () != null);
 		bool custom_array_length_type = (f.array_length_type != null);
-		if (custom_cname || custom_ctype || custom_cheaders || custom_array_length_cname || custom_array_length_type || (f.no_array_length && f.field_type is ArrayType)) {
+		if (custom_cname || custom_ctype || custom_cheaders || custom_array_length_cname || custom_array_length_type || (f.no_array_length && f.variable_type is ArrayType)) {
 			write_indent ();
 			write_string ("[CCode (");
 
@@ -697,7 +697,7 @@ public class Vala.CodeWriter : CodeVisitor {
 				write_string ("cheader_filename = \"%s\"".printf (get_cheaders(f)));
 			}
 
-			if (f.field_type is ArrayType) {
+			if (f.variable_type is ArrayType) {
 				if (f.no_array_length) {
 					if (custom_cname || custom_ctype || custom_cheaders) {
 						write_string (", ");
@@ -739,11 +739,11 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_string ("class ");
 		}
 
-		if (is_weak (f.field_type)) {
+		if (is_weak (f.variable_type)) {
 			write_string ("weak ");
 		}
 
-		write_type (f.field_type);
+		write_type (f.variable_type);
 			
 		write_string (" ");
 		write_identifier (f.name);
@@ -799,11 +799,11 @@ public class Vala.CodeWriter : CodeVisitor {
 				ccode_params.append_printf ("%stype = \"%s\"", separator, param.ctype);
 				separator = ", ";
 			}
-			if (param.no_array_length && param.parameter_type is ArrayType) {
+			if (param.no_array_length && param.variable_type is ArrayType) {
 				ccode_params.append_printf ("%sarray_length = false", separator);
 				separator = ", ";
 			}
-			if (param.array_length_type != null && param.parameter_type is ArrayType) {
+			if (param.array_length_type != null && param.variable_type is ArrayType) {
 				ccode_params.append_printf ("%sarray_length_type = \"%s\"", separator, param.array_length_type);
 				separator = ", ";
 			}
@@ -825,7 +825,7 @@ public class Vala.CodeWriter : CodeVisitor {
 			}
 
 			if (param.direction == ParameterDirection.IN) {
-				if (param.parameter_type.value_owned) {
+				if (param.variable_type.value_owned) {
 					write_string ("owned ");
 				}
 			} else {
@@ -834,19 +834,19 @@ public class Vala.CodeWriter : CodeVisitor {
 				} else if (param.direction == ParameterDirection.OUT) {
 					write_string ("out ");
 				}
-				if (is_weak (param.parameter_type)) {
+				if (is_weak (param.variable_type)) {
 					write_string ("unowned ");
 				}
 			}
 
-			write_type (param.parameter_type);
+			write_type (param.variable_type);
 
 			write_string (" ");
 			write_identifier (param.name);
 			
-			if (param.default_expression != null) {
+			if (param.initializer != null) {
 				write_string (" = ");
-				write_string (param.default_expression.to_string ());
+				write_string (param.initializer.to_string ());
 			}
 
 			i++;

@@ -3041,7 +3041,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		}
 
 		if (accept (TokenType.ASSIGN)) {
-			prop.default_expression = parse_expression ();
+			prop.initializer = parse_expression ();
 		}
 
 
@@ -3123,8 +3123,8 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 			if (needs_var) {
 				/* automatic property accessor body generation */
-				var field_type = prop.property_type.copy ();
-				prop.field = new Field ("_%s".printf (prop.name), field_type, prop.default_expression, prop.source_reference);
+				var variable_type = prop.property_type.copy ();
+				prop.field = new Field ("_%s".printf (prop.name), variable_type, prop.initializer, prop.source_reference);
 				prop.field.access = SymbolAccessibility.PRIVATE;
 				prop.field.binding = prop.binding;
 			}
@@ -3578,7 +3578,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		param.direction = direction;
 		param.params_array = params_array;
 		if (accept (TokenType.ASSIGN)) {
-			param.default_expression = parse_expression ();
+			param.initializer = parse_expression ();
 		}
 		return param;
 	}

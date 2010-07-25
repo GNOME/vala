@@ -173,15 +173,15 @@ public class Vala.DBusClientModule : DBusModule {
 			int i = 0;
 			foreach (FormalParameter param in reply_method.get_parameters ()) {
 				if ((++i) == param_count) {
-					if (!(param.parameter_type is ErrorType)) {
+					if (!(param.variable_type is ErrorType)) {
 						Report.error (null, "DBus reply callbacks must end with GLib.Error argument");
 						return;
 					}
 
 					break;
 				}
-				if (param.parameter_type is ArrayType && ((ArrayType) param.parameter_type).element_type.data_type != string_type.data_type) {
-					var array_type = (ArrayType) param.parameter_type;
+				if (param.variable_type is ArrayType && ((ArrayType) param.variable_type).element_type.data_type != string_type.data_type) {
+					var array_type = (ArrayType) param.variable_type;
 					CCodeDeclaration cdecl;
 					if (dbus_use_ptr_array (array_type)) {
 						cdecl = new CCodeDeclaration ("GPtrArray*");
@@ -195,14 +195,14 @@ public class Vala.DBusClientModule : DBusModule {
 					creply_call.add_argument (new CCodeCastExpression (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), dbus_use_ptr_array (array_type) ? "pdata" : "data"), array_type.get_cname ()));
 					creply_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), "len"));
 				} else {
-					var cdecl = new CCodeDeclaration (param.parameter_type.get_cname ());
+					var cdecl = new CCodeDeclaration (param.variable_type.get_cname ());
 					cdecl.add_declarator (new CCodeVariableDeclarator (param.name));
 					cb_fun.block.add_statement (cdecl);
-					cend_call.add_argument (get_dbus_g_type (param.parameter_type));
+					cend_call.add_argument (get_dbus_g_type (param.variable_type));
 					cend_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
 					creply_call.add_argument (new CCodeIdentifier (param.name));
 
-					if (param.parameter_type is ArrayType && ((ArrayType) param.parameter_type).element_type.data_type == string_type.data_type) {
+					if (param.variable_type is ArrayType && ((ArrayType) param.variable_type).element_type.data_type == string_type.data_type) {
 						var cstrvlen = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
 						cstrvlen.add_argument (new CCodeIdentifier (param.name));
 						creply_call.add_argument (cstrvlen);
@@ -244,8 +244,8 @@ public class Vala.DBusClientModule : DBusModule {
 		}
 
 		foreach (FormalParameter param in method.get_parameters ()) {
-			if (param.parameter_type is MethodType
-			    || param.parameter_type is DelegateType) {
+			if (param.variable_type is MethodType
+			    || param.variable_type is DelegateType) {
 				// callback parameter
 				break;
 			}
@@ -254,7 +254,7 @@ public class Vala.DBusClientModule : DBusModule {
 				continue;
 			}
 
-			var array_type = param.parameter_type as ArrayType;
+			var array_type = param.variable_type as ArrayType;
 			if (array_type != null) {
 				// array parameter
 				if (array_type.element_type.data_type != string_type.data_type) {
@@ -308,9 +308,9 @@ public class Vala.DBusClientModule : DBusModule {
 					ccall.add_argument (new CCodeIdentifier ("G_TYPE_STRV"));
 					ccall.add_argument (new CCodeIdentifier (param.name));
 				}
-			} else if (get_type_signature (param.parameter_type).has_prefix ("(")) {
+			} else if (get_type_signature (param.variable_type).has_prefix ("(")) {
 				// struct parameter
-				var st = (Struct) param.parameter_type.data_type;
+				var st = (Struct) param.variable_type.data_type;
 
 				var array_construct = new CCodeFunctionCall (new CCodeIdentifier ("g_value_array_new"));
 				array_construct.add_argument (new CCodeConstant ("0"));
@@ -338,10 +338,10 @@ public class Vala.DBusClientModule : DBusModule {
 
 					var cinit_call = new CCodeFunctionCall (new CCodeIdentifier ("g_value_init"));
 					cinit_call.add_argument (val_ptr);
-					cinit_call.add_argument (new CCodeIdentifier (f.field_type.data_type.get_type_id ()));
+					cinit_call.add_argument (new CCodeIdentifier (f.variable_type.data_type.get_type_id ()));
 					block.add_statement (new CCodeExpressionStatement (cinit_call));
 
-					var cset_call = new CCodeFunctionCall (new CCodeIdentifier (f.field_type.data_type.get_set_value_function ()));
+					var cset_call = new CCodeFunctionCall (new CCodeIdentifier (f.variable_type.data_type.get_set_value_function ()));
 					cset_call.add_argument (val_ptr);
 					cset_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), f.name));
 					block.add_statement (new CCodeExpressionStatement (cset_call));
@@ -352,10 +352,10 @@ public class Vala.DBusClientModule : DBusModule {
 					block.add_statement (new CCodeExpressionStatement (cappend_call));
 				}
 
-				ccall.add_argument (get_dbus_g_type (param.parameter_type));
+				ccall.add_argument (get_dbus_g_type (param.variable_type));
 				ccall.add_argument (new CCodeIdentifier ("dbus_%s".printf (param.name)));
 			} else {
-				ccall.add_argument (get_dbus_g_type (param.parameter_type));
+				ccall.add_argument (get_dbus_g_type (param.variable_type));
 				ccall.add_argument (new CCodeIdentifier (param.name));
 			}
 		}
@@ -365,7 +365,7 @@ public class Vala.DBusClientModule : DBusModule {
 		var out_marshalling_fragment = new CCodeFragment ();
 
 		foreach (FormalParameter param in method.get_parameters ()) {
-			if (param.parameter_type is MethodType) {
+			if (param.variable_type is MethodType) {
 				// callback parameter
 				break;
 			}
@@ -374,9 +374,9 @@ public class Vala.DBusClientModule : DBusModule {
 				continue;
 			}
 
-			if (get_type_signature (param.parameter_type).has_prefix ("(")) {
+			if (get_type_signature (param.variable_type).has_prefix ("(")) {
 				// struct output parameter
-				var st = (Struct) param.parameter_type.data_type;
+				var st = (Struct) param.variable_type.data_type;
 
 				var cdecl = new CCodeDeclaration ("GValueArray*");
 				cdecl.add_declarator (new CCodeVariableDeclarator ("dbus_%s".printf (param.name)));
@@ -388,13 +388,13 @@ public class Vala.DBusClientModule : DBusModule {
 						continue;
 					}
 
-					var cget_call = new CCodeFunctionCall (new CCodeIdentifier (f.field_type.data_type.get_get_value_function ()));
+					var cget_call = new CCodeFunctionCall (new CCodeIdentifier (f.variable_type.data_type.get_get_value_function ()));
 					cget_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeElementAccess (new CCodeMemberAccess.pointer (new CCodeIdentifier ("dbus_%s".printf (param.name)), "values"), new CCodeConstant (i.to_string ()))));
 
 					var converted_value = cget_call;
 
-					if (requires_copy (f.field_type)) {
-						var dupexpr = get_dup_func_expression (f.field_type, expr.source_reference);
+					if (requires_copy (f.variable_type)) {
+						var dupexpr = get_dup_func_expression (f.variable_type, expr.source_reference);
 						converted_value = new CCodeFunctionCall (dupexpr);
 						converted_value.add_argument (cget_call);
 					}
@@ -405,10 +405,10 @@ public class Vala.DBusClientModule : DBusModule {
 					i++;
 				}
 
-				ccall.add_argument (get_dbus_g_type (param.parameter_type));
+				ccall.add_argument (get_dbus_g_type (param.variable_type));
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("dbus_%s".printf (param.name))));
 			} else {
-				ccall.add_argument (get_dbus_g_type (param.parameter_type));
+				ccall.add_argument (get_dbus_g_type (param.variable_type));
 				ccall.add_argument (new CCodeIdentifier (param.name));
 			}
 		}
@@ -470,13 +470,13 @@ public class Vala.DBusClientModule : DBusModule {
 							continue;
 						}
 
-						var cget_call = new CCodeFunctionCall (new CCodeIdentifier (f.field_type.data_type.get_get_value_function ()));
+						var cget_call = new CCodeFunctionCall (new CCodeIdentifier (f.variable_type.data_type.get_get_value_function ()));
 						cget_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeElementAccess (new CCodeMemberAccess.pointer (new CCodeIdentifier ("dbus_result"), "values"), new CCodeConstant (i.to_string ()))));
 
 						var converted_value = cget_call;
 
-						if (requires_copy (f.field_type)) {
-							var dupexpr = get_dup_func_expression (f.field_type, expr.source_reference);
+						if (requires_copy (f.variable_type)) {
+							var dupexpr = get_dup_func_expression (f.variable_type, expr.source_reference);
 							converted_value = new CCodeFunctionCall (dupexpr);
 							converted_value.add_argument (cget_call);
 						}
@@ -594,7 +594,7 @@ public class Vala.DBusClientModule : DBusModule {
 					continue;
 				}
 
-				type_call.add_argument (get_dbus_g_type (f.field_type));
+				type_call.add_argument (get_dbus_g_type (f.variable_type));
 			}
 
 			type_call.add_argument (new CCodeConstant ("G_TYPE_INVALID"));
@@ -877,8 +877,8 @@ public class Vala.DBusClientModule : DBusModule {
 				continue;
 			}
 
-			register_call.add_argument (get_dbus_g_type (param.parameter_type));
-			add_call.add_argument (get_dbus_g_type (param.parameter_type));
+			register_call.add_argument (get_dbus_g_type (param.variable_type));
+			add_call.add_argument (get_dbus_g_type (param.variable_type));
 		}
 		register_call.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));
 		add_call.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));
@@ -1540,27 +1540,27 @@ public class Vala.DBusClientModule : DBusModule {
 		string type_signature = "";
 
 		foreach (FormalParameter param in sig.get_parameters ()) {
-			var owned_type = param.parameter_type.copy ();
+			var owned_type = param.variable_type.copy ();
 			owned_type.value_owned = true;
 
 			cdecl = new CCodeDeclaration (owned_type.get_cname ());
-			cdecl.add_declarator (new CCodeVariableDeclarator.zero (param.name, default_value_for_type (param.parameter_type, true)));
+			cdecl.add_declarator (new CCodeVariableDeclarator.zero (param.name, default_value_for_type (param.variable_type, true)));
 			prefragment.append (cdecl);
 
-			if (get_type_signature (param.parameter_type) == null) {
-				Report.error (param.parameter_type.source_reference, "D-Bus serialization of type `%s' is not supported".printf (param.parameter_type.to_string ()));
+			if (get_type_signature (param.variable_type) == null) {
+				Report.error (param.variable_type.source_reference, "D-Bus serialization of type `%s' is not supported".printf (param.variable_type.to_string ()));
 				continue;
 			}
 
-			var st = param.parameter_type.data_type as Struct;
+			var st = param.variable_type.data_type as Struct;
 			if (st != null && !st.is_simple_type ()) {
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
 			} else {
 				ccall.add_argument (new CCodeIdentifier (param.name));
 			}
 
-			if (param.parameter_type is ArrayType) {
-				var array_type = (ArrayType) param.parameter_type;
+			if (param.variable_type is ArrayType) {
+				var array_type = (ArrayType) param.variable_type;
 
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					string length_cname = get_array_length_cname (param.name, dim);
@@ -1572,10 +1572,10 @@ public class Vala.DBusClientModule : DBusModule {
 				}
 			}
 
-			type_signature += get_type_signature (param.parameter_type);
+			type_signature += get_type_signature (param.variable_type);
 
 			var target = new CCodeIdentifier (param.name);
-			var expr = read_expression (prefragment, param.parameter_type, new CCodeIdentifier ("iter"), target);
+			var expr = read_expression (prefragment, param.variable_type, new CCodeIdentifier ("iter"), target);
 			prefragment.append (new CCodeExpressionStatement (new CCodeAssignment (target, expr)));
 
 			if (requires_destroy (owned_type)) {
@@ -1682,26 +1682,26 @@ public class Vala.DBusClientModule : DBusModule {
 
 		foreach (FormalParameter param in m.get_parameters ()) {
 			if (param.direction == ParameterDirection.IN) {
-				if (param.parameter_type.data_type != null
-				    && param.parameter_type.data_type.get_full_name () == "DBus.BusName") {
+				if (param.variable_type.data_type != null
+				    && param.variable_type.data_type.get_full_name () == "DBus.BusName") {
 					// ignore BusName sender parameters
 					continue;
 				}
 				CCodeExpression expr = new CCodeIdentifier (param.name);
-				if (param.parameter_type.is_real_struct_type ()) {
+				if (param.variable_type.is_real_struct_type ()) {
 					expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, expr);
 				}
-				write_expression (prefragment, param.parameter_type, new CCodeIdentifier ("_iter"), expr);
+				write_expression (prefragment, param.variable_type, new CCodeIdentifier ("_iter"), expr);
 			} else {
 				if (no_reply) {
 					Report.error (param.source_reference, "No-reply DBus methods must not have out parameters");
 					break;
 				}
-				cdecl = new CCodeDeclaration (param.parameter_type.get_cname ());
+				cdecl = new CCodeDeclaration (param.variable_type.get_cname ());
 				cdecl.add_declarator (new CCodeVariableDeclarator ("_" + param.name));
 				postfragment.append (cdecl);
 
-				var array_type = param.parameter_type as ArrayType;
+				var array_type = param.variable_type as ArrayType;
 
 				if (array_type != null) {
 					for (int dim = 1; dim <= array_type.rank; dim++) {
@@ -1712,7 +1712,7 @@ public class Vala.DBusClientModule : DBusModule {
 				}
 
 				var target = new CCodeIdentifier ("_" + param.name);
-				var expr = read_expression (postfragment, param.parameter_type, new CCodeIdentifier ("_iter"), target);
+				var expr = read_expression (postfragment, param.variable_type, new CCodeIdentifier ("_iter"), target);
 				postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (target, expr)));
 
 				// TODO check that parameter is not NULL (out parameters are optional)
@@ -2266,7 +2266,7 @@ public class Vala.DBusClientModule : DBusModule {
 
 		foreach (FormalParameter param in m.get_parameters ()) {
 			if (param.direction == ParameterDirection.OUT) {
-				type_signature += get_type_signature (param.parameter_type);
+				type_signature += get_type_signature (param.variable_type);
 			}
 		}
 

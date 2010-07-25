@@ -514,7 +514,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		write_indent ();
 		buffer.append_printf ("<field name=\"%s\"", f.get_cname ());
-		if (f.field_type.nullable) {
+		if (f.variable_type.nullable) {
 			buffer.append_printf (" allow-none=\"1\"");
 		}
 		buffer.append_printf (">\n");
@@ -522,7 +522,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		write_annotations (f);
 
-		write_type (f.field_type);
+		write_type (f.variable_type);
 
 		indent--;
 		write_indent ();
@@ -556,9 +556,9 @@ public class Vala.GIRWriter : CodeVisitor {
 			}
 
 			foreach (FormalParameter param in params) {
-				write_param_or_return (param.parameter_type, "parameter", ref index, !param.no_array_length, param.name, param.direction);
+				write_param_or_return (param.variable_type, "parameter", ref index, !param.no_array_length, param.name, param.direction);
 
-				write_implicit_params (param.parameter_type, ref index, !param.no_array_length, param.name, param.direction);
+				write_implicit_params (param.variable_type, ref index, !param.no_array_length, param.name, param.direction);
 			}
 
 			last_index = index - 1;

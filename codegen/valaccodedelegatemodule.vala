@@ -57,8 +57,8 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			cfundecl.add_parameter ((CCodeFormalParameter) param.ccodenode);
 
 			// handle array parameters
-			if (!param.no_array_length && param.parameter_type is ArrayType) {
-				var array_type = (ArrayType) param.parameter_type;
+			if (!param.no_array_length && param.variable_type is ArrayType) {
+				var array_type = (ArrayType) param.variable_type;
 				
 				var length_ctype = "int";
 				if (param.direction != ParameterDirection.IN) {
@@ -71,8 +71,8 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 				}
 			}
 			// handle delegate parameters
-			if (param.parameter_type is DelegateType) {
-				var deleg_type = (DelegateType) param.parameter_type;
+			if (param.variable_type is DelegateType) {
+				var deleg_type = (DelegateType) param.variable_type;
 				var param_d = deleg_type.delegate_symbol;
 				if (param_d.has_target) {
 					var cparam = new CCodeFormalParameter (get_delegate_target_cname (get_variable_cname (param.name)), "void*");
@@ -398,8 +398,8 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 		var d_params = d.get_parameters ();
 		foreach (FormalParameter param in d_params) {
 			if (dynamic_sig != null
-			    && param.parameter_type is ArrayType
-			    && ((ArrayType) param.parameter_type).element_type.data_type == string_type.data_type) {
+			    && param.variable_type is ArrayType
+			    && ((ArrayType) param.variable_type).element_type.data_type == string_type.data_type) {
 				// use null-terminated string arrays for dynamic signals for compatibility reasons
 				param.no_array_length = true;
 				param.array_null_terminated = true;
@@ -489,8 +489,8 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			carg_map.set (get_param_pos (param.cparameter_position), arg);
 
 			// handle array arguments
-			if (!param.no_array_length && param.parameter_type is ArrayType) {
-				var array_type = (ArrayType) param.parameter_type;
+			if (!param.no_array_length && param.variable_type is ArrayType) {
+				var array_type = (ArrayType) param.variable_type;
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					CCodeExpression clength;
 					if (d_params.get (i).array_null_terminated) {
@@ -505,8 +505,8 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 					}
 					carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), clength);
 				}
-			} else if (param.parameter_type is DelegateType) {
-				var deleg_type = (DelegateType) param.parameter_type;
+			} else if (param.variable_type is DelegateType) {
+				var deleg_type = (DelegateType) param.variable_type;
 
 				if (deleg_type.delegate_symbol.has_target) {
 					var ctarget = new CCodeIdentifier (get_delegate_target_cname (d_params.get (i).name));
@@ -613,17 +613,17 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 	}
 
 	public override void generate_parameter (FormalParameter param, CCodeDeclarationSpace decl_space, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
-		if (!(param.parameter_type is DelegateType || param.parameter_type is MethodType)) {
+		if (!(param.variable_type is DelegateType || param.variable_type is MethodType)) {
 			base.generate_parameter (param, decl_space, cparam_map, carg_map);
 			return;
 		}
 
-		string ctypename = param.parameter_type.get_cname ();
+		string ctypename = param.variable_type.get_cname ();
 		string target_ctypename = "void*";
 		string target_destroy_notify_ctypename = "GDestroyNotify";
 
 		if (param.parent_symbol is Delegate
-		    && param.parameter_type.get_cname () == ((Delegate) param.parent_symbol).get_cname ()) {
+		    && param.variable_type.get_cname () == ((Delegate) param.parent_symbol).get_cname ()) {
 			// recursive delegate
 			ctypename = "GCallback";
 		}
@@ -641,8 +641,8 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			carg_map.set (get_param_pos (param.cparameter_position), get_variable_cexpression (param.name));
 		}
 
-		if (param.parameter_type is DelegateType) {
-			var deleg_type = (DelegateType) param.parameter_type;
+		if (param.variable_type is DelegateType) {
+			var deleg_type = (DelegateType) param.variable_type;
 			var d = deleg_type.delegate_symbol;
 
 			generate_delegate_declaration (d, decl_space);
@@ -661,7 +661,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 					}
 				}
 			}
-		} else if (param.parameter_type is MethodType) {
+		} else if (param.variable_type is MethodType) {
 			var cparam = new CCodeFormalParameter (get_delegate_target_cname (get_variable_cname (param.name)), target_ctypename);
 			cparam_map.set (get_param_pos (param.cdelegate_target_parameter_position), cparam);
 			if (carg_map != null) {

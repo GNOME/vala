@@ -367,7 +367,7 @@ public class Vala.GIdlParser : CodeVisitor {
 						} else if (nv[0] == "is_array") {
 							if (eval (nv[1]) == "1") {
 								param_type = new ArrayType (param_type, 1, param_type.source_reference);
-								p.parameter_type = param_type;
+								p.variable_type = param_type;
 								if (!out_requested) {
 									p.direction = ParameterDirection.IN;
 								}
@@ -380,7 +380,7 @@ public class Vala.GIdlParser : CodeVisitor {
 								if (!array_requested && param_type is ArrayType) {
 									var array_type = (ArrayType) param_type;
 									param_type = array_type.element_type;
-									p.parameter_type = param_type;
+									p.variable_type = param_type;
 								}
 							}
 						} else if (nv[0] == "is_ref") {
@@ -389,7 +389,7 @@ public class Vala.GIdlParser : CodeVisitor {
 								if (!array_requested && param_type is ArrayType) {
 									var array_type = (ArrayType) param_type;
 									param_type = array_type.element_type;
-									p.parameter_type = param_type;
+									p.variable_type = param_type;
 								}
 							}
 						} else if (nv[0] == "takes_ownership") {
@@ -416,7 +416,7 @@ public class Vala.GIdlParser : CodeVisitor {
 							} else {
 								// Overwrite old param_type, so "type_name" must be before any
 								// other param type modifying metadata
-								p.parameter_type = param_type = new UnresolvedType.from_symbol (sym, return_type.source_reference);
+								p.variable_type = param_type = new UnresolvedType.from_symbol (sym, return_type.source_reference);
 							}
 						}
 					}
@@ -1851,7 +1851,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (nv[0] == "is_array") {
 						if (eval (nv[1]) == "1") {
 							param_type = new ArrayType (param_type, 1, param_type.source_reference);
-							p.parameter_type = param_type;
+							p.variable_type = param_type;
 							if (!out_requested) {
 								p.direction = ParameterDirection.IN;
 							}
@@ -1864,7 +1864,7 @@ public class Vala.GIdlParser : CodeVisitor {
 							if (!array_requested && param_type is ArrayType) {
 								var array_type = (ArrayType) param_type;
 								param_type = array_type.element_type;
-								p.parameter_type = param_type;
+								p.variable_type = param_type;
 							}
 						}
 					} else if (nv[0] == "is_ref") {
@@ -1873,7 +1873,7 @@ public class Vala.GIdlParser : CodeVisitor {
 							if (!array_requested && param_type is ArrayType) {
 								var array_type = (ArrayType) param_type;
 								param_type = array_type.element_type;
-								p.parameter_type = param_type;
+								p.variable_type = param_type;
 							}
 						}
 					} else if (nv[0] == "nullable") {
@@ -1924,7 +1924,7 @@ public class Vala.GIdlParser : CodeVisitor {
 						} else {
 							// Overwrite old param_type, so "type_name" must be before any
 							// other param type modifying metadata
-							p.parameter_type = param_type = new UnresolvedType.from_symbol (sym, return_type.source_reference);
+							p.variable_type = param_type = new UnresolvedType.from_symbol (sym, return_type.source_reference);
 						}
 					} else if (nv[0] == "ctype") {
 						p.ctype = eval (nv[1]);
@@ -1936,30 +1936,30 @@ public class Vala.GIdlParser : CodeVisitor {
 					} else if (nv[0] == "default_value") {
 						var val = eval (nv[1]);
 						if (val == "null") {
-							p.default_expression = new NullLiteral (param_type.source_reference);
+							p.initializer = new NullLiteral (param_type.source_reference);
 						} else if (val == "true") {
-							p.default_expression = new BooleanLiteral (true, param_type.source_reference);
+							p.initializer = new BooleanLiteral (true, param_type.source_reference);
 						} else if (val == "false") {
-							p.default_expression = new BooleanLiteral (false, param_type.source_reference);
+							p.initializer = new BooleanLiteral (false, param_type.source_reference);
 						} else if (val == "") {
-							p.default_expression = new StringLiteral ("\"\"", param_type.source_reference);
+							p.initializer = new StringLiteral ("\"\"", param_type.source_reference);
 						} else {
 							unowned string endptr;
 							unowned string val_end = val.offset (val.len ());
 
 							val.to_long (out endptr);
 							if ((long)endptr == (long)val_end) {
-								p.default_expression = new IntegerLiteral (val, param_type.source_reference);
+								p.initializer = new IntegerLiteral (val, param_type.source_reference);
 							} else {
 								val.to_double (out endptr);
 								if ((long)endptr == (long)val_end) {
-									p.default_expression = new RealLiteral (val, param_type.source_reference);
+									p.initializer = new RealLiteral (val, param_type.source_reference);
 								} else {
 									if (val.has_prefix ("\"") && val.has_suffix ("\"")) {
-										p.default_expression = new StringLiteral (val, param_type.source_reference);
+										p.initializer = new StringLiteral (val, param_type.source_reference);
 									} else {
 										foreach (var member in val.split (".")) {
-											p.default_expression = new MemberAccess (p.default_expression, member, param_type.source_reference);
+											p.initializer = new MemberAccess (p.initializer, member, param_type.source_reference);
 										}
 									}
 								}
@@ -1973,7 +1973,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				if (!(last_param_type is ArrayType)) {
 					// last_param is array, p is array length
 					last_param_type = new ArrayType (last_param_type, 1, last_param_type.source_reference);
-					last_param.parameter_type = last_param_type;
+					last_param.variable_type = last_param_type;
 					last_param.direction = ParameterDirection.IN;
 				}
 
@@ -2479,7 +2479,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (nv[0] == "is_array") {
 						if (eval (nv[1]) == "1") {
 							param_type = new ArrayType (param_type, 1, param_type.source_reference);
-							p.parameter_type = param_type;
+							p.variable_type = param_type;
 							p.direction = ParameterDirection.IN;
 						}
 					} else if (nv[0] == "is_out") {
@@ -2501,13 +2501,13 @@ public class Vala.GIdlParser : CodeVisitor {
 					} else if (nv[0] == "type_name") {
 						if (!(param_type is UnresolvedType)) {
 							param_type = new UnresolvedType ();
-							p.parameter_type = param_type;
+							p.variable_type = param_type;
 						}
 						((UnresolvedType) param_type).unresolved_symbol = new UnresolvedSymbol (null, eval (nv[1]));
 					} else if (nv[0] == "type_arguments") {
 						var type_args = eval (nv[1]).split (",");
 						foreach (string type_arg in type_args) {
-							p.parameter_type.add_type_argument (get_type_from_string (type_arg));
+							p.variable_type.add_type_argument (get_type_from_string (type_arg));
 						}
 					} else if (nv[0] == "namespace_name") {
 						ns_name = eval (nv[1]);

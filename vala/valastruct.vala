@@ -745,7 +745,7 @@ public class Vala.Struct : TypeSymbol {
 
 		foreach (Field f in fields) {
 			if (f.binding == MemberBinding.INSTANCE
-			    && f.field_type.is_disposable ()) {
+			    && f.variable_type.is_disposable ()) {
 				return true;
 			}
 		}
@@ -761,7 +761,7 @@ public class Vala.Struct : TypeSymbol {
 				return true;
 			}
 			foreach (Field f in st.fields) {
-				if (f.binding == MemberBinding.INSTANCE && is_recursive_value_type (f.field_type)) {
+				if (f.binding == MemberBinding.INSTANCE && is_recursive_value_type (f.variable_type)) {
 					return true;
 				}
 			}
@@ -803,7 +803,7 @@ public class Vala.Struct : TypeSymbol {
 		foreach (Field f in fields) {
 			f.check (analyzer);
 
-			if (f.binding == MemberBinding.INSTANCE && is_recursive_value_type (f.field_type)) {
+			if (f.binding == MemberBinding.INSTANCE && is_recursive_value_type (f.variable_type)) {
 				error = true;
 				Report.error (f.source_reference, "Recursive value types are not allowed");
 				return false;

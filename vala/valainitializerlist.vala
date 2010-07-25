@@ -159,7 +159,7 @@ public class Vala.InitializerList : Expression {
 					}
 				}
 
-				e.target_type = field.field_type.copy ();
+				e.target_type = field.variable_type.copy ();
 				if (!target_type.value_owned) {
 					e.target_type.value_owned = false;
 				}
