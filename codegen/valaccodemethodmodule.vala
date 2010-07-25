@@ -788,9 +788,9 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 			param.ccodenode = new CCodeFormalParameter.with_ellipsis ();
 		}
 
-		cparam_map.set (get_param_pos (param.cparameter_position), (CCodeFormalParameter) param.ccodenode);
+		cparam_map.set (get_param_pos (param.cparameter_position, param.ellipsis), (CCodeFormalParameter) param.ccodenode);
 		if (carg_map != null && !param.ellipsis) {
-			carg_map.set (get_param_pos (param.cparameter_position), get_variable_cexpression (param.name));
+			carg_map.set (get_param_pos (param.cparameter_position, param.ellipsis), get_variable_cexpression (param.name));
 		}
 	}
 
