@@ -3722,9 +3722,56 @@ namespace GLib {
 
 	/* N-ary Trees */
 
+	public delegate bool NodeTraverseFunc (Node node);
+	public delegate void NodeForeachFunc (Node node);
+
+	[CCode (cprefix = "G_TRAVERSE_")]
+	public enum TraverseFlags {
+		LEAVES,
+		NON_LEAVES,
+		ALL
+	}
+
 	[Compact]
-	[CCode (free_function = "g_node_destroy")]
+	[CCode (dup_function = "g_node_copy", free_function = "g_node_destroy")]
 	public class Node<G> {
+		public Node(owned G? data = null);
+		public Node<unowned G> copy ();
+		public unowned Node<G> insert (int position, owned Node<G> node);
+		public unowned Node<G> insert_before (Node<G> sibling, owned Node<G> node);
+		public unowned Node<G> insert_after (Node<G> sibling, owned Node<G> node);
+		public unowned Node<G> append (owned Node<G> node);
+		public unowned Node<G> prepend (owned Node<G> node);
+		public unowned Node<G> insert_data (int position, owned G data);
+		public unowned Node<G> insert_data_before (Node<G> sibling, owned G data);
+		public unowned Node<G> append_data (owned G data);
+		public unowned Node<G> prepend_data (owned G data);
+		public void reverse_children ();
+		public void traverse (TraverseType order, TraverseFlags flags, int max_depth, NodeTraverseFunc func);
+		public void children_foreach (TraverseFlags flags, NodeForeachFunc func);
+		public unowned Node<G> get_root ();
+		public unowned Node<G> find (TraverseType order, TraverseFlags flags, G data);
+		public unowned Node<G> find_child (TraverseFlags flags, G data);
+		public int child_index (G data);
+		public int child_position (Node<G> child);
+		public unowned Node<G> first_child ();
+		public unowned Node<G> last_child ();
+		public unowned Node<G> nth_child ();
+		public unowned Node<G> first_sibling ();
+		public unowned Node<G> next_sibling ();
+		public unowned Node<G> prev_sibling ();
+		public unowned Node<G> last_sibling ();
+
+		[CCode (cname = "G_NODE_IS_LEAF")]
+		public bool is_leaf ();
+		[CCode (cname = "G_NODE_IS_ROOT")]
+		public bool is_root ();
+		public bool is_ancestor (Node<G> descendant);
+
+		public uint depth ();
+		public uint n_nodes (TraverseFlags flags);
+		public uint max_height ();
+
 		public G data;
 		public Node next;
 		public Node prev;
@@ -3797,7 +3844,7 @@ namespace GLib {
 	
 	public delegate int TraverseFunc (void* key, void* value);
 	
-	[CCode (c_prefix="C_", has_type_id = false)]
+	[CCode (cprefix = "G_", has_type_id = false)]
 	public enum TraverseType {
 		IN_ORDER,
 		PRE_ORDER,
