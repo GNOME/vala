@@ -187,6 +187,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	public ErrorType gerror_type;
 	public Class glist_type;
 	public Class gslist_type;
+	public Class gnode_type;
 	public Class gvaluearray_type;
 	public TypeSymbol gstringbuilder_type;
 	public TypeSymbol garray_type;
@@ -327,6 +328,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			gerror_type = new ErrorType (null, null);
 			glist_type = (Class) glib_ns.scope.lookup ("List");
 			gslist_type = (Class) glib_ns.scope.lookup ("SList");
+			gnode_type = (Class) glib_ns.scope.lookup ("Node");
 			gvaluearray_type = (Class) glib_ns.scope.lookup ("ValueArray");
 			gstringbuilder_type = (TypeSymbol) glib_ns.scope.lookup ("StringBuilder");
 			garray_type = (TypeSymbol) glib_ns.scope.lookup ("Array");
@@ -2744,7 +2746,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public CCodeExpression? get_destroy_func_expression (DataType type, bool is_chainup = false) {
-		if (context.profile == Profile.GOBJECT && (type.data_type == glist_type || type.data_type == gslist_type)) {
+		if (context.profile == Profile.GOBJECT && (type.data_type == glist_type || type.data_type == gslist_type || type.data_type == gnode_type)) {
 			// create wrapper function to free list elements if necessary
 
 			bool elements_require_free = false;
@@ -2758,7 +2760,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			}
 			
 			if (elements_require_free && element_destroy_func_expression is CCodeIdentifier) {
-				return new CCodeIdentifier (generate_glist_free_wrapper (type, (CCodeIdentifier) element_destroy_func_expression));
+				return new CCodeIdentifier (generate_collection_free_wrapper (type, (CCodeIdentifier) element_destroy_func_expression));
 			} else {
 				return new CCodeIdentifier (type.data_type.get_free_function ());
 			}
@@ -2823,8 +2825,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		}
 	}
 
-	private string generate_glist_free_wrapper (DataType list_type, CCodeIdentifier element_destroy_func_expression) {
-		string destroy_func = "_%s_%s".printf (list_type.data_type.get_free_function (), element_destroy_func_expression.name);
+	private string generate_collection_free_wrapper (DataType collection_type, CCodeIdentifier element_destroy_func_expression) {
+		string destroy_func = "_%s_%s".printf (collection_type.data_type.get_free_function (), element_destroy_func_expression.name);
 
 		if (!add_wrapper (destroy_func)) {
 			// wrapper already defined
@@ -2836,24 +2838,52 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		var function = new CCodeFunction (destroy_func, "void");
 		function.modifiers = CCodeModifiers.STATIC;
 
-		function.add_parameter (new CCodeFormalParameter ("self", list_type.get_cname ()));
+		function.add_parameter (new CCodeFormalParameter ("self", collection_type.get_cname ()));
 
 		// definition
 
 		var block = new CCodeBlock ();
 
 		CCodeFunctionCall element_free_call;
-		if (list_type.data_type == glist_type) {
-			element_free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_list_foreach"));
+		if (collection_type.data_type == gnode_type) {
+			/* A wrapper which converts GNodeTraverseFunc into GDestroyNotify */
+			string destroy_node_func = "%s_node".printf (destroy_func);
+			var wrapper = new CCodeFunction (destroy_node_func, "gboolean");
+			wrapper.modifiers = CCodeModifiers.STATIC;
+			wrapper.add_parameter (new CCodeFormalParameter ("node", collection_type.get_cname ()));
+			wrapper.add_parameter (new CCodeFormalParameter ("unused", "gpointer"));
+			var wrapper_block = new CCodeBlock ();
+			var free_call = new CCodeFunctionCall (element_destroy_func_expression);
+			free_call.add_argument (new CCodeMemberAccess.pointer(new CCodeIdentifier("node"), "data"));
+			wrapper_block.add_statement (new CCodeExpressionStatement (free_call));
+			wrapper_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
+			source_declarations.add_type_member_declaration (function.copy ());
+			wrapper.block = wrapper_block;
+			source_type_member_definition.append (wrapper);
+
+			/* Now the code to call g_traverse with the above */
+			element_free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_node_traverse"));
+			element_free_call.add_argument (new CCodeIdentifier("self"));
+			element_free_call.add_argument (new CCodeConstant ("G_POST_ORDER"));
+			element_free_call.add_argument (new CCodeConstant ("G_TRAVERSE_ALL"));
+			element_free_call.add_argument (new CCodeConstant ("-1"));
+			element_free_call.add_argument (new CCodeIdentifier (destroy_node_func));
+			element_free_call.add_argument (new CCodeConstant ("NULL"));
 		} else {
-			element_free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_slist_foreach"));
+			if (collection_type.data_type == glist_type) {
+				element_free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_list_foreach"));
+			} else {
+				element_free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_slist_foreach"));
+			}
+
+			element_free_call.add_argument (new CCodeIdentifier ("self"));
+			element_free_call.add_argument (new CCodeCastExpression (element_destroy_func_expression, "GFunc"));
+			element_free_call.add_argument (new CCodeConstant ("NULL"));
 		}
-		element_free_call.add_argument (new CCodeIdentifier ("self"));
-		element_free_call.add_argument (new CCodeCastExpression (element_destroy_func_expression, "GFunc"));
-		element_free_call.add_argument (new CCodeConstant ("NULL"));
+
 		block.add_statement (new CCodeExpressionStatement (element_free_call));
 
-		var cfreecall = new CCodeFunctionCall (new CCodeIdentifier (list_type.data_type.get_free_function ()));
+		var cfreecall = new CCodeFunctionCall (new CCodeIdentifier (collection_type.data_type.get_free_function ()));
 		cfreecall.add_argument (new CCodeIdentifier ("self"));
 		block.add_statement (new CCodeExpressionStatement (cfreecall));
 
