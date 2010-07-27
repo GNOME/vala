@@ -4119,7 +4119,7 @@ namespace Gtk {
 		public void select_range (Gtk.TextIter ins, Gtk.TextIter bound);
 		public uchar serialize (Gtk.TextBuffer content_buffer, Gdk.Atom format, Gtk.TextIter start, Gtk.TextIter end, size_t length);
 		public void set_modified (bool setting);
-		public void set_text (string text, int len);
+		public void set_text (string text, int len = -1);
 		public void unregister_deserialize_format (Gdk.Atom format);
 		public void unregister_serialize_format (Gdk.Atom format);
 		public Gtk.TargetList copy_target_list { get; }
