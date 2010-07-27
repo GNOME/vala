@@ -420,6 +420,10 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 			}
 		}
 
+		if (m.comment != null) {
+			source_type_member_definition.append (new CCodeComment (m.comment.content));
+		}
+
 		function = new CCodeFunction (m.get_real_cname ());
 		m.ccodenode = function;
 

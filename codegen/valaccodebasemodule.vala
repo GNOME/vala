@@ -1349,6 +1349,10 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 		var prop = (Property) acc.prop;
 
+		if (acc.comment != null) {
+			source_type_member_definition.append (new CCodeComment (acc.comment.content));
+		}
+
 		bool returns_real_struct = acc.readable && prop.property_type.is_real_non_null_struct_type ();
 
 		acc.accept_children (codegen);

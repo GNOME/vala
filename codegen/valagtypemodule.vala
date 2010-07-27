@@ -590,6 +590,10 @@ public class Vala.GTypeModule : GErrorModule {
 				add_finalize_function (cl);
 			}
 
+			if (cl.comment != null) {
+				source_type_member_definition.append (new CCodeComment (cl.comment.content));
+			}
+
 			var type_fun = new ClassRegisterFunction (cl, context);
 			type_fun.init_from_type (in_plugin);
 			source_declarations.add_type_member_declaration (type_fun.get_source_declaration ());
@@ -1295,6 +1299,9 @@ public class Vala.GTypeModule : GErrorModule {
 		if (!cl.is_compact) {
 			/* create signals */
 			foreach (Signal sig in cl.get_signals ()) {
+				if (sig.comment != null) {
+					init_block.add_statement (new CCodeComment (sig.comment.content));
+				}
 				init_block.add_statement (new CCodeExpressionStatement (head.get_signal_creation (sig, cl)));
 			}
 		}
@@ -1932,6 +1939,10 @@ public class Vala.GTypeModule : GErrorModule {
 
 		add_interface_base_init_function (iface);
 
+		if (iface.comment != null) {
+			source_type_member_definition.append (new CCodeComment (iface.comment.content));
+		}
+
 		var type_fun = create_interface_register_function (iface);
 		type_fun.init_from_type (in_plugin);
 		source_declarations.add_type_member_declaration (type_fun.get_source_declaration ());
@@ -1970,6 +1981,10 @@ public class Vala.GTypeModule : GErrorModule {
 						continue;
 					}
 
+					if (prop.comment != null) {
+						init_block.add_statement (new CCodeComment (prop.comment.content));
+					}
+
 					var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_interface_install_property"));
 					cinst.add_argument (new CCodeIdentifier ("iface"));
 					cinst.add_argument (head.get_param_spec (prop));
@@ -1981,6 +1996,9 @@ public class Vala.GTypeModule : GErrorModule {
 
 		/* create signals */
 		foreach (Signal sig in iface.get_signals ()) {
+			if (sig.comment != null) {
+				init_block.add_statement (new CCodeComment (sig.comment.content));
+			}
 			init_block.add_statement (new CCodeExpressionStatement (head.get_signal_creation (sig, iface)));
 		}
 

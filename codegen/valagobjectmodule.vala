@@ -137,6 +137,10 @@ public class Vala.GObjectModule : GTypeModule {
 				continue;
 			}
 
+			if (prop.comment != null) {
+				init_block.add_statement (new CCodeComment (prop.comment.content));
+			}
+
 			if (prop.overrides || prop.base_interface_property != null) {
 				var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_override_property"));
 				cinst.add_argument (ccall);

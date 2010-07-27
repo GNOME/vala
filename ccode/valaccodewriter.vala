@@ -217,30 +217,37 @@ public class Vala.CCodeWriter {
 	 * @param text the comment text
 	 */
 	public void write_comment (string text) {
-		write_indent ();
-		stream.puts ("/*");
-		bool first = true;
-		
-		/* separate declaration due to missing memory management in foreach statements */
-		var lines = text.split ("\n");
-		
-		foreach (string line in lines) {
-			if (!first) {
-				write_indent ();
-			} else {
-				first = false;
-			}
+		try {
+			write_indent ();
+			stream.puts ("/*");
+			bool first = true;
 
-			var lineparts = line.split ("*/");
+			// discard tabs at beginning of line
+			var regex = new GLib.Regex ("^\t+");
 
-			for (int i = 0; lineparts[i] != null; i++) {
-				stream.puts (lineparts[i]);
-				if (lineparts[i+1] != null) {
-					stream.puts ("* /");
+			/* separate declaration due to missing memory management in foreach statements */
+			var lines = text.split ("\n");
+		
+			foreach (string line in lines) {
+				if (!first) {
+					write_indent ();
+				} else {
+					first = false;
+				}
+
+				var lineparts = regex.replace_literal (line, -1, 0, "").split ("*/");
+
+				for (int i = 0; lineparts[i] != null; i++) {
+					stream.puts (lineparts[i]);
+					if (lineparts[i+1] != null) {
+						stream.puts ("* /");
+					}
 				}
 			}
+			stream.puts ("*/");
+			write_newline ();
+		} catch (RegexError e) {
+			// ignore
 		}
-		stream.puts ("*/");
-		write_newline ();
 	}
 }

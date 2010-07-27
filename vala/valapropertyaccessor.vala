@@ -128,8 +128,8 @@ public class Vala.PropertyAccessor : Symbol {
 	 * @param source       reference to source code
 	 * @return             newly created property accessor
 	 */
-	public PropertyAccessor (bool readable, bool writable, bool construction, DataType? value_type, Block? body, SourceReference? source_reference) {
-		base (null, source_reference);
+	public PropertyAccessor (bool readable, bool writable, bool construction, DataType? value_type, Block? body, SourceReference? source_reference, Comment? comment = null) {
+		base (null, source_reference, comment);
 		this.readable = readable;
 		this.writable = writable;
 		this.construction = construction;

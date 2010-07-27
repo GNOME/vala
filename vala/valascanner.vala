@@ -1562,6 +1562,10 @@ public class Vala.Scanner {
 
 	void push_comment (string comment_item, SourceReference source_reference, bool file_comment) {
 		if (comment_item[0] == '*') {
+			if (_comment != null) {
+				// extra doc comment, add it to source file comments
+				source_file.add_comment (_comment);
+			}
 			_comment = new Comment (comment_item, source_reference);
 		}
 
