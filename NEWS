@@ -1,3 +1,11 @@
+Vala 0.9.4
+==========
+
+ * Append documentation comments to generated C files.
+ * Skip <doc> tags in .gir files.
+ * Various improvements to the Dova profile.
+ * Many bug fixes and binding updates.
+
 Vala 0.9.3
 ==========
 
