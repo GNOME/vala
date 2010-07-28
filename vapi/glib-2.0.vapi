@@ -2684,6 +2684,8 @@ namespace GLib {
 		[CCode (cname = "fprintf")]
 		[PrintfFormat ()]
 		public void printf (string format, ...);
+		[CCode (cname = "vfprintf")]
+		public void vprintf (string format, va_list args);
 		[CCode (cname = "fputc", instance_pos = -1)]
 		public void putc (char c);
 		[CCode (cname = "fputs", instance_pos = -1)]
