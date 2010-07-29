@@ -460,6 +460,9 @@ clutter_value_get_units hidden="1"
 clutter_value_set_units hidden="1"
 
 ClutterVertex is_value_type="1"
+clutter_vertex_new hidden="1"
+clutter_vertex_free hidden="1"
+clutter_vertex_copy hidden="1"
 
 ClutterX11TexturePixmap::update_area has_emitter="1"
 

@@ -1457,11 +1457,7 @@ namespace Clutter {
 		public float x;
 		public float y;
 		public float z;
-		[CCode (cname = "clutter_vertex_new", has_construct_function = false)]
-		public Vertex (float x, float y, float z);
-		public Clutter.Vertex copy ();
 		public bool equal (Clutter.Vertex vertex_b);
-		public void free ();
 	}
 	[CCode (cprefix = "CLUTTER_ACTOR_", cheader_filename = "clutter/clutter.h")]
 	[Flags]
