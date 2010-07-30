@@ -3993,6 +3993,7 @@ namespace GLib {
 		public Variant.handle (int32 value);
 		public Variant.double (double value);
 		public Variant.string (string value);
+		public Variant.bytestring (string value);
 		public Variant.object_path (string object_path);
 		public static bool is_object_path (string object_path);
 		public Variant.signature (string signature);
@@ -4010,12 +4011,20 @@ namespace GLib {
 		public double get_double ();
 		public unowned string get_string (out size_t length = null);
 		public string dup_string ();
+		public unowned string get_bytestring ();
+		public string dup_bytestring ();
 
 		public Variant.strv (string[] value);
 		[CCode (array_length_type = "size_t")]
 		public string*[] get_strv ();
 		[CCode (array_length_type = "size_t")]
 		public string[] dup_strv ();
+
+		public Variant.bytestring_array (string[] value);
+		[CCode (array_length_type = "size_t")]
+		public string*[] get_bytestring_array ();
+		[CCode (array_length_type = "size_t")]
+		public string[] dup_bytestring_array ();
 
 		public Variant (string format, ...);
 		public void get (string format, ...);
