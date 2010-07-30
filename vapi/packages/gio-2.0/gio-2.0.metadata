@@ -208,6 +208,8 @@ g_settings_list_add transfer_ownership="1"
 g_settings_list_get transfer_ownership="1"
 g_settings_list_list is_array="1" transfer_ownership="1" array_length_pos="1"
 g_settings_list_list.n_items hidden="1"
+g_settings_get_strv is_array="1" no_array_length="1" array_null_terminated="1" transfer_ownership="1"
+g_settings_set_strv.value is_array="1" no_array_length="1"
 
 g_simple_async_result_new.source_object nullable="1"
 

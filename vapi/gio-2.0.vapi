@@ -980,7 +980,8 @@ namespace GLib {
 		public int get_int (string key);
 		public void* get_mapped (string key, GLib.SettingsGetMapping mapping);
 		public unowned string get_string (string key);
-		public unowned string get_strv (string key);
+		[CCode (array_length = false, array_null_terminated = true)]
+		public string[] get_strv (string key);
 		public GLib.Variant get_value (string key);
 		public bool is_writable (string name);
 		public unowned string list_items ();
@@ -994,7 +995,7 @@ namespace GLib {
 		public bool set_flags (string key, uint value);
 		public bool set_int (string key, int value);
 		public bool set_string (string key, string value);
-		public bool set_strv (string key, string value);
+		public bool set_strv (string key, [CCode (array_length = false)] string[] value);
 		public bool set_value (string key, GLib.Variant value);
 		public static void sync ();
 		public static void unbind (void* object, string property);
