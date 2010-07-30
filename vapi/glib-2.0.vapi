@@ -1916,6 +1916,7 @@ namespace GLib {
 	public void critical (string format, ...);
 	[Diagnostics]
 	[PrintfFormat]
+	[NoReturn]
 	public void error (string format, ...);
 	[Diagnostics]
 	[PrintfFormat]
