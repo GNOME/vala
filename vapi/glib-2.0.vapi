@@ -2558,6 +2558,8 @@ namespace GLib {
 	}
 
 	public delegate void SpawnChildSetupFunc ();
+	[CCode (has_target = false, cheader_filename = "signal.h")]
+	public delegate void SignalHandlerFunc (int signum);
 
 	[CCode (lower_case_cprefix = "g_")]
 	namespace Process {
@@ -2586,6 +2588,15 @@ namespace GLib {
 		public static ProcessSignal stop_sig (int status);
 		[CCode (cname = "WIFCONTINUED", cheader_filename = "sys/wait.h")]
 		public static bool if_continued (int status);
+
+		[CCode (cname = "abort", cheader_filename = "stdlib.h")]
+		public void abort ();
+		[CCode (cname = "exit", cheader_filename = "stdlib.h")]
+		public void exit (int status);
+		[CCode (cname = "raise", cheader_filename = "signal.h")]
+		public int raise (ProcessSignal sig);
+		[CCode (cname = "signal", cheader_filename = "signal.h")]
+		public SignalHandlerFunc @signal (ProcessSignal signum, SignalHandlerFunc handler);
 	}
 	
 	[CCode (cname = "int", has_type_id = false, cheader_filename = "signal.h", cprefix = "SIG")]
