@@ -2275,7 +2275,7 @@ namespace Gtk {
 		public int sort_column_id;
 		public weak GLib.List sort_list;
 		public int stamp;
-		[CCode (has_construct_function = false)]
+		[CCode (sentinel = "", has_construct_function = false)]
 		public ListStore (int n_columns, ...);
 		public void append (out Gtk.TreeIter iter);
 		public void clear ();
@@ -4826,7 +4826,7 @@ namespace Gtk {
 		public int sort_column_id;
 		public weak GLib.List sort_list;
 		public int stamp;
-		[CCode (has_construct_function = false)]
+		[CCode (sentinel = "", has_construct_function = false)]
 		public TreeStore (int n_columns, ...);
 		public void append (out Gtk.TreeIter iter, Gtk.TreeIter? parent);
 		public void clear ();

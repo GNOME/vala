@@ -2072,7 +2072,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ListStore : GLib.Object, Gtk.TreeModel, Gtk.TreeDragSource, Gtk.TreeDragDest, Gtk.TreeSortable, Gtk.Buildable {
-		[CCode (has_construct_function = false)]
+		[CCode (sentinel = "", has_construct_function = false)]
 		public ListStore (int n_columns, ...);
 		public void append (out Gtk.TreeIter iter);
 		public void clear ();
@@ -4354,7 +4354,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class TreeStore : GLib.Object, Gtk.TreeModel, Gtk.TreeDragSource, Gtk.TreeDragDest, Gtk.TreeSortable, Gtk.Buildable {
-		[CCode (has_construct_function = false)]
+		[CCode (sentinel = "", has_construct_function = false)]
 		public TreeStore (int n_columns, ...);
 		public void append (out Gtk.TreeIter iter, Gtk.TreeIter? parent);
 		public void clear ();
