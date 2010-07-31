@@ -24,12 +24,12 @@ using Gee;
 
 public abstract class Valadoc.Api.Member : Symbol {
 
-	public Member (Vala.Member symbol, Node parent) {
+	public Member (Vala.Symbol symbol, Node parent) {
 		base (symbol, parent);
 	}
 
 	internal override void process_comments (Settings settings, DocumentationParser parser) {
-		var source_comment = ((Vala.Member) symbol).comment;
+		var source_comment = symbol.comment;
 		if (source_comment != null) {
 			documentation = parser.parse (this, source_comment);
 		}

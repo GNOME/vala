@@ -26,7 +26,7 @@ using Valadoc.Content;
 public class Valadoc.Api.Field : Member {
 	public Field (Vala.Field symbol, Node parent) {
 		base (symbol, parent);
-		field_type = new TypeReference (symbol.field_type, this);
+		field_type = new TypeReference (symbol.variable_type, this);
 	}
 
 	public string? get_cname () {

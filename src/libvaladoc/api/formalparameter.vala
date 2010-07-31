@@ -26,7 +26,7 @@ using Valadoc.Content;
 public class Valadoc.Api.FormalParameter : Symbol {
 	public FormalParameter (Vala.FormalParameter symbol, Node parent) {
 		base (symbol, parent);
-		parameter_type = new TypeReference (symbol.parameter_type, this);
+		parameter_type = new TypeReference (symbol.variable_type, this);
 	}
 
 	public bool is_out {
@@ -43,7 +43,7 @@ public class Valadoc.Api.FormalParameter : Symbol {
 
 	public bool has_default_value {
 		get {
-			return ((Vala.FormalParameter) symbol).default_expression != null;
+			return ((Vala.FormalParameter) symbol).initializer != null; //
 		}
 	}
 
@@ -88,7 +88,7 @@ public class Valadoc.Api.FormalParameter : Symbol {
 
 			if (has_default_value) {
 				signature.append ("=");
-				signature.append (((Vala.FormalParameter) symbol).default_expression.to_string ());
+				signature.append (((Vala.FormalParameter) symbol).initializer.to_string ());
 			}
 		}
 
