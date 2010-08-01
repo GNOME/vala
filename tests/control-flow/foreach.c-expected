@@ -46,6 +46,7 @@ static void _vala_GValue_free_function_content_of (gpointer data);
 VALA_EXTERN void test_foreach_multidim_array (void);
 VALA_EXTERN void test_foreach_const_array (void);
 VALA_EXTERN void test_foreach_slice_array (void);
+VALA_EXTERN void test_foreach_string (void);
 static void _vala_main (void);
 
 const gint FOO[6] = {1, 2, 3, 4, 5, 6};
@@ -669,6 +670,36 @@ test_foreach_slice_array (void)
 	foo = (g_free (foo), NULL);
 }
 
+void
+test_foreach_string (void)
+{
+	guint i = 0U;
+	gchar* s = NULL;
+	gchar* _tmp0_;
+	const gchar* _tmp1_;
+	i = (guint) 0;
+	_tmp0_ = g_strdup ("abc àçêö 你好");
+	s = _tmp0_;
+	_tmp1_ = s;
+	{
+		const gchar* c_collection = NULL;
+		const gchar* c_iter = NULL;
+		c_collection = _tmp1_;
+		_vala_warn_if_fail (g_utf8_validate (c_collection, -1, NULL), "Invalid UTF-8 string");
+		for (c_iter = c_collection; (*c_iter) != '\0'; c_iter = g_utf8_next_char (c_iter)) {
+			gunichar c = 0U;
+			c = g_utf8_get_char (c_iter);
+			{
+				guint _tmp2_;
+				_tmp2_ = i;
+				i = _tmp2_ + 1;
+			}
+		}
+	}
+	_vala_assert (i == ((guint) 11), "i == 11");
+	_g_free0 (s);
+}
+
 static void
 _vala_main (void)
 {
@@ -679,6 +710,7 @@ _vala_main (void)
 	test_foreach_const_array ();
 	test_foreach_multidim_array ();
 	test_foreach_slice_array ();
+	test_foreach_string ();
 }
 
 int

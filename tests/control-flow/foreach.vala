@@ -173,6 +173,17 @@ void test_foreach_slice_array () {
 	assert (result == "2345");
 }
 
+void test_foreach_string () {
+	uint i = 0;
+	string s = "abc àçêö 你好"; // Ni hao
+
+	foreach (unichar c in s) {
+		i++;
+	}
+
+	assert (i == 11);
+}
+
 void main () {
 	test_foreach_gvaluearray ();
 	test_foreach_garray ();
@@ -181,4 +192,5 @@ void main () {
 	test_foreach_const_array ();
 	test_foreach_multidim_array ();
 	test_foreach_slice_array ();
+	test_foreach_string ();
 }

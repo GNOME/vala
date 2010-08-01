@@ -442,6 +442,40 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			stmt.body.emit (this);
 
 			ccode.close ();
+		} else if (stmt.collection.value_type.compatible (string_type)) {
+			// iterating over a string
+
+			var validate = new CCodeFunctionCall (new CCodeIdentifier ("g_utf8_validate"));
+			validate.add_argument (get_variable_cexpression (get_local_cname (collection_backup)));
+			validate.add_argument (new CCodeConstant ("-1"));
+			validate.add_argument (new CCodeConstant ("NULL"));
+			var cassert = new CCodeFunctionCall (new CCodeIdentifier ("_vala_warn_if_fail"));
+			cassert.add_argument (validate);
+			cassert.add_argument (new CCodeConstant ("\"Invalid UTF-8 string\""));
+			requires_assert = true;
+			ccode.add_expression (cassert);
+
+			var iterator_variable = new LocalVariable (collection_type, "%s_iter".printf (stmt.variable_name));
+			visit_local_variable (iterator_variable);
+			var string_iter = get_variable_cname (get_local_cname (iterator_variable));
+
+			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (string_iter)), new CCodeConstant ("'\\0'"));
+			var next_char_call = new CCodeFunctionCall (new CCodeIdentifier ("g_utf8_next_char"));
+			next_char_call.add_argument (get_variable_cexpression (string_iter));
+
+			ccode.open_for (new CCodeAssignment (get_variable_cexpression (string_iter), get_variable_cexpression (collection_backup.name)),
+					ccond,
+					new CCodeAssignment (get_variable_cexpression (string_iter), next_char_call));
+
+			var element_expr = new CCodeFunctionCall (new CCodeIdentifier ("g_utf8_get_char"));
+			element_expr.add_argument (get_variable_cexpression (string_iter));
+
+			visit_local_variable (stmt.element_variable);
+			ccode.add_assignment (get_variable_cexpression (get_local_cname (stmt.element_variable)), element_expr);
+
+			stmt.body.emit (this);
+
+			ccode.close ();
 		} else {
 			Report.error (stmt.source_reference, "internal error: unsupported collection type");
 			stmt.error = true;

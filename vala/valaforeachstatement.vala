@@ -194,6 +194,8 @@ public class Vala.ForeachStatement : Block {
 			return check_without_iterator (context, collection_type, collection_type.get_type_arguments ().get (0));
 		} else if (context.profile == Profile.GOBJECT && collection_type.compatible (context.analyzer.gvaluearray_type)) {
 			return check_without_iterator (context, collection_type, context.analyzer.gvalue_type);
+		} else if (context.profile == Profile.GOBJECT && collection_type.compatible (context.analyzer.string_type)) {
+			return check_without_iterator (context, collection_type, context.analyzer.unichar_type);
 		} else {
 			return check_with_iterator (context, collection_type);
 		}
