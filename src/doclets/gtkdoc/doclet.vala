@@ -85,9 +85,13 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 		}
 		this.tree = tree;
 
-		DirUtils.create_with_parents (settings.path, 0777);
+		var ccomments_dir = Path.build_filename (settings.path, "ccomments");
+		var cscan_dir = Path.build_filename (settings.path, "cscan");
+		DirUtils.create_with_parents (settings.path, 0755);
+		DirUtils.create_with_parents (ccomments_dir, 0755);
+		DirUtils.create_with_parents (cscan_dir, 0755);
 
-		find_headers ();
+		find_headers (ccomments_dir);
 		if (vala_headers.length <= 0) {
 			warning ("GtkDoc: No vala header found");
 			return;
@@ -96,9 +100,6 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 		if (!scan (settings.path)) {
 			return;
 		}
-
-		var cscan_dir = Path.build_filename (settings.path, "cscan");
-		DirUtils.create_with_parents (cscan_dir, 0777);
 
 		if (!scan (cscan_dir, vala_headers)) {
 			return;
@@ -125,7 +126,7 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 		}
 	}
 
-	private void find_headers () {
+	private void find_headers (string output_dir) {
 		vala_headers = new string[]{};
 		c_headers = new string[]{};
 		Dir dir;
@@ -156,9 +157,9 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 				try {
 					string contents;
 					FileUtils.get_contents (filename, out contents);
-					FileUtils.set_contents (Path.build_filename (settings.path, "ccomments", Path.get_basename (filename)), contents);
+					FileUtils.set_contents (Path.build_filename (output_dir, Path.get_basename (filename)), contents);
 				} catch (Error e) {
-					warning ("GtkDoc: Can't copy %s", filename);
+					warning ("GtkDoc: Can't copy %s: %s", filename, e.message);
 					return;
 				}
 			}
@@ -344,7 +345,7 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 		}
 
 		var html_dir = Path.build_filename (settings.path, "html");
-		DirUtils.create_with_parents (html_dir, 0777);
+		DirUtils.create_with_parents (html_dir, 0755);
 
 		try {
 			Process.spawn_sync (html_dir,
