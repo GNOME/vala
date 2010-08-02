@@ -1,6 +1,7 @@
 /* utils.vala
  *
  * Copyright (C) 2010 Luca Bruno
+ * Copyright (C) 2007-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -147,6 +148,20 @@ namespace Gtkdoc {
 
 	public string to_docbook_id (string name) {
 		return name.replace(".", "-").replace("_", "-");
+	}
+
+	public bool package_exists (string package_name) {
+		// copied from vala/codegen/valaccodecompiler.vala
+		string pc = "pkg-config --exists " + package_name;
+		int exit_status;
+
+		try {
+			Process.spawn_command_line_sync (pc, null, null, out exit_status);
+			return (0 == exit_status);
+		} catch (SpawnError e) {
+			warning ("GtkDoc: Error pkg-config --exists %s: %s", package_name, e.message);
+			return false;
+		}
 	}
 }
 

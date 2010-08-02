@@ -216,7 +216,7 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 
 		string[] pc = { "pkg-config" };
 		foreach (var package in tree.get_package_list()) {
-			if (package.is_package) {
+			if (package.is_package && package_exists (package.name)) {
 				pc += package.name;
 			}
 		}
