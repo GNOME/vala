@@ -27,13 +27,14 @@ using Valadoc.Content;
 namespace Gtkdoc.Config {
 	public static bool nohtml;
 	public static string library_filename;
-	public static string ignore_headers;
+	[CCode (array_length = false, array_null_terminated = true)]
+	public static string[] ignore_headers;
 	public static string deprecated_guards;
 	public static string ignore_decorators;
 
 	private static const GLib.OptionEntry[] options = {
 			{ "library", 'l', 0, OptionArg.FILENAME, ref library_filename, "Shared library path", "FILENAME" },
-			{ "ignore-headers", 'x', 0, OptionArg.STRING, ref ignore_headers, "A space-separated list of header files not to scan", "FILES" },
+			{ "ignore-headers", 'x', 0, OptionArg.FILENAME_ARRAY, ref ignore_headers, "A list of header files to not scan", "FILES" },
 			{ "deprecated-guards", 'd', 0, OptionArg.STRING, ref deprecated_guards, "A |-separated list of symbols used as deprecation guards", "GUARDS" },
 			{ "ignore-decorators", 0, 0, OptionArg.STRING, ref ignore_decorators, "A |-separated list of addition decorators in declarations that should be ignored", "DECS" },
 			{ "nohtml", 0, 0, OptionArg.NONE, ref nohtml, "Disable HTML generation", null },
@@ -55,6 +56,14 @@ namespace Gtkdoc.Config {
 			warning ("GtkDoc: Error: %s", e.message);
 			warning ("GtkDoc: Run '-X --help' to see a full list of available command line options.\n");
 			return false;
+		}
+
+		// real path to ignored headers
+		for (int i=0; i < ignore_headers.length; i++) {
+			var realheader = realpath (ignore_headers[i]);
+			if (realheader != null) {
+				ignore_headers[i] = realheader;
+			}
 		}
 
 		return true;
@@ -91,17 +100,17 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 		DirUtils.create_with_parents (ccomments_dir, 0755);
 		DirUtils.create_with_parents (cscan_dir, 0755);
 
-		find_headers (ccomments_dir);
+		find_files (ccomments_dir);
 		if (vala_headers.length <= 0) {
 			warning ("GtkDoc: No vala header found");
 			return;
 		}
 
-		if (!scan (settings.path)) {
+		if (!scan (settings.path, vala_headers)) {
 			return;
 		}
 
-		if (!scan (cscan_dir, vala_headers)) {
+		if (!scan (cscan_dir, c_headers)) {
 			return;
 		}
 
@@ -126,7 +135,7 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 		}
 	}
 
-	private void find_headers (string output_dir) {
+	private void find_files (string comments_dir) {
 		vala_headers = new string[]{};
 		c_headers = new string[]{};
 		Dir dir;
@@ -141,8 +150,16 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 		string relative_name;
 
 		while ((relative_name = dir.read_name()) != null) {
-			var filename = Path.build_filename (dirname, relative_name);
+			var filename = realpath (Path.build_filename (dirname, relative_name));
+			if (filename == null) {
+				continue;
+			}
+
 			if (filename.has_suffix (".h")) {
+				if (filename in Config.ignore_headers) {
+					continue;
+				}
+
 				if (is_generated_by_vala (filename)) {
 					vala_headers += filename;
 				} else {
@@ -154,7 +171,7 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 					try {
 						string contents;
 						FileUtils.get_contents (filename, out contents);
-						FileUtils.set_contents (Path.build_filename (output_dir, Path.get_basename (filename)), contents);
+						FileUtils.set_contents (Path.build_filename (comments_dir, Path.get_basename (filename)), contents);
 					} catch (Error e) {
 						warning ("GtkDoc: Can't copy %s: %s", filename, e.message);
 						return;
@@ -164,25 +181,20 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 		}
 	}
 
-	private bool scan (string output_dir, string[]? ignore_headers = null) {
+	private bool scan (string output_dir, string[]? headers = null) {
+		if (headers == null) {
+			// nothing to scan
+			return true;
+		}
+
 		string[] args = { "gtkdoc-scan",
 						"--module", settings.pkg_name,
-						"--source-dir", realpath (settings.basedir ?? "."),
 						"--output-dir", output_dir,
 						"--rebuild-sections", "--rebuild-types" };
 		string ignored = "";
 
-		if (ignore_headers != null) {
-			ignored = string.joinv (" ", ignore_headers);
-		}
-
-		if (Config.ignore_headers != null) {
-			ignored = "%s %s".printf (ignored, Config.ignore_headers);
-		}
-
-		if (ignored != "") {
-			args += "--ignore-headers";
-			args += ignored;
+		foreach (var header in headers) {
+			args += header;
 		}
 
 		if (Config.deprecated_guards != null) {
