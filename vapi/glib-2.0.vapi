@@ -1719,23 +1719,23 @@ namespace GLib {
 	public class AsyncQueue<G> {
 		public AsyncQueue ();
 		public void push (owned G data);
-		public void push_sorted (owned G data, CompareDataFunc func);
+		public void push_sorted (owned G data, CompareDataFunc<G> func);
 		public G pop ();
 		public G try_pop ();
 		public G timed_pop (ref TimeVal end_time);
 		public int length ();
-		public void sort (CompareDataFunc func);
+		public void sort (CompareDataFunc<G> func);
 		public void @lock ();
 		public void unlock ();
 		public void ref_unlocked ();
 		public void unref_and_unlock ();
 		public void push_unlocked (owned G data);
-		public void push_sorted_unlocked (owned G data, CompareDataFunc func);
+		public void push_sorted_unlocked (owned G data, CompareDataFunc<G> func);
 		public G pop_unlocked ();
 		public G try_pop_unlocked ();
 		public G timed_pop_unlocked (ref TimeVal end_time);
 		public int length_unlocked ();
-		public void sort_unlocked (CompareDataFunc func);
+		public void sort_unlocked (CompareDataFunc<G> func);
 	}
 
 	/* Memory Allocation */
@@ -3465,7 +3465,7 @@ namespace GLib {
 		[ReturnsModifiedPointer ()]
 		public void insert_before (List<G> sibling, owned G data);
 		[ReturnsModifiedPointer ()]
-		public void insert_sorted (owned G data, CompareFunc compare_func);
+		public void insert_sorted (owned G data, CompareFunc<G> compare_func);
 		[ReturnsModifiedPointer ()]
 		public void remove (G data);
 		[ReturnsModifiedPointer ()]
@@ -3480,11 +3480,11 @@ namespace GLib {
 		[ReturnsModifiedPointer ()]
 		public void reverse ();
 		[ReturnsModifiedPointer ()]
-		public void sort (CompareFunc compare_func);
+		public void sort (CompareFunc<G> compare_func);
 		[ReturnsModifiedPointer ()]
-		public void insert_sorted_with_data (owned G data, CompareDataFunc compare_func);
+		public void insert_sorted_with_data (owned G data, CompareDataFunc<G> compare_func);
 		[ReturnsModifiedPointer ()]
-		public void sort_with_data (CompareDataFunc compare_func);
+		public void sort_with_data (CompareDataFunc<G> compare_func);
 		[ReturnsModifiedPointer ()]
 		public void concat (owned List<G> list2);
 		public void @foreach (Func func);
@@ -3496,7 +3496,7 @@ namespace GLib {
 		public unowned List<G> nth_prev (uint n);
 		
 		public unowned List<G> find (G data);
-		public unowned List<G> find_custom (G data, CompareFunc func);
+		public unowned List<G> find_custom (G data, CompareFunc<G> func);
 		public int position (List<G> llink);
 		public int index (G data);
 		
@@ -3521,7 +3521,7 @@ namespace GLib {
 		[ReturnsModifiedPointer ()]
 		public void insert_before (SList<G> sibling, owned G data);
 		[ReturnsModifiedPointer ()]
-		public void insert_sorted (owned G data, CompareFunc compare_func);
+		public void insert_sorted (owned G data, CompareFunc<G> compare_func);
 		[ReturnsModifiedPointer ()]
 		public void remove (G data);
 		[ReturnsModifiedPointer ()]
@@ -3536,11 +3536,11 @@ namespace GLib {
 		[ReturnsModifiedPointer ()]
 		public void reverse ();
 		[ReturnsModifiedPointer ()]
-		public void insert_sorted_with_data (owned G data, CompareDataFunc compare_func);
+		public void insert_sorted_with_data (owned G data, CompareDataFunc<G> compare_func);
 		[ReturnsModifiedPointer ()]
-		public void sort (CompareFunc compare_func);
+		public void sort (CompareFunc<G> compare_func);
 		[ReturnsModifiedPointer ()]
-		public void sort_with_data (CompareDataFunc compare_func);
+		public void sort_with_data (CompareDataFunc<G> compare_func);
 		[ReturnsModifiedPointer ()]
 		public void concat (owned SList<G> list2);
 		public void @foreach (Func func);
@@ -3550,7 +3550,7 @@ namespace GLib {
 		public unowned G nth_data (uint n);
 
 		public unowned SList<G> find (G data);
-		public unowned SList<G> find_custom (G data, CompareFunc func);
+		public unowned SList<G> find_custom (G data, CompareFunc<G> func);
 		public int position (SList<G> llink);
 		public int index (G data);
 
@@ -3559,12 +3559,12 @@ namespace GLib {
 	}
 
 	[CCode (has_target = false)]
-	public delegate int CompareFunc (void* a, void* b);
+	public delegate int CompareFunc<G> (G a, G b);
 
-	public delegate int CompareDataFunc (void* a, void* b);
+	public delegate int CompareDataFunc<G> (G a, G b);
 
 	[CCode (cname = "g_strcmp0")]
-	public static GLib.CompareFunc strcmp;
+	public static GLib.CompareFunc<string> strcmp;
 
 	/* Double-ended Queues */
 
@@ -3583,8 +3583,8 @@ namespace GLib {
 		public void reverse ();
 		public Queue copy ();
 		public unowned List<G> find (G data);
-		public unowned List<G> find_custom (G data, CompareFunc func);
-		public void sort (CompareDataFunc compare_func);
+		public unowned List<G> find_custom (G data, CompareFunc<G> func);
+		public void sort (CompareDataFunc<G> compare_func);
 		public void push_head (owned G data);
 		public void push_tail (owned G data);
 		public void push_nth (owned G data, int n);
@@ -3599,7 +3599,7 @@ namespace GLib {
 		public void remove_all (G data);
 		public void insert_before (List<G> sibling, owned G data);
 		public void insert_after (List<G> sibling, owned G data);
-		public void insert_sorted (owned G data, CompareDataFunc func);
+		public void insert_sorted (owned G data, CompareDataFunc<G> func);
 	}
 
 	/* Sequences */
@@ -3611,7 +3611,7 @@ namespace GLib {
 		public int get_length ();
 		public void @foreach (Func func);
 		public static void foreach_range (SequenceIter<G> begin, SequenceIter<G> end, Func func);
-		public void sort (CompareDataFunc cmp_func);
+		public void sort (CompareDataFunc<G> cmp_func);
 		public void sort_iter (SequenceIterCompareFunc<G> func);
 		public SequenceIter<G> get_begin_iter ();
 		public SequenceIter<G> get_end_iter ();
@@ -3621,14 +3621,14 @@ namespace GLib {
 		public static SequenceIter<G> insert_before (SequenceIter<G> iter, owned G data);
 		public static void move (SequenceIter<G> src, SequenceIter<G> dest);
 		public static void swap (SequenceIter<G> src, SequenceIter<G> dest);
-		public SequenceIter<G> insert_sorted (owned G data, CompareDataFunc cmp_func);
+		public SequenceIter<G> insert_sorted (owned G data, CompareDataFunc<G> cmp_func);
 		public SequenceIter<G> insert_sorted_iter (owned G data, SequenceIterCompareFunc<G> iter_cmp);
-		public static void sort_changed (SequenceIter<G> iter, CompareDataFunc cmp_func);
+		public static void sort_changed (SequenceIter<G> iter, CompareDataFunc<G> cmp_func);
 		public static void sort_changed_iter (SequenceIter<G> iter, SequenceIterCompareFunc<G> iter_cmp);
 		public static void remove (SequenceIter<G> iter);
 		public static void remove_range (SequenceIter<G> begin, SequenceIter<G> end);
 		public static void move_range (SequenceIter<G> dest, SequenceIter<G> begin, SequenceIter<G> end);
-		public SequenceIter<G> search (G data, CompareDataFunc cmp_func);
+		public SequenceIter<G> search (G data, CompareDataFunc<G> cmp_func);
 		public SequenceIter<G> search_iter (G data, SequenceIterCompareFunc<G> iter_cmp);
 		public static unowned G get (SequenceIter<G> iter);
 		public static void set (SequenceIter<G> iter, owned G data);
@@ -3814,8 +3814,8 @@ namespace GLib {
 			this.add ((owned) data);
 			this.remove_index_fast (index);
 		}
-		public void sort (GLib.CompareFunc compare_func);
-		public void sort_with_data (GLib.CompareDataFunc compare_func);
+		public void sort (GLib.CompareFunc<G> compare_func);
+		public void sort_with_data (GLib.CompareDataFunc<G> compare_func);
 		private void set_size (int length);
 
 		public int length {
@@ -3843,8 +3843,8 @@ namespace GLib {
 		public void remove_index (uint index);
 		public void remove_index_fast (uint index);
 		public void remove_range (uint index, uint length);
-		public void sort (CompareFunc compare_func);
-		public void sort_with_data (CompareDataFunc compare_func);
+		public void sort (CompareFunc<int8> compare_func);
+		public void sort_with_data (CompareDataFunc<int8> compare_func);
 		public void set_size (uint length);
 
 		public uint len;
@@ -3975,8 +3975,8 @@ namespace GLib {
 		public void remove_index (uint index);
 		public void remove_index_fast (uint index);
 		public void remove_range (uint index, uint length);
-		public void sort (CompareFunc compare_func);
-		public void sort_with_data (CompareDataFunc compare_func);
+		public void sort (CompareFunc<G> compare_func);
+		public void sort_with_data (CompareDataFunc<G> compare_func);
 		[CCode (generic_type_pos = 0.1)]
 		public G index (uint index);
 		public void set_size (uint length);
@@ -3994,6 +3994,8 @@ namespace GLib {
 		LEVEL_ORDER
 	}
 
+	public delegate int TreeSearchFunc<K> (K key);
+
 	[Compact]
 #if GLIB_2_22
 	[CCode (ref_function = "g_tree_ref", unref_function = "g_tree_unref")]
@@ -4001,9 +4003,9 @@ namespace GLib {
 	[CCode (free_function = "g_tree_destroy")]
 #endif
 	public class Tree<K,V> {
-		public Tree (CompareFunc key_compare_func);
-		public Tree.with_data (CompareDataFunc key_compare_func);
-		public Tree.full (CompareDataFunc key_compare_func, DestroyNotify? key_destroy_func, DestroyNotify? value_destroy_func);
+		public Tree (CompareFunc<K> key_compare_func);
+		public Tree.with_data (CompareDataFunc<K> key_compare_func);
+		public Tree.full (CompareDataFunc<K> key_compare_func, DestroyNotify? key_destroy_func, DestroyNotify? value_destroy_func);
 		public void insert (owned K key, owned V value);
 		public void replace (owned K key, owned V value);
 		public int nnodes ();
@@ -4011,7 +4013,9 @@ namespace GLib {
 		public unowned V lookup (K key);
 		public bool lookup_extended (K lookup_key, K orig_key, V value);
 		public void foreach (TraverseFunc traverse_func);
-		public unowned V search (CompareFunc search_func, void* user_data);
+		public unowned V search (TreeSearchFunc<K> search_func);
+		[CCode (cname = "g_tree_search")]
+		public unowned V search_key (CompareFunc<K> search_func, K key);
 		public bool remove (K key);
 		public bool steal (K key);
 	}
@@ -4306,5 +4310,5 @@ namespace GLib {
 	public static void static_assert (bool expression);
 
 	[CCode (simple_generics = true)]
-	private static void qsort_with_data<T> (T[] elems, size_t size, [CCode (type = "GCompareDataFunc")] GLib.CompareDataFunc compare_func);
+	private static void qsort_with_data<T> (T[] elems, size_t size, [CCode (type = "GCompareDataFunc")] GLib.CompareDataFunc<T> compare_func);
 }
