@@ -106,7 +106,11 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 			return;
 		}
 
-		if (!scan (settings.path, vala_headers)) {
+		var all_headers = vala_headers;
+		foreach (var c_header in c_headers) {
+			all_headers += c_header;
+		}
+		if (!scan (settings.path, all_headers)) {
 			return;
 		}
 
