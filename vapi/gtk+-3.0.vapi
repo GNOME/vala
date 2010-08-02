@@ -398,6 +398,17 @@ namespace Gtk {
 		public weak Gtk.BindingSignal next;
 		public weak string signal_name;
 	}
+	[Compact]
+	[CCode (copy_function = "gtk_border_copy", type_id = "GTK_TYPE_BORDER", cheader_filename = "gtk/gtk.h")]
+	public class Border {
+		public int bottom;
+		public int left;
+		public int right;
+		public int top;
+		[CCode (has_construct_function = false)]
+		public Border ();
+		public Gtk.Border copy ();
+	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Box : Gtk.Container, Atk.Implementor, Gtk.Buildable, Gtk.SizeRequest, Gtk.Orientable {
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
@@ -1123,7 +1134,7 @@ namespace Gtk {
 		public unowned string get_icon_tooltip_markup (Gtk.EntryIconPosition icon_pos);
 		public unowned string get_icon_tooltip_text (Gtk.EntryIconPosition icon_pos);
 		public unowned Gdk.Window get_icon_window (Gtk.EntryIconPosition icon_pos);
-		public Gtk.Border get_inner_border ();
+		public unowned Gtk.Border get_inner_border ();
 		public unichar get_invisible_char ();
 		public unowned Pango.Layout get_layout ();
 		public void get_layout_offsets (int x, int y);
@@ -5442,17 +5453,6 @@ namespace Gtk {
 		public int y;
 		public int width;
 		public int height;
-	}
-	[CCode (type_id = "GTK_TYPE_BORDER", cheader_filename = "gtk/gtk.h")]
-	public struct Border {
-		public int left;
-		public int right;
-		public int top;
-		public int bottom;
-		[CCode (cname = "gtk_border_new", has_construct_function = false)]
-		public Border ();
-		public Gtk.Border copy ();
-		public void free ();
 	}
 	[CCode (type_id = "GTK_TYPE_IM_CONTEXT_INFO", cheader_filename = "gtk/gtk.h")]
 	public struct IMContextInfo {
