@@ -1900,7 +1900,8 @@ namespace GLib {
 
 		LEVEL_MASK
 	}
-	
+
+	public void logv (string? log_domain, LogLevelFlags log_level, string format, va_list args);
 	[Diagnostics]
 	[PrintfFormat]
 	public void log (string? log_domain, LogLevelFlags log_level, string format, ...);
