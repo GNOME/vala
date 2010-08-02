@@ -132,7 +132,13 @@ public class Vala.ErrorDomain : TypeSymbol {
 		if (infix == null) {
 			infix = "";
 		}
-		return "%s%s%s".printf (parent_symbol.get_lower_case_cprefix (), infix, get_lower_case_csuffix ());
+
+		string cprefix = "";
+		if (parent_symbol != null) {
+			cprefix = parent_symbol.get_lower_case_cprefix ();
+		}
+
+		return "%s%s%s".printf (cprefix, infix, get_lower_case_csuffix ());
 	}
 
 	public override string? get_upper_case_cname (string? infix) {
@@ -143,7 +149,7 @@ public class Vala.ErrorDomain : TypeSymbol {
 		return false;
 	}
 	
-	private void set_cname (string cname) {
+	public void set_cname (string cname) {
 		this.cname = cname;
 	}
 	

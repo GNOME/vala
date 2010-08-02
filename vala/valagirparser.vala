@@ -228,7 +228,11 @@ public class Vala.GirParser : CodeVisitor {
 			if (reader.name == "alias") {
 				sym = parse_alias ();
 			} else if (reader.name == "enumeration") {
-				sym = parse_enumeration ();
+				if (reader.get_attribute ("glib:error-quark") != null) {
+					sym = parse_error_domain ();
+				} else {
+					sym = parse_enumeration ();
+				}
 			} else if (reader.name == "bitfield") {
 				sym = parse_bitfield ();
 			} else if (reader.name == "function") {
@@ -265,6 +269,8 @@ public class Vala.GirParser : CodeVisitor {
 				ns.add_struct ((Struct) sym);
 			} else if (sym is Enum) {
 				ns.add_enum ((Enum) sym);
+			} else if (sym is ErrorDomain) {
+				ns.add_error_domain ((ErrorDomain) sym);
 			} else if (sym is Delegate) {
 				ns.add_delegate ((Delegate) sym);
 			} else if (sym is Method) {
@@ -298,6 +304,25 @@ public class Vala.GirParser : CodeVisitor {
 		return st;
 	}
 
+	private void calculate_common_prefix (ref string common_prefix, string cname) {
+		if (common_prefix == null) {
+			common_prefix = cname;
+			while (common_prefix.len () > 0 && !common_prefix.has_suffix ("_")) {
+				// FIXME: could easily be made faster
+				common_prefix = common_prefix.ndup (common_prefix.size () - 1);
+			}
+		} else {
+			while (!cname.has_prefix (common_prefix)) {
+				common_prefix = common_prefix.ndup (common_prefix.size () - 1);
+			}
+		}
+		while (common_prefix.len () > 0 && (!common_prefix.has_suffix ("_") ||
+		       (cname.offset (common_prefix.length).get_char ().isdigit ()) && (cname.len () - common_prefix.len ()) <= 1)) {
+			// enum values may not consist solely of digits
+			common_prefix = common_prefix.ndup (common_prefix.size () - 1);
+		}
+	}
+
 	Enum parse_enumeration () {
 		start_element ("enumeration");
 		var en = new Enum (reader.get_attribute ("name"), get_current_src ());
@@ -321,25 +346,7 @@ public class Vala.GirParser : CodeVisitor {
 			if (reader.name == "member") {
 				var ev = parse_enumeration_member ();
 				en.add_value (ev);
-
-				string cname = ev.get_cname ();
-
-				if (common_prefix == null) {
-					common_prefix = cname;
-					while (common_prefix.len () > 0 && !common_prefix.has_suffix ("_")) {
-						// FIXME: could easily be made faster
-						common_prefix = common_prefix.ndup (common_prefix.size () - 1);
-					}
-				} else {
-					while (!cname.has_prefix (common_prefix)) {
-						common_prefix = common_prefix.ndup (common_prefix.size () - 1);
-					}
-				}
-				while (common_prefix.len () > 0 && (!common_prefix.has_suffix ("_") ||
-				       (cname.offset (common_prefix.length).get_char ().isdigit ()) && (cname.len () - common_prefix.len ()) <= 1)) {
-					// enum values may not consist solely of digits
-					common_prefix = common_prefix.ndup (common_prefix.size () - 1);
-				}
+				calculate_common_prefix (ref common_prefix, ev.get_cname ());
 			} else {
 				// error
 				break;
@@ -350,6 +357,43 @@ public class Vala.GirParser : CodeVisitor {
 
 		end_element ("enumeration");
 		return en;
+	}
+
+	ErrorDomain parse_error_domain () {
+		start_element ("enumeration");
+
+		var ed = new ErrorDomain (reader.get_attribute ("name"), get_current_src ());
+		ed.access = SymbolAccessibility.PUBLIC;
+
+		string enum_cname = reader.get_attribute ("c:type");
+		if (enum_cname != null) {
+			ed.set_cname (enum_cname);
+		}
+
+		next ();
+
+		string common_prefix = null;
+
+		while (current_token == MarkupTokenType.START_ELEMENT) {
+			if (reader.get_attribute ("introspectable") == "0") {
+				skip_element ();
+				continue;
+			}
+
+			if (reader.name == "member") {
+				ErrorCode ec = parse_error_member ();
+				ed.add_code (ec);
+				calculate_common_prefix (ref common_prefix, ec.get_cname ());
+			} else {
+				// error
+				break;
+			}
+		}
+
+		ed.set_cprefix (common_prefix);
+
+		end_element ("enumeration");
+		return ed;
 	}
 
 	Enum parse_bitfield () {
@@ -381,6 +425,23 @@ public class Vala.GirParser : CodeVisitor {
 		next ();
 		end_element ("member");
 		return ev;
+	}
+
+	ErrorCode parse_error_member () {
+		start_element ("member");
+
+		ErrorCode ec;
+		string name = string.joinv ("_", reader.get_attribute ("name").up ().split ("-"));
+		string value = reader.get_attribute ("value");
+		if (value != null) {
+			ec = new ErrorCode.with_value (name, new IntegerLiteral (value));
+		} else {
+			ec = new ErrorCode (name);
+		}
+
+		next ();
+		end_element ("member");
+		return ec;
 	}
 
 	DataType parse_return_value (out string? ctype = null) {
