@@ -1,2 +1,3 @@
 Gst cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/net/gstnet.h"
+gst_net_time_provider_new.address nullable="1"
 

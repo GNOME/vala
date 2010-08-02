@@ -35,7 +35,7 @@ namespace Gst {
 		public int sock;
 		public weak GLib.Thread thread;
 		[CCode (has_construct_function = false)]
-		public NetTimeProvider (Gst.Clock clock, string address, int port);
+		public NetTimeProvider (Gst.Clock clock, string? address, int port);
 		[NoAccessorMethod]
 		public bool active { get; set; }
 		[NoAccessorMethod]
