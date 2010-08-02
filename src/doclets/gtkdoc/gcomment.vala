@@ -29,6 +29,7 @@ public class Gtkdoc.GComment {
 	public string returns;
 	public string[] returns_annotations;
 	public Gee.List<Header> versioning = new Gee.LinkedList<Header> ();
+	public string[] see_also;
 
 	public string to_string () {
 		var builder = new StringBuilder ();
@@ -63,6 +64,10 @@ public class Gtkdoc.GComment {
 			builder.append_printf  ("\n * \n * %s", commentize (long_comment));
 		}
 
+		if (see_also.length > 0) {
+			builder.append_printf ("\n * \n * <emphasis>See also</emphasis>: %s", string.joinv (", ", see_also));
+		}
+
 		if (returns != null || returns_annotations.length > 0) {
 			builder.append ("\n * \n * Returns:");
 			if (returns_annotations != null) {
@@ -90,6 +95,7 @@ public class Gtkdoc.GComment {
 				}
 			}
 		}
+
 		builder.append ("\n */");
 		return builder.str;
 	}

@@ -74,7 +74,7 @@ namespace Gtkdoc {
 		return null;
 	}
 
-	public string? get_docbook_link (Api.Item item, bool is_dbus = false) {
+	public string? get_docbook_link (Api.Item item, bool is_dbus = false, bool is_async_finish = false) {
 		if (item is Api.Method) {
 			string name;
 			string parent;
@@ -82,7 +82,11 @@ namespace Gtkdoc {
 				name = ((Api.Method)item).get_dbus_name ();
 				parent = "%s-".printf (get_dbus_interface (item.parent));
 			} else {
-				name = ((Api.Method)item).get_cname ();
+				if (!is_async_finish) {
+					name = ((Api.Method)item).get_cname ();
+				} else {
+					name = ((Api.Method)item).get_finish_function_cname ();
+				}
 				parent = "";
 			}
 			return """<link linkend="%s%s"><function>%s()</function></link>""".printf (to_docbook_id (parent), to_docbook_id (name), name);

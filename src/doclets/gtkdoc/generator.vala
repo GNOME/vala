@@ -27,7 +27,7 @@ using Valadoc.Content;
 public class Gtkdoc.Generator : Api.Visitor {
 	class FileData {
 		public string filename;
-		public Gee.List<string> comments;
+		public Gee.List<GComment> comments;
 		public Gee.List<string> section_lines;
 	}
 
@@ -68,7 +68,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 			}
 
 			foreach (var comment in file_data.comments) {
-				cwriter.write_line (comment);
+				cwriter.write_line (comment.to_string ());
 			}
 			cwriter.close ();
 
@@ -95,7 +95,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 		if (file_data == null) {
 			file_data = new FileData ();
 			file_data.filename = filename;
-			file_data.comments = new Gee.LinkedList<string>();
+			file_data.comments = new Gee.LinkedList<GComment>();
 			file_data.section_lines = new Gee.LinkedList<string>();
 			files_data[filename] = file_data;
 		}
@@ -150,6 +150,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 		gcomment.symbol = symbol;
 		gcomment.returns = converter.returns;
 		gcomment.returns_annotations = returns_annotations;
+		gcomment.see_also = converter.see_also;
 
 		if (converter.brief_comment != null && short_description) {
 			var header = new Header ("@short_description", converter.brief_comment);
@@ -170,7 +171,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 		}
 
 		var file_data = get_file_data (filename);
-		file_data.comments.add (create_gcomment(symbol, comment, short_description).to_string ());
+		file_data.comments.add (create_gcomment (symbol, comment, short_description));
 	}
 
 	private GComment? add_symbol (string filename, string cname, Comment? comment = null, string? symbol = null, bool title = false, bool short_description = false, string[]? returns_annotations = null) {
@@ -182,8 +183,8 @@ public class Gtkdoc.Generator : Api.Visitor {
 		file_data.section_lines.add (cname);
 
 		if (comment != null || (current_headers != null && current_headers.size > 0)) {
-			var gcomment = create_gcomment(symbol ?? cname, comment, short_description, returns_annotations);
-			file_data.comments.add (gcomment.to_string ());
+			var gcomment = create_gcomment (symbol ?? cname, comment, short_description, returns_annotations);
+			file_data.comments.add (gcomment);
 			return gcomment;
 		}
 		return null;
@@ -495,8 +496,15 @@ public class Gtkdoc.Generator : Api.Visitor {
 		if (m.is_yields) {
 			add_custom_header ("_callback_", "callback to call when the request is satisfied", {"scope async"});
 			add_custom_header ("user_data", "the data to pass to callback function", {"closure"});
+			var gcomment = add_symbol (m.get_filename(), m.get_cname (), m.documentation);
+			gcomment.returns = null; // async method has no return value
+			var see_also = gcomment.see_also; // vala bug
+			see_also += get_docbook_link (m, false, true);
+			gcomment.see_also = see_also;
+		} else {
+			add_symbol (m.get_filename(), m.get_cname (), m.documentation, null, false, false, annotations);
 		}
-		add_symbol (m.get_filename(), m.get_cname (), m.documentation, null, false, false, annotations);
+
 		if (current_dbus_interface != null && m.is_dbus_visible && !m.is_constructor) {
 			if (m.return_type != null && m.return_type.data_type != null) {
 				var dresult = new DBus.Parameter (m.get_dbus_result_name (), m.return_type.get_dbus_type_signature (), DBus.Parameter.Direction.OUT);
@@ -512,7 +520,18 @@ public class Gtkdoc.Generator : Api.Visitor {
 		current_dbus_member = old_dbus_member;
 
 		if (m.is_yields) {
-			add_symbol (m.get_filename(), m.get_finish_function_cname ());
+			var gcomment = add_symbol (m.get_filename(), m.get_finish_function_cname (), m.documentation);
+			var iter = gcomment.headers.iterator ();
+			while (iter.next ()) {
+				// remove parameters from _finish
+				message(iter.get().name);
+				if (iter.get().name.has_prefix ("@")) {
+					iter.remove ();
+				}
+			}
+			var see_also = gcomment.see_also; // vala bug
+			see_also += get_docbook_link (m);
+			gcomment.see_also = see_also;
 		}
 	}
 

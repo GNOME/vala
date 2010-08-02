@@ -42,18 +42,14 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 	public string returns;
 	public Gee.List<Header> headers = new Gee.LinkedList<Header> ();
 	public Gee.List<Header> versioning = new Gee.LinkedList<Header> ();
+	public string[] see_also = new string[]{};
 
 	private StringBuilder current_builder = new StringBuilder ();
 	private bool in_brief_comment = true;
-	private string[] see_also = new string[]{};
 
 	public void convert (Comment comment, bool is_dbus = false) {
 		this.is_dbus = is_dbus;
 		comment.accept (this);
-
-		if (see_also.length > 0) {
-			current_builder.append_printf ("<para><emphasis>See also</emphasis>: %s</para>", string.joinv (", ", see_also));
-		}
 
 		long_comment = current_builder.str.strip ();
 		if (long_comment == "") {
@@ -245,7 +241,9 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 			versioning.add (header);
 		} else if (t is Taglets.See) {
 			var see = (Taglets.See)t;
+			var see_also = this.see_also; // vala bug
 			see_also += get_docbook_link (see.symbol, is_dbus) ?? see.symbol_name;
+			this.see_also = see_also;
 		} else if (t is Taglets.Link) {
 			((Taglets.Link)t).produce_content().accept (this);
 		} else {
