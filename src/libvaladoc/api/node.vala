@@ -166,6 +166,16 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 		return children;
 	}
 
+	public Gee.List<Node> get_children_by_types (NodeType[] types, bool filtered = true) {
+		var children = new ArrayList<Node> ();
+
+		foreach (NodeType type in types) {
+			children.add_all (get_children_by_type (type, filtered));
+		}
+
+		return children;
+	}
+
 	public void accept_children_by_type (NodeType type, Visitor visitor) {
 		Gee.List<Node> all_children = per_type_children.get (type);
 		if (all_children != null) {

@@ -190,7 +190,7 @@ public class Valadoc.Api.Method : Member {
 
 		signature.append (")", false);
 
-		var exceptions = get_children_by_type (NodeType.ERROR_DOMAIN);
+		var exceptions = get_children_by_types ({NodeType.ERROR_DOMAIN, NodeType.CLASS});
 		if (exceptions.size > 0) {
 			signature.append_keyword ("throws");
 			first = true;
