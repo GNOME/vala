@@ -24,13 +24,13 @@ namespace Pango {
 	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static double cairo_context_get_resolution (Pango.Context context);
 	[CCode (cheader_filename = "pango/pangocairo.h")]
-	public static unowned Pango.CairoShapeRendererFunc cairo_context_get_shape_renderer (Pango.Context context, void* data);
+	public static unowned Pango.CairoShapeRendererFunc cairo_context_get_shape_renderer (Pango.Context context);
 	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static void cairo_context_set_font_options (Pango.Context context, Cairo.FontOptions options);
 	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static void cairo_context_set_resolution (Pango.Context context, double dpi);
 	[CCode (cheader_filename = "pango/pangocairo.h")]
-	public static void cairo_context_set_shape_renderer (Pango.Context context, Pango.CairoShapeRendererFunc func, void* data, GLib.DestroyNotify dnotify);
+	public static void cairo_context_set_shape_renderer (Pango.Context context, owned Pango.CairoShapeRendererFunc func);
 	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static Pango.Context cairo_create_context (Cairo.Context cr);
 	[CCode (cheader_filename = "pango/pangocairo.h")]
