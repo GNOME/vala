@@ -1966,9 +1966,9 @@ namespace GLib {
 	public static string convert (string str, ssize_t len, string to_codeset, string from_codeset, out size_t bytes_read = null, out size_t bytes_written = null) throws ConvertError;
 	public static bool get_charset (out unowned string charset);
 
+	[SimpleType]
 	public struct IConv {
-		[CCode (cname = "g_iconv_open")]
-		public IConv (string to_codeset, string from_codeset);
+		public static IConv open (string to_codeset, string from_codeset);
 		[CCode (cname = "g_iconv")]
 		public uint iconv (out string inbuf, out uint inbytes_left, out string outbuf, out uint outbytes_left);
 		public int close ();
