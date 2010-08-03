@@ -723,6 +723,10 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	public override void visit_enum (Enum en) {
 		en.accept_children (codegen);
 
+		if (en.comment != null) {
+			source_type_member_definition.append (new CCodeComment (en.comment.content));
+		}
+
 		generate_enum_declaration (en, source_declarations);
 
 		if (!en.is_internal_symbol ()) {
