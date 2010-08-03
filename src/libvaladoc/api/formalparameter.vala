@@ -43,7 +43,7 @@ public class Valadoc.Api.FormalParameter : Symbol {
 
 	public bool has_default_value {
 		get {
-			return ((Vala.FormalParameter) symbol).initializer != null; //
+			return ((Vala.FormalParameter) symbol).initializer != null;
 		}
 	}
 

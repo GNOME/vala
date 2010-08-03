@@ -539,37 +539,38 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			write_package_note (node);
 		}
 
-		if (node.has_children ({
-				Api.NodeType.ERROR_CODE,
-				Api.NodeType.ENUM_VALUE,
-				Api.NodeType.CREATION_METHOD,
-				Api.NodeType.STATIC_METHOD,
-				Api.NodeType.CLASS,
-				Api.NodeType.STRUCT,
-				Api.NodeType.ENUM,
-				Api.NodeType.DELEGATE,
-				Api.NodeType.METHOD,
-				Api.NodeType.SIGNAL,
-				Api.NodeType.PROPERTY,
-				Api.NodeType.FIELD,
-				Api.NodeType.CONSTANT
-			})) {
-			writer.start_tag ("h2", {"class", css_title}).text ("Content:").end_tag ("h2");
-			write_children (node, Api.NodeType.ERROR_CODE, "Error codes", node);
-			write_children (node, Api.NodeType.ENUM_VALUE, "Enum values", node);
-			write_children (node, Api.NodeType.CLASS, "Classes", node);
-			write_children (node, Api.NodeType.STRUCT, "Structs", node);
-			write_children (node, Api.NodeType.ENUM, "Enums", node);
-			write_children (node, Api.NodeType.CONSTANT, "Constants", node);
-			write_children (node, Api.NodeType.PROPERTY, "Properties", node);
-			write_children (node, Api.NodeType.DELEGATE, "Delegates", node);
-			write_children (node, Api.NodeType.STATIC_METHOD, "Static methods", node);
-			write_children (node, Api.NodeType.CREATION_METHOD, "Creation methods", node);
-			write_children (node, Api.NodeType.METHOD, "Methods", node);
-			write_children (node, Api.NodeType.SIGNAL, "Signals", node);
-			write_children (node, Api.NodeType.FIELD, "Fields", node);
+		if (!(node is Method || node is Delegate || node is Api.Signal)) { // avoids exception listings
+			if (node.has_children ({
+					Api.NodeType.ERROR_CODE,
+					Api.NodeType.ENUM_VALUE,
+					Api.NodeType.CREATION_METHOD,
+					Api.NodeType.STATIC_METHOD,
+					Api.NodeType.CLASS,
+					Api.NodeType.STRUCT,
+					Api.NodeType.ENUM,
+					Api.NodeType.DELEGATE,
+					Api.NodeType.METHOD,
+					Api.NodeType.SIGNAL,
+					Api.NodeType.PROPERTY,
+					Api.NodeType.FIELD,
+					Api.NodeType.CONSTANT
+				})) {
+				writer.start_tag ("h2", {"class", css_title}).text ("Content:").end_tag ("h2");
+				write_children (node, Api.NodeType.ERROR_CODE, "Error codes", node);
+				write_children (node, Api.NodeType.ENUM_VALUE, "Enum values", node);
+				write_children (node, Api.NodeType.CLASS, "Classes", node);
+				write_children (node, Api.NodeType.STRUCT, "Structs", node);
+				write_children (node, Api.NodeType.ENUM, "Enums", node);
+				write_children (node, Api.NodeType.CONSTANT, "Constants", node);
+				write_children (node, Api.NodeType.PROPERTY, "Properties", node);
+				write_children (node, Api.NodeType.DELEGATE, "Delegates", node);
+				write_children (node, Api.NodeType.STATIC_METHOD, "Static methods", node);
+				write_children (node, Api.NodeType.CREATION_METHOD, "Creation methods", node);
+				write_children (node, Api.NodeType.METHOD, "Methods", node);
+				write_children (node, Api.NodeType.SIGNAL, "Signals", node);
+				write_children (node, Api.NodeType.FIELD, "Fields", node);
+			}
 		}
-
 		writer.end_tag ("div");
 	}
 
