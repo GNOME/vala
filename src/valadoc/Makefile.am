@@ -26,7 +26,6 @@ valadoc_VALASOURCES = \
 
 valadoc_SOURCES = \
 	$(valadoc_VALASOURCES:.vala=.c) \
-	$(valadoc_VALASOURCES:.vala=.h) \
 	$(NULL)
 
 

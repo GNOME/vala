@@ -161,10 +161,15 @@ libvaladoc_la_LIBADD = \
 	$(NULL)
 
 
-EXTRA_DIST = $(libvaladoc_la_VALASOURCES)  libvaladoc.vala.stamp
+EXTRA_DIST =                         \
+	$(libvaladoc_la_VALASOURCES) \
+	libvaladoc.vala.stamp        \
+	valadoc-1.0.vapi             \
+	valadoc-1.0.deps             \
+	$(NULL)
 
 
-MAINTAINERCLEANFILES =                    \
+MAINTAINERCLEANFILES =                        \
 	valadoc-1.0.vapi                      \
 	valadoc-1.0.h                         \
 	valadoc-1.0.gir                       \

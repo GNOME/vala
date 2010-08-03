@@ -25,7 +25,6 @@ doclet_LTLIBRARIES = libdoclet.la
 libdoclet_la_SOURCES = \
 	libdoclet.vala.stamp \
 	$(libdoclet_VALASOURCES:.vala=.c) \
-	$(libdoclet_VALASOURCES:.vala=.h) \
 	$(NULL)
 
 
