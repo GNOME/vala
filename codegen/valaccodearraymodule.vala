@@ -798,6 +798,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			var old_symbol = current_symbol;
 			var old_temp_vars = temp_vars;
 			current_symbol = null;
+			temp_vars = new ArrayList<LocalVariable> ();
 
 			var cdecl = new CCodeDeclaration (array_type.get_cname ());
 			var cvardecl = new CCodeVariableDeclarator ("result");
@@ -879,6 +880,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			var old_symbol = current_symbol;
 			var old_temp_vars = temp_vars;
 			current_symbol = null;
+			temp_vars = new ArrayList<LocalVariable> ();
 
 			var idx_decl = new CCodeDeclaration ("int");
 			idx_decl.add_declarator (new CCodeVariableDeclarator ("i"));
