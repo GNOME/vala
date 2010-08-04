@@ -442,7 +442,7 @@ namespace Xml {
 		public void save_file_enc (string filename, string enc = "UTF-8");
 
 		[CCode (cname = "xmlSaveFormatFile", instance_pos = 1.1)]
-		public void save_format_file (string filename, int format);
+		public int save_format_file (string filename, int format);
 
 		[CCode (cname = "xmlSaveFormatFileEnc", instance_pos = 1.1)]
 		public void save_format_file_enc (string filename, string enc = "UTf-8", bool format = true);
