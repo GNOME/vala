@@ -35,6 +35,7 @@ clutter_actor_apply_relative_transform_to_point.vertex is_out="1" transfer_owner
 clutter_actor_apply_transform_to_point.vertex is_out="1" transfer_ownership="1"
 clutter_actor_has_clip name="get_has_clip" hidden="1"
 clutter_actor_has_pointer name="get_has_pointer"
+clutter_actor_get_abs_allocation_vertices.verts no_array_length="1"
 clutter_actor_get_allocation_box.box is_out="1"
 clutter_actor_get_allocation_geometry.geom is_out="1"
 clutter_actor_get_anchor_point.anchor_* is_out="1"

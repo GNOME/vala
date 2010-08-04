@@ -91,7 +91,7 @@ namespace Clutter {
 		public void apply_transform_to_point (Clutter.Vertex point, out Clutter.Vertex vertex);
 		public unowned Pango.Context create_pango_context ();
 		public unowned Pango.Layout create_pango_layout (string text);
-		public void get_abs_allocation_vertices (Clutter.Vertex[] verts);
+		public void get_abs_allocation_vertices ([CCode (array_length = false)] Clutter.Vertex[] verts);
 		public void get_allocation_box (out Clutter.ActorBox box);
 		public void get_allocation_geometry (out Clutter.Geometry geom);
 		public void get_allocation_vertices (Clutter.Actor ancestor, Clutter.Vertex[] verts);
