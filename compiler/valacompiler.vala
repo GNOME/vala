@@ -267,6 +267,10 @@ class Vala.Compiler {
 			}
 		}
 
+		for (int i = 2; i <= 10; i += 2) {
+			context.add_define ("VALA_0_%d".printf (i));
+		}
+
 		if (context.profile == Profile.POSIX) {
 			if (!nostdpkg) {
 				/* default package */
