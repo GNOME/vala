@@ -681,10 +681,15 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 		cenum.deprecated = en.deprecated;
 
+		int flag_shift = 0;
 		foreach (EnumValue ev in en.get_values ()) {
 			CCodeEnumValue c_ev;
 			if (ev.value == null) {
 				c_ev = new CCodeEnumValue (ev.get_cname ());
+				if (en.is_flags) {
+					c_ev.value = new CCodeConstant ("1 << %d".printf (flag_shift));
+					flag_shift += 1;
+				}
 			} else {
 				ev.value.accept (codegen);
 				c_ev = new CCodeEnumValue (ev.get_cname (), (CCodeExpression) ev.value.ccodenode);
