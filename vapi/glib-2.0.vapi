@@ -272,7 +272,7 @@ public struct size_t {
 	public const string FORMAT_MODIFIER;
 
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
-	public string to_string (string format = "%zu");
+	public string to_string (string format = "%" + FORMAT);
 
 	[CCode (cname = "GSIZE_TO_POINTER")]
 	public void* to_pointer ();
@@ -300,7 +300,7 @@ public struct ssize_t {
 	public const string FORMAT_MODIFIER;
 
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
-	public string to_string (string format = "%zi");
+	public string to_string (string format = "%" + FORMAT);
 
 	[CCode (cname = "MIN")]
 	public static ssize_t min (ssize_t a, ssize_t b);
@@ -365,7 +365,7 @@ public struct int16 {
 	public const string FORMAT_MODIFIER;
 
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
-	public string to_string (string format = "%hi");
+	public string to_string (string format = "%" + FORMAT);
 
 	[CCode (cname = "MIN")]
 	public static int16 min (int16 a, int16 b);
@@ -519,7 +519,7 @@ public struct int64 {
 	public const string FORMAT_MODIFIER;
 
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
-	public string to_string (string format = "%lli");
+	public string to_string (string format = "%" + FORMAT);
 
 	[CCode (cname = "MIN")]
 	public static int64 min (int64 a, int64 b);
@@ -559,7 +559,7 @@ public struct uint64 {
 	public const string FORMAT_MODIFIER;
 
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
-	public string to_string (string format = "%llu");
+	public string to_string (string format = "%" + FORMAT);
 
 	[CCode (cname = "MIN")]
 	public static uint64 min (uint64 a, uint64 b);
