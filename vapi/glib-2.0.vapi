@@ -1166,6 +1166,14 @@ public class string {
 		get { return this.len (); }
 	}
 
+	public uint8[] data {
+		get {
+			unowned uint8[] res = (uint8[]) this;
+			res.length = (int) this.size ();
+			return res;
+		}
+	}
+
 	public char[] to_utf8 () {
 		char[] result = new char[this.size () + 1];
 		result.length--;
