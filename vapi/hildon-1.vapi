@@ -806,7 +806,7 @@ namespace Hildon {
 		public bool set_hildon_ui_mode (Hildon.UIMode mode);
 		public virtual void set_model (int column, Gtk.TreeModel model);
 		public void set_print_func (Hildon.TouchSelectorPrintFunc func);
-		public void set_print_func_full (Hildon.TouchSelectorPrintFunc func, GLib.DestroyNotify destroy_func);
+		public void set_print_func_full (owned Hildon.TouchSelectorPrintFunc func);
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public TouchSelector.text ();
 		public void unselect_all (int column);
@@ -924,7 +924,7 @@ namespace Hildon {
 	public class WizardDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public WizardDialog (Gtk.Window parent, string wizard_name, Gtk.Notebook notebook);
-		public void set_forward_page_func (Hildon.WizardDialogPageFunc page_func, void* data, GLib.DestroyNotify destroy);
+		public void set_forward_page_func (owned Hildon.WizardDialogPageFunc page_func);
 		[NoAccessorMethod]
 		public bool autotitle { get; set; }
 		[NoAccessorMethod]
