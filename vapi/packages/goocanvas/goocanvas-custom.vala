@@ -43,8 +43,8 @@ namespace Goo
 		public Canvas();
 		public static void create_path(GLib.Array<CanvasPathCommand> commands, Cairo.Context cr);
 		public static GLib.Array<CanvasPathCommand> parse_path_data (string path_data);
-		public unowned GLib.List<CanvasItem> get_items_at (double x, double y, bool is_pointer_event);
-		public unowned GLib.List<CanvasItem> get_items_in_area (Goo.CanvasBounds area, bool inside_area, bool allow_overlaps, bool include_containers);
+		public GLib.List<unowned CanvasItem>? get_items_at (double x, double y, bool is_pointer_event);
+		public GLib.List<unowned CanvasItem>? get_items_in_area (Goo.CanvasBounds area, bool inside_area, bool allow_overlaps, bool include_containers);
 	}
 
 	public class CanvasEllipse

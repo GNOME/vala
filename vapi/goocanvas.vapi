@@ -29,12 +29,12 @@ namespace Goo {
 		public unowned Cairo.Context create_cairo_context ();
 		public virtual unowned Goo.CanvasItem create_item (Goo.CanvasItemModel model);
 		public static void create_path (GLib.Array<Goo.CanvasPathCommand> commands, Cairo.Context cr);
-		public void get_bounds (ref unowned double? left, ref unowned double? top, ref unowned double? right, ref unowned double? bottom);
+		public void get_bounds (out unowned double? left, out unowned double? top, out unowned double? right, out unowned double? bottom);
 		public double get_default_line_width ();
 		public unowned Goo.CanvasItem? get_item (Goo.CanvasItemModel model);
 		public unowned Goo.CanvasItem? get_item_at (double x, double y, bool is_pointer_event);
-		public unowned GLib.List<Goo.CanvasItem> get_items_at (double x, double y, bool is_pointer_event);
-		public unowned GLib.List<Goo.CanvasItem> get_items_in_area (Goo.CanvasBounds area, bool inside_area, bool allow_overlaps, bool include_containers);
+		public GLib.List<weak Goo.CanvasItem>? get_items_at (double x, double y, bool is_pointer_event);
+		public GLib.List<weak Goo.CanvasItem>? get_items_in_area (Goo.CanvasBounds area, bool inside_area, bool allow_overlaps, bool include_containers);
 		public unowned Goo.CanvasItem? get_root_item ();
 		public unowned Goo.CanvasItemModel? get_root_item_model ();
 		public double get_scale ();
