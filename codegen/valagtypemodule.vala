@@ -1348,10 +1348,10 @@ public class Vala.GTypeModule : GErrorModule {
 			CCodeExpression cfunc;
 			if (m.is_abstract || m.is_virtual) {
 				cfunc = new CCodeIdentifier (m.get_cname ());
-				cfunc = cast_method_pointer (m, cfunc, iface);
 			} else {
 				cfunc = new CCodeIdentifier (m.get_real_cname ());
 			}
+			cfunc = cast_method_pointer (m.base_interface_method, cfunc, iface);
 			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, m.base_interface_method.vfunc_name), cfunc)));
 
 			if (m.coroutine) {
