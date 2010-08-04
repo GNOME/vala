@@ -969,10 +969,11 @@ namespace Clutter {
 	public class Stage : Clutter.Group, Clutter.Scriptable, Clutter.Container {
 		[CCode (type = "ClutterActor*", has_construct_function = false)]
 		public Stage ();
+		[CCode (cname = "clutter_stage_event")]
+		public bool emit_event (Clutter.Event event);
 		public void ensure_current ();
 		public void ensure_redraw ();
 		public void ensure_viewport ();
-		public bool event (Clutter.Event event);
 		public unowned Clutter.Actor get_actor_at_pos (Clutter.PickMode pick_mode, int x, int y);
 		public static unowned Clutter.Stage get_default ();
 		public bool get_fullscreen ();
