@@ -198,6 +198,7 @@ dist_vapi_DATA = \
 	sqlite3.vapi \
 	taglib_c.vapi \
 	tiff.vapi \
+	tokyocabinet.vapi \
 	tracker-indexer-module-1.0.vapi \
 	twitter-glib-1.0.deps \
 	twitter-glib-1.0.vapi \
