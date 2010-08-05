@@ -25,7 +25,7 @@ libgidl_la_LIBADD = \
 	$(GMODULE_LIBS) \
 	$(NULL)
 
-pkglibexecdir = $(libdir)/vala
+pkglibexecdir = $(libdir)/vala@PACKAGE_SUFFIX@
 pkglibexec_PROGRAMS = gen-introspect
 
 BUILT_SOURCES = scannerparser.h

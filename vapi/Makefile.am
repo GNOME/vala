@@ -2,7 +2,7 @@ NULL =
 
 vapidir = $(pkgdatadir)/vapi
 
-vala-1.0.vapi: ../gee/gee.vapi ../ccode/ccode.vapi ../vala/vala.vapi ../codegen/codegen.vapi
+vala@PACKAGE_SUFFIX@.vapi: ../gee/gee.vapi ../ccode/ccode.vapi ../vala/vala.vapi ../codegen/codegen.vapi
 	cat $^ > $@
 
 dist_vapi_DATA = \
@@ -205,7 +205,7 @@ dist_vapi_DATA = \
 	unique-1.0.deps \
 	unique-1.0.vapi \
 	v4l2.vapi \
-	vala-1.0.vapi \
+	vala@PACKAGE_SUFFIX@.vapi \
 	vte.deps \
 	vte.vapi \
 	webkit-1.0.deps \

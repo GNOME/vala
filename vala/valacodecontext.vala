@@ -315,7 +315,7 @@ public class Vala.CodeContext {
 	}
 
 	public string? get_package_path (string pkg, string[] directories) {
-		var path = get_file_path (pkg + ".vapi", "vala/vapi", directories);
+		var path = get_file_path (pkg + ".vapi", "vala" + Config.PACKAGE_SUFFIX + "/vapi", "vala/vapi", directories);
 
 		if (path == null) {
 			/* last chance: try the package compiled-in vapi dir */
@@ -329,10 +329,10 @@ public class Vala.CodeContext {
 	}
 
 	public string? get_gir_path (string gir, string[] directories) {
-		return get_file_path (gir + ".gir", "gir-1.0", directories);
+		return get_file_path (gir + ".gir", "gir-1.0", null, directories);
 	}
 
-	string? get_file_path (string basename, string data_dir, string[] directories) {
+	string? get_file_path (string basename, string versioned_data_dir, string? data_dir, string[] directories) {
 		string filename = null;
 
 		if (directories != null) {
@@ -345,9 +345,18 @@ public class Vala.CodeContext {
 		}
 
 		foreach (string dir in Environment.get_system_data_dirs ()) {
-			filename = Path.build_filename (dir, data_dir, basename);
+			filename = Path.build_filename (dir, versioned_data_dir, basename);
 			if (FileUtils.test (filename, FileTest.EXISTS)) {
 				return filename;
+			}
+		}
+
+		if (data_dir != null) {
+			foreach (string dir in Environment.get_system_data_dirs ()) {
+				filename = Path.build_filename (dir, data_dir, basename);
+				if (FileUtils.test (filename, FileTest.EXISTS)) {
+					return filename;
+				}
 			}
 		}
 

@@ -675,7 +675,7 @@ class Vala.Compiler {
 	}
 
 	static int main (string[] args) {
-		if (Path.get_basename (args[0]) == "vala") {
+		if (Path.get_basename (args[0]) == "vala" || Path.get_basename (args[0]) == "vala" + Config.PACKAGE_SUFFIX) {
 			return run_source (args);
 		}
 

@@ -32,13 +32,17 @@ valac.vala.stamp: $(valac_VALASOURCES)
 valac_LDADD = \
 	$(COVERAGE_LIBS) \
 	$(GLIB_LIBS) \
-	../codegen/libvala.la \
+	../codegen/libvala@PACKAGE_SUFFIX@.la \
 	$(NULL)
 
 EXTRA_DIST = $(valac_VALASOURCES) valac.vala.stamp
 
 install-exec-hook:
-	cd $(DESTDIR)$(bindir) && $(LN_S) -f valac$(EXEEXT) vala$(EXEEXT)
+	cd $(DESTDIR)$(bindir) && $(LN_S) -f valac@PACKAGE_SUFFIX@$(EXEEXT) vala@PACKAGE_SUFFIX@$(EXEEXT)
+if ENABLE_UNVERSIONED
+	cd $(DESTDIR)$(bindir) && $(LN_S) -f valac@PACKAGE_SUFFIX@$(EXEEXT) valac$(EXEEXT)
+	cd $(DESTDIR)$(bindir) && $(LN_S) -f vala@PACKAGE_SUFFIX@$(EXEEXT) vala$(EXEEXT)
+endif
 
 MAINTAINERCLEANFILES = \
 	$(valac_VALASOURCES:.vala=.c) \

@@ -1,6 +1,6 @@
 /* config.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,4 +25,5 @@ namespace Config {
 	[CCode (cheader_filename = "version.h")]
 	public const string BUILD_VERSION;
 	public const string PACKAGE_DATADIR;
+	public const string PACKAGE_SUFFIX;
 }

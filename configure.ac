@@ -6,6 +6,14 @@ AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([dist-bzip2])
 AM_MAINTAINER_MODE
 
+PACKAGE_SUFFIX=-0.10
+AC_SUBST(PACKAGE_SUFFIX)
+AC_DEFINE_UNQUOTED(PACKAGE_SUFFIX, "$PACKAGE_SUFFIX", [Define to the suffix of this package])
+
+program_transform_name="s,\$\$,${PACKAGE_SUFFIX},"
+
+AC_SUBST(pkgdatadir, [${datadir}/vala${PACKAGE_SUFFIX}])
+
 # Checks for programs.
 AC_PROG_CC
 AM_PROG_CC_C_O
@@ -31,6 +39,9 @@ AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
 
+AC_ARG_ENABLE(unversioned, AS_HELP_STRING([--disable-unversioned], [Disable unversioned binaries]), enable_unversioned=$enableval, enable_unversioned=yes)
+AM_CONDITIONAL(ENABLE_UNVERSIONED, test x$enable_unversioned = xyes)
+
 AC_ARG_ENABLE(coverage, AS_HELP_STRING([--enable-coverage], [Enable coverage analysis]), enable_coverage=$enableval, enable_coverage=no)
 AM_CONDITIONAL(ENABLE_COVERAGE, test x$enable_coverage = xyes)
 
@@ -51,9 +62,9 @@ AC_ARG_ENABLE(vapigen, AS_HELP_STRING([--enable-vapigen], [Enable VAPI generator
 AM_CONDITIONAL(ENABLE_VAPIGEN, test x$enable_vapigen = xyes)
 
 if test "$enable_vapigen" = "yes"; then
-  vapigen_decl='vapigen=${bindir}/vapigen'
-  gen_introspect_decl='gen_introspect=${libdir}/vala/gen-introspect'
-  vala_gen_introspect_decl='vala_gen_introspect=${bindir}/vala-gen-introspect'
+  vapigen_decl="vapigen=\${bindir}/vapigen${PACKAGE_SUFFIX}"
+  gen_introspect_decl="gen_introspect=\${libdir}/vala${PACKAGE_SUFFIX}/gen-introspect${PACKAGE_SUFFIX}"
+  vala_gen_introspect_decl="vala_gen_introspect=\${bindir}/vala-gen-introspect${PACKAGE_SUFFIX}"
 else
   vapigen_decl=''
   gen_introspect_decl=''
@@ -86,7 +97,7 @@ AM_CONDITIONAL(HAVE_XSLTPROC, test "$XSLTPROC" != :)
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
 AC_CONFIG_FILES([Makefile
-           vala-1.0.pc
+           vala.pc
            gee/Makefile
            ccode/Makefile
            vala/Makefile

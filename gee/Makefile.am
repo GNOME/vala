@@ -29,7 +29,7 @@ libgee_la_SOURCES = \
 	$(libgee_la_VALASOURCES:.vala=.c) \
 	$(NULL)
 
-geeincludedir = $(includedir)/vala-1.0
+geeincludedir = $(includedir)/vala@PACKAGE_SUFFIX@
 
 geeinclude_HEADERS = \
 	valagee.h \

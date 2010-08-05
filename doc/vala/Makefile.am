@@ -1,6 +1,6 @@
 NULL =
 
-bookdir=$(datadir)/devhelp/books/vala
+bookdir=$(datadir)/devhelp/books/vala@PACKAGE_SUFFIX@
 
 chapter_data = \
 	overview.html \

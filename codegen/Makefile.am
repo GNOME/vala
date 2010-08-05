@@ -11,7 +11,7 @@ AM_CPPFLAGS = \
 BUILT_SOURCES = codegen.vala.stamp
 
 lib_LTLIBRARIES = \
-	libvala.la
+	libvala@PACKAGE_SUFFIX@.la
 	$(NULL)
 
 libvala_la_VALASOURCES = \
@@ -62,12 +62,12 @@ libvala_la_VALASOURCES = \
 	valatyperegisterfunction.vala \
 	$(NULL)
 
-libvala_la_SOURCES = \
+libvala@PACKAGE_SUFFIX@_la_SOURCES = \
 	codegen.vala.stamp \
 	$(libvala_la_VALASOURCES:.vala=.c) \
 	$(NULL)
 
-codegenincludedir = $(includedir)/vala-1.0
+codegenincludedir = $(includedir)/vala@PACKAGE_SUFFIX@
 
 codegeninclude_HEADERS = \
 	valacodegen.h \
@@ -77,9 +77,9 @@ codegen.vapi codegen.vala.stamp: $(libvala_la_VALASOURCES)
 	$(VALA_V)$(VALAC) $(COVERAGE_VALAFLAGS) $(VALAFLAGS) -C --vapidir $(srcdir)/../vapi --pkg gobject-2.0 --vapidir $(srcdir)/../gee --pkg gee --vapidir $(srcdir)/../ccode --pkg ccode --vapidir $(srcdir)/../vala --pkg vala -H valacodegen.h --library codegen $^
 	@touch $@
 
-libvala_la_LDFLAGS = -no-undefined
+libvala@PACKAGE_SUFFIX@_la_LDFLAGS = -no-undefined
 
-libvala_la_LIBADD = \
+libvala@PACKAGE_SUFFIX@_la_LIBADD = \
 	$(COVERAGE_LIBS) \
 	$(GLIB_LIBS) \
 	../vala/libvalacore.la \

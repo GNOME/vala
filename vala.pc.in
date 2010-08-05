@@ -5,7 +5,7 @@ bindir=@bindir@
 includedir=@includedir@
 datarootdir=@datarootdir@
 datadir=@datadir@
-vapidir=@datadir@/vala/vapi
+vapidir=@datadir@/vala@PACKAGE_SUFFIX@/vapi
 
 @vapigen_decl@
 @gen_introspect_decl@
@@ -15,5 +15,5 @@ Name: Vala
 Description: The Vala compiler library
 Version: @VERSION@
 Requires: glib-2.0 gobject-2.0
-Libs: -L${libdir} -lvala
-Cflags: -I${includedir}/vala-1.0
+Libs: -L${libdir} -lvala@PACKAGE_SUFFIX@
+Cflags: -I${includedir}/vala@PACKAGE_SUFFIX@

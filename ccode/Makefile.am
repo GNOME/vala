@@ -70,7 +70,7 @@ libvalaccode_la_SOURCES = \
 	$(libvalaccode_la_VALASOURCES:.vala=.c) \
 	$(NULL)
 
-ccodeincludedir = $(includedir)/vala-1.0
+ccodeincludedir = $(includedir)/vala@PACKAGE_SUFFIX@
 
 ccodeinclude_HEADERS = \
 	valaccode.h \

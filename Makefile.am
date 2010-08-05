@@ -34,7 +34,10 @@ DIST_SUBDIRS = \
 	$(NULL)
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = vala-1.0.pc
+pkgconfig_DATA = vala@PACKAGE_SUFFIX@.pc
+
+vala@PACKAGE_SUFFIX@.pc: vala.pc
+	cp $< $@
 
 .PHONY: bootstrap
 bootstrap: all
@@ -89,11 +92,15 @@ gen-ChangeLog:
 	  mv $(distdir)/cl-t $(distdir)/ChangeLog;			\
 	fi
 
+CLEANFILES = \
+	vala@PACKAGE_SUFFIX@.pc
+	$(NULL)
+
 EXTRA_DIST = \
 	ChangeLog.pre-0-4 \
 	ChangeLog.pre-0-5-7 \
 	MAINTAINERS \
-	vala-1.0.pc.in \
+	vala.pc.in \
 	.version \
 	build-aux/git-version-gen \
 	build-aux/gitlog-to-changelog \

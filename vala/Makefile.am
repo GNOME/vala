@@ -167,7 +167,7 @@ libvalacore_la_SOURCES = \
 	$(libvalacore_la_VALASOURCES:.vala=.c) \
 	$(NULL)
 
-valaincludedir = $(includedir)/vala-1.0
+valaincludedir = $(includedir)/vala@PACKAGE_SUFFIX@
 
 valainclude_HEADERS = \
 	vala.h \

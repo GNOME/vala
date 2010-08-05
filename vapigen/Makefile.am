@@ -50,17 +50,23 @@ vapicheck.vala.stamp: $(vapicheck_VALASOURCES)
 
 vapigen_LDADD = \
 	$(GLIB_LIBS) \
-	../codegen/libvala.la \
+	../codegen/libvala@PACKAGE_SUFFIX@.la \
 	../gobject-introspection/libgidl.la \
 	$(NULL)
 
 vapicheck_LDADD = \
 	$(GLIB_LIBS) \
-	../codegen/libvala.la \
+	../codegen/libvala@PACKAGE_SUFFIX@.la \
 	../gobject-introspection/libgidl.la \
 	$(NULL)
 
 EXTRA_DIST = $(vapigen_VALASOURCES) $(vapicheck_VALASOURCES) vapigen.vala.stamp vapicheck.vala.stamp
+
+if ENABLE_UNVERSIONED
+install-exec-hook:
+	cd $(DESTDIR)$(bindir) && $(LN_S) -f vapigen@PACKAGE_SUFFIX@$(EXEEXT) vapigen$(EXEEXT)
+	cd $(DESTDIR)$(bindir) && $(LN_S) -f vapicheck@PACKAGE_SUFFIX@$(EXEEXT) vapicheck$(EXEEXT)
+endif
 
 MAINTAINERCLEANFILES = \
 	$(vapigen_VALASOURCES:.vala=.c) \
