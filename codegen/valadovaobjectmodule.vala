@@ -111,6 +111,32 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 		type_struct.add_declaration (vdecl);
 	}
 
+	bool has_instance_struct (Class cl) {
+		foreach (Field f in cl.get_fields ()) {
+			if (f.binding == MemberBinding.INSTANCE)  {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	bool has_type_struct (Class cl) {
+		if (cl.get_type_parameters ().size > 0) {
+			return true;
+		}
+		foreach (Method m in cl.get_methods ()) {
+			if (m.is_abstract || m.is_virtual) {
+				return true;
+			}
+		}
+		foreach (Property prop in cl.get_properties ()) {
+			if (prop.is_abstract || prop.is_virtual) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	void generate_class_private_declaration (Class cl, CCodeDeclarationSpace decl_space) {
 		if (decl_space.add_symbol_declaration (cl, cl.get_cname () + "Private")) {
 			return;
@@ -221,11 +247,15 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			}
 		}
 
-		decl_space.add_type_declaration (new CCodeTypeDefinition ("struct %s".printf (instance_priv_struct.name), new CCodeVariableDeclarator ("%sPrivate".printf (cl.get_cname ()))));
-		decl_space.add_type_definition (instance_priv_struct);
+		if (!instance_priv_struct.is_empty) {
+			decl_space.add_type_declaration (new CCodeTypeDefinition ("struct %s".printf (instance_priv_struct.name), new CCodeVariableDeclarator ("%sPrivate".printf (cl.get_cname ()))));
+			decl_space.add_type_definition (instance_priv_struct);
+		}
 
-		decl_space.add_type_declaration (new CCodeTypeDefinition ("struct %s".printf (type_priv_struct.name), new CCodeVariableDeclarator ("%sTypePrivate".printf (cl.get_cname ()))));
-		decl_space.add_type_definition (type_priv_struct);
+		if (!type_priv_struct.is_empty) {
+			decl_space.add_type_declaration (new CCodeTypeDefinition ("struct %s".printf (type_priv_struct.name), new CCodeVariableDeclarator ("%sTypePrivate".printf (cl.get_cname ()))));
+			decl_space.add_type_definition (type_priv_struct);
+		}
 
 		var cdecl = new CCodeDeclaration ("int");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("_%s_object_offset".printf (cl.get_lower_case_cname ()), new CCodeConstant ("0")));
@@ -249,7 +279,9 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			macro = "((%sPrivate *) (((char *) o) + _%s_object_offset))".printf (cl.get_cname (), cl.get_lower_case_cname ());
 			type_offset = new CCodeConstant ("0");
 		}
-		decl_space.add_type_member_declaration (new CCodeMacroReplacement ("%s_GET_PRIVATE(o)".printf (cl.get_upper_case_cname (null)), macro));
+		if (!instance_priv_struct.is_empty) {
+			decl_space.add_type_member_declaration (new CCodeMacroReplacement ("%s_GET_PRIVATE(o)".printf (cl.get_upper_case_cname (null)), macro));
+		}
 
 		cdecl = new CCodeDeclaration ("int");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("_%s_type_offset".printf (cl.get_lower_case_cname ()), type_offset));
@@ -443,8 +475,16 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 
 			var alloc_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_alloc"));
 			alloc_call.add_argument (base_type);
-			alloc_call.add_argument (new CCodeConstant ("sizeof (%sPrivate)".printf (cl.get_cname ())));
-			alloc_call.add_argument (new CCodeConstant ("sizeof (%sTypePrivate)".printf (cl.get_cname ())));
+			if (!(cl is Class) || has_instance_struct ((Class) cl)) {
+				alloc_call.add_argument (new CCodeConstant ("sizeof (%sPrivate)".printf (cl.get_cname ())));
+			} else {
+				alloc_call.add_argument (new CCodeConstant ("0"));
+			}
+			if (!(cl is Class) || has_type_struct ((Class) cl)) {
+				alloc_call.add_argument (new CCodeConstant ("sizeof (%sTypePrivate)".printf (cl.get_cname ())));
+			} else {
+				alloc_call.add_argument (new CCodeConstant ("0"));
+			}
 			alloc_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("%s_type".printf (cl.get_lower_case_cname ()))));
 			alloc_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_%s_object_offset".printf (cl.get_lower_case_cname ()))));
 			alloc_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_%s_type_offset".printf (cl.get_lower_case_cname ()))));
@@ -501,8 +541,16 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 
 			var alloc_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_alloc"));
 			alloc_call.add_argument (base_type);
-			alloc_call.add_argument (new CCodeConstant ("sizeof (%sPrivate)".printf (cl.get_cname ())));
-			alloc_call.add_argument (new CCodeConstant ("sizeof (%sTypePrivate)".printf (cl.get_cname ())));
+			if (!(cl is Class) || has_instance_struct ((Class) cl)) {
+				alloc_call.add_argument (new CCodeConstant ("sizeof (%sPrivate)".printf (cl.get_cname ())));
+			} else {
+				alloc_call.add_argument (new CCodeConstant ("0"));
+			}
+			if (!(cl is Class) || has_type_struct ((Class) cl)) {
+				alloc_call.add_argument (new CCodeConstant ("sizeof (%sTypePrivate)".printf (cl.get_cname ())));
+			} else {
+				alloc_call.add_argument (new CCodeConstant ("0"));
+			}
 			alloc_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("result")));
 			alloc_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_%s_object_offset".printf (cl.get_lower_case_cname ()))));
 			alloc_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_%s_type_offset".printf (cl.get_lower_case_cname ()))));

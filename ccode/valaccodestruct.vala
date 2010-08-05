@@ -1,6 +1,6 @@
 /* valaccodestruct.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -35,7 +35,9 @@ public class Vala.CCodeStruct : CCodeNode {
 	 * Whether the struct is deprecated.
 	 */
 	public bool deprecated { get; set; default = false; }
-	
+
+	public bool is_empty { get { return declarations.size == 0; } }
+
 	private List<CCodeDeclaration> declarations = new ArrayList<CCodeDeclaration> ();
 	
 	public CCodeStruct (string name) {
