@@ -30,6 +30,8 @@ public class Vala.MarkupReader : Object {
 
 	public string name { get; private set; }
 
+	public string content { get; private set; }
+
 	MappedFile mapped_file;
 
 	char* begin;
@@ -148,17 +150,9 @@ public class Vala.MarkupReader : Object {
 						// error
 					}
 					current++;
-					char* attr_begin = current;
-					while (current < end && current[0] != '"') {
-						unichar u = ((string) current).get_char_validated ((long) (end - current));
-						if (u != (unichar) (-1)) {
-							current += u.to_utf8 (null);
-						} else {
-							Report.error (null, "invalid UTF-8 character");
-						}
-					}
-					// TODO process &amp; &gt; &lt; &quot; &apos;
-					string attr_value = ((string) attr_begin).ndup (current - attr_begin);
+
+					string attr_value = text ('"');
+
 					if (current >= end || current[0] != '"') {
 						// error
 					}
@@ -180,23 +174,16 @@ public class Vala.MarkupReader : Object {
 			}
 		} else {
 			space ();
-			char* text_begin = current;
-			while (current < end && current[0] != '<') {
-				unichar u = ((string) current).get_char_validated ((long) (end - current));
-				if (u != (unichar) (-1)) {
-					current += u.to_utf8 (null);
-				} else {
-					Report.error (null, "invalid UTF-8 character");
-				}
-			}
-			if (text_begin == current) {
+
+			if (current[0] != '<') {
+				content = text ('<');
+			} else {
 				// no text
 				// read next token
 				return read_token (out token_begin, out token_end);
 			}
+
 			type = MarkupTokenType.TEXT;
-			// TODO process &amp; &gt; &lt; &quot; &apos;
-			// string text = ((string) text_begin).ndup (current - text_begin);
 		}
 
 		column += (int) (current - begin);
@@ -206,6 +193,56 @@ public class Vala.MarkupReader : Object {
 		token_end.column = column - 1;
 
 		return type;
+	}
+
+	string text (char end_char) {
+		StringBuilder content = new StringBuilder ();
+		char* text_begin = current;
+
+		while (current < end && current[0] != end_char) {
+			unichar u = ((string) current).get_char_validated ((long) (end - current));
+			if (u == (unichar) (-1)) {
+				Report.error (null, "invalid UTF-8 character");
+			} else if (u == '&') {
+				char* next_pos = current + u.to_utf8 (null);
+				if (((string) next_pos).has_prefix ("amp;")) {
+					content.append (((string) text_begin).ndup (current - text_begin));
+					content.append_c ('&');
+					current += 5;
+					text_begin = current;
+				} else if (((string) next_pos).has_prefix ("quot;")) {
+					content.append (((string) text_begin).ndup (current - text_begin));
+					content.append_c ('"');
+					current += 6;
+					text_begin = current;
+				} else if (((string) next_pos).has_prefix ("apos;")) {
+					content.append (((string) text_begin).ndup (current - text_begin));
+					content.append_c ('\'');
+					current += 6;
+					text_begin = current;
+				} else if (((string) next_pos).has_prefix ("lt;")) {
+					content.append (((string) text_begin).ndup (current - text_begin));
+					content.append_c ('<');
+					current += 4;
+					text_begin = current;
+				} else if (((string) next_pos).has_prefix ("gt;")) {
+					content.append (((string) text_begin).ndup (current - text_begin));
+					content.append_c ('>');
+					current += 4;
+					text_begin = current;
+				} else {
+					current += u.to_utf8 (null);
+				}
+			} else {
+				current += u.to_utf8 (null);
+			}
+		}
+
+		if (text_begin != current) {
+			content.append (((string) text_begin).ndup (current - text_begin));
+		}
+
+		return content.str;
 	}
 
 	void space () {
