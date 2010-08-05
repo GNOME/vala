@@ -191,14 +191,6 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 					} else {
 						return length_expr;
 					}
-				} else if (current_method != null && current_method.coroutine) {
-					var length_expr = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_array_length_cname (get_variable_cname (param.name), dim));
-					if (is_out) {
-						// passing array as out/ref
-						return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, length_expr);
-					} else {
-						return length_expr;
-					}
 				} else {
 					if (param.array_null_terminated) {
 						var carray_expr = get_variable_cexpression (param.name);
@@ -226,14 +218,6 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 					// captured variables are stored on the heap
 					var block = (Block) local.parent_symbol;
 					var length_expr = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_array_length_cname (get_variable_cname (local.name), dim));
-					if (is_out) {
-						// passing array as out/ref
-						return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, length_expr);
-					} else {
-						return length_expr;
-					}
-				} else if (current_method != null && current_method.coroutine) {
-					var length_expr = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_array_length_cname (get_variable_cname (local.name), dim));
 					if (is_out) {
 						// passing array as out/ref
 						return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, length_expr);
