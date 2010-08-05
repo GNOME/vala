@@ -2652,9 +2652,9 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static GLib.Type fraction_range_get_type ();
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void init ([CCode (array_length_pos = 0.9)] ref unowned string[] args);
+	public static void init ([CCode (array_length_pos = 0.9)] ref unowned string[] argv);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static bool init_check (int argc, string argv) throws GLib.Error;
+	public static bool init_check ([CCode (array_length_pos = 0.9)] ref unowned string[] argv) throws GLib.Error;
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static GLib.OptionGroup init_get_option_group ();
 	[CCode (cheader_filename = "gst/gst.h")]

@@ -20,8 +20,6 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 namespace Gst {
-	public extern void init ([CCode (array_length_pos = 0.9)] ref unowned string[] args);
-
 	public struct ClockTime : uint64 {
 		[CCode (cname="GST_TIME_ARGS")]
 		public unowned string args ();
