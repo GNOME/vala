@@ -32,10 +32,10 @@ namespace Gst {
 	[Compact]
 	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
 	public class SDPMedia {
-		public weak GLib.Array attributes;
-		public weak GLib.Array bandwidths;
-		public weak GLib.Array connections;
-		public weak GLib.Array fmts;
+		public weak GLib.Array<Gst.SDPAttribute> attributes;
+		public weak GLib.Array<Gst.SDPBandwidth> bandwidths;
+		public weak GLib.Array<Gst.SDPConnection> connections;
+		public weak GLib.Array<string> fmts;
 		public weak string information;
 		public weak Gst.SDPKey key;
 		public weak string media;
@@ -76,20 +76,20 @@ namespace Gst {
 	[Compact]
 	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
 	public class SDPMessage {
-		public weak GLib.Array attributes;
-		public weak GLib.Array bandwidths;
+		public weak GLib.Array<Gst.SDPAttribute> attributes;
+		public weak GLib.Array<Gst.SDPBandwidth> bandwidths;
 		public weak Gst.SDPConnection connection;
-		public weak GLib.Array emails;
+		public weak GLib.Array<string> emails;
 		public weak string information;
 		public weak Gst.SDPKey key;
-		public weak GLib.Array medias;
+		public weak GLib.Array<Gst.SDPMedia> medias;
 		public weak Gst.SDPOrigin origin;
-		public weak GLib.Array phones;
+		public weak GLib.Array<string> phones;
 		public weak string session_name;
-		public weak GLib.Array times;
+		public weak GLib.Array<Gst.SDPTime> times;
 		public weak string uri;
 		public weak string version;
-		public weak GLib.Array zones;
+		public weak GLib.Array<Gst.SDPZone> zones;
 		[CCode (type = "GstSDPResult", has_construct_function = false)]
 		public SDPMessage (out unowned Gst.SDPMessage msg);
 		public Gst.SDPResult add_attribute (string key, string value);
@@ -148,7 +148,7 @@ namespace Gst {
 	[Compact]
 	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
 	public class SDPTime {
-		public weak GLib.Array repeat;
+		public weak GLib.Array<Gst.SDPTime> repeat;
 		public weak string start;
 		public weak string stop;
 	}

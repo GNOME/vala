@@ -13,24 +13,24 @@ namespace Gst {
 	public class Controller : GLib.Object {
 		public weak GLib.Mutex @lock;
 		public weak GLib.Object object;
-		public weak GLib.List properties;
+		public weak GLib.List<Gst.TimedValue> properties;
 		[CCode (has_construct_function = false)]
 		public Controller (GLib.Object object, ...);
 		public Gst.Value @get (string property_name, Gst.ClockTime timestamp);
-		public unowned GLib.List get_all (string property_name);
+		public GLib.List<weak Gst.TimedValue> get_all (string property_name);
 		public unowned Gst.ControlSource get_control_source (string property_name);
 		public bool get_value_array (Gst.ClockTime timestamp, Gst.ValueArray value_array);
-		public bool get_value_arrays (Gst.ClockTime timestamp, GLib.SList value_arrays);
+		public bool get_value_arrays (Gst.ClockTime timestamp, GLib.SList<Gst.ValueArray> value_arrays);
 		public static bool init ([CCode (array_length_pos = 0.9)] ref unowned string[] argv);
 		[CCode (has_construct_function = false)]
-		public Controller.list (GLib.Object object, GLib.List list);
+		public Controller.list (GLib.Object object, GLib.List<string> list);
 		public bool remove_properties (...);
-		public bool remove_properties_list (GLib.List list);
+		public bool remove_properties_list (GLib.List<string> list);
 		public bool remove_properties_valist (void* var_args);
 		public bool @set (string property_name, Gst.ClockTime timestamp, Gst.Value value);
 		public bool set_control_source (string property_name, Gst.ControlSource csource);
 		public void set_disabled (bool disabled);
-		public bool set_from_list (string property_name, GLib.SList timedvalues);
+		public bool set_from_list (string property_name, GLib.SList<Gst.TimedValue> timedvalues);
 		public bool set_interpolation_mode (string property_name, Gst.InterpolateMode mode);
 		public void set_property_disabled (string property_name, bool disabled);
 		public Gst.ClockTime suggest_next_sync ();
@@ -47,10 +47,10 @@ namespace Gst {
 		public weak GLib.Mutex @lock;
 		[CCode (has_construct_function = false)]
 		public InterpolationControlSource ();
-		public unowned GLib.List get_all ();
+		public GLib.List<weak Gst.TimedValue> get_all ();
 		public int get_count ();
 		public bool @set (Gst.ClockTime timestamp, Gst.Value value);
-		public bool set_from_list (GLib.SList timedvalues);
+		public bool set_from_list (GLib.SList<Gst.TimedValue> timedvalues);
 		public bool set_interpolation_mode (Gst.InterpolateMode mode);
 		public bool unset (Gst.ClockTime timestamp);
 		public void unset_all ();
@@ -119,7 +119,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public static bool object_get_value_array (GLib.Object object, Gst.ClockTime timestamp, Gst.ValueArray value_array);
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
-	public static bool object_get_value_arrays (GLib.Object object, Gst.ClockTime timestamp, GLib.SList value_arrays);
+	public static bool object_get_value_arrays (GLib.Object object, Gst.ClockTime timestamp, GLib.SList<Gst.ValueArray> value_arrays);
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public static void object_set_control_rate (GLib.Object object, Gst.ClockTime control_rate);
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]

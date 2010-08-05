@@ -245,7 +245,7 @@ namespace Gst {
 	}
 
 	public enum FlowReturn {
-		SOME_RANDOM_VALUE_FOR_VAPIGEN;
+		__DUMMY__;
 		[CCode (cname = "GST_FLOW_IS_FATAL")]
 		public bool is_fatal ();
 		[CCode (cname = "GST_FLOW_IS_SUCCESS")]
@@ -253,7 +253,7 @@ namespace Gst {
 	}
 
 	public enum PadLinkReturn {
-		SOME_RANDOM_VALUE_FOR_VAPIGEN;
+		__DUMMY__;
 		[CCode (cname = "GST_PAD_LINK_FAILED")]
 		public bool failed ();
 		[CCode (cname = "GST_PAD_LINK_SUCCESSFUL")]
@@ -327,7 +327,7 @@ namespace Gst {
 	}
 
 	public enum QueryType {
-		SOME_RANDOM_VALUE_FOR_VAPIGEN;
+		__DUMMY__;
 		public GLib.Quark to_quark ();
 		public unowned string get_name ();
 		public unowned QueryTypeDefinition get_details ();

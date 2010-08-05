@@ -26,7 +26,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void check_element_push_buffer (string element_name, Gst.Buffer buffer_in, Gst.Buffer buffer_out);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void check_element_push_buffer_list (string element_name, GLib.List buffer_in, GLib.List buffer_out, Gst.FlowReturn last_flow_return);
+	public static void check_element_push_buffer_list (string element_name, GLib.List<Gst.Buffer> buffer_in, GLib.List<Gst.Buffer> buffer_out, Gst.FlowReturn last_flow_return);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void check_init (int argc, string argv);
 	[CCode (cheader_filename = "gst/gst.h")]

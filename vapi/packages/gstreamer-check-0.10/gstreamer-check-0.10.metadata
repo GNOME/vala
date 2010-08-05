@@ -1,3 +1,4 @@
 Gst cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/gst.h"
 Suite name="pointer"
+gst_check_element_push_buffer_list.buffer_* type_arguments="Buffer"
 gst_check_setup_* transfer_ownership="1"

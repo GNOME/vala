@@ -1362,7 +1362,7 @@ namespace Gst {
 		[CCode (cname = "gst_type_find_factory_get_extensions")]
 		public unowned string get_extensions ();
 		[CCode (cname = "gst_type_find_factory_get_list")]
-		public static unowned GLib.List get_list ();
+		public static GLib.List<Gst.PluginFeature> get_list ();
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -1381,11 +1381,11 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class XML : Gst.Object {
 		public void* ns;
-		public weak GLib.List topelements;
+		public weak GLib.List<Gst.Element> topelements;
 		[CCode (has_construct_function = false)]
 		public XML ();
 		public unowned Gst.Element get_element (string name);
-		public unowned GLib.List get_topelements ();
+		public unowned GLib.List<Gst.Element> get_topelements ();
 		public static unowned Gst.Element make_element (void* cur, Gst.Object parent);
 		[NoWrapper]
 		public virtual void object_saved (Gst.Object object, void* self);

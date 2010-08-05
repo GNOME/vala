@@ -104,7 +104,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public static unowned string tag_to_id3_tag (string gst_tag);
 	[CCode (cheader_filename = "gst/tag/tag.h")]
-	public static GLib.List tag_to_vorbis_comments (Gst.TagList list, string tag);
+	public static GLib.List<string> tag_to_vorbis_comments (Gst.TagList list, string tag);
 	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public static unowned string tag_to_vorbis_tag (string gst_tag);
 	[CCode (cheader_filename = "gst/tag/tag.h")]

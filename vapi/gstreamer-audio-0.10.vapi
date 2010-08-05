@@ -300,7 +300,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/audio/audio.h")]
 	public static bool audio_check_channel_positions (Gst.AudioChannelPosition pos, uint channels);
 	[CCode (cheader_filename = "gst/audio/mixerutils.h")]
-	public static unowned GLib.List audio_default_registry_mixer_filter (Gst.AudioMixerFilterFunc filter_func, bool first);
+	public static GLib.List<Gst.Element> audio_default_registry_mixer_filter (Gst.AudioMixerFilterFunc filter_func, bool first);
 	[CCode (cheader_filename = "gst/audio/audio.h")]
 	public static Gst.ClockTime audio_duration_from_pad_buffer (Gst.Pad pad, Gst.Buffer buf);
 	[CCode (cheader_filename = "gst/audio/multichannel.h")]
