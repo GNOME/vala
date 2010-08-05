@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 <api version="1.0">
 	<namespace name="Oobs">
+		<function name="error_quark" symbol="oobs_error_quark">
+			<return-type type="GQuark"/>
+		</function>
 		<callback name="OobsObjectAsyncFunc">
 			<return-type type="void"/>
 			<parameters>
@@ -46,48 +49,56 @@
 			<field name="stamp" type="guint"/>
 			<field name="data" type="gpointer"/>
 		</boxed>
-		<enum name="OobsDialType">
+		<enum name="OobsDialType" type-name="OobsDialType" get-type="oobs_dial_type_get_type">
 			<member name="OOBS_DIAL_TYPE_TONES" value="0"/>
 			<member name="OOBS_DIAL_TYPE_PULSES" value="1"/>
 		</enum>
-		<enum name="OobsIfaceType">
+		<enum name="OobsError" type-name="OobsError" get-type="oobs_error_get_type">
+			<member name="OOBS_ERROR_AUTHENTICATION_FAILED" value="0"/>
+			<member name="OOBS_ERROR_AUTHENTICATION_CANCELLED" value="1"/>
+		</enum>
+		<enum name="OobsIfaceType" type-name="OobsIfaceType" get-type="oobs_iface_type_get_type">
 			<member name="OOBS_IFACE_TYPE_ETHERNET" value="0"/>
 			<member name="OOBS_IFACE_TYPE_WIRELESS" value="1"/>
 			<member name="OOBS_IFACE_TYPE_IRLAN" value="2"/>
 			<member name="OOBS_IFACE_TYPE_PLIP" value="3"/>
 			<member name="OOBS_IFACE_TYPE_PPP" value="4"/>
 		</enum>
-		<enum name="OobsModemVolume">
+		<enum name="OobsModemVolume" type-name="OobsModemVolume" get-type="oobs_modem_volume_get_type">
 			<member name="OOBS_MODEM_VOLUME_SILENT" value="0"/>
 			<member name="OOBS_MODEM_VOLUME_LOW" value="1"/>
 			<member name="OOBS_MODEM_VOLUME_MEDIUM" value="2"/>
 			<member name="OOBS_MODEM_VOLUME_LOUD" value="3"/>
 		</enum>
-		<enum name="OobsResult">
+		<enum name="OobsResult" type-name="OobsResult" get-type="oobs_result_get_type">
 			<member name="OOBS_RESULT_OK" value="0"/>
 			<member name="OOBS_RESULT_ACCESS_DENIED" value="1"/>
 			<member name="OOBS_RESULT_NO_PLATFORM" value="2"/>
 			<member name="OOBS_RESULT_MALFORMED_DATA" value="3"/>
 			<member name="OOBS_RESULT_ERROR" value="4"/>
 		</enum>
-		<enum name="OobsRunlevelRole">
+		<enum name="OobsRunlevelRole" type-name="OobsRunlevelRole" get-type="oobs_runlevel_role_get_type">
 			<member name="OOBS_RUNLEVEL_HALT" value="0"/>
 			<member name="OOBS_RUNLEVEL_REBOOT" value="1"/>
 			<member name="OOBS_RUNLEVEL_MONOUSER" value="2"/>
 			<member name="OOBS_RUNLEVEL_MULTIUSER" value="3"/>
 		</enum>
-		<enum name="OobsServiceStatus">
+		<enum name="OobsServiceStatus" type-name="OobsServiceStatus" get-type="oobs_service_status_get_type">
 			<member name="OOBS_SERVICE_START" value="0"/>
 			<member name="OOBS_SERVICE_STOP" value="1"/>
 			<member name="OOBS_SERVICE_IGNORE" value="2"/>
 		</enum>
-		<flags name="OobsShareSMBFlags">
+		<flags name="OobsShareSMBFlags" type-name="OobsShareSMBFlags" get-type="oobs_share_smb_flags_get_type">
 			<member name="OOBS_SHARE_SMB_ENABLED" value="1"/>
 			<member name="OOBS_SHARE_SMB_BROWSABLE" value="2"/>
 			<member name="OOBS_SHARE_SMB_PUBLIC" value="4"/>
 			<member name="OOBS_SHARE_SMB_WRITABLE" value="8"/>
 		</flags>
-		<object name="OobsGroup" parent="GObject" type-name="OobsGroup" get-type="oobs_group_get_type">
+		<flags name="OobsUserHomeFlags" type-name="OobsUserHomeFlags" get-type="oobs_user_home_flags_get_type">
+			<member name="OOBS_USER_REMOVE_HOME" value="1"/>
+			<member name="OOBS_USER_CHOWN_HOME" value="2"/>
+		</flags>
+		<object name="OobsGroup" parent="OobsObject" type-name="OobsGroup" get-type="oobs_group_get_type">
 			<method name="add_user" symbol="oobs_group_add_user">
 				<return-type type="void"/>
 				<parameters>
@@ -119,6 +130,12 @@
 					<parameter name="group" type="OobsGroup*"/>
 				</parameters>
 			</method>
+			<method name="is_root" symbol="oobs_group_is_root">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="group" type="OobsGroup*"/>
+				</parameters>
+			</method>
 			<constructor name="new" symbol="oobs_group_new">
 				<return-type type="OobsGroup*"/>
 				<parameters>
@@ -130,13 +147,6 @@
 				<parameters>
 					<parameter name="group" type="OobsGroup*"/>
 					<parameter name="user" type="OobsUser*"/>
-				</parameters>
-			</method>
-			<method name="set_crypted_password" symbol="oobs_group_set_crypted_password">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="group" type="OobsGroup*"/>
-					<parameter name="crypted_password" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="set_gid" symbol="oobs_group_set_gid">
@@ -153,19 +163,68 @@
 					<parameter name="password" type="gchar*"/>
 				</parameters>
 			</method>
-			<property name="crypted-password" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="gid" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gid" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="name" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
-			<property name="password" type="char*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="password" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="OobsGroupsConfig" parent="OobsObject" type-name="OobsGroupsConfig" get-type="oobs_groups_config_get_type">
+			<method name="add_group" symbol="oobs_groups_config_add_group">
+				<return-type type="OobsResult"/>
+				<parameters>
+					<parameter name="config" type="OobsGroupsConfig*"/>
+					<parameter name="group" type="OobsGroup*"/>
+				</parameters>
+			</method>
+			<method name="delete_group" symbol="oobs_groups_config_delete_group">
+				<return-type type="OobsResult"/>
+				<parameters>
+					<parameter name="config" type="OobsGroupsConfig*"/>
+					<parameter name="group" type="OobsGroup*"/>
+				</parameters>
+			</method>
+			<method name="find_free_gid" symbol="oobs_groups_config_find_free_gid">
+				<return-type type="gid_t"/>
+				<parameters>
+					<parameter name="config" type="OobsGroupsConfig*"/>
+					<parameter name="gid_min" type="gid_t"/>
+					<parameter name="gid_max" type="gid_t"/>
+				</parameters>
+			</method>
 			<method name="get" symbol="oobs_groups_config_get">
 				<return-type type="OobsObject*"/>
+			</method>
+			<method name="get_from_gid" symbol="oobs_groups_config_get_from_gid">
+				<return-type type="OobsGroup*"/>
+				<parameters>
+					<parameter name="config" type="OobsGroupsConfig*"/>
+					<parameter name="gid" type="gid_t"/>
+				</parameters>
+			</method>
+			<method name="get_from_name" symbol="oobs_groups_config_get_from_name">
+				<return-type type="OobsGroup*"/>
+				<parameters>
+					<parameter name="config" type="OobsGroupsConfig*"/>
+					<parameter name="name" type="gchar*"/>
+				</parameters>
 			</method>
 			<method name="get_groups" symbol="oobs_groups_config_get_groups">
 				<return-type type="OobsList*"/>
 				<parameters>
 					<parameter name="config" type="OobsGroupsConfig*"/>
+				</parameters>
+			</method>
+			<method name="is_gid_used" symbol="oobs_groups_config_is_gid_used">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="config" type="OobsGroupsConfig*"/>
+					<parameter name="gid" type="gid_t"/>
+				</parameters>
+			</method>
+			<method name="is_name_used" symbol="oobs_groups_config_is_name_used">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="config" type="OobsGroupsConfig*"/>
+					<parameter name="name" type="gchar*"/>
 				</parameters>
 			</method>
 			<property name="maximum-gid" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -813,6 +872,27 @@
 			<property name="hostname" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="OobsObject" parent="GObject" type-name="OobsObject" get-type="oobs_object_get_type">
+			<method name="add" symbol="oobs_object_add">
+				<return-type type="OobsResult"/>
+				<parameters>
+					<parameter name="object" type="OobsObject*"/>
+				</parameters>
+			</method>
+			<method name="add_async" symbol="oobs_object_add_async">
+				<return-type type="OobsResult"/>
+				<parameters>
+					<parameter name="object" type="OobsObject*"/>
+					<parameter name="func" type="OobsObjectAsyncFunc"/>
+					<parameter name="data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="authenticate" symbol="oobs_object_authenticate">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="object" type="OobsObject*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<method name="commit" symbol="oobs_object_commit">
 				<return-type type="OobsResult"/>
 				<parameters>
@@ -827,14 +907,22 @@
 					<parameter name="data" type="gpointer"/>
 				</parameters>
 			</method>
-			<method name="ensure_update" symbol="oobs_object_ensure_update">
-				<return-type type="void"/>
+			<method name="delete" symbol="oobs_object_delete">
+				<return-type type="OobsResult"/>
 				<parameters>
 					<parameter name="object" type="OobsObject*"/>
 				</parameters>
 			</method>
-			<method name="get_authentication_action" symbol="oobs_object_get_authentication_action">
-				<return-type type="gchar*"/>
+			<method name="delete_async" symbol="oobs_object_delete_async">
+				<return-type type="OobsResult"/>
+				<parameters>
+					<parameter name="object" type="OobsObject*"/>
+					<parameter name="func" type="OobsObjectAsyncFunc"/>
+					<parameter name="data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="ensure_update" symbol="oobs_object_ensure_update">
+				<return-type type="void"/>
 				<parameters>
 					<parameter name="object" type="OobsObject*"/>
 				</parameters>
@@ -890,8 +978,8 @@
 					<parameter name="object" type="OobsObject*"/>
 				</parameters>
 			</vfunc>
-			<vfunc name="get_authentication_action">
-				<return-type type="gchar*"/>
+			<vfunc name="get_update_message">
+				<return-type type="void"/>
 				<parameters>
 					<parameter name="object" type="OobsObject*"/>
 				</parameters>
@@ -1002,8 +1090,15 @@
 					<parameter name="config" type="OobsSelfConfig*"/>
 				</parameters>
 			</method>
+			<method name="is_user_self" symbol="oobs_self_config_is_user_self">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="config" type="OobsSelfConfig*"/>
+					<parameter name="user" type="OobsUser*"/>
+				</parameters>
+			</method>
 		</object>
-		<object name="OobsService" parent="GObject" type-name="OobsService" get-type="oobs_service_get_type">
+		<object name="OobsService" parent="OobsObject" type-name="OobsService" get-type="oobs_service_get_type">
 			<method name="get_name" symbol="oobs_service_get_name">
 				<return-type type="gchar*"/>
 				<parameters>
@@ -1319,8 +1414,14 @@
 			<property name="timezone" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="unix-time" type="glong" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
-		<object name="OobsUser" parent="GObject" type-name="OobsUser" get-type="oobs_user_get_type">
+		<object name="OobsUser" parent="OobsObject" type-name="OobsUser" get-type="oobs_user_get_type">
 			<method name="get_active" symbol="oobs_user_get_active">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="user" type="OobsUser*"/>
+				</parameters>
+			</method>
+			<method name="get_encrypted_home" symbol="oobs_user_get_encrypted_home">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="user" type="OobsUser*"/>
@@ -1344,6 +1445,12 @@
 					<parameter name="user" type="OobsUser*"/>
 				</parameters>
 			</method>
+			<method name="get_locale" symbol="oobs_user_get_locale">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="user" type="OobsUser*"/>
+				</parameters>
+			</method>
 			<method name="get_login_name" symbol="oobs_user_get_login_name">
 				<return-type type="gchar*"/>
 				<parameters>
@@ -1358,6 +1465,18 @@
 			</method>
 			<method name="get_other_data" symbol="oobs_user_get_other_data">
 				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="user" type="OobsUser*"/>
+				</parameters>
+			</method>
+			<method name="get_password_disabled" symbol="oobs_user_get_password_disabled">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="user" type="OobsUser*"/>
+				</parameters>
+			</method>
+			<method name="get_password_empty" symbol="oobs_user_get_password_empty">
+				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="user" type="OobsUser*"/>
 				</parameters>
@@ -1386,17 +1505,30 @@
 					<parameter name="user" type="OobsUser*"/>
 				</parameters>
 			</method>
+			<method name="is_in_group" symbol="oobs_user_is_in_group">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="user" type="OobsUser*"/>
+					<parameter name="group" type="OobsGroup*"/>
+				</parameters>
+			</method>
+			<method name="is_root" symbol="oobs_user_is_root">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="user" type="OobsUser*"/>
+				</parameters>
+			</method>
 			<constructor name="new" symbol="oobs_user_new">
 				<return-type type="OobsUser*"/>
 				<parameters>
 					<parameter name="name" type="gchar*"/>
 				</parameters>
 			</constructor>
-			<method name="set_crypted_password" symbol="oobs_user_set_crypted_password">
+			<method name="set_encrypted_home" symbol="oobs_user_set_encrypted_home">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="user" type="OobsUser*"/>
-					<parameter name="crypted_password" type="gchar*"/>
+					<parameter name="encrypted_home" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="set_full_name" symbol="oobs_user_set_full_name">
@@ -1413,11 +1545,25 @@
 					<parameter name="home_directory" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="set_home_flags" symbol="oobs_user_set_home_flags">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="user" type="OobsUser*"/>
+					<parameter name="home_flags" type="OobsUserHomeFlags"/>
+				</parameters>
+			</method>
 			<method name="set_home_phone_number" symbol="oobs_user_set_home_phone_number">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="user" type="OobsUser*"/>
 					<parameter name="phone_number" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_locale" symbol="oobs_user_set_locale">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="user" type="OobsUser*"/>
+					<parameter name="locale" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="set_main_group" symbol="oobs_user_set_main_group">
@@ -1439,6 +1585,20 @@
 				<parameters>
 					<parameter name="user" type="OobsUser*"/>
 					<parameter name="password" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_password_disabled" symbol="oobs_user_set_password_disabled">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="user" type="OobsUser*"/>
+					<parameter name="disabled" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_password_empty" symbol="oobs_user_set_password_empty">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="user" type="OobsUser*"/>
+					<parameter name="empty" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="set_room_number" symbol="oobs_user_set_room_number">
@@ -1470,21 +1630,53 @@
 				</parameters>
 			</method>
 			<property name="active" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="crypted-password" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="encrypted-home" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="full-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="home-directory" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="home-flags" type="OobsUserHomeFlags" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="home-phone" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="locale" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="name" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="other-data" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="password" type="char*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="password" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="password-disabled" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="password-empty" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="room-number" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="shell" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="uid" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="uid" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="work-phone" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="OobsUsersConfig" parent="OobsObject" type-name="OobsUsersConfig" get-type="oobs_users_config_get_type">
+			<method name="add_user" symbol="oobs_users_config_add_user">
+				<return-type type="OobsResult"/>
+				<parameters>
+					<parameter name="config" type="OobsUsersConfig*"/>
+					<parameter name="user" type="OobsUser*"/>
+				</parameters>
+			</method>
+			<method name="delete_user" symbol="oobs_users_config_delete_user">
+				<return-type type="OobsResult"/>
+				<parameters>
+					<parameter name="config" type="OobsUsersConfig*"/>
+					<parameter name="user" type="OobsUser*"/>
+				</parameters>
+			</method>
+			<method name="find_free_uid" symbol="oobs_users_config_find_free_uid">
+				<return-type type="uid_t"/>
+				<parameters>
+					<parameter name="config" type="OobsUsersConfig*"/>
+					<parameter name="uid_min" type="uid_t"/>
+					<parameter name="uid_max" type="uid_t"/>
+				</parameters>
+			</method>
 			<method name="get" symbol="oobs_users_config_get">
 				<return-type type="OobsObject*"/>
+			</method>
+			<method name="get_available_locales" symbol="oobs_users_config_get_available_locales">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="config" type="OobsUsersConfig*"/>
+				</parameters>
 			</method>
 			<method name="get_available_shells" symbol="oobs_users_config_get_available_shells">
 				<return-type type="GList*"/>
@@ -1510,6 +1702,26 @@
 					<parameter name="config" type="OobsUsersConfig*"/>
 				</parameters>
 			</method>
+			<method name="get_encrypted_home_support" symbol="oobs_users_config_get_encrypted_home_support">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="config" type="OobsUsersConfig*"/>
+				</parameters>
+			</method>
+			<method name="get_from_login" symbol="oobs_users_config_get_from_login">
+				<return-type type="OobsUser*"/>
+				<parameters>
+					<parameter name="config" type="OobsUsersConfig*"/>
+					<parameter name="login" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_from_uid" symbol="oobs_users_config_get_from_uid">
+				<return-type type="OobsUser*"/>
+				<parameters>
+					<parameter name="config" type="OobsUsersConfig*"/>
+					<parameter name="uid" type="uid_t"/>
+				</parameters>
+			</method>
 			<method name="get_maximum_users_uid" symbol="oobs_users_config_get_maximum_users_uid">
 				<return-type type="uid_t"/>
 				<parameters>
@@ -1526,6 +1738,20 @@
 				<return-type type="OobsList*"/>
 				<parameters>
 					<parameter name="config" type="OobsUsersConfig*"/>
+				</parameters>
+			</method>
+			<method name="is_login_used" symbol="oobs_users_config_is_login_used">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="config" type="OobsUsersConfig*"/>
+					<parameter name="login" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="is_uid_used" symbol="oobs_users_config_is_uid_used">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="config" type="OobsUsersConfig*"/>
+					<parameter name="uid" type="uid_t"/>
 				</parameters>
 			</method>
 			<method name="set_default_home_dir" symbol="oobs_users_config_set_default_home_dir">
@@ -1559,9 +1785,9 @@
 			<property name="default-group" type="OobsGroup*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="default-home" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="default-shell" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="maximum-uid" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="minimum-uid" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="use-md5" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="encrypted-home" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="maximum-uid" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="minimum-uid" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 	</namespace>
 </api>

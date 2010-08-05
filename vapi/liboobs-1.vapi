@@ -3,7 +3,7 @@
 [CCode (cprefix = "Oobs", lower_case_cprefix = "oobs_")]
 namespace Oobs {
 	[CCode (cheader_filename = "oobs/oobs.h")]
-	public class Group : GLib.Object {
+	public class Group : Oobs.Object {
 		[CCode (has_construct_function = false)]
 		public Group (string name);
 		public void add_user (Oobs.User user);
@@ -11,20 +11,26 @@ namespace Oobs {
 		public long get_gid ();
 		public unowned string get_name ();
 		public unowned GLib.List get_users ();
+		public bool is_root ();
 		public void remove_user (Oobs.User user);
-		public void set_crypted_password (string crypted_password);
 		public void set_gid (long gid);
 		public void set_password (string password);
-		[NoAccessorMethod]
-		public string crypted_password { owned get; set; }
-		public int gid { get; set; }
+		public uint gid { get; set; }
 		public string name { get; construct; }
-		public string password { set; }
+		[NoAccessorMethod]
+		public string password { owned get; set; }
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class GroupsConfig : Oobs.Object {
+		public Oobs.Result add_group (Oobs.Group group);
+		public Oobs.Result delete_group (Oobs.Group group);
+		public long find_free_gid (long gid_min, long gid_max);
 		public static unowned Oobs.Object @get ();
+		public unowned Oobs.Group get_from_gid (long gid);
+		public unowned Oobs.Group get_from_name (string name);
 		public unowned Oobs.List get_groups ();
+		public bool is_gid_used (long gid);
+		public bool is_name_used (string name);
 		[NoAccessorMethod]
 		public int maximum_gid { get; set; }
 		[NoAccessorMethod]
@@ -206,10 +212,16 @@ namespace Oobs {
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class Object : GLib.Object {
+		public Oobs.Result add ();
+		public Oobs.Result add_async (Oobs.ObjectAsyncFunc func, void* data);
+		public bool authenticate () throws GLib.Error;
 		public virtual void commit ();
 		public Oobs.Result commit_async (Oobs.ObjectAsyncFunc func, void* data);
+		public Oobs.Result @delete ();
+		public Oobs.Result delete_async (Oobs.ObjectAsyncFunc func, void* data);
 		public void ensure_update ();
-		public virtual unowned string get_authentication_action ();
+		[NoWrapper]
+		public virtual void get_update_message ();
 		public bool has_updated ();
 		public void process_requests ();
 		public virtual void update ();
@@ -251,9 +263,10 @@ namespace Oobs {
 	public class SelfConfig : Oobs.Object {
 		public static unowned Oobs.Object @get ();
 		public unowned Oobs.User get_user ();
+		public bool is_user_self (Oobs.User user);
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
-	public class Service : GLib.Object {
+	public class Service : Oobs.Object {
 		public unowned string get_name ();
 		public void get_runlevel_configuration (Oobs.ServicesRunlevel runlevel, Oobs.ServiceStatus status, int priority);
 		public void set_runlevel_configuration (Oobs.ServicesRunlevel runlevel, Oobs.ServiceStatus status, int priority);
@@ -343,58 +356,82 @@ namespace Oobs {
 		public long unix_time { get; set; }
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
-	public class User : GLib.Object {
+	public class User : Oobs.Object {
 		[CCode (has_construct_function = false)]
 		public User (string name);
 		public bool get_active ();
+		public bool get_encrypted_home ();
 		public unowned string get_full_name ();
 		public unowned string get_home_directory ();
 		public unowned string get_home_phone_number ();
+		public unowned string get_locale ();
 		public unowned string get_login_name ();
 		public unowned Oobs.Group get_main_group ();
 		public unowned string get_other_data ();
+		public bool get_password_disabled ();
+		public bool get_password_empty ();
 		public unowned string get_room_number ();
 		public unowned string get_shell ();
 		public long get_uid ();
 		public unowned string get_work_phone_number ();
-		public void set_crypted_password (string crypted_password);
+		public bool is_in_group (Oobs.Group group);
+		public bool is_root ();
+		public void set_encrypted_home (bool encrypted_home);
 		public void set_full_name (string full_name);
 		public void set_home_directory (string home_directory);
+		public void set_home_flags (Oobs.UserHomeFlags home_flags);
 		public void set_home_phone_number (string phone_number);
+		public void set_locale (string locale);
 		public void set_main_group (Oobs.Group main_group);
 		public void set_other_data (string data);
 		public void set_password (string password);
+		public void set_password_disabled (bool disabled);
+		public void set_password_empty (bool empty);
 		public void set_room_number (string room_number);
 		public void set_shell (string shell);
 		public void set_uid (long uid);
 		public void set_work_phone_number (string phone_number);
 		public bool active { get; }
-		[NoAccessorMethod]
-		public string crypted_password { owned get; set; }
+		public bool encrypted_home { get; set; }
 		public string full_name { get; set; }
 		public string home_directory { get; set; }
 		[NoAccessorMethod]
+		public Oobs.UserHomeFlags home_flags { get; set; }
+		[NoAccessorMethod]
 		public string home_phone { owned get; set; }
+		public string locale { get; set; }
 		[NoAccessorMethod]
 		public string name { owned get; construct; }
 		public string other_data { get; set; }
-		public string password { set; }
+		[NoAccessorMethod]
+		public string password { owned get; set; }
+		public bool password_disabled { get; set; }
+		public bool password_empty { get; set; }
 		public string room_number { get; set; }
 		public string shell { get; set; }
-		public int uid { get; set; }
+		public uint uid { get; set; }
 		[NoAccessorMethod]
 		public string work_phone { owned get; set; }
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class UsersConfig : Oobs.Object {
+		public Oobs.Result add_user (Oobs.User user);
+		public Oobs.Result delete_user (Oobs.User user);
+		public long find_free_uid (long uid_min, long uid_max);
 		public static unowned Oobs.Object @get ();
+		public unowned GLib.List get_available_locales ();
 		public unowned GLib.List get_available_shells ();
 		public unowned Oobs.Group get_default_group ();
 		public unowned string get_default_home_dir ();
 		public unowned string get_default_shell ();
+		public bool get_encrypted_home_support ();
+		public unowned Oobs.User get_from_login (string login);
+		public unowned Oobs.User get_from_uid (long uid);
 		public long get_maximum_users_uid ();
 		public long get_minimum_users_uid ();
 		public unowned Oobs.List get_users ();
+		public bool is_login_used (string login);
+		public bool is_uid_used (long uid);
 		public void set_default_home_dir (string home_dir);
 		public void set_default_shell (string shell);
 		public void set_maximum_users_uid (long uid);
@@ -404,18 +441,23 @@ namespace Oobs {
 		public string default_home { owned get; set; }
 		public string default_shell { get; set; }
 		[NoAccessorMethod]
-		public int maximum_uid { get; set; }
+		public bool encrypted_home { get; }
 		[NoAccessorMethod]
-		public int minimum_uid { get; set; }
+		public uint maximum_uid { get; set; }
 		[NoAccessorMethod]
-		public bool use_md5 { get; }
+		public uint minimum_uid { get; set; }
 	}
-	[CCode (cprefix = "OOBS_DIAL_TYPE_", has_type_id = false, cheader_filename = "oobs/oobs.h")]
+	[CCode (cprefix = "OOBS_DIAL_TYPE_", cheader_filename = "oobs/oobs.h")]
 	public enum DialType {
 		TONES,
 		PULSES
 	}
-	[CCode (cprefix = "OOBS_IFACE_TYPE_", has_type_id = false, cheader_filename = "oobs/oobs.h")]
+	[CCode (cprefix = "OOBS_ERROR_AUTHENTICATION_", cheader_filename = "oobs/oobs.h")]
+	public enum Error {
+		FAILED,
+		CANCELLED
+	}
+	[CCode (cprefix = "OOBS_IFACE_TYPE_", cheader_filename = "oobs/oobs.h")]
 	public enum IfaceType {
 		ETHERNET,
 		WIRELESS,
@@ -423,14 +465,14 @@ namespace Oobs {
 		PLIP,
 		PPP
 	}
-	[CCode (cprefix = "OOBS_MODEM_VOLUME_", has_type_id = false, cheader_filename = "oobs/oobs.h")]
+	[CCode (cprefix = "OOBS_MODEM_VOLUME_", cheader_filename = "oobs/oobs.h")]
 	public enum ModemVolume {
 		SILENT,
 		LOW,
 		MEDIUM,
 		LOUD
 	}
-	[CCode (cprefix = "OOBS_RESULT_", has_type_id = false, cheader_filename = "oobs/oobs.h")]
+	[CCode (cprefix = "OOBS_RESULT_", cheader_filename = "oobs/oobs.h")]
 	public enum Result {
 		OK,
 		ACCESS_DENIED,
@@ -438,20 +480,20 @@ namespace Oobs {
 		MALFORMED_DATA,
 		ERROR
 	}
-	[CCode (cprefix = "OOBS_RUNLEVEL_", has_type_id = false, cheader_filename = "oobs/oobs.h")]
+	[CCode (cprefix = "OOBS_RUNLEVEL_", cheader_filename = "oobs/oobs.h")]
 	public enum RunlevelRole {
 		HALT,
 		REBOOT,
 		MONOUSER,
 		MULTIUSER
 	}
-	[CCode (cprefix = "OOBS_SERVICE_", has_type_id = false, cheader_filename = "oobs/oobs.h")]
+	[CCode (cprefix = "OOBS_SERVICE_", cheader_filename = "oobs/oobs.h")]
 	public enum ServiceStatus {
 		START,
 		STOP,
 		IGNORE
 	}
-	[CCode (cprefix = "OOBS_SHARE_SMB_", has_type_id = false, cheader_filename = "oobs/oobs.h")]
+	[CCode (cprefix = "OOBS_SHARE_SMB_", cheader_filename = "oobs/oobs.h")]
 	[Flags]
 	public enum ShareSMBFlags {
 		ENABLED,
@@ -459,6 +501,14 @@ namespace Oobs {
 		PUBLIC,
 		WRITABLE
 	}
+	[CCode (cprefix = "OOBS_USER_", cheader_filename = "oobs/oobs.h")]
+	[Flags]
+	public enum UserHomeFlags {
+		REMOVE_HOME,
+		CHOWN_HOME
+	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public delegate void ObjectAsyncFunc (Oobs.Object object, Oobs.Result result);
+	[CCode (cheader_filename = "oobs/oobs.h")]
+	public static GLib.Quark error_quark ();
 }
