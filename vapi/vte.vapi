@@ -14,9 +14,6 @@ namespace Vte {
 	}
 	[CCode (cheader_filename = "vte/reaper.h")]
 	public class Reaper : GLib.Object {
-		public weak GLib.IOChannel channel;
-		[CCode (array_length = false)]
-		public weak int[] iopipe;
 		public static int add_child (GLib.Pid pid);
 		public static unowned Vte.Reaper @get ();
 		public virtual signal void child_exited (int p0, int p1);
@@ -29,9 +26,7 @@ namespace Vte {
 		public long char_height;
 		public long char_width;
 		public long column_count;
-		public weak string icon_title;
 		public long row_count;
-		public weak string window_title;
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public Terminal ();
 		public void copy_primary ();
@@ -47,8 +42,11 @@ namespace Vte {
 		public long get_char_descent ();
 		public long get_char_height ();
 		public long get_char_width ();
+		public int get_child_exit_status ();
 		public long get_column_count ();
+		public Vte.TerminalCursorBlinkMode get_cursor_blink_mode ();
 		public void get_cursor_position (out long column, out long row);
+		public Vte.TerminalCursorShape get_cursor_shape ();
 		public unowned string get_default_emulation ();
 		public unowned string get_emulation ();
 		public unowned string get_encoding ();
@@ -57,21 +55,24 @@ namespace Vte {
 		public unowned string get_icon_title ();
 		public bool get_mouse_autohide ();
 		public void get_padding (int xpad, int ypad);
+		public int get_pty ();
 		public long get_row_count ();
 		public unowned string get_status_line ();
-		public unowned string get_text (GLib.Callback is_selected, void* data, GLib.Array attributes);
-		public unowned string get_text_include_trailing_spaces (GLib.Callback is_selected, void* data, GLib.Array attributes);
-		public unowned string get_text_range (long start_row, long start_col, long end_row, long end_col, GLib.Callback is_selected, void* data, GLib.Array attributes);
+		public unowned string get_text (Vte.SelectionFunc is_selected, void* data, GLib.Array attributes);
+		public unowned string get_text_include_trailing_spaces (Vte.SelectionFunc is_selected, void* data, GLib.Array attributes);
+		public unowned string get_text_range (long start_row, long start_col, long end_row, long end_col, Vte.SelectionFunc is_selected, void* data, GLib.Array attributes);
 		public bool get_using_xft ();
 		public bool get_visible_bell ();
 		public unowned string get_window_title ();
 		public void im_append_menuitems (Gtk.MenuShell menushell);
 		public bool is_word_char (unichar c);
 		public int match_add (string match);
+		public int match_add_gregex (GLib.Regex regex, GLib.RegexMatchFlags flags);
 		public unowned string match_check (long column, long row, int tag);
 		public void match_clear_all ();
 		public void match_remove (int tag);
 		public void match_set_cursor (int tag, Gdk.Cursor cursor);
+		public void match_set_cursor_name (int tag, string cursor_name);
 		public void match_set_cursor_type (int tag, Gdk.CursorType cursor_type);
 		public void paste_primary ();
 		public void reset (bool full, bool clear_history);
@@ -92,7 +93,9 @@ namespace Vte {
 		public void set_color_foreground (Gdk.Color foreground);
 		public void set_color_highlight (Gdk.Color highlight_background);
 		public void set_colors (Gdk.Color foreground, Gdk.Color background, Gdk.Color[] palette);
+		public void set_cursor_blink_mode (Vte.TerminalCursorBlinkMode mode);
 		public void set_cursor_blinks (bool blink);
+		public void set_cursor_shape (Vte.TerminalCursorShape shape);
 		public void set_default_colors ();
 		public void set_delete_binding (Vte.TerminalEraseBinding binding);
 		public void set_emulation (string emulation);
@@ -112,13 +115,51 @@ namespace Vte {
 		public void set_visible_bell (bool is_visible);
 		public void set_word_chars (string spec);
 		[NoWrapper]
-		public virtual void vte_reserved1 ();
-		[NoWrapper]
-		public virtual void vte_reserved2 ();
-		[NoWrapper]
 		public virtual void vte_reserved3 ();
 		[NoWrapper]
 		public virtual void vte_reserved4 ();
+		public bool write_contents (GLib.OutputStream stream, Vte.TerminalWriteFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
+		public bool allow_bold { get; set; }
+		public bool audible_bell { get; set; }
+		[NoAccessorMethod]
+		public string background_image_file { owned get; set; }
+		[NoAccessorMethod]
+		public Gdk.Pixbuf background_image_pixbuf { owned get; set; }
+		[NoAccessorMethod]
+		public double background_opacity { get; set; }
+		[NoAccessorMethod]
+		public double background_saturation { get; set; }
+		[NoAccessorMethod]
+		public Gdk.Color background_tint_color { get; set; }
+		[NoAccessorMethod]
+		public bool background_transparent { get; set; }
+		[NoAccessorMethod]
+		public Vte.TerminalEraseBinding backspace_binding { get; set; }
+		public Vte.TerminalCursorBlinkMode cursor_blink_mode { get; set; }
+		public Vte.TerminalCursorShape cursor_shape { get; set; }
+		[NoAccessorMethod]
+		public Vte.TerminalEraseBinding delete_binding { get; set; }
+		public string emulation { get; set; }
+		public string encoding { get; set; }
+		[NoAccessorMethod]
+		public Pango.FontDescription font_desc { owned get; set; }
+		public string icon_title { get; }
+		[NoAccessorMethod]
+		public bool pointer_autohide { get; set; }
+		public int pty { get; set; }
+		[NoAccessorMethod]
+		public bool scroll_background { get; set; }
+		[NoAccessorMethod]
+		public bool scroll_on_keystroke { get; set; }
+		[NoAccessorMethod]
+		public bool scroll_on_output { get; set; }
+		[NoAccessorMethod]
+		public uint scrollback_lines { get; set; }
+		public bool visible_bell { get; set; }
+		public string window_title { get; }
+		[NoAccessorMethod]
+		public string word_chars { owned get; set; }
+		public virtual signal void beep ();
 		public virtual signal void char_size_changed (uint char_width, uint char_height);
 		public virtual signal void child_exited ();
 		public virtual signal void commit (string text, uint size);
@@ -144,6 +185,7 @@ namespace Vte {
 		public virtual signal void resize_window (uint width, uint height);
 		public virtual signal void restore_window ();
 		public virtual signal void selection_changed ();
+		public virtual signal void set_scroll_adjustments (Gtk.Adjustment hadjustment, Gtk.Adjustment vadjustment);
 		public virtual signal void status_line_changed ();
 		public virtual signal void text_deleted ();
 		public virtual signal void text_inserted ();
@@ -152,7 +194,7 @@ namespace Vte {
 		public virtual signal void window_title_changed ();
 	}
 	[CCode (cheader_filename = "vte/vteaccess.h")]
-	public class TerminalAccessible : Gtk.Accessible, Atk.Component, Atk.Action, Atk.Text {
+	public class TerminalAccessible : Gtk.Accessible, Atk.Text, Atk.Component, Atk.Action {
 		[CCode (type = "AtkObject*", has_construct_function = false)]
 		public TerminalAccessible (Vte.Terminal terminal);
 	}
@@ -161,17 +203,42 @@ namespace Vte {
 		[CCode (type = "AtkObjectFactory*", has_construct_function = false)]
 		public TerminalAccessibleFactory ();
 	}
-	[CCode (cprefix = "VTE_ANTI_ALIAS_", has_type_id = false, cheader_filename = "vte/vte.h")]
+	[CCode (cprefix = "VTE_ANTI_ALIAS_", cheader_filename = "vte/vte.h")]
 	public enum TerminalAntiAlias {
 		USE_DEFAULT,
 		FORCE_ENABLE,
 		FORCE_DISABLE
 	}
-	[CCode (cprefix = "VTE_ERASE_", has_type_id = false, cheader_filename = "vte/vte.h")]
+	[CCode (cprefix = "VTE_CURSOR_BLINK_", cheader_filename = "vte/vte.h")]
+	public enum TerminalCursorBlinkMode {
+		SYSTEM,
+		ON,
+		OFF
+	}
+	[CCode (cprefix = "VTE_CURSOR_SHAPE_", cheader_filename = "vte/vte.h")]
+	public enum TerminalCursorShape {
+		BLOCK,
+		IBEAM,
+		UNDERLINE
+	}
+	[CCode (cprefix = "VTE_ERASE_", cheader_filename = "vte/vte.h")]
 	public enum TerminalEraseBinding {
 		AUTO,
 		ASCII_BACKSPACE,
 		ASCII_DELETE,
-		DELETE_SEQUENCE
+		DELETE_SEQUENCE,
+		TTY
 	}
+	[CCode (cprefix = "VTE_TERMINAL_WRITE_", cheader_filename = "vte/vte.h")]
+	public enum TerminalWriteFlags {
+		DEFAULT
+	}
+	[CCode (cheader_filename = "vte/vte.h")]
+	public delegate bool SelectionFunc (Vte.Terminal terminal, long column, long row);
+	[CCode (cheader_filename = "vte/vte.h")]
+	public const int MAJOR_VERSION;
+	[CCode (cheader_filename = "vte/vte.h")]
+	public const int MICRO_VERSION;
+	[CCode (cheader_filename = "vte/vte.h")]
+	public const int MINOR_VERSION;
 }

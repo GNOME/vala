@@ -1,6 +1,15 @@
 <?xml version="1.0"?>
 <api version="1.0">
 	<namespace name="Vte">
+		<callback name="VteSelectionFunc">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="terminal" type="VteTerminal*"/>
+				<parameter name="column" type="glong"/>
+				<parameter name="row" type="glong"/>
+				<parameter name="data" type="gpointer"/>
+			</parameters>
+		</callback>
 		<struct name="VteCharAttributes">
 			<field name="row" type="long"/>
 			<field name="column" type="long"/>
@@ -9,16 +18,30 @@
 			<field name="underline" type="guint"/>
 			<field name="strikethrough" type="guint"/>
 		</struct>
-		<enum name="VteTerminalAntiAlias">
+		<enum name="VteTerminalAntiAlias" type-name="VteTerminalAntiAlias" get-type="vte_terminal_anti_alias_get_type">
 			<member name="VTE_ANTI_ALIAS_USE_DEFAULT" value="0"/>
 			<member name="VTE_ANTI_ALIAS_FORCE_ENABLE" value="1"/>
 			<member name="VTE_ANTI_ALIAS_FORCE_DISABLE" value="2"/>
 		</enum>
-		<enum name="VteTerminalEraseBinding">
+		<enum name="VteTerminalCursorBlinkMode" type-name="VteTerminalCursorBlinkMode" get-type="vte_terminal_cursor_blink_mode_get_type">
+			<member name="VTE_CURSOR_BLINK_SYSTEM" value="0"/>
+			<member name="VTE_CURSOR_BLINK_ON" value="1"/>
+			<member name="VTE_CURSOR_BLINK_OFF" value="2"/>
+		</enum>
+		<enum name="VteTerminalCursorShape" type-name="VteTerminalCursorShape" get-type="vte_terminal_cursor_shape_get_type">
+			<member name="VTE_CURSOR_SHAPE_BLOCK" value="0"/>
+			<member name="VTE_CURSOR_SHAPE_IBEAM" value="1"/>
+			<member name="VTE_CURSOR_SHAPE_UNDERLINE" value="2"/>
+		</enum>
+		<enum name="VteTerminalEraseBinding" type-name="VteTerminalEraseBinding" get-type="vte_terminal_erase_binding_get_type">
 			<member name="VTE_ERASE_AUTO" value="0"/>
 			<member name="VTE_ERASE_ASCII_BACKSPACE" value="1"/>
 			<member name="VTE_ERASE_ASCII_DELETE" value="2"/>
 			<member name="VTE_ERASE_DELETE_SEQUENCE" value="3"/>
+			<member name="VTE_ERASE_TTY" value="4"/>
+		</enum>
+		<enum name="VteTerminalWriteFlags" type-name="VteTerminalWriteFlags" get-type="vte_terminal_write_flags_get_type">
+			<member name="VTE_TERMINAL_WRITE_DEFAULT" value="0"/>
 		</enum>
 		<object name="VteReaper" parent="GObject" type-name="VteReaper" get-type="vte_reaper_get_type">
 			<method name="add_child" symbol="vte_reaper_add_child">
@@ -38,8 +61,6 @@
 					<parameter name="p1" type="gint"/>
 				</parameters>
 			</signal>
-			<field name="channel" type="GIOChannel*"/>
-			<field name="iopipe" type="int[]"/>
 		</object>
 		<object name="VteTerminal" parent="GtkWidget" type-name="VteTerminal" get-type="vte_terminal_get_type">
 			<implements>
@@ -148,8 +169,20 @@
 					<parameter name="terminal" type="VteTerminal*"/>
 				</parameters>
 			</method>
+			<method name="get_child_exit_status" symbol="vte_terminal_get_child_exit_status">
+				<return-type type="int"/>
+				<parameters>
+					<parameter name="terminal" type="VteTerminal*"/>
+				</parameters>
+			</method>
 			<method name="get_column_count" symbol="vte_terminal_get_column_count">
 				<return-type type="glong"/>
+				<parameters>
+					<parameter name="terminal" type="VteTerminal*"/>
+				</parameters>
+			</method>
+			<method name="get_cursor_blink_mode" symbol="vte_terminal_get_cursor_blink_mode">
+				<return-type type="VteTerminalCursorBlinkMode"/>
 				<parameters>
 					<parameter name="terminal" type="VteTerminal*"/>
 				</parameters>
@@ -160,6 +193,12 @@
 					<parameter name="terminal" type="VteTerminal*"/>
 					<parameter name="column" type="glong*"/>
 					<parameter name="row" type="glong*"/>
+				</parameters>
+			</method>
+			<method name="get_cursor_shape" symbol="vte_terminal_get_cursor_shape">
+				<return-type type="VteTerminalCursorShape"/>
+				<parameters>
+					<parameter name="terminal" type="VteTerminal*"/>
 				</parameters>
 			</method>
 			<method name="get_default_emulation" symbol="vte_terminal_get_default_emulation">
@@ -212,6 +251,12 @@
 					<parameter name="ypad" type="int*"/>
 				</parameters>
 			</method>
+			<method name="get_pty" symbol="vte_terminal_get_pty">
+				<return-type type="int"/>
+				<parameters>
+					<parameter name="terminal" type="VteTerminal*"/>
+				</parameters>
+			</method>
 			<method name="get_row_count" symbol="vte_terminal_get_row_count">
 				<return-type type="glong"/>
 				<parameters>
@@ -228,7 +273,7 @@
 				<return-type type="char*"/>
 				<parameters>
 					<parameter name="terminal" type="VteTerminal*"/>
-					<parameter name="is_selected" type="GCallback"/>
+					<parameter name="is_selected" type="VteSelectionFunc"/>
 					<parameter name="data" type="gpointer"/>
 					<parameter name="attributes" type="GArray*"/>
 				</parameters>
@@ -237,7 +282,7 @@
 				<return-type type="char*"/>
 				<parameters>
 					<parameter name="terminal" type="VteTerminal*"/>
-					<parameter name="is_selected" type="GCallback"/>
+					<parameter name="is_selected" type="VteSelectionFunc"/>
 					<parameter name="data" type="gpointer"/>
 					<parameter name="attributes" type="GArray*"/>
 				</parameters>
@@ -250,7 +295,7 @@
 					<parameter name="start_col" type="glong"/>
 					<parameter name="end_row" type="glong"/>
 					<parameter name="end_col" type="glong"/>
-					<parameter name="is_selected" type="GCallback"/>
+					<parameter name="is_selected" type="VteSelectionFunc"/>
 					<parameter name="data" type="gpointer"/>
 					<parameter name="attributes" type="GArray*"/>
 				</parameters>
@@ -294,6 +339,14 @@
 					<parameter name="match" type="char*"/>
 				</parameters>
 			</method>
+			<method name="match_add_gregex" symbol="vte_terminal_match_add_gregex">
+				<return-type type="int"/>
+				<parameters>
+					<parameter name="terminal" type="VteTerminal*"/>
+					<parameter name="regex" type="GRegex*"/>
+					<parameter name="flags" type="GRegexMatchFlags"/>
+				</parameters>
+			</method>
 			<method name="match_check" symbol="vte_terminal_match_check">
 				<return-type type="char*"/>
 				<parameters>
@@ -322,6 +375,14 @@
 					<parameter name="terminal" type="VteTerminal*"/>
 					<parameter name="tag" type="int"/>
 					<parameter name="cursor" type="GdkCursor*"/>
+				</parameters>
+			</method>
+			<method name="match_set_cursor_name" symbol="vte_terminal_match_set_cursor_name">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="terminal" type="VteTerminal*"/>
+					<parameter name="tag" type="int"/>
+					<parameter name="cursor_name" type="char*"/>
 				</parameters>
 			</method>
 			<method name="match_set_cursor_type" symbol="vte_terminal_match_set_cursor_type">
@@ -475,11 +536,25 @@
 					<parameter name="palette_size" type="glong"/>
 				</parameters>
 			</method>
+			<method name="set_cursor_blink_mode" symbol="vte_terminal_set_cursor_blink_mode">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="terminal" type="VteTerminal*"/>
+					<parameter name="mode" type="VteTerminalCursorBlinkMode"/>
+				</parameters>
+			</method>
 			<method name="set_cursor_blinks" symbol="vte_terminal_set_cursor_blinks">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="terminal" type="VteTerminal*"/>
 					<parameter name="blink" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_cursor_shape" symbol="vte_terminal_set_cursor_shape">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="terminal" type="VteTerminal*"/>
+					<parameter name="shape" type="VteTerminalCursorShape"/>
 				</parameters>
 			</method>
 			<method name="set_default_colors" symbol="vte_terminal_set_default_colors">
@@ -610,6 +685,47 @@
 					<parameter name="spec" type="char*"/>
 				</parameters>
 			</method>
+			<method name="write_contents" symbol="vte_terminal_write_contents">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="terminal" type="VteTerminal*"/>
+					<parameter name="stream" type="GOutputStream*"/>
+					<parameter name="flags" type="VteTerminalWriteFlags"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<property name="allow-bold" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="audible-bell" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="background-image-file" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="background-image-pixbuf" type="GdkPixbuf*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="background-opacity" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="background-saturation" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="background-tint-color" type="GdkColor*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="background-transparent" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="backspace-binding" type="VteTerminalEraseBinding" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="cursor-blink-mode" type="VteTerminalCursorBlinkMode" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="cursor-shape" type="VteTerminalCursorShape" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="delete-binding" type="VteTerminalEraseBinding" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="emulation" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="encoding" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="font-desc" type="PangoFontDescription*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="icon-title" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="pointer-autohide" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="pty" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="scroll-background" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="scroll-on-keystroke" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="scroll-on-output" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="scrollback-lines" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="visible-bell" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="window-title" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="word-chars" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<signal name="beep" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="terminal" type="VteTerminal*"/>
+				</parameters>
+			</signal>
 			<signal name="char-size-changed" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -756,6 +872,14 @@
 					<parameter name="terminal" type="VteTerminal*"/>
 				</parameters>
 			</signal>
+			<signal name="set-scroll-adjustments" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="widget" type="VteTerminal*"/>
+					<parameter name="hadjustment" type="GtkAdjustment*"/>
+					<parameter name="vadjustment" type="GtkAdjustment*"/>
+				</parameters>
+			</signal>
 			<signal name="status-line-changed" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -793,12 +917,6 @@
 					<parameter name="terminal" type="VteTerminal*"/>
 				</parameters>
 			</signal>
-			<vfunc name="vte_reserved1">
-				<return-type type="void"/>
-			</vfunc>
-			<vfunc name="vte_reserved2">
-				<return-type type="void"/>
-			</vfunc>
 			<vfunc name="vte_reserved3">
 				<return-type type="void"/>
 			</vfunc>
@@ -818,9 +936,9 @@
 		</object>
 		<object name="VteTerminalAccessible" parent="GtkAccessible" type-name="VteTerminalAccessible" get-type="vte_terminal_accessible_get_type">
 			<implements>
+				<interface name="AtkText"/>
 				<interface name="AtkComponent"/>
 				<interface name="AtkAction"/>
-				<interface name="AtkText"/>
 			</implements>
 			<constructor name="new" symbol="vte_terminal_accessible_new">
 				<return-type type="AtkObject*"/>
@@ -834,5 +952,8 @@
 				<return-type type="AtkObjectFactory*"/>
 			</constructor>
 		</object>
+		<constant name="VTE_MAJOR_VERSION" type="int" value="0"/>
+		<constant name="VTE_MICRO_VERSION" type="int" value="3"/>
+		<constant name="VTE_MINOR_VERSION" type="int" value="24"/>
 	</namespace>
 </api>
