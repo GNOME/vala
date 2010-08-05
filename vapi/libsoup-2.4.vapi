@@ -241,8 +241,8 @@ namespace Soup {
 		public void set_first_party (...);
 		public void set_flags (Soup.MessageFlags flags);
 		public void set_http_version (Soup.HTTPVersion version);
-		public void set_request (string content_type, Soup.MemoryUse req_use, string req_body, size_t req_length);
-		public void set_response (string content_type, Soup.MemoryUse resp_use, string resp_body, size_t resp_length);
+		public void set_request (string content_type, Soup.MemoryUse req_use, [CCode (type = "char**", array_length_type = "gsize")] uint8[] req_body);
+		public void set_response (string content_type, Soup.MemoryUse resp_use, [CCode (type = "char**", array_length_type = "gsize")] uint8[] resp_body);
 		public void set_status (uint status_code);
 		public void set_status_full (uint status_code, string reason_phrase);
 		public void set_uri (Soup.URI uri);
