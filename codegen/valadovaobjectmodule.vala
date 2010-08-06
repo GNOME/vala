@@ -480,7 +480,7 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			} else {
 				alloc_call.add_argument (new CCodeConstant ("0"));
 			}
-			if (!(cl is Class) || has_type_struct ((Class) cl)) {
+			if ((!(cl is Class) || has_type_struct ((Class) cl)) && !(cl is Delegate)) {
 				alloc_call.add_argument (new CCodeConstant ("sizeof (%sTypePrivate)".printf (cl.get_cname ())));
 			} else {
 				alloc_call.add_argument (new CCodeConstant ("0"));

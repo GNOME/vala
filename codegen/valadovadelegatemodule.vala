@@ -200,15 +200,11 @@ internal class Vala.DovaDelegateModule : DovaValueModule {
 		generate_type_get_function (d, delegate_class);
 
 		var instance_priv_struct = new CCodeStruct ("_%sPrivate".printf (d.get_cname ()));
-		var type_priv_struct = new CCodeStruct ("_%sTypePrivate".printf (d.get_cname ()));
 
 		instance_priv_struct.add_field ("void", "(*method) (void)");
 
 		source_declarations.add_type_declaration (new CCodeTypeDefinition ("struct %s".printf (instance_priv_struct.name), new CCodeVariableDeclarator ("%sPrivate".printf (d.get_cname ()))));
 		source_declarations.add_type_definition (instance_priv_struct);
-
-		source_declarations.add_type_declaration (new CCodeTypeDefinition ("struct %s".printf (type_priv_struct.name), new CCodeVariableDeclarator ("%sTypePrivate".printf (d.get_cname ()))));
-		source_declarations.add_type_definition (type_priv_struct);
 
 		string macro = "((%sPrivate *) (((char *) o) + _%s_object_offset))".printf (d.get_cname (), d.get_lower_case_cname ());
 		source_declarations.add_type_member_declaration (new CCodeMacroReplacement ("%s_GET_PRIVATE(o)".printf (d.get_upper_case_cname (null)), macro));
