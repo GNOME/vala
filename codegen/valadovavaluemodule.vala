@@ -541,28 +541,34 @@ internal class Vala.DovaValueModule : DovaObjectModule {
 	public override void visit_list_literal (ListLiteral expr) {
 		expr.accept_children (codegen);
 
-		var array_type = new ArrayType (expr.element_type, 1, expr.source_reference);
-		array_type.inline_allocated = true;
-		array_type.fixed_length = true;
-		array_type.length = expr.get_expressions ().size;
-
 		var ce = new CCodeCommaExpression ();
-		var temp_var = get_temp_variable (array_type, true, expr);
-		var name_cnode = get_variable_cexpression (temp_var.name);
+		int length = expr.get_expressions ().size;
 
-		temp_vars.insert (0, temp_var);
+		if (length == 0) {
+			ce.append_expression (new CCodeConstant ("NULL"));
+		} else {
+			var array_type = new ArrayType (expr.element_type, 1, expr.source_reference);
+			array_type.inline_allocated = true;
+			array_type.fixed_length = true;
+			array_type.length = length;
 
-		int i = 0;
-		foreach (Expression e in expr.get_expressions ()) {
-			ce.append_expression (new CCodeAssignment (new CCodeElementAccess (name_cnode, new CCodeConstant (i.to_string ())), (CCodeExpression) e.ccodenode));
-			i++;
+			var temp_var = get_temp_variable (array_type, true, expr);
+			var name_cnode = get_variable_cexpression (temp_var.name);
+
+			temp_vars.insert (0, temp_var);
+
+			int i = 0;
+			foreach (Expression e in expr.get_expressions ()) {
+				ce.append_expression (new CCodeAssignment (new CCodeElementAccess (name_cnode, new CCodeConstant (i.to_string ())), (CCodeExpression) e.ccodenode));
+				i++;
+			}
+
+			ce.append_expression (name_cnode);
 		}
-
-		ce.append_expression (name_cnode);
 
 		var list_creation = new CCodeFunctionCall (new CCodeIdentifier ("dova_list_new"));
 		list_creation.add_argument (get_type_id_expression (expr.element_type));
-		list_creation.add_argument (new CCodeConstant (array_type.length.to_string ()));
+		list_creation.add_argument (new CCodeConstant (length.to_string ()));
 		list_creation.add_argument (ce);
 
 		expr.ccodenode = list_creation;
@@ -571,28 +577,34 @@ internal class Vala.DovaValueModule : DovaObjectModule {
 	public override void visit_set_literal (SetLiteral expr) {
 		expr.accept_children (codegen);
 
-		var array_type = new ArrayType (expr.element_type, 1, expr.source_reference);
-		array_type.inline_allocated = true;
-		array_type.fixed_length = true;
-		array_type.length = expr.get_expressions ().size;
-
 		var ce = new CCodeCommaExpression ();
-		var temp_var = get_temp_variable (array_type, true, expr);
-		var name_cnode = get_variable_cexpression (temp_var.name);
+		int length = expr.get_expressions ().size;
 
-		temp_vars.insert (0, temp_var);
+		if (length == 0) {
+			ce.append_expression (new CCodeConstant ("NULL"));
+		} else {
+			var array_type = new ArrayType (expr.element_type, 1, expr.source_reference);
+			array_type.inline_allocated = true;
+			array_type.fixed_length = true;
+			array_type.length = length;
 
-		int i = 0;
-		foreach (Expression e in expr.get_expressions ()) {
-			ce.append_expression (new CCodeAssignment (new CCodeElementAccess (name_cnode, new CCodeConstant (i.to_string ())), (CCodeExpression) e.ccodenode));
-			i++;
+			var temp_var = get_temp_variable (array_type, true, expr);
+			var name_cnode = get_variable_cexpression (temp_var.name);
+
+			temp_vars.insert (0, temp_var);
+
+			int i = 0;
+			foreach (Expression e in expr.get_expressions ()) {
+				ce.append_expression (new CCodeAssignment (new CCodeElementAccess (name_cnode, new CCodeConstant (i.to_string ())), (CCodeExpression) e.ccodenode));
+				i++;
+			}
+
+			ce.append_expression (name_cnode);
 		}
-
-		ce.append_expression (name_cnode);
 
 		var set_creation = new CCodeFunctionCall (new CCodeIdentifier ("dova_set_new"));
 		set_creation.add_argument (get_type_id_expression (expr.element_type));
-		set_creation.add_argument (new CCodeConstant (array_type.length.to_string ()));
+		set_creation.add_argument (new CCodeConstant (length.to_string ()));
 		set_creation.add_argument (ce);
 
 		expr.ccodenode = set_creation;
@@ -601,40 +613,47 @@ internal class Vala.DovaValueModule : DovaObjectModule {
 	public override void visit_map_literal (MapLiteral expr) {
 		expr.accept_children (codegen);
 
-		var key_array_type = new ArrayType (expr.map_key_type, 1, expr.source_reference);
-		key_array_type.inline_allocated = true;
-		key_array_type.fixed_length = true;
-		key_array_type.length = expr.get_keys ().size;
-
 		var key_ce = new CCodeCommaExpression ();
-		var key_temp_var = get_temp_variable (key_array_type, true, expr);
-		var key_name_cnode = get_variable_cexpression (key_temp_var.name);
-
-		temp_vars.insert (0, key_temp_var);
-
-		var value_array_type = new ArrayType (expr.map_value_type, 1, expr.source_reference);
-		value_array_type.inline_allocated = true;
-		value_array_type.fixed_length = true;
-		value_array_type.length = expr.get_values ().size;
-
 		var value_ce = new CCodeCommaExpression ();
-		var value_temp_var = get_temp_variable (value_array_type, true, expr);
-		var value_name_cnode = get_variable_cexpression (value_temp_var.name);
+		int length = expr.get_keys ().size;
 
-		temp_vars.insert (0, value_temp_var);
+		if (length == 0) {
+			key_ce.append_expression (new CCodeConstant ("NULL"));
+			value_ce.append_expression (new CCodeConstant ("NULL"));
+		} else {
+			var key_array_type = new ArrayType (expr.map_key_type, 1, expr.source_reference);
+			key_array_type.inline_allocated = true;
+			key_array_type.fixed_length = true;
+			key_array_type.length = length;
 
-		for (int i = 0; i < expr.get_keys ().size; i++) {
-			key_ce.append_expression (new CCodeAssignment (new CCodeElementAccess (key_name_cnode, new CCodeConstant (i.to_string ())), (CCodeExpression) expr.get_keys ().get (i).ccodenode));
-			value_ce.append_expression (new CCodeAssignment (new CCodeElementAccess (value_name_cnode, new CCodeConstant (i.to_string ())), (CCodeExpression) expr.get_values ().get (i).ccodenode));
+			var key_temp_var = get_temp_variable (key_array_type, true, expr);
+			var key_name_cnode = get_variable_cexpression (key_temp_var.name);
+
+			temp_vars.insert (0, key_temp_var);
+
+			var value_array_type = new ArrayType (expr.map_value_type, 1, expr.source_reference);
+			value_array_type.inline_allocated = true;
+			value_array_type.fixed_length = true;
+			value_array_type.length = length;
+
+			var value_temp_var = get_temp_variable (value_array_type, true, expr);
+			var value_name_cnode = get_variable_cexpression (value_temp_var.name);
+
+			temp_vars.insert (0, value_temp_var);
+
+			for (int i = 0; i < length; i++) {
+				key_ce.append_expression (new CCodeAssignment (new CCodeElementAccess (key_name_cnode, new CCodeConstant (i.to_string ())), (CCodeExpression) expr.get_keys ().get (i).ccodenode));
+				value_ce.append_expression (new CCodeAssignment (new CCodeElementAccess (value_name_cnode, new CCodeConstant (i.to_string ())), (CCodeExpression) expr.get_values ().get (i).ccodenode));
+			}
+
+			key_ce.append_expression (key_name_cnode);
+			value_ce.append_expression (value_name_cnode);
 		}
-
-		key_ce.append_expression (key_name_cnode);
-		value_ce.append_expression (value_name_cnode);
 
 		var map_creation = new CCodeFunctionCall (new CCodeIdentifier ("dova_map_new"));
 		map_creation.add_argument (get_type_id_expression (expr.map_key_type));
 		map_creation.add_argument (get_type_id_expression (expr.map_value_type));
-		map_creation.add_argument (new CCodeConstant (key_array_type.length.to_string ()));
+		map_creation.add_argument (new CCodeConstant (length.to_string ()));
 		map_creation.add_argument (key_ce);
 		map_creation.add_argument (value_ce);
 
