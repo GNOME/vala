@@ -493,10 +493,13 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					if (param.ctype != null) {
 						cexpr = new CCodeCastExpression (cexpr, param.ctype);
 					}
+				} else {
+					cexpr = handle_struct_argument (null, arg, cexpr);
 				}
 				arg_pos = get_param_pos (param.cparameter_position, ellipsis);
 			} else {
 				// default argument position
+				cexpr = handle_struct_argument (null, arg, cexpr);
 				arg_pos = get_param_pos (i, ellipsis);
 			}
 
