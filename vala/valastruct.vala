@@ -620,6 +620,15 @@ public class Vala.Struct : TypeSymbol {
 				return st.get_default_value ();
 			}
 		}
+
+		if (CodeContext.get ().profile == Profile.DOVA) {
+			if (boolean_type) {
+				return "false";
+			} else if (integer_type || floating_type) {
+				return "0";
+			}
+		}
+
 		return null;
 	}
 
