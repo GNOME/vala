@@ -286,7 +286,7 @@ namespace Soup {
 	[Compact]
 	[CCode (type_id = "SOUP_TYPE_MESSAGE_BODY", cheader_filename = "libsoup/soup.h")]
 	public class MessageBody {
-		[CCode (array_length = false)]
+		[CCode (array_length_cname = "length", array_length_type = "gint64")]
 		public weak uint8[] data;
 		public int64 length;
 		[CCode (has_construct_function = false)]
