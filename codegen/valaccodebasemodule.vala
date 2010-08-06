@@ -4311,11 +4311,14 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 						if (param.ctype != null) {
 							cexpr = new CCodeCastExpression (cexpr, param.ctype);
 						}
+					} else {
+						cexpr = handle_struct_argument (null, arg, cexpr);
 					}
 
 					arg_pos = get_param_pos (param.cparameter_position, ellipsis);
 				} else {
 					// default argument position
+					cexpr = handle_struct_argument (null, arg, cexpr);
 					arg_pos = get_param_pos (i, ellipsis);
 				}
 			
@@ -4482,11 +4485,19 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
-	public CCodeExpression? handle_struct_argument (FormalParameter param, Expression arg, CCodeExpression? cexpr) {
+	public CCodeExpression? handle_struct_argument (FormalParameter? param, Expression arg, CCodeExpression? cexpr) {
+		DataType type;
+		if (param != null) {
+			type = param.variable_type;
+		} else {
+			// varargs
+			type = arg.value_type;
+		}
+
 		// pass non-simple struct instances always by reference
-		if (!(arg.value_type is NullType) && param.variable_type.data_type is Struct && !((Struct) param.variable_type.data_type).is_simple_type ()) {
+		if (!(arg.value_type is NullType) && type.is_real_struct_type ()) {
 			// we already use a reference for arguments of ref, out, and nullable parameters
-			if (param.direction == ParameterDirection.IN && !param.variable_type.nullable) {
+			if ((param == null || param.direction == ParameterDirection.IN) && !type.nullable) {
 				var unary = cexpr as CCodeUnaryExpression;
 				if (unary != null && unary.operator == CCodeUnaryOperator.POINTER_INDIRECTION) {
 					// *expr => expr
@@ -4498,7 +4509,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 					// (tmp = expr, &tmp)
 					var ccomma = new CCodeCommaExpression ();
 
-					var temp_var = get_temp_variable (param.variable_type, true, null, false);
+					var temp_var = get_temp_variable (type, true, null, false);
 					temp_vars.add (temp_var);
 					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), cexpr));
 					ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_var.name)));
