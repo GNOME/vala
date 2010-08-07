@@ -175,8 +175,6 @@ internal class Vala.DovaAssignmentModule : DovaMemberAccessModule {
 	}
 
 	public override void visit_assignment (Assignment assignment) {
-		assignment.right.accept (codegen);
-
 		if (assignment.left.error || assignment.right.error) {
 			assignment.error = true;
 			return;

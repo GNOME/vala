@@ -140,4 +140,12 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 
 		return !error;
 	}
+
+	public override void emit (CodeGenerator codegen) {
+		expression.emit (codegen);
+
+		codegen.visit_end_full_expression (expression);
+
+		codegen.visit_switch_statement (this);
+	}
 }

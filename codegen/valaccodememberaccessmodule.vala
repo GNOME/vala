@@ -30,8 +30,6 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 	}
 
 	public override void visit_member_access (MemberAccess expr) {
-		expr.accept_children (codegen);
-
 		CCodeExpression pub_inst = null;
 		DataType base_type = null;
 	
@@ -368,6 +366,20 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				expr.ccodenode = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_variable_cname (local.name));
 			} else {
 				expr.ccodenode = get_variable_cexpression (local.name);
+
+				if (expr.parent_node is ReturnStatement &&
+				    current_return_type.value_owned &&
+				    local.variable_type.value_owned &&
+				    !variable_accessible_in_finally (local)) {
+					/* return expression is local variable taking ownership and
+					 * current method is transferring ownership */
+
+					// don't ref expression
+					expr.value_type.value_owned = true;
+
+					// don't unref variable
+					local.active = false;
+				}
 			}
 		} else if (expr.symbol_reference is FormalParameter) {
 			var p = (FormalParameter) expr.symbol_reference;

@@ -235,6 +235,12 @@ public class Vala.LambdaExpression : Expression {
 		return !error;
 	}
 
+	public override void emit (CodeGenerator codegen) {
+		codegen.visit_lambda_expression (this);
+
+		codegen.visit_expression (this);
+	}
+
 	public override void get_used_variables (Collection<LocalVariable> collection) {
 		// require captured variables to be initialized
 		if (method.closure) {

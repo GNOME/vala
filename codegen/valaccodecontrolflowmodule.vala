@@ -30,7 +30,10 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 	}
 
 	public override void visit_if_statement (IfStatement stmt) {
-		stmt.accept_children (codegen);
+		stmt.true_statement.emit (codegen);
+		if (stmt.false_statement != null) {
+			stmt.false_statement.emit (codegen);
+		}
 
 		if (stmt.false_statement != null) {
 			stmt.ccodenode = new CCodeIfStatement ((CCodeExpression) stmt.condition.ccodenode, (CCodeStatement) stmt.true_statement.ccodenode, (CCodeStatement) stmt.false_statement.ccodenode);
@@ -189,7 +192,9 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 	}
 
 	public override void visit_switch_statement (SwitchStatement stmt) {
-		stmt.accept_children (codegen);
+		foreach (SwitchSection section in stmt.get_sections ()) {
+			section.emit (codegen);
+		}
 
 		if (stmt.expression.value_type.compatible (string_type)) {
 			visit_string_switch_statement (stmt);
@@ -220,16 +225,16 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 		create_temp_decl (stmt, stmt.expression.temp_vars);
 	}
 
-	public override void visit_switch_section (SwitchSection section) {
-		visit_block (section);
-	}
-
 	public override void visit_switch_label (SwitchLabel label) {
-		label.accept_children (codegen);
+		if (label.expression != null) {
+			label.expression.emit (codegen);
+
+			codegen.visit_end_full_expression (label.expression);
+		}
 	}
 
 	public override void visit_loop (Loop stmt) {
-		stmt.accept_children (codegen);
+		stmt.body.emit (codegen);
 
 		if (context.profile == Profile.GOBJECT) {
 			stmt.ccodenode = new CCodeWhileStatement (new CCodeConstant ("TRUE"), (CCodeStatement) stmt.body.ccodenode);
@@ -240,11 +245,7 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 	}
 
 	public override void visit_foreach_statement (ForeachStatement stmt) {
-		stmt.element_variable.active = true;
-		stmt.collection_variable.active = true;
-		if (stmt.iterator_variable != null) {
-			stmt.iterator_variable.active = true;
-		}
+		stmt.body.emit (codegen);
 
 		visit_block (stmt);
 

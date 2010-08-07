@@ -154,6 +154,10 @@ public class Vala.Block : Symbol, Statement {
 		return !error;
 	}
 
+	public override void emit (CodeGenerator codegen) {
+		codegen.visit_block (this);
+	}
+
 	public void insert_before (Statement stmt, Statement new_stmt) {
 		for (int i = 0; i < statement_list.size; i++) {
 			var stmt_list = statement_list[i] as StatementList;

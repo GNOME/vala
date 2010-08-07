@@ -131,4 +131,10 @@ public class Vala.IntegerLiteral : Literal {
 
 		return !error;
 	}
+
+	public override void emit (CodeGenerator codegen) {
+		codegen.visit_integer_literal (this);
+
+		codegen.visit_expression (this);
+	}
 }

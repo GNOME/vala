@@ -99,4 +99,14 @@ public class Vala.SetLiteral : Literal {
 
 		return !error;
 	}
+
+	public override void emit (CodeGenerator codegen) {
+		foreach (Expression expr in expression_list) {
+			expr.emit (codegen);
+		}
+
+		codegen.visit_set_literal (this);
+
+		codegen.visit_expression (this);
+	}
 }

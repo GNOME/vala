@@ -1,6 +1,6 @@
 /* valatypecheck.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -111,5 +111,13 @@ public class Vala.TypeCheck : Expression {
 		value_type = analyzer.bool_type;
 
 		return !error;
+	}
+
+	public override void emit (CodeGenerator codegen) {
+		expression.emit (codegen);
+
+		codegen.visit_type_check (this);
+
+		codegen.visit_expression (this);
 	}
 }

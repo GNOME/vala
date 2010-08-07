@@ -1,6 +1,6 @@
 /* valareturnstatement.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -146,6 +146,16 @@ public class Vala.ReturnStatement : CodeNode, Statement {
 		add_error_types (return_expression.get_error_types ());
 
 		return !error;
+	}
+
+	public override void emit (CodeGenerator codegen) {
+		if (return_expression != null) {
+			return_expression.emit (codegen);
+
+			codegen.visit_end_full_expression (return_expression);
+		}
+
+		codegen.visit_return_statement (this);
 	}
 
 	public override void get_defined_variables (Collection<LocalVariable> collection) {

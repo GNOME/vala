@@ -33,8 +33,6 @@ internal class Vala.DovaArrayModule : DovaMethodCallModule {
 	}
 
 	public override void visit_array_creation_expression (ArrayCreationExpression expr) {
-		expr.accept_children (codegen);
-
 		var array_type = expr.target_type as ArrayType;
 		if (array_type != null && array_type.fixed_length) {
 			// no heap allocation for fixed-length arrays
@@ -67,8 +65,6 @@ internal class Vala.DovaArrayModule : DovaMethodCallModule {
 	}
 
 	public override void visit_element_access (ElementAccess expr) {
-		expr.accept_children (codegen);
-
 		List<Expression> indices = expr.get_indices ();
 
 		var ccontainer = (CCodeExpression) expr.container.ccodenode;

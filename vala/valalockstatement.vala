@@ -1,7 +1,8 @@
 /* valalockstatement.vala
  *
  * Copyright (C) 2009  Jiří Zárevúcky
- * Copyright (C) 2006-2007  Raffaele Sandrini, Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
+ * Copyright (C) 2006-2007  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -99,5 +100,10 @@ public class Vala.LockStatement : CodeNode, Statement {
 		((Lockable) resource.symbol_reference).set_lock_used (true);
 
 		return !error;
+	}
+
+	public override void emit (CodeGenerator codegen) {
+		resource.emit (codegen);
+		codegen.visit_lock_statement (this);
 	}
 }

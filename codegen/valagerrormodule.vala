@@ -1,6 +1,6 @@
 /* valagerrormodule.vala
  *
- * Copyright (C) 2008-2009  Jürg Billeter
+ * Copyright (C) 2008-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -43,7 +43,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			if (ecode.value == null) {
 				cenum.add_value (new CCodeEnumValue (ecode.get_cname ()));
 			} else {
-				ecode.value.accept (codegen);
+				ecode.value.emit (codegen);
 				cenum.add_value (new CCodeEnumValue (ecode.get_cname (), (CCodeExpression) ecode.value.ccodenode));
 			}
 		}
@@ -85,8 +85,6 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 	}
 
 	public override void visit_throw_statement (ThrowStatement stmt) {
-		stmt.accept_children (codegen);
-
 		var cfrag = new CCodeFragment ();
 
 		// method will fail
@@ -333,15 +331,15 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		}
 
 		if (stmt.finally_body != null) {
-			stmt.finally_body.accept (codegen);
+			stmt.finally_body.emit (codegen);
 		}
 
 		is_in_catch = false;
-		stmt.body.accept (codegen);
+		stmt.body.emit (codegen);
 		is_in_catch = true;
 
 		foreach (CatchClause clause in stmt.get_catch_clauses ()) {
-			clause.accept (codegen);
+			clause.emit (codegen);
 		}
 
 		current_try = old_try;
@@ -369,10 +367,6 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 	}
 
 	public override void visit_catch_clause (CatchClause clause) {
-		if (clause.error_variable != null) {
-			clause.error_variable.active = true;
-		}
-
 		current_method_inner_error = true;
 
 		var error_type = (ErrorType) clause.error_type;
@@ -380,7 +374,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			generate_error_domain_declaration (error_type.error_domain, source_declarations);
 		}
 
-		clause.accept_children (codegen);
+		clause.body.emit (codegen);
 
 		var cfrag = new CCodeFragment ();
 		cfrag.append (new CCodeLabel (clause.clabel_name));

@@ -443,6 +443,37 @@ public class Vala.Assignment : Expression {
 		return !error;
 	}
 
+	public override void emit (CodeGenerator codegen) {
+		var ma = left as MemberAccess;
+		var ea = left as ElementAccess;
+		var pi = left as PointerIndirection;
+		if (ma != null) {
+			var field = ma.symbol_reference as Field;
+			var property = ma.symbol_reference as Property;
+
+			bool instance = (field != null && field.binding == MemberBinding.INSTANCE)
+				|| (property != null && property.binding == MemberBinding.INSTANCE);
+
+			if (instance) {
+				ma.inner.emit (codegen);
+			}
+		} else if (ea != null) {
+			ea.container.emit (codegen);
+
+			foreach (var index in ea.get_indices ()) {
+				index.emit (codegen);
+			}
+		} else if (pi != null) {
+			pi.inner.emit (codegen);
+		}
+
+		right.emit (codegen);
+
+		codegen.visit_assignment (this);
+
+		codegen.visit_expression (this);
+	}
+
 	public override void get_defined_variables (Collection<LocalVariable> collection) {
 		right.get_defined_variables (collection);
 		left.get_defined_variables (collection);

@@ -102,4 +102,10 @@ public class Vala.CharacterLiteral : Literal {
 
 		return !error;
 	}
+
+	public override void emit (CodeGenerator codegen) {
+		codegen.visit_character_literal (this);
+
+		codegen.visit_expression (this);
+	}
 }

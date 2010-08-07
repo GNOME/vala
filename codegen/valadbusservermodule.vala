@@ -1637,8 +1637,6 @@ public class Vala.DBusServerModule : DBusClientModule {
 
 		add_dbus_helpers ();
 
-		expr.accept_children (codegen);
-
 		var ma = (MemberAccess) expr.call;
 
 		var raw_conn = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_connection_get_connection"));

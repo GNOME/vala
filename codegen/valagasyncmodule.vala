@@ -576,8 +576,6 @@ public class Vala.GAsyncModule : GSignalModule {
 			return;
 		}
 
-		stmt.accept_children (codegen);
-
 		if (stmt.yield_expression.error) {
 			stmt.error = true;
 			return;

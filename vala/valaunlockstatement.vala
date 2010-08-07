@@ -1,6 +1,7 @@
 /* valaunlockstatement.vala
  *
- * Copyright (C) 2009  Jiří Zárevúcky, Jürg Billeter
+ * Copyright (C) 2009-2010  Jürg Billeter
+ * Copyright (C) 2009  Jiří Zárevúcky
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -66,5 +67,10 @@ public class Vala.UnlockStatement : CodeNode, Statement {
 		((Lockable) resource.symbol_reference).set_lock_used (true);
 
 		return !error;
+	}
+
+	public override void emit (CodeGenerator codegen) {
+		resource.emit (codegen);
+		codegen.visit_unlock_statement (this);
 	}
 }

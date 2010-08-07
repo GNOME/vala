@@ -1,6 +1,7 @@
 /* valaregexliteral.vala
  *
  * Copyright (C) 2010  Jukka-Pekka Iivonen
+ * Copyright (C) 2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -84,6 +85,12 @@ public class Vala.RegexLiteral : Literal {
 		value_type = analyzer.regex_type.copy ();
 
 		return !error;
+	}
+
+	public override void emit (CodeGenerator codegen) {
+		codegen.visit_regex_literal (this);
+
+		codegen.visit_expression (this);
 	}
 }
 

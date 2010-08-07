@@ -316,7 +316,29 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		if (m.binding == MemberBinding.CLASS || m.binding == MemberBinding.STATIC) {
 			in_static_or_class_context = true;
 		}
-		m.accept_children (codegen);
+
+
+		foreach (FormalParameter param in m.get_parameters ()) {
+			param.accept (codegen);
+		}
+
+		if (m.result_var != null) {
+			m.result_var.accept (codegen);
+		}
+
+		foreach (Expression precondition in m.get_preconditions ()) {
+			precondition.emit (codegen);
+		}
+
+		foreach (Expression postcondition in m.get_postconditions ()) {
+			postcondition.emit (codegen);
+		}
+
+		if (m.body != null) {
+			m.body.emit (codegen);
+		}
+
+
 		in_static_or_class_context = false;
 
 		if (m is CreationMethod) {

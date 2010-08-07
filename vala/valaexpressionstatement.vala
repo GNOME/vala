@@ -85,6 +85,12 @@ public class Vala.ExpressionStatement : CodeNode, Statement {
 		return !error;
 	}
 
+	public override void emit (CodeGenerator codegen) {
+		expression.emit (codegen);
+
+		codegen.visit_expression_statement (this);
+	}
+
 	public override void get_defined_variables (Collection<LocalVariable> collection) {
 		expression.get_defined_variables (collection);
 	}

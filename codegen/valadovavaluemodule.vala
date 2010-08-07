@@ -539,8 +539,6 @@ internal class Vala.DovaValueModule : DovaObjectModule {
 	}
 
 	public override void visit_list_literal (ListLiteral expr) {
-		expr.accept_children (codegen);
-
 		var ce = new CCodeCommaExpression ();
 		int length = expr.get_expressions ().size;
 
@@ -575,8 +573,6 @@ internal class Vala.DovaValueModule : DovaObjectModule {
 	}
 
 	public override void visit_set_literal (SetLiteral expr) {
-		expr.accept_children (codegen);
-
 		var ce = new CCodeCommaExpression ();
 		int length = expr.get_expressions ().size;
 
@@ -611,8 +607,6 @@ internal class Vala.DovaValueModule : DovaObjectModule {
 	}
 
 	public override void visit_map_literal (MapLiteral expr) {
-		expr.accept_children (codegen);
-
 		var key_ce = new CCodeCommaExpression ();
 		var value_ce = new CCodeCommaExpression ();
 		int length = expr.get_keys ().size;
@@ -661,8 +655,6 @@ internal class Vala.DovaValueModule : DovaObjectModule {
 	}
 
 	public override void visit_tuple (Tuple tuple) {
-		tuple.accept_children (codegen);
-
 		var type_array_type = new ArrayType (new PointerType (new VoidType ()), 1, tuple.source_reference);
 		type_array_type.inline_allocated = true;
 		type_array_type.fixed_length = true;

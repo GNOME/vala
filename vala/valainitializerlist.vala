@@ -1,6 +1,6 @@
 /* valainitializerlist.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
@@ -197,5 +197,13 @@ public class Vala.InitializerList : Expression {
 		}
 
 		return !error;
+	}
+
+	public override void emit (CodeGenerator codegen) {
+		foreach (Expression expr in initializers) {
+			expr.emit (codegen);
+		}
+
+		codegen.visit_initializer_list (this);
 	}
 }

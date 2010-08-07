@@ -117,4 +117,12 @@ public class Vala.SwitchSection : Block {
 
 		return !error;
 	}
+
+	public override void emit (CodeGenerator codegen) {
+		foreach (SwitchLabel label in labels) {
+			label.emit (codegen);
+		}
+
+		base.emit (codegen);
+	}
 }

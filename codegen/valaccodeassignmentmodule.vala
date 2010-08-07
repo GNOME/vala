@@ -1,6 +1,6 @@
 /* valaccodeassignmentmodule.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
@@ -232,8 +232,6 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 	}
 
 	public override void visit_assignment (Assignment assignment) {
-		assignment.right.accept (codegen);
-
 		if (assignment.left.error || assignment.right.error) {
 			assignment.error = true;
 			return;

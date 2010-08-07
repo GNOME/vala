@@ -147,6 +147,14 @@ public class Vala.CastExpression : Expression {
 		return !error;
 	}
 
+	public override void emit (CodeGenerator codegen) {
+		inner.emit (codegen);
+
+		codegen.visit_cast_expression (this);
+
+		codegen.visit_expression (this);
+	}
+
 	public override void get_defined_variables (Collection<LocalVariable> collection) {
 		inner.get_defined_variables (collection);
 	}

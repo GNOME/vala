@@ -1144,7 +1144,13 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 
 		var prop = (Property) acc.prop;
 
-		acc.accept_children (codegen);
+		if (acc.result_var != null) {
+			acc.result_var.accept (codegen);
+		}
+
+		if (acc.body != null) {
+			acc.body.emit (codegen);
+		}
 
 		// do not declare overriding properties and interface implementations
 		if (prop.is_abstract || prop.is_virtual
@@ -1383,7 +1389,27 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 		variable_name_map = new HashMap<string,string> (str_hash, str_equal);
 		current_try = null;
 
-		m.accept_children (codegen);
+
+		foreach (FormalParameter param in m.get_parameters ()) {
+			param.accept (codegen);
+		}
+
+		if (m.result_var != null) {
+			m.result_var.accept (codegen);
+		}
+
+		foreach (Expression precondition in m.get_preconditions ()) {
+			precondition.emit (codegen);
+		}
+
+		foreach (Expression postcondition in m.get_postconditions ()) {
+			postcondition.emit (codegen);
+		}
+
+		if (m.body != null) {
+			m.body.emit (codegen);
+		}
+
 
 		current_symbol = old_symbol;
 		next_temp_var_id = old_next_temp_var_id;

@@ -784,6 +784,16 @@ public class Vala.MemberAccess : Expression {
 		return !error;
 	}
 
+	public override void emit (CodeGenerator codegen) {
+		if (inner != null) {
+			inner.emit (codegen);
+		}
+
+		codegen.visit_member_access (this);
+
+		codegen.visit_expression (this);
+	}
+
 	public override void get_defined_variables (Collection<LocalVariable> collection) {
 		if (inner != null) {
 			inner.get_defined_variables (collection);

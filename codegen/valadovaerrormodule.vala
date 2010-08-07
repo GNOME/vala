@@ -33,8 +33,6 @@ internal class Vala.DovaErrorModule : DovaDelegateModule {
 	}
 
 	public override void visit_throw_statement (ThrowStatement stmt) {
-		stmt.accept_children (codegen);
-
 		var cfrag = new CCodeFragment ();
 
 		// method will fail
@@ -242,15 +240,15 @@ internal class Vala.DovaErrorModule : DovaDelegateModule {
 		}
 
 		if (stmt.finally_body != null) {
-			stmt.finally_body.accept (codegen);
+			stmt.finally_body.emit (codegen);
 		}
 
 		is_in_catch = false;
-		stmt.body.accept (codegen);
+		stmt.body.emit (codegen);
 		is_in_catch = true;
 
 		foreach (CatchClause clause in stmt.get_catch_clauses ()) {
-			clause.accept (codegen);
+			clause.emit (codegen);
 		}
 
 		current_try = old_try;
@@ -278,13 +276,9 @@ internal class Vala.DovaErrorModule : DovaDelegateModule {
 	}
 
 	public override void visit_catch_clause (CatchClause clause) {
-		if (clause.error_variable != null) {
-			clause.error_variable.active = true;
-		}
-
 		generate_type_declaration (clause.error_type, source_declarations);
 
-		clause.accept_children (codegen);
+		clause.body.emit (codegen);
 
 		var cfrag = new CCodeFragment ();
 		cfrag.append (new CCodeLabel (clause.clabel_name));

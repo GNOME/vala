@@ -1,6 +1,6 @@
 /* valanullliteral.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -60,5 +60,11 @@ public class Vala.NullLiteral : Literal {
 		value_type = new NullType (source_reference);
 
 		return !error;
+	}
+
+	public override void emit (CodeGenerator codegen) {
+		codegen.visit_null_literal (this);
+
+		codegen.visit_expression (this);
 	}
 }

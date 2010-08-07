@@ -1,6 +1,6 @@
 /* valayieldstatement.vala
  *
- * Copyright (C) 2008  Jürg Billeter
+ * Copyright (C) 2008-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -76,6 +76,16 @@ public class Vala.YieldStatement : CodeNode, Statement {
 		}
 
 		return !error;
+	}
+
+	public override void emit (CodeGenerator codegen) {
+		if (yield_expression != null) {
+			yield_expression.emit (codegen);
+
+			codegen.visit_end_full_expression (yield_expression);
+		}
+
+		codegen.visit_yield_statement (this);
 	}
 }
 

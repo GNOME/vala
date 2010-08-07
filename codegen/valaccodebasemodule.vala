@@ -693,7 +693,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 					flag_shift += 1;
 				}
 			} else {
-				ev.value.accept (codegen);
+				ev.value.emit (codegen);
 				c_ev = new CCodeEnumValue (ev.get_cname (), (CCodeExpression) ev.value.ccodenode);
 			}
 			c_ev.deprecated = ev.deprecated;
@@ -782,10 +782,10 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			return;
 		}
 
-		c.accept_children (codegen);
-
 		if (!c.external) {
 			generate_type_declaration (c.type_reference, decl_space);
+
+			c.value.emit (codegen);
 
 			var initializer_list = c.value as InitializerList;
 			if (initializer_list != null) {
@@ -916,7 +916,9 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 		check_type (f.variable_type);
 
-		f.accept_children (codegen);
+		if (f.initializer != null) {
+			f.initializer.emit (codegen);
+		}
 
 		var cl = f.parent_symbol as Class;
 		bool is_gtypeinstance = (cl != null && !cl.is_compact);
@@ -1366,7 +1368,13 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 		bool returns_real_struct = acc.readable && prop.property_type.is_real_non_null_struct_type ();
 
-		acc.accept_children (codegen);
+		if (acc.result_var != null) {
+			acc.result_var.accept (codegen);
+		}
+
+		if (acc.body != null) {
+			acc.body.emit (codegen);
+		}
 
 		var t = (TypeSymbol) prop.parent_symbol;
 
@@ -1612,7 +1620,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		bool old_method_inner_error = current_method_inner_error;
 		current_method_inner_error = false;
 
-		d.accept_children (codegen);
+		d.body.emit (codegen);
 
 		if (d.binding == MemberBinding.STATIC && !in_plugin) {
 			Report.error (d.source_reference, "static destructors are only supported for dynamic types");
@@ -1707,7 +1715,9 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		var old_symbol = current_symbol;
 		current_symbol = b;
 
-		b.accept_children (codegen);
+		foreach (Statement stmt in b.get_statements ()) {
+			stmt.emit (codegen);
+		}
 
 		var local_vars = b.get_local_variables ();
 		foreach (LocalVariable local in local_vars) {
@@ -2003,7 +2013,11 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	public override void visit_local_variable (LocalVariable local) {
 		check_type (local.variable_type);
 
-		local.accept_children (codegen);
+		if (local.initializer != null) {
+			local.initializer.emit (codegen);
+
+			visit_end_full_expression (local.initializer);
+		}
 
 		generate_type_declaration (local.variable_type, source_declarations);
 
@@ -2212,8 +2226,6 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_initializer_list (InitializerList list) {
-		list.accept_children (codegen);
-
 		if (list.target_type.data_type is Struct) {
 			/* initializer is used as struct initializer */
 			var st = (Struct) list.target_type.data_type;
@@ -3164,8 +3176,6 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_expression_statement (ExpressionStatement stmt) {
-		stmt.accept_children (codegen);
-
 		if (stmt.expression.error) {
 			stmt.error = true;
 			return;
@@ -3317,7 +3327,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		stmt.ccodenode = cfrag;
 	}
 
-	public virtual bool variable_accessible_in_finally (LocalVariable local) {
+	public bool variable_accessible_in_finally (LocalVariable local) {
 		if (current_try == null) {
 			return false;
 		}
@@ -3338,23 +3348,6 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_return_statement (ReturnStatement stmt) {
-		// avoid unnecessary ref/unref pair
-		if (stmt.return_expression != null) {
-			var local = stmt.return_expression.symbol_reference as LocalVariable;
-			if (current_return_type.value_owned
-			    && local != null && local.variable_type.value_owned
-			    && !local.captured
-			    && !variable_accessible_in_finally (local)) {
-				/* return expression is local variable taking ownership and
-				 * current method is transferring ownership */
-
-				// don't ref expression
-				stmt.return_expression.value_type.value_owned = true;
-			}
-		}
-
-		stmt.accept_children (codegen);
-
 		Symbol return_expression_symbol = null;
 
 		if (stmt.return_expression != null) {
@@ -3367,9 +3360,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				/* return expression is local variable taking ownership and
 				 * current method is transferring ownership */
 
-				// don't unref variable
 				return_expression_symbol = local;
-				return_expression_symbol.active = false;
 			}
 		}
 
@@ -3540,8 +3531,6 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_delete_statement (DeleteStatement stmt) {
-		stmt.accept_children (codegen);
-
 		var pointer_type = (PointerType) stmt.expression.value_type;
 		DataType type = pointer_type;
 		if (pointer_type.base_type.data_type != null && pointer_type.base_type.data_type.is_reference_type ()) {
@@ -4140,8 +4129,6 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_object_creation_expression (ObjectCreationExpression expr) {
-		expr.accept_children (codegen);
-
 		CCodeExpression instance = null;
 		CCodeExpression creation_expr = null;
 
@@ -4298,7 +4285,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				/* evaluate default expression here as the code
 				 * generator might not have visited the formal
 				 * parameter yet */
-				param.initializer.accept (codegen);
+				param.initializer.emit (codegen);
 			
 				carg_map.set (get_param_pos (param.cparameter_position), (CCodeExpression) param.initializer.ccodenode);
 				i++;
@@ -4483,8 +4470,6 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_unary_expression (UnaryExpression expr) {
-		expr.accept_children (codegen);
-
 		CCodeUnaryOperator op;
 		if (expr.operator == UnaryOperator.PLUS) {
 			op = CCodeUnaryOperator.PLUS;
@@ -4675,8 +4660,6 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	}
 	
 	public override void visit_named_argument (NamedArgument expr) {
-		expr.accept_children (codegen);
-
 		expr.ccodenode = expr.inner.ccodenode;
 	}
 
@@ -4697,8 +4680,6 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_reference_transfer_expression (ReferenceTransferExpression expr) {
-		expr.accept_children (codegen);
-
 		/* (tmp = var, var = null, tmp) */
 		var ccomma = new CCodeCommaExpression ();
 		var temp_decl = get_temp_variable (expr.value_type, true, expr, false);
@@ -4712,8 +4693,6 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_binary_expression (BinaryExpression expr) {
-		expr.accept_children (codegen);
-
 		var cleft = (CCodeExpression) expr.left.ccodenode;
 		var cright = (CCodeExpression) expr.right.ccodenode;
 
@@ -5587,7 +5566,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 	public CCodeNode? get_ccodenode (CodeNode node) {
 		if (node.ccodenode == null) {
-			node.accept (codegen);
+			node.emit (codegen);
 		}
 		return node.ccodenode;
 	}

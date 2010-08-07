@@ -1,6 +1,6 @@
 /* valacatchclause.vala
  *
- * Copyright (C) 2007-2009  Jürg Billeter
+ * Copyright (C) 2007-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -137,6 +137,14 @@ public class Vala.CatchClause : CodeNode {
 		body.check (analyzer);
 
 		return !error;
+	}
+
+	public override void emit (CodeGenerator codegen) {
+		if (error_variable != null) {
+			error_variable.active = true;
+		}
+
+		codegen.visit_catch_clause (this);
 	}
 
 	public override void get_defined_variables (Collection<LocalVariable> collection) {

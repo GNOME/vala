@@ -1,6 +1,6 @@
 /* valagsignalmodule.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
@@ -460,7 +460,6 @@ public class Vala.GSignalModule : GObjectModule {
 			// detailed signal emission
 			var sig = (Signal) expr.symbol_reference;
 			var ma = (MemberAccess) expr.container;
-			expr.accept_children (codegen);
 
 			var detail_expr = expr.get_indices ().get (0) as StringLiteral;
 			string signal_detail = detail_expr.eval ();
@@ -504,8 +503,6 @@ public class Vala.GSignalModule : GObjectModule {
 
 	public override void visit_assignment (Assignment assignment) {
 		if (assignment.left.symbol_reference is Signal) {
-			assignment.right.accept (codegen);
-
 			if (assignment.left.error || assignment.right.error) {
 				assignment.error = true;
 				return;
@@ -519,8 +516,6 @@ public class Vala.GSignalModule : GObjectModule {
 
 	public override void visit_member_access (MemberAccess expr) {
 		if (expr.symbol_reference is Signal) {
-			expr.accept_children (codegen);
-
 			CCodeExpression pub_inst = null;
 	
 			if (expr.inner != null) {
@@ -570,9 +565,6 @@ public class Vala.GSignalModule : GObjectModule {
 		var sig = (Signal) method_type.method_symbol.parent_symbol;
 		var signal_access = ((MemberAccess) expr.call).inner;
 		var handler = expr.get_argument_list ().get (0);
-
-		signal_access.accept (codegen);
-		handler.accept (codegen);
 
 		bool disconnect = (method_type.method_symbol.name == "disconnect");
 		bool after = (method_type.method_symbol.name == "connect_after");

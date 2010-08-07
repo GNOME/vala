@@ -139,4 +139,12 @@ public class Vala.IfStatement : CodeNode, Statement {
 
 		return !error;
 	}
+
+	public override void emit (CodeGenerator codegen) {
+		condition.emit (codegen);
+
+		codegen.visit_end_full_expression (condition);
+
+		codegen.visit_if_statement (this);
+	}
 }

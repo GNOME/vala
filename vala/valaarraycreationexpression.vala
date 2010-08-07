@@ -244,4 +244,18 @@ public class Vala.ArrayCreationExpression : Expression {
 
 		return !error;
 	}
+
+	public override void emit (CodeGenerator codegen) {
+		foreach (Expression e in sizes) {
+			e.emit (codegen);
+		}
+
+		if (initializer_list != null) {
+			initializer_list.emit (codegen);
+		}
+
+		codegen.visit_array_creation_expression (this);
+
+		codegen.visit_expression (this);
+	}
 }

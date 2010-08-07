@@ -306,6 +306,8 @@ public class Vala.BinaryExpression : Expression {
 				return false;
 			}
 
+			right.target_type = array_type.element_type.copy ();
+
 			value_type = array_type.copy ();
 			value_type.value_owned = true;
 		} else if (operator == BinaryOperator.PLUS
@@ -484,6 +486,15 @@ public class Vala.BinaryExpression : Expression {
 		}
 
 		return !error;
+	}
+
+	public override void emit (CodeGenerator codegen) {
+		left.emit (codegen);
+		right.emit (codegen);
+
+		codegen.visit_binary_expression (this);
+
+		codegen.visit_expression (this);
 	}
 
 	public override void get_defined_variables (Collection<LocalVariable> collection) {

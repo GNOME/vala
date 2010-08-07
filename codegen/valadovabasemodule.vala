@@ -376,7 +376,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 			if (ev.value == null) {
 				cenum.add_value (new CCodeEnumValue (ev.get_cname ()));
 			} else {
-				ev.value.accept (codegen);
+				ev.value.emit (codegen);
 				cenum.add_value (new CCodeEnumValue (ev.get_cname (), (CCodeExpression) ev.value.ccodenode));
 			}
 		}
@@ -400,9 +400,9 @@ internal class Vala.DovaBaseModule : CCodeModule {
 			return;
 		}
 
-		c.accept_children (codegen);
-
 		if (!c.external) {
+			c.value.emit (codegen);
+
 			if (c.value is InitializerList) {
 				var cdecl = new CCodeDeclaration (c.type_reference.get_const_cname ());
 				var arr = "";
@@ -456,7 +456,9 @@ internal class Vala.DovaBaseModule : CCodeModule {
 	}
 
 	public override void visit_field (Field f) {
-		f.accept_children (codegen);
+		if (f.initializer != null) {
+			f.initializer.emit (codegen);
+		}
 
 		var cl = f.parent_symbol as Class;
 
@@ -591,7 +593,6 @@ internal class Vala.DovaBaseModule : CCodeModule {
 	}
 
 	public override void visit_formal_parameter (FormalParameter p) {
-		p.accept_children (codegen);
 	}
 
 	public override void visit_property (Property prop) {
@@ -656,7 +657,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 	}
 
 	public override void visit_destructor (Destructor d) {
-		d.accept_children (codegen);
+		d.body.emit (codegen);
 
 		CCodeFragment cfrag = new CCodeFragment ();
 
@@ -707,7 +708,9 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		var old_symbol = current_symbol;
 		current_symbol = b;
 
-		b.accept_children (codegen);
+		foreach (Statement stmt in b.get_statements ()) {
+			stmt.emit (codegen);
+		}
 
 		var local_vars = b.get_local_variables ();
 		foreach (LocalVariable local in local_vars) {
@@ -954,7 +957,11 @@ internal class Vala.DovaBaseModule : CCodeModule {
 	}
 
 	public override void visit_local_variable (LocalVariable local) {
-		local.accept_children (codegen);
+		if (local.initializer != null) {
+			local.initializer.emit (codegen);
+
+			visit_end_full_expression (local.initializer);
+		}
 
 		generate_type_declaration (local.variable_type, source_declarations);
 
@@ -999,8 +1006,6 @@ internal class Vala.DovaBaseModule : CCodeModule {
 	}
 
 	public override void visit_initializer_list (InitializerList list) {
-		list.accept_children (codegen);
-
 		if (list.target_type.data_type is Struct) {
 			/* initializer is used as struct initializer */
 			var st = (Struct) list.target_type.data_type;
@@ -1310,8 +1315,6 @@ internal class Vala.DovaBaseModule : CCodeModule {
 	}
 
 	public override void visit_expression_statement (ExpressionStatement stmt) {
-		stmt.accept_children (codegen);
-
 		if (stmt.expression.error) {
 			stmt.error = true;
 			return;
@@ -1467,8 +1470,6 @@ internal class Vala.DovaBaseModule : CCodeModule {
 	}
 
 	public override void visit_return_statement (ReturnStatement stmt) {
-		stmt.accept_children (codegen);
-
 		var cfrag = new CCodeFragment ();
 
 		// free local variables
@@ -1480,8 +1481,6 @@ internal class Vala.DovaBaseModule : CCodeModule {
 	}
 
 	public override void visit_delete_statement (DeleteStatement stmt) {
-		stmt.accept_children (codegen);
-
 		var pointer_type = (PointerType) stmt.expression.value_type;
 		DataType type = pointer_type;
 		if (pointer_type.base_type.data_type != null && pointer_type.base_type.data_type.is_reference_type ()) {
@@ -1744,8 +1743,6 @@ internal class Vala.DovaBaseModule : CCodeModule {
 	}
 
 	public override void visit_object_creation_expression (ObjectCreationExpression expr) {
-		expr.accept_children (codegen);
-
 		CCodeExpression instance = null;
 		CCodeExpression creation_expr = null;
 
@@ -1837,7 +1834,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 				/* evaluate default expression here as the code
 				 * generator might not have visited the formal
 				 * parameter yet */
-				param.initializer.accept (codegen);
+				param.initializer.emit (codegen);
 
 				creation_call.add_argument ((CCodeExpression) param.initializer.ccodenode);
 				i++;
@@ -1944,8 +1941,6 @@ internal class Vala.DovaBaseModule : CCodeModule {
 	}
 
 	public override void visit_unary_expression (UnaryExpression expr) {
-		expr.accept_children (codegen);
-
 		CCodeUnaryOperator op;
 		if (expr.operator == UnaryOperator.PLUS) {
 			op = CCodeUnaryOperator.PLUS;
@@ -2036,8 +2031,6 @@ internal class Vala.DovaBaseModule : CCodeModule {
 	}
 
 	public override void visit_reference_transfer_expression (ReferenceTransferExpression expr) {
-		expr.accept_children (codegen);
-
 		/* (tmp = var, var = null, tmp) */
 		var ccomma = new CCodeCommaExpression ();
 		var temp_decl = get_temp_variable (expr.value_type, true, expr);
@@ -2051,8 +2044,6 @@ internal class Vala.DovaBaseModule : CCodeModule {
 	}
 
 	public override void visit_binary_expression (BinaryExpression expr) {
-		expr.accept_children (codegen);
-
 		var cleft = (CCodeExpression) expr.left.ccodenode;
 		var cright = (CCodeExpression) expr.right.ccodenode;
 
@@ -2441,7 +2432,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 
 	public CCodeNode? get_ccodenode (CodeNode node) {
 		if (node.ccodenode == null) {
-			node.accept (codegen);
+			node.emit (codegen);
 		}
 		return node.ccodenode;
 	}

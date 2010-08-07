@@ -85,4 +85,10 @@ public class Vala.RealLiteral : Literal {
 
 		return !error;
 	}
+
+	public override void emit (CodeGenerator codegen) {
+		codegen.visit_real_literal (this);
+
+		codegen.visit_expression (this);
+	}
 }

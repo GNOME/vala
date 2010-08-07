@@ -348,6 +348,24 @@ public class Vala.ForeachStatement : Block {
 		return !error;
 	}
 
+	public override void emit (CodeGenerator codegen) {
+		if (use_iterator) {
+			base.emit (codegen);
+			return;
+		}
+
+		collection.emit (codegen);
+		codegen.visit_end_full_expression (collection);
+
+		element_variable.active = true;
+		collection_variable.active = true;
+		if (iterator_variable != null) {
+			iterator_variable.active = true;
+		}
+
+		codegen.visit_foreach_statement (this);
+	}
+
 	public override void get_defined_variables (Collection<LocalVariable> collection) {
 		collection.add (element_variable);
 	}

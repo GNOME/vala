@@ -927,11 +927,11 @@ public class Vala.DBusClientModule : DBusModule {
 		Expression object_path = args.get (1);
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (type.type_symbol.get_lower_case_cprefix () + "dbus_proxy_new"));
-		connection.accept (codegen);
+		connection.emit (codegen);
 		ccall.add_argument ((CCodeExpression) connection.ccodenode);
-		bus_name.accept (codegen);
+		bus_name.emit (codegen);
 		ccall.add_argument ((CCodeExpression) bus_name.ccodenode);
-		object_path.accept (codegen);
+		object_path.emit (codegen);
 		ccall.add_argument ((CCodeExpression) object_path.ccodenode);
 		expr.ccodenode = ccall;
 	}
@@ -1413,11 +1413,11 @@ public class Vala.DBusClientModule : DBusModule {
 		if (proxy_get_all) {
 			var ma = expr.call as MemberAccess;
 			var instance = ma.inner;
-			instance.accept (codegen);
+			instance.emit (codegen);
 
 			var args = expr.get_argument_list ();
 			Expression interface_name = args.get (0);
-			interface_name.accept (codegen);
+			interface_name.emit (codegen);
 
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier (generate_get_all_function (mtype.method_symbol)));
 			ccall.add_argument ((CCodeExpression) instance.ccodenode);
@@ -1441,7 +1441,7 @@ public class Vala.DBusClientModule : DBusModule {
 		quark_call.add_argument (new CCodeConstant ("\"ValaDBusInterfaceProxyType\""));
 
 		var qdata_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_get_qdata"));
-		type.accept (codegen);
+		type.emit (codegen);
 		qdata_call.add_argument ((CCodeExpression) type.ccodenode);
 		qdata_call.add_argument (quark_call);
 
@@ -1450,16 +1450,16 @@ public class Vala.DBusClientModule : DBusModule {
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_new"));
 		ccall.add_argument (get_type_call);
 		ccall.add_argument (new CCodeConstant ("\"connection\""));
-		connection.accept (codegen);
+		connection.emit (codegen);
 		ccall.add_argument ((CCodeExpression) connection.ccodenode);
 		ccall.add_argument (new CCodeConstant ("\"name\""));
-		bus_name.accept (codegen);
+		bus_name.emit (codegen);
 		ccall.add_argument ((CCodeExpression) bus_name.ccodenode);
 		ccall.add_argument (new CCodeConstant ("\"path\""));
-		object_path.accept (codegen);
+		object_path.emit (codegen);
 		ccall.add_argument ((CCodeExpression) object_path.ccodenode);
 		ccall.add_argument (new CCodeConstant ("\"interface\""));
-		interface_name.accept (codegen);
+		interface_name.emit (codegen);
 		ccall.add_argument ((CCodeExpression) interface_name.ccodenode);
 		ccall.add_argument (new CCodeConstant ("NULL"));
 		expr.ccodenode = ccall;

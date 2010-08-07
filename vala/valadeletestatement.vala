@@ -1,6 +1,6 @@
 /* valadeletestatement.vala
  *
- * Copyright (C) 2008  Jürg Billeter
+ * Copyright (C) 2008-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,8 +19,6 @@
  * Author:
  * 	Jürg Billeter <j@bitron.ch>
  */
-
-using GLib;
 
 /**
  * Represents a delete statement e.g. "delete a".
@@ -62,5 +60,11 @@ public class Vala.DeleteStatement : CodeNode, Statement {
 		}
 
 		return !error;
+	}
+
+	public override void emit (CodeGenerator codegen) {
+		expression.emit (codegen);
+
+		codegen.visit_delete_statement (this);
 	}
 }

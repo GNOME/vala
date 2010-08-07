@@ -113,6 +113,16 @@ public class Vala.ThrowStatement : CodeNode, Statement {
 		return !error;
 	}
 
+	public override void emit (CodeGenerator codegen) {
+		if (error_expression != null) {
+			error_expression.emit (codegen);
+
+			codegen.visit_end_full_expression (error_expression);
+		}
+
+		codegen.visit_throw_statement (this);
+	}
+
 	public override void get_defined_variables (Collection<LocalVariable> collection) {
 		error_expression.get_defined_variables (collection);
 	}

@@ -458,7 +458,7 @@ public class Vala.GObjectModule : GTypeModule {
 		} else {
 			in_constructor = true;
 		}
-		c.accept_children (codegen);
+		c.body.emit (codegen);
 		in_static_or_class_context = false;
 
 		in_constructor = false;

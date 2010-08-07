@@ -706,6 +706,25 @@ public class Vala.MethodCall : Expression {
 		return !error;
 	}
 
+	public override void emit (CodeGenerator codegen) {
+		var method_type = call.value_type as MethodType;
+
+		if (method_type != null && method_type.method_symbol.parent_symbol is Signal) {
+			var signal_access = ((MemberAccess) call).inner;
+			signal_access.emit (codegen);
+		} else {
+			call.emit (codegen);
+		}
+
+		foreach (Expression expr in argument_list) {
+			expr.emit (codegen);
+		}
+
+		codegen.visit_method_call (this);
+
+		codegen.visit_expression (this);
+	}
+
 	public override void get_defined_variables (Collection<LocalVariable> collection) {
 		call.get_defined_variables (collection);
 

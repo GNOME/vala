@@ -1,6 +1,6 @@
 /* valacodegenerator.vala
  *
- * Copyright (C) 2007-2008  Jürg Billeter
+ * Copyright (C) 2007-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,8 +19,6 @@
  * Author:
  * 	Jürg Billeter <j@bitron.ch>
  */
-
-using GLib;
 
 /**
  * Abstract code visitor generating code.

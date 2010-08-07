@@ -26,7 +26,10 @@ internal class Vala.DovaControlFlowModule : DovaMethodModule {
 	}
 
 	public override void visit_if_statement (IfStatement stmt) {
-		stmt.accept_children (codegen);
+		stmt.true_statement.emit (codegen);
+		if (stmt.false_statement != null) {
+			stmt.false_statement.emit (codegen);
+		}
 
 		if (stmt.false_statement != null) {
 			stmt.ccodenode = new CCodeIfStatement ((CCodeExpression) stmt.condition.ccodenode, (CCodeStatement) stmt.true_statement.ccodenode, (CCodeStatement) stmt.false_statement.ccodenode);
@@ -38,7 +41,9 @@ internal class Vala.DovaControlFlowModule : DovaMethodModule {
 	}
 
 	public override void visit_switch_statement (SwitchStatement stmt) {
-		stmt.accept_children (codegen);
+		foreach (SwitchSection section in stmt.get_sections ()) {
+			section.emit (codegen);
+		}
 
 		var cswitch = new CCodeSwitchStatement ((CCodeExpression) stmt.expression.ccodenode);
 		stmt.ccodenode = cswitch;
@@ -68,16 +73,16 @@ internal class Vala.DovaControlFlowModule : DovaMethodModule {
 		create_temp_decl (stmt, stmt.expression.temp_vars);
 	}
 
-	public override void visit_switch_section (SwitchSection section) {
-		visit_block (section);
-	}
-
 	public override void visit_switch_label (SwitchLabel label) {
-		label.accept_children (codegen);
+		if (label.expression != null) {
+			label.expression.emit (codegen);
+
+			codegen.visit_end_full_expression (label.expression);
+		}
 	}
 
 	public override void visit_loop (Loop stmt) {
-		stmt.accept_children (codegen);
+		stmt.body.emit (codegen);
 
 		stmt.ccodenode = new CCodeWhileStatement (new CCodeConstant ("true"), (CCodeStatement) stmt.body.ccodenode);
 	}

@@ -1030,8 +1030,6 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			return;
 		}
 
-		expr.accept_children (codegen);
-
 		var ma = (MemberAccess) expr.call;
 		var type_arg = (ObjectType) ma.get_type_arguments ().get (0);
 

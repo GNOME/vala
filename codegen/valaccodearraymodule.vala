@@ -1,6 +1,6 @@
 /* valaccodearraymodule.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
@@ -43,8 +43,6 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 	}
 
 	public override void visit_array_creation_expression (ArrayCreationExpression expr) {
-		expr.accept_children (codegen);
-
 		var array_type = expr.target_type as ArrayType;
 		if (array_type != null && array_type.fixed_length) {
 			// no heap allocation for fixed-length arrays
@@ -400,8 +398,6 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 	}
 
 	public override void visit_element_access (ElementAccess expr) {
-		expr.accept_children (codegen);
-
 		List<Expression> indices = expr.get_indices ();
 		int rank = indices.size;
 
@@ -442,8 +438,6 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 	}
 
 	public override void visit_slice_expression (SliceExpression expr) {
-		expr.accept_children (codegen);
-
 		var ccontainer = (CCodeExpression) expr.container.ccodenode;
 		var cstart = (CCodeExpression) expr.start.ccodenode;
 		var cstop = (CCodeExpression) expr.stop.ccodenode;
@@ -1003,10 +997,6 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var array = binary.left;
 		var array_type = (ArrayType) array.value_type;
 		var element = binary.right;
-
-		array.accept (codegen);
-		element.target_type = array_type.element_type.copy ();
-		element.accept (codegen);
 
 		var value_param = new FormalParameter ("value", element.target_type);
 

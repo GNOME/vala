@@ -1,6 +1,6 @@
 /* valacontinuestatement.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -38,5 +38,9 @@ public class Vala.ContinueStatement : CodeNode, Statement {
 	
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_continue_statement (this);
+	}
+
+	public override void emit (CodeGenerator codegen) {
+		codegen.visit_continue_statement (this);
 	}
 }

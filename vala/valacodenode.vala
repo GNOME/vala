@@ -145,6 +145,9 @@ public abstract class Vala.CodeNode {
 		return true;
 	}
 
+	public virtual void emit (CodeGenerator codegen) {
+	}
+
 	public virtual void replace_type (DataType old_type, DataType new_type) {
 	}
 

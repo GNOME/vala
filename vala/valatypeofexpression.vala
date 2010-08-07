@@ -1,6 +1,6 @@
 /* valatypeofexpression.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -81,5 +81,11 @@ public class Vala.TypeofExpression : Expression {
 		value_type = analyzer.type_type;
 
 		return !error;
+	}
+
+	public override void emit (CodeGenerator codegen) {
+		codegen.visit_typeof_expression (this);
+
+		codegen.visit_expression (this);
 	}
 }

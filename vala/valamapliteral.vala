@@ -125,4 +125,15 @@ public class Vala.MapLiteral : Literal {
 
 		return !error;
 	}
+
+	public override void emit (CodeGenerator codegen) {
+		for (int i = 0; i < keys.size; i++) {
+			keys[i].emit (codegen);
+			values[i].emit (codegen);
+		}
+
+		codegen.visit_map_literal (this);
+
+		codegen.visit_expression (this);
+	}
 }

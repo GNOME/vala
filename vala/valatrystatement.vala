@@ -147,4 +147,8 @@ public class Vala.TryStatement : CodeNode, Statement {
 
 		return !error;
 	}
+
+	public override void emit (CodeGenerator codegen) {
+		codegen.visit_try_statement (this);
+	}
 }

@@ -429,6 +429,20 @@ public class Vala.ObjectCreationExpression : Expression {
 		return !error;
 	}
 
+	public override void emit (CodeGenerator codegen) {
+		foreach (Expression arg in argument_list) {
+			arg.emit (codegen);
+		}
+
+		foreach (MemberInitializer init in object_initializer) {
+			init.emit (codegen);
+		}
+
+		codegen.visit_object_creation_expression (this);
+
+		codegen.visit_expression (this);
+	}
+
 	public override void get_defined_variables (Collection<LocalVariable> collection) {
 		foreach (Expression arg in argument_list) {
 			arg.get_defined_variables (collection);

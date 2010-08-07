@@ -89,4 +89,14 @@ public class Vala.Tuple : Expression {
 
 		return !error;
 	}
+
+	public override void emit (CodeGenerator codegen) {
+		foreach (Expression expr in expression_list) {
+			expr.emit (codegen);
+		}
+
+		codegen.visit_tuple (this);
+
+		codegen.visit_expression (this);
+	}
 }

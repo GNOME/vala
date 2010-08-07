@@ -30,8 +30,6 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 	}
 
 	public override void visit_method_call (MethodCall expr) {
-		expr.accept_children (codegen);
-
 		// the bare function call
 		var ccall = new CCodeFunctionCall ((CCodeExpression) expr.call.ccodenode);
 

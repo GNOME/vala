@@ -234,6 +234,17 @@ public class Vala.ElementAccess : Expression {
 		return !error;
 	}
 
+	public override void emit (CodeGenerator codegen) {
+		container.emit (codegen);
+		foreach (Expression e in indices) {
+			e.emit (codegen);
+		}
+
+		codegen.visit_element_access (this);
+
+		codegen.visit_expression (this);
+	}
+
 	public override void get_defined_variables (Collection<LocalVariable> collection) {
 		container.get_defined_variables (collection);
 		foreach (Expression index in indices) {
