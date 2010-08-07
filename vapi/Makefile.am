@@ -47,6 +47,8 @@ dist_vapi_DATA = \
 	gdu.vapi \
 	gdu-gtk.deps \
 	gdu-gtk.vapi \
+	gedit-2.20.vapi \
+	gedit-2.20.deps \
 	gio-2.0.vapi \
 	gio-unix-2.0.deps \
 	gio-unix-2.0.vapi \
