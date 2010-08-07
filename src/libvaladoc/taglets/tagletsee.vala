@@ -34,18 +34,6 @@ public class Valadoc.Taglets.See : ContentElement, Taglet, Block {
 		});
 	}
 
-	public void xml_importer_parer_rule (Xml.DocumentationImporter importer) {
-		importer.start_element ("taglet");
-		symbol_name = importer.reader.get_attribute ("type");
-		importer.push (this);
-		importer.next ();
-
-		importer.process_text ();
-
-		importer.pop ();
-		importer.end_element ("taglet");
-	}
-
 	public override void check (Api.Tree api_root, Api.Node container, ErrorReporter reporter, Settings settings) {
 		symbol = api_root.search_symbol_str (container, symbol_name);
 		if (symbol == null) {

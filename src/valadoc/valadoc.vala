@@ -191,7 +191,6 @@ public class ValaDoc : Object {
 
 		Valadoc.Api.Tree doctree = new Valadoc.Api.Tree (reporter, settings);
 		Valadoc.DocumentationParser docparser = new Valadoc.DocumentationParser (settings, reporter, doctree, modules);
-		Valadoc.DocumentationImporter importer = new Valadoc.Xml.DocumentationImporter (doctree, modules, settings, reporter);
 
 		doctree.add_depencies (packages);
 		if (reporter.errors > 0) {
@@ -208,11 +207,6 @@ public class ValaDoc : Object {
 		}
 
 		doctree.parse_comments (docparser);
-		if (reporter.errors > 0) {
-			return quit (reporter);
-		}
-
-		doctree.import_documentation (importer);
 		if (reporter.errors > 0) {
 			return quit (reporter);
 		}

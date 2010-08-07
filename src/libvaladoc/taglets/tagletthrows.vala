@@ -35,18 +35,6 @@ public class Valadoc.Taglets.Throws : InlineContent, Taglet, Block {
 		});
 	}
 
-	public void xml_importer_parer_rule (Xml.DocumentationImporter importer) {
-		importer.start_element ("taglet");
-		error_domain_name = importer.reader.get_attribute ("type");
-		importer.push (this);
-		importer.next ();
-
-		importer.process_text ();
-
-		importer.pop ();
-		importer.end_element ("taglet");
-	}
-
 	public override void check (Api.Tree api_root, Api.Node container, ErrorReporter reporter, Settings settings) {
 		error_domain = api_root.search_symbol_str (container, error_domain_name);
 		if (error_domain == null) {

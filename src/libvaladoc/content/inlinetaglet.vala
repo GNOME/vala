@@ -34,8 +34,6 @@ public abstract class Valadoc.Content.InlineTaglet : ContentElement, Taglet, Inl
 
 	public abstract Rule? get_parser_rule (Rule run_rule);
 
-	public abstract void xml_importer_parer_rule (Xml.DocumentationImporter importer);
-
 	public abstract ContentElement produce_content ();
 
 	private ContentElement get_content () {

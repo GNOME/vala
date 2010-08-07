@@ -36,8 +36,6 @@ libvaladoc_la_VALASOURCES = \
 	documentation/wiki.vala \
 	documentation/wikiscanner.vala \
 	importer/documentationimporter.vala \
-	importer/valadocdocumentationimporter.vala \
-	importer/valamarkupreader.vala \
 	api/array.vala \
 	api/class.vala \
 	api/constant.vala \
