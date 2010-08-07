@@ -31,14 +31,9 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 
 	public override void visit_member_access (MemberAccess expr) {
 		CCodeExpression pub_inst = null;
-		DataType base_type = null;
 	
 		if (expr.inner != null) {
 			pub_inst = (CCodeExpression) expr.inner.ccodenode;
-
-			if (expr.inner.value_type != null) {
-				base_type = expr.inner.value_type;
-			}
 		}
 
 		if (expr.symbol_reference is Method) {
