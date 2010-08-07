@@ -167,8 +167,10 @@ namespace TokyoCabinet {
 		[CCode (cname = "tclistsortci")]
 		public void sort_insensitive ();
 		public void sort (TokyoCabinet.List.CompareDatumFunc func);
-		public void lsearch (char[] ptr);
-		public void bsearch (char[] ptr);
+		[CCode (cname = "tclistlsearch")]
+		public int linear_search (uint8[] ptr);
+		[CCode (cname = "tclistbsearch")]
+		public int binary_search (uint8[] ptr);
 		public void clear ();
 		[CCode (cname = "tclistdump")]
 		public unowned uint8[] _dump ();
@@ -229,10 +231,10 @@ namespace TokyoCabinet {
 		[CCode (cname = "tcmapout2")]
 		public bool remove_string (string key);
 		[CCode (cname = "tcmapget")]
-		public unowned uint8[]? get (char[] key);
+		public unowned uint8[]? get (uint8[] key);
 		[CCode (cname = "tcmapget2")]
 		public unowned string? get_string (string key);
-		public bool move (char[] key, bool head = true);
+		public bool move (uint8[] key, bool head = true);
 		[CCode (cname = "tcmapmove2")]
 		public bool move_string (string key, bool head = true);
 		[CCode (cname = "tcmapiterinit")]
@@ -244,14 +246,14 @@ namespace TokyoCabinet {
 		[CCode (cname = "tcmapiterval2")]
 		public unowned string? iterator_value_string (string key);
 		[CCode (cname = "tcmapiterval")]
-		public unowned uint8[]? iterator_value (char[] key);
+		public unowned uint8[]? iterator_value (uint8[] key);
 		public TokyoCabinet.List keys ();
 		[CCode (cname = "tcmapvals")]
 		public TokyoCabinet.List values ();
 		[CCode (cname = "tcmapaddint")]
 		public int add_int (uint8[] key, int num);
 		[CCode (cname = "tcmapadddouble")]
-		public double add_double (char[] key, double num);
+		public double add_double (uint8[] key, double num);
 		public void clear ();
 		[CCode (cname = "tcmapcutfront")]
 		public void cut_front (int num);
@@ -720,6 +722,8 @@ namespace TokyoCabinet {
 		public bool remove_string (string key);
 		[CCode (cname = "tcbdbget3")]
 		private unowned uint8[]? _get (uint8[] key);
+		[CCode (cname = "tcbdbsetdfunit")]
+		public bool set_defragment_unit (int32 dfunit);
 		[CCode (cname = "_vala_tcbdbget")]
 		public uint8[]? get (uint8[] key) {
 			return this._get (key);
