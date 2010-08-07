@@ -32,6 +32,9 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 
 		if (cl.base_class == null) {
 			decl_space.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (cl.get_cname ()), new CCodeVariableDeclarator (cl.get_cname ())));
+		} else if (cl == string_type.data_type) {
+			generate_class_declaration (cl.base_class, decl_space);
+			decl_space.add_type_declaration (new CCodeTypeDefinition ("const uint8_t *", new CCodeVariableDeclarator (cl.get_cname ())));
 		} else {
 			// typedef to base class instead of dummy struct to avoid warnings/casts
 			generate_class_declaration (cl.base_class, decl_space);
@@ -594,7 +597,7 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 		}
 		type_init_fun.block = new CCodeBlock ();
 
-		if (base_class == null || cl == object_class || cl == value_class) {
+		if (base_class == null || cl == object_class || cl == value_class || cl == string_class) {
 			var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
 			sizeof_call.add_argument (new CCodeIdentifier ("void *"));
 
@@ -690,7 +693,11 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			value_to_any_fun.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
 			value_to_any_fun.block = new CCodeBlock ();
 			var val = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("value"), new CCodeIdentifier ("value_index"));
-			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_ref".printf (cl.get_lower_case_cname ())));
+			string to_any_fun = "%s_ref".printf (cl.get_lower_case_cname ());
+			if (cl == string_class) {
+				to_any_fun = "string_to_any";
+			}
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier (to_any_fun));
 			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, val));
 			value_to_any_fun.block.add_statement (new CCodeReturnStatement (ccall));
 			source_type_member_definition.append (value_to_any_fun);
@@ -709,7 +716,11 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			value_from_any_fun.add_parameter (new CCodeFormalParameter ("value", cl.get_cname () + "**"));
 			value_from_any_fun.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
 			value_from_any_fun.block = new CCodeBlock ();
-			ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_ref".printf (cl.get_lower_case_cname ())));
+			string from_any_fun = "%s_ref".printf (cl.get_lower_case_cname ());
+			if (cl == string_class) {
+				from_any_fun = "string_from_any";
+			}
+			ccall = new CCodeFunctionCall (new CCodeIdentifier (from_any_fun));
 			ccall.add_argument (new CCodeIdentifier ("any_"));
 			value_from_any_fun.block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, val), ccall)));
 			value_from_any_fun.block.add_statement (new CCodeReturnStatement (ccall));

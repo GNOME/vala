@@ -414,7 +414,10 @@ public class Vala.BinaryExpression : Expression {
 			    && right.value_type.compatible (analyzer.string_type)) {
 				// string comparison
 				if (analyzer.context.profile == Profile.DOVA) {
-					var equals_call = new MethodCall (new MemberAccess (left, "equals", source_reference), source_reference);
+					var string_ma = new MemberAccess.simple ("string", source_reference);
+					string_ma.qualified = true;
+					var equals_call = new MethodCall (new MemberAccess (string_ma, "equals", source_reference), source_reference);
+					equals_call.add_argument (left);
 					equals_call.add_argument (right);
 					if (operator == BinaryOperator.EQUALITY) {
 						parent_node.replace_expression (this, equals_call);

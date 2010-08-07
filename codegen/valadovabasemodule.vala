@@ -154,6 +154,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 	public Class object_class;
 	public Class type_class;
 	public Class value_class;
+	public Class string_class;
 	public Class array_class;
 	public Class delegate_class;
 	public Class error_class;
@@ -232,6 +233,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		object_class = (Class) dova_ns.scope.lookup ("Object");
 		type_class = (Class) dova_ns.scope.lookup ("Type");
 		value_class = (Class) dova_ns.scope.lookup ("Value");
+		string_class = (Class) root_symbol.scope.lookup ("string");
 		array_class = (Class) dova_ns.scope.lookup ("Array");
 		delegate_class = (Class) dova_ns.scope.lookup ("Delegate");
 		error_class = (Class) dova_ns.scope.lookup ("Error");
@@ -1532,11 +1534,11 @@ internal class Vala.DovaBaseModule : CCodeModule {
 	}
 
 	public override void visit_string_literal (StringLiteral expr) {
-		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("string_create_from_cstring"));
 		// FIXME handle escaped characters in scanner/parser and escape them here again for C
-		ccall.add_argument (new CCodeConstant (expr.value));
+		var cliteral = new CCodeConstant ("\"\\0\" " + expr.value);
 
-		expr.ccodenode = ccall;
+		var cbinary = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, cliteral, new CCodeConstant ("1"));
+		expr.ccodenode = new CCodeCastExpression (cbinary, "string_t");
 	}
 
 	public override void visit_null_literal (NullLiteral expr) {

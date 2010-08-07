@@ -85,9 +85,6 @@ public class Vala.StringLiteral : Literal {
 		checked = true;
 
 		value_type = analyzer.string_type.copy ();
-		if (analyzer.context.profile == Profile.DOVA) {
-			value_type.value_owned = true;
-		}
 
 		return !error;
 	}
