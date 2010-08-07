@@ -33,6 +33,9 @@ DIST_SUBDIRS = \
 	vapigen \
 	$(NULL)
 
+aclocaldir = $(datadir)/aclocal
+dist_aclocal_DATA = vala.m4
+
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = vala@PACKAGE_SUFFIX@.pc
 
