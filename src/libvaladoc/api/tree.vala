@@ -20,6 +20,7 @@
  * 	Florian Brosch <flo.brosch@gmail.com>
  */
 
+using Valadoc.Importer;
 using Gee;
 
 
@@ -33,10 +34,20 @@ public class Valadoc.Api.Tree {
 	private Vala.CodeContext context;
 	private ErrorReporter reporter;
 	private Package sourcefiles = null;
+	private CTypeResolver _cresolver = null;
 
 	public WikiPageTree? wikitree {
 		private set;
 		get;
+	}
+
+	public CTypeResolver cresolver {
+		get {
+			if (_cresolver == null) {
+				_cresolver = new CTypeResolver (this);
+			}
+			return _cresolver;
+		}
 	}
 
 	public Collection<Package> get_package_list () {
