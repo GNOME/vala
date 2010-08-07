@@ -178,7 +178,7 @@ public class Vala.CodeWriter : CodeVisitor {
 					write_string (", ");
 				}
 				if (replacement != null) {
-					write_string ("replacement = \"%s\"".printf (since));
+					write_string ("replacement = \"%s\"".printf (replacement));
 				}
 				write_string (")");
 			}
