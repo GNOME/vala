@@ -150,7 +150,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 	}
 
-	private string fix_type_name (string type_name, Namespace ns) {
+	private string fix_type_name (string type_name, Symbol container) {
 		var attributes = get_attributes (type_name);
 		if (attributes != null) {
 			foreach (string attr in attributes) {
@@ -161,18 +161,22 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 		}
 
-		if (type_name.has_prefix (ns.name)) {
-			return type_name.offset (ns.name.length);
-		} else if (ns.name == "GLib" && type_name.has_prefix ("G")) {
+		if (type_name.has_prefix (container.name)) {
+			return type_name.offset (container.name.length);
+		} else if (container.name == "GLib" && type_name.has_prefix ("G")) {
 			return type_name.offset (1);
 		} else  {
 			string best_match = null;
-			foreach (string cprefix in ns.get_cprefixes ()) {
-				if (type_name.has_prefix (cprefix)) {
-					if (best_match == null || cprefix.length > best_match.length)
-						best_match = cprefix;
+			if (container is Namespace) {
+				foreach (string cprefix in ((Namespace) container).get_cprefixes ()) {
+					if (type_name.has_prefix (cprefix)) {
+						if (best_match == null || cprefix.length > best_match.length)
+							best_match = cprefix;
+					}
 				}
-			}
+               } else {
+				best_match = container.get_cprefix ();
+               }
 
 			if (best_match != null) {
 				return type_name.offset (best_match.length);;
@@ -182,13 +186,179 @@ public class Vala.GIdlParser : CodeVisitor {
 		return type_name;
 	}
 
-	private string fix_const_name (string const_name, Namespace ns) {
-		if (const_name.has_prefix (ns.name.up () + "_")) {
-			return const_name.offset (ns.name.length + 1);
-		} else if (ns.name == "GLib" && const_name.has_prefix ("G_")) {
-			return const_name.offset (2);
+	private string fix_const_name (string const_name, Symbol container) {
+		var pref = container.get_lower_case_cprefix ().up ();
+		if (const_name.has_prefix (pref)) {
+			return const_name.offset (pref.length);
 		}
 		return const_name;
+	}
+
+	private string[] get_attributes_for_node (IdlNode node) {
+		string name;
+
+		if (node.type == IdlNodeTypeId.FUNCTION) {
+			name = ((IdlNodeFunction) node).symbol;
+		} else if (node.type == IdlNodeTypeId.SIGNAL) {
+			name = "%s::%s".printf (current_data_type.get_cname (), node.name);
+		} else if (node.type == IdlNodeTypeId.PROPERTY) {
+			name = "%s:%s".printf (current_data_type.get_cname (), node.name);
+		} else if (node.type == IdlNodeTypeId.FIELD) {
+			name = "%s.%s".printf (current_data_type.get_cname (), node.name);
+		} else {
+			name = node.name;
+		}
+
+		return get_attributes (name);
+	}
+
+	private void add_symbol_to_container (Symbol container, Symbol sym) {
+		if (container is Class) {
+			unowned Class cl = (Class) container;
+
+			if (sym is Class) {
+				cl.add_class ((Class) sym);
+			} else if (sym is Constant) {
+				cl.add_constant ((Constant) sym);
+			} else if (sym is Enum) {
+				cl.add_enum ((Enum) sym);
+			} else if (sym is Field) {
+				cl.add_field ((Field) sym);
+			} else if (sym is Method) {
+				cl.add_method ((Method) sym);
+			} else if (sym is Property) {
+				cl.add_property ((Property) sym);
+			} else if (sym is Signal) {
+				cl.add_signal ((Signal) sym);
+			} else if (sym is Struct) {
+				cl.add_struct ((Struct) sym);
+			}
+		} else if (container is Enum) {
+			unowned Enum en = (Enum) container;
+
+			if (sym is EnumValue) {
+				en.add_value ((EnumValue) sym);
+			} else if (sym is Constant) {
+				en.add_constant ((Constant) sym);
+			} else if (sym is Method) {
+				en.add_method ((Method) sym);
+			}
+		} else if (container is Interface) {
+			unowned Interface iface = (Interface) container;
+
+			if (sym is Class) {
+				iface.add_class ((Class) sym);
+			} else if (sym is Constant) {
+				iface.add_constant ((Constant) sym);
+			} else if (sym is Enum) {
+				iface.add_enum ((Enum) sym);
+			} else if (sym is Field) {
+				iface.add_field ((Field) sym);
+			} else if (sym is Method) {
+				iface.add_method ((Method) sym);
+			} else if (sym is Property) {
+				iface.add_property ((Property) sym);
+			} else if (sym is Signal) {
+				iface.add_signal ((Signal) sym);
+			} else if (sym is Struct) {
+				iface.add_struct ((Struct) sym);
+			}
+		} else if (container is Namespace) {
+			unowned Namespace ns = (Namespace) container;
+
+			if (sym is Namespace) {
+				ns.add_namespace ((Namespace) sym);
+			} else if (sym is Class) {
+				ns.add_class ((Class) sym);
+			} else if (sym is Constant) {
+				ns.add_constant ((Constant) sym);
+			} else if (sym is Delegate) {
+				ns.add_delegate ((Delegate) sym);
+			} else if (sym is Enum) {
+				ns.add_enum ((Enum) sym);
+			} else if (sym is ErrorDomain) {
+				ns.add_error_domain ((ErrorDomain) sym);
+			} else if (sym is Field) {
+				ns.add_field ((Field) sym);
+			} else if (sym is Interface) {
+				ns.add_interface ((Interface) sym);
+			} else if (sym is Method) {
+				ns.add_method ((Method) sym);
+			} else if (sym is Namespace) {
+				ns.add_namespace ((Namespace) sym);
+			} else if (sym is Struct) {
+				ns.add_struct ((Struct) sym);
+			}
+		} else if (container is Struct) {
+			unowned Struct st = (Struct) container;
+
+			if (sym is Constant) {
+				st.add_constant ((Constant) sym);
+			} else if (sym is Field) {
+				st.add_field ((Field) sym);
+			} else if (sym is Method) {
+				st.add_method ((Method) sym);
+			} else if (sym is Property) {
+				st.add_property ((Property) sym);
+			}
+		}
+	}
+
+	private void parse_node (IdlNode node, IdlModule module, Symbol container) {
+		if (node.type == IdlNodeTypeId.CALLBACK) {
+			var cb = parse_delegate ((IdlNodeFunction) node);
+			if (cb == null) {
+				return;
+			}
+			cb.name = fix_type_name (cb.name, container);
+			add_symbol_to_container (container, cb);
+			current_source_file.add_node (cb);
+		} else if (node.type == IdlNodeTypeId.STRUCT) {
+			parse_struct ((IdlNodeStruct) node, container, module);
+		} else if (node.type == IdlNodeTypeId.UNION) {
+			parse_union ((IdlNodeUnion) node, container, module);
+		} else if (node.type == IdlNodeTypeId.BOXED) {
+			parse_boxed ((IdlNodeBoxed) node, container, module);
+		} else if (node.type == IdlNodeTypeId.ENUM) {
+			parse_enum ((IdlNodeEnum) node, container, module, false);
+		} else if (node.type == IdlNodeTypeId.FLAGS) {
+			parse_enum ((IdlNodeEnum) node, container, module, true);
+		} else if (node.type == IdlNodeTypeId.OBJECT) {
+			parse_object ((IdlNodeInterface) node, container, module);
+		} else if (node.type == IdlNodeTypeId.INTERFACE) {
+			parse_interface ((IdlNodeInterface) node, container, module);
+		} else if (node.type == IdlNodeTypeId.CONSTANT) {
+			var c = parse_constant ((IdlNodeConstant) node);
+			if (c != null) {
+				c.name = fix_const_name (c.name, container);
+				add_symbol_to_container (container, c);
+				current_source_file.add_node (c);
+			}
+		} else if (node.type == IdlNodeTypeId.FUNCTION) {
+			var m = parse_function ((IdlNodeFunction) node);
+			if (m != null) {
+				m.binding = MemberBinding.STATIC;
+				add_symbol_to_container (container, m);
+				current_source_file.add_node (m);
+			}
+		}
+	}
+
+	private Symbol? get_container_from_name (string name) {
+		var path = name.split (".");
+		Symbol? cp = current_namespace;
+		Symbol? cc = null;
+
+		foreach ( unowned string tok in path ) {
+			cc = cp.scope.lookup (tok) as Symbol;
+			if ( cc == null ) {
+				cc = new Namespace (tok, current_source_reference);
+				add_symbol_to_container (cp, cc);
+			}
+			cp = cc;
+		}
+
+		return cc;
 	}
 
 	private Namespace? parse_module (IdlModule module) {
@@ -226,45 +396,40 @@ public class Vala.GIdlParser : CodeVisitor {
 				}
 			}
 		}
-		
+
+		var deferred = new ArrayList<unowned IdlNode> ();
+
 		foreach (weak IdlNode node in module.entries) {
-			if (node.type == IdlNodeTypeId.CALLBACK) {
-				var cb = parse_delegate ((IdlNodeFunction) node);
-				if (cb == null) {
-					continue;
-				}
-				cb.name = fix_type_name (cb.name, ns);
-				ns.add_delegate (cb);
-				current_source_file.add_node (cb);
-			} else if (node.type == IdlNodeTypeId.STRUCT) {
-				parse_struct ((IdlNodeStruct) node, ns, module);
-			} else if (node.type == IdlNodeTypeId.UNION) {
-				parse_union ((IdlNodeUnion) node, ns, module);
-			} else if (node.type == IdlNodeTypeId.BOXED) {
-				parse_boxed ((IdlNodeBoxed) node, ns, module);
-			} else if (node.type == IdlNodeTypeId.ENUM) {
-				parse_enum ((IdlNodeEnum) node, ns, module, false);
-			} else if (node.type == IdlNodeTypeId.FLAGS) {
-				parse_enum ((IdlNodeEnum) node, ns, module, true);
-			} else if (node.type == IdlNodeTypeId.OBJECT) {
-				parse_object ((IdlNodeInterface) node, ns, module);
-			} else if (node.type == IdlNodeTypeId.INTERFACE) {
-				parse_interface ((IdlNodeInterface) node, ns, module);
-			} else if (node.type == IdlNodeTypeId.CONSTANT) {
-				var c = parse_constant ((IdlNodeConstant) node);
-				if (c != null) {
-					c.name = fix_const_name (c.name, ns);
-					ns.add_constant (c);
-					current_source_file.add_node (c);
-				}
-			} else if (node.type == IdlNodeTypeId.FUNCTION) {
-				var m = parse_function ((IdlNodeFunction) node);
-				if (m != null) {
-					m.binding = MemberBinding.STATIC;
-					ns.add_method (m);
-					current_source_file.add_node (m);
+			bool is_deferred = false;
+			var child_attributes = get_attributes_for_node (node);
+			if (child_attributes != null) {
+				foreach (unowned string attr in child_attributes) {
+					var nv = attr.split ("=", 2);
+					if (nv[0] == "parent") {
+						deferred.add (node);
+						is_deferred = true;
+					}
 				}
 			}
+
+			if (!is_deferred) {
+				parse_node (node, module, ns);
+			}
+		}
+
+		foreach (unowned IdlNode node in deferred) {
+			Symbol container = ns;
+			var child_attributes = get_attributes_for_node (node);
+			if (child_attributes != null) {
+				foreach (unowned string attr in child_attributes) {
+					var nv = attr.split ("=", 2);
+					if (nv[0] == "parent") {
+						container = get_container_from_name (eval (nv[1]));
+					}
+				}
+			}
+
+			parse_node (node, module, container);
 		}
 
 		current_namespace = null;
@@ -446,17 +611,17 @@ public class Vala.GIdlParser : CodeVisitor {
 		return true;
 	}
 
-	private void parse_struct (IdlNodeStruct st_node, Namespace ns, IdlModule module) {
+	private void parse_struct (IdlNodeStruct st_node, Symbol container, IdlModule module) {
 		weak IdlNode node = (IdlNode) st_node;
 		
 		if (st_node.deprecated) {
 			return;
 		}
 
-		string name = fix_type_name (node.name, ns);
+		string name = fix_type_name (node.name, container);
 
 		if (!is_reference_type (node.name)) {
-			var st = ns.scope.lookup (name) as Struct;
+			var st = container.scope.lookup (name) as Struct;
 			if (st == null) {
 				st = new Struct (name, current_source_reference);
 				st.access = SymbolAccessibility.PUBLIC;
@@ -509,7 +674,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					}
 				}
 
-				ns.add_struct (st);
+				add_symbol_to_container (container, st);
 				current_source_file.add_node (st);
 			}
 
@@ -537,7 +702,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			string copy_function = null;
 			string free_function = null;
 
-			var cl = ns.scope.lookup (name) as Class;
+			var cl = container.scope.lookup (name) as Class;
 			if (cl == null) {
 				string base_class = null;
 
@@ -599,7 +764,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					}
 				}
 
-				ns.add_class (cl);
+				add_symbol_to_container (container, cl);
 				current_source_file.add_node (cl);
 
 				if (base_class != null) {
@@ -653,17 +818,17 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 	}
 
-	private void parse_union (IdlNodeUnion un_node, Namespace ns, IdlModule module) {
+	private void parse_union (IdlNodeUnion un_node, Symbol container, IdlModule module) {
 		weak IdlNode node = (IdlNode) un_node;
 		
 		if (un_node.deprecated) {
 			return;
 		}
 
-		string name = fix_type_name (node.name, ns);
+		string name = fix_type_name (node.name, container);
 
 		if (!is_reference_type (node.name)) {
-			var st = ns.scope.lookup (name) as Struct;
+			var st = container.scope.lookup (name) as Struct;
 			if (st == null) {
 				st = new Struct (name, current_source_reference);
 				st.access = SymbolAccessibility.PUBLIC;
@@ -690,7 +855,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					}
 				}
 
-				ns.add_struct (st);
+				add_symbol_to_container (container, st);
 				current_source_file.add_node (st);
 			}
 
@@ -712,7 +877,7 @@ public class Vala.GIdlParser : CodeVisitor {
 
 			current_data_type = null;
 		} else {
-			var cl = ns.scope.lookup (name) as Class;
+			var cl = container.scope.lookup (name) as Class;
 			if (cl == null) {
 				cl = new Class (name, current_source_reference);
 				cl.access = SymbolAccessibility.PUBLIC;
@@ -732,7 +897,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					}
 				}
 
-				ns.add_class (cl);
+				add_symbol_to_container (container, cl);
 				current_source_file.add_node (cl);
 			}
 
@@ -787,10 +952,10 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 	}
 
-	private void parse_boxed (IdlNodeBoxed boxed_node, Namespace ns, IdlModule module) {
+	private void parse_boxed (IdlNodeBoxed boxed_node, Symbol container, IdlModule module) {
 		weak IdlNode node = (IdlNode) boxed_node;
 
-		string name = fix_type_name (node.name, ns);
+		string name = fix_type_name (node.name, container);
 
 		var node_attributes = get_attributes (node.name);
 		if (node_attributes != null) {
@@ -803,7 +968,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 
 		if (!is_reference_type (node.name)) {
-			var st = ns.scope.lookup (name) as Struct;
+			var st = container.scope.lookup (name) as Struct;
 			if (st == null) {
 				st = new Struct (name, current_source_reference);
 				st.access = SymbolAccessibility.PUBLIC;
@@ -838,7 +1003,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					}
 				}
 
-				ns.add_struct (st);
+				add_symbol_to_container (container, st);
 				st.set_type_id (st.get_upper_case_cname ("TYPE_"));
 				current_source_file.add_node (st);
 			}
@@ -867,7 +1032,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			string copy_function = null;
 			string free_function = null;
 
-			var cl = ns.scope.lookup (name) as Class;
+			var cl = container.scope.lookup (name) as Class;
 			if (cl == null) {
 				string base_class = null;
 
@@ -913,7 +1078,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					}
 				}
 
-				ns.add_class (cl);
+				add_symbol_to_container (container, cl);
 				cl.set_type_id (cl.get_upper_case_cname ("TYPE_"));
 				current_source_file.add_node (cl);
 
@@ -968,12 +1133,12 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 	}
 	
-	private void parse_enum (IdlNodeEnum en_node, Namespace ns, IdlModule module, bool is_flags) {
+	private void parse_enum (IdlNodeEnum en_node, Symbol container, IdlModule module, bool is_flags) {
 		weak IdlNode node = (IdlNode) en_node;
-		string name = fix_type_name (node.name, ns);
+		string name = fix_type_name (node.name, container);
 		bool existing = true;
 
-		var en = ns.scope.lookup (name) as Enum;
+		var en = container.scope.lookup (name) as Enum;
 		if (en == null) {
 			en = new Enum (name, current_source_reference);
 			en.access = SymbolAccessibility.PUBLIC;
@@ -1104,23 +1269,23 @@ public class Vala.GIdlParser : CodeVisitor {
 
 			current_source_file.add_node (ed);
 			if (!existing) {
-				ns.add_error_domain (ed);
+				add_symbol_to_container (container, ed);
 			}
 		} else {
 			en.is_flags = is_flags;
 			current_source_file.add_node (en);
 			if (!existing) {
-				ns.add_enum (en);
+				add_symbol_to_container (container, en);
 			}
 		}
 	}
 	
-	private void parse_object (IdlNodeInterface node, Namespace ns, IdlModule module) {
-		string name = fix_type_name (((IdlNode) node).name, ns);
+	private void parse_object (IdlNodeInterface node, Symbol container, IdlModule module) {
+		string name = fix_type_name (((IdlNode) node).name, container);
 
 		string base_class = null;
 
-		var cl = ns.scope.lookup (name) as Class;
+		var cl = container.scope.lookup (name) as Class;
 		if (cl == null) {
 			cl = new Class (name, current_source_reference);
 			cl.access = SymbolAccessibility.PUBLIC;
@@ -1157,7 +1322,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				}
 			}
 
-			ns.add_class (cl);
+			add_symbol_to_container (container, cl);
 			current_source_file.add_node (cl);
 		}
 
@@ -1264,10 +1429,10 @@ public class Vala.GIdlParser : CodeVisitor {
 		current_type_symbol_set = null;
 	}
 
-	private void parse_interface (IdlNodeInterface node, Namespace ns, IdlModule module) {
-		string name = fix_type_name (node.gtype_name, ns);
+	private void parse_interface (IdlNodeInterface node, Symbol container, IdlModule module) {
+		string name = fix_type_name (node.gtype_name, container);
 
-		var iface = ns.scope.lookup (name) as Interface;
+		var iface = container.scope.lookup (name) as Interface;
 		if (iface == null) {
 			iface = new Interface (name, current_source_reference);
 			iface.access = SymbolAccessibility.PUBLIC;
@@ -1289,7 +1454,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				iface.add_prerequisite (prereq);
 			}
 
-			ns.add_interface (iface);
+			add_symbol_to_container (container, iface);
 			current_source_file.add_node (iface);
 		}
 
