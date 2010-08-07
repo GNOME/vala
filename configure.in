@@ -70,7 +70,6 @@ AC_CONFIG_FILES([Makefile
                  src/doclets/htm/Makefile
                  src/doclets/valadoc.org/Makefile
                  src/doclets/devhelp/Makefile
-                 src/doclets/xml/Makefile
                  src/doclets/gtkdoc/Makefile
                  src/valadoc/Makefile])
 
