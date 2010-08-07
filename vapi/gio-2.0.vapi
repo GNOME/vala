@@ -194,6 +194,7 @@ namespace GLib {
 		public bool get_exit_on_close ();
 		public unowned string get_guid ();
 		public unowned GLib.Credentials get_peer_credentials ();
+		public T get_proxy_sync<T> (string? name, string object_path, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public unowned GLib.IOStream get_stream ();
 		public unowned string get_unique_name ();
 		public bool is_closed ();

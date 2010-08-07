@@ -234,8 +234,9 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 	public override void visit_method_call (MethodCall expr) {
 		var mtype = expr.call.value_type as MethodType;
-		bool get_proxy_sync = (mtype != null && mtype.method_symbol.get_cname () == "g_bus_get_proxy_sync");
-		if (!get_proxy_sync) {
+		bool bus_get_proxy_sync = (mtype != null && mtype.method_symbol.get_cname () == "g_bus_get_proxy_sync");
+		bool conn_get_proxy_sync = (mtype != null && mtype.method_symbol.get_cname () == "g_dbus_connection_get_proxy_sync");
+		if (!bus_get_proxy_sync && !conn_get_proxy_sync) {
 			base.visit_method_call (expr);
 			return;
 		}
@@ -250,11 +251,14 @@ public class Vala.GDBusClientModule : GDBusModule {
 			return;
 		}
 
+		var base_arg_index = 0;
+		if (bus_get_proxy_sync)
+			base_arg_index = 1;
+
 		var args = expr.get_argument_list ();
-		Expression bus_type = args.get (0);
-		Expression name = args.get (1);
-		Expression object_path = args.get (2);
-		Expression cancellable = args.get (3);
+		Expression name = args.get (base_arg_index + 0);
+		Expression object_path = args.get (base_arg_index + 1);
+		Expression cancellable = args.get (base_arg_index + 2);
 
 		// method can fail
 		current_method_inner_error = true;
@@ -269,9 +273,17 @@ public class Vala.GDBusClientModule : GDBusModule {
 		ccall.add_argument (new CCodeConstant ("\"g-name\""));
 		name.emit (this);
 		ccall.add_argument ((CCodeExpression) name.ccodenode);
-		ccall.add_argument (new CCodeConstant ("\"g-bus-type\""));
-		bus_type.emit (this);
-		ccall.add_argument ((CCodeExpression) bus_type.ccodenode);
+		if (bus_get_proxy_sync) {
+			Expression bus_type = args.get (0);
+			ccall.add_argument (new CCodeConstant ("\"g-bus-type\""));
+			bus_type.emit (this);
+			ccall.add_argument ((CCodeExpression) bus_type.ccodenode);
+		} else {
+			Expression connection = ((MemberAccess) expr.call).inner;
+			ccall.add_argument (new CCodeConstant ("\"g-connection\""));
+			connection.emit (this);
+			ccall.add_argument ((CCodeExpression) connection.ccodenode);
+		}
 		ccall.add_argument (new CCodeConstant ("\"g-object-path\""));
 		object_path.emit (this);
 		ccall.add_argument ((CCodeExpression) object_path.ccodenode);
