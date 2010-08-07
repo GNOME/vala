@@ -54,7 +54,7 @@ namespace Gtk {
 	public class SourceCompletion : Gtk.Object {
 		public bool add_provider (Gtk.SourceCompletionProvider provider) throws GLib.Error;
 		public void block_interactive ();
-		public unowned Gtk.SourceCompletionContext create_context (Gtk.TextIter position);
+		public unowned Gtk.SourceCompletionContext create_context (Gtk.TextIter? position = null);
 		public static GLib.Quark error_quark ();
 		public unowned Gtk.SourceCompletionInfo get_info_window ();
 		public unowned GLib.List get_providers ();
@@ -108,7 +108,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public SourceCompletionInfo ();
 		public unowned Gtk.Widget get_widget ();
-		public void move_to_iter (Gtk.TextView view, Gtk.TextIter iter);
+		public void move_to_iter (Gtk.TextView view, Gtk.TextIter? iter = null);
 		public void process_resize ();
 		public void set_sizing (int width, int height, bool shrink_width, bool shrink_height);
 		public void set_widget (Gtk.Widget widget);
@@ -122,10 +122,10 @@ namespace Gtk {
 		public bool shrink_width { get; set construct; }
 		public virtual signal void before_show ();
 	}
-	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
+	[CCode (cheader_filename = "gtksourceview/gtksourcecompletionitem.h")]
 	public class SourceCompletionItem : GLib.Object, Gtk.SourceCompletionProposal {
 		[CCode (has_construct_function = false)]
-		public SourceCompletionItem (string label, string text, Gdk.Pixbuf icon, string info);
+		public SourceCompletionItem (string label, string text, Gdk.Pixbuf? icon, string? info);
 		[CCode (has_construct_function = false)]
 		public SourceCompletionItem.from_stock (string label, string text, string stock, string info);
 		[CCode (has_construct_function = false)]
@@ -417,9 +417,9 @@ namespace Gtk {
 		public abstract bool activate_proposal (Gtk.SourceCompletionProposal proposal, Gtk.TextIter iter);
 		public abstract Gtk.SourceCompletionActivation get_activation ();
 		public abstract unowned Gdk.Pixbuf get_icon ();
-		public abstract unowned Gtk.Widget get_info_widget (Gtk.SourceCompletionProposal proposal);
+		public abstract unowned Gtk.Widget? get_info_widget (Gtk.SourceCompletionProposal proposal);
 		public abstract int get_interactive_delay ();
-		public abstract unowned string get_name ();
+		public abstract string get_name ();
 		public abstract int get_priority ();
 		public abstract bool get_start_iter (Gtk.SourceCompletionContext context, Gtk.SourceCompletionProposal proposal, Gtk.TextIter iter);
 		public abstract bool match (Gtk.SourceCompletionContext context);
