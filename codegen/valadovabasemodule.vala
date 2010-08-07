@@ -25,7 +25,7 @@
 /**
  * Code visitor generating C Code.
  */
-internal class Vala.DovaBaseModule : CCodeModule {
+public class Vala.DovaBaseModule : CodeGenerator {
 	public CodeContext context { get; set; }
 
 	public Symbol root_symbol;
@@ -163,9 +163,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 
 	public Map<string,string> variable_name_map = new HashMap<string,string> (str_hash, str_equal);
 
-	public DovaBaseModule (CCodeGenerator codegen, CCodeModule? next) {
-		base (codegen, next);
-
+	public DovaBaseModule () {
 		reserved_identifiers = new HashSet<string> (str_hash, str_equal);
 
 		// C99 keywords
@@ -262,7 +260,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		var source_files = context.get_source_files ();
 		foreach (SourceFile file in source_files) {
 			if (!file.external_package) {
-				file.accept (codegen);
+				file.accept (this);
 			}
 		}
 
@@ -338,7 +336,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 			writer.close ();
 		}
 
-		source_file.accept_children (codegen);
+		source_file.accept_children (this);
 
 		if (context.report.get_errors () > 0) {
 			return;
@@ -376,7 +374,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 			if (ev.value == null) {
 				cenum.add_value (new CCodeEnumValue (ev.get_cname ()));
 			} else {
-				ev.value.emit (codegen);
+				ev.value.emit (this);
 				cenum.add_value (new CCodeEnumValue (ev.get_cname (), (CCodeExpression) ev.value.ccodenode));
 			}
 		}
@@ -386,7 +384,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 	}
 
 	public override void visit_enum (Enum en) {
-		en.accept_children (codegen);
+		en.accept_children (this);
 
 		generate_enum_declaration (en, source_declarations);
 
@@ -401,7 +399,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		}
 
 		if (!c.external) {
-			c.value.emit (codegen);
+			c.value.emit (this);
 
 			if (c.value is InitializerList) {
 				var cdecl = new CCodeDeclaration (c.type_reference.get_const_cname ());
@@ -457,7 +455,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 
 	public override void visit_field (Field f) {
 		if (f.initializer != null) {
-			f.initializer.emit (codegen);
+			f.initializer.emit (this);
 		}
 
 		var cl = f.parent_symbol as Class;
@@ -605,7 +603,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		temp_ref_vars = new ArrayList<LocalVariable> ();
 		variable_name_map = new HashMap<string,string> (str_hash, str_equal);
 
-		prop.accept_children (codegen);
+		prop.accept_children (this);
 
 		next_temp_var_id = old_next_temp_var_id;
 		temp_vars = old_temp_vars;
@@ -657,7 +655,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 	}
 
 	public override void visit_destructor (Destructor d) {
-		d.body.emit (codegen);
+		d.body.emit (this);
 
 		CCodeFragment cfrag = new CCodeFragment ();
 
@@ -705,11 +703,10 @@ internal class Vala.DovaBaseModule : CCodeModule {
 	}
 
 	public override void visit_block (Block b) {
-		var old_symbol = current_symbol;
-		current_symbol = b;
+		emit_context.push_symbol (b);
 
 		foreach (Statement stmt in b.get_statements ()) {
-			stmt.emit (codegen);
+			stmt.emit (this);
 		}
 
 		var local_vars = b.get_local_variables ();
@@ -916,7 +913,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 
 		b.ccodenode = cblock;
 
-		current_symbol = old_symbol;
+		emit_context.pop_symbol ();
 	}
 
 	public override void visit_empty_statement (EmptyStatement stmt) {
@@ -924,7 +921,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 	}
 
 	public override void visit_declaration_statement (DeclarationStatement stmt) {
-		stmt.declaration.accept (codegen);
+		stmt.declaration.accept (this);
 
 		stmt.ccodenode = stmt.declaration.ccodenode;
 
@@ -958,7 +955,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 
 	public override void visit_local_variable (LocalVariable local) {
 		if (local.initializer != null) {
-			local.initializer.emit (codegen);
+			local.initializer.emit (this);
 
 			visit_end_full_expression (local.initializer);
 		}
@@ -997,7 +994,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		}
 
 		if (local.initializer != null && local.initializer.tree_can_fail) {
-			head.add_simple_check (local.initializer, cfrag);
+			add_simple_check (local.initializer, cfrag);
 		}
 
 		local.ccodenode = cfrag;
@@ -1338,7 +1335,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 
 			cfrag.append (stmt.ccodenode);
 
-			head.add_simple_check (stmt.expression, cfrag);
+			add_simple_check (stmt.expression, cfrag);
 
 			stmt.ccodenode = cfrag;
 		}
@@ -1843,7 +1840,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 				/* evaluate default expression here as the code
 				 * generator might not have visited the formal
 				 * parameter yet */
-				param.initializer.emit (codegen);
+				param.initializer.emit (this);
 
 				creation_call.add_argument ((CCodeExpression) param.initializer.ccodenode);
 				i++;
@@ -1866,7 +1863,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 
 			// cast the return value of the creation method back to the intended type if
 			// it requested a special C return type
-			if (head.get_custom_creturn_type (m) != null) {
+			if (get_custom_creturn_type (m) != null) {
 				creation_expr = new CCodeCastExpression (creation_expr, expr.type_reference.get_cname ());
 			}
 		} else {
@@ -2174,7 +2171,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		temp_vars = new ArrayList<LocalVariable> ();
 		temp_ref_vars = new ArrayList<LocalVariable> ();
 
-		l.accept_children (codegen);
+		l.accept_children (this);
 
 		temp_vars = old_temp_vars;
 		temp_ref_vars = old_temp_ref_vars;
@@ -2353,12 +2350,8 @@ internal class Vala.DovaBaseModule : CCodeModule {
 			base_property = prop.base_interface_property;
 		}
 
-		if (prop is DynamicProperty) {
-			set_func = head.get_dynamic_property_setter_cname ((DynamicProperty) prop);
-		} else {
-			generate_property_accessor_declaration (base_property.set_accessor, source_declarations);
-			set_func = base_property.set_accessor.get_cname ();
-		}
+		generate_property_accessor_declaration (base_property.set_accessor, source_declarations);
+		set_func = base_property.set_accessor.get_cname ();
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (set_func));
 
@@ -2441,12 +2434,9 @@ internal class Vala.DovaBaseModule : CCodeModule {
 
 	public CCodeNode? get_ccodenode (CodeNode node) {
 		if (node.ccodenode == null) {
-			node.emit (codegen);
+			node.emit (this);
 		}
 		return node.ccodenode;
-	}
-
-	public override void visit_class (Class cl) {
 	}
 
 	public DataType? get_this_type () {
@@ -2460,5 +2450,16 @@ internal class Vala.DovaBaseModule : CCodeModule {
 
 	public CCodeExpression generate_instance_cast (CCodeExpression expr, TypeSymbol type) {
 		return new CCodeCastExpression (expr, type.get_cname () + "*");
+	}
+
+	public virtual string? get_custom_creturn_type (Method m) {
+		return null;
+	}
+
+	public virtual bool method_has_wrapper (Method method) {
+		return false;
+	}
+
+	public virtual void add_simple_check (CodeNode node, CCodeFragment cfrag, bool always_fails = false) {
 	}
 }

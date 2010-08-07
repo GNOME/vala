@@ -21,10 +21,6 @@
  */
 
 public class Vala.GDBusModule : GVariantModule {
-	public GDBusModule (CCodeGenerator codegen, CCodeModule? next) {
-		base (codegen, next);
-	}
-
 	public static string? get_dbus_name (TypeSymbol symbol) {
 		var dbus = symbol.get_attribute ("DBus");
 		if (dbus == null) {

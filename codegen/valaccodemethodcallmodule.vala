@@ -25,10 +25,6 @@
 using GLib;
 
 public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
-	public CCodeMethodCallModule (CCodeGenerator codegen, CCodeModule? next) {
-		base (codegen, next);
-	}
-
 	public override void visit_method_call (MethodCall expr) {
 		// the bare function call
 		var ccall = new CCodeFunctionCall ((CCodeExpression) expr.call.ccodenode);
@@ -282,9 +278,9 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				param_nr++;
 			}
 			foreach (FormalParameter param in m.get_parameters ()) {
-				param.accept (codegen);
+				param.accept (this);
 			}
-			head.generate_dynamic_method_wrapper ((DynamicMethod) m);
+			generate_dynamic_method_wrapper ((DynamicMethod) m);
 		} else if (m is CreationMethod && context.profile == Profile.GOBJECT && m.parent_symbol is Class) {
 			ccall_expr = new CCodeAssignment (new CCodeIdentifier ("self"), new CCodeCastExpression (ccall, current_class.get_cname () + "*"));
 
@@ -364,17 +360,17 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 									}
 
 									comma.append_expression (ccall_expr);
-									comma.append_expression (new CCodeAssignment (get_variable_cexpression (head.get_array_length_cname (((UnaryExpression) arg).inner.to_string (), dim)), new CCodeCastExpression (get_variable_cexpression (temp_array_length.name), int_type.get_cname ())));
+									comma.append_expression (new CCodeAssignment (get_variable_cexpression (get_array_length_cname (((UnaryExpression) arg).inner.to_string (), dim)), new CCodeCastExpression (get_variable_cexpression (temp_array_length.name), int_type.get_cname ())));
 
 									if (temp_result != null) {
 										comma.append_expression (get_variable_cexpression (temp_result.name));
 									}
 									ccall_expr = comma;
 								} else {
-									array_length_expr = new CCodeCastExpression (head.get_array_length_cexpression (arg, dim), param.array_length_type);
+									array_length_expr = new CCodeCastExpression (get_array_length_cexpression (arg, dim), param.array_length_type);
 								}
 							} else {
-								array_length_expr = head.get_array_length_cexpression (arg, dim);
+								array_length_expr = get_array_length_cexpression (arg, dim);
 							}
 							carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), array_length_expr);
 						}
@@ -772,7 +768,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			/* memset needs string.h */
 			source_declarations.add_include ("string.h");
 
-			var clen = head.get_array_length_cexpression (ma.inner, 1);
+			var clen = get_array_length_cexpression (ma.inner, 1);
 			var celems = (CCodeExpression) ma.inner.ccodenode;
 			var array_type = (ArrayType) ma.inner.value_type;
 			var csizeof = new CCodeIdentifier ("sizeof (%s)".printf (array_type.element_type.get_cname ()));
@@ -788,7 +784,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			ccomma.append_expression (new CCodeAssignment (temp_ref, new_size));
 			ccomma.append_expression ((CCodeExpression) expr.ccodenode);
 			ccomma.append_expression (new CCodeConditionalExpression (ccheck, czero, new CCodeConstant ("NULL")));
-			ccomma.append_expression (new CCodeAssignment (head.get_array_length_cexpression (ma.inner, 1), temp_ref));
+			ccomma.append_expression (new CCodeAssignment (get_array_length_cexpression (ma.inner, 1), temp_ref));
 
 			expr.ccodenode = ccomma;
 		}

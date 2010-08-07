@@ -22,11 +22,7 @@
 
 using GLib;
 
-internal class Vala.DovaStructModule : DovaBaseModule {
-	public DovaStructModule (CCodeGenerator codegen, CCodeModule? next) {
-		base (codegen, next);
-	}
-
+public class Vala.DovaStructModule : DovaBaseModule {
 	public override void generate_struct_declaration (Struct st, CCodeDeclarationSpace decl_space) {
 		if (decl_space.add_symbol_declaration (st, st.get_cname ())) {
 			return;
@@ -85,7 +81,7 @@ internal class Vala.DovaStructModule : DovaBaseModule {
 			generate_struct_declaration (st, header_declarations);
 		}
 
-		st.accept_children (codegen);
+		st.accept_children (this);
 
 		current_symbol = old_symbol;
 		instance_finalize_fragment = old_instance_finalize_fragment;

@@ -27,10 +27,6 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 	int next_array_dup_id = 0;
 	int next_array_add_id = 0;
 
-	public CCodeArrayModule (CCodeGenerator codegen, CCodeModule? next) {
-		base (codegen, next);
-	}
-
 	void append_initializer_list (CCodeCommaExpression ce, CCodeExpression name_cnode, InitializerList initializer_list, int rank, ref int i) {
 		foreach (Expression e in initializer_list.get_initializers ()) {
 			if (rank > 1) {
@@ -411,7 +407,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			var memberaccess = expr.container as MemberAccess;
 			if (lit != null && memberaccess != null) {
 				int dim = lit.value.to_int ();
-				expr.ccodenode = head.get_array_length_cexpression (memberaccess.inner, dim + 1);
+				expr.ccodenode = get_array_length_cexpression (memberaccess.inner, dim + 1);
 			} else {
 				Report.error (expr.source_reference, "only integer literals supported as index");
 			}
@@ -430,7 +426,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		} else {
 			// access to element in an array
 			for (int i = 1; i < rank; i++) {
-				var cmul = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, cindex, head.get_array_length_cexpression (expr.container, i + 1));
+				var cmul = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, cindex, get_array_length_cexpression (expr.container, i + 1));
 				cindex = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, cmul, (CCodeExpression) indices[i].ccodenode);
 			}
 			expr.ccodenode = new CCodeElementAccess (ccontainer, cindex);
@@ -1039,7 +1035,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			}
 			
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				var cparam = new CCodeFormalParameter (head.get_array_length_cname (get_variable_cname (param.name), dim), length_ctype);
+				var cparam = new CCodeFormalParameter (get_array_length_cname (get_variable_cname (param.name), dim), length_ctype);
 				cparam_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), cparam);
 				if (carg_map != null) {
 					carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), get_variable_cexpression (cparam.name));

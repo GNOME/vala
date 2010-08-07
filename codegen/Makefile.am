@@ -22,11 +22,9 @@ libvala_la_VALASOURCES = \
 	valaccodecontrolflowmodule.vala \
 	valaccodedeclarationspace.vala \
 	valaccodedelegatemodule.vala \
-	valaccodegenerator.vala \
 	valaccodememberaccessmodule.vala \
 	valaccodemethodcallmodule.vala \
 	valaccodemethodmodule.vala \
-	valaccodemodule.vala \
 	valaccodestructmodule.vala \
 	valaclassregisterfunction.vala \
 	valactype.vala \

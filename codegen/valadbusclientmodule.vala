@@ -30,10 +30,6 @@ using GLib;
 public class Vala.DBusClientModule : DBusModule {
 	int dynamic_property_id;
 
-	public DBusClientModule (CCodeGenerator codegen, CCodeModule? next) {
-		base (codegen, next);
-	}
-
 	string get_dynamic_dbus_name (string vala_name) {
 		// TODO switch default to no transformation as soon as we have static D-Bus client support
 		// keep transformation by default for static D-Bus client and server support
@@ -270,7 +266,7 @@ public class Vala.DBusClientModule : DBusModule {
 						cdecl = new CCodeDeclaration ("GPtrArray*");
 
 						array_construct = new CCodeFunctionCall (new CCodeIdentifier ("g_ptr_array_sized_new"));
-						array_construct.add_argument (new CCodeIdentifier (head.get_array_length_cname (param.name, 1)));
+						array_construct.add_argument (new CCodeIdentifier (get_array_length_cname (param.name, 1)));
 					} else {
 						cdecl = new CCodeDeclaration ("GArray*");
 
@@ -289,16 +285,16 @@ public class Vala.DBusClientModule : DBusModule {
 						var memcpy_call = new CCodeFunctionCall (new CCodeIdentifier ("memcpy"));
 						memcpy_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("dbus_%s".printf (param.name)), "pdata"));
 						memcpy_call.add_argument (new CCodeIdentifier (param.name));
-						memcpy_call.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeIdentifier (head.get_array_length_cname (param.name, 1)), sizeof_call));
+						memcpy_call.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeIdentifier (get_array_length_cname (param.name, 1)), sizeof_call));
 						block.add_statement (new CCodeExpressionStatement (memcpy_call));
 
-						var len_assignment = new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("dbus_%s".printf (param.name)), "len"), new CCodeIdentifier (head.get_array_length_cname (param.name, 1)));
+						var len_assignment = new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("dbus_%s".printf (param.name)), "len"), new CCodeIdentifier (get_array_length_cname (param.name, 1)));
 						block.add_statement (new CCodeExpressionStatement (len_assignment));
 					} else {
 						var cappend_call = new CCodeFunctionCall (new CCodeIdentifier ("g_array_append_vals"));
 						cappend_call.add_argument (new CCodeIdentifier ("dbus_%s".printf (param.name)));
 						cappend_call.add_argument (new CCodeIdentifier (param.name));
-						cappend_call.add_argument (new CCodeIdentifier (head.get_array_length_cname (param.name, 1)));
+						cappend_call.add_argument (new CCodeIdentifier (get_array_length_cname (param.name, 1)));
 						block.add_statement (new CCodeExpressionStatement (cappend_call));
 					}
 
@@ -857,12 +853,12 @@ public class Vala.DBusClientModule : DBusModule {
 	void generate_dbus_connect_wrapper (DynamicSignal sig, CCodeBlock block) {
 		var m = (Method) sig.handler.symbol_reference;
 
-		sig.accept (codegen);
+		sig.accept (this);
 
 		// FIXME should only be done once per marshaller
 		var register_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_object_register_marshaller"));
-		head.generate_marshaller (sig.get_parameters (), sig.return_type, true);
-		register_call.add_argument (new CCodeIdentifier (head.get_marshaller_function (sig.get_parameters (), sig.return_type, null, true)));
+		generate_marshaller (sig.get_parameters (), sig.return_type, true);
+		register_call.add_argument (new CCodeIdentifier (get_marshaller_function (sig.get_parameters (), sig.return_type, null, true)));
 		register_call.add_argument (new CCodeIdentifier ("G_TYPE_NONE"));
 
 		var add_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_proxy_add_signal"));
@@ -927,11 +923,11 @@ public class Vala.DBusClientModule : DBusModule {
 		Expression object_path = args.get (1);
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (type.type_symbol.get_lower_case_cprefix () + "dbus_proxy_new"));
-		connection.emit (codegen);
+		connection.emit (this);
 		ccall.add_argument ((CCodeExpression) connection.ccodenode);
-		bus_name.emit (codegen);
+		bus_name.emit (this);
 		ccall.add_argument ((CCodeExpression) bus_name.ccodenode);
-		object_path.emit (codegen);
+		object_path.emit (this);
 		ccall.add_argument ((CCodeExpression) object_path.ccodenode);
 		expr.ccodenode = ccall;
 	}
@@ -1413,11 +1409,11 @@ public class Vala.DBusClientModule : DBusModule {
 		if (proxy_get_all) {
 			var ma = expr.call as MemberAccess;
 			var instance = ma.inner;
-			instance.emit (codegen);
+			instance.emit (this);
 
 			var args = expr.get_argument_list ();
 			Expression interface_name = args.get (0);
-			interface_name.emit (codegen);
+			interface_name.emit (this);
 
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier (generate_get_all_function (mtype.method_symbol)));
 			ccall.add_argument ((CCodeExpression) instance.ccodenode);
@@ -1441,7 +1437,7 @@ public class Vala.DBusClientModule : DBusModule {
 		quark_call.add_argument (new CCodeConstant ("\"ValaDBusInterfaceProxyType\""));
 
 		var qdata_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_get_qdata"));
-		type.emit (codegen);
+		type.emit (this);
 		qdata_call.add_argument ((CCodeExpression) type.ccodenode);
 		qdata_call.add_argument (quark_call);
 
@@ -1450,16 +1446,16 @@ public class Vala.DBusClientModule : DBusModule {
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_new"));
 		ccall.add_argument (get_type_call);
 		ccall.add_argument (new CCodeConstant ("\"connection\""));
-		connection.emit (codegen);
+		connection.emit (this);
 		ccall.add_argument ((CCodeExpression) connection.ccodenode);
 		ccall.add_argument (new CCodeConstant ("\"name\""));
-		bus_name.emit (codegen);
+		bus_name.emit (this);
 		ccall.add_argument ((CCodeExpression) bus_name.ccodenode);
 		ccall.add_argument (new CCodeConstant ("\"path\""));
-		object_path.emit (codegen);
+		object_path.emit (this);
 		ccall.add_argument ((CCodeExpression) object_path.ccodenode);
 		ccall.add_argument (new CCodeConstant ("\"interface\""));
-		interface_name.emit (codegen);
+		interface_name.emit (this);
 		ccall.add_argument ((CCodeExpression) interface_name.ccodenode);
 		ccall.add_argument (new CCodeConstant ("NULL"));
 		expr.ccodenode = ccall;

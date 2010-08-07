@@ -22,10 +22,6 @@
  */
 
 public class Vala.GDBusClientModule : GDBusModule {
-	public GDBusClientModule (CCodeGenerator codegen, CCodeModule? next) {
-		base (codegen, next);
-	}
-
 	public CCodeConstant get_dbus_timeout (Symbol symbol) {
 		int timeout = -1;
 
@@ -263,19 +259,19 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_initable_new"));
 		ccall.add_argument (new CCodeIdentifier ("%s_PROXY".printf (iface.get_type_id ())));
-		cancellable.emit (codegen);
+		cancellable.emit (this);
 		ccall.add_argument ((CCodeExpression) cancellable.ccodenode);
 		ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression ("_inner_error_")));
 		ccall.add_argument (new CCodeConstant ("\"g-flags\""));
 		ccall.add_argument (new CCodeConstant ("G_DBUS_PROXY_FLAGS_DO_NOT_LOAD_PROPERTIES"));
 		ccall.add_argument (new CCodeConstant ("\"g-name\""));
-		name.emit (codegen);
+		name.emit (this);
 		ccall.add_argument ((CCodeExpression) name.ccodenode);
 		ccall.add_argument (new CCodeConstant ("\"g-bus-type\""));
-		bus_type.emit (codegen);
+		bus_type.emit (this);
 		ccall.add_argument ((CCodeExpression) bus_type.ccodenode);
 		ccall.add_argument (new CCodeConstant ("\"g-object-path\""));
-		object_path.emit (codegen);
+		object_path.emit (this);
 		ccall.add_argument ((CCodeExpression) object_path.ccodenode);
 		ccall.add_argument (new CCodeConstant ("\"g-interface-name\""));
 		ccall.add_argument (new CCodeConstant ("\"%s\"".printf (get_dbus_name (iface))));

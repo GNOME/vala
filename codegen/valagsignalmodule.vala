@@ -24,10 +24,6 @@
 
 
 public class Vala.GSignalModule : GObjectModule {
-	public GSignalModule (CCodeGenerator codegen, CCodeModule? next) {
-		base (codegen, next);
-	}
-
 	private string get_marshaller_type_name (DataType t, bool dbus = false) {
 		if (t is PointerType || t.type_parameter != null) {
 			return ("POINTER");
@@ -172,7 +168,7 @@ public class Vala.GSignalModule : GObjectModule {
 			}
 		}
 
-		sig.accept_children (codegen);
+		sig.accept_children (this);
 
 		// declare parameter type
 		foreach (FormalParameter p in sig.get_parameters ()) {
@@ -404,7 +400,7 @@ public class Vala.GSignalModule : GObjectModule {
 		csignew.add_argument (new CCodeConstant ("NULL"));
 		csignew.add_argument (new CCodeConstant ("NULL"));
 
-		string marshaller = head.get_marshaller_function (sig.get_parameters (), sig.return_type);
+		string marshaller = get_marshaller_function (sig.get_parameters (), sig.return_type);
 
 		var marshal_arg = new CCodeIdentifier (marshaller);
 		csignew.add_argument (marshal_arg);
@@ -581,9 +577,9 @@ public class Vala.GSignalModule : GObjectModule {
 			// connect
 			if (sig is DynamicSignal) {
 				if (!after)
-					connect_func = head.get_dynamic_signal_connect_wrapper_name ((DynamicSignal) sig);
+					connect_func = get_dynamic_signal_connect_wrapper_name ((DynamicSignal) sig);
 				else
-					connect_func = head.get_dynamic_signal_connect_after_wrapper_name ((DynamicSignal) sig);
+					connect_func = get_dynamic_signal_connect_after_wrapper_name ((DynamicSignal) sig);
 			} else {
 				if (m.closure) {
 					connect_func = "g_signal_connect_data";
@@ -597,7 +593,7 @@ public class Vala.GSignalModule : GObjectModule {
 		} else {
 			// disconnect
 			if (sig is DynamicSignal) {
-				connect_func = head.get_dynamic_signal_disconnect_wrapper_name ((DynamicSignal) sig);
+				connect_func = get_dynamic_signal_disconnect_wrapper_name ((DynamicSignal) sig);
 			} else {
 				connect_func = "g_signal_handlers_disconnect_matched";
 			}

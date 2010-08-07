@@ -26,7 +26,7 @@
 /**
  * Code visitor generating C Code.
  */
-public class Vala.CCodeBaseModule : CCodeModule {
+public class Vala.CCodeBaseModule : CodeGenerator {
 	public CodeContext context { get; set; }
 
 	public Symbol root_symbol;
@@ -216,9 +216,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 	public Map<string,string> variable_name_map = new HashMap<string,string> (str_hash, str_equal);
 
-	public CCodeBaseModule (CCodeGenerator codegen, CCodeModule? next) {
-		base (codegen, next);
-
+	public CCodeBaseModule () {
 		predefined_marshal_set = new HashSet<string> (str_hash, str_equal);
 		predefined_marshal_set.add ("VOID:VOID");
 		predefined_marshal_set.add ("VOID:BOOLEAN");
@@ -375,7 +373,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		var source_files = context.get_source_files ();
 		foreach (SourceFile file in source_files) {
 			if (!file.external_package) {
-				file.accept (codegen);
+				file.accept (this);
 			}
 		}
 
@@ -477,7 +475,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		}
 	}
 
-	public override CCodeIdentifier get_value_setter_function (DataType type_reference) {
+	public CCodeIdentifier get_value_setter_function (DataType type_reference) {
 		var array_type = type_reference as ArrayType;
 		if (type_reference.data_type != null) {
 			return new CCodeIdentifier (type_reference.data_type.get_set_value_function ());
@@ -489,7 +487,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		}
 	}
 
-	public override CCodeIdentifier get_value_taker_function (DataType type_reference) {
+	public CCodeIdentifier get_value_taker_function (DataType type_reference) {
 		var array_type = type_reference as ArrayType;
 		if (type_reference.data_type != null) {
 			return new CCodeIdentifier (type_reference.data_type.get_take_value_function ());
@@ -588,7 +586,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			source_declarations.add_include ("glib-object.h");
 		}
 
-		source_file.accept_children (codegen);
+		source_file.accept_children (this);
 
 		if (context.report.get_errors () > 0) {
 			return;
@@ -693,7 +691,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 					flag_shift += 1;
 				}
 			} else {
-				ev.value.emit (codegen);
+				ev.value.emit (this);
 				c_ev = new CCodeEnumValue (ev.get_cname (), (CCodeExpression) ev.value.ccodenode);
 			}
 			c_ev.deprecated = ev.deprecated;
@@ -728,7 +726,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_enum (Enum en) {
-		en.accept_children (codegen);
+		en.accept_children (this);
 
 		if (en.comment != null) {
 			source_type_member_definition.append (new CCodeComment (en.comment.content));
@@ -744,7 +742,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		}
 	}
 
-	public override void visit_member (Symbol m) {
+	public void visit_member (Symbol m) {
 		/* stuff meant for all lockable members */
 		if (m is Lockable && ((Lockable) m).get_lock_used ()) {
 			CCodeExpression l = new CCodeIdentifier ("self");
@@ -785,7 +783,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		if (!c.external) {
 			generate_type_declaration (c.type_reference, decl_space);
 
-			c.value.emit (codegen);
+			c.value.emit (this);
 
 			var initializer_list = c.value as InitializerList;
 			if (initializer_list != null) {
@@ -874,7 +872,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 					var len_type = int_type.copy ();
 
 					cdecl = new CCodeDeclaration (len_type.get_cname ());
-					cdecl.add_declarator (new CCodeVariableDeclarator (head.get_array_length_cname (f.get_cname (), dim)));
+					cdecl.add_declarator (new CCodeVariableDeclarator (get_array_length_cname (f.get_cname (), dim)));
 					if (f.is_private_symbol ()) {
 						cdecl.modifiers = CCodeModifiers.STATIC;
 					} else {
@@ -917,7 +915,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		check_type (f.variable_type);
 
 		if (f.initializer != null) {
-			f.initializer.emit (codegen);
+			f.initializer.emit (this);
 		}
 
 		var cl = f.parent_symbol as Class;
@@ -953,14 +951,14 @@ public class Vala.CCodeBaseModule : CCodeModule {
 					
 					List<Expression> sizes = ((ArrayCreationExpression) f.initializer).get_sizes ();
 					for (int dim = 1; dim <= array_type.rank; dim++) {
-						var array_len_lhs = head.get_array_length_cexpression (ma, dim);
+						var array_len_lhs = get_array_length_cexpression (ma, dim);
 						var size = sizes[dim - 1];
 						instance_init_fragment.append (new CCodeExpressionStatement (new CCodeAssignment (array_len_lhs, (CCodeExpression) size.ccodenode)));
 					}
 
 					if (array_type.rank == 1 && f.is_internal_symbol ()) {
-						var lhs_array_size = head.get_array_size_cexpression (ma);
-						var rhs_array_len = head.get_array_length_cexpression (ma, 1);
+						var lhs_array_size = get_array_size_cexpression (ma);
+						var rhs_array_len = get_array_length_cexpression (ma, 1);
 						instance_init_fragment.append (new CCodeExpressionStatement (new CCodeAssignment (lhs_array_size, rhs_array_len)));
 					}
 				}
@@ -1066,7 +1064,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 						var len_type = int_type.copy ();
 
 						var len_def = new CCodeDeclaration (len_type.get_cname ());
-						len_def.add_declarator (new CCodeVariableDeclarator (head.get_array_length_cname (f.get_cname (), dim), new CCodeConstant ("0")));
+						len_def.add_declarator (new CCodeVariableDeclarator (get_array_length_cname (f.get_cname (), dim), new CCodeConstant ("0")));
 						if (!f.is_private_symbol ()) {
 							len_def.modifiers = CCodeModifiers.EXTERN;
 						} else {
@@ -1079,7 +1077,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 						var len_type = int_type.copy ();
 
 						var cdecl = new CCodeDeclaration (len_type.get_cname ());
-						cdecl.add_declarator (new CCodeVariableDeclarator (head.get_array_size_cname (f.get_cname ()), new CCodeConstant ("0")));
+						cdecl.add_declarator (new CCodeVariableDeclarator (get_array_size_cname (f.get_cname ()), new CCodeConstant ("0")));
 						cdecl.modifiers = CCodeModifiers.STATIC;
 						source_declarations.add_type_member_declaration (cdecl);
 					}
@@ -1144,7 +1142,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 					
 							List<Expression> sizes = ((ArrayCreationExpression) f.initializer).get_sizes ();
 							for (int dim = 1; dim <= array_type.rank; dim++) {
-								var array_len_lhs = head.get_array_length_cexpression (ma, dim);
+								var array_len_lhs = get_array_length_cexpression (ma, dim);
 								var size = sizes[dim - 1];
 								class_init_fragment.append (new CCodeExpressionStatement (new CCodeAssignment (array_len_lhs, (CCodeExpression) size.ccodenode)));
 							}
@@ -1235,7 +1233,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		temp_ref_vars = new ArrayList<LocalVariable> ();
 		variable_name_map = new HashMap<string,string> (str_hash, str_equal);
 
-		prop.accept_children (codegen);
+		prop.accept_children (this);
 
 		next_temp_var_id = old_next_temp_var_id;
 		temp_vars = old_temp_vars;
@@ -1342,7 +1340,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			}
 
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				function.add_parameter (new CCodeFormalParameter (head.get_array_length_cname (acc.readable ? "result" : "value", dim), length_ctype));
+				function.add_parameter (new CCodeFormalParameter (get_array_length_cname (acc.readable ? "result" : "value", dim), length_ctype));
 			}
 		} else if ((acc.value_type is DelegateType) && ((DelegateType) acc.value_type).delegate_symbol.has_target) {
 			function.add_parameter (new CCodeFormalParameter (get_delegate_target_cname (acc.readable ? "result" : "value"), acc.readable ? "gpointer*" : "gpointer"));
@@ -1369,11 +1367,11 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		bool returns_real_struct = acc.readable && prop.property_type.is_real_non_null_struct_type ();
 
 		if (acc.result_var != null) {
-			acc.result_var.accept (codegen);
+			acc.result_var.accept (this);
 		}
 
 		if (acc.body != null) {
-			acc.body.emit (codegen);
+			acc.body.emit (this);
 		}
 
 		var t = (TypeSymbol) prop.parent_symbol;
@@ -1440,7 +1438,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				}
 
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					function.add_parameter (new CCodeFormalParameter (head.get_array_length_cname (acc.readable ? "result" : "value", dim), length_ctype));
+					function.add_parameter (new CCodeFormalParameter (get_array_length_cname (acc.readable ? "result" : "value", dim), length_ctype));
 				}
 			} else if ((acc.value_type is DelegateType) && ((DelegateType) acc.value_type).delegate_symbol.has_target) {
 				function.add_parameter (new CCodeFormalParameter (get_delegate_target_cname (acc.readable ? "result" : "value"), acc.readable ? "gpointer*" : "gpointer"));
@@ -1477,7 +1475,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 						var array_type = (ArrayType) acc.value_type;
 
 						for (int dim = 1; dim <= array_type.rank; dim++) {
-							var len_expr = new CCodeIdentifier (head.get_array_length_cname ("result", dim));
+							var len_expr = new CCodeIdentifier (get_array_length_cname ("result", dim));
 							vcall.add_argument (len_expr);
 						}
 					}
@@ -1493,7 +1491,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 					var array_type = (ArrayType) acc.value_type;
 
 					for (int dim = 1; dim <= array_type.rank; dim++) {
-						var len_expr = new CCodeIdentifier (head.get_array_length_cname ("value", dim));
+						var len_expr = new CCodeIdentifier (get_array_length_cname ("value", dim));
 						vcall.add_argument (len_expr);
 					}
 				}
@@ -1551,7 +1549,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				}
 
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					function.add_parameter (new CCodeFormalParameter (head.get_array_length_cname (acc.readable ? "result" : "value", dim), length_ctype));
+					function.add_parameter (new CCodeFormalParameter (get_array_length_cname (acc.readable ? "result" : "value", dim), length_ctype));
 				}
 			} else if ((acc.value_type is DelegateType) && ((DelegateType) acc.value_type).delegate_symbol.has_target) {
 				function.add_parameter (new CCodeFormalParameter (get_delegate_target_cname (acc.readable ? "result" : "value"), acc.readable ? "gpointer*" : "gpointer"));
@@ -1620,7 +1618,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		bool old_method_inner_error = current_method_inner_error;
 		current_method_inner_error = false;
 
-		d.body.emit (codegen);
+		d.body.emit (this);
 
 		if (d.binding == MemberBinding.STATIC && !in_plugin) {
 			Report.error (d.source_reference, "static destructors are only supported for dynamic types");
@@ -1712,11 +1710,10 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_block (Block b) {
-		var old_symbol = current_symbol;
-		current_symbol = b;
+		emit_context.push_symbol (b);
 
 		foreach (Statement stmt in b.get_statements ()) {
-			stmt.emit (codegen);
+			stmt.emit (this);
 		}
 
 		var local_vars = b.get_local_variables ();
@@ -1944,7 +1941,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 		b.ccodenode = cblock;
 
-		current_symbol = old_symbol;
+		emit_context.pop_symbol ();
 	}
 
 	public override void visit_empty_statement (EmptyStatement stmt) {
@@ -1952,7 +1949,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_declaration_statement (DeclarationStatement stmt) {
-		stmt.declaration.accept (codegen);
+		stmt.declaration.accept (this);
 
 		stmt.ccodenode = stmt.declaration.ccodenode;
 
@@ -2014,7 +2011,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		check_type (local.variable_type);
 
 		if (local.initializer != null) {
-			local.initializer.emit (codegen);
+			local.initializer.emit (this);
 
 			visit_end_full_expression (local.initializer);
 		}
@@ -2028,12 +2025,12 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 				if (!array_type.fixed_length) {
 					for (int dim = 1; dim <= array_type.rank; dim++) {
-						var len_var = new LocalVariable (int_type.copy (), head.get_array_length_cname (get_variable_cname (local.name), dim));
+						var len_var = new LocalVariable (int_type.copy (), get_array_length_cname (get_variable_cname (local.name), dim));
 						temp_vars.add (len_var);
 					}
 
 					if (array_type.rank == 1) {
-						var size_var = new LocalVariable (int_type.copy (), head.get_array_size_cname (get_variable_cname (local.name)));
+						var size_var = new LocalVariable (int_type.copy (), get_array_size_cname (get_variable_cname (local.name)));
 						temp_vars.add (size_var);
 					}
 				}
@@ -2073,13 +2070,13 @@ public class Vala.CCodeBaseModule : CCodeModule {
 					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), rhs));
 
 					for (int dim = 1; dim <= array_type.rank; dim++) {
-						var lhs_array_len = head.get_array_length_cexpression (ma, dim);
-						var rhs_array_len = head.get_array_length_cexpression (local.initializer, dim);
+						var lhs_array_len = get_array_length_cexpression (ma, dim);
+						var rhs_array_len = get_array_length_cexpression (local.initializer, dim);
 						ccomma.append_expression (new CCodeAssignment (lhs_array_len, rhs_array_len));
 					}
 					if (array_type.rank == 1 && !local.captured) {
-						var lhs_array_size = head.get_array_size_cexpression (ma);
-						var rhs_array_len = head.get_array_length_cexpression (ma, 1);
+						var lhs_array_size = get_array_size_cexpression (ma);
+						var rhs_array_len = get_array_length_cexpression (ma, 1);
 						ccomma.append_expression (new CCodeAssignment (lhs_array_size, rhs_array_len));
 					}
 				
@@ -2133,7 +2130,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 					var ccomma = new CCodeCommaExpression ();
 
 					for (int dim = 1; dim <= array_type.rank; dim++) {
-						ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (head.get_array_length_cname (get_variable_cname (local.name), dim)), new CCodeConstant ("0")));
+						ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (get_array_length_cname (get_variable_cname (local.name), dim)), new CCodeConstant ("0")));
 					}
 
 					ccomma.append_expression (rhs);
@@ -2217,7 +2214,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		}
 
 		if (local.initializer != null && local.initializer.tree_can_fail) {
-			head.add_simple_check (local.initializer, cfrag);
+			add_simple_check (local.initializer, cfrag);
 		}
 
 		local.ccodenode = cfrag;
@@ -3019,10 +3016,10 @@ public class Vala.CCodeBaseModule : CCodeModule {
 					bool first = true;
 					for (int dim = 1; dim <= array_type.rank; dim++) {
 						if (first) {
-							csizeexpr = head.get_array_length_cexpression (expr, dim);
+							csizeexpr = get_array_length_cexpression (expr, dim);
 							first = false;
 						} else {
-							csizeexpr = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, csizeexpr, head.get_array_length_cexpression (expr, dim));
+							csizeexpr = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, csizeexpr, get_array_length_cexpression (expr, dim));
 						}
 					}
 
@@ -3220,7 +3217,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 		if (stmt.tree_can_fail && stmt.expression.tree_can_fail) {
 			// simple case, no node breakdown necessary
-			head.add_simple_check (stmt.expression, cfrag);
+			add_simple_check (stmt.expression, cfrag);
 		}
 
 		stmt.ccodenode = cfrag;
@@ -3383,11 +3380,11 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			var array_type = (ArrayType) current_return_type;
 
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				var len_l = get_result_cexpression (head.get_array_length_cname ("result", dim));
+				var len_l = get_result_cexpression (get_array_length_cname ("result", dim));
 				if (current_method == null || !current_method.coroutine) {
 					len_l = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, len_l);
 				}
-				var len_r = head.get_array_length_cexpression (stmt.return_expression, dim);
+				var len_r = get_array_length_cexpression (stmt.return_expression, dim);
 				ccomma.append_expression (new CCodeAssignment (len_l, len_r));
 			}
 
@@ -3958,10 +3955,10 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				CCodeExpression csizeexpr = null;
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					if (first) {
-						csizeexpr = head.get_array_length_cexpression (expr, dim);
+						csizeexpr = get_array_length_cexpression (expr, dim);
 						first = false;
 					} else {
-						csizeexpr = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, csizeexpr, head.get_array_length_cexpression (expr, dim));
+						csizeexpr = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, csizeexpr, get_array_length_cexpression (expr, dim));
 					}
 				}
 
@@ -4246,7 +4243,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 						if (!param.no_array_length && param.variable_type is ArrayType) {
 							var array_type = (ArrayType) param.variable_type;
 							for (int dim = 1; dim <= array_type.rank; dim++) {
-								carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), head.get_array_length_cexpression (arg, dim));
+								carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), get_array_length_cexpression (arg, dim));
 							}
 						} else if (param.variable_type is DelegateType) {
 							var deleg_type = (DelegateType) param.variable_type;
@@ -4294,7 +4291,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				/* evaluate default expression here as the code
 				 * generator might not have visited the formal
 				 * parameter yet */
-				param.initializer.emit (codegen);
+				param.initializer.emit (this);
 			
 				carg_map.set (get_param_pos (param.cparameter_position), (CCodeExpression) param.initializer.ccodenode);
 				i++;
@@ -4340,7 +4337,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 			// cast the return value of the creation method back to the intended type if
 			// it requested a special C return type
-			if (head.get_custom_creturn_type (m) != null) {
+			if (get_custom_creturn_type (m) != null) {
 				creation_expr = new CCodeCastExpression (creation_expr, expr.type_reference.get_cname ());
 			}
 		} else if (expr.symbol_reference is ErrorCode) {
@@ -4398,11 +4395,11 @@ public class Vala.CCodeBaseModule : CCodeModule {
 						var array_type = (ArrayType) f.variable_type;
 						for (int dim = 1; dim <= array_type.rank; dim++) {
 							if (expr.type_reference.data_type is Struct) {
-								lhs = new CCodeMemberAccess (typed_inst, head.get_array_length_cname (f.get_cname (), dim));
+								lhs = new CCodeMemberAccess (typed_inst, get_array_length_cname (f.get_cname (), dim));
 							} else {
-								lhs = new CCodeMemberAccess.pointer (typed_inst, head.get_array_length_cname (f.get_cname (), dim));
+								lhs = new CCodeMemberAccess.pointer (typed_inst, get_array_length_cname (f.get_cname (), dim));
 							}
-							var rhs_array_len = head.get_array_length_cexpression (init.initializer, dim);
+							var rhs_array_len = get_array_length_cexpression (init.initializer, dim);
 							ccomma.append_expression (new CCodeAssignment (lhs, rhs_array_len));
 						}
 					} else if (f.variable_type is DelegateType && !f.no_delegate_target) {
@@ -4577,7 +4574,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				temp_vars.add (temp_decl);
 
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_decl.name)));
-				cfunc.add_parameter (new CCodeFormalParameter (head.get_array_length_cname ("result", dim), "int*"));
+				cfunc.add_parameter (new CCodeFormalParameter (get_array_length_cname ("result", dim), "int*"));
 				expr.append_array_size (new CCodeIdentifier (temp_decl.name));
 			}
 		}
@@ -5012,7 +5009,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		temp_vars = new ArrayList<LocalVariable> ();
 		temp_ref_vars = new ArrayList<LocalVariable> ();
 
-		l.accept_children (codegen);
+		l.accept_children (this);
 
 		temp_vars = old_temp_vars;
 		temp_ref_vars = old_temp_ref_vars;
@@ -5109,9 +5106,9 @@ public class Vala.CCodeBaseModule : CCodeModule {
 					var ccomma = new CCodeCommaExpression ();
 					ccomma.append_expression (cexpr);
 					for (int dim = 1; dim <= array_type.rank; dim++) {
-						var len_decl = new LocalVariable (int_type.copy (), head.get_array_length_cname (decl.name, dim));
+						var len_decl = new LocalVariable (int_type.copy (), get_array_length_cname (decl.name, dim));
 						temp_vars.add (len_decl);
-						ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (len_decl.name), head.get_array_length_cexpression (expr, dim)));
+						ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (len_decl.name), get_array_length_cexpression (expr, dim)));
 					}
 					ccomma.append_expression (get_variable_cexpression (decl.name));
 					cexpr = ccomma;
@@ -5200,8 +5197,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				var array_type = (ArrayType) expression_type;
 
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					ccall.add_argument (head.get_array_length_cexpression (expr, dim));
-					cfunc.add_parameter (new CCodeFormalParameter (head.get_array_length_cname ("value", dim), "gint"));
+					ccall.add_argument (get_array_length_cexpression (expr, dim));
+					cfunc.add_parameter (new CCodeFormalParameter (get_array_length_cname ("value", dim), "gint"));
 				}
 			}
 
@@ -5328,7 +5325,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			}
 
 			if (prop is DynamicProperty) {
-				set_func = head.get_dynamic_property_setter_cname ((DynamicProperty) prop);
+				set_func = get_dynamic_property_setter_cname ((DynamicProperty) prop);
 			} else {
 				generate_property_accessor_declaration (base_property.set_accessor, source_declarations);
 				set_func = base_property.set_accessor.get_cname ();
@@ -5389,7 +5386,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 		if (array_type != null && !prop.no_array_length && rhs != null) {
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				ccall.add_argument (head.get_array_length_cexpression (rhs, dim));
+				ccall.add_argument (get_array_length_cexpression (rhs, dim));
 			}
 		} else if (prop.property_type is DelegateType && rhs != null) {
 			var delegate_type = (DelegateType) prop.property_type;
@@ -5575,7 +5572,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 	public CCodeNode? get_ccodenode (CodeNode node) {
 		if (node.ccodenode == null) {
-			node.emit (codegen);
+			node.emit (this);
 		}
 		return node.ccodenode;
 	}
@@ -5718,6 +5715,85 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		source_declarations.add_type_member_declaration (function.copy ());
 		function.block = cblock;
 		source_type_member_definition.append (function);
+	}
+
+	public virtual string? get_custom_creturn_type (Method m) {
+		return null;
+	}
+
+	public virtual void generate_dynamic_method_wrapper (DynamicMethod method) {
+	}
+
+	public virtual bool method_has_wrapper (Method method) {
+		return false;
+	}
+
+	public virtual CCodeExpression get_construct_property_assignment (CCodeConstant canonical_cconstant, DataType property_type, CCodeExpression value) {
+		return new CCodeConstant ("");
+	}
+
+	public virtual CCodeFunctionCall get_param_spec (Property prop) {
+		return new CCodeFunctionCall (new CCodeIdentifier (""));
+	}
+
+	public virtual CCodeFunctionCall get_signal_creation (Signal sig, TypeSymbol type) {
+		return new CCodeFunctionCall (new CCodeIdentifier (""));
+	}
+
+	public virtual CCodeFragment register_dbus_info (ObjectTypeSymbol bindable) {
+		return new CCodeFragment ();
+	}
+
+	public virtual string get_dynamic_property_getter_cname (DynamicProperty node) {
+		Report.error (node.source_reference, "dynamic properties are not supported for %s".printf (node.dynamic_type.to_string ()));
+		return "";
+	}
+
+	public virtual string get_dynamic_property_setter_cname (DynamicProperty node) {
+		Report.error (node.source_reference, "dynamic properties are not supported for %s".printf (node.dynamic_type.to_string ()));
+		return "";
+	}
+
+	public virtual string get_dynamic_signal_cname (DynamicSignal node) {
+		return "";
+	}
+
+	public virtual string get_dynamic_signal_connect_wrapper_name (DynamicSignal node) {
+		return "";
+	}
+
+	public virtual string get_dynamic_signal_connect_after_wrapper_name (DynamicSignal node) {
+		return "";
+	}
+
+	public virtual string get_dynamic_signal_disconnect_wrapper_name (DynamicSignal node) {
+		return "";
+	}
+
+	public virtual void generate_marshaller (List<FormalParameter> params, DataType return_type, bool dbus = false) {
+	}
+
+	public virtual string get_marshaller_function (List<FormalParameter> params, DataType return_type, string? prefix = null, bool dbus = false) {
+		return "";
+	}
+
+	public virtual string get_array_length_cname (string array_cname, int dim) {
+		return "";
+	}
+
+	public virtual CCodeExpression get_array_length_cexpression (Expression array_expr, int dim = -1) {
+		return new CCodeConstant ("");
+	}
+
+	public virtual string get_array_size_cname (string array_cname) {
+		return "";
+	}
+
+	public virtual CCodeExpression get_array_size_cexpression (Expression array_expr) {
+		return new CCodeConstant ("");
+	}
+
+	public virtual void add_simple_check (CodeNode node, CCodeFragment cfrag, bool always_fails = false) {
 	}
 }
 

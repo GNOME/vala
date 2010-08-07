@@ -20,11 +20,7 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-internal class Vala.DovaMethodCallModule : DovaAssignmentModule {
-	public DovaMethodCallModule (CCodeGenerator codegen, CCodeModule? next) {
-		base (codegen, next);
-	}
-
+public class Vala.DovaMethodCallModule : DovaAssignmentModule {
 	public override void visit_method_call (MethodCall expr) {
 		// the bare function call
 		var ccall = new CCodeFunctionCall ((CCodeExpression) expr.call.ccodenode);

@@ -22,13 +22,7 @@
  *	Raffaele Sandrini <raffaele@sandrini.ch>
  */
 
-using GLib;
-
 public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
-	public CCodeMemberAccessModule (CCodeGenerator codegen, CCodeModule? next) {
-		base (codegen, next);
-	}
-
 	public override void visit_member_access (MemberAccess expr) {
 		CCodeExpression pub_inst = null;
 	
@@ -69,7 +63,7 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			}
 
 			if (m.base_method != null) {
-				if (!head.method_has_wrapper (m.base_method)) {
+				if (!method_has_wrapper (m.base_method)) {
 					var inst = pub_inst;
 					if (expr.inner != null && !expr.inner.is_pure ()) {
 						// instance expression has side-effects
@@ -98,7 +92,7 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			if (expr.value_type is ArrayType && !(expr.parent_node is ElementAccess)) {
 				Report.error (expr.source_reference, "unsupported use of length field of multi-dimensional array");
 			}
-			expr.ccodenode = head.get_array_length_cexpression (expr.inner, 1);
+			expr.ccodenode = get_array_length_cexpression (expr.inner, 1);
 		} else if (expr.symbol_reference is Field) {
 			var f = (Field) expr.symbol_reference;
 			if (f.binding == MemberBinding.INSTANCE) {
@@ -249,7 +243,7 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				}
 				string getter_cname;
 				if (prop is DynamicProperty) {
-					getter_cname = head.get_dynamic_property_getter_cname ((DynamicProperty) prop);
+					getter_cname = get_dynamic_property_getter_cname ((DynamicProperty) prop);
 				} else {
 					getter_cname = base_property.get_accessor.get_cname ();
 				}

@@ -24,10 +24,6 @@
 
 
 public class Vala.GTypeModule : GErrorModule {
-	public GTypeModule (CCodeGenerator codegen, CCodeModule? next) {
-		base (codegen, next);
-	}
-
 	public override void generate_parameter (FormalParameter param, CCodeDeclarationSpace decl_space, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
 		if (!(param.variable_type is ObjectType)) {
 			base.generate_parameter (param, decl_space, cparam_map, carg_map);
@@ -268,7 +264,7 @@ public class Vala.GTypeModule : GErrorModule {
 				var array_type = prop.property_type as ArrayType;
 				if (array_type != null) {
 					for (int dim = 1; dim <= array_type.rank; dim++) {
-						vdeclarator.add_parameter (new CCodeFormalParameter (head.get_array_length_cname ("result", dim), "int*"));
+						vdeclarator.add_parameter (new CCodeFormalParameter (get_array_length_cname ("result", dim), "int*"));
 					}
 				}
 
@@ -291,7 +287,7 @@ public class Vala.GTypeModule : GErrorModule {
 				var array_type = prop.property_type as ArrayType;
 				if (array_type != null) {
 					for (int dim = 1; dim <= array_type.rank; dim++) {
-						vdeclarator.add_parameter (new CCodeFormalParameter (head.get_array_length_cname ("value", dim), "int"));
+						vdeclarator.add_parameter (new CCodeFormalParameter (get_array_length_cname ("value", dim), "int"));
 					}
 				}
 
@@ -320,11 +316,11 @@ public class Vala.GTypeModule : GErrorModule {
 							var len_type = int_type.copy ();
 
 							for (int dim = 1; dim <= array_type.rank; dim++) {
-								instance_struct.add_field (len_type.get_cname (), head.get_array_length_cname (f.name, dim));
+								instance_struct.add_field (len_type.get_cname (), get_array_length_cname (f.name, dim));
 							}
 
 							if (array_type.rank == 1 && f.is_internal_symbol ()) {
-								instance_struct.add_field (len_type.get_cname (), head.get_array_size_cname (f.name));
+								instance_struct.add_field (len_type.get_cname (), get_array_size_cname (f.name));
 							}
 						}
 					} else if (f.variable_type is DelegateType) {
@@ -421,11 +417,11 @@ public class Vala.GTypeModule : GErrorModule {
 
 						if (!array_type.fixed_length) {
 							for (int dim = 1; dim <= array_type.rank; dim++) {
-								instance_priv_struct.add_field (len_type.get_cname (), head.get_array_length_cname (f.name, dim));
+								instance_priv_struct.add_field (len_type.get_cname (), get_array_length_cname (f.name, dim));
 							}
 
 							if (array_type.rank == 1 && f.is_internal_symbol ()) {
-								instance_priv_struct.add_field (len_type.get_cname (), head.get_array_size_cname (f.name));
+								instance_priv_struct.add_field (len_type.get_cname (), get_array_size_cname (f.name));
 							}
 						}
 					} else if (f.variable_type is DelegateType) {
@@ -536,7 +532,7 @@ public class Vala.GTypeModule : GErrorModule {
 			generate_class_struct_declaration (cl, internal_header_declarations);
 		}
 
-		cl.accept_children (codegen);
+		cl.accept_children (this);
 
 		if (is_gtypeinstance) {
 			if (is_fundamental) {
@@ -1302,11 +1298,11 @@ public class Vala.GTypeModule : GErrorModule {
 				if (sig.comment != null) {
 					init_block.add_statement (new CCodeComment (sig.comment.content));
 				}
-				init_block.add_statement (new CCodeExpressionStatement (head.get_signal_creation (sig, cl)));
+				init_block.add_statement (new CCodeExpressionStatement (get_signal_creation (sig, cl)));
 			}
 		}
 
-		init_block.add_statement (head.register_dbus_info (cl));
+		init_block.add_statement (register_dbus_info (cl));
 		init_block.add_statement (class_init_fragment);
 
 		source_type_member_definition.append (class_init);
@@ -1878,7 +1874,7 @@ public class Vala.GTypeModule : GErrorModule {
 				var array_type = prop.property_type as ArrayType;
 				if (array_type != null) {
 					for (int dim = 1; dim <= array_type.rank; dim++) {
-						vdeclarator.add_parameter (new CCodeFormalParameter (head.get_array_length_cname ("result", dim), "int*"));
+						vdeclarator.add_parameter (new CCodeFormalParameter (get_array_length_cname ("result", dim), "int*"));
 					}
 				}
 
@@ -1900,7 +1896,7 @@ public class Vala.GTypeModule : GErrorModule {
 				var array_type = prop.property_type as ArrayType;
 				if (array_type != null) {
 					for (int dim = 1; dim <= array_type.rank; dim++) {
-						vdeclarator.add_parameter (new CCodeFormalParameter (head.get_array_length_cname ("value", dim), "int"));
+						vdeclarator.add_parameter (new CCodeFormalParameter (get_array_length_cname ("value", dim), "int"));
 					}
 				}
 
@@ -1935,7 +1931,7 @@ public class Vala.GTypeModule : GErrorModule {
 			generate_interface_declaration (iface, internal_header_declarations);
 		}
 
-		iface.accept_children (codegen);
+		iface.accept_children (this);
 
 		add_interface_base_init_function (iface);
 
@@ -1987,7 +1983,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 					var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_interface_install_property"));
 					cinst.add_argument (new CCodeIdentifier ("iface"));
-					cinst.add_argument (head.get_param_spec (prop));
+					cinst.add_argument (get_param_spec (prop));
 
 					init_block.add_statement (new CCodeExpressionStatement (cinst));
 				}
@@ -1999,7 +1995,7 @@ public class Vala.GTypeModule : GErrorModule {
 			if (sig.comment != null) {
 				init_block.add_statement (new CCodeComment (sig.comment.content));
 			}
-			init_block.add_statement (new CCodeExpressionStatement (head.get_signal_creation (sig, iface)));
+			init_block.add_statement (new CCodeExpressionStatement (get_signal_creation (sig, iface)));
 		}
 
 		// connect default implementations
@@ -2011,7 +2007,7 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 		}
 
-		init_block.add_statement (head.register_dbus_info (iface));
+		init_block.add_statement (register_dbus_info (iface));
 
 		source_type_member_definition.append (base_init);
 	}

@@ -23,11 +23,7 @@
 /**
  * The link between a method and generated code.
  */
-internal class Vala.DovaMethodModule : DovaStructModule {
-	public DovaMethodModule (CCodeGenerator codegen, CCodeModule? next) {
-		base (codegen, next);
-	}
-
+public class Vala.DovaMethodModule : DovaStructModule {
 	public override bool method_has_wrapper (Method method) {
 		return (method.get_attribute ("NoWrapper") == null);
 	}

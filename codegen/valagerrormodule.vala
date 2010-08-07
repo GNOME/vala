@@ -28,10 +28,6 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 	private int next_try_id = 0;
 	private bool is_in_catch = false;
 
-	public GErrorModule (CCodeGenerator codegen, CCodeModule? next) {
-		base (codegen, next);
-	}
-
 	public override void generate_error_domain_declaration (ErrorDomain edomain, CCodeDeclarationSpace decl_space) {
 		if (decl_space.add_symbol_declaration (edomain, edomain.get_cname ())) {
 			return;
@@ -43,7 +39,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			if (ecode.value == null) {
 				cenum.add_value (new CCodeEnumValue (ecode.get_cname ()));
 			} else {
-				ecode.value.emit (codegen);
+				ecode.value.emit (this);
 				cenum.add_value (new CCodeEnumValue (ecode.get_cname (), (CCodeExpression) ecode.value.ccodenode));
 			}
 		}
@@ -92,7 +88,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		var cassign = new CCodeAssignment (get_variable_cexpression ("_inner_error_"), (CCodeExpression) stmt.error_expression.ccodenode);
 		cfrag.append (new CCodeExpressionStatement (cassign));
 
-		head.add_simple_check (stmt, cfrag, true);
+		add_simple_check (stmt, cfrag, true);
 
 		stmt.ccodenode = cfrag;
 
@@ -331,15 +327,15 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		}
 
 		if (stmt.finally_body != null) {
-			stmt.finally_body.emit (codegen);
+			stmt.finally_body.emit (this);
 		}
 
 		is_in_catch = false;
-		stmt.body.emit (codegen);
+		stmt.body.emit (this);
 		is_in_catch = true;
 
 		foreach (CatchClause clause in stmt.get_catch_clauses ()) {
-			clause.emit (codegen);
+			clause.emit (this);
 		}
 
 		current_try = old_try;
@@ -374,7 +370,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			generate_error_domain_declaration (error_type.error_domain, source_declarations);
 		}
 
-		clause.body.emit (codegen);
+		clause.body.emit (this);
 
 		var cfrag = new CCodeFragment ();
 		cfrag.append (new CCodeLabel (clause.clabel_name));

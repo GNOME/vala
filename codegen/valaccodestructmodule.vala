@@ -25,10 +25,6 @@
 using GLib;
 
 public class Vala.CCodeStructModule : CCodeBaseModule {
-	public CCodeStructModule (CCodeGenerator codegen, CCodeModule? next) {
-		base (codegen, next);
-	}
-
 	public override void generate_struct_declaration (Struct st, CCodeDeclarationSpace decl_space) {
 		if (decl_space.add_symbol_declaration (st, st.get_cname ())) {
 			return;
@@ -83,11 +79,11 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 						var len_type = int_type.copy ();
 
 						for (int dim = 1; dim <= array_type.rank; dim++) {
-							instance_struct.add_field (len_type.get_cname (), head.get_array_length_cname (f.name, dim));
+							instance_struct.add_field (len_type.get_cname (), get_array_length_cname (f.name, dim));
 						}
 
 						if (array_type.rank == 1 && f.is_internal_symbol ()) {
-							instance_struct.add_field (len_type.get_cname (), head.get_array_size_cname (f.name));
+							instance_struct.add_field (len_type.get_cname (), get_array_size_cname (f.name));
 						}
 					}
 				} else if (f.variable_type is DelegateType) {
@@ -158,7 +154,7 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 			generate_struct_declaration (st, internal_header_declarations);
 		}
 
-		st.accept_children (codegen);
+		st.accept_children (this);
 
 		if (context.profile == Profile.GOBJECT && !st.is_boolean_type () && !st.is_integer_type () && !st.is_floating_type ()) {
 			if (st.is_disposable ()) {

@@ -20,11 +20,7 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-internal class Vala.DovaObjectModule : DovaArrayModule {
-	public DovaObjectModule (CCodeGenerator codegen, CCodeModule? next) {
-		base (codegen, next);
-	}
-
+public class Vala.DovaObjectModule : DovaArrayModule {
 	public override void generate_class_declaration (Class cl, CCodeDeclarationSpace decl_space) {
 		if (decl_space.add_symbol_declaration (cl, cl.get_cname ())) {
 			return;
@@ -807,7 +803,7 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			generate_class_declaration (cl, header_declarations);
 		}
 
-		cl.accept_children (codegen);
+		cl.accept_children (this);
 
 		var type_init_block = generate_type_get_function (cl, cl.base_class);
 
@@ -1074,7 +1070,7 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 
 		source_type_member_definition.append (type_init_fun);
 
-		iface.accept_children (codegen);
+		iface.accept_children (this);
 
 		current_symbol = old_symbol;
 	}
@@ -1145,11 +1141,11 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 		var prop = (Property) acc.prop;
 
 		if (acc.result_var != null) {
-			acc.result_var.accept (codegen);
+			acc.result_var.accept (this);
 		}
 
 		if (acc.body != null) {
-			acc.body.emit (codegen);
+			acc.body.emit (this);
 		}
 
 		// do not declare overriding properties and interface implementations
@@ -1391,23 +1387,23 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 
 
 		foreach (FormalParameter param in m.get_parameters ()) {
-			param.accept (codegen);
+			param.accept (this);
 		}
 
 		if (m.result_var != null) {
-			m.result_var.accept (codegen);
+			m.result_var.accept (this);
 		}
 
 		foreach (Expression precondition in m.get_preconditions ()) {
-			precondition.emit (codegen);
+			precondition.emit (this);
 		}
 
 		foreach (Expression postcondition in m.get_postconditions ()) {
-			postcondition.emit (codegen);
+			postcondition.emit (this);
 		}
 
 		if (m.body != null) {
-			m.body.emit (codegen);
+			m.body.emit (this);
 		}
 
 
@@ -1741,7 +1737,7 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 	public override void visit_creation_method (CreationMethod m) {
 		bool visible = !m.is_internal_symbol ();
 
-		head.visit_method (m);
+		visit_method (m);
 
 		DataType creturn_type;
 		if (current_type_symbol is Class) {
@@ -1940,7 +1936,7 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 		if (array_type != null) {
 			// access to element in an array
 
-			expr.accept_children (codegen);
+			expr.accept_children (this);
 
 			List<Expression> indices = expr.get_indices ();
 			var cindex = (CCodeExpression) indices[0].ccodenode;

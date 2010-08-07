@@ -28,10 +28,6 @@ using GLib;
  * The link between a dynamic method and generated code.
  */
 public class Vala.DBusServerModule : DBusClientModule {
-	public DBusServerModule (CCodeGenerator codegen, CCodeModule? next) {
-		base (codegen, next);
-	}
-
 	public static bool is_dbus_visible (CodeNode node) {
 		var dbus_attribute = node.get_attribute ("DBus");
 		if (dbus_attribute != null
@@ -499,7 +495,7 @@ public class Vala.DBusServerModule : DBusClientModule {
 			if (param.variable_type is ArrayType) {
 				var array_type = (ArrayType) param.variable_type;
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					function.add_parameter (new CCodeFormalParameter (head.get_array_length_cname (param.name, dim), "int"));
+					function.add_parameter (new CCodeFormalParameter (get_array_length_cname (param.name, dim), "int"));
 				}
 			}
 		}
@@ -1206,10 +1202,10 @@ public class Vala.DBusServerModule : DBusClientModule {
 				if (array_type != null) {
 					for (int dim = 1; dim <= array_type.rank; dim++) {
 						cdecl = new CCodeDeclaration ("int");
-						cdecl.add_declarator (new CCodeVariableDeclarator (head.get_array_length_cname ("value", dim)));
+						cdecl.add_declarator (new CCodeVariableDeclarator (get_array_length_cname ("value", dim)));
 						prefragment.append (cdecl);
 
-						ccall.add_argument (new CCodeIdentifier (head.get_array_length_cname ("value", dim)));
+						ccall.add_argument (new CCodeIdentifier (get_array_length_cname ("value", dim)));
 					}
 				}
 			}

@@ -20,11 +20,7 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-internal class Vala.DovaArrayModule : DovaMethodCallModule {
-	public DovaArrayModule (CCodeGenerator codegen, CCodeModule? next) {
-		base (codegen, next);
-	}
-
+public class Vala.DovaArrayModule : DovaMethodCallModule {
 	void append_initializer_list (CCodeCommaExpression ce, CCodeExpression name_cnode, InitializerList initializer_list, ref int i) {
 		foreach (Expression e in initializer_list.get_initializers ()) {
 			ce.append_expression (new CCodeAssignment (new CCodeElementAccess (name_cnode, new CCodeConstant (i.to_string ())), (CCodeExpression) e.ccodenode));

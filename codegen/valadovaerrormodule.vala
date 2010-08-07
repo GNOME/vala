@@ -21,16 +21,10 @@
  *	Thijs Vermeir <thijsvermeir@gmail.com>
  */
 
-using GLib;
-
-internal class Vala.DovaErrorModule : DovaDelegateModule {
+public class Vala.DovaErrorModule : DovaDelegateModule {
 	private int current_try_id = 0;
 	private int next_try_id = 0;
 	private bool is_in_catch = false;
-
-	public DovaErrorModule (CCodeGenerator codegen, CCodeModule? next) {
-		base (codegen, next);
-	}
 
 	public override void visit_throw_statement (ThrowStatement stmt) {
 		var cfrag = new CCodeFragment ();
@@ -39,7 +33,7 @@ internal class Vala.DovaErrorModule : DovaDelegateModule {
 		var cassign = new CCodeAssignment (new CCodeIdentifier ("dova_error"), (CCodeExpression) stmt.error_expression.ccodenode);
 		cfrag.append (new CCodeExpressionStatement (cassign));
 
-		head.add_simple_check (stmt, cfrag, true);
+		add_simple_check (stmt, cfrag, true);
 
 		stmt.ccodenode = cfrag;
 
@@ -240,15 +234,15 @@ internal class Vala.DovaErrorModule : DovaDelegateModule {
 		}
 
 		if (stmt.finally_body != null) {
-			stmt.finally_body.emit (codegen);
+			stmt.finally_body.emit (this);
 		}
 
 		is_in_catch = false;
-		stmt.body.emit (codegen);
+		stmt.body.emit (this);
 		is_in_catch = true;
 
 		foreach (CatchClause clause in stmt.get_catch_clauses ()) {
-			clause.emit (codegen);
+			clause.emit (this);
 		}
 
 		current_try = old_try;
@@ -278,7 +272,7 @@ internal class Vala.DovaErrorModule : DovaDelegateModule {
 	public override void visit_catch_clause (CatchClause clause) {
 		generate_type_declaration (clause.error_type, source_declarations);
 
-		clause.body.emit (codegen);
+		clause.body.emit (this);
 
 		var cfrag = new CCodeFragment ();
 		cfrag.append (new CCodeLabel (clause.clabel_name));

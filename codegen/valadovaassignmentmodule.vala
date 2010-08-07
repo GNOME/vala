@@ -23,11 +23,7 @@
 /**
  * The link between an assignment and generated code.
  */
-internal class Vala.DovaAssignmentModule : DovaMemberAccessModule {
-	public DovaAssignmentModule (CCodeGenerator codegen, CCodeModule? next) {
-		base (codegen, next);
-	}
-
+public class Vala.DovaAssignmentModule : DovaMemberAccessModule {
 	CCodeExpression emit_property_assignment (Assignment assignment) {
 		var ma = assignment.left as MemberAccess;
 

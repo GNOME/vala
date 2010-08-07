@@ -24,11 +24,7 @@
 /**
  * The link between a delegate and generated code.
  */
-internal class Vala.DovaDelegateModule : DovaValueModule {
-	public DovaDelegateModule (CCodeGenerator codegen, CCodeModule? next) {
-		base (codegen, next);
-	}
-
+public class Vala.DovaDelegateModule : DovaValueModule {
 	public override void generate_delegate_declaration (Delegate d, CCodeDeclarationSpace decl_space) {
 		if (decl_space.add_symbol_declaration (d, d.get_cname ())) {
 			return;
@@ -189,7 +185,7 @@ internal class Vala.DovaDelegateModule : DovaValueModule {
 	}
 
 	public override void visit_delegate (Delegate d) {
-		d.accept_children (codegen);
+		d.accept_children (this);
 
 		generate_delegate_declaration (d, source_declarations);
 

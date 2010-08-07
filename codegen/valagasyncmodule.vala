@@ -23,10 +23,6 @@
 using GLib;
 
 public class Vala.GAsyncModule : GSignalModule {
-	public GAsyncModule (CCodeGenerator codegen, CCodeModule? next) {
-		base (codegen, next);
-	}
-
 	CCodeStruct generate_data_struct (Method m) {
 		string dataname = Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data";
 		var data = new CCodeStruct ("_" + dataname);
@@ -590,7 +586,7 @@ public class Vala.GAsyncModule : GSignalModule {
 
 			cfrag.append (stmt.ccodenode);
 
-			head.add_simple_check (stmt.yield_expression, cfrag);
+			add_simple_check (stmt.yield_expression, cfrag);
 
 			stmt.ccodenode = cfrag;
 		}

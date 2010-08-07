@@ -27,10 +27,6 @@ using GLib;
  * The link between a method and generated code.
  */
 public class Vala.CCodeMethodModule : CCodeStructModule {
-	public CCodeMethodModule (CCodeGenerator codegen, CCodeModule? next) {
-		base (codegen, next);
-	}
-
 	public override bool method_has_wrapper (Method method) {
 		return (method.get_attribute ("NoWrapper") == null);
 	}
@@ -94,7 +90,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 			var array_type = (ArrayType) m.return_type;
 
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				var cparam = new CCodeFormalParameter (head.get_array_length_cname ("result", dim), "int*");
+				var cparam = new CCodeFormalParameter (get_array_length_cname ("result", dim), "int*");
 				cparam_map.set (get_param_pos (m.carray_length_parameter_position + 0.01 * dim), cparam);
 				if (carg_map != null) {
 					carg_map.set (get_param_pos (m.carray_length_parameter_position + 0.01 * dim), get_variable_cexpression (cparam.name));
@@ -319,23 +315,23 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 
 
 		foreach (FormalParameter param in m.get_parameters ()) {
-			param.accept (codegen);
+			param.accept (this);
 		}
 
 		if (m.result_var != null) {
-			m.result_var.accept (codegen);
+			m.result_var.accept (this);
 		}
 
 		foreach (Expression precondition in m.get_preconditions ()) {
-			precondition.emit (codegen);
+			precondition.emit (this);
 		}
 
 		foreach (Expression postcondition in m.get_postconditions ()) {
-			postcondition.emit (codegen);
+			postcondition.emit (this);
 		}
 
 		if (m.body != null) {
-			m.body.emit (codegen);
+			m.body.emit (this);
 		}
 
 
@@ -1081,7 +1077,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 	public override void visit_creation_method (CreationMethod m) {
 		bool visible = !m.is_private_symbol ();
 
-		head.visit_method (m);
+		visit_method (m);
 
 		DataType creturn_type;
 		if (current_type_symbol is Class) {

@@ -27,10 +27,6 @@ public class Vala.GObjectModule : GTypeModule {
 	int dynamic_property_id;
 	int signal_wrapper_id;
 
-	public GObjectModule (CCodeGenerator codegen, CCodeModule? next) {
-		base (codegen, next);
-	}
-
 	public override void visit_class (Class cl) {
 		base.visit_class (cl);
 
@@ -152,7 +148,7 @@ public class Vala.GObjectModule : GTypeModule {
 				var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_install_property"));
 				cinst.add_argument (ccall);
 				cinst.add_argument (new CCodeConstant (prop.get_upper_case_cname ()));
-				cinst.add_argument (head.get_param_spec (prop));
+				cinst.add_argument (get_param_spec (prop));
 			
 				init_block.add_statement (new CCodeExpressionStatement (cinst));
 			}
@@ -238,7 +234,7 @@ public class Vala.GObjectModule : GTypeModule {
 				cswitch.add_statement (new CCodeExpressionStatement (ccall));
 
 				var csetcall = new CCodeFunctionCall ();
-				csetcall.call = head.get_value_setter_function (prop.property_type);
+				csetcall.call = get_value_setter_function (prop.property_type);
 				csetcall.add_argument (new CCodeIdentifier ("value"));
 				csetcall.add_argument (boxed_addr);
 				cswitch.add_statement (new CCodeExpressionStatement (csetcall));
@@ -262,9 +258,9 @@ public class Vala.GObjectModule : GTypeModule {
 				}
 				var csetcall = new CCodeFunctionCall ();
 				if (prop.get_accessor.value_type.value_owned) {
-					csetcall.call = head.get_value_taker_function (prop.property_type);
+					csetcall.call = get_value_taker_function (prop.property_type);
 				} else {
-					csetcall.call = head.get_value_setter_function (prop.property_type);
+					csetcall.call = get_value_setter_function (prop.property_type);
 				}
 				csetcall.add_argument (new CCodeIdentifier ("value"));
 				csetcall.add_argument (ccall);
@@ -458,7 +454,7 @@ public class Vala.GObjectModule : GTypeModule {
 		} else {
 			in_constructor = true;
 		}
-		c.body.emit (codegen);
+		c.body.emit (this);
 		in_static_or_class_context = false;
 
 		in_constructor = false;
@@ -705,7 +701,7 @@ public class Vala.GObjectModule : GTypeModule {
 	void generate_gobject_connect_wrapper (DynamicSignal sig, CCodeBlock block, bool after) {
 		var m = (Method) sig.handler.symbol_reference;
 
-		sig.accept (codegen);
+		sig.accept (this);
 
 		string connect_func = "g_signal_connect_object";
 		if (m.binding != MemberBinding.INSTANCE) {

@@ -20,11 +20,7 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-internal class Vala.DovaValueModule : DovaObjectModule {
-	public DovaValueModule (CCodeGenerator codegen, CCodeModule? next) {
-		base (codegen, next);
-	}
-
+public class Vala.DovaValueModule : DovaObjectModule {
 	public override void visit_creation_method (CreationMethod m) {
 		if (current_type_symbol is Class &&
 		    (current_class.base_class == null ||
@@ -508,7 +504,7 @@ internal class Vala.DovaValueModule : DovaObjectModule {
 
 		// handle method calls on generic types
 
-		expr.accept_children (codegen);
+		expr.accept_children (this);
 
 		if (ma.member_name == "hash") {
 			var val = ma.inner;

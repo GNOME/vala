@@ -22,11 +22,7 @@
 
 using GLib;
 
-internal class Vala.DovaMemberAccessModule : DovaControlFlowModule {
-	public DovaMemberAccessModule (CCodeGenerator codegen, CCodeModule? next) {
-		base (codegen, next);
-	}
-
+public class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 	public override void visit_member_access (MemberAccess expr) {
 		CCodeExpression pub_inst = null;
 		DataType base_type = null;
@@ -69,7 +65,7 @@ internal class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 			}
 
 			if (m.base_method != null) {
-				if (!head.method_has_wrapper (m.base_method)) {
+				if (!method_has_wrapper (m.base_method)) {
 					var inst = pub_inst;
 					if (expr.inner != null && !expr.inner.is_pure ()) {
 						// instance expression has side-effects
@@ -183,12 +179,7 @@ internal class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 			} else if (prop.base_interface_property != null) {
 				base_property = prop.base_interface_property;
 			}
-			string getter_cname;
-			if (prop is DynamicProperty) {
-				getter_cname = head.get_dynamic_property_getter_cname ((DynamicProperty) prop);
-			} else {
-				getter_cname = base_property.get_accessor.get_cname ();
-			}
+			string getter_cname = base_property.get_accessor.get_cname ();
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier (getter_cname));
 
 			if (prop.binding == MemberBinding.INSTANCE) {

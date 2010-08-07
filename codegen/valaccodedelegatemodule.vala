@@ -27,10 +27,6 @@
  * The link between an assignment and generated code.
  */
 public class Vala.CCodeDelegateModule : CCodeArrayModule {
-	public CCodeDelegateModule (CCodeGenerator codegen, CCodeModule? next) {
-		base (codegen, next);
-	}
-
 	public override void generate_delegate_declaration (Delegate d, CCodeDeclarationSpace decl_space) {
 		if (decl_space.add_symbol_declaration (d, d.get_cname ())) {
 			return;
@@ -66,7 +62,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 				}
 				
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					var cparam = new CCodeFormalParameter (head.get_array_length_cname (get_variable_cname (param.name), dim), length_ctype);
+					var cparam = new CCodeFormalParameter (get_array_length_cname (get_variable_cname (param.name), dim), length_ctype);
 					cfundecl.add_parameter (cparam);
 				}
 			}
@@ -85,7 +81,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			var array_type = (ArrayType) d.return_type;
 
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				var cparam = new CCodeFormalParameter (head.get_array_length_cname ("result", dim), "int*");
+				var cparam = new CCodeFormalParameter (get_array_length_cname ("result", dim), "int*");
 				cfundecl.add_parameter (cparam);
 			}
 		} else if (d.return_type is DelegateType) {
@@ -116,7 +112,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 	}
 
 	public override void visit_delegate (Delegate d) {
-		d.accept_children (codegen);
+		d.accept_children (this);
 
 		generate_delegate_declaration (d, source_declarations);
 
@@ -356,7 +352,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 		var sig = d.parent_symbol as Signal;
 		var dynamic_sig = sig as DynamicSignal;
 		if (dynamic_sig != null) {
-			delegate_name = head.get_dynamic_signal_cname (dynamic_sig);
+			delegate_name = get_dynamic_signal_cname (dynamic_sig);
 		} else if (sig != null) {
 			delegate_name = sig.parent_symbol.get_lower_case_cprefix () + sig.get_cname ();
 		} else {
@@ -412,7 +408,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			var array_type = (ArrayType) d.return_type;
 
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				var cparam = new CCodeFormalParameter (head.get_array_length_cname ("result", dim), "int*");
+				var cparam = new CCodeFormalParameter (get_array_length_cname ("result", dim), "int*");
 				cparam_map.set (get_param_pos (d.carray_length_parameter_position + 0.01 * dim), cparam);
 			}
 		} else if (d.return_type is DelegateType) {
@@ -501,7 +497,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 					} else if (d_params.get (i).no_array_length) {
 						clength = new CCodeConstant ("-1");
 					} else {
-						clength = new CCodeIdentifier (head.get_array_length_cname (d_params.get (i).name, dim));
+						clength = new CCodeIdentifier (get_array_length_cname (d_params.get (i).name, dim));
 					}
 					carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), clength);
 				}
@@ -523,7 +519,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 				if (d.no_array_length) {
 					clength = new CCodeConstant ("NULL");
 				} else {
-					clength = new CCodeIdentifier (head.get_array_length_cname ("result", dim));
+					clength = new CCodeIdentifier (get_array_length_cname ("result", dim));
 				}
 				carg_map.set (get_param_pos (m.carray_length_parameter_position + 0.01 * dim), clength);
 			}

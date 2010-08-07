@@ -20,15 +20,11 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-internal class Vala.DovaControlFlowModule : DovaMethodModule {
-	public DovaControlFlowModule (CCodeGenerator codegen, CCodeModule? next) {
-		base (codegen, next);
-	}
-
+public class Vala.DovaControlFlowModule : DovaMethodModule {
 	public override void visit_if_statement (IfStatement stmt) {
-		stmt.true_statement.emit (codegen);
+		stmt.true_statement.emit (this);
 		if (stmt.false_statement != null) {
-			stmt.false_statement.emit (codegen);
+			stmt.false_statement.emit (this);
 		}
 
 		if (stmt.false_statement != null) {
@@ -42,7 +38,7 @@ internal class Vala.DovaControlFlowModule : DovaMethodModule {
 
 	public override void visit_switch_statement (SwitchStatement stmt) {
 		foreach (SwitchSection section in stmt.get_sections ()) {
-			section.emit (codegen);
+			section.emit (this);
 		}
 
 		var cswitch = new CCodeSwitchStatement ((CCodeExpression) stmt.expression.ccodenode);
@@ -75,14 +71,14 @@ internal class Vala.DovaControlFlowModule : DovaMethodModule {
 
 	public override void visit_switch_label (SwitchLabel label) {
 		if (label.expression != null) {
-			label.expression.emit (codegen);
+			label.expression.emit (this);
 
-			codegen.visit_end_full_expression (label.expression);
+			visit_end_full_expression (label.expression);
 		}
 	}
 
 	public override void visit_loop (Loop stmt) {
-		stmt.body.emit (codegen);
+		stmt.body.emit (this);
 
 		stmt.ccodenode = new CCodeWhileStatement (new CCodeConstant ("true"), (CCodeStatement) stmt.body.ccodenode);
 	}

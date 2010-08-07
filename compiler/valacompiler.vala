@@ -313,7 +313,17 @@ class Vala.Compiler {
 			}
 		}
 
-		context.codegen = new CCodeGenerator ();
+		if (context.profile == Profile.GOBJECT) {
+			if (context.has_package ("dbus-glib-1")) {
+				context.codegen = new DBusServerModule ();
+			} else {
+				context.codegen = new GDBusServerModule ();
+			}
+		} else if (context.profile == Profile.DOVA) {
+			context.codegen = new DovaErrorModule ();
+		} else {
+			context.codegen = new CCodeDelegateModule ();
+		}
 
 		if (packages != null) {
 			foreach (string package in packages) {

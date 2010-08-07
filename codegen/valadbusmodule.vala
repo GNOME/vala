@@ -45,10 +45,6 @@ public class Vala.DBusModule : GAsyncModule {
 		{ "g", "SIGNATURE", "const char*", "G_TYPE_STRING", null, "g_value_take_string" }
 	};
 
-	public DBusModule (CCodeGenerator codegen, CCodeModule? next) {
-		base (codegen, next);
-	}
-
 	static bool is_string_marshalled_enum (TypeSymbol? symbol) {
 		if (symbol != null && symbol is Enum) {
 			var dbus = symbol.get_attribute ("DBus");

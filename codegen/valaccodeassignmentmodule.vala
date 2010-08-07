@@ -28,10 +28,6 @@ using GLib;
  * The link between an assignment and generated code.
  */
 public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
-	public CCodeAssignmentModule (CCodeGenerator codegen, CCodeModule? next) {
-		base (codegen, next);
-	}
-
 	CCodeExpression emit_property_assignment (Assignment assignment) {
 		var ma = assignment.left as MemberAccess;
 
@@ -50,7 +46,7 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 		}
 
 		if (prop.set_accessor.construction && current_type_symbol is Class && current_class.is_subtype_of (gobject_type) && in_creation_method) {
-			return head.get_construct_property_assignment (prop.get_canonical_cconstant (), prop.property_type, (CCodeExpression) assignment.right.ccodenode);
+			return get_construct_property_assignment (prop.get_canonical_cconstant (), prop.property_type, (CCodeExpression) assignment.right.ccodenode);
 		} else {
 			CCodeExpression cexpr = (CCodeExpression) assignment.right.ccodenode;
 
@@ -150,8 +146,8 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 			if (array) {
 				var array_type = (ArrayType) assignment.left.value_type;
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					var lhs_array_len = head.get_array_length_cexpression (assignment.left, dim);
-					var rhs_array_len = head.get_array_length_cexpression (assignment.right, dim);
+					var lhs_array_len = get_array_length_cexpression (assignment.left, dim);
+					var rhs_array_len = get_array_length_cexpression (assignment.right, dim);
 					ccomma.append_expression (new CCodeAssignment (lhs_array_len, rhs_array_len));
 				}
 				if (array_type.rank == 1) {
@@ -159,8 +155,8 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 					var array_local = array_var as LocalVariable;
 					if (array_var != null && array_var.is_internal_symbol ()
 					    && ((array_var is LocalVariable && !array_local.captured) || array_var is Field)) {
-						var lhs_array_size = head.get_array_size_cexpression (assignment.left);
-						var rhs_array_len = head.get_array_length_cexpression (assignment.left, 1);
+						var lhs_array_size = get_array_size_cexpression (assignment.left);
+						var rhs_array_len = get_array_length_cexpression (assignment.left, 1);
 						ccomma.append_expression (new CCodeAssignment (lhs_array_size, rhs_array_len));
 					}
 				}

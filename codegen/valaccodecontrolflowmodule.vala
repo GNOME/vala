@@ -25,14 +25,10 @@
 using GLib;
 
 public class Vala.CCodeControlFlowModule : CCodeMethodModule {
-	public CCodeControlFlowModule (CCodeGenerator codegen, CCodeModule? next) {
-		base (codegen, next);
-	}
-
 	public override void visit_if_statement (IfStatement stmt) {
-		stmt.true_statement.emit (codegen);
+		stmt.true_statement.emit (this);
 		if (stmt.false_statement != null) {
-			stmt.false_statement.emit (codegen);
+			stmt.false_statement.emit (this);
 		}
 
 		if (stmt.false_statement != null) {
@@ -193,7 +189,7 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 
 	public override void visit_switch_statement (SwitchStatement stmt) {
 		foreach (SwitchSection section in stmt.get_sections ()) {
-			section.emit (codegen);
+			section.emit (this);
 		}
 
 		if (stmt.expression.value_type.compatible (string_type)) {
@@ -227,14 +223,14 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 
 	public override void visit_switch_label (SwitchLabel label) {
 		if (label.expression != null) {
-			label.expression.emit (codegen);
+			label.expression.emit (this);
 
-			codegen.visit_end_full_expression (label.expression);
+			visit_end_full_expression (label.expression);
 		}
 	}
 
 	public override void visit_loop (Loop stmt) {
-		stmt.body.emit (codegen);
+		stmt.body.emit (this);
 
 		if (context.profile == Profile.GOBJECT) {
 			stmt.ccodenode = new CCodeWhileStatement (new CCodeConstant ("TRUE"), (CCodeStatement) stmt.body.ccodenode);
@@ -245,7 +241,7 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 	}
 
 	public override void visit_foreach_statement (ForeachStatement stmt) {
-		stmt.body.emit (codegen);
+		stmt.body.emit (this);
 
 		visit_block (stmt);
 
@@ -280,22 +276,22 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 		if (stmt.tree_can_fail && stmt.collection.tree_can_fail) {
 			// exception handling
 			cfrag = new CCodeFragment ();
-			head.add_simple_check (stmt.collection, cfrag);
+			add_simple_check (stmt.collection, cfrag);
 			cblock.add_statement (cfrag);
 		}
 
 		if (stmt.collection.value_type is ArrayType) {
 			array_type = (ArrayType) stmt.collection.value_type;
 			
-			var array_len = head.get_array_length_cexpression (stmt.collection);
+			var array_len = get_array_length_cexpression (stmt.collection);
 
 			// store array length for use by _vala_array_free
 			if (current_method != null && current_method.coroutine) {
-				closure_struct.add_field ("int", head.get_array_length_cname (collection_backup.name, 1));
-				cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (head.get_array_length_cname (collection_backup.name, 1)), array_len)));
+				closure_struct.add_field ("int", get_array_length_cname (collection_backup.name, 1));
+				cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (get_array_length_cname (collection_backup.name, 1)), array_len)));
 			} else {
 				var clendecl = new CCodeDeclaration ("int");
-				clendecl.add_declarator (new CCodeVariableDeclarator (head.get_array_length_cname (collection_backup.name, 1), array_len));
+				clendecl.add_declarator (new CCodeVariableDeclarator (get_array_length_cname (collection_backup.name, 1), array_len));
 				cblock.add_statement (clendecl);
 			}
 
@@ -336,11 +332,11 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 				var inner_array_type = (ArrayType) stmt.type_reference;
 				for (int dim = 1; dim <= inner_array_type.rank; dim++) {
 					if (current_method != null && current_method.coroutine) {
-						closure_struct.add_field ("int", head.get_array_length_cname (stmt.variable_name, dim));
-						cbody.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (head.get_array_length_cname (stmt.variable_name, dim)), new CCodeConstant ("-1"))));
+						closure_struct.add_field ("int", get_array_length_cname (stmt.variable_name, dim));
+						cbody.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (get_array_length_cname (stmt.variable_name, dim)), new CCodeConstant ("-1"))));
 					} else {
 						var cdecl = new CCodeDeclaration ("int");
-						cdecl.add_declarator (new CCodeVariableDeclarator (head.get_array_length_cname (stmt.variable_name, dim), new CCodeConstant ("-1")));
+						cdecl.add_declarator (new CCodeVariableDeclarator (get_array_length_cname (stmt.variable_name, dim), new CCodeConstant ("-1")));
 						cbody.add_statement (cdecl);
 					}
 				}
