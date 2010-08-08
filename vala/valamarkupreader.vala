@@ -68,8 +68,8 @@ public class Vala.MarkupReader : Object {
 	string read_name () {
 		char* begin = current;
 		while (current < end) {
-			if (current[0] == ' ' || current[0] == '>'
-			    || current[0] == '/' || current[0] == '=') {
+			if (current[0] == ' ' || current[0] == '\t' || current[0] == '>'
+			    || current[0] == '/' || current[0] == '=' || current[0] == '\n') {
 				break;
 			}
 			unichar u = ((string) current).get_char_validated ((long) (end - current));
@@ -120,6 +120,9 @@ public class Vala.MarkupReader : Object {
 							// end of comment
 							current += 3;
 							break;
+						} else if (current[0] == '\n') {
+							line++;
+							column = 0;
 						}
 						current++;
 					}
@@ -186,8 +189,6 @@ public class Vala.MarkupReader : Object {
 			type = MarkupTokenType.TEXT;
 		}
 
-		column += (int) (current - begin);
-
 		token_end.pos = current;
 		token_end.line = line;
 		token_end.column = column - 1;
@@ -198,6 +199,7 @@ public class Vala.MarkupReader : Object {
 	string text (char end_char) {
 		StringBuilder content = new StringBuilder ();
 		char* text_begin = current;
+		char* last_linebreak = current;
 
 		while (current < end && current[0] != end_char) {
 			unichar u = ((string) current).get_char_validated ((long) (end - current));
@@ -234,13 +236,22 @@ public class Vala.MarkupReader : Object {
 					current += u.to_utf8 (null);
 				}
 			} else {
+				if (u == '\n') {
+					line++;
+					column = 0;
+					last_linebreak = current;
+				}
+
 				current += u.to_utf8 (null);
+				column++;
 			}
 		}
 
 		if (text_begin != current) {
 			content.append (((string) text_begin).ndup (current - text_begin));
 		}
+
+		column += (int) (current - last_linebreak);
 
 		return content.str;
 	}
