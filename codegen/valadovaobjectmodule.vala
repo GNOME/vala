@@ -791,9 +791,9 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 	}
 
 	public override void visit_class (Class cl) {
-		var old_symbol = current_symbol;
+		push_context (new EmitContext (cl));
+
 		var old_instance_finalize_fragment = instance_finalize_fragment;
-		current_symbol = cl;
 		instance_finalize_fragment = new CCodeFragment ();
 
 		generate_class_declaration (cl, source_declarations);
@@ -969,13 +969,13 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 			source_type_member_definition.append (create_set_value_from_any_function ());
 		}
 
-		current_symbol = old_symbol;
 		instance_finalize_fragment = old_instance_finalize_fragment;
+
+		pop_context ();
 	}
 
 	public override void visit_interface (Interface iface) {
-		var old_symbol = current_symbol;
-		current_symbol = iface;
+		push_context (new EmitContext (iface));
 
 		generate_interface_declaration (iface, source_declarations);
 
@@ -1072,7 +1072,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 
 		iface.accept_children (this);
 
-		current_symbol = old_symbol;
+		pop_context ();
 	}
 
 	public override void generate_property_accessor_declaration (PropertyAccessor acc, CCodeDeclarationSpace decl_space) {
@@ -1135,8 +1135,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 	}
 
 	public override void visit_property_accessor (PropertyAccessor acc) {
-		var old_symbol = current_symbol;
-		current_symbol = acc;
+		push_context (new EmitContext (acc));
 
 		var prop = (Property) acc.prop;
 
@@ -1261,7 +1260,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 			source_type_member_definition.append (function);
 		}
 
-		current_symbol = old_symbol;
+		pop_context ();
 	}
 
 	public override void generate_interface_declaration (Interface iface, CCodeDeclarationSpace decl_space) {
@@ -1372,19 +1371,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 	}
 
 	public override void visit_method (Method m) {
-		var old_symbol = current_symbol;
-		int old_next_temp_var_id = next_temp_var_id;
-		var old_temp_vars = temp_vars;
-		var old_temp_ref_vars = temp_ref_vars;
-		var old_variable_name_map = variable_name_map;
-		var old_try = current_try;
-		current_symbol = m;
-		next_temp_var_id = 0;
-		temp_vars = new ArrayList<LocalVariable> ();
-		temp_ref_vars = new ArrayList<LocalVariable> ();
-		variable_name_map = new HashMap<string,string> (str_hash, str_equal);
-		current_try = null;
-
+		push_context (new EmitContext (m));
 
 		foreach (FormalParameter param in m.get_parameters ()) {
 			param.accept (this);
@@ -1407,12 +1394,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 		}
 
 
-		current_symbol = old_symbol;
-		next_temp_var_id = old_next_temp_var_id;
-		temp_vars = old_temp_vars;
-		temp_ref_vars = old_temp_ref_vars;
-		variable_name_map = old_variable_name_map;
-		current_try = old_try;
+		pop_context ();
 
 		generate_method_declaration (m, source_declarations);
 

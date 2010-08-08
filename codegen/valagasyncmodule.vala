@@ -92,8 +92,7 @@ public class Vala.GAsyncModule : GSignalModule {
 		datadecl.add_declarator (new CCodeVariableDeclarator ("data", new CCodeIdentifier ("_data")));
 		freeblock.add_statement (datadecl);
 
-		var old_symbol = current_symbol;
-		current_symbol = m;
+		push_context (new EmitContext (m));
 
 		foreach (FormalParameter param in m.get_parameters ()) {
 			if (param.direction != ParameterDirection.OUT) {
@@ -129,7 +128,7 @@ public class Vala.GAsyncModule : GSignalModule {
 			}
 		}
 
-		current_symbol = old_symbol;
+		pop_context ();
 
 		var freecall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_free"));
 		freecall.add_argument (new CCodeIdentifier (dataname));

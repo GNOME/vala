@@ -492,7 +492,8 @@ public class Vala.GTypeModule : GErrorModule {
 	}
 
 	public override void visit_class (Class cl) {
-		var old_symbol = current_symbol;
+		push_context (new EmitContext (cl));
+
 		var old_param_spec_struct = param_spec_struct;
 		var old_prop_enum = prop_enum;
 		var old_class_init_fragment = class_init_fragment;
@@ -501,7 +502,6 @@ public class Vala.GTypeModule : GErrorModule {
 		var old_base_finalize_fragment = base_finalize_fragment;
 		var old_instance_init_fragment = instance_init_fragment;
 		var old_instance_finalize_fragment = instance_finalize_fragment;
-		current_symbol = cl;
 
 		bool is_gtypeinstance = !cl.is_compact;
 		bool is_fundamental = is_gtypeinstance && cl.base_class == null;
@@ -679,7 +679,6 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 		}
 
-		current_symbol = old_symbol;
 		param_spec_struct = old_param_spec_struct;
 		prop_enum = old_prop_enum;
 		class_init_fragment = old_class_init_fragment;
@@ -688,6 +687,8 @@ public class Vala.GTypeModule : GErrorModule {
 		base_finalize_fragment = old_base_finalize_fragment;
 		instance_init_fragment = old_instance_init_fragment;
 		instance_finalize_fragment = old_instance_finalize_fragment;
+
+		pop_context ();
 	}
 
 	private void add_type_value_table_init_function (Class cl) {
@@ -1914,8 +1915,7 @@ public class Vala.GTypeModule : GErrorModule {
 	}
 
 	public override void visit_interface (Interface iface) {
-		var old_symbol = current_symbol;
-		current_symbol = iface;
+		push_context (new EmitContext (iface));
 
 		if (iface.get_cname().len () < 3) {
 			iface.error = true;
@@ -1944,7 +1944,7 @@ public class Vala.GTypeModule : GErrorModule {
 		source_declarations.add_type_member_declaration (type_fun.get_source_declaration ());
 		source_type_member_definition.append (type_fun.get_definition ());
 
-		current_symbol = old_symbol;
+		pop_context ();
 	}
 
 	public virtual TypeRegisterFunction create_interface_register_function (Interface iface) {

@@ -261,22 +261,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 	}
 
 	public override void visit_method (Method m) {
-		var old_symbol = current_symbol;
-		bool old_method_inner_error = current_method_inner_error;
-		int old_next_temp_var_id = next_temp_var_id;
-		var old_temp_vars = temp_vars;
-		var old_temp_ref_vars = temp_ref_vars;
-		var old_variable_name_map = variable_name_map;
-		var old_try = current_try;
-		var old_state_switch_statement = state_switch_statement;
-		current_symbol = m;
-		current_method_inner_error = false;
-		next_temp_var_id = 0;
-		temp_vars = new ArrayList<LocalVariable> ();
-		temp_ref_vars = new ArrayList<LocalVariable> ();
-		variable_name_map = new HashMap<string,string> (str_hash, str_equal);
-		current_try = null;
-		state_switch_statement = null;
+		push_context (new EmitContext (m));
 
 		bool in_gobject_creation_method = false;
 		bool in_fundamental_creation_method = false;
@@ -354,14 +339,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 
 		bool inner_error = current_method_inner_error;
 
-		current_symbol = old_symbol;
-		current_method_inner_error = old_method_inner_error;
-		next_temp_var_id = old_next_temp_var_id;
-		temp_vars = old_temp_vars;
-		temp_ref_vars = old_temp_ref_vars;
-		variable_name_map = old_variable_name_map;
-		current_try = old_try;
-		state_switch_statement = old_state_switch_statement;
+		pop_context ();
 
 		// do not declare overriding methods and interface implementations
 		if (m.is_abstract || m.is_virtual

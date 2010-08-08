@@ -26,11 +26,44 @@
  * Code visitor generating C Code.
  */
 public class Vala.DovaBaseModule : CodeGenerator {
+	public class EmitContext {
+		public Symbol? current_symbol;
+		public ArrayList<Symbol> symbol_stack = new ArrayList<Symbol> ();
+		public TryStatement current_try;
+		public ArrayList<LocalVariable> temp_vars = new ArrayList<LocalVariable> ();
+		public ArrayList<LocalVariable> temp_ref_vars = new ArrayList<LocalVariable> ();
+		public int next_temp_var_id;
+		public Map<string,string> variable_name_map = new HashMap<string,string> (str_hash, str_equal);
+
+		public EmitContext (Symbol? symbol = null) {
+			current_symbol = symbol;
+		}
+
+		public void push_symbol (Symbol symbol) {
+			symbol_stack.add (current_symbol);
+			current_symbol = symbol;
+		}
+
+		public void pop_symbol () {
+			current_symbol = symbol_stack[symbol_stack.size - 1];
+			symbol_stack.remove_at (symbol_stack.size - 1);
+		}
+	}
+
 	public CodeContext context { get; set; }
 
 	public Symbol root_symbol;
-	public Symbol current_symbol;
-	public TryStatement current_try;
+
+	public EmitContext emit_context = new EmitContext ();
+
+	List<EmitContext> emit_context_stack = new ArrayList<EmitContext> ();
+
+	public Symbol current_symbol { get { return emit_context.current_symbol; } }
+
+	public TryStatement current_try {
+		get { return emit_context.current_try; }
+		set { emit_context.current_try = value; }
+	}
 
 	public TypeSymbol? current_type_symbol {
 		get {
@@ -127,13 +160,17 @@ public class Vala.DovaBaseModule : CodeGenerator {
 	public CCodeFragment pre_statement_fragment;
 
 	/* all temporary variables */
-	public ArrayList<LocalVariable> temp_vars = new ArrayList<LocalVariable> ();
+	public ArrayList<LocalVariable> temp_vars { get { return emit_context.temp_vars; } }
 	/* temporary variables that own their content */
-	public ArrayList<LocalVariable> temp_ref_vars = new ArrayList<LocalVariable> ();
+	public ArrayList<LocalVariable> temp_ref_vars { get { return emit_context.temp_ref_vars; } }
 	/* (constant) hash table with all reserved identifiers in the generated code */
 	Set<string> reserved_identifiers;
 
-	public int next_temp_var_id = 0;
+	public int next_temp_var_id {
+		get { return emit_context.next_temp_var_id; }
+		set { emit_context.next_temp_var_id = value; }
+	}
+
 	public int next_wrapper_id = 0;
 	public bool in_creation_method { get { return current_method is CreationMethod; } }
 	int next_block_id = 0;
@@ -161,7 +198,7 @@ public class Vala.DovaBaseModule : CodeGenerator {
 
 	Set<Symbol> generated_external_symbols;
 
-	public Map<string,string> variable_name_map = new HashMap<string,string> (str_hash, str_equal);
+	public Map<string,string> variable_name_map { get { return emit_context.variable_name_map; } }
 
 	public DovaBaseModule () {
 		reserved_identifiers = new HashSet<string> (str_hash, str_equal);
@@ -250,9 +287,6 @@ public class Vala.DovaBaseModule : CodeGenerator {
 			source_declarations.add_include ("dova-base.h");
 		}
 
-		next_temp_var_id = 0;
-		variable_name_map.clear ();
-
 		generated_external_symbols = new HashSet<Symbol> ();
 
 
@@ -321,6 +355,23 @@ public class Vala.DovaBaseModule : CodeGenerator {
 			once.append (new CCodeNewline ());
 			once.write (writer);
 			writer.close ();
+		}
+	}
+
+	public void push_context (EmitContext emit_context) {
+		if (this.emit_context != null) {
+			emit_context_stack.add (this.emit_context);
+		}
+
+		this.emit_context = emit_context;
+	}
+
+	public void pop_context () {
+		if (emit_context_stack.size > 0) {
+			this.emit_context = emit_context_stack[emit_context_stack.size - 1];
+			emit_context_stack.remove_at (emit_context_stack.size - 1);
+		} else {
+			this.emit_context = null;
 		}
 	}
 
@@ -594,21 +645,7 @@ public class Vala.DovaBaseModule : CodeGenerator {
 	}
 
 	public override void visit_property (Property prop) {
-		int old_next_temp_var_id = next_temp_var_id;
-		var old_temp_vars = temp_vars;
-		var old_temp_ref_vars = temp_ref_vars;
-		var old_variable_name_map = variable_name_map;
-		next_temp_var_id = 0;
-		temp_vars = new ArrayList<LocalVariable> ();
-		temp_ref_vars = new ArrayList<LocalVariable> ();
-		variable_name_map = new HashMap<string,string> (str_hash, str_equal);
-
 		prop.accept_children (this);
-
-		next_temp_var_id = old_next_temp_var_id;
-		temp_vars = old_temp_vars;
-		temp_ref_vars = old_temp_ref_vars;
-		variable_name_map = old_variable_name_map;
 	}
 
 	public void generate_type_declaration (DataType type, CCodeDeclarationSpace decl_space) {
@@ -2166,15 +2203,7 @@ public class Vala.DovaBaseModule : CodeGenerator {
 		var dt = (DelegateType) l.target_type;
 		l.method.cinstance_parameter_position = dt.delegate_symbol.cinstance_parameter_position;
 
-		var old_temp_vars = temp_vars;
-		var old_temp_ref_vars = temp_ref_vars;
-		temp_vars = new ArrayList<LocalVariable> ();
-		temp_ref_vars = new ArrayList<LocalVariable> ();
-
 		l.accept_children (this);
-
-		temp_vars = old_temp_vars;
-		temp_ref_vars = old_temp_ref_vars;
 
 		l.ccodenode = new CCodeIdentifier (l.method.get_cname ());
 	}

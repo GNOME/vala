@@ -769,10 +769,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var block = new CCodeBlock ();
 
 		if (requires_copy (array_type.element_type)) {
-			var old_symbol = current_symbol;
-			var old_temp_vars = temp_vars;
-			current_symbol = null;
-			temp_vars = new ArrayList<LocalVariable> ();
+			push_context (new EmitContext ());
 
 			var cdecl = new CCodeDeclaration (array_type.get_cname ());
 			var cvardecl = new CCodeVariableDeclarator ("result");
@@ -807,8 +804,8 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			var cfrag = new CCodeFragment ();
 			append_temp_decl (cfrag, temp_vars);
 			block.add_statement (cfrag);
-			current_symbol = old_symbol;
-			temp_vars = old_temp_vars;
+
+			pop_context ();
 		} else {
 			var dup_call = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup"));
 			dup_call.add_argument (new CCodeIdentifier ("self"));
@@ -851,10 +848,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var block = new CCodeBlock ();
 
 		if (requires_copy (array_type.element_type)) {
-			var old_symbol = current_symbol;
-			var old_temp_vars = temp_vars;
-			current_symbol = null;
-			temp_vars = new ArrayList<LocalVariable> ();
+			push_context (new EmitContext ());
 
 			var idx_decl = new CCodeDeclaration ("int");
 			idx_decl.add_declarator (new CCodeVariableDeclarator ("i"));
@@ -871,8 +865,8 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			var cfrag = new CCodeFragment ();
 			append_temp_decl (cfrag, temp_vars);
 			block.add_statement (cfrag);
-			current_symbol = old_symbol;
-			temp_vars = old_temp_vars;
+
+			pop_context ();
 		} else {
 			source_declarations.add_include ("string.h");
 

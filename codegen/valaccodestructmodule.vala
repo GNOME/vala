@@ -140,9 +140,9 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 	}
 
 	public override void visit_struct (Struct st) {
-		var old_symbol = current_symbol;
+		push_context (new EmitContext (st));
+
 		var old_instance_finalize_fragment = instance_finalize_fragment;
-		current_symbol = st;
 		instance_finalize_fragment = new CCodeFragment ();
 
 		generate_struct_declaration (st, source_declarations);
@@ -166,8 +166,9 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 			add_struct_free_function (st);
 		}
 
-		current_symbol = old_symbol;
 		instance_finalize_fragment = old_instance_finalize_fragment;
+
+		pop_context ();
 	}
 
 	void add_struct_dup_function (Struct st) {

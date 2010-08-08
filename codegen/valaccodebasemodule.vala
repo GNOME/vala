@@ -27,11 +27,46 @@
  * Code visitor generating C Code.
  */
 public class Vala.CCodeBaseModule : CodeGenerator {
+	public class EmitContext {
+		public Symbol? current_symbol;
+		public ArrayList<Symbol> symbol_stack = new ArrayList<Symbol> ();
+		public TryStatement current_try;
+		public CCodeSwitchStatement state_switch_statement;
+		public ArrayList<LocalVariable> temp_vars = new ArrayList<LocalVariable> ();
+		public ArrayList<LocalVariable> temp_ref_vars = new ArrayList<LocalVariable> ();
+		public int next_temp_var_id;
+		public bool current_method_inner_error;
+		public Map<string,string> variable_name_map = new HashMap<string,string> (str_hash, str_equal);
+
+		public EmitContext (Symbol? symbol = null) {
+			current_symbol = symbol;
+		}
+
+		public void push_symbol (Symbol symbol) {
+			symbol_stack.add (current_symbol);
+			current_symbol = symbol;
+		}
+
+		public void pop_symbol () {
+			current_symbol = symbol_stack[symbol_stack.size - 1];
+			symbol_stack.remove_at (symbol_stack.size - 1);
+		}
+	}
+
 	public CodeContext context { get; set; }
 
 	public Symbol root_symbol;
-	public Symbol current_symbol;
-	public TryStatement current_try;
+
+	public EmitContext emit_context = new EmitContext ();
+
+	List<EmitContext> emit_context_stack = new ArrayList<EmitContext> ();
+
+	public Symbol current_symbol { get { return emit_context.current_symbol; } }
+
+	public TryStatement current_try {
+		get { return emit_context.current_try; }
+		set { emit_context.current_try = value; }
+	}
 
 	public TypeSymbol? current_type_symbol {
 		get {
@@ -135,13 +170,17 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 	// code nodes to be inserted before the current statement
 	// used by async method calls in coroutines
 	public CCodeFragment pre_statement_fragment;
+
 	// case statements to be inserted for the couroutine state
-	public CCodeSwitchStatement state_switch_statement;
+	public CCodeSwitchStatement state_switch_statement {
+		get { return emit_context.state_switch_statement; }
+		set { emit_context.state_switch_statement = value; }
+	}
 
 	/* all temporary variables */
-	public ArrayList<LocalVariable> temp_vars = new ArrayList<LocalVariable> ();
+	public ArrayList<LocalVariable> temp_vars { get { return emit_context.temp_vars; } }
 	/* temporary variables that own their content */
-	public ArrayList<LocalVariable> temp_ref_vars = new ArrayList<LocalVariable> ();
+	public ArrayList<LocalVariable> temp_ref_vars { get { return emit_context.temp_ref_vars; } }
 	/* cache to check whether a certain marshaller has been created yet */
 	public Set<string> user_marshal_set;
 	/* (constant) hash table with all predefined marshallers */
@@ -149,12 +188,21 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 	/* (constant) hash table with all reserved identifiers in the generated code */
 	Set<string> reserved_identifiers;
 	
-	public int next_temp_var_id = 0;
+	public int next_temp_var_id {
+		get { return emit_context.next_temp_var_id; }
+		set { emit_context.next_temp_var_id = value; }
+	}
+
 	public int next_regex_id = 0;
 	public bool in_creation_method { get { return current_method is CreationMethod; } }
 	public bool in_constructor = false;
 	public bool in_static_or_class_context = false;
-	public bool current_method_inner_error = false;
+
+	public bool current_method_inner_error {
+		get { return emit_context.current_method_inner_error; }
+		set { emit_context.current_method_inner_error = value; }
+	}
+
 	public int next_coroutine_state = 1;
 	int next_block_id = 0;
 	Map<Block,int> block_map = new HashMap<Block,int> ();
@@ -214,7 +262,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 	public Set<string> wrappers;
 	Set<Symbol> generated_external_symbols;
 
-	public Map<string,string> variable_name_map = new HashMap<string,string> (str_hash, str_equal);
+	public Map<string,string> variable_name_map { get { return emit_context.variable_name_map; } }
 
 	public CCodeBaseModule () {
 		predefined_marshal_set = new HashSet<string> (str_hash, str_equal);
@@ -475,6 +523,23 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
+	public void push_context (EmitContext emit_context) {
+		if (this.emit_context != null) {
+			emit_context_stack.add (this.emit_context);
+		}
+
+		this.emit_context = emit_context;
+	}
+
+	public void pop_context () {
+		if (emit_context_stack.size > 0) {
+			this.emit_context = emit_context_stack[emit_context_stack.size - 1];
+			emit_context_stack.remove_at (emit_context_stack.size - 1);
+		} else {
+			this.emit_context = null;
+		}
+	}
+
 	public CCodeIdentifier get_value_setter_function (DataType type_reference) {
 		var array_type = type_reference as ArrayType;
 		if (type_reference.data_type != null) {
@@ -566,9 +631,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		
 		user_marshal_set = new HashSet<string> (str_hash, str_equal);
 		
-		next_temp_var_id = 0;
 		next_regex_id = 0;
-		variable_name_map.clear ();
 		
 		gvaluecollector_h_needed = false;
 		requires_array_free = false;
@@ -1224,21 +1287,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 
 		check_type (prop.property_type);
 
-		int old_next_temp_var_id = next_temp_var_id;
-		var old_temp_vars = temp_vars;
-		var old_temp_ref_vars = temp_ref_vars;
-		var old_variable_name_map = variable_name_map;
-		next_temp_var_id = 0;
-		temp_vars = new ArrayList<LocalVariable> ();
-		temp_ref_vars = new ArrayList<LocalVariable> ();
-		variable_name_map = new HashMap<string,string> (str_hash, str_equal);
-
 		prop.accept_children (this);
-
-		next_temp_var_id = old_next_temp_var_id;
-		temp_vars = old_temp_vars;
-		temp_ref_vars = old_temp_ref_vars;
-		variable_name_map = old_variable_name_map;
 	}
 
 	public void generate_type_declaration (DataType type, CCodeDeclarationSpace decl_space) {
@@ -1353,10 +1402,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public override void visit_property_accessor (PropertyAccessor acc) {
-		var old_symbol = current_symbol;
-		bool old_method_inner_error = current_method_inner_error;
-		current_symbol = acc;
-		current_method_inner_error = false;
+		push_context (new EmitContext (acc));
 
 		var prop = (Property) acc.prop;
 
@@ -1610,8 +1656,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			source_type_member_definition.append (function);
 		}
 
-		current_symbol = old_symbol;
-		current_method_inner_error = old_method_inner_error;
+		pop_context ();
 	}
 
 	public override void visit_destructor (Destructor d) {
@@ -5004,15 +5049,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		var dt = (DelegateType) l.target_type;
 		l.method.cinstance_parameter_position = dt.delegate_symbol.cinstance_parameter_position;
 
-		var old_temp_vars = temp_vars;
-		var old_temp_ref_vars = temp_ref_vars;
-		temp_vars = new ArrayList<LocalVariable> ();
-		temp_ref_vars = new ArrayList<LocalVariable> ();
-
 		l.accept_children (this);
-
-		temp_vars = old_temp_vars;
-		temp_ref_vars = old_temp_ref_vars;
 
 		l.ccodenode = new CCodeIdentifier (l.method.get_cname ());
 	}
@@ -5650,14 +5687,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		function.add_parameter (new CCodeFormalParameter ("self", "const " + st.get_cname () + "*"));
 		function.add_parameter (new CCodeFormalParameter ("dest", st.get_cname () + "*"));
 
-		int old_next_temp_var_id = next_temp_var_id;
-		var old_temp_vars = temp_vars;
-		var old_temp_ref_vars = temp_ref_vars;
-		var old_variable_name_map = variable_name_map;
-		next_temp_var_id = 0;
-		temp_vars = new ArrayList<LocalVariable> ();
-		temp_ref_vars = new ArrayList<LocalVariable> ();
-		variable_name_map = new HashMap<string,string> (str_hash, str_equal);
+		push_context (new EmitContext ());
 
 		var cblock = new CCodeBlock ();
 		var cfrag = new CCodeFragment ();
@@ -5707,10 +5737,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		append_temp_decl (cfrag, temp_vars);
 		temp_vars.clear ();
 
-		next_temp_var_id = old_next_temp_var_id;
-		temp_vars = old_temp_vars;
-		temp_ref_vars = old_temp_ref_vars;
-		variable_name_map = old_variable_name_map;
+		pop_context ();
 
 		source_declarations.add_type_member_declaration (function.copy ());
 		function.block = cblock;
