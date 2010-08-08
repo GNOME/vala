@@ -154,7 +154,7 @@ public class Vala.MarkupReader : Object {
 					}
 					current++;
 
-					string attr_value = text ('"');
+					string attr_value = text ('"', false);
 
 					if (current >= end || current[0] != '"') {
 						// error
@@ -179,7 +179,7 @@ public class Vala.MarkupReader : Object {
 			space ();
 
 			if (current[0] != '<') {
-				content = text ('<');
+				content = text ('<', true);
 			} else {
 				// no text
 				// read next token
@@ -196,7 +196,7 @@ public class Vala.MarkupReader : Object {
 		return type;
 	}
 
-	string text (char end_char) {
+	string text (char end_char, bool rm_trailing_whitespace) {
 		StringBuilder content = new StringBuilder ();
 		char* text_begin = current;
 		char* last_linebreak = current;
@@ -252,6 +252,13 @@ public class Vala.MarkupReader : Object {
 		}
 
 		column += (int) (current - last_linebreak);
+
+		// Removes trailing whitespace
+		if (rm_trailing_whitespace) {
+			char* str_pos = ((char*)content.str) + content.len;
+			for (str_pos--; str_pos > ((char*)content.str) && str_pos[0].isspace(); str_pos--);
+			content.erase ((ssize_t) (str_pos-((char*) content.str) + 1), -1);
+		}
 
 		return content.str;
 	}
