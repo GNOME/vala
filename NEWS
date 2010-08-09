@@ -1,3 +1,15 @@
+Vala 0.9.5
+==========
+
+ * Add version suffix to support parallel installation.
+ * Define VALA_X_Y according to compiler version.
+ * Enable version header by default.
+ * Add vala.m4 with VALA_CHECK_PACKAGES macro.
+ * Add gedit-2.20 bindings (Andrea Del Signore).
+ * Add tokyocabinet bindings (Evan Nemerson).
+ * Various improvements to the Dova profile.
+ * Many bug fixes and binding updates.
+
 Vala 0.9.4
 ==========
 
