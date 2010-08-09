@@ -37,5 +37,5 @@ then
 	PKGDEFINES=$(cat $PKGBASE.defines)
 fi
 
-$pkglibdir/gen-introspect --namespace=`cat $PKGBASE.namespace` $PKGDEFINES `pkg-config --cflags $PKGNAME | sed 's/-pthread//g'` $FILES > $PKGBASE.gi
+$pkglibdir/gen-introspect@PACKAGE_SUFFIX@ --namespace=`cat $PKGBASE.namespace` $PKGDEFINES `pkg-config --cflags $PKGNAME | sed 's/-pthread//g'` $FILES > $PKGBASE.gi
 
