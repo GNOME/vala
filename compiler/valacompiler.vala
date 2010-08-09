@@ -215,7 +215,7 @@ class Vala.Compiler {
 		context.report.enable_warnings = !disable_warnings;
 		context.report.set_verbose_errors (!quiet_mode);
 		context.verbose_mode = verbose_mode;
-		context.version_header = enable_version_header;
+		context.version_header = !disable_version_header;
 
 		context.ccode_only = ccode_only;
 		context.compile_only = compile_only;
