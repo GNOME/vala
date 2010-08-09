@@ -3772,6 +3772,16 @@ namespace GLib {
 		public uint n_nodes (TraverseFlags flags);
 		public uint max_height ();
 
+		[CCode (cname = "g_node_unlink")]
+		public void _unlink ();
+		[CCode (cname = "g_node_unlink_vala")]
+		public Node<G> unlink ()
+		{
+			void *ptr = this;
+			_unlink ();
+			return (Node<G>) (owned) ptr;
+		}
+
 		public G data;
 		public Node next;
 		public Node prev;
