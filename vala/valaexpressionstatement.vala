@@ -1,6 +1,6 @@
 /* valaexpressionstatement.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -65,26 +65,6 @@ public class Vala.ExpressionStatement : CodeNode, Statement {
 		if (expression == old_node) {
 			expression = new_node;
 		}
-	}
-
-	/**
-	 * Returns the property this statement sets, if any.
-	 *
-	 * @return the property this statement sets, or null if it doesn't set
-	 *         a property
-	 */
-	public Property? assigned_property () {
-		if (expression is Assignment) {
-			var assign = (Assignment) expression;
-			if (assign.left is MemberAccess) {
-				var ma = (MemberAccess) assign.left;
-				if (ma.symbol_reference is Property) {
-					return (Property) ma.symbol_reference;
-				}
-			}
-		}
-
-		return null;
 	}
 
 	public override bool check (SemanticAnalyzer analyzer) {

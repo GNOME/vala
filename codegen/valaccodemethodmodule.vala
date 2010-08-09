@@ -1,6 +1,6 @@
 /* valaccodemethodmodule.vala
  *
- * Copyright (C) 2007-2009  Jürg Billeter
+ * Copyright (C) 2007-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -321,73 +321,11 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 
 		if (m is CreationMethod) {
 			if (in_gobject_creation_method && m.body != null) {
+				var cblock = (CCodeBlock) m.body.ccodenode;
+
 				if (!((CreationMethod) m).chain_up) {
-					if (m.body.captured) {
-						Report.error (m.source_reference, "Closures are not supported in GObject-style creation methods");
-					}
-
-					var cblock = new CCodeBlock ();
-
-					// last property assignment statement
-					CodeNode last_stmt = null;
-
-					// set construct properties
-					foreach (CodeNode stmt in m.body.get_statements ()) {
-						var expr_stmt = stmt as ExpressionStatement;
-						if (expr_stmt != null) {
-							var prop = expr_stmt.assigned_property ();
-							if (prop != null && prop.set_accessor.construction) {
-								last_stmt = stmt;
-							}
-						}
-					}
-					if (last_stmt != null) {
-						foreach (CodeNode stmt in m.body.get_statements ()) {
-							if (stmt.ccodenode is CCodeFragment) {
-								foreach (CCodeNode cstmt in ((CCodeFragment) stmt.ccodenode).get_children ()) {
-									cblock.add_statement (cstmt);
-								}
-							} else {
-								cblock.add_statement (stmt.ccodenode);
-							}
-							if (last_stmt == stmt) {
-								break;
-							}
-						}
-					}
-
-					add_object_creation (cblock, ((CreationMethod) m).n_construction_params > 0 || current_class.get_type_parameters ().size > 0);
-
-					// other initialization code
-					foreach (CodeNode stmt in m.body.get_statements ()) {
-						if (last_stmt != null) {
-							if (last_stmt == stmt) {
-								last_stmt = null;
-							}
-							continue;
-						}
-						if (stmt.ccodenode is CCodeFragment) {
-							foreach (CCodeNode cstmt in ((CCodeFragment) stmt.ccodenode).get_children ()) {
-								cblock.add_statement (cstmt);
-							}
-						} else {
-							cblock.add_statement (stmt.ccodenode);
-						}
-					}
-
-					foreach (LocalVariable local in m.body.get_local_variables ()) {
-						if (!local.floating && requires_destroy (local.variable_type)) {
-							var ma = new MemberAccess.simple (local.name);
-							ma.symbol_reference = local;
-							ma.value_type = local.variable_type.copy ();
-							cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma)));
-						}
-					}
-
-					m.body.ccodenode = cblock;
+					prepend_object_creation (cblock, current_class.get_type_parameters ().size > 0);
 				} else {
-					var cblock = (CCodeBlock) m.body.ccodenode;
-
 					var cdeclaration = new CCodeDeclaration ("%s *".printf (((Class) current_type_symbol).get_cname ()));
 					cdeclaration.add_declarator (new CCodeVariableDeclarator ("self"));
 
@@ -605,14 +543,12 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 			
 				if (m is CreationMethod) {
 					if (in_gobject_creation_method) {
-						int n_params = ((CreationMethod) m).n_construction_params;
-
 						if (!((CreationMethod) m).chain_up) {
-							if (n_params > 0 || current_class.get_type_parameters ().size > 0) {
+							if (current_class.get_type_parameters ().size > 0) {
 								// declare construction parameter array
 								var cparamsinit = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
 								cparamsinit.add_argument (new CCodeIdentifier ("GParameter"));
-								cparamsinit.add_argument (new CCodeConstant ((n_params + 3 * current_class.get_type_parameters ().size).to_string ()));
+								cparamsinit.add_argument (new CCodeConstant ((current_class.get_type_parameters ().size).to_string ()));
 						
 								var cdecl = new CCodeDeclaration ("GParameter *");
 								cdecl.add_declarator (new CCodeVariableDeclarator ("__params", cparamsinit));
@@ -649,7 +585,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 						cinit.append (cdeclaration);
 
 						if (!((CreationMethod) m).chain_up) {
-							// TODO implicitly chain up to base class as in add_object_creation
+							// TODO implicitly chain up to base class as in prepend_object_creation
 							var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_create_instance"));
 							ccall.add_argument (new CCodeIdentifier ("object_type"));
 							cdecl.initializer = new CCodeCastExpression (ccall, cl.get_cname () + "*");
@@ -682,7 +618,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 						cinit.append (cdeclaration);
 
 						if (!((CreationMethod) m).chain_up) {
-							// TODO implicitly chain up to base class as in add_object_creation
+							// TODO implicitly chain up to base class as in prepend_object_creation
 							var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_new0"));
 							ccall.add_argument (new CCodeIdentifier (cl.get_cname ()));
 							cdecl.initializer = ccall;
@@ -1095,7 +1031,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		return null;
 	}
 
-	private void add_object_creation (CCodeBlock b, bool has_params) {
+	private void prepend_object_creation (CCodeBlock b, bool has_params) {
 		var cl = (Class) current_type_symbol;
 
 		if (!has_params && cl.base_class != gobject_type) {
@@ -1117,7 +1053,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		var cdeclaration = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
 		cdeclaration.add_declarator (cdecl);
 		
-		b.add_statement (cdeclaration);
+		b.prepend_statement (cdeclaration);
 	}
 
 	public override void visit_creation_method (CreationMethod m) {
@@ -1160,7 +1096,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		}
 
 		if (current_type_symbol is Class && gobject_type != null && current_class.is_subtype_of (gobject_type)
-		    && (((CreationMethod) m).n_construction_params > 0 || current_class.get_type_parameters ().size > 0)
+		    && current_class.get_type_parameters ().size > 0
 		    && !((CreationMethod) m).chain_up) {
 			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, new CCodeIdentifier ("__params_it"), new CCodeIdentifier ("__params"));
 			var cdofreeparam = new CCodeBlock ();
