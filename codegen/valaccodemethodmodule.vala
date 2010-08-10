@@ -315,32 +315,6 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 			postcondition.emit (this);
 		}
 
-		if (m.body != null) {
-			m.body.emit (this);
-		}
-
-
-		in_static_or_class_context = false;
-
-		if (m is CreationMethod) {
-			if (in_gobject_creation_method && m.body != null) {
-				var cblock = (CCodeBlock) m.body.ccodenode;
-
-				if (!((CreationMethod) m).chain_up) {
-					prepend_object_creation (cblock, current_class.get_type_parameters ().size > 0);
-				} else {
-					var cdeclaration = new CCodeDeclaration ("%s *".printf (((Class) current_type_symbol).get_cname ()));
-					cdeclaration.add_declarator (new CCodeVariableDeclarator ("self"));
-
-					cblock.prepend_statement (cdeclaration);
-				}
-			}
-		}
-
-		bool inner_error = current_method_inner_error;
-
-		pop_context ();
-
 		// do not declare overriding methods and interface implementations
 		if (m.is_abstract || m.is_virtual
 		    || (m.base_method == null && m.base_interface_method == null)) {
@@ -358,6 +332,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 			source_type_member_definition.append (new CCodeComment (m.comment.content));
 		}
 
+		CCodeFunction function;
 		function = new CCodeFunction (m.get_real_cname ());
 		m.ccodenode = function;
 
@@ -381,40 +356,42 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 					function.modifiers |= CCodeModifiers.STATIC;
 				}
 			}
-		
+		}
+
+		// generate *_real_* functions for virtual methods
+		// also generate them for abstract methods of classes to prevent faulty subclassing
+		if (!m.is_abstract || (m.is_abstract && current_type_symbol is Class)) {
 			/* Methods imported from a plain C file don't
 			 * have a body, e.g. Vala.Parser.parse_file () */
 			if (m.body != null) {
-				function.block = (CCodeBlock) m.body.ccodenode;
-				function.block.line = function.line;
-
-				var cinit = new CCodeFragment ();
-				function.block.prepend_statement (cinit);
-
 				if (m.coroutine) {
-					var co_function = new CCodeFunction (m.get_real_cname () + "_co", "gboolean");
+					function = new CCodeFunction (m.get_real_cname () + "_co", "gboolean");
 
 					// data struct to hold parameters, local variables, and the return value
-					co_function.add_parameter (new CCodeFormalParameter ("data", Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data*"));
+					function.add_parameter (new CCodeFormalParameter ("data", Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data*"));
 
-					co_function.modifiers |= CCodeModifiers.STATIC;
-					source_declarations.add_type_member_declaration (co_function.copy ());
+					function.modifiers |= CCodeModifiers.STATIC;
+					source_declarations.add_type_member_declaration (function.copy ());
+				}
+			}
+		}
 
+		var cinit = new CCodeFragment ();
+
+		// generate *_real_* functions for virtual methods
+		// also generate them for abstract methods of classes to prevent faulty subclassing
+		if (!m.is_abstract || (m.is_abstract && current_type_symbol is Class)) {
+			/* Methods imported from a plain C file don't
+			 * have a body, e.g. Vala.Parser.parse_file () */
+			if (m.body != null) {
+				if (m.coroutine) {
 					// let gcc know that this can't happen
 					current_state_switch.add_statement (new CCodeLabel ("default"));
 					current_state_switch.add_statement (new CCodeExpressionStatement (new CCodeFunctionCall (new CCodeIdentifier ("g_assert_not_reached"))));
 
-					co_function.block = new CCodeBlock ();
-					co_function.block.add_statement (current_state_switch);
+					cinit.append (current_state_switch);
 
-					// coroutine body
-					co_function.block.add_statement (new CCodeLabel ("_state_0"));
-					co_function.block.add_statement (function.block);
-
-					// epilogue
-					co_function.block.add_statement (complete_async ());
-
-					source_type_member_definition.append (co_function);
+					cinit.append (new CCodeLabel ("_state_0"));
 				}
 
 				if (m.closure) {
@@ -511,32 +488,8 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 					vardecl.init0 = true;
 					cdecl.add_declarator (vardecl);
 					cinit.append (cdecl);
-
-					// add dummy return if exit block is known to be unreachable to silence C compiler
-					if (m.return_block != null && m.return_block.get_predecessors ().size == 0) {
-						function.block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("result")));
-					}
 				}
 
-				if (inner_error) {
-					/* always separate error parameter and inner_error local variable
-					 * as error may be set to NULL but we're always interested in inner errors
-					 */
-					if (m.coroutine) {
-						closure_struct.add_field ("GError *", "_inner_error_");
-
-						// no initialization necessary, closure struct is zeroed
-					} else {
-						var cdecl = new CCodeDeclaration ("GError *");
-						cdecl.add_declarator (new CCodeVariableDeclarator ("_inner_error_", new CCodeConstant ("NULL")));
-						cinit.append (cdecl);
-					}
-				}
-
-				if (!m.coroutine) {
-					source_type_member_definition.append (function);
-				}
-			
 				if (m is CreationMethod) {
 					if (in_gobject_creation_method) {
 						if (!((CreationMethod) m).chain_up) {
@@ -572,6 +525,13 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 								param_name = new CCodeIdentifier ("%s_destroy_func".printf (type_param.name.down ()));
 								cinit.append (new CCodeExpressionStatement (get_construct_property_assignment (prop_name, new PointerType (new VoidType ()), param_name)));
 							}
+
+							add_object_creation (cinit, current_class.get_type_parameters ().size > 0);
+						} else {
+							var cdeclaration = new CCodeDeclaration ("%s *".printf (((Class) current_type_symbol).get_cname ()));
+							cdeclaration.add_declarator (new CCodeVariableDeclarator ("self"));
+
+							cinit.append (cdeclaration);
 						}
 					} else if (is_gtypeinstance_creation_method (m)) {
 						var cl = (Class) m.parent_symbol;
@@ -581,7 +541,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 						cinit.append (cdeclaration);
 
 						if (!((CreationMethod) m).chain_up) {
-							// TODO implicitly chain up to base class as in prepend_object_creation
+							// TODO implicitly chain up to base class as in add_object_creation
 							var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_create_instance"));
 							ccall.add_argument (new CCodeIdentifier ("object_type"));
 							cdecl.initializer = new CCodeCastExpression (ccall, cl.get_cname () + "*");
@@ -614,7 +574,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 						cinit.append (cdeclaration);
 
 						if (!((CreationMethod) m).chain_up) {
-							// TODO implicitly chain up to base class as in prepend_object_creation
+							// TODO implicitly chain up to base class as in add_object_creation
 							var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_new0"));
 							ccall.add_argument (new CCodeIdentifier (cl.get_cname ()));
 							cdecl.initializer = ccall;
@@ -650,6 +610,52 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 						cinit.append (check_stmt);
 					}
 				}
+			}
+		}
+
+		if (m.body != null) {
+			m.body.emit (this);
+		}
+
+		// generate *_real_* functions for virtual methods
+		// also generate them for abstract methods of classes to prevent faulty subclassing
+		if (!m.is_abstract || (m.is_abstract && current_type_symbol is Class)) {
+			/* Methods imported from a plain C file don't
+			 * have a body, e.g. Vala.Parser.parse_file () */
+			if (m.body != null) {
+				function.block = (CCodeBlock) m.body.ccodenode;
+				function.block.line = function.line;
+
+				function.block.prepend_statement (cinit);
+
+				if (current_method_inner_error) {
+					/* always separate error parameter and inner_error local variable
+					 * as error may be set to NULL but we're always interested in inner errors
+					 */
+					if (m.coroutine) {
+						closure_struct.add_field ("GError *", "_inner_error_");
+
+						// no initialization necessary, closure struct is zeroed
+					} else {
+						var cdecl = new CCodeDeclaration ("GError *");
+						cdecl.add_declarator (new CCodeVariableDeclarator.zero ("_inner_error_", new CCodeConstant ("NULL")));
+						function.block.add_statement (cdecl);
+					}
+				}
+
+				if (m.coroutine) {
+					// epilogue
+					function.block.add_statement (complete_async ());
+				}
+
+				if (!(m.return_type is VoidType) && !m.return_type.is_real_non_null_struct_type () && !m.coroutine) {
+					// add dummy return if exit block is known to be unreachable to silence C compiler
+					if (m.return_block != null && m.return_block.get_predecessors ().size == 0) {
+						function.block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("result")));
+					}
+				}
+
+				source_type_member_definition.append (function);
 			} else if (m.is_abstract) {
 				// generate helpful error message if a sublcass does not implement an abstract method.
 				// This is only meaningful for subclasses implemented in C since the vala compiler would
@@ -685,6 +691,10 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 				source_type_member_definition.append (function);
 			}
 		}
+
+		in_static_or_class_context = false;
+
+		pop_context ();
 
 		if ((m.is_abstract || m.is_virtual) && !m.coroutine &&
 		/* If the method is a signal handler, the declaration
@@ -1027,7 +1037,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		return null;
 	}
 
-	private void prepend_object_creation (CCodeBlock b, bool has_params) {
+	private void add_object_creation (CCodeFragment ccode, bool has_params) {
 		var cl = (Class) current_type_symbol;
 
 		if (!has_params && cl.base_class != gobject_type) {
@@ -1049,13 +1059,14 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		var cdeclaration = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
 		cdeclaration.add_declarator (cdecl);
 		
-		b.prepend_statement (cdeclaration);
+		ccode.append (cdeclaration);
 	}
 
 	public override void visit_creation_method (CreationMethod m) {
 		bool visible = !m.is_private_symbol ();
 
 		visit_method (m);
+		function = (CCodeFunction) m.ccodenode;
 
 		DataType creturn_type;
 		if (current_type_symbol is Class) {
