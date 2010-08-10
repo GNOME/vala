@@ -793,7 +793,7 @@ public class Vala.GObjectModule : GTypeModule {
 
 				var ccomma = new CCodeCommaExpression ();
 				var temp_var = get_temp_variable (expr.value_type, false, expr, false);
-				temp_vars.insert (0, temp_var);
+				temp_vars.add (temp_var);
 				ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), (CCodeExpression) expr.ccodenode));
 
 				var is_floating_ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_is_floating"));

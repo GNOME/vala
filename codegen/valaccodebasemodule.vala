@@ -2029,12 +2029,12 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				if (!array_type.fixed_length) {
 					for (int dim = 1; dim <= array_type.rank; dim++) {
 						var len_var = new LocalVariable (int_type.copy (), head.get_array_length_cname (get_variable_cname (local.name), dim));
-						temp_vars.insert (0, len_var);
+						temp_vars.add (len_var);
 					}
 
 					if (array_type.rank == 1) {
 						var size_var = new LocalVariable (int_type.copy (), head.get_array_size_cname (get_variable_cname (local.name)));
-						temp_vars.insert (0, size_var);
+						temp_vars.add (size_var);
 					}
 				}
 			} else if (local.variable_type is DelegateType) {
@@ -2043,10 +2043,10 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				if (d.has_target) {
 					// create variable to store delegate target
 					var target_var = new LocalVariable (new PointerType (new VoidType ()), get_delegate_target_cname (get_variable_cname (local.name)));
-					temp_vars.insert (0, target_var);
+					temp_vars.add (target_var);
 					if (deleg_type.value_owned) {
 						var target_destroy_notify_var = new LocalVariable (new DelegateType ((Delegate) context.root.scope.lookup ("GLib").scope.lookup ("DestroyNotify")), get_delegate_target_destroy_notify_cname (get_variable_cname (local.name)));
-						temp_vars.insert (0, target_destroy_notify_var);
+						temp_vars.add (target_destroy_notify_var);
 					}
 				}
 			}
@@ -2069,7 +2069,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 					var ccomma = new CCodeCommaExpression ();
 
 					var temp_var = get_temp_variable (local.variable_type, true, local, false);
-					temp_vars.insert (0, temp_var);
+					temp_vars.add (temp_var);
 					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), rhs));
 
 					for (int dim = 1; dim <= array_type.rank; dim++) {
@@ -2094,7 +2094,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 					var ccomma = new CCodeCommaExpression ();
 
 					var temp_var = get_temp_variable (local.variable_type, true, local, false);
-					temp_vars.insert (0, temp_var);
+					temp_vars.add (temp_var);
 					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), rhs));
 
 					CCodeExpression lhs_delegate_target_destroy_notify;
@@ -3714,7 +3714,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			
 			// assign current value to temp variable
 			var temp_decl = get_temp_variable (prop.property_type, true, expr, false);
-			temp_vars.insert (0, temp_decl);
+			temp_vars.add (temp_decl);
 			ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_decl.name), (CCodeExpression) expr.inner.ccodenode));
 			
 			// increment/decrement property
@@ -3825,7 +3825,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			// (copy (&expr, &temp), temp)
 
 			var decl = get_temp_variable (expression_type, false, node);
-			temp_vars.insert (0, decl);
+			temp_vars.add (decl);
 
 			var ctemp = get_variable_cexpression (decl.name);
 			
@@ -3925,7 +3925,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			return ccall;
 		} else {
 			var decl = get_temp_variable (expression_type, false, node, false);
-			temp_vars.insert (0, decl);
+			temp_vars.add (decl);
 
 			var ctemp = get_variable_cexpression (decl.name);
 			
@@ -4445,7 +4445,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 					var ccomma = new CCodeCommaExpression ();
 
 					var temp_var = get_temp_variable (param.variable_type, true, null, false);
-					temp_vars.insert (0, temp_var);
+					temp_vars.add (temp_var);
 					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), cexpr));
 					ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_var.name)));
 
@@ -4683,7 +4683,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		/* (tmp = var, var = null, tmp) */
 		var ccomma = new CCodeCommaExpression ();
 		var temp_decl = get_temp_variable (expr.value_type, true, expr, false);
-		temp_vars.insert (0, temp_decl);
+		temp_vars.add (temp_decl);
 		var cvar = get_variable_cexpression (temp_decl.name);
 
 		ccomma.append_expression (new CCodeAssignment (cvar, (CCodeExpression) expr.inner.ccodenode));
@@ -4701,7 +4701,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			var lbe = (BinaryExpression) expr.left;
 
 			var temp_decl = get_temp_variable (lbe.right.value_type, true, null, false);
-			temp_vars.insert (0, temp_decl);
+			temp_vars.add (temp_decl);
 			var cvar = get_variable_cexpression (temp_decl.name);
 			var ccomma = new CCodeCommaExpression ();
 			var clbe = (CCodeBinaryExpression) lbe.ccodenode;
@@ -5091,7 +5091,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				// treat void* special to not leak memory with void* method parameters
 			} else if (requires_destroy (expression_type)) {
 				var decl = get_temp_variable (expression_type, true, expression_type, false);
-				temp_vars.insert (0, decl);
+				temp_vars.add (decl);
 				temp_ref_vars.insert (0, decl);
 				cexpr = new CCodeAssignment (get_variable_cexpression (decl.name), cexpr);
 
@@ -5101,7 +5101,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 					ccomma.append_expression (cexpr);
 					for (int dim = 1; dim <= array_type.rank; dim++) {
 						var len_decl = new LocalVariable (int_type.copy (), head.get_array_length_cname (decl.name, dim));
-						temp_vars.insert (0, len_decl);
+						temp_vars.add (len_decl);
 						ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (len_decl.name), head.get_array_length_cexpression (expr, dim)));
 					}
 					ccomma.append_expression (get_variable_cexpression (decl.name));
@@ -5111,9 +5111,9 @@ public class Vala.CCodeBaseModule : CCodeModule {
 					ccomma.append_expression (cexpr);
 
 					var target_decl = new LocalVariable (new PointerType (new VoidType ()), get_delegate_target_cname (decl.name));
-					temp_vars.insert (0, target_decl);
+					temp_vars.add (target_decl);
 					var target_destroy_notify_decl = new LocalVariable (new DelegateType ((Delegate) context.root.scope.lookup ("GLib").scope.lookup ("DestroyNotify")), get_delegate_target_destroy_notify_cname (decl.name));
-					temp_vars.insert (0, target_destroy_notify_decl);
+					temp_vars.add (target_destroy_notify_decl);
 					CCodeExpression target_destroy_notify;
 					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (target_decl.name), get_delegate_target_cexpression (expr, out target_destroy_notify)));
 					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (target_destroy_notify_decl.name), target_destroy_notify));
@@ -5132,7 +5132,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		if (gvalue_boxing) {
 			// implicit conversion to GValue
 			var decl = get_temp_variable (target_type, true, target_type);
-			temp_vars.insert (0, decl);
+			temp_vars.add (decl);
 
 			var ccomma = new CCodeCommaExpression ();
 
@@ -5224,7 +5224,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr);
 			} else {
 				var decl = get_temp_variable (expression_type, expression_type.value_owned, expression_type, false);
-				temp_vars.insert (0, decl);
+				temp_vars.add (decl);
 
 				var ccomma = new CCodeCommaExpression ();
 				ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (decl.name), cexpr));
@@ -5346,7 +5346,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 					var ccomma = new CCodeCommaExpression ();
 
 					var temp_var = get_temp_variable (ma.inner.target_type, true, null, false);
-					temp_vars.insert (0, temp_var);
+					temp_vars.add (temp_var);
 					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), instance));
 					ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_var.name)));
 
@@ -5367,7 +5367,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		CCodeExpression rv;
 		if (array_type != null && !prop.no_array_length) {
 			var temp_var = get_temp_variable (prop.property_type, true, null, false);
-			temp_vars.insert (0, temp_var);
+			temp_vars.add (temp_var);
 			var ccomma = new CCodeCommaExpression ();
 			ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), cexpr));
 			ccall.add_argument (get_variable_cexpression (temp_var.name));

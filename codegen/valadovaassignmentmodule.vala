@@ -106,13 +106,13 @@ internal class Vala.DovaAssignmentModule : DovaMemberAccessModule {
 				var lhs_value_type = assignment.left.value_type.copy ();
 				string lhs_temp_name = "_tmp%d_".printf (next_temp_var_id++);
 				var lhs_temp = new LocalVariable (lhs_value_type, "*" + lhs_temp_name);
-				temp_vars.insert (0, lhs_temp);
+				temp_vars.add (lhs_temp);
 				outer_ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (lhs_temp_name), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, lhs)));
 				lhs = new CCodeParenthesizedExpression (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (lhs_temp_name)));
 			}
 
 			var temp_decl = get_temp_variable (assignment.left.value_type);
-			temp_vars.insert (0, temp_decl);
+			temp_vars.add (temp_decl);
 			ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_decl.name), rhs));
 			if (unref_old) {
 				/* unref old value */

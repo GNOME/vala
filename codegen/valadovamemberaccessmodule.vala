@@ -75,7 +75,7 @@ internal class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 						// instance expression has side-effects
 						// store in temp. variable
 						var temp_var = get_temp_variable (expr.inner.value_type);
-						temp_vars.insert (0, temp_var);
+						temp_vars.add (temp_var);
 						var ctemp = new CCodeIdentifier (temp_var.name);
 						inst = new CCodeAssignment (ctemp, pub_inst);
 						expr.inner.ccodenode = ctemp;

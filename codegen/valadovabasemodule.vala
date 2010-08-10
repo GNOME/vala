@@ -1559,7 +1559,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 
 			// assign current value to temp variable
 			var temp_decl = get_temp_variable (prop.property_type, true, expr);
-			temp_vars.insert (0, temp_decl);
+			temp_vars.add (temp_decl);
 			ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_decl.name), (CCodeExpression) expr.inner.ccodenode));
 
 			// increment/decrement property
@@ -1651,7 +1651,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 			// (copy (&temp, 0, &expr, 0), temp)
 
 			var decl = get_temp_variable (expression_type, false, node);
-			temp_vars.insert (0, decl);
+			temp_vars.add (decl);
 
 			var ctemp = get_variable_cexpression (decl.name);
 
@@ -1695,7 +1695,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 			return ccall;
 		} else {
 			var decl = get_temp_variable (expression_type, false, node);
-			temp_vars.insert (0, decl);
+			temp_vars.add (decl);
 
 			var ctemp = get_variable_cexpression (decl.name);
 
@@ -1918,7 +1918,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 					var ccomma = new CCodeCommaExpression ();
 
 					var temp_var = get_temp_variable (arg.target_type);
-					temp_vars.insert (0, temp_var);
+					temp_vars.add (temp_var);
 					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), cexpr));
 					ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_var.name)));
 
@@ -1974,7 +1974,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		if (expr.type_reference.data_type != null && expr.type_reference.data_type.get_full_name () == "Dova.Value") {
 			// box value
 			var temp_decl = get_temp_variable (expr.inner.value_type, true, expr);
-			temp_vars.insert (0, temp_decl);
+			temp_vars.add (temp_decl);
 			var cvar = get_variable_cexpression (temp_decl.name);
 
 			var ccomma = new CCodeCommaExpression ();
@@ -1991,7 +1991,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		} else if (expr.inner.value_type.data_type != null && expr.inner.value_type.data_type.get_full_name () == "Dova.Value") {
 			// unbox value
 			var temp_decl = get_temp_variable (expr.type_reference, true, expr);
-			temp_vars.insert (0, temp_decl);
+			temp_vars.add (temp_decl);
 			var cvar = get_variable_cexpression (temp_decl.name);
 
 			var ccomma = new CCodeCommaExpression ();
@@ -2034,7 +2034,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		/* (tmp = var, var = null, tmp) */
 		var ccomma = new CCodeCommaExpression ();
 		var temp_decl = get_temp_variable (expr.value_type, true, expr);
-		temp_vars.insert (0, temp_decl);
+		temp_vars.add (temp_decl);
 		var cvar = get_variable_cexpression (temp_decl.name);
 
 		ccomma.append_expression (new CCodeAssignment (cvar, (CCodeExpression) expr.inner.ccodenode));
@@ -2190,7 +2190,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 				// treat void* special to not leak memory with void* method parameters
 			} else if (requires_destroy (expression_type)) {
 				var decl = get_temp_variable (expression_type, true, expression_type);
-				temp_vars.insert (0, decl);
+				temp_vars.add (decl);
 				temp_ref_vars.insert (0, decl);
 				cexpr = new CCodeAssignment (get_variable_cexpression (decl.name), cexpr);
 			}

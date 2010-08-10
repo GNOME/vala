@@ -42,7 +42,7 @@ internal class Vala.DovaArrayModule : DovaMethodCallModule {
 			var name_cnode = new CCodeIdentifier (temp_var.name);
 			int i = 0;
 
-			temp_vars.insert (0, temp_var);
+			temp_vars.add (temp_var);
 
 			append_initializer_list (ce, name_cnode, expr.initializer_list, ref i);
 

@@ -52,7 +52,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			var name_cnode = get_variable_cexpression (temp_var.name);
 			int i = 0;
 
-			temp_vars.insert (0, temp_var);
+			temp_vars.add (temp_var);
 
 			append_initializer_list (ce, name_cnode, expr.initializer_list, expr.rank, ref i);
 
@@ -84,7 +84,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 				var name_cnode = get_variable_cexpression (temp_var.name);
 				size.ccodenode = name_cnode;
 
-				temp_vars.insert (0, temp_var);
+				temp_vars.add (temp_var);
 
 				csize = new CCodeAssignment (name_cnode, csize);
 			}
@@ -116,7 +116,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			var name_cnode = get_variable_cexpression (temp_var.name);
 			int i = 0;
 			
-			temp_vars.insert (0, temp_var);
+			temp_vars.add (temp_var);
 			
 			ce.append_expression (new CCodeAssignment (name_cnode, gnew));
 
@@ -446,15 +446,15 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		var len_var = get_temp_variable (int_type);
 		len_var.source_reference = expr.source_reference;
-		temp_vars.insert (0, len_var);
+		temp_vars.add (len_var);
 
 		var slice_var = get_temp_variable (expr.value_type, true, expr);
-		temp_vars.insert (0, slice_var);
+		temp_vars.add (slice_var);
 
 		if (!is_pure_ccode_expression (cstart)) {
 			// avoid double evaluation of start
 			var start_var = get_temp_variable (int_type);
-			temp_vars.insert (0, start_var);
+			temp_vars.add (start_var);
 
 			var start_assignment = new CCodeAssignment (get_variable_cexpression (start_var.name), cstart);
 			ccomma.append_expression (start_assignment);
@@ -692,7 +692,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			}
 
 			var decl = get_temp_variable (expression_type, false, node);
-			temp_vars.insert (0, decl);
+			temp_vars.add (decl);
 
 			var ctemp = get_variable_cexpression (decl.name);
 
