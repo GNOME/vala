@@ -570,7 +570,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 								// declare construction parameter array
 								var cparamsinit = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
 								cparamsinit.add_argument (new CCodeIdentifier ("GParameter"));
-								cparamsinit.add_argument (new CCodeConstant ((current_class.get_type_parameters ().size).to_string ()));
+								cparamsinit.add_argument (new CCodeConstant ((3 * current_class.get_type_parameters ().size).to_string ()));
 						
 								var cdecl = new CCodeDeclaration ("GParameter *");
 								cdecl.add_declarator (new CCodeVariableDeclarator ("__params", cparamsinit));
