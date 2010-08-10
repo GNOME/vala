@@ -1416,10 +1416,6 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			acc.result_var.accept (this);
 		}
 
-		if (acc.body != null) {
-			acc.body.emit (this);
-		}
-
 		var t = (TypeSymbol) prop.parent_symbol;
 
 		if (acc.construction && !t.is_subtype_of (gobject_type)) {
@@ -1465,6 +1461,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		}
 
 		if (prop.is_abstract || prop.is_virtual) {
+			CCodeFunction function;
 			if (acc.readable && !returns_real_struct) {
 				function = new CCodeFunction (acc.get_cname (), current_return_type.get_cname ());
 			} else {
@@ -1562,6 +1559,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 				cname = acc.get_cname ();
 			}
 
+			CCodeFunction function;
 			if (acc.writable || acc.construction || returns_real_struct) {
 				function = new CCodeFunction (cname, "void");
 			} else {
@@ -1608,28 +1606,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 				}
 			}
 
-			function.block = (CCodeBlock) acc.body.ccodenode;
-
-			if (is_virtual) {
-				var cdecl = new CCodeDeclaration (this_type.get_cname ());
-				cdecl.add_declarator (new CCodeVariableDeclarator ("self", transform_expression (new CCodeIdentifier ("base"), base_type, this_type)));
-				function.block.prepend_statement (cdecl);
-			}
-
-			if (acc.readable && !returns_real_struct) {
-				// do not declare result variable if exit block is known to be unreachable
-				if (acc.return_block == null || acc.return_block.get_predecessors ().size > 0) {
-					var cdecl = new CCodeDeclaration (acc.value_type.get_cname ());
-					cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
-					function.block.prepend_statement (cdecl);
-				}
-			}
-
-			if (current_method_inner_error) {
-				var cdecl = new CCodeDeclaration ("GError *");
-				cdecl.add_declarator (new CCodeVariableDeclarator ("_inner_error_", new CCodeConstant ("NULL")));
-				function.block.prepend_statement (cdecl);
-			}
+			var init_fragment = new CCodeFragment ();
 
 			if (prop.binding == MemberBinding.INSTANCE && !is_virtual) {
 				CCodeStatement check_stmt;
@@ -1639,8 +1616,34 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 					check_stmt = create_property_type_check_statement (prop, true, t, true, "self");
 				}
 				if (check_stmt != null) {
-					function.block.prepend_statement (check_stmt);
+					init_fragment.append (check_stmt);
 				}
+			}
+
+			if (acc.readable && !returns_real_struct) {
+				// do not declare result variable if exit block is known to be unreachable
+				if (acc.return_block == null || acc.return_block.get_predecessors ().size > 0) {
+					var cdecl = new CCodeDeclaration (acc.value_type.get_cname ());
+					cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
+					init_fragment.append (cdecl);
+				}
+			}
+
+			if (is_virtual) {
+				var cdecl = new CCodeDeclaration (this_type.get_cname ());
+				cdecl.add_declarator (new CCodeVariableDeclarator ("self", transform_expression (new CCodeIdentifier ("base"), base_type, this_type)));
+				init_fragment.append (cdecl);
+			}
+
+			acc.body.emit (this);
+
+			function.block = (CCodeBlock) acc.body.ccodenode;
+			function.block.prepend_statement (init_fragment);
+
+			if (current_method_inner_error) {
+				var cdecl = new CCodeDeclaration ("GError *");
+				cdecl.add_declarator (new CCodeVariableDeclarator.zero ("_inner_error_", new CCodeConstant ("NULL")));
+				function.block.add_statement (cdecl);
 			}
 
 			// notify on property changes
