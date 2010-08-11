@@ -27,8 +27,8 @@ using GLib;
 /**
  * Arrays of arbitrary elements which grow automatically as elements are added.
  */
-public class Vala.ArrayList<G> : CollectionObject, Iterable<G>, Collection<G>, List<G> {
-	public int size {
+public class Vala.ArrayList<G> : List<G> {
+	public override int size {
 		get { return _size; }
 	}
 
@@ -47,19 +47,19 @@ public class Vala.ArrayList<G> : CollectionObject, Iterable<G>, Collection<G>, L
 		this.equal_func = equal_func;
 	}
 
-	public Type get_element_type () {
+	public override Type get_element_type () {
 		return typeof (G);
 	}
 
-	public Vala.Iterator<G> iterator () {
+	public override Vala.Iterator<G> iterator () {
 		return new Iterator<G> (this);
 	}
 
-	public bool contains (G item) {
+	public override bool contains (G item) {
 		return (index_of (item) != -1);
 	}
 
-	public int index_of (G item) {
+	public override int index_of (G item) {
 		for (int index = 0; index < _size; index++) {
 			if (_equal_func (_items[index], item)) {
 				return index;
@@ -68,19 +68,19 @@ public class Vala.ArrayList<G> : CollectionObject, Iterable<G>, Collection<G>, L
 		return -1;
 	}
 
-	public G? get (int index) {
+	public override G? get (int index) {
 		assert (index >= 0 && index < _size);
 
 		return _items[index];
 	}
 
-	public void set (int index, G item) {
+	public override void set (int index, G item) {
 		assert (index >= 0 && index < _size);
 
 		_items[index] = item;
 	}
 
-	public bool add (G item) {
+	public override bool add (G item) {
 		if (_size == _items.length) {
 			grow_if_needed (1);
 		}
@@ -89,7 +89,7 @@ public class Vala.ArrayList<G> : CollectionObject, Iterable<G>, Collection<G>, L
 		return true;
 	}
 
-	public void insert (int index, G item) {
+	public override void insert (int index, G item) {
 		assert (index >= 0 && index <= _size);
 
 		if (_size == _items.length) {
@@ -100,7 +100,7 @@ public class Vala.ArrayList<G> : CollectionObject, Iterable<G>, Collection<G>, L
 		_stamp++;
 	}
 
-	public bool remove (G item) {
+	public override bool remove (G item) {
 		for (int index = 0; index < _size; index++) {
 			if (_equal_func (_items[index], item)) {
 				remove_at (index);
@@ -110,7 +110,7 @@ public class Vala.ArrayList<G> : CollectionObject, Iterable<G>, Collection<G>, L
 		return false;
 	}
 
-	public void remove_at (int index) {
+	public override void remove_at (int index) {
 		assert (index >= 0 && index < _size);
 
 		_items[index] = null;
@@ -120,7 +120,7 @@ public class Vala.ArrayList<G> : CollectionObject, Iterable<G>, Collection<G>, L
 		_stamp++;
 	}
 
-	public void clear () {
+	public override void clear () {
 		for (int index = 0; index < _size; index++) {
 			_items[index] = null;
 		}
@@ -152,7 +152,7 @@ public class Vala.ArrayList<G> : CollectionObject, Iterable<G>, Collection<G>, L
 		_items.resize (value);
 	}
 
-	private class Iterator<G> : CollectionObject, Vala.Iterator<G> {
+	private class Iterator<G> : Vala.Iterator<G> {
 		public ArrayList<G> list {
 			set {
 				_list = value;
@@ -170,7 +170,7 @@ public class Vala.ArrayList<G> : CollectionObject, Iterable<G>, Collection<G>, L
 			this.list = list;
 		}
 
-		public bool next () {
+		public override bool next () {
 			assert (_stamp == _list._stamp);
 			if (_index < _list._size) {
 				_index++;
@@ -178,7 +178,7 @@ public class Vala.ArrayList<G> : CollectionObject, Iterable<G>, Collection<G>, L
 			return (_index < _list._size);
 		}
 
-		public G? get () {
+		public override G? get () {
 			assert (_stamp == _list._stamp);
 
 			if (_index < 0 || _index >= _list._size) {

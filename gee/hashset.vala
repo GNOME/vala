@@ -27,8 +27,8 @@ using GLib;
 /**
  * Hashtable implementation of the Set interface.
  */
-public class Vala.HashSet<G> : CollectionObject, Iterable<G>, Collection<G>, Set<G> {
-	public int size {
+public class Vala.HashSet<G> : Set<G> {
+	public override int size {
 		get { return _nnodes; }
 	}
 
@@ -69,20 +69,20 @@ public class Vala.HashSet<G> : CollectionObject, Iterable<G>, Collection<G>, Set
 		return node;
 	}
 
-	public bool contains (G key) {
+	public override bool contains (G key) {
 		Node<G>** node = lookup_node (key);
 		return (*node != null);
 	}
 
-	public Type get_element_type () {
+	public override Type get_element_type () {
 		return typeof (G);
 	}
 
-	public Vala.Iterator<G> iterator () {
+	public override Vala.Iterator<G> iterator () {
 		return new Iterator<G> (this);
 	}
 
-	public bool add (G key) {
+	public override bool add (G key) {
 		Node<G>** node = lookup_node (key);
 		if (*node != null) {
 			return false;
@@ -96,7 +96,7 @@ public class Vala.HashSet<G> : CollectionObject, Iterable<G>, Collection<G>, Set
 		}
 	}
 
-	public bool remove (G key) {
+	public override bool remove (G key) {
 		Node<G>** node = lookup_node (key);
 		if (*node != null) {
 			Node<G> next = (owned) (*node)->next;
@@ -114,7 +114,7 @@ public class Vala.HashSet<G> : CollectionObject, Iterable<G>, Collection<G>, Set
 		return false;
 	}
 
-	public void clear () {
+	public override void clear () {
 		for (int i = 0; i < _array_size; i++) {
 			Node<G> node = (owned) _nodes[i];
 			while (node != null) {
@@ -166,7 +166,7 @@ public class Vala.HashSet<G> : CollectionObject, Iterable<G>, Collection<G>, Set
 		}
 	}
 
-	private class Iterator<G> : CollectionObject, Vala.Iterator<G> {
+	private class Iterator<G> : Vala.Iterator<G> {
 		public HashSet<G> set {
 			set {
 				_set = value;
@@ -185,7 +185,7 @@ public class Vala.HashSet<G> : CollectionObject, Iterable<G>, Collection<G>, Set
 			this.set = set;
 		}
 
-		public bool next () {
+		public override bool next () {
 			if (_node != null) {
 				_node = _node.next;
 			}
@@ -196,7 +196,7 @@ public class Vala.HashSet<G> : CollectionObject, Iterable<G>, Collection<G>, Set
 			return (_node != null);
 		}
 
-		public G? get () {
+		public override G? get () {
 			assert (_stamp == _set._stamp);
 			assert (_node != null);
 			return _node.key;
