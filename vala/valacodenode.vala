@@ -59,7 +59,7 @@ public abstract class Vala.CodeNode {
 			return _ccodenode;
 		}
 		set {
-			if (value != null && source_reference != null) {
+			if (value != null && source_reference != null && CodeContext.get ().debug) {
 				value.line = new CCodeLineDirective (
 					Path.get_basename (source_reference.file.filename),
 					source_reference.first_line);
