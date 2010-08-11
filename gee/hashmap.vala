@@ -27,8 +27,8 @@ using GLib;
 /**
  * Hashtable implementation of the Map interface.
  */
-public class Vala.HashMap<K,V> : CollectionObject, Map<K,V> {
-	public int size {
+public class Vala.HashMap<K,V> : Map<K,V> {
+	public override int size {
 		get { return _nnodes; }
 	}
 
@@ -66,11 +66,11 @@ public class Vala.HashMap<K,V> : CollectionObject, Map<K,V> {
 		_nodes = new Node<K,V>[_array_size];
 	}
 
-	public Set<K> get_keys () {
+	public override Set<K> get_keys () {
 		return new KeySet<K,V> (this);
 	}
 
-	public Collection<V> get_values () {
+	public override Collection<V> get_values () {
 		return new ValueCollection<K,V> (this);
 	}
 
@@ -83,12 +83,12 @@ public class Vala.HashMap<K,V> : CollectionObject, Map<K,V> {
 		return node;
 	}
 
-	public bool contains (K key) {
+	public override bool contains (K key) {
 		Node<K,V>** node = lookup_node (key);
 		return (*node != null);
 	}
 
-	public V? get (K key) {
+	public override V? get (K key) {
 		Node<K,V>* node = (*lookup_node (key));
 		if (node != null) {
 			return node->value;
@@ -97,7 +97,7 @@ public class Vala.HashMap<K,V> : CollectionObject, Map<K,V> {
 		}
 	}
 
-	public void set (K key, V value) {
+	public override void set (K key, V value) {
 		Node<K,V>** node = lookup_node (key);
 		if (*node != null) {
 			(*node)->value = value;
@@ -110,7 +110,7 @@ public class Vala.HashMap<K,V> : CollectionObject, Map<K,V> {
 		_stamp++;
 	}
 
-	public bool remove (K key) {
+	public override bool remove (K key) {
 		Node<K,V>** node = lookup_node (key);
 		if (*node != null) {
 			Node<K,V> next = (owned) (*node)->next;
@@ -129,7 +129,7 @@ public class Vala.HashMap<K,V> : CollectionObject, Map<K,V> {
 		return false;
 	}
 
-	public void clear () {
+	public override void clear () {
 		for (int i = 0; i < _array_size; i++) {
 			Node<K,V> node = (owned) _nodes[i];
 			while (node != null) {
@@ -184,7 +184,7 @@ public class Vala.HashMap<K,V> : CollectionObject, Map<K,V> {
 		}
 	}
 
-	private class KeySet<K,V> : CollectionObject, Iterable<K>, Collection<K>, Set<K> {
+	private class KeySet<K,V> : Set<K> {
 		public HashMap<K,V> map {
 			set { _map = value; }
 		}
@@ -195,36 +195,36 @@ public class Vala.HashMap<K,V> : CollectionObject, Map<K,V> {
 			this.map = map;
 		}
 
-		public Type get_element_type () {
+		public override Type get_element_type () {
 			return typeof (K);
 		}
 
-		public Iterator<K> iterator () {
+		public override Iterator<K> iterator () {
 			return new KeyIterator<K,V> (_map);
 		}
 
-		public int size {
+		public override int size {
 			get { return _map.size; }
 		}
 
-		public bool add (K key) {
+		public override bool add (K key) {
 			assert_not_reached ();
 		}
 
-		public void clear () {
+		public override void clear () {
 			assert_not_reached ();
 		}
 
-		public bool remove (K key) {
+		public override bool remove (K key) {
 			assert_not_reached ();
 		}
 
-		public bool contains (K key) {
+		public override bool contains (K key) {
 			return _map.contains (key);
 		}
 	}
 
-	private class KeyIterator<K,V> : CollectionObject, Iterator<K> {
+	private class KeyIterator<K,V> : Iterator<K> {
 		public HashMap<K,V> map {
 			set {
 				_map = value;
@@ -243,7 +243,7 @@ public class Vala.HashMap<K,V> : CollectionObject, Map<K,V> {
 			this.map = map;
 		}
 
-		public bool next () {
+		public override bool next () {
 			if (_node != null) {
 				_node = _node.next;
 			}
@@ -254,14 +254,14 @@ public class Vala.HashMap<K,V> : CollectionObject, Map<K,V> {
 			return (_node != null);
 		}
 
-		public K? get () {
+		public override K? get () {
 			assert (_stamp == _map._stamp);
 			assert (_node != null);
 			return _node.key;
 		}
 	}
 
-	private class ValueCollection<K,V> : CollectionObject, Iterable<V>, Collection<V> {
+	private class ValueCollection<K,V> : Collection<V> {
 		public HashMap<K,V> map {
 			set { _map = value; }
 		}
@@ -272,31 +272,31 @@ public class Vala.HashMap<K,V> : CollectionObject, Map<K,V> {
 			this.map = map;
 		}
 
-		public Type get_element_type () {
+		public override Type get_element_type () {
 			return typeof (V);
 		}
 
-		public Iterator<V> iterator () {
+		public override Iterator<V> iterator () {
 			return new ValueIterator<K,V> (_map);
 		}
 
-		public int size {
+		public override int size {
 			get { return _map.size; }
 		}
 
-		public bool add (V value) {
+		public override bool add (V value) {
 			assert_not_reached ();
 		}
 
-		public void clear () {
+		public override void clear () {
 			assert_not_reached ();
 		}
 
-		public bool remove (V value) {
+		public override bool remove (V value) {
 			assert_not_reached ();
 		}
 
-		public bool contains (V value) {
+		public override bool contains (V value) {
 			Iterator<V> it = iterator ();
 			while (it.next ()) {
 				if (_map._value_equal_func (it.get (), value)) {
@@ -307,7 +307,7 @@ public class Vala.HashMap<K,V> : CollectionObject, Map<K,V> {
 		}
 	}
 
-	private class ValueIterator<K,V> : CollectionObject, Iterator<V> {
+	private class ValueIterator<K,V> : Iterator<V> {
 		public HashMap<K,V> map {
 			set {
 				_map = value;
@@ -326,7 +326,7 @@ public class Vala.HashMap<K,V> : CollectionObject, Map<K,V> {
 			this.map = map;
 		}
 
-		public bool next () {
+		public override bool next () {
 			if (_node != null) {
 				_node = _node.next;
 			}
@@ -337,7 +337,7 @@ public class Vala.HashMap<K,V> : CollectionObject, Map<K,V> {
 			return (_node != null);
 		}
 
-		public V? get () {
+		public override V? get () {
 			assert (_stamp == _map._stamp);
 			assert (_node != null);
 			return _node.value;

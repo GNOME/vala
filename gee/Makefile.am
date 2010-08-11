@@ -14,7 +14,6 @@ noinst_LTLIBRARIES = \
 libgee_la_VALASOURCES = \
 	arraylist.vala \
 	collection.vala \
-	collectionobject.vala \
 	hashmap.vala \
 	hashset.vala \
 	iterable.vala \

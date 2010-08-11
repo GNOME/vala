@@ -23,7 +23,7 @@
 /**
  * A map is a generic collection of key/value pairs.
  */
-public interface Vala.Map<K,V> : CollectionObject {
+public abstract class Vala.Map<K,V> {
 	/**
 	 * The number of items in this map.
 	 */

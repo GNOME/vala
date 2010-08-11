@@ -24,7 +24,7 @@
  * Implemented by classes that support a simple iteration over instances of the
  * collection.
  */
-public interface Vala.Iterator<G> : CollectionObject {
+public abstract class Vala.Iterator<G> {
 	/**
 	 * Advances to the next element in the iteration.
 	 *
