@@ -97,7 +97,7 @@ public abstract class Vala.Symbol : CodeNode {
 
 	public Comment? comment { get; set; }
 
-	private List<string> cheader_filenames = new ArrayList<string> ();
+	private List<string> cheader_filenames;
 
 	/**
 	 * Specifies whether this method explicitly hides a member of a base
@@ -233,6 +233,8 @@ public abstract class Vala.Symbol : CodeNode {
 		return "";
 	}
 
+	static List<string> _empty_string_list;
+
 	/**
 	 * Returns a list of C header filenames users of this symbol must
 	 * include.
@@ -240,16 +242,24 @@ public abstract class Vala.Symbol : CodeNode {
 	 * @return list of C header filenames for this symbol
 	 */
 	public virtual List<string> get_cheader_filenames () {
-		// parent_symbol can be null on incremental parsing
-		if (cheader_filenames.size == 0 && parent_symbol != null) {
-			/* default to header filenames of the namespace */
-			foreach (string filename in parent_symbol.get_cheader_filenames ()) {
-				add_cheader_filename (filename);
-			}
+		if (cheader_filenames == null || cheader_filenames.size == 0) {
+			// parent_symbol can be null on incremental parsing
+			if (parent_symbol != null) {
+				/* default to header filenames of the namespace */
+				var parent_header_filenames = parent_symbol.get_cheader_filenames ();
+				if (parent_header_filenames.size > 0) {
+					return parent_header_filenames;
+				}
 
-			if (cheader_filenames.size == 0 && source_reference != null && !external_package) {
-				// don't add default include directives for VAPI files
-				cheader_filenames.add (source_reference.file.get_cinclude_filename ());
+				if (source_reference != null && !external_package) {
+					// don't add default include directives for VAPI files
+					add_cheader_filename (source_reference.file.get_cinclude_filename ());
+				}
+			} else {
+				if (_empty_string_list == null) {
+					_empty_string_list = new ArrayList<string> ();
+				}
+				return _empty_string_list;
 			}
 		}
 		return cheader_filenames;
@@ -455,6 +465,9 @@ public abstract class Vala.Symbol : CodeNode {
 	 * @param filename a C header filename
 	 */
 	public void add_cheader_filename (string filename) {
+		if (cheader_filenames == null) {
+			cheader_filenames = new ArrayList<string> ();
+		}
 		cheader_filenames.add (filename);
 	}
 

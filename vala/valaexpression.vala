@@ -61,9 +61,9 @@ public abstract class Vala.Expression : CodeNode {
 	 *
 	 * The code generator sets and uses them for memory management.
 	 */
-	public ArrayList<LocalVariable> temp_vars = new ArrayList<LocalVariable> ();
+	public ArrayList<LocalVariable> temp_vars;
 
-	private List<CCodeExpression> array_sizes = new ArrayList<CCodeExpression> ();
+	private List<CCodeExpression> array_sizes;
 
 	public CCodeExpression? delegate_target { get; set; }
 	public CCodeExpression? delegate_target_destroy_notify { get; set; }
@@ -89,10 +89,20 @@ public abstract class Vala.Expression : CodeNode {
 		return false;
 	}
 
+	public void add_temp_var (LocalVariable local) {
+		if (temp_vars == null) {
+			temp_vars = new ArrayList<LocalVariable> ();
+		}
+		temp_vars.add (local);
+	}
+
 	/**
 	 * Add an array size C code expression.
 	 */
 	public void append_array_size (CCodeExpression size) {
+		if (array_sizes == null) {
+			array_sizes = new ArrayList<CCodeExpression> ();
+		}
 		array_sizes.add (size);
 	}
 
@@ -100,7 +110,7 @@ public abstract class Vala.Expression : CodeNode {
 	 * Get the C code expression for array sizes for all dimensions
 	 * ascending from left to right.
 	 */
-	public List<CCodeExpression> get_array_sizes () {
+	public List<CCodeExpression>? get_array_sizes () {
 		return array_sizes;
 	}
 

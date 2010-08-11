@@ -47,7 +47,7 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 	void visit_string_switch_statement (SwitchStatement stmt) {
 		// we need a temporary variable to save the property value
 		var temp_var = get_temp_variable (stmt.expression.value_type, stmt.expression.value_type.value_owned, stmt, false);
-		stmt.expression.temp_vars.add (temp_var);
+		stmt.expression.add_temp_var (temp_var);
 
 		var ctemp = get_variable_cexpression (temp_var.name);
 		var cinit = new CCodeAssignment (ctemp, (CCodeExpression) stmt.expression.ccodenode);
@@ -66,7 +66,7 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 		var ccond = new CCodeConditionalExpression (cisnull, new CCodeConstant ("0"), cquark);
 
 		temp_var = get_temp_variable (gquark_type);
-		stmt.expression.temp_vars.add (temp_var);
+		stmt.expression.add_temp_var (temp_var);
 
 		int label_count = 0;
 

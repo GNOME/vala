@@ -1228,11 +1228,17 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		 * expr.temp_vars = temp_vars;
 		 * when deep list copying works
 		 */
-		expr.temp_vars.clear ();
-		foreach (LocalVariable local in temp_vars) {
-			expr.temp_vars.add (local);
+		if (temp_vars.size > 0) {
+			if (expr.temp_vars == null) {
+				expr.temp_vars = new ArrayList<LocalVariable> ();
+			} else {
+				expr.temp_vars.clear ();
+			}
+			foreach (LocalVariable local in temp_vars) {
+				expr.temp_vars.add (local);
+			}
+			temp_vars.clear ();
 		}
-		temp_vars.clear ();
 
 		if (((List<LocalVariable>) temp_ref_vars).size == 0) {
 			/* nothing to do without temporary variables */
@@ -1245,7 +1251,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		}
 
 		var full_expr_var = get_temp_variable (expr_type, true, expr);
-		expr.temp_vars.add (full_expr_var);
+		expr.add_temp_var (full_expr_var);
 
 		var expr_list = new CCodeCommaExpression ();
 		expr_list.append_expression (new CCodeAssignment (get_variable_cexpression (full_expr_var.name), (CCodeExpression) expr.ccodenode));
@@ -1263,7 +1269,10 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		temp_ref_vars.clear ();
 	}
 
-	public void append_temp_decl (CCodeFragment cfrag, List<LocalVariable> temp_vars) {
+	public void append_temp_decl (CCodeFragment cfrag, List<LocalVariable>? temp_vars) {
+		if (temp_vars == null) {
+			return;
+		}
 		foreach (LocalVariable local in temp_vars) {
 			var cdecl = new CCodeDeclaration (local.variable_type.get_cname ());
 
@@ -1364,10 +1373,10 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		temp_ref_vars.clear ();
 	}
 
-	public void create_temp_decl (Statement stmt, List<LocalVariable> temp_vars) {
+	public void create_temp_decl (Statement stmt, List<LocalVariable>? temp_vars) {
 		/* declare temporary variables */
 
-		if (temp_vars.size == 0) {
+		if (temp_vars == null || temp_vars.size == 0) {
 			/* nothing to do without temporary variables */
 			return;
 		}

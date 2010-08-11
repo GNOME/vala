@@ -173,7 +173,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			return (CCodeExpression) get_ccodenode (length_expr);
 		} else if (array_expr is MethodCall || array_expr is CastExpression || array_expr is SliceExpression) {
 			List<CCodeExpression> size = array_expr.get_array_sizes ();
-			if (size.size >= dim) {
+			if (size != null && size.size >= dim) {
 				return size[dim - 1];
 			}
 		} else if (array_expr.symbol_reference != null) {
@@ -325,7 +325,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 				var prop = (Property) array_expr.symbol_reference;
 				if (!prop.no_array_length) {
 					List<CCodeExpression> size = array_expr.get_array_sizes ();
-					if (size.size >= dim) {
+					if (size != null && size.size >= dim) {
 						return size[dim - 1];
 					}
 				}
