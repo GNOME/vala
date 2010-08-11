@@ -189,8 +189,41 @@ public class Vala.ForeachStatement : Block {
 		}
 	}
 
+	bool check_with_index (SemanticAnalyzer analyzer, DataType collection_type) {
+		var get_method = collection_type.get_member ("get") as Method;
+		if (get_method == null) {
+			return false;
+		}
+		if (get_method.get_parameters ().size != 1) {
+			return false;
+		}
+		var size_property = collection_type.get_member ("size") as Property;
+		if (size_property == null) {
+			return false;
+		}
+
+		add_statement (new DeclarationStatement (new LocalVariable (null, "_%s_list".printf (variable_name), collection, source_reference), source_reference));
+		add_statement (new DeclarationStatement (new LocalVariable (null, "_%s_size".printf (variable_name), new MemberAccess (new MemberAccess.simple ("_%s_list".printf (variable_name), source_reference), "size", source_reference), source_reference), source_reference));
+		add_statement (new DeclarationStatement (new LocalVariable (null, "_%s_index".printf (variable_name), new UnaryExpression (UnaryOperator.MINUS, new IntegerLiteral ("1", source_reference), source_reference), source_reference), source_reference));
+		var next = new UnaryExpression (UnaryOperator.INCREMENT, new MemberAccess.simple ("_%s_index".printf (variable_name), source_reference), source_reference);
+		var conditional = new BinaryExpression (BinaryOperator.LESS_THAN, next, new MemberAccess.simple ("_%s_size".printf (variable_name), source_reference), source_reference);
+		var loop = new WhileStatement (conditional, body, source_reference);
+		add_statement (loop);
+
+		var get_call = new MethodCall (new MemberAccess (new MemberAccess.simple ("_%s_list".printf (variable_name), source_reference), "get", source_reference), source_reference);
+		get_call.add_argument (new MemberAccess.simple ("_%s_index".printf (variable_name), source_reference));
+		body.insert_statement (0, new DeclarationStatement (new LocalVariable (type_reference, variable_name, get_call, source_reference), source_reference));
+
+		checked = false;
+		return base.check (analyzer);
+	}
+
 	bool check_with_iterator (SemanticAnalyzer analyzer, DataType collection_type) {
 		use_iterator = true;
+
+		if (check_with_index (analyzer, collection_type)) {
+			return true;
+		}
 
 		var iterator_method = collection_type.get_member ("iterator") as Method;
 		if (iterator_method == null) {
