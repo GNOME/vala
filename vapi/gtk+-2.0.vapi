@@ -5188,7 +5188,8 @@ namespace Gtk {
 		public uchar saved_state;
 		public uchar state;
 		public Gdk.Window window;
-		public Widget (GLib.Type type, ...);
+		[CCode (has_new_function = false, construct_function = "gtk_widget_new")]
+		public Widget (...);
 		public bool activate ();
 		public void add_accelerator (string accel_signal, Gtk.AccelGroup accel_group, uint accel_key, Gdk.ModifierType accel_mods, Gtk.AccelFlags accel_flags);
 		public void add_events (int events);

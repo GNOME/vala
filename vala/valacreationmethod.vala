@@ -115,15 +115,19 @@ public class Vala.CreationMethod : Method {
 	}
 
 	public override string get_real_cname () {
+		var ccode_attribute = get_attribute ("CCode");
+		if (ccode_attribute != null && ccode_attribute.has_argument ("construct_function")) {
+			return ccode_attribute.get_string ("construct_function");
+		}
+
+		return get_default_construct_function ();
+	}
+
+	public string get_default_construct_function () {
 		var parent = parent_symbol as Class;
 
 		if (parent == null || parent.is_compact) {
 			return get_cname ();
-		}
-
-		var ccode_attribute = get_attribute ("CCode");
-		if (ccode_attribute != null && ccode_attribute.has_argument ("construct_function")) {
-			return ccode_attribute.get_string ("construct_function");
 		}
 
 		string infix = "construct";

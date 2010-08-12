@@ -51,7 +51,8 @@ namespace Gtk {
 	}
 
 	public class Widget {
-		public extern Widget (GLib.Type type, ...);
+		[CCode (has_new_function = false, construct_function = "gtk_widget_new")]
+		public extern Widget (...);
 	}
 
 	public interface Editable {

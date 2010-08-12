@@ -4689,7 +4689,8 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Widget : Gtk.Object, Atk.Implementor, Gtk.Buildable, Gtk.SizeRequest {
-		public Widget (GLib.Type type, ...);
+		[CCode (has_new_function = false, construct_function = "gtk_widget_new")]
+		public Widget (...);
 		public bool activate ();
 		public void add_accelerator (string accel_signal, Gtk.AccelGroup accel_group, uint accel_key, Gdk.ModifierType accel_mods, Gtk.AccelFlags accel_flags);
 		public void add_device_events (Gdk.Device device, Gdk.EventMask events);
