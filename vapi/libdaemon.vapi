@@ -83,7 +83,11 @@ namespace Daemon {
 
 	public int exec (string dir, out int ret, string prog, ...);
 
-	public int fork ();
+#if POSIX
+	public Posix.pid_t fork ();
+#else
+	public GLib.Pid fork ();
+#endif
 	public int retval_init ();
 	public void retval_done ();
 	public int retval_wait (int timeout);
@@ -111,7 +115,11 @@ namespace Daemon {
 	public unowned string pid_file_proc_default ();
 	public int pid_file_create ();
 	public int pid_file_remove ();
-	public int pid_file_is_running ();
+#if POSIX
+	public Posix.pid_t pid_file_is_running ();
+#else
+	public GLib.Pid pid_file_is_running ();
+#endif
 	public int pid_file_kill (Sig s);
 	public int pid_file_kill_wait (Sig s, int m);
 
