@@ -62,6 +62,7 @@ GeditView.view hidden="1"
 #Window
 GeditWindow base_class="GtkWindow" cheader_filename="gedit/gedit-window.h"
 GeditWindow.window hidden="1"
+gedit_window_create_tab_from_uri.encoding nullable="1"
 gedit_window_get_documents type_arguments="Document"
 gedit_window_close_tabs.tabs type_arguments="Tab"
 gedit_window_get_unsaved_documents type_arguments="Document"

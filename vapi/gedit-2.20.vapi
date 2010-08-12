@@ -231,7 +231,7 @@ namespace Gedit {
 		public void close_tab (Gedit.Tab tab);
 		public void close_tabs (GLib.List<Gedit.Tab> tabs);
 		public unowned Gedit.Tab create_tab (bool jump_to);
-		public unowned Gedit.Tab create_tab_from_uri (string uri, Gedit.Encoding encoding, int line_pos, bool create, bool jump_to);
+		public unowned Gedit.Tab create_tab_from_uri (string uri, Gedit.Encoding? encoding, int line_pos, bool create, bool jump_to);
 		public unowned Gedit.Document get_active_document ();
 		public unowned Gedit.Tab get_active_tab ();
 		public unowned Gedit.View get_active_view ();
