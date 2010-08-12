@@ -313,18 +313,6 @@ class Vala.Compiler {
 			}
 		}
 
-		if (context.profile == Profile.GOBJECT) {
-			if (context.has_package ("dbus-glib-1")) {
-				context.codegen = new DBusServerModule ();
-			} else {
-				context.codegen = new GDBusServerModule ();
-			}
-		} else if (context.profile == Profile.DOVA) {
-			context.codegen = new DovaErrorModule ();
-		} else {
-			context.codegen = new CCodeDelegateModule ();
-		}
-
 		if (packages != null) {
 			foreach (string package in packages) {
 				if (!add_package (context, package) && !add_gir (context, package)) {
@@ -340,7 +328,19 @@ class Vala.Compiler {
 		if (context.report.get_errors () > 0) {
 			return quit ();
 		}
-		
+
+		if (context.profile == Profile.GOBJECT) {
+			if (context.has_package ("dbus-glib-1")) {
+				context.codegen = new DBusServerModule ();
+			} else {
+				context.codegen = new GDBusServerModule ();
+			}
+		} else if (context.profile == Profile.DOVA) {
+			context.codegen = new DovaErrorModule ();
+		} else {
+			context.codegen = new CCodeDelegateModule ();
+		}
+
 		bool has_c_files = false;
 
 		foreach (string source in sources) {
