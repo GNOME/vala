@@ -250,11 +250,11 @@ public abstract class Vala.Symbol : CodeNode {
 				if (parent_header_filenames.size > 0) {
 					return parent_header_filenames;
 				}
+			}
 
-				if (source_reference != null && !external_package) {
-					// don't add default include directives for VAPI files
-					add_cheader_filename (source_reference.file.get_cinclude_filename ());
-				}
+			if (source_reference != null && !external_package) {
+				// don't add default include directives for VAPI files
+				add_cheader_filename (source_reference.file.get_cinclude_filename ());
 			} else {
 				if (_empty_string_list == null) {
 					_empty_string_list = new ArrayList<string> ();
