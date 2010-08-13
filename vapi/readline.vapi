@@ -18,7 +18,7 @@
  *
  */
 
-[CCode (lower_case_cprefix = "", cheader_filename = "readline/readline.h")]
+[CCode (lower_case_cprefix = "", cheader_filename = "stdio.h,readline/readline.h")]
 namespace Readline {
 	[CCode (cname = "free", cheader_filename = "stdlib.h")]
 	private void _free (void* p);
