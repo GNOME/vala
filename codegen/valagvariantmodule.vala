@@ -155,14 +155,14 @@ public class Vala.GVariantModule : GAsyncModule {
 
 		if (is_string_marshalled_enum (en)) {
 			// strcmp
-			source_declarations.add_include ("string.h");
+			cfile.add_include ("string.h");
 
-			source_type_member_definition.append (generate_enum_from_string_function (en));
-			source_type_member_definition.append (generate_enum_to_string_function (en));
+			cfile.add_function (generate_enum_from_string_function (en));
+			cfile.add_function (generate_enum_to_string_function (en));
 		}
 	}
 
-	public override bool generate_enum_declaration (Enum en, CCodeDeclarationSpace decl_space) {
+	public override bool generate_enum_declaration (Enum en, CCodeFile decl_space) {
 		if (base.generate_enum_declaration (en, decl_space)) {
 			if (is_string_marshalled_enum (en)) {
 				decl_space.add_type_member_declaration (generate_enum_from_string_function_declaration (en));

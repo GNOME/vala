@@ -39,7 +39,7 @@ public class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 			var m = (Method) expr.symbol_reference;
 
 			if (!(m is DynamicMethod)) {
-				generate_method_declaration (m, source_declarations);
+				generate_method_declaration (m, cfile);
 
 				if (!m.external && m.external_package) {
 					// internal VAPI methods
@@ -91,7 +91,7 @@ public class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 				expr.ccodenode = new CCodeIdentifier (m.get_cname ());
 			}
 		} else if (expr.symbol_reference is ArrayLengthField) {
-			generate_property_accessor_declaration (((Property) array_class.scope.lookup ("length")).get_accessor, source_declarations);
+			generate_property_accessor_declaration (((Property) array_class.scope.lookup ("length")).get_accessor, cfile);
 
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("dova_array_get_length"));
 			ccall.add_argument (pub_inst);
@@ -121,27 +121,27 @@ public class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 					expr.ccodenode = new CCodeMemberAccess (inst, f.get_cname ());
 				}
 			} else {
-				generate_field_declaration (f, source_declarations);
+				generate_field_declaration (f, cfile);
 
 				expr.ccodenode = new CCodeIdentifier (f.get_cname ());
 			}
 		} else if (expr.symbol_reference is EnumValue) {
 			var ev = (EnumValue) expr.symbol_reference;
 
-			generate_enum_declaration ((Enum) ev.parent_symbol, source_declarations);
+			generate_enum_declaration ((Enum) ev.parent_symbol, cfile);
 
 			expr.ccodenode = new CCodeConstant (ev.get_cname ());
 		} else if (expr.symbol_reference is Constant) {
 			var c = (Constant) expr.symbol_reference;
 
-			generate_constant_declaration (c, source_declarations);
+			generate_constant_declaration (c, cfile);
 
 			expr.ccodenode = new CCodeIdentifier (c.get_cname ());
 		} else if (expr.symbol_reference is Property) {
 			var prop = (Property) expr.symbol_reference;
 
 			if (!(prop is DynamicProperty)) {
-				generate_property_accessor_declaration (prop.get_accessor, source_declarations);
+				generate_property_accessor_declaration (prop.get_accessor, cfile);
 
 				if (!prop.external && prop.external_package) {
 					// internal VAPI properties

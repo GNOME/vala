@@ -159,15 +159,15 @@ public class Vala.DBusModule : GAsyncModule {
 
 		if (is_string_marshalled_enum (en)) {
 			// strcmp
-			source_declarations.add_include ("string.h");
-			source_declarations.add_include ("dbus/dbus-glib.h");
+			cfile.add_include ("string.h");
+			cfile.add_include ("dbus/dbus-glib.h");
 
-			source_type_member_definition.append (generate_enum_from_string_function (en));
-			source_type_member_definition.append (generate_enum_to_string_function (en));
+			cfile.add_function (generate_enum_from_string_function (en));
+			cfile.add_function (generate_enum_to_string_function (en));
 		}
 	}
 
-	public override bool generate_enum_declaration (Enum en, CCodeDeclarationSpace decl_space) {
+	public override bool generate_enum_declaration (Enum en, CCodeFile decl_space) {
 		if (base.generate_enum_declaration (en, decl_space)) {
 			if (is_string_marshalled_enum (en)) {
 				decl_space.add_type_member_declaration (generate_enum_from_string_function_declaration (en));
@@ -986,19 +986,19 @@ public class Vala.DBusModule : GAsyncModule {
 	}
 
 	public void add_dbus_helpers () {
-		if (source_declarations.add_declaration ("_vala_dbus_register_object")) {
+		if (cfile.add_declaration ("_vala_dbus_register_object")) {
 			return;
 		}
 
-		source_declarations.add_include ("dbus/dbus.h");
-		source_declarations.add_include ("dbus/dbus-glib.h");
-		source_declarations.add_include ("dbus/dbus-glib-lowlevel.h");
+		cfile.add_include ("dbus/dbus.h");
+		cfile.add_include ("dbus/dbus-glib.h");
+		cfile.add_include ("dbus/dbus-glib-lowlevel.h");
 
 		var dbusvtable = new CCodeStruct ("_DBusObjectVTable");
 		dbusvtable.add_field ("void", "(*register_object) (DBusConnection*, const char*, void*)");
-		source_declarations.add_type_definition (dbusvtable);
+		cfile.add_type_definition (dbusvtable);
 
-		source_declarations.add_type_declaration (new CCodeTypeDefinition ("struct _DBusObjectVTable", new CCodeVariableDeclarator ("_DBusObjectVTable")));
+		cfile.add_type_declaration (new CCodeTypeDefinition ("struct _DBusObjectVTable", new CCodeVariableDeclarator ("_DBusObjectVTable")));
 
 		var cfunc = new CCodeFunction ("_vala_dbus_register_object", "void");
 		cfunc.add_parameter (new CCodeFormalParameter ("connection", "DBusConnection*"));
@@ -1006,7 +1006,7 @@ public class Vala.DBusModule : GAsyncModule {
 		cfunc.add_parameter (new CCodeFormalParameter ("object", "void*"));
 
 		cfunc.modifiers |= CCodeModifiers.STATIC;
-		source_declarations.add_type_member_declaration (cfunc.copy ());
+		cfile.add_type_member_declaration (cfunc.copy ());
 
 		var block = new CCodeBlock ();
 		cfunc.block = block;
@@ -1041,7 +1041,7 @@ public class Vala.DBusModule : GAsyncModule {
 
 		block.add_statement (new CCodeIfStatement (new CCodeIdentifier ("vtable"), ifblock, elseblock));
 
-		source_type_member_definition.append (cfunc);
+		cfile.add_function (cfunc);
 
 		// unregister function
 		cfunc = new CCodeFunction ("_vala_dbus_unregister_object", "void");
@@ -1049,7 +1049,7 @@ public class Vala.DBusModule : GAsyncModule {
 		cfunc.add_parameter (new CCodeFormalParameter ("object", "GObject*"));
 
 		cfunc.modifiers |= CCodeModifiers.STATIC;
-		source_declarations.add_type_member_declaration (cfunc.copy ());
+		cfile.add_type_member_declaration (cfunc.copy ());
 
 		block = new CCodeBlock ();
 		cfunc.block = block;
@@ -1072,6 +1072,6 @@ public class Vala.DBusModule : GAsyncModule {
 		path_free.add_argument (new CCodeIdentifier ("path"));
 		block.add_statement (new CCodeExpressionStatement (path_free));
 
-		source_type_member_definition.append (cfunc);
+		cfile.add_function (cfunc);
 	}
 }

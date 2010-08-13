@@ -270,7 +270,7 @@ public class Vala.DovaErrorModule : DovaDelegateModule {
 	}
 
 	public override void visit_catch_clause (CatchClause clause) {
-		generate_type_declaration (clause.error_type, source_declarations);
+		generate_type_declaration (clause.error_type, cfile);
 
 		clause.body.emit (this);
 

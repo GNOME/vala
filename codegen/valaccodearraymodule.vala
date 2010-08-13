@@ -61,7 +61,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		CCodeFunctionCall gnew;
 		if (context.profile == Profile.POSIX) {
-			source_declarations.add_include ("stdlib.h");
+			cfile.add_include ("stdlib.h");
 			gnew = new CCodeFunctionCall (new CCodeIdentifier ("calloc"));
 		} else {
 			gnew = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
@@ -479,7 +479,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 	public override string? append_struct_array_free (Struct st) {
 		string cname = "_vala_%s_array_free".printf (st.get_cname ());;
 
-		if (source_declarations.add_declaration (cname)) {
+		if (cfile.add_declaration (cname)) {
 			return cname;
 		}
 
@@ -487,7 +487,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		fun.modifiers = CCodeModifiers.STATIC;
 		fun.add_parameter (new CCodeFormalParameter ("array", "%s*".printf (st.get_cname ())));
 		fun.add_parameter (new CCodeFormalParameter ("array_length", "gint"));
-		source_declarations.add_type_member_declaration (fun.copy ());
+		cfile.add_type_member_declaration (fun.copy ());
 
 		var cdofree = new CCodeBlock ();
 
@@ -506,7 +506,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		carrfree.add_argument (new CCodeIdentifier ("array"));
 		fun.block.add_statement (new CCodeExpressionStatement (carrfree));
 
-		source_type_member_definition.append (fun);
+		cfile.add_function (fun);
 
 		return cname;
 	}
@@ -540,7 +540,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		fun.add_parameter (new CCodeFormalParameter ("array", "gpointer"));
 		fun.add_parameter (new CCodeFormalParameter ("array_length", "gint"));
 		fun.add_parameter (new CCodeFormalParameter ("destroy_func", "GDestroyNotify"));
-		source_declarations.add_type_member_declaration (fun.copy ());
+		cfile.add_type_member_declaration (fun.copy ());
 
 		var cdofree = new CCodeBlock ();
 
@@ -556,7 +556,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		fun.block = new CCodeBlock ();
 		fun.block.add_statement (cif);
 
-		source_type_member_definition.append (fun);
+		cfile.add_function (fun);
 
 		// _vala_array_free frees elements and array
 
@@ -565,7 +565,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		fun.add_parameter (new CCodeFormalParameter ("array", "gpointer"));
 		fun.add_parameter (new CCodeFormalParameter ("array_length", "gint"));
 		fun.add_parameter (new CCodeFormalParameter ("destroy_func", "GDestroyNotify"));
-		source_declarations.add_type_member_declaration (fun.copy ());
+		cfile.add_type_member_declaration (fun.copy ());
 
 		// call _vala_array_destroy to free the array elements
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_destroy"));
@@ -580,11 +580,11 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		carrfree.add_argument (new CCodeIdentifier ("array"));
 		fun.block.add_statement (new CCodeExpressionStatement (carrfree));
 
-		source_type_member_definition.append (fun);
+		cfile.add_function (fun);
 	}
 
 	public override void append_vala_array_move () {
-		source_declarations.add_include ("string.h");
+		cfile.add_include ("string.h");
 
 		// assumes that overwritten array elements are null before invocation
 		// FIXME will leak memory if that's not the case
@@ -595,7 +595,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		fun.add_parameter (new CCodeFormalParameter ("src", "gint"));
 		fun.add_parameter (new CCodeFormalParameter ("dest", "gint"));
 		fun.add_parameter (new CCodeFormalParameter ("length", "gint"));
-		source_declarations.add_type_member_declaration (fun.copy ());
+		cfile.add_type_member_declaration (fun.copy ());
 
 		var array = new CCodeCastExpression (new CCodeIdentifier ("array"), "char*");
 		var element_size = new CCodeIdentifier ("element_size");
@@ -630,14 +630,14 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		fun.block.add_statement (new CCodeIfStatement (new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, src, dest), czeroblock1, czeroblock2));
 
-		source_type_member_definition.append (fun);
+		cfile.add_function (fun);
 	}
 
 	public override void append_vala_array_length () {
 		var fun = new CCodeFunction ("_vala_array_length", "gint");
 		fun.modifiers = CCodeModifiers.STATIC;
 		fun.add_parameter (new CCodeFormalParameter ("array", "gpointer"));
-		source_declarations.add_type_member_declaration (fun.copy ());
+		cfile.add_type_member_declaration (fun.copy ());
 
 		var block = new CCodeBlock ();
 
@@ -662,7 +662,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		fun.block = block;
 
-		source_type_member_definition.append (fun);
+		cfile.add_function (fun);
 	}
 
 	public override CCodeExpression? get_ref_cexpression (DataType expression_type, CCodeExpression cexpr, Expression? expr, CodeNode node) {
@@ -805,10 +805,10 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		// append to file
 
-		source_declarations.add_type_member_declaration (function.copy ());
+		cfile.add_type_member_declaration (function.copy ());
 
 		function.block = block;
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 
 		return dup_func;
 	}
@@ -854,7 +854,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 			pop_context ();
 		} else {
-			source_declarations.add_include ("string.h");
+			cfile.add_include ("string.h");
 
 			var dup_call = new CCodeFunctionCall (new CCodeIdentifier ("memcpy"));
 			dup_call.add_argument (new CCodeIdentifier ("dest"));
@@ -869,10 +869,10 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		// append to file
 
-		source_declarations.add_type_member_declaration (function.copy ());
+		cfile.add_type_member_declaration (function.copy ());
 
 		function.block = block;
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 
 		return dup_func;
 	}
@@ -941,10 +941,10 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		// append to file
 
-		source_declarations.add_type_member_declaration (function.copy ());
+		cfile.add_type_member_declaration (function.copy ());
 
 		function.block = block;
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 
 		return add_func;
 	}
@@ -985,7 +985,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		assignment.ccodenode = ccall;
 	}
 
-	public override void generate_parameter (FormalParameter param, CCodeDeclarationSpace decl_space, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
+	public override void generate_parameter (FormalParameter param, CCodeFile decl_space, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
 		if (!(param.variable_type is ArrayType)) {
 			base.generate_parameter (param, decl_space, cparam_map, carg_map);
 			return;

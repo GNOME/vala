@@ -235,7 +235,7 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 		if (context.profile == Profile.GOBJECT) {
 			stmt.ccodenode = new CCodeWhileStatement (new CCodeConstant ("TRUE"), (CCodeStatement) stmt.body.ccodenode);
 		} else {
-			source_declarations.add_include ("stdbool.h");
+			cfile.add_include ("stdbool.h");
 			stmt.ccodenode = new CCodeWhileStatement (new CCodeConstant ("true"), (CCodeStatement) stmt.body.ccodenode);
 		}
 	}

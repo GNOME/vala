@@ -49,7 +49,7 @@ public class Vala.DovaArrayModule : DovaMethodCallModule {
 			return;
 		}
 
-		generate_method_declaration (array_class.default_construction_method, source_declarations);
+		generate_method_declaration (array_class.default_construction_method, cfile);
 
 		var array_new = new CCodeFunctionCall (new CCodeIdentifier ("dova_array_new"));
 		array_new.add_argument (get_type_id_expression (expr.element_type));

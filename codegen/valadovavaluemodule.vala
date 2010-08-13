@@ -32,7 +32,7 @@ public class Vala.DovaValueModule : DovaObjectModule {
 		visit_method (m);
 	}
 
-	public override void generate_struct_declaration (Struct st, CCodeDeclarationSpace decl_space) {
+	public override void generate_struct_declaration (Struct st, CCodeFile decl_space) {
 		base.generate_struct_declaration (st, decl_space);
 
 		if (add_symbol_declaration (decl_space, st, st.get_copy_function ())) {
@@ -73,32 +73,32 @@ public class Vala.DovaValueModule : DovaObjectModule {
 		var cdecl = new CCodeDeclaration ("int");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("_%s_object_offset".printf (st.get_lower_case_cname ()), new CCodeConstant ("0")));
 		cdecl.modifiers = CCodeModifiers.STATIC;
-		source_declarations.add_type_member_declaration (cdecl);
+		cfile.add_type_member_declaration (cdecl);
 
 		string macro = "((%s *) (((char *) o) + _%s_object_offset))".printf (st.get_cname (), st.get_lower_case_cname ());
-		source_declarations.add_type_member_declaration (new CCodeMacroReplacement ("%s_GET_PRIVATE(o)".printf (st.get_upper_case_cname (null)), macro));
+		cfile.add_type_member_declaration (new CCodeMacroReplacement ("%s_GET_PRIVATE(o)".printf (st.get_upper_case_cname (null)), macro));
 
 
 		cdecl = new CCodeDeclaration ("DovaType *");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("%s_type".printf (st.get_lower_case_cname ()), new CCodeConstant ("NULL")));
 		cdecl.modifiers = CCodeModifiers.STATIC;
-		source_declarations.add_type_member_declaration (cdecl);
+		cfile.add_type_member_declaration (cdecl);
 
 		var type_fun = new CCodeFunction ("%s_type_get".printf (st.get_lower_case_cname ()), "DovaType *");
 		type_fun.block = new CCodeBlock ();
 
 		var type_init_block = new CCodeBlock ();
 
-		generate_method_declaration ((Method) object_class.scope.lookup ("alloc"), source_declarations);
-		generate_property_accessor_declaration (((Property) type_class.scope.lookup ("base_type")).get_accessor, source_declarations);
-		generate_property_accessor_declaration (((Property) type_class.scope.lookup ("base_type")).set_accessor, source_declarations);
-		generate_property_accessor_declaration (((Property) type_class.scope.lookup ("object_size")).get_accessor, source_declarations);
-		generate_property_accessor_declaration (((Property) type_class.scope.lookup ("object_size")).set_accessor, source_declarations);
-		generate_property_accessor_declaration (((Property) type_class.scope.lookup ("type_size")).get_accessor, source_declarations);
-		generate_property_accessor_declaration (((Property) type_class.scope.lookup ("type_size")).set_accessor, source_declarations);
-		generate_property_accessor_declaration (((Property) type_class.scope.lookup ("value_size")).set_accessor, source_declarations);
+		generate_method_declaration ((Method) object_class.scope.lookup ("alloc"), cfile);
+		generate_property_accessor_declaration (((Property) type_class.scope.lookup ("base_type")).get_accessor, cfile);
+		generate_property_accessor_declaration (((Property) type_class.scope.lookup ("base_type")).set_accessor, cfile);
+		generate_property_accessor_declaration (((Property) type_class.scope.lookup ("object_size")).get_accessor, cfile);
+		generate_property_accessor_declaration (((Property) type_class.scope.lookup ("object_size")).set_accessor, cfile);
+		generate_property_accessor_declaration (((Property) type_class.scope.lookup ("type_size")).get_accessor, cfile);
+		generate_property_accessor_declaration (((Property) type_class.scope.lookup ("type_size")).set_accessor, cfile);
+		generate_property_accessor_declaration (((Property) type_class.scope.lookup ("value_size")).set_accessor, cfile);
 
-		generate_class_declaration ((Class) context.root.scope.lookup ("Dova").scope.lookup ("Value"), source_declarations);
+		generate_class_declaration ((Class) context.root.scope.lookup ("Dova").scope.lookup ("Value"), cfile);
 
 		var base_type = new CCodeFunctionCall (new CCodeIdentifier ("dova_value_type_get"));
 
@@ -111,7 +111,7 @@ public class Vala.DovaValueModule : DovaObjectModule {
 
 		type_init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("%s_type".printf (st.get_lower_case_cname ())), calloc_call)));
 
-		generate_class_declaration ((Class) object_class, source_declarations);
+		generate_class_declaration ((Class) object_class, cfile);
 
 		type_init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeCastExpression (new CCodeIdentifier ("%s_type".printf (st.get_lower_case_cname ())), "DovaObject *"), "type"), new CCodeFunctionCall (new CCodeIdentifier ("dova_type_type_get")))));
 
@@ -156,7 +156,7 @@ public class Vala.DovaValueModule : DovaObjectModule {
 
 		type_fun.block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("%s_type".printf (st.get_lower_case_cname ()))));
 
-		source_type_member_definition.append (type_fun);
+		cfile.add_function (type_fun);
 
 		var type_init_fun = new CCodeFunction ("%s_type_init".printf (st.get_lower_case_cname ()));
 		type_init_fun.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
@@ -166,7 +166,7 @@ public class Vala.DovaValueModule : DovaObjectModule {
 		type_init_call.add_argument (new CCodeIdentifier ("type"));
 		type_init_fun.block.add_statement (new CCodeExpressionStatement (type_init_call));
 
-		declare_set_value_copy_function (source_declarations);
+		declare_set_value_copy_function (cfile);
 
 		var value_copy_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_set_value_copy"));
 		value_copy_call.add_argument (new CCodeIdentifier ("type"));
@@ -187,9 +187,9 @@ public class Vala.DovaValueModule : DovaObjectModule {
 			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, val));
 			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, other));
 			value_equals_fun.block.add_statement (new CCodeReturnStatement (ccall));
-			source_type_member_definition.append (value_equals_fun);
+			cfile.add_function (value_equals_fun);
 
-			declare_set_value_equals_function (source_declarations);
+			declare_set_value_equals_function (cfile);
 
 			var value_equals_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_set_value_equals"));
 			value_equals_call.add_argument (new CCodeIdentifier ("type"));
@@ -207,9 +207,9 @@ public class Vala.DovaValueModule : DovaObjectModule {
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_hash".printf (st.get_lower_case_cname ())));
 			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, val));
 			value_hash_fun.block.add_statement (new CCodeReturnStatement (ccall));
-			source_type_member_definition.append (value_hash_fun);
+			cfile.add_function (value_hash_fun);
 
-			declare_set_value_hash_function (source_declarations);
+			declare_set_value_hash_function (cfile);
 
 			var value_hash_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_set_value_hash"));
 			value_hash_call.add_argument (new CCodeIdentifier ("type"));
@@ -237,9 +237,9 @@ public class Vala.DovaValueModule : DovaObjectModule {
 		copy_call.add_argument (new CCodeIdentifier ("value_index"));
 		value_to_any_fun.block.add_statement (new CCodeExpressionStatement (copy_call));
 		value_to_any_fun.block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("result")));
-		source_type_member_definition.append (value_to_any_fun);
+		cfile.add_function (value_to_any_fun);
 
-		declare_set_value_to_any_function (source_declarations);
+		declare_set_value_to_any_function (cfile);
 
 		var value_to_any_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_set_value_to_any"));
 		value_to_any_call.add_argument (new CCodeIdentifier ("type"));
@@ -261,16 +261,16 @@ public class Vala.DovaValueModule : DovaObjectModule {
 		copy_call.add_argument (priv_call);
 		copy_call.add_argument (new CCodeConstant ("0"));
 		value_from_any_fun.block.add_statement (new CCodeExpressionStatement (copy_call));
-		source_type_member_definition.append (value_from_any_fun);
+		cfile.add_function (value_from_any_fun);
 
-		declare_set_value_from_any_function (source_declarations);
+		declare_set_value_from_any_function (cfile);
 
 		var value_from_any_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_set_value_from_any"));
 		value_from_any_call.add_argument (new CCodeIdentifier ("type"));
 		value_from_any_call.add_argument (new CCodeIdentifier ("%s_value_from_any".printf (st.get_lower_case_cname ())));
 		type_init_fun.block.add_statement (new CCodeExpressionStatement (value_from_any_call));
 
-		source_type_member_definition.append (type_init_fun);
+		cfile.add_function (type_init_fun);
 
 		add_struct_copy_function (st);
 	}
@@ -367,7 +367,7 @@ public class Vala.DovaValueModule : DovaObjectModule {
 
 		function.block = cblock;
 
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 	}
 
 	public override void visit_assignment (Assignment assignment) {
@@ -398,7 +398,7 @@ public class Vala.DovaValueModule : DovaObjectModule {
 
 			var array_type = dest.value_type as ArrayType;
 			if (array_type != null && !array_type.inline_allocated) {
-				generate_property_accessor_declaration (((Property) array_class.scope.lookup ("data")).get_accessor, source_declarations);
+				generate_property_accessor_declaration (((Property) array_class.scope.lookup ("data")).get_accessor, cfile);
 
 				var data_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_array_get_data"));
 				data_call.add_argument ((CCodeExpression) get_ccodenode (dest));
@@ -416,7 +416,7 @@ public class Vala.DovaValueModule : DovaObjectModule {
 
 			var array_type = src.value_type as ArrayType;
 			if (array_type != null && !array_type.inline_allocated) {
-				generate_property_accessor_declaration (((Property) array_class.scope.lookup ("data")).get_accessor, source_declarations);
+				generate_property_accessor_declaration (((Property) array_class.scope.lookup ("data")).get_accessor, cfile);
 
 				var data_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_array_get_data"));
 				data_call.add_argument ((CCodeExpression) get_ccodenode (src));
@@ -460,7 +460,7 @@ public class Vala.DovaValueModule : DovaObjectModule {
 		var right_ea = expr.right as ElementAccess;
 
 		if (left_ea != null) {
-			generate_property_accessor_declaration (((Property) array_class.scope.lookup ("data")).get_accessor, source_declarations);
+			generate_property_accessor_declaration (((Property) array_class.scope.lookup ("data")).get_accessor, cfile);
 
 			var data_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_array_get_data"));
 			data_call.add_argument ((CCodeExpression) get_ccodenode (left_ea.container));
@@ -471,7 +471,7 @@ public class Vala.DovaValueModule : DovaObjectModule {
 		}
 
 		if (right_ea != null) {
-			generate_property_accessor_declaration (((Property) array_class.scope.lookup ("data")).get_accessor, source_declarations);
+			generate_property_accessor_declaration (((Property) array_class.scope.lookup ("data")).get_accessor, cfile);
 
 			var data_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_array_get_data"));
 			data_call.add_argument ((CCodeExpression) get_ccodenode (right_ea.container));
@@ -515,7 +515,7 @@ public class Vala.DovaValueModule : DovaObjectModule {
 			if (val_ea != null) {
 				val = val_ea.container;
 
-				generate_property_accessor_declaration (((Property) array_class.scope.lookup ("data")).get_accessor, source_declarations);
+				generate_property_accessor_declaration (((Property) array_class.scope.lookup ("data")).get_accessor, cfile);
 
 				var data_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_array_get_data"));
 				data_call.add_argument ((CCodeExpression) get_ccodenode (val));

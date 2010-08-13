@@ -24,7 +24,7 @@
 
 
 public class Vala.GTypeModule : GErrorModule {
-	public override void generate_parameter (FormalParameter param, CCodeDeclarationSpace decl_space, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
+	public override void generate_parameter (FormalParameter param, CCodeFile decl_space, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
 		if (!(param.variable_type is ObjectType)) {
 			base.generate_parameter (param, decl_space, cparam_map, carg_map);
 			return;
@@ -46,7 +46,7 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 	}
 
-	public override void generate_class_declaration (Class cl, CCodeDeclarationSpace decl_space) {
+	public override void generate_class_declaration (Class cl, CCodeFile decl_space) {
 		if (add_symbol_declaration (decl_space, cl, cl.get_cname ())) {
 			return;
 		}
@@ -176,7 +176,7 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 	}
 
-	public override void generate_class_struct_declaration (Class cl, CCodeDeclarationSpace decl_space) {
+	public override void generate_class_struct_declaration (Class cl, CCodeFile decl_space) {
 		if (add_symbol_declaration (decl_space, cl, "struct _" + cl.get_cname ())) {
 			return;
 		}
@@ -353,7 +353,7 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 	}
 
-	public virtual void generate_virtual_method_declaration (Method m, CCodeDeclarationSpace decl_space, CCodeStruct type_struct) {
+	public virtual void generate_virtual_method_declaration (Method m, CCodeFile decl_space, CCodeStruct type_struct) {
 		if (!m.is_abstract && !m.is_virtual) {
 			return;
 		}
@@ -375,7 +375,7 @@ public class Vala.GTypeModule : GErrorModule {
 		type_struct.add_declaration (vdecl);
 	}
 
-	void generate_class_private_declaration (Class cl, CCodeDeclarationSpace decl_space) {
+	void generate_class_private_declaration (Class cl, CCodeFile decl_space) {
 		if (decl_space.add_declaration (cl.get_cname () + "Private")) {
 			return;
 		}
@@ -542,14 +542,14 @@ public class Vala.GTypeModule : GErrorModule {
 		instance_finalize_fragment = new CCodeFragment ();
 
 
-		generate_class_struct_declaration (cl, source_declarations);
-		generate_class_private_declaration (cl, source_declarations);
+		generate_class_struct_declaration (cl, cfile);
+		generate_class_private_declaration (cl, cfile);
 
 		if (!cl.is_internal_symbol ()) {
-			generate_class_struct_declaration (cl, header_declarations);
+			generate_class_struct_declaration (cl, header_file);
 		}
 		if (!cl.is_private_symbol ()) {
-			generate_class_struct_declaration (cl, internal_header_declarations);
+			generate_class_struct_declaration (cl, internal_header_file);
 		}
 
 		cl.accept_children (this);
@@ -558,9 +558,9 @@ public class Vala.GTypeModule : GErrorModule {
 			if (is_fundamental) {
 				param_spec_struct = new CCodeStruct ( "_%sParamSpec%s".printf(cl.parent_symbol.get_cprefix (), cl.name));
 				param_spec_struct.add_field ("GParamSpec", "parent_instance");
-				source_declarations.add_type_definition (param_spec_struct);
+				cfile.add_type_definition (param_spec_struct);
 
-				source_declarations.add_type_declaration (new CCodeTypeDefinition ("struct %s".printf (param_spec_struct.name), new CCodeVariableDeclarator ( "%sParamSpec%s".printf(cl.parent_symbol.get_cprefix (), cl.name))));
+				cfile.add_type_declaration (new CCodeTypeDefinition ("struct %s".printf (param_spec_struct.name), new CCodeVariableDeclarator ( "%sParamSpec%s".printf(cl.parent_symbol.get_cprefix (), cl.name))));
 
 
 				gvaluecollector_h_needed = true;
@@ -607,13 +607,13 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 
 			if (cl.comment != null) {
-				source_type_member_definition.append (new CCodeComment (cl.comment.content));
+				cfile.add_type_member_definition (new CCodeComment (cl.comment.content));
 			}
 
 			var type_fun = new ClassRegisterFunction (cl, context);
 			type_fun.init_from_type (in_plugin);
-			source_declarations.add_type_member_declaration (type_fun.get_source_declaration ());
-			source_type_member_definition.append (type_fun.get_definition ());
+			cfile.add_type_member_declaration (type_fun.get_source_declaration ());
+			cfile.add_type_member_definition (type_fun.get_definition ());
 
 			if (is_fundamental) {
 				var ref_fun = new CCodeFunction (cl.get_lower_case_cprefix () + "ref", "gpointer");
@@ -665,8 +665,8 @@ public class Vala.GTypeModule : GErrorModule {
 				ref_fun.block = ref_block;
 				unref_fun.block = unref_block;
 
-				source_type_member_definition.append (ref_fun);
-				source_type_member_definition.append (unref_fun);
+				cfile.add_function (ref_fun);
+				cfile.add_function (unref_fun);
 			}
 		} else {
 			if (cl.base_class == null) {
@@ -695,7 +695,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 				function.block = cblock;
 
-				source_type_member_definition.append (function);
+				cfile.add_function (function);
 			}
 		}
 
@@ -720,7 +720,7 @@ public class Vala.GTypeModule : GErrorModule {
 		function.block = init_block;
 
 		init_block.add_statement(new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess(new CCodeMemberAccess.pointer (new CCodeIdentifier ("value"), "data[0]"),"v_pointer"),new CCodeConstant ("NULL"), CCodeAssignmentOperator.SIMPLE)));
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 	}
 
 	private void add_type_value_table_free_function (Class cl) {
@@ -739,7 +739,7 @@ public class Vala.GTypeModule : GErrorModule {
 		ifbody.add_statement ( new CCodeExpressionStatement(ccall) );
 
 		init_block.add_statement(new CCodeIfStatement (vpointer, ifbody));
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 	}
 
 	private void add_type_value_table_copy_function (Class cl) {
@@ -766,7 +766,7 @@ public class Vala.GTypeModule : GErrorModule {
 		var if_statement = new CCodeIfStatement (src_vpointer, true_stmt, false_stmt);
 		init_block.add_statement (if_statement);
 
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 	}
 
 	private void add_type_value_table_peek_pointer_function (Class cl) {
@@ -781,7 +781,7 @@ public class Vala.GTypeModule : GErrorModule {
 		var ret = new CCodeReturnStatement ( vpointer );
 		init_block.add_statement (ret);
 
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 	}
 
 	private void add_type_value_table_lcopy_value_function ( Class cl ) {
@@ -833,7 +833,7 @@ public class Vala.GTypeModule : GErrorModule {
 		main_else_true.add_statement (new CCodeExpressionStatement (new CCodeAssignment (object_p_ptr, ref_fct, CCodeAssignmentOperator.SIMPLE)));
 
 		init_block.add_statement (new CCodeReturnStatement (null_));
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 	}
 
 	private void add_type_value_table_collect_value_function (Class cl) {
@@ -913,7 +913,7 @@ public class Vala.GTypeModule : GErrorModule {
 		false_stmt.add_statement (else_assigment);
 
 		init_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("NULL")));
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 	}
 
 	private void add_g_param_spec_type_function (Class cl) {
@@ -960,7 +960,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 		init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccall, "value_type"), new CCodeIdentifier ("object_type"), CCodeAssignmentOperator.SIMPLE )));
 		init_block.add_statement (new CCodeReturnStatement (ccall));
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 	}
 
 	private void add_g_value_set_function (Class cl) {
@@ -1034,7 +1034,7 @@ public class Vala.GTypeModule : GErrorModule {
 		ccall = new CCodeFunctionCall (new CCodeIdentifier (cl.get_unref_function ()));
 		ccall.add_argument (new CCodeIdentifier ("old"));
 		true_stmt.add_statement (new CCodeExpressionStatement (ccall));
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 	}
 
 	private void add_g_value_take_function (Class cl) {
@@ -1104,7 +1104,7 @@ public class Vala.GTypeModule : GErrorModule {
 		ccall = new CCodeFunctionCall (new CCodeIdentifier (cl.get_unref_function ()));
 		ccall.add_argument (new CCodeIdentifier ("old"));
 		true_stmt.add_statement (new CCodeExpressionStatement (ccall));
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 	}
 
 	private void add_g_value_get_function (Class cl) {
@@ -1130,7 +1130,7 @@ public class Vala.GTypeModule : GErrorModule {
 		init_block.add_statement (new CCodeExpressionStatement (ccall));
 
 		init_block.add_statement (new CCodeReturnStatement ( vpointer ));
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 	}
 
 	private void add_base_init_function (Class cl) {
@@ -1172,7 +1172,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 			block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("priv"), ccall)));
 
-			source_declarations.add_include ("string.h");
+			cfile.add_include ("string.h");
 
 			iftrue = new CCodeBlock ();
 			ccall = new CCodeFunctionCall (new CCodeIdentifier ("memcpy"));
@@ -1211,7 +1211,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 		init_block.add_statement (base_init_fragment);
 
-		source_type_member_definition.append (base_init);
+		cfile.add_function (base_init);
 	}
 
 	public virtual void generate_class_init (Class cl, CCodeBlock init_block) {
@@ -1233,7 +1233,7 @@ public class Vala.GTypeModule : GErrorModule {
 		parent_var_decl.initializer = new CCodeConstant ("NULL");
 		parent_decl.add_declarator (parent_var_decl);
 		parent_decl.modifiers = CCodeModifiers.STATIC;
-		source_declarations.add_type_member_declaration (parent_decl);
+		cfile.add_type_member_declaration (parent_decl);
 		ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_class_peek_parent"));
 		ccall.add_argument (new CCodeIdentifier ("klass"));
 		var parent_assignment = new CCodeAssignment (new CCodeIdentifier ("%s_parent_class".printf (cl.get_lower_case_cname (null))), ccall);
@@ -1326,7 +1326,7 @@ public class Vala.GTypeModule : GErrorModule {
 		init_block.add_statement (register_dbus_info (cl));
 		init_block.add_statement (class_init_fragment);
 
-		source_type_member_definition.append (class_init);
+		cfile.add_function (class_init);
 	}
 	
 	private void add_interface_init_function (Class cl, Interface iface) {
@@ -1346,7 +1346,7 @@ public class Vala.GTypeModule : GErrorModule {
 		parent_var_decl.initializer = new CCodeConstant ("NULL");
 		parent_decl.add_declarator (parent_var_decl);
 		parent_decl.modifiers = CCodeModifiers.STATIC;
-		source_declarations.add_type_member_declaration (parent_decl);
+		cfile.add_type_member_declaration (parent_decl);
 		ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_interface_peek_parent"));
 		ccall.add_argument (new CCodeIdentifier ("iface"));
 		var parent_assignment = new CCodeAssignment (new CCodeIdentifier (parent_iface_var), ccall);
@@ -1401,7 +1401,7 @@ public class Vala.GTypeModule : GErrorModule {
 						base_method = cl_method.base_interface_method;
 					}
 
-					generate_method_declaration (base_method, source_declarations);
+					generate_method_declaration (base_method, cfile);
 
 					CCodeExpression cfunc = new CCodeIdentifier (base_method.get_cname ());
 					cfunc = cast_method_pointer (base_method, cfunc, iface);
@@ -1473,7 +1473,7 @@ public class Vala.GTypeModule : GErrorModule {
 				var ciface = new CCodeIdentifier ("iface");
 
 				if (base_property.get_accessor != null) {
-					generate_property_accessor_declaration (base_property.get_accessor, source_declarations);
+					generate_property_accessor_declaration (base_property.get_accessor, cfile);
 
 					string cname = base_property.get_accessor.get_cname ();
 					CCodeExpression cfunc = new CCodeIdentifier (cname);
@@ -1481,7 +1481,7 @@ public class Vala.GTypeModule : GErrorModule {
 					init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, "get_%s".printf (prop.name)), cfunc)));
 				}
 				if (base_property.set_accessor != null) {
-					generate_property_accessor_declaration (base_property.set_accessor, source_declarations);
+					generate_property_accessor_declaration (base_property.set_accessor, cfile);
 
 					string cname = base_property.set_accessor.get_cname ();
 					CCodeExpression cfunc = new CCodeIdentifier (cname);
@@ -1491,7 +1491,7 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 		}
 
-		source_type_member_definition.append (iface_init);
+		cfile.add_function (iface_init);
 	}
 
 	CCodeExpression cast_property_accessor_pointer (PropertyAccessor acc, CCodeExpression cfunc, ObjectTypeSymbol base_type) {
@@ -1516,7 +1516,7 @@ public class Vala.GTypeModule : GErrorModule {
 		var vdeclarator = new CCodeFunctionDeclarator (m.vfunc_name);
 		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 
-		generate_cparameters (m, source_declarations, cparam_map, new CCodeFunction ("fake"), vdeclarator);
+		generate_cparameters (m, cfile, cparam_map, new CCodeFunction ("fake"), vdeclarator);
 
 		// append C arguments in the right order
 		int last_pos = -1;
@@ -1548,7 +1548,7 @@ public class Vala.GTypeModule : GErrorModule {
 		if (cl.is_compact) {
 			// Add declaration, since the instance_init function is explicitly called
 			// by the creation methods
-			source_declarations.add_type_member_declaration (instance_init.copy ());
+			cfile.add_type_member_declaration (instance_init.copy ());
 		}
 
 		var init_block = new CCodeBlock ();
@@ -1562,7 +1562,7 @@ public class Vala.GTypeModule : GErrorModule {
 		
 		init_block.add_statement (instance_init_fragment);
 
-		source_type_member_definition.append (instance_init);
+		cfile.add_function (instance_init);
 	}
 
 	private void add_class_finalize_function (Class cl) {
@@ -1570,7 +1570,7 @@ public class Vala.GTypeModule : GErrorModule {
 		function.modifiers = CCodeModifiers.STATIC;
 
 		function.add_parameter (new CCodeFormalParameter ("klass", cl.get_cname () + "Class *"));
-		source_declarations.add_type_member_declaration (function.copy ());
+		cfile.add_type_member_declaration (function.copy ());
 		
 		var cblock = new CCodeBlock ();
 
@@ -1581,7 +1581,7 @@ public class Vala.GTypeModule : GErrorModule {
 		cblock.add_statement (class_finalize_fragment);
 
 		function.block = cblock;
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 	}
 
 	private void add_base_finalize_function (Class cl) {
@@ -1589,7 +1589,7 @@ public class Vala.GTypeModule : GErrorModule {
 		function.modifiers = CCodeModifiers.STATIC;
 
 		function.add_parameter (new CCodeFormalParameter ("klass", cl.get_cname () + "Class *"));
-		source_declarations.add_type_member_declaration (function.copy ());
+		cfile.add_type_member_declaration (function.copy ());
 		
 		var cblock = new CCodeBlock ();
 
@@ -1600,7 +1600,7 @@ public class Vala.GTypeModule : GErrorModule {
 		cblock.add_statement (base_finalize_fragment);
 
 		function.block = cblock;
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 	}
 
 	private void add_finalize_function (Class cl) {
@@ -1614,7 +1614,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 		function.add_parameter (new CCodeFormalParameter ("obj", fundamental_class.get_cname () + "*"));
 
-		source_declarations.add_type_member_declaration (function.copy ());
+		cfile.add_type_member_declaration (function.copy ());
 
 
 		var cblock = new CCodeBlock ();
@@ -1644,7 +1644,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 		function.block = cblock;
 
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 	}
 
 	public override CCodeFunctionCall get_param_spec (Property prop) {
@@ -1827,7 +1827,7 @@ public class Vala.GTypeModule : GErrorModule {
 		return cspec;
 	}
 
-	public override void generate_interface_declaration (Interface iface, CCodeDeclarationSpace decl_space) {
+	public override void generate_interface_declaration (Interface iface, CCodeFile decl_space) {
 		if (add_symbol_declaration (decl_space, iface, iface.get_cname ())) {
 			return;
 		}
@@ -1943,12 +1943,12 @@ public class Vala.GTypeModule : GErrorModule {
 			return;
 		}
 
-		generate_interface_declaration (iface, source_declarations);
+		generate_interface_declaration (iface, cfile);
 		if (!iface.is_internal_symbol ()) {
-			generate_interface_declaration (iface, header_declarations);
+			generate_interface_declaration (iface, header_file);
 		}
 		if (!iface.is_private_symbol ()) {
-			generate_interface_declaration (iface, internal_header_declarations);
+			generate_interface_declaration (iface, internal_header_file);
 		}
 
 		iface.accept_children (this);
@@ -1956,13 +1956,13 @@ public class Vala.GTypeModule : GErrorModule {
 		add_interface_base_init_function (iface);
 
 		if (iface.comment != null) {
-			source_type_member_definition.append (new CCodeComment (iface.comment.content));
+			cfile.add_type_member_definition (new CCodeComment (iface.comment.content));
 		}
 
 		var type_fun = create_interface_register_function (iface);
 		type_fun.init_from_type (in_plugin);
-		source_declarations.add_type_member_declaration (type_fun.get_source_declaration ());
-		source_type_member_definition.append (type_fun.get_definition ());
+		cfile.add_type_member_declaration (type_fun.get_source_declaration ());
+		cfile.add_type_member_definition (type_fun.get_definition ());
 
 		pop_context ();
 	}
@@ -2029,7 +2029,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 		init_block.add_statement (register_dbus_info (iface));
 
-		source_type_member_definition.append (base_init);
+		cfile.add_function (base_init);
 	}
 
 	public override void visit_struct (Struct st) {
@@ -2038,7 +2038,7 @@ public class Vala.GTypeModule : GErrorModule {
 		if (st.has_type_id) {
 			var type_fun = new StructRegisterFunction (st, context);
 			type_fun.init_from_type (false);
-			source_type_member_definition.append (type_fun.get_definition ());
+			cfile.add_type_member_definition (type_fun.get_definition ());
 		}
 	}
 
@@ -2048,7 +2048,7 @@ public class Vala.GTypeModule : GErrorModule {
 		if (en.has_type_id) {
 			var type_fun = new EnumRegisterFunction (en, context);
 			type_fun.init_from_type (false);
-			source_type_member_definition.append (type_fun.get_definition ());
+			cfile.add_type_member_definition (type_fun.get_definition ());
 		}
 	}
 

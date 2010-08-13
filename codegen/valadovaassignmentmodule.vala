@@ -30,7 +30,7 @@ public class Vala.DovaAssignmentModule : DovaMemberAccessModule {
 		var prop = (Property) assignment.left.symbol_reference;
 
 		if (!(prop is DynamicProperty)) {
-			generate_property_accessor_declaration (prop.set_accessor, source_declarations);
+			generate_property_accessor_declaration (prop.set_accessor, cfile);
 
 			if (!prop.external && prop.external_package) {
 				// internal VAPI properties

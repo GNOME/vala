@@ -81,7 +81,7 @@ public class Vala.DBusClientModule : DBusModule {
 
 		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 
-		generate_cparameters (method, source_declarations, cparam_map, func);
+		generate_cparameters (method, cfile, cparam_map, func);
 
 		var block = new CCodeBlock ();
 		if (dynamic_method.dynamic_type.data_type == dbus_object_type) {
@@ -91,10 +91,10 @@ public class Vala.DBusClientModule : DBusModule {
 		}
 
 		// append to C source file
-		source_declarations.add_type_member_declaration (func.copy ());
+		cfile.add_type_member_declaration (func.copy ());
 
 		func.block = block;
-		source_type_member_definition.append (func);
+		cfile.add_function (func);
 	}
 
 	void generate_dbus_method_wrapper (Method method, CCodeBlock block) {
@@ -225,9 +225,9 @@ public class Vala.DBusClientModule : DBusModule {
 				target = ref_call;
 			}
 
-			if (!source_declarations.add_declaration (cb_fun.name)) {
+			if (!cfile.add_declaration (cb_fun.name)) {
 				// avoid duplicate function definition
-				source_type_member_definition.append (cb_fun);
+				cfile.add_function (cb_fun);
 			}
 
 			ccall.add_argument (new CCodeIdentifier (cb_fun.name));
@@ -280,7 +280,7 @@ public class Vala.DBusClientModule : DBusModule {
 					block.add_statement (cdecl);
 
 					if (dbus_use_ptr_array (array_type)) {
-						source_declarations.add_include ("string.h");
+						cfile.add_include ("string.h");
 
 						var memcpy_call = new CCodeFunctionCall (new CCodeIdentifier ("memcpy"));
 						memcpy_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("dbus_%s".printf (param.name)), "pdata"));
@@ -648,10 +648,10 @@ public class Vala.DBusClientModule : DBusModule {
 		generate_dbus_property_getter_wrapper (prop, block);
 
 		// append to C source file
-		source_declarations.add_type_member_declaration (func.copy ());
+		cfile.add_type_member_declaration (func.copy ());
 
 		func.block = block;
-		source_type_member_definition.append (func);
+		cfile.add_function (func);
 
 		return getter_cname;
 	}
@@ -678,10 +678,10 @@ public class Vala.DBusClientModule : DBusModule {
 		generate_dbus_property_setter_wrapper (prop, block);
 
 		// append to C source file
-		source_declarations.add_type_member_declaration (func.copy ());
+		cfile.add_type_member_declaration (func.copy ());
 
 		func.block = block;
-		source_type_member_definition.append (func);
+		cfile.add_function (func);
 
 		return setter_cname;
 	}
@@ -819,10 +819,10 @@ public class Vala.DBusClientModule : DBusModule {
 		generate_dbus_connect_wrapper (sig, block);
 
 		// append to C source file
-		source_declarations.add_type_member_declaration (func.copy ());
+		cfile.add_type_member_declaration (func.copy ());
 
 		func.block = block;
-		source_type_member_definition.append (func);
+		cfile.add_function (func);
 
 		return connect_wrapper_name;
 	}
@@ -842,10 +842,10 @@ public class Vala.DBusClientModule : DBusModule {
 		generate_dbus_disconnect_wrapper (sig, block);
 
 		// append to C source file
-		source_declarations.add_type_member_declaration (func.copy ());
+		cfile.add_type_member_declaration (func.copy ());
 
 		func.block = block;
-		source_type_member_definition.append (func);
+		cfile.add_function (func);
 
 		return disconnect_wrapper_name;
 	}
@@ -975,9 +975,9 @@ public class Vala.DBusClientModule : DBusModule {
 		}
 
 		proxy_iface_init.modifiers = CCodeModifiers.STATIC;
-		source_declarations.add_type_member_declaration (proxy_iface_init.copy ());
+		cfile.add_type_member_declaration (proxy_iface_init.copy ());
 		proxy_iface_init.block = iface_block;
-		source_type_member_definition.append (proxy_iface_init);
+		cfile.add_function (proxy_iface_init);
 	}
 
 	string implement_interface (CCodeFunctionCall define_type, Interface main_iface, Interface iface) {
@@ -1029,7 +1029,7 @@ public class Vala.DBusClientModule : DBusModule {
 		}
 	}
 
-	public override void generate_interface_declaration (Interface iface, CCodeDeclarationSpace decl_space) {
+	public override void generate_interface_declaration (Interface iface, CCodeFile decl_space) {
 		base.generate_interface_declaration (iface, decl_space);
 
 		string dbus_iface_name = get_dbus_name (iface);
@@ -1061,7 +1061,7 @@ public class Vala.DBusClientModule : DBusModule {
 		}
 
 		// strcmp
-		source_declarations.add_include ("string.h");
+		cfile.add_include ("string.h");
 
 		// create proxy class
 		string cname = iface.get_cname () + "DBusProxy";
@@ -1069,18 +1069,18 @@ public class Vala.DBusClientModule : DBusModule {
 
 		add_dbus_helpers ();
 
-		source_declarations.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (cname), new CCodeVariableDeclarator (cname)));
-		source_declarations.add_type_declaration (new CCodeTypeDefinition ("DBusGProxyClass", new CCodeVariableDeclarator (cname + "Class")));
+		cfile.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (cname), new CCodeVariableDeclarator (cname)));
+		cfile.add_type_declaration (new CCodeTypeDefinition ("DBusGProxyClass", new CCodeVariableDeclarator (cname + "Class")));
 
 		var instance_struct = new CCodeStruct ("_%s".printf (cname));
 		instance_struct.add_field ("DBusGProxy", "parent_instance");
 		instance_struct.add_field ("gboolean", "disposed");
 
-		source_declarations.add_type_definition (instance_struct);
+		cfile.add_type_definition (instance_struct);
 
 		var type_fun = new CCodeFunction(lower_cname + "_get_type", "GType");
 		type_fun.attributes = "G_GNUC_CONST";
-		source_declarations.add_type_member_declaration (type_fun);
+		cfile.add_type_member_declaration (type_fun);
 
 		var define_type = new CCodeFunctionCall (new CCodeIdentifier ("G_DEFINE_TYPE_EXTENDED"));
 		define_type.add_argument (new CCodeIdentifier (cname));
@@ -1089,7 +1089,7 @@ public class Vala.DBusClientModule : DBusModule {
 		define_type.add_argument (new CCodeConstant ("0"));
 		define_type.add_argument (new CCodeIdentifier (implement_interface (define_type, iface, iface)));
 
-		source_type_member_definition.append (new CCodeExpressionStatement (define_type));
+		cfile.add_type_member_definition (new CCodeExpressionStatement (define_type));
 
 		// generate proxy_new function
 		var proxy_new = new CCodeFunction (lower_cname + "_new", iface.get_cname () + "*");
@@ -1118,7 +1118,7 @@ public class Vala.DBusClientModule : DBusModule {
 		new_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("self")));
 
 		proxy_new.block = new_block;
-		source_type_member_definition.append (proxy_new);
+		cfile.add_function (proxy_new);
 
 		// dbus proxy construct
 		var proxy_construct = new CCodeFunction (lower_cname + "_construct", "GObject*");
@@ -1202,7 +1202,7 @@ public class Vala.DBusClientModule : DBusModule {
 
 		proxy_construct.block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("self")));
 
-		source_type_member_definition.append (proxy_construct);
+		cfile.add_function (proxy_construct);
 
 		// dbus proxy filter function
 		generate_proxy_filter_function (iface);
@@ -1246,7 +1246,7 @@ public class Vala.DBusClientModule : DBusModule {
 		chainup.add_argument (new CCodeIdentifier ("self"));
 		proxy_dispose.block.add_statement (new CCodeExpressionStatement (chainup));
 
-		source_type_member_definition.append (proxy_dispose);
+		cfile.add_function (proxy_dispose);
 
 		var proxy_class_init = new CCodeFunction (lower_cname + "_class_init", "void");
 		proxy_class_init.add_parameter (new CCodeFormalParameter ("klass", cname + "Class*"));
@@ -1258,20 +1258,20 @@ public class Vala.DBusClientModule : DBusModule {
 		proxy_class_init.block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (gobject_class, "dispose"), new CCodeIdentifier (lower_cname + "_dispose"))));
 		proxy_class_init.block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (gobject_class, "get_property"), new CCodeIdentifier (lower_cname + "_get_property"))));
 		proxy_class_init.block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (gobject_class, "set_property"), new CCodeIdentifier (lower_cname + "_set_property"))));
-		source_type_member_definition.append (proxy_class_init);
+		cfile.add_function (proxy_class_init);
 
 		prop_enum = new CCodeEnum ();
 		prop_enum.add_value (new CCodeEnumValue ("%s_DUMMY_PROPERTY".printf (lower_cname.up ())));
 
 		implement_property (proxy_class_init.block, iface, iface);
 
-		source_declarations.add_type_member_declaration (prop_enum);
+		cfile.add_type_member_declaration (prop_enum);
 
 		var proxy_instance_init = new CCodeFunction (lower_cname + "_init", "void");
 		proxy_instance_init.add_parameter (new CCodeFormalParameter ("self", cname + "*"));
 		proxy_instance_init.modifiers = CCodeModifiers.STATIC;
 		proxy_instance_init.block = new CCodeBlock ();
-		source_type_member_definition.append (proxy_instance_init);
+		cfile.add_function (proxy_instance_init);
 
 		generate_proxy_interface_init (iface, iface);
 
@@ -1283,9 +1283,9 @@ public class Vala.DBusClientModule : DBusModule {
 		get_prop.add_parameter (new CCodeFormalParameter ("property_id", "guint"));
 		get_prop.add_parameter (new CCodeFormalParameter ("value", "GValue *"));
 		get_prop.add_parameter (new CCodeFormalParameter ("pspec", "GParamSpec *"));
-		source_declarations.add_type_member_declaration (get_prop.copy ());
+		cfile.add_type_member_declaration (get_prop.copy ());
 		get_prop.block = new CCodeBlock ();
-		source_type_member_definition.append (get_prop);
+		cfile.add_function (get_prop);
 
 		var set_prop = new CCodeFunction ("%s_set_property".printf (lower_cname), "void");
 		set_prop.modifiers = CCodeModifiers.STATIC;
@@ -1293,9 +1293,9 @@ public class Vala.DBusClientModule : DBusModule {
 		set_prop.add_parameter (new CCodeFormalParameter ("property_id", "guint"));
 		set_prop.add_parameter (new CCodeFormalParameter ("value", "const GValue *"));
 		set_prop.add_parameter (new CCodeFormalParameter ("pspec", "GParamSpec *"));
-		source_declarations.add_type_member_declaration (set_prop.copy ());
+		cfile.add_type_member_declaration (set_prop.copy ());
 		set_prop.block = new CCodeBlock ();
-		source_type_member_definition.append (set_prop);
+		cfile.add_function (set_prop);
 	}
 
 	public override TypeRegisterFunction create_interface_register_function (Interface iface) {
@@ -1389,10 +1389,10 @@ public class Vala.DBusClientModule : DBusModule {
 
 		block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("_result")));
 
-		source_declarations.add_type_member_declaration (function.copy ());
+		cfile.add_type_member_declaration (function.copy ());
 
 		function.block = block;
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 
 		return get_all_func;
 	}
@@ -1486,9 +1486,9 @@ public class Vala.DBusClientModule : DBusModule {
 
 		filter_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("DBUS_HANDLER_RESULT_NOT_YET_HANDLED")));
 
-		source_declarations.add_type_member_declaration (proxy_filter.copy ());
+		cfile.add_type_member_declaration (proxy_filter.copy ());
 		proxy_filter.block = filter_block;
-		source_type_member_definition.append (proxy_filter);
+		cfile.add_function (proxy_filter);
 	}
 
 	string generate_dbus_signal_handler (Signal sig, ObjectTypeSymbol sym) {
@@ -1594,10 +1594,10 @@ public class Vala.DBusClientModule : DBusModule {
 		cdecl.add_declarator (new CCodeVariableDeclarator ("reply"));
 		block.add_statement (cdecl);
 
-		source_declarations.add_type_member_declaration (function.copy ());
+		cfile.add_type_member_declaration (function.copy ());
 
 		function.block = block;
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 
 		return wrapper_name;
 	}
@@ -1822,7 +1822,7 @@ public class Vala.DBusClientModule : DBusModule {
 
 		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 
-		generate_cparameters (m, source_declarations, cparam_map, function);
+		generate_cparameters (m, cfile, cparam_map, function);
 
 		var block = new CCodeBlock ();
 		var prefragment = new CCodeFragment ();
@@ -1911,9 +1911,9 @@ public class Vala.DBusClientModule : DBusModule {
 			block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("_result")));
 		}
 
-		source_declarations.add_type_member_declaration (function.copy ());
+		cfile.add_type_member_declaration (function.copy ());
 		function.block = block;
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 
 		return proxy_name;
 	}
@@ -1930,7 +1930,7 @@ public class Vala.DBusClientModule : DBusModule {
 
 		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 
-		generate_cparameters (m, source_declarations, cparam_map, function);
+		generate_cparameters (m, cfile, cparam_map, function);
 
 		var block = new CCodeBlock ();
 		var prefragment = new CCodeFragment ();
@@ -2006,9 +2006,9 @@ public class Vala.DBusClientModule : DBusModule {
 
 		block.add_statement (postfragment);
 
-		source_declarations.add_type_member_declaration (function.copy ());
+		cfile.add_type_member_declaration (function.copy ());
 		function.block = block;
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 
 		return proxy_name;
 	}
@@ -2101,8 +2101,8 @@ public class Vala.DBusClientModule : DBusModule {
 		datastruct.add_field ("gpointer", "_user_data_");
 		datastruct.add_field ("DBusPendingCall*", "pending");
 
-		source_declarations.add_type_definition (datastruct);
-		source_declarations.add_type_declaration (new CCodeTypeDefinition ("struct _" + dataname, new CCodeVariableDeclarator (dataname)));
+		cfile.add_type_definition (datastruct);
+		cfile.add_type_declaration (new CCodeTypeDefinition ("struct _" + dataname, new CCodeVariableDeclarator (dataname)));
 
 
 		// generate async function
@@ -2115,7 +2115,7 @@ public class Vala.DBusClientModule : DBusModule {
 		cparam_map.set (get_param_pos (-1), new CCodeFormalParameter ("_callback_", "GAsyncReadyCallback"));
 		cparam_map.set (get_param_pos (-0.9), new CCodeFormalParameter ("_user_data_", "gpointer"));
 
-		generate_cparameters (m, source_declarations, cparam_map, function, null, null, null, 1);
+		generate_cparameters (m, cfile, cparam_map, function, null, null, null, 1);
 
 		var block = new CCodeBlock ();
 		var prefragment = new CCodeFragment ();
@@ -2185,9 +2185,9 @@ public class Vala.DBusClientModule : DBusModule {
 		pending.add_argument (new CCodeConstant ("NULL"));
 		block.add_statement (new CCodeExpressionStatement (pending));
 
-		source_declarations.add_type_member_declaration (function.copy ());
+		cfile.add_type_member_declaration (function.copy ());
 		function.block = block;
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 
 
 		// generate ready function
@@ -2248,9 +2248,9 @@ public class Vala.DBusClientModule : DBusModule {
 		pendingfree.add_argument (new CCodeIdentifier ("pending"));
 		block.add_statement (new CCodeExpressionStatement (pendingfree));
 
-		source_declarations.add_type_member_declaration (function.copy ());
+		cfile.add_type_member_declaration (function.copy ());
 		function.block = block;
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 
 
 		return proxy_name;
@@ -2313,7 +2313,7 @@ public class Vala.DBusClientModule : DBusModule {
 
 		cparam_map.set (get_param_pos (0.1), new CCodeFormalParameter ("_res_", "GAsyncResult*"));
 
-		generate_cparameters (m, source_declarations, cparam_map, function, null, null, null, 2);
+		generate_cparameters (m, cfile, cparam_map, function, null, null, null, 2);
 
 		var block = new CCodeBlock ();
 		var prefragment = new CCodeFragment ();
@@ -2370,9 +2370,9 @@ public class Vala.DBusClientModule : DBusModule {
 			block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("_result")));
 		}
 
-		source_declarations.add_type_member_declaration (function.copy ());
+		cfile.add_type_member_declaration (function.copy ());
 		function.block = block;
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 
 		return proxy_name;
 	}
@@ -2656,9 +2656,9 @@ public class Vala.DBusClientModule : DBusModule {
 			block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("_result")));
 		}
 
-		source_declarations.add_type_member_declaration (function.copy ());
+		cfile.add_type_member_declaration (function.copy ());
 		function.block = block;
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 
 		return proxy_name;
 	}
@@ -2803,9 +2803,9 @@ public class Vala.DBusClientModule : DBusModule {
 		reply_unref.add_argument (new CCodeIdentifier ("_reply"));
 		block.add_statement (new CCodeExpressionStatement (reply_unref));
 
-		source_declarations.add_type_member_declaration (function.copy ());
+		cfile.add_type_member_declaration (function.copy ());
 		function.block = block;
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 
 		return proxy_name;
 	}

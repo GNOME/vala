@@ -32,6 +32,7 @@ libvalaccode_la_VALASOURCES = \
 	valaccodeenumvalue.vala \
 	valaccodeexpression.vala \
 	valaccodeexpressionstatement.vala \
+	valaccodefile.vala \
 	valaccodeformalparameter.vala \
 	valaccodeforstatement.vala \
 	valaccodefragment.vala \

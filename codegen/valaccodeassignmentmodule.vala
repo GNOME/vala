@@ -34,7 +34,7 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 		var prop = (Property) assignment.left.symbol_reference;
 
 		if (!(prop is DynamicProperty)) {
-			generate_property_accessor_declaration (prop.set_accessor, source_declarations);
+			generate_property_accessor_declaration (prop.set_accessor, cfile);
 
 			if (!prop.external && prop.external_package) {
 				// internal VAPI properties
@@ -212,7 +212,7 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 		CCodeExpression rhs = (CCodeExpression) assignment.right.ccodenode;
 		CCodeExpression lhs = (CCodeExpression) get_ccodenode (assignment.left);
 
-		source_declarations.add_include ("string.h");
+		cfile.add_include ("string.h");
 
 		// it is necessary to use memcpy for fixed-length (stack-allocated) arrays
 		// simple assignments do not work in C

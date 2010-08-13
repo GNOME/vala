@@ -41,7 +41,7 @@ public class Vala.DovaMethodCallModule : DovaAssignmentModule {
 			// constructor
 			var cl = (Class) ((ObjectType) itype).type_symbol;
 			m = cl.default_construction_method;
-			generate_method_declaration (m, source_declarations);
+			generate_method_declaration (m, cfile);
 			ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_real_cname ()));
 		} else if (itype is DelegateType) {
 			deleg = ((DelegateType) itype).delegate_symbol;

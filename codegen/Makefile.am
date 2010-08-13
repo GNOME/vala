@@ -20,7 +20,6 @@ libvala_la_VALASOURCES = \
 	valaccodebasemodule.vala \
 	valaccodecompiler.vala \
 	valaccodecontrolflowmodule.vala \
-	valaccodedeclarationspace.vala \
 	valaccodedelegatemodule.vala \
 	valaccodememberaccessmodule.vala \
 	valaccodemethodcallmodule.vala \

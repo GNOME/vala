@@ -28,7 +28,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 	private int next_try_id = 0;
 	private bool is_in_catch = false;
 
-	public override void generate_error_domain_declaration (ErrorDomain edomain, CCodeDeclarationSpace decl_space) {
+	public override void generate_error_domain_declaration (ErrorDomain edomain, CCodeFile decl_space) {
 		if (add_symbol_declaration (decl_space, edomain, edomain.get_cname ())) {
 			return;
 		}
@@ -57,13 +57,13 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 	}
 
 	public override void visit_error_domain (ErrorDomain edomain) {
-		generate_error_domain_declaration (edomain, source_declarations);
+		generate_error_domain_declaration (edomain, cfile);
 
 		if (!edomain.is_internal_symbol ()) {
-			generate_error_domain_declaration (edomain, header_declarations);
+			generate_error_domain_declaration (edomain, header_file);
 		}
 		if (!edomain.is_private_symbol ()) {
-			generate_error_domain_declaration (edomain, internal_header_declarations);
+			generate_error_domain_declaration (edomain, internal_header_file);
 		}
 
 		string quark_fun_name = edomain.get_lower_case_cprefix () + "quark";
@@ -77,7 +77,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		cquark_block.add_statement (new CCodeReturnStatement (cquark_call));
 
 		cquark_fun.block = cquark_block;
-		source_type_member_definition.append (cquark_fun);
+		cfile.add_function (cquark_fun);
 	}
 
 	public override void visit_throw_statement (ThrowStatement stmt) {
@@ -367,7 +367,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 
 		var error_type = (ErrorType) clause.error_type;
 		if (error_type.error_domain != null) {
-			generate_error_domain_declaration (error_type.error_domain, source_declarations);
+			generate_error_domain_declaration (error_type.error_domain, cfile);
 		}
 
 		clause.body.emit (this);

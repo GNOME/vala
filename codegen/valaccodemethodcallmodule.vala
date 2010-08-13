@@ -54,13 +54,13 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			// constructor
 			var cl = (Class) ((ObjectType) itype).type_symbol;
 			m = cl.default_construction_method;
-			generate_method_declaration (m, source_declarations);
+			generate_method_declaration (m, cfile);
 			ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_real_cname ()));
 		} else if (itype is StructValueType) {
 			// constructor
 			var st = (Struct) ((StructValueType) itype).type_symbol;
 			m = st.default_construction_method;
-			generate_method_declaration (m, source_declarations);
+			generate_method_declaration (m, cfile);
 			ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_real_cname ()));
 		} else if (itype is DelegateType) {
 			deleg = ((DelegateType) itype).delegate_symbol;
@@ -769,7 +769,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			temp_vars.add (temp_decl);
 
 			/* memset needs string.h */
-			source_declarations.add_include ("string.h");
+			cfile.add_include ("string.h");
 
 			var clen = get_array_length_cexpression (ma.inner, 1);
 			var celems = (CCodeExpression) ma.inner.ccodenode;

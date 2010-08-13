@@ -92,7 +92,7 @@ public class Vala.DBusServerModule : DBusClientModule {
 		CCodeBlock ready_block = null;
 		if (m.coroutine) {
 			// GAsyncResult
-			source_declarations.add_include ("gio/gio.h");
+			cfile.add_include ("gio/gio.h");
 
 			ready_function = new CCodeFunction (wrapper_name + "_ready", "void");
 			ready_function.modifiers = CCodeModifiers.STATIC;
@@ -406,16 +406,16 @@ public class Vala.DBusServerModule : DBusClientModule {
 			ready_block.add_statement (new CCodeExpressionStatement (free_call));
 		}
 
-		source_declarations.add_type_member_declaration (function.copy ());
+		cfile.add_type_member_declaration (function.copy ());
 
 		function.block = block;
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 
 		if (m.coroutine) {
-			source_declarations.add_type_member_declaration (ready_function.copy ());
+			cfile.add_type_member_declaration (ready_function.copy ());
 
 			ready_function.block = ready_block;
-			source_type_member_definition.append (ready_function);
+			cfile.add_function (ready_function);
 		}
 
 		return wrapper_name;
@@ -489,7 +489,7 @@ public class Vala.DBusServerModule : DBusClientModule {
 
 		foreach (var param in sig.get_parameters ()) {
 			// ensure ccodenode of parameter is set
-			generate_parameter (param, source_declarations, new HashMap<int,CCodeFormalParameter> (), null);
+			generate_parameter (param, cfile, new HashMap<int,CCodeFormalParameter> (), null);
 
 			function.add_parameter ((CCodeFormalParameter) get_ccodenode (param));
 			if (param.variable_type is ArrayType) {
@@ -552,16 +552,16 @@ public class Vala.DBusServerModule : DBusClientModule {
 		message_unref.add_argument (new CCodeIdentifier ("_message"));
 		block.add_statement (new CCodeExpressionStatement (message_unref));
 
-		source_declarations.add_type_member_declaration (function.copy ());
+		cfile.add_type_member_declaration (function.copy ());
 		function.block = block;
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 
 		return wrapper_name;
 	}
 
 	void generate_register_function (ObjectType object_type) {
 		// strcmp
-		source_declarations.add_include ("string.h");
+		cfile.add_include ("string.h");
 
 		var sym = object_type.type_symbol;
 
@@ -576,7 +576,7 @@ public class Vala.DBusServerModule : DBusClientModule {
 			cfunc.modifiers |= CCodeModifiers.STATIC;
 		}
 
-		source_declarations.add_type_member_declaration (cfunc.copy ());
+		cfile.add_type_member_declaration (cfunc.copy ());
 
 		var block = new CCodeBlock ();
 		cfunc.block = block;
@@ -628,7 +628,7 @@ public class Vala.DBusServerModule : DBusClientModule {
 			}
 		}
 
-		source_type_member_definition.append (cfunc);
+		cfile.add_function (cfunc);
 	}
 
 	void generate_unregister_function (ObjectType object_type) {
@@ -638,12 +638,12 @@ public class Vala.DBusServerModule : DBusClientModule {
 		cfunc.add_parameter (new CCodeFormalParameter ("connection", "DBusConnection*"));
 		cfunc.add_parameter (new CCodeFormalParameter ("_user_data_", "void*"));
 
-		source_declarations.add_type_member_declaration (cfunc.copy ());
+		cfile.add_type_member_declaration (cfunc.copy ());
 
 		var block = new CCodeBlock ();
 		cfunc.block = block;
 
-		source_type_member_definition.append (cfunc);
+		cfile.add_function (cfunc);
 	}
 
 	void handle_method (string dbus_iface_name, string dbus_method_name, string handler_name, CCodeBlock block, ref CCodeIfStatement clastif) {
@@ -865,10 +865,10 @@ public class Vala.DBusServerModule : DBusClientModule {
 			handle_reply (block);
 		}
 
-		source_declarations.add_type_member_declaration (function.copy ());
+		cfile.add_type_member_declaration (function.copy ());
 
 		function.block = block;
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 
 		return wrapper_name;
 	}
@@ -1079,10 +1079,10 @@ public class Vala.DBusServerModule : DBusClientModule {
 
 		handle_reply (block);
 
-		source_declarations.add_type_member_declaration (function.copy ());
+		cfile.add_type_member_declaration (function.copy ());
 
 		function.block = block;
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 
 		return wrapper_name;
 	}
@@ -1253,10 +1253,10 @@ public class Vala.DBusServerModule : DBusClientModule {
 			handle_reply (block);
 		}
 
-		source_declarations.add_type_member_declaration (function.copy ());
+		cfile.add_type_member_declaration (function.copy ());
 
 		function.block = block;
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 
 		return wrapper_name;
 	}
@@ -1464,10 +1464,10 @@ public class Vala.DBusServerModule : DBusClientModule {
 
 		handle_reply (block);
 
-		source_declarations.add_type_member_declaration (function.copy ());
+		cfile.add_type_member_declaration (function.copy ());
 
 		function.block = block;
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 
 		return wrapper_name;
 	}
@@ -1509,7 +1509,7 @@ public class Vala.DBusServerModule : DBusClientModule {
 			cfunc.modifiers |= CCodeModifiers.STATIC;
 		}
 
-		source_declarations.add_type_member_declaration (cfunc.copy ());
+		cfile.add_type_member_declaration (cfunc.copy ());
 
 		var block = new CCodeBlock ();
 		cfunc.block = block;
@@ -1586,7 +1586,7 @@ public class Vala.DBusServerModule : DBusClientModule {
 		retblock.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("DBUS_HANDLER_RESULT_NOT_YET_HANDLED")));
 		clastif.false_statement = retblock;
 
-		source_type_member_definition.append (cfunc);
+		cfile.add_function (cfunc);
 	}
 
 	CCodeExpression get_vtable (ObjectType object_type) {
@@ -1600,7 +1600,7 @@ public class Vala.DBusServerModule : DBusClientModule {
 		var cdecl = new CCodeDeclaration ("const _DBusObjectVTable");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("_" + sym.get_lower_case_cprefix () + "dbus_vtable", vtable));
 		cdecl.modifiers = CCodeModifiers.STATIC;
-		source_declarations.add_constant_declaration (cdecl);
+		cfile.add_constant_declaration (cdecl);
 
 		return new CCodeIdentifier ("_" + sym.get_lower_case_cprefix () + "dbus_vtable");
 	}
@@ -1618,7 +1618,7 @@ public class Vala.DBusServerModule : DBusClientModule {
 		var cdecl = new CCodeDeclaration ("const DBusObjectPathVTable");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("_" + sym.get_lower_case_cprefix () + "dbus_path_vtable", vtable));
 		cdecl.modifiers = CCodeModifiers.STATIC;
-		source_declarations.add_constant_declaration (cdecl);
+		cfile.add_constant_declaration (cdecl);
 
 		return new CCodeIdentifier ("_" + sym.get_lower_case_cprefix () + "dbus_path_vtable");
 	}

@@ -43,7 +43,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 
-		generate_cparameters (method, source_declarations, cparam_map, func);
+		generate_cparameters (method, cfile, cparam_map, func);
 
 		var block = new CCodeBlock ();
 		if (dynamic_method.dynamic_type.data_type == dbus_proxy_type) {
@@ -53,10 +53,10 @@ public class Vala.GDBusClientModule : GDBusModule {
 		}
 
 		// append to C source file
-		source_declarations.add_type_member_declaration (func.copy ());
+		cfile.add_type_member_declaration (func.copy ());
 
 		func.block = block;
-		source_type_member_definition.append (func);
+		cfile.add_function (func);
 	}
 
 	void generate_dbus_method_wrapper (Method m, CCodeBlock block) {
@@ -140,9 +140,9 @@ public class Vala.GDBusClientModule : GDBusModule {
 		}
 
 		proxy_iface_init.modifiers = CCodeModifiers.STATIC;
-		source_declarations.add_type_member_declaration (proxy_iface_init.copy ());
+		cfile.add_type_member_declaration (proxy_iface_init.copy ());
 		proxy_iface_init.block = iface_block;
-		source_type_member_definition.append (proxy_iface_init);
+		cfile.add_function (proxy_iface_init);
 	}
 
 	string implement_interface (CCodeFunctionCall define_type, Interface main_iface, Interface iface) {
@@ -162,7 +162,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 		return result;
 	}
 
-	public override void generate_interface_declaration (Interface iface, CCodeDeclarationSpace decl_space) {
+	public override void generate_interface_declaration (Interface iface, CCodeFile decl_space) {
 		base.generate_interface_declaration (iface, decl_space);
 
 		string dbus_iface_name = get_dbus_name (iface);
@@ -194,14 +194,14 @@ public class Vala.GDBusClientModule : GDBusModule {
 			return;
 		}
 
-		source_declarations.add_include ("gio/gio.h");
+		cfile.add_include ("gio/gio.h");
 
 		// create proxy class
 		string cname = iface.get_cname () + "Proxy";
 		string lower_cname = iface.get_lower_case_cprefix () + "proxy";
 
-		source_declarations.add_type_declaration (new CCodeTypeDefinition ("GDBusProxy", new CCodeVariableDeclarator (cname)));
-		source_declarations.add_type_declaration (new CCodeTypeDefinition ("GDBusProxyClass", new CCodeVariableDeclarator (cname + "Class")));
+		cfile.add_type_declaration (new CCodeTypeDefinition ("GDBusProxy", new CCodeVariableDeclarator (cname)));
+		cfile.add_type_declaration (new CCodeTypeDefinition ("GDBusProxyClass", new CCodeVariableDeclarator (cname + "Class")));
 
 		var define_type = new CCodeFunctionCall (new CCodeIdentifier ("G_DEFINE_TYPE_EXTENDED"));
 		define_type.add_argument (new CCodeIdentifier (cname));
@@ -210,7 +210,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 		define_type.add_argument (new CCodeConstant ("0"));
 		define_type.add_argument (new CCodeIdentifier (implement_interface (define_type, iface, iface)));
 
-		source_type_member_definition.append (new CCodeExpressionStatement (define_type));
+		cfile.add_type_member_definition (new CCodeExpressionStatement (define_type));
 
 		var proxy_class_init = new CCodeFunction (lower_cname + "_class_init", "void");
 		proxy_class_init.add_parameter (new CCodeFormalParameter ("klass", cname + "Class*"));
@@ -219,7 +219,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 		var proxy_class = new CCodeFunctionCall (new CCodeIdentifier ("G_DBUS_PROXY_CLASS"));
 		proxy_class.add_argument (new CCodeIdentifier ("klass"));
 		proxy_class_init.block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (proxy_class, "g_signal"), new CCodeIdentifier (lower_cname + "_g_signal"))));
-		source_type_member_definition.append (proxy_class_init);
+		cfile.add_function (proxy_class_init);
 
 		generate_signal_handler_function (iface);
 
@@ -227,7 +227,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 		proxy_instance_init.add_parameter (new CCodeFormalParameter ("self", cname + "*"));
 		proxy_instance_init.modifiers = CCodeModifiers.STATIC;
 		proxy_instance_init.block = new CCodeBlock ();
-		source_type_member_definition.append (proxy_instance_init);
+		cfile.add_function (proxy_instance_init);
 
 		generate_proxy_interface_init (iface, iface);
 	}
@@ -356,10 +356,10 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		block.add_statement (postfragment);
 
-		source_declarations.add_type_member_declaration (function.copy ());
+		cfile.add_type_member_declaration (function.copy ());
 
 		function.block = block;
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 
 		return wrapper_name;
 	}
@@ -373,7 +373,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		cfunc.modifiers |= CCodeModifiers.STATIC;
 
-		source_declarations.add_type_member_declaration (cfunc.copy ());
+		cfile.add_type_member_declaration (cfunc.copy ());
 
 		var block = new CCodeBlock ();
 		cfunc.block = block;
@@ -407,7 +407,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 			clastif = cif;
 		}
 
-		source_type_member_definition.append (cfunc);
+		cfile.add_function (cfunc);
 	}
 
 	void generate_marshalling (Method m, CCodeFragment prefragment, CCodeFragment postfragment) {
@@ -516,7 +516,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 
-		generate_cparameters (m, source_declarations, cparam_map, function);
+		generate_cparameters (m, cfile, cparam_map, function);
 
 		var block = new CCodeBlock ();
 		var prefragment = new CCodeFragment ();
@@ -560,9 +560,9 @@ public class Vala.GDBusClientModule : GDBusModule {
 			block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("_result")));
 		}
 
-		source_declarations.add_type_member_declaration (function.copy ());
+		cfile.add_type_member_declaration (function.copy ());
 		function.block = block;
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 
 		return proxy_name;
 	}
@@ -582,7 +582,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 		cparam_map.set (get_param_pos (-1), new CCodeFormalParameter ("_callback_", "GAsyncReadyCallback"));
 		cparam_map.set (get_param_pos (-0.9), new CCodeFormalParameter ("_user_data_", "gpointer"));
 
-		generate_cparameters (m, source_declarations, cparam_map, function, null, null, null, 1);
+		generate_cparameters (m, cfile, cparam_map, function, null, null, null, 1);
 
 		var block = new CCodeBlock ();
 		var prefragment = new CCodeFragment ();
@@ -607,9 +607,9 @@ public class Vala.GDBusClientModule : GDBusModule {
 		ccall.add_argument (new CCodeIdentifier ("_user_data_"));
 		block.add_statement (new CCodeExpressionStatement (ccall));
 
-		source_declarations.add_type_member_declaration (function.copy ());
+		cfile.add_type_member_declaration (function.copy ());
 		function.block = block;
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 
 		return proxy_name;
 	}
@@ -626,7 +626,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		cparam_map.set (get_param_pos (0.1), new CCodeFormalParameter ("_res_", "GAsyncResult*"));
 
-		generate_cparameters (m, source_declarations, cparam_map, function, null, null, null, 2);
+		generate_cparameters (m, cfile, cparam_map, function, null, null, null, 2);
 
 		var block = new CCodeBlock ();
 		var prefragment = new CCodeFragment ();
@@ -663,9 +663,9 @@ public class Vala.GDBusClientModule : GDBusModule {
 			block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("_result")));
 		}
 
-		source_declarations.add_type_member_declaration (function.copy ());
+		cfile.add_type_member_declaration (function.copy ());
 		function.block = block;
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 
 		return proxy_name;
 	}
@@ -804,9 +804,9 @@ public class Vala.GDBusClientModule : GDBusModule {
 			block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("_result")));
 		}
 
-		source_declarations.add_type_member_declaration (function.copy ());
+		cfile.add_type_member_declaration (function.copy ());
 		function.block = block;
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 
 		return proxy_name;
 	}
@@ -904,9 +904,9 @@ public class Vala.GDBusClientModule : GDBusModule {
 		unref_reply.add_argument (new CCodeIdentifier ("_reply"));
 		block.add_statement (new CCodeExpressionStatement (unref_reply));
 
-		source_declarations.add_type_member_declaration (function.copy ());
+		cfile.add_type_member_declaration (function.copy ());
 		function.block = block;
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 
 		return proxy_name;
 	}

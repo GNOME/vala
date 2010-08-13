@@ -46,13 +46,13 @@ public class Vala.GDBusModule : GVariantModule {
 			return;
 		}
 
-		generate_error_domain_declaration (edomain, source_declarations);
+		generate_error_domain_declaration (edomain, cfile);
 
 		if (!edomain.is_internal_symbol ()) {
-			generate_error_domain_declaration (edomain, header_declarations);
+			generate_error_domain_declaration (edomain, header_file);
 		}
 		if (!edomain.is_private_symbol ()) {
-			generate_error_domain_declaration (edomain, internal_header_declarations);
+			generate_error_domain_declaration (edomain, internal_header_file);
 		}
 
 		var error_entries = new CCodeInitializerList ();
@@ -71,7 +71,7 @@ public class Vala.GDBusModule : GVariantModule {
 		var cdecl = new CCodeDeclaration ("const GDBusErrorEntry");
 		cdecl.add_declarator (new CCodeVariableDeclarator (edomain.get_lower_case_cname () + "_entries[]", error_entries));
 		cdecl.modifiers = CCodeModifiers.STATIC;
-		source_declarations.add_constant_declaration (cdecl);
+		cfile.add_constant_declaration (cdecl);
 
 		string quark_fun_name = edomain.get_lower_case_cprefix () + "quark";
 
@@ -97,7 +97,7 @@ public class Vala.GDBusModule : GVariantModule {
 		cquark_block.add_statement (new CCodeReturnStatement (new CCodeCastExpression (new CCodeIdentifier (quark_name), "GQuark")));
 
 		cquark_fun.block = cquark_block;
-		source_type_member_definition.append (cquark_fun);
+		cfile.add_function (cquark_fun);
 	}
 
 	public override CCodeFragment register_dbus_info (ObjectTypeSymbol sym) {

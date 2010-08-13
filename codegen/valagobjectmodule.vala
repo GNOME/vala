@@ -209,13 +209,13 @@ public class Vala.GObjectModule : GTypeModule {
 				prefix = base_type.get_lower_case_cname (null);
 				cself = transform_expression (cself, new ObjectType (cl), new ObjectType (base_type));
 
-				generate_property_accessor_declaration (prop.base_property.get_accessor, source_declarations);
+				generate_property_accessor_declaration (prop.base_property.get_accessor, cfile);
 			} else if (prop.base_interface_property != null) {
 				var base_type = (Interface) prop.base_interface_property.parent_symbol;
 				prefix = base_type.get_lower_case_cname (null);
 				cself = transform_expression (cself, new ObjectType (cl), new ObjectType (base_type));
 
-				generate_property_accessor_declaration (prop.base_interface_property.get_accessor, source_declarations);
+				generate_property_accessor_declaration (prop.base_interface_property.get_accessor, cfile);
 			}
 
 			cswitch.add_statement (new CCodeCaseStatement (new CCodeIdentifier (prop.get_upper_case_cname ())));
@@ -274,11 +274,11 @@ public class Vala.GObjectModule : GTypeModule {
 
 		block.add_statement (cswitch);
 
-		source_declarations.add_type_member_declaration (get_prop.copy ());
+		cfile.add_type_member_declaration (get_prop.copy ());
 
 		get_prop.block = block;
 		
-		source_type_member_definition.append (get_prop);
+		cfile.add_function (get_prop);
 	}
 	
 	private void add_set_property_function (Class cl) {
@@ -315,13 +315,13 @@ public class Vala.GObjectModule : GTypeModule {
 				prefix = base_type.get_lower_case_cname (null);
 				cself = transform_expression (cself, new ObjectType (cl), new ObjectType (base_type));
 
-				generate_property_accessor_declaration (prop.base_property.set_accessor, source_declarations);
+				generate_property_accessor_declaration (prop.base_property.set_accessor, cfile);
 			} else if (prop.base_interface_property != null) {
 				var base_type = (Interface) prop.base_interface_property.parent_symbol;
 				prefix = base_type.get_lower_case_cname (null);
 				cself = transform_expression (cself, new ObjectType (cl), new ObjectType (base_type));
 
-				generate_property_accessor_declaration (prop.base_interface_property.set_accessor, source_declarations);
+				generate_property_accessor_declaration (prop.base_interface_property.set_accessor, cfile);
 			}
 
 			cswitch.add_statement (new CCodeCaseStatement (new CCodeIdentifier (prop.get_upper_case_cname ())));
@@ -395,11 +395,11 @@ public class Vala.GObjectModule : GTypeModule {
 			cswitch.add_statement (new CCodeBreakStatement ());
 		}
 
-		source_declarations.add_type_member_declaration (set_prop.copy ());
+		cfile.add_type_member_declaration (set_prop.copy ());
 
 		set_prop.block = block;
 		
-		source_type_member_definition.append (set_prop);
+		cfile.add_function (set_prop);
 	}
 
 	private CCodeStatement get_invalid_property_id_warn_statement () {
@@ -475,7 +475,7 @@ public class Vala.GObjectModule : GTypeModule {
 			function.add_parameter (new CCodeFormalParameter ("n_construct_properties", "guint"));
 			function.add_parameter (new CCodeFormalParameter ("construct_properties", "GObjectConstructParam *"));
 		
-			source_declarations.add_type_member_declaration (function.copy ());
+			cfile.add_type_member_declaration (function.copy ());
 
 
 			var cblock = new CCodeBlock ();
@@ -522,7 +522,7 @@ public class Vala.GObjectModule : GTypeModule {
 		
 			function.block = cblock;
 
-			source_type_member_definition.append (function);
+			cfile.add_function (function);
 		} else if (c.binding == MemberBinding.CLASS) {
 			// class constructor
 
@@ -586,10 +586,10 @@ public class Vala.GObjectModule : GTypeModule {
 		generate_gobject_property_getter_wrapper (prop, block);
 
 		// append to C source file
-		source_declarations.add_type_member_declaration (func.copy ());
+		cfile.add_type_member_declaration (func.copy ());
 
 		func.block = block;
-		source_type_member_definition.append (func);
+		cfile.add_function (func);
 
 		return getter_cname;
 	}
@@ -612,10 +612,10 @@ public class Vala.GObjectModule : GTypeModule {
 		generate_gobject_property_setter_wrapper (prop, block);
 
 		// append to C source file
-		source_declarations.add_type_member_declaration (func.copy ());
+		cfile.add_type_member_declaration (func.copy ());
 
 		func.block = block;
-		source_type_member_definition.append (func);
+		cfile.add_function (func);
 
 		return setter_cname;
 	}
@@ -666,10 +666,10 @@ public class Vala.GObjectModule : GTypeModule {
 		generate_gobject_connect_wrapper (sig, block, false);
 
 		// append to C source file
-		source_declarations.add_type_member_declaration (func.copy ());
+		cfile.add_type_member_declaration (func.copy ());
 
 		func.block = block;
-		source_type_member_definition.append (func);
+		cfile.add_function (func);
 
 		return connect_wrapper_name;
 	}
@@ -690,10 +690,10 @@ public class Vala.GObjectModule : GTypeModule {
 		generate_gobject_connect_wrapper (sig, block, true);
 
 		// append to C source file
-		source_declarations.add_type_member_declaration (func.copy ());
+		cfile.add_type_member_declaration (func.copy ());
 
 		func.block = block;
-		source_type_member_definition.append (func);
+		cfile.add_function (func);
 
 		return connect_wrapper_name;
 	}

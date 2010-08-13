@@ -25,7 +25,7 @@
 using GLib;
 
 public class Vala.CCodeStructModule : CCodeBaseModule {
-	public override void generate_struct_declaration (Struct st, CCodeDeclarationSpace decl_space) {
+	public override void generate_struct_declaration (Struct st, CCodeFile decl_space) {
 		if (add_symbol_declaration (decl_space, st, st.get_cname ())) {
 			return;
 		}
@@ -145,13 +145,13 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 		var old_instance_finalize_fragment = instance_finalize_fragment;
 		instance_finalize_fragment = new CCodeFragment ();
 
-		generate_struct_declaration (st, source_declarations);
+		generate_struct_declaration (st, cfile);
 
 		if (!st.is_internal_symbol ()) {
-			generate_struct_declaration (st, header_declarations);
+			generate_struct_declaration (st, header_file);
 		}
 		if (!st.is_private_symbol ()) {
-			generate_struct_declaration (st, internal_header_declarations);
+			generate_struct_declaration (st, internal_header_file);
 		}
 
 		st.accept_children (this);
@@ -196,7 +196,7 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 			copy_call.add_argument (new CCodeIdentifier ("dup"));
 			cblock.add_statement (new CCodeExpressionStatement (copy_call));
 		} else {
-			source_declarations.add_include ("string.h");
+			cfile.add_include ("string.h");
 
 			var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
 			sizeof_call.add_argument (new CCodeConstant (st.get_cname ()));
@@ -212,7 +212,7 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 
 		function.block = cblock;
 
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 	}
 
 	void add_struct_free_function (Struct st) {
@@ -237,7 +237,7 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 
 		function.block = cblock;
 
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 	}
 
 	void add_struct_copy_function (Struct st) {
@@ -269,7 +269,7 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 				var array_type = f.variable_type as ArrayType;
 				if (array_type != null && array_type.fixed_length) {
 					// fixed-length (stack-allocated) arrays
-					source_declarations.add_include ("string.h");
+					cfile.add_include ("string.h");
 
 					var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
 					sizeof_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
@@ -299,7 +299,7 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 
 		function.block = cblock;
 
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 	}
 
 	void add_struct_destroy_function (Struct st) {
@@ -316,7 +316,7 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 
 		function.block = cblock;
 
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 	}
 }
 

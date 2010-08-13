@@ -27,7 +27,7 @@
  * The link between an assignment and generated code.
  */
 public class Vala.CCodeDelegateModule : CCodeArrayModule {
-	public override void generate_delegate_declaration (Delegate d, CCodeDeclarationSpace decl_space) {
+	public override void generate_delegate_declaration (Delegate d, CCodeFile decl_space) {
 		if (add_symbol_declaration (decl_space, d, d.get_cname ())) {
 			return;
 		}
@@ -114,13 +114,13 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 	public override void visit_delegate (Delegate d) {
 		d.accept_children (this);
 
-		generate_delegate_declaration (d, source_declarations);
+		generate_delegate_declaration (d, cfile);
 
 		if (!d.is_internal_symbol ()) {
-			generate_delegate_declaration (d, header_declarations);
+			generate_delegate_declaration (d, header_file);
 		}
 		if (!d.is_private_symbol ()) {
-			generate_delegate_declaration (d, internal_header_declarations);
+			generate_delegate_declaration (d, internal_header_file);
 		}
 	}
 
@@ -388,7 +388,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 
 		if (d.sender_type != null) {
 			var param = new FormalParameter ("_sender", d.sender_type);
-			generate_parameter (param, source_declarations, cparam_map, null);
+			generate_parameter (param, cfile, cparam_map, null);
 		}
 
 		var d_params = d.get_parameters ();
@@ -401,7 +401,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 				param.array_null_terminated = true;
 			}
 
-			generate_parameter (param, source_declarations, cparam_map, null);
+			generate_parameter (param, cfile, cparam_map, null);
 		}
 		if (!d.no_array_length && d.return_type is ArrayType) {
 			// return array length if appropriate
@@ -600,15 +600,15 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 
 		// append to file
 
-		source_declarations.add_type_member_declaration (function.copy ());
+		cfile.add_type_member_declaration (function.copy ());
 
 		function.block = block;
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 
 		return wrapper_name;
 	}
 
-	public override void generate_parameter (FormalParameter param, CCodeDeclarationSpace decl_space, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
+	public override void generate_parameter (FormalParameter param, CCodeFile decl_space, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
 		if (!(param.variable_type is DelegateType || param.variable_type is MethodType)) {
 			base.generate_parameter (param, decl_space, cparam_map, carg_map);
 			return;

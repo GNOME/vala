@@ -61,7 +61,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		return result;
 	}
 
-	public virtual void generate_method_result_declaration (Method m, CCodeDeclarationSpace decl_space, CCodeFunction cfunc, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
+	public virtual void generate_method_result_declaration (Method m, CCodeFile decl_space, CCodeFunction cfunc, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
 		var creturn_type = m.return_type;
 		if (m is CreationMethod) {
 			var cl = m.parent_symbol as Class;
@@ -158,7 +158,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		return complete_block;
 	}
 
-	public override void generate_method_declaration (Method m, CCodeDeclarationSpace decl_space) {
+	public override void generate_method_declaration (Method m, CCodeFile decl_space) {
 		if (m.is_async_callback) {
 			return;
 		}
@@ -318,18 +318,18 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		// do not declare overriding methods and interface implementations
 		if (m.is_abstract || m.is_virtual
 		    || (m.base_method == null && m.base_interface_method == null)) {
-			generate_method_declaration (m, source_declarations);
+			generate_method_declaration (m, cfile);
 
 			if (!m.is_internal_symbol ()) {
-				generate_method_declaration (m, header_declarations);
+				generate_method_declaration (m, header_file);
 			}
 			if (!m.is_private_symbol ()) {
-				generate_method_declaration (m, internal_header_declarations);
+				generate_method_declaration (m, internal_header_file);
 			}
 		}
 
 		if (m.comment != null) {
-			source_type_member_definition.append (new CCodeComment (m.comment.content));
+			cfile.add_type_member_definition (new CCodeComment (m.comment.content));
 		}
 
 		CCodeFunction function;
@@ -342,7 +342,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 
 		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 
-		generate_cparameters (m, source_declarations, cparam_map, function);
+		generate_cparameters (m, cfile, cparam_map, function);
 
 		// generate *_real_* functions for virtual methods
 		// also generate them for abstract methods of classes to prevent faulty subclassing
@@ -351,7 +351,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 				if (m.base_method != null || m.base_interface_method != null) {
 					// declare *_real_* function
 					function.modifiers |= CCodeModifiers.STATIC;
-					source_declarations.add_type_member_declaration (function.copy ());
+					cfile.add_type_member_declaration (function.copy ());
 				} else if (m.is_private_symbol ()) {
 					function.modifiers |= CCodeModifiers.STATIC;
 				}
@@ -371,7 +371,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 					function.add_parameter (new CCodeFormalParameter ("data", Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data*"));
 
 					function.modifiers |= CCodeModifiers.STATIC;
-					source_declarations.add_type_member_declaration (function.copy ());
+					cfile.add_type_member_declaration (function.copy ());
 				}
 			}
 		}
@@ -590,7 +590,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 						var st = (Struct) m.parent_symbol;
 
 						// memset needs string.h
-						source_declarations.add_include ("string.h");
+						cfile.add_include ("string.h");
 						var czero = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
 						czero.add_argument (new CCodeIdentifier ("self"));
 						czero.add_argument (new CCodeConstant ("0"));
@@ -655,7 +655,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 					}
 				}
 
-				source_type_member_definition.append (function);
+				cfile.add_function (function);
 			} else if (m.is_abstract) {
 				// generate helpful error message if a sublcass does not implement an abstract method.
 				// This is only meaningful for subclasses implemented in C since the vala compiler would
@@ -688,7 +688,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 				cblock.add_statement (new CCodeReturnStatement (default_value_for_type (creturn_type, false)));
 
 				function.block = cblock;
-				source_type_member_definition.append (function);
+				cfile.add_function (function);
 			}
 		}
 
@@ -755,11 +755,11 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 				main_block.add_statement (main_stmt);
 			}
 			cmain.block = main_block;
-			source_type_member_definition.append (cmain);
+			cfile.add_function (cmain);
 		}
 	}
 
-	public virtual void generate_parameter (FormalParameter param, CCodeDeclarationSpace decl_space, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
+	public virtual void generate_parameter (FormalParameter param, CCodeFile decl_space, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
 		if (!param.ellipsis) {
 			string ctypename = param.variable_type.get_cname ();
 
@@ -794,7 +794,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		}
 	}
 
-	public override void generate_cparameters (Method m, CCodeDeclarationSpace decl_space, Map<int,CCodeFormalParameter> cparam_map, CCodeFunction func, CCodeFunctionDeclarator? vdeclarator = null, Map<int,CCodeExpression>? carg_map = null, CCodeFunctionCall? vcall = null, int direction = 3) {
+	public override void generate_cparameters (Method m, CCodeFile decl_space, Map<int,CCodeFormalParameter> cparam_map, CCodeFunction func, CCodeFunctionDeclarator? vdeclarator = null, Map<int,CCodeExpression>? carg_map = null, CCodeFunctionCall? vcall = null, int direction = 3) {
 		if (m.closure) {
 			var closure_block = current_closure_block;
 			int block_id = get_block_id (closure_block);
@@ -960,7 +960,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		var vcall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, cname + suffix));
 		carg_map.set (get_param_pos (m.cinstance_parameter_position), new CCodeIdentifier ("self"));
 
-		generate_cparameters (m, source_declarations, cparam_map, vfunc, null, carg_map, vcall, direction);
+		generate_cparameters (m, cfile, cparam_map, vfunc, null, carg_map, vcall, direction);
 
 		CCodeStatement cstmt;
 		if (return_type is VoidType || return_type.is_real_non_null_struct_type ()) {
@@ -991,7 +991,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 
 		vfunc.block = vblock;
 
-		source_type_member_definition.append (vfunc);
+		cfile.add_function (vfunc);
 	}
 
 	private CCodeStatement? create_method_type_check_statement (Method m, DataType return_type, TypeSymbol t, bool non_null, string var_name) {
@@ -1088,7 +1088,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 			var vcall = new CCodeFunctionCall (new CCodeIdentifier (m.get_real_cname ()));
 			vcall.add_argument (new CCodeIdentifier (current_class.get_type_id ()));
 
-			generate_cparameters (m, source_declarations, cparam_map, vfunc, null, carg_map, vcall);
+			generate_cparameters (m, cfile, cparam_map, vfunc, null, carg_map, vcall);
 			CCodeStatement cstmt = new CCodeReturnStatement (vcall);
 			cstmt.line = vfunc.line;
 			vblock.add_statement (cstmt);
@@ -1099,7 +1099,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 
 			vfunc.block = vblock;
 
-			source_type_member_definition.append (vfunc);
+			cfile.add_function (vfunc);
 		}
 
 		if (current_type_symbol is Class && gobject_type != null && current_class.is_subtype_of (gobject_type)

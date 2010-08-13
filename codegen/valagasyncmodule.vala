@@ -270,12 +270,12 @@ public class Vala.GAsyncModule : GSignalModule {
 		cparam_map.set (get_param_pos (-1), new CCodeFormalParameter ("_callback_", "GAsyncReadyCallback"));
 		cparam_map.set (get_param_pos (-0.9), new CCodeFormalParameter ("_user_data_", "gpointer"));
 
-		generate_cparameters (m, source_declarations, cparam_map, asyncfunc, null, null, null, 1);
+		generate_cparameters (m, cfile, cparam_map, asyncfunc, null, null, null, 1);
 
 		if (m.base_method != null || m.base_interface_method != null) {
 			// declare *_real_* function
 			asyncfunc.modifiers |= CCodeModifiers.STATIC;
-			source_declarations.add_type_member_declaration (asyncfunc.copy ());
+			cfile.add_type_member_declaration (asyncfunc.copy ());
 		} else if (m.is_private_symbol ()) {
 			asyncfunc.modifiers |= CCodeModifiers.STATIC;
 		}
@@ -288,21 +288,21 @@ public class Vala.GAsyncModule : GSignalModule {
 	void append_struct (CCodeStruct structure) {
 		var typename = new CCodeVariableDeclarator (structure.name.substring (1));
 		var typedef = new CCodeTypeDefinition ("struct " + structure.name, typename);
-		source_declarations.add_type_declaration (typedef);
-		source_declarations.add_type_definition (structure);
+		cfile.add_type_declaration (typedef);
+		cfile.add_type_definition (structure);
 	}
 
 	void append_function (CCodeFunction function) {
 		var block = function.block;
 		function.block = null;
  
-		source_declarations.add_type_member_declaration (function.copy ());
+		cfile.add_type_member_declaration (function.copy ());
 
 		function.block = block;
-		source_type_member_definition.append (function);
+		cfile.add_function (function);
 	}
 
-	public override void generate_method_declaration (Method m, CCodeDeclarationSpace decl_space) {
+	public override void generate_method_declaration (Method m, CCodeFile decl_space) {
 		if (m.coroutine) {
 			if (add_symbol_declaration (decl_space, m, m.get_cname ())) {
 				return;
@@ -339,17 +339,17 @@ public class Vala.GAsyncModule : GSignalModule {
 
 	public override void visit_method (Method m) {
 		if (m.coroutine) {
-			source_declarations.add_include ("gio/gio.h");
+			cfile.add_include ("gio/gio.h");
 			if (!m.is_internal_symbol ()) {
-				header_declarations.add_include ("gio/gio.h");
+				header_file.add_include ("gio/gio.h");
 			}
 
 			if (!m.is_abstract && m.body != null) {
 				var data = generate_data_struct (m);
 
 				append_function (generate_free_function (m));
-				source_type_member_definition.append (generate_async_function (m));
-				source_type_member_definition.append (generate_finish_function (m));
+				cfile.add_function (generate_async_function (m));
+				cfile.add_function (generate_finish_function (m));
 				append_function (generate_ready_function (m));
 
 				// append the _co function
@@ -361,13 +361,13 @@ public class Vala.GAsyncModule : GSignalModule {
 				// types are declared before the struct definition
 				append_struct (data);
 			} else {
-				generate_method_declaration (m, source_declarations);
+				generate_method_declaration (m, cfile);
 
 				if (!m.is_internal_symbol ()) {
-					generate_method_declaration (m, header_declarations);
+					generate_method_declaration (m, header_file);
 				}
 				if (!m.is_private_symbol ()) {
-					generate_method_declaration (m, internal_header_declarations);
+					generate_method_declaration (m, internal_header_file);
 				}
 			}
 
@@ -471,7 +471,7 @@ public class Vala.GAsyncModule : GSignalModule {
 
 		cparam_map.set (get_param_pos (0.1), new CCodeFormalParameter ("_res_", "GAsyncResult*"));
 
-		generate_cparameters (m, source_declarations, cparam_map, finishfunc, null, null, null, 2);
+		generate_cparameters (m, cfile, cparam_map, finishfunc, null, null, null, 2);
 
 		if (m.is_private_symbol () || m.base_method != null || m.base_interface_method != null) {
 			finishfunc.modifiers |= CCodeModifiers.STATIC;
@@ -511,7 +511,7 @@ public class Vala.GAsyncModule : GSignalModule {
 		return readyfunc;
 	}
 
-	public override void generate_virtual_method_declaration (Method m, CCodeDeclarationSpace decl_space, CCodeStruct type_struct) {
+	public override void generate_virtual_method_declaration (Method m, CCodeFile decl_space, CCodeStruct type_struct) {
 		if (!m.coroutine) {
 			base.generate_virtual_method_declaration (m, decl_space, type_struct);
 			return;
@@ -652,7 +652,7 @@ public class Vala.GAsyncModule : GSignalModule {
 		cfrag.append (complete_async ());
 	}
 
-	public override void generate_cparameters (Method m, CCodeDeclarationSpace decl_space, Map<int,CCodeFormalParameter> cparam_map, CCodeFunction func, CCodeFunctionDeclarator? vdeclarator = null, Map<int,CCodeExpression>? carg_map = null, CCodeFunctionCall? vcall = null, int direction = 3) {
+	public override void generate_cparameters (Method m, CCodeFile decl_space, Map<int,CCodeFormalParameter> cparam_map, CCodeFunction func, CCodeFunctionDeclarator? vdeclarator = null, Map<int,CCodeExpression>? carg_map = null, CCodeFunctionCall? vcall = null, int direction = 3) {
 		if (m.coroutine) {
 			decl_space.add_include ("gio/gio.h");
 

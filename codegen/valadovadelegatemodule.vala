@@ -25,7 +25,7 @@
  * The link between a delegate and generated code.
  */
 public class Vala.DovaDelegateModule : DovaValueModule {
-	public override void generate_delegate_declaration (Delegate d, CCodeDeclarationSpace decl_space) {
+	public override void generate_delegate_declaration (Delegate d, CCodeFile decl_space) {
 		if (add_symbol_declaration (decl_space, d, d.get_cname ())) {
 			return;
 		}
@@ -60,7 +60,7 @@ public class Vala.DovaDelegateModule : DovaValueModule {
 		decl_space.add_type_member_declaration (function);
 	}
 
-	CCodeFunction generate_new_function (Delegate d, CCodeDeclarationSpace decl_space) {
+	CCodeFunction generate_new_function (Delegate d, CCodeFile decl_space) {
 		var function = new CCodeFunction ("%s_new".printf (d.get_lower_case_cname ()), "%s*".printf (d.get_cname ()));
 		if (d.is_internal_symbol ()) {
 			function.modifiers |= CCodeModifiers.STATIC;
@@ -93,7 +93,7 @@ public class Vala.DovaDelegateModule : DovaValueModule {
 		return function;
 	}
 
-	CCodeFunction generate_invoke_function (Delegate d, CCodeDeclarationSpace decl_space) {
+	CCodeFunction generate_invoke_function (Delegate d, CCodeFile decl_space) {
 		var function = new CCodeFunction ("%s_invoke".printf (d.get_lower_case_cname ()));
 
 		if (d.is_internal_symbol ()) {
@@ -187,10 +187,10 @@ public class Vala.DovaDelegateModule : DovaValueModule {
 	public override void visit_delegate (Delegate d) {
 		d.accept_children (this);
 
-		generate_delegate_declaration (d, source_declarations);
+		generate_delegate_declaration (d, cfile);
 
 		if (!d.is_internal_symbol ()) {
-			generate_delegate_declaration (d, header_declarations);
+			generate_delegate_declaration (d, header_file);
 		}
 
 		generate_type_get_function (d, delegate_class);
@@ -199,23 +199,23 @@ public class Vala.DovaDelegateModule : DovaValueModule {
 
 		instance_priv_struct.add_field ("void", "(*method) (void)");
 
-		source_declarations.add_type_declaration (new CCodeTypeDefinition ("struct %s".printf (instance_priv_struct.name), new CCodeVariableDeclarator ("%sPrivate".printf (d.get_cname ()))));
-		source_declarations.add_type_definition (instance_priv_struct);
+		cfile.add_type_declaration (new CCodeTypeDefinition ("struct %s".printf (instance_priv_struct.name), new CCodeVariableDeclarator ("%sPrivate".printf (d.get_cname ()))));
+		cfile.add_type_definition (instance_priv_struct);
 
 		string macro = "((%sPrivate *) (((char *) o) + _%s_object_offset))".printf (d.get_cname (), d.get_lower_case_cname ());
-		source_declarations.add_type_member_declaration (new CCodeMacroReplacement ("%s_GET_PRIVATE(o)".printf (d.get_upper_case_cname (null)), macro));
+		cfile.add_type_member_declaration (new CCodeMacroReplacement ("%s_GET_PRIVATE(o)".printf (d.get_upper_case_cname (null)), macro));
 
 		var cdecl = new CCodeDeclaration ("int");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("_%s_object_offset".printf (d.get_lower_case_cname ()), new CCodeConstant ("0")));
 		cdecl.modifiers = CCodeModifiers.STATIC;
-		source_declarations.add_type_member_declaration (cdecl);
+		cfile.add_type_member_declaration (cdecl);
 
 		cdecl = new CCodeDeclaration ("int");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("_%s_type_offset".printf (d.get_lower_case_cname ()), new CCodeConstant ("0")));
 		cdecl.modifiers = CCodeModifiers.STATIC;
-		source_declarations.add_type_member_declaration (cdecl);
+		cfile.add_type_member_declaration (cdecl);
 
-		source_type_member_definition.append (generate_new_function (d, source_declarations));
-		source_type_member_definition.append (generate_invoke_function (d, source_declarations));
+		cfile.add_function (generate_new_function (d, cfile));
+		cfile.add_function (generate_invoke_function (d, cfile));
 	}
 }

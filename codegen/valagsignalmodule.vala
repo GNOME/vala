@@ -202,7 +202,7 @@ public class Vala.GSignalModule : GObjectModule {
 
 		// declare parameter type
 		foreach (FormalParameter p in sig.get_parameters ()) {
-			generate_parameter (p, source_declarations, new HashMap<int,CCodeFormalParameter> (), null);
+			generate_parameter (p, cfile, new HashMap<int,CCodeFormalParameter> (), null);
 		}
 
 		generate_marshaller (sig.get_parameters (), sig.return_type);
@@ -228,7 +228,7 @@ public class Vala.GSignalModule : GObjectModule {
 		signal_marshaller.add_parameter (new CCodeFormalParameter ("invocation_hint", "gpointer"));
 		signal_marshaller.add_parameter (new CCodeFormalParameter ("marshal_data", "gpointer"));
 		
-		source_signal_marshaller_declaration.append (signal_marshaller.copy ());
+		cfile.add_type_member_declaration (signal_marshaller.copy ());
 		
 		var marshaller_body = new CCodeBlock ();
 		
@@ -384,7 +384,7 @@ public class Vala.GSignalModule : GObjectModule {
 		
 		signal_marshaller.block = marshaller_body;
 		
-		source_signal_marshaller_definition.append (signal_marshaller);
+		cfile.add_function (signal_marshaller);
 		user_marshal_set.add (signature);
 	}
 
