@@ -22,7 +22,7 @@
 
 public class Vala.DovaObjectModule : DovaArrayModule {
 	public override void generate_class_declaration (Class cl, CCodeDeclarationSpace decl_space) {
-		if (decl_space.add_symbol_declaration (cl, cl.get_cname ())) {
+		if (add_symbol_declaration (decl_space, cl, cl.get_cname ())) {
 			return;
 		}
 
@@ -137,7 +137,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 	}
 
 	void generate_class_private_declaration (Class cl, CCodeDeclarationSpace decl_space) {
-		if (decl_space.add_symbol_declaration (cl, cl.get_cname () + "Private")) {
+		if (add_symbol_declaration (decl_space, cl, cl.get_cname () + "Private")) {
 			return;
 		}
 
@@ -306,7 +306,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 	}
 
 	public void declare_set_value_copy_function (CCodeDeclarationSpace decl_space) {
-		if (decl_space.add_symbol_declaration (type_class, "dova_type_set_value_copy")) {
+		if (add_symbol_declaration (decl_space, type_class, "dova_type_set_value_copy")) {
 			return;
 		}
 		decl_space.add_type_member_declaration (create_set_value_copy_function (true));
@@ -330,7 +330,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 	}
 
 	public void declare_set_value_equals_function (CCodeDeclarationSpace decl_space) {
-		if (decl_space.add_symbol_declaration (type_class, "dova_type_set_value_equals")) {
+		if (add_symbol_declaration (decl_space, type_class, "dova_type_set_value_equals")) {
 			return;
 		}
 		decl_space.add_type_member_declaration (create_set_value_equals_function (true));
@@ -354,7 +354,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 	}
 
 	public void declare_set_value_hash_function (CCodeDeclarationSpace decl_space) {
-		if (decl_space.add_symbol_declaration (type_class, "dova_type_set_value_hash")) {
+		if (add_symbol_declaration (decl_space, type_class, "dova_type_set_value_hash")) {
 			return;
 		}
 		decl_space.add_type_member_declaration (create_set_value_hash_function (true));
@@ -378,7 +378,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 	}
 
 	public void declare_set_value_to_any_function (CCodeDeclarationSpace decl_space) {
-		if (decl_space.add_symbol_declaration (type_class, "dova_type_set_value_to_any")) {
+		if (add_symbol_declaration (decl_space, type_class, "dova_type_set_value_to_any")) {
 			return;
 		}
 		decl_space.add_type_member_declaration (create_set_value_to_any_function (true));
@@ -402,7 +402,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 	}
 
 	public void declare_set_value_from_any_function (CCodeDeclarationSpace decl_space) {
-		if (decl_space.add_symbol_declaration (type_class, "dova_type_set_value_from_any")) {
+		if (add_symbol_declaration (decl_space, type_class, "dova_type_set_value_from_any")) {
 			return;
 		}
 		decl_space.add_type_member_declaration (create_set_value_from_any_function (true));
@@ -1076,7 +1076,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 	}
 
 	public override void generate_property_accessor_declaration (PropertyAccessor acc, CCodeDeclarationSpace decl_space) {
-		if (decl_space.add_symbol_declaration (acc.prop, acc.get_cname ())) {
+		if (add_symbol_declaration (decl_space, acc.prop, acc.get_cname ())) {
 			return;
 		}
 
@@ -1264,7 +1264,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 	}
 
 	public override void generate_interface_declaration (Interface iface, CCodeDeclarationSpace decl_space) {
-		if (decl_space.add_symbol_declaration (iface, iface.get_cname ())) {
+		if (add_symbol_declaration (decl_space, iface, iface.get_cname ())) {
 			return;
 		}
 
@@ -1311,7 +1311,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 	}
 
 	public override void generate_method_declaration (Method m, CCodeDeclarationSpace decl_space) {
-		if (decl_space.add_symbol_declaration (m, m.get_cname ())) {
+		if (add_symbol_declaration (decl_space, m, m.get_cname ())) {
 			return;
 		}
 

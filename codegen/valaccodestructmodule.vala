@@ -26,7 +26,7 @@ using GLib;
 
 public class Vala.CCodeStructModule : CCodeBaseModule {
 	public override void generate_struct_declaration (Struct st, CCodeDeclarationSpace decl_space) {
-		if (decl_space.add_symbol_declaration (st, st.get_cname ())) {
+		if (add_symbol_declaration (decl_space, st, st.get_cname ())) {
 			return;
 		}
 

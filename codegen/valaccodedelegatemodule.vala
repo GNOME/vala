@@ -28,7 +28,7 @@
  */
 public class Vala.CCodeDelegateModule : CCodeArrayModule {
 	public override void generate_delegate_declaration (Delegate d, CCodeDeclarationSpace decl_space) {
-		if (decl_space.add_symbol_declaration (d, d.get_cname ())) {
+		if (add_symbol_declaration (decl_space, d, d.get_cname ())) {
 			return;
 		}
 

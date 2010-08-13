@@ -47,7 +47,7 @@ public class Vala.GTypeModule : GErrorModule {
 	}
 
 	public override void generate_class_declaration (Class cl, CCodeDeclarationSpace decl_space) {
-		if (decl_space.add_symbol_declaration (cl, cl.get_cname ())) {
+		if (add_symbol_declaration (decl_space, cl, cl.get_cname ())) {
 			return;
 		}
 
@@ -177,7 +177,7 @@ public class Vala.GTypeModule : GErrorModule {
 	}
 
 	public override void generate_class_struct_declaration (Class cl, CCodeDeclarationSpace decl_space) {
-		if (decl_space.add_symbol_declaration (cl, "struct _" + cl.get_cname ())) {
+		if (add_symbol_declaration (decl_space, cl, "struct _" + cl.get_cname ())) {
 			return;
 		}
 
@@ -1828,7 +1828,7 @@ public class Vala.GTypeModule : GErrorModule {
 	}
 
 	public override void generate_interface_declaration (Interface iface, CCodeDeclarationSpace decl_space) {
-		if (decl_space.add_symbol_declaration (iface, iface.get_cname ())) {
+		if (add_symbol_declaration (decl_space, iface, iface.get_cname ())) {
 			return;
 		}
 

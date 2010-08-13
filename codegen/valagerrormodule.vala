@@ -29,7 +29,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 	private bool is_in_catch = false;
 
 	public override void generate_error_domain_declaration (ErrorDomain edomain, CCodeDeclarationSpace decl_space) {
-		if (decl_space.add_symbol_declaration (edomain, edomain.get_cname ())) {
+		if (add_symbol_declaration (decl_space, edomain, edomain.get_cname ())) {
 			return;
 		}
 

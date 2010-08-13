@@ -540,6 +540,23 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
+	public bool add_symbol_declaration (CCodeDeclarationSpace decl_space, Symbol sym, string name) {
+		if (decl_space.add_declaration (name)) {
+			return true;
+		}
+		if (sym.external_package || (!decl_space.is_header && CodeContext.get ().use_header && !sym.is_internal_symbol ())) {
+			// add appropriate include file
+			foreach (string header_filename in sym.get_cheader_filenames ()) {
+				decl_space.add_include (header_filename, !sym.external_package);
+			}
+			// declaration complete
+			return true;
+		} else {
+			// require declaration
+			return false;
+		}
+	}
+
 	public CCodeIdentifier get_value_setter_function (DataType type_reference) {
 		var array_type = type_reference as ArrayType;
 		if (type_reference.data_type != null) {
@@ -736,7 +753,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public virtual bool generate_enum_declaration (Enum en, CCodeDeclarationSpace decl_space) {
-		if (decl_space.add_symbol_declaration (en, en.get_cname ())) {
+		if (add_symbol_declaration (decl_space, en, en.get_cname ())) {
 			return false;
 		}
 
@@ -839,7 +856,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public void generate_constant_declaration (Constant c, CCodeDeclarationSpace decl_space, bool definition = false) {
-		if (decl_space.add_symbol_declaration (c, c.get_cname ())) {
+		if (add_symbol_declaration (decl_space, c, c.get_cname ())) {
 			return;
 		}
 
@@ -890,7 +907,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public void generate_field_declaration (Field f, CCodeDeclarationSpace decl_space) {
-		if (decl_space.add_symbol_declaration (f, f.get_cname ())) {
+		if (add_symbol_declaration (decl_space, f, f.get_cname ())) {
 			return;
 		}
 
@@ -1339,7 +1356,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public void generate_property_accessor_declaration (PropertyAccessor acc, CCodeDeclarationSpace decl_space) {
-		if (decl_space.add_symbol_declaration (acc, acc.get_cname ())) {
+		if (add_symbol_declaration (decl_space, acc, acc.get_cname ())) {
 			return;
 		}
 
@@ -4173,7 +4190,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public virtual void generate_class_declaration (Class cl, CCodeDeclarationSpace decl_space) {
-		if (decl_space.add_symbol_declaration (cl, cl.get_cname ())) {
+		if (add_symbol_declaration (decl_space, cl, cl.get_cname ())) {
 			return;
 		}
 	}

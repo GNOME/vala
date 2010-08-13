@@ -172,7 +172,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		string get_type_name = "%sproxy_get_type".printf (iface.get_lower_case_cprefix ());
 
-		if (decl_space.add_symbol_declaration (iface, get_type_name)) {
+		if (add_symbol_declaration (decl_space, iface, get_type_name)) {
 			return;
 		}
 

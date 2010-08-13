@@ -40,23 +40,6 @@ public class Vala.CCodeDeclarationSpace {
 		return false;
 	}
 
-	public bool add_symbol_declaration (Symbol sym, string name) {
-		if (add_declaration (name)) {
-			return true;
-		}
-		if (sym.external_package || (!is_header && CodeContext.get ().use_header && !sym.is_internal_symbol ())) {
-			// add appropriate include file
-			foreach (string header_filename in sym.get_cheader_filenames ()) {
-				add_include (header_filename, !sym.external_package);
-			}
-			// declaration complete
-			return true;
-		} else {
-			// require declaration
-			return false;
-		}
-	}
-
 	public void add_include (string filename, bool local = false) {
 		if (!(filename in includes)) {
 			include_directives.append (new CCodeIncludeDirective (filename, local));

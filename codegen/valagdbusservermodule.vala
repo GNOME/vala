@@ -1076,7 +1076,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 		string register_object_name = "%sregister_object".printf (sym.get_lower_case_cprefix ());
 
-		if (decl_space.add_symbol_declaration (sym, register_object_name)) {
+		if (add_symbol_declaration (decl_space, sym, register_object_name)) {
 			return;
 		}
 

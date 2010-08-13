@@ -304,7 +304,7 @@ public class Vala.GAsyncModule : GSignalModule {
 
 	public override void generate_method_declaration (Method m, CCodeDeclarationSpace decl_space) {
 		if (m.coroutine) {
-			if (decl_space.add_symbol_declaration (m, m.get_cname ())) {
+			if (add_symbol_declaration (decl_space, m, m.get_cname ())) {
 				return;
 			}
 

@@ -1039,7 +1039,7 @@ public class Vala.DBusClientModule : DBusModule {
 
 		string lower_cname = iface.get_lower_case_cprefix () + "dbus_proxy";
 
-		if (decl_space.add_symbol_declaration (iface, lower_cname + "_new")) {
+		if (add_symbol_declaration (decl_space, iface, lower_cname + "_new")) {
 			return;
 		}
 

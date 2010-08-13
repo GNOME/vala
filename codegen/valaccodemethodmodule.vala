@@ -162,7 +162,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		if (m.is_async_callback) {
 			return;
 		}
-		if (decl_space.add_symbol_declaration (m, m.get_cname ())) {
+		if (add_symbol_declaration (decl_space, m, m.get_cname ())) {
 			return;
 		}
 

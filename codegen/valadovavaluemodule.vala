@@ -35,7 +35,7 @@ public class Vala.DovaValueModule : DovaObjectModule {
 	public override void generate_struct_declaration (Struct st, CCodeDeclarationSpace decl_space) {
 		base.generate_struct_declaration (st, decl_space);
 
-		if (decl_space.add_symbol_declaration (st, st.get_copy_function ())) {
+		if (add_symbol_declaration (decl_space, st, st.get_copy_function ())) {
 			return;
 		}
 

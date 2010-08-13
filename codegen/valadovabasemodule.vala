@@ -375,6 +375,23 @@ public class Vala.DovaBaseModule : CodeGenerator {
 		}
 	}
 
+	public bool add_symbol_declaration (CCodeDeclarationSpace decl_space, Symbol sym, string name) {
+		if (decl_space.add_declaration (name)) {
+			return true;
+		}
+		if (sym.external_package || (!decl_space.is_header && CodeContext.get ().use_header && !sym.is_internal_symbol ())) {
+			// add appropriate include file
+			foreach (string header_filename in sym.get_cheader_filenames ()) {
+				decl_space.add_include (header_filename, !sym.external_package);
+			}
+			// declaration complete
+			return true;
+		} else {
+			// require declaration
+			return false;
+		}
+	}
+
 	public override void visit_source_file (SourceFile source_file) {
 		if (csource_filename == null) {
 			csource_filename = source_file.get_csource_filename ();
@@ -415,7 +432,7 @@ public class Vala.DovaBaseModule : CodeGenerator {
 	}
 
 	public void generate_enum_declaration (Enum en, CCodeDeclarationSpace decl_space) {
-		if (decl_space.add_symbol_declaration (en, en.get_cname ())) {
+		if (add_symbol_declaration (decl_space, en, en.get_cname ())) {
 			return;
 		}
 
@@ -445,7 +462,7 @@ public class Vala.DovaBaseModule : CodeGenerator {
 	}
 
 	public void generate_constant_declaration (Constant c, CCodeDeclarationSpace decl_space) {
-		if (decl_space.add_symbol_declaration (c, c.get_cname ())) {
+		if (add_symbol_declaration (decl_space, c, c.get_cname ())) {
 			return;
 		}
 
@@ -478,7 +495,7 @@ public class Vala.DovaBaseModule : CodeGenerator {
 	}
 
 	public void generate_field_declaration (Field f, CCodeDeclarationSpace decl_space) {
-		if (decl_space.add_symbol_declaration (f, f.get_cname ())) {
+		if (add_symbol_declaration (decl_space, f, f.get_cname ())) {
 			return;
 		}
 
@@ -1768,7 +1785,7 @@ public class Vala.DovaBaseModule : CodeGenerator {
 	}
 
 	public virtual void generate_class_declaration (Class cl, CCodeDeclarationSpace decl_space) {
-		if (decl_space.add_symbol_declaration (cl, cl.get_cname ())) {
+		if (add_symbol_declaration (decl_space, cl, cl.get_cname ())) {
 			return;
 		}
 	}
