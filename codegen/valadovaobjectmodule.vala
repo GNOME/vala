@@ -1667,7 +1667,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 				var array_data = new CCodeFunctionCall (new CCodeIdentifier ("dova_array_get_data"));
 				array_data.add_argument (new CCodeIdentifier ("args"));
 
-				cdecl = new CCodeDeclaration ("string**");
+				cdecl = new CCodeDeclaration ("string_t*");
 				cdecl.add_declarator (new CCodeVariableDeclarator ("args_data", array_data));
 				main_block.add_statement (cdecl);
 
