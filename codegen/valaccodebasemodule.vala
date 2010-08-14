@@ -4450,7 +4450,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 							var rhs_array_len = get_array_length_cexpression (init.initializer, dim);
 							ccomma.append_expression (new CCodeAssignment (lhs, rhs_array_len));
 						}
-					} else if (f.variable_type is DelegateType && !f.no_delegate_target) {
+					} else if (f.variable_type is DelegateType && (f.variable_type as DelegateType).delegate_symbol.has_target && !f.no_delegate_target) {
 						if (expr.type_reference.data_type is Struct) {
 							lhs = new CCodeMemberAccess (typed_inst, get_delegate_target_cname (f.get_cname ()));
 						} else {
