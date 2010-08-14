@@ -188,7 +188,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		if (!(m is CreationMethod && cl != null && cl.is_abstract)) {
 			generate_cparameters (m, decl_space, cparam_map, function, null, carg_map, new CCodeFunctionCall (new CCodeIdentifier ("fake")));
 
-			decl_space.add_type_member_declaration (function);
+			decl_space.add_function_declaration (function);
 		}
 
 		if (m is CreationMethod && cl != null) {
@@ -202,7 +202,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 			cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 			generate_cparameters (m, decl_space, cparam_map, function);
 
-			decl_space.add_type_member_declaration (function);
+			decl_space.add_function_declaration (function);
 		}
 	}
 
@@ -351,7 +351,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 				if (m.base_method != null || m.base_interface_method != null) {
 					// declare *_real_* function
 					function.modifiers |= CCodeModifiers.STATIC;
-					cfile.add_type_member_declaration (function.copy ());
+					cfile.add_function_declaration (function);
 				} else if (m.is_private_symbol ()) {
 					function.modifiers |= CCodeModifiers.STATIC;
 				}
@@ -371,7 +371,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 					function.add_parameter (new CCodeFormalParameter ("data", Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data*"));
 
 					function.modifiers |= CCodeModifiers.STATIC;
-					cfile.add_type_member_declaration (function.copy ());
+					cfile.add_function_declaration (function);
 				}
 			}
 		}

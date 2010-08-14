@@ -43,16 +43,19 @@ public class Vala.CCodeFunction : CCodeNode {
 
 	public string attributes { get; set; }
 
+	public bool is_declaration { get; set; }
+
 	/**
 	 * The function body.
 	 */
 	public CCodeBlock block { get; set; }
 
 	private List<CCodeFormalParameter> parameters = new ArrayList<CCodeFormalParameter> ();
-	
+
 	public CCodeFunction (string name, string return_type = "void") {
 		this.name = name;
 		this.return_type = return_type;
+		this.block = new CCodeBlock ();
 	}
 	
 	/**
@@ -85,6 +88,7 @@ public class Vala.CCodeFunction : CCodeNode {
 			func.parameters.add (param);
 		}
 		
+		func.is_declaration = is_declaration;
 		func.block = block;
 		return func;
 	}
@@ -121,7 +125,7 @@ public class Vala.CCodeFunction : CCodeNode {
 			writer.write_string (" G_GNUC_DEPRECATED");
 		}
 
-		if (block == null) {
+		if (is_declaration) {
 			if (attributes != null) {
 				writer.write_string (" ");
 				writer.write_string (attributes);

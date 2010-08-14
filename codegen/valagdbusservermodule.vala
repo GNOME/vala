@@ -334,13 +334,13 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			ready_block.add_statement (new CCodeExpressionStatement (unref_call));
 		}
 
-		cfile.add_type_member_declaration (function.copy ());
+		cfile.add_function_declaration (function);
 
 		function.block = block;
 		cfile.add_function (function);
 
 		if (m.coroutine) {
-			cfile.add_type_member_declaration (ready_function.copy ());
+			cfile.add_function_declaration (ready_function);
 
 			ready_function.block = ready_block;
 			cfile.add_function (ready_function);
@@ -424,7 +424,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		ccall.add_argument (new CCodeConstant ("NULL"));
 		block.add_statement (new CCodeExpressionStatement (ccall));
 
-		cfile.add_type_member_declaration (function.copy ());
+		cfile.add_function_declaration (function);
 		function.block = block;
 		cfile.add_function (function);
 
@@ -502,7 +502,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 		block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("_reply")));
 
-		cfile.add_type_member_declaration (function.copy ());
+		cfile.add_function_declaration (function);
 
 		function.block = block;
 		cfile.add_function (function);
@@ -573,7 +573,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 		block.add_statement (postfragment);
 
-		cfile.add_type_member_declaration (function.copy ());
+		cfile.add_function_declaration (function);
 
 		function.block = block;
 		cfile.add_function (function);
@@ -617,7 +617,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 		cfunc.modifiers |= CCodeModifiers.STATIC;
 
-		cfile.add_type_member_declaration (cfunc.copy ());
+		cfile.add_function_declaration (cfunc);
 
 		var block = new CCodeBlock ();
 		cfunc.block = block;
@@ -679,7 +679,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 		cfunc.modifiers |= CCodeModifiers.STATIC;
 
-		cfile.add_type_member_declaration (cfunc.copy ());
+		cfile.add_function_declaration (cfunc);
 
 		var block = new CCodeBlock ();
 		cfunc.block = block;
@@ -745,7 +745,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 		cfunc.modifiers |= CCodeModifiers.STATIC;
 
-		cfile.add_type_member_declaration (cfunc.copy ());
+		cfile.add_function_declaration (cfunc);
 
 		var block = new CCodeBlock ();
 		cfunc.block = block;
@@ -1089,7 +1089,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		if (sym.is_private_symbol ()) {
 			cfunc.modifiers |= CCodeModifiers.STATIC;
 		}
-		decl_space.add_type_member_declaration (cfunc);
+		decl_space.add_function_declaration (cfunc);
 	}
 
 	void visit_object_type_symbol (ObjectTypeSymbol sym) {
@@ -1167,7 +1167,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		cfunc = new CCodeFunction ("_" + sym.get_lower_case_cprefix () + "unregister_object");
 		cfunc.add_parameter (new CCodeFormalParameter ("user_data", "gpointer"));
 		cfunc.modifiers |= CCodeModifiers.STATIC;
-		cfile.add_type_member_declaration (cfunc.copy ());
+		cfile.add_function_declaration (cfunc);
 
 		block = new CCodeBlock ();
 		cfunc.block = block;

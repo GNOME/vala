@@ -487,7 +487,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		fun.modifiers = CCodeModifiers.STATIC;
 		fun.add_parameter (new CCodeFormalParameter ("array", "%s*".printf (st.get_cname ())));
 		fun.add_parameter (new CCodeFormalParameter ("array_length", "gint"));
-		cfile.add_type_member_declaration (fun.copy ());
+		cfile.add_function_declaration (fun);
 
 		var cdofree = new CCodeBlock ();
 
@@ -540,7 +540,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		fun.add_parameter (new CCodeFormalParameter ("array", "gpointer"));
 		fun.add_parameter (new CCodeFormalParameter ("array_length", "gint"));
 		fun.add_parameter (new CCodeFormalParameter ("destroy_func", "GDestroyNotify"));
-		cfile.add_type_member_declaration (fun.copy ());
+		cfile.add_function_declaration (fun);
 
 		var cdofree = new CCodeBlock ();
 
@@ -565,7 +565,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		fun.add_parameter (new CCodeFormalParameter ("array", "gpointer"));
 		fun.add_parameter (new CCodeFormalParameter ("array_length", "gint"));
 		fun.add_parameter (new CCodeFormalParameter ("destroy_func", "GDestroyNotify"));
-		cfile.add_type_member_declaration (fun.copy ());
+		cfile.add_function_declaration (fun);
 
 		// call _vala_array_destroy to free the array elements
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_destroy"));
@@ -595,7 +595,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		fun.add_parameter (new CCodeFormalParameter ("src", "gint"));
 		fun.add_parameter (new CCodeFormalParameter ("dest", "gint"));
 		fun.add_parameter (new CCodeFormalParameter ("length", "gint"));
-		cfile.add_type_member_declaration (fun.copy ());
+		cfile.add_function_declaration (fun);
 
 		var array = new CCodeCastExpression (new CCodeIdentifier ("array"), "char*");
 		var element_size = new CCodeIdentifier ("element_size");
@@ -637,7 +637,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var fun = new CCodeFunction ("_vala_array_length", "gint");
 		fun.modifiers = CCodeModifiers.STATIC;
 		fun.add_parameter (new CCodeFormalParameter ("array", "gpointer"));
-		cfile.add_type_member_declaration (fun.copy ());
+		cfile.add_function_declaration (fun);
 
 		var block = new CCodeBlock ();
 
@@ -805,7 +805,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		// append to file
 
-		cfile.add_type_member_declaration (function.copy ());
+		cfile.add_function_declaration (function);
 
 		function.block = block;
 		cfile.add_function (function);
@@ -869,7 +869,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		// append to file
 
-		cfile.add_type_member_declaration (function.copy ());
+		cfile.add_function_declaration (function);
 
 		function.block = block;
 		cfile.add_function (function);
@@ -941,7 +941,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		// append to file
 
-		cfile.add_type_member_declaration (function.copy ());
+		cfile.add_function_declaration (function);
 
 		function.block = block;
 		cfile.add_function (function);

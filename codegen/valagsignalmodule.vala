@@ -228,7 +228,7 @@ public class Vala.GSignalModule : GObjectModule {
 		signal_marshaller.add_parameter (new CCodeFormalParameter ("invocation_hint", "gpointer"));
 		signal_marshaller.add_parameter (new CCodeFormalParameter ("marshal_data", "gpointer"));
 		
-		cfile.add_type_member_declaration (signal_marshaller.copy ());
+		cfile.add_function_declaration (signal_marshaller);
 		
 		var marshaller_body = new CCodeBlock ();
 		

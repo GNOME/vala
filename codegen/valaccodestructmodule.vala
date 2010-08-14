@@ -112,14 +112,14 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 			function.modifiers = CCodeModifiers.STATIC;
 		}
 		function.add_parameter (new CCodeFormalParameter ("self", "const " + st.get_cname () + "*"));
-		decl_space.add_type_member_declaration (function);
+		decl_space.add_function_declaration (function);
 
 		function = new CCodeFunction (st.get_free_function (), "void");
 		if (st.is_private_symbol ()) {
 			function.modifiers = CCodeModifiers.STATIC;
 		}
 		function.add_parameter (new CCodeFormalParameter ("self", st.get_cname () + "*"));
-		decl_space.add_type_member_declaration (function);
+		decl_space.add_function_declaration (function);
 
 		if (st.is_disposable ()) {
 			function = new CCodeFunction (st.get_copy_function (), "void");
@@ -128,14 +128,14 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 			}
 			function.add_parameter (new CCodeFormalParameter ("self", "const " + st.get_cname () + "*"));
 			function.add_parameter (new CCodeFormalParameter ("dest", st.get_cname () + "*"));
-			decl_space.add_type_member_declaration (function);
+			decl_space.add_function_declaration (function);
 
 			function = new CCodeFunction (st.get_destroy_function (), "void");
 			if (st.is_private_symbol ()) {
 				function.modifiers = CCodeModifiers.STATIC;
 			}
 			function.add_parameter (new CCodeFormalParameter ("self", st.get_cname () + "*"));
-			decl_space.add_type_member_declaration (function);
+			decl_space.add_function_declaration (function);
 		}
 	}
 

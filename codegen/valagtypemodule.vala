@@ -99,8 +99,8 @@ public class Vala.GTypeModule : GErrorModule {
 			ref_fun.add_parameter (new CCodeFormalParameter ("instance", "gpointer"));
 			unref_fun.add_parameter (new CCodeFormalParameter ("instance", "gpointer"));
 
-			decl_space.add_type_member_declaration (ref_fun.copy ());
-			decl_space.add_type_member_declaration (unref_fun.copy ());
+			decl_space.add_function_declaration (ref_fun);
+			decl_space.add_function_declaration (unref_fun);
 
 			// GParamSpec and GValue functions
 			string function_name = cl.get_lower_case_cname ("param_spec_");
@@ -118,7 +118,7 @@ public class Vala.GTypeModule : GErrorModule {
 				function.attributes = "G_GNUC_UNUSED";
 			}
 
-			decl_space.add_type_member_declaration (function);
+			decl_space.add_function_declaration (function);
 
 			function = new CCodeFunction (cl.get_set_value_function (), "void");
 			function.add_parameter (new CCodeFormalParameter ("value", "GValue*"));
@@ -130,7 +130,7 @@ public class Vala.GTypeModule : GErrorModule {
 				function.attributes = "G_GNUC_UNUSED";
 			}
 
-			decl_space.add_type_member_declaration (function);
+			decl_space.add_function_declaration (function);
 
 			function = new CCodeFunction (cl.get_take_value_function (), "void");
 			function.add_parameter (new CCodeFormalParameter ("value", "GValue*"));
@@ -142,7 +142,7 @@ public class Vala.GTypeModule : GErrorModule {
 				function.attributes = "G_GNUC_UNUSED";
 			}
 
-			decl_space.add_type_member_declaration (function);
+			decl_space.add_function_declaration (function);
 
 			function = new CCodeFunction (cl.get_get_value_function (), "gpointer");
 			function.add_parameter (new CCodeFormalParameter ("value", "const GValue*"));
@@ -153,7 +153,7 @@ public class Vala.GTypeModule : GErrorModule {
 				function.attributes = "G_GNUC_UNUSED";
 			}
 
-			decl_space.add_type_member_declaration (function);
+			decl_space.add_function_declaration (function);
 		} else if (!is_gtypeinstance) {
 			if (cl.base_class == null) {
 				var function = new CCodeFunction (cl.get_lower_case_cprefix () + "free", "void");
@@ -163,7 +163,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 				function.add_parameter (new CCodeFormalParameter ("self", cl.get_cname () + "*"));
 
-				decl_space.add_type_member_declaration (function);
+				decl_space.add_function_declaration (function);
 			}
 		}
 
@@ -1548,7 +1548,7 @@ public class Vala.GTypeModule : GErrorModule {
 		if (cl.is_compact) {
 			// Add declaration, since the instance_init function is explicitly called
 			// by the creation methods
-			cfile.add_type_member_declaration (instance_init.copy ());
+			cfile.add_function_declaration (instance_init);
 		}
 
 		var init_block = new CCodeBlock ();
@@ -1570,7 +1570,7 @@ public class Vala.GTypeModule : GErrorModule {
 		function.modifiers = CCodeModifiers.STATIC;
 
 		function.add_parameter (new CCodeFormalParameter ("klass", cl.get_cname () + "Class *"));
-		cfile.add_type_member_declaration (function.copy ());
+		cfile.add_function_declaration (function);
 		
 		var cblock = new CCodeBlock ();
 
@@ -1589,7 +1589,7 @@ public class Vala.GTypeModule : GErrorModule {
 		function.modifiers = CCodeModifiers.STATIC;
 
 		function.add_parameter (new CCodeFormalParameter ("klass", cl.get_cname () + "Class *"));
-		cfile.add_type_member_declaration (function.copy ());
+		cfile.add_function_declaration (function);
 		
 		var cblock = new CCodeBlock ();
 
@@ -1614,7 +1614,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 		function.add_parameter (new CCodeFormalParameter ("obj", fundamental_class.get_cname () + "*"));
 
-		cfile.add_type_member_declaration (function.copy ());
+		cfile.add_function_declaration (function);
 
 
 		var cblock = new CCodeBlock ();

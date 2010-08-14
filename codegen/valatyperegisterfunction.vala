@@ -83,7 +83,9 @@ public abstract class Vala.TypeRegisterFunction {
 			var get_fun = new CCodeFunction ("%s_get_type".printf (get_type_declaration ().get_lower_case_cname (null)), "GType");
 			get_fun.attributes = "G_GNUC_CONST";
 
+			get_fun.is_declaration = true;
 			declaration_fragment.append (get_fun.copy ());
+			get_fun.is_declaration = false;
 
 			get_fun.block = new CCodeBlock ();
 			get_fun.block.add_statement (new CCodeReturnStatement (new CCodeIdentifier (type_id_name)));
@@ -258,7 +260,9 @@ public abstract class Vala.TypeRegisterFunction {
 			type_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier (type_id_name)));
 		}
 
+		fun.is_declaration = true;
 		declaration_fragment.append (fun.copy ());
+		fun.is_declaration = false;
 
 		fun.block = type_block;
 

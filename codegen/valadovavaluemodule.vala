@@ -45,14 +45,14 @@ public class Vala.DovaValueModule : DovaObjectModule {
 		if (st.is_internal_symbol ()) {
 			type_fun.modifiers = CCodeModifiers.STATIC;
 		}
-		decl_space.add_type_member_declaration (type_fun);
+		decl_space.add_function_declaration (type_fun);
 
 		var type_init_fun = new CCodeFunction ("%s_type_init".printf (st.get_lower_case_cname ()));
 		type_init_fun.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
 		if (st.is_internal_symbol ()) {
 			type_init_fun.modifiers = CCodeModifiers.STATIC;
 		}
-		decl_space.add_type_member_declaration (type_init_fun);
+		decl_space.add_function_declaration (type_init_fun);
 
 		var function = new CCodeFunction (st.get_copy_function (), "void");
 		if (st.is_internal_symbol ()) {
@@ -64,7 +64,7 @@ public class Vala.DovaValueModule : DovaObjectModule {
 		function.add_parameter (new CCodeFormalParameter ("src", st.get_cname () + "*"));
 		function.add_parameter (new CCodeFormalParameter ("src_index", "int32_t"));
 
-		decl_space.add_type_member_declaration (function);
+		decl_space.add_function_declaration (function);
 	}
 
 	public override void visit_struct (Struct st) {

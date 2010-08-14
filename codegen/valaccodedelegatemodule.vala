@@ -600,7 +600,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 
 		// append to file
 
-		cfile.add_type_member_declaration (function.copy ());
+		cfile.add_function_declaration (function);
 
 		function.block = block;
 		cfile.add_function (function);

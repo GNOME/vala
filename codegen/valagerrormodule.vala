@@ -53,7 +53,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 
 		var cquark_fun = new CCodeFunction (quark_fun_name, gquark_type.data_type.get_cname ());
 
-		decl_space.add_type_member_declaration (cquark_fun);
+		decl_space.add_function_declaration (cquark_fun);
 	}
 
 	public override void visit_error_domain (ErrorDomain edomain) {

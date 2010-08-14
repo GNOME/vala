@@ -49,7 +49,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 			value_copy_function.add_parameter (new CCodeFormalParameter ("src", "void *"));
 			value_copy_function.add_parameter (new CCodeFormalParameter ("src_index", "int32_t"));
 
-			cfile.add_type_member_declaration (value_copy_function);
+			cfile.add_function_declaration (value_copy_function);
 
 			var value_equals_function = new CCodeFunction ("dova_type_value_equals", "bool");
 			value_equals_function.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
@@ -58,14 +58,14 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 			value_equals_function.add_parameter (new CCodeFormalParameter ("other", "void *"));
 			value_equals_function.add_parameter (new CCodeFormalParameter ("other_index", "int32_t"));
 
-			cfile.add_type_member_declaration (value_equals_function);
+			cfile.add_function_declaration (value_equals_function);
 
 			var value_hash_function = new CCodeFunction ("dova_type_value_hash", "uint32_t");
 			value_hash_function.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
 			value_hash_function.add_parameter (new CCodeFormalParameter ("value", "void *"));
 			value_hash_function.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
 
-			cfile.add_type_member_declaration (value_hash_function);
+			cfile.add_function_declaration (value_hash_function);
 		}
 
 		if (cl.base_class != null) {
@@ -82,7 +82,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 		foreach (var type_param in cl.get_type_parameters ()) {
 			type_fun.add_parameter (new CCodeFormalParameter ("%s_type".printf (type_param.name.down ()), "DovaType *"));
 		}
-		decl_space.add_type_member_declaration (type_fun);
+		decl_space.add_function_declaration (type_fun);
 
 		var type_init_fun = new CCodeFunction ("%s_type_init".printf (cl.get_lower_case_cname ()));
 		if (cl.is_internal_symbol ()) {
@@ -92,7 +92,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 		foreach (var type_param in cl.get_type_parameters ()) {
 			type_init_fun.add_parameter (new CCodeFormalParameter ("%s_type".printf (type_param.name.down ()), "DovaType *"));
 		}
-		decl_space.add_type_member_declaration (type_init_fun);
+		decl_space.add_function_declaration (type_init_fun);
 	}
 
 	void generate_virtual_method_declaration (Method m, CCodeFile decl_space, CCodeStruct type_struct) {
@@ -309,7 +309,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 		if (add_symbol_declaration (decl_space, type_class, "dova_type_set_value_copy")) {
 			return;
 		}
-		decl_space.add_type_member_declaration (create_set_value_copy_function (true));
+		decl_space.add_function_declaration (create_set_value_copy_function (true));
 	}
 
 	CCodeFunction create_set_value_equals_function (bool decl_only = false) {
@@ -333,7 +333,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 		if (add_symbol_declaration (decl_space, type_class, "dova_type_set_value_equals")) {
 			return;
 		}
-		decl_space.add_type_member_declaration (create_set_value_equals_function (true));
+		decl_space.add_function_declaration (create_set_value_equals_function (true));
 	}
 
 	CCodeFunction create_set_value_hash_function (bool decl_only = false) {
@@ -357,7 +357,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 		if (add_symbol_declaration (decl_space, type_class, "dova_type_set_value_hash")) {
 			return;
 		}
-		decl_space.add_type_member_declaration (create_set_value_hash_function (true));
+		decl_space.add_function_declaration (create_set_value_hash_function (true));
 	}
 
 	CCodeFunction create_set_value_to_any_function (bool decl_only = false) {
@@ -381,7 +381,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 		if (add_symbol_declaration (decl_space, type_class, "dova_type_set_value_to_any")) {
 			return;
 		}
-		decl_space.add_type_member_declaration (create_set_value_to_any_function (true));
+		decl_space.add_function_declaration (create_set_value_to_any_function (true));
 	}
 
 	CCodeFunction create_set_value_from_any_function (bool decl_only = false) {
@@ -405,7 +405,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 		if (add_symbol_declaration (decl_space, type_class, "dova_type_set_value_from_any")) {
 			return;
 		}
-		decl_space.add_type_member_declaration (create_set_value_from_any_function (true));
+		decl_space.add_function_declaration (create_set_value_from_any_function (true));
 	}
 
 	public CCodeBlock generate_type_get_function (TypeSymbol cl, Class? base_class) {
@@ -758,7 +758,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 
 		function.add_parameter (new CCodeFormalParameter ("this", cl.get_cname () + "*"));
 
-		cfile.add_type_member_declaration (function.copy ());
+		cfile.add_function_declaration (function);
 
 
 		var cblock = new CCodeBlock ();
@@ -1125,7 +1125,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 		if (prop.is_internal_symbol () || acc.is_internal_symbol ()) {
 			function.modifiers |= CCodeModifiers.STATIC;
 		}
-		decl_space.add_type_member_declaration (function);
+		decl_space.add_function_declaration (function);
 
 		if (prop.is_abstract || prop.is_virtual) {
 			string param_list = "(%s *this".printf (((ObjectTypeSymbol) prop.parent_symbol).get_cname ());
@@ -1139,7 +1139,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 			override_func.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
 			override_func.add_parameter (new CCodeFormalParameter ("(*function) %s".printf (param_list), acc.readable ? acc.value_type.get_cname () : "void"));
 
-			decl_space.add_type_member_declaration (override_func);
+			decl_space.add_function_declaration (override_func);
 		}
 	}
 
@@ -1290,7 +1290,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 		foreach (var type_param in iface.get_type_parameters ()) {
 			type_fun.add_parameter (new CCodeFormalParameter ("%s_type".printf (type_param.name.down ()), "DovaType *"));
 		}
-		decl_space.add_type_member_declaration (type_fun);
+		decl_space.add_function_declaration (type_fun);
 
 		var type_init_fun = new CCodeFunction ("%s_type_init".printf (iface.get_lower_case_cname ()));
 		if (iface.is_internal_symbol ()) {
@@ -1300,7 +1300,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 		foreach (var type_param in iface.get_type_parameters ()) {
 			type_init_fun.add_parameter (new CCodeFormalParameter ("%s_type".printf (type_param.name.down ()), "DovaType *"));
 		}
-		decl_space.add_type_member_declaration (type_init_fun);
+		decl_space.add_function_declaration (type_init_fun);
 	}
 
 
@@ -1335,13 +1335,13 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 
 		generate_cparameters (m, decl_space, function, null, new CCodeFunctionCall (new CCodeIdentifier ("fake")));
 
-		decl_space.add_type_member_declaration (function);
+		decl_space.add_function_declaration (function);
 
 		if (m.is_abstract || m.is_virtual) {
 			var base_func = function.copy ();
 			base_func.name = "%sbase_%s".printf (m.parent_symbol.get_lower_case_cprefix (), m.name);
 			base_func.insert_parameter (0, new CCodeFormalParameter ("base_type", "DovaType *"));
-			decl_space.add_type_member_declaration (base_func);
+			decl_space.add_function_declaration (base_func);
 
 			string param_list = "(%s *this".printf (((ObjectTypeSymbol) m.parent_symbol).get_cname ());
 			foreach (var param in m.get_parameters ()) {
@@ -1356,7 +1356,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 			var override_func = new CCodeFunction ("%soverride_%s".printf (m.parent_symbol.get_lower_case_cprefix (), m.name));
 			override_func.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
 			override_func.add_parameter (new CCodeFormalParameter ("(*function) %s".printf (param_list), (m.return_type is GenericType) ? "void" : m.return_type.get_cname ()));
-			decl_space.add_type_member_declaration (override_func);
+			decl_space.add_function_declaration (override_func);
 		}
 
 		if (m is CreationMethod && m.parent_symbol is Class) {
@@ -1371,7 +1371,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 
 			generate_cparameters (m, decl_space, function);
 
-			decl_space.add_type_member_declaration (function);
+			decl_space.add_function_declaration (function);
 		}
 	}
 
@@ -1421,7 +1421,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 			if (m.base_method != null || m.base_interface_method != null) {
 				// declare *_real_* function
 				function.modifiers |= CCodeModifiers.STATIC;
-				cfile.add_type_member_declaration (function.copy ());
+				cfile.add_function_declaration (function);
 			} else if (m.is_internal_symbol ()) {
 				function.modifiers |= CCodeModifiers.STATIC;
 			}
@@ -1790,7 +1790,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 				vfunc.modifiers |= CCodeModifiers.STATIC;
 			}
 
-			cfile.add_type_member_declaration (vfunc.copy ());
+			cfile.add_function_declaration (vfunc);
 
 			vfunc.block = vblock;
 

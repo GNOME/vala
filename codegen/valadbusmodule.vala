@@ -170,8 +170,8 @@ public class Vala.DBusModule : GAsyncModule {
 	public override bool generate_enum_declaration (Enum en, CCodeFile decl_space) {
 		if (base.generate_enum_declaration (en, decl_space)) {
 			if (is_string_marshalled_enum (en)) {
-				decl_space.add_type_member_declaration (generate_enum_from_string_function_declaration (en));
-				decl_space.add_type_member_declaration (generate_enum_to_string_function_declaration (en));
+				decl_space.add_function_declaration (generate_enum_from_string_function_declaration (en));
+				decl_space.add_function_declaration (generate_enum_to_string_function_declaration (en));
 			}
 			return true;
 		}
@@ -1006,7 +1006,7 @@ public class Vala.DBusModule : GAsyncModule {
 		cfunc.add_parameter (new CCodeFormalParameter ("object", "void*"));
 
 		cfunc.modifiers |= CCodeModifiers.STATIC;
-		cfile.add_type_member_declaration (cfunc.copy ());
+		cfile.add_function_declaration (cfunc);
 
 		var block = new CCodeBlock ();
 		cfunc.block = block;
@@ -1049,7 +1049,7 @@ public class Vala.DBusModule : GAsyncModule {
 		cfunc.add_parameter (new CCodeFormalParameter ("object", "GObject*"));
 
 		cfunc.modifiers |= CCodeModifiers.STATIC;
-		cfile.add_type_member_declaration (cfunc.copy ());
+		cfile.add_function_declaration (cfunc);
 
 		block = new CCodeBlock ();
 		cfunc.block = block;

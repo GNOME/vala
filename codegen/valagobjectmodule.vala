@@ -274,7 +274,7 @@ public class Vala.GObjectModule : GTypeModule {
 
 		block.add_statement (cswitch);
 
-		cfile.add_type_member_declaration (get_prop.copy ());
+		cfile.add_function_declaration (get_prop);
 
 		get_prop.block = block;
 		
@@ -395,7 +395,7 @@ public class Vala.GObjectModule : GTypeModule {
 			cswitch.add_statement (new CCodeBreakStatement ());
 		}
 
-		cfile.add_type_member_declaration (set_prop.copy ());
+		cfile.add_function_declaration (set_prop);
 
 		set_prop.block = block;
 		
@@ -441,7 +441,7 @@ public class Vala.GObjectModule : GTypeModule {
 			function.add_parameter (new CCodeFormalParameter ("n_construct_properties", "guint"));
 			function.add_parameter (new CCodeFormalParameter ("construct_properties", "GObjectConstructParam *"));
 		
-			cfile.add_type_member_declaration (function.copy ());
+			cfile.add_function_declaration (function);
 
 
 			var cblock = new CCodeBlock ();
@@ -552,7 +552,7 @@ public class Vala.GObjectModule : GTypeModule {
 		generate_gobject_property_getter_wrapper (prop, block);
 
 		// append to C source file
-		cfile.add_type_member_declaration (func.copy ());
+		cfile.add_function_declaration (func);
 
 		func.block = block;
 		cfile.add_function (func);
@@ -578,7 +578,7 @@ public class Vala.GObjectModule : GTypeModule {
 		generate_gobject_property_setter_wrapper (prop, block);
 
 		// append to C source file
-		cfile.add_type_member_declaration (func.copy ());
+		cfile.add_function_declaration (func);
 
 		func.block = block;
 		cfile.add_function (func);
@@ -632,7 +632,7 @@ public class Vala.GObjectModule : GTypeModule {
 		generate_gobject_connect_wrapper (sig, block, false);
 
 		// append to C source file
-		cfile.add_type_member_declaration (func.copy ());
+		cfile.add_function_declaration (func);
 
 		func.block = block;
 		cfile.add_function (func);
@@ -656,7 +656,7 @@ public class Vala.GObjectModule : GTypeModule {
 		generate_gobject_connect_wrapper (sig, block, true);
 
 		// append to C source file
-		cfile.add_type_member_declaration (func.copy ());
+		cfile.add_function_declaration (func);
 
 		func.block = block;
 		cfile.add_function (func);

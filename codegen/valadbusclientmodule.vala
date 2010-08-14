@@ -91,7 +91,7 @@ public class Vala.DBusClientModule : DBusModule {
 		}
 
 		// append to C source file
-		cfile.add_type_member_declaration (func.copy ());
+		cfile.add_function_declaration (func);
 
 		func.block = block;
 		cfile.add_function (func);
@@ -648,7 +648,7 @@ public class Vala.DBusClientModule : DBusModule {
 		generate_dbus_property_getter_wrapper (prop, block);
 
 		// append to C source file
-		cfile.add_type_member_declaration (func.copy ());
+		cfile.add_function_declaration (func);
 
 		func.block = block;
 		cfile.add_function (func);
@@ -678,7 +678,7 @@ public class Vala.DBusClientModule : DBusModule {
 		generate_dbus_property_setter_wrapper (prop, block);
 
 		// append to C source file
-		cfile.add_type_member_declaration (func.copy ());
+		cfile.add_function_declaration (func);
 
 		func.block = block;
 		cfile.add_function (func);
@@ -819,7 +819,7 @@ public class Vala.DBusClientModule : DBusModule {
 		generate_dbus_connect_wrapper (sig, block);
 
 		// append to C source file
-		cfile.add_type_member_declaration (func.copy ());
+		cfile.add_function_declaration (func);
 
 		func.block = block;
 		cfile.add_function (func);
@@ -842,7 +842,7 @@ public class Vala.DBusClientModule : DBusModule {
 		generate_dbus_disconnect_wrapper (sig, block);
 
 		// append to C source file
-		cfile.add_type_member_declaration (func.copy ());
+		cfile.add_function_declaration (func);
 
 		func.block = block;
 		cfile.add_function (func);
@@ -975,7 +975,7 @@ public class Vala.DBusClientModule : DBusModule {
 		}
 
 		proxy_iface_init.modifiers = CCodeModifiers.STATIC;
-		cfile.add_type_member_declaration (proxy_iface_init.copy ());
+		cfile.add_function_declaration (proxy_iface_init);
 		proxy_iface_init.block = iface_block;
 		cfile.add_function (proxy_iface_init);
 	}
@@ -1049,7 +1049,7 @@ public class Vala.DBusClientModule : DBusModule {
 		proxy_new.add_parameter (new CCodeFormalParameter ("name", "const char*"));
 		proxy_new.add_parameter (new CCodeFormalParameter ("path", "const char*"));
 
-		decl_space.add_type_member_declaration (proxy_new);
+		decl_space.add_function_declaration (proxy_new);
 	}
 
 	public override void visit_interface (Interface iface) {
@@ -1080,7 +1080,7 @@ public class Vala.DBusClientModule : DBusModule {
 
 		var type_fun = new CCodeFunction(lower_cname + "_get_type", "GType");
 		type_fun.attributes = "G_GNUC_CONST";
-		cfile.add_type_member_declaration (type_fun);
+		cfile.add_function_declaration (type_fun);
 
 		var define_type = new CCodeFunctionCall (new CCodeIdentifier ("G_DEFINE_TYPE_EXTENDED"));
 		define_type.add_argument (new CCodeIdentifier (cname));
@@ -1283,7 +1283,7 @@ public class Vala.DBusClientModule : DBusModule {
 		get_prop.add_parameter (new CCodeFormalParameter ("property_id", "guint"));
 		get_prop.add_parameter (new CCodeFormalParameter ("value", "GValue *"));
 		get_prop.add_parameter (new CCodeFormalParameter ("pspec", "GParamSpec *"));
-		cfile.add_type_member_declaration (get_prop.copy ());
+		cfile.add_function_declaration (get_prop);
 		get_prop.block = new CCodeBlock ();
 		cfile.add_function (get_prop);
 
@@ -1293,7 +1293,7 @@ public class Vala.DBusClientModule : DBusModule {
 		set_prop.add_parameter (new CCodeFormalParameter ("property_id", "guint"));
 		set_prop.add_parameter (new CCodeFormalParameter ("value", "const GValue *"));
 		set_prop.add_parameter (new CCodeFormalParameter ("pspec", "GParamSpec *"));
-		cfile.add_type_member_declaration (set_prop.copy ());
+		cfile.add_function_declaration (set_prop);
 		set_prop.block = new CCodeBlock ();
 		cfile.add_function (set_prop);
 	}
@@ -1389,7 +1389,7 @@ public class Vala.DBusClientModule : DBusModule {
 
 		block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("_result")));
 
-		cfile.add_type_member_declaration (function.copy ());
+		cfile.add_function_declaration (function);
 
 		function.block = block;
 		cfile.add_function (function);
@@ -1486,7 +1486,7 @@ public class Vala.DBusClientModule : DBusModule {
 
 		filter_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("DBUS_HANDLER_RESULT_NOT_YET_HANDLED")));
 
-		cfile.add_type_member_declaration (proxy_filter.copy ());
+		cfile.add_function_declaration (proxy_filter);
 		proxy_filter.block = filter_block;
 		cfile.add_function (proxy_filter);
 	}
@@ -1594,7 +1594,7 @@ public class Vala.DBusClientModule : DBusModule {
 		cdecl.add_declarator (new CCodeVariableDeclarator ("reply"));
 		block.add_statement (cdecl);
 
-		cfile.add_type_member_declaration (function.copy ());
+		cfile.add_function_declaration (function);
 
 		function.block = block;
 		cfile.add_function (function);
@@ -1911,7 +1911,7 @@ public class Vala.DBusClientModule : DBusModule {
 			block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("_result")));
 		}
 
-		cfile.add_type_member_declaration (function.copy ());
+		cfile.add_function_declaration (function);
 		function.block = block;
 		cfile.add_function (function);
 
@@ -2006,7 +2006,7 @@ public class Vala.DBusClientModule : DBusModule {
 
 		block.add_statement (postfragment);
 
-		cfile.add_type_member_declaration (function.copy ());
+		cfile.add_function_declaration (function);
 		function.block = block;
 		cfile.add_function (function);
 
@@ -2185,7 +2185,7 @@ public class Vala.DBusClientModule : DBusModule {
 		pending.add_argument (new CCodeConstant ("NULL"));
 		block.add_statement (new CCodeExpressionStatement (pending));
 
-		cfile.add_type_member_declaration (function.copy ());
+		cfile.add_function_declaration (function);
 		function.block = block;
 		cfile.add_function (function);
 
@@ -2248,7 +2248,7 @@ public class Vala.DBusClientModule : DBusModule {
 		pendingfree.add_argument (new CCodeIdentifier ("pending"));
 		block.add_statement (new CCodeExpressionStatement (pendingfree));
 
-		cfile.add_type_member_declaration (function.copy ());
+		cfile.add_function_declaration (function);
 		function.block = block;
 		cfile.add_function (function);
 
@@ -2370,7 +2370,7 @@ public class Vala.DBusClientModule : DBusModule {
 			block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("_result")));
 		}
 
-		cfile.add_type_member_declaration (function.copy ());
+		cfile.add_function_declaration (function);
 		function.block = block;
 		cfile.add_function (function);
 
@@ -2656,7 +2656,7 @@ public class Vala.DBusClientModule : DBusModule {
 			block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("_result")));
 		}
 
-		cfile.add_type_member_declaration (function.copy ());
+		cfile.add_function_declaration (function);
 		function.block = block;
 		cfile.add_function (function);
 
@@ -2803,7 +2803,7 @@ public class Vala.DBusClientModule : DBusModule {
 		reply_unref.add_argument (new CCodeIdentifier ("_reply"));
 		block.add_statement (new CCodeExpressionStatement (reply_unref));
 
-		cfile.add_type_member_declaration (function.copy ());
+		cfile.add_function_declaration (function);
 		function.block = block;
 		cfile.add_function (function);
 

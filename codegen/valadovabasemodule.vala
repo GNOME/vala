@@ -814,7 +814,7 @@ public class Vala.DovaBaseModule : CodeGenerator {
 			// create type_get/finalize functions
 			var type_get_fun = new CCodeFunction ("block%d_data_type_get".printf (block_id), "DovaType*");
 			type_get_fun.modifiers = CCodeModifiers.STATIC;
-			cfile.add_type_member_declaration (type_get_fun.copy ());
+			cfile.add_function_declaration (type_get_fun);
 			type_get_fun.block = new CCodeBlock ();
 
 			var cdecl = new CCodeDeclaration ("int");
@@ -852,7 +852,7 @@ public class Vala.DovaBaseModule : CodeGenerator {
 			var unref_fun = new CCodeFunction ("block%d_data_finalize".printf (block_id), "void");
 			unref_fun.add_parameter (new CCodeFormalParameter ("_data%d_".printf (block_id), struct_name + "*"));
 			unref_fun.modifiers = CCodeModifiers.STATIC;
-			cfile.add_type_member_declaration (unref_fun.copy ());
+			cfile.add_function_declaration (unref_fun);
 			unref_fun.block = free_block;
 
 			cfile.add_function (unref_fun);

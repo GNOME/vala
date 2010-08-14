@@ -73,6 +73,12 @@ public class Vala.CCodeFile {
 		type_member_definition.append (node);
 	}
 
+	public void add_function_declaration (CCodeFunction func) {
+		var decl = func.copy ();
+		decl.is_declaration = true;
+		type_member_declaration.append (decl);
+	}
+
 	public void add_function (CCodeFunction func) {
 		type_member_definition.append (func);
 	}

@@ -40,24 +40,24 @@ public class Vala.DovaDelegateModule : DovaValueModule {
 		if (d.is_internal_symbol ()) {
 			type_fun.modifiers = CCodeModifiers.STATIC;
 		}
-		decl_space.add_type_member_declaration (type_fun);
+		decl_space.add_function_declaration (type_fun);
 
 		var type_init_fun = new CCodeFunction ("%s_type_init".printf (d.get_lower_case_cname ()));
 		if (d.is_internal_symbol ()) {
 			type_init_fun.modifiers = CCodeModifiers.STATIC;
 		}
 		type_init_fun.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
-		decl_space.add_type_member_declaration (type_init_fun);
+		decl_space.add_function_declaration (type_init_fun);
 
 		generate_type_declaration (d.return_type, decl_space);
 
 		var function = generate_new_function (d, decl_space);
 		function.block = null;
-		decl_space.add_type_member_declaration (function);
+		decl_space.add_function_declaration (function);
 
 		function = generate_invoke_function (d, decl_space);
 		function.block = null;
-		decl_space.add_type_member_declaration (function);
+		decl_space.add_function_declaration (function);
 	}
 
 	CCodeFunction generate_new_function (Delegate d, CCodeFile decl_space) {

@@ -552,7 +552,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		fun.modifiers = CCodeModifiers.STATIC;
 		fun.add_parameter (new CCodeFormalParameter ("str1", "const char *"));
 		fun.add_parameter (new CCodeFormalParameter ("str2", "const char *"));
-		cfile.add_type_member_declaration (fun.copy ());
+		cfile.add_function_declaration (fun);
 
 		// (str1 != str2)
 		var cineq = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("str1"), new CCodeIdentifier ("str2"));
@@ -700,7 +700,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			regfun.attributes = "G_GNUC_UNUSED";
 		}
 
-		decl_space.add_type_member_declaration (regfun);
+		decl_space.add_function_declaration (regfun);
 
 		return true;
 	}
@@ -1315,7 +1315,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		if (prop.is_private_symbol () || (!acc.readable && !acc.writable) || acc.access == SymbolAccessibility.PRIVATE) {
 			function.modifiers |= CCodeModifiers.STATIC;
 		}
-		decl_space.add_type_member_declaration (function);
+		decl_space.add_function_declaration (function);
 	}
 
 	public override void visit_property_accessor (PropertyAccessor acc) {
@@ -1845,7 +1845,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			var ref_fun = new CCodeFunction ("block%d_data_ref".printf (block_id), struct_name + "*");
 			ref_fun.add_parameter (new CCodeFormalParameter ("_data%d_".printf (block_id), struct_name + "*"));
 			ref_fun.modifiers = CCodeModifiers.STATIC;
-			cfile.add_type_member_declaration (ref_fun.copy ());
+			cfile.add_function_declaration (ref_fun);
 			ref_fun.block = new CCodeBlock ();
 
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_atomic_int_inc"));
@@ -1857,7 +1857,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			var unref_fun = new CCodeFunction ("block%d_data_unref".printf (block_id), "void");
 			unref_fun.add_parameter (new CCodeFormalParameter ("_data%d_".printf (block_id), struct_name + "*"));
 			unref_fun.modifiers = CCodeModifiers.STATIC;
-			cfile.add_type_member_declaration (unref_fun.copy ());
+			cfile.add_function_declaration (unref_fun);
 			unref_fun.block = new CCodeBlock ();
 			
 			ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_atomic_int_dec_and_test"));
@@ -2513,7 +2513,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 
 		// append to file
 
-		cfile.add_type_member_declaration (function.copy ());
+		cfile.add_function_declaration (function);
 
 		function.block = cblock;
 		cfile.add_function (function);
@@ -2569,7 +2569,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 
 		// append to file
 
-		cfile.add_type_member_declaration (function.copy ());
+		cfile.add_function_declaration (function);
 
 		function.block = cblock;
 		cfile.add_function (function);
@@ -2640,7 +2640,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 
 		// append to file
 
-		cfile.add_type_member_declaration (function.copy ());
+		cfile.add_function_declaration (function);
 
 		function.block = block;
 		cfile.add_function (function);
@@ -2677,7 +2677,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 
 		// append to file
 
-		cfile.add_type_member_declaration (function.copy ());
+		cfile.add_function_declaration (function);
 
 		function.block = block;
 		cfile.add_function (function);
@@ -2737,7 +2737,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 
 		// append to file
 
-		cfile.add_type_member_declaration (function.copy ());
+		cfile.add_function_declaration (function);
 
 		function.block = block;
 		cfile.add_function (function);
@@ -2861,7 +2861,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			free_call.add_argument (new CCodeMemberAccess.pointer(new CCodeIdentifier("node"), "data"));
 			wrapper_block.add_statement (new CCodeExpressionStatement (free_call));
 			wrapper_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
-			cfile.add_type_member_declaration (function.copy ());
+			cfile.add_function_declaration (function);
 			wrapper.block = wrapper_block;
 			cfile.add_function (wrapper);
 
@@ -2893,7 +2893,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 
 		// append to file
 
-		cfile.add_type_member_declaration (function.copy ());
+		cfile.add_function_declaration (function);
 
 		function.block = block;
 		cfile.add_function (function);
@@ -4592,7 +4592,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		block.add_statement (fragment);
 		block.add_statement (new CCodeReturnStatement (result));
 
-		cfile.add_type_member_declaration (cfunc.copy ());
+		cfile.add_function_declaration (cfunc);
 
 		cfunc.block = block;
 		cfile.add_function (cfunc);
@@ -4989,7 +4989,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 
 		block.add_statement (cloop);
 		block.add_statement (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
-		cfile.add_type_member_declaration (function.copy ());
+		cfile.add_function_declaration (function);
 		function.block = block;
 		cfile.add_function (function);
 
@@ -5211,7 +5211,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			block.add_statement (fragment);
 			block.add_statement (new CCodeReturnStatement (sink));
 
-			cfile.add_type_member_declaration (cfunc.copy ());
+			cfile.add_function_declaration (cfunc);
 
 			cfunc.block = block;
 			cfile.add_function (cfunc);
@@ -5644,7 +5644,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			}
 		}
 
-		cfile.add_type_member_declaration (function.copy ());
+		cfile.add_function_declaration (function);
 		function.block = cblock;
 		cfile.add_function (function);
 	}
@@ -5712,7 +5712,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 
 		pop_context ();
 
-		cfile.add_type_member_declaration (function.copy ());
+		cfile.add_function_declaration (function);
 		function.block = cblock;
 		cfile.add_function (function);
 	}

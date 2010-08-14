@@ -275,7 +275,7 @@ public class Vala.GAsyncModule : GSignalModule {
 		if (m.base_method != null || m.base_interface_method != null) {
 			// declare *_real_* function
 			asyncfunc.modifiers |= CCodeModifiers.STATIC;
-			cfile.add_type_member_declaration (asyncfunc.copy ());
+			cfile.add_function_declaration (asyncfunc);
 		} else if (m.is_private_symbol ()) {
 			asyncfunc.modifiers |= CCodeModifiers.STATIC;
 		}
@@ -296,7 +296,7 @@ public class Vala.GAsyncModule : GSignalModule {
 		var block = function.block;
 		function.block = null;
  
-		cfile.add_type_member_declaration (function.copy ());
+		cfile.add_function_declaration (function);
 
 		function.block = block;
 		cfile.add_function (function);
@@ -319,7 +319,7 @@ public class Vala.GAsyncModule : GSignalModule {
 				asyncfunc.modifiers |= CCodeModifiers.STATIC;
 			}
 
-			decl_space.add_type_member_declaration (asyncfunc);
+			decl_space.add_function_declaration (asyncfunc);
 
 			var finishfunc = new CCodeFunction (m.get_finish_cname ());
 			cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
@@ -331,7 +331,7 @@ public class Vala.GAsyncModule : GSignalModule {
 				finishfunc.modifiers |= CCodeModifiers.STATIC;
 			}
 
-			decl_space.add_type_member_declaration (finishfunc);
+			decl_space.add_function_declaration (finishfunc);
 		} else {
 			base.generate_method_declaration (m, decl_space);
 		}
