@@ -52,10 +52,14 @@ public class Vala.CCodeFunction : CCodeNode {
 
 	private List<CCodeFormalParameter> parameters = new ArrayList<CCodeFormalParameter> ();
 
+	CCodeBlock current_block;
+	List<CCodeStatement> statement_stack = new ArrayList<CCodeStatement> ();
+
 	public CCodeFunction (string name, string return_type = "void") {
 		this.name = name;
 		this.return_type = return_type;
 		this.block = new CCodeBlock ();
+		current_block = block;
 	}
 	
 	/**
@@ -137,5 +141,134 @@ public class Vala.CCodeFunction : CCodeNode {
 			writer.write_newline ();
 		}
 		writer.write_newline ();
+	}
+
+	public void add_statement (CCodeNode stmt) {
+		current_block.add_statement (stmt);
+	}
+
+	public void open_block () {
+		statement_stack.add (current_block);
+		var parent_block = current_block;
+
+		current_block = new CCodeBlock ();
+
+		parent_block.add_statement (current_block);
+	}
+
+	public void open_if (CCodeExpression condition) {
+		statement_stack.add (current_block);
+		var parent_block = current_block;
+
+		current_block = new CCodeBlock ();
+
+		var cif = new CCodeIfStatement (condition, current_block);
+		statement_stack.add (cif);
+
+		parent_block.add_statement (cif);
+	}
+
+	public void add_else () {
+		current_block = new CCodeBlock ();
+
+		var cif = (CCodeIfStatement) statement_stack[statement_stack.size - 1];
+		assert (cif.false_statement == null);
+		cif.false_statement = current_block;
+	}
+
+	public void else_if (CCodeExpression condition) {
+		var parent_if = (CCodeIfStatement) statement_stack[statement_stack.size - 1];
+		assert (parent_if.false_statement == null);
+
+		statement_stack.remove_at (statement_stack.size - 1);
+
+		current_block = new CCodeBlock ();
+
+		var cif = new CCodeIfStatement (condition, current_block);
+		parent_if.false_statement = cif;
+		statement_stack.add (cif);
+	}
+
+	public void open_while (CCodeExpression condition) {
+		statement_stack.add (current_block);
+		var parent_block = current_block;
+
+		current_block = new CCodeBlock ();
+
+		parent_block.add_statement (new CCodeWhileStatement (condition, current_block));
+	}
+
+	public void open_for (CCodeExpression? initializer, CCodeExpression condition, CCodeExpression? iterator) {
+		statement_stack.add (current_block);
+		var parent_block = current_block;
+
+		current_block = new CCodeBlock ();
+
+		var cfor = new CCodeForStatement (condition, current_block);
+		if (initializer != null) {
+			cfor.add_initializer (initializer);
+		}
+		if (iterator != null) {
+			cfor.add_iterator (iterator);
+		}
+
+		parent_block.add_statement (cfor);
+	}
+
+	public void open_switch (CCodeExpression expression) {
+		statement_stack.add (current_block);
+		var parent_block = current_block;
+
+		var cswitch = new CCodeSwitchStatement (expression);
+		current_block = cswitch;
+
+		parent_block.add_statement (cswitch);
+	}
+
+	public void add_label (string label) {
+		current_block.add_statement (new CCodeLabel (label));
+	}
+
+	public void add_case (CCodeExpression expression) {
+		current_block.add_statement (new CCodeCaseStatement (expression));
+	}
+
+	public void add_default () {
+		current_block.add_statement (new CCodeLabel ("default"));
+	}
+
+	public void add_goto (string target) {
+		current_block.add_statement (new CCodeGotoStatement (target));
+	}
+
+	public void add_expression (CCodeExpression expression) {
+		current_block.add_statement (new CCodeExpressionStatement (expression));
+	}
+
+	public void add_return (CCodeExpression? expression = null) {
+		current_block.add_statement (new CCodeReturnStatement (expression));
+	}
+
+	public void add_break () {
+		current_block.add_statement (new CCodeBreakStatement ());
+	}
+
+	public void add_continue () {
+		current_block.add_statement (new CCodeContinueStatement ());
+	}
+
+	public void add_declaration (string type_name, CCodeDeclarator declarator, CCodeModifiers modifiers = 0) {
+		var stmt = new CCodeDeclaration (type_name);
+		stmt.add_declarator (declarator);
+		stmt.modifiers = modifiers;
+		current_block.add_statement (stmt);
+	}
+
+	public void close () {
+		do {
+			var top = statement_stack[statement_stack.size - 1];
+			statement_stack.remove_at (statement_stack.size - 1);
+			current_block = top as CCodeBlock;
+		} while (current_block == null);
 	}
 }
