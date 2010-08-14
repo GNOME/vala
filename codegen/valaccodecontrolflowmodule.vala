@@ -26,24 +26,22 @@ using GLib;
 
 public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 	public override void visit_if_statement (IfStatement stmt) {
+		ccode.open_if ((CCodeExpression) stmt.condition.ccodenode);
+
 		stmt.true_statement.emit (this);
+
 		if (stmt.false_statement != null) {
+			ccode.add_else ();
 			stmt.false_statement.emit (this);
 		}
 
-		if (stmt.false_statement != null) {
-			stmt.ccodenode = new CCodeIfStatement ((CCodeExpression) stmt.condition.ccodenode, (CCodeStatement) stmt.true_statement.ccodenode, (CCodeStatement) stmt.false_statement.ccodenode);
-		} else {
-			stmt.ccodenode = new CCodeIfStatement ((CCodeExpression) stmt.condition.ccodenode, (CCodeStatement) stmt.true_statement.ccodenode);
-		}
-		
-		create_temp_decl (stmt, stmt.condition.temp_vars);
+		ccode.close ();
 	}
 
 	void visit_string_switch_statement (SwitchStatement stmt) {
 		// we need a temporary variable to save the property value
 		var temp_var = get_temp_variable (stmt.expression.value_type, stmt.expression.value_type.value_owned, stmt, false);
-		stmt.expression.add_temp_var (temp_var);
+		emit_temp_var (temp_var);
 
 		var ctemp = get_variable_cexpression (temp_var.name);
 		var cinit = new CCodeAssignment (ctemp, (CCodeExpression) stmt.expression.ccodenode);
@@ -52,9 +50,6 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 		var free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
 		free_call.add_argument (ctemp);
 
-		var cswitchblock = new CCodeFragment ();
-		stmt.ccodenode = cswitchblock;
-
 		var cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeConstant ("NULL"), ctemp);
 		var cquark = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_string"));
 		cquark.add_argument (ctemp);
@@ -62,7 +57,7 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 		var ccond = new CCodeConditionalExpression (cisnull, new CCodeConstant ("0"), cquark);
 
 		temp_var = get_temp_variable (gquark_type);
-		stmt.expression.add_temp_var (temp_var);
+		emit_temp_var (temp_var);
 
 		int label_count = 0;
 
@@ -72,48 +67,43 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			}
 
 			foreach (SwitchLabel label in section.get_labels ()) {
+				label.expression.emit (this);
 				var cexpr = (CCodeExpression) label.expression.ccodenode;
 
 				if (is_constant_ccode_expression (cexpr)) {
 					var cname = "%s_label%d".printf (temp_var.name, label_count++);
-					var cdecl = new CCodeDeclaration (gquark_type.get_cname ());
 
-					cdecl.modifiers = CCodeModifiers.STATIC;
-					cdecl.add_declarator (new CCodeVariableDeclarator (cname, czero));
-
-					cswitchblock.append (cdecl);
+					ccode.add_declaration (gquark_type.get_cname (), new CCodeVariableDeclarator (cname, czero), CCodeModifiers.STATIC);
 				}
 			}
 		}
 
-		cswitchblock.append (new CCodeExpressionStatement (cinit));
+		ccode.add_expression (cinit);
 
 		ctemp = get_variable_cexpression (temp_var.name);
 		cinit = new CCodeAssignment (ctemp, ccond);
 
-		cswitchblock.append (new CCodeExpressionStatement (cinit));
-		create_temp_decl (stmt, stmt.expression.temp_vars);
+		ccode.add_expression (cinit);
 
 		if (stmt.expression.value_type.value_owned) {
 			// free owned string
-			cswitchblock.append (new CCodeExpressionStatement (free_call));
+			ccode.add_expression (free_call);
 		}
 
-		List<Statement> default_statements = null;
+		SwitchSection default_section = null;
 		label_count = 0;
 
-		// generate nested if statements		
-		CCodeStatement ctopstmt = null;
-		CCodeIfStatement coldif = null;
+		int n = 0;
 
 		foreach (SwitchSection section in stmt.get_sections ()) {
 			if (section.has_default_label ()) {
-				default_statements = section.get_statements ();
+				default_section = section;
 				continue;
 			}
 
 			CCodeBinaryExpression cor = null;
 			foreach (SwitchLabel label in section.get_labels ()) {
+				label.expression.emit (this);
 				var cexpr = (CCodeExpression) label.expression.ccodenode;
 
 				if (is_constant_ccode_expression (cexpr)) {
@@ -140,119 +130,86 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 				}
 			}
 
-			var cblock = new CCodeBlock ();
-			foreach (CodeNode body_stmt in section.get_statements ()) {
-				if (body_stmt.ccodenode is CCodeFragment) {
-					foreach (CCodeNode cstmt in ((CCodeFragment) body_stmt.ccodenode).get_children ()) {
-						cblock.add_statement (cstmt);
-					}
-				} else {
-					cblock.add_statement (body_stmt.ccodenode);
-				}
-			}
-
-			var cswitch = new CCodeSwitchStatement (new CCodeConstant ("0"));
-			cswitch.add_statement (new CCodeLabel ("default"));
-			cswitch.add_statement (cblock);
-			var cif = new CCodeIfStatement (cor, cswitch);
-
-			if (coldif != null) {
-				coldif.false_statement = cif;
+			if (n > 0) {
+				ccode.else_if (cor);
 			} else {
-				ctopstmt = cif;
+				ccode.open_if (cor);
 			}
 
-			coldif = cif;
+			ccode.open_switch (new CCodeConstant ("0"));
+			ccode.add_default ();
+
+			section.emit (this);
+
+			ccode.close ();
+
+			n++;
 		}
 	
-		if (default_statements != null) {
-			var cblock = new CCodeBlock ();
-			foreach (CodeNode body_stmt in default_statements) {
-				cblock.add_statement (body_stmt.ccodenode);
+		if (default_section != null) {
+			if (n > 0) {
+				ccode.add_else ();
 			}
 
-			var cswitch = new CCodeSwitchStatement (new CCodeConstant ("0"));
-			cswitch.add_statement (new CCodeLabel ("default"));
-			cswitch.add_statement (cblock);
+			ccode.open_switch (new CCodeConstant ("0"));
+			ccode.add_default ();
 
-			if (coldif == null) {
-				// there is only one section and that section
-				// contains a default label
-				ctopstmt = cswitch;
-			} else {
-				coldif.false_statement = cswitch;
-			}
+			default_section.emit (this);
+
+			ccode.close ();
 		}
-	
-		cswitchblock.append (ctopstmt);
+
+		ccode.close ();
 	}
 
 	public override void visit_switch_statement (SwitchStatement stmt) {
-		foreach (SwitchSection section in stmt.get_sections ()) {
-			section.emit (this);
-		}
-
 		if (stmt.expression.value_type.compatible (string_type)) {
 			visit_string_switch_statement (stmt);
 			return;
 		}
 
-		var cswitch = new CCodeSwitchStatement ((CCodeExpression) stmt.expression.ccodenode);
-		stmt.ccodenode = cswitch;
+		ccode.open_switch ((CCodeExpression) stmt.expression.ccodenode);
 
 		foreach (SwitchSection section in stmt.get_sections ()) {
 			if (section.has_default_label ()) {
-				cswitch.add_statement (new CCodeLabel ("default"));
-				var cdefaultblock = new CCodeBlock ();
-				cswitch.add_statement (cdefaultblock);
-				foreach (CodeNode default_stmt in section.get_statements ()) {
-					cdefaultblock.add_statement (default_stmt.ccodenode);
-				}
-				continue;
+				ccode.add_default ();
 			}
-
-			foreach (SwitchLabel label in section.get_labels ()) {
-				cswitch.add_statement (new CCodeCaseStatement ((CCodeExpression) label.expression.ccodenode));
-			}
-
-			cswitch.add_statement (section.ccodenode);
+			section.emit (this);
 		}
-		
-		create_temp_decl (stmt, stmt.expression.temp_vars);
+
+		ccode.close ();
 	}
 
 	public override void visit_switch_label (SwitchLabel label) {
+		if (((SwitchStatement) label.section.parent_node).expression.value_type.compatible (string_type)) {
+			return;
+		}
+
 		if (label.expression != null) {
 			label.expression.emit (this);
 
 			visit_end_full_expression (label.expression);
+
+			ccode.add_case ((CCodeExpression) label.expression.ccodenode);
 		}
 	}
 
 	public override void visit_loop (Loop stmt) {
-		stmt.body.emit (this);
-
 		if (context.profile == Profile.GOBJECT) {
-			stmt.ccodenode = new CCodeWhileStatement (new CCodeConstant ("TRUE"), (CCodeStatement) stmt.body.ccodenode);
+			ccode.open_while (new CCodeConstant ("TRUE"));
 		} else {
 			cfile.add_include ("stdbool.h");
-			stmt.ccodenode = new CCodeWhileStatement (new CCodeConstant ("true"), (CCodeStatement) stmt.body.ccodenode);
+			ccode.open_while (new CCodeConstant ("true"));
 		}
+
+		stmt.body.emit (this);
+
+		ccode.close ();
 	}
 
 	public override void visit_foreach_statement (ForeachStatement stmt) {
-		stmt.body.emit (this);
+		ccode.open_block ();
 
-		visit_block (stmt);
-
-		var cblock = new CCodeBlock ();
-		// sets #line
-		stmt.ccodenode = cblock;
-
-		var cfrag = new CCodeFragment ();
-		append_temp_decl (cfrag, stmt.collection.temp_vars);
-		cblock.add_statement (cfrag);
-		
 		var collection_backup = stmt.collection_variable;
 		var collection_type = collection_backup.variable_type.copy ();
 
@@ -264,20 +221,15 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 
 		if (current_method != null && current_method.coroutine) {
 			closure_struct.add_field (collection_type.get_cname (), collection_backup.name);
-			cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (collection_backup.name), (CCodeExpression) stmt.collection.ccodenode)));
 		} else {
-			var ccoldecl = new CCodeDeclaration (collection_type.get_cname ());
-			var ccolvardecl = new CCodeVariableDeclarator (collection_backup.name, (CCodeExpression) stmt.collection.ccodenode);
-			ccolvardecl.line = cblock.line;
-			ccoldecl.add_declarator (ccolvardecl);
-			cblock.add_statement (ccoldecl);
+			var ccolvardecl = new CCodeVariableDeclarator (collection_backup.name);
+			ccode.add_declaration (collection_type.get_cname (), ccolvardecl);
 		}
+		ccode.add_expression (new CCodeAssignment (get_variable_cexpression (collection_backup.name), (CCodeExpression) stmt.collection.ccodenode));
 		
 		if (stmt.tree_can_fail && stmt.collection.tree_can_fail) {
 			// exception handling
-			cfrag = new CCodeFragment ();
-			add_simple_check (stmt.collection, cfrag);
-			cblock.add_statement (cfrag);
+			add_simple_check (stmt.collection);
 		}
 
 		if (stmt.collection.value_type is ArrayType) {
@@ -288,24 +240,24 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			// store array length for use by _vala_array_free
 			if (current_method != null && current_method.coroutine) {
 				closure_struct.add_field ("int", get_array_length_cname (collection_backup.name, 1));
-				cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (get_array_length_cname (collection_backup.name, 1)), array_len)));
 			} else {
-				var clendecl = new CCodeDeclaration ("int");
-				clendecl.add_declarator (new CCodeVariableDeclarator (get_array_length_cname (collection_backup.name, 1), array_len));
-				cblock.add_statement (clendecl);
+				ccode.add_declaration ("int", new CCodeVariableDeclarator (get_array_length_cname (collection_backup.name, 1)));
 			}
+			ccode.add_expression (new CCodeAssignment (get_variable_cexpression (get_array_length_cname (collection_backup.name, 1)), array_len));
 
 			var it_name = (stmt.variable_name + "_it");
 		
 			if (current_method != null && current_method.coroutine) {
 				closure_struct.add_field ("int", it_name);
 			} else {
-				var citdecl = new CCodeDeclaration ("int");
-				citdecl.add_declarator (new CCodeVariableDeclarator (it_name));
-				cblock.add_statement (citdecl);
+				ccode.add_declaration ("int", new CCodeVariableDeclarator (it_name));
 			}
-			
-			var cbody = new CCodeBlock ();
+
+			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, get_variable_cexpression (it_name), array_len);
+
+			ccode.open_for (new CCodeAssignment (get_variable_cexpression (it_name), new CCodeConstant ("0")),
+			                   ccond,
+			                   new CCodeAssignment (get_variable_cexpression (it_name), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, get_variable_cexpression (it_name), new CCodeConstant ("1"))));
 
 			CCodeExpression element_expr = new CCodeElementAccess (get_variable_cexpression (collection_backup.name), get_variable_cexpression (it_name));
 
@@ -313,19 +265,12 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			element_type.value_owned = false;
 			element_expr = transform_expression (element_expr, element_type, stmt.type_reference);
 
-			cfrag = new CCodeFragment ();
-			append_temp_decl (cfrag, temp_vars);
-			cbody.add_statement (cfrag);
-			temp_vars.clear ();
-
 			if (current_method != null && current_method.coroutine) {
 				closure_struct.add_field (stmt.type_reference.get_cname (), stmt.variable_name);
-				cbody.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (stmt.variable_name), element_expr)));
 			} else {
-				var cdecl = new CCodeDeclaration (stmt.type_reference.get_cname ());
-				cdecl.add_declarator (new CCodeVariableDeclarator (stmt.variable_name, element_expr));
-				cbody.add_statement (cdecl);
+				ccode.add_declaration (stmt.type_reference.get_cname (), new CCodeVariableDeclarator (stmt.variable_name));
 			}
+			ccode.add_expression (new CCodeAssignment (get_variable_cexpression (stmt.variable_name), element_expr));
 
 			// add array length variable for stacked arrays
 			if (stmt.type_reference is ArrayType) {
@@ -333,23 +278,16 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 				for (int dim = 1; dim <= inner_array_type.rank; dim++) {
 					if (current_method != null && current_method.coroutine) {
 						closure_struct.add_field ("int", get_array_length_cname (stmt.variable_name, dim));
-						cbody.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (get_array_length_cname (stmt.variable_name, dim)), new CCodeConstant ("-1"))));
+						ccode.add_expression (new CCodeAssignment (get_variable_cexpression (get_array_length_cname (stmt.variable_name, dim)), new CCodeConstant ("-1")));
 					} else {
-						var cdecl = new CCodeDeclaration ("int");
-						cdecl.add_declarator (new CCodeVariableDeclarator (get_array_length_cname (stmt.variable_name, dim), new CCodeConstant ("-1")));
-						cbody.add_statement (cdecl);
+						ccode.add_declaration ("int", new CCodeVariableDeclarator (get_array_length_cname (stmt.variable_name, dim), new CCodeConstant ("-1")));
 					}
 				}
 			}
 
-			cbody.add_statement (stmt.body.ccodenode);
-			
-			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, get_variable_cexpression (it_name), array_len);
+			stmt.body.emit (this);
 
-			var cfor = new CCodeForStatement (ccond, cbody);
-			cfor.add_initializer (new CCodeAssignment (get_variable_cexpression (it_name), new CCodeConstant ("0")));
-			cfor.add_iterator (new CCodeAssignment (get_variable_cexpression (it_name), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, get_variable_cexpression (it_name), new CCodeConstant ("1"))));
-			cblock.add_statement (cfor);
+			ccode.close ();
 		} else if (stmt.collection.value_type.compatible (new ObjectType (glist_type)) || stmt.collection.value_type.compatible (new ObjectType (gslist_type))) {
 			// iterating over a GList or GSList
 
@@ -358,14 +296,14 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			if (current_method != null && current_method.coroutine) {
 				closure_struct.add_field (collection_type.get_cname (), it_name);
 			} else {
-				var citdecl = new CCodeDeclaration (collection_type.get_cname ());
-				var citvardecl = new CCodeVariableDeclarator (it_name);
-				citvardecl.line = cblock.line;
-				citdecl.add_declarator (citvardecl);
-				cblock.add_statement (citdecl);
+				ccode.add_declaration (collection_type.get_cname (), new CCodeVariableDeclarator (it_name));
 			}
 			
-			var cbody = new CCodeBlock ();
+			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_variable_cexpression (it_name), new CCodeConstant ("NULL"));
+
+			ccode.open_for (new CCodeAssignment (get_variable_cexpression (it_name), get_variable_cexpression (collection_backup.name)),
+			                   ccond,
+			                   new CCodeAssignment (get_variable_cexpression (it_name), new CCodeMemberAccess.pointer (get_variable_cexpression (it_name), "next")));
 
 			CCodeExpression element_expr = new CCodeMemberAccess.pointer (get_variable_cexpression (it_name), "data");
 
@@ -380,32 +318,16 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			element_expr = convert_from_generic_pointer (element_expr, element_data_type);
 			element_expr = transform_expression (element_expr, element_data_type, stmt.type_reference);
 
-			cfrag = new CCodeFragment ();
-			append_temp_decl (cfrag, temp_vars);
-			cbody.add_statement (cfrag);
-			temp_vars.clear ();
-
 			if (current_method != null && current_method.coroutine) {
 				closure_struct.add_field (stmt.type_reference.get_cname (), stmt.variable_name);
-				cbody.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (stmt.variable_name), element_expr)));
 			} else {
-				var cdecl = new CCodeDeclaration (stmt.type_reference.get_cname ());
-				var cvardecl = new CCodeVariableDeclarator (stmt.variable_name, element_expr);
-				cvardecl.line = cblock.line;
-				cdecl.add_declarator (cvardecl);
-				cbody.add_statement (cdecl);
+				ccode.add_declaration (stmt.type_reference.get_cname (), new CCodeVariableDeclarator (stmt.variable_name));
 			}
-			
-			cbody.add_statement (stmt.body.ccodenode);
-			
-			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_variable_cexpression (it_name), new CCodeConstant ("NULL"));
-			
-			var cfor = new CCodeForStatement (ccond, cbody);
-			
-			cfor.add_initializer (new CCodeAssignment (get_variable_cexpression (it_name), get_variable_cexpression (collection_backup.name)));
+			ccode.add_expression (new CCodeAssignment (get_variable_cexpression (stmt.variable_name), element_expr));
 
-			cfor.add_iterator (new CCodeAssignment (get_variable_cexpression (it_name), new CCodeMemberAccess.pointer (get_variable_cexpression (it_name), "next")));
-			cblock.add_statement (cfor);
+			stmt.body.emit (this);
+
+			ccode.close ();
 		} else if (stmt.collection.value_type.compatible (new ObjectType (gvaluearray_type))) {
 			// iterating over a GValueArray
 
@@ -414,14 +336,14 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			if (current_method != null && current_method.coroutine) {
 				closure_struct.add_field (uint_type.get_cname (), arr_index);
 			} else {
-				var citdecl = new CCodeDeclaration (uint_type.get_cname ());
-				var citvardecl = new CCodeVariableDeclarator (arr_index);
-				citvardecl.line = cblock.line;
-				citdecl.add_declarator (citvardecl);
-				cblock.add_statement (citdecl);
+				ccode.add_declaration (uint_type.get_cname (), new CCodeVariableDeclarator (arr_index));
 			}
 
-			var cbody = new CCodeBlock ();
+			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, get_variable_cexpression (arr_index), new CCodeMemberAccess.pointer (get_variable_cexpression (collection_backup.name), "n_values"));
+
+			ccode.open_for (new CCodeAssignment (get_variable_cexpression (arr_index), new CCodeConstant ("0")),
+			                   ccond,
+			                   new CCodeAssignment (get_variable_cexpression (arr_index), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, get_variable_cexpression (arr_index), new CCodeConstant ("1"))));
 
 			var get_item = new CCodeFunctionCall (new CCodeIdentifier ("g_value_array_get_nth"));
 			get_item.add_argument (get_variable_cexpression (collection_backup.name));
@@ -433,56 +355,39 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 				element_expr = get_ref_cexpression (stmt.type_reference, element_expr, null, new StructValueType (gvalue_type));
 			}
 
-			cfrag = new CCodeFragment ();
-			append_temp_decl (cfrag, temp_vars);
-			cbody.add_statement (cfrag);
-			temp_vars.clear ();
-
 			if (current_method != null && current_method.coroutine) {
 				closure_struct.add_field (stmt.type_reference.get_cname (), stmt.variable_name);
-				cbody.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (stmt.variable_name), element_expr)));
 			} else {
-				var cdecl = new CCodeDeclaration (stmt.type_reference.get_cname ());
-				var cvardecl = new CCodeVariableDeclarator (stmt.variable_name, element_expr);
-				cvardecl.line = cblock.line;
-				cdecl.add_declarator (cvardecl);
-				cbody.add_statement (cdecl);
+				ccode.add_declaration (stmt.type_reference.get_cname (), new CCodeVariableDeclarator (stmt.variable_name));
 			}
+			ccode.add_expression (new CCodeAssignment (get_variable_cexpression (stmt.variable_name), element_expr));
 
-			cbody.add_statement (stmt.body.ccodenode);
+			stmt.body.emit (this);
 
-			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, get_variable_cexpression (arr_index), new CCodeMemberAccess.pointer (get_variable_cexpression (collection_backup.name), "n_values"));
-
-			var cfor = new CCodeForStatement (ccond, cbody);
-
-			cfor.add_initializer (new CCodeAssignment (get_variable_cexpression (arr_index), new CCodeConstant ("0")));
-
-			cfor.add_iterator (new CCodeAssignment (get_variable_cexpression (arr_index), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, get_variable_cexpression (arr_index), new CCodeConstant ("1"))));
-
-			cblock.add_statement (cfor);
+			ccode.close ();
 		}
 
 		foreach (LocalVariable local in stmt.get_local_variables ()) {
 			if (requires_destroy (local.variable_type)) {
 				var ma = new MemberAccess.simple (local.name);
 				ma.symbol_reference = local;
-				var cunref = new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma));
-				cunref.line = cblock.line;
-				cblock.add_statement (cunref);
+				ccode.add_expression (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma));
 			}
 		}
+
+		ccode.close ();
 	}
 
 	public override void visit_break_statement (BreakStatement stmt) {
-		stmt.ccodenode = new CCodeBreakStatement ();
+		append_local_free (current_symbol, true);
 
-		create_local_free (stmt, true);
+		ccode.add_break ();
 	}
 
 	public override void visit_continue_statement (ContinueStatement stmt) {
-		stmt.ccodenode = new CCodeContinueStatement ();
+		append_local_free (current_symbol, true);
 
-		create_local_free (stmt, true);
+		ccode.add_continue ();
 	}
 }
 

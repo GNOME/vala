@@ -81,60 +81,40 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 	}
 
 	public override void visit_throw_statement (ThrowStatement stmt) {
-		var cfrag = new CCodeFragment ();
-
 		// method will fail
 		current_method_inner_error = true;
-		var cassign = new CCodeAssignment (get_variable_cexpression ("_inner_error_"), (CCodeExpression) stmt.error_expression.ccodenode);
-		cfrag.append (new CCodeExpressionStatement (cassign));
+		ccode.add_expression (new CCodeAssignment (get_variable_cexpression ("_inner_error_"), (CCodeExpression) stmt.error_expression.ccodenode));
 
-		add_simple_check (stmt, cfrag, true);
-
-		stmt.ccodenode = cfrag;
-
-		create_temp_decl (stmt, stmt.error_expression.temp_vars);
+		add_simple_check (stmt, true);
 	}
 
-	public virtual CCodeStatement return_with_exception (CCodeExpression error_expr)
-	{
+	public virtual void return_with_exception (CCodeExpression error_expr) {
 		var cpropagate = new CCodeFunctionCall (new CCodeIdentifier ("g_propagate_error"));
 		cpropagate.add_argument (new CCodeIdentifier ("error"));
 		cpropagate.add_argument (error_expr);
 
-		var cerror_block = new CCodeBlock ();
-		cerror_block.add_statement (new CCodeExpressionStatement (cpropagate));
+		ccode.add_expression (cpropagate);
 
 		// free local variables
-		var free_frag = new CCodeFragment ();
-		append_local_free (current_symbol, free_frag, false);
-		cerror_block.add_statement (free_frag);
+		append_local_free (current_symbol, false);
 
 		if (current_method is CreationMethod) {
 			var cl = current_method.parent_symbol as Class;
 			var unref_call = get_unref_expression (new CCodeIdentifier ("self"), new ObjectType (cl), null);
-			cerror_block.add_statement (new CCodeExpressionStatement (unref_call));
-			cerror_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("NULL")));
+			ccode.add_expression (unref_call);
+			ccode.add_return (new CCodeConstant ("NULL"));
 		} else if (current_method != null && current_method.coroutine) {
-			cerror_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
+			ccode.add_return (new CCodeConstant ("FALSE"));
 		} else if (current_return_type is VoidType) {
-			cerror_block.add_statement (new CCodeReturnStatement ());
+			ccode.add_return ();
 		} else {
-			cerror_block.add_statement (new CCodeReturnStatement (default_value_for_type (current_return_type, false)));
+			ccode.add_return (default_value_for_type (current_return_type, false));
 		}
-
-		return cerror_block;
 	}
 
-	CCodeStatement uncaught_error_statement (CCodeExpression inner_error, CCodeBlock? block = null, bool unexpected = false) {
-		var cerror_block = block;
-		if (cerror_block == null) {
-			cerror_block = new CCodeBlock ();
-		}
-
+	void uncaught_error_statement (CCodeExpression inner_error, bool unexpected = false) {
 		// free local variables
-		var free_frag = new CCodeFragment ();
-		append_local_free (current_symbol, free_frag, false);
-		cerror_block.add_statement (free_frag);
+		append_local_free (current_symbol, false);
 
 		var ccritical = new CCodeFunctionCall (new CCodeIdentifier ("g_critical"));
 		ccritical.add_argument (new CCodeConstant (unexpected ? "\"file %s: line %d: unexpected error: %s (%s, %d)\"" : "\"file %s: line %d: uncaught error: %s (%s, %d)\""));
@@ -149,24 +129,19 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		var cclear = new CCodeFunctionCall (new CCodeIdentifier ("g_clear_error"));
 		cclear.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, inner_error));
 
-		var cprint_frag = new CCodeFragment ();
-		cprint_frag.append (new CCodeExpressionStatement (ccritical));
-		cprint_frag.append (new CCodeExpressionStatement (cclear));
-
 		// print critical message
-		cerror_block.add_statement (cprint_frag);
+		ccode.add_expression (ccritical);
+		ccode.add_expression (cclear);
 
 		if (current_method is CreationMethod) {
-			cerror_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("NULL")));
+			ccode.add_return (new CCodeConstant ("NULL"));
 		} else if (current_method != null && current_method.coroutine) {
-			cerror_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
+			ccode.add_return (new CCodeConstant ("FALSE"));
 		} else if (current_return_type is VoidType) {
-			cerror_block.add_statement (new CCodeReturnStatement ());
+			ccode.add_return ();
 		} else if (current_return_type != null) {
-			cerror_block.add_statement (new CCodeReturnStatement (default_value_for_type (current_return_type, false)));
+			ccode.add_return (default_value_for_type (current_return_type, false));
 		}
-
-		return cerror_block;
 	}
 
 	bool in_finally_block (CodeNode node) {
@@ -181,21 +156,24 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		return false;
 	}
 
-	public override void add_simple_check (CodeNode node, CCodeFragment cfrag, bool always_fails = false) {
+	public override void add_simple_check (CodeNode node, bool always_fails = false) {
 		current_method_inner_error = true;
 
 		var inner_error = get_variable_cexpression ("_inner_error_");
 
-		CCodeStatement cerror_handler = null;
+		if (always_fails) {
+			// inner_error is always set, avoid unnecessary if statement
+			// eliminates C warnings
+		} else {
+			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, inner_error, new CCodeConstant ("NULL"));
+			ccode.open_if (ccond);
+		}
 
 		if (current_try != null) {
 			// surrounding try found
-			var cerror_block = new CCodeBlock ();
 
 			// free local variables
-			var free_frag = new CCodeFragment ();
-			append_error_free (current_symbol, free_frag, current_try);
-			cerror_block.add_statement (free_frag);
+			append_error_free (current_symbol, current_try);
 
 			var error_types = new ArrayList<DataType> ();
 			foreach (DataType node_error_type in node.get_error_types ()) {
@@ -218,18 +196,13 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 					}
 					handled_error_types.clear ();
 
-					// go to catch clause if error domain matches
-					var cgoto_stmt = new CCodeGotoStatement (clause.clabel_name);
-
 					if (clause.error_type.equals (gerror_type)) {
 						// general catch clause, this should be the last one
 						has_general_catch_clause = true;
-						cerror_block.add_statement (cgoto_stmt);
+						ccode.add_goto (clause.clabel_name);
 						break;
 					} else {
 						var catch_type = clause.error_type as ErrorType;
-						var cgoto_block = new CCodeBlock ();
-						cgoto_block.add_statement (cgoto_stmt);
 
 						if (catch_type.error_code != null) {
 							/* catch clause specifies a specific error code */
@@ -238,15 +211,19 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 							error_match.add_argument (new CCodeIdentifier (catch_type.data_type.get_upper_case_cname ()));
 							error_match.add_argument (new CCodeIdentifier (catch_type.error_code.get_cname ()));
 
-							cerror_block.add_statement (new CCodeIfStatement (error_match, cgoto_block));
+							ccode.open_if (error_match);
 						} else {
 							/* catch clause specifies a full error domain */
 							var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY,
 									new CCodeMemberAccess.pointer (inner_error, "domain"), new CCodeIdentifier
 									(clause.error_type.data_type.get_upper_case_cname ()));
 
-							cerror_block.add_statement (new CCodeIfStatement (ccond, cgoto_block));
+							ccode.open_if (ccond);
 						}
+
+						// go to catch clause if error domain matches
+						ccode.add_goto (clause.clabel_name);
+						ccode.close ();
 					}
 				}
 			}
@@ -258,16 +235,14 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			} else if (error_types.size > 0) {
 				// go to finally clause if no catch clause matches
 				// and there are still unhandled error types
-				cerror_block.add_statement (new CCodeGotoStatement ("__finally%d".printf (current_try_id)));
+				ccode.add_goto ("__finally%d".printf (current_try_id));
 			} else if (in_finally_block (node)) {
 				// do not check unexpected errors happening within finally blocks
 				// as jump out of finally block is not supported
 			} else {
 				// should never happen with correct bindings
-				uncaught_error_statement (inner_error, cerror_block, true);
+				uncaught_error_statement (inner_error, true);
 			}
-
-			cerror_handler = cerror_block;
 		} else if (current_method != null && current_method.get_error_types ().size > 0) {
 			// current method can fail, propagate error
 			CCodeBinaryExpression ccond = null;
@@ -289,26 +264,22 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 				}
 			}
 
-			if (ccond == null) {
-				cerror_handler = return_with_exception (inner_error);
+			if (ccond != null) {
+				ccode.open_if (ccond);
+				return_with_exception (inner_error);
+
+				ccode.add_else ();
+				uncaught_error_statement (inner_error);
+				ccode.close ();
 			} else {
-				var cerror_block = new CCodeBlock ();
-				cerror_block.add_statement (new CCodeIfStatement (ccond,
-					return_with_exception (inner_error),
-					uncaught_error_statement (inner_error)));
-				cerror_handler = cerror_block;
+				return_with_exception (inner_error);
 			}
 		} else {
-			cerror_handler = uncaught_error_statement (inner_error);
+			uncaught_error_statement (inner_error);
 		}
 
-		if (always_fails) {
-			// inner_error is always set, avoid unnecessary if statement
-			// eliminates C warnings
-			cfrag.append (cerror_handler);
-		} else {
-			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, inner_error, new CCodeConstant ("NULL"));
-			cfrag.append (new CCodeIfStatement (ccond, cerror_handler));
+		if (!always_fails) {
+			ccode.close ();
 		}
 	}
 
@@ -326,15 +297,12 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			clause.clabel_name = "__catch%d_%s".printf (this_try_id, clause.error_type.get_lower_case_cname ());
 		}
 
-		if (stmt.finally_body != null) {
-			stmt.finally_body.emit (this);
-		}
-
 		is_in_catch = false;
 		stmt.body.emit (this);
 		is_in_catch = true;
 
 		foreach (CatchClause clause in stmt.get_catch_clauses ()) {
+			ccode.add_goto ("__finally%d".printf (this_try_id));
 			clause.emit (this);
 		}
 
@@ -342,24 +310,14 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		current_try_id = old_try_id;
 		is_in_catch = old_is_in_catch;
 
-		var cfrag = new CCodeFragment ();
-		cfrag.append (stmt.body.ccodenode);
-
-		foreach (CatchClause clause in stmt.get_catch_clauses ()) {
-			cfrag.append (new CCodeGotoStatement ("__finally%d".printf (this_try_id)));
-			cfrag.append (clause.ccodenode);
-		}
-
-		cfrag.append (new CCodeLabel ("__finally%d".printf (this_try_id)));
+		ccode.add_label ("__finally%d".printf (this_try_id));
 		if (stmt.finally_body != null) {
-			cfrag.append (stmt.finally_body.ccodenode);
+			stmt.finally_body.emit (this);
 		}
 
 		// check for errors not handled by this try statement
 		// may be handled by outer try statements or propagated
-		add_simple_check (stmt, cfrag, !stmt.after_try_block_reachable);
-
-		stmt.ccodenode = cfrag;
+		add_simple_check (stmt, !stmt.after_try_block_reachable);
 	}
 
 	public override void visit_catch_clause (CatchClause clause) {
@@ -370,12 +328,9 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			generate_error_domain_declaration (error_type.error_domain, cfile);
 		}
 
-		clause.body.emit (this);
+		ccode.add_label (clause.clabel_name);
 
-		var cfrag = new CCodeFragment ();
-		cfrag.append (new CCodeLabel (clause.clabel_name));
-
-		var cblock = new CCodeBlock ();
+		ccode.open_block ();
 
 		string variable_name;
 		if (clause.variable_name != null) {
@@ -384,31 +339,27 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			variable_name = "__err";
 		}
 
-		if (current_method != null && current_method.coroutine) {
-			closure_struct.add_field ("GError *", variable_name);
-			cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (variable_name), get_variable_cexpression ("_inner_error_"))));
-		} else {
-			if (clause.variable_name != null) {
-				var cdecl = new CCodeDeclaration ("GError *");
-				cdecl.add_declarator (new CCodeVariableDeclarator (variable_name, get_variable_cexpression ("_inner_error_")));
-				cblock.add_statement (cdecl);
+		if (clause.variable_name != null) {
+			if (current_method != null && current_method.coroutine) {
+				closure_struct.add_field ("GError *", variable_name);
 			} else {
-				// error object is not used within catch statement, clear it
-				var cclear = new CCodeFunctionCall (new CCodeIdentifier ("g_clear_error"));
-				cclear.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression ("_inner_error_")));
-				cblock.add_statement (new CCodeExpressionStatement (cclear));
+				ccode.add_declaration ("GError *", new CCodeVariableDeclarator (variable_name));
 			}
+			ccode.add_expression (new CCodeAssignment (get_variable_cexpression (variable_name), get_variable_cexpression ("_inner_error_")));
+		} else {
+			// error object is not used within catch statement, clear it
+			var cclear = new CCodeFunctionCall (new CCodeIdentifier ("g_clear_error"));
+			cclear.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression ("_inner_error_")));
+			ccode.add_expression (cclear);
 		}
-		cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression ("_inner_error_"), new CCodeConstant ("NULL"))));
+		ccode.add_expression (new CCodeAssignment (get_variable_cexpression ("_inner_error_"), new CCodeConstant ("NULL")));
 
-		cblock.add_statement (clause.body.ccodenode);
+		clause.body.emit (this);
 
-		cfrag.append (cblock);
-
-		clause.ccodenode = cfrag;
+		ccode.close ();
 	}
 
-	public override void append_local_free (Symbol sym, CCodeFragment cfrag, bool stop_at_loop = false) {
+	public override void append_local_free (Symbol sym, bool stop_at_loop = false) {
 		var finally_block = (Block) null;
 		if (sym.parent_node is TryStatement) {
 			finally_block = (sym.parent_node as TryStatement).finally_body;
@@ -417,10 +368,10 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		}
 
 		if (finally_block != null) {
-			cfrag.append (finally_block.ccodenode);
+			finally_block.emit (this);
 		}
 
-		base.append_local_free (sym, cfrag, stop_at_loop);
+		base.append_local_free (sym, stop_at_loop);
 	}
 }
 

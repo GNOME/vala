@@ -538,6 +538,7 @@ public class Vala.MethodCall : Expression {
 					error = true;
 					Report.error (source_reference, "yield expression not available outside async method");
 				}
+				analyzer.current_method.yield_count++;
 			}
 			if (m != null && m.coroutine && !is_yield_expression && ((MemberAccess) call).member_name != "end") {
 				// .begin call of async method, no error can happen here

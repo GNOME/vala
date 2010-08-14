@@ -42,7 +42,7 @@ public class Vala.GObjectModule : GTypeModule {
 		}
 	}
 
-	public override void generate_class_init (Class cl, CCodeBlock init_block) {
+	public override void generate_class_init (Class cl) {
 		if (!cl.is_subtype_of (gobject_type)) {
 			return;
 		}
@@ -51,24 +51,24 @@ public class Vala.GObjectModule : GTypeModule {
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
 		ccall.add_argument (new CCodeIdentifier ("klass"));
 		if (class_has_readable_properties (cl) || cl.get_type_parameters ().size > 0) {
-			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccall, "get_property"), new CCodeIdentifier ("_vala_%s_get_property".printf (cl.get_lower_case_cname (null))))));
+			ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (ccall, "get_property"), new CCodeIdentifier ("_vala_%s_get_property".printf (cl.get_lower_case_cname (null)))));
 		}
 		if (class_has_writable_properties (cl) || cl.get_type_parameters ().size > 0) {
-			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccall, "set_property"), new CCodeIdentifier ("_vala_%s_set_property".printf (cl.get_lower_case_cname (null))))));
+			ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (ccall, "set_property"), new CCodeIdentifier ("_vala_%s_set_property".printf (cl.get_lower_case_cname (null)))));
 		}
 	
 		/* set constructor */
 		if (cl.constructor != null) {
 			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
 			ccast.add_argument (new CCodeIdentifier ("klass"));
-			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, "constructor"), new CCodeIdentifier ("%s_constructor".printf (cl.get_lower_case_cname (null))))));
+			ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, "constructor"), new CCodeIdentifier ("%s_constructor".printf (cl.get_lower_case_cname (null)))));
 		}
 
 		/* set finalize function */
 		if (cl.get_fields ().size > 0 || cl.destructor != null) {
 			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
 			ccast.add_argument (new CCodeIdentifier ("klass"));
-			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, "finalize"), new CCodeIdentifier ("%s_finalize".printf (cl.get_lower_case_cname (null))))));
+			ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, "finalize"), new CCodeIdentifier ("%s_finalize".printf (cl.get_lower_case_cname (null)))));
 		}
 
 		/* create type, dup_func, and destroy_func properties for generic types */
@@ -90,7 +90,7 @@ public class Vala.GObjectModule : GTypeModule {
 			cspec.add_argument (new CCodeIdentifier ("G_TYPE_NONE"));
 			cspec.add_argument (new CCodeConstant ("G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY"));
 			cinst.add_argument (cspec);
-			init_block.add_statement (new CCodeExpressionStatement (cinst));
+			ccode.add_expression (cinst);
 			prop_enum.add_value (new CCodeEnumValue (enum_value));
 
 
@@ -106,7 +106,7 @@ public class Vala.GObjectModule : GTypeModule {
 			cspec.add_argument (new CCodeConstant ("\"dup func\""));
 			cspec.add_argument (new CCodeConstant ("G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY"));
 			cinst.add_argument (cspec);
-			init_block.add_statement (new CCodeExpressionStatement (cinst));
+			ccode.add_expression (cinst);
 			prop_enum.add_value (new CCodeEnumValue (enum_value));
 
 
@@ -122,7 +122,7 @@ public class Vala.GObjectModule : GTypeModule {
 			cspec.add_argument (new CCodeConstant ("\"destroy func\""));
 			cspec.add_argument (new CCodeConstant ("G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY"));
 			cinst.add_argument (cspec);
-			init_block.add_statement (new CCodeExpressionStatement (cinst));
+			ccode.add_expression (cinst);
 			prop_enum.add_value (new CCodeEnumValue (enum_value));
 		}
 
@@ -134,7 +134,7 @@ public class Vala.GObjectModule : GTypeModule {
 			}
 
 			if (prop.comment != null) {
-				init_block.add_statement (new CCodeComment (prop.comment.content));
+				ccode.add_statement (new CCodeComment (prop.comment.content));
 			}
 
 			if (prop.overrides || prop.base_interface_property != null) {
@@ -143,14 +143,14 @@ public class Vala.GObjectModule : GTypeModule {
 				cinst.add_argument (new CCodeConstant (prop.get_upper_case_cname ()));
 				cinst.add_argument (prop.get_canonical_cconstant ());
 			
-				init_block.add_statement (new CCodeExpressionStatement (cinst));
+				ccode.add_expression (cinst);
 			} else {
 				var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_install_property"));
 				cinst.add_argument (ccall);
 				cinst.add_argument (new CCodeConstant (prop.get_upper_case_cname ()));
 				cinst.add_argument (get_param_spec (prop));
 			
-				init_block.add_statement (new CCodeExpressionStatement (cinst));
+				ccode.add_expression (cinst);
 			}
 		}
 	}
@@ -412,18 +412,11 @@ public class Vala.GObjectModule : GTypeModule {
 	}
 
 	public override void visit_constructor (Constructor c) {
-		bool old_method_inner_error = current_method_inner_error;
-		current_method_inner_error = false;
-
 		if (c.binding == MemberBinding.CLASS || c.binding == MemberBinding.STATIC) {
 			in_static_or_class_context = true;
 		} else {
 			in_constructor = true;
 		}
-		c.body.emit (this);
-		in_static_or_class_context = false;
-
-		in_constructor = false;
 
 		var cl = (Class) c.parent_symbol;
 
@@ -434,7 +427,9 @@ public class Vala.GObjectModule : GTypeModule {
 				return;
 			}
 
-			function = new CCodeFunction ("%s_constructor".printf (cl.get_lower_case_cname (null)), "GObject *");
+			push_context (new EmitContext (c));
+
+			var function = new CCodeFunction ("%s_constructor".printf (cl.get_lower_case_cname (null)), "GObject *");
 			function.modifiers = CCodeModifiers.STATIC;
 		
 			function.add_parameter (new CCodeFormalParameter ("type", "GType"));
@@ -443,52 +438,43 @@ public class Vala.GObjectModule : GTypeModule {
 		
 			cfile.add_function_declaration (function);
 
+			push_function (function);
 
-			var cblock = new CCodeBlock ();
-			var cdecl = new CCodeDeclaration ("GObject *");
-			cdecl.add_declarator (new CCodeVariableDeclarator ("obj"));
-			cblock.add_statement (cdecl);
-
-			cdecl = new CCodeDeclaration ("GObjectClass *");
-			cdecl.add_declarator (new CCodeVariableDeclarator ("parent_class"));
-			cblock.add_statement (cdecl);
-
+			ccode.add_declaration ("GObject *", new CCodeVariableDeclarator ("obj"));
+			ccode.add_declaration ("GObjectClass *", new CCodeVariableDeclarator ("parent_class"));
 
 			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
 			ccast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (cl.get_lower_case_cname (null))));
-			cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("parent_class"), ccast)));
+			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("parent_class"), ccast));
 
-		
 			var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (new CCodeIdentifier ("parent_class"), "constructor"));
 			ccall.add_argument (new CCodeIdentifier ("type"));
 			ccall.add_argument (new CCodeIdentifier ("n_construct_properties"));
 			ccall.add_argument (new CCodeIdentifier ("construct_properties"));
-			cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("obj"), ccall)));
+			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("obj"), ccall));
 
 
 			ccall = generate_instance_cast (new CCodeIdentifier ("obj"), cl);
 
-			cdecl = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
-			cdecl.add_declarator (new CCodeVariableDeclarator ("self", ccall));
-			cblock.add_statement (cdecl);
+			ccode.add_declaration ("%s *".printf (cl.get_cname ()), new CCodeVariableDeclarator ("self"));
+			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("self"), ccall));
 
 			if (current_method_inner_error) {
 				/* always separate error parameter and inner_error local variable
 				 * as error may be set to NULL but we're always interested in inner errors
 				 */
-				cdecl = new CCodeDeclaration ("GError *");
-				cdecl.add_declarator (new CCodeVariableDeclarator ("_inner_error_", new CCodeConstant ("NULL")));
-				cblock.add_statement (cdecl);
+				ccode.add_declaration ("GError *", new CCodeVariableDeclarator.zero ("_inner_error_", new CCodeConstant ("NULL")));
 			}
 
 
-			cblock.add_statement (c.body.ccodenode);
+			c.body.emit (this);
 		
-			cblock.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("obj")));
-		
-			function.block = cblock;
+			ccode.add_return (new CCodeIdentifier ("obj"));
 
+			pop_function ();
 			cfile.add_function (function);
+
+			pop_context ();
 		} else if (c.binding == MemberBinding.CLASS) {
 			// class constructor
 
@@ -498,16 +484,18 @@ public class Vala.GObjectModule : GTypeModule {
 				return;
 			}
 
+			push_context (base_init_context);
+
+			c.body.emit (this);
+
 			if (current_method_inner_error) {
 				/* always separate error parameter and inner_error local variable
 				 * as error may be set to NULL but we're always interested in inner errors
 				 */
-				var cdecl = new CCodeDeclaration ("GError *");
-				cdecl.add_declarator (new CCodeVariableDeclarator ("_inner_error_", new CCodeConstant ("NULL")));
-				base_init_fragment.append (cdecl);
+				ccode.add_declaration ("GError *", new CCodeVariableDeclarator.zero ("_inner_error_", new CCodeConstant ("NULL")));
 			}
 
-			base_init_fragment.append (c.body.ccodenode);
+			pop_context ();
 		} else if (c.binding == MemberBinding.STATIC) {
 			// static class constructor
 			// add to class_init
@@ -518,21 +506,25 @@ public class Vala.GObjectModule : GTypeModule {
 				return;
 			}
 
+			push_context (class_init_context);
+
+			c.body.emit (this);
+
 			if (current_method_inner_error) {
 				/* always separate error parameter and inner_error local variable
 				 * as error may be set to NULL but we're always interested in inner errors
 				 */
-				var cdecl = new CCodeDeclaration ("GError *");
-				cdecl.add_declarator (new CCodeVariableDeclarator ("_inner_error_", new CCodeConstant ("NULL")));
-				class_init_fragment.append (cdecl);
+				ccode.add_declaration ("GError *", new CCodeVariableDeclarator ("_inner_error_", new CCodeConstant ("NULL")));
 			}
 
-			class_init_fragment.append (c.body.ccodenode);
+			pop_context ();
 		} else {
 			Report.error (c.source_reference, "internal error: constructors must have instance, class, or static binding");
 		}
 
-		current_method_inner_error = old_method_inner_error;
+		in_static_or_class_context = false;
+
+		in_constructor = false;
 	}
 
 	public override string get_dynamic_property_getter_cname (DynamicProperty prop) {
@@ -756,7 +748,7 @@ public class Vala.GObjectModule : GTypeModule {
 
 				var ccomma = new CCodeCommaExpression ();
 				var temp_var = get_temp_variable (expr.value_type, false, expr, false);
-				temp_vars.add (temp_var);
+				emit_temp_var (temp_var);
 				ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), (CCodeExpression) expr.ccodenode));
 
 				var initiallyunowned_ccall = new CCodeFunctionCall (new CCodeIdentifier ("G_IS_INITIALLY_UNOWNED"));

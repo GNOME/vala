@@ -142,8 +142,8 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 	public override void visit_struct (Struct st) {
 		push_context (new EmitContext (st));
 
-		var old_instance_finalize_fragment = instance_finalize_fragment;
-		instance_finalize_fragment = new CCodeFragment ();
+		var old_instance_finalize_context = instance_finalize_context;
+		instance_finalize_context = new EmitContext ();
 
 		generate_struct_declaration (st, cfile);
 
@@ -153,6 +153,8 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 		if (!st.is_private_symbol ()) {
 			generate_struct_declaration (st, internal_header_file);
 		}
+
+		begin_struct_destroy_function (st);
 
 		st.accept_children (this);
 
@@ -166,7 +168,7 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 			add_struct_free_function (st);
 		}
 
-		instance_finalize_fragment = old_instance_finalize_fragment;
+		instance_finalize_context = old_instance_finalize_context;
 
 		pop_context ();
 	}
@@ -294,15 +296,14 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 			}
 		}
 
-		append_temp_decl (cfrag, temp_vars);
-		temp_vars.clear ();
-
 		function.block = cblock;
 
 		cfile.add_function (function);
 	}
 
-	void add_struct_destroy_function (Struct st) {
+	void begin_struct_destroy_function (Struct st) {
+		push_context (instance_finalize_context);
+
 		var function = new CCodeFunction (st.get_destroy_function (), "void");
 		if (st.access == SymbolAccessibility.PRIVATE) {
 			function.modifiers = CCodeModifiers.STATIC;
@@ -310,13 +311,13 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 
 		function.add_parameter (new CCodeFormalParameter ("self", st.get_cname () + "*"));
 
-		var cblock = new CCodeBlock ();
+		push_function (function);
 
-		cblock.add_statement (instance_finalize_fragment);
+		pop_context ();
+	}
 
-		function.block = cblock;
-
-		cfile.add_function (function);
+	void add_struct_destroy_function (Struct st) {
+		cfile.add_function (instance_finalize_context.ccode);
 	}
 }
 

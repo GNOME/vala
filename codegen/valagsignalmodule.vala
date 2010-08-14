@@ -164,7 +164,7 @@ public class Vala.GSignalModule : GObjectModule {
 		}
 
 		var detail_decl = get_temp_variable (detail_expr.value_type, true, node);
-		temp_vars.insert (0, detail_decl);
+		emit_temp_var (detail_decl);
 		temp_ref_vars.insert (0, detail_decl);
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_strconcat"));
@@ -679,7 +679,7 @@ public class Vala.GSignalModule : GObjectModule {
 			// get signal id
 			ccomma = new CCodeCommaExpression ();
 			var temp_decl = get_temp_variable (uint_type);
-			temp_vars.add (temp_decl);
+			emit_temp_var (temp_decl);
 			var parse_call = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_parse_name"));
 			parse_call.add_argument (signal_name_cexpr);
 			var decl_type = (TypeSymbol) sig.parent_symbol;
@@ -691,7 +691,7 @@ public class Vala.GSignalModule : GObjectModule {
 				parse_call.add_argument (new CCodeConstant ("FALSE"));
 			} else {
 				detail_temp_decl = get_temp_variable (gquark_type);
-				temp_vars.add (detail_temp_decl);
+				emit_temp_var (detail_temp_decl);
 				parse_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (detail_temp_decl.name)));
 				parse_call.add_argument (new CCodeConstant ("TRUE"));
 			}

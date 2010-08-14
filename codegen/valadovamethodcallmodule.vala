@@ -81,7 +81,7 @@ public class Vala.DovaMethodCallModule : DovaAssignmentModule {
 						var ccomma = new CCodeCommaExpression ();
 
 						var temp_var = get_temp_variable (ma.inner.target_type);
-						temp_vars.add (temp_var);
+						emit_temp_var (temp_var);
 						ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), instance));
 						ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_var.name)));
 
@@ -135,7 +135,7 @@ public class Vala.DovaMethodCallModule : DovaAssignmentModule {
 						var ccomma = new CCodeCommaExpression ();
 
 						var temp_var = get_temp_variable (param.variable_type, param.variable_type.value_owned);
-						temp_vars.add (temp_var);
+						emit_temp_var (temp_var);
 						cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_var.name));
 
 						if (param.direction == ParameterDirection.REF) {
@@ -151,14 +151,14 @@ public class Vala.DovaMethodCallModule : DovaAssignmentModule {
 							ccomma.append_expression (ccall_expr);
 						} else {
 							ret_temp_var = get_temp_variable (itype.get_return_type ());
-							temp_vars.add (ret_temp_var);
+							emit_temp_var (ret_temp_var);
 							ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (ret_temp_var.name), ccall_expr));
 						}
 
 						var cassign_comma = new CCodeCommaExpression ();
 
 						var assign_temp_var = get_temp_variable (unary.inner.value_type, unary.inner.value_type.value_owned);
-						temp_vars.add (assign_temp_var);
+						emit_temp_var (assign_temp_var);
 
 						cassign_comma.append_expression (new CCodeAssignment (get_variable_cexpression (assign_temp_var.name), transform_expression (get_variable_cexpression (temp_var.name), param.variable_type, unary.inner.value_type, arg)));
 
@@ -203,7 +203,7 @@ public class Vala.DovaMethodCallModule : DovaAssignmentModule {
 			var ccomma = new CCodeCommaExpression ();
 
 			var temp_var = get_temp_variable (expr.value_type);
-			temp_vars.add (temp_var);
+			emit_temp_var (temp_var);
 			if (expr.value_type is GenericType) {
 				ccall.add_argument (get_variable_cexpression (temp_var.name));
 			} else {

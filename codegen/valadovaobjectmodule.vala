@@ -758,16 +758,42 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 
 		function.add_parameter (new CCodeFormalParameter ("this", cl.get_cname () + "*"));
 
+		push_function (function);
+
 		cfile.add_function_declaration (function);
 
-
-		var cblock = new CCodeBlock ();
-
 		if (cl.destructor != null) {
-			cblock.add_statement (cl.destructor.ccodenode);
+			cl.destructor.body.emit (this);
 		}
 
-		cblock.add_statement (instance_finalize_fragment);
+		foreach (var f in cl.get_fields ()) {
+			if (f.binding == MemberBinding.INSTANCE)  {
+				CCodeExpression lhs = null;
+				if (f.is_internal_symbol ()) {
+					var priv_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_PRIVATE".printf (cl.get_upper_case_cname (null))));
+					priv_call.add_argument (new CCodeIdentifier ("this"));
+					lhs = new CCodeMemberAccess.pointer (priv_call, f.get_cname ());
+				} else {
+					lhs = new CCodeMemberAccess.pointer (new CCodeIdentifier ("this"), f.get_cname ());
+				}
+
+				if (requires_destroy (f.variable_type)) {
+					var this_access = new MemberAccess.simple ("this");
+					this_access.value_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
+
+					var field_st = f.parent_symbol as Struct;
+					if (field_st != null && !field_st.is_simple_type ()) {
+						this_access.ccodenode = new CCodeIdentifier ("(*this)");
+					} else {
+						this_access.ccodenode = new CCodeIdentifier ("this");
+					}
+
+					var ma = new MemberAccess (this_access, f.name);
+					ma.symbol_reference = f;
+					ccode.add_expression (get_unref_expression (lhs, f.variable_type, ma));
+				}
+			}
+		}
 
 		// chain up to finalize function of the base class
 		foreach (DataType base_type in cl.get_base_types ()) {
@@ -780,21 +806,17 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 				}
 				ccall.add_argument (type_get_call);
 				ccall.add_argument (new CCodeIdentifier ("this"));
-				cblock.add_statement (new CCodeExpressionStatement (ccall));
+				ccode.add_statement (new CCodeExpressionStatement (ccall));
 			}
 		}
 
-
-		function.block = cblock;
+		pop_function ();
 
 		cfile.add_function (function);
 	}
 
 	public override void visit_class (Class cl) {
 		push_context (new EmitContext (cl));
-
-		var old_instance_finalize_fragment = instance_finalize_fragment;
-		instance_finalize_fragment = new CCodeFragment ();
 
 		generate_class_declaration (cl, cfile);
 		generate_class_private_declaration (cl, cfile);
@@ -968,8 +990,6 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 			declare_set_value_from_any_function (header_file);
 			cfile.add_function (create_set_value_from_any_function ());
 		}
-
-		instance_finalize_fragment = old_instance_finalize_fragment;
 
 		pop_context ();
 	}
@@ -1148,14 +1168,6 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 
 		var prop = (Property) acc.prop;
 
-		if (acc.result_var != null) {
-			acc.result_var.accept (this);
-		}
-
-		if (acc.body != null) {
-			acc.body.emit (this);
-		}
-
 		// do not declare overriding properties and interface implementations
 		if (prop.is_abstract || prop.is_virtual
 		    || (prop.base_property == null && prop.base_interface_property == null)) {
@@ -1256,7 +1268,13 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 				function.modifiers |= CCodeModifiers.STATIC;
 			}
 
-			function.block = (CCodeBlock) acc.body.ccodenode;
+			push_function (function);
+
+			if (acc.result_var != null) {
+				acc.result_var.accept (this);
+			}
+
+			acc.body.emit (this);
 
 			if (acc.readable) {
 				var cdecl = new CCodeDeclaration (acc.value_type.get_cname ());
@@ -1386,10 +1404,6 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 			param.accept (this);
 		}
 
-		if (m.result_var != null) {
-			m.result_var.accept (this);
-		}
-
 		foreach (Expression precondition in m.get_preconditions ()) {
 			precondition.emit (this);
 		}
@@ -1398,12 +1412,6 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 			postcondition.emit (this);
 		}
 
-		if (m.body != null) {
-			m.body.emit (this);
-		}
-
-
-		pop_context ();
 
 		generate_method_declaration (m, cfile);
 
@@ -1412,7 +1420,6 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 		}
 
 		var function = new CCodeFunction (m.get_real_cname ());
-		m.ccodenode = function;
 
 		generate_cparameters (m, cfile, function);
 
@@ -1427,14 +1434,10 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 			}
 
 			if (m.body != null) {
-				function.block = (CCodeBlock) m.body.ccodenode;
-				function.block.line = function.line;
-
-				var cinit = new CCodeFragment ();
-				function.block.prepend_statement (cinit);
+				push_function (function);
 
 				if (context.module_init_method == m) {
-					cinit.append (module_init_fragment);
+					add_module_init ();
 				}
 
 				if (m.closure) {
@@ -1453,7 +1456,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 						var cdecl = new CCodeDeclaration ("Block%dData*".printf (parent_block_id));
 						cdecl.add_declarator (new CCodeVariableDeclarator ("_data%d_".printf (parent_block_id), parent_data));
 
-						cinit.append (cdecl);
+						ccode.add_statement (cdecl);
 
 						closure_block = parent_closure_block;
 						block_id = parent_block_id;
@@ -1466,7 +1469,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 						var cdecl = new CCodeDeclaration ("%s *".printf (current_class.get_cname ()));
 						cdecl.add_declarator (new CCodeVariableDeclarator ("this", cself));
 
-						cinit.append (cdecl);
+						ccode.add_statement (cdecl);
 					}
 				}
 				foreach (FormalParameter param in m.get_parameters ()) {
@@ -1484,26 +1487,32 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 
 							var condition = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier (param.name), new CCodeConstant ("NULL"));
 							var if_statement = new CCodeIfStatement (condition, cblock);
-							cinit.append (if_statement);
+							ccode.add_statement (if_statement);
 						}
 					}
 				}
 
+				if (m.result_var != null) {
+					m.result_var.accept (this);
+				}
+
+				m.body.emit (this);
+
 				if (!(m.return_type is VoidType) && !(m.return_type is GenericType)) {
 					var cdecl = new CCodeDeclaration (m.return_type.get_cname ());
 					cdecl.add_declarator (new CCodeVariableDeclarator.zero ("result", default_value_for_type (m.return_type, true)));
-					cinit.append (cdecl);
+					ccode.add_statement (cdecl);
 
-					function.block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("result")));
+					ccode.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("result")));
 				}
 
 				var st = m.parent_symbol as Struct;
 				if (m is CreationMethod && st != null && (st.is_boolean_type () || st.is_integer_type () || st.is_floating_type ())) {
 					var cdecl = new CCodeDeclaration (st.get_cname ());
 					cdecl.add_declarator (new CCodeVariableDeclarator ("this", new CCodeConstant ("0")));
-					cinit.append (cdecl);
+					ccode.add_statement (cdecl);
 
-					function.block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("this")));
+					ccode.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("this")));
 				}
 
 				cfile.add_function (function);
@@ -1639,6 +1648,8 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 			cfile.add_function (override_func);
 		}
 
+		pop_context ();
+
 		if (m.entry_point) {
 			generate_type_declaration (new ObjectType (array_class), cfile);
 
@@ -1647,18 +1658,19 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 			cmain.line = function.line;
 			cmain.add_parameter (new CCodeFormalParameter ("argc", "int"));
 			cmain.add_parameter (new CCodeFormalParameter ("argv", "char **"));
-			var main_block = new CCodeBlock ();
+
+			push_function (cmain);
 
 			var dova_init_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_init"));
 			dova_init_call.add_argument (new CCodeIdentifier ("argc"));
 			dova_init_call.add_argument (new CCodeIdentifier ("argv"));
-			main_block.add_statement (new CCodeExpressionStatement (dova_init_call));
+			ccode.add_statement (new CCodeExpressionStatement (dova_init_call));
 
-			main_block.add_statement (module_init_fragment);
+			add_module_init ();
 
 			var cdecl = new CCodeDeclaration ("int");
 			cdecl.add_declarator (new CCodeVariableDeclarator ("result", new CCodeConstant ("0")));
-			main_block.add_statement (cdecl);
+			ccode.add_statement (cdecl);
 
 			var main_call = new CCodeFunctionCall (new CCodeIdentifier (function.name));
 
@@ -1671,18 +1683,18 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 
 				cdecl = new CCodeDeclaration ("DovaArray*");
 				cdecl.add_declarator (new CCodeVariableDeclarator ("args", array_creation));
-				main_block.add_statement (cdecl);
+				ccode.add_statement (cdecl);
 
 				var array_data = new CCodeFunctionCall (new CCodeIdentifier ("dova_array_get_data"));
 				array_data.add_argument (new CCodeIdentifier ("args"));
 
 				cdecl = new CCodeDeclaration ("string_t*");
 				cdecl.add_declarator (new CCodeVariableDeclarator ("args_data", array_data));
-				main_block.add_statement (cdecl);
+				ccode.add_statement (cdecl);
 
 				cdecl = new CCodeDeclaration ("int");
 				cdecl.add_declarator (new CCodeVariableDeclarator ("argi"));
-				main_block.add_statement (cdecl);
+				ccode.add_statement (cdecl);
 
 				var string_creation = new CCodeFunctionCall (new CCodeIdentifier ("string_create_from_cstring"));
 				string_creation.add_argument (new CCodeElementAccess (new CCodeIdentifier ("argv"), new CCodeIdentifier ("argi")));
@@ -1693,7 +1705,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 				var for_stmt = new CCodeForStatement (new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier ("argi"), new CCodeIdentifier ("argc")), loop_block);
 				for_stmt.add_initializer (new CCodeAssignment (new CCodeIdentifier ("argi"), new CCodeConstant ("0")));
 				for_stmt.add_iterator (new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier ("argi")));
-				main_block.add_statement (for_stmt);
+				ccode.add_statement (for_stmt);
 
 				main_call.add_argument (new CCodeIdentifier ("args"));
 			}
@@ -1702,25 +1714,26 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 				// method returns void, always use 0 as exit code
 				var main_stmt = new CCodeExpressionStatement (main_call);
 				main_stmt.line = cmain.line;
-				main_block.add_statement (main_stmt);
+				ccode.add_statement (main_stmt);
 			} else {
 				var main_stmt = new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("result"), main_call));
 				main_stmt.line = cmain.line;
-				main_block.add_statement (main_stmt);
+				ccode.add_statement (main_stmt);
 			}
 
 			if (m.get_parameters ().size == 1) {
 				// destroy Dova array
 				var unref = new CCodeFunctionCall (new CCodeIdentifier ("dova_object_unref"));
 				unref.add_argument (new CCodeIdentifier ("args"));
-				main_block.add_statement (new CCodeExpressionStatement (unref));
+				ccode.add_statement (new CCodeExpressionStatement (unref));
 			}
 
 			var ret_stmt = new CCodeReturnStatement (new CCodeIdentifier ("result"));
 			ret_stmt.line = cmain.line;
-			main_block.add_statement (ret_stmt);
+			ccode.add_statement (ret_stmt);
 
-			cmain.block = main_block;
+			pop_function ();
+
 			cfile.add_function (cmain);
 		}
 	}
@@ -1953,6 +1966,17 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 
 		} else {
 			base.visit_element_access (expr);
+		}
+	}
+
+	void add_module_init () {
+		foreach (var field in static_fields) {
+			field.initializer.emit (this);
+
+			var lhs = new CCodeIdentifier (field.get_cname ());
+			var rhs = (CCodeExpression) field.initializer.ccodenode;
+
+			ccode.add_expression (new CCodeAssignment (lhs, rhs));
 		}
 	}
 }

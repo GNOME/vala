@@ -165,6 +165,7 @@ public class Vala.Block : Symbol, Statement {
 				for (int j = 0; j < stmt_list.length; j++) {
 					if (stmt_list.get (j) == stmt) {
 						stmt_list.insert (j, new_stmt);
+						new_stmt.parent_node = this;
 						break;
 					}
 				}
@@ -173,6 +174,7 @@ public class Vala.Block : Symbol, Statement {
 				stmt_list.add (new_stmt);
 				stmt_list.add (stmt);
 				statement_list[i] = stmt_list;
+				new_stmt.parent_node = this;
 			}
 		}
 	}
@@ -184,11 +186,13 @@ public class Vala.Block : Symbol, Statement {
 				for (int j = 0; j < stmt_list.length; j++) {
 					if (stmt_list.get (j) == old_stmt) {
 						stmt_list.set (j, new_stmt);
+						new_stmt.parent_node = this;
 						break;
 					}
 				}
 			} else if (statement_list[i] == old_stmt) {
 				statement_list[i] = new_stmt;
+				new_stmt.parent_node = this;
 				break;
 			}
 		}

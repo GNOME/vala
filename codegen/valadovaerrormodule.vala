@@ -27,67 +27,44 @@ public class Vala.DovaErrorModule : DovaDelegateModule {
 	private bool is_in_catch = false;
 
 	public override void visit_throw_statement (ThrowStatement stmt) {
-		var cfrag = new CCodeFragment ();
+		ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("dova_error"), (CCodeExpression) stmt.error_expression.ccodenode));
 
-		// method will fail
-		var cassign = new CCodeAssignment (new CCodeIdentifier ("dova_error"), (CCodeExpression) stmt.error_expression.ccodenode);
-		cfrag.append (new CCodeExpressionStatement (cassign));
-
-		add_simple_check (stmt, cfrag, true);
-
-		stmt.ccodenode = cfrag;
-
-		create_temp_decl (stmt, stmt.error_expression.temp_vars);
+		add_simple_check (stmt, true);
 	}
 
-	public virtual CCodeStatement return_with_exception () {
-		var cerror_block = new CCodeBlock ();
-
+	public void return_with_exception () {
 		// propagate error
 		// nothing to do
 
 		// free local variables
-		var free_frag = new CCodeFragment ();
-		append_local_free (current_symbol, free_frag, false);
-		cerror_block.add_statement (free_frag);
+		append_local_free (current_symbol, false);
 
 		if (current_method is CreationMethod && current_method.parent_symbol is Class) {
 			var cl = current_method.parent_symbol as Class;
 			var unref_call = new CCodeFunctionCall (new CCodeIdentifier (cl.get_unref_function ()));
 			unref_call.add_argument (new CCodeIdentifier ("this"));
-			cerror_block.add_statement (new CCodeExpressionStatement (unref_call));
-			cerror_block.add_statement (new CCodeReturnStatement ());
+			ccode.add_expression (unref_call);
+			ccode.add_return ();
 		} else if (current_return_type is VoidType) {
-			cerror_block.add_statement (new CCodeReturnStatement ());
+			ccode.add_return ();
 		} else {
-			cerror_block.add_statement (new CCodeReturnStatement (default_value_for_type (current_return_type, false)));
+			ccode.add_return (default_value_for_type (current_return_type, false));
 		}
-
-		return cerror_block;
 	}
 
-	CCodeStatement uncaught_error_statement (CCodeBlock? block = null, bool unexpected = false) {
-		var cerror_block = block;
-		if (cerror_block == null) {
-			cerror_block = new CCodeBlock ();
-		}
-
+	void uncaught_error_statement () {
 		// free local variables
-		var free_frag = new CCodeFragment ();
-		append_local_free (current_symbol, free_frag, false);
-		cerror_block.add_statement (free_frag);
+		append_local_free (current_symbol, false);
 
 		// TODO log uncaught error as critical warning
 
 		if (current_method is CreationMethod) {
-			cerror_block.add_statement (new CCodeReturnStatement ());
+			ccode.add_return ();
 		} else if (current_return_type is VoidType) {
-			cerror_block.add_statement (new CCodeReturnStatement ());
+			ccode.add_return ();
 		} else if (current_return_type != null) {
-			cerror_block.add_statement (new CCodeReturnStatement (default_value_for_type (current_return_type, false)));
+			ccode.add_return (default_value_for_type (current_return_type, false));
 		}
-
-		return cerror_block;
 	}
 
 	bool in_finally_block (CodeNode node) {
@@ -102,17 +79,20 @@ public class Vala.DovaErrorModule : DovaDelegateModule {
 		return false;
 	}
 
-	public override void add_simple_check (CodeNode node, CCodeFragment cfrag, bool always_fails = false) {
-		CCodeStatement cerror_handler = null;
+	public override void add_simple_check (CodeNode node, bool always_fails = false) {
+		if (always_fails) {
+			// inner_error is always set, avoid unnecessary if statement
+			// eliminates C warnings
+		} else {
+			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("dova_error"), new CCodeConstant ("NULL"));
+			ccode.open_if (ccond);
+		}
 
 		if (current_try != null) {
 			// surrounding try found
-			var cerror_block = new CCodeBlock ();
 
 			// free local variables
-			var free_frag = new CCodeFragment ();
-			append_error_free (current_symbol, free_frag, current_try);
-			cerror_block.add_statement (free_frag);
+			append_error_free (current_symbol, current_try);
 
 			var error_types = new ArrayList<DataType> ();
 			foreach (DataType node_error_type in node.get_error_types ()) {
@@ -135,24 +115,23 @@ public class Vala.DovaErrorModule : DovaDelegateModule {
 					}
 					handled_error_types.clear ();
 
-					// go to catch clause if error domain matches
-					var cgoto_stmt = new CCodeGotoStatement (clause.clabel_name);
-
 					if (clause.error_type.equals (new ObjectType (error_class))) {
 						// general catch clause, this should be the last one
 						has_general_catch_clause = true;
-						cerror_block.add_statement (cgoto_stmt);
+						ccode.add_goto (clause.clabel_name);
 						break;
 					} else {
 						var catch_type = clause.error_type as ObjectType;
-						var cgoto_block = new CCodeBlock ();
-						cgoto_block.add_statement (cgoto_stmt);
 
 						var type_check = new CCodeFunctionCall (new CCodeIdentifier ("any_is_a"));
 						type_check.add_argument (new CCodeIdentifier ("dova_error"));
 						type_check.add_argument (new CCodeFunctionCall (new CCodeIdentifier ("%s_type_get".printf (catch_type.type_symbol.get_lower_case_cname ()))));
 
-						cerror_block.add_statement (new CCodeIfStatement (type_check, cgoto_block));
+						ccode.open_if (type_check);
+
+						// go to catch clause if error domain matches
+						ccode.add_goto (clause.clabel_name);
+						ccode.close ();
 					}
 				}
 			}
@@ -164,16 +143,13 @@ public class Vala.DovaErrorModule : DovaDelegateModule {
 			} else if (error_types.size > 0) {
 				// go to finally clause if no catch clause matches
 				// and there are still unhandled error types
-				cerror_block.add_statement (new CCodeGotoStatement ("__finally%d".printf (current_try_id)));
+				ccode.add_goto ("__finally%d".printf (current_try_id));
 			} else if (in_finally_block (node)) {
 				// do not check unexpected errors happening within finally blocks
 				// as jump out of finally block is not supported
 			} else {
-				// should never happen with correct bindings
-				uncaught_error_statement (cerror_block, true);
+				assert_not_reached ();
 			}
-
-			cerror_handler = cerror_block;
 		} else if (current_method != null && current_method.get_error_types ().size > 0) {
 			// current method can fail, propagate error
 			CCodeExpression ccond = null;
@@ -197,25 +173,20 @@ public class Vala.DovaErrorModule : DovaDelegateModule {
 			}
 
 			if (ccond == null) {
-				cerror_handler = return_with_exception ();
+				return_with_exception ();
 			} else {
-				var cerror_block = new CCodeBlock ();
-				cerror_block.add_statement (new CCodeIfStatement (ccond,
-					return_with_exception (),
-					uncaught_error_statement ()));
-				cerror_handler = cerror_block;
+				ccode.open_if (ccond);
+				return_with_exception ();
+				ccode.add_else ();
+				uncaught_error_statement ();
+				ccode.close ();
 			}
 		} else {
-			cerror_handler = uncaught_error_statement ();
+			uncaught_error_statement ();
 		}
 
-		if (always_fails) {
-			// inner_error is always set, avoid unnecessary if statement
-			// eliminates C warnings
-			cfrag.append (cerror_handler);
-		} else {
-			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("dova_error"), new CCodeConstant ("NULL"));
-			cfrag.append (new CCodeIfStatement (ccond, cerror_handler));
+		if (!always_fails) {
+			ccode.close ();
 		}
 	}
 
@@ -233,15 +204,12 @@ public class Vala.DovaErrorModule : DovaDelegateModule {
 			clause.clabel_name = "__catch%d_%s".printf (this_try_id, clause.error_type.get_lower_case_cname ());
 		}
 
-		if (stmt.finally_body != null) {
-			stmt.finally_body.emit (this);
-		}
-
 		is_in_catch = false;
 		stmt.body.emit (this);
 		is_in_catch = true;
 
 		foreach (CatchClause clause in stmt.get_catch_clauses ()) {
+			ccode.add_goto ("__finally%d".printf (this_try_id));
 			clause.emit (this);
 		}
 
@@ -249,35 +217,22 @@ public class Vala.DovaErrorModule : DovaDelegateModule {
 		current_try_id = old_try_id;
 		is_in_catch = old_is_in_catch;
 
-		var cfrag = new CCodeFragment ();
-		cfrag.append (stmt.body.ccodenode);
-
-		foreach (CatchClause clause in stmt.get_catch_clauses ()) {
-			cfrag.append (new CCodeGotoStatement ("__finally%d".printf (this_try_id)));
-			cfrag.append (clause.ccodenode);
-		}
-
-		cfrag.append (new CCodeLabel ("__finally%d".printf (this_try_id)));
+		ccode.add_label ("__finally%d".printf (this_try_id));
 		if (stmt.finally_body != null) {
-			cfrag.append (stmt.finally_body.ccodenode);
+			stmt.finally_body.emit (this);
 		}
 
 		// check for errors not handled by this try statement
 		// may be handled by outer try statements or propagated
-		add_simple_check (stmt, cfrag, !stmt.after_try_block_reachable);
-
-		stmt.ccodenode = cfrag;
+		add_simple_check (stmt, !stmt.after_try_block_reachable);
 	}
 
 	public override void visit_catch_clause (CatchClause clause) {
 		generate_type_declaration (clause.error_type, cfile);
 
-		clause.body.emit (this);
+		ccode.add_label (clause.clabel_name);
 
-		var cfrag = new CCodeFragment ();
-		cfrag.append (new CCodeLabel (clause.clabel_name));
-
-		var cblock = new CCodeBlock ();
+		ccode.open_block ();
 
 		string variable_name;
 		if (clause.variable_name != null) {
@@ -289,23 +244,21 @@ public class Vala.DovaErrorModule : DovaDelegateModule {
 		if (clause.variable_name != null) {
 			var cdecl = new CCodeDeclaration (clause.error_type.get_cname ());
 			cdecl.add_declarator (new CCodeVariableDeclarator (variable_name, new CCodeIdentifier ("dova_error")));
-			cblock.add_statement (cdecl);
+			ccode.add_statement (cdecl);
 		} else {
 			// error object is not used within catch statement, clear it
 			var cclear = new CCodeFunctionCall (new CCodeIdentifier ("dova_object_unref"));
 			cclear.add_argument (new CCodeIdentifier ("dova_error"));
-			cblock.add_statement (new CCodeExpressionStatement (cclear));
+			ccode.add_statement (new CCodeExpressionStatement (cclear));
 		}
-		cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("dova_error"), new CCodeConstant ("NULL"))));
+		ccode.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("dova_error"), new CCodeConstant ("NULL"))));
 
-		cblock.add_statement (clause.body.ccodenode);
+		clause.body.emit (this);
 
-		cfrag.append (cblock);
-
-		clause.ccodenode = cfrag;
+		ccode.close ();
 	}
 
-	public override void append_local_free (Symbol sym, CCodeFragment cfrag, bool stop_at_loop = false) {
+	public override void append_local_free (Symbol sym, bool stop_at_loop = false) {
 		var finally_block = (Block) null;
 		if (sym.parent_node is TryStatement) {
 			finally_block = (sym.parent_node as TryStatement).finally_body;
@@ -314,10 +267,10 @@ public class Vala.DovaErrorModule : DovaDelegateModule {
 		}
 
 		if (finally_block != null) {
-			cfrag.append (finally_block.ccodenode);
+			finally_block.emit (this);
 		}
 
-		base.append_local_free (sym, cfrag, stop_at_loop);
+		base.append_local_free (sym, stop_at_loop);
 	}
 }
 

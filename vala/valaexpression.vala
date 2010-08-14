@@ -1,6 +1,6 @@
 /* valaexpression.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -55,14 +55,6 @@ public abstract class Vala.Expression : CodeNode {
 	 */
 	public bool lvalue { get; set; }
 
-	/**
-	 * Contains all temporary variables this expression requires for
-	 * execution.
-	 *
-	 * The code generator sets and uses them for memory management.
-	 */
-	public ArrayList<LocalVariable> temp_vars;
-
 	private List<CCodeExpression> array_sizes;
 
 	public CCodeExpression? delegate_target { get; set; }
@@ -87,13 +79,6 @@ public abstract class Vala.Expression : CodeNode {
 	 */
 	public virtual bool is_non_null () {
 		return false;
-	}
-
-	public void add_temp_var (LocalVariable local) {
-		if (temp_vars == null) {
-			temp_vars = new ArrayList<LocalVariable> ();
-		}
-		temp_vars.add (local);
 	}
 
 	/**

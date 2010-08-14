@@ -138,8 +138,27 @@ public class Vala.GAsyncModule : GSignalModule {
 		return freefunc;
 	}
 
-	CCodeFunction generate_async_function (Method m) {
-		var asyncblock = new CCodeBlock ();
+	void generate_async_function (Method m) {
+		push_context (new EmitContext ());
+
+		var dataname = Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data";
+		var asyncfunc = new CCodeFunction (m.get_real_cname (), "void");
+		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
+
+		cparam_map.set (get_param_pos (-1), new CCodeFormalParameter ("_callback_", "GAsyncReadyCallback"));
+		cparam_map.set (get_param_pos (-0.9), new CCodeFormalParameter ("_user_data_", "gpointer"));
+
+		generate_cparameters (m, cfile, cparam_map, asyncfunc, null, null, null, 1);
+
+		if (m.base_method != null || m.base_interface_method != null) {
+			// declare *_real_* function
+			asyncfunc.modifiers |= CCodeModifiers.STATIC;
+			cfile.add_function_declaration (asyncfunc);
+		} else if (m.is_private_symbol ()) {
+			asyncfunc.modifiers |= CCodeModifiers.STATIC;
+		}
+
+		push_function (asyncfunc);
 
 		// logic copied from valaccodemethodmodule
 		if (m.overrides || (m.base_interface_method != null && !m.is_abstract && !m.is_virtual)) {
@@ -156,24 +175,17 @@ public class Vala.GAsyncModule : GSignalModule {
 
 			var self_target_type = new ObjectType (type_symbol);
 			var cself = transform_expression (new CCodeIdentifier ("base"), base_expression_type, self_target_type);
-			var cdecl = new CCodeDeclaration ("%s *".printf (type_symbol.get_cname ()));
-			cdecl.add_declarator (new CCodeVariableDeclarator ("self", cself));
-			asyncblock.add_statement (cdecl);
+			ccode.add_declaration ("%s *".printf (type_symbol.get_cname ()), new CCodeVariableDeclarator ("self"));
+			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("self"), cself));
 		}
-
-		var dataname = Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data";
-		var asyncfunc = new CCodeFunction (m.get_real_cname (), "void");
-		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 
 		var dataalloc = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_new0"));
 		dataalloc.add_argument (new CCodeIdentifier (dataname));
 
 		var data_var = new CCodeIdentifier ("_data_");
 
-		var datadecl = new CCodeDeclaration (dataname + "*");
-		datadecl.add_declarator (new CCodeVariableDeclarator ("_data_"));
-		asyncblock.add_statement (datadecl);
-		asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (data_var, dataalloc)));
+		ccode.add_declaration (dataname + "*", new CCodeVariableDeclarator ("_data_"));
+		ccode.add_expression (new CCodeAssignment (data_var, dataalloc));
 
 		var create_result = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_new"));
 
@@ -201,13 +213,13 @@ public class Vala.GAsyncModule : GSignalModule {
 		create_result.add_argument (new CCodeIdentifier ("_user_data_"));
 		create_result.add_argument (new CCodeIdentifier (m.get_real_cname ()));
 
-		asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, "_async_result"), create_result)));
+		ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, "_async_result"), create_result));
 
 		var set_op_res_call = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_set_op_res_gpointer"));
 		set_op_res_call.add_argument (new CCodeMemberAccess.pointer (data_var, "_async_result"));
 		set_op_res_call.add_argument (data_var);
 		set_op_res_call.add_argument (new CCodeIdentifier (m.get_real_cname () + "_data_free"));
-		asyncblock.add_statement (new CCodeExpressionStatement (set_op_res_call));
+		ccode.add_expression (set_op_res_call);
 
 		if (m.binding == MemberBinding.INSTANCE) {
 			CCodeExpression self_expr = new CCodeIdentifier ("self");
@@ -219,7 +231,7 @@ public class Vala.GAsyncModule : GSignalModule {
 				self_expr = refcall;
 			}
 
-			asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, "self"), self_expr)));
+			ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, "self"), self_expr));
 		}
 
 		foreach (FormalParameter param in m.get_parameters ()) {
@@ -228,7 +240,7 @@ public class Vala.GAsyncModule : GSignalModule {
 				param_type.value_owned = true;
 
 				// create copy if necessary as variables in async methods may need to be kept alive
-				CCodeExpression cparam = get_variable_cexpression (param.name);
+				CCodeExpression cparam = new CCodeIdentifier (get_variable_cname (param.name));
 				if (param.variable_type.is_real_non_null_struct_type ()) {
 					cparam = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, cparam);
 				}
@@ -238,51 +250,33 @@ public class Vala.GAsyncModule : GSignalModule {
 					cparam = get_ref_cexpression (param.variable_type, cparam, ma, param);
 				}
 
-				asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, get_variable_cname (param.name)), cparam)));
+				ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, get_variable_cname (param.name)), cparam));
 				if (param.variable_type is ArrayType) {
 					var array_type = (ArrayType) param.variable_type;
 					if (!param.no_array_length) {
 						for (int dim = 1; dim <= array_type.rank; dim++) {
-							asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, get_array_length_cname (get_variable_cname (param.name), dim)), new CCodeIdentifier (get_array_length_cname (get_variable_cname (param.name), dim)))));
+							ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, get_array_length_cname (get_variable_cname (param.name), dim)), new CCodeIdentifier (get_array_length_cname (get_variable_cname (param.name), dim))));
 						}
 					}
 				} else if (param.variable_type is DelegateType) {
 					var deleg_type = (DelegateType) param.variable_type;
 					if (deleg_type.delegate_symbol.has_target) {
-						asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, get_delegate_target_cname (get_variable_cname (param.name))), new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (param.name))))));
+						ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, get_delegate_target_cname (get_variable_cname (param.name))), new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (param.name)))));
 						if (deleg_type.value_owned) {
-							asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, get_delegate_target_destroy_notify_cname (get_variable_cname (param.name))), new CCodeIdentifier (get_delegate_target_destroy_notify_cname (get_variable_cname (param.name))))));
+							ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, get_delegate_target_destroy_notify_cname (get_variable_cname (param.name))), new CCodeIdentifier (get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)))));
 						}
 					}
 				}
 			}
 		}
 
-		var cfrag = new CCodeFragment ();
-		append_temp_decl (cfrag, temp_vars);
-		temp_vars.clear ();
-		asyncblock.add_statement (cfrag);
-
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_real_cname () + "_co"));
 		ccall.add_argument (data_var);
-		asyncblock.add_statement (new CCodeExpressionStatement (ccall));
+		ccode.add_expression (ccall);
 
-		cparam_map.set (get_param_pos (-1), new CCodeFormalParameter ("_callback_", "GAsyncReadyCallback"));
-		cparam_map.set (get_param_pos (-0.9), new CCodeFormalParameter ("_user_data_", "gpointer"));
+		cfile.add_function (asyncfunc);
 
-		generate_cparameters (m, cfile, cparam_map, asyncfunc, null, null, null, 1);
-
-		if (m.base_method != null || m.base_interface_method != null) {
-			// declare *_real_* function
-			asyncfunc.modifiers |= CCodeModifiers.STATIC;
-			cfile.add_function_declaration (asyncfunc);
-		} else if (m.is_private_symbol ()) {
-			asyncfunc.modifiers |= CCodeModifiers.STATIC;
-		}
-
-		asyncfunc.block = asyncblock;
-
-		return asyncfunc;
+		pop_context ();
 	}
 
 	void append_struct (CCodeStruct structure) {
@@ -293,12 +287,7 @@ public class Vala.GAsyncModule : GSignalModule {
 	}
 
 	void append_function (CCodeFunction function) {
-		var block = function.block;
-		function.block = null;
- 
 		cfile.add_function_declaration (function);
-
-		function.block = block;
 		cfile.add_function (function);
 	}
 
@@ -347,13 +336,14 @@ public class Vala.GAsyncModule : GSignalModule {
 			if (!m.is_abstract && m.body != null) {
 				var data = generate_data_struct (m);
 
+				closure_struct = data;
+
 				append_function (generate_free_function (m));
-				cfile.add_function (generate_async_function (m));
-				cfile.add_function (generate_finish_function (m));
+				generate_async_function (m);
+				generate_finish_function (m);
 				append_function (generate_ready_function (m));
 
 				// append the _co function
-				closure_struct = data;
 				base.visit_method (m);
 				closure_struct = null;
 
@@ -387,27 +377,33 @@ public class Vala.GAsyncModule : GSignalModule {
 	}
 
 
-	CCodeFunction generate_finish_function (Method m) {
+	void generate_finish_function (Method m) {
+		push_context (new EmitContext ());
+
 		string dataname = Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data";
 
 		var finishfunc = new CCodeFunction (m.get_finish_real_cname ());
 
 		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 
-		var finishblock = new CCodeBlock ();
+		cparam_map.set (get_param_pos (0.1), new CCodeFormalParameter ("_res_", "GAsyncResult*"));
+
+		generate_cparameters (m, cfile, cparam_map, finishfunc, null, null, null, 2);
+
+		if (m.is_private_symbol () || m.base_method != null || m.base_interface_method != null) {
+			finishfunc.modifiers |= CCodeModifiers.STATIC;
+		}
+
+		push_function (finishfunc);
 
 		var return_type = m.return_type;
 		if (!(return_type is VoidType) && !return_type.is_real_non_null_struct_type ()) {
-			var cdecl = new CCodeDeclaration (m.return_type.get_cname ());
-			cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
-			finishblock.add_statement (cdecl);
+			ccode.add_declaration (m.return_type.get_cname (), new CCodeVariableDeclarator ("result"));
 		}
 
 		var data_var = new CCodeIdentifier ("_data_");
 
-		var datadecl = new CCodeDeclaration (dataname + "*");
-		datadecl.add_declarator (new CCodeVariableDeclarator ("_data_"));
-		finishblock.add_statement (datadecl);
+		ccode.add_declaration (dataname + "*", new CCodeVariableDeclarator ("_data_"));
 
 		var simple_async_result_cast = new CCodeFunctionCall (new CCodeIdentifier ("G_SIMPLE_ASYNC_RESULT"));
 		simple_async_result_cast.add_argument (new CCodeIdentifier ("_res_"));
@@ -417,24 +413,25 @@ public class Vala.GAsyncModule : GSignalModule {
 			var propagate_error = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_propagate_error"));
 			propagate_error.add_argument (simple_async_result_cast);
 			propagate_error.add_argument (new CCodeIdentifier ("error"));
-			var errorblock = new CCodeBlock ();
+
+			ccode.open_if (propagate_error);
 			if (return_type is VoidType || return_type.is_real_non_null_struct_type ()) {
-				errorblock.add_statement (new CCodeReturnStatement ());
+				ccode.add_return ();
 			} else {
-				errorblock.add_statement (new CCodeReturnStatement (default_value_for_type (return_type, false)));
+				ccode.add_return (default_value_for_type (return_type, false));
 			}
-			finishblock.add_statement (new CCodeIfStatement (propagate_error, errorblock));
+			ccode.close ();
 		}
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_get_op_res_gpointer"));
 		ccall.add_argument (simple_async_result_cast);
-		finishblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (data_var, ccall)));
+		ccode.add_expression (new CCodeAssignment (data_var, ccall));
 
 		foreach (FormalParameter param in m.get_parameters ()) {
 			if (param.direction != ParameterDirection.IN) {
-				finishblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (param.name)), new CCodeMemberAccess.pointer (data_var, get_variable_cname (param.name)))));
+				ccode.add_expression (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (param.name)), new CCodeMemberAccess.pointer (data_var, get_variable_cname (param.name))));
 				if (!(param.variable_type is ValueType) || param.variable_type.nullable) {
-					finishblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, get_variable_cname (param.name)), new CCodeConstant ("NULL"))));
+					ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, get_variable_cname (param.name)), new CCodeConstant ("NULL")));
 				}
 			}
 		}
@@ -445,41 +442,30 @@ public class Vala.GAsyncModule : GSignalModule {
 			if (requires_copy (return_type)) {
 				cexpr = get_ref_cexpression (return_type, cexpr, null, return_type);
 			}
-			finishblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result")), cexpr)));
+			ccode.add_expression (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result")), cexpr));
 		} else if (!(return_type is VoidType)) {
-			finishblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("result"), new CCodeMemberAccess.pointer (data_var, "result"))));
+			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("result"), new CCodeMemberAccess.pointer (data_var, "result")));
 			if (return_type is ArrayType) {
 				var array_type = (ArrayType) return_type;
 				if (!m.no_array_length) {
 					for (int dim = 1; dim <= array_type.rank; dim++) {
-						finishblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (get_array_length_cname ("result", dim))), new CCodeMemberAccess.pointer (data_var, get_array_length_cname ("result", dim)))));
+						ccode.add_expression (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (get_array_length_cname ("result", dim))), new CCodeMemberAccess.pointer (data_var, get_array_length_cname ("result", dim))));
 					}
 				}
 			} else if (return_type is DelegateType && ((DelegateType) return_type).delegate_symbol.has_target) {
-				finishblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (get_delegate_target_cname ("result"))), new CCodeMemberAccess.pointer (data_var, get_delegate_target_cname ("result")))));
+				ccode.add_expression (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (get_delegate_target_cname ("result"))), new CCodeMemberAccess.pointer (data_var, get_delegate_target_cname ("result"))));
 			}
 			if (!(return_type is ValueType) || return_type.nullable) {
-				finishblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, "result"), new CCodeConstant ("NULL"))));
+				ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, "result"), new CCodeConstant ("NULL")));
 			}
-			finishblock.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("result")));
+			ccode.add_return (new CCodeIdentifier ("result"));
 		}
 
-		var cfrag = new CCodeFragment ();
-		append_temp_decl (cfrag, temp_vars);
-		temp_vars.clear ();
-		finishblock.add_statement (cfrag);
+		pop_function ();
 
-		cparam_map.set (get_param_pos (0.1), new CCodeFormalParameter ("_res_", "GAsyncResult*"));
+		cfile.add_function (finishfunc);
 
-		generate_cparameters (m, cfile, cparam_map, finishfunc, null, null, null, 2);
-
-		if (m.is_private_symbol () || m.base_method != null || m.base_interface_method != null) {
-			finishfunc.modifiers |= CCodeModifiers.STATIC;
-		}
-
-		finishfunc.block = finishblock;
-
-		return finishfunc;
+		pop_context ();
 	}
 
 	CCodeFunction generate_ready_function (Method m) {
@@ -550,23 +536,16 @@ public class Vala.GAsyncModule : GSignalModule {
 
 	public override void visit_yield_statement (YieldStatement stmt) {
 		if (current_method == null || !current_method.coroutine) {
-			stmt.ccodenode = new CCodeEmptyStatement ();
 			return;
 		}
 
 		if (stmt.yield_expression == null) {
-			var cfrag = new CCodeFragment ();
-			stmt.ccodenode = cfrag;
-
 			int state = next_coroutine_state++;
 
-			state_switch_statement.add_statement (new CCodeCaseStatement (new CCodeConstant (state.to_string ())));
-			state_switch_statement.add_statement (new CCodeGotoStatement ("_state_%d".printf (state)));
-
-			cfrag.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_state_"), new CCodeConstant (state.to_string ()))));
-			cfrag.append (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
-			cfrag.append (new CCodeLabel ("_state_%d".printf (state)));
-			cfrag.append (new CCodeEmptyStatement ());
+			ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_state_"), new CCodeConstant (state.to_string ())));
+			ccode.add_return (new CCodeConstant ("FALSE"));
+			ccode.add_label ("_state_%d".printf (state));
+			ccode.add_statement (new CCodeEmptyStatement ());
 
 			return;
 		}
@@ -576,68 +555,44 @@ public class Vala.GAsyncModule : GSignalModule {
 			return;
 		}
 
-		stmt.ccodenode = new CCodeExpressionStatement ((CCodeExpression) stmt.yield_expression.ccodenode);
+		ccode.add_expression ((CCodeExpression) stmt.yield_expression.ccodenode);
 
 		if (stmt.tree_can_fail && stmt.yield_expression.tree_can_fail) {
 			// simple case, no node breakdown necessary
 
-			var cfrag = new CCodeFragment ();
-
-			cfrag.append (stmt.ccodenode);
-
-			add_simple_check (stmt.yield_expression, cfrag);
-
-			stmt.ccodenode = cfrag;
+			add_simple_check (stmt.yield_expression);
 		}
 
 		/* free temporary objects */
 
-		if (((List<LocalVariable>) temp_vars).size == 0) {
-			/* nothing to do without temporary variables */
-			return;
-		}
-		
-		var cfrag = new CCodeFragment ();
-		append_temp_decl (cfrag, temp_vars);
-		
-		cfrag.append (stmt.ccodenode);
-		
 		foreach (LocalVariable local in temp_ref_vars) {
 			var ma = new MemberAccess.simple (local.name);
 			ma.symbol_reference = local;
-			cfrag.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (local.name), local.variable_type, ma)));
+			ccode.add_expression (get_unref_expression (new CCodeIdentifier (local.name), local.variable_type, ma));
 		}
-		
-		stmt.ccodenode = cfrag;
-		
-		temp_vars.clear ();
+
 		temp_ref_vars.clear ();
 	}
 
-	public override CCodeStatement return_with_exception (CCodeExpression error_expr)
+	public override void return_with_exception (CCodeExpression error_expr)
 	{
 		if (!current_method.coroutine) {
-			return base.return_with_exception (error_expr);
+			base.return_with_exception (error_expr);
+			return;
 		}
-
-		var block = new CCodeBlock ();
 
 		var set_error = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_set_from_error"));
 		set_error.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_async_result"));
 		set_error.add_argument (error_expr);
-		block.add_statement (new CCodeExpressionStatement (set_error));
+		ccode.add_expression (set_error);
 
 		var free_error = new CCodeFunctionCall (new CCodeIdentifier ("g_error_free"));
 		free_error.add_argument (error_expr);
-		block.add_statement (new CCodeExpressionStatement (free_error));
+		ccode.add_expression (free_error);
 
-		var free_locals = new CCodeFragment ();
-		append_local_free (current_symbol, free_locals, false);
-		block.add_statement (free_locals);
+		append_local_free (current_symbol, false);
 
-		block.add_statement (complete_async ());
-
-		return block;
+		complete_async ();
 	}
 
 	public override void visit_return_statement (ReturnStatement stmt) {
@@ -647,9 +602,7 @@ public class Vala.GAsyncModule : GSignalModule {
 			return;
 		}
 
-		var cfrag = (CCodeFragment) stmt.ccodenode;
-
-		cfrag.append (complete_async ());
+		complete_async ();
 	}
 
 	public override void generate_cparameters (Method m, CCodeFile decl_space, Map<int,CCodeFormalParameter> cparam_map, CCodeFunction func, CCodeFunctionDeclarator? vdeclarator = null, Map<int,CCodeExpression>? carg_map = null, CCodeFunctionCall? vcall = null, int direction = 3) {

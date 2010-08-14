@@ -233,6 +233,8 @@ public class Vala.Method : Symbol {
 
 	public bool is_async_callback { get; set; }
 
+	public int yield_count { get; set; }
+
 	private List<FormalParameter> parameters = new ArrayList<FormalParameter> ();
 	private string cname;
 	private string finish_name;

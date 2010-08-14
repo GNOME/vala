@@ -129,33 +129,31 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		}
 	}
 
-	public CCodeStatement complete_async () {
-		var complete_block = new CCodeBlock ();
-
-		var direct_block = new CCodeBlock ();
-		var direct_call = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_complete"));
-		var async_result_expr = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_async_result");
-		direct_call.add_argument (async_result_expr);
-		direct_block.add_statement (new CCodeExpressionStatement (direct_call));
-
-		var idle_block = new CCodeBlock ();
-		var idle_call = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_complete_in_idle"));
-		idle_call.add_argument (async_result_expr);
-		idle_block.add_statement (new CCodeExpressionStatement (idle_call));
-
+	public void complete_async () {
 		var state = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_state_");
 		var zero = new CCodeConstant ("0");
 		var state_is_zero = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, state, zero);
-		var dispatch = new CCodeIfStatement (state_is_zero, idle_block, direct_block);
-		complete_block.add_statement (dispatch);
+		ccode.open_if (state_is_zero);
+
+		var async_result_expr = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_async_result");
+
+		var idle_call = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_complete_in_idle"));
+		idle_call.add_argument (async_result_expr);
+		ccode.add_expression (idle_call);
+
+		ccode.add_else ();
+
+		var direct_call = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_complete"));
+		direct_call.add_argument (async_result_expr);
+		ccode.add_expression (direct_call);
+
+		ccode.close ();
 
 		var unref = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
 		unref.add_argument (async_result_expr);
-		complete_block.add_statement (new CCodeExpressionStatement (unref));
+		ccode.add_expression (unref);
 
-		complete_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
-
-		return complete_block;
+		ccode.add_return (new CCodeConstant ("FALSE"));
 	}
 
 	public override void generate_method_declaration (Method m, CCodeFile decl_space) {
@@ -206,34 +204,34 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		}
 	}
 
-	void register_plugin_types (CCodeFragment module_init_fragment, Symbol sym, Set<Symbol> registered_types) {
+	void register_plugin_types (Symbol sym, Set<Symbol> registered_types) {
 		var ns = sym as Namespace;
 		var cl = sym as Class;
 		var iface = sym as Interface;
 		if (ns != null) {
 			foreach (var ns_ns in ns.get_namespaces ()) {
-				register_plugin_types (module_init_fragment, ns_ns, registered_types);
+				register_plugin_types (ns_ns, registered_types);
 			}
 			foreach (var ns_cl in ns.get_classes ()) {
-				register_plugin_types (module_init_fragment, ns_cl, registered_types);
+				register_plugin_types (ns_cl, registered_types);
 			}
 			foreach (var ns_iface in ns.get_interfaces ()) {
-				register_plugin_types (module_init_fragment, ns_iface, registered_types);
+				register_plugin_types (ns_iface, registered_types);
 			}
 		} else if (cl != null) {
-			register_plugin_type (module_init_fragment, cl, registered_types);
+			register_plugin_type (cl, registered_types);
 			foreach (var cl_cl in cl.get_classes ()) {
-				register_plugin_types (module_init_fragment, cl_cl, registered_types);
+				register_plugin_types (cl_cl, registered_types);
 			}
 		} else if (iface != null) {
-			register_plugin_type (module_init_fragment, iface, registered_types);
+			register_plugin_type (iface, registered_types);
 			foreach (var iface_cl in iface.get_classes ()) {
-				register_plugin_types (module_init_fragment, iface_cl, registered_types);
+				register_plugin_types (iface_cl, registered_types);
 			}
 		}
 	}
 
-	void register_plugin_type (CCodeFragment module_init_fragment, ObjectTypeSymbol type_symbol, Set<Symbol> registered_types) {
+	void register_plugin_type (ObjectTypeSymbol type_symbol, Set<Symbol> registered_types) {
 		if (type_symbol.external_package) {
 			return;
 		}
@@ -251,13 +249,13 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 
 			// register base types first
 			foreach (var base_type in cl.get_base_types ()) {
-				register_plugin_type (module_init_fragment, (ObjectTypeSymbol) base_type.data_type, registered_types);
+				register_plugin_type ((ObjectTypeSymbol) base_type.data_type, registered_types);
 			}
 		}
 
 		var register_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_register_type".printf (type_symbol.get_lower_case_cname (null))));
 		register_call.add_argument (new CCodeIdentifier (module_init_param_name));
-		module_init_fragment.append (new CCodeExpressionStatement (register_call));
+		ccode.add_expression (register_call);
 	}
 
 	public override void visit_method (Method m) {
@@ -280,13 +278,8 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		}
 
 		if (m.coroutine) {
-			state_switch_statement = new CCodeSwitchStatement (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_state_"));
-
-			// initial coroutine state
-			state_switch_statement.add_statement (new CCodeCaseStatement (new CCodeConstant ("0")));
-			state_switch_statement.add_statement (new CCodeGotoStatement ("_state_0"));
+			next_coroutine_state = 1;
 		}
-		var current_state_switch = state_switch_statement;
 
 		var creturn_type = m.return_type;
 		if (m.return_type.is_real_non_null_struct_type ()) {
@@ -328,13 +321,8 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 			}
 		}
 
-		if (m.comment != null) {
-			cfile.add_type_member_definition (new CCodeComment (m.comment.content));
-		}
-
 		CCodeFunction function;
 		function = new CCodeFunction (m.get_real_cname ());
-		m.ccodenode = function;
 
 		if (m.is_inline) {
 			function.modifiers |= CCodeModifiers.INLINE;
@@ -361,8 +349,6 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		// generate *_real_* functions for virtual methods
 		// also generate them for abstract methods of classes to prevent faulty subclassing
 		if (!m.is_abstract || (m.is_abstract && current_type_symbol is Class)) {
-			/* Methods imported from a plain C file don't
-			 * have a body, e.g. Vala.Parser.parse_file () */
 			if (m.body != null) {
 				if (m.coroutine) {
 					function = new CCodeFunction (m.get_real_cname () + "_co", "gboolean");
@@ -376,22 +362,37 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 			}
 		}
 
-		var cinit = new CCodeFragment ();
+		if (m.comment != null) {
+			cfile.add_type_member_definition (new CCodeComment (m.comment.content));
+		}
+
+		push_function (function);
 
 		// generate *_real_* functions for virtual methods
 		// also generate them for abstract methods of classes to prevent faulty subclassing
 		if (!m.is_abstract || (m.is_abstract && current_type_symbol is Class)) {
-			/* Methods imported from a plain C file don't
-			 * have a body, e.g. Vala.Parser.parse_file () */
 			if (m.body != null) {
 				if (m.coroutine) {
+					ccode.open_switch (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_state_"));
+
+					// initial coroutine state
+					ccode.add_case (new CCodeConstant ("0"));
+					ccode.add_goto ("_state_0");
+
+					for (int state = 1; state <= m.yield_count; state++) {
+						ccode.add_case (new CCodeConstant (state.to_string ()));
+						ccode.add_goto ("_state_%d".printf (state));
+					}
+
+
 					// let gcc know that this can't happen
-					current_state_switch.add_statement (new CCodeLabel ("default"));
-					current_state_switch.add_statement (new CCodeExpressionStatement (new CCodeFunctionCall (new CCodeIdentifier ("g_assert_not_reached"))));
+					ccode.add_default ();
+					ccode.add_expression (new CCodeFunctionCall (new CCodeIdentifier ("g_assert_not_reached")));
 
-					cinit.append (current_state_switch);
+					ccode.close ();
 
-					cinit.append (new CCodeLabel ("_state_0"));
+					// coroutine body
+					ccode.add_label ("_state_0");
 				}
 
 				if (m.closure) {
@@ -407,10 +408,8 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 						int parent_block_id = get_block_id (parent_closure_block);
 
 						var parent_data = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "_data%d_".printf (parent_block_id));
-						var cdecl = new CCodeDeclaration ("Block%dData*".printf (parent_block_id));
-						cdecl.add_declarator (new CCodeVariableDeclarator ("_data%d_".printf (parent_block_id), parent_data));
-
-						cinit.append (cdecl);
+						ccode.add_declaration ("Block%dData*".printf (parent_block_id), new CCodeVariableDeclarator ("_data%d_".printf (parent_block_id)));
+						ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_data%d_".printf (parent_block_id)), parent_data));
 
 						closure_block = parent_closure_block;
 						block_id = parent_block_id;
@@ -420,10 +419,8 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 					// as closures have block data parameter
 					if (m.binding == MemberBinding.INSTANCE) {
 						var cself = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "self");
-						var cdecl = new CCodeDeclaration ("%s *".printf (current_class.get_cname ()));
-						cdecl.add_declarator (new CCodeVariableDeclarator ("self", cself));
-
-						cinit.append (cdecl);
+						ccode.add_declaration ("%s *".printf (current_class.get_cname ()), new CCodeVariableDeclarator ("self"));
+						ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("self"), cself));
 					}
 				} else if (m.parent_symbol is Class && !m.coroutine) {
 					var cl = (Class) m.parent_symbol;
@@ -440,19 +437,14 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 						var self_target_type = new ObjectType (cl);
 						CCodeExpression cself = transform_expression (new CCodeIdentifier ("base"), base_expression_type, self_target_type);
 
-						var cdecl = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
-						cdecl.add_declarator (new CCodeVariableDeclarator ("self", cself));
-					
-						cinit.append (cdecl);
+						ccode.add_declaration ("%s *".printf (cl.get_cname ()), new CCodeVariableDeclarator ("self"));
+						ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("self"), cself));
 					} else if (m.binding == MemberBinding.INSTANCE
-					           && !(m is CreationMethod)) {
-						var ccheckstmt = create_method_type_check_statement (m, creturn_type, cl, true, "self");
-						if (ccheckstmt != null) {
-							ccheckstmt.line = function.line;
-							cinit.append (ccheckstmt);
-						}
+						   && !(m is CreationMethod)) {
+						create_method_type_check_statement (m, creturn_type, cl, true, "self");
 					}
 				}
+
 				foreach (FormalParameter param in m.get_parameters ()) {
 					if (param.ellipsis) {
 						break;
@@ -461,11 +453,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 					if (param.direction != ParameterDirection.OUT) {
 						var t = param.variable_type.data_type;
 						if (t != null && t.is_reference_type ()) {
-							var type_check = create_method_type_check_statement (m, creturn_type, t, !param.variable_type.nullable, get_variable_cname (param.name));
-							if (type_check != null) {
-								type_check.line = function.line;
-								cinit.append (type_check);
-							}
+							create_method_type_check_statement (m, creturn_type, t, !param.variable_type.nullable, get_variable_cname (param.name));
 						}
 					} else if (!m.coroutine) {
 						var t = param.variable_type.data_type;
@@ -477,36 +465,28 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 
 							var condition = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_variable_cexpression (param.name), new CCodeConstant ("NULL"));
 							var if_statement = new CCodeIfStatement (condition, cblock);
-							cinit.append (if_statement);
+							ccode.add_statement (if_statement);
 						}
 					}
 				}
 
 				if (!(m.return_type is VoidType) && !m.return_type.is_real_non_null_struct_type () && !m.coroutine) {
-					var cdecl = new CCodeDeclaration (m.return_type.get_cname ());
 					var vardecl =  new CCodeVariableDeclarator ("result", default_value_for_type (m.return_type, true));
 					vardecl.init0 = true;
-					cdecl.add_declarator (vardecl);
-					cinit.append (cdecl);
+					ccode.add_declaration (m.return_type.get_cname (), vardecl);
 				}
 
 				if (m is CreationMethod) {
 					if (in_gobject_creation_method) {
-						var cdeclaration = new CCodeDeclaration ("%s *".printf (((Class) current_type_symbol).get_cname ()));
-						cdeclaration.add_declarator (new CCodeVariableDeclarator ("self"));
-
-						cinit.append (cdeclaration);
+						ccode.add_declaration ("%s *".printf (((Class) current_type_symbol).get_cname ()), new CCodeVariableDeclarator ("self"));
 					} else if (is_gtypeinstance_creation_method (m)) {
 						var cl = (Class) m.parent_symbol;
-						var cdeclaration = new CCodeDeclaration (cl.get_cname () + "*");
-						var cdecl = new CCodeVariableDeclarator ("self");
-						cdeclaration.add_declarator (cdecl);
-						cinit.append (cdeclaration);
+						ccode.add_declaration (cl.get_cname () + "*", new CCodeVariableDeclarator ("self"));
 
 						if (cl.is_fundamental ()) {
 							var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_create_instance"));
 							ccall.add_argument (new CCodeIdentifier ("object_type"));
-							cdecl.initializer = new CCodeCastExpression (ccall, cl.get_cname () + "*");
+							ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("self"), new CCodeCastExpression (ccall, cl.get_cname () + "*")));
 
 							/* type, dup func, and destroy func fields for generic types */
 							foreach (TypeParameter type_param in current_class.get_type_parameters ()) {
@@ -517,36 +497,33 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 
 								param_name = new CCodeIdentifier ("%s_type".printf (type_param.name.down ()));
 								assign = new CCodeAssignment (new CCodeMemberAccess.pointer (priv_access, param_name.name), param_name);
-								cinit.append (new CCodeExpressionStatement (assign));
+								ccode.add_expression (assign);
 
 								param_name = new CCodeIdentifier ("%s_dup_func".printf (type_param.name.down ()));
 								assign = new CCodeAssignment (new CCodeMemberAccess.pointer (priv_access, param_name.name), param_name);
-								cinit.append (new CCodeExpressionStatement (assign));
+								ccode.add_expression (assign);
 
 								param_name = new CCodeIdentifier ("%s_destroy_func".printf (type_param.name.down ()));
 								assign = new CCodeAssignment (new CCodeMemberAccess.pointer (priv_access, param_name.name), param_name);
-								cinit.append (new CCodeExpressionStatement (assign));
+								ccode.add_expression (assign);
 							}
 						}
 					} else if (current_type_symbol is Class) {
 						var cl = (Class) m.parent_symbol;
-						var cdeclaration = new CCodeDeclaration (cl.get_cname () + "*");
-						var cdecl = new CCodeVariableDeclarator ("self");
-						cdeclaration.add_declarator (cdecl);
-						cinit.append (cdeclaration);
+						ccode.add_declaration (cl.get_cname () + "*", new CCodeVariableDeclarator ("self"));
 
 						if (!((CreationMethod) m).chain_up) {
 							// TODO implicitly chain up to base class as in add_object_creation
 							var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_new0"));
 							ccall.add_argument (new CCodeIdentifier (cl.get_cname ()));
-							cdecl.initializer = ccall;
+							ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("self"), ccall));
 						}
 
 						if (cl.base_class == null) {
 							// derived compact classes do not have fields
 							var cinitcall = new CCodeFunctionCall (new CCodeIdentifier ("%s_instance_init".printf (cl.get_lower_case_cname (null))));
 							cinitcall.add_argument (new CCodeIdentifier ("self"));
-							cinit.append (new CCodeExpressionStatement (cinitcall));
+							ccode.add_expression (cinitcall);
 						}
 					} else {
 						var st = (Struct) m.parent_symbol;
@@ -557,20 +534,17 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 						czero.add_argument (new CCodeIdentifier ("self"));
 						czero.add_argument (new CCodeConstant ("0"));
 						czero.add_argument (new CCodeIdentifier ("sizeof (%s)".printf (st.get_cname ())));
-						cinit.append (new CCodeExpressionStatement (czero));
+						ccode.add_expression (czero);
 					}
 				}
 
 				if (context.module_init_method == m && in_plugin) {
 					// GTypeModule-based plug-in, register types
-					register_plugin_types (cinit, context.root, new HashSet<Symbol> ());
+					register_plugin_types (context.root, new HashSet<Symbol> ());
 				}
 
 				foreach (Expression precondition in m.get_preconditions ()) {
-					var check_stmt = create_precondition_statement (m, creturn_type, precondition);
-					if (check_stmt != null) {
-						cinit.append (check_stmt);
-					}
+					create_precondition_statement (m, creturn_type, precondition);
 				}
 			}
 		}
@@ -585,11 +559,6 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 			/* Methods imported from a plain C file don't
 			 * have a body, e.g. Vala.Parser.parse_file () */
 			if (m.body != null) {
-				function.block = (CCodeBlock) m.body.ccodenode;
-				function.block.line = function.line;
-
-				function.block.prepend_statement (cinit);
-
 				if (current_method_inner_error) {
 					/* always separate error parameter and inner_error local variable
 					 * as error may be set to NULL but we're always interested in inner errors
@@ -599,60 +568,89 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 
 						// no initialization necessary, closure struct is zeroed
 					} else {
-						var cdecl = new CCodeDeclaration ("GError *");
-						cdecl.add_declarator (new CCodeVariableDeclarator.zero ("_inner_error_", new CCodeConstant ("NULL")));
-						function.block.add_statement (cdecl);
+						ccode.add_declaration ("GError *", new CCodeVariableDeclarator.zero ("_inner_error_", new CCodeConstant ("NULL")));
 					}
 				}
 
 				if (m.coroutine) {
 					// epilogue
-					function.block.add_statement (complete_async ());
+					complete_async ();
 				}
 
 				if (!(m.return_type is VoidType) && !m.return_type.is_real_non_null_struct_type () && !m.coroutine) {
 					// add dummy return if exit block is known to be unreachable to silence C compiler
 					if (m.return_block != null && m.return_block.get_predecessors ().size == 0) {
-						function.block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("result")));
+						ccode.add_return (new CCodeIdentifier ("result"));
 					}
 				}
 
-				cfile.add_function (function);
-			} else if (m.is_abstract) {
-				// generate helpful error message if a sublcass does not implement an abstract method.
-				// This is only meaningful for subclasses implemented in C since the vala compiler would
-				// complain during compile time of such en error.
+				if (m is CreationMethod) {
+					if (current_type_symbol is Class) {
+						creturn_type = new ObjectType (current_class);
+					} else {
+						creturn_type = new VoidType ();
+					}
 
-				var cblock = new CCodeBlock ();
 
-				// add a typecheck statement for "self"
-				var check_stmt = create_method_type_check_statement (m, creturn_type, current_type_symbol, true, "self");
-				if (check_stmt != null) {
-					cblock.add_statement (check_stmt);
+					if (current_type_symbol is Class && gobject_type != null && current_class.is_subtype_of (gobject_type)
+					    && current_class.get_type_parameters ().size > 0
+					    && !((CreationMethod) m).chain_up) {
+						var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, new CCodeIdentifier ("__params_it"), new CCodeIdentifier ("__params"));
+						var cdofreeparam = new CCodeBlock ();
+						cdofreeparam.add_statement (new CCodeExpressionStatement (new CCodeUnaryExpression (CCodeUnaryOperator.PREFIX_DECREMENT, new CCodeIdentifier ("__params_it"))));
+						var cunsetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_unset"));
+						cunsetcall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeMemberAccess.pointer (new CCodeIdentifier ("__params_it"), "value")));
+						cdofreeparam.add_statement (new CCodeExpressionStatement (cunsetcall));
+						ccode.add_statement (new CCodeWhileStatement (ccond, cdofreeparam));
+
+						var cfreeparams = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
+						cfreeparams.add_argument (new CCodeIdentifier ("__params"));
+						ccode.add_expression (cfreeparams);
+					}
+
+					if (current_type_symbol is Class) {
+						CCodeExpression cresult = new CCodeIdentifier ("self");
+						if (get_custom_creturn_type (m) != null) {
+							cresult = new CCodeCastExpression (cresult, get_custom_creturn_type (m));
+						}
+
+						ccode.add_return (cresult);
+					}
 				}
 
-				// add critical warning that this method should not have been called
-				var type_from_instance_call = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_FROM_INSTANCE"));
-				type_from_instance_call.add_argument (new CCodeIdentifier ("self"));
-			
-				var type_name_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_name"));
-				type_name_call.add_argument (type_from_instance_call);
-
-				var error_string = "\"Type `%%s' does not implement abstract method `%s'\"".printf (m.get_cname ());
-
-				var cerrorcall = new CCodeFunctionCall (new CCodeIdentifier ("g_critical"));
-				cerrorcall.add_argument (new CCodeConstant (error_string));
-				cerrorcall.add_argument (type_name_call);
-
-				cblock.add_statement (new CCodeExpressionStatement (cerrorcall));
-
-				// add return statement
-				cblock.add_statement (new CCodeReturnStatement (default_value_for_type (creturn_type, false)));
-
-				function.block = cblock;
-				cfile.add_function (function);
+				cfile.add_function (ccode);
 			}
 		}
+
+		if (m.is_abstract) {
+			// generate helpful error message if a sublcass does not implement an abstract method.
+			// This is only meaningful for subclasses implemented in C since the vala compiler would
+			// complain during compile time of such en error.
+
+			// add a typecheck statement for "self"
+			create_method_type_check_statement (m, creturn_type, current_type_symbol, true, "self");
+
+			// add critical warning that this method should not have been called
+			var type_from_instance_call = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_FROM_INSTANCE"));
+			type_from_instance_call.add_argument (new CCodeIdentifier ("self"));
+
+			var type_name_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_name"));
+			type_name_call.add_argument (type_from_instance_call);
+
+			var error_string = "\"Type `%%s' does not implement abstract method `%s'\"".printf (m.get_cname ());
+
+			var cerrorcall = new CCodeFunctionCall (new CCodeIdentifier ("g_critical"));
+			cerrorcall.add_argument (new CCodeConstant (error_string));
+			cerrorcall.add_argument (type_name_call);
+
+			ccode.add_expression (cerrorcall);
+
+			// add return statement
+			ccode.add_return (default_value_for_type (creturn_type, false));
+
+			cfile.add_function (ccode);
+		}
+
 
 		in_static_or_class_context = false;
 
@@ -885,23 +883,13 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 	}
 
 	public void generate_vfunc (Method m, DataType return_type, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression> carg_map, string suffix = "", int direction = 3) {
+		push_context (new EmitContext ());
+
 		string cname = m.get_cname ();
 		if (suffix == "_finish" && cname.has_suffix ("_async")) {
 			cname = cname.substring (0, cname.length - "_async".length);
 		}
 		var vfunc = new CCodeFunction (cname + suffix);
-		if (function != null) {
-			vfunc.line = function.line;
-		}
-
-		var vblock = new CCodeBlock ();
-
-		foreach (Expression precondition in m.get_preconditions ()) {
-			var check_stmt = create_precondition_statement (m, return_type, precondition);
-			if (check_stmt != null) {
-				vblock.add_statement (check_stmt);
-			}
-		}
 
 		CCodeFunctionCall vcast = null;
 		if (m.parent_symbol is Interface) {
@@ -924,47 +912,45 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 
 		generate_cparameters (m, cfile, cparam_map, vfunc, null, carg_map, vcall, direction);
 
-		CCodeStatement cstmt;
+		push_function (vfunc);
+
+		foreach (Expression precondition in m.get_preconditions ()) {
+			create_precondition_statement (m, return_type, precondition);
+		}
+
 		if (return_type is VoidType || return_type.is_real_non_null_struct_type ()) {
-			cstmt = new CCodeExpressionStatement (vcall);
+			ccode.add_expression (vcall);
 		} else if (m.get_postconditions ().size == 0) {
 			/* pass method return value */
-			cstmt = new CCodeReturnStatement (vcall);
+			ccode.add_return (vcall);
 		} else {
 			/* store method return value for postconditions */
-			var cdecl = new CCodeDeclaration (get_creturn_type (m, return_type.get_cname ()));
-			cdecl.add_declarator (new CCodeVariableDeclarator ("result", vcall));
-			cstmt = cdecl;
+			ccode.add_declaration (get_creturn_type (m, return_type.get_cname ()), new CCodeVariableDeclarator ("result"));
+			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("result"), vcall));
 		}
-		cstmt.line = vfunc.line;
-		vblock.add_statement (cstmt);
 
 		if (m.get_postconditions ().size > 0) {
 			foreach (Expression postcondition in m.get_postconditions ()) {
-				vblock.add_statement (create_postcondition_statement (postcondition));
+				create_postcondition_statement (postcondition);
 			}
 
 			if (!(return_type is VoidType)) {
-				var cret_stmt = new CCodeReturnStatement (new CCodeIdentifier ("result"));
-				cret_stmt.line = vfunc.line;
-				vblock.add_statement (cret_stmt);
+				ccode.add_return (new CCodeIdentifier ("result"));
 			}
 		}
 
-		vfunc.block = vblock;
-
 		cfile.add_function (vfunc);
+
+		pop_context ();
 	}
 
-	private CCodeStatement? create_method_type_check_statement (Method m, DataType return_type, TypeSymbol t, bool non_null, string var_name) {
-		if (m.coroutine) {
-			return null;
-		} else {
-			return create_type_check_statement (m, return_type, t, non_null, var_name);
+	private void create_method_type_check_statement (Method m, DataType return_type, TypeSymbol t, bool non_null, string var_name) {
+		if (!m.coroutine) {
+			create_type_check_statement (m, return_type, t, non_null, var_name);
 		}
 	}
 
-	private CCodeStatement? create_precondition_statement (CodeNode method_node, DataType ret_type, Expression precondition) {
+	private void create_precondition_statement (CodeNode method_node, DataType ret_type, Expression precondition) {
 		var ccheck = new CCodeFunctionCall ();
 
 		ccheck.add_argument ((CCodeExpression) precondition.ccodenode);
@@ -986,11 +972,11 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 			if (cdefault != null) {
 				ccheck.add_argument (cdefault);
 			} else {
-				return null;
+				return;
 			}
 		}
 		
-		return new CCodeExpressionStatement (ccheck);
+		ccode.add_expression (ccheck);
 	}
 
 	private TypeSymbol? find_parent_type (Symbol sym) {
@@ -1012,19 +998,9 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 			return;
 		}
 
-		function = (CCodeFunction) m.ccodenode;
-
-		DataType creturn_type;
-		if (current_type_symbol is Class) {
-			creturn_type = new ObjectType (current_class);
-		} else {
-			creturn_type = new VoidType ();
-		}
-
 		// do not generate _new functions for creation methods of abstract classes
 		if (current_type_symbol is Class && !current_class.is_compact && !current_class.is_abstract) {
 			var vfunc = new CCodeFunction (m.get_cname ());
-			vfunc.line = function.line;
 
 			var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 			var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
@@ -1046,17 +1022,6 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 			vfunc.block = vblock;
 
 			cfile.add_function (vfunc);
-		}
-
-		if (current_type_symbol is Class) {
-			CCodeExpression cresult = new CCodeIdentifier ("self");
-			if (get_custom_creturn_type (m) != null) {
-				cresult = new CCodeCastExpression (cresult, get_custom_creturn_type (m));
-			}
-
-			var creturn = new CCodeReturnStatement ();
-			creturn.return_expression = cresult;
-			function.block.add_statement (creturn);
 		}
 	}
 }

@@ -200,7 +200,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					var ccomma = new CCodeCommaExpression ();
 
 					var temp_var = get_temp_variable (ma.inner.target_type, true, null, false);
-					temp_vars.add (temp_var);
+					emit_temp_var (temp_var);
 					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), instance));
 					ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_var.name)));
 
@@ -353,14 +353,14 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 							if (param.array_length_type != null) {
 								if (param.direction == ParameterDirection.OUT) {
 									var temp_array_length = get_temp_variable (new CType (param.array_length_type));
-									temp_vars.add (temp_array_length);
+									emit_temp_var (temp_array_length);
 									array_length_expr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_array_length.name));
 
 									var comma = new CCodeCommaExpression ();
 									LocalVariable? temp_result = null;
 									if (!(m.return_type is VoidType)) {
 										temp_result = get_temp_variable (m.return_type);
-										temp_vars.add (temp_result);
+										emit_temp_var (temp_result);
 										ccall_expr = new CCodeAssignment (get_variable_cexpression (temp_result.name), ccall_expr);
 									}
 
@@ -430,7 +430,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 						var ccomma = new CCodeCommaExpression ();
 
 						var temp_decl = get_temp_variable (arg.value_type, true, null, false);
-						temp_vars.add (temp_decl);
+						emit_temp_var (temp_decl);
 						ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_decl.name), cexpr));
 
 						cexpr = get_variable_cexpression (temp_decl.name);
@@ -451,7 +451,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 						var ccomma = new CCodeCommaExpression ();
 
 						var temp_var = get_temp_variable (param.variable_type, param.variable_type.value_owned);
-						temp_vars.add (temp_var);
+						emit_temp_var (temp_var);
 						cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_var.name));
 
 						if (param.direction == ParameterDirection.REF) {
@@ -468,14 +468,14 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 							ccomma.append_expression (ccall_expr);
 						} else {
 							ret_temp_var = get_temp_variable (itype.get_return_type (), true, null, false);
-							temp_vars.add (ret_temp_var);
+							emit_temp_var (ret_temp_var);
 							ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (ret_temp_var.name), ccall_expr));
 						}
 
 						var cassign_comma = new CCodeCommaExpression ();
 
 						var assign_temp_var = get_temp_variable (unary.inner.value_type, unary.inner.value_type.value_owned, null, false);
-						temp_vars.add (assign_temp_var);
+						emit_temp_var (assign_temp_var);
 
 						cassign_comma.append_expression (new CCodeAssignment (get_variable_cexpression (assign_temp_var.name), transform_expression (get_variable_cexpression (temp_var.name), param.variable_type, unary.inner.value_type, arg)));
 
@@ -538,7 +538,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					var temp_var = get_temp_variable (itype.get_return_type (), true, null, false);
 					var temp_ref = get_variable_cexpression (temp_var.name);
 
-					temp_vars.add (temp_var);
+					emit_temp_var (temp_var);
 
 					ccall_expr = new CCodeAssignment (temp_ref, ccall_expr);
 
@@ -557,7 +557,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					}
 					var temp_ref = get_variable_cexpression (temp_var.name);
 
-					temp_vars.add (temp_var);
+					emit_temp_var (temp_var);
 
 					out_arg_map.set (get_param_pos (m.carray_length_parameter_position + 0.01 * dim), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
 
@@ -573,7 +573,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				var temp_var = get_temp_variable (new PointerType (new VoidType ()));
 				var temp_ref = get_variable_cexpression (temp_var.name);
 
-				temp_vars.add (temp_var);
+				emit_temp_var (temp_var);
 
 				out_arg_map.set (get_param_pos (m.cdelegate_target_parameter_position), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
 
@@ -583,7 +583,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					temp_var = get_temp_variable (new DelegateType ((Delegate) context.root.scope.lookup ("GLib").scope.lookup ("DestroyNotify")));
 					temp_ref = get_variable_cexpression (temp_var.name);
 
-					temp_vars.add (temp_var);
+					emit_temp_var (temp_var);
 
 					out_arg_map.set (get_param_pos (m.cdelegate_target_parameter_position + 0.01), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
 
@@ -602,7 +602,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					var temp_var = get_temp_variable (itype.get_return_type (), true, null, false);
 					var temp_ref = get_variable_cexpression (temp_var.name);
 
-					temp_vars.add (temp_var);
+					emit_temp_var (temp_var);
 
 					ccall_expr = new CCodeAssignment (temp_ref, ccall_expr);
 
@@ -615,7 +615,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					var temp_var = get_temp_variable (int_type);
 					var temp_ref = get_variable_cexpression (temp_var.name);
 
-					temp_vars.add (temp_var);
+					emit_temp_var (temp_var);
 
 					out_arg_map.set (get_param_pos (deleg.carray_length_parameter_position + 0.01 * dim), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
 
@@ -631,7 +631,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				var temp_var = get_temp_variable (new PointerType (new VoidType ()));
 				var temp_ref = get_variable_cexpression (temp_var.name);
 
-				temp_vars.add (temp_var);
+				emit_temp_var (temp_var);
 
 				out_arg_map.set (get_param_pos (deleg.cdelegate_target_parameter_position), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
 
@@ -688,7 +688,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			var temp_var = get_temp_variable (itype.get_return_type ());
 			var temp_ref = get_variable_cexpression (temp_var.name);
 
-			temp_vars.add (temp_var);
+			emit_temp_var (temp_var);
 
 			out_arg_map.set (get_param_pos (-3), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
 
@@ -746,20 +746,13 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		}
 
 		if (expr.is_yield_expression) {
-			if (pre_statement_fragment == null) {
-				pre_statement_fragment = new CCodeFragment ();
-			}
-
 			// set state before calling async function to support immediate callbacks
 			int state = next_coroutine_state++;
 
-			state_switch_statement.add_statement (new CCodeCaseStatement (new CCodeConstant (state.to_string ())));
-			state_switch_statement.add_statement (new CCodeGotoStatement ("_state_%d".printf (state)));
-
-			pre_statement_fragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_state_"), new CCodeConstant (state.to_string ()))));
-			pre_statement_fragment.append (new CCodeExpressionStatement (async_call));
-			pre_statement_fragment.append (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
-			pre_statement_fragment.append (new CCodeLabel ("_state_%d".printf (state)));
+			ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_state_"), new CCodeConstant (state.to_string ())));
+			ccode.add_expression (async_call);
+			ccode.add_return (new CCodeConstant ("FALSE"));
+			ccode.add_label ("_state_%d".printf (state));
 		}
 
 		if (m is ArrayResizeMethod) {
@@ -771,7 +764,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			var temp_decl = get_temp_variable (int_type);
 			var temp_ref = get_variable_cexpression (temp_decl.name);
 
-			temp_vars.add (temp_decl);
+			emit_temp_var (temp_decl);
 
 			/* memset needs string.h */
 			cfile.add_include ("string.h");

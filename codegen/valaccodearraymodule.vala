@@ -48,7 +48,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			var name_cnode = get_variable_cexpression (temp_var.name);
 			int i = 0;
 
-			temp_vars.add (temp_var);
+			emit_temp_var (temp_var);
 
 			append_initializer_list (ce, name_cnode, expr.initializer_list, expr.rank, ref i);
 
@@ -80,7 +80,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 				var name_cnode = get_variable_cexpression (temp_var.name);
 				size.ccodenode = name_cnode;
 
-				temp_vars.add (temp_var);
+				emit_temp_var (temp_var);
 
 				csize = new CCodeAssignment (name_cnode, csize);
 			}
@@ -112,7 +112,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			var name_cnode = get_variable_cexpression (temp_var.name);
 			int i = 0;
 			
-			temp_vars.add (temp_var);
+			emit_temp_var (temp_var);
 			
 			ce.append_expression (new CCodeAssignment (name_cnode, gnew));
 
@@ -428,15 +428,15 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		var len_var = get_temp_variable (int_type);
 		len_var.source_reference = expr.source_reference;
-		temp_vars.add (len_var);
+		emit_temp_var (len_var);
 
 		var slice_var = get_temp_variable (expr.value_type, true, expr);
-		temp_vars.add (slice_var);
+		emit_temp_var (slice_var);
 
 		if (!is_pure_ccode_expression (cstart)) {
 			// avoid double evaluation of start
 			var start_var = get_temp_variable (int_type);
-			temp_vars.add (start_var);
+			emit_temp_var (start_var);
 
 			var start_assignment = new CCodeAssignment (get_variable_cexpression (start_var.name), cstart);
 			ccomma.append_expression (start_assignment);
@@ -674,7 +674,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			}
 
 			var decl = get_temp_variable (expression_type, false, node);
-			temp_vars.add (decl);
+			emit_temp_var (decl);
 
 			var ctemp = get_variable_cexpression (decl.name);
 
@@ -752,14 +752,11 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		// definition
 
-		var block = new CCodeBlock ();
+		push_context (new EmitContext ());
+		push_function (function);
 
 		if (requires_copy (array_type.element_type)) {
-			push_context (new EmitContext ());
-
-			var cdecl = new CCodeDeclaration (array_type.get_cname ());
 			var cvardecl = new CCodeVariableDeclarator ("result");
-			cdecl.add_declarator (cvardecl);
 			var gnew = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
 			gnew.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
 
@@ -770,28 +767,19 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			}
 			gnew.add_argument (length_expr);
 
-			cvardecl.initializer = gnew;
-			block.add_statement (cdecl);
+			ccode.add_declaration (array_type.get_cname (), cvardecl);
+			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("result"), gnew));
 
-			var idx_decl = new CCodeDeclaration ("int");
-			idx_decl.add_declarator (new CCodeVariableDeclarator ("i"));
-			block.add_statement (idx_decl);
+			ccode.add_declaration ("int", new CCodeVariableDeclarator ("i"));
 
-			var loop_body = new CCodeBlock ();
-			loop_body.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeElementAccess (new CCodeIdentifier ("result"), new CCodeIdentifier ("i")), get_ref_cexpression (array_type.element_type, new CCodeElementAccess (new CCodeIdentifier ("self"), new CCodeIdentifier ("i")), null, array_type))));
+			ccode.open_for (new CCodeAssignment (new CCodeIdentifier ("i"), new CCodeConstant ("0")),
+			                   new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier ("i"), new CCodeIdentifier ("length")),
+			                   new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier ("i")));
 
-			var cfor = new CCodeForStatement (new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier ("i"), new CCodeIdentifier ("length")), loop_body);
-			cfor.add_initializer (new CCodeAssignment (new CCodeIdentifier ("i"), new CCodeConstant ("0")));
-			cfor.add_iterator (new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier ("i")));
-			block.add_statement (cfor);
+			ccode.add_expression (new CCodeAssignment (new CCodeElementAccess (new CCodeIdentifier ("result"), new CCodeIdentifier ("i")), get_ref_cexpression (array_type.element_type, new CCodeElementAccess (new CCodeIdentifier ("self"), new CCodeIdentifier ("i")), null, array_type)));
+			ccode.close ();
 
-			block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("result")));
-
-			var cfrag = new CCodeFragment ();
-			append_temp_decl (cfrag, temp_vars);
-			block.add_statement (cfrag);
-
-			pop_context ();
+			ccode.add_return (new CCodeIdentifier ("result"));
 		} else {
 			var dup_call = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup"));
 			dup_call.add_argument (new CCodeIdentifier ("self"));
@@ -800,15 +788,15 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			sizeof_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
 			dup_call.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeIdentifier ("length"), sizeof_call));
 
-			block.add_statement (new CCodeReturnStatement (dup_call));
+			ccode.add_return (dup_call);
 		}
 
 		// append to file
 
 		cfile.add_function_declaration (function);
-
-		function.block = block;
 		cfile.add_function (function);
+
+		pop_context ();
 
 		return dup_func;
 	}
@@ -831,28 +819,18 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		// definition
 
-		var block = new CCodeBlock ();
+		push_context (new EmitContext ());
+		push_function (function);
 
 		if (requires_copy (array_type.element_type)) {
-			push_context (new EmitContext ());
+			ccode.add_declaration ("int", new CCodeVariableDeclarator ("i"));
 
-			var idx_decl = new CCodeDeclaration ("int");
-			idx_decl.add_declarator (new CCodeVariableDeclarator ("i"));
-			block.add_statement (idx_decl);
+			ccode.open_for (new CCodeAssignment (new CCodeIdentifier ("i"), new CCodeConstant ("0")),
+			                   new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier ("i"), new CCodeConstant ("%d".printf (array_type.length))),
+			                   new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier ("i")));
 
-			var loop_body = new CCodeBlock ();
-			loop_body.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeElementAccess (new CCodeIdentifier ("dest"), new CCodeIdentifier ("i")), get_ref_cexpression (array_type.element_type, new CCodeElementAccess (new CCodeIdentifier ("self"), new CCodeIdentifier ("i")), null, array_type))));
 
-			var cfor = new CCodeForStatement (new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier ("i"), new CCodeConstant ("%d".printf (array_type.length))), loop_body);
-			cfor.add_initializer (new CCodeAssignment (new CCodeIdentifier ("i"), new CCodeConstant ("0")));
-			cfor.add_iterator (new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier ("i")));
-			block.add_statement (cfor);
-
-			var cfrag = new CCodeFragment ();
-			append_temp_decl (cfrag, temp_vars);
-			block.add_statement (cfrag);
-
-			pop_context ();
+			ccode.add_expression (new CCodeAssignment (new CCodeElementAccess (new CCodeIdentifier ("dest"), new CCodeIdentifier ("i")), get_ref_cexpression (array_type.element_type, new CCodeElementAccess (new CCodeIdentifier ("self"), new CCodeIdentifier ("i")), null, array_type)));
 		} else {
 			cfile.add_include ("string.h");
 
@@ -864,15 +842,15 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			sizeof_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
 			dup_call.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeConstant ("%d".printf (array_type.length)), sizeof_call));
 
-			block.add_statement (new CCodeExpressionStatement (dup_call));
+			ccode.add_expression (dup_call);
 		}
 
 		// append to file
 
 		cfile.add_function_declaration (function);
-
-		function.block = block;
 		cfile.add_function (function);
+
+		pop_context ();
 
 		return dup_func;
 	}

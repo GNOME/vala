@@ -22,51 +22,29 @@
 
 public class Vala.DovaControlFlowModule : DovaMethodModule {
 	public override void visit_if_statement (IfStatement stmt) {
+		ccode.open_if ((CCodeExpression) stmt.condition.ccodenode);
+
 		stmt.true_statement.emit (this);
+
 		if (stmt.false_statement != null) {
+			ccode.add_else ();
 			stmt.false_statement.emit (this);
 		}
 
-		if (stmt.false_statement != null) {
-			stmt.ccodenode = new CCodeIfStatement ((CCodeExpression) stmt.condition.ccodenode, (CCodeStatement) stmt.true_statement.ccodenode, (CCodeStatement) stmt.false_statement.ccodenode);
-		} else {
-			stmt.ccodenode = new CCodeIfStatement ((CCodeExpression) stmt.condition.ccodenode, (CCodeStatement) stmt.true_statement.ccodenode);
-		}
-
-		create_temp_decl (stmt, stmt.condition.temp_vars);
+		ccode.close ();
 	}
 
 	public override void visit_switch_statement (SwitchStatement stmt) {
-		foreach (SwitchSection section in stmt.get_sections ()) {
-			section.emit (this);
-		}
-
-		var cswitch = new CCodeSwitchStatement ((CCodeExpression) stmt.expression.ccodenode);
-		stmt.ccodenode = cswitch;
+		ccode.open_switch ((CCodeExpression) stmt.expression.ccodenode);
 
 		foreach (SwitchSection section in stmt.get_sections ()) {
 			if (section.has_default_label ()) {
-				cswitch.add_statement (new CCodeLabel ("default"));
-				var cdefaultblock = new CCodeBlock ();
-				cswitch.add_statement (cdefaultblock);
-				foreach (CodeNode default_stmt in section.get_statements ()) {
-					cdefaultblock.add_statement (default_stmt.ccodenode);
-				}
-				continue;
+				ccode.add_default ();
 			}
-
-			foreach (SwitchLabel label in section.get_labels ()) {
-				cswitch.add_statement (new CCodeCaseStatement ((CCodeExpression) label.expression.ccodenode));
-			}
-
-			var cblock = new CCodeBlock ();
-			cswitch.add_statement (cblock);
-			foreach (CodeNode body_stmt in section.get_statements ()) {
-				cblock.add_statement (body_stmt.ccodenode);
-			}
+			section.emit (this);
 		}
 
-		create_temp_decl (stmt, stmt.expression.temp_vars);
+		ccode.close ();
 	}
 
 	public override void visit_switch_label (SwitchLabel label) {
@@ -74,25 +52,29 @@ public class Vala.DovaControlFlowModule : DovaMethodModule {
 			label.expression.emit (this);
 
 			visit_end_full_expression (label.expression);
+
+			ccode.add_case ((CCodeExpression) label.expression.ccodenode);
 		}
 	}
 
 	public override void visit_loop (Loop stmt) {
+		ccode.open_while (new CCodeConstant ("true"));
+
 		stmt.body.emit (this);
 
-		stmt.ccodenode = new CCodeWhileStatement (new CCodeConstant ("true"), (CCodeStatement) stmt.body.ccodenode);
+		ccode.close ();
 	}
 
 	public override void visit_break_statement (BreakStatement stmt) {
-		stmt.ccodenode = new CCodeBreakStatement ();
+		append_local_free (current_symbol, true);
 
-		create_local_free (stmt, true);
+		ccode.add_break ();
 	}
 
 	public override void visit_continue_statement (ContinueStatement stmt) {
-		stmt.ccodenode = new CCodeContinueStatement ();
+		append_local_free (current_symbol, true);
 
-		create_local_free (stmt, true);
+		ccode.add_continue ();
 	}
 }
 

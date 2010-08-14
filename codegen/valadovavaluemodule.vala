@@ -362,9 +362,6 @@ public class Vala.DovaValueModule : DovaObjectModule {
 
 		cblock.add_statement (new CCodeIfStatement (new CCodeIdentifier ("src"), copy_block));
 
-		append_temp_decl (cfrag, temp_vars);
-		temp_vars.clear ();
-
 		function.block = cblock;
 
 		cfile.add_function (function);
@@ -549,7 +546,7 @@ public class Vala.DovaValueModule : DovaObjectModule {
 			var temp_var = get_temp_variable (array_type, true, expr);
 			var name_cnode = get_variable_cexpression (temp_var.name);
 
-			temp_vars.add (temp_var);
+			emit_temp_var (temp_var);
 
 			int i = 0;
 			foreach (Expression e in expr.get_expressions ()) {
@@ -583,7 +580,7 @@ public class Vala.DovaValueModule : DovaObjectModule {
 			var temp_var = get_temp_variable (array_type, true, expr);
 			var name_cnode = get_variable_cexpression (temp_var.name);
 
-			temp_vars.add (temp_var);
+			emit_temp_var (temp_var);
 
 			int i = 0;
 			foreach (Expression e in expr.get_expressions ()) {
@@ -619,7 +616,7 @@ public class Vala.DovaValueModule : DovaObjectModule {
 			var key_temp_var = get_temp_variable (key_array_type, true, expr);
 			var key_name_cnode = get_variable_cexpression (key_temp_var.name);
 
-			temp_vars.add (key_temp_var);
+			emit_temp_var (key_temp_var);
 
 			var value_array_type = new ArrayType (expr.map_value_type, 1, expr.source_reference);
 			value_array_type.inline_allocated = true;
@@ -629,7 +626,7 @@ public class Vala.DovaValueModule : DovaObjectModule {
 			var value_temp_var = get_temp_variable (value_array_type, true, expr);
 			var value_name_cnode = get_variable_cexpression (value_temp_var.name);
 
-			temp_vars.add (value_temp_var);
+			emit_temp_var (value_temp_var);
 
 			for (int i = 0; i < length; i++) {
 				key_ce.append_expression (new CCodeAssignment (new CCodeElementAccess (key_name_cnode, new CCodeConstant (i.to_string ())), (CCodeExpression) expr.get_keys ().get (i).ccodenode));
@@ -658,7 +655,7 @@ public class Vala.DovaValueModule : DovaObjectModule {
 
 		var type_temp_var = get_temp_variable (type_array_type, true, tuple);
 		var type_name_cnode = get_variable_cexpression (type_temp_var.name);
-		temp_vars.add (type_temp_var);
+		emit_temp_var (type_temp_var);
 
 		var array_type = new ArrayType (new PointerType (new VoidType ()), 1, tuple.source_reference);
 		array_type.inline_allocated = true;
@@ -667,7 +664,7 @@ public class Vala.DovaValueModule : DovaObjectModule {
 
 		var temp_var = get_temp_variable (array_type, true, tuple);
 		var name_cnode = get_variable_cexpression (temp_var.name);
-		temp_vars.add (temp_var);
+		emit_temp_var (temp_var);
 
 		var type_ce = new CCodeCommaExpression ();
 		var ce = new CCodeCommaExpression ();
@@ -691,7 +688,7 @@ public class Vala.DovaValueModule : DovaObjectModule {
 				// tmp = expr, &tmp
 
 				var element_temp_var = get_temp_variable (element_type);
-				temp_vars.add (element_temp_var);
+				emit_temp_var (element_temp_var);
 				ce.append_expression (new CCodeAssignment (get_variable_cexpression (element_temp_var.name), cexpr));
 				cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (element_temp_var.name));
 			}

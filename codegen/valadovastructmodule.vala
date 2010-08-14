@@ -72,9 +72,6 @@ public class Vala.DovaStructModule : DovaBaseModule {
 	public override void visit_struct (Struct st) {
 		push_context (new EmitContext (st));
 
-		var old_instance_finalize_fragment = instance_finalize_fragment;
-		instance_finalize_fragment = new CCodeFragment ();
-
 		generate_struct_declaration (st, cfile);
 
 		if (!st.is_internal_symbol ()) {
@@ -82,8 +79,6 @@ public class Vala.DovaStructModule : DovaBaseModule {
 		}
 
 		st.accept_children (this);
-
-		instance_finalize_fragment = old_instance_finalize_fragment;
 
 		pop_context ();
 	}
