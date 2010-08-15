@@ -176,7 +176,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			var length_expr = size[dim - 1];
 			return (CCodeExpression) get_ccodenode (length_expr);
 		} else if (array_expr is MethodCall || array_expr is CastExpression || array_expr is SliceExpression) {
-			List<CCodeExpression> size = array_expr.get_array_sizes ();
+			List<CCodeExpression> size = get_array_sizes (array_expr);
 			if (size != null && size.size >= dim) {
 				return size[dim - 1];
 			}
@@ -328,7 +328,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			} else if (array_expr.symbol_reference is Property) {
 				var prop = (Property) array_expr.symbol_reference;
 				if (!prop.no_array_length) {
-					List<CCodeExpression> size = array_expr.get_array_sizes ();
+					List<CCodeExpression> size = get_array_sizes (array_expr);
 					if (size != null && size.size >= dim) {
 						return size[dim - 1];
 					}
@@ -463,7 +463,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		ccomma.append_expression (get_variable_cexpression (slice_var.name));
 
 		set_cvalue (expr, ccomma);
-		expr.append_array_size (get_variable_cexpression (len_var.name));
+		append_array_size (expr, get_variable_cexpression (len_var.name));
 	}
 
 	private CCodeForStatement get_struct_array_free_loop (Struct st) {
@@ -980,10 +980,9 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		}
 	}
 
-	public override void generate_parameter (FormalParameter param, CCodeFile decl_space, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
+	public override CCodeFormalParameter generate_parameter (FormalParameter param, CCodeFile decl_space, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
 		if (!(param.variable_type is ArrayType)) {
-			base.generate_parameter (param, decl_space, cparam_map, carg_map);
-			return;
+			return base.generate_parameter (param, decl_space, cparam_map, carg_map);
 		}
 
 		string ctypename = param.variable_type.get_cname ();
@@ -992,13 +991,13 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			ctypename += "*";
 		}
 
-		param.ccodenode = new CCodeFormalParameter (get_variable_cname (param.name), ctypename);
+		var main_cparam = new CCodeFormalParameter (get_variable_cname (param.name), ctypename);
 
 		var array_type = (ArrayType) param.variable_type;
 
 		generate_type_declaration (array_type.element_type, decl_space);
 
-		cparam_map.set (get_param_pos (param.cparameter_position), (CCodeFormalParameter) param.ccodenode);
+		cparam_map.set (get_param_pos (param.cparameter_position), main_cparam);
 		if (carg_map != null) {
 			carg_map.set (get_param_pos (param.cparameter_position), get_variable_cexpression (param.name));
 		}
@@ -1020,5 +1019,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 				}
 			}
 		}
+
+		return main_cparam;
 	}
 }

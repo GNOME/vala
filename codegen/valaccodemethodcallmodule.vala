@@ -546,7 +546,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
 					len_call.add_argument (temp_ref);
 
-					expr.append_array_size (len_call);
+					append_array_size (expr, len_call);
 				} else if (!m.no_array_length) {
 					LocalVariable temp_var;
 
@@ -561,9 +561,9 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 					out_arg_map.set (get_param_pos (m.carray_length_parameter_position + 0.01 * dim), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
 
-					expr.append_array_size (temp_ref);
+					append_array_size (expr, temp_ref);
 				} else {
-					expr.append_array_size (new CCodeConstant ("-1"));
+					append_array_size (expr, new CCodeConstant ("-1"));
 				}
 			}
 		} else if (m != null && m.return_type is DelegateType && async_call != ccall) {
@@ -577,7 +577,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 				out_arg_map.set (get_param_pos (m.cdelegate_target_parameter_position), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
 
-				expr.delegate_target = temp_ref;
+				set_delegate_target (expr, temp_ref);
 
 				if (deleg_type.value_owned) {
 					temp_var = get_temp_variable (new DelegateType ((Delegate) context.root.scope.lookup ("GLib").scope.lookup ("DestroyNotify")));
@@ -587,7 +587,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 					out_arg_map.set (get_param_pos (m.cdelegate_target_parameter_position + 0.01), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
 
-					expr.delegate_target_destroy_notify = temp_ref;
+					set_delegate_target_destroy_notify (expr, temp_ref);
 				}
 			}
 		}
@@ -610,7 +610,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
 					len_call.add_argument (temp_ref);
 
-					expr.append_array_size (len_call);
+					append_array_size (expr, len_call);
 				} else if (!deleg.no_array_length) {
 					var temp_var = get_temp_variable (int_type);
 					var temp_ref = get_variable_cexpression (temp_var.name);
@@ -619,9 +619,9 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 					out_arg_map.set (get_param_pos (deleg.carray_length_parameter_position + 0.01 * dim), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
 
-					expr.append_array_size (temp_ref);
+					append_array_size (expr, temp_ref);
 				} else {
-					expr.append_array_size (new CCodeConstant ("-1"));
+					append_array_size (expr, new CCodeConstant ("-1"));
 				}
 			}
 		} else if (deleg != null && deleg.return_type is DelegateType) {
@@ -635,7 +635,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 				out_arg_map.set (get_param_pos (deleg.cdelegate_target_parameter_position), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
 
-				expr.delegate_target = temp_ref;
+				set_delegate_target (expr, temp_ref);
 			}
 		}
 

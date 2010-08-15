@@ -489,9 +489,9 @@ public class Vala.DBusServerModule : DBusClientModule {
 
 		foreach (var param in sig.get_parameters ()) {
 			// ensure ccodenode of parameter is set
-			generate_parameter (param, cfile, new HashMap<int,CCodeFormalParameter> (), null);
+			var cparam = generate_parameter (param, cfile, new HashMap<int,CCodeFormalParameter> (), null);
 
-			function.add_parameter ((CCodeFormalParameter) get_ccodenode (param));
+			function.add_parameter (cparam);
 			if (param.variable_type is ArrayType) {
 				var array_type = (ArrayType) param.variable_type;
 				for (int dim = 1; dim <= array_type.rank; dim++) {

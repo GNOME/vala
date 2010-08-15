@@ -50,24 +50,6 @@ public abstract class Vala.CodeNode {
 	public string type_name {
 		get { return Type.from_instance (this).name (); }
 	}
-	
-	/**
-	 * Generated CCodeNode that corresponds to this code node.
-	 */
-	public CCodeNode? ccodenode {
-		get {
-			return _ccodenode;
-		}
-		set {
-			if (value != null && source_reference != null && CodeContext.get ().debug) {
-				value.line = new CCodeLineDirective (
-					Path.get_basename (source_reference.file.filename),
-					source_reference.first_line);
-			}
-
-			_ccodenode = value;
-		}
-	}
 
 	public bool checked { get; set; }
 
@@ -85,8 +67,6 @@ public abstract class Vala.CodeNode {
 
 	private List<DataType> _error_types;
 	private static List<DataType> _empty_type_list;
-
-	private CCodeNode? _ccodenode;
 
 	static int last_temp_nr = 0;
 

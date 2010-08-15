@@ -719,7 +719,8 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		}
 	}
 
-	public virtual void generate_parameter (FormalParameter param, CCodeFile decl_space, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
+	public virtual CCodeFormalParameter generate_parameter (FormalParameter param, CCodeFile decl_space, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
+		CCodeFormalParameter cparam;
 		if (!param.ellipsis) {
 			string ctypename = param.variable_type.get_cname ();
 
@@ -743,15 +744,17 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 				ctypename += "*";
 			}
 
-			param.ccodenode = new CCodeFormalParameter (get_variable_cname (param.name), ctypename);
+			cparam = new CCodeFormalParameter (get_variable_cname (param.name), ctypename);
 		} else {
-			param.ccodenode = new CCodeFormalParameter.with_ellipsis ();
+			cparam = new CCodeFormalParameter.with_ellipsis ();
 		}
 
-		cparam_map.set (get_param_pos (param.cparameter_position, param.ellipsis), (CCodeFormalParameter) param.ccodenode);
+		cparam_map.set (get_param_pos (param.cparameter_position, param.ellipsis), cparam);
 		if (carg_map != null && !param.ellipsis) {
 			carg_map.set (get_param_pos (param.cparameter_position, param.ellipsis), get_variable_cexpression (param.name));
 		}
+
+		return cparam;
 	}
 
 	public override void generate_cparameters (Method m, CCodeFile decl_space, Map<int,CCodeFormalParameter> cparam_map, CCodeFunction func, CCodeFunctionDeclarator? vdeclarator = null, Map<int,CCodeExpression>? carg_map = null, CCodeFunctionCall? vcall = null, int direction = 3) {

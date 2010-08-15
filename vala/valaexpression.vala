@@ -55,10 +55,7 @@ public abstract class Vala.Expression : CodeNode {
 	 */
 	public bool lvalue { get; set; }
 
-	private List<CCodeExpression> array_sizes;
-
-	public CCodeExpression? delegate_target { get; set; }
-	public CCodeExpression? delegate_target_destroy_notify { get; set; }
+	public TargetValue? target_value { get; set; }
 
 	/**
 	 * Returns whether this expression is constant, i.e. whether this
@@ -79,24 +76,6 @@ public abstract class Vala.Expression : CodeNode {
 	 */
 	public virtual bool is_non_null () {
 		return false;
-	}
-
-	/**
-	 * Add an array size C code expression.
-	 */
-	public void append_array_size (CCodeExpression size) {
-		if (array_sizes == null) {
-			array_sizes = new ArrayList<CCodeExpression> ();
-		}
-		array_sizes.add (size);
-	}
-
-	/**
-	 * Get the C code expression for array sizes for all dimensions
-	 * ascending from left to right.
-	 */
-	public List<CCodeExpression>? get_array_sizes () {
-		return array_sizes;
 	}
 
 	public Statement? parent_statement {

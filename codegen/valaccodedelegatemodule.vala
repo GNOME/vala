@@ -48,9 +48,9 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 
 		var cfundecl = new CCodeFunctionDeclarator (d.get_cname ());
 		foreach (FormalParameter param in d.get_parameters ()) {
-			generate_parameter (param, decl_space, new HashMap<int,CCodeFormalParameter> (), null);
+			var cparam = generate_parameter (param, decl_space, new HashMap<int,CCodeFormalParameter> (), null);
 
-			cfundecl.add_parameter ((CCodeFormalParameter) param.ccodenode);
+			cfundecl.add_parameter (cparam);
 
 			// handle array parameters
 			if (!param.no_array_length && param.variable_type is ArrayType) {
@@ -62,7 +62,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 				}
 				
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					var cparam = new CCodeFormalParameter (get_parameter_array_length_cname (param, dim), length_ctype);
+					cparam = new CCodeFormalParameter (get_parameter_array_length_cname (param, dim), length_ctype);
 					cfundecl.add_parameter (cparam);
 				}
 			}
@@ -71,7 +71,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 				var deleg_type = (DelegateType) param.variable_type;
 				var param_d = deleg_type.delegate_symbol;
 				if (param_d.has_target) {
-					var cparam = new CCodeFormalParameter (get_delegate_target_cname (get_variable_cname (param.name)), "void*");
+					cparam = new CCodeFormalParameter (get_delegate_target_cname (get_variable_cname (param.name)), "void*");
 					cfundecl.add_parameter (cparam);
 				}
 			}
@@ -150,10 +150,10 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 		
 		if (delegate_expr is MethodCall) {
 			var invocation_expr = (MethodCall) delegate_expr;
-			if (invocation_expr.delegate_target_destroy_notify != null) {
-				delegate_target_destroy_notify = invocation_expr.delegate_target_destroy_notify;
+			if (get_delegate_target_destroy_notify (invocation_expr) != null) {
+				delegate_target_destroy_notify = get_delegate_target_destroy_notify (invocation_expr);
 			}
-			return invocation_expr.delegate_target;
+			return get_delegate_target (invocation_expr);
 		} else if (delegate_expr is LambdaExpression) {
 			var lambda = (LambdaExpression) delegate_expr;
 			var delegate_type = (DelegateType) delegate_expr.target_type;
@@ -317,7 +317,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 					return delegate_target;
 				}
 			} else if (delegate_expr.symbol_reference is Property) {
-				return delegate_expr.delegate_target;
+				return get_delegate_target (delegate_expr);
 			}
 		}
 
@@ -377,7 +377,6 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 
 		var function = new CCodeFunction (wrapper_name, return_type_cname);
 		function.modifiers = CCodeModifiers.STATIC;
-		m.ccodenode = function;
 
 		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 
@@ -462,7 +461,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 					Report.error (expr != null ? expr.source_reference : null, "Cannot create delegate without target for instance method or closure");
 					arg = new CCodeConstant ("NULL");
 				} else {
-					arg = new CCodeIdentifier ((d_params.get (0).ccodenode as CCodeFormalParameter).name);
+					arg = new CCodeIdentifier (d_params.get (0).name);
 					i = 1;
 				}
 			}
@@ -481,7 +480,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			}
 
 			CCodeExpression arg;
-			arg = new CCodeIdentifier ((d_params.get (i).ccodenode as CCodeFormalParameter).name);
+			arg = new CCodeIdentifier (d_params.get (i).name);
 			carg_map.set (get_param_pos (param.cparameter_position), arg);
 
 			// handle array arguments
@@ -608,10 +607,9 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 		return wrapper_name;
 	}
 
-	public override void generate_parameter (FormalParameter param, CCodeFile decl_space, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
+	public override CCodeFormalParameter generate_parameter (FormalParameter param, CCodeFile decl_space, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
 		if (!(param.variable_type is DelegateType || param.variable_type is MethodType)) {
-			base.generate_parameter (param, decl_space, cparam_map, carg_map);
-			return;
+			return base.generate_parameter (param, decl_space, cparam_map, carg_map);
 		}
 
 		string ctypename = param.variable_type.get_cname ();
@@ -630,9 +628,9 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			target_destroy_notify_ctypename += "*";
 		}
 
-		param.ccodenode = new CCodeFormalParameter (get_variable_cname (param.name), ctypename);
+		var main_cparam = new CCodeFormalParameter (get_variable_cname (param.name), ctypename);
 
-		cparam_map.set (get_param_pos (param.cparameter_position), (CCodeFormalParameter) param.ccodenode);
+		cparam_map.set (get_param_pos (param.cparameter_position), main_cparam);
 		if (carg_map != null) {
 			carg_map.set (get_param_pos (param.cparameter_position), get_variable_cexpression (param.name));
 		}
@@ -664,5 +662,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 				carg_map.set (get_param_pos (param.cdelegate_target_parameter_position), get_variable_cexpression (cparam.name));
 			}
 		}
+
+		return main_cparam;
 	}
 }

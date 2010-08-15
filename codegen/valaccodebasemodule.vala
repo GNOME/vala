@@ -3037,8 +3037,6 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 	
 	public void emit_temp_var (LocalVariable local) {
 		var vardecl = new CCodeVariableDeclarator (local.name, null, local.variable_type.get_cdeclarator_suffix ());
-		// sets #line
-		local.ccodenode = vardecl;
 
 		var st = local.variable_type.data_type as Struct;
 		var array_type = local.variable_type as ArrayType;
@@ -4375,7 +4373,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			// null-terminated string array
 			var len_call = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
 			len_call.add_argument (rv);
-			expr.append_array_size (len_call);
+			append_array_size (expr, len_call);
 		} else if (to is StructValueType) {
 			var temp_decl = get_temp_variable (to, true, null, true);
 			emit_temp_var (temp_decl);
@@ -4430,7 +4428,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_decl.name)));
 				cfunc.add_parameter (new CCodeFormalParameter (get_array_length_cname ("result", dim), "int*"));
-				expr.append_array_size (get_variable_cexpression (temp_decl.name));
+				append_array_size (expr, get_variable_cexpression (temp_decl.name));
 			}
 		}
 
@@ -4506,7 +4504,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			var array_type = expr.type_reference as ArrayType;
 			if (array_type != null && expr.inner.value_type is ArrayType) {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					expr.append_array_size (get_array_length_cexpression (expr.inner, dim));
+					append_array_size (expr, get_array_length_cexpression (expr.inner, dim));
 				}
 			}
 
@@ -5435,19 +5433,11 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
-	public CCodeExpression? get_cvalue (Expression expr) {
-		return (CCodeExpression) expr.ccodenode;
-	}
-
-	public void set_cvalue (Expression expr, CCodeExpression? cvalue) {
-		expr.ccodenode = cvalue;
-	}
-
-	public CCodeNode? get_ccodenode (CodeNode node) {
-		if (node.ccodenode == null) {
+	public CCodeExpression? get_ccodenode (Expression node) {
+		if (get_cvalue (node) == null) {
 			node.emit (this);
 		}
-		return node.ccodenode;
+		return get_cvalue (node);
 	}
 
 	public override void visit_class (Class cl) {
@@ -5655,6 +5645,85 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 
 	public virtual void add_simple_check (CodeNode node, bool always_fails = false) {
 	}
+
+	public CCodeExpression? get_cvalue (Expression expr) {
+		if (expr.target_value == null) {
+			return null;
+		}
+		var glib_value = (GLibValue) expr.target_value;
+		return glib_value.ccodenode;
+	}
+
+	public void set_cvalue (Expression expr, CCodeExpression cvalue) {
+		var glib_value = (GLibValue) expr.target_value;
+		if (glib_value == null) {
+			glib_value = new GLibValue ();
+			expr.target_value = glib_value;
+		}
+		glib_value.ccodenode = cvalue;
+	}
+
+	public CCodeExpression? get_delegate_target (Expression expr) {
+		if (expr.target_value == null) {
+			return null;
+		}
+		var glib_value = (GLibValue) expr.target_value;
+		return glib_value.delegate_target;
+	}
+
+	public void set_delegate_target (Expression expr, CCodeExpression delegate_target) {
+		var glib_value = (GLibValue) expr.target_value;
+		if (glib_value == null) {
+			glib_value = new GLibValue ();
+			expr.target_value = glib_value;
+		}
+		glib_value.delegate_target = delegate_target;
+	}
+
+	public CCodeExpression? get_delegate_target_destroy_notify (Expression expr) {
+		if (expr.target_value == null) {
+			return null;
+		}
+		var glib_value = (GLibValue) expr.target_value;
+		return glib_value.delegate_target_destroy_notify;
+	}
+
+	public void set_delegate_target_destroy_notify (Expression expr, CCodeExpression destroy_notify) {
+		var glib_value = (GLibValue) expr.target_value;
+		if (glib_value == null) {
+			glib_value = new GLibValue ();
+			expr.target_value = glib_value;
+		}
+		glib_value.delegate_target_destroy_notify = destroy_notify;
+	}
+
+	public void append_array_size (Expression expr, CCodeExpression size) {
+		var glib_value = (GLibValue) expr.target_value;
+		if (glib_value == null) {
+			glib_value = new GLibValue ();
+			expr.target_value = glib_value;
+		}
+		if (glib_value.array_sizes == null) {
+			glib_value.array_sizes = new ArrayList<CCodeExpression> ();
+		}
+		glib_value.array_sizes.add (size);
+	}
+
+	public List<CCodeExpression>? get_array_sizes (Expression expr) {
+		var glib_value = (GLibValue) expr.target_value;
+		if (glib_value == null) {
+			glib_value = new GLibValue ();
+			expr.target_value = glib_value;
+		}
+		return glib_value.array_sizes;
+	}
 }
 
-// vim:sw=8 noet
+public class Vala.GLibValue : TargetValue {
+	public CCodeExpression ccodenode;
+
+	public List<CCodeExpression> array_sizes;
+
+	public CCodeExpression? delegate_target;
+	public CCodeExpression? delegate_target_destroy_notify;
+}

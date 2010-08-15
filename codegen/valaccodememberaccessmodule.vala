@@ -294,7 +294,7 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 							var ctemp = get_variable_cexpression (temp_var.name);
 							emit_temp_var (temp_var);
 							ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
-							expr.append_array_size (ctemp);
+							append_array_size (expr, ctemp);
 						}
 					} else {
 						var delegate_type = base_property.property_type as DelegateType;
@@ -303,7 +303,7 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 							var ctemp = get_variable_cexpression (temp_var.name);
 							emit_temp_var (temp_var);
 							ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
-							expr.delegate_target = ctemp;
+							set_delegate_target (expr, ctemp);
 						}
 					}
 

@@ -1133,8 +1133,6 @@ public class Vala.DovaBaseModule : CodeGenerator {
 		var cdecl = new CCodeDeclaration (local.variable_type.get_cname ());
 
 		var vardecl = new CCodeVariableDeclarator (local.name, null, local.variable_type.get_cdeclarator_suffix ());
-		// sets #line
-		local.ccodenode = vardecl;
 		cdecl.add_declarator (vardecl);
 
 		var st = local.variable_type.data_type as Struct;
@@ -2231,19 +2229,11 @@ public class Vala.DovaBaseModule : CodeGenerator {
 		return null;
 	}
 
-	public CCodeExpression? get_cvalue (Expression expr) {
-		return (CCodeExpression) expr.ccodenode;
-	}
-
-	public void set_cvalue (Expression expr, CCodeExpression? cvalue) {
-		expr.ccodenode = cvalue;
-	}
-
-	public CCodeNode? get_ccodenode (CodeNode node) {
-		if (node.ccodenode == null) {
+	public CCodeExpression? get_ccodenode (Expression node) {
+		if (get_cvalue (node) == null) {
 			node.emit (this);
 		}
-		return node.ccodenode;
+		return get_cvalue (node);
 	}
 
 	public DataType? get_this_type () {
@@ -2269,4 +2259,25 @@ public class Vala.DovaBaseModule : CodeGenerator {
 
 	public virtual void add_simple_check (CodeNode node, bool always_fails = false) {
 	}
+
+	public CCodeExpression? get_cvalue (Expression expr) {
+		if (expr.target_value == null) {
+			return null;
+		}
+		var dova_value = (DovaValue) expr.target_value;
+		return dova_value.ccodenode;
+	}
+
+	public void set_cvalue (Expression expr, CCodeExpression cvalue) {
+		var dova_value = (DovaValue) expr.target_value;
+		if (dova_value == null) {
+			dova_value = new DovaValue ();
+			expr.target_value = dova_value;
+		}
+		dova_value.ccodenode = cvalue;
+	}
+}
+
+public class Vala.DovaValue : TargetValue {
+	public CCodeExpression ccodenode;
 }

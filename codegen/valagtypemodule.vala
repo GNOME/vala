@@ -24,10 +24,9 @@
 
 
 public class Vala.GTypeModule : GErrorModule {
-	public override void generate_parameter (FormalParameter param, CCodeFile decl_space, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
+	public override CCodeFormalParameter generate_parameter (FormalParameter param, CCodeFile decl_space, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
 		if (!(param.variable_type is ObjectType)) {
-			base.generate_parameter (param, decl_space, cparam_map, carg_map);
-			return;
+			return base.generate_parameter (param, decl_space, cparam_map, carg_map);
 		}
 
 		generate_type_declaration (param.variable_type, decl_space);
@@ -38,12 +37,14 @@ public class Vala.GTypeModule : GErrorModule {
 			ctypename += "*";
 		}
 
-		param.ccodenode = new CCodeFormalParameter (get_variable_cname (param.name), ctypename);
+		var cparam = new CCodeFormalParameter (get_variable_cname (param.name), ctypename);
 
-		cparam_map.set (get_param_pos (param.cparameter_position), (CCodeFormalParameter) param.ccodenode);
+		cparam_map.set (get_param_pos (param.cparameter_position), cparam);
 		if (carg_map != null) {
 			carg_map.set (get_param_pos (param.cparameter_position), get_variable_cexpression (param.name));
 		}
+
+		return cparam;
 	}
 
 	public override void generate_class_declaration (Class cl, CCodeFile decl_space) {
