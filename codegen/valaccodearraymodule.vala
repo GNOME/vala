@@ -1023,9 +1023,12 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		}
 
 		if (!param.no_array_length) {
-			var length_ctype = "int";
+			string length_ctype = "int";
+			if (param.array_length_type != null) {
+				length_ctype = param.array_length_type;
+			}
 			if (param.direction != ParameterDirection.IN) {
-				length_ctype = "int*";
+				length_ctype = "%s*".printf (length_ctype);
 			}
 			
 			for (int dim = 1; dim <= array_type.rank; dim++) {
