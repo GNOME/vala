@@ -3392,7 +3392,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 
 		var sym = current_symbol;
 
-		while (!(sym is Method) && sym.scope.lookup (local.name) == null) {
+		while (!(sym is Method || sym is PropertyAccessor) && sym.scope.lookup (local.name) == null) {
 			if ((sym.parent_node is TryStatement && ((TryStatement) sym.parent_node).finally_body != null) ||
 				(sym.parent_node is CatchClause && ((TryStatement) sym.parent_node.parent_node).finally_body != null)) {
 
