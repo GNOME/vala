@@ -1163,6 +1163,10 @@ public class Vala.GirParser : CodeVisitor {
 				j++;
 			} else {
 				info.keep = false;
+				// make sure that vala_idx is always set
+				// the above if branch does not set vala_idx for
+				// hidden parameters at the end of the parameter list
+				info.vala_idx = (j - 1) + (i - last) * 0.1F;
 			}
 			i++;
 		}
