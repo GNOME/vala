@@ -5,64 +5,15 @@ namespace Poppler {
 	[Compact]
 	[CCode (copy_function = "poppler_action_copy", type_id = "POPPLER_TYPE_ACTION", cheader_filename = "poppler.h")]
 	public class Action {
-		public weak Poppler.ActionAny any;
-		public weak Poppler.ActionGotoDest goto_dest;
-		public weak Poppler.ActionGotoRemote goto_remote;
-		public weak Poppler.ActionLaunch launch;
-		public weak Poppler.ActionMovie movie;
-		public weak Poppler.ActionNamed named;
+		public Poppler.ActionAny any;
+		public Poppler.ActionGotoDest goto_dest;
+		public Poppler.ActionGotoRemote goto_remote;
+		public Poppler.ActionLaunch launch;
+		public Poppler.ActionMovie movie;
+		public Poppler.ActionNamed named;
 		public Poppler.ActionType type;
-		public weak Poppler.ActionUri uri;
+		public Poppler.ActionUri uri;
 		public Poppler.Action copy ();
-	}
-	[Compact]
-	[CCode (cheader_filename = "poppler.h")]
-	public class ActionAny {
-		public weak string title;
-		public Poppler.ActionType type;
-	}
-	[Compact]
-	[CCode (cheader_filename = "poppler.h")]
-	public class ActionGotoDest {
-		public weak Poppler.Dest dest;
-		public weak string title;
-		public Poppler.ActionType type;
-	}
-	[Compact]
-	[CCode (cheader_filename = "poppler.h")]
-	public class ActionGotoRemote {
-		public weak Poppler.Dest dest;
-		public weak string file_name;
-		public weak string title;
-		public Poppler.ActionType type;
-	}
-	[Compact]
-	[CCode (cheader_filename = "poppler.h")]
-	public class ActionLaunch {
-		public weak string file_name;
-		public weak string @params;
-		public weak string title;
-		public Poppler.ActionType type;
-	}
-	[Compact]
-	[CCode (cheader_filename = "poppler.h")]
-	public class ActionMovie {
-		public weak string title;
-		public Poppler.ActionType type;
-	}
-	[Compact]
-	[CCode (cheader_filename = "poppler.h")]
-	public class ActionNamed {
-		public weak string named_dest;
-		public weak string title;
-		public Poppler.ActionType type;
-	}
-	[Compact]
-	[CCode (cheader_filename = "poppler.h")]
-	public class ActionUri {
-		public weak string title;
-		public Poppler.ActionType type;
-		public weak string uri;
 	}
 	[CCode (cheader_filename = "poppler.h")]
 	public class Annot : GLib.Object {
@@ -369,6 +320,48 @@ namespace Poppler {
 		[CCode (has_construct_function = false)]
 		public PageTransition ();
 		public Poppler.PageTransition copy ();
+	}
+	[CCode (has_type_id = false, cheader_filename = "poppler.h")]
+	public struct ActionAny {
+		public Poppler.ActionType type;
+		public weak string title;
+	}
+	[CCode (has_type_id = false, cheader_filename = "poppler.h")]
+	public struct ActionGotoDest {
+		public Poppler.ActionType type;
+		public weak string title;
+		public weak Poppler.Dest dest;
+	}
+	[CCode (has_type_id = false, cheader_filename = "poppler.h")]
+	public struct ActionGotoRemote {
+		public Poppler.ActionType type;
+		public weak string title;
+		public weak string file_name;
+		public weak Poppler.Dest dest;
+	}
+	[CCode (has_type_id = false, cheader_filename = "poppler.h")]
+	public struct ActionLaunch {
+		public Poppler.ActionType type;
+		public weak string title;
+		public weak string file_name;
+		public weak string @params;
+	}
+	[CCode (has_type_id = false, cheader_filename = "poppler.h")]
+	public struct ActionMovie {
+		public Poppler.ActionType type;
+		public weak string title;
+	}
+	[CCode (has_type_id = false, cheader_filename = "poppler.h")]
+	public struct ActionNamed {
+		public Poppler.ActionType type;
+		public weak string title;
+		public weak string named_dest;
+	}
+	[CCode (has_type_id = false, cheader_filename = "poppler.h")]
+	public struct ActionUri {
+		public Poppler.ActionType type;
+		public weak string title;
+		public weak string uri;
 	}
 	[CCode (type_id = "POPPLER_TYPE_RECTANGLE", cheader_filename = "poppler.h")]
 	public struct Rectangle {
