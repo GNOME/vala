@@ -1,3 +1,10 @@
+Vala 0.9.6
+==========
+
+ * Drop deprecated support for assigning to construct properties.
+ * Some refactoring in the code generator.
+ * Bug fixes in bindings and vapigen.
+
 Vala 0.9.5
 ==========
 
