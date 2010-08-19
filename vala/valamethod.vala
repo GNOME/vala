@@ -502,6 +502,8 @@ public class Vala.Method : Symbol {
 				no_array_length = true;
 			} else if (a.name == "Deprecated") {
 				process_deprecated_attribute (a);
+			} else if (a.name == "NoThrow") {
+				get_error_types ().clear ();
 			}
 		}
 	}
