@@ -31,23 +31,18 @@ public class Valadoc.Api.Tree {
 	private ArrayList<Package> packages = new ArrayList<Package>();
 	private Package source_package = null;
 	private Settings settings;
-	private Vala.CodeContext context;
 	private ErrorReporter reporter;
 	private Package sourcefiles = null;
 	private CTypeResolver _cresolver = null;
 
-	public WikiPageTree? wikitree {
+	internal Vala.CodeContext context {
 		private set;
 		get;
 	}
 
-	public CTypeResolver cresolver {
-		get {
-			if (_cresolver == null) {
-				_cresolver = new CTypeResolver (this);
-			}
-			return _cresolver;
-		}
+	public WikiPageTree? wikitree {
+		private set;
+		get;
 	}
 
 	public Collection<Package> get_package_list () {
@@ -115,6 +110,14 @@ public class Valadoc.Api.Tree {
 		}
 
 		return null;
+	}
+
+	public Node? search_symbol_cstr (string cname) {
+		if (_cresolver == null) {
+			_cresolver = new CTypeResolver (this);
+		}
+
+		return _cresolver.resolve_symbol (cname);
 	}
 
 	public Node? search_symbol_str (Node? element, string symname) {
@@ -208,6 +211,25 @@ public class Valadoc.Api.Tree {
 		}
 	}
 
+	private void add_deps (string file_path, string pkg_name) {
+		if (FileUtils.test (file_path, FileTest.EXISTS)) {
+			try {
+				string deps_content;
+				ulong deps_len;
+				FileUtils.get_contents (file_path, out deps_content, out deps_len);
+				foreach (string dep in deps_content.split ("\n")) {
+					dep.strip ();
+					if (dep != "") {
+						if (!add_package (dep)) {
+							Vala.Report.error (null, "%s, dependency of %s, not found in specified Vala API directories".printf (dep, pkg_name));
+						}
+					}
+				}
+			} catch (FileError e) {
+				Vala.Report.error (null, "Unable to read dependency file: %s".printf (e.message));
+			}
+		}
+	}
 
 	private bool add_package (string pkg) {
 		if (context.has_package (pkg)) {
@@ -216,7 +238,6 @@ public class Valadoc.Api.Tree {
 		}
 
 		var package_path = context.get_package_path (pkg, settings.vapi_directories);
-
 		if (package_path == null) {
 			return false;
 		}
@@ -230,30 +251,12 @@ public class Valadoc.Api.Tree {
 		Package vdpkg = new Package (vfile, pkg, true);
 		this.packages.add (vdpkg);
 
-		var deps_filename = Path.build_filename (Path.get_dirname (package_path), "%s.deps".printf (pkg));
-		if (FileUtils.test (deps_filename, FileTest.EXISTS)) {
-			try {
-				string deps_content;
-				ulong deps_len;
-				FileUtils.get_contents (deps_filename, out deps_content, out deps_len);
-				foreach (string dep in deps_content.split ("\n")) {
-					dep.strip ();
-					if (dep != "") {
-						if (!add_package (dep)) {
-							Vala.Report.error (null, "%s, dependency of %s, not found in specified Vala API directories".printf (dep, pkg));
-						}
-					}
-				}
-			} catch (FileError e) {
-				Vala.Report.error (null, "Unable to read dependency file: %s".printf (e.message));
-			}
-		}
-
+		add_deps (Path.build_filename (Path.get_dirname (package_path), "%s.deps".printf (pkg)), pkg);
 		return true;
 	}
 
 	// copied from valacodecontext.vala
-	private string? get_file_path (string basename, string data_dir, string[] directories) {
+	private string? get_file_path (string basename, string[] directories) {
 		string filename = null;
 
 		if (directories != null) {
@@ -266,28 +269,13 @@ public class Valadoc.Api.Tree {
 		}
 
 		foreach (string dir in Environment.get_system_data_dirs ()) {
-			filename = Path.build_filename (dir, data_dir, basename);
+			filename = Path.build_filename (dir, basename);
 			if (FileUtils.test (filename, FileTest.EXISTS)) {
 				return filename;
 			}
 		}
 
 		return null;
-	}
-
-	// copied from valacodecontext.vala
-	private string? get_external_documentation_path (string pkg) {
-		var path = get_file_path (Path.build_filename (pkg, "documentation.xml"), "vala/vapi/documentation", settings.docu_directories);
-
-		if (path == null) {
-			/* last chance: try the package compiled-in vapi dir */
-			var filename = Path.build_filename (Config.vapi_dir, "vapi", "documentation", pkg, "documentation.xml");
-			if (FileUtils.test (filename, FileTest.EXISTS)) {
-				path = filename;
-			}
-		}
-
-		return path;
 	}
 
 	public void add_depencies (string[] packages) {
@@ -332,12 +320,13 @@ public class Valadoc.Api.Tree {
 					context.add_source_file (source_file);
 				} else if (source.has_suffix (".vapi")) {
 					string file_name = Path.get_basename (source);
-					file_name = file_name.ndup ( file_name.size() - ".vapi".size() );
+					file_name = file_name.ndup (file_name.size() - ".vapi".size());
 
 					var vfile = new Vala.SourceFile (context, rpath, true);
 					Package vdpkg = new Package (vfile, file_name);
 					context.add_source_file (vfile);
 					this.packages.add (vdpkg);
+					add_deps (Path.build_filename (Path.get_dirname (source), "%s.deps".printf (file_name)), file_name);
 				} else if (source.has_suffix (".c")) {
 					context.add_c_source_file (rpath);
 				} else {
@@ -374,6 +363,15 @@ public class Valadoc.Api.Tree {
 		this.resolve_children ();
 		this.add_dependencies_to_source_package ();
 		return true;
+	}
+
+	private Package? find_package_by_name (string name) {
+		foreach (Package pkg in packages) {
+			if (name == pkg.name) {
+				return pkg;
+			}
+		}
+		return null;
 	}
 
 	private Package? find_package_for_file (Vala.SourceFile vfile) {
@@ -426,15 +424,16 @@ public class Valadoc.Api.Tree {
 		}
 	}
 
-	public void import_documentation (DocumentationImporter importer) {
-		foreach (Package pkg in this.packages) {
-			string? path = (pkg.is_package)? get_external_documentation_path (pkg.name) : null;
+	public void import_documentation (DocumentationImporter importer, string[] packages, string[] import_directories) {
+		foreach (string pkg_name in packages) {
+			string? path = get_file_path ("%s.%s".printf (pkg_name, importer.file_extension), import_directories);
 
-			if (pkg.is_browsable (settings) && path != null) {
-				pkg.import_documentation (path, settings, importer);
+			if (path == null) {
+				Vala.Report.error (null, "%s not found in specified import directories".printf (pkg_name));
+			} else {
+				importer.process (path);
 			}
 		}
-
 	}
 
 	internal Symbol? search_vala_symbol (Vala.Symbol symbol) {

@@ -23,7 +23,7 @@
 using Gee;
 
 public class Valadoc.TokenType : Object {
-
+	// valadoc-comments:
 	public static TokenType ANY;
 	public static TokenType ANY_WORD;
 	public static TokenType ANY_NUMBER;
@@ -59,6 +59,64 @@ public class Valadoc.TokenType : Object {
 	public static TokenType DOUBLE_PIPE;
 	public static TokenType ALIGN_RIGHT;
 	public static TokenType ALIGN_CENTER;
+
+	// Gir, doc-nodes:
+	public static TokenType GTKDOC_FUNCTION_BRACKETS;
+	public static TokenType GTKDOC_XML_COMMENT_START;
+	public static TokenType GTKDOC_XML_COMMENT_END;
+	public static TokenType GTKDOC_PARAM;
+	public static TokenType GTKDOC_SYMBOL;
+	public static TokenType GTKDOC_ANY_WORD;
+	public static TokenType GTKDOC_SPACE;
+	public static TokenType GTKDOC_EOF;
+	public static TokenType GTKDOC_EOL;
+	public static TokenType GTKDOC_STRUCTNAME_ELEMENT_CLOSE;
+	public static TokenType GTKDOC_STRUCTNAME_ELEMENT_OPEN;
+	public static TokenType GTKDOC_LINK_ELEMENT_CLOSE;
+	public static TokenType GTKDOC_LINK_ELEMENT_OPEN;
+	public static TokenType GTKDOC_ITEMIZED_LIST_ELEMENT_CLOSE;
+	public static TokenType GTKDOC_ITEMIZED_LIST_ELEMENT_OPEN;
+	public static TokenType GTKDOC_LIST_ITEM_ELEMENT_CLOSE;
+	public static TokenType GTKDOC_LIST_ITEM_ELEMENT_OPEN;
+	public static TokenType GTKDOC_NOTE_ELEMENT_CLOSE;
+	public static TokenType GTKDOC_NOTE_ELEMENT_OPEN;
+	public static TokenType GTKDOC_PARA_ELEMENT_CLOSE;
+	public static TokenType GTKDOC_PARA_ELEMENT_OPEN;
+	public static TokenType GTKDOC_LITERAL_ELEMENT_CLOSE;
+	public static TokenType GTKDOC_LITERAL_ELEMENT_OPEN;
+	public static TokenType GTKDOC_GUI_MENU_ITEM_ELEMENT_CLOSE;
+	public static TokenType GTKDOC_GUI_MENU_ITEM_ELEMENT_OPEN;
+	public static TokenType GTKDOC_REPLACEABLE_ELEMENT_CLOSE;
+	public static TokenType GTKDOC_REPLACEABLE_ELEMENT_OPEN;
+	public static TokenType GTKDOC_WARNING_ELEMENT_CLOSE;
+	public static TokenType GTKDOC_WARNING_ELEMENT_OPEN;
+	public static TokenType GTKDOC_SOURCE_CLOSE;
+	public static TokenType GTKDOC_SOURCE_OPEN;
+	public static TokenType GTKDOC_EXAMPLE_ELEMENT_CLOSE;
+	public static TokenType GTKDOC_EXAMPLE_ELEMENT_OPEN;
+	public static TokenType GTKDOC_TITLE_ELEMENT_CLOSE;
+	public static TokenType GTKDOC_TITLE_ELEMENT_OPEN;
+	public static TokenType GTKDOC_PROGRAMLISTING_ELEMENT_CLOSE;
+	public static TokenType GTKDOC_PROGRAMLISTING_ELEMENT_OPEN;
+	public static TokenType GTKDOC_VARIABLE_LIST_ELEMENT_CLOSE;
+	public static TokenType GTKDOC_VARIABLE_LIST_ELEMENT_OPEN;
+	public static TokenType GTKDOC_VARIABLE_LIST_ENTRY_ELEMENT_CLOSE;
+	public static TokenType GTKDOC_VARIABLE_LIST_ENTRY_ELEMENT_OPEN;
+	public static TokenType GTKDOC_TERM_ELEMENT_CLOSE;
+	public static TokenType GTKDOC_TERM_ELEMENT_OPEN;
+	public static TokenType GTKDOC_ENVAR_ELEMENT_CLOSE;
+	public static TokenType GTKDOC_ENVAR_ELEMENT_OPEN;
+	public static TokenType GTKDOC_OPTION_ELEMENT_CLOSE;
+	public static TokenType GTKDOC_OPTION_ELEMENT_OPEN;
+	public static TokenType GTKDOC_EMPHASIS_ELEMENT_CLOSE;
+	public static TokenType GTKDOC_EMPHASIS_ELEMENT_OPEN;
+	public static TokenType GTKDOC_FILENAME_ELEMENT_CLOSE;
+	public static TokenType GTKDOC_FILENAME_ELEMENT_OPEN;
+	public static TokenType GTKDOC_SIMPLELIST_ELEMENT_CLOSE;
+	public static TokenType GTKDOC_SIMPLELIST_ELEMENT_OPEN;
+	public static TokenType GTKDOC_MEMBER_ELEMENT_CLOSE;
+	public static TokenType GTKDOC_MEMBER_ELEMENT_OPEN;
+	public static TokenType GTKDOC_DOT;
 
 	private static bool initialized = false;
 
@@ -99,6 +157,64 @@ public class Valadoc.TokenType : Object {
 			DOUBLE_PIPE = new TokenType.basic ("||");
 			ALIGN_RIGHT = new TokenType.basic ("))");
 			ALIGN_CENTER = new TokenType.basic (")(");
+
+			GTKDOC_FUNCTION_BRACKETS = new TokenType.basic ("()");
+			GTKDOC_XML_COMMENT_START = new TokenType.basic ("<!--");
+			GTKDOC_XML_COMMENT_END = new TokenType.basic ("-->");
+			GTKDOC_PARAM = new TokenType.basic ("<c-parameter>");
+			GTKDOC_SYMBOL = new TokenType.basic ("<symbol>");
+			GTKDOC_STRUCTNAME_ELEMENT_CLOSE = new TokenType.basic ("</structname>");
+			GTKDOC_STRUCTNAME_ELEMENT_OPEN = new TokenType.basic ("<structname>");
+			GTKDOC_LINK_ELEMENT_CLOSE = new TokenType.basic ("</link>");
+			GTKDOC_LINK_ELEMENT_OPEN = new TokenType.basic ("<link>");
+			GTKDOC_ITEMIZED_LIST_ELEMENT_CLOSE = new TokenType.basic ("</itemizedlist>");
+			GTKDOC_ITEMIZED_LIST_ELEMENT_OPEN = new TokenType.basic ("<itemizedlist>");
+			GTKDOC_LIST_ITEM_ELEMENT_CLOSE = new TokenType.basic ("</listitem>");
+			GTKDOC_LIST_ITEM_ELEMENT_OPEN = new TokenType.basic ("<listitem>");
+			GTKDOC_NOTE_ELEMENT_CLOSE = new TokenType.basic ("</note>");
+			GTKDOC_NOTE_ELEMENT_OPEN = new TokenType.basic ("<note>");
+			GTKDOC_PARA_ELEMENT_CLOSE = new TokenType.basic ("</para>");
+			GTKDOC_PARA_ELEMENT_OPEN = new TokenType.basic ("<para>");
+			GTKDOC_LITERAL_ELEMENT_CLOSE = new TokenType.basic ("</literal>");
+			GTKDOC_LITERAL_ELEMENT_OPEN = new TokenType.basic ("<literal>");
+			GTKDOC_GUI_MENU_ITEM_ELEMENT_CLOSE = new TokenType.basic ("</guimenuitem>");
+			GTKDOC_GUI_MENU_ITEM_ELEMENT_OPEN = new TokenType.basic ("<guimenuitem>");
+			GTKDOC_REPLACEABLE_ELEMENT_CLOSE = new TokenType.basic ("</replaceable>");
+			GTKDOC_REPLACEABLE_ELEMENT_OPEN = new TokenType.basic ("<replaceable>");
+			GTKDOC_WARNING_ELEMENT_CLOSE = new TokenType.basic ("</warning>");
+			GTKDOC_WARNING_ELEMENT_OPEN = new TokenType.basic ("<warning>");
+			GTKDOC_SOURCE_CLOSE = new TokenType.basic ("|]");
+			GTKDOC_SOURCE_OPEN = new TokenType.basic ("[|");
+			GTKDOC_EXAMPLE_ELEMENT_CLOSE = new TokenType.basic ("</example>");
+			GTKDOC_EXAMPLE_ELEMENT_OPEN = new TokenType.basic ("<example>");
+			GTKDOC_TITLE_ELEMENT_CLOSE = new TokenType.basic ("</title>");
+			GTKDOC_TITLE_ELEMENT_OPEN = new TokenType.basic ("<title>");
+			GTKDOC_PROGRAMLISTING_ELEMENT_CLOSE = new TokenType.basic ("</programlisting>");
+			GTKDOC_PROGRAMLISTING_ELEMENT_OPEN = new TokenType.basic ("<programlisting>");
+			GTKDOC_VARIABLE_LIST_ELEMENT_CLOSE = new TokenType.basic ("</variablelist>");
+			GTKDOC_VARIABLE_LIST_ELEMENT_OPEN = new TokenType.basic ("<variablelist>");
+			GTKDOC_VARIABLE_LIST_ENTRY_ELEMENT_CLOSE = new TokenType.basic ("</varlistentry>");
+			GTKDOC_VARIABLE_LIST_ENTRY_ELEMENT_OPEN = new TokenType.basic ("<varlistentry>");
+			GTKDOC_TERM_ELEMENT_CLOSE = new TokenType.basic ("</term>");
+			GTKDOC_TERM_ELEMENT_OPEN = new TokenType.basic ("<term>");
+			GTKDOC_ENVAR_ELEMENT_CLOSE = new TokenType.basic ("</envar>");
+			GTKDOC_ENVAR_ELEMENT_OPEN = new TokenType.basic ("<envar>");
+			GTKDOC_OPTION_ELEMENT_CLOSE = new TokenType.basic ("</option>");
+			GTKDOC_OPTION_ELEMENT_OPEN = new TokenType.basic ("<option>");
+			GTKDOC_EMPHASIS_ELEMENT_CLOSE = new TokenType.basic ("</emphasis>");
+			GTKDOC_EMPHASIS_ELEMENT_OPEN = new TokenType.basic ("<emphasis>");
+			GTKDOC_FILENAME_ELEMENT_CLOSE = new TokenType.basic ("</filename>");
+			GTKDOC_FILENAME_ELEMENT_OPEN = new TokenType.basic ("<filename>");
+			GTKDOC_SIMPLELIST_ELEMENT_CLOSE = new TokenType.basic ("</simplelist>");
+			GTKDOC_SIMPLELIST_ELEMENT_OPEN = new TokenType.basic ("<simplelist>");
+			GTKDOC_MEMBER_ELEMENT_CLOSE = new TokenType.basic ("</member>");
+			GTKDOC_MEMBER_ELEMENT_OPEN = new TokenType.basic ("<member>");
+			GTKDOC_DOT = new TokenType.basic (".");
+			GTKDOC_ANY_WORD = ANY_WORD;
+			GTKDOC_EOL = TokenType.EOL;
+			GTKDOC_SPACE = SPACE;
+			GTKDOC_EOF = EOF;
+
 			initialized = true;
 		}
 	}

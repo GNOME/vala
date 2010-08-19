@@ -57,11 +57,17 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 		return linker.get_relative_link (_container, symbol, _doclet.settings);
 	}
 
-	private void write_symbol_link (Api.Node symbol, string? label) {
-		var url = get_url (symbol);
-		writer.link (url,
-		             (label == null || label == "") ? symbol.get_full_name () : label,
-		             cssresolver.resolve (symbol));
+	private void write_symbol_link (Api.Node? symbol, string? label) {
+		if (symbol == null && label != null) {
+			writer.start_tag ("code");
+			writer.text (label);
+			writer.end_tag ("code");
+		} else if (symbol != null) {
+			var url = get_url (symbol);
+			writer.link (url,
+				         (label == null || label == "") ? symbol.get_full_name () : label,
+				         cssresolver.resolve (symbol));
+		}
 	}
 
 	private delegate void Write ();
@@ -230,10 +236,12 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 	}
 
 	public override void visit_symbol_link (SymbolLink element) {
-		if (element.symbol == _container
+		if (element.symbol == null || element.symbol == _container
 		    || !element.symbol.is_browsable (_doclet.settings)
 		    || !element.symbol.package.is_browsable (_doclet.settings)) {
+			writer.start_tag ("code");
 			writer.text (element.label);
+			writer.end_tag ("code");
 		} else {
 			write_symbol_link (element.symbol, element.label);
 		}

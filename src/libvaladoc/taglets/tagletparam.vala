@@ -25,7 +25,7 @@ using Valadoc.Content;
 
 
 public class Valadoc.Taglets.Param : InlineContent, Taglet, Block {
-	public string parameter_name { private set; get; }
+	public string parameter_name { internal set; get; }
 
 	public Rule? get_parser_rule (Rule run_rule) {
 		return Rule.seq ({

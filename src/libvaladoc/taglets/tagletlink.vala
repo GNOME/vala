@@ -25,7 +25,7 @@ using Valadoc.Content;
 
 
 public class Valadoc.Taglets.Link : InlineTaglet {
-	public string symbol_name { private set; get; }
+	public string symbol_name { internal set; get; }
 
 	private Api.Node _symbol;
 
@@ -36,10 +36,19 @@ public class Valadoc.Taglets.Link : InlineTaglet {
 	}
 
 	public override void check (Api.Tree api_root, Api.Node container, ErrorReporter reporter, Settings settings) {
-		_symbol = api_root.search_symbol_str (container, symbol_name);
+		if (symbol_name.has_prefix ("c::")) {
+			_symbol_name = _symbol_name.offset (3);
+			_symbol = api_root.search_symbol_cstr (symbol_name);
+			if (_symbol != null) {
+				symbol_name = _symbol.name;
+			}
+		} else {
+			_symbol = api_root.search_symbol_str (container, symbol_name);
+		}
+
 		if (_symbol == null) {
 			// TODO use ContentElement's source reference
-			reporter.simple_error ("%s does not exist".printf (symbol_name));
+			reporter.simple_warning ("%s does not exist".printf (symbol_name));
 		}
 
 		base.check (api_root, container, reporter, settings);

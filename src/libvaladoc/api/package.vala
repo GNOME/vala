@@ -22,6 +22,7 @@
 
 using Gee;
 using Valadoc.Content;
+using Valadoc.Importer;
 
 public class Valadoc.Api.Package : Node {
 	private ArrayList<Vala.SourceFile> vfiles = new ArrayList<Vala.SourceFile> ();
@@ -108,10 +109,6 @@ public class Valadoc.Api.Package : Node {
 			.append_keyword ("package")
 			.append (name)
 			.get ();
-	}
-
-	internal void import_documentation (string path, Settings settings, DocumentationImporter importer) {
-		importer.process (path, settings, this);
 	}
 
 	internal Namespace get_namespace (Tree root, Vala.Symbol symbol) {

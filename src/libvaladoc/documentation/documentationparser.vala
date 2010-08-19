@@ -21,6 +21,7 @@
  */
 
 using Valadoc.Content;
+using Valadoc.Importer;
 using Gee;
 
 
@@ -42,7 +43,16 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		_comment_parser = new Parser (_settings, _comment_scanner, _reporter);
 		_comment_scanner.set_parser (_comment_parser);
 
-		init_rules ();
+		_gir_scanner = new GirDocumentationScanner (_settings);
+		_gir_parser = new Parser (_settings, _gir_scanner, _reporter);
+		_gir_scanner.set_parser (_gir_parser);
+
+		_gir_taglet_scanner = new GirDocumentationScanner (_settings);
+		_gir_taglet_parser = new Parser (_settings, _gir_taglet_scanner, _reporter);
+		_gir_taglet_scanner.set_parser (_gir_taglet_parser);
+
+		init_valadoc_rules ();
+		init_girdoc_rules ();
 	}
 
 	private Settings _settings;
@@ -51,13 +61,17 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 	private ModuleLoader _modules;
 
 	private ContentFactory _factory;
+	private GirDocumentationScanner _gir_taglet_scanner;
+	private GirDocumentationScanner _gir_scanner;
 	private WikiScanner _wiki_scanner;
 	private CommentScanner _comment_scanner;
+	private Parser _gir_parser;
+	private Parser _gir_taglet_parser;
 	private Parser _wiki_parser;
 	private Parser _comment_parser;
 	
 	private Parser _parser;
-	private WikiScanner _scanner;
+	private Scanner _scanner;
 
 	public Comment? parse (Api.Node element, Vala.Comment source_comment) {
 		weak string content = source_comment.content;
@@ -65,6 +79,48 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		try {
 			Comment doc_comment = parse_comment (content, source_ref.file.filename, source_ref.first_line, source_ref.first_column);
 			doc_comment.check (_tree, element, _reporter, _settings);
+			return doc_comment;
+		} catch (ParserError error) {
+			return null;
+		}
+	}
+
+	public Comment? parse_gir_comment (Api.Node element, GirDocumentationBuilder doc) {
+		try {
+			_stack.clear ();
+
+			if (doc.content != null) {
+				_parser = _gir_parser;
+				_scanner = _gir_scanner;
+				_gir_parser.parse (doc.content, doc.source_reference.file.filename, doc.source_reference.first_line, doc.source_reference.first_column);
+			} else {
+				push (_factory.create_comment ());
+			}
+
+
+			_parser = _gir_taglet_parser;
+			_scanner = _gir_taglet_scanner;
+
+			if (doc.return_value != null && !(element is Api.Method && ((Api.Method) element).is_constructor)) {
+				push (_factory.create_taglet ("return"));
+				_gir_taglet_parser.parse (doc.return_value.content, doc.return_value.source_reference.file.filename, doc.return_value.source_reference.first_line, doc.return_value.source_reference.first_column);
+			}
+
+			var iter = doc.parameters.map_iterator ();
+			for (iter.next (); iter.has_next (); iter.next ()) {
+				var val = iter.get_value ();
+				var key = iter.get_key ();
+				if (key != "self") {
+					var param = _factory.create_taglet ("param") as Taglets.Param;
+					param.parameter_name = key;
+					push (param);
+					_gir_taglet_parser.parse (val.content, val.source_reference.file.filename, val.source_reference.first_line, val.source_reference.first_column);
+				}
+			}
+
+			var doc_comment = (Comment) pop ();
+			doc_comment.check (_tree, element, _reporter, _settings);
+
 			return doc_comment;
 		} catch (ParserError error) {
 			return null;
@@ -216,7 +272,465 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		text.content += str;
 	}
 
-	private void init_rules () {
+	private void gir_append_link (Token token) throws ParserError {
+		var taglet = _factory.create_taglet ("link") as Taglets.Link;
+		if (!(taglet is Inline)) {
+			_parser.error ("Invalid taglet in this context: link");
+		}
+		taglet.symbol_name = "c::"+token.to_string ();
+		push (taglet);
+	}
+
+	private bool _gir_is_first_paragraph = true;
+
+	private void init_girdoc_rules () {
+		StubRule run = new StubRule ();
+		run.set_name ("Run");
+
+		TokenType.Action add_text = (token) => {
+			add_content_string (token.to_string ());
+		};
+
+		TokenType dot = TokenType.GTKDOC_DOT.action ((token) => { add_content_string ("."); });
+		TokenType word = TokenType.GTKDOC_ANY_WORD.action (add_text);
+		TokenType space = TokenType.GTKDOC_SPACE.action (add_text);
+		TokenType newline = TokenType.GTKDOC_EOL.action ((token) => { add_content_string (" "); });
+		Rule unprinted_space = Rule.one_of ({ space.action ((token) => {}), newline.action ((token) => {}) });
+		Rule unprinted_spaces = Rule.many ({ unprinted_space });
+		Rule optional_unprinted_spaces = Rule.option ({ unprinted_spaces });
+
+		Rule raw_text = Rule.many ({
+			Rule.one_of ({
+				word, space, newline, dot
+			})
+			.set_reduce (() => { ((InlineContent) peek ()).content.add ((Inline) pop ()); })
+		})
+		.set_name ("RawText");
+
+		Rule run_with_dot = Rule.many ({
+			Rule.one_of ({
+				run, dot
+			})
+			.set_reduce (() => { ((InlineContent) peek ()).content.add ((Inline) pop ()); })
+		})
+		.set_name ("FormatedText");
+
+		Rule xml_comment_raw = Rule.seq ({
+			TokenType.GTKDOC_XML_COMMENT_START,
+			Rule.option ({
+				Rule.many ({
+					Rule.one_of ({
+						word.action ((token) => {}),
+						space.action ((token) => {}),
+						newline.action ((token) => {}),
+						dot.action ((token) => {})
+						//TODO
+					})
+				})
+			}),
+			TokenType.GTKDOC_XML_COMMENT_END
+		});
+		
+
+		Rule xml_comment = Rule.seq ({
+			xml_comment_raw
+		})
+		.set_name ("XmlComment")
+		.set_start (() => { push (_factory.create_text ("")); });
+
+
+		Rule word_or_function = Rule.seq ({
+			TokenType.GTKDOC_ANY_WORD.action ((token) => { push (token); }),
+			Rule.option ({
+				Rule.many ({
+					Rule.one_of ({
+						space.action ((token) => {
+							if (((Token) peek ()).is_word) {
+								push (token);
+							}
+						}),
+						xml_comment_raw
+					})
+				})
+			}),
+			Rule.option ({
+				TokenType.GTKDOC_FUNCTION_BRACKETS.action ((token) => {
+					var last_token = (Token) pop ();
+					if (!last_token.is_word) {
+						last_token = (Token) pop ();
+					}
+
+					gir_append_link (last_token);
+				})
+			}).set_skip (() => {
+				var last_token = (Token) pop ();
+				if (last_token.is_word) {
+					add_content_string (last_token.to_string ());
+				} else {
+					add_content_string (((Token) pop ()).to_string ());
+					add_content_string (last_token.to_string ());
+				}
+			})
+		});
+
+		Rule node_link = Rule.one_of ({
+			Rule.seq ({
+				TokenType.GTKDOC_SYMBOL,
+				word.action ((token) => {
+					switch (token.to_string ()) {
+					case "FALSE":
+					case "TRUE":
+					case "NULL":
+						var myrun = _factory.create_run (Run.Style.MONOSPACED);
+						var mytext = _factory.create_text ();
+						mytext.content = token.to_string ().down ();
+						myrun.content.add (mytext);
+						push (myrun);
+						break;
+
+					default:
+						gir_append_link (token);
+						break;
+					}
+				})
+			})
+		})
+		.set_name ("TypeLink");
+
+		Rule link_element = Rule.seq ({
+			TokenType.GTKDOC_LINK_ELEMENT_OPEN,
+			run_with_dot,
+			TokenType.GTKDOC_LINK_ELEMENT_CLOSE
+		})
+		.set_name ("Link")
+		.set_start (() => { push (_factory.create_run (Run.Style.NONE)); });
+
+		Rule filename_element = Rule.seq ({
+			TokenType.GTKDOC_FILENAME_ELEMENT_OPEN,
+			raw_text,
+			TokenType.GTKDOC_FILENAME_ELEMENT_CLOSE
+		})
+		.set_name ("Filename")
+		.set_start (() => { push (_factory.create_run (Run.Style.MONOSPACED)); });
+
+		Rule envar_element = Rule.seq ({
+			TokenType.GTKDOC_ENVAR_ELEMENT_OPEN,
+			run_with_dot,
+			TokenType.GTKDOC_ENVAR_ELEMENT_CLOSE
+		})
+		.set_name ("Envar")
+		.set_start (() => { push (_factory.create_run (Run.Style.MONOSPACED)); });
+
+		Rule emphasis_element = Rule.seq ({
+			TokenType.GTKDOC_EMPHASIS_ELEMENT_OPEN,
+			run_with_dot,
+			TokenType.GTKDOC_EMPHASIS_ELEMENT_CLOSE
+		})
+		.set_name ("Emphasis")
+		.set_start (() => { push (_factory.create_run (Run.Style.ITALIC)); });
+
+		Rule option_element = Rule.seq ({
+			TokenType.GTKDOC_OPTION_ELEMENT_OPEN,
+			run_with_dot,
+			TokenType.GTKDOC_OPTION_ELEMENT_CLOSE
+		})
+		.set_name ("Option")
+		.set_start (() => { push (_factory.create_run (Run.Style.MONOSPACED)); });
+
+		Rule term_element = Rule.seq ({
+			TokenType.GTKDOC_TERM_ELEMENT_OPEN,
+			run_with_dot,
+			TokenType.GTKDOC_TERM_ELEMENT_CLOSE
+		})
+		.set_name ("Term")
+		.set_start (() => { push (_factory.create_run (Run.Style.MONOSPACED)); });
+
+		Rule literal_element = Rule.seq ({
+			TokenType.GTKDOC_LITERAL_ELEMENT_OPEN,
+			run_with_dot,
+			TokenType.GTKDOC_LITERAL_ELEMENT_CLOSE
+		})
+		.set_name ("Literal")
+		.set_start (() => { push (_factory.create_run (Run.Style.MONOSPACED)); });
+
+		Rule replaceable_element = Rule.seq ({
+			TokenType.GTKDOC_REPLACEABLE_ELEMENT_OPEN,
+			raw_text,
+			TokenType.GTKDOC_REPLACEABLE_ELEMENT_CLOSE
+		})
+		.set_name ("Replaceable")
+		.set_start (() => { push (_factory.create_run (Run.Style.MONOSPACED)); });
+
+		Rule guimenuitem_element = Rule.seq ({
+			TokenType.GTKDOC_GUI_MENU_ITEM_ELEMENT_OPEN,
+			raw_text,
+			TokenType.GTKDOC_GUI_MENU_ITEM_ELEMENT_CLOSE
+		})
+		.set_name ("GuiMenuItem")
+		.set_start (() => { push (_factory.create_run (Run.Style.MONOSPACED)); });
+
+		Rule struct_name_element = Rule.seq ({
+			TokenType.GTKDOC_STRUCTNAME_ELEMENT_OPEN,
+			word.action ((token) => {
+				gir_append_link (token);
+			}),
+			TokenType.GTKDOC_STRUCTNAME_ELEMENT_CLOSE
+		})
+		.set_name ("Structname");
+
+		Rule param = Rule.one_of ({
+			Rule.seq ({
+				TokenType.GTKDOC_PARAM,
+				word
+			})
+		})
+		.set_name ("Parameter")
+		.set_start (() => { push (_factory.create_run (Run.Style.MONOSPACED)); })
+		.set_reduce (() => { ((InlineContent) peek ()).content.add ((Inline) pop ()); });
+
+		run.set_rule (
+			Rule.many ({
+				Rule.one_of ({
+					newline, space, word_or_function, node_link, param, struct_name_element, link_element, xml_comment,
+					literal_element, guimenuitem_element, replaceable_element, envar_element, emphasis_element,
+					option_element,  term_element, filename_element
+				})
+			})
+			.set_name ("Run")
+		);
+
+		Rule paragraph_element = Rule.seq ({
+			TokenType.GTKDOC_PARA_ELEMENT_OPEN,
+			run_with_dot,
+			TokenType.GTKDOC_PARA_ELEMENT_CLOSE,
+			Rule.option ({
+				Rule.many({
+					Rule.one_of ({
+						space.action ((token) => {}),
+						newline.action ((token) => {})
+					})
+				})
+			})
+		})
+		.set_name ("ParagraphElement")
+		.set_start (() => { push (_factory.create_paragraph ()); })
+		.set_reduce (() => { ((BlockContent) peek ()).content.add ((Block) pop ()); });
+
+		Rule source = Rule.seq ({
+			TokenType.GTKDOC_SOURCE_OPEN.action ((token) => { ((GirDocumentationScanner) _scanner).set_code_escape_mode (true); }),
+			Rule.many ({
+				word.action ((token) => { ((SourceCode) peek ()).code = token.to_string (); })
+			})
+			.set_start (() => { push (_factory.create_source_code ()); })
+			.set_reduce (() => { ((Paragraph) peek ()).content.add ((Inline) pop ()); }),
+			TokenType.GTKDOC_SOURCE_CLOSE.action ((token) => { ((GirDocumentationScanner) _scanner).set_code_escape_mode (false); }),
+			optional_unprinted_spaces
+		})
+		.set_name ("Source")
+		.set_start (() => { push (_factory.create_paragraph ()); })
+		.set_reduce (() => { ((BlockContent) peek ()).content.add ((Block) pop ()); });
+
+		Rule program_listing_element = Rule.seq ({
+			TokenType.GTKDOC_PROGRAMLISTING_ELEMENT_OPEN.action ((token) => { ((GirDocumentationScanner) _scanner).set_code_element_escape_mode (true); }),
+			Rule.many ({
+				word.action ((token) => { ((SourceCode) peek ()).code = token.to_string (); })
+			})
+			.set_start (() => { push (_factory.create_source_code ()); })
+			.set_reduce (() => { ((Paragraph) peek ()).content.add ((Inline) pop ()); }),
+			TokenType.GTKDOC_PROGRAMLISTING_ELEMENT_CLOSE.action ((token) => { ((GirDocumentationScanner) _scanner).set_code_element_escape_mode (false); }),
+			optional_unprinted_spaces
+		})
+		.set_name ("ProgramListing")
+		.set_start (() => { push (_factory.create_paragraph ()); })
+		.set_reduce (() => { ((BlockContent) peek ()).content.add ((Block) pop ()); });
+
+		Rule example_element = Rule.seq ({
+			Rule.one_of ({
+				program_listing_element,
+				Rule.seq ({
+					TokenType.GTKDOC_EXAMPLE_ELEMENT_OPEN,
+					optional_unprinted_spaces,
+					Rule.option ({
+						TokenType.GTKDOC_TITLE_ELEMENT_OPEN,
+						Rule.many ({
+							Rule.one_of ({ word.action ((token) => {}) })
+						}),
+						TokenType.GTKDOC_TITLE_ELEMENT_CLOSE,
+						optional_unprinted_spaces
+					}),
+					program_listing_element,
+					TokenType.GTKDOC_EXAMPLE_ELEMENT_CLOSE
+				})
+			}),
+			optional_unprinted_spaces
+		})
+		.set_name ("SourceElement");
+
+		Rule paragraph = Rule.seq ({
+			run_with_dot
+		})
+		.set_name ("Paragraph")
+		.set_start (() => { push (_factory.create_paragraph ()); })
+		.set_reduce (() => { ((BlockContent) peek ()).content.add ((Block) pop ()); });
+
+		Rule note_element = Rule.seq ({
+			TokenType.GTKDOC_NOTE_ELEMENT_OPEN,
+			optional_unprinted_spaces,
+			Rule.option ({
+				paragraph
+			}),
+			Rule.option ({
+				Rule.many ({
+					paragraph_element,
+					Rule.option ({ paragraph })
+				})
+			}),
+			TokenType.GTKDOC_NOTE_ELEMENT_CLOSE,
+			optional_unprinted_spaces
+		})
+		.set_name ("Note");
+
+		Rule warning_element = Rule.seq ({
+			TokenType.GTKDOC_WARNING_ELEMENT_OPEN,
+			optional_unprinted_spaces,
+			Rule.option ({
+				paragraph
+			}),
+			Rule.option ({
+				Rule.many ({
+					paragraph_element,
+					Rule.option ({ paragraph })
+				})
+			}),
+			TokenType.GTKDOC_WARNING_ELEMENT_CLOSE,
+			optional_unprinted_spaces
+		})
+		.set_name ("Warning");
+
+		Rule variable_list_element = Rule.seq ({
+			TokenType.GTKDOC_VARIABLE_LIST_ELEMENT_OPEN,
+			optional_unprinted_spaces,
+			Rule.many ({
+				Rule.seq ({
+					TokenType.GTKDOC_VARIABLE_LIST_ENTRY_ELEMENT_OPEN,
+					optional_unprinted_spaces,
+
+					TokenType.GTKDOC_TERM_ELEMENT_OPEN,
+					optional_unprinted_spaces,
+					run_with_dot,
+					TokenType.GTKDOC_TERM_ELEMENT_CLOSE.action ((token) => { add_content_string (": "); }),
+					optional_unprinted_spaces,
+
+					TokenType.GTKDOC_LIST_ITEM_ELEMENT_OPEN,
+					optional_unprinted_spaces,
+					run_with_dot,
+					TokenType.GTKDOC_LIST_ITEM_ELEMENT_CLOSE,
+					optional_unprinted_spaces,
+
+					TokenType.GTKDOC_VARIABLE_LIST_ENTRY_ELEMENT_CLOSE,
+					optional_unprinted_spaces
+				})
+				.set_start (() => { push (_factory.create_list_item ()); })
+				.set_reduce (() => { ((Content.List) peek ()).items.add ((Content.ListItem) pop ()); })
+			}),
+			TokenType.GTKDOC_VARIABLE_LIST_ELEMENT_CLOSE,
+			optional_unprinted_spaces
+		})
+		.set_name ("VariableList")
+		.set_start (() => { push (_factory.create_list ()); })
+		.set_reduce (() => { ((BlockContent) peek ()).content.add ((Block) pop ()); });
+
+		Rule list_element = Rule.seq ({
+			TokenType.GTKDOC_ITEMIZED_LIST_ELEMENT_OPEN,
+			optional_unprinted_spaces,
+			Rule.many ({
+				Rule.seq ({
+					TokenType.GTKDOC_LIST_ITEM_ELEMENT_OPEN,
+					optional_unprinted_spaces,
+					run_with_dot,
+					TokenType.GTKDOC_LIST_ITEM_ELEMENT_CLOSE,
+					optional_unprinted_spaces
+				})
+				.set_start (() => { push (_factory.create_list_item ()); })
+				.set_reduce (() => { ((Content.List) peek ()).items.add ((Content.ListItem) pop ()); })
+			}),
+			TokenType.GTKDOC_ITEMIZED_LIST_ELEMENT_CLOSE,
+			optional_unprinted_spaces
+		})
+		.set_name ("ItemizedList")
+		.set_start (() => { push (_factory.create_list ()); })
+		.set_reduce (() => { ((BlockContent) peek ()).content.add ((Block) pop ()); });
+
+		Rule simple_list_element = Rule.seq ({
+			TokenType.GTKDOC_SIMPLELIST_ELEMENT_OPEN,
+			optional_unprinted_spaces,
+			Rule.many ({
+				Rule.seq ({
+					TokenType.GTKDOC_MEMBER_ELEMENT_OPEN,
+					optional_unprinted_spaces,
+					run_with_dot,
+					TokenType.GTKDOC_MEMBER_ELEMENT_CLOSE,
+					optional_unprinted_spaces
+				})
+				.set_start (() => { push (_factory.create_list_item ()); })
+				.set_reduce (() => { ((Content.List) peek ()).items.add ((Content.ListItem) pop ()); })
+			}),
+			TokenType.GTKDOC_SIMPLELIST_ELEMENT_CLOSE,
+			optional_unprinted_spaces
+		})
+		.set_name ("SimpleList")
+		.set_start (() => { push (_factory.create_list ()); })
+		.set_reduce (() => { ((BlockContent) peek ()).content.add ((Block) pop ()); });
+
+		Rule block_element = Rule.one_of ({
+			paragraph_element, list_element, note_element, warning_element, source,
+			example_element, variable_list_element, simple_list_element
+		})
+		.set_name ("Block");
+
+		// TODO: find out why the clean version does not work ...
+		Rule first_paragraph = Rule.many ({
+			Rule.one_of ({
+				Rule.seq ({ run }).set_reduce (() => { ((InlineContent) peek ()).content.add ((Inline) pop ()); }),
+				TokenType.GTKDOC_DOT.action ((token) => {
+					((InlineContent) peek ()).content.add (_factory.create_text ("."));
+					if (_gir_is_first_paragraph) {
+						((BlockContent) peek ()).content.add ((Block) pop ());
+						push (_factory.create_paragraph ());
+						_gir_is_first_paragraph = false;
+					}
+				})
+			})
+		})
+		.set_name ("BriefDescription")
+		.set_start (() => { push (_factory.create_paragraph ()); })
+		.set_reduce (() => { ((BlockContent) peek ()).content.add ((Block) pop ()); _gir_is_first_paragraph = true; });
+
+		Rule comment = Rule.seq ({
+			Rule.option ({
+				first_paragraph
+			}),
+			Rule.option ({
+				Rule.many ({
+					block_element,
+					Rule.option ({ paragraph })
+				})
+			})
+		})
+		.set_name ("Comment")
+		.set_start (() => { push (_factory.create_comment ()); });
+
+		Rule taglet = Rule.many ({
+			run_with_dot
+		})
+		.set_name ("Taglet")
+		.set_reduce (() => { ((Comment) peek ()).taglets.add ((Taglet) pop ()); });
+
+		_gir_taglet_parser.set_root_rule (taglet);
+		_gir_parser.set_root_rule (comment);
+	}
+
+	private void init_valadoc_rules () {
 		// Inline rules
 
 		StubRule run = new StubRule ();
@@ -311,35 +825,35 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 
 		Rule embedded =
 			Rule.seq ({
-				TokenType.DOUBLE_OPEN_BRACE.action (() => { _scanner.set_url_escape_mode (true); }),
+				TokenType.DOUBLE_OPEN_BRACE.action (() => { ((WikiScanner) _scanner).set_url_escape_mode (true); }),
 				TokenType.any_word ().action ((token) => { ((Embedded) peek ()).url = token.to_string (); }),
 				Rule.option ({
-					TokenType.PIPE.action (() => { _scanner.set_url_escape_mode (false); }),
+					TokenType.PIPE.action (() => { ((WikiScanner) _scanner).set_url_escape_mode (false); }),
 					text
 				})
 				.set_reduce (() => { var caption = pop () as Text; ((Embedded) peek ()).caption = caption.content; }),
-				TokenType.DOUBLE_CLOSED_BRACE.action (() => { _scanner.set_url_escape_mode (false); })
+				TokenType.DOUBLE_CLOSED_BRACE.action (() => { ((WikiScanner) _scanner).set_url_escape_mode (false); })
 			})
 			.set_name ("Embedded")
 			.set_start (() => { push (_factory.create_embedded ()); });
 		Rule link =
 			Rule.seq ({
-				TokenType.DOUBLE_OPEN_BRACKET.action (() => { _scanner.set_url_escape_mode (true); }),
+				TokenType.DOUBLE_OPEN_BRACKET.action (() => { ((WikiScanner) _scanner).set_url_escape_mode (true); }),
 				TokenType.any_word ().action ((token) => { ((Link) peek ()).url = token.to_string (); }),
 				Rule.option ({
-					TokenType.PIPE.action (() => { _scanner.set_url_escape_mode (false); }),
+					TokenType.PIPE.action (() => { ((WikiScanner) _scanner).set_url_escape_mode (false); }),
 					run
 				}),
-				TokenType.DOUBLE_CLOSED_BRACKET.action (() => { _scanner.set_url_escape_mode (false); })
+				TokenType.DOUBLE_CLOSED_BRACKET.action (() => { ((WikiScanner) _scanner).set_url_escape_mode (false); })
 			})
 			.set_name ("Link")
 			.set_start (() => { push (_factory.create_link ()); });
 
 		Rule source_code =
 			Rule.seq ({
-				TokenType.TRIPLE_OPEN_BRACE.action ((token) => { _scanner.set_code_escape_mode (true); }),
+				TokenType.TRIPLE_OPEN_BRACE.action ((token) => { ((WikiScanner) _scanner).set_code_escape_mode (true); }),
 				TokenType.any_word ().action ((token) => { ((SourceCode) peek ()).code = token.to_string (); }),
-				TokenType.TRIPLE_CLOSED_BRACE.action ((token) => { _scanner.set_code_escape_mode (false); })
+				TokenType.TRIPLE_CLOSED_BRACE.action ((token) => { ((WikiScanner) _scanner).set_code_escape_mode (false); })
 			})
 			.set_name ("SourceCode")
 			.set_start (() => { push (_factory.create_source_code ()); });

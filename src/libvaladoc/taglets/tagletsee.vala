@@ -35,10 +35,19 @@ public class Valadoc.Taglets.See : ContentElement, Taglet, Block {
 	}
 
 	public override void check (Api.Tree api_root, Api.Node container, ErrorReporter reporter, Settings settings) {
-		symbol = api_root.search_symbol_str (container, symbol_name);
+		if (symbol_name.has_prefix ("c::")) {
+			symbol_name = symbol_name.offset (3);
+			symbol = api_root.search_symbol_cstr (symbol_name);
+			if (symbol != null) {
+				symbol_name = _symbol.name;
+			}
+		} else {
+			symbol = api_root.search_symbol_str (container, symbol_name);
+		}
+
 		if (symbol == null) {
 			// TODO use ContentElement's source reference
-			reporter.simple_error ("%s does not exist".printf (symbol_name));
+			reporter.simple_warning ("%s does not exist".printf (symbol_name));
 		}
 	}
 

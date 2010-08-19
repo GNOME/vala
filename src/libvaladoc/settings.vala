@@ -46,7 +46,6 @@ public class Valadoc.Settings : Object {
 
 	public string[] defines;
 	public string[] vapi_directories;
-	public string[] docu_directories;
 }
 
 

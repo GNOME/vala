@@ -24,19 +24,18 @@
 using Gee;
 
 
-public abstract class Valadoc.DocumentationImporter : Object, ResourceLocator {
-	protected ErrorReporter errorreporter;
+public abstract class Valadoc.Importer.DocumentationImporter : Object, ResourceLocator {
 	protected ModuleLoader modules;
 	protected Settings settings;
 	protected Api.Tree tree;
 
 	protected Content.ContentFactory factory;
 
+	public abstract string file_extension { get; }
 
-	public DocumentationImporter (Api.Tree tree, ModuleLoader modules, Settings settings, ErrorReporter errorreporter) {
+	public DocumentationImporter (Api.Tree tree, ModuleLoader modules, Settings settings) {
 		factory = new Content.ContentFactory (settings, this, modules);
 
-		this.errorreporter = errorreporter;
 		this.settings = settings;
 		this.modules = null;
 		this.tree = tree;
@@ -46,7 +45,7 @@ public abstract class Valadoc.DocumentationImporter : Object, ResourceLocator {
 		return path;
 	}
 
-	public abstract bool process (string filename, Settings settings, Api.Package package);
+	public abstract void process (string filename);
 }
 
 

@@ -30,13 +30,16 @@ libvaladoc_la_VALASOURCES = \
 	settings.vala \
 	markupwriter.vala \
 	devhelp-markupwriter.vala \
+	ctyperesolver.vala \
+	documentation/girdocumentationscanner.vala \
 	documentation/commentscanner.vala \
 	documentation/documentation.vala \
 	documentation/documentationparser.vala \
 	documentation/wiki.vala \
 	documentation/wikiscanner.vala \
+	importer/girdocumentationimporter.vala \
 	importer/documentationimporter.vala \
-	importer/ctyperesolver.vala \
+	importer/girdocumentationbuilder.vala \
 	api/array.vala \
 	api/class.vala \
 	api/constant.vala \

@@ -21,6 +21,7 @@
  */
 
 using GLib.Path;
+using Valadoc.Importer;
 using Valadoc;
 using Config;
 using Gee;
@@ -54,9 +55,10 @@ public class ValaDoc : Object {
 	private static bool experimental_non_null = false;
 	private static bool disable_dbus_transformation;
 	private static string profile;
-
 	[CCode (array_length = false, array_null_terminated = true)]
-	private static string[] docu_directories;
+	private static string[] import_packages;
+	[CCode (array_length = false, array_null_terminated = true)]
+	private static string[] import_directories;
 	[CCode (array_length = false, array_null_terminated = true)]
 	private static string[] vapi_directories;
 	[CCode (array_length = false, array_null_terminated = true)]
@@ -73,11 +75,11 @@ public class ValaDoc : Object {
 		{ "enable-experimental-non-null", 0, 0, OptionArg.NONE, ref experimental_non_null, "Enable experimental enhancements for non-null types", null },
 		{ "disable-dbus-transformation", 0, 0, OptionArg.NONE, ref disable_dbus_transformation, "Disable transformation of D-Bus member names", null },
 		{ "vapidir", 0, 0, OptionArg.FILENAME_ARRAY, ref vapi_directories, "Look for package bindings in DIRECTORY", "DIRECTORY..." },
-		{ "docudir", 0, 0, OptionArg.FILENAME_ARRAY, ref docu_directories, "Look for external documentation in DIRECTORY", "DIRECTORY..." },
+		{ "importdir", 0, 0, OptionArg.FILENAME_ARRAY, ref import_directories, "Look for external documentation in DIRECTORY", "DIRECTORY..." },
 		{ "profile", 0, 0, OptionArg.STRING, ref profile, "Use the given profile instead of the default", "PROFILE" },
 
-
 		{ "pkg", 0, 0, OptionArg.STRING_ARRAY, ref packages, "Include binding for PACKAGE", "PACKAGE..." },
+		{ "import", 0, 0, OptionArg.STRING_ARRAY, ref import_packages, "Include binding for PACKAGE", "PACKAGE..." },
 		{ "directory", 'o', 0, OptionArg.FILENAME, ref directory, "Output directory", "DIRECTORY" },
 
 		{ "wiki", 0, 0, OptionArg.FILENAME, ref wikidirectory, "Wiki directory", "DIRECTORY" },
@@ -155,7 +157,6 @@ public class ValaDoc : Object {
 		settings.basedir = basedir;
 		settings.directory = directory;
 		settings.vapi_directories = vapi_directories;
-		settings.docu_directories = docu_directories;
 
 		settings.profile = profile;
 		settings.defines = defines;
@@ -163,19 +164,16 @@ public class ValaDoc : Object {
 		string fulldirpath = "";
 		if (pluginpath == null) {
 			fulldirpath = build_filename (Config.plugin_dir, "html");
-		}
-		else if ( is_absolute (pluginpath ) == false) {
+		} else if (is_absolute (pluginpath ) == false) {
 			// Test to see if the plugin exists in the expanded path and then fallback
 			// to using the configured plugin directory
 			string local_path = build_filename (Environment.get_current_dir(), pluginpath);
 			if ( FileUtils.test(local_path, FileTest.EXISTS)) {
 				fulldirpath = local_path;
-			}
-			else {
+			} else {
 				fulldirpath = build_filename (Config.plugin_dir, pluginpath);
 			}
-		}
-		else {
+		} else {
 			fulldirpath = pluginpath;
 		}
 
@@ -207,6 +205,12 @@ public class ValaDoc : Object {
 		}
 
 		doctree.parse_comments (docparser);
+		if (reporter.errors > 0) {
+			return quit (reporter);
+		}
+
+		var gir_importer = new GirDocumentationImporter (doctree, docparser, modules, settings);
+		doctree.import_documentation (gir_importer, import_packages, import_directories);
 		if (reporter.errors > 0) {
 			return quit (reporter);
 		}

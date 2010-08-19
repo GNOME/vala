@@ -24,7 +24,7 @@
 using Valadoc.Api;
 using Gee;
 
-public class Valadoc.Importer.CTypeResolver : Visitor {
+public class Valadoc.CTypeResolver : Visitor {
 	private Map<string, Api.Node> nodes = new HashMap<string, Api.Node> ();
 
 	public CTypeResolver (Api.Tree tree) {
