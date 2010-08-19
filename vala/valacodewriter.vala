@@ -941,6 +941,10 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_indent ();
 			write_string ("[NoWrapper]");
 		}
+		if (m.get_attribute ("NoThrow") != null) {
+			write_indent ();
+			write_string ("[NoThrow]");
+		}
 		if (m.returns_modified_pointer) {
 			write_indent ();
 			write_string ("[ReturnsModifiedPointer]");
