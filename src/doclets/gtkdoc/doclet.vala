@@ -195,7 +195,6 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 						"--module", settings.pkg_name,
 						"--output-dir", output_dir,
 						"--rebuild-sections", "--rebuild-types" };
-		string ignored = "";
 
 		foreach (var header in headers) {
 			args += header;

@@ -27,6 +27,8 @@ using Valadoc.Content;
 public class Gtkdoc.Generator : Api.Visitor {
 	class FileData {
 		public string filename;
+		public string title;
+		public GComment section_comment;
 		public Gee.List<GComment> comments;
 		public Gee.List<string> section_lines;
 	}
@@ -67,6 +69,11 @@ public class Gtkdoc.Generator : Api.Visitor {
 				return false;
 			}
 
+			// Gtkdoc SECTION
+			if (file_data.section_comment != null) {
+				cwriter.write_line (file_data.section_comment.to_string ());
+			}
+
 			foreach (var comment in file_data.comments) {
 				cwriter.write_line (comment.to_string ());
 			}
@@ -75,6 +82,9 @@ public class Gtkdoc.Generator : Api.Visitor {
 			// sections
 			sections_writer.write_line ("<SECTION>");
 			sections_writer.write_line ("<FILE>%s</FILE>".printf (basename));
+			if (file_data.title != null) {
+				sections_writer.write_line ("<TITLE>%s</TITLE>".printf (file_data.title));
+			}
 
 			foreach (var section_line in file_data.section_lines) {
 				sections_writer.write_line (section_line);
@@ -95,6 +105,8 @@ public class Gtkdoc.Generator : Api.Visitor {
 		if (file_data == null) {
 			file_data = new FileData ();
 			file_data.filename = filename;
+			file_data.title = null;
+			file_data.section_comment = null;
 			file_data.comments = new Gee.LinkedList<GComment>();
 			file_data.section_lines = new Gee.LinkedList<string>();
 			files_data[filename] = file_data;
@@ -140,7 +152,28 @@ public class Gtkdoc.Generator : Api.Visitor {
 		return headers;
 	}
 
-	private GComment create_gcomment (string symbol, Comment? comment, bool short_description = false, string[]? returns_annotations = null, bool is_dbus = false) {
+	private void set_section_comment (string filename, string section_name, Comment? comment) {
+		var file_data = get_file_data (filename);
+		if (file_data.title == null) {
+			file_data.title = section_name;
+		}
+		if (comment == null) {
+			return;
+		}
+		if (file_data.section_comment != null) {
+			// already have a section comment
+			return;
+		}
+
+		var gcomment = create_gcomment ("SECTION:%s".printf (get_section (filename)), comment);
+		if (gcomment.brief_comment != null) {
+			gcomment.headers.insert (0, new Header ("@short_description", gcomment.brief_comment));
+			gcomment.brief_comment = null;
+		}
+		file_data.section_comment = gcomment;
+	}
+
+	private GComment create_gcomment (string symbol, Comment? comment, string[]? returns_annotations = null, bool is_dbus = false) {
 		var converter = new Gtkdoc.CommentConverter ();
 		if (comment != null) {
 			converter.convert (comment, is_dbus);
@@ -152,12 +185,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 		gcomment.returns_annotations = returns_annotations;
 		gcomment.see_also = converter.see_also;
 
-		if (converter.brief_comment != null && short_description) {
-			var header = new Header ("@short_description", converter.brief_comment);
-			gcomment.headers.add (header);
-		} else {
-			gcomment.brief_comment = converter.brief_comment;
-		}
+		gcomment.brief_comment = converter.brief_comment;
 		gcomment.long_comment = converter.long_comment;
 
 		gcomment.headers.add_all (merge_headers (converter.headers, current_headers));
@@ -165,27 +193,24 @@ public class Gtkdoc.Generator : Api.Visitor {
 		return gcomment;
 	}
 
-	private GComment? add_comment (string filename, string symbol, Comment? comment, bool short_description = false) {
+	private GComment? add_comment (string filename, string symbol, Comment? comment) {
 		if (comment == null) {
 			return null;
 		}
 
 		var file_data = get_file_data (filename);
-		var gcomment = create_gcomment (symbol, comment, short_description);
+		var gcomment = create_gcomment (symbol, comment);
 		file_data.comments.add (gcomment);
 		return gcomment;
 	}
 
-	private GComment? add_symbol (string filename, string cname, Comment? comment = null, string? symbol = null, bool title = false, bool short_description = false, string[]? returns_annotations = null) {
+	private GComment? add_symbol (string filename, string cname, Comment? comment = null, string? symbol = null, string[]? returns_annotations = null) {
 		var file_data = get_file_data (filename);
-		if (title) {
-			file_data.section_lines.add ("<TITLE>%s</TITLE>".printf (cname));
-		}
 
 		file_data.section_lines.add (cname);
 
 		if (comment != null || (current_headers != null && current_headers.size > 0)) {
-			var gcomment = create_gcomment (symbol ?? cname, comment, short_description, returns_annotations);
+			var gcomment = create_gcomment (symbol ?? cname, comment, returns_annotations);
 			file_data.comments.add (gcomment);
 			return gcomment;
 		}
@@ -254,7 +279,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 
 	public override void visit_namespace (Api.Namespace ns) {
 		if (ns.get_filename () != null) {
-			add_comment (ns.get_filename(), "SECTION:%s".printf (get_section (ns.get_filename ())), ns.documentation, true);
+			set_section_comment (ns.get_filename (), get_section (ns.get_filename ()), ns.documentation);
 		}
 
 		ns.accept_all_children (this);
@@ -271,8 +296,12 @@ public class Gtkdoc.Generator : Api.Visitor {
 		if (iface.get_dbus_name () != null) {
 			current_dbus_interface = new DBus.Interface (settings.pkg_name, iface.get_dbus_name ());
 		}
+
 		iface.accept_all_children (this);
-		add_symbol (iface.get_filename(), iface.get_cname(), iface.documentation, null, true);
+
+		add_symbol (iface.get_filename(), iface.get_cname(), iface.documentation, null);
+		set_section_comment (iface.get_filename(), iface.get_cname(), iface.documentation);
+
 		if (current_dbus_interface != null) {
 			current_dbus_interface.write (settings);
 			dbus_interfaces.add (current_dbus_interface);
@@ -296,8 +325,13 @@ public class Gtkdoc.Generator : Api.Visitor {
 		if (cl.get_dbus_name () != null) {
 			current_dbus_interface = new DBus.Interface (settings.pkg_name, cl.get_dbus_name ());
 		}
+
+
 		cl.accept_all_children (this);
-		add_symbol (cl.get_filename(), cl.get_cname(), cl.documentation, null, true);
+
+		add_symbol (cl.get_filename(), cl.get_cname(), cl.documentation, null);
+		set_section_comment (cl.get_filename(), cl.get_cname(), cl.documentation);
+
 		if (current_dbus_interface != null) {
 			current_dbus_interface.write (settings);
 			dbus_interfaces.add (current_dbus_interface);
@@ -454,7 +488,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 		gcomment.headers.insert (0, new Header ("@%s".printf (to_lower_case (((Api.Node)sig.parent).name)),
 												"the %s".printf (get_docbook_link (sig.parent))));
 		if (current_dbus_interface != null && sig.is_dbus_visible) {
-			var dbuscomment = create_gcomment (sig.get_dbus_name (), sig.documentation, false, null, true);
+			var dbuscomment = create_gcomment (sig.get_dbus_name (), sig.documentation, null, true);
 			current_dbus_member.comment = dbuscomment;
 			current_dbus_interface.add_signal (current_dbus_member);
 		}
@@ -503,7 +537,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 			see_also += get_docbook_link (m, false, true);
 			gcomment.see_also = see_also;
 		} else {
-			add_symbol (m.get_filename(), m.get_cname (), m.documentation, null, false, false, annotations);
+			add_symbol (m.get_filename(), m.get_cname (), m.documentation, null, annotations);
 		}
 
 		if (current_dbus_interface != null && m.is_dbus_visible && !m.is_constructor) {
@@ -511,7 +545,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 				var dresult = new DBus.Parameter (m.get_dbus_result_name (), m.return_type.get_dbus_type_signature (), DBus.Parameter.Direction.OUT);
 				current_dbus_member.add_parameter (dresult);
 			}
-			var gcomment = create_gcomment (m.get_dbus_name (), m.documentation, false, null, true);
+			var gcomment = create_gcomment (m.get_dbus_name (), m.documentation, null, true);
 			current_dbus_member.comment = gcomment;
 			current_dbus_interface.add_method (current_dbus_member);
 		}
