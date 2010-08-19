@@ -454,7 +454,13 @@ public class Vala.Assignment : Expression {
 			bool instance = (field != null && field.binding == MemberBinding.INSTANCE)
 				|| (property != null && property.binding == MemberBinding.INSTANCE);
 
-			if (instance) {
+			if (field != null) {
+				// always process full lvalue
+				// current codegen depends on it
+				// should be removed when moving codegen from
+				// visit_assignment to emit_store_field
+				ma.emit (codegen);
+			} else if (instance) {
 				ma.inner.emit (codegen);
 			}
 		} else if (ea != null) {
