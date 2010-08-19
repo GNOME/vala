@@ -165,13 +165,15 @@ public class Gtkdoc.Generator : Api.Visitor {
 		return gcomment;
 	}
 
-	private void add_comment (string filename, string symbol, Comment? comment, bool short_description = false) {
+	private GComment? add_comment (string filename, string symbol, Comment? comment, bool short_description = false) {
 		if (comment == null) {
-			return;
+			return null;
 		}
 
 		var file_data = get_file_data (filename);
-		file_data.comments.add (create_gcomment (symbol, comment, short_description));
+		var gcomment = create_gcomment (symbol, comment, short_description);
+		file_data.comments.add (gcomment);
+		return gcomment;
 	}
 
 	private GComment? add_symbol (string filename, string cname, Comment? comment = null, string? symbol = null, bool title = false, bool short_description = false, string[]? returns_annotations = null) {
@@ -443,18 +445,17 @@ public class Gtkdoc.Generator : Api.Visitor {
 		if (current_dbus_interface != null && sig.is_dbus_visible) {
 			current_dbus_member = new DBus.Member (sig.get_dbus_name ());
 		}
-		// gtkdoc maps parameters by their ordering, so let's customly add the first parameter
-		add_custom_header (to_lower_case (((Api.Node)sig.parent).name), "", null);
 
 		sig.accept_all_children (this);
 
 		var name = sig.get_cname().replace ("_", "-");
-		add_comment (sig.get_filename(), "%s::%s".printf (current_cname, name), sig.documentation);
+		var gcomment = add_comment (sig.get_filename(), "%s::%s".printf (current_cname, name), sig.documentation);
+		// gtkdoc maps parameters by their ordering, so let's customly add the first parameter
+		gcomment.headers.insert (0, new Header ("@%s".printf (to_lower_case (((Api.Node)sig.parent).name)),
+												"the %s".printf (get_docbook_link (sig.parent))));
 		if (current_dbus_interface != null && sig.is_dbus_visible) {
-			// remove the custom header
-			remove_custom_header (to_lower_case (((Api.Node)sig.parent).name));
-			var gcomment = create_gcomment (sig.get_dbus_name (), sig.documentation, false, null, true);
-			current_dbus_member.comment = gcomment;
+			var dbuscomment = create_gcomment (sig.get_dbus_name (), sig.documentation, false, null, true);
+			current_dbus_member.comment = dbuscomment;
 			current_dbus_interface.add_signal (current_dbus_member);
 		}
 
@@ -524,7 +525,6 @@ public class Gtkdoc.Generator : Api.Visitor {
 			var iter = gcomment.headers.iterator ();
 			while (iter.next ()) {
 				// remove parameters from _finish
-				message(iter.get().name);
 				if (iter.get().name.has_prefix ("@")) {
 					iter.remove ();
 				}
