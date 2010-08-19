@@ -3571,6 +3571,10 @@ namespace GLib {
 	public static GLib.HashFunc direct_hash;
 	[CCode (cname = "g_direct_equal")]
 	public static GLib.EqualFunc direct_equal;
+	[CCode (cname = "g_int64_hash")]
+	public static GLib.HashFunc int64_hash;
+	[CCode (cname = "g_int64_equal")]
+	public static GLib.EqualFunc int64_equal;
 	[CCode (cname = "g_int_hash")]
 	public static GLib.HashFunc int_hash;
 	[CCode (cname = "g_int_equal")]
