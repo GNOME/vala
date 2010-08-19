@@ -185,6 +185,7 @@ dist_vapi_DATA = \
 	purple.vapi \
 	raptor.vapi \
 	rasqal.vapi \
+	rasqal.deps \
 	readline.vapi \
 	rest-0.6.deps \
 	rest-0.6.vapi \
