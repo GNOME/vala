@@ -46,7 +46,11 @@ public class Valadoc.Api.Class : TypeSymbol {
 	}
 
 	public string? get_cname () {
-		return this.vclass.get_cname();
+		return this.vclass.get_cname ();
+	}
+
+	public string? get_type_id () {
+		return this.vclass.get_type_id ();
 	}
 
 	public string? get_ref_function_cname () {

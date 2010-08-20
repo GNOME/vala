@@ -202,7 +202,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 		return gcomment;
 	}
 
-	private GComment add_comment (string filename, string symbol, Comment? comment) {
+	private GComment add_comment (string filename, string symbol, Comment? comment = null) {
 		var file_data = get_file_data (filename);
 		var gcomment = create_gcomment (symbol, comment);
 		file_data.comments.add (gcomment);
@@ -328,6 +328,8 @@ public class Gtkdoc.Generator : Api.Visitor {
 			current_dbus_interface = new DBus.Interface (settings.pkg_name, cl.get_dbus_name ());
 		}
 
+		var gcomment = add_symbol (cl.get_filename(), cl.get_type_id());
+		gcomment.brief_comment = "The type for %s.".printf (get_docbook_link (cl));
 
 		cl.accept_all_children (this);
 
@@ -339,20 +341,63 @@ public class Gtkdoc.Generator : Api.Visitor {
 			dbus_interfaces.add (current_dbus_interface);
 		}
 
+		if (cl.is_fundamental && cl.base_type == null) {
+			var filename = cl.get_filename ();
+
+			// ref
+			current_headers.clear ();
+			add_custom_header ("instance", "a %s.".printf (get_docbook_link (cl)));
+			gcomment = add_symbol (filename, cl.get_ref_function_cname ());
+			gcomment.brief_comment = "Increases the reference count of @object.";
+			gcomment.returns = "the same @object";
+
+			// unref
+			current_headers.clear ();
+			add_custom_header ("instance", "a %s.".printf (get_docbook_link (cl)));
+			gcomment = add_symbol (filename, cl.get_unref_function_cname ());
+			gcomment.brief_comment = "Decreases the reference count of @object. When its reference count drops to 0, the object is finalized (i.e. its memory is freed).";
+
+			// param_spec
+			current_headers.clear ();
+			add_custom_header ("name", "canonical name of the property specified");
+			add_custom_header ("nick", "nick name for the property specified");
+			add_custom_header ("blurb", "description of the property specified");
+			add_custom_header ("object_type", "%s derived type of this property".printf (get_docbook_type_link (cl)));
+			add_custom_header ("flags", "flags for the property specified");
+			gcomment = add_symbol (filename, cl.get_param_spec_function_cname ());
+			gcomment.brief_comment = "Creates a new <link linkend=\"GParamSpecBoxed\"><type>GParamSpecBoxed</type></link> instance specifying a %s derived property.".printf (get_docbook_type_link (cl));
+			gcomment.long_comment = "See <link linkend=\"g-param-spec-internal\"><function>g_param_spec_internal()</function></link> for details on property names.";
+
+			// value_set
+			current_headers.clear ();
+			add_custom_header ("value", "a valid <link linkend=\"GValue\"><type>GValue</type></link> of %s derived type".printf (get_docbook_type_link (cl)));
+			add_custom_header ("v_object", "object value to be set");
+			gcomment = add_symbol (filename, cl.get_set_value_function_cname ());
+			gcomment.brief_comment = "Set the contents of a %s derived <link linkend=\"GValue\"><type>GValue</type></link> to @v_object.".printf (get_docbook_type_link (cl));
+			gcomment.long_comment = "<link linkend=\"%s\"><function>%s()</function></link> increases the reference count of @v_object (the <link linkend=\"GValue\"><type>GValue</type></link> holds a reference to @v_object). If you do not wish to increase the reference count of the object (i.e. you wish to pass your current reference to the <link linkend=\"GValue\"><type>GValue</type></link> because you no longer need it), use <link linkend=\"%s\"><function>%s()</function></link> instead.
+
+It is important that your <link linkend=\"GValue\"><type>GValue</type></link> holds a reference to @v_object (either its own, or one it has taken) to ensure that the object won't be destroyed while the <link linkend=\"GValue\"><type>GValue</type></link> still exists).".printf (to_docbook_id (cl.get_set_value_function_cname ()), cl.get_set_value_function_cname (), to_docbook_id (cl.get_take_value_function_cname ()), cl.get_take_value_function_cname ());
+
+			// value_get
+			current_headers.clear ();
+			add_custom_header ("value", "a valid <link linkend=\"GValue\"><type>GValue</type></link> of %s derived type".printf (get_docbook_type_link (cl)));
+			gcomment = add_symbol (filename, cl.get_get_value_function_cname ());
+			gcomment.brief_comment = "Get the contents of a %s derived <link linkend=\"GValue\"><type>GValue</type></link>.".printf (get_docbook_type_link (cl));
+			gcomment.returns = "object contents of @value";
+
+			// value_take
+			current_headers.clear ();
+			add_custom_header ("value", "a valid <link linkend=\"GValue\"><type>GValue</type></link> of %s derived type".printf (get_docbook_type_link (cl)));
+			add_custom_header ("v_object", "object value to be set");
+			gcomment = add_symbol (filename, cl.get_take_value_function_cname ());
+			gcomment.brief_comment = "Sets the contents of a %s derived <link linkend=\"GValue\"><type>GValue</type></link> to @v_object and takes over the ownership of the callers reference to @v_object; the caller doesn't have to unref it any more (i.e. the reference count of the object is not increased).".printf (get_docbook_type_link (cl));
+			gcomment.long_comment = "If you want the GValue to hold its own reference to @v_object, use <link linkend=\"%s\"><function>%s()</function></link> instead.".printf (to_docbook_id (cl.get_set_value_function_cname ()), cl.get_set_value_function_cname ());
+		}
+
 		current_cname = old_cname;
 		current_headers = old_headers;
 		current_class = old_class;
 		current_dbus_interface = old_dbus_interface;
-
-		if (cl.is_fundamental && cl.base_type == null) {
-			var filename = cl.get_filename ();
-			add_symbol (filename, cl.get_ref_function_cname ());
-			add_symbol (filename, cl.get_unref_function_cname ());
-			add_symbol (filename, cl.get_param_spec_function_cname ());
-			add_symbol (filename, cl.get_set_value_function_cname ());
-			add_symbol (filename, cl.get_get_value_function_cname ());
-			add_symbol (filename, cl.get_take_value_function_cname ());
-		}
 	}
 
 	public override void visit_struct (Api.Struct st) {
@@ -578,7 +623,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 			if (!m.is_static) {
 				finish_gcomment.headers.add (new Header ("self", "the %s instance".printf (get_docbook_link (m.parent))));
 			}
-			finish_gcomment.headers.add (new Header ("_res_", "a GAsyncResult"));
+			finish_gcomment.headers.add (new Header ("_res_", "a <link linkend=\"GAsyncResult\"><type>GAsyncResult</type></link>"));
 			if (error_header != null) {
 				finish_gcomment.headers.add (error_header);
 			}

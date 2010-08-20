@@ -75,6 +75,10 @@ namespace Gtkdoc {
 		return null;
 	}
 
+	public string get_docbook_type_link (Api.Class cls) {
+		return """<link linkend="%s:CAPS"><literal>%s</literal></link>""".printf (to_docbook_id (cls.get_type_id ()), cls.get_type_id ());
+	}
+
 	public string? get_docbook_link (Api.Item item, bool is_dbus = false, bool is_async_finish = false) {
 		if (item is Api.Method) {
 			string name;
