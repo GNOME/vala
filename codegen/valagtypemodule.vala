@@ -526,7 +526,7 @@ public class Vala.GTypeModule : GErrorModule {
 		bool is_gtypeinstance = !cl.is_compact;
 		bool is_fundamental = is_gtypeinstance && cl.base_class == null;
 
-		if (cl.get_cname().len () < 3) {
+		if (cl.get_cname().length < 3) {
 			cl.error = true;
 			Report.error (cl.source_reference, "Class name `%s' is too short".printf (cl.get_cname ()));
 			return;
@@ -1937,7 +1937,7 @@ public class Vala.GTypeModule : GErrorModule {
 	public override void visit_interface (Interface iface) {
 		push_context (new EmitContext (iface));
 
-		if (iface.get_cname().len () < 3) {
+		if (iface.get_cname().length < 3) {
 			iface.error = true;
 			Report.error (iface.source_reference, "Interface name `%s' is too short".printf (iface.get_cname ()));
 			return;

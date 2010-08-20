@@ -595,12 +595,12 @@ public class Vala.Class : ObjectTypeSymbol {
 
 			// remove underscores in some cases to avoid conflicts of type macros
 			if (lower_case_csuffix.has_prefix ("type_")) {
-				lower_case_csuffix = "type" + lower_case_csuffix.offset ("type_".len ());
+				lower_case_csuffix = "type" + lower_case_csuffix.offset ("type_".length);
 			} else if (lower_case_csuffix.has_prefix ("is_")) {
-				lower_case_csuffix = "is" + lower_case_csuffix.offset ("is_".len ());
+				lower_case_csuffix = "is" + lower_case_csuffix.offset ("is_".length);
 			}
 			if (lower_case_csuffix.has_suffix ("_class")) {
-				lower_case_csuffix = lower_case_csuffix.substring (0, lower_case_csuffix.len () - "_class".len ()) + "class";
+				lower_case_csuffix = lower_case_csuffix.substring (0, lower_case_csuffix.length - "_class".length) + "class";
 			}
 		}
 		return lower_case_csuffix;

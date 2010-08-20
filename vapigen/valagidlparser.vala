@@ -162,20 +162,20 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 
 		if (type_name.has_prefix (ns.name)) {
-			return type_name.offset (ns.name.len ());
+			return type_name.offset (ns.name.length);
 		} else if (ns.name == "GLib" && type_name.has_prefix ("G")) {
 			return type_name.offset (1);
 		} else  {
 			string best_match = null;
 			foreach (string cprefix in ns.get_cprefixes ()) {
 				if (type_name.has_prefix (cprefix)) {
-					if (best_match == null || cprefix.len () > best_match.len ())
+					if (best_match == null || cprefix.length > best_match.length)
 						best_match = cprefix;
 				}
 			}
 
 			if (best_match != null) {
-				return type_name.offset (best_match.len ());;
+				return type_name.offset (best_match.length);;
 			}
 		}
 
@@ -184,7 +184,7 @@ public class Vala.GIdlParser : CodeVisitor {
 
 	private string fix_const_name (string const_name, Namespace ns) {
 		if (const_name.has_prefix (ns.name.up () + "_")) {
-			return const_name.offset (ns.name.len () + 1);
+			return const_name.offset (ns.name.length + 1);
 		} else if (ns.name == "GLib" && const_name.has_prefix ("G_")) {
 			return const_name.offset (2);
 		}
@@ -1010,7 +1010,7 @@ public class Vala.GIdlParser : CodeVisitor {
 
 			if (common_prefix == null) {
 				common_prefix = value.name;
-				while (common_prefix.len () > 0 && !common_prefix.has_suffix ("_")) {
+				while (common_prefix.length > 0 && !common_prefix.has_suffix ("_")) {
 					// FIXME: could easily be made faster
 					common_prefix = common_prefix.ndup (common_prefix.size () - 1);
 				}
@@ -1019,8 +1019,8 @@ public class Vala.GIdlParser : CodeVisitor {
 					common_prefix = common_prefix.ndup (common_prefix.size () - 1);
 				}
 			}
-			while (common_prefix.len () > 0 && (!common_prefix.has_suffix ("_") ||
-			       (value.name.offset (common_prefix.length).get_char ().isdigit ()) && (value.name.len () - common_prefix.len ()) <= 1)) {
+			while (common_prefix.length > 0 && (!common_prefix.has_suffix ("_") ||
+			       (value.name.offset (common_prefix.length).get_char ().isdigit ()) && (value.name.length - common_prefix.length) <= 1)) {
 				// enum values may not consist solely of digits
 				common_prefix = common_prefix.ndup (common_prefix.size () - 1);
 			}
@@ -1084,7 +1084,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 
 			if (!is_hidden) {
-				var ev = new EnumValue (value2.name.offset (common_prefix.len ()), null);
+				var ev = new EnumValue (value2.name.offset (common_prefix.length), null);
 				en.add_value (ev);
 			}
 		}
@@ -1456,7 +1456,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 			
 			if (n.has_prefix ("const-")) {
-				n = n.offset ("const-".len ());
+				n = n.offset ("const-".length);
 			}
 
 			if (type_node.is_pointer &&
@@ -1567,7 +1567,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				var nv = attr.split ("=", 2);
 
 				if (nv[0] == "cprefix") {
-					type.unresolved_symbol = new UnresolvedSymbol (null, n.offset (eval (nv[1]).len ()));
+					type.unresolved_symbol = new UnresolvedSymbol (null, n.offset (eval (nv[1]).length));
 				} else if (nv[0] == "name") {
 					type.unresolved_symbol = new UnresolvedSymbol (null, eval (nv[1]));
 				} else if (nv[0] == "namespace") {
@@ -1589,7 +1589,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 
 		if (n.has_prefix (current_namespace.name)) {
-			type.unresolved_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, current_namespace.name), n.offset (current_namespace.name.len ()));
+			type.unresolved_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, current_namespace.name), n.offset (current_namespace.name.length));
 		} else if (n.has_prefix ("G")) {
 			type.unresolved_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, "GLib"), n.offset (1));
 		} else {
@@ -1622,7 +1622,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 
 		if (type_arg.has_prefix ("unowned ")) {
-			type_arg = type_arg.offset ("unowned ".len ());
+			type_arg = type_arg.offset ("unowned ".length);
 			is_unowned = true;
 		}
 
@@ -1649,7 +1649,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			if (m.name == "new") {
 				m.name = null;
 			} else if (m.name.has_prefix ("new_")) {
-				m.name = m.name.offset ("new_".len ());
+				m.name = m.name.offset ("new_".length);
 			}
 			// For classes, check whether a creation method return type equals to the
 			// type of the class created. If the types do not match (e.g. in most
@@ -1806,7 +1806,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					// class method
 					m.binding = MemberBinding.CLASS;
 					if (m.name.has_prefix ("class_")) {
-						m.name = m.name.substring ("class_".len (), m.name.len () - "class_".len ());
+						m.name = m.name.substring ("class_".length, m.name.length - "class_".length);
 					}
 					continue;
 				} else {
@@ -1949,7 +1949,7 @@ public class Vala.GIdlParser : CodeVisitor {
 							p.initializer = new StringLiteral ("\"\"", param_type.source_reference);
 						} else {
 							unowned string endptr;
-							unowned string val_end = val.offset (val.len ());
+							unowned string val_end = val.offset (val.length);
 
 							val.to_long (out endptr);
 							if ((long)endptr == (long)val_end) {
@@ -2086,7 +2086,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		
 		string i = name;
 		
-		while (i.len () > 0) {
+		while (i.length > 0) {
 			unichar c = i.get_char ();
 			if (c == '-') {
 				str.append_c ('_');
@@ -2378,7 +2378,7 @@ public class Vala.GIdlParser : CodeVisitor {
 
 		GLib.SList<string> attr_list = new GLib.SList<string> ();
 		var attr = new GLib.StringBuilder.sized (attributes.size ());
-		var attributes_len = attributes.len ();
+		var attributes_len = attributes.length;
 		unowned string remaining = attributes;
 		bool quoted = false, escaped = false;
 		for (int b = 0 ; b < attributes_len ; b++) {

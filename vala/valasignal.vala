@@ -174,7 +174,7 @@ public class Vala.Signal : Symbol, Lockable {
 		
 		string i = get_cname ();
 		
-		while (i.len () > 0) {
+		while (i.length > 0) {
 			unichar c = i.get_char ();
 			if (c == '_') {
 				str.append_c ('-');

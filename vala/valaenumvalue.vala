@@ -48,7 +48,7 @@ public class Vala.EnumValue : Constant {
 
 		string i = name;
 
-		while (i.len () > 0) {
+		while (i.length > 0) {
 			unichar c = i.get_char ();
 			if (c == '_') {
 				str.append_c ('-');

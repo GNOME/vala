@@ -460,7 +460,7 @@ class Vala.Compiler {
 		if (library != null) {
 			if (gir != null) {
 				if (context.profile == Profile.GOBJECT) {
-					long gir_len = gir.len ();
+					long gir_len = gir.length;
 					unowned string? last_hyphen = gir.rchr (gir_len, '-');
 
 					if (last_hyphen == null || !gir.has_suffix (".gir")) {
@@ -541,7 +541,7 @@ class Vala.Compiler {
 	}
 
 	private static bool ends_with_dir_separator (string s) {
-		return Path.is_dir_separator (s.offset (s.len () - 1).get_char ());
+		return Path.is_dir_separator (s.offset (s.length - 1).get_char ());
 	}
 
 	/* ported from glibc */
@@ -586,9 +586,9 @@ class Vala.Compiler {
 				// do nothing
 			} else if (len == 2 && start.has_prefix ("..")) {
 				// back up to previous component, ignore if at root already
-				if (rpath.len () > root_len) {
+				if (rpath.length > root_len) {
 					do {
-						rpath = rpath.substring (0, rpath.len () - 1);
+						rpath = rpath.substring (0, rpath.length - 1);
 					} while (!ends_with_dir_separator (rpath));
 				}
 			} else {
@@ -600,8 +600,8 @@ class Vala.Compiler {
 			}
 		}
 
-		if (rpath.len () > root_len && ends_with_dir_separator (rpath)) {
-			rpath = rpath.substring (0, rpath.len () - 1);
+		if (rpath.length > root_len && ends_with_dir_separator (rpath)) {
+			rpath = rpath.substring (0, rpath.length - 1);
 		}
 
 		if (Path.DIR_SEPARATOR != '/') {

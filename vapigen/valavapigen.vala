@@ -131,7 +131,7 @@ class Vala.VAPIGen : Object {
 				continue;
 			}
 
-			var depsfile = source.substring (0, source.len () - "gi".len ()) + "deps";
+			var depsfile = source.substring (0, source.length - "gi".length) + "deps";
 
 			if (!FileUtils.test (depsfile, FileTest.EXISTS)) continue;
 			

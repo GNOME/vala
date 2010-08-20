@@ -308,7 +308,7 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.VERBATIM_STRING_LITERAL:
 			next ();
 			string raw_string = get_last_string ();
-			string escaped_string = raw_string.substring (3, raw_string.len () - 6).escape ("");
+			string escaped_string = raw_string.substring (3, raw_string.length - 6).escape ("");
 			return new StringLiteral ("\"%s\"".printf (escaped_string), get_src (begin));
 		case TokenType.NULL:
 			next ();
