@@ -25,7 +25,7 @@ using GLib;
 class Vala.VAPICheck : Object {
 	public VAPICheck (string gidlname, CodeContext context = new CodeContext ()) {
 		gidl = new SourceFile (context, gidlname);
-		metadata = new SourceFile (context, gidlname.substring (0, gidlname.len () - 5) + ".metadata");
+		metadata = new SourceFile (context, gidlname.substring (0, gidlname.length - 5) + ".metadata");
 		this.context = context;
 	}
 
@@ -137,7 +137,7 @@ class Vala.VAPICheck : Object {
 				var symbol = tokens[0];
 
 				if (symbol.size () > 0 && !_symbols.contains (symbol)) {
-					var src = new SourceReference (metadata, lineno, 1, lineno, (int)symbol.len ());
+					var src = new SourceReference (metadata, lineno, 1, lineno, (int)symbol.length);
 					Report.error (src, "Symbol `%s' not found".printf (symbol));
 				}
 
