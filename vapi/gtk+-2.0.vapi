@@ -2343,7 +2343,7 @@ namespace Gtk {
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public Menu ();
 		public void attach (Gtk.Widget child, uint left_attach, uint right_attach, uint top_attach, uint bottom_attach);
-		public void attach_to_widget (Gtk.Widget attach_widget, Gtk.MenuDetachFunc detacher);
+		public void attach_to_widget (Gtk.Widget attach_widget, Gtk.MenuDetachFunc? detacher);
 		public void detach ();
 		public unowned Gtk.AccelGroup get_accel_group ();
 		public unowned string get_accel_path ();
