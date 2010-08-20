@@ -1156,6 +1156,10 @@ public class Vala.Scanner {
 							Report.error (new SourceReference (source_file, line, column + token_length_in_chars, line, column + token_length_in_chars), "invalid UTF-8 character");
 						}
 					}
+					if (current < end && begin[0] == '\'' && current[0] != '\'') {
+						// multiple characters in single character literal
+						Report.error (new SourceReference (source_file, line, column + token_length_in_chars, line, column + token_length_in_chars), "invalid character literal");
+					}
 				}
 				if (current < end) {
 					current++;
