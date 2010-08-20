@@ -967,7 +967,10 @@ public class string {
 	[CCode (cname = "g_utf8_next_char")]
 	public unowned string next_char ();
 	[CCode (cname = "g_utf8_get_char")]
-	public unichar get_char ();
+	static unichar utf8_get_char (char* str);
+	public unichar get_char (int index = 0) {
+		return utf8_get_char ((char*) this + index);
+	}
 	[CCode (cname = "g_utf8_get_char_validated")]
 	public unichar get_char_validated (ssize_t max_len = -1);
 	public unowned string offset (long offset) {
