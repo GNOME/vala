@@ -331,6 +331,9 @@ class Vala.Compiler {
 
 		if (context.profile == Profile.GOBJECT) {
 			if (context.has_package ("dbus-glib-1")) {
+				if (!context.deprecated) {
+					Report.warning (null, "D-Bus GLib is deprecated, use GDBus");
+				}
 				context.codegen = new DBusServerModule ();
 			} else {
 				context.codegen = new GDBusServerModule ();
