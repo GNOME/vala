@@ -1193,7 +1193,7 @@ public class Vala.Scanner {
 
 	static bool matches (char* begin, string keyword) {
 		char* keyword_array = (char*) keyword;
-		long len = keyword.len ();
+		long len = keyword.length;
 		for (int i = 0; i < len; i++) {
 			if (begin[i] != keyword_array[i]) {
 				return false;

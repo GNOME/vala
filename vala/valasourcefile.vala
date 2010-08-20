@@ -170,7 +170,7 @@ public class Vala.SourceFile {
 		// filename and basedir are already canonicalized
 		if (filename.has_prefix (context.basedir + "/")) {
 			var basename = Path.get_basename (filename);
-			var subdir = filename.substring (context.basedir.len (), filename.len () - context.basedir.len () - basename.len ());
+			var subdir = filename.substring (context.basedir.length, filename.length - context.basedir.length - basename.length);
 			while (subdir[0] == '/') {
 				subdir = subdir.offset (1);
 			}

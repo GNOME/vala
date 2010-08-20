@@ -282,7 +282,7 @@ public abstract class Vala.Symbol : CodeNode {
 		weak string i = camel_case;
 
 		bool first = true;
-		while (i.len () > 0) {
+		while (i.length > 0) {
 			unichar c = i.get_char ();
 			if (c.isupper () && !first) {
 				/* current character is upper case and
@@ -291,10 +291,10 @@ public abstract class Vala.Symbol : CodeNode {
 				bool prev_upper = t.get_char ().isupper ();
 				t = i.next_char ();
 				bool next_upper = t.get_char ().isupper ();
-				if (!prev_upper || (i.len () >= 2 && !next_upper)) {
+				if (!prev_upper || (i.length >= 2 && !next_upper)) {
 					/* previous character wasn't upper case or
 					 * next character isn't upper case*/
-					long len = result_builder.str.len ();
+					long len = result_builder.str.length;
 					if (len != 1 && result_builder.str.offset (len - 2).get_char () != '_') {
 						/* we're not creating 1 character words */
 						result_builder.append_c ('_');
@@ -323,7 +323,7 @@ public abstract class Vala.Symbol : CodeNode {
 		weak string i = lower_case;
 
 		bool last_underscore = true;
-		while (i.len () > 0) {
+		while (i.length > 0) {
 			unichar c = i.get_char ();
 			if (c == '_') {
 				last_underscore = true;

@@ -307,7 +307,7 @@ public class Vala.GirParser : CodeVisitor {
 	private void calculate_common_prefix (ref string common_prefix, string cname) {
 		if (common_prefix == null) {
 			common_prefix = cname;
-			while (common_prefix.len () > 0 && !common_prefix.has_suffix ("_")) {
+			while (common_prefix.length > 0 && !common_prefix.has_suffix ("_")) {
 				// FIXME: could easily be made faster
 				common_prefix = common_prefix.ndup (common_prefix.size () - 1);
 			}
@@ -316,8 +316,8 @@ public class Vala.GirParser : CodeVisitor {
 				common_prefix = common_prefix.ndup (common_prefix.size () - 1);
 			}
 		}
-		while (common_prefix.len () > 0 && (!common_prefix.has_suffix ("_") ||
-		       (cname.offset (common_prefix.length).get_char ().isdigit ()) && (cname.len () - common_prefix.len ()) <= 1)) {
+		while (common_prefix.length > 0 && (!common_prefix.has_suffix ("_") ||
+		       (cname.offset (common_prefix.length).get_char ().isdigit ()) && (cname.length - common_prefix.length) <= 1)) {
 			// enum values may not consist solely of digits
 			common_prefix = common_prefix.ndup (common_prefix.size () - 1);
 		}
@@ -1018,7 +1018,7 @@ public class Vala.GirParser : CodeVisitor {
 		if (m.name == "new") {
 			m.name = null;
 		} else if (m.name.has_prefix ("new_")) {
-			m.name = m.name.offset ("new_".len ());
+			m.name = m.name.offset ("new_".length);
 		}
 		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "parameters") {
 			start_element ("parameters");

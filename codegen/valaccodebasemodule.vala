@@ -719,7 +719,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		var define = new StringBuilder ("__");
 		
 		var i = filename;
-		while (i.len () > 0) {
+		while (i.length > 0) {
 			var c = i.get_char ();
 			if (c.isalnum  () && c < 0x80) {
 				define.append_unichar (c.toupper ());

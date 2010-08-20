@@ -976,6 +976,7 @@ public class string {
 	public long pointer_to_offset (string pos);
 	[CCode (cname = "g_utf8_prev_char")]
 	public unowned string prev_char ();
+	[Deprecated (replacement = "string.length")]
 	[CCode (cname = "g_utf8_strlen")]
 	public long len (ssize_t max = -1);
 	[CCode (cname = "g_utf8_strchr")]
@@ -1083,7 +1084,7 @@ public class string {
 	public string ndup (size_t n);
 
 	public string substring (long offset, long len = -1) {
-		long string_length = this.len ();
+		long string_length = this.length;
 		if (offset < 0) {
 			offset = string_length + offset;
 			GLib.return_val_if_fail (offset >= 0, null);
@@ -1099,7 +1100,7 @@ public class string {
 	}
 
 	public string slice (long start, long end) {
-		long string_length = this.len ();
+		long string_length = this.length;
 		if (start < 0) {
 			start = string_length + start;
 		}
@@ -1114,7 +1115,7 @@ public class string {
 	}
 
 	public string splice (long start, long end, string? str = null) {
-		long string_length = this.len ();
+		long string_length = this.length;
 		if (start < 0) {
 			start = string_length + start;
 		}
@@ -1162,8 +1163,11 @@ public class string {
 		}
 	}
 
+	[CCode (cname = "g_utf8_strlen")]
+	long utf8_strlen (ssize_t max);
+
 	public long length {
-		get { return this.len (); }
+		get { return this.utf8_strlen (-1); }
 	}
 
 	public uint8[] data {

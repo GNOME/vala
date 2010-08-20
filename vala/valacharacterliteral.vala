@@ -38,7 +38,7 @@ public class Vala.CharacterLiteral : Literal {
 		set {
 			_value = value;
 			
-			if (!value.validate () || (value.len () != 3 && value.next_char ().get_char () != '\\')) {
+			if (!value.validate () || (value.length != 3 && value.next_char ().get_char () != '\\')) {
 				error = true;
 			}
 		}
