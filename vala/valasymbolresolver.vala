@@ -215,7 +215,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 		var unresolved_symbol = ns.namespace_symbol as UnresolvedSymbol;
 		if (unresolved_symbol != null) {
 			ns.namespace_symbol = resolve_symbol (unresolved_symbol);
-			if (ns.namespace_symbol == null) {
+			if (!(ns.namespace_symbol is Namespace)) {
 				ns.error = true;
 				Report.error (ns.source_reference, "The namespace name `%s' could not be found".printf (unresolved_symbol.to_string ()));
 				return;
