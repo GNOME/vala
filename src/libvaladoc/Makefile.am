@@ -1,6 +1,6 @@
 NULL =
 
-globalvapidir = `pkg-config vala-1.0 --variable vapidir`
+globalvapidir = `pkg-config $(VALA_PACKAGE) --variable vapidir`
 
 
 AM_CFLAGS = \
@@ -147,7 +147,7 @@ libvaladocincludedir = $(includedir)/
 
 
 libvaladoc.vala.stamp: $(libvaladoc_la_VALASOURCES)
-	$(VALAC) $(VALAFLAGS) -C -H valadoc-1.0.h --pkg gee-1.0 --pkg vala-1.0 --pkg libgvc --pkg gmodule-2.0 --pkg libgvc --vapidir $(top_srcdir)/src/vapi --pkg config --library valadoc-1.0 --basedir $(top_srcdir)/src/libvaladoc/ --save-temps $^
+	$(VALAC) $(VALAFLAGS) -C -H valadoc-1.0.h --pkg gee-1.0 --pkg $(VALA_PACKAGE) --pkg libgvc --pkg gmodule-2.0 --pkg libgvc --vapidir $(top_srcdir)/src/vapi --pkg config --library valadoc-1.0 --basedir $(top_srcdir)/src/libvaladoc/ --save-temps $^
 	touch $@
 
 
@@ -180,6 +180,10 @@ MAINTAINERCLEANFILES =                        \
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = valadoc-1.0.pc
+
+valadoc-1.0.deps: valadoc-1.0.deps.in
+	cat $^ > $@
+	echo $(VALA_PACKAGE) >> $@
 
 vapidir = $(datadir)/vala/vapi
 vapi_DATA =     \

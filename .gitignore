@@ -9,6 +9,7 @@ Makefile
 *.stamp
 *.gir
 *.vapi
+*.deps
 .deps
 .libs
 

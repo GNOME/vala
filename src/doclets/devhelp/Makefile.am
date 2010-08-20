@@ -37,7 +37,7 @@ libdoclet_la_SOURCES =      \
 
 
 libdoclet.vala.stamp: $(libdoclet_la_VALASOURCES)
-	$(VALAC) -C --vapidir $(top_srcdir)/src/vapi --vapidir $(top_srcdir)/src/libvaladoc --pkg vala-1.0 --pkg gee-1.0 --pkg valadoc-1.0 --basedir . $^
+	$(VALAC) -C --vapidir $(top_srcdir)/src/vapi --vapidir $(top_srcdir)/src/libvaladoc --pkg $(VALA_PACKAGE) --pkg gee-1.0 --pkg valadoc-1.0 --basedir . $^
 	touch $@
 
 
