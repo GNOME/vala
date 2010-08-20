@@ -136,7 +136,7 @@ class Vala.VAPICheck : Object {
 				var tokens = line.split (" ", 2);
 				var symbol = tokens[0];
 
-				if (symbol.size () > 0 && !_symbols.contains (symbol)) {
+				if (symbol.length > 0 && !_symbols.contains (symbol)) {
 					var src = new SourceReference (metadata, lineno, 1, lineno, (int)symbol.length);
 					Report.error (src, "Symbol `%s' not found".printf (symbol));
 				}

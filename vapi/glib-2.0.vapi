@@ -1064,6 +1064,7 @@ public class string {
 		}
 	}
 
+	[Deprecated (replacement = "string.length")]
 	[CCode (cname = "strlen")]
 	public size_t size ();
 
@@ -1133,10 +1134,10 @@ public class string {
 		if (str == null) {
 			str_size = 0;
 		} else {
-			str_size = str.size ();
+			str_size = str.length;
 		}
 
-		string* result = GLib.malloc0 (this.size () - ((char*) end_string - (char*) start_string) + str_size + 1);
+		string* result = GLib.malloc0 (this.length - ((char*) end_string - (char*) start_string) + str_size + 1);
 
 		char* dest = (char*) result;
 
@@ -1146,7 +1147,7 @@ public class string {
 		GLib.Memory.copy (dest, str, str_size);
 		dest += str_size;
 
-		GLib.Memory.copy (dest, end_string, end_string.size ());
+		GLib.Memory.copy (dest, end_string, end_string.length);
 
 		return (owned) result;
 	}
@@ -1175,15 +1176,15 @@ public class string {
 	public uint8[] data {
 		get {
 			unowned uint8[] res = (uint8[]) this;
-			res.length = (int) this.size ();
+			res.length = (int) this.length;
 			return res;
 		}
 	}
 
 	public char[] to_utf8 () {
-		char[] result = new char[this.size () + 1];
+		char[] result = new char[this.length + 1];
 		result.length--;
-		GLib.Memory.copy (result, this, this.size ());
+		GLib.Memory.copy (result, this, this.length);
 		return result;
 	}
 

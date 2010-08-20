@@ -98,7 +98,7 @@ public class Vala.GIdlParser : CodeVisitor {
 	}
 	
 	private void parse_file (SourceFile source_file) {
-		string metadata_filename = "%s.metadata".printf (source_file.filename.ndup (source_file.filename.size () - ".gi".size ()));
+		string metadata_filename = "%s.metadata".printf (source_file.filename.ndup (source_file.filename.length - ".gi".length));
 
 		current_source_file = source_file;
 
@@ -1012,17 +1012,17 @@ public class Vala.GIdlParser : CodeVisitor {
 				common_prefix = value.name;
 				while (common_prefix.length > 0 && !common_prefix.has_suffix ("_")) {
 					// FIXME: could easily be made faster
-					common_prefix = common_prefix.ndup (common_prefix.size () - 1);
+					common_prefix = common_prefix.ndup (common_prefix.length - 1);
 				}
 			} else {
 				while (!value.name.has_prefix (common_prefix)) {
-					common_prefix = common_prefix.ndup (common_prefix.size () - 1);
+					common_prefix = common_prefix.ndup (common_prefix.length - 1);
 				}
 			}
 			while (common_prefix.length > 0 && (!common_prefix.has_suffix ("_") ||
 			       (value.name.offset (common_prefix.length).get_char ().isdigit ()) && (value.name.length - common_prefix.length) <= 1)) {
 				// enum values may not consist solely of digits
-				common_prefix = common_prefix.ndup (common_prefix.size () - 1);
+				common_prefix = common_prefix.ndup (common_prefix.length - 1);
 			}
 		}
 
@@ -2377,7 +2377,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 
 		GLib.SList<string> attr_list = new GLib.SList<string> ();
-		var attr = new GLib.StringBuilder.sized (attributes.size ());
+		var attr = new GLib.StringBuilder.sized (attributes.length);
 		var attributes_len = attributes.length;
 		unowned string remaining = attributes;
 		bool quoted = false, escaped = false;
@@ -2418,7 +2418,7 @@ public class Vala.GIdlParser : CodeVisitor {
 	}
 	
 	private string eval (string s) {
-		return ((s.size () >= 2) && s.has_prefix ("\"") && s.has_suffix ("\"")) ? s.offset (1).ndup (s.size () - 2) : s;
+		return ((s.length >= 2) && s.has_prefix ("\"") && s.has_suffix ("\"")) ? s.offset (1).ndup (s.length - 2) : s;
 	}
 
 	private Signal? parse_signal (IdlNodeSignal sig_node) {

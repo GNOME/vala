@@ -48,7 +48,7 @@ public class Vala.CCodeConstant : CCodeExpression {
 		var builder = new StringBuilder ("\"");
 
 		char* p = _name;
-		char* end = p + _name.size ();
+		char* end = p + _name.length;
 
 		// remove quotes
 		p++;

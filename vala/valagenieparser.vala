@@ -826,7 +826,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 						
 						if (p_expr is StringLiteral) {
 							var s_exp = (StringLiteral) p_expr;
-							var len = s_exp.value.size ();
+							var len = s_exp.value.length;
 							
 							if (len > 2) {
 								string s = "\\n\"";

@@ -309,17 +309,17 @@ public class Vala.GirParser : CodeVisitor {
 			common_prefix = cname;
 			while (common_prefix.length > 0 && !common_prefix.has_suffix ("_")) {
 				// FIXME: could easily be made faster
-				common_prefix = common_prefix.ndup (common_prefix.size () - 1);
+				common_prefix = common_prefix.ndup (common_prefix.length - 1);
 			}
 		} else {
 			while (!cname.has_prefix (common_prefix)) {
-				common_prefix = common_prefix.ndup (common_prefix.size () - 1);
+				common_prefix = common_prefix.ndup (common_prefix.length - 1);
 			}
 		}
 		while (common_prefix.length > 0 && (!common_prefix.has_suffix ("_") ||
 		       (cname.offset (common_prefix.length).get_char ().isdigit ()) && (cname.length - common_prefix.length) <= 1)) {
 			// enum values may not consist solely of digits
-			common_prefix = common_prefix.ndup (common_prefix.size () - 1);
+			common_prefix = common_prefix.ndup (common_prefix.length - 1);
 		}
 	}
 

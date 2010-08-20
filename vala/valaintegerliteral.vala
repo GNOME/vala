@@ -69,13 +69,13 @@ public class Vala.IntegerLiteral : Literal {
 		int l = 0;
 		while (value.has_suffix ("l") || value.has_suffix ("L")) {
 			l++;
-			value = value.ndup (value.size () - 1);
+			value = value.ndup (value.length - 1);
 		}
 
 		bool u = false;
 		if (value.has_suffix ("u") || value.has_suffix ("U")) {
 			u = true;
-			value = value.ndup (value.size () - 1);
+			value = value.ndup (value.length - 1);
 		}
 		
 		int64 n = value.to_int64 ();
