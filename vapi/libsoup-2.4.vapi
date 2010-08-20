@@ -8,8 +8,8 @@ namespace Soup {
 		public Address (string name, uint port);
 		[CCode (has_construct_function = false)]
 		public Address.any (Soup.AddressFamily family, uint port);
-		public static bool equal_by_ip (void* addr1, void* addr2);
-		public static bool equal_by_name (void* addr1, void* addr2);
+		public static bool equal_by_ip ([CCode (type = "void*")] Soup.Address addr1, [CCode (type = "void*")] Soup.Address addr2);
+		public static bool equal_by_name ([CCode (type = "void*")] Soup.Address addr1, [CCode (type = "void*")] Soup.Address addr2);
 		[CCode (has_construct_function = false)]
 		public Address.from_sockaddr (void* sa, int len);
 		public unowned string get_name ();
@@ -100,13 +100,13 @@ namespace Soup {
 		public weak string data;
 		public size_t length;
 		[CCode (has_construct_function = false)]
-		public Buffer (Soup.MemoryUse use, void* data, size_t length);
+		public Buffer (Soup.MemoryUse use, [CCode (type = "void*", array_length_type = "gsize")] uint8[] data);
 		public Soup.Buffer copy ();
 		public void* get_owner ();
 		[CCode (has_construct_function = false)]
 		public Buffer.subbuffer (Soup.Buffer parent, size_t offset, size_t length);
 		[CCode (has_construct_function = false)]
-		public Buffer.with_owner (void* data, size_t length, void* owner, GLib.DestroyNotify owner_dnotify);
+		public Buffer.with_owner ([CCode (type = "void*", array_length_type = "gsize")] uint8[] data, void* owner, GLib.DestroyNotify? owner_dnotify);
 	}
 	[Compact]
 	[CCode (type_id = "SOUP_TYPE_BYTE_ARRAY", cheader_filename = "libsoup/soup.h")]
@@ -241,8 +241,8 @@ namespace Soup {
 		public void set_first_party (...);
 		public void set_flags (Soup.MessageFlags flags);
 		public void set_http_version (Soup.HTTPVersion version);
-		public void set_request (string content_type, Soup.MemoryUse req_use, [CCode (type = "char**", array_length_type = "gsize")] uint8[] req_body);
-		public void set_response (string content_type, Soup.MemoryUse resp_use, [CCode (type = "char**", array_length_type = "gsize")] uint8[] resp_body);
+		public void set_request (string content_type, Soup.MemoryUse req_use, [CCode (type = "const char*", array_length_type = "gsize")] uint8[] req_body);
+		public void set_response (string content_type, Soup.MemoryUse resp_use, [CCode (type = "const char*", array_length_type = "gsize")] uint8[] resp_body);
 		public void set_status (uint status_code);
 		public void set_status_full (uint status_code, string reason_phrase);
 		public void set_uri (Soup.URI uri);
@@ -291,7 +291,7 @@ namespace Soup {
 		public int64 length;
 		[CCode (has_construct_function = false)]
 		public MessageBody ();
-		public void append (Soup.MemoryUse use, void* data, size_t length);
+		public void append (Soup.MemoryUse use, [CCode (type = "gconstpointer", array_length_type = "gsize")] uint8[] data);
 		public void append_buffer (Soup.Buffer buffer);
 		public void complete ();
 		public Soup.Buffer flatten ();
@@ -335,7 +335,6 @@ namespace Soup {
 	[Compact]
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class MessageHeadersIter {
-		public void* dummy;
 		public void init (Soup.MessageHeaders hdrs);
 		public bool next (out unowned string name, out unowned string value);
 	}
@@ -376,7 +375,7 @@ namespace Soup {
 		public void run ();
 		public void run_async ();
 		public void unpause_message (Soup.Message msg);
-		public void* async_context { get; construct; }
+		public GLib.MainContext async_context { get; construct; }
 		[NoAccessorMethod]
 		public Soup.Address @interface { owned get; construct; }
 		public uint port { get; construct; }
@@ -418,7 +417,7 @@ namespace Soup {
 		public Soup.SessionFeature add_feature { owned get; set; }
 		[NoAccessorMethod]
 		public GLib.Type add_feature_by_type { get; set; }
-		public void* async_context { get; construct; }
+		public GLib.MainContext async_context { get; construct; }
 		[NoAccessorMethod]
 		public uint idle_timeout { get; set; }
 		[NoAccessorMethod]
@@ -473,13 +472,13 @@ namespace Soup {
 		public bool is_connected ();
 		public bool is_ssl ();
 		public bool listen ();
-		public Soup.SocketIOStatus read (void* buffer, size_t len, size_t nread, GLib.Cancellable cancellable) throws GLib.Error;
-		public Soup.SocketIOStatus read_until (void* buffer, size_t len, void* boundary, size_t boundary_len, size_t nread, bool got_boundary, GLib.Cancellable cancellable) throws GLib.Error;
+		public Soup.SocketIOStatus read ([CCode (array_length_type = "gsize")] uint8[] buffer, out size_t nread, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public Soup.SocketIOStatus read_until ([CCode (array_length_type = "gsize")] uint8[] buffer, [CCode (array_length_type = "gsize")] uint8[] boundary, out size_t nread, out bool got_boundary, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool start_proxy_ssl (string ssl_host, GLib.Cancellable cancellable);
 		public bool start_ssl (GLib.Cancellable cancellable);
-		public Soup.SocketIOStatus write (void* buffer, size_t len, size_t nwrote, GLib.Cancellable cancellable) throws GLib.Error;
+		public Soup.SocketIOStatus write ([CCode (array_length_type = "gsize")] uint8[] buffer, out size_t nwrote, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[NoAccessorMethod]
-		public void* async_context { get; construct; }
+		public GLib.MainContext async_context { get; construct; }
 		[NoAccessorMethod]
 		public bool is_server { get; }
 		public Soup.Address local_address { get; construct; }
@@ -517,8 +516,8 @@ namespace Soup {
 		public static string decode (string part);
 		public static string encode (string part, string? escape_extra);
 		public bool equal (Soup.URI uri2);
-		public static bool host_equal (void* v1, void* v2);
-		public static uint host_hash (void* key);
+		public static bool host_equal (Soup.URI v1, Soup.URI v2);
+		public static uint host_hash (Soup.URI key);
 		public static string normalize (string part, string unescape_extra);
 		public void set_fragment (string fragment);
 		public void set_host (string host);
@@ -750,8 +749,8 @@ namespace Soup {
 	public delegate void LoggerPrinter (Soup.Logger logger, Soup.LoggerLogLevel level, char direction, string data);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate void MessageHeadersForeachFunc (string name, string value);
-	[CCode (cheader_filename = "libsoup/soup.h", has_target = false)]
-	public delegate void ProxyResolverCallback (Soup.ProxyResolver p1, Soup.Message p2, uint p3, Soup.Address p4, void* p5);
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public delegate void ProxyResolverCallback (Soup.ProxyResolver p1, Soup.Message p2, uint p3, Soup.Address p4);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate void ProxyURIResolverCallback (Soup.ProxyURIResolver resolver, uint status, Soup.URI proxy_uri);
 	[CCode (cheader_filename = "libsoup/soup.h")]
