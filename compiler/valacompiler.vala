@@ -351,6 +351,7 @@ class Vala.Compiler {
 				var rpath = realpath (source);
 				if (run_output || source.has_suffix (".vala") || source.has_suffix (".gs")) {
 					var source_file = new SourceFile (context, rpath);
+					source_file.relative_filename = source;
 
 					if (context.profile == Profile.POSIX) {
 						// import the Posix namespace by default (namespace of backend-specific standard library)
@@ -371,7 +372,10 @@ class Vala.Compiler {
 
 					context.add_source_file (source_file);
 				} else if (source.has_suffix (".vapi") || source.has_suffix (".gir")) {
-					context.add_source_file (new SourceFile (context, rpath, true));
+					var source_file = new SourceFile (context, rpath, true);
+					source_file.relative_filename = source;
+
+					context.add_source_file (source_file);
 				} else if (source.has_suffix (".c")) {
 					context.add_c_source_file (rpath);
 					has_c_files = true;
