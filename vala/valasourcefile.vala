@@ -31,7 +31,12 @@ public class Vala.SourceFile {
 	 */
 	public string filename { get; set; }
 	
-	
+	public string? relative_filename {
+		set {
+			this._relative_filename = value;
+		}
+	}
+
 	/**
 	 * Specifies whether this file is a VAPI package file.
 	 */
@@ -67,7 +72,9 @@ public class Vala.SourceFile {
 	public List<UsingDirective> current_using_directives { get; set; default = new ArrayList<UsingDirective> (); }
 
 	private List<CodeNode> nodes = new ArrayList<CodeNode> ();
-	
+
+	string? _relative_filename;
+
 	private string csource_filename = null;
 	private string cinclude_filename = null;
 
@@ -185,7 +192,11 @@ public class Vala.SourceFile {
 	}
 
 	public string get_relative_filename () {
-		return get_subdir () + Path.get_basename (filename);
+		if (_relative_filename != null) {
+			return _relative_filename;
+		} else {
+			return Path.get_basename (filename);
+		}
 	}
 
 	/**
