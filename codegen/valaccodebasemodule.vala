@@ -2764,7 +2764,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		return destroy_func;
 	}
 
-	protected string generate_destroy_func_wrapper (DataType type) {
+	protected string generate_free_func_wrapper (DataType type) {
 		string destroy_func = "_vala_%s_free".printf (type.data_type.get_cname ());
 
 		if (!add_wrapper (destroy_func)) {
@@ -2789,9 +2789,27 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			free_call.add_argument (new CCodeIdentifier ("self"));
 
 			block.add_statement (new CCodeExpressionStatement (free_call));
-		} else {
+		} else if (cl != null) {
+			assert (cl.free_function_address_of);
+
 			var free_call = new CCodeFunctionCall (new CCodeIdentifier (type.data_type.get_free_function ()));
 			free_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("self")));
+
+			block.add_statement (new CCodeExpressionStatement (free_call));
+		} else {
+			var st = type.data_type as Struct;
+			if (st != null && st.is_disposable ()) {
+				if (!st.has_destroy_function) {
+					generate_struct_destroy_function (st);
+				}
+
+				var destroy_call = new CCodeFunctionCall (new CCodeIdentifier (st.get_destroy_function ()));
+				destroy_call.add_argument (new CCodeIdentifier ("self"));
+				block.add_statement (new CCodeExpressionStatement (destroy_call));
+			}
+
+			var free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
+			free_call.add_argument (new CCodeIdentifier ("self"));
 
 			block.add_statement (new CCodeExpressionStatement (free_call));
 		}
@@ -2839,7 +2857,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 				} else {
 					var cl = type.data_type as Class;
 					if (cl != null && (cl.free_function_address_of || cl.is_gboxed)) {
-						unref_function = generate_destroy_func_wrapper (type);
+						unref_function = generate_free_func_wrapper (type);
 					} else {
 						unref_function = type.data_type.get_free_function ();
 					}
@@ -2848,7 +2866,11 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 				if (type.nullable) {
 					unref_function = type.data_type.get_free_function ();
 					if (unref_function == null) {
-						unref_function = "g_free";
+						if (type.data_type is Struct && ((Struct) type.data_type).is_disposable ()) {
+							unref_function = generate_free_func_wrapper (type);
+						} else {
+							unref_function = "g_free";
+						}
 					}
 				} else {
 					var st = (Struct) type.data_type;
