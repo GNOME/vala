@@ -128,6 +128,17 @@ namespace Gtkdoc {
 		return null;
 	}
 
+	public double get_parameter_pos (Api.Node node, string name) {
+		double pos = 1;
+		foreach (var param in node.get_children_by_type (NodeType.FORMAL_PARAMETER)) {
+			if (param.name == name) {
+				return pos;
+			}
+			pos++;
+		}
+		return -1;
+	}
+
 	public string to_lower_case (string camel) {
 		var builder = new StringBuilder ();
 		bool last_upper = true;

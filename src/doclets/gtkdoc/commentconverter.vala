@@ -24,28 +24,23 @@ using Valadoc;
 using Valadoc.Api;
 using Valadoc.Content;
 
-public class Gtkdoc.Header {
-	public string name;
-	public string[]? annotations;
-	public string? value;
-
-	public Header (string name, string? value = null) {
-		this.name = name;
-		this.value = value;
-	}
-}
-
 public class Gtkdoc.CommentConverter : ContentVisitor {
+	public Api.Node node_reference;
+
 	public bool is_dbus;
 	public string brief_comment;
 	public string long_comment;
 	public string returns;
-	public Gee.List<Header> headers = new Gee.LinkedList<Header> ();
+	public Gee.List<Header> parameters = new Gee.LinkedList<Header> ();
 	public Gee.List<Header> versioning = new Gee.LinkedList<Header> ();
 	public string[] see_also = new string[]{};
 
 	private StringBuilder current_builder = new StringBuilder ();
 	private bool in_brief_comment = true;
+
+	public CommentConverter (Api.Node? node_reference = null) {
+		this.node_reference = node_reference;
+	}
 
 	public void convert (Comment comment, bool is_dbus = false) {
 		this.is_dbus = is_dbus;
@@ -227,8 +222,13 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 
 		t.accept_children (this);
 		if (t is Taglets.Param) {
-			var header = new Header ("@"+((Taglets.Param)t).parameter_name, current_builder.str);
-			headers.add (header);
+			double pos = double.MAX;
+			var param_name = ((Taglets.Param)t).parameter_name;
+			if (node_reference != null) {
+				pos = get_parameter_pos (node_reference, param_name);
+			}
+			var header = new Header (param_name, current_builder.str, pos);
+			parameters.add (header);
 		} else if (t is Taglets.InheritDoc) {
 			((Taglets.InheritDoc)t).produce_content().accept (this);
 		} else if (t is Taglets.Return) {

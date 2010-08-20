@@ -46,6 +46,17 @@ public class Gtkdoc.Generator : Api.Visitor {
 	private DBus.Interface current_dbus_interface;
 	private DBus.Member current_dbus_member;
 
+	private Api.Node? current_method_or_delegate {
+		get {
+			if (current_method != null) {
+				return current_method;
+			} else if (current_delegate != null) {
+				return current_delegate;
+			}
+			return null;
+		}
+	}
+
 	public bool execute (Settings settings, Api.Tree tree) {
 		this.settings = settings;
 		tree.accept (this);
@@ -166,15 +177,13 @@ public class Gtkdoc.Generator : Api.Visitor {
 		}
 
 		var gcomment = create_gcomment ("SECTION:%s".printf (get_section (filename)), comment);
-		if (gcomment.brief_comment != null) {
-			gcomment.headers.insert (0, new Header ("@short_description", gcomment.brief_comment));
-			gcomment.brief_comment = null;
-		}
+		gcomment.short_description = true;
 		file_data.section_comment = gcomment;
 	}
 
 	private GComment create_gcomment (string symbol, Comment? comment, string[]? returns_annotations = null, bool is_dbus = false) {
-		var converter = new Gtkdoc.CommentConverter ();
+		var converter = new Gtkdoc.CommentConverter (current_method_or_delegate);
+
 		if (comment != null) {
 			converter.convert (comment, is_dbus);
 		}
@@ -188,7 +197,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 		gcomment.brief_comment = converter.brief_comment;
 		gcomment.long_comment = converter.long_comment;
 
-		gcomment.headers.add_all (merge_headers (converter.headers, current_headers));
+		gcomment.headers.add_all (merge_headers (converter.parameters, current_headers));
 		gcomment.versioning.add_all (converter.versioning);
 		return gcomment;
 	}
@@ -210,37 +219,37 @@ public class Gtkdoc.Generator : Api.Visitor {
 		return gcomment;
 	}
 
-	private Header? add_custom_header (string name, string? comment, string[]? annotations = null) {
+	private Header? add_custom_header (string name, string? comment, string[]? annotations = null, double pos = double.MAX) {
 		if (comment == null && annotations == null) {
 			return null;
 		}
 
-		var header = new Header ("@"+name);
+		var header = new Header (name, comment, pos);
 		header.annotations = annotations;
-		header.value = comment;
 		current_headers.add (header);
 		return header;
 	}
 
-	private void remove_custom_header (string name) {
-		var header_name = "@%s".printf (name);
+	private Header? remove_custom_header (string name) {
 		var it = current_headers.iterator();
 		while (it.next ()) {
 			var header = it.@get ();
-			if (header.name == header_name) {
+			if (header.name == name) {
 				it.remove ();
-				break;
+				return header;
 			}
 		}
+		return null;
 	}
 
-	private Header? add_header (string name, Comment? comment, string[]? annotations = null) {
+	private Header? add_header (string name, Comment? comment, string[]? annotations = null, double pos = double.MAX) {
 		if (comment == null && annotations == null) {
 			return null;
 		}
 
-		var converter = new Gtkdoc.CommentConverter ();
-		var header = new Header ("@"+name);
+		var converter = new Gtkdoc.CommentConverter (current_method_or_delegate);
+		var header = new Header (name);
+		header.pos = pos;
 
 		if (comment != null) {
 			converter.convert (comment);
@@ -363,7 +372,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 	}
 
 	public override void visit_error_domain (Api.ErrorDomain edomain) {
-		if (current_method != null || current_delegate != null) {
+		if (current_method_or_delegate != null) {
 			// method throws error
 			Header? param_header = null;
 			foreach (var header in current_headers) {
@@ -373,7 +382,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 				}
 			}
 			if (param_header == null) {
-				add_custom_header ("error", "location to store the error occuring, or %NULL to ignore", {"error-domains %s".printf (edomain.get_cname ())});
+				add_custom_header ("error", "location to store the error occuring, or %NULL to ignore", {"error-domains %s".printf (edomain.get_cname ())}, double.MAX-1);
 			} else {
 				// assume the only annotation is error-domains
 				var annotation = param_header.annotations[0];
@@ -422,14 +431,14 @@ public class Gtkdoc.Generator : Api.Visitor {
 
 		if (prop.getter != null && !prop.getter.is_private && prop.getter.is_get) {
 			var gcomment = add_symbol (prop.get_filename(), prop.getter.get_cname ());
-			gcomment.headers.add (new Header ("@self", "the %s instance to query".printf (get_docbook_link (prop.parent))));
+			gcomment.headers.add (new Header ("self", "the %s instance to query".printf (get_docbook_link (prop.parent)), 1));
 			gcomment.returns = "the value of the %s property".printf (get_docbook_link (prop));
 		}
 
 		if (prop.setter != null && !prop.setter.is_private && prop.setter.is_set) {
 			var gcomment = add_symbol (prop.get_filename(), prop.setter.get_cname ());
-			gcomment.headers.insert (0, new Header ("@self", "the %s instance to modify".printf (get_docbook_link (prop.parent))));
-			gcomment.headers.add (new Header ("@value", "the new value of the %s property".printf (get_docbook_link (prop))));
+			gcomment.headers.add (new Header ("self", "the %s instance to modify".printf (get_docbook_link (prop.parent)), 1));
+			gcomment.headers.add (new Header ("value", "the new value of the %s property".printf (get_docbook_link (prop)), 2));
 		}
 	}
 
@@ -482,8 +491,8 @@ public class Gtkdoc.Generator : Api.Visitor {
 		var name = sig.get_cname().replace ("_", "-");
 		var gcomment = add_comment (sig.get_filename(), "%s::%s".printf (current_cname, name), sig.documentation);
 		// gtkdoc maps parameters by their ordering, so let's customly add the first parameter
-		gcomment.headers.insert (0, new Header ("@%s".printf (to_lower_case (((Api.Node)sig.parent).name)),
-												"the %s instance that received the signal".printf (get_docbook_link (sig.parent))));
+		gcomment.headers.insert (0, new Header (to_lower_case (((Api.Node)sig.parent).name),
+												   "the %s instance that received the signal".printf (get_docbook_link (sig.parent)), 0.1));
 		if (current_dbus_interface != null && sig.is_dbus_visible) {
 			var dbuscomment = create_gcomment (sig.get_dbus_name (), sig.documentation, null, true);
 			current_dbus_member.comment = dbuscomment;
@@ -523,6 +532,10 @@ public class Gtkdoc.Generator : Api.Visitor {
 			current_dbus_member = new DBus.Member (m.get_dbus_name ());
 		}
 
+		if (!m.is_static && !m.is_constructor) {
+			add_custom_header ("self", "the %s instance".printf (get_docbook_link (m.parent)), null, 0.1);
+		}
+
 		m.accept_all_children (this);
 
 		Header error_header = null;
@@ -530,19 +543,10 @@ public class Gtkdoc.Generator : Api.Visitor {
 		if (m.is_yields) {
 			add_custom_header ("_callback_", "callback to call when the request is satisfied", {"scope async"});
 			add_custom_header ("_user_data_", "the data to pass to @_callback_ function", {"closure"});
-			gcomment = add_symbol (m.get_filename(), m.get_cname (), m.documentation);
-
 			// remove error from here, put that in the _finish function
-			var it = gcomment.headers.iterator ();
-			while (it.next ()) {
-				var header = it.get ();
-				if (header.name == "@error") {
-					error_header = header;
-					it.remove ();
-					break;
-				}
-			}
+			error_header = remove_custom_header ("error");
 
+			gcomment = add_symbol (m.get_filename(), m.get_cname (), m.documentation);
 			gcomment.returns = null; // async method has no return value
 			var see_also = gcomment.see_also; // vala bug
 			see_also += get_docbook_link (m, false, true);
@@ -551,9 +555,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 			gcomment = add_symbol (m.get_filename(), m.get_cname (), m.documentation, null, annotations);
 		}
 
-		if (!m.is_static && !m.is_constructor) {
-			gcomment.headers.insert (0, new Header ("@self", "the %s instance".printf (get_docbook_link (m.parent))));
-		}
+		remove_custom_header ("self");
 
 		if (current_dbus_interface != null && m.is_dbus_visible && !m.is_constructor) {
 			if (m.return_type != null && m.return_type.data_type != null) {
@@ -571,19 +573,12 @@ public class Gtkdoc.Generator : Api.Visitor {
 
 		if (m.is_yields) {
 			var finish_gcomment = add_symbol (m.get_filename(), m.get_finish_function_cname (), m.documentation);
-
-			var iter = finish_gcomment.headers.iterator ();
-			while (iter.next ()) {
-				// remove parameters from _finish
-				if (iter.get().name.has_prefix ("@")) {
-					iter.remove ();
-				}
-			}
+			finish_gcomment.headers.clear ();
 
 			if (!m.is_static) {
-				finish_gcomment.headers.add (new Header ("@self", "the %s instance".printf (get_docbook_link (m.parent))));
+				finish_gcomment.headers.add (new Header ("self", "the %s instance".printf (get_docbook_link (m.parent))));
 			}
-			finish_gcomment.headers.add (new Header ("@_res_", "a GAsyncResult"));
+			finish_gcomment.headers.add (new Header ("_res_", "a GAsyncResult"));
 			if (error_header != null) {
 				finish_gcomment.headers.add (error_header);
 			}
@@ -615,7 +610,8 @@ public class Gtkdoc.Generator : Api.Visitor {
 
 		if (param.parameter_type.data_type is Api.Array) {
 			annotations += "array length=%s_length1".printf (param.name);
-			add_custom_header ("%s_length1".printf (param.name), "length of the @%s array".printf (param.name));
+			add_custom_header ("%s_length1".printf (param.name), "length of the @%s array".printf (param.name),
+							   null, get_parameter_pos (current_method_or_delegate, param.name)+0.1);
 		}
 
 		if (get_cname (param.parameter_type.data_type) == "GError") {
@@ -626,12 +622,14 @@ public class Gtkdoc.Generator : Api.Visitor {
 			// gtkdoc writes arg0, arg1 which is ugly. As a workaround, we always add an header for them.
 			add_custom_header (param.name, "", null);
 		} else {
-			add_header (param.name, param.documentation, annotations);
+			add_header (param.name, param.documentation, annotations,
+						get_parameter_pos (current_method_or_delegate, param.name));
 		}
 
 		if (param.parameter_type.data_type is Api.Delegate) {
-			add_custom_header ("%s_target".printf (param.name), "user data to pass to @%s".printf (param.name), {"allow-none", "closure"});
-			add_custom_header ("%s_target_destroy_notify".printf (param.name), "function to call when @%s_target is no longer needed".printf (param.name), {"allow-none"});
+			add_custom_header ("%s_target".printf (param.name), "user data to pass to @%s".printf (param.name),
+							   {"allow-none", "closure"}, get_parameter_pos (current_method_or_delegate, param.name)+0.1);
+			add_custom_header ("%s_target_destroy_notify".printf (param.name), "function to call when @%s_target is no longer needed".printf (param.name), {"allow-none"}, get_parameter_pos (current_method_or_delegate, param.name)+0.2);
 		}
 
 		if (current_dbus_member != null) {

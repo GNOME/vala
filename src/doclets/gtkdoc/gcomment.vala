@@ -20,10 +20,33 @@
 * 	Luca Bruno <lethalman88@gmail.com>
 */
 
+public class Gtkdoc.Header {
+	public string name;
+	public string[]? annotations;
+	public string? value;
+	public double pos;
+
+	public Header (string name, string? value = null, double pos = double.MAX) {
+		this.name = name;
+		this.value = value;
+		this.pos = pos;
+	}
+
+	public int cmp (Header header) {
+		if (pos > header.pos) {
+			return 1;
+		} else if (pos < header.pos) {
+			return -1;
+		}
+		return 0;
+	}
+}
+
 public class Gtkdoc.GComment {
 	public string symbol;
 	public string[] symbol_annotations;
 	public Gee.List<Header> headers = new Gee.LinkedList<Header> ();
+	public bool short_description;
 	public string brief_comment;
 	public string long_comment;
 	public string returns;
@@ -42,8 +65,13 @@ public class Gtkdoc.GComment {
 			}
 		}
 
+		if (short_description && brief_comment != null) {
+			builder.append_printf ("\n * @short_description: %s", commentize (brief_comment));
+		}
+
+		headers.sort ((CompareFunc) Header.cmp);
 		foreach (var header in headers) {
-			builder.append_printf ("\n * %s:", header.name);
+			builder.append_printf ("\n * @%s:", header.name);
 			if (header.annotations != null && header.annotations.length > 0) {
 				foreach (var annotation in header.annotations) {
 					builder.append_printf (" (%s)", annotation);
@@ -57,7 +85,7 @@ public class Gtkdoc.GComment {
 			}
 		}
 
-		if (brief_comment != null) {
+		if (!short_description && brief_comment != null) {
 			builder.append_printf  ("\n * \n * %s", commentize (brief_comment));
 		}
 		if (long_comment != null) {
@@ -137,12 +165,13 @@ public class Gtkdoc.GComment {
 			builder.append (long_comment);
 		}
 
+		headers.sort ((CompareFunc) Header.cmp);
 		if (headers.size > 0 || returns != null) {
 			builder.append ("""<variablelist role="params">""");
 			foreach (var header in headers) {
 				builder.append_printf ("""<varlistentry><term><parameter>%s</parameter>&#160;:</term>
 <listitem><simpara> %s </simpara></listitem></varlistentry>""",
-									   header.name.offset (1), header.value);
+									   header.name, header.value);
 			}
 			if (returns != null) {
 				builder.append_printf ("""<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term>
