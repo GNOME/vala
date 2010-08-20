@@ -105,9 +105,10 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 			return false;
 		}
 
-		if (!(expression.value_type is IntegerType)
-		    && !(expression.value_type is EnumValueType)
-		    && !expression.value_type.compatible (analyzer.string_type)) {
+		if (expression.value_type == null ||
+		    (!(expression.value_type is IntegerType) &&
+		     !(expression.value_type is EnumValueType) &&
+		     !expression.value_type.compatible (analyzer.string_type))) {
 			Report.error (expression.source_reference, "Integer or string expression expected");
 			error = true;
 			return false;
