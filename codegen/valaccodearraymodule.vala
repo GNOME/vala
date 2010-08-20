@@ -397,8 +397,6 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		List<Expression> indices = expr.get_indices ();
 		int rank = indices.size;
 
-		var container_type = expr.container.value_type.data_type;
-
 		var ccontainer = (CCodeExpression) expr.container.ccodenode;
 		var cindex = (CCodeExpression) indices[0].ccodenode;
 		if (expr.container.symbol_reference is ArrayLengthField) {
@@ -411,16 +409,6 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			} else {
 				Report.error (expr.source_reference, "only integer literals supported as index");
 			}
-		} else if (container_type == string_type.data_type) {
-			// should be moved to a different module
-
-			// access to unichar in a string
-			var coffset = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, ccontainer, cindex);
-
-			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_utf8_get_char"));
-			ccall.add_argument (coffset);
-
-			expr.ccodenode = ccall;
 		} else {
 			// access to element in an array
 			for (int i = 1; i < rank; i++) {

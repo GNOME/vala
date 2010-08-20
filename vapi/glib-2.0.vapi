@@ -964,6 +964,10 @@ public class string {
 	[CCode (cname = "g_strnfill")]
 	public static string nfill (size_t length, char fill_char);
 
+	public char get (long index) {
+		return ((char*) this)[index];
+	}
+
 	[CCode (cname = "g_utf8_next_char")]
 	public unowned string next_char ();
 	[CCode (cname = "g_utf8_get_char")]
