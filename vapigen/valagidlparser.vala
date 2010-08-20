@@ -2164,6 +2164,8 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "1") {
 						prop.get_accessor.value_type.value_owned = true;
 					}
+				} else if (nv[0] == "type_name") {
+					prop.property_type = get_type_from_string (eval (nv[1]));
 				}
 			}
 		}
