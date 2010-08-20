@@ -782,7 +782,8 @@ public class Vala.GObjectModule : GTypeModule {
 	public override void visit_method_call (MethodCall expr) {
 		if (expr.call is MemberAccess) {
 			var ma = expr.call as MemberAccess;
-			if (ma.inner != null && ma.inner.symbol_reference == gobject_type && ma.member_name == "new") {
+			if (ma.inner != null && ma.inner.symbol_reference == gobject_type &&
+			    (ma.member_name == "new" || ma.member_name == "newv")) {
 				// Object.new (...) creation
 				// runtime check to ref_sink the instance if it's a floating type
 				base.visit_method_call (expr);
