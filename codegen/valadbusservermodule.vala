@@ -1488,7 +1488,7 @@ public class Vala.DBusServerModule : DBusClientModule {
 
 			var connect = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_connect"));
 			connect.add_argument (new CCodeIdentifier ("object"));
-			connect.add_argument (sig.get_canonical_cconstant (null));
+			connect.add_argument (sig.get_canonical_cconstant ());
 			connect.add_argument (new CCodeCastExpression (new CCodeIdentifier (generate_dbus_signal_wrapper (sig, sym, dbus_iface_name)), "GCallback"));
 			connect.add_argument (new CCodeIdentifier ("connection"));
 			block.add_statement (new CCodeExpressionStatement (connect));

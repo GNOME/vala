@@ -147,7 +147,37 @@ public class Vala.GSignalModule : GObjectModule {
 		
 		return signature;
 	}
-	
+
+	private CCodeExpression? get_signal_name_cexpression (Signal sig, Expression? detail_expr, CodeNode node) {
+		if (detail_expr == null) {
+			return sig.get_canonical_cconstant ();
+		}
+
+		if (detail_expr.value_type is NullType || !detail_expr.value_type.compatible (string_type)) {
+			node.error = true;
+			Report.error (detail_expr.source_reference, "only string details are supported");
+			return null;
+		}
+
+		if (detail_expr is StringLiteral) {
+			return sig.get_canonical_cconstant (((StringLiteral) detail_expr).eval ());
+		}
+
+		var detail_decl = get_temp_variable (detail_expr.value_type, true, node);
+		temp_vars.insert (0, detail_decl);
+		temp_ref_vars.insert (0, detail_decl);
+
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_strconcat"));
+		ccall.add_argument (sig.get_canonical_cconstant (""));
+		ccall.add_argument ((CCodeExpression) detail_expr.ccodenode);
+		ccall.add_argument (new CCodeConstant ("NULL"));
+
+		var ccomma = new CCodeCommaExpression ();
+		ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (detail_decl.name), ccall));
+		ccomma.append_expression (get_variable_cexpression (detail_decl.name));
+		return ccomma;
+	}
+
 	public override void visit_signal (Signal sig) {
 		// parent_symbol may be null for dynamic signals
 
@@ -457,13 +487,14 @@ public class Vala.GSignalModule : GObjectModule {
 			var sig = (Signal) expr.symbol_reference;
 			var ma = (MemberAccess) expr.container;
 
-			var detail_expr = expr.get_indices ().get (0) as StringLiteral;
-			string signal_detail = detail_expr.eval ();
+			var detail_expr = expr.get_indices ().get (0);
+			var signal_name_cexpr = get_signal_name_cexpression (sig, detail_expr, expr);
 			
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_emit_by_name"));
 			ccall.add_argument ((CCodeExpression) ma.inner.ccodenode);
-			ccall.add_argument (sig.get_canonical_cconstant (signal_detail));
-			
+			if (signal_name_cexpr != null) {
+				ccall.add_argument (signal_name_cexpr);
+			}
 			expr.ccodenode = ccall;
 		} else {
 			base.visit_element_access (expr);
@@ -601,22 +632,21 @@ public class Vala.GSignalModule : GObjectModule {
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (connect_func));
 
-		string signal_detail = null;
+		CCodeExpression signal_name_cexpr = null;
 
 		// first argument: instance of sender
 		MemberAccess ma;
 		if (signal_access is ElementAccess) {
 			var ea = (ElementAccess) signal_access;
 			ma = (MemberAccess) ea.container;
-			var detail_expr = ea.get_indices ().get (0) as StringLiteral;
-			if (detail_expr == null) {
-				expr.error = true;
-				Report.error (detail_expr.source_reference, "internal error: only literal string details supported");
+			var detail_expr = ea.get_indices ().get (0);
+			signal_name_cexpr = get_signal_name_cexpression (sig, detail_expr, expr);
+			if (signal_name_cexpr == null) {
 				return null;
 			}
-			signal_detail = detail_expr.eval ();
 		} else {
 			ma = (MemberAccess) signal_access;
+			signal_name_cexpr = get_signal_name_cexpression (sig, null, expr);
 		}
 		if (ma.inner != null) {
 			ccall.add_argument ((CCodeExpression) get_ccodenode (ma.inner));
@@ -635,12 +665,12 @@ public class Vala.GSignalModule : GObjectModule {
 			// g_signal_connect_object or g_signal_connect
 
 			// second argument: signal name
-			ccall.add_argument (sig.get_canonical_cconstant (signal_detail));
+			ccall.add_argument (signal_name_cexpr);
 		} else {
 			// g_signal_handlers_disconnect_matched
 
 			// second argument: mask
-			if (signal_detail == null) {
+			if (!(signal_access is ElementAccess)) {
 				ccall.add_argument (new CCodeConstant ("G_SIGNAL_MATCH_ID | G_SIGNAL_MATCH_FUNC | G_SIGNAL_MATCH_DATA"));
 			} else {
 				ccall.add_argument (new CCodeConstant ("G_SIGNAL_MATCH_ID | G_SIGNAL_MATCH_DETAIL | G_SIGNAL_MATCH_FUNC | G_SIGNAL_MATCH_DATA"));
@@ -651,12 +681,12 @@ public class Vala.GSignalModule : GObjectModule {
 			var temp_decl = get_temp_variable (uint_type);
 			temp_vars.add (temp_decl);
 			var parse_call = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_parse_name"));
-			parse_call.add_argument (sig.get_canonical_cconstant (signal_detail));
+			parse_call.add_argument (signal_name_cexpr);
 			var decl_type = (TypeSymbol) sig.parent_symbol;
 			parse_call.add_argument (new CCodeIdentifier (decl_type.get_type_id ()));
 			parse_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_decl.name)));
 			LocalVariable? detail_temp_decl = null;
-			if (signal_detail == null) {
+			if (!(signal_access is ElementAccess)) {
 				parse_call.add_argument (new CCodeConstant ("NULL"));
 				parse_call.add_argument (new CCodeConstant ("FALSE"));
 			} else {
