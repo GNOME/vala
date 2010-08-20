@@ -1521,6 +1521,8 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 							var len_expr = new CCodeIdentifier (get_array_length_cname ("result", dim));
 							vcall.add_argument (len_expr);
 						}
+					} else if ((acc.value_type is DelegateType) && ((DelegateType) acc.value_type).delegate_symbol.has_target) {
+						vcall.add_argument (new CCodeIdentifier (get_delegate_target_cname ("result")));
 					}
 
 					block.add_statement (new CCodeReturnStatement (vcall));
@@ -1537,6 +1539,8 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 						var len_expr = new CCodeIdentifier (get_array_length_cname ("value", dim));
 						vcall.add_argument (len_expr);
 					}
+				} else if ((acc.value_type is DelegateType) && ((DelegateType) acc.value_type).delegate_symbol.has_target) {
+					vcall.add_argument (new CCodeIdentifier (get_delegate_target_cname ("value")));
 				}
 
 				block.add_statement (new CCodeExpressionStatement (vcall));
