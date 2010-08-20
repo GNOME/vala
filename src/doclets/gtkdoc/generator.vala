@@ -604,7 +604,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 			annotations += "allow-none";
 		}
 
-		if (param.parameter_type.is_owned) {
+		if (param.parameter_type.is_owned && !(param.parameter_type.data_type is Api.Delegate)) {
 			annotations += "transfer full";
 		}
 
