@@ -17,7 +17,7 @@ namespace Gdk {
 		public void fill (uint32 pixel);
 		public Gdk.Pixbuf flip (bool horizontal);
 		[CCode (has_construct_function = false)]
-		public Pixbuf.from_data ([CCode (array_length = false)] uchar[] data, Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height, int rowstride, Gdk.PixbufDestroyNotify? destroy_fn);
+		public Pixbuf.from_data ([CCode (array_length = false)] uint8[] data, Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height, int rowstride, Gdk.PixbufDestroyNotify? destroy_fn);
 		[CCode (has_construct_function = false)]
 		public Pixbuf.from_file (string filename) throws GLib.Error;
 		[CCode (has_construct_function = false)]
@@ -25,7 +25,7 @@ namespace Gdk {
 		[CCode (has_construct_function = false)]
 		public Pixbuf.from_file_at_size (string filename, int width, int height) throws GLib.Error;
 		[CCode (has_construct_function = false)]
-		public Pixbuf.from_inline (int data_length, [CCode (array_length = false)] uchar[] data, bool copy_pixels) throws GLib.Error;
+		public Pixbuf.from_inline (int data_length, [CCode (array_length = false)] uint8[] data, bool copy_pixels = true) throws GLib.Error;
 		public static unowned Gdk.Pixbuf from_pixdata (Gdk.Pixdata pixdata, bool copy_pixels) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public Pixbuf.from_stream (GLib.InputStream stream, GLib.Cancellable? cancellable) throws GLib.Error;
@@ -42,7 +42,7 @@ namespace Gdk {
 		public int get_n_channels ();
 		public unowned string get_option (string key);
 		[CCode (array_length = false)]
-		public unowned uchar[] get_pixels ();
+		public unowned uint8[] get_pixels ();
 		public int get_rowstride ();
 		public int get_width ();
 		public Gdk.Pixbuf rotate_simple (Gdk.PixbufRotation angle);
@@ -110,7 +110,7 @@ namespace Gdk {
 		public PixbufLoader.with_mime_type (string mime_type) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public PixbufLoader.with_type (string image_type) throws GLib.Error;
-		public bool write ([CCode (array_length = false)] uchar[] buf, size_t count) throws GLib.Error;
+		public bool write ([CCode (array_length_type = "gsize")] uint8[] buf) throws GLib.Error;
 		public virtual signal void area_prepared ();
 		public virtual signal void area_updated (int x, int y, int width, int height);
 		public virtual signal void closed ();
@@ -141,10 +141,10 @@ namespace Gdk {
 		public uint32 width;
 		public uint32 height;
 		[CCode (array_length = false)]
-		public weak uchar[] pixel_data;
-		public bool deserialize ([CCode (array_length_pos = 0.9)] uchar[] stream) throws GLib.Error;
+		public weak uint8[] pixel_data;
+		public bool deserialize ([CCode (array_length_pos = 0.9)] uint8[] stream) throws GLib.Error;
 		public void* from_pixbuf (Gdk.Pixbuf pixbuf, bool use_rle);
-		public unowned uchar[] serialize ();
+		public unowned uint8[] serialize ();
 		public unowned GLib.StringBuilder to_csource (string name, Gdk.PixdataDumpType dump_type);
 	}
 	[CCode (cprefix = "GDK_COLORSPACE_", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
@@ -202,7 +202,7 @@ namespace Gdk {
 		FAILED,
 	}
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
-	public delegate void PixbufDestroyNotify ([CCode (array_length = false)] uchar[] pixels);
+	public delegate void PixbufDestroyNotify ([CCode (array_length = false)] uint8[] pixels);
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public delegate bool PixbufSaveFunc (string buf, size_t count, GLib.Error error);
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
