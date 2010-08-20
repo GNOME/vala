@@ -72,6 +72,7 @@ class Vala.Compiler {
 	static bool nostdpkg;
 	static bool enable_version_header;
 	static bool disable_version_header;
+	static bool fatal_warnings;
 
 	static string entry_point;
 
@@ -109,6 +110,7 @@ class Vala.Compiler {
 		{ "enable-deprecated", 0, 0, OptionArg.NONE, ref deprecated, "Enable deprecated features", null },
 		{ "enable-experimental", 0, 0, OptionArg.NONE, ref experimental, "Enable experimental features", null },
 		{ "disable-warnings", 0, 0, OptionArg.NONE, ref disable_warnings, "Disable warnings", null },
+		{ "fatal-warnings", 0, 0, OptionArg.NONE, ref fatal_warnings, "Treat warnings as fatal", null },
 		{ "enable-experimental-non-null", 0, 0, OptionArg.NONE, ref experimental_non_null, "Enable experimental enhancements for non-null types", null },
 		{ "disable-dbus-transformation", 0, 0, OptionArg.NONE, ref disable_dbus_transformation, "Disable transformation of D-Bus member names", null },
 		{ "cc", 0, 0, OptionArg.STRING, ref cc_command, "Use COMMAND as C compiler command", "COMMAND" },
@@ -129,7 +131,7 @@ class Vala.Compiler {
 		if (context.report.get_errors () == 0 && context.report.get_warnings () == 0) {
 			return 0;
 		}
-		if (context.report.get_errors () == 0) {
+		if (context.report.get_errors () == 0 && (!fatal_warnings || context.report.get_warnings () == 0)) {
 			if (!quiet_mode) {
 				stdout.printf ("Compilation succeeded - %d warning(s)\n", context.report.get_warnings ());
 			}
@@ -325,7 +327,7 @@ class Vala.Compiler {
 			packages = null;
 		}
 		
-		if (context.report.get_errors () > 0) {
+		if (context.report.get_errors () > 0 || (fatal_warnings && context.report.get_warnings () > 0)) {
 			return quit ();
 		}
 
@@ -388,7 +390,7 @@ class Vala.Compiler {
 		}
 		sources = null;
 		
-		if (context.report.get_errors () > 0) {
+		if (context.report.get_errors () > 0 || (fatal_warnings && context.report.get_warnings () > 0)) {
 			return quit ();
 		}
 		
@@ -407,14 +409,14 @@ class Vala.Compiler {
 			}
 		}
 
-		if (context.report.get_errors () > 0) {
+		if (context.report.get_errors () > 0 || (fatal_warnings && context.report.get_warnings () > 0)) {
 			return quit ();
 		}
 		
 		var resolver = new SymbolResolver ();
 		resolver.resolve (context);
 		
-		if (context.report.get_errors () > 0) {
+		if (context.report.get_errors () > 0 || (fatal_warnings && context.report.get_warnings () > 0)) {
 			return quit ();
 		}
 
@@ -433,20 +435,20 @@ class Vala.Compiler {
 			code_writer.write_file (context, dump_tree);
 		}
 
-		if (context.report.get_errors () > 0) {
+		if (context.report.get_errors () > 0 || (fatal_warnings && context.report.get_warnings () > 0)) {
 			return quit ();
 		}
 
 		var flow_analyzer = new FlowAnalyzer ();
 		flow_analyzer.analyze (context);
 
-		if (context.report.get_errors () > 0) {
+		if (context.report.get_errors () > 0 || (fatal_warnings && context.report.get_warnings () > 0)) {
 			return quit ();
 		}
 
 		context.codegen.emit (context);
 
-		if (context.report.get_errors () > 0) {
+		if (context.report.get_errors () > 0 || (fatal_warnings && context.report.get_warnings () > 0)) {
 			return quit ();
 		}
 
