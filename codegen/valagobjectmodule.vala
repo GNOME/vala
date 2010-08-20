@@ -792,11 +792,11 @@ public class Vala.GObjectModule : GTypeModule {
 				temp_vars.add (temp_var);
 				ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), (CCodeExpression) expr.ccodenode));
 
-				var is_floating_ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_is_floating"));
-				is_floating_ccall.add_argument (get_variable_cexpression (temp_var.name));
+				var initiallyunowned_ccall = new CCodeFunctionCall (new CCodeIdentifier ("G_IS_INITIALLY_UNOWNED"));
+				initiallyunowned_ccall.add_argument (get_variable_cexpression (temp_var.name));
 				var sink_ref_ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_ref_sink"));
 				sink_ref_ccall.add_argument (get_variable_cexpression (temp_var.name));
-				ccomma.append_expression (new CCodeConditionalExpression (is_floating_ccall, sink_ref_ccall, get_variable_cexpression (temp_var.name)));
+				ccomma.append_expression (new CCodeConditionalExpression (initiallyunowned_ccall, sink_ref_ccall, get_variable_cexpression (temp_var.name)));
 
 				expr.ccodenode = ccomma;
 				return;
