@@ -194,6 +194,8 @@ public class Vala.GDBusClientModule : GDBusModule {
 			return;
 		}
 
+		source_declarations.add_include ("gio/gio.h");
+
 		// create proxy class
 		string cname = iface.get_cname () + "Proxy";
 		string lower_cname = iface.get_lower_case_cprefix () + "proxy";
