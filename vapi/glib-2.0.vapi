@@ -970,15 +970,17 @@ public class string {
 	public unichar get_char ();
 	[CCode (cname = "g_utf8_get_char_validated")]
 	public unichar get_char_validated (ssize_t max_len = -1);
-	[CCode (cname = "g_utf8_offset_to_pointer")]
-	public unowned string offset (long offset);
-	[CCode (cname = "g_utf8_pointer_to_offset")]
-	public long pointer_to_offset (string pos);
+	public unowned string offset (long offset) {
+		return (string) ((char*) this + offset);
+	}
+	public long pointer_to_offset (string pos) {
+		return (long) ((char*) pos - (char*) this);
+	}
 	[CCode (cname = "g_utf8_prev_char")]
 	public unowned string prev_char ();
 	[Deprecated (replacement = "string.length")]
-	[CCode (cname = "g_utf8_strlen")]
-	public long len (ssize_t max = -1);
+	[CCode (cname = "strlen")]
+	public long len ();
 	[CCode (cname = "g_utf8_strchr")]
 	public unowned string chr (ssize_t len, unichar c);
 	[CCode (cname = "g_utf8_strrchr")]
@@ -1079,7 +1081,6 @@ public class string {
 
 	[CCode (cname = "g_strdup")]
 	public string dup ();
-	// n is size in bytes, not length in characters
 	[CCode (cname = "g_strndup")]
 	public string ndup (size_t n);
 
@@ -1167,7 +1168,8 @@ public class string {
 	long utf8_strlen (ssize_t max);
 
 	public long length {
-		get { return this.utf8_strlen (-1); }
+		[CCode (cname = "strlen")]
+		get;
 	}
 
 	public uint8[] data {

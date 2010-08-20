@@ -415,12 +415,10 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			// should be moved to a different module
 
 			// access to unichar in a string
-			var coffsetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_utf8_offset_to_pointer"));
-			coffsetcall.add_argument (ccontainer);
-			coffsetcall.add_argument (cindex);
+			var coffset = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, ccontainer, cindex);
 
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_utf8_get_char"));
-			ccall.add_argument (coffsetcall);
+			ccall.add_argument (coffset);
 
 			expr.ccodenode = ccall;
 		} else {
