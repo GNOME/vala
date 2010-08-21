@@ -4,6 +4,24 @@
 namespace Soup {
 	[CCode (cprefix = "SoupXMLRPC", lower_case_cprefix = "soup_xmlrpc_")]
 	namespace XMLRPC {
+		[CCode (cprefix = "SOUP_XMLRPC_ERROR_", cheader_filename = "libsoup/soup.h")]
+		public errordomain Error {
+			ARGUMENTS,
+			RETVAL,
+		}
+		[CCode (cprefix = "SOUP_XMLRPC_FAULT_", cheader_filename = "libsoup/soup.h")]
+		public errordomain Fault {
+			PARSE_ERROR_NOT_WELL_FORMED,
+			PARSE_ERROR_UNSUPPORTED_ENCODING,
+			PARSE_ERROR_INVALID_CHARACTER_FOR_ENCODING,
+			SERVER_ERROR_INVALID_XML_RPC,
+			SERVER_ERROR_REQUESTED_METHOD_NOT_FOUND,
+			SERVER_ERROR_INVALID_METHOD_PARAMETERS,
+			SERVER_ERROR_INTERNAL_XML_RPC_ERROR,
+			APPLICATION_ERROR,
+			SYSTEM_ERROR,
+			TRANSPORT_ERROR,
+		}
 		[PrintfFormat]
 		[CCode (cheader_filename = "libsoup/soup.h")]
 		public static unowned string build_fault (int fault_code, string fault_format, ...);
@@ -16,13 +34,13 @@ namespace Soup {
 		[CCode (cheader_filename = "libsoup/soup.h", sentinel = "G_TYPE_INVALID")]
 		public static bool extract_method_call (string method_call, int length, out unowned string method_name, ...);
 		[CCode (cheader_filename = "libsoup/soup.h", sentinel = "G_TYPE_INVALID")]
-		public static bool extract_method_response (string method_response, int length, ...) throws GLib.Error;
+		public static bool extract_method_response (string method_response, int length, ...) throws Soup.XMLRPC.Fault;
 		[CCode (cheader_filename = "libsoup/soup.h")]
 		public static GLib.Quark fault_quark ();
 		[CCode (cheader_filename = "libsoup/soup.h")]
 		public static bool parse_method_call (string method_call, int length, out unowned string method_name, out unowned GLib.ValueArray @params);
 		[CCode (cheader_filename = "libsoup/soup.h")]
-		public static bool parse_method_response (string method_response, int length, GLib.Value value) throws GLib.Error;
+		public static bool parse_method_response (string method_response, int length, GLib.Value value) throws Soup.XMLRPC.Fault;
 		[CCode (cheader_filename = "libsoup/soup.h", sentinel = "G_TYPE_INVALID")]
 		public static unowned Soup.Message request_new (string uri, string method_name, ...);
 		[PrintfFormat]
@@ -747,24 +765,6 @@ namespace Soup {
 		WOULD_BLOCK,
 		EOF,
 		ERROR
-	}
-	[CCode (cprefix = "SOUP_XMLRPC_ERROR_", cheader_filename = "libsoup/soup.h")]
-	public enum XMLRPCError {
-		ARGUMENTS,
-		RETVAL
-	}
-	[CCode (cprefix = "SOUP_XMLRPC_FAULT_", cheader_filename = "libsoup/soup.h")]
-	public enum XMLRPCFault {
-		PARSE_ERROR_NOT_WELL_FORMED,
-		PARSE_ERROR_UNSUPPORTED_ENCODING,
-		PARSE_ERROR_INVALID_CHARACTER_FOR_ENCODING,
-		SERVER_ERROR_INVALID_XML_RPC,
-		SERVER_ERROR_REQUESTED_METHOD_NOT_FOUND,
-		SERVER_ERROR_INVALID_METHOD_PARAMETERS,
-		SERVER_ERROR_INTERNAL_XML_RPC_ERROR,
-		APPLICATION_ERROR,
-		SYSTEM_ERROR,
-		TRANSPORT_ERROR
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate void AddressCallback (Soup.Address addr, uint status);

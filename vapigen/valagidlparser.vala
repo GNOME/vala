@@ -353,6 +353,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			cc = cp.scope.lookup (tok) as Symbol;
 			if ( cc == null ) {
 				cc = new Namespace (tok, current_source_reference);
+				((Namespace) cc).add_cprefix (cp.get_cprefix () + tok);
 				add_symbol_to_container (cp, cc);
 			}
 			cp = cc;
