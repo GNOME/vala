@@ -8,6 +8,8 @@ namespace Gst {
 		public int frame_duration;
 		public int frame_size;
 		public int sample_size;
+		[CCode (has_construct_function = false)]
+		protected BaseRTPAudioPayload ();
 		public Gst.FlowReturn flush (uint payload_len, Gst.ClockTime timestamp);
 		public unowned Gst.Adapter get_adapter ();
 		public Gst.FlowReturn push (uchar data, uint payload_len, Gst.ClockTime timestamp);
@@ -30,6 +32,8 @@ namespace Gst {
 		public weak Gst.Pad srcpad;
 		public weak GLib.Thread thread;
 		public bool thread_running;
+		[CCode (has_construct_function = false)]
+		protected BaseRTPDepayload ();
 		[NoWrapper]
 		public virtual Gst.FlowReturn add_to_queue (Gst.Buffer @in);
 		[NoWrapper]
@@ -62,6 +66,8 @@ namespace Gst {
 		public uint32 ts_base;
 		public int32 ts_offset;
 		public weak GLib.Rand ts_rand;
+		[CCode (has_construct_function = false)]
+		protected BaseRTPPayload ();
 		[NoWrapper]
 		public virtual unowned Gst.Caps get_caps (Gst.Pad pad);
 		[NoWrapper]

@@ -109,6 +109,8 @@ namespace Cogl {
 	}
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public class PangoRenderer : Pango.Renderer {
+		[CCode (has_construct_function = false)]
+		protected PangoRenderer ();
 	}
 	[Compact]
 	[CCode (cheader_filename = "cogl/cogl.h")]

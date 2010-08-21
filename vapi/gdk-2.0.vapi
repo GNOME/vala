@@ -65,6 +65,8 @@ namespace Gdk {
 		public int num_axes;
 		public int num_keys;
 		public Gdk.InputSource source;
+		[CCode (has_construct_function = false)]
+		protected Device ();
 		public static void free_history (Gdk.TimeCoord[] events);
 		public bool get_axis ([CCode (array_length = false)] double[] axes, Gdk.AxisUse use, out double value);
 		public Gdk.AxisUse get_axis_use (uint index);
@@ -104,6 +106,8 @@ namespace Gdk {
 		public weak Gdk.PointerWindowInfo pointer_info;
 		public weak GLib.List queued_events;
 		public weak GLib.List queued_tail;
+		[CCode (has_construct_function = false)]
+		protected Display ();
 		public void add_client_message_filter (Gdk.Atom message_type, Gdk.FilterFunc func);
 		public void beep ();
 		public void close ();
@@ -148,6 +152,8 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class DisplayManager : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected DisplayManager ();
 		public static unowned Gdk.DisplayManager @get ();
 		public unowned Gdk.Display get_default_display ();
 		public GLib.SList<weak Gdk.Display> list_displays ();
@@ -184,6 +190,8 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Drawable : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Drawable ();
 		public unowned Gdk.Image copy_to_image (Gdk.Image image, int src_x, int src_y, int dest_x, int dest_y, int width, int height);
 		[NoWrapper]
 		public virtual unowned Cairo.Surface create_cairo_surface (int width, int height);
@@ -369,6 +377,8 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Keymap : GLib.Object {
 		public weak Gdk.Display display;
+		[CCode (has_construct_function = false)]
+		protected Keymap ();
 		public void add_virtual_modifiers (Gdk.ModifierType state);
 		public bool get_caps_lock_state ();
 		public static unowned Gdk.Keymap get_default ();
@@ -461,6 +471,8 @@ namespace Gdk {
 		public weak Gdk.GC[] normal_gcs;
 		[CCode (array_length = false)]
 		public weak Gdk.GC[] subwindow_gcs;
+		[CCode (has_construct_function = false)]
+		protected Screen ();
 		public void broadcast_client_message (Gdk.Event event);
 		public unowned Gdk.Window get_active_window ();
 		public static unowned Gdk.Screen get_default ();
@@ -523,6 +535,8 @@ namespace Gdk {
 		public int red_prec;
 		public int red_shift;
 		public Gdk.VisualType type;
+		[CCode (has_construct_function = false)]
+		protected Visual ();
 		public static unowned Gdk.Visual get_best ();
 		public static int get_best_depth ();
 		public static Gdk.VisualType get_best_type ();

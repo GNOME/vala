@@ -14,11 +14,15 @@ namespace Atk {
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class GObjectAccessible : Atk.Object {
+		[CCode (has_construct_function = false)]
+		protected GObjectAccessible ();
 		public static unowned Atk.Object for_object (GLib.Object obj);
 		public unowned GLib.Object get_object ();
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class Hyperlink : GLib.Object, Atk.Action {
+		[CCode (has_construct_function = false)]
+		protected Hyperlink ();
 		public virtual int get_end_index ();
 		public virtual int get_n_anchors ();
 		public virtual unowned Atk.Object get_object (int i);
@@ -51,6 +55,8 @@ namespace Atk {
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class Misc : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Misc ();
 		public static unowned Atk.Misc get_instance ();
 		public virtual void threads_enter ();
 		public virtual void threads_leave ();
@@ -72,6 +78,8 @@ namespace Atk {
 		public weak string name;
 		public weak Atk.RelationSet relation_set;
 		public Atk.Role role;
+		[CCode (has_construct_function = false)]
+		protected Object ();
 		public bool add_relationship (Atk.RelationType relationship, Atk.Object target);
 		public virtual uint connect_property_change_handler (Atk.PropertyChangeHandler handler);
 		public virtual unowned Atk.AttributeSet get_attributes ();
@@ -137,6 +145,8 @@ namespace Atk {
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class ObjectFactory : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected ObjectFactory ();
 		public virtual unowned Atk.Object create_accessible (GLib.Object obj);
 		public virtual GLib.Type get_accessible_type ();
 		public virtual void invalidate ();
@@ -160,6 +170,8 @@ namespace Atk {
 	public class Registry : GLib.Object {
 		public weak GLib.HashTable factory_singleton_cache;
 		public weak GLib.HashTable factory_type_registry;
+		[CCode (has_construct_function = false)]
+		protected Registry ();
 		public unowned Atk.ObjectFactory get_factory (GLib.Type type);
 		public GLib.Type get_factory_type (GLib.Type type);
 		public void set_factory_type (GLib.Type type, GLib.Type factory_type);
@@ -235,6 +247,8 @@ namespace Atk {
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class Util : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Util ();
 		[NoWrapper]
 		public virtual uint add_global_event_listener (GLib.SignalEmissionHook listener, string event_type);
 		[NoWrapper]

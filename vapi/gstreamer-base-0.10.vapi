@@ -41,6 +41,8 @@ namespace Gst {
 		public int preroll_queued;
 		public Gst.Segment segment;
 		public Gst.Pad sinkpad;
+		[CCode (has_construct_function = false)]
+		protected BaseSink ();
 		[NoWrapper]
 		public virtual bool activate_pull (bool active);
 		[NoWrapper]
@@ -123,6 +125,8 @@ namespace Gst {
 		public Gst.Segment segment;
 		public uint64 size;
 		public Gst.Pad srcpad;
+		[CCode (has_construct_function = false)]
+		protected BaseSrc ();
 		[NoWrapper]
 		public virtual bool check_get_range ();
 		[NoWrapper]
@@ -196,6 +200,8 @@ namespace Gst {
 		public GLib.Mutex transform_lock;
 		public const string SINK_NAME;
 		public const string SRC_NAME;
+		[CCode (has_construct_function = false)]
+		protected BaseTransform ();
 		[NoWrapper]
 		public virtual void before_transform (Gst.Buffer buffer);
 		[NoWrapper]
@@ -483,6 +489,8 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/base/gstpushsrc.h")]
 	public class PushSrc : Gst.BaseSrc {
+		[CCode (has_construct_function = false)]
+		protected PushSrc ();
 		[NoWrapper]
 		public virtual Gst.FlowReturn create (out unowned Gst.Buffer buf);
 	}

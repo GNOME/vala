@@ -240,6 +240,8 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class Session : GLib.Object, Soup.MessageFilter {
 		public weak Soup.MessageQueue queue;
+		[CCode (has_construct_function = false)]
+		protected Session ();
 		public void abort ();
 		public void add_filter (Soup.MessageFilter filter);
 		public virtual void cancel_message (Soup.Message msg);

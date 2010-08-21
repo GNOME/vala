@@ -63,6 +63,8 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon-file-selection.h")]
 	public class FileSelection : Gtk.Container, Atk.Implementor, Gtk.Buildable {
+		[CCode (has_construct_function = false)]
+		protected FileSelection ();
 		public void clear_multi_selection ();
 		public bool content_iter_is_selected (Gtk.TreeIter iter);
 		public void dim_current_selection ();
@@ -139,6 +141,8 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon-file-system-model.h")]
 	public class FileSystemModel : GLib.Object, Gtk.TreeModel, Gtk.TreeDragSource {
+		[CCode (has_construct_function = false)]
+		protected FileSystemModel ();
 		public unowned string autoname_uri (string uri) throws GLib.Error;
 		[CCode (type = "gchar*", has_construct_function = false)]
 		public FileSystemModel.item (Hildon.FileSystemModel model, Gtk.TreeIter parent, string stub_name, string extension);

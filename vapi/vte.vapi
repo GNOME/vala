@@ -14,6 +14,8 @@ namespace Vte {
 	}
 	[CCode (cheader_filename = "vte/reaper.h")]
 	public class Reaper : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Reaper ();
 		public static int add_child (GLib.Pid pid);
 		public static unowned Vte.Reaper @get ();
 		public virtual signal void child_exited (int p0, int p1);

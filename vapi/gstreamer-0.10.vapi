@@ -242,6 +242,8 @@ namespace Gst {
 		public int time_index;
 		[CCode (array_length = false)]
 		public weak Gst.ClockTime[] times;
+		[CCode (has_construct_function = false)]
+		protected Clock ();
 		public bool add_observation (Gst.ClockTime slave, Gst.ClockTime master, out double r_squared);
 		public Gst.ClockTime adjust_unlocked (Gst.ClockTime @internal);
 		[NoWrapper]
@@ -363,6 +365,8 @@ namespace Gst {
 		public void* state_lock;
 		[CCode (cname = "abidata.ABI.target_state")]
 		public Gst.State target_state;
+		[CCode (has_construct_function = false)]
+		protected Element ();
 		public void abort_state ();
 		public bool add_pad (owned Gst.Pad pad);
 		[CCode (cname = "gst_element_class_add_pad_template")]
@@ -448,6 +452,8 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class ElementFactory : Gst.PluginFeature {
+		[CCode (has_construct_function = false)]
+		protected ElementFactory ();
 		public bool can_sink_caps (Gst.Caps caps);
 		public bool can_src_caps (Gst.Caps caps);
 		public Gst.Element? create (string? name);
@@ -750,6 +756,8 @@ namespace Gst {
 		public weak GLib.Mutex @lock;
 		public weak string name_prefix;
 		public weak Gst.Object parent;
+		[CCode (has_construct_function = false)]
+		protected Object ();
 		public static bool check_uniqueness (GLib.List<Gst.Object> list, string name);
 		public static void default_deep_notify (GLib.Object object, Gst.Object orig, GLib.ParamSpec pspec, string? excluded_props);
 		public void default_error (GLib.Error error, string? debug);
@@ -981,6 +989,8 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Plugin : Gst.Object {
+		[CCode (has_construct_function = false)]
+		protected Plugin ();
 		public void add_dependency ([CCode (array_length = false)] string?[] env_vars, [CCode (array_length = false)] string?[] paths, [CCode (array_length = false)] string?[] names, Gst.PluginDependencyFlags flags);
 		public void add_dependency_simple (string? env_vars, string? paths, string? names, Gst.PluginDependencyFlags flags);
 		public static GLib.Quark error_quark ();
@@ -1006,6 +1016,8 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public abstract class PluginFeature : Gst.Object {
+		[CCode (has_construct_function = false)]
+		protected PluginFeature ();
 		public bool check_version (uint min_major, uint min_minor, uint min_micro);
 		public unowned string get_name ();
 		public uint get_rank ();
@@ -1033,6 +1045,8 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class ProxyPad : Gst.Pad {
+		[CCode (has_construct_function = false)]
+		protected ProxyPad ();
 	}
 	[CCode (ref_function = "gst_query_ref", unref_function = "gst_query_unref", cheader_filename = "gst/gst.h")]
 	public class Query : Gst.MiniObject {
@@ -1092,6 +1106,8 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Registry : Gst.Object {
+		[CCode (has_construct_function = false)]
+		protected Registry ();
 		public bool add_feature (owned Gst.PluginFeature feature);
 		public void add_path (string path);
 		public bool add_plugin (owned Gst.Plugin plugin);
@@ -1211,6 +1227,8 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class SystemClock : Gst.Clock {
+		[CCode (has_construct_function = false)]
+		protected SystemClock ();
 		public static Gst.Clock obtain ();
 		[NoAccessorMethod]
 		public Gst.ClockType clock_type { get; set; }
@@ -1279,6 +1297,8 @@ namespace Gst {
 		public void* @lock;
 		public bool running;
 		public Gst.TaskState state;
+		[CCode (has_construct_function = false)]
+		protected Task ();
 		public static void cleanup_all ();
 		public static unowned Gst.Task create (Gst.TaskFunction func, void* data);
 		public unowned Gst.TaskPool get_pool ();
@@ -1355,6 +1375,8 @@ namespace Gst {
 		public weak Gst.TypeFindFunction function;
 		public void* user_data;
 		public weak GLib.DestroyNotify user_data_notify;
+		[CCode (has_construct_function = false)]
+		protected TypeFindFactory ();
 		[CCode (cname = "gst_type_find_factory_call_function")]
 		public void call_function (Gst.TypeFind find);
 		[CCode (cname = "gst_type_find_factory_get_caps")]

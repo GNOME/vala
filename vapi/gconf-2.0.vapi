@@ -37,6 +37,8 @@ namespace GConf {
 		public weak GLib.SList notify_list;
 		public int pad2;
 		public int pending_notify_count;
+		[CCode (has_construct_function = false)]
+		protected Client ();
 		public void add_dir (string dir, GConf.ClientPreloadType preload) throws GLib.Error;
 		public GLib.SList<string> all_dirs (string dir) throws GLib.Error;
 		public GLib.SList<GConf.Entry> all_entries (string dir) throws GLib.Error;

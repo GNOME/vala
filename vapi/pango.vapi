@@ -179,6 +179,8 @@ namespace Pango {
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class Font : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Font ();
 		public unowned Pango.FontDescription describe ();
 		public unowned Pango.FontDescription describe_with_absolute_size ();
 		public static void descriptions_free (Pango.FontDescription[] descs);
@@ -225,6 +227,8 @@ namespace Pango {
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class FontFace : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected FontFace ();
 		public unowned Pango.FontDescription describe ();
 		public unowned string get_face_name ();
 		public bool is_synthesized ();
@@ -232,12 +236,16 @@ namespace Pango {
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class FontFamily : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected FontFamily ();
 		public unowned string get_name ();
 		public bool is_monospace ();
 		public void list_faces (Pango.FontFace[] faces);
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class FontMap : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected FontMap ();
 		public unowned Pango.Context create_context ();
 		public void list_families (Pango.FontFamily[] families);
 		public unowned Pango.Font load_font (Pango.Context context, Pango.FontDescription desc);
@@ -257,6 +265,8 @@ namespace Pango {
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class Fontset : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Fontset ();
 		public void @foreach (Pango.FontsetForeachFunc func, void* data);
 		public unowned Pango.Font get_font (uint wc);
 		public unowned Pango.FontMetrics get_metrics ();
@@ -448,6 +458,8 @@ namespace Pango {
 		public Pango.Matrix matrix;
 		public bool strikethrough;
 		public Pango.Underline underline;
+		[CCode (has_construct_function = false)]
+		protected Renderer ();
 		public void activate ();
 		[NoWrapper]
 		public virtual void begin ();

@@ -109,6 +109,8 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/video/gstvideofilter.h")]
 	public class VideoFilter : Gst.BaseTransform {
 		public bool inited;
+		[CCode (has_construct_function = false)]
+		protected VideoFilter ();
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/video/gstvideosink.h")]
@@ -122,6 +124,8 @@ namespace Gst {
 	public class VideoSink : Gst.BaseSink {
 		public int height;
 		public int width;
+		[CCode (has_construct_function = false)]
+		protected VideoSink ();
 		public static void center_rect (Gst.VideoRectangle src, Gst.VideoRectangle dst, Gst.VideoRectangle _result, bool scaling);
 		[NoWrapper]
 		public virtual Gst.FlowReturn show_frame (Gst.Buffer buf);

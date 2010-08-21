@@ -51,6 +51,8 @@ namespace Soup {
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class AuthDomain : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected AuthDomain ();
 		public virtual unowned string accepts (Soup.Message msg);
 		public void add_path (string path);
 		public virtual unowned string challenge (Soup.Message msg);
@@ -123,6 +125,8 @@ namespace Soup {
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class ContentDecoder : GLib.Object, Soup.SessionFeature {
+		[CCode (has_construct_function = false)]
+		protected ContentDecoder ();
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class ContentSniffer : GLib.Object, Soup.SessionFeature {
@@ -395,6 +399,8 @@ namespace Soup {
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class Session : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Session ();
 		public void abort ();
 		[NoWrapper]
 		public virtual void auth_required (Soup.Message msg, Soup.Auth auth, bool retrying);

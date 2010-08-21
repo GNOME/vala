@@ -54,6 +54,8 @@ namespace Gsf {
 	}
 	[CCode (cheader_filename = "gsf/gsf-infile-impl.h")]
 	public class Infile : Gsf.Input {
+		[CCode (has_construct_function = false)]
+		protected Infile ();
 		public unowned Gsf.Input child_by_aname (string[] names);
 		public virtual unowned Gsf.Input? child_by_index (int i);
 		public virtual unowned Gsf.Input? child_by_name (string name);
@@ -101,6 +103,8 @@ namespace Gsf {
 	[CCode (cheader_filename = "gsf/gsf-input-impl.h")]
 	public class Input : GLib.Object {
 		public Gsf.off_t cur_offset;
+		[CCode (has_construct_function = false)]
+		protected Input ();
 		[NoWrapper]
 		public virtual Gsf.Input Dup () throws GLib.Error;
 		[NoWrapper]
@@ -209,6 +213,8 @@ namespace Gsf {
 	}
 	[CCode (cheader_filename = "gsf/gsf-outfile-impl.h")]
 	public class Outfile : Gsf.Output {
+		[CCode (has_construct_function = false)]
+		protected Outfile ();
 		public Gsf.Output new_child (string name, bool is_dir);
 		public Gsf.Output new_child_full (string name, bool is_dir, ...);
 	}
@@ -264,6 +270,8 @@ namespace Gsf {
 		public weak string printf_buf;
 		public int printf_buf_size;
 		public weak GLib.Object wrapped_by;
+		[CCode (has_construct_function = false)]
+		protected Output ();
 		[NoWrapper]
 		public virtual bool Close ();
 		[NoWrapper]
@@ -303,6 +311,8 @@ namespace Gsf {
 		public bool fields_on_line;
 		public size_t quote_len;
 		public size_t separator_len;
+		[CCode (has_construct_function = false)]
+		protected OutputCsv ();
 		public bool write_eol ();
 		public bool write_field (string field, size_t len);
 		[NoAccessorMethod]
@@ -382,6 +392,8 @@ namespace Gsf {
 	}
 	[CCode (cheader_filename = "gsf/gsf-structured-blob.h")]
 	public class StructuredBlob : Gsf.Infile {
+		[CCode (has_construct_function = false)]
+		protected StructuredBlob ();
 		public static Gsf.StructuredBlob read (Gsf.Input input);
 		public bool write (Gsf.Outfile container);
 	}

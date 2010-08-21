@@ -25,6 +25,8 @@ namespace Gnome {
 	}
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public class Program : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Program ();
 		public static unowned Gnome.Program @get ();
 		public unowned string get_app_id ();
 		public unowned string get_app_version ();

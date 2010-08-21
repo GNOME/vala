@@ -52,6 +52,8 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public class SourceCompletion : Gtk.Object {
+		[CCode (has_construct_function = false)]
+		protected SourceCompletion ();
 		public bool add_provider (Gtk.SourceCompletionProvider provider) throws GLib.Error;
 		public void block_interactive ();
 		public unowned Gtk.SourceCompletionContext create_context (Gtk.TextIter? position = null);
@@ -92,6 +94,8 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public class SourceCompletionContext : GLib.InitiallyUnowned {
+		[CCode (has_construct_function = false)]
+		protected SourceCompletionContext ();
 		public void add_proposals (void* provider, GLib.List proposals, bool finished);
 		public Gtk.SourceCompletionActivation get_activation ();
 		public void get_iter (Gtk.TextIter iter);
@@ -164,6 +168,8 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public class SourceGutter : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected SourceGutter ();
 		public unowned Gdk.Window get_window ();
 		public void insert (Gtk.CellRenderer renderer, int position);
 		public void queue_draw ();
@@ -180,6 +186,8 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public class SourceLanguage : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected SourceLanguage ();
 		public unowned string get_globs ();
 		public bool get_hidden ();
 		public unowned string get_id ();
@@ -276,6 +284,8 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public class SourceStyle : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected SourceStyle ();
 		public Gtk.SourceStyle copy ();
 		[NoAccessorMethod]
 		public string background { owned get; construct; }
@@ -308,6 +318,8 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public class SourceStyleScheme : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected SourceStyleScheme ();
 		public unowned string get_authors ();
 		public unowned string get_description ();
 		public unowned string get_filename ();

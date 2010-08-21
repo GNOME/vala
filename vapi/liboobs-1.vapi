@@ -22,6 +22,8 @@ namespace Oobs {
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class GroupsConfig : Oobs.Object {
+		[CCode (has_construct_function = false)]
+		protected GroupsConfig ();
 		public Oobs.Result add_group (Oobs.Group group);
 		public Oobs.Result delete_group (Oobs.Group group);
 		public long find_free_gid (long gid_min, long gid_max);
@@ -38,6 +40,8 @@ namespace Oobs {
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class HostsConfig : Oobs.Object {
+		[CCode (has_construct_function = false)]
+		protected HostsConfig ();
 		public static unowned Oobs.Object @get ();
 		public unowned GLib.List get_dns_servers ();
 		public unowned string get_domainname ();
@@ -51,6 +55,8 @@ namespace Oobs {
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class Iface : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Iface ();
 		public bool get_active ();
 		public bool get_auto ();
 		public bool get_configured ();
@@ -70,6 +76,8 @@ namespace Oobs {
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class IfaceEthernet : Oobs.Iface {
+		[CCode (has_construct_function = false)]
+		protected IfaceEthernet ();
 		public unowned string get_broadcast_address ();
 		public unowned string get_configuration_method ();
 		public unowned string get_gateway_address ();
@@ -93,9 +101,13 @@ namespace Oobs {
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class IfaceIRLan : Oobs.IfaceEthernet {
+		[CCode (has_construct_function = false)]
+		protected IfaceIRLan ();
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class IfacePPP : Oobs.Iface {
+		[CCode (has_construct_function = false)]
+		protected IfacePPP ();
 		public unowned string get_apn ();
 		public unowned string get_connection_type ();
 		public bool get_default_gateway ();
@@ -143,6 +155,8 @@ namespace Oobs {
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class IfacePlip : Oobs.Iface {
+		[CCode (has_construct_function = false)]
+		protected IfacePlip ();
 		public unowned string get_address ();
 		public unowned string get_remote_address ();
 		public void set_address (string address);
@@ -152,6 +166,8 @@ namespace Oobs {
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class IfaceWireless : Oobs.IfaceEthernet {
+		[CCode (has_construct_function = false)]
+		protected IfaceWireless ();
 		public unowned string get_essid ();
 		public unowned string get_key ();
 		public unowned string get_key_type ();
@@ -164,6 +180,8 @@ namespace Oobs {
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class IfacesConfig : Oobs.Object {
+		[CCode (has_construct_function = false)]
+		protected IfacesConfig ();
 		public static unowned Oobs.Object @get ();
 		public unowned GLib.List get_available_configuration_methods ();
 		public unowned GLib.List get_available_key_types ();
@@ -172,6 +190,8 @@ namespace Oobs {
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class List : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected List ();
 		public void append (Oobs.ListIter iter);
 		public void clear ();
 		public unowned GLib.Object @get (Oobs.ListIter iter);
@@ -194,11 +214,15 @@ namespace Oobs {
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class NFSConfig : Oobs.Object {
+		[CCode (has_construct_function = false)]
+		protected NFSConfig ();
 		public static unowned Oobs.Object @get ();
 		public unowned Oobs.List get_shares ();
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class NTPConfig : Oobs.Object {
+		[CCode (has_construct_function = false)]
+		protected NTPConfig ();
 		public static unowned Oobs.Object @get ();
 		public unowned Oobs.List get_servers ();
 	}
@@ -212,6 +236,8 @@ namespace Oobs {
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class Object : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Object ();
 		public Oobs.Result add ();
 		public Oobs.Result add_async (Oobs.ObjectAsyncFunc func, void* data);
 		public bool authenticate () throws GLib.Error;
@@ -241,6 +267,8 @@ namespace Oobs {
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class SMBConfig : Oobs.Object {
+		[CCode (has_construct_function = false)]
+		protected SMBConfig ();
 		public void delete_user_password (Oobs.User user);
 		public static unowned Oobs.Object @get ();
 		public unowned string get_description ();
@@ -261,12 +289,16 @@ namespace Oobs {
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class SelfConfig : Oobs.Object {
+		[CCode (has_construct_function = false)]
+		protected SelfConfig ();
 		public static unowned Oobs.Object @get ();
 		public unowned Oobs.User get_user ();
 		public bool is_user_self (Oobs.User user);
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class Service : Oobs.Object {
+		[CCode (has_construct_function = false)]
+		protected Service ();
 		public unowned string get_name ();
 		public void get_runlevel_configuration (Oobs.ServicesRunlevel runlevel, Oobs.ServiceStatus status, int priority);
 		public void set_runlevel_configuration (Oobs.ServicesRunlevel runlevel, Oobs.ServiceStatus status, int priority);
@@ -274,6 +306,8 @@ namespace Oobs {
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class ServicesConfig : Oobs.Object {
+		[CCode (has_construct_function = false)]
+		protected ServicesConfig ();
 		public static unowned Oobs.Object @get ();
 		public unowned Oobs.ServicesRunlevel get_default_runlevel ();
 		public unowned GLib.List get_runlevels ();
@@ -287,6 +321,8 @@ namespace Oobs {
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class Session : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Session ();
 		public Oobs.Result commit ();
 		public static unowned Oobs.Session @get ();
 		public unowned string get_authentication_action ();
@@ -299,6 +335,8 @@ namespace Oobs {
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class Share : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Share ();
 		public unowned string get_path ();
 		public void set_path (string path);
 		public string path { get; set; }
@@ -343,6 +381,8 @@ namespace Oobs {
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class TimeConfig : Oobs.Object {
+		[CCode (has_construct_function = false)]
+		protected TimeConfig ();
 		public static unowned Oobs.Object @get ();
 		public void get_time (int year, int month, int day, int hour, int minute, int second);
 		public unowned string get_timezone ();
@@ -415,6 +455,8 @@ namespace Oobs {
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class UsersConfig : Oobs.Object {
+		[CCode (has_construct_function = false)]
+		protected UsersConfig ();
 		public Oobs.Result add_user (Oobs.User user);
 		public Oobs.Result delete_user (Oobs.User user);
 		public long find_free_uid (long uid_min, long uid_max);

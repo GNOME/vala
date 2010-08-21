@@ -104,6 +104,8 @@ namespace GLib {
 
 	[CCode (lower_case_csuffix = "type_module")]
 	public class TypeModule : Object, TypePlugin {
+		[CCode (has_construct_function = false)]
+		protected TypeModule ();
 		public bool use ();
 		public void unuse ();
 		public void set_name (string name);
@@ -360,6 +362,8 @@ namespace GLib {
 
 	[CCode (ref_sink_function = "g_object_ref_sink")]
 	public class InitiallyUnowned : Object {
+		[CCode (has_construct_function = false)]
+		protected InitiallyUnowned ();
 	}
 
 	[CCode (cname = "int")]

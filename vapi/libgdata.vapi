@@ -108,6 +108,8 @@ namespace GData {
 	}
 	[CCode (cheader_filename = "gdata/gdata.h")]
 	public class CalendarFeed : GData.Feed {
+		[CCode (has_construct_function = false)]
+		protected CalendarFeed ();
 		public uint get_times_cleaned ();
 		public unowned string get_timezone ();
 		public uint times_cleaned { get; }
@@ -281,6 +283,8 @@ namespace GData {
 	}
 	[CCode (cheader_filename = "gdata/gdata.h")]
 	public class DocumentsEntry : GData.Entry, GData.AccessHandler {
+		[CCode (has_construct_function = false)]
+		protected DocumentsEntry ();
 		public unowned string get_document_id ();
 		public void get_edited (GLib.TimeVal edited);
 		public unowned GData.Author get_last_modified_by ();
@@ -298,6 +302,8 @@ namespace GData {
 	}
 	[CCode (cheader_filename = "gdata/gdata.h")]
 	public class DocumentsFeed : GData.Feed {
+		[CCode (has_construct_function = false)]
+		protected DocumentsFeed ();
 	}
 	[CCode (cheader_filename = "gdata/gdata.h")]
 	public class DocumentsFolder : GData.DocumentsEntry, GData.AccessHandler {
@@ -416,6 +422,8 @@ namespace GData {
 	}
 	[CCode (cheader_filename = "gdata/gdata.h")]
 	public class Feed : GData.Parsable {
+		[CCode (has_construct_function = false)]
+		protected Feed ();
 		public unowned GLib.List<GData.Author> get_authors ();
 		public unowned GLib.List<GData.Category> get_categories ();
 		public unowned GLib.List<GData.Entry> get_entries ();
@@ -919,6 +927,8 @@ namespace GData {
 	[CCode (cheader_filename = "gdata/gdata.h")]
 	public class Parsable : GLib.Object {
 		[CCode (has_construct_function = false)]
+		protected Parsable ();
+		[CCode (has_construct_function = false)]
 		public Parsable.from_xml (GLib.Type parsable_type, string xml, int length) throws GLib.Error;
 		[NoWrapper]
 		public virtual void get_namespaces (GLib.HashTable namespaces);
@@ -1001,6 +1011,8 @@ namespace GData {
 	}
 	[CCode (cheader_filename = "gdata/gdata.h")]
 	public class PicasaWebFeed : GData.Feed {
+		[CCode (has_construct_function = false)]
+		protected PicasaWebFeed ();
 	}
 	[CCode (type_check_function = "GDATA_IS_PICASAWEB_FILE",cprefix="gdata_picasaweb_file_",type_id="GDATA_TYPE_PICASAWEB_FILE", cheader_filename = "gdata/gdata.h")]
 	public class PicasaWebFile : GData.Entry {
@@ -1176,6 +1188,8 @@ namespace GData {
 	}
 	[CCode (cheader_filename = "gdata/gdata.h")]
 	public class PicasaWebUser : GData.Entry {
+		[CCode (has_construct_function = false)]
+		protected PicasaWebUser ();
 		[CCode (cname = "gdata_picasaweb_user_get_max_photos_per_album")]
 		public int get_max_photos_per_album ();
 		[CCode (cname = "gdata_picasaweb_user_get_nickname")]
@@ -1240,6 +1254,8 @@ namespace GData {
 	}
 	[CCode (cheader_filename = "gdata/gdata.h")]
 	public class Service : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Service ();
 		[NoWrapper]
 		public virtual void append_query_headers (Soup.Message message);
 		public bool authenticate (string username, string password, GLib.Cancellable? cancellable) throws GLib.Error;
@@ -1291,12 +1307,16 @@ namespace GData {
 	}
 	[CCode (type_check_function = "GDATA_IS_YOUTUBE_CONTENT", cheader_filename = "gdata/gdata.h")]
 	public class YouTubeContent : GData.MediaContent {
+		[CCode (has_construct_function = false)]
+		protected YouTubeContent ();
 		[CCode (cname = "gdata_youtube_content_get_format")]
 		public GData.YouTubeFormat get_format ();
 		public GData.YouTubeFormat format { get; }
 	}
 	[CCode (type_check_function = "GDATA_IS_YOUTUBE_CREDIT", cheader_filename = "gdata/gdata.h")]
 	public class YouTubeCredit : GData.MediaCredit {
+		[CCode (has_construct_function = false)]
+		protected YouTubeCredit ();
 		[CCode (cname = "gdata_youtube_credit_get_entity_type")]
 		public unowned string get_entity_type ();
 		public string entity_type { get; }

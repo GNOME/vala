@@ -47,6 +47,8 @@ namespace Gda {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public class BlobOp : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected BlobOp ();
 		public virtual long get_length ();
 		public virtual long read (Gda.Blob blob, long offset, long size);
 		public bool read_all (Gda.Blob blob);
@@ -83,6 +85,8 @@ namespace Gda {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public class Config : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Config ();
 		public static bool can_modify_system_config ();
 		public static bool define_dsn (Gda.DsnInfo info) throws GLib.Error;
 		public static bool dsn_needs_authentication (string dsn_name);
@@ -108,6 +112,8 @@ namespace Gda {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public class Connection : GLib.Object, Gda.Lockable {
+		[CCode (has_construct_function = false)]
+		protected Connection ();
 		public bool add_savepoint (string name) throws GLib.Error;
 		public unowned GLib.SList<GLib.Object> batch_execute (Gda.Batch batch, Gda.Set @params, Gda.StatementModelUsage model_usage) throws GLib.Error;
 		public bool begin_transaction (string name, Gda.TransactionIsolation level) throws GLib.Error;
@@ -259,6 +265,8 @@ namespace Gda {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public class DataModelImport : GLib.Object, Gda.DataModel {
+		[CCode (has_construct_function = false)]
+		protected DataModelImport ();
 		public void clean_errors ();
 		[CCode (type = "GdaDataModel*", has_construct_function = false)]
 		public DataModelImport.file (string filename, bool random_access, Gda.Set options);
@@ -283,6 +291,8 @@ namespace Gda {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public class DataModelIter : Gda.Set {
+		[CCode (has_construct_function = false)]
+		protected DataModelIter ();
 		public static GLib.Quark error_quark ();
 		public unowned Gda.Holder get_holder_for_field (int col);
 		public int get_row ();
@@ -361,6 +371,8 @@ namespace Gda {
 		public int advertized_nrows;
 		public int nb_stored_rows;
 		public weak Gda.PStmt prep_stmt;
+		[CCode (has_construct_function = false)]
+		protected DataSelect ();
 		public bool compute_columns_attributes () throws GLib.Error;
 		public bool compute_modification_statements () throws GLib.Error;
 		public bool compute_row_selection_condition () throws GLib.Error;
@@ -680,6 +692,8 @@ namespace Gda {
 		public weak GLib.SList tmpl_columns;
 		[CCode (array_length = false)]
 		public weak GLib.Type[] types;
+		[CCode (has_construct_function = false)]
+		protected PStmt ();
 		public void copy_contents (Gda.PStmt dest);
 		public unowned Gda.Statement get_gda_statement ();
 		public void set_gda_statement (Gda.Statement stmt);
@@ -768,6 +782,8 @@ namespace Gda {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public class ServerProvider : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected ServerProvider ();
 		[NoWrapper]
 		public virtual bool add_savepoint (Gda.Connection cnc, string name) throws GLib.Error;
 		[NoWrapper]
@@ -1316,6 +1332,8 @@ namespace Gda {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public class SqliteProvider : Gda.ServerProvider {
+		[CCode (has_construct_function = false)]
+		protected SqliteProvider ();
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public class Statement : GLib.Object {
@@ -1383,6 +1401,8 @@ namespace Gda {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public class VconnectionDataModel : Gda.VirtualConnection, Gda.Lockable {
+		[CCode (has_construct_function = false)]
+		protected VconnectionDataModel ();
 		public bool add (Gda.VconnectionDataModelSpec spec, GLib.DestroyNotify spec_free_func, string table_name) throws GLib.Error;
 		public bool add_model (Gda.DataModel model, string table_name) throws GLib.Error;
 		public void @foreach (Gda.VconnectionDataModelFunc func, void* data);
@@ -1399,6 +1419,8 @@ namespace Gda {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public class VconnectionHub : Gda.VconnectionDataModel, Gda.Lockable {
+		[CCode (has_construct_function = false)]
+		protected VconnectionHub ();
 		public bool add (Gda.Connection cnc, string ns) throws GLib.Error;
 		public void @foreach (Gda.VConnectionHubFunc func, void* data);
 		public unowned Gda.Connection get_connection (string ns);
@@ -1406,12 +1428,16 @@ namespace Gda {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public class VirtualConnection : Gda.Connection, Gda.Lockable {
+		[CCode (has_construct_function = false)]
+		protected VirtualConnection ();
 		public void* internal_get_provider_data ();
 		public void internal_set_provider_data (void* data, GLib.DestroyNotify destroy_func);
 		public static unowned Gda.Connection open (Gda.VirtualProvider virtual_provider) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public class VirtualProvider : Gda.SqliteProvider {
+		[CCode (has_construct_function = false)]
+		protected VirtualProvider ();
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public class VproviderDataModel : Gda.VirtualProvider {
@@ -1445,7 +1471,7 @@ namespace Gda {
 	public class XaTransactionId {
 		public ushort bqual_length;
 		[CCode (array_length = false)]
-		public weak string[] data;
+		public weak GLib.ObjectPath[] data;
 		public uint32 format;
 		public ushort gtrid_length;
 		public unowned string to_string ();

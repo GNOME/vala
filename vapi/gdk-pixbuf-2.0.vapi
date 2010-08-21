@@ -70,6 +70,8 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public class PixbufAnimation : GLib.Object {
 		[CCode (has_construct_function = false)]
+		protected PixbufAnimation ();
+		[CCode (has_construct_function = false)]
 		public PixbufAnimation.from_file (string filename) throws GLib.Error;
 		public int get_height ();
 		public unowned Gdk.PixbufAnimationIter get_iter (GLib.TimeVal start_time);
@@ -79,6 +81,8 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public class PixbufAnimationIter : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected PixbufAnimationIter ();
 		public bool advance (GLib.TimeVal current_time);
 		public int get_delay_time ();
 		public unowned Gdk.Pixbuf get_pixbuf ();
@@ -131,6 +135,8 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public class PixbufSimpleAnimIter : Gdk.PixbufAnimationIter {
+		[CCode (has_construct_function = false)]
+		protected PixbufSimpleAnimIter ();
 	}
 	[CCode (type_id = "GDK_TYPE_PIXDATA", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public struct Pixdata {

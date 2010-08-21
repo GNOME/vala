@@ -7,15 +7,21 @@ namespace Gst {
 		public weak string label;
 		public int max_value;
 		public int min_value;
+		[CCode (has_construct_function = false)]
+		protected ColorBalanceChannel ();
 		public virtual signal void value_changed (int value);
 	}
 	[CCode (cheader_filename = "gst/interfaces/mixer.h")]
 	public class MixerOptions : Gst.MixerTrack {
+		[CCode (has_construct_function = false)]
+		protected MixerOptions ();
 		public unowned GLib.List<string> get_values ();
 		public static void list_changed (Gst.Mixer mixer, Gst.MixerOptions opts);
 	}
 	[CCode (cheader_filename = "gst/interfaces/mixer.h")]
 	public class MixerTrack : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected MixerTrack ();
 		[NoAccessorMethod]
 		public uint flags { get; }
 		[NoAccessorMethod]
@@ -40,6 +46,8 @@ namespace Gst {
 		public int max_signal;
 		public ulong min_frequency;
 		public int min_signal;
+		[CCode (has_construct_function = false)]
+		protected TunerChannel ();
 		public static void changed (Gst.Tuner tuner, Gst.TunerChannel channel);
 		public virtual signal void frequency_changed (ulong frequency);
 		public virtual signal void signal_changed (int @signal);
@@ -48,6 +56,8 @@ namespace Gst {
 	public class TunerNorm : GLib.Object {
 		public Gst.Value framerate;
 		public weak string label;
+		[CCode (has_construct_function = false)]
+		protected TunerNorm ();
 		public static void changed (Gst.Tuner tuner, Gst.TunerNorm norm);
 	}
 	[CCode (cheader_filename = "gst/interfaces/colorbalance.h")]
