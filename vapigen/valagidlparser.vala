@@ -1951,6 +1951,13 @@ public class Vala.GIdlParser : CodeVisitor {
 						// force async function, even if it doesn't end in _async
 						m.coroutine = true;
 					}
+				} else if (nv[0] == "parent") {
+					Symbol container = get_container_from_name (eval (nv[1]));
+					var prefix = container.get_lower_case_cprefix ();
+					if (symbol.has_prefix (prefix)) {
+						m.set_cname (m.name);
+						m.name = symbol.offset (prefix.length);
+					}
 				}
 			}
 		}
