@@ -1029,7 +1029,7 @@ public class Vala.CodeWriter : CodeVisitor {
 				ccode_params.append_printf ("%shas_construct_function = false", separator);
 				separator = ", ";
 			} else if (m.name == ".new" && m.get_real_cname () != cm.get_default_construct_function ()) {
-				ccode_params.append_printf ("%sconstruct_function = \"%s\"", separator, cm.get_default_construct_function ());
+				ccode_params.append_printf ("%sconstruct_function = \"%s\"", separator, m.get_real_cname ());
 				separator = ", ";
 			}
 		}
