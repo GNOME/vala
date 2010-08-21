@@ -100,6 +100,7 @@ gdk_screen_get_toplevel_windows type_arguments="unowned Window" transfer_ownersh
 gdk_screen_get_window_stack type_arguments="Window" transfer_ownership="1" nullable="1"
 gdk_screen_list_visuals type_arguments="unowned Visual" transfer_ownership="1"
 GdkSegment is_value_type="1"
+gdk_selection_* parent="Selection"
 GdkSpan is_value_type="1"
 gdk_spawn_on_screen.working_directory nullable="1"
 gdk_spawn_on_screen.argv is_array="1" no_array_length="1"

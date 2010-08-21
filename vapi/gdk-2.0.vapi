@@ -2,6 +2,25 @@
 
 [CCode (cprefix = "Gdk", lower_case_cprefix = "gdk_", gir_namespace = "Gdk", gir_version = "2.0")]
 namespace Gdk {
+	[CCode (cprefix = "GdkSelection", lower_case_cprefix = "gdk_selection_")]
+	namespace Selection {
+		[CCode (cheader_filename = "gdk/gdk.h")]
+		public static void convert (Gdk.Window requestor, Gdk.Atom selection, Gdk.Atom target, uint32 time_);
+		[CCode (cheader_filename = "gdk/gdk.h")]
+		public static unowned Gdk.Window owner_get (Gdk.Atom selection);
+		[CCode (cheader_filename = "gdk/gdk.h")]
+		public static unowned Gdk.Window owner_get_for_display (Gdk.Display display, Gdk.Atom selection);
+		[CCode (cheader_filename = "gdk/gdk.h")]
+		public static bool owner_set (Gdk.Window owner, Gdk.Atom selection, uint32 time_, bool send_event);
+		[CCode (cheader_filename = "gdk/gdk.h")]
+		public static bool owner_set_for_display (Gdk.Display display, Gdk.Window owner, Gdk.Atom selection, uint32 time_, bool send_event);
+		[CCode (cheader_filename = "gdk/gdk.h")]
+		public static int property_get (Gdk.Window requestor, uchar[] data, out Gdk.Atom prop_type, int prop_format);
+		[CCode (cheader_filename = "gdk/gdk.h")]
+		public static void send_notify (Gdk.NativeWindow requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint32 time_);
+		[CCode (cheader_filename = "gdk/gdk.h")]
+		public static void send_notify_for_display (Gdk.Display display, Gdk.NativeWindow requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint32 time_);
+	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class AppLaunchContext : GLib.AppLaunchContext {
 		[CCode (has_construct_function = false)]
@@ -50,6 +69,7 @@ namespace Gdk {
 		public Cursor.from_pixbuf (Gdk.Display display, Gdk.Pixbuf pixbuf, int x, int y);
 		[CCode (has_construct_function = false)]
 		public Cursor.from_pixmap (Gdk.Pixmap source, Gdk.Pixmap mask, Gdk.Color fg, Gdk.Color bg, int x, int y);
+		public Gdk.CursorType get_cursor_type ();
 		public unowned Gdk.Display get_display ();
 		public unowned Gdk.Pixbuf get_image ();
 	}
@@ -75,6 +95,7 @@ namespace Gdk {
 		public bool get_history (Gdk.Window window, uint32 start, uint32 stop, Gdk.TimeCoord[] events);
 		public void get_key (uint index, uint keyval, Gdk.ModifierType modifiers);
 		public Gdk.InputMode get_mode ();
+		public int get_n_axes ();
 		public unowned string get_name ();
 		public Gdk.InputSource get_source ();
 		public void get_state (Gdk.Window window, double axes, Gdk.ModifierType mask);
@@ -126,6 +147,7 @@ namespace Gdk {
 		public void get_pointer (out unowned Gdk.Screen screen, out int x, out int y, out Gdk.ModifierType mask);
 		public virtual unowned Gdk.Screen get_screen (int screen_num);
 		public unowned Gdk.Window get_window_at_pointer (int win_x, int win_y);
+		public bool is_closed ();
 		public void keyboard_ungrab (uint32 time_);
 		public unowned GLib.List<Gdk.Device> list_devices ();
 		public static unowned Gdk.Display open (string display_name);
@@ -580,6 +602,7 @@ namespace Gdk {
 		public static void constrain_size (Gdk.Geometry geometry, uint flags, int width, int height, out int new_width, out int new_height);
 		public void coords_from_parent (double parent_x, double parent_y, double x, double y);
 		public void coords_to_parent (double x, double y, double parent_x, double parent_y);
+		public Cairo.Surface create_similar_surface (Cairo.Content content, int width, int height);
 		public void deiconify ();
 		public void destroy ();
 		public void enable_synchronized_configure ();
@@ -594,10 +617,7 @@ namespace Gdk {
 		public void fullscreen ();
 		public void geometry_changed ();
 		public bool get_accept_focus ();
-		[Deprecated (since = "2.22")]
-		public void get_back_pixmap (out unowned Gdk.Pixmap pixmap, bool parent_relative);
-		[Deprecated (since = "2.22")]
-		public void get_background (Gdk.Color color);
+		public unowned Cairo.Pattern get_background_pattern ();
 		public GLib.List<weak Gdk.Window> get_children ();
 		public bool get_composited ();
 		public unowned Gdk.Cursor? get_cursor ();
@@ -624,6 +644,7 @@ namespace Gdk {
 		public unowned Gdk.Region get_update_area ();
 		public void get_user_data (void* data);
 		public Gdk.WindowType get_window_type ();
+		public bool has_native ();
 		public void hide ();
 		public void iconify ();
 		public void input_shape_combine_mask (Gdk.Bitmap? mask, int x, int y);
@@ -1902,20 +1923,28 @@ namespace Gdk {
 	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void rgb_set_verbose (bool verbose);
+	[Deprecated (since = "vala-0.12", replacement = "Selection.convert")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void selection_convert (Gdk.Window requestor, Gdk.Atom selection, Gdk.Atom target, uint32 time_);
+	[Deprecated (since = "vala-0.12", replacement = "Selection.owner_get")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static unowned Gdk.Window selection_owner_get (Gdk.Atom selection);
+	[Deprecated (since = "vala-0.12", replacement = "Selection.owner_get_for_display")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static unowned Gdk.Window selection_owner_get_for_display (Gdk.Display display, Gdk.Atom selection);
+	[Deprecated (since = "vala-0.12", replacement = "Selection.owner_set")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool selection_owner_set (Gdk.Window owner, Gdk.Atom selection, uint32 time_, bool send_event);
+	[Deprecated (since = "vala-0.12", replacement = "Selection.owner_set_for_display")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool selection_owner_set_for_display (Gdk.Display display, Gdk.Window owner, Gdk.Atom selection, uint32 time_, bool send_event);
+	[Deprecated (since = "vala-0.12", replacement = "Selection.property_get")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static int selection_property_get (Gdk.Window requestor, uchar[] data, out Gdk.Atom prop_type, int prop_format);
+	[Deprecated (since = "vala-0.12", replacement = "Selection.send_notify")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void selection_send_notify (Gdk.NativeWindow requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint32 time_);
+	[Deprecated (since = "vala-0.12", replacement = "Selection.send_notify_for_display")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void selection_send_notify_for_display (Gdk.Display display, Gdk.NativeWindow requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint32 time_);
 	[CCode (cheader_filename = "gdk/gdk.h")]
