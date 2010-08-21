@@ -45,57 +45,53 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 			}
 		}
 
-		if (prop.set_accessor.construction && current_type_symbol is Class && current_class.is_subtype_of (gobject_type) && in_creation_method) {
-			return get_construct_property_assignment (prop.get_canonical_cconstant (), prop.property_type, (CCodeExpression) assignment.right.ccodenode);
-		} else {
-			CCodeExpression cexpr = (CCodeExpression) assignment.right.ccodenode;
+		CCodeExpression cexpr = (CCodeExpression) assignment.right.ccodenode;
 
-			if (!prop.no_accessor_method) {
-				if (prop.property_type.is_real_non_null_struct_type ()) {
-					cexpr = get_address_of_expression (assignment.right, cexpr);
-				}
+		if (!prop.no_accessor_method) {
+			if (prop.property_type.is_real_non_null_struct_type ()) {
+				cexpr = get_address_of_expression (assignment.right, cexpr);
 			}
+		}
 
-			if (assignment.operator != AssignmentOperator.SIMPLE) {
-				CCodeBinaryOperator cop;
-				if (assignment.operator == AssignmentOperator.BITWISE_OR) {
-					cop = CCodeBinaryOperator.BITWISE_OR;
-				} else if (assignment.operator == AssignmentOperator.BITWISE_AND) {
-					cop = CCodeBinaryOperator.BITWISE_AND;
-				} else if (assignment.operator == AssignmentOperator.BITWISE_XOR) {
-					cop = CCodeBinaryOperator.BITWISE_XOR;
-				} else if (assignment.operator == AssignmentOperator.ADD) {
-					cop = CCodeBinaryOperator.PLUS;
-				} else if (assignment.operator == AssignmentOperator.SUB) {
-					cop = CCodeBinaryOperator.MINUS;
-				} else if (assignment.operator == AssignmentOperator.MUL) {
-					cop = CCodeBinaryOperator.MUL;
-				} else if (assignment.operator == AssignmentOperator.DIV) {
-					cop = CCodeBinaryOperator.DIV;
-				} else if (assignment.operator == AssignmentOperator.PERCENT) {
-					cop = CCodeBinaryOperator.MOD;
-				} else if (assignment.operator == AssignmentOperator.SHIFT_LEFT) {
-					cop = CCodeBinaryOperator.SHIFT_LEFT;
-				} else if (assignment.operator == AssignmentOperator.SHIFT_RIGHT) {
-					cop = CCodeBinaryOperator.SHIFT_RIGHT;
-				} else {
-					assert_not_reached ();
-				}
-				cexpr = new CCodeBinaryExpression (cop, (CCodeExpression) get_ccodenode (assignment.left), cexpr);
-			}
-			
-			var ccall = get_property_set_call (prop, ma, cexpr, assignment.right);
-			
-			// assignments are expressions, so return the current property value, except if we're sure that it can't be used
-			if (!(assignment.parent_node is ExpressionStatement)) {
-				var ccomma = new CCodeCommaExpression ();
-				ccomma.append_expression (ccall); // update property
-				ccomma.append_expression ((CCodeExpression) get_ccodenode (ma)); // current property value
-				
-				return ccomma;
+		if (assignment.operator != AssignmentOperator.SIMPLE) {
+			CCodeBinaryOperator cop;
+			if (assignment.operator == AssignmentOperator.BITWISE_OR) {
+				cop = CCodeBinaryOperator.BITWISE_OR;
+			} else if (assignment.operator == AssignmentOperator.BITWISE_AND) {
+				cop = CCodeBinaryOperator.BITWISE_AND;
+			} else if (assignment.operator == AssignmentOperator.BITWISE_XOR) {
+				cop = CCodeBinaryOperator.BITWISE_XOR;
+			} else if (assignment.operator == AssignmentOperator.ADD) {
+				cop = CCodeBinaryOperator.PLUS;
+			} else if (assignment.operator == AssignmentOperator.SUB) {
+				cop = CCodeBinaryOperator.MINUS;
+			} else if (assignment.operator == AssignmentOperator.MUL) {
+				cop = CCodeBinaryOperator.MUL;
+			} else if (assignment.operator == AssignmentOperator.DIV) {
+				cop = CCodeBinaryOperator.DIV;
+			} else if (assignment.operator == AssignmentOperator.PERCENT) {
+				cop = CCodeBinaryOperator.MOD;
+			} else if (assignment.operator == AssignmentOperator.SHIFT_LEFT) {
+				cop = CCodeBinaryOperator.SHIFT_LEFT;
+			} else if (assignment.operator == AssignmentOperator.SHIFT_RIGHT) {
+				cop = CCodeBinaryOperator.SHIFT_RIGHT;
 			} else {
-				return ccall;
+				assert_not_reached ();
 			}
+			cexpr = new CCodeBinaryExpression (cop, (CCodeExpression) get_ccodenode (assignment.left), cexpr);
+		}
+		
+		var ccall = get_property_set_call (prop, ma, cexpr, assignment.right);
+		
+		// assignments are expressions, so return the current property value, except if we're sure that it can't be used
+		if (!(assignment.parent_node is ExpressionStatement)) {
+			var ccomma = new CCodeCommaExpression ();
+			ccomma.append_expression (ccall); // update property
+			ccomma.append_expression ((CCodeExpression) get_ccodenode (ma)); // current property value
+			
+			return ccomma;
+		} else {
+			return ccall;
 		}
 	}
 
