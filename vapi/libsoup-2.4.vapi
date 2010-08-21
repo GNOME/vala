@@ -2,6 +2,35 @@
 
 [CCode (cprefix = "Soup", lower_case_cprefix = "soup_")]
 namespace Soup {
+	[CCode (cprefix = "SoupXMLRPC", lower_case_cprefix = "soup_xmlrpc_")]
+	namespace XMLRPC {
+		[PrintfFormat]
+		[CCode (cheader_filename = "libsoup/soup.h")]
+		public static unowned string build_fault (int fault_code, string fault_format, ...);
+		[CCode (cheader_filename = "libsoup/soup.h")]
+		public static unowned string build_method_call (string method_name, GLib.Value[] @params);
+		[CCode (cheader_filename = "libsoup/soup.h")]
+		public static unowned string build_method_response (GLib.Value value);
+		[CCode (cheader_filename = "libsoup/soup.h")]
+		public static GLib.Quark error_quark ();
+		[CCode (cheader_filename = "libsoup/soup.h", sentinel = "G_TYPE_INVALID")]
+		public static bool extract_method_call (string method_call, int length, out unowned string method_name, ...);
+		[CCode (cheader_filename = "libsoup/soup.h", sentinel = "G_TYPE_INVALID")]
+		public static bool extract_method_response (string method_response, int length, ...) throws GLib.Error;
+		[CCode (cheader_filename = "libsoup/soup.h")]
+		public static GLib.Quark fault_quark ();
+		[CCode (cheader_filename = "libsoup/soup.h")]
+		public static bool parse_method_call (string method_call, int length, out unowned string method_name, out unowned GLib.ValueArray @params);
+		[CCode (cheader_filename = "libsoup/soup.h")]
+		public static bool parse_method_response (string method_response, int length, GLib.Value value) throws GLib.Error;
+		[CCode (cheader_filename = "libsoup/soup.h", sentinel = "G_TYPE_INVALID")]
+		public static unowned Soup.Message request_new (string uri, string method_name, ...);
+		[PrintfFormat]
+		[CCode (cheader_filename = "libsoup/soup.h")]
+		public static void set_fault (Soup.Message msg, int fault_code, string fault_format, ...);
+		[CCode (cheader_filename = "libsoup/soup.h", sentinel = "G_TYPE_INVALID")]
+		public static void set_response (Soup.Message msg, ...);
+	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class Address : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -1086,29 +1115,41 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static GLib.HashTable<string,GLib.Value> value_hash_new_with_vals (...);
 	[PrintfFormat]
+	[Deprecated (since = "vala-0.12", replacement = "XMLRPC.build_fault")]
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static unowned string xmlrpc_build_fault (int fault_code, string fault_format, ...);
+	[Deprecated (since = "vala-0.12", replacement = "XMLRPC.build_method_call")]
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static unowned string xmlrpc_build_method_call (string method_name, GLib.Value[] @params);
+	[Deprecated (since = "vala-0.12", replacement = "XMLRPC.build_method_response")]
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static unowned string xmlrpc_build_method_response (GLib.Value value);
+	[Deprecated (since = "vala-0.12", replacement = "XMLRPC.error_quark")]
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static GLib.Quark xmlrpc_error_quark ();
+	[Deprecated (since = "vala-0.12", replacement = "XMLRPC.extract_method_call")]
 	[CCode (cheader_filename = "libsoup/soup.h", sentinel = "G_TYPE_INVALID")]
 	public static bool xmlrpc_extract_method_call (string method_call, int length, out unowned string method_name, ...);
+	[Deprecated (since = "vala-0.12", replacement = "XMLRPC.extract_method_response")]
 	[CCode (cheader_filename = "libsoup/soup.h", sentinel = "G_TYPE_INVALID")]
 	public static bool xmlrpc_extract_method_response (string method_response, int length, ...) throws GLib.Error;
+	[Deprecated (since = "vala-0.12", replacement = "XMLRPC.fault_quark")]
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static GLib.Quark xmlrpc_fault_quark ();
+	[Deprecated (since = "vala-0.12", replacement = "XMLRPC.parse_method_call")]
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static bool xmlrpc_parse_method_call (string method_call, int length, out unowned string method_name, out unowned GLib.ValueArray @params);
+	[Deprecated (since = "vala-0.12", replacement = "XMLRPC.parse_method_response")]
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static bool xmlrpc_parse_method_response (string method_response, int length, GLib.Value value) throws GLib.Error;
+	[Deprecated (since = "vala-0.12", replacement = "XMLRPC.request_new")]
 	[CCode (cheader_filename = "libsoup/soup.h", sentinel = "G_TYPE_INVALID")]
 	public static unowned Soup.Message xmlrpc_request_new (string uri, string method_name, ...);
 	[PrintfFormat]
+	[Deprecated (since = "vala-0.12", replacement = "XMLRPC.set_fault")]
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static void xmlrpc_set_fault (Soup.Message msg, int fault_code, string fault_format, ...);
+	[Deprecated (since = "vala-0.12", replacement = "XMLRPC.set_response")]
 	[CCode (cheader_filename = "libsoup/soup.h", sentinel = "G_TYPE_INVALID")]
 	public static void xmlrpc_set_response (Soup.Message msg, ...);
 }
