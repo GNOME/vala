@@ -103,6 +103,8 @@ namespace Goo {
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public class CanvasEllipse : Goo.CanvasItemSimple, Goo.CanvasItem {
+		[CCode (has_construct_function = false)]
+		protected CanvasEllipse ();
 		[CCode (cname = "goo_canvas_ellipse_new")]
 		public static unowned Goo.CanvasEllipse create (Goo.CanvasItem? parent, double center_x, double center_y, double radius_x, double radius_y, ...);
 		[NoAccessorMethod]
@@ -124,6 +126,8 @@ namespace Goo {
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public class CanvasEllipseModel : Goo.CanvasItemModelSimple, Goo.CanvasItemModel {
+		[CCode (has_construct_function = false)]
+		protected CanvasEllipseModel ();
 		[CCode (cname = "goo_canvas_ellipse_model_new")]
 		public static unowned Goo.CanvasEllipseModel create (Goo.CanvasItemModel? parent, double center_x, double center_y, double radius_x, double radius_y, ...);
 		[NoAccessorMethod]
@@ -145,6 +149,8 @@ namespace Goo {
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public class CanvasGrid : Goo.CanvasItemSimple, Goo.CanvasItem {
+		[CCode (has_construct_function = false)]
+		protected CanvasGrid ();
 		[CCode (cname = "goo_canvas_grid_new")]
 		public static unowned Goo.CanvasGrid create (Goo.CanvasItem? parent, double x, double y, double width, double height, double x_step, double y_step, double x_offset, double y_offset, ...);
 		[NoAccessorMethod]
@@ -202,6 +208,8 @@ namespace Goo {
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public class CanvasGridModel : Goo.CanvasItemModelSimple, Goo.CanvasItemModel {
+		[CCode (has_construct_function = false)]
+		protected CanvasGridModel ();
 		[CCode (cname = "goo_canvas_grid_model_new")]
 		public static unowned Goo.CanvasGridModel create (Goo.CanvasItemModel? parent, double x, double y, double width, double height, double x_step, double y_step, double x_offset, double y_offset, ...);
 		[NoAccessorMethod]
@@ -259,6 +267,8 @@ namespace Goo {
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public class CanvasGroup : Goo.CanvasItemSimple, Goo.CanvasItem {
+		[CCode (has_construct_function = false)]
+		protected CanvasGroup ();
 		[CCode (cname = "goo_canvas_group_new")]
 		public static unowned Goo.CanvasGroup create (Goo.CanvasItem? parent, ...);
 		[NoAccessorMethod]
@@ -272,6 +282,8 @@ namespace Goo {
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public class CanvasGroupModel : Goo.CanvasItemModelSimple, Goo.CanvasItemModel {
+		[CCode (has_construct_function = false)]
+		protected CanvasGroupModel ();
 		[CCode (cname = "goo_canvas_group_model_new")]
 		public static unowned Goo.CanvasGroupModel create (Goo.CanvasItemModel? parent, ...);
 		[NoAccessorMethod]
@@ -285,6 +297,8 @@ namespace Goo {
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public class CanvasImage : Goo.CanvasItemSimple, Goo.CanvasItem {
+		[CCode (has_construct_function = false)]
+		protected CanvasImage ();
 		[CCode (cname = "goo_canvas_image_new")]
 		public static unowned Goo.CanvasImage create (Goo.CanvasItem? parent, Gdk.Pixbuf pixbuf, double x, double y, ...);
 		[NoAccessorMethod]
@@ -304,6 +318,8 @@ namespace Goo {
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public class CanvasImageModel : Goo.CanvasItemModelSimple, Goo.CanvasItemModel {
+		[CCode (has_construct_function = false)]
+		protected CanvasImageModel ();
 		[CCode (cname = "goo_canvas_image_model_new")]
 		public static unowned Goo.CanvasImageModel create (Goo.CanvasItemModel? parent, Gdk.Pixbuf pixbuf, double x, double y, ...);
 		[NoAccessorMethod]
@@ -325,6 +341,8 @@ namespace Goo {
 	public class CanvasItemModelSimple : GLib.Object, Goo.CanvasItemModel {
 		public weak Goo.CanvasItemModel parent;
 		public Goo.CanvasItemSimpleData simple_data;
+		[CCode (has_construct_function = false)]
+		protected CanvasItemModelSimple ();
 		[NoAccessorMethod]
 		public Goo.CairoAntialias antialias { get; set; }
 		[NoAccessorMethod]
@@ -377,6 +395,8 @@ namespace Goo {
 		public uint need_update;
 		public weak Goo.CanvasItem parent;
 		public Goo.CanvasItemSimpleData simple_data;
+		[CCode (has_construct_function = false)]
+		protected CanvasItemSimple ();
 		public void changed (bool recompute_bounds);
 		public bool check_in_path (double x, double y, Cairo.Context cr, Goo.CanvasPointerEvents pointer_events);
 		public void check_style ();
@@ -450,6 +470,8 @@ namespace Goo {
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public class CanvasPath : Goo.CanvasItemSimple, Goo.CanvasItem {
+		[CCode (has_construct_function = false)]
+		protected CanvasPath ();
 		[CCode (cname = "goo_canvas_path_new")]
 		public static unowned Goo.CanvasPath create (Goo.CanvasItem? parent, string path_data, ...);
 		[NoAccessorMethod]
@@ -465,6 +487,8 @@ namespace Goo {
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public class CanvasPathModel : Goo.CanvasItemModelSimple, Goo.CanvasItemModel {
+		[CCode (has_construct_function = false)]
+		protected CanvasPathModel ();
 		[CCode (cname = "goo_canvas_path_model_new")]
 		public static unowned Goo.CanvasPathModel create (Goo.CanvasItemModel? parent, string path_data, ...);
 		[NoAccessorMethod]
@@ -489,6 +513,8 @@ namespace Goo {
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public class CanvasPolyline : Goo.CanvasItemSimple, Goo.CanvasItem {
+		[CCode (has_construct_function = false)]
+		protected CanvasPolyline ();
 		[CCode (cname = "goo_canvas_polyline_new")]
 		public static unowned Goo.CanvasPolyline create (Goo.CanvasItem? parent, bool close_path, int num_points, ...);
 		[CCode (cname = "goo_canvas_polyline_new_line")]
@@ -533,6 +559,8 @@ namespace Goo {
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public class CanvasPolylineModel : Goo.CanvasItemModelSimple, Goo.CanvasItemModel {
+		[CCode (has_construct_function = false)]
+		protected CanvasPolylineModel ();
 		[CCode (cname = "goo_canvas_polyline_model_new")]
 		public static unowned Goo.CanvasPolylineModel create (Goo.CanvasItemModel? parent, bool close_path, int num_points, ...);
 		[CCode (cname = "goo_canvas_polyline_model_new_line")]
@@ -562,6 +590,8 @@ namespace Goo {
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public class CanvasRect : Goo.CanvasItemSimple, Goo.CanvasItem {
+		[CCode (has_construct_function = false)]
+		protected CanvasRect ();
 		[CCode (cname = "goo_canvas_rect_new")]
 		public static unowned Goo.CanvasRect create (Goo.CanvasItem? parent, double x, double y, double width, double height, ...);
 		[NoAccessorMethod]
@@ -579,6 +609,8 @@ namespace Goo {
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public class CanvasRectModel : Goo.CanvasItemModelSimple, Goo.CanvasItemModel {
+		[CCode (has_construct_function = false)]
+		protected CanvasRectModel ();
 		[CCode (cname = "goo_canvas_rect_model_new")]
 		public static unowned Goo.CanvasRectModel create (Goo.CanvasItemModel? parent, double x, double y, double width, double height, ...);
 		[NoAccessorMethod]
@@ -610,6 +642,8 @@ namespace Goo {
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public class CanvasTable : Goo.CanvasGroup, Goo.CanvasItem {
+		[CCode (has_construct_function = false)]
+		protected CanvasTable ();
 		[CCode (cname = "goo_canvas_table_new")]
 		public static unowned Goo.CanvasTable create (Goo.CanvasItem? parent, ...);
 		[NoAccessorMethod]
@@ -631,6 +665,8 @@ namespace Goo {
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public class CanvasTableModel : Goo.CanvasGroupModel, Goo.CanvasItemModel {
+		[CCode (has_construct_function = false)]
+		protected CanvasTableModel ();
 		[CCode (cname = "goo_canvas_table_model_new")]
 		public static unowned Goo.CanvasTableModel create (Goo.CanvasItemModel? parent, ...);
 		[NoAccessorMethod]
@@ -652,6 +688,8 @@ namespace Goo {
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public class CanvasText : Goo.CanvasItemSimple, Goo.CanvasItem {
+		[CCode (has_construct_function = false)]
+		protected CanvasText ();
 		[CCode (cname = "goo_canvas_text_new")]
 		public static unowned Goo.CanvasText create (Goo.CanvasItem? parent, string str, double x, double y, double width, Gtk.AnchorType anchor, ...);
 		public void get_natural_extents (out unowned Pango.Rectangle? ink_rect, out unowned Pango.Rectangle? logical_rect);
@@ -678,6 +716,8 @@ namespace Goo {
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public class CanvasTextModel : Goo.CanvasItemModelSimple, Goo.CanvasItemModel {
+		[CCode (has_construct_function = false)]
+		protected CanvasTextModel ();
 		[CCode (cname = "goo_canvas_text_model_new")]
 		public static unowned Goo.CanvasTextModel create (Goo.CanvasItemModel? parent, string str, double x, double y, double width, Gtk.AnchorType anchor, ...);
 		[NoAccessorMethod]
@@ -703,6 +743,8 @@ namespace Goo {
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public class CanvasWidget : Goo.CanvasItemSimple, Goo.CanvasItem {
+		[CCode (has_construct_function = false)]
+		protected CanvasWidget ();
 		[CCode (cname = "goo_canvas_widget_new")]
 		public static unowned Goo.CanvasWidget create (Goo.CanvasItem? parent, Gtk.Widget widget, double x, double y, double width, double height, ...);
 		[NoAccessorMethod]

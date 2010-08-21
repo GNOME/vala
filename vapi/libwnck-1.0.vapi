@@ -19,6 +19,8 @@ namespace Wnck {
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public class Application : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Application ();
 		public static unowned Wnck.Application @get (ulong xwindow);
 		public unowned Gdk.Pixbuf get_icon ();
 		public bool get_icon_is_fallback ();
@@ -43,6 +45,8 @@ namespace Wnck {
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public class ClassGroup : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected ClassGroup ();
 		public static unowned Wnck.ClassGroup @get (string res_class);
 		public unowned Gdk.Pixbuf get_icon ();
 		public unowned Gdk.Pixbuf get_mini_icon ();
@@ -106,6 +110,8 @@ namespace Wnck {
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public class Screen : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Screen ();
 		public void calc_workspace_layout (int num_workspaces, int space_index, Wnck.WorkspaceLayout layout);
 		public void change_workspace_count (int count);
 		public void force_update ();
@@ -201,6 +207,8 @@ namespace Wnck {
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public class Window : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Window ();
 		public void activate (uint32 timestamp);
 		public void activate_transient (uint32 timestamp);
 		public void close (uint32 timestamp);
@@ -293,6 +301,8 @@ namespace Wnck {
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public class Workspace : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Workspace ();
 		public void activate (uint32 timestamp);
 		public void change_name (string name);
 		public int get_height ();

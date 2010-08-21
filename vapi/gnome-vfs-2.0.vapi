@@ -117,6 +117,8 @@ namespace GnomeVFS {
 	}
 	[CCode (type_check_function = "GNOME_IS_VFS_DRIVE", cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class Drive : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Drive ();
 		public int compare (GnomeVFS.Drive b);
 		public void eject (GnomeVFS.VolumeOpCallback callback);
 		public unowned string get_activation_uri ();
@@ -218,6 +220,8 @@ namespace GnomeVFS {
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class MIMEMonitor : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected MIMEMonitor ();
 		public static unowned GnomeVFS.MIMEMonitor @get ();
 		public virtual signal void data_changed ();
 	}
@@ -505,6 +509,8 @@ namespace GnomeVFS {
 	}
 	[CCode (type_check_function = "GNOME_IS_VFS_VOLUME", cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class Volume : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Volume ();
 		public int compare (GnomeVFS.Volume b);
 		public void eject (GnomeVFS.VolumeOpCallback callback);
 		public unowned string get_activation_uri ();
@@ -527,6 +533,8 @@ namespace GnomeVFS {
 	}
 	[CCode (type_check_function = "GNOME_IS_VFS_VOLUME_MONITOR", cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class VolumeMonitor : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected VolumeMonitor ();
 		public GLib.List<GnomeVFS.Drive> get_connected_drives ();
 		public unowned GnomeVFS.Drive get_drive_by_id (ulong id);
 		public unowned GLib.List get_mounted_volumes ();

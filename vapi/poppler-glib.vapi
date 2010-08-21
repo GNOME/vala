@@ -17,6 +17,8 @@ namespace Poppler {
 	}
 	[CCode (cheader_filename = "poppler.h")]
 	public class Annot : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Annot ();
 		public Poppler.AnnotType get_annot_type ();
 		public unowned Poppler.Color get_color ();
 		public unowned string get_contents ();
@@ -41,6 +43,8 @@ namespace Poppler {
 	}
 	[CCode (cheader_filename = "poppler.h")]
 	public class AnnotFreeText : Poppler.AnnotMarkup {
+		[CCode (has_construct_function = false)]
+		protected AnnotFreeText ();
 		public unowned Poppler.AnnotCalloutLine get_callout_line ();
 		public Poppler.AnnotFreeTextQuadding get_quadding ();
 	}
@@ -55,6 +59,8 @@ namespace Poppler {
 	}
 	[CCode (cheader_filename = "poppler.h")]
 	public class AnnotMarkup : Poppler.Annot {
+		[CCode (has_construct_function = false)]
+		protected AnnotMarkup ();
 		public GLib.Date get_date ();
 		public Poppler.AnnotExternalDataType get_external_data ();
 		public unowned string get_label ();
@@ -67,6 +73,8 @@ namespace Poppler {
 	}
 	[CCode (cheader_filename = "poppler.h")]
 	public class AnnotText : Poppler.AnnotMarkup {
+		[CCode (has_construct_function = false)]
+		protected AnnotText ();
 		public unowned string get_icon ();
 		public bool get_is_open ();
 		public Poppler.AnnotTextState get_state ();
@@ -79,6 +87,8 @@ namespace Poppler {
 		public GLib.Time mtime;
 		public weak string name;
 		public size_t size;
+		[CCode (has_construct_function = false)]
+		protected Attachment ();
 		public bool save (string filename) throws GLib.Error;
 		public bool save_to_callback (Poppler.AttachmentSaveFunc save_func) throws GLib.Error;
 	}
@@ -110,6 +120,8 @@ namespace Poppler {
 	}
 	[CCode (cheader_filename = "poppler.h")]
 	public class Document : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Document ();
 		public unowned Poppler.Dest find_dest (string link_name);
 		[CCode (has_construct_function = false)]
 		public Document.from_data (string data, int length, string password) throws GLib.Error;
@@ -179,6 +191,8 @@ namespace Poppler {
 	}
 	[CCode (cheader_filename = "poppler.h")]
 	public class FormField : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected FormField ();
 		public Poppler.FormButtonType button_get_button_type ();
 		public bool button_get_state ();
 		public void button_set_state (bool state);
@@ -239,6 +253,8 @@ namespace Poppler {
 	}
 	[CCode (cheader_filename = "poppler.h")]
 	public class Layer : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Layer ();
 		public int get_radio_button_group_id ();
 		public unowned string get_title ();
 		public void hide ();
@@ -276,6 +292,8 @@ namespace Poppler {
 	}
 	[CCode (cheader_filename = "poppler.h")]
 	public class Page : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Page ();
 		public unowned GLib.List find_text (string text);
 		public static void free_annot_mapping (GLib.List list);
 		public static void free_form_field_mapping (GLib.List list);

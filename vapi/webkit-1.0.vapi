@@ -31,9 +31,13 @@ namespace WebKit {
 	}
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public class GeolocationPolicyDecision : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected GeolocationPolicyDecision ();
 	}
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public class HitTestResult : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected HitTestResult ();
 		[NoAccessorMethod]
 		public WebKit.HitTestResultContext context { get; construct; }
 		[NoAccessorMethod]
@@ -65,6 +69,8 @@ namespace WebKit {
 	}
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public class SecurityOrigin : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected SecurityOrigin ();
 		public unowned GLib.List get_all_web_databases ();
 		public unowned string get_host ();
 		public uint get_port ();
@@ -80,10 +86,14 @@ namespace WebKit {
 	}
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public class SoupAuthDialog : GLib.Object, Soup.SessionFeature {
+		[CCode (has_construct_function = false)]
+		protected SoupAuthDialog ();
 		public virtual signal unowned Gtk.Widget current_toplevel (Soup.Message message);
 	}
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public class WebBackForwardList : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected WebBackForwardList ();
 		public void add_item (WebKit.WebHistoryItem history_item);
 		public void clear ();
 		public bool contains_item (WebKit.WebHistoryItem history_item);
@@ -121,6 +131,8 @@ namespace WebKit {
 	}
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public class WebDatabase : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected WebDatabase ();
 		public unowned string get_display_name ();
 		public uint64 get_expected_size ();
 		public unowned string get_filename ();
@@ -194,6 +206,8 @@ namespace WebKit {
 	}
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public class WebInspector : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected WebInspector ();
 		public void close ();
 		public unowned string get_inspected_uri ();
 		public unowned WebKit.WebView get_web_view ();
@@ -214,6 +228,8 @@ namespace WebKit {
 	}
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public class WebNavigationAction : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected WebNavigationAction ();
 		public int get_button ();
 		public int get_modifier_state ();
 		public unowned string get_original_uri ();
@@ -229,6 +245,8 @@ namespace WebKit {
 	}
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public class WebPolicyDecision : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected WebPolicyDecision ();
 		public void download ();
 		public void ignore ();
 		public void use ();

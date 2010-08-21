@@ -16,6 +16,8 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gunixconnection.h")]
 	public class UnixConnection : GLib.SocketConnection {
+		[CCode (has_construct_function = false)]
+		protected UnixConnection ();
 		public unowned GLib.Credentials receive_credentials (GLib.Cancellable cancellable) throws GLib.Error;
 		public int receive_fd (GLib.Cancellable cancellable) throws GLib.Error;
 		public bool send_credentials (GLib.Cancellable cancellable) throws GLib.Error;

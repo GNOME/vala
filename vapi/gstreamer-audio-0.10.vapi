@@ -17,6 +17,8 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/audio/gstaudiofilter.h")]
 	public class AudioFilter : Gst.BaseTransform {
 		public weak Gst.RingBufferSpec format;
+		[CCode (has_construct_function = false)]
+		protected AudioFilter ();
 		[CCode (cname = "gst_audio_filter_class_add_pad_templates")]
 		public class void add_pad_templates (Gst.Caps allowed_caps);
 		[NoWrapper]
@@ -25,6 +27,8 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/audio/gstaudiosink.h")]
 	public class AudioSink : Gst.BaseAudioSink {
 		public weak GLib.Thread thread;
+		[CCode (has_construct_function = false)]
+		protected AudioSink ();
 		[NoWrapper]
 		public virtual bool close ();
 		[NoWrapper]
@@ -43,6 +47,8 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/audio/gstaudiosrc.h")]
 	public class AudioSrc : Gst.BaseAudioSrc {
 		public weak GLib.Thread thread;
+		[CCode (has_construct_function = false)]
+		protected AudioSrc ();
 		[NoWrapper]
 		public virtual bool close ();
 		[NoWrapper]
@@ -63,6 +69,8 @@ namespace Gst {
 		public uint64 next_sample;
 		public weak Gst.Clock provided_clock;
 		public weak Gst.RingBuffer ringbuffer;
+		[CCode (has_construct_function = false)]
+		protected BaseAudioSink ();
 		public virtual unowned Gst.RingBuffer create_ringbuffer ();
 		public bool get_provide_clock ();
 		public Gst.BaseAudioSinkSlaveMethod get_slave_method ();
@@ -84,6 +92,8 @@ namespace Gst {
 		public weak Gst.Clock clock;
 		public uint64 next_sample;
 		public weak Gst.RingBuffer ringbuffer;
+		[CCode (has_construct_function = false)]
+		protected BaseAudioSrc ();
 		public virtual unowned Gst.RingBuffer create_ringbuffer ();
 		public bool get_provide_clock ();
 		public Gst.BaseAudioSrcSlaveMethod get_slave_method ();
@@ -117,6 +127,8 @@ namespace Gst {
 		public weak Gst.RingBufferSpec spec;
 		public int state;
 		public int waiting;
+		[CCode (has_construct_function = false)]
+		protected RingBuffer ();
 		public virtual bool acquire (Gst.RingBufferSpec spec);
 		public virtual bool activate (bool active);
 		public void advance (uint advance);

@@ -97,6 +97,8 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class AccelMap : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected AccelMap ();
 		public static void add_entry (string accel_path, uint accel_key, Gdk.ModifierType accel_mods);
 		public static void add_filter (string filter_pattern);
 		public static bool change_entry (string accel_path, uint accel_key, Gdk.ModifierType accel_mods, bool replace);
@@ -119,6 +121,8 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Accessible : Atk.Object {
+		[CCode (has_construct_function = false)]
+		protected Accessible ();
 		public virtual void connect_widget_destroyed ();
 		public unowned Gtk.Widget get_widget ();
 	}
@@ -351,6 +355,8 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Bin : Gtk.Container, Atk.Implementor, Gtk.Buildable, Gtk.SizeRequest {
+		[CCode (has_construct_function = false)]
+		protected Bin ();
 		public unowned Gtk.Widget get_child ();
 	}
 	[Compact]
@@ -560,6 +566,8 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public abstract class CellRenderer : Gtk.Object {
+		[CCode (has_construct_function = false)]
+		protected CellRenderer ();
 		public virtual bool activate (Gdk.Event event, Gtk.Widget widget, string path, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gtk.CellRendererState flags);
 		public void get_alignment (float xalign, float yalign);
 		public void get_fixed_size (int width, int height);
@@ -869,6 +877,8 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Clipboard : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Clipboard ();
 		public void clear ();
 		public static unowned Gtk.Clipboard @get (Gdk.Atom selection);
 		public unowned Gdk.Display get_display ();
@@ -1030,6 +1040,8 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Container : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.SizeRequest {
+		[CCode (has_construct_function = false)]
+		protected Container ();
 		public void add_with_properties (Gtk.Widget widget, ...);
 		public void child_get (Gtk.Widget child, ...);
 		public void child_get_property (Gtk.Widget child, string property_name, GLib.Value value);
@@ -1581,6 +1593,8 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class IMContext : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected IMContext ();
 		public virtual bool filter_keypress (Gdk.EventKey event);
 		public virtual void focus_in ();
 		public virtual void focus_out ();
@@ -1958,6 +1972,8 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Item : Gtk.Bin, Atk.Implementor, Gtk.Buildable, Gtk.SizeRequest {
+		[CCode (has_construct_function = false)]
+		protected Item ();
 		[HasEmitter]
 		public virtual signal void deselect ();
 		[HasEmitter]
@@ -2194,6 +2210,8 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class MenuShell : Gtk.Container, Atk.Implementor, Gtk.Buildable, Gtk.SizeRequest {
+		[CCode (has_construct_function = false)]
+		protected MenuShell ();
 		public void activate_item (Gtk.Widget menu_item, bool force_deactivate);
 		public void append ([CCode (type = "GtkWidget*")] Gtk.MenuItem child);
 		public void deselect ();
@@ -2257,6 +2275,8 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Misc : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.SizeRequest {
+		[CCode (has_construct_function = false)]
+		protected Misc ();
 		public void get_alignment (float xalign, float yalign);
 		public void get_padding (int xpad, int ypad);
 		public void set_alignment (float xalign, float yalign);
@@ -2356,6 +2376,8 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Object : GLib.InitiallyUnowned {
+		[CCode (has_construct_function = false)]
+		protected Object ();
 		[HasEmitter]
 		public virtual signal void destroy ();
 	}
@@ -2474,6 +2496,8 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class PrintContext : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected PrintContext ();
 		public unowned Pango.Context create_pango_context ();
 		public unowned Pango.Layout create_pango_layout ();
 		public unowned Cairo.Context get_cairo_context ();
@@ -2740,6 +2764,8 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Range : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.SizeRequest, Gtk.Orientable {
+		[CCode (has_construct_function = false)]
+		protected Range ();
 		public unowned Gtk.Adjustment get_adjustment ();
 		public double get_fill_level ();
 		public bool get_flippable ();
@@ -3119,6 +3145,8 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Settings : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Settings ();
 		public static unowned Gtk.Settings get_default ();
 		public static unowned Gtk.Settings get_for_screen (Gdk.Screen screen);
 		public static void install_property (GLib.ParamSpec pspec);
@@ -4249,6 +4277,8 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Tooltip : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Tooltip ();
 		public void set_custom (Gtk.Widget custom_widget);
 		public void set_icon (Gdk.Pixbuf pixbuf);
 		public void set_icon_from_gicon (GLib.Icon gicon, Gtk.IconSize size);
@@ -4284,6 +4314,8 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class TreeModelSort : GLib.Object, Gtk.TreeModel, Gtk.TreeSortable, Gtk.TreeDragSource {
+		[CCode (has_construct_function = false)]
+		protected TreeModelSort ();
 		public void clear_cache ();
 		public bool convert_child_iter_to_iter (out Gtk.TreeIter sort_iter, Gtk.TreeIter child_iter);
 		public unowned Gtk.TreePath convert_child_path_to_path (Gtk.TreePath child_path);
@@ -4341,6 +4373,8 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class TreeSelection : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected TreeSelection ();
 		public int count_selected_rows ();
 		public Gtk.SelectionMode get_mode ();
 		public unowned Gtk.TreeSelectionFunc get_select_function ();

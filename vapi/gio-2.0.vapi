@@ -402,6 +402,8 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class DBusServer : GLib.Object, GLib.Initable {
+		[CCode (has_construct_function = false)]
+		protected DBusServer ();
 		public unowned string get_client_address ();
 		public GLib.DBusServerFlags get_flags ();
 		public unowned string get_guid ();
@@ -531,6 +533,8 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class FileEnumerator : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected FileEnumerator ();
 		public bool close (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public virtual async bool close_async (int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[NoWrapper]
@@ -545,6 +549,8 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class FileIOStream : GLib.IOStream, GLib.Seekable {
+		[CCode (has_construct_function = false)]
+		protected FileIOStream ();
 		[NoWrapper]
 		public virtual bool can_seek ();
 		[NoWrapper]
@@ -640,6 +646,8 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class FileInputStream : GLib.InputStream, GLib.Seekable {
+		[CCode (has_construct_function = false)]
+		protected FileInputStream ();
 		[NoWrapper]
 		public virtual bool can_seek ();
 		public virtual unowned GLib.FileInfo query_info (string attributes, GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -651,6 +659,8 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class FileMonitor : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected FileMonitor ();
 		public virtual bool cancel ();
 		public void emit_event (GLib.File child, GLib.File other_file, GLib.FileMonitorEvent event_type);
 		public bool is_cancelled ();
@@ -663,6 +673,8 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class FileOutputStream : GLib.OutputStream, GLib.Seekable {
+		[CCode (has_construct_function = false)]
+		protected FileOutputStream ();
 		[NoWrapper]
 		public virtual bool can_seek ();
 		[NoWrapper]
@@ -688,6 +700,8 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class FilterInputStream : GLib.InputStream {
+		[CCode (has_construct_function = false)]
+		protected FilterInputStream ();
 		public unowned GLib.InputStream get_base_stream ();
 		public bool get_close_base_stream ();
 		public void set_close_base_stream (bool close_base);
@@ -696,6 +710,8 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class FilterOutputStream : GLib.OutputStream {
+		[CCode (has_construct_function = false)]
+		protected FilterOutputStream ();
 		public unowned GLib.OutputStream get_base_stream ();
 		public bool get_close_base_stream ();
 		public void set_close_base_stream (bool close_base);
@@ -741,6 +757,8 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class IOStream : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected IOStream ();
 		public void clear_pending ();
 		public bool close (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public virtual async bool close_async (int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -758,6 +776,8 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class InetAddress : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected InetAddress ();
 		[CCode (has_construct_function = false)]
 		public InetAddress.any (GLib.SocketFamily family);
 		[CCode (has_construct_function = false)]
@@ -806,6 +826,8 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class InputStream : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected InputStream ();
 		public void clear_pending ();
 		public bool close (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public virtual async bool close_async (int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -882,6 +904,8 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class NativeVolumeMonitor : GLib.VolumeMonitor {
+		[CCode (has_construct_function = false)]
+		protected NativeVolumeMonitor ();
 		[NoWrapper]
 		public virtual unowned GLib.Mount get_mount_for_mount_path (string mount_path, GLib.Cancellable? cancellable = null);
 	}
@@ -908,6 +932,8 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class OutputStream : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected OutputStream ();
 		public void clear_pending ();
 		public bool close (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public virtual async bool close_async (int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -935,6 +961,8 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class Permission : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Permission ();
 		public virtual bool acquire (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public virtual async bool acquire_async (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool get_allowed ();
@@ -949,6 +977,8 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class Resolver : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Resolver ();
 		public static GLib.Quark error_quark ();
 		public static unowned GLib.Resolver get_default ();
 		public virtual unowned string lookup_by_address (GLib.InetAddress address, GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -1108,6 +1138,8 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class SocketAddress : GLib.Object, GLib.SocketConnectable {
 		[CCode (has_construct_function = false)]
+		protected SocketAddress ();
+		[CCode (has_construct_function = false)]
 		public SocketAddress.from_native (void* native, size_t len);
 		public virtual GLib.SocketFamily get_family ();
 		public virtual ssize_t get_native_size ();
@@ -1116,6 +1148,8 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class SocketAddressEnumerator : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected SocketAddressEnumerator ();
 		public virtual unowned GLib.SocketAddress next (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public virtual async unowned GLib.SocketAddress next_async (GLib.Cancellable? cancellable = null) throws GLib.Error;
 	}
@@ -1145,6 +1179,8 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class SocketConnection : GLib.IOStream {
+		[CCode (has_construct_function = false)]
+		protected SocketConnection ();
 		public static unowned GLib.SocketConnection factory_create_connection (GLib.Socket socket);
 		public static GLib.Type factory_lookup_type (GLib.SocketFamily family, GLib.SocketType type, int protocol_id);
 		public static void factory_register_type (GLib.Type g_type, GLib.SocketFamily family, GLib.SocketType type, int protocol);
@@ -1155,6 +1191,8 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class SocketControlMessage : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected SocketControlMessage ();
 		public virtual unowned GLib.SocketControlMessage deserialize (int level, int type, size_t size, void* data);
 		public virtual int get_level ();
 		public int get_msg_type ();
@@ -1211,6 +1249,8 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class TcpConnection : GLib.SocketConnection {
+		[CCode (has_construct_function = false)]
+		protected TcpConnection ();
 		public bool get_graceful_disconnect ();
 		public void set_graceful_disconnect (bool graceful_disconnect);
 		public bool graceful_disconnect { get; set; }
@@ -1255,6 +1295,8 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class Vfs : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Vfs ();
 		[NoWrapper]
 		public virtual void add_writable_namespaces (GLib.FileAttributeInfoList list);
 		public static unowned GLib.Vfs get_default ();
@@ -1275,6 +1317,8 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class VolumeMonitor : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected VolumeMonitor ();
 		public virtual unowned GLib.Volume adopt_orphan_mount (GLib.Mount mount);
 		public static GLib.VolumeMonitor @get ();
 		public virtual GLib.List<GLib.Drive> get_connected_drives ();

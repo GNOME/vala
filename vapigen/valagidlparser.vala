@@ -1251,6 +1251,15 @@ public class Vala.GIdlParser : CodeVisitor {
 
 		handle_async_methods (cl);
 
+		if (cl.default_construction_method == null) {
+			// always provide constructor in generated bindings
+			// to indicate that implicit Object () chainup is allowed
+			var cm = new CreationMethod (null, null, cl.source_reference);
+			cm.has_construct_function = false;
+			cm.access = SymbolAccessibility.PROTECTED;
+			cl.add_method (cm);
+		}
+
 		current_data_type = null;
 		current_type_symbol_set = null;
 	}

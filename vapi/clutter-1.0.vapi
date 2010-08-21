@@ -76,6 +76,8 @@ namespace Clutter {
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public class Actor : GLib.InitiallyUnowned, Clutter.Scriptable {
 		public uint32 flags;
+		[CCode (has_construct_function = false)]
+		protected Actor ();
 		public virtual void allocate (Clutter.ActorBox box, Clutter.AllocationFlags flags);
 		public void allocate_available_size (float x, float y, float available_width, float available_height, Clutter.AllocationFlags flags);
 		public void allocate_preferred_size (Clutter.AllocationFlags flags);
@@ -351,6 +353,8 @@ namespace Clutter {
 	}
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public class Backend : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Backend ();
 		[NoWrapper]
 		public virtual void add_options (GLib.OptionGroup group);
 		[NoWrapper]
@@ -388,6 +392,8 @@ namespace Clutter {
 	}
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public class Behaviour : GLib.Object, Clutter.Scriptable {
+		[CCode (has_construct_function = false)]
+		protected Behaviour ();
 		public void actors_foreach (Clutter.BehaviourForeachFunc func);
 		[NoWrapper]
 		public virtual void alpha_notify (double alpha_value);
@@ -589,6 +595,8 @@ namespace Clutter {
 	}
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public class ChildMeta : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected ChildMeta ();
 		public Clutter.Actor actor { get; construct; }
 		public Clutter.Container container { get; construct; }
 	}
@@ -600,6 +608,8 @@ namespace Clutter {
 	}
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public class DeviceManager : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected DeviceManager ();
 		[NoWrapper]
 		public virtual void add_device (Clutter.InputDevice device);
 		public virtual unowned Clutter.InputDevice get_core_device (Clutter.InputDeviceType device_type);
@@ -696,6 +706,8 @@ namespace Clutter {
 	}
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public class InputDevice : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected InputDevice ();
 		public void get_device_coords (int x, int y);
 		public int get_device_id ();
 		public unowned string get_device_name ();
@@ -734,6 +746,8 @@ namespace Clutter {
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public class LayoutManager : GLib.InitiallyUnowned {
 		public void* dummy;
+		[CCode (has_construct_function = false)]
+		protected LayoutManager ();
 		public virtual void allocate (Clutter.Container container, Clutter.ActorBox allocation, Clutter.AllocationFlags flags);
 		public virtual unowned Clutter.Alpha begin_animation (uint duration, ulong mode);
 		public void child_get (Clutter.Container container, Clutter.Actor actor, ...);
@@ -759,6 +773,8 @@ namespace Clutter {
 	public class LayoutMeta : Clutter.ChildMeta {
 		public int32 dummy0;
 		public void* dummy1;
+		[CCode (has_construct_function = false)]
+		protected LayoutMeta ();
 		public unowned Clutter.LayoutManager get_manager ();
 		public Clutter.LayoutManager manager { get; construct; }
 	}
@@ -771,6 +787,8 @@ namespace Clutter {
 	}
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public class Model : GLib.Object, Clutter.Scriptable {
+		[CCode (has_construct_function = false)]
+		protected Model ();
 		public void append (...);
 		public void appendv ([CCode (array_length_pos = 0.9)] uint[] columns, [CCode (array_length_pos = 0.9)] GLib.Value[] values);
 		public bool filter_iter (Clutter.ModelIter iter);
@@ -810,6 +828,8 @@ namespace Clutter {
 	}
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public class ModelIter : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected ModelIter ();
 		public virtual unowned Clutter.ModelIter copy ();
 		public void @get (...);
 		public virtual unowned Clutter.Model get_model ();
@@ -1021,6 +1041,8 @@ namespace Clutter {
 	}
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public class StageManager : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected StageManager ();
 		public static unowned Clutter.StageManager get_default ();
 		public unowned GLib.SList<Clutter.Stage> list_stages ();
 		public unowned GLib.SList<Clutter.Stage> peek_stages ();

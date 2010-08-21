@@ -5,6 +5,8 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/tag/gsttagdemux.h")]
 	public class TagDemux : Gst.Element {
 		public void* reserved;
+		[CCode (has_construct_function = false)]
+		protected TagDemux ();
 		[NoWrapper]
 		public virtual bool identify_tag (Gst.Buffer buffer, bool start_tag, out uint tag_size);
 		[NoWrapper]
