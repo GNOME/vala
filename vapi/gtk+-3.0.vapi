@@ -2,6 +2,219 @@
 
 [CCode (cprefix = "Gtk", lower_case_cprefix = "gtk_", gir_namespace = "Gtk", gir_version = "2.0")]
 namespace Gtk {
+	[CCode (cprefix = "GtkStock", lower_case_cprefix = "gtk_stock_", gir_namespace = "Gtk", gir_version = "2.0")]
+	namespace Stock {
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string ABOUT;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string ADD;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string APPLY;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string BOLD;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string CANCEL;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string CAPS_LOCK_WARNING;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string CDROM;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string CLEAR;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string CLOSE;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string COLOR_PICKER;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string CONNECT;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string CONVERT;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string COPY;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string CUT;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string DELETE;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string DIALOG_AUTHENTICATION;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string DIALOG_ERROR;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string DIALOG_INFO;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string DIALOG_QUESTION;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string DIALOG_WARNING;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string DIRECTORY;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string DISCARD;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string DISCONNECT;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string DND;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string DND_MULTIPLE;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string EDIT;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string EXECUTE;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string FILE;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string FIND;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string FIND_AND_REPLACE;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string FLOPPY;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string FULLSCREEN;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string GOTO_BOTTOM;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string GOTO_FIRST;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string GOTO_LAST;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string GOTO_TOP;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string GO_BACK;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string GO_DOWN;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string GO_FORWARD;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string GO_UP;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string HARDDISK;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string HELP;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string HOME;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string INDENT;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string INDEX;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string INFO;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string ITALIC;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string JUMP_TO;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string JUSTIFY_CENTER;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string JUSTIFY_FILL;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string JUSTIFY_LEFT;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string JUSTIFY_RIGHT;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string LEAVE_FULLSCREEN;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string MEDIA_FORWARD;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string MEDIA_NEXT;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string MEDIA_PAUSE;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string MEDIA_PLAY;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string MEDIA_PREVIOUS;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string MEDIA_RECORD;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string MEDIA_REWIND;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string MEDIA_STOP;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string MISSING_IMAGE;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string NETWORK;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string NEW;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string NO;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string OK;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string OPEN;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string ORIENTATION_LANDSCAPE;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string ORIENTATION_PORTRAIT;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string ORIENTATION_REVERSE_LANDSCAPE;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string ORIENTATION_REVERSE_PORTRAIT;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string PAGE_SETUP;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string PASTE;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string PREFERENCES;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string PRINT;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string PRINT_ERROR;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string PRINT_PAUSED;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string PRINT_PREVIEW;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string PRINT_REPORT;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string PRINT_WARNING;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string PROPERTIES;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string QUIT;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string REDO;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string REFRESH;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string REMOVE;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string REVERT_TO_SAVED;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string SAVE;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string SAVE_AS;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string SELECT_ALL;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string SELECT_COLOR;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string SELECT_FONT;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string SORT_ASCENDING;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string SORT_DESCENDING;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string SPELL_CHECK;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string STOP;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string STRIKETHROUGH;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string UNDELETE;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string UNDERLINE;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string UNDO;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string UNINDENT;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string YES;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string ZOOM_100;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string ZOOM_FIT;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string ZOOM_IN;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public const string ZOOM_OUT;
+	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class AboutDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable, Gtk.SizeRequest {
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
@@ -6732,214 +6945,319 @@ namespace Gtk {
 	public const string PRINT_SETTINGS_WIN32_DRIVER_VERSION;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const int PRIORITY_RESIZE;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.ABOUT")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_ABOUT;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.ADD")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_ADD;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.APPLY")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_APPLY;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.BOLD")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_BOLD;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.CANCEL")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_CANCEL;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.CAPS_LOCK_WARNING")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_CAPS_LOCK_WARNING;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.CDROM")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_CDROM;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.CLEAR")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_CLEAR;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.CLOSE")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_CLOSE;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.COLOR_PICKER")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_COLOR_PICKER;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.CONNECT")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_CONNECT;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.CONVERT")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_CONVERT;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.COPY")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_COPY;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.CUT")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_CUT;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.DELETE")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_DELETE;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.DIALOG_AUTHENTICATION")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_DIALOG_AUTHENTICATION;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.DIALOG_ERROR")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_DIALOG_ERROR;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.DIALOG_INFO")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_DIALOG_INFO;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.DIALOG_QUESTION")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_DIALOG_QUESTION;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.DIALOG_WARNING")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_DIALOG_WARNING;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.DIRECTORY")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_DIRECTORY;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.DISCARD")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_DISCARD;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.DISCONNECT")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_DISCONNECT;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.DND")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_DND;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.DND_MULTIPLE")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_DND_MULTIPLE;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.EDIT")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_EDIT;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.EXECUTE")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_EXECUTE;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.FILE")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_FILE;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.FIND")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_FIND;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.FIND_AND_REPLACE")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_FIND_AND_REPLACE;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.FLOPPY")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_FLOPPY;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.FULLSCREEN")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_FULLSCREEN;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.GOTO_BOTTOM")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_GOTO_BOTTOM;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.GOTO_FIRST")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_GOTO_FIRST;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.GOTO_LAST")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_GOTO_LAST;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.GOTO_TOP")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_GOTO_TOP;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.GO_BACK")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_GO_BACK;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.GO_DOWN")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_GO_DOWN;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.GO_FORWARD")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_GO_FORWARD;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.GO_UP")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_GO_UP;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.HARDDISK")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_HARDDISK;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.HELP")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_HELP;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.HOME")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_HOME;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.INDENT")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_INDENT;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.INDEX")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_INDEX;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.INFO")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_INFO;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.ITALIC")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_ITALIC;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.JUMP_TO")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_JUMP_TO;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.JUSTIFY_CENTER")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_JUSTIFY_CENTER;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.JUSTIFY_FILL")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_JUSTIFY_FILL;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.JUSTIFY_LEFT")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_JUSTIFY_LEFT;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.JUSTIFY_RIGHT")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_JUSTIFY_RIGHT;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.FULLSCREEN")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_LEAVE_FULLSCREEN;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.MEDIA_FORWARD")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_MEDIA_FORWARD;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.MEDIA_NEXT")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_MEDIA_NEXT;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.MEDIA_PAUSE")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_MEDIA_PAUSE;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.MEDIA_PLAY")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_MEDIA_PLAY;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.MEDIA_PREVIOUS")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_MEDIA_PREVIOUS;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.MEDIA_RECORD")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_MEDIA_RECORD;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.MEDIA_REWIND")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_MEDIA_REWIND;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.MEDIA_STOP")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_MEDIA_STOP;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.MISSING_IMAGE")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_MISSING_IMAGE;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.NETWORK")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_NETWORK;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.NEW")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_NEW;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.NO")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_NO;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.OK")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_OK;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.OPEN")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_OPEN;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.ORIENTATION_LANDSCAPE")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_ORIENTATION_LANDSCAPE;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.ORIENTATION_PORTRAIT")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_ORIENTATION_PORTRAIT;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.ORIENTATION_REVERSE_LANDSCAPE")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_ORIENTATION_REVERSE_LANDSCAPE;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.ORIENTATION_REVERSE_PORTRAIT")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_ORIENTATION_REVERSE_PORTRAIT;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.PAGE_SETUP")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_PAGE_SETUP;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.PASTE")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_PASTE;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.PREFERENCES")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_PREFERENCES;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.PRINT")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_PRINT;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.PRINT_ERROR")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_PRINT_ERROR;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.PRINT_PAUSED")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_PRINT_PAUSED;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.PRINT_PREVIEW")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_PRINT_PREVIEW;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.PRINT_REPORT")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_PRINT_REPORT;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.PRINT_WARNING")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_PRINT_WARNING;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.PROPERTIES")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_PROPERTIES;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.QUIT")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_QUIT;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.REDO")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_REDO;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.REFRESH")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_REFRESH;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.REMOVE")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_REMOVE;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.REVERT_TO_SAVED")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_REVERT_TO_SAVED;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.SAVE")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_SAVE;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.SAVE_AS")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_SAVE_AS;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.SELECT_ALL")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_SELECT_ALL;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.SELECT_COLOR")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_SELECT_COLOR;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.SELECT_FONT")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_SELECT_FONT;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.SORT_ASCENDING")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_SORT_ASCENDING;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.SORT_DESCENDING")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_SORT_DESCENDING;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.SPELL_CHECK")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_SPELL_CHECK;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.STOP")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_STOP;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.STRIKETHROUGH")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_STRIKETHROUGH;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.UNDELETE")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_UNDELETE;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.UNDERLINE")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_UNDERLINE;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.UNDO")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_UNDO;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.UNINDENT")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_UNINDENT;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.YES")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_YES;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.ZOOM_100")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_ZOOM_100;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.ZOOM_FIT")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_ZOOM_FIT;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.ZOOM_IN")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_ZOOM_IN;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.ZOOM_OUT")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_ZOOM_OUT;
 	[CCode (cheader_filename = "gtk/gtk.h")]
