@@ -34,7 +34,7 @@ public class Vala.Attribute : CodeNode {
 	/**
 	 * Contains all specified attribute arguments.
 	 */
-	public Vala.Map<string,Expression> args = new HashMap<string,Expression> (str_hash, str_equal);
+	public Vala.Map<string,string> args = new HashMap<string,string> (str_hash, str_equal);
 
 	/**
 	 * Creates a new attribute.
@@ -53,7 +53,7 @@ public class Vala.Attribute : CodeNode {
 	 *
 	 * @param arg named argument
 	 */
-	public void add_argument (string key, Expression value) {
+	public void add_argument (string key, string value) {
 		args.set (key, value);
 	}
 	
@@ -74,12 +74,16 @@ public class Vala.Attribute : CodeNode {
 	 * @return     string value
 	 */
 	public string? get_string (string name) {
-		var lit = args.get (name) as StringLiteral;
-		if (lit != null) {
-			return lit.eval ();
+		string value = args.get (name);
+
+		if (value == null) {
+			return null;
 		}
-		
-		return null;
+
+		/* remove quotes */
+		var noquotes = value.substring (1, (uint) (value.length - 2));
+		/* unescape string */
+		return noquotes.compress ();
 	}
 	
 	/**
@@ -89,12 +93,13 @@ public class Vala.Attribute : CodeNode {
 	 * @return     integer value
 	 */
 	public int get_integer (string name) {
-		var lit = args.get (name) as IntegerLiteral;
-		if (lit != null) {
-			return lit.value.to_int ();
+		string value = args.get (name);
+
+		if (value == null) {
+			return 0;
 		}
-		
-		return 0;
+
+		return value.to_int ();
 	}
 
 	/**
@@ -104,27 +109,13 @@ public class Vala.Attribute : CodeNode {
 	 * @return     double value
 	 */
 	public double get_double (string name) {
-		var arg = args.get (name);
-		if (arg is RealLiteral) {
-			var lit = (RealLiteral) arg;
-			return lit.value.to_double ();
-		} else if (arg is IntegerLiteral) {
-			var lit = (IntegerLiteral) arg;
-			return lit.value.to_int ();
-		} else if (arg is UnaryExpression) {
-			var unary = (UnaryExpression) arg;
-			if (unary.operator == UnaryOperator.MINUS) {
-				if (unary.inner is RealLiteral) {
-					var lit = (RealLiteral) unary.inner;
-					return -lit.value.to_double ();
-				} else if (unary.inner is IntegerLiteral) {
-					var lit = (IntegerLiteral) unary.inner;
-					return -lit.value.to_int ();
-				}
-			}
+		string value = args.get (name);
+
+		if (value == null) {
+			return 0;
 		}
-		
-		return 0;
+
+		return value.to_double ();
 	}
 
 	/**
@@ -134,11 +125,6 @@ public class Vala.Attribute : CodeNode {
 	 * @return     boolean value
 	 */
 	public bool get_bool (string name) {
-		var lit = args.get (name) as BooleanLiteral;
-		if (lit != null) {
-			return lit.value;
-		}
-		
-		return false;
+		return (args.get (name) == "true");
 	}
 }

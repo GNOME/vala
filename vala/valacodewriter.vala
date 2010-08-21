@@ -1915,9 +1915,7 @@ public class Vala.CodeWriter : CodeVisitor {
 
 					string separator = "";
 					foreach (string arg_name in keys) {
-						stream.printf ("%s%s = ", separator, arg_name);
-						var expr = attr.args.get (arg_name);
-						expr.accept (this);
+						stream.printf ("%s%s = %s", separator, arg_name, attr.args.get (arg_name));
 						separator = ", ";
 					}
 
