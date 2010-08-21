@@ -497,6 +497,18 @@ public abstract class Vala.Symbol : CodeNode {
 		return null;
 	}
 
+	// check whether this symbol is at least as accessible as the specified symbol
+	public  bool is_accessible (Symbol sym) {
+		Scope sym_scope = sym.get_top_accessible_scope ();
+		Scope this_scope = this.get_top_accessible_scope ();
+		if ((sym_scope == null && this_scope != null)
+		    || (sym_scope != null && !sym_scope.is_subscope_of (this_scope))) {
+			return false;
+		}
+
+		return true;
+	}
+
 	public virtual void add_namespace (Namespace ns) {
 		Report.error (ns.source_reference, "unexpected declaration");
 	}

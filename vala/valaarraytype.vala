@@ -232,8 +232,8 @@ public class Vala.ArrayType : ReferenceType {
 		}
 	}
 
-	public override List<Symbol> get_symbols () {
-		return element_type.get_symbols ();
+	public override bool is_accessible (Symbol sym) {
+		return element_type.is_accessible (sym);
 	}
 
 	public override bool check (SemanticAnalyzer analyzer) {

@@ -241,16 +241,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	// check whether type is at least as accessible as the specified symbol
 	public bool is_type_accessible (Symbol sym, DataType type) {
-		foreach (Symbol type_symbol in type.get_symbols ()) {
-			Scope method_scope = sym.get_top_accessible_scope ();
-			Scope type_scope = type_symbol.get_top_accessible_scope ();
-			if ((method_scope == null && type_scope != null)
-			    || (method_scope != null && !method_scope.is_subscope_of (type_scope))) {
-				return false;
-			}
-		}
-
-		return true;
+		return type.is_accessible (sym);
 	}
 
 	public DataType? get_value_type_for_symbol (Symbol sym, bool lvalue) {

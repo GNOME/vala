@@ -435,17 +435,12 @@ public abstract class Vala.DataType : CodeNode {
 		return false;
 	}
 
-	/**
-	 * Returns a list of symbols that define this type.
-	 *
-	 * @return symbol list
-	 */
-	public virtual List<Symbol> get_symbols () {
-		var symbols = new ArrayList<Symbol> ();
+	// check whether this type is at least as accessible as the specified symbol
+	public virtual bool is_accessible (Symbol sym) {
 		if (data_type != null) {
-			symbols.add (data_type);
+			return data_type.is_accessible (sym);
 		}
-		return symbols;
+		return true;
 	}
 
 	public virtual Symbol? get_member (string member_name) {

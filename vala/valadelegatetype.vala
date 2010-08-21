@@ -93,10 +93,8 @@ public class Vala.DelegateType : DataType {
 		}
 	}
 
-	public override List<Symbol> get_symbols () {
-		var symbols = new ArrayList<Symbol> ();
-		symbols.add (delegate_symbol);
-		return symbols;
+	public override bool is_accessible (Symbol sym) {
+		return delegate_symbol.is_accessible (sym);
 	}
 
 	public override string? get_type_id () {
