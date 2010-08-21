@@ -196,17 +196,9 @@ public class Vala.CreationMethod : Method {
 					// chain up impossible
 				} else if (cl.base_class.default_construction_method == null
 				    || cl.base_class.default_construction_method.access == SymbolAccessibility.PRIVATE) {
-					if (analyzer.context.profile == Profile.GOBJECT) {
-						Report.warning (source_reference, "unable to chain up to private base constructor");
-					} else {
-						Report.error (source_reference, "unable to chain up to private base constructor");
-					}
+					Report.error (source_reference, "unable to chain up to private base constructor");
 				} else if (cl.base_class.default_construction_method.get_required_arguments () > 0) {
-					if (analyzer.context.profile == Profile.GOBJECT) {
-						Report.warning (source_reference, "unable to chain up to base constructor requiring arguments");
-					} else {
-						Report.error (source_reference, "unable to chain up to base constructor requiring arguments");
-					}
+					Report.error (source_reference, "unable to chain up to base constructor requiring arguments");
 				} else {
 					var old_insert_block = analyzer.insert_block;
 					analyzer.current_symbol = body;
