@@ -28,7 +28,7 @@ using GLib;
  * Represents a type or namespace method.
  */
 public class Vala.Method : Symbol {
-	List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
+	List<TypeParameter> type_parameters;
 
 	public const string DEFAULT_SENTINEL = "NULL";
 
@@ -238,8 +238,8 @@ public class Vala.Method : Symbol {
 	private string finish_name;
 	private string _vfunc_name;
 	private string _sentinel;
-	private List<Expression> preconditions = new ArrayList<Expression> ();
-	private List<Expression> postconditions = new ArrayList<Expression> ();
+	private List<Expression> preconditions;
+	private List<Expression> postconditions;
 	private DataType _return_type;
 	private Block _body;
 
@@ -251,6 +251,9 @@ public class Vala.Method : Symbol {
 
 	// only valid for closures
 	List<LocalVariable> captured_variables;
+
+	static List<Expression> _empty_expression_list;
+	static List<TypeParameter> _empty_type_parameter_list;
 
 	/**
 	 * Creates a new method.
@@ -327,12 +330,16 @@ public class Vala.Method : Symbol {
 			result_var.accept (visitor);
 		}
 
-		foreach (Expression precondition in preconditions) {
-			precondition.accept (visitor);
+		if (preconditions != null) {
+			foreach (Expression precondition in preconditions) {
+				precondition.accept (visitor);
+			}
 		}
 
-		foreach (Expression postcondition in postconditions) {
-			postcondition.accept (visitor);
+		if (postconditions != null) {
+			foreach (Expression postcondition in postconditions) {
+				postcondition.accept (visitor);
+			}
 		}
 
 		if (body != null) {
@@ -590,6 +597,9 @@ public class Vala.Method : Symbol {
 	 * @param p a type parameter
 	 */
 	public void add_type_parameter (TypeParameter p) {
+		if (type_parameters == null) {
+			type_parameters = new ArrayList<TypeParameter> ();
+		}
 		type_parameters.add (p);
 		scope.add (p.name, p);
 	}
@@ -600,10 +610,20 @@ public class Vala.Method : Symbol {
 	 * @return list of type parameters
 	 */
 	public List<TypeParameter> get_type_parameters () {
-		return type_parameters;
+		if (type_parameters != null) {
+			return type_parameters;
+		}
+		if (_empty_type_parameter_list == null) {
+			_empty_type_parameter_list = new ArrayList<TypeParameter> ();
+		}
+		return _empty_type_parameter_list;
 	}
 
 	public int get_type_parameter_index (string name) {
+		if (type_parameters == null) {
+			return -1;
+		}
+
 		int i = 0;
 		foreach (TypeParameter parameter in type_parameters) {
 			if (parameter.name == name) {
@@ -620,6 +640,9 @@ public class Vala.Method : Symbol {
 	 * @param precondition a boolean precondition expression
 	 */
 	public void add_precondition (Expression precondition) {
+		if (preconditions == null) {
+			preconditions = new ArrayList<Expression> ();
+		}
 		preconditions.add (precondition);
 		precondition.parent_node = this;
 	}
@@ -630,7 +653,13 @@ public class Vala.Method : Symbol {
 	 * @return list of preconditions
 	 */
 	public List<Expression> get_preconditions () {
-		return preconditions;
+		if (preconditions != null) {
+			return preconditions;
+		}
+		if (_empty_expression_list == null) {
+			_empty_expression_list = new ArrayList<Expression> ();
+		}
+		return _empty_expression_list;
 	}
 
 	/**
@@ -639,6 +668,9 @@ public class Vala.Method : Symbol {
 	 * @param postcondition a boolean postcondition expression
 	 */
 	public void add_postcondition (Expression postcondition) {
+		if (postconditions == null) {
+			postconditions = new ArrayList<Expression> ();
+		}
 		postconditions.add (postcondition);
 		postcondition.parent_node = this;
 	}
@@ -649,7 +681,13 @@ public class Vala.Method : Symbol {
 	 * @return list of postconditions
 	 */
 	public List<Expression> get_postconditions () {
-		return postconditions;
+		if (postconditions != null) {
+			return postconditions;
+		}
+		if (_empty_expression_list == null) {
+			_empty_expression_list = new ArrayList<Expression> ();
+		}
+		return _empty_expression_list;
 	}
 
 	public override void replace_type (DataType old_type, DataType new_type) {
@@ -853,12 +891,16 @@ public class Vala.Method : Symbol {
 			result_var.check (analyzer);
 		}
 
-		foreach (Expression precondition in preconditions) {
-			precondition.check (analyzer);
+		if (preconditions != null) {
+			foreach (Expression precondition in preconditions) {
+				precondition.check (analyzer);
+			}
 		}
 
-		foreach (Expression postcondition in postconditions) {
-			postcondition.check (analyzer);
+		if (postconditions != null) {
+			foreach (Expression postcondition in postconditions) {
+				postcondition.check (analyzer);
+			}
 		}
 
 		if (body != null) {
