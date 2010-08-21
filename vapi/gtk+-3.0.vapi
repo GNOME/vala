@@ -214,6 +214,14 @@ namespace Gtk {
 		public const string ZOOM_IN;
 		[CCode (cheader_filename = "gtk/gtk.h")]
 		public const string ZOOM_OUT;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public static void add (Gtk.StockItem[] items);
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public static void add_static (Gtk.StockItem[] items);
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public static GLib.SList<string> list_ids ();
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public static bool lookup (string stock_id, out Gtk.StockItem item);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class AboutDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable, Gtk.SizeRequest {
@@ -7552,14 +7560,15 @@ namespace Gtk {
 	public static void show_about_dialog (Gtk.Window? parent, ...);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool show_uri (Gdk.Screen? screen, string uri, uint32 timestamp) throws GLib.Error;
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.add")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void stock_add (Gtk.StockItem[] items);
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.add_static")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void stock_add_static (Gtk.StockItem[] items);
+	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.list_ids")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static GLib.SList<string> stock_list_ids ();
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static bool stock_lookup (string stock_id, Gtk.StockItem item);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void stock_set_translate_func (string domain, owned Gtk.TranslateFunc func);
 	[CCode (cheader_filename = "gtk/gtk.h")]
