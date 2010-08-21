@@ -5715,10 +5715,6 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		return false;
 	}
 
-	public virtual CCodeExpression get_construct_property_assignment (CCodeConstant canonical_cconstant, DataType property_type, CCodeExpression value) {
-		return new CCodeConstant ("");
-	}
-
 	public virtual CCodeFunctionCall get_param_spec (Property prop) {
 		return new CCodeFunctionCall (new CCodeIdentifier (""));
 	}

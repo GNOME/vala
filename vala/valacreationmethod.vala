@@ -193,7 +193,17 @@ public class Vala.CreationMethod : Method {
 				if (analyzer.context.profile == Profile.GOBJECT
 				    && cl.base_class.default_construction_method != null
 				    && !cl.base_class.default_construction_method.has_construct_function) {
-					// chain up impossible
+					// directly chain up to Object
+					var old_insert_block = analyzer.insert_block;
+					analyzer.current_symbol = body;
+					analyzer.insert_block = body;
+
+					var stmt = new ExpressionStatement (new MethodCall (new MemberAccess (new MemberAccess.simple ("GLib", source_reference), "Object", source_reference), source_reference), source_reference);
+					body.insert_statement (0, stmt);
+					stmt.check (analyzer);
+
+					analyzer.current_symbol = this;
+					analyzer.insert_block = old_insert_block;
 				} else if (cl.base_class.default_construction_method == null
 				    || cl.base_class.default_construction_method.access == SymbolAccessibility.PRIVATE) {
 					Report.error (source_reference, "unable to chain up to private base constructor");

@@ -492,47 +492,10 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 
 				if (m is CreationMethod) {
 					if (in_gobject_creation_method) {
-						if (!((CreationMethod) m).chain_up) {
-							if (current_class.get_type_parameters ().size > 0) {
-								// declare construction parameter array
-								var cparamsinit = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
-								cparamsinit.add_argument (new CCodeIdentifier ("GParameter"));
-								cparamsinit.add_argument (new CCodeConstant ((3 * current_class.get_type_parameters ().size).to_string ()));
-						
-								var cdecl = new CCodeDeclaration ("GParameter *");
-								cdecl.add_declarator (new CCodeVariableDeclarator ("__params", cparamsinit));
-								cinit.append (cdecl);
-						
-								cdecl = new CCodeDeclaration ("GParameter *");
-								cdecl.add_declarator (new CCodeVariableDeclarator ("__params_it", new CCodeIdentifier ("__params")));
-								cinit.append (cdecl);
-							}
+						var cdeclaration = new CCodeDeclaration ("%s *".printf (((Class) current_type_symbol).get_cname ()));
+						cdeclaration.add_declarator (new CCodeVariableDeclarator ("self"));
 
-							/* type, dup func, and destroy func properties for generic types */
-							foreach (TypeParameter type_param in current_class.get_type_parameters ()) {
-								CCodeConstant prop_name;
-								CCodeIdentifier param_name;
-
-								prop_name = new CCodeConstant ("\"%s-type\"".printf (type_param.name.down ()));
-								param_name = new CCodeIdentifier ("%s_type".printf (type_param.name.down ()));
-								cinit.append (new CCodeExpressionStatement (get_construct_property_assignment (prop_name, new IntegerType ((Struct) gtype_type), param_name)));
-
-								prop_name = new CCodeConstant ("\"%s-dup-func\"".printf (type_param.name.down ()));
-								param_name = new CCodeIdentifier ("%s_dup_func".printf (type_param.name.down ()));
-								cinit.append (new CCodeExpressionStatement (get_construct_property_assignment (prop_name, new PointerType (new VoidType ()), param_name)));
-
-								prop_name = new CCodeConstant ("\"%s-destroy-func\"".printf (type_param.name.down ()));
-								param_name = new CCodeIdentifier ("%s_destroy_func".printf (type_param.name.down ()));
-								cinit.append (new CCodeExpressionStatement (get_construct_property_assignment (prop_name, new PointerType (new VoidType ()), param_name)));
-							}
-
-							add_object_creation (cinit, current_class.get_type_parameters ().size > 0);
-						} else {
-							var cdeclaration = new CCodeDeclaration ("%s *".printf (((Class) current_type_symbol).get_cname ()));
-							cdeclaration.add_declarator (new CCodeVariableDeclarator ("self"));
-
-							cinit.append (cdeclaration);
-						}
+						cinit.append (cdeclaration);
 					} else if (is_gtypeinstance_creation_method (m)) {
 						var cl = (Class) m.parent_symbol;
 						var cdeclaration = new CCodeDeclaration (cl.get_cname () + "*");
@@ -540,8 +503,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 						cdeclaration.add_declarator (cdecl);
 						cinit.append (cdeclaration);
 
-						if (!((CreationMethod) m).chain_up) {
-							// TODO implicitly chain up to base class as in add_object_creation
+						if (cl.is_fundamental ()) {
 							var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_create_instance"));
 							ccall.add_argument (new CCodeIdentifier ("object_type"));
 							cdecl.initializer = new CCodeCastExpression (ccall, cl.get_cname () + "*");
@@ -1037,31 +999,6 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		return null;
 	}
 
-	private void add_object_creation (CCodeFragment ccode, bool has_params) {
-		var cl = (Class) current_type_symbol;
-
-		if (!has_params && cl.base_class != gobject_type) {
-			// possibly report warning or error about missing base call
-		}
-
-		var cdecl = new CCodeVariableDeclarator ("self");
-		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_newv"));
-		ccall.add_argument (new CCodeIdentifier ("object_type"));
-		if (has_params) {
-			ccall.add_argument (new CCodeConstant ("__params_it - __params"));
-			ccall.add_argument (new CCodeConstant ("__params"));
-		} else {
-			ccall.add_argument (new CCodeConstant ("0"));
-			ccall.add_argument (new CCodeConstant ("NULL"));
-		}
-		cdecl.initializer = ccall;
-		
-		var cdeclaration = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
-		cdeclaration.add_declarator (cdecl);
-		
-		ccode.append (cdeclaration);
-	}
-
 	public override void visit_creation_method (CreationMethod m) {
 		bool visible = !m.is_private_symbol ();
 
@@ -1100,22 +1037,6 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 			vfunc.block = vblock;
 
 			cfile.add_function (vfunc);
-		}
-
-		if (current_type_symbol is Class && gobject_type != null && current_class.is_subtype_of (gobject_type)
-		    && current_class.get_type_parameters ().size > 0
-		    && !((CreationMethod) m).chain_up) {
-			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, new CCodeIdentifier ("__params_it"), new CCodeIdentifier ("__params"));
-			var cdofreeparam = new CCodeBlock ();
-			cdofreeparam.add_statement (new CCodeExpressionStatement (new CCodeUnaryExpression (CCodeUnaryOperator.PREFIX_DECREMENT, new CCodeIdentifier ("__params_it"))));
-			var cunsetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_unset"));
-			cunsetcall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeMemberAccess.pointer (new CCodeIdentifier ("__params_it"), "value")));
-			cdofreeparam.add_statement (new CCodeExpressionStatement (cunsetcall));
-			function.block.add_statement (new CCodeWhileStatement (ccond, cdofreeparam));
-
-			var cfreeparams = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
-			cfreeparams.add_argument (new CCodeIdentifier ("__params"));
-			function.block.add_statement (new CCodeExpressionStatement (cfreeparams));
 		}
 
 		if (current_type_symbol is Class) {
