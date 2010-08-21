@@ -192,6 +192,7 @@ namespace Gdk {
 	public class Drawable : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Drawable ();
+		[Deprecated (since = "2.22")]
 		public unowned Gdk.Image copy_to_image (Gdk.Image image, int src_x, int src_y, int dest_x, int dest_y, int width, int height);
 		[NoWrapper]
 		public virtual unowned Cairo.Surface create_cairo_surface (int width, int height);
@@ -298,6 +299,7 @@ namespace Gdk {
 		public int id ();
 		public static unowned Gdk.Font load_for_display (Gdk.Display display, string font_name);
 	}
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class GC : GLib.Object {
 		public int clip_x_origin;
@@ -334,6 +336,7 @@ namespace Gdk {
 		[CCode (has_construct_function = false)]
 		public GC.with_values (Gdk.Drawable drawable, Gdk.GCValues values, Gdk.GCValuesMask values_mask);
 	}
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Image : GLib.Object {
 		public uint16 bits_per_pixel;
@@ -410,10 +413,15 @@ namespace Gdk {
 	public class Pixmap : Gdk.Drawable {
 		[CCode (has_construct_function = false)]
 		public Pixmap (Gdk.Drawable? drawable, int width, int height, int depth);
+		[Deprecated (since = "2.22")]
 		public static unowned Gdk.Pixmap colormap_create_from_xpm (Gdk.Drawable drawable, Gdk.Colormap colormap, out unowned Gdk.Bitmap mask, Gdk.Color transparent_color, string filename);
+		[Deprecated (since = "2.22")]
 		public static unowned Gdk.Pixmap colormap_create_from_xpm_d (Gdk.Drawable drawable, Gdk.Colormap colormap, out unowned Gdk.Bitmap mask, Gdk.Color transparent_color, string data);
+		[Deprecated (since = "2.22")]
 		public static unowned Gdk.Pixmap create_from_data (Gdk.Drawable drawable, string data, int width, int height, int depth, Gdk.Color fg, Gdk.Color bg);
+		[Deprecated (since = "2.22")]
 		public static unowned Gdk.Pixmap create_from_xpm (Gdk.Drawable drawable, out unowned Gdk.Bitmap mask, Gdk.Color transparent_color, string filename);
+		[Deprecated (since = "2.22")]
 		public static unowned Gdk.Pixmap create_from_xpm_d (Gdk.Drawable drawable, out unowned Gdk.Bitmap mask, Gdk.Color transparent_color, string data);
 		public static unowned Gdk.Pixmap foreign_new (Gdk.NativeWindow anid);
 		public static unowned Gdk.Pixmap foreign_new_for_display (Gdk.Display display, Gdk.NativeWindow anid);
@@ -586,7 +594,9 @@ namespace Gdk {
 		public void fullscreen ();
 		public void geometry_changed ();
 		public bool get_accept_focus ();
+		[Deprecated (since = "2.22")]
 		public void get_back_pixmap (out unowned Gdk.Pixmap pixmap, bool parent_relative);
+		[Deprecated (since = "2.22")]
 		public void get_background (Gdk.Color color);
 		public GLib.List<weak Gdk.Window> get_children ();
 		public bool get_composited ();
@@ -1010,14 +1020,17 @@ namespace Gdk {
 		public bool intersect (Gdk.Rectangle src2, Gdk.Rectangle dest);
 		public void union (Gdk.Rectangle src2, out Gdk.Rectangle dest);
 	}
+	[Deprecated (since = "2.22")]
 	[CCode (type_id = "GDK_TYPE_RGB_CMAP", cheader_filename = "gdk/gdk.h")]
 	public struct RgbCmap {
 		[CCode (array_length = false)]
 		public weak uint32[] colors;
 		public int n_colors;
 		public weak GLib.SList info_list;
+		[Deprecated (since = "2.22")]
 		[CCode (cname = "gdk_rgb_cmap_new", has_construct_function = false)]
 		public RgbCmap (uint32[] colors);
+		[Deprecated (since = "2.22")]
 		public void free ();
 	}
 	[CCode (type_id = "GDK_TYPE_SEGMENT", cheader_filename = "gdk/gdk.h")]
@@ -1616,6 +1629,7 @@ namespace Gdk {
 	public delegate Gdk.FilterReturn FilterFunc (Gdk.XEvent xevent, Gdk.Event event);
 	[CCode (cheader_filename = "gdk/gdk.h", has_target = false)]
 	public delegate void InputFunction (void* data, int source, Gdk.InputCondition condition);
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public delegate void SpanFunc (Gdk.Span span);
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -1680,56 +1694,82 @@ namespace Gdk {
 	public static bool drag_motion (Gdk.DragContext context, Gdk.Window dest_window, Gdk.DragProtocol protocol, int x_root, int y_root, Gdk.DragAction suggested_action, Gdk.DragAction possible_actions, uint32 time_);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void drag_status (Gdk.DragContext context, Gdk.DragAction action, uint32 time_);
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_arc (Gdk.Drawable drawable, Gdk.GC gc, bool filled, int x, int y, int width, int height, int angle1, int angle2);
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_drawable (Gdk.Drawable drawable, Gdk.GC gc, Gdk.Drawable src, int xsrc, int ysrc, int xdest, int ydest, int width, int height);
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_glyphs (Gdk.Drawable drawable, Gdk.GC gc, Pango.Font font, int x, int y, Pango.GlyphString glyphs);
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_glyphs_transformed (Gdk.Drawable drawable, Gdk.GC gc, Pango.Matrix matrix, Pango.Font font, int x, int y, Pango.GlyphString glyphs);
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_gray_image (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, [CCode (array_length = false)] uchar[] buf, int rowstride);
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_image (Gdk.Drawable drawable, Gdk.GC gc, Gdk.Image image, int xsrc, int ysrc, int xdest, int ydest, int width, int height);
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_indexed_image (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, [CCode (array_length = false)] uchar[] buf, int rowstride, Gdk.RgbCmap cmap);
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_layout (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, Pango.Layout layout);
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_layout_line (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, Pango.LayoutLine line);
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_layout_line_with_colors (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, Pango.LayoutLine line, Gdk.Color foreground, Gdk.Color background);
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_layout_with_colors (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, Pango.Layout layout, Gdk.Color foreground, Gdk.Color background);
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_line (Gdk.Drawable drawable, Gdk.GC gc, int x1_, int y1_, int x2_, int y2_);
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_lines (Gdk.Drawable drawable, Gdk.GC gc, Gdk.Point[] points);
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_pixbuf (Gdk.Drawable drawable, Gdk.GC gc, Gdk.Pixbuf pixbuf, int src_x, int src_y, int dest_x, int dest_y, int width, int height, Gdk.RgbDither dither, int x_dither, int y_dither);
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_point (Gdk.Drawable drawable, Gdk.GC gc, int x, int y);
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_points (Gdk.Drawable drawable, Gdk.GC gc, Gdk.Point[] points);
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_polygon (Gdk.Drawable drawable, Gdk.GC gc, bool filled, Gdk.Point[] points);
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_rectangle (Gdk.Drawable drawable, Gdk.GC gc, bool filled, int x, int y, int width, int height);
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_rgb_32_image (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, [CCode (array_length = false)] uchar[] buf, int rowstride);
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_rgb_32_image_dithalign (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, [CCode (array_length = false)] uchar[] buf, int rowstride, int xdith, int ydith);
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_rgb_image (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, [CCode (array_length = false)] uchar[] rgb_buf, int rowstride);
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_rgb_image_dithalign (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, [CCode (array_length = false)] uchar[] rgb_buf, int rowstride, int xdith, int ydith);
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_segments (Gdk.Drawable drawable, Gdk.GC gc, Gdk.Segment[] segs);
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_text (Gdk.Drawable drawable, Gdk.Font font, Gdk.GC gc, int x, int y, string text, int text_length);
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_text_wc (Gdk.Drawable drawable, Gdk.Font font, Gdk.GC gc, int x, int y, Gdk.WChar text, int text_length);
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_trapezoids (Gdk.Drawable drawable, Gdk.GC gc, Gdk.Trapezoid[] trapezoids);
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -1838,20 +1878,28 @@ namespace Gdk {
 	public static void query_depths (int depths, int count);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void query_visual_types (out Gdk.VisualType visual_types, int count);
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool rgb_colormap_ditherable (Gdk.Colormap cmap);
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool rgb_ditherable ();
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void rgb_find_color (Gdk.Colormap colormap, ref Gdk.Color color);
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static unowned Gdk.Colormap rgb_get_colormap ();
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static unowned Gdk.Visual rgb_get_visual ();
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void rgb_set_install (bool install);
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void rgb_set_min_colors (int min_colors);
+	[Deprecated (since = "2.22")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void rgb_set_verbose (bool verbose);
 	[CCode (cheader_filename = "gdk/gdk.h")]

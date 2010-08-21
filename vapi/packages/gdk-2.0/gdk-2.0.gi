@@ -70,6 +70,34 @@
 				<parameter name="pixmap_y" type="double"/>
 			</parameters>
 		</function>
+		<function name="char_height" symbol="gdk_char_height">
+			<return-type type="gint"/>
+			<parameters>
+				<parameter name="font" type="GdkFont*"/>
+				<parameter name="character" type="gchar"/>
+			</parameters>
+		</function>
+		<function name="char_measure" symbol="gdk_char_measure">
+			<return-type type="gint"/>
+			<parameters>
+				<parameter name="font" type="GdkFont*"/>
+				<parameter name="character" type="gchar"/>
+			</parameters>
+		</function>
+		<function name="char_width" symbol="gdk_char_width">
+			<return-type type="gint"/>
+			<parameters>
+				<parameter name="font" type="GdkFont*"/>
+				<parameter name="character" type="gchar"/>
+			</parameters>
+		</function>
+		<function name="char_width_wc" symbol="gdk_char_width_wc">
+			<return-type type="gint"/>
+			<parameters>
+				<parameter name="font" type="GdkFont*"/>
+				<parameter name="character" type="GdkWChar"/>
+			</parameters>
+		</function>
 		<function name="colors_alloc" symbol="gdk_colors_alloc">
 			<return-type type="gint"/>
 			<parameters>
@@ -88,6 +116,14 @@
 				<parameter name="pixels" type="gulong*"/>
 				<parameter name="npixels" type="gint"/>
 				<parameter name="planes" type="gulong"/>
+			</parameters>
+		</function>
+		<function name="colors_store" symbol="gdk_colors_store">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="colormap" type="GdkColormap*"/>
+				<parameter name="colors" type="GdkColor*"/>
+				<parameter name="ncolors" type="gint"/>
 			</parameters>
 		</function>
 		<function name="devices_list" symbol="gdk_devices_list">
@@ -469,6 +505,17 @@
 				<parameter name="n_segs" type="gint"/>
 			</parameters>
 		</function>
+		<function name="draw_string" symbol="gdk_draw_string">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="drawable" type="GdkDrawable*"/>
+				<parameter name="font" type="GdkFont*"/>
+				<parameter name="gc" type="GdkGC*"/>
+				<parameter name="x" type="gint"/>
+				<parameter name="y" type="gint"/>
+				<parameter name="string" type="gchar*"/>
+			</parameters>
+		</function>
 		<function name="draw_text" symbol="gdk_draw_text">
 			<return-type type="void"/>
 			<parameters>
@@ -527,8 +574,20 @@
 		<function name="events_pending" symbol="gdk_events_pending">
 			<return-type type="gboolean"/>
 		</function>
+		<function name="exit" symbol="gdk_exit">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="error_code" type="gint"/>
+			</parameters>
+		</function>
 		<function name="flush" symbol="gdk_flush">
 			<return-type type="void"/>
+		</function>
+		<function name="fontset_load" symbol="gdk_fontset_load">
+			<return-type type="GdkFont*"/>
+			<parameters>
+				<parameter name="fontset_name" type="gchar*"/>
+			</parameters>
 		</function>
 		<function name="fontset_load_for_display" symbol="gdk_fontset_load_for_display">
 			<return-type type="GdkFont*"/>
@@ -564,6 +623,9 @@
 		<function name="get_show_events" symbol="gdk_get_show_events">
 			<return-type type="gboolean"/>
 		</function>
+		<function name="get_use_xshm" symbol="gdk_get_use_xshm">
+			<return-type type="gboolean"/>
+		</function>
 		<function name="init" symbol="gdk_init">
 			<return-type type="void"/>
 			<parameters>
@@ -576,6 +638,31 @@
 			<parameters>
 				<parameter name="argc" type="gint*"/>
 				<parameter name="argv" type="gchar***"/>
+			</parameters>
+		</function>
+		<function name="input_add" symbol="gdk_input_add">
+			<return-type type="gint"/>
+			<parameters>
+				<parameter name="source" type="gint"/>
+				<parameter name="condition" type="GdkInputCondition"/>
+				<parameter name="function" type="GdkInputFunction"/>
+				<parameter name="data" type="gpointer"/>
+			</parameters>
+		</function>
+		<function name="input_add_full" symbol="gdk_input_add_full">
+			<return-type type="gint"/>
+			<parameters>
+				<parameter name="source" type="gint"/>
+				<parameter name="condition" type="GdkInputCondition"/>
+				<parameter name="function" type="GdkInputFunction"/>
+				<parameter name="data" type="gpointer"/>
+				<parameter name="destroy" type="GDestroyNotify"/>
+			</parameters>
+		</function>
+		<function name="input_remove" symbol="gdk_input_remove">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="tag" type="gint"/>
 			</parameters>
 		</function>
 		<function name="input_set_extension_events" symbol="gdk_input_set_extension_events">
@@ -653,6 +740,14 @@
 		<function name="list_visuals" symbol="gdk_list_visuals">
 			<return-type type="GList*"/>
 		</function>
+		<function name="mbstowcs" symbol="gdk_mbstowcs">
+			<return-type type="gint"/>
+			<parameters>
+				<parameter name="dest" type="GdkWChar*"/>
+				<parameter name="src" type="gchar*"/>
+				<parameter name="dest_max" type="gint"/>
+			</parameters>
+		</function>
 		<function name="notify_startup_complete" symbol="gdk_notify_startup_complete">
 			<return-type type="void"/>
 		</function>
@@ -688,6 +783,13 @@
 			<return-type type="PangoContext*"/>
 			<parameters>
 				<parameter name="screen" type="GdkScreen*"/>
+			</parameters>
+		</function>
+		<function name="pango_context_set_colormap" symbol="gdk_pango_context_set_colormap">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="context" type="PangoContext*"/>
+				<parameter name="colormap" type="GdkColormap*"/>
 			</parameters>
 		</function>
 		<function name="pango_layout_get_clip_region" symbol="gdk_pango_layout_get_clip_region">
@@ -776,6 +878,41 @@
 				<parameter name="width" type="int"/>
 				<parameter name="height" type="int"/>
 				<parameter name="alpha_threshold" type="int"/>
+			</parameters>
+		</function>
+		<function name="pixbuf_render_to_drawable" symbol="gdk_pixbuf_render_to_drawable">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="pixbuf" type="GdkPixbuf*"/>
+				<parameter name="drawable" type="GdkDrawable*"/>
+				<parameter name="gc" type="GdkGC*"/>
+				<parameter name="src_x" type="int"/>
+				<parameter name="src_y" type="int"/>
+				<parameter name="dest_x" type="int"/>
+				<parameter name="dest_y" type="int"/>
+				<parameter name="width" type="int"/>
+				<parameter name="height" type="int"/>
+				<parameter name="dither" type="GdkRgbDither"/>
+				<parameter name="x_dither" type="int"/>
+				<parameter name="y_dither" type="int"/>
+			</parameters>
+		</function>
+		<function name="pixbuf_render_to_drawable_alpha" symbol="gdk_pixbuf_render_to_drawable_alpha">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="pixbuf" type="GdkPixbuf*"/>
+				<parameter name="drawable" type="GdkDrawable*"/>
+				<parameter name="src_x" type="int"/>
+				<parameter name="src_y" type="int"/>
+				<parameter name="dest_x" type="int"/>
+				<parameter name="dest_y" type="int"/>
+				<parameter name="width" type="int"/>
+				<parameter name="height" type="int"/>
+				<parameter name="alpha_mode" type="GdkPixbufAlphaMode"/>
+				<parameter name="alpha_threshold" type="int"/>
+				<parameter name="dither" type="GdkRgbDither"/>
+				<parameter name="x_dither" type="int"/>
+				<parameter name="y_dither" type="int"/>
 			</parameters>
 		</function>
 		<function name="pointer_grab" symbol="gdk_pointer_grab">
@@ -873,11 +1010,28 @@
 				<parameter name="color" type="GdkColor*"/>
 			</parameters>
 		</function>
+		<function name="rgb_gc_set_background" symbol="gdk_rgb_gc_set_background">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="gc" type="GdkGC*"/>
+				<parameter name="rgb" type="guint32"/>
+			</parameters>
+		</function>
+		<function name="rgb_gc_set_foreground" symbol="gdk_rgb_gc_set_foreground">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="gc" type="GdkGC*"/>
+				<parameter name="rgb" type="guint32"/>
+			</parameters>
+		</function>
 		<function name="rgb_get_colormap" symbol="gdk_rgb_get_colormap">
 			<return-type type="GdkColormap*"/>
 		</function>
 		<function name="rgb_get_visual" symbol="gdk_rgb_get_visual">
 			<return-type type="GdkVisual*"/>
+		</function>
+		<function name="rgb_init" symbol="gdk_rgb_init">
+			<return-type type="void"/>
 		</function>
 		<function name="rgb_set_install" symbol="gdk_rgb_set_install">
 			<return-type type="void"/>
@@ -897,75 +1051,10 @@
 				<parameter name="verbose" type="gboolean"/>
 			</parameters>
 		</function>
-		<function name="selection_convert" symbol="gdk_selection_convert">
-			<return-type type="void"/>
+		<function name="rgb_xpixel_from_rgb" symbol="gdk_rgb_xpixel_from_rgb">
+			<return-type type="gulong"/>
 			<parameters>
-				<parameter name="requestor" type="GdkWindow*"/>
-				<parameter name="selection" type="GdkAtom"/>
-				<parameter name="target" type="GdkAtom"/>
-				<parameter name="time_" type="guint32"/>
-			</parameters>
-		</function>
-		<function name="selection_owner_get" symbol="gdk_selection_owner_get">
-			<return-type type="GdkWindow*"/>
-			<parameters>
-				<parameter name="selection" type="GdkAtom"/>
-			</parameters>
-		</function>
-		<function name="selection_owner_get_for_display" symbol="gdk_selection_owner_get_for_display">
-			<return-type type="GdkWindow*"/>
-			<parameters>
-				<parameter name="display" type="GdkDisplay*"/>
-				<parameter name="selection" type="GdkAtom"/>
-			</parameters>
-		</function>
-		<function name="selection_owner_set" symbol="gdk_selection_owner_set">
-			<return-type type="gboolean"/>
-			<parameters>
-				<parameter name="owner" type="GdkWindow*"/>
-				<parameter name="selection" type="GdkAtom"/>
-				<parameter name="time_" type="guint32"/>
-				<parameter name="send_event" type="gboolean"/>
-			</parameters>
-		</function>
-		<function name="selection_owner_set_for_display" symbol="gdk_selection_owner_set_for_display">
-			<return-type type="gboolean"/>
-			<parameters>
-				<parameter name="display" type="GdkDisplay*"/>
-				<parameter name="owner" type="GdkWindow*"/>
-				<parameter name="selection" type="GdkAtom"/>
-				<parameter name="time_" type="guint32"/>
-				<parameter name="send_event" type="gboolean"/>
-			</parameters>
-		</function>
-		<function name="selection_property_get" symbol="gdk_selection_property_get">
-			<return-type type="gint"/>
-			<parameters>
-				<parameter name="requestor" type="GdkWindow*"/>
-				<parameter name="data" type="guchar**"/>
-				<parameter name="prop_type" type="GdkAtom*"/>
-				<parameter name="prop_format" type="gint*"/>
-			</parameters>
-		</function>
-		<function name="selection_send_notify" symbol="gdk_selection_send_notify">
-			<return-type type="void"/>
-			<parameters>
-				<parameter name="requestor" type="GdkNativeWindow"/>
-				<parameter name="selection" type="GdkAtom"/>
-				<parameter name="target" type="GdkAtom"/>
-				<parameter name="property" type="GdkAtom"/>
-				<parameter name="time_" type="guint32"/>
-			</parameters>
-		</function>
-		<function name="selection_send_notify_for_display" symbol="gdk_selection_send_notify_for_display">
-			<return-type type="void"/>
-			<parameters>
-				<parameter name="display" type="GdkDisplay*"/>
-				<parameter name="requestor" type="GdkNativeWindow"/>
-				<parameter name="selection" type="GdkAtom"/>
-				<parameter name="target" type="GdkAtom"/>
-				<parameter name="property" type="GdkAtom"/>
-				<parameter name="time_" type="guint32"/>
+				<parameter name="rgb" type="guint32"/>
 			</parameters>
 		</function>
 		<function name="set_double_click_time" symbol="gdk_set_double_click_time">
@@ -999,6 +1088,12 @@
 			<return-type type="void"/>
 			<parameters>
 				<parameter name="sm_client_id" type="gchar*"/>
+			</parameters>
+		</function>
+		<function name="set_use_xshm" symbol="gdk_set_use_xshm">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="use_xshm" type="gboolean"/>
 			</parameters>
 		</function>
 		<function name="setting_get" symbol="gdk_setting_get">
@@ -1047,6 +1142,32 @@
 				<parameter name="error" type="GError**"/>
 			</parameters>
 		</function>
+		<function name="string_extents" symbol="gdk_string_extents">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="font" type="GdkFont*"/>
+				<parameter name="string" type="gchar*"/>
+				<parameter name="lbearing" type="gint*"/>
+				<parameter name="rbearing" type="gint*"/>
+				<parameter name="width" type="gint*"/>
+				<parameter name="ascent" type="gint*"/>
+				<parameter name="descent" type="gint*"/>
+			</parameters>
+		</function>
+		<function name="string_height" symbol="gdk_string_height">
+			<return-type type="gint"/>
+			<parameters>
+				<parameter name="font" type="GdkFont*"/>
+				<parameter name="string" type="gchar*"/>
+			</parameters>
+		</function>
+		<function name="string_measure" symbol="gdk_string_measure">
+			<return-type type="gint"/>
+			<parameters>
+				<parameter name="font" type="GdkFont*"/>
+				<parameter name="string" type="gchar*"/>
+			</parameters>
+		</function>
 		<function name="string_to_compound_text" symbol="gdk_string_to_compound_text">
 			<return-type type="gint"/>
 			<parameters>
@@ -1066,6 +1187,13 @@
 				<parameter name="format" type="gint*"/>
 				<parameter name="ctext" type="guchar**"/>
 				<parameter name="length" type="gint*"/>
+			</parameters>
+		</function>
+		<function name="string_width" symbol="gdk_string_width">
+			<return-type type="gint"/>
+			<parameters>
+				<parameter name="font" type="GdkFont*"/>
+				<parameter name="string" type="gchar*"/>
 			</parameters>
 		</function>
 		<function name="test_render_sync" symbol="gdk_test_render_sync">
@@ -1094,6 +1222,48 @@
 				<parameter name="keyval" type="guint"/>
 				<parameter name="modifiers" type="GdkModifierType"/>
 				<parameter name="key_pressrelease" type="GdkEventType"/>
+			</parameters>
+		</function>
+		<function name="text_extents" symbol="gdk_text_extents">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="font" type="GdkFont*"/>
+				<parameter name="text" type="gchar*"/>
+				<parameter name="text_length" type="gint"/>
+				<parameter name="lbearing" type="gint*"/>
+				<parameter name="rbearing" type="gint*"/>
+				<parameter name="width" type="gint*"/>
+				<parameter name="ascent" type="gint*"/>
+				<parameter name="descent" type="gint*"/>
+			</parameters>
+		</function>
+		<function name="text_extents_wc" symbol="gdk_text_extents_wc">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="font" type="GdkFont*"/>
+				<parameter name="text" type="GdkWChar*"/>
+				<parameter name="text_length" type="gint"/>
+				<parameter name="lbearing" type="gint*"/>
+				<parameter name="rbearing" type="gint*"/>
+				<parameter name="width" type="gint*"/>
+				<parameter name="ascent" type="gint*"/>
+				<parameter name="descent" type="gint*"/>
+			</parameters>
+		</function>
+		<function name="text_height" symbol="gdk_text_height">
+			<return-type type="gint"/>
+			<parameters>
+				<parameter name="font" type="GdkFont*"/>
+				<parameter name="text" type="gchar*"/>
+				<parameter name="text_length" type="gint"/>
+			</parameters>
+		</function>
+		<function name="text_measure" symbol="gdk_text_measure">
+			<return-type type="gint"/>
+			<parameters>
+				<parameter name="font" type="GdkFont*"/>
+				<parameter name="text" type="gchar*"/>
+				<parameter name="text_length" type="gint"/>
 			</parameters>
 		</function>
 		<function name="text_property_to_text_list" symbol="gdk_text_property_to_text_list">
@@ -1136,6 +1306,22 @@
 				<parameter name="text" type="guchar*"/>
 				<parameter name="length" type="gint"/>
 				<parameter name="list" type="gchar***"/>
+			</parameters>
+		</function>
+		<function name="text_width" symbol="gdk_text_width">
+			<return-type type="gint"/>
+			<parameters>
+				<parameter name="font" type="GdkFont*"/>
+				<parameter name="text" type="gchar*"/>
+				<parameter name="text_length" type="gint"/>
+			</parameters>
+		</function>
+		<function name="text_width_wc" symbol="gdk_text_width_wc">
+			<return-type type="gint"/>
+			<parameters>
+				<parameter name="font" type="GdkFont*"/>
+				<parameter name="text" type="GdkWChar*"/>
+				<parameter name="text_length" type="gint"/>
 			</parameters>
 		</function>
 		<function name="threads_add_idle" symbol="gdk_threads_add_idle">
@@ -1239,6 +1425,18 @@
 				<parameter name="str" type="gchar*"/>
 			</parameters>
 		</function>
+		<function name="wcstombs" symbol="gdk_wcstombs">
+			<return-type type="gchar*"/>
+			<parameters>
+				<parameter name="src" type="GdkWChar*"/>
+			</parameters>
+		</function>
+		<callback name="GdkDestroyNotify">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="data" type="gpointer"/>
+			</parameters>
+		</callback>
 		<callback name="GdkEventFunc">
 			<return-type type="void"/>
 			<parameters>
@@ -1777,10 +1975,87 @@
 			<field name="x2" type="gint"/>
 			<field name="y2" type="gint"/>
 		</struct>
+		<struct name="GdkSelection">
+			<method name="convert" symbol="gdk_selection_convert">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="requestor" type="GdkWindow*"/>
+					<parameter name="selection" type="GdkAtom"/>
+					<parameter name="target" type="GdkAtom"/>
+					<parameter name="time_" type="guint32"/>
+				</parameters>
+			</method>
+			<method name="owner_get" symbol="gdk_selection_owner_get">
+				<return-type type="GdkWindow*"/>
+				<parameters>
+					<parameter name="selection" type="GdkAtom"/>
+				</parameters>
+			</method>
+			<method name="owner_get_for_display" symbol="gdk_selection_owner_get_for_display">
+				<return-type type="GdkWindow*"/>
+				<parameters>
+					<parameter name="display" type="GdkDisplay*"/>
+					<parameter name="selection" type="GdkAtom"/>
+				</parameters>
+			</method>
+			<method name="owner_set" symbol="gdk_selection_owner_set">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="owner" type="GdkWindow*"/>
+					<parameter name="selection" type="GdkAtom"/>
+					<parameter name="time_" type="guint32"/>
+					<parameter name="send_event" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="owner_set_for_display" symbol="gdk_selection_owner_set_for_display">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="display" type="GdkDisplay*"/>
+					<parameter name="owner" type="GdkWindow*"/>
+					<parameter name="selection" type="GdkAtom"/>
+					<parameter name="time_" type="guint32"/>
+					<parameter name="send_event" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="property_get" symbol="gdk_selection_property_get">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="requestor" type="GdkWindow*"/>
+					<parameter name="data" type="guchar**"/>
+					<parameter name="prop_type" type="GdkAtom*"/>
+					<parameter name="prop_format" type="gint*"/>
+				</parameters>
+			</method>
+			<method name="send_notify" symbol="gdk_selection_send_notify">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="requestor" type="GdkNativeWindow"/>
+					<parameter name="selection" type="GdkAtom"/>
+					<parameter name="target" type="GdkAtom"/>
+					<parameter name="property" type="GdkAtom"/>
+					<parameter name="time_" type="guint32"/>
+				</parameters>
+			</method>
+			<method name="send_notify_for_display" symbol="gdk_selection_send_notify_for_display">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="display" type="GdkDisplay*"/>
+					<parameter name="requestor" type="GdkNativeWindow"/>
+					<parameter name="selection" type="GdkAtom"/>
+					<parameter name="target" type="GdkAtom"/>
+					<parameter name="property" type="GdkAtom"/>
+					<parameter name="time_" type="guint32"/>
+				</parameters>
+			</method>
+		</struct>
+		<struct name="GdkSelectionType">
+		</struct>
 		<struct name="GdkSpan">
 			<field name="x" type="gint"/>
 			<field name="y" type="gint"/>
 			<field name="width" type="gint"/>
+		</struct>
+		<struct name="GdkTarget">
 		</struct>
 		<struct name="GdkTimeCoord">
 			<field name="time" type="guint32"/>
@@ -1838,6 +2113,27 @@
 		<struct name="GdkXEvent">
 		</struct>
 		<boxed name="GdkColor" type-name="GdkColor" get-type="gdk_color_get_type">
+			<method name="alloc" symbol="gdk_color_alloc">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="colormap" type="GdkColormap*"/>
+					<parameter name="color" type="GdkColor*"/>
+				</parameters>
+			</method>
+			<method name="black" symbol="gdk_color_black">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="colormap" type="GdkColormap*"/>
+					<parameter name="color" type="GdkColor*"/>
+				</parameters>
+			</method>
+			<method name="change" symbol="gdk_color_change">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="colormap" type="GdkColormap*"/>
+					<parameter name="color" type="GdkColor*"/>
+				</parameters>
+			</method>
 			<method name="copy" symbol="gdk_color_copy">
 				<return-type type="GdkColor*"/>
 				<parameters>
@@ -1876,12 +2172,25 @@
 					<parameter name="color" type="GdkColor*"/>
 				</parameters>
 			</method>
+			<method name="white" symbol="gdk_color_white">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="colormap" type="GdkColormap*"/>
+					<parameter name="color" type="GdkColor*"/>
+				</parameters>
+			</method>
 			<field name="pixel" type="guint32"/>
 			<field name="red" type="guint16"/>
 			<field name="green" type="guint16"/>
 			<field name="blue" type="guint16"/>
 		</boxed>
 		<boxed name="GdkCursor" type-name="GdkCursor" get-type="gdk_cursor_get_type">
+			<method name="get_cursor_type" symbol="gdk_cursor_get_cursor_type">
+				<return-type type="GdkCursorType"/>
+				<parameters>
+					<parameter name="cursor" type="GdkCursor*"/>
+				</parameters>
+			</method>
 			<method name="get_display" symbol="gdk_cursor_get_display">
 				<return-type type="GdkDisplay*"/>
 				<parameters>
@@ -1979,6 +2288,12 @@
 					<parameter name="event" type="GdkEvent*"/>
 					<parameter name="x_win" type="gdouble*"/>
 					<parameter name="y_win" type="gdouble*"/>
+				</parameters>
+			</method>
+			<method name="get_graphics_expose" symbol="gdk_event_get_graphics_expose">
+				<return-type type="GdkEvent*"/>
+				<parameters>
+					<parameter name="window" type="GdkWindow*"/>
 				</parameters>
 			</method>
 			<method name="get_root_coords" symbol="gdk_event_get_root_coords">
@@ -2095,6 +2410,12 @@
 					<parameter name="fontb" type="GdkFont*"/>
 				</parameters>
 			</method>
+			<method name="from_description" symbol="gdk_font_from_description">
+				<return-type type="GdkFont*"/>
+				<parameters>
+					<parameter name="font_desc" type="PangoFontDescription*"/>
+				</parameters>
+			</method>
 			<method name="from_description_for_display" symbol="gdk_font_from_description_for_display">
 				<return-type type="GdkFont*"/>
 				<parameters>
@@ -2102,10 +2423,22 @@
 					<parameter name="font_desc" type="PangoFontDescription*"/>
 				</parameters>
 			</method>
+			<method name="get_display" symbol="gdk_font_get_display">
+				<return-type type="GdkDisplay*"/>
+				<parameters>
+					<parameter name="font" type="GdkFont*"/>
+				</parameters>
+			</method>
 			<method name="id" symbol="gdk_font_id">
 				<return-type type="gint"/>
 				<parameters>
 					<parameter name="font" type="GdkFont*"/>
+				</parameters>
+			</method>
+			<method name="load" symbol="gdk_font_load">
+				<return-type type="GdkFont*"/>
+				<parameters>
+					<parameter name="font_name" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="load_for_display" symbol="gdk_font_load_for_display">
@@ -2723,6 +3056,9 @@
 			<method name="get_system" symbol="gdk_colormap_get_system">
 				<return-type type="GdkColormap*"/>
 			</method>
+			<method name="get_system_size" symbol="gdk_colormap_get_system_size">
+				<return-type type="gint"/>
+			</method>
 			<method name="get_visual" symbol="gdk_colormap_get_visual">
 				<return-type type="GdkVisual*"/>
 				<parameters>
@@ -2742,6 +3078,18 @@
 					<parameter name="colormap" type="GdkColormap*"/>
 					<parameter name="pixel" type="gulong"/>
 					<parameter name="result" type="GdkColor*"/>
+				</parameters>
+			</method>
+			<method name="ref" symbol="gdk_colormap_ref">
+				<return-type type="GdkColormap*"/>
+				<parameters>
+					<parameter name="cmap" type="GdkColormap*"/>
+				</parameters>
+			</method>
+			<method name="unref" symbol="gdk_colormap_unref">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="cmap" type="GdkColormap*"/>
 				</parameters>
 			</method>
 			<field name="size" type="gint"/>
@@ -2804,6 +3152,12 @@
 			</method>
 			<method name="get_mode" symbol="gdk_device_get_mode">
 				<return-type type="GdkInputMode"/>
+				<parameters>
+					<parameter name="device" type="GdkDevice*"/>
+				</parameters>
+			</method>
+			<method name="get_n_axes" symbol="gdk_device_get_n_axes">
+				<return-type type="gint"/>
 				<parameters>
 					<parameter name="device" type="GdkDevice*"/>
 				</parameters>
@@ -2973,6 +3327,12 @@
 					<parameter name="display" type="GdkDisplay*"/>
 					<parameter name="win_x" type="gint*"/>
 					<parameter name="win_y" type="gint*"/>
+				</parameters>
+			</method>
+			<method name="is_closed" symbol="gdk_display_is_closed">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="display" type="GdkDisplay*"/>
 				</parameters>
 			</method>
 			<method name="keyboard_ungrab" symbol="gdk_display_keyboard_ungrab">
@@ -3234,6 +3594,18 @@
 			<constructor name="new" symbol="gdk_drag_context_new">
 				<return-type type="GdkDragContext*"/>
 			</constructor>
+			<method name="ref" symbol="gdk_drag_context_ref">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="context" type="GdkDragContext*"/>
+				</parameters>
+			</method>
+			<method name="unref" symbol="gdk_drag_context_unref">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="context" type="GdkDragContext*"/>
+				</parameters>
+			</method>
 			<field name="protocol" type="GdkDragProtocol"/>
 			<field name="is_source" type="gboolean"/>
 			<field name="source_window" type="GdkWindow*"/>
@@ -3269,6 +3641,13 @@
 				<return-type type="GdkColormap*"/>
 				<parameters>
 					<parameter name="drawable" type="GdkDrawable*"/>
+				</parameters>
+			</method>
+			<method name="get_data" symbol="gdk_drawable_get_data">
+				<return-type type="gpointer"/>
+				<parameters>
+					<parameter name="drawable" type="GdkDrawable*"/>
+					<parameter name="key" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="get_depth" symbol="gdk_drawable_get_depth">
@@ -3319,11 +3698,32 @@
 					<parameter name="drawable" type="GdkDrawable*"/>
 				</parameters>
 			</method>
+			<method name="ref" symbol="gdk_drawable_ref">
+				<return-type type="GdkDrawable*"/>
+				<parameters>
+					<parameter name="drawable" type="GdkDrawable*"/>
+				</parameters>
+			</method>
 			<method name="set_colormap" symbol="gdk_drawable_set_colormap">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="drawable" type="GdkDrawable*"/>
 					<parameter name="colormap" type="GdkColormap*"/>
+				</parameters>
+			</method>
+			<method name="set_data" symbol="gdk_drawable_set_data">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="drawable" type="GdkDrawable*"/>
+					<parameter name="key" type="gchar*"/>
+					<parameter name="data" type="gpointer"/>
+					<parameter name="destroy_func" type="GDestroyNotify"/>
+				</parameters>
+			</method>
+			<method name="unref" symbol="gdk_drawable_unref">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="drawable" type="GdkDrawable*"/>
 				</parameters>
 			</method>
 			<vfunc name="create_cairo_surface">
@@ -3663,6 +4063,12 @@
 					<parameter name="y_offset" type="gint"/>
 				</parameters>
 			</method>
+			<method name="ref" symbol="gdk_gc_ref">
+				<return-type type="GdkGC*"/>
+				<parameters>
+					<parameter name="gc" type="GdkGC*"/>
+				</parameters>
+			</method>
 			<method name="set_background" symbol="gdk_gc_set_background">
 				<return-type type="void"/>
 				<parameters>
@@ -3727,6 +4133,13 @@
 				<parameters>
 					<parameter name="gc" type="GdkGC*"/>
 					<parameter name="fill" type="GdkFill"/>
+				</parameters>
+			</method>
+			<method name="set_font" symbol="gdk_gc_set_font">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="gc" type="GdkGC*"/>
+					<parameter name="font" type="GdkFont*"/>
 				</parameters>
 			</method>
 			<method name="set_foreground" symbol="gdk_gc_set_foreground">
@@ -3804,6 +4217,12 @@
 					<parameter name="values_mask" type="GdkGCValuesMask"/>
 				</parameters>
 			</method>
+			<method name="unref" symbol="gdk_gc_unref">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="gc" type="GdkGC*"/>
+				</parameters>
+			</method>
 			<vfunc name="get_values">
 				<return-type type="void"/>
 				<parameters>
@@ -3835,6 +4254,16 @@
 			<field name="colormap" type="GdkColormap*"/>
 		</object>
 		<object name="GdkImage" parent="GObject" type-name="GdkImage" get-type="gdk_image_get_type">
+			<method name="get" symbol="gdk_image_get">
+				<return-type type="GdkImage*"/>
+				<parameters>
+					<parameter name="drawable" type="GdkDrawable*"/>
+					<parameter name="x" type="gint"/>
+					<parameter name="y" type="gint"/>
+					<parameter name="width" type="gint"/>
+					<parameter name="height" type="gint"/>
+				</parameters>
+			</method>
 			<method name="get_bits_per_pixel" symbol="gdk_image_get_bits_per_pixel">
 				<return-type type="guint16"/>
 				<parameters>
@@ -3891,6 +4320,12 @@
 					<parameter name="y" type="gint"/>
 				</parameters>
 			</method>
+			<method name="get_pixels" symbol="gdk_image_get_pixels">
+				<return-type type="gpointer"/>
+				<parameters>
+					<parameter name="image" type="GdkImage*"/>
+				</parameters>
+			</method>
 			<method name="get_visual" symbol="gdk_image_get_visual">
 				<return-type type="GdkVisual*"/>
 				<parameters>
@@ -3921,11 +4356,23 @@
 					<parameter name="pixel" type="guint32"/>
 				</parameters>
 			</method>
+			<method name="ref" symbol="gdk_image_ref">
+				<return-type type="GdkImage*"/>
+				<parameters>
+					<parameter name="image" type="GdkImage*"/>
+				</parameters>
+			</method>
 			<method name="set_colormap" symbol="gdk_image_set_colormap">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="image" type="GdkImage*"/>
 					<parameter name="colormap" type="GdkColormap*"/>
+				</parameters>
+			</method>
+			<method name="unref" symbol="gdk_image_unref">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="image" type="GdkImage*"/>
 				</parameters>
 			</method>
 			<field name="type" type="GdkImageType"/>
@@ -4681,6 +5128,15 @@
 					<parameter name="parent_y" type="gdouble*"/>
 				</parameters>
 			</method>
+			<method name="create_similar_surface" symbol="gdk_window_create_similar_surface">
+				<return-type type="cairo_surface_t*"/>
+				<parameters>
+					<parameter name="window" type="GdkWindow*"/>
+					<parameter name="content" type="cairo_content_t"/>
+					<parameter name="width" type="int"/>
+					<parameter name="height" type="int"/>
+				</parameters>
+			</method>
 			<method name="deiconify" symbol="gdk_window_deiconify">
 				<return-type type="void"/>
 				<parameters>
@@ -4767,19 +5223,10 @@
 					<parameter name="window" type="GdkWindow*"/>
 				</parameters>
 			</method>
-			<method name="get_back_pixmap" symbol="gdk_window_get_back_pixmap">
-				<return-type type="void"/>
+			<method name="get_background_pattern" symbol="gdk_window_get_background_pattern">
+				<return-type type="cairo_pattern_t*"/>
 				<parameters>
 					<parameter name="window" type="GdkWindow*"/>
-					<parameter name="pixmap" type="GdkPixmap**"/>
-					<parameter name="parent_relative" type="gboolean*"/>
-				</parameters>
-			</method>
-			<method name="get_background" symbol="gdk_window_get_background">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="window" type="GdkWindow*"/>
-					<parameter name="color" type="GdkColor*"/>
 				</parameters>
 			</method>
 			<method name="get_children" symbol="gdk_window_get_children">
@@ -4939,6 +5386,9 @@
 					<parameter name="window" type="GdkWindow*"/>
 				</parameters>
 			</method>
+			<method name="get_toplevels" symbol="gdk_window_get_toplevels">
+				<return-type type="GList*"/>
+			</method>
 			<method name="get_type_hint" symbol="gdk_window_get_type_hint">
 				<return-type type="GdkWindowTypeHint"/>
 				<parameters>
@@ -4960,6 +5410,12 @@
 			</method>
 			<method name="get_window_type" symbol="gdk_window_get_window_type">
 				<return-type type="GdkWindowType"/>
+				<parameters>
+					<parameter name="window" type="GdkWindow*"/>
+				</parameters>
+			</method>
+			<method name="has_native" symbol="gdk_window_has_native">
+				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="window" type="GdkWindow*"/>
 				</parameters>
@@ -5291,6 +5747,19 @@
 				<parameters>
 					<parameter name="window" type="GdkWindow*"/>
 					<parameter name="leader" type="GdkWindow*"/>
+				</parameters>
+			</method>
+			<method name="set_hints" symbol="gdk_window_set_hints">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="window" type="GdkWindow*"/>
+					<parameter name="x" type="gint"/>
+					<parameter name="y" type="gint"/>
+					<parameter name="min_width" type="gint"/>
+					<parameter name="min_height" type="gint"/>
+					<parameter name="max_width" type="gint"/>
+					<parameter name="max_height" type="gint"/>
+					<parameter name="flags" type="gint"/>
 				</parameters>
 			</method>
 			<method name="set_icon" symbol="gdk_window_set_icon">
