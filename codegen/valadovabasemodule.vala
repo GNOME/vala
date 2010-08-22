@@ -273,6 +273,7 @@ public class Vala.DovaBaseModule : CodeGenerator {
 		error_class = (Class) dova_ns.scope.lookup ("Error");
 
 		header_file = new CCodeFile ();
+		header_file.is_header = true;
 
 		cfile = new CCodeFile ();
 		module_init_fragment = new CCodeFragment ();
