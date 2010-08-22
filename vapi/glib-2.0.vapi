@@ -4084,7 +4084,7 @@ namespace GLib {
 		public int32 get_handle ();
 		public double get_double ();
 		public unowned string get_string (out size_t length = null);
-		public string dup_string ();
+		public string dup_string (out size_t length = null);
 		public unowned string get_bytestring ();
 		public string dup_bytestring ();
 
