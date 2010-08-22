@@ -991,8 +991,10 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 			generate_virtual_method_declaration (m, source_declarations, type_priv_struct);
 		}
 
-		source_declarations.add_type_declaration (new CCodeTypeDefinition ("struct %s".printf (type_priv_struct.name), new CCodeVariableDeclarator ("%sTypePrivate".printf (iface.get_cname ()))));
-		source_declarations.add_type_definition (type_priv_struct);
+		if (!type_priv_struct.is_empty) {
+			source_declarations.add_type_declaration (new CCodeTypeDefinition ("struct %s".printf (type_priv_struct.name), new CCodeVariableDeclarator ("%sTypePrivate".printf (iface.get_cname ()))));
+			source_declarations.add_type_definition (type_priv_struct);
+		}
 
 		var cdecl = new CCodeDeclaration ("DovaType *");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("%s_type".printf (iface.get_lower_case_cname ()), new CCodeConstant ("NULL")));
@@ -1012,7 +1014,12 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 
 		var calloc_call = new CCodeFunctionCall (new CCodeIdentifier ("calloc"));
 		calloc_call.add_argument (new CCodeConstant ("1"));
-		calloc_call.add_argument (new CCodeConstant ("dova_type_get_type_size (dova_type_type_get ()) + sizeof (%sTypePrivate)".printf (iface.get_cname ())));
+
+		if (!type_priv_struct.is_empty) {
+			calloc_call.add_argument (new CCodeConstant ("dova_type_get_type_size (dova_type_type_get ()) + sizeof (%sTypePrivate)".printf (iface.get_cname ())));
+		} else {
+			calloc_call.add_argument (new CCodeConstant ("dova_type_get_type_size (dova_type_type_get ())"));
+		}
 
 		type_init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("%s_type".printf (iface.get_lower_case_cname ())), calloc_call)));
 
@@ -1062,11 +1069,13 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 			type_get_call.add_argument (new CCodeIdentifier ("%s_type".printf (type_param.name.down ())));
 		}
 
-		var add_interface_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_add_interface"));
-		add_interface_call.add_argument (new CCodeIdentifier ("type"));
-		add_interface_call.add_argument (type_get_call);
-		add_interface_call.add_argument (vtable_alloc);
-		type_init_fun.block.add_statement (new CCodeExpressionStatement (add_interface_call));
+		if (!type_priv_struct.is_empty) {
+			var add_interface_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_add_interface"));
+			add_interface_call.add_argument (new CCodeIdentifier ("type"));
+			add_interface_call.add_argument (type_get_call);
+			add_interface_call.add_argument (vtable_alloc);
+			type_init_fun.block.add_statement (new CCodeExpressionStatement (add_interface_call));
+		}
 
 		source_type_member_definition.append (type_init_fun);
 
