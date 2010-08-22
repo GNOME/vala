@@ -63,7 +63,7 @@ namespace GLib {
 		public virtual signal void action_with_data (string action_name, GLib.Variant platform_data);
 		public virtual signal void prepare_activation (GLib.Variant arguments, GLib.Variant platform_data);
 		[HasEmitter]
-		public virtual signal bool quit_with_data (GLib.Variant platform_data);
+		public virtual signal bool quit_with_data (GLib.Variant? platform_data);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class BufferedInputStream : GLib.FilterInputStream {
