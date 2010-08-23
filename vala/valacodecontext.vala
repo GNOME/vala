@@ -428,14 +428,19 @@ public class Vala.CodeContext {
 
 	/**
 	 * Visits the complete code tree file by file.
+	 * It is possible to add new source files while visiting the tree.
 	 *
 	 * @param visitor the visitor to be called when traversing
 	 */
 	public void accept (CodeVisitor visitor) {
 		root.accept (visitor);
 
-		foreach (SourceFile file in source_files) {
-			file.accept (visitor);
+		// support queueing new source files
+		int index = 0;
+		while (index < source_files.size) {
+			var source_file = source_files[index];
+			source_file.accept (visitor);
+			index++;
 		}
 	}
 
