@@ -294,6 +294,58 @@ public class Vala.CodeContext {
 	}
 
 	/**
+	 * Add the specified source file to the context. Only .vala, .vapi, .gs,
+	 * and .c extensions are supported.
+	 *
+	 * @param filename a filename
+	 * @param is_source true to force adding the file as .vala or .gs
+	 * @return false if the file is not recognized or the file does not exist
+	 */
+	public bool add_source_filename (string filename, bool is_source = false) {
+		if (!FileUtils.test (filename, FileTest.EXISTS)) {
+			Report.error (null, "%s not found".printf (filename));
+			return false;
+		}
+
+		var rpath = realpath (filename);
+		if (is_source || filename.has_suffix (".vala") || filename.has_suffix (".gs")) {
+			var source_file = new SourceFile (this, SourceFileType.SOURCE, rpath);
+			source_file.relative_filename = filename;
+
+			if (profile == Profile.POSIX) {
+				// import the Posix namespace by default (namespace of backend-specific standard library)
+				var ns_ref = new UsingDirective (new UnresolvedSymbol (null, "Posix", null));
+				source_file.add_using_directive (ns_ref);
+				root.add_using_directive (ns_ref);
+			} else if (profile == Profile.GOBJECT) {
+				// import the GLib namespace by default (namespace of backend-specific standard library)
+				var ns_ref = new UsingDirective (new UnresolvedSymbol (null, "GLib", null));
+				source_file.add_using_directive (ns_ref);
+				root.add_using_directive (ns_ref);
+			} else if (profile == Profile.DOVA) {
+				// import the Dova namespace by default (namespace of backend-specific standard library)
+				var ns_ref = new UsingDirective (new UnresolvedSymbol (null, "Dova", null));
+				source_file.add_using_directive (ns_ref);
+				root.add_using_directive (ns_ref);
+			}
+
+			add_source_file (source_file);
+		} else if (filename.has_suffix (".vapi") || filename.has_suffix (".gir")) {
+			var source_file = new SourceFile (this, SourceFileType.PACKAGE, rpath);
+			source_file.relative_filename = filename;
+
+			add_source_file (source_file);
+		} else if (filename.has_suffix (".c")) {
+			add_c_source_file (rpath);
+		} else {
+			Report.error (null, "%s is not a supported source file type. Only .vala, .vapi, .gs, and .c files are supported.".printf (filename));
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Visits the complete code tree file by file.
 	 *
 	 * @param visitor the visitor to be called when traversing
@@ -378,5 +430,79 @@ public class Vala.CodeContext {
 			}
 		}
 		stream.printf ("\n\n");
+	}
+
+	private static bool ends_with_dir_separator (string s) {
+		return Path.is_dir_separator (s.offset (s.length - 1).get_char ());
+	}
+
+	/* ported from glibc */
+	public static string realpath (string name) {
+		string rpath;
+
+		// start of path component
+		weak string start;
+		// end of path component
+		weak string end;
+
+		if (!Path.is_absolute (name)) {
+			// relative path
+			rpath = Environment.get_current_dir ();
+
+			start = end = name;
+		} else {
+			// set start after root
+			start = end = Path.skip_root (name);
+
+			// extract root
+			rpath = name.substring (0, name.pointer_to_offset (start));
+		}
+
+		long root_len = rpath.pointer_to_offset (Path.skip_root (rpath));
+
+		for (; start.get_char () != 0; start = end) {
+			// skip sequence of multiple path-separators
+			while (Path.is_dir_separator (start.get_char ())) {
+				start = start.next_char ();
+			}
+
+			// find end of path component
+			long len = 0;
+			for (end = start; end.get_char () != 0 && !Path.is_dir_separator (end.get_char ()); end = end.next_char ()) {
+				len++;
+			}
+
+			if (len == 0) {
+				break;
+			} else if (len == 1 && start.get_char () == '.') {
+				// do nothing
+			} else if (len == 2 && start.has_prefix ("..")) {
+				// back up to previous component, ignore if at root already
+				if (rpath.length > root_len) {
+					do {
+						rpath = rpath.substring (0, rpath.length - 1);
+					} while (!ends_with_dir_separator (rpath));
+				}
+			} else {
+				if (!ends_with_dir_separator (rpath)) {
+					rpath += Path.DIR_SEPARATOR_S;
+				}
+
+				rpath += start.substring (0, len);
+			}
+		}
+
+		if (rpath.length > root_len && ends_with_dir_separator (rpath)) {
+			rpath = rpath.substring (0, rpath.length - 1);
+		}
+
+		if (Path.DIR_SEPARATOR != '/') {
+			// don't use backslashes internally,
+			// to avoid problems in #include directives
+			string[] components = rpath.split ("\\");
+			rpath = string.joinv ("/", components);
+		}
+
+		return rpath;
 	}
 }
