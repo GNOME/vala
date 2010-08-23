@@ -35,7 +35,6 @@ class Vala.VAPIGen : Object {
 	static string library;
 	[CCode (array_length = false, array_null_terminated = true)]
 	static string[] packages;
-	static string metadata_filename;
 	CodeContext context;
 
 	const OptionEntry[] options = {
@@ -43,7 +42,6 @@ class Vala.VAPIGen : Object {
 		{ "girdir", 0, 0, OptionArg.FILENAME_ARRAY, ref gir_directories, "Look for GIR bindings in DIRECTORY", "DIRECTORY..." },
 		{ "pkg", 0, 0, OptionArg.STRING_ARRAY, ref packages, "Include binding for PACKAGE", "PACKAGE..." },
 		{ "library", 0, 0, OptionArg.STRING, ref library, "Library name", "NAME" },
-		{ "metadata", 0, 0, OptionArg.FILENAME, ref metadata_filename, "Metadata filename", "FILE" },
 		{ "directory", 'd', 0, OptionArg.FILENAME, ref directory, "Output directory", "DIRECTORY" },
 		{ "version", 0, 0, OptionArg.NONE, ref version, "Display version number", null },
 		{ "quiet", 'q', 0, OptionArg.NONE, ref quiet_mode, "Do not print messages to the console", null },
@@ -138,9 +136,6 @@ class Vala.VAPIGen : Object {
 		}
 		
 		var girparser = new GirParser ();
-		if (metadata_filename != null) {
-			girparser.parse_metadata (metadata_filename);
-		}
 		girparser.parse (context);
 		
 		if (context.report.get_errors () > 0) {
