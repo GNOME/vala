@@ -30,6 +30,8 @@ class Vala.VAPIGen : Object {
 	static string[] sources;
 	[CCode (array_length = false, array_null_terminated = true)]
 	static string[] vapi_directories;
+	[CCode (array_length = false, array_null_terminated = true)]
+	static string[] gir_directories;
 	static string library;
 	[CCode (array_length = false, array_null_terminated = true)]
 	static string[] packages;
@@ -38,6 +40,7 @@ class Vala.VAPIGen : Object {
 
 	const OptionEntry[] options = {
 		{ "vapidir", 0, 0, OptionArg.FILENAME_ARRAY, ref vapi_directories, "Look for package bindings in DIRECTORY", "DIRECTORY..." },
+		{ "girdir", 0, 0, OptionArg.FILENAME_ARRAY, ref gir_directories, "Look for GIR bindings in DIRECTORY", "DIRECTORY..." },
 		{ "pkg", 0, 0, OptionArg.STRING_ARRAY, ref packages, "Include binding for PACKAGE", "PACKAGE..." },
 		{ "library", 0, 0, OptionArg.STRING, ref library, "Library name", "NAME" },
 		{ "metadata", 0, 0, OptionArg.FILENAME, ref metadata_filename, "Metadata filename", "FILE" },
@@ -61,68 +64,20 @@ class Vala.VAPIGen : Object {
 			return 1;
 		}
 	}
-
-	/* TODO: this is duplicated between here and the compiler. its should go somewhere on its own */
-	private bool add_package (string pkg) {
-		if (context.has_package (pkg)) {
-			// ignore multiple occurences of the same package
-			return true;
-		}
-
-		var package_path = context.get_package_path (pkg, vapi_directories);
-		
-		if (package_path == null) {
-			return false;
-		}
-		
-		context.add_package (pkg);
-
-		context.add_source_file (new SourceFile (context, SourceFileType.PACKAGE, package_path));
-
-		var deps_filename = Path.build_filename (Path.get_dirname (package_path), "%s.deps".printf (pkg));
-		if (FileUtils.test (deps_filename, FileTest.EXISTS)) {
-			try {
-				string deps_content;
-				ulong deps_len;
-				FileUtils.get_contents (deps_filename, out deps_content, out deps_len);
-				foreach (string dep in deps_content.split ("\n")) {
-					dep = dep.strip ();
-					if (dep != "") {
-						if (!add_package (dep)) {
-							Report.error (null, "%s, dependency of %s, not found in specified Vala API directories".printf (dep, pkg));
-						}
-					}
-				}
-			} catch (FileError e) {
-				Report.error (null, "Unable to read dependency file: %s".printf (e.message));
-			}
-		}
-
-		return true;
-	}
 	
-	private static string[]? get_packages_from_depsfile (string depsfile) {
-		try {
-			string contents;
-			FileUtils.get_contents (depsfile, out contents);
-			return contents.strip ().split ("\n");
-		} catch (FileError e) {
-			// deps files are optional
-			return null;
-		}
-	}
-
 	private int run () {
 		context = new CodeContext ();
 		context.profile = Profile.GOBJECT;
+		context.vapi_directories = vapi_directories;
+		context.gir_directories = gir_directories;
 		CodeContext.push (context);
 		
 		/* default package */
-		if (!add_package ("glib-2.0")) {
-			Report.error (null, "glib-2.0 not found in specified Vala API directories");
-		}
-		if (!add_package ("gobject-2.0")) {
-			Report.error (null, "gobject-2.0 not found in specified Vala API directories");
+		context.add_external_package ("glib-2.0");
+		context.add_external_package ("gobject-2.0");
+
+		if (context.report.get_errors () > 0) {
+			return quit ();
 		}
 
 		/* load packages from .deps file */
@@ -132,40 +87,28 @@ class Vala.VAPIGen : Object {
 			}
 
 			var depsfile = source.substring (0, source.length - "gi".length) + "deps";
+			context.add_packages_from_file (depsfile);
+		}
 
-			if (!FileUtils.test (depsfile, FileTest.EXISTS)) continue;
-			
-			string[] deps = get_packages_from_depsfile (depsfile);
-			
-			foreach (string dep in deps) {
-				if (!add_package (dep)) {
-					Report.error (null, "%s not found in specified Vala API directories".printf (dep));
-				}
-			}
+		if (context.report.get_errors () > 0) {
+			return quit ();
 		}
 
 		// depsfile for gir case
 		if (library != null) {
 			var depsfile = library + ".deps";
-			if (FileUtils.test (depsfile, FileTest.EXISTS)) {
-
-				string[] deps = get_packages_from_depsfile (depsfile);
-
-				foreach (string dep in deps) {
-					if (!add_package (dep)) {
-						Report.error (null, "%s not found in specified Vala API directories".printf (dep));
-					}
-				}
-			}
+			context.add_packages_from_file (depsfile);
 		} else {
 			Report.error (null, "--library option must be specified");
 		}
 
+		if (context.report.get_errors () > 0) {
+			return quit ();
+		}
+
 		if (packages != null) {
 			foreach (string package in packages) {
-				if (!add_package (package)) {
-					Report.error (null, "%s not found in specified Vala API directories".printf (package));
-				}
+				context.add_external_package (package);
 			}
 			packages = null;
 		}

@@ -104,6 +104,16 @@ public class Vala.CodeContext {
 	public string directory { get; set; }
 
 	/**
+	 * List of directories where to find .vapi files.
+	 */
+	public string[] vapi_directories;
+
+	/**
+	 * List of directories where to find .gir files.
+	 */
+	public string[] gir_directories;
+
+	/**
 	 * Produce debug information.
 	 */
 	public bool debug { get; set; }
@@ -294,6 +304,72 @@ public class Vala.CodeContext {
 	}
 
 	/**
+	 * Pull the specified package into the context.
+	 * The method is tolerant if the package has been already loaded.
+	 *
+	 * @param pkg a package name
+	 * @return false if the package could not be loaded
+	 *
+	 */
+	public bool add_external_package (string pkg) {
+		if (has_package (pkg)) {
+			// ignore multiple occurences of the same package
+			return true;
+		}
+
+		// first try .vapi
+		var path = get_vapi_path (pkg);
+		if (path == null) {
+			// try with .gir
+			path = get_gir_path (pkg);
+		}
+		if (path == null) {
+			Report.error (null, "Package `%s' not found in specified Vala API directories or GObject-Introspection GIR directories".printf (pkg));
+			return false;
+		}
+
+		add_package (pkg);
+
+		add_source_file (new SourceFile (this, SourceFileType.PACKAGE, path));
+
+		var deps_filename = Path.build_filename (Path.get_dirname (path), "%s.deps".printf (pkg));
+		if (!add_packages_from_file (deps_filename)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Read the given filename and pull in packages.
+	 * The method is tolerant if the file does not exist.
+	 *
+	 * @param filename a filanem
+	 * @return false if an error occurs while reading the file or if a package could not be added
+	 */
+	public bool add_packages_from_file (string filename) {
+		if (!FileUtils.test (filename, FileTest.EXISTS)) {
+			return true;
+		}
+
+		try {
+			string contents;
+			FileUtils.get_contents (filename, out contents);
+			foreach (string package in contents.split ("\n")) {
+				package = package.strip ();
+				if (package != "") {
+					add_external_package (package);
+				}
+			}
+		} catch (FileError e) {
+			Report.error (null, "Unable to read dependency file: %s".printf (e.message));
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Add the specified source file to the context. Only .vala, .vapi, .gs,
 	 * and .c extensions are supported.
 	 *
@@ -335,6 +411,11 @@ public class Vala.CodeContext {
 			source_file.relative_filename = filename;
 
 			add_source_file (source_file);
+			// look for a local .deps
+			var deps_filename = "%s.deps".printf (filename.ndup (filename.length - ".vapi".length));
+			if (!add_packages_from_file (deps_filename)) {
+				return false;
+			}
 		} else if (filename.has_suffix (".c")) {
 			add_c_source_file (rpath);
 		} else {
@@ -366,8 +447,8 @@ public class Vala.CodeContext {
 		return (define in defines);
 	}
 
-	public string? get_package_path (string pkg, string[] directories) {
-		var path = get_file_path (pkg + ".vapi", "vala" + Config.PACKAGE_SUFFIX + "/vapi", "vala/vapi", directories);
+	public string? get_vapi_path (string pkg) {
+		var path = get_file_path (pkg + ".vapi", "vala" + Config.PACKAGE_SUFFIX + "/vapi", "vala/vapi", vapi_directories);
 
 		if (path == null) {
 			/* last chance: try the package compiled-in vapi dir */
@@ -380,8 +461,8 @@ public class Vala.CodeContext {
 		return path;
 	}
 
-	public string? get_gir_path (string gir, string[] directories) {
-		return get_file_path (gir + ".gir", "gir-1.0", null, directories);
+	public string? get_gir_path (string gir) {
+		return get_file_path (gir + ".gir", "gir-1.0", null, gir_directories);
 	}
 
 	string? get_file_path (string basename, string versioned_data_dir, string? data_dir, string[] directories) {

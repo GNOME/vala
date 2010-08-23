@@ -151,56 +151,6 @@ class Vala.Compiler {
 		}
 	}
 
-	private bool add_gir (CodeContext context, string gir) {
-		var gir_path = context.get_gir_path (gir, gir_directories);
-
-		if (gir_path == null) {
-			return false;
-		}
-
-		context.add_source_file (new SourceFile (context, SourceFileType.PACKAGE, gir_path));
-
-		return true;
-	}
-	
-	private bool add_package (CodeContext context, string pkg) {
-		if (context.has_package (pkg)) {
-			// ignore multiple occurences of the same package
-			return true;
-		}
-	
-		var package_path = context.get_package_path (pkg, vapi_directories);
-		
-		if (package_path == null) {
-			return false;
-		}
-		
-		context.add_package (pkg);
-		
-		context.add_source_file (new SourceFile (context, SourceFileType.PACKAGE, package_path));
-		
-		var deps_filename = Path.build_filename (Path.get_dirname (package_path), "%s.deps".printf (pkg));
-		if (FileUtils.test (deps_filename, FileTest.EXISTS)) {
-			try {
-				string deps_content;
-				size_t deps_len;
-				FileUtils.get_contents (deps_filename, out deps_content, out deps_len);
-				foreach (string dep in deps_content.split ("\n")) {
-					dep = dep.strip ();
-					if (dep != "") {
-						if (!add_package (context, dep)) {
-							Report.error (null, "%s, dependency of %s, not found in specified Vala API directories".printf (dep, pkg));
-						}
-					}
-				}
-			} catch (FileError e) {
-				Report.error (null, "Unable to read dependency file: %s".printf (e.message));
-			}
-		}
-		
-		return true;
-	}
-	
 	private int run () {
 		context = new CodeContext ();
 		CodeContext.push (context);
@@ -247,6 +197,8 @@ class Vala.Compiler {
 		} else {
 			context.directory = context.basedir;
 		}
+		context.vapi_directories = vapi_directories;
+		context.gir_directories = gir_directories;
 		context.debug = debug;
 		context.thread = thread;
 		context.mem_profiler = mem_profiler;
@@ -284,9 +236,7 @@ class Vala.Compiler {
 		if (context.profile == Profile.POSIX) {
 			if (!nostdpkg) {
 				/* default package */
-				if (!add_package (context, "posix")) {
-					Report.error (null, "posix not found in specified Vala API directories");
-				}
+				context.add_external_package ("posix");
 			}
 		} else if (context.profile == Profile.GOBJECT) {
 			int glib_major = 2;
@@ -307,27 +257,19 @@ class Vala.Compiler {
 
 			if (!nostdpkg) {
 				/* default packages */
-				if (!add_package (context, "glib-2.0")) {
-					Report.error (null, "glib-2.0 not found in specified Vala API directories");
-				}
-				if (!add_package (context, "gobject-2.0")) {
-					Report.error (null, "gobject-2.0 not found in specified Vala API directories");
-				}
+				context.add_external_package ("glib-2.0");
+				context.add_external_package ("gobject-2.0");
 			}
 		} else if (context.profile == Profile.DOVA) {
 			if (!nostdpkg) {
 				/* default package */
-				if (!add_package (context, "dova-core-0.1")) {
-					Report.error (null, "dova-core-0.1 not found in specified Vala API directories");
-				}
+				context.add_external_package ("dova-core-0.1");
 			}
 		}
 
 		if (packages != null) {
 			foreach (string package in packages) {
-				if (!add_package (context, package) && !add_gir (context, package)) {
-					Report.error (null, "%s not found in specified Vala API directories or GObject-Introspection GIR directories".printf (package));
-				}
+				context.add_external_package (package);
 				if (context.profile == Profile.GOBJECT && package == "dbus-glib-1") {
 					context.add_define ("DBUS_GLIB");
 				}
@@ -365,11 +307,10 @@ class Vala.Compiler {
 		bool has_c_files = false;
 
 		foreach (string source in sources) {
-			if (!context.add_source_filename (source, run_output)) {
-				break;
-			}
-			if (source.has_suffix (".c")) {
-				has_c_files = true;
+			if (context.add_source_filename (source, run_output)) {
+				if (source.has_suffix (".c")) {
+					has_c_files = true;
+				}
 			}
 		}
 		sources = null;
