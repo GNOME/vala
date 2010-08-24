@@ -1916,18 +1916,6 @@ public class Vala.GirParser : CodeVisitor {
 			pop_metadata ();
 		}
 
-		// ensure we have at least one instantiable prerequisite (GLib.Object)
-		bool has_instantiable_prereq = false;
-		foreach (DataType prereq in iface.get_prerequisites ()) {
-			if (prereq.data_type is Class) {
-				has_instantiable_prereq = true;
-				break;
-			}
-		}
-
-		if (!has_instantiable_prereq)
-			iface.add_prerequisite (new ObjectType ((ObjectTypeSymbol) glib_ns.scope.lookup ("Object")));
-
 		merge_add_process (iface);
 		current_symbols_info = old_symbols_info;
 
