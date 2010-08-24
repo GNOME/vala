@@ -541,34 +541,6 @@ public class Vala.GirParser : CodeVisitor {
 		next ();
 		parse_repository ();
 
-		var remove_queue = new ArrayList<CodeNode> ();
-
-		foreach (CodeNode node in source_file.get_nodes ()) {
-			if (node is Class) {
-				var cl = (Class) node;
-				var ns = cl.parent_symbol as Namespace;
-				// remove Class records
-				var class_struct = ns.scope.lookup (cl.name + "Class") as Struct;
-				if (class_struct != null) {
-					ns.remove_struct ((Struct) class_struct);
-					remove_queue.add (class_struct);
-				}
-			} else if (node is Interface) {
-				var iface = (Interface) node;
-				var ns = iface.parent_symbol as Namespace;
-				// remove Iface records
-				var iface_struct = ns.scope.lookup (iface.name + "Iface") as Struct;
-				if (iface_struct != null) {
-					ns.remove_struct ((Struct) iface_struct);
-					remove_queue.add (iface_struct);
-				}
-			}
-		}
-
-		foreach (CodeNode node in remove_queue) {
-			source_file.remove_node (node);
-		}
-
 		reader = null;
 		this.current_source_file = null;
 	}
@@ -1206,7 +1178,7 @@ public class Vala.GirParser : CodeVisitor {
 		return type;
 	}
 
-	Struct parse_record () {
+	Struct? parse_record () {
 		start_element ("record");
 		var st = new Struct (reader.get_attribute ("name"), get_current_src ());
 		st.external = true;
@@ -1242,6 +1214,13 @@ public class Vala.GirParser : CodeVisitor {
 			}
 		}
 		end_element ("record");
+
+		if (current_gtype_struct_for != null) {
+			// skip *Class or *Iface
+			current_gtype_struct_for = null;
+			return null;
+		}
+
 		return st;
 	}
 
