@@ -40,7 +40,7 @@ public class Vala.SourceFile {
 	/**
 	 * Specifies whether this file is a VAPI package file.
 	 */
-	public bool external_package { get; set; }
+	public SourceFileType file_type { get; set; }
 
 	/**
 	 *  GIR Namespace for this source file, if it's a VAPI package
@@ -91,10 +91,10 @@ public class Vala.SourceFile {
 	 * @param pkg      true if this is a VAPI package file
 	 * @return         newly created source file
 	 */
-	public SourceFile (CodeContext context, string filename, bool pkg = false, string? content = null) {
-		this.filename = filename;
-		this.external_package = pkg;
+	public SourceFile (CodeContext context, SourceFileType type, string filename, string? content = null) {
 		this.context = context;
+		this.file_type = type;
+		this.filename = filename;
 		this.content = content;
 	}
 
@@ -314,3 +314,7 @@ public class Vala.SourceFile {
 	}
 }
 
+public enum SourceFileType {
+	SOURCE,
+	PACKAGE
+}

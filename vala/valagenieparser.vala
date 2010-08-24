@@ -2639,7 +2639,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		parse_declarations (cl);
 
 		// ensure there is always a default construction method
-		if (!scanner.source_file.external_package
+		if (scanner.source_file.file_type == SourceFileType.SOURCE
 		    && cl.default_construction_method == null) {
 			var m = new CreationMethod (cl.name, null, cl.source_reference);
 			m.access = SymbolAccessibility.PUBLIC;
@@ -2753,7 +2753,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		var c = new Constant (id, type, initializer, get_src (begin), comment);
 		c.access = get_access (id);
 		
-		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
+		if (ModifierFlags.EXTERN in flags || scanner.source_file.file_type == SourceFileType.PACKAGE) {
 			c.external = true;
 		}
 		if (ModifierFlags.NEW in flags) {
@@ -2789,7 +2789,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 		set_attributes (f, attrs);
 
-		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
+		if (ModifierFlags.EXTERN in flags || scanner.source_file.file_type == SourceFileType.PACKAGE) {
 			f.external = true;
 		}
 		if (ModifierFlags.NEW in flags) {
@@ -3008,7 +3008,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 		if (accept_block ()) {
 			method.body = parse_block ();
-		} else if (scanner.source_file.external_package) {
+		} else if (scanner.source_file.file_type == SourceFileType.PACKAGE) {
 			method.external = true;
 		}
 		return method;
@@ -3056,7 +3056,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		if (ModifierFlags.NEW in flags) {
 			prop.hides = true;
 		}
-		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
+		if (ModifierFlags.EXTERN in flags || scanner.source_file.file_type == SourceFileType.PACKAGE) {
 			prop.external = true;
 		}
 		
@@ -3138,7 +3138,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 			expect_terminator ();
 		}
 
-		if (!prop.is_abstract && !scanner.source_file.external_package) {
+		if (!prop.is_abstract && scanner.source_file.file_type == SourceFileType.SOURCE) {
 			var needs_var = (readonly && (prop.get_accessor != null && prop.get_accessor.body == null));
 
 			if (!needs_var) {
@@ -3321,7 +3321,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		} else {
 			iface.access = get_access (sym.name);
 		}
-		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
+		if (ModifierFlags.EXTERN in flags || scanner.source_file.file_type == SourceFileType.PACKAGE) {
 			iface.external = true;
 		}
 		set_attributes (iface, attrs);
@@ -3390,7 +3390,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		} else {
 			en.access = get_access (sym.name);
 		}
-		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
+		if (ModifierFlags.EXTERN in flags || scanner.source_file.file_type == SourceFileType.PACKAGE) {
 			en.external = true;
 		}
 		set_attributes (en, attrs);
@@ -3650,7 +3650,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 		if (accept_block ()) {
 			method.body = parse_block ();
-		} else if (scanner.source_file.external_package) {
+		} else if (scanner.source_file.file_type == SourceFileType.PACKAGE) {
 			method.external = true;
 		}
 		
@@ -3711,7 +3711,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		if (!(ModifierFlags.STATIC in flags)) {
 			d.has_target = true;
 		}
-		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
+		if (ModifierFlags.EXTERN in flags || scanner.source_file.file_type == SourceFileType.PACKAGE) {
 			d.external = true;
 		}
 

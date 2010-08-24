@@ -105,7 +105,7 @@ public class Vala.CCodeCompiler {
 		/* we're only interested in non-pkg source files */
 		var source_files = context.get_source_files ();
 		foreach (SourceFile file in source_files) {
-			if (!file.external_package) {
+			if (file.file_type == SourceFileType.SOURCE) {
 				cmdline += " " + Shell.quote (file.get_csource_filename ());
 			}
 		}
@@ -137,7 +137,7 @@ public class Vala.CCodeCompiler {
 
 		/* remove generated C source and header files */
 		foreach (SourceFile file in source_files) {
-			if (!file.external_package) {
+			if (file.file_type == SourceFileType.SOURCE) {
 				if (!context.save_csources) {
 					FileUtils.unlink (file.get_csource_filename ());
 				}

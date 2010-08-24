@@ -24,8 +24,8 @@ using GLib;
 
 class Vala.VAPICheck : Object {
 	public VAPICheck (string gidlname, CodeContext context = new CodeContext ()) {
-		gidl = new SourceFile (context, gidlname);
-		metadata = new SourceFile (context, gidlname.substring (0, gidlname.length - 5) + ".metadata");
+		gidl = new SourceFile (context, SourceFileType.SOURCE, gidlname);
+		metadata = new SourceFile (context, SourceFileType.SOURCE, gidlname.substring (0, gidlname.length - 5) + ".metadata");
 		this.context = context;
 	}
 
