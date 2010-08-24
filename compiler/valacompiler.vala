@@ -38,6 +38,8 @@ class Vala.Compiler {
 	static string gir;
 	[CCode (array_length = false, array_null_terminated = true)]
 	static string[] packages;
+	[CCode (array_length = false, array_null_terminated = true)]
+	static string[] fast_vapis;
 	static string target_glib;
 
 	static bool ccode_only;
@@ -98,6 +100,7 @@ class Vala.Compiler {
 		{ "internal-header", 'h', 0, OptionArg.FILENAME, ref internal_header_filename, "Output internal C header file", "FILE" },
 		{ "internal-vapi", 0, 0, OptionArg.FILENAME, ref internal_vapi_filename, "Output vapi with internal api", "FILE" },
 		{ "fast-vapi", 0, 0, OptionArg.STRING, ref fast_vapi_filename, "Output vapi without performing symbol resolution", null },
+		{ "use-fast-vapi", 0, 0, OptionArg.STRING_ARRAY, ref fast_vapis, "Use --fast-vapi output during this compile", null },
 		{ "symbols", 0, 0, OptionArg.FILENAME, ref symbols_filename, "Output symbols file", "FILE" },
 		{ "compile", 'c', 0, OptionArg.NONE, ref compile_only, "Compile but do not link", null },
 		{ "output", 'o', 0, OptionArg.FILENAME, ref output, "Place output in file FILE", "FILE" },
@@ -328,6 +331,14 @@ class Vala.Compiler {
 				}
 			}
 			packages = null;
+		}
+
+		if (fast_vapis != null) {
+			foreach (string vapi in fast_vapis) {
+				var rpath = realpath (vapi);
+				var source_file = new SourceFile (context, SourceFileType.FAST, rpath);
+				context.add_source_file (source_file);
+			}
 		}
 		
 		if (context.report.get_errors () > 0 || (fatal_warnings && context.report.get_warnings () > 0)) {
@@ -723,7 +734,7 @@ class Vala.Compiler {
 			return 0;
 		}
 		
-		if (sources == null) {
+		if (sources == null && fast_vapis == null) {
 			stderr.printf ("No source file specified.\n");
 			return 1;
 		}
