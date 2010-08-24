@@ -132,7 +132,7 @@ public class Vala.MemberAccess : Expression {
 	}
 
 	public override string to_string () {
-		if (symbol_reference.is_instance_member ()) {
+		if (symbol_reference == null || symbol_reference.is_instance_member ()) {
 			if (inner == null) {
 				return member_name;
 			} else {
