@@ -2360,7 +2360,7 @@ public class Vala.Parser : CodeVisitor {
 		if (ModifierFlags.ABSTRACT in flags) {
 			cl.is_abstract = true;
 		}
-		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
+		if (ModifierFlags.EXTERN in flags || scanner.source_file.file_type == SourceFileType.PACKAGE) {
 			cl.external = true;
 		}
 		set_attributes (cl, attrs);
@@ -2374,7 +2374,7 @@ public class Vala.Parser : CodeVisitor {
 		parse_declarations (cl);
 
 		// ensure there is always a default construction method
-		if (!scanner.source_file.external_package
+		if (scanner.source_file.file_type == SourceFileType.SOURCE
 		    && cl.default_construction_method == null) {
 			var m = new CreationMethod (cl.name, null, cl.source_reference);
 			m.access = SymbolAccessibility.PUBLIC;
@@ -2420,7 +2420,7 @@ public class Vala.Parser : CodeVisitor {
 
 		var c = new Constant (id, type, initializer, get_src (begin), comment);
 		c.access = access;
-		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
+		if (ModifierFlags.EXTERN in flags || scanner.source_file.file_type == SourceFileType.PACKAGE) {
 			c.external = true;
 		}
 		if (ModifierFlags.NEW in flags) {
@@ -2456,7 +2456,7 @@ public class Vala.Parser : CodeVisitor {
 		    || ModifierFlags.OVERRIDE in flags) {
 			Report.error (f.source_reference, "abstract, virtual, and override modifiers are not applicable to fields");
 		}
-		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
+		if (ModifierFlags.EXTERN in flags || scanner.source_file.file_type == SourceFileType.PACKAGE) {
 			f.external = true;
 		}
 		if (ModifierFlags.NEW in flags) {
@@ -2626,7 +2626,7 @@ public class Vala.Parser : CodeVisitor {
 		}
 		if (!accept (TokenType.SEMICOLON)) {
 			method.body = parse_block ();
-		} else if (scanner.source_file.external_package) {
+		} else if (scanner.source_file.file_type == SourceFileType.PACKAGE) {
 			method.external = true;
 		}
 
@@ -2673,7 +2673,7 @@ public class Vala.Parser : CodeVisitor {
 		if (ModifierFlags.ASYNC in flags) {
 			Report.error (prop.source_reference, "async properties are not supported yet");
 		}
-		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
+		if (ModifierFlags.EXTERN in flags || scanner.source_file.file_type == SourceFileType.PACKAGE) {
 			prop.external = true;
 		}
 		if (context.profile == Profile.DOVA) {
@@ -2863,7 +2863,7 @@ public class Vala.Parser : CodeVisitor {
 		}
 		var st = new Struct (sym.name, get_src (begin), comment);
 		st.access = access;
-		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
+		if (ModifierFlags.EXTERN in flags || scanner.source_file.file_type == SourceFileType.PACKAGE) {
 			st.external = true;
 		}
 		set_attributes (st, attrs);
@@ -2906,7 +2906,7 @@ public class Vala.Parser : CodeVisitor {
 		}
 		var iface = new Interface (sym.name, get_src (begin), comment);
 		iface.access = access;
-		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
+		if (ModifierFlags.EXTERN in flags || scanner.source_file.file_type == SourceFileType.PACKAGE) {
 			iface.external = true;
 		}
 		set_attributes (iface, attrs);
@@ -2941,7 +2941,7 @@ public class Vala.Parser : CodeVisitor {
 		var sym = parse_symbol_name ();
 		var en = new Enum (sym.name, get_src (begin), comment);
 		en.access = access;
-		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
+		if (ModifierFlags.EXTERN in flags || scanner.source_file.file_type == SourceFileType.PACKAGE) {
 			en.external = true;
 		}
 		set_attributes (en, attrs);
@@ -2997,7 +2997,7 @@ public class Vala.Parser : CodeVisitor {
 		var sym = parse_symbol_name ();
 		var ed = new ErrorDomain (sym.name, get_src (begin), comment);
 		ed.access = access;
-		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
+		if (ModifierFlags.EXTERN in flags || scanner.source_file.file_type == SourceFileType.PACKAGE) {
 			ed.external = true;
 		}
 		set_attributes (ed, attrs);
@@ -3243,7 +3243,7 @@ public class Vala.Parser : CodeVisitor {
 		set_attributes (method, attrs);
 		if (!accept (TokenType.SEMICOLON)) {
 			method.body = parse_block ();
-		} else if (scanner.source_file.external_package) {
+		} else if (scanner.source_file.file_type == SourceFileType.PACKAGE) {
 			method.external = true;
 		}
 
@@ -3272,7 +3272,7 @@ public class Vala.Parser : CodeVisitor {
 		} else {
 			d.has_target = true;
 		}
-		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
+		if (ModifierFlags.EXTERN in flags || scanner.source_file.file_type == SourceFileType.PACKAGE) {
 			d.external = true;
 		}
 		foreach (TypeParameter type_param in type_param_list) {

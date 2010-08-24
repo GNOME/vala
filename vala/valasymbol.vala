@@ -156,7 +156,7 @@ public abstract class Vala.Symbol : CodeNode {
 	 */
 	public bool external_package {
 		get {
-			return (source_reference != null && source_reference.file.external_package);
+			return (source_reference != null && source_reference.file.file_type == SourceFileType.PACKAGE);
 		}
 	}
 

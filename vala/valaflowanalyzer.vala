@@ -108,7 +108,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		/* we're only interested in non-pkg source files */
 		var source_files = context.get_source_files ();
 		foreach (SourceFile file in source_files) {
-			if (!file.external_package) {
+			if (file.file_type == SourceFileType.SOURCE) {
 				file.accept (this);
 			}
 		}

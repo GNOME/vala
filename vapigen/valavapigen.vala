@@ -77,7 +77,7 @@ class Vala.VAPIGen : Object {
 		
 		context.add_package (pkg);
 
-		context.add_source_file (new SourceFile (context, package_path, true));
+		context.add_source_file (new SourceFile (context, SourceFileType.PACKAGE, package_path));
 
 		var deps_filename = Path.build_filename (Path.get_dirname (package_path), "%s.deps".printf (pkg));
 		if (FileUtils.test (deps_filename, FileTest.EXISTS)) {
@@ -176,7 +176,7 @@ class Vala.VAPIGen : Object {
 		
 		foreach (string source in sources) {
 			if (FileUtils.test (source, FileTest.EXISTS)) {
-				context.add_source_file (new SourceFile (context, source, true));
+				context.add_source_file (new SourceFile (context, SourceFileType.PACKAGE, source));
 			} else {
 				Report.error (null, "%s not found".printf (source));
 			}
@@ -240,7 +240,7 @@ class Vala.VAPIGen : Object {
 			// interface writer ignores external packages
 			foreach (SourceFile file in context.get_source_files ()) {
 				if (!file.filename.has_suffix (".vapi")) {
-					file.external_package = false;
+					file.file_type = SourceFileType.SOURCE;
 				}
 	 		}
 

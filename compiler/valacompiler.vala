@@ -151,7 +151,7 @@ class Vala.Compiler {
 			return false;
 		}
 
-		context.add_source_file (new SourceFile (context, gir_path, true));
+		context.add_source_file (new SourceFile (context, SourceFileType.PACKAGE, gir_path));
 
 		return true;
 	}
@@ -170,7 +170,7 @@ class Vala.Compiler {
 		
 		context.add_package (pkg);
 		
-		context.add_source_file (new SourceFile (context, package_path, true));
+		context.add_source_file (new SourceFile (context, SourceFileType.PACKAGE, package_path));
 		
 		var deps_filename = Path.build_filename (Path.get_dirname (package_path), "%s.deps".printf (pkg));
 		if (FileUtils.test (deps_filename, FileTest.EXISTS)) {
@@ -352,7 +352,7 @@ class Vala.Compiler {
 			if (FileUtils.test (source, FileTest.EXISTS)) {
 				var rpath = realpath (source);
 				if (run_output || source.has_suffix (".vala") || source.has_suffix (".gs")) {
-					var source_file = new SourceFile (context, rpath);
+					var source_file = new SourceFile (context, SourceFileType.SOURCE, rpath);
 					source_file.relative_filename = source;
 
 					if (context.profile == Profile.POSIX) {
@@ -374,7 +374,7 @@ class Vala.Compiler {
 
 					context.add_source_file (source_file);
 				} else if (source.has_suffix (".vapi") || source.has_suffix (".gir")) {
-					var source_file = new SourceFile (context, rpath, true);
+					var source_file = new SourceFile (context, SourceFileType.PACKAGE, rpath);
 					source_file.relative_filename = source;
 
 					context.add_source_file (source_file);

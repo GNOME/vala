@@ -417,7 +417,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		/* we're only interested in non-pkg source files */
 		var source_files = context.get_source_files ();
 		foreach (SourceFile file in source_files) {
-			if (!file.external_package) {
+			if (file.file_type == SourceFileType.SOURCE) {
 				file.accept (this);
 			}
 		}
@@ -751,7 +751,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			return;
 		}
 
-		if (!c.external) {
+		if (c.source_reference.file.file_type != SourceFileType.PACKAGE) {
 			generate_type_declaration (c.type_reference, decl_space);
 
 			c.value.emit (this);
