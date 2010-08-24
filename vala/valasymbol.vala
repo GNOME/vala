@@ -156,7 +156,21 @@ public abstract class Vala.Symbol : CodeNode {
 	 */
 	public bool external_package {
 		get {
-			return (source_reference != null && source_reference.file.file_type == SourceFileType.PACKAGE);
+			return source_type == SourceFileType.PACKAGE;
+		}
+	}
+
+	/**
+	 * Gets the SourceFileType of the source file that this symbol
+	 * came from, or SourceFileType.NONE.
+	 */
+	public SourceFileType source_type {
+		get {
+			if (source_reference != null) {
+				return source_reference.file.file_type;
+			} else {
+				return SourceFileType.NONE;
+			}
 		}
 	}
 
