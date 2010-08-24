@@ -89,6 +89,12 @@ public class Vala.CodeWriter : CodeVisitor {
 		stream = null;
 	}
 
+	public override void visit_using_directive (UsingDirective ns) {
+		if (type == CodeWriterType.FAST) {
+			write_string ("using %s;\n".printf (ns.namespace_symbol.name));
+		}
+	}
+
 	public override void visit_namespace (Namespace ns) {
 		if (ns.external_package) {
 			return;
@@ -211,7 +217,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		
 		write_string ("[CCode (");
 
-		if (cl.is_reference_counting ()) {
+		if (cl.is_reference_counting () && type != CodeWriterType.FAST) {
 			if (cl.base_class == null || cl.base_class.get_ref_function () == null || cl.base_class.get_ref_function () != cl.get_ref_function ()) {
 				write_string ("ref_function = \"%s\", ".printf (cl.get_ref_function ()));
 				if (cl.ref_function_void) {
@@ -555,6 +561,11 @@ public class Vala.CodeWriter : CodeVisitor {
 			}
 			write_indent ();
 			write_identifier (ev.name);
+
+			if (type == CodeWriterType.FAST && ev.value != null) {
+				write_string(" = ");
+				ev.value.accept (this);
+			}
 		}
 
 		if (!first) {
@@ -653,6 +664,10 @@ public class Vala.CodeWriter : CodeVisitor {
 			
 		write_string (" ");
 		write_identifier (c.name);
+		if (type == CodeWriterType.FAST && c.value != null) {
+			write_string(" = ");
+			c.value.accept (this);
+		}
 		write_string (";");
 		write_newline ();
 	}
@@ -1889,6 +1904,7 @@ public class Vala.CodeWriter : CodeVisitor {
 			       sym.access == SymbolAccessibility.PROTECTED;
 
 		case CodeWriterType.INTERNAL:
+		case CodeWriterType.FAST:
 			return sym.access == SymbolAccessibility.INTERNAL ||
 			       sym.access == SymbolAccessibility.PUBLIC ||
 			       sym.access == SymbolAccessibility.PROTECTED;
@@ -1951,5 +1967,6 @@ public class Vala.CodeWriter : CodeVisitor {
 public enum CodeWriterType {
 	EXTERNAL,
 	INTERNAL,
+	FAST,
 	DUMP
 }
