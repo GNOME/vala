@@ -2825,7 +2825,7 @@ public class Vala.Parser : CodeVisitor {
 		}
 		expect (TokenType.CLOSE_BRACE);
 
-		if (!prop.is_abstract && !prop.external) {
+		if (!prop.is_abstract && prop.source_type == SourceFileType.SOURCE) {
 			bool empty_get = (prop.get_accessor != null && prop.get_accessor.body == null);
 			bool empty_set = (prop.set_accessor != null && prop.set_accessor.body == null);
 
