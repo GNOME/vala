@@ -37,15 +37,13 @@ public class Vala.CodeWriter : CodeVisitor {
 
 	Scope current_scope;
 
-	bool dump_tree;
-	bool emit_internal;
+	CodeWriterType type;
 
 	string? override_header = null;
 	string? header_to_override = null;
 
-	public CodeWriter (bool dump_tree = false, bool emit_internal = false) {
-		this.dump_tree = dump_tree;
-		this.emit_internal = emit_internal;
+	public CodeWriter (CodeWriterType type = CodeWriterType.EXTERNAL) {
+		this.type = type;
 	}
 
 	/**
@@ -919,7 +917,7 @@ public class Vala.CodeWriter : CodeVisitor {
 	}
 
 	public override void visit_constructor (Constructor c) {
-		if (!dump_tree) {
+		if (type != CodeWriterType.DUMP) {
 			return;
 		}
 
@@ -936,7 +934,7 @@ public class Vala.CodeWriter : CodeVisitor {
 
 		// don't write interface implementation unless it's an abstract or virtual method
 		if (!check_accessibility (m) || (m.base_interface_method != null && !m.is_abstract && !m.is_virtual)) {
-			if (!dump_tree) {
+			if (type != CodeWriterType.DUMP) {
 				return;
 			}
 		}
@@ -1867,7 +1865,7 @@ public class Vala.CodeWriter : CodeVisitor {
 	}
 	
 	void write_code_block (Block? block) {
-		if (block == null || !dump_tree) {
+		if (block == null || type != CodeWriterType.DUMP) {
 			write_string (";");
 			return;
 		}
@@ -1893,22 +1891,22 @@ public class Vala.CodeWriter : CodeVisitor {
 	}
 
 	private bool check_accessibility (Symbol sym) {
-		if (dump_tree) {
-			return true;
-		} else {
-		    if (!emit_internal &&
-			( sym.access == SymbolAccessibility.PUBLIC ||
-			  sym.access == SymbolAccessibility.PROTECTED)) {
-			return true;
-		    } else if (emit_internal &&
-			( sym.access == SymbolAccessibility.INTERNAL ||
-			  sym.access == SymbolAccessibility.PUBLIC ||
-			  sym.access == SymbolAccessibility.PROTECTED)) {
-			return true;
-		    }
-		}
+		switch (type) {
+		case CodeWriterType.EXTERNAL:
+			return sym.access == SymbolAccessibility.PUBLIC ||
+			       sym.access == SymbolAccessibility.PROTECTED;
 
-		return false;
+		case CodeWriterType.INTERNAL:
+			return sym.access == SymbolAccessibility.INTERNAL ||
+			       sym.access == SymbolAccessibility.PUBLIC ||
+			       sym.access == SymbolAccessibility.PROTECTED;
+
+		case CodeWriterType.DUMP:
+			return true;
+
+		default:
+			assert_not_reached ();
+		}
 	}
 
 	private void write_attributes (CodeNode node) {
@@ -1956,4 +1954,10 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_string ("private ");
 		}
 	}
+}
+
+public enum CodeWriterType {
+	EXTERNAL,
+	INTERNAL,
+	DUMP
 }

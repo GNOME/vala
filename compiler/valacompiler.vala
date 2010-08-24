@@ -431,7 +431,7 @@ class Vala.Compiler {
 		}
 
 		if (dump_tree != null) {
-			var code_writer = new CodeWriter (true);
+			var code_writer = new CodeWriter (CodeWriterType.DUMP);
 			code_writer.write_file (context, dump_tree);
 		}
 
@@ -511,7 +511,7 @@ class Vala.Compiler {
 				return quit();
 			}
 
-			var interface_writer = new CodeWriter (false, true);
+			var interface_writer = new CodeWriter (CodeWriterType.INTERNAL);
 			interface_writer.set_cheader_override(header_filename, internal_header_filename);
 			string vapi_filename = internal_vapi_filename;
 
