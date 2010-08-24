@@ -316,5 +316,6 @@ public class Vala.SourceFile {
 
 public enum SourceFileType {
 	SOURCE,
-	PACKAGE
+	PACKAGE,
+	FAST
 }
