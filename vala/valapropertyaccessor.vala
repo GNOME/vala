@@ -187,7 +187,7 @@ public class Vala.PropertyAccessor : Symbol {
 
 		analyzer.current_symbol = this;
 
-		if (!prop.external_package) {
+		if (prop.source_type == SourceFileType.SOURCE) {
 			if (body == null && !prop.interface_only && !prop.is_abstract) {
 				/* no accessor body specified, insert default body */
 

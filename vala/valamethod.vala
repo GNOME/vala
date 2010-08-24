@@ -840,7 +840,7 @@ public class Vala.Method : Symbol {
 			Report.error (source_reference, "Extern methods cannot be abstract or virtual");
 		} else if (external && body != null) {
 			Report.error (source_reference, "Extern methods cannot have bodies");
-		} else if (!is_abstract && !external && !external_package && body == null) {
+		} else if (!is_abstract && !external && source_type == SourceFileType.SOURCE && body == null) {
 			Report.error (source_reference, "Non-abstract, non-extern methods must have bodies");
 		}
 
