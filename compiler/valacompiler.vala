@@ -45,6 +45,7 @@ class Vala.Compiler {
 	static bool use_header;
 	static string internal_header_filename;
 	static string internal_vapi_filename;
+	static string fast_vapi_filename;
 	static string symbols_filename;
 	static string includedir;
 	static bool compile_only;
@@ -96,6 +97,7 @@ class Vala.Compiler {
 		{ "includedir", 0, 0, OptionArg.FILENAME, ref includedir, "Directory used to include the C header file", "DIRECTORY" },
 		{ "internal-header", 'h', 0, OptionArg.FILENAME, ref internal_header_filename, "Output internal C header file", "FILE" },
 		{ "internal-vapi", 0, 0, OptionArg.FILENAME, ref internal_vapi_filename, "Output vapi with internal api", "FILE" },
+		{ "fast-vapi", 0, 0, OptionArg.STRING, ref fast_vapi_filename, "Output vapi without performing symbol resolution", null },
 		{ "symbols", 0, 0, OptionArg.FILENAME, ref symbols_filename, "Output symbols file", "FILE" },
 		{ "compile", 'c', 0, OptionArg.NONE, ref compile_only, "Compile but do not link", null },
 		{ "output", 'o', 0, OptionArg.FILENAME, ref output, "Place output in file FILE", "FILE" },
@@ -257,6 +259,7 @@ class Vala.Compiler {
 		} else {
 			Report.error (null, "Unknown profile %s".printf (profile));
 		}
+		nostdpkg |= fast_vapi_filename != null;
 		context.nostdpkg = nostdpkg;
 
 		context.entry_point_name = entry_point;
@@ -410,6 +413,12 @@ class Vala.Compiler {
 		}
 
 		if (context.report.get_errors () > 0 || (fatal_warnings && context.report.get_warnings () > 0)) {
+			return quit ();
+		}
+
+		if (fast_vapi_filename != null) {
+			var interface_writer = new CodeWriter (CodeWriterType.FAST);
+			interface_writer.write_file (context, fast_vapi_filename);
 			return quit ();
 		}
 		
