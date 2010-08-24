@@ -87,6 +87,29 @@ public class Vala.UnresolvedType : DataType {
 	}
 
 	public override string to_qualified_string (Scope? scope) {
-		return unresolved_symbol.to_string ();
+		var s = unresolved_symbol.to_string ();
+
+		var type_args = get_type_arguments ();
+		if (type_args.size > 0) {
+			s += "<";
+			bool first = true;
+			foreach (DataType type_arg in type_args) {
+				if (!first) {
+					s += ",";
+				} else {
+					first = false;
+				}
+				if (!type_arg.value_owned) {
+					s += "weak ";
+				}
+				s += type_arg.to_qualified_string (scope);
+			}
+			s += ">";
+		}
+		if (nullable) {
+			s += "?";
+		}
+
+		return s;
 	}
 }
