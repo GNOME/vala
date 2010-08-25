@@ -362,4 +362,21 @@ public class Vala.CodeContext {
 
 		return null;
 	}
+
+	public void write_dependencies (string filename) {
+		var stream = FileStream.open (filename, "w");
+
+		if (stream == null) {
+			Report.error (null, "unable to open `%s' for writing".printf (filename));
+			return;
+		}
+
+		stream.printf ("%s:", filename);
+		foreach (var src in source_files) {
+			if (src.file_type == SourceFileType.FAST && src.used) {
+				stream.printf (" %s", src.filename);
+			}
+		}
+		stream.printf ("\n\n");
+	}
 }

@@ -271,6 +271,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 				Report.error (unresolved_symbol.inner.source_reference, "The symbol `%s' could not be found".printf (unresolved_symbol.inner.name));
 				return null;
 			}
+			parent_symbol.used = true;
 
 			return parent_symbol.scope.lookup (unresolved_symbol.name);
 		}
@@ -354,6 +355,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 
 		type.source_reference = unresolved_type.source_reference;
 		type.value_owned = unresolved_type.value_owned;
+		sym.used = true;
 
 		if (type is GenericType) {
 			// type parameters are always considered nullable

@@ -97,7 +97,16 @@ public abstract class Vala.Symbol : CodeNode {
 	/**
 	 * Specifies whether this symbol has been accessed.
 	 */
-	public bool used { get; set; }
+	public bool used {
+		get { return _used; }
+		set {
+			_used = value;
+			if (_used && source_reference != null) {
+				source_reference.file.used = true;
+			 }
+		}
+	}
+	bool _used;
 
 	/**
 	 * Specifies the accessibility of this symbol. Public accessibility
