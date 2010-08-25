@@ -76,6 +76,7 @@ class Vala.Compiler {
 	static bool enable_version_header;
 	static bool disable_version_header;
 	static bool fatal_warnings;
+	static string dependencies;
 
 	static string entry_point;
 
@@ -101,6 +102,7 @@ class Vala.Compiler {
 		{ "internal-vapi", 0, 0, OptionArg.FILENAME, ref internal_vapi_filename, "Output vapi with internal api", "FILE" },
 		{ "fast-vapi", 0, 0, OptionArg.STRING, ref fast_vapi_filename, "Output vapi without performing symbol resolution", null },
 		{ "use-fast-vapi", 0, 0, OptionArg.STRING_ARRAY, ref fast_vapis, "Use --fast-vapi output during this compile", null },
+		{ "deps", 0, 0, OptionArg.STRING, ref dependencies, "Write make-style dependency information to this file", null },
 		{ "symbols", 0, 0, OptionArg.FILENAME, ref symbols_filename, "Output symbols file", "FILE" },
 		{ "compile", 'c', 0, OptionArg.NONE, ref compile_only, "Compile but do not link", null },
 		{ "output", 'o', 0, OptionArg.FILENAME, ref output, "Place output in file FILE", "FILE" },
@@ -543,6 +545,10 @@ class Vala.Compiler {
 			interface_writer.write_file (context, vapi_filename);
 
 			internal_vapi_filename = null;
+		}
+
+		if (dependencies != null) {
+			context.write_dependencies (dependencies);
 		}
 
 		if (!ccode_only) {
