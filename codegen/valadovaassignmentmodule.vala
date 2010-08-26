@@ -41,7 +41,7 @@ public class Vala.DovaAssignmentModule : DovaMemberAccessModule {
 			}
 		}
 
-		CCodeExpression cexpr = (CCodeExpression) assignment.right.ccodenode;
+		CCodeExpression cexpr = get_cvalue (assignment.right);
 
 		if (assignment.operator != AssignmentOperator.SIMPLE) {
 			CCodeBinaryOperator cop;
@@ -86,7 +86,7 @@ public class Vala.DovaAssignmentModule : DovaMemberAccessModule {
 	}
 
 	CCodeExpression emit_simple_assignment (Assignment assignment) {
-		CCodeExpression rhs = (CCodeExpression) assignment.right.ccodenode;
+		CCodeExpression rhs = get_cvalue (assignment.right);
 		CCodeExpression lhs = (CCodeExpression) get_ccodenode (assignment.left);
 		CCodeCommaExpression outer_ccomma = null;
 
@@ -154,7 +154,7 @@ public class Vala.DovaAssignmentModule : DovaMemberAccessModule {
 	}
 
 	CCodeExpression emit_fixed_length_array_assignment (Assignment assignment, ArrayType array_type) {
-		CCodeExpression rhs = (CCodeExpression) assignment.right.ccodenode;
+		CCodeExpression rhs = get_cvalue (assignment.right);
 		CCodeExpression lhs = (CCodeExpression) get_ccodenode (assignment.left);
 
 		// it is necessary to use memcpy for fixed-length (stack-allocated) arrays
@@ -177,13 +177,13 @@ public class Vala.DovaAssignmentModule : DovaMemberAccessModule {
 		}
 
 		if (assignment.left.symbol_reference is Property) {
-			assignment.ccodenode = emit_property_assignment (assignment);
+			set_cvalue (assignment, emit_property_assignment (assignment));
 		} else {
 			var array_type = assignment.left.value_type as ArrayType;
 			if (array_type != null && array_type.fixed_length) {
-				assignment.ccodenode = emit_fixed_length_array_assignment (assignment, array_type);
+				set_cvalue (assignment, emit_fixed_length_array_assignment (assignment, array_type));
 			} else {
-				assignment.ccodenode = emit_simple_assignment (assignment);
+				set_cvalue (assignment, emit_simple_assignment (assignment));
 			}
 		}
 	}

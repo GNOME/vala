@@ -161,7 +161,7 @@ public class Vala.DBusClientModule : DBusModule {
 			cend_call.add_argument (new CCodeIdentifier ("proxy"));
 			cend_call.add_argument (new CCodeIdentifier ("call"));
 			cend_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("error")));
-			var creply_call = new CCodeFunctionCall ((CCodeExpression) callback.ccodenode);
+			var creply_call = new CCodeFunctionCall (get_cvalue (callback));
 			if (reply_method.binding != MemberBinding.STATIC) {
 				creply_call.add_argument (new CCodeIdentifier ("user_data"));
 			}
@@ -924,12 +924,12 @@ public class Vala.DBusClientModule : DBusModule {
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (type.type_symbol.get_lower_case_cprefix () + "dbus_proxy_new"));
 		connection.emit (this);
-		ccall.add_argument ((CCodeExpression) connection.ccodenode);
+		ccall.add_argument (get_cvalue (connection));
 		bus_name.emit (this);
-		ccall.add_argument ((CCodeExpression) bus_name.ccodenode);
+		ccall.add_argument (get_cvalue (bus_name));
 		object_path.emit (this);
-		ccall.add_argument ((CCodeExpression) object_path.ccodenode);
-		expr.ccodenode = ccall;
+		ccall.add_argument (get_cvalue (object_path));
+		set_cvalue (expr, ccall);
 	}
 
 	void generate_proxy_interface_init (Interface main_iface, Interface iface) {
@@ -1416,13 +1416,13 @@ public class Vala.DBusClientModule : DBusModule {
 			interface_name.emit (this);
 
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier (generate_get_all_function (mtype.method_symbol)));
-			ccall.add_argument ((CCodeExpression) instance.ccodenode);
-			ccall.add_argument ((CCodeExpression) interface_name.ccodenode);
+			ccall.add_argument (get_cvalue (instance));
+			ccall.add_argument (get_cvalue (interface_name));
 
 			current_method_inner_error = true;
 			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression ("_inner_error_")));
 
-			expr.ccodenode = ccall;
+			set_cvalue (expr, ccall);
 			return;
 		}
 
@@ -1438,7 +1438,7 @@ public class Vala.DBusClientModule : DBusModule {
 
 		var qdata_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_get_qdata"));
 		type.emit (this);
-		qdata_call.add_argument ((CCodeExpression) type.ccodenode);
+		qdata_call.add_argument (get_cvalue (type));
 		qdata_call.add_argument (quark_call);
 
 		var get_type_call = new CCodeFunctionCall (new CCodeCastExpression (qdata_call, "GType (*)(void)"));
@@ -1447,18 +1447,18 @@ public class Vala.DBusClientModule : DBusModule {
 		ccall.add_argument (get_type_call);
 		ccall.add_argument (new CCodeConstant ("\"connection\""));
 		connection.emit (this);
-		ccall.add_argument ((CCodeExpression) connection.ccodenode);
+		ccall.add_argument (get_cvalue (connection));
 		ccall.add_argument (new CCodeConstant ("\"name\""));
 		bus_name.emit (this);
-		ccall.add_argument ((CCodeExpression) bus_name.ccodenode);
+		ccall.add_argument (get_cvalue (bus_name));
 		ccall.add_argument (new CCodeConstant ("\"path\""));
 		object_path.emit (this);
-		ccall.add_argument ((CCodeExpression) object_path.ccodenode);
+		ccall.add_argument (get_cvalue (object_path));
 		ccall.add_argument (new CCodeConstant ("\"interface\""));
 		interface_name.emit (this);
-		ccall.add_argument ((CCodeExpression) interface_name.ccodenode);
+		ccall.add_argument (get_cvalue (interface_name));
 		ccall.add_argument (new CCodeConstant ("NULL"));
-		expr.ccodenode = ccall;
+		set_cvalue (expr, ccall);
 	}
 
 	void generate_proxy_filter_function (Interface iface) {

@@ -555,7 +555,7 @@ public class Vala.GAsyncModule : GSignalModule {
 			return;
 		}
 
-		ccode.add_expression ((CCodeExpression) stmt.yield_expression.ccodenode);
+		ccode.add_expression (get_cvalue (stmt.yield_expression));
 
 		if (stmt.tree_can_fail && stmt.yield_expression.tree_can_fail) {
 			// simple case, no node breakdown necessary

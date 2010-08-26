@@ -40,7 +40,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 				cenum.add_value (new CCodeEnumValue (ecode.get_cname ()));
 			} else {
 				ecode.value.emit (this);
-				cenum.add_value (new CCodeEnumValue (ecode.get_cname (), (CCodeExpression) ecode.value.ccodenode));
+				cenum.add_value (new CCodeEnumValue (ecode.get_cname (), get_cvalue (ecode.value)));
 			}
 		}
 
@@ -87,7 +87,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 	public override void visit_throw_statement (ThrowStatement stmt) {
 		// method will fail
 		current_method_inner_error = true;
-		ccode.add_expression (new CCodeAssignment (get_variable_cexpression ("_inner_error_"), (CCodeExpression) stmt.error_expression.ccodenode));
+		ccode.add_expression (new CCodeAssignment (get_variable_cexpression ("_inner_error_"), get_cvalue (stmt.error_expression)));
 
 		add_simple_check (stmt, true);
 	}

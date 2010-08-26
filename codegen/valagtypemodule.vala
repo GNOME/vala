@@ -2116,7 +2116,7 @@ public class Vala.GTypeModule : GErrorModule {
 		ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), get_value));
 		var is_null_value = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_variable_cexpression (temp_var.name), new CCodeIdentifier ("NULL"));
 		ccomma.append_expression (new CCodeConditionalExpression (is_null_value, new CCodeMemberAccess.pointer (get_variable_cexpression (temp_var.name), "value_name"), new CCodeIdentifier ("NULL")));
-		expr.ccodenode = ccomma;
+		set_cvalue (expr, ccomma);
 	}
 
 	public override void visit_property (Property prop) {

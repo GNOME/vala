@@ -1049,11 +1049,11 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		current_method_inner_error = true;
 
 		var cregister = new CCodeFunctionCall (new CCodeIdentifier ("%sregister_object".printf (type_arg.type_symbol.get_lower_case_cprefix ())));
-		cregister.add_argument ((CCodeExpression) obj_arg.ccodenode);
-		cregister.add_argument ((CCodeExpression) ma.inner.ccodenode);
-		cregister.add_argument ((CCodeExpression) path_arg.ccodenode);
+		cregister.add_argument (get_cvalue (obj_arg));
+		cregister.add_argument (get_cvalue (ma.inner));
+		cregister.add_argument (get_cvalue (path_arg));
 		cregister.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression ("_inner_error_")));
-		expr.ccodenode = cregister;
+		set_cvalue (expr, cregister);
 	}
 
 	public override void generate_class_declaration (Class cl, CCodeFile decl_space) {

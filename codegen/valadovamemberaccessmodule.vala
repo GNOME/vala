@@ -28,7 +28,7 @@ public class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 		DataType base_type = null;
 
 		if (expr.inner != null) {
-			pub_inst = (CCodeExpression) expr.inner.ccodenode;
+			pub_inst = get_cvalue (expr.inner);
 
 			if (expr.inner.value_type != null) {
 				base_type = expr.inner.value_type;
@@ -54,12 +54,12 @@ public class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 				if (m.base_method != null) {
 					var base_class = (Class) m.base_method.parent_symbol;
 
-					expr.ccodenode = new CCodeIdentifier ("%s_base_%s".printf (base_class.get_lower_case_cname (null), m.name));
+					set_cvalue (expr, new CCodeIdentifier ("%s_base_%s".printf (base_class.get_lower_case_cname (null), m.name)));
 					return;
 				} else if (m.base_interface_method != null) {
 					var base_iface = (Interface) m.base_interface_method.parent_symbol;
 
-					expr.ccodenode = new CCodeIdentifier ("%s_base_%s".printf (base_iface.get_lower_case_cname (null), m.name));
+					set_cvalue (expr, new CCodeIdentifier ("%s_base_%s".printf (base_iface.get_lower_case_cname (null), m.name)));
 					return;
 				}
 			}
@@ -74,28 +74,28 @@ public class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 						emit_temp_var (temp_var);
 						var ctemp = new CCodeIdentifier (temp_var.name);
 						inst = new CCodeAssignment (ctemp, pub_inst);
-						expr.inner.ccodenode = ctemp;
+						set_cvalue (expr.inner, ctemp);
 					}
 					var base_class = (Class) m.base_method.parent_symbol;
 					var vclass = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS".printf (base_class.get_upper_case_cname (null))));
 					vclass.add_argument (inst);
-					expr.ccodenode = new CCodeMemberAccess.pointer (vclass, m.name);
+					set_cvalue (expr, new CCodeMemberAccess.pointer (vclass, m.name));
 				} else {
-					expr.ccodenode = new CCodeIdentifier (m.base_method.get_cname ());
+					set_cvalue (expr, new CCodeIdentifier (m.base_method.get_cname ()));
 				}
 			} else if (m.base_interface_method != null) {
-				expr.ccodenode = new CCodeIdentifier (m.base_interface_method.get_cname ());
+				set_cvalue (expr, new CCodeIdentifier (m.base_interface_method.get_cname ()));
 			} else if (m is CreationMethod) {
-				expr.ccodenode = new CCodeIdentifier (m.get_real_cname ());
+				set_cvalue (expr, new CCodeIdentifier (m.get_real_cname ()));
 			} else {
-				expr.ccodenode = new CCodeIdentifier (m.get_cname ());
+				set_cvalue (expr, new CCodeIdentifier (m.get_cname ()));
 			}
 		} else if (expr.symbol_reference is ArrayLengthField) {
 			generate_property_accessor_declaration (((Property) array_class.scope.lookup ("length")).get_accessor, cfile);
 
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("dova_array_get_length"));
 			ccall.add_argument (pub_inst);
-			expr.ccodenode = ccall;
+			set_cvalue (expr, ccall);
 		} else if (expr.symbol_reference is Field) {
 			var f = (Field) expr.symbol_reference;
 			if (f.binding == MemberBinding.INSTANCE) {
@@ -116,27 +116,27 @@ public class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 					inst = pub_inst;
 				}
 				if (instance_target_type.data_type.is_reference_type () || (expr.inner != null && expr.inner.value_type is PointerType)) {
-					expr.ccodenode = new CCodeMemberAccess.pointer (inst, f.get_cname ());
+					set_cvalue (expr, new CCodeMemberAccess.pointer (inst, f.get_cname ()));
 				} else {
-					expr.ccodenode = new CCodeMemberAccess (inst, f.get_cname ());
+					set_cvalue (expr, new CCodeMemberAccess (inst, f.get_cname ()));
 				}
 			} else {
 				generate_field_declaration (f, cfile);
 
-				expr.ccodenode = new CCodeIdentifier (f.get_cname ());
+				set_cvalue (expr, new CCodeIdentifier (f.get_cname ()));
 			}
 		} else if (expr.symbol_reference is EnumValue) {
 			var ev = (EnumValue) expr.symbol_reference;
 
 			generate_enum_declaration ((Enum) ev.parent_symbol, cfile);
 
-			expr.ccodenode = new CCodeConstant (ev.get_cname ());
+			set_cvalue (expr, new CCodeConstant (ev.get_cname ()));
 		} else if (expr.symbol_reference is Constant) {
 			var c = (Constant) expr.symbol_reference;
 
 			generate_constant_declaration (c, cfile);
 
-			expr.ccodenode = new CCodeIdentifier (c.get_cname ());
+			set_cvalue (expr, new CCodeIdentifier (c.get_cname ()));
 		} else if (expr.symbol_reference is Property) {
 			var prop = (Property) expr.symbol_reference;
 
@@ -159,16 +159,16 @@ public class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 					vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (current_class.get_lower_case_cname (null))));
 
 					var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "get_%s".printf (prop.name)));
-					ccall.add_argument ((CCodeExpression) expr.inner.ccodenode);
-					expr.ccodenode = ccall;
+					ccall.add_argument (get_cvalue (expr.inner));
+					set_cvalue (expr, ccall);
 					return;
 				} else if (prop.base_interface_property != null) {
 					var base_iface = (Interface) prop.base_interface_property.parent_symbol;
 					string parent_iface_var = "%s_%s_parent_iface".printf (current_class.get_lower_case_cname (null), base_iface.get_lower_case_cname (null));
 
 					var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (new CCodeIdentifier (parent_iface_var), "get_%s".printf (prop.name)));
-					ccall.add_argument ((CCodeExpression) expr.inner.ccodenode);
-					expr.ccodenode = ccall;
+					ccall.add_argument (get_cvalue (expr.inner));
+					set_cvalue (expr, ccall);
 					return;
 				}
 			}
@@ -186,31 +186,31 @@ public class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 				ccall.add_argument (pub_inst);
 			}
 
-			expr.ccodenode = ccall;
+			set_cvalue (expr, ccall);
 		} else if (expr.symbol_reference is LocalVariable) {
 			var local = (LocalVariable) expr.symbol_reference;
 			if (local.is_result) {
 				// used in postconditions
-				expr.ccodenode = new CCodeIdentifier ("result");
+				set_cvalue (expr, new CCodeIdentifier ("result"));
 			} else if (local.captured) {
 				// captured variables are stored on the heap
 				var block = (Block) local.parent_symbol;
-				expr.ccodenode = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_variable_cname (local.name));
+				set_cvalue (expr, new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_variable_cname (local.name)));
 			} else {
-				expr.ccodenode = get_variable_cexpression (local.name);
+				set_cvalue (expr, get_variable_cexpression (local.name));
 			}
 		} else if (expr.symbol_reference is FormalParameter) {
 			var p = (FormalParameter) expr.symbol_reference;
 			if (p.name == "this") {
 				if (current_method != null && current_method.coroutine) {
 					// use closure
-					expr.ccodenode = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "this");
+					set_cvalue (expr, new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "this"));
 				} else {
 					var st = current_type_symbol as Struct;
 					if (st != null && !st.is_boolean_type () && !st.is_integer_type () && !st.is_floating_type () && (!st.is_simple_type () || current_method is CreationMethod)) {
-						expr.ccodenode = new CCodeIdentifier ("(*this)");
+						set_cvalue (expr, new CCodeIdentifier ("(*this)"));
 					} else {
-						expr.ccodenode = new CCodeIdentifier ("this");
+						set_cvalue (expr, new CCodeIdentifier ("this"));
 					}
 				}
 			} else {
@@ -220,19 +220,19 @@ public class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 					if (block == null) {
 						block = ((Method) p.parent_symbol).body;
 					}
-					expr.ccodenode = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_variable_cname (p.name));
+					set_cvalue (expr, new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_variable_cname (p.name)));
 				} else {
 					if (current_method != null && current_method.coroutine) {
 						// use closure
-						expr.ccodenode = get_variable_cexpression (p.name);
+						set_cvalue (expr, get_variable_cexpression (p.name));
 					} else {
 						var type_as_struct = p.variable_type.data_type as Struct;
 						if (p.direction != ParameterDirection.IN
 						    || (type_as_struct != null && !type_as_struct.is_simple_type () && !p.variable_type.nullable)) {
 							if (p.variable_type is GenericType) {
-								expr.ccodenode = get_variable_cexpression (p.name);
+								set_cvalue (expr, get_variable_cexpression (p.name));
 							} else {
-								expr.ccodenode = new CCodeIdentifier ("(*%s)".printf (get_variable_cname (p.name)));
+								set_cvalue (expr, new CCodeIdentifier ("(*%s)".printf (get_variable_cname (p.name))));
 							}
 						} else {
 							// Property setters of non simple structs shall replace all occurences
@@ -242,9 +242,9 @@ public class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 							    current_property_accessor.writable &&
 							    current_property_accessor.value_parameter == p &&
 							    current_property_accessor.prop.property_type.is_real_struct_type ()) {
-								expr.ccodenode = new CCodeIdentifier ("(*value)");
+								set_cvalue (expr, new CCodeIdentifier ("(*value)"));
 							} else {
-								expr.ccodenode = get_variable_cexpression (p.name);
+								set_cvalue (expr, get_variable_cexpression (p.name));
 							}
 						}
 					}

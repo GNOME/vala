@@ -1636,7 +1636,7 @@ public class Vala.DBusServerModule : DBusClientModule {
 		var ma = (MemberAccess) expr.call;
 
 		var raw_conn = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_connection_get_connection"));
-		raw_conn.add_argument ((CCodeExpression) ma.inner.ccodenode);
+		raw_conn.add_argument (get_cvalue (ma.inner));
 
 		var args_it = expr.get_argument_list ().iterator ();
 		args_it.next ();
@@ -1648,11 +1648,11 @@ public class Vala.DBusServerModule : DBusClientModule {
 		if (mtype.method_symbol.get_cname () == "dbus_g_connection_register_g_object") {
 			cregister.add_argument (raw_conn);
 		} else {
-			cregister.add_argument ((CCodeExpression) ma.inner.ccodenode);
+			cregister.add_argument (get_cvalue (ma.inner));
 		}
-		cregister.add_argument ((CCodeExpression) path_arg.ccodenode);
-		cregister.add_argument ((CCodeExpression) obj_arg.ccodenode);
-		expr.ccodenode = cregister;
+		cregister.add_argument (get_cvalue (path_arg));
+		cregister.add_argument (get_cvalue (obj_arg));
+		set_cvalue (expr, cregister);
 	}
 
 	bool type_implements_dbus_interface (ObjectTypeSymbol sym) {

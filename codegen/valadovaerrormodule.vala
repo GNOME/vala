@@ -27,7 +27,7 @@ public class Vala.DovaErrorModule : DovaDelegateModule {
 	private bool is_in_catch = false;
 
 	public override void visit_throw_statement (ThrowStatement stmt) {
-		ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("dova_error"), (CCodeExpression) stmt.error_expression.ccodenode));
+		ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("dova_error"), get_cvalue (stmt.error_expression)));
 
 		add_simple_check (stmt, true);
 	}

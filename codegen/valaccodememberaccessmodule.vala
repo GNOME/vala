@@ -27,7 +27,7 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 		CCodeExpression pub_inst = null;
 	
 		if (expr.inner != null) {
-			pub_inst = (CCodeExpression) expr.inner.ccodenode;
+			pub_inst = get_cvalue (expr.inner);
 		}
 
 		if (expr.symbol_reference is Method) {
@@ -51,13 +51,13 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					var vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (base_class.get_upper_case_cname (null))));
 					vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (current_class.get_lower_case_cname (null))));
 					
-					expr.ccodenode = new CCodeMemberAccess.pointer (vcast, m.vfunc_name);
+					set_cvalue (expr, new CCodeMemberAccess.pointer (vcast, m.vfunc_name));
 					return;
 				} else if (m.base_interface_method != null) {
 					var base_iface = (Interface) m.base_interface_method.parent_symbol;
 					string parent_iface_var = "%s_%s_parent_iface".printf (current_class.get_lower_case_cname (null), base_iface.get_lower_case_cname (null));
 
-					expr.ccodenode = new CCodeMemberAccess.pointer (new CCodeIdentifier (parent_iface_var), m.vfunc_name);
+					set_cvalue (expr, new CCodeMemberAccess.pointer (new CCodeIdentifier (parent_iface_var), m.vfunc_name));
 					return;
 				}
 			}
@@ -72,27 +72,27 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 						emit_temp_var (temp_var);
 						var ctemp = get_variable_cexpression (temp_var.name);
 						inst = new CCodeAssignment (ctemp, pub_inst);
-						expr.inner.ccodenode = ctemp;
+						set_cvalue (expr.inner, ctemp);
 					}
 					var base_class = (Class) m.base_method.parent_symbol;
 					var vclass = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS".printf (base_class.get_upper_case_cname (null))));
 					vclass.add_argument (inst);
-					expr.ccodenode = new CCodeMemberAccess.pointer (vclass, m.name);
+					set_cvalue (expr, new CCodeMemberAccess.pointer (vclass, m.name));
 				} else {
-					expr.ccodenode = new CCodeIdentifier (m.base_method.get_cname ());
+					set_cvalue (expr, new CCodeIdentifier (m.base_method.get_cname ()));
 				}
 			} else if (m.base_interface_method != null) {
-				expr.ccodenode = new CCodeIdentifier (m.base_interface_method.get_cname ());
+				set_cvalue (expr, new CCodeIdentifier (m.base_interface_method.get_cname ()));
 			} else if (m is CreationMethod) {
-				expr.ccodenode = new CCodeIdentifier (m.get_real_cname ());
+				set_cvalue (expr, new CCodeIdentifier (m.get_real_cname ()));
 			} else {
-				expr.ccodenode = new CCodeIdentifier (m.get_cname ());
+				set_cvalue (expr, new CCodeIdentifier (m.get_cname ()));
 			}
 		} else if (expr.symbol_reference is ArrayLengthField) {
 			if (expr.value_type is ArrayType && !(expr.parent_node is ElementAccess)) {
 				Report.error (expr.source_reference, "unsupported use of length field of multi-dimensional array");
 			}
-			expr.ccodenode = get_array_length_cexpression (expr.inner, 1);
+			set_cvalue (expr, get_array_length_cexpression (expr.inner, 1));
 		} else if (expr.symbol_reference is Field) {
 			var f = (Field) expr.symbol_reference;
 			if (f.binding == MemberBinding.INSTANCE) {
@@ -111,16 +111,16 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					inst = pub_inst;
 				}
 				if (instance_target_type.data_type.is_reference_type () || (expr.inner != null && expr.inner.value_type is PointerType)) {
-					expr.ccodenode = new CCodeMemberAccess.pointer (inst, f.get_cname ());
+					set_cvalue (expr, new CCodeMemberAccess.pointer (inst, f.get_cname ()));
 				} else {
 					if (inst is CCodeCommaExpression) {
 						var ccomma = inst as CCodeCommaExpression;
 						var inner = ccomma.get_inner ();
 						var last = inner.get (inner.size - 1);
 						ccomma.set_expression (inner.size - 1, new CCodeMemberAccess (last, f.get_cname ()));
-						expr.ccodenode = ccomma;
+						set_cvalue (expr, ccomma);
 					} else {
-						expr.ccodenode = new CCodeMemberAccess (inst, f.get_cname ());
+						set_cvalue (expr, new CCodeMemberAccess (inst, f.get_cname ()));
 					}
 				}
 			} else if (f.binding == MemberBinding.CLASS) {
@@ -141,7 +141,7 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				} else {
 					// Accessing the field of an instance
 					var k = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_GET_CLASS"));
-					k.add_argument ((CCodeExpression) expr.inner.ccodenode);
+					k.add_argument (get_cvalue (expr.inner));
 					klass = k;
 				}
 				cast.add_argument (klass);
@@ -149,22 +149,22 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				if (f.access == SymbolAccessibility.PRIVATE) {
 					var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS_PRIVATE".printf (cl.get_upper_case_cname ())));
 					ccall.add_argument (klass);
-					expr.ccodenode = new CCodeMemberAccess.pointer (ccall, f.get_cname ());
+					set_cvalue (expr, new CCodeMemberAccess.pointer (ccall, f.get_cname ()));
 				} else {
-					expr.ccodenode = new CCodeMemberAccess.pointer (cast, f.get_cname ());
+					set_cvalue (expr, new CCodeMemberAccess.pointer (cast, f.get_cname ()));
 				}
 
 			} else {
 				generate_field_declaration (f, cfile);
 
-				expr.ccodenode = new CCodeIdentifier (f.get_cname ());
+				set_cvalue (expr, new CCodeIdentifier (f.get_cname ()));
 			}
 		} else if (expr.symbol_reference is EnumValue) {
 			var ev = (EnumValue) expr.symbol_reference;
 
 			generate_enum_declaration ((Enum) ev.parent_symbol, cfile);
 
-			expr.ccodenode = new CCodeConstant (ev.get_cname ());
+			set_cvalue (expr, new CCodeConstant (ev.get_cname ()));
 		} else if (expr.symbol_reference is Constant) {
 			var c = (Constant) expr.symbol_reference;
 
@@ -175,18 +175,18 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			string fn = c.get_full_name ();
 			if (fn == "GLib.Log.FILE") {
 				string s = Path.get_basename (expr.source_reference.file.filename);
-				expr.ccodenode = new CCodeConstant ("\"%s\"".printf (s));
+				set_cvalue (expr, new CCodeConstant ("\"%s\"".printf (s)));
 			} else if (fn == "GLib.Log.LINE") {
 				int i = expr.source_reference.first_line;
-				expr.ccodenode = new CCodeConstant ("%d".printf (i));
+				set_cvalue (expr, new CCodeConstant ("%d".printf (i)));
 			} else if (fn == "GLib.Log.METHOD") {
 				string s = "";
 				if (current_method != null) {
 					s = current_method.get_full_name ();
 				}
-				expr.ccodenode = new CCodeConstant ("\"%s\"".printf (s));
+				set_cvalue (expr, new CCodeConstant ("\"%s\"".printf (s)));
 			} else {
-				expr.ccodenode = new CCodeIdentifier (c.get_cname ());
+				set_cvalue (expr, new CCodeIdentifier (c.get_cname ()));
 			}
 		} else if (expr.symbol_reference is Property) {
 			var prop = (Property) expr.symbol_reference;
@@ -210,16 +210,16 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (current_class.get_lower_case_cname (null))));
 					
 					var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "get_%s".printf (prop.name)));
-					ccall.add_argument ((CCodeExpression) expr.inner.ccodenode);
-					expr.ccodenode = ccall;
+					ccall.add_argument (get_cvalue (expr.inner));
+					set_cvalue (expr, ccall);
 					return;
 				} else if (prop.base_interface_property != null) {
 					var base_iface = (Interface) prop.base_interface_property.parent_symbol;
 					string parent_iface_var = "%s_%s_parent_iface".printf (current_class.get_lower_case_cname (null), base_iface.get_lower_case_cname (null));
 
 					var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (new CCodeIdentifier (parent_iface_var), "get_%s".printf (prop.name)));
-					ccall.add_argument ((CCodeExpression) expr.inner.ccodenode);
-					expr.ccodenode = ccall;
+					ccall.add_argument (get_cvalue (expr.inner));
+					set_cvalue (expr, ccall);
 					return;
 				}
 			}
@@ -233,7 +233,7 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			    !(prop.property_type is ArrayType || prop.property_type is DelegateType)) {
 				CCodeExpression inst;
 				inst = new CCodeMemberAccess.pointer (pub_inst, "priv");
-				expr.ccodenode = new CCodeMemberAccess.pointer (inst, prop.field.get_cname());
+				set_cvalue (expr, new CCodeMemberAccess.pointer (inst, prop.field.get_cname()));
 			} else if (!prop.no_accessor_method) {
 				var base_property = prop;
 				if (prop.base_property != null) {
@@ -285,7 +285,7 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
 					ccomma.append_expression (ccall);
 					ccomma.append_expression (ctemp);
-					expr.ccodenode = ccomma;
+					set_cvalue (expr, ccomma);
 				} else {
 					var array_type = base_property.property_type as ArrayType;
 					if (array_type != null && !base_property.no_array_length) {
@@ -307,7 +307,7 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 						}
 					}
 
-					expr.ccodenode = ccall;
+					set_cvalue (expr, ccall);
 				}
 			} else {
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_get"));
@@ -337,7 +337,7 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				ccall.add_argument (new CCodeConstant ("NULL"));
 				ccomma.append_expression (ccall);
 				ccomma.append_expression (ctemp);
-				expr.ccodenode = ccomma;
+				set_cvalue (expr, ccomma);
 			}
 		} else if (expr.symbol_reference is LocalVariable) {
 			var local = (LocalVariable) expr.symbol_reference;
@@ -345,16 +345,16 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				// used in postconditions
 				// structs are returned as out parameter
 				if (local.variable_type != null && local.variable_type.is_real_non_null_struct_type ()) {
-					expr.ccodenode = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result"));
+					set_cvalue (expr, new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result")));
 				} else {
-					expr.ccodenode = new CCodeIdentifier ("result");
+					set_cvalue (expr, new CCodeIdentifier ("result"));
 				}
 			} else if (local.captured) {
 				// captured variables are stored on the heap
 				var block = (Block) local.parent_symbol;
-				expr.ccodenode = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_variable_cname (local.name));
+				set_cvalue (expr, new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_variable_cname (local.name)));
 			} else {
-				expr.ccodenode = get_variable_cexpression (local.name);
+				set_cvalue (expr, get_variable_cexpression (local.name));
 
 				if (expr.parent_node is ReturnStatement &&
 				    current_return_type.value_owned &&
@@ -375,13 +375,13 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			if (p.name == "this") {
 				if (current_method != null && current_method.coroutine) {
 					// use closure
-					expr.ccodenode = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "self");
+					set_cvalue (expr, new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "self"));
 				} else {
 					var st = current_type_symbol as Struct;
 					if (st != null && !st.is_simple_type ()) {
-						expr.ccodenode = new CCodeIdentifier ("(*self)");
+						set_cvalue (expr, new CCodeIdentifier ("(*self)"));
 					} else {
-						expr.ccodenode = new CCodeIdentifier ("self");
+						set_cvalue (expr, new CCodeIdentifier ("self"));
 					}
 				}
 			} else {
@@ -391,15 +391,15 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					if (block == null) {
 						block = ((Method) p.parent_symbol).body;
 					}
-					expr.ccodenode = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_variable_cname (p.name));
+					set_cvalue (expr, new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_variable_cname (p.name)));
 				} else if (current_method != null && current_method.coroutine) {
 					// use closure
-					expr.ccodenode = get_variable_cexpression (p.name);
+					set_cvalue (expr, get_variable_cexpression (p.name));
 				} else {
 					var type_as_struct = p.variable_type.data_type as Struct;
 					if (p.direction != ParameterDirection.IN
 					    || (type_as_struct != null && !type_as_struct.is_simple_type () && !p.variable_type.nullable)) {
-						expr.ccodenode = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (get_variable_cname (p.name)));
+						set_cvalue (expr, new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (get_variable_cname (p.name))));
 					} else {
 						// Property setters of non simple structs shall replace all occurences
 						// of the "value" formal parameter with a dereferencing version of that
@@ -409,9 +409,9 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 						    current_property_accessor.value_parameter == p &&
 						    current_property_accessor.prop.property_type.is_real_struct_type () &&
 						    !current_property_accessor.prop.property_type.nullable) {
-							expr.ccodenode = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("value"));
+							set_cvalue (expr, new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("value")));
 						} else {
-							expr.ccodenode = get_variable_cexpression (p.name);
+							set_cvalue (expr, get_variable_cexpression (p.name));
 						}
 					}
 				}

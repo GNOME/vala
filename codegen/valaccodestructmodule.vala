@@ -259,7 +259,7 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 				if (requires_copy (f.variable_type))  {
 					var this_access = new MemberAccess.simple ("this");
 					this_access.value_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
-					this_access.ccodenode = new CCodeIdentifier ("(*self)");
+					set_cvalue (this_access, new CCodeIdentifier ("(*self)"));
 					var ma = new MemberAccess (this_access, f.name);
 					ma.symbol_reference = f;
 					copy = get_ref_cexpression (f.variable_type, copy, ma, f);

@@ -26,7 +26,7 @@ using GLib;
 
 public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 	public override void visit_if_statement (IfStatement stmt) {
-		ccode.open_if ((CCodeExpression) stmt.condition.ccodenode);
+		ccode.open_if (get_cvalue (stmt.condition));
 
 		stmt.true_statement.emit (this);
 
@@ -44,7 +44,7 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 		emit_temp_var (temp_var);
 
 		var ctemp = get_variable_cexpression (temp_var.name);
-		var cinit = new CCodeAssignment (ctemp, (CCodeExpression) stmt.expression.ccodenode);
+		var cinit = new CCodeAssignment (ctemp, get_cvalue (stmt.expression));
 		var czero = new CCodeConstant ("0");
 
 		var free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
@@ -68,7 +68,7 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 
 			foreach (SwitchLabel label in section.get_labels ()) {
 				label.expression.emit (this);
-				var cexpr = (CCodeExpression) label.expression.ccodenode;
+				var cexpr = get_cvalue (label.expression);
 
 				if (is_constant_ccode_expression (cexpr)) {
 					var cname = "%s_label%d".printf (temp_var.name, label_count++);
@@ -104,7 +104,7 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			CCodeBinaryExpression cor = null;
 			foreach (SwitchLabel label in section.get_labels ()) {
 				label.expression.emit (this);
-				var cexpr = (CCodeExpression) label.expression.ccodenode;
+				var cexpr = get_cvalue (label.expression);
 
 				if (is_constant_ccode_expression (cexpr)) {
 					var cname = new CCodeIdentifier ("%s_label%d".printf (temp_var.name, label_count++));
@@ -168,7 +168,7 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			return;
 		}
 
-		ccode.open_switch ((CCodeExpression) stmt.expression.ccodenode);
+		ccode.open_switch (get_cvalue (stmt.expression));
 
 		foreach (SwitchSection section in stmt.get_sections ()) {
 			if (section.has_default_label ()) {
@@ -190,7 +190,7 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 
 			visit_end_full_expression (label.expression);
 
-			ccode.add_case ((CCodeExpression) label.expression.ccodenode);
+			ccode.add_case (get_cvalue (label.expression));
 		}
 	}
 
@@ -225,7 +225,7 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			var ccolvardecl = new CCodeVariableDeclarator (collection_backup.name);
 			ccode.add_declaration (collection_type.get_cname (), ccolvardecl);
 		}
-		ccode.add_expression (new CCodeAssignment (get_variable_cexpression (collection_backup.name), (CCodeExpression) stmt.collection.ccodenode));
+		ccode.add_expression (new CCodeAssignment (get_variable_cexpression (collection_backup.name), get_cvalue (stmt.collection)));
 		
 		if (stmt.tree_can_fail && stmt.collection.tree_can_fail) {
 			// exception handling

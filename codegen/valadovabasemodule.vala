@@ -375,7 +375,7 @@ public class Vala.DovaBaseModule : CodeGenerator {
 				cenum.add_value (new CCodeEnumValue (ev.get_cname ()));
 			} else {
 				ev.value.emit (this);
-				cenum.add_value (new CCodeEnumValue (ev.get_cname (), (CCodeExpression) ev.value.ccodenode));
+				cenum.add_value (new CCodeEnumValue (ev.get_cname (), get_cvalue (ev.value)));
 			}
 		}
 
@@ -407,12 +407,12 @@ public class Vala.DovaBaseModule : CodeGenerator {
 				if (c.type_reference is ArrayType) {
 					arr = "[]";
 				}
-				cdecl.add_declarator (new CCodeVariableDeclarator ("%s%s".printf (c.get_cname (), arr), (CCodeExpression) c.value.ccodenode));
+				cdecl.add_declarator (new CCodeVariableDeclarator ("%s%s".printf (c.get_cname (), arr), get_cvalue (c.value)));
 				cdecl.modifiers = CCodeModifiers.STATIC;
 
 				decl_space.add_constant_declaration (cdecl);
 			} else {
-				var cdefine = new CCodeMacroReplacement.with_expression (c.get_cname (), (CCodeExpression) c.value.ccodenode);
+				var cdefine = new CCodeMacroReplacement.with_expression (c.get_cname (), get_cvalue (c.value));
 				decl_space.add_type_member_declaration (cdefine);
 			}
 		}
@@ -853,8 +853,8 @@ public class Vala.DovaBaseModule : CodeGenerator {
 		generate_type_declaration (local.variable_type, cfile);
 
 		CCodeExpression rhs = null;
-		if (local.initializer != null && local.initializer.ccodenode != null) {
-			rhs = (CCodeExpression) local.initializer.ccodenode;
+		if (local.initializer != null && get_cvalue (local.initializer) != null) {
+			rhs = get_cvalue (local.initializer);
 		}
 
 		if (local.captured) {
@@ -902,7 +902,7 @@ public class Vala.DovaBaseModule : CodeGenerator {
 					}
 				}
 
-				var cexpr = (CCodeExpression) expr.ccodenode;
+				var cexpr = get_cvalue (expr);
 
 				string ctype = field.get_ctype ();
 				if (ctype != null) {
@@ -912,13 +912,13 @@ public class Vala.DovaBaseModule : CodeGenerator {
 				clist.append (cexpr);
 			}
 
-			list.ccodenode = clist;
+			set_cvalue (list, clist);
 		} else {
 			var clist = new CCodeInitializerList ();
 			foreach (Expression expr in list.get_initializers ()) {
-				clist.append ((CCodeExpression) expr.ccodenode);
+				clist.append (get_cvalue (expr));
 			}
-			list.ccodenode = clist;
+			set_cvalue (list, clist);
 		}
 	}
 
@@ -1114,7 +1114,7 @@ public class Vala.DovaBaseModule : CodeGenerator {
 		emit_temp_var (full_expr_var);
 
 		var expr_list = new CCodeCommaExpression ();
-		expr_list.append_expression (new CCodeAssignment (get_variable_cexpression (full_expr_var.name), (CCodeExpression) expr.ccodenode));
+		expr_list.append_expression (new CCodeAssignment (get_variable_cexpression (full_expr_var.name), get_cvalue (expr)));
 
 		foreach (LocalVariable local in temp_ref_vars) {
 			var ma = new MemberAccess.simple (local.name);
@@ -1124,7 +1124,7 @@ public class Vala.DovaBaseModule : CodeGenerator {
 
 		expr_list.append_expression (get_variable_cexpression (full_expr_var.name));
 
-		expr.ccodenode = expr_list;
+		set_cvalue (expr, expr_list);
 
 		temp_ref_vars.clear ();
 	}
@@ -1184,7 +1184,7 @@ public class Vala.DovaBaseModule : CodeGenerator {
 			return;
 		}
 
-		ccode.add_expression ((CCodeExpression) stmt.expression.ccodenode);
+		ccode.add_expression (get_cvalue (stmt.expression));
 		/* free temporary objects and handle errors */
 
 		foreach (LocalVariable local in temp_ref_vars) {
@@ -1297,31 +1297,31 @@ public class Vala.DovaBaseModule : CodeGenerator {
 		}
 
 		var ccall = new CCodeFunctionCall (get_destroy_func_expression (type));
-		ccall.add_argument ((CCodeExpression) stmt.expression.ccodenode);
+		ccall.add_argument (get_cvalue (stmt.expression));
 		ccode.add_expression (ccall);
 	}
 
 	public override void visit_expression (Expression expr) {
-		if (expr.ccodenode != null && !expr.lvalue) {
+		if (get_cvalue (expr) != null && !expr.lvalue) {
 			// memory management, implicit casts, and boxing/unboxing
-			expr.ccodenode = transform_expression ((CCodeExpression) expr.ccodenode, expr.value_type, expr.target_type, expr);
+			set_cvalue (expr, transform_expression (get_cvalue (expr), expr.value_type, expr.target_type, expr));
 		}
 	}
 
 	public override void visit_boolean_literal (BooleanLiteral expr) {
-		expr.ccodenode = new CCodeConstant (expr.value ? "true" : "false");
+		set_cvalue (expr, new CCodeConstant (expr.value ? "true" : "false"));
 	}
 
 	public override void visit_character_literal (CharacterLiteral expr) {
 		if (expr.get_char () >= 0x20 && expr.get_char () < 0x80) {
-			expr.ccodenode = new CCodeConstant (expr.value);
+			set_cvalue (expr, new CCodeConstant (expr.value));
 		} else {
-			expr.ccodenode = new CCodeConstant ("%uU".printf (expr.get_char ()));
+			set_cvalue (expr, new CCodeConstant ("%uU".printf (expr.get_char ())));
 		}
 	}
 
 	public override void visit_integer_literal (IntegerLiteral expr) {
-		expr.ccodenode = new CCodeConstant (expr.value);
+		set_cvalue (expr, new CCodeConstant (expr.value));
 	}
 
 	public override void visit_real_literal (RealLiteral expr) {
@@ -1338,7 +1338,7 @@ public class Vala.DovaBaseModule : CodeGenerator {
 				c_literal += ".";
 			}
 		}
-		expr.ccodenode = new CCodeConstant (c_literal);
+		set_cvalue (expr, new CCodeConstant (c_literal));
 	}
 
 	public override void visit_string_literal (StringLiteral expr) {
@@ -1346,16 +1346,16 @@ public class Vala.DovaBaseModule : CodeGenerator {
 		var cliteral = new CCodeConstant ("\"\\0\" " + expr.value);
 
 		var cbinary = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, cliteral, new CCodeConstant ("1"));
-		expr.ccodenode = new CCodeCastExpression (cbinary, "string_t");
+		set_cvalue (expr, new CCodeCastExpression (cbinary, "string_t"));
 	}
 
 	public override void visit_null_literal (NullLiteral expr) {
-		expr.ccodenode = new CCodeConstant ("NULL");
+		set_cvalue (expr, new CCodeConstant ("NULL"));
 	}
 
 	public override void visit_base_access (BaseAccess expr) {
 		generate_type_declaration (expr.value_type, cfile);
-		expr.ccodenode = new CCodeCastExpression (new CCodeIdentifier ("this"), expr.value_type.get_cname ());
+		set_cvalue (expr, new CCodeCastExpression (new CCodeIdentifier ("this"), expr.value_type.get_cname ()));
 	}
 
 	public override void visit_postfix_expression (PostfixExpression expr) {
@@ -1369,7 +1369,7 @@ public class Vala.DovaBaseModule : CodeGenerator {
 			// assign current value to temp variable
 			var temp_decl = get_temp_variable (prop.property_type, true, expr);
 			emit_temp_var (temp_decl);
-			ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_decl.name), (CCodeExpression) expr.inner.ccodenode));
+			ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_decl.name), get_cvalue (expr.inner)));
 
 			// increment/decrement property
 			var op = expr.increment ? CCodeBinaryOperator.PLUS : CCodeBinaryOperator.MINUS;
@@ -1380,13 +1380,13 @@ public class Vala.DovaBaseModule : CodeGenerator {
 			// return previous value
 			ccomma.append_expression (new CCodeIdentifier (temp_decl.name));
 
-			expr.ccodenode = ccomma;
+			set_cvalue (expr, ccomma);
 			return;
 		}
 
 		var op = expr.increment ? CCodeUnaryOperator.POSTFIX_INCREMENT : CCodeUnaryOperator.POSTFIX_DECREMENT;
 
-		expr.ccodenode = new CCodeUnaryExpression (op, (CCodeExpression) expr.inner.ccodenode);
+		set_cvalue (expr, new CCodeUnaryExpression (op, get_cvalue (expr.inner)));
 	}
 
 	private MemberAccess? find_property_access (Expression expr) {
@@ -1499,7 +1499,7 @@ public class Vala.DovaBaseModule : CodeGenerator {
 		if (expr != null && expr.is_non_null ()
 		    && !is_ref_function_void (expression_type)) {
 			// expression is non-null
-			ccall.add_argument ((CCodeExpression) expr.ccodenode);
+			ccall.add_argument (get_cvalue (expr));
 
 			return ccall;
 		} else {
@@ -1613,7 +1613,7 @@ public class Vala.DovaBaseModule : CodeGenerator {
 			int i = 1;
 			Iterator<FormalParameter> params_it = params.iterator ();
 			foreach (Expression arg in expr.get_argument_list ()) {
-				CCodeExpression cexpr = (CCodeExpression) arg.ccodenode;
+				CCodeExpression cexpr = get_cvalue (arg);
 				FormalParameter param = null;
 				if (params_it.next ()) {
 					param = params_it.get ();
@@ -1645,7 +1645,7 @@ public class Vala.DovaBaseModule : CodeGenerator {
 				 * parameter yet */
 				param.initializer.emit (this);
 
-				creation_call.add_argument ((CCodeExpression) param.initializer.ccodenode);
+				creation_call.add_argument (get_cvalue (param.initializer));
 				i++;
 			}
 
@@ -1693,21 +1693,21 @@ public class Vala.DovaBaseModule : CodeGenerator {
 					} else {
 						lhs = new CCodeMemberAccess.pointer (typed_inst, f.get_cname ());
 					}
-					ccomma.append_expression (new CCodeAssignment (lhs, (CCodeExpression) init.initializer.ccodenode));
+					ccomma.append_expression (new CCodeAssignment (lhs, get_cvalue (init.initializer)));
 				} else if (init.symbol_reference is Property) {
 					var inst_ma = new MemberAccess.simple ("new");
 					inst_ma.value_type = expr.type_reference;
-					inst_ma.ccodenode = instance;
+					set_cvalue (inst_ma, instance);
 					var ma = new MemberAccess (inst_ma, init.name);
-					ccomma.append_expression (get_property_set_call ((Property) init.symbol_reference, ma, (CCodeExpression) init.initializer.ccodenode));
+					ccomma.append_expression (get_property_set_call ((Property) init.symbol_reference, ma, get_cvalue (init.initializer)));
 				}
 			}
 
 			ccomma.append_expression (instance);
 
-			expr.ccodenode = ccomma;
+			set_cvalue (expr, ccomma);
 		} else if (creation_expr != null) {
-			expr.ccodenode = creation_expr;
+			set_cvalue (expr, creation_expr);
 		}
 	}
 
@@ -1742,11 +1742,11 @@ public class Vala.DovaBaseModule : CodeGenerator {
 	public override void visit_sizeof_expression (SizeofExpression expr) {
 		var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
 		csizeof.add_argument (new CCodeIdentifier (expr.type_reference.get_cname ()));
-		expr.ccodenode = csizeof;
+		set_cvalue (expr, csizeof);
 	}
 
 	public override void visit_typeof_expression (TypeofExpression expr) {
-		expr.ccodenode = get_type_id_expression (expr.type_reference);
+		set_cvalue (expr, get_type_id_expression (expr.type_reference));
 	}
 
 	public override void visit_unary_expression (UnaryExpression expr) {
@@ -1770,7 +1770,7 @@ public class Vala.DovaBaseModule : CodeGenerator {
 		} else {
 			assert_not_reached ();
 		}
-		expr.ccodenode = new CCodeUnaryExpression (op, (CCodeExpression) expr.inner.ccodenode);
+		set_cvalue (expr, new CCodeUnaryExpression (op, get_cvalue (expr.inner)));
 	}
 
 	public override void visit_cast_expression (CastExpression expr) {
@@ -1782,7 +1782,7 @@ public class Vala.DovaBaseModule : CodeGenerator {
 				emit_temp_var (temp_decl);
 
 				var ctemp = get_variable_cexpression (temp_decl.name);
-				var cinit = new CCodeAssignment (ctemp, (CCodeExpression) expr.inner.ccodenode);
+				var cinit = new CCodeAssignment (ctemp, get_cvalue (expr.inner));
 				var ccheck = create_type_check (ctemp, expr.type_reference);
 				var ccast = new CCodeCastExpression (ctemp, expr.type_reference.get_cname ());
 				var cnull = new CCodeConstant ("NULL");
@@ -1790,7 +1790,7 @@ public class Vala.DovaBaseModule : CodeGenerator {
 				ccomma.append_expression (cinit);
 				ccomma.append_expression (new CCodeConditionalExpression (ccheck, ccast, cnull));
 
-				expr.ccodenode = ccomma;
+				set_cvalue (expr, ccomma);
 			} else {
 				expr.error = true;
 				Report.error (expr.source_reference, "Operation not supported for this type");
@@ -1805,7 +1805,7 @@ public class Vala.DovaBaseModule : CodeGenerator {
 			var cvar = get_variable_cexpression (temp_decl.name);
 
 			var ccomma = new CCodeCommaExpression ();
-			ccomma.append_expression (new CCodeAssignment (cvar, (CCodeExpression) expr.inner.ccodenode));
+			ccomma.append_expression (new CCodeAssignment (cvar, get_cvalue (expr.inner)));
 
 			var to_any  = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_value_to_any"));
 			to_any.add_argument (get_type_id_expression (expr.inner.value_type));
@@ -1813,7 +1813,7 @@ public class Vala.DovaBaseModule : CodeGenerator {
 			to_any.add_argument (new CCodeConstant ("0"));
 			ccomma.append_expression (to_any);
 
-			expr.ccodenode = ccomma;
+			set_cvalue (expr, ccomma);
 			return;
 		} else if (expr.inner.value_type.data_type != null && expr.inner.value_type.data_type.get_full_name () == "Dova.Value") {
 			// unbox value
@@ -1828,14 +1828,14 @@ public class Vala.DovaBaseModule : CodeGenerator {
 
 			var to_any  = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_value_from_any"));
 			to_any.add_argument (get_type_id_expression (expr.type_reference));
-			to_any.add_argument ((CCodeExpression) expr.inner.ccodenode);
+			to_any.add_argument (get_cvalue (expr.inner));
 			to_any.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cvar));
 			to_any.add_argument (new CCodeConstant ("0"));
 			ccomma.append_expression (to_any);
 
 			ccomma.append_expression (cvar);
 
-			expr.ccodenode = ccomma;
+			set_cvalue (expr, ccomma);
 			return;
 		}
 
@@ -1843,18 +1843,18 @@ public class Vala.DovaBaseModule : CodeGenerator {
 
 		if (expr.inner.value_type is GenericType && !(expr.type_reference is GenericType)) {
 			// generic types use an extra pointer, dereference that pointer
-			expr.ccodenode = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeCastExpression ((CCodeExpression) expr.inner.ccodenode, expr.type_reference.get_cname () + "*"));
+			set_cvalue (expr, new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeCastExpression (get_cvalue (expr.inner), expr.type_reference.get_cname () + "*")));
 		} else {
-			expr.ccodenode = new CCodeCastExpression ((CCodeExpression) expr.inner.ccodenode, expr.type_reference.get_cname ());
+			set_cvalue (expr, new CCodeCastExpression (get_cvalue (expr.inner), expr.type_reference.get_cname ()));
 		}
 	}
 
 	public override void visit_pointer_indirection (PointerIndirection expr) {
-		expr.ccodenode = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, (CCodeExpression) expr.inner.ccodenode);
+		set_cvalue (expr, new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_cvalue (expr.inner)));
 	}
 
 	public override void visit_addressof_expression (AddressofExpression expr) {
-		expr.ccodenode = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, (CCodeExpression) expr.inner.ccodenode);
+		set_cvalue (expr, new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_cvalue (expr.inner)));
 	}
 
 	public override void visit_reference_transfer_expression (ReferenceTransferExpression expr) {
@@ -1864,15 +1864,15 @@ public class Vala.DovaBaseModule : CodeGenerator {
 		emit_temp_var (temp_decl);
 		var cvar = get_variable_cexpression (temp_decl.name);
 
-		ccomma.append_expression (new CCodeAssignment (cvar, (CCodeExpression) expr.inner.ccodenode));
-		ccomma.append_expression (new CCodeAssignment ((CCodeExpression) expr.inner.ccodenode, new CCodeConstant ("NULL")));
+		ccomma.append_expression (new CCodeAssignment (cvar, get_cvalue (expr.inner)));
+		ccomma.append_expression (new CCodeAssignment (get_cvalue (expr.inner), new CCodeConstant ("NULL")));
 		ccomma.append_expression (cvar);
-		expr.ccodenode = ccomma;
+		set_cvalue (expr, ccomma);
 	}
 
 	public override void visit_binary_expression (BinaryExpression expr) {
-		var cleft = (CCodeExpression) expr.left.ccodenode;
-		var cright = (CCodeExpression) expr.right.ccodenode;
+		var cleft = get_cvalue (expr.left);
+		var cright = get_cvalue (expr.right);
 
 		CCodeBinaryOperator op;
 		if (expr.operator == BinaryOperator.PLUS) {
@@ -1912,7 +1912,7 @@ public class Vala.DovaBaseModule : CodeGenerator {
 		} else if (expr.operator == BinaryOperator.OR) {
 			op = CCodeBinaryOperator.OR;
 		} else if (expr.operator == BinaryOperator.IN) {
-			expr.ccodenode = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeBinaryExpression (CCodeBinaryOperator.BITWISE_AND, cright, cleft), cleft);
+			set_cvalue (expr, new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeBinaryExpression (CCodeBinaryOperator.BITWISE_AND, cright, cleft), cleft));
 			return;
 		} else {
 			assert_not_reached ();
@@ -1949,7 +1949,7 @@ public class Vala.DovaBaseModule : CodeGenerator {
 			}
 		}
 
-		expr.ccodenode = new CCodeBinaryExpression (op, cleft, cright);
+		set_cvalue (expr, new CCodeBinaryExpression (op, cleft, cright));
 	}
 
 	CCodeExpression? create_type_check (CCodeNode ccodenode, DataType type) {
@@ -1962,8 +1962,8 @@ public class Vala.DovaBaseModule : CodeGenerator {
 	public override void visit_type_check (TypeCheck expr) {
 		generate_type_declaration (expr.type_reference, cfile);
 
-		expr.ccodenode = create_type_check (expr.expression.ccodenode, expr.type_reference);
-		if (expr.ccodenode is CCodeInvalidExpression) {
+		set_cvalue (expr, create_type_check (get_cvalue (expr.expression), expr.type_reference));
+		if (get_cvalue (expr) is CCodeInvalidExpression) {
 			Report.error (expr.source_reference, "type check expressions not supported for compact classes, structs, and enums");
 		}
 	}
@@ -1975,7 +1975,7 @@ public class Vala.DovaBaseModule : CodeGenerator {
 
 		l.accept_children (this);
 
-		l.ccodenode = new CCodeIdentifier (l.method.get_cname ());
+		set_cvalue (l, new CCodeIdentifier (l.method.get_cname ()));
 	}
 
 	// manage memory and implicit casts
@@ -2229,6 +2229,14 @@ public class Vala.DovaBaseModule : CodeGenerator {
 			return new CCodeConstant (type.data_type.get_default_value ());
 		}
 		return null;
+	}
+
+	public CCodeExpression? get_cvalue (Expression expr) {
+		return (CCodeExpression) expr.ccodenode;
+	}
+
+	public void set_cvalue (Expression expr, CCodeExpression? cvalue) {
+		expr.ccodenode = cvalue;
 	}
 
 	public CCodeNode? get_ccodenode (CodeNode node) {

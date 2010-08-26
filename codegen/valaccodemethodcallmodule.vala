@@ -27,7 +27,7 @@ using GLib;
 public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 	public override void visit_method_call (MethodCall expr) {
 		// the bare function call
-		var ccall = new CCodeFunctionCall ((CCodeExpression) expr.call.ccodenode);
+		var ccall = new CCodeFunctionCall (get_cvalue (expr.call));
 
 		CCodeFunctionCall async_call = null;
 
@@ -53,7 +53,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			if (ma != null && ma.inner is BaseAccess && sig_type.signal_symbol.is_virtual) {
 				m = sig_type.signal_symbol.default_handler;
 			} else {
-				ccall = (CCodeFunctionCall) expr.call.ccodenode;
+				ccall = (CCodeFunctionCall) get_cvalue (expr.call);
 			}
 		} else if (itype is ObjectType) {
 			// constructor
@@ -178,11 +178,11 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			in_arg_map.set (get_param_pos (m.cinstance_parameter_position), instance);
 			out_arg_map.set (get_param_pos (m.cinstance_parameter_position), instance);
 		} else if (m != null && m.binding == MemberBinding.INSTANCE && !(m is CreationMethod)) {
-			instance = (CCodeExpression) ma.inner.ccodenode;
+			instance = get_cvalue (ma.inner);
 
 			if ((ma.member_name == "begin" || ma.member_name == "end") && ma.inner.symbol_reference == ma.symbol_reference) {
 				var inner_ma = (MemberAccess) ma.inner;
-				instance = (CCodeExpression) inner_ma.inner.ccodenode;
+				instance = get_cvalue (inner_ma.inner);
 			}
 
 			var st = m.parent_symbol as Struct;
@@ -228,7 +228,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			} else {
 				// Accessing the method of an instance
 				var k = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_GET_CLASS"));
-				k.add_argument ((CCodeExpression) ma.inner.ccodenode);
+				k.add_argument (get_cvalue (ma.inner));
 				klass = k;
 			}
 
@@ -327,7 +327,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		int arg_pos;
 		Iterator<FormalParameter> params_it = params.iterator ();
 		foreach (Expression arg in expr.get_argument_list ()) {
-			CCodeExpression cexpr = (CCodeExpression) arg.ccodenode;
+			CCodeExpression cexpr = get_cvalue (arg);
 
 			var carg_map = in_arg_map;
 
@@ -456,7 +456,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 						if (param.direction == ParameterDirection.REF) {
 							var crefcomma = new CCodeCommaExpression ();
-							crefcomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), (CCodeExpression) unary.inner.ccodenode));
+							crefcomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), get_cvalue (unary.inner)));
 							crefcomma.append_expression (cexpr);
 							cexpr = crefcomma;
 						}
@@ -480,12 +480,12 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 						cassign_comma.append_expression (new CCodeAssignment (get_variable_cexpression (assign_temp_var.name), transform_expression (get_variable_cexpression (temp_var.name), param.variable_type, unary.inner.value_type, arg)));
 
 						// unref old value
-						cassign_comma.append_expression (get_unref_expression ((CCodeExpression) unary.inner.ccodenode, arg.value_type, arg));
+						cassign_comma.append_expression (get_unref_expression (get_cvalue (unary.inner), arg.value_type, arg));
 
 						cassign_comma.append_expression (get_variable_cexpression (assign_temp_var.name));
 
 						// assign new value
-						ccomma.append_expression (new CCodeAssignment ((CCodeExpression) unary.inner.ccodenode, cassign_comma));
+						ccomma.append_expression (new CCodeAssignment (get_cvalue (unary.inner), cassign_comma));
 
 						// return value
 						if (ret_temp_var != null) {
@@ -740,9 +740,9 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		}
 
 		if (m != null && m.binding == MemberBinding.INSTANCE && m.returns_modified_pointer) {
-			expr.ccodenode = new CCodeAssignment (instance, ccall_expr);
+			set_cvalue (expr, new CCodeAssignment (instance, ccall_expr));
 		} else {
-			expr.ccodenode = ccall_expr;
+			set_cvalue (expr, ccall_expr);
 		}
 
 		if (expr.is_yield_expression) {
@@ -759,7 +759,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			// FIXME: size expression must not be evaluated twice at runtime (potential side effects)
 			Iterator<Expression> arg_it = expr.get_argument_list ().iterator ();
 			arg_it.next ();
-			var new_size = (CCodeExpression) arg_it.get ().ccodenode;
+			var new_size = get_cvalue (arg_it.get ());
 
 			var temp_decl = get_temp_variable (int_type);
 			var temp_ref = get_variable_cexpression (temp_decl.name);
@@ -770,7 +770,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			cfile.add_include ("string.h");
 
 			var clen = get_array_length_cexpression (ma.inner, 1);
-			var celems = (CCodeExpression) ma.inner.ccodenode;
+			var celems = get_cvalue (ma.inner);
 			var array_type = (ArrayType) ma.inner.value_type;
 			var csizeof = new CCodeIdentifier ("sizeof (%s)".printf (array_type.element_type.get_cname ()));
 			var cdelta = new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, temp_ref, clen);
@@ -783,11 +783,11 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 			var ccomma = new CCodeCommaExpression ();
 			ccomma.append_expression (new CCodeAssignment (temp_ref, new_size));
-			ccomma.append_expression ((CCodeExpression) expr.ccodenode);
+			ccomma.append_expression (get_cvalue (expr));
 			ccomma.append_expression (new CCodeConditionalExpression (ccheck, czero, new CCodeConstant ("NULL")));
 			ccomma.append_expression (new CCodeAssignment (get_array_length_cexpression (ma.inner, 1), temp_ref));
 
-			expr.ccodenode = ccomma;
+			set_cvalue (expr, ccomma);
 		}
 	}
 

@@ -783,9 +783,9 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 
 					var field_st = f.parent_symbol as Struct;
 					if (field_st != null && !field_st.is_simple_type ()) {
-						this_access.ccodenode = new CCodeIdentifier ("(*this)");
+						set_cvalue (this_access, new CCodeIdentifier ("(*this)"));
 					} else {
-						this_access.ccodenode = new CCodeIdentifier ("this");
+						set_cvalue (this_access, new CCodeIdentifier ("this"));
 					}
 
 					var ma = new MemberAccess (this_access, f.name);
@@ -1945,24 +1945,24 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 			expr.accept_children (this);
 
 			List<Expression> indices = expr.get_indices ();
-			var cindex = (CCodeExpression) indices[0].ccodenode;
+			var cindex = get_cvalue (indices[0]);
 
 			if (array_type.inline_allocated) {
-				expr.ccodenode = new CCodeElementAccess ((CCodeExpression) expr.container.ccodenode, cindex);
+				set_cvalue (expr, new CCodeElementAccess (get_cvalue (expr.container), cindex));
 			} else {
 				generate_property_accessor_declaration (((Property) array_class.scope.lookup ("data")).get_accessor, cfile);
 
 				var ccontainer = new CCodeFunctionCall (new CCodeIdentifier ("dova_array_get_data"));
-				ccontainer.add_argument ((CCodeExpression) expr.container.ccodenode);
+				ccontainer.add_argument (get_cvalue (expr.container));
 
 				if (array_type.element_type is GenericType) {
 					// generic array
 					// calculate offset in bytes based on value size
 					var value_size = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_get_value_size"));
 					value_size.add_argument (get_type_id_expression (array_type.element_type));
-					expr.ccodenode = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeCastExpression (ccontainer, "char*"), new CCodeBinaryExpression (CCodeBinaryOperator.MUL, value_size, cindex));
+					set_cvalue (expr, new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeCastExpression (ccontainer, "char*"), new CCodeBinaryExpression (CCodeBinaryOperator.MUL, value_size, cindex)));
 				} else {
-					expr.ccodenode = new CCodeElementAccess (new CCodeCastExpression (ccontainer, "%s*".printf (array_type.element_type.get_cname ())), cindex);
+					set_cvalue (expr, new CCodeElementAccess (new CCodeCastExpression (ccontainer, "%s*".printf (array_type.element_type.get_cname ())), cindex));
 				}
 			}
 
@@ -1976,7 +1976,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 			field.initializer.emit (this);
 
 			var lhs = new CCodeIdentifier (field.get_cname ());
-			var rhs = (CCodeExpression) field.initializer.ccodenode;
+			var rhs = get_cvalue (field.initializer);
 
 			ccode.add_expression (new CCodeAssignment (lhs, rhs));
 		}

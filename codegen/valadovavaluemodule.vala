@@ -312,7 +312,7 @@ public class Vala.DovaValueModule : DovaObjectModule {
 				if (requires_destroy (f.variable_type))  {
 					var this_access = new MemberAccess.simple ("this");
 					this_access.value_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
-					this_access.ccodenode = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, dest);
+					set_cvalue (this_access, new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, dest));
 					var ma = new MemberAccess (this_access, f.name);
 					ma.symbol_reference = f;
 					ma.value_type = f.variable_type.copy ();
@@ -349,7 +349,7 @@ public class Vala.DovaValueModule : DovaObjectModule {
 					if (requires_copy (f.variable_type))  {
 						var this_access = new MemberAccess.simple ("this");
 						this_access.value_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
-						this_access.ccodenode = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, src);
+						set_cvalue (this_access, new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, src));
 						var ma = new MemberAccess (this_access, f.name);
 						ma.symbol_reference = f;
 						copy = get_ref_cexpression (f.variable_type, copy, ma, f);
@@ -383,7 +383,7 @@ public class Vala.DovaValueModule : DovaObjectModule {
 
 		if (src is NullLiteral) {
 			// TODO destroy dest
-			assignment.ccodenode = new CCodeConstant ("0");
+			set_cvalue (assignment, new CCodeConstant ("0"));
 			return;
 		}
 
@@ -438,7 +438,7 @@ public class Vala.DovaValueModule : DovaObjectModule {
 		ccall.add_argument (dest_index);
 		ccall.add_argument (csrc);
 		ccall.add_argument (src_index);
-		assignment.ccodenode = ccall;
+		set_cvalue (assignment, ccall);
 	}
 
 	public override void visit_binary_expression (BinaryExpression expr) {
@@ -486,9 +486,9 @@ public class Vala.DovaValueModule : DovaObjectModule {
 		ccall.add_argument (right_index);
 
 		if (expr.operator == BinaryOperator.EQUALITY) {
-			expr.ccodenode = ccall;
+			set_cvalue (expr, ccall);
 		} else {
-			expr.ccodenode = new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, ccall);
+			set_cvalue (expr, new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, ccall));
 		}
 	}
 
@@ -527,7 +527,7 @@ public class Vala.DovaValueModule : DovaObjectModule {
 			ccall.add_argument (cval);
 			ccall.add_argument (val_index);
 
-			expr.ccodenode = ccall;
+			set_cvalue (expr, ccall);
 		}
 	}
 
@@ -550,7 +550,7 @@ public class Vala.DovaValueModule : DovaObjectModule {
 
 			int i = 0;
 			foreach (Expression e in expr.get_expressions ()) {
-				ce.append_expression (new CCodeAssignment (new CCodeElementAccess (name_cnode, new CCodeConstant (i.to_string ())), (CCodeExpression) e.ccodenode));
+				ce.append_expression (new CCodeAssignment (new CCodeElementAccess (name_cnode, new CCodeConstant (i.to_string ())), get_cvalue (e)));
 				i++;
 			}
 
@@ -562,7 +562,7 @@ public class Vala.DovaValueModule : DovaObjectModule {
 		list_creation.add_argument (new CCodeConstant (length.to_string ()));
 		list_creation.add_argument (ce);
 
-		expr.ccodenode = list_creation;
+		set_cvalue (expr, list_creation);
 	}
 
 	public override void visit_set_literal (SetLiteral expr) {
@@ -584,7 +584,7 @@ public class Vala.DovaValueModule : DovaObjectModule {
 
 			int i = 0;
 			foreach (Expression e in expr.get_expressions ()) {
-				ce.append_expression (new CCodeAssignment (new CCodeElementAccess (name_cnode, new CCodeConstant (i.to_string ())), (CCodeExpression) e.ccodenode));
+				ce.append_expression (new CCodeAssignment (new CCodeElementAccess (name_cnode, new CCodeConstant (i.to_string ())), get_cvalue (e)));
 				i++;
 			}
 
@@ -596,7 +596,7 @@ public class Vala.DovaValueModule : DovaObjectModule {
 		set_creation.add_argument (new CCodeConstant (length.to_string ()));
 		set_creation.add_argument (ce);
 
-		expr.ccodenode = set_creation;
+		set_cvalue (expr, set_creation);
 	}
 
 	public override void visit_map_literal (MapLiteral expr) {
@@ -629,8 +629,8 @@ public class Vala.DovaValueModule : DovaObjectModule {
 			emit_temp_var (value_temp_var);
 
 			for (int i = 0; i < length; i++) {
-				key_ce.append_expression (new CCodeAssignment (new CCodeElementAccess (key_name_cnode, new CCodeConstant (i.to_string ())), (CCodeExpression) expr.get_keys ().get (i).ccodenode));
-				value_ce.append_expression (new CCodeAssignment (new CCodeElementAccess (value_name_cnode, new CCodeConstant (i.to_string ())), (CCodeExpression) expr.get_values ().get (i).ccodenode));
+				key_ce.append_expression (new CCodeAssignment (new CCodeElementAccess (key_name_cnode, new CCodeConstant (i.to_string ())), get_cvalue (expr.get_keys ().get (i))));
+				value_ce.append_expression (new CCodeAssignment (new CCodeElementAccess (value_name_cnode, new CCodeConstant (i.to_string ())), get_cvalue (expr.get_values ().get (i))));
 			}
 
 			key_ce.append_expression (key_name_cnode);
@@ -644,7 +644,7 @@ public class Vala.DovaValueModule : DovaObjectModule {
 		map_creation.add_argument (key_ce);
 		map_creation.add_argument (value_ce);
 
-		expr.ccodenode = map_creation;
+		set_cvalue (expr, map_creation);
 	}
 
 	public override void visit_tuple (Tuple tuple) {
@@ -675,7 +675,7 @@ public class Vala.DovaValueModule : DovaObjectModule {
 
 			type_ce.append_expression (new CCodeAssignment (new CCodeElementAccess (type_name_cnode, new CCodeConstant (i.to_string ())), get_type_id_expression (element_type)));
 
-			var cexpr = (CCodeExpression) e.ccodenode;
+			var cexpr = get_cvalue (e);
 
 			var unary = cexpr as CCodeUnaryExpression;
 			if (unary != null && unary.operator == CCodeUnaryOperator.POINTER_INDIRECTION) {
@@ -706,6 +706,6 @@ public class Vala.DovaValueModule : DovaObjectModule {
 		tuple_creation.add_argument (type_ce);
 		tuple_creation.add_argument (ce);
 
-		tuple.ccodenode = tuple_creation;
+		set_cvalue (tuple, tuple_creation);
 	}
 }

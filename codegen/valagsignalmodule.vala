@@ -169,7 +169,7 @@ public class Vala.GSignalModule : GObjectModule {
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_strconcat"));
 		ccall.add_argument (sig.get_canonical_cconstant (""));
-		ccall.add_argument ((CCodeExpression) detail_expr.ccodenode);
+		ccall.add_argument (get_cvalue (detail_expr));
 		ccall.add_argument (new CCodeConstant ("NULL"));
 
 		var ccomma = new CCodeCommaExpression ();
@@ -491,11 +491,11 @@ public class Vala.GSignalModule : GObjectModule {
 			var signal_name_cexpr = get_signal_name_cexpression (sig, detail_expr, expr);
 			
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_emit_by_name"));
-			ccall.add_argument ((CCodeExpression) ma.inner.ccodenode);
+			ccall.add_argument (get_cvalue (ma.inner));
 			if (signal_name_cexpr != null) {
 				ccall.add_argument (signal_name_cexpr);
 			}
-			expr.ccodenode = ccall;
+			set_cvalue (expr, ccall);
 		} else {
 			base.visit_element_access (expr);
 		}
@@ -535,7 +535,7 @@ public class Vala.GSignalModule : GObjectModule {
 				return;
 			}
 
-			assignment.ccodenode = emit_signal_assignment (assignment);
+			set_cvalue (assignment, emit_signal_assignment (assignment));
 		} else {
 			base.visit_assignment (assignment);
 		}
@@ -546,7 +546,7 @@ public class Vala.GSignalModule : GObjectModule {
 			CCodeExpression pub_inst = null;
 	
 			if (expr.inner != null) {
-				pub_inst = (CCodeExpression) expr.inner.ccodenode;
+				pub_inst = get_cvalue (expr.inner);
 			}
 
 			var sig = (Signal) expr.symbol_reference;
@@ -558,7 +558,7 @@ public class Vala.GSignalModule : GObjectModule {
 				var vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (base_class.get_upper_case_cname (null))));
 				vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (current_class.get_lower_case_cname (null))));
 				
-				expr.ccodenode = new CCodeMemberAccess.pointer (vcast, m.name);
+				set_cvalue (expr, new CCodeMemberAccess.pointer (vcast, m.name));
 				return;
 			}
 
@@ -566,14 +566,14 @@ public class Vala.GSignalModule : GObjectModule {
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_%s".printf (cl.get_lower_case_cname (null), sig.name)));
 
 				ccall.add_argument (pub_inst);
-				expr.ccodenode = ccall;
+				set_cvalue (expr, ccall);
 			} else {
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_emit_by_name"));
 				ccall.add_argument (pub_inst);
 
 				ccall.add_argument (sig.get_canonical_cconstant ());
 				
-				expr.ccodenode = ccall;
+				set_cvalue (expr, ccall);
 			}
 		} else {
 			base.visit_member_access (expr);
@@ -596,7 +596,7 @@ public class Vala.GSignalModule : GObjectModule {
 		bool disconnect = (method_type.method_symbol.name == "disconnect");
 		bool after = (method_type.method_symbol.name == "connect_after");
 
-		expr.ccodenode = connect_signal (sig, signal_access, handler, disconnect, after, expr);
+		set_cvalue (expr, connect_signal (sig, signal_access, handler, disconnect, after, expr));
 	}
 
 	CCodeExpression? connect_signal (Signal sig, Expression signal_access, Expression handler, bool disconnect, bool after, CodeNode expr) {
@@ -711,7 +711,7 @@ public class Vala.GSignalModule : GObjectModule {
 		}
 
 		// third resp. sixth argument: handler
-		ccall.add_argument (new CCodeCastExpression ((CCodeExpression) handler.ccodenode, "GCallback"));
+		ccall.add_argument (new CCodeCastExpression (get_cvalue (handler), "GCallback"));
 
 		if (m.closure) {
 			// g_signal_connect_data
@@ -736,7 +736,7 @@ public class Vala.GSignalModule : GObjectModule {
 			if (handler is MemberAccess) {
 				var right_ma = (MemberAccess) handler;
 				if (right_ma.inner != null) {
-					ccall.add_argument ((CCodeExpression) right_ma.inner.ccodenode);
+					ccall.add_argument (get_cvalue (right_ma.inner));
 				} else {
 					ccall.add_argument (get_result_cexpression ("self"));
 				}

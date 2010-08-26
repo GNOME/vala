@@ -23,7 +23,7 @@
 public class Vala.DovaArrayModule : DovaMethodCallModule {
 	void append_initializer_list (CCodeCommaExpression ce, CCodeExpression name_cnode, InitializerList initializer_list, ref int i) {
 		foreach (Expression e in initializer_list.get_initializers ()) {
-			ce.append_expression (new CCodeAssignment (new CCodeElementAccess (name_cnode, new CCodeConstant (i.to_string ())), (CCodeExpression) e.ccodenode));
+			ce.append_expression (new CCodeAssignment (new CCodeElementAccess (name_cnode, new CCodeConstant (i.to_string ())), get_cvalue (e)));
 			i++;
 		}
 	}
@@ -44,7 +44,7 @@ public class Vala.DovaArrayModule : DovaMethodCallModule {
 
 			ce.append_expression (name_cnode);
 
-			expr.ccodenode = ce;
+			set_cvalue (expr, ce);
 
 			return;
 		}
@@ -55,18 +55,18 @@ public class Vala.DovaArrayModule : DovaMethodCallModule {
 		array_new.add_argument (get_type_id_expression (expr.element_type));
 
 		// length of new array
-		array_new.add_argument ((CCodeExpression) expr.get_sizes ().get (0).ccodenode);
+		array_new.add_argument (get_cvalue (expr.get_sizes ().get (0)));
 
-		expr.ccodenode = array_new;
+		set_cvalue (expr, array_new);
 	}
 
 	public override void visit_element_access (ElementAccess expr) {
 		List<Expression> indices = expr.get_indices ();
 
-		var ccontainer = (CCodeExpression) expr.container.ccodenode;
-		var cindex = (CCodeExpression) indices[0].ccodenode;
+		var ccontainer = get_cvalue (expr.container);
+		var cindex = get_cvalue (indices[0]);
 
 		// access to element in an array
-		expr.ccodenode = new CCodeElementAccess (ccontainer, cindex);
+		set_cvalue (expr, new CCodeElementAccess (ccontainer, cindex));
 	}
 }

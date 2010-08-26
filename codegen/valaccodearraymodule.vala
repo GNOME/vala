@@ -32,7 +32,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			if (rank > 1) {
 				append_initializer_list (ce, name_cnode, (InitializerList) e, rank - 1, ref i);
 			} else {
-				ce.append_expression (new CCodeAssignment (new CCodeElementAccess (name_cnode, new CCodeConstant (i.to_string ())), (CCodeExpression) e.ccodenode));
+				ce.append_expression (new CCodeAssignment (new CCodeElementAccess (name_cnode, new CCodeConstant (i.to_string ())), get_cvalue (e)));
 				i++;
 			}
 		}
@@ -54,7 +54,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 			ce.append_expression (name_cnode);
 
-			expr.ccodenode = ce;
+			set_cvalue (expr, ce);
 
 			return;
 		}
@@ -73,12 +73,12 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		// iterate over each dimension
 		foreach (Expression size in expr.get_sizes ()) {
-			CCodeExpression csize = (CCodeExpression) size.ccodenode;
+			CCodeExpression csize = get_cvalue (size);
 
 			if (!is_pure_ccode_expression (csize)) {
 				var temp_var = get_temp_variable (int_type, false, expr);
 				var name_cnode = get_variable_cexpression (temp_var.name);
-				size.ccodenode = name_cnode;
+				set_cvalue (size, name_cnode);
 
 				emit_temp_var (temp_var);
 
@@ -120,9 +120,9 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			
 			ce.append_expression (name_cnode);
 			
-			expr.ccodenode = ce;
+			set_cvalue (expr, ce);
 		} else {
-			expr.ccodenode = gnew;
+			set_cvalue (expr, gnew);
 		}
 	}
 
@@ -405,15 +405,15 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		List<Expression> indices = expr.get_indices ();
 		int rank = indices.size;
 
-		var ccontainer = (CCodeExpression) expr.container.ccodenode;
-		var cindex = (CCodeExpression) indices[0].ccodenode;
+		var ccontainer = get_cvalue (expr.container);
+		var cindex = get_cvalue (indices[0]);
 		if (expr.container.symbol_reference is ArrayLengthField) {
 			/* Figure if cindex is a constant expression and calculate dim...*/
 			var lit = indices[0] as IntegerLiteral;
 			var memberaccess = expr.container as MemberAccess;
 			if (lit != null && memberaccess != null) {
 				int dim = lit.value.to_int ();
-				expr.ccodenode = get_array_length_cexpression (memberaccess.inner, dim + 1);
+				set_cvalue (expr, get_array_length_cexpression (memberaccess.inner, dim + 1));
 			} else {
 				Report.error (expr.source_reference, "only integer literals supported as index");
 			}
@@ -421,16 +421,16 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			// access to element in an array
 			for (int i = 1; i < rank; i++) {
 				var cmul = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, cindex, get_array_length_cexpression (expr.container, i + 1));
-				cindex = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, cmul, (CCodeExpression) indices[i].ccodenode);
+				cindex = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, cmul, get_cvalue (indices[i]));
 			}
-			expr.ccodenode = new CCodeElementAccess (ccontainer, cindex);
+			set_cvalue (expr, new CCodeElementAccess (ccontainer, cindex));
 		}
 	}
 
 	public override void visit_slice_expression (SliceExpression expr) {
-		var ccontainer = (CCodeExpression) expr.container.ccodenode;
-		var cstart = (CCodeExpression) expr.start.ccodenode;
-		var cstop = (CCodeExpression) expr.stop.ccodenode;
+		var ccontainer = get_cvalue (expr.container);
+		var cstart = get_cvalue (expr.start);
+		var cstop = get_cvalue (expr.stop);
 
 		var ccomma = new CCodeCommaExpression ();
 
@@ -462,7 +462,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		ccomma.append_expression (get_variable_cexpression (slice_var.name));
 
-		expr.ccodenode = ccomma;
+		set_cvalue (expr, ccomma);
 		expr.append_array_size (get_variable_cexpression (len_var.name));
 	}
 
@@ -963,12 +963,12 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var value_param = new FormalParameter ("value", element.target_type);
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (generate_array_add_wrapper (array_type)));
-		ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, (CCodeExpression) array.ccodenode));
+		ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_cvalue (array)));
 		ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_array_length_cexpression (array)));
 		ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_array_size_cexpression (array)));
-		ccall.add_argument (handle_struct_argument (value_param, element, (CCodeExpression) element.ccodenode));
+		ccall.add_argument (handle_struct_argument (value_param, element, get_cvalue (element)));
 
-		assignment.ccodenode = ccall;
+		set_cvalue (assignment, ccall);
 
 		var array_var = assignment.left.symbol_reference;
 		var array_local = array_var as LocalVariable;

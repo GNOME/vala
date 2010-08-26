@@ -45,7 +45,7 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 			}
 		}
 
-		CCodeExpression cexpr = (CCodeExpression) assignment.right.ccodenode;
+		CCodeExpression cexpr = get_cvalue (assignment.right);
 
 		if (!prop.no_accessor_method) {
 			if (prop.property_type.is_real_non_null_struct_type ()) {
@@ -96,7 +96,7 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 	}
 
 	CCodeExpression emit_simple_assignment (Assignment assignment) {
-		CCodeExpression rhs = (CCodeExpression) assignment.right.ccodenode;
+		CCodeExpression rhs = get_cvalue (assignment.right);
 		CCodeExpression lhs = (CCodeExpression) get_ccodenode (assignment.left);
 		CCodeCommaExpression outer_ccomma = null;
 
@@ -205,7 +205,7 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 	}
 
 	CCodeExpression emit_fixed_length_array_assignment (Assignment assignment, ArrayType array_type) {
-		CCodeExpression rhs = (CCodeExpression) assignment.right.ccodenode;
+		CCodeExpression rhs = get_cvalue (assignment.right);
 		CCodeExpression lhs = (CCodeExpression) get_ccodenode (assignment.left);
 
 		cfile.add_include ("string.h");
@@ -230,13 +230,13 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 		}
 
 		if (assignment.left.symbol_reference is Property) {
-			assignment.ccodenode = emit_property_assignment (assignment);
+			set_cvalue (assignment, emit_property_assignment (assignment));
 		} else {
 			var array_type = assignment.left.value_type as ArrayType;
 			if (array_type != null && array_type.fixed_length) {
-				assignment.ccodenode = emit_fixed_length_array_assignment (assignment, array_type);
+				set_cvalue (assignment, emit_fixed_length_array_assignment (assignment, array_type));
 			} else {
-				assignment.ccodenode = emit_simple_assignment (assignment);
+				set_cvalue (assignment, emit_simple_assignment (assignment));
 			}
 		}
 	}

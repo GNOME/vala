@@ -748,7 +748,7 @@ public class Vala.GObjectModule : GTypeModule {
 				var ccomma = new CCodeCommaExpression ();
 				var temp_var = get_temp_variable (expr.value_type, false, expr, false);
 				emit_temp_var (temp_var);
-				ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), (CCodeExpression) expr.ccodenode));
+				ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), get_cvalue (expr)));
 
 				var initiallyunowned_ccall = new CCodeFunctionCall (new CCodeIdentifier ("G_IS_INITIALLY_UNOWNED"));
 				initiallyunowned_ccall.add_argument (get_variable_cexpression (temp_var.name));
@@ -756,7 +756,7 @@ public class Vala.GObjectModule : GTypeModule {
 				sink_ref_ccall.add_argument (get_variable_cexpression (temp_var.name));
 				ccomma.append_expression (new CCodeConditionalExpression (initiallyunowned_ccall, sink_ref_ccall, get_variable_cexpression (temp_var.name)));
 
-				expr.ccodenode = ccomma;
+				set_cvalue (expr, ccomma);
 				return;
 			} else if (ma.symbol_reference == gobject_type) {
 				// Object (...) chain up

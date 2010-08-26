@@ -953,7 +953,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 	private void create_precondition_statement (CodeNode method_node, DataType ret_type, Expression precondition) {
 		var ccheck = new CCodeFunctionCall ();
 
-		ccheck.add_argument ((CCodeExpression) precondition.ccodenode);
+		ccheck.add_argument (get_cvalue (precondition));
 
 		if (method_node is CreationMethod) {
 			ccheck.call = new CCodeIdentifier ("g_return_val_if_fail");

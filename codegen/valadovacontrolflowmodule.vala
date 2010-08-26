@@ -22,7 +22,7 @@
 
 public class Vala.DovaControlFlowModule : DovaMethodModule {
 	public override void visit_if_statement (IfStatement stmt) {
-		ccode.open_if ((CCodeExpression) stmt.condition.ccodenode);
+		ccode.open_if (get_cvalue (stmt.condition));
 
 		stmt.true_statement.emit (this);
 
@@ -35,7 +35,7 @@ public class Vala.DovaControlFlowModule : DovaMethodModule {
 	}
 
 	public override void visit_switch_statement (SwitchStatement stmt) {
-		ccode.open_switch ((CCodeExpression) stmt.expression.ccodenode);
+		ccode.open_switch (get_cvalue (stmt.expression));
 
 		foreach (SwitchSection section in stmt.get_sections ()) {
 			if (section.has_default_label ()) {
@@ -53,7 +53,7 @@ public class Vala.DovaControlFlowModule : DovaMethodModule {
 
 			visit_end_full_expression (label.expression);
 
-			ccode.add_case ((CCodeExpression) label.expression.ccodenode);
+			ccode.add_case (get_cvalue (label.expression));
 		}
 	}
 

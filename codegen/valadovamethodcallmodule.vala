@@ -23,7 +23,7 @@
 public class Vala.DovaMethodCallModule : DovaAssignmentModule {
 	public override void visit_method_call (MethodCall expr) {
 		// the bare function call
-		var ccall = new CCodeFunctionCall ((CCodeExpression) expr.call.ccodenode);
+		var ccall = new CCodeFunctionCall (get_cvalue (expr.call));
 
 		Method m = null;
 		Delegate deleg = null;
@@ -46,7 +46,7 @@ public class Vala.DovaMethodCallModule : DovaAssignmentModule {
 		} else if (itype is DelegateType) {
 			deleg = ((DelegateType) itype).delegate_symbol;
 			ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_invoke".printf (deleg.get_lower_case_cname ())));
-			ccall.add_argument ((CCodeExpression) expr.call.ccodenode);
+			ccall.add_argument (get_cvalue (expr.call));
 		}
 
 		if (m is CreationMethod) {
@@ -59,11 +59,11 @@ public class Vala.DovaMethodCallModule : DovaAssignmentModule {
 			}
 		} else if (m != null) {
 			if (m.binding == MemberBinding.INSTANCE) {
-				var instance = (CCodeExpression) ma.inner.ccodenode;
+				var instance = get_cvalue (ma.inner);
 
 				if (ma.member_name == "begin" && ma.inner.symbol_reference == ma.symbol_reference) {
 					var inner_ma = (MemberAccess) ma.inner;
-					instance = (CCodeExpression) inner_ma.inner.ccodenode;
+					instance = get_cvalue (inner_ma.inner);
 				}
 
 				var st = m.parent_symbol as Struct;
@@ -116,7 +116,7 @@ public class Vala.DovaMethodCallModule : DovaAssignmentModule {
 		int i = 1;
 		Iterator<FormalParameter> params_it = params.iterator ();
 		foreach (Expression arg in expr.get_argument_list ()) {
-			CCodeExpression cexpr = (CCodeExpression) arg.ccodenode;
+			CCodeExpression cexpr = get_cvalue (arg);
 
 			if (params_it.next ()) {
 				var param = params_it.get ();
@@ -140,7 +140,7 @@ public class Vala.DovaMethodCallModule : DovaAssignmentModule {
 
 						if (param.direction == ParameterDirection.REF) {
 							var crefcomma = new CCodeCommaExpression ();
-							crefcomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), (CCodeExpression) unary.inner.ccodenode));
+							crefcomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), get_cvalue (unary.inner)));
 							crefcomma.append_expression (cexpr);
 							cexpr = crefcomma;
 						}
@@ -163,12 +163,12 @@ public class Vala.DovaMethodCallModule : DovaAssignmentModule {
 						cassign_comma.append_expression (new CCodeAssignment (get_variable_cexpression (assign_temp_var.name), transform_expression (get_variable_cexpression (temp_var.name), param.variable_type, unary.inner.value_type, arg)));
 
 						// unref old value
-						cassign_comma.append_expression (get_unref_expression ((CCodeExpression) unary.inner.ccodenode, arg.value_type, arg));
+						cassign_comma.append_expression (get_unref_expression (get_cvalue (unary.inner), arg.value_type, arg));
 
 						cassign_comma.append_expression (get_variable_cexpression (assign_temp_var.name));
 
 						// assign new value
-						ccomma.append_expression (new CCodeAssignment ((CCodeExpression) unary.inner.ccodenode, cassign_comma));
+						ccomma.append_expression (new CCodeAssignment (get_cvalue (unary.inner), cassign_comma));
 
 						// return value
 						if (!(itype.get_return_type () is VoidType)) {
@@ -218,7 +218,7 @@ public class Vala.DovaMethodCallModule : DovaAssignmentModule {
 			ccall_expr = ccomma;
 		}
 
-		expr.ccodenode = ccall_expr;
+		set_cvalue (expr, ccall_expr);
 	}
 }
 
