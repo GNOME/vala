@@ -151,16 +151,18 @@ public class Vala.CodeWriter : CodeVisitor {
 	private string get_cheaders (Symbol cl) {
 		bool first = true;
 		string cheaders = "";
-		foreach (string cheader in cl.get_cheader_filenames ()) {
-			if (header_to_override != null &&
-			    cheader == header_to_override) {
-				cheader = override_header;
-			}
-			if (first) {
-				cheaders = cheader;
-				first = false;
-			} else {
-				cheaders = "%s,%s".printf (cheaders, cheader);
+		if (type != CodeWriterType.FAST) {
+			foreach (string cheader in cl.get_cheader_filenames ()) {
+				if (header_to_override != null &&
+				    cheader == header_to_override) {
+					cheader = override_header;
+				}
+				if (first) {
+					cheaders = cheader;
+					first = false;
+				} else {
+					cheaders = "%s,%s".printf (cheaders, cheader);
+				}
 			}
 		}
 		return cheaders;
