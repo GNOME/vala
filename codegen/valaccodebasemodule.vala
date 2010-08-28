@@ -420,7 +420,8 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		/* we're only interested in non-pkg source files */
 		var source_files = context.get_source_files ();
 		foreach (SourceFile file in source_files) {
-			if (file.file_type != SourceFileType.PACKAGE) {
+			if (file.file_type == SourceFileType.SOURCE ||
+			    (context.header_filename != null && file.file_type == SourceFileType.FAST)) {
 				file.accept (this);
 			}
 		}
