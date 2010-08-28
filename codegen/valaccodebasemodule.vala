@@ -420,7 +420,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		/* we're only interested in non-pkg source files */
 		var source_files = context.get_source_files ();
 		foreach (SourceFile file in source_files) {
-			if (file.file_type == SourceFileType.SOURCE) {
+			if (file.file_type != SourceFileType.PACKAGE) {
 				file.accept (this);
 			}
 		}
@@ -652,6 +652,14 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		source_file.accept_children (this);
 
 		if (context.report.get_errors () > 0) {
+			return;
+		}
+
+		/* For fast-vapi, we only wanted the header declarations
+		 * to be emitted, so bail out here without writing the
+		 * C code output.
+		 */
+		if (source_file.file_type == SourceFileType.FAST) {
 			return;
 		}
 
@@ -1444,6 +1452,10 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 					generate_property_accessor_declaration (acc, internal_header_declarations);
 				}
 			}
+		}
+
+		if (acc.source_type == SourceFileType.FAST) {
+			return;
 		}
 
 		var this_type = get_data_type_for_symbol (t);

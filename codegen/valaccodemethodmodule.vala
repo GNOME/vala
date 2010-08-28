@@ -1070,6 +1070,11 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		bool visible = !m.is_private_symbol ();
 
 		visit_method (m);
+
+		if (m.source_type == SourceFileType.FAST) {
+			return;
+		}
+
 		function = (CCodeFunction) m.ccodenode;
 
 		DataType creturn_type;
