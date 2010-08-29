@@ -24,6 +24,21 @@ using GLib;
 
 /**
  * Code visitor parsing all Vala source files.
+ *
+ * Pipeline:
+ * 1) Parse metadata
+ * 2) Parse GIR with metadata, track unresolved GIR symbols, create symbol mappings
+ * 3) Reconciliate the tree by mapping tracked symbols
+ * 4) Reparent nodes
+ * 5) Process callbacks/virtual
+ * 6) Process aliases
+ *
+ * Best hacking practices:
+ * - Keep GIR parsing bloat-free, it must contain the logic
+ * - Prefer being clean / short over performance
+ * - Try to make things common as much as possible
+ * - Prefer replace/merge after parse rather than a bunch of if-then-else and hardcoding
+ * - Prefer postprocessing over hardcoding the parser
  */
 public class Vala.GirParser : CodeVisitor {
 	enum MetadataType {
@@ -505,6 +520,7 @@ public class Vala.GirParser : CodeVisitor {
 	HashMap<Symbol,Symbol> concrete_symbols_map = new HashMap<Symbol,Symbol> ();
 
 	ArrayList<UnresolvedSymbol> unresolved_gir_symbols = new ArrayList<UnresolvedSymbol> ();
+	HashMap<UnresolvedSymbol,ArrayList<Symbol>> symbol_reparent_map = new HashMap<UnresolvedSymbol,ArrayList<Symbol>> (unresolved_symbol_hash, unresolved_symbol_equal);
 	HashMap<Namespace,ArrayList<Method>> namespace_methods = new HashMap<Namespace,ArrayList<Method>> ();
 	HashMap<CallbackScope,ArrayList<Delegate>> gtype_callbacks = new HashMap<CallbackScope,ArrayList<Delegate>> (callback_scope_hash, callback_scope_equal);
 	ArrayList<Alias> aliases = new ArrayList<Alias> ();
@@ -522,6 +538,7 @@ public class Vala.GirParser : CodeVisitor {
 
 		resolve_gir_symbols ();
 
+		postprocess_reparenting ();
 		postprocess_gtype_callbacks ();
 		postprocess_aliases ();
 		postprocess_namespace_methods ();
@@ -838,6 +855,24 @@ public class Vala.GirParser : CodeVisitor {
 		}
 	}
 
+	void postprocess_symbol (Symbol symbol, Metadata metadata) {
+		// mark to be reparented
+		if (metadata.has_argument (ArgumentType.PARENT)) {
+			var target_symbol = parse_symbol_from_string (metadata.get_string (ArgumentType.PARENT), metadata.get_source_reference (ArgumentType.PARENT));
+			var reparent_list = symbol_reparent_map[target_symbol];
+			if (reparent_list == null) {
+				reparent_list = new ArrayList<Symbol>();
+				symbol_reparent_map[target_symbol] = reparent_list;
+			}
+			reparent_list.add (symbol);
+
+			// if referenceable, map unresolved references to point to the new place
+			if (symbol is Namespace || symbol is TypeSymbol) {
+				set_symbol_mapping (symbol, new UnresolvedSymbol (target_symbol, symbol.name));
+			}
+		}
+	}
+
 	void merge_add_process (Symbol container) {
 		var merged = new ArrayList<SymbolInfo> ();
 		foreach (var name in current_symbols_info.get_keys ()) {
@@ -852,7 +887,10 @@ public class Vala.GirParser : CodeVisitor {
 				if (merged.contains (info)) {
 					continue;
 				}
-				add_symbol_to_container (container, info.symbol);
+				if (!info.metadata.has_argument (ArgumentType.PARENT)) {
+					add_symbol_to_container (container, info.symbol);
+				}
+				postprocess_symbol (info.symbol, info.metadata);
 			}
 		}
 	}
@@ -2370,6 +2408,48 @@ public class Vala.GirParser : CodeVisitor {
 			}
 		}
 		return null;
+	}
+
+	void postprocess_reparenting () {
+		foreach (UnresolvedSymbol target_unresolved_symbol in symbol_reparent_map.get_keys ()) {
+			var target_symbol = resolve_symbol (context.root.scope, target_unresolved_symbol);
+			if (target_symbol == null) {
+				// create namespaces backward
+				var sym = target_unresolved_symbol;
+				var ns = new Namespace (sym.name, sym.source_reference);
+				var result = ns;
+				sym = sym.inner;
+				while (sym != null) {
+					var res = resolve_symbol (context.root.scope, sym);
+					if (res != null && !(res is Namespace)) {
+						result = null;
+						break;
+					}
+					var parent = res as Namespace;
+					if (res == null) {
+						parent = new Namespace (sym.name, sym.source_reference);
+					}
+					if (parent.scope.lookup (ns.name) == null) {
+						parent.add_namespace (ns);
+					}
+					ns = parent;
+					sym = sym.inner;
+				}
+				if (result != null && sym == null && context.root.scope.lookup (ns.name) == null) {
+					// a new root namespace, helpful for a possible non-gobject gir?
+					context.root.add_namespace (ns);
+				}
+				target_symbol = result;
+			}
+			if (target_symbol == null) {
+				Report.error (null, "unable to reparent into `%s'".printf (target_unresolved_symbol.to_string ()));
+				continue;
+			}
+			var symbols = symbol_reparent_map[target_unresolved_symbol];
+			foreach (var symbol in symbols) {
+				add_symbol_to_container (target_symbol, symbol);
+			}
+		}
 	}
 
 	void postprocess_gtype_callbacks () {
