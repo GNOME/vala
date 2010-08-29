@@ -1481,7 +1481,7 @@ public class Vala.GirParser : CodeVisitor {
 
 	EnumValue parse_enumeration_member () {
 		start_element ("member");
-		var ev = new EnumValue (string.joinv ("_", reader.get_attribute ("name").up ().split ("-")), null);
+		var ev = new EnumValue (reader.get_attribute ("name").up ().replace ("-", "_"), null, get_current_src ());
 		ev.set_cname (reader.get_attribute ("c:identifier"));
 		next ();
 		end_element ("member");
@@ -1492,7 +1492,7 @@ public class Vala.GirParser : CodeVisitor {
 		start_element ("member");
 
 		ErrorCode ec;
-		string name = string.joinv ("_", reader.get_attribute ("name").up ().split ("-"));
+		string name = reader.get_attribute ("name").up ().replace ("-", "_");
 		string value = reader.get_attribute ("value");
 		if (value != null) {
 			ec = new ErrorCode.with_value (name, new IntegerLiteral (value));
@@ -2016,7 +2016,7 @@ public class Vala.GirParser : CodeVisitor {
 
 	Property parse_property () {
 		start_element ("property");
-		string name = string.joinv ("_", reader.get_attribute ("name").split ("-"));
+		string name = reader.get_attribute ("name").replace ("-", "_");
 		string readable = reader.get_attribute ("readable");
 		string writable = reader.get_attribute ("writable");
 		string construct_ = reader.get_attribute ("construct");
@@ -2289,7 +2289,7 @@ public class Vala.GirParser : CodeVisitor {
 
 	Signal parse_signal () {
 		start_element ("glib:signal");
-		string name = string.joinv ("_", reader.get_attribute ("name").split ("-"));
+		string name = reader.get_attribute ("name").replace ("-", "_");
 		next ();
 		DataType return_type;
 		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "return-value") {
