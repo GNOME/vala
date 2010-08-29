@@ -26,6 +26,7 @@ class Vala.VAPIGen : Object {
 	static string directory;
 	static bool version;
 	static bool quiet_mode;
+	static bool disable_warnings;
 	[CCode (array_length = false, array_null_terminated = true)]
 	static string[] sources;
 	[CCode (array_length = false, array_null_terminated = true)]
@@ -43,6 +44,7 @@ class Vala.VAPIGen : Object {
 		{ "pkg", 0, 0, OptionArg.STRING_ARRAY, ref packages, "Include binding for PACKAGE", "PACKAGE..." },
 		{ "library", 0, 0, OptionArg.STRING, ref library, "Library name", "NAME" },
 		{ "directory", 'd', 0, OptionArg.FILENAME, ref directory, "Output directory", "DIRECTORY" },
+		{ "disable-warnings", 0, 0, OptionArg.NONE, ref disable_warnings, "Disable warnings", null },
 		{ "version", 0, 0, OptionArg.NONE, ref version, "Display version number", null },
 		{ "quiet", 'q', 0, OptionArg.NONE, ref quiet_mode, "Do not print messages to the console", null },
 		{ "", 0, 0, OptionArg.FILENAME_ARRAY, ref sources, null, "FILE..." },
@@ -68,6 +70,8 @@ class Vala.VAPIGen : Object {
 		context.profile = Profile.GOBJECT;
 		context.vapi_directories = vapi_directories;
 		context.gir_directories = gir_directories;
+		context.report.enable_warnings = !disable_warnings;
+		context.report.set_verbose_errors (!quiet_mode);
 		CodeContext.push (context);
 		
 		/* default package */
