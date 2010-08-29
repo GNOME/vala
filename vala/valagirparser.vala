@@ -891,7 +891,7 @@ public class Vala.GirParser : CodeVisitor {
 
 		foreach (var infos in current_symbols_info.get_values ()) {
 			foreach (var info in infos) {
-				if (merged.contains (info)) {
+				if (merged.contains (info) || info.metadata.get_bool (ArgumentType.HIDDEN)) {
 					continue;
 				}
 				if (!info.metadata.has_argument (ArgumentType.PARENT)) {
