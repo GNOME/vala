@@ -1584,6 +1584,10 @@ public class Vala.GirParser : CodeVisitor {
 				ctype = null;
 			}
 
+			if (type is ArrayType && metadata.has_argument (ArgumentType.ARRAY_LENGTH_POS)) {
+				array_length_idx = metadata.get_integer (ArgumentType.ARRAY_LENGTH_POS);
+			}
+
 			if (transfer == "full" || transfer == "container" || destroy != null) {
 				type.value_owned = true;
 			}
