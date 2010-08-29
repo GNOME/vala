@@ -858,6 +858,11 @@ public class Vala.GirParser : CodeVisitor {
 	}
 
 	void postprocess_symbol (Symbol symbol, Metadata metadata) {
+		// deprecation
+		symbol.replacement = metadata.get_string (ArgumentType.REPLACEMENT);
+		symbol.deprecated_since = element_get_string ("deprecated-version", ArgumentType.DEPRECATED_SINCE);
+		symbol.deprecated = metadata.get_bool (ArgumentType.DEPRECATED) || symbol.replacement != null || symbol.deprecated_since != null;
+
 		// mark to be reparented
 		if (metadata.has_argument (ArgumentType.PARENT)) {
 			var target_symbol = parse_symbol_from_string (metadata.get_string (ArgumentType.PARENT), metadata.get_source_reference (ArgumentType.PARENT));
@@ -1054,6 +1059,14 @@ public class Vala.GirParser : CodeVisitor {
 		type.nullable = nullable;
 		type.value_owned = value_owned;
 		return type;
+	}
+
+	string? element_get_string (string attribute_name, ArgumentType arg_type) {
+		var str = metadata.get_string (arg_type);
+		if (str == null) {
+			str = reader.get_attribute (attribute_name);
+		}
+		return str;
 	}
 
 	DataType? element_get_type (DataType orig_type, bool owned_by_default, out bool changed = null) {
