@@ -1597,6 +1597,7 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (direction == "inout") {
 				param.direction = ParameterDirection.REF;
 			}
+			param.initializer = metadata.get_expression (ArgumentType.DEFAULT);
 		}
 		end_element ("parameter");
 		return param;
