@@ -26,6 +26,443 @@ using GLib;
  * Code visitor parsing all Vala source files.
  */
 public class Vala.GirParser : CodeVisitor {
+	enum MetadataType {
+		GENERIC,
+		PROPERTY,
+		SIGNAL
+	}
+
+	enum ArgumentType {
+		SKIP,
+		HIDDEN,
+		TYPE,
+		TYPE_ARGUMENTS,
+		CHEADER_FILENAME,
+		NAME,
+		OWNED,
+		UNOWNED,
+		PARENT,
+		NULLABLE,
+		DEPRECATED,
+		REPLACEMENT,
+		DEPRECATED_SINCE,
+		ARRAY,
+		ARRAY_LENGTH_POS,
+		DEFAULT,
+		OUT,
+		REF;
+
+		public static ArgumentType? from_string (string name) {
+			var enum_class = (EnumClass) typeof(ArgumentType).class_ref ();
+			var nick = name.replace ("_", "-");
+			unowned GLib.EnumValue? enum_value = enum_class.get_value_by_nick (nick);
+			if (enum_value != null) {
+				ArgumentType value = (ArgumentType) enum_value.value;
+				return value;
+			}
+			return null;
+		}
+	}
+
+	class Argument {
+		public Expression expression;
+		public SourceReference source_reference;
+
+		public bool used = false;
+
+		public Argument (Expression expression, SourceReference? source_reference = null) {
+			this.expression = expression;
+			this.source_reference = source_reference;
+		}
+	}
+
+	class MetadataSet : Metadata {
+		public MetadataSet (MetadataType type) {
+			base ("", type);
+		}
+
+		public void add_sibling (Metadata metadata) {
+			foreach (var child in metadata.children) {
+				add_child (child);
+			}
+			// merge arguments and take precedence
+			foreach (var key in metadata.args.get_keys ()) {
+				args[key] = metadata.args[key];
+			}
+		}
+	}
+
+	class Metadata {
+		private static Metadata _empty = null;
+		public static Metadata empty {
+			get {
+				if (_empty == null) {
+					_empty = new Metadata ("");
+				}
+				return _empty;
+			}
+		}
+
+		public string pattern;
+		public PatternSpec pattern_spec;
+		public MetadataType type;
+		public SourceReference source_reference;
+
+		public bool used = false;
+		public Vala.Map<ArgumentType,Argument> args = new HashMap<ArgumentType,Argument> ();
+		public ArrayList<Metadata> children = new ArrayList<Metadata> ();
+
+		public Metadata (string pattern, MetadataType type = MetadataType.GENERIC, SourceReference? source_reference = null) {
+			this.pattern = pattern;
+			this.pattern_spec = new PatternSpec (pattern);
+			this.type = type;
+			this.source_reference = source_reference;
+		}
+
+		public void add_child (Metadata metadata) {
+			children.add (metadata);
+		}
+
+		public Metadata? get_child (string pattern, MetadataType type = MetadataType.GENERIC) {
+			foreach (var metadata in children) {
+				if (metadata.type == type && metadata.pattern == pattern) {
+					return metadata;
+				}
+			}
+			return null;
+		}
+
+		public Metadata match_child (string name, MetadataType type = MetadataType.GENERIC) {
+			var result = Metadata.empty;
+			foreach (var metadata in children) {
+				if (metadata.type == type && metadata.pattern_spec.match_string (name)) {
+					metadata.used = true;
+					if (result == Metadata.empty) {
+						// first match
+						result = metadata;
+					} else {
+						var ms = result as MetadataSet;
+						if (ms == null) {
+							// second match
+							ms = new MetadataSet (type);
+							ms.add_sibling (result);
+						}
+						ms.add_sibling (metadata);
+						result = ms;
+					}
+				}
+			}
+			return result;
+		}
+
+		public void add_argument (ArgumentType key, Argument value) {
+			args.set (key, value);
+		}
+
+		public bool has_argument (ArgumentType key) {
+			return args.contains (key);
+		}
+
+		public Expression? get_expression (ArgumentType arg) {
+			var val = args.get (arg);
+			if (val != null) {
+				val.used = true;
+				return val.expression;
+			}
+			return null;
+		}
+
+		public string? get_string (ArgumentType arg) {
+			var lit = get_expression (arg) as StringLiteral;
+			if (lit != null) {
+				return lit.eval ();
+			}
+			return null;
+		}
+
+		public int get_integer (ArgumentType arg) {
+			var lit = get_expression (arg) as IntegerLiteral;
+			if (lit != null) {
+				return lit.value.to_int ();
+			}
+
+			return 0;
+		}
+
+		public double get_double (ArgumentType arg) {
+			var expr = get_expression (arg);
+			if (expr is RealLiteral) {
+				var lit = (RealLiteral) expr;
+				return lit.value.to_double ();
+			} else if (expr is IntegerLiteral) {
+				var lit = (IntegerLiteral) expr;
+				return lit.value.to_int ();
+			}
+			return 0;
+		}
+
+		public bool get_bool (ArgumentType arg) {
+			var lit = get_expression (arg) as BooleanLiteral;
+			if (lit != null) {
+				return lit.value;
+			}
+			return false;
+		}
+
+		public SourceReference? get_source_reference (ArgumentType arg) {
+			var val = args.get (arg);
+			if (val != null) {
+				return val.source_reference;
+			}
+			return null;
+		}
+	}
+
+	class MetadataParser {
+		/**
+		 * Grammar:
+		 * metadata ::= [ rule [ '\n' relativerule ]* ]
+		 * rule ::= pattern ' ' [ args ]
+		 * relativerule ::= [ access ] rule
+		 * pattern ::= identifier [ access identifier ]*
+		 * access ::= '.' | ':' | '::'
+		 */
+		private Metadata tree = new Metadata ("");
+		private Scanner scanner;
+		private SourceLocation begin;
+		private SourceLocation end;
+		private SourceLocation old_end;
+		private TokenType current;
+		private Metadata parent_metadata;
+
+		public MetadataParser () {
+			tree.used = true;
+		}
+
+		SourceReference get_current_src () {
+			return new SourceReference (scanner.source_file, begin.line, begin.column, end.line, end.column);
+		}
+
+		SourceReference get_src (SourceLocation begin) {
+			return new SourceReference (scanner.source_file, begin.line, begin.column, end.line, end.column);
+		}
+
+		public Metadata parse_metadata (SourceFile metadata_file) {
+			scanner = new Scanner (metadata_file);
+			next ();
+			while (current != TokenType.EOF) {
+				if (!parse_rule ()) {
+					return Metadata.empty;
+				}
+			}
+			return tree;
+		}
+
+		TokenType next () {
+			old_end = end;
+			current = scanner.read_token (out begin, out end);
+			return current;
+		}
+
+		bool has_space () {
+			return old_end.pos != begin.pos;
+		}
+
+		bool has_newline () {
+			return old_end.line != begin.line;
+		}
+
+		string get_string () {
+			return ((string) begin.pos).ndup ((end.pos - begin.pos));
+		}
+
+		MetadataType? parse_metadata_access () {
+			switch (current) {
+			case TokenType.DOT:
+				next ();
+				return MetadataType.GENERIC;
+			case TokenType.COLON:
+				if (next () == TokenType.COLON) {
+					next ();
+					return MetadataType.SIGNAL;
+				}
+				return MetadataType.PROPERTY;
+			default:
+				return null;
+			}
+		}
+
+		string? parse_identifier (out SourceReference source_reference, bool is_glob) {
+			var begin = this.begin;
+			var builder = new StringBuilder ();
+			do {
+				if (is_glob && current == TokenType.STAR) {
+					builder.append_c ('*');
+				} else {
+					string str = null;
+					switch (current) {
+					case TokenType.IDENTIFIER:
+					case TokenType.UNOWNED:
+					case TokenType.OWNED:
+					case TokenType.GET:
+					case TokenType.NEW:
+					case TokenType.DEFAULT:
+					case TokenType.OUT:
+					case TokenType.REF:
+						str = get_string ();
+						break;
+					}
+					if (str == null) {
+						break;
+					}
+					builder.append (str);
+				}
+				source_reference = get_src (begin);
+				next ();
+			} while (!has_space ());
+
+			if (builder.str == "") {
+				if (is_glob) {
+					Report.error (get_src (begin), "expected pattern");
+				} else {
+					Report.error (get_src (begin), "expected identifier");
+				}
+				return null;
+			}
+			return builder.str;
+		}
+
+		Metadata? parse_pattern () {
+			Metadata metadata;
+			bool is_relative = false;
+			MetadataType? type = MetadataType.GENERIC;
+			if (current == TokenType.IDENTIFIER || current == TokenType.STAR) {
+				// absolute pattern
+				parent_metadata = tree;
+			} else {
+				// relative pattern
+				type = parse_metadata_access ();
+				is_relative = true;
+			}
+
+			if (type == null) {
+				Report.error (get_current_src (), "expected pattern, `.', `:' or `::'");
+				return null;
+			}
+
+			if (parent_metadata == null) {
+				Report.error (get_current_src (), "cannot determinate parent metadata");
+				return null;
+			}
+
+			SourceReference src;
+			var pattern = parse_identifier (out src, true);
+			if (pattern == null) {
+				return null;
+			}
+			metadata = parent_metadata.get_child (pattern, type);
+			if (metadata == null) {
+				metadata = new Metadata (pattern, type, src);
+				parent_metadata.add_child (metadata);
+			}
+
+			while (current != TokenType.EOF && !has_space ()) {
+				type = parse_metadata_access ();
+				if (type == null) {
+					Report.error (get_current_src (), "expected `.', `:' or `::'");
+					return null;
+				}
+
+				pattern = parse_identifier (out src, true);
+				if (pattern == null) {
+					return null;
+				}
+				var child = metadata.get_child (pattern, type);
+				if (child == null) {
+					child = new Metadata (pattern, type, src);
+					metadata.add_child (child);
+				}
+				metadata = child;
+			}
+			if (!is_relative) {
+				parent_metadata = metadata;
+			}
+
+			return metadata;
+		}
+
+		Expression? parse_literal () {
+			var src = get_current_src ();
+			Expression expr = null;
+			switch (current) {
+			case TokenType.TRUE:
+				expr = new BooleanLiteral (true, src);
+				break;
+			case TokenType.FALSE:
+				expr = new BooleanLiteral (false, src);
+				break;
+			case TokenType.INTEGER_LITERAL:
+				expr = new IntegerLiteral (get_string (), src);
+				break;
+			case TokenType.REAL_LITERAL:
+				expr = new RealLiteral (get_string (), src);
+				break;
+			case TokenType.STRING_LITERAL:
+				expr = new StringLiteral (get_string (), src);
+				break;
+			default:
+				Report.error (src, "expected literal");
+				break;
+			}
+			next ();
+			return expr;
+		}
+
+		bool parse_args (Metadata metadata) {
+			while (current != TokenType.EOF && has_space () && !has_newline ()) {
+				SourceReference src;
+				var id = parse_identifier (out src, false);
+				if (id == null) {
+					return false;
+				}
+				var arg_type = ArgumentType.from_string (id);
+				if (arg_type == null) {
+					Report.error (src, "unknown argument");
+					return false;
+				}
+
+				if (current != TokenType.ASSIGN) {
+					// threat as `true'
+					metadata.add_argument (arg_type, new Argument (new BooleanLiteral (true, src), src));
+					continue;
+				}
+				next ();
+
+				Expression expr = parse_literal ();
+				if (expr == null) {
+					return false;
+				}
+				metadata.add_argument (arg_type, new Argument (expr, src));
+			}
+
+			return true;
+		}
+
+		bool parse_rule () {
+			var old_end = end;
+			var metadata = parse_pattern ();
+			if (metadata == null) {
+				return false;
+			}
+
+			if (current == TokenType.EOF || old_end.line != end.line) {
+				// eof or new rule
+				return true;
+			}
+			return parse_args (metadata);
+		}
+	}
+
 	MarkupReader reader;
 
 	CodeContext context;
@@ -37,8 +474,6 @@ public class Vala.GirParser : CodeVisitor {
 	MarkupTokenType current_token;
 
 	string[] cheader_filenames;
-
-	HashMap<string,string> attributes_map = new HashMap<string,string> (str_hash, str_equal);
 
 	HashMap<string,ArrayList<Method>> gtype_callbacks = new HashMap<string,ArrayList<Method>> (str_hash, str_equal);
 
@@ -1411,42 +1846,6 @@ public class Vala.GirParser : CodeVisitor {
 		c.external = true;
 		end_element ("constant");
 		return c;
-	}
-
-	public void parse_metadata (string metadata_filename) {
-		if (FileUtils.test (metadata_filename, FileTest.EXISTS)) {
-			try {
-				string metadata;
-				FileUtils.get_contents (metadata_filename, out metadata, null);
-				
-				foreach (string line in metadata.split ("\n")) {
-					if (line.has_prefix ("#")) {
-						// ignore comment lines
-						continue;
-					}
-
-					string[] tokens = line.split (" ", 2);
-
-					if (null == tokens[0]) {
-						continue;
-					}
-
-					foreach (string attribute in tokens[1].split (" ")) {
-						string[] pair = attribute.split ("=", 2);
-						if (pair[0] == null || pair[1] == null) {
-							continue;
-						}
-
-						string key = "%s/@%s".printf (tokens[0], pair[0]);
-						attributes_map.set (key, pair[1].substring (1, pair[1].length - 2));
-					}
-				}
-			} catch (FileError e) {
-				Report.error (null, "Unable to read metadata file: %s".printf (e.message));
-			}
-		} else {
-			Report.error (null, "Metadata file `%s' not found".printf (metadata_filename));
-		}
 	}
 }
 
