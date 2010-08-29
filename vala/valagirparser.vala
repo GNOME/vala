@@ -591,6 +591,8 @@ public class Vala.GirParser : CodeVisitor {
 		next ();
 		parse_repository ();
 
+		report_unused_metadata (metadata);
+
 		reader = null;
 		this.current_source_file = null;
 	}
@@ -2351,6 +2353,34 @@ public class Vala.GirParser : CodeVisitor {
 		c.external = true;
 		end_element ("constant");
 		return c;
+	}
+
+	/* Reporting */
+	void report_unused_metadata (Metadata metadata) {
+		if (metadata == Metadata.empty) {
+			return;
+		}
+
+		if (metadata.args.size == 0 && metadata.children.size == 0) {
+			Report.warning (metadata.source_reference, "empty metadata");
+			return;
+		}
+
+		foreach (var arg_type in metadata.args.get_keys ()) {
+			var arg = metadata.args[arg_type];
+			if (!arg.used) {
+				// if metadata is used and argument is not, then it's a unexpected argument
+				Report.warning (arg.source_reference, "argument never used");
+			}
+		}
+
+		foreach (var child in metadata.children) {
+			if (!child.used) {
+				Report.warning (child.source_reference, "metadata never used");
+			} else {
+				report_unused_metadata (child);
+			}
+		}
 	}
 
 	/* Post-parsing */
