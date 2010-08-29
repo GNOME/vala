@@ -985,6 +985,11 @@ public class Vala.GirParser : CodeVisitor {
 		current_source_file.gir_namespace = gir_namespace;
 		current_source_file.gir_version = gir_version;
 
+		var ns_metadata = metadata.match_child (gir_namespace);
+		if (ns_metadata.has_argument (ArgumentType.NAME)) {
+			namespace_name = ns_metadata.get_string (ArgumentType.NAME);
+		}
+
 		var ns = context.root.scope.lookup (namespace_name) as Namespace;
 		if (ns == null) {
 			ns = new Namespace (namespace_name, get_current_src ());
@@ -1008,9 +1013,17 @@ public class Vala.GirParser : CodeVisitor {
 			ns.set_lower_case_cprefix (Symbol.camel_case_to_lower_case (cprefix) + "_");
 		}
 
-		foreach (string c_header in cheader_filenames) {
-			ns.add_cheader_filename (c_header);
+		if (ns_metadata.has_argument (ArgumentType.CHEADER_FILENAME)) {
+			var val = ns_metadata.get_string (ArgumentType.CHEADER_FILENAME);
+			foreach (string filename in val.split (",")) {
+				ns.add_cheader_filename (filename);
+			}
+		} else {
+			foreach (string c_header in cheader_filenames) {
+				ns.add_cheader_filename (c_header);
+			}
 		}
+
 		next ();
 		var current_namespace_methods = namespace_methods[ns];
 		if (current_namespace_methods == null) {
