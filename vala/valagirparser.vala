@@ -1540,7 +1540,18 @@ public class Vala.GirParser : CodeVisitor {
 		if (name == null) {
 			name = default_name;
 		}
-		string direction = reader.get_attribute ("direction");
+		string direction = null;
+		if (metadata.has_argument (ArgumentType.OUT)) {
+			if (metadata.get_bool (ArgumentType.OUT)) {
+				direction = "out";
+			} // null otherwise
+		} else if (metadata.has_argument (ArgumentType.REF)) {
+			if (metadata.get_bool (ArgumentType.REF)) {
+				direction = "inout";
+			} // null otherwise
+		} else {
+			direction = reader.get_attribute ("direction");
+		}
 		string transfer = reader.get_attribute ("transfer-ownership");
 		string allow_none = reader.get_attribute ("allow-none");
 
