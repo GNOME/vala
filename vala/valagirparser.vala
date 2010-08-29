@@ -788,6 +788,37 @@ public class Vala.GirParser : CodeVisitor {
 		return info;
 	}
 
+	SymbolInfo? find_invoker (Method method) {
+		/* most common use case is invoker has at least the given method prefix
+		   and the same parameter names */
+		var prefix = "%s_".printf (method.name);
+		foreach (var name in current_symbols_info.get_keys ()) {
+			if (!name.has_prefix (prefix)) {
+				continue;
+			}
+			var infos = current_symbols_info[name];
+			foreach (var cinfo in infos) {
+				Method? invoker = cinfo.symbol as Method;
+				if (invoker == null || (method.get_parameters ().size != invoker.get_parameters ().size)) {
+					continue;
+				}
+				var iter = invoker.get_parameters ().iterator ();
+				foreach (var param in method.get_parameters ()) {
+					assert (iter.next ());
+					if (param.name != iter.get ().name)	{
+						invoker = null;
+						break;
+					}
+				}
+				if (invoker != null) {
+					return cinfo;
+				}
+			}
+		}
+
+		return null;
+	}
+
 	void merge (SymbolInfo info, ArrayList<SymbolInfo> colliding, ArrayList<SymbolInfo> merged) {
 		if (info.symbol is Property) {
 			foreach (var cinfo in colliding) {
@@ -826,8 +857,26 @@ public class Vala.GirParser : CodeVisitor {
 			foreach (var cinfo in colliding) {
 				var sym = cinfo.symbol;
 				if (sym != method && method.is_virtual && sym is Method) {
-					// assume method is wrapper
-					merged.add (cinfo);
+					bool different_invoker = false;
+					foreach (var attr in method.attributes) {
+						if (attr.name == "NoWrapper") {
+							/* no invoker but this method has the same name,
+							   most probably the invoker has a different name
+							   and g-ir-scanner missed it */
+							var invoker = find_invoker (method);
+							if (invoker != null) {
+								method.vfunc_name = method.name;
+								method.name = invoker.symbol.name;
+								method.attributes.remove (attr);
+								merged.add (invoker);
+								different_invoker = true;
+								break;
+							}
+						}
+					}
+					if (!different_invoker) {
+						merged.add (cinfo);
+					}
 				}
 			}
 		} else if (info.symbol is Field) {
@@ -2136,9 +2185,12 @@ public class Vala.GirParser : CodeVisitor {
 		if (element_name == "virtual-method" || element_name == "callback") {
 			if (s is Method) {
 				((Method) s).is_virtual = true;
+				if (invoker == null) {
+					s.attributes.append (new Attribute ("NoWrapper", s.source_reference));
+				}
 			}
 
-			if (invoker != null){
+			if (invoker != null) {
 				s.name = invoker;
 			}
 		} else if (element_name == "function") {
