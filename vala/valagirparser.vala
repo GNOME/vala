@@ -1603,7 +1603,7 @@ public class Vala.GirParser : CodeVisitor {
 		return param;
 	}
 
-	DataType parse_type (out string? ctype = null, out int array_length_index = null, bool transfer_elements = false) {
+	DataType parse_type (out string? ctype = null, out int array_length_index = null, bool transfer_elements = false, out bool no_array_length = null, out bool array_null_terminated = null) {
 		bool is_array = false;
 		string type_name = reader.get_attribute ("name");
 
@@ -1639,7 +1639,7 @@ public class Vala.GirParser : CodeVisitor {
 			type_name = "GLib.GenericArray";
 		}
 
-		DataType type = parse_type_from_gir_name (type_name);
+		DataType type = parse_type_from_gir_name (type_name, out no_array_length, out array_null_terminated);
 
 		// type arguments / element types
 		while (current_token == MarkupTokenType.START_ELEMENT) {
@@ -1652,7 +1652,14 @@ public class Vala.GirParser : CodeVisitor {
 		return type;
 	}
 
-	DataType parse_type_from_gir_name (string type_name) {
+	DataType parse_type_from_gir_name (string type_name, out bool no_array_length = null, out bool array_null_terminated = null) {
+		if (&no_array_length != null) {
+			no_array_length = false;
+		}
+		if (&array_null_terminated != null) {
+			array_null_terminated = false;
+		}
+
 		DataType type;
 		if (type_name == "none") {
 			type = new VoidType (get_current_src ());
@@ -1660,6 +1667,12 @@ public class Vala.GirParser : CodeVisitor {
 			type = new PointerType (new VoidType (get_current_src ()), get_current_src ());
 		} else if (type_name == "GObject.Strv") {
 			type = new ArrayType (new UnresolvedType.from_symbol (new UnresolvedSymbol (null, "string")), 1, get_current_src ());
+			if (&no_array_length != null) {
+				no_array_length = true;
+			}
+			if (&array_null_terminated != null) {
+				array_null_terminated = true;
+			}
 		} else {
 			bool known_type = true;
 			if (type_name == "utf8") {
@@ -2009,10 +2022,14 @@ public class Vala.GirParser : CodeVisitor {
 		string construct_ = reader.get_attribute ("construct");
 		string construct_only = reader.get_attribute ("construct-only");
 		next ();
-		var type = parse_type ();
+		bool no_array_length;
+		bool array_null_terminated;
+		var type = parse_type (null, null, false, out no_array_length, out array_null_terminated);
 		var prop = new Property (name, type, null, null, get_current_src ());
 		prop.access = SymbolAccessibility.PUBLIC;
 		prop.no_accessor_method = true;
+		prop.no_array_length = no_array_length;
+		prop.array_null_terminated = array_null_terminated;
 		if (readable != "0") {
 			prop.get_accessor = new PropertyAccessor (true, false, false, prop.property_type.copy (), null, null);
 		}
