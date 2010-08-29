@@ -65,7 +65,10 @@ public class Vala.GirParser : CodeVisitor {
 		ARRAY_LENGTH_POS,
 		DEFAULT,
 		OUT,
-		REF;
+		REF,
+		VFUNC_NAME,
+		VIRTUAL,
+		ABSTRACT;
 
 		public static ArgumentType? from_string (string name) {
 			var enum_class = (EnumClass) typeof(ArgumentType).class_ref ();
@@ -324,6 +327,8 @@ public class Vala.GirParser : CodeVisitor {
 					case TokenType.DEFAULT:
 					case TokenType.OUT:
 					case TokenType.REF:
+					case TokenType.VIRTUAL:
+					case TokenType.ABSTRACT:
 						str = get_string ();
 						break;
 					}
@@ -2185,7 +2190,7 @@ public class Vala.GirParser : CodeVisitor {
 		if (element_name == "virtual-method" || element_name == "callback") {
 			if (s is Method) {
 				((Method) s).is_virtual = true;
-				if (invoker == null) {
+				if (invoker == null && !metadata.has_argument (ArgumentType.VFUNC_NAME)) {
 					s.attributes.append (new Attribute ("NoWrapper", s.source_reference));
 				}
 			}
@@ -2195,6 +2200,18 @@ public class Vala.GirParser : CodeVisitor {
 			}
 		} else if (element_name == "function") {
 			((Method) s).binding = MemberBinding.STATIC;
+		}
+
+		if (s is Method) {
+			var method = (Method) s;
+			if (metadata.has_argument (ArgumentType.VIRTUAL)) {
+				method.is_virtual = metadata.get_bool (ArgumentType.VIRTUAL);
+				method.is_abstract = false;
+			} else if (metadata.has_argument (ArgumentType.ABSTRACT)) {
+				method.is_abstract = metadata.get_bool (ArgumentType.ABSTRACT);
+				method.is_virtual = false;
+			}
+			method.vfunc_name = metadata.get_string (ArgumentType.VFUNC_NAME);
 		}
 
 		var parameters = new ArrayList<MethodInfo> ();
