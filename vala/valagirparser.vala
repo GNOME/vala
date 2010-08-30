@@ -1869,6 +1869,7 @@ public class Vala.GirParser : CodeVisitor {
 		}
 
 		next ();
+		var first_field = true;
 		var old_symbols_info = current_symbols_info;
 		current_symbols_info = new HashMap<string,ArrayList<SymbolInfo>> (str_hash, str_equal);
 		while (current_token == MarkupTokenType.START_ELEMENT) {
@@ -1885,7 +1886,13 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (reader.name == "constant") {
 				add_symbol_info (parse_constant ());
 			} else if (reader.name == "field") {
-				add_symbol_info (parse_field ());
+				if (first_field && parent != null) {
+					// first field is guaranteed to be the parent instance
+					skip_element ();
+				} else {
+					add_symbol_info (parse_field ());
+				}
+				first_field = false;
 			} else if (reader.name == "property") {
 				add_symbol_info (parse_property ());
 			} else if (reader.name == "constructor") {
