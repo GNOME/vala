@@ -2065,7 +2065,7 @@ namespace Gtk {
 		public void set_from_icon_set (Gtk.IconSet icon_set, Gtk.IconSize size);
 		public void set_from_image (Gdk.Image gdk_image, Gdk.Bitmap mask);
 		public void set_from_pixbuf (Gdk.Pixbuf pixbuf);
-		public void set_from_pixmap (Gdk.Pixmap pixmap, Gdk.Bitmap mask);
+		public void set_from_pixmap (Gdk.Pixmap? pixmap, Gdk.Bitmap? mask);
 		public void set_from_stock (string stock_id, Gtk.IconSize size);
 		public void set_pixel_size (int pixel_size);
 		[NoAccessorMethod]
