@@ -448,7 +448,7 @@ namespace WebKit {
 		[HasEmitter]
 		public virtual signal void copy_clipboard ();
 		public virtual signal unowned Gtk.Widget create_plugin_widget (string p0, string p1, GLib.HashTable p2);
-		public virtual signal unowned WebKit.WebView create_web_view (WebKit.WebFrame web_frame);
+		public virtual signal WebKit.WebView create_web_view (WebKit.WebFrame web_frame);
 		[HasEmitter]
 		public virtual signal void cut_clipboard ();
 		public virtual signal void database_quota_exceeded (GLib.Object p0, GLib.Object p1);
