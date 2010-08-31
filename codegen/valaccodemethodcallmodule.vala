@@ -43,6 +43,11 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		if (itype is MethodType) {
 			assert (ma != null);
 			m = ((MethodType) itype).method_symbol;
+			if (ma.inner != null && ma.inner.value_type is EnumValueType && ((EnumValueType) ma.inner.value_type).get_to_string_method() == m) {
+				// Enum.VALUE.to_string()
+				var en = (Enum) ma.inner.value_type.data_type;
+				ccall.call = new CCodeIdentifier (generate_enum_tostring_function (en));
+			}
 		} else if (itype is SignalType) {
 			var sig_type = (SignalType) itype;
 			if (ma != null && ma.inner is BaseAccess && sig_type.signal_symbol.is_virtual) {
@@ -791,6 +796,41 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 			expr.ccodenode = ccomma;
 		}
+	}
+
+	private string generate_enum_tostring_function (Enum en) {
+		var to_string_func = "_%s_to_string".printf (en.get_lower_case_cname ());
+
+		if (!add_wrapper (to_string_func)) {
+			// wrapper already defined
+			return to_string_func;
+		}
+		// declaration
+
+		var function = new CCodeFunction (to_string_func, "const char*");
+		function.modifiers = CCodeModifiers.STATIC;
+
+		function.add_parameter (new CCodeFormalParameter ("value", en.get_cname ()));
+
+		// definition
+		var cblock = new CCodeBlock ();
+
+		var cswitch = new CCodeSwitchStatement (new CCodeConstant ("value"));
+		foreach (var enum_value in en.get_values ()) {
+			cswitch.add_statement (new CCodeCaseStatement (new CCodeIdentifier (enum_value.get_cname ())));
+			cswitch.add_statement (new CCodeReturnStatement (new CCodeConstant ("\""+enum_value.get_cname ()+"\"")));
+		}
+		cblock.add_statement (cswitch);
+		cblock.add_statement (new CCodeReturnStatement (new CCodeConstant ("NULL")));
+
+		// append to file
+
+		cfile.add_type_member_declaration (function.copy ());
+
+		function.block = cblock;
+		cfile.add_function (function);
+
+		return to_string_func;
 	}
 }
 

@@ -26,6 +26,8 @@ using GLib;
  * An enum value type.
  */
 public class Vala.EnumValueType : ValueType {
+	private Method? to_string_method;
+
 	public EnumValueType (Enum type_symbol) {
 		base (type_symbol);
 	}
@@ -39,10 +41,22 @@ public class Vala.EnumValueType : ValueType {
 		return result;
 	}
 
+	public Method get_to_string_method () {
+		if (to_string_method == null) {
+			var string_type = new ObjectType ((Class) CodeContext.get ().root.scope.lookup ("string"));
+			string_type.value_owned = false;
+			to_string_method = new Method ("to_string", string_type);
+			to_string_method.access = SymbolAccessibility.PUBLIC;
+			to_string_method.external = true;
+			to_string_method.owner = type_symbol.scope;
+		}
+		return to_string_method;
+	}
+
 	public override Symbol? get_member (string member_name) {
 		var result = base.get_member (member_name);
-		if (result == null) {
-			result = CodeContext.get ().root.scope.lookup ("GLib").scope.lookup ("Enum").scope.lookup (member_name);
+		if (result == null && member_name == "to_string") {
+			return get_to_string_method ();
 		}
 		return result;
 	}

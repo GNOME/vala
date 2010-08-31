@@ -366,11 +366,6 @@ namespace GLib {
 		protected InitiallyUnowned ();
 	}
 
-	[CCode (cname = "int")]
-	public struct Enum : int {
-		public unowned string to_string ();
-	}
-
 	[CCode (lower_case_csuffix = "enum")]
 	public class EnumClass : TypeClass {
 		public unowned EnumValue? get_value (int value);

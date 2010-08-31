@@ -2055,11 +2055,13 @@ public class Vala.GTypeModule : GErrorModule {
 	public override void visit_method_call (MethodCall expr) {
 		var ma = expr.call as MemberAccess;
 		var mtype = expr.call.value_type as MethodType;
-		if (mtype == null || mtype.method_symbol.get_full_name () != "GLib.Enum.to_string" ||
-		    ma == null || ma.inner.value_type.get_type_id () == null) {
+		if (mtype == null || ma == null || ma.inner == null ||
+			!(ma.inner.value_type is EnumValueType) || !((Enum) ma.inner.value_type.data_type).has_type_id ||
+			mtype.method_symbol != ((EnumValueType) ma.inner.value_type).get_to_string_method ()) {
 			base.visit_method_call (expr);
 			return;
 		}
+		// to_string() on a gtype enum
 
 		var ccomma = new CCodeCommaExpression ();
 		var temp_var = get_temp_variable (new CType ("GEnumValue*"), false, expr, false);
