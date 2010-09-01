@@ -28,7 +28,6 @@ using Gee;
 
 
 public class Valadoc.ValadocOrg.Doclet : Valadoc.Html.BasicDoclet {
-	private ArrayList<Api.Node> nodes = new ArrayList<Api.Node> ();
 	private string package_dir_name = ""; // remove
 
 	construct {
@@ -41,10 +40,6 @@ public class Valadoc.ValadocOrg.Doclet : Valadoc.Html.BasicDoclet {
 
 	protected override string get_img_path_html (Api.Node element, string type) {
 		return Path.build_filename ("/doc", element.package.name,"img", element.get_full_name () + "." + type);
-	}
-
-	private string get_path (Api.Node element) {
-		return element.get_full_name () + ".html";
 	}
 
 	private string get_real_path (Api.Node element, string file_extension) {
