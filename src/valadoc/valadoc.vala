@@ -209,8 +209,13 @@ public class ValaDoc : Object {
 			return quit (reporter);
 		}
 
-		var gir_importer = new GirDocumentationImporter (doctree, docparser, modules, settings);
-		doctree.import_documentation (gir_importer, import_packages, import_directories);
+
+		DocumentationImporter[] importers = {
+			new GirDocumentationImporter (doctree, docparser, modules, settings),
+			new ValadocDocumentationImporter (doctree, docparser, modules, settings, reporter)
+		};
+
+		doctree.import_documentation (importers, import_packages, import_directories);
 		if (reporter.errors > 0) {
 			return quit (reporter);
 		}

@@ -74,10 +74,13 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 	private Scanner _scanner;
 
 	public Comment? parse (Api.Node element, Vala.Comment source_comment) {
-		weak string content = source_comment.content;
 		var source_ref = source_comment.source_reference;
+		return parse_comment_str (element, source_comment.content, source_ref.file.filename, source_ref.first_line, source_ref.first_column);
+	}
+
+	public Comment? parse_comment_str (Api.Node element, string content, string filename, int first_line, int first_column) {
 		try {
-			Comment doc_comment = parse_comment (content, source_ref.file.filename, source_ref.first_line, source_ref.first_column);
+			Comment doc_comment = parse_comment (content, filename, first_line, first_column);
 			doc_comment.check (_tree, element, _reporter, _settings);
 			return doc_comment;
 		} catch (ParserError error) {

@@ -118,6 +118,14 @@ public class Valadoc.TokenType : Object {
 	public static TokenType GTKDOC_MEMBER_ELEMENT_OPEN;
 	public static TokenType GTKDOC_DOT;
 
+	// .valadoc
+	public static TokenType VALADOC_COMMENT_START;
+	public static TokenType VALADOC_COMMENT_END;
+	public static TokenType VALADOC_ANY_WORD;
+	public static TokenType VALADOC_SPACE;
+	public static TokenType VALADOC_TAB;
+	public static TokenType VALADOC_EOL;
+
 	private static bool initialized = false;
 
 	internal static void init_token_types () {
@@ -214,6 +222,14 @@ public class Valadoc.TokenType : Object {
 			GTKDOC_EOL = TokenType.EOL;
 			GTKDOC_SPACE = SPACE;
 			GTKDOC_EOF = EOF;
+
+			VALADOC_COMMENT_START = new TokenType.basic ("/*");
+			VALADOC_COMMENT_END = new TokenType.basic ("*/");
+			VALADOC_ANY_WORD = ANY_WORD;
+			VALADOC_SPACE = SPACE;
+			VALADOC_TAB = TAB;
+			VALADOC_EOL = EOL;
+
 
 			initialized = true;
 		}

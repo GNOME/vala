@@ -365,15 +365,6 @@ public class Valadoc.Api.Tree {
 		return true;
 	}
 
-	private Package? find_package_by_name (string name) {
-		foreach (Package pkg in packages) {
-			if (name == pkg.name) {
-				return pkg;
-			}
-		}
-		return null;
-	}
-
 	private Package? find_package_for_file (Vala.SourceFile vfile) {
 		foreach (Package pkg in this.packages) {
 			if (pkg.is_package_for_file (vfile))
@@ -424,14 +415,20 @@ public class Valadoc.Api.Tree {
 		}
 	}
 
-	public void import_documentation (DocumentationImporter importer, string[] packages, string[] import_directories) {
+	public void import_documentation (DocumentationImporter[] importers, string[] packages, string[] import_directories) {
 		foreach (string pkg_name in packages) {
-			string? path = get_file_path ("%s.%s".printf (pkg_name, importer.file_extension), import_directories);
+			bool imported = false;
+			foreach (DocumentationImporter importer in importers) {
+				string? path = get_file_path ("%s.%s".printf (pkg_name, importer.file_extension), import_directories);
 
-			if (path == null) {
+				if (path != null) {
+					importer.process (path);
+					imported = true;
+				}
+			}
+
+			if (imported == false) {
 				Vala.Report.error (null, "%s not found in specified import directories".printf (pkg_name));
-			} else {
-				importer.process (path);
 			}
 		}
 	}

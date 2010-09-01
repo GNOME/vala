@@ -40,6 +40,8 @@ libvaladoc_la_VALASOURCES = \
 	importer/girdocumentationimporter.vala \
 	importer/documentationimporter.vala \
 	importer/girdocumentationbuilder.vala \
+	importer/valadocdocumentationimporter.vala \
+	importer/valadocdocumentationimporterscanner.vala \
 	api/array.vala \
 	api/class.vala \
 	api/constant.vala \
