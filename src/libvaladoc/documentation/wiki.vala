@@ -62,13 +62,13 @@ public class Valadoc.WikiPage : Object, Documentation {
 		this.path = path;
 	}
 
-	public void read () throws GLib.FileError {
+	public void read (ErrorReporter reporter) {
 		try {
 			string content;
 			FileUtils.get_contents (this.path, out content);
 			this.documentation_str = content;
 		} catch (FileError err) {
-			throw err;
+			reporter.simple_error ("Unable to read file `%s': %s".printf (this.path, err.message));
 		}
 	}
 
@@ -107,36 +107,36 @@ public class Valadoc.WikiPageTree : Object {
 		return null;
 	}
 
-	private void create_tree_from_path (DocumentationParser docparser, Api.Package package, string path, string? nameoffset = null) throws GLib.FileError {
-		Dir dir = Dir.open (path);
+	private void create_tree_from_path (DocumentationParser docparser, Api.Package package, ErrorReporter reporer, string path, string? nameoffset = null) {
+		try {
+			Dir dir = Dir.open (path);
 
-		for (string? curname = dir.read_name (); curname!=null ; curname = dir.read_name ()) {
-			string filename = Path.build_filename (path, curname);
-			if (curname.has_suffix (".valadoc") && FileUtils.test (filename, FileTest.IS_REGULAR)) {
-				WikiPage wikipage = new WikiPage ((nameoffset!=null)? Path.build_filename (nameoffset, curname) : curname, filename, package);
-				this.wikipages.add(wikipage);
-				wikipage.read ();
-			} else if (FileUtils.test (filename, FileTest.IS_DIR)) {
-				this.create_tree_from_path (docparser, package, filename, (nameoffset!=null)? Path.build_filename (nameoffset, curname) : curname);
+			for (string? curname = dir.read_name (); curname!=null ; curname = dir.read_name ()) {
+				string filename = Path.build_filename (path, curname);
+				if (curname.has_suffix (".valadoc") && FileUtils.test (filename, FileTest.IS_REGULAR)) {
+					WikiPage wikipage = new WikiPage ((nameoffset!=null)? Path.build_filename (nameoffset, curname) : curname, filename, package);
+					this.wikipages.add(wikipage);
+					wikipage.read (reporter);
+				} else if (FileUtils.test (filename, FileTest.IS_DIR)) {
+					this.create_tree_from_path (docparser, package, reporter, filename, (nameoffset!=null)? Path.build_filename (nameoffset, curname) : curname);
+				}
 			}
+		} catch (FileError err) {
+			reporter.simple_error ("Unable to open directory `%s': %s".printf (path, err.message));
 		}
 	}
 
-	public void create_tree (DocumentationParser docparser, Api.Package package) throws GLib.FileError {
-		try {
-			weak string path = this.settings.wiki_directory;
-			if (path == null) {
-				return ;
-			}
+	public void create_tree (DocumentationParser docparser, Api.Package package, ErrorReporter reporer) {
+		weak string path = this.settings.wiki_directory;
+		if (path == null) {
+			return;
+		}
 
-			this.wikipages = new ArrayList<WikiPage> ();
-			this.create_tree_from_path (docparser, package, path);
+		this.wikipages = new ArrayList<WikiPage> ();
+		this.create_tree_from_path (docparser, package, reporter, path);
 
-			foreach (WikiPage page in this.wikipages) {
-				page.parse (docparser, package);
-			}
-		} catch (FileError err) {
-			throw err;
+		foreach (WikiPage page in this.wikipages) {
+			page.parse (docparser, package);
 		}
 	}
 }

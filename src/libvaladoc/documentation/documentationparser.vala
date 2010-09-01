@@ -1105,10 +1105,12 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		_wiki_parser.set_root_rule (page);
 	}
 
+#if DEBUG
 	private void dump_stack () {
 		message ("Dumping stack");
 		foreach (Object object in _stack) {
 			message ("%s", object.get_type ().name ());
 		}
 	}
+#endif
 }

@@ -512,7 +512,6 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	}
 
 	public void write_symbol_content (Api.Node node) {
-		string full_name = node.get_full_name ();
 		writer.start_tag ("div", {"class", css_style_content});
 		writer.start_tag ("h1", {"class", css_title}).text (node.name).end_tag ("h1");
 		writer.simple_tag ("hr", {"class", css_headline_hr});

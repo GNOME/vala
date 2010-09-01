@@ -396,10 +396,10 @@ public class Valadoc.Api.Tree {
 	}
 
 	private void process_wiki (DocumentationParser docparser) {
-		this.wikitree = new WikiPageTree(this.reporter, this.settings);
+		this.wikitree = new WikiPageTree(reporter, settings);
 		var pkg = get_source_package ();
 		if (pkg != null) {
-			wikitree.create_tree (docparser, pkg);
+			wikitree.create_tree (docparser, pkg, reporter);
 		}
 	}
 

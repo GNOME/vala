@@ -134,10 +134,6 @@ public class Valadoc.Importer.ValadocDocumentationImporter : DocumentationImport
 		} catch (ParserError err) {
 		}
 	}
-
-	public string resolve (string path) {
-		return path;
-	}
 }
 
 

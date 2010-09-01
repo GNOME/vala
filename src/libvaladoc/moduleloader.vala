@@ -35,6 +35,10 @@ public class Valadoc.ModuleLoader : TypeModule {
 	private Module docletmodule;
 	private Type doclettype;
 
+	public ModuleLoader () {
+		Object ();
+	}
+
 	public override bool load () {
 		return true;
 	}
