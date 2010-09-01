@@ -331,6 +331,15 @@ public class Vala.Interface : ObjectTypeSymbol {
 
 		return result;
 	}
+
+	/**
+	 * Returns default string for the type struct when used in C code.
+	 *
+	 * @return the type struct to be used in C code
+	 */
+	public string get_default_type_cname () {
+		return "%sIface".printf (get_cname ());
+	}
 	
 	/**
 	 * Sets the string to be prepended to the name of members of this
@@ -495,7 +504,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 */
 	public string get_type_cname () {
 		if (type_cname == null) {
-			type_cname = "%sIface".printf (get_cname ());
+			type_cname = get_default_type_cname ();
 		}
 		return type_cname;
 	}

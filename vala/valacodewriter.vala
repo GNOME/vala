@@ -495,6 +495,8 @@ public class Vala.CodeWriter : CodeVisitor {
 		write_string ("[CCode (cheader_filename = \"%s\"".printf (get_cheaders(iface)));
 		if (iface.get_lower_case_csuffix () != iface.get_default_lower_case_csuffix ())
 			write_string (", lower_case_csuffix = \"%s\"".printf (iface.get_lower_case_csuffix ()));
+		if (iface.get_type_cname () != iface.get_default_type_cname ())
+			write_string (", type_cname = \"%s\"".printf (iface.get_type_cname ()));
 
 		write_string (")]");
 		write_newline ();

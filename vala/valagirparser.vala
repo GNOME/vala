@@ -32,6 +32,7 @@ using GLib;
  * 4) Reparent nodes
  * 5) Process callbacks/virtual
  * 6) Process aliases
+ * 7) Autoreparent static methods
  *
  * Best hacking practices:
  * - Keep GIR parsing bloat-free, it must contain the logic
@@ -486,6 +487,8 @@ public class Vala.GirParser : CodeVisitor {
 	class SymbolInfo {
 		public Symbol symbol;
 		public Metadata metadata;
+		// additional information from GIR
+		public HashMap<string,string> girdata;
 	}
 
 	class CallbackScope {
@@ -518,6 +521,8 @@ public class Vala.GirParser : CodeVisitor {
 
 	ArrayList<Metadata> metadata_stack;
 	Metadata metadata;
+	ArrayList<HashMap<string,string>> girdata_stack;
+	HashMap<string,string> girdata;
 
 	HashMap<string,ArrayList<SymbolInfo>> current_symbols_info;
 
@@ -575,9 +580,11 @@ public class Vala.GirParser : CodeVisitor {
 	}
 
 	public void parse_file (SourceFile source_file) {
-		// load metadata
 		metadata_stack = new ArrayList<Metadata> ();
 		metadata = Metadata.empty;
+		girdata_stack = new ArrayList<HashMap<string,string>> ();
+
+		// load metadata
 		string metadata_filename = "%s.metadata".printf (source_file.filename.ndup (source_file.filename.length - ".gir".length));
 		if (FileUtils.test (metadata_filename, FileTest.EXISTS)) {
 			var metadata_parser = new MetadataParser ();
@@ -784,6 +791,7 @@ public class Vala.GirParser : CodeVisitor {
 		var info = new SymbolInfo ();
 		info.symbol = symbol;
 		info.metadata = metadata;
+		info.girdata = girdata;
 		var colliding = current_symbols_info[name];
 		if (colliding == null) {
 			colliding = new ArrayList<SymbolInfo> ();
@@ -825,7 +833,17 @@ public class Vala.GirParser : CodeVisitor {
 	}
 
 	void merge (SymbolInfo info, ArrayList<SymbolInfo> colliding, ArrayList<SymbolInfo> merged) {
-		if (info.symbol is Property) {
+		if (info.symbol is Struct) {
+			var gtype_struct_for = info.girdata["glib:is-gtype-struct-for"];
+			if (gtype_struct_for != null && current_symbols_info.contains (gtype_struct_for)) {
+				var iface = current_symbols_info.get (gtype_struct_for).get (0).symbol as Interface;
+				if (iface != null) {
+					// set the interface struct name
+					iface.set_type_cname (((Struct) info.symbol).get_cname ());
+				}
+				merged.add (info);
+			}
+		} else if (info.symbol is Property) {
 			foreach (var cinfo in colliding) {
 				var sym = cinfo.symbol;
 				if (sym is Signal || sym is Field) {
@@ -985,12 +1003,17 @@ public class Vala.GirParser : CodeVisitor {
 
 		metadata_stack.add (metadata);
 		metadata = new_metadata;
+		girdata_stack.add (girdata);
+		girdata = new HashMap<string,string> (str_hash, str_equal);
+
 		return true;
 	}
 
 	void pop_metadata () {
 		metadata = metadata_stack[metadata_stack.size - 1];
 		metadata_stack.remove_at (metadata_stack.size - 1);
+		girdata = girdata_stack[girdata_stack.size - 1];
+		girdata_stack.remove_at (girdata_stack.size - 1);
 	}
 
 	bool parse_type_arguments_from_string (DataType parent_type, string type_arguments, SourceReference? source_reference = null) {
@@ -1361,10 +1384,7 @@ public class Vala.GirParser : CodeVisitor {
 				if (reader.get_attribute ("glib:get-type") != null) {
 					add_symbol_info (parse_boxed ());
 				} else {
-					var record = parse_record ();
-					if (record != null) {
-						add_symbol_info (record);
-					}
+					add_symbol_info (parse_record ());
 				}
 			} else if (reader.name == "class") {
 				add_symbol_info (parse_class ());
@@ -1804,14 +1824,22 @@ public class Vala.GirParser : CodeVisitor {
 		return type;
 	}
 
-	Struct? parse_record () {
+	Struct parse_record () {
 		start_element ("record");
 		var st = new Struct (reader.get_attribute ("name"), get_current_src ());
 		st.external = true;
+		st.access = SymbolAccessibility.PUBLIC;
+
+		string cname = reader.get_attribute ("c:type");
+		if (cname != null) {
+			st.set_cname (cname);
+		}
 
 		current_gtype_struct_for = reader.get_attribute ("glib:is-gtype-struct-for");
+		if (current_gtype_struct_for != null) {
+			girdata["glib:is-gtype-struct-for"] = current_gtype_struct_for;
+		}
 
-		st.access = SymbolAccessibility.PUBLIC;
 		next ();
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (!push_metadata ()) {
@@ -1843,12 +1871,7 @@ public class Vala.GirParser : CodeVisitor {
 		}
 		end_element ("record");
 
-		if (current_gtype_struct_for != null) {
-			// skip *Class or *Iface
-			current_gtype_struct_for = null;
-			return null;
-		}
-
+		current_gtype_struct_for = null;
 		return st;
 	}
 
@@ -1957,7 +1980,7 @@ public class Vala.GirParser : CodeVisitor {
 				next ();
 				end_element ("prerequisite");
 			} else if (reader.name == "field") {
-				parse_field ();
+				add_symbol_info (parse_field ());
 			} else if (reader.name == "property") {
 				add_symbol_info (parse_property ());
 			} else if (reader.name == "virtual-method") {
