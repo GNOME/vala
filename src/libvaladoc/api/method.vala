@@ -75,7 +75,7 @@ public class Valadoc.Api.Method : Member {
 
 	public bool is_static {
 		get {
-			if (this.parent is Namespace || is_constructor) {
+			if (is_constructor) {
 				return false;
 			}
 			return ((Vala.Method) symbol).binding == MemberBinding.STATIC;
