@@ -74,8 +74,6 @@ public class Valadoc.Importer.ValadocDocumentationImporter : DocumentationImport
 		});
 
 		Rule documentation = Rule.seq ({
-			TokenType.ANY_WORD.action ((token) => { _cname = token.to_string (); }),
-			optional_empty_lines,
 			TokenType.VALADOC_COMMENT_START.action ((token) => { _comment_location = token.end; }),
 			Rule.many ({
 				Rule.one_of ({
@@ -86,7 +84,9 @@ public class Valadoc.Importer.ValadocDocumentationImporter : DocumentationImport
 					TokenType.VALADOC_EOL.action ((token) => { _comment.append (token.to_string ()); })
 				})
 			}),
-			TokenType.VALADOC_COMMENT_END
+			TokenType.VALADOC_COMMENT_END,
+			optional_empty_lines,
+			TokenType.ANY_WORD.action ((token) => { _cname = token.to_string (); })
 		})
 		.set_name ("Documentation")
 		.set_reduce (() => {
