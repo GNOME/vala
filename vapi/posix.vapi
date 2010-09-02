@@ -1284,7 +1284,7 @@ namespace Posix {
 		public uint32 s_addr;
 	}
 
-	[CCode (cname = "struct sock_addr", cheader_filename = "sys/socket.h", destroy_function = "")]
+	[CCode (cname = "struct sockaddr", cheader_filename = "sys/socket.h", destroy_function = "")]
 	public struct SockAddr {
 	}
 
