@@ -817,7 +817,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 		var main_else_true = new CCodeBlock ();
 		var main_else_if_true = new CCodeBlock ();
-		var main_else_if_condition = new CCodeBinaryExpression (CCodeBinaryOperator.AND, new CCodeIdentifier ("collect_flags"), new CCodeIdentifier ("G_VALUE_NOCOPY_CONTENTS"));
+		var main_else_if_condition = new CCodeBinaryExpression (CCodeBinaryOperator.BITWISE_AND, new CCodeIdentifier ("collect_flags"), new CCodeIdentifier ("G_VALUE_NOCOPY_CONTENTS"));
 		var main_else_if = new CCodeIfStatement (main_else_if_condition, main_else_if_true, main_else_true);
 
 		var main_true = new CCodeBlock ();
