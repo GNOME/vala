@@ -972,6 +972,10 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		if (method_node is CreationMethod) {
 			ccheck.call = new CCodeIdentifier ("g_return_val_if_fail");
 			ccheck.add_argument (new CCodeConstant ("NULL"));
+		} else if (method_node is Method && ((Method) method_node).coroutine) {
+			// _co function
+			ccheck.call = new CCodeIdentifier ("g_return_val_if_fail");
+			ccheck.add_argument (new CCodeConstant ("FALSE"));
 		} else if (ret_type is VoidType) {
 			/* void function */
 			ccheck.call = new CCodeIdentifier ("g_return_if_fail");
