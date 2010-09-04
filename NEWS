@@ -1,3 +1,11 @@
+Vala 0.9.8
+==========
+
+ * Add --fatal-warnings commandline option.
+ * Deprecate string.len () in favor of string.length.
+ * Deprecate use of D-Bus GLib in favor of GDBus.
+ * Many bug fixes and binding updates.
+
 Vala 0.9.7
 ==========
 
