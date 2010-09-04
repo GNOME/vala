@@ -977,6 +977,8 @@ public class string {
 	}
 	[CCode (cname = "g_utf8_get_char_validated")]
 	public unichar get_char_validated (ssize_t max_len = -1);
+	[CCode (cname = "g_utf8_offset_to_pointer")]
+	public unowned string utf8_offset (long offset);
 	public unowned string offset (long offset) {
 		return (string) ((char*) this + offset);
 	}
