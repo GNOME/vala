@@ -2614,8 +2614,10 @@ namespace GLib {
 		[CCode (cname = "WIFCONTINUED", cheader_filename = "sys/wait.h")]
 		public static bool if_continued (int status);
 
+		[NoReturn]
 		[CCode (cname = "abort", cheader_filename = "stdlib.h")]
 		public void abort ();
+		[NoReturn]
 		[CCode (cname = "exit", cheader_filename = "stdlib.h")]
 		public void exit (int status);
 		[CCode (cname = "raise", cheader_filename = "signal.h")]
