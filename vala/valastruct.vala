@@ -407,6 +407,12 @@ public class Vala.Struct : TypeSymbol {
 		this.rank = rank;
 	}
 
+	private void process_gir_attribute (Attribute a) {
+		if (a.has_argument ("name")) {
+			gir_name = a.get_string ("name");
+		}
+	}
+
 	private void process_ccode_attribute (Attribute a) {
 		if (a.has_argument ("const_cname")) {
 			set_const_cname (a.get_string ("const_cname"));
@@ -499,6 +505,8 @@ public class Vala.Struct : TypeSymbol {
 				is_immutable = true;
 			} else if (a.name == "Deprecated") {
 				process_deprecated_attribute (a);
+			} else if (a.name == "GIR") {
+				process_gir_attribute (a);
 			}
 		}
 	}

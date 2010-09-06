@@ -665,6 +665,12 @@ public class Vala.Class : ObjectTypeSymbol {
 	public override bool is_reference_type () {
 		return true;
 	}
+
+	private void process_gir_attribute (Attribute a) {
+		if (a.has_argument ("name")) {
+			gir_name = a.get_string ("name");
+		}
+	}
 	
 	private void process_ccode_attribute (Attribute a) {
 		if (a.has_argument ("ref_function")) {
@@ -741,6 +747,8 @@ public class Vala.Class : ObjectTypeSymbol {
 				is_immutable = true;
 			} else if (a.name == "Deprecated") {
 				process_deprecated_attribute (a);
+			} else if (a.name == "GIR") {
+				process_gir_attribute (a);
 			}
 		}
 	}

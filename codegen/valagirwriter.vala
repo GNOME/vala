@@ -94,7 +94,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		stream.printf ("<?xml version=\"1.0\"?>\n");
 
-		stream.printf ("<repository version=\"1.1\"");
+		stream.printf ("<repository version=\"1.2\"");
 		stream.printf (" xmlns=\"http://www.gtk.org/introspection/core/1.0\"");
 		stream.printf (" xmlns:c=\"http://www.gtk.org/introspection/c/1.0\"");
 		stream.printf (" xmlns:glib=\"http://www.gtk.org/introspection/glib/1.0\"");
@@ -231,7 +231,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			buffer.append_printf ("<field name=\"priv\">\n");
 			indent++;
 			write_indent ();
-			buffer.append_printf ("<type name=\"any\" c:type=\"%sPrivate*\"/>\n", cl.get_cname ());
+			buffer.append_printf ("<type name=\"%sPrivate\" c:type=\"%sPrivate*\"/>\n", cl.name, cl.get_cname ());
 			indent--;
 			write_indent ();
 			buffer.append_printf("</field>\n");
@@ -286,6 +286,9 @@ public class Vala.GIRWriter : CodeVisitor {
 			indent--;
 			write_indent ();
 			buffer.append_printf ("</record>\n");
+
+			write_indent ();
+			buffer.append_printf ("<record name=\"%sPrivate\" c:type=\"%sPrivate\" disguised=\"1\"/>\n", cl.name, cl.get_cname ());
 		} else {
 			write_indent ();
 			buffer.append_printf ("<record name=\"%s\"", cl.name);
@@ -345,30 +348,13 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		// write prerequisites
 		if (iface.get_prerequisites ().size > 0) {
-			write_indent ();
-			buffer.append_printf ("<requires>\n");
-			indent++;
-
 			foreach (DataType base_type in iface.get_prerequisites ()) {
-				var object_type = (ObjectType) base_type;
-				if (object_type.type_symbol is Class) {
-					write_indent ();
-					buffer.append_printf ("<object name=\"%s\"/>\n", gi_type_name (object_type.type_symbol));
-				} else if (object_type.type_symbol is Interface) {
-					write_indent ();
-					buffer.append_printf ("<interface name=\"%s\"/>\n", gi_type_name (object_type.type_symbol));
-				} else {
-					assert_not_reached ();
-				}
+				write_indent ();
+				buffer.append_printf ("<prerequisite name=\"%s\"/>\n", gi_type_name (((ObjectType) base_type).type_symbol));
 			}
-
-			indent--;
-			write_indent ();
-			buffer.append_printf ("</requires>\n");
 		}
 
 		write_annotations (iface);
-
 		iface.accept_children (this);
 
 		indent--;
@@ -569,7 +555,7 @@ public class Vala.GIRWriter : CodeVisitor {
 				buffer.append_printf ("<parameter name=\"user_data\" transfer-ownership=\"none\" closure=\"%d\">\n", index);
 				indent++;
 				write_indent ();
-				buffer.append_printf ("<type name=\"any\" c:type=\"void*\"/>\n");
+				buffer.append_printf ("<type name=\"gpointer\" c:type=\"void*\"/>\n");
 				indent--;
 				write_indent ();
 				buffer.append_printf ("</parameter>\n");
@@ -858,7 +844,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			buffer.append_printf ("<type name=\"none\"/>\n");
 		} else if (type is PointerType) {
 			write_indent ();
-			buffer.append_printf ("<type name=\"any\" c:type=\"%s\"/>\n", type.get_cname ());
+			buffer.append_printf ("<type name=\"gpointer\" c:type=\"%s\"/>\n", type.get_cname ());
 		} else if (type.data_type != null) {
 			write_indent ();
 			buffer.append_printf ("<type name=\"%s\" c:type=\"%s\"", gi_type_name (type.data_type), type.get_cname ());
@@ -885,7 +871,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		} else if (type is GenericType) {
 			// generic type parameters not supported in GIR
 			write_indent ();
-			buffer.append ("<type name=\"any\" c:type=\"gpointer\"/>\n");
+			buffer.append ("<type name=\"gpointer\" c:type=\"gpointer\"/>\n");
 		} else {
 			write_indent ();
 			buffer.append_printf ("<type name=\"%s\"/>\n", type.to_string ());
@@ -913,40 +899,20 @@ public class Vala.GIRWriter : CodeVisitor {
 		Symbol parent = type_symbol.parent_symbol;
 		if (parent is Namespace) {
 			Namespace ns = parent as Namespace;
-			if (ns.name != null) {
+			if (ns.gir_name != null) {
 				if (type_symbol.source_reference.file.gir_namespace != null) {
 					GIRNamespace external = GIRNamespace (type_symbol.source_reference.file.gir_namespace, type_symbol.source_reference.file.gir_version);
 					if (!externals.contains (external)) {
 						externals.add (external);
 					}
-					return "%s.%s".printf (type_symbol.source_reference.file.gir_namespace, type_symbol.name);
+					return "%s.%s".printf (type_symbol.source_reference.file.gir_namespace, type_symbol.gir_name);
 				} else {
 					unannotated_namespaces.add(ns);
 				}
 			}
 		}
 
-		return vala_to_gi_type_name (type_symbol.get_full_name());
-	}
-
-	private string vala_to_gi_type_name (string name) {
-		if (name == "bool") {
-			return "boolean";
-		} else if (name == "string") {
-			return "utf8";
-		} else if (!name.contains (".")) {
-			return name;
-		} else {
-			string[] split_name = name.split (".");
-
-			StringBuilder type_name = new StringBuilder ();
-			type_name.append (split_name[0]);
-			type_name.append_unichar ('.');
-			for (int i = 1; i < split_name.length; i++) {
-				type_name.append (split_name[i]);
-			}
-			return type_name.str;
-		}
+		return type_symbol.get_full_gir_name();
 	}
 
 	private string? literal_expression_to_value_string (Expression literal) {
