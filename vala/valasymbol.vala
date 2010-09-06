@@ -51,7 +51,19 @@ public abstract class Vala.Symbol : CodeNode {
 			_scope.parent_scope = value;
 		}
 	}
-	
+
+	/**
+	 * The GIR name.
+	 */
+	public string? gir_name {
+		get {
+			return _gir_name == null ? name : _gir_name;
+		}
+		set {
+			_gir_name = value;
+		}
+	}
+
 	/**
 	 * The symbol name.
 	 */
@@ -162,12 +174,38 @@ public abstract class Vala.Symbol : CodeNode {
 
 	private weak Scope _owner;
 	private Scope _scope;
+	private string? _gir_name = null;
 
 	public Symbol (string? name, SourceReference? source_reference, Comment? comment = null) {
 		this.name = name;
 		this.source_reference = source_reference;
 		this.comment = comment;
 		_scope = new Scope (this);
+	}
+	
+	/**
+	 * Returns the fully expanded GIR name of this symbol
+	 *
+	 * @return full GIR name
+	 */
+	public string get_full_gir_name () {
+		if (parent_symbol == null) {
+			return gir_name;
+		}
+		
+		if (name == null) {
+			return parent_symbol.get_full_gir_name ();
+		}
+
+		if (parent_symbol.get_full_gir_name () == null) {
+			return gir_name;
+		}
+
+		if (name.has_prefix (".")) {
+			return "%s%s".printf (parent_symbol.get_full_gir_name (), gir_name);
+		} else {
+			return "%s.%s".printf (parent_symbol.get_full_gir_name (), gir_name);
+		}
 	}
 	
 	/**
