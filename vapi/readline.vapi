@@ -980,7 +980,7 @@ namespace Readline {
 	[CCode (cname = "rl_ignore_some_completions_function")]
 	public CompignoreFunc ignore_some_completions_function;
 
-	[CCode (cname = "rl_attempt_completion_function")]
+	[CCode (cname = "rl_attempted_completion_function")]
 	public CompletionFunc attempted_completion_function;
 
 	[CCode (cname = "rl_basic_word_break_characters")]
