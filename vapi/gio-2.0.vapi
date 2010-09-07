@@ -27,8 +27,8 @@ namespace GLib {
 	public class AppLaunchContext : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public AppLaunchContext ();
-		public virtual unowned string get_display (GLib.AppInfo info, GLib.List<GLib.File> files);
-		public virtual unowned string get_startup_notify_id (GLib.AppInfo info, GLib.List<GLib.File> files);
+		public virtual string get_display (GLib.AppInfo info, GLib.List<GLib.File> files);
+		public virtual string get_startup_notify_id (GLib.AppInfo info, GLib.List<GLib.File> files);
 		public virtual void launch_failed (string startup_notify_id);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
