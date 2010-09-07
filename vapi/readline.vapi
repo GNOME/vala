@@ -851,7 +851,7 @@ namespace Readline {
 	[CCode (cname = "rl_display_match_list")]
 	public void display_match_list (string[] matches, int len, int max);
 
-	[CCode (cname = "rl_completion_matches")]
+	[CCode (cname = "rl_completion_matches", array_length = false, array_null_terminated = true)]
 	public unowned string[] completion_matches (string text, CompentryFunc func);
 
 	[CCode (cname = "rl_username_completion_function")]
