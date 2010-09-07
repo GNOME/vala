@@ -25,8 +25,8 @@ namespace Readline {
 
 	[CCode (cname = "rl_command_func_t", has_target = false)]
 	public delegate int      CommandFunc (int a, int b);
-	[CCode (cname = "rl_completion_func_t", has_target = false)]
-	public delegate string[] CompletionFunc (string str, int a, int b);
+	[CCode (cname = "rl_completion_func_t", has_target = false, array_length = false, array_null_terminated = true)]
+	public delegate string[]? CompletionFunc (string str, int a, int b);
 	[CCode (cname = "rl_quote_func_t", has_target = false)]
 	public delegate string?  CompentryFunc (string str, int a);
 	[CCode (cname = "rl_quote_func_t", has_target = false)]
