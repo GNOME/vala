@@ -73,27 +73,33 @@ public class Valadoc.Importer.ValadocDocumentationImporter : DocumentationImport
 			empty_lines
 		});
 
-		Rule documentation = Rule.seq ({
-			TokenType.VALADOC_COMMENT_START.action ((token) => { _comment_location = token.end; }),
-			Rule.many ({
-				Rule.one_of ({
-					TokenType.ANY_WORD.action ((token) => { _comment.append (token.to_string ()); }),
-					TokenType.VALADOC_COMMENT_START.action ((token) => { _comment.append (token.to_string ()); }),
-					TokenType.VALADOC_SPACE.action ((token) => { _comment.append (token.to_string ()); }),
-					TokenType.VALADOC_TAB.action ((token) => { _comment.append (token.to_string ()); }),
-					TokenType.VALADOC_EOL.action ((token) => { _comment.append (token.to_string ()); })
-				})
+		Rule documentation = Rule.one_of ({
+			Rule.seq ({
+				TokenType.VALADOC_COMMENT_START.action ((token) => { _comment_location = token.end; }),
+				Rule.many ({
+					Rule.one_of ({
+						TokenType.ANY_WORD.action ((token) => { _comment.append (token.to_string ()); }),
+						TokenType.VALADOC_COMMENT_START.action ((token) => { _comment.append (token.to_string ()); }),
+						TokenType.VALADOC_SPACE.action ((token) => { _comment.append (token.to_string ()); }),
+						TokenType.VALADOC_TAB.action ((token) => { _comment.append (token.to_string ()); }),
+						TokenType.VALADOC_EOL.action ((token) => { _comment.append (token.to_string ()); })
+					})
+				}),
+				TokenType.VALADOC_COMMENT_END,
+				optional_empty_lines,
+				TokenType.ANY_WORD.action ((token) => { _cname = token.to_string (); })
+			})
+			.set_reduce (() => {
+				add_documentation (_cname, _comment, _filename, _comment_location);
+		 		_comment.erase ();
+				_cname = null;
 			}),
-			TokenType.VALADOC_COMMENT_END,
-			optional_empty_lines,
-			TokenType.ANY_WORD.action ((token) => { _cname = token.to_string (); })
+
+			TokenType.ANY_WORD.action ((token) => {
+				add_documentation (token.to_string (), null, _filename, _comment_location);
+			})
 		})
-		.set_name ("Documentation")
-		.set_reduce (() => {
-			add_documentation (_cname, _comment, _filename, _comment_location);
-	 		_comment.erase ();
-			_cname = null;
-		});
+		.set_name ("Documentation");
 
 		Rule file = Rule.many ({
 			optional_empty_lines,
@@ -105,7 +111,7 @@ public class Valadoc.Importer.ValadocDocumentationImporter : DocumentationImport
 		_parser.set_root_rule (file);
 	}
 
-	private void add_documentation (string symbol_name, StringBuilder comment, string filename, SourceLocation src_ref) {
+	private void add_documentation (string symbol_name, StringBuilder? comment, string filename, SourceLocation src_ref) {
 		Api.Node? symbol = null;
 
 		if (symbol_name.has_prefix ("c::")) {
@@ -116,7 +122,10 @@ public class Valadoc.Importer.ValadocDocumentationImporter : DocumentationImport
 
 		if (symbol == null) {
 			reporter.simple_warning ("%s does not exist".printf (symbol_name));
-		} else {
+			return ;
+		}
+
+		if (comment != null) {
 			var docu = _doc_parser.parse_comment_str (symbol, comment.str, filename, src_ref.line, src_ref.column);
 			if (docu != null) {
 				symbol.documentation = docu;
@@ -135,5 +144,4 @@ public class Valadoc.Importer.ValadocDocumentationImporter : DocumentationImport
 		}
 	}
 }
-
 
