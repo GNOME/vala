@@ -62,58 +62,71 @@ namespace Valadoc {
 		return true;
 	}
 
-	public string realpath (string name) {
+	/* cp from valacompiler.vala, ported from glibc */
+	private static string realpath (string name) {
 		string rpath;
 
-		if (name.get_char () != '/') {
-			// relative path
-			rpath = Environment.get_current_dir ();
-		}
-		else {
-			rpath = "/";
-		}
-
+		// start of path component
 		weak string start;
+		// end of path component
 		weak string end;
 
-		for (start = end = name; start.get_char () != 0; start = end) {
+		if (!Path.is_absolute (name)) {
+			// relative path
+			rpath = Environment.get_current_dir ();
+
+			start = end = name;
+		} else {
+			// set start after root
+			start = end = Path.skip_root (name);
+
+			// extract root
+			rpath = name.substring (0, name.pointer_to_offset (start));
+		}
+
+		long root_len = rpath.pointer_to_offset (Path.skip_root (rpath));
+
+		for (; start.get_char () != 0; start = end) {
 			// skip sequence of multiple path-separators
-			while (start.get_char () == '/') {
+			while (Path.is_dir_separator (start.get_char ())) {
 				start = start.next_char ();
 			}
 
 			// find end of path component
 			long len = 0;
-			for (end = start; end.get_char () != 0 && end.get_char () != '/'; end = end.next_char ()) {
+			for (end = start; end.get_char () != 0 && !Path.is_dir_separator (end.get_char ()); end = end.next_char ()) {
 				len++;
 			}
 
 			if (len == 0) {
 				break;
-			}
-			else if (len == 1 && start.get_char () == '.') {
+			} else if (len == 1 && start.get_char () == '.') {
 				// do nothing
-			}
-			else if (len == 2 && start.has_prefix ("..")) {
+			} else if (len == 2 && start.has_prefix ("..")) {
 				// back up to previous component, ignore if at root already
-				if (rpath.len () > 1) {
+				if (rpath.length > root_len) {
 					do {
-						rpath = rpath.substring (0, rpath.len () - 1);
-					}
-					while (!rpath.has_suffix ("/"));
+						rpath = rpath.substring (0, rpath.length - 1);
+					} while (!ends_with_dir_separator (rpath));
 				}
-			}
-			else {
-				if (!rpath.has_suffix ("/")) {
-					rpath += "/";
+			} else {
+				if (!ends_with_dir_separator (rpath)) {
+					rpath += Path.DIR_SEPARATOR_S;
 				}
 
 				rpath += start.substring (0, len);
 			}
 		}
 
-		if (rpath.len () > 1 && rpath.has_suffix ("/")) {
-			rpath = rpath.substring (0, rpath.len () - 1);
+		if (rpath.length > root_len && ends_with_dir_separator (rpath)) {
+			rpath = rpath.substring (0, rpath.length - 1);
+		}
+
+		if (Path.DIR_SEPARATOR != '/') {
+			// don't use backslashes internally,
+			// to avoid problems in #include directives
+			string[] components = rpath.split ("\\");
+			rpath = string.joinv ("/", components);
 		}
 
 		return rpath;
