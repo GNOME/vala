@@ -224,37 +224,6 @@ public class ValaDoc : Object {
 		return quit (reporter);
 	}
 
-	private static bool remove_directory (string rpath) {
-		try {
-			GLib.Dir dir = GLib.Dir.open ( rpath );
-			if (dir == null)
-				return false;
-
-			for (weak string entry = dir.read_name(); entry != null ; entry = dir.read_name()) {
-				string path = rpath + entry;
-
-				bool is_dir = GLib.FileUtils.test (path, GLib.FileTest.IS_DIR);
-				if (is_dir == true) {
-					bool tmp = remove_directory (path);
-					if (tmp == false) {
-						return false;
-					}
-				}
-				else {
-					int tmp = GLib.FileUtils.unlink (path);
-					if (tmp > 0) {
-						return false;
-					}
-				}
-			}
-		}
-		catch (GLib.FileError err) {
-			return false;
-		}
-
-		return true;
-	}
-
 	static int main (string[] args) {
 		ErrorReporter reporter = new ErrorReporter();
 

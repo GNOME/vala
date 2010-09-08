@@ -62,8 +62,41 @@ namespace Valadoc {
 		return true;
 	}
 
+	public bool remove_directory (string rpath) {
+		try {
+			GLib.Dir dir = GLib.Dir.open ( rpath );
+			if (dir == null)
+				return false;
+
+			for (weak string entry = dir.read_name(); entry != null ; entry = dir.read_name()) {
+				string path = rpath + entry;
+
+				bool is_dir = GLib.FileUtils.test (path, GLib.FileTest.IS_DIR);
+				if (is_dir == true) {
+					bool tmp = remove_directory (path);
+					if (tmp == false) {
+						return false;
+					}
+				} else {
+					int tmp = GLib.FileUtils.unlink (path);
+					if (tmp > 0) {
+						return false;
+					}
+				}
+			}
+		} catch (GLib.FileError err) {
+			return false;
+		}
+
+		return true;
+	}
+
 	/* cp from valacompiler.vala, ported from glibc */
-	private static string realpath (string name) {
+	private static bool ends_with_dir_separator (string s) {
+		return Path.is_dir_separator (s.offset (s.length - 1).get_char ());
+	}
+
+	public string realpath (string name) {
 		string rpath;
 
 		// start of path component
