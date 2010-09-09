@@ -1553,10 +1553,6 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 				}
 			}
 
-			if (current_method_inner_error) {
-				ccode.add_declaration ("GError *", new CCodeVariableDeclarator.zero ("_inner_error_", new CCodeConstant ("NULL")));
-			}
-
 			if (acc.readable && !returns_real_struct) {
 				// do not declare result variable if exit block is known to be unreachable
 				if (acc.return_block == null || acc.return_block.get_predecessors ().size > 0) {
@@ -1570,6 +1566,10 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			}
 
 			acc.body.emit (this);
+
+			if (current_method_inner_error) {
+				ccode.add_declaration ("GError *", new CCodeVariableDeclarator.zero ("_inner_error_", new CCodeConstant ("NULL")));
+			}
 
 			// notify on property changes
 			if (is_gobject_property (prop) &&
