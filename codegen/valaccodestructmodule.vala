@@ -251,9 +251,7 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 		function.add_parameter (new CCodeFormalParameter ("self", "const " + st.get_cname () + "*"));
 		function.add_parameter (new CCodeFormalParameter ("dest", st.get_cname () + "*"));
 
-		var cblock = new CCodeBlock ();
-		var cfrag = new CCodeFragment ();
-		cblock.add_statement (cfrag);
+		push_function (function);
 
 		foreach (var f in st.get_fields ()) {
 			if (f.binding == MemberBinding.INSTANCE) {
@@ -281,22 +279,22 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 					array_copy_call.add_argument (dest);
 					array_copy_call.add_argument (copy);
 					array_copy_call.add_argument (size);
-					cblock.add_statement (new CCodeExpressionStatement (array_copy_call));
+					ccode.add_expression (array_copy_call);
 				} else {
-					cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (dest, copy)));
+					ccode.add_expression (new CCodeAssignment (dest, copy));
 
 					if (array_type != null) {
 						for (int dim = 1; dim <= array_type.rank; dim++) {
 							var len_src = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), get_array_length_cname (f.name, dim));
 							var len_dest = new CCodeMemberAccess.pointer (new CCodeIdentifier ("dest"), get_array_length_cname (f.name, dim));
-							cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (len_dest, len_src)));
+							ccode.add_expression (new CCodeAssignment (len_dest, len_src));
 						}
 					}
 				}
 			}
 		}
 
-		function.block = cblock;
+		pop_function ();
 
 		cfile.add_function (function);
 	}
