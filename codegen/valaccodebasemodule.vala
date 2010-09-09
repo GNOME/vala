@@ -5217,6 +5217,11 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			var decl = get_temp_variable (target_type, true, target_type);
 			temp_vars.add (decl);
 
+			if (!target_type.value_owned) {
+				// boxed GValue leaked, destroy it
+				temp_ref_vars.insert (0, decl);
+			}
+
 			var ccomma = new CCodeCommaExpression ();
 
 			if (target_type.nullable) {
