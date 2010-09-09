@@ -997,6 +997,15 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		ccall.add_argument (handle_struct_argument (value_param, element, (CCodeExpression) element.ccodenode));
 
 		assignment.ccodenode = ccall;
+
+		var array_var = assignment.left.symbol_reference;
+		var array_local = array_var as LocalVariable;
+		if (array_type.rank == 1 && array_var != null && array_var.is_internal_symbol ()
+		    && ((array_var is LocalVariable && !array_local.captured) || array_var is Field)) {
+			// valid array add
+		} else {
+			Report.error (assignment.source_reference, "Array concatenation not supported for public array variables");
+		}
 	}
 
 	public override void generate_parameter (FormalParameter param, CCodeDeclarationSpace decl_space, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
