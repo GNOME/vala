@@ -1256,8 +1256,8 @@ public class Vala.DBusClientModule : DBusModule {
 		gobject_class.add_argument (new CCodeIdentifier ("klass"));
 		proxy_class_init.block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (gobject_class, "constructor"), new CCodeIdentifier (lower_cname + "_construct"))));
 		proxy_class_init.block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (gobject_class, "dispose"), new CCodeIdentifier (lower_cname + "_dispose"))));
-		proxy_class_init.block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (gobject_class, "get_property"), new CCodeIdentifier (lower_cname + "_get_property"))));
-		proxy_class_init.block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (gobject_class, "set_property"), new CCodeIdentifier (lower_cname + "_set_property"))));
+		proxy_class_init.block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (gobject_class, "get_property"), new CCodeIdentifier ("_vala_%s_get_property".printf (lower_cname)))));
+		proxy_class_init.block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (gobject_class, "set_property"), new CCodeIdentifier ("_vala_%s_set_property".printf (lower_cname)))));
 		cfile.add_function (proxy_class_init);
 
 		prop_enum = new CCodeEnum ();
@@ -1277,7 +1277,7 @@ public class Vala.DBusClientModule : DBusModule {
 
 		// dbus proxy get/set_property stubs
 		// TODO add actual implementation
-		var get_prop = new CCodeFunction ("%s_get_property".printf (lower_cname), "void");
+		var get_prop = new CCodeFunction ("_vala_%s_get_property".printf (lower_cname), "void");
 		get_prop.modifiers = CCodeModifiers.STATIC;
 		get_prop.add_parameter (new CCodeFormalParameter ("object", "GObject *"));
 		get_prop.add_parameter (new CCodeFormalParameter ("property_id", "guint"));
@@ -1287,7 +1287,7 @@ public class Vala.DBusClientModule : DBusModule {
 		get_prop.block = new CCodeBlock ();
 		cfile.add_function (get_prop);
 
-		var set_prop = new CCodeFunction ("%s_set_property".printf (lower_cname), "void");
+		var set_prop = new CCodeFunction ("_vala_%s_set_property".printf (lower_cname), "void");
 		set_prop.modifiers = CCodeModifiers.STATIC;
 		set_prop.add_parameter (new CCodeFormalParameter ("object", "GObject *"));
 		set_prop.add_parameter (new CCodeFormalParameter ("property_id", "guint"));

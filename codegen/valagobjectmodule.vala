@@ -51,10 +51,10 @@ public class Vala.GObjectModule : GTypeModule {
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
 		ccall.add_argument (new CCodeIdentifier ("klass"));
 		if (class_has_readable_properties (cl) || cl.get_type_parameters ().size > 0) {
-			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccall, "get_property"), new CCodeIdentifier ("%s_get_property".printf (cl.get_lower_case_cname (null))))));
+			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccall, "get_property"), new CCodeIdentifier ("_vala_%s_get_property".printf (cl.get_lower_case_cname (null))))));
 		}
 		if (class_has_writable_properties (cl) || cl.get_type_parameters ().size > 0) {
-			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccall, "set_property"), new CCodeIdentifier ("%s_set_property".printf (cl.get_lower_case_cname (null))))));
+			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccall, "set_property"), new CCodeIdentifier ("_vala_%s_set_property".printf (cl.get_lower_case_cname (null))))));
 		}
 	
 		/* set constructor */
@@ -174,7 +174,7 @@ public class Vala.GObjectModule : GTypeModule {
 	}
 
 	private void add_get_property_function (Class cl) {
-		var get_prop = new CCodeFunction ("%s_get_property".printf (cl.get_lower_case_cname (null)), "void");
+		var get_prop = new CCodeFunction ("_vala_%s_get_property".printf (cl.get_lower_case_cname (null)), "void");
 		get_prop.modifiers = CCodeModifiers.STATIC;
 		get_prop.add_parameter (new CCodeFormalParameter ("object", "GObject *"));
 		get_prop.add_parameter (new CCodeFormalParameter ("property_id", "guint"));
@@ -282,7 +282,7 @@ public class Vala.GObjectModule : GTypeModule {
 	}
 	
 	private void add_set_property_function (Class cl) {
-		var set_prop = new CCodeFunction ("%s_set_property".printf (cl.get_lower_case_cname (null)), "void");
+		var set_prop = new CCodeFunction ("_vala_%s_set_property".printf (cl.get_lower_case_cname (null)), "void");
 		set_prop.modifiers = CCodeModifiers.STATIC;
 		set_prop.add_parameter (new CCodeFormalParameter ("object", "GObject *"));
 		set_prop.add_parameter (new CCodeFormalParameter ("property_id", "guint"));
