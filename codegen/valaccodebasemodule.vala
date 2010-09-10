@@ -763,7 +763,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			return;
 		}
 
-		if (c.source_reference.file.file_type != SourceFileType.PACKAGE) {
+		if (!c.external) {
 			generate_type_declaration (c.type_reference, decl_space);
 
 			c.value.emit (this);
