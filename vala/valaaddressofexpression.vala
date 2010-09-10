@@ -53,7 +53,9 @@ public class Vala.AddressofExpression : Expression {
 	}
 	
 	public override void accept (CodeVisitor visitor) {
-		inner.accept (visitor);
+		if (!(visitor is CodeWriter)) {
+			inner.accept (visitor);
+		}
 
 		visitor.visit_addressof_expression (this);
 
