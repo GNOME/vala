@@ -914,11 +914,16 @@ public class Vala.Method : Symbol {
 
 		if (analyzer.current_struct != null) {
 			if (is_abstract || is_virtual || overrides) {
+				error = true;
 				Report.error (source_reference, "A struct member `%s' cannot be marked as override, virtual, or abstract".printf (get_full_name ()));
 				return false;
 			}
 		} else if (overrides && base_method == null) {
 			Report.error (source_reference, "%s: no suitable method found to override".printf (get_full_name ()));
+		} else if ((is_abstract || is_virtual || overrides) && access == SymbolAccessibility.PRIVATE) {
+			error = true;
+			Report.error (source_reference, "Private member `%s' cannot be marked as override, virtual, or abstract".printf (get_full_name ()));
+			return false;
 		}
 
 		if (!external_package && !overrides && !hides && get_hidden_member () != null) {
