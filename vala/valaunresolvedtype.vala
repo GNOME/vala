@@ -112,4 +112,8 @@ public class Vala.UnresolvedType : DataType {
 
 		return s;
 	}
+
+	public override bool is_disposable () {
+		return value_owned;
+	}
 }
