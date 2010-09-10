@@ -1996,6 +1996,10 @@ public class Vala.CodeWriter : CodeVisitor {
 		} else if (sym.access == SymbolAccessibility.PRIVATE) {
 			write_string ("private ");
 		}
+
+		if (sym.external && !sym.external_package) {
+			write_string ("extern ");
+		}
 	}
 }
 
