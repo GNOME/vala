@@ -3082,6 +3082,7 @@ public class Vala.Parser : CodeVisitor {
 			}
 
 			var ev = new EnumValue (id, value, get_src (value_begin), comment);
+			ev.access = SymbolAccessibility.PUBLIC;
 			set_attributes (ev, value_attrs);
 			en.add_value (ev);
 		} while (accept (TokenType.COMMA));
