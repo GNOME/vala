@@ -1160,7 +1160,7 @@ public class Vala.Class : ObjectTypeSymbol {
 		}
 
 		/* VAPI classes don't have to specify overridden methods */
-		if (!external_package) {
+		if (source_type == SourceFileType.SOURCE) {
 			/* all abstract symbols defined in base types have to be at least defined (or implemented) also in this type */
 			foreach (DataType base_type in get_base_types ()) {
 				if (base_type.data_type is Interface) {
