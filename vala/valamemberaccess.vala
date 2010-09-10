@@ -524,6 +524,9 @@ public class Vala.MemberAccess : Expression {
 			if (f.variable_type is GenericType) {
 				generics = true;
 			}
+		} else if (member is Constant) {
+			var c = (Constant) member;
+			access = c.access;
 		} else if (member is Method) {
 			var m = (Method) member;
 			if (m.is_async_callback) {
