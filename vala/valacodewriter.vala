@@ -900,7 +900,7 @@ public class Vala.CodeWriter : CodeVisitor {
 			
 			if (param.initializer != null) {
 				write_string (" = ");
-				write_string (param.initializer.to_string ());
+				param.initializer.accept (this);
 			}
 
 			i++;
