@@ -357,6 +357,14 @@ public class Vala.CodeWriter : CodeVisitor {
 	}
 
 	void visit_sorted (List<Symbol> symbols) {
+		if (type != CodeWriterType.EXTERNAL) {
+			// order of virtual methods matters for fast vapis
+			foreach (Symbol sym in symbols) {
+				sym.accept (this);
+			}
+			return;
+		}
+
 		var sorted_symbols = new ArrayList<Symbol> ();
 		foreach (Symbol sym in symbols) {
 			int left = 0;
