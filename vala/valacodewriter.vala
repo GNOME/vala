@@ -1067,6 +1067,10 @@ public class Vala.CodeWriter : CodeVisitor {
 				write_string ("override ");
 			}
 
+			if (m.hides) {
+				write_string ("new ");
+			}
+
 			if (m.coroutine) {
 				write_string ("async ");
 			}
