@@ -1,0 +1,55 @@
+#!/bin/sh -e
+
+VALAC=valac
+JOBS=10
+
+####
+
+
+VALAFLAGS=''
+makeflags=''
+
+while test -n "$*"; do
+  case "$1" in
+    --version) echo -n par; exec ${VALAC} --version;;
+    --disable-version-header) VALAFLAGS="${VALAFLAGS} $1";;
+    --vapidir) shift; VALAFLAGS="${VALAFLAGS} --vapidir $1";;
+    --pkg) shift; VALAFLAGS="${VALAFLAGS} --pkg $1";;
+    *.vala) valafiles="${valafiles} $1";;
+    --library) shift; vapi_file="$1";;
+    --directory=*) VALAFLAGS="${VALAFLAGS} $1";;
+    --basedir=*) VALAFLAGS="${VALAFLAGS} $1";;
+    --enable-checking) VALAFLAGS="${VALAFLAGS} $1";;
+    --thread) VALAFLAGS="${VALAFLAGS} $1";;
+    --pkg=*) VALAFLAGS="${VALAFLAGS} $1";;
+    --vapidir=*) VALAFLAGS="${VALAFLAGS} $1";;
+    -X) shift; VALAFLAGS="${VALAFLAGS} -X $1";;
+    -g) VALAFLAGS="${VALAFLAGS} $1";;
+    -d) shift; makeflags="${makeflags} DIRECTORY=$1/";;
+    -H) shift; h_file="$1";;
+    --ccode) c_mode="yes";;
+    -C) c_mode="yes";;
+    *) echo "parvala: unrecognised argument: $1"; exit 1;;
+  esac
+  shift
+done
+
+if test -n "${h_file}"; then
+  if test -n "${vapi_file}"; then
+    makeflags="${makeflags} OUT_VAPI=${vapi_file}"
+  fi
+  makeflags="${makeflags} OUT_HFILE=${h_file}"
+else
+  if test -n "${vapi_file}"; then
+    echo 'parvala: --library requires -H to also be specified'
+  fi
+fi
+
+if test -z "${c_mode}"; then
+  echo 'parvala: required argument -C not specified'
+  exit 1
+fi
+
+make -j${JOBS} -f `dirname $0`/../share/parvala/parvala.mk  \
+  VALAC="${VALAC}" VALAFLAGS="${VALAFLAGS}" \
+  VALAFILES="${valafiles}" ${makeflags}
