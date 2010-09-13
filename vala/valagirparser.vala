@@ -570,19 +570,57 @@ public class Vala.GirParser : CodeVisitor {
 		DataType type;
 		if (type_name == "none") {
 			type = new VoidType ();
-		} else if (type_name == "any") {
+		} else if (type_name == "gpointer") {
 			type = new PointerType (new VoidType ());
 		} else if (type_name == "GObject.Strv") {
 			type = new ArrayType (new UnresolvedType.from_symbol (new UnresolvedSymbol (null, "string")), 1, null);
 		} else {
 			if (type_name == "utf8") {
 				type_name = "string";
-			} else if (type_name == "boolean") {
+			} else if (type_name == "gboolean") {
 				type_name = "bool";
+			} else if (type_name == "gchar") {
+				type_name = "char";
+			} else if (type_name == "gshort") {
+				type_name = "short";
+			} else if (type_name == "gushort") {
+				type_name = "ushort";
+			} else if (type_name == "gint") {
+				type_name = "int";
+			} else if (type_name == "guint") {
+				type_name = "uint";
+			} else if (type_name == "glong") {
+				type_name = "long";
+			} else if (type_name == "gulong") {
+				type_name = "ulong";
+			} else if (type_name == "gint8") {
+				type_name = "int8";
+			} else if (type_name == "guint8") {
+				type_name = "uint8";
+			} else if (type_name == "gint16") {
+				type_name = "int16";
+			} else if (type_name == "guint16") {
+				type_name = "uint16";
+			} else if (type_name == "gint32") {
+				type_name = "int32";
+			} else if (type_name == "guint32") {
+				type_name = "uint32";
+			} else if (type_name == "gint64") {
+				type_name = "int64";
+			} else if (type_name == "guint64") {
+				type_name = "uint64";
+			} else if (type_name == "gfloat") {
+				type_name = "float";
+			} else if (type_name == "gdouble") {
+				type_name = "double";
+			} else if (type_name == "filename") {
+				type_name = "string";
 			} else if (type_name == "GLib.offset") {
 				type_name = "int64";
 			} else if (type_name == "gsize") {
 				type_name = "size_t";
+			} else if (type_name == "gssize") {
+				type_name = "ssize_t";
 			} else if (type_name == "GType") {
 				type_name = "GLib.Type";
 			} else if (type_name == "GLib.String") {
