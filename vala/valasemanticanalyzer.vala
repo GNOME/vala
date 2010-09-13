@@ -409,9 +409,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 			if (arg_it == null || !arg_it.next ()) {
 				if (param.initializer == null) {
-					var m = (MethodType) mtype;
 					expr.error = true;
-					Report.error (expr.source_reference, "%d missing arguments for `%s'".printf (m.get_parameters ().size - args.size, m.to_prototype_string ()));
+					var m = mtype as MethodType;
+					if (m != null) {
+						Report.error (expr.source_reference, "%d missing arguments for `%s'".printf (m.get_parameters ().size - args.size, m.to_prototype_string ()));
+					} else {
+						Report.error (expr.source_reference, "Too few arguments, method `%s' does not take %d arguments".printf (mtype.to_string (), args.size));
+					}
 					return false;
 				} else {
 					var invocation_expr = expr as MethodCall;
@@ -466,9 +470,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				i++;
 			}
 		} else if (!ellipsis && arg_it != null && arg_it.next ()) {
-			var m = (MethodType) mtype;
 			expr.error = true;
-			Report.error (expr.source_reference, "%d extra arguments for `%s'".printf (args.size - m.get_parameters ().size, m.to_prototype_string ()));
+			var m = mtype as MethodType;
+			if (m != null) {
+				Report.error (expr.source_reference, "%d extra arguments for `%s'".printf (args.size - m.get_parameters ().size, m.to_prototype_string ()));
+			} else {
+				Report.error (expr.source_reference, "Too many arguments, method `%s' does not take %d arguments".printf (mtype.to_string (), args.size));
+			}
 			return false;
 		}
 
