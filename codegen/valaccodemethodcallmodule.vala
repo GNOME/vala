@@ -806,22 +806,22 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		function.add_parameter (new CCodeFormalParameter ("value", en.get_cname ()));
 
 		// definition
-		var cblock = new CCodeBlock ();
+		push_context (new EmitContext ());
+		push_function (function);
 
-		var cswitch = new CCodeSwitchStatement (new CCodeConstant ("value"));
+		ccode.open_switch (new CCodeConstant ("value"));
 		foreach (var enum_value in en.get_values ()) {
-			cswitch.add_statement (new CCodeCaseStatement (new CCodeIdentifier (enum_value.get_cname ())));
-			cswitch.add_statement (new CCodeReturnStatement (new CCodeConstant ("\""+enum_value.get_cname ()+"\"")));
+			ccode.add_case (new CCodeIdentifier (enum_value.get_cname ()));
+			ccode.add_return (new CCodeConstant ("\""+enum_value.get_cname ()+"\""));
 		}
-		cblock.add_statement (cswitch);
-		cblock.add_statement (new CCodeReturnStatement (new CCodeConstant ("NULL")));
+		ccode.close ();
+		ccode.add_return (new CCodeConstant ("NULL"));
 
 		// append to file
-
-		cfile.add_type_member_declaration (function.copy ());
-
-		function.block = cblock;
+		cfile.add_function_declaration (function);
 		cfile.add_function (function);
+
+		pop_context ();
 
 		return to_string_func;
 	}
