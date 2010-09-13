@@ -208,7 +208,7 @@ public class Vala.GirParser : CodeVisitor {
 			}
 		}
 
-		string? cprefix = reader.get_attribute ("c:prefix");
+		string? cprefix = reader.get_attribute ("c:identifier-prefixes");
 		if (cprefix != null) {
 			ns.add_cprefix (cprefix);
 			ns.set_lower_case_cprefix (Symbol.camel_case_to_lower_case (cprefix) + "_");
@@ -1043,6 +1043,7 @@ public class Vala.GirParser : CodeVisitor {
 		start_element ("constructor");
 		string name = reader.get_attribute ("name");
 		string throws_string = reader.get_attribute ("throws");
+		string cname = reader.get_attribute ("c:identifier");
 		next ();
 
 		string? ctype;
@@ -1058,6 +1059,9 @@ public class Vala.GirParser : CodeVisitor {
 			m.name = null;
 		} else if (m.name.has_prefix ("new_")) {
 			m.name = m.name.offset ("new_".length);
+		}
+		if (cname != null) {
+			m.set_cname (cname);
 		}
 		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "parameters") {
 			start_element ("parameters");
