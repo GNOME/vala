@@ -1173,24 +1173,19 @@ public class Vala.GirParser : CodeVisitor {
 			}
 			end_element ("parameters");
 		}
-		int i = 0, j=1, add=0;
-
-		if (element_name == "method" || element_name == "virtual-method") {
-			// implicit instance parameter
-			add = 1;
-		}
+		int i = 0, j=1;
 
 		int last = -1;
 		foreach (MethodInfo info in parameters) {
-			if (s is Delegate && info.closure_idx == i + add) {
+			if (s is Delegate && info.closure_idx == i) {
 				var d = (Delegate) s;
 				d.has_target = true;
 				d.cinstance_parameter_position = (float) j - 0.1;
 				info.keep = false;
 			} else if (info.keep
-			    && !array_length_parameters.contains (i+add)
-			    && !closure_parameters.contains (i+add)
-			    && !destroy_parameters.contains (i+add)) {
+			    && !array_length_parameters.contains (i)
+			    && !closure_parameters.contains (i)
+			    && !destroy_parameters.contains (i)) {
 				info.vala_idx = (float) j;
 				info.keep = true;
 
@@ -1226,29 +1221,29 @@ public class Vala.GirParser : CodeVisitor {
 				}
 
 				if (info.array_length_idx != -1) {
-					if ((info.array_length_idx) - add >= parameters.size) {
+					if ((info.array_length_idx) >= parameters.size) {
 						Report.error (get_current_src (), "invalid array_length index");
 						continue;
 					}
-					info.param.carray_length_parameter_position = parameters[info.array_length_idx-add].vala_idx;
+					info.param.carray_length_parameter_position = parameters[info.array_length_idx].vala_idx;
 				}
 				if (info.param.variable_type is ArrayType && info.array_length_idx == -1) {
 					info.param.no_array_length = true;
 				}
 
 				if (info.closure_idx != -1) {
-					if ((info.closure_idx - add) >= parameters.size) {
+					if ((info.closure_idx) >= parameters.size) {
 						Report.error (get_current_src (), "invalid closure index");
 						continue;
 					}
-					info.param.cdelegate_target_parameter_position = parameters[info.closure_idx - add].vala_idx;
+					info.param.cdelegate_target_parameter_position = parameters[info.closure_idx].vala_idx;
 				}
 				if (info.destroy_idx != -1) {
-					if (info.destroy_idx - add >= parameters.size) {
+					if (info.destroy_idx >= parameters.size) {
 						Report.error (get_current_src (), "invalid destroy index");
 						continue;
 					}
-					info.param.cdestroy_notify_parameter_position = parameters[info.destroy_idx - add].vala_idx;
+					info.param.cdestroy_notify_parameter_position = parameters[info.destroy_idx].vala_idx;
 				}
 			}
 		}
