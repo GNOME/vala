@@ -1636,10 +1636,6 @@ public class Vala.GTypeModule : GErrorModule {
 
 			ccode.add_declaration ("%s *".printf (cl.get_cname ()), new CCodeVariableDeclarator ("self"));
 			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("self"), ccall));
-
-			if (cl.destructor != null) {
-				cl.destructor.body.emit (this);
-			}
 		} else {
 			var function = new CCodeFunction (cl.get_lower_case_cprefix () + "free", "void");
 			if (cl.access == SymbolAccessibility.PRIVATE) {
@@ -1649,9 +1645,13 @@ public class Vala.GTypeModule : GErrorModule {
 			function.add_parameter (new CCodeFormalParameter ("self", cl.get_cname () + "*"));
 
 			push_function (function);
+		}
 
-			if (cl.destructor != null) {
-				cl.destructor.body.emit (this);
+		if (cl.destructor != null) {
+			cl.destructor.body.emit (this);
+
+			if (current_method_inner_error) {
+				ccode.add_declaration ("GError *", new CCodeVariableDeclarator.zero ("_inner_error_", new CCodeConstant ("NULL")));
 			}
 		}
 
