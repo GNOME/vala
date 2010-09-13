@@ -296,9 +296,11 @@ public class Vala.GirParser : CodeVisitor {
 		start_element ("alias");
 		var st = new Struct (reader.get_attribute ("name"), get_current_src ());
 		st.access = SymbolAccessibility.PUBLIC;
-		st.base_type = parse_type_from_name (reader.get_attribute ("target"));
 		st.external = true;
 		next ();
+
+		st.base_type = parse_type (null, null, true);
+
 		end_element ("alias");
 		return st;
 	}
