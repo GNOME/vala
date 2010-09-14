@@ -887,6 +887,13 @@ public class Vala.Method : Symbol {
 
 		foreach (DataType error_type in get_error_types ()) {
 			error_type.check (analyzer);
+
+			// check whether error type is at least as accessible as the method
+			if (!analyzer.is_type_accessible (this, error_type)) {
+				error = true;
+				Report.error (source_reference, "error type `%s` is less accessible than method `%s`".printf (error_type.to_string (), get_full_name ()));
+				return false;
+			}
 		}
 
 		if (result_var != null) {
