@@ -38,12 +38,12 @@ class Test : Object {
 	}
 }
 
-Application app;
+MainLoop main_loop;
 
 void client_exit (Pid pid, int status) {
 	// client finished, terminate server
 	assert (status == 0);
-	app.quit ();
+	main_loop.quit ();
 }
 
 void main () {
@@ -51,12 +51,15 @@ void main () {
 	conn.register_object ("/org/example/test", new Test ());
 
 	// try to register service in session bus
-	app = new Application ("org.example.Test");
+	var request_result = conn.call_sync ("org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus", "RequestName",
+	                                      new Variant ("(su)", "org.example.Test", 0x4), null, 0, -1);
+	assert ((uint) request_result.get_child_value (0) == 1);
 
 	// server ready, spawn client
 	Pid client_pid;
 	Process.spawn_async (null, { "test", "/dbus/signals/client" }, null, SpawnFlags.DO_NOT_REAP_CHILD, null, out client_pid);
 	ChildWatch.add (client_pid, client_exit);
 
-	app.run ();
+	main_loop = new MainLoop ();
+	main_loop.run ();
 }
