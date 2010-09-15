@@ -62,7 +62,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 				}
 				
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					var cparam = new CCodeFormalParameter (get_array_length_cname (get_variable_cname (param.name), dim), length_ctype);
+					var cparam = new CCodeFormalParameter (get_parameter_array_length_cname (param, dim), length_ctype);
 					cfundecl.add_parameter (cparam);
 				}
 			}
@@ -497,7 +497,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 					} else if (d_params.get (i).no_array_length) {
 						clength = new CCodeConstant ("-1");
 					} else {
-						clength = new CCodeIdentifier (get_array_length_cname (d_params.get (i).name, dim));
+						clength = new CCodeIdentifier (get_parameter_array_length_cname (d_params.get (i), dim));
 					}
 					carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), clength);
 				}

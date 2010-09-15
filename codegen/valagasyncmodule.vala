@@ -45,7 +45,7 @@ public class Vala.GAsyncModule : GSignalModule {
 				var array_type = (ArrayType) param.variable_type;
 				if (!param.no_array_length) {
 					for (int dim = 1; dim <= array_type.rank; dim++) {
-						data.add_field ("gint", get_array_length_cname (get_variable_cname (param.name), dim));
+						data.add_field ("gint", get_parameter_array_length_cname (param, dim));
 					}
 				}
 			} else if (param.variable_type is DelegateType) {
@@ -255,7 +255,7 @@ public class Vala.GAsyncModule : GSignalModule {
 					var array_type = (ArrayType) param.variable_type;
 					if (!param.no_array_length) {
 						for (int dim = 1; dim <= array_type.rank; dim++) {
-							ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, get_array_length_cname (get_variable_cname (param.name), dim)), new CCodeIdentifier (get_array_length_cname (get_variable_cname (param.name), dim))));
+							ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, get_parameter_array_length_cname (param, dim)), new CCodeIdentifier (get_parameter_array_length_cname (param, dim))));
 						}
 					}
 				} else if (param.variable_type is DelegateType) {

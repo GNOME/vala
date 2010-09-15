@@ -160,7 +160,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 				var array_type = (ArrayType) param.variable_type;
 
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					string length_cname = get_array_length_cname (param.name, dim);
+					string length_cname = get_parameter_array_length_cname (param, dim);
 
 					cdecl = new CCodeDeclaration ("int");
 					cdecl.add_declarator (new CCodeVariableDeclarator (length_cname, new CCodeConstant ("0")));
@@ -369,7 +369,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			if (param.variable_type is ArrayType) {
 				var array_type = (ArrayType) param.variable_type;
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					function.add_parameter (new CCodeFormalParameter (get_array_length_cname (param.name, dim), "int"));
+					function.add_parameter (new CCodeFormalParameter (get_parameter_array_length_cname (param, dim), "int"));
 				}
 			}
 		}
