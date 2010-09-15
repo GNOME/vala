@@ -1166,8 +1166,12 @@ public class Vala.GirParser : CodeVisitor {
 				var info = new MethodInfo(param, array_length_idx, closure_idx, destroy_idx);
 
 				if (s is Method && scope == "async") {
-					((Method) s).coroutine = true;
-					info.keep = false;
+					var unresolved_type = param.variable_type as UnresolvedType;
+					if (unresolved_type != null && unresolved_type.unresolved_symbol.name == "AsyncReadyCallback") {
+						// GAsync-style method
+						((Method) s).coroutine = true;
+						info.keep = false;
+					}
 				}
 
 				parameters.add (info);
