@@ -54,6 +54,13 @@ public class Vala.FormalParameter : Variable {
 	public bool array_null_terminated { get; set; }
 
 	/**
+	 * Specifies whether the array length parameter uses a custom name in C.
+	 */
+	public bool has_array_length_cname {
+		get { return (array_length_cname != null); }
+	}
+
+	/**
 	 * Specifies a custom type for the array length.
 	 */
 	public string? array_length_type { get; set; default = null; }
@@ -83,6 +90,8 @@ public class Vala.FormalParameter : Variable {
 	public string? ctype { get; set; }
 
 	public bool captured { get; set; }
+
+	private string? array_length_cname;
 
 	/**
 	 * Creates a new formal parameter.
@@ -135,6 +144,25 @@ public class Vala.FormalParameter : Variable {
 		}
 	}
 
+	/**
+	 * Returns the name of the array length parameter as it is used in C code
+	 *
+	 * @return the name of the array length parameter to be used in C code
+	 */
+	public string? get_array_length_cname () {
+		return this.array_length_cname;
+	}
+
+	/**
+	 * Sets the name of the array length parameter as it is used in C code
+	 *
+	 * @param array_length_cname the name of the array length parameter to be
+	 * used in C code
+	 */
+	public void set_array_length_cname (string? array_length_cname) {
+		this.array_length_cname = array_length_cname;
+	}
+
 	private void process_ccode_attribute (Attribute a) {
 		if (a.has_argument ("type")) {
 			ctype = a.get_string ("type");
@@ -153,6 +181,9 @@ public class Vala.FormalParameter : Variable {
 		}
 		if (a.has_argument ("array_length_pos")) {
 			carray_length_parameter_position = a.get_double ("array_length_pos");
+		}
+		if (a.has_argument ("array_length_cname")) {
+			set_array_length_cname (a.get_string ("array_length_cname"));
 		}
 		if (a.has_argument ("delegate_target_pos")) {
 			cdelegate_target_parameter_position = a.get_double ("delegate_target_pos");

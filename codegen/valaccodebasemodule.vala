@@ -1731,8 +1731,8 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		if (param.variable_type is ArrayType) {
 			var array_type = (ArrayType) param.variable_type;
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				data.add_field ("gint", get_array_length_cname (get_variable_cname (param.name), dim));
-				cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_array_length_cname (get_variable_cname (param.name), dim)), new CCodeIdentifier (get_array_length_cname (get_variable_cname (param.name), dim)))));
+				data.add_field ("gint", get_parameter_array_length_cname (param, dim));
+				cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_parameter_array_length_cname (param, dim)), new CCodeIdentifier (get_parameter_array_length_cname (param, dim)))));
 			}
 		} else if (param.variable_type is DelegateType) {
 			data.add_field ("gpointer", get_delegate_target_cname (get_variable_cname (param.name)));
@@ -5862,6 +5862,10 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public virtual string get_array_length_cname (string array_cname, int dim) {
+		return "";
+	}
+
+	public virtual string get_parameter_array_length_cname (FormalParameter param, int dim) {
 		return "";
 	}
 

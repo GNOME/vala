@@ -809,6 +809,10 @@ public class Vala.CodeWriter : CodeVisitor {
 				ccode_params.append_printf ("%sarray_length_type = \"%s\"", separator, param.array_length_type);
 				separator = ", ";
 			}
+			if (param.get_array_length_cname () != null && param.variable_type is ArrayType) {
+				ccode_params.append_printf ("%sarray_length_cname = \"%s\"", separator, param.get_array_length_cname ());
+				separator = ", ";
+			}
 			if (!float_equal (param.carray_length_parameter_position, i + 0.1)) {
 				ccode_params.append_printf ("%sarray_length_pos = %g", separator, param.carray_length_parameter_position);
 				separator = ", ";

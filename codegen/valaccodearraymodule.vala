@@ -130,6 +130,14 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		return "%s_length%d".printf (array_cname, dim);
 	}
 
+	public override string get_parameter_array_length_cname (FormalParameter param, int dim) {
+		if (param.has_array_length_cname) {
+			return param.get_array_length_cname ();
+		} else {
+			return get_array_length_cname (get_variable_cname (param.name), dim);
+		}
+	}
+
 	public override CCodeExpression get_array_length_cexpression (Expression array_expr, int dim = -1) {
 		var array_type = array_expr.value_type as ArrayType;
 
@@ -178,7 +186,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 				if (param.captured) {
 					// captured variables are stored on the heap
 					var block = ((Method) param.parent_symbol).body;
-					var length_expr = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_array_length_cname (get_variable_cname (param.name), dim));
+					var length_expr = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_parameter_array_length_cname (param, dim));
 					if (is_out) {
 						// passing array as out/ref
 						return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, length_expr);
@@ -193,7 +201,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 						len_call.add_argument (carray_expr);
 						return len_call;
 					} else if (!param.no_array_length) {
-						CCodeExpression length_expr = get_variable_cexpression (get_array_length_cname (get_variable_cname (param.name), dim));
+						CCodeExpression length_expr = get_variable_cexpression (get_parameter_array_length_cname (param, dim));
 						if (param.direction != ParameterDirection.IN) {
 							// accessing argument of out/ref param
 							length_expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, length_expr);
@@ -1041,7 +1049,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			}
 			
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				var cparam = new CCodeFormalParameter (get_array_length_cname (get_variable_cname (param.name), dim), length_ctype);
+				var cparam = new CCodeFormalParameter (get_parameter_array_length_cname (param, dim), length_ctype);
 				cparam_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), cparam);
 				if (carg_map != null) {
 					carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), get_variable_cexpression (cparam.name));
