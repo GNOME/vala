@@ -1226,6 +1226,7 @@ public class Vala.GirParser : CodeVisitor {
 						continue;
 					}
 					info.param.carray_length_parameter_position = parameters[info.array_length_idx].vala_idx;
+					info.param.set_array_length_cname (parameters[info.array_length_idx].param.name);
 				}
 				if (info.param.variable_type is ArrayType && info.array_length_idx == -1) {
 					info.param.no_array_length = true;
@@ -1257,7 +1258,7 @@ public class Vala.GirParser : CodeVisitor {
 
 	Method parse_method (string element_name) {
 		return this.parse_function (element_name) as Method;
-     }
+	}
 
 	Signal parse_signal () {
 		start_element ("glib:signal");
