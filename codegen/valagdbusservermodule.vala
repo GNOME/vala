@@ -1100,6 +1100,8 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			return;
 		}
 
+		source_declarations.add_include ("gio/gio.h");
+
 		var cfunc = new CCodeFunction (sym.get_lower_case_cprefix () + "register_object", "guint");
 		cfunc.add_parameter (new CCodeFormalParameter ("object", "gpointer"));
 		cfunc.add_parameter (new CCodeFormalParameter ("connection", "GDBusConnection*"));
