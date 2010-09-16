@@ -3153,6 +3153,8 @@ namespace GLib {
 		public string get_locale_string (string group_name, string key, string? locale = null) throws KeyFileError;
 		public bool get_boolean (string group_name, string key) throws KeyFileError;
 		public int get_integer (string group_name, string key) throws KeyFileError;
+		public int64 get_int64 (string group_name, string key) throws KeyFileError;
+		public uint64 get_uint64 (string group_name, string key) throws KeyFileError;
 		public double get_double (string group_name, string key) throws KeyFileError;
 		[CCode (array_length_type = "gsize")]
 		public string[] get_string_list (string group_name, string key) throws KeyFileError;
@@ -3170,6 +3172,8 @@ namespace GLib {
 		public void set_locale_string (string group_name, string key, string locale, string str);
 		public void set_boolean (string group_name, string key, bool value);
 		public void set_integer (string group_name, string key, int value);
+		public void set_int64 (string group_name, string key, int64 value);
+		public void set_uint64 (string group_name, string key, uint64 value);
 		public void set_double (string group_name, string key, double value);
 		public void set_string_list (string group_name, string key, [CCode (type = "const gchar* const*")] string[] list);
 		public void set_locale_string_list (string group_name, string key, string locale, string[] list);
