@@ -131,8 +131,14 @@ public class Vala.GirParser : CodeVisitor {
 		return new SourceReference (this.current_source_file, begin.line, begin.column, end.line, end.column);
 	}
 
+	const string GIR_VERSION = "1.2";
+
 	void parse_repository () {
 		start_element ("repository");
+		if (reader.get_attribute ("version") != GIR_VERSION) {
+			Report.error (get_current_src (), "unsupported GIR version %s (supported: %s)".printf (reader.get_attribute ("version"), GIR_VERSION));
+			return;
+		}
 		next ();
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (reader.name == "namespace") {
