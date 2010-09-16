@@ -2251,6 +2251,86 @@ namespace GLib {
 		public unowned string? strptime (string buf, string format);
 	}
 
+	public struct TimeSpan : int64 {
+		public const TimeSpan DAY;
+		public const TimeSpan HOUR;
+		public const TimeSpan MINUTE;
+		public const TimeSpan SECOND;
+		public const TimeSpan MILLISECOND;
+	}
+
+        [Compact]
+        [CCode (ref_function = "g_date_time_ref", unref_function = "g_date_time_unref", type_id = "G_TYPE_DATE_TIME")]
+        public class DateTime {
+		public DateTime.now (TimeZone tz);
+		public DateTime.now_local ();
+		public DateTime.now_utc ();
+		public DateTime.from_unix_local (int64 t);
+		public DateTime.from_unix_utc (int64 t);
+		public DateTime.from_timeval_local (TimeVal tv);
+		public DateTime.from_timeval_utc (TimeVal tv);
+		public DateTime (TimeZone tz, int year, int month, int day, int hour, int minute, double seconds);
+		public DateTime.local (int year, int month, int day, int hour, int minute, double seconds);
+		public DateTime.utc (int year, int month, int day, int hour, int minute, double seconds);
+		public DateTime add (TimeSpan timespan);
+		public DateTime add_years (int years);
+		public DateTime add_months (int months);
+		public DateTime add_weeks (int weeks);
+		public DateTime add_days (int days);
+		public DateTime add_hours (int hours);
+		public DateTime add_milliseconds (int milliseconds);
+		public DateTime add_minutes (int minutes);
+		public DateTime add_seconds (double seconds);
+		public DateTime add_full (int years, int months, int days, int hours = 0, int minutes = 0, double seconds = 0);
+		public int compare (DateTime dt);
+		public TimeSpan difference (DateTime end);
+		public uint hash ();
+		public bool equal (DateTime dt);
+		public void get_ymd (out int year, out int month, out int day);
+		public int get_year ();
+		public int get_month ();
+		public int get_day_of_month ();
+		public int get_week_of_year ();
+		public int get_day_of_week ();
+		public int get_day_of_year ();
+		public int get_hour ();
+		public int get_minute ();
+		public int get_second ();
+		public int get_microsecond ();
+		public double get_seconds ();
+		public int64 to_unix ();
+		public bool to_timeval (out TimeVal tv);
+		public TimeSpan get_utc_offset ();
+		public unowned string get_timezone_abbreviation ();
+		public bool is_daylight_savings ();
+		public DateTime to_timezone (TimeZone tz);
+		public DateTime to_local ();
+		public DateTime to_utc ();
+		public string format (string format);
+		public string to_string () {
+			return this.format ("%FT%H:%M:%S%z");
+		}
+	}
+
+	public enum TimeType {
+		STANDARD,
+		DAYLIGHT,
+		UNIVERSAL
+	}
+
+        [Compact]
+        [CCode (ref_function = "g_time_zone_ref", unref_function = "g_time_zone_unref")]
+        public class TimeZone {
+		public TimeZone (string identifier);
+		public TimeZone.utc ();
+		public TimeZone.local ();
+		public int find_interval (TimeType type, int64 time);
+		public int adjust_time (TimeType type, ref int64 time);
+		public unowned string get_abbreviation (int interval);
+		public int32 get_offset (int interval);
+		public bool is_dst (int interval);
+        }
+
 	/* Random Numbers */
 
 	[Compact]
