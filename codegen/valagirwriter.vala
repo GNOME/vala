@@ -882,15 +882,11 @@ public class Vala.GIRWriter : CodeVisitor {
 		foreach (Attribute attr in node.attributes) {
 			string name = camel_case_to_canonical (attr.name);
 			foreach (string arg_name in attr.args.get_keys ()) {
-				var arg = attr.args.get (arg_name);
+				string value = attr.args.get (arg_name);
 
-				string value = literal_expression_to_value_string ((Literal) arg);
-
-				if (value != null) {
-					write_indent ();
-					buffer.append_printf ("<annotation key=\"%s.%s\" value=\"%s\"/>\n",
-						name, camel_case_to_canonical (arg_name), value);
-				}
+				write_indent ();
+				buffer.append_printf ("<annotation key=\"%s.%s\" value=\"%s\"/>\n",
+					name, camel_case_to_canonical (arg_name), value);
 			}
 		}
 	}
