@@ -1478,6 +1478,9 @@ namespace GLib {
 		public static unowned MainContext get_thread_default ();
 		public void push_thread_default ();
 		public void pop_thread_default ();
+		public unowned string? get_name ();
+		public void set_name (string? name);
+		public static void set_name_by_id (uint tag, string? name);
 	}
 	
 	[CCode (has_target = false)]
@@ -3024,6 +3027,8 @@ namespace GLib {
 	public class Regex {
 		public Regex (string pattern, RegexCompileFlags compile_options = 0, RegexMatchFlags match_options = 0) throws RegexError;
 		public unowned string get_pattern ();
+		public RegexCompileFlags get_compile_flags ();
+		public RegexMatchFlags get_match_flags ();
 		public int get_max_backref ();
 		public int get_capture_count ();
 		public int get_string_number (string name);
@@ -3943,6 +3948,8 @@ namespace GLib {
 	public static unowned string ngettext (string msgid, string msgid_plural, ulong n);
 	[CCode (cname = "g_dgettext", cheader_filename = "glib/gi18n-lib.h")]
 	public static unowned string dgettext (string? domain, string msgid);
+	[CCode (cname = "g_dcgettext", cheader_filename = "glib/gi18n-lib.h")]
+	public static unowned string dcgettext (string? domain, string msgid, int category);
 	[CCode (cname = "g_dngettext", cheader_filename = "glib/gi18n-lib.h")]
 	public static unowned string dngettext (string? domain, string msgid, string msgid_plural, ulong n);
 	[CCode (cname = "g_dpgettext", cheader_filename = "glib/gi18n-lib.h")]
@@ -4093,7 +4100,9 @@ namespace GLib {
 		public unowned string get_type_string ();
 		public bool is_of_type (VariantType type);
 		public bool is_container ();
+		public bool is_floating ();
 		public Class classify ();
+		public int compare (Variant other);
 
 		public Variant.boolean (bool value);
 		public Variant.byte (uchar value);
