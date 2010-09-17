@@ -46,12 +46,6 @@ namespace GLib {
 	[CCode (cname = "g_file_equal", cheader_filename = "gio/gio.h")]
 	public static GLib.EqualFunc file_equal;
 
-	[CCode (cname = "GApplication")]
-	public class Application {
-		[CCode (cname = "g_application_quit_with_data")]
-		public bool quit (GLib.Variant? platform_data = null);
-	}
-
 	[CCode (cheader_filename = "gio/gio.h")]
 	namespace Bus {
 		public async GLib.DBusConnection get (GLib.BusType bus_type, GLib.Cancellable? cancellable = null) throws GLib.IOError;
