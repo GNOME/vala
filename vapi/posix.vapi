@@ -828,6 +828,8 @@ namespace Posix {
 	public void endpwent ();
 	public unowned Passwd? getpwent ();
 	public void setpwent ();
+	[CCode (cheader_filename = "pwd.h")]
+	public unowned Passwd? getpwnam (string name);
 
 	[CCode (cheader_filename = "sys/resource.h")]
 	public const int PRIO_PROCESS;
