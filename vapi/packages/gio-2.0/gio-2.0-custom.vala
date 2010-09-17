@@ -71,6 +71,7 @@ namespace GLib {
 
 	[CCode (cname = "GDBusConnection")]
 	public class DBusConnection {
+		public T get_proxy_sync<T> (string? name, string object_path, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public uint register_object<T> (string object_path, T object) throws GLib.IOError;
 	}
 }
