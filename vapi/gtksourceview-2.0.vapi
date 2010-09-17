@@ -428,7 +428,7 @@ namespace Gtk {
 	public interface SourceCompletionProvider : GLib.Object {
 		public abstract bool activate_proposal (Gtk.SourceCompletionProposal proposal, Gtk.TextIter iter);
 		public abstract Gtk.SourceCompletionActivation get_activation ();
-		public abstract unowned Gdk.Pixbuf get_icon ();
+		public abstract unowned Gdk.Pixbuf? get_icon ();
 		public abstract unowned Gtk.Widget? get_info_widget (Gtk.SourceCompletionProposal proposal);
 		public abstract int get_interactive_delay ();
 		public abstract string get_name ();
@@ -501,9 +501,9 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public delegate unowned string SourceViewMarkTooltipFunc (Gtk.SourceMark mark);
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
-	public const string SOURCE_COMPLETION_CAPABILITY_AUTOMATIC;
+	public extern const string SOURCE_COMPLETION_CAPABILITY_AUTOMATIC;
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
-	public const string SOURCE_COMPLETION_CAPABILITY_INTERACTIVE;
+	public extern const string SOURCE_COMPLETION_CAPABILITY_INTERACTIVE;
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public static bool source_iter_backward_search (Gtk.TextIter iter, string str, Gtk.SourceSearchFlags flags, out Gtk.TextIter match_start, out Gtk.TextIter match_end, Gtk.TextIter? limit);
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
