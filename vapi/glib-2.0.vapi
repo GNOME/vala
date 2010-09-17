@@ -3659,8 +3659,8 @@ namespace GLib {
 	[CCode (ref_function = "g_hash_table_ref", unref_function = "g_hash_table_unref", type_id = "G_TYPE_HASH_TABLE", type_signature = "a{%s}")]
 	public class HashTable<K,V> {
 		[CCode (cname = "g_hash_table_new_full", simple_generics = true)]
-		public HashTable (HashFunc? hash_func, EqualFunc? key_equal_func);
-		public HashTable.full (HashFunc? hash_func, EqualFunc? key_equal_func, DestroyNotify? key_destroy_func, DestroyNotify? value_destroy_func);
+		public HashTable (HashFunc<K>? hash_func, EqualFunc<K>? key_equal_func);
+		public HashTable.full (HashFunc<K>? hash_func, EqualFunc<K>? key_equal_func, DestroyNotify? key_destroy_func, DestroyNotify? value_destroy_func);
 		public void insert (owned K key, owned V value);
 		public void replace (owned K key, owned V value);
 		public unowned V lookup (K key);
@@ -3686,30 +3686,30 @@ namespace GLib {
 	}
 
 	[CCode (has_target = false)]
-	public delegate uint HashFunc (void* key);
+	public delegate uint HashFunc<K> (K key);
 	[CCode (has_target = false)]
-	public delegate bool EqualFunc (void* a, void* b);
+	public delegate bool EqualFunc<G> (G a, G b);
 	public delegate void HFunc (void* key, void* value);
 
 	[CCode (has_target = false)]
 	public delegate void DestroyNotify (void* data);
 
 	[CCode (cname = "g_direct_hash")]
-	public static GLib.HashFunc direct_hash;
+	public static GLib.HashFunc<void*> direct_hash;
 	[CCode (cname = "g_direct_equal")]
-	public static GLib.EqualFunc direct_equal;
+	public static GLib.EqualFunc<void*> direct_equal;
 	[CCode (cname = "g_int64_hash")]
-	public static GLib.HashFunc int64_hash;
+	public static GLib.HashFunc<int64?> int64_hash;
 	[CCode (cname = "g_int64_equal")]
-	public static GLib.EqualFunc int64_equal;
+	public static GLib.EqualFunc<int64?> int64_equal;
 	[CCode (cname = "g_int_hash")]
-	public static GLib.HashFunc int_hash;
+	public static GLib.HashFunc<int?> int_hash;
 	[CCode (cname = "g_int_equal")]
-	public static GLib.EqualFunc int_equal;
+	public static GLib.EqualFunc<int?> int_equal;
 	[CCode (cname = "g_str_hash")]
-	public static GLib.HashFunc str_hash;
+	public static GLib.HashFunc<string> str_hash;
 	[CCode (cname = "g_str_equal")]
-	public static GLib.EqualFunc str_equal;
+	public static GLib.EqualFunc<string> str_equal;
 	[CCode (cname = "g_free")]
 	public static GLib.DestroyNotify g_free;
 	[CCode (cname = "g_object_unref")]
