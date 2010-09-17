@@ -1026,9 +1026,12 @@ namespace GLib {
 		public string[] get_strv (string key);
 		public GLib.Variant get_value (string key);
 		public bool is_writable (string name);
-		public unowned string list_children ();
-		public unowned string list_keys ();
-		public static unowned string list_schemas ();
+		[CCode (array_length = false, array_null_terminated = true)]
+		public string[] list_children ();
+		[CCode (array_length = false, array_null_terminated = true)]
+		public string[] list_keys ();
+		[CCode (array_length = false, array_null_terminated = true)]
+		public static unowned string[] list_schemas ();
 		public void reset (string key);
 		public void revert ();
 		[CCode (sentinel = "")]
