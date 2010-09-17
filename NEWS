@@ -1,3 +1,10 @@
+Vala 0.10.0
+===========
+
+ * Port GIR parser and writer to GIR version 1.2.
+ * Update GLib bindings to 2.26 branch.
+ * Bug fixes.
+
 Vala 0.9.8
 ==========
 
