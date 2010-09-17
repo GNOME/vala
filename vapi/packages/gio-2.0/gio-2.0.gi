@@ -495,7 +495,7 @@
 			</parameters>
 		</callback>
 		<callback name="GDBusMessageFilterFunction">
-			<return-type type="gboolean"/>
+			<return-type type="GDBusMessage*"/>
 			<parameters>
 				<parameter name="connection" type="GDBusConnection*"/>
 				<parameter name="message" type="GDBusMessage*"/>
@@ -537,7 +537,7 @@
 			</parameters>
 		</callback>
 		<callback name="GDBusSubtreeIntrospectFunc">
-			<return-type type="GPtrArray*"/>
+			<return-type type="GDBusInterfaceInfo**"/>
 			<parameters>
 				<parameter name="connection" type="GDBusConnection*"/>
 				<parameter name="sender" type="gchar*"/>
@@ -617,6 +617,8 @@
 				<parameter name="user_data" type="gpointer"/>
 			</parameters>
 		</callback>
+		<struct name="GCredentialsClass">
+		</struct>
 		<struct name="GDBusErrorEntry">
 			<field name="error_code" type="gint"/>
 			<field name="dbus_error_name" type="gchar*"/>
@@ -631,14 +633,7 @@
 			<field name="enumerate" type="GDBusSubtreeEnumerateFunc"/>
 			<field name="introspect" type="GDBusSubtreeIntrospectFunc"/>
 			<field name="dispatch" type="GDBusSubtreeDispatchFunc"/>
-			<field name="_g_reserved1" type="GCallback"/>
-			<field name="_g_reserved2" type="GCallback"/>
-			<field name="_g_reserved3" type="GCallback"/>
-			<field name="_g_reserved4" type="GCallback"/>
-			<field name="_g_reserved5" type="GCallback"/>
-			<field name="_g_reserved6" type="GCallback"/>
-			<field name="_g_reserved7" type="GCallback"/>
-			<field name="_g_reserved8" type="GCallback"/>
+			<field name="padding" type="gpointer[]"/>
 		</struct>
 		<struct name="GEmblemClass">
 		</struct>
@@ -1106,6 +1101,11 @@
 			<member name="G_CONVERTER_FINISHED" value="2"/>
 			<member name="G_CONVERTER_FLUSHED" value="3"/>
 		</enum>
+		<enum name="GCredentialsType" type-name="GCredentialsType" get-type="g_credentials_type_get_type">
+			<member name="G_CREDENTIALS_TYPE_INVALID" value="0"/>
+			<member name="G_CREDENTIALS_TYPE_LINUX_UCRED" value="1"/>
+			<member name="G_CREDENTIALS_TYPE_FREEBSD_CMSGCRED" value="2"/>
+		</enum>
 		<enum name="GDBusError" type-name="GDBusError" get-type="g_dbus_error_get_type">
 			<member name="G_DBUS_ERROR_FAILED" value="0"/>
 			<member name="G_DBUS_ERROR_NO_MEMORY" value="1"/>
@@ -1148,6 +1148,10 @@
 			<member name="G_DBUS_ERROR_SELINUX_SECURITY_CONTEXT_UNKNOWN" value="38"/>
 			<member name="G_DBUS_ERROR_ADT_AUDIT_DATA_UNKNOWN" value="39"/>
 			<member name="G_DBUS_ERROR_OBJECT_PATH_IN_USE" value="40"/>
+		</enum>
+		<enum name="GDBusMessageByteOrder" type-name="GDBusMessageByteOrder" get-type="g_dbus_message_byte_order_get_type">
+			<member name="G_DBUS_MESSAGE_BYTE_ORDER_BIG_ENDIAN" value="66"/>
+			<member name="G_DBUS_MESSAGE_BYTE_ORDER_LITTLE_ENDIAN" value="108"/>
 		</enum>
 		<enum name="GDBusMessageHeaderField" type-name="GDBusMessageHeaderField" get-type="g_dbus_message_header_field_get_type">
 			<member name="G_DBUS_MESSAGE_HEADER_FIELD_INVALID" value="0"/>
@@ -1274,6 +1278,13 @@
 			<member name="G_IO_ERROR_PARTIAL_INPUT" value="34"/>
 			<member name="G_IO_ERROR_INVALID_DATA" value="35"/>
 			<member name="G_IO_ERROR_DBUS_ERROR" value="36"/>
+			<member name="G_IO_ERROR_HOST_UNREACHABLE" value="37"/>
+			<member name="G_IO_ERROR_NETWORK_UNREACHABLE" value="38"/>
+			<member name="G_IO_ERROR_CONNECTION_REFUSED" value="39"/>
+			<member name="G_IO_ERROR_PROXY_FAILED" value="40"/>
+			<member name="G_IO_ERROR_PROXY_AUTH_FAILED" value="41"/>
+			<member name="G_IO_ERROR_PROXY_NEED_AUTH" value="42"/>
+			<member name="G_IO_ERROR_PROXY_NOT_ALLOWED" value="43"/>
 		</enum>
 		<enum name="GMountMountFlags" type-name="GMountMountFlags" get-type="g_mount_mount_flags_get_type">
 			<member name="G_MOUNT_MOUNT_NONE" value="0"/>
@@ -1389,10 +1400,17 @@
 			<member name="G_DBUS_PROXY_FLAGS_DO_NOT_CONNECT_SIGNALS" value="2"/>
 			<member name="G_DBUS_PROXY_FLAGS_DO_NOT_AUTO_START" value="4"/>
 		</flags>
+		<flags name="GDBusSendMessageFlags" type-name="GDBusSendMessageFlags" get-type="g_dbus_send_message_flags_get_type">
+			<member name="G_DBUS_SEND_MESSAGE_FLAGS_NONE" value="0"/>
+			<member name="G_DBUS_SEND_MESSAGE_FLAGS_PRESERVE_SERIAL" value="1"/>
+		</flags>
 		<flags name="GDBusServerFlags" type-name="GDBusServerFlags" get-type="g_dbus_server_flags_get_type">
 			<member name="G_DBUS_SERVER_FLAGS_NONE" value="0"/>
 			<member name="G_DBUS_SERVER_FLAGS_RUN_IN_THREAD" value="1"/>
 			<member name="G_DBUS_SERVER_FLAGS_AUTHENTICATION_ALLOW_ANONYMOUS" value="2"/>
+		</flags>
+		<flags name="GDBusSignalFlags" type-name="GDBusSignalFlags" get-type="g_dbus_signal_flags_get_type">
+			<member name="G_DBUS_SIGNAL_FLAGS_NONE" value="0"/>
 		</flags>
 		<flags name="GDBusSubtreeFlags" type-name="GDBusSubtreeFlags" get-type="g_dbus_subtree_flags_get_type">
 			<member name="G_DBUS_SUBTREE_FLAGS_NONE" value="0"/>
@@ -1441,6 +1459,7 @@
 			<member name="G_SETTINGS_BIND_SET" value="2"/>
 			<member name="G_SETTINGS_BIND_NO_SENSITIVITY" value="4"/>
 			<member name="G_SETTINGS_BIND_GET_NO_CHANGES" value="8"/>
+			<member name="G_SETTINGS_BIND_INVERT_BOOLEAN" value="16"/>
 		</flags>
 		<object name="GAppLaunchContext" parent="GObject" type-name="GAppLaunchContext" get-type="g_app_launch_context_get_type">
 			<method name="get_display" symbol="g_app_launch_context_get_display">
@@ -1961,6 +1980,7 @@
 				<return-type type="gpointer"/>
 				<parameters>
 					<parameter name="credentials" type="GCredentials*"/>
+					<parameter name="native_type" type="GCredentialsType"/>
 				</parameters>
 			</method>
 			<method name="get_unix_user" symbol="g_credentials_get_unix_user">
@@ -1985,6 +2005,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="credentials" type="GCredentials*"/>
+					<parameter name="native_type" type="GCredentialsType"/>
 					<parameter name="native" type="gpointer"/>
 				</parameters>
 			</method>
@@ -2083,6 +2104,25 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="connection" type="GDBusConnection*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="close_finish" symbol="g_dbus_connection_close_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="connection" type="GDBusConnection*"/>
+					<parameter name="res" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="close_sync" symbol="g_dbus_connection_close_sync">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="connection" type="GDBusConnection*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
 			<method name="emit_signal" symbol="g_dbus_connection_emit_signal">
@@ -2258,6 +2298,7 @@
 				<parameters>
 					<parameter name="connection" type="GDBusConnection*"/>
 					<parameter name="message" type="GDBusMessage*"/>
+					<parameter name="flags" type="GDBusSendMessageFlags"/>
 					<parameter name="out_serial" type="guint32*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
@@ -2267,6 +2308,7 @@
 				<parameters>
 					<parameter name="connection" type="GDBusConnection*"/>
 					<parameter name="message" type="GDBusMessage*"/>
+					<parameter name="flags" type="GDBusSendMessageFlags"/>
 					<parameter name="timeout_msec" type="gint"/>
 					<parameter name="out_serial" type="guint32*"/>
 					<parameter name="cancellable" type="GCancellable*"/>
@@ -2287,6 +2329,7 @@
 				<parameters>
 					<parameter name="connection" type="GDBusConnection*"/>
 					<parameter name="message" type="GDBusMessage*"/>
+					<parameter name="flags" type="GDBusSendMessageFlags"/>
 					<parameter name="timeout_msec" type="gint"/>
 					<parameter name="out_serial" type="guint32*"/>
 					<parameter name="cancellable" type="GCancellable*"/>
@@ -2309,6 +2352,7 @@
 					<parameter name="member" type="gchar*"/>
 					<parameter name="object_path" type="gchar*"/>
 					<parameter name="arg0" type="gchar*"/>
+					<parameter name="flags" type="GDBusSignalFlags"/>
 					<parameter name="callback" type="GDBusSignalCallback"/>
 					<parameter name="user_data" type="gpointer"/>
 					<parameter name="user_data_free_func" type="GDestroyNotify"/>
@@ -2368,6 +2412,13 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<method name="copy" symbol="g_dbus_message_copy">
+				<return-type type="GDBusMessage*"/>
+				<parameters>
+					<parameter name="message" type="GDBusMessage*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<method name="get_arg0" symbol="g_dbus_message_get_arg0">
 				<return-type type="gchar*"/>
 				<parameters>
@@ -2376,6 +2427,12 @@
 			</method>
 			<method name="get_body" symbol="g_dbus_message_get_body">
 				<return-type type="GVariant*"/>
+				<parameters>
+					<parameter name="message" type="GDBusMessage*"/>
+				</parameters>
+			</method>
+			<method name="get_byte_order" symbol="g_dbus_message_get_byte_order">
+				<return-type type="GDBusMessageByteOrder"/>
 				<parameters>
 					<parameter name="message" type="GDBusMessage*"/>
 				</parameters>
@@ -2413,6 +2470,12 @@
 			</method>
 			<method name="get_interface" symbol="g_dbus_message_get_interface">
 				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="message" type="GDBusMessage*"/>
+				</parameters>
+			</method>
+			<method name="get_locked" symbol="g_dbus_message_get_locked">
+				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="message" type="GDBusMessage*"/>
 				</parameters>
@@ -2467,6 +2530,12 @@
 			</method>
 			<method name="get_unix_fd_list" symbol="g_dbus_message_get_unix_fd_list">
 				<return-type type="GUnixFDList*"/>
+				<parameters>
+					<parameter name="message" type="GDBusMessage*"/>
+				</parameters>
+			</method>
+			<method name="lock" symbol="g_dbus_message_lock">
+				<return-type type="void"/>
 				<parameters>
 					<parameter name="message" type="GDBusMessage*"/>
 				</parameters>
@@ -2543,6 +2612,13 @@
 				<parameters>
 					<parameter name="message" type="GDBusMessage*"/>
 					<parameter name="body" type="GVariant*"/>
+				</parameters>
+			</method>
+			<method name="set_byte_order" symbol="g_dbus_message_set_byte_order">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="message" type="GDBusMessage*"/>
+					<parameter name="byte_order" type="GDBusMessageByteOrder"/>
 				</parameters>
 			</method>
 			<method name="set_destination" symbol="g_dbus_message_set_destination">
@@ -2660,6 +2736,7 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<property name="locked" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
 		</object>
 		<object name="GDBusMethodInvocation" parent="GObject" type-name="GDBusMethodInvocation" get-type="g_dbus_method_invocation_get_type">
 			<method name="get_connection" symbol="g_dbus_method_invocation_get_connection">
@@ -2716,20 +2793,6 @@
 					<parameter name="invocation" type="GDBusMethodInvocation*"/>
 				</parameters>
 			</method>
-			<constructor name="new" symbol="g_dbus_method_invocation_new">
-				<return-type type="GDBusMethodInvocation*"/>
-				<parameters>
-					<parameter name="sender" type="gchar*"/>
-					<parameter name="object_path" type="gchar*"/>
-					<parameter name="interface_name" type="gchar*"/>
-					<parameter name="method_name" type="gchar*"/>
-					<parameter name="method_info" type="GDBusMethodInfo*"/>
-					<parameter name="connection" type="GDBusConnection*"/>
-					<parameter name="message" type="GDBusMessage*"/>
-					<parameter name="parameters" type="GVariant*"/>
-					<parameter name="user_data" type="gpointer"/>
-				</parameters>
-			</constructor>
 			<method name="return_dbus_error" symbol="g_dbus_method_invocation_return_dbus_error">
 				<return-type type="void"/>
 				<parameters>
@@ -3048,14 +3111,14 @@
 					<parameter name="server" type="GDBusServer*"/>
 				</parameters>
 			</method>
-			<property name="active" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="active" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="address" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="authentication-observer" type="GDBusAuthObserver*" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="client-address" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="flags" type="GDBusServerFlags" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="guid" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
 			<signal name="new-connection" when="LAST">
-				<return-type type="void"/>
+				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="object" type="GDBusServer*"/>
 					<parameter name="p0" type="GDBusConnection*"/>
@@ -3187,6 +3250,38 @@
 				</parameters>
 			</method>
 			<method name="read_until_finish" symbol="g_data_input_stream_read_until_finish">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="stream" type="GDataInputStream*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="length" type="gsize*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="read_upto" symbol="g_data_input_stream_read_upto">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="stream" type="GDataInputStream*"/>
+					<parameter name="stop_chars" type="gchar*"/>
+					<parameter name="stop_chars_len" type="gssize"/>
+					<parameter name="length" type="gsize*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="read_upto_async" symbol="g_data_input_stream_read_upto_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="stream" type="GDataInputStream*"/>
+					<parameter name="stop_chars" type="gchar*"/>
+					<parameter name="stop_chars_len" type="gssize"/>
+					<parameter name="io_priority" type="gint"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="read_upto_finish" symbol="g_data_input_stream_read_upto_finish">
 				<return-type type="char*"/>
 				<parameters>
 					<parameter name="stream" type="GDataInputStream*"/>
@@ -4942,6 +5037,12 @@
 					<parameter name="destroy_function" type="GDestroyNotify"/>
 				</parameters>
 			</constructor>
+			<method name="steal_data" symbol="g_memory_output_stream_steal_data">
+				<return-type type="gpointer"/>
+				<parameters>
+					<parameter name="ostream" type="GMemoryOutputStream*"/>
+				</parameters>
+			</method>
 			<property name="data" type="gpointer" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="data-size" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="destroy-function" type="gpointer" readable="1" writable="1" construct="0" construct-only="1"/>
@@ -5109,6 +5210,12 @@
 					<parameter name="addr" type="GNetworkAddress*"/>
 				</parameters>
 			</method>
+			<method name="get_scheme" symbol="g_network_address_get_scheme">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="addr" type="GNetworkAddress*"/>
+				</parameters>
+			</method>
 			<constructor name="new" symbol="g_network_address_new">
 				<return-type type="GSocketConnectable*"/>
 				<parameters>
@@ -5124,8 +5231,17 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<method name="parse_uri" symbol="g_network_address_parse_uri">
+				<return-type type="GSocketConnectable*"/>
+				<parameters>
+					<parameter name="uri" type="gchar*"/>
+					<parameter name="default_port" type="guint16"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<property name="hostname" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="port" type="guint" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="scheme" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
 		</object>
 		<object name="GNetworkService" parent="GObject" type-name="GNetworkService" get-type="g_network_service_get_type">
 			<implements>
@@ -5138,6 +5254,12 @@
 				</parameters>
 			</method>
 			<method name="get_protocol" symbol="g_network_service_get_protocol">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="srv" type="GNetworkService*"/>
+				</parameters>
+			</method>
+			<method name="get_scheme" symbol="g_network_service_get_scheme">
 				<return-type type="gchar*"/>
 				<parameters>
 					<parameter name="srv" type="GNetworkService*"/>
@@ -5157,8 +5279,16 @@
 					<parameter name="domain" type="gchar*"/>
 				</parameters>
 			</constructor>
+			<method name="set_scheme" symbol="g_network_service_set_scheme">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="srv" type="GNetworkService*"/>
+					<parameter name="scheme" type="gchar*"/>
+				</parameters>
+			</method>
 			<property name="domain" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="protocol" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="scheme" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="service" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
 		</object>
 		<object name="GOutputStream" parent="GObject" type-name="GOutputStream" get-type="g_output_stream_get_type">
@@ -5561,6 +5691,62 @@
 				</parameters>
 			</vfunc>
 		</object>
+		<object name="GProxyAddress" parent="GInetSocketAddress" type-name="GProxyAddress" get-type="g_proxy_address_get_type">
+			<implements>
+				<interface name="GSocketConnectable"/>
+			</implements>
+			<method name="get_destination_hostname" symbol="g_proxy_address_get_destination_hostname">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="proxy" type="GProxyAddress*"/>
+				</parameters>
+			</method>
+			<method name="get_destination_port" symbol="g_proxy_address_get_destination_port">
+				<return-type type="guint16"/>
+				<parameters>
+					<parameter name="proxy" type="GProxyAddress*"/>
+				</parameters>
+			</method>
+			<method name="get_password" symbol="g_proxy_address_get_password">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="proxy" type="GProxyAddress*"/>
+				</parameters>
+			</method>
+			<method name="get_protocol" symbol="g_proxy_address_get_protocol">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="proxy" type="GProxyAddress*"/>
+				</parameters>
+			</method>
+			<method name="get_username" symbol="g_proxy_address_get_username">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="proxy" type="GProxyAddress*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="g_proxy_address_new">
+				<return-type type="GSocketAddress*"/>
+				<parameters>
+					<parameter name="inetaddr" type="GInetAddress*"/>
+					<parameter name="port" type="guint16"/>
+					<parameter name="protocol" type="gchar*"/>
+					<parameter name="dest_hostname" type="gchar*"/>
+					<parameter name="dest_port" type="guint16"/>
+					<parameter name="username" type="gchar*"/>
+					<parameter name="password" type="gchar*"/>
+				</parameters>
+			</constructor>
+			<property name="destination-hostname" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="destination-port" type="guint" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="password" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="protocol" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="username" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
+		</object>
+		<object name="GProxyAddressEnumerator" parent="GSocketAddressEnumerator" type-name="GProxyAddressEnumerator" get-type="g_proxy_address_enumerator_get_type">
+			<property name="connectable" type="GSocketConnectable*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="uri" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
+		</object>
 		<object name="GResolver" parent="GObject" type-name="GResolver" get-type="g_resolver_get_type">
 			<method name="error_quark" symbol="g_resolver_error_quark">
 				<return-type type="GQuark"/>
@@ -5899,7 +6085,13 @@
 					<parameter name="name" type="gchar*"/>
 				</parameters>
 			</method>
-			<method name="list_items" symbol="g_settings_list_items">
+			<method name="list_children" symbol="g_settings_list_children">
+				<return-type type="gchar**"/>
+				<parameters>
+					<parameter name="settings" type="GSettings*"/>
+				</parameters>
+			</method>
+			<method name="list_keys" symbol="g_settings_list_keys">
 				<return-type type="gchar**"/>
 				<parameters>
 					<parameter name="settings" type="GSettings*"/>
@@ -5936,6 +6128,13 @@
 					<parameter name="path" type="gchar*"/>
 				</parameters>
 			</constructor>
+			<method name="reset" symbol="g_settings_reset">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="settings" type="GSettings*"/>
+					<parameter name="key" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="revert" symbol="g_settings_revert">
 				<return-type type="void"/>
 				<parameters>
@@ -6057,6 +6256,74 @@
 					<parameter name="key" type="char*"/>
 				</parameters>
 			</signal>
+		</object>
+		<object name="GSimpleAction" parent="GObject" type-name="GSimpleAction" get-type="g_simple_action_get_type">
+			<implements>
+				<interface name="GAction"/>
+			</implements>
+			<constructor name="new" symbol="g_simple_action_new">
+				<return-type type="GSimpleAction*"/>
+				<parameters>
+					<parameter name="name" type="gchar*"/>
+					<parameter name="parameter_type" type="GVariantType*"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_stateful" symbol="g_simple_action_new_stateful">
+				<return-type type="GSimpleAction*"/>
+				<parameters>
+					<parameter name="name" type="gchar*"/>
+					<parameter name="parameter_type" type="GVariantType*"/>
+					<parameter name="state" type="GVariant*"/>
+				</parameters>
+			</constructor>
+			<method name="set_enabled" symbol="g_simple_action_set_enabled">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="simple" type="GSimpleAction*"/>
+					<parameter name="enabled" type="gboolean"/>
+				</parameters>
+			</method>
+			<property name="enabled" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="name" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="parameter-type" type="GVariantType*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="state" type="GVariant" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="state-type" type="GVariantType*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<signal name="activate" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="simple" type="GSimpleAction*"/>
+					<parameter name="parameter" type="GVariant"/>
+				</parameters>
+			</signal>
+		</object>
+		<object name="GSimpleActionGroup" parent="GObject" type-name="GSimpleActionGroup" get-type="g_simple_action_group_get_type">
+			<implements>
+				<interface name="GActionGroup"/>
+			</implements>
+			<method name="insert" symbol="g_simple_action_group_insert">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="simple" type="GSimpleActionGroup*"/>
+					<parameter name="action" type="GAction*"/>
+				</parameters>
+			</method>
+			<method name="lookup" symbol="g_simple_action_group_lookup">
+				<return-type type="GAction*"/>
+				<parameters>
+					<parameter name="simple" type="GSimpleActionGroup*"/>
+					<parameter name="action_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="g_simple_action_group_new">
+				<return-type type="GSimpleActionGroup*"/>
+			</constructor>
+			<method name="remove" symbol="g_simple_action_group_remove">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="simple" type="GSimpleActionGroup*"/>
+					<parameter name="action_name" type="gchar*"/>
+				</parameters>
+			</method>
 		</object>
 		<object name="GSimpleAsyncResult" parent="GObject" type-name="GSimpleAsyncResult" get-type="g_simple_async_result_get_type">
 			<implements>
@@ -6289,6 +6556,13 @@
 					<parameter name="socket" type="GSocket*"/>
 				</parameters>
 			</method>
+			<method name="get_credentials" symbol="g_socket_get_credentials">
+				<return-type type="GCredentials*"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<method name="get_family" symbol="g_socket_get_family">
 				<return-type type="GSocketFamily"/>
 				<parameters>
@@ -6415,6 +6689,17 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<method name="receive_with_blocking" symbol="g_socket_receive_with_blocking">
+				<return-type type="gssize"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+					<parameter name="buffer" type="gchar*"/>
+					<parameter name="size" type="gsize"/>
+					<parameter name="blocking" type="gboolean"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<method name="send" symbol="g_socket_send">
 				<return-type type="gssize"/>
 				<parameters>
@@ -6446,6 +6731,17 @@
 					<parameter name="address" type="GSocketAddress*"/>
 					<parameter name="buffer" type="gchar*"/>
 					<parameter name="size" type="gsize"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="send_with_blocking" symbol="g_socket_send_with_blocking">
+				<return-type type="gssize"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+					<parameter name="buffer" type="gchar*"/>
+					<parameter name="size" type="gsize"/>
+					<parameter name="blocking" type="gboolean"/>
 					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
@@ -6612,6 +6908,13 @@
 			</vfunc>
 		</object>
 		<object name="GSocketClient" parent="GObject" type-name="GSocketClient" get-type="g_socket_client_get_type">
+			<method name="add_application_proxy" symbol="g_socket_client_add_application_proxy">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="client" type="GSocketClient*"/>
+					<parameter name="protocol" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="connect" symbol="g_socket_client_connect">
 				<return-type type="GSocketConnection*"/>
 				<parameters>
@@ -6697,6 +7000,41 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<method name="connect_to_uri" symbol="g_socket_client_connect_to_uri">
+				<return-type type="GSocketConnection*"/>
+				<parameters>
+					<parameter name="client" type="GSocketClient*"/>
+					<parameter name="uri" type="gchar*"/>
+					<parameter name="default_port" type="guint16"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="connect_to_uri_async" symbol="g_socket_client_connect_to_uri_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="client" type="GSocketClient*"/>
+					<parameter name="uri" type="gchar*"/>
+					<parameter name="default_port" type="guint16"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="connect_to_uri_finish" symbol="g_socket_client_connect_to_uri_finish">
+				<return-type type="GSocketConnection*"/>
+				<parameters>
+					<parameter name="client" type="GSocketClient*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="get_enable_proxy" symbol="g_socket_client_get_enable_proxy">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="client" type="GSocketClient*"/>
+				</parameters>
+			</method>
 			<method name="get_family" symbol="g_socket_client_get_family">
 				<return-type type="GSocketFamily"/>
 				<parameters>
@@ -6721,9 +7059,22 @@
 					<parameter name="client" type="GSocketClient*"/>
 				</parameters>
 			</method>
+			<method name="get_timeout" symbol="g_socket_client_get_timeout">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="client" type="GSocketClient*"/>
+				</parameters>
+			</method>
 			<constructor name="new" symbol="g_socket_client_new">
 				<return-type type="GSocketClient*"/>
 			</constructor>
+			<method name="set_enable_proxy" symbol="g_socket_client_set_enable_proxy">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="client" type="GSocketClient*"/>
+					<parameter name="enable" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="set_family" symbol="g_socket_client_set_family">
 				<return-type type="void"/>
 				<parameters>
@@ -6752,9 +7103,18 @@
 					<parameter name="type" type="GSocketType"/>
 				</parameters>
 			</method>
+			<method name="set_timeout" symbol="g_socket_client_set_timeout">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="client" type="GSocketClient*"/>
+					<parameter name="timeout" type="guint"/>
+				</parameters>
+			</method>
+			<property name="enable-proxy" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="family" type="GSocketFamily" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="local-address" type="GSocketAddress*" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="protocol" type="GSocketProtocol" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="timeout" type="guint" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="type" type="GSocketType" readable="1" writable="1" construct="1" construct-only="0"/>
 		</object>
 		<object name="GSocketConnection" parent="GIOStream" type-name="GSocketConnection" get-type="g_socket_connection_get_type">
@@ -7394,6 +7754,12 @@
 			<implements>
 				<interface name="GConverter"/>
 			</implements>
+			<method name="get_file_info" symbol="g_zlib_compressor_get_file_info">
+				<return-type type="GFileInfo*"/>
+				<parameters>
+					<parameter name="compressor" type="GZlibCompressor*"/>
+				</parameters>
+			</method>
 			<constructor name="new" symbol="g_zlib_compressor_new">
 				<return-type type="GZlibCompressor*"/>
 				<parameters>
@@ -7401,6 +7767,14 @@
 					<parameter name="level" type="int"/>
 				</parameters>
 			</constructor>
+			<method name="set_file_info" symbol="g_zlib_compressor_set_file_info">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="compressor" type="GZlibCompressor*"/>
+					<parameter name="file_info" type="GFileInfo*"/>
+				</parameters>
+			</method>
+			<property name="file-info" type="GFileInfo*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="format" type="GZlibCompressorFormat" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="level" type="gint" readable="1" writable="1" construct="0" construct-only="1"/>
 		</object>
@@ -7408,14 +7782,324 @@
 			<implements>
 				<interface name="GConverter"/>
 			</implements>
+			<method name="get_file_info" symbol="g_zlib_decompressor_get_file_info">
+				<return-type type="GFileInfo*"/>
+				<parameters>
+					<parameter name="decompressor" type="GZlibDecompressor*"/>
+				</parameters>
+			</method>
 			<constructor name="new" symbol="g_zlib_decompressor_new">
 				<return-type type="GZlibDecompressor*"/>
 				<parameters>
 					<parameter name="format" type="GZlibCompressorFormat"/>
 				</parameters>
 			</constructor>
+			<property name="file-info" type="GFileInfo*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="format" type="GZlibCompressorFormat" readable="1" writable="1" construct="0" construct-only="1"/>
 		</object>
+		<interface name="GAction" type-name="GAction" get-type="g_action_get_type">
+			<requires>
+				<interface name="GObject"/>
+			</requires>
+			<method name="activate" symbol="g_action_activate">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="action" type="GAction*"/>
+					<parameter name="parameter" type="GVariant*"/>
+				</parameters>
+			</method>
+			<method name="get_enabled" symbol="g_action_get_enabled">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="action" type="GAction*"/>
+				</parameters>
+			</method>
+			<method name="get_name" symbol="g_action_get_name">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="action" type="GAction*"/>
+				</parameters>
+			</method>
+			<method name="get_parameter_type" symbol="g_action_get_parameter_type">
+				<return-type type="GVariantType*"/>
+				<parameters>
+					<parameter name="action" type="GAction*"/>
+				</parameters>
+			</method>
+			<method name="get_state" symbol="g_action_get_state">
+				<return-type type="GVariant*"/>
+				<parameters>
+					<parameter name="action" type="GAction*"/>
+				</parameters>
+			</method>
+			<method name="get_state_hint" symbol="g_action_get_state_hint">
+				<return-type type="GVariant*"/>
+				<parameters>
+					<parameter name="action" type="GAction*"/>
+				</parameters>
+			</method>
+			<method name="get_state_type" symbol="g_action_get_state_type">
+				<return-type type="GVariantType*"/>
+				<parameters>
+					<parameter name="action" type="GAction*"/>
+				</parameters>
+			</method>
+			<method name="set_state" symbol="g_action_set_state">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="action" type="GAction*"/>
+					<parameter name="value" type="GVariant*"/>
+				</parameters>
+			</method>
+			<property name="enabled" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="name" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="parameter-type" type="GVariantType*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="state" type="GVariant" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="state-type" type="GVariantType*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<vfunc name="activate">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="action" type="GAction*"/>
+					<parameter name="parameter" type="GVariant*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_enabled">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="action" type="GAction*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_name">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="action" type="GAction*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_parameter_type">
+				<return-type type="GVariantType*"/>
+				<parameters>
+					<parameter name="action" type="GAction*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_state">
+				<return-type type="GVariant*"/>
+				<parameters>
+					<parameter name="action" type="GAction*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_state_hint">
+				<return-type type="GVariant*"/>
+				<parameters>
+					<parameter name="action" type="GAction*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_state_type">
+				<return-type type="GVariantType*"/>
+				<parameters>
+					<parameter name="action" type="GAction*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="set_state">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="action" type="GAction*"/>
+					<parameter name="state" type="GVariant*"/>
+				</parameters>
+			</vfunc>
+		</interface>
+		<interface name="GActionGroup" type-name="GActionGroup" get-type="g_action_group_get_type">
+			<requires>
+				<interface name="GObject"/>
+			</requires>
+			<method name="action_added" symbol="g_action_group_action_added">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="action_group" type="GActionGroup*"/>
+					<parameter name="action_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="action_enabled_changed" symbol="g_action_group_action_enabled_changed">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="action_group" type="GActionGroup*"/>
+					<parameter name="action_name" type="gchar*"/>
+					<parameter name="enabled" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="action_removed" symbol="g_action_group_action_removed">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="action_group" type="GActionGroup*"/>
+					<parameter name="action_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="action_state_changed" symbol="g_action_group_action_state_changed">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="action_group" type="GActionGroup*"/>
+					<parameter name="action_name" type="gchar*"/>
+					<parameter name="state" type="GVariant*"/>
+				</parameters>
+			</method>
+			<method name="activate" symbol="g_action_group_activate">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="action_group" type="GActionGroup*"/>
+					<parameter name="action_name" type="gchar*"/>
+					<parameter name="parameter" type="GVariant*"/>
+				</parameters>
+			</method>
+			<method name="get_enabled" symbol="g_action_group_get_enabled">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="action_group" type="GActionGroup*"/>
+					<parameter name="action_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_parameter_type" symbol="g_action_group_get_parameter_type">
+				<return-type type="GVariantType*"/>
+				<parameters>
+					<parameter name="action_group" type="GActionGroup*"/>
+					<parameter name="action_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_state" symbol="g_action_group_get_state">
+				<return-type type="GVariant*"/>
+				<parameters>
+					<parameter name="action_group" type="GActionGroup*"/>
+					<parameter name="action_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_state_hint" symbol="g_action_group_get_state_hint">
+				<return-type type="GVariant*"/>
+				<parameters>
+					<parameter name="action_group" type="GActionGroup*"/>
+					<parameter name="action_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_state_type" symbol="g_action_group_get_state_type">
+				<return-type type="GVariantType*"/>
+				<parameters>
+					<parameter name="action_group" type="GActionGroup*"/>
+					<parameter name="action_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="has_action" symbol="g_action_group_has_action">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="action_group" type="GActionGroup*"/>
+					<parameter name="action_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="list_actions" symbol="g_action_group_list_actions">
+				<return-type type="gchar**"/>
+				<parameters>
+					<parameter name="action_group" type="GActionGroup*"/>
+				</parameters>
+			</method>
+			<method name="set_state" symbol="g_action_group_set_state">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="action_group" type="GActionGroup*"/>
+					<parameter name="action_name" type="gchar*"/>
+					<parameter name="value" type="GVariant*"/>
+				</parameters>
+			</method>
+			<signal name="action-added" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="action_group" type="GActionGroup*"/>
+					<parameter name="action_name" type="char*"/>
+				</parameters>
+			</signal>
+			<signal name="action-enabled-changed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="action_group" type="GActionGroup*"/>
+					<parameter name="action_name" type="char*"/>
+					<parameter name="enabled" type="gboolean"/>
+				</parameters>
+			</signal>
+			<signal name="action-removed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="action_group" type="GActionGroup*"/>
+					<parameter name="action_name" type="char*"/>
+				</parameters>
+			</signal>
+			<signal name="action-state-changed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="action_group" type="GActionGroup*"/>
+					<parameter name="action_name" type="char*"/>
+					<parameter name="value" type="GVariant"/>
+				</parameters>
+			</signal>
+			<vfunc name="activate">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="action_group" type="GActionGroup*"/>
+					<parameter name="action_name" type="gchar*"/>
+					<parameter name="parameter" type="GVariant*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_enabled">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="action_group" type="GActionGroup*"/>
+					<parameter name="action_name" type="gchar*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_parameter_type">
+				<return-type type="GVariantType*"/>
+				<parameters>
+					<parameter name="action_group" type="GActionGroup*"/>
+					<parameter name="action_name" type="gchar*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_state">
+				<return-type type="GVariant*"/>
+				<parameters>
+					<parameter name="action_group" type="GActionGroup*"/>
+					<parameter name="action_name" type="gchar*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_state_hint">
+				<return-type type="GVariant*"/>
+				<parameters>
+					<parameter name="action_group" type="GActionGroup*"/>
+					<parameter name="action_name" type="gchar*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_state_type">
+				<return-type type="GVariantType*"/>
+				<parameters>
+					<parameter name="action_group" type="GActionGroup*"/>
+					<parameter name="action_name" type="gchar*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="has_action">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="action_group" type="GActionGroup*"/>
+					<parameter name="action_name" type="gchar*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="list_actions">
+				<return-type type="gchar**"/>
+				<parameters>
+					<parameter name="action_group" type="GActionGroup*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="set_state">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="action_group" type="GActionGroup*"/>
+					<parameter name="action_name" type="gchar*"/>
+					<parameter name="value" type="GVariant*"/>
+				</parameters>
+			</vfunc>
+		</interface>
 		<interface name="GAppInfo" type-name="GAppInfo" get-type="g_app_info_get_type">
 			<requires>
 				<interface name="GObject"/>
@@ -10625,6 +11309,161 @@
 				</parameters>
 			</vfunc>
 		</interface>
+		<interface name="GProxy" type-name="GProxy" get-type="g_proxy_get_type">
+			<requires>
+				<interface name="GObject"/>
+			</requires>
+			<method name="connect" symbol="g_proxy_connect">
+				<return-type type="GIOStream*"/>
+				<parameters>
+					<parameter name="proxy" type="GProxy*"/>
+					<parameter name="connection" type="GIOStream*"/>
+					<parameter name="proxy_address" type="GProxyAddress*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="connect_async" symbol="g_proxy_connect_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="proxy" type="GProxy*"/>
+					<parameter name="connection" type="GIOStream*"/>
+					<parameter name="proxy_address" type="GProxyAddress*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="connect_finish" symbol="g_proxy_connect_finish">
+				<return-type type="GIOStream*"/>
+				<parameters>
+					<parameter name="proxy" type="GProxy*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="get_default_for_protocol" symbol="g_proxy_get_default_for_protocol">
+				<return-type type="GProxy*"/>
+				<parameters>
+					<parameter name="protocol" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="supports_hostname" symbol="g_proxy_supports_hostname">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="proxy" type="GProxy*"/>
+				</parameters>
+			</method>
+			<vfunc name="connect">
+				<return-type type="GIOStream*"/>
+				<parameters>
+					<parameter name="proxy" type="GProxy*"/>
+					<parameter name="connection" type="GIOStream*"/>
+					<parameter name="proxy_address" type="GProxyAddress*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="connect_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="proxy" type="GProxy*"/>
+					<parameter name="connection" type="GIOStream*"/>
+					<parameter name="proxy_address" type="GProxyAddress*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="connect_finish">
+				<return-type type="GIOStream*"/>
+				<parameters>
+					<parameter name="proxy" type="GProxy*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="supports_hostname">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="proxy" type="GProxy*"/>
+				</parameters>
+			</vfunc>
+		</interface>
+		<interface name="GProxyResolver" type-name="GProxyResolver" get-type="g_proxy_resolver_get_type">
+			<requires>
+				<interface name="GObject"/>
+			</requires>
+			<method name="get_default" symbol="g_proxy_resolver_get_default">
+				<return-type type="GProxyResolver*"/>
+			</method>
+			<method name="is_supported" symbol="g_proxy_resolver_is_supported">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="resolver" type="GProxyResolver*"/>
+				</parameters>
+			</method>
+			<method name="lookup" symbol="g_proxy_resolver_lookup">
+				<return-type type="gchar**"/>
+				<parameters>
+					<parameter name="resolver" type="GProxyResolver*"/>
+					<parameter name="uri" type="gchar*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="lookup_async" symbol="g_proxy_resolver_lookup_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="resolver" type="GProxyResolver*"/>
+					<parameter name="uri" type="gchar*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="lookup_finish" symbol="g_proxy_resolver_lookup_finish">
+				<return-type type="gchar**"/>
+				<parameters>
+					<parameter name="resolver" type="GProxyResolver*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<vfunc name="is_supported">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="resolver" type="GProxyResolver*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="lookup">
+				<return-type type="gchar**"/>
+				<parameters>
+					<parameter name="resolver" type="GProxyResolver*"/>
+					<parameter name="uri" type="gchar*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="lookup_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="resolver" type="GProxyResolver*"/>
+					<parameter name="uri" type="gchar*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="lookup_finish">
+				<return-type type="gchar**"/>
+				<parameters>
+					<parameter name="resolver" type="GProxyResolver*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+		</interface>
 		<interface name="GSeekable" type-name="GSeekable" get-type="g_seekable_get_type">
 			<requires>
 				<interface name="GObject"/>
@@ -10714,7 +11553,19 @@
 					<parameter name="connectable" type="GSocketConnectable*"/>
 				</parameters>
 			</method>
+			<method name="proxy_enumerate" symbol="g_socket_connectable_proxy_enumerate">
+				<return-type type="GSocketAddressEnumerator*"/>
+				<parameters>
+					<parameter name="connectable" type="GSocketConnectable*"/>
+				</parameters>
+			</method>
 			<vfunc name="enumerate">
+				<return-type type="GSocketAddressEnumerator*"/>
+				<parameters>
+					<parameter name="connectable" type="GSocketConnectable*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="proxy_enumerate">
 				<return-type type="GSocketAddressEnumerator*"/>
 				<parameters>
 					<parameter name="connectable" type="GSocketConnectable*"/>
@@ -11060,6 +11911,8 @@
 		<constant name="G_FILE_ATTRIBUTE_UNIX_RDEV" type="char*" value="unix::rdev"/>
 		<constant name="G_FILE_ATTRIBUTE_UNIX_UID" type="char*" value="unix::uid"/>
 		<constant name="G_NATIVE_VOLUME_MONITOR_EXTENSION_POINT_NAME" type="char*" value="gio-native-volume-monitor"/>
+		<constant name="G_PROXY_EXTENSION_POINT_NAME" type="char*" value="gio-proxy"/>
+		<constant name="G_PROXY_RESOLVER_EXTENSION_POINT_NAME" type="char*" value="gio-proxy-resolver"/>
 		<constant name="G_VFS_EXTENSION_POINT_NAME" type="char*" value="gio-vfs"/>
 		<constant name="G_VOLUME_IDENTIFIER_KIND_HAL_UDI" type="char*" value="hal-udi"/>
 		<constant name="G_VOLUME_IDENTIFIER_KIND_LABEL" type="char*" value="label"/>
