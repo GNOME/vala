@@ -182,7 +182,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	}
 
 	protected virtual void write_wiki_page (WikiPage page, string contentp, string css_path, string js_path, string pkg_name) {
-		GLib.FileStream file = GLib.FileStream.open (Path.build_filename(contentp, page.name.ndup(page.name.len()-7).replace ("/", ".")+"html"), "w");
+		GLib.FileStream file = GLib.FileStream.open (Path.build_filename(contentp, page.name.ndup(page.name.length-7).replace ("/", ".")+"html"), "w");
 		writer = new MarkupWriter (file);
 		_renderer.set_writer (writer);
 		this.write_file_header (css_path, js_path, pkg_name);

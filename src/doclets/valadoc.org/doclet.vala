@@ -155,7 +155,7 @@ public class Valadoc.ValadocOrg.Doclet : Valadoc.Html.BasicDoclet {
 	}
 
 	protected override void write_wiki_page (WikiPage page, string contentp, string css_path, string js_path, string pkg_name) {
-		GLib.FileStream file = GLib.FileStream.open (Path.build_filename(contentp, page.name.ndup(page.name.len()-7).replace ("/", ".")+"wiki.tpl"), "w");
+		GLib.FileStream file = GLib.FileStream.open (Path.build_filename(contentp, page.name.ndup(page.name.length-7).replace ("/", ".")+"wiki.tpl"), "w");
 		writer = new Html.MarkupWriter (file);
 		_renderer.set_writer (writer);
 		_renderer.set_container (page);
