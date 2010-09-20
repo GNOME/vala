@@ -316,6 +316,13 @@ public class Vala.BinaryExpression : Expression {
 			   || operator == BinaryOperator.DIV) {
 			// check for pointer arithmetic
 			if (left.value_type is PointerType) {
+				var pointer_type = (PointerType) left.value_type;
+				if (pointer_type.base_type is VoidType) {
+					error = true;
+					Report.error (source_reference, "Pointer arithmetic not supported for `void*'");
+					return false;
+				}
+
 				var offset_type = right.value_type.data_type as Struct;
 				if (offset_type != null && offset_type.is_integer_type ()) {
 					if (operator == BinaryOperator.PLUS
