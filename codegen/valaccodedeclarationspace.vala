@@ -44,6 +44,7 @@ public class Vala.CCodeDeclarationSpace {
 		if (add_declaration (name)) {
 			return true;
 		}
+		sym.source_reference.file.used = true;
 		if (sym.external_package || (!is_header && CodeContext.get ().use_header && !sym.is_internal_symbol ())) {
 			// add appropriate include file
 			foreach (string header_filename in sym.get_cheader_filenames ()) {
