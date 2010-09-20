@@ -459,6 +459,8 @@ public class Vala.GObjectModule : GTypeModule {
 			ccode.add_declaration ("%s *".printf (cl.get_cname ()), new CCodeVariableDeclarator ("self"));
 			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("self"), ccall));
 
+			c.body.emit (this);
+
 			if (current_method_inner_error) {
 				/* always separate error parameter and inner_error local variable
 				 * as error may be set to NULL but we're always interested in inner errors
@@ -466,9 +468,6 @@ public class Vala.GObjectModule : GTypeModule {
 				ccode.add_declaration ("GError *", new CCodeVariableDeclarator.zero ("_inner_error_", new CCodeConstant ("NULL")));
 			}
 
-
-			c.body.emit (this);
-		
 			ccode.add_return (new CCodeIdentifier ("obj"));
 
 			pop_function ();
