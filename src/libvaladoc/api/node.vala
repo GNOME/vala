@@ -176,27 +176,27 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 		return children;
 	}
 
-	public void accept_children_by_type (NodeType type, Visitor visitor) {
+	public void accept_children_by_type (NodeType type, Visitor visitor, bool filtered = true) {
 		Gee.List<Node> all_children = per_type_children.get (type);
 		if (all_children != null) {
 			foreach (Node node in all_children) {
-				if (node.do_document) {
+				if (node.do_document || !filtered) {
 					node.accept (visitor);
 				}
 			}
 		}
 	}
 
-	public void accept_children (NodeType[] types, Visitor visitor) {
+	public void accept_children (NodeType[] types, Visitor visitor, bool filtered = true) {
 		foreach (NodeType type in types) {
-			accept_children_by_type (type, visitor);
+			accept_children_by_type (type, visitor, filtered);
 		}
 	}
 
-	public void accept_all_children (Visitor visitor) {
+	public void accept_all_children (Visitor visitor, bool filtered = true) {
 		foreach (Gee.List<Node> children in per_type_children.values) {
 			foreach (Node node in children) {
-				if (node.do_document) {
+				if (node.do_document || !filtered) {
 					node.accept (visitor);
 				}
 			}

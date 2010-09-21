@@ -64,26 +64,26 @@ public class Valadoc.CTypeResolver : Visitor {
 	}
 
 	public override void visit_package (Package item) {
-		item.accept_all_children (this);
+		item.accept_all_children (this, false);
 	}
 
 	public override void visit_namespace (Namespace item) {
-		item.accept_all_children (this);
+		item.accept_all_children (this, false);
 	}
 
 	public override void visit_interface (Interface item) {
 		register_symbol (item.get_cname (), item);
-		item.accept_all_children (this);
+		item.accept_all_children (this, false);
 	}
 
 	public override void visit_class (Class item) {
 		register_symbol (item.get_cname (), item);
-		item.accept_all_children (this);
+		item.accept_all_children (this, false);
 	}
 
 	public override void visit_struct (Struct item) {
 		register_symbol (item.get_cname (), item);
-		item.accept_all_children (this);
+		item.accept_all_children (this, false);
 	}
 
 	public override void visit_property (Property item) {
@@ -125,7 +125,7 @@ public class Valadoc.CTypeResolver : Visitor {
 
 	public override void visit_error_domain (ErrorDomain item) {
 		register_symbol (item.get_cname (), item);
-		item.accept_all_children (this);
+		item.accept_all_children (this, false);
 	}
 
 	public override void visit_error_code (ErrorCode item) {
@@ -134,7 +134,7 @@ public class Valadoc.CTypeResolver : Visitor {
 
 	public override void visit_enum (Api.Enum item) {
 		register_symbol (item.get_cname (), item);
-		item.accept_all_children (this);
+		item.accept_all_children (this, false);
 	}
 
 	public override void visit_enum_value (Api.EnumValue item) {
