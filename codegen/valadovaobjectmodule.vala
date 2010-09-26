@@ -1910,7 +1910,9 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 				vdeclarator.add_parameter (cparam);
 			}
 			if (vcall != null) {
-				vcall.add_argument (get_variable_cexpression (param.name));
+				if (param.name != null) {
+					vcall.add_argument (get_variable_cexpression (param.name));
+				}
 			}
 		}
 
