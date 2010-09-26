@@ -99,7 +99,7 @@ AM_CONDITIONAL(HAVE_XSLTPROC, test "$XSLTPROC" != :)
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
 AC_CONFIG_FILES([Makefile
-           vala.pc
+           libvala.pc
            gee/Makefile
            ccode/Makefile
            vala/Makefile

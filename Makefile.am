@@ -37,9 +37,9 @@ aclocaldir = $(datadir)/aclocal
 dist_aclocal_DATA = vala.m4
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = vala@PACKAGE_SUFFIX@.pc
+pkgconfig_DATA = libvala@PACKAGE_SUFFIX@.pc
 
-vala@PACKAGE_SUFFIX@.pc: vala.pc
+libvala@PACKAGE_SUFFIX@.pc: libvala.pc
 	cp $< $@
 
 .PHONY: bootstrap
