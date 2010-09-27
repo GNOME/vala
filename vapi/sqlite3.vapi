@@ -354,11 +354,13 @@ namespace Sqlite {
 		[CCode (cname = "sqlite3_stmt_status")]
 		public int status (Sqlite.StatementStatus op, int resetFlg = 0);
 		public int step ();
-		public int bind_blob (int index, void* value, int n, GLib.DestroyNotify destroy_notify);
+		public int bind_blob (int index, void* value, int n, GLib.DestroyNotify? destroy_notify = null);
 		public int bind_double (int index, double value);
 		public int bind_int (int index, int value);
 		public int bind_int64 (int index, int64 value);
 		public int bind_null (int index);
+		[CCode (cname = "sqlite3_bind_text")]
+		public int _bind_text (int index, string value, int n = -1, GLib.DestroyNotify? destroy_notify = null);
 		public int bind_text (int index, owned string value, int n = -1, GLib.DestroyNotify destroy_notify = GLib.g_free);
 		public int bind_value (int index, Value value);
 		public int bind_zeroblob (int index, int n);
@@ -408,7 +410,7 @@ namespace Sqlite {
 
 	[Compact, CCode (cname = "sqlite3_context", cprefix = "sqlite3_")]
 	public class Context {
-		public void result_blob (uint8[] data, GLib.DestroyNotify? destroy_notify = GLib.g_free);
+		public void result_blob (owned uint8[] data, GLib.DestroyNotify? destroy_notify = GLib.g_free);
 		public void result_double (double value);
 		public void result_error (string value, int error_code);
 		public void result_error_toobig ();
@@ -417,7 +419,7 @@ namespace Sqlite {
 		public void result_int (int value);
 		public void result_int64 (int64 value);
 		public void result_null ();
-		public void result_text (string value, int length = -1, GLib.DestroyNotify? destroy_notify = GLib.g_free);
+		public void result_text (owned string value, int length = -1, GLib.DestroyNotify? destroy_notify = GLib.g_free);
 		public void result_value (Sqlite.Value value);
 		public void result_zeroblob (int n);
 
