@@ -48,6 +48,8 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 	const int BUFFER_SIZE = 32;
 
+	static List<TypeParameter> _empty_type_parameter_list;
+
 	struct TokenInfo {
 		public TokenType type;
 		public SourceLocation begin;
@@ -3738,16 +3740,20 @@ public class Vala.Genie.Parser : CodeVisitor {
 	}
 
 	List<TypeParameter> parse_type_parameter_list () throws ParseError {
-		var list = new ArrayList<TypeParameter> ();
 		if (accept (TokenType.OF)) {
+			var list = new ArrayList<TypeParameter> ();
 			do {
 				var begin = get_location ();
 				string id = parse_identifier ();
 				list.add (new TypeParameter (id, get_src (begin)));
 			} while (accept (TokenType.COMMA));
-
+			return list;
+		} else {
+			if (_empty_type_parameter_list == null) {
+				_empty_type_parameter_list = new ArrayList<TypeParameter> ();
+			}
+			return _empty_type_parameter_list;
 		}
-		return list;
 	}
 
 	void skip_type_argument_list () throws ParseError {
