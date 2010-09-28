@@ -609,7 +609,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 				array_type.fixed_length = true;
 				array_type.length = array_length;
 			}
-
+			array_type.value_owned = type.value_owned;
 			return array_type;
 		}
 		return type;
