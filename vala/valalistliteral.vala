@@ -95,13 +95,19 @@ public class Vala.ListLiteral : Literal {
 			fixed_element_type = true;
 		}
 
-		foreach (var expr in expression_list) {
+		for (int i = 0; i < expression_list.size; i++) {
+			var expr = expression_list[i];
+
 			if (fixed_element_type) {
 				expr.target_type = element_type;
 			}
 			if (!expr.check (analyzer)) {
 				return false;
 			}
+
+			// expression might have been replaced in the list
+			expr = expression_list[i];
+
 			if (element_type == null) {
 				element_type = expr.value_type.copy ();
 				element_type.value_owned = false;
