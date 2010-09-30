@@ -57,6 +57,10 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 	}
 
 	public override void visit_error_domain (ErrorDomain edomain) {
+		if (edomain.comment != null) {
+			cfile.add_type_definition (new CCodeComment (edomain.comment.content));
+		}
+
 		generate_error_domain_declaration (edomain, cfile);
 
 		if (!edomain.is_internal_symbol ()) {
