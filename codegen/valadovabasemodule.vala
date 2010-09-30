@@ -1783,8 +1783,26 @@ public class Vala.DovaBaseModule : CodeGenerator {
 
 	public override void visit_cast_expression (CastExpression expr) {
 		if (expr.is_silent_cast) {
-			expr.error = true;
-			Report.error (expr.source_reference, "Operation not supported for this type");
+			if (expr.inner.value_type is ObjectType) {
+				var ccomma = new CCodeCommaExpression ();
+				var temp_decl = get_temp_variable (expr.inner.value_type, true, expr);
+
+				emit_temp_var (temp_decl);
+
+				var ctemp = get_variable_cexpression (temp_decl.name);
+				var cinit = new CCodeAssignment (ctemp, (CCodeExpression) expr.inner.ccodenode);
+				var ccheck = create_type_check (ctemp, expr.type_reference);
+				var ccast = new CCodeCastExpression (ctemp, expr.type_reference.get_cname ());
+				var cnull = new CCodeConstant ("NULL");
+
+				ccomma.append_expression (cinit);
+				ccomma.append_expression (new CCodeConditionalExpression (ccheck, ccast, cnull));
+
+				expr.ccodenode = ccomma;
+			} else {
+				expr.error = true;
+				Report.error (expr.source_reference, "Operation not supported for this type");
+			}
 			return;
 		}
 
@@ -1942,24 +1960,10 @@ public class Vala.DovaBaseModule : CodeGenerator {
 		expr.ccodenode = new CCodeBinaryExpression (op, cleft, cright);
 	}
 
-	public string? get_type_check_function (TypeSymbol type) {
-		var cl = type as Class;
-		if (cl != null && cl.type_check_function != null) {
-			return cl.type_check_function;
-		} else if ((cl != null && cl.is_compact) || type is Struct || type is Enum || type is Delegate) {
-			return null;
-		} else {
-			return type.get_upper_case_cname ("IS_");
-		}
-	}
-
 	CCodeExpression? create_type_check (CCodeNode ccodenode, DataType type) {
-		string type_check_func = get_type_check_function (type.data_type);
-		if (type_check_func == null) {
-			return new CCodeInvalidExpression ();
-		}
-		var ccheck = new CCodeFunctionCall (new CCodeIdentifier (type_check_func));
+		var ccheck = new CCodeFunctionCall (new CCodeIdentifier ("any_is_a"));
 		ccheck.add_argument ((CCodeExpression) ccodenode);
+		ccheck.add_argument (get_type_id_expression (type));
 		return ccheck;
 	}
 
