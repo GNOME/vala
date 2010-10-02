@@ -247,6 +247,10 @@ ClutterKeyEvent is_value_type="1"
 ClutterKnot is_value_type="1"
 
 ClutterLayoutManager::layout_changed has_emitter="1"
+clutter_layout_manager_get_preferred_height.min_height_p is_out="1"
+clutter_layout_manager_get_preferred_height.nat_height_p is_out="1"
+clutter_layout_manager_get_preferred_width.min_width_p is_out="1"
+clutter_layout_manager_get_preferred_width.nat_width_p is_out="1"
 
 clutter_list_model_newv.n_columns hidden="1"
 clutter_list_model_newv.types array_length_pos="0.9"
