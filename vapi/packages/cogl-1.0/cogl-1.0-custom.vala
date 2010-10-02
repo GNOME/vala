@@ -12,11 +12,9 @@ namespace Cogl {
 	public class Buffer: Handle {
 		public uint get_size ();
 		public Cogl.BufferUpdateHint get_update_hint ();
-		public Cogl.BufferUsageHint get_usage_hint ();
 		public uchar map (Cogl.BufferAccess access);
-		public bool set_data (size_t offset, uchar data, size_t size);
+		public bool set_data (size_t offset, [CCode (array_length_type = "size_t")] uint8[] data);
 		public void set_update_hint (Cogl.BufferUpdateHint hint);
-		public void set_usage_hint (Cogl.BufferUsageHint hint);
 		public void unmap ();
 	}
 

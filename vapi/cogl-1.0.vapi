@@ -5,20 +5,29 @@ namespace Cogl {
 	[Compact]
 	[CCode (cname = "CoglHandle", cheader_filename = "cogl/cogl.h")]
 	public class Bitmap : Cogl.Handle {
+		public static GLib.Type error_get_type ();
+		public static GLib.Quark error_quark ();
 		public static bool get_size_from_file (string filename, out int width, out int height);
 		public static Cogl.Bitmap new_from_file (string filename) throws GLib.Error;
 	}
 	[Compact]
 	[CCode (cname = "CoglHandle", cheader_filename = "cogl/cogl.h")]
 	public class Buffer : Cogl.Handle {
+		public static GLib.Type access_get_type ();
+		public static GLib.Type bit_get_type ();
 		public uint get_size ();
 		public Cogl.BufferUpdateHint get_update_hint ();
-		public Cogl.BufferUsageHint get_usage_hint ();
 		public uchar map (Cogl.BufferAccess access);
-		public bool set_data (size_t offset, uchar data, size_t size);
+		public static GLib.Type map_hint_get_type ();
+		public bool set_data (size_t offset, [CCode (array_length_type = "size_t")] uint8[] data);
 		public void set_update_hint (Cogl.BufferUpdateHint hint);
-		public void set_usage_hint (Cogl.BufferUsageHint hint);
+		public static GLib.Type target_get_type ();
 		public void unmap ();
+		public static GLib.Type update_hint_get_type ();
+	}
+	[Compact]
+	[CCode (cheader_filename = "cogl/cogl.h")]
+	public class Framebuffer {
 	}
 	[Compact]
 	[CCode (ref_function = "cogl_handle_ref", unref_function = "cogl_handle_unref", cheader_filename = "cogl/cogl.h")]
@@ -47,15 +56,25 @@ namespace Cogl {
 	public class Material : Cogl.Handle {
 		[CCode (has_construct_function = false)]
 		public Material ();
+		public static GLib.Type alpha_func_get_type ();
 		public Cogl.Material copy ();
+		public static GLib.Type filter_get_type ();
+		public static void foreach_layer (Cogl.Material material, Cogl.MaterialLayerCallback callback);
 		public void get_ambient (out Cogl.Color ambient);
 		public void get_color (out Cogl.Color color);
+		public static void get_depth_range (Cogl.Material material, float near_val, float far_val);
+		public static bool get_depth_test_enabled (Cogl.Material material);
+		public static Cogl.DepthTestFunction get_depth_test_function (Cogl.Material material);
+		public static bool get_depth_writing_enabled (Cogl.Material material);
 		public void get_diffuse (out Cogl.Color diffuse);
 		public void get_emission (out Cogl.Color emission);
+		public static bool get_layer_point_sprite_coords_enabled (Cogl.Material material, int layer_index);
 		public unowned GLib.List<Cogl.MaterialLayer> get_layers ();
 		public int get_n_layers ();
+		public float get_point_size ();
 		public float get_shininess ();
 		public void get_specular (out Cogl.Color specular);
+		public static unowned Cogl.Bitmap get_user_program (Cogl.Material material);
 		public void remove_layer (int layer_index);
 		public void set_alpha_test_function (Cogl.MaterialAlphaFunc alpha_func, float alpha_reference);
 		public void set_ambient (Cogl.Color ambient);
@@ -65,6 +84,10 @@ namespace Cogl {
 		public void set_color (Cogl.Color color);
 		public void set_color4f (float red, float green, float blue, float alpha);
 		public void set_color4ub (uchar red, uchar green, uchar blue, uchar alpha);
+		public static bool set_depth_range (Cogl.Material material, float near_val, float far_val) throws GLib.Error;
+		public static void set_depth_test_enabled (Cogl.Material material, bool enable);
+		public static void set_depth_test_function (Cogl.Material material, Cogl.DepthTestFunction function);
+		public static void set_depth_writing_enabled (Cogl.Material material, bool enable);
 		public void set_diffuse (Cogl.Color diffuse);
 		public void set_emission (Cogl.Color emission);
 		public void set_layer (int layer_index, Cogl.Texture texture);
@@ -72,8 +95,16 @@ namespace Cogl {
 		public void set_layer_combine_constant (int layer_index, Cogl.Color constant);
 		public void set_layer_filters (int layer_index, Cogl.MaterialFilter min_filter, Cogl.MaterialFilter mag_filter);
 		public void set_layer_matrix (int layer_index, Cogl.Matrix matrix);
+		public static bool set_layer_point_sprite_coords_enabled (Cogl.Material material, int layer_index, bool enable) throws GLib.Error;
+		public static void set_layer_wrap_mode (Cogl.Material material, int layer_index, Cogl.MaterialWrapMode mode);
+		public static void set_layer_wrap_mode_p (Cogl.Material material, int layer_index, Cogl.MaterialWrapMode mode);
+		public static void set_layer_wrap_mode_s (Cogl.Material material, int layer_index, Cogl.MaterialWrapMode mode);
+		public static void set_layer_wrap_mode_t (Cogl.Material material, int layer_index, Cogl.MaterialWrapMode mode);
+		public void set_point_size (float point_size);
 		public void set_shininess (float shininess);
 		public void set_specular (Cogl.Color specular);
+		public static void set_user_program (Cogl.Material material, Cogl.Bitmap program);
+		public static GLib.Type wrap_mode_get_type ();
 	}
 	[Compact]
 	[CCode (cname = "CoglHandle", cheader_filename = "cogl/cogl.h")]
@@ -82,6 +113,16 @@ namespace Cogl {
 		public Cogl.MaterialFilter get_min_filter ();
 		public unowned Cogl.Texture? get_texture ();
 		public Cogl.MaterialLayerType get_type ();
+		public static Cogl.MaterialWrapMode get_wrap_mode_p (Cogl.MaterialLayer layer);
+		public static Cogl.MaterialWrapMode get_wrap_mode_s (Cogl.MaterialLayer layer);
+		public static Cogl.MaterialWrapMode get_wrap_mode_t (Cogl.MaterialLayer layer);
+		public static GLib.Type type_get_type ();
+	}
+	[Compact]
+	[CCode (ref_function = "cogl_object_ref", unref_function = "cogl_object_unref", cheader_filename = "cogl/cogl.h")]
+	public class Object {
+		public void* get_user_data (Cogl.UserDataKey key);
+		public void set_user_data (Cogl.UserDataKey key, Cogl.UserDataDestroyCallback destroy);
 	}
 	[Compact]
 	[CCode (ref_function = "cogl_offscreen_ref", unref_function = "cogl_offscreen_unref", cname = "CoglHandle", cheader_filename = "cogl/cogl.h")]
@@ -107,14 +148,45 @@ namespace Cogl {
 		public void set_resolution (double dpi);
 		public void set_use_mipmapping (bool value);
 	}
+	[Compact]
 	[CCode (cheader_filename = "cogl/cogl.h")]
-	public class PangoRenderer : Pango.Renderer {
-		[CCode (has_construct_function = false)]
-		protected PangoRenderer ();
+	public class PangoRenderer {
 	}
 	[Compact]
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public class PangoRendererClass {
+	}
+	[Compact]
+	[CCode (copy_function = "cogl_path_copy", cheader_filename = "cogl/cogl.h")]
+	public class Path {
+		[CCode (type = "void", has_construct_function = false)]
+		public Path ();
+		public static void arc (float center_x, float center_y, float radius_x, float radius_y, float angle_1, float angle_2);
+		public static void close ();
+		public unowned Cogl.Path copy ();
+		public static void curve_to (float x_1, float y_1, float x_2, float y_2, float x_3, float y_3);
+		public static void ellipse (float center_x, float center_y, float radius_x, float radius_y);
+		public static void fill ();
+		public static void fill_preserve ();
+		public static GLib.Type fill_rule_get_type ();
+		public static Cogl.PathFillRule get_fill_rule ();
+		public static void line (float x_1, float y_1, float x_2, float y_2);
+		public static void line_to (float x, float y);
+		public static void move_to (float x, float y);
+		public static void polygon ([CCode (array_length = false)] float[] coords, int num_points);
+		public static void polyline ([CCode (array_length = false)] float[] coords, int num_points);
+		public static void rectangle (float x_1, float y_1, float x_2, float y_2);
+		public static void rel_curve_to (float x_1, float y_1, float x_2, float y_2, float x_3, float y_3);
+		public static void rel_line_to (float x, float y);
+		public static void rel_move_to (float x, float y);
+		public static void round_rectangle (float x_1, float y_1, float x_2, float y_2, float radius, float arc_step);
+		public static void set_fill_rule (Cogl.PathFillRule fill_rule);
+		public static void stroke ();
+		public static void stroke_preserve ();
+	}
+	[Compact]
+	[CCode (cheader_filename = "cogl/cogl.h")]
+	public class PixelArray {
 	}
 	[Compact]
 	[CCode (cheader_filename = "cogl/cogl.h")]
@@ -165,6 +237,18 @@ namespace Cogl {
 		public Texture.with_size (uint width, uint height, Cogl.TextureFlags flags, Cogl.PixelFormat internal_format);
 	}
 	[Compact]
+	[CCode (cheader_filename = "cogl/cogl.h")]
+	public class UserDataKey {
+		public int unused;
+	}
+	[Compact]
+	[CCode (cheader_filename = "cogl/cogl.h")]
+	public class Vector3 {
+		public float x;
+		public float y;
+		public float z;
+	}
+	[Compact]
 	[CCode (ref_function = "cogl_vertex_buffer_ref", unref_function = "cogl_vertex_buffer_unref", cname = "CoglHandle", cheader_filename = "cogl/cogl.h")]
 	public class VertexBuffer : Cogl.Handle {
 		[CCode (has_construct_function = false)]
@@ -191,7 +275,7 @@ namespace Cogl {
 		public Cogl.Fixed sin ();
 		public Cogl.Fixed tan ();
 	}
-	[CCode (type_id = "COGL_TYPE_COLOR", cheader_filename = "cogl/cogl.h")]
+	[CCode (has_type_id = false, cheader_filename = "cogl/cogl.h")]
 	public struct Color {
 		public uchar red;
 		public uchar green;
@@ -200,8 +284,6 @@ namespace Cogl {
 		public uint32 padding0;
 		public uint32 padding1;
 		public uint32 padding2;
-		[CCode (cname = "cogl_color_new", has_construct_function = false)]
-		public Color ();
 		public Cogl.Color copy ();
 		public static bool equal (void* v1, void* v2);
 		public float get_alpha ();
@@ -216,14 +298,30 @@ namespace Cogl {
 		public float get_red ();
 		public uint get_red_byte ();
 		public float get_red_float ();
+		public void init_from_4f (float red, float green, float blue, float alpha);
+		public void init_from_4fv (float color_array);
+		public void init_from_4ub (uchar red, uchar green, uchar blue, uchar alpha);
 		public void premultiply ();
+		public void set_alpha (float alpha);
+		public void set_alpha_byte (uint alpha);
+		public void set_alpha_float (float alpha);
+		public void set_blue (float blue);
+		public void set_blue_byte (uint blue);
+		public void set_blue_float (float blue);
 		public void set_from_4f (float red, float green, float blue, float alpha);
 		public void set_from_4ub (uchar red, uchar green, uchar blue, uchar alpha);
+		public void set_green (float green);
+		public void set_green_byte (uint green);
+		public void set_green_float (float green);
+		public void set_red (float red);
+		public void set_red_byte (uint red);
+		public void set_red_float (float red);
+		public void unpremultiply ();
 	}
 	[CCode (type_id = "COGL_TYPE_FIXED", cheader_filename = "cogl/cogl.h")]
 	public struct Fixed {
+		public Cogl.Fixed atan ();
 		public Cogl.Fixed atan2 (Cogl.Fixed b);
-		public Cogl.Fixed atani ();
 		public Cogl.Fixed cos ();
 		public Cogl.Fixed div (Cogl.Fixed b);
 		public static Cogl.Fixed log2 (uint x);
@@ -257,6 +355,7 @@ namespace Cogl {
 		public weak float[] inv;
 		public uint type;
 		public uint flags;
+		public static bool equal (void* v1, void* v2);
 		public Matrix.from_array (float[] array);
 		public void frustum (float left, float right, float bottom, float top, float z_near, float z_far);
 		[CCode (array_length = false)]
@@ -281,7 +380,7 @@ namespace Cogl {
 		public float ty;
 		public Cogl.Color color;
 	}
-	[CCode (cprefix = "COGL_ATTRIBUTE_TYPE_", cheader_filename = "cogl/cogl.h")]
+	[CCode (cprefix = "COGL_ATTRIBUTE_TYPE_", has_type_id = false, cheader_filename = "cogl/cogl.h")]
 	public enum AttributeType {
 		BYTE,
 		UNSIGNED_BYTE,
@@ -289,65 +388,60 @@ namespace Cogl {
 		UNSIGNED_SHORT,
 		FLOAT
 	}
-	[CCode (cprefix = "COGL_BUFFER_ACCESS_", cheader_filename = "cogl/cogl.h")]
-	[Flags]
+	[CCode (cprefix = "COGL_BITMAP_ERROR_", has_type_id = false, cheader_filename = "cogl/cogl.h")]
+	public enum BitmapError {
+		FAILED,
+		UNKNOWN_TYPE,
+		CORRUPT_IMAGE
+	}
+	[CCode (cprefix = "COGL_BUFFER_ACCESS_", has_type_id = false, cheader_filename = "cogl/cogl.h")]
 	public enum BufferAccess {
 		READ,
 		WRITE,
 		READ_WRITE
 	}
-	[CCode (cprefix = "COGL_BUFFER_BIT_", cheader_filename = "cogl/cogl.h")]
-	[Flags]
+	[CCode (cprefix = "COGL_BUFFER_BIT_", has_type_id = false, cheader_filename = "cogl/cogl.h")]
 	public enum BufferBit {
 		COLOR,
 		DEPTH,
 		STENCIL
 	}
-	[CCode (cprefix = "COGL_", cheader_filename = "cogl/cogl.h")]
-	[Flags]
+	[CCode (cprefix = "COGL_BUFFER_MAP_HINT_", has_type_id = false, cheader_filename = "cogl/cogl.h")]
+	public enum BufferMapHint {
+		DISCARD
+	}
+	[CCode (cprefix = "COGL_", has_type_id = false, cheader_filename = "cogl/cogl.h")]
 	public enum BufferTarget {
 		WINDOW_BUFFER,
 		OFFSCREEN_BUFFER
 	}
-	[CCode (cprefix = "COGL_BUFFER_UPDATE_HINT_", cheader_filename = "cogl/cogl.h")]
+	[CCode (cprefix = "COGL_BUFFER_UPDATE_HINT_", has_type_id = false, cheader_filename = "cogl/cogl.h")]
 	public enum BufferUpdateHint {
 		STATIC,
 		DYNAMIC,
 		STREAM
 	}
-	[CCode (cprefix = "COGL_BUFFER_USAGE_HINT_", cheader_filename = "cogl/cogl.h")]
-	public enum BufferUsageHint {
-		TEXTURE
+	[CCode (cprefix = "COGL_DEPTH_TEST_FUNCTION_", has_type_id = false, cheader_filename = "cogl/cogl.h")]
+	public enum DepthTestFunction {
+		NEVER,
+		LESS,
+		EQUAL,
+		LEQUAL,
+		GREATER,
+		NOTEQUAL,
+		GEQUAL,
+		ALWAYS
 	}
-	[CCode (cprefix = "COGL_DEBUG_", cheader_filename = "cogl/cogl.h")]
-	[Flags]
-	public enum DebugFlags {
-		SLICING,
-		OFFSCREEN,
-		DRAW,
-		PANGO,
-		RECTANGLES,
-		HANDLE,
-		BLEND_STRINGS,
-		DISABLE_BATCHING,
-		DISABLE_VBOS,
-		JOURNAL,
-		BATCHING,
-		DISABLE_SOFTWARE_TRANSFORM,
-		MATRICES,
-		FORCE_SCANLINE_PATHS,
-		ATLAS,
-		DUMP_ATLAS_IMAGE,
-		DISABLE_ATLAS,
-		OPENGL
-	}
-	[CCode (cprefix = "COGL_DRIVER_ERROR_", cheader_filename = "cogl/cogl.h")]
+	[CCode (cprefix = "COGL_DRIVER_ERROR_", has_type_id = false, cheader_filename = "cogl/cogl.h")]
 	public enum DriverError {
 		UNKNOWN_VERSION,
 		INVALID_VERSION
 	}
-	[CCode (cprefix = "COGL_FEATURE_", cheader_filename = "cogl/cogl.h")]
-	[Flags]
+	[CCode (cprefix = "COGL_ERROR_", has_type_id = false, cheader_filename = "cogl/cogl.h")]
+	public enum Error {
+		UNSUPPORTED
+	}
+	[CCode (cprefix = "COGL_FEATURE_", has_type_id = false, cheader_filename = "cogl/cogl.h")]
 	public enum FeatureFlags {
 		TEXTURE_RECTANGLE,
 		TEXTURE_NPOT,
@@ -361,21 +455,28 @@ namespace Cogl {
 		STENCIL_BUFFER,
 		VBOS,
 		PBOS,
-		UNSIGNED_INT_INDICES
+		UNSIGNED_INT_INDICES,
+		DEPTH_RANGE,
+		TEXTURE_NPOT_BASIC,
+		TEXTURE_NPOT_MIPMAP,
+		TEXTURE_NPOT_REPEAT,
+		POINT_SPRITE,
+		TEXTURE_3D,
+		SHADERS_ARBFP
 	}
-	[CCode (cprefix = "COGL_FOG_MODE_", cheader_filename = "cogl/cogl.h")]
+	[CCode (cprefix = "COGL_FOG_MODE_", has_type_id = false, cheader_filename = "cogl/cogl.h")]
 	public enum FogMode {
 		LINEAR,
 		EXPONENTIAL,
 		EXPONENTIAL_SQUARED
 	}
-	[CCode (cprefix = "COGL_INDICES_TYPE_UNSIGNED_", cheader_filename = "cogl/cogl.h")]
+	[CCode (cprefix = "COGL_INDICES_TYPE_UNSIGNED_", has_type_id = false, cheader_filename = "cogl/cogl.h")]
 	public enum IndicesType {
 		BYTE,
 		SHORT,
 		INT
 	}
-	[CCode (cprefix = "COGL_MATERIAL_ALPHA_FUNC_", cheader_filename = "cogl/cogl.h")]
+	[CCode (cprefix = "COGL_MATERIAL_ALPHA_FUNC_", has_type_id = false, cheader_filename = "cogl/cogl.h")]
 	public enum MaterialAlphaFunc {
 		NEVER,
 		LESS,
@@ -386,7 +487,7 @@ namespace Cogl {
 		GEQUAL,
 		ALWAYS
 	}
-	[CCode (cprefix = "COGL_MATERIAL_FILTER_", cheader_filename = "cogl/cogl.h")]
+	[CCode (cprefix = "COGL_MATERIAL_FILTER_", has_type_id = false, cheader_filename = "cogl/cogl.h")]
 	public enum MaterialFilter {
 		NEAREST,
 		LINEAR,
@@ -395,11 +496,22 @@ namespace Cogl {
 		NEAREST_MIPMAP_LINEAR,
 		LINEAR_MIPMAP_LINEAR
 	}
-	[CCode (cprefix = "COGL_MATERIAL_LAYER_TYPE_", cheader_filename = "cogl/cogl.h")]
+	[CCode (cprefix = "COGL_MATERIAL_LAYER_TYPE_", has_type_id = false, cheader_filename = "cogl/cogl.h")]
 	public enum MaterialLayerType {
 		TEXTURE
 	}
-	[CCode (cprefix = "COGL_PIXEL_FORMAT_", cheader_filename = "cogl/cogl.h")]
+	[CCode (cprefix = "COGL_MATERIAL_WRAP_MODE_", has_type_id = false, cheader_filename = "cogl/cogl.h")]
+	public enum MaterialWrapMode {
+		REPEAT,
+		CLAMP_TO_EDGE,
+		AUTOMATIC
+	}
+	[CCode (cprefix = "COGL_PATH_FILL_RULE_", has_type_id = false, cheader_filename = "cogl/cogl.h")]
+	public enum PathFillRule {
+		NON_ZERO,
+		EVEN_ODD
+	}
+	[CCode (cprefix = "COGL_PIXEL_FORMAT_", has_type_id = false, cheader_filename = "cogl/cogl.h")]
 	public enum PixelFormat {
 		ANY,
 		A_8,
@@ -421,25 +533,30 @@ namespace Cogl {
 		RGBA_4444_PRE,
 		RGBA_5551_PRE
 	}
-	[CCode (cprefix = "COGL_READ_PIXELS_COLOR_", cheader_filename = "cogl/cogl.h")]
-	[Flags]
+	[CCode (cprefix = "COGL_READ_PIXELS_COLOR_", has_type_id = false, cheader_filename = "cogl/cogl.h")]
 	public enum ReadPixelsFlags {
 		BUFFER
 	}
-	[CCode (cprefix = "COGL_SHADER_TYPE_", cheader_filename = "cogl/cogl.h")]
+	[CCode (cprefix = "COGL_SHADER_TYPE_", has_type_id = false, cheader_filename = "cogl/cogl.h")]
 	public enum ShaderType {
 		VERTEX,
 		FRAGMENT
 	}
-	[CCode (cprefix = "COGL_TEXTURE_", cheader_filename = "cogl/cogl.h")]
-	[Flags]
+	[CCode (cprefix = "COGL_TEXTURE_", has_type_id = false, cheader_filename = "cogl/cogl.h")]
 	public enum TextureFlags {
 		NONE,
 		NO_AUTO_MIPMAP,
 		NO_SLICING,
 		NO_ATLAS
 	}
-	[CCode (cprefix = "COGL_VERTICES_MODE_", cheader_filename = "cogl/cogl.h")]
+	[CCode (cprefix = "COGL_TEXTURE_PIXMAP_X11_DAMAGE_", has_type_id = false, cheader_filename = "cogl/cogl.h")]
+	public enum TexturePixmapX11ReportLevel {
+		RAW_RECTANGLES,
+		DELTA_RECTANGLES,
+		BOUNDING_BOX,
+		NON_EMPTY
+	}
+	[CCode (cprefix = "COGL_VERTICES_MODE_", has_type_id = false, cheader_filename = "cogl/cogl.h")]
 	public enum VerticesMode {
 		POINTS,
 		LINE_STRIP,
@@ -458,6 +575,10 @@ namespace Cogl {
 	}
 	[CCode (cheader_filename = "cogl/cogl.h", has_target = false)]
 	public delegate void FuncPtr ();
+	[CCode (cheader_filename = "cogl/cogl.h")]
+	public delegate bool MaterialLayerCallback (Cogl.Material material, int layer_index);
+	[CCode (cheader_filename = "cogl/cogl.h")]
+	public delegate void UserDataDestroyCallback ();
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public const int AFIRST_BIT;
 	[CCode (cheader_filename = "cogl/cogl.h")]
@@ -491,6 +612,10 @@ namespace Cogl {
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public const int HAS_GL;
 	[CCode (cheader_filename = "cogl/cogl.h")]
+	public const int HAS_X11;
+	[CCode (cheader_filename = "cogl/cogl.h")]
+	public const int HAS_XLIB;
+	[CCode (cheader_filename = "cogl/cogl.h")]
 	public const int PIXEL_FORMAT_24;
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public const int PIXEL_FORMAT_32;
@@ -511,7 +636,11 @@ namespace Cogl {
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public const int UNPREMULT_MASK;
 	[CCode (cheader_filename = "cogl/cogl.h")]
+	public static GLib.Type attribute_type_get_type ();
+	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static void begin_gl ();
+	[CCode (cheader_filename = "cogl/cogl.h")]
+	public static GLib.Type blend_string_error_get_type ();
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static bool check_extension (string name, string ext);
 	[CCode (cheader_filename = "cogl/cogl.h")]
@@ -537,19 +666,29 @@ namespace Cogl {
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static void clip_stack_save ();
 	[CCode (cheader_filename = "cogl/cogl.h")]
+	public static GLib.Type depth_test_function_get_type ();
+	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static void disable_fog ();
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static Cogl.Fixed double_to_fixed (double value);
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static int double_to_int (double value);
 	[CCode (cheader_filename = "cogl/cogl.h")]
-	public static uint double_to_unit (double value);
+	public static uint double_to_uint (double value);
+	[CCode (cheader_filename = "cogl/cogl.h")]
+	public static GLib.Type driver_error_get_type ();
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static void end_gl ();
+	[CCode (cheader_filename = "cogl/cogl.h")]
+	public static GLib.Type error_get_type ();
+	[CCode (cheader_filename = "cogl/cogl.h")]
+	public static GLib.Type feature_flags_get_type ();
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static bool features_available (Cogl.FeatureFlags features);
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static void flush ();
+	[CCode (cheader_filename = "cogl/cogl.h")]
+	public static GLib.Type fog_mode_get_type ();
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static void frustum (float left, float right, float bottom, float top, float z_near, float z_far);
 	[CCode (cheader_filename = "cogl/cogl.h")]
@@ -565,11 +704,19 @@ namespace Cogl {
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static unowned GLib.OptionGroup get_option_group ();
 	[CCode (cheader_filename = "cogl/cogl.h")]
+	public static unowned Cogl.Path get_path ();
+	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static unowned Cogl.FuncPtr get_proc_address (string name);
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static void get_projection_matrix (Cogl.Matrix matrix);
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static void get_viewport (float[] v);
+	[CCode (cheader_filename = "cogl/cogl.h")]
+	public static GLib.Type indices_type_get_type ();
+	[CCode (cheader_filename = "cogl/cogl.h")]
+	public static bool is_path (Cogl.Bitmap handle);
+	[CCode (cheader_filename = "cogl/cogl.h")]
+	public static bool is_vertex_buffer_indices (Cogl.Bitmap handle);
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static void ortho (float left, float right, float bottom, float top, float near, float far);
 	[CCode (cheader_filename = "cogl/cogl.h")]
@@ -581,45 +728,9 @@ namespace Cogl {
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static void pango_render_layout_subpixel (Pango.Layout layout, int x, int y, Cogl.Color color, int flags);
 	[CCode (cheader_filename = "cogl/cogl.h")]
-	public static void path_arc (float center_x, float center_y, float radius_x, float radius_y, float angle_1, float angle_2);
-	[CCode (cheader_filename = "cogl/cogl.h")]
-	public static void path_close ();
-	[CCode (cheader_filename = "cogl/cogl.h")]
-	public static void path_curve_to (float x_1, float y_1, float x_2, float y_2, float x_3, float y_3);
-	[CCode (cheader_filename = "cogl/cogl.h")]
-	public static void path_ellipse (float center_x, float center_y, float radius_x, float radius_y);
-	[CCode (cheader_filename = "cogl/cogl.h")]
-	public static void path_fill ();
-	[CCode (cheader_filename = "cogl/cogl.h")]
-	public static void path_fill_preserve ();
-	[CCode (cheader_filename = "cogl/cogl.h")]
-	public static void path_line (float x_1, float y_1, float x_2, float y_2);
-	[CCode (cheader_filename = "cogl/cogl.h")]
-	public static void path_line_to (float x, float y);
-	[CCode (cheader_filename = "cogl/cogl.h")]
-	public static void path_move_to (float x, float y);
-	[CCode (cheader_filename = "cogl/cogl.h")]
-	public static void path_new ();
-	[CCode (cheader_filename = "cogl/cogl.h")]
-	public static void path_polygon ([CCode (array_length = false)] float[] coords, int num_points);
-	[CCode (cheader_filename = "cogl/cogl.h")]
-	public static void path_polyline ([CCode (array_length = false)] float[] coords, int num_points);
-	[CCode (cheader_filename = "cogl/cogl.h")]
-	public static void path_rectangle (float x_1, float y_1, float x_2, float y_2);
-	[CCode (cheader_filename = "cogl/cogl.h")]
-	public static void path_rel_curve_to (float x_1, float y_1, float x_2, float y_2, float x_3, float y_3);
-	[CCode (cheader_filename = "cogl/cogl.h")]
-	public static void path_rel_line_to (float x, float y);
-	[CCode (cheader_filename = "cogl/cogl.h")]
-	public static void path_rel_move_to (float x, float y);
-	[CCode (cheader_filename = "cogl/cogl.h")]
-	public static void path_round_rectangle (float x_1, float y_1, float x_2, float y_2, float radius, float arc_step);
-	[CCode (cheader_filename = "cogl/cogl.h")]
-	public static void path_stroke ();
-	[CCode (cheader_filename = "cogl/cogl.h")]
-	public static void path_stroke_preserve ();
-	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static void perspective (float fovy, float aspect, float z_near, float z_far);
+	[CCode (cheader_filename = "cogl/cogl.h")]
+	public static GLib.Type pixel_format_get_type ();
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static void polygon (Cogl.TextureVertex[] vertices, bool use_color);
 	[CCode (cheader_filename = "cogl/cogl.h")]
@@ -627,11 +738,13 @@ namespace Cogl {
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static void pop_matrix ();
 	[CCode (cheader_filename = "cogl/cogl.h")]
-	public static void push_framebuffer (Cogl.Bitmap buffer);
+	public static void push_framebuffer (Cogl.Framebuffer buffer);
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static void push_matrix ();
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static void read_pixels (int x, int y, int width, int height, Cogl.ReadPixelsFlags source, Cogl.PixelFormat format, uchar pixels);
+	[CCode (cheader_filename = "cogl/cogl.h")]
+	public static GLib.Type read_pixels_flags_get_type ();
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static void rectangle (float x_1, float y_1, float x_2, float y_2);
 	[CCode (cheader_filename = "cogl/cogl.h")]
@@ -653,9 +766,11 @@ namespace Cogl {
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static void set_fog (Cogl.Color fog_color, Cogl.FogMode mode, float density, float z_near, float z_far);
 	[CCode (cheader_filename = "cogl/cogl.h")]
-	public static void set_framebuffer (Cogl.Bitmap buffer);
+	public static void set_framebuffer (Cogl.Framebuffer buffer);
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static void set_modelview_matrix (Cogl.Matrix matrix);
+	[CCode (cheader_filename = "cogl/cogl.h")]
+	public static void set_path (Cogl.Path path);
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static void set_projection_matrix (Cogl.Matrix matrix);
 	[CCode (cheader_filename = "cogl/cogl.h")]
@@ -673,7 +788,11 @@ namespace Cogl {
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static int sqrti (int x);
 	[CCode (cheader_filename = "cogl/cogl.h")]
+	public static void transform (Cogl.Matrix matrix);
+	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static void translate (float x, float y, float z);
+	[CCode (cheader_filename = "cogl/cogl.h")]
+	public static GLib.Type vertices_mode_get_type ();
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static void viewport (uint width, uint height);
 }

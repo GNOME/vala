@@ -19,7 +19,8 @@ cogl_blend_string_error_quark hidden="1"
 cogl_bitmap_get_size_from_file hidden="1"
 cogl_bitmap_new_from_file hidden="1"
 
-CoglColor is_value_type="1" free_function="cogl_color_free"
+CoglColor is_value_type="1" free_function="cogl_color_free" has_type_id="0"
+cogl_color_new hidden="1"
 cogl_color_free hidden="1"
 
 cogl_create_program hidden="1"
