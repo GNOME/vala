@@ -223,12 +223,34 @@ namespace Mysql {
 		public bool eof ();
 		public Field* fetch_field ();
 		public Field* fetch_field_direct (uint field_nbr);
-		[CCode (array_length = false)]
-		public unowned Field[] fetch_fields ();
-		[CCode (array_length = false)]
-		public unowned ulong[] fetch_lengths ();
-		[CCode (array_length = false)]
-		public unowned string[]? fetch_row ();		
+
+		[CCode (cname = "mysql_fetch_fields", array_length = false)]
+		public unowned Field[] _fetch_fields ();
+		[CCode (cname = "_vala_mysql_fetch_fields")]
+		public unowned Field[] fetch_fields () {
+			unowned Field[] fields = this._fetch_fields ();
+			fields.length = (int) this.num_fields ();
+			return fields;
+		}
+
+		[CCode (cname = "mysql_fetch_lengths", array_length = false)]
+		public unowned ulong[] _fetch_lengths ();
+		[CCode (cname = "_vala_mysql_fetch_lengths")]
+		public unowned ulong[] fetch_lengths () {
+			unowned ulong[] lengths = this._fetch_lengths ();
+			lengths.length = (int) this.num_fields ();
+			return lengths;
+		}
+
+		[CCode (cname = "mysql_fetch_row", array_length = false)]
+		public unowned string[]? _fetch_row ();
+		[CCode (cname = "_vala_mysql_fetch_row")]
+		public unowned string[]? fetch_row () {
+			unowned string[]? row = this._fetch_row ();
+			row.length = (int) this.num_fields ();
+			return row;
+		}
+
 		public uint fetch_count ();
 		public uint num_fields ();
 		public uint num_rows ();
