@@ -414,29 +414,29 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public interface SourceCompletionProposal : GLib.Object {
-		public abstract bool equal (Gtk.SourceCompletionProposal other);
-		public abstract unowned Gdk.Pixbuf get_icon ();
-		public abstract unowned string get_info ();
-		public abstract unowned string get_label ();
-		public abstract unowned string get_markup ();
-		public abstract unowned string get_text ();
-		public abstract uint hash ();
+		public virtual bool equal (Gtk.SourceCompletionProposal other);
+		public virtual unowned Gdk.Pixbuf get_icon ();
+		public virtual unowned string get_info ();
+		public virtual unowned string get_label ();
+		public virtual unowned string get_markup ();
+		public virtual unowned string get_text ();
+		public virtual uint hash ();
 		[HasEmitter]
 		public signal void changed ();
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public interface SourceCompletionProvider : GLib.Object {
-		public abstract bool activate_proposal (Gtk.SourceCompletionProposal proposal, Gtk.TextIter iter);
-		public abstract Gtk.SourceCompletionActivation get_activation ();
-		public abstract unowned Gdk.Pixbuf? get_icon ();
-		public abstract unowned Gtk.Widget? get_info_widget (Gtk.SourceCompletionProposal proposal);
-		public abstract int get_interactive_delay ();
-		public abstract string get_name ();
-		public abstract int get_priority ();
-		public abstract bool get_start_iter (Gtk.SourceCompletionContext context, Gtk.SourceCompletionProposal proposal, Gtk.TextIter iter);
-		public abstract bool match (Gtk.SourceCompletionContext context);
-		public abstract void populate (Gtk.SourceCompletionContext context);
-		public abstract void update_info (Gtk.SourceCompletionProposal proposal, Gtk.SourceCompletionInfo info);
+		public virtual bool activate_proposal (Gtk.SourceCompletionProposal proposal, Gtk.TextIter iter);
+		public virtual Gtk.SourceCompletionActivation get_activation ();
+		public virtual unowned Gdk.Pixbuf get_icon ();
+		public virtual unowned Gtk.Widget get_info_widget (Gtk.SourceCompletionProposal proposal);
+		public virtual int get_interactive_delay ();
+		public virtual unowned string get_name ();
+		public virtual int get_priority ();
+		public virtual bool get_start_iter (Gtk.SourceCompletionContext context, Gtk.SourceCompletionProposal proposal, Gtk.TextIter iter);
+		public virtual bool match (Gtk.SourceCompletionContext context);
+		public virtual void populate (Gtk.SourceCompletionContext context);
+		public virtual void update_info (Gtk.SourceCompletionProposal proposal, Gtk.SourceCompletionInfo info);
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public interface SourceUndoManager : GLib.Object {
@@ -501,9 +501,9 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public delegate unowned string SourceViewMarkTooltipFunc (Gtk.SourceMark mark);
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
-	public extern const string SOURCE_COMPLETION_CAPABILITY_AUTOMATIC;
+	public const string SOURCE_COMPLETION_CAPABILITY_AUTOMATIC;
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
-	public extern const string SOURCE_COMPLETION_CAPABILITY_INTERACTIVE;
+	public const string SOURCE_COMPLETION_CAPABILITY_INTERACTIVE;
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public static bool source_iter_backward_search (Gtk.TextIter iter, string str, Gtk.SourceSearchFlags flags, out Gtk.TextIter match_start, out Gtk.TextIter match_end, Gtk.TextIter? limit);
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]

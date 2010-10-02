@@ -2250,6 +2250,9 @@ public class Vala.GIdlParser : CodeVisitor {
 						if (eval (nv[1]) == "0") {
 							m.is_virtual = false;
 							m.is_abstract = false;
+						} else {
+							m.is_virtual = true;
+							m.is_abstract = false;
 						}
 					}
 				}
