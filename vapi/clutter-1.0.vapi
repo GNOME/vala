@@ -762,8 +762,8 @@ namespace Clutter {
 		public unowned Clutter.LayoutMeta get_child_meta (Clutter.Container container, Clutter.Actor actor);
 		[NoWrapper]
 		public virtual GLib.Type get_child_meta_type ();
-		public virtual void get_preferred_height (Clutter.Container container, float for_width, float min_height_p, float nat_height_p);
-		public virtual void get_preferred_width (Clutter.Container container, float for_height, float min_width_p, float nat_width_p);
+		public virtual void get_preferred_height (Clutter.Container container, float for_width, out float min_height_p, out float nat_height_p);
+		public virtual void get_preferred_width (Clutter.Container container, float for_height, out float min_width_p, out float nat_width_p);
 		public unowned Clutter.ParamSpecColor list_child_properties (uint n_pspecs);
 		public virtual void set_container (Clutter.Container container);
 		[HasEmitter]
