@@ -62,6 +62,8 @@ public class Vala.Enum : TypeSymbol {
 	 * @param value an enum value
 	 */
 	public void add_value (EnumValue value) {
+		value.access = SymbolAccessibility.PUBLIC;
+
 		values.add (value);
 		scope.add (value.name, value);
 	}
