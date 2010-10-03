@@ -68,7 +68,7 @@ namespace Gtk {
 	}
 
 	[CCode (has_target = false)]
-	public delegate void CallbackMarshal (Object object, void* data, Arg[] args);
+	public delegate void CallbackMarshal (GLib.Object object, void* data, Arg[] args);
 
 	public delegate void ActionCallback (Action action);
 
