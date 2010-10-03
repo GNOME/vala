@@ -2013,7 +2013,7 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_string ("private ");
 		}
 
-		if (sym.external && !sym.external_package) {
+		if (type != CodeWriterType.EXTERNAL && sym.external && !sym.external_package) {
 			write_string ("extern ");
 		}
 	}
