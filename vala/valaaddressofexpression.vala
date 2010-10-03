@@ -81,10 +81,11 @@ public class Vala.AddressofExpression : Expression {
 			error = true;
 			return false;
 		}
-		if (!(inner.value_type is ValueType
-		      || inner.value_type is ObjectType
-		      || inner.value_type is PointerType
-		      || inner.value_type is GenericType)) {
+		if (inner is MemberAccess && inner.symbol_reference is Variable) {
+			// address of variable is always possible
+		} else if (inner is ElementAccess && ((ElementAccess) inner).container.value_type is ArrayType) {
+			// address of element of regular array is always possible
+		} else {
 			error = true;
 			Report.error (source_reference, "Address-of operator not supported for this expression");
 			return false;
