@@ -2002,7 +2002,7 @@ namespace GLib {
 	}
 
 	namespace Filename {
-       public static string to_utf8 (string opsysstring, ssize_t len, out size_t bytes_read, out size_t bytes_written) throws ConvertError;
+		public static string to_utf8 (string opsysstring, ssize_t len, out size_t bytes_read, out size_t bytes_written) throws ConvertError;
 		public static string from_utf8 (string utf8string, ssize_t len, out size_t bytes_read, out size_t bytes_written) throws ConvertError;
 		public static string from_uri (string uri, out string hostname = null) throws ConvertError;
 		public static string to_uri (string filename, string? hostname = null) throws ConvertError;
@@ -2247,9 +2247,9 @@ namespace GLib {
 		public const TimeSpan MILLISECOND;
 	}
 
-        [Compact]
-        [CCode (ref_function = "g_date_time_ref", unref_function = "g_date_time_unref", type_id = "G_TYPE_DATE_TIME")]
-        public class DateTime {
+	[Compact]
+	[CCode (ref_function = "g_date_time_ref", unref_function = "g_date_time_unref", type_id = "G_TYPE_DATE_TIME")]
+	public class DateTime {
 		public DateTime.now (TimeZone tz);
 		public DateTime.now_local ();
 		public DateTime.now_utc ();
@@ -2271,13 +2271,14 @@ namespace GLib {
 		public DateTime add_seconds (double seconds);
 		public DateTime add_full (int years, int months, int days, int hours = 0, int minutes = 0, double seconds = 0);
 		public int compare (DateTime dt);
-		public TimeSpan difference (DateTime end);
+		public TimeSpan difference (DateTime begin);
 		public uint hash ();
 		public bool equal (DateTime dt);
 		public void get_ymd (out int year, out int month, out int day);
 		public int get_year ();
 		public int get_month ();
 		public int get_day_of_month ();
+		public int get_week_numbering_year ();
 		public int get_week_of_year ();
 		public int get_day_of_week ();
 		public int get_day_of_year ();
@@ -2306,9 +2307,9 @@ namespace GLib {
 		UNIVERSAL
 	}
 
-        [Compact]
-        [CCode (ref_function = "g_time_zone_ref", unref_function = "g_time_zone_unref")]
-        public class TimeZone {
+	[Compact]
+	[CCode (ref_function = "g_time_zone_ref", unref_function = "g_time_zone_unref")]
+	public class TimeZone {
 		public TimeZone (string identifier);
 		public TimeZone.utc ();
 		public TimeZone.local ();
@@ -2317,7 +2318,7 @@ namespace GLib {
 		public unowned string get_abbreviation (int interval);
 		public int32 get_offset (int interval);
 		public bool is_dst (int interval);
-        }
+	}
 
 	/* Random Numbers */
 
