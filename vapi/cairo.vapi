@@ -280,7 +280,7 @@ namespace Cairo {
 		BILINEAR,
 		GAUSSIAN
 	}
-	
+
 	[CCode (cname = "cairo_pattern_type_t")]
 	public enum PatternType {
 		SOLID,
@@ -288,7 +288,42 @@ namespace Cairo {
 		LINEAR,
 		RADIAL
 	}
-	
+
+	[Compact]
+	[CCode (ref_function = "cairo_region_reference", unref_function = "cairo_region_destroy", cname = "cairo_region_t")]
+	public class Region {
+		[CCode (cname = "cairo_region_create")]
+		public Region ();
+		[CCode (cname = "cairo_region_create_rectangle")]
+		public Region.rectangle (RectangleInt rectangle);
+		[CCode (cname = "cairo_region_create_rectangles")]
+		public Region.rectangles (RectangleInt[] rects);
+		public Status status ();
+		public RectangleInt get_extents ();
+		public int num_rectangles ();
+		public RectangleInt get_rectangle (int nth);
+		public bool is_empty ();
+		public bool contains_point (int x, int y);
+		public RegionOverlap contains_rectangle (RectangleInt rectangle);
+		public bool equal (Region other);
+		public void translate (int dx, int dy);
+		public Status intersect (Region other);
+		public Status intersect_rectangle (RectangleInt rectangle);
+		public Status subtract (Region other);
+		public Status subtract_rectangle (RectangleInt rectangle);
+		public Status union (Region other);
+		public Status union_rectangle (RectangleInt rectangle);
+		public Status xor (Region other);
+		public Status xor_rectangle (RectangleInt rectangle);
+	}
+
+	[CCode (cname = "cairo_region_overlap_t")]
+	public enum RegionOverlap {
+		IN,
+		OUT,
+		PART
+	}
+
 	[CCode (cname = "cairo_glyph_t")]
 	public class Glyph {
 	}
@@ -552,12 +587,19 @@ namespace Cairo {
 	}
 
 	[CCode (cname = "cairo_rectangle_t", has_type_id = false)]
-	public struct Rectangle
-	{
+	public struct Rectangle	{
 		public double x;
 		public double y;
 		public double width;
 		public double height;
+	}
+
+	[CCode (cname = "cairo_rectangle_int_t", has_type_id = false)]
+	public struct RectangleInt {
+		public int x;
+		public int y;
+		public int width;
+		public int height;
 	}
 
 	[CCode (cname = "cairo_status_t")]
