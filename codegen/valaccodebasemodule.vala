@@ -4425,9 +4425,9 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 				var temp_decl = get_temp_variable (int_type, false, expr);
 				emit_temp_var (temp_decl);
 
-				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_decl.name)));
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_decl.name)));
 				cfunc.add_parameter (new CCodeFormalParameter (get_array_length_cname ("result", dim), "int*"));
-				expr.append_array_size (new CCodeIdentifier (temp_decl.name));
+				expr.append_array_size (get_variable_cexpression (temp_decl.name));
 			}
 		}
 
