@@ -1,3 +1,13 @@
+Vala 0.11.0
+===========
+
+ * Use byte indices for strings.
+ * Use uint8[] for binary data in bindings.
+ * Add support for parallel compilation.
+ * Improve compiler performance.
+ * More refactoring in the code generator.
+ * Many bug fixes and binding updates.
+
 Vala 0.10.0
 ===========
 
