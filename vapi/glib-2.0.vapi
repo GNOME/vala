@@ -1481,6 +1481,9 @@ namespace GLib {
 		public unowned string? get_name ();
 		public void set_name (string? name);
 		public static void set_name_by_id (uint tag, string? name);
+		[CCode (cname = "g_main_context_invoke_full")]
+		public void invoke (owned SourceFunc function, [CCode (pos = 0.1)] int priority = Priority.DEFAULT);
+		public void invoke_full (int priority, owned SourceFunc function);
 	}
 	
 	[CCode (has_target = false)]
