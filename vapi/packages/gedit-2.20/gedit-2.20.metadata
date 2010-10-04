@@ -18,6 +18,7 @@ GeditDocument base_class="GtkSourceBuffer" cheader_filename="gedit/gedit-documen
 GeditDocument.buffer hidden="1"
 GeditDocumentSaveFlags cheader_filename="gedit/gedit-document.h"
 GeditSearchFlags cheader_filename="gedit/gedit-document.h"
+gedit_document_get_uri transfer_ownership="1"
 
 #Encoding
 #in realta' 

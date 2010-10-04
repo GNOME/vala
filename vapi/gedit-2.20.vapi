@@ -30,7 +30,7 @@ namespace Gedit {
 		public bool get_readonly ();
 		public unowned string get_search_text (uint flags);
 		public unowned string get_short_name_for_display ();
-		public unowned string get_uri ();
+		public string get_uri ();
 		public unowned string get_uri_for_display ();
 		public bool goto_line (int line);
 		public bool goto_line_offset (int line, int line_offset);
