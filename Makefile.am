@@ -96,14 +96,14 @@ gen-ChangeLog:
 	fi
 
 CLEANFILES = \
-	vala@PACKAGE_SUFFIX@.pc
+	libvala@PACKAGE_SUFFIX@.pc
 	$(NULL)
 
 EXTRA_DIST = \
 	ChangeLog.pre-0-4 \
 	ChangeLog.pre-0-5-7 \
 	MAINTAINERS \
-	vala.pc.in \
+	libvala.pc.in \
 	.version \
 	build-aux/git-version-gen \
 	build-aux/gitlog-to-changelog \
