@@ -287,6 +287,25 @@ namespace GLib {
 	public struct ObjectConstructParam {
 	}
 
+	[Flags]
+	[CCode (cprefix = "G_BINDING_")]
+	public enum BindingFlags {
+		DEFAULT,
+		BIDIRECTIONAL,
+		SYNC_CREATE,
+		INVERT_BOOLEAN
+	}
+
+	public delegate bool BindingTransformFunc (GLib.Binding binding, GLib.Value source_value, GLib.Value target_value);
+
+	public class Binding : GLib.Object {
+		public weak GLib.Object source { get; }
+		public string source_property { get; }
+		public weak GLib.Object target { get; }
+		public string target_property { get; }
+		public GLib.BindingFlags flags { get; }
+	}
+
 	[CCode (has_target = false)]
 	public delegate void ObjectGetPropertyFunc (Object object, uint property_id, Value value, ParamSpec pspec);
 	[CCode (has_target = false)]
@@ -349,6 +368,9 @@ namespace GLib {
 
 		public void add_toggle_ref (ToggleNotify notify);
 		public void remove_toggle_ref (ToggleNotify notify);
+
+		[CCode (cname = "g_object_bind_property_with_closures")]
+		public unowned GLib.Binding bind_property (string source_property, GLib.Object target, string target_property, GLib.BindingFlags flags, [CCode (type = "GClosure*")] owned GLib.BindingTransformFunc? transform_to = null, [CCode (type = "GClosure*")] owned GLib.BindingTransformFunc? transform_from = null);
 	}
 
 	[CCode (instance_pos = 0)]
@@ -476,7 +498,7 @@ namespace GLib {
 		public void take_param(out ParamSpec param);
 		public void param_take_ownership(out ParamSpec param);
 	}
-	
+
 	public struct SignalInvocationHint {
 		public uint signal_id;
 		public Quark detail;
