@@ -205,6 +205,7 @@ public class Vala.ElementAccess : Expression {
 					foreach (Expression e in get_indices ()) {
 						get_call.add_argument (e);
 					}
+					get_call.formal_target_type = this.formal_target_type;
 					get_call.target_type = this.target_type;
 					parent_node.replace_expression (this, get_call);
 					return get_call.check (analyzer);
