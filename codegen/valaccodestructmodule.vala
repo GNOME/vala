@@ -263,6 +263,10 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 					var ma = new MemberAccess (this_access, f.name);
 					ma.symbol_reference = f;
 					copy = get_ref_cexpression (f.variable_type, copy, ma, f);
+					if (copy == null) {
+						// error case, continue to avoid critical
+						continue;
+					}
 				}
 				var dest = new CCodeMemberAccess.pointer (new CCodeIdentifier ("dest"), f.name);
 
