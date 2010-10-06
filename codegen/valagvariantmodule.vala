@@ -625,7 +625,7 @@ public class Vala.GVariantModule : GAsyncModule {
 
 		var builder_init = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_init"));
 		builder_init.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (builder_name)));
-		builder_init.add_argument (new CCodeIdentifier ("G_VARIANT_TYPE_ARRAY"));
+		builder_init.add_argument (new CCodeConstant ("\"%s\"".printf (get_type_signature (array_type))));
 		fragment.append (new CCodeExpressionStatement (builder_init));
 
 		var cforblock = new CCodeBlock ();
