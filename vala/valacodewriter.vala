@@ -913,6 +913,8 @@ public class Vala.CodeWriter : CodeVisitor {
 		
 		write_params (cb.get_parameters ());
 
+		write_error_domains (cb.get_error_types ());
+
 		write_string (";");
 
 		write_newline ();
