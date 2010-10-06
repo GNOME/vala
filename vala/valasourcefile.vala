@@ -69,7 +69,7 @@ public class Vala.SourceFile {
 
 	/**
 	 * If the file has been used (ie: if anything in the file has
-	 * been found by symbol resolution).
+	 * been emitted into C code as a definition or declaration).
 	 */
 	public bool used { get; set; }
 
