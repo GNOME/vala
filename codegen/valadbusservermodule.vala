@@ -1,6 +1,6 @@
 /* valadbusservermodule.vala
  *
- * Copyright (C) 2007-2009  Jürg Billeter
+ * Copyright (C) 2007-2010  Jürg Billeter
 *  Copyright (C) 2008  Philip Van Hoof
  *
  * This library is free software; you can redistribute it and/or
@@ -1674,11 +1674,9 @@ public class Vala.DBusServerModule : DBusClientModule {
 		return false;
 	}
 
-	public override CCodeFragment register_dbus_info (ObjectTypeSymbol sym) {
-		CCodeFragment fragment = new CCodeFragment ();
-
+	public override void register_dbus_info (ObjectTypeSymbol sym) {
 		if (!type_implements_dbus_interface (sym)) {
-			return fragment;
+			return;
 		}
 
 		var quark = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_static_string"));
@@ -1689,8 +1687,6 @@ public class Vala.DBusServerModule : DBusClientModule {
 		set_qdata.add_argument (quark);
 		set_qdata.add_argument (new CCodeCastExpression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_vtable (new ObjectType (sym))), "void*"));
 
-		fragment.append (new CCodeExpressionStatement (set_qdata));
-
-		return fragment;
+		ccode.add_expression (set_qdata);
 	}
 }

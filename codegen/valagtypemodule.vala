@@ -2010,21 +2010,19 @@ public class Vala.GTypeModule : GErrorModule {
 	}
 
 	private void add_interface_base_init_function (Interface iface) {
+		push_context (new EmitContext (iface));
+
 		var base_init = new CCodeFunction ("%s_base_init".printf (iface.get_lower_case_cname (null)), "void");
 		base_init.add_parameter (new CCodeFormalParameter ("iface", "%sIface *".printf (iface.get_cname ())));
 		base_init.modifiers = CCodeModifiers.STATIC;
-		
-		var init_block = new CCodeBlock ();
-		
+
+		push_function (base_init);
+
 		/* make sure not to run the initialization code twice */
-		base_init.block = new CCodeBlock ();
-		var decl = new CCodeDeclaration (bool_type.get_cname ());
-		decl.modifiers |= CCodeModifiers.STATIC;
-		decl.add_declarator (new CCodeVariableDeclarator ("initialized", new CCodeConstant ("FALSE")));
-		base_init.block.add_statement (decl);
-		var cif = new CCodeIfStatement (new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeIdentifier ("initialized")), init_block);
-		base_init.block.add_statement (cif);
-		init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("initialized"), new CCodeConstant ("TRUE"))));
+		ccode.add_declaration (bool_type.get_cname (), new CCodeVariableDeclarator ("initialized", new CCodeConstant ("FALSE")), CCodeModifiers.STATIC);
+		ccode.open_if (new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeIdentifier ("initialized")));
+
+		ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("initialized"), new CCodeConstant ("TRUE")));
 
 		if (iface.is_subtype_of (gobject_type)) {
 			/* create properties */
@@ -2036,14 +2034,14 @@ public class Vala.GTypeModule : GErrorModule {
 					}
 
 					if (prop.comment != null) {
-						init_block.add_statement (new CCodeComment (prop.comment.content));
+						ccode.add_statement (new CCodeComment (prop.comment.content));
 					}
 
 					var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_interface_install_property"));
 					cinst.add_argument (new CCodeIdentifier ("iface"));
 					cinst.add_argument (get_param_spec (prop));
 
-					init_block.add_statement (new CCodeExpressionStatement (cinst));
+					ccode.add_expression (cinst);
 				}
 			}
 		}
@@ -2051,9 +2049,9 @@ public class Vala.GTypeModule : GErrorModule {
 		/* create signals */
 		foreach (Signal sig in iface.get_signals ()) {
 			if (sig.comment != null) {
-				init_block.add_statement (new CCodeComment (sig.comment.content));
+				ccode.add_statement (new CCodeComment (sig.comment.content));
 			}
-			init_block.add_statement (new CCodeExpressionStatement (get_signal_creation (sig, iface)));
+			ccode.add_expression (get_signal_creation (sig, iface));
 		}
 
 		// connect default implementations
@@ -2061,11 +2059,15 @@ public class Vala.GTypeModule : GErrorModule {
 			if (m.is_virtual) {
 				var ciface = new CCodeIdentifier ("iface");
 				var cname = m.get_real_cname ();
-				base_init.block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, m.vfunc_name), new CCodeIdentifier (cname))));
+				ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, m.vfunc_name), new CCodeIdentifier (cname)));
 			}
 		}
 
-		init_block.add_statement (register_dbus_info (iface));
+		register_dbus_info (iface);
+
+		ccode.close ();
+
+		pop_context ();
 
 		cfile.add_function (base_init);
 	}

@@ -5587,8 +5587,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		return new CCodeFunctionCall (new CCodeIdentifier (""));
 	}
 
-	public virtual CCodeFragment register_dbus_info (ObjectTypeSymbol bindable) {
-		return new CCodeFragment ();
+	public virtual void register_dbus_info (ObjectTypeSymbol bindable) {
 	}
 
 	public virtual string get_dynamic_property_getter_cname (DynamicProperty node) {

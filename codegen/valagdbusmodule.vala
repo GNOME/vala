@@ -99,8 +99,4 @@ public class Vala.GDBusModule : GVariantModule {
 		cquark_fun.block = cquark_block;
 		cfile.add_function (cquark_fun);
 	}
-
-	public override CCodeFragment register_dbus_info (ObjectTypeSymbol sym) {
-		return new CCodeFragment ();
-	}
 }
