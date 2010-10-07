@@ -1788,12 +1788,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccode.add_assignment (new CCodeIdentifier ("self"), get_cvalue_ (transform_value (new GLibValue (base_type, new CCodeIdentifier ("base"), true), this_type, acc)));
 			}
 
-			acc.body.emit (this);
-
-			if (current_method_inner_error) {
-				ccode.add_declaration ("GError *", new CCodeVariableDeclarator.zero ("_inner_error_", new CCodeConstant ("NULL")));
-			}
-
 			// notify on property changes
 			if (is_gobject_property (prop) &&
 			    get_ccode_notify (prop) &&
@@ -1801,7 +1795,52 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				var notify_call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_notify"));
 				notify_call.add_argument (new CCodeCastExpression (new CCodeIdentifier ("self"), "GObject *"));
 				notify_call.add_argument (get_property_canonical_cconstant (prop));
-				ccode.add_expression (notify_call);
+
+				var get_accessor = prop.get_accessor;
+				if (get_accessor != null) {
+					var property_type = prop.property_type;
+					var get_call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_real_name (get_accessor)));
+					get_call.add_argument (new CCodeIdentifier ("self"));
+
+					if (property_type is ArrayType) {
+						ccode.add_declaration ("int", new CCodeVariableDeclarator ("old_value_length"));
+						get_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("old_value_length")));
+						ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_call, new CCodeIdentifier ("value")));
+					} else if (property_type.compatible (string_type)) {
+						var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_strcmp0"));
+						ccall.add_argument (new CCodeIdentifier ("value"));
+						ccall.add_argument (get_call);
+						ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, ccall, new CCodeConstant ("0")));
+					} else if (property_type is StructValueType) {
+						ccode.add_declaration (get_ccode_name (property_type), new CCodeVariableDeclarator ("old_value"));
+						get_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("old_value")));
+
+						var get_expr = new CCodeCommaExpression ();
+						get_expr.append_expression (get_call);
+						get_expr.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("old_value")));
+
+						var equalfunc = generate_struct_equal_function ((Struct) property_type.data_type);
+						var ccall = new CCodeFunctionCall (new CCodeIdentifier (equalfunc));
+						ccall.add_argument (new CCodeIdentifier ("value"));
+						ccall.add_argument (get_expr);
+						ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, ccall, new CCodeConstant ("TRUE")));
+					} else {
+						ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_call, new CCodeIdentifier ("value")));
+					}
+
+					acc.body.emit (this);
+					ccode.add_expression (notify_call);
+					ccode.close ();
+				} else {
+					acc.body.emit (this);
+					ccode.add_expression (notify_call);
+				}
+			} else {
+				acc.body.emit (this);
+			}
+
+			if (current_method_inner_error) {
+				ccode.add_declaration ("GError *", new CCodeVariableDeclarator.zero ("_inner_error_", new CCodeConstant ("NULL")));
 			}
 
 			cfile.add_function (function);
