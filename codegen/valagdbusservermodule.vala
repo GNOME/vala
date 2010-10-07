@@ -77,6 +77,8 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			ready_block.add_statement (cdecl);
 		}
 
+		bool no_reply = is_dbus_no_reply (m);
+
 		var in_prefragment = new CCodeFragment ();
 		var in_postfragment = new CCodeFragment ();
 		var out_prefragment = in_prefragment;
@@ -99,9 +101,11 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			ready_block.add_statement (out_prefragment);
 		}
 
-		cdecl = new CCodeDeclaration ("GVariant*");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("_reply"));
-		out_postfragment.append (cdecl);
+		if (!no_reply) {
+			cdecl = new CCodeDeclaration ("GVariant*");
+			cdecl.add_declarator (new CCodeVariableDeclarator ("_reply"));
+			out_postfragment.append (cdecl);
+		}
 
 		cdecl = new CCodeDeclaration ("GVariantIter");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("_arguments_iter"));
@@ -112,14 +116,16 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		iter_init.add_argument (new CCodeIdentifier ("parameters"));
 		in_prefragment.append (new CCodeExpressionStatement (iter_init));
 
-		cdecl = new CCodeDeclaration ("GVariantBuilder");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("_reply_builder"));
-		out_postfragment.append (cdecl);
+		if (!no_reply) {
+			cdecl = new CCodeDeclaration ("GVariantBuilder");
+			cdecl.add_declarator (new CCodeVariableDeclarator ("_reply_builder"));
+			out_postfragment.append (cdecl);
 
-		var builder_init = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_init"));
-		builder_init.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_reply_builder")));
-		builder_init.add_argument (new CCodeIdentifier ("G_VARIANT_TYPE_TUPLE"));
-		out_postfragment.append (new CCodeExpressionStatement (builder_init));
+			var builder_init = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_init"));
+			builder_init.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_reply_builder")));
+			builder_init.add_argument (new CCodeIdentifier ("G_VARIANT_TYPE_TUPLE"));
+			out_postfragment.append (new CCodeExpressionStatement (builder_init));
+		}
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname ()));
 
@@ -274,9 +280,11 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			}
 		}
 
-		var builder_end = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_end"));
-		builder_end.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_reply_builder")));
-		out_postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_reply"), builder_end)));
+		if (!no_reply) {
+			var builder_end = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_end"));
+			builder_end.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_reply_builder")));
+			out_postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_reply"), builder_end)));
+		}
 
 		if (m.coroutine) {
 			ccall.add_argument (new CCodeCastExpression (new CCodeIdentifier (wrapper_name + "_ready"), "GAsyncReadyCallback"));
@@ -312,7 +320,11 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 		block.add_statement (in_postfragment);
 
-		if (!m.coroutine) {
+		if (no_reply) {
+			var return_value = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
+			return_value.add_argument (new CCodeIdentifier ("invocation"));
+			block.add_statement (new CCodeExpressionStatement (return_value));
+		} else if (!m.coroutine) {
 			var return_value = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_method_invocation_return_value"));
 			return_value.add_argument (new CCodeIdentifier ("invocation"));
 			return_value.add_argument (new CCodeIdentifier ("_reply"));

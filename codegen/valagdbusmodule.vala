@@ -39,6 +39,17 @@ public class Vala.GDBusModule : GVariantModule {
 		return Symbol.lower_case_to_camel_case (symbol.name);
 	}
 
+	public static bool is_dbus_no_reply (Method m) {
+		var dbus_attribute = m.get_attribute ("DBus");
+		if (dbus_attribute != null
+		    && dbus_attribute.has_argument ("no_reply")
+		    && dbus_attribute.get_bool ("no_reply")) {
+			return true;
+		}
+
+		return false;
+	}
+
 	public override void visit_error_domain (ErrorDomain edomain) {
 		var edomain_dbus_name = get_dbus_name (edomain);
 		if (edomain_dbus_name == null) {
