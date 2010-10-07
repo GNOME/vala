@@ -486,7 +486,9 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		if (decl_space.add_declaration (name)) {
 			return true;
 		}
-		sym.source_reference.file.used = true;
+		if (sym.source_reference != null) {
+			sym.source_reference.file.used = true;
+		}
 		if (sym.external_package || (!decl_space.is_header && CodeContext.get ().use_header && !sym.is_internal_symbol ())) {
 			// add appropriate include file
 			foreach (string header_filename in sym.get_cheader_filenames ()) {
