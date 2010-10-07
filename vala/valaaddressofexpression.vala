@@ -83,10 +83,12 @@ public class Vala.AddressofExpression : Expression {
 			error = true;
 			return false;
 		}
+		var ea = inner as ElementAccess;
 		if (inner is MemberAccess && inner.symbol_reference is Variable) {
 			// address of variable is always possible
-		} else if (inner is ElementAccess && ((ElementAccess) inner).container.value_type is ArrayType) {
-			// address of element of regular array is always possible
+		} else if (ea != null &&
+		           (ea.container.value_type is ArrayType || ea.container.value_type is PointerType)) {
+			// address of element of regular array or pointer is always possible
 		} else {
 			error = true;
 			Report.error (source_reference, "Address-of operator not supported for this expression");
