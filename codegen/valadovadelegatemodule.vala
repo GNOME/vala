@@ -205,12 +205,12 @@ public class Vala.DovaDelegateModule : DovaValueModule {
 		string macro = "((%sPrivate *) (((char *) o) + _%s_object_offset))".printf (d.get_cname (), d.get_lower_case_cname ());
 		cfile.add_type_member_declaration (new CCodeMacroReplacement ("%s_GET_PRIVATE(o)".printf (d.get_upper_case_cname (null)), macro));
 
-		var cdecl = new CCodeDeclaration ("int");
+		var cdecl = new CCodeDeclaration ("intptr_t");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("_%s_object_offset".printf (d.get_lower_case_cname ()), new CCodeConstant ("0")));
 		cdecl.modifiers = CCodeModifiers.STATIC;
 		cfile.add_type_member_declaration (cdecl);
 
-		cdecl = new CCodeDeclaration ("int");
+		cdecl = new CCodeDeclaration ("intptr_t");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("_%s_type_offset".printf (d.get_lower_case_cname ()), new CCodeConstant ("0")));
 		cdecl.modifiers = CCodeModifiers.STATIC;
 		cfile.add_type_member_declaration (cdecl);

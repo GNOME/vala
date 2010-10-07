@@ -173,12 +173,8 @@ public class Vala.DovaBaseModule : CodeGenerator {
 	public DataType void_type = new VoidType ();
 	public DataType bool_type;
 	public DataType char_type;
-	public DataType short_type;
-	public DataType ushort_type;
 	public DataType int_type;
 	public DataType uint_type;
-	public DataType long_type;
-	public DataType ulong_type;
 	public DataType string_type;
 	public DataType float_type;
 	public DataType double_type;
@@ -248,12 +244,8 @@ public class Vala.DovaBaseModule : CodeGenerator {
 
 		bool_type = new BooleanType ((Struct) root_symbol.scope.lookup ("bool"));
 		char_type = new IntegerType ((Struct) root_symbol.scope.lookup ("char"));
-		short_type = new IntegerType ((Struct) root_symbol.scope.lookup ("short"));
-		ushort_type = new IntegerType ((Struct) root_symbol.scope.lookup ("ushort"));
 		int_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int"));
 		uint_type = new IntegerType ((Struct) root_symbol.scope.lookup ("uint"));
-		long_type = new IntegerType ((Struct) root_symbol.scope.lookup ("long"));
-		ulong_type = new IntegerType ((Struct) root_symbol.scope.lookup ("ulong"));
 		float_type = new FloatingType ((Struct) root_symbol.scope.lookup ("float"));
 		double_type = new FloatingType ((Struct) root_symbol.scope.lookup ("double"));
 		string_type = new ObjectType ((Class) root_symbol.scope.lookup ("string"));
@@ -657,7 +649,7 @@ public class Vala.DovaBaseModule : CodeGenerator {
 
 			var data = new CCodeStruct ("_" + struct_name);
 			data.add_field ("DovaType*", "type");
-			data.add_field ("int", "_ref_count_");
+			data.add_field ("int32_t", "_ref_count_");
 			if (parent_block != null) {
 				int parent_block_id = get_block_id (parent_block);
 
@@ -747,12 +739,12 @@ public class Vala.DovaBaseModule : CodeGenerator {
 			cfile.add_function_declaration (type_get_fun);
 			type_get_fun.block = new CCodeBlock ();
 
-			var cdecl = new CCodeDeclaration ("int");
+			var cdecl = new CCodeDeclaration ("intptr_t");
 			cdecl.add_declarator (new CCodeVariableDeclarator ("_block%d_data_object_offset".printf (block_id), new CCodeConstant ("0")));
 			cdecl.modifiers = CCodeModifiers.STATIC;
 			cfile.add_type_member_declaration (cdecl);
 
-			cdecl = new CCodeDeclaration ("int");
+			cdecl = new CCodeDeclaration ("intptr_t");
 			cdecl.add_declarator (new CCodeVariableDeclarator ("_block%d_data_type_offset".printf (block_id), new CCodeConstant ("0")));
 			cdecl.modifiers = CCodeModifiers.STATIC;
 			cfile.add_type_member_declaration (cdecl);

@@ -96,16 +96,15 @@ public class Vala.IntegerLiteral : Literal {
 				type_suffix = "";
 				type_name = "int";
 			}
-		} else if (l == 1) {
+		} else if (CodeContext.get ().profile == Profile.DOVA) {
 			if (u) {
 				type_suffix = "UL";
-				type_name = "ulong";
+				type_name = "uint64";
 			} else {
 				type_suffix = "L";
-				type_name = "long";
+				type_name = "int64";
 			}
-		} else if (CodeContext.get ().profile == Profile.DOVA) {
-			// long is 64-bit in Dova profile
+		} else if (l == 1) {
 			if (u) {
 				type_suffix = "UL";
 				type_name = "ulong";

@@ -178,30 +178,29 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		bool_type = new BooleanType ((Struct) root_symbol.scope.lookup ("bool"));
 		string_type = new ObjectType ((Class) root_symbol.scope.lookup ("string"));
-		short_type = new IntegerType ((Struct) root_symbol.scope.lookup ("short"));
-		ushort_type = new IntegerType ((Struct) root_symbol.scope.lookup ("ushort"));
 		int_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int"));
 		uint_type = new IntegerType ((Struct) root_symbol.scope.lookup ("uint"));
-		long_type = new IntegerType ((Struct) root_symbol.scope.lookup ("long"));
-		ulong_type = new IntegerType ((Struct) root_symbol.scope.lookup ("ulong"));
 		double_type = new FloatingType ((Struct) root_symbol.scope.lookup ("double"));
 
 		if (context.profile != Profile.DOVA) {
 			uchar_type = new IntegerType ((Struct) root_symbol.scope.lookup ("uchar"));
 			int8_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int8"));
+			short_type = new IntegerType ((Struct) root_symbol.scope.lookup ("short"));
+			ushort_type = new IntegerType ((Struct) root_symbol.scope.lookup ("ushort"));
+			long_type = new IntegerType ((Struct) root_symbol.scope.lookup ("long"));
+			ulong_type = new IntegerType ((Struct) root_symbol.scope.lookup ("ulong"));
+			size_t_type = new IntegerType ((Struct) root_symbol.scope.lookup ("size_t"));
+			ssize_t_type = new IntegerType ((Struct) root_symbol.scope.lookup ("ssize_t"));
+		} else {
+			long_type = int_type;
+			ulong_type = uint_type;
+			size_t_type = uint_type;
+			ssize_t_type = int_type;
 		}
 
 		var unichar_struct = (Struct) root_symbol.scope.lookup ("unichar");
 		if (unichar_struct != null) {
 			unichar_type = new IntegerType (unichar_struct);
-		}
-		var size_t_struct = (Struct) root_symbol.scope.lookup ("size_t");
-		if (size_t_struct != null) {
-			size_t_type = new IntegerType (size_t_struct);
-		}
-		var ssize_t_struct = (Struct) root_symbol.scope.lookup ("ssize_t");
-		if (ssize_t_struct != null) {
-			ssize_t_type = new IntegerType (ssize_t_struct);
 		}
 
 		if (context.profile == Profile.GOBJECT) {

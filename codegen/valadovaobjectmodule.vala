@@ -45,25 +45,25 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 			var value_copy_function = new CCodeFunction ("dova_type_value_copy");
 			value_copy_function.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
 			value_copy_function.add_parameter (new CCodeFormalParameter ("dest", "void *"));
-			value_copy_function.add_parameter (new CCodeFormalParameter ("dest_index", "int32_t"));
+			value_copy_function.add_parameter (new CCodeFormalParameter ("dest_index", "intptr_t"));
 			value_copy_function.add_parameter (new CCodeFormalParameter ("src", "void *"));
-			value_copy_function.add_parameter (new CCodeFormalParameter ("src_index", "int32_t"));
+			value_copy_function.add_parameter (new CCodeFormalParameter ("src_index", "intptr_t"));
 
 			cfile.add_function_declaration (value_copy_function);
 
 			var value_equals_function = new CCodeFunction ("dova_type_value_equals", "bool");
 			value_equals_function.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
 			value_equals_function.add_parameter (new CCodeFormalParameter ("value", "void *"));
-			value_equals_function.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
+			value_equals_function.add_parameter (new CCodeFormalParameter ("value_index", "intptr_t"));
 			value_equals_function.add_parameter (new CCodeFormalParameter ("other", "void *"));
-			value_equals_function.add_parameter (new CCodeFormalParameter ("other_index", "int32_t"));
+			value_equals_function.add_parameter (new CCodeFormalParameter ("other_index", "intptr_t"));
 
 			cfile.add_function_declaration (value_equals_function);
 
-			var value_hash_function = new CCodeFunction ("dova_type_value_hash", "uint32_t");
+			var value_hash_function = new CCodeFunction ("dova_type_value_hash", "uintptr_t");
 			value_hash_function.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
 			value_hash_function.add_parameter (new CCodeFormalParameter ("value", "void *"));
-			value_hash_function.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
+			value_hash_function.add_parameter (new CCodeFormalParameter ("value_index", "intptr_t"));
 
 			cfile.add_function_declaration (value_hash_function);
 		}
@@ -160,9 +160,9 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 		if (cl.get_full_name () == "Dova.Type") {
 			var vdeclarator = new CCodeFunctionDeclarator ("value_copy");
 			vdeclarator.add_parameter (new CCodeFormalParameter ("dest", "void *"));
-			vdeclarator.add_parameter (new CCodeFormalParameter ("dest_index", "int32_t"));
+			vdeclarator.add_parameter (new CCodeFormalParameter ("dest_index", "intptr_t"));
 			vdeclarator.add_parameter (new CCodeFormalParameter ("src", "void *"));
-			vdeclarator.add_parameter (new CCodeFormalParameter ("src_index", "int32_t"));
+			vdeclarator.add_parameter (new CCodeFormalParameter ("src_index", "intptr_t"));
 
 			var vdecl = new CCodeDeclaration ("void");
 			vdecl.add_declarator (vdeclarator);
@@ -170,9 +170,9 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 
 			vdeclarator = new CCodeFunctionDeclarator ("value_equals");
 			vdeclarator.add_parameter (new CCodeFormalParameter ("value", "void *"));
-			vdeclarator.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
+			vdeclarator.add_parameter (new CCodeFormalParameter ("value_index", "intptr_t"));
 			vdeclarator.add_parameter (new CCodeFormalParameter ("other", "void *"));
-			vdeclarator.add_parameter (new CCodeFormalParameter ("other_index", "int32_t"));
+			vdeclarator.add_parameter (new CCodeFormalParameter ("other_index", "intptr_t"));
 
 			vdecl = new CCodeDeclaration ("bool");
 			vdecl.add_declarator (vdeclarator);
@@ -180,15 +180,15 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 
 			vdeclarator = new CCodeFunctionDeclarator ("value_hash");
 			vdeclarator.add_parameter (new CCodeFormalParameter ("value", "void *"));
-			vdeclarator.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
+			vdeclarator.add_parameter (new CCodeFormalParameter ("value_index", "intptr_t"));
 
-			vdecl = new CCodeDeclaration ("uint32_t");
+			vdecl = new CCodeDeclaration ("uintptr_t");
 			vdecl.add_declarator (vdeclarator);
 			instance_priv_struct.add_declaration (vdecl);
 
 			vdeclarator = new CCodeFunctionDeclarator ("value_to_any");
 			vdeclarator.add_parameter (new CCodeFormalParameter ("value", "void *"));
-			vdeclarator.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
+			vdeclarator.add_parameter (new CCodeFormalParameter ("value_index", "intptr_t"));
 
 			vdecl = new CCodeDeclaration ("DovaObject *");
 			vdecl.add_declarator (vdeclarator);
@@ -197,7 +197,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 			vdeclarator = new CCodeFunctionDeclarator ("value_from_any");
 			vdeclarator.add_parameter (new CCodeFormalParameter ("any_", "any *"));
 			vdeclarator.add_parameter (new CCodeFormalParameter ("value", "void *"));
-			vdeclarator.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
+			vdeclarator.add_parameter (new CCodeFormalParameter ("value_index", "intptr_t"));
 
 			vdecl = new CCodeDeclaration ("void");
 			vdecl.add_declarator (vdeclarator);
@@ -256,7 +256,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 			decl_space.add_type_definition (type_priv_struct);
 		}
 
-		var cdecl = new CCodeDeclaration ("int");
+		var cdecl = new CCodeDeclaration ("intptr_t");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("_%s_object_offset".printf (cl.get_lower_case_cname ()), new CCodeConstant ("0")));
 		cdecl.modifiers = CCodeModifiers.STATIC;
 		decl_space.add_type_member_declaration (cdecl);
@@ -282,7 +282,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 			decl_space.add_type_member_declaration (new CCodeMacroReplacement ("%s_GET_PRIVATE(o)".printf (cl.get_upper_case_cname (null)), macro));
 		}
 
-		cdecl = new CCodeDeclaration ("int");
+		cdecl = new CCodeDeclaration ("intptr_t");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("_%s_type_offset".printf (cl.get_lower_case_cname ()), type_offset));
 		cdecl.modifiers = CCodeModifiers.STATIC;
 		decl_space.add_type_member_declaration (cdecl);
@@ -291,7 +291,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 	CCodeFunction create_set_value_copy_function (bool decl_only = false) {
 		var result = new CCodeFunction ("dova_type_set_value_copy");
 		result.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
-		result.add_parameter (new CCodeFormalParameter ("(*function) (void *dest, int32_t dest_index, void *src, int32_t src_index)", "void"));
+		result.add_parameter (new CCodeFormalParameter ("(*function) (void *dest, intptr_t dest_index, void *src, intptr_t src_index)", "void"));
 		if (decl_only) {
 			return result;
 		}
@@ -315,7 +315,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 	CCodeFunction create_set_value_equals_function (bool decl_only = false) {
 		var result = new CCodeFunction ("dova_type_set_value_equals");
 		result.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
-		result.add_parameter (new CCodeFormalParameter ("(*function) (void *value, int32_t value_index, void *other, int32_t other_index)", "bool"));
+		result.add_parameter (new CCodeFormalParameter ("(*function) (void *value, intptr_t value_index, void *other, intptr_t other_index)", "bool"));
 		if (decl_only) {
 			return result;
 		}
@@ -339,7 +339,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 	CCodeFunction create_set_value_hash_function (bool decl_only = false) {
 		var result = new CCodeFunction ("dova_type_set_value_hash");
 		result.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
-		result.add_parameter (new CCodeFormalParameter ("(*function) (void *value, int32_t value_index)", "uint32_t"));
+		result.add_parameter (new CCodeFormalParameter ("(*function) (void *value, intptr_t value_index)", "uintptr_t"));
 		if (decl_only) {
 			return result;
 		}
@@ -363,7 +363,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 	CCodeFunction create_set_value_to_any_function (bool decl_only = false) {
 		var result = new CCodeFunction ("dova_type_set_value_to_any");
 		result.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
-		result.add_parameter (new CCodeFormalParameter ("(*function) (void *value, int32_t value_index)", "DovaObject *"));
+		result.add_parameter (new CCodeFormalParameter ("(*function) (void *value, intptr_t value_index)", "DovaObject *"));
 		if (decl_only) {
 			return result;
 		}
@@ -387,7 +387,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 	CCodeFunction create_set_value_from_any_function (bool decl_only = false) {
 		var result = new CCodeFunction ("dova_type_set_value_from_any");
 		result.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
-		result.add_parameter (new CCodeFormalParameter ("(*function) (DovaObject *any, void *value, int32_t value_index)", "void"));
+		result.add_parameter (new CCodeFormalParameter ("(*function) (DovaObject *any, void *value, intptr_t value_index)", "void"));
 		if (decl_only) {
 			return result;
 		}
@@ -606,15 +606,15 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 
 			var value_copy_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_set_value_copy"));
 			value_copy_call.add_argument (new CCodeIdentifier ("type"));
-			value_copy_call.add_argument (new CCodeCastExpression (new CCodeIdentifier ("%s_copy".printf (cl.get_lower_case_cname ())), "void (*)(void *, int32_t,  void *, int32_t)"));
+			value_copy_call.add_argument (new CCodeCastExpression (new CCodeIdentifier ("%s_copy".printf (cl.get_lower_case_cname ())), "void (*)(void *, intptr_t,  void *, intptr_t)"));
 			type_init_fun.block.add_statement (new CCodeExpressionStatement (value_copy_call));
 
 			var function = new CCodeFunction ("%s_copy".printf (cl.get_lower_case_cname ()), "void");
 			function.modifiers = CCodeModifiers.STATIC;
 			function.add_parameter (new CCodeFormalParameter ("dest", "any **"));
-			function.add_parameter (new CCodeFormalParameter ("dest_index", "int32_t"));
+			function.add_parameter (new CCodeFormalParameter ("dest_index", "intptr_t"));
 			function.add_parameter (new CCodeFormalParameter ("src", "any **"));
-			function.add_parameter (new CCodeFormalParameter ("src_index", "int32_t"));
+			function.add_parameter (new CCodeFormalParameter ("src_index", "intptr_t"));
 
 			function.block = new CCodeBlock ();
 			var cfrag = new CCodeFragment ();
@@ -642,9 +642,9 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 				var value_equals_fun = new CCodeFunction ("%s_value_equals".printf (cl.get_lower_case_cname ()), "bool");
 				value_equals_fun.modifiers = CCodeModifiers.STATIC;
 				value_equals_fun.add_parameter (new CCodeFormalParameter ("value", cl.get_cname () + "**"));
-				value_equals_fun.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
+				value_equals_fun.add_parameter (new CCodeFormalParameter ("value_index", "intptr_t"));
 				value_equals_fun.add_parameter (new CCodeFormalParameter ("other", cl.get_cname () + "**"));
-				value_equals_fun.add_parameter (new CCodeFormalParameter ("other_index", "int32_t"));
+				value_equals_fun.add_parameter (new CCodeFormalParameter ("other_index", "intptr_t"));
 				value_equals_fun.block = new CCodeBlock ();
 				var val = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("value"), new CCodeIdentifier ("value_index"));
 				var other = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("other"), new CCodeIdentifier ("other_index"));
@@ -658,15 +658,15 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 
 				var value_equals_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_set_value_equals"));
 				value_equals_call.add_argument (new CCodeIdentifier ("type"));
-				value_equals_call.add_argument (new CCodeCastExpression (new CCodeIdentifier ("%s_value_equals".printf (cl.get_lower_case_cname ())), "bool (*)(void *, int32_t,  void *, int32_t)"));
+				value_equals_call.add_argument (new CCodeCastExpression (new CCodeIdentifier ("%s_value_equals".printf (cl.get_lower_case_cname ())), "bool (*)(void *, intptr_t,  void *, intptr_t)"));
 				type_init_fun.block.add_statement (new CCodeExpressionStatement (value_equals_call));
 			}
 
 			{
-				var value_hash_fun = new CCodeFunction ("%s_value_hash".printf (cl.get_lower_case_cname ()), "uint32_t");
+				var value_hash_fun = new CCodeFunction ("%s_value_hash".printf (cl.get_lower_case_cname ()), "uintptr_t");
 				value_hash_fun.modifiers = CCodeModifiers.STATIC;
 				value_hash_fun.add_parameter (new CCodeFormalParameter ("value", cl.get_cname () + "**"));
-				value_hash_fun.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
+				value_hash_fun.add_parameter (new CCodeFormalParameter ("value_index", "intptr_t"));
 				value_hash_fun.block = new CCodeBlock ();
 				var val = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("value"), new CCodeIdentifier ("value_index"));
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("any_hash"));
@@ -678,7 +678,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 
 				var value_hash_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_set_value_hash"));
 				value_hash_call.add_argument (new CCodeIdentifier ("type"));
-				value_hash_call.add_argument (new CCodeCastExpression (new CCodeIdentifier ("%s_value_hash".printf (cl.get_lower_case_cname ())), "uint32_t (*)(void *, int32_t)"));
+				value_hash_call.add_argument (new CCodeCastExpression (new CCodeIdentifier ("%s_value_hash".printf (cl.get_lower_case_cname ())), "uintptr_t (*)(void *, intptr_t)"));
 				type_init_fun.block.add_statement (new CCodeExpressionStatement (value_hash_call));
 			}
 
@@ -686,7 +686,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 			var value_to_any_fun = new CCodeFunction ("%s_value_to_any".printf (cl.get_lower_case_cname ()), "any*");
 			value_to_any_fun.modifiers = CCodeModifiers.STATIC;
 			value_to_any_fun.add_parameter (new CCodeFormalParameter ("value", cl.get_cname () + "**"));
-			value_to_any_fun.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
+			value_to_any_fun.add_parameter (new CCodeFormalParameter ("value_index", "intptr_t"));
 			value_to_any_fun.block = new CCodeBlock ();
 			var val = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("value"), new CCodeIdentifier ("value_index"));
 			string to_any_fun = "%s_ref".printf (cl.get_lower_case_cname ());
@@ -710,7 +710,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 			value_from_any_fun.modifiers = CCodeModifiers.STATIC;
 			value_from_any_fun.add_parameter (new CCodeFormalParameter ("any_", "any *"));
 			value_from_any_fun.add_parameter (new CCodeFormalParameter ("value", cl.get_cname () + "**"));
-			value_from_any_fun.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
+			value_from_any_fun.add_parameter (new CCodeFormalParameter ("value_index", "intptr_t"));
 			value_from_any_fun.block = new CCodeBlock ();
 			string from_any_fun = "%s_ref".printf (cl.get_lower_case_cname ());
 			if (cl == string_class) {
@@ -893,9 +893,9 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 			var value_copy_function = new CCodeFunction ("dova_type_value_copy");
 			value_copy_function.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
 			value_copy_function.add_parameter (new CCodeFormalParameter ("dest", "void *"));
-			value_copy_function.add_parameter (new CCodeFormalParameter ("dest_index", "int32_t"));
+			value_copy_function.add_parameter (new CCodeFormalParameter ("dest_index", "intptr_t"));
 			value_copy_function.add_parameter (new CCodeFormalParameter ("src", "void *"));
-			value_copy_function.add_parameter (new CCodeFormalParameter ("src_index", "int32_t"));
+			value_copy_function.add_parameter (new CCodeFormalParameter ("src_index", "intptr_t"));
 
 			value_copy_function.block = new CCodeBlock ();
 
@@ -915,9 +915,9 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 			var value_equals_function = new CCodeFunction ("dova_type_value_equals", "bool");
 			value_equals_function.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
 			value_equals_function.add_parameter (new CCodeFormalParameter ("value", "void *"));
-			value_equals_function.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
+			value_equals_function.add_parameter (new CCodeFormalParameter ("value_index", "intptr_t"));
 			value_equals_function.add_parameter (new CCodeFormalParameter ("other", "void *"));
-			value_equals_function.add_parameter (new CCodeFormalParameter ("other_index", "int32_t"));
+			value_equals_function.add_parameter (new CCodeFormalParameter ("other_index", "intptr_t"));
 
 			value_equals_function.block = new CCodeBlock ();
 
@@ -934,10 +934,10 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 			declare_set_value_equals_function (header_file);
 			cfile.add_function (create_set_value_equals_function ());
 
-			var value_hash_function = new CCodeFunction ("dova_type_value_hash", "uint32_t");
+			var value_hash_function = new CCodeFunction ("dova_type_value_hash", "uintptr_t");
 			value_hash_function.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
 			value_hash_function.add_parameter (new CCodeFormalParameter ("value", "void *"));
-			value_hash_function.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
+			value_hash_function.add_parameter (new CCodeFormalParameter ("value_index", "intptr_t"));
 
 			value_hash_function.block = new CCodeBlock ();
 
@@ -955,7 +955,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 			var value_to_any_function = new CCodeFunction ("dova_type_value_to_any", "DovaObject *");
 			value_to_any_function.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
 			value_to_any_function.add_parameter (new CCodeFormalParameter ("value", "void *"));
-			value_to_any_function.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
+			value_to_any_function.add_parameter (new CCodeFormalParameter ("value_index", "intptr_t"));
 
 			value_to_any_function.block = new CCodeBlock ();
 
@@ -974,7 +974,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 			value_from_any_function.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
 			value_from_any_function.add_parameter (new CCodeFormalParameter ("any_", "any *"));
 			value_from_any_function.add_parameter (new CCodeFormalParameter ("value", "void *"));
-			value_from_any_function.add_parameter (new CCodeFormalParameter ("value_index", "int32_t"));
+			value_from_any_function.add_parameter (new CCodeFormalParameter ("value_index", "intptr_t"));
 
 			value_from_any_function.block = new CCodeBlock ();
 
