@@ -529,14 +529,14 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 							add_object_creation (cinit, current_class.get_type_parameters ().size > 0);
 						} else {
 							var cdeclaration = new CCodeDeclaration ("%s *".printf (((Class) current_type_symbol).get_cname ()));
-							cdeclaration.add_declarator (new CCodeVariableDeclarator ("self"));
+							cdeclaration.add_declarator (new CCodeVariableDeclarator.zero ("self", new CCodeConstant ("NULL")));
 
 							cinit.append (cdeclaration);
 						}
 					} else if (is_gtypeinstance_creation_method (m)) {
 						var cl = (Class) m.parent_symbol;
 						var cdeclaration = new CCodeDeclaration (cl.get_cname () + "*");
-						var cdecl = new CCodeVariableDeclarator ("self");
+						var cdecl = new CCodeVariableDeclarator.zero ("self", new CCodeConstant ("NULL"));
 						cdeclaration.add_declarator (cdecl);
 						cinit.append (cdeclaration);
 
