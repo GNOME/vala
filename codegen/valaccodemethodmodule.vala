@@ -478,10 +478,10 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 
 				if (m is CreationMethod) {
 					if (in_gobject_creation_method) {
-						ccode.add_declaration ("%s *".printf (((Class) current_type_symbol).get_cname ()), new CCodeVariableDeclarator ("self"));
+						ccode.add_declaration ("%s *".printf (((Class) current_type_symbol).get_cname ()), new CCodeVariableDeclarator.zero ("self", new CCodeConstant ("NULL")));
 					} else if (is_gtypeinstance_creation_method (m)) {
 						var cl = (Class) m.parent_symbol;
-						ccode.add_declaration (cl.get_cname () + "*", new CCodeVariableDeclarator ("self"));
+						ccode.add_declaration (cl.get_cname () + "*", new CCodeVariableDeclarator.zero ("self", new CCodeConstant ("NULL")));
 
 						if (cl.is_fundamental ()) {
 							var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_create_instance"));
