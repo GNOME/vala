@@ -157,6 +157,11 @@ public class Vala.Delegate : TypeSymbol {
 	 * @return  true if the specified method is compatible to this callback
 	 */
 	public bool matches_method (Method m, DataType dt) {
+		if (m.coroutine) {
+			// async delegates are not yet supported
+			return false;
+		}
+
 		// method is allowed to ensure stricter return type (stronger postcondition)
 		if (!m.return_type.stricter (return_type.get_actual_type (dt, null, this))) {
 			return false;
