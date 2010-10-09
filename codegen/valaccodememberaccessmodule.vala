@@ -96,15 +96,15 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			}
 			set_cvalue (expr, get_array_length_cexpression (expr.inner, 1));
 		} else if (expr.symbol_reference is Field) {
-			var f = (Field) expr.symbol_reference;
-			if (f.binding == MemberBinding.INSTANCE) {
-				var instance_target_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
+			var field = (Field) expr.symbol_reference;
+			if (field.binding == MemberBinding.INSTANCE) {
+				var instance_target_type = get_data_type_for_symbol ((TypeSymbol) field.parent_symbol);
 
 				var cl = instance_target_type.data_type as Class;
 				bool is_gtypeinstance = ((instance_target_type.data_type == cl) && (cl == null || !cl.is_compact));
 
 				CCodeExpression inst;
-				if (is_gtypeinstance && f.access == SymbolAccessibility.PRIVATE) {
+				if (is_gtypeinstance && field.access == SymbolAccessibility.PRIVATE) {
 					inst = new CCodeMemberAccess.pointer (pub_inst, "priv");
 				} else {
 					if (cl != null) {
@@ -113,20 +113,71 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					inst = pub_inst;
 				}
 				if (instance_target_type.data_type.is_reference_type () || (expr.inner != null && expr.inner.value_type is PointerType)) {
-					set_cvalue (expr, new CCodeMemberAccess.pointer (inst, f.get_cname ()));
+					set_cvalue (expr, new CCodeMemberAccess.pointer (inst, field.get_cname ()));
 				} else {
 					if (inst is CCodeCommaExpression) {
 						var ccomma = inst as CCodeCommaExpression;
 						var inner = ccomma.get_inner ();
 						var last = inner.get (inner.size - 1);
-						ccomma.set_expression (inner.size - 1, new CCodeMemberAccess (last, f.get_cname ()));
+						ccomma.set_expression (inner.size - 1, new CCodeMemberAccess (last, field.get_cname ()));
 						set_cvalue (expr, ccomma);
 					} else {
-						set_cvalue (expr, new CCodeMemberAccess (inst, f.get_cname ()));
+						set_cvalue (expr, new CCodeMemberAccess (inst, field.get_cname ()));
 					}
 				}
-			} else if (f.binding == MemberBinding.CLASS) {
-				var cl = (Class) f.parent_symbol;
+
+				if (array_type != null) {
+					if (field.array_null_terminated) {
+						CCodeExpression carray_expr = null;
+						if (instance_target_type.data_type.is_reference_type () || (expr.inner != null && expr.inner.value_type is PointerType)) {
+							carray_expr = new CCodeMemberAccess.pointer (inst, field.get_cname ());
+						} else {
+							carray_expr = new CCodeMemberAccess (inst, field.get_cname ());
+						}
+
+						requires_array_length = true;
+						var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
+						len_call.add_argument (carray_expr);
+						append_array_size (expr, len_call);
+					} else if (!field.no_array_length) {
+						for (int dim = 1; dim <= array_type.rank; dim++) {
+							CCodeExpression length_expr = null;
+
+							if (field.has_array_length_cexpr) {
+								length_expr = new CCodeConstant (field.get_array_length_cexpr ());
+							} else {
+								string length_cname;
+								if (field.has_array_length_cname) {
+									length_cname = field.get_array_length_cname ();
+								} else {
+									length_cname = get_array_length_cname (field.name, dim);
+								}
+
+								if (((TypeSymbol) field.parent_symbol).is_reference_type ()) {
+									length_expr = new CCodeMemberAccess.pointer (inst, length_cname);
+								} else {
+									length_expr = new CCodeMemberAccess (inst, length_cname);
+								}
+
+								if (field.array_length_type != null) {
+									// cast if field does not use int for array length
+									var parent_expr = expr.parent_node as Expression;
+									if (expr.lvalue) {
+										// don't cast if array is used as lvalue
+									} else if (parent_expr != null && parent_expr.symbol_reference is ArrayLengthField &&
+										   parent_expr.lvalue) {
+										// don't cast if array length is used as lvalue
+									} else {
+										length_expr = new CCodeCastExpression (length_expr, "gint");
+									}
+								}
+							}
+							append_array_size (expr, length_expr);
+						}
+					}
+				}
+			} else if (field.binding == MemberBinding.CLASS) {
+				var cl = (Class) field.parent_symbol;
 				var cast = new CCodeFunctionCall (new CCodeIdentifier (cl.get_upper_case_cname (null) + "_CLASS"));
 
 				CCodeExpression klass;
@@ -148,18 +199,35 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				}
 				cast.add_argument (klass);
 
-				if (f.access == SymbolAccessibility.PRIVATE) {
+				if (field.access == SymbolAccessibility.PRIVATE) {
 					var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS_PRIVATE".printf (cl.get_upper_case_cname ())));
 					ccall.add_argument (klass);
-					set_cvalue (expr, new CCodeMemberAccess.pointer (ccall, f.get_cname ()));
+					set_cvalue (expr, new CCodeMemberAccess.pointer (ccall, field.get_cname ()));
 				} else {
-					set_cvalue (expr, new CCodeMemberAccess.pointer (cast, f.get_cname ()));
+					set_cvalue (expr, new CCodeMemberAccess.pointer (cast, field.get_cname ()));
 				}
 
 			} else {
-				generate_field_declaration (f, cfile);
+				generate_field_declaration (field, cfile);
 
-				set_cvalue (expr, new CCodeIdentifier (f.get_cname ()));
+				set_cvalue (expr, new CCodeIdentifier (field.get_cname ()));
+
+				if (array_type != null) {
+					if (field.array_null_terminated) {
+						requires_array_length = true;
+						var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
+						len_call.add_argument (new CCodeIdentifier (field.get_cname ()));
+						append_array_size (expr, len_call);
+					} else if (!field.no_array_length) {
+						for (int dim = 1; dim <= array_type.rank; dim++) {
+							if (field.has_array_length_cexpr) {
+								append_array_size (expr, new CCodeConstant (field.get_array_length_cexpr ()));
+							} else {
+								append_array_size (expr, new CCodeIdentifier (get_array_length_cname (field.get_cname (), dim)));
+							}
+						}
+					}
+				}
 			}
 		} else if (expr.symbol_reference is EnumValue) {
 			var ev = (EnumValue) expr.symbol_reference;

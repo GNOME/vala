@@ -934,7 +934,9 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 					set_cvalue (this_access, new CCodeIdentifier ("self"));
 					var ma = new MemberAccess (this_access, f.name);
 					ma.symbol_reference = f;
-					
+					ma.value_type = f.variable_type.copy ();
+					visit_member_access (ma);
+
 					List<Expression> sizes = ((ArrayCreationExpression) f.initializer).get_sizes ();
 					for (int dim = 1; dim <= array_type.rank; dim++) {
 						var array_len_lhs = get_array_length_cexpression (ma, dim);
@@ -978,6 +980,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 				var ma = new MemberAccess (this_access, f.name);
 				ma.symbol_reference = f;
 				ma.value_type = f.variable_type.copy ();
+				visit_member_access (ma);
 				ccode.add_expression (get_unref_expression (lhs, f.variable_type, ma));
 
 				pop_context ();
@@ -1010,6 +1013,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 					var ma = new MemberAccess.simple (local.name);
 					ma.symbol_reference = local;
 					ma.value_type = local.variable_type.copy ();
+					visit_member_access (ma);
 					ccode.add_expression (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma));
 				}
 
@@ -1135,7 +1139,9 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 							var array_type = (ArrayType) f.variable_type;
 							var ma = new MemberAccess.simple (f.name);
 							ma.symbol_reference = f;
-					
+							ma.value_type = f.variable_type.copy ();
+							visit_member_access (ma);
+
 							List<Expression> sizes = ((ArrayCreationExpression) f.initializer).get_sizes ();
 							for (int dim = 1; dim <= array_type.rank; dim++) {
 								var array_len_lhs = get_array_length_cexpression (ma, dim);
@@ -5505,6 +5511,8 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 
 					var ma = new MemberAccess (this_access, f.name);
 					ma.symbol_reference = f;
+					ma.value_type = f.variable_type.copy ();
+					visit_member_access (ma);
 					cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (lhs, f.variable_type, ma)));
 				}
 			}
@@ -5541,6 +5549,8 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 					set_cvalue (this_access, new CCodeIdentifier ("(*self)"));
 					var ma = new MemberAccess (this_access, f.name);
 					ma.symbol_reference = f;
+					ma.value_type = f.variable_type.copy ();
+					visit_member_access (ma);
 					copy = get_ref_cexpression (f.variable_type, copy, ma, f);
 				}
 				var dest = new CCodeMemberAccess.pointer (new CCodeIdentifier ("dest"), f.name);
