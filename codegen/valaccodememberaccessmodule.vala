@@ -258,6 +258,12 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			} else {
 				set_cvalue (expr, new CCodeIdentifier (c.get_cname ()));
 			}
+
+			if (array_type != null) {
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("G_N_ELEMENTS"));
+				ccall.add_argument (new CCodeIdentifier (c.get_cname ()));
+				append_array_size (expr, ccall);
+			}
 		} else if (expr.symbol_reference is Property) {
 			var prop = (Property) expr.symbol_reference;
 

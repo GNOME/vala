@@ -181,28 +181,13 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 				return size[dim - 1];
 			}
 		} else if (array_expr.symbol_reference != null) {
-			if (array_expr.symbol_reference is FormalParameter || array_expr.symbol_reference is LocalVariable || array_expr.symbol_reference is Field) {
-				List<CCodeExpression> size = get_array_sizes (array_expr);
-				if (size != null && size.size >= dim) {
-					if (is_out) {
-						// passing array as out/ref
-						return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, size[dim - 1]);
-					} else {
-						return size[dim - 1];
-					}
-				}
-			} else if (array_expr.symbol_reference is Constant) {
-				var constant = (Constant) array_expr.symbol_reference;
-				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("G_N_ELEMENTS"));
-				ccall.add_argument (new CCodeIdentifier (constant.get_cname ()));
-				return ccall;
-			} else if (array_expr.symbol_reference is Property) {
-				var prop = (Property) array_expr.symbol_reference;
-				if (!prop.no_array_length) {
-					List<CCodeExpression> size = get_array_sizes (array_expr);
-					if (size != null && size.size >= dim) {
-						return size[dim - 1];
-					}
+			List<CCodeExpression> size = get_array_sizes (array_expr);
+			if (size != null && size.size >= dim) {
+				if (is_out) {
+					// passing array as out/ref
+					return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, size[dim - 1]);
+				} else {
+					return size[dim - 1];
 				}
 			}
 		} else if (array_expr is NullLiteral) {
