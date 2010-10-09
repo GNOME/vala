@@ -482,10 +482,17 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 						for (int dim = 1; dim <= array_type.rank; dim++) {
 							append_array_size (expr, new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_parameter_array_length_cname (p, dim)));
 						}
+					} else if (p.variable_type is DelegateType) {
+						set_delegate_target (expr, new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_cname (get_variable_cname (p.name))));
+						set_delegate_target_destroy_notify (expr, new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_destroy_notify_cname (get_variable_cname (p.name))));
 					}
 				} else if (current_method != null && current_method.coroutine) {
 					// use closure
 					set_cvalue (expr, get_variable_cexpression (p.name));
+					if (p.variable_type is DelegateType) {
+						set_delegate_target (expr, new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_delegate_target_cname (get_variable_cname (p.name))));
+						set_delegate_target_destroy_notify (expr, new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_delegate_target_destroy_notify_cname (get_variable_cname (p.name))));
+					}
 				} else {
 					var type_as_struct = p.variable_type.data_type as Struct;
 					if (p.direction != ParameterDirection.IN
@@ -503,6 +510,19 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 							set_cvalue (expr, new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("value")));
 						} else {
 							set_cvalue (expr, get_variable_cexpression (p.name));
+						}
+					}
+					if (p.variable_type is DelegateType) {
+						CCodeExpression target_expr = new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (p.name)));
+						CCodeExpression delegate_target_destroy_notify = new CCodeIdentifier (get_delegate_target_destroy_notify_cname (get_variable_cname (p.name)));
+						if (p.direction != ParameterDirection.IN) {
+							// accessing argument of out/ref param
+							target_expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, target_expr);
+							delegate_target_destroy_notify = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, delegate_target_destroy_notify);
+						}
+						set_delegate_target (expr, target_expr);
+						if (expr.value_type.value_owned) {
+							set_delegate_target_destroy_notify (expr, delegate_target_destroy_notify);
 						}
 					}
 				}
