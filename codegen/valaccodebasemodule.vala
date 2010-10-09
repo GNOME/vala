@@ -3545,6 +3545,13 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			cfile.add_include ("stddef.h");
 		}
 		set_cvalue (expr, new CCodeConstant ("NULL"));
+
+		var array_type = expr.target_type as ArrayType;
+		if (array_type != null) {
+			for (int dim = 1; dim <= array_type.rank; dim++) {
+				append_array_size (expr, new CCodeConstant ("0"));
+			}
+		}
 	}
 
 	public virtual string get_delegate_target_cname (string delegate_cname) {

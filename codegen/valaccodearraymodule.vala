@@ -175,23 +175,14 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			array_expr = reftransfer_expr.inner;
 		}
 		
-		if (array_expr is ArrayCreationExpression || array_expr is MethodCall || array_expr is CastExpression || array_expr is SliceExpression) {
-			List<CCodeExpression> size = get_array_sizes (array_expr);
-			if (size != null && size.size >= dim) {
+		List<CCodeExpression> size = get_array_sizes (array_expr);
+		if (size != null && size.size >= dim) {
+			if (is_out) {
+				// passing array as out/ref
+				return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, size[dim - 1]);
+			} else {
 				return size[dim - 1];
 			}
-		} else if (array_expr.symbol_reference != null) {
-			List<CCodeExpression> size = get_array_sizes (array_expr);
-			if (size != null && size.size >= dim) {
-				if (is_out) {
-					// passing array as out/ref
-					return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, size[dim - 1]);
-				} else {
-					return size[dim - 1];
-				}
-			}
-		} else if (array_expr is NullLiteral) {
-			return new CCodeConstant ("0");
 		}
 
 		if (!is_out) {
