@@ -83,6 +83,10 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 				emit_temp_var (temp_var);
 
 				csize = new CCodeAssignment (name_cnode, csize);
+
+				append_array_size (expr, name_cnode);
+			} else {
+				append_array_size (expr, csize);
 			}
 
 			if (first) {
@@ -171,11 +175,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			array_expr = reftransfer_expr.inner;
 		}
 		
-		if (array_expr is ArrayCreationExpression) {
-			List<Expression> size = ((ArrayCreationExpression) array_expr).get_sizes ();
-			var length_expr = size[dim - 1];
-			return (CCodeExpression) get_ccodenode (length_expr);
-		} else if (array_expr is MethodCall || array_expr is CastExpression || array_expr is SliceExpression) {
+		if (array_expr is ArrayCreationExpression || array_expr is MethodCall || array_expr is CastExpression || array_expr is SliceExpression) {
 			List<CCodeExpression> size = get_array_sizes (array_expr);
 			if (size != null && size.size >= dim) {
 				return size[dim - 1];
