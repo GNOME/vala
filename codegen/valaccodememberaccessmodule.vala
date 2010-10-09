@@ -30,6 +30,8 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			pub_inst = get_cvalue (expr.inner);
 		}
 
+		var array_type = expr.value_type as ArrayType;
+
 		if (expr.symbol_reference is Method) {
 			var m = (Method) expr.symbol_reference;
 
@@ -287,7 +289,7 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					ccomma.append_expression (ctemp);
 					set_cvalue (expr, ccomma);
 				} else {
-					var array_type = base_property.property_type as ArrayType;
+					array_type = base_property.property_type as ArrayType;
 					if (array_type != null && !base_property.no_array_length) {
 						for (int dim = 1; dim <= array_type.rank; dim++) {
 							var temp_var = get_temp_variable (int_type);
@@ -392,6 +394,11 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 						block = ((Method) p.parent_symbol).body;
 					}
 					set_cvalue (expr, new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_variable_cname (p.name)));
+					if (array_type != null) {
+						for (int dim = 1; dim <= array_type.rank; dim++) {
+							append_array_size (expr, new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_parameter_array_length_cname (p, dim)));
+						}
+					}
 				} else if (current_method != null && current_method.coroutine) {
 					// use closure
 					set_cvalue (expr, get_variable_cexpression (p.name));
@@ -412,6 +419,24 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 							set_cvalue (expr, new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("value")));
 						} else {
 							set_cvalue (expr, get_variable_cexpression (p.name));
+						}
+					}
+				}
+				if (!p.captured && array_type != null) {
+					if (p.array_null_terminated) {
+						var carray_expr = get_variable_cexpression (p.name);
+						requires_array_length = true;
+						var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
+						len_call.add_argument (carray_expr);
+						append_array_size (expr, len_call);
+					} else if (!p.no_array_length) {
+						for (int dim = 1; dim <= array_type.rank; dim++) {
+							CCodeExpression length_expr = get_variable_cexpression (get_parameter_array_length_cname (p, dim));
+							if (p.direction != ParameterDirection.IN) {
+								// accessing argument of out/ref param
+								length_expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, length_expr);
+							}
+							append_array_size (expr, length_expr);
 						}
 					}
 				}

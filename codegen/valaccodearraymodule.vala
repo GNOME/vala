@@ -182,36 +182,13 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			}
 		} else if (array_expr.symbol_reference != null) {
 			if (array_expr.symbol_reference is FormalParameter) {
-				var param = (FormalParameter) array_expr.symbol_reference;
-				if (param.captured) {
-					// captured variables are stored on the heap
-					var block = ((Method) param.parent_symbol).body;
-					var length_expr = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_parameter_array_length_cname (param, dim));
+				List<CCodeExpression> size = get_array_sizes (array_expr);
+				if (size != null && size.size >= dim) {
 					if (is_out) {
 						// passing array as out/ref
-						return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, length_expr);
+						return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, size[dim - 1]);
 					} else {
-						return length_expr;
-					}
-				} else {
-					if (param.array_null_terminated) {
-						var carray_expr = get_variable_cexpression (param.name);
-						requires_array_length = true;
-						var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
-						len_call.add_argument (carray_expr);
-						return len_call;
-					} else if (!param.no_array_length) {
-						CCodeExpression length_expr = get_variable_cexpression (get_parameter_array_length_cname (param, dim));
-						if (param.direction != ParameterDirection.IN) {
-							// accessing argument of out/ref param
-							length_expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, length_expr);
-						}
-						if (is_out) {
-							// passing array as out/ref
-							return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, length_expr);
-						} else {
-							return length_expr;
-						}
+						return size[dim - 1];
 					}
 				}
 			} else if (array_expr.symbol_reference is LocalVariable) {

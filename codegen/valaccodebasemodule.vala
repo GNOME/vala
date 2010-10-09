@@ -1625,6 +1625,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			var ma = new MemberAccess.simple (param.name);
 			ma.symbol_reference = param;
 			ma.value_type = param.variable_type.copy ();
+			visit_member_access (ma);
 			// directly access parameters in ref expressions
 			param.captured = false;
 			cparam = get_ref_cexpression (param.variable_type, cparam, ma, param);
@@ -1658,6 +1659,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			var ma = new MemberAccess.simple (param.name);
 			ma.symbol_reference = param;
 			ma.value_type = param_type.copy ();
+			visit_member_access (ma);
 			free_block.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), get_variable_cname (param.name)), param.variable_type, ma)));
 
 			if (old_coroutine) {
@@ -1857,6 +1859,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 					var ma = new MemberAccess.simple (param.name);
 					ma.symbol_reference = param;
 					ma.value_type = param.variable_type.copy ();
+					visit_member_access (ma);
 					ccode.add_expression (get_unref_expression (get_variable_cexpression (param.name), param.variable_type, ma));
 				}
 			}
@@ -3189,6 +3192,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 				var ma = new MemberAccess.simple (param.name);
 				ma.symbol_reference = param;
 				ma.value_type = param.variable_type.copy ();
+				visit_member_access (ma);
 				ccode.add_expression (get_unref_expression (get_variable_cexpression (param.name), param.variable_type, ma));
 			}
 		}

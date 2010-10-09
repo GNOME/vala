@@ -103,6 +103,7 @@ public class Vala.GAsyncModule : GSignalModule {
 					var ma = new MemberAccess.simple (param.name);
 					ma.symbol_reference = param;
 					ma.value_type = param.variable_type.copy ();
+					visit_member_access (ma);
 					freeblock.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_variable_cname (param.name)), param.variable_type, ma)));
 				}
 			}
@@ -247,6 +248,8 @@ public class Vala.GAsyncModule : GSignalModule {
 				if (requires_copy (param_type) && !param.variable_type.value_owned)  {
 					var ma = new MemberAccess.simple (param.name);
 					ma.symbol_reference = param;
+					ma.value_type = param.variable_type.copy ();
+					visit_member_access (ma);
 					cparam = get_ref_cexpression (param.variable_type, cparam, ma, param);
 				}
 
