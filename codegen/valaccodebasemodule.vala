@@ -5738,7 +5738,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		return glib_value.delegate_target;
 	}
 
-	public void set_delegate_target (Expression expr, CCodeExpression delegate_target) {
+	public void set_delegate_target (Expression expr, CCodeExpression? delegate_target) {
 		var glib_value = (GLibValue) expr.target_value;
 		if (glib_value == null) {
 			glib_value = new GLibValue ();

@@ -148,55 +148,21 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			delegate_expr = reftransfer_expr.inner;
 		}
 		
-		if (delegate_expr is MethodCall || delegate_expr is LambdaExpression) {
-			if (get_delegate_target_destroy_notify (delegate_expr) != null) {
-				delegate_target_destroy_notify = get_delegate_target_destroy_notify (delegate_expr);
-			}
-			return get_delegate_target (delegate_expr);
-		} else if (delegate_expr.symbol_reference != null) {
-			if (delegate_expr.symbol_reference is FormalParameter || delegate_expr.symbol_reference is LocalVariable || delegate_expr.symbol_reference is Field) {
-				if (get_delegate_target_destroy_notify (delegate_expr) != null) {
-					delegate_target_destroy_notify = get_delegate_target_destroy_notify (delegate_expr);
-				}
-				var target_expr = get_delegate_target (delegate_expr);
-				if (is_out) {
-					// passing delegate as out/ref
-					if (expr_owned) {
-						delegate_target_destroy_notify = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, delegate_target_destroy_notify);
-					}
-					return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, target_expr);
-				} else {
-					return target_expr;
-				}
-			} else if (delegate_expr.symbol_reference is Method) {
-				var m = (Method) delegate_expr.symbol_reference;
-				var ma = (MemberAccess) delegate_expr;
-				if (m.binding == MemberBinding.STATIC) {
-					return new CCodeConstant ("NULL");
-				} else if (m.is_async_callback) {
-					if (current_method.closure) {
-						var block = ((Method) m.parent_symbol).body;
-						return new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), "_async_data_");
-					} else {
-						return new CCodeIdentifier ("data");
-					}
-				} else {
-					var delegate_target = (CCodeExpression) get_ccodenode (ma.inner);
-					var delegate_type = delegate_expr.target_type as DelegateType;
-					if ((expr_owned || (delegate_type != null && delegate_type.is_called_once)) && ma.inner.value_type.data_type != null && ma.inner.value_type.data_type.is_reference_counting ()) {
-						var ref_call = new CCodeFunctionCall (get_dup_func_expression (ma.inner.value_type, delegate_expr.source_reference));
-						ref_call.add_argument (delegate_target);
-						delegate_target = ref_call;
-						delegate_target_destroy_notify = get_destroy_func_expression (ma.inner.value_type);
-					}
-					return delegate_target;
-				}
-			} else if (delegate_expr.symbol_reference is Property) {
-				return get_delegate_target (delegate_expr);
-			}
+		if (get_delegate_target_destroy_notify (delegate_expr) != null) {
+			delegate_target_destroy_notify = get_delegate_target_destroy_notify (delegate_expr);
 		}
-
-		return new CCodeConstant ("NULL");
+		var target_expr = get_delegate_target (delegate_expr);
+		if (target_expr == null) {
+			return new CCodeConstant ("NULL");
+		} else if (is_out) {
+			// passing delegate as out/ref
+			if (expr_owned) {
+				delegate_target_destroy_notify = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, delegate_target_destroy_notify);
+			}
+			return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, target_expr);
+		} else {
+			return target_expr;
+		}
 	}
 
 	public override string get_delegate_target_destroy_notify_cname (string delegate_cname) {
