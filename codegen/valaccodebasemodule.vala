@@ -953,6 +953,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 					var ma = new MemberAccess.simple (local.name);
 					ma.symbol_reference = local;
 					ma.value_type = local.variable_type.copy ();
+					visit_member_access (ma);
 					ccode.add_expression (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma));
 				}
 
@@ -1737,6 +1738,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 						var ma = new MemberAccess.simple (local.name);
 						ma.symbol_reference = local;
 						ma.value_type = local.variable_type.copy ();
+						visit_member_access (ma);
 						free_block.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), get_variable_cname (local.name)), local.variable_type, ma)));
 
 						if (old_coroutine) {
@@ -1848,6 +1850,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 				var ma = new MemberAccess.simple (local.name);
 				ma.symbol_reference = local;
 				ma.value_type = local.variable_type.copy ();
+				visit_member_access (ma);
 				ccode.add_expression (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma));
 			}
 		}
@@ -1976,6 +1979,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			var ma = new MemberAccess.simple (local.name);
 			ma.symbol_reference = local;
 			ma.value_type = local.variable_type.copy ();
+			visit_member_access (ma);
 
 			rhs = get_cvalue (local.initializer);
 
@@ -3026,6 +3030,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			var ma = new MemberAccess.simple (local.name);
 			ma.symbol_reference = local;
 			ma.value_type = local.variable_type.copy ();
+			visit_member_access (ma);
 			expr_list.append_expression (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma));
 		}
 
@@ -3104,6 +3109,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			var ma = new MemberAccess.simple (local.name);
 			ma.symbol_reference = local;
 			ma.value_type = local.variable_type.copy ();
+			visit_member_access (ma);
 			ccode.add_expression (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma));
 		}
 
@@ -3126,6 +3132,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 				var ma = new MemberAccess.simple (local.name);
 				ma.symbol_reference = local;
 				ma.value_type = local.variable_type.copy ();
+				visit_member_access (ma);
 				ccode.add_expression (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma));
 			}
 		}
@@ -3163,6 +3170,8 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			if (!local.unreachable && local.active && !local.floating && !local.captured && requires_destroy (local.variable_type)) {
 				var ma = new MemberAccess.simple (local.name);
 				ma.symbol_reference = local;
+				ma.value_type = local.variable_type.copy ();
+				visit_member_access (ma);
 				ccode.add_expression (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma));
 			}
 		}

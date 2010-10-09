@@ -181,7 +181,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 				return size[dim - 1];
 			}
 		} else if (array_expr.symbol_reference != null) {
-			if (array_expr.symbol_reference is FormalParameter) {
+			if (array_expr.symbol_reference is FormalParameter || array_expr.symbol_reference is LocalVariable) {
 				List<CCodeExpression> size = get_array_sizes (array_expr);
 				if (size != null && size.size >= dim) {
 					if (is_out) {
@@ -189,26 +189,6 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 						return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, size[dim - 1]);
 					} else {
 						return size[dim - 1];
-					}
-				}
-			} else if (array_expr.symbol_reference is LocalVariable) {
-				var local = (LocalVariable) array_expr.symbol_reference;
-				if (local.captured) {
-					// captured variables are stored on the heap
-					var block = (Block) local.parent_symbol;
-					var length_expr = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_array_length_cname (get_variable_cname (local.name), dim));
-					if (is_out) {
-						// passing array as out/ref
-						return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, length_expr);
-					} else {
-						return length_expr;
-					}
-				} else {
-					var length_expr = get_variable_cexpression (get_array_length_cname (get_variable_cname (local.name), dim));
-					if (is_out) {
-						return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, length_expr);
-					} else {
-						return length_expr;
 					}
 				}
 			} else if (array_expr.symbol_reference is Field) {

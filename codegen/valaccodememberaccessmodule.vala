@@ -355,8 +355,18 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				// captured variables are stored on the heap
 				var block = (Block) local.parent_symbol;
 				set_cvalue (expr, new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_variable_cname (local.name)));
+				if (array_type != null) {
+					for (int dim = 1; dim <= array_type.rank; dim++) {
+						append_array_size (expr, new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_array_length_cname (get_variable_cname (local.name), dim)));
+					}
+				}
 			} else {
 				set_cvalue (expr, get_variable_cexpression (local.name));
+				if (array_type != null) {
+					for (int dim = 1; dim <= array_type.rank; dim++) {
+						append_array_size (expr, get_variable_cexpression (get_array_length_cname (get_variable_cname (local.name), dim)));
+					}
+				}
 
 				if (expr.parent_node is ReturnStatement &&
 				    current_return_type.value_owned &&

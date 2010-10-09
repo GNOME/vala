@@ -114,6 +114,8 @@ public class Vala.GAsyncModule : GSignalModule {
 			var v = new LocalVariable (m.return_type, ".result");
 			var ma = new MemberAccess.simple (".result");
 			ma.symbol_reference = v;
+			ma.value_type = v.variable_type.copy ();
+			visit_member_access (ma);
 			var unref_expr = get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "result"), m.return_type, ma);
 			freeblock.add_statement (new CCodeExpressionStatement (unref_expr));
 		}
@@ -571,6 +573,8 @@ public class Vala.GAsyncModule : GSignalModule {
 		foreach (LocalVariable local in temp_ref_vars) {
 			var ma = new MemberAccess.simple (local.name);
 			ma.symbol_reference = local;
+			ma.value_type = local.variable_type.copy ();
+			visit_member_access (ma);
 			ccode.add_expression (get_unref_expression (new CCodeIdentifier (local.name), local.variable_type, ma));
 		}
 
