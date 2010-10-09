@@ -3547,10 +3547,13 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		set_cvalue (expr, new CCodeConstant ("NULL"));
 
 		var array_type = expr.target_type as ArrayType;
+		var delegate_type = expr.target_type as DelegateType;
 		if (array_type != null) {
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				append_array_size (expr, new CCodeConstant ("0"));
 			}
+		} else if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
+			set_delegate_target (expr, new CCodeConstant ("NULL"));
 		}
 	}
 
