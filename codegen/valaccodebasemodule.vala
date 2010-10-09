@@ -4878,14 +4878,48 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
-	public override void visit_lambda_expression (LambdaExpression l) {
+	public override void visit_lambda_expression (LambdaExpression lambda) {
 		// use instance position from delegate
-		var dt = (DelegateType) l.target_type;
-		l.method.cinstance_parameter_position = dt.delegate_symbol.cinstance_parameter_position;
+		var dt = (DelegateType) lambda.target_type;
+		lambda.method.cinstance_parameter_position = dt.delegate_symbol.cinstance_parameter_position;
 
-		l.accept_children (this);
+		lambda.accept_children (this);
 
-		set_cvalue (l, new CCodeIdentifier (l.method.get_cname ()));
+		bool expr_owned = lambda.value_type.value_owned;
+
+		set_cvalue (lambda, new CCodeIdentifier (lambda.method.get_cname ()));
+
+		var delegate_type = (DelegateType) lambda.target_type;
+		if (lambda.method.closure) {
+			int block_id = get_block_id (current_closure_block);
+			var delegate_target = get_variable_cexpression ("_data%d_".printf (block_id));
+			if (expr_owned || delegate_type.is_called_once) {
+				var ref_call = new CCodeFunctionCall (new CCodeIdentifier ("block%d_data_ref".printf (block_id)));
+				ref_call.add_argument (delegate_target);
+				delegate_target = ref_call;
+				set_delegate_target_destroy_notify (lambda, new CCodeIdentifier ("block%d_data_unref".printf (block_id)));
+			}
+			set_delegate_target (lambda, delegate_target);
+		} else if (get_this_type () != null || in_constructor) {
+			CCodeExpression delegate_target = get_result_cexpression ("self");
+			if (expr_owned || delegate_type.is_called_once) {
+				if (get_this_type () != null) {
+					var ref_call = new CCodeFunctionCall (get_dup_func_expression (get_this_type (), lambda.source_reference));
+					ref_call.add_argument (delegate_target);
+					delegate_target = ref_call;
+					set_delegate_target_destroy_notify (lambda, get_destroy_func_expression (get_this_type ()));
+				} else {
+					// in constructor
+					var ref_call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_ref"));
+					ref_call.add_argument (delegate_target);
+					delegate_target = ref_call;
+					set_delegate_target_destroy_notify (lambda, new CCodeIdentifier ("g_object_unref"));
+				}
+			}
+			set_delegate_target (lambda, delegate_target);
+		} else {
+			set_delegate_target (lambda, new CCodeConstant ("NULL"));
+		}
 	}
 
 	public CCodeExpression convert_from_generic_pointer (CCodeExpression cexpr, DataType actual_type) {

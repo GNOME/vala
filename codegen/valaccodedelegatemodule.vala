@@ -148,45 +148,11 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			delegate_expr = reftransfer_expr.inner;
 		}
 		
-		if (delegate_expr is MethodCall) {
-			var invocation_expr = (MethodCall) delegate_expr;
-			if (get_delegate_target_destroy_notify (invocation_expr) != null) {
-				delegate_target_destroy_notify = get_delegate_target_destroy_notify (invocation_expr);
+		if (delegate_expr is MethodCall || delegate_expr is LambdaExpression) {
+			if (get_delegate_target_destroy_notify (delegate_expr) != null) {
+				delegate_target_destroy_notify = get_delegate_target_destroy_notify (delegate_expr);
 			}
-			return get_delegate_target (invocation_expr);
-		} else if (delegate_expr is LambdaExpression) {
-			var lambda = (LambdaExpression) delegate_expr;
-			var delegate_type = (DelegateType) delegate_expr.target_type;
-			if (lambda.method.closure) {
-				int block_id = get_block_id (current_closure_block);
-				var delegate_target = get_variable_cexpression ("_data%d_".printf (block_id));
-				if (expr_owned || delegate_type.is_called_once) {
-					var ref_call = new CCodeFunctionCall (new CCodeIdentifier ("block%d_data_ref".printf (block_id)));
-					ref_call.add_argument (delegate_target);
-					delegate_target = ref_call;
-					delegate_target_destroy_notify = new CCodeIdentifier ("block%d_data_unref".printf (block_id));
-				}
-				return delegate_target;
-			} else if (get_this_type () != null || in_constructor) {
-				CCodeExpression delegate_target = get_result_cexpression ("self");
-				if (expr_owned || delegate_type.is_called_once) {
-					if (get_this_type () != null) {
-						var ref_call = new CCodeFunctionCall (get_dup_func_expression (get_this_type (), delegate_expr.source_reference));
-						ref_call.add_argument (delegate_target);
-						delegate_target = ref_call;
-						delegate_target_destroy_notify = get_destroy_func_expression (get_this_type ());
-					} else {
-						// in constructor
-						var ref_call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_ref"));
-						ref_call.add_argument (delegate_target);
-						delegate_target = ref_call;
-						delegate_target_destroy_notify = new CCodeIdentifier ("g_object_unref");
-					}
-				}
-				return delegate_target;
-			} else {
-				return new CCodeConstant ("NULL");
-			}
+			return get_delegate_target (delegate_expr);
 		} else if (delegate_expr.symbol_reference != null) {
 			if (delegate_expr.symbol_reference is FormalParameter) {
 				var param = (FormalParameter) delegate_expr.symbol_reference;
