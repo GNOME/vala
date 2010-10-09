@@ -5728,7 +5728,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		return glib_value.ccodenode;
 	}
 
-	public void set_cvalue (Expression expr, CCodeExpression cvalue) {
+	public void set_cvalue (Expression expr, CCodeExpression? cvalue) {
 		var glib_value = (GLibValue) expr.target_value;
 		if (glib_value == null) {
 			glib_value = new GLibValue ();

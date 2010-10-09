@@ -2275,7 +2275,7 @@ public class Vala.DovaBaseModule : CodeGenerator {
 		return dova_value.ccodenode;
 	}
 
-	public void set_cvalue (Expression expr, CCodeExpression cvalue) {
+	public void set_cvalue (Expression expr, CCodeExpression? cvalue) {
 		var dova_value = (DovaValue) expr.target_value;
 		if (dova_value == null) {
 			dova_value = new DovaValue ();

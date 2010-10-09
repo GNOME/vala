@@ -24,7 +24,7 @@
  * The link between an assignment and generated code.
  */
 public class Vala.DovaAssignmentModule : DovaMemberAccessModule {
-	CCodeExpression emit_property_assignment (Assignment assignment) {
+	CCodeExpression? emit_property_assignment (Assignment assignment) {
 		var ma = assignment.left as MemberAccess;
 
 		var prop = (Property) assignment.left.symbol_reference;
@@ -71,21 +71,17 @@ public class Vala.DovaAssignmentModule : DovaMemberAccessModule {
 			cexpr = new CCodeBinaryExpression (cop, (CCodeExpression) get_ccodenode (assignment.left), cexpr);
 		}
 
-		var ccall = get_property_set_call (prop, ma, cexpr, assignment.right);
+		ccode.add_expression (get_property_set_call (prop, ma, cexpr, assignment.right));
 
 		// assignments are expressions, so return the current property value, except if we're sure that it can't be used
-		if (!(assignment.parent_node is ExpressionStatement)) {
-			var ccomma = new CCodeCommaExpression ();
-			ccomma.append_expression (ccall); // update property
-			ccomma.append_expression ((CCodeExpression) get_ccodenode (ma)); // current property value
-
-			return ccomma;
+		if (assignment.parent_node is ExpressionStatement) {
+			return null;
 		} else {
-			return ccall;
+			return get_ccodenode (ma); // current property value
 		}
 	}
 
-	CCodeExpression emit_simple_assignment (Assignment assignment) {
+	CCodeExpression? emit_simple_assignment (Assignment assignment) {
 		CCodeExpression rhs = get_cvalue (assignment.right);
 		CCodeExpression lhs = (CCodeExpression) get_ccodenode (assignment.left);
 		CCodeCommaExpression outer_ccomma = null;
@@ -150,10 +146,16 @@ public class Vala.DovaAssignmentModule : DovaMemberAccessModule {
 			codenode = outer_ccomma;
 		}
 
-		return codenode;
+		ccode.add_expression (codenode);
+
+		if (assignment.parent_node is ExpressionStatement) {
+			return null;
+		} else {
+			return lhs;
+		}
 	}
 
-	CCodeExpression emit_fixed_length_array_assignment (Assignment assignment, ArrayType array_type) {
+	CCodeExpression? emit_fixed_length_array_assignment (Assignment assignment, ArrayType array_type) {
 		CCodeExpression rhs = get_cvalue (assignment.right);
 		CCodeExpression lhs = (CCodeExpression) get_ccodenode (assignment.left);
 
@@ -167,7 +169,13 @@ public class Vala.DovaAssignmentModule : DovaMemberAccessModule {
 		ccopy.add_argument (rhs);
 		ccopy.add_argument (size);
 
-		return ccopy;
+		ccode.add_expression (ccopy);
+
+		if (assignment.parent_node is ExpressionStatement) {
+			return null;
+		} else {
+			return lhs;
+		}
 	}
 
 	public override void visit_assignment (Assignment assignment) {
