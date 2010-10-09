@@ -1187,7 +1187,9 @@ public class Vala.DovaBaseModule : CodeGenerator {
 			return;
 		}
 
-		ccode.add_expression (get_cvalue (stmt.expression));
+		if (get_cvalue (stmt.expression) != null) {
+			ccode.add_expression (get_cvalue (stmt.expression));
+		}
 		/* free temporary objects and handle errors */
 
 		foreach (LocalVariable local in temp_ref_vars) {

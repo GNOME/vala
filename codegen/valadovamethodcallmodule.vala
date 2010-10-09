@@ -218,7 +218,17 @@ public class Vala.DovaMethodCallModule : DovaAssignmentModule {
 			ccall_expr = ccomma;
 		}
 
-		set_cvalue (expr, ccall_expr);
+		if (expr.parent_node is ExpressionStatement) {
+			ccode.add_expression (ccall_expr);
+		} else {
+			var temp_var = get_temp_variable (expr.value_type);
+			var temp_ref = get_variable_cexpression (temp_var.name);
+
+			emit_temp_var (temp_var);
+
+			ccode.add_expression (new CCodeAssignment (temp_ref, ccall_expr));
+			set_cvalue (expr, temp_ref);
+		}
 	}
 }
 

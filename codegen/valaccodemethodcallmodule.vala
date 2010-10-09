@@ -740,9 +740,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		}
 
 		if (m != null && m.binding == MemberBinding.INSTANCE && m.returns_modified_pointer) {
-			set_cvalue (expr, new CCodeAssignment (instance, ccall_expr));
-		} else {
-			set_cvalue (expr, ccall_expr);
+			ccall_expr = new CCodeAssignment (instance, ccall_expr);
 		}
 
 		if (expr.is_yield_expression) {
@@ -783,11 +781,25 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 			var ccomma = new CCodeCommaExpression ();
 			ccomma.append_expression (new CCodeAssignment (temp_ref, new_size));
-			ccomma.append_expression (get_cvalue (expr));
+			ccomma.append_expression (ccall_expr);
 			ccomma.append_expression (new CCodeConditionalExpression (ccheck, czero, new CCodeConstant ("NULL")));
 			ccomma.append_expression (new CCodeAssignment (get_array_length_cexpression (ma.inner, 1), temp_ref));
 
 			set_cvalue (expr, ccomma);
+
+			return;
+		}
+
+		if (expr.parent_node is ExpressionStatement) {
+			ccode.add_expression (ccall_expr);
+		} else {
+			var temp_var = get_temp_variable (itype.get_return_type ());
+			var temp_ref = get_variable_cexpression (temp_var.name);
+
+			emit_temp_var (temp_var);
+
+			ccode.add_expression (new CCodeAssignment (temp_ref, ccall_expr));
+			set_cvalue (expr, temp_ref);
 		}
 	}
 
