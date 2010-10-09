@@ -154,7 +154,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			}
 			return get_delegate_target (delegate_expr);
 		} else if (delegate_expr.symbol_reference != null) {
-			if (delegate_expr.symbol_reference is FormalParameter || delegate_expr.symbol_reference is LocalVariable) {
+			if (delegate_expr.symbol_reference is FormalParameter || delegate_expr.symbol_reference is LocalVariable || delegate_expr.symbol_reference is Field) {
 				if (get_delegate_target_destroy_notify (delegate_expr) != null) {
 					delegate_target_destroy_notify = get_delegate_target_destroy_notify (delegate_expr);
 				}
@@ -164,55 +164,6 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 					if (expr_owned) {
 						delegate_target_destroy_notify = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, delegate_target_destroy_notify);
 					}
-					return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, target_expr);
-				} else {
-					return target_expr;
-				}
-			} else if (delegate_expr.symbol_reference is Field) {
-				var field = (Field) delegate_expr.symbol_reference;
-				string target_cname = get_delegate_target_cname (field.get_cname ());
-				string target_destroy_notify_cname = get_delegate_target_destroy_notify_cname (field.get_cname ());
-
-				var ma = (MemberAccess) delegate_expr;
-
-				CCodeExpression target_expr = null;
-
-				if (field.no_delegate_target) {
-					return new CCodeConstant ("NULL");
-				}
-
-				if (field.binding == MemberBinding.INSTANCE) {
-					var instance_expression_type = ma.inner.value_type;
-					var instance_target_type = get_data_type_for_symbol ((TypeSymbol) field.parent_symbol);
-
-					var pub_inst = (CCodeExpression) get_ccodenode (ma.inner);
-					CCodeExpression typed_inst = transform_expression (pub_inst, instance_expression_type, instance_target_type);
-
-					CCodeExpression inst;
-					if (field.access == SymbolAccessibility.PRIVATE) {
-						inst = new CCodeMemberAccess.pointer (typed_inst, "priv");
-					} else {
-						inst = typed_inst;
-					}
-					if (((TypeSymbol) field.parent_symbol).is_reference_type ()) {
-						target_expr = new CCodeMemberAccess.pointer (inst, target_cname);
-						if (expr_owned) {
-							delegate_target_destroy_notify = new CCodeMemberAccess.pointer (inst, target_destroy_notify_cname);
-						}
-					} else {
-						target_expr = new CCodeMemberAccess (inst, target_cname);
-						if (expr_owned) {
-							delegate_target_destroy_notify = new CCodeMemberAccess (inst, target_destroy_notify_cname);
-						}
-					}
-				} else {
-					target_expr = new CCodeIdentifier (target_cname);
-					if (expr_owned) {
-						delegate_target_destroy_notify = new CCodeIdentifier (target_destroy_notify_cname);
-					}
-				}
-
-				if (is_out) {
 					return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, target_expr);
 				} else {
 					return target_expr;

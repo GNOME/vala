@@ -175,6 +175,25 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 							append_array_size (expr, length_expr);
 						}
 					}
+				} else if (field.variable_type is DelegateType) {
+					string target_cname = get_delegate_target_cname (field.get_cname ());
+					string target_destroy_notify_cname = get_delegate_target_destroy_notify_cname (field.get_cname ());
+
+					if (field.no_delegate_target) {
+						set_delegate_target (expr, new CCodeConstant ("NULL"));
+					} else {
+						if (((TypeSymbol) field.parent_symbol).is_reference_type ()) {
+							set_delegate_target (expr, new CCodeMemberAccess.pointer (inst, target_cname));
+							if (expr.value_type.value_owned) {
+								set_delegate_target_destroy_notify (expr, new CCodeMemberAccess.pointer (inst, target_destroy_notify_cname));
+							}
+						} else {
+							set_delegate_target (expr, new CCodeMemberAccess (inst, target_cname));
+							if (expr.value_type.value_owned) {
+								set_delegate_target_destroy_notify (expr, new CCodeMemberAccess (inst, target_destroy_notify_cname));
+							}
+						}
+					}
 				}
 			} else if (field.binding == MemberBinding.CLASS) {
 				var cl = (Class) field.parent_symbol;
@@ -225,6 +244,15 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 							} else {
 								append_array_size (expr, new CCodeIdentifier (get_array_length_cname (field.get_cname (), dim)));
 							}
+						}
+					}
+				} else if (field.variable_type is DelegateType) {
+					if (field.no_delegate_target) {
+						set_delegate_target (expr, new CCodeConstant ("NULL"));
+					} else {
+						set_delegate_target (expr, new CCodeIdentifier (get_delegate_target_cname (field.get_cname ())));
+						if (expr.value_type.value_owned) {
+							set_delegate_target_destroy_notify (expr, new CCodeIdentifier (get_delegate_target_destroy_notify_cname (field.get_cname ())));
 						}
 					}
 				}
