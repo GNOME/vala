@@ -3409,28 +3409,30 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			fun.add_parameter (new CCodeFormalParameter ("re", "GRegex**"));
 			fun.add_parameter (new CCodeFormalParameter ("pattern", "const gchar *"));
 			fun.add_parameter (new CCodeFormalParameter ("match_options", "GRegexMatchFlags"));
-			fun.block = new CCodeBlock ();
+
+			push_function (fun);
 
 			var once_enter_call = new CCodeFunctionCall (new CCodeIdentifier ("g_once_init_enter"));
 			once_enter_call.add_argument (new CCodeConstant ("(volatile gsize*) re"));
-
-			var if_block = new CCodeBlock ();
+			ccode.open_if (once_enter_call);
 
 			var regex_new_call = new CCodeFunctionCall (new CCodeIdentifier ("g_regex_new"));
 			regex_new_call.add_argument (new CCodeConstant ("pattern"));
 			regex_new_call.add_argument (new CCodeConstant ("match_options"));
 			regex_new_call.add_argument (new CCodeConstant ("0"));
 			regex_new_call.add_argument (new CCodeConstant ("NULL"));
-			if_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("GRegex* val"), regex_new_call)));
+			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("GRegex* val"), regex_new_call));
 
 			var once_leave_call = new CCodeFunctionCall (new CCodeIdentifier ("g_once_init_leave"));
 			once_leave_call.add_argument (new CCodeConstant ("(volatile gsize*) re"));
 			once_leave_call.add_argument (new CCodeConstant ("(gsize) val"));
-			if_block.add_statement (new CCodeExpressionStatement (once_leave_call));
+			ccode.add_expression (once_leave_call);
 
-			var if_stat = new CCodeIfStatement (once_enter_call, if_block);
-			fun.block.add_statement (if_stat);
-			fun.block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("*re")));
+			ccode.close ();
+
+			ccode.add_return (new CCodeIdentifier ("*re"));
+
+			pop_function ();
 
 			cfile.add_function (fun);
 		}
