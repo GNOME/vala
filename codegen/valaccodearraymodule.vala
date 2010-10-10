@@ -707,14 +707,14 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			return add_func;
 		}
 
-		// declaration
-
 		var function = new CCodeFunction (add_func, "void");
 		function.modifiers = CCodeModifiers.STATIC;
 
 		function.add_parameter (new CCodeFormalParameter ("array", array_type.get_cname () + "*"));
 		function.add_parameter (new CCodeFormalParameter ("length", "int*"));
 		function.add_parameter (new CCodeFormalParameter ("size", "int*"));
+
+		push_function (function);
 
 		string typename = array_type.element_type.get_cname ();
 		CCodeExpression value = new CCodeIdentifier ("value");
@@ -733,10 +733,6 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var length = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("length"));
 		var size = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("size"));
 
-		// definition
-
-		var block = new CCodeBlock ();
-
 		var renew_call = new CCodeFunctionCall (new CCodeIdentifier ("g_renew"));
 		renew_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
 		renew_call.add_argument (array);
@@ -747,25 +743,22 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			renew_call.add_argument (size);
 		}
 
-		var resize_block = new CCodeBlock ();
-		resize_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (size, new CCodeConditionalExpression (size, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeConstant ("2"), size), new CCodeConstant ("4")))));
-		resize_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (array, renew_call)));
-
 		var csizecheck = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, length, size);
-		block.add_statement (new CCodeIfStatement (csizecheck, resize_block));
+		ccode.open_if (csizecheck);
+		ccode.add_expression (new CCodeAssignment (size, new CCodeConditionalExpression (size, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeConstant ("2"), size), new CCodeConstant ("4"))));
+		ccode.add_expression (new CCodeAssignment (array, renew_call));
+		ccode.close ();
 
-		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeElementAccess (array, new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, length)), value)));
+		ccode.add_expression (new CCodeAssignment (new CCodeElementAccess (array, new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, length)), value));
 
 		if (array_type.element_type.is_reference_type_or_type_parameter ()) {
 			// NULL terminate array
-			block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeElementAccess (array, length), new CCodeConstant ("NULL"))));
+			ccode.add_expression (new CCodeAssignment (new CCodeElementAccess (array, length), new CCodeConstant ("NULL")));
 		}
 
-		// append to file
+		pop_function ();
 
 		cfile.add_function_declaration (function);
-
-		function.block = block;
 		cfile.add_function (function);
 
 		return add_func;
