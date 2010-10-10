@@ -4226,8 +4226,9 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 
 		var local = expr.parent_node as LocalVariable;
 		if (local != null && has_simple_struct_initializer (local)) {
-			// no comma expression necessary
+			// no temporary variable necessary
 			set_cvalue (expr, creation_expr);
+			return;
 		} else if (instance != null) {
 			var ccomma = new CCodeCommaExpression ();
 
@@ -4287,9 +4288,17 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 
 			ccomma.append_expression (instance);
 
-			set_cvalue (expr, ccomma);
-		} else if (creation_expr != null) {
-			set_cvalue (expr, creation_expr);
+			creation_expr = ccomma;
+		}
+
+		if (creation_expr != null) {
+			var temp_var = get_temp_variable (expr.value_type);
+			var temp_ref = get_variable_cexpression (temp_var.name);
+
+			emit_temp_var (temp_var);
+
+			ccode.add_expression (new CCodeAssignment (temp_ref, creation_expr));
+			set_cvalue (expr, temp_ref);
 		}
 	}
 
