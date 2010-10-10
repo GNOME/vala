@@ -355,25 +355,23 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		return cname;
 	}
 
-	private CCodeForStatement get_vala_array_free_loop () {
-		var cbody = new CCodeBlock ();
+	void append_vala_array_free_loop () {
+		var cforinit = new CCodeAssignment (new CCodeIdentifier ("i"), new CCodeConstant ("0"));
+		var cforcond = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier ("i"), new CCodeIdentifier ("array_length"));
+		var cforiter = new CCodeAssignment (new CCodeIdentifier ("i"), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("i"), new CCodeConstant ("1")));
+		ccode.open_for (cforinit, cforcond, cforiter);
+
 		var cptrarray = new CCodeCastExpression (new CCodeIdentifier ("array"), "gpointer*");
 		var cea = new CCodeElementAccess (cptrarray, new CCodeIdentifier ("i"));
 
+		var cfreecond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, cea, new CCodeConstant ("NULL"));
+		ccode.open_if (cfreecond);
+
 		var cfreecall = new CCodeFunctionCall (new CCodeIdentifier ("destroy_func"));
 		cfreecall.add_argument (cea);
+		ccode.add_expression (cfreecall);
 
-		var cfreecond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, cea, new CCodeConstant ("NULL"));
-		var cforcond = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier ("i"), new CCodeIdentifier ("array_length"));
-		var cfreeblock = new CCodeBlock ();
-		cfreeblock.add_statement (new CCodeExpressionStatement (cfreecall));
-		cbody.add_statement (new CCodeIfStatement (cfreecond, cfreeblock));
-
-		var cfor = new CCodeForStatement (cforcond, cbody);
-		cfor.add_initializer (new CCodeAssignment (new CCodeIdentifier ("i"), new CCodeConstant ("0")));
-		cfor.add_iterator (new CCodeAssignment (new CCodeIdentifier ("i"), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("i"), new CCodeConstant ("1"))));
-
-		return cfor;
+		ccode.close ();
 	}
 
 	public override void append_vala_array_free () {
@@ -384,22 +382,21 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		fun.add_parameter (new CCodeFormalParameter ("array", "gpointer"));
 		fun.add_parameter (new CCodeFormalParameter ("array_length", "gint"));
 		fun.add_parameter (new CCodeFormalParameter ("destroy_func", "GDestroyNotify"));
-		cfile.add_function_declaration (fun);
 
-		var cdofree = new CCodeBlock ();
-
-		var citdecl = new CCodeDeclaration ("int");
-		citdecl.add_declarator (new CCodeVariableDeclarator ("i"));
-		cdofree.add_statement (citdecl);
-
-		cdofree.add_statement (get_vala_array_free_loop ());
+		push_function (fun);
 
 		var ccondarr = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("array"), new CCodeConstant ("NULL"));
 		var ccondfunc = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("destroy_func"), new CCodeConstant ("NULL"));
-		var cif = new CCodeIfStatement (new CCodeBinaryExpression (CCodeBinaryOperator.AND, ccondarr, ccondfunc), cdofree);
-		fun.block = new CCodeBlock ();
-		fun.block.add_statement (cif);
+		ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.AND, ccondarr, ccondfunc));
 
+		ccode.add_declaration ("int", new CCodeVariableDeclarator ("i"));
+		append_vala_array_free_loop ();
+
+		ccode.close ();
+
+		pop_function ();
+
+		cfile.add_function_declaration (fun);
 		cfile.add_function (fun);
 
 		// _vala_array_free frees elements and array
@@ -409,21 +406,23 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		fun.add_parameter (new CCodeFormalParameter ("array", "gpointer"));
 		fun.add_parameter (new CCodeFormalParameter ("array_length", "gint"));
 		fun.add_parameter (new CCodeFormalParameter ("destroy_func", "GDestroyNotify"));
-		cfile.add_function_declaration (fun);
+
+		push_function (fun);
 
 		// call _vala_array_destroy to free the array elements
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_destroy"));
 		ccall.add_argument (new CCodeIdentifier ("array"));
 		ccall.add_argument (new CCodeIdentifier ("array_length"));
 		ccall.add_argument (new CCodeIdentifier ("destroy_func"));
-
-		fun.block = new CCodeBlock ();
-		fun.block.add_statement (new CCodeExpressionStatement (ccall));
+		ccode.add_expression (ccall);
 
 		var carrfree = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
 		carrfree.add_argument (new CCodeIdentifier ("array"));
-		fun.block.add_statement (new CCodeExpressionStatement (carrfree));
+		ccode.add_expression (carrfree);
 
+		pop_function ();
+
+		cfile.add_function_declaration (fun);
 		cfile.add_function (fun);
 	}
 
