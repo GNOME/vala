@@ -192,7 +192,7 @@ public class Vala.GVariantModule : GAsyncModule {
 		}
 	}
 
-	CCodeExpression? generate_enum_value_from_string (CCodeFragment fragment, EnumValueType type, CCodeExpression? expr) {
+	CCodeExpression? generate_enum_value_from_string (EnumValueType type, CCodeExpression? expr) {
 		var en = type.type_symbol as Enum;
 		var from_string_name = "%s_from_string".printf (en.get_lower_case_cname (null));
 
@@ -252,7 +252,7 @@ public class Vala.GVariantModule : GAsyncModule {
 		return from_string_func;
 	}
 
-	CCodeExpression deserialize_basic (CCodeFragment fragment, BasicTypeInfo basic_type, CCodeExpression variant_expr, bool transfer = false) {
+	CCodeExpression deserialize_basic (BasicTypeInfo basic_type, CCodeExpression variant_expr, bool transfer = false) {
 		var get_call = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_get_" + basic_type.type_name));
 		get_call.add_argument (variant_expr);
 
@@ -268,7 +268,7 @@ public class Vala.GVariantModule : GAsyncModule {
 		return get_call;
 	}
 
-	CCodeExpression deserialize_array (CCodeFragment fragment, ArrayType array_type, CCodeExpression variant_expr, CCodeExpression? expr) {
+	CCodeExpression deserialize_array (ArrayType array_type, CCodeExpression variant_expr, CCodeExpression? expr) {
 		string temp_name = "_tmp%d_".printf (next_temp_var_id++);
 
 		var new_call = new CCodeFunctionCall (new CCodeIdentifier ("g_new"));
@@ -276,113 +276,89 @@ public class Vala.GVariantModule : GAsyncModule {
 		// add one extra element for NULL-termination
 		new_call.add_argument (new CCodeConstant ("5"));
 
-		var cdecl = new CCodeDeclaration (array_type.get_cname ());
-		cdecl.add_declarator (new CCodeVariableDeclarator (temp_name, new_call));
-		fragment.append (cdecl);
+		ccode.add_declaration (array_type.get_cname (), new CCodeVariableDeclarator (temp_name, new_call));
+		ccode.add_declaration ("int", new CCodeVariableDeclarator (temp_name + "_length", new CCodeConstant ("0")));
+		ccode.add_declaration ("int", new CCodeVariableDeclarator (temp_name + "_size", new CCodeConstant ("4")));
 
-		cdecl = new CCodeDeclaration ("int");
-		cdecl.add_declarator (new CCodeVariableDeclarator (temp_name + "_length", new CCodeConstant ("0")));
-		fragment.append (cdecl);
-
-		cdecl = new CCodeDeclaration ("int");
-		cdecl.add_declarator (new CCodeVariableDeclarator (temp_name + "_size", new CCodeConstant ("4")));
-		fragment.append (cdecl);
-
-		deserialize_array_dim (fragment, array_type, 1, temp_name, variant_expr, expr);
+		deserialize_array_dim (array_type, 1, temp_name, variant_expr, expr);
 
 		if (array_type.element_type.is_reference_type_or_type_parameter ()) {
 			// NULL terminate array
 			var length = new CCodeIdentifier (temp_name + "_length");
 			var element_access = new CCodeElementAccess (new CCodeIdentifier (temp_name), length);
-			fragment.append (new CCodeExpressionStatement (new CCodeAssignment (element_access, new CCodeIdentifier ("NULL"))));
+			ccode.add_expression (new CCodeAssignment (element_access, new CCodeIdentifier ("NULL")));
 		}
 
 		return new CCodeIdentifier (temp_name);
 	}
 
-	void deserialize_array_dim (CCodeFragment fragment, ArrayType array_type, int dim, string temp_name, CCodeExpression variant_expr, CCodeExpression? expr) {
+	void deserialize_array_dim (ArrayType array_type, int dim, string temp_name, CCodeExpression variant_expr, CCodeExpression? expr) {
 		string subiter_name = "_tmp%d_".printf (next_temp_var_id++);
 		string element_name = "_tmp%d_".printf (next_temp_var_id++);
 
-		var cdecl = new CCodeDeclaration ("int");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("%s_length%d".printf (temp_name, dim), new CCodeConstant ("0")));
-		fragment.append (cdecl);
-
-		cdecl = new CCodeDeclaration ("GVariantIter");
-		cdecl.add_declarator (new CCodeVariableDeclarator (subiter_name));
-		fragment.append (cdecl);
-
-		cdecl = new CCodeDeclaration ("GVariant*");
-		cdecl.add_declarator (new CCodeVariableDeclarator (element_name));
-		fragment.append (cdecl);
+		ccode.add_declaration ("int", new CCodeVariableDeclarator ("%s_length%d".printf (temp_name, dim), new CCodeConstant ("0")));
+		ccode.add_declaration ("GVariantIter", new CCodeVariableDeclarator (subiter_name));
+		ccode.add_declaration ("GVariant*", new CCodeVariableDeclarator (element_name));
 
 		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_iter_init"));
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
 		iter_call.add_argument (variant_expr);
-		fragment.append (new CCodeExpressionStatement (iter_call));
+		ccode.add_expression (iter_call);
 
 		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_iter_next_value"));
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
 
-		var cforblock = new CCodeBlock ();
-		var cforfragment = new CCodeFragment ();
-		cforblock.add_statement (cforfragment);
-		var cfor = new CCodeForStatement (new CCodeAssignment (new CCodeIdentifier (element_name), iter_call), cforblock);
-		cfor.add_iterator (new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier ("%s_length%d".printf (temp_name, dim))));
+		var cforcond = new CCodeAssignment (new CCodeIdentifier (element_name), iter_call);
+		var cforiter = new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier ("%s_length%d".printf (temp_name, dim)));
+		ccode.open_for (null, cforcond, cforiter);
 
 		if (dim < array_type.rank) {
-			deserialize_array_dim (cforfragment, array_type, dim + 1, temp_name, new CCodeIdentifier (element_name), expr);
+			deserialize_array_dim (array_type, dim + 1, temp_name, new CCodeIdentifier (element_name), expr);
 		} else {
 			var size_check = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier (temp_name + "_size"), new CCodeIdentifier (temp_name + "_length"));
-			var renew_block = new CCodeBlock ();
+
+			ccode.open_if (size_check);
 
 			// tmp_size = (2 * tmp_size);
 			var new_size = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeConstant ("2"), new CCodeIdentifier (temp_name + "_size"));
-			renew_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier (temp_name + "_size"), new_size)));
+			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier (temp_name + "_size"), new_size));
 
 			var renew_call = new CCodeFunctionCall (new CCodeIdentifier ("g_renew"));
 			renew_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
 			renew_call.add_argument (new CCodeIdentifier (temp_name));
 			// add one extra element for NULL-termination
 			renew_call.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier (temp_name + "_size"), new CCodeConstant ("1")));
-			var renew_stmt = new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier (temp_name), renew_call));
-			renew_block.add_statement (renew_stmt);
+			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier (temp_name), renew_call));
 
-			var cif = new CCodeIfStatement (size_check, renew_block);
-			cforfragment.append (cif);
+			ccode.close ();
 
 			var element_access = new CCodeElementAccess (new CCodeIdentifier (temp_name), new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier (temp_name + "_length")));
-			var element_expr = deserialize_expression (cforfragment, array_type.element_type, new CCodeIdentifier (element_name), null);
-			cforfragment.append (new CCodeExpressionStatement (new CCodeAssignment (element_access, element_expr)));
+			var element_expr = deserialize_expression (array_type.element_type, new CCodeIdentifier (element_name), null);
+			ccode.add_expression (new CCodeAssignment (element_access, element_expr));
 		}
 
 		var unref = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_unref"));
 		unref.add_argument (new CCodeIdentifier (element_name));
-		cforfragment.append (new CCodeExpressionStatement (unref));
+		ccode.add_expression (unref);
 
-		fragment.append (cfor);
+		ccode.close ();
 
 		if (expr != null) {
-			fragment.append (new CCodeExpressionStatement (new CCodeAssignment (get_array_length (expr, dim), new CCodeIdentifier ("%s_length%d".printf (temp_name, dim)))));
+			ccode.add_expression (new CCodeAssignment (get_array_length (expr, dim), new CCodeIdentifier ("%s_length%d".printf (temp_name, dim))));
 		}
 	}
 
-	CCodeExpression? deserialize_struct (CCodeFragment fragment, Struct st, CCodeExpression variant_expr) {
+	CCodeExpression? deserialize_struct (Struct st, CCodeExpression variant_expr) {
 		string temp_name = "_tmp%d_".printf (next_temp_var_id++);
 		string subiter_name = "_tmp%d_".printf (next_temp_var_id++);
 
-		var cdecl = new CCodeDeclaration (st.get_cname ());
-		cdecl.add_declarator (new CCodeVariableDeclarator (temp_name));
-		fragment.append (cdecl);
-
-		cdecl = new CCodeDeclaration ("GVariantIter");
-		cdecl.add_declarator (new CCodeVariableDeclarator (subiter_name));
-		fragment.append (cdecl);
+		ccode.add_declaration (st.get_cname (), new CCodeVariableDeclarator (temp_name));
+		ccode.add_declaration ("GVariantIter", new CCodeVariableDeclarator (subiter_name));
 
 		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_iter_init"));
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
 		iter_call.add_argument (variant_expr);
-		fragment.append (new CCodeExpressionStatement (iter_call));
+		ccode.add_expression (iter_call);
 
 		bool field_found = false;;
 
@@ -393,7 +369,7 @@ public class Vala.GVariantModule : GAsyncModule {
 
 			field_found = true;
 
-			read_expression (fragment, f.variable_type, new CCodeIdentifier (subiter_name), new CCodeMemberAccess (new CCodeIdentifier (temp_name), f.get_cname ()), f);
+			read_expression (f.variable_type, new CCodeIdentifier (subiter_name), new CCodeMemberAccess (new CCodeIdentifier (temp_name), f.get_cname ()), f);
 		}
 
 		if (!field_found) {
@@ -403,7 +379,7 @@ public class Vala.GVariantModule : GAsyncModule {
 		return new CCodeIdentifier (temp_name);
 	}
 
-	CCodeExpression deserialize_hash_table (CCodeFragment fragment, ObjectType type, CCodeExpression variant_expr) {
+	CCodeExpression deserialize_hash_table (ObjectType type, CCodeExpression variant_expr) {
 		string temp_name = "_tmp%d_".printf (next_temp_var_id++);
 		string subiter_name = "_tmp%d_".printf (next_temp_var_id++);
 		string key_name = "_tmp%d_".printf (next_temp_var_id++);
@@ -414,21 +390,10 @@ public class Vala.GVariantModule : GAsyncModule {
 		var key_type = type_args.get (0);
 		var value_type = type_args.get (1);
 
-		var cdecl = new CCodeDeclaration ("GHashTable*");
-		cdecl.add_declarator (new CCodeVariableDeclarator (temp_name));
-		fragment.append (cdecl);
-
-		cdecl = new CCodeDeclaration ("GVariantIter");
-		cdecl.add_declarator (new CCodeVariableDeclarator (subiter_name));
-		fragment.append (cdecl);
-
-		cdecl = new CCodeDeclaration ("GVariant*");
-		cdecl.add_declarator (new CCodeVariableDeclarator (key_name));
-		fragment.append (cdecl);
-
-		cdecl = new CCodeDeclaration ("GVariant*");
-		cdecl.add_declarator (new CCodeVariableDeclarator (value_name));
-		fragment.append (cdecl);
+		ccode.add_declaration ("GHashTable*", new CCodeVariableDeclarator (temp_name));
+		ccode.add_declaration ("GVariantIter", new CCodeVariableDeclarator (subiter_name));
+		ccode.add_declaration ("GVariant*", new CCodeVariableDeclarator (key_name));
+		ccode.add_declaration ("GVariant*", new CCodeVariableDeclarator (value_name));
 
 		var hash_table_new = new CCodeFunctionCall (new CCodeIdentifier ("g_hash_table_new_full"));
 		if (key_type.data_type == string_type.data_type) {
@@ -448,12 +413,12 @@ public class Vala.GVariantModule : GAsyncModule {
 		} else {
 			hash_table_new.add_argument (new CCodeIdentifier ("NULL"));
 		}
-		fragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier (temp_name), hash_table_new)));
+		ccode.add_expression (new CCodeAssignment (new CCodeIdentifier (temp_name), hash_table_new));
 
 		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_iter_init"));
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
 		iter_call.add_argument (variant_expr);
-		fragment.append (new CCodeExpressionStatement (iter_call));
+		ccode.add_expression (iter_call);
 
 		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_iter_loop"));
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
@@ -461,39 +426,36 @@ public class Vala.GVariantModule : GAsyncModule {
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (key_name)));
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (value_name)));
 
-		var cwhileblock = new CCodeBlock ();
-		var cwhilefragment = new CCodeFragment ();
-		cwhileblock.add_statement (cwhilefragment);
-		var cwhile = new CCodeWhileStatement (iter_call, cwhileblock);
+		ccode.open_while (iter_call);
 
-		var key_expr = deserialize_expression (cwhilefragment, key_type, new CCodeIdentifier (key_name), null);
-		var value_expr = deserialize_expression (cwhilefragment, value_type, new CCodeIdentifier (value_name), null);
+		var key_expr = deserialize_expression (key_type, new CCodeIdentifier (key_name), null);
+		var value_expr = deserialize_expression (value_type, new CCodeIdentifier (value_name), null);
 
 		var hash_table_insert = new CCodeFunctionCall (new CCodeIdentifier ("g_hash_table_insert"));
 		hash_table_insert.add_argument (new CCodeIdentifier (temp_name));
 		hash_table_insert.add_argument (convert_to_generic_pointer (key_expr, key_type));
 		hash_table_insert.add_argument (convert_to_generic_pointer (value_expr, value_type));
-		cwhilefragment.append (new CCodeExpressionStatement (hash_table_insert));
+		ccode.add_expression (hash_table_insert);
 
-		fragment.append (cwhile);
+		ccode.close ();
 
 		return new CCodeIdentifier (temp_name);
 	}
 
-	public override CCodeExpression? deserialize_expression (CCodeFragment fragment, DataType type, CCodeExpression variant_expr, CCodeExpression? expr) {
+	public override CCodeExpression? deserialize_expression (DataType type, CCodeExpression variant_expr, CCodeExpression? expr) {
 		BasicTypeInfo basic_type;
 		CCodeExpression result = null;
 		if (is_string_marshalled_enum (type.data_type)) {
 			get_basic_type_info ("s", out basic_type);
-			result = deserialize_basic (fragment, basic_type, variant_expr, true);
-			result = generate_enum_value_from_string (fragment, type as EnumValueType, result);
+			result = deserialize_basic (basic_type, variant_expr, true);
+			result = generate_enum_value_from_string (type as EnumValueType, result);
 		} else if (get_basic_type_info (get_type_signature (type), out basic_type)) {
-			result = deserialize_basic (fragment, basic_type, variant_expr);
+			result = deserialize_basic (basic_type, variant_expr);
 		} else if (type is ArrayType) {
-			result = deserialize_array (fragment, (ArrayType) type, variant_expr, expr);
+			result = deserialize_array ((ArrayType) type, variant_expr, expr);
 		} else if (type.data_type is Struct) {
 			var st = (Struct) type.data_type;
-			result = deserialize_struct (fragment, st, variant_expr);
+			result = deserialize_struct (st, variant_expr);
 			if (result != null && type.nullable) {
 				var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
 				csizeof.add_argument (new CCodeIdentifier (st.get_cname ()));
@@ -508,7 +470,7 @@ public class Vala.GVariantModule : GAsyncModule {
 				variant_get.add_argument (variant_expr);
 				result = variant_get;
 			} else if (type.data_type.get_full_name () == "GLib.HashTable") {
-				result = deserialize_hash_table (fragment, (ObjectType) type, variant_expr);
+				result = deserialize_hash_table ((ObjectType) type, variant_expr);
 			}
 		}
 
@@ -519,35 +481,33 @@ public class Vala.GVariantModule : GAsyncModule {
 		return result;
 	}
 
-	public void read_expression (CCodeFragment fragment, DataType type, CCodeExpression iter_expr, CCodeExpression target_expr, Symbol? sym) {
+	public void read_expression (DataType type, CCodeExpression iter_expr, CCodeExpression target_expr, Symbol? sym) {
 		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_iter_next_value"));
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, iter_expr));
 
 		if (sym != null && get_dbus_signature (sym) != null) {
 			// raw GVariant
-			fragment.append (new CCodeExpressionStatement (new CCodeAssignment (target_expr, iter_call)));
+			ccode.add_expression (new CCodeAssignment (target_expr, iter_call));
 			return;
 		}
 
 		string temp_name = "_tmp%d_".printf (next_temp_var_id++);
 
-		var cdecl = new CCodeDeclaration ("GVariant*");
-		cdecl.add_declarator (new CCodeVariableDeclarator (temp_name));
-		fragment.append (cdecl);
+		ccode.add_declaration ("GVariant*", new CCodeVariableDeclarator (temp_name));
 
 		var variant_expr = new CCodeIdentifier (temp_name);
 
-		fragment.append (new CCodeExpressionStatement (new CCodeAssignment (variant_expr, iter_call)));
+		ccode.add_expression (new CCodeAssignment (variant_expr, iter_call));
 
-		var result = deserialize_expression (fragment, type, variant_expr, target_expr);
-		fragment.append (new CCodeExpressionStatement (new CCodeAssignment (target_expr, result)));
+		var result = deserialize_expression (type, variant_expr, target_expr);
+		ccode.add_expression (new CCodeAssignment (target_expr, result));
 
 		var unref = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_unref"));
 		unref.add_argument (variant_expr);
-		fragment.append (new CCodeExpressionStatement (unref));
+		ccode.add_expression (unref);
 	}
 
-	CCodeExpression? generate_enum_value_to_string (CCodeFragment fragment, EnumValueType type, CCodeExpression? expr) {
+	CCodeExpression? generate_enum_value_to_string (EnumValueType type, CCodeExpression? expr) {
 		var en = type.type_symbol as Enum;
 		var to_string_name = "%s_to_string".printf (en.get_lower_case_cname (null));
 
@@ -593,84 +553,72 @@ public class Vala.GVariantModule : GAsyncModule {
 		return to_string_func;
 	}
 
-	CCodeExpression? serialize_basic (CCodeFragment fragment, BasicTypeInfo basic_type, CCodeExpression expr) {
+	CCodeExpression? serialize_basic (BasicTypeInfo basic_type, CCodeExpression expr) {
 		var new_call = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_new_" + basic_type.type_name));
 		new_call.add_argument (expr);
 		return new_call;
 	}
 
-	CCodeExpression? serialize_array (CCodeFragment fragment, ArrayType array_type, CCodeExpression array_expr) {
+	CCodeExpression? serialize_array (ArrayType array_type, CCodeExpression array_expr) {
 		string array_iter_name = "_tmp%d_".printf (next_temp_var_id++);
 
-		var cdecl = new CCodeDeclaration (array_type.get_cname ());
-		cdecl.add_declarator (new CCodeVariableDeclarator (array_iter_name));
-		fragment.append (cdecl);
+		ccode.add_declaration (array_type.get_cname (), new CCodeVariableDeclarator (array_iter_name));
+		ccode.add_expression (new CCodeAssignment (new CCodeIdentifier (array_iter_name), array_expr));
 
-		fragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier (array_iter_name), array_expr)));
-
-		return serialize_array_dim (fragment, array_type, 1, array_expr, new CCodeIdentifier (array_iter_name));
+		return serialize_array_dim (array_type, 1, array_expr, new CCodeIdentifier (array_iter_name));
 	}
 
-	CCodeExpression? serialize_array_dim (CCodeFragment fragment, ArrayType array_type, int dim, CCodeExpression array_expr, CCodeExpression array_iter_expr) {
+	CCodeExpression? serialize_array_dim (ArrayType array_type, int dim, CCodeExpression array_expr, CCodeExpression array_iter_expr) {
 		string builder_name = "_tmp%d_".printf (next_temp_var_id++);
 		string index_name = "_tmp%d_".printf (next_temp_var_id++);
 
-		var cdecl = new CCodeDeclaration ("GVariantBuilder");
-		cdecl.add_declarator (new CCodeVariableDeclarator (builder_name));
-		fragment.append (cdecl);
-
-		cdecl = new CCodeDeclaration ("int");
-		cdecl.add_declarator (new CCodeVariableDeclarator (index_name));
-		fragment.append (cdecl);
+		ccode.add_declaration ("GVariantBuilder", new CCodeVariableDeclarator (builder_name));
+		ccode.add_declaration ("int", new CCodeVariableDeclarator (index_name));
 
 		var builder_init = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_init"));
 		builder_init.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (builder_name)));
 		builder_init.add_argument (new CCodeConstant ("\"%s\"".printf (get_type_signature (array_type))));
-		fragment.append (new CCodeExpressionStatement (builder_init));
+		ccode.add_expression (builder_init);
 
-		var cforblock = new CCodeBlock ();
-		var cforfragment = new CCodeFragment ();
-		cforblock.add_statement (cforfragment);
-		var cfor = new CCodeForStatement (new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier (index_name), get_array_length (array_expr, dim)), cforblock);
-		cfor.add_initializer (new CCodeAssignment (new CCodeIdentifier (index_name), new CCodeConstant ("0")));
-		cfor.add_iterator (new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier (index_name)));
+		var cforinit = new CCodeAssignment (new CCodeIdentifier (index_name), new CCodeConstant ("0"));
+		var cforcond = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier (index_name), get_array_length (array_expr, dim));
+		var cforiter = new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier (index_name));
+		ccode.open_for (cforinit, cforcond, cforiter);
 
 		CCodeExpression element_variant;
 		if (dim < array_type.rank) {
-			element_variant = serialize_array_dim (cforfragment, array_type, dim + 1, array_expr, array_iter_expr);
+			element_variant = serialize_array_dim (array_type, dim + 1, array_expr, array_iter_expr);
 		} else {
 			var element_expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, array_iter_expr);
-			element_variant = serialize_expression (cforfragment, array_type.element_type, element_expr);
+			element_variant = serialize_expression (array_type.element_type, element_expr);
 		}
 
 		var builder_add = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_add_value"));
 		builder_add.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (builder_name)));
 		builder_add.add_argument (element_variant);
-		cforfragment.append (new CCodeExpressionStatement (builder_add));
+		ccode.add_expression (builder_add);
 
 		if (dim == array_type.rank) {
 			var array_iter_incr = new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, array_iter_expr);
-			cforfragment.append (new CCodeExpressionStatement (array_iter_incr));
+			ccode.add_expression (array_iter_incr);
 		}
 
-		fragment.append (cfor);
+		ccode.close ();
 
 		var builder_end = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_end"));
 		builder_end.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (builder_name)));
 		return builder_end;
 	}
 
-	CCodeExpression? serialize_struct (CCodeFragment fragment, Struct st, CCodeExpression struct_expr) {
+	CCodeExpression? serialize_struct (Struct st, CCodeExpression struct_expr) {
 		string builder_name = "_tmp%d_".printf (next_temp_var_id++);
 
-		var cdecl = new CCodeDeclaration ("GVariantBuilder");
-		cdecl.add_declarator (new CCodeVariableDeclarator (builder_name));
-		fragment.append (cdecl);
+		ccode.add_declaration ("GVariantBuilder", new CCodeVariableDeclarator (builder_name));
 
 		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_init"));
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (builder_name)));
 		iter_call.add_argument (new CCodeIdentifier ("G_VARIANT_TYPE_TUPLE"));
-		fragment.append (new CCodeExpressionStatement (iter_call));
+		ccode.add_expression (iter_call);
 
 		bool field_found = false;;
 
@@ -681,7 +629,7 @@ public class Vala.GVariantModule : GAsyncModule {
 
 			field_found = true;
 
-			write_expression (fragment, f.variable_type, new CCodeIdentifier (builder_name), new CCodeMemberAccess (struct_expr, f.get_cname ()), f);
+			write_expression (f.variable_type, new CCodeIdentifier (builder_name), new CCodeMemberAccess (struct_expr, f.get_cname ()), f);
 		}
 
 		if (!field_found) {
@@ -693,7 +641,7 @@ public class Vala.GVariantModule : GAsyncModule {
 		return builder_end;
 	}
 
-	CCodeExpression serialize_hash_table (CCodeFragment fragment, ObjectType type, CCodeExpression hash_table_expr) {
+	CCodeExpression serialize_hash_table (ObjectType type, CCodeExpression hash_table_expr) {
 		string subiter_name = "_tmp%d_".printf (next_temp_var_id++);
 		string tableiter_name = "_tmp%d_".printf (next_temp_var_id++);
 		string key_name = "_tmp%d_".printf (next_temp_var_id++);
@@ -704,88 +652,72 @@ public class Vala.GVariantModule : GAsyncModule {
 		var key_type = type_args.get (0);
 		var value_type = type_args.get (1);
 
-		var cdecl = new CCodeDeclaration ("GVariantBuilder");
-		cdecl.add_declarator (new CCodeVariableDeclarator (subiter_name));
-		fragment.append (cdecl);
-
-		cdecl = new CCodeDeclaration ("GHashTableIter");
-		cdecl.add_declarator (new CCodeVariableDeclarator (tableiter_name));
-		fragment.append (cdecl);
-
-		cdecl = new CCodeDeclaration ("gpointer");
-		cdecl.add_declarator (new CCodeVariableDeclarator (key_name));
-		cdecl.add_declarator (new CCodeVariableDeclarator (value_name));
-		fragment.append (cdecl);
+		ccode.add_declaration ("GVariantBuilder", new CCodeVariableDeclarator (subiter_name));
+		ccode.add_declaration ("GHashTableIter", new CCodeVariableDeclarator (tableiter_name));
+		ccode.add_declaration ("gpointer", new CCodeVariableDeclarator (key_name));
+		ccode.add_declaration ("gpointer", new CCodeVariableDeclarator (value_name));
 
 		var iter_init_call = new CCodeFunctionCall (new CCodeIdentifier ("g_hash_table_iter_init"));
 		iter_init_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (tableiter_name)));
 		iter_init_call.add_argument (hash_table_expr);
-		fragment.append (new CCodeExpressionStatement (iter_init_call));
+		ccode.add_expression (iter_init_call);
 
 		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_init"));
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
 		iter_call.add_argument (new CCodeIdentifier ("G_VARIANT_TYPE_DICTIONARY"));
-		fragment.append (new CCodeExpressionStatement (iter_call));
+		ccode.add_expression (iter_call);
 
 		var iter_next_call = new CCodeFunctionCall (new CCodeIdentifier ("g_hash_table_iter_next"));
 		iter_next_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (tableiter_name)));
 		iter_next_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (key_name)));
 		iter_next_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (value_name)));
 
-		var cwhileblock = new CCodeBlock ();
-		var cwhilefragment = new CCodeFragment ();
-		cwhileblock.add_statement (cwhilefragment);
-		var cwhile = new CCodeWhileStatement (iter_next_call, cwhileblock);
+		ccode.open_while (iter_next_call);
 
-		cdecl = new CCodeDeclaration (key_type.get_cname ());
-		cdecl.add_declarator (new CCodeVariableDeclarator ("_key"));
-		cwhilefragment.append (cdecl);
+		ccode.add_declaration (key_type.get_cname (), new CCodeVariableDeclarator ("_key"));
+		ccode.add_declaration (value_type.get_cname (), new CCodeVariableDeclarator ("_value"));
 
-		cdecl = new CCodeDeclaration (value_type.get_cname ());
-		cdecl.add_declarator (new CCodeVariableDeclarator ("_value"));
-		cwhilefragment.append (cdecl);
-
-		cwhilefragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_key"), convert_from_generic_pointer (new CCodeIdentifier (key_name), key_type))));
-		cwhilefragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_value"), convert_from_generic_pointer (new CCodeIdentifier (value_name), value_type))));
+		ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_key"), convert_from_generic_pointer (new CCodeIdentifier (key_name), key_type)));
+		ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_value"), convert_from_generic_pointer (new CCodeIdentifier (value_name), value_type)));
 
 		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_add"));
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
 		iter_call.add_argument (new CCodeConstant ("\"{?*}\""));
-		iter_call.add_argument (serialize_expression (cwhilefragment, key_type, new CCodeIdentifier ("_key")));
-		iter_call.add_argument (serialize_expression (cwhilefragment, value_type, new CCodeIdentifier ("_value")));
-		cwhilefragment.append (new CCodeExpressionStatement (iter_call));
+		iter_call.add_argument (serialize_expression (key_type, new CCodeIdentifier ("_key")));
+		iter_call.add_argument (serialize_expression (value_type, new CCodeIdentifier ("_value")));
+		ccode.add_expression (iter_call);
 
-		fragment.append (cwhile);
+		ccode.close ();
 
 		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_end"));
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
 		return iter_call;
 	}
 
-	public override CCodeExpression? serialize_expression (CCodeFragment fragment, DataType type, CCodeExpression expr) {
+	public override CCodeExpression? serialize_expression (DataType type, CCodeExpression expr) {
 		BasicTypeInfo basic_type;
 		CCodeExpression result = null;
 		if (is_string_marshalled_enum (type.data_type)) {
 			get_basic_type_info ("s", out basic_type);
-			result = generate_enum_value_to_string (fragment, type as EnumValueType, expr);
-			result = serialize_basic (fragment, basic_type, result);
+			result = generate_enum_value_to_string (type as EnumValueType, expr);
+			result = serialize_basic (basic_type, result);
 		} else if (get_basic_type_info (get_type_signature (type), out basic_type)) {
-			result = serialize_basic (fragment, basic_type, expr);
+			result = serialize_basic (basic_type, expr);
 		} else if (type is ArrayType) {
-			result = serialize_array (fragment, (ArrayType) type, expr);
+			result = serialize_array ((ArrayType) type, expr);
 		} else if (type.data_type is Struct) {
 			var st_expr = expr;
 			if (type.nullable) {
 				st_expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, st_expr);
 			}
-			result = serialize_struct (fragment, (Struct) type.data_type, st_expr);
+			result = serialize_struct ((Struct) type.data_type, st_expr);
 		} else if (type is ObjectType) {
 			if (type.data_type.get_full_name () == "GLib.Variant") {
 				var variant_new = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_new_variant"));
 				variant_new.add_argument (expr);
 				result = variant_new;
 			} else if (type.data_type.get_full_name () == "GLib.HashTable") {
-				result = serialize_hash_table (fragment, (ObjectType) type, expr);
+				result = serialize_hash_table ((ObjectType) type, expr);
 			}
 		}
 
@@ -796,17 +728,17 @@ public class Vala.GVariantModule : GAsyncModule {
 		return result;
 	}
 
-	public void write_expression (CCodeFragment fragment, DataType type, CCodeExpression builder_expr, CCodeExpression expr, Symbol? sym) {
+	public void write_expression (DataType type, CCodeExpression builder_expr, CCodeExpression expr, Symbol? sym) {
 		var variant_expr = expr;
 		if (sym == null || get_dbus_signature (sym) == null) {
 			// perform boxing
-			variant_expr = serialize_expression (fragment, type, expr);
+			variant_expr = serialize_expression (type, expr);
 		}
 		if (variant_expr != null) {
 			var builder_add = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_add_value"));
 			builder_add.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, builder_expr));
 			builder_add.add_argument (variant_expr);
-			fragment.append (new CCodeExpressionStatement (builder_add));
+			ccode.add_expression (builder_add);
 		}
 	}
 }

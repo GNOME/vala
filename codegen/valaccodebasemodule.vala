@@ -4372,26 +4372,24 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			}
 		}
 
-		var block = new CCodeBlock ();
-		var fragment = new CCodeFragment ();
-		var result = deserialize_expression (fragment, to, new CCodeIdentifier ("value"), new CCodeIdentifier ("*result"));
+		push_function (cfunc);
 
-		block.add_statement (fragment);
-		block.add_statement (new CCodeReturnStatement (result));
+		var result = deserialize_expression (to, new CCodeIdentifier ("value"), new CCodeIdentifier ("*result"));
+		ccode.add_return (result);
+
+		pop_function ();
 
 		cfile.add_function_declaration (cfunc);
-
-		cfunc.block = block;
 		cfile.add_function (cfunc);
 
 		return ccall;
 	}
 
-	public virtual CCodeExpression? deserialize_expression (CCodeFragment fragment, DataType type, CCodeExpression variant_expr, CCodeExpression? expr) {
+	public virtual CCodeExpression? deserialize_expression (DataType type, CCodeExpression variant_expr, CCodeExpression? expr) {
 		return null;
 	}
 
-	public virtual CCodeExpression? serialize_expression (CCodeFragment fragment, DataType type, CCodeExpression expr) {
+	public virtual CCodeExpression? serialize_expression (DataType type, CCodeExpression expr) {
 		return null;
 	}
 
@@ -5027,20 +5025,18 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 				}
 			}
 
-			var block = new CCodeBlock ();
-			var fragment = new CCodeFragment ();
-			var result = serialize_expression (fragment, expression_type, new CCodeIdentifier ("value"));
+			push_function (cfunc);
+
+			var result = serialize_expression (expression_type, new CCodeIdentifier ("value"));
 
 			// sink floating reference
 			var sink = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_ref_sink"));
 			sink.add_argument (result);
+			ccode.add_return (sink);
 
-			block.add_statement (fragment);
-			block.add_statement (new CCodeReturnStatement (sink));
+			pop_function ();
 
 			cfile.add_function_declaration (cfunc);
-
-			cfunc.block = block;
 			cfile.add_function (cfunc);
 
 			return ccall;

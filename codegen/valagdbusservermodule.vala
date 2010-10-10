@@ -45,248 +45,126 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		return "result";
 	}
 
-	string generate_dbus_wrapper (Method m, ObjectTypeSymbol sym) {
+	string generate_dbus_wrapper (Method m, ObjectTypeSymbol sym, bool ready = false) {
 		string wrapper_name = "_dbus_%s".printf (m.get_cname ());
 
-		// declaration
-
-		CCodeDeclaration cdecl;
+		if (ready) {
+			// async ready function
+			wrapper_name += "_ready";
+		}
 
 		var function = new CCodeFunction (wrapper_name);
 		function.modifiers = CCodeModifiers.STATIC;
-		function.add_parameter (new CCodeFormalParameter ("self", sym.get_cname () + "*"));
-		function.add_parameter (new CCodeFormalParameter ("parameters", "GVariant*"));
-		function.add_parameter (new CCodeFormalParameter ("invocation", "GDBusMethodInvocation*"));
-		var block = new CCodeBlock ();
 
-		CCodeFunction ready_function = null;
-		CCodeBlock ready_block = null;
-		if (m.coroutine) {
-			// GAsyncResult
-			cfile.add_include ("gio/gio.h");
+		if (!ready) {
+			function.add_parameter (new CCodeFormalParameter ("self", sym.get_cname () + "*"));
+			function.add_parameter (new CCodeFormalParameter ("parameters", "GVariant*"));
+			function.add_parameter (new CCodeFormalParameter ("invocation", "GDBusMethodInvocation*"));
+		} else {
+			function.add_parameter (new CCodeFormalParameter ("source_object", "GObject *"));
+			function.add_parameter (new CCodeFormalParameter ("_res_", "GAsyncResult *"));
+			function.add_parameter (new CCodeFormalParameter ("_user_data_", "gpointer *"));
+		}
 
-			ready_function = new CCodeFunction (wrapper_name + "_ready", "void");
-			ready_function.modifiers = CCodeModifiers.STATIC;
-			ready_function.add_parameter (new CCodeFormalParameter ("source_object", "GObject *"));
-			ready_function.add_parameter (new CCodeFormalParameter ("_res_", "GAsyncResult *"));
-			ready_function.add_parameter (new CCodeFormalParameter ("_user_data_", "gpointer *"));
-			ready_block = new CCodeBlock ();
+		push_function (function);
 
-			cdecl = new CCodeDeclaration ("GDBusMethodInvocation *");
-			cdecl.add_declarator (new CCodeVariableDeclarator ("invocation", new CCodeIdentifier ("_user_data_")));
-			ready_block.add_statement (cdecl);
+		if (ready) {
+			ccode.add_declaration ("GDBusMethodInvocation *", new CCodeVariableDeclarator ("invocation", new CCodeIdentifier ("_user_data_")));
 		}
 
 		bool no_reply = is_dbus_no_reply (m);
 
-		var in_prefragment = new CCodeFragment ();
-		var in_postfragment = new CCodeFragment ();
-		var out_prefragment = in_prefragment;
-		var out_postfragment = in_postfragment;
-		if (m.coroutine) {
-			out_prefragment = new CCodeFragment ();
-			out_postfragment = new CCodeFragment ();
+		if (!m.coroutine || ready) {
+			ccode.add_declaration ("GError*", new CCodeVariableDeclarator ("error", new CCodeConstant ("NULL")));
 		}
 
-		cdecl = new CCodeDeclaration ("GError*");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("error", new CCodeConstant ("NULL")));
-		if (m.coroutine) {
-			ready_block.add_statement (cdecl);
+		ccode.add_declaration ("GVariantIter", new CCodeVariableDeclarator ("_arguments_iter"));
+
+		if (!ready) {
+			var iter_init = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_iter_init"));
+			iter_init.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_arguments_iter")));
+			iter_init.add_argument (new CCodeIdentifier ("parameters"));
+			ccode.add_expression (iter_init);
+		}
+
+		CCodeFunctionCall ccall;
+		if (!ready) {
+			ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname ()));
+			ccall.add_argument (new CCodeIdentifier ("self"));
 		} else {
-			block.add_statement (cdecl);
+			ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_finish_cname ()));
+			ccall.add_argument (new CCodeCastExpression (new CCodeIdentifier ("source_object"), sym.get_cname () + "*"));
+			ccall.add_argument (new CCodeIdentifier ("_res_"));
 		}
 
-		block.add_statement (in_prefragment);
-		if (m.coroutine) {
-			ready_block.add_statement (out_prefragment);
+		if (!ready) {
+			foreach (FormalParameter param in m.get_parameters ()) {
+				if (param.direction != ParameterDirection.IN) {
+					continue;
+				}
+
+				var owned_type = param.variable_type.copy ();
+				owned_type.value_owned = true;
+
+				ccode.add_declaration (owned_type.get_cname (), new CCodeVariableDeclarator.zero (param.name, default_value_for_type (param.variable_type, true)));
+
+				var array_type = param.variable_type as ArrayType;
+				if (array_type != null) {
+					for (int dim = 1; dim <= array_type.rank; dim++) {
+						string length_cname = get_parameter_array_length_cname (param, dim);
+
+						ccode.add_declaration ("int", new CCodeVariableDeclarator.zero (length_cname, new CCodeConstant ("0")));
+					}
+				}
+
+				read_expression (param.variable_type, new CCodeIdentifier ("_arguments_iter"), new CCodeIdentifier (param.name), param);
+			}
 		}
-
-		if (!no_reply) {
-			cdecl = new CCodeDeclaration ("GVariant*");
-			cdecl.add_declarator (new CCodeVariableDeclarator ("_reply"));
-			out_postfragment.append (cdecl);
-		}
-
-		cdecl = new CCodeDeclaration ("GVariantIter");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("_arguments_iter"));
-		block.add_statement (cdecl);
-
-		var iter_init = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_iter_init"));
-		iter_init.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_arguments_iter")));
-		iter_init.add_argument (new CCodeIdentifier ("parameters"));
-		in_prefragment.append (new CCodeExpressionStatement (iter_init));
-
-		if (!no_reply) {
-			cdecl = new CCodeDeclaration ("GVariantBuilder");
-			cdecl.add_declarator (new CCodeVariableDeclarator ("_reply_builder"));
-			out_postfragment.append (cdecl);
-
-			var builder_init = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_init"));
-			builder_init.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_reply_builder")));
-			builder_init.add_argument (new CCodeIdentifier ("G_VARIANT_TYPE_TUPLE"));
-			out_postfragment.append (new CCodeExpressionStatement (builder_init));
-		}
-
-		var ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname ()));
-
-		CCodeFunctionCall finish_ccall = null;
-		if (m.coroutine) {
-			finish_ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_finish_cname ()));
-			finish_ccall.add_argument (new CCodeCastExpression (new CCodeIdentifier ("source_object"), sym.get_cname () + "*"));
-			finish_ccall.add_argument (new CCodeIdentifier ("_res_"));
-		}
-
-		ccall.add_argument (new CCodeIdentifier ("self"));
 
 		foreach (FormalParameter param in m.get_parameters ()) {
-			var owned_type = param.variable_type.copy ();
-			owned_type.value_owned = true;
-
-			cdecl = new CCodeDeclaration (owned_type.get_cname ());
-			cdecl.add_declarator (new CCodeVariableDeclarator.zero (param.name, default_value_for_type (param.variable_type, true)));
-			if (param.direction == ParameterDirection.IN) {
-				in_prefragment.append (cdecl);
-			} else {
-				out_prefragment.append (cdecl);
-			}
-
-			if (!m.coroutine || param.direction == ParameterDirection.IN) {
+			if (param.direction == ParameterDirection.IN && !ready) {
 				var st = param.variable_type.data_type as Struct;
-				if (param.direction != ParameterDirection.IN
-				    || (st != null && !st.is_simple_type ())) {
+				if (st != null && !st.is_simple_type ()) {
 					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
 				} else {
 					ccall.add_argument (new CCodeIdentifier (param.name));
 				}
-			} else {
-				finish_ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
+			} else if (param.direction == ParameterDirection.OUT && (!m.coroutine || ready)) {
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
 			}
 
-			if (param.variable_type is ArrayType) {
-				var array_type = (ArrayType) param.variable_type;
-
+			var array_type = param.variable_type as ArrayType;
+			if (array_type != null) {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					string length_cname = get_parameter_array_length_cname (param, dim);
 
-					cdecl = new CCodeDeclaration ("int");
-					cdecl.add_declarator (new CCodeVariableDeclarator (length_cname, new CCodeConstant ("0")));
-					if (!m.coroutine || param.direction == ParameterDirection.IN) {
-						if (param.direction != ParameterDirection.IN) {
-							out_prefragment.append (cdecl);
-							ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (length_cname)));
-						} else {
-							in_prefragment.append (cdecl);
-							ccall.add_argument (new CCodeIdentifier (length_cname));
-						}
-					} else {
-						out_prefragment.append (cdecl);
-						finish_ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (length_cname)));
+					if (param.direction == ParameterDirection.IN && !ready) {
+						ccall.add_argument (new CCodeIdentifier (length_cname));
+					} else if (param.direction == ParameterDirection.OUT && !no_reply && (!m.coroutine || ready)) {
+						ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (length_cname)));
 					}
-				}
-			}
-
-			if (param.direction == ParameterDirection.IN) {
-				read_expression (in_prefragment, param.variable_type, new CCodeIdentifier ("_arguments_iter"), new CCodeIdentifier (param.name), param);
-			} else {
-				write_expression (out_postfragment, param.variable_type, new CCodeIdentifier ("_reply_builder"), new CCodeIdentifier (param.name), param);
-			}
-
-			if (requires_destroy (owned_type)) {
-				// keep local alive (symbol_reference is weak)
-				var local = new LocalVariable (owned_type, param.name);
-				var ma = new MemberAccess.simple (param.name);
-				ma.symbol_reference = local;
-				var stmt = new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (param.name), owned_type, ma));
-				if (param.direction == ParameterDirection.IN) {
-					in_postfragment.append (stmt);
-				} else {
-					out_postfragment.append (stmt);
 				}
 			}
 		}
 
-		if (!(m.return_type is VoidType)) {
-			if (m.return_type.is_real_non_null_struct_type ()) {
-				cdecl = new CCodeDeclaration (m.return_type.get_cname ());
-				cdecl.add_declarator (new CCodeVariableDeclarator.zero ("result", default_value_for_type (m.return_type, true)));
-				out_prefragment.append (cdecl);
-
-				if (!m.coroutine) {
+		if (!m.coroutine || ready) {
+			if (!(m.return_type is VoidType)) {
+				if (m.return_type.is_real_non_null_struct_type ()) {
 					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("result")));
 				} else {
-					finish_ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("result")));
-				}
+					var array_type = m.return_type as ArrayType;
+					if (array_type != null) {
+						for (int dim = 1; dim <= array_type.rank; dim++) {
+							string length_cname = get_array_length_cname ("result", dim);
 
-				write_expression (out_postfragment, m.return_type, new CCodeIdentifier ("_reply_builder"), new CCodeIdentifier ("result"), m);
-
-				if (requires_destroy (m.return_type)) {
-					// keep local alive (symbol_reference is weak)
-					// space before `result' is work around to not trigger
-					// variable renaming, we really mean C identifier `result' here
-					var local = new LocalVariable (m.return_type, " result");
-					var ma = new MemberAccess.simple ("result");
-					ma.symbol_reference = local;
-					out_postfragment.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier ("result"), m.return_type, ma)));
-				}
-
-				block.add_statement (new CCodeExpressionStatement (ccall));
-				if (m.coroutine) {
-					ready_block.add_statement (new CCodeExpressionStatement (finish_ccall));
-				}
-			} else {
-				cdecl = new CCodeDeclaration (m.return_type.get_cname ());
-				cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
-				out_prefragment.append (cdecl);
-				if (!m.coroutine) {
-					block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("result"), ccall)));
-				} else {
-					block.add_statement (new CCodeExpressionStatement (ccall));
-					ready_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("result"), finish_ccall)));
-				}
-
-				if (m.return_type is ArrayType) {
-					var array_type = (ArrayType) m.return_type;
-
-					for (int dim = 1; dim <= array_type.rank; dim++) {
-						string length_cname = get_array_length_cname ("result", dim);
-
-						cdecl = new CCodeDeclaration ("int");
-						cdecl.add_declarator (new CCodeVariableDeclarator (length_cname, new CCodeConstant ("0")));
-						out_prefragment.append (cdecl);
-						if (!m.coroutine) {
 							ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (length_cname)));
-						} else {
-							finish_ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (length_cname)));
 						}
 					}
 				}
-
-				write_expression (out_postfragment, m.return_type, new CCodeIdentifier ("_reply_builder"), new CCodeIdentifier ("result"), m);
-
-				if (requires_destroy (m.return_type)) {
-					// keep local alive (symbol_reference is weak)
-					// space before `result' is work around to not trigger
-					// variable renaming, we really mean C identifier `result' here
-					var local = new LocalVariable (m.return_type, " result");
-					var ma = new MemberAccess.simple ("result");
-					ma.symbol_reference = local;
-					out_postfragment.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier ("result"), m.return_type, ma)));
-				}
-			}
-		} else {
-			block.add_statement (new CCodeExpressionStatement (ccall));
-			if (m.coroutine) {
-				ready_block.add_statement (new CCodeExpressionStatement (finish_ccall));
 			}
 		}
 
-		if (!no_reply) {
-			var builder_end = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_end"));
-			builder_end.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_reply_builder")));
-			out_postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_reply"), builder_end)));
-		}
-
-		if (m.coroutine) {
+		if (m.coroutine && !ready) {
 			ccall.add_argument (new CCodeCastExpression (new CCodeIdentifier (wrapper_name + "_ready"), "GAsyncReadyCallback"));
 
 			var ref_call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_ref"));
@@ -295,67 +173,155 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			ccall.add_argument (ref_call);
 		}
 
-		if (m.get_error_types ().size > 0) {
-			if (m.coroutine) {
-				finish_ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("error")));
-			} else {
+		if (!m.coroutine || ready) {
+			if (m.get_error_types ().size > 0) {
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("error")));
-			}
-
-			var error_block = new CCodeBlock ();
-
-			var return_error = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_method_invocation_return_gerror"));
-			return_error.add_argument (new CCodeIdentifier ("invocation"));
-			return_error.add_argument (new CCodeIdentifier ("error"));
-			error_block.add_statement (new CCodeExpressionStatement (return_error));
-
-			error_block.add_statement (new CCodeReturnStatement ());
-
-			if (m.coroutine) {
-				ready_block.add_statement (new CCodeIfStatement (new CCodeIdentifier ("error"), error_block));
-			} else {
-				block.add_statement (new CCodeIfStatement (new CCodeIdentifier ("error"), error_block));
 			}
 		}
 
-		block.add_statement (in_postfragment);
+		if (!no_reply && (!m.coroutine || ready)) {
+			if (m.return_type is VoidType || m.return_type.is_real_non_null_struct_type ()) {
+				ccode.add_expression (ccall);
+			} else {
+				ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("result"), ccall));
+			}
+
+			if (m.get_error_types ().size > 0) {
+				ccode.open_if (new CCodeIdentifier ("error"));
+
+				var return_error = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_method_invocation_return_gerror"));
+				return_error.add_argument (new CCodeIdentifier ("invocation"));
+				return_error.add_argument (new CCodeIdentifier ("error"));
+				ccode.add_expression (return_error);
+
+				ccode.add_return ();
+
+				ccode.close ();
+			}
+
+			ccode.add_declaration ("GVariant*", new CCodeVariableDeclarator ("_reply"));
+			ccode.add_declaration ("GVariantBuilder", new CCodeVariableDeclarator ("_reply_builder"));
+
+			var builder_init = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_init"));
+			builder_init.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_reply_builder")));
+			builder_init.add_argument (new CCodeIdentifier ("G_VARIANT_TYPE_TUPLE"));
+			ccode.add_expression (builder_init);
+
+			foreach (FormalParameter param in m.get_parameters ()) {
+				if (param.direction != ParameterDirection.OUT) {
+					continue;
+				}
+
+				var owned_type = param.variable_type.copy ();
+				owned_type.value_owned = true;
+
+				ccode.add_declaration (owned_type.get_cname (), new CCodeVariableDeclarator.zero (param.name, default_value_for_type (param.variable_type, true)));
+
+				var array_type = param.variable_type as ArrayType;
+				if (array_type != null) {
+					for (int dim = 1; dim <= array_type.rank; dim++) {
+						string length_cname = get_parameter_array_length_cname (param, dim);
+
+						ccode.add_declaration ("int", new CCodeVariableDeclarator.zero (length_cname, new CCodeConstant ("0")));
+					}
+				}
+
+				write_expression (param.variable_type, new CCodeIdentifier ("_reply_builder"), new CCodeIdentifier (param.name), param);
+			}
+
+			if (!(m.return_type is VoidType)) {
+				if (m.return_type.is_real_non_null_struct_type ()) {
+					ccode.add_declaration (m.return_type.get_cname (), new CCodeVariableDeclarator.zero ("result", default_value_for_type (m.return_type, true)));
+
+					write_expression (m.return_type, new CCodeIdentifier ("_reply_builder"), new CCodeIdentifier ("result"), m);
+
+					if (requires_destroy (m.return_type)) {
+						// keep local alive (symbol_reference is weak)
+						// space before `result' is work around to not trigger
+						// variable renaming, we really mean C identifier `result' here
+						var local = new LocalVariable (m.return_type, " result");
+						var ma = new MemberAccess.simple ("result");
+						ma.symbol_reference = local;
+						ccode.add_expression (get_unref_expression (new CCodeIdentifier ("result"), m.return_type, ma));
+					}
+				} else {
+					ccode.add_declaration (m.return_type.get_cname (), new CCodeVariableDeclarator ("result"));
+
+					var array_type = m.return_type as ArrayType;
+					if (array_type != null) {
+						for (int dim = 1; dim <= array_type.rank; dim++) {
+							string length_cname = get_array_length_cname ("result", dim);
+
+							ccode.add_declaration ("int", new CCodeVariableDeclarator.zero (length_cname, new CCodeConstant ("0")));
+						}
+					}
+
+					write_expression (m.return_type, new CCodeIdentifier ("_reply_builder"), new CCodeIdentifier ("result"), m);
+
+					if (requires_destroy (m.return_type)) {
+						// keep local alive (symbol_reference is weak)
+						// space before `result' is work around to not trigger
+						// variable renaming, we really mean C identifier `result' here
+						var local = new LocalVariable (m.return_type, " result");
+						var ma = new MemberAccess.simple ("result");
+						ma.symbol_reference = local;
+						ccode.add_expression (get_unref_expression (new CCodeIdentifier ("result"), m.return_type, ma));
+					}
+				}
+			}
+
+			var builder_end = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_end"));
+			builder_end.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_reply_builder")));
+			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_reply"), builder_end));
+		} else {
+			ccode.add_expression (ccall);
+		}
+
+		foreach (FormalParameter param in m.get_parameters ()) {
+			if ((param.direction == ParameterDirection.IN && !ready) ||
+			    (param.direction == ParameterDirection.OUT && !no_reply && (!m.coroutine || ready))) {
+				var owned_type = param.variable_type.copy ();
+				owned_type.value_owned = true;
+
+				if (requires_destroy (owned_type)) {
+					// keep local alive (symbol_reference is weak)
+					var local = new LocalVariable (owned_type, param.name);
+					var ma = new MemberAccess.simple (param.name);
+					ma.symbol_reference = local;
+					ccode.add_expression (get_unref_expression (new CCodeIdentifier (param.name), owned_type, ma));
+				}
+			}
+		}
 
 		if (no_reply) {
 			var return_value = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
 			return_value.add_argument (new CCodeIdentifier ("invocation"));
-			block.add_statement (new CCodeExpressionStatement (return_value));
-		} else if (!m.coroutine) {
+			ccode.add_expression (return_value);
+		} else if (!m.coroutine || ready) {
 			var return_value = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_method_invocation_return_value"));
 			return_value.add_argument (new CCodeIdentifier ("invocation"));
 			return_value.add_argument (new CCodeIdentifier ("_reply"));
-			block.add_statement (new CCodeExpressionStatement (return_value));
-		} else {
-			ready_block.add_statement (out_postfragment);
+			ccode.add_expression (return_value);
 
-			var return_value = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_method_invocation_return_value"));
-			return_value.add_argument (new CCodeIdentifier ("invocation"));
-			return_value.add_argument (new CCodeIdentifier ("_reply"));
-			ready_block.add_statement (new CCodeExpressionStatement (return_value));
+			if (ready) {
+				var unref_call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
+				unref_call.add_argument (new CCodeIdentifier ("invocation"));
+				ccode.add_expression (unref_call);
 
-			var unref_call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
-			unref_call.add_argument (new CCodeIdentifier ("invocation"));
-			ready_block.add_statement (new CCodeExpressionStatement (unref_call));
-
-			unref_call = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_unref"));
-			unref_call.add_argument (new CCodeIdentifier ("_reply"));
-			ready_block.add_statement (new CCodeExpressionStatement (unref_call));
+				unref_call = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_unref"));
+				unref_call.add_argument (new CCodeIdentifier ("_reply"));
+				ccode.add_expression (unref_call);
+			}
 		}
 
-		cfile.add_function_declaration (function);
+		pop_function ();
 
-		function.block = block;
+		cfile.add_function_declaration (function);
 		cfile.add_function (function);
 
-		if (m.coroutine) {
-			cfile.add_function_declaration (ready_function);
-
-			ready_function.block = ready_block;
-			cfile.add_function (ready_function);
+		if (m.coroutine && !ready) {
+			// generate ready function
+			generate_dbus_wrapper (m, sym, true);
 		}
 
 		return wrapper_name;
@@ -363,10 +329,6 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 	string generate_dbus_signal_wrapper (Signal sig, ObjectTypeSymbol sym, string dbus_iface_name) {
 		string wrapper_name = "_dbus_%s_%s".printf (sym.get_lower_case_cname (), sig.get_cname ());
-
-		// declaration
-
-		CCodeDeclaration cdecl;
 
 		var function = new CCodeFunction (wrapper_name, "void");
 		function.modifiers = CCodeModifiers.STATIC;
@@ -388,43 +350,29 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 		function.add_parameter (new CCodeFormalParameter ("_data", "gpointer*"));
 
-		var block = new CCodeBlock ();
-		var prefragment = new CCodeFragment ();
+		push_function (function);
 
-		cdecl = new CCodeDeclaration ("GDBusConnection *");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("_connection", new CCodeElementAccess (new CCodeIdentifier ("_data"), new CCodeConstant ("1"))));
-		block.add_statement (cdecl);
-
-		cdecl = new CCodeDeclaration ("const gchar *");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("_path", new CCodeElementAccess (new CCodeIdentifier ("_data"), new CCodeConstant ("2"))));
-		block.add_statement (cdecl);
-
-		cdecl = new CCodeDeclaration ("GVariant");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("*_arguments"));
-		block.add_statement (cdecl);
-
-		cdecl = new CCodeDeclaration ("GVariantBuilder");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("_arguments_builder"));
-		prefragment.append (cdecl);
+		ccode.add_declaration ("GDBusConnection *", new CCodeVariableDeclarator ("_connection", new CCodeElementAccess (new CCodeIdentifier ("_data"), new CCodeConstant ("1"))));
+		ccode.add_declaration ("const gchar *", new CCodeVariableDeclarator ("_path", new CCodeElementAccess (new CCodeIdentifier ("_data"), new CCodeConstant ("2"))));
+		ccode.add_declaration ("GVariant", new CCodeVariableDeclarator ("*_arguments"));
+		ccode.add_declaration ("GVariantBuilder", new CCodeVariableDeclarator ("_arguments_builder"));
 
 		var builder_init = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_init"));
 		builder_init.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_arguments_builder")));
 		builder_init.add_argument (new CCodeIdentifier ("G_VARIANT_TYPE_TUPLE"));
-		prefragment.append (new CCodeExpressionStatement (builder_init));
+		ccode.add_expression (builder_init);
 
 		foreach (FormalParameter param in sig.get_parameters ()) {
 			CCodeExpression expr = new CCodeIdentifier (param.name);
 			if (param.variable_type.is_real_struct_type ()) {
 				expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, expr);
 			}
-			write_expression (prefragment, param.variable_type, new CCodeIdentifier ("_arguments_builder"), expr, param);
+			write_expression (param.variable_type, new CCodeIdentifier ("_arguments_builder"), expr, param);
 		}
 
 		var builder_end = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_end"));
 		builder_end.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_arguments_builder")));
-		prefragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_arguments"), builder_end)));
-
-		block.add_statement (prefragment);
+		ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_arguments"), builder_end));
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_connection_emit_signal"));
 		ccall.add_argument (new CCodeIdentifier ("_connection"));
@@ -434,10 +382,11 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		ccall.add_argument (new CCodeConstant ("\"%s\"".printf (get_dbus_name_for_member (sig))));
 		ccall.add_argument (new CCodeIdentifier ("_arguments"));
 		ccall.add_argument (new CCodeConstant ("NULL"));
-		block.add_statement (new CCodeExpressionStatement (ccall));
+		ccode.add_expression (ccall);
+
+		pop_function ();
 
 		cfile.add_function_declaration (function);
-		function.block = block;
 		cfile.add_function (function);
 
 		return wrapper_name;
@@ -446,59 +395,39 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 	string generate_dbus_property_get_wrapper (Property prop, ObjectTypeSymbol sym) {
 		string wrapper_name = "_dbus_%s".printf (prop.get_accessor.get_cname ());
 
-		// declaration
-
-		CCodeDeclaration cdecl;
-
 		var function = new CCodeFunction (wrapper_name, "GVariant*");
 		function.modifiers = CCodeModifiers.STATIC;
 		function.add_parameter (new CCodeFormalParameter ("self", sym.get_cname () + "*"));
-		var block = new CCodeBlock ();
 
-		var prefragment = new CCodeFragment ();
-		var postfragment = new CCodeFragment ();
-
-		block.add_statement (prefragment);
-
-		cdecl = new CCodeDeclaration ("GVariant*");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("_reply"));
-		postfragment.append (cdecl);
+		push_function (function);
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (prop.get_accessor.get_cname ()));
 		ccall.add_argument (new CCodeIdentifier ("self"));
 
 		if (prop.property_type.is_real_non_null_struct_type ()) {
-			cdecl = new CCodeDeclaration (prop.property_type.get_cname ());
-			cdecl.add_declarator (new CCodeVariableDeclarator.zero ("result", default_value_for_type (prop.property_type, true)));
-			prefragment.append (cdecl);
-
+			ccode.add_declaration (prop.property_type.get_cname (), new CCodeVariableDeclarator.zero ("result", default_value_for_type (prop.property_type, true)));
 			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("result")));
 
-			block.add_statement (new CCodeExpressionStatement (ccall));
+			ccode.add_expression (ccall);
 		} else {
-			cdecl = new CCodeDeclaration (prop.property_type.get_cname ());
-			cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
-			prefragment.append (cdecl);
-
-			block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("result"), ccall)));
+			ccode.add_declaration (prop.property_type.get_cname (), new CCodeVariableDeclarator ("result"));
+			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("result"), ccall));
 
 			var array_type = prop.property_type as ArrayType;
 			if (array_type != null) {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					string length_cname = get_array_length_cname ("result", dim);
 
-					cdecl = new CCodeDeclaration ("int");
-					cdecl.add_declarator (new CCodeVariableDeclarator (length_cname));
-					postfragment.append (cdecl);
-
+					ccode.add_declaration ("int", new CCodeVariableDeclarator (length_cname));
 					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (length_cname)));
 				}
 			}
 		}
 
-		var reply_expr = serialize_expression (postfragment, prop.property_type, new CCodeIdentifier ("result"));
+		var reply_expr = serialize_expression (prop.property_type, new CCodeIdentifier ("result"));
 
-		postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_reply"), reply_expr)));
+		ccode.add_declaration ("GVariant*", new CCodeVariableDeclarator ("_reply"));
+		ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_reply"), reply_expr));
 
 		if (requires_destroy (prop.property_type)) {
 			// keep local alive (symbol_reference is weak)
@@ -507,16 +436,14 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			var local = new LocalVariable (prop.property_type, " result");
 			var ma = new MemberAccess.simple ("result");
 			ma.symbol_reference = local;
-			postfragment.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier ("result"), prop.property_type, ma)));
+			ccode.add_expression (get_unref_expression (new CCodeIdentifier ("result"), prop.property_type, ma));
 		}
 
-		block.add_statement (postfragment);
+		ccode.add_return (new CCodeIdentifier ("_reply"));
 
-		block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("_reply")));
+		pop_function ();
 
 		cfile.add_function_declaration (function);
-
-		function.block = block;
 		cfile.add_function (function);
 
 		return wrapper_name;
@@ -525,20 +452,12 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 	string generate_dbus_property_set_wrapper (Property prop, ObjectTypeSymbol sym) {
 		string wrapper_name = "_dbus_%s".printf (prop.set_accessor.get_cname ());
 
-		// declaration
-
-		CCodeDeclaration cdecl;
-
 		var function = new CCodeFunction (wrapper_name);
 		function.modifiers = CCodeModifiers.STATIC;
 		function.add_parameter (new CCodeFormalParameter ("self", sym.get_cname () + "*"));
 		function.add_parameter (new CCodeFormalParameter ("_value", "GVariant*"));
-		var block = new CCodeBlock ();
 
-		var prefragment = new CCodeFragment ();
-		var postfragment = new CCodeFragment ();
-
-		block.add_statement (prefragment);
+		push_function (function);
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (prop.set_accessor.get_cname ()));
 		ccall.add_argument (new CCodeIdentifier ("self"));
@@ -546,9 +465,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		var owned_type = prop.property_type.copy ();
 		owned_type.value_owned = true;
 
-		cdecl = new CCodeDeclaration (owned_type.get_cname ());
-		cdecl.add_declarator (new CCodeVariableDeclarator.zero ("value", default_value_for_type (prop.property_type, true)));
-		prefragment.append (cdecl);
+		ccode.add_declaration (owned_type.get_cname (), new CCodeVariableDeclarator.zero ("value", default_value_for_type (prop.property_type, true)));
 
 		var st = prop.property_type.data_type as Struct;
 		if (st != null && !st.is_simple_type ()) {
@@ -559,35 +476,29 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			var array_type = prop.property_type as ArrayType;
 			if (array_type != null) {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					cdecl = new CCodeDeclaration ("int");
-					cdecl.add_declarator (new CCodeVariableDeclarator (get_array_length_cname ("value", dim)));
-					prefragment.append (cdecl);
-
+					ccode.add_declaration ("int", new CCodeVariableDeclarator (get_array_length_cname ("value", dim)));
 					ccall.add_argument (new CCodeIdentifier (get_array_length_cname ("value", dim)));
 				}
 			}
 		}
 
 		var target = new CCodeIdentifier ("value");
-		var expr = deserialize_expression (prefragment, prop.property_type, new CCodeIdentifier ("_value"), target);
-		prefragment.append (new CCodeExpressionStatement (new CCodeAssignment (target, expr)));
+		var expr = deserialize_expression (prop.property_type, new CCodeIdentifier ("_value"), target);
+		ccode.add_expression (new CCodeAssignment (target, expr));
+
+		ccode.add_expression (ccall);
 
 		if (requires_destroy (owned_type)) {
 			// keep local alive (symbol_reference is weak)
 			var local = new LocalVariable (owned_type, "value");
 			var ma = new MemberAccess.simple ("value");
 			ma.symbol_reference = local;
-			var stmt = new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier ("value"), owned_type, ma));
-			postfragment.append (stmt);
+			ccode.add_expression (get_unref_expression (new CCodeIdentifier ("value"), owned_type, ma));
 		}
 
-		block.add_statement (new CCodeExpressionStatement (ccall));
-
-		block.add_statement (postfragment);
+		pop_function ();
 
 		cfile.add_function_declaration (function);
-
-		function.block = block;
 		cfile.add_function (function);
 
 		return wrapper_name;
