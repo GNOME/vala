@@ -438,7 +438,8 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		fun.add_parameter (new CCodeFormalParameter ("src", "gint"));
 		fun.add_parameter (new CCodeFormalParameter ("dest", "gint"));
 		fun.add_parameter (new CCodeFormalParameter ("length", "gint"));
-		cfile.add_function_declaration (fun);
+
+		push_function (fun);
 
 		var array = new CCodeCastExpression (new CCodeIdentifier ("array"), "char*");
 		var element_size = new CCodeIdentifier ("element_size");
@@ -449,30 +450,33 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var dest_address = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, array, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, dest, element_size));
 		var dest_end_address = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, array, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, dest, length), element_size));
 
-		fun.block = new CCodeBlock ();
-
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_memmove"));
 		ccall.add_argument (dest_address);
 		ccall.add_argument (src_address);
 		ccall.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, length, element_size));
-		fun.block.add_statement (new CCodeExpressionStatement (ccall));
+		ccode.add_expression (ccall);
+
+		ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, src, dest));
 
 		var czero1 = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
 		czero1.add_argument (src_address);
 		czero1.add_argument (new CCodeConstant ("0"));
 		czero1.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, dest, src), element_size));
-		var czeroblock1 = new CCodeBlock ();
-		czeroblock1.add_statement (new CCodeExpressionStatement (czero1));
+		ccode.add_expression (czero1);
+
+		ccode.add_else ();
 
 		var czero2 = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
 		czero2.add_argument (dest_end_address);
 		czero2.add_argument (new CCodeConstant ("0"));
 		czero2.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, src, dest), element_size));
-		var czeroblock2 = new CCodeBlock ();
-		czeroblock2.add_statement (new CCodeExpressionStatement (czero2));
+		ccode.add_expression (czero2);
 
-		fun.block.add_statement (new CCodeIfStatement (new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, src, dest), czeroblock1, czeroblock2));
+		ccode.close ();
 
+		pop_function ();
+
+		cfile.add_function_declaration (fun);
 		cfile.add_function (fun);
 	}
 
