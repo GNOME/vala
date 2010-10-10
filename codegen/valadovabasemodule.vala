@@ -1675,12 +1675,10 @@ public class Vala.DovaBaseModule : CodeGenerator {
 		}
 
 		if (instance != null) {
-			var ccomma = new CCodeCommaExpression ();
-
 			if (expr.type_reference.data_type is Struct) {
-				ccomma.append_expression (creation_expr);
+				ccode.add_expression (creation_expr);
 			} else {
-				ccomma.append_expression (new CCodeAssignment (instance, creation_expr));
+				ccode.add_expression (new CCodeAssignment (instance, creation_expr));
 			}
 
 			foreach (MemberInitializer init in expr.get_object_initializer ()) {
@@ -1694,19 +1692,17 @@ public class Vala.DovaBaseModule : CodeGenerator {
 					} else {
 						lhs = new CCodeMemberAccess.pointer (typed_inst, f.get_cname ());
 					}
-					ccomma.append_expression (new CCodeAssignment (lhs, get_cvalue (init.initializer)));
+					ccode.add_expression (new CCodeAssignment (lhs, get_cvalue (init.initializer)));
 				} else if (init.symbol_reference is Property) {
 					var inst_ma = new MemberAccess.simple ("new");
 					inst_ma.value_type = expr.type_reference;
 					set_cvalue (inst_ma, instance);
 					var ma = new MemberAccess (inst_ma, init.name);
-					ccomma.append_expression (get_property_set_call ((Property) init.symbol_reference, ma, get_cvalue (init.initializer)));
+					ccode.add_expression (get_property_set_call ((Property) init.symbol_reference, ma, get_cvalue (init.initializer)));
 				}
 			}
 
-			ccomma.append_expression (instance);
-
-			creation_expr = ccomma;
+			creation_expr = instance;
 		}
 
 		if (creation_expr != null) {

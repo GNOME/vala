@@ -4230,12 +4230,10 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			set_cvalue (expr, creation_expr);
 			return;
 		} else if (instance != null) {
-			var ccomma = new CCodeCommaExpression ();
-
 			if (expr.type_reference.data_type is Struct) {
-				ccomma.append_expression (creation_expr);
+				ccode.add_expression (creation_expr);
 			} else {
-				ccomma.append_expression (new CCodeAssignment (instance, creation_expr));
+				ccode.add_expression (new CCodeAssignment (instance, creation_expr));
 			}
 
 			foreach (MemberInitializer init in expr.get_object_initializer ()) {
@@ -4249,7 +4247,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 					} else {
 						lhs = new CCodeMemberAccess.pointer (typed_inst, f.get_cname ());
 					}
-					ccomma.append_expression (new CCodeAssignment (lhs, get_cvalue (init.initializer)));
+					ccode.add_expression (new CCodeAssignment (lhs, get_cvalue (init.initializer)));
 
 					if (f.variable_type is ArrayType && !f.no_array_length) {
 						var array_type = (ArrayType) f.variable_type;
@@ -4260,7 +4258,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 								lhs = new CCodeMemberAccess.pointer (typed_inst, get_array_length_cname (f.get_cname (), dim));
 							}
 							var rhs_array_len = get_array_length_cexpression (init.initializer, dim);
-							ccomma.append_expression (new CCodeAssignment (lhs, rhs_array_len));
+							ccode.add_expression (new CCodeAssignment (lhs, rhs_array_len));
 						}
 					} else if (f.variable_type is DelegateType && (f.variable_type as DelegateType).delegate_symbol.has_target && !f.no_delegate_target) {
 						if (expr.type_reference.data_type is Struct) {
@@ -4270,7 +4268,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 						}
 						CCodeExpression rhs_delegate_target_destroy_notify;
 						var rhs_delegate_target = get_delegate_target_cexpression (init.initializer, out rhs_delegate_target_destroy_notify);
-						ccomma.append_expression (new CCodeAssignment (lhs, rhs_delegate_target));
+						ccode.add_expression (new CCodeAssignment (lhs, rhs_delegate_target));
 					}
 
 					var cl = f.parent_symbol as Class;
@@ -4282,13 +4280,11 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 					inst_ma.value_type = expr.type_reference;
 					set_cvalue (inst_ma, instance);
 					var ma = new MemberAccess (inst_ma, init.name);
-					ccomma.append_expression (get_property_set_call ((Property) init.symbol_reference, ma, get_cvalue (init.initializer)));
+					ccode.add_expression (get_property_set_call ((Property) init.symbol_reference, ma, get_cvalue (init.initializer)));
 				}
 			}
 
-			ccomma.append_expression (instance);
-
-			creation_expr = ccomma;
+			creation_expr = instance;
 		}
 
 		if (creation_expr != null) {
