@@ -3261,8 +3261,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		if (((current_method != null && !current_method.no_array_length) || current_property_accessor != null) && current_return_type is ArrayType) {
 			var return_expr_decl = get_temp_variable (stmt.return_expression.value_type, true, stmt, false);
 
-			var ccomma = new CCodeCommaExpression ();
-			ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (return_expr_decl.name), get_cvalue (stmt.return_expression)));
+			ccode.add_expression (new CCodeAssignment (get_variable_cexpression (return_expr_decl.name), get_cvalue (stmt.return_expression)));
 
 			var array_type = (ArrayType) current_return_type;
 
@@ -3272,20 +3271,18 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 					len_l = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, len_l);
 				}
 				var len_r = get_array_length_cexpression (stmt.return_expression, dim);
-				ccomma.append_expression (new CCodeAssignment (len_l, len_r));
+				ccode.add_expression (new CCodeAssignment (len_l, len_r));
 			}
 
-			ccomma.append_expression (get_variable_cexpression (return_expr_decl.name));
+			set_cvalue (stmt.return_expression, get_variable_cexpression (return_expr_decl.name));
 
-			set_cvalue (stmt.return_expression, ccomma);
 			emit_temp_var (return_expr_decl);
 		} else if ((current_method != null || current_property_accessor != null) && current_return_type is DelegateType) {
 			var delegate_type = (DelegateType) current_return_type;
 			if (delegate_type.delegate_symbol.has_target) {
 				var return_expr_decl = get_temp_variable (stmt.return_expression.value_type, true, stmt, false);
 
-				var ccomma = new CCodeCommaExpression ();
-				ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (return_expr_decl.name), get_cvalue (stmt.return_expression)));
+				ccode.add_expression (new CCodeAssignment (get_variable_cexpression (return_expr_decl.name), get_cvalue (stmt.return_expression)));
 
 				var target_l = get_result_cexpression (get_delegate_target_cname ("result"));
 				if (current_method == null || !current_method.coroutine) {
@@ -3293,18 +3290,17 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 				}
 				CCodeExpression target_r_destroy_notify;
 				var target_r = get_delegate_target_cexpression (stmt.return_expression, out target_r_destroy_notify);
-				ccomma.append_expression (new CCodeAssignment (target_l, target_r));
+				ccode.add_expression (new CCodeAssignment (target_l, target_r));
 				if (delegate_type.value_owned) {
 					var target_l_destroy_notify = get_result_cexpression (get_delegate_target_destroy_notify_cname ("result"));
 					if (current_method == null || !current_method.coroutine) {
 						target_l_destroy_notify = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, target_l_destroy_notify);
 					}
-					ccomma.append_expression (new CCodeAssignment (target_l_destroy_notify, target_r_destroy_notify));
+					ccode.add_expression (new CCodeAssignment (target_l_destroy_notify, target_r_destroy_notify));
 				}
 
-				ccomma.append_expression (get_variable_cexpression (return_expr_decl.name));
+				set_cvalue (stmt.return_expression, get_variable_cexpression (return_expr_decl.name));
 
-				set_cvalue (stmt.return_expression, ccomma);
 				emit_temp_var (return_expr_decl);
 			}
 		}
