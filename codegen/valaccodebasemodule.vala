@@ -243,7 +243,6 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 	public bool requires_array_free;
 	public bool requires_array_move;
 	public bool requires_array_length;
-	public bool requires_strcmp0;
 
 	public Set<string> wrappers;
 	Set<Symbol> generated_external_symbols;
@@ -547,44 +546,6 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 	public virtual void append_vala_array_length () {
 	}
 
-	private void append_vala_strcmp0 () {
-		cfile.add_include ("string.h");;
-
-		var fun = new CCodeFunction ("_vala_strcmp0", "int");
-		fun.modifiers = CCodeModifiers.STATIC;
-		fun.add_parameter (new CCodeFormalParameter ("str1", "const char *"));
-		fun.add_parameter (new CCodeFormalParameter ("str2", "const char *"));
-		cfile.add_function_declaration (fun);
-
-		// (str1 != str2)
-		var cineq = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("str1"), new CCodeIdentifier ("str2"));
-
-		fun.block = new CCodeBlock ();
-
-		var cblock = new CCodeBlock ();
-		// if (str1 == NULL)
-		var cif = new CCodeIfStatement (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier ("str1"), new CCodeConstant ("NULL")), cblock);
-		// return -(str1 != str2);
-		cblock.add_statement (new CCodeReturnStatement (new CCodeUnaryExpression (CCodeUnaryOperator.MINUS, cineq)));
-		fun.block.add_statement (cif);
-
-		cblock = new CCodeBlock ();
-		// if (str2 == NULL)
-		cif = new CCodeIfStatement (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier ("str2"), new CCodeConstant ("NULL")), cblock);
-		// return (str1 != str2);
-		cblock.add_statement (new CCodeReturnStatement (cineq));
-		fun.block.add_statement (cif);
-
-		// strcmp (str1, str2)
-		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("strcmp"));
-		ccall.add_argument (new CCodeIdentifier ("str1"));
-		ccall.add_argument (new CCodeIdentifier ("str2"));
-		// return strcmp (str1, str2);
-		fun.block.add_statement (new CCodeReturnStatement (ccall));
-
-		cfile.add_function (fun);
-	}
-
 	public override void visit_source_file (SourceFile source_file) {
 		cfile = new CCodeFile ();
 		
@@ -596,7 +557,6 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		requires_array_free = false;
 		requires_array_move = false;
 		requires_array_length = false;
-		requires_strcmp0 = false;
 
 		wrappers = new HashSet<string> (str_hash, str_equal);
 		generated_external_symbols = new HashSet<Symbol> ();
@@ -630,9 +590,6 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		}
 		if (requires_array_length) {
 			append_vala_array_length ();
-		}
-		if (requires_strcmp0) {
-			append_vala_strcmp0 ();
 		}
 
 		if (gvaluecollector_h_needed) {
@@ -2422,8 +2379,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			make_comparable_cexpression (ref variable_type, ref s1, ref variable_type, ref s2);
 
 			if (!(f.variable_type is NullType) && f.variable_type.compatible (string_type)) {
-				requires_strcmp0 = true;
-				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("_vala_strcmp0"));
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_strcmp0"));
 				ccall.add_argument (s1);
 				ccall.add_argument (s2);
 				cexp = ccall;
@@ -4753,8 +4709,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			           || expr.operator == BinaryOperator.GREATER_THAN
 			           || expr.operator == BinaryOperator.LESS_THAN_OR_EQUAL
 			           || expr.operator == BinaryOperator.GREATER_THAN_OR_EQUAL) {
-				requires_strcmp0 = true;
-				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("_vala_strcmp0"));
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_strcmp0"));
 				ccall.add_argument (cleft);
 				ccall.add_argument (cright);
 				cleft = ccall;
@@ -4829,8 +4784,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		var cneedle = new CCodeIdentifier ("needle");
 		CCodeBinaryExpression cif_condition;
 		if (array_type.element_type.compatible (string_type)) {
-			requires_strcmp0 = true;
-			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("_vala_strcmp0"));
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_strcmp0"));
 			ccall.add_argument (celement);
 			ccall.add_argument (cneedle);
 			cif_condition = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ccall, new CCodeConstant ("0"));
