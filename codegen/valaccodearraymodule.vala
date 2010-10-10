@@ -484,31 +484,28 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var fun = new CCodeFunction ("_vala_array_length", "gint");
 		fun.modifiers = CCodeModifiers.STATIC;
 		fun.add_parameter (new CCodeFormalParameter ("array", "gpointer"));
-		cfile.add_function_declaration (fun);
 
-		var block = new CCodeBlock ();
+		push_function (fun);
 
-		var len_decl = new CCodeDeclaration ("int");
-		len_decl.add_declarator (new CCodeVariableDeclarator ("length", new CCodeConstant ("0")));
-		block.add_statement (len_decl);
-
-		var non_null_block = new CCodeBlock ();
-
-		var while_body = new CCodeBlock ();
-		while_body.add_statement (new CCodeExpressionStatement (new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier ("length"))));
-
-		var array_element_check = new CCodeElementAccess (new CCodeCastExpression (new CCodeIdentifier ("array"), "gpointer*"), new CCodeConstant ("length"));
-		non_null_block.add_statement (new CCodeWhileStatement (array_element_check, while_body));
+		ccode.add_declaration ("int", new CCodeVariableDeclarator ("length", new CCodeConstant ("0")));
 
 		// return 0 if the array is NULL
 		// avoids an extra NULL check on the caller side
 		var array_check = new CCodeIdentifier ("array");
-		block.add_statement (new CCodeIfStatement (array_check, non_null_block));
+		ccode.open_if (array_check);
 
-		block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("length")));
+		var array_element_check = new CCodeElementAccess (new CCodeCastExpression (new CCodeIdentifier ("array"), "gpointer*"), new CCodeConstant ("length"));
+		ccode.open_while (array_element_check);
+		ccode.add_expression (new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier ("length")));
+		ccode.close ();
 
-		fun.block = block;
+		ccode.close ();
 
+		ccode.add_return (new CCodeIdentifier ("length"));
+
+		pop_function ();
+
+		cfile.add_function_declaration (fun);
 		cfile.add_function (fun);
 	}
 
