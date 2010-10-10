@@ -2000,36 +2000,30 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 				if (array_type.fixed_length) {
 					rhs = null;
 				} else {
-					var ccomma = new CCodeCommaExpression ();
-
 					var temp_var = get_temp_variable (local.variable_type, true, local, false);
 					emit_temp_var (temp_var);
-					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), rhs));
+					ccode.add_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), rhs));
 
 					for (int dim = 1; dim <= array_type.rank; dim++) {
 						var lhs_array_len = get_array_length_cexpression (ma, dim);
 						var rhs_array_len = get_array_length_cexpression (local.initializer, dim);
-						ccomma.append_expression (new CCodeAssignment (lhs_array_len, rhs_array_len));
+						ccode.add_expression (new CCodeAssignment (lhs_array_len, rhs_array_len));
 					}
 					if (array_type.rank == 1 && !local.captured) {
 						var lhs_array_size = get_array_size_cexpression (ma);
 						var rhs_array_len = get_array_length_cexpression (ma, 1);
-						ccomma.append_expression (new CCodeAssignment (lhs_array_size, rhs_array_len));
+						ccode.add_expression (new CCodeAssignment (lhs_array_size, rhs_array_len));
 					}
-				
-					ccomma.append_expression (get_variable_cexpression (temp_var.name));
-				
-					rhs = ccomma;
+
+					rhs = get_variable_cexpression (temp_var.name);
 				}
 			} else if (local.variable_type is DelegateType) {
 				var deleg_type = (DelegateType) local.variable_type;
 				var d = deleg_type.delegate_symbol;
 				if (d.has_target) {
-					var ccomma = new CCodeCommaExpression ();
-
 					var temp_var = get_temp_variable (local.variable_type, true, local, false);
 					emit_temp_var (temp_var);
-					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), rhs));
+					ccode.add_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), rhs));
 
 					CCodeExpression lhs_delegate_target_destroy_notify;
 					var lhs_delegate_target = get_delegate_target_cexpression (ma, out lhs_delegate_target_destroy_notify);
@@ -2039,19 +2033,17 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 					}
 					CCodeExpression rhs_delegate_target_destroy_notify;
 					var rhs_delegate_target = get_delegate_target_cexpression (local.initializer, out rhs_delegate_target_destroy_notify);
-					ccomma.append_expression (new CCodeAssignment (lhs_delegate_target, rhs_delegate_target));
+					ccode.add_expression (new CCodeAssignment (lhs_delegate_target, rhs_delegate_target));
 
 					if (deleg_type.value_owned) {
 						if (local.captured) {
 							var block = (Block) local.parent_symbol;
 							lhs_delegate_target = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_destroy_notify_cname (local.name));
 						}
-						ccomma.append_expression (new CCodeAssignment (lhs_delegate_target_destroy_notify, rhs_delegate_target_destroy_notify));
+						ccode.add_expression (new CCodeAssignment (lhs_delegate_target_destroy_notify, rhs_delegate_target_destroy_notify));
 					}
 
-					ccomma.append_expression (get_variable_cexpression (temp_var.name));
-
-					rhs = ccomma;
+					rhs = get_variable_cexpression (temp_var.name);
 				}
 			}
 		} else if (local.variable_type.is_reference_type_or_type_parameter ()) {
@@ -2064,15 +2056,9 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 				if (array_type.fixed_length) {
 					rhs = null;
 				} else {
-					var ccomma = new CCodeCommaExpression ();
-
 					for (int dim = 1; dim <= array_type.rank; dim++) {
-						ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (get_array_length_cname (get_variable_cname (local.name), dim)), new CCodeConstant ("0")));
+						ccode.add_expression (new CCodeAssignment (get_variable_cexpression (get_array_length_cname (get_variable_cname (local.name), dim)), new CCodeConstant ("0")));
 					}
-
-					ccomma.append_expression (rhs);
-
-					rhs = ccomma;
 				}
 			}
 		}
