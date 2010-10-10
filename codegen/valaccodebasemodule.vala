@@ -3590,23 +3590,19 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			// property postfix expression
 			var prop = (Property) ma.symbol_reference;
 			
-			var ccomma = new CCodeCommaExpression ();
-			
 			// assign current value to temp variable
 			var temp_decl = get_temp_variable (prop.property_type, true, expr, false);
 			emit_temp_var (temp_decl);
-			ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_decl.name), get_cvalue (expr.inner)));
+			ccode.add_expression (new CCodeAssignment (get_variable_cexpression (temp_decl.name), get_cvalue (expr.inner)));
 			
 			// increment/decrement property
 			var op = expr.increment ? CCodeBinaryOperator.PLUS : CCodeBinaryOperator.MINUS;
 			var cexpr = new CCodeBinaryExpression (op, get_variable_cexpression (temp_decl.name), new CCodeConstant ("1"));
 			var ccall = get_property_set_call (prop, ma, cexpr);
-			ccomma.append_expression (ccall);
+			ccode.add_expression (ccall);
 			
 			// return previous value
-			ccomma.append_expression (get_variable_cexpression (temp_decl.name));
-			
-			set_cvalue (expr, ccomma);
+			set_cvalue (expr, get_variable_cexpression (temp_decl.name));
 			return;
 		}
 	
