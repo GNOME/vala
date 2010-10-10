@@ -379,7 +379,7 @@ public class Vala.GVariantModule : GAsyncModule {
 		return new CCodeIdentifier (temp_name);
 	}
 
-	CCodeExpression deserialize_hash_table (ObjectType type, CCodeExpression variant_expr) {
+	CCodeExpression? deserialize_hash_table (ObjectType type, CCodeExpression variant_expr) {
 		string temp_name = "_tmp%d_".printf (next_temp_var_id++);
 		string subiter_name = "_tmp%d_".printf (next_temp_var_id++);
 		string key_name = "_tmp%d_".printf (next_temp_var_id++);
@@ -430,6 +430,9 @@ public class Vala.GVariantModule : GAsyncModule {
 
 		var key_expr = deserialize_expression (key_type, new CCodeIdentifier (key_name), null);
 		var value_expr = deserialize_expression (value_type, new CCodeIdentifier (value_name), null);
+		if (key_expr == null || value_expr == null) {
+			return null;
+		}
 
 		var hash_table_insert = new CCodeFunctionCall (new CCodeIdentifier ("g_hash_table_insert"));
 		hash_table_insert.add_argument (new CCodeIdentifier (temp_name));
@@ -500,6 +503,11 @@ public class Vala.GVariantModule : GAsyncModule {
 		ccode.add_expression (new CCodeAssignment (variant_expr, iter_call));
 
 		var result = deserialize_expression (type, variant_expr, target_expr);
+		if (result == null) {
+			// error already reported
+			return;
+		}
+
 		ccode.add_expression (new CCodeAssignment (target_expr, result));
 
 		var unref = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_unref"));
@@ -641,7 +649,7 @@ public class Vala.GVariantModule : GAsyncModule {
 		return builder_end;
 	}
 
-	CCodeExpression serialize_hash_table (ObjectType type, CCodeExpression hash_table_expr) {
+	CCodeExpression? serialize_hash_table (ObjectType type, CCodeExpression hash_table_expr) {
 		string subiter_name = "_tmp%d_".printf (next_temp_var_id++);
 		string tableiter_name = "_tmp%d_".printf (next_temp_var_id++);
 		string key_name = "_tmp%d_".printf (next_temp_var_id++);
@@ -680,11 +688,17 @@ public class Vala.GVariantModule : GAsyncModule {
 		ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_key"), convert_from_generic_pointer (new CCodeIdentifier (key_name), key_type)));
 		ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_value"), convert_from_generic_pointer (new CCodeIdentifier (value_name), value_type)));
 
+		var serialized_key =  serialize_expression (key_type, new CCodeIdentifier ("_key"));
+		var serialized_value = serialize_expression (value_type, new CCodeIdentifier ("_value"));
+		if (serialized_key == null || serialized_value == null) {
+			return null;
+		}
+
 		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_add"));
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
 		iter_call.add_argument (new CCodeConstant ("\"{?*}\""));
-		iter_call.add_argument (serialize_expression (key_type, new CCodeIdentifier ("_key")));
-		iter_call.add_argument (serialize_expression (value_type, new CCodeIdentifier ("_value")));
+		iter_call.add_argument (serialized_key);
+		iter_call.add_argument (serialized_value);
 		ccode.add_expression (iter_call);
 
 		ccode.close ();
