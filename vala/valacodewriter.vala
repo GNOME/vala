@@ -2021,7 +2021,7 @@ public class Vala.CodeWriter : CodeVisitor {
 	}
 }
 
-public enum CodeWriterType {
+public enum Vala.CodeWriterType {
 	EXTERNAL,
 	INTERNAL,
 	FAST,

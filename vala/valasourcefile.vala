@@ -320,7 +320,7 @@ public class Vala.SourceFile {
 	}
 }
 
-public enum SourceFileType {
+public enum Vala.SourceFileType {
 	NONE,
 	SOURCE,
 	PACKAGE,

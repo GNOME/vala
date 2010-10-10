@@ -625,7 +625,7 @@ public enum Vala.SymbolAccessibility {
 	PUBLIC
 }
 
-public enum MemberBinding {
+public enum Vala.MemberBinding {
 	INSTANCE,
 	CLASS,
 	STATIC
