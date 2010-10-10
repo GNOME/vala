@@ -1225,7 +1225,12 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 
 		check_type (prop.property_type);
 
-		prop.accept_children (this);
+		if (prop.get_accessor != null) {
+			prop.get_accessor.accept (this);
+		}
+		if (prop.set_accessor != null) {
+			prop.set_accessor.accept (this);
+		}
 	}
 
 	public void generate_type_declaration (DataType type, CCodeFile decl_space) {
