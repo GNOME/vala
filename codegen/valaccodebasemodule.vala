@@ -2471,32 +2471,26 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			return dup_func;
 		}
 
-		// declaration
-
 		var function = new CCodeFunction (dup_func, value_type.get_cname ());
 		function.modifiers = CCodeModifiers.STATIC;
 
 		function.add_parameter (new CCodeFormalParameter ("self", value_type.get_cname ()));
 
-		// definition
-
-		var block = new CCodeBlock ();
+		push_function (function);
 
 		if (value_type.type_symbol == gvalue_type) {
 			var dup_call = new CCodeFunctionCall (new CCodeIdentifier ("g_boxed_copy"));
 			dup_call.add_argument (new CCodeIdentifier ("G_TYPE_VALUE"));
 			dup_call.add_argument (new CCodeIdentifier ("self"));
 
-			block.add_statement (new CCodeReturnStatement (dup_call));
+			ccode.add_return (dup_call);
 		} else {
-			var cdecl = new CCodeDeclaration (value_type.get_cname ());
-			cdecl.add_declarator (new CCodeVariableDeclarator ("dup"));
-			block.add_statement (cdecl);
+			ccode.add_declaration (value_type.get_cname (), new CCodeVariableDeclarator ("dup"));
 
 			var creation_call = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
 			creation_call.add_argument (new CCodeConstant (value_type.data_type.get_cname ()));
 			creation_call.add_argument (new CCodeConstant ("1"));
-			block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("dup"), creation_call)));
+			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("dup"), creation_call));
 
 			var st = value_type.data_type as Struct;
 			if (st != null && st.is_disposable ()) {
@@ -2507,7 +2501,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 				var copy_call = new CCodeFunctionCall (new CCodeIdentifier (st.get_copy_function ()));
 				copy_call.add_argument (new CCodeIdentifier ("self"));
 				copy_call.add_argument (new CCodeIdentifier ("dup"));
-				block.add_statement (new CCodeExpressionStatement (copy_call));
+				ccode.add_expression (copy_call);
 			} else {
 				cfile.add_include ("string.h");
 
@@ -2518,17 +2512,15 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 				copy_call.add_argument (new CCodeIdentifier ("dup"));
 				copy_call.add_argument (new CCodeIdentifier ("self"));
 				copy_call.add_argument (sizeof_call);
-				block.add_statement (new CCodeExpressionStatement (copy_call));
+				ccode.add_expression (copy_call);
 			}
 
-			block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("dup")));
+			ccode.add_return (new CCodeIdentifier ("dup"));
 		}
 
-		// append to file
+		pop_function ();
 
 		cfile.add_function_declaration (function);
-
-		function.block = block;
 		cfile.add_function (function);
 
 		return dup_func;
