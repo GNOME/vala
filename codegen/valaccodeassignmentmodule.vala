@@ -94,7 +94,6 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 	CCodeExpression? emit_simple_assignment (Assignment assignment) {
 		CCodeExpression rhs = get_cvalue (assignment.right);
 		CCodeExpression lhs = (CCodeExpression) get_ccodenode (assignment.left);
-		CCodeCommaExpression outer_ccomma = null;
 
 		bool unref_old = requires_destroy (assignment.left.value_type);
 		bool array = false;
@@ -113,26 +112,22 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 		}
 
 		if (unref_old || array || instance_delegate) {
-			var ccomma = new CCodeCommaExpression ();
-
 			if (!is_pure_ccode_expression (lhs)) {
 				/* Assign lhs to temp var to avoid repeating side effect */
-				outer_ccomma = new CCodeCommaExpression ();
-
 				var lhs_value_type = assignment.left.value_type.copy ();
 				string lhs_temp_name = "_tmp%d_".printf (next_temp_var_id++);
 				var lhs_temp = new LocalVariable (lhs_value_type, "*" + lhs_temp_name);
 				emit_temp_var (lhs_temp);
-				outer_ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (lhs_temp_name), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, lhs)));
+				ccode.add_expression (new CCodeAssignment (get_variable_cexpression (lhs_temp_name), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, lhs)));
 				lhs = new CCodeParenthesizedExpression (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (lhs_temp_name)));
 			}
 
 			var temp_decl = get_temp_variable (assignment.left.value_type, true, null, false);
 			emit_temp_var (temp_decl);
-			ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_decl.name), rhs));
+			ccode.add_expression (new CCodeAssignment (get_variable_cexpression (temp_decl.name), rhs));
 			if (unref_old) {
 				/* unref old value */
-				ccomma.append_expression (get_unref_expression (lhs, assignment.left.value_type, assignment.left));
+				ccode.add_expression (get_unref_expression (lhs, assignment.left.value_type, assignment.left));
 			}
 			
 			if (array) {
@@ -140,7 +135,7 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					var lhs_array_len = get_array_length_cexpression (assignment.left, dim);
 					var rhs_array_len = get_array_length_cexpression (assignment.right, dim);
-					ccomma.append_expression (new CCodeAssignment (lhs_array_len, rhs_array_len));
+					ccode.add_expression (new CCodeAssignment (lhs_array_len, rhs_array_len));
 				}
 				if (array_type.rank == 1) {
 					var array_var = assignment.left.symbol_reference;
@@ -149,22 +144,20 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 					    && ((array_var is LocalVariable && !array_local.captured) || array_var is Field)) {
 						var lhs_array_size = get_array_size_cexpression (assignment.left);
 						var rhs_array_len = get_array_length_cexpression (assignment.left, 1);
-						ccomma.append_expression (new CCodeAssignment (lhs_array_size, rhs_array_len));
+						ccode.add_expression (new CCodeAssignment (lhs_array_size, rhs_array_len));
 					}
 				}
 			} else if (instance_delegate) {
 				CCodeExpression lhs_delegate_target_destroy_notify, rhs_delegate_target_destroy_notify;
 				var lhs_delegate_target = get_delegate_target_cexpression (assignment.left, out lhs_delegate_target_destroy_notify);
 				var rhs_delegate_target = get_delegate_target_cexpression (assignment.right, out rhs_delegate_target_destroy_notify);
-				ccomma.append_expression (new CCodeAssignment (lhs_delegate_target, rhs_delegate_target));
+				ccode.add_expression (new CCodeAssignment (lhs_delegate_target, rhs_delegate_target));
 				if (assignment.right.target_type.value_owned) {
-					ccomma.append_expression (new CCodeAssignment (lhs_delegate_target_destroy_notify, rhs_delegate_target_destroy_notify));
+					ccode.add_expression (new CCodeAssignment (lhs_delegate_target_destroy_notify, rhs_delegate_target_destroy_notify));
 				}
 			}
-			
-			ccomma.append_expression (get_variable_cexpression (temp_decl.name));
-			
-			rhs = ccomma;
+
+			rhs = get_variable_cexpression (temp_decl.name);
 		}
 		
 		var cop = CCodeAssignmentOperator.SIMPLE;
@@ -191,11 +184,6 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 		}
 
 		CCodeExpression codenode = new CCodeAssignment (lhs, rhs, cop);
-
-		if (outer_ccomma != null) {
-			outer_ccomma.append_expression (codenode);
-			codenode = outer_ccomma;
-		}
 
 		ccode.add_expression (codenode);
 
