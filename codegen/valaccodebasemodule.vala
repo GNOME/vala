@@ -2332,7 +2332,6 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			// wrapper already defined
 			return equal_func;
 		}
-		// declaration
 
 		var function = new CCodeFunction (equal_func, "gboolean");
 		function.modifiers = CCodeModifiers.STATIC;
@@ -2340,30 +2339,26 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		function.add_parameter (new CCodeFormalParameter ("s1", "const " + st.get_cname () + "*"));
 		function.add_parameter (new CCodeFormalParameter ("s2", "const " + st.get_cname () + "*"));
 
-		// definition
-		var cblock = new CCodeBlock ();
+		push_function (function);
 
 		// if (s1 == s2) return TRUE;
 		{
-			var block = new CCodeBlock ();
-			block.add_statement (new CCodeReturnStatement (new CCodeConstant ("TRUE")));
-
 			var cexp = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier ("s1"), new CCodeIdentifier ("s2"));
-			var cif = new CCodeIfStatement (cexp, block);
-			cblock.add_statement (cif);
+			ccode.open_if (cexp);
+			ccode.add_return (new CCodeConstant ("TRUE"));
+			ccode.close ();
 		}
 		// if (s1 == NULL || s2 == NULL) return FALSE;
 		{
-			var block = new CCodeBlock ();
-			block.add_statement (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
-
 			var cexp = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier ("s1"), new CCodeConstant ("NULL"));
-			var cif = new CCodeIfStatement (cexp, block);
-			cblock.add_statement (cif);
+			ccode.open_if (cexp);
+			ccode.add_return (new CCodeConstant ("FALSE"));
+			ccode.close ();
 
 			cexp = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier ("s2"), new CCodeConstant ("NULL"));
-			cif = new CCodeIfStatement (cexp, block);
-			cblock.add_statement (cif);
+			ccode.open_if (cexp);
+			ccode.add_return (new CCodeConstant ("FALSE"));
+			ccode.close ();
 		}
 
 		foreach (Field f in st.get_fields ()) {
@@ -2394,29 +2389,26 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 				cexp = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, s1, s2);
 			}
 
-			var block = new CCodeBlock ();
-			block.add_statement (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
-			var cif = new CCodeIfStatement (cexp, block);
-			cblock.add_statement (cif);
+			ccode.open_if (cexp);
+			ccode.add_return (new CCodeConstant ("FALSE"));
+			ccode.close ();
 		}
 
 		if (st.get_fields().size == 0) {
 			// either opaque structure or simple type
 			if (st.is_simple_type ()) {
 				var cexp = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("s1")), new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("s2")));
-				cblock.add_statement (new CCodeReturnStatement (cexp));
+				ccode.add_return (cexp);
 			} else {
-				cblock.add_statement (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
+				ccode.add_return (new CCodeConstant ("FALSE"));
 			}
 		} else {
-			cblock.add_statement (new CCodeReturnStatement (new CCodeConstant ("TRUE")));
+			ccode.add_return (new CCodeConstant ("TRUE"));
 		}
 
-		// append to file
+		pop_function ();
 
 		cfile.add_function_declaration (function);
-
-		function.block = cblock;
 		cfile.add_function (function);
 
 		return equal_func;
