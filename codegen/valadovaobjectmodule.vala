@@ -1210,21 +1210,22 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 				function.modifiers |= CCodeModifiers.STATIC;
 			}
 
-			var block = new CCodeBlock ();
-			function.block = block;
+			push_function (function);
 
 			var vcast = get_type_private_from_type ((ObjectTypeSymbol) prop.parent_symbol, get_type_from_instance (new CCodeIdentifier ("this")));
 
 			if (acc.readable) {
 				var vcall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "get_%s".printf (prop.name)));
 				vcall.add_argument (new CCodeIdentifier ("this"));
-				block.add_statement (new CCodeReturnStatement (vcall));
+				ccode.add_return (vcall);
 			} else {
 				var vcall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "set_%s".printf (prop.name)));
 				vcall.add_argument (new CCodeIdentifier ("this"));
 				vcall.add_argument (new CCodeIdentifier ("value"));
-				block.add_statement (new CCodeExpressionStatement (vcall));
+				ccode.add_expression (vcall);
 			}
+
+			pop_function ();
 
 			cfile.add_function (function);
 
@@ -1239,11 +1240,14 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 			var override_func = new CCodeFunction ("%soverride_%s_%s".printf (prop.parent_symbol.get_lower_case_cprefix (), acc.readable ? "get" : "set", prop.name));
 			override_func.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
 			override_func.add_parameter (new CCodeFormalParameter ("(*function) %s".printf (param_list), acc.readable ? acc.value_type.get_cname () : "void"));
-			override_func.block = new CCodeBlock ();
+
+			push_function (override_func);
 
 			vcast = get_type_private_from_type ((ObjectTypeSymbol) prop.parent_symbol, new CCodeIdentifier ("type"));
 
-			override_func.block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (vcast, "%s_%s".printf (acc.readable ? "get" : "set", prop.name)), new CCodeIdentifier ("function"))));
+			ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (vcast, "%s_%s".printf (acc.readable ? "get" : "set", prop.name)), new CCodeIdentifier ("function")));
+
+			pop_function ();
 
 			cfile.add_function (override_func);
 		}

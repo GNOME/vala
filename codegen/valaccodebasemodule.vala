@@ -1397,8 +1397,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 				function.modifiers |= CCodeModifiers.STATIC;
 			}
 
-			var block = new CCodeBlock ();
-			function.block = block;
+			push_function (function);
 
 			CCodeFunctionCall vcast = null;
 			if (prop.parent_symbol is Interface) {
@@ -1417,7 +1416,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 				vcall.add_argument (new CCodeIdentifier ("self"));
 				if (returns_real_struct) {
 					vcall.add_argument (new CCodeIdentifier ("result"));
-					block.add_statement (new CCodeExpressionStatement (vcall));
+					ccode.add_expression (vcall);
 				} else {
 					if (acc.value_type is ArrayType) {
 						var array_type = (ArrayType) acc.value_type;
@@ -1430,7 +1429,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 						vcall.add_argument (new CCodeIdentifier (get_delegate_target_cname ("result")));
 					}
 
-					block.add_statement (new CCodeReturnStatement (vcall));
+					ccode.add_return (vcall);
 				}
 			} else {
 				var vcall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "set_%s".printf (prop.name)));
@@ -1448,8 +1447,10 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 					vcall.add_argument (new CCodeIdentifier (get_delegate_target_cname ("value")));
 				}
 
-				block.add_statement (new CCodeExpressionStatement (vcall));
+				ccode.add_expression (vcall);
 			}
+
+			pop_function ();
 
 			cfile.add_function (function);
 		}
