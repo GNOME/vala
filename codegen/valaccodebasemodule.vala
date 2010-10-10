@@ -2703,16 +2703,12 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			return destroy_func;
 		}
 
-		// declaration
-
 		var function = new CCodeFunction (destroy_func, "void");
 		function.modifiers = CCodeModifiers.STATIC;
 
 		function.add_parameter (new CCodeFormalParameter ("self", collection_type.get_cname ()));
 
-		// definition
-
-		var block = new CCodeBlock ();
+		push_function (function);
 
 		CCodeFunctionCall element_free_call;
 		if (collection_type.data_type == gnode_type) {
@@ -2751,17 +2747,15 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			element_free_call.add_argument (new CCodeConstant ("NULL"));
 		}
 
-		block.add_statement (new CCodeExpressionStatement (element_free_call));
+		ccode.add_expression (element_free_call);
 
 		var cfreecall = new CCodeFunctionCall (new CCodeIdentifier (collection_type.data_type.get_free_function ()));
 		cfreecall.add_argument (new CCodeIdentifier ("self"));
-		block.add_statement (new CCodeExpressionStatement (cfreecall));
+		ccode.add_expression (cfreecall);
 
-		// append to file
+		pop_function ();
 
 		cfile.add_function_declaration (function);
-
-		function.block = block;
 		cfile.add_function (function);
 
 		return destroy_func;
