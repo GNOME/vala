@@ -305,22 +305,20 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		append_array_size (expr, get_variable_cexpression (len_var.name));
 	}
 
-	private CCodeForStatement get_struct_array_free_loop (Struct st) {
-		var cbody = new CCodeBlock ();
+	void append_struct_array_free_loop (Struct st) {
+		var cforinit = new CCodeAssignment (new CCodeIdentifier ("i"), new CCodeConstant ("0"));
+		var cforcond = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier ("i"), new CCodeIdentifier ("array_length"));
+		var cforiter = new CCodeAssignment (new CCodeIdentifier ("i"), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("i"), new CCodeConstant ("1")));
+		ccode.open_for (cforinit, cforcond, cforiter);
+
 		var cptrarray = new CCodeIdentifier ("array");
 		var cea = new CCodeElementAccess (cptrarray, new CCodeIdentifier ("i"));
 
 		var cfreecall = new CCodeFunctionCall (get_destroy_func_expression (new StructValueType (st)));
 		cfreecall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cea));
+		ccode.add_expression (cfreecall);
 
-		var cforcond = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier ("i"), new CCodeIdentifier ("array_length"));
-		cbody.add_statement (new CCodeExpressionStatement (cfreecall));
-
-		var cfor = new CCodeForStatement (cforcond, cbody);
-		cfor.add_initializer (new CCodeAssignment (new CCodeIdentifier ("i"), new CCodeConstant ("0")));
-		cfor.add_iterator (new CCodeAssignment (new CCodeIdentifier ("i"), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("i"), new CCodeConstant ("1"))));
-
-		return cfor;
+		ccode.close ();
 	}
 
 	public override string? append_struct_array_free (Struct st) {
@@ -334,25 +332,24 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		fun.modifiers = CCodeModifiers.STATIC;
 		fun.add_parameter (new CCodeFormalParameter ("array", "%s*".printf (st.get_cname ())));
 		fun.add_parameter (new CCodeFormalParameter ("array_length", "gint"));
-		cfile.add_function_declaration (fun);
 
-		var cdofree = new CCodeBlock ();
-
-		var citdecl = new CCodeDeclaration ("int");
-		citdecl.add_declarator (new CCodeVariableDeclarator ("i"));
-		cdofree.add_statement (citdecl);
-
-		cdofree.add_statement (get_struct_array_free_loop (st));
+		push_function (fun);
 
 		var ccondarr = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("array"), new CCodeConstant ("NULL"));
-		var cif = new CCodeIfStatement (ccondarr, cdofree);
-		fun.block = new CCodeBlock ();
-		fun.block.add_statement (cif);
+		ccode.open_if (ccondarr);
+
+		ccode.add_declaration ("int", new CCodeVariableDeclarator ("i"));
+		append_struct_array_free_loop (st);
+
+		ccode.close ();
 
 		var carrfree = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
 		carrfree.add_argument (new CCodeIdentifier ("array"));
-		fun.block.add_statement (new CCodeExpressionStatement (carrfree));
+		ccode.add_expression (carrfree);
 
+		pop_function ();
+
+		cfile.add_function_declaration (fun);
 		cfile.add_function (fun);
 
 		return cname;
