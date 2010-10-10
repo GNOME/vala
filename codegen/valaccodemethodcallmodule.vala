@@ -806,7 +806,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				}
 			}
 
-			var temp_var = get_temp_variable (result_type);
+			var temp_var = get_temp_variable (result_type, result_type.value_owned);
 			var temp_ref = get_variable_cexpression (temp_var.name);
 
 			emit_temp_var (temp_var);
