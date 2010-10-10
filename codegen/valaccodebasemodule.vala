@@ -2565,15 +2565,11 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			return destroy_func;
 		}
 
-		// declaration
-
 		var function = new CCodeFunction (destroy_func, "void");
 		function.modifiers = CCodeModifiers.STATIC;
 		function.add_parameter (new CCodeFormalParameter ("self", type.get_cname ()));
 
-		// definition
-
-		var block = new CCodeBlock ();
+		push_function (function);
 
 		var cl = type.data_type as Class;
 		if (cl != null && cl.is_gboxed) {
@@ -2581,14 +2577,14 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			free_call.add_argument (new CCodeIdentifier (cl.get_type_id ()));
 			free_call.add_argument (new CCodeIdentifier ("self"));
 
-			block.add_statement (new CCodeExpressionStatement (free_call));
+			ccode.add_expression (free_call);
 		} else if (cl != null) {
 			assert (cl.free_function_address_of);
 
 			var free_call = new CCodeFunctionCall (new CCodeIdentifier (type.data_type.get_free_function ()));
 			free_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("self")));
 
-			block.add_statement (new CCodeExpressionStatement (free_call));
+			ccode.add_expression (free_call);
 		} else {
 			var st = type.data_type as Struct;
 			if (st != null && st.is_disposable ()) {
@@ -2598,20 +2594,18 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 
 				var destroy_call = new CCodeFunctionCall (new CCodeIdentifier (st.get_destroy_function ()));
 				destroy_call.add_argument (new CCodeIdentifier ("self"));
-				block.add_statement (new CCodeExpressionStatement (destroy_call));
+				ccode.add_expression (destroy_call);
 			}
 
 			var free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
 			free_call.add_argument (new CCodeIdentifier ("self"));
 
-			block.add_statement (new CCodeExpressionStatement (free_call));
+			ccode.add_expression (free_call);
 		}
 
-		// append to file
+		pop_function ();
 
 		cfile.add_function_declaration (function);
-
-		function.block = block;
 		cfile.add_function (function);
 
 		return destroy_func;
