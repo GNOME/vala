@@ -3680,12 +3680,15 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 				var dup0_fun = new CCodeFunction (dup0_func, pointer_cname);
 				dup0_fun.add_parameter (new CCodeFormalParameter ("self", pointer_cname));
 				dup0_fun.modifiers = CCodeModifiers.STATIC;
-				dup0_fun.block = new CCodeBlock ();
+
+				push_function (dup0_fun);
 
 				var dup_call = new CCodeFunctionCall (dupexpr);
 				dup_call.add_argument (new CCodeIdentifier ("self"));
 
-				dup0_fun.block.add_statement (new CCodeReturnStatement (new CCodeConditionalExpression (new CCodeIdentifier ("self"), dup_call, new CCodeConstant ("NULL"))));
+				ccode.add_return (new CCodeConditionalExpression (new CCodeIdentifier ("self"), dup_call, new CCodeConstant ("NULL")));
+
+				pop_function ();
 
 				cfile.add_function (dup0_fun);
 			}
