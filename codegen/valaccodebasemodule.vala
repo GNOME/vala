@@ -4739,11 +4739,15 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		} else {
 			function.add_parameter (new CCodeFormalParameter ("needle", array_type.element_type.get_cname ()));
 		}
-		var block = new CCodeBlock ();
 
-		var idx_decl = new CCodeDeclaration ("int");
-		idx_decl.add_declarator (new CCodeVariableDeclarator ("i"));
-		block.add_statement (idx_decl);
+		push_function (function);
+
+		ccode.add_declaration ("int", new CCodeVariableDeclarator ("i"));
+
+		var cloop_initializer = new CCodeAssignment (new CCodeIdentifier ("i"), new CCodeConstant ("0"));
+		var cloop_condition = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier ("i"), new CCodeIdentifier ("stack_length"));
+		var cloop_iterator = new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier ("i"));
+		ccode.open_for (cloop_initializer, cloop_condition, cloop_iterator);
 
 		var celement = new CCodeElementAccess (new CCodeIdentifier ("stack"), new CCodeIdentifier ("i"));
 		var cneedle = new CCodeIdentifier ("needle");
@@ -4762,20 +4766,18 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		} else {
 			cif_condition = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, cneedle, celement);
 		}
-		var cif_found = new CCodeBlock ();
-		cif_found.add_statement (new CCodeReturnStatement (new CCodeConstant ("TRUE")));
-		var cloop_body = new CCodeBlock ();
-		cloop_body.add_statement (new CCodeIfStatement (cif_condition, cif_found));
 
-		var cloop_condition = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier ("i"), new CCodeIdentifier ("stack_length"));
-		var cloop = new CCodeForStatement (cloop_condition, cloop_body);
-		cloop.add_initializer (new CCodeAssignment (new CCodeIdentifier ("i"), new CCodeConstant ("0")));
-		cloop.add_iterator (new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier ("i")));
+		ccode.open_if (cif_condition);
+		ccode.add_return (new CCodeConstant ("TRUE"));
+		ccode.close ();
 
-		block.add_statement (cloop);
-		block.add_statement (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
+		ccode.close ();
+
+		ccode.add_return (new CCodeConstant ("FALSE"));
+
+		pop_function ();
+
 		cfile.add_function_declaration (function);
-		function.block = block;
 		cfile.add_function (function);
 
 		return array_contains_func;
