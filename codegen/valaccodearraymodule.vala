@@ -27,12 +27,12 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 	int next_array_dup_id = 0;
 	int next_array_add_id = 0;
 
-	void append_initializer_list (CCodeCommaExpression ce, CCodeExpression name_cnode, InitializerList initializer_list, int rank, ref int i) {
+	void append_initializer_list (CCodeExpression name_cnode, InitializerList initializer_list, int rank, ref int i) {
 		foreach (Expression e in initializer_list.get_initializers ()) {
 			if (rank > 1) {
-				append_initializer_list (ce, name_cnode, (InitializerList) e, rank - 1, ref i);
+				append_initializer_list (name_cnode, (InitializerList) e, rank - 1, ref i);
 			} else {
-				ce.append_expression (new CCodeAssignment (new CCodeElementAccess (name_cnode, new CCodeConstant (i.to_string ())), get_cvalue (e)));
+				ccode.add_expression (new CCodeAssignment (new CCodeElementAccess (name_cnode, new CCodeConstant (i.to_string ())), get_cvalue (e)));
 				i++;
 			}
 		}
@@ -43,18 +43,15 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		if (array_type != null && array_type.fixed_length) {
 			// no heap allocation for fixed-length arrays
 
-			var ce = new CCodeCommaExpression ();
 			var temp_var = get_temp_variable (array_type, true, expr);
 			var name_cnode = get_variable_cexpression (temp_var.name);
 			int i = 0;
 
 			emit_temp_var (temp_var);
 
-			append_initializer_list (ce, name_cnode, expr.initializer_list, expr.rank, ref i);
+			append_initializer_list (name_cnode, expr.initializer_list, expr.rank, ref i);
 
-			ce.append_expression (name_cnode);
-
-			set_cvalue (expr, ce);
+			set_cvalue (expr, name_cnode);
 
 			return;
 		}
@@ -110,24 +107,19 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			gnew.add_argument (csizeof);
 		}
 
-		if (expr.initializer_list != null) {
-			var ce = new CCodeCommaExpression ();
-			var temp_var = get_temp_variable (expr.value_type, true, expr);
-			var name_cnode = get_variable_cexpression (temp_var.name);
-			int i = 0;
-			
-			emit_temp_var (temp_var);
-			
-			ce.append_expression (new CCodeAssignment (name_cnode, gnew));
+		var temp_var = get_temp_variable (expr.value_type, true, expr);
+		var name_cnode = get_variable_cexpression (temp_var.name);
+		int i = 0;
 
-			append_initializer_list (ce, name_cnode, expr.initializer_list, expr.rank, ref i);
-			
-			ce.append_expression (name_cnode);
-			
-			set_cvalue (expr, ce);
-		} else {
-			set_cvalue (expr, gnew);
+		emit_temp_var (temp_var);
+
+		ccode.add_expression (new CCodeAssignment (name_cnode, gnew));
+
+		if (expr.initializer_list != null) {
+			append_initializer_list (name_cnode, expr.initializer_list, expr.rank, ref i);
 		}
+
+		set_cvalue (expr, name_cnode);
 	}
 
 	public override string get_array_length_cname (string array_cname, int dim) {

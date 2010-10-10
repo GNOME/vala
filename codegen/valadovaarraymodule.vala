@@ -21,9 +21,9 @@
  */
 
 public class Vala.DovaArrayModule : DovaMethodCallModule {
-	void append_initializer_list (CCodeCommaExpression ce, CCodeExpression name_cnode, InitializerList initializer_list, ref int i) {
+	void append_initializer_list (CCodeExpression name_cnode, InitializerList initializer_list, ref int i) {
 		foreach (Expression e in initializer_list.get_initializers ()) {
-			ce.append_expression (new CCodeAssignment (new CCodeElementAccess (name_cnode, new CCodeConstant (i.to_string ())), get_cvalue (e)));
+			ccode.add_expression (new CCodeAssignment (new CCodeElementAccess (name_cnode, new CCodeConstant (i.to_string ())), get_cvalue (e)));
 			i++;
 		}
 	}
@@ -33,18 +33,15 @@ public class Vala.DovaArrayModule : DovaMethodCallModule {
 		if (array_type != null && array_type.fixed_length) {
 			// no heap allocation for fixed-length arrays
 
-			var ce = new CCodeCommaExpression ();
 			var temp_var = get_temp_variable (array_type, true, expr);
 			var name_cnode = new CCodeIdentifier (temp_var.name);
 			int i = 0;
 
 			emit_temp_var (temp_var);
 
-			append_initializer_list (ce, name_cnode, expr.initializer_list, ref i);
+			append_initializer_list (name_cnode, expr.initializer_list, ref i);
 
-			ce.append_expression (name_cnode);
-
-			set_cvalue (expr, ce);
+			set_cvalue (expr, name_cnode);
 
 			return;
 		}
@@ -57,7 +54,14 @@ public class Vala.DovaArrayModule : DovaMethodCallModule {
 		// length of new array
 		array_new.add_argument (get_cvalue (expr.get_sizes ().get (0)));
 
-		set_cvalue (expr, array_new);
+		var temp_var = get_temp_variable (expr.value_type, true, expr);
+		var name_cnode = get_variable_cexpression (temp_var.name);
+
+		emit_temp_var (temp_var);
+
+		ccode.add_expression (new CCodeAssignment (name_cnode, array_new));
+
+		set_cvalue (expr, name_cnode);
 	}
 
 	public override void visit_element_access (ElementAccess expr) {
