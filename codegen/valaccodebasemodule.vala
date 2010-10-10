@@ -2534,15 +2534,11 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			return destroy_func;
 		}
 
-		// declaration
-
 		var function = new CCodeFunction (destroy_func, type.get_cname ());
 		function.modifiers = CCodeModifiers.STATIC;
 		function.add_parameter (new CCodeFormalParameter ("self", type.get_cname ()));
 
-		// definition
-
-		var block = new CCodeBlock ();
+		push_function (function);
 
 		var cl = type.data_type as Class;
 		assert (cl != null && cl.is_gboxed);
@@ -2551,13 +2547,11 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		free_call.add_argument (new CCodeIdentifier (cl.get_type_id ()));
 		free_call.add_argument (new CCodeIdentifier ("self"));
 
-		block.add_statement (new CCodeReturnStatement (free_call));
+		ccode.add_return (free_call);
 
-		// append to file
+		pop_function ();
 
 		cfile.add_function_declaration (function);
-
-		function.block = block;
 		cfile.add_function (function);
 
 		return destroy_func;
