@@ -5416,6 +5416,8 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 	public void create_postcondition_statement (Expression postcondition) {
 		var cassert = new CCodeFunctionCall (new CCodeIdentifier ("g_warn_if_fail"));
 
+		postcondition.emit (this);
+
 		cassert.add_argument (get_cvalue (postcondition));
 
 		ccode.add_expression (cassert);

@@ -300,14 +300,6 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 			m.result_var.accept (this);
 		}
 
-		foreach (Expression precondition in m.get_preconditions ()) {
-			precondition.emit (this);
-		}
-
-		foreach (Expression postcondition in m.get_postconditions ()) {
-			postcondition.emit (this);
-		}
-
 		// do not declare overriding methods and interface implementations
 		if (m.is_abstract || m.is_virtual
 		    || (m.base_method == null && m.base_interface_method == null)) {
@@ -955,6 +947,8 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 
 	private void create_precondition_statement (CodeNode method_node, DataType ret_type, Expression precondition) {
 		var ccheck = new CCodeFunctionCall ();
+
+		precondition.emit (this);
 
 		ccheck.add_argument (get_cvalue (precondition));
 
