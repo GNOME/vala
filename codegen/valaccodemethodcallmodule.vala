@@ -793,7 +793,20 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		if (expr.parent_node is ExpressionStatement) {
 			ccode.add_expression (ccall_expr);
 		} else {
-			var temp_var = get_temp_variable (itype.get_return_type ());
+			var result_type = itype.get_return_type ();
+
+			if (expr.formal_value_type is GenericType && !(expr.value_type is GenericType)) {
+				var st = expr.formal_value_type.type_parameter.parent_symbol.parent_symbol as Struct;
+				if (expr.formal_value_type.type_parameter.parent_symbol == garray_type ||
+				    (st != null && st.get_cname () == "va_list")) {
+					// GArray and va_list don't use pointer-based generics
+					// above logic copied from visit_expression ()
+					// TODO avoid code duplication
+					result_type = expr.value_type;
+				}
+			}
+
+			var temp_var = get_temp_variable (result_type);
 			var temp_ref = get_variable_cexpression (temp_var.name);
 
 			emit_temp_var (temp_var);
