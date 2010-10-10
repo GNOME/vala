@@ -5454,7 +5454,8 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		function.modifiers = CCodeModifiers.STATIC;
 		function.add_parameter (new CCodeFormalParameter ("self", st.get_cname () + "*"));
 
-		var cblock = new CCodeBlock ();
+		push_function (function);
+
 		foreach (Field f in st.get_fields ()) {
 			if (f.binding == MemberBinding.INSTANCE) {
 				if (requires_destroy (f.variable_type)) {
@@ -5468,13 +5469,14 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 					ma.symbol_reference = f;
 					ma.value_type = f.variable_type.copy ();
 					visit_member_access (ma);
-					cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (lhs, f.variable_type, ma)));
+					ccode.add_expression (get_unref_expression (lhs, f.variable_type, ma));
 				}
 			}
 		}
 
+		pop_function ();
+
 		cfile.add_function_declaration (function);
-		function.block = cblock;
 		cfile.add_function (function);
 	}
 
