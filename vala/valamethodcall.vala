@@ -710,6 +710,25 @@ public class Vala.MethodCall : Expression {
 	public override void emit (CodeGenerator codegen) {
 		var method_type = call.value_type as MethodType;
 
+		if (method_type != null) {
+			// N_ and NC_ do not have any effect on the C code,
+			// they are only interpreted by xgettext
+			// this means that it is ok to use them in constant initializers
+			// however, we must avoid generating regular method call code
+			// as that may include temporary variables
+			if (method_type.method_symbol.get_full_name () == "GLib.N_") {
+				// first argument is string
+				argument_list[0].emit (codegen);
+				this.target_value = argument_list[0].target_value;
+				return;
+			} else if (method_type.method_symbol.get_full_name () == "GLib.NC_") {
+				// second argument is string
+				argument_list[1].emit (codegen);
+				this.target_value = argument_list[1].target_value;
+				return;
+			}
+		}
+
 		if (method_type != null && method_type.method_symbol.parent_symbol is Signal) {
 			var signal_access = ((MemberAccess) call).inner;
 			signal_access.emit (codegen);
