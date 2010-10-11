@@ -224,7 +224,7 @@ namespace Cairo {
 		public double y;
 	}
 	
-	[CCode (cprefix = "CAIRO_PATH_")]
+	[CCode (cprefix = "CAIRO_PATH_", cname = "cairo_path_data_type_t")]
 	public enum PathDataType {
 		MOVE_TO,
 		LINE_TO,
