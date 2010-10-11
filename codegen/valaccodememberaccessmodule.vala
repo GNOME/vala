@@ -101,7 +101,8 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					} else {
 						set_delegate_target (expr, new CCodeIdentifier ("data"));
 					}
-				} else {
+				} else if (expr.inner != null) {
+					// expr.inner is null in the special case of referencing the method in a constant initializer
 					var delegate_target = (CCodeExpression) get_ccodenode (expr.inner);
 					var delegate_type = expr.target_type as DelegateType;
 					if ((expr.value_type.value_owned || (delegate_type != null && delegate_type.is_called_once)) && expr.inner.value_type.data_type != null && expr.inner.value_type.data_type.is_reference_counting ()) {
