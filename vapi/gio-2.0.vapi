@@ -1291,7 +1291,7 @@ namespace GLib {
 		public void append_name (string iconname);
 		[CCode (type = "GIcon*", has_construct_function = false)]
 		public ThemedIcon.from_names (string[] iconnames);
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[] get_names ();
 		public void prepend_name (string iconname);
 		[CCode (type = "GIcon*", has_construct_function = false)]
