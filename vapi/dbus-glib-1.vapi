@@ -51,7 +51,7 @@ namespace DBus {
 		[CCode (cname = "dbus_connection_setup_with_g_main")]
 		public void setup_with_main (GLib.MainContext? context = null);
 		[CCode (cname = "dbus_connection_get_g_connection")]
-		public Connection get_g_connection ();
+		public unowned Connection get_g_connection ();
 		[CCode (cname = "dbus_connection_register_g_object")]
 		public void register_object (string at_path, GLib.Object object);
 
