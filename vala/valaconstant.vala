@@ -217,6 +217,8 @@ public class Vala.Constant : Symbol, Lockable {
 		analyzer.current_source_file = old_source_file;
 		analyzer.current_symbol = old_symbol;
 
+		active = true;
+
 		return !error;
 	}
 

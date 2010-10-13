@@ -719,6 +719,11 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public void generate_constant_declaration (Constant c, CCodeFile decl_space, bool definition = false) {
+		if (c.parent_symbol is Block) {
+			// local constant
+			return;
+		}
+
 		if (add_symbol_declaration (decl_space, c, c.get_cname ())) {
 			return;
 		}
@@ -759,6 +764,31 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public override void visit_constant (Constant c) {
+		if (c.parent_symbol is Block) {
+			// local constant
+
+			generate_type_declaration (c.type_reference, cfile);
+
+			c.value.emit (this);
+
+			string type_name = c.type_reference.get_const_cname ();
+			string arr = "";
+			if (c.type_reference is ArrayType) {
+				arr = "[]";
+			}
+
+			if (c.type_reference.compatible (string_type)) {
+				type_name = "const char";
+				arr = "[]";
+			}
+
+			var cinitializer = get_cvalue (c.value);
+
+			ccode.add_declaration (type_name, new CCodeVariableDeclarator ("%s%s".printf (c.get_cname (), arr), cinitializer), CCodeModifiers.STATIC);
+
+			return;
+		}
+
 		generate_constant_declaration (c, cfile, true);
 
 		if (!c.is_internal_symbol ()) {

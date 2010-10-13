@@ -1495,6 +1495,10 @@ public class Vala.Parser : CodeVisitor {
 					is_decl = true;
 					parse_local_variable_declarations (block);
 					break;
+				case TokenType.CONST:
+					is_decl = true;
+					parse_local_constant_declarations (block);
+					break;
 				case TokenType.OP_INC:
 				case TokenType.OP_DEC:
 				case TokenType.BASE:
@@ -1707,6 +1711,31 @@ public class Vala.Parser : CodeVisitor {
 			initializer = parse_expression ();
 		}
 		return new LocalVariable (type, id, initializer, get_src (begin));
+	}
+
+	void parse_local_constant_declarations (Block block) throws ParseError {
+		expect (TokenType.CONST);
+		var constant_type = parse_type (false, false);
+		do {
+			DataType type_copy = constant_type.copy ();
+			var local = parse_local_constant (type_copy);
+			block.add_statement (new DeclarationStatement (local, local.source_reference));
+			block.add_local_constant (local);
+			local.active = false;
+		} while (accept (TokenType.COMMA));
+		expect (TokenType.SEMICOLON);
+	}
+
+	Constant parse_local_constant (DataType constant_type) throws ParseError {
+		var begin = get_location ();
+		string id = parse_identifier ();
+
+		var type = parse_inline_array_type (constant_type);
+
+		expect (TokenType.ASSIGN);
+		var initializer = parse_expression ();
+
+		return new Constant (id, type, initializer, get_src (begin));
 	}
 
 	Statement parse_expression_statement () throws ParseError {

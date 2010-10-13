@@ -36,6 +36,7 @@ public class Vala.Block : Symbol, Statement {
 
 	private List<Statement> statement_list = new ArrayList<Statement> ();
 	private List<LocalVariable> local_variables = new ArrayList<LocalVariable> ();
+	private List<Constant> local_constants = new ArrayList<Constant> ();
 	
 	/**
 	 * Creates a new block.
@@ -90,7 +91,7 @@ public class Vala.Block : Symbol, Statement {
 		var parent_block = parent_symbol;
 		while (parent_block is Block || parent_block is Method || parent_block is PropertyAccessor) {
 			if (parent_block.scope.lookup (local.name) != null) {
-				Report.error (local.source_reference, "Local variable `%s' conflicts with another local variable declared in a parent scope".printf (local.name));
+				Report.error (local.source_reference, "Local variable `%s' conflicts with a local variable or constant declared in a parent scope".printf (local.name));
 				break;
 			}
 			parent_block = parent_block.parent_symbol;
@@ -109,6 +110,19 @@ public class Vala.Block : Symbol, Statement {
 	 */
 	public List<LocalVariable> get_local_variables () {
 		return local_variables;
+	}
+
+	public void add_local_constant (Constant constant) {
+		var parent_block = parent_symbol;
+		while (parent_block is Block || parent_block is Method || parent_block is PropertyAccessor) {
+			if (parent_block.scope.lookup (constant.name) != null) {
+				Report.error (constant.source_reference, "Local constant `%s' conflicts with a local variable or constant declared in a parent scope".printf (constant.name));
+				break;
+			}
+			parent_block = parent_block.parent_symbol;
+		}
+		local_constants.add (constant);
+		scope.add (constant.name, constant);
 	}
 
 	public override void accept (CodeVisitor visitor) {
@@ -141,6 +155,10 @@ public class Vala.Block : Symbol, Statement {
 
 		foreach (LocalVariable local in get_local_variables ()) {
 			local.active = false;
+		}
+
+		foreach (Constant constant in local_constants) {
+			constant.active = false;
 		}
 
 		// use get_statements () instead of statement_list to not miss errors within StatementList objects

@@ -158,9 +158,12 @@ public class Vala.SymbolResolver : CodeVisitor {
 	}
 
 	public override void visit_constant (Constant c) {
+		var old_scope = current_scope;
 		current_scope = c.scope;
 
 		c.accept_children (this);
+
+		current_scope = old_scope;
 	}
 
 	public override void visit_field (Field f) {
