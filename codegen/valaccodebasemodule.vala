@@ -4947,33 +4947,25 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 				var decl = get_temp_variable (expression_type, true, expression_type, false);
 				emit_temp_var (decl);
 				temp_ref_vars.insert (0, decl);
-				cexpr = new CCodeAssignment (get_variable_cexpression (decl.name), cexpr);
+				ccode.add_expression (new CCodeAssignment (get_variable_cexpression (decl.name), cexpr));
+				cexpr = get_variable_cexpression (decl.name);
 
 				if (expression_type is ArrayType && expr != null) {
 					var array_type = (ArrayType) expression_type;
-					var ccomma = new CCodeCommaExpression ();
-					ccomma.append_expression (cexpr);
 					for (int dim = 1; dim <= array_type.rank; dim++) {
 						var len_decl = new LocalVariable (int_type.copy (), get_array_length_cname (decl.name, dim));
 						emit_temp_var (len_decl);
-						ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (len_decl.name), get_array_length_cexpression (expr, dim)));
+						ccode.add_expression (new CCodeAssignment (get_variable_cexpression (len_decl.name), get_array_length_cexpression (expr, dim)));
 					}
-					ccomma.append_expression (get_variable_cexpression (decl.name));
-					cexpr = ccomma;
 				} else if (expression_type is DelegateType && expr != null) {
-					var ccomma = new CCodeCommaExpression ();
-					ccomma.append_expression (cexpr);
-
 					var target_decl = new LocalVariable (new PointerType (new VoidType ()), get_delegate_target_cname (decl.name));
 					emit_temp_var (target_decl);
 					var target_destroy_notify_decl = new LocalVariable (new DelegateType ((Delegate) context.root.scope.lookup ("GLib").scope.lookup ("DestroyNotify")), get_delegate_target_destroy_notify_cname (decl.name));
 					emit_temp_var (target_destroy_notify_decl);
 					CCodeExpression target_destroy_notify;
-					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (target_decl.name), get_delegate_target_cexpression (expr, out target_destroy_notify)));
-					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (target_destroy_notify_decl.name), target_destroy_notify));
+					ccode.add_expression (new CCodeAssignment (get_variable_cexpression (target_decl.name), get_delegate_target_cexpression (expr, out target_destroy_notify)));
+					ccode.add_expression (new CCodeAssignment (get_variable_cexpression (target_destroy_notify_decl.name), target_destroy_notify));
 
-					ccomma.append_expression (get_variable_cexpression (decl.name));
-					cexpr = ccomma;
 				}
 			}
 		}
