@@ -1778,11 +1778,11 @@ public class Vala.DBusClientModule : DBusModule {
 		var error_block = new CCodeBlock ();
 
 		var cdecl = new CCodeDeclaration ("GQuark");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("_edomain"));
+		cdecl.add_declarator (new CCodeVariableDeclarator.zero ("_edomain", new CCodeConstant ("0")));
 		error_block.add_statement (cdecl);
 
 		cdecl = new CCodeDeclaration ("gint");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("_ecode"));
+		cdecl.add_declarator (new CCodeVariableDeclarator.zero ("_ecode", new CCodeConstant ("0")));
 		error_block.add_statement (cdecl);
 
 		generate_client_error_cases (error_block, error_types, new CCodeMemberAccess (new CCodeIdentifier ("_dbus_error"), "name"), new CCodeIdentifier ("_edomain"), new CCodeIdentifier ("_ecode"));
