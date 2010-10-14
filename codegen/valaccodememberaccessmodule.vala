@@ -403,23 +403,24 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					ccall.add_argument (pub_inst);
 				}
 
+				var temp_var = get_temp_variable (base_property.get_accessor.value_type, base_property.get_accessor.value_type.value_owned);
+				emit_temp_var (temp_var);
+				var ctemp = get_variable_cexpression (temp_var.name);
+				set_cvalue (expr, ctemp);
+
 				// Property access to real struct types is handled differently
 				// The value is returned by out parameter
 				if (base_property.property_type.is_real_non_null_struct_type ()) {
-					var ccomma = new CCodeCommaExpression ();
-					var temp_var = get_temp_variable (base_property.get_accessor.value_type);
-					var ctemp = get_variable_cexpression (temp_var.name);
-					emit_temp_var (temp_var);
 					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
-					ccomma.append_expression (ccall);
-					ccomma.append_expression (ctemp);
-					set_cvalue (expr, ccomma);
+					ccode.add_expression (ccall);
 				} else {
+					ccode.add_expression (new CCodeAssignment (ctemp, ccall));
+
 					array_type = base_property.property_type as ArrayType;
 					if (array_type != null && !base_property.no_array_length) {
 						for (int dim = 1; dim <= array_type.rank; dim++) {
-							var temp_var = get_temp_variable (int_type);
-							var ctemp = get_variable_cexpression (temp_var.name);
+							temp_var = get_temp_variable (int_type);
+							ctemp = get_variable_cexpression (temp_var.name);
 							emit_temp_var (temp_var);
 							ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
 							append_array_size (expr, ctemp);
@@ -427,15 +428,13 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					} else {
 						var delegate_type = base_property.property_type as DelegateType;
 						if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
-							var temp_var = get_temp_variable (new PointerType (new VoidType ()));
-							var ctemp = get_variable_cexpression (temp_var.name);
+							temp_var = get_temp_variable (new PointerType (new VoidType ()));
+							ctemp = get_variable_cexpression (temp_var.name);
 							emit_temp_var (temp_var);
 							ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
 							set_delegate_target (expr, ctemp);
 						}
 					}
-
-					set_cvalue (expr, ccall);
 				}
 			} else {
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_get"));
