@@ -78,9 +78,6 @@ class Maman.SubBar : Bar {
 		test_ref_weak (ref weak_str);
 		assert (str == "world");
 
-		test_ref_weak (ref str2);
-		assert (str == "world");
-
 		ClassTest.run_test ();
 
 		return 0;

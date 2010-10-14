@@ -485,7 +485,8 @@ class Vala.Compiler {
 				var opt_context = new OptionContext ("- Vala");
 				opt_context.set_help_enabled (true);
 				opt_context.add_main_entries (options, null);
-				opt_context.parse (ref compile_args);
+				unowned string[] temp_args = compile_args;
+				opt_context.parse (ref temp_args);
 			} catch (ShellError e) {
 				stdout.printf ("%s\n", e.message);
 				return 1;

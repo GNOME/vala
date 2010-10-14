@@ -549,7 +549,16 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				if (arg.target_type.is_disposable ()) {
 					if (!(arg.value_type is PointerType) && !arg.value_type.value_owned) {
 						/* variable doesn't own the value */
-						Report.error (arg.source_reference, "Invalid assignment from owned expression to unowned variable");
+						Report.error (arg.source_reference, "Argument %d: Cannot pass unowned ref argument to owned reference parameter".printf (i + 1));
+						return false;
+					}
+				}
+
+				// owned variables can only be used with owned ref parameters
+				if (arg.value_type.is_disposable ()) {
+					if (!arg.target_type.value_owned) {
+						/* parameter doesn't own the value */
+						Report.error (arg.source_reference, "Argument %d: Cannot pass owned ref argument to unowned reference parameter".printf (i + 1));
 						return false;
 					}
 				}
