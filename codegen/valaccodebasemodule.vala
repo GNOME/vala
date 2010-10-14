@@ -5095,7 +5095,11 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 				if (node == null) {
 					node = expression_type;
 				}
-				cexpr = get_ref_cexpression (target_type, cexpr, expr, node);
+
+				var decl = get_temp_variable (target_type, true, node, false);
+				emit_temp_var (decl);
+				ccode.add_expression (new CCodeAssignment (get_variable_cexpression (decl.name), get_ref_cexpression (target_type, cexpr, expr, node)));
+				cexpr = get_variable_cexpression (decl.name);
 			}
 		}
 
