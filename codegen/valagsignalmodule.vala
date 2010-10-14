@@ -34,9 +34,9 @@ public class Vala.GSignalModule : GObjectModule {
 				return ("BOXED");
 			} else {
 				if (((ArrayType) t).element_type.data_type == string_type.data_type) {
-					return ("BOXED_INT");
+					return ("BOXED,INT");
 				} else {
-					return ("POINTER_INT");
+					return ("POINTER,INT");
 				}
 			}
 		} else if (t is VoidType) {
@@ -85,7 +85,7 @@ public class Vala.GSignalModule : GObjectModule {
 			ret = ret + "_VOID";
 		} else {
 			foreach (FormalParameter p in params) {
-				ret = "%s_%s".printf (ret, get_marshaller_type_name_for_parameter (p, dbus));
+				ret = "%s_%s".printf (ret, get_marshaller_type_name_for_parameter (p, dbus).replace (",", "_"));
 			}
 		}
 		
