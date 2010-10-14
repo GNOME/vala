@@ -1043,6 +1043,8 @@ public class Vala.DBusClientModule : DBusModule {
 			return;
 		}
 
+		decl_space.add_include ("dbus/dbus-glib.h");
+
 		// declare proxy_new function
 		var proxy_new = new CCodeFunction (lower_cname + "_new", iface.get_cname () + "*");
 		proxy_new.add_parameter (new CCodeFormalParameter ("connection", "DBusGConnection*"));
