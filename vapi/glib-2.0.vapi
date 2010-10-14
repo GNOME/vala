@@ -2826,6 +2826,8 @@ namespace GLib {
 		public void puts (string s);
 		[CCode (cname = "fgetc")]
 		public int getc ();
+		[CCode (cname = "ungetc", instance_pos = -1)]
+		public int ungetc (int c);
 		[CCode (cname = "fgets", instance_pos = -1)]
 		public unowned string gets (char[] s);
 		[CCode (cname = "feof")]
