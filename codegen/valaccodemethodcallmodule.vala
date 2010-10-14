@@ -339,131 +339,92 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 						carg_map = out_arg_map;
 					}
 
-					if (!param.no_array_length && param.variable_type is ArrayType) {
-						var array_type = (ArrayType) param.variable_type;
-						for (int dim = 1; dim <= array_type.rank; dim++) {
-							CCodeExpression? array_length_expr = null;
-							if (param.array_length_type != null) {
-								if (param.direction == ParameterDirection.OUT) {
-									var temp_array_length = get_temp_variable (new CType (param.array_length_type));
-									emit_temp_var (temp_array_length);
-									array_length_expr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_array_length.name));
-
-									var comma = new CCodeCommaExpression ();
-									LocalVariable? temp_result = null;
-									if (!(m.return_type is VoidType)) {
-										temp_result = get_temp_variable (m.return_type);
-										emit_temp_var (temp_result);
-										ccall_expr = new CCodeAssignment (get_variable_cexpression (temp_result.name), ccall_expr);
-									}
-
-									comma.append_expression (ccall_expr);
-									comma.append_expression (new CCodeAssignment (get_variable_cexpression (get_array_length_cname (((UnaryExpression) arg).inner.to_string (), dim)), new CCodeCastExpression (get_variable_cexpression (temp_array_length.name), int_type.get_cname ())));
-
-									if (temp_result != null) {
-										comma.append_expression (get_variable_cexpression (temp_result.name));
-									}
-									ccall_expr = comma;
-								} else {
+					var unary = arg as UnaryExpression;
+					if (unary == null || unary.operator != UnaryOperator.OUT) {
+						if (!param.no_array_length && param.variable_type is ArrayType) {
+							var array_type = (ArrayType) param.variable_type;
+							for (int dim = 1; dim <= array_type.rank; dim++) {
+								CCodeExpression? array_length_expr = null;
+								if (param.array_length_type != null) {
 									array_length_expr = new CCodeCastExpression (get_array_length_cexpression (arg, dim), param.array_length_type);
+								} else {
+									array_length_expr = get_array_length_cexpression (arg, dim);
 								}
-							} else {
-								array_length_expr = get_array_length_cexpression (arg, dim);
+								carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), array_length_expr);
 							}
-							carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), array_length_expr);
-						}
-					} else if (param.variable_type is DelegateType) {
-						var deleg_type = (DelegateType) param.variable_type;
-						var d = deleg_type.delegate_symbol;
-						if (d.has_target) {
+						} else if (param.variable_type is DelegateType) {
+							var deleg_type = (DelegateType) param.variable_type;
+							var d = deleg_type.delegate_symbol;
+							if (d.has_target) {
+								CCodeExpression delegate_target_destroy_notify;
+								var delegate_target = get_delegate_target_cexpression (arg, out delegate_target_destroy_notify);
+								if (param.ctype == "GClosure*") {
+									// one single GClosure parameter
+									var closure_new = new CCodeFunctionCall (new CCodeIdentifier ("g_cclosure_new"));
+									closure_new.add_argument (new CCodeCastExpression (cexpr, "GCallback"));
+									closure_new.add_argument (delegate_target);
+									closure_new.add_argument (delegate_target_destroy_notify);
+									cexpr = closure_new;
+								} else {
+									carg_map.set (get_param_pos (param.cdelegate_target_parameter_position), delegate_target);
+									if (deleg_type.value_owned) {
+										carg_map.set (get_param_pos (param.cdelegate_target_parameter_position + 0.01), delegate_target_destroy_notify);
+									}
+								}
+							}
+						} else if (param.variable_type is MethodType) {
+							// callbacks in dynamic method calls
 							CCodeExpression delegate_target_destroy_notify;
-							var delegate_target = get_delegate_target_cexpression (arg, out delegate_target_destroy_notify);
-							if (param.ctype == "GClosure*") {
-								// one single GClosure parameter
-								var closure_new = new CCodeFunctionCall (new CCodeIdentifier ("g_cclosure_new"));
-								closure_new.add_argument (new CCodeCastExpression (cexpr, "GCallback"));
-								closure_new.add_argument (delegate_target);
-								closure_new.add_argument (delegate_target_destroy_notify);
-								cexpr = closure_new;
-							} else {
-								carg_map.set (get_param_pos (param.cdelegate_target_parameter_position), delegate_target);
-								if (deleg_type.value_owned) {
-									carg_map.set (get_param_pos (param.cdelegate_target_parameter_position + 0.01), delegate_target_destroy_notify);
+							carg_map.set (get_param_pos (param.cdelegate_target_parameter_position), get_delegate_target_cexpression (arg, out delegate_target_destroy_notify));
+						} else if (param.variable_type is GenericType) {
+							if (m != null && m.simple_generics) {
+								var generic_type = (GenericType) param.variable_type;
+								int type_param_index = m.get_type_parameter_index (generic_type.type_parameter.name);
+								var type_arg = ma.get_type_arguments ().get (type_param_index);
+								if (requires_copy (type_arg)) {
+									carg_map.set (get_param_pos (param.cdestroy_notify_parameter_position), get_destroy_func_expression (type_arg));
+								} else {
+									carg_map.set (get_param_pos (param.cdestroy_notify_parameter_position), new CCodeConstant ("NULL"));
 								}
 							}
 						}
-					} else if (param.variable_type is MethodType) {
-						// callbacks in dynamic method calls
-						CCodeExpression delegate_target_destroy_notify;
-						carg_map.set (get_param_pos (param.cdelegate_target_parameter_position), get_delegate_target_cexpression (arg, out delegate_target_destroy_notify));
-					} else if (param.variable_type is GenericType) {
-						if (m != null && m.simple_generics) {
-							var generic_type = (GenericType) param.variable_type;
-							int type_param_index = m.get_type_parameter_index (generic_type.type_parameter.name);
-							var type_arg = ma.get_type_arguments ().get (type_param_index);
-							if (requires_copy (type_arg)) {
-								carg_map.set (get_param_pos (param.cdestroy_notify_parameter_position), get_destroy_func_expression (type_arg));
-							} else {
-								carg_map.set (get_param_pos (param.cdestroy_notify_parameter_position), new CCodeConstant ("NULL"));
-							}
-						}
-					}
 
-					cexpr = handle_struct_argument (param, arg, cexpr);
-
-					// unref old value for non-null non-weak ref/out arguments
-					// disabled for arrays for now as that requires special handling
-					// (ret_tmp = call (&tmp), var1 = (assign_tmp = dup (tmp), free (var1), assign_tmp), ret_tmp)
-					if (param.direction != ParameterDirection.IN && requires_destroy (arg.value_type)
-					    && (param.direction == ParameterDirection.OUT || !param.variable_type.value_owned)
-					    && !(param.variable_type is ArrayType) && !(param.variable_type is DelegateType)) {
-						var unary = (UnaryExpression) arg;
-
-						var ccomma = new CCodeCommaExpression ();
-
+						cexpr = handle_struct_argument (param, arg, cexpr);
+					} else {
 						var temp_var = get_temp_variable (param.variable_type, param.variable_type.value_owned);
 						emit_temp_var (temp_var);
-						cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_var.name));
+						set_cvalue (arg, get_variable_cexpression (temp_var.name));
 
-						if (param.direction == ParameterDirection.REF) {
-							var crefcomma = new CCodeCommaExpression ();
-							crefcomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), get_cvalue (unary.inner)));
-							crefcomma.append_expression (cexpr);
-							cexpr = crefcomma;
+						cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_cvalue (arg));
+
+						if (!param.no_array_length && param.variable_type is ArrayType) {
+							var array_type = (ArrayType) param.variable_type;
+							var array_length_type = int_type;
+							if (param.array_length_type != null) {
+								array_length_type = new CType (param.array_length_type);
+							}
+							for (int dim = 1; dim <= array_type.rank; dim++) {
+								var temp_array_length = get_temp_variable (array_length_type);
+								emit_temp_var (temp_array_length);
+								append_array_size (arg, new CCodeIdentifier (temp_array_length.name));
+								carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_array_sizes (arg).get (dim - 1)));
+							}
+						} else if (param.variable_type is DelegateType) {
+							var deleg_type = (DelegateType) param.variable_type;
+							var d = deleg_type.delegate_symbol;
+							if (d.has_target) {
+								temp_var = get_temp_variable (new PointerType (new VoidType ()));
+								emit_temp_var (temp_var);
+								set_delegate_target (arg, get_variable_cexpression (temp_var.name));
+								carg_map.set (get_param_pos (param.cdelegate_target_parameter_position), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_delegate_target (arg)));
+								if (deleg_type.value_owned) {
+									temp_var = get_temp_variable (new DelegateType ((Delegate) context.root.scope.lookup ("GLib").scope.lookup ("DestroyNotify")));
+									emit_temp_var (temp_var);
+									set_delegate_target_destroy_notify (arg, get_variable_cexpression (temp_var.name));
+									carg_map.set (get_param_pos (param.cdelegate_target_parameter_position + 0.01), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_delegate_target_destroy_notify (arg)));
+								}
+							}
 						}
-
-						// call function
-						LocalVariable ret_temp_var = null;
-						if (itype.get_return_type () is VoidType || itype.get_return_type ().is_real_struct_type () ||
-						    (expr.parent_node is ExpressionStatement && !requires_destroy (itype.get_return_type ()))) {
-							ccomma.append_expression (ccall_expr);
-						} else {
-							ret_temp_var = get_temp_variable (itype.get_return_type (), true, null, false);
-							emit_temp_var (ret_temp_var);
-							ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (ret_temp_var.name), ccall_expr));
-						}
-
-						var cassign_comma = new CCodeCommaExpression ();
-
-						var assign_temp_var = get_temp_variable (unary.inner.value_type, unary.inner.value_type.value_owned, null, false);
-						emit_temp_var (assign_temp_var);
-
-						cassign_comma.append_expression (new CCodeAssignment (get_variable_cexpression (assign_temp_var.name), transform_expression (get_variable_cexpression (temp_var.name), param.variable_type, unary.inner.value_type, arg)));
-
-						// unref old value
-						cassign_comma.append_expression (get_unref_expression (get_cvalue (unary.inner), arg.value_type, arg));
-
-						cassign_comma.append_expression (get_variable_cexpression (assign_temp_var.name));
-
-						// assign new value
-						ccomma.append_expression (new CCodeAssignment (get_cvalue (unary.inner), cassign_comma));
-
-						// return value
-						if (ret_temp_var != null) {
-							ccomma.append_expression (get_variable_cexpression (ret_temp_var.name));
-						}
-
-						ccall_expr = ccomma;
 					}
 
 					if (param.ctype != null) {
@@ -784,6 +745,33 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 			ccode.add_expression (new CCodeAssignment (temp_ref, ccall_expr));
 			set_cvalue (expr, temp_ref);
+		}
+
+		foreach (Expression arg in expr.get_argument_list ()) {
+			var unary = arg as UnaryExpression;
+			if (unary == null || unary.operator != UnaryOperator.OUT) {
+				continue;
+			}
+
+			if (requires_destroy (arg.value_type)) {
+				// unref old value
+				ccode.add_expression (get_unref_expression (get_cvalue (unary.inner), unary.inner.value_type, unary.inner));
+			}
+
+			// assign new value
+			ccode.add_expression (new CCodeAssignment (get_cvalue (unary.inner), transform_expression (get_cvalue (unary), unary.target_type, unary.inner.value_type, arg)));
+
+			var array_type = arg.value_type as ArrayType;
+			if (array_type != null) {
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					ccode.add_expression (new CCodeAssignment (get_array_sizes (unary.inner).get (dim - 1), get_array_sizes (unary).get (dim - 1)));
+				}
+			}
+
+			var delegate_type = arg.value_type as DelegateType;
+			if (delegate_type != null) {
+				ccode.add_expression (new CCodeAssignment (get_delegate_target (unary.inner), get_delegate_target (unary)));
+			}
 		}
 	}
 
