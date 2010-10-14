@@ -335,13 +335,6 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				var param = params_it.get ();
 				ellipsis = param.params_array || param.ellipsis;
 				if (!ellipsis) {
-					// if the vala argument expands to multiple C arguments,
-					// we have to make sure that the C arguments don't depend
-					// on each other as there is no guaranteed argument
-					// evaluation order
-					// http://bugzilla.gnome.org/show_bug.cgi?id=519597
-					bool multiple_cargs = false;
-
 					if (param.direction == ParameterDirection.OUT) {
 						carg_map = out_arg_map;
 					}
@@ -379,7 +372,6 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 							}
 							carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), array_length_expr);
 						}
-						multiple_cargs = true;
 					} else if (param.variable_type is DelegateType) {
 						var deleg_type = (DelegateType) param.variable_type;
 						var d = deleg_type.delegate_symbol;
@@ -398,14 +390,12 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 								if (deleg_type.value_owned) {
 									carg_map.set (get_param_pos (param.cdelegate_target_parameter_position + 0.01), delegate_target_destroy_notify);
 								}
-								multiple_cargs = true;
 							}
 						}
 					} else if (param.variable_type is MethodType) {
 						// callbacks in dynamic method calls
 						CCodeExpression delegate_target_destroy_notify;
 						carg_map.set (get_param_pos (param.cdelegate_target_parameter_position), get_delegate_target_cexpression (arg, out delegate_target_destroy_notify));
-						multiple_cargs = true;
 					} else if (param.variable_type is GenericType) {
 						if (m != null && m.simple_generics) {
 							var generic_type = (GenericType) param.variable_type;
@@ -420,25 +410,6 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					}
 
 					cexpr = handle_struct_argument (param, arg, cexpr);
-
-					if (multiple_cargs && arg is MethodCall) {
-						// if vala argument is invocation expression
-						// the auxiliary C argument(s) will depend on the main C argument
-
-						// (tmp = arg1, call (tmp, arg2, arg3,...))
-
-						var ccomma = new CCodeCommaExpression ();
-
-						var temp_decl = get_temp_variable (arg.value_type, true, null, false);
-						emit_temp_var (temp_decl);
-						ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_decl.name), cexpr));
-
-						cexpr = get_variable_cexpression (temp_decl.name);
-
-						ccomma.append_expression (ccall_expr);
-
-						ccall_expr = ccomma;
-					}
 
 					// unref old value for non-null non-weak ref/out arguments
 					// disabled for arrays for now as that requires special handling
