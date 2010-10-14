@@ -184,6 +184,15 @@ public class Vala.GIRWriter : CodeVisitor {
 		our_namespaces.add(ns);
 	}
 
+	private void write_symbol_attributes (Symbol symbol) {
+		if (symbol.deprecated) {
+			buffer.append_printf (" deprecated=\"%s\"", (symbol.replacement == null) ? "" : "Use %s".printf (symbol.replacement));
+			if (symbol.deprecated_since != null) {
+				buffer.append_printf (" deprecated-version=\"%s\"", symbol.deprecated_since);
+			}
+		}
+	}
+
 	public override void visit_class (Class cl) {
 		if (cl.external_package) {
 			return;
@@ -204,6 +213,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			if (cl.is_abstract) {
 				buffer.append_printf (" abstract=\"1\"");
 			}
+			write_symbol_attributes (cl);
 			buffer.append_printf (">\n");
 			indent++;
 
@@ -292,6 +302,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		} else {
 			write_indent ();
 			buffer.append_printf ("<record name=\"%s\"", cl.name);
+			write_symbol_attributes (cl);
 			buffer.append_printf (">\n");
 			indent++;
 
@@ -316,6 +327,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		write_indent ();
 		buffer.append_printf ("<record name=\"%s\"", st.name);
+		write_symbol_attributes (st);
 		buffer.append_printf (">\n");
 		indent++;
 
@@ -343,6 +355,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		buffer.append_printf ("<interface name=\"%s\"", iface.name);
 		write_gtype_attributes (iface);
 		buffer.append_printf (" glib:type-struct=\"%s\"", gtype_struct_name);
+		write_symbol_attributes (iface);
 		buffer.append_printf (">\n");
 		indent++;
 
@@ -391,6 +404,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		write_indent ();
 		buffer.append_printf ("<enumeration name=\"%s\"", en.name);
 		write_gtype_attributes (en);
+		write_symbol_attributes (en);
 		buffer.append_printf (">\n");
 		indent++;
 
@@ -415,6 +429,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		} else {
 			buffer.append_printf (" value=\"%d\"", enum_value++);
 		}
+		write_symbol_attributes (ev);
 		buffer.append_printf ("/>\n");
 	}
 
@@ -431,6 +446,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		buffer.append_printf ("<errordomain name=\"%s\"", edomain.name);
 		buffer.append_printf (" get-quark=\"%squark\"", edomain.get_lower_case_cprefix ());
 		buffer.append_printf (" codes=\"%s\"", edomain.name);
+		write_symbol_attributes (edomain);
 		buffer.append_printf (">\n");
 
 		write_annotations (edomain);
@@ -460,6 +476,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		} else {
 			buffer.append_printf (" value=\"%d\"", enum_value++);
 		}
+		write_symbol_attributes (ecode);
 		buffer.append_printf ("/>\n");
 	}
 
@@ -479,6 +496,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		write_indent ();
 		buffer.append_printf ("<constant name=\"%s\" c:identifier=\"%s\"", c.name, c.get_cname ());
 		buffer.append_printf (" value=\"%s\"", value);
+		write_symbol_attributes (c);
 		buffer.append_printf (">\n");
 		indent++;
 
@@ -503,6 +521,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		if (f.variable_type.nullable) {
 			buffer.append_printf (" allow-none=\"1\"");
 		}
+		write_symbol_attributes (f);
 		buffer.append_printf (">\n");
 		indent++;
 
@@ -586,6 +605,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		if (cb.tree_can_fail) {
 			buffer.append_printf (" throws=\"1\"");
 		}
+		write_symbol_attributes (cb);
 		buffer.append_printf (">\n");
 		indent++;
 
@@ -649,6 +669,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		if (can_fail) {
 			buffer.append_printf (" throws=\"1\"");
 		}
+		write_symbol_attributes (m);
 		buffer.append_printf (">\n");
 		indent++;
 
@@ -721,6 +742,7 @@ public class Vala.GIRWriter : CodeVisitor {
 				}
 			}
 		}
+		write_symbol_attributes (prop);
 		buffer.append_printf (">\n");
 		indent++;
 
@@ -740,6 +762,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		
 		write_indent ();
 		buffer.append_printf ("<glib:signal name=\"%s\"", sig.get_cname ());
+		write_symbol_attributes (sig);
 		buffer.append_printf (">\n");
 		indent++;
 
