@@ -3953,11 +3953,11 @@ namespace GLib {
 		public Array (bool zero_terminated, bool clear, ulong element_size);
 		[CCode (cname = "g_array_sized_new")]
 		public Array.sized (bool zero_terminated, bool clear, ulong element_size, uint reserved_size);
-		public void append_val (G value);
+		public void append_val (owned G value);
 		public void append_vals (void* data, uint len);
-		public void prepend_val (G value);
+		public void prepend_val (owned G value);
 		public void prepend_vals (void* data, uint len);
-		public void insert_val (uint index, G value);
+		public void insert_val (uint index, owned G value);
 		public void insert_vals (uint index, void* data, uint len);
 		public void remove_index (uint index);
 		public void remove_index_fast (uint index);
@@ -3965,7 +3965,7 @@ namespace GLib {
 		public void sort (CompareFunc compare_func);
 		public void sort_with_data (CompareDataFunc compare_func);
 		[CCode (generic_type_pos = 0.1)]
-		public G index (uint index);
+		public unowned G index (uint index);
 		public void set_size (uint length);
 	}
 	
