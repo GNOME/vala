@@ -2652,6 +2652,29 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 				elements_require_free = requires_destroy (type_arg);
 				if (elements_require_free) {
 					element_destroy_func_expression = get_destroy_func_expression (type_arg);
+
+					if (element_destroy_func_expression is CCodeIdentifier) {
+						var freeid = (CCodeIdentifier) element_destroy_func_expression;
+						string free0_func = "_%s0_".printf (freeid.name);
+
+						if (add_wrapper (free0_func)) {
+							var function = new CCodeFunction (free0_func, "void");
+							function.modifiers = CCodeModifiers.STATIC;
+
+							function.add_parameter (new CCodeFormalParameter ("var", "gpointer"));
+
+							push_function (function);
+
+							ccode.add_expression (get_unref_expression (new CCodeIdentifier ("var"), type_arg, null, true));
+
+							pop_function ();
+
+							cfile.add_function_declaration (function);
+							cfile.add_function (function);
+						}
+
+						element_destroy_func_expression = new CCodeIdentifier (free0_func);
+					}
 				}
 			}
 			
