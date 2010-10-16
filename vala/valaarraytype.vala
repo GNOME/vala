@@ -268,4 +268,11 @@ public class Vala.ArrayType : ReferenceType {
 		return result;
 	}
 
+	public override bool is_disposable () {
+		if (fixed_length) {
+			return element_type.is_disposable ();
+		} else {
+			return base.is_disposable ();
+		}
+	}
 }
