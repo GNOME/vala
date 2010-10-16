@@ -790,9 +790,8 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var element = binary.right;
 
 		var array_var = assignment.left.symbol_reference;
-		var array_local = array_var as LocalVariable;
 		if (array_type.rank == 1 && array_var != null && array_var.is_internal_symbol ()
-		    && ((array_var is LocalVariable && !array_local.captured) || array_var is Field)) {
+		    && (array_var is LocalVariable || array_var is Field)) {
 			// valid array add
 		} else {
 			Report.error (assignment.source_reference, "Array concatenation not supported for public array variables and parameters");
