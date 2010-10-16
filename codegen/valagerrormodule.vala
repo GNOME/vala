@@ -371,7 +371,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			finally_block = (sym.parent_node.parent_node as TryStatement).finally_body;
 		}
 
-		if (finally_block != null) {
+		if (finally_block != null && finally_block != sym) {
 			finally_block.emit (this);
 		}
 
