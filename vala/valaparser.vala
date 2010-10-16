@@ -1628,7 +1628,23 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.TRY:       return parse_try_statement ();
 		case TokenType.LOCK:      return parse_lock_statement ();
 		case TokenType.DELETE:    return parse_delete_statement ();
-		default:                  return parse_expression_statement ();
+		case TokenType.VAR:
+		case TokenType.CONST:
+			throw new ParseError.SYNTAX (get_error ("embedded statement cannot be declaration "));
+		case TokenType.OP_INC:
+		case TokenType.OP_DEC:
+		case TokenType.BASE:
+		case TokenType.THIS:
+		case TokenType.OPEN_PARENS:
+		case TokenType.STAR:
+		case TokenType.NEW:
+			return parse_expression_statement ();
+		default:
+			if (is_expression ()) {
+				return parse_expression_statement ();
+			} else {
+				throw new ParseError.SYNTAX (get_error ("embedded statement cannot be declaration"));
+			}
 		}
 	}
 
