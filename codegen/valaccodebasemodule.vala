@@ -3949,7 +3949,9 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		var array_type = type as ArrayType;
 		if (array_type != null) {
 			check_type (array_type.element_type);
-			if (array_type.element_type is DelegateType) {
+			if (array_type.element_type is ArrayType) {
+				Report.error (type.source_reference, "Stacked arrays are not supported");
+			} else if (array_type.element_type is DelegateType) {
 				var delegate_type = (DelegateType) array_type.element_type;
 				if (delegate_type.delegate_symbol.has_target) {
 					Report.error (type.source_reference, "Delegates with target are not supported as array element type");
