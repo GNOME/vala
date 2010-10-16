@@ -1863,6 +1863,8 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 					ma.value_type = param.variable_type.copy ();
 					visit_member_access (ma);
 					ccode.add_expression (get_unref_expression (get_variable_cexpression (param.name), param.variable_type, ma));
+				} else if (param.direction == ParameterDirection.OUT && !m.coroutine) {
+					return_out_parameter (param);
 				}
 			}
 		}
@@ -3195,6 +3197,39 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		return false;
 	}
 
+	void return_out_parameter (FormalParameter param) {
+		var delegate_type = param.variable_type as DelegateType;
+
+		ccode.open_if (get_variable_cexpression (param.name));
+		ccode.add_expression (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (param.name)), get_variable_cexpression ("_" + param.name)));
+
+		if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
+			ccode.add_expression (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (get_delegate_target_cname (param.name))), new CCodeIdentifier (get_delegate_target_cname (get_variable_cname ("_" + param.name)))));
+			if (delegate_type.value_owned) {
+				ccode.add_expression (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (get_delegate_target_destroy_notify_cname (param.name))), new CCodeIdentifier (get_delegate_target_destroy_notify_cname (get_variable_cname ("_" + param.name)))));
+			}
+		}
+
+		if (param.variable_type.is_disposable ()){
+			ccode.add_else ();
+			var ma = new MemberAccess (null, param.name);
+			ma.symbol_reference = param;
+			ma.value_type = param.variable_type.copy ();
+			visit_member_access (ma);
+			ccode.add_expression (get_unref_expression (get_variable_cexpression ("_" + param.name), param.variable_type, ma));
+		}
+		ccode.close ();
+
+		var array_type = param.variable_type as ArrayType;
+		if (array_type != null && !array_type.fixed_length && !param.no_array_length) {
+			for (int dim = 1; dim <= array_type.rank; dim++) {
+				ccode.open_if (get_variable_cexpression (get_parameter_array_length_cname (param, dim)));
+				ccode.add_expression (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (get_parameter_array_length_cname (param, dim))), new CCodeIdentifier (get_array_length_cname (get_variable_cname ("_" + param.name), dim))));
+				ccode.close ();
+			}
+		}
+	}
+
 	public override void visit_return_statement (ReturnStatement stmt) {
 		Symbol return_expression_symbol = null;
 
@@ -3269,6 +3304,16 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			ccode.add_expression (new CCodeAssignment (result_lhs, get_cvalue (stmt.return_expression)));
 		}
 
+		// free local variables
+		append_local_free (current_symbol);
+
+		if (current_method != null) {
+			// check postconditions
+			foreach (Expression postcondition in current_method.get_postconditions ()) {
+				create_postcondition_statement (postcondition);
+			}
+		}
+
 		if (current_method != null && !current_method.coroutine) {
 			// assign values to output parameters if they are not NULL
 			// otherwise, free the value if necessary
@@ -3277,46 +3322,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 					continue;
 				}
 
-				var delegate_type = param.variable_type as DelegateType;
-
-				ccode.open_if (get_variable_cexpression (param.name));
-				ccode.add_expression (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (param.name)), get_variable_cexpression ("_" + param.name)));
-
-				if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
-					ccode.add_expression (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (get_delegate_target_cname (param.name))), new CCodeIdentifier (get_delegate_target_cname (get_variable_cname ("_" + param.name)))));
-					if (delegate_type.value_owned) {
-						ccode.add_expression (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (get_delegate_target_destroy_notify_cname (param.name))), new CCodeIdentifier (get_delegate_target_destroy_notify_cname (get_variable_cname ("_" + param.name)))));
-					}
-				}
-
-				if (param.variable_type.is_disposable ()){
-					ccode.add_else ();
-					var ma = new MemberAccess (null, param.name);
-					ma.symbol_reference = param;
-					ma.value_type = param.variable_type.copy ();
-					visit_member_access (ma);
-					ccode.add_expression (get_unref_expression (get_variable_cexpression ("_" + param.name), param.variable_type, ma));
-				}
-				ccode.close ();
-
-				var array_type = param.variable_type as ArrayType;
-				if (array_type != null && !array_type.fixed_length && !param.no_array_length) {
-					for (int dim = 1; dim <= array_type.rank; dim++) {
-						ccode.open_if (get_variable_cexpression (get_parameter_array_length_cname (param, dim)));
-						ccode.add_expression (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (get_parameter_array_length_cname (param, dim))), new CCodeIdentifier (get_array_length_cname (get_variable_cname ("_" + param.name), dim))));
-						ccode.close ();
-					}
-				}
-			}
-		}
-
-		// free local variables
-		append_local_free (current_symbol);
-
-		if (current_method != null) {
-			// check postconditions
-			foreach (Expression postcondition in current_method.get_postconditions ()) {
-				create_postcondition_statement (postcondition);
+				return_out_parameter (param);
 			}
 		}
 
