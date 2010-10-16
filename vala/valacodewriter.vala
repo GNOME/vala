@@ -1228,6 +1228,8 @@ public class Vala.CodeWriter : CodeVisitor {
 				write_string ("[CCode (%s)]".printf (ccode_params.str));
 			}
 
+			write_property_accessor_accessibility (prop.get_accessor);
+
 			if (context.profile != Profile.DOVA && prop.get_accessor.value_type.is_disposable ()) {
 				write_string (" owned");
 			}
@@ -1247,6 +1249,8 @@ public class Vala.CodeWriter : CodeVisitor {
 				write_indent ();
 				write_string ("[CCode (%s)]".printf (ccode_params.str));
 			}
+
+			write_property_accessor_accessibility (prop.set_accessor);
 
 			if (context.profile != Profile.DOVA && prop.set_accessor.value_type.value_owned) {
 				write_string (" owned");
@@ -2017,6 +2021,16 @@ public class Vala.CodeWriter : CodeVisitor {
 
 		if (type != CodeWriterType.EXTERNAL && sym.external && !sym.external_package) {
 			write_string ("extern ");
+		}
+	}
+
+	void write_property_accessor_accessibility (Symbol sym) {
+		if (sym.access == SymbolAccessibility.PROTECTED) {
+			write_string (" protected");
+		} else if (sym.access == SymbolAccessibility.INTERNAL) {
+			write_string (" internal");
+		} else if (sym.access == SymbolAccessibility.PRIVATE) {
+			write_string (" private");
 		}
 	}
 }
