@@ -850,7 +850,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			write_indent ();
 			buffer.append_printf ("<array");
 			if (array_type.fixed_length) {
-				buffer.append_printf (" fixed-length\"%i\"", array_type.length);
+				buffer.append_printf (" fixed-size=\"%i\"", array_type.length);
 			} else if (index != -1) {
 				buffer.append_printf (" length=\"%i\"", index + 1);
 			}
