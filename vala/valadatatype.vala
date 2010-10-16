@@ -235,7 +235,7 @@ public abstract class Vala.DataType : CodeNode {
 	 *              otherwise
 	 */
 	public virtual bool equals (DataType type2) {
-		if (type2.value_owned != value_owned) {
+		if (type2.is_disposable () != is_disposable ()) {
 			return false;
 		}
 		if (type2.nullable != nullable) {
@@ -267,7 +267,7 @@ public abstract class Vala.DataType : CodeNode {
 	 * @return      true if this type reference is stricter or equal
 	 */
 	public virtual bool stricter (DataType type2) {
-		if (type2.value_owned != value_owned) {
+		if (type2.is_disposable () != is_disposable ()) {
 			return false;
 		}
 		
