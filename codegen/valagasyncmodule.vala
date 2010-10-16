@@ -33,7 +33,11 @@ public class Vala.GAsyncModule : GSignalModule {
 
 		if (m.binding == MemberBinding.INSTANCE) {
 			var type_sym = (TypeSymbol) m.parent_symbol;
-			data.add_field (type_sym.get_cname () + "*", "self");
+			if (type_sym is ObjectTypeSymbol) {
+				data.add_field (type_sym.get_cname () + "*", "self");
+			} else {
+				data.add_field (type_sym.get_cname (), "self");
+			}
 		}
 
 		foreach (FormalParameter param in m.get_parameters ()) {
@@ -120,14 +124,16 @@ public class Vala.GAsyncModule : GSignalModule {
 			freeblock.add_statement (new CCodeExpressionStatement (unref_expr));
 		}
 
-		var cl = m.parent_symbol as Class;
-		if (m.binding == MemberBinding.INSTANCE && cl != null) {
-			var unref_func = cl.get_unref_function ();
+		if (m.binding == MemberBinding.INSTANCE) {
+			var this_type = m.this_parameter.variable_type.copy ();
+			this_type.value_owned = true;
 
-			if (unref_func != null) {
-				var unref_call = new CCodeFunctionCall (new CCodeIdentifier (unref_func));
-				unref_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "self"));
-				freeblock.add_statement (new CCodeExpressionStatement (unref_call));
+			if (requires_destroy (this_type)) {
+				var ma = new MemberAccess.simple ("this");
+				ma.symbol_reference = m.this_parameter;
+				ma.value_type = m.this_parameter.variable_type.copy ();
+				visit_member_access (ma);
+				freeblock.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "self"), m.this_parameter.variable_type, ma)));
 			}
 		}
 
@@ -225,16 +231,23 @@ public class Vala.GAsyncModule : GSignalModule {
 		ccode.add_expression (set_op_res_call);
 
 		if (m.binding == MemberBinding.INSTANCE) {
-			CCodeExpression self_expr = new CCodeIdentifier ("self");
-			string? ref_function = null;
+			var this_type = m.this_parameter.variable_type.copy ();
+			this_type.value_owned = true;
 
-			if (cl != null && (ref_function = cl.get_ref_function ()) != null) {
-				var refcall = new CCodeFunctionCall (new CCodeIdentifier (ref_function));
-				refcall.add_argument (self_expr);
-				self_expr = refcall;
+			// create copy if necessary as variables in async methods may need to be kept alive
+			CCodeExpression cself = new CCodeIdentifier ("self");
+			if (this_type.is_real_non_null_struct_type ()) {
+				cself = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, cself);
+			}
+			if (requires_copy (this_type))  {
+				var ma = new MemberAccess.simple ("this");
+				ma.symbol_reference = m.this_parameter;
+				ma.value_type = m.this_parameter.variable_type.copy ();
+				visit_member_access (ma);
+				cself = get_ref_cexpression (m.this_parameter.variable_type, cself, ma, m.this_parameter);
 			}
 
-			ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, "self"), self_expr));
+			ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, "self"), cself));
 		}
 
 		foreach (FormalParameter param in m.get_parameters ()) {
