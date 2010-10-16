@@ -1377,8 +1377,7 @@ public class Vala.DovaBaseModule : CodeGenerator {
 			// increment/decrement property
 			var op = expr.increment ? CCodeBinaryOperator.PLUS : CCodeBinaryOperator.MINUS;
 			var cexpr = new CCodeBinaryExpression (op, get_variable_cexpression (temp_decl.name), new CCodeConstant ("1"));
-			var ccall = get_property_set_call (prop, ma, cexpr);
-			ccode.add_expression (ccall);
+			store_property (prop, ma, cexpr);
 
 			// return previous value
 			set_cvalue (expr, new CCodeIdentifier (temp_decl.name));
@@ -1698,7 +1697,7 @@ public class Vala.DovaBaseModule : CodeGenerator {
 					inst_ma.value_type = expr.type_reference;
 					set_cvalue (inst_ma, instance);
 					var ma = new MemberAccess (inst_ma, init.name);
-					ccode.add_expression (get_property_set_call ((Property) init.symbol_reference, ma, get_cvalue (init.initializer)));
+					store_property ((Property) init.symbol_reference, ma, get_cvalue (init.initializer));
 				}
 			}
 
@@ -2144,7 +2143,7 @@ public class Vala.DovaBaseModule : CodeGenerator {
 		}
 	}
 
-	public CCodeFunctionCall get_property_set_call (Property prop, MemberAccess ma, CCodeExpression cexpr, Expression? rhs = null) {
+	public void store_property (Property prop, MemberAccess ma, CCodeExpression cexpr, Expression? rhs = null) {
 		string set_func;
 
 		var base_property = prop;
@@ -2166,7 +2165,7 @@ public class Vala.DovaBaseModule : CodeGenerator {
 
 		ccall.add_argument (cexpr);
 
-		return ccall;
+		ccode.add_expression (ccall);
 	}
 
 	public bool add_generated_external_symbol (Symbol external_symbol) {

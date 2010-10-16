@@ -3555,8 +3555,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			// increment/decrement property
 			var op = expr.increment ? CCodeBinaryOperator.PLUS : CCodeBinaryOperator.MINUS;
 			var cexpr = new CCodeBinaryExpression (op, get_variable_cexpression (temp_decl.name), new CCodeConstant ("1"));
-			var ccall = get_property_set_call (prop, ma, cexpr);
-			ccode.add_expression (ccall);
+			store_property (prop, ma, cexpr);
 			
 			// return previous value
 			set_cvalue (expr, get_variable_cexpression (temp_decl.name));
@@ -4254,7 +4253,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 					inst_ma.value_type = expr.type_reference;
 					set_cvalue (inst_ma, instance);
 					var ma = new MemberAccess (inst_ma, init.name);
-					ccode.add_expression (get_property_set_call ((Property) init.symbol_reference, ma, get_cvalue (init.initializer)));
+					store_property ((Property) init.symbol_reference, ma, get_cvalue (init.initializer));
 				}
 			}
 
@@ -5162,7 +5161,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
-	public CCodeExpression get_property_set_call (Property prop, MemberAccess ma, CCodeExpression cexpr, Expression? rhs = null) {
+	public void store_property (Property prop, MemberAccess ma, CCodeExpression cexpr, Expression? rhs = null) {
 		if (ma.inner is BaseAccess) {
 			if (prop.base_property != null) {
 				var base_class = (Class) prop.base_property.parent_symbol;
@@ -5172,7 +5171,8 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 				var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "set_%s".printf (prop.name)));
 				ccall.add_argument ((CCodeExpression) get_ccodenode (ma.inner));
 				ccall.add_argument (cexpr);
-				return ccall;
+
+				ccode.add_expression (ccall);
 			} else if (prop.base_interface_property != null) {
 				var base_iface = (Interface) prop.base_interface_property.parent_symbol;
 				string parent_iface_var = "%s_%s_parent_iface".printf (current_class.get_lower_case_cname (null), base_iface.get_lower_case_cname (null));
@@ -5180,8 +5180,10 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 				var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (new CCodeIdentifier (parent_iface_var), "set_%s".printf (prop.name)));
 				ccall.add_argument ((CCodeExpression) get_ccodenode (ma.inner));
 				ccall.add_argument (cexpr);
-				return ccall;
+
+				ccode.add_expression (ccall);
 			}
+			return;
 		}
 
 		var set_func = "g_object_set";
@@ -5219,14 +5221,12 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 				} else {
 					// if instance is e.g. a function call, we can't take the address of the expression
 					// (tmp = expr, &tmp)
-					var ccomma = new CCodeCommaExpression ();
 
 					var temp_var = get_temp_variable (ma.inner.target_type, true, null, false);
 					emit_temp_var (temp_var);
-					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), instance));
-					ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_var.name)));
+					ccode.add_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), instance));
 
-					instance = ccomma;
+					instance = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_var.name));
 				}
 			}
 
@@ -5240,18 +5240,13 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 
 		var array_type = prop.property_type as ArrayType;
 
-		CCodeExpression rv;
 		if (array_type != null && !prop.no_array_length) {
 			var temp_var = get_temp_variable (prop.property_type, true, null, false);
 			emit_temp_var (temp_var);
-			var ccomma = new CCodeCommaExpression ();
-			ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), cexpr));
+			ccode.add_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), cexpr));
 			ccall.add_argument (get_variable_cexpression (temp_var.name));
-			ccomma.append_expression (ccall);
-			rv = ccomma;
 		} else {
 			ccall.add_argument (cexpr);
-			rv = ccall;
 		}
 
 		if (array_type != null && !prop.no_array_length && rhs != null) {
@@ -5270,7 +5265,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			ccall.add_argument (new CCodeConstant ("NULL"));
 		}
 
-		return rv;
+		ccode.add_expression (ccall);
 	}
 
 	/* indicates whether a given Expression eligable for an ADDRESS_OF operator

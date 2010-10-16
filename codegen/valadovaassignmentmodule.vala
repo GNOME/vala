@@ -71,7 +71,7 @@ public class Vala.DovaAssignmentModule : DovaMemberAccessModule {
 			cexpr = new CCodeBinaryExpression (cop, (CCodeExpression) get_ccodenode (assignment.left), cexpr);
 		}
 
-		ccode.add_expression (get_property_set_call (prop, ma, cexpr, assignment.right));
+		store_property (prop, ma, cexpr, assignment.right);
 
 		// assignments are expressions, so return the current property value, except if we're sure that it can't be used
 		if (assignment.parent_node is ExpressionStatement) {
