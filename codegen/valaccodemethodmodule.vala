@@ -444,22 +444,39 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 							create_method_type_check_statement (m, creturn_type, t, !param.variable_type.nullable, get_variable_cname (param.name));
 						}
 					} else if (!m.coroutine) {
-						var t = param.variable_type.data_type;
-						if ((t != null && t.is_reference_type ()) || param.variable_type is ArrayType) {
-							// ensure that the passed reference for output parameter is cleared
-							var a = new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (param.name)), new CCodeConstant ("NULL"));
-							var cblock = new CCodeBlock ();
-							cblock.add_statement (new CCodeExpressionStatement (a));
+						// declare local variable for out parameter to allow assignment even when caller passes NULL
+						var vardecl = new CCodeVariableDeclarator.zero (get_variable_cname ("_" + param.name), default_value_for_type (param.variable_type, true));
+						ccode.add_declaration (param.variable_type.get_cname (), vardecl);
 
-							var condition = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_variable_cexpression (param.name), new CCodeConstant ("NULL"));
-							var if_statement = new CCodeIfStatement (condition, cblock);
-							ccode.add_statement (if_statement);
+						if (param.variable_type is ArrayType) {
+							// create variables to store array dimensions
+							var array_type = (ArrayType) param.variable_type;
+
+							if (!array_type.fixed_length) {
+								for (int dim = 1; dim <= array_type.rank; dim++) {
+									vardecl = new CCodeVariableDeclarator.zero (get_array_length_cname (get_variable_cname ("_" + param.name), dim), new CCodeConstant ("0"));
+									ccode.add_declaration ("int", vardecl);
+								}
+							}
+						} else if (param.variable_type is DelegateType) {
+							var deleg_type = (DelegateType) param.variable_type;
+							var d = deleg_type.delegate_symbol;
+							if (d.has_target) {
+								// create variable to store delegate target
+								vardecl = new CCodeVariableDeclarator.zero (get_delegate_target_cname (get_variable_cname ("_" + param.name)), new CCodeConstant ("NULL"));
+								ccode.add_declaration ("void *", vardecl);
+
+								if (deleg_type.value_owned) {
+									vardecl = new CCodeVariableDeclarator.zero (get_delegate_target_destroy_notify_cname (get_variable_cname ("_" + param.name)), new CCodeConstant ("NULL"));
+									ccode.add_declaration ("GDestroyNotify", vardecl);
+								}
+							}
 						}
 					}
 				}
 
 				if (!(m.return_type is VoidType) && !m.return_type.is_real_non_null_struct_type () && !m.coroutine) {
-					var vardecl =  new CCodeVariableDeclarator ("result", default_value_for_type (m.return_type, true));
+					var vardecl = new CCodeVariableDeclarator ("result", default_value_for_type (m.return_type, true));
 					vardecl.init0 = true;
 					ccode.add_declaration (m.return_type.get_cname (), vardecl);
 				}
