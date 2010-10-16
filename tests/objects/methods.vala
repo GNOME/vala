@@ -70,13 +70,13 @@ class Maman.SubBar : Bar {
 		assert (weak_str == "hello");
 
 		test_out_weak (out str2);
-		assert (str == "hello");
+		assert (str2 == "hello");
 
 		test_ref (ref str);
 		assert (str == "world");
 
 		test_ref_weak (ref weak_str);
-		assert (str == "world");
+		assert (weak_str == "world");
 
 		ClassTest.run_test ();
 
