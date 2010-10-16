@@ -815,6 +815,10 @@ public class Vala.GObjectModule : GTypeModule {
 						Report.error (arg.source_reference, "Property `%s' not found in `%s'".printf (named_argument.name, current_class.get_full_name ()));
 						break;
 					}
+					if (!is_gobject_property (prop)) {
+						Report.error (arg.source_reference, "Property `%s' not supported in Object (property: value) constructor chain up".printf (named_argument.name));
+						break;
+					}
 					if (!arg.value_type.compatible (prop.property_type)) {
 						Report.error (arg.source_reference, "Cannot convert from `%s' to `%s'".printf (arg.value_type.to_string (), prop.property_type.to_string ()));
 						break;
