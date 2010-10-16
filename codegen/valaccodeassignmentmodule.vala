@@ -47,10 +47,8 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 
 		CCodeExpression cexpr = get_cvalue (assignment.right);
 
-		if (!prop.no_accessor_method) {
-			if (prop.property_type.is_real_non_null_struct_type ()) {
-				cexpr = get_address_of_expression (assignment.right, cexpr);
-			}
+		if (prop.property_type.is_real_non_null_struct_type ()) {
+			cexpr = get_address_of_expression (assignment.right, cexpr);
 		}
 
 		if (assignment.operator != AssignmentOperator.SIMPLE) {
