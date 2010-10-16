@@ -132,7 +132,7 @@ namespace GLib {
 	public interface DesktopAppInfoLookup : GLib.Object {
 		public abstract unowned GLib.AppInfo get_default_for_uri_scheme (string uri_scheme);
 	}
-	[CCode (cheader_filename = "gio/gunixmounts.h")]
+	[CCode (cheader_filename = "gio/gfiledescriptorbased.h")]
 	public interface FileDescriptorBased : GLib.Object {
 		public abstract int get_fd ();
 	}
