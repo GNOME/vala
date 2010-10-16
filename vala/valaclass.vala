@@ -95,7 +95,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	/**
 	 * Specifies whether this class has private fields.
 	 */
-	public bool has_private_fields { get; private set; }
+	public bool has_private_fields { get; set; }
 	
 	/**
 	 * Specifies whether this class has class fields.

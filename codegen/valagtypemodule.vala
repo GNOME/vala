@@ -382,7 +382,6 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 
 		bool is_gtypeinstance = !cl.is_compact;
-		bool has_instance_locks = false;
 		bool has_class_locks = false;
 
 		var instance_priv_struct = new CCodeStruct ("_%sPrivate".printf (cl.get_cname ()));
@@ -442,7 +441,7 @@ public class Vala.GTypeModule : GErrorModule {
 				}
 
 				if (f.get_lock_used ()) {
-					has_instance_locks = true;
+					cl.has_private_fields = true;
 					// add field for mutex
 					instance_priv_struct.add_field (mutex_type.get_cname (), get_symbol_lock_name (f.name));
 				}
@@ -462,7 +461,7 @@ public class Vala.GTypeModule : GErrorModule {
 		foreach (Property prop in cl.get_properties ()) {
 			if (prop.binding == MemberBinding.INSTANCE) {
 				if (prop.get_lock_used ()) {
-					has_instance_locks = true;
+					cl.has_private_fields = true;
 					// add field for mutex
 					instance_priv_struct.add_field (mutex_type.get_cname (), get_symbol_lock_name (prop.name));
 				}
@@ -487,7 +486,7 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 
 			/* only add the *Private struct if it is not empty, i.e. we actually have private data */
-			if (cl.has_private_fields || cl.get_type_parameters ().size > 0 || has_instance_locks) {
+			if (cl.has_private_fields || cl.get_type_parameters ().size > 0) {
 				decl_space.add_type_definition (instance_priv_struct);
 				var macro = "(G_TYPE_INSTANCE_GET_PRIVATE ((o), %s, %sPrivate))".printf (cl.get_type_id (), cl.get_cname ());
 				decl_space.add_type_member_declaration (new CCodeMacroReplacement ("%s_GET_PRIVATE(o)".printf (cl.get_upper_case_cname (null)), macro));
