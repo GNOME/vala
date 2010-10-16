@@ -298,10 +298,8 @@ public class Vala.Class : ObjectTypeSymbol {
 			get_type.value_owned = true;
 
 			prop.get_accessor = new PropertyAccessor (true, false, false, get_type, null, f.source_reference);
-			prop.get_accessor.access = SymbolAccessibility.PUBLIC;
 
 			prop.set_accessor = new PropertyAccessor (false, true, false, prop.property_type.copy (), null, f.source_reference);
-			prop.set_accessor.access = SymbolAccessibility.PUBLIC;
 
 			f.name = "_%s".printf (f.name);
 			f.access = SymbolAccessibility.PRIVATE;

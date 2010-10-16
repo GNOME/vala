@@ -138,6 +138,7 @@ public class Vala.PropertyAccessor : Symbol {
 		this.construction = construction;
 		this.value_type = value_type;
 		this.body = body;
+		this.access = SymbolAccessibility.PUBLIC;
 	}
 
 	public override void accept (CodeVisitor visitor) {
