@@ -623,6 +623,9 @@ public class Vala.GSignalModule : GObjectModule {
 			}
 		} else {
 			// disconnect
+			if (handler is LambdaExpression) {
+				Report.error (handler.source_reference, "Cannot disconnect lambda expression from signal. Use Object.disconnect.");
+			}
 			if (sig is DynamicSignal) {
 				connect_func = get_dynamic_signal_disconnect_wrapper_name ((DynamicSignal) sig);
 			} else {
