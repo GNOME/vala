@@ -717,6 +717,13 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			ccomma.append_expression (new CCodeConditionalExpression (ccheck, czero, new CCodeConstant ("NULL")));
 			ccomma.append_expression (new CCodeAssignment (get_array_length_cexpression (ma.inner, 1), temp_ref));
 
+			var array_var = ma.inner.symbol_reference;
+			var array_local = array_var as LocalVariable;
+			if (array_var != null && array_var.is_internal_symbol ()
+			    && ((array_var is LocalVariable && !array_local.captured) || array_var is Field)) {
+				ccomma.append_expression (new CCodeAssignment (get_array_size_cexpression (ma.inner), temp_ref));
+			}
+
 			set_cvalue (expr, ccomma);
 
 			return;
