@@ -1105,6 +1105,30 @@ public class Vala.GirParser : CodeVisitor {
 		return type;
 	}
 
+	string? element_get_name (string attribute_name = "name", ArgumentType arg_type = ArgumentType.NAME) {
+		var name = reader.get_attribute (attribute_name);
+		var pattern = metadata.get_string (arg_type);
+		if (pattern != null) {
+			try {
+				var regex = new Regex (pattern, RegexCompileFlags.ANCHORED, RegexMatchFlags.ANCHORED);
+				GLib.MatchInfo match;
+				if (!regex.match (name, 0, out match)) {
+					name = pattern;
+				} else {
+					var matched = match.fetch (1);
+					if (matched != null && matched.length > 0) {
+						name = matched;
+					} else {
+						name = pattern;
+					}
+				}
+			} catch (Error e) {
+				name = pattern;
+			}
+		}
+		return name;
+	}
+
 	void parse_repository () {
 		start_element ("repository");
 		if (reader.get_attribute ("version") != GIR_VERSION) {
@@ -1806,7 +1830,7 @@ public class Vala.GirParser : CodeVisitor {
 
 	Interface parse_interface () {
 		start_element ("interface");
-		var iface = new Interface (reader.get_attribute ("name"), get_current_src ());
+		var iface = new Interface (element_get_name (), get_current_src ());
 		iface.access = SymbolAccessibility.PUBLIC;
 		iface.external = true;
 
@@ -1980,7 +2004,7 @@ public class Vala.GirParser : CodeVisitor {
 
 	Method parse_constructor (string? parent_ctype = null) {
 		start_element ("constructor");
-		string name = reader.get_attribute ("name");
+		string name = element_get_name ();
 		string throws_string = reader.get_attribute ("throws");
 		string cname = reader.get_attribute ("c:identifier");
 		next ();
@@ -2045,7 +2069,7 @@ public class Vala.GirParser : CodeVisitor {
 
 	Symbol parse_function (string element_name) {
 		start_element (element_name);
-		string name = reader.get_attribute ("name");
+		string name = element_get_name ();
 		string cname = reader.get_attribute ("c:identifier");
 		string throws_string = reader.get_attribute ("throws");
 		string invoker = reader.get_attribute ("invoker");
@@ -2345,7 +2369,7 @@ public class Vala.GirParser : CodeVisitor {
 
 	Constant parse_constant () {
 		start_element ("constant");
-		string name = reader.get_attribute ("name");
+		string name = element_get_name ();
 		next ();
 		var type = parse_type ();
 		var c = new Constant (name, type, null, get_current_src ());
