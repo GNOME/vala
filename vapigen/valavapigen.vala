@@ -159,31 +159,18 @@ class Vala.VAPIGen : Object {
 		if (context.report.get_errors () > 0) {
 			return quit ();
 		}
-		
-		if (library == null && girparser.get_package_names () != null) {
-			var names = girparser.get_package_names ();
 
-			if (names.length != 1) {
-				Report.error (null, "multiple packages encountered and no library name given");
-				return quit ();
+		// interface writer ignores external packages
+		foreach (SourceFile file in context.get_source_files ()) {
+			if (!file.filename.has_suffix (".vapi")) {
+				file.file_type = SourceFileType.SOURCE;
 			}
-
-			library = names[0];
 		}
 
-		if (library != null) {
-			// interface writer ignores external packages
-			foreach (SourceFile file in context.get_source_files ()) {
-				if (!file.filename.has_suffix (".vapi")) {
-					file.file_type = SourceFileType.SOURCE;
-				}
-	 		}
-
-			var interface_writer = new CodeWriter ();
-			interface_writer.write_file (context, "%s.vapi".printf (library));
+		var interface_writer = new CodeWriter ();
+		interface_writer.write_file (context, "%s.vapi".printf (library));
 			
-			library = null;
-		}
+		library = null;
 		
 		return quit ();
 	}
