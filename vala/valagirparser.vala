@@ -567,6 +567,17 @@ public class Vala.GirParser : CodeVisitor {
 
 	const string GIR_VERSION = "1.2";
 
+	UnresolvedSymbol? parse_symbol_from_string (string symbol_string, SourceReference? source_reference = null) {
+		UnresolvedSymbol? sym = null;
+		foreach (unowned string s in symbol_string.split (".")) {
+			sym = new UnresolvedSymbol (sym, s, source_reference);
+		}
+		if (sym == null) {
+			Report.error (source_reference, "a symbol must be specified");
+		}
+		return sym;
+	}
+
 	void parse_repository () {
 		start_element ("repository");
 		if (reader.get_attribute ("version") != GIR_VERSION) {
@@ -1093,15 +1104,8 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (type_name == "Atk.ImplementorIface") {
 				type_name = "Atk.Implementor";
 			}
-			string[] type_components = type_name.split (".");
-			if (type_components[1] != null) {
-				// namespaced name
-				string namespace_name = transform_namespace_name (type_components[0]);
-				string transformed_type_name = type_components[1];
-				type = new UnresolvedType.from_symbol (new UnresolvedSymbol (new UnresolvedSymbol (null, namespace_name), transformed_type_name));
-			} else {
-				type = new UnresolvedType.from_symbol (new UnresolvedSymbol (null, type_name));
-			}
+			var sym = parse_symbol_from_string (type_name, get_current_src ());
+			type = new UnresolvedType.from_symbol (sym, get_current_src ());
 		}
 
 		return type;
