@@ -464,13 +464,17 @@ public class Vala.Assignment : Expression {
 				ma.inner.emit (codegen);
 			}
 		} else if (ea != null) {
-			ea.container.emit (codegen);
-
-			foreach (var index in ea.get_indices ()) {
-				index.emit (codegen);
-			}
+			// always process full lvalue
+			// current codegen depends on it
+			// should be removed when moving codegen from
+			// visit_assignment to emit_store_element
+			ea.emit (codegen);
 		} else if (pi != null) {
-			pi.inner.emit (codegen);
+			// always process full lvalue
+			// current codegen depends on it
+			// should be removed when moving codegen from
+			// visit_assignment to emit_store_indirectZ
+			pi.emit (codegen);
 		}
 
 		right.emit (codegen);
