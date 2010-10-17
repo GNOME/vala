@@ -122,7 +122,6 @@ class Vala.VAPIGen : Object {
 				Report.error (null, "%s not found".printf (source));
 			}
 		}
-		sources = null;
 		
 		if (context.report.get_errors () > 0) {
 			return quit ();
@@ -157,7 +156,7 @@ class Vala.VAPIGen : Object {
 
 		// interface writer ignores external packages
 		foreach (SourceFile file in context.get_source_files ()) {
-			if (!file.filename.has_suffix (".vapi")) {
+			if (!file.filename.has_suffix (".vapi") && file.filename in sources) {
 				file.file_type = SourceFileType.SOURCE;
 			}
 		}

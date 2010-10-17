@@ -168,6 +168,13 @@ public class Vala.GirParser : CodeVisitor {
 
 	void parse_include () {
 		start_element ("include");
+		var pkg = reader.get_attribute ("name");
+		var version = reader.get_attribute ("version");
+		if (version != null) {
+			pkg = "%s-%s".printf (pkg, version);
+		}
+		// add the package to the queue
+		context.add_external_package (pkg);
 		next ();
 		end_element ("include");
 	}
