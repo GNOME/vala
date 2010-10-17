@@ -468,6 +468,13 @@ public class Vala.GirParser : CodeVisitor {
 		public UnresolvedSymbol gtype_struct_for;
 	}
 
+	class Alias {
+		public string name;
+		public DataType base_type;
+		public Namespace parent_namespace;
+		public SourceReference source_reference;
+	}
+
 	MarkupReader reader;
 
 	CodeContext context;
@@ -488,6 +495,7 @@ public class Vala.GirParser : CodeVisitor {
 	ArrayList<UnresolvedSymbol> unresolved_gir_symbols = new ArrayList<UnresolvedSymbol> ();
 
 	HashMap<CallbackScope,ArrayList<Delegate>> gtype_callbacks = new HashMap<CallbackScope,ArrayList<Delegate>> (callback_scope_hash, callback_scope_equal);
+	ArrayList<Alias> aliases = new ArrayList<Alias> ();
 
 	/**
 	 * Parses all .gir source files in the specified code
@@ -503,6 +511,7 @@ public class Vala.GirParser : CodeVisitor {
 		resolve_gir_symbols ();
 
 		postprocess_gtype_callbacks ();
+		postprocess_aliases ();
 	}
 
 	public override void visit_source_file (SourceFile source_file) {
@@ -752,7 +761,8 @@ public class Vala.GirParser : CodeVisitor {
 
 			Symbol sym = null;
 			if (reader.name == "alias") {
-				sym = parse_alias ();
+				var alias = parse_alias ();
+				aliases.add (alias);
 			} else if (reader.name == "enumeration") {
 				if (reader.get_attribute ("glib:error-quark") != null) {
 					sym = parse_error_domain ();
@@ -818,17 +828,17 @@ public class Vala.GirParser : CodeVisitor {
 		return ns;
 	}
 
-	Struct parse_alias () {
+	Alias parse_alias () {
+		// alias has no type information
 		start_element ("alias");
-		var st = new Struct (reader.get_attribute ("name"), get_current_src ());
-		st.access = SymbolAccessibility.PUBLIC;
-		st.external = true;
+		var alias = new Alias ();
+		alias.source_reference = get_current_src ();
+		alias.name = reader.get_attribute ("name");
+		alias.base_type = parse_type_from_name (reader.get_attribute ("target"));
+		alias.parent_namespace = current_namespace;
 		next ();
-
-		st.base_type = parse_type (null, null, true);
-
 		end_element ("alias");
-		return st;
+		return alias;
 	}
 
 	private void calculate_common_prefix (ref string common_prefix, string cname) {
@@ -1977,6 +1987,41 @@ public class Vala.GirParser : CodeVisitor {
 				} else {
 					Report.error (get_current_src (), "unknown member type `%s' in `%s'".printf (d.name, gtype.name));
 				}
+			}
+		}
+	}
+
+	void postprocess_aliases () {
+		/* this is unfortunate because <alias> tag has no type information, thus we have
+		   to guess it from the target */
+		foreach (var alias in aliases) {
+			DataType base_type = null;
+			Symbol type_sym = null;
+			if (alias.base_type is UnresolvedType) {
+				base_type = alias.base_type;
+				type_sym = resolve_symbol (alias.parent_namespace.scope, ((UnresolvedType) base_type).unresolved_symbol);
+			} else if (!(alias.base_type is VoidType)) {
+				base_type = alias.base_type;
+				type_sym = base_type.data_type;
+			}
+
+			if (base_type == null || type_sym == null || type_sym is Struct) {
+				var st = new Struct (alias.name, alias.source_reference);
+				st.access = SymbolAccessibility.PUBLIC;
+				if (base_type != null) {
+					// threat target="none" as a new struct
+					st.base_type = base_type;
+				}
+				st.external = true;
+				alias.parent_namespace.add_struct (st);
+			} else if (type_sym is Class) {
+				var cl = new Class (alias.name, alias.source_reference);
+				cl.access = SymbolAccessibility.PUBLIC;
+				if (base_type != null) {
+					cl.add_base_type (base_type);
+				}
+				cl.external = true;
+				alias.parent_namespace.add_class (cl);
 			}
 		}
 	}
