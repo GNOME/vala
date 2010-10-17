@@ -129,19 +129,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 	}
 
 	public override CCodeExpression get_delegate_target_cexpression (Expression delegate_expr, out CCodeExpression delegate_target_destroy_notify) {
-		bool is_out = false;
-	
 		delegate_target_destroy_notify = new CCodeConstant ("NULL");
-
-		if (delegate_expr is UnaryExpression) {
-			var unary_expr = (UnaryExpression) delegate_expr;
-			if (unary_expr.operator == UnaryOperator.OUT || unary_expr.operator == UnaryOperator.REF) {
-				delegate_expr = unary_expr.inner;
-				is_out = true;
-			}
-		}
-
-		bool expr_owned = delegate_expr.value_type.value_owned;
 
 		if (delegate_expr is ReferenceTransferExpression) {
 			var reftransfer_expr = (ReferenceTransferExpression) delegate_expr;
@@ -154,12 +142,6 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 		var target_expr = get_delegate_target (delegate_expr);
 		if (target_expr == null) {
 			return new CCodeConstant ("NULL");
-		} else if (is_out) {
-			// passing delegate as out/ref
-			if (expr_owned) {
-				delegate_target_destroy_notify = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, delegate_target_destroy_notify);
-			}
-			return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, target_expr);
 		} else {
 			return target_expr;
 		}

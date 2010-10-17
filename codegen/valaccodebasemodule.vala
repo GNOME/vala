@@ -4376,6 +4376,28 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public override void visit_unary_expression (UnaryExpression expr) {
+		if (expr.operator == UnaryOperator.REF || expr.operator == UnaryOperator.OUT) {
+			set_cvalue (expr, new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_cvalue (expr.inner)));
+
+			var array_type = expr.value_type as ArrayType;
+			if (array_type != null) {
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					append_array_size (expr, new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_array_length_cexpression (expr.inner, dim)));
+				}
+			}
+
+			var delegate_type = expr.value_type as DelegateType;
+			if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
+				CCodeExpression target_destroy_notify;
+				set_delegate_target (expr, new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_delegate_target_cexpression (expr.inner, out target_destroy_notify)));
+				if (target_destroy_notify != null) {
+					set_delegate_target_destroy_notify (expr, new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, target_destroy_notify));
+				}
+			}
+
+			return;
+		}
+
 		CCodeUnaryOperator op;
 		if (expr.operator == UnaryOperator.PLUS) {
 			op = CCodeUnaryOperator.PLUS;
@@ -4389,10 +4411,6 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			op = CCodeUnaryOperator.PREFIX_INCREMENT;
 		} else if (expr.operator == UnaryOperator.DECREMENT) {
 			op = CCodeUnaryOperator.PREFIX_DECREMENT;
-		} else if (expr.operator == UnaryOperator.REF) {
-			op = CCodeUnaryOperator.ADDRESS_OF;
-		} else if (expr.operator == UnaryOperator.OUT) {
-			op = CCodeUnaryOperator.ADDRESS_OF;
 		} else {
 			assert_not_reached ();
 		}

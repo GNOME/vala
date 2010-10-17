@@ -391,6 +391,8 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 						cexpr = handle_struct_argument (param, arg, cexpr);
 					} else {
+						arg.target_value = null;
+
 						var temp_var = get_temp_variable (param.variable_type, param.variable_type.value_owned);
 						emit_temp_var (temp_var);
 						set_cvalue (arg, get_variable_cexpression (temp_var.name));

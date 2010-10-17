@@ -159,7 +159,6 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		if (array_expr is UnaryExpression) {
 			var unary_expr = (UnaryExpression) array_expr;
 			if (unary_expr.operator == UnaryOperator.OUT || unary_expr.operator == UnaryOperator.REF) {
-				array_expr = unary_expr.inner;
 				is_out = true;
 			}
 		} else if (array_expr is ReferenceTransferExpression) {
@@ -169,12 +168,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		
 		List<CCodeExpression> size = get_array_sizes (array_expr);
 		if (size != null && size.size >= dim) {
-			if (is_out) {
-				// passing array as out/ref
-				return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, size[dim - 1]);
-			} else {
-				return size[dim - 1];
-			}
+			return size[dim - 1];
 		}
 
 		if (!is_out) {
