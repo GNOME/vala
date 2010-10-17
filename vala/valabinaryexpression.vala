@@ -141,18 +141,6 @@ public class Vala.BinaryExpression : Expression {
 		return left.is_non_null () && right.is_non_null ();
 	}
 
-	bool in_assert () {
-		CodeNode expr = this;
-		while (expr != null && !(expr is MethodCall && ((MethodCall) expr).is_assert)) {
-			expr = expr.parent_node;
-		}
-		return (expr != null);
-	}
-
-	bool pure_and_in_assert () {
-		return is_pure () && in_assert ();
-	}
-
 	public override bool check (SemanticAnalyzer analyzer) {
 		if (checked) {
 			return !error;
@@ -162,14 +150,7 @@ public class Vala.BinaryExpression : Expression {
 
 		// some expressions are not in a block,
 		// for example, expressions in method contracts
-		//
-		// also don't convert expressions in asserts to not execute
-		// assert expressions when disabled on the C level and
-		// avoid unusable assertion messages
-		// reachability analysis and error handling should never be
-		// necessary for assertion expressions, so it is ok to avoid
-		// the split
-		if (analyzer.current_symbol is Block && !pure_and_in_assert ()
+		if (analyzer.current_symbol is Block
 		    && (operator == BinaryOperator.AND || operator == BinaryOperator.OR)) {
 			// convert conditional expression into if statement
 			// required for flow analysis and exception handling
