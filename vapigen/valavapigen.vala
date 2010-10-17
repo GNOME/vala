@@ -168,7 +168,12 @@ class Vala.VAPIGen : Object {
 		}
 
 		var interface_writer = new CodeWriter ();
-		interface_writer.write_file (context, "%s.vapi".printf (library));
+		var vapi_filename = "%s.vapi".printf (library);
+		if (directory != null) {
+			vapi_filename = Path.build_filename (directory, vapi_filename);
+		}
+
+		interface_writer.write_file (context, vapi_filename);
 			
 		library = null;
 		
