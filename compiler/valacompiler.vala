@@ -328,12 +328,6 @@ class Vala.Compiler {
 		var gir_parser = new GirParser ();
 		gir_parser.parse (context);
 
-		if (gir_parser.get_package_names != null) {
-			foreach (var pkg in gir_parser.get_package_names ()) {
-				context.add_package (pkg);
-			}
-		}
-
 		if (context.report.get_errors () > 0 || (fatal_warnings && context.report.get_warnings () > 0)) {
 			return quit ();
 		}

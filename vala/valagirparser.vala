@@ -37,7 +37,6 @@ public class Vala.GirParser : CodeVisitor {
 	MarkupTokenType current_token;
 
 	string[] cheader_filenames;
-	string[] package_names;
 
 	HashMap<string,string> attributes_map = new HashMap<string,string> (str_hash, str_equal);
 
@@ -149,7 +148,13 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (reader.name == "include") {
 				parse_include ();
 			} else if (reader.name == "package") {
-				parse_package ();
+				var pkg = parse_package ();
+				if (context.has_package (pkg)) {
+					// package already provided elsewhere, stop parsing this GIR
+					return;
+				} else {
+					context.add_package (pkg);
+				}
 			} else if (reader.name == "c:include") {
 				parse_c_include ();
 			} else {
@@ -167,11 +172,12 @@ public class Vala.GirParser : CodeVisitor {
 		end_element ("include");
 	}
 
-	void parse_package () {
+	string parse_package () {
 		start_element ("package");
-		add_package_name (reader.get_attribute ("name"));
+		var pkg = reader.get_attribute ("name");
 		next ();
 		end_element ("package");
+		return pkg;
 	}
 
 	void parse_c_include () {
@@ -1427,24 +1433,6 @@ public class Vala.GirParser : CodeVisitor {
 		} else {
 			Report.error (null, "Metadata file `%s' not found".printf (metadata_filename));
 		}
-	}
-
-	void add_package_name (string name) {
-		if (package_names == null) {
-			package_names = new string[0];
-		}
-
-		foreach (var existing in package_names) {
-			if (name == existing) {
-				return;
-			}
-		}
-
-		package_names += name;
-	}
-
-	public string[]? get_package_names () {
-		return package_names;
 	}
 }
 
