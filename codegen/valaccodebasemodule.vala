@@ -4611,6 +4611,22 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		ccode.add_expression (new CCodeAssignment (get_cvalue (expr.inner), new CCodeConstant ("NULL")));
 
 		set_cvalue (expr, cvar);
+
+		var array_type = expr.value_type as ArrayType;
+		if (array_type != null) {
+			for (int dim = 1; dim <= array_type.rank; dim++) {
+				append_array_size (expr, get_array_length_cexpression (expr.inner, dim));
+			}
+		}
+
+		var delegate_type = expr.value_type as DelegateType;
+		if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
+			CCodeExpression target_destroy_notify;
+			set_delegate_target (expr, get_delegate_target_cexpression (expr.inner, out target_destroy_notify));
+			if (target_destroy_notify != null) {
+				set_delegate_target_destroy_notify (expr, target_destroy_notify);
+			}
+		}
 	}
 
 	public override void visit_binary_expression (BinaryExpression expr) {

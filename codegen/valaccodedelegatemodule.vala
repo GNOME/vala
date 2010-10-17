@@ -131,11 +131,6 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 	public override CCodeExpression get_delegate_target_cexpression (Expression delegate_expr, out CCodeExpression delegate_target_destroy_notify) {
 		delegate_target_destroy_notify = new CCodeConstant ("NULL");
 
-		if (delegate_expr is ReferenceTransferExpression) {
-			var reftransfer_expr = (ReferenceTransferExpression) delegate_expr;
-			delegate_expr = reftransfer_expr.inner;
-		}
-		
 		if (get_delegate_target_destroy_notify (delegate_expr) != null) {
 			delegate_target_destroy_notify = get_delegate_target_destroy_notify (delegate_expr);
 		}

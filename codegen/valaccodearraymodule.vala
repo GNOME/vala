@@ -161,9 +161,6 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			if (unary_expr.operator == UnaryOperator.OUT || unary_expr.operator == UnaryOperator.REF) {
 				is_out = true;
 			}
-		} else if (array_expr is ReferenceTransferExpression) {
-			var reftransfer_expr = (ReferenceTransferExpression) array_expr;
-			array_expr = reftransfer_expr.inner;
 		}
 		
 		List<CCodeExpression> size = get_array_sizes (array_expr);
