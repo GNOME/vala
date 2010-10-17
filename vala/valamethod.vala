@@ -1115,6 +1115,7 @@ public class Vala.Method : Symbol {
 
 		var callback_param = new FormalParameter ("_callback_", callback_type);
 		callback_param.initializer = new NullLiteral (source_reference);
+		callback_param.initializer.target_type = callback_type.copy ();
 		callback_param.cparameter_position = -1;
 		callback_param.cdelegate_target_parameter_position = -0.9;
 

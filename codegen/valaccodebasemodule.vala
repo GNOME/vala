@@ -3602,6 +3602,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			}
 		} else if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
 			set_delegate_target (expr, new CCodeConstant ("NULL"));
+			set_delegate_target_destroy_notify (expr, new CCodeConstant ("NULL"));
 		}
 	}
 

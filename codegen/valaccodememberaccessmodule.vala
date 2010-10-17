@@ -92,6 +92,7 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			}
 
 			if (expr.target_type is DelegateType) {
+				set_delegate_target_destroy_notify (expr, new CCodeConstant ("NULL"));
 				if (m.binding == MemberBinding.STATIC) {
 					set_delegate_target (expr, new CCodeConstant ("NULL"));
 				} else if (m.is_async_callback) {
@@ -203,6 +204,7 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					string target_cname = get_delegate_target_cname (field.get_cname ());
 					string target_destroy_notify_cname = get_delegate_target_destroy_notify_cname (field.get_cname ());
 
+					set_delegate_target_destroy_notify (expr, new CCodeConstant ("NULL"));
 					if (field.no_delegate_target) {
 						set_delegate_target (expr, new CCodeConstant ("NULL"));
 					} else {
@@ -271,6 +273,7 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 						}
 					}
 				} else if (field.variable_type is DelegateType) {
+					set_delegate_target_destroy_notify (expr, new CCodeConstant ("NULL"));
 					if (field.no_delegate_target) {
 						set_delegate_target (expr, new CCodeConstant ("NULL"));
 					} else {
@@ -502,6 +505,8 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 						set_delegate_target (expr, new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (local.name))));
 						if (expr.value_type.value_owned) {
 							set_delegate_target_destroy_notify (expr, new CCodeIdentifier (get_delegate_target_destroy_notify_cname (get_variable_cname (local.name))));
+						} else {
+							set_delegate_target_destroy_notify (expr, new CCodeConstant ("NULL"));
 						}
 					}
 				}
@@ -594,6 +599,8 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 						set_delegate_target (expr, target_expr);
 						if (expr.value_type.value_owned) {
 							set_delegate_target_destroy_notify (expr, delegate_target_destroy_notify);
+						} else {
+							set_delegate_target_destroy_notify (expr, new CCodeConstant ("NULL"));
 						}
 					}
 				}
