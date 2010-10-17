@@ -242,6 +242,8 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 						var local = new LocalVariable (m.return_type, " result");
 						var ma = new MemberAccess.simple ("result");
 						ma.symbol_reference = local;
+						ma.value_type = local.variable_type.copy ();
+						visit_member_access (ma);
 						ccode.add_expression (get_unref_expression (new CCodeIdentifier ("result"), m.return_type, ma));
 					}
 				} else {
@@ -265,6 +267,8 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 						var local = new LocalVariable (m.return_type, " result");
 						var ma = new MemberAccess.simple ("result");
 						ma.symbol_reference = local;
+						ma.value_type = local.variable_type.copy ();
+						visit_member_access (ma);
 						ccode.add_expression (get_unref_expression (new CCodeIdentifier ("result"), m.return_type, ma));
 					}
 				}
@@ -288,6 +292,8 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 					var local = new LocalVariable (owned_type, param.name);
 					var ma = new MemberAccess.simple (param.name);
 					ma.symbol_reference = local;
+					ma.value_type = local.variable_type.copy ();
+					visit_member_access (ma);
 					ccode.add_expression (get_unref_expression (new CCodeIdentifier (param.name), owned_type, ma));
 				}
 			}
@@ -436,6 +442,8 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			var local = new LocalVariable (prop.property_type, " result");
 			var ma = new MemberAccess.simple ("result");
 			ma.symbol_reference = local;
+			ma.value_type = local.variable_type.copy ();
+			visit_member_access (ma);
 			ccode.add_expression (get_unref_expression (new CCodeIdentifier ("result"), prop.property_type, ma));
 		}
 
@@ -493,6 +501,8 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			var local = new LocalVariable (owned_type, "value");
 			var ma = new MemberAccess.simple ("value");
 			ma.symbol_reference = local;
+			ma.value_type = local.variable_type.copy ();
+			visit_member_access (ma);
 			ccode.add_expression (get_unref_expression (new CCodeIdentifier ("value"), owned_type, ma));
 		}
 

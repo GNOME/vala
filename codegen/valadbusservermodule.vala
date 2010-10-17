@@ -254,6 +254,8 @@ public class Vala.DBusServerModule : DBusClientModule {
 				var local = new LocalVariable (owned_type, param.name);
 				var ma = new MemberAccess.simple (param.name);
 				ma.symbol_reference = local;
+				ma.value_type = owned_type.copy ();
+				visit_member_access (ma);
 				var stmt = new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (param.name), owned_type, ma));
 				if (param.direction == ParameterDirection.IN) {
 					in_postfragment.append (stmt);
@@ -288,6 +290,8 @@ public class Vala.DBusServerModule : DBusClientModule {
 					var local = new LocalVariable (m.return_type, " result");
 					var ma = new MemberAccess.simple ("result");
 					ma.symbol_reference = local;
+					ma.value_type = m.return_type.copy ();
+					visit_member_access (ma);
 					out_postfragment.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier ("result"), m.return_type, ma)));
 				}
 
@@ -332,6 +336,8 @@ public class Vala.DBusServerModule : DBusClientModule {
 					var local = new LocalVariable (m.return_type, " result");
 					var ma = new MemberAccess.simple ("result");
 					ma.symbol_reference = local;
+					ma.value_type = m.return_type.copy ();
+					visit_member_access (ma);
 					out_postfragment.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier ("result"), m.return_type, ma)));
 				}
 			}
@@ -824,6 +830,8 @@ public class Vala.DBusServerModule : DBusClientModule {
 				var local = new LocalVariable (prop.get_accessor.value_type, " result");
 				var ma = new MemberAccess.simple ("result");
 				ma.symbol_reference = local;
+				ma.value_type = local.variable_type.copy ();
+				visit_member_access (ma);
 				postfragment.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier ("result"), prop.get_accessor.value_type, ma)));
 			}
 
@@ -1040,6 +1048,8 @@ public class Vala.DBusServerModule : DBusClientModule {
 				var local = new LocalVariable (prop.get_accessor.value_type, " result");
 				var ma = new MemberAccess.simple ("result");
 				ma.symbol_reference = local;
+				ma.value_type = local.variable_type.copy ();
+				visit_member_access (ma);
 				postfragment.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier ("result"), prop.get_accessor.value_type, ma)));
 			}
 
@@ -1217,6 +1227,8 @@ public class Vala.DBusServerModule : DBusClientModule {
 				var local = new LocalVariable (owned_type, "value");
 				var ma = new MemberAccess.simple ("value");
 				ma.symbol_reference = local;
+				ma.value_type = local.variable_type.copy ();
+				visit_member_access (ma);
 				prop_block.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier ("value"), owned_type, ma)));
 			}
 

@@ -154,31 +154,9 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			}
 		}
 
-		bool is_out = false;
-
-		if (array_expr is UnaryExpression) {
-			var unary_expr = (UnaryExpression) array_expr;
-			if (unary_expr.operator == UnaryOperator.OUT || unary_expr.operator == UnaryOperator.REF) {
-				is_out = true;
-			}
-		}
-		
 		List<CCodeExpression> size = get_array_sizes (array_expr);
-		if (size != null && size.size >= dim) {
-			return size[dim - 1];
-		}
-
-		if (!is_out) {
-			/* allow arrays with unknown length even for value types
-			 * as else it may be impossible to bind some libraries
-			 * users of affected libraries should explicitly set
-			 * the array length as early as possible
-			 * by setting the virtual length field of the array
-			 */
-			return new CCodeConstant ("-1");
-		} else {
-			return new CCodeConstant ("NULL");
-		}
+		assert (size != null && size.size >= dim);
+		return size[dim - 1];
 	}
 
 	public override string get_array_size_cname (string array_cname) {

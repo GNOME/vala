@@ -371,6 +371,8 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			if (requires_destroy (local.variable_type)) {
 				var ma = new MemberAccess.simple (local.name);
 				ma.symbol_reference = local;
+				ma.value_type = local.variable_type.copy ();
+				visit_member_access (ma);
 				ccode.add_expression (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma));
 			}
 		}
