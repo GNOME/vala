@@ -4603,15 +4603,14 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 
 	public override void visit_reference_transfer_expression (ReferenceTransferExpression expr) {
 		/* (tmp = var, var = null, tmp) */
-		var ccomma = new CCodeCommaExpression ();
 		var temp_decl = get_temp_variable (expr.value_type, true, expr, false);
 		emit_temp_var (temp_decl);
 		var cvar = get_variable_cexpression (temp_decl.name);
 
-		ccomma.append_expression (new CCodeAssignment (cvar, get_cvalue (expr.inner)));
-		ccomma.append_expression (new CCodeAssignment (get_cvalue (expr.inner), new CCodeConstant ("NULL")));
-		ccomma.append_expression (cvar);
-		set_cvalue (expr, ccomma);
+		ccode.add_expression (new CCodeAssignment (cvar, get_cvalue (expr.inner)));
+		ccode.add_expression (new CCodeAssignment (get_cvalue (expr.inner), new CCodeConstant ("NULL")));
+
+		set_cvalue (expr, cvar);
 	}
 
 	public override void visit_binary_expression (BinaryExpression expr) {
