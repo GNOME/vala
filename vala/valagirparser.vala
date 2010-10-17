@@ -1423,9 +1423,11 @@ public class Vala.GirParser : CodeVisitor {
 		var alias = new Alias ();
 		alias.source_reference = get_current_src ();
 		alias.name = reader.get_attribute ("name");
-		alias.base_type = element_get_type (parse_type_from_gir_name (reader.get_attribute ("target")), true);
 		alias.parent_namespace = current_namespace;
 		next ();
+
+		alias.base_type = element_get_type (parse_type (null, null, true), true);
+
 		end_element ("alias");
 		return alias;
 	}
