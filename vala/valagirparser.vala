@@ -590,11 +590,11 @@ public class Vala.GirParser : CodeVisitor {
 	DataType parse_type_from_name (string type_name) {
 		DataType type;
 		if (type_name == "none") {
-			type = new VoidType ();
+			type = new VoidType (get_current_src ());
 		} else if (type_name == "gpointer") {
-			type = new PointerType (new VoidType ());
+			type = new PointerType (new VoidType (get_current_src ()), get_current_src ());
 		} else if (type_name == "GObject.Strv") {
-			type = new ArrayType (new UnresolvedType.from_symbol (new UnresolvedSymbol (null, "string")), 1, null);
+			type = new ArrayType (new UnresolvedType.from_symbol (new UnresolvedSymbol (null, "string")), 1, get_current_src ());
 		} else {
 			if (type_name == "utf8") {
 				type_name = "string";
@@ -1293,7 +1293,7 @@ public class Vala.GirParser : CodeVisitor {
 		} else {
 			return_type = new VoidType ();
 		}
-		var sig = new Signal (name, return_type);
+		var sig = new Signal (name, return_type, get_current_src ());
 		sig.access = SymbolAccessibility.PUBLIC;
 		sig.external = true;
 		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "parameters") {
@@ -1313,7 +1313,7 @@ public class Vala.GirParser : CodeVisitor {
 		if (name == null) {
 			name = reader.get_attribute ("glib:name");
 		}
-		var cl = new Class (name);
+		var cl = new Class (name, get_current_src ());
 		cl.access = SymbolAccessibility.PUBLIC;
 		cl.external = true;
 		cl.is_compact = true;
@@ -1358,7 +1358,7 @@ public class Vala.GirParser : CodeVisitor {
 
 	Struct parse_union () {
 		start_element ("union");
-		var st = new Struct (reader.get_attribute ("name"));
+		var st = new Struct (reader.get_attribute ("name"), get_current_src ());
 		st.access = SymbolAccessibility.PUBLIC;
 		st.external = true;
 		next ();
