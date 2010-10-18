@@ -756,7 +756,16 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			set_cvalue (expr, temp_ref);
 		}
 
+		params_it = params.iterator ();
 		foreach (Expression arg in expr.get_argument_list ()) {
+			if (params_it.next ()) {
+				var param = params_it.get ();
+				if (param.params_array || param.ellipsis) {
+					// ignore ellipsis arguments as we currently don't use temporary variables for them
+					break;
+				}
+			}
+
 			var unary = arg as UnaryExpression;
 			if (unary == null || unary.operator != UnaryOperator.OUT) {
 				continue;
