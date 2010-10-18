@@ -558,6 +558,7 @@ public class Vala.MethodCall : Expression {
 
 			var dynamic_sig = m.parent_symbol as DynamicSignal;
 			if (dynamic_sig != null && dynamic_sig.handler != null) {
+				dynamic_sig.return_type = dynamic_sig.handler.value_type.get_return_type ().copy ();
 				bool first = true;
 				foreach (FormalParameter param in dynamic_sig.handler.value_type.get_parameters ()) {
 					if (first) {
