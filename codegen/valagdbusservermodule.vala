@@ -74,6 +74,8 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 		push_function (function);
 
+		cfile.add_include ("gio/gunixfdlist.h");
+
 		if (ready) {
 			ccode.add_declaration ("GDBusMethodInvocation *", new CCodeVariableDeclarator ("invocation", new CCodeIdentifier ("_user_data_")));
 		}
@@ -229,6 +231,9 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			builder_init.add_argument (new CCodeIdentifier ("G_VARIANT_TYPE_TUPLE"));
 			ccode.add_expression (builder_init);
 
+			ccode.add_declaration ("GUnixFDList", new CCodeVariableDeclarator ("*_fd_list"));
+			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_fd_list"), new CCodeFunctionCall (new CCodeIdentifier ("g_unix_fd_list_new"))));
+
 			foreach (FormalParameter param in m.get_parameters ()) {
 				if (param.direction != ParameterDirection.OUT) {
 					continue;
@@ -248,14 +253,14 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 					}
 				}
 
-				write_expression (param.variable_type, new CCodeIdentifier ("_reply_builder"), new CCodeIdentifier (param.name), param);
+				send_dbus_value (param.variable_type, new CCodeIdentifier ("_reply_builder"), new CCodeIdentifier (param.name), param);
 			}
 
 			if (!(m.return_type is VoidType)) {
 				if (m.return_type.is_real_non_null_struct_type ()) {
 					ccode.add_declaration (m.return_type.get_cname (), new CCodeVariableDeclarator.zero ("result", default_value_for_type (m.return_type, true)));
 
-					write_expression (m.return_type, new CCodeIdentifier ("_reply_builder"), new CCodeIdentifier ("result"), m);
+					send_dbus_value (m.return_type, new CCodeIdentifier ("_reply_builder"), new CCodeIdentifier ("result"), m);
 
 					if (requires_destroy (m.return_type)) {
 						// keep local alive (symbol_reference is weak)
@@ -280,7 +285,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 						}
 					}
 
-					write_expression (m.return_type, new CCodeIdentifier ("_reply_builder"), new CCodeIdentifier ("result"), m);
+					send_dbus_value (m.return_type, new CCodeIdentifier ("_reply_builder"), new CCodeIdentifier ("result"), m);
 
 					if (requires_destroy (m.return_type)) {
 						// keep local alive (symbol_reference is weak)
@@ -304,6 +309,15 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			set_body.add_argument (new CCodeIdentifier ("_reply_message"));
 			set_body.add_argument (new CCodeIdentifier ("_reply"));
 			ccode.add_expression (set_body);
+
+			ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_message_set_unix_fd_list"));
+			ccall.add_argument (new CCodeIdentifier ("_reply_message"));
+			ccall.add_argument (new CCodeIdentifier ("_fd_list"));
+			ccode.add_expression (ccall);
+
+			ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
+			ccall.add_argument (new CCodeIdentifier ("_fd_list"));
+			ccode.add_expression (ccall);
 		} else {
 			ccode.add_expression (ccall);
 		}

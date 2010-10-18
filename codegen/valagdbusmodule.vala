@@ -110,4 +110,44 @@ public class Vala.GDBusModule : GVariantModule {
 		cquark_fun.block = cquark_block;
 		cfile.add_function (cquark_fun);
 	}
+
+	CCodeExpression? get_file_descriptor (DataType type, CCodeExpression expr) {
+		if (type is ObjectType) {
+			if (type.data_type.get_full_name () == "GLib.UnixInputStream") {
+				var result = new CCodeFunctionCall (new CCodeIdentifier ("g_unix_input_stream_get_fd"));
+				result.add_argument (expr);
+				return result;
+			} else if (type.data_type.get_full_name () == "GLib.UnixOutputStream") {
+				var result = new CCodeFunctionCall (new CCodeIdentifier ("g_unix_output_stream_get_fd"));
+				result.add_argument (expr);
+				return result;
+			} else if (type.data_type.get_full_name () == "GLib.Socket") {
+				var result = new CCodeFunctionCall (new CCodeIdentifier ("g_socket_get_fd"));
+				result.add_argument (expr);
+				return result;
+			}
+		}
+
+		return null;
+	}
+
+	public void send_dbus_value (DataType type, CCodeExpression builder_expr, CCodeExpression expr, Symbol? sym) {
+		var fd = get_file_descriptor (type, expr);
+		if (fd != null) {
+			// add file descriptor to the file descriptor list
+			var fd_append = new CCodeFunctionCall (new CCodeIdentifier ("g_unix_fd_list_append"));
+			fd_append.add_argument (new CCodeIdentifier ("_fd_list"));
+			fd_append.add_argument (fd);
+			fd_append.add_argument (new CCodeConstant ("NULL"));
+
+			// add index to file descriptor to gvariant
+			var builder_add = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_add"));
+			builder_add.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, builder_expr));
+			builder_add.add_argument (new CCodeConstant ("\"h\""));
+			builder_add.add_argument (fd_append);
+			ccode.add_expression (builder_add);
+		} else {
+			write_expression (type, builder_expr, expr, sym);
+		}
+	}
 }

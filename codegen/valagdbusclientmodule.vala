@@ -415,6 +415,8 @@ public class Vala.GDBusClientModule : GDBusModule {
 	}
 
 	void generate_marshalling (Method m, CallType call_type, string? iface_name, string? method_name) {
+		cfile.add_include ("gio/gunixfdlist.h");
+
 		var connection = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_proxy_get_connection"));
 		connection.add_argument (new CCodeIdentifier ("self"));
 
@@ -454,13 +456,17 @@ public class Vala.GDBusClientModule : GDBusModule {
 			builder_init.add_argument (new CCodeIdentifier ("G_VARIANT_TYPE_TUPLE"));
 			ccode.add_expression (builder_init);
 
+			ccode.add_declaration ("GUnixFDList", new CCodeVariableDeclarator ("*_fd_list"));
+			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_fd_list"), new CCodeFunctionCall (new CCodeIdentifier ("g_unix_fd_list_new"))));
+
 			foreach (FormalParameter param in m.get_parameters ()) {
 				if (param.direction == ParameterDirection.IN) {
 					CCodeExpression expr = new CCodeIdentifier (param.name);
 					if (param.variable_type.is_real_struct_type ()) {
 						expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, expr);
 					}
-					write_expression (param.variable_type, new CCodeIdentifier ("_arguments_builder"), expr, param);
+
+					send_dbus_value (param.variable_type, new CCodeIdentifier ("_arguments_builder"), expr, param);
 				}
 			}
 
@@ -472,6 +478,15 @@ public class Vala.GDBusClientModule : GDBusModule {
 			set_body.add_argument (new CCodeIdentifier ("_message"));
 			set_body.add_argument (new CCodeIdentifier ("_arguments"));
 			ccode.add_expression (set_body);
+
+			ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_message_set_unix_fd_list"));
+			ccall.add_argument (new CCodeIdentifier ("_message"));
+			ccall.add_argument (new CCodeIdentifier ("_fd_list"));
+			ccode.add_expression (ccall);
+
+			ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
+			ccall.add_argument (new CCodeIdentifier ("_fd_list"));
+			ccode.add_expression (ccall);
 
 			// send D-Bus message
 
