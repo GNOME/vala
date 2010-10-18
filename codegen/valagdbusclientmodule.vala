@@ -415,7 +415,37 @@ public class Vala.GDBusClientModule : GDBusModule {
 	}
 
 	void generate_marshalling (Method m, CallType call_type, string? iface_name, string? method_name) {
+		var connection = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_proxy_get_connection"));
+		connection.add_argument (new CCodeIdentifier ("self"));
+
 		if (call_type != CallType.FINISH) {
+			var destination = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_proxy_get_name"));
+			destination.add_argument (new CCodeIdentifier ("self"));
+
+			var interface_name = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_proxy_get_interface_name"));
+			interface_name.add_argument (new CCodeIdentifier ("self"));
+
+			var object_path = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_proxy_get_object_path"));
+			object_path.add_argument (new CCodeIdentifier ("self"));
+
+			var timeout = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_proxy_get_default_timeout"));
+			timeout.add_argument (new CCodeIdentifier ("self"));
+
+			// build D-Bus message
+
+			ccode.add_declaration ("GDBusMessage", new CCodeVariableDeclarator ("*_message"));
+
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_message_new_method_call"));
+			ccall.add_argument (destination);
+			ccall.add_argument (object_path);
+			if (iface_name != null) {
+				ccall.add_argument (new CCodeConstant ("\"%s\"".printf (iface_name)));
+			} else {
+				ccall.add_argument (interface_name);
+			}
+			ccall.add_argument (new CCodeConstant ("\"%s\"".printf (method_name)));
+			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_message"), ccall));
+
 			ccode.add_declaration ("GVariant", new CCodeVariableDeclarator ("*_arguments"));
 			ccode.add_declaration ("GVariantBuilder", new CCodeVariableDeclarator ("_arguments_builder"));
 
@@ -437,148 +467,160 @@ public class Vala.GDBusClientModule : GDBusModule {
 			var builder_end = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_end"));
 			builder_end.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_arguments_builder")));
 			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_arguments"), builder_end));
-		}
-
-		if (call_type == CallType.SYNC) {
-			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_proxy_call_sync"));
-			ccall.add_argument (new CCodeCastExpression (new CCodeIdentifier ("self"), "GDBusProxy *"));
-			ccall.add_argument (new CCodeConstant ("\"%s\"".printf (method_name)));
-			ccall.add_argument (new CCodeIdentifier ("_arguments"));
-			ccall.add_argument (new CCodeConstant ("G_DBUS_CALL_FLAGS_NONE"));
-			ccall.add_argument (get_dbus_timeout (m));
-			ccall.add_argument (new CCodeConstant ("NULL"));
-			ccall.add_argument (new CCodeConstant ("error"));
-			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_reply"), ccall));
-		} else if (call_type == CallType.NO_REPLY) {
-			ccode.add_declaration ("GDBusMessage", new CCodeVariableDeclarator ("*_message"));
-
-			var connection = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_proxy_get_connection"));
-			connection.add_argument (new CCodeIdentifier ("self"));
-
-			var destination = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_proxy_get_name"));
-			destination.add_argument (new CCodeIdentifier ("self"));
-
-			var object_path = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_proxy_get_object_path"));
-			object_path.add_argument (new CCodeIdentifier ("self"));
-
-			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_message_new_method_call"));
-			ccall.add_argument (destination);
-			ccall.add_argument (object_path);
-			ccall.add_argument (new CCodeConstant ("\"%s\"".printf (iface_name)));
-			ccall.add_argument (new CCodeConstant ("\"%s\"".printf (get_dbus_name_for_member (m))));
-			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_message"), ccall));
-
-			var set_flags = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_message_set_flags"));
-			set_flags.add_argument (new CCodeIdentifier ("_message"));
-			set_flags.add_argument (new CCodeConstant ("G_DBUS_MESSAGE_FLAGS_NO_REPLY_EXPECTED"));
-			ccode.add_expression (set_flags);
 
 			var set_body = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_message_set_body"));
 			set_body.add_argument (new CCodeIdentifier ("_message"));
 			set_body.add_argument (new CCodeIdentifier ("_arguments"));
 			ccode.add_expression (set_body);
 
-			ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_connection_send_message"));
-			ccall.add_argument (connection);
-			ccall.add_argument (new CCodeIdentifier ("_message"));
-			ccall.add_argument (new CCodeConstant ("0"));
-			ccall.add_argument (new CCodeConstant ("NULL"));
-			ccall.add_argument (new CCodeIdentifier ("error"));
-			ccode.add_expression (ccall);
+			// send D-Bus message
+
+			if (call_type == CallType.SYNC) {
+				ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_connection_send_message_with_reply_sync"));
+				ccall.add_argument (connection);
+				ccall.add_argument (new CCodeIdentifier ("_message"));
+				ccall.add_argument (new CCodeConstant ("G_DBUS_SEND_MESSAGE_FLAGS_NONE"));
+				ccall.add_argument (timeout);
+				ccall.add_argument (new CCodeConstant ("NULL"));
+				ccall.add_argument (new CCodeConstant ("NULL"));
+				ccall.add_argument (new CCodeIdentifier ("error"));
+				ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_reply_message"), ccall));
+			} else if (call_type == CallType.NO_REPLY) {
+				var set_flags = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_message_set_flags"));
+				set_flags.add_argument (new CCodeIdentifier ("_message"));
+				set_flags.add_argument (new CCodeConstant ("G_DBUS_MESSAGE_FLAGS_NO_REPLY_EXPECTED"));
+				ccode.add_expression (set_flags);
+
+				ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_connection_send_message"));
+				ccall.add_argument (connection);
+				ccall.add_argument (new CCodeIdentifier ("_message"));
+				ccall.add_argument (new CCodeConstant ("G_DBUS_SEND_MESSAGE_FLAGS_NONE"));
+				ccall.add_argument (new CCodeConstant ("NULL"));
+				ccall.add_argument (new CCodeIdentifier ("error"));
+				ccode.add_expression (ccall);
+			} else if (call_type == CallType.ASYNC) {
+				ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_connection_send_message_with_reply"));
+				ccall.add_argument (connection);
+				ccall.add_argument (new CCodeIdentifier ("_message"));
+				ccall.add_argument (new CCodeConstant ("G_DBUS_SEND_MESSAGE_FLAGS_NONE"));
+				ccall.add_argument (timeout);
+				ccall.add_argument (new CCodeConstant ("NULL"));
+				ccall.add_argument (new CCodeConstant ("NULL"));
+				ccall.add_argument (new CCodeIdentifier ("_callback_"));
+				ccall.add_argument (new CCodeIdentifier ("_user_data_"));
+				ccode.add_expression (ccall);
+			}
+
+			// free D-Bus message
 
 			ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
 			ccall.add_argument (new CCodeIdentifier ("_message"));
 			ccode.add_expression (ccall);
-		} else if (call_type == CallType.ASYNC) {
-			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_proxy_call"));
-			ccall.add_argument (new CCodeCastExpression (new CCodeIdentifier ("self"), "GDBusProxy *"));
-			ccall.add_argument (new CCodeConstant ("\"%s\"".printf (method_name)));
-			ccall.add_argument (new CCodeIdentifier ("_arguments"));
-			ccall.add_argument (new CCodeConstant ("G_DBUS_CALL_FLAGS_NONE"));
-			ccall.add_argument (get_dbus_timeout (m));
-			ccall.add_argument (new CCodeConstant ("NULL"));
-			ccall.add_argument (new CCodeIdentifier ("_callback_"));
-			ccall.add_argument (new CCodeIdentifier ("_user_data_"));
-			ccode.add_expression (ccall);
-		} else if (call_type == CallType.FINISH) {
-			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_proxy_call_finish"));
-			ccall.add_argument (new CCodeCastExpression (new CCodeIdentifier ("self"), "GDBusProxy *"));
+		} else {
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_connection_send_message_with_reply_finish"));
+			ccall.add_argument (connection);
 			ccall.add_argument (new CCodeIdentifier ("_res_"));
 			ccall.add_argument (new CCodeConstant ("error"));
-			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_reply"), ccall));
+			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_reply_message"), ccall));
 		}
 
 		if (call_type == CallType.SYNC || call_type == CallType.FINISH) {
-			ccode.add_declaration ("GVariant", new CCodeVariableDeclarator ("*_reply"));
+			ccode.add_declaration ("GDBusMessage", new CCodeVariableDeclarator ("*_reply_message"));
 
-			// return on error
-			ccode.open_if (new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeIdentifier ("_reply")));
+			var unref_reply = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
+			unref_reply.add_argument (new CCodeIdentifier ("_reply_message"));
+
+			// return on io error
+			var reply_is_null = new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeIdentifier ("_reply_message"));
+			ccode.open_if (reply_is_null);
 			return_default_value (m.return_type);
 			ccode.close ();
 
-			ccode.add_declaration ("GVariantIter", new CCodeVariableDeclarator ("_reply_iter"));
+			// return on remote error
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_message_to_gerror"));
+			ccall.add_argument (new CCodeIdentifier ("_reply_message"));
+			ccall.add_argument (new CCodeIdentifier ("error"));
+			ccode.open_if (ccall);
+			ccode.add_expression (unref_reply);
+			return_default_value (m.return_type);
+			ccode.close ();
 
-			var iter_init = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_iter_init"));
-			iter_init.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_reply_iter")));
-			iter_init.add_argument (new CCodeIdentifier ("_reply"));
-			ccode.add_expression (iter_init);
+			bool has_result = !(m.return_type is VoidType);
 
 			foreach (FormalParameter param in m.get_parameters ()) {
 				if (param.direction == ParameterDirection.OUT) {
-					ccode.add_declaration (param.variable_type.get_cname (), new CCodeVariableDeclarator ("_" + param.name));
+					has_result = true;
+				}
+			}
 
-					var array_type = param.variable_type as ArrayType;
+			if (has_result) {
+				ccode.add_declaration ("GVariant", new CCodeVariableDeclarator ("*_reply"));
+				ccode.add_declaration ("GVariantIter", new CCodeVariableDeclarator ("_reply_iter"));
 
-					if (array_type != null) {
-						for (int dim = 1; dim <= array_type.rank; dim++) {
-							ccode.add_declaration ("int", new CCodeVariableDeclarator ("_%s_length%d".printf (param.name, dim), new CCodeConstant ("0")));
+				ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_message_get_body"));
+				ccall.add_argument (new CCodeIdentifier ("_reply_message"));
+				ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_reply"), ccall));
+
+				var iter_init = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_iter_init"));
+				iter_init.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_reply_iter")));
+				iter_init.add_argument (new CCodeIdentifier ("_reply"));
+				ccode.add_expression (iter_init);
+
+				foreach (FormalParameter param in m.get_parameters ()) {
+					if (param.direction == ParameterDirection.OUT) {
+						ccode.add_declaration (param.variable_type.get_cname (), new CCodeVariableDeclarator ("_" + param.name));
+
+						var array_type = param.variable_type as ArrayType;
+
+						if (array_type != null) {
+							for (int dim = 1; dim <= array_type.rank; dim++) {
+								ccode.add_declaration ("int", new CCodeVariableDeclarator ("_%s_length%d".printf (param.name, dim), new CCodeConstant ("0")));
+							}
+						}
+
+						var target = new CCodeIdentifier ("_" + param.name);
+						read_expression (param.variable_type, new CCodeIdentifier ("_reply_iter"), target, param);
+
+						// TODO check that parameter is not NULL (out parameters are optional)
+						// free value if parameter is NULL
+						ccode.add_expression (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (param.name)), target));
+
+						if (array_type != null) {
+							for (int dim = 1; dim <= array_type.rank; dim++) {
+								// TODO check that parameter is not NULL (out parameters are optional)
+								ccode.add_expression (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("%s_length%d".printf (param.name, dim))), new CCodeIdentifier ("_%s_length%d".printf (param.name, dim))));
+							}
 						}
 					}
+				}
 
-					var target = new CCodeIdentifier ("_" + param.name);
-					read_expression (param.variable_type, new CCodeIdentifier ("_reply_iter"), target, param);
+				if (!(m.return_type is VoidType)) {
+					if (m.return_type.is_real_non_null_struct_type ()) {
+						var target = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result"));
+						read_expression (m.return_type, new CCodeIdentifier ("_reply_iter"), target, m);
+					} else {
+						ccode.add_declaration (m.return_type.get_cname (), new CCodeVariableDeclarator ("_result"));
 
-					// TODO check that parameter is not NULL (out parameters are optional)
-					// free value if parameter is NULL
-					ccode.add_expression (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (param.name)), target));
+						var array_type = m.return_type as ArrayType;
 
-					if (array_type != null) {
-						for (int dim = 1; dim <= array_type.rank; dim++) {
-							// TODO check that parameter is not NULL (out parameters are optional)
-							ccode.add_expression (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("%s_length%d".printf (param.name, dim))), new CCodeIdentifier ("_%s_length%d".printf (param.name, dim))));
+						if (array_type != null) {
+							for (int dim = 1; dim <= array_type.rank; dim++) {
+								ccode.add_declaration ("int", new CCodeVariableDeclarator ("_result_length%d".printf (dim), new CCodeConstant ("0")));
+							}
+						}
+
+						read_expression (m.return_type, new CCodeIdentifier ("_reply_iter"), new CCodeIdentifier ("_result"), m);
+
+						if (array_type != null) {
+							for (int dim = 1; dim <= array_type.rank; dim++) {
+								// TODO check that parameter is not NULL (out parameters are optional)
+								ccode.add_expression (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result_length%d".printf (dim))), new CCodeIdentifier ("_result_length%d".printf (dim))));
+							}
 						}
 					}
 				}
 			}
 
-			if (!(m.return_type is VoidType)) {
-				if (m.return_type.is_real_non_null_struct_type ()) {
-					var target = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result"));
-					read_expression (m.return_type, new CCodeIdentifier ("_reply_iter"), target, m);
-				} else {
-					ccode.add_declaration (m.return_type.get_cname (), new CCodeVariableDeclarator ("_result"));
-
-					var array_type = m.return_type as ArrayType;
-
-					if (array_type != null) {
-						for (int dim = 1; dim <= array_type.rank; dim++) {
-							ccode.add_declaration ("int", new CCodeVariableDeclarator ("_result_length%d".printf (dim), new CCodeConstant ("0")));
-						}
-					}
-
-					read_expression (m.return_type, new CCodeIdentifier ("_reply_iter"), new CCodeIdentifier ("_result"), m);
-
-					if (array_type != null) {
-						for (int dim = 1; dim <= array_type.rank; dim++) {
-							// TODO check that parameter is not NULL (out parameters are optional)
-							ccode.add_expression (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result_length%d".printf (dim))), new CCodeIdentifier ("_result_length%d".printf (dim))));
-						}
-					}
-				}
-			}
-
-			var unref_reply = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_unref"));
-			unref_reply.add_argument (new CCodeIdentifier ("_reply"));
 			ccode.add_expression (unref_reply);
 
 			if (!(m.return_type is VoidType || m.return_type.is_real_non_null_struct_type ())) {
@@ -603,7 +645,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		push_function (function);
 
-		generate_marshalling (m, no_reply ? CallType.NO_REPLY : CallType.SYNC, dbus_iface_name, "%s.%s".printf (dbus_iface_name, get_dbus_name_for_member (m)));
+		generate_marshalling (m, no_reply ? CallType.NO_REPLY : CallType.SYNC, dbus_iface_name, get_dbus_name_for_member (m));
 
 		pop_function ();
 
@@ -630,7 +672,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		push_function (function);
 
-		generate_marshalling (m, CallType.ASYNC, dbus_iface_name, "%s.%s".printf (dbus_iface_name, get_dbus_name_for_member (m)));
+		generate_marshalling (m, CallType.ASYNC, dbus_iface_name, get_dbus_name_for_member (m));
 
 		pop_function ();
 
