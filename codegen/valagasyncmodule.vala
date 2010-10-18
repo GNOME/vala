@@ -433,11 +433,7 @@ public class Vala.GAsyncModule : GSignalModule {
 			propagate_error.add_argument (new CCodeIdentifier ("error"));
 
 			ccode.open_if (propagate_error);
-			if (return_type is VoidType || return_type.is_real_non_null_struct_type ()) {
-				ccode.add_return ();
-			} else {
-				ccode.add_return (default_value_for_type (return_type, false));
-			}
+			return_default_value (return_type);
 			ccode.close ();
 		}
 

@@ -109,10 +109,8 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			ccode.add_return (new CCodeConstant ("NULL"));
 		} else if (current_method != null && current_method.coroutine) {
 			ccode.add_return (new CCodeConstant ("FALSE"));
-		} else if (current_return_type is VoidType) {
-			ccode.add_return ();
 		} else {
-			ccode.add_return (default_value_for_type (current_return_type, false));
+			return_default_value (current_return_type);
 		}
 	}
 
@@ -141,10 +139,8 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			ccode.add_return (new CCodeConstant ("NULL"));
 		} else if (current_method != null && current_method.coroutine) {
 			ccode.add_return (new CCodeConstant ("FALSE"));
-		} else if (current_return_type is VoidType) {
-			ccode.add_return ();
 		} else if (current_return_type != null) {
-			ccode.add_return (default_value_for_type (current_return_type, false));
+			return_default_value (current_return_type);
 		}
 	}
 

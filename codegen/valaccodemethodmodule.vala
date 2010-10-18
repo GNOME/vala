@@ -651,7 +651,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 			ccode.add_expression (cerrorcall);
 
 			// add return statement
-			ccode.add_return (default_value_for_type (creturn_type, false));
+			return_default_value (creturn_type);
 
 			cfile.add_function (ccode);
 		}

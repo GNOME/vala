@@ -5674,6 +5674,10 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		cfile.add_function (function);
 	}
 
+	public void return_default_value (DataType return_type) {
+		ccode.add_return (default_value_for_type (return_type, false));
+	}
+
 	public virtual string? get_custom_creturn_type (Method m) {
 		return null;
 	}

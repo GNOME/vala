@@ -479,11 +479,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 		if (call_type == CallType.SYNC || call_type == CallType.FINISH) {
 			// return on error
 			ccode.open_if (new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeIdentifier ("_reply")));
-			if (m.return_type is VoidType || m.return_type.is_real_non_null_struct_type ()) {
-				ccode.add_return ();
-			} else {
-				ccode.add_return (default_value_for_type (m.return_type, false));
-			}
+			return_default_value (m.return_type);
 			ccode.close ();
 
 			ccode.add_declaration ("GVariantIter", new CCodeVariableDeclarator ("_reply_iter"));
@@ -708,11 +704,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		// return on error
 		ccode.open_if (new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeIdentifier ("_reply")));
-		if (prop.property_type.is_real_non_null_struct_type ()) {
-			ccode.add_return ();
-		} else {
-			ccode.add_return (default_value_for_type (prop.property_type, false));
-		}
+		return_default_value (prop.property_type);
 		ccode.close ();
 
 		ccode.add_declaration ("GVariantIter", new CCodeVariableDeclarator ("_reply_iter"));
