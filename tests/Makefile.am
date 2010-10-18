@@ -96,6 +96,7 @@ TESTS = \
 	dbus/async.test \
 	dbus/async-errors.test \
 	dbus/signals.test \
+	dbus/filedescriptor.test \
 	dbus/bug596862.vala \
 	dbus/bug602003.test \
 	$(NULL)
