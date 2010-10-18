@@ -144,6 +144,13 @@ public class Vala.GVariantModule : GAsyncModule {
 				sig = sig.printf (element_sig);
 			}
 
+			if (sig == null &&
+			    (datatype.data_type.get_full_name () == "GLib.UnixInputStream" ||
+			     datatype.data_type.get_full_name () == "GLib.UnixOutputStream" ||
+			     datatype.data_type.get_full_name () == "GLib.Socket")) {
+				return "h";
+			}
+
 			return sig;
 		} else {
 			return null;
