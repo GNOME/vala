@@ -109,6 +109,8 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		}
 
 		if (!ready) {
+			ccode.add_declaration ("gint", new CCodeVariableDeclarator.zero ("_fd_index", new CCodeConstant ("0")));
+
 			foreach (FormalParameter param in m.get_parameters ()) {
 				if (param.direction != ParameterDirection.IN) {
 					continue;
@@ -128,7 +130,10 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 					}
 				}
 
-				read_expression (param.variable_type, new CCodeIdentifier ("_arguments_iter"), new CCodeIdentifier (param.name), param);
+				var message_expr = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_method_invocation_get_message"));
+				message_expr.add_argument (new CCodeIdentifier ("invocation"));
+
+				receive_dbus_value (param.variable_type, message_expr, new CCodeIdentifier ("_arguments_iter"), new CCodeIdentifier (param.name), param);
 			}
 		}
 

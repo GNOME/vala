@@ -150,4 +150,50 @@ public class Vala.GDBusModule : GVariantModule {
 			write_expression (type, builder_expr, expr, sym);
 		}
 	}
+
+	CCodeExpression? create_from_file_descriptor (DataType type, CCodeExpression expr) {
+		if (type is ObjectType) {
+			if (type.data_type.get_full_name () == "GLib.UnixInputStream") {
+				var result = new CCodeFunctionCall (new CCodeIdentifier ("g_unix_input_stream_new"));
+				result.add_argument (expr);
+				result.add_argument (new CCodeConstant ("TRUE"));
+				return result;
+			} else if (type.data_type.get_full_name () == "GLib.UnixOutputStream") {
+				var result = new CCodeFunctionCall (new CCodeIdentifier ("g_unix_output_stream_new"));
+				result.add_argument (expr);
+				result.add_argument (new CCodeConstant ("TRUE"));
+				return result;
+			} else if (type.data_type.get_full_name () == "GLib.Socket") {
+				var result = new CCodeFunctionCall (new CCodeIdentifier ("g_socket_new_from_fd"));
+				result.add_argument (expr);
+				result.add_argument (new CCodeConstant ("NULL"));
+				return result;
+			}
+		}
+
+		return null;
+	}
+
+	public void receive_dbus_value (DataType type, CCodeExpression message_expr, CCodeExpression iter_expr, CCodeExpression target_expr, Symbol? sym) {
+		var fd_list = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_message_get_unix_fd_list"));
+		fd_list.add_argument (message_expr);
+
+		var fd = new CCodeFunctionCall (new CCodeIdentifier ("g_unix_fd_list_get"));
+		fd.add_argument (fd_list);
+		fd.add_argument (new CCodeIdentifier ("_fd_index"));
+		fd.add_argument (new CCodeConstant ("NULL"));
+
+		var stream = create_from_file_descriptor (type, fd);
+		if (stream != null) {
+			var get_fd = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_iter_next"));
+			get_fd.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, iter_expr));
+			get_fd.add_argument (new CCodeConstant ("\"h\""));
+			get_fd.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_fd_index")));
+			ccode.add_expression (get_fd);
+
+			ccode.add_expression (new CCodeAssignment (target_expr, stream));
+		} else {
+			read_expression (type, iter_expr, target_expr, sym);
+		}
+	}
 }

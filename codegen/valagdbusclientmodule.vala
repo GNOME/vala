@@ -575,6 +575,8 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 			bool has_result = !(m.return_type is VoidType);
 
+			ccode.add_declaration ("gint", new CCodeVariableDeclarator.zero ("_fd_index", new CCodeConstant ("0")));
+
 			foreach (FormalParameter param in m.get_parameters ()) {
 				if (param.direction == ParameterDirection.OUT) {
 					has_result = true;
@@ -607,7 +609,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 						}
 
 						var target = new CCodeIdentifier ("_" + param.name);
-						read_expression (param.variable_type, new CCodeIdentifier ("_reply_iter"), target, param);
+						receive_dbus_value (param.variable_type, new CCodeIdentifier ("_reply_message"), new CCodeIdentifier ("_reply_iter"), target, param);
 
 						// TODO check that parameter is not NULL (out parameters are optional)
 						// free value if parameter is NULL
@@ -625,7 +627,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 				if (!(m.return_type is VoidType)) {
 					if (m.return_type.is_real_non_null_struct_type ()) {
 						var target = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result"));
-						read_expression (m.return_type, new CCodeIdentifier ("_reply_iter"), target, m);
+						receive_dbus_value (m.return_type, new CCodeIdentifier ("_reply_message"), new CCodeIdentifier ("_reply_iter"), target, m);
 					} else {
 						ccode.add_declaration (m.return_type.get_cname (), new CCodeVariableDeclarator ("_result"));
 
@@ -637,7 +639,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 							}
 						}
 
-						read_expression (m.return_type, new CCodeIdentifier ("_reply_iter"), new CCodeIdentifier ("_result"), m);
+						receive_dbus_value (m.return_type, new CCodeIdentifier ("_reply_message"), new CCodeIdentifier ("_reply_iter"), new CCodeIdentifier ("_result"), m);
 
 						if (array_type != null) {
 							for (int dim = 1; dim <= array_type.rank; dim++) {
