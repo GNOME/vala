@@ -55,7 +55,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 		push_function (func);
 
 		if (dynamic_method.dynamic_type.data_type == dbus_proxy_type) {
-			generate_dbus_method_wrapper (method);
+			generate_marshalling (method, CallType.SYNC, null, method.name);
 		} else {
 			Report.error (method.source_reference, "dynamic methods are not supported for `%s'".printf (dynamic_method.dynamic_type.to_string ()));
 		}
@@ -64,13 +64,6 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		cfile.add_function_declaration (func);
 		cfile.add_function (func);
-	}
-
-	void generate_dbus_method_wrapper (Method m) {
-		ccode.add_declaration ("GVariant", new CCodeVariableDeclarator ("*_arguments"));
-		ccode.add_declaration ("GVariant", new CCodeVariableDeclarator ("*_reply"));
-
-		generate_marshalling (m, CallType.SYNC, null, m.name);
 	}
 
 	void generate_proxy_interface_init (Interface main_iface, Interface iface) {
@@ -385,6 +378,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 	void generate_marshalling (Method m, CallType call_type, string? iface_name, string? method_name) {
 		if (call_type != CallType.FINISH) {
+			ccode.add_declaration ("GVariant", new CCodeVariableDeclarator ("*_arguments"));
 			ccode.add_declaration ("GVariantBuilder", new CCodeVariableDeclarator ("_arguments_builder"));
 
 			var builder_init = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_init"));
@@ -477,6 +471,8 @@ public class Vala.GDBusClientModule : GDBusModule {
 		}
 
 		if (call_type == CallType.SYNC || call_type == CallType.FINISH) {
+			ccode.add_declaration ("GVariant", new CCodeVariableDeclarator ("*_reply"));
+
 			// return on error
 			ccode.open_if (new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeIdentifier ("_reply")));
 			return_default_value (m.return_type);
@@ -569,11 +565,6 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		push_function (function);
 
-		ccode.add_declaration ("GVariant", new CCodeVariableDeclarator ("*_arguments"));
-		if (!no_reply) {
-			ccode.add_declaration ("GVariant", new CCodeVariableDeclarator ("*_reply"));
-		}
-
 		generate_marshalling (m, no_reply ? CallType.NO_REPLY : CallType.SYNC, dbus_iface_name, "%s.%s".printf (dbus_iface_name, get_dbus_name_for_member (m)));
 
 		pop_function ();
@@ -601,8 +592,6 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		push_function (function);
 
-		ccode.add_declaration ("GVariant", new CCodeVariableDeclarator ("*_arguments"));
-
 		generate_marshalling (m, CallType.ASYNC, dbus_iface_name, "%s.%s".printf (dbus_iface_name, get_dbus_name_for_member (m)));
 
 		pop_function ();
@@ -626,8 +615,6 @@ public class Vala.GDBusClientModule : GDBusModule {
 		generate_cparameters (m, cfile, cparam_map, function, null, null, null, 2);
 
 		push_function (function);
-
-		ccode.add_declaration ("GVariant", new CCodeVariableDeclarator ("*_reply"));
 
 		generate_marshalling (m, CallType.FINISH, null, null);
 
