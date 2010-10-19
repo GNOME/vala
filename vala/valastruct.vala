@@ -46,6 +46,7 @@ public class Vala.Struct : TypeSymbol {
 	private string marshaller_type_name;
 	private string get_value_function;
 	private string set_value_function;
+	private string take_value_function;
 	private string default_value = null;
 	private string copy_function;
 	private string destroy_function;
@@ -441,6 +442,9 @@ public class Vala.Struct : TypeSymbol {
 		if (a.has_argument ("set_value_function")) {
 			set_set_value_function (a.get_string ("set_value_function"));
 		}
+		if (a.has_argument ("take_value_function")) {
+			set_take_value_function (a.get_string ("take_value_function"));
+		}
 		if (a.has_argument ("default_value")) {
 			set_default_value (a.get_string ("default_value"));
 		}
@@ -607,13 +611,40 @@ public class Vala.Struct : TypeSymbol {
 			return set_value_function;
 		}
 	}
-	
+
+	public override string? get_take_value_function () {
+		if (take_value_function == null) {
+			if (base_type != null) {
+				var st = base_struct;
+				if (st != null) {
+					return st.get_take_value_function ();
+				}
+			}
+			if (is_simple_type ()) {
+				Report.error (source_reference, "The value type `%s` doesn't declare a GValue take function".printf (get_full_name ()));
+				// set take_value_function to avoid multiple errors
+				take_value_function = "";
+				return "";
+			} else if (has_type_id) {
+				return "g_value_take_boxed";
+			} else {
+				return "g_value_take_pointer";
+			}
+		} else {
+			return take_value_function;
+		}
+	}
+
 	private void set_get_value_function (string? function) {
 		get_value_function = function;
 	}
 	
 	private void set_set_value_function (string? function) {
 		set_value_function = function;
+	}
+
+	private void set_take_value_function (string? function) {
+		take_value_function = function;
 	}
 
 	public override string? get_default_value () {
