@@ -178,6 +178,7 @@ GActionGroup::action_state_changed has_emitter="1"
 
 GDBusAuthObserver::authorize_authenticated_peer has_emitter="1"
 GDBusConnection:closed hidden="1"
+GDBusError errordomain="1"
 
 GFileDescriptorBased hidden="1"
 
