@@ -478,6 +478,12 @@ public class Vala.Property : Symbol, Lockable {
 		}
 		analyzer.current_symbol = this;
 
+		if (property_type is VoidType) {
+			error = true;
+			Report.error (source_reference, "'void' not supported as property type");
+			return false;
+		}
+
 		property_type.check (analyzer);
 
 		if (get_accessor != null) {
