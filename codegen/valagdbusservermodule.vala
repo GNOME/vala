@@ -556,20 +556,12 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 		cfunc.modifiers |= CCodeModifiers.STATIC;
 
-		cfile.add_function_declaration (cfunc);
+		push_function (cfunc);
 
-		var block = new CCodeBlock ();
-		cfunc.block = block;
+		ccode.add_declaration ("gpointer*", new CCodeVariableDeclarator ("data", new CCodeIdentifier ("user_data")));
+		ccode.add_declaration ("gpointer", new CCodeVariableDeclarator ("object", new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("0"))));
 
-		var cdecl = new CCodeDeclaration ("gpointer*");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("data", new CCodeIdentifier ("user_data")));
-		block.add_statement (cdecl);
-
-		cdecl = new CCodeDeclaration ("gpointer");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("object", new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("0"))));
-		block.add_statement (cdecl);
-
-		CCodeIfStatement clastif = null;
+		bool first = true;
 
 		foreach (Method m in sym.get_methods ()) {
 			if (m is CreationMethod || m.binding != MemberBinding.INSTANCE
@@ -584,25 +576,25 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			ccheck.add_argument (new CCodeIdentifier ("method_name"));
 			ccheck.add_argument (new CCodeConstant ("\"%s\"".printf (get_dbus_name_for_member (m))));
 
-			var callblock = new CCodeBlock ();
+			if (first) {
+				ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ccheck, new CCodeConstant ("0")));
+				first = false;
+			} else {
+				ccode.else_if (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ccheck, new CCodeConstant ("0")));
+			}
 
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier (generate_dbus_wrapper (m, sym)));
 			ccall.add_argument (new CCodeIdentifier ("object"));
 			ccall.add_argument (new CCodeIdentifier ("parameters"));
 			ccall.add_argument (new CCodeIdentifier ("invocation"));
-
-			callblock.add_statement (new CCodeExpressionStatement (ccall));
-
-			var cif = new CCodeIfStatement (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ccheck, new CCodeConstant ("0")), callblock);
-			if (clastif == null) {
-				block.add_statement (cif);
-			} else {
-				clastif.false_statement = cif;
-			}
-
-			clastif = cif;
+			ccode.add_expression (ccall);
 		}
 
+		ccode.close ();
+
+		pop_function ();
+
+		cfile.add_function_declaration (cfunc);
 		cfile.add_function (cfunc);
 	}
 
