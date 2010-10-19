@@ -85,6 +85,11 @@ public class Vala.LocalVariable : Variable {
 		checked = true;
 
 		if (variable_type != null) {
+			if (variable_type is VoidType) {
+				error = true;
+				Report.error (source_reference, "'void' not supported as variable type");
+				return false;
+			}
 			variable_type.check (analyzer);
 		}
 

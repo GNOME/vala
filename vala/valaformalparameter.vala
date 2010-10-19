@@ -234,6 +234,11 @@ public class Vala.FormalParameter : Variable {
 		analyzer.current_symbol = parent_symbol;
 
 		if (variable_type != null) {
+			if (variable_type is VoidType) {
+				error = true;
+				Report.error (source_reference, "'void' not supported as parameter type");
+				return false;
+			}
 			variable_type.check (analyzer);
 		}
 
