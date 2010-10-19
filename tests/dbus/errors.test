@@ -1,0 +1,81 @@
+Packages: gio-2.0
+D-Bus
+
+Program: client
+
+[DBus (name = "org.example.Test")]
+interface Test : Object {
+	public abstract void test_void () throws Error;
+	public abstract int test_int (int i, out int j) throws Error;
+	public abstract string test_string (string s, out string t) throws Error;
+}
+
+void main () {
+	// client
+	Test test = Bus.get_proxy_sync (BusType.SESSION, "org.example.Test", "/org/example/test");
+
+	try {
+		test.test_void ();
+		assert_not_reached ();
+	} catch {
+	}
+
+	try {
+		int j, k;
+		k = test.test_int (42, out j);
+		assert_not_reached ();
+	} catch {
+	}
+
+	try {
+		string t, u;
+		u = test.test_string ("hello", out t);
+		assert (t == "world");
+		assert (u == "vala");
+		assert_not_reached ();
+	} catch {
+	}
+}
+
+Program: server
+
+[DBus (name = "org.example.Test")]
+class Test : Object {
+	public void test_void () throws Error {
+		throw new IOError.FAILED ("Operation failed");
+	}
+
+	public int test_int (int i, out int j) throws Error {
+		throw new IOError.FAILED ("Operation failed");
+	}
+
+	public string test_string (string s, out string t) throws Error {
+		throw new IOError.FAILED ("Operation failed");
+	}
+}
+
+MainLoop main_loop;
+
+void client_exit (Pid pid, int status) {
+	// client finished, terminate server
+	assert (status == 0);
+	main_loop.quit ();
+}
+
+void main () {
+	var conn = Bus.get_sync (BusType.SESSION);
+	conn.register_object ("/org/example/test", new Test ());
+
+	// try to register service in session bus
+	var request_result = conn.call_sync ("org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus", "RequestName",
+	                                      new Variant ("(su)", "org.example.Test", 0x4), null, 0, -1);
+	assert ((uint) request_result.get_child_value (0) == 1);
+
+	// server ready, spawn client
+	Pid client_pid;
+	Process.spawn_async (null, { "test", "/dbus/errors/client" }, null, SpawnFlags.DO_NOT_REAP_CHILD, null, out client_pid);
+	ChildWatch.add (client_pid, client_exit);
+
+	main_loop = new MainLoop ();
+	main_loop.run ();
+}

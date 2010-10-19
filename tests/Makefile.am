@@ -92,7 +92,9 @@ TESTS = \
 	dbus/basic-types.test \
 	dbus/arrays.test \
 	dbus/structs.test \
+	dbus/errors.test \
 	dbus/async.test \
+	dbus/async-errors.test \
 	dbus/signals.test \
 	dbus/bug596862.vala \
 	dbus/bug602003.test \
