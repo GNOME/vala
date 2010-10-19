@@ -4569,6 +4569,12 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					append_array_size (expr, get_array_length_cexpression (expr.inner, dim));
 				}
+			} else if (array_type != null) {
+				// cast from non-array to array, set invalid length
+				// required by string.data, e.g.
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					append_array_size (expr, new CCodeConstant ("-1"));
+				}
 			}
 
 			var innercexpr = get_cvalue (expr.inner);
