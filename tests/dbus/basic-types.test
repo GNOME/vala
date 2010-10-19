@@ -7,6 +7,7 @@ Program: client
 interface Test : Object {
 	public abstract string test_property { owned get; set; }
 
+	public abstract void test_void () throws IOError;
 	public abstract int test_int (int i, out int j) throws IOError;
 	public abstract string test_string (string s, out string t) throws IOError;
 }
@@ -14,6 +15,8 @@ interface Test : Object {
 void main () {
 	// client
 	Test test = Bus.get_proxy_sync (BusType.SESSION, "org.example.Test", "/org/example/test");
+
+	test.test_void ();
 
 	int j, k;
 	k = test.test_int (42, out j);
@@ -35,6 +38,9 @@ Program: server
 [DBus (name = "org.example.Test")]
 class Test : Object {
 	public string test_property { owned get; set; }
+
+	public void test_void () {
+	}
 
 	public int test_int (int i, out int j) {
 		assert (i == 42);

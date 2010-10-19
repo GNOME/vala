@@ -5,6 +5,7 @@ Program: client
 
 [DBus (name = "org.example.Test")]
 interface Test : Object {
+	public abstract async void test_void () throws IOError;
 	public abstract async int test_int (int i, out int j) throws IOError;
 	public abstract async string test_string (string s, out string t) throws IOError;
 }
@@ -12,6 +13,8 @@ interface Test : Object {
 MainLoop main_loop;
 
 async void run (Test test) {
+	yield test.test_void ();
+
 	int j, k;
 	k = yield test.test_int (42, out j);
 	assert (j == 23);
@@ -39,6 +42,11 @@ Program: server
 
 [DBus (name = "org.example.Test")]
 class Test : Object {
+	public async void test_void () {
+		Idle.add (test_void.callback);
+		yield;
+	}
+
 	public async int test_int (int i, out int j) {
 		assert (i == 42);
 		Idle.add (test_int.callback);
