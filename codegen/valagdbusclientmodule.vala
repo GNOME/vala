@@ -459,11 +459,18 @@ public class Vala.GDBusClientModule : GDBusModule {
 			ccode.add_declaration ("GUnixFDList", new CCodeVariableDeclarator ("*_fd_list"));
 			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_fd_list"), new CCodeFunctionCall (new CCodeIdentifier ("g_unix_fd_list_new"))));
 
+			CCodeExpression cancellable = new CCodeConstant ("NULL");
+
 			foreach (FormalParameter param in m.get_parameters ()) {
 				if (param.direction == ParameterDirection.IN) {
 					CCodeExpression expr = new CCodeIdentifier (param.name);
 					if (param.variable_type.is_real_struct_type ()) {
 						expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, expr);
+					}
+
+					if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.Cancellable") {
+						cancellable = expr;
+						continue;
 					}
 
 					send_dbus_value (param.variable_type, new CCodeIdentifier ("_arguments_builder"), expr, param);
@@ -497,7 +504,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 				ccall.add_argument (new CCodeConstant ("G_DBUS_SEND_MESSAGE_FLAGS_NONE"));
 				ccall.add_argument (timeout);
 				ccall.add_argument (new CCodeConstant ("NULL"));
-				ccall.add_argument (new CCodeConstant ("NULL"));
+				ccall.add_argument (cancellable);
 				ccall.add_argument (new CCodeIdentifier ("error"));
 				ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_reply_message"), ccall));
 			} else if (call_type == CallType.NO_REPLY) {
@@ -520,7 +527,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 				ccall.add_argument (new CCodeConstant ("G_DBUS_SEND_MESSAGE_FLAGS_NONE"));
 				ccall.add_argument (timeout);
 				ccall.add_argument (new CCodeConstant ("NULL"));
-				ccall.add_argument (new CCodeConstant ("NULL"));
+				ccall.add_argument (cancellable);
 
 				// use wrapper as source_object wouldn't be correct otherwise
 				ccall.add_argument (new CCodeIdentifier (generate_async_callback_wrapper ()));

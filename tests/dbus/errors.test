@@ -8,6 +8,7 @@ interface Test : Object {
 	public abstract void test_void () throws Error;
 	public abstract int test_int (int i, out int j) throws Error;
 	public abstract string test_string (string s, out string t) throws Error;
+	public abstract void test_cancellable (Cancellable? cancellable = null) throws Error;
 }
 
 void main () {
@@ -35,6 +36,14 @@ void main () {
 		assert_not_reached ();
 	} catch {
 	}
+
+	try {
+		var cancellable = new Cancellable ();
+		cancellable.cancel ();
+		test.test_cancellable (cancellable);
+		assert_not_reached ();
+	} catch {
+	}
 }
 
 Program: server
@@ -51,6 +60,9 @@ class Test : Object {
 
 	public string test_string (string s, out string t) throws Error {
 		throw new IOError.FAILED ("Operation failed");
+	}
+
+	public void test_cancellable (Cancellable? cancellable = null) throws Error {
 	}
 }
 

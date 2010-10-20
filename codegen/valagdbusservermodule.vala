@@ -116,6 +116,10 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 					continue;
 				}
 
+				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.Cancellable") {
+					continue;
+				}
+
 				var owned_type = param.variable_type.copy ();
 				owned_type.value_owned = true;
 
@@ -139,6 +143,11 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 		foreach (FormalParameter param in m.get_parameters ()) {
 			if (param.direction == ParameterDirection.IN && !ready) {
+				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.Cancellable") {
+					ccall.add_argument (new CCodeConstant ("NULL"));
+					continue;
+				}
+
 				var st = param.variable_type.data_type as Struct;
 				if (st != null && !st.is_simple_type ()) {
 					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
@@ -330,6 +339,10 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		foreach (FormalParameter param in m.get_parameters ()) {
 			if ((param.direction == ParameterDirection.IN && !ready) ||
 			    (param.direction == ParameterDirection.OUT && !no_reply && (!m.coroutine || ready))) {
+				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.Cancellable") {
+					continue;
+				}
+
 				var owned_type = param.variable_type.copy ();
 				owned_type.value_owned = true;
 
@@ -790,6 +803,10 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			var out_args_info = new CCodeInitializerList ();
 
 			foreach (FormalParameter param in m.get_parameters ()) {
+				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.Cancellable") {
+					continue;
+				}
+
 				var info = new CCodeInitializerList ();
 				info.append (new CCodeConstant ("-1"));
 				info.append (new CCodeConstant ("\"%s\"".printf (param.name)));

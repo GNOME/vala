@@ -8,6 +8,7 @@ interface Test : Object {
 	public abstract async void test_void () throws Error;
 	public abstract async int test_int (int i, out int j) throws Error;
 	public abstract async string test_string (string s, out string t) throws Error;
+	public abstract async void test_cancellable (Cancellable? cancellable = null) throws Error;
 }
 
 MainLoop main_loop;
@@ -31,6 +32,14 @@ async void run () {
 	try {
 		string t, u;
 		u = yield test.test_string ("hello", out t);
+		assert_not_reached ();
+	} catch {
+	}
+
+	try {
+		var cancellable = new Cancellable ();
+		cancellable.cancel ();
+		yield test.test_cancellable (cancellable);
 		assert_not_reached ();
 	} catch {
 	}
@@ -66,6 +75,11 @@ class Test : Object {
 		Idle.add (test_string.callback);
 		yield;
 		throw new IOError.FAILED ("Operation failed");
+	}
+
+	public async void test_cancellable (Cancellable? cancellable = null) throws Error {
+		Idle.add (test_cancellable.callback);
+		yield;
 	}
 }
 
