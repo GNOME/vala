@@ -28,6 +28,7 @@ public class Vala.GAsyncModule : GSignalModule {
 		var data = new CCodeStruct ("_" + dataname);
 
 		data.add_field ("int", "_state_");
+		data.add_field ("GObject*", "_source_object_");
 		data.add_field ("GAsyncResult*", "_res_");
 		data.add_field ("GSimpleAsyncResult*", "_async_result");
 
@@ -498,6 +499,7 @@ public class Vala.GAsyncModule : GSignalModule {
 		datadecl.add_declarator (new CCodeVariableDeclarator ("data"));
 		readyblock.add_statement (datadecl);
 		readyblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("data"), new CCodeIdentifier ("_user_data_"))));
+		readyblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_source_object_"), new CCodeIdentifier ("source_object"))));
 		readyblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_res_"), new CCodeIdentifier ("_res_"))));
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_real_cname () + "_co"));

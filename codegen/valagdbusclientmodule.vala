@@ -198,9 +198,11 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 	public override void visit_method_call (MethodCall expr) {
 		var mtype = expr.call.value_type as MethodType;
+		bool bus_get_proxy_async = (mtype != null && mtype.method_symbol.get_cname () == "g_bus_get_proxy");
 		bool bus_get_proxy_sync = (mtype != null && mtype.method_symbol.get_cname () == "g_bus_get_proxy_sync");
+		bool conn_get_proxy_async = (mtype != null && mtype.method_symbol.get_cname () == "g_dbus_connection_get_proxy_sync");
 		bool conn_get_proxy_sync = (mtype != null && mtype.method_symbol.get_cname () == "g_dbus_connection_get_proxy_sync");
-		if (!bus_get_proxy_sync && !conn_get_proxy_sync) {
+		if (!bus_get_proxy_async && !bus_get_proxy_sync && !conn_get_proxy_async && !conn_get_proxy_sync) {
 			base.visit_method_call (expr);
 			return;
 		}
@@ -216,7 +218,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 		}
 
 		var base_arg_index = 0;
-		if (bus_get_proxy_sync)
+		if (bus_get_proxy_async || bus_get_proxy_sync)
 			base_arg_index = 1;
 
 		var args = expr.get_argument_list ();
@@ -228,17 +230,34 @@ public class Vala.GDBusClientModule : GDBusModule {
 		// method can fail
 		current_method_inner_error = true;
 
-		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_initable_new"));
+		CCodeFunctionCall ccall;
+		if (bus_get_proxy_async || conn_get_proxy_async) {
+			ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_async_initable_new_async"));
+		} else {
+			ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_initable_new"));
+		}
 		ccall.add_argument (new CCodeIdentifier ("%s_PROXY".printf (iface.get_type_id ())));
+		if (bus_get_proxy_async || conn_get_proxy_async) {
+			// I/O priority
+			ccall.add_argument (new CCodeConstant ("0"));
+		}
 		cancellable.emit (this);
 		ccall.add_argument (get_cvalue (cancellable));
-		ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression ("_inner_error_")));
+		if (bus_get_proxy_async || conn_get_proxy_async) {
+			if (expr.is_yield_expression) {
+				// asynchronous call
+				ccall.add_argument (new CCodeIdentifier (current_method.get_cname () + "_ready"));
+				ccall.add_argument (new CCodeIdentifier ("data"));
+			}
+		} else {
+			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression ("_inner_error_")));
+		}
 		ccall.add_argument (new CCodeConstant ("\"g-flags\""));
 		ccall.add_argument (get_cvalue (flags));
 		ccall.add_argument (new CCodeConstant ("\"g-name\""));
 		name.emit (this);
 		ccall.add_argument (get_cvalue (name));
-		if (bus_get_proxy_sync) {
+		if (bus_get_proxy_async || bus_get_proxy_sync) {
 			Expression bus_type = args.get (0);
 			ccall.add_argument (new CCodeConstant ("\"g-bus-type\""));
 			bus_type.emit (this);
@@ -255,6 +274,24 @@ public class Vala.GDBusClientModule : GDBusModule {
 		ccall.add_argument (new CCodeConstant ("\"g-interface-name\""));
 		ccall.add_argument (new CCodeConstant ("\"%s\"".printf (get_dbus_name (iface))));
 		ccall.add_argument (new CCodeConstant ("NULL"));
+
+		if (bus_get_proxy_async || conn_get_proxy_async) {
+			if (expr.is_yield_expression) {
+				int state = next_coroutine_state++;
+
+				ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_state_"), new CCodeConstant (state.to_string ())));
+				ccode.add_expression (ccall);
+				ccode.add_return (new CCodeConstant ("FALSE"));
+				ccode.add_label ("_state_%d".printf (state));
+
+				ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_async_initable_new_finish"));
+				ccall.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_source_object_"));
+				// pass GAsyncResult stored in closure to finish function
+				ccall.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_res_"));
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression ("_inner_error_")));
+			}
+		}
+
 		set_cvalue (expr, ccall);
 	}
 

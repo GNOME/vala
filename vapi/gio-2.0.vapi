@@ -7,6 +7,8 @@ namespace GLib {
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static async GLib.DBusConnection @get (GLib.BusType bus_type, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		[CCode (cheader_filename = "gio/gio.h")]
+		public static async T get_proxy<T> (GLib.BusType bus_type, string name, string object_path, GLib.DBusProxyFlags flags = 0, GLib.Cancellable? cancellable = null) throws GLib.IOError;
+		[CCode (cheader_filename = "gio/gio.h")]
 		public static T get_proxy_sync<T> (GLib.BusType bus_type, string name, string object_path, GLib.DBusProxyFlags flags = 0, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static GLib.DBusConnection get_sync (GLib.BusType bus_type, GLib.Cancellable? cancellable = null) throws GLib.IOError;
@@ -200,6 +202,7 @@ namespace GLib {
 		public bool get_exit_on_close ();
 		public unowned string get_guid ();
 		public unowned GLib.Credentials get_peer_credentials ();
+		public async T get_proxy<T> (string? name, string object_path, GLib.DBusProxyFlags flags = 0, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public T get_proxy_sync<T> (string? name, string object_path, GLib.DBusProxyFlags flags = 0, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public unowned GLib.IOStream get_stream ();
 		public unowned string get_unique_name ();

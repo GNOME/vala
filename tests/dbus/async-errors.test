@@ -12,7 +12,9 @@ interface Test : Object {
 
 MainLoop main_loop;
 
-async void run (Test test) {
+async void run () {
+	Test test = yield Bus.get_proxy (BusType.SESSION, "org.example.Test", "/org/example/test");
+
 	try {
 		yield test.test_void ();
 		assert_not_reached ();
@@ -38,9 +40,7 @@ async void run (Test test) {
 
 void main () {
 	// client
-	Test test = Bus.get_proxy_sync (BusType.SESSION, "org.example.Test", "/org/example/test");
-
-	run.begin (test);
+	run.begin ();
 
 	main_loop = new MainLoop (null, false);
 	main_loop.run ();
