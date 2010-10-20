@@ -410,16 +410,16 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (prop.get_accessor.get_cname ()));
 		ccall.add_argument (new CCodeIdentifier ("self"));
 
-		if (prop.property_type.is_real_non_null_struct_type ()) {
-			ccode.add_declaration (prop.property_type.get_cname (), new CCodeVariableDeclarator.zero ("result", default_value_for_type (prop.property_type, true)));
+		if (prop.get_accessor.value_type.is_real_non_null_struct_type ()) {
+			ccode.add_declaration (prop.get_accessor.value_type.get_cname (), new CCodeVariableDeclarator.zero ("result", default_value_for_type (prop.get_accessor.value_type, true)));
 			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("result")));
 
 			ccode.add_expression (ccall);
 		} else {
-			ccode.add_declaration (prop.property_type.get_cname (), new CCodeVariableDeclarator ("result"));
+			ccode.add_declaration (prop.get_accessor.value_type.get_cname (), new CCodeVariableDeclarator ("result"));
 			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("result"), ccall));
 
-			var array_type = prop.property_type as ArrayType;
+			var array_type = prop.get_accessor.value_type as ArrayType;
 			if (array_type != null) {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					string length_cname = get_array_length_cname ("result", dim);
@@ -430,21 +430,21 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			}
 		}
 
-		var reply_expr = serialize_expression (prop.property_type, new CCodeIdentifier ("result"));
+		var reply_expr = serialize_expression (prop.get_accessor.value_type, new CCodeIdentifier ("result"));
 
 		ccode.add_declaration ("GVariant*", new CCodeVariableDeclarator ("_reply"));
 		ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_reply"), reply_expr));
 
-		if (requires_destroy (prop.property_type)) {
+		if (requires_destroy (prop.get_accessor.value_type)) {
 			// keep local alive (symbol_reference is weak)
 			// space before `result' is work around to not trigger
 			// variable renaming, we really mean C identifier `result' here
-			var local = new LocalVariable (prop.property_type, " result");
+			var local = new LocalVariable (prop.get_accessor.value_type, " result");
 			var ma = new MemberAccess.simple ("result");
 			ma.symbol_reference = local;
 			ma.value_type = local.variable_type.copy ();
 			visit_member_access (ma);
-			ccode.add_expression (get_unref_expression (new CCodeIdentifier ("result"), prop.property_type, ma));
+			ccode.add_expression (get_unref_expression (new CCodeIdentifier ("result"), prop.get_accessor.value_type, ma));
 		}
 
 		ccode.add_return (new CCodeIdentifier ("_reply"));
