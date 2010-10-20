@@ -222,7 +222,8 @@ public class Vala.GDBusClientModule : GDBusModule {
 		var args = expr.get_argument_list ();
 		Expression name = args.get (base_arg_index + 0);
 		Expression object_path = args.get (base_arg_index + 1);
-		Expression cancellable = args.get (base_arg_index + 2);
+		Expression flags = args.get (base_arg_index + 2);
+		Expression cancellable = args.get (base_arg_index + 3);
 
 		// method can fail
 		current_method_inner_error = true;
@@ -233,7 +234,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 		ccall.add_argument (get_cvalue (cancellable));
 		ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression ("_inner_error_")));
 		ccall.add_argument (new CCodeConstant ("\"g-flags\""));
-		ccall.add_argument (new CCodeConstant ("G_DBUS_PROXY_FLAGS_DO_NOT_LOAD_PROPERTIES"));
+		ccall.add_argument (get_cvalue (flags));
 		ccall.add_argument (new CCodeConstant ("\"g-name\""));
 		name.emit (this);
 		ccall.add_argument (get_cvalue (name));

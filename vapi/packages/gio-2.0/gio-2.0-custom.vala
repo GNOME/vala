@@ -56,7 +56,7 @@ namespace GLib {
 	namespace Bus {
 		public async GLib.DBusConnection get (GLib.BusType bus_type, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public GLib.DBusConnection get_sync (GLib.BusType bus_type, GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		public T get_proxy_sync<T> (GLib.BusType bus_type, string name, string object_path, GLib.Cancellable? cancellable = null) throws GLib.IOError;
+		public T get_proxy_sync<T> (GLib.BusType bus_type, string name, string object_path, GLib.DBusProxyFlags flags = 0, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		[CCode (cname = "g_bus_own_name_with_closures")]
 		public uint own_name (GLib.BusType bus_type, string name, GLib.BusNameOwnerFlags flags, [CCode (type = "GClosure*")] owned GLib.BusAcquiredCallback bus_acquired_handler, [CCode (type = "GClosure*")] owned GLib.BusNameAcquiredCallback name_acquired_handler, [CCode (type = "GClosure*")] owned GLib.BusNameLostCallback name_lost_handler);
 		[CCode (cname = "g_bus_own_name_on_connection_with_closures")]
@@ -71,7 +71,7 @@ namespace GLib {
 
 	[CCode (cname = "GDBusConnection")]
 	public class DBusConnection {
-		public T get_proxy_sync<T> (string? name, string object_path, GLib.Cancellable? cancellable = null) throws GLib.IOError;
+		public T get_proxy_sync<T> (string? name, string object_path, GLib.DBusProxyFlags flags = 0, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public uint register_object<T> (string object_path, T object) throws GLib.IOError;
 	}
 }

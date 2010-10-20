@@ -13,7 +13,7 @@ interface Test : Object {
 
 void main () {
 	// client
-	Test test = Bus.get_proxy_sync (BusType.SESSION, "org.example.Test", "/org/example/test");
+	Test test = Bus.get_proxy_sync (BusType.SESSION, "org.example.Test", "/org/example/test", DBusProxyFlags.DO_NOT_LOAD_PROPERTIES);
 
 	int[] j, k;
 	k = test.test_int ({ 42 }, out j);
