@@ -48,6 +48,12 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 	string generate_dbus_wrapper (Method m, ObjectTypeSymbol sym, bool ready = false) {
 		string wrapper_name = "_dbus_%s".printf (m.get_cname ());
 
+		if (m.base_method != null) {
+			m = m.base_method;
+		} else if (m.base_interface_method != null) {
+			m = m.base_interface_method;
+		}
+
 		if (ready) {
 			// async ready function
 			wrapper_name += "_ready";
