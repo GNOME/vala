@@ -659,10 +659,19 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		push_function (function);
 
-		ccode.add_declaration ("GVariant", new CCodeVariableDeclarator ("*_arguments"));
-		ccode.add_declaration ("GVariant", new CCodeVariableDeclarator ("*_reply"));
 		ccode.add_declaration ("GVariant", new CCodeVariableDeclarator ("*_inner_reply"));
 
+		// first try cached value
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_proxy_get_cached_property"));
+		ccall.add_argument (new CCodeCastExpression (new CCodeIdentifier ("self"), "GDBusProxy *"));
+		ccall.add_argument (new CCodeConstant ("\"%s\"".printf (get_dbus_name_for_member (prop))));
+		ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_inner_reply"), ccall));
+
+		// if not successful, retrieve value via D-Bus
+		ccode.open_if (new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeIdentifier ("_inner_reply")));
+
+		ccode.add_declaration ("GVariant", new CCodeVariableDeclarator ("*_arguments"));
+		ccode.add_declaration ("GVariant", new CCodeVariableDeclarator ("*_reply"));
 		ccode.add_declaration ("GVariantBuilder", new CCodeVariableDeclarator ("_arguments_builder"));
 
 		var builder_init = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_init"));
@@ -679,7 +688,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 		builder_end.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_arguments_builder")));
 		ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_arguments"), builder_end));
 
-		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_proxy_call_sync"));
+		ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_proxy_call_sync"));
 		ccall.add_argument (new CCodeCastExpression (new CCodeIdentifier ("self"), "GDBusProxy *"));
 		ccall.add_argument (new CCodeConstant ("\"org.freedesktop.DBus.Properties.Get\""));
 		ccall.add_argument (new CCodeIdentifier ("_arguments"));
@@ -695,21 +704,22 @@ public class Vala.GDBusClientModule : GDBusModule {
 		return_default_value (prop.property_type);
 		ccode.close ();
 
-		ccode.add_declaration ("GVariantIter", new CCodeVariableDeclarator ("_reply_iter"));
-
-		var get_variant = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_get_child_value"));
+		var get_variant = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_get"));
 		get_variant.add_argument (new CCodeIdentifier ("_reply"));
-		get_variant.add_argument (new CCodeConstant ("0"));
-		ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_inner_reply"), get_variant));
+		get_variant.add_argument (new CCodeConstant ("\"(v)\""));
+		get_variant.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_inner_reply")));
+		ccode.add_expression (get_variant);
 
-		var iter_init = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_iter_init"));
-		iter_init.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_reply_iter")));
-		iter_init.add_argument (new CCodeIdentifier ("_inner_reply"));
-		ccode.add_expression (iter_init);
+		var unref_reply = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_unref"));
+		unref_reply.add_argument (new CCodeIdentifier ("_reply"));
+		ccode.add_expression (unref_reply);
+
+		ccode.close ();
 
 		if (prop.property_type.is_real_non_null_struct_type ()) {
 			var target = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result"));
-			read_expression (prop.get_accessor.value_type, new CCodeIdentifier ("_reply_iter"), target, prop);
+			var result = deserialize_expression (prop.get_accessor.value_type, new CCodeIdentifier ("_inner_reply"), target);
+			ccode.add_expression (new CCodeAssignment (target, result));
 		} else {
 			ccode.add_declaration (prop.get_accessor.value_type.get_cname (), new CCodeVariableDeclarator ("_result"));
 
@@ -719,7 +729,8 @@ public class Vala.GDBusClientModule : GDBusModule {
 				}
 			}
 
-			read_expression (prop.get_accessor.value_type, new CCodeIdentifier ("_reply_iter"), new CCodeIdentifier ("_result"), prop);
+			var result = deserialize_expression (prop.get_accessor.value_type, new CCodeIdentifier ("_inner_reply"), new CCodeIdentifier ("_result"));
+			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_result"), result));
 
 			if (array_type != null) {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
@@ -729,8 +740,8 @@ public class Vala.GDBusClientModule : GDBusModule {
 			}
 		}
 
-		var unref_reply = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_unref"));
-		unref_reply.add_argument (new CCodeIdentifier ("_reply"));
+		unref_reply = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_unref"));
+		unref_reply.add_argument (new CCodeIdentifier ("_inner_reply"));
 		ccode.add_expression (unref_reply);
 
 		if (prop.property_type.is_real_non_null_struct_type ()) {
