@@ -962,6 +962,11 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		var ma = (MemberAccess) expr.call;
 		var type_arg = (ObjectType) ma.get_type_arguments ().get (0);
 
+		if (get_dbus_name (type_arg.type_symbol) == null) {
+			Report.error (expr.source_reference, "DBusConnection.register_object requires type argument with [DBus (name = ...)] attribute");
+			return;
+		}
+
 		var args = expr.get_argument_list ();
 		var path_arg = args[0];
 		var obj_arg = args[1];
