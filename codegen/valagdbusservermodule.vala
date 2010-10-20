@@ -52,6 +52,12 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 		CCodeDeclaration cdecl;
 
+		if (m.base_method != null) {
+			m = m.base_method;
+		} else if (m.base_interface_method != null) {
+			m = m.base_interface_method;
+		}
+
 		var function = new CCodeFunction (wrapper_name);
 		function.modifiers = CCodeModifiers.STATIC;
 		function.add_parameter (new CCodeFormalParameter ("self", sym.get_cname () + "*"));
