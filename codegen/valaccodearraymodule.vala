@@ -522,12 +522,14 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		}
 	}
 
-	public override CCodeExpression get_unref_expression (CCodeExpression cvar, DataType type, Expression? expr, bool is_macro_definition) {
+	public override CCodeExpression destroy_value (TargetValue value, bool is_macro_definition = false) {
+		var type = value.value_type;
+
 		if (type is ArrayType) {
 			var array_type = (ArrayType) type;
 
 			if (!array_type.fixed_length) {
-				return base.get_unref_expression (cvar, type, expr, is_macro_definition);
+				return base.destroy_value (value, is_macro_definition);
 			}
 
 			requires_array_free = true;
@@ -535,13 +537,13 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			var ccall = new CCodeFunctionCall (get_destroy_func_expression (type));
 
 			ccall = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_destroy"));
-			ccall.add_argument (cvar);
+			ccall.add_argument (get_cvalue_ (value));
 			ccall.add_argument (new CCodeConstant ("%d".printf (array_type.length)));
 			ccall.add_argument (new CCodeCastExpression (get_destroy_func_expression (array_type.element_type), "GDestroyNotify"));
 
 			return ccall;
 		} else {
-			return base.get_unref_expression (cvar, type, expr, is_macro_definition);
+			return base.destroy_value (value, is_macro_definition);
 		}
 	}
 

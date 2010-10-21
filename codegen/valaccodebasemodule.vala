@@ -2900,10 +2900,23 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return null;
 	}
 
-	public virtual CCodeExpression get_unref_expression (CCodeExpression cvar, DataType type, Expression? expr, bool is_macro_definition = false) {
+	public CCodeExpression get_unref_expression (CCodeExpression cvar, DataType type, Expression? expr, bool is_macro_definition = false) {
+		var value = new GLibValue (type, cvar);
+		if (expr != null && expr.target_value != null) {
+			value.array_length_cvalues = ((GLibValue) expr.target_value).array_length_cvalues;
+			value.delegate_target_cvalue = get_delegate_target_cvalue (expr.target_value);
+			value.delegate_target_destroy_notify_cvalue = get_delegate_target_destroy_notify_cvalue (expr.target_value);
+		}
+		return destroy_value (value, is_macro_definition);
+	}
+
+	public virtual CCodeExpression destroy_value (TargetValue value, bool is_macro_definition = false) {
+		var type = value.value_type;
+		var cvar = get_cvalue_ (value);
+
 		if (type is DelegateType) {
-			CCodeExpression delegate_target_destroy_notify;
-			var delegate_target = get_delegate_target_cexpression (expr, out delegate_target_destroy_notify);
+			var delegate_target = get_delegate_target_cvalue (value);
+			var delegate_target_destroy_notify = get_delegate_target_destroy_notify_cvalue (value);
 
 			var ccall = new CCodeFunctionCall (delegate_target_destroy_notify);
 			ccall.add_argument (delegate_target);
@@ -2957,7 +2970,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			string free0_func = "_%s0".printf (freeid.name);
 
 			if (add_wrapper (free0_func)) {
-				var macro = get_unref_expression (new CCodeIdentifier ("var"), type, expr, true);
+				var macro = destroy_value (new GLibValue (type, new CCodeIdentifier ("var")), true);
 				cfile.add_type_declaration (new CCodeMacroReplacement.with_expression ("%s(var)".printf (free0_func), macro));
 			}
 
@@ -3006,10 +3019,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					bool first = true;
 					for (int dim = 1; dim <= array_type.rank; dim++) {
 						if (first) {
-							csizeexpr = get_array_length_cexpression (expr, dim);
+							csizeexpr = get_array_length_cvalue (value, dim);
 							first = false;
 						} else {
-							csizeexpr = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, csizeexpr, get_array_length_cexpression (expr, dim));
+							csizeexpr = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, csizeexpr, get_array_length_cvalue (value, dim));
 						}
 					}
 

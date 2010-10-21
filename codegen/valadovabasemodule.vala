@@ -1058,7 +1058,14 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 		}
 	}
 
-	public virtual CCodeExpression get_unref_expression (CCodeExpression cvar, DataType type, Expression? expr = null) {
+	public CCodeExpression get_unref_expression (CCodeExpression cvar, DataType type, Expression? expr = null) {
+		return destroy_value (new DovaValue (type, cvar));
+	}
+
+	public CCodeExpression destroy_value (TargetValue value) {
+		var type = value.value_type;
+		var cvar = get_cvalue_ (value);
+
 		var ccall = new CCodeFunctionCall (get_destroy_func_expression (type));
 
 		if (type is ValueType && !type.nullable) {
