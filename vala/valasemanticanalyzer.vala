@@ -123,6 +123,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				}
 			}
 
+			if (is_in_constructor () || is_in_destructor ()) {
+				return void_type;
+			}
+
 			return null;
 		}
 	}
@@ -879,6 +883,17 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		var sym = current_symbol;
 		while (sym != null) {
 			if (sym is Constructor) {
+				return true;
+			}
+			sym = sym.parent_symbol;
+		}
+		return false;
+	}
+
+	public bool is_in_destructor () {
+		var sym = current_symbol;
+		while (sym != null) {
+			if (sym is Destructor) {
 				return true;
 			}
 			sym = sym.parent_symbol;

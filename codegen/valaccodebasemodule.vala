@@ -121,8 +121,34 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 				}
 			}
 
+			if (is_in_constructor () || is_in_destructor ()) {
+				return void_type;
+			}
+
 			return null;
 		}
+	}
+
+	bool is_in_constructor () {
+		var sym = current_symbol;
+		while (sym != null) {
+			if (sym is Constructor) {
+				return true;
+			}
+			sym = sym.parent_symbol;
+		}
+		return false;
+	}
+
+	bool is_in_destructor () {
+		var sym = current_symbol;
+		while (sym != null) {
+			if (sym is Destructor) {
+				return true;
+			}
+			sym = sym.parent_symbol;
+		}
+		return false;
 	}
 
 	public Block? current_closure_block {
@@ -3326,7 +3352,13 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			}
 		}
 
-		if (current_method is CreationMethod) {
+		if (is_in_constructor ()) {
+			ccode.add_return (new CCodeIdentifier ("obj"));
+		} else if (is_in_destructor ()) {
+			// do not call return as member cleanup and chain up to base finalizer
+			// stil need to be executed
+			ccode.add_goto ("_return");
+		} else if (current_method is CreationMethod) {
 			ccode.add_return (new CCodeIdentifier ("self"));
 		} else if (current_method != null && current_method.coroutine) {
 		} else if (current_return_type is VoidType || current_return_type.is_real_non_null_struct_type ()) {
