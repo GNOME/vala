@@ -183,4 +183,17 @@ public class Vala.DovaAssignmentModule : DovaMemberAccessModule {
 			}
 		}
 	}
+
+	void store_variable (Variable variable, TargetValue lvalue, TargetValue value) {
+		if (requires_destroy (variable.variable_type)) {
+			/* unref old value */
+			ccode.add_expression (destroy_value (lvalue));
+		}
+
+		ccode.add_expression (new CCodeAssignment (get_cvalue_ (lvalue), get_cvalue_ (value)));
+	}
+
+	public override void store_local (LocalVariable local, TargetValue value) {
+		store_variable (local, get_local_cvalue (local), value);
+	}
 }

@@ -22,7 +22,7 @@
  *	Raffaele Sandrini <raffaele@sandrini.ch>
  */
 
-public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
+public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 	public override void visit_member_access (MemberAccess expr) {
 		CCodeExpression pub_inst = null;
 	

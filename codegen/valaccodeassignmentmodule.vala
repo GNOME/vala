@@ -234,4 +234,45 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 			}
 		}
 	}
+
+	void store_variable (Variable variable, TargetValue lvalue, TargetValue value) {
+		if (requires_destroy (variable.variable_type)) {
+			/* unref old value */
+			ccode.add_expression (destroy_value (lvalue));
+		}
+
+		ccode.add_expression (new CCodeAssignment (get_cvalue_ (lvalue), get_cvalue_ (value)));
+
+		var array_type = variable.variable_type as ArrayType;
+		if (array_type != null) {
+			for (int dim = 1; dim <= array_type.rank; dim++) {
+				if (get_array_length_cvalue (lvalue, dim) != null) {
+					ccode.add_expression (new CCodeAssignment (get_array_length_cvalue (lvalue, dim), get_array_length_cvalue (value, dim)));
+				}
+			}
+			if (array_type.rank == 1) {
+				if (get_array_size_cvalue (lvalue) != null) {
+					if (get_array_size_cvalue (value) != null) {
+						ccode.add_expression (new CCodeAssignment (get_array_size_cvalue (lvalue), get_array_size_cvalue (value)));
+					} else {
+						ccode.add_expression (new CCodeAssignment (get_array_size_cvalue (lvalue), get_array_length_cvalue (value, 1)));
+					}
+				}
+			}
+		}
+
+		var delegate_type = variable.variable_type as DelegateType;
+		if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
+			if (get_delegate_target_cvalue (lvalue) != null) {
+				ccode.add_expression (new CCodeAssignment (get_delegate_target_cvalue (lvalue), get_delegate_target_cvalue (value)));
+				if (get_delegate_target_destroy_notify_cvalue (lvalue) != null) {
+					ccode.add_expression (new CCodeAssignment (get_delegate_target_destroy_notify_cvalue (lvalue), get_delegate_target_destroy_notify_cvalue (value)));
+				}
+			}
+		}
+	}
+
+	public override void store_local (LocalVariable local, TargetValue value) {
+		store_variable (local, get_local_cvalue (local), value);
+	}
 }

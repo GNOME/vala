@@ -22,7 +22,7 @@
 
 using GLib;
 
-public class Vala.DovaMemberAccessModule : DovaControlFlowModule {
+public abstract class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 	public override void visit_member_access (MemberAccess expr) {
 		CCodeExpression pub_inst = null;
 		DataType base_type = null;
