@@ -20,7 +20,7 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-public class Vala.DovaControlFlowModule : DovaMethodModule {
+public abstract class Vala.DovaControlFlowModule : DovaMethodModule {
 	public override void visit_if_statement (IfStatement stmt) {
 		ccode.open_if (get_cvalue (stmt.condition));
 

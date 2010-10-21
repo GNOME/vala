@@ -26,7 +26,7 @@
 /**
  * Code visitor generating C Code.
  */
-public class Vala.CCodeBaseModule : CodeGenerator {
+public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public class EmitContext {
 		public Symbol? current_symbol;
 		public ArrayList<Symbol> symbol_stack = new ArrayList<Symbol> ();

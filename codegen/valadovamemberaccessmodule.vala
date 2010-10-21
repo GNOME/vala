@@ -189,16 +189,7 @@ public class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 			set_cvalue (expr, ccall);
 		} else if (expr.symbol_reference is LocalVariable) {
 			var local = (LocalVariable) expr.symbol_reference;
-			if (local.is_result) {
-				// used in postconditions
-				set_cvalue (expr, new CCodeIdentifier ("result"));
-			} else if (local.captured) {
-				// captured variables are stored on the heap
-				var block = (Block) local.parent_symbol;
-				set_cvalue (expr, new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_variable_cname (local.name)));
-			} else {
-				set_cvalue (expr, get_variable_cexpression (local.name));
-			}
+			expr.target_value = load_local (local);
 		} else if (expr.symbol_reference is FormalParameter) {
 			var p = (FormalParameter) expr.symbol_reference;
 			if (p.name == "this") {
@@ -251,6 +242,31 @@ public class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 				}
 			}
 		}
+	}
+
+	public TargetValue get_local_cvalue (LocalVariable local) {
+		var result = new GLibValue (local.variable_type);
+
+		if (local.is_result) {
+			// used in postconditions
+			result.cvalue = new CCodeIdentifier ("result");
+		} else if (local.captured) {
+			// captured variables are stored on the heap
+			var block = (Block) local.parent_symbol;
+			result.cvalue = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_variable_cname (local.name));
+		} else {
+			result.cvalue = get_variable_cexpression (local.name);
+		}
+
+		return result;
+	}
+
+	TargetValue load_variable (Variable variable, TargetValue value) {
+		return value;
+	}
+
+	public override TargetValue load_local (LocalVariable local) {
+		return load_variable (local, get_local_cvalue (local));
 	}
 }
 

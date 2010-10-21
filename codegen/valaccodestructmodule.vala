@@ -24,7 +24,7 @@
 
 using GLib;
 
-public class Vala.CCodeStructModule : CCodeBaseModule {
+public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 	public override void generate_struct_declaration (Struct st, CCodeFile decl_space) {
 		if (add_symbol_declaration (decl_space, st, st.get_cname ())) {
 			return;

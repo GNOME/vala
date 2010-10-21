@@ -471,59 +471,21 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			}
 		} else if (expr.symbol_reference is LocalVariable) {
 			var local = (LocalVariable) expr.symbol_reference;
-			if (local.is_result) {
-				// used in postconditions
-				// structs are returned as out parameter
-				if (local.variable_type != null && local.variable_type.is_real_non_null_struct_type ()) {
-					set_cvalue (expr, new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result")));
-				} else {
-					set_cvalue (expr, new CCodeIdentifier ("result"));
-				}
-			} else if (local.captured) {
-				// captured variables are stored on the heap
-				var block = (Block) local.parent_symbol;
-				set_cvalue (expr, new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_variable_cname (local.name)));
-				if (array_type != null) {
-					for (int dim = 1; dim <= array_type.rank; dim++) {
-						append_array_size (expr, new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_array_length_cname (get_variable_cname (local.name), dim)));
-					}
-				} else if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
-					set_delegate_target (expr, new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_cname (get_variable_cname (local.name))));
-					set_delegate_target_destroy_notify (expr, new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_destroy_notify_cname (get_variable_cname (local.name))));
-				}
-			} else {
-				set_cvalue (expr, get_variable_cexpression (local.name));
-				if (array_type != null) {
-					for (int dim = 1; dim <= array_type.rank; dim++) {
-						append_array_size (expr, get_variable_cexpression (get_array_length_cname (get_variable_cname (local.name), dim)));
-					}
-				} else if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
-					if (current_method != null && current_method.coroutine) {
-						set_delegate_target (expr, new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_delegate_target_cname (get_variable_cname (local.name))));
-						set_delegate_target_destroy_notify (expr, new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_delegate_target_destroy_notify_cname (get_variable_cname (local.name))));
-					} else {
-						set_delegate_target (expr, new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (local.name))));
-						if (expr.value_type.value_owned) {
-							set_delegate_target_destroy_notify (expr, new CCodeIdentifier (get_delegate_target_destroy_notify_cname (get_variable_cname (local.name))));
-						} else {
-							set_delegate_target_destroy_notify (expr, new CCodeConstant ("NULL"));
-						}
-					}
-				}
+			expr.target_value = load_local (local);
 
-				if (expr.parent_node is ReturnStatement &&
-				    current_return_type.value_owned &&
-				    local.variable_type.value_owned &&
-				    !variable_accessible_in_finally (local)) {
-					/* return expression is local variable taking ownership and
-					 * current method is transferring ownership */
+			if (expr.parent_node is ReturnStatement &&
+			    current_return_type.value_owned &&
+			    local.variable_type.value_owned &&
+			    !local.captured &&
+			    !variable_accessible_in_finally (local)) {
+				/* return expression is local variable taking ownership and
+				 * current method is transferring ownership */
 
-					// don't ref expression
-					expr.value_type.value_owned = true;
+				// don't ref expression
+				expr.value_type.value_owned = true;
 
-					// don't unref variable
-					local.active = false;
-				}
+				// don't unref variable
+				local.active = false;
 			}
 		} else if (expr.symbol_reference is FormalParameter) {
 			var p = (FormalParameter) expr.symbol_reference;
@@ -627,5 +589,64 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			}
 		}
 	}
-}
 
+	public TargetValue get_local_cvalue (LocalVariable local) {
+		var result = new GLibValue (local.variable_type);
+
+		var array_type = local.variable_type as ArrayType;
+		var delegate_type = local.variable_type as DelegateType;
+
+		if (local.is_result) {
+			// used in postconditions
+			// structs are returned as out parameter
+			if (local.variable_type != null && local.variable_type.is_real_non_null_struct_type ()) {
+				result.cvalue = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result"));
+			} else {
+				result.cvalue = new CCodeIdentifier ("result");
+			}
+		} else if (local.captured) {
+			// captured variables are stored on the heap
+			var block = (Block) local.parent_symbol;
+			result.cvalue = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_variable_cname (local.name));
+			if (array_type != null) {
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					result.append_array_length_cvalue (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_array_length_cname (get_variable_cname (local.name), dim)));
+				}
+			} else if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
+				result.delegate_target_cvalue = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_cname (get_variable_cname (local.name)));
+				result.delegate_target_destroy_notify_cvalue = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_destroy_notify_cname (get_variable_cname (local.name)));
+			}
+		} else {
+			result.cvalue = get_variable_cexpression (local.name);
+			if (array_type != null) {
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					result.append_array_length_cvalue (get_variable_cexpression (get_array_length_cname (get_variable_cname (local.name), dim)));
+				}
+			} else if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
+				if (current_method != null && current_method.coroutine) {
+					result.delegate_target_cvalue = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_delegate_target_cname (get_variable_cname (local.name)));
+					result.delegate_target_destroy_notify_cvalue = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_delegate_target_destroy_notify_cname (get_variable_cname (local.name)));
+				} else {
+					result.delegate_target_cvalue = new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (local.name)));
+					if (local.variable_type.value_owned) {
+						result.delegate_target_destroy_notify_cvalue = new CCodeIdentifier (get_delegate_target_destroy_notify_cname (get_variable_cname (local.name)));
+					}
+				}
+			}
+		}
+
+		return result;
+	}
+
+	TargetValue load_variable (Variable variable, TargetValue value) {
+		return value;
+	}
+
+	public override TargetValue load_local (LocalVariable local) {
+		var result = (GLibValue) get_local_cvalue (local);
+		if (local.variable_type is DelegateType && result.delegate_target_destroy_notify_cvalue == null) {
+			result.delegate_target_destroy_notify_cvalue = new CCodeConstant ("NULL");
+		}
+		return load_variable (local, result);
+	}
+}
