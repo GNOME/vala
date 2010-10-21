@@ -102,8 +102,8 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		// free local variables
 		append_local_free (current_symbol, false);
 
-		if (current_method is CreationMethod) {
-			var cl = current_method.parent_symbol as Class;
+		if (current_method is CreationMethod && current_method.parent_symbol is Class) {
+			var cl = (Class) current_method.parent_symbol;
 			var unref_call = get_unref_expression (new CCodeIdentifier ("self"), new ObjectType (cl), null);
 			ccode.add_expression (unref_call);
 			ccode.add_return (new CCodeConstant ("NULL"));
@@ -136,7 +136,11 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		ccode.add_expression (cclear);
 
 		if (current_method is CreationMethod) {
-			ccode.add_return (new CCodeConstant ("NULL"));
+			if (current_method.parent_symbol is Struct) {
+				ccode.add_return ();
+			} else {
+				ccode.add_return (new CCodeConstant ("NULL"));
+			}
 		} else if (current_method != null && current_method.coroutine) {
 			ccode.add_return (new CCodeConstant ("FALSE"));
 		} else if (current_return_type != null) {
