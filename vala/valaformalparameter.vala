@@ -252,6 +252,7 @@ public class Vala.FormalParameter : Variable {
 			}
 
 			if (initializer != null) {
+				initializer.target_type = variable_type.copy ();
 				initializer.check (analyzer);
 			}
 		}
