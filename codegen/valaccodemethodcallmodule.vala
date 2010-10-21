@@ -358,6 +358,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 							if (d.has_target) {
 								CCodeExpression delegate_target_destroy_notify;
 								var delegate_target = get_delegate_target_cexpression (arg, out delegate_target_destroy_notify);
+								assert (delegate_target != null);
 								if (param.ctype == "GClosure*") {
 									// one single GClosure parameter
 									var closure_new = new CCodeFunctionCall (new CCodeIdentifier ("g_cclosure_new"));
@@ -368,6 +369,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 								} else {
 									carg_map.set (get_param_pos (param.cdelegate_target_parameter_position), delegate_target);
 									if (deleg_type.value_owned) {
+										assert (delegate_target_destroy_notify != null);
 										carg_map.set (get_param_pos (param.cdelegate_target_parameter_position + 0.01), delegate_target_destroy_notify);
 									}
 								}
