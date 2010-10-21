@@ -77,7 +77,7 @@ void main (string[] args) {
 	switch (args[1]) {
 EOF
 
-PACKAGES=
+PACKAGES=gio-2.0
 SOURCEFILES=
 for testfile in "$@"; do
 	rm -f prepare check
