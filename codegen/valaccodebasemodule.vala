@@ -5815,7 +5815,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 	public void set_cvalue (Expression expr, CCodeExpression? cvalue) {
 		var glib_value = (GLibValue) expr.target_value;
 		if (glib_value == null) {
-			glib_value = new GLibValue ();
+			glib_value = new GLibValue (expr.value_type);
 			expr.target_value = glib_value;
 		}
 		glib_value.ccodenode = cvalue;
@@ -5832,7 +5832,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 	public void set_delegate_target (Expression expr, CCodeExpression? delegate_target) {
 		var glib_value = (GLibValue) expr.target_value;
 		if (glib_value == null) {
-			glib_value = new GLibValue ();
+			glib_value = new GLibValue (expr.value_type);
 			expr.target_value = glib_value;
 		}
 		glib_value.delegate_target = delegate_target;
@@ -5849,7 +5849,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 	public void set_delegate_target_destroy_notify (Expression expr, CCodeExpression destroy_notify) {
 		var glib_value = (GLibValue) expr.target_value;
 		if (glib_value == null) {
-			glib_value = new GLibValue ();
+			glib_value = new GLibValue (expr.value_type);
 			expr.target_value = glib_value;
 		}
 		glib_value.delegate_target_destroy_notify = destroy_notify;
@@ -5858,7 +5858,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 	public void append_array_size (Expression expr, CCodeExpression size) {
 		var glib_value = (GLibValue) expr.target_value;
 		if (glib_value == null) {
-			glib_value = new GLibValue ();
+			glib_value = new GLibValue (expr.value_type);
 			expr.target_value = glib_value;
 		}
 		if (glib_value.array_sizes == null) {
@@ -5870,7 +5870,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 	public List<CCodeExpression>? get_array_sizes (Expression expr) {
 		var glib_value = (GLibValue) expr.target_value;
 		if (glib_value == null) {
-			glib_value = new GLibValue ();
+			glib_value = new GLibValue (expr.value_type);
 			expr.target_value = glib_value;
 		}
 		return glib_value.array_sizes;
@@ -5884,4 +5884,9 @@ public class Vala.GLibValue : TargetValue {
 
 	public CCodeExpression? delegate_target;
 	public CCodeExpression? delegate_target_destroy_notify;
+
+	public GLibValue (DataType? value_type = null, CCodeExpression? cvalue = null) {
+		base (value_type);
+		this.ccodenode = cvalue;
+	}
 }
