@@ -140,7 +140,7 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 					var array_local = array_var as LocalVariable;
 					if (array_var != null && array_var.is_internal_symbol ()
 					    && ((array_var is LocalVariable && !array_local.captured) || array_var is Field)) {
-						var lhs_array_size = get_array_size_cexpression (assignment.left);
+						var lhs_array_size = get_array_size_cvalue (assignment.left.target_value);
 						var rhs_array_len = get_array_length_cexpression (assignment.left, 1);
 						ccode.add_expression (new CCodeAssignment (lhs_array_size, rhs_array_len));
 					}

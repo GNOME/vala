@@ -198,6 +198,15 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 							}
 							append_array_size (expr, length_expr);
 						}
+						if (array_type.rank == 1 && field.is_internal_symbol ()) {
+							string size_cname = get_array_size_cname (field.name);
+
+							if (((TypeSymbol) field.parent_symbol).is_reference_type ()) {
+								set_array_size_cvalue (expr.target_value, new CCodeMemberAccess.pointer (inst, size_cname));
+							} else {
+								set_array_size_cvalue (expr.target_value, new CCodeMemberAccess (inst, size_cname));
+							}
+						}
 					}
 				} else if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
 					string target_cname = get_delegate_target_cname (field.get_cname ());
@@ -269,6 +278,9 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 							} else {
 								append_array_size (expr, new CCodeIdentifier (get_array_length_cname (field.get_cname (), dim)));
 							}
+						}
+						if (array_type.rank == 1 && field.is_internal_symbol ()) {
+							set_array_size_cvalue (expr.target_value, new CCodeIdentifier (get_array_size_cname (field.get_cname ())));
 						}
 					}
 				} else if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
@@ -612,6 +624,9 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					result.append_array_length_cvalue (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_array_length_cname (get_variable_cname (local.name), dim)));
 				}
+				if (array_type.rank == 1) {
+					result.array_size_cvalue = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_array_size_cname (get_variable_cname (local.name)));
+				}
 			} else if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
 				result.delegate_target_cvalue = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_cname (get_variable_cname (local.name)));
 				result.delegate_target_destroy_notify_cvalue = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_destroy_notify_cname (get_variable_cname (local.name)));
@@ -621,6 +636,9 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			if (array_type != null) {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					result.append_array_length_cvalue (get_variable_cexpression (get_array_length_cname (get_variable_cname (local.name), dim)));
+				}
+				if (array_type.rank == 1) {
+					result.array_size_cvalue = get_variable_cexpression (get_array_size_cname (get_variable_cname (local.name)));
 				}
 			} else if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
 				if (current_method != null && current_method.coroutine) {

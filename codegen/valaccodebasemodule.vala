@@ -964,7 +964,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					}
 
 					if (array_type.rank == 1 && f.is_internal_symbol ()) {
-						var lhs_array_size = get_array_size_cexpression (ma);
+						var lhs_array_size = get_array_size_cvalue (ma.target_value);
 						var rhs_array_len = get_array_length_cexpression (ma, 1);
 						ccode.add_expression (new CCodeAssignment (lhs_array_size, rhs_array_len));
 					}
@@ -2068,7 +2068,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						ccode.add_expression (new CCodeAssignment (lhs_array_len, rhs_array_len));
 					}
 					if (array_type.rank == 1 && !local.captured) {
-						var lhs_array_size = get_array_size_cexpression (ma);
+						var lhs_array_size = get_array_size_cvalue (ma.target_value);
 						var rhs_array_len = get_array_length_cexpression (ma, 1);
 						ccode.add_expression (new CCodeAssignment (lhs_array_size, rhs_array_len));
 					}
@@ -5888,10 +5888,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return "";
 	}
 
-	public virtual CCodeExpression get_array_size_cexpression (Expression array_expr) {
-		return new CCodeConstant ("");
-	}
-
 	public virtual void add_simple_check (CodeNode node, bool always_fails = false) {
 	}
 
@@ -5915,6 +5911,16 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			expr.target_value = glib_value;
 		}
 		glib_value.cvalue = cvalue;
+	}
+
+	public CCodeExpression? get_array_size_cvalue (TargetValue value) {
+		var glib_value = (GLibValue) value;
+		return glib_value.array_size_cvalue;
+	}
+
+	public void set_array_size_cvalue (TargetValue value, CCodeExpression? cvalue) {
+		var glib_value = (GLibValue) value;
+		glib_value.array_size_cvalue = cvalue;
 	}
 
 	public CCodeExpression? get_delegate_target (Expression expr) {
@@ -5974,6 +5980,7 @@ public class Vala.GLibValue : TargetValue {
 	public CCodeExpression cvalue;
 
 	public List<CCodeExpression> array_length_cvalues;
+	public CCodeExpression? array_size_cvalue;
 
 	public CCodeExpression? delegate_target_cvalue;
 	public CCodeExpression? delegate_target_destroy_notify_cvalue;

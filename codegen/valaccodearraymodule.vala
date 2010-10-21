@@ -167,52 +167,6 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		return "_%s_size_".printf (array_cname);
 	}
 
-	public override CCodeExpression get_array_size_cexpression (Expression array_expr) {
-		if (array_expr.symbol_reference is LocalVariable) {
-			var local = (LocalVariable) array_expr.symbol_reference;
-			if (local.captured) {
-				// captured variables are stored on the heap
-				var block = (Block) local.parent_symbol;
-				return new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_array_size_cname (get_variable_cname (local.name)));
-			} else {
-				var size_expr = get_variable_cexpression (get_array_size_cname (get_variable_cname (local.name)));
-				return size_expr;
-			}
-
-		} else if (array_expr.symbol_reference is Field) {
-			var field = (Field) array_expr.symbol_reference;
-			var ma = (MemberAccess) array_expr;
-
-			CCodeExpression size_expr = null;
-
-			if (field.binding == MemberBinding.INSTANCE) {
-				var cl = field.parent_symbol as Class;
-				bool is_gtypeinstance = (cl != null && !cl.is_compact);
-
-				string size_cname = get_array_size_cname (field.name);
-				CCodeExpression typed_inst = (CCodeExpression) get_ccodenode (ma.inner);
-
-				CCodeExpression inst;
-				if (is_gtypeinstance && field.access == SymbolAccessibility.PRIVATE) {
-					inst = new CCodeMemberAccess.pointer (typed_inst, "priv");
-				} else {
-					inst = typed_inst;
-				}
-				if (((TypeSymbol) field.parent_symbol).is_reference_type ()) {
-					size_expr = new CCodeMemberAccess.pointer (inst, size_cname);
-				} else {
-					size_expr = new CCodeMemberAccess (inst, size_cname);
-				}
-			} else {
-				size_expr = new CCodeIdentifier (get_array_size_cname (field.get_cname ()));
-			}
-
-			return size_expr;
-		}
-
-		assert_not_reached ();
-	}
-
 	public override void visit_element_access (ElementAccess expr) {
 		List<Expression> indices = expr.get_indices ();
 		int rank = indices.size;
@@ -779,7 +733,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (generate_array_add_wrapper (array_type)));
 		ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_cvalue (array)));
 		ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_array_length_cexpression (array)));
-		ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_array_size_cexpression (array)));
+		ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_array_size_cvalue (array.target_value)));
 		ccall.add_argument (handle_struct_argument (value_param, element, get_cvalue (element)));
 
 		set_cvalue (assignment, ccall);

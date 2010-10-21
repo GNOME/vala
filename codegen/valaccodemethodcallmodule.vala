@@ -729,7 +729,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			var array_local = array_var as LocalVariable;
 			if (array_var != null && array_var.is_internal_symbol ()
 			    && ((array_var is LocalVariable && !array_local.captured) || array_var is Field)) {
-				ccomma.append_expression (new CCodeAssignment (get_array_size_cexpression (ma.inner), temp_ref));
+				ccomma.append_expression (new CCodeAssignment (get_array_size_cvalue (ma.inner.target_value), temp_ref));
 			}
 
 			set_cvalue (expr, ccomma);
