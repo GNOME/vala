@@ -4634,6 +4634,19 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 				innercexpr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, innercexpr);
 			}
 			set_cvalue (expr, new CCodeCastExpression (innercexpr, expr.type_reference.get_cname ()));
+
+			if (expr.type_reference is DelegateType) {
+				if (get_delegate_target (expr.inner) != null) {
+					set_delegate_target (expr, get_delegate_target (expr.inner));
+				} else {
+					set_delegate_target (expr, new CCodeConstant ("NULL"));
+				}
+				if (get_delegate_target_destroy_notify (expr.inner) != null) {
+					set_delegate_target_destroy_notify (expr, get_delegate_target_destroy_notify (expr.inner));
+				} else {
+					set_delegate_target_destroy_notify (expr, new CCodeConstant ("NULL"));
+				}
+			}
 		}
 	}
 	
@@ -5868,7 +5881,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		return glib_value.delegate_target_destroy_notify_cvalue;
 	}
 
-	public void set_delegate_target_destroy_notify (Expression expr, CCodeExpression destroy_notify) {
+	public void set_delegate_target_destroy_notify (Expression expr, CCodeExpression? destroy_notify) {
 		var glib_value = (GLibValue) expr.target_value;
 		if (glib_value == null) {
 			glib_value = new GLibValue (expr.value_type);

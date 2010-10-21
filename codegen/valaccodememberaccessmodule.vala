@@ -91,29 +91,27 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				set_cvalue (expr, new CCodeIdentifier (m.get_cname ()));
 			}
 
-			if (expr.target_type is DelegateType) {
-				set_delegate_target_destroy_notify (expr, new CCodeConstant ("NULL"));
-				if (m.binding == MemberBinding.STATIC) {
-					set_delegate_target (expr, new CCodeConstant ("NULL"));
-				} else if (m.is_async_callback) {
-					if (current_method.closure) {
-						var block = ((Method) m.parent_symbol).body;
-						set_delegate_target (expr, new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), "_async_data_"));
-					} else {
-						set_delegate_target (expr, new CCodeIdentifier ("data"));
-					}
-				} else if (expr.inner != null) {
-					// expr.inner is null in the special case of referencing the method in a constant initializer
-					var delegate_target = (CCodeExpression) get_ccodenode (expr.inner);
-					var delegate_type = expr.target_type as DelegateType;
-					if ((expr.value_type.value_owned || (delegate_type != null && delegate_type.is_called_once)) && expr.inner.value_type.data_type != null && expr.inner.value_type.data_type.is_reference_counting ()) {
-						var ref_call = new CCodeFunctionCall (get_dup_func_expression (expr.inner.value_type, expr.source_reference));
-						ref_call.add_argument (delegate_target);
-						delegate_target = ref_call;
-						set_delegate_target_destroy_notify (expr, get_destroy_func_expression (expr.inner.value_type));
-					}
-					set_delegate_target (expr, delegate_target);
+			set_delegate_target_destroy_notify (expr, new CCodeConstant ("NULL"));
+			if (m.binding == MemberBinding.STATIC) {
+				set_delegate_target (expr, new CCodeConstant ("NULL"));
+			} else if (m.is_async_callback) {
+				if (current_method.closure) {
+					var block = ((Method) m.parent_symbol).body;
+					set_delegate_target (expr, new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), "_async_data_"));
+				} else {
+					set_delegate_target (expr, new CCodeIdentifier ("data"));
 				}
+			} else if (expr.inner != null) {
+				// expr.inner is null in the special case of referencing the method in a constant initializer
+				var delegate_target = (CCodeExpression) get_ccodenode (expr.inner);
+				var delegate_type = expr.target_type as DelegateType;
+				if ((expr.value_type.value_owned || (delegate_type != null && delegate_type.is_called_once)) && expr.inner.value_type.data_type != null && expr.inner.value_type.data_type.is_reference_counting ()) {
+					var ref_call = new CCodeFunctionCall (get_dup_func_expression (expr.inner.value_type, expr.source_reference));
+					ref_call.add_argument (delegate_target);
+					delegate_target = ref_call;
+					set_delegate_target_destroy_notify (expr, get_destroy_func_expression (expr.inner.value_type));
+				}
+				set_delegate_target (expr, delegate_target);
 			}
 		} else if (expr.symbol_reference is ArrayLengthField) {
 			if (expr.value_type is ArrayType && !(expr.parent_node is ElementAccess)) {
