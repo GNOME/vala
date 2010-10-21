@@ -36,6 +36,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		public ArrayList<LocalVariable> temp_ref_vars = new ArrayList<LocalVariable> ();
 		public int next_temp_var_id;
 		public bool current_method_inner_error;
+		public bool current_method_return;
 		public Map<string,string> variable_name_map = new HashMap<string,string> (str_hash, str_equal);
 
 		public EmitContext (Symbol? symbol = null) {
@@ -213,6 +214,11 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 	public bool current_method_inner_error {
 		get { return emit_context.current_method_inner_error; }
 		set { emit_context.current_method_inner_error = value; }
+	}
+
+	public bool current_method_return {
+		get { return emit_context.current_method_return; }
+		set { emit_context.current_method_return = value; }
 	}
 
 	public int next_coroutine_state = 1;
@@ -3371,6 +3377,9 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		if (return_expression_symbol != null) {
 			return_expression_symbol.active = true;
 		}
+
+		// required for destructors
+		current_method_return = true;
 	}
 
 	public string get_symbol_lock_name (string symname) {

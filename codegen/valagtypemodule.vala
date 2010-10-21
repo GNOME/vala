@@ -1654,8 +1654,10 @@ public class Vala.GTypeModule : GErrorModule {
 				ccode.add_declaration ("GError *", new CCodeVariableDeclarator.zero ("_inner_error_", new CCodeConstant ("NULL")));
 			}
 
-			// support return statements in destructors
-			ccode.add_label ("_return");
+			if (current_method_return) {
+				// support return statements in destructors
+				ccode.add_label ("_return");
+			}
 		}
 
 		pop_context ();
