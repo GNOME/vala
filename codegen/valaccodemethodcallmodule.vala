@@ -731,7 +731,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			return;
 		}
 
-		if (expr.parent_node is ExpressionStatement) {
+		if (expr.parent_node is ExpressionStatement && !expr.value_type.is_disposable ()) {
 			ccode.add_expression (ccall_expr);
 		} else {
 			var result_type = itype.get_return_type ();
