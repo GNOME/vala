@@ -5006,6 +5006,8 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 				ref_call.add_argument (delegate_target);
 				delegate_target = ref_call;
 				set_delegate_target_destroy_notify (lambda, new CCodeIdentifier ("block%d_data_unref".printf (block_id)));
+			} else {
+				set_delegate_target_destroy_notify (lambda, new CCodeConstant ("NULL"));
 			}
 			set_delegate_target (lambda, delegate_target);
 		} else if (get_this_type () != null || in_constructor) {
@@ -5023,10 +5025,13 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 					delegate_target = ref_call;
 					set_delegate_target_destroy_notify (lambda, new CCodeIdentifier ("g_object_unref"));
 				}
+			} else {
+				set_delegate_target_destroy_notify (lambda, new CCodeConstant ("NULL"));
 			}
 			set_delegate_target (lambda, delegate_target);
 		} else {
 			set_delegate_target (lambda, new CCodeConstant ("NULL"));
+			set_delegate_target_destroy_notify (lambda, new CCodeConstant ("NULL"));
 		}
 	}
 
