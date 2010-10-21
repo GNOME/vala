@@ -3614,6 +3614,14 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		assert_not_reached ();
 	}
 
+	public virtual CCodeExpression get_delegate_target_cvalue (TargetValue value) {
+		return new CCodeInvalidExpression ();
+	}
+
+	public virtual CCodeExpression get_delegate_target_destroy_notify_cvalue (TargetValue value) {
+		return new CCodeInvalidExpression ();
+	}
+
 	public virtual string get_delegate_target_destroy_notify_cname (string delegate_cname) {
 		assert_not_reached ();
 	}
@@ -5793,6 +5801,10 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		return new CCodeConstant ("");
 	}
 
+	public virtual CCodeExpression get_array_length_cvalue (TargetValue value, int dim = -1) {
+		return new CCodeInvalidExpression ();
+	}
+
 	public virtual string get_array_size_cname (string array_cname) {
 		return "";
 	}
@@ -5809,7 +5821,12 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			return null;
 		}
 		var glib_value = (GLibValue) expr.target_value;
-		return glib_value.ccodenode;
+		return glib_value.cvalue;
+	}
+
+	public CCodeExpression? get_cvalue_ (TargetValue value) {
+		var glib_value = (GLibValue) value;
+		return glib_value.cvalue;
 	}
 
 	public void set_cvalue (Expression expr, CCodeExpression? cvalue) {
@@ -5818,7 +5835,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			glib_value = new GLibValue (expr.value_type);
 			expr.target_value = glib_value;
 		}
-		glib_value.ccodenode = cvalue;
+		glib_value.cvalue = cvalue;
 	}
 
 	public CCodeExpression? get_delegate_target (Expression expr) {
@@ -5826,7 +5843,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			return null;
 		}
 		var glib_value = (GLibValue) expr.target_value;
-		return glib_value.delegate_target;
+		return glib_value.delegate_target_cvalue;
 	}
 
 	public void set_delegate_target (Expression expr, CCodeExpression? delegate_target) {
@@ -5835,7 +5852,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			glib_value = new GLibValue (expr.value_type);
 			expr.target_value = glib_value;
 		}
-		glib_value.delegate_target = delegate_target;
+		glib_value.delegate_target_cvalue = delegate_target;
 	}
 
 	public CCodeExpression? get_delegate_target_destroy_notify (Expression expr) {
@@ -5843,7 +5860,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			return null;
 		}
 		var glib_value = (GLibValue) expr.target_value;
-		return glib_value.delegate_target_destroy_notify;
+		return glib_value.delegate_target_destroy_notify_cvalue;
 	}
 
 	public void set_delegate_target_destroy_notify (Expression expr, CCodeExpression destroy_notify) {
@@ -5852,7 +5869,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			glib_value = new GLibValue (expr.value_type);
 			expr.target_value = glib_value;
 		}
-		glib_value.delegate_target_destroy_notify = destroy_notify;
+		glib_value.delegate_target_destroy_notify_cvalue = destroy_notify;
 	}
 
 	public void append_array_size (Expression expr, CCodeExpression size) {
@@ -5861,10 +5878,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			glib_value = new GLibValue (expr.value_type);
 			expr.target_value = glib_value;
 		}
-		if (glib_value.array_sizes == null) {
-			glib_value.array_sizes = new ArrayList<CCodeExpression> ();
-		}
-		glib_value.array_sizes.add (size);
+		glib_value.append_array_length_cvalue (size);
 	}
 
 	public List<CCodeExpression>? get_array_sizes (Expression expr) {
@@ -5873,20 +5887,27 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			glib_value = new GLibValue (expr.value_type);
 			expr.target_value = glib_value;
 		}
-		return glib_value.array_sizes;
+		return glib_value.array_length_cvalues;
 	}
 }
 
 public class Vala.GLibValue : TargetValue {
-	public CCodeExpression ccodenode;
+	public CCodeExpression cvalue;
 
-	public List<CCodeExpression> array_sizes;
+	public List<CCodeExpression> array_length_cvalues;
 
-	public CCodeExpression? delegate_target;
-	public CCodeExpression? delegate_target_destroy_notify;
+	public CCodeExpression? delegate_target_cvalue;
+	public CCodeExpression? delegate_target_destroy_notify_cvalue;
 
 	public GLibValue (DataType? value_type = null, CCodeExpression? cvalue = null) {
 		base (value_type);
-		this.ccodenode = cvalue;
+		this.cvalue = cvalue;
+	}
+
+	public void append_array_length_cvalue (CCodeExpression length_cvalue) {
+		if (array_length_cvalues == null) {
+			array_length_cvalues = new ArrayList<CCodeExpression> ();
+		}
+		array_length_cvalues.add (length_cvalue);
 	}
 }

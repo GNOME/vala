@@ -135,7 +135,11 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 	}
 
 	public override CCodeExpression get_array_length_cexpression (Expression array_expr, int dim = -1) {
-		var array_type = array_expr.value_type as ArrayType;
+		return get_array_length_cvalue (array_expr.target_value, dim);
+	}
+
+	public override CCodeExpression get_array_length_cvalue (TargetValue value, int dim = -1) {
+		var array_type = value.value_type as ArrayType;
 
 		if (array_type != null && array_type.fixed_length) {
 			return new CCodeConstant (array_type.length.to_string ());
@@ -144,9 +148,9 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		// dim == -1 => total size over all dimensions
 		if (dim == -1) {
 			if (array_type != null && array_type.rank > 1) {
-				CCodeExpression cexpr = get_array_length_cexpression (array_expr, 1);
+				CCodeExpression cexpr = get_array_length_cvalue (value, 1);
 				for (dim = 2; dim <= array_type.rank; dim++) {
-					cexpr = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, cexpr, get_array_length_cexpression (array_expr, dim));
+					cexpr = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, cexpr, get_array_length_cvalue (value, dim));
 				}
 				return cexpr;
 			} else {
@@ -154,7 +158,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			}
 		}
 
-		List<CCodeExpression> size = get_array_sizes (array_expr);
+		List<CCodeExpression> size = ((GLibValue) value).array_length_cvalues;
 		assert (size != null && size.size >= dim);
 		return size[dim - 1];
 	}

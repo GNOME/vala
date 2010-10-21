@@ -129,9 +129,16 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 	}
 
 	public override CCodeExpression get_delegate_target_cexpression (Expression delegate_expr, out CCodeExpression delegate_target_destroy_notify) {
-		delegate_target_destroy_notify = get_delegate_target_destroy_notify (delegate_expr);
+		delegate_target_destroy_notify = get_delegate_target_destroy_notify_cvalue (delegate_expr.target_value);
+		return get_delegate_target_cvalue (delegate_expr.target_value);
+	}
 
-		return get_delegate_target (delegate_expr);
+	public override CCodeExpression get_delegate_target_cvalue (TargetValue value) {
+		return ((GLibValue) value).delegate_target_cvalue;
+	}
+
+	public override CCodeExpression get_delegate_target_destroy_notify_cvalue (TargetValue value) {
+		return ((GLibValue) value).delegate_target_destroy_notify_cvalue;
 	}
 
 	public override string get_delegate_target_destroy_notify_cname (string delegate_cname) {

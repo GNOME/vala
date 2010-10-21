@@ -2271,7 +2271,12 @@ public class Vala.DovaBaseModule : CodeGenerator {
 			return null;
 		}
 		var dova_value = (DovaValue) expr.target_value;
-		return dova_value.ccodenode;
+		return dova_value.cvalue;
+	}
+
+	public CCodeExpression? get_cvalue_ (TargetValue value) {
+		var dova_value = (DovaValue) value;
+		return dova_value.cvalue;
 	}
 
 	public void set_cvalue (Expression expr, CCodeExpression? cvalue) {
@@ -2280,15 +2285,15 @@ public class Vala.DovaBaseModule : CodeGenerator {
 			dova_value = new DovaValue (expr.value_type);
 			expr.target_value = dova_value;
 		}
-		dova_value.ccodenode = cvalue;
+		dova_value.cvalue = cvalue;
 	}
 }
 
 public class Vala.DovaValue : TargetValue {
-	public CCodeExpression ccodenode;
+	public CCodeExpression cvalue;
 
 	public DovaValue (DataType? value_type = null, CCodeExpression? cvalue = null) {
 		base (value_type);
-		this.ccodenode = cvalue;
+		this.cvalue = cvalue;
 	}
 }
