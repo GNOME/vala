@@ -203,7 +203,7 @@ public class Vala.CodeContext {
 	/**
 	 * The selected code generator.
 	 */
-	public CodeGenerator codegen { get; set; default = new CodeGenerator (); }
+	public CodeGenerator codegen { get; set; }
 
 	public CodeContext () {
 	}

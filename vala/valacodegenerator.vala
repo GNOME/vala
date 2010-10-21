@@ -23,7 +23,7 @@
 /**
  * Abstract code visitor generating code.
  */
-public class Vala.CodeGenerator : CodeVisitor {
+public abstract class Vala.CodeGenerator : CodeVisitor {
 	/**
 	 * Generate and emit C code for the specified code context.
 	 *
@@ -31,4 +31,6 @@ public class Vala.CodeGenerator : CodeVisitor {
 	 */
 	public virtual void emit (CodeContext context) {
 	}
+
+	public abstract LocalVariable create_local (DataType type);
 }
