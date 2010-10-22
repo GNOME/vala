@@ -287,23 +287,6 @@ namespace Pango {
 		public unowned Pango.GlyphItem split (string text, int split_index);
 	}
 	[Compact]
-	[CCode (copy_function = "pango_glyph_item_iter_copy", type_id = "PANGO_TYPE_GLYPH_ITEM_ITER", cheader_filename = "pango/pango.h")]
-	public class GlyphItemIter {
-		public int end_char;
-		public int end_glyph;
-		public int end_index;
-		public weak Pango.GlyphItem glyph_item;
-		public int start_char;
-		public int start_glyph;
-		public int start_index;
-		public weak string text;
-		public Pango.GlyphItemIter copy ();
-		public bool init_end (Pango.GlyphItem glyph_item, string text);
-		public bool init_start (Pango.GlyphItem glyph_item, string text);
-		public bool next_cluster ();
-		public bool prev_cluster ();
-	}
-	[Compact]
 	[CCode (copy_function = "pango_glyph_string_copy", type_id = "PANGO_TYPE_GLYPH_STRING", cheader_filename = "pango/pango.h")]
 	public class GlyphString {
 		public Pango.GlyphInfo glyphs;
@@ -530,6 +513,23 @@ namespace Pango {
 		public weak Pango.Glyph glyph;
 		public Pango.GlyphGeometry geometry;
 		public Pango.GlyphVisAttr attr;
+	}
+	[CCode (type_id = "PANGO_TYPE_GLYPH_ITEM_ITER", cheader_filename = "pango/pango.h")]
+	public struct GlyphItemIter {
+		public weak Pango.GlyphItem glyph_item;
+		public weak string text;
+		public int start_glyph;
+		public int start_index;
+		public int start_char;
+		public int end_glyph;
+		public int end_index;
+		public int end_char;
+		public Pango.GlyphItemIter copy ();
+		public void free ();
+		public bool init_end (Pango.GlyphItem glyph_item, string text);
+		public bool init_start (Pango.GlyphItem glyph_item, string text);
+		public bool next_cluster ();
+		public bool prev_cluster ();
 	}
 	[CCode (type_id = "PANGO_TYPE_GLYPH_VIS_ATTR", cheader_filename = "pango/pango.h")]
 	public struct GlyphVisAttr {
