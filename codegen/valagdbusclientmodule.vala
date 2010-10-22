@@ -433,6 +433,14 @@ public class Vala.GDBusClientModule : GDBusModule {
 			var timeout = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_proxy_get_default_timeout"));
 			timeout.add_argument (new CCodeIdentifier ("self"));
 
+			// register errors
+			foreach (var error_type in m.get_error_types ()) {
+				var errtype = (ErrorType) error_type;
+				if (errtype.error_domain != null) {
+					ccode.add_expression (new CCodeIdentifier (errtype.error_domain.get_upper_case_cname ()));
+				}
+			}
+
 			// build D-Bus message
 
 			ccode.add_declaration ("GDBusMessage", new CCodeVariableDeclarator ("*_message"));
