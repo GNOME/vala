@@ -118,6 +118,10 @@ public class Vala.GDBusClientModule : GDBusModule {
 		var iface_block = new CCodeBlock ();
 
 		foreach (Method m in iface.get_methods ()) {
+			if (!m.is_abstract) {
+				continue;
+			}
+
 			var vfunc_entry = new CCodeMemberAccess.pointer (new CCodeIdentifier ("iface"), m.vfunc_name);
 			if (!m.coroutine) {
 				iface_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (vfunc_entry, new CCodeIdentifier (generate_dbus_proxy_method (main_iface, iface, m)))));
@@ -129,6 +133,10 @@ public class Vala.GDBusClientModule : GDBusModule {
 		}
 
 		foreach (Property prop in iface.get_properties ()) {
+			if (!prop.is_abstract) {
+				continue;
+			}
+
 			if (prop.get_accessor != null) {
 				var vfunc_entry = new CCodeMemberAccess.pointer (new CCodeIdentifier ("iface"), "get_" + prop.name);
 				iface_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (vfunc_entry, new CCodeIdentifier (generate_dbus_proxy_property_get (main_iface, iface, prop)))));
