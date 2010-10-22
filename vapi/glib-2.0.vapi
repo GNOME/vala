@@ -596,7 +596,7 @@ public struct uint64 {
 
 [SimpleType]
 [GIR (name = "gfloat")]
-[CCode (cname = "float", cheader_filename = "glib.h,float.h,math.h", type_id = "G_TYPE_FLOAT", marshaller_type_name = "FLOAT", get_value_function = "g_value_get_float", set_value_function = "g_value_set_float", default_value = "0.0F")]
+[CCode (cname = "gfloat", cheader_filename = "glib.h,float.h,math.h", type_id = "G_TYPE_FLOAT", marshaller_type_name = "FLOAT", get_value_function = "g_value_get_float", set_value_function = "g_value_set_float", default_value = "0.0F")]
 [FloatingType (rank = 1)]
 public struct float {
 	[CCode (cname = "FLT_MANT_DIG")]
@@ -648,7 +648,7 @@ public struct float {
 
 [SimpleType]
 [GIR (name = "gdouble")]
-[CCode (cname = "double", cheader_filename = "glib.h,float.h,math.h", type_id = "G_TYPE_DOUBLE", marshaller_type_name = "DOUBLE", get_value_function = "g_value_get_double", set_value_function = "g_value_set_double", default_value = "0.0", type_signature = "d")]
+[CCode (cname = "gdouble", cheader_filename = "glib.h,float.h,math.h", type_id = "G_TYPE_DOUBLE", marshaller_type_name = "DOUBLE", get_value_function = "g_value_get_double", set_value_function = "g_value_set_double", default_value = "0.0", type_signature = "d")]
 [FloatingType (rank = 2)]
 public struct double {
 	[CCode (cname = "DBL_MANT_DIG")]
@@ -949,7 +949,7 @@ public enum NormalizeMode {
 [Compact]
 [Immutable]
 [GIR (name = "utf8")]
-[CCode (cname = "char", const_cname = "const char", copy_function = "g_strdup", free_function = "g_free", cheader_filename = "stdlib.h,string.h,glib.h", type_id = "G_TYPE_STRING", marshaller_type_name = "STRING", param_spec_function = "g_param_spec_string", get_value_function = "g_value_get_string", set_value_function = "g_value_set_string", take_value_function = "g_value_take_string", type_signature = "s")]
+[CCode (cname = "gchar", const_cname = "const gchar", copy_function = "g_strdup", free_function = "g_free", cheader_filename = "stdlib.h,string.h,glib.h", type_id = "G_TYPE_STRING", marshaller_type_name = "STRING", param_spec_function = "g_param_spec_string", get_value_function = "g_value_get_string", set_value_function = "g_value_set_string", take_value_function = "g_value_take_string", type_signature = "s")]
 public class string {
 	[CCode (cname = "strstr")]
 	public unowned string? str (string needle);
