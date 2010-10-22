@@ -111,6 +111,32 @@ public class Vala.GDBusModule : GVariantModule {
 		cfile.add_function (cquark_fun);
 	}
 
+	bool is_file_descriptor (DataType type) {
+		if (type is ObjectType) {
+			if (type.data_type.get_full_name () == "GLib.UnixInputStream" ||
+			    type.data_type.get_full_name () == "GLib.UnixOutputStream" ||
+			    type.data_type.get_full_name () == "GLib.Socket") {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public bool dbus_method_uses_file_descriptor (Method method) {
+		foreach (FormalParameter param in method.get_parameters ()) {
+			if (is_file_descriptor (param.variable_type)) {
+				return true;
+			}
+		}
+
+		if (is_file_descriptor (method.return_type)) {
+			return true;
+		}
+
+		return false;
+	}
+
 	CCodeExpression? get_file_descriptor (DataType type, CCodeExpression expr) {
 		if (type is ObjectType) {
 			if (type.data_type.get_full_name () == "GLib.UnixInputStream") {

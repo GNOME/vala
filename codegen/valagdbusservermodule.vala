@@ -74,8 +74,6 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 		push_function (function);
 
-		cfile.add_include ("gio/gunixfdlist.h");
-
 		if (ready) {
 			ccode.add_declaration ("GDBusMethodInvocation *", new CCodeVariableDeclarator ("invocation", new CCodeIdentifier ("_user_data_")));
 		}
@@ -84,6 +82,10 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		connection.add_argument (new CCodeIdentifier ("invocation"));
 
 		bool no_reply = is_dbus_no_reply (m);
+		bool uses_fd = dbus_method_uses_file_descriptor (m);
+		if (uses_fd) {
+			cfile.add_include ("gio/gunixfdlist.h");
+		}
 
 		if (!m.coroutine || ready) {
 			ccode.add_declaration ("GError*", new CCodeVariableDeclarator ("error", new CCodeConstant ("NULL")));
@@ -109,7 +111,9 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		}
 
 		if (!ready) {
-			ccode.add_declaration ("gint", new CCodeVariableDeclarator.zero ("_fd_index", new CCodeConstant ("0")));
+			if (uses_fd) {
+				ccode.add_declaration ("gint", new CCodeVariableDeclarator.zero ("_fd_index", new CCodeConstant ("0")));
+			}
 
 			foreach (FormalParameter param in m.get_parameters ()) {
 				if (param.direction != ParameterDirection.IN) {
@@ -245,8 +249,10 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			builder_init.add_argument (new CCodeIdentifier ("G_VARIANT_TYPE_TUPLE"));
 			ccode.add_expression (builder_init);
 
-			ccode.add_declaration ("GUnixFDList", new CCodeVariableDeclarator ("*_fd_list"));
-			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_fd_list"), new CCodeFunctionCall (new CCodeIdentifier ("g_unix_fd_list_new"))));
+			if (uses_fd) {
+				ccode.add_declaration ("GUnixFDList", new CCodeVariableDeclarator ("*_fd_list"));
+				ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_fd_list"), new CCodeFunctionCall (new CCodeIdentifier ("g_unix_fd_list_new"))));
+			}
 
 			foreach (FormalParameter param in m.get_parameters ()) {
 				if (param.direction != ParameterDirection.OUT) {
@@ -324,14 +330,16 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			set_body.add_argument (new CCodeIdentifier ("_reply"));
 			ccode.add_expression (set_body);
 
-			ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_message_set_unix_fd_list"));
-			ccall.add_argument (new CCodeIdentifier ("_reply_message"));
-			ccall.add_argument (new CCodeIdentifier ("_fd_list"));
-			ccode.add_expression (ccall);
+			if (uses_fd) {
+				ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_message_set_unix_fd_list"));
+				ccall.add_argument (new CCodeIdentifier ("_reply_message"));
+				ccall.add_argument (new CCodeIdentifier ("_fd_list"));
+				ccode.add_expression (ccall);
 
-			ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
-			ccall.add_argument (new CCodeIdentifier ("_fd_list"));
-			ccode.add_expression (ccall);
+				ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
+				ccall.add_argument (new CCodeIdentifier ("_fd_list"));
+				ccode.add_expression (ccall);
+			}
 		} else {
 			ccode.add_expression (ccall);
 		}
