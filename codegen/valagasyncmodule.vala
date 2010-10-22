@@ -643,6 +643,48 @@ public class Vala.GAsyncModule : GSignalModule {
 		}
 		base.generate_cparameters (m, decl_space, cparam_map, func, vdeclarator, carg_map, vcall, direction);
 	}
-}
 
-// vim:sw=8 noet
+	public string generate_async_callback_wrapper () {
+		string async_callback_wrapper_func = "_vala_g_async_ready_callback";
+
+		if (!add_wrapper (async_callback_wrapper_func)) {
+			return async_callback_wrapper_func;
+		}
+
+		var function = new CCodeFunction (async_callback_wrapper_func, "void");
+		function.modifiers = CCodeModifiers.STATIC;
+
+		function.add_parameter (new CCodeFormalParameter ("*source_object", "GObject"));
+		function.add_parameter (new CCodeFormalParameter ("*res", "GAsyncResult"));
+		function.add_parameter (new CCodeFormalParameter ("*user_data", "void"));
+
+		push_function (function);
+
+		var res_ref = new CCodeFunctionCall (new CCodeIdentifier ("g_object_ref"));
+		res_ref.add_argument (new CCodeIdentifier ("res"));
+
+		// store reference to async result of inner async function in out async result
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_set_op_res_gpointer"));
+		ccall.add_argument (new CCodeIdentifier ("user_data"));
+		ccall.add_argument (res_ref);
+		ccall.add_argument (new CCodeIdentifier ("g_object_unref"));
+		ccode.add_expression (ccall);
+
+		// call user-provided callback
+		ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_complete"));
+		ccall.add_argument (new CCodeIdentifier ("user_data"));
+		ccode.add_expression (ccall);
+
+		// free async result
+		ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
+		ccall.add_argument (new CCodeIdentifier ("user_data"));
+		ccode.add_expression (ccall);
+
+		pop_function ();
+
+		cfile.add_function_declaration (function);
+		cfile.add_function (function);
+
+		return async_callback_wrapper_func;
+	}
+}

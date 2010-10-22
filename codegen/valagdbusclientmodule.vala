@@ -506,8 +506,16 @@ public class Vala.GDBusClientModule : GDBusModule {
 				ccall.add_argument (timeout);
 				ccall.add_argument (new CCodeConstant ("NULL"));
 				ccall.add_argument (new CCodeConstant ("NULL"));
-				ccall.add_argument (new CCodeIdentifier ("_callback_"));
-				ccall.add_argument (new CCodeIdentifier ("_user_data_"));
+
+				// use wrapper as source_object wouldn't be correct otherwise
+				ccall.add_argument (new CCodeIdentifier (generate_async_callback_wrapper ()));
+				var res_wrapper = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_new"));
+				res_wrapper.add_argument (new CCodeIdentifier ("self"));
+				res_wrapper.add_argument (new CCodeIdentifier ("_callback_"));
+				res_wrapper.add_argument (new CCodeIdentifier ("_user_data_"));
+				res_wrapper.add_argument (new CCodeConstant ("NULL"));
+				ccall.add_argument (res_wrapper);
+
 				ccode.add_expression (ccall);
 			}
 
@@ -519,7 +527,12 @@ public class Vala.GDBusClientModule : GDBusModule {
 		} else {
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_connection_send_message_with_reply_finish"));
 			ccall.add_argument (connection);
-			ccall.add_argument (new CCodeIdentifier ("_res_"));
+
+			// unwrap async result
+			var inner_res = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_get_op_res_gpointer"));
+			inner_res.add_argument (new CCodeIdentifier ("_res_"));
+			ccall.add_argument (inner_res);
+
 			ccall.add_argument (new CCodeConstant ("error"));
 			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_reply_message"), ccall));
 		}
