@@ -2675,6 +2675,35 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		return destroy_func;
 	}
 
+	public CCodeExpression? get_destroy0_func_expression (DataType type, bool is_chainup = false) {
+		var element_destroy_func_expression = get_destroy_func_expression (type, is_chainup);
+
+		if (element_destroy_func_expression is CCodeIdentifier) {
+			var freeid = (CCodeIdentifier) element_destroy_func_expression;
+			string free0_func = "_%s0_".printf (freeid.name);
+
+			if (add_wrapper (free0_func)) {
+				var function = new CCodeFunction (free0_func, "void");
+				function.modifiers = CCodeModifiers.STATIC;
+
+				function.add_parameter (new CCodeFormalParameter ("var", "gpointer"));
+
+				push_function (function);
+
+				ccode.add_expression (get_unref_expression (new CCodeIdentifier ("var"), type, null, true));
+
+				pop_function ();
+
+				cfile.add_function_declaration (function);
+				cfile.add_function (function);
+			}
+
+			element_destroy_func_expression = new CCodeIdentifier (free0_func);
+		}
+
+		return element_destroy_func_expression;
+	}
+
 	public CCodeExpression? get_destroy_func_expression (DataType type, bool is_chainup = false) {
 		if (context.profile == Profile.GOBJECT && (type.data_type == glist_type || type.data_type == gslist_type || type.data_type == gnode_type)) {
 			// create wrapper function to free list elements if necessary
@@ -2685,30 +2714,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 			foreach (DataType type_arg in type.get_type_arguments ()) {
 				elements_require_free = requires_destroy (type_arg);
 				if (elements_require_free) {
-					element_destroy_func_expression = get_destroy_func_expression (type_arg);
-
-					if (element_destroy_func_expression is CCodeIdentifier) {
-						var freeid = (CCodeIdentifier) element_destroy_func_expression;
-						string free0_func = "_%s0_".printf (freeid.name);
-
-						if (add_wrapper (free0_func)) {
-							var function = new CCodeFunction (free0_func, "void");
-							function.modifiers = CCodeModifiers.STATIC;
-
-							function.add_parameter (new CCodeFormalParameter ("var", "gpointer"));
-
-							push_function (function);
-
-							ccode.add_expression (get_unref_expression (new CCodeIdentifier ("var"), type_arg, null, true));
-
-							pop_function ();
-
-							cfile.add_function_declaration (function);
-							cfile.add_function (function);
-						}
-
-						element_destroy_func_expression = new CCodeIdentifier (free0_func);
-					}
+					element_destroy_func_expression = get_destroy0_func_expression (type_arg);
 				}
 			}
 			
@@ -4154,7 +4160,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 				int type_param_index = 0;
 				foreach (var type_arg in expr.type_reference.get_type_arguments ()) {
 					if (requires_copy (type_arg)) {
-						carg_map.set (get_param_pos (-1 + 0.1 * type_param_index + 0.03), get_destroy_func_expression (type_arg));
+						carg_map.set (get_param_pos (-1 + 0.1 * type_param_index + 0.03), get_destroy0_func_expression (type_arg));
 					} else {
 						carg_map.set (get_param_pos (-1 + 0.1 * type_param_index + 0.03), new CCodeConstant ("NULL"));
 					}
