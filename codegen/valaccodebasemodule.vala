@@ -130,7 +130,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
-	bool is_in_constructor () {
+	public bool is_in_constructor () {
 		var sym = current_symbol;
 		while (sym != null) {
 			if (sym is Constructor) {
@@ -141,7 +141,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		return false;
 	}
 
-	bool is_in_destructor () {
+	public bool is_in_destructor () {
 		var sym = current_symbol;
 		while (sym != null) {
 			if (sym is Destructor) {

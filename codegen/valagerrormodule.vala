@@ -135,7 +135,9 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		ccode.add_expression (ccritical);
 		ccode.add_expression (cclear);
 
-		if (current_method is CreationMethod) {
+		if (is_in_constructor () || is_in_destructor ()) {
+			// just print critical, do not return prematurely
+		} else if (current_method is CreationMethod) {
 			if (current_method.parent_symbol is Struct) {
 				ccode.add_return ();
 			} else {
