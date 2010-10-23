@@ -1672,9 +1672,9 @@ public class Vala.CodeWriter : CodeVisitor {
 
 		write_type (expr.type_reference);
 
-		if (expr.constructor.name != ".new") {
+		if (expr.symbol_reference.name != ".new") {
 			write_string (".");
-			write_string (expr.constructor.name);
+			write_string (expr.symbol_reference.name);
 		}
 
 		write_string (" (");

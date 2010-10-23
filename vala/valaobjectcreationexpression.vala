@@ -38,12 +38,6 @@ public class Vala.ObjectCreationExpression : Expression {
 	}
 
 	/**
-	 * The construction method to use. May be null to indicate that
-	 * the default construction method should be used.
-	 */
-	public Method constructor { get; set; }
-
-	/**
 	 * The construction method to use or the data type to be created
 	 * with the default construction method.
 	 */
