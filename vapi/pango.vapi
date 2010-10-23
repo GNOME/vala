@@ -355,7 +355,7 @@ namespace Pango {
 		public unowned Pango.LayoutLine get_line_readonly (int line);
 		public unowned GLib.SList get_lines ();
 		public unowned GLib.SList get_lines_readonly ();
-		public void get_log_attrs (Pango.LogAttr[] attrs);
+		public void get_log_attrs (out Pango.LogAttr[] attrs);
 		public void get_pixel_extents (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
 		public void get_pixel_size (out int width, out int height);
 		public bool get_single_paragraph_mode ();
@@ -902,9 +902,9 @@ namespace Pango {
 	[CCode (cheader_filename = "pango/pango.h")]
 	public static Pango.Direction find_base_dir (string text, int length);
 	[CCode (cheader_filename = "pango/pango.h")]
-	public static void find_paragraph_boundary (string text, int length, int paragraph_delimiter_index, int next_paragraph_start);
+	public static void find_paragraph_boundary (string text, int length, out int paragraph_delimiter_index, out int next_paragraph_start);
 	[CCode (cheader_filename = "pango/pango.h")]
-	public static void get_log_attrs (string text, int length, int level, Pango.Language language, Pango.LogAttr[] log_attrs, int attrs_len);
+	public static void get_log_attrs (string text, int length, int level, Pango.Language language, Pango.LogAttr[] log_attrs);
 	[CCode (cheader_filename = "pango/pango.h")]
 	public static Pango.Gravity gravity_get_for_matrix (Pango.Matrix matrix);
 	[CCode (cheader_filename = "pango/pango.h")]
