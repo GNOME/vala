@@ -650,7 +650,9 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			ccode.add_expression (ccall);
 		}
 
-		ccode.close ();
+		if (!first) {
+			ccode.close ();
+		}
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
 		ccall.add_argument (new CCodeIdentifier ("invocation"));
