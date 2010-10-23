@@ -2434,16 +2434,7 @@ public class Vala.GIdlParser : CodeVisitor {
 						type.value_owned = true;
 					}
 				} else if (nv[0] == "type_name") {
-					if (eval (nv[1]) == "pointer") {
-						type = new PointerType (new VoidType ());
-					} else {
-						var unresolved_sym = new UnresolvedSymbol (null, eval (nv[1]));
-						if (type is ArrayType) {
-							((UnresolvedType) ((ArrayType) type).element_type).unresolved_symbol = unresolved_sym;
-						} else {
-							((UnresolvedType) type).unresolved_symbol = unresolved_sym;
-						}
-					}
+					type = get_type_from_string (eval (nv[1]));
 				} else if (nv[0] == "type_arguments") {
 					var type_args = eval (nv[1]).split (",");
 					foreach (string type_arg in type_args) {
