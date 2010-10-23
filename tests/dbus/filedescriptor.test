@@ -23,10 +23,10 @@ void main () {
 	UnixInputStream j, k;
 	k = test.test_in (new UnixInputStream (pipe1[0], true), out j);
 
-	assert (j.read (buffer, 1) == 1);
+	assert (j.read (buffer) == 1);
 	assert (buffer[0] == 23);
 
-	assert (k.read (buffer, 1) == 1);
+	assert (k.read (buffer) == 1);
 	assert (buffer[0] == 11);
 }
 
@@ -37,7 +37,7 @@ class Test : Object {
 	public UnixInputStream test_in (UnixInputStream i, out UnixInputStream j) throws IOError {
 		uint8[] buffer = new uint8[1];
 
-		assert (i.read (buffer, 1) == 1);
+		assert (i.read (buffer) == 1);
 		assert (buffer[0] == 42);
 
 		int[] pipe1 = new int[2];
