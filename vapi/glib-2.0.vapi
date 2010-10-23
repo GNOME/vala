@@ -2693,6 +2693,8 @@ namespace GLib {
 	[CCode (has_target = false, cheader_filename = "signal.h")]
 	public delegate void SignalHandlerFunc (int signum);
 
+	public unowned string strsignal (int signum);
+
 	[CCode (lower_case_cprefix = "g_")]
 	namespace Process {
 		public static bool spawn_async_with_pipes (string? working_directory, [CCode (array_length = false, array_null_terminated = true)] string[] argv, [CCode (array_length = false, array_null_terminated = true)] string[]? envp, SpawnFlags _flags, SpawnChildSetupFunc? child_setup, out Pid child_pid, out int standard_input = null, out int standard_output = null, out int standard_error = null) throws SpawnError;
