@@ -76,4 +76,34 @@ namespace GLib {
 		public T get_proxy_sync<T> (string? name, string object_path, GLib.DBusProxyFlags flags = 0, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public uint register_object<T> (string object_path, T object) throws GLib.IOError;
 	}
+	[Deprecated (since = "vala-0.12", replacement = "GLib.ContentType.can_be_executable")]
+	[CCode (cname = "g_content_type_can_be_executable", cheader_filename = "gio/gio.h")]
+	public static bool g_content_type_can_be_executable (string type);
+	[Deprecated (since = "vala-0.12", replacement = "GLib.ContentType.equals")]
+	[CCode (cname = "g_content_type_equals", cheader_filename = "gio/gio.h")]
+	public static bool g_content_type_equals (string type1, string type2);
+	[Deprecated (since = "vala-0.12", replacement = "GLib.ContentType.from_mime_type")]
+	[CCode (cname = "g_content_type_from_mime_type", cheader_filename = "gio/gio.h")]
+	public static string g_content_type_from_mime_type (string mime_type);
+	[Deprecated (since = "vala-0.12", replacement = "GLib.ContentType.get_description")]
+	[CCode (cname = "g_content_type_get_description", cheader_filename = "gio/gio.h")]
+	public static string g_content_type_get_description (string type);
+	[Deprecated (since = "vala-0.12", replacement = "GLib.ContentType.get_icon")]
+	[CCode (cname = "g_content_type_get_icon", cheader_filename = "gio/gio.h")]
+	public static GLib.Icon g_content_type_get_icon (string type);
+	[Deprecated (since = "vala-0.12", replacement = "GLib.ContentType.get_mime_type")]
+	[CCode (cname = "g_content_type_get_mime_type", cheader_filename = "gio/gio.h")]
+	public static string g_content_type_get_mime_type (string type);
+	[Deprecated (since = "vala-0.12", replacement = "GLib.ContentType.guess")]
+	[CCode (cname = "g_content_type_guess", cheader_filename = "gio/gio.h")]
+	public static string g_content_type_guess (string filename, uchar[] data, out bool result_uncertain);
+	[Deprecated (since = "vala-0.12", replacement = "GLib.ContentType.guess_for_tree")]
+	[CCode (cname = "g_content_type_guess_for_tree", cheader_filename = "gio/gio.h")]
+	public static string g_content_type_guess_for_tree (GLib.File root);
+	[Deprecated (since = "vala-0.12", replacement = "GLib.ContentType.is_a")]
+	[CCode (cname = "g_content_type_is_a", cheader_filename = "gio/gio.h")]
+	public static bool g_content_type_is_a (string type, string supertype);
+	[Deprecated (since = "vala-0.12", replacement = "GLib.ContentType.is_unknown")]
+	[CCode (cname = "g_content_type_is_unknown", cheader_filename = "gio/gio.h")]
+	public static bool g_content_type_is_unknown (string type);
 }
