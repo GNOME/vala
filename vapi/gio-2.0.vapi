@@ -72,7 +72,7 @@ namespace GLib {
 		[CCode (type = "GInputStream*", has_construct_function = false)]
 		public BufferedInputStream (GLib.InputStream base_stream);
 		public virtual ssize_t fill (ssize_t count, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public virtual async ssize_t fill_async (ssize_t count, int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public virtual async ssize_t fill_async (ssize_t count, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public size_t get_available ();
 		public size_t get_buffer_size ();
 		public size_t peek ([CCode (array_length_type = "gsize", array_length_pos = 2.9)] uint8[] buffer, size_t offset = 0);
@@ -467,14 +467,14 @@ namespace GLib {
 		public int32 read_int32 (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public int64 read_int64 (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public string? read_line (out size_t length, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public async string? read_line_async (int io_priority, GLib.Cancellable? cancellable = null, out size_t? length = null) throws GLib.Error;
+		public async string? read_line_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null, out size_t? length = null) throws GLib.Error;
 		public uint16 read_uint16 (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public uint32 read_uint32 (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public uint64 read_uint64 (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public string? read_until (string stop_chars, out size_t length, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public async string? read_until_async (string stop_chars, int io_priority, GLib.Cancellable? cancellable = null, out size_t? length = null) throws GLib.Error;
+		public async string? read_until_async (string stop_chars, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null, out size_t? length = null) throws GLib.Error;
 		public unowned string read_upto (string stop_chars, ssize_t stop_chars_len, size_t length, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public async unowned string read_upto_async (string stop_chars, ssize_t stop_chars_len, int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async unowned string read_upto_async (string stop_chars, ssize_t stop_chars_len, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void set_byte_order (GLib.DataStreamByteOrder order);
 		public void set_newline_type (GLib.DataStreamNewlineType type);
 		public GLib.DataStreamByteOrder byte_order { get; set; }
@@ -556,14 +556,14 @@ namespace GLib {
 		[CCode (has_construct_function = false)]
 		protected FileEnumerator ();
 		public bool close (GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public virtual async bool close_async (int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public virtual async bool close_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[NoWrapper]
 		public virtual bool close_fn (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public unowned GLib.File get_container ();
 		public bool has_pending ();
 		public bool is_closed ();
 		public virtual GLib.FileInfo next_file (GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public virtual async GLib.List<GLib.FileInfo> next_files_async (int num_files, int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public virtual async GLib.List<GLib.FileInfo> next_files_async (int num_files, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void set_pending (bool pending);
 		public GLib.File container { construct; }
 	}
@@ -577,7 +577,7 @@ namespace GLib {
 		public virtual bool can_truncate ();
 		public virtual unowned string get_etag ();
 		public virtual unowned GLib.FileInfo query_info (string attributes, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public virtual async unowned GLib.FileInfo query_info_async (string attributes, int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public virtual async unowned GLib.FileInfo query_info_async (string attributes, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[NoWrapper]
 		public virtual bool seek (int64 offset, GLib.SeekType type, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[NoWrapper]
@@ -671,7 +671,7 @@ namespace GLib {
 		[NoWrapper]
 		public virtual bool can_seek ();
 		public virtual unowned GLib.FileInfo query_info (string attributes, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public virtual async unowned GLib.FileInfo query_info_async (string attributes, int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public virtual async unowned GLib.FileInfo query_info_async (string attributes, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[NoWrapper]
 		public virtual bool seek (int64 offset, GLib.SeekType type, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[NoWrapper]
@@ -701,7 +701,7 @@ namespace GLib {
 		public virtual bool can_truncate ();
 		public virtual unowned string get_etag ();
 		public virtual unowned GLib.FileInfo query_info (string attributes, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public virtual async unowned GLib.FileInfo query_info_async (string attributes, int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public virtual async unowned GLib.FileInfo query_info_async (string attributes, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[NoWrapper]
 		public virtual bool seek (int64 offset, GLib.SeekType type, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[NoWrapper]
@@ -781,7 +781,7 @@ namespace GLib {
 		protected IOStream ();
 		public void clear_pending ();
 		public bool close (GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public virtual async bool close_async (int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public virtual async bool close_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[NoWrapper]
 		public virtual bool close_fn (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public virtual unowned GLib.InputStream get_input_stream ();
@@ -850,7 +850,7 @@ namespace GLib {
 		protected InputStream ();
 		public void clear_pending ();
 		public bool close (GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public virtual async bool close_async (int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public virtual async bool close_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[NoWrapper]
 		public virtual bool close_fn (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool has_pending ();
@@ -858,10 +858,10 @@ namespace GLib {
 		[CCode (vfunc_name = "read_fn")]
 		public virtual ssize_t read ([CCode (array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool read_all ([CCode (array_length_type = "gsize")] uint8[] buffer, out size_t bytes_read, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public virtual async ssize_t read_async ([CCode (array_length_type = "gsize")] uint8[] buffer, int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public virtual async ssize_t read_async ([CCode (array_length_type = "gsize")] uint8[] buffer, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool set_pending () throws GLib.Error;
 		public virtual ssize_t skip (size_t count, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public virtual async ssize_t skip_async (size_t count, int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public virtual async ssize_t skip_async (size_t count, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	}
 	[Compact]
 	[CCode (cheader_filename = "gio/gio.h")]
@@ -964,21 +964,21 @@ namespace GLib {
 		protected OutputStream ();
 		public void clear_pending ();
 		public bool close (GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public virtual async bool close_async (int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public virtual async bool close_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[NoWrapper]
 		public virtual bool close_fn (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public virtual bool flush (GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public virtual async bool flush_async (int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public virtual async bool flush_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool has_pending ();
 		public bool is_closed ();
 		public bool is_closing ();
 		public bool set_pending () throws GLib.Error;
 		public virtual ssize_t splice (GLib.InputStream source, GLib.OutputStreamSpliceFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public virtual async ssize_t splice_async (GLib.InputStream source, GLib.OutputStreamSpliceFlags flags, int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public virtual async ssize_t splice_async (GLib.InputStream source, GLib.OutputStreamSpliceFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (vfunc_name = "write_fn")]
 		public virtual ssize_t write ([CCode (array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool write_all ([CCode (array_length_type = "gsize")] uint8[] buffer, out size_t bytes_written, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public virtual async ssize_t write_async ([CCode (array_length_type = "gsize")] uint8[] buffer, int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public virtual async ssize_t write_async ([CCode (array_length_type = "gsize")] uint8[] buffer, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	}
 	[Compact]
 	[CCode (cheader_filename = "gio/gio.h")]
@@ -1149,7 +1149,7 @@ namespace GLib {
 		public void* get_source_tag ();
 		public static bool is_valid (GLib.AsyncResult _result, GLib.Object source, void* source_tag);
 		public bool propagate_error () throws GLib.Error;
-		public void run_in_thread (GLib.SimpleAsyncThreadFunc func, int io_priority, GLib.Cancellable? cancellable = null);
+		public void run_in_thread (GLib.SimpleAsyncThreadFunc func, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null);
 		public void set_error (GLib.Quark domain, int code, string format);
 		public void set_error_va (GLib.Quark domain, int code, string format, void* args);
 		public void set_from_error (GLib.Error error);
@@ -1528,10 +1528,10 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface AsyncInitable : GLib.Object {
-		public abstract async bool init_async (int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public static async unowned GLib.Object new_async (GLib.Type object_type, int io_priority, GLib.Cancellable? cancellable, ...) throws GLib.Error;
-		public static async void new_valist_async (GLib.Type object_type, string first_property_name, void* var_args, int io_priority, GLib.Cancellable? cancellable = null);
-		public static async void newv_async (GLib.Type object_type, uint n_parameters, GLib.Parameter parameters, int io_priority, GLib.Cancellable? cancellable = null);
+		public abstract async bool init_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public static async unowned GLib.Object new_async (GLib.Type object_type, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable, ...) throws GLib.Error;
+		public static async void new_valist_async (GLib.Type object_type, string first_property_name, void* var_args, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null);
+		public static async void newv_async (GLib.Type object_type, uint n_parameters, GLib.Parameter parameters, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface AsyncResult : GLib.Object {
@@ -1573,14 +1573,14 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface File : GLib.Object {
 		public abstract GLib.FileOutputStream append_to (GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public abstract async GLib.FileOutputStream append_to_async (GLib.FileCreateFlags flags, int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public abstract async GLib.FileOutputStream append_to_async (GLib.FileCreateFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract bool copy (GLib.File destination, GLib.FileCopyFlags flags, GLib.Cancellable? cancellable = null, GLib.FileProgressCallback? progress_callback = null) throws GLib.Error;
-		public abstract async bool copy_async (GLib.File destination, GLib.FileCopyFlags flags, int io_priority, GLib.Cancellable? cancellable = null, GLib.FileProgressCallback? progress_callback = null) throws GLib.Error;
+		public abstract async bool copy_async (GLib.File destination, GLib.FileCopyFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null, GLib.FileProgressCallback? progress_callback = null) throws GLib.Error;
 		public bool copy_attributes (GLib.File destination, GLib.FileCopyFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract GLib.FileOutputStream create (GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public abstract async GLib.FileOutputStream create_async (GLib.FileCreateFlags flags, int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public abstract async GLib.FileOutputStream create_async (GLib.FileCreateFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract unowned GLib.FileIOStream create_readwrite (GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public abstract async unowned GLib.FileIOStream create_readwrite_async (GLib.FileCreateFlags flags, int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public abstract async unowned GLib.FileIOStream create_readwrite_async (GLib.FileCreateFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool @delete (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[NoWrapper]
 		public abstract bool delete_file (GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -1588,10 +1588,10 @@ namespace GLib {
 		public abstract async bool eject_mountable (GLib.MountUnmountFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract async bool eject_mountable_with_operation (GLib.MountUnmountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract GLib.FileEnumerator enumerate_children (string attributes, GLib.FileQueryInfoFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public abstract async GLib.FileEnumerator enumerate_children_async (string attributes, GLib.FileQueryInfoFlags flags, int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public abstract async GLib.FileEnumerator enumerate_children_async (string attributes, GLib.FileQueryInfoFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract bool equal (GLib.File file2);
 		public abstract GLib.Mount find_enclosing_mount (GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public abstract async GLib.Mount find_enclosing_mount_async (int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public abstract async GLib.Mount find_enclosing_mount_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract string? get_basename ();
 		public GLib.File get_child (string name);
 		public abstract GLib.File get_child_for_display_name (string display_name) throws GLib.Error;
@@ -1623,7 +1623,7 @@ namespace GLib {
 		public static GLib.File new_for_path (string path);
 		public static GLib.File new_for_uri (string uri);
 		public abstract unowned GLib.FileIOStream open_readwrite (GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public abstract async unowned GLib.FileIOStream open_readwrite_async (int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public abstract async unowned GLib.FileIOStream open_readwrite_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public static unowned GLib.File parse_name (string parse_name);
 		public abstract async bool poll_mountable (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[NoWrapper]
@@ -1632,21 +1632,21 @@ namespace GLib {
 		public bool query_exists (GLib.Cancellable? cancellable = null);
 		public GLib.FileType query_file_type (GLib.FileQueryInfoFlags flags, GLib.Cancellable? cancellable = null);
 		public abstract unowned GLib.FileInfo query_filesystem_info (string attributes, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public abstract async unowned GLib.FileInfo query_filesystem_info_async (string attributes, int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public abstract async unowned GLib.FileInfo query_filesystem_info_async (string attributes, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract GLib.FileInfo query_info (string attributes, GLib.FileQueryInfoFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public abstract async GLib.FileInfo query_info_async (string attributes, GLib.FileQueryInfoFlags flags, int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public abstract async GLib.FileInfo query_info_async (string attributes, GLib.FileQueryInfoFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract unowned GLib.FileAttributeInfoList query_settable_attributes (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract unowned GLib.FileAttributeInfoList query_writable_namespaces (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public GLib.FileInputStream read (GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public abstract async GLib.FileInputStream read_async (int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public abstract async GLib.FileInputStream read_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[NoWrapper]
 		public abstract unowned GLib.FileInputStream read_fn (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract GLib.FileOutputStream replace (string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public abstract async GLib.FileOutputStream replace_async (string? etag, bool make_backup, GLib.FileCreateFlags flags, int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public abstract async GLib.FileOutputStream replace_async (string? etag, bool make_backup, GLib.FileCreateFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool replace_contents (string contents, size_t length, string? etag, bool make_backup, GLib.FileCreateFlags flags, out string? new_etag, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool replace_contents_async (string contents, size_t length, string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null, out string? new_etag = null) throws GLib.Error;
 		public abstract unowned GLib.FileIOStream replace_readwrite (string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public abstract async unowned GLib.FileIOStream replace_readwrite_async (string? etag, bool make_backup, GLib.FileCreateFlags flags, int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public abstract async unowned GLib.FileIOStream replace_readwrite_async (string? etag, bool make_backup, GLib.FileCreateFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract GLib.File resolve_relative_path (string relative_path);
 		public abstract bool set_attribute (string attribute, GLib.FileAttributeType type, void* value_p, GLib.FileQueryInfoFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool set_attribute_byte_string (string attribute, string value, GLib.FileQueryInfoFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -1655,10 +1655,10 @@ namespace GLib {
 		public bool set_attribute_string (string attribute, string value, GLib.FileQueryInfoFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool set_attribute_uint32 (string attribute, uint32 value, GLib.FileQueryInfoFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool set_attribute_uint64 (string attribute, uint64 value, GLib.FileQueryInfoFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public abstract async bool set_attributes_async (GLib.FileInfo info, GLib.FileQueryInfoFlags flags, int io_priority, GLib.Cancellable? cancellable, out unowned GLib.FileInfo info_out) throws GLib.Error;
+		public abstract async bool set_attributes_async (GLib.FileInfo info, GLib.FileQueryInfoFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable, out unowned GLib.FileInfo info_out) throws GLib.Error;
 		public abstract bool set_attributes_from_info (GLib.FileInfo info, GLib.FileQueryInfoFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract unowned GLib.File set_display_name (string display_name, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public abstract async unowned GLib.File set_display_name_async (string display_name, int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public abstract async unowned GLib.File set_display_name_async (string display_name, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract async bool start_mountable (GLib.DriveStartFlags flags, GLib.MountOperation start_operation, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract async bool stop_mountable (GLib.MountUnmountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool supports_thread_contexts ();
@@ -2508,7 +2508,7 @@ namespace GLib {
 	[CCode (cname = "g_io_scheduler_cancel_all_jobs", cheader_filename = "gio/gio.h")]
 	public static void g_io_scheduler_cancel_all_jobs ();
 	[CCode (cname = "g_io_scheduler_push_job", cheader_filename = "gio/gio.h")]
-	public static void g_io_scheduler_push_job (GLib.IOSchedulerJobFunc job_func, GLib.DestroyNotify? notify, int io_priority, GLib.Cancellable? cancellable = null);
+	public static void g_io_scheduler_push_job (GLib.IOSchedulerJobFunc job_func, GLib.DestroyNotify? notify, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null);
 	[CCode (cname = "g_simple_async_report_error_in_idle", cheader_filename = "gio/gio.h")]
 	public static void g_simple_async_report_error_in_idle (GLib.Object object, GLib.AsyncReadyCallback callback, GLib.Quark domain, int code, string format);
 	[CCode (cname = "g_simple_async_report_gerror_in_idle", cheader_filename = "gio/gio.h")]

@@ -189,6 +189,7 @@ g_volume_mount_fn.cancellable nullable="1"
 
 g_*.cancellable nullable="1" default_value="null"
 g_*.mount_operation nullable="1"
+g_*.io_priority default_value="GLib.Priority.DEFAULT"
 g_file_*.etag nullable="1"
 g_file_*.progress_callback nullable="1" default_value="null"
 g_io_scheduler_*.notify nullable="1"
