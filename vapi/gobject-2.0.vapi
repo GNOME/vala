@@ -527,12 +527,27 @@ namespace GLib {
 	public delegate void Callback ();
 
 	[Compact]
-	[CCode (type_id = "G_TYPE_CLOSURE")]
+	[CCode (ref_function = "g_closure_ref", unref_function = "g_closure_unref", type_id = "G_TYPE_CLOSURE")]
 	public class Closure {
+		public void sink ();
+		public void invoke (out Value? return_value, [CCode (array_length_pos = 1.9)] Value[] param_values, void *invocation_hint);
+		public void invalidate ();
+		public void add_finalize_notifier (void *notify_data, ClosureNotify notify_func);
+		public void add_invalidate_notifier (void *notify_data, ClosureNotify notify_func);
+		public void remove_finalize_notifier (void *notify_data, ClosureNotify notify_func);
+		public void remove_invalidate_notifier (void *notify_data, ClosureNotify notify_func);
+		[CCode (cname = "g_closure_new_object")]
+		public Closure (ulong sizeof_closure, Object object);
+		public void set_marshal (ClosureMarshal marshal);
+		public void add_marshal_guards (void *pre_marshal_data, ClosureNotify pre_marshal_notify, void *post_marshal_data, ClosureNotify post_marshal_notify);
+		public void set_meta_marshal (void *marshal_data, ClosureMarshal meta_marshal);
 	}
 
 	[CCode (has_target = false)]
 	public delegate void ClosureNotify (void* data, Closure closure);
+
+	[CCode (instance_pos = 0, has_target = false)]
+	public delegate void ClosureMarshal (Closure closure, out Value return_value, [CCode (array_length_pos = 2.9)] Value[] param_values, void *invocation_hint, void *marshal_data);
 
 	[Compact]
 	[CCode (type_id = "G_TYPE_VALUE_ARRAY", copy_function = "g_value_array_copy", free_function = "g_value_array_free")]
