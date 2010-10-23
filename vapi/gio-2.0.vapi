@@ -75,8 +75,9 @@ namespace GLib {
 		public virtual async ssize_t fill_async (ssize_t count, int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public size_t get_available ();
 		public size_t get_buffer_size ();
-		public size_t peek (void* buffer, size_t offset, size_t count);
-		public void* peek_buffer (out size_t count);
+		public size_t peek ([CCode (array_length_type = "gsize", array_length_pos = 2.9)] uint8[] buffer, size_t offset = 0);
+		[CCode (array_length_type = "gsize")]
+		public unowned uint8[] peek_buffer ();
 		public int read_byte (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void set_buffer_size (size_t size);
 		[CCode (type = "GInputStream*", has_construct_function = false)]
@@ -854,11 +855,10 @@ namespace GLib {
 		public virtual bool close_fn (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool has_pending ();
 		public bool is_closed ();
-		public ssize_t read (void* buffer, size_t count, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public bool read_all (void* buffer, size_t count, out size_t bytes_read, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public virtual async ssize_t read_async (void* buffer, size_t count, int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		[NoWrapper]
-		public virtual ssize_t read_fn (void* buffer, size_t count, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[CCode (vfunc_name = "read_fn")]
+		public virtual ssize_t read ([CCode (array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public bool read_all ([CCode (array_length_type = "gsize")] uint8[] buffer, out size_t bytes_read, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public virtual async ssize_t read_async ([CCode (array_length_type = "gsize")] uint8[] buffer, int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool set_pending () throws GLib.Error;
 		public virtual ssize_t skip (size_t count, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public virtual async ssize_t skip_async (size_t count, int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -866,25 +866,27 @@ namespace GLib {
 	[Compact]
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class InputVector {
-		public void* buffer;
-		public size_t size;
+		[CCode (array_length_cname = "size", array_length_type = "gsize")]
+		public uint8[] buffer;
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class MemoryInputStream : GLib.InputStream, GLib.Seekable {
 		[CCode (type = "GInputStream*", has_construct_function = false)]
 		public MemoryInputStream ();
-		public void add_data (void* data, ssize_t len, GLib.DestroyNotify? destroy);
+		public void add_data ([CCode (array_length_type = "gsize")] owned uint8[] data, GLib.DestroyNotify? destroy);
 		[CCode (type = "GInputStream*", has_construct_function = false)]
-		public MemoryInputStream.from_data (void* data, ssize_t len, GLib.DestroyNotify? destroy);
+		public MemoryInputStream.from_data ([CCode (array_length_type = "gsize")] owned uint8[] data, GLib.DestroyNotify? destroy);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class MemoryOutputStream : GLib.OutputStream, GLib.Seekable {
 		[CCode (type = "GOutputStream*", has_construct_function = false)]
-		public MemoryOutputStream (void* data, size_t size, GLib.ReallocFunc realloc_function, GLib.DestroyNotify? destroy_function);
-		public void* get_data ();
+		public MemoryOutputStream ([CCode (array_length_type = "gsize")] owned uint8[] data, GLib.ReallocFunc? realloc_function, GLib.DestroyNotify? destroy_function);
+		[CCode (array_length = false)]
+		public unowned uint8[] get_data ();
 		public size_t get_data_size ();
 		public size_t get_size ();
-		public void* steal_data ();
+		[CCode (array_length = false)]
+		public uint8[] steal_data ();
 		public void* data { get; construct; }
 		public ulong data_size { get; }
 		[NoAccessorMethod]
@@ -973,17 +975,16 @@ namespace GLib {
 		public bool set_pending () throws GLib.Error;
 		public virtual ssize_t splice (GLib.InputStream source, GLib.OutputStreamSpliceFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public virtual async ssize_t splice_async (GLib.InputStream source, GLib.OutputStreamSpliceFlags flags, int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public ssize_t write (void* buffer, size_t count, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public bool write_all (void* buffer, size_t count, out size_t bytes_written, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public virtual async ssize_t write_async (void* buffer, size_t count, int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		[NoWrapper]
-		public virtual ssize_t write_fn (void* buffer, size_t count, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[CCode (vfunc_name = "write_fn")]
+		public virtual ssize_t write ([CCode (array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public bool write_all ([CCode (array_length_type = "gsize")] uint8[] buffer, out size_t bytes_written, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public virtual async ssize_t write_async ([CCode (array_length_type = "gsize")] uint8[] buffer, int io_priority, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	}
 	[Compact]
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class OutputVector {
-		public void* buffer;
-		public size_t size;
+		[CCode (array_length_cname = "size", array_length_type = "gsize")]
+		public uint8[] buffer;
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class Permission : GLib.Object {
@@ -1287,13 +1288,13 @@ namespace GLib {
 	public class SocketControlMessage : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected SocketControlMessage ();
-		public virtual unowned GLib.SocketControlMessage deserialize (int level, int type, size_t size, void* data);
+		public virtual GLib.SocketControlMessage deserialize (int level, int type, [CCode (array_length_type = "gsize", array_length_pos = 2.9)] uint8[] data);
 		public virtual int get_level ();
 		public int get_msg_type ();
 		public virtual size_t get_size ();
 		[NoWrapper]
 		public virtual int get_type ();
-		public virtual void serialize (void* data);
+		public virtual void serialize ([CCode (array_length = false)] uint8[] data);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class SocketListener : GLib.Object {
@@ -1539,7 +1540,7 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface Converter : GLib.Object {
-		public abstract GLib.ConverterResult convert (void* inbuf, size_t inbuf_size, void* outbuf, size_t outbuf_size, GLib.ConverterFlags flags, out size_t bytes_read, out size_t bytes_written) throws GLib.Error;
+		public abstract GLib.ConverterResult convert ([CCode (array_length_type = "gsize")] uint8[] inbuf, [CCode (array_length_type = "gsize")] uint8[] outbuf, GLib.ConverterFlags flags, out size_t bytes_read, out size_t bytes_written) throws GLib.Error;
 		public abstract void reset ();
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
