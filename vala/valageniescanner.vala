@@ -996,7 +996,9 @@ public class Vala.Genie.Scanner {
 			case '}':
 				type = TokenType.CLOSE_BRACE;
 				open_brace_count--;
-				state_stack.length--;
+				if (state_stack.length > 0) {
+					state_stack.length--;
+				}
 				current++;
 				break;
 			case '(':
@@ -1009,7 +1011,9 @@ public class Vala.Genie.Scanner {
 				type = TokenType.CLOSE_PARENS;
 				open_parens_count--;
 				current++;
-				state_stack.length--;
+				if (state_stack.length > 0) {
+					state_stack.length--;
+				}
 				if (in_template ()) {
 					type = TokenType.COMMA;
 				}
@@ -1021,7 +1025,9 @@ public class Vala.Genie.Scanner {
 				break;
 			case ']':
 				type = TokenType.CLOSE_BRACKET;
-				state_stack.length--;
+				if (state_stack.length > 0) {
+					state_stack.length--;
+				}
 				current++;
 				break;
 			case '.':
