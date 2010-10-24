@@ -855,14 +855,16 @@ public class Vala.Genie.Parser : CodeVisitor {
 		var begin = get_location ();
 	
 		expect (TokenType.PRINT);
-		accept (TokenType.OPEN_PARENS);
-	
+		bool parens = accept (TokenType.OPEN_PARENS);
+
 		var expr = new MemberAccess (null, "print", get_src (begin));
 		
 		var arg_list = parse_print_argument_list ();
-		
-		accept (TokenType.CLOSE_PARENS);
-		
+
+		if (parens) {
+			expect (TokenType.CLOSE_PARENS);
+		}
+
 		var print_expr = new MethodCall (expr, get_src (begin));
 		
 		foreach (Expression arg in arg_list) {
@@ -877,14 +879,16 @@ public class Vala.Genie.Parser : CodeVisitor {
 		var begin = get_location ();
 	
 		expect (TokenType.ASSERT);
-		accept (TokenType.OPEN_PARENS);
-	
+		bool parens = accept (TokenType.OPEN_PARENS);
+
 		var expr = new MemberAccess (null, "assert", get_src (begin));
 		
 		var arg_list = parse_argument_list ();
-		
-		accept (TokenType.CLOSE_PARENS);
-		
+
+		if (parens) {
+			expect (TokenType.CLOSE_PARENS);
+		}
+
 		var assert_expr = new MethodCall (expr, get_src (begin));
 		
 		foreach (Expression arg in arg_list) {
