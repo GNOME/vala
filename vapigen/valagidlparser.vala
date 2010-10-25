@@ -2658,14 +2658,21 @@ public class Vala.GIdlParser : CodeVisitor {
 			var param_type = parse_param (param, out direction);
 			var p = new FormalParameter (param_node.name, param_type);
 			p.direction = direction;
-			sig.add_parameter (p);
 
+			bool hide_param = false;
+			bool show_param = false;
 			attributes = get_attributes ("%s::%s.%s".printf (current_data_type.get_cname (), sig.name, param_node.name));
 			if (attributes != null) {
 				string ns_name = null;
 				foreach (string attr in attributes) {
 					var nv = attr.split ("=", 2);
-					if (nv[0] == "is_array") {
+					if (nv[0] == "hidden") {
+						if (eval (nv[1]) == "1") {
+							hide_param = true;
+						} else if (eval (nv[1]) == "0") {
+							show_param = true;
+						}
+					} else if (nv[0] == "is_array") {
 						if (eval (nv[1]) == "1") {
 							param_type = new ArrayType (param_type, 1, param_type.source_reference);
 							p.variable_type = param_type;
@@ -2705,6 +2712,10 @@ public class Vala.GIdlParser : CodeVisitor {
 				if (ns_name != null) {
 					((UnresolvedType) param_type).unresolved_symbol.inner = new UnresolvedSymbol (null, ns_name);
 				}
+			}
+
+			if (show_param || !hide_param) {
+				sig.add_parameter (p);
 			}
 		}
 		
