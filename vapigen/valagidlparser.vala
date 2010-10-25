@@ -2609,6 +2609,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		
 		var attributes = get_attributes ("%s::%s".printf (current_data_type.get_cname (), sig.name));
 		if (attributes != null) {
+			string ns_name = null;
 			foreach (string attr in attributes) {
 				var nv = attr.split ("=", 2);
 				if (nv[0] == "name") {
@@ -2632,12 +2633,26 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "1") {
 						sig.return_type.value_owned = true;
 					}
+				} else if (nv[0] == "namespace_name") {
+					ns_name = eval (nv[1]);
+				} else if (nv[0] == "type_name") {
+					var sym = new UnresolvedSymbol (null, eval (nv[1]));
+					if (sig.return_type is UnresolvedType) {
+						((UnresolvedType) sig.return_type).unresolved_symbol = sym;
+					} else {
+						// Overwrite old return_type, so "type_name" must be before any
+						// other return type modifying metadata
+						sig.return_type = new UnresolvedType.from_symbol (sym, sig.return_type.source_reference);
+					}
 				} else if (nv[0] == "type_arguments") {
 					var type_args = eval (nv[1]).split (",");
 					foreach (string type_arg in type_args) {
 						sig.return_type.add_type_argument (get_type_from_string (type_arg));
 					}
 				}
+			}
+			if (ns_name != null) {
+				((UnresolvedType) sig.return_type).unresolved_symbol.inner = new UnresolvedSymbol (null, ns_name);
 			}
 		}
 
