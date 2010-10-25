@@ -26,25 +26,6 @@
 				<parameter name="atom" type="GdkAtom"/>
 			</parameters>
 		</function>
-		<function name="x11_colormap_foreign_new" symbol="gdk_x11_colormap_foreign_new">
-			<return-type type="GdkColormap*"/>
-			<parameters>
-				<parameter name="visual" type="GdkVisual*"/>
-				<parameter name="xcolormap" type="Colormap"/>
-			</parameters>
-		</function>
-		<function name="x11_colormap_get_xcolormap" symbol="gdk_x11_colormap_get_xcolormap">
-			<return-type type="Colormap"/>
-			<parameters>
-				<parameter name="colormap" type="GdkColormap*"/>
-			</parameters>
-		</function>
-		<function name="x11_colormap_get_xdisplay" symbol="gdk_x11_colormap_get_xdisplay">
-			<return-type type="Display*"/>
-			<parameters>
-				<parameter name="colormap" type="GdkColormap*"/>
-			</parameters>
-		</function>
 		<function name="x11_cursor_get_xcursor" symbol="gdk_x11_cursor_get_xcursor">
 			<return-type type="Cursor"/>
 			<parameters>
@@ -62,6 +43,24 @@
 			<parameters>
 				<parameter name="display" type="GdkDisplay*"/>
 				<parameter name="message_type" type="char*"/>
+			</parameters>
+		</function>
+		<function name="x11_display_error_trap_pop" symbol="gdk_x11_display_error_trap_pop">
+			<return-type type="gint"/>
+			<parameters>
+				<parameter name="display" type="GdkDisplay*"/>
+			</parameters>
+		</function>
+		<function name="x11_display_error_trap_pop_ignored" symbol="gdk_x11_display_error_trap_pop_ignored">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="display" type="GdkDisplay*"/>
+			</parameters>
+		</function>
+		<function name="x11_display_error_trap_push" symbol="gdk_x11_display_error_trap_push">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="display" type="GdkDisplay*"/>
 			</parameters>
 		</function>
 		<function name="x11_display_get_startup_notification_id" symbol="gdk_x11_display_get_startup_notification_id">
@@ -96,6 +95,13 @@
 				<parameter name="size" type="gint"/>
 			</parameters>
 		</function>
+		<function name="x11_display_set_startup_notification_id" symbol="gdk_x11_display_set_startup_notification_id">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="display" type="GdkDisplay*"/>
+				<parameter name="startup_id" type="gchar*"/>
+			</parameters>
+		</function>
 		<function name="x11_display_ungrab" symbol="gdk_x11_display_ungrab">
 			<return-type type="void"/>
 			<parameters>
@@ -112,18 +118,6 @@
 			<return-type type="XID"/>
 			<parameters>
 				<parameter name="drawable" type="GdkDrawable*"/>
-			</parameters>
-		</function>
-		<function name="x11_gc_get_xdisplay" symbol="gdk_x11_gc_get_xdisplay">
-			<return-type type="Display*"/>
-			<parameters>
-				<parameter name="gc" type="GdkGC*"/>
-			</parameters>
-		</function>
-		<function name="x11_gc_get_xgc" symbol="gdk_x11_gc_get_xgc">
-			<return-type type="GC"/>
-			<parameters>
-				<parameter name="gc" type="GdkGC*"/>
 			</parameters>
 		</function>
 		<function name="x11_get_default_root_xwindow" symbol="gdk_x11_get_default_root_xwindow">
@@ -170,28 +164,10 @@
 		<function name="x11_grab_server" symbol="gdk_x11_grab_server">
 			<return-type type="void"/>
 		</function>
-		<function name="x11_image_get_xdisplay" symbol="gdk_x11_image_get_xdisplay">
-			<return-type type="Display*"/>
-			<parameters>
-				<parameter name="image" type="GdkImage*"/>
-			</parameters>
-		</function>
-		<function name="x11_image_get_ximage" symbol="gdk_x11_image_get_ximage">
-			<return-type type="XImage*"/>
-			<parameters>
-				<parameter name="image" type="GdkImage*"/>
-			</parameters>
-		</function>
 		<function name="x11_lookup_xdisplay" symbol="gdk_x11_lookup_xdisplay">
 			<return-type type="GdkDisplay*"/>
 			<parameters>
 				<parameter name="xdisplay" type="Display*"/>
-			</parameters>
-		</function>
-		<function name="x11_pixmap_get_drawable_impl" symbol="gdk_x11_pixmap_get_drawable_impl">
-			<return-type type="GdkDrawable*"/>
-			<parameters>
-				<parameter name="pixmap" type="GdkPixmap*"/>
 			</parameters>
 		</function>
 		<function name="x11_register_standard_event_type" symbol="gdk_x11_register_standard_event_type">

@@ -7,17 +7,17 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static X.Atom x11_atom_to_xatom_for_display (Gdk.Display display, Gdk.Atom atom);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static unowned Gdk.Colormap x11_colormap_foreign_new (Gdk.Visual visual, X.Colormap xcolormap);
-	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static X.Colormap x11_colormap_get_xcolormap (Gdk.Colormap colormap);
-	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static unowned X.Display x11_colormap_get_xdisplay (Gdk.Colormap colormap);
-	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static unowned Gdk.Cursor x11_cursor_get_xcursor (Gdk.Cursor cursor);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static unowned X.Display x11_cursor_get_xdisplay (Gdk.Cursor cursor);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static void x11_display_broadcast_startup_message (Gdk.Display display, string message_type);
+	[CCode (cheader_filename = "gdk/gdkx.h")]
+	public static int x11_display_error_trap_pop (Gdk.Display display);
+	[CCode (cheader_filename = "gdk/gdkx.h")]
+	public static void x11_display_error_trap_pop_ignored (Gdk.Display display);
+	[CCode (cheader_filename = "gdk/gdkx.h")]
+	public static void x11_display_error_trap_push (Gdk.Display display);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static unowned string x11_display_get_startup_notification_id (Gdk.Display display);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
@@ -29,15 +29,13 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static void x11_display_set_cursor_theme (Gdk.Display display, string theme, int size);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
+	public static void x11_display_set_startup_notification_id (Gdk.Display display, string startup_id);
+	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static void x11_display_ungrab (Gdk.Display display);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static unowned X.Display x11_drawable_get_xdisplay (Gdk.Drawable drawable);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static X.ID x11_drawable_get_xid (Gdk.Drawable drawable);
-	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static unowned X.Display x11_gc_get_xdisplay (Gdk.GC gc);
-	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static X.GC x11_gc_get_xgc (Gdk.GC gc);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static X.Window x11_get_default_root_xwindow ();
 	[CCode (cheader_filename = "gdk/gdkx.h")]
@@ -57,15 +55,9 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static void x11_grab_server ();
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static unowned X.Display x11_image_get_xdisplay (Gdk.Image image);
-	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static void* x11_image_get_ximage (Gdk.Image image);
-	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static unowned Gdk.Display x11_lookup_xdisplay (X.Display xdisplay);
 	[CCode (cname = "gdk_net_wm_supports", cheader_filename = "gdk/gdkx.h")]
 	public static bool x11_net_wm_supports (Gdk.Atom property);
-	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static unowned Gdk.Drawable x11_pixmap_get_drawable_impl (Gdk.Pixmap pixmap);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static void x11_register_standard_event_type (Gdk.Display display, int event_base, int n_events);
 	[CCode (cheader_filename = "gdk/gdkx.h")]

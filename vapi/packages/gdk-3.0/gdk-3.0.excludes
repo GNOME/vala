@@ -1,5 +1,6 @@
 gdkalias.h
 gdkkeysyms.h
+gdkkeysyms-compat.h
 gdkx.h
 gdkdirectfb.h
 gdkprivate.h
