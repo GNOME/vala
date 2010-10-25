@@ -423,9 +423,10 @@ public class Vala.GDBusClientModule : GDBusModule {
 	}
 
 	void generate_marshalling (Method m, CallType call_type, string? iface_name, string? method_name) {
+		var gdbusproxy = new CCodeCastExpression (new CCodeIdentifier ("self"), "GDBusProxy *");
 
 		var connection = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_proxy_get_connection"));
-		connection.add_argument (new CCodeIdentifier ("self"));
+		connection.add_argument (gdbusproxy);
 
 		bool uses_fd = dbus_method_uses_file_descriptor (m);
 		if (uses_fd) {
@@ -434,16 +435,16 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		if (call_type != CallType.FINISH) {
 			var destination = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_proxy_get_name"));
-			destination.add_argument (new CCodeIdentifier ("self"));
+			destination.add_argument (gdbusproxy);
 
 			var interface_name = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_proxy_get_interface_name"));
-			interface_name.add_argument (new CCodeIdentifier ("self"));
+			interface_name.add_argument (gdbusproxy);
 
 			var object_path = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_proxy_get_object_path"));
-			object_path.add_argument (new CCodeIdentifier ("self"));
+			object_path.add_argument (gdbusproxy);
 
 			var timeout = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_proxy_get_default_timeout"));
-			timeout.add_argument (new CCodeIdentifier ("self"));
+			timeout.add_argument (gdbusproxy);
 
 			// register errors
 			foreach (var error_type in m.get_error_types ()) {
