@@ -1,3 +1,16 @@
+Vala 0.11.1
+===========
+
+ * Require and target GLib >= 2.16.
+ * Guard access to out parameters to allow null arguments.
+ * Add support for local constants.
+ * Support file descriptor passing with GDBus.
+ * Support cached property values in GDBus clients.
+ * Support Cancellable parameter in GDBus clients.
+ * Support no-reply methods in GDBus clients and servers.
+ * More refactoring in the code generator.
+ * Many bug fixes and binding updates.
+
 Vala 0.11.0
 ===========
 
