@@ -903,7 +903,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class MemoryOutputStream : GLib.OutputStream, GLib.Seekable {
 		[CCode (type = "GOutputStream*", has_construct_function = false)]
-		public MemoryOutputStream ([CCode (array_length_type = "gsize")] owned uint8[] data, GLib.ReallocFunc? realloc_function, GLib.DestroyNotify? destroy_function);
+		public MemoryOutputStream ([CCode (array_length_type = "gsize")] owned uint8[]? data, GLib.ReallocFunc? realloc_function, GLib.DestroyNotify? destroy_function);
 		[CCode (array_length = false)]
 		public unowned uint8[] get_data ();
 		public size_t get_data_size ();
