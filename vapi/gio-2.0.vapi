@@ -496,8 +496,8 @@ namespace GLib {
 		public uint64 read_uint64 (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public string? read_until (string stop_chars, out size_t length, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async string? read_until_async (string stop_chars, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null, out size_t? length = null) throws GLib.Error;
-		public unowned string read_upto (string stop_chars, ssize_t stop_chars_len, size_t length, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public async unowned string read_upto_async (string stop_chars, ssize_t stop_chars_len, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public string? read_upto (string stop_chars, ssize_t stop_chars_len, out size_t length, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async string? read_upto_async (string stop_chars, ssize_t stop_chars_len, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null, out size_t? length = null) throws GLib.Error;
 		public void set_byte_order (GLib.DataStreamByteOrder order);
 		public void set_newline_type (GLib.DataStreamNewlineType type);
 		public GLib.DataStreamByteOrder byte_order { get; set; }
