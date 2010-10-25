@@ -57,38 +57,69 @@ namespace GLib {
 		public virtual void launch_failed (string startup_notify_id);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
-	public class Application : GLib.Object, GLib.Initable {
+	public class Application : GLib.Object, GLib.ActionGroup {
 		[CCode (has_construct_function = false)]
-		public Application (string appid, [CCode (array_length_pos = 1.9)] ref unowned string[]? argv = null);
-		public void add_action (string name, string description);
-		public unowned string get_action_description (string name);
-		public bool get_action_enabled (string name);
-		public unowned string get_id ();
-		public static unowned GLib.Application get_instance ();
-		public void invoke_action (string name, GLib.Variant platform_data);
-		public unowned string list_actions ();
+		public Application (string application_id, GLib.ApplicationFlags flags);
+		[NoWrapper]
+		public virtual void add_platform_data (GLib.VariantBuilder builder);
+		[NoWrapper]
+		public virtual void after_emit (GLib.Variant platform_data);
+		[NoWrapper]
+		public virtual void before_emit (GLib.Variant platform_data);
+		public unowned string get_application_id ();
+		public GLib.ApplicationFlags get_flags ();
+		public uint get_inactivity_timeout ();
+		public bool get_is_registered ();
+		public bool get_is_remote ();
+		public void hold ();
+		public static bool id_is_valid (string application_id);
+		[NoWrapper]
+		public virtual bool local_command_line (string arguments, int exit_status);
 		[CCode (cname = "g_application_quit_with_data")]
 		public bool quit (GLib.Variant? platform_data = null);
-		public bool register ();
-		public void remove_action (string name);
-		public virtual void run ();
-		public void set_action_enabled (string name, bool enabled);
-		public static unowned GLib.Application try_new (string appid, int argc, out unowned string argv) throws GLib.Error;
-		public static unowned GLib.Application unregistered_try_new (string appid, int argc, out unowned string argv) throws GLib.Error;
-		[NoAccessorMethod]
-		public string application_id { owned get; construct; }
-		[NoAccessorMethod]
-		public GLib.Variant argv { owned get; construct; }
-		[NoAccessorMethod]
-		public bool default_quit { get; construct; }
-		[NoAccessorMethod]
+		[NoWrapper]
+		public virtual void quit_mainloop ();
+		public bool register (GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public void release ();
+		public int run ([CCode (array_length_pos = 1.9)] string[]? argv = null);
+		[NoWrapper]
+		public virtual void run_mainloop ();
+		public void set_action_group (GLib.ActionGroup action_group);
+		public void set_application_id (string application_id);
+		public void set_flags (GLib.ApplicationFlags flags);
+		public void set_inactivity_timeout (uint inactivity_timeout);
+		public GLib.ActionGroup action_group { set; }
+		public string application_id { get; set construct; }
+		public GLib.ApplicationFlags flags { get; set; }
+		public uint inactivity_timeout { get; set; }
+		public bool is_registered { get; }
 		public bool is_remote { get; }
-		[NoAccessorMethod]
-		public GLib.Variant platform_data { owned get; construct; }
-		public virtual signal void action_with_data (string action_name, GLib.Variant platform_data);
-		public virtual signal void prepare_activation (GLib.Variant arguments, GLib.Variant platform_data);
 		[HasEmitter]
-		public virtual signal bool quit_with_data (GLib.Variant? platform_data);
+		public virtual signal void activate ();
+		public virtual signal int command_line (GLib.ApplicationCommandLine command_line);
+		[HasEmitter]
+		public virtual signal void open (GLib.File[] files, string hint);
+		public virtual signal void startup ();
+	}
+	[CCode (cheader_filename = "gio/gio.h")]
+	public class ApplicationCommandLine : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected ApplicationCommandLine ();
+		public string[] get_arguments ();
+		public unowned string get_cwd ();
+		public int get_exit_status ();
+		public bool get_is_remote ();
+		public GLib.Variant? get_platform_data ();
+		public void print (string format);
+		[NoWrapper]
+		public virtual void print_literal (string message);
+		public void printerr (string format);
+		[NoWrapper]
+		public virtual void printerr_literal (string message);
+		public void set_exit_status (int exit_status);
+		public GLib.Variant arguments { construct; }
+		public bool is_remote { get; }
+		public GLib.Variant platform_data { construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class BufferedInputStream : GLib.FilterInputStream {
@@ -1010,6 +1041,22 @@ namespace GLib {
 		public uint8[] buffer;
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
+	public class Periodic : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public Periodic (uint hz, int priority);
+		public uint add (GLib.PeriodicTickFunc callback, GLib.DestroyNotify notify);
+		public void block ();
+		public void damaged (GLib.PeriodicRepairFunc callback, GLib.DestroyNotify notify);
+		public uint get_hz ();
+		public int get_priority ();
+		public void remove (uint tag);
+		public void unblock ();
+		public uint hz { get; construct; }
+		public int priority { get; construct; }
+		public virtual signal void repair ();
+		public virtual signal void tick (uint64 p0);
+	}
+	[CCode (cheader_filename = "gio/gio.h")]
 	public class Permission : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Permission ();
@@ -1083,6 +1130,7 @@ namespace GLib {
 		public bool get_has_unapplied ();
 		public int get_int (string key);
 		public void* get_mapped (string key, GLib.SettingsGetMapping mapping);
+		public unowned GLib.Variant get_range (string key);
 		public unowned string get_string (string key);
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] get_strv (string key);
@@ -1092,8 +1140,10 @@ namespace GLib {
 		public string[] list_children ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] list_keys ();
+		public static unowned string list_relocatable_schemas ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		public static unowned string[] list_schemas ();
+		public bool range_check (string key, GLib.Variant value);
 		public void reset (string key);
 		public void revert ();
 		[CCode (sentinel = "")]
@@ -1498,15 +1548,15 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface ActionGroup : GLib.Object {
-		public abstract void activate (string action_name, GLib.Variant parameter);
-		public abstract bool get_enabled (string action_name);
-		public abstract unowned GLib.VariantType get_parameter_type (string action_name);
-		public abstract unowned GLib.Variant get_state (string action_name);
-		public abstract unowned GLib.Variant get_state_hint (string action_name);
-		public abstract unowned GLib.VariantType get_state_type (string action_name);
+		public abstract void activate_action (string action_name, GLib.Variant parameter);
+		public abstract void change_action_state (string action_name, GLib.Variant value);
+		public abstract bool get_action_enabled (string action_name);
+		public abstract unowned GLib.VariantType get_action_parameter_type (string action_name);
+		public abstract unowned GLib.Variant get_action_state (string action_name);
+		public abstract unowned GLib.Variant get_action_state_hint (string action_name);
+		public abstract unowned GLib.VariantType get_action_state_type (string action_name);
 		public abstract bool has_action (string action_name);
 		public abstract unowned string list_actions ();
-		public abstract void set_state (string action_name, GLib.Variant value);
 		[HasEmitter]
 		public signal void action_added (string action_name);
 		[HasEmitter]
@@ -1793,6 +1843,15 @@ namespace GLib {
 		NEEDS_TERMINAL,
 		SUPPORTS_URIS,
 		SUPPORTS_STARTUP_NOTIFICATION
+	}
+	[CCode (cprefix = "G_APPLICATION_", cheader_filename = "gio/gio.h")]
+	[Flags]
+	public enum ApplicationFlags {
+		FLAGS_NONE,
+		IS_SERVICE,
+		IS_LAUNCHER,
+		HANDLES_OPEN,
+		HANDLES_COMMAND_LINE
 	}
 	[CCode (cprefix = "G_ASK_PASSWORD_", cheader_filename = "gio/gio.h")]
 	[Flags]
@@ -2266,6 +2325,10 @@ namespace GLib {
 	public delegate bool FileReadMoreCallback (string file_contents, int64 file_size, void* callback_data);
 	[CCode (cheader_filename = "gio/gio.h")]
 	public delegate bool IOSchedulerJobFunc (GLib.IOSchedulerJob job, GLib.Cancellable cancellable);
+	[CCode (cheader_filename = "gio/gio.h")]
+	public delegate void PeriodicRepairFunc (GLib.Periodic periodic);
+	[CCode (cheader_filename = "gio/gio.h")]
+	public delegate void PeriodicTickFunc (GLib.Periodic periodic, uint64 timestamp);
 	[CCode (cheader_filename = "gio/gio.h", has_target = false)]
 	public delegate void* ReallocFunc (void* data, size_t size);
 	[CCode (cheader_filename = "gio/gio.h")]

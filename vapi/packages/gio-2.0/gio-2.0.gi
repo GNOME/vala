@@ -570,6 +570,21 @@
 				<parameter name="user_data" type="gpointer"/>
 			</parameters>
 		</callback>
+		<callback name="GPeriodicRepairFunc">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="periodic" type="GPeriodic*"/>
+				<parameter name="user_data" type="gpointer"/>
+			</parameters>
+		</callback>
+		<callback name="GPeriodicTickFunc">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="periodic" type="GPeriodic*"/>
+				<parameter name="timestamp" type="guint64"/>
+				<parameter name="user_data" type="gpointer"/>
+			</parameters>
+		</callback>
 		<callback name="GReallocFunc">
 			<return-type type="gpointer"/>
 			<parameters>
@@ -1347,6 +1362,13 @@
 			<member name="G_APP_INFO_CREATE_SUPPORTS_URIS" value="2"/>
 			<member name="G_APP_INFO_CREATE_SUPPORTS_STARTUP_NOTIFICATION" value="4"/>
 		</flags>
+		<flags name="GApplicationFlags" type-name="GApplicationFlags" get-type="g_application_flags_get_type">
+			<member name="G_APPLICATION_FLAGS_NONE" value="0"/>
+			<member name="G_APPLICATION_IS_SERVICE" value="1"/>
+			<member name="G_APPLICATION_IS_LAUNCHER" value="2"/>
+			<member name="G_APPLICATION_HANDLES_OPEN" value="4"/>
+			<member name="G_APPLICATION_HANDLES_COMMAND_LINE" value="8"/>
+		</flags>
 		<flags name="GAskPasswordFlags" type-name="GAskPasswordFlags" get-type="g_ask_password_flags_get_type">
 			<member name="G_ASK_PASSWORD_NEED_PASSWORD" value="1"/>
 			<member name="G_ASK_PASSWORD_NEED_USERNAME" value="2"/>
@@ -1514,152 +1536,266 @@
 		</object>
 		<object name="GApplication" parent="GObject" type-name="GApplication" get-type="g_application_get_type">
 			<implements>
-				<interface name="GInitable"/>
+				<interface name="GActionGroup"/>
 			</implements>
-			<method name="add_action" symbol="g_application_add_action">
+			<method name="activate" symbol="g_application_activate">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="application" type="GApplication*"/>
-					<parameter name="name" type="gchar*"/>
-					<parameter name="description" type="gchar*"/>
 				</parameters>
 			</method>
-			<method name="get_action_description" symbol="g_application_get_action_description">
-				<return-type type="gchar*"/>
-				<parameters>
-					<parameter name="application" type="GApplication*"/>
-					<parameter name="name" type="gchar*"/>
-				</parameters>
-			</method>
-			<method name="get_action_enabled" symbol="g_application_get_action_enabled">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="application" type="GApplication*"/>
-					<parameter name="name" type="gchar*"/>
-				</parameters>
-			</method>
-			<method name="get_id" symbol="g_application_get_id">
+			<method name="get_application_id" symbol="g_application_get_application_id">
 				<return-type type="gchar*"/>
 				<parameters>
 					<parameter name="application" type="GApplication*"/>
 				</parameters>
 			</method>
-			<method name="get_instance" symbol="g_application_get_instance">
-				<return-type type="GApplication*"/>
-			</method>
-			<method name="invoke_action" symbol="g_application_invoke_action">
-				<return-type type="void"/>
+			<method name="get_flags" symbol="g_application_get_flags">
+				<return-type type="GApplicationFlags"/>
 				<parameters>
 					<parameter name="application" type="GApplication*"/>
-					<parameter name="name" type="gchar*"/>
-					<parameter name="platform_data" type="GVariant*"/>
 				</parameters>
 			</method>
-			<method name="is_remote" symbol="g_application_is_remote">
+			<method name="get_inactivity_timeout" symbol="g_application_get_inactivity_timeout">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="application" type="GApplication*"/>
+				</parameters>
+			</method>
+			<method name="get_is_registered" symbol="g_application_get_is_registered">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="application" type="GApplication*"/>
 				</parameters>
 			</method>
-			<method name="list_actions" symbol="g_application_list_actions">
-				<return-type type="gchar**"/>
+			<method name="get_is_remote" symbol="g_application_get_is_remote">
+				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="application" type="GApplication*"/>
+				</parameters>
+			</method>
+			<method name="hold" symbol="g_application_hold">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="application" type="GApplication*"/>
+				</parameters>
+			</method>
+			<method name="id_is_valid" symbol="g_application_id_is_valid">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="application_id" type="gchar*"/>
 				</parameters>
 			</method>
 			<constructor name="new" symbol="g_application_new">
 				<return-type type="GApplication*"/>
 				<parameters>
-					<parameter name="appid" type="gchar*"/>
-					<parameter name="argc" type="int"/>
-					<parameter name="argv" type="char**"/>
+					<parameter name="application_id" type="gchar*"/>
+					<parameter name="flags" type="GApplicationFlags"/>
 				</parameters>
 			</constructor>
-			<method name="quit_with_data" symbol="g_application_quit_with_data">
-				<return-type type="gboolean"/>
+			<method name="open" symbol="g_application_open">
+				<return-type type="void"/>
 				<parameters>
 					<parameter name="application" type="GApplication*"/>
-					<parameter name="platform_data" type="GVariant*"/>
+					<parameter name="files" type="GFile**"/>
+					<parameter name="n_files" type="gint"/>
+					<parameter name="hint" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="register" symbol="g_application_register">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="application" type="GApplication*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
-			<method name="remove_action" symbol="g_application_remove_action">
+			<method name="release" symbol="g_application_release">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="application" type="GApplication*"/>
-					<parameter name="name" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="run" symbol="g_application_run">
+				<return-type type="int"/>
+				<parameters>
+					<parameter name="application" type="GApplication*"/>
+					<parameter name="argc" type="int"/>
+					<parameter name="argv" type="char**"/>
+				</parameters>
+			</method>
+			<method name="set_action_group" symbol="g_application_set_action_group">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="application" type="GApplication*"/>
+					<parameter name="action_group" type="GActionGroup*"/>
 				</parameters>
 			</method>
-			<method name="set_action_enabled" symbol="g_application_set_action_enabled">
+			<method name="set_application_id" symbol="g_application_set_application_id">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="application" type="GApplication*"/>
-					<parameter name="name" type="gchar*"/>
-					<parameter name="enabled" type="gboolean"/>
+					<parameter name="application_id" type="gchar*"/>
 				</parameters>
 			</method>
-			<method name="try_new" symbol="g_application_try_new">
-				<return-type type="GApplication*"/>
+			<method name="set_flags" symbol="g_application_set_flags">
+				<return-type type="void"/>
 				<parameters>
-					<parameter name="appid" type="gchar*"/>
-					<parameter name="argc" type="int"/>
-					<parameter name="argv" type="char**"/>
-					<parameter name="error" type="GError**"/>
+					<parameter name="application" type="GApplication*"/>
+					<parameter name="flags" type="GApplicationFlags"/>
 				</parameters>
 			</method>
-			<method name="unregistered_try_new" symbol="g_application_unregistered_try_new">
-				<return-type type="GApplication*"/>
+			<method name="set_inactivity_timeout" symbol="g_application_set_inactivity_timeout">
+				<return-type type="void"/>
 				<parameters>
-					<parameter name="appid" type="gchar*"/>
-					<parameter name="argc" type="int"/>
-					<parameter name="argv" type="char**"/>
-					<parameter name="error" type="GError**"/>
+					<parameter name="application" type="GApplication*"/>
+					<parameter name="inactivity_timeout" type="guint"/>
 				</parameters>
 			</method>
-			<property name="application-id" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
-			<property name="argv" type="GVariant" readable="1" writable="1" construct="0" construct-only="1"/>
-			<property name="default-quit" type="gboolean" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="action-group" type="GActionGroup*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="application-id" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="flags" type="GApplicationFlags" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="inactivity-timeout" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="is-registered" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="is-remote" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="platform-data" type="GVariant" readable="1" writable="1" construct="0" construct-only="1"/>
-			<property name="register" type="gboolean" readable="1" writable="1" construct="0" construct-only="1"/>
-			<signal name="action-with-data" when="FIRST">
+			<signal name="activate" when="LAST">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="application" type="GApplication*"/>
-					<parameter name="action_name" type="char*"/>
-					<parameter name="platform_data" type="GVariant"/>
 				</parameters>
 			</signal>
-			<signal name="prepare-activation" when="LAST">
+			<signal name="command-line" when="LAST">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="application" type="GApplication*"/>
+					<parameter name="command_line" type="GApplicationCommandLine*"/>
+				</parameters>
+			</signal>
+			<signal name="open" when="LAST">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="application" type="GApplication*"/>
-					<parameter name="arguments" type="GVariant"/>
-					<parameter name="platform_data" type="GVariant"/>
+					<parameter name="files" type="gpointer"/>
+					<parameter name="n_files" type="gint"/>
+					<parameter name="hint" type="char*"/>
 				</parameters>
 			</signal>
-			<signal name="quit-with-data" when="LAST">
+			<signal name="startup" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="application" type="GApplication*"/>
+				</parameters>
+			</signal>
+			<vfunc name="add_platform_data">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="application" type="GApplication*"/>
+					<parameter name="builder" type="GVariantBuilder*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="after_emit">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="application" type="GApplication*"/>
+					<parameter name="platform_data" type="GVariant*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="before_emit">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="application" type="GApplication*"/>
+					<parameter name="platform_data" type="GVariant*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="local_command_line">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="application" type="GApplication*"/>
-					<parameter name="platform_data" type="GVariant"/>
+					<parameter name="arguments" type="gchar***"/>
+					<parameter name="exit_status" type="int*"/>
 				</parameters>
-			</signal>
-			<vfunc name="run">
+			</vfunc>
+			<vfunc name="quit_mainloop">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="application" type="GApplication*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="run_mainloop">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="application" type="GApplication*"/>
+				</parameters>
+			</vfunc>
+		</object>
+		<object name="GApplicationCommandLine" parent="GObject" type-name="GApplicationCommandLine" get-type="g_application_command_line_get_type">
+			<method name="get_arguments" symbol="g_application_command_line_get_arguments">
+				<return-type type="gchar**"/>
+				<parameters>
+					<parameter name="cmdline" type="GApplicationCommandLine*"/>
+					<parameter name="argc" type="int*"/>
+				</parameters>
+			</method>
+			<method name="get_cwd" symbol="g_application_command_line_get_cwd">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="cmdline" type="GApplicationCommandLine*"/>
+				</parameters>
+			</method>
+			<method name="get_exit_status" symbol="g_application_command_line_get_exit_status">
+				<return-type type="int"/>
+				<parameters>
+					<parameter name="cmdline" type="GApplicationCommandLine*"/>
+				</parameters>
+			</method>
+			<method name="get_is_remote" symbol="g_application_command_line_get_is_remote">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="cmdline" type="GApplicationCommandLine*"/>
+				</parameters>
+			</method>
+			<method name="get_platform_data" symbol="g_application_command_line_get_platform_data">
+				<return-type type="GVariant*"/>
+				<parameters>
+					<parameter name="cmdline" type="GApplicationCommandLine*"/>
+				</parameters>
+			</method>
+			<method name="print" symbol="g_application_command_line_print">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="cmdline" type="GApplicationCommandLine*"/>
+					<parameter name="format" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="printerr" symbol="g_application_command_line_printerr">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="cmdline" type="GApplicationCommandLine*"/>
+					<parameter name="format" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_exit_status" symbol="g_application_command_line_set_exit_status">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="cmdline" type="GApplicationCommandLine*"/>
+					<parameter name="exit_status" type="int"/>
+				</parameters>
+			</method>
+			<property name="arguments" type="GVariant" readable="0" writable="1" construct="0" construct-only="1"/>
+			<property name="is-remote" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="platform-data" type="GVariant" readable="0" writable="1" construct="0" construct-only="1"/>
+			<vfunc name="print_literal">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="cmdline" type="GApplicationCommandLine*"/>
+					<parameter name="message" type="gchar*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="printerr_literal">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="cmdline" type="GApplicationCommandLine*"/>
+					<parameter name="message" type="gchar*"/>
 				</parameters>
 			</vfunc>
 		</object>
@@ -5559,6 +5695,79 @@
 				</parameters>
 			</vfunc>
 		</object>
+		<object name="GPeriodic" parent="GObject" type-name="GPeriodic" get-type="g_periodic_get_type">
+			<method name="add" symbol="g_periodic_add">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="periodic" type="GPeriodic*"/>
+					<parameter name="callback" type="GPeriodicTickFunc"/>
+					<parameter name="user_data" type="gpointer"/>
+					<parameter name="notify" type="GDestroyNotify"/>
+				</parameters>
+			</method>
+			<method name="block" symbol="g_periodic_block">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="periodic" type="GPeriodic*"/>
+				</parameters>
+			</method>
+			<method name="damaged" symbol="g_periodic_damaged">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="periodic" type="GPeriodic*"/>
+					<parameter name="callback" type="GPeriodicRepairFunc"/>
+					<parameter name="user_data" type="gpointer"/>
+					<parameter name="notify" type="GDestroyNotify"/>
+				</parameters>
+			</method>
+			<method name="get_hz" symbol="g_periodic_get_hz">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="periodic" type="GPeriodic*"/>
+				</parameters>
+			</method>
+			<method name="get_priority" symbol="g_periodic_get_priority">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="periodic" type="GPeriodic*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="g_periodic_new">
+				<return-type type="GPeriodic*"/>
+				<parameters>
+					<parameter name="hz" type="guint"/>
+					<parameter name="priority" type="gint"/>
+				</parameters>
+			</constructor>
+			<method name="remove" symbol="g_periodic_remove">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="periodic" type="GPeriodic*"/>
+					<parameter name="tag" type="guint"/>
+				</parameters>
+			</method>
+			<method name="unblock" symbol="g_periodic_unblock">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="periodic" type="GPeriodic*"/>
+				</parameters>
+			</method>
+			<property name="hz" type="guint" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="priority" type="gint" readable="1" writable="1" construct="0" construct-only="1"/>
+			<signal name="repair" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GPeriodic*"/>
+				</parameters>
+			</signal>
+			<signal name="tick" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GPeriodic*"/>
+					<parameter name="p0" type="guint64"/>
+				</parameters>
+			</signal>
+		</object>
 		<object name="GPermission" parent="GObject" type-name="GPermission" get-type="g_permission_get_type">
 			<method name="acquire" symbol="g_permission_acquire">
 				<return-type type="gboolean"/>
@@ -6057,6 +6266,13 @@
 					<parameter name="user_data" type="gpointer"/>
 				</parameters>
 			</method>
+			<method name="get_range" symbol="g_settings_get_range">
+				<return-type type="GVariant*"/>
+				<parameters>
+					<parameter name="settings" type="GSettings*"/>
+					<parameter name="key" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="get_string" symbol="g_settings_get_string">
 				<return-type type="gchar*"/>
 				<parameters>
@@ -6097,6 +6313,9 @@
 					<parameter name="settings" type="GSettings*"/>
 				</parameters>
 			</method>
+			<method name="list_relocatable_schemas" symbol="g_settings_list_relocatable_schemas">
+				<return-type type="gchar**"/>
+			</method>
 			<method name="list_schemas" symbol="g_settings_list_schemas">
 				<return-type type="gchar**"/>
 			</method>
@@ -6128,6 +6347,14 @@
 					<parameter name="path" type="gchar*"/>
 				</parameters>
 			</constructor>
+			<method name="range_check" symbol="g_settings_range_check">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="settings" type="GSettings*"/>
+					<parameter name="key" type="gchar*"/>
+					<parameter name="value" type="GVariant*"/>
+				</parameters>
+			</method>
 			<method name="reset" symbol="g_settings_reset">
 				<return-type type="void"/>
 				<parameters>
@@ -7903,7 +8130,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="action" type="GAction*"/>
-					<parameter name="state" type="GVariant*"/>
+					<parameter name="value" type="GVariant*"/>
 				</parameters>
 			</vfunc>
 		</interface>
@@ -7941,7 +8168,7 @@
 					<parameter name="state" type="GVariant*"/>
 				</parameters>
 			</method>
-			<method name="activate" symbol="g_action_group_activate">
+			<method name="activate_action" symbol="g_action_group_activate_action">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="action_group" type="GActionGroup*"/>
@@ -7949,35 +8176,43 @@
 					<parameter name="parameter" type="GVariant*"/>
 				</parameters>
 			</method>
-			<method name="get_enabled" symbol="g_action_group_get_enabled">
+			<method name="change_action_state" symbol="g_action_group_change_action_state">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="action_group" type="GActionGroup*"/>
+					<parameter name="action_name" type="gchar*"/>
+					<parameter name="value" type="GVariant*"/>
+				</parameters>
+			</method>
+			<method name="get_action_enabled" symbol="g_action_group_get_action_enabled">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="action_group" type="GActionGroup*"/>
 					<parameter name="action_name" type="gchar*"/>
 				</parameters>
 			</method>
-			<method name="get_parameter_type" symbol="g_action_group_get_parameter_type">
+			<method name="get_action_parameter_type" symbol="g_action_group_get_action_parameter_type">
 				<return-type type="GVariantType*"/>
 				<parameters>
 					<parameter name="action_group" type="GActionGroup*"/>
 					<parameter name="action_name" type="gchar*"/>
 				</parameters>
 			</method>
-			<method name="get_state" symbol="g_action_group_get_state">
+			<method name="get_action_state" symbol="g_action_group_get_action_state">
 				<return-type type="GVariant*"/>
 				<parameters>
 					<parameter name="action_group" type="GActionGroup*"/>
 					<parameter name="action_name" type="gchar*"/>
 				</parameters>
 			</method>
-			<method name="get_state_hint" symbol="g_action_group_get_state_hint">
+			<method name="get_action_state_hint" symbol="g_action_group_get_action_state_hint">
 				<return-type type="GVariant*"/>
 				<parameters>
 					<parameter name="action_group" type="GActionGroup*"/>
 					<parameter name="action_name" type="gchar*"/>
 				</parameters>
 			</method>
-			<method name="get_state_type" symbol="g_action_group_get_state_type">
+			<method name="get_action_state_type" symbol="g_action_group_get_action_state_type">
 				<return-type type="GVariantType*"/>
 				<parameters>
 					<parameter name="action_group" type="GActionGroup*"/>
@@ -7995,14 +8230,6 @@
 				<return-type type="gchar**"/>
 				<parameters>
 					<parameter name="action_group" type="GActionGroup*"/>
-				</parameters>
-			</method>
-			<method name="set_state" symbol="g_action_group_set_state">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="action_group" type="GActionGroup*"/>
-					<parameter name="action_name" type="gchar*"/>
-					<parameter name="value" type="GVariant*"/>
 				</parameters>
 			</method>
 			<signal name="action-added" when="LAST">
@@ -8035,7 +8262,7 @@
 					<parameter name="value" type="GVariant"/>
 				</parameters>
 			</signal>
-			<vfunc name="activate">
+			<vfunc name="activate_action">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="action_group" type="GActionGroup*"/>
@@ -8043,35 +8270,43 @@
 					<parameter name="parameter" type="GVariant*"/>
 				</parameters>
 			</vfunc>
-			<vfunc name="get_enabled">
+			<vfunc name="change_action_state">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="action_group" type="GActionGroup*"/>
+					<parameter name="action_name" type="gchar*"/>
+					<parameter name="value" type="GVariant*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_action_enabled">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="action_group" type="GActionGroup*"/>
 					<parameter name="action_name" type="gchar*"/>
 				</parameters>
 			</vfunc>
-			<vfunc name="get_parameter_type">
+			<vfunc name="get_action_parameter_type">
 				<return-type type="GVariantType*"/>
 				<parameters>
 					<parameter name="action_group" type="GActionGroup*"/>
 					<parameter name="action_name" type="gchar*"/>
 				</parameters>
 			</vfunc>
-			<vfunc name="get_state">
+			<vfunc name="get_action_state">
 				<return-type type="GVariant*"/>
 				<parameters>
 					<parameter name="action_group" type="GActionGroup*"/>
 					<parameter name="action_name" type="gchar*"/>
 				</parameters>
 			</vfunc>
-			<vfunc name="get_state_hint">
+			<vfunc name="get_action_state_hint">
 				<return-type type="GVariant*"/>
 				<parameters>
 					<parameter name="action_group" type="GActionGroup*"/>
 					<parameter name="action_name" type="gchar*"/>
 				</parameters>
 			</vfunc>
-			<vfunc name="get_state_type">
+			<vfunc name="get_action_state_type">
 				<return-type type="GVariantType*"/>
 				<parameters>
 					<parameter name="action_group" type="GActionGroup*"/>
@@ -8089,14 +8324,6 @@
 				<return-type type="gchar**"/>
 				<parameters>
 					<parameter name="action_group" type="GActionGroup*"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="set_state">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="action_group" type="GActionGroup*"/>
-					<parameter name="action_name" type="gchar*"/>
-					<parameter name="value" type="GVariant*"/>
 				</parameters>
 			</vfunc>
 		</interface>
