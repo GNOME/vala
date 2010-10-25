@@ -224,6 +224,17 @@ public class Vala.LambdaExpression : Expression {
 		}
 		method.body.owner = method.scope;
 
+		// support use of generics in closures
+		var m = analyzer.find_parent_method (analyzer.current_symbol);
+		if (m != null) {
+			foreach (var type_param in m.get_type_parameters ()) {
+				method.add_type_parameter (new TypeParameter (type_param.name, type_param.source_reference));
+
+				method.closure = true;
+				m.body.captured = true;
+			}
+		}
+
 		/* lambda expressions should be usable like MemberAccess of a method */
 		symbol_reference = method;
 

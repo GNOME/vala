@@ -410,6 +410,23 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 						ccode.add_declaration ("%s *".printf (current_class.get_cname ()), new CCodeVariableDeclarator ("self"));
 						ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("self"), cself));
 					}
+
+					// allow capturing generic type parameters
+					foreach (var type_param in m.get_type_parameters ()) {
+						string func_name;
+
+						func_name = "%s_type".printf (type_param.name.down ());
+						ccode.add_declaration ("GType", new CCodeVariableDeclarator (func_name));
+						ccode.add_expression (new CCodeAssignment (new CCodeIdentifier (func_name), new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name)));
+
+						func_name = "%s_dup_func".printf (type_param.name.down ());
+						ccode.add_declaration ("GBoxedCopyFunc", new CCodeVariableDeclarator (func_name));
+						ccode.add_expression (new CCodeAssignment (new CCodeIdentifier (func_name), new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name)));
+
+						func_name = "%s_destroy_func".printf (type_param.name.down ());
+						ccode.add_declaration ("GDestroyNotify", new CCodeVariableDeclarator (func_name));
+						ccode.add_expression (new CCodeAssignment (new CCodeIdentifier (func_name), new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name)));
+					}
 				} else if (m.parent_symbol is Class && !m.coroutine) {
 					var cl = (Class) m.parent_symbol;
 					if (m.overrides || (m.base_interface_method != null && !m.is_abstract && !m.is_virtual)) {
@@ -828,7 +845,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 				}
 				type_param_index++;
 			}
-		} else {
+		} else if (!m.closure) {
 			int type_param_index = 0;
 			foreach (var type_param in m.get_type_parameters ()) {
 				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.01), new CCodeFormalParameter ("%s_type".printf (type_param.name.down ()), "GType"));
