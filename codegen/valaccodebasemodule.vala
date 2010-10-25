@@ -2260,7 +2260,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
-	private CCodeExpression get_type_id_expression (DataType type, bool is_chainup = false) {
+	public CCodeExpression get_type_id_expression (DataType type, bool is_chainup = false) {
 		if (type is GenericType) {
 			string var_name = "%s_type".printf (type.type_parameter.name.down ());
 			if (is_in_generic_type (type) && !is_chainup && !in_creation_method) {

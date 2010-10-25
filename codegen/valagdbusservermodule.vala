@@ -1020,6 +1020,67 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		return new CCodeIdentifier ("_" + sym.get_lower_case_cprefix () + "dbus_interface_vtable");
 	}
 
+	string generate_register_object_function () {
+		string register_object_func = "_vala_g_dbus_connection_register_object";
+
+		if (!add_wrapper (register_object_func)) {
+			return register_object_func;
+		}
+
+		var function = new CCodeFunction (register_object_func, "guint");
+		function.modifiers = CCodeModifiers.STATIC;
+
+		function.add_parameter (new CCodeFormalParameter ("type", "GType"));
+		function.add_parameter (new CCodeFormalParameter ("object", "void*"));
+		function.add_parameter (new CCodeFormalParameter ("connection", "GDBusConnection*"));
+		function.add_parameter (new CCodeFormalParameter ("path", "const gchar*"));
+		function.add_parameter (new CCodeFormalParameter ("error", "GError**"));
+
+		push_function (function);
+
+		var quark = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_static_string"));
+		quark.add_argument (new CCodeConstant ("\"vala-dbus-register-object\""));
+
+		var get_qdata = new CCodeFunctionCall (new CCodeIdentifier ("g_type_get_qdata"));
+		get_qdata.add_argument (new CCodeIdentifier ("type"));
+		get_qdata.add_argument (quark);
+
+		ccode.add_declaration ("void", new CCodeVariableDeclarator ("*func"));
+		ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("func"), get_qdata));
+
+		ccode.open_if (new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeIdentifier ("func")));
+		// no D-Bus interface
+		// return error
+
+		var set_error = new CCodeFunctionCall (new CCodeIdentifier ("g_set_error_literal"));
+		set_error.add_argument (new CCodeIdentifier ("error"));
+		set_error.add_argument (new CCodeIdentifier ("G_IO_ERROR"));
+		set_error.add_argument (new CCodeIdentifier ("G_IO_ERROR_FAILED"));
+		set_error.add_argument (new CCodeConstant ("\"The specified type does not support D-Bus registration\""));
+		ccode.add_expression (set_error);
+
+		ccode.add_return (new CCodeConstant ("0"));
+
+		ccode.close ();
+
+		var register_object = new CCodeCastExpression (new CCodeIdentifier ("func"), "guint (*) (void *, GDBusConnection *, const gchar *, GError **)");
+
+		var ccall = new CCodeFunctionCall (register_object);
+		ccall.add_argument (new CCodeIdentifier ("object"));
+		ccall.add_argument (new CCodeIdentifier ("connection"));
+		ccall.add_argument (new CCodeIdentifier ("path"));
+		ccall.add_argument (new CCodeIdentifier ("error"));
+
+		ccode.add_return (ccall);
+
+		pop_function ();
+
+		cfile.add_function_declaration (function);
+		cfile.add_function (function);
+
+		return register_object_func;
+	}
+
 	public override void visit_method_call (MethodCall expr) {
 		var mtype = expr.call.value_type as MethodType;
 		if (mtype == null || mtype.method_symbol.get_cname () != "g_dbus_connection_register_object") {
@@ -1028,11 +1089,22 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		}
 
 		var ma = (MemberAccess) expr.call;
-		var type_arg = (ObjectType) ma.get_type_arguments ().get (0);
+		var type_arg = ma.get_type_arguments ().get (0);
 
-		if (get_dbus_name (type_arg.type_symbol) == null) {
-			Report.error (expr.source_reference, "DBusConnection.register_object requires type argument with [DBus (name = ...)] attribute");
-			return;
+		CCodeFunctionCall cregister;
+
+		var object_type = type_arg as ObjectType;
+		if (object_type != null) {
+			if (get_dbus_name (object_type.type_symbol) == null) {
+				Report.error (expr.source_reference, "DBusConnection.register_object requires type argument with [DBus (name = ...)] attribute");
+				return;
+			}
+
+			cregister = new CCodeFunctionCall (new CCodeIdentifier ("%sregister_object".printf (object_type.type_symbol.get_lower_case_cprefix ())));
+		} else {
+			// use runtime type information for generic methods
+			cregister = new CCodeFunctionCall (new CCodeIdentifier (generate_register_object_function ()));
+			cregister.add_argument (get_type_id_expression (type_arg));
 		}
 
 		var args = expr.get_argument_list ();
@@ -1042,7 +1114,6 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		// method can fail
 		current_method_inner_error = true;
 
-		var cregister = new CCodeFunctionCall (new CCodeIdentifier ("%sregister_object".printf (type_arg.type_symbol.get_lower_case_cprefix ())));
 		cregister.add_argument (get_cvalue (obj_arg));
 		cregister.add_argument (get_cvalue (ma.inner));
 		cregister.add_argument (get_cvalue (path_arg));
@@ -1201,5 +1272,22 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		block.add_statement (new CCodeExpressionStatement (free_data));
 
 		cfile.add_function (cfunc);
+	}
+
+	public override void register_dbus_info (ObjectTypeSymbol sym) {
+		string dbus_iface_name = get_dbus_name (sym);
+		if (dbus_iface_name == null) {
+			return;
+		}
+
+		var quark = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_static_string"));
+		quark.add_argument (new CCodeConstant ("\"vala-dbus-register-object\""));
+
+		var set_qdata = new CCodeFunctionCall (new CCodeIdentifier ("g_type_set_qdata"));
+		set_qdata.add_argument (new CCodeIdentifier (sym.get_upper_case_cname ("TYPE_")));
+		set_qdata.add_argument (quark);
+		set_qdata.add_argument (new CCodeCastExpression (new CCodeIdentifier (sym.get_lower_case_cprefix () + "register_object"), "void*"));
+
+		ccode.add_expression (set_qdata);
 	}
 }
