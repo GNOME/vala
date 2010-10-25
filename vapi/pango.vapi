@@ -21,19 +21,6 @@ namespace Pango {
 	}
 	[Compact]
 	[CCode (cheader_filename = "pango/pango.h")]
-	public class Analysis {
-		public weak GLib.SList extra_attrs;
-		public uchar flags;
-		public weak Pango.Font font;
-		public uchar gravity;
-		public weak Pango.EngineLang lang_engine;
-		public weak Pango.Language language;
-		public uchar level;
-		public uchar script;
-		public weak Pango.EngineShape shape_engine;
-	}
-	[Compact]
-	[CCode (cheader_filename = "pango/pango.h")]
 	public class AttrClass {
 		public weak GLib.Callback copy;
 		public weak GLib.Callback destroy;
@@ -311,7 +298,7 @@ namespace Pango {
 	[Compact]
 	[CCode (copy_function = "pango_item_copy", type_id = "PANGO_TYPE_ITEM", cheader_filename = "pango/pango.h")]
 	public class Item {
-		public weak Pango.Analysis analysis;
+		public Pango.Analysis analysis;
 		public int length;
 		public int num_chars;
 		public int offset;
@@ -491,6 +478,18 @@ namespace Pango {
 		public void set_tab (int tab_index, Pango.TabAlign alignment, int location);
 		[CCode (has_construct_function = false)]
 		public TabArray.with_positions (int size, bool positions_in_pixels, Pango.TabAlign first_alignment, ...);
+	}
+	[CCode (type_id = "PANGO_TYPE_ANALYSIS", cheader_filename = "pango/pango.h")]
+	public struct Analysis {
+		public weak Pango.EngineShape shape_engine;
+		public weak Pango.EngineLang lang_engine;
+		public weak Pango.Font font;
+		public uchar level;
+		public uchar gravity;
+		public uchar flags;
+		public uchar script;
+		public weak Pango.Language language;
+		public weak GLib.SList extra_attrs;
 	}
 	[CCode (type_id = "PANGO_TYPE_COLOR", cheader_filename = "pango/pango.h")]
 	public struct Color {
