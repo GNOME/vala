@@ -22,6 +22,10 @@
 
 namespace Pango {
 	[CCode (cheader_filename = "pango/pango.h")]
+	public struct Glyph : uint32 {
+	}
+
+	[CCode (cheader_filename = "pango/pango.h")]
 	namespace Scale {
 		[CCode (cname = "PANGO_SCALE_XX_SMALL")]
 		public const double XX_SMALL;

@@ -259,10 +259,6 @@ namespace Pango {
 		public unowned Pango.FontMetrics get_metrics ();
 	}
 	[Compact]
-	[CCode (cheader_filename = "pango/pango.h")]
-	public class Glyph {
-	}
-	[Compact]
 	[CCode (copy_function = "pango_glyph_item_copy", type_id = "PANGO_TYPE_GLYPH_ITEM", cheader_filename = "pango/pango.h")]
 	public class GlyphItem {
 		public weak Pango.GlyphString glyphs;
@@ -276,8 +272,10 @@ namespace Pango {
 	[Compact]
 	[CCode (copy_function = "pango_glyph_string_copy", type_id = "PANGO_TYPE_GLYPH_STRING", cheader_filename = "pango/pango.h")]
 	public class GlyphString {
-		public Pango.GlyphInfo glyphs;
-		public int log_clusters;
+		[CCode (array_length_cname = "num_glyphs")]
+		public Pango.GlyphInfo[] glyphs;
+		[CCode (array_length_cname = "num_glyphs")]
+		public int[] log_clusters;
 		public int num_glyphs;
 		public int space;
 		[CCode (has_construct_function = false)]
@@ -501,6 +499,11 @@ namespace Pango {
 		public bool parse (string spec);
 		public unowned string to_string ();
 	}
+	[CCode (cheader_filename = "pango/pango.h")]
+	[SimpleType]
+	[IntegerType (rank = 0)]
+	public struct Glyph : uint32 {
+	}
 	[CCode (type_id = "PANGO_TYPE_GLYPH_GEOMETRY", cheader_filename = "pango/pango.h")]
 	public struct GlyphGeometry {
 		public weak Pango.GlyphUnit width;
@@ -509,7 +512,7 @@ namespace Pango {
 	}
 	[CCode (type_id = "PANGO_TYPE_GLYPH_INFO", cheader_filename = "pango/pango.h")]
 	public struct GlyphInfo {
-		public weak Pango.Glyph glyph;
+		public Pango.Glyph glyph;
 		public Pango.GlyphGeometry geometry;
 		public Pango.GlyphVisAttr attr;
 	}
