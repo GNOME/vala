@@ -593,10 +593,14 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		if (ellipsis) {
 			/* ensure variable argument list ends with NULL
 			 * except when using printf-style arguments */
-			if (!m.printf_format && !m.scanf_format && m.sentinel != "") {
+			if (m == null) {
+				in_arg_map.set (get_param_pos (-1, true), new CCodeConstant (Method.DEFAULT_SENTINEL));
+			} else if (!m.printf_format && !m.scanf_format && m.sentinel != "") {
 				in_arg_map.set (get_param_pos (-1, true), new CCodeConstant (m.sentinel));
 			}
-		} else if (itype is DelegateType) {
+		}
+
+		if (itype is DelegateType) {
 			var deleg_type = (DelegateType) itype;
 			var d = deleg_type.delegate_symbol;
 			if (d.has_target) {
