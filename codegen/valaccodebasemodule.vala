@@ -2335,7 +2335,7 @@ public class Vala.CCodeBaseModule : CodeGenerator {
 				}
 			} else if (cl != null && cl.is_gboxed) {
 				// allow duplicates of gboxed instances
-				dup_function = type.data_type.get_dup_function ();
+				dup_function = generate_dup_func_wrapper (type);
 				if (dup_function == null) {
 					dup_function = "";
 				}
