@@ -1570,7 +1570,7 @@ namespace GLib {
 		[NoWrapper]
 		public abstract unowned GLib.Icon from_tokens (string tokens, int num_tokens, int version) throws GLib.Error;
 		public abstract uint hash (void* icon);
-		public static unowned GLib.Icon new_for_string (string str) throws GLib.Error;
+		public static GLib.Icon? new_for_string (string str) throws GLib.Error;
 		public string to_string ();
 		[NoWrapper]
 		public abstract bool to_tokens (GLib.GenericArray tokens, int out_version);
