@@ -435,6 +435,7 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 							emit_temp_var (temp_var);
 							ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
 							set_delegate_target (expr, ctemp);
+							set_delegate_target_destroy_notify (expr, new CCodeConstant ("NULL"));
 						}
 					}
 				}
