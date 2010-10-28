@@ -61,14 +61,14 @@ public class Vala.BooleanLiteral : Literal {
 		return true;
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
 
-		value_type = analyzer.bool_type;
+		value_type = context.analyzer.bool_type;
 
 		return !error;
 	}

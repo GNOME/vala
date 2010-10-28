@@ -585,7 +585,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 		return null;
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
@@ -594,17 +594,17 @@ public class Vala.Interface : ObjectTypeSymbol {
 
 		process_attributes ();
 
-		var old_source_file = analyzer.current_source_file;
-		var old_symbol = analyzer.current_symbol;
+		var old_source_file = context.analyzer.current_source_file;
+		var old_symbol = context.analyzer.current_symbol;
 
 		if (source_reference != null) {
-			analyzer.current_source_file = source_reference.file;
+			context.analyzer.current_source_file = source_reference.file;
 		}
-		analyzer.current_symbol = this;
+		context.analyzer.current_symbol = this;
 
 		foreach (DataType prerequisite_reference in get_prerequisites ()) {
 			// check whether prerequisite is at least as accessible as the interface
-			if (!analyzer.is_type_accessible (this, prerequisite_reference)) {
+			if (!context.analyzer.is_type_accessible (this, prerequisite_reference)) {
 				error = true;
 				Report.error (source_reference, "prerequisite `%s` is less accessible than interface `%s`".printf (prerequisite_reference.to_string (), get_full_name ()));
 				return false;
@@ -640,51 +640,51 @@ public class Vala.Interface : ObjectTypeSymbol {
 		}
 
 		foreach (DataType type in prerequisites) {
-			type.check (analyzer);
+			type.check (context);
 		}
 
 		foreach (TypeParameter p in get_type_parameters ()) {
-			p.check (analyzer);
+			p.check (context);
 		}
 
 		foreach (Enum en in enums) {
-			en.check (analyzer);
+			en.check (context);
 		}
 
 		foreach (Method m in methods) {
-			m.check (analyzer);
+			m.check (context);
 		}
 		
 		foreach (Field f in fields) {
-			f.check (analyzer);
+			f.check (context);
 		}
 
 		foreach (Constant c in constants) {
-			c.check (analyzer);
+			c.check (context);
 		}
 
 		foreach (Property prop in properties) {
-			prop.check (analyzer);
+			prop.check (context);
 		}
 		
 		foreach (Signal sig in signals) {
-			sig.check (analyzer);
+			sig.check (context);
 		}
 		
 		foreach (Class cl in classes) {
-			cl.check (analyzer);
+			cl.check (context);
 		}
 		
 		foreach (Struct st in structs) {
-			st.check (analyzer);
+			st.check (context);
 		}
 
 		foreach (Delegate d in delegates) {
-			d.check (analyzer);
+			d.check (context);
 		}
 
-		analyzer.current_source_file = old_source_file;
-		analyzer.current_symbol = old_symbol;
+		context.analyzer.current_source_file = old_source_file;
+		context.analyzer.current_symbol = old_symbol;
 
 		return !error;
 	}

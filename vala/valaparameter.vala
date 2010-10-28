@@ -216,7 +216,7 @@ public class Vala.Parameter : Variable {
 		}
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
@@ -225,13 +225,13 @@ public class Vala.Parameter : Variable {
 
 		process_attributes ();
 
-		var old_source_file = analyzer.current_source_file;
-		var old_symbol = analyzer.current_symbol;
+		var old_source_file = context.analyzer.current_source_file;
+		var old_symbol = context.analyzer.current_symbol;
 
 		if (source_reference != null) {
-			analyzer.current_source_file = source_reference.file;
+			context.analyzer.current_source_file = source_reference.file;
 		}
-		analyzer.current_symbol = parent_symbol;
+		context.analyzer.current_symbol = parent_symbol;
 
 		if (variable_type != null) {
 			if (variable_type is VoidType) {
@@ -239,11 +239,11 @@ public class Vala.Parameter : Variable {
 				Report.error (source_reference, "'void' not supported as parameter type");
 				return false;
 			}
-			variable_type.check (analyzer);
+			variable_type.check (context);
 		}
 
 		if (!ellipsis) {
-			variable_type.check (analyzer);
+			variable_type.check (context);
 			
 			if (params_array && !(variable_type is ArrayType)) {
 				error = true;
@@ -253,7 +253,7 @@ public class Vala.Parameter : Variable {
 
 			if (initializer != null) {
 				initializer.target_type = variable_type.copy ();
-				initializer.check (analyzer);
+				initializer.check (context);
 			}
 		}
 
@@ -267,14 +267,14 @@ public class Vala.Parameter : Variable {
 
 		if (!ellipsis) {
 			// check whether parameter type is at least as accessible as the method
-			if (!analyzer.is_type_accessible (this, variable_type)) {
+			if (!context.analyzer.is_type_accessible (this, variable_type)) {
 				error = true;
 				Report.error (source_reference, "parameter type `%s` is less accessible than method `%s`".printf (variable_type.to_string (), parent_symbol.get_full_name ()));
 			}
 		}
 
-		analyzer.current_source_file = old_source_file;
-		analyzer.current_symbol = old_symbol;
+		context.analyzer.current_source_file = old_source_file;
+		context.analyzer.current_symbol = old_symbol;
 
 		return !error;
 	}

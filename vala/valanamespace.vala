@@ -606,7 +606,7 @@ public class Vala.Namespace : Symbol {
 		}
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
@@ -616,7 +616,7 @@ public class Vala.Namespace : Symbol {
 		process_attributes ();
 
 		foreach (Namespace ns in namespaces) {
-			ns.check (analyzer);
+			ns.check (context);
 		}
 
 		return !error;

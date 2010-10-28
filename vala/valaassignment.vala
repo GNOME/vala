@@ -97,7 +97,7 @@ public class Vala.Assignment : Expression {
 		return false;
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
@@ -109,15 +109,15 @@ public class Vala.Assignment : Expression {
 
 			var local = new LocalVariable (null, get_temp_name (), right, right.source_reference);
 			var decl = new DeclarationStatement (local, source_reference);
-			decl.check (analyzer);
-			insert_statement (analyzer.insert_block, decl);
+			decl.check (context);
+			insert_statement (context.analyzer.insert_block, decl);
 
 			int i = 0;
 			ExpressionStatement stmt = null;
 			foreach (var expr in tuple.get_expressions ()) {
 				if (stmt != null) {
-					stmt.check (analyzer);
-					insert_statement (analyzer.insert_block, stmt);
+					stmt.check (context);
+					insert_statement (context.analyzer.insert_block, stmt);
 				}
 
 				var temp_access = new MemberAccess.simple (local.name, right.source_reference);
@@ -129,14 +129,14 @@ public class Vala.Assignment : Expression {
 				i++;
 			}
 
-			analyzer.replaced_nodes.add (this);
+			context.analyzer.replaced_nodes.add (this);
 			parent_node.replace_expression (this, stmt.expression);
-			return stmt.expression.check (analyzer);
+			return stmt.expression.check (context);
 		}
 
 		left.lvalue = true;
 
-		if (!left.check (analyzer)) {
+		if (!left.check (context)) {
 			// skip on error in inner expression
 			error = true;
 			return false;
@@ -146,7 +146,7 @@ public class Vala.Assignment : Expression {
 			var ma = (MemberAccess) left;
 
 			if ((!(ma.symbol_reference is Signal || ma.symbol_reference is DynamicProperty) && ma.value_type == null) ||
-			    (ma.inner == null && ma.member_name == "this" && analyzer.is_in_instance_method ())) {
+			    (ma.inner == null && ma.member_name == "this" && context.analyzer.is_in_instance_method ())) {
 				error = true;
 				Report.error (source_reference, "unsupported lvalue in assignment");
 				return false;
@@ -165,11 +165,11 @@ public class Vala.Assignment : Expression {
 
 			if (ma.symbol_reference is DynamicSignal) {
 				// target_type not available for dynamic signals
-				if (!analyzer.context.deprecated) {
+				if (!context.deprecated) {
 					Report.warning (source_reference, "deprecated syntax, use `connect' method instead");
 				}
 			} else if (ma.symbol_reference is Signal) {
-				if (!analyzer.context.deprecated) {
+				if (!context.deprecated) {
 					Report.warning (source_reference, "deprecated syntax, use `connect' method instead");
 				}
 				var sig = (Signal) ma.symbol_reference;
@@ -181,7 +181,7 @@ public class Vala.Assignment : Expression {
 		} else if (left is ElementAccess) {
 			var ea = (ElementAccess) left;
 
-			if (ea.container.value_type.data_type == analyzer.string_type.data_type) {
+			if (ea.container.value_type.data_type == context.analyzer.string_type.data_type) {
 				error = true;
 				Report.error (ea.source_reference, "strings are immutable");
 				return false;
@@ -196,7 +196,7 @@ public class Vala.Assignment : Expression {
 				}
 				set_call.add_argument (right);
 				parent_node.replace_expression (this, set_call);
-				return set_call.check (analyzer);
+				return set_call.check (context);
 			} else {
 				right.target_type = left.value_type;
 			}
@@ -208,7 +208,7 @@ public class Vala.Assignment : Expression {
 			return false;
 		}
 
-		if (!right.check (analyzer)) {
+		if (!right.check (context)) {
 			// skip on error in inner expression
 			error = true;
 			return false;
@@ -252,7 +252,7 @@ public class Vala.Assignment : Expression {
 				}
 
 				right = bin;
-				right.check (analyzer);
+				right.check (context);
 
 				operator = AssignmentOperator.SIMPLE;
 			}
@@ -306,14 +306,14 @@ public class Vala.Assignment : Expression {
 				}
 
 				if (prop.set_accessor == null
-				    || (!prop.set_accessor.writable && !(analyzer.find_current_method () is CreationMethod || analyzer.is_in_constructor ()))) {
+				    || (!prop.set_accessor.writable && !(context.analyzer.find_current_method () is CreationMethod || context.analyzer.is_in_constructor ()))) {
 					ma.error = true;
 					Report.error (ma.source_reference, "Property `%s' is read-only".printf (prop.get_full_name ()));
 					return false;
-				} else if (!analyzer.context.deprecated
+				} else if (!context.deprecated
 				           && !prop.set_accessor.writable
-				           && analyzer.find_current_method () is CreationMethod) {
-					if (ma.inner.symbol_reference != analyzer.find_current_method ().this_parameter) {
+				           && context.analyzer.find_current_method () is CreationMethod) {
+					if (ma.inner.symbol_reference != context.analyzer.find_current_method ().this_parameter) {
 						// trying to set construct-only property in creation method for foreign instance
 						Report.error (ma.source_reference, "Property `%s' is read-only".printf (prop.get_full_name ()));
 						return false;

@@ -57,7 +57,7 @@ public class Vala.LockStatement : CodeNode, Statement {
 		visitor.visit_lock_statement (this);
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (body != null) {
 			// if the statement isn't empty, it is converted into a try statement
 
@@ -71,7 +71,7 @@ public class Vala.LockStatement : CodeNode, Statement {
 			var parent_block = (Block) parent_node;
 			parent_block.replace_statement (this, block);
 
-			return block.check (analyzer);
+			return block.check (context);
 		}
 
 		if (checked) {
@@ -80,7 +80,7 @@ public class Vala.LockStatement : CodeNode, Statement {
 
 		checked = true;
 
-		resource.check (analyzer);
+		resource.check (context);
 
 		/* resource must be a member access and denote a Lockable */
 		if (!(resource is MemberAccess && resource.symbol_reference is Lockable)) {
@@ -91,7 +91,7 @@ public class Vala.LockStatement : CodeNode, Statement {
 		}
 
 		/* parent symbol must be the current class */
-		if (resource.symbol_reference.parent_symbol != analyzer.current_class) {
+		if (resource.symbol_reference.parent_symbol != context.analyzer.current_class) {
 			error = true;
 			resource.error = true;
 			Report.error (resource.source_reference, "Only members of the current class are lockable");

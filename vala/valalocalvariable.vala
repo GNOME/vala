@@ -77,7 +77,7 @@ public class Vala.LocalVariable : Variable {
 		}
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
@@ -90,13 +90,13 @@ public class Vala.LocalVariable : Variable {
 				Report.error (source_reference, "'void' not supported as variable type");
 				return false;
 			}
-			variable_type.check (analyzer);
+			variable_type.check (context);
 		}
 
 		if (initializer != null) {
 			initializer.target_type = variable_type;
 
-			initializer.check (analyzer);
+			initializer.check (context);
 		}
 
 		if (variable_type == null) {
@@ -171,11 +171,11 @@ public class Vala.LocalVariable : Variable {
 			}
 		}
 
-		analyzer.current_symbol.scope.add (name, this);
+		context.analyzer.current_symbol.scope.add (name, this);
 
 		// current_symbol is a Method if this is the `result'
 		// variable used for postconditions
-		var block = analyzer.current_symbol as Block;
+		var block = context.analyzer.current_symbol as Block;
 		if (block != null) {
 			block.add_local_variable (this);
 		}

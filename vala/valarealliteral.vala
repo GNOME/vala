@@ -70,16 +70,16 @@ public class Vala.RealLiteral : Literal {
 		return value;
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
 
-		var st = (Struct) analyzer.root_symbol.scope.lookup (get_type_name ());
+		var st = (Struct) context.analyzer.root_symbol.scope.lookup (get_type_name ());
 		// ensure attributes are already processed in case of bootstrapping dova-core
-		st.check (analyzer);
+		st.check (context);
 
 		value_type = new FloatingType (st);
 

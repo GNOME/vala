@@ -384,7 +384,7 @@ public class Vala.Delegate : TypeSymbol {
 		return str;
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
@@ -393,27 +393,27 @@ public class Vala.Delegate : TypeSymbol {
 
 		process_attributes ();
 
-		var old_source_file = analyzer.current_source_file;
+		var old_source_file = context.analyzer.current_source_file;
 
 		if (source_reference != null) {
-			analyzer.current_source_file = source_reference.file;
+			context.analyzer.current_source_file = source_reference.file;
 		}
 
 		foreach (TypeParameter p in type_parameters) {
-			p.check (analyzer);
+			p.check (context);
 		}
 		
-		return_type.check (analyzer);
+		return_type.check (context);
 		
 		foreach (Parameter param in parameters) {
-			param.check (analyzer);
+			param.check (context);
 		}
 
 		foreach (DataType error_type in get_error_types ()) {
-			error_type.check (analyzer);
+			error_type.check (context);
 		}
 
-		analyzer.current_source_file = old_source_file;
+		context.analyzer.current_source_file = old_source_file;
 
 		return !error;
 	}

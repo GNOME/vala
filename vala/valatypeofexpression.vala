@@ -71,16 +71,16 @@ public class Vala.TypeofExpression : Expression {
 		}
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
 
-		type_reference.check (analyzer);
+		type_reference.check (context);
 
-		value_type = analyzer.type_type;
+		value_type = context.analyzer.type_type;
 
 		return !error;
 	}

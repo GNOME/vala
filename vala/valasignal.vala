@@ -266,7 +266,7 @@ public class Vala.Signal : Symbol, Lockable {
 		}
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
@@ -275,10 +275,10 @@ public class Vala.Signal : Symbol, Lockable {
 
 		process_attributes ();
 
-		return_type.check (analyzer);
+		return_type.check (context);
 		
 		foreach (Parameter param in parameters) {
-			param.check (analyzer);
+			param.check (context);
 		}
 
 		if (!is_virtual && body != null) {
@@ -305,7 +305,7 @@ public class Vala.Signal : Symbol, Lockable {
 			var cl = parent_symbol as ObjectTypeSymbol;
 
 			cl.add_hidden_method (default_handler);
-			default_handler.check (analyzer);
+			default_handler.check (context);
 		}
 
 

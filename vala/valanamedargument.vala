@@ -61,7 +61,7 @@ public class Vala.NamedArgument : Expression {
 		return inner.is_pure ();
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
@@ -70,7 +70,7 @@ public class Vala.NamedArgument : Expression {
 
 		inner.target_type = target_type;
 
-		if (!inner.check (analyzer)) {
+		if (!inner.check (context)) {
 			error = true;
 			return false;
 		}

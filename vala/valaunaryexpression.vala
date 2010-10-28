@@ -137,7 +137,7 @@ public class Vala.UnaryExpression : Expression {
 		return null;
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
@@ -149,7 +149,7 @@ public class Vala.UnaryExpression : Expression {
 			inner.target_type = target_type;
 		}
 
-		if (!inner.check (analyzer)) {
+		if (!inner.check (context)) {
 			/* if there was an error in the inner expression, skip type check */
 			error = true;
 			return false;
@@ -172,7 +172,7 @@ public class Vala.UnaryExpression : Expression {
 			value_type = inner.value_type;
 		} else if (operator == UnaryOperator.LOGICAL_NEGATION) {
 			// boolean type
-			if (!inner.value_type.compatible (analyzer.bool_type)) {
+			if (!inner.value_type.compatible (context.analyzer.bool_type)) {
 				error = true;
 				Report.error (source_reference, "Operator not supported for `%s'".printf (inner.value_type.to_string ()));
 				return false;
@@ -209,9 +209,9 @@ public class Vala.UnaryExpression : Expression {
 
 			var assignment = new Assignment (ma, bin, AssignmentOperator.SIMPLE, source_reference);
 			assignment.target_type = target_type;
-			analyzer.replaced_nodes.add (this);
+			context.analyzer.replaced_nodes.add (this);
 			parent_node.replace_expression (this, assignment);
-			assignment.check (analyzer);
+			assignment.check (context);
 			return true;
 		} else if (operator == UnaryOperator.REF || operator == UnaryOperator.OUT) {
 			var ea = inner as ElementAccess;

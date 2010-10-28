@@ -83,20 +83,20 @@ public class Vala.CharacterLiteral : Literal {
 		return value;
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
 
-		if (analyzer.context.profile == Profile.DOVA) {
-			value_type = new IntegerType ((Struct) analyzer.root_symbol.scope.lookup ("char"), get_char ().to_string (), "int");
+		if (context.profile == Profile.DOVA) {
+			value_type = new IntegerType ((Struct) context.analyzer.root_symbol.scope.lookup ("char"), get_char ().to_string (), "int");
 		} else {
 			if (get_char () < 128) {
-				value_type = new IntegerType ((Struct) analyzer.root_symbol.scope.lookup ("char"));
+				value_type = new IntegerType ((Struct) context.analyzer.root_symbol.scope.lookup ("char"));
 			} else {
-				value_type = new IntegerType ((Struct) analyzer.root_symbol.scope.lookup ("unichar"));
+				value_type = new IntegerType ((Struct) context.analyzer.root_symbol.scope.lookup ("unichar"));
 			}
 		}
 

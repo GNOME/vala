@@ -98,24 +98,24 @@ public class Vala.SliceExpression : Expression {
 		return false;
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
 
-		if (!container.check (analyzer)) {
+		if (!container.check (context)) {
 			error = true;
 			return false;
 		}
 
-		if (!start.check (analyzer)) {
+		if (!start.check (context)) {
 			error = true;
 			return false;
 		}
 
-		if (!stop.check (analyzer)) {
+		if (!stop.check (context)) {
 			error = true;
 			return false;
 		}
@@ -153,7 +153,7 @@ public class Vala.SliceExpression : Expression {
 				slice_call.add_argument (stop);
 				slice_call.target_type = this.target_type;
 				parent_node.replace_expression (this, slice_call);
-				return slice_call.check (analyzer);
+				return slice_call.check (context);
 			}
 
 			error = true;

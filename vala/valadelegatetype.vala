@@ -101,8 +101,8 @@ public class Vala.DelegateType : DataType {
 		return "G_TYPE_POINTER";
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
-		return delegate_symbol.check (analyzer);
+	public override bool check (CodeContext context) {
+		return delegate_symbol.check (context);
 	}
 
 	public override bool is_disposable () {

@@ -58,7 +58,7 @@ public class Vala.Template : Expression {
 		}
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
@@ -72,7 +72,7 @@ public class Vala.Template : Expression {
 		} else {
 			expr = stringify (expression_list[0]);
 			if (expression_list.size > 1) {
-				if (analyzer.context.profile == Profile.DOVA) {
+				if (context.profile == Profile.DOVA) {
 					// varargs concat not yet supported
 					for (int i = 1; i < expression_list.size; i++) {
 						expr = new BinaryExpression (BinaryOperator.PLUS, expr, stringify (expression_list[i]), source_reference);
@@ -88,9 +88,9 @@ public class Vala.Template : Expression {
 		}
 		expr.target_type = target_type;
 
-		analyzer.replaced_nodes.add (this);
+		context.analyzer.replaced_nodes.add (this);
 		parent_node.replace_expression (this, expr);
-		return expr.check (analyzer);
+		return expr.check (context);
 	}
 }
 

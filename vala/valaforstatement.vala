@@ -146,7 +146,7 @@ public class Vala.ForStatement : CodeNode, Statement {
 		return (literal != null && !literal.value);
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		// convert to simple loop
 
 		var block = new Block (source_reference);
@@ -171,7 +171,7 @@ public class Vala.ForStatement : CodeNode, Statement {
 		}
 
 		// iterator
-		var first_local = new LocalVariable (analyzer.bool_type.copy (), get_temp_name (), new BooleanLiteral (true, source_reference), source_reference);
+		var first_local = new LocalVariable (context.analyzer.bool_type.copy (), get_temp_name (), new BooleanLiteral (true, source_reference), source_reference);
 		block.add_statement (new DeclarationStatement (first_local, source_reference));
 
 		var iterator_block = new Block (source_reference);
@@ -188,6 +188,6 @@ public class Vala.ForStatement : CodeNode, Statement {
 		var parent_block = (Block) parent_node;
 		parent_block.replace_statement (this, block);
 
-		return block.check (analyzer);
+		return block.check (context);
 	}
 }

@@ -71,7 +71,7 @@ public class Vala.ReferenceTransferExpression : Expression {
 		return false;
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
@@ -80,7 +80,7 @@ public class Vala.ReferenceTransferExpression : Expression {
 
 		inner.lvalue = true;
 
-		inner.check (analyzer);
+		inner.check (context);
 
 		if (inner.error) {
 			/* if there was an error in the inner expression, skip type check */

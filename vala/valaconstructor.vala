@@ -61,21 +61,21 @@ public class Vala.Constructor : Symbol {
 		}
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
 
-		this_parameter = new Parameter ("this", new ObjectType (analyzer.current_class));
+		this_parameter = new Parameter ("this", new ObjectType (context.analyzer.current_class));
 		scope.add (this_parameter.name, this_parameter);
 
-		owner = analyzer.current_symbol.scope;
-		analyzer.current_symbol = this;
+		owner = context.analyzer.current_symbol.scope;
+		context.analyzer.current_symbol = this;
 
 		if (body != null) {
-			body.check (analyzer);
+			body.check (context);
 		}
 
 		foreach (DataType body_error_type in body.get_error_types ()) {
@@ -84,7 +84,7 @@ public class Vala.Constructor : Symbol {
 			}
 		}
 
-		analyzer.current_symbol = analyzer.current_symbol.parent_symbol;
+		context.analyzer.current_symbol = context.analyzer.current_symbol.parent_symbol;
 
 		return !error;
 	}

@@ -79,7 +79,7 @@ public class Vala.EnumValue : Constant {
 		return "%s%s".printf (en.get_cprefix (), name);
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
@@ -89,7 +89,7 @@ public class Vala.EnumValue : Constant {
 		process_attributes ();
 
 		if (value != null) {
-			value.check (analyzer);
+			value.check (context);
 		}
 
 		return !error;

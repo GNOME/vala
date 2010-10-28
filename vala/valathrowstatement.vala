@@ -72,22 +72,22 @@ public class Vala.ThrowStatement : CodeNode, Statement {
 		}
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
 
-		if (analyzer.context.profile == Profile.GOBJECT) {
+		if (context.profile == Profile.GOBJECT) {
 			error_expression.target_type = new ErrorType (null, null, source_reference);
 		} else {
-			error_expression.target_type = analyzer.error_type.copy ();
+			error_expression.target_type = context.analyzer.error_type.copy ();
 		}
 		error_expression.target_type.value_owned = true;
 
 		if (error_expression != null) {
-			if (!error_expression.check (analyzer)) {
+			if (!error_expression.check (context)) {
 				error = true;
 				return false;
 			}
@@ -98,7 +98,7 @@ public class Vala.ThrowStatement : CodeNode, Statement {
 				return false;
 			}
 
-			if (analyzer.context.profile == Profile.GOBJECT && !(error_expression.value_type is ErrorType)) {
+			if (context.profile == Profile.GOBJECT && !(error_expression.value_type is ErrorType)) {
 				Report.error (error_expression.source_reference, "`%s' is not an error type".printf (error_expression.value_type.to_string ()));
 				error = true;
 				return false;

@@ -140,8 +140,8 @@ public class Vala.PointerType : DataType {
 		return false;
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
-		error = !base_type.check (analyzer);
+	public override bool check (CodeContext context) {
+		error = !base_type.check (context);
 		return !error;
 	}
 }

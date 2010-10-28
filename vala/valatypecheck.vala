@@ -93,16 +93,16 @@ public class Vala.TypeCheck : Expression {
 		}
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
 
-		expression.check (analyzer);
+		expression.check (context);
 		
-		type_reference.check (analyzer);
+		type_reference.check (context);
 
 		if (type_reference.data_type == null) {
 			/* if type resolving didn't succeed, skip this check */
@@ -110,7 +110,7 @@ public class Vala.TypeCheck : Expression {
 			return false;
 		}
 
-		value_type = analyzer.bool_type;
+		value_type = context.analyzer.bool_type;
 
 		return !error;
 	}

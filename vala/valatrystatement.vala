@@ -104,14 +104,14 @@ public class Vala.TryStatement : CodeNode, Statement {
 		}
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
 
-		body.check (analyzer);
+		body.check (context);
 
 		var error_types = new ArrayList<DataType> ();
 		foreach (DataType body_error_type in body.get_error_types ()) {
@@ -130,14 +130,14 @@ public class Vala.TryStatement : CodeNode, Statement {
 			}
 			handled_error_types.clear ();
 
-			clause.check (analyzer);
+			clause.check (context);
 			foreach (DataType body_error_type in clause.body.get_error_types ()) {
 				error_types.add (body_error_type);
 			}
 		}
 
 		if (finally_body != null) {
-			finally_body.check (analyzer);
+			finally_body.check (context);
 			foreach (DataType body_error_type in finally_body.get_error_types ()) {
 				error_types.add (body_error_type);
 			}

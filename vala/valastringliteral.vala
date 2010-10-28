@@ -77,14 +77,14 @@ public class Vala.StringLiteral : Literal {
 		return value;
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
 
-		value_type = analyzer.string_type.copy ();
+		value_type = context.analyzer.string_type.copy ();
 
 		return !error;
 	}

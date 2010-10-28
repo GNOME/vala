@@ -236,13 +236,13 @@ public class Vala.ArrayType : ReferenceType {
 		return element_type.is_accessible (sym);
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (invalid_syntax) {
 			Report.error (source_reference, "syntax error, no expression allowed between array brackets");
 			error = true;
 			return false;
 		}
-		return element_type.check (analyzer);
+		return element_type.check (context);
 	}
 
 	public override string? get_type_id () {

@@ -37,7 +37,7 @@ public class Vala.DynamicProperty : Property {
 		return new ArrayList<string> ();
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		return true;
 	}
 }

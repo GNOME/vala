@@ -67,9 +67,9 @@ public class Vala.SwitchLabel : CodeNode {
 		}
 	}
 	
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (expression != null) {
-			expression.check (analyzer);
+			expression.check (context);
 
 			var switch_statement = (SwitchStatement) section.parent_node;
 			if (!expression.is_constant ()) {

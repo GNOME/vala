@@ -163,7 +163,7 @@ public class Vala.Constant : Symbol, Lockable {
 		}
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
@@ -172,17 +172,17 @@ public class Vala.Constant : Symbol, Lockable {
 
 		process_attributes ();
 
-		var old_source_file = analyzer.current_source_file;
-		var old_symbol = analyzer.current_symbol;
+		var old_source_file = context.analyzer.current_source_file;
+		var old_symbol = context.analyzer.current_symbol;
 
 		if (source_reference != null) {
-			analyzer.current_source_file = source_reference.file;
+			context.analyzer.current_source_file = source_reference.file;
 		}
-		analyzer.current_symbol = this;
+		context.analyzer.current_symbol = this;
 
-		type_reference.check (analyzer);
+		type_reference.check (context);
 
-		if (!check_const_type (type_reference, analyzer)) {
+		if (!check_const_type (type_reference, context)) {
 			error = true;
 			Report.error (source_reference, "`%s' not supported as type for constants".printf (type_reference.to_string ()));
 			return false;
@@ -195,7 +195,7 @@ public class Vala.Constant : Symbol, Lockable {
 			} else {
 				value.target_type = type_reference;
 
-				value.check (analyzer);
+				value.check (context);
 
 				if (!value.value_type.compatible (type_reference)) {
 					error = true;
@@ -214,21 +214,21 @@ public class Vala.Constant : Symbol, Lockable {
 			Report.warning (source_reference, "%s hides inherited constant `%s'. Use the `new' keyword if hiding was intentional".printf (get_full_name (), get_hidden_member ().get_full_name ()));
 		}
 
-		analyzer.current_source_file = old_source_file;
-		analyzer.current_symbol = old_symbol;
+		context.analyzer.current_source_file = old_source_file;
+		context.analyzer.current_symbol = old_symbol;
 
 		active = true;
 
 		return !error;
 	}
 
-	bool check_const_type (DataType type, SemanticAnalyzer analyzer) {
+	bool check_const_type (DataType type, CodeContext context) {
 		if (type is ValueType) {
 			return true;
 		} else if (type is ArrayType) {
 			var array_type = type as ArrayType;
-			return check_const_type (array_type.element_type, analyzer);
-		} else if (type.data_type == analyzer.string_type.data_type) {
+			return check_const_type (array_type.element_type, context);
+		} else if (type.data_type == context.analyzer.string_type.data_type) {
 			return true;
 		} else {
 			return false;

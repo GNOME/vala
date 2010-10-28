@@ -312,9 +312,9 @@ public class Vala.SourceFile {
 		return mapped_file.get_length ();
 	}
 
-	public bool check (SemanticAnalyzer analyzer) {
+	public bool check (CodeContext context) {
 		foreach (CodeNode node in nodes) {
-			node.check (analyzer);
+			node.check (context);
 		}
 		return true;
 	}

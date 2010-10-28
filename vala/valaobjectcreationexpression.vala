@@ -143,7 +143,7 @@ public class Vala.ObjectCreationExpression : Expression {
 		}
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
@@ -151,7 +151,7 @@ public class Vala.ObjectCreationExpression : Expression {
 		checked = true;
 
 		if (member_name != null) {
-			member_name.check (analyzer);
+			member_name.check (context);
 		}
 
 		TypeSymbol type = null;
@@ -260,7 +260,7 @@ public class Vala.ObjectCreationExpression : Expression {
 
 			if (symbol_reference != null && symbol_reference.access == SymbolAccessibility.PRIVATE) {
 				bool in_target_type = false;
-				for (Symbol this_symbol = analyzer.current_symbol; this_symbol != null; this_symbol = this_symbol.parent_symbol) {
+				for (Symbol this_symbol = context.analyzer.current_symbol; this_symbol != null; this_symbol = this_symbol.parent_symbol) {
 					if (this_symbol == cl) {
 						in_target_type = true;
 						break;
@@ -287,7 +287,7 @@ public class Vala.ObjectCreationExpression : Expression {
 
 			expected_num_type_args = st.get_type_parameters ().size;
 
-			if (!struct_creation && !analyzer.context.deprecated) {
+			if (!struct_creation && !context.deprecated) {
 				Report.warning (source_reference, "deprecated syntax, don't use `new' to initialize structs");
 			}
 
@@ -333,10 +333,10 @@ public class Vala.ObjectCreationExpression : Expression {
 			}
 
 			foreach (Expression arg in args) {
-				arg.check (analyzer);
+				arg.check (context);
 			}
 
-			analyzer.check_arguments (this, new MethodType (m), m.get_parameters (), args);
+			context.analyzer.check_arguments (this, new MethodType (m), m.get_parameters (), args);
 
 			foreach (DataType error_type in m.get_error_types ()) {
 				may_throw = true;
@@ -349,19 +349,19 @@ public class Vala.ObjectCreationExpression : Expression {
 			}
 		} else if (type_reference is ErrorType) {
 			if (type_reference != null) {
-				type_reference.check (analyzer);
+				type_reference.check (context);
 			}
 
 			if (member_name != null) {
-				member_name.check (analyzer);
+				member_name.check (context);
 			}
 		
 			foreach (Expression arg in argument_list) {
-				arg.check (analyzer);
+				arg.check (context);
 			}
 
 			foreach (MemberInitializer init in object_initializer) {
-				init.check (analyzer);
+				init.check (context);
 			}
 
 			if (get_argument_list ().size == 0) {
@@ -371,7 +371,7 @@ public class Vala.ObjectCreationExpression : Expression {
 				Iterator<Expression> arg_it = get_argument_list ().iterator ();
 				arg_it.next ();
 				var ex = arg_it.get ();
-				if (ex.value_type == null || !ex.value_type.compatible (analyzer.string_type)) {
+				if (ex.value_type == null || !ex.value_type.compatible (context.analyzer.string_type)) {
 					error = true;
 					Report.error (source_reference, "Invalid type for argument 1");
 				}
@@ -379,14 +379,14 @@ public class Vala.ObjectCreationExpression : Expression {
 		}
 
 		foreach (MemberInitializer init in get_object_initializer ()) {
-			analyzer.visit_member_initializer (init, type_reference);
+			context.analyzer.visit_member_initializer (init, type_reference);
 		}
 
 		if (may_throw) {
 			if (parent_node is LocalVariable || parent_node is ExpressionStatement) {
 				// simple statements, no side effects after method call
-			} else if (!(analyzer.current_symbol is Block)) {
-				if (analyzer.context.profile != Profile.DOVA) {
+			} else if (!(context.analyzer.current_symbol is Block)) {
+				if (context.profile != Profile.DOVA) {
 					// can't handle errors in field initializers
 					Report.error (source_reference, "Field initializers must not throw errors");
 				}
@@ -399,22 +399,22 @@ public class Vala.ObjectCreationExpression : Expression {
 				local.floating = true;
 				var decl = new DeclarationStatement (local, source_reference);
 
-				insert_statement (analyzer.insert_block, decl);
+				insert_statement (context.analyzer.insert_block, decl);
 
 				Expression temp_access = new MemberAccess.simple (local.name, source_reference);
 				temp_access.target_type = target_type;
 
 				// don't set initializer earlier as this changes parent_node and parent_statement
 				local.initializer = this;
-				decl.check (analyzer);
-				temp_access.check (analyzer);
+				decl.check (context);
+				temp_access.check (context);
 
 				// move temp variable to insert block to ensure the
 				// variable is in the same block as the declaration
 				// otherwise there will be scoping issues in the generated code
-				var block = (Block) analyzer.current_symbol;
+				var block = (Block) context.analyzer.current_symbol;
 				block.remove_local_variable (local);
-				analyzer.insert_block.add_local_variable (local);
+				context.analyzer.insert_block.add_local_variable (local);
 
 				old_parent_node.replace_expression (this, temp_access);
 			}

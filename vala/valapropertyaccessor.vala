@@ -170,7 +170,7 @@ public class Vala.PropertyAccessor : Symbol {
 		}
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
@@ -179,14 +179,14 @@ public class Vala.PropertyAccessor : Symbol {
 
 		process_attributes ();
 
-		if (!value_type.check (analyzer)) {
+		if (!value_type.check (context)) {
 			error = true;
 			return false;
 		}
 
-		var old_symbol = analyzer.current_symbol;
+		var old_symbol = context.analyzer.current_symbol;
 
-		analyzer.current_symbol = this;
+		context.analyzer.current_symbol = this;
 
 		if (prop.source_type == SourceFileType.SOURCE) {
 			if (body == null && !prop.interface_only && !prop.is_abstract) {
@@ -201,7 +201,7 @@ public class Vala.PropertyAccessor : Symbol {
 				body = new Block (source_reference);
 				var ma = new MemberAccess.simple ("_%s".printf (prop.name), source_reference);
 				if (readable) {
-					if (analyzer.context.profile == Profile.DOVA) {
+					if (context.profile == Profile.DOVA) {
 						body.add_statement (new ExpressionStatement (new Assignment (new MemberAccess.simple ("result", source_reference), ma, AssignmentOperator.SIMPLE, source_reference), source_reference));
 						body.add_statement (new ReturnStatement (null, source_reference));
 					} else {
@@ -215,19 +215,19 @@ public class Vala.PropertyAccessor : Symbol {
 		}
 
 		if (body != null) {
-			if (readable && analyzer.context.profile == Profile.DOVA) {
+			if (readable && context.profile == Profile.DOVA) {
 				result_var = new LocalVariable (value_type.copy (), "result", null, source_reference);
 				result_var.is_result = true;
 
-				result_var.check (analyzer);
+				result_var.check (context);
 			} else if (writable || construction) {
 				value_parameter = new Parameter ("value", value_type, source_reference);
 				body.scope.add (value_parameter.name, value_parameter);
 			}
 
-			body.check (analyzer);
+			body.check (context);
 
-			if (analyzer.context.profile != Profile.DOVA) {
+			if (context.profile != Profile.DOVA) {
 				foreach (DataType body_error_type in body.get_error_types ()) {
 					if (!((ErrorType) body_error_type).dynamic_error) {
 						Report.warning (body_error_type.source_reference, "unhandled error `%s'".printf (body_error_type.to_string()));
@@ -236,7 +236,7 @@ public class Vala.PropertyAccessor : Symbol {
 			}
 		}
 
-		analyzer.current_symbol = old_symbol;
+		context.analyzer.current_symbol = old_symbol;
 
 		return !error;
 	}

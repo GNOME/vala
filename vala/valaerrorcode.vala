@@ -77,7 +77,7 @@ public class Vala.ErrorCode : TypeSymbol {
 		return get_cname ().down ();
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
@@ -85,7 +85,7 @@ public class Vala.ErrorCode : TypeSymbol {
 		checked = true;
 
 		if (value != null) {
-			value.check (analyzer);
+			value.check (context);
 		}
 
 		return !error;

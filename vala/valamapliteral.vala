@@ -77,14 +77,14 @@ public class Vala.MapLiteral : Literal {
 		}
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
 
-		var map_type = new ObjectType ((Class) analyzer.context.root.scope.lookup ("Dova").scope.lookup ("Map"));
+		var map_type = new ObjectType ((Class) context.root.scope.lookup ("Dova").scope.lookup ("Map"));
 		map_type.value_owned = true;
 
 		bool fixed_element_type = false;
@@ -101,10 +101,10 @@ public class Vala.MapLiteral : Literal {
 				keys[i].target_type = map_key_type;
 				values[i].target_type = map_value_type;
 			}
-			if (!keys[i].check (analyzer)) {
+			if (!keys[i].check (context)) {
 				return false;
 			}
-			if (!values[i].check (analyzer)) {
+			if (!values[i].check (context)) {
 				return false;
 			}
 			if (map_key_type == null) {

@@ -817,7 +817,7 @@ public class Vala.Struct : TypeSymbol {
 		return false;
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
@@ -826,16 +826,16 @@ public class Vala.Struct : TypeSymbol {
 
 		process_attributes ();
 
-		var old_source_file = analyzer.current_source_file;
-		var old_symbol = analyzer.current_symbol;
+		var old_source_file = context.analyzer.current_source_file;
+		var old_symbol = context.analyzer.current_symbol;
 
 		if (source_reference != null) {
-			analyzer.current_source_file = source_reference.file;
+			context.analyzer.current_source_file = source_reference.file;
 		}
-		analyzer.current_symbol = this;
+		context.analyzer.current_symbol = this;
 
 		if (base_type != null) {
-			base_type.check (analyzer);
+			base_type.check (context);
 
 			if (!(base_type is ValueType)) {
 				error = true;
@@ -845,11 +845,11 @@ public class Vala.Struct : TypeSymbol {
 		}
 
 		foreach (TypeParameter p in type_parameters) {
-			p.check (analyzer);
+			p.check (context);
 		}
 
 		foreach (Field f in fields) {
-			f.check (analyzer);
+			f.check (context);
 
 			if (f.binding == MemberBinding.INSTANCE && is_recursive_value_type (f.variable_type)) {
 				error = true;
@@ -865,15 +865,15 @@ public class Vala.Struct : TypeSymbol {
 		}
 
 		foreach (Constant c in constants) {
-			c.check (analyzer);
+			c.check (context);
 		}
 
 		foreach (Method m in methods) {
-			m.check (analyzer);
+			m.check (context);
 		}
 
 		foreach (Property prop in properties) {
-			prop.check (analyzer);
+			prop.check (context);
 		}
 
 		if (!external && !external_package) {
@@ -891,8 +891,8 @@ public class Vala.Struct : TypeSymbol {
 			}
 		}
 
-		analyzer.current_source_file = old_source_file;
-		analyzer.current_symbol = old_symbol;
+		context.analyzer.current_source_file = old_source_file;
+		context.analyzer.current_symbol = old_symbol;
 
 		return !error;
 	}

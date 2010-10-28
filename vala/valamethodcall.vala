@@ -128,14 +128,14 @@ public class Vala.MethodCall : Expression {
 		}
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
 
-		if (!call.check (analyzer)) {
+		if (!call.check (context)) {
 			/* if method resolving didn't succeed, skip this check */
 			error = true;
 			return false;
@@ -166,9 +166,9 @@ public class Vala.MethodCall : Expression {
 
 		var mtype = call.value_type;
 
-		if (mtype is ObjectType || (analyzer.context.profile == Profile.GOBJECT && call.symbol_reference == analyzer.object_type)) {
+		if (mtype is ObjectType || (context.profile == Profile.GOBJECT && call.symbol_reference == context.analyzer.object_type)) {
 			// constructor chain-up
-			var cm = analyzer.find_current_method () as CreationMethod;
+			var cm = context.analyzer.find_current_method () as CreationMethod;
 			if (cm == null) {
 				error = true;
 				Report.error (source_reference, "invocation not supported in this context");
@@ -196,12 +196,12 @@ public class Vala.MethodCall : Expression {
 			} else {
 				// GObject chain up
 				var cl = cm.parent_symbol as Class;
-				if (cl == null || !cl.is_subtype_of (analyzer.object_type)) {
+				if (cl == null || !cl.is_subtype_of (context.analyzer.object_type)) {
 					error = true;
 					Report.error (source_reference, "chain up to `GLib.Object' not supported");
 					return false;
 				}
-				call.value_type = new ObjectType (analyzer.object_type);
+				call.value_type = new ObjectType (context.analyzer.object_type);
 				mtype = call.value_type;
 			}
 		}
@@ -219,7 +219,7 @@ public class Vala.MethodCall : Expression {
 			}
 
 			if (is_chainup ()) {
-				var cm = analyzer.find_current_method () as CreationMethod;
+				var cm = context.analyzer.find_current_method () as CreationMethod;
 				if (cm != null) {
 					if (cm.chain_up) {
 						error = true;
@@ -235,14 +235,14 @@ public class Vala.MethodCall : Expression {
 				struct_creation_expression.add_argument (arg);
 			}
 			struct_creation_expression.target_type = target_type;
-			analyzer.replaced_nodes.add (this);
+			context.analyzer.replaced_nodes.add (this);
 			parent_node.replace_expression (this, struct_creation_expression);
-			struct_creation_expression.check (analyzer);
+			struct_creation_expression.check (context);
 			return true;
 		} else if (call is MemberAccess
 		           && call.symbol_reference is CreationMethod) {
 			// constructor chain-up
-			var cm = analyzer.find_current_method () as CreationMethod;
+			var cm = context.analyzer.find_current_method () as CreationMethod;
 			if (cm == null) {
 				error = true;
 				Report.error (source_reference, "use `new' operator to create new objects");
@@ -365,7 +365,7 @@ public class Vala.MethodCall : Expression {
 				if (format_literal == null && args.size == params.size - 1) {
 					// insert "%s" to avoid issues with embedded %
 					format_literal = new StringLiteral ("\"%s\"");
-					format_literal.target_type = analyzer.string_type.copy ();
+					format_literal.target_type = context.analyzer.string_type.copy ();
 					argument_list.insert (args.size - 1, format_literal);
 
 					// recreate iterator and skip to right position
@@ -444,36 +444,36 @@ public class Vala.MethodCall : Expression {
 					if (c == 'd' || c == 'i' || c == 'c') {
 						// integer
 						if (length == -2) {
-							param_type = analyzer.int8_type;
+							param_type = context.analyzer.int8_type;
 						} else if (length == -1) {
-							param_type = analyzer.short_type;
+							param_type = context.analyzer.short_type;
 						} else if (length == 0) {
-							param_type = analyzer.int_type;
+							param_type = context.analyzer.int_type;
 						} else if (length == 1) {
-							param_type = analyzer.long_type;
+							param_type = context.analyzer.long_type;
 						} else if (length == 2) {
-							param_type = analyzer.ssize_t_type;
+							param_type = context.analyzer.ssize_t_type;
 						}
 					} else if (c == 'o' || c == 'u' || c == 'x' || c == 'X') {
 						// unsigned integer
 						if (length == -2) {
-							param_type = analyzer.uchar_type;
+							param_type = context.analyzer.uchar_type;
 						} else if (length == -1) {
-							param_type = analyzer.ushort_type;
+							param_type = context.analyzer.ushort_type;
 						} else if (length == 0) {
-							param_type = analyzer.uint_type;
+							param_type = context.analyzer.uint_type;
 						} else if (length == 1) {
-							param_type = analyzer.ulong_type;
+							param_type = context.analyzer.ulong_type;
 						} else if (length == 2) {
-							param_type = analyzer.size_t_type;
+							param_type = context.analyzer.size_t_type;
 						}
 					} else if (c == 'e' || c == 'E' || c == 'f' || c == 'F'
 					           || c == 'g' || c == 'G' || c == 'a' || c == 'A') {
 						// double
-						param_type = analyzer.double_type;
+						param_type = context.analyzer.double_type;
 					} else if (c == 's') {
 						// string
-						param_type = analyzer.string_type;
+						param_type = context.analyzer.string_type;
 					} else if (c == 'p') {
 						// pointer
 						param_type = new PointerType (new VoidType ());
@@ -506,7 +506,7 @@ public class Vala.MethodCall : Expression {
 		}
 
 		foreach (Expression arg in get_argument_list ()) {
-			arg.check (analyzer);
+			arg.check (context);
 		}
 
 		if (ret_type is VoidType) {
@@ -534,11 +534,11 @@ public class Vala.MethodCall : Expression {
 					error = true;
 					Report.error (source_reference, "yield expression requires async method");
 				}
-				if (analyzer.current_method == null || !analyzer.current_method.coroutine) {
+				if (context.analyzer.current_method == null || !context.analyzer.current_method.coroutine) {
 					error = true;
 					Report.error (source_reference, "yield expression not available outside async method");
 				}
-				analyzer.current_method.yield_count++;
+				context.analyzer.current_method.yield_count++;
 			}
 			if (m != null && m.coroutine && !is_yield_expression && ((MemberAccess) call).member_name != "end") {
 				// .begin call of async method, no error can happen here
@@ -662,7 +662,7 @@ public class Vala.MethodCall : Expression {
 			}
 		}
 
-		if (!analyzer.check_arguments (this, mtype, params, get_argument_list ())) {
+		if (!context.analyzer.check_arguments (this, mtype, params, get_argument_list ())) {
 			error = true;
 			return false;
 		}
@@ -670,8 +670,8 @@ public class Vala.MethodCall : Expression {
 		if (may_throw) {
 			if (parent_node is LocalVariable || parent_node is ExpressionStatement) {
 				// simple statements, no side effects after method call
-			} else if (!(analyzer.current_symbol is Block)) {
-				if (analyzer.context.profile != Profile.DOVA) {
+			} else if (!(context.analyzer.current_symbol is Block)) {
+				if (context.profile != Profile.DOVA) {
 					// can't handle errors in field initializers
 					Report.error (source_reference, "Field initializers must not throw errors");
 				}
@@ -684,22 +684,22 @@ public class Vala.MethodCall : Expression {
 				local.floating = true;
 				var decl = new DeclarationStatement (local, source_reference);
 
-				insert_statement (analyzer.insert_block, decl);
+				insert_statement (context.analyzer.insert_block, decl);
 
 				Expression temp_access = new MemberAccess.simple (local.name, source_reference);
 				temp_access.target_type = target_type;
 
 				// don't set initializer earlier as this changes parent_node and parent_statement
 				local.initializer = this;
-				decl.check (analyzer);
-				temp_access.check (analyzer);
+				decl.check (context);
+				temp_access.check (context);
 
 				// move temp variable to insert block to ensure the
 				// variable is in the same block as the declaration
 				// otherwise there will be scoping issues in the generated code
-				var block = (Block) analyzer.current_symbol;
+				var block = (Block) context.analyzer.current_symbol;
 				block.remove_local_variable (local);
-				analyzer.insert_block.add_local_variable (local);
+				context.analyzer.insert_block.add_local_variable (local);
 
 				old_parent_node.replace_expression (this, temp_access);
 			}

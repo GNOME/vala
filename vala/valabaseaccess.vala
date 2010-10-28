@@ -49,36 +49,36 @@ public class Vala.BaseAccess : Expression {
 		return true;
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
 
-		if (!analyzer.is_in_instance_method ()) {
+		if (!context.analyzer.is_in_instance_method ()) {
 			error = true;
 			Report.error (source_reference, "Base access invalid outside of instance methods");
 			return false;
 		}
 
-		if (analyzer.current_class == null) {
-			if (analyzer.current_struct == null) {
+		if (context.analyzer.current_class == null) {
+			if (context.analyzer.current_struct == null) {
 				error = true;
 				Report.error (source_reference, "Base access invalid outside of class and struct");
 				return false;
-			} else if (analyzer.current_struct.base_type == null) {
+			} else if (context.analyzer.current_struct.base_type == null) {
 				error = true;
 				Report.error (source_reference, "Base access invalid without base type");
 				return false;
 			}
-			value_type = analyzer.current_struct.base_type;
-		} else if (analyzer.current_class.base_class == null) {
+			value_type = context.analyzer.current_struct.base_type;
+		} else if (context.analyzer.current_class.base_class == null) {
 			error = true;
 			Report.error (source_reference, "Base access invalid without base class");
 			return false;
 		} else {
-			foreach (var base_type in analyzer.current_class.get_base_types ()) {
+			foreach (var base_type in context.analyzer.current_class.get_base_types ()) {
 				if (base_type.data_type is Class) {
 					value_type = base_type.copy ();
 					value_type.value_owned = false;

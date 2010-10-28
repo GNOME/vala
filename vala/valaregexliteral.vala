@@ -62,14 +62,14 @@ public class Vala.RegexLiteral : Literal {
 		return value;
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
 
-		if (!analyzer.context.experimental) {
+		if (!context.experimental) {
 			Report.warning (source_reference, "regular expression literals are experimental");
 		}
 
@@ -82,7 +82,7 @@ public class Vala.RegexLiteral : Literal {
 			return false;
 		}
 
-		value_type = analyzer.regex_type.copy ();
+		value_type = context.analyzer.regex_type.copy ();
 
 		return !error;
 	}

@@ -62,7 +62,7 @@ public abstract class Vala.ValueType : DataType {
 		return false;
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
-		return type_symbol.check (analyzer);
+	public override bool check (CodeContext context) {
+		return type_symbol.check (context);
 	}
 }

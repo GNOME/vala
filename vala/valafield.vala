@@ -260,20 +260,20 @@ public class Vala.Field : Variable, Lockable {
 		attr.add_argument ("type", "\"%s\"".printf (ctype));
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
 
-		var old_source_file = analyzer.current_source_file;
-		var old_symbol = analyzer.current_symbol;
+		var old_source_file = context.analyzer.current_source_file;
+		var old_symbol = context.analyzer.current_symbol;
 
 		if (source_reference != null) {
-			analyzer.current_source_file = source_reference.file;
+			context.analyzer.current_source_file = source_reference.file;
 		}
-		analyzer.current_symbol = this;
+		context.analyzer.current_symbol = this;
 
 		if (variable_type is VoidType) {
 			error = true;
@@ -281,10 +281,10 @@ public class Vala.Field : Variable, Lockable {
 			return false;
 		}
 
-		variable_type.check (analyzer);
+		variable_type.check (context);
 
 		// check whether field type is at least as accessible as the field
-		if (!analyzer.is_type_accessible (this, variable_type)) {
+		if (!context.analyzer.is_type_accessible (this, variable_type)) {
 			error = true;
 			Report.error (source_reference, "field type `%s` is less accessible than field `%s`".printf (variable_type.to_string (), get_full_name ()));
 			return false;
@@ -295,7 +295,7 @@ public class Vala.Field : Variable, Lockable {
 		if (initializer != null) {
 			initializer.target_type = variable_type;
 
-			if (!initializer.check (analyzer)) {
+			if (!initializer.check (context)) {
 				error = true;
 				return false;
 			}
@@ -337,8 +337,8 @@ public class Vala.Field : Variable, Lockable {
 			Report.warning (source_reference, "%s hides inherited field `%s'. Use the `new' keyword if hiding was intentional".printf (get_full_name (), get_hidden_member ().get_full_name ()));
 		}
 
-		analyzer.current_source_file = old_source_file;
-		analyzer.current_symbol = old_symbol;
+		context.analyzer.current_source_file = old_source_file;
+		context.analyzer.current_symbol = old_symbol;
 
 		return !error;
 	}

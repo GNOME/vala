@@ -419,7 +419,7 @@ public class Vala.Property : Symbol, Lockable {
 		}
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
@@ -470,13 +470,13 @@ public class Vala.Property : Symbol, Lockable {
 			}
 		}
 
-		var old_source_file = analyzer.current_source_file;
-		var old_symbol = analyzer.current_symbol;
+		var old_source_file = context.analyzer.current_source_file;
+		var old_symbol = context.analyzer.current_symbol;
 
 		if (source_reference != null) {
-			analyzer.current_source_file = source_reference.file;
+			context.analyzer.current_source_file = source_reference.file;
 		}
-		analyzer.current_symbol = this;
+		context.analyzer.current_symbol = this;
 
 		if (property_type is VoidType) {
 			error = true;
@@ -484,21 +484,21 @@ public class Vala.Property : Symbol, Lockable {
 			return false;
 		}
 
-		property_type.check (analyzer);
+		property_type.check (context);
 
 		if (get_accessor != null) {
-			get_accessor.check (analyzer);
+			get_accessor.check (context);
 		}
 		if (set_accessor != null) {
-			set_accessor.check (analyzer);
+			set_accessor.check (context);
 		}
 
 		if (initializer != null) {
-			initializer.check (analyzer);
+			initializer.check (context);
 		}
 
 		// check whether property type is at least as accessible as the property
-		if (!analyzer.is_type_accessible (this, property_type)) {
+		if (!context.analyzer.is_type_accessible (this, property_type)) {
 			error = true;
 			Report.error (source_reference, "property type `%s` is less accessible than property `%s`".printf (property_type.to_string (), get_full_name ()));
 		}
@@ -524,8 +524,8 @@ public class Vala.Property : Symbol, Lockable {
 			Report.error (initializer.source_reference, "Expected initializer of type `%s' but got `%s'".printf (property_type.to_string (), initializer.value_type.to_string ()));
 		}
 
-		analyzer.current_source_file = old_source_file;
-		analyzer.current_symbol = old_symbol;
+		context.analyzer.current_source_file = old_source_file;
+		context.analyzer.current_symbol = old_symbol;
 
 		return !error;
 	}

@@ -86,7 +86,7 @@ public class Vala.DoStatement : CodeNode, Statement {
 		return (literal != null && literal.value);
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		// convert to simple loop
 
 		// do not generate variable and if block if condition is always true
@@ -96,12 +96,12 @@ public class Vala.DoStatement : CodeNode, Statement {
 			var parent_block = (Block) parent_node;
 			parent_block.replace_statement (this, loop);
 
-			return loop.check (analyzer);
+			return loop.check (context);
 		}
 
 		var block = new Block (source_reference);
 
-		var first_local = new LocalVariable (analyzer.bool_type.copy (), get_temp_name (), new BooleanLiteral (true, source_reference), source_reference);
+		var first_local = new LocalVariable (context.analyzer.bool_type.copy (), get_temp_name (), new BooleanLiteral (true, source_reference), source_reference);
 		block.add_statement (new DeclarationStatement (first_local, source_reference));
 
 		var if_condition = new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, condition, condition.source_reference);
@@ -121,6 +121,6 @@ public class Vala.DoStatement : CodeNode, Statement {
 		var parent_block = (Block) parent_node;
 		parent_block.replace_statement (this, block);
 
-		return block.check (analyzer);
+		return block.check (context);
 	}
 }

@@ -786,7 +786,7 @@ public class Vala.Method : Symbol {
 		}
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
@@ -846,21 +846,21 @@ public class Vala.Method : Symbol {
 			Report.error (source_reference, "Non-abstract, non-extern methods must have bodies");
 		}
 
-		if (coroutine && !external_package && !analyzer.context.has_package ("gio-2.0")) {
+		if (coroutine && !external_package && !context.has_package ("gio-2.0")) {
 			error = true;
 			Report.error (source_reference, "gio-2.0 package required for async methods");
 			return false;
 		}
 
-		var old_source_file = analyzer.current_source_file;
-		var old_symbol = analyzer.current_symbol;
+		var old_source_file = context.analyzer.current_source_file;
+		var old_symbol = context.analyzer.current_symbol;
 
 		if (source_reference != null) {
-			analyzer.current_source_file = source_reference.file;
+			context.analyzer.current_source_file = source_reference.file;
 		}
-		analyzer.current_symbol = this;
+		context.analyzer.current_symbol = this;
 
-		return_type.check (analyzer);
+		return_type.check (context);
 
 		var init_attr = get_attribute ("ModuleInit");
 		if (init_attr != null) {
@@ -868,7 +868,7 @@ public class Vala.Method : Symbol {
 		}
 
 		if (return_type != null) {
-			return_type.check (analyzer);
+			return_type.check (context);
 		}
 
 		if (parameters.size == 1 && parameters[0].ellipsis && body != null) {
@@ -878,7 +878,7 @@ public class Vala.Method : Symbol {
 		}
 
 		foreach (Parameter param in parameters) {
-			param.check (analyzer);
+			param.check (context);
 			if (coroutine && param.direction == ParameterDirection.REF) {
 				error = true;
 				Report.error (param.source_reference, "Reference parameters are not supported for async methods");
@@ -886,10 +886,10 @@ public class Vala.Method : Symbol {
 		}
 
 		foreach (DataType error_type in get_error_types ()) {
-			error_type.check (analyzer);
+			error_type.check (context);
 
 			// check whether error type is at least as accessible as the method
-			if (!analyzer.is_type_accessible (this, error_type)) {
+			if (!context.analyzer.is_type_accessible (this, error_type)) {
 				error = true;
 				Report.error (source_reference, "error type `%s` is less accessible than method `%s`".printf (error_type.to_string (), get_full_name ()));
 				return false;
@@ -897,29 +897,29 @@ public class Vala.Method : Symbol {
 		}
 
 		if (result_var != null) {
-			result_var.check (analyzer);
+			result_var.check (context);
 		}
 
 		if (preconditions != null) {
 			foreach (Expression precondition in preconditions) {
-				precondition.check (analyzer);
+				precondition.check (context);
 			}
 		}
 
 		if (postconditions != null) {
 			foreach (Expression postcondition in postconditions) {
-				postcondition.check (analyzer);
+				postcondition.check (context);
 			}
 		}
 
 		if (body != null) {
-			body.check (analyzer);
+			body.check (context);
 		}
 
-		analyzer.current_source_file = old_source_file;
-		analyzer.current_symbol = old_symbol;
+		context.analyzer.current_source_file = old_source_file;
+		context.analyzer.current_symbol = old_symbol;
 
-		if (analyzer.current_struct != null) {
+		if (context.analyzer.current_struct != null) {
 			if (is_abstract || is_virtual || overrides) {
 				error = true;
 				Report.error (source_reference, "A struct member `%s' cannot be marked as override, virtual, or abstract".printf (get_full_name ()));
@@ -938,7 +938,7 @@ public class Vala.Method : Symbol {
 		}
 
 		// check whether return type is at least as accessible as the method
-		if (!analyzer.is_type_accessible (this, return_type)) {
+		if (!context.analyzer.is_type_accessible (this, return_type)) {
 			error = true;
 			Report.error (source_reference, "return type `%s` is less accessible than method `%s`".printf (return_type.to_string (), get_full_name ()));
 			return false;
@@ -951,7 +951,7 @@ public class Vala.Method : Symbol {
 				return false;
 			}
 
-			if (!precondition.value_type.compatible (analyzer.bool_type)) {
+			if (!precondition.value_type.compatible (context.analyzer.bool_type)) {
 				error = true;
 				Report.error (precondition.source_reference, "Precondition must be boolean");
 				return false;
@@ -965,7 +965,7 @@ public class Vala.Method : Symbol {
 				return false;
 			}
 
-			if (!postcondition.value_type.compatible (analyzer.bool_type)) {
+			if (!postcondition.value_type.compatible (context.analyzer.bool_type)) {
 				error = true;
 				Report.error (postcondition.source_reference, "Postcondition must be boolean");
 				return false;
@@ -988,16 +988,16 @@ public class Vala.Method : Symbol {
 			}
 		}
 
-		if (is_possible_entry_point (analyzer)) {
-			if (analyzer.context.entry_point != null) {
+		if (is_possible_entry_point (context)) {
+			if (context.entry_point != null) {
 				error = true;
-				Report.error (source_reference, "program already has an entry point `%s'".printf (analyzer.context.entry_point.get_full_name ()));
+				Report.error (source_reference, "program already has an entry point `%s'".printf (context.entry_point.get_full_name ()));
 				return false;
 			}
 			entry_point = true;
-			analyzer.context.entry_point = this;
+			context.entry_point = this;
 
-			if (tree_can_fail && analyzer.context.profile != Profile.DOVA) {
+			if (tree_can_fail && context.profile != Profile.DOVA) {
 				Report.error (source_reference, "\"main\" method cannot throw errors");
 			}
 		}
@@ -1005,19 +1005,19 @@ public class Vala.Method : Symbol {
 		return !error;
 	}
 
-	bool is_possible_entry_point (SemanticAnalyzer analyzer) {
+	bool is_possible_entry_point (CodeContext context) {
 		if (external_package) {
 			return false;
 		}
 
-		if (analyzer.context.entry_point_name == null) {
+		if (context.entry_point_name == null) {
 			if (name == null || name != "main") {
 				// method must be called "main"
 				return false;
 			}
 		} else {
 			// custom entry point name
-			if (get_full_name () != analyzer.context.entry_point_name) {
+			if (get_full_name () != context.entry_point_name) {
 				return false;
 			}
 		}
@@ -1028,7 +1028,7 @@ public class Vala.Method : Symbol {
 		}
 		
 		if (return_type is VoidType) {
-		} else if (return_type.data_type == analyzer.int_type.data_type) {
+		} else if (return_type.data_type == context.analyzer.int_type.data_type) {
 		} else {
 			// return type must be void or int
 			return false;
@@ -1060,7 +1060,7 @@ public class Vala.Method : Symbol {
 		}
 		
 		var array_type = (ArrayType) param.variable_type;
-		if (array_type.element_type.data_type != analyzer.string_type.data_type) {
+		if (array_type.element_type.data_type != context.analyzer.string_type.data_type) {
 			// parameter must be an array of strings
 			return false;
 		}

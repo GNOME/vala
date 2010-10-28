@@ -68,8 +68,8 @@ public class Vala.MemberInitializer : CodeNode {
 		initializer.accept (visitor);
 	}
 	
-	public override bool check (SemanticAnalyzer analyzer) {
-		return initializer.check (analyzer);
+	public override bool check (CodeContext context) {
+		return initializer.check (context);
 	}
 
 	public override void emit (CodeGenerator codegen) {

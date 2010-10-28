@@ -93,7 +93,7 @@ public class Vala.InitializerList : Expression {
 		}
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
@@ -123,7 +123,7 @@ public class Vala.InitializerList : Expression {
 				old_parent_node.replace_expression (this, array_creation);
 
 				checked = false;
-				return array_creation.check (analyzer);
+				return array_creation.check (context);
 			}
 
 			DataType inner_target_type;
@@ -171,7 +171,7 @@ public class Vala.InitializerList : Expression {
 		}
 
 		foreach (Expression expr in initializers) {
-			expr.check (analyzer);
+			expr.check (context);
 		}
 
 		bool error = false;

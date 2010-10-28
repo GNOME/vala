@@ -64,14 +64,14 @@ public class Vala.PostfixExpression : Expression {
 		return false;
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
 
-		if (!inner.check (analyzer)) {
+		if (!inner.check (context)) {
 			error = true;
 			return false;
 		}

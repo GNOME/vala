@@ -232,14 +232,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		current_symbol = root_symbol;
-		context.root.check (this);
+		context.root.check (context);
 		context.accept (this);
 	}
 
 	public override void visit_source_file (SourceFile file) {
 		current_source_file = file;
 
-		file.check (this);
+		file.check (context);
 	}
 
 	// check whether type is at least as accessible as the specified symbol
@@ -387,7 +387,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		bool ellipsis = false;
 		int i = 0;
 		foreach (Parameter param in params) {
-			if (!param.check (this)) {
+			if (!param.check (context)) {
 				return false;
 			}
 
@@ -799,7 +799,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		init.initializer.formal_target_type = member_type;
 		init.initializer.target_type = init.initializer.formal_target_type.get_actual_type (type, null, init);;
 
-		init.check (this);
+		init.check (context);
 
 		if (init.initializer.value_type == null || !init.initializer.value_type.compatible (init.initializer.target_type)) {
 			init.error = true;

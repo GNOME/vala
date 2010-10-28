@@ -320,7 +320,7 @@ public class Vala.Enum : TypeSymbol {
 		return "0";
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
@@ -329,28 +329,28 @@ public class Vala.Enum : TypeSymbol {
 
 		process_attributes ();
 
-		var old_source_file = analyzer.current_source_file;
-		var old_symbol = analyzer.current_symbol;
+		var old_source_file = context.analyzer.current_source_file;
+		var old_symbol = context.analyzer.current_symbol;
 
 		if (source_reference != null) {
-			analyzer.current_source_file = source_reference.file;
+			context.analyzer.current_source_file = source_reference.file;
 		}
-		analyzer.current_symbol = this;
+		context.analyzer.current_symbol = this;
 
 		foreach (EnumValue value in values) {
-			value.check (analyzer);
+			value.check (context);
 		}
 
 		foreach (Method m in methods) {
-			m.check (analyzer);
+			m.check (context);
 		}
 
 		foreach (Constant c in constants) {
-			c.check (analyzer);
+			c.check (context);
 		}
 
-		analyzer.current_source_file = old_source_file;
-		analyzer.current_symbol = old_symbol;
+		context.analyzer.current_source_file = old_source_file;
+		context.analyzer.current_symbol = old_symbol;
 
 		return !error;
 	}

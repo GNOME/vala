@@ -42,14 +42,14 @@ public class Vala.DeleteStatement : CodeNode, Statement {
 		expression.accept (visitor);
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
 
-		if (!expression.check (analyzer)) {
+		if (!expression.check (context)) {
 			// if there was an error in the inner expression, skip this check
 			return false;
 		}

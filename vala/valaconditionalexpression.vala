@@ -100,14 +100,14 @@ public class Vala.ConditionalExpression : Expression {
 		return condition.is_pure () && true_expression.is_pure () && false_expression.is_pure ();
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
 
-		if (!(analyzer.current_symbol is Block)) {
+		if (!(context.analyzer.current_symbol is Block)) {
 			Report.error (source_reference, "Conditional expressions may only be used in blocks");
 			error = true;
 			return false;
@@ -136,10 +136,10 @@ public class Vala.ConditionalExpression : Expression {
 
 		var if_stmt = new IfStatement (condition, true_block, false_block, source_reference);
 
-		insert_statement (analyzer.insert_block, decl);
-		insert_statement (analyzer.insert_block, if_stmt);
+		insert_statement (context.analyzer.insert_block, decl);
+		insert_statement (context.analyzer.insert_block, if_stmt);
 
-		if (!if_stmt.check (analyzer) || true_expression.error || false_expression.error) {
+		if (!if_stmt.check (context) || true_expression.error || false_expression.error) {
 			error = true;
 			return false;
 		}
@@ -163,23 +163,23 @@ public class Vala.ConditionalExpression : Expression {
 		value_type.value_owned = (true_expression.value_type.value_owned || false_expression.value_type.value_owned);
 
 		local.variable_type = value_type;
-		decl.check (analyzer);
+		decl.check (context);
 
 		true_expression.target_type = value_type;
 		false_expression.target_type = value_type;
 
 		var true_stmt = new ExpressionStatement (new Assignment (new MemberAccess.simple (local.name, true_expression.source_reference), true_expression, AssignmentOperator.SIMPLE, true_expression.source_reference), true_expression.source_reference);
-		true_stmt.check (analyzer);
+		true_stmt.check (context);
 
 		var false_stmt = new ExpressionStatement (new Assignment (new MemberAccess.simple (local.name, false_expression.source_reference), false_expression, AssignmentOperator.SIMPLE, false_expression.source_reference), false_expression.source_reference);
-		false_stmt.check (analyzer);
+		false_stmt.check (context);
 
 		true_block.replace_statement (true_decl, true_stmt);
 		false_block.replace_statement (false_decl, false_stmt);
 
 		var ma = new MemberAccess.simple (local.name, source_reference);
 		ma.target_type = target_type;
-		ma.check (analyzer);
+		ma.check (context);
 
 		parent_node.replace_expression (this, ma);
 

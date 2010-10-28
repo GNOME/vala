@@ -50,7 +50,7 @@ public class Vala.NullLiteral : Literal {
 		return true;
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}

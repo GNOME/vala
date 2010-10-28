@@ -69,13 +69,13 @@ public class Vala.YieldStatement : CodeNode, Statement {
 		}
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (yield_expression != null) {
-			yield_expression.check (analyzer);
+			yield_expression.check (context);
 			error = yield_expression.error;
 		}
 
-		analyzer.current_method.yield_count++;
+		context.analyzer.current_method.yield_count++;
 
 		return !error;
 	}

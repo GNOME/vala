@@ -128,11 +128,11 @@ public class Vala.ArrayCreationExpression : Expression {
 		}
 	}
 
-	private int create_sizes_from_initializer_list (SemanticAnalyzer analyzer, InitializerList il, int rank, List<Literal> sl) {
+	private int create_sizes_from_initializer_list (CodeContext context, InitializerList il, int rank, List<Literal> sl) {
 		if (sl.size == (this.rank - rank)) {
 			// only add size if this is the first initializer list of the current dimension
 			var init = new IntegerLiteral (il.size.to_string (), il.source_reference);
-			init.check (analyzer);
+			init.check (context);
 			sl.add (init);
 		}
 
@@ -145,7 +145,7 @@ public class Vala.ArrayCreationExpression : Expression {
 					Report.error (e.source_reference, "Expected array element, got array initializer list");
 					return -1;
 				}
-				int size = create_sizes_from_initializer_list (analyzer, (InitializerList) e, rank - 1, sl);
+				int size = create_sizes_from_initializer_list (context, (InitializerList) e, rank - 1, sl);
 				if (size == -1) {
 					return -1;
 				}
@@ -168,7 +168,7 @@ public class Vala.ArrayCreationExpression : Expression {
 		return il.size;
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
@@ -179,20 +179,20 @@ public class Vala.ArrayCreationExpression : Expression {
 		var initlist = initializer_list;
 
 		if (element_type != null) {
-			element_type.check (analyzer);
+			element_type.check (context);
 		}
 
 		foreach (Expression e in sizes) {
-			e.check (analyzer);
+			e.check (context);
 		}
 
 		var calc_sizes = new ArrayList<Literal> ();
 		if (initlist != null) {
 			initlist.target_type = new ArrayType (element_type, rank, source_reference);
 
-			initlist.check (analyzer);
+			initlist.check (context);
 
-			var ret = create_sizes_from_initializer_list (analyzer, initlist, rank, calc_sizes);
+			var ret = create_sizes_from_initializer_list (context, initlist, rank, calc_sizes);
 			if (ret == -1) {
 				error = true;
 			}

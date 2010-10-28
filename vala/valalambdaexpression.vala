@@ -111,15 +111,15 @@ public class Vala.LambdaExpression : Expression {
 		return false;
 	}
 
-	string get_lambda_name (SemanticAnalyzer analyzer) {
-		var result = "_lambda%d_".printf (analyzer.next_lambda_id);
+	string get_lambda_name (CodeContext context) {
+		var result = "_lambda%d_".printf (context.analyzer.next_lambda_id);
 
-		analyzer.next_lambda_id++;
+		context.analyzer.next_lambda_id++;
 
 		return result;
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
@@ -134,15 +134,15 @@ public class Vala.LambdaExpression : Expression {
 
 		var cb = (Delegate) ((DelegateType) target_type).delegate_symbol;
 		var return_type = cb.return_type.get_actual_type (target_type, null, this);
-		method = new Method (get_lambda_name (analyzer), return_type, source_reference);
+		method = new Method (get_lambda_name (context), return_type, source_reference);
 		// track usage for flow analyzer
 		method.used = true;
 		method.check_deprecated (source_reference);
 
-		if (!cb.has_target || !analyzer.is_in_instance_method ()) {
+		if (!cb.has_target || !context.analyzer.is_in_instance_method ()) {
 			method.binding = MemberBinding.STATIC;
 		} else {
-			var sym = analyzer.current_symbol;
+			var sym = context.analyzer.current_symbol;
 			while (method.this_parameter == null) {
 				if (sym is Property) {
 					var prop = (Property) sym;
@@ -161,7 +161,7 @@ public class Vala.LambdaExpression : Expression {
 				sym = sym.parent_symbol;
 			}
 		}
-		method.owner = analyzer.current_symbol.scope;
+		method.owner = context.analyzer.current_symbol.scope;
 
 		if (!(method.return_type is VoidType) && CodeContext.get ().profile == Profile.DOVA) {
 			method.result_var = new LocalVariable (method.return_type.copy (), "result", null, source_reference);
@@ -208,7 +208,7 @@ public class Vala.LambdaExpression : Expression {
 			block.scope.parent_scope = method.scope;
 
 			if (method.return_type.data_type != null) {
-				if (analyzer.context.profile == Profile.DOVA) {
+				if (context.profile == Profile.DOVA) {
 					block.add_statement (new ExpressionStatement (new Assignment (new MemberAccess.simple ("result", source_reference), expression_body, AssignmentOperator.SIMPLE, source_reference), source_reference));
 					block.add_statement (new ReturnStatement (null, source_reference));
 				} else {
@@ -225,7 +225,7 @@ public class Vala.LambdaExpression : Expression {
 		method.body.owner = method.scope;
 
 		// support use of generics in closures
-		var m = analyzer.find_parent_method (analyzer.current_symbol);
+		var m = context.analyzer.find_parent_method (context.analyzer.current_symbol);
 		if (m != null) {
 			foreach (var type_param in m.get_type_parameters ()) {
 				method.add_type_parameter (new TypeParameter (type_param.name, type_param.source_reference));
@@ -238,7 +238,7 @@ public class Vala.LambdaExpression : Expression {
 		/* lambda expressions should be usable like MemberAccess of a method */
 		symbol_reference = method;
 
-		method.check (analyzer);
+		method.check (context);
 
 		value_type = new MethodType (method);
 		value_type.value_owned = target_type.value_owned;

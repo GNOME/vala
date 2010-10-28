@@ -59,7 +59,7 @@ public class Vala.IntegerLiteral : Literal {
 		return true;
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
@@ -122,9 +122,9 @@ public class Vala.IntegerLiteral : Literal {
 			}
 		}
 
-		var st = (Struct) analyzer.root_symbol.scope.lookup (type_name);
+		var st = (Struct) context.analyzer.root_symbol.scope.lookup (type_name);
 		// ensure attributes are already processed in case of bootstrapping dova-core
-		st.check (analyzer);
+		st.check (context);
 
 		value_type = new IntegerType (st, value, type_name);
 

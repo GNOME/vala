@@ -40,14 +40,14 @@ public class Vala.UnlockStatement : CodeNode, Statement {
 		visitor.visit_unlock_statement (this);
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
 
-		resource.check (analyzer);
+		resource.check (context);
 
 		/* resource must be a member access and denote a Lockable */
 		if (!(resource is MemberAccess && resource.symbol_reference is Lockable)) {
@@ -58,7 +58,7 @@ public class Vala.UnlockStatement : CodeNode, Statement {
 		}
 
 		/* parent symbol must be the current class */
-		if (resource.symbol_reference.parent_symbol != analyzer.current_class) {
+		if (resource.symbol_reference.parent_symbol != context.analyzer.current_class) {
 			error = true;
 			resource.error = true;
 			Report.error (resource.source_reference, "Only members of the current class are lockable");

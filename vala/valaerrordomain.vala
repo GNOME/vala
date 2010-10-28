@@ -217,7 +217,7 @@ public class Vala.ErrorDomain : TypeSymbol {
 		return "g_value_set_pointer";
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
@@ -227,11 +227,11 @@ public class Vala.ErrorDomain : TypeSymbol {
 		process_attributes ();
 
 		foreach (ErrorCode ecode in codes) {
-			ecode.check (analyzer);
+			ecode.check (context);
 		}
 
 		foreach (Method m in methods) {
-			m.check (analyzer);
+			m.check (context);
 		}
 
 		return !error;

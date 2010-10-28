@@ -102,20 +102,20 @@ public class Vala.IfStatement : CodeNode, Statement {
 		}
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
 
-		condition.target_type = analyzer.bool_type.copy ();
+		condition.target_type = context.analyzer.bool_type.copy ();
 
-		condition.check (analyzer);
+		condition.check (context);
 
-		true_statement.check (analyzer);
+		true_statement.check (context);
 		if (false_statement != null) {
-			false_statement.check (analyzer);
+			false_statement.check (context);
 		}
 
 		if (condition.error) {
@@ -124,7 +124,7 @@ public class Vala.IfStatement : CodeNode, Statement {
 			return false;
 		}
 
-		if (condition.value_type == null || !condition.value_type.compatible (analyzer.bool_type)) {
+		if (condition.value_type == null || !condition.value_type.compatible (context.analyzer.bool_type)) {
 			error = true;
 			Report.error (condition.source_reference, "Condition must be boolean");
 			return false;

@@ -62,14 +62,14 @@ public class Vala.SetLiteral : Literal {
 		}
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
 
-		var set_type = new ObjectType ((Class) analyzer.context.root.scope.lookup ("Dova").scope.lookup ("Set"));
+		var set_type = new ObjectType ((Class) context.root.scope.lookup ("Dova").scope.lookup ("Set"));
 		set_type.value_owned = true;
 
 		bool fixed_element_type = false;
@@ -85,7 +85,7 @@ public class Vala.SetLiteral : Literal {
 			if (fixed_element_type) {
 				expr.target_type = element_type;
 			}
-			if (!expr.check (analyzer)) {
+			if (!expr.check (context)) {
 				return false;
 			}
 

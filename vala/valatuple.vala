@@ -64,24 +64,24 @@ public class Vala.Tuple : Expression {
 		}
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
 
-		if (analyzer.context.profile != Profile.DOVA) {
+		if (context.profile != Profile.DOVA) {
 			Report.error (source_reference, "tuples are not supported");
 			error = true;
 			return false;
 		}
 
-		value_type = new ObjectType ((Class) analyzer.context.root.scope.lookup ("Dova").scope.lookup ("Tuple"));
+		value_type = new ObjectType ((Class) context.root.scope.lookup ("Dova").scope.lookup ("Tuple"));
 		value_type.value_owned = true;
 
 		foreach (var expr in expression_list) {
-			if (!expr.check (analyzer)) {
+			if (!expr.check (context)) {
 				return false;
 			}
 			value_type.add_type_argument (expr.value_type.copy ());

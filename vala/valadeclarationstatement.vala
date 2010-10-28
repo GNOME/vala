@@ -62,14 +62,14 @@ public class Vala.DeclarationStatement : CodeNode, Statement {
 		declaration.accept (visitor);
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
 
-		declaration.check (analyzer);
+		declaration.check (context);
 
 		var local = declaration as LocalVariable;
 		if (local != null && local.initializer != null) {

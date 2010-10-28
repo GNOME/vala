@@ -105,12 +105,12 @@ public class Vala.ObjectType : ReferenceType {
 		}
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
-		if (!type_symbol.check (analyzer)) {
+	public override bool check (CodeContext context) {
+		if (!type_symbol.check (context)) {
 			return false;
 		}
 
-		if (analyzer.context.profile == Profile.DOVA && type_symbol.get_full_name () == "Dova.Tuple") {
+		if (context.profile == Profile.DOVA && type_symbol.get_full_name () == "Dova.Tuple") {
 			// tuples have variadic generics
 			return true;
 		}

@@ -135,22 +135,22 @@ public class Vala.Block : Symbol, Statement {
 		}
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
 
-		owner = analyzer.current_symbol.scope;
+		owner = context.analyzer.current_symbol.scope;
 
-		var old_symbol = analyzer.current_symbol;
-		var old_insert_block = analyzer.insert_block;
-		analyzer.current_symbol = this;
-		analyzer.insert_block = this;
+		var old_symbol = context.analyzer.current_symbol;
+		var old_insert_block = context.analyzer.insert_block;
+		context.analyzer.current_symbol = this;
+		context.analyzer.insert_block = this;
 
 		for (int i = 0; i < statement_list.size; i++) {
-			statement_list[i].check (analyzer);
+			statement_list[i].check (context);
 		}
 
 		foreach (LocalVariable local in get_local_variables ()) {
@@ -166,8 +166,8 @@ public class Vala.Block : Symbol, Statement {
 			add_error_types (stmt.get_error_types ());
 		}
 
-		analyzer.current_symbol = old_symbol;
-		analyzer.insert_block = old_insert_block;
+		context.analyzer.current_symbol = old_symbol;
+		context.analyzer.insert_block = old_insert_block;
 
 		return !error;
 	}

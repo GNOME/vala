@@ -109,14 +109,14 @@ public class Vala.CastExpression : Expression {
 		}
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
 
-		if (!inner.check (analyzer)) {
+		if (!inner.check (context)) {
 			error = true;
 			return false;
 		}
@@ -133,7 +133,7 @@ public class Vala.CastExpression : Expression {
 			type_reference.nullable = false;
 		}
 
-		type_reference.check (analyzer);
+		type_reference.check (context);
 
 		// FIXME: check whether cast is allowed
 

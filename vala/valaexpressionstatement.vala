@@ -67,14 +67,14 @@ public class Vala.ExpressionStatement : CodeNode, Statement {
 		}
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
 
-		if (!expression.check (analyzer)) {
+		if (!expression.check (context)) {
 			// ignore inner error
 			error = true;
 			return false;

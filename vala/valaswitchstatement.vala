@@ -93,14 +93,14 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 		}
 	}
 	
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
 
-		if (!expression.check (analyzer)) {
+		if (!expression.check (context)) {
 			error = true;
 			return false;
 		}
@@ -108,7 +108,7 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 		if (expression.value_type == null ||
 		    (!(expression.value_type is IntegerType) &&
 		     !(expression.value_type is EnumValueType) &&
-		     !expression.value_type.compatible (analyzer.string_type))) {
+		     !expression.value_type.compatible (context.analyzer.string_type))) {
 			Report.error (expression.source_reference, "Integer or string expression expected");
 			error = true;
 			return false;
@@ -119,7 +119,7 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 
 		var labelset = new HashSet<string> (str_hash, str_equal);
 		foreach (SwitchSection section in sections) {
-			section.check (analyzer);
+			section.check (context);
 
 			// check for duplicate literal case labels
 			// FIXME: make it work for all constant expressions

@@ -147,9 +147,9 @@ public class Vala.ErrorType : ReferenceType {
 		return true;
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (error_domain != null) {
-			return error_domain.check (analyzer);
+			return error_domain.check (context);
 		}
 		return true;
 	}

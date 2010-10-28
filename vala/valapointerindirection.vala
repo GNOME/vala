@@ -69,14 +69,14 @@ public class Vala.PointerIndirection : Expression {
 		return inner.is_pure ();
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
 
-		if (!inner.check (analyzer)) {
+		if (!inner.check (context)) {
 			return false;
 		}
 		if (inner.value_type == null) {

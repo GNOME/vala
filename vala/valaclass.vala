@@ -995,7 +995,7 @@ public class Vala.Class : ObjectTypeSymbol {
 		return false;
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
@@ -1004,16 +1004,16 @@ public class Vala.Class : ObjectTypeSymbol {
 
 		process_attributes ();
 
-		var old_source_file = analyzer.current_source_file;
-		var old_symbol = analyzer.current_symbol;
+		var old_source_file = context.analyzer.current_source_file;
+		var old_symbol = context.analyzer.current_symbol;
 
 		if (source_reference != null) {
-			analyzer.current_source_file = source_reference.file;
+			context.analyzer.current_source_file = source_reference.file;
 		}
-		analyzer.current_symbol = this;
+		context.analyzer.current_symbol = this;
 
 		foreach (DataType base_type_reference in get_base_types ()) {
-			if (!base_type_reference.check (analyzer)) {
+			if (!base_type_reference.check (context)) {
 				error = true;
 				return false;
 			}
@@ -1025,7 +1025,7 @@ public class Vala.Class : ObjectTypeSymbol {
 			}
 
 			// check whether base type is at least as accessible as the class
-			if (!analyzer.is_type_accessible (this, base_type_reference)) {
+			if (!context.analyzer.is_type_accessible (this, base_type_reference)) {
 				error = true;
 				Report.error (source_reference, "base type `%s` is less accessible than class `%s`".printf (base_type_reference.to_string (), get_full_name ()));
 				return false;
@@ -1045,72 +1045,72 @@ public class Vala.Class : ObjectTypeSymbol {
 		}
 
 		foreach (DataType type in base_types) {
-			type.check (analyzer);
+			type.check (context);
 		}
 
 		foreach (TypeParameter p in get_type_parameters ()) {
-			p.check (analyzer);
+			p.check (context);
 		}
 
 		/* process enums first to avoid order problems in C code */
 		foreach (Enum en in enums) {
-			en.check (analyzer);
+			en.check (context);
 		}
 
 		foreach (Field f in fields) {
-			f.check (analyzer);
+			f.check (context);
 		}
 		
 		foreach (Constant c in constants) {
-			c.check (analyzer);
+			c.check (context);
 		}
 		
 		foreach (Method m in methods) {
-			m.check (analyzer);
+			m.check (context);
 		}
 		
 		foreach (Property prop in properties) {
-			prop.check (analyzer);
+			prop.check (context);
 		}
 		
 		foreach (Signal sig in signals) {
-			sig.check (analyzer);
+			sig.check (context);
 		}
 		
 		if (constructor != null) {
-			constructor.check (analyzer);
+			constructor.check (context);
 		}
 
 		if (class_constructor != null) {
-			class_constructor.check (analyzer);
+			class_constructor.check (context);
 		}
 
 		if (static_constructor != null) {
-			static_constructor.check (analyzer);
+			static_constructor.check (context);
 		}
 
 		if (destructor != null) {
-			destructor.check (analyzer);
+			destructor.check (context);
 		}
 
 		if (static_destructor != null) {
-			static_destructor.check (analyzer);
+			static_destructor.check (context);
 		}
 		
 		if (class_destructor != null) {
-			class_destructor.check (analyzer);
+			class_destructor.check (context);
 		}
 		
 		foreach (Class cl in classes) {
-			cl.check (analyzer);
+			cl.check (context);
 		}
 		
 		foreach (Struct st in structs) {
-			st.check (analyzer);
+			st.check (context);
 		}
 
 		foreach (Delegate d in delegates) {
-			d.check (analyzer);
+			d.check (context);
 		}
 
 		/* compact classes cannot implement interfaces */
@@ -1229,7 +1229,7 @@ public class Vala.Class : ObjectTypeSymbol {
 				while (base_class != null && base_class.is_abstract) {
 					foreach (Method base_method in base_class.get_methods ()) {
 						if (base_method.is_abstract) {
-							var override_method = analyzer.symbol_lookup_inherited (this, base_method.name) as Method;
+							var override_method = context.analyzer.symbol_lookup_inherited (this, base_method.name) as Method;
 							if (override_method == null || !override_method.overrides) {
 								error = true;
 								Report.error (source_reference, "`%s' does not implement abstract method `%s'".printf (get_full_name (), base_method.get_full_name ()));
@@ -1238,7 +1238,7 @@ public class Vala.Class : ObjectTypeSymbol {
 					}
 					foreach (Property base_property in base_class.get_properties ()) {
 						if (base_property.is_abstract) {
-							var override_property = analyzer.symbol_lookup_inherited (this, base_property.name) as Property;
+							var override_property = context.analyzer.symbol_lookup_inherited (this, base_property.name) as Property;
 							if (override_property == null || !override_property.overrides) {
 								error = true;
 								Report.error (source_reference, "`%s' does not implement abstract property `%s'".printf (get_full_name (), base_property.get_full_name ()));
@@ -1250,8 +1250,8 @@ public class Vala.Class : ObjectTypeSymbol {
 			}
 		}
 
-		analyzer.current_source_file = old_source_file;
-		analyzer.current_symbol = old_symbol;
+		context.analyzer.current_source_file = old_source_file;
+		context.analyzer.current_symbol = old_symbol;
 
 		return !error;
 	}

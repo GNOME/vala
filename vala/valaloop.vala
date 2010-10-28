@@ -61,14 +61,14 @@ public class Vala.Loop : CodeNode, Statement {
 		body.accept (visitor);
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
 
-		body.check (analyzer);
+		body.check (context);
 
 		add_error_types (body.get_error_types ());
 

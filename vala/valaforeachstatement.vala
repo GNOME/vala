@@ -146,7 +146,7 @@ public class Vala.ForeachStatement : Block {
 		}
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
@@ -154,7 +154,7 @@ public class Vala.ForeachStatement : Block {
 		checked = true;
 
 		// analyze collection expression first, used for type inference
-		if (!collection.check (analyzer)) {
+		if (!collection.check (context)) {
 			// ignore inner error
 			error = true;
 			return false;
@@ -167,29 +167,29 @@ public class Vala.ForeachStatement : Block {
 		var collection_type = collection.value_type.copy ();
 		collection.target_type = collection_type.copy ();
 		
-		if (analyzer.context.profile != Profile.DOVA && collection_type.is_array ()) {
+		if (context.profile != Profile.DOVA && collection_type.is_array ()) {
 			var array_type = (ArrayType) collection_type;
 
 			// can't use inline-allocated array for temporary variable
 			array_type.inline_allocated = false;
 
-			return check_without_iterator (analyzer, collection_type, array_type.element_type);
-		} else if (analyzer.context.profile == Profile.GOBJECT && (collection_type.compatible (analyzer.glist_type) || collection_type.compatible (analyzer.gslist_type))) {
+			return check_without_iterator (context, collection_type, array_type.element_type);
+		} else if (context.profile == Profile.GOBJECT && (collection_type.compatible (context.analyzer.glist_type) || collection_type.compatible (context.analyzer.gslist_type))) {
 			if (collection_type.get_type_arguments ().size != 1) {
 				error = true;
 				Report.error (collection.source_reference, "missing type argument for collection");
 				return false;
 			}
 
-			return check_without_iterator (analyzer, collection_type, collection_type.get_type_arguments ().get (0));
-		} else if (analyzer.context.profile == Profile.GOBJECT && collection_type.compatible (analyzer.gvaluearray_type)) {
-			return check_without_iterator (analyzer, collection_type, analyzer.gvalue_type);
+			return check_without_iterator (context, collection_type, collection_type.get_type_arguments ().get (0));
+		} else if (context.profile == Profile.GOBJECT && collection_type.compatible (context.analyzer.gvaluearray_type)) {
+			return check_without_iterator (context, collection_type, context.analyzer.gvalue_type);
 		} else {
-			return check_with_iterator (analyzer, collection_type);
+			return check_with_iterator (context, collection_type);
 		}
 	}
 
-	bool check_with_index (SemanticAnalyzer analyzer, DataType collection_type) {
+	bool check_with_index (CodeContext context, DataType collection_type) {
 		var get_method = collection_type.get_member ("get") as Method;
 		if (get_method == null) {
 			return false;
@@ -215,13 +215,13 @@ public class Vala.ForeachStatement : Block {
 		body.insert_statement (0, new DeclarationStatement (new LocalVariable (type_reference, variable_name, get_call, source_reference), source_reference));
 
 		checked = false;
-		return base.check (analyzer);
+		return base.check (context);
 	}
 
-	bool check_with_iterator (SemanticAnalyzer analyzer, DataType collection_type) {
+	bool check_with_iterator (CodeContext context, DataType collection_type) {
 		use_iterator = true;
 
-		if (check_with_index (analyzer, collection_type)) {
+		if (check_with_index (context, collection_type)) {
 			return true;
 		}
 
@@ -278,7 +278,7 @@ public class Vala.ForeachStatement : Block {
 				error = true;
 				return false;
 			}
-			if (!next_method.return_type.compatible (analyzer.bool_type)) {
+			if (!next_method.return_type.compatible (context.analyzer.bool_type)) {
 				Report.error (collection.source_reference, "`%s' must return a boolean value".printf (next_method.get_full_name ()));
 				error = true;
 				return false;
@@ -318,7 +318,7 @@ public class Vala.ForeachStatement : Block {
 		}
 
 		checked = false;
-		return base.check (analyzer);
+		return base.check (context);
 	}
 
 	bool analyze_element_type (DataType element_type) {
@@ -339,7 +339,7 @@ public class Vala.ForeachStatement : Block {
 		return true;
 	}
 
-	bool check_without_iterator (SemanticAnalyzer analyzer, DataType collection_type, DataType element_type) {
+	bool check_without_iterator (CodeContext context, DataType collection_type, DataType element_type) {
 		// analyze element type
 		if (type_reference == null) {
 			// var type
@@ -359,16 +359,16 @@ public class Vala.ForeachStatement : Block {
 		element_variable.checked = true;
 
 		// analyze body
-		owner = analyzer.current_symbol.scope;
-		analyzer.current_symbol = this;
+		owner = context.analyzer.current_symbol.scope;
+		context.analyzer.current_symbol = this;
 
-		body.check (analyzer);
+		body.check (context);
 
 		foreach (LocalVariable local in get_local_variables ()) {
 			local.active = false;
 		}
 
-		analyzer.current_symbol = analyzer.current_symbol.parent_symbol;
+		context.analyzer.current_symbol = context.analyzer.current_symbol.parent_symbol;
 
 		collection_variable = new LocalVariable (collection_type, "%s_collection".printf (variable_name));
 

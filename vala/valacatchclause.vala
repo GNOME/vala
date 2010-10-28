@@ -109,7 +109,7 @@ public class Vala.CatchClause : CodeNode {
 		}
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
@@ -125,16 +125,16 @@ public class Vala.CatchClause : CodeNode {
 			error_variable.checked = true;
 		} else {
 			// generic catch clause
-			if (analyzer.context.profile == Profile.GOBJECT) {
+			if (context.profile == Profile.GOBJECT) {
 				error_type = new ErrorType (null, null, source_reference);
 			} else {
-				error_type = analyzer.error_type;
+				error_type = context.analyzer.error_type;
 			}
 		}
 
-		error_type.check (analyzer);
+		error_type.check (context);
 
-		body.check (analyzer);
+		body.check (context);
 
 		return !error;
 	}

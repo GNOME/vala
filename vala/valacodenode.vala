@@ -121,7 +121,7 @@ public abstract class Vala.CodeNode {
 	public virtual void accept_children (CodeVisitor visitor) {
 	}
 
-	public virtual bool check (SemanticAnalyzer analyzer) {
+	public virtual bool check (CodeContext context) {
 		return true;
 	}
 

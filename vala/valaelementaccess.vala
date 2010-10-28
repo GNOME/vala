@@ -96,14 +96,14 @@ public class Vala.ElementAccess : Expression {
 		return container.is_pure ();
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
 
-		if (!container.check (analyzer)) {
+		if (!container.check (context)) {
 			/* don't proceed if a child expression failed */
 			error = true;
 			return false;
@@ -124,11 +124,11 @@ public class Vala.ElementAccess : Expression {
 				Report.error (source_reference, "Element access with more than one dimension is not supported for signals");
 				return false;
 			}
-			get_indices ().get (0).target_type = analyzer.string_type.copy ();
+			get_indices ().get (0).target_type = context.analyzer.string_type.copy ();
 		}
 
 		foreach (Expression index in get_indices ()) {
-			index.check (analyzer);
+			index.check (context);
 		}
 
 		bool index_int_type_check = true;
@@ -144,7 +144,7 @@ public class Vala.ElementAccess : Expression {
 			}
 		} else if (pointer_type != null && !pointer_type.base_type.is_reference_type_or_type_parameter ()) {
 			value_type = pointer_type.base_type.copy ();
-		} else if (analyzer.context.profile == Profile.DOVA && container_type == analyzer.tuple_type.data_type) {
+		} else if (context.profile == Profile.DOVA && container_type == context.analyzer.tuple_type.data_type) {
 			if (get_indices ().size != 1) {
 				error = true;
 				Report.error (source_reference, "Element access with more than one dimension is not supported for tuples");
@@ -177,7 +177,7 @@ public class Vala.ElementAccess : Expression {
 			get_call.add_argument (index);
 			get_call.target_type = this.target_type;
 			parent_node.replace_expression (this, get_call);
-			return get_call.check (analyzer);
+			return get_call.check (context);
 		} else if (container is MemberAccess && container.symbol_reference is Signal) {
 			index_int_type_check = false;
 
@@ -200,7 +200,7 @@ public class Vala.ElementAccess : Expression {
 					get_call.formal_target_type = this.formal_target_type;
 					get_call.target_type = this.target_type;
 					parent_node.replace_expression (this, get_call);
-					return get_call.check (analyzer);
+					return get_call.check (context);
 				}
 			}
 

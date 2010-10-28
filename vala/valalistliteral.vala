@@ -62,7 +62,7 @@ public class Vala.ListLiteral : Literal {
 		}
 	}
 
-	public override bool check (SemanticAnalyzer analyzer) {
+	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
@@ -80,12 +80,12 @@ public class Vala.ListLiteral : Literal {
 				initializer.append (expr);
 			}
 
-			analyzer.replaced_nodes.add (this);
+			context.analyzer.replaced_nodes.add (this);
 			parent_node.replace_expression (this, initializer);
-			return initializer.check (analyzer);
+			return initializer.check (context);
 		}
 
-		var list_type = new ObjectType ((Class) analyzer.context.root.scope.lookup ("Dova").scope.lookup ("List"));
+		var list_type = new ObjectType ((Class) context.root.scope.lookup ("Dova").scope.lookup ("List"));
 		list_type.value_owned = true;
 
 		bool fixed_element_type = false;
@@ -101,7 +101,7 @@ public class Vala.ListLiteral : Literal {
 			if (fixed_element_type) {
 				expr.target_type = element_type;
 			}
-			if (!expr.check (analyzer)) {
+			if (!expr.check (context)) {
 				return false;
 			}
 
