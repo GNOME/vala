@@ -38,6 +38,10 @@ public class Valadoc.Taglets.InheritDoc : InlineTaglet {
 			_inherited = ((Api.Method) container).base_method;
 		} else if (container is Api.Property) {
 			_inherited = ((Api.Property) container).base_property;
+		} else if (container is Api.Class && ((Api.Class) container).base_type != null) {
+			_inherited = (Api.Node) ((Api.Class) container).base_type.data_type;
+		} else if (container is Api.Struct && ((Api.Struct) container).base_type != null) {
+			_inherited = (Api.Node) ((Api.Struct) container).base_type.data_type;
 		}
 
 		// TODO report error if inherited is null
