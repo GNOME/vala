@@ -152,8 +152,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		var old_current_block = current_block;
 		var old_unreachable_reported = unreachable_reported;
 		var old_jump_stack = jump_stack;
-		current_block = null;
-		unreachable_reported = false;
+		mark_unreachable ();
 		jump_stack = new ArrayList<JumpTarget> ();
 
 		le.accept_children (this);
@@ -578,8 +577,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			var expr = (MethodCall) stmt.expression;
 			var ma = expr.call as MemberAccess;
 			if (ma != null && ma.symbol_reference != null && ma.symbol_reference.get_attribute ("NoReturn") != null) {
-				current_block = null;
-				unreachable_reported = false;
+				mark_unreachable ();
 				return;
 			}
 		}
@@ -608,8 +606,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		// true block
 		var last_block = current_block;
 		if (always_false (stmt.condition)) {
-			current_block = null;
-			unreachable_reported = false;
+			mark_unreachable ();
 		} else {
 			current_block = new BasicBlock ();
 			last_block.connect (current_block);
@@ -619,8 +616,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		// false block
 		var last_true_block = current_block;
 		if (always_true (stmt.condition)) {
-			current_block = null;
-			unreachable_reported = false;
+			mark_unreachable ();
 		} else {
 			current_block = new BasicBlock ();
 			last_block.connect (current_block);
@@ -690,8 +686,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		if (after_switch_block.get_predecessors ().size > 0) {
 			current_block = after_switch_block;
 		} else {
-			current_block = null;
-			unreachable_reported = false;
+			mark_unreachable ();
 		}
 
 		jump_stack.remove_at (jump_stack.size - 1);
@@ -722,8 +717,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		// reachable?
 		if (after_loop_block.get_predecessors ().size == 0) {
 			// after loop block not reachable
-			current_block = null;
-			unreachable_reported = false;
+			mark_unreachable ();
 		} else {
 			// after loop block reachable
 			current_block = after_loop_block;
@@ -779,8 +773,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			var jump_target = jump_stack[i];
 			if (jump_target.is_break_target) {
 				current_block.connect (jump_target.basic_block);
-				current_block = null;
-				unreachable_reported = false;
+				mark_unreachable ();
 				return;
 			} else if (jump_target.is_finally_clause) {
 				current_block.connect (jump_target.basic_block);
@@ -803,8 +796,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			var jump_target = jump_stack[i];
 			if (jump_target.is_continue_target) {
 				current_block.connect (jump_target.basic_block);
-				current_block = null;
-				unreachable_reported = false;
+				mark_unreachable ();
 				return;
 			} else if (jump_target.is_finally_clause) {
 				current_block.connect (jump_target.basic_block);
@@ -833,8 +825,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			var jump_target = jump_stack[i];
 			if (jump_target.is_return_target) {
 				current_block.connect (jump_target.basic_block);
-				current_block = null;
-				unreachable_reported = false;
+				mark_unreachable ();
 				return;
 			} else if (jump_target.is_finally_clause) {
 				current_block.connect (jump_target.basic_block);
@@ -861,8 +852,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 					var jump_target = jump_stack[i];
 					if (jump_target.is_exit_target) {
 						current_block.connect (jump_target.basic_block);
-						current_block = null;
-						unreachable_reported = false;
+						mark_unreachable ();
 						break;
 					} else if (jump_target.is_error_target) {
 						if (context.profile == Profile.GOBJECT) {
@@ -873,8 +863,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 								// error can always be caught by this catch clause
 								// following catch clauses cannot be reached by this error
 								current_block.connect (jump_target.basic_block);
-								current_block = null;
-								unreachable_reported = false;
+								mark_unreachable ();
 								break;
 							} else if (error_type.error_domain == null
 								   || (error_type.error_domain == jump_target.error_domain
@@ -889,8 +878,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 							// error can always be caught by this catch clause
 							// following catch clauses cannot be reached by this error
 							current_block.connect (jump_target.basic_block);
-							current_block = null;
-							unreachable_reported = false;
+							mark_unreachable ();
 							break;
 						} else if (jump_target.error_class.is_subtype_of (error_class)) {
 							// error might be caught by this catch clause
@@ -1046,8 +1034,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			current_block = after_try_block;
 		} else {
 			stmt.after_try_block_reachable = false;
-			current_block = null;
-			unreachable_reported = false;
+			mark_unreachable ();
 		}
 	}
 
@@ -1081,5 +1068,10 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		}
 
 		return false;
+	}
+
+	void mark_unreachable () {
+		current_block = null;
+		unreachable_reported = false;
 	}
 }
