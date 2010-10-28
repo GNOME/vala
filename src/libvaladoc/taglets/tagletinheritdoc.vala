@@ -44,6 +44,10 @@ public class Valadoc.Taglets.InheritDoc : InlineTaglet {
 			_inherited = (Api.Node) ((Api.Struct) container).base_type.data_type;
 		}
 
+		if (_inherited != null) {
+			api_root.push_unbrowsable_documentation_dependency (_inherited);
+		}
+
 		// TODO report error if inherited is null
 
 		// TODO postpone check after complete parse of the api tree comments
@@ -52,7 +56,7 @@ public class Valadoc.Taglets.InheritDoc : InlineTaglet {
 	}
 
 	public override ContentElement produce_content () {
-		if (_inherited != null) {
+		if (_inherited != null && _inherited.documentation != null) {
 			Paragraph inherited_paragraph = _inherited.documentation.content.get (0) as Paragraph;
 
 			Run paragraph = new Run (Run.Style.NONE);

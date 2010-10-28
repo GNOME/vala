@@ -28,6 +28,7 @@ private Valadoc.Api.Class glib_error = null;
 
 
 public class Valadoc.Api.Tree {
+	private Deque<Node> unbrowsable_documentation_dependencies = new LinkedList<Node>();
 	private ArrayList<Package> packages = new ArrayList<Package>();
 	private Package source_package = null;
 	private Settings settings;
@@ -47,6 +48,10 @@ public class Valadoc.Api.Tree {
 
 	public Collection<Package> get_package_list () {
 		return this.packages.read_only_view;
+	}
+
+	internal bool push_unbrowsable_documentation_dependency (Api.Node node) {
+		return unbrowsable_documentation_dependencies.offer_head (node);
 	}
 
 	private void add_dependencies_to_source_package () {
@@ -188,8 +193,7 @@ public class Valadoc.Api.Tree {
 			if (!add_package ("posix")) {
 				Vala.Report.error (null, "posix not found in specified Vala API directories");
 			}
-		}
-		else if (context.profile == Vala.Profile.GOBJECT) {
+		} else if (context.profile == Vala.Profile.GOBJECT) {
 			int glib_major = 2;
 			int glib_minor = 12;
 
@@ -405,13 +409,18 @@ public class Valadoc.Api.Tree {
 
 	// TODO Rename to process_comments
 	public void parse_comments (DocumentationParser docparser) {
-		// TODO Move Wiki tree parse to Package
 		process_wiki (docparser);
 
 		foreach (Package pkg in this.packages) {
 			if (pkg.is_browsable (settings)) {
-				pkg.process_comments(settings, docparser);
+				pkg.process_comments (settings, docparser);
 			}
+		}
+
+		// parse inherited non-public comments
+		while (!this.unbrowsable_documentation_dependencies.is_empty) {
+			var node = this.unbrowsable_documentation_dependencies.poll_head ();
+			node.process_comments (settings, docparser);
 		}
 	}
 
