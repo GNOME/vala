@@ -262,7 +262,12 @@ public class Valadoc.WikiScanner : Object, Scanner {
 				break;
 
 			case '`':
-				emit_token (TokenType.BACK_QUOTE);
+				if (get_next_char () == '`') {
+					emit_token (TokenType.BACK_QUOTE_2);
+					_skip = 1;
+				} else {
+					append_char (c);
+				}
 				break;
 
 			case '\t':

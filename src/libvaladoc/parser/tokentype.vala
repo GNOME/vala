@@ -46,7 +46,7 @@ public class Valadoc.TokenType : Object {
 	public static TokenType SINGLE_QUOTE_2;
 	public static TokenType SLASH_2;
 	public static TokenType UNDERSCORE_2;
-	public static TokenType BACK_QUOTE;
+	public static TokenType BACK_QUOTE_2;
 	public static TokenType OPEN_BRACE;
 	public static TokenType CLOSED_BRACE;
 	public static TokenType DOUBLE_OPEN_BRACE;
@@ -152,7 +152,7 @@ public class Valadoc.TokenType : Object {
 			SINGLE_QUOTE_2 = new TokenType.basic ("''");
 			SLASH_2 = new TokenType.basic ("//");
 			UNDERSCORE_2 = new TokenType.basic ("__");
-			BACK_QUOTE = new TokenType.basic ("`");
+			BACK_QUOTE_2 = new TokenType.basic ("``");
 			OPEN_BRACE = new TokenType.basic ("{");
 			CLOSED_BRACE = new TokenType.basic ("}");
 			DOUBLE_OPEN_BRACE = new TokenType.basic ("{{");

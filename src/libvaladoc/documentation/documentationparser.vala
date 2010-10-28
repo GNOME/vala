@@ -822,7 +822,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 				.set_name ("Underlined")
 				.set_start (() => { push (_factory.create_run (Run.Style.UNDERLINED)); });
 		Rule monospace =
-			Rule.seq ({ TokenType.BACK_QUOTE, run, TokenType.BACK_QUOTE })
+			Rule.seq ({ TokenType.BACK_QUOTE_2, run, TokenType.BACK_QUOTE_2 })
 				.set_name ("Monospace")
 				.set_start (() => { push (_factory.create_run (Run.Style.MONOSPACED)); });
 
