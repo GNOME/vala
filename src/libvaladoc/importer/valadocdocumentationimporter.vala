@@ -137,7 +137,10 @@ public class Valadoc.Importer.ValadocDocumentationImporter : DocumentationImport
 		try {
 			_filename = filename;
 			_mapped_file = new MappedFile (filename, false);
-			_parser.parse ((string) _mapped_file.get_contents (), filename, 0, 0);
+			var content = _mapped_file.get_contents ();
+			if (content != null) {
+				_parser.parse ((string) content, filename, 0, 0);
+			}
 		} catch (FileError err) {
 			reporter.simple_error ("Unable to map file `%s': %s".printf (filename, err.message));
 		} catch (ParserError err) {
