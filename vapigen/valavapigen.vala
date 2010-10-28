@@ -153,16 +153,8 @@ class Vala.VAPIGen : Object {
 		if (context.report.get_errors () > 0) {
 			return quit ();
 		}
-		
-		var resolver = new SymbolResolver ();
-		resolver.resolve (context);
-		
-		if (context.report.get_errors () > 0) {
-			return quit ();
-		}
 
-		var analyzer = new SemanticAnalyzer ();
-		analyzer.analyze (context);
+		context.check ();
 
 		if (context.report.get_errors () > 0) {
 			return quit ();

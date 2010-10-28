@@ -200,12 +200,21 @@ public class Vala.CodeContext {
 		get { return _root; }
 	}
 
+	public SymbolResolver resolver { get; private set; }
+
+	public SemanticAnalyzer analyzer { get; private set; }
+
+	public FlowAnalyzer flow_analyzer { get; private set; }
+
 	/**
 	 * The selected code generator.
 	 */
 	public CodeGenerator codegen { get; set; }
 
 	public CodeContext () {
+		resolver = new SymbolResolver ();
+		analyzer = new SemanticAnalyzer ();
+		flow_analyzer = new FlowAnalyzer ();
 	}
 
 	/**
@@ -442,6 +451,25 @@ public class Vala.CodeContext {
 			source_file.accept (visitor);
 			index++;
 		}
+	}
+
+	/**
+	 * Resolve and analyze.
+	 */
+	public void check () {
+		resolver.resolve (this);
+
+		if (report.get_errors () > 0) {
+			return;
+		}
+
+		analyzer.analyze (this);
+
+		if (report.get_errors () > 0) {
+			return;
+		}
+
+		flow_analyzer.analyze (this);
 	}
 
 	public void add_define (string define) {

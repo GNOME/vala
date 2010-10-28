@@ -343,16 +343,12 @@ class Vala.Compiler {
 			interface_writer.write_file (context, fast_vapi_filename);
 			return quit ();
 		}
-		
-		var resolver = new SymbolResolver ();
-		resolver.resolve (context);
-		
+
+		context.check ();
+
 		if (context.report.get_errors () > 0 || (fatal_warnings && context.report.get_warnings () > 0)) {
 			return quit ();
 		}
-
-		var analyzer = new SemanticAnalyzer ();
-		analyzer.analyze (context);
 
 		if (!ccode_only && !compile_only && library == null) {
 			// building program, require entry point
@@ -365,13 +361,6 @@ class Vala.Compiler {
 			var code_writer = new CodeWriter (CodeWriterType.DUMP);
 			code_writer.write_file (context, dump_tree);
 		}
-
-		if (context.report.get_errors () > 0 || (fatal_warnings && context.report.get_warnings () > 0)) {
-			return quit ();
-		}
-
-		var flow_analyzer = new FlowAnalyzer ();
-		flow_analyzer.analyze (context);
 
 		if (context.report.get_errors () > 0 || (fatal_warnings && context.report.get_warnings () > 0)) {
 			return quit ();
