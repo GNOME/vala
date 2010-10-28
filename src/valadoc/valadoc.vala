@@ -204,7 +204,7 @@ public class ValaDoc : Object {
 			return quit (reporter);
 		}
 
-		doctree.parse_comments (docparser);
+		doctree.process_comments (docparser);
 		if (reporter.errors > 0) {
 			return quit (reporter);
 		}

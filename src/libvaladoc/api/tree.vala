@@ -407,8 +407,7 @@ public class Valadoc.Api.Tree {
 		}
 	}
 
-	// TODO Rename to process_comments
-	public void parse_comments (DocumentationParser docparser) {
+	public void process_comments (DocumentationParser docparser) {
 		process_wiki (docparser);
 
 		foreach (Package pkg in this.packages) {
