@@ -40,7 +40,7 @@ public class Vala.MethodType : DataType {
 		return method_symbol.return_type;
 	}
 
-	public override List<FormalParameter>? get_parameters () {
+	public override List<Parameter>? get_parameters () {
 		return method_symbol.get_parameters ();
 	}
 
@@ -81,7 +81,7 @@ public class Vala.MethodType : DataType {
 		var proto = "%s %s (".printf (get_return_type ().to_string (), this.to_string ());
 
 		int i = 1;
-		foreach (FormalParameter param in get_parameters ()) {
+		foreach (Parameter param in get_parameters ()) {
 			if (i > 1) {
 				proto += ", ";
 			}

@@ -542,7 +542,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 		return false;
 	}
 
-	public override void visit_formal_parameter (FormalParameter p) {
+	public override void visit_formal_parameter (Parameter p) {
 	}
 
 	public override void visit_property (Property prop) {
@@ -606,7 +606,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 		return result;
 	}
 
-	void capture_parameter (FormalParameter param, CCodeStruct data, int block_id, CCodeBlock free_block) {
+	void capture_parameter (Parameter param, CCodeStruct data, int block_id, CCodeBlock free_block) {
 		generate_type_declaration (param.variable_type, cfile);
 
 		var param_type = param.variable_type.copy ();
@@ -777,7 +777,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 			cfile.add_function (type_get_fun);
 
 			var unref_fun = new CCodeFunction ("block%d_data_finalize".printf (block_id), "void");
-			unref_fun.add_parameter (new CCodeFormalParameter ("_data%d_".printf (block_id), struct_name + "*"));
+			unref_fun.add_parameter (new CCodeParameter ("_data%d_".printf (block_id), struct_name + "*"));
 			unref_fun.modifiers = CCodeModifiers.STATIC;
 			cfile.add_function_declaration (unref_fun);
 			unref_fun.block = free_block;
@@ -801,7 +801,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 
 		if (b.parent_symbol is Method) {
 			var m = (Method) b.parent_symbol;
-			foreach (FormalParameter param in m.get_parameters ()) {
+			foreach (Parameter param in m.get_parameters ()) {
 				if (!param.captured && requires_destroy (param.variable_type) && param.direction == ParameterDirection.IN) {
 					var ma = new MemberAccess.simple (param.name);
 					ma.symbol_reference = param;
@@ -1291,7 +1291,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 	}
 
 	private void append_param_free (Method m) {
-		foreach (FormalParameter param in m.get_parameters ()) {
+		foreach (Parameter param in m.get_parameters ()) {
 			if (requires_destroy (param.variable_type) && param.direction == ParameterDirection.IN) {
 				var ma = new MemberAccess.simple (param.name);
 				ma.symbol_reference = param;
@@ -1624,10 +1624,10 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 			bool ellipsis = false;
 
 			int i = 1;
-			Iterator<FormalParameter> params_it = params.iterator ();
+			Iterator<Parameter> params_it = params.iterator ();
 			foreach (Expression arg in expr.get_argument_list ()) {
 				CCodeExpression cexpr = get_cvalue (arg);
-				FormalParameter param = null;
+				Parameter param = null;
 				if (params_it.next ()) {
 					param = params_it.get ();
 					ellipsis = param.ellipsis;
@@ -1728,7 +1728,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 		}
 	}
 
-	public CCodeExpression? handle_struct_argument (FormalParameter param, Expression arg, CCodeExpression? cexpr) {
+	public CCodeExpression? handle_struct_argument (Parameter param, Expression arg, CCodeExpression? cexpr) {
 		if (arg.formal_target_type is GenericType && !(arg.target_type is GenericType)) {
 			// we already use a reference for arguments of ref and out parameters
 			if (param.direction == ParameterDirection.IN) {
@@ -2085,12 +2085,12 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 			var call = new CCodeFunctionCall (source_cexpr);
 
 			if (method_type.method_symbol.binding == MemberBinding.INSTANCE) {
-				wrapper.add_parameter (new CCodeFormalParameter ("this", "void *"));
+				wrapper.add_parameter (new CCodeParameter ("this", "void *"));
 				call.add_argument (new CCodeIdentifier ("this"));
 			}
 
 			var method_param_iter = method_type.method_symbol.get_parameters ().iterator ();
-			foreach (FormalParameter param in d.get_parameters ()) {
+			foreach (Parameter param in d.get_parameters ()) {
 				method_param_iter.next ();
 				var method_param = method_param_iter.get ();
 				string ctype = param.variable_type.get_cname ();
@@ -2103,7 +2103,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 					call.add_argument (new CCodeIdentifier (param.name));
 				}
 
-				wrapper.add_parameter (new CCodeFormalParameter (param.name, ctype));
+				wrapper.add_parameter (new CCodeParameter (param.name, ctype));
 			}
 
 			wrapper.block = new CCodeBlock ();
@@ -2112,7 +2112,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 			} else {
 				var method_return_type = method_type.method_symbol.return_type;
 				if (d.return_type is GenericType && !(method_return_type is GenericType)) {
-					wrapper.add_parameter (new CCodeFormalParameter ("result", method_return_type.get_cname () + "*"));
+					wrapper.add_parameter (new CCodeParameter ("result", method_return_type.get_cname () + "*"));
 					wrapper.block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result")), call)));
 				} else if (!(d.return_type is GenericType) && method_return_type is GenericType) {
 					wrapper.return_type = d.return_type.get_cname ();
@@ -2122,7 +2122,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 					wrapper.block.add_statement (new CCodeExpressionStatement (call));
 					wrapper.block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("result")));
 				} else if (d.return_type is GenericType) {
-					wrapper.add_parameter (new CCodeFormalParameter ("result", "void *"));
+					wrapper.add_parameter (new CCodeParameter ("result", "void *"));
 					wrapper.block.add_statement (new CCodeExpressionStatement (call));
 				} else {
 					wrapper.return_type = d.return_type.get_cname ();

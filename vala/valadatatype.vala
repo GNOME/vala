@@ -421,7 +421,7 @@ public abstract class Vala.DataType : CodeNode {
 	 *
 	 * @return parameter list
 	 */
-	public virtual List<FormalParameter>? get_parameters () {
+	public virtual List<Parameter>? get_parameters () {
 		return null;
 	}
 

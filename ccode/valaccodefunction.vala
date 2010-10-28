@@ -50,7 +50,7 @@ public class Vala.CCodeFunction : CCodeNode {
 	 */
 	public CCodeBlock block { get; set; }
 
-	private List<CCodeFormalParameter> parameters = new ArrayList<CCodeFormalParameter> ();
+	private List<CCodeParameter> parameters = new ArrayList<CCodeParameter> ();
 
 	CCodeBlock current_block;
 	List<CCodeStatement> statement_stack = new ArrayList<CCodeStatement> ();
@@ -67,11 +67,11 @@ public class Vala.CCodeFunction : CCodeNode {
 	 *
 	 * @param param a formal parameter
 	 */
-	public void add_parameter (CCodeFormalParameter param) {
+	public void add_parameter (CCodeParameter param) {
 		parameters.add (param);
 	}
 
-	public void insert_parameter (int position, CCodeFormalParameter param) {
+	public void insert_parameter (int position, CCodeParameter param) {
 		parameters.insert (position, param);
 	}
 
@@ -88,7 +88,7 @@ public class Vala.CCodeFunction : CCodeNode {
 		/* no deep copy for lists available yet
 		 * func.parameters = parameters.copy ();
 		 */
-		foreach (CCodeFormalParameter param in parameters) {
+		foreach (CCodeParameter param in parameters) {
 			func.parameters.add (param);
 		}
 		
@@ -111,7 +111,7 @@ public class Vala.CCodeFunction : CCodeNode {
 		writer.write_string (" (");
 		
 		bool first = true;
-		foreach (CCodeFormalParameter param in parameters) {
+		foreach (CCodeParameter param in parameters) {
 			if (!first) {
 				writer.write_string (", ");
 			} else {

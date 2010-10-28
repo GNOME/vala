@@ -135,7 +135,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 			return;
 		}
 		if (m.binding == MemberBinding.INSTANCE) {
-			m.this_parameter = new FormalParameter ("this", get_this_type ());
+			m.this_parameter = new Parameter ("this", get_this_type ());
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
 		if (!(m.return_type is VoidType) && (CodeContext.get ().profile == Profile.DOVA || m.get_postconditions ().size > 0)) {
@@ -204,7 +204,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 		properties.add (prop);
 		scope.add (prop.name, prop);
 
-		prop.this_parameter = new FormalParameter ("this", new ObjectType (this));
+		prop.this_parameter = new Parameter ("this", new ObjectType (this));
 		prop.scope.add (prop.this_parameter.name, prop.this_parameter);
 	}
 	

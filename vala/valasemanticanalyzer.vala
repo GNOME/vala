@@ -271,8 +271,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					return prop.get_accessor.value_type.copy ();
 				}
 			}
-		} else if (sym is FormalParameter) {
-			var p = (FormalParameter) sym;
+		} else if (sym is Parameter) {
+			var p = (Parameter) sym;
 			var type = p.variable_type.copy ();
 			if (!lvalue) {
 				type.value_owned = false;
@@ -378,7 +378,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return type;
 	}
 
-	public bool check_arguments (Expression expr, DataType mtype, List<FormalParameter> params, List<Expression> args) {
+	public bool check_arguments (Expression expr, DataType mtype, List<Parameter> params, List<Expression> args) {
 		Expression prev_arg = null;
 		Iterator<Expression> arg_it = args.iterator ();
 
@@ -386,7 +386,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		bool ellipsis = false;
 		int i = 0;
-		foreach (FormalParameter param in params) {
+		foreach (Parameter param in params) {
 			if (!param.check (this)) {
 				return false;
 			}

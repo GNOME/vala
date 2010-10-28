@@ -76,7 +76,7 @@ public class Vala.Delegate : TypeSymbol {
 
 	private List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
 
-	private List<FormalParameter> parameters = new ArrayList<FormalParameter> ();
+	private List<Parameter> parameters = new ArrayList<Parameter> ();
 	private string cname;
 
 	private DataType _return_type;
@@ -129,7 +129,7 @@ public class Vala.Delegate : TypeSymbol {
 	 *
 	 * @param param a formal parameter
 	 */
-	public void add_parameter (FormalParameter param) {
+	public void add_parameter (Parameter param) {
 		// default C parameter position
 		param.cparameter_position = parameters.size + 1;
 		param.carray_length_parameter_position = param.cparameter_position + 0.1;
@@ -145,7 +145,7 @@ public class Vala.Delegate : TypeSymbol {
 	 *
 	 * @return parameter list
 	 */
-	public List<FormalParameter> get_parameters () {
+	public List<Parameter> get_parameters () {
 		return parameters;
 	}
 	
@@ -168,7 +168,7 @@ public class Vala.Delegate : TypeSymbol {
 		}
 		
 		var method_params = m.get_parameters ();
-		Iterator<FormalParameter> method_params_it = method_params.iterator ();
+		Iterator<Parameter> method_params_it = method_params.iterator ();
 
 		if (sender_type != null && method_params.size == parameters.size + 1) {
 			// method has sender parameter
@@ -182,7 +182,7 @@ public class Vala.Delegate : TypeSymbol {
 		}
 
 		bool first = true;
-		foreach (FormalParameter param in parameters) {
+		foreach (Parameter param in parameters) {
 			/* use first callback parameter as instance parameter if
 			 * an instance method is being compared to a static
 			 * callback
@@ -223,7 +223,7 @@ public class Vala.Delegate : TypeSymbol {
 		
 		return_type.accept (visitor);
 		
-		foreach (FormalParameter param in parameters) {
+		foreach (Parameter param in parameters) {
 			param.accept (visitor);
 		}
 
@@ -354,7 +354,7 @@ public class Vala.Delegate : TypeSymbol {
 		string str = "(";
 
 		int i = 1;
-		foreach (FormalParameter param in parameters) {
+		foreach (Parameter param in parameters) {
 			if (i > 1) {
 				str += ", ";
 			}
@@ -405,7 +405,7 @@ public class Vala.Delegate : TypeSymbol {
 		
 		return_type.check (analyzer);
 		
-		foreach (FormalParameter param in parameters) {
+		foreach (Parameter param in parameters) {
 			param.check (analyzer);
 		}
 

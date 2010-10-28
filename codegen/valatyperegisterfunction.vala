@@ -78,7 +78,7 @@ public abstract class Vala.TypeRegisterFunction {
 			}
 		} else {
 			fun = new CCodeFunction ("%s_register_type".printf (get_type_declaration ().get_lower_case_cname (null)), "GType");
-			fun.add_parameter (new CCodeFormalParameter ("module", "GTypeModule *"));
+			fun.add_parameter (new CCodeParameter ("module", "GTypeModule *"));
 
 			var get_fun = new CCodeFunction ("%s_get_type".printf (get_type_declaration ().get_lower_case_cname (null)), "GType");
 			get_fun.attributes = "G_GNUC_CONST";

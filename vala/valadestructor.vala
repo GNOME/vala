@@ -34,7 +34,7 @@ public class Vala.Destructor : Symbol {
 	/**
 	 * Specifies the generated `this` parameter for instance methods.
 	 */
-	public FormalParameter this_parameter { get; set; }
+	public Parameter this_parameter { get; set; }
 
 	/**
 	 * Specifies whether this is an instance or a class destructor.

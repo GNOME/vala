@@ -186,7 +186,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 		m.accept_children (this);
 	}
 
-	public override void visit_formal_parameter (FormalParameter p) {
+	public override void visit_formal_parameter (Parameter p) {
 		p.accept_children (this);
 	}
 

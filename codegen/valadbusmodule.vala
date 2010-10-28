@@ -212,8 +212,8 @@ public class Vala.DBusModule : GAsyncModule {
 		var from_string_name = "%s_from_string".printf (en.get_lower_case_cname (null));
 
 		var from_string_func = new CCodeFunction (from_string_name, en.get_cname ());
-		from_string_func.add_parameter (new CCodeFormalParameter ("str", "const char*"));
-		from_string_func.add_parameter (new CCodeFormalParameter ("error", "GError**"));
+		from_string_func.add_parameter (new CCodeParameter ("str", "const char*"));
+		from_string_func.add_parameter (new CCodeParameter ("error", "GError**"));
 
 		return from_string_func;
 	}
@@ -222,8 +222,8 @@ public class Vala.DBusModule : GAsyncModule {
 		var from_string_name = "%s_from_string".printf (en.get_lower_case_cname (null));
 
 		var from_string_func = new CCodeFunction (from_string_name, en.get_cname ());
-		from_string_func.add_parameter (new CCodeFormalParameter ("str", "const char*"));
-		from_string_func.add_parameter (new CCodeFormalParameter ("error", "GError**"));
+		from_string_func.add_parameter (new CCodeParameter ("str", "const char*"));
+		from_string_func.add_parameter (new CCodeParameter ("error", "GError**"));
 
 		var from_string_block = new CCodeBlock ();
 		from_string_func.block = from_string_block;
@@ -657,7 +657,7 @@ public class Vala.DBusModule : GAsyncModule {
 		var to_string_name = "%s_to_string".printf (en.get_lower_case_cname (null));
 
 		var to_string_func = new CCodeFunction (to_string_name, "const char*");
-		to_string_func.add_parameter (new CCodeFormalParameter ("value", en.get_cname ()));
+		to_string_func.add_parameter (new CCodeParameter ("value", en.get_cname ()));
 
 		return to_string_func;
 	}
@@ -666,7 +666,7 @@ public class Vala.DBusModule : GAsyncModule {
 		var to_string_name = "%s_to_string".printf (en.get_lower_case_cname (null));
 
 		var to_string_func = new CCodeFunction (to_string_name, "const char*");
-		to_string_func.add_parameter (new CCodeFormalParameter ("value", en.get_cname ()));
+		to_string_func.add_parameter (new CCodeParameter ("value", en.get_cname ()));
 
 		var to_string_block = new CCodeBlock ();
 		to_string_func.block = to_string_block;
@@ -1001,9 +1001,9 @@ public class Vala.DBusModule : GAsyncModule {
 		cfile.add_type_declaration (new CCodeTypeDefinition ("struct _DBusObjectVTable", new CCodeVariableDeclarator ("_DBusObjectVTable")));
 
 		var cfunc = new CCodeFunction ("_vala_dbus_register_object", "void");
-		cfunc.add_parameter (new CCodeFormalParameter ("connection", "DBusConnection*"));
-		cfunc.add_parameter (new CCodeFormalParameter ("path", "const char*"));
-		cfunc.add_parameter (new CCodeFormalParameter ("object", "void*"));
+		cfunc.add_parameter (new CCodeParameter ("connection", "DBusConnection*"));
+		cfunc.add_parameter (new CCodeParameter ("path", "const char*"));
+		cfunc.add_parameter (new CCodeParameter ("object", "void*"));
 
 		cfunc.modifiers |= CCodeModifiers.STATIC;
 		cfile.add_function_declaration (cfunc);
@@ -1045,8 +1045,8 @@ public class Vala.DBusModule : GAsyncModule {
 
 		// unregister function
 		cfunc = new CCodeFunction ("_vala_dbus_unregister_object", "void");
-		cfunc.add_parameter (new CCodeFormalParameter ("connection", "gpointer"));
-		cfunc.add_parameter (new CCodeFormalParameter ("object", "GObject*"));
+		cfunc.add_parameter (new CCodeParameter ("connection", "gpointer"));
+		cfunc.add_parameter (new CCodeParameter ("object", "GObject*"));
 
 		cfunc.modifiers |= CCodeModifiers.STATIC;
 		cfile.add_function_declaration (cfunc);

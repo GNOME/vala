@@ -27,7 +27,7 @@ public class Vala.DovaMethodCallModule : DovaAssignmentModule {
 
 		Method m = null;
 		Delegate deleg = null;
-		List<FormalParameter> params;
+		List<Parameter> params;
 
 		var ma = expr.call as MemberAccess;
 
@@ -114,7 +114,7 @@ public class Vala.DovaMethodCallModule : DovaAssignmentModule {
 		bool ellipsis = false;
 
 		int i = 1;
-		Iterator<FormalParameter> params_it = params.iterator ();
+		Iterator<Parameter> params_it = params.iterator ();
 		foreach (Expression arg in expr.get_argument_list ()) {
 			CCodeExpression cexpr = get_cvalue (arg);
 

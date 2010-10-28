@@ -63,13 +63,13 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		function.modifiers = CCodeModifiers.STATIC;
 
 		if (!ready) {
-			function.add_parameter (new CCodeFormalParameter ("self", sym.get_cname () + "*"));
-			function.add_parameter (new CCodeFormalParameter ("parameters", "GVariant*"));
-			function.add_parameter (new CCodeFormalParameter ("invocation", "GDBusMethodInvocation*"));
+			function.add_parameter (new CCodeParameter ("self", sym.get_cname () + "*"));
+			function.add_parameter (new CCodeParameter ("parameters", "GVariant*"));
+			function.add_parameter (new CCodeParameter ("invocation", "GDBusMethodInvocation*"));
 		} else {
-			function.add_parameter (new CCodeFormalParameter ("source_object", "GObject *"));
-			function.add_parameter (new CCodeFormalParameter ("_res_", "GAsyncResult *"));
-			function.add_parameter (new CCodeFormalParameter ("_user_data_", "gpointer *"));
+			function.add_parameter (new CCodeParameter ("source_object", "GObject *"));
+			function.add_parameter (new CCodeParameter ("_res_", "GAsyncResult *"));
+			function.add_parameter (new CCodeParameter ("_user_data_", "gpointer *"));
 		}
 
 		push_function (function);
@@ -115,7 +115,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 				ccode.add_declaration ("gint", new CCodeVariableDeclarator.zero ("_fd_index", new CCodeConstant ("0")));
 			}
 
-			foreach (FormalParameter param in m.get_parameters ()) {
+			foreach (Parameter param in m.get_parameters ()) {
 				if (param.direction != ParameterDirection.IN) {
 					continue;
 				}
@@ -145,7 +145,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			}
 		}
 
-		foreach (FormalParameter param in m.get_parameters ()) {
+		foreach (Parameter param in m.get_parameters ()) {
 			if (param.direction == ParameterDirection.IN && !ready) {
 				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.Cancellable") {
 					ccall.add_argument (new CCodeConstant ("NULL"));
@@ -254,7 +254,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 				ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_fd_list"), new CCodeFunctionCall (new CCodeIdentifier ("g_unix_fd_list_new"))));
 			}
 
-			foreach (FormalParameter param in m.get_parameters ()) {
+			foreach (Parameter param in m.get_parameters ()) {
 				if (param.direction != ParameterDirection.OUT) {
 					continue;
 				}
@@ -344,7 +344,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			ccode.add_expression (ccall);
 		}
 
-		foreach (FormalParameter param in m.get_parameters ()) {
+		foreach (Parameter param in m.get_parameters ()) {
 			if ((param.direction == ParameterDirection.IN && !ready) ||
 			    (param.direction == ParameterDirection.OUT && !no_reply && (!m.coroutine || ready))) {
 				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.Cancellable") {
@@ -405,22 +405,22 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		var function = new CCodeFunction (wrapper_name, "void");
 		function.modifiers = CCodeModifiers.STATIC;
 
-		function.add_parameter (new CCodeFormalParameter ("_sender", "GObject*"));
+		function.add_parameter (new CCodeParameter ("_sender", "GObject*"));
 
 		foreach (var param in sig.get_parameters ()) {
 			// ensure ccodenode of parameter is set
-			var cparam = generate_parameter (param, cfile, new HashMap<int,CCodeFormalParameter> (), null);
+			var cparam = generate_parameter (param, cfile, new HashMap<int,CCodeParameter> (), null);
 
 			function.add_parameter (cparam);
 			if (param.variable_type is ArrayType) {
 				var array_type = (ArrayType) param.variable_type;
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					function.add_parameter (new CCodeFormalParameter (get_parameter_array_length_cname (param, dim), "int"));
+					function.add_parameter (new CCodeParameter (get_parameter_array_length_cname (param, dim), "int"));
 				}
 			}
 		}
 
-		function.add_parameter (new CCodeFormalParameter ("_data", "gpointer*"));
+		function.add_parameter (new CCodeParameter ("_data", "gpointer*"));
 
 		push_function (function);
 
@@ -434,7 +434,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		builder_init.add_argument (new CCodeIdentifier ("G_VARIANT_TYPE_TUPLE"));
 		ccode.add_expression (builder_init);
 
-		foreach (FormalParameter param in sig.get_parameters ()) {
+		foreach (Parameter param in sig.get_parameters ()) {
 			CCodeExpression expr = new CCodeIdentifier (param.name);
 			if (param.variable_type.is_real_struct_type ()) {
 				expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, expr);
@@ -469,7 +469,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 		var function = new CCodeFunction (wrapper_name, "GVariant*");
 		function.modifiers = CCodeModifiers.STATIC;
-		function.add_parameter (new CCodeFormalParameter ("self", sym.get_cname () + "*"));
+		function.add_parameter (new CCodeParameter ("self", sym.get_cname () + "*"));
 
 		push_function (function);
 
@@ -528,8 +528,8 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 		var function = new CCodeFunction (wrapper_name);
 		function.modifiers = CCodeModifiers.STATIC;
-		function.add_parameter (new CCodeFormalParameter ("self", sym.get_cname () + "*"));
-		function.add_parameter (new CCodeFormalParameter ("_value", "GVariant*"));
+		function.add_parameter (new CCodeParameter ("self", sym.get_cname () + "*"));
+		function.add_parameter (new CCodeParameter ("_value", "GVariant*"));
 
 		push_function (function);
 
@@ -605,14 +605,14 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 	void generate_interface_method_call_function (ObjectTypeSymbol sym) {
 		var cfunc = new CCodeFunction (sym.get_lower_case_cprefix () + "dbus_interface_method_call", "void");
-		cfunc.add_parameter (new CCodeFormalParameter ("connection", "GDBusConnection*"));
-		cfunc.add_parameter (new CCodeFormalParameter ("sender", "const gchar*"));
-		cfunc.add_parameter (new CCodeFormalParameter ("object_path", "const gchar*"));
-		cfunc.add_parameter (new CCodeFormalParameter ("interface_name", "const gchar*"));
-		cfunc.add_parameter (new CCodeFormalParameter ("method_name", "const gchar*"));
-		cfunc.add_parameter (new CCodeFormalParameter ("parameters", "GVariant*"));
-		cfunc.add_parameter (new CCodeFormalParameter ("invocation", "GDBusMethodInvocation*"));
-		cfunc.add_parameter (new CCodeFormalParameter ("user_data", "gpointer"));
+		cfunc.add_parameter (new CCodeParameter ("connection", "GDBusConnection*"));
+		cfunc.add_parameter (new CCodeParameter ("sender", "const gchar*"));
+		cfunc.add_parameter (new CCodeParameter ("object_path", "const gchar*"));
+		cfunc.add_parameter (new CCodeParameter ("interface_name", "const gchar*"));
+		cfunc.add_parameter (new CCodeParameter ("method_name", "const gchar*"));
+		cfunc.add_parameter (new CCodeParameter ("parameters", "GVariant*"));
+		cfunc.add_parameter (new CCodeParameter ("invocation", "GDBusMethodInvocation*"));
+		cfunc.add_parameter (new CCodeParameter ("user_data", "gpointer"));
 
 		cfunc.modifiers |= CCodeModifiers.STATIC;
 
@@ -666,13 +666,13 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 	void generate_interface_get_property_function (ObjectTypeSymbol sym) {
 		var cfunc = new CCodeFunction (sym.get_lower_case_cprefix () + "dbus_interface_get_property", "GVariant*");
-		cfunc.add_parameter (new CCodeFormalParameter ("connection", "GDBusConnection*"));
-		cfunc.add_parameter (new CCodeFormalParameter ("sender", "const gchar*"));
-		cfunc.add_parameter (new CCodeFormalParameter ("object_path", "const gchar*"));
-		cfunc.add_parameter (new CCodeFormalParameter ("interface_name", "const gchar*"));
-		cfunc.add_parameter (new CCodeFormalParameter ("property_name", "const gchar*"));
-		cfunc.add_parameter (new CCodeFormalParameter ("error", "GError**"));
-		cfunc.add_parameter (new CCodeFormalParameter ("user_data", "gpointer"));
+		cfunc.add_parameter (new CCodeParameter ("connection", "GDBusConnection*"));
+		cfunc.add_parameter (new CCodeParameter ("sender", "const gchar*"));
+		cfunc.add_parameter (new CCodeParameter ("object_path", "const gchar*"));
+		cfunc.add_parameter (new CCodeParameter ("interface_name", "const gchar*"));
+		cfunc.add_parameter (new CCodeParameter ("property_name", "const gchar*"));
+		cfunc.add_parameter (new CCodeParameter ("error", "GError**"));
+		cfunc.add_parameter (new CCodeParameter ("user_data", "gpointer"));
 
 		cfunc.modifiers |= CCodeModifiers.STATIC;
 
@@ -731,14 +731,14 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 	void generate_interface_set_property_function (ObjectTypeSymbol sym) {
 		var cfunc = new CCodeFunction (sym.get_lower_case_cprefix () + "dbus_interface_set_property", "gboolean");
-		cfunc.add_parameter (new CCodeFormalParameter ("connection", "GDBusConnection*"));
-		cfunc.add_parameter (new CCodeFormalParameter ("sender", "const gchar*"));
-		cfunc.add_parameter (new CCodeFormalParameter ("object_path", "const gchar*"));
-		cfunc.add_parameter (new CCodeFormalParameter ("interface_name", "const gchar*"));
-		cfunc.add_parameter (new CCodeFormalParameter ("property_name", "const gchar*"));
-		cfunc.add_parameter (new CCodeFormalParameter ("value", "GVariant*"));
-		cfunc.add_parameter (new CCodeFormalParameter ("error", "GError**"));
-		cfunc.add_parameter (new CCodeFormalParameter ("user_data", "gpointer"));
+		cfunc.add_parameter (new CCodeParameter ("connection", "GDBusConnection*"));
+		cfunc.add_parameter (new CCodeParameter ("sender", "const gchar*"));
+		cfunc.add_parameter (new CCodeParameter ("object_path", "const gchar*"));
+		cfunc.add_parameter (new CCodeParameter ("interface_name", "const gchar*"));
+		cfunc.add_parameter (new CCodeParameter ("property_name", "const gchar*"));
+		cfunc.add_parameter (new CCodeParameter ("value", "GVariant*"));
+		cfunc.add_parameter (new CCodeParameter ("error", "GError**"));
+		cfunc.add_parameter (new CCodeParameter ("user_data", "gpointer"));
 
 		cfunc.modifiers |= CCodeModifiers.STATIC;
 
@@ -812,7 +812,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			var in_args_info = new CCodeInitializerList ();
 			var out_args_info = new CCodeInitializerList ();
 
-			foreach (FormalParameter param in m.get_parameters ()) {
+			foreach (Parameter param in m.get_parameters ()) {
 				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.Cancellable") {
 					continue;
 				}
@@ -898,7 +898,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 			var args_info = new CCodeInitializerList ();
 
-			foreach (FormalParameter param in sig.get_parameters ()) {
+			foreach (Parameter param in sig.get_parameters ()) {
 				var info = new CCodeInitializerList ();
 				info.append (new CCodeConstant ("-1"));
 				info.append (new CCodeConstant ("\"%s\"".printf (param.name)));
@@ -1030,11 +1030,11 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		var function = new CCodeFunction (register_object_func, "guint");
 		function.modifiers = CCodeModifiers.STATIC;
 
-		function.add_parameter (new CCodeFormalParameter ("type", "GType"));
-		function.add_parameter (new CCodeFormalParameter ("object", "void*"));
-		function.add_parameter (new CCodeFormalParameter ("connection", "GDBusConnection*"));
-		function.add_parameter (new CCodeFormalParameter ("path", "const gchar*"));
-		function.add_parameter (new CCodeFormalParameter ("error", "GError**"));
+		function.add_parameter (new CCodeParameter ("type", "GType"));
+		function.add_parameter (new CCodeParameter ("object", "void*"));
+		function.add_parameter (new CCodeParameter ("connection", "GDBusConnection*"));
+		function.add_parameter (new CCodeParameter ("path", "const gchar*"));
+		function.add_parameter (new CCodeParameter ("error", "GError**"));
 
 		push_function (function);
 
@@ -1159,10 +1159,10 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 		// declare register_object function
 		var cfunc = new CCodeFunction (register_object_name, "guint");
-		cfunc.add_parameter (new CCodeFormalParameter ("object", "void*"));
-		cfunc.add_parameter (new CCodeFormalParameter ("connection", "GDBusConnection*"));
-		cfunc.add_parameter (new CCodeFormalParameter ("path", "const gchar*"));
-		cfunc.add_parameter (new CCodeFormalParameter ("error", "GError**"));
+		cfunc.add_parameter (new CCodeParameter ("object", "void*"));
+		cfunc.add_parameter (new CCodeParameter ("connection", "GDBusConnection*"));
+		cfunc.add_parameter (new CCodeParameter ("path", "const gchar*"));
+		cfunc.add_parameter (new CCodeParameter ("error", "GError**"));
 		if (sym.is_private_symbol ()) {
 			cfunc.modifiers |= CCodeModifiers.STATIC;
 		}
@@ -1180,10 +1180,10 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		cfile.add_include ("gio/gio.h");
 
 		var cfunc = new CCodeFunction (sym.get_lower_case_cprefix () + "register_object", "guint");
-		cfunc.add_parameter (new CCodeFormalParameter ("object", "gpointer"));
-		cfunc.add_parameter (new CCodeFormalParameter ("connection", "GDBusConnection*"));
-		cfunc.add_parameter (new CCodeFormalParameter ("path", "const gchar*"));
-		cfunc.add_parameter (new CCodeFormalParameter ("error", "GError**"));
+		cfunc.add_parameter (new CCodeParameter ("object", "gpointer"));
+		cfunc.add_parameter (new CCodeParameter ("connection", "GDBusConnection*"));
+		cfunc.add_parameter (new CCodeParameter ("path", "const gchar*"));
+		cfunc.add_parameter (new CCodeParameter ("error", "GError**"));
 		if (sym.is_private_symbol ()) {
 			cfunc.modifiers |= CCodeModifiers.STATIC;
 		}
@@ -1244,7 +1244,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 
 		cfunc = new CCodeFunction ("_" + sym.get_lower_case_cprefix () + "unregister_object");
-		cfunc.add_parameter (new CCodeFormalParameter ("user_data", "gpointer"));
+		cfunc.add_parameter (new CCodeParameter ("user_data", "gpointer"));
 		cfunc.modifiers |= CCodeModifiers.STATIC;
 		cfile.add_function_declaration (cfunc);
 

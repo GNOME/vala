@@ -96,7 +96,7 @@ public class Vala.ObjectType : ReferenceType {
 		}
 	}
 
-	public override List<FormalParameter>? get_parameters () {
+	public override List<Parameter>? get_parameters () {
 		var cl = type_symbol as Class;
 		if (cl != null && cl.default_construction_method != null) {
 			return cl.default_construction_method.get_parameters ();

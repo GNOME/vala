@@ -69,7 +69,7 @@ public class Vala.Property : Symbol, Lockable {
 	/**
 	 * Represents the generated `this` parameter in this property.
 	 */
-	public FormalParameter this_parameter { get; set; }
+	public Parameter this_parameter { get; set; }
 
 	/**
 	 * Specifies whether a `notify` signal should be emitted on property

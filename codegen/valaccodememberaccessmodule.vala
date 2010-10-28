@@ -499,8 +499,8 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				// don't unref variable
 				local.active = false;
 			}
-		} else if (expr.symbol_reference is FormalParameter) {
-			var p = (FormalParameter) expr.symbol_reference;
+		} else if (expr.symbol_reference is Parameter) {
+			var p = (Parameter) expr.symbol_reference;
 			if (p.name == "this") {
 				if (current_method != null && current_method.coroutine) {
 					// use closure

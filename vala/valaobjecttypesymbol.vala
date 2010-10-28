@@ -95,7 +95,7 @@ public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 			if (m.this_parameter != null) {
 				m.scope.remove (m.this_parameter.name);
 			}
-			m.this_parameter = new FormalParameter ("this", get_this_type ());
+			m.this_parameter = new Parameter ("this", get_this_type ());
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
 		if (!(m.return_type is VoidType) && m.get_postconditions ().size > 0) {

@@ -273,7 +273,7 @@ public class Vala.Assignment : Expression {
 			var right_ma = right as MemberAccess;
 			if (dynamic_sig != null) {
 				bool first = true;
-				foreach (FormalParameter param in dynamic_sig.handler.value_type.get_parameters ()) {
+				foreach (Parameter param in dynamic_sig.handler.value_type.get_parameters ()) {
 					if (first) {
 						// skip sender parameter
 						first = false;
@@ -375,7 +375,7 @@ public class Vala.Assignment : Expression {
 
 			var right_ma = right as MemberAccess;
 			if (right_ma != null && ma.symbol_reference == right_ma.symbol_reference) {
-				if (ma.symbol_reference is LocalVariable || ma.symbol_reference is FormalParameter) {
+				if (ma.symbol_reference is LocalVariable || ma.symbol_reference is Parameter) {
 					Report.warning (source_reference, "Assignment to same variable");
 				} else if (ma.symbol_reference is Field) {
 					var f = (Field) ma.symbol_reference;

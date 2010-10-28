@@ -548,7 +548,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 	}
 
-	private void write_params_and_return (List<FormalParameter> params, DataType? return_type, bool return_array_length, bool constructor = false, DataType? instance_type = null, bool user_data = false) {
+	private void write_params_and_return (List<Parameter> params, DataType? return_type, bool return_array_length, bool constructor = false, DataType? instance_type = null, bool user_data = false) {
 		int last_index = 0;
 		if (params.size != 0 || instance_type != null || (return_type is ArrayType && return_array_length) || (return_type is DelegateType)) {
 			write_indent ();
@@ -560,7 +560,7 @@ public class Vala.GIRWriter : CodeVisitor {
 				write_param_or_return (instance_type, "parameter", ref index, false, "self");
 			}
 
-			foreach (FormalParameter param in params) {
+			foreach (Parameter param in params) {
 				write_param_or_return (param.variable_type, "parameter", ref index, !param.no_array_length, param.name, param.direction);
 
 				write_implicit_params (param.variable_type, ref index, !param.no_array_length, param.name, param.direction);
@@ -655,7 +655,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 	}
 
-	private void do_write_signature (Method m, string tag_name, bool instance, string name, string cname, List<Vala.FormalParameter> params, DataType return_type, bool can_fail) {
+	private void do_write_signature (Method m, string tag_name, bool instance, string name, string cname, List<Vala.Parameter> params, DataType return_type, bool can_fail) {
 		write_indent ();
 		buffer.append_printf ("<%s name=\"%s\"", tag_name, name);
 		if (tag_name == "virtual-method") {

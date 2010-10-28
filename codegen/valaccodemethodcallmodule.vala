@@ -33,7 +33,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 		Method m = null;
 		Delegate deleg = null;
-		List<FormalParameter> params;
+		List<Parameter> params;
 		
 		var ma = expr.call as MemberAccess;
 		
@@ -268,21 +268,21 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				var unary = arg as UnaryExpression;
 				if (unary != null && unary.operator == UnaryOperator.OUT) {
 					// out argument
-					var param = new FormalParameter ("param%d".printf (param_nr), unary.inner.value_type);
+					var param = new Parameter ("param%d".printf (param_nr), unary.inner.value_type);
 					param.direction = ParameterDirection.OUT;
 					m.add_parameter (param);
 				} else if (unary != null && unary.operator == UnaryOperator.REF) {
 					// ref argument
-					var param = new FormalParameter ("param%d".printf (param_nr), unary.inner.value_type);
+					var param = new Parameter ("param%d".printf (param_nr), unary.inner.value_type);
 					param.direction = ParameterDirection.REF;
 					m.add_parameter (param);
 				} else {
 					// in argument
-					m.add_parameter (new FormalParameter ("param%d".printf (param_nr), arg.value_type));
+					m.add_parameter (new Parameter ("param%d".printf (param_nr), arg.value_type));
 				}
 				param_nr++;
 			}
-			foreach (FormalParameter param in m.get_parameters ()) {
+			foreach (Parameter param in m.get_parameters ()) {
 				param.accept (this);
 			}
 			generate_dynamic_method_wrapper ((DynamicMethod) m);
@@ -325,7 +325,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		
 		int i = 1;
 		int arg_pos;
-		Iterator<FormalParameter> params_it = params.iterator ();
+		Iterator<Parameter> params_it = params.iterator ();
 		foreach (Expression arg in expr.get_argument_list ()) {
 			CCodeExpression cexpr = get_cvalue (arg);
 
@@ -811,7 +811,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		var function = new CCodeFunction (to_string_func, "const char*");
 		function.modifiers = CCodeModifiers.STATIC;
 
-		function.add_parameter (new CCodeFormalParameter ("value", en.get_cname ()));
+		function.add_parameter (new CCodeParameter ("value", en.get_cname ()));
 
 		// definition
 		push_context (new EmitContext ());

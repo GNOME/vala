@@ -44,7 +44,7 @@ public class Vala.SignalType : DataType {
 		return signal_symbol.return_type;
 	}
 
-	public override List<FormalParameter>? get_parameters () {
+	public override List<Parameter>? get_parameters () {
 		return signal_symbol.get_parameters ();
 	}
 
@@ -74,7 +74,7 @@ public class Vala.SignalType : DataType {
 			connect_method.access = SymbolAccessibility.PUBLIC;
 			connect_method.external = true;
 			connect_method.owner = signal_symbol.scope;
-			connect_method.add_parameter (new FormalParameter ("handler", get_handler_type ()));
+			connect_method.add_parameter (new Parameter ("handler", get_handler_type ()));
 		}
 		return connect_method;
 	}
@@ -86,7 +86,7 @@ public class Vala.SignalType : DataType {
 			connect_after_method.access = SymbolAccessibility.PUBLIC;
 			connect_after_method.external = true;
 			connect_after_method.owner = signal_symbol.scope;
-			connect_after_method.add_parameter (new FormalParameter ("handler", get_handler_type ()));
+			connect_after_method.add_parameter (new Parameter ("handler", get_handler_type ()));
 		}
 		return connect_after_method;
 	}
@@ -97,7 +97,7 @@ public class Vala.SignalType : DataType {
 			disconnect_method.access = SymbolAccessibility.PUBLIC;
 			disconnect_method.external = true;
 			disconnect_method.owner = signal_symbol.scope;
-			disconnect_method.add_parameter (new FormalParameter ("handler", get_handler_type ()));
+			disconnect_method.add_parameter (new Parameter ("handler", get_handler_type ()));
 		}
 		return disconnect_method;
 	}

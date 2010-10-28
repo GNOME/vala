@@ -190,8 +190,8 @@ public abstract class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 		} else if (expr.symbol_reference is LocalVariable) {
 			var local = (LocalVariable) expr.symbol_reference;
 			expr.target_value = load_local (local);
-		} else if (expr.symbol_reference is FormalParameter) {
-			var p = (FormalParameter) expr.symbol_reference;
+		} else if (expr.symbol_reference is Parameter) {
+			var p = (Parameter) expr.symbol_reference;
 			if (p.name == "this") {
 				if (current_method != null && current_method.coroutine) {
 					// use closure

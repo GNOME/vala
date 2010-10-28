@@ -213,7 +213,7 @@ public class Vala.GVariantModule : GAsyncModule {
 		var from_string_name = "%s_from_string".printf (en.get_lower_case_cname (null));
 
 		var from_string_func = new CCodeFunction (from_string_name, en.get_cname ());
-		from_string_func.add_parameter (new CCodeFormalParameter ("str", "const char*"));
+		from_string_func.add_parameter (new CCodeParameter ("str", "const char*"));
 
 		return from_string_func;
 	}
@@ -222,7 +222,7 @@ public class Vala.GVariantModule : GAsyncModule {
 		var from_string_name = "%s_from_string".printf (en.get_lower_case_cname (null));
 
 		var from_string_func = new CCodeFunction (from_string_name, en.get_cname ());
-		from_string_func.add_parameter (new CCodeFormalParameter ("str", "const char*"));
+		from_string_func.add_parameter (new CCodeParameter ("str", "const char*"));
 
 		var from_string_block = new CCodeBlock ();
 		from_string_func.block = from_string_block;
@@ -536,7 +536,7 @@ public class Vala.GVariantModule : GAsyncModule {
 		var to_string_name = "%s_to_string".printf (en.get_lower_case_cname (null));
 
 		var to_string_func = new CCodeFunction (to_string_name, "const char*");
-		to_string_func.add_parameter (new CCodeFormalParameter ("value", en.get_cname ()));
+		to_string_func.add_parameter (new CCodeParameter ("value", en.get_cname ()));
 
 		return to_string_func;
 	}
@@ -545,7 +545,7 @@ public class Vala.GVariantModule : GAsyncModule {
 		var to_string_name = "%s_to_string".printf (en.get_lower_case_cname (null));
 
 		var to_string_func = new CCodeFunction (to_string_name, "const char*");
-		to_string_func.add_parameter (new CCodeFormalParameter ("value", en.get_cname ()));
+		to_string_func.add_parameter (new CCodeParameter ("value", en.get_cname ()));
 
 		var to_string_block = new CCodeBlock ();
 		to_string_func.block = to_string_block;

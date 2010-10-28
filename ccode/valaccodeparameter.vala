@@ -1,4 +1,4 @@
-/* valaccodeformalparameter.vala
+/* valaccodeparameter.vala
  *
  * Copyright (C) 2006-2008  Jürg Billeter
  *
@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a formal parameter in a C method signature.
  */
-public class Vala.CCodeFormalParameter : CCodeNode {
+public class Vala.CCodeParameter : CCodeNode {
 	/**
 	 * The parameter name.
 	 */
@@ -42,12 +42,12 @@ public class Vala.CCodeFormalParameter : CCodeNode {
 	 */
 	public bool ellipsis { get; set; }
 
-	public CCodeFormalParameter (string n, string type) {
+	public CCodeParameter (string n, string type) {
 		name = n;
 		type_name = type;
 	}
 
-	public CCodeFormalParameter.with_ellipsis () {
+	public CCodeParameter.with_ellipsis () {
 		ellipsis = true;
 	}
 

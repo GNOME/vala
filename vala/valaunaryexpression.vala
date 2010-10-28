@@ -215,7 +215,7 @@ public class Vala.UnaryExpression : Expression {
 			return true;
 		} else if (operator == UnaryOperator.REF || operator == UnaryOperator.OUT) {
 			var ea = inner as ElementAccess;
-			if (inner.symbol_reference is Field || inner.symbol_reference is FormalParameter || inner.symbol_reference is LocalVariable ||
+			if (inner.symbol_reference is Field || inner.symbol_reference is Parameter || inner.symbol_reference is LocalVariable ||
 			    (ea != null && ea.container.value_type is ArrayType)) {
 				// ref and out can only be used with fields, parameters, local variables, and array element access
 				lvalue = true;

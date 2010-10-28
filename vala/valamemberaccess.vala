@@ -198,7 +198,7 @@ public class Vala.MemberAccess : Expression {
 		}
 
 		Symbol base_symbol = null;
-		FormalParameter this_parameter = null;
+		Parameter this_parameter = null;
 		bool may_access_instance_members = false;
 		bool may_access_klass_members = false;
 
@@ -365,7 +365,7 @@ public class Vala.MemberAccess : Expression {
 						err.dynamic_error = true;
 						m.add_error_type (err);
 						m.access = SymbolAccessibility.PUBLIC;
-						m.add_parameter (new FormalParameter.with_ellipsis ());
+						m.add_parameter (new Parameter.with_ellipsis ());
 						dynamic_object_type.type_symbol.scope.add (null, m);
 						symbol_reference = m;
 					}
@@ -471,8 +471,8 @@ public class Vala.MemberAccess : Expression {
 				local.captured = true;
 				block.captured = true;
 			}
-		} else if (member is FormalParameter) {
-			var param = (FormalParameter) member;
+		} else if (member is Parameter) {
+			var param = (Parameter) member;
 			var m = param.parent_symbol as Method;
 			if (m != null && m != analyzer.current_method_or_property_accessor && param != m.this_parameter) {
 				// mark all methods between current method and the captured

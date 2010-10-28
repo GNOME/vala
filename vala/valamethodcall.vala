@@ -317,7 +317,7 @@ public class Vala.MethodCall : Expression {
 
 		var args = get_argument_list ();
 		Iterator<Expression> arg_it = args.iterator ();
-		foreach (FormalParameter param in params) {
+		foreach (Parameter param in params) {
 			if (param.ellipsis) {
 				break;
 			}
@@ -370,7 +370,7 @@ public class Vala.MethodCall : Expression {
 
 					// recreate iterator and skip to right position
 					arg_it = argument_list.iterator ();
-					foreach (FormalParameter param in params) {
+					foreach (Parameter param in params) {
 						if (param.ellipsis) {
 							break;
 						}
@@ -561,7 +561,7 @@ public class Vala.MethodCall : Expression {
 			if (dynamic_sig != null && dynamic_sig.handler != null) {
 				dynamic_sig.return_type = dynamic_sig.handler.value_type.get_return_type ().copy ();
 				bool first = true;
-				foreach (FormalParameter param in dynamic_sig.handler.value_type.get_parameters ()) {
+				foreach (Parameter param in dynamic_sig.handler.value_type.get_parameters ()) {
 					if (first) {
 						// skip sender parameter
 						first = false;
@@ -581,7 +581,7 @@ public class Vala.MethodCall : Expression {
 
 						// infer type arguments from arguments
 						arg_it = args.iterator ();
-						foreach (FormalParameter param in params) {
+						foreach (Parameter param in params) {
 							if (param.ellipsis || param.params_array) {
 								break;
 							}
@@ -620,7 +620,7 @@ public class Vala.MethodCall : Expression {
 
 					// recalculate argument target types with new information
 					arg_it = args.iterator ();
-					foreach (FormalParameter param in params) {
+					foreach (Parameter param in params) {
 						if (param.ellipsis || param.params_array) {
 							break;
 						}

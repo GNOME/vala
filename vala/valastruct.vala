@@ -180,7 +180,7 @@ public class Vala.Struct : TypeSymbol {
 		return_if_fail (m != null);
 		
 		if (m.binding == MemberBinding.INSTANCE || m is CreationMethod) {
-			m.this_parameter = new FormalParameter ("this", SemanticAnalyzer.get_data_type_for_symbol (this));
+			m.this_parameter = new Parameter ("this", SemanticAnalyzer.get_data_type_for_symbol (this));
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
 		if (!(m.return_type is VoidType) && (CodeContext.get ().profile == Profile.DOVA || m.get_postconditions ().size > 0)) {
@@ -224,7 +224,7 @@ public class Vala.Struct : TypeSymbol {
 		properties.add (prop);
 		scope.add (prop.name, prop);
 
-		prop.this_parameter = new FormalParameter ("this", SemanticAnalyzer.get_data_type_for_symbol (this));
+		prop.this_parameter = new Parameter ("this", SemanticAnalyzer.get_data_type_for_symbol (this));
 		prop.scope.add (prop.this_parameter.name, prop.this_parameter);
 
 		if (prop.field != null) {

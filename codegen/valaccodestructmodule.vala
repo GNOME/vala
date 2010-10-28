@@ -111,14 +111,14 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 		if (st.is_private_symbol ()) {
 			function.modifiers = CCodeModifiers.STATIC;
 		}
-		function.add_parameter (new CCodeFormalParameter ("self", "const " + st.get_cname () + "*"));
+		function.add_parameter (new CCodeParameter ("self", "const " + st.get_cname () + "*"));
 		decl_space.add_function_declaration (function);
 
 		function = new CCodeFunction (st.get_free_function (), "void");
 		if (st.is_private_symbol ()) {
 			function.modifiers = CCodeModifiers.STATIC;
 		}
-		function.add_parameter (new CCodeFormalParameter ("self", st.get_cname () + "*"));
+		function.add_parameter (new CCodeParameter ("self", st.get_cname () + "*"));
 		decl_space.add_function_declaration (function);
 
 		if (st.is_disposable ()) {
@@ -126,15 +126,15 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 			if (st.is_private_symbol ()) {
 				function.modifiers = CCodeModifiers.STATIC;
 			}
-			function.add_parameter (new CCodeFormalParameter ("self", "const " + st.get_cname () + "*"));
-			function.add_parameter (new CCodeFormalParameter ("dest", st.get_cname () + "*"));
+			function.add_parameter (new CCodeParameter ("self", "const " + st.get_cname () + "*"));
+			function.add_parameter (new CCodeParameter ("dest", st.get_cname () + "*"));
 			decl_space.add_function_declaration (function);
 
 			function = new CCodeFunction (st.get_destroy_function (), "void");
 			if (st.is_private_symbol ()) {
 				function.modifiers = CCodeModifiers.STATIC;
 			}
-			function.add_parameter (new CCodeFormalParameter ("self", st.get_cname () + "*"));
+			function.add_parameter (new CCodeParameter ("self", st.get_cname () + "*"));
 			decl_space.add_function_declaration (function);
 		}
 	}
@@ -179,7 +179,7 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 			function.modifiers = CCodeModifiers.STATIC;
 		}
 
-		function.add_parameter (new CCodeFormalParameter ("self", "const " + st.get_cname () + "*"));
+		function.add_parameter (new CCodeParameter ("self", "const " + st.get_cname () + "*"));
 
 		var cblock = new CCodeBlock ();
 
@@ -223,7 +223,7 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 			function.modifiers = CCodeModifiers.STATIC;
 		}
 
-		function.add_parameter (new CCodeFormalParameter ("self", st.get_cname () + "*"));
+		function.add_parameter (new CCodeParameter ("self", st.get_cname () + "*"));
 
 		var cblock = new CCodeBlock ();
 
@@ -248,8 +248,8 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 			function.modifiers = CCodeModifiers.STATIC;
 		}
 
-		function.add_parameter (new CCodeFormalParameter ("self", "const " + st.get_cname () + "*"));
-		function.add_parameter (new CCodeFormalParameter ("dest", st.get_cname () + "*"));
+		function.add_parameter (new CCodeParameter ("self", "const " + st.get_cname () + "*"));
+		function.add_parameter (new CCodeParameter ("dest", st.get_cname () + "*"));
 
 		push_function (function);
 
@@ -311,7 +311,7 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 			function.modifiers = CCodeModifiers.STATIC;
 		}
 
-		function.add_parameter (new CCodeFormalParameter ("self", st.get_cname () + "*"));
+		function.add_parameter (new CCodeParameter ("self", st.get_cname () + "*"));
 
 		push_function (function);
 

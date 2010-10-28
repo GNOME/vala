@@ -24,7 +24,7 @@
 
 
 public class Vala.GTypeModule : GErrorModule {
-	public override CCodeFormalParameter generate_parameter (FormalParameter param, CCodeFile decl_space, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
+	public override CCodeParameter generate_parameter (Parameter param, CCodeFile decl_space, Map<int,CCodeParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
 		if (!(param.variable_type is ObjectType)) {
 			return base.generate_parameter (param, decl_space, cparam_map, carg_map);
 		}
@@ -37,7 +37,7 @@ public class Vala.GTypeModule : GErrorModule {
 			ctypename += "*";
 		}
 
-		var cparam = new CCodeFormalParameter (get_variable_cname (param.name), ctypename);
+		var cparam = new CCodeParameter (get_variable_cname (param.name), ctypename);
 
 		cparam_map.set (get_param_pos (param.cparameter_position), cparam);
 		if (carg_map != null) {
@@ -97,8 +97,8 @@ public class Vala.GTypeModule : GErrorModule {
 				unref_fun.modifiers = CCodeModifiers.STATIC;
 			}
 
-			ref_fun.add_parameter (new CCodeFormalParameter ("instance", "gpointer"));
-			unref_fun.add_parameter (new CCodeFormalParameter ("instance", "gpointer"));
+			ref_fun.add_parameter (new CCodeParameter ("instance", "gpointer"));
+			unref_fun.add_parameter (new CCodeParameter ("instance", "gpointer"));
 
 			decl_space.add_function_declaration (ref_fun);
 			decl_space.add_function_declaration (unref_fun);
@@ -107,11 +107,11 @@ public class Vala.GTypeModule : GErrorModule {
 			string function_name = cl.get_lower_case_cname ("param_spec_");
 
 			var function = new CCodeFunction (function_name, "GParamSpec*");
-			function.add_parameter (new CCodeFormalParameter ("name", "const gchar*"));
-			function.add_parameter (new CCodeFormalParameter ("nick", "const gchar*"));
-			function.add_parameter (new CCodeFormalParameter ("blurb", "const gchar*"));
-			function.add_parameter (new CCodeFormalParameter ("object_type", "GType"));
-			function.add_parameter (new CCodeFormalParameter ("flags", "GParamFlags"));
+			function.add_parameter (new CCodeParameter ("name", "const gchar*"));
+			function.add_parameter (new CCodeParameter ("nick", "const gchar*"));
+			function.add_parameter (new CCodeParameter ("blurb", "const gchar*"));
+			function.add_parameter (new CCodeParameter ("object_type", "GType"));
+			function.add_parameter (new CCodeParameter ("flags", "GParamFlags"));
 
 			if (cl.access == SymbolAccessibility.PRIVATE) {
 				function.modifiers = CCodeModifiers.STATIC;
@@ -122,8 +122,8 @@ public class Vala.GTypeModule : GErrorModule {
 			decl_space.add_function_declaration (function);
 
 			function = new CCodeFunction (cl.get_set_value_function (), "void");
-			function.add_parameter (new CCodeFormalParameter ("value", "GValue*"));
-			function.add_parameter (new CCodeFormalParameter ("v_object", "gpointer"));
+			function.add_parameter (new CCodeParameter ("value", "GValue*"));
+			function.add_parameter (new CCodeParameter ("v_object", "gpointer"));
 
 			if (cl.access == SymbolAccessibility.PRIVATE) {
 				function.modifiers = CCodeModifiers.STATIC;
@@ -134,8 +134,8 @@ public class Vala.GTypeModule : GErrorModule {
 			decl_space.add_function_declaration (function);
 
 			function = new CCodeFunction (cl.get_take_value_function (), "void");
-			function.add_parameter (new CCodeFormalParameter ("value", "GValue*"));
-			function.add_parameter (new CCodeFormalParameter ("v_object", "gpointer"));
+			function.add_parameter (new CCodeParameter ("value", "GValue*"));
+			function.add_parameter (new CCodeParameter ("v_object", "gpointer"));
 
 			if (cl.access == SymbolAccessibility.PRIVATE) {
 				function.modifiers = CCodeModifiers.STATIC;
@@ -146,7 +146,7 @@ public class Vala.GTypeModule : GErrorModule {
 			decl_space.add_function_declaration (function);
 
 			function = new CCodeFunction (cl.get_get_value_function (), "gpointer");
-			function.add_parameter (new CCodeFormalParameter ("value", "const GValue*"));
+			function.add_parameter (new CCodeParameter ("value", "const GValue*"));
 
 			if (cl.access == SymbolAccessibility.PRIVATE) {
 				function.modifiers = CCodeModifiers.STATIC;
@@ -162,7 +162,7 @@ public class Vala.GTypeModule : GErrorModule {
 					function.modifiers = CCodeModifiers.STATIC;
 				}
 
-				function.add_parameter (new CCodeFormalParameter ("self", cl.get_cname () + "*"));
+				function.add_parameter (new CCodeParameter ("self", cl.get_cname () + "*"));
 
 				decl_space.add_function_declaration (function);
 			}
@@ -248,14 +248,14 @@ public class Vala.GTypeModule : GErrorModule {
 			var t = (ObjectTypeSymbol) prop.parent_symbol;
 
 			var this_type = new ObjectType (t);
-			var cselfparam = new CCodeFormalParameter ("self", this_type.get_cname ());
+			var cselfparam = new CCodeParameter ("self", this_type.get_cname ());
 
 			if (prop.get_accessor != null) {
 				var vdeclarator = new CCodeFunctionDeclarator ("get_%s".printf (prop.name));
 				vdeclarator.add_parameter (cselfparam);
 				string creturn_type;
 				if (prop.property_type.is_real_non_null_struct_type ()) {
-					var cvalueparam = new CCodeFormalParameter ("result", prop.get_accessor.value_type.get_cname () + "*");
+					var cvalueparam = new CCodeParameter ("result", prop.get_accessor.value_type.get_cname () + "*");
 					vdeclarator.add_parameter (cvalueparam);
 					creturn_type = "void";
 				} else {
@@ -265,10 +265,10 @@ public class Vala.GTypeModule : GErrorModule {
 				var array_type = prop.property_type as ArrayType;
 				if (array_type != null) {
 					for (int dim = 1; dim <= array_type.rank; dim++) {
-						vdeclarator.add_parameter (new CCodeFormalParameter (get_array_length_cname ("result", dim), "int*"));
+						vdeclarator.add_parameter (new CCodeParameter (get_array_length_cname ("result", dim), "int*"));
 					}
 				} else if ((prop.property_type is DelegateType) && ((DelegateType) prop.property_type).delegate_symbol.has_target) {
-					vdeclarator.add_parameter (new CCodeFormalParameter (get_delegate_target_cname ("result"), "gpointer*"));
+					vdeclarator.add_parameter (new CCodeParameter (get_delegate_target_cname ("result"), "gpointer*"));
 				}
 
 				var vdecl = new CCodeDeclaration (creturn_type);
@@ -276,11 +276,11 @@ public class Vala.GTypeModule : GErrorModule {
 				type_struct.add_declaration (vdecl);
 			}
 			if (prop.set_accessor != null) {
-				CCodeFormalParameter cvalueparam;
+				CCodeParameter cvalueparam;
 				if (prop.property_type.is_real_non_null_struct_type ()) {
-					cvalueparam = new CCodeFormalParameter ("value", prop.set_accessor.value_type.get_cname () + "*");
+					cvalueparam = new CCodeParameter ("value", prop.set_accessor.value_type.get_cname () + "*");
 				} else {
-					cvalueparam = new CCodeFormalParameter ("value", prop.set_accessor.value_type.get_cname ());
+					cvalueparam = new CCodeParameter ("value", prop.set_accessor.value_type.get_cname ());
 				}
 
 				var vdeclarator = new CCodeFunctionDeclarator ("set_%s".printf (prop.name));
@@ -290,10 +290,10 @@ public class Vala.GTypeModule : GErrorModule {
 				var array_type = prop.property_type as ArrayType;
 				if (array_type != null) {
 					for (int dim = 1; dim <= array_type.rank; dim++) {
-						vdeclarator.add_parameter (new CCodeFormalParameter (get_array_length_cname ("value", dim), "int"));
+						vdeclarator.add_parameter (new CCodeParameter (get_array_length_cname ("value", dim), "int"));
 					}
 				} else if ((prop.property_type is DelegateType) && ((DelegateType) prop.property_type).delegate_symbol.has_target) {
-					vdeclarator.add_parameter (new CCodeFormalParameter (get_delegate_target_cname ("value"), "gpointer"));
+					vdeclarator.add_parameter (new CCodeParameter (get_delegate_target_cname ("value"), "gpointer"));
 				}
 
 				var vdecl = new CCodeDeclaration ("void");
@@ -367,7 +367,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 		// add vfunc field to the type struct
 		var vdeclarator = new CCodeFunctionDeclarator (m.vfunc_name);
-		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
+		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
 
 		generate_cparameters (m, decl_space, cparam_map, new CCodeFunction ("fake"), vdeclarator);
 
@@ -638,8 +638,8 @@ public class Vala.GTypeModule : GErrorModule {
 					unref_fun.modifiers = CCodeModifiers.STATIC;
 				}
 
-				ref_fun.add_parameter (new CCodeFormalParameter ("instance", "gpointer"));
-				unref_fun.add_parameter (new CCodeFormalParameter ("instance", "gpointer"));
+				ref_fun.add_parameter (new CCodeParameter ("instance", "gpointer"));
+				unref_fun.add_parameter (new CCodeParameter ("instance", "gpointer"));
 
 				var ref_block = new CCodeBlock ();
 				var unref_block = new CCodeBlock ();
@@ -705,7 +705,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 	private void add_type_value_table_init_function (Class cl) {
 		var function = new CCodeFunction ("%s_init".printf (cl.get_lower_case_cname ("value_")), "void");
-		function.add_parameter (new CCodeFormalParameter ("value", "GValue*"));
+		function.add_parameter (new CCodeParameter ("value", "GValue*"));
 		function.modifiers = CCodeModifiers.STATIC;
 
 		var init_block = new CCodeBlock ();
@@ -717,7 +717,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 	private void add_type_value_table_free_function (Class cl) {
 		var function = new CCodeFunction ("%s_free_value".printf (cl.get_lower_case_cname ("value_")), "void");
-		function.add_parameter (new CCodeFormalParameter ("value", "GValue*"));
+		function.add_parameter (new CCodeParameter ("value", "GValue*"));
 		function.modifiers = CCodeModifiers.STATIC;
 
 		var init_block = new CCodeBlock ();
@@ -736,8 +736,8 @@ public class Vala.GTypeModule : GErrorModule {
 
 	private void add_type_value_table_copy_function (Class cl) {
 		var function = new CCodeFunction ("%s_copy_value".printf (cl.get_lower_case_cname ("value_")), "void");
-		function.add_parameter (new CCodeFormalParameter ("src_value", "const GValue*"));
-		function.add_parameter (new CCodeFormalParameter ("dest_value", "GValue*"));
+		function.add_parameter (new CCodeParameter ("src_value", "const GValue*"));
+		function.add_parameter (new CCodeParameter ("dest_value", "GValue*"));
 		function.modifiers = CCodeModifiers.STATIC;
 
 		var init_block = new CCodeBlock ();
@@ -763,7 +763,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 	private void add_type_value_table_peek_pointer_function (Class cl) {
 		var function = new CCodeFunction ("%s_peek_pointer".printf (cl.get_lower_case_cname ("value_")), "gpointer");
-		function.add_parameter (new CCodeFormalParameter ("value", "const GValue*"));
+		function.add_parameter (new CCodeParameter ("value", "const GValue*"));
 		function.modifiers = CCodeModifiers.STATIC;
 
 		var init_block = new CCodeBlock ();
@@ -778,10 +778,10 @@ public class Vala.GTypeModule : GErrorModule {
 
 	private void add_type_value_table_lcopy_value_function ( Class cl ) {
 		var function = new CCodeFunction ("%s_lcopy_value".printf (cl.get_lower_case_cname ("value_")), "gchar*");
-		function.add_parameter (new CCodeFormalParameter ("value", "const GValue*"));
-		function.add_parameter (new CCodeFormalParameter ("n_collect_values", "guint"));
-		function.add_parameter (new CCodeFormalParameter ("collect_values", "GTypeCValue*"));
-		function.add_parameter (new CCodeFormalParameter ("collect_flags", "guint"));
+		function.add_parameter (new CCodeParameter ("value", "const GValue*"));
+		function.add_parameter (new CCodeParameter ("n_collect_values", "guint"));
+		function.add_parameter (new CCodeParameter ("collect_values", "GTypeCValue*"));
+		function.add_parameter (new CCodeParameter ("collect_flags", "guint"));
 		function.modifiers = CCodeModifiers.STATIC;
 
 		var vpointer = new CCodeMemberAccess (new CCodeMemberAccess.pointer (new CCodeIdentifier ("value"), "data[0]"), "v_pointer");
@@ -830,10 +830,10 @@ public class Vala.GTypeModule : GErrorModule {
 
 	private void add_type_value_table_collect_value_function (Class cl) {
 		var function = new CCodeFunction ("%s_collect_value".printf (cl.get_lower_case_cname ("value_")), "gchar*");
-		function.add_parameter (new CCodeFormalParameter ("value", "GValue*"));
-		function.add_parameter (new CCodeFormalParameter ("n_collect_values", "guint"));
-		function.add_parameter (new CCodeFormalParameter ("collect_values", "GTypeCValue*"));
-		function.add_parameter (new CCodeFormalParameter ("collect_flags", "guint"));
+		function.add_parameter (new CCodeParameter ("value", "GValue*"));
+		function.add_parameter (new CCodeParameter ("n_collect_values", "guint"));
+		function.add_parameter (new CCodeParameter ("collect_values", "GTypeCValue*"));
+		function.add_parameter (new CCodeParameter ("collect_flags", "guint"));
 		function.modifiers = CCodeModifiers.STATIC;
 
 		var vpointer = new CCodeMemberAccess(new CCodeMemberAccess.pointer (new CCodeIdentifier ("value"), "data[0]"),"v_pointer");
@@ -912,11 +912,11 @@ public class Vala.GTypeModule : GErrorModule {
 		string function_name = cl.get_lower_case_cname ("param_spec_");
 
 		var function = new CCodeFunction (function_name, "GParamSpec*");
-		function.add_parameter (new CCodeFormalParameter ("name", "const gchar*"));
-		function.add_parameter (new CCodeFormalParameter ("nick", "const gchar*"));
-		function.add_parameter (new CCodeFormalParameter ("blurb", "const gchar*"));
-		function.add_parameter (new CCodeFormalParameter ("object_type", "GType"));
-		function.add_parameter (new CCodeFormalParameter ("flags", "GParamFlags"));
+		function.add_parameter (new CCodeParameter ("name", "const gchar*"));
+		function.add_parameter (new CCodeParameter ("nick", "const gchar*"));
+		function.add_parameter (new CCodeParameter ("blurb", "const gchar*"));
+		function.add_parameter (new CCodeParameter ("object_type", "GType"));
+		function.add_parameter (new CCodeParameter ("flags", "GParamFlags"));
 
 		if (cl.access == SymbolAccessibility.PRIVATE) {
 			function.modifiers = CCodeModifiers.STATIC;
@@ -957,8 +957,8 @@ public class Vala.GTypeModule : GErrorModule {
 
 	private void add_g_value_set_function (Class cl) {
 		var function = new CCodeFunction (cl.get_set_value_function (), "void");
-		function.add_parameter (new CCodeFormalParameter ("value", "GValue*"));
-		function.add_parameter (new CCodeFormalParameter ("v_object", "gpointer"));
+		function.add_parameter (new CCodeParameter ("value", "GValue*"));
+		function.add_parameter (new CCodeParameter ("v_object", "gpointer"));
 
 		if (cl.access == SymbolAccessibility.PRIVATE) {
 			function.modifiers = CCodeModifiers.STATIC;
@@ -1031,8 +1031,8 @@ public class Vala.GTypeModule : GErrorModule {
 
 	private void add_g_value_take_function (Class cl) {
 		var function = new CCodeFunction (cl.get_take_value_function (), "void");
-		function.add_parameter (new CCodeFormalParameter ("value", "GValue*"));
-		function.add_parameter (new CCodeFormalParameter ("v_object", "gpointer"));
+		function.add_parameter (new CCodeParameter ("value", "GValue*"));
+		function.add_parameter (new CCodeParameter ("v_object", "gpointer"));
 
 		if (cl.access == SymbolAccessibility.PRIVATE) {
 			function.modifiers = CCodeModifiers.STATIC;
@@ -1101,7 +1101,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 	private void add_g_value_get_function (Class cl) {
 		var function = new CCodeFunction (cl.get_get_value_function (), "gpointer");
-		function.add_parameter (new CCodeFormalParameter ("value", "const GValue*"));
+		function.add_parameter (new CCodeParameter ("value", "const GValue*"));
 
 		if (cl.access == SymbolAccessibility.PRIVATE) {
 			function.modifiers = CCodeModifiers.STATIC;
@@ -1129,7 +1129,7 @@ public class Vala.GTypeModule : GErrorModule {
 		push_context (base_init_context);
 
 		var base_init = new CCodeFunction ("%s_base_init".printf (cl.get_lower_case_cname (null)), "void");
-		base_init.add_parameter (new CCodeFormalParameter ("klass", "%sClass *".printf (cl.get_cname ())));
+		base_init.add_parameter (new CCodeParameter ("klass", "%sClass *".printf (cl.get_cname ())));
 		base_init.modifiers = CCodeModifiers.STATIC;
 
 		push_function (base_init);
@@ -1198,7 +1198,7 @@ public class Vala.GTypeModule : GErrorModule {
 		push_context (class_init_context);
 
 		var func = new CCodeFunction ("%s_class_init".printf (cl.get_lower_case_cname (null)));
-		func.add_parameter (new CCodeFormalParameter ("klass", "%sClass *".printf (cl.get_cname ())));
+		func.add_parameter (new CCodeParameter ("klass", "%sClass *".printf (cl.get_cname ())));
 		func.modifiers = CCodeModifiers.STATIC;
 
 		CCodeFunctionCall ccall;
@@ -1313,7 +1313,7 @@ public class Vala.GTypeModule : GErrorModule {
 	
 	private void add_interface_init_function (Class cl, Interface iface) {
 		var iface_init = new CCodeFunction ("%s_%s_interface_init".printf (cl.get_lower_case_cname (null), iface.get_lower_case_cname (null)), "void");
-		iface_init.add_parameter (new CCodeFormalParameter ("iface", "%s *".printf (iface.get_type_cname ())));
+		iface_init.add_parameter (new CCodeParameter ("iface", "%s *".printf (iface.get_type_cname ())));
 		iface_init.modifiers = CCodeModifiers.STATIC;
 		
 		var init_block = new CCodeBlock ();
@@ -1496,7 +1496,7 @@ public class Vala.GTypeModule : GErrorModule {
 		string cast_args = base_type.get_cname () + "*";
 
 		var vdeclarator = new CCodeFunctionDeclarator (m.vfunc_name);
-		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
+		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
 
 		generate_cparameters (m, cfile, cparam_map, new CCodeFunction ("fake"), vdeclarator);
 
@@ -1526,7 +1526,7 @@ public class Vala.GTypeModule : GErrorModule {
 		push_context (instance_init_context);
 
 		var func = new CCodeFunction ("%s_instance_init".printf (cl.get_lower_case_cname (null)));
-		func.add_parameter (new CCodeFormalParameter ("self", "%s *".printf (cl.get_cname ())));
+		func.add_parameter (new CCodeParameter ("self", "%s *".printf (cl.get_cname ())));
 		func.modifiers = CCodeModifiers.STATIC;
 
 		push_function (func);
@@ -1556,7 +1556,7 @@ public class Vala.GTypeModule : GErrorModule {
 		var function = new CCodeFunction ("%s_class_finalize".printf (cl.get_lower_case_cname (null)), "void");
 		function.modifiers = CCodeModifiers.STATIC;
 
-		function.add_parameter (new CCodeFormalParameter ("klass", cl.get_cname () + "Class *"));
+		function.add_parameter (new CCodeParameter ("klass", cl.get_cname () + "Class *"));
 
 		push_function (function);
 
@@ -1578,7 +1578,7 @@ public class Vala.GTypeModule : GErrorModule {
 		var function = new CCodeFunction ("%s_base_finalize".printf (cl.get_lower_case_cname (null)), "void");
 		function.modifiers = CCodeModifiers.STATIC;
 
-		function.add_parameter (new CCodeFormalParameter ("klass", cl.get_cname () + "Class *"));
+		function.add_parameter (new CCodeParameter ("klass", cl.get_cname () + "Class *"));
 
 		push_function (function);
 
@@ -1627,7 +1627,7 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 
 			var func = new CCodeFunction ("%s_finalize".printf (cl.get_lower_case_cname (null)));
-			func.add_parameter (new CCodeFormalParameter ("obj", fundamental_class.get_cname () + "*"));
+			func.add_parameter (new CCodeParameter ("obj", fundamental_class.get_cname () + "*"));
 			func.modifiers = CCodeModifiers.STATIC;
 
 			push_function (func);
@@ -1642,7 +1642,7 @@ public class Vala.GTypeModule : GErrorModule {
 				function.modifiers = CCodeModifiers.STATIC;
 			}
 
-			function.add_parameter (new CCodeFormalParameter ("self", cl.get_cname () + "*"));
+			function.add_parameter (new CCodeParameter ("self", cl.get_cname () + "*"));
 
 			push_function (function);
 		}
@@ -1921,14 +1921,14 @@ public class Vala.GTypeModule : GErrorModule {
 			bool returns_real_struct = prop.property_type.is_real_non_null_struct_type ();
 
 			var this_type = new ObjectType (t);
-			var cselfparam = new CCodeFormalParameter ("self", this_type.get_cname ());
+			var cselfparam = new CCodeParameter ("self", this_type.get_cname ());
 
 			if (prop.get_accessor != null) {
 				var vdeclarator = new CCodeFunctionDeclarator ("get_%s".printf (prop.name));
 				vdeclarator.add_parameter (cselfparam);
 				string creturn_type;
 				if (returns_real_struct) {
-					var cvalueparam = new CCodeFormalParameter ("value", prop.get_accessor.value_type.get_cname () + "*");
+					var cvalueparam = new CCodeParameter ("value", prop.get_accessor.value_type.get_cname () + "*");
 					vdeclarator.add_parameter (cvalueparam);
 					creturn_type = "void";
 				} else {
@@ -1938,7 +1938,7 @@ public class Vala.GTypeModule : GErrorModule {
 				var array_type = prop.property_type as ArrayType;
 				if (array_type != null) {
 					for (int dim = 1; dim <= array_type.rank; dim++) {
-						vdeclarator.add_parameter (new CCodeFormalParameter (get_array_length_cname ("result", dim), "int*"));
+						vdeclarator.add_parameter (new CCodeParameter (get_array_length_cname ("result", dim), "int*"));
 					}
 				}
 
@@ -1950,17 +1950,17 @@ public class Vala.GTypeModule : GErrorModule {
 				var vdeclarator = new CCodeFunctionDeclarator ("set_%s".printf (prop.name));
 				vdeclarator.add_parameter (cselfparam);
 				if (returns_real_struct) {
-					var cvalueparam = new CCodeFormalParameter ("value", prop.set_accessor.value_type.get_cname () + "*");
+					var cvalueparam = new CCodeParameter ("value", prop.set_accessor.value_type.get_cname () + "*");
 					vdeclarator.add_parameter (cvalueparam);
 				} else {
-					var cvalueparam = new CCodeFormalParameter ("value", prop.set_accessor.value_type.get_cname ());
+					var cvalueparam = new CCodeParameter ("value", prop.set_accessor.value_type.get_cname ());
 					vdeclarator.add_parameter (cvalueparam);
 				}
 
 				var array_type = prop.property_type as ArrayType;
 				if (array_type != null) {
 					for (int dim = 1; dim <= array_type.rank; dim++) {
-						vdeclarator.add_parameter (new CCodeFormalParameter (get_array_length_cname ("value", dim), "int"));
+						vdeclarator.add_parameter (new CCodeParameter (get_array_length_cname ("value", dim), "int"));
 					}
 				}
 
@@ -2018,7 +2018,7 @@ public class Vala.GTypeModule : GErrorModule {
 		push_context (new EmitContext (iface));
 
 		var base_init = new CCodeFunction ("%s_base_init".printf (iface.get_lower_case_cname (null)), "void");
-		base_init.add_parameter (new CCodeFormalParameter ("iface", "%sIface *".printf (iface.get_cname ())));
+		base_init.add_parameter (new CCodeParameter ("iface", "%sIface *".printf (iface.get_cname ())));
 		base_init.modifiers = CCodeModifiers.STATIC;
 
 		push_function (base_init);

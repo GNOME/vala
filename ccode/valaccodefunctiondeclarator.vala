@@ -31,7 +31,7 @@ public class Vala.CCodeFunctionDeclarator : CCodeDeclarator {
 	 */
 	public string name { get; set; }
 	
-	private List<CCodeFormalParameter> parameters = new ArrayList<CCodeFormalParameter> ();
+	private List<CCodeParameter> parameters = new ArrayList<CCodeParameter> ();
 	
 	public CCodeFunctionDeclarator (string name) {
 		this.name = name;
@@ -42,7 +42,7 @@ public class Vala.CCodeFunctionDeclarator : CCodeDeclarator {
 	 *
 	 * @param param a formal parameter
 	 */
-	public void add_parameter (CCodeFormalParameter param) {
+	public void add_parameter (CCodeParameter param) {
 		parameters.add (param);
 	}
 	
@@ -56,7 +56,7 @@ public class Vala.CCodeFunctionDeclarator : CCodeDeclarator {
 		writer.write_string (") (");
 		
 		bool first = true;
-		foreach (CCodeFormalParameter param in parameters) {
+		foreach (CCodeParameter param in parameters) {
 			if (!first) {
 				writer.write_string (", ");
 			} else {

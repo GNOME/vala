@@ -67,7 +67,7 @@ public class Vala.CreationMethod : Method {
 	}
 
 	public override void accept_children (CodeVisitor visitor) {
-		foreach (FormalParameter param in get_parameters()) {
+		foreach (Parameter param in get_parameters()) {
 			param.accept (visitor);
 		}
 
@@ -167,7 +167,7 @@ public class Vala.CreationMethod : Method {
 		}
 		analyzer.current_symbol = this;
 
-		foreach (FormalParameter param in get_parameters()) {
+		foreach (Parameter param in get_parameters()) {
 			param.check (analyzer);
 		}
 

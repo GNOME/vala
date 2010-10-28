@@ -145,7 +145,7 @@ public abstract class Vala.CodeVisitor {
 	 *
 	 * @param p a formal parameter
 	 */
-	public virtual void visit_formal_parameter (FormalParameter p) {
+	public virtual void visit_formal_parameter (Parameter p) {
 	}
 
 	/**

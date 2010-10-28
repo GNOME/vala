@@ -3183,12 +3183,12 @@ public class Vala.Parser : CodeVisitor {
 		}
 	}
 
-	FormalParameter parse_parameter () throws ParseError {
+	Parameter parse_parameter () throws ParseError {
 		var attrs = parse_attributes ();
 		var begin = get_location ();
 		if (accept (TokenType.ELLIPSIS)) {
 			// varargs
-			return new FormalParameter.with_ellipsis (get_src (begin));
+			return new Parameter.with_ellipsis (get_src (begin));
 		}
 		bool params_array = accept (TokenType.PARAMS);
 		var direction = ParameterDirection.IN;
@@ -3216,7 +3216,7 @@ public class Vala.Parser : CodeVisitor {
 
 		type = parse_inline_array_type (type);
 
-		var param = new FormalParameter (id, type, get_src (begin));
+		var param = new Parameter (id, type, get_src (begin));
 		set_attributes (param, attrs);
 		param.direction = direction;
 		param.params_array = params_array;

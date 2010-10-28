@@ -79,7 +79,7 @@ public class Vala.DBusClientModule : DBusModule {
 		var func = new CCodeFunction (method.get_cname ());
 		func.modifiers = CCodeModifiers.STATIC;
 
-		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
+		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
 
 		generate_cparameters (method, cfile, cparam_map, func);
 
@@ -150,9 +150,9 @@ public class Vala.DBusClientModule : DBusModule {
 
 			var cb_fun = new CCodeFunction ("_%s_cb".printf (reply_method.get_cname ()), "void");
 			cb_fun.modifiers = CCodeModifiers.STATIC;
-			cb_fun.add_parameter (new CCodeFormalParameter ("proxy", "DBusGProxy*"));
-			cb_fun.add_parameter (new CCodeFormalParameter ("call", "DBusGProxyCall*"));
-			cb_fun.add_parameter (new CCodeFormalParameter ("user_data", "void*"));
+			cb_fun.add_parameter (new CCodeParameter ("proxy", "DBusGProxy*"));
+			cb_fun.add_parameter (new CCodeParameter ("call", "DBusGProxyCall*"));
+			cb_fun.add_parameter (new CCodeParameter ("user_data", "void*"));
 			cb_fun.block = new CCodeBlock ();
 			var cerrdecl = new CCodeDeclaration ("GError*");
 			cerrdecl.add_declarator (new CCodeVariableDeclarator ("error", new CCodeConstant ("NULL")));
@@ -167,7 +167,7 @@ public class Vala.DBusClientModule : DBusModule {
 			}
 			int param_count = reply_method.get_parameters ().size;
 			int i = 0;
-			foreach (FormalParameter param in reply_method.get_parameters ()) {
+			foreach (Parameter param in reply_method.get_parameters ()) {
 				if ((++i) == param_count) {
 					if (!(param.variable_type is ErrorType)) {
 						Report.error (null, "DBus reply callbacks must end with GLib.Error argument");
@@ -239,7 +239,7 @@ public class Vala.DBusClientModule : DBusModule {
 			ccall.add_argument (new CCodeIdentifier ("error"));
 		}
 
-		foreach (FormalParameter param in method.get_parameters ()) {
+		foreach (Parameter param in method.get_parameters ()) {
 			if (param.variable_type is MethodType
 			    || param.variable_type is DelegateType) {
 				// callback parameter
@@ -360,7 +360,7 @@ public class Vala.DBusClientModule : DBusModule {
 
 		var out_marshalling_fragment = new CCodeFragment ();
 
-		foreach (FormalParameter param in method.get_parameters ()) {
+		foreach (Parameter param in method.get_parameters ()) {
 			if (param.variable_type is MethodType) {
 				// callback parameter
 				break;
@@ -642,7 +642,7 @@ public class Vala.DBusClientModule : DBusModule {
 		var func = new CCodeFunction (getter_cname, prop.property_type.get_cname ());
 		func.modifiers |= CCodeModifiers.STATIC | CCodeModifiers.INLINE;
 
-		func.add_parameter (new CCodeFormalParameter ("obj", prop.dynamic_type.get_cname ()));
+		func.add_parameter (new CCodeParameter ("obj", prop.dynamic_type.get_cname ()));
 
 		var block = new CCodeBlock ();
 		generate_dbus_property_getter_wrapper (prop, block);
@@ -671,8 +671,8 @@ public class Vala.DBusClientModule : DBusModule {
 		var func = new CCodeFunction (setter_cname, "void");
 		func.modifiers |= CCodeModifiers.STATIC | CCodeModifiers.INLINE;
 
-		func.add_parameter (new CCodeFormalParameter ("obj", prop.dynamic_type.get_cname ()));
-		func.add_parameter (new CCodeFormalParameter ("value", prop.property_type.get_cname ()));
+		func.add_parameter (new CCodeParameter ("obj", prop.dynamic_type.get_cname ()));
+		func.add_parameter (new CCodeParameter ("value", prop.property_type.get_cname ()));
 
 		var block = new CCodeBlock ();
 		generate_dbus_property_setter_wrapper (prop, block);
@@ -811,10 +811,10 @@ public class Vala.DBusClientModule : DBusModule {
 
 		string connect_wrapper_name = "_%sconnect".printf (get_dynamic_signal_cname (sig));
 		var func = new CCodeFunction (connect_wrapper_name, "void");
-		func.add_parameter (new CCodeFormalParameter ("obj", "gpointer"));
-		func.add_parameter (new CCodeFormalParameter ("signal_name", "const char *"));
-		func.add_parameter (new CCodeFormalParameter ("handler", "GCallback"));
-		func.add_parameter (new CCodeFormalParameter ("data", "gpointer"));
+		func.add_parameter (new CCodeParameter ("obj", "gpointer"));
+		func.add_parameter (new CCodeParameter ("signal_name", "const char *"));
+		func.add_parameter (new CCodeParameter ("handler", "GCallback"));
+		func.add_parameter (new CCodeParameter ("data", "gpointer"));
 		var block = new CCodeBlock ();
 		generate_dbus_connect_wrapper (sig, block);
 
@@ -834,10 +834,10 @@ public class Vala.DBusClientModule : DBusModule {
 
 		string disconnect_wrapper_name = "_%sdisconnect".printf (get_dynamic_signal_cname (sig));
 		var func = new CCodeFunction (disconnect_wrapper_name, "void");
-		func.add_parameter (new CCodeFormalParameter ("obj", "gpointer"));
-		func.add_parameter (new CCodeFormalParameter ("signal_name", "const char *"));
-		func.add_parameter (new CCodeFormalParameter ("handler", "GCallback"));
-		func.add_parameter (new CCodeFormalParameter ("data", "gpointer"));
+		func.add_parameter (new CCodeParameter ("obj", "gpointer"));
+		func.add_parameter (new CCodeParameter ("signal_name", "const char *"));
+		func.add_parameter (new CCodeParameter ("handler", "GCallback"));
+		func.add_parameter (new CCodeParameter ("data", "gpointer"));
 		var block = new CCodeBlock ();
 		generate_dbus_disconnect_wrapper (sig, block);
 
@@ -866,7 +866,7 @@ public class Vala.DBusClientModule : DBusModule {
 		add_call.add_argument (new CCodeConstant ("\"%s\"".printf (get_dynamic_dbus_name (sig.name))));
 
 		bool first = true;
-		foreach (FormalParameter param in m.get_parameters ()) {
+		foreach (Parameter param in m.get_parameters ()) {
 			if (first) {
 				// skip sender parameter
 				first = false;
@@ -943,7 +943,7 @@ public class Vala.DBusClientModule : DBusModule {
 		string lower_cname = main_iface.get_lower_case_cprefix () + "dbus_proxy";
 
 		var proxy_iface_init = new CCodeFunction (lower_cname + "_" + iface.get_lower_case_cprefix () + "_interface_init", "void");
-		proxy_iface_init.add_parameter (new CCodeFormalParameter ("iface", iface.get_cname () + "Iface*"));
+		proxy_iface_init.add_parameter (new CCodeParameter ("iface", iface.get_cname () + "Iface*"));
 
 		var iface_block = new CCodeBlock ();
 
@@ -1047,9 +1047,9 @@ public class Vala.DBusClientModule : DBusModule {
 
 		// declare proxy_new function
 		var proxy_new = new CCodeFunction (lower_cname + "_new", iface.get_cname () + "*");
-		proxy_new.add_parameter (new CCodeFormalParameter ("connection", "DBusGConnection*"));
-		proxy_new.add_parameter (new CCodeFormalParameter ("name", "const char*"));
-		proxy_new.add_parameter (new CCodeFormalParameter ("path", "const char*"));
+		proxy_new.add_parameter (new CCodeParameter ("connection", "DBusGConnection*"));
+		proxy_new.add_parameter (new CCodeParameter ("name", "const char*"));
+		proxy_new.add_parameter (new CCodeParameter ("path", "const char*"));
 
 		decl_space.add_function_declaration (proxy_new);
 	}
@@ -1095,9 +1095,9 @@ public class Vala.DBusClientModule : DBusModule {
 
 		// generate proxy_new function
 		var proxy_new = new CCodeFunction (lower_cname + "_new", iface.get_cname () + "*");
-		proxy_new.add_parameter (new CCodeFormalParameter ("connection", "DBusGConnection*"));
-		proxy_new.add_parameter (new CCodeFormalParameter ("name", "const char*"));
-		proxy_new.add_parameter (new CCodeFormalParameter ("path", "const char*"));
+		proxy_new.add_parameter (new CCodeParameter ("connection", "DBusGConnection*"));
+		proxy_new.add_parameter (new CCodeParameter ("name", "const char*"));
+		proxy_new.add_parameter (new CCodeParameter ("path", "const char*"));
 
 		var new_block = new CCodeBlock ();
 
@@ -1124,9 +1124,9 @@ public class Vala.DBusClientModule : DBusModule {
 
 		// dbus proxy construct
 		var proxy_construct = new CCodeFunction (lower_cname + "_construct", "GObject*");
-		proxy_construct.add_parameter (new CCodeFormalParameter ("gtype", "GType"));
-		proxy_construct.add_parameter (new CCodeFormalParameter ("n_properties", "guint"));
-		proxy_construct.add_parameter (new CCodeFormalParameter ("properties", "GObjectConstructParam*"));
+		proxy_construct.add_parameter (new CCodeParameter ("gtype", "GType"));
+		proxy_construct.add_parameter (new CCodeParameter ("n_properties", "guint"));
+		proxy_construct.add_parameter (new CCodeParameter ("properties", "GObjectConstructParam*"));
 		proxy_construct.modifiers = CCodeModifiers.STATIC;
 		proxy_construct.block = new CCodeBlock ();
 
@@ -1211,7 +1211,7 @@ public class Vala.DBusClientModule : DBusModule {
 
 		// dbus proxy dispose
 		var proxy_dispose = new CCodeFunction (lower_cname + "_dispose", "void");
-		proxy_dispose.add_parameter (new CCodeFormalParameter ("self", "GObject*"));
+		proxy_dispose.add_parameter (new CCodeParameter ("self", "GObject*"));
 		proxy_dispose.modifiers = CCodeModifiers.STATIC;
 		proxy_dispose.block = new CCodeBlock ();
 
@@ -1251,7 +1251,7 @@ public class Vala.DBusClientModule : DBusModule {
 		cfile.add_function (proxy_dispose);
 
 		var proxy_class_init = new CCodeFunction (lower_cname + "_class_init", "void");
-		proxy_class_init.add_parameter (new CCodeFormalParameter ("klass", cname + "Class*"));
+		proxy_class_init.add_parameter (new CCodeParameter ("klass", cname + "Class*"));
 		proxy_class_init.modifiers = CCodeModifiers.STATIC;
 		proxy_class_init.block = new CCodeBlock ();
 		var gobject_class = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
@@ -1270,7 +1270,7 @@ public class Vala.DBusClientModule : DBusModule {
 		cfile.add_type_member_declaration (prop_enum);
 
 		var proxy_instance_init = new CCodeFunction (lower_cname + "_init", "void");
-		proxy_instance_init.add_parameter (new CCodeFormalParameter ("self", cname + "*"));
+		proxy_instance_init.add_parameter (new CCodeParameter ("self", cname + "*"));
 		proxy_instance_init.modifiers = CCodeModifiers.STATIC;
 		proxy_instance_init.block = new CCodeBlock ();
 		cfile.add_function (proxy_instance_init);
@@ -1281,20 +1281,20 @@ public class Vala.DBusClientModule : DBusModule {
 		// TODO add actual implementation
 		var get_prop = new CCodeFunction ("_vala_%s_get_property".printf (lower_cname), "void");
 		get_prop.modifiers = CCodeModifiers.STATIC;
-		get_prop.add_parameter (new CCodeFormalParameter ("object", "GObject *"));
-		get_prop.add_parameter (new CCodeFormalParameter ("property_id", "guint"));
-		get_prop.add_parameter (new CCodeFormalParameter ("value", "GValue *"));
-		get_prop.add_parameter (new CCodeFormalParameter ("pspec", "GParamSpec *"));
+		get_prop.add_parameter (new CCodeParameter ("object", "GObject *"));
+		get_prop.add_parameter (new CCodeParameter ("property_id", "guint"));
+		get_prop.add_parameter (new CCodeParameter ("value", "GValue *"));
+		get_prop.add_parameter (new CCodeParameter ("pspec", "GParamSpec *"));
 		cfile.add_function_declaration (get_prop);
 		get_prop.block = new CCodeBlock ();
 		cfile.add_function (get_prop);
 
 		var set_prop = new CCodeFunction ("_vala_%s_set_property".printf (lower_cname), "void");
 		set_prop.modifiers = CCodeModifiers.STATIC;
-		set_prop.add_parameter (new CCodeFormalParameter ("object", "GObject *"));
-		set_prop.add_parameter (new CCodeFormalParameter ("property_id", "guint"));
-		set_prop.add_parameter (new CCodeFormalParameter ("value", "const GValue *"));
-		set_prop.add_parameter (new CCodeFormalParameter ("pspec", "GParamSpec *"));
+		set_prop.add_parameter (new CCodeParameter ("object", "GObject *"));
+		set_prop.add_parameter (new CCodeParameter ("property_id", "guint"));
+		set_prop.add_parameter (new CCodeParameter ("value", "const GValue *"));
+		set_prop.add_parameter (new CCodeParameter ("pspec", "GParamSpec *"));
 		cfile.add_function_declaration (set_prop);
 		set_prop.block = new CCodeBlock ();
 		cfile.add_function (set_prop);
@@ -1320,9 +1320,9 @@ public class Vala.DBusClientModule : DBusModule {
 		var function = new CCodeFunction (get_all_func, "GHashTable*");
 		function.modifiers = CCodeModifiers.STATIC;
 
-		function.add_parameter (new CCodeFormalParameter ("self", "DBusGProxy*"));
-		function.add_parameter (new CCodeFormalParameter ("interface_name", "const gchar*"));
-		function.add_parameter (new CCodeFormalParameter ("error", "GError**"));
+		function.add_parameter (new CCodeParameter ("self", "DBusGProxy*"));
+		function.add_parameter (new CCodeParameter ("interface_name", "const gchar*"));
+		function.add_parameter (new CCodeParameter ("error", "GError**"));
 
 		var block = new CCodeBlock ();
 		var prefragment = new CCodeFragment ();
@@ -1467,9 +1467,9 @@ public class Vala.DBusClientModule : DBusModule {
 		string lower_cname = iface.get_lower_case_cprefix () + "dbus_proxy";
 
 		var proxy_filter = new CCodeFunction (lower_cname + "_filter", "DBusHandlerResult");
-		proxy_filter.add_parameter (new CCodeFormalParameter ("connection", "DBusConnection*"));
-		proxy_filter.add_parameter (new CCodeFormalParameter ("message", "DBusMessage*"));
-		proxy_filter.add_parameter (new CCodeFormalParameter ("user_data", "void*"));
+		proxy_filter.add_parameter (new CCodeParameter ("connection", "DBusConnection*"));
+		proxy_filter.add_parameter (new CCodeParameter ("message", "DBusMessage*"));
+		proxy_filter.add_parameter (new CCodeParameter ("user_data", "void*"));
 
 		var filter_block = new CCodeBlock ();
 
@@ -1503,9 +1503,9 @@ public class Vala.DBusClientModule : DBusModule {
 		var function = new CCodeFunction (wrapper_name, "void");
 		function.modifiers = CCodeModifiers.STATIC;
 
-		function.add_parameter (new CCodeFormalParameter ("self", sym.get_cname () + "*"));
-		function.add_parameter (new CCodeFormalParameter ("connection", "DBusConnection*"));
-		function.add_parameter (new CCodeFormalParameter ("message", "DBusMessage*"));
+		function.add_parameter (new CCodeParameter ("self", sym.get_cname () + "*"));
+		function.add_parameter (new CCodeParameter ("connection", "DBusConnection*"));
+		function.add_parameter (new CCodeParameter ("message", "DBusMessage*"));
 
 		var block = new CCodeBlock ();
 		var prefragment = new CCodeFragment ();
@@ -1537,7 +1537,7 @@ public class Vala.DBusClientModule : DBusModule {
 		// expected type signature for input parameters
 		string type_signature = "";
 
-		foreach (FormalParameter param in sig.get_parameters ()) {
+		foreach (Parameter param in sig.get_parameters ()) {
 			var owned_type = param.variable_type.copy ();
 			owned_type.value_owned = true;
 
@@ -1680,7 +1680,7 @@ public class Vala.DBusClientModule : DBusModule {
 			postfragment.append (new CCodeExpressionStatement (iter_call));
 		}
 
-		foreach (FormalParameter param in m.get_parameters ()) {
+		foreach (Parameter param in m.get_parameters ()) {
 			if (param.direction == ParameterDirection.IN) {
 				if (param.variable_type.data_type != null
 				    && param.variable_type.data_type.get_full_name () == "DBus.BusName") {
@@ -1824,7 +1824,7 @@ public class Vala.DBusClientModule : DBusModule {
 		var function = new CCodeFunction (proxy_name);
 		function.modifiers = CCodeModifiers.STATIC;
 
-		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
+		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
 
 		generate_cparameters (m, cfile, cparam_map, function);
 
@@ -1932,7 +1932,7 @@ public class Vala.DBusClientModule : DBusModule {
 		var function = new CCodeFunction (proxy_name);
 		function.modifiers = CCodeModifiers.STATIC;
 
-		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
+		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
 
 		generate_cparameters (m, cfile, cparam_map, function);
 
@@ -2114,10 +2114,10 @@ public class Vala.DBusClientModule : DBusModule {
 		var function = new CCodeFunction (proxy_name, "void");
 		function.modifiers = CCodeModifiers.STATIC;
 
-		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
+		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
 
-		cparam_map.set (get_param_pos (-1), new CCodeFormalParameter ("_callback_", "GAsyncReadyCallback"));
-		cparam_map.set (get_param_pos (-0.9), new CCodeFormalParameter ("_user_data_", "gpointer"));
+		cparam_map.set (get_param_pos (-1), new CCodeParameter ("_callback_", "GAsyncReadyCallback"));
+		cparam_map.set (get_param_pos (-0.9), new CCodeParameter ("_user_data_", "gpointer"));
 
 		generate_cparameters (m, cfile, cparam_map, function, null, null, null, 1);
 
@@ -2199,8 +2199,8 @@ public class Vala.DBusClientModule : DBusModule {
 		function = new CCodeFunction ("%sdbus_proxy_%s_ready".printf (iface.get_lower_case_cprefix (), m.name), "void");
 		function.modifiers = CCodeModifiers.STATIC;
 
-		function.add_parameter (new CCodeFormalParameter ("pending", "DBusPendingCall*"));
-		function.add_parameter (new CCodeFormalParameter ("user_data", "void*"));
+		function.add_parameter (new CCodeParameter ("pending", "DBusPendingCall*"));
+		function.add_parameter (new CCodeParameter ("user_data", "void*"));
 
 		block = new CCodeBlock ();
 
@@ -2264,7 +2264,7 @@ public class Vala.DBusClientModule : DBusModule {
 		// expected type signature for output parameters
 		string type_signature = "";
 
-		foreach (FormalParameter param in m.get_parameters ()) {
+		foreach (Parameter param in m.get_parameters ()) {
 			if (param.direction == ParameterDirection.OUT) {
 				type_signature += get_type_signature (param.variable_type);
 			}
@@ -2313,9 +2313,9 @@ public class Vala.DBusClientModule : DBusModule {
 		var function = new CCodeFunction (proxy_name);
 		function.modifiers = CCodeModifiers.STATIC;
 
-		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
+		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
 
-		cparam_map.set (get_param_pos (0.1), new CCodeFormalParameter ("_res_", "GAsyncResult*"));
+		cparam_map.set (get_param_pos (0.1), new CCodeParameter ("_res_", "GAsyncResult*"));
 
 		generate_cparameters (m, cfile, cparam_map, function, null, null, null, 2);
 
@@ -2505,14 +2505,14 @@ public class Vala.DBusClientModule : DBusModule {
 		var function = new CCodeFunction (proxy_name);
 		function.modifiers = CCodeModifiers.STATIC;
 
-		function.add_parameter (new CCodeFormalParameter ("self", "%s*".printf (iface.get_cname ())));
+		function.add_parameter (new CCodeParameter ("self", "%s*".printf (iface.get_cname ())));
 
 		if (prop.property_type.is_real_non_null_struct_type ()) {
-			function.add_parameter (new CCodeFormalParameter ("result", "%s*".printf (prop.get_accessor.value_type.get_cname ())));
+			function.add_parameter (new CCodeParameter ("result", "%s*".printf (prop.get_accessor.value_type.get_cname ())));
 		} else {
 			if (array_type != null) {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					function.add_parameter (new CCodeFormalParameter ("result_length%d".printf (dim), "int*"));
+					function.add_parameter (new CCodeParameter ("result_length%d".printf (dim), "int*"));
 				}
 			}
 
@@ -2679,16 +2679,16 @@ public class Vala.DBusClientModule : DBusModule {
 		var function = new CCodeFunction (proxy_name);
 		function.modifiers = CCodeModifiers.STATIC;
 
-		function.add_parameter (new CCodeFormalParameter ("self", "%s*".printf (iface.get_cname ())));
+		function.add_parameter (new CCodeParameter ("self", "%s*".printf (iface.get_cname ())));
 
 		if (prop.property_type.is_real_non_null_struct_type ()) {
-			function.add_parameter (new CCodeFormalParameter ("value", "%s*".printf (prop.set_accessor.value_type.get_cname ())));
+			function.add_parameter (new CCodeParameter ("value", "%s*".printf (prop.set_accessor.value_type.get_cname ())));
 		} else {
-			function.add_parameter (new CCodeFormalParameter ("value", prop.set_accessor.value_type.get_cname ()));
+			function.add_parameter (new CCodeParameter ("value", prop.set_accessor.value_type.get_cname ()));
 
 			if (array_type != null) {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					function.add_parameter (new CCodeFormalParameter ("value_length%d".printf (dim), "int"));
+					function.add_parameter (new CCodeParameter ("value_length%d".printf (dim), "int"));
 				}
 			}
 		}

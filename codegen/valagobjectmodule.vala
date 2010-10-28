@@ -176,10 +176,10 @@ public class Vala.GObjectModule : GTypeModule {
 	private void add_get_property_function (Class cl) {
 		var get_prop = new CCodeFunction ("_vala_%s_get_property".printf (cl.get_lower_case_cname (null)), "void");
 		get_prop.modifiers = CCodeModifiers.STATIC;
-		get_prop.add_parameter (new CCodeFormalParameter ("object", "GObject *"));
-		get_prop.add_parameter (new CCodeFormalParameter ("property_id", "guint"));
-		get_prop.add_parameter (new CCodeFormalParameter ("value", "GValue *"));
-		get_prop.add_parameter (new CCodeFormalParameter ("pspec", "GParamSpec *"));
+		get_prop.add_parameter (new CCodeParameter ("object", "GObject *"));
+		get_prop.add_parameter (new CCodeParameter ("property_id", "guint"));
+		get_prop.add_parameter (new CCodeParameter ("value", "GValue *"));
+		get_prop.add_parameter (new CCodeParameter ("pspec", "GParamSpec *"));
 		
 		var block = new CCodeBlock ();
 		
@@ -284,10 +284,10 @@ public class Vala.GObjectModule : GTypeModule {
 	private void add_set_property_function (Class cl) {
 		var set_prop = new CCodeFunction ("_vala_%s_set_property".printf (cl.get_lower_case_cname (null)), "void");
 		set_prop.modifiers = CCodeModifiers.STATIC;
-		set_prop.add_parameter (new CCodeFormalParameter ("object", "GObject *"));
-		set_prop.add_parameter (new CCodeFormalParameter ("property_id", "guint"));
-		set_prop.add_parameter (new CCodeFormalParameter ("value", "const GValue *"));
-		set_prop.add_parameter (new CCodeFormalParameter ("pspec", "GParamSpec *"));
+		set_prop.add_parameter (new CCodeParameter ("object", "GObject *"));
+		set_prop.add_parameter (new CCodeParameter ("property_id", "guint"));
+		set_prop.add_parameter (new CCodeParameter ("value", "const GValue *"));
+		set_prop.add_parameter (new CCodeParameter ("pspec", "GParamSpec *"));
 		
 		var block = new CCodeBlock ();
 		
@@ -432,9 +432,9 @@ public class Vala.GObjectModule : GTypeModule {
 			var function = new CCodeFunction ("%s_constructor".printf (cl.get_lower_case_cname (null)), "GObject *");
 			function.modifiers = CCodeModifiers.STATIC;
 		
-			function.add_parameter (new CCodeFormalParameter ("type", "GType"));
-			function.add_parameter (new CCodeFormalParameter ("n_construct_properties", "guint"));
-			function.add_parameter (new CCodeFormalParameter ("construct_properties", "GObjectConstructParam *"));
+			function.add_parameter (new CCodeParameter ("type", "GType"));
+			function.add_parameter (new CCodeParameter ("n_construct_properties", "guint"));
+			function.add_parameter (new CCodeParameter ("construct_properties", "GObjectConstructParam *"));
 		
 			cfile.add_function_declaration (function);
 
@@ -537,7 +537,7 @@ public class Vala.GObjectModule : GTypeModule {
 		var func = new CCodeFunction (getter_cname, prop.property_type.get_cname ());
 		func.modifiers |= CCodeModifiers.STATIC | CCodeModifiers.INLINE;
 
-		func.add_parameter (new CCodeFormalParameter ("obj", prop.dynamic_type.get_cname ()));
+		func.add_parameter (new CCodeParameter ("obj", prop.dynamic_type.get_cname ()));
 
 		var block = new CCodeBlock ();
 		generate_gobject_property_getter_wrapper (prop, block);
@@ -562,8 +562,8 @@ public class Vala.GObjectModule : GTypeModule {
 		var func = new CCodeFunction (setter_cname, "void");
 		func.modifiers |= CCodeModifiers.STATIC | CCodeModifiers.INLINE;
 
-		func.add_parameter (new CCodeFormalParameter ("obj", prop.dynamic_type.get_cname ()));
-		func.add_parameter (new CCodeFormalParameter ("value", prop.property_type.get_cname ()));
+		func.add_parameter (new CCodeParameter ("obj", prop.dynamic_type.get_cname ()));
+		func.add_parameter (new CCodeParameter ("value", prop.property_type.get_cname ()));
 
 		var block = new CCodeBlock ();
 		generate_gobject_property_setter_wrapper (prop, block);
@@ -615,10 +615,10 @@ public class Vala.GObjectModule : GTypeModule {
 
 		string connect_wrapper_name = "_%sconnect".printf (get_dynamic_signal_cname (sig));
 		var func = new CCodeFunction (connect_wrapper_name, "void");
-		func.add_parameter (new CCodeFormalParameter ("obj", "gpointer"));
-		func.add_parameter (new CCodeFormalParameter ("signal_name", "const char *"));
-		func.add_parameter (new CCodeFormalParameter ("handler", "GCallback"));
-		func.add_parameter (new CCodeFormalParameter ("data", "gpointer"));
+		func.add_parameter (new CCodeParameter ("obj", "gpointer"));
+		func.add_parameter (new CCodeParameter ("signal_name", "const char *"));
+		func.add_parameter (new CCodeParameter ("handler", "GCallback"));
+		func.add_parameter (new CCodeParameter ("data", "gpointer"));
 		var block = new CCodeBlock ();
 		generate_gobject_connect_wrapper (sig, block, false);
 
@@ -639,10 +639,10 @@ public class Vala.GObjectModule : GTypeModule {
 
 		string connect_wrapper_name = "_%sconnect_after".printf (get_dynamic_signal_cname (sig));
 		var func = new CCodeFunction (connect_wrapper_name, "void");
-		func.add_parameter (new CCodeFormalParameter ("obj", "gpointer"));
-		func.add_parameter (new CCodeFormalParameter ("signal_name", "const char *"));
-		func.add_parameter (new CCodeFormalParameter ("handler", "GCallback"));
-		func.add_parameter (new CCodeFormalParameter ("data", "gpointer"));
+		func.add_parameter (new CCodeParameter ("obj", "gpointer"));
+		func.add_parameter (new CCodeParameter ("signal_name", "const char *"));
+		func.add_parameter (new CCodeParameter ("handler", "GCallback"));
+		func.add_parameter (new CCodeParameter ("data", "gpointer"));
 		var block = new CCodeBlock ();
 		generate_gobject_connect_wrapper (sig, block, true);
 

@@ -126,7 +126,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		return "%s_length%d".printf (array_cname, dim);
 	}
 
-	public override string get_parameter_array_length_cname (FormalParameter param, int dim) {
+	public override string get_parameter_array_length_cname (Parameter param, int dim) {
 		if (param.has_array_length_cname) {
 			return param.get_array_length_cname ();
 		} else {
@@ -257,8 +257,8 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		var fun = new CCodeFunction (cname, "void");
 		fun.modifiers = CCodeModifiers.STATIC;
-		fun.add_parameter (new CCodeFormalParameter ("array", "%s*".printf (st.get_cname ())));
-		fun.add_parameter (new CCodeFormalParameter ("array_length", "gint"));
+		fun.add_parameter (new CCodeParameter ("array", "%s*".printf (st.get_cname ())));
+		fun.add_parameter (new CCodeParameter ("array_length", "gint"));
 
 		push_function (fun);
 
@@ -306,9 +306,9 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		var fun = new CCodeFunction ("_vala_array_destroy", "void");
 		fun.modifiers = CCodeModifiers.STATIC;
-		fun.add_parameter (new CCodeFormalParameter ("array", "gpointer"));
-		fun.add_parameter (new CCodeFormalParameter ("array_length", "gint"));
-		fun.add_parameter (new CCodeFormalParameter ("destroy_func", "GDestroyNotify"));
+		fun.add_parameter (new CCodeParameter ("array", "gpointer"));
+		fun.add_parameter (new CCodeParameter ("array_length", "gint"));
+		fun.add_parameter (new CCodeParameter ("destroy_func", "GDestroyNotify"));
 
 		push_function (fun);
 
@@ -330,9 +330,9 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		fun = new CCodeFunction ("_vala_array_free", "void");
 		fun.modifiers = CCodeModifiers.STATIC;
-		fun.add_parameter (new CCodeFormalParameter ("array", "gpointer"));
-		fun.add_parameter (new CCodeFormalParameter ("array_length", "gint"));
-		fun.add_parameter (new CCodeFormalParameter ("destroy_func", "GDestroyNotify"));
+		fun.add_parameter (new CCodeParameter ("array", "gpointer"));
+		fun.add_parameter (new CCodeParameter ("array_length", "gint"));
+		fun.add_parameter (new CCodeParameter ("destroy_func", "GDestroyNotify"));
 
 		push_function (fun);
 
@@ -360,11 +360,11 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		// FIXME will leak memory if that's not the case
 		var fun = new CCodeFunction ("_vala_array_move", "void");
 		fun.modifiers = CCodeModifiers.STATIC;
-		fun.add_parameter (new CCodeFormalParameter ("array", "gpointer"));
-		fun.add_parameter (new CCodeFormalParameter ("element_size", "gsize"));
-		fun.add_parameter (new CCodeFormalParameter ("src", "gint"));
-		fun.add_parameter (new CCodeFormalParameter ("dest", "gint"));
-		fun.add_parameter (new CCodeFormalParameter ("length", "gint"));
+		fun.add_parameter (new CCodeParameter ("array", "gpointer"));
+		fun.add_parameter (new CCodeParameter ("element_size", "gsize"));
+		fun.add_parameter (new CCodeParameter ("src", "gint"));
+		fun.add_parameter (new CCodeParameter ("dest", "gint"));
+		fun.add_parameter (new CCodeParameter ("length", "gint"));
 
 		push_function (fun);
 
@@ -410,7 +410,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 	public override void append_vala_array_length () {
 		var fun = new CCodeFunction ("_vala_array_length", "gint");
 		fun.modifiers = CCodeModifiers.STATIC;
-		fun.add_parameter (new CCodeFormalParameter ("array", "gpointer"));
+		fun.add_parameter (new CCodeParameter ("array", "gpointer"));
 
 		push_function (fun);
 
@@ -514,13 +514,13 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var function = new CCodeFunction (dup_func, array_type.get_cname ());
 		function.modifiers = CCodeModifiers.STATIC;
 
-		function.add_parameter (new CCodeFormalParameter ("self", array_type.get_cname ()));
+		function.add_parameter (new CCodeParameter ("self", array_type.get_cname ()));
 		// total length over all dimensions
-		function.add_parameter (new CCodeFormalParameter ("length", "int"));
+		function.add_parameter (new CCodeParameter ("length", "int"));
 		if (array_type.element_type is GenericType) {
 			// dup function array elements
 			string func_name = "%s_dup_func".printf (array_type.element_type.type_parameter.name.down ());
-			function.add_parameter (new CCodeFormalParameter (func_name, "GBoxedCopyFunc"));
+			function.add_parameter (new CCodeParameter (func_name, "GBoxedCopyFunc"));
 		}
 
 		// definition
@@ -587,8 +587,8 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var function = new CCodeFunction (dup_func, "void");
 		function.modifiers = CCodeModifiers.STATIC;
 
-		function.add_parameter (new CCodeFormalParameter ("self", array_type.get_cname () + "*"));
-		function.add_parameter (new CCodeFormalParameter ("dest", array_type.get_cname () + "*"));
+		function.add_parameter (new CCodeParameter ("self", array_type.get_cname () + "*"));
+		function.add_parameter (new CCodeParameter ("dest", array_type.get_cname () + "*"));
 
 		// definition
 
@@ -639,9 +639,9 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var function = new CCodeFunction (add_func, "void");
 		function.modifiers = CCodeModifiers.STATIC;
 
-		function.add_parameter (new CCodeFormalParameter ("array", array_type.get_cname () + "*"));
-		function.add_parameter (new CCodeFormalParameter ("length", "int*"));
-		function.add_parameter (new CCodeFormalParameter ("size", "int*"));
+		function.add_parameter (new CCodeParameter ("array", array_type.get_cname () + "*"));
+		function.add_parameter (new CCodeParameter ("length", "int*"));
+		function.add_parameter (new CCodeParameter ("size", "int*"));
 
 		push_function (function);
 
@@ -656,7 +656,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 				value = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, value);
 			}
 		}
-		function.add_parameter (new CCodeFormalParameter ("value", typename));
+		function.add_parameter (new CCodeParameter ("value", typename));
 
 		var array = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("array"));
 		var length = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("length"));
@@ -728,7 +728,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			return;
 		}
 
-		var value_param = new FormalParameter ("value", element.target_type);
+		var value_param = new Parameter ("value", element.target_type);
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (generate_array_add_wrapper (array_type)));
 		ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_cvalue (array)));
@@ -739,7 +739,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		set_cvalue (assignment, ccall);
 	}
 
-	public override CCodeFormalParameter generate_parameter (FormalParameter param, CCodeFile decl_space, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
+	public override CCodeParameter generate_parameter (Parameter param, CCodeFile decl_space, Map<int,CCodeParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
 		if (!(param.variable_type is ArrayType)) {
 			return base.generate_parameter (param, decl_space, cparam_map, carg_map);
 		}
@@ -750,7 +750,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			ctypename += "*";
 		}
 
-		var main_cparam = new CCodeFormalParameter (get_variable_cname (param.name), ctypename);
+		var main_cparam = new CCodeParameter (get_variable_cname (param.name), ctypename);
 
 		var array_type = (ArrayType) param.variable_type;
 
@@ -771,7 +771,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			}
 			
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				var cparam = new CCodeFormalParameter (get_parameter_array_length_cname (param, dim), length_ctype);
+				var cparam = new CCodeParameter (get_parameter_array_length_cname (param, dim), length_ctype);
 				cparam_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), cparam);
 				if (carg_map != null) {
 					carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), get_variable_cexpression (cparam.name));

@@ -157,7 +157,7 @@ public class Vala.Method : Symbol {
 	/**
 	 * Specifies the generated `this` parameter for instance methods.
 	 */
-	public FormalParameter this_parameter { get; set; }
+	public Parameter this_parameter { get; set; }
 
 	/**
 	 * Specifies the generated `result` variable for postconditions.
@@ -235,7 +235,7 @@ public class Vala.Method : Symbol {
 
 	public int yield_count { get; set; }
 
-	private List<FormalParameter> parameters = new ArrayList<FormalParameter> ();
+	private List<Parameter> parameters = new ArrayList<Parameter> ();
 	private string cname;
 	private string finish_name;
 	private string _vfunc_name;
@@ -278,7 +278,7 @@ public class Vala.Method : Symbol {
 	 *
 	 * @param param a formal parameter
 	 */
-	public void add_parameter (FormalParameter param) {
+	public void add_parameter (Parameter param) {
 		// default C parameter position
 		param.cparameter_position = parameters.size + 1;
 		param.carray_length_parameter_position = param.cparameter_position + 0.1;
@@ -291,7 +291,7 @@ public class Vala.Method : Symbol {
 		}
 	}
 	
-	public List<FormalParameter> get_parameters () {
+	public List<Parameter> get_parameters () {
 		return parameters;
 	}
 
@@ -299,7 +299,7 @@ public class Vala.Method : Symbol {
 	 * Remove all parameters from this method.
 	 */
 	public void clear_parameters () {
-		foreach (FormalParameter param in parameters) {
+		foreach (Parameter param in parameters) {
 			if (!param.ellipsis) {
 				scope.remove (param.name);
 			}
@@ -320,7 +320,7 @@ public class Vala.Method : Symbol {
 			return_type.accept (visitor);
 		}
 
-		foreach (FormalParameter param in parameters) {
+		foreach (Parameter param in parameters) {
 			param.accept (visitor);
 		}
 
@@ -547,9 +547,9 @@ public class Vala.Method : Symbol {
 			return false;
 		}
 		
-		Iterator<FormalParameter> method_params_it = parameters.iterator ();
+		Iterator<Parameter> method_params_it = parameters.iterator ();
 		int param_index = 1;
-		foreach (FormalParameter base_param in base_method.parameters) {
+		foreach (Parameter base_param in base_method.parameters) {
 			/* this method may not expect less arguments */
 			if (!method_params_it.next ()) {
 				invalid_match = "too few parameters";
@@ -877,7 +877,7 @@ public class Vala.Method : Symbol {
 			Report.error (parameters[0].source_reference, "Named parameter required before `...'");
 		}
 
-		foreach (FormalParameter param in parameters) {
+		foreach (Parameter param in parameters) {
 			param.check (analyzer);
 			if (coroutine && param.direction == ParameterDirection.REF) {
 				error = true;
@@ -1045,7 +1045,7 @@ public class Vala.Method : Symbol {
 			return false;
 		}
 		
-		Iterator<FormalParameter> params_it = params.iterator ();
+		Iterator<Parameter> params_it = params.iterator ();
 		params_it.next ();
 		var param = params_it.get ();
 
@@ -1097,12 +1097,12 @@ public class Vala.Method : Symbol {
 		return callback_method;
 	}
 
-	public List<FormalParameter> get_async_begin_parameters () {
+	public List<Parameter> get_async_begin_parameters () {
 		assert (this.coroutine);
 
 		var glib_ns = CodeContext.get ().root.scope.lookup ("GLib");
 
-		var params = new ArrayList<FormalParameter> ();
+		var params = new ArrayList<Parameter> ();
 		foreach (var param in parameters) {
 			if (param.direction == ParameterDirection.IN) {
 				params.add (param);
@@ -1113,7 +1113,7 @@ public class Vala.Method : Symbol {
 		callback_type.nullable = true;
 		callback_type.is_called_once = true;
 
-		var callback_param = new FormalParameter ("_callback_", callback_type);
+		var callback_param = new Parameter ("_callback_", callback_type);
 		callback_param.initializer = new NullLiteral (source_reference);
 		callback_param.initializer.target_type = callback_type.copy ();
 		callback_param.cparameter_position = -1;
@@ -1124,15 +1124,15 @@ public class Vala.Method : Symbol {
 		return params;
 	}
 
-	public List<FormalParameter> get_async_end_parameters () {
+	public List<Parameter> get_async_end_parameters () {
 		assert (this.coroutine);
 
-		var params = new ArrayList<FormalParameter> ();
+		var params = new ArrayList<Parameter> ();
 
 		var glib_ns = CodeContext.get ().root.scope.lookup ("GLib");
 		var result_type = new ObjectType ((ObjectTypeSymbol) glib_ns.scope.lookup ("AsyncResult"));
 
-		var result_param = new FormalParameter ("_res_", result_type);
+		var result_param = new Parameter ("_res_", result_type);
 		result_param.cparameter_position = 0.1;
 		params.add (result_param);
 

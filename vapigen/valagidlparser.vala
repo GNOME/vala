@@ -513,7 +513,7 @@ public class Vala.GIdlParser : CodeVisitor {
 
 				ParameterDirection direction;
 				var param_type = parse_param (param, out direction);
-				var p = new FormalParameter (param_name, param_type);
+				var p = new Parameter (param_name, param_type);
 				p.direction = direction;
 
 				bool hide_param = false;
@@ -1966,7 +1966,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		m.set_cname (symbol);
 		
 		bool first = true;
-		FormalParameter last_param = null;
+		Parameter last_param = null;
 		DataType last_param_type = null;
 		foreach (weak IdlNodeParam param in parameters) {
 			weak IdlNode param_node = (IdlNode) param;
@@ -2019,7 +2019,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 			ParameterDirection direction;
 			var param_type = parse_param (param, out direction);
-			var p = new FormalParameter (param_name, param_type);
+			var p = new Parameter (param_name, param_type);
 			p.direction = direction;
 
 			bool hide_param = false;
@@ -2201,7 +2201,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		if (last_param != null && last_param.name.has_prefix ("first_")) {
 			last_param.ellipsis = true;
 		} else if (add_ellipsis) {
-			m.add_parameter (new FormalParameter.with_ellipsis ());
+			m.add_parameter (new Parameter.with_ellipsis ());
 		}
 		
 		return m;
@@ -2671,7 +2671,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			
 			ParameterDirection direction;
 			var param_type = parse_param (param, out direction);
-			var p = new FormalParameter (param_node.name, param_type);
+			var p = new Parameter (param_node.name, param_type);
 			p.direction = direction;
 
 			bool hide_param = false;

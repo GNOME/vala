@@ -124,7 +124,7 @@ public class Vala.GDBusModule : GVariantModule {
 	}
 
 	public bool dbus_method_uses_file_descriptor (Method method) {
-		foreach (FormalParameter param in method.get_parameters ()) {
+		foreach (Parameter param in method.get_parameters ()) {
 			if (is_file_descriptor (param.variable_type)) {
 				return true;
 			}

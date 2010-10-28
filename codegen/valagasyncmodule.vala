@@ -41,7 +41,7 @@ public class Vala.GAsyncModule : GSignalModule {
 			}
 		}
 
-		foreach (FormalParameter param in m.get_parameters ()) {
+		foreach (Parameter param in m.get_parameters ()) {
 			var param_type = param.variable_type.copy ();
 			param_type.value_owned = true;
 			data.add_field (param_type.get_cname (), get_variable_cname (param.name));
@@ -88,7 +88,7 @@ public class Vala.GAsyncModule : GSignalModule {
 
 		var freefunc = new CCodeFunction (m.get_real_cname () + "_data_free", "void");
 		freefunc.modifiers = CCodeModifiers.STATIC;
-		freefunc.add_parameter (new CCodeFormalParameter ("_data", "gpointer"));
+		freefunc.add_parameter (new CCodeParameter ("_data", "gpointer"));
 
 		var freeblock = new CCodeBlock ();
 		freefunc.block = freeblock;
@@ -99,7 +99,7 @@ public class Vala.GAsyncModule : GSignalModule {
 
 		push_context (new EmitContext (m));
 
-		foreach (FormalParameter param in m.get_parameters ()) {
+		foreach (Parameter param in m.get_parameters ()) {
 			if (param.direction != ParameterDirection.OUT) {
 				var param_type = param.variable_type.copy ();
 				param_type.value_owned = true;
@@ -153,10 +153,10 @@ public class Vala.GAsyncModule : GSignalModule {
 
 		var dataname = Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data";
 		var asyncfunc = new CCodeFunction (m.get_real_cname (), "void");
-		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
+		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
 
-		cparam_map.set (get_param_pos (-1), new CCodeFormalParameter ("_callback_", "GAsyncReadyCallback"));
-		cparam_map.set (get_param_pos (-0.9), new CCodeFormalParameter ("_user_data_", "gpointer"));
+		cparam_map.set (get_param_pos (-1), new CCodeParameter ("_callback_", "GAsyncReadyCallback"));
+		cparam_map.set (get_param_pos (-0.9), new CCodeParameter ("_user_data_", "gpointer"));
 
 		generate_cparameters (m, cfile, cparam_map, asyncfunc, null, null, null, 1);
 
@@ -251,7 +251,7 @@ public class Vala.GAsyncModule : GSignalModule {
 			ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, "self"), cself));
 		}
 
-		foreach (FormalParameter param in m.get_parameters ()) {
+		foreach (Parameter param in m.get_parameters ()) {
 			if (param.direction != ParameterDirection.OUT) {
 				var param_type = param.variable_type.copy ();
 				param_type.value_owned = true;
@@ -317,9 +317,9 @@ public class Vala.GAsyncModule : GSignalModule {
 			}
 
 			var asyncfunc = new CCodeFunction (m.get_cname (), "void");
-			var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
-			cparam_map.set (get_param_pos (-1), new CCodeFormalParameter ("_callback_", "GAsyncReadyCallback"));
-			cparam_map.set (get_param_pos (-0.9), new CCodeFormalParameter ("_user_data_", "gpointer"));
+			var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
+			cparam_map.set (get_param_pos (-1), new CCodeParameter ("_callback_", "GAsyncReadyCallback"));
+			cparam_map.set (get_param_pos (-0.9), new CCodeParameter ("_user_data_", "gpointer"));
 
 			generate_cparameters (m, decl_space, cparam_map, asyncfunc, null, null, null, 1);
 
@@ -330,8 +330,8 @@ public class Vala.GAsyncModule : GSignalModule {
 			decl_space.add_function_declaration (asyncfunc);
 
 			var finishfunc = new CCodeFunction (m.get_finish_cname ());
-			cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
-			cparam_map.set (get_param_pos (0.1), new CCodeFormalParameter ("_res_", "GAsyncResult*"));
+			cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
+			cparam_map.set (get_param_pos (0.1), new CCodeParameter ("_res_", "GAsyncResult*"));
 
 			generate_cparameters (m, decl_space, cparam_map, finishfunc, null, null, null, 2);
 
@@ -382,11 +382,11 @@ public class Vala.GAsyncModule : GSignalModule {
 
 			if (m.is_abstract || m.is_virtual) {
 				// generate virtual function wrappers
-				var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
+				var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
 				var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
 				generate_vfunc (m, new VoidType (), cparam_map, carg_map, "", 1);
 
-				cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
+				cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
 				carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
 				generate_vfunc (m, m.return_type, cparam_map, carg_map, "_finish", 2);
 			}
@@ -403,9 +403,9 @@ public class Vala.GAsyncModule : GSignalModule {
 
 		var finishfunc = new CCodeFunction (m.get_finish_real_cname ());
 
-		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
+		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
 
-		cparam_map.set (get_param_pos (0.1), new CCodeFormalParameter ("_res_", "GAsyncResult*"));
+		cparam_map.set (get_param_pos (0.1), new CCodeParameter ("_res_", "GAsyncResult*"));
 
 		generate_cparameters (m, cfile, cparam_map, finishfunc, null, null, null, 2);
 
@@ -442,7 +442,7 @@ public class Vala.GAsyncModule : GSignalModule {
 		ccall.add_argument (simple_async_result_cast);
 		ccode.add_expression (new CCodeAssignment (data_var, ccall));
 
-		foreach (FormalParameter param in m.get_parameters ()) {
+		foreach (Parameter param in m.get_parameters ()) {
 			if (param.direction != ParameterDirection.IN) {
 				ccode.add_expression (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (param.name)), new CCodeMemberAccess.pointer (data_var, get_variable_cname (param.name))));
 				if (!(param.variable_type is ValueType) || param.variable_type.nullable) {
@@ -489,9 +489,9 @@ public class Vala.GAsyncModule : GSignalModule {
 
 		var readyfunc = new CCodeFunction (m.get_cname () + "_ready", "void");
 
-		readyfunc.add_parameter (new CCodeFormalParameter ("source_object", "GObject*"));
-		readyfunc.add_parameter (new CCodeFormalParameter ("_res_", "GAsyncResult*"));
-		readyfunc.add_parameter (new CCodeFormalParameter ("_user_data_", "gpointer"));
+		readyfunc.add_parameter (new CCodeParameter ("source_object", "GObject*"));
+		readyfunc.add_parameter (new CCodeParameter ("_res_", "GAsyncResult*"));
+		readyfunc.add_parameter (new CCodeParameter ("_user_data_", "gpointer"));
 
 		var readyblock = new CCodeBlock ();
 
@@ -531,7 +531,7 @@ public class Vala.GAsyncModule : GSignalModule {
 
 		// add vfunc field to the type struct
 		var vdeclarator = new CCodeFunctionDeclarator (m.vfunc_name);
-		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
+		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
 
 		generate_cparameters (m, decl_space, cparam_map, new CCodeFunction ("fake"), vdeclarator, null, null, 1);
 
@@ -541,7 +541,7 @@ public class Vala.GAsyncModule : GSignalModule {
 
 		// add vfunc field to the type struct
 		vdeclarator = new CCodeFunctionDeclarator (m.get_finish_vfunc_name ());
-		cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
+		cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
 
 		generate_cparameters (m, decl_space, cparam_map, new CCodeFunction ("fake"), vdeclarator, null, null, 2);
 
@@ -623,19 +623,19 @@ public class Vala.GAsyncModule : GSignalModule {
 		complete_async ();
 	}
 
-	public override void generate_cparameters (Method m, CCodeFile decl_space, Map<int,CCodeFormalParameter> cparam_map, CCodeFunction func, CCodeFunctionDeclarator? vdeclarator = null, Map<int,CCodeExpression>? carg_map = null, CCodeFunctionCall? vcall = null, int direction = 3) {
+	public override void generate_cparameters (Method m, CCodeFile decl_space, Map<int,CCodeParameter> cparam_map, CCodeFunction func, CCodeFunctionDeclarator? vdeclarator = null, Map<int,CCodeExpression>? carg_map = null, CCodeFunctionCall? vcall = null, int direction = 3) {
 		if (m.coroutine) {
 			decl_space.add_include ("gio/gio.h");
 
 			if (direction == 1) {
-				cparam_map.set (get_param_pos (-1), new CCodeFormalParameter ("_callback_", "GAsyncReadyCallback"));
-				cparam_map.set (get_param_pos (-0.9), new CCodeFormalParameter ("_user_data_", "gpointer"));
+				cparam_map.set (get_param_pos (-1), new CCodeParameter ("_callback_", "GAsyncReadyCallback"));
+				cparam_map.set (get_param_pos (-0.9), new CCodeParameter ("_user_data_", "gpointer"));
 				if (carg_map != null) {
 					carg_map.set (get_param_pos (-1), new CCodeIdentifier ("_callback_"));
 					carg_map.set (get_param_pos (-0.9), new CCodeIdentifier ("_user_data_"));
 				}
 			} else if (direction == 2) {
-				cparam_map.set (get_param_pos (0.1), new CCodeFormalParameter ("_res_", "GAsyncResult*"));
+				cparam_map.set (get_param_pos (0.1), new CCodeParameter ("_res_", "GAsyncResult*"));
 				if (carg_map != null) {
 					carg_map.set (get_param_pos (0.1), new CCodeIdentifier ("_res_"));
 				}
@@ -654,9 +654,9 @@ public class Vala.GAsyncModule : GSignalModule {
 		var function = new CCodeFunction (async_callback_wrapper_func, "void");
 		function.modifiers = CCodeModifiers.STATIC;
 
-		function.add_parameter (new CCodeFormalParameter ("*source_object", "GObject"));
-		function.add_parameter (new CCodeFormalParameter ("*res", "GAsyncResult"));
-		function.add_parameter (new CCodeFormalParameter ("*user_data", "void"));
+		function.add_parameter (new CCodeParameter ("*source_object", "GObject"));
+		function.add_parameter (new CCodeParameter ("*res", "GAsyncResult"));
+		function.add_parameter (new CCodeParameter ("*user_data", "void"));
 
 		push_function (function);
 

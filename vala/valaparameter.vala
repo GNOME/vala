@@ -1,4 +1,4 @@
-/* valaformalparameter.vala
+/* valaparameter.vala
  *
  * Copyright (C) 2006-2010  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
@@ -27,7 +27,7 @@ using GLib;
 /**
  * Represents a formal parameter in method and callback signatures.
  */
-public class Vala.FormalParameter : Variable {
+public class Vala.Parameter : Variable {
 	public ParameterDirection direction { get; set; default = ParameterDirection.IN; }
 
 	/**
@@ -101,7 +101,7 @@ public class Vala.FormalParameter : Variable {
 	 * @param source reference to source code
 	 * @return       newly created formal parameter
 	 */
-	public FormalParameter (string name, DataType variable_type, SourceReference? source_reference = null) {
+	public Parameter (string name, DataType variable_type, SourceReference? source_reference = null) {
 		base (variable_type, name, null, source_reference);
 
 		access = SymbolAccessibility.PUBLIC;
@@ -111,7 +111,7 @@ public class Vala.FormalParameter : Variable {
 	 * Creates a new ellipsis parameter representing an indefinite number of
 	 * parameters.
 	 */
-	public FormalParameter.with_ellipsis (SourceReference? source_reference = null) {
+	public Parameter.with_ellipsis (SourceReference? source_reference = null) {
 		base (null, null, null, source_reference);
 		ellipsis = true;
 
@@ -204,15 +204,15 @@ public class Vala.FormalParameter : Variable {
 		}
 	}
 
-	public FormalParameter copy () {
+	public Parameter copy () {
 		if (!ellipsis) {
-			var result = new FormalParameter (name, variable_type, source_reference);
+			var result = new Parameter (name, variable_type, source_reference);
 			result.params_array = params_array;
 			result.direction = this.direction;
 			result.initializer = this.initializer;
 			return result;
 		} else {
-			return new FormalParameter.with_ellipsis ();
+			return new Parameter.with_ellipsis ();
 		}
 	}
 

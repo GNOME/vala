@@ -210,7 +210,7 @@ public class Vala.Class : ObjectTypeSymbol {
 				if (_destructor.this_parameter != null) {
 					_destructor.scope.remove (_destructor.this_parameter.name);
 				}
-				_destructor.this_parameter = new FormalParameter ("this", get_this_type ());
+				_destructor.this_parameter = new Parameter ("this", get_this_type ());
 				_destructor.scope.add (_destructor.this_parameter.name, _destructor.this_parameter);
 			}
 		}
@@ -346,7 +346,7 @@ public class Vala.Class : ObjectTypeSymbol {
 			if (m.this_parameter != null) {
 				m.scope.remove (m.this_parameter.name);
 			}
-			m.this_parameter = new FormalParameter ("this", get_this_type ());
+			m.this_parameter = new Parameter ("this", get_this_type ());
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
 		if (!(m.return_type is VoidType) && (CodeContext.get ().profile == Profile.DOVA || m.get_postconditions ().size > 0)) {
@@ -393,7 +393,7 @@ public class Vala.Class : ObjectTypeSymbol {
 		properties.add (prop);
 		scope.add (prop.name, prop);
 
-		prop.this_parameter = new FormalParameter ("this", get_this_type ());
+		prop.this_parameter = new Parameter ("this", get_this_type ());
 		prop.scope.add (prop.this_parameter.name, prop.this_parameter);
 
 		if (prop.field != null) {

@@ -33,7 +33,6 @@ libvalaccode_la_VALASOURCES = \
 	valaccodeexpression.vala \
 	valaccodeexpressionstatement.vala \
 	valaccodefile.vala \
-	valaccodeformalparameter.vala \
 	valaccodeforstatement.vala \
 	valaccodefragment.vala \
 	valaccodefunction.vala \
@@ -53,6 +52,7 @@ libvalaccode_la_VALASOURCES = \
 	valaccodenewline.vala \
 	valaccodenode.vala \
 	valaccodeoncesection.vala \
+	valaccodeparameter.vala \
 	valaccodeparenthesizedexpression.vala \
 	valaccodereturnstatement.vala \
 	valaccodestatement.vala \

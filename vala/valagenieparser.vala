@@ -2855,7 +2855,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		type = new ArrayType (type, 1, get_src (begin));
 		type.nullable = false;
 				
-		var param = new FormalParameter ("args", type, get_src (begin));
+		var param = new Parameter ("args", type, get_src (begin));
 		method.add_parameter (param);
 		
 		
@@ -2876,7 +2876,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 		string id = parse_identifier ();
 
-		var params = new ArrayList<FormalParameter> ();
+		var params = new ArrayList<Parameter> ();
 		expect (TokenType.OPEN_PARENS);
 
 		if (current () != TokenType.CLOSE_PARENS) {
@@ -2911,7 +2911,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		}
 		
 
-		foreach (FormalParameter param in params) {
+		foreach (Parameter param in params) {
 			method.add_parameter (param);
 		}
 
@@ -3170,7 +3170,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		string id = parse_identifier ();
 
 
-		var params = new ArrayList<FormalParameter> ();
+		var params = new ArrayList<Parameter> ();
 
 		expect (TokenType.OPEN_PARENS);
 		if (current () != TokenType.CLOSE_PARENS) {
@@ -3209,7 +3209,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 		set_attributes (sig, attrs);
 
-		foreach (FormalParameter formal_param in params) {
+		foreach (Parameter formal_param in params) {
 			sig.add_parameter (formal_param);
 		}
 
@@ -3572,12 +3572,12 @@ public class Vala.Genie.Parser : CodeVisitor {
 		}
 	}
 
-	FormalParameter parse_parameter () throws ParseError {
+	Parameter parse_parameter () throws ParseError {
 		var attrs = parse_attributes ();
 		var begin = get_location ();
 		if (accept (TokenType.ELLIPSIS)) {
 			// varargs
-			return new FormalParameter.with_ellipsis (get_src (begin));
+			return new Parameter.with_ellipsis (get_src (begin));
 		}
 		bool params_array = accept (TokenType.PARAMS);
 		var direction = ParameterDirection.IN;
@@ -3598,7 +3598,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 			 type = parse_type (true);
 		}
 
-		var param = new FormalParameter (id, type, get_src (begin));
+		var param = new Parameter (id, type, get_src (begin));
 		set_attributes (param, attrs);
 		param.direction = direction;
 		param.params_array = params_array;
@@ -3674,7 +3674,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 			throw new ParseError.SYNTAX (get_error ("`new' modifier not allowed on delegates"));
 		}
 
-		var params = new ArrayList<FormalParameter> ();
+		var params = new ArrayList<Parameter> ();
 
 		expect (TokenType.OPEN_PARENS);
 		if (current () != TokenType.CLOSE_PARENS) {
@@ -3722,7 +3722,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 			d.add_type_parameter (type_param);
 		}
 
-		foreach (FormalParameter formal_param in params) {
+		foreach (Parameter formal_param in params) {
 			d.add_parameter (formal_param);
 		}
 

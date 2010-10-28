@@ -109,7 +109,7 @@ public class Vala.ArrayType : ReferenceType {
 			var root_symbol = source_reference.file.context.root;
 			var int_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int"));
 
-			resize_method.add_parameter (new FormalParameter ("length", int_type));
+			resize_method.add_parameter (new Parameter ("length", int_type));
 			
 			resize_method.returns_modified_pointer = true;
 		}
@@ -128,9 +128,9 @@ public class Vala.ArrayType : ReferenceType {
 			var root_symbol = source_reference.file.context.root;
 			var int_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int"));
 
-			move_method.add_parameter (new FormalParameter ("src", int_type));
-			move_method.add_parameter (new FormalParameter ("dest", int_type));
-			move_method.add_parameter (new FormalParameter ("length", int_type));
+			move_method.add_parameter (new Parameter ("src", int_type));
+			move_method.add_parameter (new Parameter ("dest", int_type));
+			move_method.add_parameter (new Parameter ("length", int_type));
 		}
 		return move_method;
 	}

@@ -83,9 +83,9 @@ public class Vala.DBusServerModule : DBusClientModule {
 
 		var function = new CCodeFunction (wrapper_name, "DBusHandlerResult");
 		function.modifiers = CCodeModifiers.STATIC;
-		function.add_parameter (new CCodeFormalParameter ("self", sym.get_cname () + "*"));
-		function.add_parameter (new CCodeFormalParameter ("connection", "DBusConnection*"));
-		function.add_parameter (new CCodeFormalParameter ("message", "DBusMessage*"));
+		function.add_parameter (new CCodeParameter ("self", sym.get_cname () + "*"));
+		function.add_parameter (new CCodeParameter ("connection", "DBusConnection*"));
+		function.add_parameter (new CCodeParameter ("message", "DBusMessage*"));
 		var block = new CCodeBlock ();
 
 		CCodeFunction ready_function = null;
@@ -96,9 +96,9 @@ public class Vala.DBusServerModule : DBusClientModule {
 
 			ready_function = new CCodeFunction (wrapper_name + "_ready", "void");
 			ready_function.modifiers = CCodeModifiers.STATIC;
-			ready_function.add_parameter (new CCodeFormalParameter ("source_object", "GObject *"));
-			ready_function.add_parameter (new CCodeFormalParameter ("_res_", "GAsyncResult *"));
-			ready_function.add_parameter (new CCodeFormalParameter ("_user_data_", "gpointer *"));
+			ready_function.add_parameter (new CCodeParameter ("source_object", "GObject *"));
+			ready_function.add_parameter (new CCodeParameter ("_res_", "GAsyncResult *"));
+			ready_function.add_parameter (new CCodeParameter ("_user_data_", "gpointer *"));
 			ready_block = new CCodeBlock ();
 
 			cdecl = new CCodeDeclaration ("DBusConnection *");
@@ -176,7 +176,7 @@ public class Vala.DBusServerModule : DBusClientModule {
 		// expected type signature for input parameters
 		string type_signature = "";
 
-		foreach (FormalParameter param in m.get_parameters ()) {
+		foreach (Parameter param in m.get_parameters ()) {
 			var owned_type = param.variable_type.copy ();
 			owned_type.value_owned = true;
 
@@ -491,22 +491,22 @@ public class Vala.DBusServerModule : DBusClientModule {
 		var function = new CCodeFunction (wrapper_name, "void");
 		function.modifiers = CCodeModifiers.STATIC;
 
-		function.add_parameter (new CCodeFormalParameter ("_sender", "GObject*"));
+		function.add_parameter (new CCodeParameter ("_sender", "GObject*"));
 
 		foreach (var param in sig.get_parameters ()) {
 			// ensure ccodenode of parameter is set
-			var cparam = generate_parameter (param, cfile, new HashMap<int,CCodeFormalParameter> (), null);
+			var cparam = generate_parameter (param, cfile, new HashMap<int,CCodeParameter> (), null);
 
 			function.add_parameter (cparam);
 			if (param.variable_type is ArrayType) {
 				var array_type = (ArrayType) param.variable_type;
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					function.add_parameter (new CCodeFormalParameter (get_parameter_array_length_cname (param, dim), "int"));
+					function.add_parameter (new CCodeParameter (get_parameter_array_length_cname (param, dim), "int"));
 				}
 			}
 		}
 
-		function.add_parameter (new CCodeFormalParameter ("_connection", "DBusConnection*"));
+		function.add_parameter (new CCodeParameter ("_connection", "DBusConnection*"));
 
 		var block = new CCodeBlock ();
 		var prefragment = new CCodeFragment ();
@@ -540,7 +540,7 @@ public class Vala.DBusServerModule : DBusClientModule {
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_iter")));
 		prefragment.append (new CCodeExpressionStatement (iter_call));
 
-		foreach (FormalParameter param in sig.get_parameters ()) {
+		foreach (Parameter param in sig.get_parameters ()) {
 			CCodeExpression expr = new CCodeIdentifier (param.name);
 			if (param.variable_type.is_real_struct_type ()) {
 				expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, expr);
@@ -572,9 +572,9 @@ public class Vala.DBusServerModule : DBusClientModule {
 		var sym = object_type.type_symbol;
 
 		var cfunc = new CCodeFunction (sym.get_lower_case_cprefix () + "dbus_register_object", "void");
-		cfunc.add_parameter (new CCodeFormalParameter ("connection", "DBusConnection*"));
-		cfunc.add_parameter (new CCodeFormalParameter ("path", "const char*"));
-		cfunc.add_parameter (new CCodeFormalParameter ("object", "void*"));
+		cfunc.add_parameter (new CCodeParameter ("connection", "DBusConnection*"));
+		cfunc.add_parameter (new CCodeParameter ("path", "const char*"));
+		cfunc.add_parameter (new CCodeParameter ("object", "void*"));
 
 		add_dbus_helpers ();
 
@@ -641,8 +641,8 @@ public class Vala.DBusServerModule : DBusClientModule {
 		var sym = object_type.type_symbol;
 
 		var cfunc = new CCodeFunction ("_" + sym.get_lower_case_cprefix () + "dbus_unregister", "void");
-		cfunc.add_parameter (new CCodeFormalParameter ("connection", "DBusConnection*"));
-		cfunc.add_parameter (new CCodeFormalParameter ("_user_data_", "void*"));
+		cfunc.add_parameter (new CCodeParameter ("connection", "DBusConnection*"));
+		cfunc.add_parameter (new CCodeParameter ("_user_data_", "void*"));
 
 		cfile.add_function_declaration (cfunc);
 
@@ -699,9 +699,9 @@ public class Vala.DBusServerModule : DBusClientModule {
 		var function = new CCodeFunction (wrapper_name, "DBusHandlerResult");
 		function.modifiers = CCodeModifiers.STATIC;
 
-		function.add_parameter (new CCodeFormalParameter ("self", sym.get_cname () + "*"));
-		function.add_parameter (new CCodeFormalParameter ("connection", "DBusConnection*"));
-		function.add_parameter (new CCodeFormalParameter ("message", "DBusMessage*"));
+		function.add_parameter (new CCodeParameter ("self", sym.get_cname () + "*"));
+		function.add_parameter (new CCodeParameter ("connection", "DBusConnection*"));
+		function.add_parameter (new CCodeParameter ("message", "DBusMessage*"));
 
 		var block = new CCodeBlock ();
 		var prefragment = new CCodeFragment ();
@@ -903,9 +903,9 @@ public class Vala.DBusServerModule : DBusClientModule {
 		var function = new CCodeFunction (wrapper_name, "DBusHandlerResult");
 		function.modifiers = CCodeModifiers.STATIC;
 
-		function.add_parameter (new CCodeFormalParameter ("self", sym.get_cname () + "*"));
-		function.add_parameter (new CCodeFormalParameter ("connection", "DBusConnection*"));
-		function.add_parameter (new CCodeFormalParameter ("message", "DBusMessage*"));
+		function.add_parameter (new CCodeParameter ("self", sym.get_cname () + "*"));
+		function.add_parameter (new CCodeParameter ("connection", "DBusConnection*"));
+		function.add_parameter (new CCodeParameter ("message", "DBusMessage*"));
 
 		var block = new CCodeBlock ();
 		var prefragment = new CCodeFragment ();
@@ -1103,9 +1103,9 @@ public class Vala.DBusServerModule : DBusClientModule {
 		var function = new CCodeFunction (wrapper_name, "DBusHandlerResult");
 		function.modifiers = CCodeModifiers.STATIC;
 
-		function.add_parameter (new CCodeFormalParameter ("self", sym.get_cname () + "*"));
-		function.add_parameter (new CCodeFormalParameter ("connection", "DBusConnection*"));
-		function.add_parameter (new CCodeFormalParameter ("message", "DBusMessage*"));
+		function.add_parameter (new CCodeParameter ("self", sym.get_cname () + "*"));
+		function.add_parameter (new CCodeParameter ("connection", "DBusConnection*"));
+		function.add_parameter (new CCodeParameter ("message", "DBusMessage*"));
 
 		var block = new CCodeBlock ();
 		var prefragment = new CCodeFragment ();
@@ -1361,9 +1361,9 @@ public class Vala.DBusServerModule : DBusClientModule {
 		var function = new CCodeFunction (wrapper_name, "DBusHandlerResult");
 		function.modifiers = CCodeModifiers.STATIC;
 
-		function.add_parameter (new CCodeFormalParameter ("self", sym.get_cname () + "*"));
-		function.add_parameter (new CCodeFormalParameter ("connection", "DBusConnection*"));
-		function.add_parameter (new CCodeFormalParameter ("message", "DBusMessage*"));
+		function.add_parameter (new CCodeParameter ("self", sym.get_cname () + "*"));
+		function.add_parameter (new CCodeParameter ("connection", "DBusConnection*"));
+		function.add_parameter (new CCodeParameter ("message", "DBusMessage*"));
 
 		var block = new CCodeBlock ();
 
@@ -1513,9 +1513,9 @@ public class Vala.DBusServerModule : DBusClientModule {
 		add_dbus_helpers ();
 
 		var cfunc = new CCodeFunction (sym.get_lower_case_cprefix () + "dbus_message", "DBusHandlerResult");
-		cfunc.add_parameter (new CCodeFormalParameter ("connection", "DBusConnection*"));
-		cfunc.add_parameter (new CCodeFormalParameter ("message", "DBusMessage*"));
-		cfunc.add_parameter (new CCodeFormalParameter ("object", "void*"));
+		cfunc.add_parameter (new CCodeParameter ("connection", "DBusConnection*"));
+		cfunc.add_parameter (new CCodeParameter ("message", "DBusMessage*"));
+		cfunc.add_parameter (new CCodeParameter ("object", "void*"));
 
 		if (sym.is_private_symbol ()) {
 			cfunc.modifiers |= CCodeModifiers.STATIC;

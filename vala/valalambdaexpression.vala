@@ -176,11 +176,11 @@ public class Vala.LambdaExpression : Expression {
 			lambda_param_it.next ();
 
 			string lambda_param = lambda_param_it.get ();
-			var param = new FormalParameter (lambda_param, cb.sender_type);
+			var param = new Parameter (lambda_param, cb.sender_type);
 			method.add_parameter (param);
 		}
 
-		foreach (FormalParameter cb_param in cb.get_parameters ()) {
+		foreach (Parameter cb_param in cb.get_parameters ()) {
 			if (!lambda_param_it.next ()) {
 				/* lambda expressions are allowed to have less parameters */
 				break;
@@ -188,7 +188,7 @@ public class Vala.LambdaExpression : Expression {
 
 			string lambda_param = lambda_param_it.get ();
 			var param_type = cb_param.variable_type.get_actual_type (target_type, null, this);
-			var param = new FormalParameter (lambda_param, param_type);
+			var param = new Parameter (lambda_param, param_type);
 			method.add_parameter (param);
 		}
 

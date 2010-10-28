@@ -48,7 +48,7 @@ public class Vala.StructValueType : ValueType {
 		}
 	}
 
-	public override List<FormalParameter>? get_parameters () {
+	public override List<Parameter>? get_parameters () {
 		var st = type_symbol as Struct;
 		if (st != null && st.default_construction_method != null) {
 			return st.default_construction_method.get_parameters ();

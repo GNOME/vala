@@ -34,7 +34,7 @@ public class Vala.Constructor : Symbol {
 	/**
 	 * Specifies the generated `this` parameter for instance methods.
 	 */
-	public FormalParameter this_parameter { get; set; }
+	public Parameter this_parameter { get; set; }
 
 	/**
 	 * Specifies whether this is an instance or a class constructor.
@@ -68,7 +68,7 @@ public class Vala.Constructor : Symbol {
 
 		checked = true;
 
-		this_parameter = new FormalParameter ("this", new ObjectType (analyzer.current_class));
+		this_parameter = new Parameter ("this", new ObjectType (analyzer.current_class));
 		scope.add (this_parameter.name, this_parameter);
 
 		owner = analyzer.current_symbol.scope;

@@ -59,7 +59,7 @@ public class Vala.GSignalModule : GObjectModule {
 		}
 	}
 	
-	private string get_marshaller_type_name_for_parameter (FormalParameter param, bool dbus = false) {
+	private string get_marshaller_type_name_for_parameter (Parameter param, bool dbus = false) {
 		if (param.direction != ParameterDirection.IN) {
 			return ("POINTER");
 		} else {
@@ -67,7 +67,7 @@ public class Vala.GSignalModule : GObjectModule {
 		}
 	}
 	
-	public override string get_marshaller_function (List<FormalParameter> params, DataType return_type, string? prefix = null, bool dbus = false) {
+	public override string get_marshaller_function (List<Parameter> params, DataType return_type, string? prefix = null, bool dbus = false) {
 		var signature = get_marshaller_signature (params, return_type, dbus);
 		string ret;
 
@@ -84,7 +84,7 @@ public class Vala.GSignalModule : GObjectModule {
 		if (params == null || params.size == 0) {
 			ret = ret + "_VOID";
 		} else {
-			foreach (FormalParameter p in params) {
+			foreach (Parameter p in params) {
 				ret = "%s_%s".printf (ret, get_marshaller_type_name_for_parameter (p, dbus).replace (",", "_"));
 			}
 		}
@@ -119,7 +119,7 @@ public class Vala.GSignalModule : GObjectModule {
 		return null;
 	}
 	
-	private string? get_value_type_name_from_parameter (FormalParameter p) {
+	private string? get_value_type_name_from_parameter (Parameter p) {
 		if (p.direction != ParameterDirection.IN) {
 			return "gpointer";
 		} else {
@@ -127,7 +127,7 @@ public class Vala.GSignalModule : GObjectModule {
 		}
 	}
 	
-	private string get_marshaller_signature (List<FormalParameter> params, DataType return_type, bool dbus = false) {
+	private string get_marshaller_signature (List<Parameter> params, DataType return_type, bool dbus = false) {
 		string signature;
 		
 		signature = "%s:".printf (get_marshaller_type_name (return_type, dbus));
@@ -135,7 +135,7 @@ public class Vala.GSignalModule : GObjectModule {
 			signature = signature + "VOID";
 		} else {
 			bool first = true;
-			foreach (FormalParameter p in params) {
+			foreach (Parameter p in params) {
 				if (first) {
 					signature = signature + get_marshaller_type_name_for_parameter (p, dbus);
 					first = false;
@@ -201,14 +201,14 @@ public class Vala.GSignalModule : GObjectModule {
 		sig.accept_children (this);
 
 		// declare parameter type
-		foreach (FormalParameter p in sig.get_parameters ()) {
-			generate_parameter (p, cfile, new HashMap<int,CCodeFormalParameter> (), null);
+		foreach (Parameter p in sig.get_parameters ()) {
+			generate_parameter (p, cfile, new HashMap<int,CCodeParameter> (), null);
 		}
 
 		generate_marshaller (sig.get_parameters (), sig.return_type);
 	}
 
-	public override void generate_marshaller (List<FormalParameter> params, DataType return_type, bool dbus = false) {
+	public override void generate_marshaller (List<Parameter> params, DataType return_type, bool dbus = false) {
 		string signature;
 		int n_params, i;
 		
@@ -221,29 +221,29 @@ public class Vala.GSignalModule : GObjectModule {
 		var signal_marshaller = new CCodeFunction (get_marshaller_function (params, return_type, null, dbus), "void");
 		signal_marshaller.modifiers = CCodeModifiers.STATIC;
 		
-		signal_marshaller.add_parameter (new CCodeFormalParameter ("closure", "GClosure *"));
-		signal_marshaller.add_parameter (new CCodeFormalParameter ("return_value", "GValue *"));
-		signal_marshaller.add_parameter (new CCodeFormalParameter ("n_param_values", "guint"));
-		signal_marshaller.add_parameter (new CCodeFormalParameter ("param_values", "const GValue *"));
-		signal_marshaller.add_parameter (new CCodeFormalParameter ("invocation_hint", "gpointer"));
-		signal_marshaller.add_parameter (new CCodeFormalParameter ("marshal_data", "gpointer"));
+		signal_marshaller.add_parameter (new CCodeParameter ("closure", "GClosure *"));
+		signal_marshaller.add_parameter (new CCodeParameter ("return_value", "GValue *"));
+		signal_marshaller.add_parameter (new CCodeParameter ("n_param_values", "guint"));
+		signal_marshaller.add_parameter (new CCodeParameter ("param_values", "const GValue *"));
+		signal_marshaller.add_parameter (new CCodeParameter ("invocation_hint", "gpointer"));
+		signal_marshaller.add_parameter (new CCodeParameter ("marshal_data", "gpointer"));
 		
 		cfile.add_function_declaration (signal_marshaller);
 		
 		var marshaller_body = new CCodeBlock ();
 		
 		var callback_decl = new CCodeFunctionDeclarator (get_marshaller_function (params, return_type, "GMarshalFunc", dbus));
-		callback_decl.add_parameter (new CCodeFormalParameter ("data1", "gpointer"));
+		callback_decl.add_parameter (new CCodeParameter ("data1", "gpointer"));
 		n_params = 1;
-		foreach (FormalParameter p in params) {
-			callback_decl.add_parameter (new CCodeFormalParameter ("arg_%d".printf (n_params), get_value_type_name_from_parameter (p)));
+		foreach (Parameter p in params) {
+			callback_decl.add_parameter (new CCodeParameter ("arg_%d".printf (n_params), get_value_type_name_from_parameter (p)));
 			n_params++;
 			if (p.variable_type.is_array () && !dbus) {
-				callback_decl.add_parameter (new CCodeFormalParameter ("arg_%d".printf (n_params), "gint"));
+				callback_decl.add_parameter (new CCodeParameter ("arg_%d".printf (n_params), "gint"));
 				n_params++;
 			}
 		}
-		callback_decl.add_parameter (new CCodeFormalParameter ("data2", "gpointer"));
+		callback_decl.add_parameter (new CCodeParameter ("data2", "gpointer"));
 		marshaller_body.add_statement (new CCodeTypeDefinition (get_value_type_name_from_type_reference (return_type), callback_decl));
 		
 		var var_decl = new CCodeDeclaration (get_marshaller_function (params, return_type, "GMarshalFunc", dbus));
@@ -296,7 +296,7 @@ public class Vala.GSignalModule : GObjectModule {
 		fc = new CCodeFunctionCall (new CCodeIdentifier ("callback"));
 		fc.add_argument (new CCodeIdentifier ("data1"));
 		i = 1;
-		foreach (FormalParameter p in params) {
+		foreach (Parameter p in params) {
 			string get_value_function;
 			bool is_array = p.variable_type.is_array ();
 			if (p.direction != ParameterDirection.IN) {
@@ -447,7 +447,7 @@ public class Vala.GSignalModule : GObjectModule {
 		}
 
 		int params_len = 0;
-		foreach (FormalParameter param in params) {
+		foreach (Parameter param in params) {
 			params_len++;
 			if (param.variable_type.is_array ()) {
 				params_len++;
@@ -455,7 +455,7 @@ public class Vala.GSignalModule : GObjectModule {
 		}
 
 		csignew.add_argument (new CCodeConstant ("%d".printf (params_len)));
-		foreach (FormalParameter param in params) {
+		foreach (Parameter param in params) {
 			if (param.variable_type.is_array ()) {
 				if (((ArrayType) param.variable_type).element_type.data_type == string_type.data_type) {
 					csignew.add_argument (new CCodeConstant ("G_TYPE_STRV"));

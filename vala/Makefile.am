@@ -71,7 +71,6 @@ libvalacore_la_VALASOURCES = \
 	valafloatingtype.vala \
 	valaflowanalyzer.vala \
 	valaforeachstatement.vala \
-	valaformalparameter.vala \
 	valaforstatement.vala \
 	valagirparser.vala \
 	valagenerictype.vala \
@@ -106,6 +105,7 @@ libvalacore_la_VALASOURCES = \
 	valaobjectcreationexpression.vala \
 	valaobjecttype.vala \
 	valaobjecttypesymbol.vala \
+	valaparameter.vala \
 	valaparser.vala \
 	valaphifunction.vala \
 	valapointerindirection.vala \

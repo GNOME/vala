@@ -57,7 +57,7 @@ public class Vala.Signal : Symbol, Lockable {
 	 */
 	public bool is_virtual { get; set; }
 
-	private List<FormalParameter> parameters = new ArrayList<FormalParameter> ();
+	private List<Parameter> parameters = new ArrayList<Parameter> ();
 	/**
 	 * Refers to the default signal handler, which is an anonymous
 	 * function in the scope.
@@ -102,7 +102,7 @@ public class Vala.Signal : Symbol, Lockable {
 	 *
 	 * @param param a formal parameter
 	 */
-	public void add_parameter (FormalParameter param) {
+	public void add_parameter (Parameter param) {
 		// default C parameter position
 		param.cparameter_position = parameters.size + 1;
 		param.carray_length_parameter_position = param.cparameter_position + 0.1;
@@ -113,7 +113,7 @@ public class Vala.Signal : Symbol, Lockable {
 		scope.add (param.name, param);
 	}
 
-	public List<FormalParameter> get_parameters () {
+	public List<Parameter> get_parameters () {
 		return parameters;
 	}
 
@@ -137,7 +137,7 @@ public class Vala.Signal : Symbol, Lockable {
 
 		generated_delegate.sender_type = sender_param_type;
 
-		foreach (FormalParameter param in parameters) {
+		foreach (Parameter param in parameters) {
 			var actual_param = param.copy ();
 			actual_param.variable_type = actual_param.variable_type.get_actual_type (sender_type, null, node_reference);
 			generated_delegate.add_parameter (actual_param);
@@ -202,7 +202,7 @@ public class Vala.Signal : Symbol, Lockable {
 	public override void accept_children (CodeVisitor visitor) {
 		return_type.accept (visitor);
 		
-		foreach (FormalParameter param in parameters) {
+		foreach (Parameter param in parameters) {
 			param.accept (visitor);
 		}
 		if (default_handler != null) {
@@ -277,7 +277,7 @@ public class Vala.Signal : Symbol, Lockable {
 
 		return_type.check (analyzer);
 		
-		foreach (FormalParameter param in parameters) {
+		foreach (Parameter param in parameters) {
 			param.check (analyzer);
 		}
 
@@ -298,7 +298,7 @@ public class Vala.Signal : Symbol, Lockable {
 			default_handler.body = body;
 
 
-			foreach (FormalParameter param in parameters) {
+			foreach (Parameter param in parameters) {
 				default_handler.add_parameter (param);
 			}
 

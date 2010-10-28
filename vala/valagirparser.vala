@@ -468,8 +468,8 @@ public class Vala.GirParser : CodeVisitor {
 		return type;
 	}
 
-	FormalParameter parse_parameter (out int array_length_idx = null, out int closure_idx = null, out int destroy_idx = null, out string? scope = null) {
-		FormalParameter param;
+	Parameter parse_parameter (out int array_length_idx = null, out int closure_idx = null, out int destroy_idx = null, out string? scope = null) {
+		Parameter param;
 
 		if (&array_length_idx != null) {
 			array_length_idx = -1;
@@ -504,7 +504,7 @@ public class Vala.GirParser : CodeVisitor {
 		if (reader.name == "varargs") {
 			start_element ("varargs");
 			next ();
-			param = new FormalParameter.with_ellipsis (get_current_src ());
+			param = new Parameter.with_ellipsis (get_current_src ());
 			end_element ("varargs");
 		} else {
 			var type = parse_type (null, out array_length_idx, transfer == "full");
@@ -514,7 +514,7 @@ public class Vala.GirParser : CodeVisitor {
 			if (allow_none == "1") {
 				type.nullable = true;
 			}
-			param = new FormalParameter (name, type, get_current_src ());
+			param = new Parameter (name, type, get_current_src ());
 			if (direction == "out") {
 				param.direction = ParameterDirection.OUT;
 			} else if (direction == "inout") {
@@ -1086,7 +1086,7 @@ public class Vala.GirParser : CodeVisitor {
 	}
 
 	class MethodInfo {
-		public MethodInfo (FormalParameter param, int array_length_idx, int closure_idx, int destroy_idx) {
+		public MethodInfo (Parameter param, int array_length_idx, int closure_idx, int destroy_idx) {
 			this.param = param;
 			this.array_length_idx = array_length_idx;
 			this.closure_idx = closure_idx;
@@ -1095,7 +1095,7 @@ public class Vala.GirParser : CodeVisitor {
 			this.keep = true;
 		}
 
-		public FormalParameter param;
+		public Parameter param;
 		public float vala_idx;
 		public int array_length_idx;
 		public int closure_idx;

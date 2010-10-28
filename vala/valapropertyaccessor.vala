@@ -89,7 +89,7 @@ public class Vala.PropertyAccessor : Symbol {
 	/**
 	 * Represents the generated value parameter in a set accessor.
 	 */
-	public FormalParameter value_parameter { get; set; }
+	public Parameter value_parameter { get; set; }
 
 	/**
 	 * Specifies the generated `result' variable in a get accessor.
@@ -221,7 +221,7 @@ public class Vala.PropertyAccessor : Symbol {
 
 				result_var.check (analyzer);
 			} else if (writable || construction) {
-				value_parameter = new FormalParameter ("value", value_type, source_reference);
+				value_parameter = new Parameter ("value", value_type, source_reference);
 				body.scope.add (value_parameter.name, value_parameter);
 			}
 

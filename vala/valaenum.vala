@@ -81,7 +81,7 @@ public class Vala.Enum : TypeSymbol {
 			return;
 		}
 		if (m.binding == MemberBinding.INSTANCE) {
-			m.this_parameter = new FormalParameter ("this", new EnumValueType (this));
+			m.this_parameter = new Parameter ("this", new EnumValueType (this));
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
 		if (!(m.return_type is VoidType) && (CodeContext.get ().profile == Profile.DOVA || m.get_postconditions ().size > 0)) {

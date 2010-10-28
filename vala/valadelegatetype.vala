@@ -42,7 +42,7 @@ public class Vala.DelegateType : DataType {
 		return delegate_symbol.return_type;
 	}
 
-	public override List<FormalParameter>? get_parameters () {
+	public override List<Parameter>? get_parameters () {
 		return delegate_symbol.get_parameters ();
 	}
 

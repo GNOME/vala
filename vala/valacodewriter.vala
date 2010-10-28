@@ -831,11 +831,11 @@ public class Vala.CodeWriter : CodeVisitor {
 		return ((int) (d1 * 1000)) == ((int) (d2 * 1000));
 	}
 
-	private void write_params (List<FormalParameter> params) {
+	private void write_params (List<Parameter> params) {
 		write_string ("(");
 
 		int i = 1;
-		foreach (FormalParameter param in params) {
+		foreach (Parameter param in params) {
 			if (i > 1) {
 				write_string (", ");
 			}

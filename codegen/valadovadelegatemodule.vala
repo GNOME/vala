@@ -46,7 +46,7 @@ public class Vala.DovaDelegateModule : DovaValueModule {
 		if (d.is_internal_symbol ()) {
 			type_init_fun.modifiers = CCodeModifiers.STATIC;
 		}
-		type_init_fun.add_parameter (new CCodeFormalParameter ("type", "DovaType *"));
+		type_init_fun.add_parameter (new CCodeParameter ("type", "DovaType *"));
 		decl_space.add_function_declaration (type_init_fun);
 
 		generate_type_declaration (d.return_type, decl_space);
@@ -66,8 +66,8 @@ public class Vala.DovaDelegateModule : DovaValueModule {
 			function.modifiers |= CCodeModifiers.STATIC;
 		}
 
-		function.add_parameter (new CCodeFormalParameter ("target", "DovaObject *"));
-		function.add_parameter (new CCodeFormalParameter ("(*method) (void)", "void"));
+		function.add_parameter (new CCodeParameter ("target", "DovaObject *"));
+		function.add_parameter (new CCodeParameter ("(*method) (void)", "void"));
 
 		function.block = new CCodeBlock ();
 
@@ -100,14 +100,14 @@ public class Vala.DovaDelegateModule : DovaValueModule {
 			function.modifiers |= CCodeModifiers.STATIC;
 		}
 
-		function.add_parameter (new CCodeFormalParameter ("this", "%s*".printf (d.get_cname ())));
+		function.add_parameter (new CCodeParameter ("this", "%s*".printf (d.get_cname ())));
 
 		string param_list = "";
 
-		foreach (FormalParameter param in d.get_parameters ()) {
+		foreach (Parameter param in d.get_parameters ()) {
 			generate_type_declaration (param.variable_type, decl_space);
 
-			function.add_parameter (new CCodeFormalParameter (param.name, param.variable_type.get_cname ()));
+			function.add_parameter (new CCodeParameter (param.name, param.variable_type.get_cname ()));
 
 			if (param_list != "") {
 				param_list += ", ";
@@ -116,7 +116,7 @@ public class Vala.DovaDelegateModule : DovaValueModule {
 		}
 
 		if (d.return_type is GenericType) {
-			function.add_parameter (new CCodeFormalParameter ("result", "void *"));
+			function.add_parameter (new CCodeParameter ("result", "void *"));
 
 			if (param_list != "") {
 				param_list += ", ";
@@ -161,7 +161,7 @@ public class Vala.DovaDelegateModule : DovaValueModule {
 		var static_block = new CCodeBlock ();
 		var static_call = new CCodeFunctionCall (new CCodeCastExpression (new CCodeMemberAccess.pointer (priv, "method"), "%s (*) %s".printf (function.return_type, static_param_list)));
 
-		foreach (FormalParameter param in d.get_parameters ()) {
+		foreach (Parameter param in d.get_parameters ()) {
 			instance_call.add_argument (new CCodeIdentifier (param.name));
 			static_call.add_argument (new CCodeIdentifier (param.name));
 		}
