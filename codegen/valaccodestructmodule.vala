@@ -262,6 +262,8 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 					set_cvalue (this_access, new CCodeIdentifier ("(*self)"));
 					var ma = new MemberAccess (this_access, f.name);
 					ma.symbol_reference = f;
+					ma.value_type = f.variable_type.copy ();
+					visit_member_access (ma);
 					copy = get_ref_cexpression (f.variable_type, copy, ma, f);
 					if (copy == null) {
 						// error case, continue to avoid critical
