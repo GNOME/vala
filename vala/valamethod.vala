@@ -27,7 +27,7 @@ using GLib;
 /**
  * Represents a type or namespace method.
  */
-public class Vala.Method : Symbol {
+public class Vala.Method : Subroutine {
 	List<TypeParameter> type_parameters;
 
 	public const string DEFAULT_SENTINEL = "NULL";
@@ -42,22 +42,6 @@ public class Vala.Method : Symbol {
 			_return_type.parent_node = this;
 		}
 	}
-	
-	public Block body {
-		get { return _body; }
-		set {
-			_body = value;
-			if (_body != null) {
-				_body.owner = scope;
-			}
-		}
-	}
-
-	public BasicBlock entry_block { get; set; }
-
-	public BasicBlock return_block { get; set; }
-
-	public BasicBlock exit_block { get; set; }
 
 	/**
 	 * Specifies whether this method may only be called with an instance of
@@ -160,11 +144,6 @@ public class Vala.Method : Symbol {
 	public Parameter this_parameter { get; set; }
 
 	/**
-	 * Specifies the generated `result` variable for postconditions.
-	 */
-	public LocalVariable result_var { get; set; }
-
-	/**
 	 * Specifies the position of the instance parameter in the C function.
 	 */
 	public double cinstance_parameter_position { get; set; }
@@ -243,7 +222,6 @@ public class Vala.Method : Symbol {
 	private List<Expression> preconditions;
 	private List<Expression> postconditions;
 	private DataType _return_type;
-	private Block _body;
 
 	private weak Method _base_method;
 	private Method _base_interface_method;

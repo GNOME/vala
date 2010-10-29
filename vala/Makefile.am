@@ -136,6 +136,7 @@ libvalacore_la_VALASOURCES = \
 	valastringliteral.vala \
 	valastruct.vala \
 	valastructvaluetype.vala \
+	valasubroutine.vala \
 	valaswitchlabel.vala \
 	valaswitchsection.vala \
 	valaswitchstatement.vala \

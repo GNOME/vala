@@ -173,6 +173,10 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			}
 		}
 
+		visit_subroutine (m);
+	}
+
+	void visit_subroutine (Subroutine m) {
 		if (m.body == null) {
 			return;
 		}
@@ -183,7 +187,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 
 		m.return_block.connect (m.exit_block);
 
-		if (context.profile == Profile.DOVA && !(m.return_type is VoidType)) {
+		if (context.profile == Profile.DOVA && m.result_var != null) {
 			// ensure result is defined at end of method
 			var result_ma = new MemberAccess.simple ("result", m.source_reference);
 			result_ma.symbol_reference = m.result_var;
@@ -204,8 +208,8 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		if (current_block != null) {
 			// end of method body reachable
 
-			if (context.profile != Profile.DOVA && !(m.return_type is VoidType)) {
-				Report.error (m.source_reference, "missing return statement at end of method or lambda body");
+			if (context.profile != Profile.DOVA && m.result_var != null) {
+				Report.error (m.source_reference, "missing return statement at end of subroutine body");
 				m.error = true;
 			}
 
@@ -499,45 +503,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_property_accessor (PropertyAccessor acc) {
-		if (acc.body == null) {
-			return;
-		}
-
-		acc.entry_block = new BasicBlock.entry ();
-		acc.return_block = new BasicBlock ();
-		acc.exit_block = new BasicBlock.exit ();
-
-		acc.return_block.connect (acc.exit_block);
-
-		if (context.profile == Profile.DOVA && acc.readable) {
-			// ensure result is defined at end of method
-			var result_ma = new MemberAccess.simple ("result", acc.source_reference);
-			result_ma.symbol_reference = acc.result_var;
-			acc.return_block.add_node (result_ma);
-		}
-
-		current_block = new BasicBlock ();
-		acc.entry_block.connect (current_block);
-
-		jump_stack.add (new JumpTarget.return_target (acc.return_block));
-		jump_stack.add (new JumpTarget.exit_target (acc.exit_block));
-
-		acc.accept_children (this);
-
-		jump_stack.remove_at (jump_stack.size - 1);
-
-		if (current_block != null) {
-			// end of property accessor body reachable
-
-			if (context.profile != Profile.DOVA && acc.readable) {
-				Report.error (acc.source_reference, "missing return statement at end of property getter body");
-				acc.error = true;
-			}
-
-			current_block.connect (acc.return_block);
-		}
-
-		analyze_body (acc.entry_block);
+		visit_subroutine (acc);
 	}
 
 	public override void visit_block (Block b) {

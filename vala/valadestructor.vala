@@ -25,12 +25,7 @@ using GLib;
 /**
  * Represents a class or instance destructor.
  */
-public class Vala.Destructor : Symbol {
-	/**
-	 * The body of this constructor.
-	 */
-	public Block body { get; set; }
-	
+public class Vala.Destructor : Subroutine {
 	/**
 	 * Specifies the generated `this` parameter for instance methods.
 	 */

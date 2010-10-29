@@ -25,12 +25,7 @@ using GLib;
 /**
  * Represents a class or instance constructor.
  */
-public class Vala.Constructor : Symbol {
-	/**
-	 * The body of this constructor.
-	 */
-	public Block body { get; set; }
-	
+public class Vala.Constructor : Subroutine {
 	/**
 	 * Specifies the generated `this` parameter for instance methods.
 	 */

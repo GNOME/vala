@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a get or set accessor of a property in the source code.
  */
-public class Vala.PropertyAccessor : Symbol {
+public class Vala.PropertyAccessor : Subroutine {
 	/**
 	 * The corresponding property.
 	 */
@@ -63,25 +63,6 @@ public class Vala.PropertyAccessor : Symbol {
 	public bool construction { get; set; }
 
 	/**
-	 * The accessor body.
-	 */
-	public Block? body {
-		get { return _body; }
-		set {
-			_body = value;
-			if (_body != null) {
-				_body.owner = scope;
-			}
-		}
-	}
-
-	public BasicBlock entry_block { get; set; }
-
-	public BasicBlock return_block { get; set; }
-
-	public BasicBlock exit_block { get; set; }
-
-	/**
 	 * True if the body was automatically generated
 	 */
 	public bool automatic_body { get; set; }
@@ -90,11 +71,6 @@ public class Vala.PropertyAccessor : Symbol {
 	 * Represents the generated value parameter in a set accessor.
 	 */
 	public Parameter value_parameter { get; set; }
-
-	/**
-	 * Specifies the generated `result' variable in a get accessor.
-	 */
-	public LocalVariable? result_var { get; set; }
 
 	public virtual string get_default_cname () {
 		var t = (TypeSymbol) prop.parent_symbol;
@@ -119,7 +95,6 @@ public class Vala.PropertyAccessor : Symbol {
 
 	private DataType _value_type;
 	private string? _cname;
-	private Block _body;
 	
 	/**
 	 * Creates a new property accessor.
