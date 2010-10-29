@@ -306,7 +306,10 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 			Rule.one_of ({
 				word, space, newline, dot
 			})
-			.set_reduce (() => { ((InlineContent) peek ()).content.add ((Inline) pop ()); })
+			.set_reduce (() => {
+				var head = (Inline) pop ();
+				((InlineContent) peek ()).content.add (head);
+			})
 		})
 		.set_name ("RawText");
 
@@ -314,7 +317,10 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 			Rule.one_of ({
 				run, dot
 			})
-			.set_reduce (() => { ((InlineContent) peek ()).content.add ((Inline) pop ()); })
+			.set_reduce (() => {
+				var head = (Inline) pop ();
+				((InlineContent) peek ()).content.add (head);
+			})
 		})
 		.set_name ("FormatedText");
 
@@ -489,7 +495,10 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		})
 		.set_name ("Parameter")
 		.set_start (() => { push (_factory.create_run (Run.Style.MONOSPACED)); })
-		.set_reduce (() => { ((InlineContent) peek ()).content.add ((Inline) pop ()); });
+		.set_reduce (() => {
+			var head = (Inline) pop ();
+			((InlineContent) peek ()).content.add (head);
+		});
 
 		run.set_rule (
 			Rule.many ({
@@ -517,7 +526,10 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		})
 		.set_name ("ParagraphElement")
 		.set_start (() => { push (_factory.create_paragraph ()); })
-		.set_reduce (() => { ((BlockContent) peek ()).content.add ((Block) pop ()); });
+		.set_reduce (() => {
+			var head = (Block) pop ();
+			((BlockContent) peek ()).content.add (head);
+		});
 
 		Rule source = Rule.seq ({
 			TokenType.GTKDOC_SOURCE_OPEN.action ((token) => { ((GirDocumentationScanner) _scanner).set_code_escape_mode (true); }),
@@ -525,13 +537,19 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 				word.action ((token) => { ((SourceCode) peek ()).code = token.to_string (); })
 			})
 			.set_start (() => { push (_factory.create_source_code ()); })
-			.set_reduce (() => { ((Paragraph) peek ()).content.add ((Inline) pop ()); }),
+			.set_reduce (() => {
+				var head = (Inline) pop ();
+				((Paragraph) peek ()).content.add (head);
+			}),
 			TokenType.GTKDOC_SOURCE_CLOSE.action ((token) => { ((GirDocumentationScanner) _scanner).set_code_escape_mode (false); }),
 			optional_unprinted_spaces
 		})
 		.set_name ("Source")
 		.set_start (() => { push (_factory.create_paragraph ()); })
-		.set_reduce (() => { ((BlockContent) peek ()).content.add ((Block) pop ()); });
+		.set_reduce (() => {
+			var head = (Block) pop ();
+			((BlockContent) peek ()).content.add (head);
+		});
 
 		Rule program_listing_element = Rule.seq ({
 			TokenType.GTKDOC_PROGRAMLISTING_ELEMENT_OPEN.action ((token) => { ((GirDocumentationScanner) _scanner).set_code_element_escape_mode (true); }),
@@ -539,13 +557,19 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 				word.action ((token) => { ((SourceCode) peek ()).code = token.to_string (); })
 			})
 			.set_start (() => { push (_factory.create_source_code ()); })
-			.set_reduce (() => { ((Paragraph) peek ()).content.add ((Inline) pop ()); }),
+			.set_reduce (() => {
+				var head = (Inline) pop ();
+				((Paragraph) peek ()).content.add (head);
+			}),
 			TokenType.GTKDOC_PROGRAMLISTING_ELEMENT_CLOSE.action ((token) => { ((GirDocumentationScanner) _scanner).set_code_element_escape_mode (false); }),
 			optional_unprinted_spaces
 		})
 		.set_name ("ProgramListing")
 		.set_start (() => { push (_factory.create_paragraph ()); })
-		.set_reduce (() => { ((BlockContent) peek ()).content.add ((Block) pop ()); });
+		.set_reduce (() => {
+			var head = (Block) pop ();
+			((BlockContent) peek ()).content.add (head);
+		});
 
 		Rule example_element = Rule.seq ({
 			Rule.one_of ({
@@ -574,7 +598,10 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		})
 		.set_name ("Paragraph")
 		.set_start (() => { push (_factory.create_paragraph ()); })
-		.set_reduce (() => { ((BlockContent) peek ()).content.add ((Block) pop ()); });
+		.set_reduce (() => {
+			var head = (Block) pop ();
+			((BlockContent) peek ()).content.add (head);
+		});
 
 		Rule note_element = Rule.seq ({
 			TokenType.GTKDOC_NOTE_ELEMENT_OPEN,
@@ -634,14 +661,20 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 					optional_unprinted_spaces
 				})
 				.set_start (() => { push (_factory.create_list_item ()); })
-				.set_reduce (() => { ((Content.List) peek ()).items.add ((Content.ListItem) pop ()); })
+				.set_reduce (() => {
+					var head = (Content.ListItem) pop ();
+					((Content.List) peek ()).items.add (head);
+				})
 			}),
 			TokenType.GTKDOC_VARIABLE_LIST_ELEMENT_CLOSE,
 			optional_unprinted_spaces
 		})
 		.set_name ("VariableList")
 		.set_start (() => { push (_factory.create_list ()); })
-		.set_reduce (() => { ((BlockContent) peek ()).content.add ((Block) pop ()); });
+		.set_reduce (() => {
+			var head = (Block) pop ();
+			((BlockContent) peek ()).content.add (head);
+		});
 
 		Rule list_element = Rule.seq ({
 			TokenType.GTKDOC_ITEMIZED_LIST_ELEMENT_OPEN,
@@ -655,14 +688,20 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 					optional_unprinted_spaces
 				})
 				.set_start (() => { push (_factory.create_list_item ()); })
-				.set_reduce (() => { ((Content.List) peek ()).items.add ((Content.ListItem) pop ()); })
+				.set_reduce (() => {
+					var head = (Content.ListItem) pop ();
+					((Content.List) peek ()).items.add (head);
+				})
 			}),
 			TokenType.GTKDOC_ITEMIZED_LIST_ELEMENT_CLOSE,
 			optional_unprinted_spaces
 		})
 		.set_name ("ItemizedList")
 		.set_start (() => { push (_factory.create_list ()); })
-		.set_reduce (() => { ((BlockContent) peek ()).content.add ((Block) pop ()); });
+		.set_reduce (() => {
+			var head = (Block) pop ();
+			((BlockContent) peek ()).content.add (head);
+		});
 
 		Rule simple_list_element = Rule.seq ({
 			TokenType.GTKDOC_SIMPLELIST_ELEMENT_OPEN,
@@ -676,14 +715,20 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 					optional_unprinted_spaces
 				})
 				.set_start (() => { push (_factory.create_list_item ()); })
-				.set_reduce (() => { ((Content.List) peek ()).items.add ((Content.ListItem) pop ()); })
+				.set_reduce (() => {
+					var head = (Content.ListItem) pop ();
+					((Content.List) peek ()).items.add (head);
+				})
 			}),
 			TokenType.GTKDOC_SIMPLELIST_ELEMENT_CLOSE,
 			optional_unprinted_spaces
 		})
 		.set_name ("SimpleList")
 		.set_start (() => { push (_factory.create_list ()); })
-		.set_reduce (() => { ((BlockContent) peek ()).content.add ((Block) pop ()); });
+		.set_reduce (() => {
+			var head = (Block) pop ();
+			((BlockContent) peek ()).content.add (head);
+		});
 
 		Rule block_element = Rule.one_of ({
 			paragraph_element, list_element, note_element, warning_element, source,
@@ -694,11 +739,15 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		// TODO: find out why the clean version does not work ...
 		Rule first_paragraph = Rule.many ({
 			Rule.one_of ({
-				Rule.seq ({ run }).set_reduce (() => { ((InlineContent) peek ()).content.add ((Inline) pop ()); }),
+				Rule.seq ({ run }).set_reduce (() => {
+					var head = (Inline) pop ();
+					((InlineContent) peek ()).content.add (head);
+				}),
 				TokenType.GTKDOC_DOT.action ((token) => {
 					((InlineContent) peek ()).content.add (_factory.create_text ("."));
 					if (_gir_is_first_paragraph) {
-						((BlockContent) peek ()).content.add ((Block) pop ());
+						var head = (Block) pop ();
+						((BlockContent) peek ()).content.add (head);
 						push (_factory.create_paragraph ());
 						_gir_is_first_paragraph = false;
 					}
@@ -707,7 +756,11 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		})
 		.set_name ("BriefDescription")
 		.set_start (() => { push (_factory.create_paragraph ()); })
-		.set_reduce (() => { ((BlockContent) peek ()).content.add ((Block) pop ()); _gir_is_first_paragraph = true; });
+		.set_reduce (() => {
+			var head = (Block) pop ();
+			((BlockContent) peek ()).content.add (head);
+			_gir_is_first_paragraph = true;
+		});
 
 		Rule comment = Rule.seq ({
 			Rule.option ({
@@ -727,7 +780,10 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 			run_with_dot
 		})
 		.set_name ("Taglet")
-		.set_reduce (() => { ((Comment) peek ()).taglets.add ((Taglet) pop ()); });
+		.set_reduce (() => {
+			var head = (Taglet) pop ();
+			((Comment) peek ()).taglets.add (head);
+		});
 
 		_gir_taglet_parser.set_root_rule (taglet);
 		_gir_parser.set_root_rule (comment);
@@ -866,9 +922,15 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 				Rule.one_of ({
 					text, inline_taglet, bold, italic, underlined, monospace, embedded, link, source_code
 				})
-				.set_reduce (() => { ((InlineContent) peek ()).content.add ((Inline) pop ()); }),
+				.set_reduce (() => {
+					var head = (Inline) pop ();
+					((InlineContent) peek ()).content.add (head);
+				}),
 				Rule.option ({ space })
-				.set_reduce (() => { ((InlineContent) peek ()).content.add ((Inline) pop ()); })
+				.set_reduce (() => {
+					var head = (Inline) pop ();
+					((InlineContent) peek ()).content.add (head);
+				})
 			})
 			.set_name ("Run")
 		);
@@ -890,7 +952,10 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 			})
 			.set_name ("Paragraph")
 			.set_start (() => { push (_factory.create_paragraph ()); })
-			.set_reduce (() => { ((BlockContent) peek ()).content.add ((Block) pop ()); });
+			.set_reduce (() => {
+				var head = (Block) pop ();
+				((BlockContent) peek ()).content.add (head);
+			});
 
 		Rule indented_item =
 			Rule.seq ({
@@ -976,7 +1041,10 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 			})
 			.set_name ("Cell")
 			.set_start (() => { push (_factory.create_table_cell ()); })
-			.set_reduce (() => { ((TableRow) peek ()).cells.add ((TableCell) pop ()); });
+			.set_reduce (() => {
+				var head = (TableCell) pop ();
+				((TableRow) peek ()).cells.add (head);
+			});
 		Rule table_row =
 			Rule.seq ({
 				TokenType.DOUBLE_PIPE,
@@ -987,7 +1055,10 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 			})
 			.set_name ("Row")
 			.set_start (() => { push (_factory.create_table_row ()); })
-			.set_reduce (() => { ((Table) peek ()).rows.add ((TableRow) pop ()); });
+			.set_reduce (() => {
+				var head = (TableRow) pop ();
+				((Table) peek ()).rows.add (head);
+			});
 		Rule table =
 			Rule.seq ({
 				Rule.many ({
@@ -996,7 +1067,10 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 			})
 			.set_name ("Table")
 			.set_start (() => { push (_factory.create_table ()); })
-			.set_reduce (() => { ((BlockContent) peek ()).content.add ((Block) pop ()); });
+			.set_reduce (() => {
+				var head = (Block) pop ();
+				((BlockContent) peek ()).content.add (head);
+			});
 
 		Rule headline =
 			Rule.one_of ({
@@ -1033,7 +1107,10 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 			})
 			.set_name ("Headline")
 			.set_start (() => { push (_factory.create_headline ()); })
-			.set_reduce (() => { ((BlockContent) peek ()).content.add ((Block) pop ()); });
+			.set_reduce (() => {
+				var head = (Block) pop ();
+				((BlockContent) peek ()).content.add (head);
+			});
 
 		Rule blocks =
 			Rule.one_of ({
@@ -1088,7 +1165,10 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 				})
 			})
 			.set_name ("Taglet")
-			.set_reduce (() => { ((Comment) peek ()).taglets.add ((Taglet) pop ()); });
+			.set_reduce (() => {
+				var head = (Taglet) pop ();
+				((Comment) peek ()).taglets.add (head);
+			});
 
 		Rule comment =
 			Rule.seq ({
