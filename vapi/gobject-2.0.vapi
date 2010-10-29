@@ -400,8 +400,8 @@ namespace GLib {
 		public unowned EnumValue[] values;
 	}
 
-	[Compact]
-	public class EnumValue {
+	[CCode (has_type_id = false)]
+	public struct EnumValue {
 		public int value;
 		public unowned string value_name;
 		public unowned string value_nick;
