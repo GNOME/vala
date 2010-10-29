@@ -78,7 +78,7 @@ public class Valadoc.Api.Method : Member {
 			if (is_constructor) {
 				return false;
 			}
-			return ((Vala.Method) symbol).binding == MemberBinding.STATIC;
+			return ((Vala.Method) symbol).binding == Vala.MemberBinding.STATIC;
 		}
 	}
 

@@ -53,7 +53,7 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 
 	void parse_file (string gir_file) {
 		reader = new Vala.MarkupReader (gir_file);
-		this.current_source_file = new Vala.SourceFile (tree.context, GLib.Path. get_basename (gir_file));
+		this.current_source_file = new Vala.SourceFile (tree.context, Vala.SourceFileType.PACKAGE, GLib.Path.get_basename (gir_file));
 
 		// xml prolog
 		next ();

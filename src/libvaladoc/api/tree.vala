@@ -163,7 +163,7 @@ public class Valadoc.Api.Tree {
 		this.context.experimental = settings.experimental;
 		this.context.experimental_non_null = settings.experimental || settings.experimental_non_null;
 		this.context.dbus_transformation = !settings.disable_dbus_transformation;
-
+		this.context.vapi_directories = settings.vapi_directories;
 
 		if (settings.basedir == null) {
 			context.basedir = realpath (".");
@@ -241,15 +241,15 @@ public class Valadoc.Api.Tree {
 			return true;
 		}
 
-		var package_path = context.get_package_path (pkg, settings.vapi_directories);
+		var package_path = context.get_vapi_path (pkg) ?? context.get_gir_path (pkg);
 		if (package_path == null) {
+			Vala.Report.error (null, "Package `%s' not found in specified Vala API directories or GObject-Introspection GIR directories".printf (pkg));
 			return false;
 		}
 
 		context.add_package (pkg);
 
-
-		var vfile = new Vala.SourceFile (context, package_path, true);
+		var vfile = new Vala.SourceFile (context, Vala.SourceFileType.PACKAGE, package_path);
 		context.add_source_file (vfile);
 
 		Package vdpkg = new Package (vfile, pkg, true);
@@ -285,7 +285,7 @@ public class Valadoc.Api.Tree {
 	public void add_depencies (string[] packages) {
 		foreach (string package in packages) {
 			if (!add_package (package)) {
-				Vala.Report.error (null, "%s not found in specified Vala API directories".printf (package));
+				Vala.Report.error (null, "Package `%s' not found in specified Vala API directories or GObject-Introspection GIR directories".printf (package));
 			}
 		}
 	}
@@ -299,7 +299,7 @@ public class Valadoc.Api.Tree {
 			if (FileUtils.test (source, FileTest.EXISTS)) {
 				var rpath = realpath (source);
 				if (source.has_suffix (".vala") || source.has_suffix (".gs")) {
-					var source_file = new Vala.SourceFile (context, rpath);
+					var source_file = new Vala.SourceFile (context, Vala.SourceFileType.SOURCE, rpath);
 
 
 					if (this.sourcefiles == null) {
@@ -324,9 +324,9 @@ public class Valadoc.Api.Tree {
 					context.add_source_file (source_file);
 				} else if (source.has_suffix (".vapi")) {
 					string file_name = Path.get_basename (source);
-					file_name = file_name.ndup (file_name.size() - ".vapi".size());
+					file_name = file_name.ndup (file_name.length - ".vapi".length);
 
-					var vfile = new Vala.SourceFile (context, rpath, true);
+					var vfile = new Vala.SourceFile (context, Vala.SourceFileType.PACKAGE, rpath);
 					Package vdpkg = new Package (vfile, file_name);
 					context.add_source_file (vfile);
 					this.packages.add (vdpkg);

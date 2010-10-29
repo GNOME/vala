@@ -67,7 +67,7 @@ public class Valadoc.Html.MarkupWriter : Valadoc.MarkupWriter {
 		return this;
 	}
 
-	private override bool inline_element (string name) {
+	protected override bool inline_element (string name) {
 		return name != "html"
 			&& name != "head"
 			&& name != "title"
@@ -90,7 +90,7 @@ public class Valadoc.Html.MarkupWriter : Valadoc.MarkupWriter {
 			&& name != "img";
 	}
 
-	private override bool content_inline_element (string name) {
+	protected override bool content_inline_element (string name) {
 		return name == "title"
 			|| name == "p"
 			|| name == "a"

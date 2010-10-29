@@ -41,7 +41,7 @@ public class Valadoc.Api.Field : Member {
 				return false;
 			}
 
-			return ((Vala.Field) symbol).binding == MemberBinding.STATIC;
+			return ((Vala.Field) symbol).binding == Vala.MemberBinding.STATIC;
 		}
 	}
 

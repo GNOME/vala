@@ -51,7 +51,8 @@ namespace Gtkdoc.Config {
 			var opt_context = new OptionContext ("- Vala GTK-Doc");
 			opt_context.set_help_enabled (true);
 			opt_context.add_main_entries (options, null);
-			opt_context.parse (ref args);
+			unowned string[] gtkdoc_args = args;
+			opt_context.parse (ref gtkdoc_args);
 		} catch (OptionError e) {
 			warning ("GtkDoc: Error: %s", e.message);
 			warning ("GtkDoc: Run '-X --help' to see a full list of available command line options.\n");
