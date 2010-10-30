@@ -241,7 +241,7 @@ namespace GLib {
 	public class DBusConnection : GLib.Object, GLib.Initable, GLib.AsyncInitable {
 		[CCode (type = "void", has_construct_function = false)]
 		public async DBusConnection (GLib.IOStream stream, string guid, GLib.DBusConnectionFlags flags, GLib.DBusAuthObserver? observer = null, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public uint add_filter (GLib.DBusMessageFilterFunction filter_function, GLib.DestroyNotify user_data_free_func);
+		public uint add_filter (owned GLib.DBusMessageFilterFunction filter_function);
 		public async GLib.Variant call (string bus_name, string object_path, string interface_name, string method_name, GLib.Variant? parameters, GLib.VariantType reply_type, GLib.DBusCallFlags flags, int timeout_msec, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public GLib.Variant call_sync (string bus_name, string object_path, string interface_name, string method_name, GLib.Variant? parameters, GLib.VariantType reply_type, GLib.DBusCallFlags flags, int timeout_msec, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool close (GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -839,8 +839,8 @@ namespace GLib {
 	[Compact]
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class IOSchedulerJob {
-		public bool send_to_mainloop (GLib.SourceFunc func, GLib.DestroyNotify? notify);
-		public void send_to_mainloop_async (GLib.SourceFunc func, GLib.DestroyNotify? notify);
+		public bool send_to_mainloop (owned GLib.SourceFunc func);
+		public void send_to_mainloop_async (owned GLib.SourceFunc func);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class IOStream : GLib.Object {
@@ -1057,9 +1057,9 @@ namespace GLib {
 	public class Periodic : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Periodic (uint hz, int priority);
-		public uint add (GLib.PeriodicTickFunc callback, GLib.DestroyNotify notify);
+		public uint add (owned GLib.PeriodicTickFunc callback);
 		public void block ();
-		public void damaged (GLib.PeriodicRepairFunc callback, GLib.DestroyNotify notify);
+		public void damaged (owned GLib.PeriodicRepairFunc callback);
 		public uint get_hz ();
 		public int get_priority ();
 		public void remove (uint tag);
@@ -2617,7 +2617,7 @@ namespace GLib {
 	[CCode (cname = "g_io_scheduler_cancel_all_jobs", cheader_filename = "gio/gio.h")]
 	public static void g_io_scheduler_cancel_all_jobs ();
 	[CCode (cname = "g_io_scheduler_push_job", cheader_filename = "gio/gio.h")]
-	public static void g_io_scheduler_push_job (GLib.IOSchedulerJobFunc job_func, GLib.DestroyNotify? notify, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null);
+	public static void g_io_scheduler_push_job (owned GLib.IOSchedulerJobFunc job_func, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null);
 	[CCode (cname = "g_simple_async_report_error_in_idle", cheader_filename = "gio/gio.h")]
 	public static void g_simple_async_report_error_in_idle (GLib.Object object, GLib.AsyncReadyCallback callback, GLib.Quark domain, int code, string format);
 	[CCode (cname = "g_simple_async_report_gerror_in_idle", cheader_filename = "gio/gio.h")]
