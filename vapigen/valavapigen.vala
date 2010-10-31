@@ -160,8 +160,16 @@ class Vala.VAPIGen : Object {
 
 		// interface writer ignores external packages
 		foreach (SourceFile file in context.get_source_files ()) {
-			if (!file.filename.has_suffix (".vapi") && file.filename in sources) {
+			if (file.filename.has_suffix (".vapi")) {
+				continue;
+			}
+			if (file.filename in sources) {
 				file.file_type = SourceFileType.SOURCE;
+			} else if (file.filename.has_suffix (".metadata")) {
+				string gir_filename = "%s.gir".printf (file.filename.ndup (file.filename.length - ".metadata".length));
+				if (gir_filename in sources) {
+					file.file_type = SourceFileType.SOURCE;
+				}
 			}
 		}
 
