@@ -36,7 +36,7 @@ namespace Gdk {
 		public int get_bits_per_sample ();
 		public Gdk.Colorspace get_colorspace ();
 		public static unowned Gdk.PixbufFormat get_file_info (string filename, out int width, out int height);
-		public static unowned GLib.SList get_formats ();
+		public static GLib.SList<weak Gdk.PixbufFormat> get_formats ();
 		public bool get_has_alpha ();
 		public int get_height ();
 		public int get_n_channels ();
@@ -92,9 +92,11 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public class PixbufFormat {
 		public unowned string get_description ();
-		public unowned string get_extensions ();
+		[CCode (array_length = false, array_null_terminated = true)]
+		public string[] get_extensions ();
 		public unowned string get_license ();
-		public unowned string get_mime_types ();
+		[CCode (array_length = false, array_null_terminated = true)]
+		public string[] get_mime_types ();
 		public unowned string get_name ();
 		public bool is_disabled ();
 		public bool is_scalable ();
