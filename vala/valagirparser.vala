@@ -480,6 +480,8 @@ public class Vala.GirParser : CodeVisitor {
 		public SourceReference source_reference;
 	}
 
+	static GLib.Regex type_from_string_regex;
+
 	MarkupReader reader;
 
 	CodeContext context;
@@ -892,6 +894,177 @@ public class Vala.GirParser : CodeVisitor {
 		metadata_stack.remove_at (metadata_stack.size - 1);
 	}
 
+	bool parse_type_arguments_from_string (DataType parent_type, string type_arguments, SourceReference? source_reference = null) {
+		int type_arguments_length = (int) type_arguments.length;
+		GLib.StringBuilder current = new GLib.StringBuilder.sized (type_arguments_length);
+
+		int depth = 0;
+		for (var c = 0 ; c < type_arguments_length ; c++) {
+			if (type_arguments[c] == '<' || type_arguments[c] == '[') {
+				depth++;
+				current.append_unichar (type_arguments[c]);
+			} else if (type_arguments[c] == '>' || type_arguments[c] == ']') {
+				depth--;
+				current.append_unichar (type_arguments[c]);
+			} else if (type_arguments[c] == ',') {
+				if (depth == 0) {
+					var dt = parse_type_from_string (current.str, true, source_reference);
+					if (dt == null) {
+						return false;
+					}
+					parent_type.add_type_argument (dt);
+					current.truncate ();
+				} else {
+					current.append_unichar (type_arguments[c]);
+				}
+			} else {
+				current.append_unichar (type_arguments[c]);
+			}
+		}
+
+		var dt = parse_type_from_string (current.str, true, source_reference);
+		if (dt == null) {
+			return false;
+		}
+		parent_type.add_type_argument (dt);
+
+		return true;
+	}
+
+	DataType? parse_type_from_string (string type_string, bool owned_by_default, SourceReference? source_reference = null) {
+		if (type_from_string_regex == null) {
+			try {
+				type_from_string_regex = new GLib.Regex ("^(?:(owned|unowned|weak) +)?([0-9a-zA-Z_\\.]+)(?:<(.+)>)?(\\*+)?(\\[(,*)?\\])?(\\?)?$", GLib.RegexCompileFlags.ANCHORED | GLib.RegexCompileFlags.DOLLAR_ENDONLY | GLib.RegexCompileFlags.OPTIMIZE);
+			} catch (GLib.RegexError e) {
+				GLib.error ("Unable to compile regex: %s", e.message);
+			}
+		}
+
+		GLib.MatchInfo match;
+		if (!type_from_string_regex.match (type_string, 0, out match)) {
+			Report.error (source_reference, "unable to parse type");
+			return null;
+		}
+
+		DataType? type = null;
+
+		var ownership_data = match.fetch (1);
+		var type_name = match.fetch (2);
+		var type_arguments_data = match.fetch (3);
+		var pointers_data = match.fetch (4);
+		var array_data = match.fetch (5);
+		var nullable_data = match.fetch (6);
+
+		var nullable = nullable_data != null && nullable_data.length > 0;
+
+		if (ownership_data == null && type_name == "void") {
+			if (array_data == null && !nullable) {
+				type = new VoidType (source_reference);
+				if (pointers_data != null) {
+					for (int i=0; i < pointers_data.length; i++) {
+						type = new PointerType (type);
+					}
+				}
+				return type;
+			} else {
+				Report.error (source_reference, "invalid void type");
+				return null;
+			}
+		}
+
+		bool value_owned = owned_by_default;
+
+		if (ownership_data == "owned") {
+			if (owned_by_default) {
+				Report.error (source_reference, "unexpected `owned' keyword");
+			} else {
+				value_owned = true;
+			}
+		} else if (ownership_data == "unowned") {
+			if (owned_by_default) {
+				value_owned = true;
+			} else {
+				Report.error (source_reference, "unexpected `unowned' keyword");
+				return null;
+			}
+		}
+
+		var sym = parse_symbol_from_string (type_name, source_reference);
+		if (sym == null) {
+			return null;
+		}
+		type = new UnresolvedType.from_symbol (sym, source_reference);
+
+		if (type_arguments_data != null && type_arguments_data.length > 0) {
+			if (!parse_type_arguments_from_string (type, type_arguments_data, source_reference)) {
+				return null;
+			}
+		}
+
+		if (pointers_data != null) {
+			for (int i=0; i < pointers_data.length; i++) {
+				type = new PointerType (type);
+			}
+		}
+
+		if (array_data != null) {
+			type = new ArrayType (type, (int) array_data.length + 1, source_reference);
+		}
+
+		type.nullable = nullable;
+		type.value_owned = value_owned;
+		return type;
+	}
+
+	DataType? element_get_type (DataType orig_type, bool owned_by_default, out bool changed = null) {
+		if (&changed != null) {
+			changed = false;
+		}
+
+		var type = orig_type;
+
+		if (metadata.has_argument (ArgumentType.TYPE)) {
+			var new_type = parse_type_from_string (metadata.get_string (ArgumentType.TYPE), owned_by_default, metadata.get_source_reference (ArgumentType.TYPE));
+			if (&changed != null) {
+				changed = true;
+			}
+			return new_type;
+		}
+
+		if (metadata.has_argument (ArgumentType.TYPE_ARGUMENTS)) {
+			parse_type_arguments_from_string (type, metadata.get_string (ArgumentType.TYPE_ARGUMENTS), metadata.get_source_reference (ArgumentType.TYPE_ARGUMENTS));
+			if (&changed != null) {
+				changed = true;
+			}
+		}
+
+		if (type is VoidType) {
+			return type;
+		}
+
+		if (metadata.get_bool (ArgumentType.ARRAY)) {
+			type = new ArrayType (type, 1, type.source_reference);
+			if (&changed != null) {
+				changed = true;
+			}
+		}
+
+		if (owned_by_default) {
+			if (metadata.has_argument (ArgumentType.UNOWNED)) {
+				type.value_owned = !metadata.get_bool (ArgumentType.UNOWNED);
+			}
+		} else {
+			if (metadata.has_argument (ArgumentType.OWNED)) {
+				type.value_owned = metadata.get_bool (ArgumentType.OWNED);
+			}
+		}
+		if (metadata.has_argument (ArgumentType.NULLABLE)) {
+			type.nullable = metadata.get_bool (ArgumentType.NULLABLE);
+		}
+
+		return type;
+	}
+
 	void parse_repository () {
 		start_element ("repository");
 		if (reader.get_attribute ("version") != GIR_VERSION) {
@@ -1099,7 +1272,7 @@ public class Vala.GirParser : CodeVisitor {
 		var alias = new Alias ();
 		alias.source_reference = get_current_src ();
 		alias.name = reader.get_attribute ("name");
-		alias.base_type = parse_type_from_name (reader.get_attribute ("target"));
+		alias.base_type = element_get_type (parse_type_from_gir_name (reader.get_attribute ("target")), true);
 		alias.parent_namespace = current_namespace;
 		next ();
 		end_element ("alias");
@@ -1314,7 +1487,15 @@ public class Vala.GirParser : CodeVisitor {
 			param = new Parameter.with_ellipsis (get_current_src ());
 			end_element ("varargs");
 		} else {
-			var type = parse_type (null, out array_length_idx, transfer == "full");
+			string ctype;
+			var type = parse_type (out ctype, out array_length_idx, transfer == "full");
+			bool changed;
+			type = element_get_type (type, false, out changed);
+			if (!changed) {
+				// discard ctype, duplicated information
+				ctype = null;
+			}
+
 			if (transfer == "full" || transfer == "container" || destroy != null) {
 				type.value_owned = true;
 			}
@@ -1322,6 +1503,7 @@ public class Vala.GirParser : CodeVisitor {
 				type.nullable = true;
 			}
 			param = new Parameter (name, type, get_current_src ());
+			param.ctype = ctype;
 			if (direction == "out") {
 				param.direction = ParameterDirection.OUT;
 			} else if (direction == "inout") {
@@ -1368,7 +1550,7 @@ public class Vala.GirParser : CodeVisitor {
 			type_name = "GLib.GenericArray";
 		}
 
-		DataType type = parse_type_from_name (type_name);
+		DataType type = parse_type_from_gir_name (type_name);
 
 		// type arguments / element types
 		while (current_token == MarkupTokenType.START_ELEMENT) {
@@ -1381,7 +1563,7 @@ public class Vala.GirParser : CodeVisitor {
 		return type;
 	}
 
-	DataType parse_type_from_name (string type_name) {
+	DataType parse_type_from_gir_name (string type_name) {
 		DataType type;
 		if (type_name == "none") {
 			type = new VoidType (get_current_src ());
@@ -1523,7 +1705,7 @@ public class Vala.GirParser : CodeVisitor {
 
 		string parent = reader.get_attribute ("parent");
 		if (parent != null) {
-			cl.add_base_type (parse_type_from_name (parent));
+			cl.add_base_type (parse_type_from_gir_name (parent));
 		}
 
 		next ();
@@ -1537,7 +1719,7 @@ public class Vala.GirParser : CodeVisitor {
 
 			if (reader.name == "implements") {
 				start_element ("implements");
-				cl.add_base_type (parse_type_from_name (reader.get_attribute ("name")));
+				cl.add_base_type (parse_type_from_gir_name (reader.get_attribute ("name")));
 				next ();
 				end_element ("implements");
 			} else if (reader.name == "constant") {
@@ -1604,7 +1786,7 @@ public class Vala.GirParser : CodeVisitor {
 
 			if (reader.name == "prerequisite") {
 				start_element ("prerequisite");
-				iface.add_prerequisite (parse_type_from_name (reader.get_attribute ("name")));
+				iface.add_prerequisite (parse_type_from_gir_name (reader.get_attribute ("name")));
 				next ();
 				end_element ("prerequisite");
 			} else if (reader.name == "field") {
@@ -1707,6 +1889,7 @@ public class Vala.GirParser : CodeVisitor {
 		string allow_none = reader.get_attribute ("allow-none");
 		next ();
 		var type = parse_type ();
+		type = element_get_type (type, true);
 		if (type is DelegateType && current_gtype_struct_for != null) {
 			// virtual
 			var callback_scope = new CallbackScope ();
@@ -1833,6 +2016,7 @@ public class Vala.GirParser : CodeVisitor {
 		} else {
 			return_type = new VoidType ();
 		}
+		return_type = element_get_type (return_type, true);
 
 		Symbol s;
 
