@@ -481,7 +481,7 @@ public class Vala.GirParser : CodeVisitor {
 		return type;
 	}
 
-	Parameter parse_parameter (out int array_length_idx = null, out int closure_idx = null, out int destroy_idx = null, out string? scope = null) {
+	Parameter parse_parameter (out int array_length_idx = null, out int closure_idx = null, out int destroy_idx = null, out string? scope = null, string? default_name = null) {
 		Parameter param;
 
 		if (&array_length_idx != null) {
@@ -496,6 +496,9 @@ public class Vala.GirParser : CodeVisitor {
 
 		start_element ("parameter");
 		string name = reader.get_attribute ("name");
+		if (name == null) {
+			name = default_name;
+		}
 		string direction = reader.get_attribute ("direction");
 		string transfer = reader.get_attribute ("transfer-ownership");
 		string allow_none = reader.get_attribute ("allow-none");
@@ -1170,7 +1173,11 @@ public class Vala.GirParser : CodeVisitor {
 			while (current_token == MarkupTokenType.START_ELEMENT) {
 				int array_length_idx, closure_idx, destroy_idx;
 				string scope;
-				var param = parse_parameter (out array_length_idx, out closure_idx, out destroy_idx, out scope);
+				string default_param_name = null;
+				if (s is Delegate) {
+					default_param_name = "arg%d".printf (parameters.size);
+				}
+				var param = parse_parameter (out array_length_idx, out closure_idx, out destroy_idx, out scope, default_param_name);
 				if (array_length_idx != -1) {
 					array_length_parameters.add (array_length_idx);
 				}
