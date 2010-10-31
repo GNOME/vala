@@ -493,7 +493,7 @@ public class Vala.GirParser : CodeVisitor {
 	HashMap<Symbol,Symbol> concrete_symbols_map = new HashMap<Symbol,Symbol> ();
 
 	ArrayList<UnresolvedSymbol> unresolved_gir_symbols = new ArrayList<UnresolvedSymbol> ();
-
+	HashMap<Namespace,ArrayList<Method>> namespace_methods = new HashMap<Namespace,ArrayList<Method>> ();
 	HashMap<CallbackScope,ArrayList<Delegate>> gtype_callbacks = new HashMap<CallbackScope,ArrayList<Delegate>> (callback_scope_hash, callback_scope_equal);
 	ArrayList<Alias> aliases = new ArrayList<Alias> ();
 
@@ -512,6 +512,7 @@ public class Vala.GirParser : CodeVisitor {
 
 		postprocess_gtype_callbacks ();
 		postprocess_aliases ();
+		postprocess_namespace_methods ();
 	}
 
 	public override void visit_source_file (SourceFile source_file) {
@@ -582,6 +583,100 @@ public class Vala.GirParser : CodeVisitor {
 	}
 
 	const string GIR_VERSION = "1.2";
+
+	void add_symbol_to_container (Symbol container, Symbol sym) {
+		if (container is Class) {
+			unowned Class cl = (Class) container;
+
+			if (sym is Class) {
+				cl.add_class ((Class) sym);
+			} else if (sym is Constant) {
+				cl.add_constant ((Constant) sym);
+			} else if (sym is Enum) {
+				cl.add_enum ((Enum) sym);
+			} else if (sym is Field) {
+				cl.add_field ((Field) sym);
+			} else if (sym is Method) {
+				cl.add_method ((Method) sym);
+			} else if (sym is Property) {
+				cl.add_property ((Property) sym);
+			} else if (sym is Signal) {
+				cl.add_signal ((Signal) sym);
+			} else if (sym is Struct) {
+				cl.add_struct ((Struct) sym);
+			}
+		} else if (container is Enum) {
+			unowned Enum en = (Enum) container;
+
+			if (sym is EnumValue) {
+				en.add_value ((EnumValue) sym);
+			} else if (sym is Constant) {
+				en.add_constant ((Constant) sym);
+			} else if (sym is Method) {
+				en.add_method ((Method) sym);
+			}
+		} else if (container is Interface) {
+			unowned Interface iface = (Interface) container;
+
+			if (sym is Class) {
+				iface.add_class ((Class) sym);
+			} else if (sym is Constant) {
+				iface.add_constant ((Constant) sym);
+			} else if (sym is Enum) {
+				iface.add_enum ((Enum) sym);
+			} else if (sym is Field) {
+				iface.add_field ((Field) sym);
+			} else if (sym is Method) {
+				iface.add_method ((Method) sym);
+			} else if (sym is Property) {
+				iface.add_property ((Property) sym);
+			} else if (sym is Signal) {
+				iface.add_signal ((Signal) sym);
+			} else if (sym is Struct) {
+				iface.add_struct ((Struct) sym);
+			}
+		} else if (container is Namespace) {
+			unowned Namespace ns = (Namespace) container;
+
+			if (sym is Namespace) {
+				ns.add_namespace ((Namespace) sym);
+			} else if (sym is Class) {
+				ns.add_class ((Class) sym);
+			} else if (sym is Constant) {
+				ns.add_constant ((Constant) sym);
+			} else if (sym is Delegate) {
+				ns.add_delegate ((Delegate) sym);
+			} else if (sym is Enum) {
+				ns.add_enum ((Enum) sym);
+			} else if (sym is ErrorDomain) {
+				ns.add_error_domain ((ErrorDomain) sym);
+			} else if (sym is Field) {
+				ns.add_field ((Field) sym);
+			} else if (sym is Interface) {
+				ns.add_interface ((Interface) sym);
+			} else if (sym is Method) {
+				ns.add_method ((Method) sym);
+			} else if (sym is Namespace) {
+				ns.add_namespace ((Namespace) sym);
+			} else if (sym is Struct) {
+				ns.add_struct ((Struct) sym);
+			}
+		} else if (container is Struct) {
+			unowned Struct st = (Struct) container;
+
+			if (sym is Constant) {
+				st.add_constant ((Constant) sym);
+			} else if (sym is Field) {
+				st.add_field ((Field) sym);
+			} else if (sym is Method) {
+				st.add_method ((Method) sym);
+			} else if (sym is Property) {
+				st.add_property ((Property) sym);
+			}
+		} else {
+			Report.error (sym.source_reference, "impossible to add to container `%s'".printf (container.name));
+		}
+	}
 
 	UnresolvedSymbol? parse_symbol_from_string (string symbol_string, SourceReference? source_reference = null) {
 		UnresolvedSymbol? sym = null;
@@ -753,6 +848,11 @@ public class Vala.GirParser : CodeVisitor {
 			ns.add_cheader_filename (c_header);
 		}
 		next ();
+		var current_namespace_methods = namespace_methods[ns];
+		if (current_namespace_methods == null) {
+			current_namespace_methods = new ArrayList<Method> ();
+			namespace_methods[ns] = current_namespace_methods;
+		}
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (reader.get_attribute ("introspectable") == "0") {
 				skip_element ();
@@ -772,7 +872,7 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (reader.name == "bitfield") {
 				sym = parse_bitfield ();
 			} else if (reader.name == "function") {
-				sym = parse_method ("function");
+				current_namespace_methods.add (parse_method ("function"));
 			} else if (reader.name == "callback") {
 				sym = parse_callback ();
 			} else if (reader.name == "record") {
@@ -2022,6 +2122,81 @@ public class Vala.GirParser : CodeVisitor {
 				}
 				cl.external = true;
 				alias.parent_namespace.add_class (cl);
+			}
+		}
+	}
+
+	void find_static_method_parent (string cname, Symbol current, ref Symbol best, ref double match, double match_char) {
+		var old_best = best;
+		if (current.scope.get_symbol_table () != null) {
+			foreach (var child in current.scope.get_symbol_table().get_values ()) {
+				if (child is Struct || child is ObjectTypeSymbol || child is Namespace) {
+					find_static_method_parent (cname, child, ref best, ref match, match_char);
+				}
+			}
+		}
+		if (best != old_best) {
+			// child is better
+			return;
+		}
+
+		var current_cprefix = current.get_lower_case_cprefix ();
+		if (cname.has_prefix (current_cprefix)) {
+			var current_match = match_char * current_cprefix.length;
+			if (current_match > match) {
+				match = current_match;
+				best = current;
+			}
+		}
+	}
+
+	void postprocess_namespace_methods () {
+		/* transform static methods into instance methods if possible.
+		   In most of cases this is a .gir fault we are going to fix */
+		foreach (var ns in namespace_methods.get_keys ()) {
+			var ns_cprefix = ns.get_lower_case_cprefix ();
+			var methods = namespace_methods[ns];
+			foreach (var method in methods) {
+				if (method.parent_node != null) {
+					// fixed earlier by metadata
+					continue;
+				}
+
+				var cname = method.get_cname ();
+
+				Parameter first_param = null;
+				if (method.get_parameters ().size > 0) {
+					first_param = method.get_parameters()[0];
+				}
+				if (first_param != null && first_param.variable_type is UnresolvedType) {
+					// check if it's a missed instance method (often happens for structs)
+					var parent = resolve_symbol (ns.scope, ((UnresolvedType) first_param.variable_type).unresolved_symbol);
+					if (parent != null && (parent is Struct || parent is ObjectTypeSymbol || parent is Namespace)
+						&& cname.has_prefix (parent.get_lower_case_cprefix ())) {
+						// instance method
+						var new_name = method.name.offset (parent.get_lower_case_cprefix().length-ns_cprefix.length);
+						if (parent.scope.lookup (new_name) == null) {
+							method.name = new_name;
+							method.get_parameters().remove_at (0);
+							method.binding = MemberBinding.INSTANCE;
+							add_symbol_to_container (parent, method);
+						} else {
+							ns.add_method (method);
+						}
+						continue;
+					}
+				}
+
+				double match = 0;
+				Symbol parent = ns;
+				find_static_method_parent (cname, ns, ref parent, ref match, 1.0/cname.length);
+				var new_name = method.name.offset (parent.get_lower_case_cprefix().length-ns_cprefix.length);
+				if (parent.scope.lookup (new_name) == null) {
+					method.name = new_name;
+					add_symbol_to_container (parent, method);
+				} else {
+					ns.add_method (method);
+				}
 			}
 		}
 	}
