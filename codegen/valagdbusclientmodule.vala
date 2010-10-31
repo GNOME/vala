@@ -208,7 +208,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 		var mtype = expr.call.value_type as MethodType;
 		bool bus_get_proxy_async = (mtype != null && mtype.method_symbol.get_cname () == "g_bus_get_proxy");
 		bool bus_get_proxy_sync = (mtype != null && mtype.method_symbol.get_cname () == "g_bus_get_proxy_sync");
-		bool conn_get_proxy_async = (mtype != null && mtype.method_symbol.get_cname () == "g_dbus_connection_get_proxy_sync");
+		bool conn_get_proxy_async = (mtype != null && mtype.method_symbol.get_cname () == "g_dbus_connection_get_proxy");
 		bool conn_get_proxy_sync = (mtype != null && mtype.method_symbol.get_cname () == "g_dbus_connection_get_proxy_sync");
 		if (!bus_get_proxy_async && !bus_get_proxy_sync && !conn_get_proxy_async && !conn_get_proxy_sync) {
 			base.visit_method_call (expr);
