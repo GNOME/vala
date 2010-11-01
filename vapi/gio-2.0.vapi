@@ -1584,7 +1584,7 @@ namespace GLib {
 		public abstract bool add_supports_type (string content_type) throws GLib.Error;
 		public abstract bool can_delete ();
 		public abstract bool can_remove_supports_type ();
-		public static unowned GLib.AppInfo create_from_commandline (string commandline, string application_name, GLib.AppInfoCreateFlags flags) throws GLib.Error;
+		public static unowned GLib.AppInfo create_from_commandline (string commandline, string? application_name, GLib.AppInfoCreateFlags flags) throws GLib.Error;
 		public bool @delete ();
 		[NoWrapper]
 		public abstract bool do_delete ();
