@@ -1687,6 +1687,10 @@ public class Vala.GirParser : CodeVisitor {
 		bool is_array = false;
 		string type_name = reader.get_attribute ("name");
 
+		if (&array_length_index != null) {
+			array_length_index = -1;
+		}
+
 		if (reader.name == "array") {
 			is_array = true;
 			start_element ("array");
