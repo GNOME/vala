@@ -463,19 +463,31 @@ public class Vala.GirParser : CodeVisitor {
 		}
 	}
 
+	class CallbackScope {
+		public Namespace parent_namespace;
+		public UnresolvedSymbol gtype_struct_for;
+	}
+
 	MarkupReader reader;
 
 	CodeContext context;
 	Namespace glib_ns;
 
 	SourceFile current_source_file;
+	Namespace current_namespace;
+	string current_gtype_struct_for;
 	SourceLocation begin;
 	SourceLocation end;
 	MarkupTokenType current_token;
 
 	string[] cheader_filenames;
 
-	HashMap<string,ArrayList<Method>> gtype_callbacks = new HashMap<string,ArrayList<Method>> (str_hash, str_equal);
+	HashMap<UnresolvedSymbol,Symbol> unresolved_symbols_map = new HashMap<UnresolvedSymbol,Symbol> (unresolved_symbol_hash, unresolved_symbol_equal);
+	HashMap<Symbol,Symbol> concrete_symbols_map = new HashMap<Symbol,Symbol> ();
+
+	ArrayList<UnresolvedSymbol> unresolved_gir_symbols = new ArrayList<UnresolvedSymbol> ();
+
+	HashMap<CallbackScope,ArrayList<Delegate>> gtype_callbacks = new HashMap<CallbackScope,ArrayList<Delegate>> (callback_scope_hash, callback_scope_equal);
 
 	/**
 	 * Parses all .gir source files in the specified code
@@ -487,9 +499,32 @@ public class Vala.GirParser : CodeVisitor {
 		this.context = context;
 		glib_ns = context.root.scope.lookup ("GLib") as Namespace;
 		context.accept (this);
+
+		resolve_gir_symbols ();
+
+		postprocess_gtype_callbacks ();
 	}
 
 	public override void visit_source_file (SourceFile source_file) {
+		// collect gir namespaces
+		foreach (var node in source_file.get_nodes ()) {
+			if (node is Namespace) {
+				var ns = (Namespace) node;
+				var gir_namespace = source_file.gir_namespace;
+				if (gir_namespace == null) {
+					var a = ns.get_attribute ("CCode");
+					if (a != null && a.has_argument ("gir_namespace")) {
+						gir_namespace = a.get_string ("gir_namespace");
+					}
+				}
+				if (gir_namespace != null && gir_namespace != ns.name) {
+					var map_from = new UnresolvedSymbol (null, gir_namespace);
+					set_symbol_mapping (map_from, ns);
+					break;
+				}
+			}
+		}
+
 		if (source_file.filename.has_suffix (".gir")) {
 			parse_file (source_file);
 		}
@@ -578,6 +613,45 @@ public class Vala.GirParser : CodeVisitor {
 		return sym;
 	}
 
+	UnresolvedSymbol get_unresolved_symbol (Symbol symbol) {
+		if (symbol is UnresolvedSymbol) {
+			return (UnresolvedSymbol) symbol;
+		}
+		var sym = new UnresolvedSymbol (null, symbol.name);
+		var result = sym;
+		var cur = symbol.parent_node as Symbol;
+		while (cur != null && cur.name != null) {
+			sym = new UnresolvedSymbol (sym, cur.name);
+			cur = cur.parent_node as Symbol;
+		}
+		return result;
+	}
+
+	void set_symbol_mapping (Symbol map_from, Symbol map_to) {
+		// last mapping is the most up-to-date
+		if (map_from is UnresolvedSymbol) {
+			unresolved_symbols_map[(UnresolvedSymbol) map_from] = map_to;
+		} else {
+			concrete_symbols_map[map_from] = map_to;
+		}
+	}
+
+	void assume_parameter_names (Signal sig, Symbol sym) {
+		Iterator<Parameter> iter;
+		if (sym is Method) {
+			iter = ((Method) sym).get_parameters ().iterator ();
+		} else {
+			iter = ((Delegate) sym).get_parameters ().iterator ();
+		}
+		foreach (var param in sig.get_parameters ()) {
+			if (!iter.next ()) {
+				// unreachable for valid GIR
+				break;
+			}
+			param.name = iter.get ().name;
+		}
+	}
+
 	void parse_repository () {
 		start_element ("repository");
 		if (reader.get_attribute ("version") != GIR_VERSION) {
@@ -661,7 +735,16 @@ public class Vala.GirParser : CodeVisitor {
 		start_element ("namespace");
 
 		bool new_namespace = false;
-		string namespace_name = transform_namespace_name (reader.get_attribute ("name"));
+		string? cprefix = reader.get_attribute ("c:identifier-prefixes");
+		string namespace_name = cprefix;
+		string gir_namespace = reader.get_attribute ("name");
+		string gir_version = reader.get_attribute ("version");
+		if (namespace_name == null) {
+			namespace_name = gir_namespace;
+		}
+		current_source_file.gir_namespace = gir_namespace;
+		current_source_file.gir_version = gir_version;
+
 		var ns = context.root.scope.lookup (namespace_name) as Namespace;
 		if (ns == null) {
 			ns = new Namespace (namespace_name, get_current_src ());
@@ -673,7 +756,13 @@ public class Vala.GirParser : CodeVisitor {
 			}
 		}
 
-		string? cprefix = reader.get_attribute ("c:identifier-prefixes");
+		if (gir_namespace != ns.name) {
+			set_symbol_mapping (new UnresolvedSymbol (null, gir_namespace), ns);
+		}
+
+		var old_namespace = current_namespace;
+		current_namespace = ns;
+
 		if (cprefix != null) {
 			ns.add_cprefix (cprefix);
 			ns.set_lower_case_cprefix (Symbol.camel_case_to_lower_case (cprefix) + "_");
@@ -748,7 +837,7 @@ public class Vala.GirParser : CodeVisitor {
 		}
 		end_element ("namespace");
 
-		postprocess_gtype_callbacks (ns);
+		current_namespace = old_namespace;
 
 		if (!new_namespace) {
 			ns = null;
@@ -1045,6 +1134,7 @@ public class Vala.GirParser : CodeVisitor {
 		} else if (type_name == "GObject.Strv") {
 			type = new ArrayType (new UnresolvedType.from_symbol (new UnresolvedSymbol (null, "string")), 1, get_current_src ());
 		} else {
+			bool known_type = true;
 			if (type_name == "utf8") {
 				type_name = "string";
 			} else if (type_name == "gboolean") {
@@ -1103,23 +1193,17 @@ public class Vala.GirParser : CodeVisitor {
 				type_name = "GLib.Datalist";
 			} else if (type_name == "Atk.ImplementorIface") {
 				type_name = "Atk.Implementor";
+			} else {
+				known_type = false;
 			}
 			var sym = parse_symbol_from_string (type_name, get_current_src ());
 			type = new UnresolvedType.from_symbol (sym, get_current_src ());
+			if (!known_type) {
+				unresolved_gir_symbols.add (sym);
+			}
 		}
 
 		return type;
-	}
-
-	string transform_namespace_name (string gir_module_name) {
-		if (gir_module_name == "GObject") {
-			return "GLib";
-		} else if (gir_module_name == "Gio") {
-			return "GLib";
-		} else if (gir_module_name == "GModule") {
-			return "GLib";
-		}
-		return gir_module_name;
 	}
 
 	Struct parse_record () {
@@ -1127,7 +1211,7 @@ public class Vala.GirParser : CodeVisitor {
 		var st = new Struct (reader.get_attribute ("name"), get_current_src ());
 		st.external = true;
 
-		string glib_is_gtype_struct_for = reader.get_attribute ("glib:is-gtype-struct-for");
+		current_gtype_struct_for = reader.get_attribute ("glib:is-gtype-struct-for");
 
 		st.access = SymbolAccessibility.PUBLIC;
 		next ();
@@ -1139,17 +1223,6 @@ public class Vala.GirParser : CodeVisitor {
 
 			if (reader.name == "field") {
 				st.add_field (parse_field ());
-			} else if (reader.name == "callback") {
-				if (glib_is_gtype_struct_for != null) {
-					ArrayList<Method> callbacks = gtype_callbacks.get (glib_is_gtype_struct_for);
-					if (callbacks == null) {
-						callbacks = new ArrayList<Method> ();
-						gtype_callbacks.set (glib_is_gtype_struct_for, callbacks);
-					}
-					callbacks.add (parse_method ("callback"));
-				} else {
-					parse_callback ();
-				}
 			} else if (reader.name == "constructor") {
 				parse_constructor ();
 			} else if (reader.name == "method") {
@@ -1170,31 +1243,6 @@ public class Vala.GirParser : CodeVisitor {
 		}
 		end_element ("record");
 		return st;
-	}
-
-	void postprocess_gtype_callbacks (Namespace ns) {
-		foreach (string gtype_name in gtype_callbacks.get_keys ()) {
-			var gtype = ns.scope.lookup (gtype_name) as ObjectTypeSymbol;
-			ArrayList<Method> callbacks = gtype_callbacks.get (gtype_name);
-			foreach (Method m in callbacks) {
-				var symbol = gtype.scope.lookup (m.name);
-				if (symbol == null) {
-					continue;
-				} else if (symbol is Method)  {
-					var meth = (Method) symbol;
-					if (gtype is Class) {
-						meth.is_virtual = true;
-					} else if (gtype is Interface) {
-						meth.is_abstract = true;
-					}
-				} else if (symbol is Signal) {
-					var sig = (Signal) symbol;
-					sig.is_virtual = true;
-				} else {
-					Report.error (get_current_src (), "unknown member type `%s' in `%s'".printf (m.name, gtype.name));
-				}
-			}
-		}
 	}
 
 	Class parse_class () {
@@ -1466,6 +1514,18 @@ public class Vala.GirParser : CodeVisitor {
 		string allow_none = reader.get_attribute ("allow-none");
 		next ();
 		var type = parse_type ();
+		if (type is DelegateType && current_gtype_struct_for != null) {
+			// virtual
+			var callback_scope = new CallbackScope ();
+			callback_scope.parent_namespace = current_namespace;
+			callback_scope.gtype_struct_for = parse_symbol_from_string (current_gtype_struct_for);
+			ArrayList<Delegate> callbacks = gtype_callbacks.get (callback_scope);
+			if (callbacks == null) {
+				callbacks = new ArrayList<Delegate> ();
+				gtype_callbacks.set (callback_scope, callbacks);
+			}
+			callbacks.add (((DelegateType) type).delegate_symbol);
+		}
 		var field = new Field (name, type, null, get_current_src ());
 		field.access = SymbolAccessibility.PUBLIC;
 		if (allow_none == "1") {
@@ -1851,5 +1911,133 @@ public class Vala.GirParser : CodeVisitor {
 		end_element ("constant");
 		return c;
 	}
-}
 
+	/* Post-parsing */
+
+	void resolve_gir_symbols () {
+		// we are remapping unresolved symbols, so create them from concrete symbols
+		foreach (var map_from in concrete_symbols_map.get_keys ()) {
+			unresolved_symbols_map[get_unresolved_symbol(map_from)] = concrete_symbols_map[map_from];
+		}
+
+		// gir has simple namespaces, we won't get deeper than 2 levels here, except reparenting
+		foreach (var map_from in unresolved_gir_symbols) {
+			while (map_from != null) {
+				var map_to = unresolved_symbols_map[map_from];
+				if (map_to != null) {
+					// remap the original symbol to match the target
+					map_from.inner = null;
+					map_from.name = map_to.name;
+					if (map_to is UnresolvedSymbol) {
+						var umap_to = (UnresolvedSymbol) map_to;
+						while (umap_to.inner != null) {
+							umap_to = umap_to.inner;
+							map_from.inner = new UnresolvedSymbol (null, umap_to.name);
+							map_from = map_from.inner;
+						}
+					} else {
+						while (map_to.parent_symbol != null && map_to.parent_symbol != context.root) {
+							map_to = map_to.parent_symbol;
+							map_from.inner = new UnresolvedSymbol (null, map_to.name);
+							map_from = map_from.inner;
+						}
+					}
+					break;
+				}
+				map_from = map_from.inner;
+			}
+		}
+	}
+
+	Symbol? resolve_symbol (Scope parent_scope, UnresolvedSymbol unresolved_symbol) {
+		// simple symbol resolver, enough for gir
+		if (unresolved_symbol.inner == null) {
+			var scope = parent_scope;
+			while (scope != null) {
+				var sym = scope.lookup (unresolved_symbol.name);
+				if (sym != null) {
+					return sym;
+				}
+				scope = scope.parent_scope;
+			}
+		} else {
+			var inner = resolve_symbol (parent_scope, unresolved_symbol.inner);
+			if (inner != null) {
+				return inner.scope.lookup (unresolved_symbol.name);
+			}
+		}
+		return null;
+	}
+
+	void postprocess_gtype_callbacks () {
+		foreach (CallbackScope callback_scope in gtype_callbacks.get_keys ()) {
+			var gtype = resolve_symbol (callback_scope.parent_namespace.scope, callback_scope.gtype_struct_for) as ObjectTypeSymbol;
+			if (gtype == null) {
+				Report.error (null, "unknown symbol `%s'".printf (callback_scope.gtype_struct_for.to_string ()));
+				continue;
+			}
+			ArrayList<Delegate> callbacks = gtype_callbacks.get (callback_scope);
+			foreach (Delegate d in callbacks) {
+				var symbol = gtype.scope.lookup (d.name);
+				if (symbol == null) {
+					continue;
+				} else if (symbol is Method)  {
+					var meth = (Method) symbol;
+					if (gtype is Class) {
+						meth.is_virtual = true;
+					} else if (gtype is Interface) {
+						meth.is_abstract = true;
+					}
+				} else if (symbol is Signal) {
+					var sig = (Signal) symbol;
+					sig.is_virtual = true;
+					assume_parameter_names (sig, d);
+				} else if (symbol is Property) {
+					var prop = (Property) symbol;
+					prop.is_virtual = true;
+				} else {
+					Report.error (get_current_src (), "unknown member type `%s' in `%s'".printf (d.name, gtype.name));
+				}
+			}
+		}
+	}
+
+	/* Hash and equal functions */
+
+	static uint unresolved_symbol_hash (void *ptr) {
+		var sym = (UnresolvedSymbol) ptr;
+		var builder = new StringBuilder ();
+		while (sym != null) {
+			builder.append (sym.name);
+			sym = sym.inner;
+		}
+		return builder.str.hash ();
+	}
+
+	static bool unresolved_symbol_equal (void *ptr1, void *ptr2) {
+		var sym1 = (UnresolvedSymbol) ptr1;
+		var sym2 = (UnresolvedSymbol) ptr2;
+		while (sym1 != sym2) {
+			if (sym1 == null || sym2 == null) {
+				return false;
+			}
+			if (sym1.name != sym2.name) {
+				return false;
+			}
+			sym1 = sym1.inner;
+			sym2 = sym2.inner;
+		}
+		return true;
+	}
+
+	static uint callback_scope_hash (void *ptr) {
+		var cs = (CallbackScope) ptr;
+		return unresolved_symbol_hash (cs.gtype_struct_for);
+	}
+
+	static bool callback_scope_equal (void *ptr1, void *ptr2) {
+		var cs1 = (CallbackScope) ptr1;
+		var cs2 = (CallbackScope) ptr2;
+		return cs1.parent_namespace == cs2.parent_namespace && unresolved_symbol_equal (cs1.gtype_struct_for, cs2.gtype_struct_for);
+	}
+}
