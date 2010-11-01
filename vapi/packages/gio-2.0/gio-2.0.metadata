@@ -1,4 +1,5 @@
 GLib cprefix="G" lower_case_cprefix="g_" cheader_filename="gio/gio.h" gir_namespace="Gio" gir_version="2.0"
+g_app_info_create_from_commandline.application_name nullable="1"
 g_app_info_get_all type_arguments="AppInfo" transfer_ownership="1"
 g_app_info_get_all_for_type type_arguments="AppInfo" transfer_ownership="1"
 g_app_info_launch.envp is_array="1"
