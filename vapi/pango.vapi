@@ -74,7 +74,7 @@ namespace Pango {
 		public void change (Pango.Attribute attr);
 		public Pango.AttrList copy ();
 		public unowned Pango.AttrList filter (Pango.AttrFilterFunc func, void* data);
-		public unowned Pango.AttrIterator get_iterator ();
+		public Pango.AttrIterator get_iterator ();
 		public void insert (owned Pango.Attribute attr);
 		public void insert_before (Pango.Attribute attr);
 		public void splice (Pango.AttrList other, int pos, int len);
