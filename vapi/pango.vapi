@@ -267,7 +267,7 @@ namespace Pango {
 		public Pango.GlyphItem copy ();
 		public void get_logical_widths (string text, int logical_widths);
 		public void letter_space (string text, Pango.LogAttr[] log_attrs, int letter_spacing);
-		public unowned Pango.GlyphItem split (string text, int split_index);
+		public Pango.GlyphItem split (string text, int split_index);
 	}
 	[Compact]
 	[CCode (copy_function = "pango_glyph_string_copy", type_id = "PANGO_TYPE_GLYPH_STRING", cheader_filename = "pango/pango.h")]
