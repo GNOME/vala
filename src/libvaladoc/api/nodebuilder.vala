@@ -212,7 +212,7 @@ internal class Valadoc.Api.NodeBuilder : Vala.CodeVisitor {
 		process_children (node, element);
 	}
 
-	public override void visit_formal_parameter (Vala.FormalParameter element) {
+	public override void visit_formal_parameter (Vala.Parameter element) {
 		Node parent = get_parent_node_for (element);
 
 		Symbol node = new FormalParameter (element, parent);

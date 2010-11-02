@@ -24,26 +24,26 @@ using Gee;
 using Valadoc.Content;
 
 public class Valadoc.Api.FormalParameter : Symbol {
-	public FormalParameter (Vala.FormalParameter symbol, Node parent) {
+	public FormalParameter (Vala.Parameter symbol, Node parent) {
 		base (symbol, parent);
 		parameter_type = new TypeReference (symbol.variable_type, this);
 	}
 
 	public bool is_out {
 		get {
-			return ((Vala.FormalParameter) symbol).direction == Vala.ParameterDirection.OUT;
+			return ((Vala.Parameter) symbol).direction == Vala.ParameterDirection.OUT;
 		}
 	}
 
 	public bool is_ref {
 		get {
-			return ((Vala.FormalParameter) symbol).direction == Vala.ParameterDirection.REF;
+			return ((Vala.Parameter) symbol).direction == Vala.ParameterDirection.REF;
 		}
 	}
 
 	public bool has_default_value {
 		get {
-			return ((Vala.FormalParameter) symbol).initializer != null;
+			return ((Vala.Parameter) symbol).initializer != null;
 		}
 	}
 
@@ -51,7 +51,7 @@ public class Valadoc.Api.FormalParameter : Symbol {
 
 	public bool ellipsis {
 		get {
-			return ((Vala.FormalParameter) symbol).ellipsis;
+			return ((Vala.Parameter) symbol).ellipsis;
 		}
 	}
 
@@ -88,7 +88,7 @@ public class Valadoc.Api.FormalParameter : Symbol {
 
 			if (has_default_value) {
 				signature.append ("=");
-				signature.append (((Vala.FormalParameter) symbol).initializer.to_string ());
+				signature.append (((Vala.Parameter) symbol).initializer.to_string ());
 			}
 		}
 

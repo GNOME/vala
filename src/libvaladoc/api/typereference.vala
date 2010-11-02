@@ -55,9 +55,9 @@ public class Valadoc.Api.TypeReference : Item {
 			if (node == null) {
 				return false;
 			}
-			if (node is Vala.FormalParameter) {
-				return (((Vala.FormalParameter)node).direction == Vala.ParameterDirection.IN &&
-					((Vala.FormalParameter)node).variable_type.value_owned);
+			if (node is Vala.Parameter) {
+				return (((Vala.Parameter)node).direction == Vala.ParameterDirection.IN &&
+					((Vala.Parameter)node).variable_type.value_owned);
 			}
 			if (node is Vala.Property) {
 				return ((Vala.Property)node).property_type.value_owned;
@@ -72,11 +72,11 @@ public class Valadoc.Api.TypeReference : Item {
 			Vala.CodeNode parent = this.vtyperef.parent_node;
 
 			// parameter:
-			if (parent is Vala.FormalParameter) {
-				if (((Vala.FormalParameter)parent).direction != Vala.ParameterDirection.IN) {
+			if (parent is Vala.Parameter) {
+				if (((Vala.Parameter)parent).direction != Vala.ParameterDirection.IN) {
 					return false;
 				}
-				return ((Vala.FormalParameter)parent).variable_type.value_owned;
+				return ((Vala.Parameter)parent).variable_type.value_owned;
 			}
 			return false;
 		}
@@ -118,7 +118,7 @@ public class Valadoc.Api.TypeReference : Item {
 		get {
 			Vala.CodeNode parent = this.vtyperef.parent_node;
 
-			if (parent is Vala.FormalParameter) {
+			if (parent is Vala.Parameter) {
 				return false;
 			}
 

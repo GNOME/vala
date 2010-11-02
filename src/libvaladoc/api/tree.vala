@@ -349,14 +349,8 @@ public class Valadoc.Api.Tree {
 			return false;
 		}
 
-		Vala.SymbolResolver resolver = new Vala.SymbolResolver ();
-		resolver.resolve(this.context);
-		if (this.context.report.get_errors () > 0) {
-			return false;
-		}
+		context.check ();
 
-		Vala.SemanticAnalyzer analyzer = new Vala.SemanticAnalyzer ( );
-		analyzer.analyze(this.context);
 		if (this.context.report.get_errors () > 0) {
 			return false;
 		}
