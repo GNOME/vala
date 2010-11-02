@@ -821,7 +821,7 @@ namespace Gtk {
 		protected CellRenderer ();
 		public virtual bool activate (Gdk.Event event, Gtk.Widget widget, string path, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gtk.CellRendererState flags);
 		public void get_alignment (float xalign, float yalign);
-		public void get_fixed_size (int width, int height);
+		public void get_fixed_size (out int width, out int height);
 		public void get_padding (int xpad, int ypad);
 		public bool get_sensitive ();
 		public abstract void get_size (Gtk.Widget widget, Gdk.Rectangle? cell_area, out int x_offset, out int y_offset, out int width, out int height);
@@ -1392,9 +1392,9 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Dialog : Gtk.Window, Atk.Implementor, Gtk.Buildable {
-		public weak Gtk.HButtonBox action_area;
+		public Gtk.HButtonBox action_area;
 		public weak Gtk.Widget separator;
-		public weak Gtk.VBox vbox;
+		public Gtk.VBox vbox;
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public Dialog ();
 		public void add_action_widget (Gtk.Widget child, int response_id);
@@ -6245,7 +6245,7 @@ namespace Gtk {
 		public weak string accelerator;
 		public weak string tooltip;
 		[CCode (type = "GCallback")]
-		public weak Gtk.ActionCallback callback;
+		public Gtk.ActionCallback callback;
 	}
 	[CCode (type_id = "GTK_TYPE_ALLOCATION", cheader_filename = "gtk/gtk.h")]
 	public struct Allocation {
@@ -6420,7 +6420,7 @@ namespace Gtk {
 		public weak string accelerator;
 		public weak string tooltip;
 		[CCode (type = "GCallback")]
-		public weak Gtk.ActionCallback callback;
+		public Gtk.ActionCallback callback;
 		public bool is_active;
 	}
 	[CCode (type_id = "GTK_TYPE_TREE_ITER", cheader_filename = "gtk/gtk.h")]
