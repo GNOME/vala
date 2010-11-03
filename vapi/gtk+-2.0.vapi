@@ -4164,7 +4164,7 @@ namespace Gtk {
 		[NoWrapper]
 		public virtual void draw_vline (Gdk.Window window, Gtk.StateType state_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int y1_, int y2_, int x);
 		public void @get (GLib.Type widget_type, ...);
-		public void get_style_property (GLib.Type widget_type, string property_name, GLib.Value value);
+		public void get_style_property (GLib.Type widget_type, string property_name, out GLib.Value value);
 		public void get_valist (GLib.Type widget_type, string first_property_name, void* var_args);
 		[NoWrapper]
 		public virtual void init_from_rc (Gtk.RcStyle rc_style);
