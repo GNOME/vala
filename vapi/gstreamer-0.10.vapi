@@ -821,11 +821,11 @@ namespace Gst {
 		public bool activate_pull (bool active);
 		public bool activate_push (bool active);
 		[CCode (cname = "gst_pad_add_buffer_probe_full")]
-		public uint add_buffer_probe (owned Gst.BufferProbeCallback handler);
+		public uint add_buffer_probe ([CCode (type = "GCallback")] owned Gst.BufferProbeCallback handler);
 		[CCode (cname = "gst_pad_add_data_probe_full")]
-		public uint add_data_probe (owned Gst.DataProbeCallback handler);
+		public uint add_data_probe ([CCode (type = "GCallback")] owned Gst.DataProbeCallback handler);
 		[CCode (cname = "gst_pad_add_event_probe_full")]
-		public uint add_event_probe (owned Gst.EventProbeCallback handler);
+		public uint add_event_probe ([CCode (type = "GCallback")] owned Gst.EventProbeCallback handler);
 		public Gst.FlowReturn alloc_buffer (uint64 offset, int size, Gst.Caps caps, out Gst.Buffer buf);
 		public Gst.FlowReturn alloc_buffer_and_set_caps (uint64 offset, int size, Gst.Caps caps, out Gst.Buffer buf);
 		public bool can_link (Gst.Pad sinkpad);
