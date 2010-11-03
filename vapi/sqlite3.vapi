@@ -87,7 +87,12 @@ namespace Sqlite {
 		public void rollback_hook (RollbackCallback? rollback_hook);
 		public void update_hook (UpdateCallback? update_hook);
 		public int create_function (string zFunctionName, int nArg, int eTextRep, void * user_data, UserFuncCallback? xFunc, UserFuncCallback? xStep, UserFuncFinishCallback? xFinal);
+		public int create_function_v2 (string zFunctionName, int nArg, int eTextRep, void * user_data, UserFuncCallback? xFunc, UserFuncCallback? xStep, UserFuncFinishCallback? xFinal, GLib.DestroyNotify? destroy = null);
 		public int create_collation (string zName, int eTextRep, [CCode (delegate_target_pos = 2.9, type = "int (*)(void *, int,  const void *, int,  const void *)")] CompareCallback xCompare);
+
+		public int wal_autocheckpoint (int N);
+		public int wal_checkpoint (string zDb);
+		public void* wal_hook (WALHookCallback cb, string db_name, int page_count);
 	}
 
 	[CCode (instance_pos = 0)]
@@ -107,6 +112,8 @@ namespace Sqlite {
 	public delegate void UpdateCallback (Sqlite.Action action, string dbname, string table, int64 rowid);
 	[CCode (instance_pos = 0)]
 	public delegate int CompareCallback (int alen, void* a, int blen, void* b);
+	[CCode (instance_pos = 0)]
+	public delegate int WALHookCallback (Sqlite.Database db, string dbname, int pages);
 
 	public unowned string? compileoption_get (int n);
 	public int compileoption_used (string option_name);
@@ -392,8 +399,11 @@ namespace Sqlite {
 		public static int64 used ();
 		[CCode (cname = "sqlite3_memory_highwater")]
 		public static int64 highwater (int reset = 0);
+		[Deprecated (since = "3.7.2", replacement = "Sqlite.Memory.soft_heap_limit64")]
 		[CCode (cname = "sqlite3_soft_heap_limit")]
 		public static void soft_heap_limit (int limit);
+		[CCode (cname = "sqlite3_soft_heap_limit64")]
+		public static int64 soft_heap_limit64 (int64 limit = -1);
 	}
 
 	[Compact]
