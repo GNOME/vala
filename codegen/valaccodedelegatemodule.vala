@@ -278,7 +278,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 					Report.error (expr != null ? expr.source_reference : null, "Cannot create delegate without target for instance method or closure");
 					arg = new CCodeConstant ("NULL");
 				} else {
-					arg = new CCodeIdentifier (d_params.get (0).name);
+					arg = new CCodeIdentifier (get_variable_cname (d_params.get (0).name));
 					i = 1;
 				}
 			}
@@ -297,7 +297,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			}
 
 			CCodeExpression arg;
-			arg = new CCodeIdentifier (d_params.get (i).name);
+			arg = new CCodeIdentifier (get_variable_cname (d_params.get (i).name));
 			carg_map.set (get_param_pos (param.cparameter_position), arg);
 
 			// handle array arguments
