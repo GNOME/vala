@@ -1605,8 +1605,8 @@ namespace GLib {
 
 	/* Thread support */
 
-	public delegate void* ThreadFunc ();
-	public delegate void Func (void* data);
+	public delegate G ThreadFunc<G> ();
+	public delegate void Func<G> (G data);
 	
 	[CCode (has_type_id = false)]
 	public enum ThreadPriority {
@@ -1617,17 +1617,19 @@ namespace GLib {
 	}
 	
 	[Compact]
-	public class Thread {
+	public class Thread<T> {
 		public static bool supported ();
-		public static unowned Thread create (ThreadFunc func, bool joinable) throws ThreadError;
-		public static unowned Thread create_full (ThreadFunc func, ulong stack_size, bool joinable, bool bound, ThreadPriority priority) throws ThreadError;
-		public static unowned Thread self ();
-		public void* join ();
+		[CCode (simple_generics = true)]
+		public static unowned Thread<T> create<T> (ThreadFunc<T> func, bool joinable) throws ThreadError;
+		[CCode (simple_generics = true)]
+		public static unowned Thread<T> create_full<T> (ThreadFunc<T> func, ulong stack_size, bool joinable, bool bound, ThreadPriority priority) throws ThreadError;
+		public static unowned Thread<T> self<T> ();
+		public T join ();
 		public void set_priority (ThreadPriority priority);
 		public static void yield ();
-		public static void exit (void* retval);
-		public static void @foreach (Func thread_func);
-		
+		public static void exit (T retval);
+		public static void @foreach<T> (Func<T> thread_func);
+
 		[CCode (cname = "g_usleep")]
 		public static void usleep (ulong microseconds);
 	}
@@ -1699,9 +1701,9 @@ namespace GLib {
 
 	[Compact]
 	[CCode (free_function = "g_thread_pool_free")]
-	public class ThreadPool {
-		public ThreadPool (Func func, int max_threads, bool exclusive) throws ThreadError;
-		public void push (void* data) throws ThreadError;
+	public class ThreadPool<T> {
+		public ThreadPool (Func<T> func, int max_threads, bool exclusive) throws ThreadError;
+		public void push (T data) throws ThreadError;
 		public void set_max_threads (int max_threads) throws ThreadError;
 		public int get_max_threads ();
 		public uint get_num_threads ();
@@ -3500,7 +3502,7 @@ namespace GLib {
 		public void sort_with_data (CompareDataFunc<G> compare_func);
 		[ReturnsModifiedPointer ()]
 		public void concat (owned List<G> list2);
-		public void @foreach (Func func);
+		public void @foreach (Func<G> func);
 
 		public unowned List<G> first ();
 		public unowned List<G> last ();
@@ -3556,7 +3558,7 @@ namespace GLib {
 		public void sort_with_data (CompareDataFunc<G> compare_func);
 		[ReturnsModifiedPointer ()]
 		public void concat (owned SList<G> list2);
-		public void @foreach (Func func);
+		public void @foreach (Func<G> func);
 
 		public unowned SList<G> last ();
 		public unowned SList<G> nth (uint n);
@@ -3610,6 +3612,8 @@ namespace GLib {
 		public int index (G data);
 		public void remove (G data);
 		public void remove_all (G data);
+		public void delete_link (List<G> link);
+		public void unlink (List<G> link);
 		public void insert_before (List<G> sibling, owned G data);
 		public void insert_after (List<G> sibling, owned G data);
 		public void insert_sorted (owned G data, CompareDataFunc<G> func);
@@ -3622,8 +3626,8 @@ namespace GLib {
 	public class Sequence<G> {
 		public Sequence (DestroyNotify? data_destroy);
 		public int get_length ();
-		public void @foreach (Func func);
-		public static void foreach_range (SequenceIter<G> begin, SequenceIter<G> end, Func func);
+		public void @foreach (Func<G> func);
+		public static void foreach_range (SequenceIter<G> begin, SequenceIter<G> end, Func<G> func);
 		public void sort (CompareDataFunc<G> cmp_func);
 		public void sort_iter (SequenceIterCompareFunc<G> func);
 		public SequenceIter<G> get_begin_iter ();
@@ -3682,9 +3686,9 @@ namespace GLib {
 		public void remove_all ();
 		public List<unowned K> get_keys ();
 		public List<unowned V> get_values ();
-		public void @foreach (HFunc func);
+		public void @foreach (HFunc<K,V> func);
 		[CCode (cname = "g_hash_table_foreach")]
-		public void for_each (HFunc func);
+		public void for_each (HFunc<K,V> func);
 		public uint size ();
 		public bool steal (K key);
 		public void steal_all ();
@@ -3702,7 +3706,7 @@ namespace GLib {
 	public delegate uint HashFunc<K> (K key);
 	[CCode (has_target = false)]
 	public delegate bool EqualFunc<G> (G a, G b);
-	public delegate void HFunc (void* key, void* value);
+	public delegate void HFunc<K,V> (K key, V value);
 
 	[CCode (has_target = false)]
 	public delegate void DestroyNotify (void* data);
@@ -3792,7 +3796,7 @@ namespace GLib {
 		[CCode (cname = "g_ptr_array_sized_new")]
 		public PtrArray.sized (uint reserved_size);
 		public void add (void* data);
-		public void foreach (GLib.Func func);
+		public void foreach (GLib.Func<void*> func);
 		[CCode (cname = "g_ptr_array_index")]
 		public void* index(uint index);
 		public bool remove (void* data);
@@ -3815,7 +3819,7 @@ namespace GLib {
 		[CCode (cname = "g_ptr_array_new_with_free_func", simple_generics = true)]
 		public GenericArray ();
 		public void add (owned G data);
-		public void foreach (GLib.Func func);
+		public void foreach (GLib.Func<G> func);
 		[CCode (cname = "g_ptr_array_index")]
 		public unowned G get (uint index);
 		public bool remove (G data);
