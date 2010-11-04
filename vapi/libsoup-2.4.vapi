@@ -146,7 +146,8 @@ namespace Soup {
 	[Compact]
 	[CCode (ref_function = "soup_buffer_copy", unref_function = "soup_buffer_free", type_id = "SOUP_TYPE_BUFFER", cheader_filename = "libsoup/soup.h")]
 	public class Buffer {
-		public weak string data;
+		[CCode (array_length_cname = "length", array_length_type = "size_t")]
+		public uint8[] data;
 		public size_t length;
 		[CCode (has_construct_function = false)]
 		public Buffer (Soup.MemoryUse use, [CCode (type = "void*", array_length_type = "gsize")] uint8[] data);
