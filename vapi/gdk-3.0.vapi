@@ -2,7 +2,7 @@
 
 [CCode (cprefix = "Gdk", lower_case_cprefix = "gdk_", gir_namespace = "Gdk", gir_version = "2.0")]
 namespace Gdk {
-	[CCode (cprefix = "GdkSelection", lower_case_cprefix = "gdk_selection_", gir_namespace = "Gdk", gir_version = "2.0")]
+	[CCode (cprefix = "GdkSelection", lower_case_cprefix = "gdk_selection_")]
 	namespace Selection {
 		[CCode (cheader_filename = "gdk/gdk.h")]
 		public static void convert (Gdk.Window requestor, Gdk.Atom selection, Gdk.Atom target, uint32 time_);

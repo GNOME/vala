@@ -2,7 +2,7 @@
 
 [CCode (cprefix = "Gtk", lower_case_cprefix = "gtk_", gir_namespace = "Gtk", gir_version = "2.0")]
 namespace Gtk {
-	[CCode (cprefix = "GtkStock", lower_case_cprefix = "gtk_stock_", gir_namespace = "Gtk", gir_version = "2.0")]
+	[CCode (cprefix = "GtkStock", lower_case_cprefix = "gtk_stock_")]
 	namespace Stock {
 		[CCode (cheader_filename = "gtk/gtk.h")]
 		public const string ABOUT;

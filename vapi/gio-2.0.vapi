@@ -25,7 +25,7 @@ namespace GLib {
 		[CCode (cname = "g_bus_watch_name_on_connection_with_closures", cheader_filename = "gio/gio.h")]
 		public static uint watch_name_on_connection (GLib.DBusConnection connection, string name, GLib.BusNameWatcherFlags flags, [CCode (type = "GClosure*")] owned GLib.BusNameAppearedCallback name_appeared_handler, [CCode (type = "GClosure*")] owned GLib.BusNameVanishedCallback name_vanished_handler);
 	}
-	[CCode (cprefix = "GContentType", lower_case_cprefix = "g_content_type_", gir_namespace = "Gio", gir_version = "2.0")]
+	[CCode (cprefix = "GContentType", lower_case_cprefix = "g_content_type_")]
 	namespace ContentType {
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static bool can_be_executable (string type);
