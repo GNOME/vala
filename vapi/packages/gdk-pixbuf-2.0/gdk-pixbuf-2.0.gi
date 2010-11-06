@@ -17,7 +17,62 @@
 				<parameter name="data" type="gpointer"/>
 			</parameters>
 		</callback>
-		<struct name="GdkPixbufFormat">
+		<struct name="GdkPixbufSimpleAnimClass">
+		</struct>
+		<struct name="GdkPixdata">
+			<method name="deserialize" symbol="gdk_pixdata_deserialize">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="pixdata" type="GdkPixdata*"/>
+					<parameter name="stream_length" type="guint"/>
+					<parameter name="stream" type="guint8*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="from_pixbuf" symbol="gdk_pixdata_from_pixbuf">
+				<return-type type="gpointer"/>
+				<parameters>
+					<parameter name="pixdata" type="GdkPixdata*"/>
+					<parameter name="pixbuf" type="GdkPixbuf*"/>
+					<parameter name="use_rle" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="serialize" symbol="gdk_pixdata_serialize">
+				<return-type type="guint8*"/>
+				<parameters>
+					<parameter name="pixdata" type="GdkPixdata*"/>
+					<parameter name="stream_length_p" type="guint*"/>
+				</parameters>
+			</method>
+			<method name="to_csource" symbol="gdk_pixdata_to_csource">
+				<return-type type="GString*"/>
+				<parameters>
+					<parameter name="pixdata" type="GdkPixdata*"/>
+					<parameter name="name" type="gchar*"/>
+					<parameter name="dump_type" type="GdkPixdataDumpType"/>
+				</parameters>
+			</method>
+			<field name="magic" type="guint32"/>
+			<field name="length" type="gint32"/>
+			<field name="pixdata_type" type="guint32"/>
+			<field name="rowstride" type="guint32"/>
+			<field name="width" type="guint32"/>
+			<field name="height" type="guint32"/>
+			<field name="pixel_data" type="guint8*"/>
+		</struct>
+		<boxed name="GdkPixbufFormat" type-name="GdkPixbufFormat" get-type="gdk_pixbuf_format_get_type">
+			<method name="copy" symbol="gdk_pixbuf_format_copy">
+				<return-type type="GdkPixbufFormat*"/>
+				<parameters>
+					<parameter name="format" type="GdkPixbufFormat*"/>
+				</parameters>
+			</method>
+			<method name="free" symbol="gdk_pixbuf_format_free">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="format" type="GdkPixbufFormat*"/>
+				</parameters>
+			</method>
 			<method name="get_description" symbol="gdk_pixbuf_format_get_description">
 				<return-type type="gchar*"/>
 				<parameters>
@@ -73,50 +128,7 @@
 					<parameter name="disabled" type="gboolean"/>
 				</parameters>
 			</method>
-		</struct>
-		<struct name="GdkPixbufSimpleAnimClass">
-		</struct>
-		<struct name="GdkPixdata">
-			<method name="deserialize" symbol="gdk_pixdata_deserialize">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="pixdata" type="GdkPixdata*"/>
-					<parameter name="stream_length" type="guint"/>
-					<parameter name="stream" type="guint8*"/>
-					<parameter name="error" type="GError**"/>
-				</parameters>
-			</method>
-			<method name="from_pixbuf" symbol="gdk_pixdata_from_pixbuf">
-				<return-type type="gpointer"/>
-				<parameters>
-					<parameter name="pixdata" type="GdkPixdata*"/>
-					<parameter name="pixbuf" type="GdkPixbuf*"/>
-					<parameter name="use_rle" type="gboolean"/>
-				</parameters>
-			</method>
-			<method name="serialize" symbol="gdk_pixdata_serialize">
-				<return-type type="guint8*"/>
-				<parameters>
-					<parameter name="pixdata" type="GdkPixdata*"/>
-					<parameter name="stream_length_p" type="guint*"/>
-				</parameters>
-			</method>
-			<method name="to_csource" symbol="gdk_pixdata_to_csource">
-				<return-type type="GString*"/>
-				<parameters>
-					<parameter name="pixdata" type="GdkPixdata*"/>
-					<parameter name="name" type="gchar*"/>
-					<parameter name="dump_type" type="GdkPixdataDumpType"/>
-				</parameters>
-			</method>
-			<field name="magic" type="guint32"/>
-			<field name="length" type="gint32"/>
-			<field name="pixdata_type" type="guint32"/>
-			<field name="rowstride" type="guint32"/>
-			<field name="width" type="guint32"/>
-			<field name="height" type="guint32"/>
-			<field name="pixel_data" type="guint8*"/>
-		</struct>
+		</boxed>
 		<enum name="GdkColorspace" type-name="GdkColorspace" get-type="gdk_colorspace_get_type">
 			<member name="GDK_COLORSPACE_RGB" value="0"/>
 		</enum>
@@ -165,6 +177,9 @@
 			<member name="GDK_PIXDATA_ENCODING_MASK" value="251658240"/>
 		</enum>
 		<object name="GdkPixbuf" parent="GObject" type-name="GdkPixbuf" get-type="gdk_pixbuf_get_type">
+			<implements>
+				<interface name="GIcon"/>
+			</implements>
 			<method name="add_alpha" symbol="gdk_pixbuf_add_alpha">
 				<return-type type="GdkPixbuf*"/>
 				<parameters>
@@ -755,9 +770,9 @@
 		<constant name="GDK_PIXBUF_FEATURES_H" type="int" value="1"/>
 		<constant name="GDK_PIXBUF_MAGIC_NUMBER" type="int" value="1197763408"/>
 		<constant name="GDK_PIXBUF_MAJOR" type="int" value="2"/>
-		<constant name="GDK_PIXBUF_MICRO" type="int" value="0"/>
-		<constant name="GDK_PIXBUF_MINOR" type="int" value="20"/>
-		<constant name="GDK_PIXBUF_VERSION" type="char*" value="2.20.0"/>
+		<constant name="GDK_PIXBUF_MICRO" type="int" value="1"/>
+		<constant name="GDK_PIXBUF_MINOR" type="int" value="22"/>
+		<constant name="GDK_PIXBUF_VERSION" type="char*" value="2.22.1"/>
 		<constant name="GDK_PIXDATA_HEADER_LENGTH" type="int" value="24"/>
 	</namespace>
 </api>

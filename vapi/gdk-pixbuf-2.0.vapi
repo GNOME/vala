@@ -3,7 +3,7 @@
 [CCode (cprefix = "Gdk", lower_case_cprefix = "gdk_", gir_namespace = "GdkPixbuf", gir_version = "2.0")]
 namespace Gdk {
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
-	public class Pixbuf : GLib.Object {
+	public class Pixbuf : GLib.Object, GLib.Icon {
 		[CCode (has_construct_function = false)]
 		public Pixbuf (Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height);
 		public unowned Gdk.Pixbuf add_alpha (bool substitute_color, uchar r, uchar g, uchar b);
@@ -89,8 +89,9 @@ namespace Gdk {
 		public bool on_currently_loading_frame ();
 	}
 	[Compact]
-	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
+	[CCode (copy_function = "gdk_pixbuf_format_copy", type_id = "GDK_TYPE_PIXBUF_FORMAT", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public class PixbufFormat {
+		public unowned Gdk.PixbufFormat copy ();
 		public unowned string get_description ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] get_extensions ();
