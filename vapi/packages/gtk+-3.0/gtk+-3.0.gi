@@ -3946,6 +3946,7 @@
 			<member name="GTK_ASSISTANT_PAGE_CONFIRM" value="2"/>
 			<member name="GTK_ASSISTANT_PAGE_SUMMARY" value="3"/>
 			<member name="GTK_ASSISTANT_PAGE_PROGRESS" value="4"/>
+			<member name="GTK_ASSISTANT_PAGE_CUSTOM" value="5"/>
 		</enum>
 		<enum name="GtkBuilderError" type-name="GtkBuilderError" get-type="gtk_builder_error_get_type">
 			<member name="GTK_BUILDER_ERROR_INVALID_TYPE_FUNCTION" value="0"/>
@@ -4347,6 +4348,10 @@
 			<member name="GTK_SCROLL_START" value="14"/>
 			<member name="GTK_SCROLL_END" value="15"/>
 		</enum>
+		<enum name="GtkScrollablePolicy" type-name="GtkScrollablePolicy" get-type="gtk_scrollable_policy_get_type">
+			<member name="GTK_SCROLL_MINIMUM" value="0"/>
+			<member name="GTK_SCROLL_NATURAL" value="1"/>
+		</enum>
 		<enum name="GtkSelectionMode" type-name="GtkSelectionMode" get-type="gtk_selection_mode_get_type">
 			<member name="GTK_SELECTION_NONE" value="0"/>
 			<member name="GTK_SELECTION_SINGLE" value="1"/>
@@ -4562,6 +4567,7 @@
 		<flags name="GtkTextSearchFlags" type-name="GtkTextSearchFlags" get-type="gtk_text_search_flags_get_type">
 			<member name="GTK_TEXT_SEARCH_VISIBLE_ONLY" value="1"/>
 			<member name="GTK_TEXT_SEARCH_TEXT_ONLY" value="2"/>
+			<member name="GTK_TEXT_SEARCH_CASE_INSENSITIVE" value="4"/>
 		</flags>
 		<flags name="GtkToolPaletteDragTargets" type-name="GtkToolPaletteDragTargets" get-type="gtk_tool_palette_drag_targets_get_type">
 			<member name="GTK_TOOL_PALETTE_DRAG_ITEMS" value="1"/>
@@ -5998,11 +6004,23 @@
 			<constructor name="new" symbol="gtk_assistant_new">
 				<return-type type="GtkWidget*"/>
 			</constructor>
+			<method name="next_page" symbol="gtk_assistant_next_page">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="assistant" type="GtkAssistant*"/>
+				</parameters>
+			</method>
 			<method name="prepend_page" symbol="gtk_assistant_prepend_page">
 				<return-type type="gint"/>
 				<parameters>
 					<parameter name="assistant" type="GtkAssistant*"/>
 					<parameter name="page" type="GtkWidget*"/>
+				</parameters>
+			</method>
+			<method name="previous_page" symbol="gtk_assistant_previous_page">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="assistant" type="GtkAssistant*"/>
 				</parameters>
 			</method>
 			<method name="remove_action_widget" symbol="gtk_assistant_remove_action_widget">
@@ -6134,7 +6152,6 @@
 				<return-type type="GtkWidget*"/>
 				<parameters>
 					<parameter name="orientation" type="GtkOrientation"/>
-					<parameter name="homogeneous" type="gboolean"/>
 					<parameter name="spacing" type="gint"/>
 				</parameters>
 			</constructor>
@@ -8022,6 +8039,12 @@
 				<return-type type="GtkWidget*"/>
 			</constructor>
 			<constructor name="new_with_model" symbol="gtk_combo_box_new_with_model">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="model" type="GtkTreeModel*"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_with_model_and_entry" symbol="gtk_combo_box_new_with_model_and_entry">
 				<return-type type="GtkWidget*"/>
 				<parameters>
 					<parameter name="model" type="GtkTreeModel*"/>
@@ -12282,12 +12305,24 @@
 					<parameter name="layout" type="GtkLayout*"/>
 				</parameters>
 			</method>
+			<method name="get_hadjustment" symbol="gtk_layout_get_hadjustment">
+				<return-type type="GtkAdjustment*"/>
+				<parameters>
+					<parameter name="layout" type="GtkLayout*"/>
+				</parameters>
+			</method>
 			<method name="get_size" symbol="gtk_layout_get_size">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="layout" type="GtkLayout*"/>
 					<parameter name="width" type="guint*"/>
 					<parameter name="height" type="guint*"/>
+				</parameters>
+			</method>
+			<method name="get_vadjustment" symbol="gtk_layout_get_vadjustment">
+				<return-type type="GtkAdjustment*"/>
+				<parameters>
+					<parameter name="layout" type="GtkLayout*"/>
 				</parameters>
 			</method>
 			<method name="move" symbol="gtk_layout_move">
@@ -12315,12 +12350,26 @@
 					<parameter name="y" type="gint"/>
 				</parameters>
 			</method>
+			<method name="set_hadjustment" symbol="gtk_layout_set_hadjustment">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="layout" type="GtkLayout*"/>
+					<parameter name="adjustment" type="GtkAdjustment*"/>
+				</parameters>
+			</method>
 			<method name="set_size" symbol="gtk_layout_set_size">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="layout" type="GtkLayout*"/>
 					<parameter name="width" type="guint"/>
 					<parameter name="height" type="guint"/>
+				</parameters>
+			</method>
+			<method name="set_vadjustment" symbol="gtk_layout_set_vadjustment">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="layout" type="GtkLayout*"/>
+					<parameter name="adjustment" type="GtkAdjustment*"/>
 				</parameters>
 			</method>
 			<property name="height" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -22203,8 +22252,20 @@
 					<parameter name="viewport" type="GtkViewport*"/>
 				</parameters>
 			</method>
+			<method name="get_hadjustment" symbol="gtk_viewport_get_hadjustment">
+				<return-type type="GtkAdjustment*"/>
+				<parameters>
+					<parameter name="viewport" type="GtkViewport*"/>
+				</parameters>
+			</method>
 			<method name="get_shadow_type" symbol="gtk_viewport_get_shadow_type">
 				<return-type type="GtkShadowType"/>
+				<parameters>
+					<parameter name="viewport" type="GtkViewport*"/>
+				</parameters>
+			</method>
+			<method name="get_vadjustment" symbol="gtk_viewport_get_vadjustment">
+				<return-type type="GtkAdjustment*"/>
 				<parameters>
 					<parameter name="viewport" type="GtkViewport*"/>
 				</parameters>
@@ -22222,11 +22283,25 @@
 					<parameter name="vadjustment" type="GtkAdjustment*"/>
 				</parameters>
 			</constructor>
+			<method name="set_hadjustment" symbol="gtk_viewport_set_hadjustment">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="viewport" type="GtkViewport*"/>
+					<parameter name="adjustment" type="GtkAdjustment*"/>
+				</parameters>
+			</method>
 			<method name="set_shadow_type" symbol="gtk_viewport_set_shadow_type">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="viewport" type="GtkViewport*"/>
 					<parameter name="type" type="GtkShadowType"/>
+				</parameters>
+			</method>
+			<method name="set_vadjustment" symbol="gtk_viewport_set_vadjustment">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="viewport" type="GtkViewport*"/>
+					<parameter name="adjustment" type="GtkAdjustment*"/>
 				</parameters>
 			</method>
 			<property name="shadow-type" type="GtkShadowType" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -26463,8 +26538,20 @@
 					<parameter name="scrollable" type="GtkScrollable*"/>
 				</parameters>
 			</method>
+			<method name="get_hscroll_policy" symbol="gtk_scrollable_get_hscroll_policy">
+				<return-type type="GtkScrollablePolicy"/>
+				<parameters>
+					<parameter name="scrollable" type="GtkScrollable*"/>
+				</parameters>
+			</method>
 			<method name="get_vadjustment" symbol="gtk_scrollable_get_vadjustment">
 				<return-type type="GtkAdjustment*"/>
+				<parameters>
+					<parameter name="scrollable" type="GtkScrollable*"/>
+				</parameters>
+			</method>
+			<method name="get_vscroll_policy" symbol="gtk_scrollable_get_vscroll_policy">
+				<return-type type="GtkScrollablePolicy"/>
 				<parameters>
 					<parameter name="scrollable" type="GtkScrollable*"/>
 				</parameters>
@@ -26476,6 +26563,13 @@
 					<parameter name="hadjustment" type="GtkAdjustment*"/>
 				</parameters>
 			</method>
+			<method name="set_hscroll_policy" symbol="gtk_scrollable_set_hscroll_policy">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="scrollable" type="GtkScrollable*"/>
+					<parameter name="policy" type="GtkScrollablePolicy"/>
+				</parameters>
+			</method>
 			<method name="set_vadjustment" symbol="gtk_scrollable_set_vadjustment">
 				<return-type type="void"/>
 				<parameters>
@@ -26483,8 +26577,17 @@
 					<parameter name="vadjustment" type="GtkAdjustment*"/>
 				</parameters>
 			</method>
+			<method name="set_vscroll_policy" symbol="gtk_scrollable_set_vscroll_policy">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="scrollable" type="GtkScrollable*"/>
+					<parameter name="policy" type="GtkScrollablePolicy"/>
+				</parameters>
+			</method>
 			<property name="hadjustment" type="GtkAdjustment*" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="hscroll-policy" type="GtkScrollablePolicy" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="vadjustment" type="GtkAdjustment*" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="vscroll-policy" type="GtkScrollablePolicy" readable="1" writable="1" construct="0" construct-only="0"/>
 		</interface>
 		<interface name="GtkToolShell" type-name="GtkToolShell" get-type="gtk_tool_shell_get_type">
 			<requires>
@@ -27115,12 +27218,12 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="9102"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="9103"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="2"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="2"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="3"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="91"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>

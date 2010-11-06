@@ -556,7 +556,9 @@ namespace Gtk {
 		public unowned string get_page_title (Gtk.Widget page);
 		public Gtk.AssistantPageType get_page_type (Gtk.Widget page);
 		public int insert_page (Gtk.Widget page, int position);
+		public void next_page ();
 		public int prepend_page (Gtk.Widget page);
+		public void previous_page ();
 		public void remove_action_widget (Gtk.Widget child);
 		public void set_current_page (int page_num);
 		public void set_forward_page_func (owned Gtk.AssistantPageFunc page_func);
@@ -636,7 +638,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Box : Gtk.Container, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
-		public Box (Gtk.Orientation orientation, bool homogeneous, int spacing);
+		public Box (Gtk.Orientation orientation, int spacing);
 		public bool get_homogeneous ();
 		public int get_spacing ();
 		public void pack_end (Gtk.Widget child, bool expand = true, bool fill = true, uint padding = 0);
@@ -1244,6 +1246,8 @@ namespace Gtk {
 		public ComboBox.with_entry ();
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public ComboBox.with_model (Gtk.TreeModel model);
+		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		public ComboBox.with_model_and_entry (Gtk.TreeModel model);
 		public int active { get; set; }
 		public bool add_tearoffs { get; set; }
 		public Gtk.SensitivityType button_sensitivity { get; set; }
@@ -2290,10 +2294,14 @@ namespace Gtk {
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public Layout (Gtk.Adjustment hadjustment, Gtk.Adjustment vadjustment);
 		public unowned Gdk.Window get_bin_window ();
+		public unowned Gtk.Adjustment get_hadjustment ();
 		public void get_size (out uint width, out uint height);
+		public unowned Gtk.Adjustment get_vadjustment ();
 		public void move (Gtk.Widget child_widget, int x, int y);
 		public void put (Gtk.Widget child_widget, int x, int y);
+		public void set_hadjustment (Gtk.Adjustment adjustment);
 		public void set_size (uint width, uint height);
+		public void set_vadjustment (Gtk.Adjustment adjustment);
 		[NoAccessorMethod]
 		public uint height { get; set; }
 		[NoAccessorMethod]
@@ -4869,9 +4877,13 @@ namespace Gtk {
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public Viewport (Gtk.Adjustment? hadjustment, Gtk.Adjustment? vadjustment);
 		public unowned Gdk.Window get_bin_window ();
+		public unowned Gtk.Adjustment get_hadjustment ();
 		public Gtk.ShadowType get_shadow_type ();
+		public unowned Gtk.Adjustment get_vadjustment ();
 		public unowned Gdk.Window get_view_window ();
+		public void set_hadjustment (Gtk.Adjustment adjustment);
 		public void set_shadow_type (Gtk.ShadowType type);
+		public void set_vadjustment (Gtk.Adjustment adjustment);
 		public Gtk.ShadowType shadow_type { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -5592,11 +5604,17 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface Scrollable : GLib.Object {
 		public unowned Gtk.Adjustment get_hadjustment ();
+		public Gtk.ScrollablePolicy get_hscroll_policy ();
 		public unowned Gtk.Adjustment get_vadjustment ();
+		public Gtk.ScrollablePolicy get_vscroll_policy ();
 		public void set_hadjustment (Gtk.Adjustment hadjustment);
+		public void set_hscroll_policy (Gtk.ScrollablePolicy policy);
 		public void set_vadjustment (Gtk.Adjustment vadjustment);
+		public void set_vscroll_policy (Gtk.ScrollablePolicy policy);
 		public Gtk.Adjustment hadjustment { get; set construct; }
+		public Gtk.ScrollablePolicy hscroll_policy { get; set; }
 		public Gtk.Adjustment vadjustment { get; set construct; }
+		public Gtk.ScrollablePolicy vscroll_policy { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface ToolShell : Gtk.Widget {
@@ -5904,7 +5922,8 @@ namespace Gtk {
 		INTRO,
 		CONFIRM,
 		SUMMARY,
-		PROGRESS
+		PROGRESS,
+		CUSTOM
 	}
 	[CCode (cprefix = "GTK_", cheader_filename = "gtk/gtk.h")]
 	[Flags]
@@ -6438,6 +6457,11 @@ namespace Gtk {
 		START,
 		END
 	}
+	[CCode (cprefix = "GTK_SCROLL_", cheader_filename = "gtk/gtk.h")]
+	public enum ScrollablePolicy {
+		MINIMUM,
+		NATURAL
+	}
 	[CCode (cprefix = "GTK_SELECTION_", cheader_filename = "gtk/gtk.h")]
 	public enum SelectionMode {
 		NONE,
@@ -6523,7 +6547,8 @@ namespace Gtk {
 	[Flags]
 	public enum TextSearchFlags {
 		VISIBLE_ONLY,
-		TEXT_ONLY
+		TEXT_ONLY,
+		CASE_INSENSITIVE
 	}
 	[CCode (cprefix = "GTK_TEXT_WINDOW_", cheader_filename = "gtk/gtk.h")]
 	public enum TextWindowType {
