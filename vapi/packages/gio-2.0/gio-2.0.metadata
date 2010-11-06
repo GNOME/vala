@@ -337,6 +337,7 @@ g_settings_get_strv is_array="1" no_array_length="1" array_null_terminated="1" t
 g_settings_set_strv.value is_array="1" no_array_length="1"
 
 g_simple_async_result_new.source_object nullable="1"
+g_simple_async_result_new_take_error hidden="1"
 
 g_socket_listener_accept_finish.source_object transfer_ownership="1" nullable="1" default_value="null"
 g_socket_listener_accept_socket_finish.source_object transfer_ownership="1" nullable="1" default_value="null"

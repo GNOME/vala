@@ -107,9 +107,11 @@ namespace GLib {
 		protected ApplicationCommandLine ();
 		public string[] get_arguments ();
 		public unowned string get_cwd ();
+		public unowned string get_environ ();
 		public int get_exit_status ();
 		public bool get_is_remote ();
 		public GLib.Variant? get_platform_data ();
+		public unowned string getenv (string name);
 		public void print (string format);
 		[NoWrapper]
 		public virtual void print_literal (string message);
@@ -1063,7 +1065,7 @@ namespace GLib {
 		public uint get_hz ();
 		public int get_priority ();
 		public void remove (uint tag);
-		public void unblock ();
+		public void unblock (GLib.TimeSpec unblock_time);
 		public uint hz { get; construct; }
 		public int priority { get; construct; }
 		public virtual signal void repair ();
@@ -1243,6 +1245,7 @@ namespace GLib {
 		public void set_op_res_gboolean (bool op_res);
 		public void set_op_res_gpointer (void* op_res, GLib.DestroyNotify destroy_op_res);
 		public void set_op_res_gssize (ssize_t op_res);
+		public void take_error (GLib.Error error);
 	}
 	[Compact]
 	[CCode (cheader_filename = "gio/gio.h")]
@@ -1864,7 +1867,8 @@ namespace GLib {
 		IS_SERVICE,
 		IS_LAUNCHER,
 		HANDLES_OPEN,
-		HANDLES_COMMAND_LINE
+		HANDLES_COMMAND_LINE,
+		SEND_ENVIRONMENT
 	}
 	[CCode (cprefix = "G_ASK_PASSWORD_", cheader_filename = "gio/gio.h")]
 	[Flags]

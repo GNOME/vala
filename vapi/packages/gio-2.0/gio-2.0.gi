@@ -1368,6 +1368,7 @@
 			<member name="G_APPLICATION_IS_LAUNCHER" value="2"/>
 			<member name="G_APPLICATION_HANDLES_OPEN" value="4"/>
 			<member name="G_APPLICATION_HANDLES_COMMAND_LINE" value="8"/>
+			<member name="G_APPLICATION_SEND_ENVIRONMENT" value="16"/>
 		</flags>
 		<flags name="GAskPasswordFlags" type-name="GAskPasswordFlags" get-type="g_ask_password_flags_get_type">
 			<member name="G_ASK_PASSWORD_NEED_PASSWORD" value="1"/>
@@ -1742,6 +1743,12 @@
 					<parameter name="cmdline" type="GApplicationCommandLine*"/>
 				</parameters>
 			</method>
+			<method name="get_environ" symbol="g_application_command_line_get_environ">
+				<return-type type="gchar**"/>
+				<parameters>
+					<parameter name="cmdline" type="GApplicationCommandLine*"/>
+				</parameters>
+			</method>
 			<method name="get_exit_status" symbol="g_application_command_line_get_exit_status">
 				<return-type type="int"/>
 				<parameters>
@@ -1758,6 +1765,13 @@
 				<return-type type="GVariant*"/>
 				<parameters>
 					<parameter name="cmdline" type="GApplicationCommandLine*"/>
+				</parameters>
+			</method>
+			<method name="getenv" symbol="g_application_command_line_getenv">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="cmdline" type="GApplicationCommandLine*"/>
+					<parameter name="name" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="print" symbol="g_application_command_line_print">
@@ -5750,6 +5764,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="periodic" type="GPeriodic*"/>
+					<parameter name="unblock_time" type="GTimeSpec*"/>
 				</parameters>
 			</method>
 			<property name="hz" type="guint" readable="1" writable="1" construct="0" construct-only="1"/>
@@ -6629,6 +6644,15 @@
 					<parameter name="error" type="GError*"/>
 				</parameters>
 			</constructor>
+			<constructor name="new_take_error" symbol="g_simple_async_result_new_take_error">
+				<return-type type="GSimpleAsyncResult*"/>
+				<parameters>
+					<parameter name="source_object" type="GObject*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+					<parameter name="error" type="GError*"/>
+				</parameters>
+			</constructor>
 			<method name="propagate_error" symbol="g_simple_async_result_propagate_error">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -6698,6 +6722,13 @@
 				<parameters>
 					<parameter name="simple" type="GSimpleAsyncResult*"/>
 					<parameter name="op_res" type="gssize"/>
+				</parameters>
+			</method>
+			<method name="take_error" symbol="g_simple_async_result_take_error">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="simple" type="GSimpleAsyncResult*"/>
+					<parameter name="error" type="GError*"/>
 				</parameters>
 			</method>
 		</object>
