@@ -141,7 +141,8 @@ public class Vala.CodeWriter : CodeVisitor {
 		write_indent ();
 		write_string ("[CCode (cprefix = \"%s\", lower_case_cprefix = \"%s\"".printf (ns.get_cprefix (), ns.get_lower_case_cprefix ()));
 
-		if (ns.source_reference != null) {
+		if (ns.source_reference != null && ns.parent_symbol == context.root) {
+			// Set GIR information only for the main namespace of the file.
 			if (ns.source_reference.file.gir_namespace != null) {
 				write_string (", ");
 				write_string ("gir_namespace = \"%s\"".printf (ns.source_reference.file.gir_namespace));
