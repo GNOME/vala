@@ -383,10 +383,12 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 								var generic_type = (GenericType) param.variable_type;
 								int type_param_index = m.get_type_parameter_index (generic_type.type_parameter.name);
 								var type_arg = ma.get_type_arguments ().get (type_param_index);
-								if (requires_copy (type_arg)) {
-									carg_map.set (get_param_pos (param.cdestroy_notify_parameter_position), get_destroy_func_expression (type_arg));
-								} else {
-									carg_map.set (get_param_pos (param.cdestroy_notify_parameter_position), new CCodeConstant ("NULL"));
+								if (param.variable_type.value_owned) {
+									if (requires_copy (type_arg)) {
+										carg_map.set (get_param_pos (param.cdestroy_notify_parameter_position), get_destroy_func_expression (type_arg));
+									} else {
+										carg_map.set (get_param_pos (param.cdestroy_notify_parameter_position), new CCodeConstant ("NULL"));
+									}
 								}
 							}
 						}
