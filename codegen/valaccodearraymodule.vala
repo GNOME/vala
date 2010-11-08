@@ -198,38 +198,11 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var cstart = get_cvalue (expr.start);
 		var cstop = get_cvalue (expr.stop);
 
-		var ccomma = new CCodeCommaExpression ();
-
-		var len_var = get_temp_variable (int_type);
-		len_var.source_reference = expr.source_reference;
-		emit_temp_var (len_var);
-
-		var slice_var = get_temp_variable (expr.value_type, true, expr);
-		emit_temp_var (slice_var);
-
-		if (!is_pure_ccode_expression (cstart)) {
-			// avoid double evaluation of start
-			var start_var = get_temp_variable (int_type);
-			emit_temp_var (start_var);
-
-			var start_assignment = new CCodeAssignment (get_variable_cexpression (start_var.name), cstart);
-			ccomma.append_expression (start_assignment);
-
-			cstart = get_variable_cexpression (start_var.name);
-		}
-
 		var cstartpointer = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, ccontainer, cstart);
-		var slice_assignment = new CCodeAssignment (get_variable_cexpression (slice_var.name), cstartpointer);
-		ccomma.append_expression (slice_assignment);
-
 		var splicelen = new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, cstop, cstart);
-		var len_assignment = new CCodeAssignment (get_variable_cexpression (len_var.name), splicelen);
-		ccomma.append_expression (len_assignment);
 
-		ccomma.append_expression (get_variable_cexpression (slice_var.name));
-
-		set_cvalue (expr, ccomma);
-		append_array_size (expr, get_variable_cexpression (len_var.name));
+		set_cvalue (expr, cstartpointer);
+		append_array_size (expr, splicelen);
 	}
 
 	void append_struct_array_free_loop (Struct st) {
