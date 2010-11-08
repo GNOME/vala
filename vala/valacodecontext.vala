@@ -109,6 +109,11 @@ public class Vala.CodeContext {
 	public string[] gir_directories;
 
 	/**
+	 * List of directories where to find .metadata files for .gir files.
+	 */
+	public string[] metadata_directories;
+
+	/**
 	 * Produce debug information.
 	 */
 	public bool debug { get; set; }
@@ -493,7 +498,29 @@ public class Vala.CodeContext {
 		return get_file_path (gir + ".gir", "gir-1.0", null, gir_directories);
 	}
 
-	string? get_file_path (string basename, string versioned_data_dir, string? data_dir, string[] directories) {
+	/*
+	 * Returns the .metadata file associated with the given .gir file.
+	 */
+	public string? get_metadata_path (string gir_filename) {
+		var basename = Path.get_basename (gir_filename);
+		var metadata_basename = "%s.metadata".printf (basename.substring (0, basename.length - ".gir".length));
+
+		// look into metadata directories
+		var metadata_filename = get_file_path (metadata_basename, null, null, metadata_directories);
+		if (metadata_filename != null) {
+			return metadata_filename;
+		}
+
+		// look into the same directory of .gir
+		metadata_filename = Path.build_filename (Path.get_dirname (gir_filename), metadata_basename);
+		if (FileUtils.test (metadata_filename, FileTest.EXISTS)) {
+			return metadata_filename;
+		}
+
+		return null;
+	}
+
+	string? get_file_path (string basename, string? versioned_data_dir, string? data_dir, string[] directories) {
 		string filename = null;
 
 		if (directories != null) {
@@ -505,10 +532,12 @@ public class Vala.CodeContext {
 			}
 		}
 
-		foreach (string dir in Environment.get_system_data_dirs ()) {
-			filename = Path.build_filename (dir, versioned_data_dir, basename);
-			if (FileUtils.test (filename, FileTest.EXISTS)) {
-				return filename;
+		if (versioned_data_dir != null) {
+			foreach (string dir in Environment.get_system_data_dirs ()) {
+				filename = Path.build_filename (dir, versioned_data_dir, basename);
+				if (FileUtils.test (filename, FileTest.EXISTS)) {
+					return filename;
+				}
 			}
 		}
 

@@ -574,9 +574,9 @@ public class Vala.GirParser : CodeVisitor {
 		metadata = Metadata.empty;
 		girdata_stack = new ArrayList<HashMap<string,string>> ();
 
-		// load metadata
-		string metadata_filename = "%s.metadata".printf (source_file.filename.substring (0, source_file.filename.length - ".gir".length));
-		if (FileUtils.test (metadata_filename, FileTest.EXISTS)) {
+		// load metadata, first look into metadata directories then in the same directory of the .gir.
+		string? metadata_filename = context.get_metadata_path (source_file.filename);
+		if (metadata_filename != null && FileUtils.test (metadata_filename, FileTest.EXISTS)) {
 			var metadata_parser = new MetadataParser ();
 			var metadata_file = new SourceFile (context, source_file.file_type, metadata_filename);
 			context.add_source_file (metadata_file);

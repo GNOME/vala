@@ -33,6 +33,8 @@ class Vala.VAPIGen : Object {
 	static string[] vapi_directories;
 	[CCode (array_length = false, array_null_terminated = true)]
 	static string[] gir_directories;
+	[CCode (array_length = false, array_null_terminated = true)]
+	static string[] metadata_directories;
 	static string library;
 	[CCode (array_length = false, array_null_terminated = true)]
 	static string[] packages;
@@ -41,6 +43,7 @@ class Vala.VAPIGen : Object {
 	const OptionEntry[] options = {
 		{ "vapidir", 0, 0, OptionArg.FILENAME_ARRAY, ref vapi_directories, "Look for package bindings in DIRECTORY", "DIRECTORY..." },
 		{ "girdir", 0, 0, OptionArg.FILENAME_ARRAY, ref gir_directories, "Look for GIR bindings in DIRECTORY", "DIRECTORY..." },
+		{ "metadatadir", 0, 0, OptionArg.FILENAME_ARRAY, ref metadata_directories, "Look for GIR .metadata files in DIRECTORY", "DIRECTORY..." },
 		{ "pkg", 0, 0, OptionArg.STRING_ARRAY, ref packages, "Include binding for PACKAGE", "PACKAGE..." },
 		{ "library", 0, 0, OptionArg.STRING, ref library, "Library name", "NAME" },
 		{ "directory", 'd', 0, OptionArg.FILENAME, ref directory, "Output directory", "DIRECTORY" },
@@ -70,6 +73,7 @@ class Vala.VAPIGen : Object {
 		context.profile = Profile.GOBJECT;
 		context.vapi_directories = vapi_directories;
 		context.gir_directories = gir_directories;
+		context.metadata_directories = metadata_directories;
 		context.report.enable_warnings = !disable_warnings;
 		context.report.set_verbose_errors (!quiet_mode);
 		CodeContext.push (context);
