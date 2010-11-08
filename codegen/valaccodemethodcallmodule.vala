@@ -410,7 +410,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 							for (int dim = 1; dim <= array_type.rank; dim++) {
 								var temp_array_length = get_temp_variable (array_length_type);
 								emit_temp_var (temp_array_length);
-								append_array_size (arg, new CCodeIdentifier (temp_array_length.name));
+								append_array_size (arg, get_variable_cexpression (temp_array_length.name));
 								carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_array_sizes (arg).get (dim - 1)));
 							}
 						} else if (param.variable_type is DelegateType) {
