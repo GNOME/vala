@@ -208,18 +208,6 @@ public class Vala.GirParser : CodeVisitor {
 			return 0;
 		}
 
-		public double get_double (ArgumentType arg) {
-			var expr = get_expression (arg);
-			if (expr is RealLiteral) {
-				var lit = (RealLiteral) expr;
-				return lit.value.to_double ();
-			} else if (expr is IntegerLiteral) {
-				var lit = (IntegerLiteral) expr;
-				return lit.value.to_int ();
-			}
-			return 0;
-		}
-
 		public bool get_bool (ArgumentType arg) {
 			var lit = get_expression (arg) as BooleanLiteral;
 			if (lit != null) {
