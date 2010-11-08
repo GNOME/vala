@@ -2,7 +2,7 @@
 <api version="1.0">
 	<namespace name="Notify">
 		<function name="get_app_name" symbol="notify_get_app_name">
-			<return-type type="gchar*"/>
+			<return-type type="char*"/>
 		</function>
 		<function name="get_server_caps" symbol="notify_get_server_caps">
 			<return-type type="GList*"/>
@@ -53,20 +53,6 @@
 					<parameter name="free_func" type="GFreeFunc"/>
 				</parameters>
 			</method>
-			<method name="attach_to_status_icon" symbol="notify_notification_attach_to_status_icon">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="notification" type="NotifyNotification*"/>
-					<parameter name="status_icon" type="GtkStatusIcon*"/>
-				</parameters>
-			</method>
-			<method name="attach_to_widget" symbol="notify_notification_attach_to_widget">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="notification" type="NotifyNotification*"/>
-					<parameter name="attach" type="GtkWidget*"/>
-				</parameters>
-			</method>
 			<method name="clear_actions" symbol="notify_notification_clear_actions">
 				<return-type type="void"/>
 				<parameters>
@@ -98,16 +84,6 @@
 					<parameter name="summary" type="char*"/>
 					<parameter name="body" type="char*"/>
 					<parameter name="icon" type="char*"/>
-					<parameter name="attach" type="GtkWidget*"/>
-				</parameters>
-			</constructor>
-			<constructor name="new_with_status_icon" symbol="notify_notification_new_with_status_icon">
-				<return-type type="NotifyNotification*"/>
-				<parameters>
-					<parameter name="summary" type="char*"/>
-					<parameter name="body" type="char*"/>
-					<parameter name="icon" type="char*"/>
-					<parameter name="status_icon" type="GtkStatusIcon*"/>
 				</parameters>
 			</constructor>
 			<method name="set_category" symbol="notify_notification_set_category">
@@ -117,13 +93,12 @@
 					<parameter name="category" type="char*"/>
 				</parameters>
 			</method>
-			<method name="set_geometry_hints" symbol="notify_notification_set_geometry_hints">
+			<method name="set_hint" symbol="notify_notification_set_hint">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="notification" type="NotifyNotification*"/>
-					<parameter name="screen" type="GdkScreen*"/>
-					<parameter name="x" type="gint"/>
-					<parameter name="y" type="gint"/>
+					<parameter name="key" type="char*"/>
+					<parameter name="value" type="GVariant*"/>
 				</parameters>
 			</method>
 			<method name="set_hint_byte" symbol="notify_notification_set_hint_byte">
@@ -219,12 +194,10 @@
 					<parameter name="icon" type="char*"/>
 				</parameters>
 			</method>
-			<property name="attach-widget" type="GtkWidget*" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="body" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="closed-reason" type="gint" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="icon-name" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="id" type="gint" readable="1" writable="1" construct="1" construct-only="0"/>
-			<property name="status-icon" type="GtkStatusIcon*" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="summary" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
 			<signal name="closed" when="FIRST">
 				<return-type type="void"/>
@@ -235,5 +208,8 @@
 		</object>
 		<constant name="NOTIFY_EXPIRES_DEFAULT" type="int" value="-1"/>
 		<constant name="NOTIFY_EXPIRES_NEVER" type="int" value="0"/>
+		<constant name="NOTIFY_VERSION_MAJOR" type="int" value="0"/>
+		<constant name="NOTIFY_VERSION_MICRO" type="int" value="0"/>
+		<constant name="NOTIFY_VERSION_MINOR" type="int" value="7"/>
 	</namespace>
 </api>

@@ -5,16 +5,14 @@ namespace Notify {
 	[CCode (cheader_filename = "libnotify/notify.h")]
 	public class Notification : GLib.Object {
 		[CCode (has_construct_function = false)]
-		public Notification (string summary, string? body, string? icon, Gtk.Widget? attach);
+		public Notification (string summary, string? body, string? icon);
 		public void add_action (string action, string label, owned Notify.ActionCallback callback);
-		public void attach_to_status_icon (Gtk.StatusIcon status_icon);
-		public void attach_to_widget (Gtk.Widget attach);
 		public void clear_actions ();
 		public void clear_hints ();
 		public bool close () throws GLib.Error;
 		public int get_closed_reason ();
 		public void set_category (string category);
-		public void set_geometry_hints (Gdk.Screen screen, int x, int y);
+		public void set_hint (string key, GLib.Variant value);
 		public void set_hint_byte (string key, uchar value);
 		public void set_hint_byte_array (string key, uchar[] value, size_t len);
 		public void set_hint_double (string key, double value);
@@ -27,10 +25,6 @@ namespace Notify {
 		public void set_urgency (Notify.Urgency urgency);
 		public bool show () throws GLib.Error;
 		public bool update (string summary, string body, string icon);
-		[CCode (has_construct_function = false)]
-		public Notification.with_status_icon (string summary, string body, string icon, Gtk.StatusIcon status_icon);
-		[NoAccessorMethod]
-		public Gtk.Widget attach_widget { owned get; set construct; }
 		[NoAccessorMethod]
 		public string body { owned get; set construct; }
 		public int closed_reason { get; }
@@ -38,8 +32,6 @@ namespace Notify {
 		public string icon_name { owned get; set construct; }
 		[NoAccessorMethod]
 		public int id { get; set construct; }
-		[NoAccessorMethod]
-		public Gtk.StatusIcon status_icon { owned get; set construct; }
 		[NoAccessorMethod]
 		public string summary { owned get; set construct; }
 		public virtual signal void closed ();
@@ -56,6 +48,12 @@ namespace Notify {
 	public const int EXPIRES_DEFAULT;
 	[CCode (cheader_filename = "libnotify/notify.h")]
 	public const int EXPIRES_NEVER;
+	[CCode (cheader_filename = "libnotify/notify.h")]
+	public const int VERSION_MAJOR;
+	[CCode (cheader_filename = "libnotify/notify.h")]
+	public const int VERSION_MICRO;
+	[CCode (cheader_filename = "libnotify/notify.h")]
+	public const int VERSION_MINOR;
 	[CCode (cheader_filename = "libnotify/notify.h")]
 	public static unowned string get_app_name ();
 	[CCode (cheader_filename = "libnotify/notify.h")]
