@@ -966,7 +966,7 @@ public class Vala.GirParser : CodeVisitor {
 				if (merged.contains (info) || info.metadata.get_bool (ArgumentType.HIDDEN)) {
 					continue;
 				}
-				if (!info.metadata.has_argument (ArgumentType.PARENT)) {
+				if (!(current_symbol is Namespace && info.symbol is Method) && !info.metadata.has_argument (ArgumentType.PARENT)) {
 					add_symbol_to_container (container, info.symbol);
 				}
 				postprocess_symbol (info.symbol, info.metadata);
@@ -1385,7 +1385,9 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (reader.name == "bitfield") {
 				add_symbol_info (parse_bitfield ());
 			} else if (reader.name == "function") {
-				current_namespace_methods.add (parse_method ("function"));
+				var method = parse_method ("function");
+				add_symbol_info (method);
+				current_namespace_methods.add (method);
 			} else if (reader.name == "callback") {
 				add_symbol_info (parse_callback ());
 			} else if (reader.name == "record") {
@@ -1476,6 +1478,8 @@ public class Vala.GirParser : CodeVisitor {
 
 		string common_prefix = null;
 		
+		var old_symbol = current_symbol;
+		current_symbol = en;
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (!push_metadata ()) {
 				skip_element ();
@@ -1498,6 +1502,7 @@ public class Vala.GirParser : CodeVisitor {
 		en.set_cprefix (common_prefix);
 
 		end_element ("enumeration");
+		current_symbol = old_symbol;
 		return en;
 	}
 
@@ -1515,7 +1520,8 @@ public class Vala.GirParser : CodeVisitor {
 		next ();
 
 		string common_prefix = null;
-
+		var old_symbol = current_symbol;
+		current_symbol = ed;
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (!push_metadata ()) {
 				skip_element ();
@@ -1538,6 +1544,7 @@ public class Vala.GirParser : CodeVisitor {
 		ed.set_cprefix (common_prefix);
 
 		end_element ("enumeration");
+		current_symbol = old_symbol;
 		return ed;
 	}
 
@@ -1546,6 +1553,8 @@ public class Vala.GirParser : CodeVisitor {
 		var en = new Enum (reader.get_attribute ("name"), get_current_src ());
 		en.access = SymbolAccessibility.PUBLIC;
 		next ();
+		var old_symbol = current_symbol;
+		current_symbol = en;
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (!push_metadata ()) {
 				skip_element ();
@@ -1563,6 +1572,7 @@ public class Vala.GirParser : CodeVisitor {
 			pop_metadata ();
 		}
 		end_element ("bitfield");
+		current_symbol = en;
 		return en;
 	}
 
@@ -1991,8 +2001,10 @@ public class Vala.GirParser : CodeVisitor {
 		}
 
 		next ();
+		var old_symbol = current_symbol;
 		var old_symbols_info = current_symbols_info;
 		current_symbols_info = new HashMap<string,ArrayList<SymbolInfo>> (str_hash, str_equal);
+		current_symbol = iface;
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (!push_metadata ()) {
 				skip_element ();
@@ -2026,6 +2038,7 @@ public class Vala.GirParser : CodeVisitor {
 		}
 
 		merge_add_process (iface);
+		current_symbol = old_symbol;
 		current_symbols_info = old_symbols_info;
 
 		handle_async_methods (iface);
@@ -2490,6 +2503,8 @@ public class Vala.GirParser : CodeVisitor {
 		st.external = true;
 		next ();
 
+		var old_symbol = current_symbol;
+		current_symbol = st;
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (!push_metadata ()) {
 				skip_element ();
@@ -2520,6 +2535,8 @@ public class Vala.GirParser : CodeVisitor {
 		}
 
 		end_element ("union");
+		current_symbol = old_symbol;
+
 		return st;
 	}
 
@@ -2786,7 +2803,7 @@ public class Vala.GirParser : CodeVisitor {
 			var ns_cprefix = ns.get_lower_case_cprefix ();
 			var methods = namespace_methods[ns];
 			foreach (var method in methods) {
-				if (method.parent_node != null) {
+				if (method.parent_symbol != null) {
 					// fixed earlier by metadata
 					continue;
 				}
