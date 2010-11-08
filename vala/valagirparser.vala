@@ -480,14 +480,14 @@ public class Vala.GirParser : CodeVisitor {
 	}
 
 	class CallbackScope {
-		public Namespace parent_namespace;
+		public Symbol parent_symbol;
 		public UnresolvedSymbol gtype_struct_for;
 	}
 
 	class Alias {
 		public string name;
 		public DataType base_type;
-		public Namespace parent_namespace;
+		public Symbol parent_symbol;
 		public SourceReference source_reference;
 	}
 
@@ -499,7 +499,8 @@ public class Vala.GirParser : CodeVisitor {
 	Namespace glib_ns;
 
 	SourceFile current_source_file;
-	Namespace current_namespace;
+	Symbol current_symbol;
+
 	string current_gtype_struct_for;
 	SourceLocation begin;
 	SourceLocation end;
@@ -629,6 +630,15 @@ public class Vala.GirParser : CodeVisitor {
 	const string GIR_VERSION = "1.2";
 
 	void add_symbol_to_container (Symbol container, Symbol sym) {
+		var name = sym.name;
+		if (name == null && sym is CreationMethod) {
+			name = ".new";
+		}
+		if (container.scope.lookup (name) != null) {
+			// overridden by -custom.vala
+			return;
+		}
+
 		if (container is Class) {
 			unowned Class cl = (Class) container;
 
@@ -1185,9 +1195,10 @@ public class Vala.GirParser : CodeVisitor {
 		return type;
 	}
 
-	string? element_get_name (string attribute_name = "name", ArgumentType arg_type = ArgumentType.NAME) {
-		var name = reader.get_attribute (attribute_name);
-		var pattern = metadata.get_string (arg_type);
+	string? element_get_name (bool remap = false) {
+		var name = reader.get_attribute ("name");
+		var orig_name = name;
+		var pattern = metadata.get_string (ArgumentType.NAME);
 		if (pattern != null) {
 			try {
 				var regex = new Regex (pattern, RegexCompileFlags.ANCHORED, RegexMatchFlags.ANCHORED);
@@ -1205,7 +1216,15 @@ public class Vala.GirParser : CodeVisitor {
 			} catch (Error e) {
 				name = pattern;
 			}
+		} else {
+			if (name != null && name.has_suffix ("Enum")) {
+				name = name.substring (0, name.length - "Enum".length);
+			}
 		}
+		if (name != orig_name && remap) {
+			set_symbol_mapping (parse_symbol_from_string (orig_name), parse_symbol_from_string (name));
+		}
+
 		return name;
 	}
 
@@ -1322,9 +1341,6 @@ public class Vala.GirParser : CodeVisitor {
 			set_symbol_mapping (new UnresolvedSymbol (null, gir_namespace), ns);
 		}
 
-		var old_namespace = current_namespace;
-		current_namespace = ns;
-
 		if (cprefix != null) {
 			ns.add_cprefix (cprefix);
 			ns.set_lower_case_cprefix (Symbol.camel_case_to_lower_case (cprefix) + "_");
@@ -1348,7 +1364,9 @@ public class Vala.GirParser : CodeVisitor {
 			namespace_methods[ns] = current_namespace_methods;
 		}
 		var old_symbols_info = current_symbols_info;
+		var old_symbol = current_symbol;
 		current_symbols_info = new HashMap<string,ArrayList<SymbolInfo>> (str_hash, str_equal);
+		current_symbol = ns;
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (!push_metadata ()) {
 				skip_element ();
@@ -1400,7 +1418,7 @@ public class Vala.GirParser : CodeVisitor {
 
 		merge_add_process (ns);
 		current_symbols_info = old_symbols_info;
-		current_namespace = old_namespace;
+		current_symbol = old_symbol;
 
 		if (!new_namespace) {
 			ns = null;
@@ -1415,7 +1433,7 @@ public class Vala.GirParser : CodeVisitor {
 		var alias = new Alias ();
 		alias.source_reference = get_current_src ();
 		alias.name = reader.get_attribute ("name");
-		alias.parent_namespace = current_namespace;
+		alias.parent_symbol = current_symbol;
 		next ();
 
 		alias.base_type = element_get_type (parse_type (null, null, true), true);
@@ -1445,7 +1463,8 @@ public class Vala.GirParser : CodeVisitor {
 
 	Enum parse_enumeration () {
 		start_element ("enumeration");
-		var en = new Enum (reader.get_attribute ("name"), get_current_src ());
+
+		var en = new Enum (element_get_name (), get_current_src ());
 		en.access = SymbolAccessibility.PUBLIC;
 
 		string enum_cname = reader.get_attribute ("c:type");
@@ -1485,7 +1504,7 @@ public class Vala.GirParser : CodeVisitor {
 	ErrorDomain parse_error_domain () {
 		start_element ("enumeration");
 
-		var ed = new ErrorDomain (reader.get_attribute ("name"), get_current_src ());
+		var ed = new ErrorDomain (element_get_name (true), get_current_src ());
 		ed.access = SymbolAccessibility.PUBLIC;
 
 		string enum_cname = reader.get_attribute ("c:type");
@@ -1879,18 +1898,22 @@ public class Vala.GirParser : CodeVisitor {
 
 	Class parse_class () {
 		start_element ("class");
-		var cl = new Class (reader.get_attribute ("name"), get_current_src ());
-		cl.access = SymbolAccessibility.PUBLIC;
-		cl.external = true;
-
+		var name = element_get_name ();
 		string cname = reader.get_attribute ("c:type");
-		if (cname != null) {
-			cl.set_cname (cname);
-		}
-
 		string parent = reader.get_attribute ("parent");
-		if (parent != null) {
-			cl.add_base_type (parse_type_from_gir_name (parent));
+		var cl = current_symbol.scope.lookup (name) as Class;
+		if (cl == null) {
+			cl = new Class (name, get_current_src ());
+			cl.access = SymbolAccessibility.PUBLIC;
+			cl.external = true;
+
+			if (cname != null) {
+				cl.set_cname (cname);
+			}
+
+			if (parent != null) {
+				cl.add_base_type (parse_type_from_gir_name (parent));
+			}
 		}
 
 		next ();
@@ -2073,7 +2096,7 @@ public class Vala.GirParser : CodeVisitor {
 		if (type is DelegateType && current_gtype_struct_for != null) {
 			// virtual
 			var callback_scope = new CallbackScope ();
-			callback_scope.parent_namespace = current_namespace;
+			callback_scope.parent_symbol = current_symbol;
 			callback_scope.gtype_struct_for = parse_symbol_from_string (current_gtype_struct_for);
 			ArrayList<Delegate> callbacks = gtype_callbacks.get (callback_scope);
 			if (callbacks == null) {
@@ -2125,20 +2148,13 @@ public class Vala.GirParser : CodeVisitor {
 
 	Method parse_constructor (string? parent_ctype = null) {
 		start_element ("constructor");
-		string name = element_get_name ();
+
 		string throws_string = reader.get_attribute ("throws");
 		string cname = reader.get_attribute ("c:identifier");
-		next ();
-
-		string? ctype;
-		parse_return_value (out ctype);
-
-		var m = new CreationMethod (null, name, get_current_src ());
+		var m = new CreationMethod (null, element_get_name (), get_current_src ());
 		m.access = SymbolAccessibility.PUBLIC;
 		m.has_construct_function = false;
-		if (ctype != null && (parent_ctype == null || ctype != parent_ctype + "*")) {
-			m.custom_return_type_cname = ctype;
-		}
+
 		if (m.name == "new") {
 			m.name = null;
 		} else if (m.name.has_prefix ("new_")) {
@@ -2147,6 +2163,14 @@ public class Vala.GirParser : CodeVisitor {
 		if (cname != null) {
 			m.set_cname (cname);
 		}
+
+		next ();
+		string? ctype;
+		parse_return_value (out ctype);
+		if (ctype != null && (parent_ctype == null || ctype != parent_ctype + "*")) {
+			m.custom_return_type_cname = ctype;
+		}
+
 		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "parameters") {
 			start_element ("parameters");
 			next ();
@@ -2665,7 +2689,7 @@ public class Vala.GirParser : CodeVisitor {
 
 	void postprocess_gtype_callbacks () {
 		foreach (CallbackScope callback_scope in gtype_callbacks.get_keys ()) {
-			var gtype = resolve_symbol (callback_scope.parent_namespace.scope, callback_scope.gtype_struct_for) as ObjectTypeSymbol;
+			var gtype = resolve_symbol (callback_scope.parent_symbol.scope, callback_scope.gtype_struct_for) as ObjectTypeSymbol;
 			if (gtype == null) {
 				Report.error (null, "unknown symbol `%s'".printf (callback_scope.gtype_struct_for.to_string ()));
 				continue;
@@ -2704,7 +2728,7 @@ public class Vala.GirParser : CodeVisitor {
 			Symbol type_sym = null;
 			if (alias.base_type is UnresolvedType) {
 				base_type = alias.base_type;
-				type_sym = resolve_symbol (alias.parent_namespace.scope, ((UnresolvedType) base_type).unresolved_symbol);
+				type_sym = resolve_symbol (alias.parent_symbol.scope, ((UnresolvedType) base_type).unresolved_symbol);
 			} else if (!(alias.base_type is VoidType)) {
 				base_type = alias.base_type;
 				type_sym = base_type.data_type;
@@ -2718,7 +2742,7 @@ public class Vala.GirParser : CodeVisitor {
 					st.base_type = base_type;
 				}
 				st.external = true;
-				alias.parent_namespace.add_struct (st);
+				add_symbol_to_container (alias.parent_symbol, st);
 			} else if (type_sym is Class) {
 				var cl = new Class (alias.name, alias.source_reference);
 				cl.access = SymbolAccessibility.PUBLIC;
@@ -2726,7 +2750,7 @@ public class Vala.GirParser : CodeVisitor {
 					cl.add_base_type (base_type);
 				}
 				cl.external = true;
-				alias.parent_namespace.add_class (cl);
+				add_symbol_to_container (alias.parent_symbol, cl);
 			}
 		}
 	}
@@ -2842,6 +2866,6 @@ public class Vala.GirParser : CodeVisitor {
 	static bool callback_scope_equal (void *ptr1, void *ptr2) {
 		var cs1 = (CallbackScope) ptr1;
 		var cs2 = (CallbackScope) ptr2;
-		return cs1.parent_namespace == cs2.parent_namespace && unresolved_symbol_equal (cs1.gtype_struct_for, cs2.gtype_struct_for);
+		return cs1.parent_symbol == cs2.parent_symbol && unresolved_symbol_equal (cs1.gtype_struct_for, cs2.gtype_struct_for);
 	}
 }
