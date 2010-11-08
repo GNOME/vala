@@ -1095,49 +1095,21 @@ public class Vala.Genie.Parser : CodeVisitor {
 		list_member.creation_member = true;
 		
 		var expr = new ObjectCreationExpression (list_member, get_src (begin));
-		var t = element_type.to_qualified_string ();
-		if (t == "string") {
-			parent_member = new MemberAccess (null, "GLib", get_src (begin));			
-			expr.add_argument (new MemberAccess (parent_member, "str_equal", get_src (begin)));
-			
-		} else if (t == "int") {
-			parent_member = new MemberAccess (null, "GLib", get_src (begin));
-			expr.add_argument (new MemberAccess (parent_member, "int_equal", get_src (begin)));
-		}
-
 		return expr;
 	}
 	
 	Expression parse_dict_creation_expression (SourceLocation begin, DataType key_type, DataType value_type) throws ParseError {
 	
-		MemberAccess dict_member = null, parent_member = null, dict_hash = null, dict_equal = null;
+		MemberAccess dict_member = null, parent_member = null;
 		
 		parent_member = new MemberAccess (null, "Gee", get_src (begin));
 		dict_member = new MemberAccess (parent_member, "HashMap", get_src (begin));
 		dict_member.add_type_argument (key_type);
 		dict_member.add_type_argument (value_type);
 	
-		var key_type_name = key_type.to_qualified_string ();
-		if (key_type_name == "string") {
-			parent_member = new MemberAccess (null, "GLib", get_src (begin));			
-			dict_hash = new MemberAccess (parent_member, "str_hash", get_src (begin));
-			dict_equal = new MemberAccess (parent_member, "str_equal", get_src (begin));
-			
-		} else if (key_type_name == "int") {
-			parent_member = new MemberAccess (null, "GLib", get_src (begin));
-			dict_hash = new MemberAccess (parent_member, "int_hash", get_src (begin));
-			dict_equal = new MemberAccess (parent_member, "int_equal", get_src (begin));
-		}
-
 		dict_member.creation_member = true;
 		
 		var expr = new ObjectCreationExpression (dict_member, get_src (begin));
-
-		if (dict_hash != null && dict_equal != null) {
-			expr.add_argument (dict_hash);
-			expr.add_argument (dict_equal);
-		}
-
 
 		return expr;
 	}
