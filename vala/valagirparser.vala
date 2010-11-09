@@ -1146,37 +1146,32 @@ public class Vala.GirParser : CodeVisitor {
 		return str;
 	}
 
+	/*
+	 * The changed is a faster way to check whether the type has changed and it may affect the C declaration.
+	 * If type arguments change, the C declaration is not affected.
+	 */
 	DataType? element_get_type (DataType orig_type, bool owned_by_default, out bool changed = null) {
-		if (&changed != null) {
-			changed = false;
-		}
-
+		changed = false;
 		var type = orig_type;
 
 		if (metadata.has_argument (ArgumentType.TYPE)) {
 			var new_type = parse_type_from_string (metadata.get_string (ArgumentType.TYPE), owned_by_default, metadata.get_source_reference (ArgumentType.TYPE));
-			if (&changed != null) {
-				changed = true;
-			}
+			changed = true;
 			return new_type;
-		}
-
-		if (metadata.has_argument (ArgumentType.TYPE_ARGUMENTS)) {
-			parse_type_arguments_from_string (type, metadata.get_string (ArgumentType.TYPE_ARGUMENTS), metadata.get_source_reference (ArgumentType.TYPE_ARGUMENTS));
-			if (&changed != null) {
-				changed = true;
-			}
 		}
 
 		if (type is VoidType) {
 			return type;
 		}
 
+		if (metadata.has_argument (ArgumentType.TYPE_ARGUMENTS)) {
+			type.remove_all_type_arguments ();
+			parse_type_arguments_from_string (type, metadata.get_string (ArgumentType.TYPE_ARGUMENTS), metadata.get_source_reference (ArgumentType.TYPE_ARGUMENTS));
+		}
+
 		if (metadata.get_bool (ArgumentType.ARRAY)) {
 			type = new ArrayType (type, 1, type.source_reference);
-			if (&changed != null) {
-				changed = true;
-			}
+			changed = true;
 		}
 
 		if (owned_by_default) {
