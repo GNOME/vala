@@ -855,7 +855,8 @@ public class Vala.GirParser : CodeVisitor {
 				}
 			}
 			var getter_name = "get_%s".printf (info.symbol.name);
-			if (current_symbols_info.contains (getter_name)) {
+			var setter_name = "set_%s".printf (info.symbol.name);
+			if (current_symbols_info.contains (getter_name) || current_symbols_info.contains (setter_name)) {
 				((Property) info.symbol).no_accessor_method = false;
 			}
 		} else if (info.symbol is Signal) {
