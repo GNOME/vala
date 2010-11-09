@@ -1739,7 +1739,7 @@ public class Vala.GirParser : CodeVisitor {
 			type_name = "GLib.GenericArray";
 		}
 
-		DataType type = parse_type_from_gir_name (type_name, out no_array_length, out array_null_terminated);
+		DataType type = parse_type_from_gir_name (type_name, out no_array_length, out array_null_terminated, ctype);
 
 		// type arguments / element types
 		while (current_token == MarkupTokenType.START_ELEMENT) {
@@ -1752,7 +1752,7 @@ public class Vala.GirParser : CodeVisitor {
 		return type;
 	}
 
-	DataType parse_type_from_gir_name (string type_name, out bool no_array_length = null, out bool array_null_terminated = null) {
+	DataType parse_type_from_gir_name (string type_name, out bool no_array_length = null, out bool array_null_terminated = null, string? ctype = null) {
 		if (&no_array_length != null) {
 			no_array_length = false;
 		}
@@ -1790,9 +1790,17 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (type_name == "guint") {
 				type_name = "uint";
 			} else if (type_name == "glong") {
-				type_name = "long";
+				if (ctype == "gssize") {
+					type_name = "ssize_t";
+				} else {
+					type_name = "long";
+				}
 			} else if (type_name == "gulong") {
-				type_name = "ulong";
+				if (ctype == "gsize") {
+					type_name = "size_t";
+				} else {
+					type_name = "ulong";
+				}
 			} else if (type_name == "gint8") {
 				type_name = "int8";
 			} else if (type_name == "guint8") {
