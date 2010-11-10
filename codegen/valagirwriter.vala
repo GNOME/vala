@@ -35,6 +35,8 @@ public class Vala.GIRWriter : CodeVisitor {
 	FileStream stream;
 	Vala.HashSet<Namespace> unannotated_namespaces = new Vala.HashSet<Namespace>();
 	Vala.HashSet<Namespace> our_namespaces = new Vala.HashSet<Namespace>();
+	Vala.ArrayList<Vala.Symbol> hierarchy = new Vala.ArrayList<Vala.Symbol>();
+	Vala.ArrayList<Vala.CodeNode> deferred = new Vala.ArrayList<Vala.CodeNode>();
 
 	int indent;
 
@@ -153,13 +155,14 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		if (ns.name == null)  {
 			// global namespace
+			hierarchy.insert (0, ns);
 			ns.accept_children (this);
+			hierarchy.remove_at (0);
 			return;
 		}
 
 		if (ns.parent_symbol.name != null) {
-			// nested namespace
-			// not supported in GIR at the moment
+			ns.accept_children (this);
 			return;
 		}
 
@@ -176,12 +179,16 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		write_annotations (ns);
 
+		hierarchy.insert (0, ns);
 		ns.accept_children (this);
+		hierarchy.remove_at (0);
 
 		indent--;
 		write_indent ();
 		buffer.append_printf ("</namespace>\n");
 		our_namespaces.add(ns);
+
+		visit_deferred ();
 	}
 
 	private void write_symbol_attributes (Symbol symbol) {
@@ -202,11 +209,16 @@ public class Vala.GIRWriter : CodeVisitor {
 			return;
 		}
 
+		if (!(hierarchy[0] is Namespace)) {
+			deferred.add (cl);
+			return;
+		}
+
 		if (cl.is_subtype_of (gobject_type)) {
 			string gtype_struct_name = cl.name + "Class";
 
 			write_indent ();
-			buffer.append_printf ("<class name=\"%s\"", cl.name);
+			buffer.append_printf ("<class name=\"%s\"", get_gir_name (cl));
 			write_gtype_attributes (cl);
 			buffer.append_printf (" glib:type-struct=\"%s\"", gtype_struct_name);
 			buffer.append_printf (" parent=\"%s\"", gi_type_name (cl.base_class));
@@ -246,7 +258,9 @@ public class Vala.GIRWriter : CodeVisitor {
 			write_indent ();
 			buffer.append_printf("</field>\n");
 
+			hierarchy.insert (0, cl);
 			cl.accept_children (this);
+			hierarchy.remove_at (0);
 
 			indent--;
 			write_indent ();
@@ -301,19 +315,23 @@ public class Vala.GIRWriter : CodeVisitor {
 			buffer.append_printf ("<record name=\"%sPrivate\" c:type=\"%sPrivate\" disguised=\"1\"/>\n", cl.name, cl.get_cname ());
 		} else {
 			write_indent ();
-			buffer.append_printf ("<record name=\"%s\"", cl.name);
+			buffer.append_printf ("<record name=\"%s\"", get_gir_name (cl));
 			write_symbol_attributes (cl);
 			buffer.append_printf (">\n");
 			indent++;
 
 			write_annotations (cl);
 
+			hierarchy.insert (0, cl);
 			cl.accept_children (this);
+			hierarchy.remove_at (0);
 
 			indent--;
 			write_indent ();
 			buffer.append_printf ("</record>\n");
 		}
+
+		visit_deferred ();
 	}
 
 	public override void visit_struct (Struct st) {
@@ -325,19 +343,28 @@ public class Vala.GIRWriter : CodeVisitor {
 			return;
 		}
 
+		if (!(hierarchy[0] is Namespace)) {
+			deferred.add (st);
+			return;
+		}
+
 		write_indent ();
-		buffer.append_printf ("<record name=\"%s\"", st.name);
+		buffer.append_printf ("<record name=\"%s\"", get_gir_name (st));
 		write_symbol_attributes (st);
 		buffer.append_printf (">\n");
 		indent++;
 
 		write_annotations (st);
 
+		hierarchy.insert (0, st);
 		st.accept_children (this);
+		hierarchy.remove_at (0);
 
 		indent--;
 		write_indent ();
 		buffer.append_printf ("</record>\n");
+
+		visit_deferred ();
 	}
 
 	public override void visit_interface (Interface iface) {
@@ -349,10 +376,15 @@ public class Vala.GIRWriter : CodeVisitor {
 			return;
 		}
 
+		if (!(hierarchy[0] is Namespace)) {
+			deferred.add (iface);
+			return;
+		}
+
 		string gtype_struct_name = iface.name + "Iface";
 
 		write_indent ();
-		buffer.append_printf ("<interface name=\"%s\"", iface.name);
+		buffer.append_printf ("<interface name=\"%s\"", get_gir_name (iface));
 		write_gtype_attributes (iface);
 		buffer.append_printf (" glib:type-struct=\"%s\"", gtype_struct_name);
 		write_symbol_attributes (iface);
@@ -368,7 +400,10 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 
 		write_annotations (iface);
+
+		hierarchy.insert (0, iface);
 		iface.accept_children (this);
+		hierarchy.remove_at (0);
 
 		indent--;
 		write_indent ();
@@ -390,6 +425,32 @@ public class Vala.GIRWriter : CodeVisitor {
 		indent--;
 		write_indent ();
 		buffer.append_printf ("</record>\n");
+
+		visit_deferred ();
+	}
+
+	private void visit_deferred () {
+		var nodes = this.deferred;
+		this.deferred = new Vala.ArrayList<Vala.CodeNode>();
+
+		foreach (var node in nodes) {
+			node.accept (this);
+		}
+	}
+
+	private string? get_gir_name (Symbol symbol) {
+		string? gir_name = null;
+		var h0 = hierarchy[0];
+
+		for (Symbol? cur_sym = symbol ; cur_sym != null ; cur_sym = cur_sym.parent_symbol) {
+			if (cur_sym == h0) {
+				break;
+			}
+
+			gir_name = cur_sym.gir_name.concat (gir_name);
+		}
+
+		return gir_name;
 	}
 
 	public override void visit_enum (Enum en) {
@@ -401,8 +462,13 @@ public class Vala.GIRWriter : CodeVisitor {
 			return;
 		}
 
+		if (!(hierarchy[0] is Namespace)) {
+			deferred.add (en);
+			return;
+		}
+
 		write_indent ();
-		buffer.append_printf ("<enumeration name=\"%s\"", en.name);
+		buffer.append_printf ("<enumeration name=\"%s\"", get_gir_name (en));
 		write_gtype_attributes (en);
 		write_symbol_attributes (en);
 		buffer.append_printf (">\n");
@@ -411,11 +477,15 @@ public class Vala.GIRWriter : CodeVisitor {
 		write_annotations (en);
 
 		enum_value = 0;
+		hierarchy.insert (0, en);
 		en.accept_children (this);
+		hierarchy.remove_at (0);
 
 		indent--;
 		write_indent ();
 		buffer.append_printf ("</enumeration>\n");
+
+		visit_deferred ();
 	}
 
 	private int enum_value;
@@ -460,11 +530,15 @@ public class Vala.GIRWriter : CodeVisitor {
 		indent++;
 
 		enum_value = 0;
+		hierarchy.insert (0, edomain);
 		edomain.accept_children (this);
+		hierarchy.remove_at (0);
 
 		indent--;
 		write_indent ();
 		buffer.append_printf ("</enumeration>\n");
+
+		visit_deferred ();
 	}
 
 	public override void visit_error_code (ErrorCode ecode) {
@@ -629,8 +703,13 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 
 		string tag_name = "method";
-		var parent = m.parent_symbol;
-		if (parent is Namespace || m.binding == MemberBinding.STATIC) {
+		var parent = this.hierarchy.get (0);
+		if (parent is Enum) {
+			deferred.add (m);
+			return;
+		}
+
+		if (parent is Namespace || m.binding == MemberBinding.STATIC || parent != m.parent_symbol) {
 			tag_name = "function";
 		}
 
@@ -642,16 +721,29 @@ public class Vala.GIRWriter : CodeVisitor {
 	}
 
 	private void write_signature (Method m, string tag_name, bool instance = false) {
+		var parent = this.hierarchy.get (0);
+		string name;
+		if (m.parent_symbol != parent) {
+			instance = false;
+			name = m.get_cname ();
+			var parent_prefix = parent.get_lower_case_cprefix ();
+			if (name.has_prefix (parent_prefix)) {
+				name = name.offset (parent_prefix.length);
+			}
+		} else {
+			name = m.name;
+		}
+
 		if (m.coroutine) {
-			string finish_name = m.name;
+			string finish_name = name;
 			if (finish_name.has_suffix ("_async")) {
 				finish_name = finish_name.substring (0, finish_name.length - "_async".length);
 			}
 			finish_name += "_finish";
-			do_write_signature (m, tag_name, instance, m.name, m.get_cname (), m.get_async_begin_parameters (), new VoidType (), false);
+			do_write_signature (m, tag_name, instance, name, m.get_cname (), m.get_async_begin_parameters (), new VoidType (), false);
 			do_write_signature (m, tag_name, instance, finish_name, m.get_finish_cname (), m.get_async_end_parameters (), m.return_type, m.tree_can_fail);
 		} else {
-			do_write_signature (m, tag_name, instance, m.name, m.get_cname (), m.get_parameters (), m.return_type, m.tree_can_fail);
+			do_write_signature (m, tag_name, instance, name, m.get_cname (), m.get_parameters (), m.return_type, m.tree_can_fail);
 		}
 	}
 

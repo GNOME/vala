@@ -215,10 +215,12 @@ public abstract class Vala.Symbol : CodeNode {
 			return gir_name;
 		}
 
-		if (name.has_prefix (".")) {
-			return "%s%s".printf (parent_symbol.get_full_gir_name (), gir_name);
+		string parent_gir_name = parent_symbol.get_full_gir_name ();
+		string self_gir_name = gir_name.has_prefix (".") ? gir_name.offset (1) : gir_name;
+		if (parent_gir_name.str (".") != null) {
+			return "%s%s".printf (parent_gir_name, self_gir_name);
 		} else {
-			return "%s.%s".printf (parent_symbol.get_full_gir_name (), gir_name);
+			return "%s.%s".printf (parent_gir_name, self_gir_name);
 		}
 	}
 	
