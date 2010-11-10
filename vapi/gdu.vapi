@@ -4,6 +4,8 @@
 namespace Gdu {
 	[CCode (cheader_filename = "gdu/gdu.h")]
 	public class Adapter : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Adapter ();
 		public unowned string get_driver ();
 		public unowned string get_fabric ();
 		public unowned string get_model ();
@@ -17,6 +19,8 @@ namespace Gdu {
 	}
 	[CCode (cheader_filename = "gdu/gdu.h")]
 	public class Device : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Device ();
 		public void* drive_ata_smart_get_blob (size_t out_size);
 		public bool drive_ata_smart_get_is_available ();
 		public unowned string drive_ata_smart_get_status ();
@@ -149,7 +153,7 @@ namespace Gdu {
 		public void op_linux_lvm2_lv_stop (Gdu.DeviceLinuxLvm2LVStopCompletedFunc callback);
 		public void op_linux_md_add_spare (string component_objpath, Gdu.DeviceLinuxMdAddSpareCompletedFunc callback);
 		public void op_linux_md_check (string options, Gdu.DeviceLinuxMdCheckCompletedFunc callback);
-		public void op_linux_md_expand (GLib.PtrArray component_objpaths, Gdu.DeviceLinuxMdExpandCompletedFunc callback);
+		public void op_linux_md_expand (GLib.GenericArray<string> component_objpaths, Gdu.DeviceLinuxMdExpandCompletedFunc callback);
 		public void op_linux_md_remove_component (string component_objpath, Gdu.DeviceLinuxMdRemoveComponentCompletedFunc callback);
 		public void op_linux_md_stop (Gdu.DeviceLinuxMdStopCompletedFunc callback);
 		public void op_luks_change_passphrase (string old_secret, string new_secret, Gdu.DeviceLuksChangePassphraseCompletedFunc callback);
@@ -184,6 +188,8 @@ namespace Gdu {
 	}
 	[CCode (cheader_filename = "gdu/gdu.h")]
 	public class Drive : GLib.Object, Gdu.Presentable {
+		[CCode (has_construct_function = false)]
+		protected Drive ();
 		public virtual void activate (Gdu.DriveActivateFunc callback);
 		public virtual bool can_activate (bool out_degraded);
 		public virtual bool can_create_volume (bool out_is_uninitialized, uint64 out_largest_contiguous_free_segment, uint64 out_total_free, out unowned Gdu.Presentable out_presentable);
@@ -198,6 +204,8 @@ namespace Gdu {
 	}
 	[CCode (cheader_filename = "gdu/gdu.h")]
 	public class Expander : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Expander ();
 		public unowned string get_adapter ();
 		public unowned string get_model ();
 		public unowned string get_native_path ();
@@ -212,12 +220,16 @@ namespace Gdu {
 	}
 	[CCode (cheader_filename = "gdu/gdu.h")]
 	public class Hub : GLib.Object, Gdu.Presentable {
+		[CCode (has_construct_function = false)]
+		protected Hub ();
 		public unowned Gdu.Adapter get_adapter ();
 		public unowned Gdu.Expander get_expander ();
 		public Gdu.HubUsage get_usage ();
 	}
 	[CCode (cheader_filename = "gdu/gdu.h")]
 	public class KnownFilesystem : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected KnownFilesystem ();
 		public bool get_can_create ();
 		public bool get_can_mount ();
 		public unowned string get_id ();
@@ -235,11 +247,15 @@ namespace Gdu {
 	}
 	[CCode (cheader_filename = "gdu/gdu.h")]
 	public class LinuxLvm2Volume : Gdu.Volume, Gdu.Presentable {
+		[CCode (has_construct_function = false)]
+		protected LinuxLvm2Volume ();
 		public unowned string get_group_uuid ();
 		public unowned string get_uuid ();
 	}
 	[CCode (cheader_filename = "gdu/gdu.h")]
 	public class LinuxLvm2VolumeGroup : Gdu.Drive, Gdu.Presentable {
+		[CCode (has_construct_function = false)]
+		protected LinuxLvm2VolumeGroup ();
 		public unowned string get_compute_new_lv_name ();
 		public bool get_lv_info (string lv_uuid, uint out_position, string out_name, uint64 out_size);
 		public uint get_num_lvs ();
@@ -250,9 +266,13 @@ namespace Gdu {
 	}
 	[CCode (cheader_filename = "gdu/gdu.h")]
 	public class LinuxLvm2VolumeHole : Gdu.VolumeHole, Gdu.Presentable {
+		[CCode (has_construct_function = false)]
+		protected LinuxLvm2VolumeHole ();
 	}
 	[CCode (cheader_filename = "gdu/gdu.h")]
 	public class LinuxMdDrive : Gdu.Drive, Gdu.Presentable {
+		[CCode (has_construct_function = false)]
+		protected LinuxMdDrive ();
 		public Gdu.LinuxMdDriveSlaveFlags get_slave_flags (Gdu.Device slave);
 		public unowned string get_slave_state_markup (Gdu.Device slave);
 		public unowned GLib.List get_slaves ();
@@ -261,6 +281,8 @@ namespace Gdu {
 	}
 	[CCode (cheader_filename = "gdu/gdu.h")]
 	public class Machine : GLib.Object, Gdu.Presentable {
+		[CCode (has_construct_function = false)]
+		protected Machine ();
 	}
 	[CCode (cheader_filename = "gdu/gdu.h")]
 	public class Pool : GLib.Object {
@@ -300,8 +322,8 @@ namespace Gdu {
 		public void op_linux_lvm2_vg_set_name (string uuid, string new_name, Gdu.PoolLinuxLvm2VGSetNameCompletedFunc callback);
 		public void op_linux_lvm2_vg_start (string uuid, Gdu.PoolLinuxLvm2VGStartCompletedFunc callback);
 		public void op_linux_lvm2_vg_stop (string uuid, Gdu.PoolLinuxLvm2VGStopCompletedFunc callback);
-		public void op_linux_md_create (GLib.PtrArray component_objpaths, string level, uint64 stripe_size, string name, Gdu.PoolLinuxMdCreateCompletedFunc callback);
-		public void op_linux_md_start (GLib.PtrArray component_objpaths, Gdu.PoolLinuxMdStartCompletedFunc callback);
+		public void op_linux_md_create (GLib.GenericArray<string> component_objpaths, string level, uint64 stripe_size, string name, Gdu.PoolLinuxMdCreateCompletedFunc callback);
+		public void op_linux_md_start (GLib.GenericArray<string> component_objpaths, Gdu.PoolLinuxMdStartCompletedFunc callback);
 		public bool supports_luks_devices ();
 		public virtual signal void adapter_added (Gdu.Adapter adapter);
 		public virtual signal void adapter_changed (Gdu.Adapter adapter);
@@ -324,6 +346,8 @@ namespace Gdu {
 	}
 	[CCode (cheader_filename = "gdu/gdu.h")]
 	public class Port : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Port ();
 		public unowned string get_adapter ();
 		public unowned string get_connector_type ();
 		public unowned string get_native_path ();
@@ -336,6 +360,8 @@ namespace Gdu {
 	}
 	[CCode (cheader_filename = "gdu/gdu.h")]
 	public class Process : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Process ();
 		public unowned GLib.AppInfo get_app_info ();
 		public unowned string get_command_line ();
 		public int get_id ();
@@ -343,6 +369,8 @@ namespace Gdu {
 	}
 	[CCode (cheader_filename = "gdu/gdu.h")]
 	public class Volume : GLib.Object, Gdu.Presentable {
+		[CCode (has_construct_function = false)]
+		protected Volume ();
 		public unowned Gdu.Drive get_drive ();
 		public virtual Gdu.VolumeFlags get_flags ();
 		public virtual bool is_allocated ();
@@ -350,6 +378,8 @@ namespace Gdu {
 	}
 	[CCode (cheader_filename = "gdu/gdu.h")]
 	public class VolumeHole : GLib.Object, Gdu.Presentable {
+		[CCode (has_construct_function = false)]
+		protected VolumeHole ();
 	}
 	[CCode (cheader_filename = "gdu/gdu.h")]
 	public interface Presentable : GLib.Object {
@@ -431,7 +461,7 @@ namespace Gdu {
 	[CCode (cheader_filename = "gdu/gdu.h")]
 	public delegate void DeviceDriveAtaSmartRefreshDataCompletedFunc (Gdu.Device device, GLib.Error error);
 	[CCode (cheader_filename = "gdu/gdu.h")]
-	public delegate void DeviceDriveBenchmarkCompletedFunc (Gdu.Device device, GLib.PtrArray read_transfer_rate_results, GLib.PtrArray write_transfer_rate_results, GLib.PtrArray access_time_results, GLib.Error error);
+	public delegate void DeviceDriveBenchmarkCompletedFunc (Gdu.Device device, GLib.GenericArray read_transfer_rate_results, GLib.GenericArray write_transfer_rate_results, GLib.GenericArray access_time_results, GLib.Error error);
 	[CCode (cheader_filename = "gdu/gdu.h")]
 	public delegate void DeviceDriveDetachCompletedFunc (Gdu.Device device, GLib.Error error);
 	[CCode (cheader_filename = "gdu/gdu.h")]

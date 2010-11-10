@@ -6,9 +6,9 @@ namespace Gdu {
 	public class AddComponentLinuxMdDialog : Gdu.Dialog, Atk.Implementor, Gtk.Buildable {
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public AddComponentLinuxMdDialog (Gtk.Window parent, Gdu.AddComponentLinuxMdFlags flags, Gdu.LinuxMdDrive linux_md_drive);
-		public unowned GLib.PtrArray get_drives ();
+		public unowned GLib.GenericArray<Gdu.Drive> get_drives ();
 		public uint64 get_size ();
-		public GLib.PtrArray drives { get; }
+		public GLib.GenericArray<Gdu.Drive> drives { get; }
 		[NoAccessorMethod]
 		public Gdu.AddComponentLinuxMdFlags flags { get; construct; }
 		public uint64 size { get; }
@@ -49,12 +49,12 @@ namespace Gdu {
 	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h")]
 	public class ButtonTable : Gtk.HBox, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
-		public ButtonTable (uint num_columns, GLib.PtrArray elements);
-		public unowned GLib.PtrArray get_elements ();
+		public ButtonTable (uint num_columns, GLib.GenericArray<Gdu.ButtonElement> elements);
+		public GLib.GenericArray<Gdu.ButtonElement> get_elements ();
 		public uint get_num_columns ();
-		public void set_elements (GLib.PtrArray elements);
+		public void set_elements (GLib.GenericArray<Gdu.ButtonElement> elements);
 		public void set_num_columns (uint num_columns);
-		public GLib.PtrArray elements { get; set construct; }
+		public GLib.GenericArray<Gdu.ButtonElement> elements { get; set construct; }
 		public uint num_columns { get; set construct; }
 	}
 	[Compact]
@@ -97,12 +97,12 @@ namespace Gdu {
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public CreateLinuxMdDialog (Gtk.Window parent, Gdu.Pool pool);
 		public uint64 get_component_size ();
-		public unowned GLib.PtrArray get_drives ();
+		public GLib.GenericArray<Gdu.Drive> get_drives ();
 		public unowned string get_level ();
 		public uint64 get_size ();
 		public uint64 get_stripe_size ();
 		public uint64 component_size { get; }
-		public GLib.PtrArray drives { get; }
+		public GLib.GenericArray<Gdu.Drive> drives { get; }
 		public string level { get; }
 		public string name { get; }
 		[NoAccessorMethod]
@@ -168,16 +168,18 @@ namespace Gdu {
 	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h")]
 	public class DetailsTable : Gtk.HBox, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
-		public DetailsTable (uint num_columns, GLib.PtrArray elements);
-		public unowned GLib.PtrArray get_elements ();
+		public DetailsTable (uint num_columns, GLib.GenericArray<Gdu.DetailsElement> elements);
+		public GLib.GenericArray<Gdu.DetailsElement> get_elements ();
 		public uint get_num_columns ();
-		public void set_elements (GLib.PtrArray elements);
+		public void set_elements (GLib.GenericArray<Gdu.DetailsElement> elements);
 		public void set_num_columns (uint num_columns);
-		public GLib.PtrArray elements { get; set construct; }
+		public GLib.GenericArray<Gdu.DetailsElement> elements { get; set construct; }
 		public uint num_columns { get; set construct; }
 	}
 	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h")]
 	public class Dialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
+		[CCode (has_construct_function = false)]
+		protected Dialog ();
 		public unowned Gdu.Device get_device ();
 		public unowned Gdu.Pool get_pool ();
 		public unowned Gdu.Presentable get_presentable ();
@@ -193,7 +195,7 @@ namespace Gdu {
 		public uint64 get_largest_segment_for_all ();
 		public uint64 get_largest_segment_for_selected ();
 		public uint get_num_available_disks ();
-		public unowned GLib.PtrArray get_selected_drives ();
+		public unowned GLib.GenericArray<Gdu.Drive> get_selected_drives ();
 		public void set_component_size (uint64 component_size);
 		public uint64 component_size { get; set; }
 		[NoAccessorMethod]
@@ -203,7 +205,7 @@ namespace Gdu {
 		public uint num_available_disks { get; }
 		[NoAccessorMethod]
 		public Gdu.Pool pool { owned get; construct; }
-		public GLib.PtrArray selected_drives { get; }
+		public GLib.GenericArray<Gdu.Drive> selected_drives { get; }
 		public virtual signal void changed ();
 		public virtual signal unowned string is_drive_ignored (Gdu.Drive drive);
 	}
@@ -305,13 +307,13 @@ namespace Gdu {
 	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h")]
 	public class PoolTreeModel : Gtk.TreeStore, Gtk.TreeModel, Gtk.TreeDragSource, Gtk.TreeDragDest, Gtk.TreeSortable, Gtk.Buildable {
 		[CCode (has_construct_function = false)]
-		public PoolTreeModel (GLib.PtrArray pools, Gdu.Presentable root, Gdu.PoolTreeModelFlags flags);
+		public PoolTreeModel (GLib.GenericArray<Gdu.Pool> pools, Gdu.Presentable root, Gdu.PoolTreeModelFlags flags);
 		public bool get_iter_for_presentable (Gdu.Presentable presentable, Gtk.TreeIter out_iter);
-		public void set_pools (GLib.PtrArray pools);
+		public void set_pools (GLib.GenericArray<Gdu.Pool> pools);
 		[NoAccessorMethod]
 		public Gdu.PoolTreeModelFlags flags { get; construct; }
 		[NoAccessorMethod]
-		public GLib.PtrArray pools { owned get; set construct; }
+		public GLib.GenericArray<Gdu.Pool> pools { owned get; set construct; }
 		[NoAccessorMethod]
 		public Gdu.Presentable root { owned get; construct; }
 	}
