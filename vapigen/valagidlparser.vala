@@ -42,6 +42,8 @@ public class Vala.GIdlParser : CodeVisitor {
 
 	private Map<string,TypeSymbol> cname_type_map;
 
+	static GLib.Regex type_from_string_regex;
+
 	/**
 	 * Parse all source files in the specified code context and build a
 	 * code tree.
@@ -480,10 +482,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				} else if (nv[0] == "deprecated_since") {
 					cb.deprecated_since = eval (nv[1]);
 				} else if (nv[0] == "type_arguments") {
-					var type_args = eval (nv[1]).split (",");
-					foreach (string type_arg in type_args) {
-						return_type.add_type_argument (get_type_from_string (type_arg));
-					}
+					parse_type_arguments_from_string (return_type, eval (nv[1]));
 				} else if (nv[0] == "instance_pos") {
 					cb.cinstance_parameter_position = eval (nv[1]).to_double ();
 				} else if (nv[0] == "type_parameters") {
@@ -567,23 +566,13 @@ public class Vala.GIdlParser : CodeVisitor {
 								param_type.nullable = true;
 							}
 						} else if (nv[0] == "type_arguments") {
-							var type_args = eval (nv[1]).split (",");
-							foreach (string type_arg in type_args) {
-								param_type.add_type_argument (get_type_from_string (type_arg));
-							}
+							parse_type_arguments_from_string (param_type, eval (nv[1]));
 						} else if (nv[0] == "no_array_length") {
 							if (eval (nv[1]) == "1") {
 								p.no_array_length = true;
 							}
 						} else if (nv[0] == "type_name") {
-							var sym = new UnresolvedSymbol (null, eval (nv[1]));
-							if (param_type is UnresolvedType) {
-								((UnresolvedType) param_type).unresolved_symbol = sym;
-							} else {
-								// Overwrite old param_type, so "type_name" must be before any
-								// other param type modifying metadata
-								p.variable_type = param_type = new UnresolvedType.from_symbol (sym, return_type.source_reference);
-							}
+							p.variable_type = param_type = parse_type_from_string (eval (nv[1]), false);
 						}
 					}
 				}
@@ -1788,27 +1777,137 @@ public class Vala.GIdlParser : CodeVisitor {
 		return type;
 	}
 
-	public DataType get_type_from_string (string type_arg) {
-		bool is_unowned = false;
+	private UnresolvedSymbol? parse_symbol_from_string (string symbol_string, SourceReference? source_reference = null) {
 		UnresolvedSymbol? sym = null;
+		foreach (unowned string s in symbol_string.split (".")) {
+			sym = new UnresolvedSymbol (sym, s, source_reference);
+		}
+		if (sym == null) {
+			Report.error (source_reference, "a symbol must be specified");
+		}
+		return sym;
+	}
 
-		if (type_arg == "pointer") {
-			return new PointerType (new VoidType ());
+	private bool parse_type_arguments_from_string (DataType parent_type, string type_arguments, SourceReference? source_reference = null) {
+		int type_arguments_length = (int) type_arguments.length;
+		GLib.StringBuilder current = new GLib.StringBuilder.sized (type_arguments_length);
+
+		int depth = 0;
+		for (var c = 0 ; c < type_arguments_length ; c++) {
+			if (type_arguments[c] == '<' || type_arguments[c] == '[') {
+				depth++;
+				current.append_unichar (type_arguments[c]);
+			} else if (type_arguments[c] == '>' || type_arguments[c] == ']') {
+				depth--;
+				current.append_unichar (type_arguments[c]);
+			} else if (type_arguments[c] == ',') {
+				if (depth == 0) {
+					var dt = parse_type_from_string (current.str, true, source_reference);
+					if (dt == null) {
+						return false;
+					}
+					parent_type.add_type_argument (dt);
+					current.truncate ();
+				} else {
+					current.append_unichar (type_arguments[c]);
+				}
+			} else {
+				current.append_unichar (type_arguments[c]);
+			}
 		}
 
-		if (type_arg.has_prefix ("unowned ")) {
-			type_arg = type_arg.offset ("unowned ".length);
-			is_unowned = true;
+		var dt = parse_type_from_string (current.str, true, source_reference);
+		if (dt == null) {
+			return false;
+		}
+		parent_type.add_type_argument (dt);
+
+		return true;
+	}
+
+	private DataType? parse_type_from_string (string type_string, bool owned_by_default, SourceReference? source_reference = null) {
+		if (type_from_string_regex == null) {
+			try {
+				type_from_string_regex = new GLib.Regex ("^(?:(owned|unowned|weak) +)?([0-9a-zA-Z_\\.]+)(?:<(.+)>)?(\\*+)?(\\[(,*)?\\])?(\\?)?$", GLib.RegexCompileFlags.ANCHORED | GLib.RegexCompileFlags.DOLLAR_ENDONLY | GLib.RegexCompileFlags.OPTIMIZE);
+			} catch (GLib.RegexError e) {
+				GLib.error ("Unable to compile regex: %s", e.message);
+			}
 		}
 
-		foreach (unowned string s in type_arg.split (".")) {
-			sym = new UnresolvedSymbol (sym, s);
+		GLib.MatchInfo match;
+		if (!type_from_string_regex.match (type_string, 0, out match)) {
+			Report.error (source_reference, "unable to parse type");
+			return null;
 		}
 
-		var arg_type = new UnresolvedType.from_symbol (sym);
-		arg_type.value_owned = !is_unowned;
+		DataType? type = null;
 
-		return arg_type;
+		var ownership_data = match.fetch (1);
+		var type_name = match.fetch (2);
+		var type_arguments_data = match.fetch (3);
+		var pointers_data = match.fetch (4);
+		var array_data = match.fetch (5);
+		var nullable_data = match.fetch (6);
+
+		var nullable = nullable_data != null && nullable_data.length > 0;
+
+		if (ownership_data == null && type_name == "void") {
+			if (array_data == null && !nullable) {
+				type = new VoidType (source_reference);
+				if (pointers_data != null) {
+					for (int i=0; i < pointers_data.length; i++) {
+						type = new PointerType (type);
+					}
+				}
+				return type;
+			} else {
+				Report.error (source_reference, "invalid void type");
+				return null;
+			}
+		}
+
+		bool value_owned = owned_by_default;
+
+		if (ownership_data == "owned") {
+			if (owned_by_default) {
+				Report.error (source_reference, "unexpected `owned' keyword");
+			} else {
+				value_owned = true;
+			}
+		} else if (ownership_data == "unowned") {
+			if (owned_by_default) {
+				value_owned = false;
+			} else {
+				Report.error (source_reference, "unexpected `unowned' keyword");
+				return null;
+			}
+		}
+
+		var sym = parse_symbol_from_string (type_name, source_reference);
+		if (sym == null) {
+			return null;
+		}
+		type = new UnresolvedType.from_symbol (sym, source_reference);
+
+		if (type_arguments_data != null && type_arguments_data.length > 0) {
+			if (!parse_type_arguments_from_string (type, type_arguments_data, source_reference)) {
+				return null;
+			}
+		}
+
+		if (pointers_data != null) {
+			for (int i=0; i < pointers_data.length; i++) {
+				type = new PointerType (type);
+			}
+		}
+
+		if (array_data != null) {
+			type = new ArrayType (type, (int) array_data.length + 1, source_reference);
+		}
+
+		type.nullable = nullable;
+		type.value_owned = value_owned;
+		return type;
 	}
 
 	private Method? create_method (string name, string symbol, IdlNodeParam? res, GLib.List<IdlNodeParam>? parameters, bool is_constructor, bool is_interface) {
@@ -1912,19 +2011,9 @@ public class Vala.GIdlParser : CodeVisitor {
 				} else if (nv[0] == "array_length_type") {
 					m.array_length_type = eval (nv[1]);
 				} else if (nv[0] == "type_name") {
-					var sym = new UnresolvedSymbol (null, eval (nv[1]));
-					if (return_type is UnresolvedType) {
-						((UnresolvedType) return_type).unresolved_symbol = sym;
-					} else {
-						// Overwrite old return_type, so "type_name" must be before any
-						// other return type modifying metadata
-						m.return_type = return_type = new UnresolvedType.from_symbol (sym, return_type.source_reference);
-					}
+					m.return_type = return_type = parse_type_from_string (eval (nv[1]), false);
 				} else if (nv[0] == "type_arguments") {
-					var type_args = eval (nv[1]).split (",");
-					foreach (string type_arg in type_args) {
-						return_type.add_type_argument (get_type_from_string (type_arg));
-					}
+					parse_type_arguments_from_string (return_type, eval (nv[1]));
 				} else if (nv[0] == "deprecated") {
 					if (eval (nv[1]) == "1") {
 						m.deprecated = true;
@@ -2104,21 +2193,11 @@ public class Vala.GIdlParser : CodeVisitor {
 						set_delegate_target_pos = true;
 						delegate_target_pos = eval (nv[1]).to_double ();
 					} else if (nv[0] == "type_name") {
-						var sym = new UnresolvedSymbol (null, eval (nv[1]));
-						if (param_type is UnresolvedType) {
-							((UnresolvedType) param_type).unresolved_symbol = sym;
-						} else {
-							// Overwrite old param_type, so "type_name" must be before any
-							// other param type modifying metadata
-							p.variable_type = param_type = new UnresolvedType.from_symbol (sym, return_type.source_reference);
-						}
+						p.variable_type = param_type = parse_type_from_string (eval (nv[1]), false);
 					} else if (nv[0] == "ctype") {
 						p.ctype = eval (nv[1]);
 					} else if (nv[0] == "type_arguments") {
-						var type_args = eval (nv[1]).split (",");
-						foreach (string type_arg in type_args) {
-							param_type.add_type_argument (get_type_from_string (type_arg));
-						}
+						parse_type_arguments_from_string (param_type, eval (nv[1]));
 					} else if (nv[0] == "default_value") {
 						var val = eval (nv[1]);
 						if (val == "null") {
@@ -2189,7 +2268,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		if (suppress_throws == false && error_types != null) {
 			var type_args = eval (error_types).split (",");
 			foreach (string type_arg in type_args) {
-				m.add_error_type (get_type_from_string (type_arg));
+				m.add_error_type (parse_type_from_string (type_arg, true));
 			}
 		}
 
@@ -2329,10 +2408,7 @@ public class Vala.GIdlParser : CodeVisitor {
 						return null;
 					}
 				} else if (nv[0] == "type_arguments") {
-					var type_args = eval (nv[1]).split (",");
-					foreach (string type_arg in type_args) {
-						prop.property_type.add_type_argument (get_type_from_string (type_arg));
-					}
+					parse_type_arguments_from_string (prop.property_type, eval (nv[1]));
 				} else if (nv[0] == "deprecated") {
 					if (eval (nv[1]) == "1") {
 						prop.deprecated = true;
@@ -2350,7 +2426,7 @@ public class Vala.GIdlParser : CodeVisitor {
 						prop.get_accessor.value_type.value_owned = true;
 					}
 				} else if (nv[0] == "type_name") {
-					prop.property_type = get_type_from_string (eval (nv[1]));
+					prop.property_type = parse_type_from_string (eval (nv[1]), false);
 				}
 			}
 		}
@@ -2437,12 +2513,9 @@ public class Vala.GIdlParser : CodeVisitor {
 						type.value_owned = true;
 					}
 				} else if (nv[0] == "type_name") {
-					type = get_type_from_string (eval (nv[1]));
+					type = parse_type_from_string (eval (nv[1]), true);
 				} else if (nv[0] == "type_arguments") {
-					var type_args = eval (nv[1]).split (",");
-					foreach (string type_arg in type_args) {
-						type.add_type_argument (get_type_from_string (type_arg));
-					}
+					parse_type_arguments_from_string (type, eval (nv[1]));
 				} else if (nv[0] == "deprecated") {
 					if (eval (nv[1]) == "1") {
 						deprecated = true;
@@ -2636,19 +2709,9 @@ public class Vala.GIdlParser : CodeVisitor {
 				} else if (nv[0] == "namespace_name") {
 					ns_name = eval (nv[1]);
 				} else if (nv[0] == "type_name") {
-					var sym = new UnresolvedSymbol (null, eval (nv[1]));
-					if (sig.return_type is UnresolvedType) {
-						((UnresolvedType) sig.return_type).unresolved_symbol = sym;
-					} else {
-						// Overwrite old return_type, so "type_name" must be before any
-						// other return type modifying metadata
-						sig.return_type = new UnresolvedType.from_symbol (sym, sig.return_type.source_reference);
-					}
+					sig.return_type = parse_type_from_string (eval (nv[1]), false);
 				} else if (nv[0] == "type_arguments") {
-					var type_args = eval (nv[1]).split (",");
-					foreach (string type_arg in type_args) {
-						sig.return_type.add_type_argument (get_type_from_string (type_arg));
-					}
+					parse_type_arguments_from_string (sig.return_type, eval (nv[1]));
 				}
 			}
 			if (ns_name != null) {
@@ -2710,16 +2773,9 @@ public class Vala.GIdlParser : CodeVisitor {
 							param_type.value_owned = true;
 						}
 					} else if (nv[0] == "type_name") {
-						if (!(param_type is UnresolvedType)) {
-							param_type = new UnresolvedType ();
-							p.variable_type = param_type;
-						}
-						((UnresolvedType) param_type).unresolved_symbol = new UnresolvedSymbol (null, eval (nv[1]));
+						p.variable_type = param_type = parse_type_from_string (eval (nv[1]), false);
 					} else if (nv[0] == "type_arguments") {
-						var type_args = eval (nv[1]).split (",");
-						foreach (string type_arg in type_args) {
-							p.variable_type.add_type_argument (get_type_from_string (type_arg));
-						}
+						parse_type_arguments_from_string (p.variable_type, eval (nv[1]));
 					} else if (nv[0] == "namespace_name") {
 						ns_name = eval (nv[1]);
 					}
