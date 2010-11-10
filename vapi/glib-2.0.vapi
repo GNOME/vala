@@ -43,6 +43,7 @@ public struct bool {
 }
 
 [SimpleType]
+[GIR (name = "gint8")]
 [CCode (cname = "gchar", cprefix = "g_ascii_", cheader_filename = "glib.h", type_id = "G_TYPE_CHAR", marshaller_type_name = "CHAR", get_value_function = "g_value_get_char", set_value_function = "g_value_set_char", default_value = "\'\\0\'", type_signature = "y")]
 [IntegerType (rank = 2, min = 0, max = 127)]
 public struct char {
@@ -73,6 +74,7 @@ public struct char {
 }
 
 [SimpleType]
+[GIR (name = "guint8")]
 [CCode (cname = "guchar", cheader_filename = "glib.h", type_id = "G_TYPE_UCHAR", marshaller_type_name = "UCHAR", get_value_function = "g_value_get_uchar", set_value_function = "g_value_set_uchar", default_value = "\'\\0\'", type_signature = "y")]
 [IntegerType (rank = 3, min = 0, max = 255)]
 public struct uchar {
@@ -265,6 +267,7 @@ public struct ulong {
 }
 
 [SimpleType]
+[GIR (name = "gulong")]
 [CCode (cname = "gsize", cheader_filename = "glib.h", type_id = "G_TYPE_ULONG", marshaller_type_name = "ULONG", get_value_function = "g_value_get_ulong", set_value_function = "g_value_set_ulong", default_value = "0UL")]
 [IntegerType (rank = 9)]
 public struct size_t {
@@ -293,6 +296,7 @@ public struct size_t {
 }
 
 [SimpleType]
+[GIR (name = "glong")]
 [CCode (cname = "gssize", cheader_filename = "glib.h", type_id = "G_TYPE_LONG", marshaller_type_name = "LONG", get_value_function = "g_value_get_long", set_value_function = "g_value_set_long", default_value = "0L")]
 [IntegerType (rank = 8)]
 public struct ssize_t {
