@@ -207,6 +207,10 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 								set_array_size_cvalue (expr.target_value, new CCodeMemberAccess (inst, size_cname));
 							}
 						}
+					} else {
+						for (int dim = 1; dim <= array_type.rank; dim++) {
+							append_array_size (expr, new CCodeConstant ("-1"));
+						}
 					}
 				} else if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
 					string target_cname = get_delegate_target_cname (field.get_cname ());
@@ -281,6 +285,10 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 						}
 						if (array_type.rank == 1 && field.is_internal_symbol ()) {
 							set_array_size_cvalue (expr.target_value, new CCodeIdentifier (get_array_size_cname (field.get_cname ())));
+						}
+					} else {
+						for (int dim = 1; dim <= array_type.rank; dim++) {
+							append_array_size (expr, new CCodeConstant ("-1"));
 						}
 					}
 				} else if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
@@ -595,6 +603,10 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 								length_expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, length_expr);
 							}
 							append_array_size (expr, length_expr);
+						}
+					} else {
+						for (int dim = 1; dim <= array_type.rank; dim++) {
+							append_array_size (expr, new CCodeConstant ("-1"));
 						}
 					}
 				}
