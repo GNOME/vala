@@ -208,7 +208,22 @@ public class Vala.Delegate : TypeSymbol {
 		if (method_params_it.next ()) {
 			return false;
 		}
-		
+
+		// method may throw less but not more errors than the delegate
+		foreach (DataType method_error_type in m.get_error_types ()) {
+			bool match = false;
+			foreach (DataType delegate_error_type in get_error_types ()) {
+				if (method_error_type.compatible (delegate_error_type)) {
+					match = true;
+					break;
+				}
+			}
+
+			if (!match) {
+				return false;
+			}
+		}
+
 		return true;
 	}
 
