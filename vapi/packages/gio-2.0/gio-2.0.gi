@@ -407,6 +407,15 @@
 				<parameter name="error" type="GError*"/>
 			</parameters>
 		</function>
+		<function name="g_simple_async_report_take_gerror_in_idle" symbol="g_simple_async_report_take_gerror_in_idle">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="object" type="GObject*"/>
+				<parameter name="callback" type="GAsyncReadyCallback"/>
+				<parameter name="user_data" type="gpointer"/>
+				<parameter name="error" type="GError*"/>
+			</parameters>
+		</function>
 		<callback name="GAsyncReadyCallback">
 			<return-type type="void"/>
 			<parameters>
@@ -570,18 +579,11 @@
 				<parameter name="user_data" type="gpointer"/>
 			</parameters>
 		</callback>
-		<callback name="GPeriodicRepairFunc">
-			<return-type type="void"/>
-			<parameters>
-				<parameter name="periodic" type="GPeriodic*"/>
-				<parameter name="user_data" type="gpointer"/>
-			</parameters>
-		</callback>
 		<callback name="GPeriodicTickFunc">
 			<return-type type="void"/>
 			<parameters>
 				<parameter name="periodic" type="GPeriodic*"/>
-				<parameter name="timestamp" type="guint64"/>
+				<parameter name="timestamp" type="gint64"/>
 				<parameter name="user_data" type="gpointer"/>
 			</parameters>
 		</callback>
@@ -1434,6 +1436,7 @@
 		</flags>
 		<flags name="GDBusSignalFlags" type-name="GDBusSignalFlags" get-type="g_dbus_signal_flags_get_type">
 			<member name="G_DBUS_SIGNAL_FLAGS_NONE" value="0"/>
+			<member name="G_DBUS_SIGNAL_FLAGS_NO_MATCH_RULE" value="1"/>
 		</flags>
 		<flags name="GDBusSubtreeFlags" type-name="GDBusSubtreeFlags" get-type="g_dbus_subtree_flags_get_type">
 			<member name="G_DBUS_SUBTREE_FLAGS_NONE" value="0"/>
@@ -5729,9 +5732,12 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="periodic" type="GPeriodic*"/>
-					<parameter name="callback" type="GPeriodicRepairFunc"/>
-					<parameter name="user_data" type="gpointer"/>
-					<parameter name="notify" type="GDestroyNotify"/>
+				</parameters>
+			</method>
+			<method name="get_high_priority" symbol="g_periodic_get_high_priority">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="periodic" type="GPeriodic*"/>
 				</parameters>
 			</method>
 			<method name="get_hz" symbol="g_periodic_get_hz">
@@ -5740,7 +5746,7 @@
 					<parameter name="periodic" type="GPeriodic*"/>
 				</parameters>
 			</method>
-			<method name="get_priority" symbol="g_periodic_get_priority">
+			<method name="get_low_priority" symbol="g_periodic_get_low_priority">
 				<return-type type="gint"/>
 				<parameters>
 					<parameter name="periodic" type="GPeriodic*"/>
@@ -5750,7 +5756,8 @@
 				<return-type type="GPeriodic*"/>
 				<parameters>
 					<parameter name="hz" type="guint"/>
-					<parameter name="priority" type="gint"/>
+					<parameter name="high_priority" type="gint"/>
+					<parameter name="low_priority" type="gint"/>
 				</parameters>
 			</constructor>
 			<method name="remove" symbol="g_periodic_remove">
@@ -5764,22 +5771,23 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="periodic" type="GPeriodic*"/>
-					<parameter name="unblock_time" type="GTimeSpec*"/>
+					<parameter name="unblock_time" type="gint64"/>
 				</parameters>
 			</method>
+			<property name="high-priority" type="gint" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="hz" type="guint" readable="1" writable="1" construct="0" construct-only="1"/>
-			<property name="priority" type="gint" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="low-priority" type="gint" readable="1" writable="1" construct="0" construct-only="1"/>
 			<signal name="repair" when="LAST">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="object" type="GPeriodic*"/>
+					<parameter name="periodic" type="GPeriodic*"/>
 				</parameters>
 			</signal>
 			<signal name="tick" when="LAST">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="object" type="GPeriodic*"/>
-					<parameter name="p0" type="guint64"/>
+					<parameter name="periodic" type="GPeriodic*"/>
+					<parameter name="timestamp" type="gint64"/>
 				</parameters>
 			</signal>
 		</object>

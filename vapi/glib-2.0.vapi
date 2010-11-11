@@ -2094,11 +2094,6 @@ namespace GLib {
 		public string to_iso8601 ();
 	}
 
-	public struct TimeSpec {
-		public time_t tv_usec;
-		public long tv_nsec;
-	}
-
 	public struct DateDay : uchar {
 		[CCode (cname = "G_DATE_BAD_DAY")]
 		public static DateDay BAD_DAY;

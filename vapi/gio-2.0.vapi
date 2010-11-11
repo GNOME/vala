@@ -1058,18 +1058,20 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class Periodic : GLib.Object {
 		[CCode (has_construct_function = false)]
-		public Periodic (uint hz, int priority);
+		public Periodic (uint hz, int high_priority, int low_priority);
 		public uint add (owned GLib.PeriodicTickFunc callback);
 		public void block ();
-		public void damaged (owned GLib.PeriodicRepairFunc callback);
+		public void damaged ();
+		public int get_high_priority ();
 		public uint get_hz ();
-		public int get_priority ();
+		public int get_low_priority ();
 		public void remove (uint tag);
-		public void unblock (GLib.TimeSpec unblock_time);
+		public void unblock (int64 unblock_time);
+		public int high_priority { get; construct; }
 		public uint hz { get; construct; }
-		public int priority { get; construct; }
+		public int low_priority { get; construct; }
 		public virtual signal void repair ();
-		public virtual signal void tick (uint64 p0);
+		public virtual signal void tick (int64 timestamp);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class Permission : GLib.Object {
@@ -2005,7 +2007,8 @@ namespace GLib {
 	[CCode (cprefix = "G_DBUS_SIGNAL_FLAGS_", cheader_filename = "gio/gio.h")]
 	[Flags]
 	public enum DBusSignalFlags {
-		NONE
+		NONE,
+		NO_MATCH_RULE
 	}
 	[CCode (cprefix = "G_DBUS_SUBTREE_FLAGS_", cheader_filename = "gio/gio.h")]
 	[Flags]
@@ -2343,9 +2346,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public delegate bool IOSchedulerJobFunc (GLib.IOSchedulerJob job, GLib.Cancellable cancellable);
 	[CCode (cheader_filename = "gio/gio.h")]
-	public delegate void PeriodicRepairFunc (GLib.Periodic periodic);
-	[CCode (cheader_filename = "gio/gio.h")]
-	public delegate void PeriodicTickFunc (GLib.Periodic periodic, uint64 timestamp);
+	public delegate void PeriodicTickFunc (GLib.Periodic periodic, int64 timestamp);
 	[CCode (cheader_filename = "gio/gio.h", has_target = false)]
 	public delegate void* ReallocFunc (void* data, size_t size);
 	[CCode (cheader_filename = "gio/gio.h")]
@@ -2626,4 +2627,6 @@ namespace GLib {
 	public static void g_simple_async_report_error_in_idle (GLib.Object object, GLib.AsyncReadyCallback callback, GLib.Quark domain, int code, string format);
 	[CCode (cname = "g_simple_async_report_gerror_in_idle", cheader_filename = "gio/gio.h")]
 	public static void g_simple_async_report_gerror_in_idle (GLib.Object object, GLib.AsyncReadyCallback callback, GLib.Error error);
+	[CCode (cname = "g_simple_async_report_take_gerror_in_idle", cheader_filename = "gio/gio.h")]
+	public static void g_simple_async_report_take_gerror_in_idle (GLib.Object object, GLib.AsyncReadyCallback callback, GLib.Error error);
 }
