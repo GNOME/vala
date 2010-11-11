@@ -1665,9 +1665,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var ma = new MemberAccess.simple (param.name);
 			ma.symbol_reference = param;
 			ma.value_type = param.variable_type.copy ();
-			visit_member_access (ma);
 			// directly access parameters in ref expressions
 			param.captured = false;
+			visit_member_access (ma);
 			cparam = get_ref_cexpression (param.variable_type, cparam, ma, param);
 			param.captured = true;
 		}
