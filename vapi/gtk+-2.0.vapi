@@ -2090,7 +2090,7 @@ namespace Gtk {
 		public bool has_icon (string icon_name);
 		public GLib.List<string> list_contexts ();
 		public GLib.List<string> list_icons (string context);
-		public unowned Gdk.Pixbuf load_icon (string icon_name, int size, Gtk.IconLookupFlags flags) throws GLib.Error;
+		public Gdk.Pixbuf? load_icon (string icon_name, int size, Gtk.IconLookupFlags flags) throws GLib.Error;
 		public Gtk.IconInfo lookup_by_gicon (GLib.Icon icon, int size, Gtk.IconLookupFlags flags);
 		public Gtk.IconInfo lookup_icon (string icon_name, int size, Gtk.IconLookupFlags flags);
 		public void prepend_search_path (string path);
