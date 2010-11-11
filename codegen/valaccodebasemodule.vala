@@ -131,6 +131,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public bool is_in_constructor () {
+		if (current_method != null) {
+			// make sure to not return true in lambda expression inside constructor
+			return false;
+		}
 		var sym = current_symbol;
 		while (sym != null) {
 			if (sym is Constructor) {
@@ -142,6 +146,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public bool is_in_destructor () {
+		if (current_method != null) {
+			// make sure to not return true in lambda expression inside constructor
+			return false;
+		}
 		var sym = current_symbol;
 		while (sym != null) {
 			if (sym is Destructor) {
