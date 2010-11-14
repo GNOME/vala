@@ -29,52 +29,52 @@ using GLib;
 namespace ZLib {
 	[CCode (cname="int", cprefix="Z_")]
 	public enum Flush {
-		NO_FLUSH = 0,
-		SYNC_FLUSH = 2,
-		FULL_FLUSH = 3,
-		FINISH = 4,
-		BLOCK = 5
+		NO_FLUSH,
+		SYNC_FLUSH,
+		FULL_FLUSH,
+		FINISH,
+		BLOCK
 	}
 	[CCode (cname="int", cprefix="Z_")]
 	public enum Status {
-		OK = 0,
-		STREAM_END = 1,
-		NEED_DICT = 2,
-		ERRNO = (-1),
-		STREAM_ERROR = (-2),
-		DATA_ERROR = (-3),
-		MEM_ERROR = (-4),
-		BUF_ERROR = (-5),
-		VERSION_ERROR = (-6)
+		OK,
+		STREAM_END,
+		NEED_DICT,
+		ERRNO,
+		STREAM_ERROR,
+		DATA_ERROR,
+		MEM_ERROR,
+		BUF_ERROR,
+		VERSION_ERROR
 	}
 	[CCode (cname="int", cprefix="Z_")]
 	public enum Level {
-		NO_COMPRESSION = 0,
-		BEST_SPEED = 1,
-		BEST_COMPRESSION = 9,
-		DEFAULT_COMPRESSION = (-1)
+		NO_COMPRESSION,
+		BEST_SPEED,
+		BEST_COMPRESSION,
+		DEFAULT_COMPRESSION
 	}
 	[CCode (cname="int", cprefix="Z_")]
 	public enum Strategy {
-		DEFAULT_STRATEGY = 0,
-		FILTERED = 1,
-		HUFFMAN_ONLY = 2,
-		RLE = 3,
-		FIXED = 4
+		DEFAULT_STRATEGY,
+		FILTERED,
+		HUFFMAN_ONLY,
+		RLE,
+		FIXED
 	}
 	[CCode (cname="int", cprefix="Z_")]
 	public enum Data {
-		BINARY = 0,
-		ASCII = 1,
-		UNKNOWN = 2
+		BINARY,
+		ASCII,
+		UNKNOWN
 	}
 	[CCode (cname="int", cprefix="Z_")]
 	public enum Algorithm {
-		DEFLATED = 8
+		DEFLATED
 	}
 	[CCode (cname="int", cprefix="Z_")]
 	public enum Initial {
-		NULL = 0
+		NULL
 	}
 	namespace VERSION {
 		[CCode (cname = "ZLIB_VERSION")]
