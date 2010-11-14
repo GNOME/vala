@@ -2414,7 +2414,9 @@ namespace GLib {
 		PICTURES,
 		PUBLIC_SHARE,
 		TEMPLATES,
-		VIDEOS
+		VIDEOS,
+		[CCode (cname = "G_USER_N_DIRECTORIES")]
+		N_DIRECTORIES
 	}
 
 	namespace Path {
