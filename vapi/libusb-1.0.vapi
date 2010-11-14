@@ -160,7 +160,7 @@ namespace LibUSB {
 		public uint8 bRefresh;
 		public uint8 bSynchAddress;
 		[CCode (array_length_cname = "extra_length")]
-		uchar[] extra;
+		public uint8[] extra;
 	}
 
 	[CCode (cname = "struct libusb_interface_descriptor")]
@@ -177,7 +177,7 @@ namespace LibUSB {
 		[CCode (array_length_cname = "bNumEndpoints", array_length_type = "uint8_t")]
 		public EndpointDescriptor[] endpoint;
 		[CCode (array_length_cname = "extra_length")]
-		uchar[] extra;
+		public uint8[] extra;
 	}
 
 	[CCode (cname = "struct libusb_interface")]
@@ -199,7 +199,7 @@ namespace LibUSB {
 		[CCode (array_length_cname = "bNumInterfaces")]
 		public Interface[] @interface;
 		[CCode (array_length_cname = "extra_length")]
-		uchar[] extra;
+		public uint8[] extra;
 	}
 
 
@@ -225,20 +225,20 @@ namespace LibUSB {
 		public int detach_kernel_driver (int @interface);
 		public int attach_kernel_driver (int @interface);
 
-		public int get_string_descriptor_ascii (uint8 desc_index, uchar[] data);
-		public int get_descriptor (uint8 desc_type, uint8 desc_index, uchar[] data);
-		public int get_string_descriptor (uint desc_index, uint16 langid, uchar[] data);
+		public int get_string_descriptor_ascii (uint8 desc_index, uint8[] data);
+		public int get_descriptor (uint8 desc_type, uint8 desc_index, uint8[] data);
+		public int get_string_descriptor (uint desc_index, uint16 langid, uint8[] data);
 
-		public int control_transfer (uint8 bmRequestType, uint8 bRequest, uint16 wValue, uint16 wIndex, [CCode (array_length = false)] uchar[] data, uint16 wLength, uint timeout);
-		public int bulk_transfer (uchar endpoint, uchar[] data, out int transferred, uint timeout);
-		public int interrupt_transfer (uchar endpoint, uchar[] data, out int transferred, uint timeout);
+		public int control_transfer (uint8 bmRequestType, uint8 bRequest, uint16 wValue, uint16 wIndex, [CCode (array_length = false)] uint8[] data, uint16 wLength, uint timeout);
+		public int bulk_transfer (uint8 endpoint, uint8[] data, out int transferred, uint timeout);
+		public int interrupt_transfer (uint8 endpoint, uint8[] data, out int transferred, uint timeout);
 	}
 
 	[CCode (cname = "libusb_device", cprefix = "libusb_", ref_function = "libusb_ref_device", unref_function = "libusb_unref_device")]
 	public class Device {
 		public uint8 get_bus_number ();
 		public uint8 get_device_address ();
-		public int get_max_packet_size (uchar endpoint);
+		public int get_max_packet_size (uint8 endpoint);
 		public int open (out DeviceHandle handle);
 
 		public int get_active_config_descriptor (out ConfigDescriptor config);
@@ -310,8 +310,8 @@ namespace LibUSB {
 	public class Transfer {
 		public DeviceHandle dev_handle;
 		public uint8 flags;
-		public uchar endpoint;
-		public uchar type;
+		public uint8 endpoint;
+		public uint8 type;
 		public uint timeout;
 		public TransferStatus status;
 		public int length;
@@ -319,7 +319,7 @@ namespace LibUSB {
 		public transfer_cb_fn @callback;
 		public void* user_data;
 		[CCode (array_length_cname = "length")]
-		public uchar[] buffer;
+		public uint8[] buffer;
 		public int num_iso_packets;
 		[CCode (array_length = false)]
 		public IsoPacketDescriptor[] iso_packet_desc;
@@ -335,16 +335,16 @@ namespace LibUSB {
 		[CCode (cname = "libusb_control_transfer_get_setup")]
 		public unowned ControlSetup control_get_setup ();
 
-		public static void fill_control_setup ([CCode (array_length = false)] uchar[] buffer, uint8 bmRequestType, uint8 bRequest, uint16 wValue, uint16 wIndex, uint16 wLength);
-		public void fill_control_transfer (DeviceHandle dev_handle, [CCode (array_length = false)] uchar[] buffer, transfer_cb_fn @callback, void* user_data, uint timeout);
-		public void fill_bulk_transfer (DeviceHandle dev_handle, uchar endpoint, uchar[] buffer, transfer_cb_fn @callback, void* user_data, uint timeout);
-		public void fill_interrupt_transfer (DeviceHandle dev_handle, uchar endpoint, uchar[] buffer, transfer_cb_fn @callback, void* user_data, uint timeout);
-		public void fill_iso_transfer (DeviceHandle dev_handle, uchar endpoint, uchar[] buffer, int num_iso_packets, transfer_cb_fn @callback, void* user_data, uint timeout);
+		public static void fill_control_setup ([CCode (array_length = false)] uint8[] buffer, uint8 bmRequestType, uint8 bRequest, uint16 wValue, uint16 wIndex, uint16 wLength);
+		public void fill_control_transfer (DeviceHandle dev_handle, [CCode (array_length = false)] uint8[] buffer, transfer_cb_fn @callback, void* user_data, uint timeout);
+		public void fill_bulk_transfer (DeviceHandle dev_handle, uint8 endpoint, uint8[] buffer, transfer_cb_fn @callback, void* user_data, uint timeout);
+		public void fill_interrupt_transfer (DeviceHandle dev_handle, uint8 endpoint, uint8[] buffer, transfer_cb_fn @callback, void* user_data, uint timeout);
+		public void fill_iso_transfer (DeviceHandle dev_handle, uint8 endpoint, uint8[] buffer, int num_iso_packets, transfer_cb_fn @callback, void* user_data, uint timeout);
 		public void set_packet_lengths (uint length);
 		[CCode (array_length = false)]
-		public unowned uchar[] get_iso_packet_buffer (uint packet);
+		public unowned uint8[] get_iso_packet_buffer (uint packet);
 		[CCode (array_length = false)]
-		public unowned uchar[] get_iso_packet_buffer_simple (int packet);
+		public unowned uint8[] get_iso_packet_buffer_simple (int packet);
 	}
 
 	[CCode (has_target = false)]
