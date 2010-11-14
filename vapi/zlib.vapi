@@ -90,12 +90,16 @@ namespace ZLib {
 	}
 	[CCode (cname = "z_stream", destroy_function = "deflateEnd")]
 	public struct Stream {
-		public uchar* next_in;
+		[CCode (array_length_cname = "avail_in", array_length_type = "ulong")]
+		public uint8[] next_in;
 		public uint avail_in;
 		public ulong total_in;
-		public uchar* next_out;
+
+		[CCode (array_length_cname = "avail_out", array_length_type = "ulong")]
+		public uint8[] next_out;
 		public uint avail_out;
 		public ulong total_out;
+
 		public string? msg;
 		public int data_type;
 		public ulong adler;
@@ -109,7 +113,7 @@ namespace ZLib {
 		[CCode (cname = "deflate")]
 		public int deflate (int flush);
 		[CCode (cname = "deflateSetDictionary")]
-		public int set_dictionary ([CCode (array_length_type = "guint")] uchar[] dictionary);
+		public int set_dictionary ([CCode (array_length_type = "guint")] uint8[] dictionary);
 		[CCode (cname = "deflateCopy", instance_pos = 0)]
 		public int copy (DeflateStream dest);
 		[CCode (cname = "deflateReset")]
@@ -134,7 +138,7 @@ namespace ZLib {
 		[CCode (cname = "inflate")]
 		public int inflate (int flush);
 		[CCode (cname = "inflateSetDictionary")]
-		public int set_dictionary ([CCode (array_length_type = "guint")] uchar[] dictionary);
+		public int set_dictionary ([CCode (array_length_type = "guint")] uint8[] dictionary);
 		[CCode (cnmae = "inflateSync")]
 		public int sync ();
 		public int reset ();
@@ -144,10 +148,10 @@ namespace ZLib {
 	[CCode (lower_case_cprefix = "", cheader_filename = "zlib.h")]
 	namespace Utility {
 		[CCode (cname = "compress2")]
-		public static int compress ([CCode (array_length = false)] uchar[] dest, ref ulong dest_length, [CCode (array_length_type = "gulong")] uchar[] source, int level = Level.DEFAULT_COMPRESSION);
+		public static int compress ([CCode (array_length = false)] uint8[] dest, ref ulong dest_length, [CCode (array_length_type = "gulong")] uint8[] source, int level = Level.DEFAULT_COMPRESSION);
 		[CCode (cname = "compressBound")]
 		public static int compress_bound (ulong sourceLen);
-		public static int uncompress ([CCode (array_length = false)] uchar[] dest, ref ulong dest_length, [CCode (array_length_type = "gulong")] uchar[] source);
+		public static int uncompress ([CCode (array_length = false)] uint8[] dest, ref ulong dest_length, [CCode (array_length_type = "gulong")] uint8[] source);
 		public static ulong adler32 (ulong crc = 0UL, [CCode (array_length_type = "guint")] uint8[]? buf = null);
 		public static ulong crc32 (ulong crc = 0UL, [CCode (array_length_type = "guint")] uint8[]? buf = null);
 	}
@@ -158,7 +162,7 @@ namespace ZLib {
 		public int xflags;
 		public int os;
 		[CCode (array_length_cname = "extra_len", array_length_type = "guint")]
-		public uchar[] extra;
+		public uint8[] extra;
 		public uint extra_max;
 		public string? name;
 		public uint name_max;
@@ -173,8 +177,8 @@ namespace ZLib {
 		public static GZFileStream open (string path, string mode = "rb");
 		public static GZFileStream dopen (int fd, string mode);
 		public int setparams (int level, int strategy);
-		public int read (char[] buf);
-		public int write (char[] buf);
+		public int read (uint8[] buf);
+		public int write (uint8[] buf);
 		[PrintfFormat]
 		public int printf (string format, ...);
 		public int puts (string s);
