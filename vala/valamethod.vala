@@ -43,6 +43,10 @@ public class Vala.Method : Subroutine {
 		}
 	}
 
+	public override bool has_result {
+		get { return !(return_type is VoidType); }
+	}
+
 	/**
 	 * Specifies whether this method may only be called with an instance of
 	 * the contained type.

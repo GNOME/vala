@@ -34,6 +34,8 @@ public abstract class Vala.Subroutine : Symbol {
 	 */
 	public LocalVariable result_var { get; set; }
 
+	public abstract bool has_result { get; }
+
 	protected Subroutine (string? name, SourceReference? source_reference, Comment? comment = null) {
 		base (name, source_reference, comment);
 	}

@@ -67,6 +67,10 @@ public class Vala.PropertyAccessor : Subroutine {
 	 */
 	public bool automatic_body { get; set; }
 
+	public override bool has_result {
+		get { return readable; }
+	}
+
 	/**
 	 * Represents the generated value parameter in a set accessor.
 	 */

@@ -1,6 +1,6 @@
 /* valadestructor.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -35,6 +35,10 @@ public class Vala.Destructor : Subroutine {
 	 * Specifies whether this is an instance or a class destructor.
 	 */
 	public MemberBinding binding { get; set; default = MemberBinding.INSTANCE; }
+
+	public override bool has_result {
+		get { return false; }
+	}
 
 	/**
 	 * Creates a new destructor.

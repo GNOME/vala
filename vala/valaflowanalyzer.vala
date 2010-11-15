@@ -208,7 +208,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		if (current_block != null) {
 			// end of method body reachable
 
-			if (context.profile != Profile.DOVA && m.result_var != null) {
+			if (context.profile != Profile.DOVA && m.has_result) {
 				Report.error (m.source_reference, "missing return statement at end of subroutine body");
 				m.error = true;
 			}
