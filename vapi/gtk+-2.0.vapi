@@ -5403,7 +5403,7 @@ namespace Gtk {
 		public void show_now ();
 		public void style_attach ();
 		public void style_get (...);
-		public void style_get_property (string property_name, GLib.Value value);
+		public void style_get_property (string property_name, out GLib.Value value);
 		public void style_get_valist (string first_property_name, void* var_args);
 		public void thaw_child_notify ();
 		public bool translate_coordinates (Gtk.Widget dest_widget, int src_x, int src_y, out int dest_x, out int dest_y);
