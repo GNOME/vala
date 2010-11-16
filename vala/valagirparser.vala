@@ -479,11 +479,6 @@ public class Vala.GirParser : CodeVisitor {
 		public HashMap<string,string> girdata;
 	}
 
-	class CallbackScope {
-		public Symbol parent_symbol;
-		public UnresolvedSymbol gtype_struct_for;
-	}
-
 	class Alias {
 		public string name;
 		public DataType base_type;
@@ -521,9 +516,10 @@ public class Vala.GirParser : CodeVisitor {
 	ArrayList<UnresolvedSymbol> unresolved_gir_symbols = new ArrayList<UnresolvedSymbol> ();
 	HashMap<UnresolvedSymbol,ArrayList<Symbol>> symbol_reparent_map = new HashMap<UnresolvedSymbol,ArrayList<Symbol>> (unresolved_symbol_hash, unresolved_symbol_equal);
 	HashMap<Namespace,ArrayList<Method>> namespace_methods = new HashMap<Namespace,ArrayList<Method>> ();
-	HashMap<CallbackScope,ArrayList<Delegate>> gtype_callbacks = new HashMap<CallbackScope,ArrayList<Delegate>> (callback_scope_hash, callback_scope_equal);
 	ArrayList<Alias> aliases = new ArrayList<Alias> ();
 	ArrayList<Interface> interfaces = new ArrayList<Interface> ();
+
+	HashMap<UnresolvedSymbol,ArrayList<Delegate>> gtype_callbacks;
 
 	/**
 	 * Parses all .gir source files in the specified code
@@ -540,7 +536,6 @@ public class Vala.GirParser : CodeVisitor {
 
 		postprocess_interfaces ();
 		postprocess_reparenting ();
-		postprocess_gtype_callbacks ();
 		postprocess_aliases ();
 		postprocess_namespace_methods ();
 	}
@@ -1363,6 +1358,7 @@ public class Vala.GirParser : CodeVisitor {
 		var old_symbol = current_symbol;
 		current_symbols_info = new HashMap<string,ArrayList<SymbolInfo>> (str_hash, str_equal);
 		current_symbol = ns;
+		gtype_callbacks = new HashMap<UnresolvedSymbol,ArrayList<Delegate>> (unresolved_symbol_hash, unresolved_symbol_equal);
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (!push_metadata ()) {
 				skip_element ();
@@ -1417,6 +1413,7 @@ public class Vala.GirParser : CodeVisitor {
 		merge_add_process (ns);
 		current_symbols_info = old_symbols_info;
 		current_symbol = old_symbol;
+		postprocess_gtype_callbacks (ns);
 
 		if (!new_namespace) {
 			ns = null;
@@ -1872,6 +1869,10 @@ public class Vala.GirParser : CodeVisitor {
 		}
 
 		next ();
+		var old_symbols_info = current_symbols_info;
+		var old_symbol = current_symbol;
+		current_symbols_info = new HashMap<string,ArrayList<SymbolInfo>> (str_hash, str_equal);
+		current_symbol = st;
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (!push_metadata ()) {
 				skip_element ();
@@ -1880,14 +1881,14 @@ public class Vala.GirParser : CodeVisitor {
 
 			if (reader.name == "field") {
 				if (reader.get_attribute ("name") != "priv") {
-					st.add_field (parse_field ());
+					add_symbol_info (parse_field ());
 				} else {
 					skip_element ();
 				}
 			} else if (reader.name == "constructor") {
 				parse_constructor ();
 			} else if (reader.name == "method") {
-				st.add_method (parse_method ("method"));
+				add_symbol_info (parse_method ("method"));
 			} else if (reader.name == "union") {
 				Struct s = parse_union ();
 				var s_fields = s.get_fields ();
@@ -1906,7 +1907,11 @@ public class Vala.GirParser : CodeVisitor {
 		}
 		end_element ("record");
 
+		merge_add_process (st);
+		current_symbols_info = old_symbols_info;
+		current_symbol = old_symbol;
 		current_gtype_struct_for = null;
+
 		return st;
 	}
 
@@ -2112,13 +2117,11 @@ public class Vala.GirParser : CodeVisitor {
 		type = element_get_type (type, true);
 		if (type is DelegateType && current_gtype_struct_for != null) {
 			// virtual
-			var callback_scope = new CallbackScope ();
-			callback_scope.parent_symbol = current_symbol;
-			callback_scope.gtype_struct_for = parse_symbol_from_string (current_gtype_struct_for);
-			ArrayList<Delegate> callbacks = gtype_callbacks.get (callback_scope);
+			var gtype_struct_for = parse_symbol_from_string (current_gtype_struct_for);
+			ArrayList<Delegate> callbacks = gtype_callbacks.get (gtype_struct_for);
 			if (callbacks == null) {
 				callbacks = new ArrayList<Delegate> ();
-				gtype_callbacks.set (callback_scope, callbacks);
+				gtype_callbacks.set (gtype_struct_for, callbacks);
 			}
 			callbacks.add (((DelegateType) type).delegate_symbol);
 		}
@@ -2475,7 +2478,10 @@ public class Vala.GirParser : CodeVisitor {
 		cl.set_dup_function ("g_boxed_copy");
 
 		next ();
-
+		var old_symbols_info = current_symbols_info;
+		var old_symbol = current_symbol;
+		current_symbols_info = new HashMap<string,ArrayList<SymbolInfo>> (str_hash, str_equal);
+		current_symbol = cl;
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (!push_metadata ()) {
 				skip_element ();
@@ -2483,11 +2489,11 @@ public class Vala.GirParser : CodeVisitor {
 			}
 
 			if (reader.name == "field") {
-				cl.add_field (parse_field ());
+				add_symbol_info (parse_field ());
 			} else if (reader.name == "constructor") {
 				parse_constructor ();
 			} else if (reader.name == "method") {
-				cl.add_method (parse_method ("method"));
+				add_symbol_info (parse_method ("method"));
 			} else {
 				// error
 				Report.error (get_current_src (), "unknown child element `%s' in `class'".printf (reader.name));
@@ -2497,6 +2503,11 @@ public class Vala.GirParser : CodeVisitor {
 			pop_metadata ();
 		}
 		end_element (element_name);
+
+		merge_add_process (cl);
+		current_symbols_info = old_symbols_info;
+		current_symbol = old_symbol;
+
 		return cl;
 	}
 
@@ -2708,14 +2719,15 @@ public class Vala.GirParser : CodeVisitor {
 		}
 	}
 
-	void postprocess_gtype_callbacks () {
-		foreach (CallbackScope callback_scope in gtype_callbacks.get_keys ()) {
-			var gtype = resolve_symbol (callback_scope.parent_symbol.scope, callback_scope.gtype_struct_for) as ObjectTypeSymbol;
+	void postprocess_gtype_callbacks (Namespace ns) {
+		foreach (UnresolvedSymbol gtype_struct_for in gtype_callbacks.get_keys ()) {
+			// parent symbol is the record, therefore use parent of parent symbol
+			var gtype = resolve_symbol (ns.scope, gtype_struct_for) as ObjectTypeSymbol;
 			if (gtype == null) {
-				Report.error (null, "unknown symbol `%s'".printf (callback_scope.gtype_struct_for.to_string ()));
+				Report.error (null, "unknown symbol `%s' while postprocessing callbacks".printf (gtype_struct_for.name));
 				continue;
 			}
-			ArrayList<Delegate> callbacks = gtype_callbacks.get (callback_scope);
+			ArrayList<Delegate> callbacks = gtype_callbacks.get (gtype_struct_for);
 			foreach (Delegate d in callbacks) {
 				var symbol = gtype.scope.lookup (d.name);
 				if (symbol == null) {
@@ -2877,16 +2889,5 @@ public class Vala.GirParser : CodeVisitor {
 			sym2 = sym2.inner;
 		}
 		return true;
-	}
-
-	static uint callback_scope_hash (void *ptr) {
-		var cs = (CallbackScope) ptr;
-		return unresolved_symbol_hash (cs.gtype_struct_for);
-	}
-
-	static bool callback_scope_equal (void *ptr1, void *ptr2) {
-		var cs1 = (CallbackScope) ptr1;
-		var cs2 = (CallbackScope) ptr2;
-		return cs1.parent_symbol == cs2.parent_symbol && unresolved_symbol_equal (cs1.gtype_struct_for, cs2.gtype_struct_for);
 	}
 }
