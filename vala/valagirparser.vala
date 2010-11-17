@@ -404,6 +404,9 @@ public class Vala.GirParser : CodeVisitor {
 			var src = get_current_src ();
 			Expression expr = null;
 			switch (current) {
+			case TokenType.NULL:
+				expr = new NullLiteral (src);
+				break;
 			case TokenType.TRUE:
 				expr = new BooleanLiteral (true, src);
 				break;
