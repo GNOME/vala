@@ -400,7 +400,7 @@ public class Vala.GirParser : CodeVisitor {
 			return metadata;
 		}
 
-		Expression? parse_literal () {
+		Expression? parse_expression () {
 			var src = get_current_src ();
 			Expression expr = null;
 			switch (current) {
@@ -422,8 +422,18 @@ public class Vala.GirParser : CodeVisitor {
 			case TokenType.STRING_LITERAL:
 				expr = new StringLiteral (get_string (), src);
 				break;
+			case TokenType.IDENTIFIER:
+				expr = new MemberAccess (null, get_string (), src);
+				while (next () == TokenType.DOT) {
+					if (next () != TokenType.IDENTIFIER) {
+						Report.error (get_current_src (), "expected identifier got `%s'".printf (current.to_string ()));
+						break;
+					}
+					expr = new MemberAccess (expr, get_string (), get_current_src ());
+				}
+				return expr;
 			default:
-				Report.error (src, "expected literal");
+				Report.error (src, "expected literal or symbol got `%s'".printf (current.to_string ()));
 				break;
 			}
 			next ();
@@ -450,7 +460,7 @@ public class Vala.GirParser : CodeVisitor {
 				}
 				next ();
 
-				Expression expr = parse_literal ();
+				Expression expr = parse_expression ();
 				if (expr == null) {
 					return false;
 				}
