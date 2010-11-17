@@ -289,11 +289,11 @@ public class Vala.GirParser : CodeVisitor {
 				next ();
 				return MetadataType.GENERIC;
 			case TokenType.COLON:
-				if (next () == TokenType.COLON) {
-					next ();
-					return MetadataType.SIGNAL;
-				}
+				next ();
 				return MetadataType.PROPERTY;
+			case TokenType.DOUBLE_COLON:
+				next ();
+				return MetadataType.SIGNAL;
 			default:
 				return null;
 			}
@@ -982,6 +982,7 @@ public class Vala.GirParser : CodeVisitor {
 
 		var type = MetadataType.GENERIC;
 		if (name == "glib:signal") {
+			child_name = child_name.replace ("-", "_");
 			type = MetadataType.SIGNAL;
 		} else if (name == "property") {
 			type = MetadataType.PROPERTY;
