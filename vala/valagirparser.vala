@@ -1802,13 +1802,13 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (type_name == "guint") {
 				type_name = "uint";
 			} else if (type_name == "glong") {
-				if (ctype == "gssize") {
+				if (ctype != null && ctype.has_prefix ("gssize")) {
 					type_name = "ssize_t";
 				} else {
 					type_name = "long";
 				}
 			} else if (type_name == "gulong") {
-				if (ctype == "gsize") {
+				if (ctype != null && ctype.has_prefix ("gsize")) {
 					type_name = "size_t";
 				} else {
 					type_name = "ulong";
@@ -2407,7 +2407,15 @@ public class Vala.GirParser : CodeVisitor {
 						continue;
 					}
 					info.param.carray_length_parameter_position = parameters[info.array_length_idx].vala_idx;
+					var length_param = parameters[info.array_length_idx].param;
 					info.param.set_array_length_cname (parameters[info.array_length_idx].param.name);
+					if (length_param.variable_type.to_qualified_string () != "int") {
+						var unresolved_type = (UnresolvedType) length_param.variable_type;
+						var resolved_struct = resolve_symbol (glib_ns.scope, unresolved_type.unresolved_symbol) as Struct;
+						if (resolved_struct != null) {
+							info.param.array_length_type = resolved_struct.get_cname ();
+						}
+					}
 				}
 				if (info.param.variable_type is ArrayType && info.array_length_idx == -1) {
 					info.param.no_array_length = true;
