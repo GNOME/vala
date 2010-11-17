@@ -1957,7 +1957,10 @@ public class Vala.GirParser : CodeVisitor {
 					// first field is guaranteed to be the parent instance
 					skip_element ();
 				} else {
-					add_symbol_info (parse_field ());
+					var field = parse_field ();
+					if (field.name != "priv") {
+						add_symbol_info (field);
+					}
 				}
 				first_field = false;
 			} else if (reader.name == "property") {
