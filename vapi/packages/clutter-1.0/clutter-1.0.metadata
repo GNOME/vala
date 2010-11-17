@@ -215,6 +215,8 @@ clutter_device_manager_list_devices type_arguments="unowned InputDevice" transfe
 clutter_device_manager_peek_devices type_arguments="InputDevice"
 clutter_device_manager_get_devices type_arguments="InputDevice"
 
+clutter_event_get_coords.x is_out="1"
+clutter_event_get_coords.y is_out="1"
 clutter_event_type name="get_type"
 
 ClutterFeatureFlags hidden="1"

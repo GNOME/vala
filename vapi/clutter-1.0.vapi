@@ -643,7 +643,7 @@ namespace Clutter {
 		public static unowned Clutter.Event @get ();
 		public uint32 get_button ();
 		public uint get_click_count ();
-		public void get_coords (float x, float y);
+		public void get_coords (out float x, out float y);
 		public unowned Clutter.InputDevice get_device ();
 		public int get_device_id ();
 		public Clutter.InputDeviceType get_device_type ();
