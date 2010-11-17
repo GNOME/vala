@@ -1066,7 +1066,7 @@ public class Vala.GirParser : CodeVisitor {
 	DataType? parse_type_from_string (string type_string, bool owned_by_default, SourceReference? source_reference = null) {
 		if (type_from_string_regex == null) {
 			try {
-				type_from_string_regex = new GLib.Regex ("^(?:(owned|unowned|weak) +)?([0-9a-zA-Z_\\.]+)(?:<(.+)>)?(\\*+)?(\\[(,*)?\\])?(\\?)?$", GLib.RegexCompileFlags.ANCHORED | GLib.RegexCompileFlags.DOLLAR_ENDONLY | GLib.RegexCompileFlags.OPTIMIZE);
+				type_from_string_regex = new GLib.Regex ("^(?:(owned|unowned|weak) +)?([0-9a-zA-Z_\\.]+)(?:<(.+)>)?(\\*+)?(\\[,*\\])?(\\?)?$", GLib.RegexCompileFlags.ANCHORED | GLib.RegexCompileFlags.DOLLAR_ENDONLY | GLib.RegexCompileFlags.OPTIMIZE);
 			} catch (GLib.RegexError e) {
 				GLib.error ("Unable to compile regex: %s", e.message);
 			}
@@ -1140,7 +1140,7 @@ public class Vala.GirParser : CodeVisitor {
 		}
 
 		if (array_data != null) {
-			type = new ArrayType (type, (int) array_data.length + 1, source_reference);
+			type = new ArrayType (type, (int) array_data.length - 1, source_reference);
 		}
 
 		type.nullable = nullable;
