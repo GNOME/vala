@@ -1929,10 +1929,9 @@ public class Vala.GirParser : CodeVisitor {
 			if (cname != null) {
 				cl.set_cname (cname);
 			}
-
-			if (parent != null) {
-				cl.add_base_type (parse_type_from_gir_name (parent));
-			}
+		}
+		if (parent != null) {
+			cl.add_base_type (parse_type_from_gir_name (parent));
 		}
 
 		next ();
