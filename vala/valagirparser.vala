@@ -1114,7 +1114,7 @@ public class Vala.GirParser : CodeVisitor {
 			}
 		} else if (ownership_data == "unowned") {
 			if (owned_by_default) {
-				value_owned = true;
+				value_owned = false;
 			} else {
 				Report.error (source_reference, "unexpected `unowned' keyword");
 				return null;
