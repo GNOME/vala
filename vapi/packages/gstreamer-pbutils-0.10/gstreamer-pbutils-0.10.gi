@@ -1,6 +1,78 @@
 <?xml version="1.0"?>
 <api version="1.0">
 	<namespace name="Gst">
+		<function name="codec_utils_aac_caps_set_level_and_profile" symbol="gst_codec_utils_aac_caps_set_level_and_profile">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="caps" type="GstCaps*"/>
+				<parameter name="audio_config" type="guint8*"/>
+				<parameter name="len" type="guint"/>
+			</parameters>
+		</function>
+		<function name="codec_utils_aac_get_level" symbol="gst_codec_utils_aac_get_level">
+			<return-type type="gchar*"/>
+			<parameters>
+				<parameter name="audio_config" type="guint8*"/>
+				<parameter name="len" type="guint"/>
+			</parameters>
+		</function>
+		<function name="codec_utils_aac_get_profile" symbol="gst_codec_utils_aac_get_profile">
+			<return-type type="gchar*"/>
+			<parameters>
+				<parameter name="audio_config" type="guint8*"/>
+				<parameter name="len" type="guint"/>
+			</parameters>
+		</function>
+		<function name="codec_utils_aac_get_sample_rate_from_index" symbol="gst_codec_utils_aac_get_sample_rate_from_index">
+			<return-type type="guint"/>
+			<parameters>
+				<parameter name="sr_idx" type="guint"/>
+			</parameters>
+		</function>
+		<function name="codec_utils_h264_caps_set_level_and_profile" symbol="gst_codec_utils_h264_caps_set_level_and_profile">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="caps" type="GstCaps*"/>
+				<parameter name="sps" type="guint8*"/>
+				<parameter name="len" type="guint"/>
+			</parameters>
+		</function>
+		<function name="codec_utils_h264_get_level" symbol="gst_codec_utils_h264_get_level">
+			<return-type type="gchar*"/>
+			<parameters>
+				<parameter name="sps" type="guint8*"/>
+				<parameter name="len" type="guint"/>
+			</parameters>
+		</function>
+		<function name="codec_utils_h264_get_profile" symbol="gst_codec_utils_h264_get_profile">
+			<return-type type="gchar*"/>
+			<parameters>
+				<parameter name="sps" type="guint8*"/>
+				<parameter name="len" type="guint"/>
+			</parameters>
+		</function>
+		<function name="codec_utils_mpeg4video_caps_set_level_and_profile" symbol="gst_codec_utils_mpeg4video_caps_set_level_and_profile">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="caps" type="GstCaps*"/>
+				<parameter name="vis_obj_seq" type="guint8*"/>
+				<parameter name="len" type="guint"/>
+			</parameters>
+		</function>
+		<function name="codec_utils_mpeg4video_get_level" symbol="gst_codec_utils_mpeg4video_get_level">
+			<return-type type="gchar*"/>
+			<parameters>
+				<parameter name="vis_obj_seq" type="guint8*"/>
+				<parameter name="len" type="guint"/>
+			</parameters>
+		</function>
+		<function name="codec_utils_mpeg4video_get_profile" symbol="gst_codec_utils_mpeg4video_get_profile">
+			<return-type type="gchar*"/>
+			<parameters>
+				<parameter name="vis_obj_seq" type="guint8*"/>
+				<parameter name="len" type="guint"/>
+			</parameters>
+		</function>
 		<function name="install_plugins_async" symbol="gst_install_plugins_async">
 			<return-type type="GstInstallPluginsReturn"/>
 			<parameters>
@@ -159,6 +231,18 @@
 		<function name="pb_utils_init" symbol="gst_pb_utils_init">
 			<return-type type="void"/>
 		</function>
+		<function name="plugins_base_version" symbol="gst_plugins_base_version">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="major" type="guint*"/>
+				<parameter name="minor" type="guint*"/>
+				<parameter name="micro" type="guint*"/>
+				<parameter name="nano" type="guint*"/>
+			</parameters>
+		</function>
+		<function name="plugins_base_version_string" symbol="gst_plugins_base_version_string">
+			<return-type type="gchar*"/>
+		</function>
 		<callback name="GstInstallPluginsResultFunc">
 			<return-type type="void"/>
 			<parameters>
@@ -166,6 +250,243 @@
 				<parameter name="user_data" type="gpointer"/>
 			</parameters>
 		</callback>
+		<struct name="GstDiscovererAudioInfo">
+			<method name="get_bitrate" symbol="gst_discoverer_audio_info_get_bitrate">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererAudioInfo*"/>
+				</parameters>
+			</method>
+			<method name="get_channels" symbol="gst_discoverer_audio_info_get_channels">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererAudioInfo*"/>
+				</parameters>
+			</method>
+			<method name="get_depth" symbol="gst_discoverer_audio_info_get_depth">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererAudioInfo*"/>
+				</parameters>
+			</method>
+			<method name="get_max_bitrate" symbol="gst_discoverer_audio_info_get_max_bitrate">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererAudioInfo*"/>
+				</parameters>
+			</method>
+			<method name="get_sample_rate" symbol="gst_discoverer_audio_info_get_sample_rate">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererAudioInfo*"/>
+				</parameters>
+			</method>
+		</struct>
+		<struct name="GstDiscovererAudioInfoClass">
+		</struct>
+		<struct name="GstDiscovererContainerInfo">
+			<method name="get_streams" symbol="gst_discoverer_container_info_get_streams">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererContainerInfo*"/>
+				</parameters>
+			</method>
+		</struct>
+		<struct name="GstDiscovererContainerInfoClass">
+		</struct>
+		<struct name="GstDiscovererInfo">
+			<method name="copy" symbol="gst_discoverer_info_copy">
+				<return-type type="GstDiscovererInfo*"/>
+				<parameters>
+					<parameter name="ptr" type="GstDiscovererInfo*"/>
+				</parameters>
+			</method>
+			<method name="get_audio_streams" symbol="gst_discoverer_info_get_audio_streams">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererInfo*"/>
+				</parameters>
+			</method>
+			<method name="get_container_streams" symbol="gst_discoverer_info_get_container_streams">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererInfo*"/>
+				</parameters>
+			</method>
+			<method name="get_duration" symbol="gst_discoverer_info_get_duration">
+				<return-type type="GstClockTime"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererInfo*"/>
+				</parameters>
+			</method>
+			<method name="get_misc" symbol="gst_discoverer_info_get_misc">
+				<return-type type="GstStructure*"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererInfo*"/>
+				</parameters>
+			</method>
+			<method name="get_result" symbol="gst_discoverer_info_get_result">
+				<return-type type="GstDiscovererResult"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererInfo*"/>
+				</parameters>
+			</method>
+			<method name="get_stream_info" symbol="gst_discoverer_info_get_stream_info">
+				<return-type type="GstDiscovererStreamInfo*"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererInfo*"/>
+				</parameters>
+			</method>
+			<method name="get_stream_list" symbol="gst_discoverer_info_get_stream_list">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererInfo*"/>
+				</parameters>
+			</method>
+			<method name="get_streams" symbol="gst_discoverer_info_get_streams">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererInfo*"/>
+					<parameter name="streamtype" type="GType"/>
+				</parameters>
+			</method>
+			<method name="get_tags" symbol="gst_discoverer_info_get_tags">
+				<return-type type="GstTagList*"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererInfo*"/>
+				</parameters>
+			</method>
+			<method name="get_uri" symbol="gst_discoverer_info_get_uri">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererInfo*"/>
+				</parameters>
+			</method>
+			<method name="get_video_streams" symbol="gst_discoverer_info_get_video_streams">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererInfo*"/>
+				</parameters>
+			</method>
+		</struct>
+		<struct name="GstDiscovererInfoClass">
+		</struct>
+		<struct name="GstDiscovererStreamInfo">
+			<method name="get_caps" symbol="gst_discoverer_stream_info_get_caps">
+				<return-type type="GstCaps*"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererStreamInfo*"/>
+				</parameters>
+			</method>
+			<method name="get_misc" symbol="gst_discoverer_stream_info_get_misc">
+				<return-type type="GstStructure*"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererStreamInfo*"/>
+				</parameters>
+			</method>
+			<method name="get_next" symbol="gst_discoverer_stream_info_get_next">
+				<return-type type="GstDiscovererStreamInfo*"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererStreamInfo*"/>
+				</parameters>
+			</method>
+			<method name="get_previous" symbol="gst_discoverer_stream_info_get_previous">
+				<return-type type="GstDiscovererStreamInfo*"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererStreamInfo*"/>
+				</parameters>
+			</method>
+			<method name="get_stream_type_nick" symbol="gst_discoverer_stream_info_get_stream_type_nick">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererStreamInfo*"/>
+				</parameters>
+			</method>
+			<method name="get_tags" symbol="gst_discoverer_stream_info_get_tags">
+				<return-type type="GstTagList*"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererStreamInfo*"/>
+				</parameters>
+			</method>
+			<method name="list_free" symbol="gst_discoverer_stream_info_list_free">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="infos" type="GList*"/>
+				</parameters>
+			</method>
+		</struct>
+		<struct name="GstDiscovererStreamInfoClass">
+		</struct>
+		<struct name="GstDiscovererVideoInfo">
+			<method name="get_bitrate" symbol="gst_discoverer_video_info_get_bitrate">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererVideoInfo*"/>
+				</parameters>
+			</method>
+			<method name="get_depth" symbol="gst_discoverer_video_info_get_depth">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererVideoInfo*"/>
+				</parameters>
+			</method>
+			<method name="get_framerate_denom" symbol="gst_discoverer_video_info_get_framerate_denom">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererVideoInfo*"/>
+				</parameters>
+			</method>
+			<method name="get_framerate_num" symbol="gst_discoverer_video_info_get_framerate_num">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererVideoInfo*"/>
+				</parameters>
+			</method>
+			<method name="get_height" symbol="gst_discoverer_video_info_get_height">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererVideoInfo*"/>
+				</parameters>
+			</method>
+			<method name="get_max_bitrate" symbol="gst_discoverer_video_info_get_max_bitrate">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererVideoInfo*"/>
+				</parameters>
+			</method>
+			<method name="get_par_denom" symbol="gst_discoverer_video_info_get_par_denom">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererVideoInfo*"/>
+				</parameters>
+			</method>
+			<method name="get_par_num" symbol="gst_discoverer_video_info_get_par_num">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererVideoInfo*"/>
+				</parameters>
+			</method>
+			<method name="get_width" symbol="gst_discoverer_video_info_get_width">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererVideoInfo*"/>
+				</parameters>
+			</method>
+			<method name="is_image" symbol="gst_discoverer_video_info_is_image">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererVideoInfo*"/>
+				</parameters>
+			</method>
+			<method name="is_interlaced" symbol="gst_discoverer_video_info_is_interlaced">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererVideoInfo*"/>
+				</parameters>
+			</method>
+		</struct>
+		<struct name="GstDiscovererVideoInfoClass">
+		</struct>
 		<boxed name="GstInstallPluginsContext" type-name="GstInstallPluginsContext" get-type="gst_install_plugins_context_get_type">
 			<method name="free" symbol="gst_install_plugins_context_free">
 				<return-type type="void"/>
@@ -184,6 +505,14 @@
 				</parameters>
 			</method>
 		</boxed>
+		<enum name="GstDiscovererResult" type-name="GstDiscovererResult" get-type="gst_discoverer_result_get_type">
+			<member name="GST_DISCOVERER_OK" value="0"/>
+			<member name="GST_DISCOVERER_URI_INVALID" value="1"/>
+			<member name="GST_DISCOVERER_ERROR" value="2"/>
+			<member name="GST_DISCOVERER_TIMEOUT" value="3"/>
+			<member name="GST_DISCOVERER_BUSY" value="4"/>
+			<member name="GST_DISCOVERER_MISSING_PLUGINS" value="5"/>
+		</enum>
 		<enum name="GstInstallPluginsReturn" type-name="GstInstallPluginsReturn" get-type="gst_install_plugins_return_get_type">
 			<member name="GST_INSTALL_PLUGINS_SUCCESS" value="0"/>
 			<member name="GST_INSTALL_PLUGINS_NOT_FOUND" value="1"/>
@@ -197,5 +526,66 @@
 			<member name="GST_INSTALL_PLUGINS_HELPER_MISSING" value="202"/>
 			<member name="GST_INSTALL_PLUGINS_INSTALL_IN_PROGRESS" value="203"/>
 		</enum>
+		<object name="GstDiscoverer" parent="GObject" type-name="GstDiscoverer" get-type="gst_discoverer_get_type">
+			<method name="discover_uri" symbol="gst_discoverer_discover_uri">
+				<return-type type="GstDiscovererInfo*"/>
+				<parameters>
+					<parameter name="discoverer" type="GstDiscoverer*"/>
+					<parameter name="uri" type="gchar*"/>
+					<parameter name="err" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="discover_uri_async" symbol="gst_discoverer_discover_uri_async">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="discoverer" type="GstDiscoverer*"/>
+					<parameter name="uri" type="gchar*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gst_discoverer_new">
+				<return-type type="GstDiscoverer*"/>
+				<parameters>
+					<parameter name="timeout" type="GstClockTime"/>
+					<parameter name="err" type="GError**"/>
+				</parameters>
+			</constructor>
+			<method name="start" symbol="gst_discoverer_start">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="discoverer" type="GstDiscoverer*"/>
+				</parameters>
+			</method>
+			<method name="stop" symbol="gst_discoverer_stop">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="discoverer" type="GstDiscoverer*"/>
+				</parameters>
+			</method>
+			<property name="timeout" type="guint64" readable="1" writable="1" construct="1" construct-only="0"/>
+			<signal name="discovered" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="discoverer" type="GstDiscoverer*"/>
+					<parameter name="info" type="GstDiscovererInfo"/>
+					<parameter name="err" type="GError*"/>
+				</parameters>
+			</signal>
+			<signal name="finished" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="discoverer" type="GstDiscoverer*"/>
+				</parameters>
+			</signal>
+			<signal name="starting" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="discoverer" type="GstDiscoverer*"/>
+				</parameters>
+			</signal>
+		</object>
+		<constant name="GST_PLUGINS_BASE_VERSION_MAJOR" type="int" value="0"/>
+		<constant name="GST_PLUGINS_BASE_VERSION_MICRO" type="int" value="31"/>
+		<constant name="GST_PLUGINS_BASE_VERSION_MINOR" type="int" value="10"/>
+		<constant name="GST_PLUGINS_BASE_VERSION_NANO" type="int" value="1"/>
 	</namespace>
 </api>

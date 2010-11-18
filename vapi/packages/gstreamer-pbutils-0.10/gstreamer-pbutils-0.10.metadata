@@ -13,3 +13,57 @@ gst_missing_decoder_installer_detail_new transfer_ownership="1"
 gst_missing_encoder_installer_detail_new transfer_ownership="1"
 gst_install_plugins_async.details is_array="1" no_array_length="1"
 gst_install_plugins_async.ctx nullable="1"
+
+gst_codec_utils_aac_caps_set_level_and_profile.audio_config is_array="1" array_length_pos="2.9"
+gst_codec_utils_aac_caps_set_level_and_profile.len hidden="1"
+gst_codec_utils_aac_get_level.audio_config is_array="1" array_length_pos="1.9"
+gst_codec_utils_aac_get_level.len hidden="1"
+gst_codec_utils_aac_get_profile.audio_config is_array="1" array_length_pos="1.9"
+gst_codec_utils_aac_get_profile.len hidden="1"
+gst_codec_utils_h264_caps_set_level_and_profile.sps is_array="1" array_length_pos="2.9"
+gst_codec_utils_h264_caps_set_level_and_profile.len hidden="1"
+gst_codec_utils_h264_get_level.sps is_array="1" array_length_pos="1.9"
+gst_codec_utils_h264_get_level.len hidden="1"
+gst_codec_utils_h264_get_profile.sps is_array="1" array_length_pos="1.9"
+gst_codec_utils_h264_get_profile.len hidden="1"
+gst_codec_utils_mpeg4video_caps_set_level_and_profile.vis_obj_seq is_array="1" array_length_pos="2.9"
+gst_codec_utils_mpeg4video_caps_set_level_and_profile.len hidden="1"
+gst_codec_utils_mpeg4video_get_level.vis_obj_seq is_array="1" array_length_pos="1.9"
+gst_codec_utils_mpeg4video_get_level.len hidden="1"
+gst_codec_utils_mpeg4video_get_profile.vis_obj_seq is_array="1" array_length_pos="1.9"
+gst_codec_utils_mpeg4video_get_profile.len hidden="1"
+
+GstDiscovererStreamInfo base_class="GstMiniObject"
+GstDiscovererStreamInfoClass hidden="1"
+GstDiscovererAudioInfo base_class="GstDiscovererStreamInfo"
+GstDiscovererAudioInfoClass hidden="1"
+GstDiscovererContainerInfo base_class="GstDiscovererStreamInfo"
+GstDiscovererContainerInfoClass hidden="1"
+GstDiscovererVideoInfo base_class="GstDiscovererStreamInfo"
+GstDiscovererVideoInfoClass hidden="1"
+GstDiscovererInfo base_class="GstMiniObject"
+GstDiscovererInfoClass hidden="1"
+
+gst_discoverer_discover_uri transfer_ownership="1"
+
+# note, we're not using gst_discoverer_stream_information_list_free for freeing
+# the lists returned by the various getters below. This is fine for now since
+# Vala does the right thing (unrefs each element then g_list_free()). If either
+# the way these lists are supposed to be freed changes, or it becomes possible
+# to attach a free-function to a returned object, this needs to change.
+
+gst_discoverer_info_copy transfer_ownership="1" hidden="1"
+# The real type is actually an argument to the function, so we just use the parent class
+gst_discoverer_info_get_streams namespace_name="Gst" type_arguments="MiniObject" transfer_ownership="1"
+gst_discoverer_info_get_stream_list namespace_name="Gst" type_arguments="DiscovererStreamInfo" transfer_ownership="1"
+gst_discoverer_info_get_audio_streams namespace_name="Gst" type_arguments="DiscovererAudioInfo" transfer_ownership="1"
+gst_discoverer_info_get_container_streams namespace_name="Gst" type_arguments="DiscovererVideoInfo" transfer_ownership="1"
+gst_discoverer_info_get_video_streams namespace_name="Gst" type_arguments="DiscovererVideoInfo" transfer_ownership="1"
+gst_discoverer_info_get_stream_info transfer_ownership="1"
+
+gst_discoverer_stream_info_get_caps transfer_ownership="1"
+gst_discoverer_stream_info_get_next transfer_ownership="1"
+gst_discoverer_stream_info_get_previous transfer_ownership="1"
+
+# The real type is actually an argument to the function, so we just use the parent class
+gst_discoverer_container_info_get_streams namespace_name="Gst" type_arguments="MiniObject" transfer_ownership="1"
