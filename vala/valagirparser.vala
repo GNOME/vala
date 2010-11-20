@@ -1233,6 +1233,33 @@ public class Vala.GirParser : CodeVisitor {
 		return name;
 	}
 
+	void set_array_ccode (Symbol sym, ParameterInfo info) {
+		if (sym is Method) {
+			var m = (Method) sym;
+			m.carray_length_parameter_position = info.vala_idx;
+		} else if (sym is Delegate) {
+			var d = (Delegate) sym;
+			d.carray_length_parameter_position = info.vala_idx;
+		} else {
+			var param = (Parameter) sym;
+			param.carray_length_parameter_position = info.vala_idx;
+			param.set_array_length_cname (info.param.name);
+		}
+		if (info.param.variable_type.to_qualified_string () != "int") {
+			var unresolved_type = (UnresolvedType) info.param.variable_type;
+			var resolved_struct = resolve_symbol (glib_ns.scope, unresolved_type.unresolved_symbol) as Struct;
+			if (resolved_struct != null) {
+				if (sym is Method) {
+					var m = (Method) sym;
+					m.array_length_type = resolved_struct.get_cname ();
+				} else {
+					var param = (Parameter) sym;
+					param.array_length_type = resolved_struct.get_cname ();
+				}
+			}
+		}
+	}
+
 	void parse_repository () {
 		start_element ("repository");
 		if (reader.get_attribute ("version") != GIR_VERSION) {
@@ -2354,6 +2381,13 @@ public class Vala.GirParser : CodeVisitor {
 			}
 			end_element ("parameters");
 		}
+		var array_length_idx = -1;
+		if (return_type is ArrayType && metadata.has_argument (ArgumentType.ARRAY_LENGTH_IDX)) {
+			array_length_idx = metadata.get_integer (ArgumentType.ARRAY_LENGTH_IDX);
+			parameters[array_length_idx].keep = false;
+			array_length_parameters.add (array_length_idx);
+		}
+
 		int i = 0, j=1;
 
 		int last = -1;
@@ -2406,18 +2440,8 @@ public class Vala.GirParser : CodeVisitor {
 						Report.error (get_current_src (), "invalid array_length index");
 						continue;
 					}
-					info.param.carray_length_parameter_position = parameters[info.array_length_idx].vala_idx;
-					var length_param = parameters[info.array_length_idx].param;
-					info.param.set_array_length_cname (parameters[info.array_length_idx].param.name);
-					if (length_param.variable_type.to_qualified_string () != "int") {
-						var unresolved_type = (UnresolvedType) length_param.variable_type;
-						var resolved_struct = resolve_symbol (glib_ns.scope, unresolved_type.unresolved_symbol) as Struct;
-						if (resolved_struct != null) {
-							info.param.array_length_type = resolved_struct.get_cname ();
-						}
-					}
-				}
-				if (info.param.variable_type is ArrayType && info.array_length_idx == -1) {
+					set_array_ccode (info.param, parameters[info.array_length_idx]);
+				} else if (info.param.variable_type is ArrayType) {
 					info.param.no_array_length = true;
 				}
 
@@ -2435,6 +2459,19 @@ public class Vala.GirParser : CodeVisitor {
 					}
 					info.param.cdestroy_notify_parameter_position = parameters[info.destroy_idx].vala_idx;
 				}
+			}
+		}
+		if (array_length_idx != -1) {
+			if (array_length_idx >= parameters.size) {
+				Report.error (get_current_src (), "invalid array_length index");
+			} else {
+				set_array_ccode (s, parameters[array_length_idx]);
+			}
+		} else if (return_type is ArrayType) {
+			if (s is Method) {
+				((Method) s).no_array_length = true;
+			} else {
+				((Delegate) s).no_array_length = true;
 			}
 		}
 
