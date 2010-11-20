@@ -852,6 +852,7 @@ public class Vala.GirParser : CodeVisitor {
 				merged.add (info);
 			}
 		} else if (info.symbol is Property) {
+			var prop = (Property) info.symbol;
 			foreach (var cinfo in colliding) {
 				var sym = cinfo.symbol;
 				if (sym is Signal || sym is Field) {
@@ -862,10 +863,19 @@ public class Vala.GirParser : CodeVisitor {
 					merged.add (cinfo);
 				}
 			}
-			var getter_name = "get_%s".printf (info.symbol.name);
-			var setter_name = "set_%s".printf (info.symbol.name);
-			if (current_symbols_info.contains (getter_name) || current_symbols_info.contains (setter_name)) {
-				((Property) info.symbol).no_accessor_method = false;
+			var getter_name = "get_%s".printf (prop.name);
+			var setter_name = "set_%s".printf (prop.name);
+			if (prop.get_accessor != null && current_symbols_info.contains (getter_name)) {
+				var getter_list = current_symbols_info[getter_name];
+				foreach (var getter_info in getter_list) {
+					if (getter_info.symbol is Method) {
+						prop.no_accessor_method = false;
+						prop.get_accessor.value_type.value_owned = ((Method) getter_info.symbol).return_type.value_owned;
+						break;
+					}
+				}
+			} else if (prop.set_accessor != null && current_symbols_info.contains (setter_name)) {
+				prop.no_accessor_method = false;
 			}
 		} else if (info.symbol is Signal) {
 			var sig = (Signal) info.symbol;
@@ -2198,6 +2208,7 @@ public class Vala.GirParser : CodeVisitor {
 		prop.array_null_terminated = array_null_terminated;
 		if (readable != "0") {
 			prop.get_accessor = new PropertyAccessor (true, false, false, prop.property_type.copy (), null, null);
+			prop.get_accessor.value_type.value_owned = true;
 		}
 		if (writable == "1" || construct_only == "1") {
 			prop.set_accessor = new PropertyAccessor (false, (construct_only != "1") && (writable == "1"), (construct_only == "1") || (construct_ == "1"), prop.property_type.copy (), null, null);
