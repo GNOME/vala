@@ -2230,8 +2230,8 @@ public class Vala.GirParser : CodeVisitor {
 		return m;
 	}
 
-	class MethodInfo {
-		public MethodInfo (Parameter param, int array_length_idx, int closure_idx, int destroy_idx) {
+	class ParameterInfo {
+		public ParameterInfo (Parameter param, int array_length_idx, int closure_idx, int destroy_idx) {
 			this.param = param;
 			this.array_length_idx = array_length_idx;
 			this.closure_idx = closure_idx;
@@ -2309,7 +2309,7 @@ public class Vala.GirParser : CodeVisitor {
 			method.vfunc_name = metadata.get_string (ArgumentType.VFUNC_NAME);
 		}
 
-		var parameters = new ArrayList<MethodInfo> ();
+		var parameters = new ArrayList<ParameterInfo> ();
 		var array_length_parameters = new ArrayList<int> ();
 		var closure_parameters = new ArrayList<int> ();
 		var destroy_parameters = new ArrayList<int> ();
@@ -2338,7 +2338,7 @@ public class Vala.GirParser : CodeVisitor {
 					destroy_parameters.add (destroy_idx);
 				}
 
-				var info = new MethodInfo(param, array_length_idx, closure_idx, destroy_idx);
+				var info = new ParameterInfo(param, array_length_idx, closure_idx, destroy_idx);
 
 				if (s is Method && scope == "async") {
 					var unresolved_type = param.variable_type as UnresolvedType;
@@ -2357,7 +2357,7 @@ public class Vala.GirParser : CodeVisitor {
 		int i = 0, j=1;
 
 		int last = -1;
-		foreach (MethodInfo info in parameters) {
+		foreach (ParameterInfo info in parameters) {
 			if (s is Delegate && info.closure_idx == i) {
 				var d = (Delegate) s;
 				d.has_target = true;
@@ -2390,7 +2390,7 @@ public class Vala.GirParser : CodeVisitor {
 			i++;
 		}
 
-		foreach (MethodInfo info in parameters) {
+		foreach (ParameterInfo info in parameters) {
 			if (info.keep) {
 
 				/* add_parameter sets carray_length_parameter_position and cdelegate_target_parameter_position
