@@ -245,7 +245,7 @@ public abstract class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 	}
 
 	public TargetValue get_local_cvalue (LocalVariable local) {
-		var result = new GLibValue (local.variable_type);
+		var result = new DovaValue (local.variable_type);
 
 		if (local.is_result) {
 			// used in postconditions
