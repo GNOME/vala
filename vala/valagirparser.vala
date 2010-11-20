@@ -2171,6 +2171,7 @@ public class Vala.GirParser : CodeVisitor {
 		var field = new Field (name, type, null, get_current_src ());
 		field.access = SymbolAccessibility.PUBLIC;
 		field.no_array_length = true;
+		field.array_null_terminated = true;
 		if (allow_none == "1") {
 			type.nullable = true;
 		}
@@ -2443,6 +2444,7 @@ public class Vala.GirParser : CodeVisitor {
 					set_array_ccode (info.param, parameters[info.array_length_idx]);
 				} else if (info.param.variable_type is ArrayType) {
 					info.param.no_array_length = true;
+					info.param.array_null_terminated = true;
 				}
 
 				if (info.closure_idx != -1) {
@@ -2469,9 +2471,13 @@ public class Vala.GirParser : CodeVisitor {
 			}
 		} else if (return_type is ArrayType) {
 			if (s is Method) {
-				((Method) s).no_array_length = true;
+				var m = (Method) s;
+				m.no_array_length = true;
+				m.array_null_terminated = true;
 			} else {
-				((Delegate) s).no_array_length = true;
+				var d = (Delegate) s;
+				d.no_array_length = true;
+				d.array_null_terminated = true;
 			}
 		}
 
