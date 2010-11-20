@@ -63,7 +63,7 @@ public class Vala.GirParser : CodeVisitor {
 		REPLACEMENT,
 		DEPRECATED_SINCE,
 		ARRAY,
-		ARRAY_LENGTH_POS,
+		ARRAY_LENGTH_IDX,
 		DEFAULT,
 		OUT,
 		REF,
@@ -1688,8 +1688,8 @@ public class Vala.GirParser : CodeVisitor {
 				ctype = null;
 			}
 
-			if (type is ArrayType && metadata.has_argument (ArgumentType.ARRAY_LENGTH_POS)) {
-				array_length_idx = metadata.get_integer (ArgumentType.ARRAY_LENGTH_POS);
+			if (type is ArrayType && metadata.has_argument (ArgumentType.ARRAY_LENGTH_IDX)) {
+				array_length_idx = metadata.get_integer (ArgumentType.ARRAY_LENGTH_IDX);
 			}
 
 			if (transfer == "full" || transfer == "container" || destroy != null) {
