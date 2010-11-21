@@ -124,6 +124,8 @@ namespace Gdl {
 		public int dock_number;
 		public weak GLib.HashTable dock_objects;
 		public weak GLib.List toplevel_docks;
+		[CCode (has_construct_function = false)]
+		protected DockMaster ();
 		public void add (Gdl.DockObject object);
 		public void @foreach (GLib.Func function);
 		public void foreach_toplevel (bool include_controller, GLib.Func function);
@@ -144,6 +146,8 @@ namespace Gdl {
 		public Gdl.DockObjectFlags flags;
 		public int freeze_count;
 		public bool reduce_pending;
+		[CCode (has_construct_function = false)]
+		protected DockObject ();
 		public void bind (GLib.Object master);
 		public virtual bool child_placement (Gdl.DockObject child, Gdl.DockPlacement placement);
 		public void detach (bool recursive);

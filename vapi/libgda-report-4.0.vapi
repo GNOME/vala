@@ -17,6 +17,8 @@ namespace Gda {
 	}
 	[CCode (cheader_filename = "libgda-report/libgda-report.h")]
 	public class ReportDocument : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected ReportDocument ();
 		public virtual bool run_as_html (string filename) throws GLib.Error;
 		public virtual bool run_as_pdf (string filename) throws GLib.Error;
 		public void set_template (string file);

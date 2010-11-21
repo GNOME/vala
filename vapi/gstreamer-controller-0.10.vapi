@@ -5,6 +5,8 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public class ControlSource : GLib.Object {
 		public bool bound;
+		[CCode (has_construct_function = false)]
+		protected ControlSource ();
 		public bool bind (GLib.ParamSpec pspec);
 		public bool get_value (Gst.ClockTime timestamp, Gst.Value value);
 		public bool get_value_array (Gst.ClockTime timestamp, Gst.ValueArray value_array);

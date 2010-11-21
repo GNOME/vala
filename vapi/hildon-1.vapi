@@ -36,6 +36,8 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class Banner : Gtk.Window, Atk.Implementor, Gtk.Buildable {
+		[CCode (has_construct_function = false)]
+		protected Banner ();
 		public void set_fraction (double fraction);
 		public void set_icon (string icon_name);
 		public void set_icon_from_file (string icon_file);
@@ -468,6 +470,8 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class Note : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
+		[CCode (has_construct_function = false)]
+		protected Note ();
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public Note.cancel_with_progress_bar (Gtk.Window parent, string description, Gtk.ProgressBar progressbar);
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
@@ -600,6 +604,8 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class Program : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Program ();
 		public void add_window (Hildon.Window window);
 		public bool get_can_hibernate ();
 		public unowned Hildon.AppMenu get_common_app_menu ();
@@ -821,6 +827,8 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class TouchSelectorColumn : GLib.Object, Gtk.CellLayout {
+		[CCode (has_construct_function = false)]
+		protected TouchSelectorColumn ();
 		public int get_text_column ();
 		public void set_text_column (int text_column);
 		public int text_column { get; set; }
@@ -845,6 +853,8 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class Volumebar : Gtk.Container, Atk.Implementor, Gtk.Buildable {
+		[CCode (has_construct_function = false)]
+		protected Volumebar ();
 		public unowned Gtk.Adjustment get_adjustment ();
 		public double get_level ();
 		public bool get_mute ();

@@ -28,6 +28,8 @@ namespace Unique {
 		public weak Gdk.Screen screen;
 		public weak string startup_id;
 		public uint workspace;
+		[CCode (has_construct_function = false)]
+		protected Backend ();
 		public static unowned Unique.Backend create ();
 		public unowned string get_name ();
 		public unowned Gdk.Screen get_screen ();

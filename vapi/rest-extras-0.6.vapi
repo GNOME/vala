@@ -25,8 +25,7 @@ namespace Rest {
 		[CCode (cname = "facebook_proxy_new_with_session", type = "RestProxy*", has_construct_function = false)]
 		public FacebookProxy.with_session (string api_key, string app_secret, string session_key);
 	}
-	[Compact]
-	[CCode (free_function = "rest_proxy_call_free", cname = "FacebookProxyCall", cheader_filename = "rest-extras/facebook-proxy-call.h")]
+	[CCode (cname = "FacebookProxyCall", cheader_filename = "rest-extras/facebook-proxy-call.h")]
 	public class FacebookProxyCall : Rest.ProxyCall {
 	}
 	[CCode (cname = "FlickrProxy", cheader_filename = "rest-extras/flickr-proxy.h")]
@@ -50,8 +49,7 @@ namespace Rest {
 		[CCode (cname = "flickr_proxy_new_with_token", type = "RestProxy*", has_construct_function = false)]
 		public FlickrProxy.with_token (string api_key, string shared_secret, string token);
 	}
-	[Compact]
-	[CCode (free_function = "rest_proxy_call_free", cname = "FlickrProxyCall", cheader_filename = "rest-extras/flickr-proxy-call.h")]
+	[CCode (cname = "FlickrProxyCall", cheader_filename = "rest-extras/flickr-proxy-call.h")]
 	public class FlickrProxyCall : Rest.ProxyCall {
 	}
 }

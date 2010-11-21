@@ -21,6 +21,8 @@ namespace Gst {
 		public weak Gst.CddaBaseSrcTrack tracks;
 		public weak string uri;
 		public int uri_track;
+		[CCode (has_construct_function = false)]
+		protected CddaBaseSrc ();
 		public bool add_track (Gst.CddaBaseSrcTrack track);
 		[NoWrapper]
 		public virtual void close ();

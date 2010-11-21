@@ -34,6 +34,8 @@ namespace GUdev {
 	}
 	[CCode (cheader_filename = "gudev/gudev.h")]
 	public class Device : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Device ();
 		public unowned string get_action ();
 		public unowned string? get_device_file ();
 		[CCode (array_length = false)]

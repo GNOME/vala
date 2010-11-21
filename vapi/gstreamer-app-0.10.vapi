@@ -4,6 +4,8 @@
 namespace Gst {
 	[CCode (cheader_filename = "gst/app/gstappsink.h")]
 	public class AppSink : Gst.BaseSink, Gst.URIHandler {
+		[CCode (has_construct_function = false)]
+		protected AppSink ();
 		public bool is_eos ();
 		public Gst.Buffer pull_buffer ();
 		public Gst.BufferList pull_buffer_list ();
@@ -28,6 +30,8 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/app/gstappsrc.h")]
 	public class AppSrc : Gst.BaseSrc, Gst.URIHandler {
+		[CCode (has_construct_function = false)]
+		protected AppSrc ();
 		public Gst.FlowReturn end_of_stream ();
 		public Gst.FlowReturn push_buffer (owned Gst.Buffer buffer);
 		public void set_callbacks (Gst.AppSrcCallbacks callbacks, GLib.DestroyNotify notify);

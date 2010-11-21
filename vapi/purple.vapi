@@ -146,14 +146,14 @@ namespace Purple {
 	[CCode (free_function = "purple_account_user_split_destroy", cheader_filename = "purple.h")]
 	public class AccountUserSplit {
 		public weak string default_value;
-		public weak DBus.ObjectPath field_sep;
+		public weak GLib.ObjectPath field_sep;
 		public bool reverse;
 		public weak string text;
 		[CCode (has_construct_function = false)]
-		public AccountUserSplit (string text, string default_value, DBus.ObjectPath sep);
+		public AccountUserSplit (string text, string default_value, GLib.ObjectPath sep);
 		public unowned string get_default_value ();
 		public bool get_reverse ();
-		public unowned DBus.ObjectPath get_separator ();
+		public unowned GLib.ObjectPath get_separator ();
 		public unowned string get_text ();
 		public void set_reverse (bool reverse);
 	}
@@ -1732,7 +1732,7 @@ namespace Purple {
 	[CCode (cheader_filename = "purple.h")]
 	public class SrvResponse {
 		[CCode (array_length = false)]
-		public weak DBus.ObjectPath[] hostname;
+		public weak GLib.ObjectPath[] hostname;
 		public int port;
 		public int pref;
 		public int weight;
@@ -1848,7 +1848,7 @@ namespace Purple {
 	public class StunNatDiscovery {
 		public ulong lookup_time;
 		[CCode (array_length = false)]
-		public weak DBus.ObjectPath[] publicip;
+		public weak GLib.ObjectPath[] publicip;
 		public weak string servername;
 		public Purple.StunStatus status;
 		public Purple.StunNatType type;
@@ -1935,7 +1935,7 @@ namespace Purple {
 		public unowned Purple.Value dup ();
 		public bool get_boolean ();
 		public void* get_boxed ();
-		public unowned DBus.ObjectPath get_char ();
+		public unowned GLib.ObjectPath get_char ();
 		public int get_enum ();
 		public int get_int ();
 		public int64 get_int64 ();
@@ -1956,7 +1956,7 @@ namespace Purple {
 		public Value.outgoing (Purple.Type type);
 		public void set_boolean (bool data);
 		public void set_boxed (void* data);
-		public void set_char (DBus.ObjectPath data);
+		public void set_char (GLib.ObjectPath data);
 		public void set_enum (int data);
 		public void set_int (int data);
 		public void set_int64 (int64 data);
@@ -3340,7 +3340,7 @@ namespace Purple {
 	[CCode (cheader_filename = "purple.h")]
 	public static unowned string markup_escape_text (string text, ssize_t length);
 	[CCode (cheader_filename = "purple.h")]
-	public static bool markup_extract_info_field (string str, int len, Purple.NotifyUserInfo user_info, string start_token, int skip, string end_token, DBus.ObjectPath check_value, string no_value_token, string display_name, bool is_link, string link_prefix, Purple.InfoFieldFormatCallback format_cb);
+	public static bool markup_extract_info_field (string str, int len, Purple.NotifyUserInfo user_info, string start_token, int skip, string end_token, GLib.ObjectPath check_value, string no_value_token, string display_name, bool is_link, string link_prefix, Purple.InfoFieldFormatCallback format_cb);
 	[CCode (cheader_filename = "purple.h")]
 	public static bool markup_find_tag (string needle, string haystack, out string start, out string end, out GLib.Datalist attributes);
 	[CCode (cheader_filename = "purple.h")]
@@ -3962,7 +3962,7 @@ namespace Purple {
 	[CCode (cheader_filename = "purple.h")]
 	public static unowned string str_size_to_units (size_t size);
 	[CCode (cheader_filename = "purple.h")]
-	public static void str_strip_char (string str, DBus.ObjectPath thechar);
+	public static void str_strip_char (string str, GLib.ObjectPath thechar);
 	[CCode (cheader_filename = "purple.h")]
 	public static ulong str_to_time (string timestamp, bool utc, void* tm, long tz_off, out unowned string rest);
 	[CCode (cheader_filename = "purple.h")]
@@ -4040,7 +4040,7 @@ namespace Purple {
 	[CCode (cheader_filename = "purple.h")]
 	public static unowned string utf8_try_convert (string str);
 	[CCode (cheader_filename = "purple.h")]
-	public static void util_chrreplace (string str, DBus.ObjectPath delimiter, DBus.ObjectPath replacement);
+	public static void util_chrreplace (string str, GLib.ObjectPath delimiter, GLib.ObjectPath replacement);
 	[CCode (cheader_filename = "purple.h")]
 	public static void util_fetch_url_cancel (Purple.UtilFetchUrlData url_data);
 	[CCode (cheader_filename = "purple.h")]
