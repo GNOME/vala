@@ -80,6 +80,8 @@ namespace Mx {
 	}
 	[CCode (cheader_filename = "mx/mx.h")]
 	public class Bin : Mx.Widget, Clutter.Scriptable, Mx.Stylable, Clutter.Container, Mx.Focusable {
+		[CCode (has_construct_function = false)]
+		protected Bin ();
 		public void allocate_child (Clutter.ActorBox box, Clutter.AllocationFlags flags);
 		public void get_alignment (Mx.Align x_align, Mx.Align y_align);
 		public unowned Clutter.Actor get_child ();
@@ -124,6 +126,8 @@ namespace Mx {
 	}
 	[CCode (cheader_filename = "mx/mx.h")]
 	public class BoxLayoutChild : Clutter.ChildMeta {
+		[CCode (has_construct_function = false)]
+		protected BoxLayoutChild ();
 		public static bool get_expand (Mx.BoxLayout box_layout, Clutter.Actor child);
 		public static Mx.Align get_x_align (Mx.BoxLayout box_layout, Clutter.Actor child);
 		public static bool get_x_fill (Mx.BoxLayout box_layout, Clutter.Actor child);
@@ -174,6 +178,8 @@ namespace Mx {
 	}
 	[CCode (cheader_filename = "mx/mx.h")]
 	public class Clipboard : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Clipboard ();
 		public static unowned Mx.Clipboard get_default ();
 		public void get_text (Mx.ClipboardCallbackFunc callback);
 		public void set_text (string text);
@@ -224,6 +230,8 @@ namespace Mx {
 	}
 	[CCode (cheader_filename = "mx/mx.h")]
 	public class DeformTexture : Mx.Widget, Clutter.Scriptable, Mx.Stylable {
+		[CCode (has_construct_function = false)]
+		protected DeformTexture ();
 		[NoWrapper]
 		public virtual void deform (Cogl.TextureVertex vertex, float width, float height);
 		public void get_resolution (int tiles_x, int tiles_y);
@@ -293,6 +301,8 @@ namespace Mx {
 	}
 	[CCode (cheader_filename = "mx/mx.h")]
 	public class FloatingWidget : Mx.Widget, Clutter.Scriptable, Mx.Stylable {
+		[CCode (has_construct_function = false)]
+		protected FloatingWidget ();
 		[NoWrapper]
 		public virtual void floating_paint (Clutter.Actor actor);
 		[NoWrapper]
@@ -300,6 +310,8 @@ namespace Mx {
 	}
 	[CCode (cheader_filename = "mx/mx.h")]
 	public class FocusManager : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected FocusManager ();
 		public unowned Mx.Focusable get_focused ();
 		public static unowned Mx.FocusManager get_for_stage (Clutter.Stage stage);
 		public unowned Clutter.Stage get_stage ();
@@ -565,6 +577,8 @@ namespace Mx {
 	}
 	[CCode (cheader_filename = "mx/mx.h")]
 	public class TableChild : Clutter.ChildMeta {
+		[CCode (has_construct_function = false)]
+		protected TableChild ();
 		public static int get_column (Mx.Table table, Clutter.Actor child);
 		public static int get_column_span (Mx.Table table, Clutter.Actor child);
 		public static int get_row (Mx.Table table, Clutter.Actor child);
@@ -598,6 +612,8 @@ namespace Mx {
 	}
 	[CCode (cheader_filename = "mx/mx.h")]
 	public class TextureCache : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected TextureCache ();
 		[NoWrapper]
 		public virtual void error_loading (GLib.Error error);
 		public unowned Clutter.Actor get_actor (string path);
@@ -646,6 +662,8 @@ namespace Mx {
 	}
 	[CCode (cheader_filename = "mx/mx.h")]
 	public class Tooltip : Mx.FloatingWidget, Clutter.Scriptable, Mx.Stylable {
+		[CCode (has_construct_function = false)]
+		protected Tooltip ();
 		public unowned string get_text ();
 		public Clutter.Geometry get_tip_area ();
 		public void hide ();
@@ -673,6 +691,8 @@ namespace Mx {
 	}
 	[CCode (cheader_filename = "mx/mx.h")]
 	public class Widget : Clutter.Actor, Clutter.Scriptable, Mx.Stylable {
+		[CCode (has_construct_function = false)]
+		protected Widget ();
 		public void get_available_area (Clutter.ActorBox allocation, Clutter.ActorBox area);
 		public unowned Clutter.Actor get_background_image ();
 		public unowned Clutter.Actor get_border_image ();
@@ -725,8 +745,8 @@ namespace Mx {
 	}
 	[CCode (cheader_filename = "mx/mx.h")]
 	public interface Draggable : Clutter.Actor {
-		public abstract void disable ();
-		public abstract void enable ();
+		public void disable ();
+		public void enable ();
 		public Mx.DragAxis get_axis ();
 		public unowned Clutter.Actor get_drag_actor ();
 		public uint get_drag_threshold ();
@@ -744,9 +764,9 @@ namespace Mx {
 	}
 	[CCode (cheader_filename = "mx/mx.h")]
 	public interface Droppable : Clutter.Actor {
-		public abstract bool accept_drop (Mx.Draggable draggable);
-		public abstract void disable ();
-		public abstract void enable ();
+		public bool accept_drop (Mx.Draggable draggable);
+		public void disable ();
+		public void enable ();
 		public bool is_enabled ();
 		public bool drop_enabled { get; set; }
 		public signal void drop (Clutter.Actor draggable, float event_x, float event_y, int button, Clutter.ModifierType modifiers);
