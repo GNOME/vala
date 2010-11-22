@@ -602,8 +602,6 @@ public class Vala.GirParser : CodeVisitor {
 		next ();
 		parse_repository ();
 
-		report_unused_metadata (metadata);
-
 		reader = null;
 		this.current_source_file = null;
 	}
@@ -1302,6 +1300,8 @@ public class Vala.GirParser : CodeVisitor {
 			}
 		}
 		end_element ("repository");
+
+		report_unused_metadata (metadata);
 	}
 
 	void parse_include () {
