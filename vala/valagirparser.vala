@@ -1010,12 +1010,13 @@ public class Vala.GirParser : CodeVisitor {
 	}
 
 	bool push_metadata () {
-		// skip?
-		if (reader.get_attribute ("introspectable") == "0") {
-			return false;
-		}
 		var new_metadata = get_current_metadata ();
-		if (new_metadata.get_bool (ArgumentType.SKIP)) {
+		// skip ?
+		if (new_metadata.has_argument (ArgumentType.SKIP)) {
+			if (new_metadata.get_bool (ArgumentType.SKIP)) {
+				return false;
+			}
+		} else if (reader.get_attribute ("introspectable") == "0") {
 			return false;
 		}
 
