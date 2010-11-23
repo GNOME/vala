@@ -1437,7 +1437,11 @@ public class Vala.GirParser : CodeVisitor {
 				if (reader.get_attribute ("glib:get-type") != null) {
 					add_symbol_info (parse_boxed ("record"));
 				} else {
-					add_symbol_info (parse_record ());
+					if (!reader.get_attribute ("name").has_suffix ("Private")) {
+						add_symbol_info (parse_record ());
+					} else {
+						skip_element ();
+					}
 				}
 			} else if (reader.name == "class") {
 				add_symbol_info (parse_class ());
@@ -2007,9 +2011,10 @@ public class Vala.GirParser : CodeVisitor {
 					// first field is guaranteed to be the parent instance
 					skip_element ();
 				} else {
-					var field = parse_field ();
-					if (field.name != "priv") {
-						add_symbol_info (field);
+					if (reader.get_attribute ("name") != "priv") {
+						add_symbol_info (parse_field ());
+					} else {
+						skip_element ();
 					}
 				}
 				first_field = false;
