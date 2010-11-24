@@ -411,7 +411,7 @@ namespace Gst {
 		public void lost_state ();
 		public void lost_state_full (bool new_base_time);
 		public static Gst.Element? make_from_uri (Gst.URIType type, string uri, string? elementname);
-		public void message_full (Gst.MessageType type, GLib.Quark domain, int code, string? text, string? debug, string file, string function, int line);
+		public void message_full (Gst.MessageType type, GLib.Quark domain, int code, owned string? text, owned string? debug, string file, string function, int line);
 		public bool post_message (owned Gst.Message message);
 		public virtual Gst.Clock? provide_clock ();
 		public bool provides_clock ();
