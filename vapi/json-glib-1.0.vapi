@@ -182,16 +182,18 @@ namespace Json {
 	public static void boxed_register_serialize_func (GLib.Type gboxed_type, Json.NodeType node_type, Json.BoxedSerializeFunc serialize_func);
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	public static unowned Json.Node boxed_serialize (GLib.Type gboxed_type, void* boxed);
+	[Deprecated (since = "0.10", replacement = "Json.gobject_from_data")]
 	[CCode (cheader_filename = "json-glib/json-glib.h,json-glib/json-gobject.h")]
 	public static GLib.Object construct_gobject (GLib.Type gtype, string data, size_t length) throws GLib.Error;
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
-	public static unowned GLib.Object gobject_deserialize (GLib.Type gtype, Json.Node node);
+	public static GLib.Object gobject_deserialize (GLib.Type gtype, Json.Node node);
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
-	public static unowned GLib.Object gobject_from_data (GLib.Type gtype, string data, ssize_t length) throws GLib.Error;
+	public static GLib.Object gobject_from_data (GLib.Type gtype, string data, ssize_t length = -1) throws GLib.Error;
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
-	public static unowned Json.Node gobject_serialize (GLib.Object gobject);
+	public static Json.Node gobject_serialize (GLib.Object gobject);
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	public static string gobject_to_data (GLib.Object gobject, out size_t length);
+	[Deprecated (since = "0.10", replacement = "Json.gobject_to_data")]
 	[CCode (cheader_filename = "json-glib/json-glib.h,json-glib/json-gobject.h")]
 	public static string serialize_gobject (GLib.Object gobject, out size_t length);
 }
