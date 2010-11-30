@@ -2074,6 +2074,17 @@ namespace Posix {
 	[CCode (cheader_filename = "sys/mman.h")]
 	public const int MS_SYNC;
 
+	[CCode (cname = "struct utsname", cheader_filename = "sys/utsname.h")]
+	public struct utsname {
+		public unowned string sysname;
+		public unowned string nodename;
+		public unowned string release;
+		public unowned string version;
+		public unowned string machine;
+		[CCode (cname = "uname")]
+		public utsname ();
+	}
+
 	[Compact]
 	[CCode (cname = "FILE", free_function = "fclose", cheader_filename = "stdio.h")]
 	public class FILE {
