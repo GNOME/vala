@@ -467,8 +467,10 @@ public class Vala.GIRWriter : CodeVisitor {
 			return;
 		}
 
+		string element_name = (en.is_flags) ? "bitfield" : "enumeration";
+
 		write_indent ();
-		buffer.append_printf ("<enumeration name=\"%s\"", get_gir_name (en));
+		buffer.append_printf ("<%s name=\"%s\"", element_name, get_gir_name (en));
 		write_gtype_attributes (en);
 		write_symbol_attributes (en);
 		buffer.append_printf (">\n");
@@ -483,7 +485,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		indent--;
 		write_indent ();
-		buffer.append_printf ("</enumeration>\n");
+		buffer.append_printf ("</%s>\n", element_name);
 
 		visit_deferred ();
 	}
@@ -492,12 +494,17 @@ public class Vala.GIRWriter : CodeVisitor {
 
 	public override void visit_enum_value (EnumValue ev) {
 		write_indent ();
+		var en = (Enum) hierarchy[0];
 		buffer.append_printf ("<member name=\"%s\" c:identifier=\"%s\"", ev.name.down (), ev.get_cname ());
 		if (ev.value != null) {
 			string value = literal_expression_to_value_string (ev.value);
 			buffer.append_printf (" value=\"%s\"", value);
 		} else {
-			buffer.append_printf (" value=\"%d\"", enum_value++);
+			if (en.is_flags) {
+				buffer.append_printf (" value=\"%d\"", 1 << enum_value++);
+			} else {
+				buffer.append_printf (" value=\"%d\"", enum_value++);
+			}
 		}
 		write_symbol_attributes (ev);
 		buffer.append_printf ("/>\n");
