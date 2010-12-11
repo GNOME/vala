@@ -219,6 +219,9 @@ namespace X {
 		[CCode (cname = "XUngrabButton")]
 		public int ungrab_button (uint button, uint modifiers, Window grab_window);
 
+		[CCode (cname = "XUngrabKey")]
+		public int ungrab_key (int keycode, uint modifiers, Window grab_window);
+
 		[CCode (cname = "XUngrabPointer")]
 		public int ungrab_pointer (int time);
 
