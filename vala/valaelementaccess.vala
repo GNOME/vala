@@ -171,9 +171,9 @@ public class Vala.ElementAccess : Expression {
 			value_type = container.value_type.get_type_arguments ().get (i);
 
 			// replace element access by call to generic get method
-			var ma = new MemberAccess (container, "get");
+			var ma = new MemberAccess (container, "get", source_reference);
 			ma.add_type_argument (value_type);
-			var get_call = new MethodCall (ma);
+			var get_call = new MethodCall (ma, source_reference);
 			get_call.add_argument (index);
 			get_call.target_type = this.target_type;
 			parent_node.replace_expression (this, get_call);
@@ -193,7 +193,7 @@ public class Vala.ElementAccess : Expression {
 			} else {
 				var get_method = container.value_type.get_member ("get") as Method;
 				if (get_method != null) {
-					var get_call = new MethodCall (new MemberAccess (container, "get"));
+					var get_call = new MethodCall (new MemberAccess (container, "get", source_reference), source_reference);
 					foreach (Expression e in get_indices ()) {
 						get_call.add_argument (e);
 					}

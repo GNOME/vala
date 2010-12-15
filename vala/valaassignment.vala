@@ -190,7 +190,7 @@ public class Vala.Assignment : Expression {
 				var sig = (Signal) ea.container.symbol_reference;
 				right.target_type = new DelegateType (sig.get_delegate (ma.inner.value_type, this));
 			} else if (ea.container.value_type.get_member ("set") is Method) {
-				var set_call = new MethodCall (new MemberAccess (ea.container, "set"));
+				var set_call = new MethodCall (new MemberAccess (ea.container, "set", source_reference), source_reference);
 				foreach (Expression e in ea.get_indices ()) {
 					set_call.add_argument (e);
 				}

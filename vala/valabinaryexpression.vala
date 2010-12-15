@@ -461,7 +461,7 @@ public class Vala.BinaryExpression : Expression {
 					return false;
 				}
 
-				var contains_call = new MethodCall (new MemberAccess (right, "contains"));
+				var contains_call = new MethodCall (new MemberAccess (right, "contains", source_reference), source_reference);
 				contains_call.add_argument (left);
 				parent_node.replace_expression (this, contains_call);
 				return contains_call.check (context);
