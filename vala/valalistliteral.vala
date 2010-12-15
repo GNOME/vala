@@ -114,6 +114,12 @@ public class Vala.ListLiteral : Literal {
 			}
 		}
 
+		if (element_type == null) {
+			error = true;
+			Report.error (source_reference, "cannot infer element type for list literal");
+			return false;
+		}
+
 		element_type = element_type.copy ();
 		element_type.value_owned = true;
 		list_type.add_type_argument (element_type);

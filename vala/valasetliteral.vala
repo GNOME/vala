@@ -98,6 +98,12 @@ public class Vala.SetLiteral : Literal {
 			}
 		}
 
+		if (element_type == null) {
+			error = true;
+			Report.error (source_reference, "cannot infer element type for set literal");
+			return false;
+		}
+
 		element_type = element_type.copy ();
 		element_type.value_owned = true;
 		set_type.add_type_argument (element_type);

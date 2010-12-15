@@ -115,6 +115,18 @@ public class Vala.MapLiteral : Literal {
 			}
 		}
 
+		if (map_key_type == null) {
+			error = true;
+			Report.error (source_reference, "cannot infer key type for map literal");
+			return false;
+		}
+
+		if (map_value_type == null) {
+			error = true;
+			Report.error (source_reference, "cannot infer value type for map literal");
+			return false;
+		}
+
 		map_key_type = map_key_type.copy ();
 		map_key_type.value_owned = true;
 		map_value_type = map_value_type.copy ();
