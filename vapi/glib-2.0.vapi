@@ -3690,6 +3690,7 @@ namespace GLib {
 		public void @foreach (HFunc<K,V> func);
 		[CCode (cname = "g_hash_table_foreach")]
 		public void for_each (HFunc<K,V> func);
+		public unowned V find (HRFunc<K,V> predicate);
 		public uint size ();
 		public bool steal (K key);
 		public void steal_all ();
@@ -3708,6 +3709,7 @@ namespace GLib {
 	[CCode (has_target = false)]
 	public delegate bool EqualFunc<G> (G a, G b);
 	public delegate void HFunc<K,V> (K key, V value);
+	public delegate bool HRFunc<K,V> (K key, V value);
 
 	[CCode (has_target = false)]
 	public delegate void DestroyNotify (void* data);
