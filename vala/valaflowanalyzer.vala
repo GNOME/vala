@@ -176,6 +176,12 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		visit_subroutine (m);
 	}
 
+	public override void visit_signal (Signal sig) {
+		if (sig.default_handler != null) {
+			visit_subroutine (sig.default_handler);
+		}
+	}
+
 	void visit_subroutine (Subroutine m) {
 		if (m.body == null) {
 			return;

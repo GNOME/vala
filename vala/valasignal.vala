@@ -205,7 +205,9 @@ public class Vala.Signal : Symbol, Lockable {
 		foreach (Parameter param in parameters) {
 			param.accept (visitor);
 		}
-		if (default_handler != null) {
+		if (default_handler == null && body != null) {
+			body.accept (visitor);
+		} else if (default_handler != null) {
 			default_handler.accept (visitor);
 		}
 	}
