@@ -522,6 +522,7 @@ public class Vala.GirParser : CodeVisitor {
 	HashMap<Namespace,ArrayList<Method>> namespace_methods = new HashMap<Namespace,ArrayList<Method>> ();
 	HashMap<CallbackScope,ArrayList<Delegate>> gtype_callbacks = new HashMap<CallbackScope,ArrayList<Delegate>> (callback_scope_hash, callback_scope_equal);
 	ArrayList<Alias> aliases = new ArrayList<Alias> ();
+	ArrayList<Interface> interfaces = new ArrayList<Interface> ();
 
 	/**
 	 * Parses all .gir source files in the specified code
@@ -536,6 +537,7 @@ public class Vala.GirParser : CodeVisitor {
 
 		resolve_gir_symbols ();
 
+		postprocess_interfaces ();
 		postprocess_reparenting ();
 		postprocess_gtype_callbacks ();
 		postprocess_aliases ();
@@ -1377,7 +1379,9 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (reader.name == "class") {
 				add_symbol_info (parse_class ());
 			} else if (reader.name == "interface") {
-				add_symbol_info (parse_interface ());
+				var iface = parse_interface ();
+				add_symbol_info (iface);
+				interfaces.add (iface);
 			} else if (reader.name == "glib:boxed") {
 				add_symbol_info (parse_boxed ());
 			} else if (reader.name == "union") {
@@ -2589,6 +2593,31 @@ public class Vala.GirParser : CodeVisitor {
 			}
 		}
 		return null;
+	}
+
+	void postprocess_interfaces () {
+		foreach (var iface in interfaces) {
+			/* Temporarily workaround G-I bug not adding GLib.Object prerequisite:
+			   ensure we have at least one instantiable prerequisite */
+			bool has_instantiable_prereq = false;
+			foreach (DataType prereq in iface.get_prerequisites ()) {
+				Symbol sym = null;
+				if (prereq is UnresolvedType) {
+					var unresolved_symbol = ((UnresolvedType) prereq).unresolved_symbol;
+					sym = resolve_symbol (iface.parent_symbol.scope, unresolved_symbol);
+				} else {
+					sym = prereq.data_type;
+				}
+				if (sym is Class) {
+					has_instantiable_prereq = true;
+					break;
+				}
+			}
+
+			if (!has_instantiable_prereq) {
+				iface.add_prerequisite (new ObjectType ((ObjectTypeSymbol) glib_ns.scope.lookup ("Object")));
+			}
+		}
 	}
 
 	void postprocess_reparenting () {
