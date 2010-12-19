@@ -341,7 +341,7 @@ public class Vala.Assignment : Expression {
 					right.value_type = variable.variable_type;
 				} else {
 					error = true;
-					Report.error (source_reference, "Assignment: Invalid callback assignment attempt");
+					Report.error (source_reference, "Assignment: Invalid assignment attempt");
 					return false;
 				}
 			}

@@ -190,7 +190,9 @@ public class Vala.ArrayCreationExpression : Expression {
 		if (initlist != null) {
 			initlist.target_type = new ArrayType (element_type, rank, source_reference);
 
-			initlist.check (context);
+			if (!initlist.check (context)) {
+				error = true;
+			}
 
 			var ret = create_sizes_from_initializer_list (context, initlist, rank, calc_sizes);
 			if (ret == -1) {

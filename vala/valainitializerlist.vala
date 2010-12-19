@@ -178,6 +178,7 @@ public class Vala.InitializerList : Expression {
 		foreach (Expression e in get_initializers ()) {
 			if (e.value_type == null) {
 				error = true;
+				Report.error (e.source_reference, "expression type not allowed as initializer");
 				continue;
 			}
 
