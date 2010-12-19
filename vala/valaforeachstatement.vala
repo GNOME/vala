@@ -350,7 +350,7 @@ public class Vala.ForeachStatement : Block {
 			return false;
 		}
 
-		element_variable = new LocalVariable (type_reference, variable_name);
+		element_variable = new LocalVariable (type_reference, variable_name, null, source_reference);
 
 		body.scope.add (variable_name, element_variable);
 
@@ -361,6 +361,10 @@ public class Vala.ForeachStatement : Block {
 		// analyze body
 		owner = context.analyzer.current_symbol.scope;
 		context.analyzer.current_symbol = this;
+
+		// call add_local_variable to check for shadowed variable
+		add_local_variable (element_variable);
+		remove_local_variable (element_variable);
 
 		body.check (context);
 
