@@ -1899,6 +1899,10 @@ public class Vala.Parser : CodeVisitor {
 		DataType type = null;
 		if (!accept (TokenType.VAR)) {
 			type = parse_type (true, true);
+			if (accept (TokenType.IN)) {
+				Report.error (type.source_reference, "syntax error, expected var or type");
+				throw new ParseError.SYNTAX ("expected var or type");
+			}
 		}
 		string id = parse_identifier ();
 		expect (TokenType.IN);
