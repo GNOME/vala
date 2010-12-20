@@ -124,6 +124,11 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 					continue;
 				}
 
+				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.BusName") {
+					// ignore BusName sender parameters
+					continue;
+				}
+
 				var owned_type = param.variable_type.copy ();
 				owned_type.value_owned = true;
 
@@ -149,6 +154,14 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			if (param.direction == ParameterDirection.IN && !ready) {
 				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.Cancellable") {
 					ccall.add_argument (new CCodeConstant ("NULL"));
+					continue;
+				}
+
+				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.BusName") {
+					// ignore BusName sender parameters
+					var sender = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_method_invocation_get_sender"));
+					sender.add_argument (new CCodeIdentifier ("invocation"));
+					ccall.add_argument (sender);
 					continue;
 				}
 
@@ -348,6 +361,11 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			if ((param.direction == ParameterDirection.IN && !ready) ||
 			    (param.direction == ParameterDirection.OUT && !no_reply && (!m.coroutine || ready))) {
 				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.Cancellable") {
+					continue;
+				}
+
+				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.BusName") {
+					// ignore BusName sender parameters
 					continue;
 				}
 
@@ -814,6 +832,9 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 			foreach (Parameter param in m.get_parameters ()) {
 				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.Cancellable") {
+					continue;
+				}
+				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.BusName") {
 					continue;
 				}
 

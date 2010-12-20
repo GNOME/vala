@@ -496,6 +496,11 @@ public class Vala.GDBusClientModule : GDBusModule {
 						continue;
 					}
 
+					if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.BusName") {
+						// ignore BusName sender parameters
+						continue;
+					}
+
 					send_dbus_value (param.variable_type, new CCodeIdentifier ("_arguments_builder"), expr, param);
 				}
 			}
