@@ -1525,7 +1525,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class EntryBuffer : GLib.Object {
 		[CCode (has_construct_function = false)]
-		public EntryBuffer (string[] initial_chars);
+		public EntryBuffer (uint8[] initial_chars);
 		public virtual uint delete_text (uint position, int n_chars);
 		public void emit_deleted_text (uint position, uint n_chars);
 		public void emit_inserted_text (uint position, string[] chars);
