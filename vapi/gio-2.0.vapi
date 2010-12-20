@@ -81,7 +81,7 @@ namespace GLib {
 		public virtual void quit_mainloop ();
 		public bool register (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void release ();
-		public int run ([CCode (array_length_pos = 1.9)] string[]? argv = null);
+		public int run ([CCode (array_length_pos = 0.9)] string[]? argv = null);
 		[NoWrapper]
 		public virtual void run_mainloop ();
 		public void set_action_group (GLib.ActionGroup action_group);

@@ -272,7 +272,7 @@ g_*_stream_close error_types="IOError"
 g_*_stream_close_finish error_types="IOError"
 
 g_application_run.argc hidden="1"
-g_application_run.argv is_array="1" array_length_pos="1.9" nullable="1" default_value="null"
+g_application_run.argv is_array="1" array_length_pos="0.9" nullable="1" default_value="null"
 g_application_is_remote hidden="1"
 GApplication::activate has_emitter="1"
 GApplication::open has_emitter="1"
