@@ -1611,14 +1611,14 @@ namespace Gtk {
 		public EntryBuffer (uint8[] initial_chars);
 		public virtual uint delete_text (uint position, int n_chars);
 		public void emit_deleted_text (uint position, uint n_chars);
-		public void emit_inserted_text (uint position, string[] chars);
+		public void emit_inserted_text (uint position, uint8[] chars);
 		public size_t get_bytes ();
 		public virtual uint get_length ();
 		public int get_max_length ();
 		public virtual unowned string get_text ();
-		public virtual uint insert_text (uint position, string[] chars);
+		public virtual uint insert_text (uint position, uint8[] chars);
 		public void set_max_length (int max_length);
-		public void set_text (string[] chars);
+		public void set_text (uint8[] chars);
 		public uint length { get; }
 		public int max_length { get; set; }
 		public string text { get; set; }
