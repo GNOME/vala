@@ -180,11 +180,7 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 
 		ccode.add_expression (codenode);
 
-		if (assignment.parent_node is ExpressionStatement) {
-			return null;
-		} else {
-			return lhs;
-		}
+		return lhs;
 	}
 
 	CCodeExpression? emit_fixed_length_array_assignment (Assignment assignment, ArrayType array_type) {
@@ -205,11 +201,7 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 
 		ccode.add_expression (ccopy);
 
-		if (assignment.parent_node is ExpressionStatement) {
-			return null;
-		} else {
-			return lhs;
-		}
+		return lhs;
 	}
 
 	public override void visit_assignment (Assignment assignment) {
