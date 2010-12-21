@@ -331,14 +331,8 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 				} else if (m.is_private_symbol ()) {
 					function.modifiers |= CCodeModifiers.STATIC;
 				}
-			}
-		}
-
-		// generate *_real_* functions for virtual methods
-		// also generate them for abstract methods of classes to prevent faulty subclassing
-		if (!m.is_abstract || (m.is_abstract && current_type_symbol is Class)) {
-			if (m.body != null) {
-				if (m.coroutine) {
+			} else {
+				if (m.body != null) {
 					function = new CCodeFunction (m.get_real_cname () + "_co", "gboolean");
 
 					// data struct to hold parameters, local variables, and the return value
@@ -644,7 +638,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			}
 		}
 
-		if (m.is_abstract) {
+		if (m.is_abstract && current_type_symbol is Class) {
 			// generate helpful error message if a sublcass does not implement an abstract method.
 			// This is only meaningful for subclasses implemented in C since the vala compiler would
 			// complain during compile time of such en error.
