@@ -154,7 +154,11 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 			generate_struct_declaration (st, internal_header_file);
 		}
 
-		begin_struct_destroy_function (st);
+		if (context.profile == Profile.GOBJECT && !st.is_boolean_type () && !st.is_integer_type () && !st.is_floating_type ()) {
+			if (st.is_disposable ()) {
+				begin_struct_destroy_function (st);
+			}
+		}
 
 		st.accept_children (this);
 
