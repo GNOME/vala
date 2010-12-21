@@ -91,9 +91,9 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			ccode.add_declaration ("GError*", new CCodeVariableDeclarator ("error", new CCodeConstant ("NULL")));
 		}
 
-		ccode.add_declaration ("GVariantIter", new CCodeVariableDeclarator ("_arguments_iter"));
-
 		if (!ready) {
+			ccode.add_declaration ("GVariantIter", new CCodeVariableDeclarator ("_arguments_iter"));
+
 			var iter_init = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_iter_init"));
 			iter_init.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_arguments_iter")));
 			iter_init.add_argument (new CCodeIdentifier ("parameters"));
