@@ -568,7 +568,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 				// use wrapper as source_object wouldn't be correct otherwise
 				ccall.add_argument (new CCodeIdentifier (generate_async_callback_wrapper ()));
 				var res_wrapper = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_new"));
-				res_wrapper.add_argument (new CCodeIdentifier ("self"));
+				res_wrapper.add_argument (new CCodeCastExpression (new CCodeIdentifier ("self"), "GObject *"));
 				res_wrapper.add_argument (new CCodeIdentifier ("_callback_"));
 				res_wrapper.add_argument (new CCodeIdentifier ("_user_data_"));
 				res_wrapper.add_argument (new CCodeConstant ("NULL"));
@@ -588,7 +588,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 			// unwrap async result
 			var inner_res = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_get_op_res_gpointer"));
-			inner_res.add_argument (new CCodeIdentifier ("_res_"));
+			inner_res.add_argument (new CCodeCastExpression (new CCodeIdentifier ("_res_"), "GSimpleAsyncResult *"));
 			ccall.add_argument (inner_res);
 
 			ccall.add_argument (new CCodeConstant ("error"));

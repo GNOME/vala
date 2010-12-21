@@ -69,7 +69,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		} else {
 			function.add_parameter (new CCodeParameter ("source_object", "GObject *"));
 			function.add_parameter (new CCodeParameter ("_res_", "GAsyncResult *"));
-			function.add_parameter (new CCodeParameter ("_user_data_", "gpointer *"));
+			function.add_parameter (new CCodeParameter ("_user_data_", "gpointer"));
 		}
 
 		push_function (function);
