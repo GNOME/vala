@@ -5910,6 +5910,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public virtual void add_simple_check (CodeNode node, bool always_fails = false) {
 	}
 
+	public virtual string generate_ready_function (Method m) {
+		return "";
+	}
+
 	public CCodeExpression? get_cvalue (Expression expr) {
 		if (expr.target_value == null) {
 			return null;

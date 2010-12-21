@@ -360,7 +360,6 @@ public class Vala.GAsyncModule : GSignalModule {
 				append_function (generate_free_function (m));
 				generate_async_function (m);
 				generate_finish_function (m);
-				append_function (generate_ready_function (m));
 
 				// append the _co function
 				base.visit_method (m);
@@ -483,11 +482,17 @@ public class Vala.GAsyncModule : GSignalModule {
 		pop_context ();
 	}
 
-	CCodeFunction generate_ready_function (Method m) {
+	public override string generate_ready_function (Method m) {
 		// generate ready callback handler
+
 		var dataname = Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data";
 
 		var readyfunc = new CCodeFunction (m.get_cname () + "_ready", "void");
+
+		if (!add_wrapper (readyfunc.name)) {
+			// wrapper already defined
+			return readyfunc.name;
+		}
 
 		readyfunc.add_parameter (new CCodeParameter ("source_object", "GObject*"));
 		readyfunc.add_parameter (new CCodeParameter ("_res_", "GAsyncResult*"));
@@ -510,7 +515,9 @@ public class Vala.GAsyncModule : GSignalModule {
 
 		readyfunc.block = readyblock;
 
-		return readyfunc;
+		append_function (readyfunc);
+
+		return readyfunc.name;
 	}
 
 	public override void generate_virtual_method_declaration (Method m, CCodeFile decl_space, CCodeStruct type_struct) {

@@ -580,7 +580,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		if (m != null && m.coroutine) {
 			if (expr.is_yield_expression) {
 				// asynchronous call
-				in_arg_map.set (get_param_pos (-1), new CCodeIdentifier (current_method.get_cname () + "_ready"));
+				in_arg_map.set (get_param_pos (-1), new CCodeIdentifier (generate_ready_function (current_method)));
 				in_arg_map.set (get_param_pos (-0.9), new CCodeIdentifier ("data"));
 			}
 		}

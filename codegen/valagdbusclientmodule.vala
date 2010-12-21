@@ -254,7 +254,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 		if (bus_get_proxy_async || conn_get_proxy_async) {
 			if (expr.is_yield_expression) {
 				// asynchronous call
-				ccall.add_argument (new CCodeIdentifier (current_method.get_cname () + "_ready"));
+				ccall.add_argument (new CCodeIdentifier (generate_ready_function (current_method)));
 				ccall.add_argument (new CCodeIdentifier ("data"));
 			}
 		} else {
