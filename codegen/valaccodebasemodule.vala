@@ -3727,10 +3727,25 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			set_cvalue (expr, get_variable_cexpression (temp_decl.name));
 			return;
 		}
-	
-		var op = expr.increment ? CCodeUnaryOperator.POSTFIX_INCREMENT : CCodeUnaryOperator.POSTFIX_DECREMENT;
-	
-		set_cvalue (expr, new CCodeUnaryExpression (op, get_cvalue (expr.inner)));
+
+		if (expr.parent_node is ExpressionStatement) {
+			var op = expr.increment ? CCodeUnaryOperator.POSTFIX_INCREMENT : CCodeUnaryOperator.POSTFIX_DECREMENT;
+
+			ccode.add_expression (new CCodeUnaryExpression (op, get_cvalue (expr.inner)));
+		} else {
+			// assign current value to temp variable
+			var temp_decl = get_temp_variable (expr.inner.value_type, true, expr, false);
+			emit_temp_var (temp_decl);
+			ccode.add_expression (new CCodeAssignment (get_variable_cexpression (temp_decl.name), get_cvalue (expr.inner)));
+
+			// increment/decrement variable
+			var op = expr.increment ? CCodeBinaryOperator.PLUS : CCodeBinaryOperator.MINUS;
+			var cexpr = new CCodeBinaryExpression (op, get_variable_cexpression (temp_decl.name), new CCodeConstant ("1"));
+			ccode.add_expression (new CCodeAssignment (get_cvalue (expr.inner), cexpr));
+
+			// return previous value
+			set_cvalue (expr, get_variable_cexpression (temp_decl.name));
+		}
 	}
 	
 	private MemberAccess? find_property_access (Expression expr) {
