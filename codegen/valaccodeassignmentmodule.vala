@@ -81,12 +81,7 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 		
 		store_property (prop, ma, cexpr, assignment.right);
 
-		// assignments are expressions, so return the current property value, except if we're sure that it can't be used
-		if (assignment.parent_node is ExpressionStatement) {
-			return null;
-		} else {
-			return get_ccodenode (ma); // current property value
-		}
+		return get_ccodenode (assignment.right);
 	}
 
 	CCodeExpression? emit_simple_assignment (Assignment assignment) {
