@@ -1664,7 +1664,8 @@ public class Vala.DBusServerModule : DBusClientModule {
 		}
 		cregister.add_argument (get_cvalue (path_arg));
 		cregister.add_argument (get_cvalue (obj_arg));
-		set_cvalue (expr, cregister);
+
+		ccode.add_expression (cregister);
 	}
 
 	bool type_implements_dbus_interface (ObjectTypeSymbol sym) {

@@ -300,7 +300,13 @@ public class Vala.GDBusClientModule : GDBusModule {
 			}
 		}
 
-		set_cvalue (expr, ccall);
+		var temp_var = get_temp_variable (expr.value_type, expr.value_type.value_owned);
+		var temp_ref = get_variable_cexpression (temp_var.name);
+
+		emit_temp_var (temp_var);
+
+		ccode.add_expression (new CCodeAssignment (temp_ref, ccall));
+		set_cvalue (expr, temp_ref);
 	}
 
 	string generate_dbus_signal_handler (Signal sig, ObjectTypeSymbol sym) {

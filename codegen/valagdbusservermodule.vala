@@ -1139,7 +1139,18 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		cregister.add_argument (get_cvalue (ma.inner));
 		cregister.add_argument (get_cvalue (path_arg));
 		cregister.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression ("_inner_error_")));
-		set_cvalue (expr, cregister);
+
+		if (expr.parent_node is ExpressionStatement) {
+			ccode.add_expression (cregister);
+		} else {
+			var temp_var = get_temp_variable (expr.value_type, expr.value_type.value_owned);
+			var temp_ref = get_variable_cexpression (temp_var.name);
+
+			emit_temp_var (temp_var);
+
+			ccode.add_expression (new CCodeAssignment (temp_ref, cregister));
+			set_cvalue (expr, temp_ref);
+		}
 	}
 
 	public override void generate_class_declaration (Class cl, CCodeFile decl_space) {
