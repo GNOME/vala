@@ -509,7 +509,7 @@ public class Vala.GSignalModule : GObjectModule {
 		return result;
 	}
 
-	CCodeExpression? emit_signal_assignment (Assignment assignment) {
+	void emit_signal_assignment (Assignment assignment) {
 		var sig = (Signal) assignment.left.symbol_reference;
 
 		bool disconnect = false;
@@ -522,10 +522,10 @@ public class Vala.GSignalModule : GObjectModule {
 		} else {
 			assignment.error = true;
 			Report.error (assignment.source_reference, "Specified compound assignment type for signals not supported.");
-			return null;
+			return;
 		}
 
-		return connect_signal (sig, assignment.left, assignment.right, disconnect, false, assignment);
+		connect_signal (sig, assignment.left, assignment.right, disconnect, false, assignment);
 	}
 
 	public override void visit_assignment (Assignment assignment) {
@@ -535,7 +535,7 @@ public class Vala.GSignalModule : GObjectModule {
 				return;
 			}
 
-			set_cvalue (assignment, emit_signal_assignment (assignment));
+			emit_signal_assignment (assignment);
 		} else {
 			base.visit_assignment (assignment);
 		}
@@ -596,7 +596,8 @@ public class Vala.GSignalModule : GObjectModule {
 		bool disconnect = (method_type.method_symbol.name == "disconnect");
 		bool after = (method_type.method_symbol.name == "connect_after");
 
-		set_cvalue (expr, connect_signal (sig, signal_access, handler, disconnect, after, expr));
+		var cexpr = connect_signal (sig, signal_access, handler, disconnect, after, expr);
+		set_cvalue (expr, cexpr);
 	}
 
 	CCodeExpression? connect_signal (Signal sig, Expression signal_access, Expression handler, bool disconnect, bool after, CodeNode expr) {
@@ -657,8 +658,6 @@ public class Vala.GSignalModule : GObjectModule {
 			ccall.add_argument (get_result_cexpression ("self"));
 		}
 
-		CCodeCommaExpression? ccomma = null;
-
 		if (sig is DynamicSignal) {
 			// dynamic_signal_connect or dynamic_signal_disconnect
 
@@ -680,7 +679,6 @@ public class Vala.GSignalModule : GObjectModule {
 			}
 
 			// get signal id
-			ccomma = new CCodeCommaExpression ();
 			var temp_decl = get_temp_variable (uint_type);
 			emit_temp_var (temp_decl);
 			var parse_call = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_parse_name"));
@@ -698,7 +696,7 @@ public class Vala.GSignalModule : GObjectModule {
 				parse_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (detail_temp_decl.name)));
 				parse_call.add_argument (new CCodeConstant ("TRUE"));
 			}
-			ccomma.append_expression (parse_call);
+			ccode.add_expression (parse_call);
 
 			// third argument: signal_id
 			ccall.add_argument (get_variable_cexpression (temp_decl.name));
@@ -764,11 +762,18 @@ public class Vala.GSignalModule : GObjectModule {
 			ccall.add_argument (new CCodeConstant ("NULL"));
 		}
 
-		if (ccomma != null) {
-			ccomma.append_expression (ccall);
-			return ccomma;
+		if (disconnect || expr.parent_node is ExpressionStatement) {
+			ccode.add_expression (ccall);
+			return null;
 		} else {
-			return ccall;
+			var temp_var = get_temp_variable (ulong_type);
+			var temp_ref = get_variable_cexpression (temp_var.name);
+
+			emit_temp_var (temp_var);
+
+			ccode.add_expression (new CCodeAssignment (temp_ref, ccall));
+
+			return temp_ref;
 		}
 	}
 }
