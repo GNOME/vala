@@ -697,7 +697,6 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			// valid array add
 		} else {
 			Report.error (assignment.source_reference, "Array concatenation not supported for public array variables and parameters");
-			set_cvalue (assignment, new CCodeInvalidExpression ());
 			return;
 		}
 
@@ -709,7 +708,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_array_size_cvalue (array.target_value)));
 		ccall.add_argument (handle_struct_argument (value_param, element, get_cvalue (element)));
 
-		set_cvalue (assignment, ccall);
+		ccode.add_expression (ccall);
 	}
 
 	public override CCodeParameter generate_parameter (Parameter param, CCodeFile decl_space, Map<int,CCodeParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
