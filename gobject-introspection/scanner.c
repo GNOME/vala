@@ -1753,7 +1753,7 @@ main (int argc, char **argv)
     {
       g_printerr ("ERROR: Need at least one header file.\n");
       g_igenerator_free (igenerator);  
-      return 0;
+      return 1;
     }
   igenerator->filenames = filenames;
   cpp_options = g_list_reverse (cpp_options);
