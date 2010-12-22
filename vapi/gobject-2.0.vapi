@@ -59,6 +59,7 @@ namespace GLib {
 		public Type[] children ();
 		public uint depth ();
 		public static Type from_name (string name);
+		[CCode (array_length_type = "guint")]
 		public Type[] interfaces ();
 		public bool is_a (Type is_a_type);
 		public unowned string name ();
