@@ -2428,6 +2428,17 @@ namespace Linux {
         [CCode (cheader_filename = "linux/netlink.h")]
         public const int NETLINK_ECRYPTFS;
 
+        [CCode (cheader_filename = "linux/netlink.h")]
+        public const int NETLINK_ADD_MEMBERSHIP;
+        [CCode (cheader_filename = "linux/netlink.h")]
+        public const int NETLINK_DROP_MEMBERSHIP;
+        [CCode (cheader_filename = "linux/netlink.h")]
+        public const int NETLINK_PKTINFO;
+        [CCode (cheader_filename = "linux/netlink.h")]
+        public const int NETLINK_BROADCAST_ERROR;
+        [CCode (cheader_filename = "linux/netlink.h")]
+        public const int NETLINK_NO_ENOBUFS;
+
         // netlink socket, can be used instead of sockaddr
         [CCode (cname = "struct sockaddr_nl", cheader_filename = "linux/netlink.h", destroy_function = "")]
         public struct SockAddrNl {
