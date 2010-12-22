@@ -1255,7 +1255,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		cregister.add_argument (new CCodeIdentifier ("connection"));
 		cregister.add_argument (new CCodeIdentifier ("path"));
 
-		cregister.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_interface_info (sym)));
+		cregister.add_argument (new CCodeCastExpression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_interface_info (sym)), "GDBusInterfaceInfo *"));
 		cregister.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_interface_vtable (sym)));
 
 		cregister.add_argument (new CCodeIdentifier ("data"));
