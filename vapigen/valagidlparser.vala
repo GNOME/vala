@@ -148,7 +148,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				}
 			}
 		} catch (MarkupError e) {
-			stdout.printf ("error parsing GIDL file: %s\n", e.message);
+			Report.error (null, "Unable to parse GIDL file: %s".printf (e.message));
 		}
 	}
 
