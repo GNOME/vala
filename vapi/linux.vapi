@@ -2632,6 +2632,68 @@ namespace Linux {
             public uint32 uid;
             public uint32 gid;
         }
+
+        /* setsockopt(2) level constants */
+        [CCode (cheader_filename = "linux/socket.h")]
+        public const int SOL_IP;
+        [CCode (cheader_filename = "linux/socket.h")]
+        public const int SOL_TCP;
+        [CCode (cheader_filename = "linux/socket.h")]
+        public const int SOL_UDP;
+        [CCode (cheader_filename = "linux/socket.h")]
+        public const int SOL_IPV6;
+        [CCode (cheader_filename = "linux/socket.h")]
+        public const int SOL_ICMPV6;
+        [CCode (cheader_filename = "linux/socket.h")]
+        public const int SOL_SCTP;
+        [CCode (cheader_filename = "linux/socket.h")]
+        public const int SOL_UDPLITE;
+        [CCode (cheader_filename = "linux/socket.h")]
+        public const int SOL_RAW;
+        [CCode (cheader_filename = "linux/socket.h")]
+        public const int SOL_IPX;
+        [CCode (cheader_filename = "linux/socket.h")]
+        public const int SOL_AX25;
+        [CCode (cheader_filename = "linux/socket.h")]
+        public const int SOL_ATALK;
+        [CCode (cheader_filename = "linux/socket.h")]
+        public const int SOL_NETROM;
+        [CCode (cheader_filename = "linux/socket.h")]
+        public const int SOL_ROSE;
+        [CCode (cheader_filename = "linux/socket.h")]
+        public const int SOL_DECNET;
+        [CCode (cheader_filename = "linux/socket.h")]
+        public const int SOL_X25;
+        [CCode (cheader_filename = "linux/socket.h")]
+        public const int SOL_PACKET;
+        [CCode (cheader_filename = "linux/socket.h")]
+        public const int SOL_ATM;
+        [CCode (cheader_filename = "linux/socket.h")]
+        public const int SOL_AAL;
+        [CCode (cheader_filename = "linux/socket.h")]
+        public const int SOL_IRDA;
+        [CCode (cheader_filename = "linux/socket.h")]
+        public const int SOL_NETBEUI;
+        [CCode (cheader_filename = "linux/socket.h")]
+        public const int SOL_LLC;
+        [CCode (cheader_filename = "linux/socket.h")]
+        public const int SOL_DCCP;
+        [CCode (cheader_filename = "linux/socket.h")]
+        public const int SOL_NETLINK;
+        [CCode (cheader_filename = "linux/socket.h")]
+        public const int SOL_TIPC;
+        [CCode (cheader_filename = "linux/socket.h")]
+        public const int SOL_RXRPC;
+        [CCode (cheader_filename = "linux/socket.h")]
+        public const int SOL_PPPOL2TP;
+        [CCode (cheader_filename = "linux/socket.h")]
+        public const int SOL_BLUETOOTH;
+        [CCode (cheader_filename = "linux/socket.h")]
+        public const int SOL_PNPIPE;
+        [CCode (cheader_filename = "linux/socket.h")]
+        public const int SOL_RDS;
+        [CCode (cheader_filename = "linux/socket.h")]
+        public const int SOL_IUCV;
     }
 
     /*
