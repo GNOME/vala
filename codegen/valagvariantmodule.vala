@@ -315,7 +315,7 @@ public class Vala.GVariantModule : GAsyncModule {
 		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_iter_next_value"));
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
 
-		var cforcond = new CCodeAssignment (new CCodeIdentifier (element_name), iter_call);
+		var cforcond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeAssignment (new CCodeIdentifier (element_name), iter_call), new CCodeConstant ("NULL"));
 		var cforiter = new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier ("%s_length%d".printf (temp_name, dim)));
 		ccode.open_for (null, cforcond, cforiter);
 
