@@ -1268,17 +1268,26 @@ namespace Posix {
 	public const int AF_UNIX;
 	[CCode (cheader_filename = "sys/socket.h", sentinel = "")]
 	public int accept (int sfd, ... );
-	[CCode (cheader_filename = "sys/socket.h", sentinel = "")]
+    [CCode (cheader_filename = "sys/socket.h", sentinel = "")]
 	public int bind (int sockfd, ...);
 	[CCode (cheader_filename = "sys/socket.h",  sentinel = "")]
 	public int connect(int sfd, ... );
-	[CCode (cheader_filename = "sys/socket.h")]
+    [CCode (cheader_filename = "sys/socket.h")]
+    public int getsockopt (int sockfd, int level, int optname, void* optval, out socklen_t optlen);
+    [CCode (cheader_filename = "sys/socket.h")]
 	public int listen (int sfd, int backlog);
-	[CCode (cheader_filename = "sys/socket.h")]
+    [CCode (cheader_filename = "sys/socket.h")]
+    public int setsockopt(int sockfd, int level, int optname, void* optval, socklen_t optlen);
+    [CCode (cheader_filename = "sys/socket.h")]
 	public int socket (int domain, int type, int protocol);
-
 	[CCode (cheader_filename = "sys/socket.h")]
 	public int socketpair (int domain, int type, int protocol, int[] sv);
+
+    [SimpleType]
+    [IntegerType]
+    [CCode (cname = "socklen_t", cheader_filename = "sys/socket.h", default_value = "0")]
+    public struct socklen_t {
+    }
 
 	[SimpleType]
 	[CCode (cname = "struct in_addr", cheader_filename = "sys/socket.h", destroy_function = "")]
