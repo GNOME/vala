@@ -51,34 +51,6 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 			cexpr = get_address_of_expression (assignment.right, cexpr);
 		}
 
-		if (assignment.operator != AssignmentOperator.SIMPLE) {
-			CCodeBinaryOperator cop;
-			if (assignment.operator == AssignmentOperator.BITWISE_OR) {
-				cop = CCodeBinaryOperator.BITWISE_OR;
-			} else if (assignment.operator == AssignmentOperator.BITWISE_AND) {
-				cop = CCodeBinaryOperator.BITWISE_AND;
-			} else if (assignment.operator == AssignmentOperator.BITWISE_XOR) {
-				cop = CCodeBinaryOperator.BITWISE_XOR;
-			} else if (assignment.operator == AssignmentOperator.ADD) {
-				cop = CCodeBinaryOperator.PLUS;
-			} else if (assignment.operator == AssignmentOperator.SUB) {
-				cop = CCodeBinaryOperator.MINUS;
-			} else if (assignment.operator == AssignmentOperator.MUL) {
-				cop = CCodeBinaryOperator.MUL;
-			} else if (assignment.operator == AssignmentOperator.DIV) {
-				cop = CCodeBinaryOperator.DIV;
-			} else if (assignment.operator == AssignmentOperator.PERCENT) {
-				cop = CCodeBinaryOperator.MOD;
-			} else if (assignment.operator == AssignmentOperator.SHIFT_LEFT) {
-				cop = CCodeBinaryOperator.SHIFT_LEFT;
-			} else if (assignment.operator == AssignmentOperator.SHIFT_RIGHT) {
-				cop = CCodeBinaryOperator.SHIFT_RIGHT;
-			} else {
-				assert_not_reached ();
-			}
-			cexpr = new CCodeBinaryExpression (cop, (CCodeExpression) get_ccodenode (assignment.left), cexpr);
-		}
-		
 		store_property (prop, ma, cexpr, assignment.right);
 
 		return get_ccodenode (assignment.right);
