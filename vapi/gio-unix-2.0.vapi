@@ -52,7 +52,7 @@ namespace GLib {
 		[CCode (cname = "g_unix_mount_compare")]
 		public int compare (GLib.UnixMountEntry mount);
 		[CCode (cname = "g_unix_mounts_get")]
-		public static GLib.List<GLib.UnixMountEntry> @get (ref uint64? time_read = null);
+		public static GLib.List<GLib.UnixMountEntry> @get (out uint64 time_read = null);
 		[CCode (cname = "g_unix_mount_get_device_path")]
 		public unowned string get_device_path ();
 		[CCode (cname = "g_unix_mount_get_fs_type")]
