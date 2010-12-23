@@ -48,6 +48,6 @@ namespace GLib {
 		public bool is_system_internal ();
 
 		[CCode (cname = "g_unix_mounts_get", cheader_filename = "gio/gunixmounts.h")]
-		public static GLib.List<UnixMountEntry> @get (ref uint64? time_read = null);
+		public static GLib.List<UnixMountEntry> @get (out uint64 time_read = null);
 	}
 }
