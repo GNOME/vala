@@ -5249,14 +5249,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				temp_ref_vars.insert (0, decl);
 			}
 
-			var ccomma = new CCodeCommaExpression ();
-
 			if (target_type.nullable) {
 				var newcall = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
 				newcall.add_argument (new CCodeConstant ("GValue"));
 				newcall.add_argument (new CCodeConstant ("1"));
 				var newassignment = new CCodeAssignment (get_variable_cexpression (decl.name), newcall);
-				ccomma.append_expression (newassignment);
+				ccode.add_expression (newassignment);
 			}
 
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_init"));
@@ -5266,7 +5264,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (decl.name)));
 			}
 			ccall.add_argument (new CCodeIdentifier (expression_type.get_type_id ()));
-			ccomma.append_expression (ccall);
+			ccode.add_expression (ccall);
 
 			if (requires_destroy (expression_type)) {
 				ccall = new CCodeFunctionCall (get_value_taker_function (expression_type));
@@ -5284,10 +5282,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccall.add_argument (cexpr);
 			}
 
-			ccomma.append_expression (ccall);
+			ccode.add_expression (ccall);
 
-			ccomma.append_expression (get_variable_cexpression (decl.name));
-			cexpr = ccomma;
+			cexpr = get_variable_cexpression (decl.name);
 
 			return cexpr;
 		} else if (gvariant_boxing) {
