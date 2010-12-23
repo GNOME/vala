@@ -122,7 +122,7 @@ class Vala.VAPIGen : Object {
 		if (context.report.get_errors () > 0) {
 			return quit ();
 		}
-		
+
 		foreach (string source in sources) {
 			if (FileUtils.test (source, FileTest.EXISTS)) {
 				context.add_source_file (new SourceFile (context, SourceFileType.PACKAGE, source));
@@ -169,10 +169,16 @@ class Vala.VAPIGen : Object {
 			}
 			if (file.filename in sources) {
 				file.file_type = SourceFileType.SOURCE;
-			} else if (file.filename.has_suffix (".metadata")) {
-				string gir_filename = "%s.gir".printf (file.filename.substring (0, file.filename.length - ".metadata".length));
-				if (gir_filename in sources) {
-					file.file_type = SourceFileType.SOURCE;
+				if (file.filename.has_suffix (".gir")) {
+					// mark relative metadata as source
+					string? metadata_filename = context.get_metadata_path (file.filename);
+					if (metadata_filename != null) {
+						foreach (SourceFile metadata_file in context.get_source_files ()) {
+							if (metadata_file.filename == metadata_filename) {
+								metadata_file.file_type = SourceFileType.SOURCE;
+							}
+						}
+					}
 				}
 			}
 		}
