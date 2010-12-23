@@ -494,6 +494,7 @@ public class Vala.GirParser : CodeVisitor {
 
 	class Alias {
 		public string name;
+		public string cname;
 		public DataType base_type;
 		public Symbol parent_symbol;
 		public SourceReference source_reference;
@@ -1484,6 +1485,7 @@ public class Vala.GirParser : CodeVisitor {
 		var alias = new Alias ();
 		alias.source_reference = get_current_src ();
 		alias.name = reader.get_attribute ("name");
+		alias.cname = reader.get_attribute ("c:type");
 		alias.parent_symbol = current_symbol;
 		next ();
 
@@ -2839,16 +2841,24 @@ public class Vala.GirParser : CodeVisitor {
 
 	void postprocess_aliases () {
 		/* this is unfortunate because <alias> tag has no type information, thus we have
-		   to guess it from the target */
+		   to guess it from the base type */
 		foreach (var alias in aliases) {
 			DataType base_type = null;
 			Symbol type_sym = null;
+			bool simple_type = false;
 			if (alias.base_type is UnresolvedType) {
 				base_type = alias.base_type;
 				type_sym = resolve_symbol (alias.parent_symbol.scope, ((UnresolvedType) base_type).unresolved_symbol);
-			} else if (!(alias.base_type is VoidType)) {
+			} else if (alias.base_type is PointerType && ((PointerType) alias.base_type).base_type is VoidType) {
+				// gpointer, if it's a struct make it a simpletype
+				simple_type = true;
+			} else {
 				base_type = alias.base_type;
 				type_sym = base_type.data_type;
+			}
+
+			if (type_sym is Struct && ((Struct) type_sym).is_simple_type ()) {
+				simple_type = true;
 			}
 
 			if (base_type == null || type_sym == null || type_sym is Struct) {
@@ -2859,6 +2869,12 @@ public class Vala.GirParser : CodeVisitor {
 					st.base_type = base_type;
 				}
 				st.external = true;
+				if (alias.cname != null) {
+					st.set_cname (alias.cname);
+				}
+				if (simple_type) {
+					st.set_simple_type (true);
+				}
 				add_symbol_to_container (alias.parent_symbol, st);
 			} else if (type_sym is Class) {
 				var cl = new Class (alias.name, alias.source_reference);
@@ -2867,6 +2883,9 @@ public class Vala.GirParser : CodeVisitor {
 					cl.add_base_type (base_type);
 				}
 				cl.external = true;
+				if (alias.cname != null) {
+					cl.set_cname (alias.cname);
+				}
 				add_symbol_to_container (alias.parent_symbol, cl);
 			}
 		}
