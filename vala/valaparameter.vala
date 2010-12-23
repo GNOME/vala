@@ -264,6 +264,8 @@ public class Vala.Parameter : Variable {
 				Report.warning (source_reference, "`null' incompatible with parameter type `%s`".printf (variable_type.to_string ()));
 			} else if (!(initializer is NullLiteral) && direction == ParameterDirection.OUT) {
 				Report.error (source_reference, "only `null' is allowed as default value for out parameters");
+			} else if (direction == ParameterDirection.REF) {
+				Report.error (source_reference, "default value not allowed for ref parameter");
 			}
 		}
 
