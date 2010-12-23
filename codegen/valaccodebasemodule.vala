@@ -3717,7 +3717,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			// increment/decrement property
 			var op = expr.increment ? CCodeBinaryOperator.PLUS : CCodeBinaryOperator.MINUS;
 			var cexpr = new CCodeBinaryExpression (op, get_variable_cexpression (temp_decl.name), new CCodeConstant ("1"));
-			store_property (prop, ma, cexpr);
+			store_property (prop, ma.inner, new GLibValue (expr.value_type, cexpr));
 			
 			// return previous value
 			set_cvalue (expr, get_variable_cexpression (temp_decl.name));
@@ -4437,8 +4437,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					var inst_ma = new MemberAccess.simple ("new");
 					inst_ma.value_type = expr.type_reference;
 					set_cvalue (inst_ma, instance);
-					var ma = new MemberAccess (inst_ma, init.name);
-					store_property ((Property) init.symbol_reference, ma, get_cvalue (init.initializer));
+					store_property ((Property) init.symbol_reference, inst_ma, init.initializer.target_value);
 				}
 			}
 
@@ -5400,16 +5399,16 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
-	public void store_property (Property prop, MemberAccess ma, CCodeExpression cexpr, Expression? rhs = null) {
-		if (ma.inner is BaseAccess) {
+	public void store_property (Property prop, Expression? instance, TargetValue value) {
+		if (instance is BaseAccess) {
 			if (prop.base_property != null) {
 				var base_class = (Class) prop.base_property.parent_symbol;
 				var vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (base_class.get_upper_case_cname (null))));
 				vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (current_class.get_lower_case_cname (null))));
 				
 				var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "set_%s".printf (prop.name)));
-				ccall.add_argument ((CCodeExpression) get_ccodenode (ma.inner));
-				ccall.add_argument (cexpr);
+				ccall.add_argument ((CCodeExpression) get_ccodenode (instance));
+				ccall.add_argument (get_cvalue_ (value));
 
 				ccode.add_expression (ccall);
 			} else if (prop.base_interface_property != null) {
@@ -5417,8 +5416,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				string parent_iface_var = "%s_%s_parent_iface".printf (current_class.get_lower_case_cname (null), base_iface.get_lower_case_cname (null));
 
 				var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (new CCodeIdentifier (parent_iface_var), "set_%s".printf (prop.name)));
-				ccall.add_argument ((CCodeExpression) get_ccodenode (ma.inner));
-				ccall.add_argument (cexpr);
+				ccall.add_argument ((CCodeExpression) get_ccodenode (instance));
+				ccall.add_argument (get_cvalue_ (value));
 
 				ccode.add_expression (ccall);
 			}
@@ -5440,6 +5439,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			} else {
 				generate_property_accessor_declaration (base_property.set_accessor, cfile);
 				set_func = base_property.set_accessor.get_cname ();
+
+				if (!prop.external && prop.external_package) {
+					// internal VAPI properties
+					// only add them once per source file
+					if (add_generated_external_symbol (prop)) {
+						visit_property (prop);
+					}
+				}
 			}
 		}
 		
@@ -5447,34 +5454,40 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		if (prop.binding == MemberBinding.INSTANCE) {
 			/* target instance is first argument */
-			var instance = (CCodeExpression) get_ccodenode (ma.inner);
+			var cinstance = (CCodeExpression) get_ccodenode (instance);
 
 			if (prop.parent_symbol is Struct) {
 				// we need to pass struct instance by reference
-				var unary = instance as CCodeUnaryExpression;
+				var unary = cinstance as CCodeUnaryExpression;
 				if (unary != null && unary.operator == CCodeUnaryOperator.POINTER_INDIRECTION) {
 					// *expr => expr
-					instance = unary.inner;
-				} else if (instance is CCodeIdentifier || instance is CCodeMemberAccess) {
-					instance = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance);
+					cinstance = unary.inner;
+				} else if (cinstance is CCodeIdentifier || cinstance is CCodeMemberAccess) {
+					cinstance = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cinstance);
 				} else {
 					// if instance is e.g. a function call, we can't take the address of the expression
 					// (tmp = expr, &tmp)
 
-					var temp_var = get_temp_variable (ma.inner.target_type, true, null, false);
+					var temp_var = get_temp_variable (instance.target_type, true, null, false);
 					emit_temp_var (temp_var);
-					ccode.add_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), instance));
+					ccode.add_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), cinstance));
 
-					instance = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_var.name));
+					cinstance = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_var.name));
 				}
 			}
 
-			ccall.add_argument (instance);
+			ccall.add_argument (cinstance);
 		}
 
 		if (prop.no_accessor_method) {
 			/* property name is second argument of g_object_set */
 			ccall.add_argument (prop.get_canonical_cconstant ());
+		}
+
+		var cexpr = get_cvalue_ (value);
+
+		if (prop.property_type.is_real_non_null_struct_type ()) {
+			cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr);
 		}
 
 		var array_type = prop.property_type as ArrayType;
@@ -5488,15 +5501,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			ccall.add_argument (cexpr);
 		}
 
-		if (array_type != null && !prop.no_array_length && rhs != null) {
+		if (array_type != null && !prop.no_array_length) {
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				ccall.add_argument (get_array_length_cexpression (rhs, dim));
+				ccall.add_argument (get_array_length_cvalue (value, dim));
 			}
-		} else if (prop.property_type is DelegateType && rhs != null) {
+		} else if (prop.property_type is DelegateType) {
 			var delegate_type = (DelegateType) prop.property_type;
 			if (delegate_type.delegate_symbol.has_target) {
-				CCodeExpression delegate_target_destroy_notify;
-				ccall.add_argument (get_delegate_target_cexpression (rhs, out delegate_target_destroy_notify));
+				ccall.add_argument (get_delegate_target_cvalue (value));
 			}
 		}
 

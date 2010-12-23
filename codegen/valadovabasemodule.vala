@@ -1390,7 +1390,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 			// increment/decrement property
 			var op = expr.increment ? CCodeBinaryOperator.PLUS : CCodeBinaryOperator.MINUS;
 			var cexpr = new CCodeBinaryExpression (op, get_variable_cexpression (temp_decl.name), new CCodeConstant ("1"));
-			store_property (prop, ma, cexpr);
+			store_property (prop, ma.inner, new DovaValue (expr.value_type, cexpr));
 
 			// return previous value
 			set_cvalue (expr, new CCodeIdentifier (temp_decl.name));
@@ -1709,8 +1709,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 					var inst_ma = new MemberAccess.simple ("new");
 					inst_ma.value_type = expr.type_reference;
 					set_cvalue (inst_ma, instance);
-					var ma = new MemberAccess (inst_ma, init.name);
-					store_property ((Property) init.symbol_reference, ma, get_cvalue (init.initializer));
+					store_property ((Property) init.symbol_reference, inst_ma, init.initializer.target_value);
 				}
 			}
 
@@ -2156,7 +2155,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 		}
 	}
 
-	public void store_property (Property prop, MemberAccess ma, CCodeExpression cexpr, Expression? rhs = null) {
+	public void store_property (Property prop, Expression? instance, TargetValue value) {
 		string set_func;
 
 		var base_property = prop;
@@ -2169,14 +2168,22 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 		generate_property_accessor_declaration (base_property.set_accessor, cfile);
 		set_func = base_property.set_accessor.get_cname ();
 
+		if (!prop.external && prop.external_package) {
+			// internal VAPI properties
+			// only add them once per source file
+			if (add_generated_external_symbol (prop)) {
+				visit_property (prop);
+			}
+		}
+
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (set_func));
 
 		if (prop.binding == MemberBinding.INSTANCE) {
 			/* target instance is first argument */
-			ccall.add_argument ((CCodeExpression) get_ccodenode (ma.inner));
+			ccall.add_argument ((CCodeExpression) get_ccodenode (instance));
 		}
 
-		ccall.add_argument (cexpr);
+		ccall.add_argument (get_cvalue_ (value));
 
 		ccode.add_expression (ccall);
 	}

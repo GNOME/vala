@@ -28,34 +28,6 @@ using GLib;
  * The link between an assignment and generated code.
  */
 public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
-	CCodeExpression? emit_property_assignment (Assignment assignment) {
-		var ma = assignment.left as MemberAccess;
-
-		var prop = (Property) assignment.left.symbol_reference;
-
-		if (!(prop is DynamicProperty)) {
-			generate_property_accessor_declaration (prop.set_accessor, cfile);
-
-			if (!prop.external && prop.external_package) {
-				// internal VAPI properties
-				// only add them once per source file
-				if (add_generated_external_symbol (prop)) {
-					visit_property (prop);
-				}
-			}
-		}
-
-		CCodeExpression cexpr = get_cvalue (assignment.right);
-
-		if (prop.property_type.is_real_non_null_struct_type ()) {
-			cexpr = get_address_of_expression (assignment.right, cexpr);
-		}
-
-		store_property (prop, ma, cexpr, assignment.right);
-
-		return get_ccodenode (assignment.right);
-	}
-
 	CCodeExpression? emit_simple_assignment (Assignment assignment) {
 		CCodeExpression rhs = get_cvalue (assignment.right);
 		CCodeExpression lhs = (CCodeExpression) get_ccodenode (assignment.left);
@@ -183,7 +155,12 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 		}
 
 		if (assignment.left.symbol_reference is Property) {
-			set_cvalue (assignment, emit_property_assignment (assignment));
+			var ma = assignment.left as MemberAccess;
+			var prop = (Property) assignment.left.symbol_reference;
+
+			store_property (prop, ma.inner, assignment.right.target_value);
+
+			set_cvalue (assignment, get_ccodenode (assignment.right));
 		} else {
 			var array_type = assignment.left.value_type as ArrayType;
 			if (array_type != null && array_type.fixed_length) {
