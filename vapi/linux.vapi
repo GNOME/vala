@@ -905,7 +905,7 @@ namespace Linux {
         [CCode (cheader_filename = "net/if.h")]
         public IfNameindex if_nameindex ();
 
-        [CCode (cname = "int", cprefix = "IFF_", cheader_filename = "net/if.h")]
+        [CCode (cname = "int", cprefix = "IFF_", cheader_filename = "linux/if.h")]
         public enum IfFlag {
             UP,
             BROADCAST,
@@ -924,13 +924,13 @@ namespace Linux {
             DYNAMIC
         }
 
-        [CCode (cname = "struct if_nameindex", cheader_filename = "net/if.h", destroy_function = "if_freenameindex")]
+        [CCode (cname = "struct if_nameindex", cheader_filename = "linux/if.h", destroy_function = "if_freenameindex")]
         public struct IfNameindex {
             public uint if_index;
             public string if_name;
         }
 
-        [CCode (cname = "struct ifmap", cheader_filename = "net/if.h", destroy_function = "")]
+        [CCode (cname = "struct ifmap", cheader_filename = "linux/if.h", destroy_function = "")]
         public struct IfMap {
             public ulong mem_start;
             public ulong mem_end;
@@ -940,7 +940,7 @@ namespace Linux {
             public uchar port;
         }
 
-        [CCode (cname = "struct ifreq", cheader_filename = "net/if.h", destroy_function = "")]
+        [CCode (cname = "struct ifreq", cheader_filename = "linux/if.h", destroy_function = "")]
         public struct IfReq {
             public char[] ifr_name;
             public Posix.SockAddr ifr_addr;
@@ -960,11 +960,90 @@ namespace Linux {
             public char[] ifr_newname;
         }
 
-        [CCode (cname = "struct ifconf", cheader_filename = "net/if.h", destroy_function = "")]
+        [CCode (cname = "struct ifconf", cheader_filename = "linux/if.h", destroy_function = "")]
         public struct IfConf {
             public int ifc_len;
             public string ifc_buf;
             public IfReq ifc_req;
+        }
+
+        [CCode (cheader_filename = "linux/if_addr.h")]
+        public void* IFA_PAYLOAD (int n);
+
+        [CCode (cprefix = "ARPHRD_", cheader_filename = "linux/if_arp.h")]
+        enum IfArpHeaderType {
+            NETROM,
+            ETHER,
+            EETHER,
+            AX25,
+            PRONET,
+            CHAOS,
+            IEEE802,
+            ARCNET,
+            APPLETLK,
+            DLCI,
+            ATM,
+            METRICOM,
+            IEEE1394,
+            EUI64,
+            INFINIBAND,
+            SLIP,
+            CSLIP,
+            SLIP6,
+            CSLIP6,
+            RSRVD,
+            ADAPT,
+            ROSE,
+            X25,
+            HWX25,
+            CAN,
+            PPP,
+            CISCO,
+            HDLC,
+            LAPB,
+            DDCMP,
+            RAWHDLC,
+            TUNNEL,
+            TUNNEL6,
+            FRAD,
+            SKIP,
+            LOOPBACK,
+            LOCALTLK,
+            FDDI,
+            BIF,
+            SIT,
+            IPDDP,
+            IPGRE,
+            PIMREG,
+            HIPPI,
+            ASH,
+            ECONET,
+            IRDA,
+            FCPP,
+            FCAL,
+            FCPL,
+            FCFABRIC,
+            IEEE802_TR,
+            IEEE80211,
+            IEEE80211_PRISM,
+            IEEE80211_RADIOTAP,
+            IEEE802154,
+            PHONET,
+            PHONET_PIPE,
+            CAIF,
+            VOID,
+            NONE
+        }
+
+        [CCode (cprefix = "ARPOP_", cheader_filename = "linux/if_arp.h")]
+        enum IfArpOpcode {
+            REQUEST,
+            REPLY,
+            RREQUEST,
+            RREPLY,
+            InREQUEST,
+            InREPLY,
+            ARPOP_NAK
         }
 
         // route consts, structs, and methods
@@ -2439,6 +2518,64 @@ namespace Linux {
         [CCode (cheader_filename = "linux/netlink.h")]
         public const int NETLINK_NO_ENOBUFS;
 
+        [CCode (cheader_filename = "linux/netlink.h")]
+        public const int NLM_F_REQUEST;
+        [CCode (cheader_filename = "linux/netlink.h")]
+        public const int NLM_F_MULTI;
+        [CCode (cheader_filename = "linux/netlink.h")]
+        public const int NLM_F_ACK;
+        [CCode (cheader_filename = "linux/netlink.h")]
+        public const int NLM_F_ECHO;
+
+        [CCode (cheader_filename = "linux/netlink.h")]
+        public const int NLM_F_ROOT;
+        [CCode (cheader_filename = "linux/netlink.h")]
+        public const int NLM_F_MATCH;
+        [CCode (cheader_filename = "linux/netlink.h")]
+        public const int NLM_F_ATOMIC;
+        [CCode (cheader_filename = "linux/netlink.h")]
+        public const int NLM_F_DUMP;
+
+        [CCode (cheader_filename = "linux/netlink.h")]
+        public const int NLM_F_REPLACE;
+        [CCode (cheader_filename = "linux/netlink.h")]
+        public const int NLM_F_EXCL;
+        [CCode (cheader_filename = "linux/netlink.h")]
+        public const int NLM_F_CREATE;
+        [CCode (cheader_filename = "linux/netlink.h")]
+        public const int NLM_F_APPEND;
+
+        [CCode (cheader_filename = "linux/netlink.h")]
+        public const int NLMSG_ALIGNTO;
+        [CCode (cheader_filename = "linux/netlink.h")]
+        public const int NLMSG_NOOP;
+        [CCode (cheader_filename = "linux/netlink.h")]
+        public const int NLMSG_ERROR;
+        [CCode (cheader_filename = "linux/netlink.h")]
+        public const int NLMSG_DONE;
+        [CCode (cheader_filename = "linux/netlink.h")]
+        public const int NLMSG_OVERRUN;
+        [CCode (cheader_filename = "linux/netlink.h")]
+        public const int NLMSG_MIN_TYPE;
+
+        /* netlink action macros, we bind them as functions for convenience */
+        [CCode (cheader_filename = "linux/netlink.h")]
+        public void NLMSG_ALIGN (int len);
+        [CCode (cheader_filename = "linux/netlink.h")]
+        public int NLMSG_HDRLEN ();
+        [CCode (cheader_filename = "linux/netlink.h")]
+        public int NLMSG_LENGTH (int len);
+        [CCode (cheader_filename = "linux/netlink.h")]
+        public void NLMSG_SPACE (int len);
+        [CCode (cheader_filename = "linux/netlink.h")]
+        public void* NLMSG_DATA (NlMsgHdr nlh);
+        [CCode (cheader_filename = "linux/netlink.h")]
+        public void* NLMSG_NEXT (NlMsgHdr nlh, int len);
+        [CCode (cheader_filename = "linux/netlink.h")]
+        public bool NLMSG_OK (NlMsgHdr nlh, int len);
+        [CCode (cheader_filename = "linux/netlink.h")]
+        public void* NLMSG_PAYLOAD (NlMsgHdr nlh, int len);
+
         // netlink socket, can be used instead of sockaddr
         [CCode (cname = "struct sockaddr_nl", cheader_filename = "linux/netlink.h", destroy_function = "")]
         public struct SockAddrNl {
@@ -2545,10 +2682,46 @@ namespace Linux {
         [CCode (cheader_filename = "linux/rtnetlink.h")]
         public const int RTNLGRP_PHONET_ROUTE;
 
+        /* rtnetlink action macros, we bind them as functions for convenience */
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public void RTA_ALIGN (int len);
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public int RTA_HDRLEN ();
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public int RTA_LENGTH (int len);
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public void RTA_SPACE (int len);
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public void* RTA_DATA (RtAttr rta);
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public void* RTA_NEXT (RtAttr rta, int len);
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public bool RTA_OK (RtAttr rta, int len);
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public void* RTA_PAYLOAD (RtAttr rta, int len);
+
         /*
         [CCode (cheader_filename = "sys/socket.h", sentinel = "")]
         public int bind (int sockfd, SockAddrNl addr, ulong length);
         */
+
+        // rtnetlink info message
+        [CCode (cname = "struct ifinfomsg", cheader_filename = "linux/rtnetlink.h", destroy_function = "")]
+        public struct IfInfoMsg {
+            public uchar ifi_family;
+            public uchar __ifi_pad;
+            public ushort ifi_type;
+            public int ifi_index;
+            public uint32 ifi_flags;
+            public uint32 ifi_change;
+        }
+
+        // rtnetlink attribute
+        [CCode (cname = "struct rtattr", cheader_filename = "linux/rtnetlink.h", destroy_function = "")]
+        public struct RtAttr {
+            public ushort rta_len;
+            public ushort rta_type;
+        }
 
         // rtnetlink routing / discovery messages
         [CCode (cprefix = "RTM_", cheader_filename = "linux/rtnetlink.h")]
@@ -2619,6 +2792,8 @@ namespace Linux {
      */
     [CCode (cprefix = "", lower_case_cprefix = "")]
     namespace Socket {
+        [CCode (cheader_filename = "sys/socket.h")]
+        public const int AF_UNSPEC;
         [CCode (cheader_filename = "sys/socket.h")]
         public const int AF_NETLINK;
         [CCode (cheader_filename = "sys/socket.h")]
