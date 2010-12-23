@@ -38,46 +38,6 @@ public class Vala.Field : Variable, Lockable {
 	 */
 	public bool is_volatile { get; set; }
 
-	/**
-	 * Specifies whether an array length field should implicitly be created
-	 * if the field type is an array.
-	 */
-	public bool no_array_length { get; set; }
-
-	/**
-	 * Specifies whether a delegate target field should implicitly be created
-	 * if the field type is a delegate.
-	 */
-	public bool no_delegate_target { get; set; }
-
-	/**
-	 * Specifies whether the array is null terminated.
-	 */
-	public bool array_null_terminated { get; set; }
-
-	/**
-	 * Specifies whether the array length field uses a custom name in C.
-	 */
-	public bool has_array_length_cname {
-		get { return (array_length_cname != null); }
-	}
-
-	/**
-	 * Specifies whether the array uses a custom C expression as length.
-	 */
-	public bool has_array_length_cexpr {
-		get { return (array_length_cexpr != null); }
-	}
-
-	/**
-	 * Specifies a custom type for the array length.
-	 */
-	public string? array_length_type { get; set; default = null; }
-
-	private string? array_length_cname;
-
-	private string? array_length_cexpr;
-
 	private string cname;
 	
 	private bool lock_used = false;
@@ -141,45 +101,6 @@ public class Vala.Field : Variable, Lockable {
 		}
 	}
 
-	/**
-	 * Returns the name of the array length field as it is used in C code
-	 *
-	 * @return the name of the array length field to be used in C code
-	 */
-	public string? get_array_length_cname () {
-		return this.array_length_cname;
-	}
-
-	/**
-	 * Sets the name of the array length field as it is used in C code
-	 *
-	 * @param array_length_cname the name of the array length field to be
-	 * used in C code
-	 */
-	public void set_array_length_cname (string? array_length_cname) {
-		this.array_length_cname = array_length_cname;
-	}
-
-	/**
-	 * Returns the array length expression as it is used in C code
-	 *
-	 * @return the array length expression to be used in C code
-	 */
-	public string? get_array_length_cexpr () {
-		return this.array_length_cexpr;
-	}
-
-
-	/**
-	 * Sets the array length expression as it is used in C code
-	 *
-	 * @param array_length_cexpr the array length expression to be used in C
-	 * code
-	 */
-	public void set_array_length_cexpr (string? array_length_cexpr) {
-		this.array_length_cexpr = array_length_cexpr;
-	}
-
 	private void process_ccode_attribute (Attribute a) {
 		if (a.has_argument ("cname")) {
 			set_cname (a.get_string ("cname"));
@@ -213,7 +134,9 @@ public class Vala.Field : Variable, Lockable {
 	/**
 	 * Process all associated attributes.
 	 */
-	public void process_attributes () {
+	public override void process_attributes () {
+		base.process_attributes ();
+
 		foreach (Attribute a in attributes) {
 			if (a.name == "CCode") {
 				process_ccode_attribute (a);
