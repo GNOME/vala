@@ -1277,6 +1277,12 @@ namespace Posix {
     [CCode (cheader_filename = "sys/socket.h")]
 	public int listen (int sfd, int backlog);
     [CCode (cheader_filename = "sys/socket.h")]
+    public ssize_t send (int sockfd, void* buf, size_t len, int flags);
+    [CCode (cheader_filename = "sys/socket.h", sentinel = "")]
+    public ssize_t sendto (int sockfd, void* buf, size_t len, int flags, ...);
+    [CCode (cheader_filename = "sys/socket.h", sentinel = "")]
+    public ssize_t sendmsg (int sockfd, ...);
+    [CCode (cheader_filename = "sys/socket.h")]
     public int setsockopt(int sockfd, int level, int optname, void* optval, socklen_t optlen);
     [CCode (cheader_filename = "sys/socket.h")]
 	public int socket (int domain, int type, int protocol);
