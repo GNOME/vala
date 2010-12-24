@@ -912,21 +912,21 @@ public class Vala.GirParser : CodeVisitor {
 				}
 			}
 		} else if (info.symbol is Method && !(info.symbol is CreationMethod)) {
-			var method = (Method) info.symbol;
+			var m = (Method) info.symbol;
 			foreach (var cinfo in colliding) {
 				var sym = cinfo.symbol;
-				if (sym != method && method.is_virtual && sym is Method) {
+				if (sym != m && m.is_virtual && sym is Method) {
 					bool different_invoker = false;
-					foreach (var attr in method.attributes) {
+					foreach (var attr in m.attributes) {
 						if (attr.name == "NoWrapper") {
 							/* no invoker but this method has the same name,
 							   most probably the invoker has a different name
 							   and g-ir-scanner missed it */
-							var invoker = find_invoker (method);
+							var invoker = find_invoker (m);
 							if (invoker != null) {
-								method.vfunc_name = method.name;
-								method.name = invoker.symbol.name;
-								method.attributes.remove (attr);
+								m.vfunc_name = m.name;
+								m.name = invoker.symbol.name;
+								m.attributes.remove (attr);
 								merged.add (invoker);
 								different_invoker = true;
 								break;
@@ -936,6 +936,55 @@ public class Vala.GirParser : CodeVisitor {
 					if (!different_invoker) {
 						merged.add (cinfo);
 					}
+				}
+			}
+			if (m.coroutine) {
+				string finish_method_base;
+				if (m.name.has_suffix ("_async")) {
+					finish_method_base = m.name.substring (0, m.name.length - "_async".length);
+				} else {
+					finish_method_base = m.name;
+				}
+				SymbolInfo finish_method_info = null;
+				if (current_symbols_info.contains (finish_method_base + "_finish")) {
+					finish_method_info = current_symbols_info.get (finish_method_base + "_finish")[0];
+				}
+
+				// check if the method is using non-standard finish method name
+				if (finish_method_info == null) {
+					var method_cname = m.get_finish_cname ();
+					foreach (var infos in current_symbols_info.get_values ()) {
+						foreach (var minfo in infos) {
+							if (minfo.symbol is Method && ((Method) minfo.symbol).get_cname () == method_cname) {
+								finish_method_info = minfo;
+								break;
+							}
+						}
+						if (finish_method_info != null) {
+							break;
+						}
+					}
+				}
+
+				if (finish_method_info != null && finish_method_info.symbol is Method) {
+					var finish_method = (Method) finish_method_info.symbol;
+					m.return_type = finish_method.return_type.copy ();
+					m.no_array_length = finish_method.no_array_length;
+					m.array_null_terminated = finish_method.array_null_terminated;
+					foreach (var param in finish_method.get_parameters ()) {
+						if (param.direction == ParameterDirection.OUT) {
+							var async_param = param.copy ();
+							if (m.scope.lookup (param.name) != null) {
+								// parameter name conflict
+								async_param.name += "_out";
+							}
+							m.add_parameter (async_param);
+						}
+					}
+					foreach (DataType error_type in finish_method.get_error_types ()) {
+						m.add_error_type (error_type.copy ());
+					}
+					merged.add (finish_method_info);
 				}
 			}
 		} else if (info.symbol is Field) {
@@ -2071,8 +2120,6 @@ public class Vala.GirParser : CodeVisitor {
 		merge_add_process (cl);
 		current_symbols_info = old_symbols_info;
 
-		handle_async_methods (cl);
-
 		end_element ("class");
 		return cl;
 	}
@@ -2129,62 +2176,8 @@ public class Vala.GirParser : CodeVisitor {
 		current_symbol = old_symbol;
 		current_symbols_info = old_symbols_info;
 
-		handle_async_methods (iface);
-
 		end_element ("interface");
 		return iface;
-	}
-
-	void handle_async_methods (ObjectTypeSymbol type_symbol) {
-		var methods = type_symbol.get_methods ();
-		for (int method_n = 0 ; method_n < methods.size ; method_n++) {
-			var m = methods.get (method_n);
-
-			if (m.coroutine) {
-				string finish_method_base;
-				if (m.name.has_suffix ("_async")) {
-					finish_method_base = m.name.substring (0, m.name.length - "_async".length);
-				} else {
-					finish_method_base = m.name;
-				}
-				var finish_method = type_symbol.scope.lookup (finish_method_base + "_finish") as Method;
-
-				// check if the method is using non-standard finish method name
-				if (finish_method == null) {
-					var method_cname = m.get_finish_cname ();
-					foreach (Method method in type_symbol.get_methods ()) {
-						if (method.get_cname () == method_cname) {
-							finish_method = method;
-							break;
-						}
-					}
-				}
-
-				if (finish_method != null) {
-					m.return_type = finish_method.return_type.copy ();
-					m.no_array_length = finish_method.no_array_length;
-					m.array_null_terminated = finish_method.array_null_terminated;
-					foreach (var param in finish_method.get_parameters ()) {
-						if (param.direction == ParameterDirection.OUT) {
-							var async_param = param.copy ();
-							if (m.scope.lookup (param.name) != null) {
-								// parameter name conflict
-								async_param.name += "_out";
-							}
-							m.add_parameter (async_param);
-						}
-					}
-					foreach (DataType error_type in finish_method.get_error_types ()) {
-						m.add_error_type (error_type.copy ());
-					}
-					if (methods.index_of (finish_method) < method_n) {
-						method_n--;
-					}
-					type_symbol.scope.remove (finish_method.name);
-					methods.remove (finish_method);
-				}
-			}
-		}
 	}
 
 	Field parse_field () {
