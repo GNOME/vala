@@ -939,6 +939,7 @@ public class Vala.GirParser : CodeVisitor {
 				}
 			}
 			if (m.coroutine) {
+				// handle async methods
 				string finish_method_base;
 				if (m.name.has_suffix ("_async")) {
 					finish_method_base = m.name.substring (0, m.name.length - "_async".length);
@@ -968,21 +969,43 @@ public class Vala.GirParser : CodeVisitor {
 
 				if (finish_method_info != null && finish_method_info.symbol is Method) {
 					var finish_method = (Method) finish_method_info.symbol;
-					m.return_type = finish_method.return_type.copy ();
-					m.no_array_length = finish_method.no_array_length;
-					m.array_null_terminated = finish_method.array_null_terminated;
+					Method method;
+					if (finish_method is CreationMethod) {
+						method = new CreationMethod (((CreationMethod) finish_method).class_name, null, m.source_reference);
+						method.access = m.access;
+						method.binding = m.binding;
+						method.external = true;
+						method.coroutine = true;
+						method.has_construct_function = finish_method.has_construct_function;
+						method.attributes = m.attributes.copy ();
+						method.set_cname (m.get_cname ());
+						if (finish_method_base == "new") {
+							method.name = null;
+						} else if (finish_method_base.has_prefix ("new_")) {
+							method.name = m.name.substring ("new_".length);
+						}
+						foreach (var param in m.get_parameters ()) {
+							method.add_parameter (param);
+						}
+						info.symbol = method;
+					} else {
+						method = m;
+					}
+					method.return_type = finish_method.return_type.copy ();
+					method.no_array_length = finish_method.no_array_length;
+					method.array_null_terminated = finish_method.array_null_terminated;
 					foreach (var param in finish_method.get_parameters ()) {
 						if (param.direction == ParameterDirection.OUT) {
 							var async_param = param.copy ();
-							if (m.scope.lookup (param.name) != null) {
+							if (method.scope.lookup (param.name) != null) {
 								// parameter name conflict
 								async_param.name += "_out";
 							}
-							m.add_parameter (async_param);
+							method.add_parameter (async_param);
 						}
 					}
 					foreach (DataType error_type in finish_method.get_error_types ()) {
-						m.add_error_type (error_type.copy ());
+						method.add_error_type (error_type.copy ());
 					}
 					merged.add (finish_method_info);
 				}
