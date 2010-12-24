@@ -857,7 +857,7 @@ public class Vala.GirParser : CodeVisitor {
 		return null;
 	}
 
-	void merge (SymbolInfo info, ArrayList<SymbolInfo> colliding, ArrayList<SymbolInfo> merged) {
+	void merge (SymbolInfo info, ArrayList<SymbolInfo> colliding, HashSet<SymbolInfo> merged) {
 		if (info.symbol is Struct) {
 			var gtype_struct_for = info.girdata["glib:is-gtype-struct-for"];
 			if (gtype_struct_for != null && current_symbols_info.contains (gtype_struct_for)) {
@@ -1038,9 +1038,8 @@ public class Vala.GirParser : CodeVisitor {
 	}
 
 	void merge_add_process (Symbol container) {
-		var merged = new ArrayList<SymbolInfo> ();
-		foreach (var name in current_symbols_info.get_keys ()) {
-			var colliding = current_symbols_info[name];
+		var merged = new HashSet<SymbolInfo> ();
+		foreach (var colliding in current_symbols_info.get_values ()) {
 			foreach (var info in colliding) {
 				merge (info, colliding, merged);
 			}
