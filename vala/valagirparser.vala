@@ -200,9 +200,17 @@ public class Vala.GirParser : CodeVisitor {
 		}
 
 		public int get_integer (ArgumentType arg) {
-			var lit = get_expression (arg) as IntegerLiteral;
-			if (lit != null) {
-				return int.parse (lit.value);
+			var unary = get_expression (arg) as UnaryExpression;
+			if (unary != null && unary.operator == UnaryOperator.MINUS) {
+				var lit = unary.inner as IntegerLiteral;
+				if (lit != null) {
+					return -int.parse (lit.value);
+				}
+			} else {
+				var lit = get_expression (arg) as IntegerLiteral;
+				if (lit != null) {
+					return int.parse (lit.value);
+				}
 			}
 
 			return 0;
@@ -401,6 +409,7 @@ public class Vala.GirParser : CodeVisitor {
 		}
 
 		Expression? parse_expression () {
+			var begin = this.begin;
 			var src = get_current_src ();
 			Expression expr = null;
 			switch (current) {
@@ -413,6 +422,15 @@ public class Vala.GirParser : CodeVisitor {
 			case TokenType.FALSE:
 				expr = new BooleanLiteral (false, src);
 				break;
+			case TokenType.MINUS:
+				next ();
+				var inner = parse_expression ();
+				if (inner == null) {
+					Report.error (src, "expected expression after `-', got `%s'".printf (current.to_string ()));
+				} else {
+					expr = new UnaryExpression (UnaryOperator.MINUS, inner, get_src (begin));
+				}
+				return expr;
 			case TokenType.INTEGER_LITERAL:
 				expr = new IntegerLiteral (get_string (), src);
 				break;
