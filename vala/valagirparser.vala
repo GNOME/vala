@@ -791,17 +791,25 @@ public class Vala.GirParser : CodeVisitor {
 		}
 	}
 
-	void assume_parameter_names (Signal sig, Symbol sym) {
+	void assume_parameter_names (Signal sig, Symbol sym, bool skip_first) {
 		Iterator<Parameter> iter;
 		if (sym is Method) {
 			iter = ((Method) sym).get_parameters ().iterator ();
 		} else {
 			iter = ((Delegate) sym).get_parameters ().iterator ();
 		}
+		bool first = true;
 		foreach (var param in sig.get_parameters ()) {
 			if (!iter.next ()) {
 				// unreachable for valid GIR
 				break;
+			}
+			if (skip_first && first) {
+				if (!iter.next ()) {
+					// unreachable for valid GIR
+					break;
+				}
+				first = false;
 			}
 			param.name = iter.get ().name;
 		}
@@ -905,7 +913,7 @@ public class Vala.GirParser : CodeVisitor {
 					} else {
 						sig.has_emitter = true;
 					}
-					assume_parameter_names (sig, method);
+					assume_parameter_names (sig, method, false);
 					merged.add (cinfo);
 				} else if (sym is Field) {
 					merged.add (cinfo);
@@ -2861,7 +2869,7 @@ public class Vala.GirParser : CodeVisitor {
 				} else if (symbol is Signal) {
 					var sig = (Signal) symbol;
 					sig.is_virtual = true;
-					assume_parameter_names (sig, d);
+					assume_parameter_names (sig, d, true);
 				} else if (symbol is Property) {
 					var prop = (Property) symbol;
 					prop.is_virtual = true;
