@@ -540,7 +540,7 @@ public class Vala.GirParser : CodeVisitor {
 	ArrayList<HashMap<string,string>> girdata_stack;
 	HashMap<string,string> girdata;
 
-	HashMap<string,ArrayList<SymbolInfo>> current_symbols_info;
+	ArrayList<SymbolInfo> current_symbols_info;
 
 	HashMap<UnresolvedSymbol,Symbol> unresolved_symbols_map = new HashMap<UnresolvedSymbol,Symbol> (unresolved_symbol_hash, unresolved_symbol_equal);
 	HashMap<Symbol,Symbol> concrete_symbols_map = new HashMap<Symbol,Symbol> ();
@@ -825,40 +825,63 @@ public class Vala.GirParser : CodeVisitor {
 		info.symbol = symbol;
 		info.metadata = metadata;
 		info.girdata = girdata;
-		var colliding = current_symbols_info[name];
-		if (colliding == null) {
-			colliding = new ArrayList<SymbolInfo> ();
-			current_symbols_info[name] = colliding;
-		}
-		colliding.add (info);
+		current_symbols_info.add (info);
 		return info;
+	}
+
+	ArrayList<SymbolInfo> get_colliding_symbols_info (SymbolInfo info) {
+		var name = info.symbol.name;
+		if (name == null && info.symbol is CreationMethod) {
+			name = ".new";
+		}
+		var result = new ArrayList<SymbolInfo> ();
+		foreach (var cinfo in current_symbols_info) {
+			if (cinfo.symbol.name == name) {
+				result.add (cinfo);
+			}
+		}
+		return result;
+	}
+
+	SymbolInfo? get_current_first_symbol_info (string name) {
+		foreach (var info in current_symbols_info) {
+			if (info.symbol.name == name) {
+				return info;
+			}
+		}
+		return null;
+	}
+
+	Symbol? get_current_first_symbol (string name) {
+		var info = get_current_first_symbol_info (name);
+		if (info != null) {
+			return info.symbol;
+		}
+		return null;
 	}
 
 	SymbolInfo? find_invoker (Method method) {
 		/* most common use case is invoker has at least the given method prefix
 		   and the same parameter names */
 		var prefix = "%s_".printf (method.name);
-		foreach (var name in current_symbols_info.get_keys ()) {
-			if (!name.has_prefix (prefix)) {
+		foreach (var info in current_symbols_info) {
+			if (!info.symbol.name.has_prefix (prefix)) {
 				continue;
 			}
-			var infos = current_symbols_info[name];
-			foreach (var cinfo in infos) {
-				Method? invoker = cinfo.symbol as Method;
-				if (invoker == null || (method.get_parameters ().size != invoker.get_parameters ().size)) {
-					continue;
+			Method? invoker = info.symbol as Method;
+			if (invoker == null || (method.get_parameters ().size != invoker.get_parameters ().size)) {
+				continue;
+			}
+			var iter = invoker.get_parameters ().iterator ();
+			foreach (var param in method.get_parameters ()) {
+				assert (iter.next ());
+				if (param.name != iter.get ().name)	{
+					invoker = null;
+					break;
 				}
-				var iter = invoker.get_parameters ().iterator ();
-				foreach (var param in method.get_parameters ()) {
-					assert (iter.next ());
-					if (param.name != iter.get ().name)	{
-						invoker = null;
-						break;
-					}
-				}
-				if (invoker != null) {
-					return cinfo;
-				}
+			}
+			if (invoker != null) {
+				return info;
 			}
 		}
 
@@ -868,8 +891,8 @@ public class Vala.GirParser : CodeVisitor {
 	void merge (SymbolInfo info, ArrayList<SymbolInfo> colliding, HashSet<SymbolInfo> merged) {
 		if (info.symbol is Struct) {
 			var gtype_struct_for = info.girdata["glib:is-gtype-struct-for"];
-			if (gtype_struct_for != null && current_symbols_info.contains (gtype_struct_for)) {
-				var iface = current_symbols_info.get (gtype_struct_for).get (0).symbol as Interface;
+			if (gtype_struct_for != null) {
+				var iface = get_current_first_symbol (gtype_struct_for) as Interface;
 				if (iface != null) {
 					// set the interface struct name
 					iface.set_type_cname (((Struct) info.symbol).get_cname ());
@@ -890,16 +913,13 @@ public class Vala.GirParser : CodeVisitor {
 			}
 			var getter_name = "get_%s".printf (prop.name);
 			var setter_name = "set_%s".printf (prop.name);
-			if (prop.get_accessor != null && current_symbols_info.contains (getter_name)) {
-				var getter_list = current_symbols_info[getter_name];
-				foreach (var getter_info in getter_list) {
-					if (getter_info.symbol is Method) {
-						prop.no_accessor_method = false;
-						prop.get_accessor.value_type.value_owned = ((Method) getter_info.symbol).return_type.value_owned;
-						break;
-					}
+			if (prop.get_accessor != null) {
+				var getter_method = get_current_first_symbol (getter_name) as Method;
+				if (getter_method != null) {
+					prop.no_accessor_method = false;
+					prop.get_accessor.value_type.value_owned = getter_method.return_type.value_owned;
 				}
-			} else if (prop.set_accessor != null && current_symbols_info.contains (setter_name)) {
+			} else if (prop.set_accessor != null && get_current_first_symbol_info (setter_name) != null) {
 				prop.no_accessor_method = false;
 			}
 		} else if (info.symbol is Signal) {
@@ -954,22 +974,14 @@ public class Vala.GirParser : CodeVisitor {
 				} else {
 					finish_method_base = m.name;
 				}
-				SymbolInfo finish_method_info = null;
-				if (current_symbols_info.contains (finish_method_base + "_finish")) {
-					finish_method_info = current_symbols_info.get (finish_method_base + "_finish")[0];
-				}
+				var finish_method_info = get_current_first_symbol_info (finish_method_base + "_finish");
 
 				// check if the method is using non-standard finish method name
 				if (finish_method_info == null) {
 					var method_cname = m.get_finish_cname ();
-					foreach (var infos in current_symbols_info.get_values ()) {
-						foreach (var minfo in infos) {
-							if (minfo.symbol is Method && ((Method) minfo.symbol).get_cname () == method_cname) {
-								finish_method_info = minfo;
-								break;
-							}
-						}
-						if (finish_method_info != null) {
+					foreach (var minfo in current_symbols_info) {
+						if (minfo.symbol is Method && ((Method) minfo.symbol).get_cname () == method_cname) {
+							finish_method_info = minfo;
 							break;
 						}
 					}
@@ -1029,11 +1041,9 @@ public class Vala.GirParser : CodeVisitor {
 
 			var field = (Field) info.symbol;
 			if (field.variable_type is ArrayType) {
-				SymbolInfo array_length = null;
-				if (current_symbols_info.contains ("n_%s".printf (field.name))) {
-					array_length = current_symbols_info.get ("n_%s".printf (field.name)).get (0);
-				} else if (current_symbols_info.contains ("%s_length".printf (field.name))) {
-					array_length = current_symbols_info.get ("%s_length".printf (field.name)).get (0);
+				var array_length = get_current_first_symbol_info ("n_%s".printf (field.name));
+				if (array_length == null) {
+					array_length = get_current_first_symbol_info ("%s_length".printf (field.name));
 				}
 				if (array_length != null) {
 					// array has length
@@ -1070,22 +1080,18 @@ public class Vala.GirParser : CodeVisitor {
 
 	void merge_add_process (Symbol container) {
 		var merged = new HashSet<SymbolInfo> ();
-		foreach (var colliding in current_symbols_info.get_values ()) {
-			foreach (var info in colliding) {
-				merge (info, colliding, merged);
-			}
+		foreach (var info in current_symbols_info) {
+			merge (info, get_colliding_symbols_info (info), merged);
 		}
 
-		foreach (var infos in current_symbols_info.get_values ()) {
-			foreach (var info in infos) {
-				if (merged.contains (info) || info.metadata.get_bool (ArgumentType.HIDDEN)) {
-					continue;
-				}
-				if (!(current_symbol is Namespace && info.symbol is Method) && !info.metadata.has_argument (ArgumentType.PARENT)) {
-					add_symbol_to_container (container, info.symbol);
-				}
-				postprocess_symbol (info.symbol, info.metadata);
+		foreach (var info in current_symbols_info) {
+			if (merged.contains (info) || info.metadata.get_bool (ArgumentType.HIDDEN)) {
+				continue;
 			}
+			if (!(current_symbol is Namespace && info.symbol is Method) && !info.metadata.has_argument (ArgumentType.PARENT)) {
+				add_symbol_to_container (container, info.symbol);
+			}
+			postprocess_symbol (info.symbol, info.metadata);
 		}
 	}
 
@@ -1506,7 +1512,7 @@ public class Vala.GirParser : CodeVisitor {
 		}
 		var old_symbols_info = current_symbols_info;
 		var old_symbol = current_symbol;
-		current_symbols_info = new HashMap<string,ArrayList<SymbolInfo>> (str_hash, str_equal);
+		current_symbols_info = new ArrayList<SymbolInfo> ();
 		current_symbol = ns;
 		gtype_callbacks = new HashMap<UnresolvedSymbol,ArrayList<Delegate>> (unresolved_symbol_hash, unresolved_symbol_equal);
 		while (current_token == MarkupTokenType.START_ELEMENT) {
@@ -2026,7 +2032,7 @@ public class Vala.GirParser : CodeVisitor {
 		next ();
 		var old_symbols_info = current_symbols_info;
 		var old_symbol = current_symbol;
-		current_symbols_info = new HashMap<string,ArrayList<SymbolInfo>> (str_hash, str_equal);
+		current_symbols_info = new ArrayList<SymbolInfo> ();
 		current_symbol = st;
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (!push_metadata ()) {
@@ -2092,7 +2098,7 @@ public class Vala.GirParser : CodeVisitor {
 		next ();
 		var first_field = true;
 		var old_symbols_info = current_symbols_info;
-		current_symbols_info = new HashMap<string,ArrayList<SymbolInfo>> (str_hash, str_equal);
+		current_symbols_info = new ArrayList<SymbolInfo> ();
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (!push_metadata ()) {
 				skip_element ();
@@ -2168,8 +2174,8 @@ public class Vala.GirParser : CodeVisitor {
 		next ();
 		var old_symbol = current_symbol;
 		var old_symbols_info = current_symbols_info;
-		current_symbols_info = new HashMap<string,ArrayList<SymbolInfo>> (str_hash, str_equal);
 		current_symbol = iface;
+		current_symbols_info = new ArrayList<SymbolInfo> ();
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (!push_metadata ()) {
 				skip_element ();
@@ -2607,7 +2613,7 @@ public class Vala.GirParser : CodeVisitor {
 		next ();
 		var old_symbols_info = current_symbols_info;
 		var old_symbol = current_symbol;
-		current_symbols_info = new HashMap<string,ArrayList<SymbolInfo>> (str_hash, str_equal);
+		current_symbols_info = new ArrayList<SymbolInfo> ();
 		current_symbol = cl;
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (!push_metadata ()) {
