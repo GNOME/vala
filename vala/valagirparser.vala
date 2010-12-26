@@ -1777,15 +1777,9 @@ public class Vala.GirParser : CodeVisitor {
 	Parameter parse_parameter (out int array_length_idx = null, out int closure_idx = null, out int destroy_idx = null, out string? scope = null, string? default_name = null) {
 		Parameter param;
 
-		if (&array_length_idx != null) {
-			array_length_idx = -1;
-		}
-		if (&closure_idx != null) {
-			closure_idx = -1;
-		}
-		if (&destroy_idx != null) {
-			destroy_idx = -1;
-		}
+		array_length_idx = -1;
+		closure_idx = -1;
+		destroy_idx = -1;
 
 		start_element ("parameter");
 		string name = reader.get_attribute ("name");
@@ -1807,9 +1801,7 @@ public class Vala.GirParser : CodeVisitor {
 		string transfer = reader.get_attribute ("transfer-ownership");
 		string allow_none = reader.get_attribute ("allow-none");
 
-		if (&scope != null) {
-			scope = element_get_string ("scope", ArgumentType.SCOPE);
-		}
+		scope = element_get_string ("scope", ArgumentType.SCOPE);
 
 		string closure = reader.get_attribute ("closure");
 		string destroy = reader.get_attribute ("destroy");
@@ -1863,9 +1855,7 @@ public class Vala.GirParser : CodeVisitor {
 		bool is_array = false;
 		string type_name = reader.get_attribute ("name");
 
-		if (&array_length_index != null) {
-			array_length_index = -1;
-		}
+		array_length_index = -1;
 
 		if (reader.name == "array") {
 			is_array = true;
@@ -1888,9 +1878,7 @@ public class Vala.GirParser : CodeVisitor {
 			start_element ("type");
 		}
 
-		if (&ctype != null) {
-			ctype = reader.get_attribute("c:type");
-		}
+		ctype = reader.get_attribute("c:type");
 
 		next ();
 
@@ -1913,12 +1901,8 @@ public class Vala.GirParser : CodeVisitor {
 	}
 
 	DataType parse_type_from_gir_name (string type_name, out bool no_array_length = null, out bool array_null_terminated = null, string? ctype = null) {
-		if (&no_array_length != null) {
-			no_array_length = false;
-		}
-		if (&array_null_terminated != null) {
-			array_null_terminated = false;
-		}
+		no_array_length = false;
+		array_null_terminated = false;
 
 		DataType type;
 		if (type_name == "none") {
@@ -1927,12 +1911,8 @@ public class Vala.GirParser : CodeVisitor {
 			type = new PointerType (new VoidType (get_current_src ()), get_current_src ());
 		} else if (type_name == "GObject.Strv") {
 			type = new ArrayType (new UnresolvedType.from_symbol (new UnresolvedSymbol (null, "string")), 1, get_current_src ());
-			if (&no_array_length != null) {
-				no_array_length = true;
-			}
-			if (&array_null_terminated != null) {
-				array_null_terminated = true;
-			}
+			no_array_length = true;
+			array_null_terminated = true;
 		} else {
 			bool known_type = true;
 			if (type_name == "utf8") {
