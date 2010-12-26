@@ -159,7 +159,7 @@ namespace DBus {
 		public bool   get_path_decomposed (out char[] path );
 	}
 
-	[CCode (cprefix = "DBUS_MESSAGE_TYPE_")]
+	[CCode (cname = "int", cprefix = "DBUS_MESSAGE_TYPE_")]
 	public enum RawMessageType {
 		INVALID,
 		METHOD_CALL,
@@ -168,7 +168,7 @@ namespace DBus {
 		SIGNAL
 	}
 
-	[CCode (cprefix = "DBUS_TYPE_")]
+	[CCode (cname = "int", cprefix = "DBUS_TYPE_")]
 	public enum RawType {
 		INVALID,
 		BYTE,
