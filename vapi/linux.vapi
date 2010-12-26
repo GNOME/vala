@@ -967,8 +967,31 @@ namespace Linux {
             public IfReq ifc_req;
         }
 
+        [CCode (cname = "struct ifaddrmsg", cheader_filename = "linux/if_addr.h", destroy_function = "")]
+        public struct IfAddrMsg {
+            public uint8 ifa_family;
+            public uint8 ifa_prefixlen;
+            public uint8 ifa_flags;
+            public uint8 ifa_scope;
+            public uint32 ifa_index;
+        }
+
+        [CCode (cprefix = "IFA_", cheader_filename = "linux/if_addr.h")]
+        enum IfAddrType {
+            UNSPEC,
+            ADDRESS,
+            LOCAL,
+            LABEL,
+            BROADCAST,
+            ANYCAST,
+            CACHEINFO,
+            MULTICAST
+        }
+
         [CCode (cheader_filename = "linux/if_addr.h")]
-        public void* IFA_PAYLOAD (int n);
+        public int IFA_PAYLOAD (Linux.Netlink.NlMsgHdr nlh);
+        [CCode (cheader_filename = "linux/if_addr.h")]
+        public Linux.Netlink.RtAttr* IFA_RTA (Linux.Network.IfAddrMsg* msg);
 
         [CCode (cprefix = "ARPHRD_", cheader_filename = "linux/if_arp.h")]
         enum IfArpHeaderType {
@@ -2570,11 +2593,11 @@ namespace Linux {
         [CCode (cheader_filename = "linux/netlink.h")]
         public void* NLMSG_DATA (NlMsgHdr nlh);
         [CCode (cheader_filename = "linux/netlink.h")]
-        public void* NLMSG_NEXT (NlMsgHdr nlh, int len);
+        public unowned NlMsgHdr NLMSG_NEXT (NlMsgHdr nlh, int len);
         [CCode (cheader_filename = "linux/netlink.h")]
         public bool NLMSG_OK (NlMsgHdr nlh, int len);
         [CCode (cheader_filename = "linux/netlink.h")]
-        public void* NLMSG_PAYLOAD (NlMsgHdr nlh, int len);
+        public int NLMSG_PAYLOAD (NlMsgHdr nlh, int len);
 
         // netlink socket, can be used instead of sockaddr
         [CCode (cname = "struct sockaddr_nl", cheader_filename = "linux/netlink.h", destroy_function = "")]
@@ -2692,13 +2715,13 @@ namespace Linux {
         [CCode (cheader_filename = "linux/rtnetlink.h")]
         public void RTA_SPACE (int len);
         [CCode (cheader_filename = "linux/rtnetlink.h")]
-        public void* RTA_DATA (RtAttr rta);
+        public void* RTA_DATA (RtAttr* rta);
         [CCode (cheader_filename = "linux/rtnetlink.h")]
-        public void* RTA_NEXT (RtAttr rta, int len);
+        public RtAttr* RTA_NEXT (RtAttr* rta, int len);
         [CCode (cheader_filename = "linux/rtnetlink.h")]
-        public bool RTA_OK (RtAttr rta, int len);
+        public bool RTA_OK (RtAttr* rta, int len);
         [CCode (cheader_filename = "linux/rtnetlink.h")]
-        public void* RTA_PAYLOAD (RtAttr rta, int len);
+        public void* RTA_PAYLOAD (RtAttr* rta, int len);
 
         /*
         [CCode (cheader_filename = "sys/socket.h", sentinel = "")]
@@ -2793,9 +2816,11 @@ namespace Linux {
     [CCode (cprefix = "", lower_case_cprefix = "")]
     namespace Socket {
         [CCode (cheader_filename = "sys/socket.h")]
-        public const int AF_UNSPEC;
-        [CCode (cheader_filename = "sys/socket.h")]
         public const int AF_NETLINK;
+        [CCode (cheader_filename = "sys/socket.h")]
+        public const int AF_PHONET;
+        [CCode (cheader_filename = "sys/socket.h")]
+        public const int AF_UNSPEC;
         [CCode (cheader_filename = "sys/socket.h")]
         public const int SOCK_NONBLOCK;
         [CCode (cheader_filename = "sys/socket.h")]
