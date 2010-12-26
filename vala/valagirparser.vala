@@ -1763,7 +1763,7 @@ public class Vala.GirParser : CodeVisitor {
 		string allow_none = reader.get_attribute ("allow-none");
 		next ();
 		var transfer_elements = transfer == "full";
-		var type = &ctype != null ? parse_type(out ctype, null, transfer_elements) : parse_type (null, null, transfer_elements);
+		var type = parse_type (out ctype, null, transfer_elements);
 		if (transfer == "full" || transfer == "container") {
 			type.value_owned = true;
 		}
@@ -2098,8 +2098,10 @@ public class Vala.GirParser : CodeVisitor {
 
 		next ();
 		var first_field = true;
+		var old_symbol = current_symbol;
 		var old_symbols_info = current_symbols_info;
 		current_symbols_info = new ArrayList<SymbolInfo> ();
+		current_symbol = cl;
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (!push_metadata ()) {
 				skip_element ();
@@ -2128,7 +2130,7 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (reader.name == "property") {
 				add_symbol_info (parse_property ());
 			} else if (reader.name == "constructor") {
-				add_symbol_info (parse_constructor (cname));
+				add_symbol_info (parse_constructor ());
 			} else if (reader.name == "function") {
 				add_symbol_info (parse_method ("function"));
 			} else if (reader.name == "method") {
@@ -2156,6 +2158,7 @@ public class Vala.GirParser : CodeVisitor {
 
 		merge_add_process (cl);
 		current_symbols_info = old_symbols_info;
+		current_symbol = old_symbol;
 
 		end_element ("class");
 		return cl;
@@ -2277,52 +2280,8 @@ public class Vala.GirParser : CodeVisitor {
 		return this.parse_function ("callback") as Delegate;
 	}
 
-	Method parse_constructor (string? parent_ctype = null) {
-		start_element ("constructor");
-
-		string throws_string = reader.get_attribute ("throws");
-		string cname = reader.get_attribute ("c:identifier");
-		var m = new CreationMethod (null, element_get_name (), get_current_src ());
-		m.access = SymbolAccessibility.PUBLIC;
-		m.has_construct_function = false;
-
-		if (m.name == "new") {
-			m.name = null;
-		} else if (m.name.has_prefix ("new_")) {
-			m.name = m.name.substring ("new_".length);
-		}
-		if (cname != null) {
-			m.set_cname (cname);
-		}
-
-		next ();
-		string? ctype;
-		parse_return_value (out ctype);
-		if (ctype != null && (parent_ctype == null || ctype != parent_ctype + "*")) {
-			m.custom_return_type_cname = ctype;
-		}
-
-		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "parameters") {
-			start_element ("parameters");
-			next ();
-			while (current_token == MarkupTokenType.START_ELEMENT) {
-				if (!push_metadata ()) {
-					skip_element ();
-					continue;
-				}
-
-				m.add_parameter (parse_parameter ());
-
-				pop_metadata ();
-			}
-			end_element ("parameters");
-		}
-
-		if (throws_string == "1") {
-			m.add_error_type (new ErrorType (null, null));
-		}
-		end_element ("constructor");
-		return m;
+	CreationMethod parse_constructor () {
+		return parse_function ("constructor") as CreationMethod;
 	}
 
 	class ParameterInfo {
@@ -2349,10 +2308,12 @@ public class Vala.GirParser : CodeVisitor {
 		string cname = reader.get_attribute ("c:identifier");
 		string throws_string = reader.get_attribute ("throws");
 		string invoker = reader.get_attribute ("invoker");
+
 		next ();
 		DataType return_type;
+		string return_ctype = null;
 		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "return-value") {
-			return_type = parse_return_value ();
+			return_type = parse_return_value (out return_ctype);
 		} else {
 			return_type = new VoidType ();
 		}
@@ -2362,6 +2323,23 @@ public class Vala.GirParser : CodeVisitor {
 
 		if (element_name == "callback") {
 			s = new Delegate (name, return_type, get_current_src ());
+		} else if (element_name == "constructor") {
+			if (name == "new") {
+				name = null;
+			} else if (name.has_prefix ("new_")) {
+				name = name.substring ("new_".length);
+			}
+			var m = new CreationMethod (null, name, get_current_src ());
+			m.has_construct_function = false;
+
+			string parent_ctype = null;
+			if (current_symbol is Class) {
+				parent_ctype = ((Class) current_symbol).get_cname ();
+			}
+			if (return_ctype != null && (parent_ctype == null || return_ctype != parent_ctype + "*")) {
+				m.custom_return_type_cname = return_ctype;
+			}
+			s = m;
 		} else {
 			s = new Method (name, return_type, get_current_src ());
 		}
@@ -2392,7 +2370,7 @@ public class Vala.GirParser : CodeVisitor {
 			((Method) s).binding = MemberBinding.STATIC;
 		}
 
-		if (s is Method) {
+		if (s is Method && !(s is CreationMethod)) {
 			var method = (Method) s;
 			if (metadata.has_argument (ArgumentType.VIRTUAL)) {
 				method.is_virtual = metadata.get_bool (ArgumentType.VIRTUAL);
