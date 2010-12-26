@@ -69,7 +69,8 @@ public class Vala.GirParser : CodeVisitor {
 		REF,
 		VFUNC_NAME,
 		VIRTUAL,
-		ABSTRACT;
+		ABSTRACT,
+		SCOPE;
 
 		public static ArgumentType? from_string (string name) {
 			var enum_class = (EnumClass) typeof(ArgumentType).class_ref ();
@@ -1262,11 +1263,11 @@ public class Vala.GirParser : CodeVisitor {
 	}
 
 	string? element_get_string (string attribute_name, ArgumentType arg_type) {
-		var str = metadata.get_string (arg_type);
-		if (str == null) {
-			str = reader.get_attribute (attribute_name);
+		if (metadata.has_argument (arg_type)) {
+			return metadata.get_string (arg_type);
+		} else {
+			return reader.get_attribute (attribute_name);
 		}
-		return str;
 	}
 
 	/*
@@ -1807,7 +1808,7 @@ public class Vala.GirParser : CodeVisitor {
 		string allow_none = reader.get_attribute ("allow-none");
 
 		if (&scope != null) {
-			scope = reader.get_attribute ("scope");
+			scope = element_get_string ("scope", ArgumentType.SCOPE);
 		}
 
 		string closure = reader.get_attribute ("closure");
