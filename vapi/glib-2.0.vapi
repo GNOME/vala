@@ -711,7 +711,7 @@ public struct double {
 }
 
 [GIR (name = "glong")]
-[CCode (cheader_filename = "time.h", has_type_id = false)]
+[CCode (cheader_filename = "time.h", has_type_id = false, default_value = "0")]
 [IntegerType (rank = 8)]
 public struct time_t {
 	[CCode (cname = "time")]
