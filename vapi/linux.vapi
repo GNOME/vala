@@ -731,32 +731,41 @@ namespace Linux {
     [CCode (cheader_filename = "sys/ioctl.h", sentinel = "")]
     public int ioctl (int fd, int request, ...);
 
-    [CCode (cname = "long", cprefix = "", cheader_filename = "sys/mount.h,linux/fs.h")]
+    [CCode (cname = "unsigned long int", cprefix = "MS_", cheader_filename = "sys/mount.h,linux/fs.h")]
     public enum MountFlags {
-        MS_BIND,
-        MS_DIRSYNC,
-        MS_MANDLOCK,
-        MS_MOVE,
-        MS_NOATIME,
-        MS_NODEV,
-        MS_NODIRATIME,
-        MS_NOEXEC,
-        MS_NOSUID,
-        MS_RDONLY,
-        MS_RELATIME,
-        MS_REMOUNT,
-        MS_SILENT,
-        MS_SYNCHRONOUS,
-        S_WRITE,
-        S_APPEND,
-        S_IMMUTABLE,
+        RDONLY,
+        NOSUID,
+        NODEV,
+        NOEXEC,
+        SYNCHRONOUS,
+        REMOUNT,
+        MANDLOCK,
+        DIRSYNC,
+        NOATIME,
+        NODIRATIME,
+        BIND,
+        MOVE,
+        REC,
+        SILENT,
+        POSIXACL,
+        UNBINDABLE,
+        PRIVATE,
+        SLAVE,
+        SHARED,
+        RELATIME,
+        KERNMOUNT,
+        I_VERSION,
+        STRICTATIME,
+        BORN,
+        ACTIVE,
+        NOUSER
     }
 
-    [CCode (cname = "int", cprefix = "", cheader_filename = "sys/mount.h")]
+    [CCode (cname = "int", cprefix = "MNT_", cheader_filename = "sys/mount.h")]
     public enum UnmountFlags {
-        MNT_FORCE,                /* Force unmounting.  */
-        MNT_DETACH,               /* Just detach from the tree.  */
-        MNT_EXPIRE                /* Mark for expiry.  */
+        FORCE,                /* Force unmounting.  */
+        DETACH,               /* Just detach from the tree.  */
+        EXPIRE                /* Mark for expiry.  */
     }
 
     [CCode (cheader_filename = "sys/mount.h")]
