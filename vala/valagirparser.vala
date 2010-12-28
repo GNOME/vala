@@ -1707,6 +1707,8 @@ public class Vala.GirParser : CodeVisitor {
 		start_element ("bitfield");
 		var en = new Enum (reader.get_attribute ("name"), get_current_src ());
 		en.access = SymbolAccessibility.PUBLIC;
+		en.is_flags = true;
+
 		next ();
 		var old_symbol = current_symbol;
 		current_symbol = en;
