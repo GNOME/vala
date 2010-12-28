@@ -1618,23 +1618,28 @@ public class Vala.GirParser : CodeVisitor {
 		}
 	}
 
-	Enum parse_enumeration () {
-		start_element ("enumeration");
+	Symbol parse_enumeration (string element_name = "enumeration", bool error_domain = false) {
+		start_element (element_name);
 
-		var en = new Enum (element_get_name (), get_current_src ());
-		en.access = SymbolAccessibility.PUBLIC;
-
-		string enum_cname = reader.get_attribute ("c:type");
-		if (enum_cname != null) {
-			en.set_cname (enum_cname);
+		Symbol sym;
+		if (error_domain) {
+			sym = new ErrorDomain (element_get_name (true), get_current_src ());
+		} else {
+			var en = new Enum (element_get_name (), get_current_src ());
+			if (element_name == "bitfield") {
+				en.is_flags = true;
+			}
+			sym = en;
 		}
+		sym.access = SymbolAccessibility.PUBLIC;
+
+		string cname = reader.get_attribute ("c:type");
+		string common_prefix = null;
 
 		next ();
-
-		string common_prefix = null;
 		
 		var old_symbol = current_symbol;
-		current_symbol = en;
+		current_symbol = sym;
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (!push_metadata ()) {
 				skip_element ();
@@ -1642,95 +1647,45 @@ public class Vala.GirParser : CodeVisitor {
 			}
 
 			if (reader.name == "member") {
-				var ev = parse_enumeration_member ();
-				en.add_value (ev);
-				calculate_common_prefix (ref common_prefix, ev.get_cname ());
+				if (error_domain) {
+					ErrorCode ec = parse_error_member ();
+					((ErrorDomain) sym).add_code (ec);
+					calculate_common_prefix (ref common_prefix, ec.get_cname ());
+				} else {
+					var ev = parse_enumeration_member ();
+					((Enum) sym).add_value (ev);
+					calculate_common_prefix (ref common_prefix, ev.get_cname ());
+				}
 			} else {
 				// error
-				Report.error (get_current_src (), "unknown child element `%s' in `enumaration'".printf (reader.name));
+				Report.error (get_current_src (), "unknown child element `%s' in `%s'".printf (reader.name, element_name));
 				skip_element ();
 			}
 
 			pop_metadata ();
 		}
 
-		en.set_cprefix (common_prefix);
+		if (cname != null) {
+			if (sym is Enum) {
+				((Enum) sym).set_cname (cname);
+				((Enum) sym).set_cprefix (common_prefix);
+			} else {
+				((ErrorDomain) sym).set_cname (cname);
+				((ErrorDomain) sym).set_cprefix (common_prefix);
+			}
+		}
 
-		end_element ("enumeration");
+		end_element (element_name);
 		current_symbol = old_symbol;
-		return en;
+		return sym;
 	}
 
 	ErrorDomain parse_error_domain () {
-		start_element ("enumeration");
-
-		var ed = new ErrorDomain (element_get_name (true), get_current_src ());
-		ed.access = SymbolAccessibility.PUBLIC;
-
-		string enum_cname = reader.get_attribute ("c:type");
-		if (enum_cname != null) {
-			ed.set_cname (enum_cname);
-		}
-
-		next ();
-
-		string common_prefix = null;
-		var old_symbol = current_symbol;
-		current_symbol = ed;
-		while (current_token == MarkupTokenType.START_ELEMENT) {
-			if (!push_metadata ()) {
-				skip_element ();
-				continue;
-			}
-
-			if (reader.name == "member") {
-				ErrorCode ec = parse_error_member ();
-				ed.add_code (ec);
-				calculate_common_prefix (ref common_prefix, ec.get_cname ());
-			} else {
-				// error
-				Report.error (get_current_src (), "unknown child element `%s' in `enumeration'".printf (reader.name));
-				skip_element ();
-			}
-
-			pop_metadata ();
-		}
-
-		ed.set_cprefix (common_prefix);
-
-		end_element ("enumeration");
-		current_symbol = old_symbol;
-		return ed;
+		return parse_enumeration ("enumeration", true) as ErrorDomain;
 	}
 
 	Enum parse_bitfield () {
-		start_element ("bitfield");
-		var en = new Enum (reader.get_attribute ("name"), get_current_src ());
-		en.access = SymbolAccessibility.PUBLIC;
-		en.is_flags = true;
-
-		next ();
-		var old_symbol = current_symbol;
-		current_symbol = en;
-		while (current_token == MarkupTokenType.START_ELEMENT) {
-			if (!push_metadata ()) {
-				skip_element ();
-				continue;
-			}
-
-			if (reader.name == "member") {
-				en.add_value (parse_enumeration_member ());
-			} else {
-				// error
-				Report.error (get_current_src (), "unknown child element `%s' in `bitfield'".printf (reader.name));
-				skip_element ();
-			}
-
-			pop_metadata ();
-		}
-		end_element ("bitfield");
-		current_symbol = en;
-		return en;
+		return parse_enumeration ("bitfield") as Enum;
 	}
 
 	EnumValue parse_enumeration_member () {
