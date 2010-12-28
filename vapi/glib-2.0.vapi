@@ -1201,7 +1201,7 @@ public class string {
 	[CCode (cname = "g_utf8_strlen")]
 	long utf8_strlen (ssize_t max);
 
-	public long length {
+	public int length {
 		[CCode (cname = "strlen")]
 		get;
 	}
