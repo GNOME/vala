@@ -584,6 +584,13 @@ namespace Cairo {
 		public void multiply (Matrix a, Matrix b);
 		public void transform_distance (ref double dx, ref double dy);
 		public void transform_point (ref double x, ref double y);
+
+		public double xx;
+		public double yx;
+		public double xy;
+		public double yy;
+		public double x0;
+		public double y0;
 	}
 
 	[CCode (cname = "cairo_rectangle_t", has_type_id = false)]
