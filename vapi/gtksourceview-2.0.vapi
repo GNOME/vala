@@ -416,10 +416,10 @@ namespace Gtk {
 	public interface SourceCompletionProposal : GLib.Object {
 		public virtual bool equal (Gtk.SourceCompletionProposal other);
 		public virtual unowned Gdk.Pixbuf get_icon ();
-		public virtual unowned string get_info ();
-		public virtual unowned string get_label ();
-		public virtual unowned string get_markup ();
-		public virtual unowned string get_text ();
+		public abstract string get_info ();
+		public abstract string get_label ();
+		public abstract string get_markup ();
+		public abstract string get_text ();
 		public virtual uint hash ();
 		[HasEmitter]
 		public signal void changed ();
