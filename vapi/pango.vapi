@@ -71,7 +71,7 @@ namespace Pango {
 	public class AttrList {
 		[CCode (has_construct_function = false)]
 		public AttrList ();
-		public void change (Pango.Attribute attr);
+		public void change (owned Pango.Attribute attr);
 		public Pango.AttrList copy ();
 		public unowned Pango.AttrList filter (Pango.AttrFilterFunc func, void* data);
 		public Pango.AttrIterator get_iterator ();
