@@ -416,10 +416,10 @@ namespace Gtk {
 	public interface SourceCompletionProposal : GLib.Object {
 		public abstract bool equal (Gtk.SourceCompletionProposal other);
 		public abstract unowned Gdk.Pixbuf get_icon ();
-		public abstract unowned string get_info ();
-		public abstract unowned string get_label ();
-		public abstract unowned string get_markup ();
-		public abstract unowned string get_text ();
+		public abstract string get_info ();
+		public abstract string get_label ();
+		public abstract string get_markup ();
+		public abstract string get_text ();
 		public abstract uint hash ();
 		[HasEmitter]
 		public signal void changed ();
@@ -501,9 +501,9 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public delegate unowned string SourceViewMarkTooltipFunc (Gtk.SourceMark mark);
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
-	public extern const string SOURCE_COMPLETION_CAPABILITY_AUTOMATIC;
+	public const string SOURCE_COMPLETION_CAPABILITY_AUTOMATIC;
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
-	public extern const string SOURCE_COMPLETION_CAPABILITY_INTERACTIVE;
+	public const string SOURCE_COMPLETION_CAPABILITY_INTERACTIVE;
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public static bool source_iter_backward_search (Gtk.TextIter iter, string str, Gtk.SourceSearchFlags flags, out Gtk.TextIter match_start, out Gtk.TextIter match_end, Gtk.TextIter? limit);
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
