@@ -680,9 +680,12 @@ public class Vala.GVariantModule : GAsyncModule {
 		iter_init_call.add_argument (hash_table_expr);
 		ccode.add_expression (iter_init_call);
 
+		var gvariant_type = new CCodeFunctionCall (new CCodeIdentifier ("G_VARIANT_TYPE"));
+		gvariant_type.add_argument (new CCodeConstant ("\"%s\"".printf (get_type_signature (type))));
+
 		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_init"));
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
-		iter_call.add_argument (new CCodeIdentifier ("G_VARIANT_TYPE_DICTIONARY"));
+		iter_call.add_argument (gvariant_type);
 		ccode.add_expression (iter_call);
 
 		var iter_next_call = new CCodeFunctionCall (new CCodeIdentifier ("g_hash_table_iter_next"));
