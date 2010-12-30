@@ -1819,7 +1819,7 @@ public class Vala.GirParser : CodeVisitor {
 			is_array = true;
 			start_element ("array");
 
-			if (!(type_name == "GLib.Array" || type_name == "GLib.PtrArray")) {
+			if (type_name == null) {
 				if (reader.get_attribute ("length") != null
 				    && &array_length_index != null) {
 					array_length_index = int.parse (reader.get_attribute ("length"));
@@ -1849,6 +1849,10 @@ public class Vala.GirParser : CodeVisitor {
 
 		// type arguments / element types
 		while (current_token == MarkupTokenType.START_ELEMENT) {
+			if (type_name == "GLib.ByteArray") {
+				skip_element ();
+				continue;
+			}
 			var element_type = parse_type ();
 			element_type.value_owned = transfer_elements;
 			type.add_type_argument (element_type);
