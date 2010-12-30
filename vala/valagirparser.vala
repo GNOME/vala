@@ -958,13 +958,20 @@ public class Vala.GirParser : CodeVisitor {
 								m.attributes.remove (attr);
 								merged.add (invoker);
 								different_invoker = true;
-								break;
 							}
+							break;
 						}
 					}
 					if (!different_invoker) {
 						merged.add (cinfo);
 					}
+				}
+			}
+			// merge custom vfunc
+			if (info.metadata.has_argument (ArgumentType.VFUNC_NAME)) {
+				var vfunc = get_current_first_symbol_info (info.metadata.get_string (ArgumentType.VFUNC_NAME));
+				if (vfunc != null && vfunc != info) {
+					merged.add (vfunc);
 				}
 			}
 			if (m.coroutine) {
@@ -2321,7 +2328,10 @@ public class Vala.GirParser : CodeVisitor {
 				method.is_abstract = metadata.get_bool (ArgumentType.ABSTRACT);
 				method.is_virtual = false;
 			}
-			method.vfunc_name = metadata.get_string (ArgumentType.VFUNC_NAME);
+			if (metadata.has_argument (ArgumentType.VFUNC_NAME)) {
+				method.vfunc_name = metadata.get_string (ArgumentType.VFUNC_NAME);
+				method.is_virtual = true;
+			}
 		}
 
 		var parameters = new ArrayList<ParameterInfo> ();
