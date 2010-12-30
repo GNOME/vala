@@ -1708,6 +1708,7 @@ public class Vala.GirParser : CodeVisitor {
 		} else {
 			ec = new ErrorCode (name);
 		}
+		ec.set_cname (reader.get_attribute ("c:identifier"));
 
 		next ();
 		end_element ("member");

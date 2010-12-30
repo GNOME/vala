@@ -677,6 +677,10 @@ public class Vala.CodeWriter : CodeVisitor {
 	}
 
 	public override void visit_error_code (ErrorCode ecode) {
+		if (ecode.get_cname () != ecode.get_default_cname ()) {
+			write_indent ();
+			write_string ("[CCode (cname = \"%s\")]".printf (ecode.get_cname ()));
+		}
 		write_indent ();
 		write_identifier (ecode.name);
 		write_string (",");
