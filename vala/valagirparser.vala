@@ -1063,11 +1063,11 @@ public class Vala.GirParser : CodeVisitor {
 		}
 	}
 
-	void postprocess_symbol (Symbol symbol, Metadata metadata) {
+	void postprocess_symbol (Symbol sym, Metadata metadata) {
 		// deprecation
-		symbol.replacement = metadata.get_string (ArgumentType.REPLACEMENT);
-		symbol.deprecated_since = element_get_string ("deprecated-version", ArgumentType.DEPRECATED_SINCE);
-		symbol.deprecated = metadata.get_bool (ArgumentType.DEPRECATED) || symbol.replacement != null || symbol.deprecated_since != null;
+		sym.replacement = metadata.get_string (ArgumentType.REPLACEMENT);
+		sym.deprecated_since = element_get_string ("deprecated-version", ArgumentType.DEPRECATED_SINCE);
+		sym.deprecated = metadata.get_bool (ArgumentType.DEPRECATED) || sym.replacement != null || sym.deprecated_since != null;
 
 		// mark to be reparented
 		if (metadata.has_argument (ArgumentType.PARENT)) {
@@ -1077,11 +1077,23 @@ public class Vala.GirParser : CodeVisitor {
 				reparent_list = new ArrayList<Symbol>();
 				symbol_reparent_map[target_symbol] = reparent_list;
 			}
-			reparent_list.add (symbol);
+			reparent_list.add (sym);
 
 			// if referenceable, map unresolved references to point to the new place
-			if (symbol is Namespace || symbol is TypeSymbol) {
-				set_symbol_mapping (symbol, new UnresolvedSymbol (target_symbol, symbol.name));
+			if (sym is Namespace || sym is TypeSymbol) {
+				set_symbol_mapping (sym, new UnresolvedSymbol (target_symbol, sym.name));
+			}
+		}
+
+		if (sym is Class) {
+			var cl = (Class) sym;
+			if (cl.default_construction_method == null) {
+				// always provide constructor in generated bindings
+				// to indicate that implicit Object () chainup is allowed
+				var cm = new CreationMethod (null, null, cl.source_reference);
+				cm.has_construct_function = false;
+				cm.access = SymbolAccessibility.PROTECTED;
+				cl.add_method (cm);
 			}
 		}
 	}
