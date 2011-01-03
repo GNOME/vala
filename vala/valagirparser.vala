@@ -2567,7 +2567,7 @@ public class Vala.GirParser : CodeVisitor {
 			if (reader.name == "field") {
 				add_symbol_info (parse_field ());
 			} else if (reader.name == "constructor") {
-				parse_constructor ();
+				add_symbol_info (parse_constructor ());
 			} else if (reader.name == "method") {
 				add_symbol_info (parse_method ("method"));
 			} else {
