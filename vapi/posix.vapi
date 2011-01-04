@@ -1,6 +1,7 @@
 /* posix.vapi
  *
  * Copyright (C) 2008-2009  Jürg Billeter
+ * Copyright (C) 2010 Marco Trevisan (Treviño)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,6 +19,7 @@
  *
  * Author:
  * 	Jürg Billeter <j@bitron.ch>
+ *  Marco Trevisan (Treviño) <mail@3v1n0.net>
  */
 
 #if POSIX
@@ -2179,5 +2181,124 @@ namespace Posix {
 	public static FILE stderr;
 	public static FILE stdout;
 	public static FILE stdin;
+
+	[CCode(cheader_filename = "sched.h", cprefix = "sched_")]
+	namespace Sched {
+		[SimpleType]
+		[CCode (cname = "struct sched_param")]
+		public struct Param {
+			public int sched_priority;
+		}
+
+		public static int setparam(Posix.pid_t pid, ref Sched.Param param);
+		public static int getparam(Posix.pid_t pid, out Sched.Param param);
+
+		public static int setscheduler(Posix.pid_t pid, Algorithm policy, ref Sched.Param param);
+		public static Algorithm getscheduler(Posix.pid_t pid);
+
+		public static int @yield();
+
+		public static int get_priority_max(int algorithm);
+		public static int get_priority_min(int algorithm);
+
+		public static int rr_get_interval(Posix.pid_t pid, out Posix.timespec? interval);
+
+		[CCode (cprefix = "SCHED_", cname = "int")]
+		public enum Algorithm {
+			OTHER,
+			FIFO,
+			RR,
+			BATCH,
+			IDLE
+		}
+	}
+
+	[Compact]
+	[CCode(cheader_filename = "sched.h", cname = "cpu_set_t", free_function = "CPU_FREE", copy_function="memcpy")]
+	public class CpuSet {
+		[CCode(cname = "CPU_ALLOC")]
+		public CpuSet(int num = 1);
+
+		[CCode(cname = "CPU_ALLOC_SIZE")]
+		public static size_t alloc_size(int num = 1);
+
+		[CCode(cname = "CPU_SETSIZE")]
+		public static size_t size;
+
+		[CCode(cname = "CPU_COUNT")]
+		public int count();
+
+		[CCode(cname = "CPU_COUNT_S", instance_pos = -1)]
+		public int count_sized(size_t num);
+
+		[CCode(cname = "CPU_ZERO")]
+		public void zero();
+
+		[CCode(cname = "CPU_ZERO_S", instance_pos = -1)]
+		public void zero_sized(size_t num);
+
+		[CCode(cname = "CPU_SET", instance_pos = -1)]
+		public void @set(int cpu);
+
+		[CCode(cname = "CPU_SET_S", instance_pos = -1)]
+		public void @set_sized(int cpu, size_t num);
+
+		[CCode(cname = "CPU_CLR", instance_pos = -1)]
+		public void clr(int cpu);
+
+		[CCode(cname = "CPU_CLR_S", instance_pos = -1)]
+		public void clr_sized(int cpu, size_t num);
+
+		[CCode(cname = "CPU_ISSET", instance_pos = -1)]
+		public bool is_set(int cpu);
+
+		[CCode(cname = "CPU_ISSET_S", instance_pos = -1)]
+		public bool is_set_sized(int cpu, size_t num);
+
+		[CCode(cname = "CPU_EQUAL")]
+		public static bool equal(CpuSet cs1, CpuSet cs2);
+
+		public bool is_equal(CpuSet cs) {
+			return CpuSet.equal(this, cs);
+		}
+
+		[CCode(cname = "CPU_EQUAL_S", instance_pos = -1)]
+		public static bool equal_sized(size_t num, CpuSet cs1, CpuSet cs2);
+
+		public bool is_equal_sized(size_t num, CpuSet cs) {
+			return CpuSet.equal_sized(num, this, cs);
+		}
+
+		[CCode(cname = "CPU_AND", instance_pos = -1)]
+		public void and(CpuSet destset, CpuSet srcset);
+
+		[CCode(cname = "CPU_AND_S", instance_pos = -1)]
+		public void and_sized(size_t num, CpuSet destset, CpuSet srcset);
+
+		[CCode(cname = "CPU_OR", instance_pos = -1)]
+		public void or(CpuSet destset, CpuSet srcset);
+
+		[CCode(cname = "CPU_OR_S", instance_pos = -1)]
+		public void or_sized(size_t num, CpuSet destset, CpuSet srcset);
+
+		[CCode(cname = "CPU_XOR", instance_pos = -1)]
+		public void xor(CpuSet destset, CpuSet srcset);
+
+		[CCode(cname = "CPU_XOR_S", instance_pos = -1)]
+		public void xor_sized(size_t num, CpuSet destset, CpuSet srcset);
+
+		[CCode(cname = "sched_setaffinity", instance_pos = -1)]
+		public int setaffinity(size_t num, [CCode(pos = 0)]Posix.pid_t pid = 0);
+
+		[CCode(cname = "sched_getaffinity", instance_pos = -1)]
+		public int getaffinity(size_t num, [CCode(pos = 0)]Posix.pid_t pid = 0);
+
+		public static CpuSet init(int num = 1) {
+			CpuSet cpus = new CpuSet(num);
+			var size = cpus.alloc_size(num);
+			cpus.zero_sized(size);
+			return cpus;
+		}
+	}
 }
 
