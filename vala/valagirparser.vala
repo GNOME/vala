@@ -2265,7 +2265,8 @@ public class Vala.GirParser : CodeVisitor {
 
 	Symbol parse_function (string element_name) {
 		start_element (element_name);
-		string name = element_get_name ();
+		// replace is needed for signal names
+		string name = element_get_name ().replace ("-", "_");
 		string cname = reader.get_attribute ("c:identifier");
 		string throws_string = reader.get_attribute ("throws");
 		string invoker = reader.get_attribute ("invoker");
@@ -2301,6 +2302,8 @@ public class Vala.GirParser : CodeVisitor {
 				m.custom_return_type_cname = return_ctype;
 			}
 			s = m;
+		} else if (element_name == "glib:signal") {
+			s = new Signal (name, return_type, get_current_src ());
 		} else {
 			s = new Method (name, return_type, get_current_src ());
 		}
@@ -2309,7 +2312,7 @@ public class Vala.GirParser : CodeVisitor {
 		if (cname != null) {
 			if (s is Method) {
 				((Method) s).set_cname (cname);
-			} else {
+			} else if (s is Delegate) {
 				((Delegate) s).set_cname (cname);
 			}
 		}
@@ -2441,8 +2444,10 @@ public class Vala.GirParser : CodeVisitor {
 				 so do it first*/
 				if (s is Method) {
 					((Method) s).add_parameter (info.param);
-				} else {
+				} else if (s is Delegate) {
 					((Delegate) s).add_parameter (info.param);
+				} else if (s is Signal) {
+					((Signal) s).add_parameter (info.param);
 				}
 
 				if (info.array_length_idx != -1) {
@@ -2483,7 +2488,7 @@ public class Vala.GirParser : CodeVisitor {
 				var m = (Method) s;
 				m.no_array_length = true;
 				m.array_null_terminated = true;
-			} else {
+			} else if (s is Delegate) {
 				var d = (Delegate) s;
 				d.no_array_length = true;
 				d.array_null_terminated = true;
@@ -2502,35 +2507,7 @@ public class Vala.GirParser : CodeVisitor {
 	}
 
 	Signal parse_signal () {
-		start_element ("glib:signal");
-		string name = reader.get_attribute ("name").replace ("-", "_");
-		next ();
-		DataType return_type;
-		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "return-value") {
-			return_type = parse_return_value ();
-		} else {
-			return_type = new VoidType ();
-		}
-		var sig = new Signal (name, return_type, get_current_src ());
-		sig.access = SymbolAccessibility.PUBLIC;
-		sig.external = true;
-		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "parameters") {
-			start_element ("parameters");
-			next ();
-			while (current_token == MarkupTokenType.START_ELEMENT) {
-				if (!push_metadata ()) {
-					skip_element ();
-					continue;
-				}
-
-				sig.add_parameter (parse_parameter ());
-
-				pop_metadata ();
-			}
-			end_element ("parameters");
-		}
-		end_element ("glib:signal");
-		return sig;
+		return this.parse_function ("glib:signal") as Signal;
 	}
 
 	Class parse_boxed (string element_name) {
