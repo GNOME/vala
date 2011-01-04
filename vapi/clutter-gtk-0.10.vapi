@@ -56,7 +56,7 @@ namespace GtkClutter {
 	[CCode (cheader_filename = "clutter-gtk/clutter-gtk.h")]
 	public static Clutter.InitError init ([CCode (array_length_pos = 0.9)] ref unowned string[] argv);
 	[CCode (cheader_filename = "clutter-gtk/clutter-gtk.h")]
-	public static Clutter.InitError init_with_args (int argc, out unowned string argv, string parameter_string, GLib.OptionEntry entries, string translation_domain) throws GLib.Error;
+	public static Clutter.InitError init_with_args ([CCode (array_length_pos = 0.9)] ref unowned string[] argv, string parameter_string, [CCode (array_length = false)] GLib.OptionEntry[] entries, string? translation_domain) throws GLib.Error;
 	[CCode (cheader_filename = "clutter-gtk/clutter-gtk.h")]
 	public static GLib.Quark texture_error_quark ();
 	[CCode (cheader_filename = "clutter-gtk/clutter-gtk.h")]
