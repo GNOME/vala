@@ -8068,7 +8068,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void init ([CCode (array_length_pos = 0.9)] ref unowned string[] argv);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void init_add (Gtk.Function function, void* data);
+	public static void init_add (Gtk.Function function);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool init_check ([CCode (array_length_pos = 0.9)] ref unowned string[] argv);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -8142,7 +8142,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void propagate_event (Gtk.Widget widget, Gdk.Event event);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static uint quit_add (uint main_level, Gtk.Function function, void* data);
+	public static uint quit_add (uint main_level, Gtk.Function function);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void quit_add_destroy (uint main_level, Gtk.Object object);
 	[CCode (cheader_filename = "gtk/gtk.h")]
