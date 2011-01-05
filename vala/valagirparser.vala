@@ -1846,7 +1846,11 @@ public class Vala.GirParser : CodeVisitor {
 			}
 
 			if (reader.name == "field") {
-				st.add_field (parse_field ());
+				if (reader.get_attribute ("name") != "priv") {
+					st.add_field (parse_field ());
+				} else {
+					skip_element ();
+				}
 			} else if (reader.name == "constructor") {
 				parse_constructor ();
 			} else if (reader.name == "method") {
