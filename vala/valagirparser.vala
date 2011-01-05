@@ -2455,12 +2455,6 @@ public class Vala.GirParser : CodeVisitor {
 			pop_metadata ();
 		}
 		end_element (element_name);
-
-		if (current_token != MarkupTokenType.END_ELEMENT) {
-			// error
-			Report.error (get_current_src (), "expected end element");
-		}
-		next ();
 		return cl;
 	}
 
