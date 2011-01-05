@@ -674,6 +674,101 @@
 			<member name="JSON_PARSER_ERROR_INVALID_BAREWORD" value="4"/>
 			<member name="JSON_PARSER_ERROR_UNKNOWN" value="5"/>
 		</enum>
+		<enum name="JsonReaderError" type-name="JsonReaderError" get-type="json_reader_error_get_type">
+			<member name="JSON_READER_ERROR_NO_ARRAY" value="0"/>
+			<member name="JSON_READER_ERROR_INVALID_INDEX" value="1"/>
+			<member name="JSON_READER_ERROR_NO_OBJECT" value="2"/>
+			<member name="JSON_READER_ERROR_INVALID_MEMBER" value="3"/>
+		</enum>
+		<object name="JsonBuilder" parent="GObject" type-name="JsonBuilder" get-type="json_builder_get_type">
+			<method name="add_boolean_value" symbol="json_builder_add_boolean_value">
+				<return-type type="JsonBuilder*"/>
+				<parameters>
+					<parameter name="builder" type="JsonBuilder*"/>
+					<parameter name="value" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="add_double_value" symbol="json_builder_add_double_value">
+				<return-type type="JsonBuilder*"/>
+				<parameters>
+					<parameter name="builder" type="JsonBuilder*"/>
+					<parameter name="value" type="gdouble"/>
+				</parameters>
+			</method>
+			<method name="add_int_value" symbol="json_builder_add_int_value">
+				<return-type type="JsonBuilder*"/>
+				<parameters>
+					<parameter name="builder" type="JsonBuilder*"/>
+					<parameter name="value" type="gint64"/>
+				</parameters>
+			</method>
+			<method name="add_null_value" symbol="json_builder_add_null_value">
+				<return-type type="JsonBuilder*"/>
+				<parameters>
+					<parameter name="builder" type="JsonBuilder*"/>
+				</parameters>
+			</method>
+			<method name="add_string_value" symbol="json_builder_add_string_value">
+				<return-type type="JsonBuilder*"/>
+				<parameters>
+					<parameter name="builder" type="JsonBuilder*"/>
+					<parameter name="value" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="add_value" symbol="json_builder_add_value">
+				<return-type type="JsonBuilder*"/>
+				<parameters>
+					<parameter name="builder" type="JsonBuilder*"/>
+					<parameter name="node" type="JsonNode*"/>
+				</parameters>
+			</method>
+			<method name="begin_array" symbol="json_builder_begin_array">
+				<return-type type="JsonBuilder*"/>
+				<parameters>
+					<parameter name="builder" type="JsonBuilder*"/>
+				</parameters>
+			</method>
+			<method name="begin_object" symbol="json_builder_begin_object">
+				<return-type type="JsonBuilder*"/>
+				<parameters>
+					<parameter name="builder" type="JsonBuilder*"/>
+				</parameters>
+			</method>
+			<method name="end_array" symbol="json_builder_end_array">
+				<return-type type="JsonBuilder*"/>
+				<parameters>
+					<parameter name="builder" type="JsonBuilder*"/>
+				</parameters>
+			</method>
+			<method name="end_object" symbol="json_builder_end_object">
+				<return-type type="JsonBuilder*"/>
+				<parameters>
+					<parameter name="builder" type="JsonBuilder*"/>
+				</parameters>
+			</method>
+			<method name="get_root" symbol="json_builder_get_root">
+				<return-type type="JsonNode*"/>
+				<parameters>
+					<parameter name="builder" type="JsonBuilder*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="json_builder_new">
+				<return-type type="JsonBuilder*"/>
+			</constructor>
+			<method name="reset" symbol="json_builder_reset">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="builder" type="JsonBuilder*"/>
+				</parameters>
+			</method>
+			<method name="set_member_name" symbol="json_builder_set_member_name">
+				<return-type type="JsonBuilder*"/>
+				<parameters>
+					<parameter name="builder" type="JsonBuilder*"/>
+					<parameter name="member_name" type="gchar*"/>
+				</parameters>
+			</method>
+		</object>
 		<object name="JsonGenerator" parent="GObject" type-name="JsonGenerator" get-type="json_generator_get_type">
 			<constructor name="new" symbol="json_generator_new">
 				<return-type type="JsonGenerator*"/>
@@ -697,6 +792,15 @@
 				<parameters>
 					<parameter name="generator" type="JsonGenerator*"/>
 					<parameter name="filename" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="to_stream" symbol="json_generator_to_stream">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="generator" type="JsonGenerator*"/>
+					<parameter name="stream" type="GOutputStream*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -748,6 +852,33 @@
 				<parameters>
 					<parameter name="parser" type="JsonParser*"/>
 					<parameter name="filename" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="load_from_stream" symbol="json_parser_load_from_stream">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="parser" type="JsonParser*"/>
+					<parameter name="stream" type="GInputStream*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="load_from_stream_async" symbol="json_parser_load_from_stream_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="parser" type="JsonParser*"/>
+					<parameter name="stream" type="GInputStream*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="load_from_stream_finish" symbol="json_parser_load_from_stream_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="parser" type="JsonParser*"/>
+					<parameter name="result" type="GAsyncResult*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -816,6 +947,123 @@
 				</parameters>
 			</signal>
 		</object>
+		<object name="JsonReader" parent="GObject" type-name="JsonReader" get-type="json_reader_get_type">
+			<method name="count_elements" symbol="json_reader_count_elements">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="reader" type="JsonReader*"/>
+				</parameters>
+			</method>
+			<method name="count_members" symbol="json_reader_count_members">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="reader" type="JsonReader*"/>
+				</parameters>
+			</method>
+			<method name="end_element" symbol="json_reader_end_element">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="reader" type="JsonReader*"/>
+				</parameters>
+			</method>
+			<method name="end_member" symbol="json_reader_end_member">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="reader" type="JsonReader*"/>
+				</parameters>
+			</method>
+			<method name="error_quark" symbol="json_reader_error_quark">
+				<return-type type="GQuark"/>
+			</method>
+			<method name="get_boolean_value" symbol="json_reader_get_boolean_value">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="JsonReader*"/>
+				</parameters>
+			</method>
+			<method name="get_double_value" symbol="json_reader_get_double_value">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="reader" type="JsonReader*"/>
+				</parameters>
+			</method>
+			<method name="get_error" symbol="json_reader_get_error">
+				<return-type type="GError*"/>
+				<parameters>
+					<parameter name="reader" type="JsonReader*"/>
+				</parameters>
+			</method>
+			<method name="get_int_value" symbol="json_reader_get_int_value">
+				<return-type type="gint64"/>
+				<parameters>
+					<parameter name="reader" type="JsonReader*"/>
+				</parameters>
+			</method>
+			<method name="get_null_value" symbol="json_reader_get_null_value">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="JsonReader*"/>
+				</parameters>
+			</method>
+			<method name="get_string_value" symbol="json_reader_get_string_value">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="reader" type="JsonReader*"/>
+				</parameters>
+			</method>
+			<method name="get_value" symbol="json_reader_get_value">
+				<return-type type="JsonNode*"/>
+				<parameters>
+					<parameter name="reader" type="JsonReader*"/>
+				</parameters>
+			</method>
+			<method name="is_array" symbol="json_reader_is_array">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="JsonReader*"/>
+				</parameters>
+			</method>
+			<method name="is_object" symbol="json_reader_is_object">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="JsonReader*"/>
+				</parameters>
+			</method>
+			<method name="is_value" symbol="json_reader_is_value">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="JsonReader*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="json_reader_new">
+				<return-type type="JsonReader*"/>
+				<parameters>
+					<parameter name="node" type="JsonNode*"/>
+				</parameters>
+			</constructor>
+			<method name="read_element" symbol="json_reader_read_element">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="JsonReader*"/>
+					<parameter name="index_" type="guint"/>
+				</parameters>
+			</method>
+			<method name="read_member" symbol="json_reader_read_member">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="JsonReader*"/>
+					<parameter name="member_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_root" symbol="json_reader_set_root">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="reader" type="JsonReader*"/>
+					<parameter name="root" type="JsonNode*"/>
+				</parameters>
+			</method>
+			<property name="root" type="JsonNode*" readable="1" writable="1" construct="1" construct-only="0"/>
+		</object>
 		<interface name="JsonSerializable" type-name="JsonSerializable" get-type="json_serializable_get_type">
 			<method name="default_deserialize_property" symbol="json_serializable_default_deserialize_property">
 				<return-type type="gboolean"/>
@@ -876,9 +1124,9 @@
 			</vfunc>
 		</interface>
 		<constant name="JSON_MAJOR_VERSION" type="int" value="0"/>
-		<constant name="JSON_MICRO_VERSION" type="int" value="1"/>
-		<constant name="JSON_MINOR_VERSION" type="int" value="11"/>
+		<constant name="JSON_MICRO_VERSION" type="int" value="0"/>
+		<constant name="JSON_MINOR_VERSION" type="int" value="12"/>
 		<constant name="JSON_VERSION_HEX" type="int" value="0"/>
-		<constant name="JSON_VERSION_S" type="char*" value="0.11.1"/>
+		<constant name="JSON_VERSION_S" type="char*" value="0.12.0"/>
 	</namespace>
 </api>

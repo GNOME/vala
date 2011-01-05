@@ -31,12 +31,31 @@ namespace Json {
 		public static unowned Json.Array sized_new (uint n_elements);
 	}
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
+	public class Builder : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public Builder ();
+		public unowned Json.Builder add_boolean_value (bool value);
+		public unowned Json.Builder add_double_value (double value);
+		public unowned Json.Builder add_int_value (int64 value);
+		public unowned Json.Builder add_null_value ();
+		public unowned Json.Builder add_string_value (string value);
+		public unowned Json.Builder add_value (Json.Node node);
+		public unowned Json.Builder begin_array ();
+		public unowned Json.Builder begin_object ();
+		public unowned Json.Builder end_array ();
+		public unowned Json.Builder end_object ();
+		public unowned Json.Node get_root ();
+		public void reset ();
+		public unowned Json.Builder set_member_name (string member_name);
+	}
+	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	public class Generator : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Generator ();
 		public void set_root (Json.Node node);
 		public string to_data (out size_t length);
 		public bool to_file (string filename) throws GLib.Error;
+		public bool to_stream (GLib.OutputStream stream, GLib.Cancellable cancellable) throws GLib.Error;
 		[NoAccessorMethod]
 		public uint indent { get; set; }
 		[NoAccessorMethod]
@@ -119,6 +138,8 @@ namespace Json {
 		public bool has_assignment (out unowned string variable_name);
 		public bool load_from_data (string data, ssize_t length = -1) throws GLib.Error;
 		public bool load_from_file (string filename) throws GLib.Error;
+		public bool load_from_stream (GLib.InputStream stream, GLib.Cancellable cancellable) throws GLib.Error;
+		public async bool load_from_stream_async (GLib.InputStream stream, GLib.Cancellable cancellable) throws GLib.Error;
 		public virtual signal void array_element (Json.Array array, int index_);
 		public virtual signal void array_end (Json.Array array);
 		public virtual signal void array_start ();
@@ -128,6 +149,31 @@ namespace Json {
 		public virtual signal void object_start ();
 		public virtual signal void parse_end ();
 		public virtual signal void parse_start ();
+	}
+	[CCode (cheader_filename = "json-glib/json-glib.h")]
+	public class Reader : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public Reader (Json.Node node);
+		public int count_elements ();
+		public int count_members ();
+		public void end_element ();
+		public void end_member ();
+		public static GLib.Quark error_quark ();
+		public bool get_boolean_value ();
+		public double get_double_value ();
+		public unowned GLib.Error get_error ();
+		public int64 get_int_value ();
+		public bool get_null_value ();
+		public unowned string get_string_value ();
+		public unowned Json.Node get_value ();
+		public bool is_array ();
+		public bool is_object ();
+		public bool is_value ();
+		public bool read_element (uint index_);
+		public bool read_member (string member_name);
+		public void set_root (Json.Node root);
+		[NoAccessorMethod]
+		public Json.Node root { owned get; set construct; }
 	}
 	[CCode (cheader_filename = "json-glib/json-glib.h,json-glib/json-gobject.h")]
 	public interface Serializable {
@@ -151,6 +197,13 @@ namespace Json {
 		MISSING_COLON,
 		INVALID_BAREWORD,
 		UNKNOWN
+	}
+	[CCode (cprefix = "JSON_READER_ERROR_", cheader_filename = "json-glib/json-glib.h")]
+	public enum ReaderError {
+		NO_ARRAY,
+		INVALID_INDEX,
+		NO_OBJECT,
+		INVALID_MEMBER
 	}
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	public delegate void ArrayForeach (Json.Array array, uint index_, Json.Node element_node);

@@ -118,6 +118,7 @@ dist_vapi_DATA = \
 	hildon-1.vapi \
 	hildon-fm-2.deps \
 	hildon-fm-2.vapi \
+	json-glib-1.0.deps \
 	json-glib-1.0.vapi \
 	libarchive.deps \
 	libarchive.vapi \
