@@ -1372,7 +1372,7 @@ public class Vala.GirParser : CodeVisitor {
 				add_symbol_info (parse_callback ());
 			} else if (reader.name == "record") {
 				if (reader.get_attribute ("glib:get-type") != null) {
-					add_symbol_info (parse_boxed ());
+					add_symbol_info (parse_boxed ("record"));
 				} else {
 					add_symbol_info (parse_record ());
 				}
@@ -1383,7 +1383,7 @@ public class Vala.GirParser : CodeVisitor {
 				add_symbol_info (iface);
 				interfaces.add (iface);
 			} else if (reader.name == "glib:boxed") {
-				add_symbol_info (parse_boxed ());
+				add_symbol_info (parse_boxed ("glib:boxed"));
 			} else if (reader.name == "union") {
 				add_symbol_info (parse_union ());
 			} else if (reader.name == "constant") {
@@ -2408,7 +2408,8 @@ public class Vala.GirParser : CodeVisitor {
 		return sig;
 	}
 
-	Class parse_boxed () {
+	Class parse_boxed (string element_name) {
+		start_element (element_name);
 		string name = reader.get_attribute ("name");
 		if (name == null) {
 			name = reader.get_attribute ("glib:name");
@@ -2449,6 +2450,7 @@ public class Vala.GirParser : CodeVisitor {
 
 			pop_metadata ();
 		}
+		end_element (element_name);
 
 		if (current_token != MarkupTokenType.END_ELEMENT) {
 			// error
