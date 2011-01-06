@@ -1063,10 +1063,13 @@ public class Vala.GirParser : CodeVisitor {
 		}
 	}
 
-	void postprocess_symbol (Symbol sym, Metadata metadata) {
+	void postprocess_symbol (Symbol sym, Metadata metadata, Map<string,string> girdata) {
 		// deprecation
 		sym.replacement = metadata.get_string (ArgumentType.REPLACEMENT);
-		sym.deprecated_since = element_get_string ("deprecated-version", ArgumentType.DEPRECATED_SINCE);
+		sym.deprecated_since = metadata.get_string (ArgumentType.DEPRECATED_SINCE);
+		if (sym.deprecated_since == null) {
+			sym.deprecated_since = girdata.get ("deprecated-version");
+		}
 		sym.deprecated = metadata.get_bool (ArgumentType.DEPRECATED) || sym.replacement != null || sym.deprecated_since != null;
 
 		// cheader filename
@@ -1119,7 +1122,7 @@ public class Vala.GirParser : CodeVisitor {
 			if (!(current_symbol is Namespace && info.symbol is Method) && !info.metadata.has_argument (ArgumentType.PARENT)) {
 				add_symbol_to_container (container, info.symbol);
 			}
-			postprocess_symbol (info.symbol, info.metadata);
+			postprocess_symbol (info.symbol, info.metadata, info.girdata);
 		}
 	}
 
