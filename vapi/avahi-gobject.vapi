@@ -97,20 +97,18 @@ namespace Avahi {
 	/* Network addresses */
 
 	[SimpleType]
-	[CCode(cheader_filename="avahi-common/address.h", cname="AvahiProtocol", cprefix="avahi_proto_")]
-	public struct Protocol {
-		[CCode(cname="AVAHI_PROTO_INET")]
-		public static Protocol INET;
-		[CCode(cname="AVAHI_PROTO_INET6")]
-		public static Protocol INET6;
-		[CCode(cname="AVAHI_PROTO_UNSPEC")]
-		public static Protocol UNSPEC;
+	[CCode(cheader_filename="avahi-common/address.h", cname="AvahiProtocol", cprefix="AVAHI_PROTO_", lower_case_cprefix="avahi_proto_")]
+	public enum Protocol {
+		INET,
+		INET6,
+		UNSPEC;
 
 		[CCode(cname="avahi_af_to_proto")]
-		public Protocol.from_af(int af);
+		public static Protocol from_af(int af);
 
 		public unowned string to_string();
 		public int to_af();
+
 		[CCode(cname="AVAHI_PROTO_VALID")]
 		public bool is_valid();
 	}
