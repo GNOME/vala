@@ -1317,11 +1317,11 @@ public class Vala.GirParser : CodeVisitor {
 			changed = true;
 		}
 
-		if (owned_by_default) {
+		if (owned_by_default || type.value_owned) {
 			if (metadata.has_argument (ArgumentType.UNOWNED)) {
 				type.value_owned = !metadata.get_bool (ArgumentType.UNOWNED);
 			}
-		} else {
+		} else if (!owned_by_default || !type.value_owned) {
 			if (metadata.has_argument (ArgumentType.OWNED)) {
 				type.value_owned = metadata.get_bool (ArgumentType.OWNED);
 			}
@@ -1798,6 +1798,13 @@ public class Vala.GirParser : CodeVisitor {
 		} else {
 			string ctype;
 			var type = parse_type (out ctype, out array_length_idx, transfer == "full");
+			if (transfer == "full" || transfer == "container" || destroy != null) {
+				type.value_owned = true;
+			}
+			if (allow_none == "1") {
+				type.nullable = true;
+			}
+
 			bool changed;
 			type = element_get_type (type, false, out changed);
 			if (!changed) {
@@ -1809,12 +1816,6 @@ public class Vala.GirParser : CodeVisitor {
 				array_length_idx = metadata.get_integer (ArgumentType.ARRAY_LENGTH_IDX);
 			}
 
-			if (transfer == "full" || transfer == "container" || destroy != null) {
-				type.value_owned = true;
-			}
-			if (allow_none == "1") {
-				type.nullable = true;
-			}
 			param = new Parameter (name, type, get_current_src ());
 			param.ctype = ctype;
 			if (direction == "out") {
