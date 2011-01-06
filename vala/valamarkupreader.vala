@@ -65,6 +65,19 @@ public class Vala.MarkupReader : Object {
 		return attributes[attr];
 	}
 
+	/*
+	 * Returns a copy of the current attributes.
+	 *
+	 * @return map of current attributes
+	 */
+	public Map<string,string> get_attributes () {
+		var result = new HashMap<string,string> (str_hash, str_equal);
+		foreach (var key in attributes.get_keys ()) {
+			result.set (key, attributes.get (key));
+		}
+		return result;
+	}
+
 	string read_name () {
 		char* begin = current;
 		while (current < end) {
