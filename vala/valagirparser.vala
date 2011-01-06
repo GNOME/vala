@@ -1069,6 +1069,14 @@ public class Vala.GirParser : CodeVisitor {
 		sym.deprecated_since = element_get_string ("deprecated-version", ArgumentType.DEPRECATED_SINCE);
 		sym.deprecated = metadata.get_bool (ArgumentType.DEPRECATED) || sym.replacement != null || sym.deprecated_since != null;
 
+		// cheader filename
+		var cheader_filename = metadata.get_string (ArgumentType.CHEADER_FILENAME);
+		if (cheader_filename != null) {
+			foreach (string filename in cheader_filename.split (",")) {
+				sym.add_cheader_filename (filename);
+			}
+		}
+
 		// mark to be reparented
 		if (metadata.has_argument (ArgumentType.PARENT)) {
 			var target_symbol = parse_symbol_from_string (metadata.get_string (ArgumentType.PARENT), metadata.get_source_reference (ArgumentType.PARENT));
