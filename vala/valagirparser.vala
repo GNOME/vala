@@ -508,7 +508,7 @@ public class Vala.GirParser : CodeVisitor {
 		public Symbol symbol;
 		public Metadata metadata;
 		// additional information from GIR
-		public HashMap<string,string> girdata;
+		public Map<string,string> girdata;
 	}
 
 	class Alias {
@@ -538,8 +538,8 @@ public class Vala.GirParser : CodeVisitor {
 
 	ArrayList<Metadata> metadata_stack;
 	Metadata metadata;
-	ArrayList<HashMap<string,string>> girdata_stack;
-	HashMap<string,string> girdata;
+	ArrayList<Map<string,string>> girdata_stack;
+	Map<string,string> girdata;
 
 	ArrayList<SymbolInfo> current_symbols_info;
 
@@ -1155,7 +1155,7 @@ public class Vala.GirParser : CodeVisitor {
 		metadata_stack.add (metadata);
 		metadata = new_metadata;
 		girdata_stack.add (girdata);
-		girdata = new HashMap<string,string> (str_hash, str_equal);
+		girdata = reader.get_attributes ();
 
 		return true;
 	}
@@ -1994,11 +1994,7 @@ public class Vala.GirParser : CodeVisitor {
 		if (cname != null) {
 			st.set_cname (cname);
 		}
-
 		current_gtype_struct_for = reader.get_attribute ("glib:is-gtype-struct-for");
-		if (current_gtype_struct_for != null) {
-			girdata["glib:is-gtype-struct-for"] = current_gtype_struct_for;
-		}
 
 		next ();
 		var old_symbols_info = current_symbols_info;
