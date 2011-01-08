@@ -946,5 +946,7 @@ namespace X {
 
 	public const uint XK_Num_Lock;
 	public const uint XK_Scroll_Lock;
+	public const uint XK_Super_L;
+	public const uint XK_Super_R;
 }
 
