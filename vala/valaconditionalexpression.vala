@@ -1,6 +1,6 @@
 /* valaconditionalexpression.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2011  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -178,6 +178,7 @@ public class Vala.ConditionalExpression : Expression {
 		false_block.replace_statement (false_decl, false_stmt);
 
 		var ma = new MemberAccess.simple (local.name, source_reference);
+		ma.formal_target_type = formal_target_type;
 		ma.target_type = target_type;
 		ma.check (context);
 
