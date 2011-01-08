@@ -1,6 +1,6 @@
 /* valagobjectmodule.vala
  *
- * Copyright (C) 2006-2010  Jürg Billeter
+ * Copyright (C) 2006-2011  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
@@ -763,16 +763,18 @@ public class Vala.GObjectModule : GTypeModule {
 			return false;
 		}
 
-		if (prop.base_interface_property != null) {
-			var iface = (Interface) prop.base_interface_property.parent_symbol;
-			if (!iface.is_subtype_of (gobject_type)) {
-				// implementing non-GObject property
-				return false;
-			}
+		if (type_sym is Class && prop.base_interface_property != null &&
+		    !is_gobject_property (prop.base_interface_property)) {
+			return false;
 		}
 
 		if (!prop.name[0].isalpha ()) {
 			// GObject requires properties to start with a letter
+			return false;
+		}
+
+		if (type_sym is Interface && type_sym.get_attribute ("DBus") != null) {
+			// GObject properties not currently supported in D-Bus interfaces
 			return false;
 		}
 
