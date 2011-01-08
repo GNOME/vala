@@ -1401,6 +1401,13 @@ public class Vala.DBusClientModule : DBusModule {
 		var mtype = expr.call.value_type as MethodType;
 		bool proxy_new_from_type = (mtype != null && mtype.method_symbol.get_cname () == "dbus_g_proxy_new_from_type");
 		bool proxy_get_all = (mtype != null && mtype.method_symbol.get_cname () == "dbus_g_proxy_get_all");
+
+		bool proxy_new_for_name = (mtype != null && mtype.method_symbol.get_cname () == "dbus_g_proxy_new_for_name");
+		if (proxy_new_for_name && expr.parent_node is CastExpression) {
+			// method call handled by visit_cast_expression
+			return;
+		}
+
 		if (!proxy_new_from_type && !proxy_get_all) {
 			base.visit_method_call (expr);
 			return;
