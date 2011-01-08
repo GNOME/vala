@@ -1176,7 +1176,7 @@ public class Vala.DBusClientModule : DBusModule {
 		proxy_construct.block.add_statement (new CCodeExpressionStatement (filter_call));
 
 		var filter_printf = new CCodeFunctionCall (new CCodeIdentifier ("g_strdup_printf"));
-		filter_printf.add_argument (new CCodeConstant ("\"type='signal',path='%s'\""));
+		filter_printf.add_argument (new CCodeConstant ("\"type='signal',path='%s',interface='" + dbus_iface_name + "'\""));
 		filter_printf.add_argument (new CCodeIdentifier ("path"));
 
 		cdecl = new CCodeDeclaration ("char*");
