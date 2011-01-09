@@ -73,6 +73,10 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 				if (param_d.has_target) {
 					cparam = new CCodeParameter (get_delegate_target_cname (get_variable_cname (param.name)), "void*");
 					cfundecl.add_parameter (cparam);
+					if (deleg_type.value_owned) {
+						cparam = new CCodeParameter (get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)), "GDestroyNotify*");
+						cfundecl.add_parameter (cparam);
+					}
 				}
 			}
 		}
@@ -331,6 +335,10 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 				if (deleg_type.delegate_symbol.has_target) {
 					var ctarget = new CCodeIdentifier (get_delegate_target_cname (d_params.get (i).name));
 					carg_map.set (get_param_pos (param.cdelegate_target_parameter_position), ctarget);
+					if (deleg_type.value_owned) {
+						var ctarget_destroy_notify = new CCodeIdentifier (get_delegate_target_destroy_notify_cname (d_params.get (i).name));
+						carg_map.set (get_param_pos (m.cdelegate_target_parameter_position + 0.01), ctarget_destroy_notify);
+					}
 				}
 			}
 
