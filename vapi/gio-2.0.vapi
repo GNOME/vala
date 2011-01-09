@@ -168,7 +168,7 @@ namespace GLib {
 		public void push_current ();
 		public void release_fd ();
 		public void reset ();
-		public bool set_error_if_cancelled () throws GLib.Error;
+		public bool set_error_if_cancelled () throws GLib.IOError;
 		public virtual signal void cancelled ();
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
@@ -1267,7 +1267,7 @@ namespace GLib {
 		public bool check_connect_result () throws GLib.Error;
 		public bool close () throws GLib.Error;
 		public GLib.IOCondition condition_check (GLib.IOCondition condition);
-		public bool condition_wait (GLib.IOCondition condition, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public bool condition_wait (GLib.IOCondition condition, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public bool connect (GLib.SocketAddress address, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public GLib.SocketSource create_source (GLib.IOCondition condition, GLib.Cancellable? cancellable = null);
 		[CCode (has_construct_function = false)]
