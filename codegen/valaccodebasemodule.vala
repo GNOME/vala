@@ -274,6 +274,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public TypeSymbol gbytearray_type;
 	public TypeSymbol gptrarray_type;
 	public TypeSymbol gthreadpool_type;
+	public DataType gdestroynotify_type;
 	public DataType gquark_type;
 	public Struct gvalue_type;
 	public Class gvariant_type;
@@ -412,6 +413,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			gbytearray_type = (TypeSymbol) glib_ns.scope.lookup ("ByteArray");
 			gptrarray_type = (TypeSymbol) glib_ns.scope.lookup ("PtrArray");
 			gthreadpool_type = (TypeSymbol) glib_ns.scope.lookup ("ThreadPool");
+			gdestroynotify_type = new DelegateType ((Delegate) glib_ns.scope.lookup ("DestroyNotify"));
 
 			gquark_type = new IntegerType ((Struct) glib_ns.scope.lookup ("Quark"));
 			gvalue_type = (Struct) glib_ns.scope.lookup ("Value");
@@ -4731,7 +4733,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var cvar = get_variable_cexpression (temp_decl.name);
 
 		ccode.add_expression (new CCodeAssignment (cvar, get_cvalue (expr.inner)));
-		ccode.add_expression (new CCodeAssignment (get_cvalue (expr.inner), new CCodeConstant ("NULL")));
+		if (!(expr.value_type is DelegateType)) {
+			ccode.add_expression (new CCodeAssignment (get_cvalue (expr.inner), new CCodeConstant ("NULL")));
+		}
 
 		set_cvalue (expr, cvar);
 
@@ -4744,10 +4748,20 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		var delegate_type = expr.value_type as DelegateType;
 		if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
+			var temp_target_decl = get_temp_variable (new PointerType (new VoidType ()), true, expr, false);
+			emit_temp_var (temp_target_decl);
+			var target_cvar = get_variable_cexpression (temp_target_decl.name);
 			CCodeExpression target_destroy_notify;
-			set_delegate_target (expr, get_delegate_target_cexpression (expr.inner, out target_destroy_notify));
+			var target = get_delegate_target_cexpression (expr.inner, out target_destroy_notify);
+			ccode.add_expression (new CCodeAssignment (target_cvar, target));
+			set_delegate_target (expr, target_cvar);
 			if (target_destroy_notify != null) {
-				set_delegate_target_destroy_notify (expr, target_destroy_notify);
+				var temp_target_destroy_notify_decl = get_temp_variable (gdestroynotify_type, true, expr, false);
+				emit_temp_var (temp_target_destroy_notify_decl);
+				var target_destroy_notify_cvar = get_variable_cexpression (temp_target_destroy_notify_decl.name);
+				ccode.add_expression (new CCodeAssignment (target_destroy_notify_cvar, target_destroy_notify));
+				ccode.add_expression (new CCodeAssignment (target_destroy_notify, new CCodeConstant ("NULL")));
+				set_delegate_target_destroy_notify (expr, target_destroy_notify_cvar);
 			}
 		}
 	}
