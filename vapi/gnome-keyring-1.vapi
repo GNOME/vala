@@ -312,7 +312,7 @@ namespace GnomeKeyring {
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static void* store_password (GnomeKeyring.PasswordSchema schema, string? keyring, string display_name, string password, owned GnomeKeyring.OperationDoneCallback callback, ...);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static GnomeKeyring.Result store_password_sync (GnomeKeyring.PasswordSchema schema, string keyring, string display_name, string password, ...);
+	public static GnomeKeyring.Result store_password_sync (GnomeKeyring.PasswordSchema schema, string? keyring, string display_name, string password, ...);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static void* unlock (string? keyring, string? password, owned GnomeKeyring.OperationDoneCallback callback);
 	[CCode (cheader_filename = "gnome-keyring.h")]
