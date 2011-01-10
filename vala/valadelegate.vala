@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a function callback type.
  */
-public class Vala.Delegate : TypeSymbol {
+public class Vala.Delegate : TypeSymbol, Callable {
 	/**
 	 * The return type of this callback.
 	 */

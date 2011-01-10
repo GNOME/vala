@@ -32,6 +32,7 @@ libvalacore_la_VALASOURCES = \
 	valabooleanliteral.vala \
 	valabooleantype.vala \
 	valabreakstatement.vala \
+	valacallable.vala \
 	valacastexpression.vala \
 	valacatchclause.vala \
 	valacharacterliteral.vala \
