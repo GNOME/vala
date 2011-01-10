@@ -537,11 +537,18 @@ public class Vala.Method : Subroutine {
 				invalid_match = "too few parameters";
 				return false;
 			}
-			
-			actual_base_type = base_param.variable_type.get_actual_type (object_type, null, this);
-			if (!actual_base_type.equals (method_params_it.get ().variable_type)) {
-				invalid_match = "incompatible type of parameter %d".printf (param_index);
+
+			var param = method_params_it.get ();
+			if (base_param.ellipsis != param.ellipsis) {
+				invalid_match = "ellipsis parameter mismatch";
 				return false;
+			}
+			if (!base_param.ellipsis) {
+				actual_base_type = base_param.variable_type.get_actual_type (object_type, null, this);
+				if (!actual_base_type.equals (param.variable_type)) {
+					invalid_match = "incompatible type of parameter %d".printf (param_index);
+					return false;
+				}
 			}
 			param_index++;
 		}
