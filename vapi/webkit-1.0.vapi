@@ -459,7 +459,7 @@ namespace WebKit {
 		public virtual signal void hovering_over_link (string? p0, string p1);
 		public virtual signal void icon_loaded (string p0);
 		public virtual signal void load_committed (WebKit.WebFrame p0);
-		public virtual signal bool load_error (WebKit.WebFrame p0, string p1, void* p2);
+		public virtual signal bool load_error (WebKit.WebFrame p0, string p1, GLib.Error p2);
 		public virtual signal void load_finished (WebKit.WebFrame p0);
 		public virtual signal void load_progress_changed (int p0);
 		public virtual signal void load_started (WebKit.WebFrame p0);
