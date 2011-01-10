@@ -289,6 +289,8 @@ GActionGroup::action_removed has_emitter="1"
 GActionGroup::action_enabled_changed has_emitter="1"
 GActionGroup::action_state_changed has_emitter="1"
 
+g_cancellable_set_error_if_cancelled error_types="IOError"
+
 GDBusAuthObserver::authorize_authenticated_peer has_emitter="1"
 GDBusConnection:closed hidden="1"
 GDBusError errordomain="1"
@@ -339,6 +341,7 @@ g_settings_set_strv.value is_array="1" no_array_length="1"
 g_simple_async_result_new.source_object nullable="1"
 g_simple_async_result_new_take_error hidden="1"
 
+g_socket_condition_wait error_types="GLib.IOError"
 g_socket_listener_accept_finish.source_object transfer_ownership="1" nullable="1" default_value="null"
 g_socket_listener_accept_socket_finish.source_object transfer_ownership="1" nullable="1" default_value="null"
 g_vfs_local_file_add_info.extra_data default_value="null"
