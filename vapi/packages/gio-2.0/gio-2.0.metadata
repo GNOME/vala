@@ -179,6 +179,8 @@ g_io_scheduler_*.notify nullable="1"
 g_memory_input_stream_*.destroy nullable="1"
 g_memory_output_stream_*.destroy_function nullable="1"
 
+g_cancellable_set_error_if_cancelled error_types="IOError"
+
 GDBusAuthObserver::authorize_authenticated_peer has_emitter="1"
 GDBusConnection:closed hidden="1"
 GDBusError errordomain="1"
@@ -228,6 +230,7 @@ g_settings_set_strv.value is_array="1" no_array_length="1"
 
 g_simple_async_result_new.source_object nullable="1"
 
+g_socket_condition_wait error_types="GLib.IOError"
 g_socket_listener_accept_finish.source_object transfer_ownership="1" nullable="1" default_value="null"
 g_socket_listener_accept_socket_finish.source_object transfer_ownership="1" nullable="1" default_value="null"
 g_vfs_local_file_add_info.extra_data default_value="null"
