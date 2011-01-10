@@ -1262,7 +1262,7 @@ namespace GLib {
 	public class Socket : GLib.Object, GLib.Initable {
 		[CCode (has_construct_function = false)]
 		public Socket (GLib.SocketFamily family, GLib.SocketType type, GLib.SocketProtocol protocol) throws GLib.Error;
-		public unowned GLib.Socket accept (GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public GLib.Socket accept (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool bind (GLib.SocketAddress address, bool allow_reuse) throws GLib.Error;
 		public bool check_connect_result () throws GLib.Error;
 		public bool close () throws GLib.Error;
