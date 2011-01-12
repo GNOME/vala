@@ -40,7 +40,7 @@ namespace GLib {
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static string get_mime_type (string type);
 		[CCode (cheader_filename = "gio/gio.h")]
-		public static string guess (string filename, uchar[] data, out bool result_uncertain);
+		public static string guess (string? filename, uchar[] data, out bool result_uncertain);
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static string guess_for_tree (GLib.File root);
 		[CCode (cheader_filename = "gio/gio.h")]
