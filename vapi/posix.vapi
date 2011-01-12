@@ -1539,6 +1539,12 @@ namespace Posix {
 	[CCode (cheader_filename = "sys/time.h,sys/resource.h")]
 	public int setpriority (int which, int who, int prio);
 
+	[CCode (cname = "struct iovec", cheader_filename = "sys/uio.h")]
+	public struct iovector {
+		public void* iov_base;
+		public size_t iov_len;
+	}
+
 	[CCode (cheader_filename = "unistd.h")]
 	public int close (int fd);
 	[CCode (cheader_filename = "unistd.h")]
@@ -1553,6 +1559,8 @@ namespace Posix {
 	public ssize_t pread (int fd, void* buf, size_t count, off_t offset);
 	[CCode (cheader_filename = "unistd.h")]
 	public ssize_t readlink (string path, char[] buf);
+	[CCode (cheader_filename = "sys/uio.h")]
+	public ssize_t readv (int fd, iovector vector, int iovcnt);
 	[CCode (cheader_filename = "unistd.h,sys/types.h")]
 	public int setgid (gid_t gid);
 	[CCode (cheader_filename = "unistd.h,sys/types.h")]
@@ -1563,6 +1571,8 @@ namespace Posix {
 	public ssize_t write (int fd, void* buf, size_t count);
 	[CCode (cheader_filename = "unistd.h")]
 	public ssize_t pwrite (int fd, void* buf, size_t count, off_t offset);
+	[CCode (cheader_filename = "sys/uio.h")]
+	public ssize_t writev (int fd, iovector vector, int iovcnt);
 	[CCode (cheader_filename = "unistd.h")]
 	public off_t lseek(int fildes, off_t offset, int whence);
 
