@@ -164,6 +164,9 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			for (int i = 1; i < rank; i++) {
 				var cmul = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, cindex, get_array_length_cexpression (expr.container, i + 1));
 				cindex = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, cmul, get_cvalue (indices[i]));
+				if (expr.container.is_constant ()) {
+					ccontainer = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, ccontainer);
+				}
 			}
 			set_cvalue (expr, new CCodeElementAccess (ccontainer, cindex));
 		}
