@@ -147,9 +147,13 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			}
 
 			if (array_type != null) {
-				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("G_N_ELEMENTS"));
-				ccall.add_argument (new CCodeIdentifier (get_ccode_name (c)));
-				append_array_length (expr, ccall);
+				string sub = "";
+				for (int i = 0; i < array_type.rank; i++) {
+					var ccall = new CCodeFunctionCall (new CCodeIdentifier ("G_N_ELEMENTS"));
+					ccall.add_argument (new CCodeIdentifier (get_ccode_name (c) + sub));
+					append_array_length (expr, ccall);
+					sub += "[0]";
+				}
 			}
 		} else if (expr.symbol_reference is Property) {
 			var prop = (Property) expr.symbol_reference;

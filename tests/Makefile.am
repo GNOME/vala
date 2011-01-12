@@ -28,6 +28,7 @@ TESTS = \
 	basic-types/bug595751.vala \
 	basic-types/bug596637.vala \
 	basic-types/bug596785.vala \
+	basic-types/bug604371.vala \
 	basic-types/bug622178.vala \
 	basic-types/bug632322.vala \
 	basic-types/bug643612.vala \
