@@ -1,6 +1,6 @@
 /* valaccodecontrolflowmodule.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2011  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
@@ -156,7 +156,9 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 
 			default_section.emit (this);
 
-			ccode.close ();
+			if (n > 0) {
+				ccode.close ();
+			}
 		}
 
 		ccode.close ();
