@@ -179,7 +179,11 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			// surrounding try found
 
 			// free local variables
-			append_local_free (current_symbol, false, current_try);
+			if (is_in_catch) {
+				append_local_free (current_symbol, false, current_catch);
+			} else {
+				append_local_free (current_symbol, false, current_try);
+			}
 
 			var error_types = new ArrayList<DataType> ();
 			foreach (DataType node_error_type in node.get_error_types ()) {
@@ -295,6 +299,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		var old_try = current_try;
 		var old_try_id = current_try_id;
 		var old_is_in_catch = is_in_catch;
+		var old_catch = current_catch;
 		current_try = stmt;
 		current_try_id = this_try_id;
 		is_in_catch = true;
@@ -308,6 +313,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		is_in_catch = true;
 
 		foreach (CatchClause clause in stmt.get_catch_clauses ()) {
+			current_catch = clause;
 			ccode.add_goto ("__finally%d".printf (this_try_id));
 			clause.emit (this);
 		}
@@ -315,6 +321,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		current_try = old_try;
 		current_try_id = old_try_id;
 		is_in_catch = old_is_in_catch;
+		current_catch = old_catch;
 
 		ccode.add_label ("__finally%d".printf (this_try_id));
 		if (stmt.finally_body != null) {
