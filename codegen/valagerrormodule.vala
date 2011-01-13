@@ -179,7 +179,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			// surrounding try found
 
 			// free local variables
-			append_error_free (current_symbol, current_try);
+			append_local_free (current_symbol, false, current_try);
 
 			var error_types = new ArrayList<DataType> ();
 			foreach (DataType node_error_type in node.get_error_types ()) {
@@ -365,19 +365,21 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		ccode.close ();
 	}
 
-	public override void append_local_free (Symbol sym, bool stop_at_loop = false) {
-		var finally_block = (Block) null;
-		if (sym.parent_node is TryStatement) {
-			finally_block = (sym.parent_node as TryStatement).finally_body;
-		} else if (sym.parent_node is CatchClause) {
-			finally_block = (sym.parent_node.parent_node as TryStatement).finally_body;
+	public override void append_local_free (Symbol sym, bool stop_at_loop = false, CodeNode? stop_at = null) {
+		if (!(stop_at is TryStatement || stop_at is CatchClause)) {
+			var finally_block = (Block) null;
+			if (sym.parent_node is TryStatement) {
+				finally_block = (sym.parent_node as TryStatement).finally_body;
+			} else if (sym.parent_node is CatchClause) {
+				finally_block = (sym.parent_node.parent_node as TryStatement).finally_body;
+			}
+
+			if (finally_block != null && finally_block != sym) {
+				finally_block.emit (this);
+			}
 		}
 
-		if (finally_block != null && finally_block != sym) {
-			finally_block.emit (this);
-		}
-
-		base.append_local_free (sym, stop_at_loop);
+		base.append_local_free (sym, stop_at_loop, stop_at);
 	}
 }
 

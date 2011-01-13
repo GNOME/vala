@@ -3188,7 +3188,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		temp_ref_vars.clear ();
 	}
 
-	public virtual void append_local_free (Symbol sym, bool stop_at_loop = false) {
+	public virtual void append_local_free (Symbol sym, bool stop_at_loop = false, CodeNode? stop_at = null) {
 		var b = (Block) sym;
 
 		var local_vars = b.get_local_variables ();
@@ -3220,43 +3220,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 		}
 
-		if (sym.parent_symbol is Block) {
-			append_local_free (sym.parent_symbol, stop_at_loop);
-		} else if (sym.parent_symbol is Method) {
-			append_param_free ((Method) sym.parent_symbol);
-		}
-	}
-
-	public void append_error_free (Symbol sym, TryStatement current_try) {
-		var b = (Block) sym;
-
-		var local_vars = b.get_local_variables ();
-		// free in reverse order
-		for (int i = local_vars.size - 1; i >= 0; i--) {
-			var local = local_vars[i];
-			if (!local.unreachable && local.active && !local.floating && !local.captured && requires_destroy (local.variable_type)) {
-				var ma = new MemberAccess.simple (local.name);
-				ma.symbol_reference = local;
-				ma.value_type = local.variable_type.copy ();
-				visit_member_access (ma);
-				ccode.add_expression (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma));
-			}
-		}
-
-		if (b.captured) {
-			int block_id = get_block_id (b);
-
-			var data_unref = new CCodeFunctionCall (new CCodeIdentifier ("block%d_data_unref".printf (block_id)));
-			data_unref.add_argument (get_variable_cexpression ("_data%d_".printf (block_id)));
-			ccode.add_expression (data_unref);
-		}
-
-		if (sym == current_try.body) {
+		if (b.parent_node == stop_at) {
 			return;
 		}
 
 		if (sym.parent_symbol is Block) {
-			append_error_free (sym.parent_symbol, current_try);
+			append_local_free (sym.parent_symbol, stop_at_loop, stop_at);
 		} else if (sym.parent_symbol is Method) {
 			append_param_free ((Method) sym.parent_symbol);
 		}
