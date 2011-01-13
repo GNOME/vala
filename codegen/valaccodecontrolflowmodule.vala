@@ -172,11 +172,20 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 
 		ccode.open_switch (get_cvalue (stmt.expression));
 
+		bool has_default = false;
+
 		foreach (SwitchSection section in stmt.get_sections ()) {
 			if (section.has_default_label ()) {
 				ccode.add_default ();
+				has_default = true;
 			}
 			section.emit (this);
+		}
+
+		if (!has_default) {
+			// silence C compiler
+			ccode.add_default ();
+			ccode.add_break ();
 		}
 
 		ccode.close ();
