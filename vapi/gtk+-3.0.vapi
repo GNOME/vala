@@ -784,11 +784,11 @@ namespace Gtk {
 		public void get_alignment (float xalign, float yalign);
 		public void get_fixed_size (out int width, out int height);
 		public void get_padding (int xpad, int ypad);
-		public virtual void get_preferred_height (Gtk.Widget widget, int minimum_size, int natural_size);
-		public virtual void get_preferred_height_for_width (Gtk.Widget widget, int width, int minimum_height, int natural_height);
-		public void get_preferred_size (Gtk.Widget widget, Gtk.Requisition minimum_size, Gtk.Requisition natural_size);
-		public virtual void get_preferred_width (Gtk.Widget widget, int minimum_size, int natural_size);
-		public virtual void get_preferred_width_for_height (Gtk.Widget widget, int height, int minimum_width, int natural_width);
+		public virtual void get_preferred_height (Gtk.Widget widget, out int minimum_size, out int natural_size);
+		public virtual void get_preferred_height_for_width (Gtk.Widget widget, int width, out int minimum_height, out int natural_height);
+		public void get_preferred_size (Gtk.Widget widget, out Gtk.Requisition minimum_size, out Gtk.Requisition natural_size);
+		public virtual void get_preferred_width (Gtk.Widget widget, out int minimum_size, out int natural_size);
+		public virtual void get_preferred_width_for_height (Gtk.Widget widget, int height, out int minimum_width, out int natural_width);
 		public virtual Gtk.SizeRequestMode get_request_mode ();
 		public bool get_sensitive ();
 		[NoWrapper]
