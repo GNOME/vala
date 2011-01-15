@@ -992,6 +992,17 @@ public class string {
 		return ((char*) this)[index];
 	}
 
+	// checks whether valid string character starts at specified index
+	// embedded NULs are not supported by the string class
+	public bool valid_char (int index) {
+		uint8 c = ((uint8*) this)[index];
+		if (c == 0x00 || (c >= 0x80 && c < 0xc2) || c >= 0xf5) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
 	[CCode (cname = "g_utf8_next_char")]
 	public unowned string next_char ();
 	[CCode (cname = "g_utf8_get_char")]
