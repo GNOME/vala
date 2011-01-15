@@ -3,39 +3,123 @@
 [CCode (cprefix = "Gdk", lower_case_cprefix = "gdk_")]
 namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdkx.h")]
+	public class X11AppLaunchContext : Gdk.AppLaunchContext {
+		[CCode (has_construct_function = false)]
+		protected X11AppLaunchContext ();
+	}
+	[Compact]
+	[CCode (cheader_filename = "gdk/gdkx.h")]
+	public class X11AppLaunchContextClass {
+	}
+	[CCode (cheader_filename = "gdk/gdkx.h")]
+	public class X11Cursor : Gdk.Cursor {
+		[CCode (has_construct_function = false)]
+		protected X11Cursor ();
+		public static unowned Gdk.Cursor get_xcursor (Gdk.Cursor cursor);
+		public static unowned X.Display get_xdisplay (Gdk.Cursor cursor);
+	}
+	[Compact]
+	[CCode (cheader_filename = "gdk/gdkx.h")]
+	public class X11CursorClass {
+	}
+	[CCode (cheader_filename = "gdk/gdkx.h")]
+	public class X11Display : Gdk.Display {
+		[CCode (has_construct_function = false)]
+		protected X11Display ();
+		public static void broadcast_startup_message (Gdk.Display display, string message_type);
+		public static int error_trap_pop (Gdk.Display display);
+		public static void error_trap_pop_ignored (Gdk.Display display);
+		public static void error_trap_push (Gdk.Display display);
+		public static unowned string get_startup_notification_id (Gdk.Display display);
+		public static uint32 get_user_time (Gdk.Display display);
+		public static unowned X.Display get_xdisplay (Gdk.Display display);
+		public static void grab (Gdk.Display display);
+		public static void set_cursor_theme (Gdk.Display display, string theme, int size);
+		public static void set_startup_notification_id (Gdk.Display display, string startup_id);
+		public static int string_to_compound_text (Gdk.Display display, string str, out Gdk.Atom encoding, int format, uchar[] ctext, int length);
+		public static int text_property_to_text_list (Gdk.Display display, Gdk.Atom encoding, int format, uchar[] text, int length, string list);
+		public static void ungrab (Gdk.Display display);
+		public static bool utf8_to_compound_text (Gdk.Display display, string str, out Gdk.Atom encoding, int format, uchar[] ctext, int length);
+	}
+	[Compact]
+	[CCode (cheader_filename = "gdk/gdkx.h")]
+	public class X11DisplayClass {
+	}
+	[CCode (cheader_filename = "gdk/gdkx.h")]
+	public class X11DisplayManager : Gdk.DisplayManager {
+		[CCode (has_construct_function = false)]
+		protected X11DisplayManager ();
+	}
+	[Compact]
+	[CCode (cheader_filename = "gdk/gdkx.h")]
+	public class X11DisplayManagerClass {
+	}
+	[CCode (cheader_filename = "gdk/gdkx.h")]
+	public class X11DragContext : Gdk.DragContext {
+		[CCode (has_construct_function = false)]
+		protected X11DragContext ();
+	}
+	[Compact]
+	[CCode (cheader_filename = "gdk/gdkx.h")]
+	public class X11DragContextClass {
+	}
+	[CCode (cheader_filename = "gdk/gdkx.h")]
+	public class X11Keymap : Gdk.Keymap {
+		[CCode (has_construct_function = false)]
+		protected X11Keymap ();
+	}
+	[Compact]
+	[CCode (cheader_filename = "gdk/gdkx.h")]
+	public class X11KeymapClass {
+	}
+	[CCode (cheader_filename = "gdk/gdkx.h")]
+	public class X11Screen : Gdk.Screen {
+		[CCode (has_construct_function = false)]
+		protected X11Screen ();
+		public static X.ID get_monitor_output (Gdk.Screen screen, int monitor_num);
+		public static int get_screen_number (Gdk.Screen screen);
+		public static unowned string get_window_manager_name (Gdk.Screen screen);
+		public static unowned X.Screen get_xscreen (Gdk.Screen screen);
+		public static unowned Gdk.Visual lookup_visual (Gdk.Screen screen, uint32 xvisualid);
+		public static bool supports_net_wm_hint (Gdk.Screen screen, Gdk.Atom property);
+		public virtual signal void window_manager_changed ();
+	}
+	[Compact]
+	[CCode (cheader_filename = "gdk/gdkx.h")]
+	public class X11ScreenClass {
+	}
+	[CCode (cheader_filename = "gdk/gdkx.h")]
+	public class X11Visual : Gdk.Visual {
+		[CCode (has_construct_function = false)]
+		protected X11Visual ();
+		public static unowned Gdk.Visual get_xvisual (Gdk.Visual visual);
+	}
+	[Compact]
+	[CCode (cheader_filename = "gdk/gdkx.h")]
+	public class X11VisualClass {
+	}
+	[CCode (cheader_filename = "gdk/gdkx.h")]
+	public class X11Window : Gdk.Window {
+		[CCode (has_construct_function = false)]
+		protected X11Window ();
+		public static unowned Gdk.Window foreign_new_for_display (Gdk.Display display, X.Window window);
+		public static X.Window get_xid (Gdk.Window window);
+		public static unowned Gdk.Window lookup_for_display (Gdk.Display display, X.Window window);
+		public static void move_to_current_desktop (Gdk.Window window);
+		public static void set_user_time (Gdk.Window window, uint32 timestamp);
+	}
+	[Compact]
+	[CCode (cheader_filename = "gdk/gdkx.h")]
+	public class X11WindowClass {
+	}
+	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static X.Atom x11_atom_to_xatom (Gdk.Atom atom);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static X.Atom x11_atom_to_xatom_for_display (Gdk.Display display, Gdk.Atom atom);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static unowned Gdk.Cursor x11_cursor_get_xcursor (Gdk.Cursor cursor);
+	public static void x11_free_compound_text (uchar[] ctext);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static unowned X.Display x11_cursor_get_xdisplay (Gdk.Cursor cursor);
-	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static void x11_display_broadcast_startup_message (Gdk.Display display, string message_type);
-	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static int x11_display_error_trap_pop (Gdk.Display display);
-	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static void x11_display_error_trap_pop_ignored (Gdk.Display display);
-	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static void x11_display_error_trap_push (Gdk.Display display);
-	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static unowned string x11_display_get_startup_notification_id (Gdk.Display display);
-	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static uint32 x11_display_get_user_time (Gdk.Display display);
-	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static unowned X.Display x11_display_get_xdisplay (Gdk.Display display);
-	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static void x11_display_grab (Gdk.Display display);
-	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static void x11_display_set_cursor_theme (Gdk.Display display, string theme, int size);
-	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static void x11_display_set_startup_notification_id (Gdk.Display display, string startup_id);
-	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static void x11_display_ungrab (Gdk.Display display);
-	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static unowned X.Display x11_drawable_get_xdisplay (Gdk.Drawable drawable);
-	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static X.ID x11_drawable_get_xid (Gdk.Drawable drawable);
+	public static void x11_free_text_list (string list);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static X.Window x11_get_default_root_xwindow ();
 	[CCode (cheader_filename = "gdk/gdkx.h")]
@@ -56,40 +140,14 @@ namespace Gdk {
 	public static void x11_grab_server ();
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static unowned Gdk.Display x11_lookup_xdisplay (X.Display xdisplay);
-	[CCode (cname = "gdk_net_wm_supports", cheader_filename = "gdk/gdkx.h")]
-	public static bool x11_net_wm_supports (Gdk.Atom property);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static void x11_register_standard_event_type (Gdk.Display display, int event_base, int n_events);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static X.ID x11_screen_get_monitor_output (Gdk.Screen screen, int monitor_num);
-	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static int x11_screen_get_screen_number (Gdk.Screen screen);
-	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static unowned string x11_screen_get_window_manager_name (Gdk.Screen screen);
-	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static unowned X.Screen x11_screen_get_xscreen (Gdk.Screen screen);
-	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static unowned Gdk.Visual x11_screen_lookup_visual (Gdk.Screen screen, uint32 xvisualid);
-	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static bool x11_screen_supports_net_wm_hint (Gdk.Screen screen, Gdk.Atom property);
+	public static void x11_set_sm_client_id (string sm_client_id);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static void x11_ungrab_server ();
-	[CCode (cname = "gdkx_visual_get", cheader_filename = "gdk/gdkx.h")]
-	public static unowned Gdk.Visual x11_visual_get (uint32 xvisualid);
-	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static unowned Gdk.Visual x11_visual_get_xvisual (Gdk.Visual visual);
-	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static unowned Gdk.Drawable x11_window_get_drawable_impl (Gdk.Window window);
-	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static void x11_window_move_to_current_desktop (Gdk.Window window);
-	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static void x11_window_set_user_time (Gdk.Window window, uint32 timestamp);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static Gdk.Atom x11_xatom_to_atom (X.Atom xatom);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static Gdk.Atom x11_xatom_to_atom_for_display (Gdk.Display display, X.Atom xatom);
-	[CCode (cname = "gdk_xid_table_lookup", cheader_filename = "gdk/gdkx.h")]
-	public static void* x11_xid_table_lookup (X.ID xid);
-	[CCode (cname = "gdk_xid_table_lookup_for_display", cheader_filename = "gdk/gdkx.h")]
-	public static void* x11_xid_table_lookup_for_display (Gdk.Display display, X.ID xid);
 }
