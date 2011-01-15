@@ -5134,6 +5134,7 @@ namespace Gtk {
 		public virtual signal bool configure_event (Gdk.EventConfigure event);
 		public virtual signal bool damage_event (Gdk.Event event);
 		public virtual signal bool delete_event (Gdk.Event event);
+		[HasEmitter]
 		public virtual signal void destroy ();
 		public virtual signal bool destroy_event (Gdk.Event event);
 		public virtual signal void direction_changed (Gtk.TextDirection previous_direction);
