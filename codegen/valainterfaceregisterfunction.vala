@@ -1,6 +1,7 @@
 /* valainterfaceregisterfunction.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2011  Jürg Billeter
+ * Copyright (C) 2006-2007  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -77,9 +78,7 @@ public class Vala.InterfaceRegisterFunction : TypeRegisterFunction {
 		return interface_reference.access;
 	}
 
-	public override CCodeFragment get_type_interface_init_statements (bool plugin) {
-		var frag = new CCodeFragment ();
-		
+	public override void get_type_interface_init_statements (CCodeBlock block, bool plugin) {
 		/* register all prerequisites */
 		foreach (DataType prereq_ref in interface_reference.get_prerequisites ()) {
 			var prereq = prereq_ref.data_type;
@@ -88,9 +87,9 @@ public class Vala.InterfaceRegisterFunction : TypeRegisterFunction {
 			func.add_argument (new CCodeIdentifier ("%s_type_id".printf (interface_reference.get_lower_case_cname (null))));
 			func.add_argument (new CCodeIdentifier (prereq.get_type_id()));
 			
-			frag.append (new CCodeExpressionStatement (func));
+			block.add_statement (new CCodeExpressionStatement (func));
 		}
-		
-		return frag;
+
+		((CCodeBaseModule) context.codegen).register_dbus_info (block, interface_reference);
 	}
 }

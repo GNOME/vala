@@ -1300,15 +1300,6 @@ public class Vala.DBusClientModule : DBusModule {
 		cfile.add_function (set_prop);
 	}
 
-	public override TypeRegisterFunction create_interface_register_function (Interface iface) {
-		string dbus_iface_name = get_dbus_name (iface);
-		if (dbus_iface_name == null) {
-			return new InterfaceRegisterFunction (iface, context);
-		}
-
-		return new DBusInterfaceRegisterFunction (iface, context);
-	}
-
 	string generate_get_all_function (Method m) {
 		string get_all_func = "_dbus_g_proxy_get_all";
 
@@ -2819,5 +2810,26 @@ public class Vala.DBusClientModule : DBusModule {
 		cfile.add_function (function);
 
 		return proxy_name;
+	}
+
+	public override void register_dbus_info (CCodeBlock block, ObjectTypeSymbol sym) {
+		if (!(sym is Interface)) {
+			return;
+		}
+
+		string dbus_iface_name = get_dbus_name (sym);
+		if (dbus_iface_name == null) {
+			return;
+		}
+
+		var quark_dbus_proxy = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_string"));
+		quark_dbus_proxy.add_argument (new CCodeConstant ("\"ValaDBusInterfaceProxyType\""));
+
+		var func = new CCodeFunctionCall (new CCodeIdentifier ("g_type_set_qdata"));
+		func.add_argument (new CCodeIdentifier ("%s_type_id".printf (sym.get_lower_case_cname (null))));
+		func.add_argument (quark_dbus_proxy);
+		func.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("%s_dbus_proxy_get_type".printf (sym.get_lower_case_cname (null)))));
+
+		block.add_statement (new CCodeExpressionStatement (func));
 	}
 }

@@ -1302,8 +1302,6 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 		}
 
-		register_dbus_info (cl);
-
 		pop_context ();
 	}
 
@@ -1972,7 +1970,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 		decl_space.add_type_definition (type_struct);
 
-		var type_fun = create_interface_register_function (iface);
+		var type_fun = new InterfaceRegisterFunction (iface, context);
 		type_fun.init_from_type (in_plugin);
 		decl_space.add_type_member_declaration (type_fun.get_declaration ());
 	}
@@ -2002,16 +2000,12 @@ public class Vala.GTypeModule : GErrorModule {
 			cfile.add_type_member_definition (new CCodeComment (iface.comment.content));
 		}
 
-		var type_fun = create_interface_register_function (iface);
+		var type_fun = new InterfaceRegisterFunction (iface, context);
 		type_fun.init_from_type (in_plugin);
 		cfile.add_type_member_declaration (type_fun.get_source_declaration ());
 		cfile.add_type_member_definition (type_fun.get_definition ());
 
 		pop_context ();
-	}
-
-	public virtual TypeRegisterFunction create_interface_register_function (Interface iface) {
-		return new InterfaceRegisterFunction (iface, context);
 	}
 
 	private void add_interface_base_init_function (Interface iface) {
@@ -2067,8 +2061,6 @@ public class Vala.GTypeModule : GErrorModule {
 				ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, m.vfunc_name), new CCodeIdentifier (cname)));
 			}
 		}
-
-		register_dbus_info (iface);
 
 		ccode.close ();
 

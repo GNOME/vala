@@ -50,8 +50,4 @@ public class Vala.EnumRegisterFunction : TypeRegisterFunction {
 	public override SymbolAccessibility get_accessibility () {
 		return enum_reference.access;
 	}
-
-	public override CCodeFragment get_type_interface_init_statements (bool plugin) {
-		return new CCodeFragment ();
-	}
 }

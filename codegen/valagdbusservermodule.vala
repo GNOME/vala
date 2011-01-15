@@ -1323,20 +1323,22 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		cfile.add_function (cfunc);
 	}
 
-	public override void register_dbus_info (ObjectTypeSymbol sym) {
+	public override void register_dbus_info (CCodeBlock block, ObjectTypeSymbol sym) {
 		string dbus_iface_name = get_dbus_name (sym);
 		if (dbus_iface_name == null) {
 			return;
 		}
 
+		base.register_dbus_info (block, sym);
+
 		var quark = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_static_string"));
 		quark.add_argument (new CCodeConstant ("\"vala-dbus-register-object\""));
 
 		var set_qdata = new CCodeFunctionCall (new CCodeIdentifier ("g_type_set_qdata"));
-		set_qdata.add_argument (new CCodeIdentifier (sym.get_upper_case_cname ("TYPE_")));
+		set_qdata.add_argument (new CCodeIdentifier ("%s_type_id".printf (sym.get_lower_case_cname (null))));
 		set_qdata.add_argument (quark);
 		set_qdata.add_argument (new CCodeCastExpression (new CCodeIdentifier (sym.get_lower_case_cprefix () + "register_object"), "void*"));
 
-		ccode.add_expression (set_qdata);
+		block.add_statement (new CCodeExpressionStatement (set_qdata));
 	}
 }

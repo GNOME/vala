@@ -216,13 +216,42 @@ public class Vala.GDBusClientModule : GDBusModule {
 		}
 
 		var ma = (MemberAccess) expr.call;
-		var type_arg = (ObjectType) ma.get_type_arguments ().get (0);
-		var iface = (Interface) type_arg.type_symbol;
+		var type_arg = ma.get_type_arguments ().get (0);
 
-		string dbus_iface_name = get_dbus_name (iface);
-		if (dbus_iface_name == null) {
-			Report.error (expr.source_reference, "`%s' is not a D-Bus interface".printf (iface.get_full_name ()));
-			return;
+		CCodeExpression proxy_type;
+		CCodeExpression dbus_iface_name;
+
+		var object_type = type_arg as ObjectType;
+		if (object_type != null) {
+			var iface = (Interface) object_type.type_symbol;
+
+			if (get_dbus_name (iface) == null) {
+				Report.error (expr.source_reference, "`%s' is not a D-Bus interface".printf (iface.get_full_name ()));
+				return;
+			}
+
+			proxy_type = new CCodeIdentifier ("%s_PROXY".printf (iface.get_type_id ()));
+			dbus_iface_name = new CCodeConstant ("\"%s\"".printf (get_dbus_name (iface)));
+		} else {
+			// use runtime type information for generic methods
+
+			var quark = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_static_string"));
+			quark.add_argument (new CCodeConstant ("\"vala-dbus-proxy-type\""));
+
+			var get_qdata = new CCodeFunctionCall (new CCodeIdentifier ("g_type_get_qdata"));
+			get_qdata.add_argument (get_type_id_expression (type_arg));
+			get_qdata.add_argument (quark);
+
+			proxy_type = new CCodeFunctionCall (new CCodeCastExpression (get_qdata, "GType (*) (void)"));
+
+			quark = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_static_string"));
+			quark.add_argument (new CCodeConstant ("\"vala-dbus-interface-name\""));
+
+			get_qdata = new CCodeFunctionCall (new CCodeIdentifier ("g_type_get_qdata"));
+			get_qdata.add_argument (get_type_id_expression (type_arg));
+			get_qdata.add_argument (quark);
+
+			dbus_iface_name = get_qdata;
 		}
 
 		var base_arg_index = 0;
@@ -244,7 +273,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 		} else {
 			ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_initable_new"));
 		}
-		ccall.add_argument (new CCodeIdentifier ("%s_PROXY".printf (iface.get_type_id ())));
+		ccall.add_argument (proxy_type);
 		if (bus_get_proxy_async || conn_get_proxy_async) {
 			// I/O priority
 			ccall.add_argument (new CCodeConstant ("0"));
@@ -280,7 +309,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 		object_path.emit (this);
 		ccall.add_argument (get_cvalue (object_path));
 		ccall.add_argument (new CCodeConstant ("\"g-interface-name\""));
-		ccall.add_argument (new CCodeConstant ("\"%s\"".printf (get_dbus_name (iface))));
+		ccall.add_argument (dbus_iface_name);
 		ccall.add_argument (new CCodeConstant ("NULL"));
 
 		if (bus_get_proxy_async || conn_get_proxy_async) {
@@ -1015,5 +1044,38 @@ public class Vala.GDBusClientModule : GDBusModule {
 		cfile.add_function (function);
 
 		return proxy_name;
+	}
+
+	public override void register_dbus_info (CCodeBlock block, ObjectTypeSymbol sym) {
+		if (!(sym is Interface)) {
+			return;
+		}
+
+		string dbus_iface_name = get_dbus_name (sym);
+		if (dbus_iface_name == null) {
+			return;
+		}
+
+		var quark = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_static_string"));
+		quark.add_argument (new CCodeConstant ("\"vala-dbus-proxy-type\""));
+
+		var proxy_type = new CCodeIdentifier (sym.get_lower_case_cprefix () + "proxy_get_type");
+
+		var set_qdata = new CCodeFunctionCall (new CCodeIdentifier ("g_type_set_qdata"));
+		set_qdata.add_argument (new CCodeIdentifier ("%s_type_id".printf (sym.get_lower_case_cname (null))));
+		set_qdata.add_argument (quark);
+		set_qdata.add_argument (new CCodeCastExpression (proxy_type, "void*"));
+
+		block.add_statement (new CCodeExpressionStatement (set_qdata));
+
+		quark = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_static_string"));
+		quark.add_argument (new CCodeConstant ("\"vala-dbus-interface-name\""));
+
+		set_qdata = new CCodeFunctionCall (new CCodeIdentifier ("g_type_set_qdata"));
+		set_qdata.add_argument (new CCodeIdentifier ("%s_type_id".printf (sym.get_lower_case_cname (null))));
+		set_qdata.add_argument (quark);
+		set_qdata.add_argument (new CCodeConstant ("\"%s\"".printf (dbus_iface_name)));
+
+		block.add_statement (new CCodeExpressionStatement (set_qdata));
 	}
 }

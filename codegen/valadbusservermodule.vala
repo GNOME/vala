@@ -1604,15 +1604,17 @@ public class Vala.DBusServerModule : DBusClientModule {
 	CCodeExpression get_vtable (ObjectType object_type) {
 		var sym = object_type.type_symbol;
 
-		var vtable = new CCodeInitializerList ();
-		vtable.append (new CCodeIdentifier (sym.get_lower_case_cprefix () + "dbus_register_object"));
+		if (add_wrapper ("_" + sym.get_lower_case_cprefix () + "dbus_vtable")) {
+			var vtable = new CCodeInitializerList ();
+			vtable.append (new CCodeIdentifier (sym.get_lower_case_cprefix () + "dbus_register_object"));
 
-		generate_register_function (object_type);
+			generate_register_function (object_type);
 
-		var cdecl = new CCodeDeclaration ("const _DBusObjectVTable");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("_" + sym.get_lower_case_cprefix () + "dbus_vtable", vtable));
-		cdecl.modifiers = CCodeModifiers.STATIC;
-		cfile.add_constant_declaration (cdecl);
+			var cdecl = new CCodeDeclaration ("const _DBusObjectVTable");
+			cdecl.add_declarator (new CCodeVariableDeclarator ("_" + sym.get_lower_case_cprefix () + "dbus_vtable", vtable));
+			cdecl.modifiers = CCodeModifiers.STATIC;
+			cfile.add_constant_declaration (cdecl);
+		}
 
 		return new CCodeIdentifier ("_" + sym.get_lower_case_cprefix () + "dbus_vtable");
 	}
@@ -1687,19 +1689,21 @@ public class Vala.DBusServerModule : DBusClientModule {
 		return false;
 	}
 
-	public override void register_dbus_info (ObjectTypeSymbol sym) {
+	public override void register_dbus_info (CCodeBlock block, ObjectTypeSymbol sym) {
 		if (!type_implements_dbus_interface (sym)) {
 			return;
 		}
+
+		base.register_dbus_info (block, sym);
 
 		var quark = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_static_string"));
 		quark.add_argument (new CCodeConstant ("\"DBusObjectVTable\""));
 
 		var set_qdata = new CCodeFunctionCall (new CCodeIdentifier ("g_type_set_qdata"));
-		set_qdata.add_argument (new CCodeIdentifier (sym.get_upper_case_cname ("TYPE_")));
+		set_qdata.add_argument (new CCodeIdentifier ("%s_type_id".printf (sym.get_lower_case_cname (null))));
 		set_qdata.add_argument (quark);
 		set_qdata.add_argument (new CCodeCastExpression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_vtable (new ObjectType (sym))), "void*"));
 
-		ccode.add_expression (set_qdata);
+		block.add_statement (new CCodeExpressionStatement (set_qdata));
 	}
 }

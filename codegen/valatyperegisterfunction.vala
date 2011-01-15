@@ -222,7 +222,7 @@ public abstract class Vala.TypeRegisterFunction {
 			type_init.add_statement (new CCodeExpressionStatement (add_class_private_call));
 		}
 
-		type_init.add_statement (get_type_interface_init_statements (plugin));
+		get_type_interface_init_statements (type_init, plugin);
 
 		if (!plugin) {
 			CCodeExpression condition; // the condition that guards the type initialisation
@@ -426,7 +426,8 @@ public abstract class Vala.TypeRegisterFunction {
 	 *
 	 * @return C statements
 	 */
-	public abstract CCodeFragment get_type_interface_init_statements (bool plugin);
+	public virtual void get_type_interface_init_statements (CCodeBlock block, bool plugin) {
+	}
 	
 	public CCodeFragment get_source_declaration () {
 		return source_declaration_fragment;

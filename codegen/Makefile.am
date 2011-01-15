@@ -28,7 +28,6 @@ libvala_la_VALASOURCES = \
 	valaclassregisterfunction.vala \
 	valactype.vala \
 	valadbusclientmodule.vala \
-	valadbusinterfaceregisterfunction.vala \
 	valadbusmodule.vala \
 	valadbusservermodule.vala \
 	valadovaarraymodule.vala \

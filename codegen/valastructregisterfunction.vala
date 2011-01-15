@@ -49,8 +49,4 @@ public class Vala.StructRegisterFunction : TypeRegisterFunction {
 	public override SymbolAccessibility get_accessibility () {
 		return struct_reference.access;
 	}
-
-	public override CCodeFragment get_type_interface_init_statements (bool plugin) {
-		return new CCodeFragment ();
-	}
 }
