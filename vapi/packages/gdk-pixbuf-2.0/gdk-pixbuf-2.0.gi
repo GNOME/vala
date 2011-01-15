@@ -425,6 +425,15 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</constructor>
+			<constructor name="new_from_stream_async" symbol="gdk_pixbuf_new_from_stream_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="stream" type="GInputStream*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</constructor>
 			<constructor name="new_from_stream_at_scale" symbol="gdk_pixbuf_new_from_stream_at_scale">
 				<return-type type="GdkPixbuf*"/>
 				<parameters>
@@ -433,6 +442,25 @@
 					<parameter name="height" type="gint"/>
 					<parameter name="preserve_aspect_ratio" type="gboolean"/>
 					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_from_stream_at_scale_async" symbol="gdk_pixbuf_new_from_stream_at_scale_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="stream" type="GInputStream*"/>
+					<parameter name="width" type="gint"/>
+					<parameter name="height" type="gint"/>
+					<parameter name="preserve_aspect_ratio" type="gboolean"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_from_stream_finish" symbol="gdk_pixbuf_new_from_stream_finish">
+				<return-type type="GdkPixbuf*"/>
+				<parameters>
+					<parameter name="async_result" type="GAsyncResult*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</constructor>
@@ -528,6 +556,24 @@
 					<parameter name="stream" type="GOutputStream*"/>
 					<parameter name="type" type="char*"/>
 					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="save_to_stream_async" symbol="gdk_pixbuf_save_to_stream_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="pixbuf" type="GdkPixbuf*"/>
+					<parameter name="stream" type="GOutputStream*"/>
+					<parameter name="type" type="gchar*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="save_to_stream_finish" symbol="gdk_pixbuf_save_to_stream_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="async_result" type="GAsyncResult*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -770,9 +816,9 @@
 		<constant name="GDK_PIXBUF_FEATURES_H" type="int" value="1"/>
 		<constant name="GDK_PIXBUF_MAGIC_NUMBER" type="int" value="1197763408"/>
 		<constant name="GDK_PIXBUF_MAJOR" type="int" value="2"/>
-		<constant name="GDK_PIXBUF_MICRO" type="int" value="1"/>
-		<constant name="GDK_PIXBUF_MINOR" type="int" value="22"/>
-		<constant name="GDK_PIXBUF_VERSION" type="char*" value="2.22.1"/>
+		<constant name="GDK_PIXBUF_MICRO" type="int" value="0"/>
+		<constant name="GDK_PIXBUF_MINOR" type="int" value="23"/>
+		<constant name="GDK_PIXBUF_VERSION" type="char*" value="2.23.0"/>
 		<constant name="GDK_PIXDATA_HEADER_LENGTH" type="int" value="24"/>
 	</namespace>
 </api>
