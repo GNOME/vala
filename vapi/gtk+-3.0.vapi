@@ -2292,7 +2292,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Layout : Gtk.Container, Atk.Implementor, Gtk.Buildable, Gtk.Scrollable {
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
-		public Layout (Gtk.Adjustment hadjustment, Gtk.Adjustment vadjustment);
+		public Layout (Gtk.Adjustment? hadjustment = null, Gtk.Adjustment? vadjustment = null);
 		public unowned Gdk.Window get_bin_window ();
 		public unowned Gtk.Adjustment get_hadjustment ();
 		public void get_size (out uint width, out uint height);
