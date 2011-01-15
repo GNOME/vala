@@ -424,7 +424,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 								set_delegate_target (arg, get_variable_cexpression (temp_var.name));
 								carg_map.set (get_param_pos (param.cdelegate_target_parameter_position), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_delegate_target (arg)));
 								if (deleg_type.value_owned) {
-									temp_var = get_temp_variable (new DelegateType ((Delegate) context.root.scope.lookup ("GLib").scope.lookup ("DestroyNotify")));
+									temp_var = get_temp_variable (gdestroynotify_type);
 									emit_temp_var (temp_var);
 									set_delegate_target_destroy_notify (arg, get_variable_cexpression (temp_var.name));
 									carg_map.set (get_param_pos (param.cdelegate_target_parameter_position + 0.01), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_delegate_target_destroy_notify (arg)));
@@ -518,7 +518,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				set_delegate_target (expr, temp_ref);
 
 				if (deleg_type.value_owned) {
-					temp_var = get_temp_variable (new DelegateType ((Delegate) context.root.scope.lookup ("GLib").scope.lookup ("DestroyNotify")));
+					temp_var = get_temp_variable (gdestroynotify_type);
 					temp_ref = get_variable_cexpression (temp_var.name);
 
 					emit_temp_var (temp_var);

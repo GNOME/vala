@@ -2052,7 +2052,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					var target_var = new LocalVariable (new PointerType (new VoidType ()), get_delegate_target_cname (get_variable_cname (local.name)));
 					emit_temp_var (target_var);
 					if (deleg_type.value_owned) {
-						var target_destroy_notify_var = new LocalVariable (new DelegateType ((Delegate) context.root.scope.lookup ("GLib").scope.lookup ("DestroyNotify")), get_delegate_target_destroy_notify_cname (get_variable_cname (local.name)));
+						var target_destroy_notify_var = new LocalVariable (gdestroynotify_type, get_delegate_target_destroy_notify_cname (get_variable_cname (local.name)));
 						emit_temp_var (target_destroy_notify_var);
 					}
 				}
@@ -5212,7 +5212,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				} else if (expression_type is DelegateType && expr != null) {
 					var target_decl = new LocalVariable (new PointerType (new VoidType ()), get_delegate_target_cname (decl.name));
 					emit_temp_var (target_decl);
-					var target_destroy_notify_decl = new LocalVariable (new DelegateType ((Delegate) context.root.scope.lookup ("GLib").scope.lookup ("DestroyNotify")), get_delegate_target_destroy_notify_cname (decl.name));
+					var target_destroy_notify_decl = new LocalVariable (gdestroynotify_type, get_delegate_target_destroy_notify_cname (decl.name));
 					emit_temp_var (target_destroy_notify_decl);
 					CCodeExpression target_destroy_notify;
 					ccode.add_expression (new CCodeAssignment (get_variable_cexpression (target_decl.name), get_delegate_target_cexpression (expr, out target_destroy_notify)));
