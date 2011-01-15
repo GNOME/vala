@@ -1266,25 +1266,35 @@ namespace Posix {
 	public const int AF_INET6;
 	[CCode (cheader_filename = "sys/socket.h")]
 	public const int AF_UNIX;
+
+	[CCode (cheader_filename = "sys/socket.h")]
+	public const int SHUT_RD;
+	[CCode (cheader_filename = "sys/socket.h")]
+	public const int SHUT_WR;
+	[CCode (cheader_filename = "sys/socket.h")]
+	public const int SHUT_RDWR;
+
 	[CCode (cheader_filename = "sys/socket.h", sentinel = "")]
 	public int accept (int sfd, ... );
-    [CCode (cheader_filename = "sys/socket.h", sentinel = "")]
+	[CCode (cheader_filename = "sys/socket.h", sentinel = "")]
 	public int bind (int sockfd, ...);
 	[CCode (cheader_filename = "sys/socket.h",  sentinel = "")]
 	public int connect(int sfd, ... );
-    [CCode (cheader_filename = "sys/socket.h")]
-    public int getsockopt (int sockfd, int level, int optname, void* optval, out socklen_t optlen);
-    [CCode (cheader_filename = "sys/socket.h")]
+	[CCode (cheader_filename = "sys/socket.h")]
+	public int getsockopt (int sockfd, int level, int optname, void* optval, out socklen_t optlen);
+	[CCode (cheader_filename = "sys/socket.h")]
 	public int listen (int sfd, int backlog);
-    [CCode (cheader_filename = "sys/socket.h")]
-    public ssize_t send (int sockfd, void* buf, size_t len, int flags);
-    [CCode (cheader_filename = "sys/socket.h", sentinel = "")]
-    public ssize_t sendto (int sockfd, void* buf, size_t len, int flags, ...);
-    [CCode (cheader_filename = "sys/socket.h", sentinel = "")]
-    public ssize_t sendmsg (int sockfd, ...);
-    [CCode (cheader_filename = "sys/socket.h")]
-    public int setsockopt(int sockfd, int level, int optname, void* optval, socklen_t optlen);
-    [CCode (cheader_filename = "sys/socket.h")]
+	[CCode (cheader_filename = "sys/socket.h")]
+	public ssize_t send (int sockfd, void* buf, size_t len, int flags);
+	[CCode (cheader_filename = "sys/socket.h", sentinel = "")]
+	public ssize_t sendto (int sockfd, void* buf, size_t len, int flags, ...);
+	[CCode (cheader_filename = "sys/socket.h", sentinel = "")]
+	public ssize_t sendmsg (int sockfd, ...);
+	[CCode (cheader_filename = "sys/socket.h")]
+	public int setsockopt (int sockfd, int level, int optname, void* optval, socklen_t optlen);
+	[CCode (cheader_filename = "sys/socket.h")]
+	public int shutdown (int sockfd, int how);
+	[CCode (cheader_filename = "sys/socket.h")]
 	public int socket (int domain, int type, int protocol);
 	[CCode (cheader_filename = "sys/socket.h")]
 	public int socketpair (int domain, int type, int protocol, int[] sv);
