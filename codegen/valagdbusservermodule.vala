@@ -90,7 +90,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		bool uses_error = false;
 
 		if (!m.coroutine || ready) {
-			ccode.add_declaration ("GError*", new CCodeVariableDeclarator ("error", new CCodeConstant ("NULL")));
+			ccode.add_declaration ("GError*", new CCodeVariableDeclarator.zero ("error", new CCodeConstant ("NULL")));
 			uses_error = true;
 		}
 
@@ -154,7 +154,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 				if (may_fail) {
 					if (!uses_error) {
-						ccode.add_declaration ("GError*", new CCodeVariableDeclarator ("error", new CCodeConstant ("NULL")));
+						ccode.add_declaration ("GError*", new CCodeVariableDeclarator.zero ("error", new CCodeConstant ("NULL")));
 						uses_error = true;
 					}
 
