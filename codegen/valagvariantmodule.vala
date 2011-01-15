@@ -199,13 +199,13 @@ public class Vala.GVariantModule : GAsyncModule {
 		}
 	}
 
-	CCodeExpression? generate_enum_value_from_string (EnumValueType type, CCodeExpression? expr) {
+	CCodeExpression? generate_enum_value_from_string (EnumValueType type, CCodeExpression? expr, CCodeExpression? error_expr) {
 		var en = type.type_symbol as Enum;
 		var from_string_name = "%s_from_string".printf (en.get_lower_case_cname (null));
 
 		var from_string_call = new CCodeFunctionCall (new CCodeIdentifier (from_string_name));
 		from_string_call.add_argument (expr);
-		from_string_call.add_argument (new CCodeConstant ("NULL"));
+		from_string_call.add_argument (error_expr != null ? error_expr : new CCodeConstant ("NULL"));
 
 		return from_string_call;
 	}
@@ -464,13 +464,14 @@ public class Vala.GVariantModule : GAsyncModule {
 		return new CCodeIdentifier (temp_name);
 	}
 
-	public override CCodeExpression? deserialize_expression (DataType type, CCodeExpression variant_expr, CCodeExpression? expr) {
+	public override CCodeExpression? deserialize_expression (DataType type, CCodeExpression variant_expr, CCodeExpression? expr, CCodeExpression? error_expr = null, out bool may_fail = null) {
 		BasicTypeInfo basic_type;
 		CCodeExpression result = null;
 		if (is_string_marshalled_enum (type.data_type)) {
 			get_basic_type_info ("s", out basic_type);
 			result = deserialize_basic (basic_type, variant_expr, true);
-			result = generate_enum_value_from_string (type as EnumValueType, result);
+			result = generate_enum_value_from_string (type as EnumValueType, result, error_expr);
+			may_fail = true;
 		} else if (get_basic_type_info (get_type_signature (type), out basic_type)) {
 			result = deserialize_basic (basic_type, variant_expr);
 		} else if (type is ArrayType) {
@@ -503,7 +504,7 @@ public class Vala.GVariantModule : GAsyncModule {
 		return result;
 	}
 
-	public void read_expression (DataType type, CCodeExpression iter_expr, CCodeExpression target_expr, Symbol? sym) {
+	public void read_expression (DataType type, CCodeExpression iter_expr, CCodeExpression target_expr, Symbol? sym, CCodeExpression? error_expr = null, out bool may_fail = null) {
 		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_iter_next_value"));
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, iter_expr));
 
@@ -521,7 +522,7 @@ public class Vala.GVariantModule : GAsyncModule {
 
 		ccode.add_expression (new CCodeAssignment (variant_expr, iter_call));
 
-		var result = deserialize_expression (type, variant_expr, target_expr);
+		var result = deserialize_expression (type, variant_expr, target_expr, error_expr, out may_fail);
 		if (result == null) {
 			// error already reported
 			return;

@@ -1,6 +1,6 @@
 /* valagdbusclientmodule.vala
  *
- * Copyright (C) 2010  Jürg Billeter
+ * Copyright (C) 2010-2011  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -654,7 +654,8 @@ public class Vala.GDBusClientModule : GDBusModule {
 						}
 
 						var target = new CCodeIdentifier ("_" + param.name);
-						receive_dbus_value (param.variable_type, new CCodeIdentifier ("_reply_message"), new CCodeIdentifier ("_reply_iter"), target, param);
+						bool may_fail;
+						receive_dbus_value (param.variable_type, new CCodeIdentifier ("_reply_message"), new CCodeIdentifier ("_reply_iter"), target, param, new CCodeIdentifier ("error"), out may_fail);
 
 						// TODO check that parameter is not NULL (out parameters are optional)
 						// free value if parameter is NULL
@@ -665,6 +666,13 @@ public class Vala.GDBusClientModule : GDBusModule {
 								// TODO check that parameter is not NULL (out parameters are optional)
 								ccode.add_expression (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("%s_length%d".printf (param.name, dim))), new CCodeIdentifier ("_%s_length%d".printf (param.name, dim))));
 							}
+						}
+
+						if (may_fail) {
+							ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.AND, new CCodeIdentifier ("error"), new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("error"))));
+							ccode.add_expression (unref_reply);
+							return_default_value (m.return_type);
+							ccode.close ();
 						}
 					}
 				}
@@ -684,13 +692,21 @@ public class Vala.GDBusClientModule : GDBusModule {
 							}
 						}
 
-						receive_dbus_value (m.return_type, new CCodeIdentifier ("_reply_message"), new CCodeIdentifier ("_reply_iter"), new CCodeIdentifier ("_result"), m);
+						bool may_fail;
+						receive_dbus_value (m.return_type, new CCodeIdentifier ("_reply_message"), new CCodeIdentifier ("_reply_iter"), new CCodeIdentifier ("_result"), m, new CCodeIdentifier ("error"), out may_fail);
 
 						if (array_type != null) {
 							for (int dim = 1; dim <= array_type.rank; dim++) {
 								// TODO check that parameter is not NULL (out parameters are optional)
 								ccode.add_expression (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result_length%d".printf (dim))), new CCodeIdentifier ("_result_length%d".printf (dim))));
 							}
+						}
+
+						if (may_fail) {
+							ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.AND, new CCodeIdentifier ("error"), new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("error"))));
+							ccode.add_expression (unref_reply);
+							return_default_value (m.return_type);
+							ccode.close ();
 						}
 					}
 				}

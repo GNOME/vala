@@ -1,6 +1,6 @@
 /* valagdbusservermodule.vala
  *
- * Copyright (C) 2010  Jürg Billeter
+ * Copyright (C) 2010-2011  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -87,8 +87,11 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			cfile.add_include ("gio/gunixfdlist.h");
 		}
 
+		bool uses_error = false;
+
 		if (!m.coroutine || ready) {
 			ccode.add_declaration ("GError*", new CCodeVariableDeclarator ("error", new CCodeConstant ("NULL")));
+			uses_error = true;
 		}
 
 		if (!ready) {
@@ -146,7 +149,26 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 				var message_expr = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_method_invocation_get_message"));
 				message_expr.add_argument (new CCodeIdentifier ("invocation"));
 
-				receive_dbus_value (param.variable_type, message_expr, new CCodeIdentifier ("_arguments_iter"), new CCodeIdentifier (param.name), param);
+				bool may_fail;
+				receive_dbus_value (param.variable_type, message_expr, new CCodeIdentifier ("_arguments_iter"), new CCodeIdentifier (param.name), param, new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("error")), out may_fail);
+
+				if (may_fail) {
+					if (!uses_error) {
+						ccode.add_declaration ("GError*", new CCodeVariableDeclarator ("error", new CCodeConstant ("NULL")));
+						uses_error = true;
+					}
+
+					ccode.open_if (new CCodeIdentifier ("error"));
+
+					var return_error = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_method_invocation_return_gerror"));
+					return_error.add_argument (new CCodeIdentifier ("invocation"));
+					return_error.add_argument (new CCodeIdentifier ("error"));
+					ccode.add_expression (return_error);
+
+					ccode.add_return ();
+
+					ccode.close ();
+				}
 			}
 		}
 

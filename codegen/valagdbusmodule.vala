@@ -200,7 +200,7 @@ public class Vala.GDBusModule : GVariantModule {
 		return null;
 	}
 
-	public void receive_dbus_value (DataType type, CCodeExpression message_expr, CCodeExpression iter_expr, CCodeExpression target_expr, Symbol? sym) {
+	public void receive_dbus_value (DataType type, CCodeExpression message_expr, CCodeExpression iter_expr, CCodeExpression target_expr, Symbol? sym, CCodeExpression? error_expr = null, out bool may_fail = null) {
 		var fd_list = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_message_get_unix_fd_list"));
 		fd_list.add_argument (message_expr);
 
@@ -219,7 +219,7 @@ public class Vala.GDBusModule : GVariantModule {
 
 			ccode.add_expression (new CCodeAssignment (target_expr, stream));
 		} else {
-			read_expression (type, iter_expr, target_expr, sym);
+			read_expression (type, iter_expr, target_expr, sym, error_expr, out may_fail);
 		}
 	}
 }
