@@ -1005,6 +1005,10 @@ public class Vala.GIRWriter : CodeVisitor {
 			string name = camel_case_to_canonical (attr.name);
 			foreach (string arg_name in attr.args.get_keys ()) {
 				string value = attr.args.get (arg_name);
+				if (value.has_prefix ("\"")) {
+					// eval string
+					value = attr.get_string (arg_name);
+				}
 
 				write_indent ();
 				buffer.append_printf ("<annotation key=\"%s.%s\" value=\"%s\"/>\n",
