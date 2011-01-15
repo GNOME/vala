@@ -2259,7 +2259,7 @@ namespace Gtk {
 		public int scroll_y;
 		public Gdk.VisibilityState visibility;
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
-		public Layout (Gtk.Adjustment hadjustment, Gtk.Adjustment vadjustment);
+		public Layout (Gtk.Adjustment? hadjustment = null, Gtk.Adjustment? vadjustment = null);
 		public unowned Gdk.Window get_bin_window ();
 		public unowned Gtk.Adjustment get_hadjustment ();
 		public void get_size (out uint width, out uint height);
