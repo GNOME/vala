@@ -1,6 +1,6 @@
 /* glib-2.0.vala
  *
- * Copyright (C) 2006-2010  Jürg Billeter
+ * Copyright (C) 2006-2011  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  * Copyright (C) 2007  Mathias Hasselmann
  *
@@ -1199,7 +1199,7 @@ public class string {
 	}
 
 	[CCode (cname = "g_utf8_strlen")]
-	long utf8_strlen (ssize_t max);
+	public int char_count (ssize_t max = -1);
 
 	public int length {
 		[CCode (cname = "strlen")]
