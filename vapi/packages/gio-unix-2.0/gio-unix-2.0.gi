@@ -105,6 +105,14 @@
 				<parameter name="time_read" type="guint64*"/>
 			</parameters>
 		</function>
+		<callback name="GDesktopAppLaunchCallback">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="appinfo" type="GDesktopAppInfo*"/>
+				<parameter name="pid" type="GPid"/>
+				<parameter name="user_data" type="gpointer"/>
+			</parameters>
+		</callback>
 		<struct name="GUnixMountEntry">
 		</struct>
 		<struct name="GUnixMountMonitorClass">
@@ -192,6 +200,20 @@
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="info" type="GDesktopAppInfo*"/>
+				</parameters>
+			</method>
+			<method name="launch_uris_as_manager" symbol="g_desktop_app_info_launch_uris_as_manager">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="appinfo" type="GDesktopAppInfo*"/>
+					<parameter name="uris" type="GList*"/>
+					<parameter name="launch_context" type="GAppLaunchContext*"/>
+					<parameter name="spawn_flags" type="GSpawnFlags"/>
+					<parameter name="user_setup" type="GSpawnChildSetupFunc"/>
+					<parameter name="user_setup_data" type="gpointer"/>
+					<parameter name="pid_callback" type="GDesktopAppLaunchCallback"/>
+					<parameter name="pid_callback_data" type="gpointer"/>
+					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
 			<constructor name="new" symbol="g_desktop_app_info_new">
@@ -357,6 +379,9 @@
 			<property name="fd-list" type="GUnixFDList*" readable="1" writable="1" construct="0" construct-only="1"/>
 		</object>
 		<object name="GUnixInputStream" parent="GInputStream" type-name="GUnixInputStream" get-type="g_unix_input_stream_get_type">
+			<implements>
+				<interface name="GPollableInputStream"/>
+			</implements>
 			<method name="get_close_fd" symbol="g_unix_input_stream_get_close_fd">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -411,6 +436,9 @@
 			</signal>
 		</object>
 		<object name="GUnixOutputStream" parent="GOutputStream" type-name="GUnixOutputStream" get-type="g_unix_output_stream_get_type">
+			<implements>
+				<interface name="GPollableOutputStream"/>
+			</implements>
 			<method name="get_close_fd" symbol="g_unix_output_stream_get_close_fd">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -497,6 +525,25 @@
 			<property name="path" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="path-as-array" type="GByteArray*" readable="1" writable="1" construct="0" construct-only="1"/>
 		</object>
+		<interface name="GDesktopAppInfoLookup" type-name="GDesktopAppInfoLookup" get-type="g_desktop_app_info_lookup_get_type">
+			<requires>
+				<interface name="GObject"/>
+			</requires>
+			<method name="get_default_for_uri_scheme" symbol="g_desktop_app_info_lookup_get_default_for_uri_scheme">
+				<return-type type="GAppInfo*"/>
+				<parameters>
+					<parameter name="lookup" type="GDesktopAppInfoLookup*"/>
+					<parameter name="uri_scheme" type="char*"/>
+				</parameters>
+			</method>
+			<vfunc name="get_default_for_uri_scheme">
+				<return-type type="GAppInfo*"/>
+				<parameters>
+					<parameter name="lookup" type="GDesktopAppInfoLookup*"/>
+					<parameter name="uri_scheme" type="char*"/>
+				</parameters>
+			</vfunc>
+		</interface>
 		<interface name="GFileDescriptorBased" type-name="GFileDescriptorBased" get-type="g_file_descriptor_based_get_type">
 			<requires>
 				<interface name="GObject"/>
@@ -514,5 +561,6 @@
 				</parameters>
 			</vfunc>
 		</interface>
+		<constant name="G_DESKTOP_APP_INFO_LOOKUP_EXTENSION_POINT_NAME" type="char*" value="gio-desktop-app-info-lookup"/>
 	</namespace>
 </api>

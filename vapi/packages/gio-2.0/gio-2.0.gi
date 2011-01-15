@@ -387,6 +387,12 @@
 				<parameter name="cancellable" type="GCancellable*"/>
 			</parameters>
 		</function>
+		<function name="g_pollable_source_new" symbol="g_pollable_source_new">
+			<return-type type="GSource*"/>
+			<parameters>
+				<parameter name="pollable_stream" type="GObject*"/>
+			</parameters>
+		</function>
 		<function name="g_simple_async_report_error_in_idle" symbol="g_simple_async_report_error_in_idle">
 			<return-type type="void"/>
 			<parameters>
@@ -415,6 +421,9 @@
 				<parameter name="user_data" type="gpointer"/>
 				<parameter name="error" type="GError*"/>
 			</parameters>
+		</function>
+		<function name="g_tls_error_quark" symbol="g_tls_error_quark">
+			<return-type type="GQuark"/>
 		</function>
 		<callback name="GAsyncReadyCallback">
 			<return-type type="void"/>
@@ -462,6 +471,13 @@
 			<parameters>
 				<parameter name="connection" type="GDBusConnection*"/>
 				<parameter name="name" type="gchar*"/>
+				<parameter name="user_data" type="gpointer"/>
+			</parameters>
+		</callback>
+		<callback name="GCancellableSourceFunc">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="cancellable" type="GCancellable*"/>
 				<parameter name="user_data" type="gpointer"/>
 			</parameters>
 		</callback>
@@ -579,11 +595,10 @@
 				<parameter name="user_data" type="gpointer"/>
 			</parameters>
 		</callback>
-		<callback name="GPeriodicTickFunc">
-			<return-type type="void"/>
+		<callback name="GPollableSourceFunc">
+			<return-type type="gboolean"/>
 			<parameters>
-				<parameter name="periodic" type="GPeriodic*"/>
-				<parameter name="timestamp" type="gint64"/>
+				<parameter name="pollable_stream" type="GObject*"/>
 				<parameter name="user_data" type="gpointer"/>
 			</parameters>
 		</callback>
@@ -653,8 +668,6 @@
 			<field name="padding" type="gpointer[]"/>
 		</struct>
 		<struct name="GEmblemClass">
-		</struct>
-		<struct name="GEmblemedIconClass">
 		</struct>
 		<struct name="GFileAttributeInfo">
 			<field name="name" type="char*"/>
@@ -758,6 +771,8 @@
 				</parameters>
 			</method>
 		</struct>
+		<struct name="GIOStreamAdapter">
+		</struct>
 		<struct name="GInputVector">
 			<field name="buffer" type="gpointer"/>
 			<field name="size" type="gsize"/>
@@ -771,6 +786,12 @@
 		<struct name="GSimpleAsyncResultClass">
 		</struct>
 		<struct name="GThemedIconClass">
+		</struct>
+		<struct name="GTlsClientContext">
+		</struct>
+		<struct name="GTlsContext">
+		</struct>
+		<struct name="GTlsServerContext">
 		</struct>
 		<struct name="GUnixCredentialsMessage">
 		</struct>
@@ -1346,6 +1367,25 @@
 			<member name="G_SOCKET_TYPE_DATAGRAM" value="2"/>
 			<member name="G_SOCKET_TYPE_SEQPACKET" value="3"/>
 		</enum>
+		<enum name="GTlsAuthenticationMode" type-name="GTlsAuthenticationMode" get-type="g_tls_authentication_mode_get_type">
+			<member name="G_TLS_AUTHENTICATION_NONE" value="0"/>
+			<member name="G_TLS_AUTHENTICATION_REQUESTED" value="1"/>
+			<member name="G_TLS_AUTHENTICATION_REQUIRED" value="2"/>
+		</enum>
+		<enum name="GTlsError" type-name="GTlsError" get-type="g_tls_error_get_type">
+			<member name="G_TLS_ERROR_UNAVAILABLE" value="0"/>
+			<member name="G_TLS_ERROR_MISC" value="1"/>
+			<member name="G_TLS_ERROR_BAD_CERTIFICATE" value="2"/>
+			<member name="G_TLS_ERROR_NOT_TLS" value="3"/>
+			<member name="G_TLS_ERROR_HANDSHAKE" value="4"/>
+			<member name="G_TLS_ERROR_CERTIFICATE_REQUIRED" value="5"/>
+			<member name="G_TLS_ERROR_EOF" value="6"/>
+		</enum>
+		<enum name="GTlsRehandshakeMode" type-name="GTlsRehandshakeMode" get-type="g_tls_rehandshake_mode_get_type">
+			<member name="G_TLS_REHANDSHAKE_NEVER" value="0"/>
+			<member name="G_TLS_REHANDSHAKE_SAFELY" value="1"/>
+			<member name="G_TLS_REHANDSHAKE_UNSAFELY" value="2"/>
+		</enum>
 		<enum name="GUnixSocketAddressType" type-name="GUnixSocketAddressType" get-type="g_unix_socket_address_type_get_type">
 			<member name="G_UNIX_SOCKET_ADDRESS_INVALID" value="0"/>
 			<member name="G_UNIX_SOCKET_ADDRESS_ANONYMOUS" value="1"/>
@@ -1470,6 +1510,12 @@
 			<member name="G_FILE_QUERY_INFO_NONE" value="0"/>
 			<member name="G_FILE_QUERY_INFO_NOFOLLOW_SYMLINKS" value="1"/>
 		</flags>
+		<flags name="GIOStreamSpliceFlags" type-name="GIOStreamSpliceFlags" get-type="g_io_stream_splice_flags_get_type">
+			<member name="G_IO_STREAM_SPLICE_NONE" value="0"/>
+			<member name="G_IO_STREAM_SPLICE_CLOSE_STREAM1" value="1"/>
+			<member name="G_IO_STREAM_SPLICE_CLOSE_STREAM2" value="2"/>
+			<member name="G_IO_STREAM_SPLICE_WAIT_FOR_BOTH" value="4"/>
+		</flags>
 		<flags name="GMountUnmountFlags" type-name="GMountUnmountFlags" get-type="g_mount_unmount_flags_get_type">
 			<member name="G_MOUNT_UNMOUNT_NONE" value="0"/>
 			<member name="G_MOUNT_UNMOUNT_FORCE" value="1"/>
@@ -1486,6 +1532,16 @@
 			<member name="G_SETTINGS_BIND_NO_SENSITIVITY" value="4"/>
 			<member name="G_SETTINGS_BIND_GET_NO_CHANGES" value="8"/>
 			<member name="G_SETTINGS_BIND_INVERT_BOOLEAN" value="16"/>
+		</flags>
+		<flags name="GTlsCertificateFlags" type-name="GTlsCertificateFlags" get-type="g_tls_certificate_flags_get_type">
+			<member name="G_TLS_CERTIFICATE_UNKNOWN_CA" value="1"/>
+			<member name="G_TLS_CERTIFICATE_BAD_IDENTITY" value="2"/>
+			<member name="G_TLS_CERTIFICATE_NOT_ACTIVATED" value="4"/>
+			<member name="G_TLS_CERTIFICATE_EXPIRED" value="8"/>
+			<member name="G_TLS_CERTIFICATE_REVOKED" value="16"/>
+			<member name="G_TLS_CERTIFICATE_INSECURE" value="32"/>
+			<member name="G_TLS_CERTIFICATE_GENERIC_ERROR" value="64"/>
+			<member name="G_TLS_CERTIFICATE_VALIDATE_ALL" value="127"/>
 		</flags>
 		<object name="GAppLaunchContext" parent="GObject" type-name="GAppLaunchContext" get-type="g_app_launch_context_get_type">
 			<method name="get_display" symbol="g_app_launch_context_get_display">
@@ -2051,6 +2107,12 @@
 				<parameters>
 					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="source_new" symbol="g_cancellable_source_new">
+				<return-type type="GSource*"/>
+				<parameters>
+					<parameter name="cancellable" type="GCancellable*"/>
 				</parameters>
 			</method>
 			<signal name="cancelled" when="LAST">
@@ -3597,6 +3659,12 @@
 					<parameter name="emblem" type="GEmblem*"/>
 				</parameters>
 			</method>
+			<method name="clear_emblems" symbol="g_emblemed_icon_clear_emblems">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="emblemed" type="GEmblemedIcon*"/>
+				</parameters>
+			</method>
 			<method name="get_emblems" symbol="g_emblemed_icon_get_emblems">
 				<return-type type="GList*"/>
 				<parameters>
@@ -3616,6 +3684,7 @@
 					<parameter name="emblem" type="GEmblem*"/>
 				</parameters>
 			</constructor>
+			<property name="gicon" type="GIcon*" readable="1" writable="1" construct="0" construct-only="1"/>
 		</object>
 		<object name="GFileEnumerator" parent="GObject" type-name="GFileEnumerator" get-type="g_file_enumerator_get_type">
 			<method name="close" symbol="g_file_enumerator_close">
@@ -3711,7 +3780,7 @@
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="enumerator" type="GFileEnumerator*"/>
-					<parameter name="res" type="GAsyncResult*"/>
+					<parameter name="result" type="GAsyncResult*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</vfunc>
@@ -3746,7 +3815,7 @@
 				<return-type type="GList*"/>
 				<parameters>
 					<parameter name="enumerator" type="GFileEnumerator*"/>
-					<parameter name="res" type="GAsyncResult*"/>
+					<parameter name="result" type="GAsyncResult*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</vfunc>
@@ -3831,7 +3900,7 @@
 				<return-type type="GFileInfo*"/>
 				<parameters>
 					<parameter name="stream" type="GFileIOStream*"/>
-					<parameter name="res" type="GAsyncResult*"/>
+					<parameter name="result" type="GAsyncResult*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</vfunc>
@@ -4359,7 +4428,7 @@
 				<return-type type="GFileInfo*"/>
 				<parameters>
 					<parameter name="stream" type="GFileInputStream*"/>
-					<parameter name="res" type="GAsyncResult*"/>
+					<parameter name="result" type="GAsyncResult*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</vfunc>
@@ -4424,7 +4493,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="monitor" type="GFileMonitor*"/>
-					<parameter name="limit_msecs" type="int"/>
+					<parameter name="limit_msecs" type="gint"/>
 				</parameters>
 			</method>
 			<property name="cancelled" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
@@ -4525,7 +4594,7 @@
 				<return-type type="GFileInfo*"/>
 				<parameters>
 					<parameter name="stream" type="GFileOutputStream*"/>
-					<parameter name="res" type="GAsyncResult*"/>
+					<parameter name="result" type="GAsyncResult*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</vfunc>
@@ -4722,6 +4791,25 @@
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="stream" type="GIOStream*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="splice_async" symbol="g_io_stream_splice_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="stream1" type="GIOStream*"/>
+					<parameter name="stream2" type="GIOStream*"/>
+					<parameter name="flags" type="GIOStreamSpliceFlags"/>
+					<parameter name="io_priority" type="int"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="splice_finish" symbol="g_io_stream_splice_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="result" type="GAsyncResult*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -5670,7 +5758,7 @@
 					<parameter name="io_priority" type="int"/>
 					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="callback" type="GAsyncReadyCallback"/>
-					<parameter name="data" type="gpointer"/>
+					<parameter name="user_data" type="gpointer"/>
 				</parameters>
 			</vfunc>
 			<vfunc name="splice_finish">
@@ -5711,85 +5799,6 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</vfunc>
-		</object>
-		<object name="GPeriodic" parent="GObject" type-name="GPeriodic" get-type="g_periodic_get_type">
-			<method name="add" symbol="g_periodic_add">
-				<return-type type="guint"/>
-				<parameters>
-					<parameter name="periodic" type="GPeriodic*"/>
-					<parameter name="callback" type="GPeriodicTickFunc"/>
-					<parameter name="user_data" type="gpointer"/>
-					<parameter name="notify" type="GDestroyNotify"/>
-				</parameters>
-			</method>
-			<method name="block" symbol="g_periodic_block">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="periodic" type="GPeriodic*"/>
-				</parameters>
-			</method>
-			<method name="damaged" symbol="g_periodic_damaged">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="periodic" type="GPeriodic*"/>
-				</parameters>
-			</method>
-			<method name="get_high_priority" symbol="g_periodic_get_high_priority">
-				<return-type type="gint"/>
-				<parameters>
-					<parameter name="periodic" type="GPeriodic*"/>
-				</parameters>
-			</method>
-			<method name="get_hz" symbol="g_periodic_get_hz">
-				<return-type type="guint"/>
-				<parameters>
-					<parameter name="periodic" type="GPeriodic*"/>
-				</parameters>
-			</method>
-			<method name="get_low_priority" symbol="g_periodic_get_low_priority">
-				<return-type type="gint"/>
-				<parameters>
-					<parameter name="periodic" type="GPeriodic*"/>
-				</parameters>
-			</method>
-			<constructor name="new" symbol="g_periodic_new">
-				<return-type type="GPeriodic*"/>
-				<parameters>
-					<parameter name="hz" type="guint"/>
-					<parameter name="high_priority" type="gint"/>
-					<parameter name="low_priority" type="gint"/>
-				</parameters>
-			</constructor>
-			<method name="remove" symbol="g_periodic_remove">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="periodic" type="GPeriodic*"/>
-					<parameter name="tag" type="guint"/>
-				</parameters>
-			</method>
-			<method name="unblock" symbol="g_periodic_unblock">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="periodic" type="GPeriodic*"/>
-					<parameter name="unblock_time" type="gint64"/>
-				</parameters>
-			</method>
-			<property name="high-priority" type="gint" readable="1" writable="1" construct="0" construct-only="1"/>
-			<property name="hz" type="guint" readable="1" writable="1" construct="0" construct-only="1"/>
-			<property name="low-priority" type="gint" readable="1" writable="1" construct="0" construct-only="1"/>
-			<signal name="repair" when="LAST">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="periodic" type="GPeriodic*"/>
-				</parameters>
-			</signal>
-			<signal name="tick" when="LAST">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="periodic" type="GPeriodic*"/>
-					<parameter name="timestamp" type="gint64"/>
-				</parameters>
-			</signal>
 		</object>
 		<object name="GPermission" parent="GObject" type-name="GPermission" get-type="g_permission_get_type">
 			<method name="acquire" symbol="g_permission_acquire">
@@ -6474,6 +6483,7 @@
 				</parameters>
 			</method>
 			<property name="backend" type="GSettingsBackend*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="delay-apply" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="has-unapplied" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="path" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="schema" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
@@ -7331,6 +7341,18 @@
 					<parameter name="client" type="GSocketClient*"/>
 				</parameters>
 			</method>
+			<method name="get_tls" symbol="g_socket_client_get_tls">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="client" type="GSocketClient*"/>
+				</parameters>
+			</method>
+			<method name="get_tls_validation_flags" symbol="g_socket_client_get_tls_validation_flags">
+				<return-type type="GTlsCertificateFlags"/>
+				<parameters>
+					<parameter name="client" type="GSocketClient*"/>
+				</parameters>
+			</method>
 			<constructor name="new" symbol="g_socket_client_new">
 				<return-type type="GSocketClient*"/>
 			</constructor>
@@ -7376,11 +7398,27 @@
 					<parameter name="timeout" type="guint"/>
 				</parameters>
 			</method>
+			<method name="set_tls" symbol="g_socket_client_set_tls">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="client" type="GSocketClient*"/>
+					<parameter name="tls" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_tls_validation_flags" symbol="g_socket_client_set_tls_validation_flags">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="client" type="GSocketClient*"/>
+					<parameter name="flags" type="GTlsCertificateFlags"/>
+				</parameters>
+			</method>
 			<property name="enable-proxy" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="family" type="GSocketFamily" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="local-address" type="GSocketAddress*" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="protocol" type="GSocketProtocol" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="timeout" type="guint" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="tls" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="tls-validation-flags" type="GTlsCertificateFlags" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="type" type="GSocketType" readable="1" writable="1" construct="1" construct-only="0"/>
 		</object>
 		<object name="GSocketConnection" parent="GIOStream" type-name="GSocketConnection" get-type="g_socket_connection_get_type">
@@ -7663,6 +7701,22 @@
 			</method>
 			<property name="graceful-disconnect" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
+		<object name="GTcpWrapperConnection" parent="GTcpConnection" type-name="GTcpWrapperConnection" get-type="g_tcp_wrapper_connection_get_type">
+			<method name="get_base_io_stream" symbol="g_tcp_wrapper_connection_get_base_io_stream">
+				<return-type type="GIOStream*"/>
+				<parameters>
+					<parameter name="conn" type="GTcpWrapperConnection*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="g_tcp_wrapper_connection_new">
+				<return-type type="GSocketConnection*"/>
+				<parameters>
+					<parameter name="base_io_stream" type="GIOStream*"/>
+					<parameter name="socket" type="GSocket*"/>
+				</parameters>
+			</constructor>
+			<property name="base-io-stream" type="GIOStream*" readable="1" writable="1" construct="0" construct-only="1"/>
+		</object>
 		<object name="GThemedIcon" parent="GObject" type-name="GThemedIcon" get-type="g_themed_icon_get_type">
 			<implements>
 				<interface name="GIcon"/>
@@ -7726,6 +7780,206 @@
 					<parameter name="source_object" type="GObject*"/>
 				</parameters>
 			</signal>
+		</object>
+		<object name="GTlsCertificate" parent="GObject" type-name="GTlsCertificate" get-type="g_tls_certificate_get_type">
+			<method name="get_issuer" symbol="g_tls_certificate_get_issuer">
+				<return-type type="GTlsCertificate*"/>
+				<parameters>
+					<parameter name="cert" type="GTlsCertificate*"/>
+				</parameters>
+			</method>
+			<method name="list_new_from_file" symbol="g_tls_certificate_list_new_from_file">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="file" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<constructor name="new_from_file" symbol="g_tls_certificate_new_from_file">
+				<return-type type="GTlsCertificate*"/>
+				<parameters>
+					<parameter name="file" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_from_files" symbol="g_tls_certificate_new_from_files">
+				<return-type type="GTlsCertificate*"/>
+				<parameters>
+					<parameter name="cert_file" type="gchar*"/>
+					<parameter name="key_file" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_from_pem" symbol="g_tls_certificate_new_from_pem">
+				<return-type type="GTlsCertificate*"/>
+				<parameters>
+					<parameter name="data" type="gchar*"/>
+					<parameter name="length" type="gssize"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</constructor>
+			<method name="verify" symbol="g_tls_certificate_verify">
+				<return-type type="GTlsCertificateFlags"/>
+				<parameters>
+					<parameter name="cert" type="GTlsCertificate*"/>
+					<parameter name="identity" type="GSocketConnectable*"/>
+					<parameter name="trusted_ca" type="GTlsCertificate*"/>
+				</parameters>
+			</method>
+			<property name="certificate" type="GByteArray*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="certificate-pem" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="issuer" type="GTlsCertificate*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="private-key" type="GByteArray*" readable="0" writable="1" construct="0" construct-only="1"/>
+			<property name="private-key-pem" type="char*" readable="0" writable="1" construct="0" construct-only="1"/>
+			<vfunc name="verify">
+				<return-type type="GTlsCertificateFlags"/>
+				<parameters>
+					<parameter name="cert" type="GTlsCertificate*"/>
+					<parameter name="identity" type="GSocketConnectable*"/>
+					<parameter name="trusted_ca" type="GTlsCertificate*"/>
+				</parameters>
+			</vfunc>
+		</object>
+		<object name="GTlsConnection" parent="GIOStream" type-name="GTlsConnection" get-type="g_tls_connection_get_type">
+			<method name="emit_accept_certificate" symbol="g_tls_connection_emit_accept_certificate">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="conn" type="GTlsConnection*"/>
+					<parameter name="peer_cert" type="GTlsCertificate*"/>
+					<parameter name="errors" type="GTlsCertificateFlags"/>
+				</parameters>
+			</method>
+			<method name="get_certificate" symbol="g_tls_connection_get_certificate">
+				<return-type type="GTlsCertificate*"/>
+				<parameters>
+					<parameter name="conn" type="GTlsConnection*"/>
+				</parameters>
+			</method>
+			<method name="get_peer_certificate" symbol="g_tls_connection_get_peer_certificate">
+				<return-type type="GTlsCertificate*"/>
+				<parameters>
+					<parameter name="conn" type="GTlsConnection*"/>
+				</parameters>
+			</method>
+			<method name="get_peer_certificate_errors" symbol="g_tls_connection_get_peer_certificate_errors">
+				<return-type type="GTlsCertificateFlags"/>
+				<parameters>
+					<parameter name="conn" type="GTlsConnection*"/>
+				</parameters>
+			</method>
+			<method name="get_rehandshake_mode" symbol="g_tls_connection_get_rehandshake_mode">
+				<return-type type="GTlsRehandshakeMode"/>
+				<parameters>
+					<parameter name="conn" type="GTlsConnection*"/>
+				</parameters>
+			</method>
+			<method name="get_require_close_notify" symbol="g_tls_connection_get_require_close_notify">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="conn" type="GTlsConnection*"/>
+				</parameters>
+			</method>
+			<method name="get_use_system_certdb" symbol="g_tls_connection_get_use_system_certdb">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="conn" type="GTlsConnection*"/>
+				</parameters>
+			</method>
+			<method name="handshake" symbol="g_tls_connection_handshake">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="conn" type="GTlsConnection*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="handshake_async" symbol="g_tls_connection_handshake_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="conn" type="GTlsConnection*"/>
+					<parameter name="io_priority" type="int"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="handshake_finish" symbol="g_tls_connection_handshake_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="conn" type="GTlsConnection*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="set_certificate" symbol="g_tls_connection_set_certificate">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="conn" type="GTlsConnection*"/>
+					<parameter name="certificate" type="GTlsCertificate*"/>
+				</parameters>
+			</method>
+			<method name="set_rehandshake_mode" symbol="g_tls_connection_set_rehandshake_mode">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="conn" type="GTlsConnection*"/>
+					<parameter name="mode" type="GTlsRehandshakeMode"/>
+				</parameters>
+			</method>
+			<method name="set_require_close_notify" symbol="g_tls_connection_set_require_close_notify">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="conn" type="GTlsConnection*"/>
+					<parameter name="require_close_notify" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_use_system_certdb" symbol="g_tls_connection_set_use_system_certdb">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="conn" type="GTlsConnection*"/>
+					<parameter name="use_system_certdb" type="gboolean"/>
+				</parameters>
+			</method>
+			<property name="base-io-stream" type="GIOStream*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="certificate" type="GTlsCertificate*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="peer-certificate" type="GTlsCertificate*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="peer-certificate-errors" type="GTlsCertificateFlags" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="rehandshake-mode" type="GTlsRehandshakeMode" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="require-close-notify" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="use-system-certdb" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<signal name="accept-certificate" when="LAST">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="connection" type="GTlsConnection*"/>
+					<parameter name="peer_cert" type="GTlsCertificate*"/>
+					<parameter name="errors" type="GTlsCertificateFlags"/>
+				</parameters>
+			</signal>
+			<vfunc name="handshake">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="conn" type="GTlsConnection*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="handshake_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="conn" type="GTlsConnection*"/>
+					<parameter name="io_priority" type="int"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="handshake_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="conn" type="GTlsConnection*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
 		</object>
 		<object name="GVfs" parent="GObject" type-name="GVfs" get-type="g_vfs_get_type">
 			<method name="get_default" symbol="g_vfs_get_default">
@@ -8117,9 +8371,9 @@
 					<parameter name="value" type="GVariant*"/>
 				</parameters>
 			</method>
-			<property name="enabled" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="name" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="parameter-type" type="GVariantType*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="enabled" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="name" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="parameter-type" type="GVariantType*" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="state" type="GVariant" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="state-type" type="GVariantType*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<vfunc name="activate">
@@ -8464,6 +8718,12 @@
 					<parameter name="appinfo" type="GAppInfo*"/>
 				</parameters>
 			</method>
+			<method name="get_fallback_for_type" symbol="g_app_info_get_fallback_for_type">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="content_type" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="get_icon" symbol="g_app_info_get_icon">
 				<return-type type="GIcon*"/>
 				<parameters>
@@ -8480,6 +8740,12 @@
 				<return-type type="char*"/>
 				<parameters>
 					<parameter name="appinfo" type="GAppInfo*"/>
+				</parameters>
+			</method>
+			<method name="get_recommended_for_type" symbol="g_app_info_get_recommended_for_type">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="content_type" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="launch" symbol="g_app_info_launch">
@@ -8531,6 +8797,14 @@
 				</parameters>
 			</method>
 			<method name="set_as_default_for_type" symbol="g_app_info_set_as_default_for_type">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="appinfo" type="GAppInfo*"/>
+					<parameter name="content_type" type="char*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="set_as_last_used_for_type" symbol="g_app_info_set_as_last_used_for_type">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="appinfo" type="GAppInfo*"/>
@@ -8641,7 +8915,7 @@
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="appinfo" type="GAppInfo*"/>
-					<parameter name="filenames" type="GList*"/>
+					<parameter name="files" type="GList*"/>
 					<parameter name="launch_context" type="GAppLaunchContext*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
@@ -8672,6 +8946,14 @@
 				</parameters>
 			</vfunc>
 			<vfunc name="set_as_default_for_type">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="appinfo" type="GAppInfo*"/>
+					<parameter name="content_type" type="char*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="set_as_last_used_for_type">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="appinfo" type="GAppInfo*"/>
@@ -8801,13 +9083,13 @@
 			<vfunc name="get_source_object">
 				<return-type type="GObject*"/>
 				<parameters>
-					<parameter name="async_result" type="GAsyncResult*"/>
+					<parameter name="res" type="GAsyncResult*"/>
 				</parameters>
 			</vfunc>
 			<vfunc name="get_user_data">
 				<return-type type="gpointer"/>
 				<parameters>
-					<parameter name="async_result" type="GAsyncResult*"/>
+					<parameter name="res" type="GAsyncResult*"/>
 				</parameters>
 			</vfunc>
 		</interface>
@@ -11575,6 +11857,130 @@
 				</parameters>
 			</vfunc>
 		</interface>
+		<interface name="GPollableInputStream" type-name="GPollableInputStream" get-type="g_pollable_input_stream_get_type">
+			<requires>
+				<interface name="GInputStream"/>
+			</requires>
+			<method name="can_poll" symbol="g_pollable_input_stream_can_poll">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="stream" type="GPollableInputStream*"/>
+				</parameters>
+			</method>
+			<method name="create_source" symbol="g_pollable_input_stream_create_source">
+				<return-type type="GSource*"/>
+				<parameters>
+					<parameter name="stream" type="GPollableInputStream*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+				</parameters>
+			</method>
+			<method name="is_readable" symbol="g_pollable_input_stream_is_readable">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="stream" type="GPollableInputStream*"/>
+				</parameters>
+			</method>
+			<method name="read_nonblocking" symbol="g_pollable_input_stream_read_nonblocking">
+				<return-type type="gssize"/>
+				<parameters>
+					<parameter name="stream" type="GPollableInputStream*"/>
+					<parameter name="buffer" type="void*"/>
+					<parameter name="size" type="gsize"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<vfunc name="can_poll">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="stream" type="GPollableInputStream*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="create_source">
+				<return-type type="GSource*"/>
+				<parameters>
+					<parameter name="stream" type="GPollableInputStream*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="is_readable">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="stream" type="GPollableInputStream*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="read_nonblocking">
+				<return-type type="gssize"/>
+				<parameters>
+					<parameter name="stream" type="GPollableInputStream*"/>
+					<parameter name="buffer" type="void*"/>
+					<parameter name="size" type="gsize"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+		</interface>
+		<interface name="GPollableOutputStream" type-name="GPollableOutputStream" get-type="g_pollable_output_stream_get_type">
+			<requires>
+				<interface name="GOutputStream"/>
+			</requires>
+			<method name="can_poll" symbol="g_pollable_output_stream_can_poll">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="stream" type="GPollableOutputStream*"/>
+				</parameters>
+			</method>
+			<method name="create_source" symbol="g_pollable_output_stream_create_source">
+				<return-type type="GSource*"/>
+				<parameters>
+					<parameter name="stream" type="GPollableOutputStream*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+				</parameters>
+			</method>
+			<method name="is_writable" symbol="g_pollable_output_stream_is_writable">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="stream" type="GPollableOutputStream*"/>
+				</parameters>
+			</method>
+			<method name="write_nonblocking" symbol="g_pollable_output_stream_write_nonblocking">
+				<return-type type="gssize"/>
+				<parameters>
+					<parameter name="stream" type="GPollableOutputStream*"/>
+					<parameter name="buffer" type="void*"/>
+					<parameter name="size" type="gsize"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<vfunc name="can_poll">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="stream" type="GPollableOutputStream*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="create_source">
+				<return-type type="GSource*"/>
+				<parameters>
+					<parameter name="stream" type="GPollableOutputStream*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="is_writable">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="stream" type="GPollableOutputStream*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="write_nonblocking">
+				<return-type type="gssize"/>
+				<parameters>
+					<parameter name="stream" type="GPollableOutputStream*"/>
+					<parameter name="buffer" type="void*"/>
+					<parameter name="size" type="gsize"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+		</interface>
 		<interface name="GProxy" type-name="GProxy" get-type="g_proxy_get_type">
 			<requires>
 				<interface name="GObject"/>
@@ -11837,6 +12243,129 @@
 					<parameter name="connectable" type="GSocketConnectable*"/>
 				</parameters>
 			</vfunc>
+		</interface>
+		<interface name="GTlsBackend" type-name="GTlsBackend" get-type="g_tls_backend_get_type">
+			<requires>
+				<interface name="GObject"/>
+			</requires>
+			<method name="get_certificate_type" symbol="g_tls_backend_get_certificate_type">
+				<return-type type="GType"/>
+				<parameters>
+					<parameter name="backend" type="GTlsBackend*"/>
+				</parameters>
+			</method>
+			<method name="get_client_connection_type" symbol="g_tls_backend_get_client_connection_type">
+				<return-type type="GType"/>
+				<parameters>
+					<parameter name="backend" type="GTlsBackend*"/>
+				</parameters>
+			</method>
+			<method name="get_default" symbol="g_tls_backend_get_default">
+				<return-type type="GTlsBackend*"/>
+			</method>
+			<method name="get_server_connection_type" symbol="g_tls_backend_get_server_connection_type">
+				<return-type type="GType"/>
+				<parameters>
+					<parameter name="backend" type="GTlsBackend*"/>
+				</parameters>
+			</method>
+			<method name="supports_tls" symbol="g_tls_backend_supports_tls">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="backend" type="GTlsBackend*"/>
+				</parameters>
+			</method>
+			<vfunc name="get_certificate_type">
+				<return-type type="GType"/>
+			</vfunc>
+			<vfunc name="get_client_connection_type">
+				<return-type type="GType"/>
+			</vfunc>
+			<vfunc name="get_server_connection_type">
+				<return-type type="GType"/>
+			</vfunc>
+			<vfunc name="supports_tls">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="backend" type="GTlsBackend*"/>
+				</parameters>
+			</vfunc>
+		</interface>
+		<interface name="GTlsClientConnection" type-name="GTlsClientConnection" get-type="g_tls_client_connection_get_type">
+			<requires>
+				<interface name="GTlsConnection"/>
+			</requires>
+			<method name="get_accepted_cas" symbol="g_tls_client_connection_get_accepted_cas">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="conn" type="GTlsClientConnection*"/>
+				</parameters>
+			</method>
+			<method name="get_server_identity" symbol="g_tls_client_connection_get_server_identity">
+				<return-type type="GSocketConnectable*"/>
+				<parameters>
+					<parameter name="conn" type="GTlsClientConnection*"/>
+				</parameters>
+			</method>
+			<method name="get_use_ssl3" symbol="g_tls_client_connection_get_use_ssl3">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="conn" type="GTlsClientConnection*"/>
+				</parameters>
+			</method>
+			<method name="get_validation_flags" symbol="g_tls_client_connection_get_validation_flags">
+				<return-type type="GTlsCertificateFlags"/>
+				<parameters>
+					<parameter name="conn" type="GTlsClientConnection*"/>
+				</parameters>
+			</method>
+			<method name="new" symbol="g_tls_client_connection_new">
+				<return-type type="GIOStream*"/>
+				<parameters>
+					<parameter name="base_io_stream" type="GIOStream*"/>
+					<parameter name="server_identity" type="GSocketConnectable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="set_server_identity" symbol="g_tls_client_connection_set_server_identity">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="conn" type="GTlsClientConnection*"/>
+					<parameter name="identity" type="GSocketConnectable*"/>
+				</parameters>
+			</method>
+			<method name="set_use_ssl3" symbol="g_tls_client_connection_set_use_ssl3">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="conn" type="GTlsClientConnection*"/>
+					<parameter name="use_ssl3" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_validation_flags" symbol="g_tls_client_connection_set_validation_flags">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="conn" type="GTlsClientConnection*"/>
+					<parameter name="flags" type="GTlsCertificateFlags"/>
+				</parameters>
+			</method>
+			<property name="accepted-cas" type="gpointer" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="server-identity" type="GSocketConnectable*" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="use-ssl3" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="validation-flags" type="GTlsCertificateFlags" readable="1" writable="1" construct="1" construct-only="0"/>
+		</interface>
+		<interface name="GTlsServerConnection" type-name="GTlsServerConnection" get-type="g_tls_server_connection_get_type">
+			<requires>
+				<interface name="GTlsConnection"/>
+			</requires>
+			<method name="new" symbol="g_tls_server_connection_new">
+				<return-type type="GIOStream*"/>
+				<parameters>
+					<parameter name="base_io_stream" type="GIOStream*"/>
+					<parameter name="certificate" type="GTlsCertificate*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<property name="authentication-mode" type="GTlsAuthenticationMode" readable="1" writable="1" construct="0" construct-only="0"/>
 		</interface>
 		<interface name="GVolume" type-name="GVolume" get-type="g_volume_get_type">
 			<requires>
@@ -12179,6 +12708,7 @@
 		<constant name="G_NATIVE_VOLUME_MONITOR_EXTENSION_POINT_NAME" type="char*" value="gio-native-volume-monitor"/>
 		<constant name="G_PROXY_EXTENSION_POINT_NAME" type="char*" value="gio-proxy"/>
 		<constant name="G_PROXY_RESOLVER_EXTENSION_POINT_NAME" type="char*" value="gio-proxy-resolver"/>
+		<constant name="G_TLS_BACKEND_EXTENSION_POINT_NAME" type="char*" value="gio-tls-backend"/>
 		<constant name="G_VFS_EXTENSION_POINT_NAME" type="char*" value="gio-vfs"/>
 		<constant name="G_VOLUME_IDENTIFIER_KIND_HAL_UDI" type="char*" value="hal-udi"/>
 		<constant name="G_VOLUME_IDENTIFIER_KIND_LABEL" type="char*" value="label"/>

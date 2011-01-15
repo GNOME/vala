@@ -12,6 +12,7 @@ namespace GLib {
 		public DesktopAppInfo.from_keyfile (GLib.KeyFile key_file);
 		public unowned string get_filename ();
 		public bool get_is_hidden ();
+		public bool launch_uris_as_manager (GLib.List uris, GLib.AppLaunchContext launch_context, GLib.SpawnFlags spawn_flags, GLib.SpawnChildSetupFunc user_setup, void* user_setup_data, GLib.DesktopAppLaunchCallback pid_callback, void* pid_callback_data) throws GLib.Error;
 		public static void set_desktop_env (string desktop_env);
 	}
 	[CCode (cheader_filename = "gio/gunixconnection.h")]
@@ -35,7 +36,7 @@ namespace GLib {
 		public GLib.UnixFDList fd_list { get; construct; }
 	}
 	[CCode (cheader_filename = "gio/gunixinputstream.h")]
-	public class UnixInputStream : GLib.InputStream {
+	public class UnixInputStream : GLib.InputStream, GLib.PollableInputStream {
 		[CCode (type = "GInputStream*", has_construct_function = false)]
 		public UnixInputStream (int fd, bool close_fd);
 		public bool get_close_fd ();
@@ -99,7 +100,7 @@ namespace GLib {
 		public bool is_user_mountable ();
 	}
 	[CCode (cheader_filename = "gio/gunixoutputstream.h")]
-	public class UnixOutputStream : GLib.OutputStream {
+	public class UnixOutputStream : GLib.OutputStream, GLib.PollableOutputStream {
 		[CCode (type = "GOutputStream*", has_construct_function = false)]
 		public UnixOutputStream (int fd, bool close_fd);
 		public bool get_close_fd ();
@@ -128,10 +129,18 @@ namespace GLib {
 		[NoAccessorMethod]
 		public GLib.ByteArray path_as_array { owned get; construct; }
 	}
+	[CCode (cheader_filename = "gio/gunixmounts.h")]
+	public interface DesktopAppInfoLookup : GLib.Object {
+		public abstract unowned GLib.AppInfo get_default_for_uri_scheme (string uri_scheme);
+	}
 	[CCode (cheader_filename = "gio/gfiledescriptorbased.h")]
 	public interface FileDescriptorBased : GLib.Object {
 		public abstract int get_fd ();
 	}
+	[CCode (cheader_filename = "gio/gunixmounts.h")]
+	public delegate void DesktopAppLaunchCallback (GLib.DesktopAppInfo appinfo, GLib.Pid pid);
+	[CCode (cheader_filename = "gio/gunixmounts.h")]
+	public const string DESKTOP_APP_INFO_LOOKUP_EXTENSION_POINT_NAME;
 	[CCode (cname = "g_unix_is_mount_path_system_internal", cheader_filename = "gio/gunixmounts.h")]
 	public static bool is_mount_path_system_internal (string mount_path);
 	[CCode (cname = "g_unix_mount_points_changed_since", cheader_filename = "gio/gunixmounts.h")]
