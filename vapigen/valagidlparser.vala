@@ -1328,6 +1328,24 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 		
 		foreach (string iface_name in node.interfaces) {
+			bool skip_iface = false;
+
+			var attributes = get_attributes (iface_name);
+			if (attributes != null) {
+				foreach (string attr in attributes) {
+					var nv = attr.split ("=", 2);
+					if (nv[0] == "hidden") {
+						if (eval (nv[1]) == "1") {
+							skip_iface = true;
+						}
+					}
+				}
+			}
+
+			if (skip_iface) {
+				continue;
+			}
+
 			var iface = parse_type_string (iface_name);
 			cl.add_base_type (iface);
 		}
