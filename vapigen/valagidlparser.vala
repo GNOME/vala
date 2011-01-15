@@ -124,7 +124,7 @@ public class Vala.GIdlParser : CodeVisitor {
 						continue;
 					}
 
-					if (null != tokens[0].chr (-1, '*')) {
+					if (-1 != tokens[0].index_of_char ('*')) {
 						PatternSpec* pattern = new PatternSpec (tokens[0]);
 						codenode_attributes_patterns[pattern] = tokens[0];
 					}
@@ -2621,15 +2621,15 @@ public class Vala.GIdlParser : CodeVisitor {
 		var attributes = codenode_attributes_map.get (codenode);
 
 		if (attributes == null) {
-			var dot_required = (null != codenode.chr (-1, '.'));
-			var colon_required = (null != codenode.chr (-1, ':'));
+			var dot_required = (-1 != codenode.index_of_char ('.'));
+			var colon_required = (-1 != codenode.index_of_char (':'));
 
 			var pattern_specs = codenode_attributes_patterns.get_keys ();
 			foreach (PatternSpec* pattern in pattern_specs) {
 				var pspec = codenode_attributes_patterns[pattern];
 
-				if ((dot_required && null == pspec.chr (-1, '.')) ||
-				    (colon_required && null == pspec.chr (-1, ':'))) {
+				if ((dot_required && -1 != pspec.index_of_char ('.')) ||
+				    (colon_required && -1 != pspec.index_of_char (':'))) {
 					continue;
 				}
 
