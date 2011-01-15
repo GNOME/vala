@@ -952,7 +952,6 @@ public class Vala.Parser : CodeVisitor {
 	}
 
 	Expression parse_yield_expression () throws ParseError {
-		var begin = get_location ();
 		expect (TokenType.YIELD);
 		var expr = parse_expression ();
 
