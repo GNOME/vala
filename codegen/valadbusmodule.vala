@@ -229,7 +229,7 @@ public class Vala.DBusModule : GAsyncModule {
 		from_string_func.block = from_string_block;
 
 		var cdecl = new CCodeDeclaration (en.get_cname ());
-		cdecl.add_declarator (new CCodeVariableDeclarator ("value"));
+		cdecl.add_declarator (new CCodeVariableDeclarator.zero ("value", new CCodeConstant ("0")));
 		from_string_block.add_statement (cdecl);
 
 		CCodeStatement if_else_if = null;

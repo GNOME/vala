@@ -1,6 +1,6 @@
 /* valagvariantmodule.vala
  *
- * Copyright (C) 2010  Jürg Billeter
+ * Copyright (C) 2010-2011  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -205,6 +205,7 @@ public class Vala.GVariantModule : GAsyncModule {
 
 		var from_string_call = new CCodeFunctionCall (new CCodeIdentifier (from_string_name));
 		from_string_call.add_argument (expr);
+		from_string_call.add_argument (new CCodeConstant ("NULL"));
 
 		return from_string_call;
 	}
@@ -214,6 +215,7 @@ public class Vala.GVariantModule : GAsyncModule {
 
 		var from_string_func = new CCodeFunction (from_string_name, en.get_cname ());
 		from_string_func.add_parameter (new CCodeParameter ("str", "const char*"));
+		from_string_func.add_parameter (new CCodeParameter ("error", "GError**"));
 
 		return from_string_func;
 	}
@@ -223,12 +225,13 @@ public class Vala.GVariantModule : GAsyncModule {
 
 		var from_string_func = new CCodeFunction (from_string_name, en.get_cname ());
 		from_string_func.add_parameter (new CCodeParameter ("str", "const char*"));
+		from_string_func.add_parameter (new CCodeParameter ("error", "GError**"));
 
 		var from_string_block = new CCodeBlock ();
 		from_string_func.block = from_string_block;
 
 		var cdecl = new CCodeDeclaration (en.get_cname ());
-		cdecl.add_declarator (new CCodeVariableDeclarator ("value"));
+		cdecl.add_declarator (new CCodeVariableDeclarator.zero ("value", new CCodeConstant ("0")));
 		from_string_block.add_statement (cdecl);
 
 		CCodeStatement if_else_if = null;
@@ -251,6 +254,15 @@ public class Vala.GVariantModule : GAsyncModule {
 			}
 			last_statement = stmt;
 		}
+
+		var set_error = new CCodeFunctionCall (new CCodeIdentifier ("g_set_error"));
+		set_error.add_argument (new CCodeIdentifier ("error"));
+		set_error.add_argument (new CCodeIdentifier ("G_DBUS_ERROR"));
+		set_error.add_argument (new CCodeIdentifier ("G_DBUS_ERROR_INVALID_ARGS"));
+		set_error.add_argument (new CCodeConstant ("\"Invalid value for enum `%s'\"".printf (en.get_cname ())));
+		var error_block = new CCodeBlock ();
+		error_block.add_statement (new CCodeExpressionStatement (set_error));
+		last_statement.false_statement = error_block;
 
 		from_string_block.add_statement (if_else_if);
 
