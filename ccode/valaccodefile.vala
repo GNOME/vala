@@ -1,6 +1,6 @@
 /* valaccodefile.vala
  *
- * Copyright (C) 2009-2010  Jürg Billeter
+ * Copyright (C) 2009-2011  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -85,13 +85,21 @@ public class Vala.CCodeFile {
 
 	public List<string> get_symbols () {
 		var symbols = new ArrayList<string> ();
-		foreach (CCodeNode node in type_member_declaration.get_children ()) {
-			var func = node as CCodeFunction;
-			if (func != null) {
-				symbols.add (func.name);
+		get_symbols_from_fragment (symbols, type_member_declaration);
+		return symbols;
+	}
+
+	void get_symbols_from_fragment (List<string> symbols, CCodeFragment fragment) {
+		foreach (CCodeNode node in fragment.get_children ()) {
+			if (node is CCodeFragment) {
+				get_symbols_from_fragment (symbols, (CCodeFragment) node);
+			} else {
+				var func = node as CCodeFunction;
+				if (func != null) {
+					symbols.add (func.name);
+				}
 			}
 		}
-		return symbols;
 	}
 
 	static string get_define_for_filename (string filename) {
