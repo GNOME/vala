@@ -1,6 +1,6 @@
 /* valaparser.vala
  *
- * Copyright (C) 2006-2010  Jürg Billeter
+ * Copyright (C) 2006-2011  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -954,13 +954,14 @@ public class Vala.Parser : CodeVisitor {
 	Expression parse_yield_expression () throws ParseError {
 		var begin = get_location ();
 		expect (TokenType.YIELD);
-		Expression base_expr = null;
-		if (current () == TokenType.BASE) {
-			base_expr = parse_base_access ();
-			expect (TokenType.DOT);
+		var expr = parse_expression ();
+
+		var call = expr as MethodCall;
+		if (call == null) {
+			Report.error (expr.source_reference, "syntax error, expected method call");
+			throw new ParseError.SYNTAX ("expected method call");
 		}
-		var member = parse_member_name (base_expr);
-		var call = (MethodCall) parse_method_call (begin, member);
+
 		call.is_yield_expression = true;
 		return call;
 	}
@@ -1047,6 +1048,7 @@ public class Vala.Parser : CodeVisitor {
 					case TokenType.THIS:
 					case TokenType.BASE:
 					case TokenType.NEW:
+					case TokenType.YIELD:
 					case TokenType.SIZEOF:
 					case TokenType.TYPEOF:
 					case TokenType.IDENTIFIER:
