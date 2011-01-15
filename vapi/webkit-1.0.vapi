@@ -71,7 +71,7 @@ namespace WebKit {
 	public class SecurityOrigin : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected SecurityOrigin ();
-		public unowned GLib.List get_all_web_databases ();
+		public unowned GLib.List<WebKit.WebDatabase> get_all_web_databases ();
 		public unowned string get_host ();
 		public uint get_port ();
 		public unowned string get_protocol ();
@@ -99,11 +99,11 @@ namespace WebKit {
 		public bool contains_item (WebKit.WebHistoryItem history_item);
 		public unowned WebKit.WebHistoryItem get_back_item ();
 		public int get_back_length ();
-		public unowned GLib.List get_back_list_with_limit (int limit);
+		public unowned GLib.List<WebKit.WebHistoryItem> get_back_list_with_limit (int limit);
 		public unowned WebKit.WebHistoryItem get_current_item ();
 		public unowned WebKit.WebHistoryItem get_forward_item ();
 		public int get_forward_length ();
-		public unowned GLib.List get_forward_list_with_limit (int limit);
+		public unowned GLib.List<WebKit.WebHistoryItem> get_forward_list_with_limit (int limit);
 		public int get_limit ();
 		public unowned WebKit.WebHistoryItem get_nth_item (int index);
 		public void go_back ();
@@ -122,7 +122,7 @@ namespace WebKit {
 		public unowned WebKit.NetworkRequest get_initial_request ();
 		public unowned WebKit.WebResource get_main_resource ();
 		public unowned WebKit.NetworkRequest get_request ();
-		public unowned GLib.List get_subresources ();
+		public unowned GLib.List<WebKit.WebResource> get_subresources ();
 		public unowned string get_unreachable_uri ();
 		public unowned WebKit.WebFrame get_web_frame ();
 		public bool is_loading ();

@@ -1,4 +1,8 @@
 WebKit cheader_filename="webkit/webkit.h" lower_case_cprefix="webkit_"
+webkit_security_origin_get_all_web_databases type_arguments="WebKit.WebDatabase"
+webkit_web_back_forward_list_get_back_list_with_limit type_arguments="WebKit.WebHistoryItem"
+webkit_web_back_forward_list_get_forward_list_with_limit type_arguments="WebKit.WebHistoryItem"
+webkit_web_data_source_get_subresources type_arguments="WebKit.WebResource"
 webkit_web_frame_get_global_context hidden="1"
 webkit_web_settings_copy transfer_ownership="1"
 WebKitWebView::copy_clipboard has_emitter="1"
