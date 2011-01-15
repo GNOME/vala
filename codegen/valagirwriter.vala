@@ -735,7 +735,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			name = m.get_cname ();
 			var parent_prefix = parent.get_lower_case_cprefix ();
 			if (name.has_prefix (parent_prefix)) {
-				name = name.offset (parent_prefix.length);
+				name = name.substring (parent_prefix.length);
 			}
 		} else {
 			name = m.name;

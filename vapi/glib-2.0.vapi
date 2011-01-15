@@ -1007,19 +1007,31 @@ public class string {
 	public unowned string next_char ();
 	[CCode (cname = "g_utf8_get_char")]
 	static unichar utf8_get_char (char* str);
-	public unichar get_char (int index = 0) {
+	public unichar get_char (long index = 0) {
 		return utf8_get_char ((char*) this + index);
 	}
 	[CCode (cname = "g_utf8_get_char_validated")]
 	public unichar get_char_validated (ssize_t max_len = -1);
+
+	[Deprecated (replacement = "string.index_of_nth_char")]
 	[CCode (cname = "g_utf8_offset_to_pointer")]
 	public unowned string utf8_offset (long offset);
+	[Deprecated (replacement = "string.substring")]
 	public unowned string offset (long offset) {
 		return (string) ((char*) this + offset);
 	}
+	[Deprecated (replacement = "string.char_count")]
 	public long pointer_to_offset (string pos) {
 		return (long) ((char*) pos - (char*) this);
 	}
+
+	[CCode (cname = "g_utf8_offset_to_pointer")]
+	char* utf8_offset_to_pointer (long offset);
+
+	public int index_of_nth_char (long c) {
+		return (int) (this.utf8_offset_to_pointer (c) - (char*) this);
+	}
+
 	[CCode (cname = "g_utf8_prev_char")]
 	public unowned string prev_char ();
 	[Deprecated (replacement = "string.length")]
@@ -1126,8 +1138,12 @@ public class string {
 
 	[CCode (cname = "g_strdup")]
 	public string dup ();
+	[Deprecated (replacement = "string.substring")]
 	[CCode (cname = "g_strndup")]
 	public string ndup (size_t n);
+
+	[CCode (cname = "g_strndup")]
+	static string strndup (char* str, size_t n);
 
 	public string substring (long offset, long len = -1) {
 		long string_length = this.length;
@@ -1141,8 +1157,7 @@ public class string {
 			len = string_length - offset;
 		}
 		GLib.return_val_if_fail (offset + len <= string_length, null);
-		unowned string start = this.offset (offset);
-		return start.ndup (((char*) start.offset (len)) - ((char*) start));
+		return strndup ((char*) this + offset, len);
 	}
 
 	public string slice (long start, long end) {
@@ -1156,8 +1171,7 @@ public class string {
 		GLib.return_val_if_fail (start >= 0 && start <= string_length, null);
 		GLib.return_val_if_fail (end >= 0 && end <= string_length, null);
 		GLib.return_val_if_fail (start <= end, null);
-		unowned string start_string = this.offset (start);
-		return start_string.ndup (((char*) start_string.offset (end - start)) - ((char*) start_string));
+		return strndup ((char*) this + start, end - start);
 	}
 
 	public string splice (long start, long end, string? str = null) {
@@ -1172,8 +1186,6 @@ public class string {
 		GLib.return_val_if_fail (end >= 0 && end <= string_length, null);
 		GLib.return_val_if_fail (start <= end, null);
 
-		unowned string start_string = this.offset (start);
-		unowned string end_string = start_string.offset (end - start);
 		size_t str_size;
 		if (str == null) {
 			str_size = 0;
@@ -1181,17 +1193,17 @@ public class string {
 			str_size = str.length;
 		}
 
-		string* result = GLib.malloc0 (this.length - ((char*) end_string - (char*) start_string) + str_size + 1);
+		string* result = GLib.malloc0 (this.length - (end - start) + str_size + 1);
 
 		char* dest = (char*) result;
 
-		GLib.Memory.copy (dest, this, (char*) start_string - (char*) this);
-		dest += (char*) start_string - (char*) this;
+		GLib.Memory.copy (dest, this, start);
+		dest += start;
 
 		GLib.Memory.copy (dest, str, str_size);
 		dest += str_size;
 
-		GLib.Memory.copy (dest, end_string, end_string.length);
+		GLib.Memory.copy (dest, (char*) this + end, string_length - end);
 
 		return (owned) result;
 	}

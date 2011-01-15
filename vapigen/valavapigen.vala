@@ -166,7 +166,7 @@ class Vala.VAPIGen : Object {
 			if (file.filename in sources) {
 				file.file_type = SourceFileType.SOURCE;
 			} else if (file.filename.has_suffix (".metadata")) {
-				string gir_filename = "%s.gir".printf (file.filename.ndup (file.filename.length - ".metadata".length));
+				string gir_filename = "%s.gir".printf (file.filename.substring (0, file.filename.length - ".metadata".length));
 				if (gir_filename in sources) {
 					file.file_type = SourceFileType.SOURCE;
 				}

@@ -321,9 +321,9 @@ public class Vala.Interface : ObjectTypeSymbol {
 
 		// remove underscores in some cases to avoid conflicts of type macros
 		if (result.has_prefix ("type_")) {
-			result = "type" + result.offset ("type_".length);
+			result = "type" + result.substring ("type_".length);
 		} else if (result.has_prefix ("is_")) {
-			result = "is" + result.offset ("is_".length);
+			result = "is" + result.substring ("is_".length);
 		}
 		if (result.has_suffix ("_class")) {
 			result = result.substring (0, result.length - "_class".length) + "class";

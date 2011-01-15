@@ -1479,7 +1479,7 @@ public class Vala.Genie.Scanner {
 			}
 			
 			if (source_reference != null) {
-				push_comment (((string) begin).ndup ((long) (current - begin)), source_reference, file_comment);
+				push_comment (((string) begin).substring (0, (long) (current - begin)), source_reference, file_comment);
 			}
 			
 		} else {
@@ -1511,7 +1511,7 @@ public class Vala.Genie.Scanner {
 			}
 
 			if (source_reference != null) {
-				string comment = ((string) begin).ndup ((long) (current - begin));
+				string comment = ((string) begin).substring (0, (long) (current - begin));
 				push_comment (comment, source_reference, file_comment);
 			}
 
@@ -1728,7 +1728,7 @@ public class Vala.Genie.Scanner {
 			return false;
 		}
 
-		string identifier = ((string) (current - len)).ndup (len);
+		string identifier = ((string) (current - len)).substring (0, len);
 		bool defined;
 		if (identifier == "true") {
 			defined = true;

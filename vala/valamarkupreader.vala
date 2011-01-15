@@ -82,7 +82,7 @@ public class Vala.MarkupReader : Object {
 		if (current == begin) {
 			// syntax error: invalid name
 		}
-		return ((string) begin).ndup (current - begin);
+		return ((string) begin).substring (0, (int) (current - begin));
 	}
 
 	public MarkupTokenType read_token (out SourceLocation token_begin, out SourceLocation token_end) {
@@ -208,27 +208,27 @@ public class Vala.MarkupReader : Object {
 			} else if (u == '&') {
 				char* next_pos = current + u.to_utf8 (null);
 				if (((string) next_pos).has_prefix ("amp;")) {
-					content.append (((string) text_begin).ndup (current - text_begin));
+					content.append (((string) text_begin).substring (0, (int) (current - text_begin)));
 					content.append_c ('&');
 					current += 5;
 					text_begin = current;
 				} else if (((string) next_pos).has_prefix ("quot;")) {
-					content.append (((string) text_begin).ndup (current - text_begin));
+					content.append (((string) text_begin).substring (0, (int) (current - text_begin)));
 					content.append_c ('"');
 					current += 6;
 					text_begin = current;
 				} else if (((string) next_pos).has_prefix ("apos;")) {
-					content.append (((string) text_begin).ndup (current - text_begin));
+					content.append (((string) text_begin).substring (0, (int) (current - text_begin)));
 					content.append_c ('\'');
 					current += 6;
 					text_begin = current;
 				} else if (((string) next_pos).has_prefix ("lt;")) {
-					content.append (((string) text_begin).ndup (current - text_begin));
+					content.append (((string) text_begin).substring (0, (int) (current - text_begin)));
 					content.append_c ('<');
 					current += 4;
 					text_begin = current;
 				} else if (((string) next_pos).has_prefix ("gt;")) {
-					content.append (((string) text_begin).ndup (current - text_begin));
+					content.append (((string) text_begin).substring (0, (int) (current - text_begin)));
 					content.append_c ('>');
 					current += 4;
 					text_begin = current;
@@ -248,7 +248,7 @@ public class Vala.MarkupReader : Object {
 		}
 
 		if (text_begin != current) {
-			content.append (((string) text_begin).ndup (current - text_begin));
+			content.append (((string) text_begin).substring (0, (int) (current - text_begin)));
 		}
 
 		column += (int) (current - last_linebreak);

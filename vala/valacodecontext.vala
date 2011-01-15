@@ -421,7 +421,7 @@ public class Vala.CodeContext {
 
 			add_source_file (source_file);
 			// look for a local .deps
-			var deps_filename = "%s.deps".printf (filename.ndup (filename.length - ".vapi".length));
+			var deps_filename = "%s.deps".printf (filename.substring (0, filename.length - ".vapi".length));
 			if (!add_packages_from_file (deps_filename)) {
 				return false;
 			}
@@ -547,7 +547,7 @@ public class Vala.CodeContext {
 	}
 
 	private static bool ends_with_dir_separator (string s) {
-		return Path.is_dir_separator (s.offset (s.length - 1).get_char ());
+		return Path.is_dir_separator (s.get_char (s.length - 1));
 	}
 
 	/* ported from glibc */
@@ -569,10 +569,10 @@ public class Vala.CodeContext {
 			start = end = Path.skip_root (name);
 
 			// extract root
-			rpath = name.substring (0, name.pointer_to_offset (start));
+			rpath = name.substring (0, (int) ((char*) start - (char*) name));
 		}
 
-		long root_len = rpath.pointer_to_offset (Path.skip_root (rpath));
+		long root_len = (long) ((char*) Path.skip_root (rpath) - (char*) rpath);
 
 		for (; start.get_char () != 0; start = end) {
 			// skip sequence of multiple path-separators

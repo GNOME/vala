@@ -366,7 +366,7 @@ public class Vala.Method : Subroutine {
 			// avoid conflict with generated main function
 			return "_vala_main";
 		} else if (name.has_prefix ("_")) {
-			return "_%s%s".printf (parent_symbol.get_lower_case_cprefix (), name.offset (1));
+			return "_%s%s".printf (parent_symbol.get_lower_case_cprefix (), name.substring (1));
 		} else {
 			return "%s%s".printf (parent_symbol.get_lower_case_cprefix (), name);
 		}

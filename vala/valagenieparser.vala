@@ -182,12 +182,12 @@ public class Vala.Genie.Parser : CodeVisitor {
 	}
 	
 	string get_current_string () {
-		return ((string) tokens[index].begin.pos).ndup ((tokens[index].end.pos - tokens[index].begin.pos));
+		return ((string) tokens[index].begin.pos).substring (0, (int) (tokens[index].end.pos - tokens[index].begin.pos));
 	}
 
 	string get_last_string () {
 		int last_index = (index + BUFFER_SIZE - 1) % BUFFER_SIZE;
-		return ((string) tokens[last_index].begin.pos).ndup ((tokens[last_index].end.pos - tokens[last_index].begin.pos));
+		return ((string) tokens[last_index].begin.pos).substring (0, (int) (tokens[last_index].end.pos - tokens[last_index].begin.pos));
 	}
 
 	SourceReference get_src (SourceLocation begin) {
@@ -832,7 +832,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 							
 							if (len > 2) {
 								string s = "\\n\"";
-								var st =  s_exp.value.ndup (len-1);
+								var st =  s_exp.value.substring (0, len-1);
 								st += s;
 								s_exp.value = st;
 							}

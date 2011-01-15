@@ -178,7 +178,7 @@ public class Vala.SourceFile {
 			var basename = Path.get_basename (filename);
 			var subdir = filename.substring (context.basedir.length, filename.length - context.basedir.length - basename.length);
 			while (subdir[0] == '/') {
-				subdir = subdir.offset (1);
+				subdir = subdir.substring (1);
 			}
 			return subdir;
 		}
@@ -193,7 +193,7 @@ public class Vala.SourceFile {
 	}
 
 	private string get_basename () {
-		long dot = filename.pointer_to_offset (filename.rchr (-1, '.'));
+		long dot = (long) ((char*) filename.rchr (-1, '.') - (char*) filename);
 		return Path.get_basename (filename.substring (0, dot));
 	}
 

@@ -160,7 +160,7 @@ class Vala.Compiler {
 			// strip extension if there is one
 			// else we use the default output file of the C compiler
 			if (sources[0].rchr (-1, '.') != null) {
-				long dot = sources[0].pointer_to_offset (sources[0].rchr (-1, '.'));
+				long dot = (long) ((char*) sources[0].rchr (-1, '.') - (char*) sources[0]);
 				output = Path.get_basename (sources[0].substring (0, dot));
 			}
 		}
@@ -380,7 +380,7 @@ class Vala.Compiler {
 					if (last_hyphen == null || !gir.has_suffix (".gir")) {
 						Report.error (null, "GIR file name `%s' is not well-formed, expected NAME-VERSION.gir".printf (gir));
 					} else {
-						long offset = gir.pointer_to_offset (last_hyphen);
+						long offset = (long) ((char*) last_hyphen - (char*) gir);
 						string gir_namespace = gir.substring (0, offset);
 						string gir_version = gir.substring (offset + 1, gir_len - offset - 5);
 						gir_version.canon ("0123456789.", '?');

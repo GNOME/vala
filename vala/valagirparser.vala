@@ -280,7 +280,7 @@ public class Vala.GirParser : CodeVisitor {
 		}
 
 		string get_string () {
-			return ((string) begin.pos).ndup ((end.pos - begin.pos));
+			return ((string) begin.pos).substring (0, (int) (end.pos - begin.pos));
 		}
 
 		MetadataType? parse_metadata_access () {
@@ -575,7 +575,7 @@ public class Vala.GirParser : CodeVisitor {
 		girdata_stack = new ArrayList<HashMap<string,string>> ();
 
 		// load metadata
-		string metadata_filename = "%s.metadata".printf (source_file.filename.ndup (source_file.filename.length - ".gir".length));
+		string metadata_filename = "%s.metadata".printf (source_file.filename.substring (0, source_file.filename.length - ".gir".length));
 		if (FileUtils.test (metadata_filename, FileTest.EXISTS)) {
 			var metadata_parser = new MetadataParser ();
 			var metadata_file = new SourceFile (context, source_file.file_type, metadata_filename);
@@ -1429,17 +1429,17 @@ public class Vala.GirParser : CodeVisitor {
 			common_prefix = cname;
 			while (common_prefix.length > 0 && !common_prefix.has_suffix ("_")) {
 				// FIXME: could easily be made faster
-				common_prefix = common_prefix.ndup (common_prefix.length - 1);
+				common_prefix = common_prefix.substring (0, common_prefix.length - 1);
 			}
 		} else {
 			while (!cname.has_prefix (common_prefix)) {
-				common_prefix = common_prefix.ndup (common_prefix.length - 1);
+				common_prefix = common_prefix.substring (0, common_prefix.length - 1);
 			}
 		}
 		while (common_prefix.length > 0 && (!common_prefix.has_suffix ("_") ||
-		       (cname.offset (common_prefix.length).get_char ().isdigit ()) && (cname.length - common_prefix.length) <= 1)) {
+		       (cname.get_char (common_prefix.length).isdigit ()) && (cname.length - common_prefix.length) <= 1)) {
 			// enum values may not consist solely of digits
-			common_prefix = common_prefix.ndup (common_prefix.length - 1);
+			common_prefix = common_prefix.substring (0, common_prefix.length - 1);
 		}
 	}
 
@@ -2141,7 +2141,7 @@ public class Vala.GirParser : CodeVisitor {
 		if (m.name == "new") {
 			m.name = null;
 		} else if (m.name.has_prefix ("new_")) {
-			m.name = m.name.offset ("new_".length);
+			m.name = m.name.substring ("new_".length);
 		}
 		if (cname != null) {
 			m.set_cname (cname);
@@ -2778,7 +2778,7 @@ public class Vala.GirParser : CodeVisitor {
 					if (parent != null && (parent is Struct || parent is ObjectTypeSymbol || parent is Namespace)
 						&& cname.has_prefix (parent.get_lower_case_cprefix ())) {
 						// instance method
-						var new_name = method.name.offset (parent.get_lower_case_cprefix().length-ns_cprefix.length);
+						var new_name = method.name.substring (parent.get_lower_case_cprefix().length - ns_cprefix.length);
 						if (parent.scope.lookup (new_name) == null) {
 							method.name = new_name;
 							method.get_parameters().remove_at (0);
@@ -2794,7 +2794,7 @@ public class Vala.GirParser : CodeVisitor {
 				double match = 0;
 				Symbol parent = ns;
 				find_static_method_parent (cname, ns, ref parent, ref match, 1.0/cname.length);
-				var new_name = method.name.offset (parent.get_lower_case_cprefix().length-ns_cprefix.length);
+				var new_name = method.name.substring (parent.get_lower_case_cprefix().length - ns_cprefix.length);
 				if (parent.scope.lookup (new_name) == null) {
 					method.name = new_name;
 					add_symbol_to_container (parent, method);

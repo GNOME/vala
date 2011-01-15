@@ -216,7 +216,7 @@ public abstract class Vala.Symbol : CodeNode {
 		}
 
 		string parent_gir_name = parent_symbol.get_full_gir_name ();
-		string self_gir_name = gir_name.has_prefix (".") ? gir_name.offset (1) : gir_name;
+		string self_gir_name = gir_name.has_prefix (".") ? gir_name.substring (1) : gir_name;
 		if (parent_gir_name.str (".") != null) {
 			return "%s%s".printf (parent_gir_name, self_gir_name);
 		} else {
@@ -349,7 +349,7 @@ public abstract class Vala.Symbol : CodeNode {
 					/* previous character wasn't upper case or
 					 * next character isn't upper case*/
 					long len = result_builder.str.length;
-					if (len != 1 && result_builder.str.offset (len - 2).get_char () != '_') {
+					if (len != 1 && result_builder.str.get_char (len - 2) != '_') {
 						/* we're not creating 1 character words */
 						result_builder.append_c ('_');
 					}
