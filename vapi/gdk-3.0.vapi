@@ -565,7 +565,8 @@ namespace Gdk {
 		public uint32 time;
 		public double x;
 		public double y;
-		public double axes;
+		[CCode (array_length = false)]
+		public weak double[] axes;
 		public Gdk.ModifierType state;
 		public uint button;
 		public weak Gdk.Device device;
@@ -665,7 +666,8 @@ namespace Gdk {
 		public uint32 time;
 		public double x;
 		public double y;
-		public double axes;
+		[CCode (array_length = false)]
+		public weak double[] axes;
 		public Gdk.ModifierType state;
 		public bool is_hint;
 		public weak Gdk.Device device;
