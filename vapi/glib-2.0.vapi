@@ -955,12 +955,27 @@ public enum NormalizeMode {
 [GIR (name = "utf8")]
 [CCode (cname = "gchar", const_cname = "const gchar", copy_function = "g_strdup", free_function = "g_free", cheader_filename = "stdlib.h,string.h,glib.h", type_id = "G_TYPE_STRING", marshaller_type_name = "STRING", param_spec_function = "g_param_spec_string", get_value_function = "g_value_get_string", set_value_function = "g_value_set_string", take_value_function = "g_value_take_string", type_signature = "s")]
 public class string {
+	[Deprecated (replacement = "string.index_of")]
 	[CCode (cname = "strstr")]
 	public unowned string? str (string needle);
 	[CCode (cname = "g_strrstr")]
 	public unowned string? rstr (string needle);
 	[CCode (cname = "g_strrstr_len")]
 	public unowned string? rstr_len (ssize_t haystack_len, string needle);
+
+	[CCode (cname = "strstr")]
+	static char* strstr (char* haystack, char* needle);
+
+	public int index_of (string needle, int start_index = 0) {
+		char* result = strstr ((char*) this + start_index, (char*) needle);
+
+		if (result != null) {
+			return (int) (result - (char*) this);
+		} else {
+			return -1;
+		}
+	}
+
 	[CCode (cname = "g_str_has_prefix")]
 	public bool has_prefix (string prefix);
 	[CCode (cname = "g_str_has_suffix")]
@@ -1209,7 +1224,7 @@ public class string {
 	}
 
 	public bool contains (string needle) {
-		return this.str (needle) != null;
+		return strstr ((char*) this, (char*) needle) != null;
 	}
 
 	public string replace (string old, string replacement) {

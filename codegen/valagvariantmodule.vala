@@ -132,7 +132,7 @@ public class Vala.GVariantModule : GAsyncModule {
 			}
 
 			var type_args = datatype.get_type_arguments ();
-			if (sig != null && sig.str ("%s") != null && type_args.size > 0) {
+			if (sig != null && "%s" in sig && type_args.size > 0) {
 				string element_sig = "";
 				foreach (DataType type_arg in type_args) {
 					var s = get_type_signature (type_arg);

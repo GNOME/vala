@@ -217,7 +217,7 @@ public abstract class Vala.Symbol : CodeNode {
 
 		string parent_gir_name = parent_symbol.get_full_gir_name ();
 		string self_gir_name = gir_name.has_prefix (".") ? gir_name.substring (1) : gir_name;
-		if (parent_gir_name.str (".") != null) {
+		if ("." in parent_gir_name) {
 			return "%s%s".printf (parent_gir_name, self_gir_name);
 		} else {
 			return "%s.%s".printf (parent_gir_name, self_gir_name);
