@@ -1681,11 +1681,21 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_array_length_cname (get_variable_cname (param.name), dim)), new CCodeIdentifier (get_array_length_cname (get_variable_cname (param.name), dim))));
 			}
 		} else if (param.variable_type is DelegateType) {
+			CCodeExpression target_expr;
+			CCodeExpression delegate_target_destroy_notify;
+			if (current_method != null && current_method.coroutine) {
+				target_expr = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_delegate_target_cname (get_variable_cname (param.name)));
+				delegate_target_destroy_notify = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
+			} else {
+				target_expr = new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (param.name)));
+				delegate_target_destroy_notify = new CCodeIdentifier (get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
+			}
+
 			data.add_field ("gpointer", get_delegate_target_cname (get_variable_cname (param.name)));
-			ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_delegate_target_cname (get_variable_cname (param.name))), new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (param.name)))));
+			ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_delegate_target_cname (get_variable_cname (param.name))), target_expr));
 			if (param.variable_type.value_owned) {
 				data.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
-				ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_delegate_target_destroy_notify_cname (get_variable_cname (param.name))), new CCodeIdentifier (get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)))));
+				ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_delegate_target_destroy_notify_cname (get_variable_cname (param.name))), delegate_target_destroy_notify));
 			}
 		}
 

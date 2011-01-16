@@ -89,6 +89,7 @@ TESTS = \
 	asynchronous/bug601558.vala \
 	asynchronous/bug613484.vala \
 	asynchronous/bug620740.vala \
+	asynchronous/bug639591.vala \
 	dbus/basic-types.test \
 	dbus/arrays.test \
 	dbus/structs.test \

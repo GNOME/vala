@@ -101,10 +101,12 @@ public class Vala.GAsyncModule : GSignalModule {
 
 		foreach (Parameter param in m.get_parameters ()) {
 			if (param.direction != ParameterDirection.OUT) {
+				bool is_unowned_delegate = param.variable_type is DelegateType && !param.variable_type.value_owned;
+
 				var param_type = param.variable_type.copy ();
 				param_type.value_owned = true;
 
-				if (requires_destroy (param_type)) {
+				if (requires_destroy (param_type) && !is_unowned_delegate) {
 					var ma = new MemberAccess.simple (param.name);
 					ma.symbol_reference = param;
 					ma.value_type = param.variable_type.copy ();
