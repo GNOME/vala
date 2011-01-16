@@ -589,11 +589,7 @@ public class Vala.GAsyncModule : GSignalModule {
 		/* free temporary objects */
 
 		foreach (LocalVariable local in temp_ref_vars) {
-			var ma = new MemberAccess.simple (local.name);
-			ma.symbol_reference = local;
-			ma.value_type = local.variable_type.copy ();
-			visit_member_access (ma);
-			ccode.add_expression (get_unref_expression (new CCodeIdentifier (local.name), local.variable_type, ma));
+			ccode.add_expression (get_unref_expression_ (local));
 		}
 
 		temp_ref_vars.clear ();

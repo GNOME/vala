@@ -987,11 +987,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				}
 
 				foreach (LocalVariable local in temp_ref_vars) {
-					var ma = new MemberAccess.simple (local.name);
-					ma.symbol_reference = local;
-					ma.value_type = local.variable_type.copy ();
-					visit_member_access (ma);
-					ccode.add_expression (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma));
+					ccode.add_expression (get_unref_expression_ (local));
 				}
 
 				temp_ref_vars.clear ();
@@ -1045,11 +1041,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccode.add_expression (new CCodeAssignment (lhs, rhs));
 
 				foreach (LocalVariable local in temp_ref_vars) {
-					var ma = new MemberAccess.simple (local.name);
-					ma.symbol_reference = local;
-					ma.value_type = local.variable_type.copy ();
-					visit_member_access (ma);
-					ccode.add_expression (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma));
+					ccode.add_expression (get_unref_expression_ (local));
 				}
 
 				temp_ref_vars.clear ();
@@ -1800,11 +1792,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 							current_method.coroutine = false;
 						}
 
-						var ma = new MemberAccess.simple (local.name);
-						ma.symbol_reference = local;
-						ma.value_type = local.variable_type.copy ();
-						visit_member_access (ma);
-						free_block.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), get_variable_cname (local.name)), local.variable_type, ma)));
+						free_block.add_statement (new CCodeExpressionStatement (get_unref_expression_ (local)));
 
 						if (old_coroutine) {
 							current_method.coroutine = true;
@@ -1930,11 +1918,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var local = local_vars[i];
 			local.active = false;
 			if (!local.unreachable && !local.floating && !local.captured && requires_destroy (local.variable_type)) {
-				var ma = new MemberAccess.simple (local.name);
-				ma.symbol_reference = local;
-				ma.value_type = local.variable_type.copy ();
-				visit_member_access (ma);
-				ccode.add_expression (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma));
+				ccode.add_expression (get_unref_expression_ (local));
 			}
 		}
 
@@ -2061,10 +2045,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	
 		CCodeExpression rhs = null;
 		if (local.initializer != null && get_cvalue (local.initializer) != null) {
-			var ma = new MemberAccess.simple (local.name);
-			ma.symbol_reference = local;
-			ma.value_type = local.variable_type.copy ();
-			visit_member_access (ma);
+			var target_value = get_variable_cvalue (local);
 
 			rhs = get_cvalue (local.initializer);
 
@@ -2079,13 +2060,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					ccode.add_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), rhs));
 
 					for (int dim = 1; dim <= array_type.rank; dim++) {
-						var lhs_array_len = get_array_length_cexpression (ma, dim);
+						var lhs_array_len = get_array_length_cvalue (target_value, dim);
 						var rhs_array_len = get_array_length_cexpression (local.initializer, dim);
 						ccode.add_expression (new CCodeAssignment (lhs_array_len, rhs_array_len));
 					}
 					if (array_type.rank == 1 && !local.captured) {
-						var lhs_array_size = get_array_size_cvalue (ma.target_value);
-						var rhs_array_len = get_array_length_cexpression (ma, 1);
+						var lhs_array_size = get_array_size_cvalue (target_value);
+						var rhs_array_len = get_array_length_cvalue (target_value, 1);
 						ccode.add_expression (new CCodeAssignment (lhs_array_size, rhs_array_len));
 					}
 
@@ -2099,21 +2080,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					emit_temp_var (temp_var);
 					ccode.add_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), rhs));
 
-					CCodeExpression lhs_delegate_target_destroy_notify;
-					var lhs_delegate_target = get_delegate_target_cexpression (ma, out lhs_delegate_target_destroy_notify);
-					if (local.captured) {
-						var block = (Block) local.parent_symbol;
-						lhs_delegate_target = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_cname (local.name));
-					}
+					var lhs_delegate_target = get_delegate_target_cvalue (target_value);
+					var lhs_delegate_target_destroy_notify = get_delegate_target_destroy_notify_cvalue (target_value);
+
 					CCodeExpression rhs_delegate_target_destroy_notify;
 					var rhs_delegate_target = get_delegate_target_cexpression (local.initializer, out rhs_delegate_target_destroy_notify);
 					ccode.add_expression (new CCodeAssignment (lhs_delegate_target, rhs_delegate_target));
 
 					if (deleg_type.value_owned) {
-						if (local.captured) {
-							var block = (Block) local.parent_symbol;
-							lhs_delegate_target = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_destroy_notify_cname (local.name));
-						}
 						ccode.add_expression (new CCodeAssignment (lhs_delegate_target_destroy_notify, rhs_delegate_target_destroy_notify));
 					}
 
@@ -2916,7 +2890,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return null;
 	}
 
+	public CCodeExpression get_unref_expression_ (Variable variable, CCodeExpression? inner = null) {
+		return destroy_value (get_variable_cvalue (variable, inner));
+	}
+
 	public CCodeExpression get_unref_expression (CCodeExpression cvar, DataType type, Expression? expr, bool is_macro_definition = false) {
+		if (expr != null && expr.symbol_reference is LocalVariable) {
+			return get_unref_expression_ ((Variable) expr.symbol_reference);
+		}
 		var value = new GLibValue (type, cvar);
 		if (expr != null && expr.target_value != null) {
 			value.array_length_cvalues = ((GLibValue) expr.target_value).array_length_cvalues;
@@ -3104,11 +3085,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 		
 		foreach (LocalVariable local in temp_ref_vars) {
-			var ma = new MemberAccess.simple (local.name);
-			ma.symbol_reference = local;
-			ma.value_type = local.variable_type.copy ();
-			visit_member_access (ma);
-			expr_list.append_expression (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma));
+			expr_list.append_expression (get_unref_expression_ (local));
 		}
 
 		if (full_expr_var != null) {
@@ -3181,11 +3158,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		/* free temporary objects and handle errors */
 
 		foreach (LocalVariable local in temp_ref_vars) {
-			var ma = new MemberAccess.simple (local.name);
-			ma.symbol_reference = local;
-			ma.value_type = local.variable_type.copy ();
-			visit_member_access (ma);
-			ccode.add_expression (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma));
+			ccode.add_expression (get_unref_expression_ (local));
 		}
 
 		if (stmt.tree_can_fail && stmt.expression.tree_can_fail) {
@@ -3204,11 +3177,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		for (int i = local_vars.size - 1; i >= 0; i--) {
 			var local = local_vars[i];
 			if (!local.unreachable && local.active && !local.floating && !local.captured && requires_destroy (local.variable_type)) {
-				var ma = new MemberAccess.simple (local.name);
-				ma.symbol_reference = local;
-				ma.value_type = local.variable_type.copy ();
-				visit_member_access (ma);
-				ccode.add_expression (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma));
+				ccode.add_expression (get_unref_expression_ (local));
 			}
 		}
 
@@ -3646,6 +3615,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			set_delegate_target (expr, new CCodeConstant ("NULL"));
 			set_delegate_target_destroy_notify (expr, new CCodeConstant ("NULL"));
 		}
+	}
+
+	public virtual TargetValue get_variable_cvalue (Variable variable, CCodeExpression? inner = null) {
+		assert_not_reached ();
 	}
 
 	public virtual string get_delegate_target_cname (string delegate_cname) {

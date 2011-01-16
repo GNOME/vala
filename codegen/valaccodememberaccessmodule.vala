@@ -491,7 +491,11 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			}
 		} else if (expr.symbol_reference is LocalVariable) {
 			var local = (LocalVariable) expr.symbol_reference;
-			expr.target_value = load_local (local);
+			if (expr.lvalue) {
+				expr.target_value = get_local_cvalue (local);
+			} else {
+				expr.target_value = load_local (local);
+			}
 
 			if (expr.parent_node is ReturnStatement &&
 			    current_return_type.value_owned &&
@@ -614,12 +618,12 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 		}
 	}
 
+	/* Returns lvalue access to the given local variable */
 	public TargetValue get_local_cvalue (LocalVariable local) {
-		var result = new GLibValue (local.variable_type);
+		var result = new GLibValue (local.variable_type.copy ());
 
 		var array_type = local.variable_type as ArrayType;
 		var delegate_type = local.variable_type as DelegateType;
-
 		if (local.is_result) {
 			// used in postconditions
 			// structs are returned as out parameter
@@ -672,11 +676,22 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 		return value;
 	}
 
+	/* Returns lvalue access to the given symbol */
+	public override TargetValue get_variable_cvalue (Variable variable, CCodeExpression? inner = null) {
+		if (variable is LocalVariable) {
+			return get_local_cvalue ((LocalVariable) variable);
+		} else {
+			assert_not_reached ();
+		}
+	}
+
+	/* Returns unowned access to the given local variable */
 	public override TargetValue load_local (LocalVariable local) {
 		var result = (GLibValue) get_local_cvalue (local);
-		if (local.variable_type is DelegateType && result.delegate_target_destroy_notify_cvalue == null) {
+		if (local.variable_type is DelegateType) {
 			result.delegate_target_destroy_notify_cvalue = new CCodeConstant ("NULL");
 		}
+		result.value_type.value_owned = false;
 		return load_variable (local, result);
 	}
 }
