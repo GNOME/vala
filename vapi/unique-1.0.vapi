@@ -53,7 +53,7 @@ namespace Unique {
 		[CCode (array_length = false)]
 		public string[] get_uris ();
 		public uint get_workspace ();
-		public void @set (uchar[]? data, size_t length);
+		public void @set ([CCode (array_length_type = "gsize")] uchar[]? data);
 		public void set_filename (string filename);
 		public bool set_text (string str, ssize_t length);
 		public bool set_uris ([CCode (array_length = false)] string[] uris);
