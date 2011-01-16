@@ -2628,8 +2628,8 @@ public class Vala.GIdlParser : CodeVisitor {
 			foreach (PatternSpec* pattern in pattern_specs) {
 				var pspec = codenode_attributes_patterns[pattern];
 
-				if ((dot_required && -1 != pspec.index_of_char ('.')) ||
-				    (colon_required && -1 != pspec.index_of_char (':'))) {
+				if ((dot_required && -1 == pspec.index_of_char ('.')) ||
+				    (colon_required && -1 == pspec.index_of_char (':'))) {
 					continue;
 				}
 
