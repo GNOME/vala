@@ -1577,11 +1577,7 @@ public class Vala.DBusClientModule : DBusModule {
 			if (requires_destroy (owned_type)) {
 				// keep local alive (symbol_reference is weak)
 				var local = new LocalVariable (owned_type, param.name);
-				var ma = new MemberAccess.simple (param.name);
-				ma.symbol_reference = local;
-				ma.value_type = owned_type.copy ();
-				visit_member_access (ma);
-				var stmt = new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (param.name), owned_type, ma));
+				var stmt = new CCodeExpressionStatement (get_unref_expression_ (local));
 				postfragment.append (stmt);
 			}
 		}

@@ -1706,11 +1706,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				current_method.coroutine = false;
 			}
 
-			var ma = new MemberAccess.simple (param.name);
-			ma.symbol_reference = param;
-			ma.value_type = param_type.copy ();
-			visit_member_access (ma);
-			free_block.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), get_variable_cname (param.name)), param.variable_type, ma)));
+			free_block.add_statement (new CCodeExpressionStatement (get_unref_expression_ (param)));
 
 			if (old_coroutine) {
 				current_method.coroutine = true;
@@ -1936,11 +1932,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var m = (Method) b.parent_symbol;
 			foreach (Parameter param in m.get_parameters ()) {
 				if (!param.captured && !param.ellipsis && requires_destroy (param.variable_type) && param.direction == ParameterDirection.IN) {
-					var ma = new MemberAccess.simple (param.name);
-					ma.symbol_reference = param;
-					ma.value_type = param.variable_type.copy ();
-					visit_member_access (ma);
-					ccode.add_expression (get_unref_expression (get_variable_cexpression (param.name), param.variable_type, ma));
+					ccode.add_expression (get_unref_expression_ (param));
 				} else if (param.direction == ParameterDirection.OUT && !m.coroutine) {
 					return_out_parameter (param);
 				}
@@ -2905,7 +2897,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public CCodeExpression get_unref_expression (CCodeExpression cvar, DataType type, Expression? expr, bool is_macro_definition = false) {
-		if (expr != null && expr.symbol_reference is LocalVariable) {
+		if (expr != null && (expr.symbol_reference is LocalVariable || expr.symbol_reference is Parameter)) {
 			return get_unref_expression_ ((Variable) expr.symbol_reference);
 		}
 		var value = new GLibValue (type, cvar);
@@ -3221,11 +3213,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	private void append_param_free (Method m) {
 		foreach (Parameter param in m.get_parameters ()) {
 			if (!param.ellipsis && requires_destroy (param.variable_type) && param.direction == ParameterDirection.IN) {
-				var ma = new MemberAccess.simple (param.name);
-				ma.symbol_reference = param;
-				ma.value_type = param.variable_type.copy ();
-				visit_member_access (ma);
-				ccode.add_expression (get_unref_expression (get_variable_cexpression (param.name), param.variable_type, ma));
+				ccode.add_expression (get_unref_expression_ (param));
 			}
 		}
 	}
@@ -3265,11 +3253,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		if (param.variable_type.is_disposable ()){
 			ccode.add_else ();
-			var ma = new MemberAccess (null, param.name);
-			ma.symbol_reference = param;
-			ma.value_type = param.variable_type.copy ();
-			visit_member_access (ma);
-			ccode.add_expression (get_unref_expression (get_variable_cexpression ("_" + param.name), param.variable_type, ma));
+			ccode.add_expression (get_unref_expression_ (param));
 		}
 		ccode.close ();
 

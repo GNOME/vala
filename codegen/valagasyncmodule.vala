@@ -107,11 +107,7 @@ public class Vala.GAsyncModule : GSignalModule {
 				param_type.value_owned = true;
 
 				if (requires_destroy (param_type) && !is_unowned_delegate) {
-					var ma = new MemberAccess.simple (param.name);
-					ma.symbol_reference = param;
-					ma.value_type = param.variable_type.copy ();
-					visit_member_access (ma);
-					freeblock.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_variable_cname (param.name)), param.variable_type, ma)));
+					freeblock.add_statement (new CCodeExpressionStatement (get_unref_expression_ (param)));
 				}
 			}
 		}

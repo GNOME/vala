@@ -512,108 +512,11 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				local.active = false;
 			}
 		} else if (expr.symbol_reference is Parameter) {
-			var p = (Parameter) expr.symbol_reference;
-			if (p.name == "this") {
-				if (current_method != null && current_method.coroutine) {
-					// use closure
-					set_cvalue (expr, new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "self"));
-				} else {
-					var st = current_type_symbol as Struct;
-					if (st != null && !st.is_simple_type ()) {
-						set_cvalue (expr, new CCodeIdentifier ("(*self)"));
-					} else {
-						set_cvalue (expr, new CCodeIdentifier ("self"));
-					}
-				}
+			var param = (Parameter) expr.symbol_reference;
+			if (expr.lvalue) {
+				expr.target_value = get_parameter_cvalue (param);
 			} else {
-				string name = p.name;
-
-				if (p.captured) {
-					// captured variables are stored on the heap
-					var block = p.parent_symbol as Block;
-					if (block == null) {
-						block = ((Method) p.parent_symbol).body;
-					}
-					set_cvalue (expr, new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_variable_cname (p.name)));
-					if (array_type != null) {
-						for (int dim = 1; dim <= array_type.rank; dim++) {
-							append_array_size (expr, new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_parameter_array_length_cname (p, dim)));
-						}
-					} else if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
-						set_delegate_target (expr, new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_cname (get_variable_cname (p.name))));
-						set_delegate_target_destroy_notify (expr, new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_destroy_notify_cname (get_variable_cname (p.name))));
-					}
-				} else if (current_method != null && current_method.coroutine) {
-					// use closure
-					set_cvalue (expr, get_variable_cexpression (p.name));
-					if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
-						set_delegate_target (expr, new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_delegate_target_cname (get_variable_cname (p.name))));
-						set_delegate_target_destroy_notify (expr, new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_delegate_target_destroy_notify_cname (get_variable_cname (p.name))));
-					}
-				} else {
-					var type_as_struct = p.variable_type.data_type as Struct;
-
-					if (p.direction == ParameterDirection.OUT) {
-						name = "_" + name;
-					}
-
-					if (p.direction == ParameterDirection.REF
-					    || (p.direction == ParameterDirection.IN && type_as_struct != null && !type_as_struct.is_simple_type () && !p.variable_type.nullable)) {
-						set_cvalue (expr, new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (get_variable_cname (name))));
-					} else {
-						// Property setters of non simple structs shall replace all occurences
-						// of the "value" formal parameter with a dereferencing version of that
-						// parameter.
-						if (current_property_accessor != null &&
-						    current_property_accessor.writable &&
-						    current_property_accessor.value_parameter == p &&
-						    current_property_accessor.prop.property_type.is_real_struct_type () &&
-						    !current_property_accessor.prop.property_type.nullable) {
-							set_cvalue (expr, new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("value")));
-						} else {
-							set_cvalue (expr, get_variable_cexpression (name));
-						}
-					}
-					if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
-						CCodeExpression target_expr = new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (name)));
-						CCodeExpression delegate_target_destroy_notify = new CCodeIdentifier (get_delegate_target_destroy_notify_cname (get_variable_cname (name)));
-						if (p.direction == ParameterDirection.REF) {
-							// accessing argument of ref param
-							target_expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, target_expr);
-							delegate_target_destroy_notify = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, delegate_target_destroy_notify);
-						}
-						set_delegate_target (expr, target_expr);
-						if (expr.value_type.value_owned) {
-							set_delegate_target_destroy_notify (expr, delegate_target_destroy_notify);
-						} else {
-							set_delegate_target_destroy_notify (expr, new CCodeConstant ("NULL"));
-						}
-					}
-				}
-				if (!p.captured && array_type != null) {
-					if (p.array_null_terminated) {
-						var carray_expr = get_variable_cexpression (name);
-						requires_array_length = true;
-						var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
-						len_call.add_argument (carray_expr);
-						append_array_size (expr, len_call);
-					} else if (!p.no_array_length) {
-						for (int dim = 1; dim <= array_type.rank; dim++) {
-							CCodeExpression length_expr = get_variable_cexpression (get_parameter_array_length_cname (p, dim));
-							if (p.direction == ParameterDirection.OUT) {
-								length_expr = get_variable_cexpression (get_array_length_cname (get_variable_cname (name), dim));
-							} else if (p.direction == ParameterDirection.REF) {
-								// accessing argument of ref param
-								length_expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, length_expr);
-							}
-							append_array_size (expr, length_expr);
-						}
-					} else {
-						for (int dim = 1; dim <= array_type.rank; dim++) {
-							append_array_size (expr, new CCodeConstant ("-1"));
-						}
-					}
-				}
+				expr.target_value = load_parameter (param);
 			}
 		}
 	}
@@ -672,6 +575,110 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 		return result;
 	}
 
+	/* Returns access values to the given parameter */
+	public TargetValue get_parameter_cvalue (Parameter param) {
+		var result = new GLibValue (param.variable_type.copy ());
+		if (param.captured || current_method != null && current_method.coroutine) {
+			result.value_type.value_owned = true;
+		}
+
+		var array_type = result.value_type as ArrayType;
+		var delegate_type = result.value_type as DelegateType;
+
+		if (param.name == "this") {
+			if (current_method != null && current_method.coroutine) {
+				// use closure
+				result.cvalue = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "self");
+			} else {
+				var st = current_type_symbol as Struct;
+				if (st != null && !st.is_simple_type ()) {
+					result.cvalue = new CCodeIdentifier ("(*self)");
+				} else {
+					result.cvalue = new CCodeIdentifier ("self");
+				}
+			}
+		} else {
+			string name = param.name;
+
+			if (param.captured) {
+				// captured variables are stored on the heap
+				var block = param.parent_symbol as Block;
+				if (block == null) {
+					block = ((Method) param.parent_symbol).body;
+				}
+				result.cvalue = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_variable_cname (param.name));
+				if (array_type != null) {
+					for (int dim = 1; dim <= array_type.rank; dim++) {
+						result.append_array_length_cvalue (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_parameter_array_length_cname (param, dim)));
+					}
+				} else if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
+					result.delegate_target_cvalue = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_cname (get_variable_cname (param.name)));
+					result.delegate_target_destroy_notify_cvalue = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
+				}
+			} else if (current_method != null && current_method.coroutine) {
+				// use closure
+				result.cvalue = get_variable_cexpression (param.name);
+				if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
+					result.delegate_target_cvalue = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_delegate_target_cname (get_variable_cname (param.name)));
+					result.delegate_target_destroy_notify_cvalue = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
+				}
+			} else {
+				var type_as_struct = result.value_type.data_type as Struct;
+
+				if (param.direction == ParameterDirection.OUT) {
+					name = "_" + name;
+				}
+
+				if (param.direction == ParameterDirection.REF ||
+					(param.direction == ParameterDirection.IN && type_as_struct != null && !type_as_struct.is_simple_type () && !result.value_type.nullable)) {
+					result.cvalue = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (get_variable_cname (name)));
+				} else {
+					// Property setters of non simple structs shall replace all occurences
+					// of the "value" formal parameter with a dereferencing version of that
+					// parameter.
+					if (current_property_accessor != null &&
+						current_property_accessor.writable &&
+						current_property_accessor.value_parameter == param &&
+						current_property_accessor.prop.property_type.is_real_struct_type () &&
+						!current_property_accessor.prop.property_type.nullable) {
+						result.cvalue = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("value"));
+					} else {
+						result.cvalue = get_variable_cexpression (name);
+					}
+				}
+				if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
+					CCodeExpression target_expr = new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (name)));
+					CCodeExpression delegate_target_destroy_notify = new CCodeIdentifier (get_delegate_target_destroy_notify_cname (get_variable_cname (name)));
+					if (param.direction == ParameterDirection.REF) {
+						// accessing argument of ref param
+						target_expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, target_expr);
+						delegate_target_destroy_notify = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, delegate_target_destroy_notify);
+					}
+					result.delegate_target_cvalue = target_expr;
+					if (result.value_type.value_owned) {
+						result.delegate_target_destroy_notify_cvalue = delegate_target_destroy_notify;
+					}
+				}
+			}
+			if (!param.captured && array_type != null) {
+				if (!param.no_array_length && !param.array_null_terminated) {
+					for (int dim = 1; dim <= array_type.rank; dim++) {
+						CCodeExpression length_expr = get_variable_cexpression (get_parameter_array_length_cname (param, dim));
+						if (param.direction == ParameterDirection.OUT) {
+							length_expr = get_variable_cexpression (get_array_length_cname (get_variable_cname (name), dim));
+						} else if (param.direction == ParameterDirection.REF) {
+							// accessing argument of ref param
+							length_expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, length_expr);
+						}
+						result.append_array_length_cvalue (length_expr);
+					}
+				}
+			}
+		}
+
+		return result;
+	}
+
 	TargetValue load_variable (Variable variable, TargetValue value) {
 		return value;
 	}
@@ -680,6 +687,8 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 	public override TargetValue get_variable_cvalue (Variable variable, CCodeExpression? inner = null) {
 		if (variable is LocalVariable) {
 			return get_local_cvalue ((LocalVariable) variable);
+		} else if (variable is Parameter) {
+			return get_parameter_cvalue ((Parameter) variable);
 		} else {
 			assert_not_reached ();
 		}
@@ -693,5 +702,31 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 		}
 		result.value_type.value_owned = false;
 		return load_variable (local, result);
+	}
+
+	public TargetValue load_parameter (Parameter param) {
+		var result = (GLibValue) get_parameter_cvalue (param);
+		if (result.value_type is DelegateType) {
+			result.delegate_target_destroy_notify_cvalue = new CCodeConstant ("NULL");
+		}
+		if (result.value_type is ArrayType) {
+			if (param.array_null_terminated) {
+				string name = param.name;
+				if (param.direction == ParameterDirection.OUT) {
+					name = "_" + name;
+				}
+				var carray_expr = get_variable_cexpression (name);
+				requires_array_length = true;
+				var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
+				len_call.add_argument (carray_expr);
+				result.append_array_length_cvalue (len_call);
+			} else if (param.no_array_length) {
+				for (int dim = 1; dim <= ((ArrayType) result.value_type).rank; dim++) {
+					result.append_array_length_cvalue (new CCodeConstant ("-1"));
+				}
+			}
+		}
+		result.value_type.value_owned = false;
+		return load_variable (param, result);
 	}
 }
