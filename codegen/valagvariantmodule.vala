@@ -305,7 +305,7 @@ public class Vala.GVariantModule : GAsyncModule {
 			// NULL terminate array
 			var length = new CCodeIdentifier (temp_name + "_length");
 			var element_access = new CCodeElementAccess (new CCodeIdentifier (temp_name), length);
-			ccode.add_expression (new CCodeAssignment (element_access, new CCodeIdentifier ("NULL")));
+			ccode.add_assignment (element_access, new CCodeIdentifier ("NULL"));
 		}
 
 		return new CCodeIdentifier (temp_name);
@@ -340,20 +340,20 @@ public class Vala.GVariantModule : GAsyncModule {
 
 			// tmp_size = (2 * tmp_size);
 			var new_size = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeConstant ("2"), new CCodeIdentifier (temp_name + "_size"));
-			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier (temp_name + "_size"), new_size));
+			ccode.add_assignment (new CCodeIdentifier (temp_name + "_size"), new_size);
 
 			var renew_call = new CCodeFunctionCall (new CCodeIdentifier ("g_renew"));
 			renew_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
 			renew_call.add_argument (new CCodeIdentifier (temp_name));
 			// add one extra element for NULL-termination
 			renew_call.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier (temp_name + "_size"), new CCodeConstant ("1")));
-			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier (temp_name), renew_call));
+			ccode.add_assignment (new CCodeIdentifier (temp_name), renew_call);
 
 			ccode.close ();
 
 			var element_access = new CCodeElementAccess (new CCodeIdentifier (temp_name), new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier (temp_name + "_length")));
 			var element_expr = deserialize_expression (array_type.element_type, new CCodeIdentifier (element_name), null);
-			ccode.add_expression (new CCodeAssignment (element_access, element_expr));
+			ccode.add_assignment (element_access, element_expr);
 		}
 
 		var unref = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_unref"));
@@ -363,7 +363,7 @@ public class Vala.GVariantModule : GAsyncModule {
 		ccode.close ();
 
 		if (expr != null) {
-			ccode.add_expression (new CCodeAssignment (get_array_length (expr, dim), new CCodeIdentifier ("%s_length%d".printf (temp_name, dim))));
+			ccode.add_assignment (get_array_length (expr, dim), new CCodeIdentifier ("%s_length%d".printf (temp_name, dim)));
 		}
 	}
 
@@ -432,7 +432,7 @@ public class Vala.GVariantModule : GAsyncModule {
 		} else {
 			hash_table_new.add_argument (new CCodeIdentifier ("NULL"));
 		}
-		ccode.add_expression (new CCodeAssignment (new CCodeIdentifier (temp_name), hash_table_new));
+		ccode.add_assignment (new CCodeIdentifier (temp_name), hash_table_new);
 
 		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_iter_init"));
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
@@ -510,7 +510,7 @@ public class Vala.GVariantModule : GAsyncModule {
 
 		if (sym != null && get_dbus_signature (sym) != null) {
 			// raw GVariant
-			ccode.add_expression (new CCodeAssignment (target_expr, iter_call));
+			ccode.add_assignment (target_expr, iter_call);
 			return;
 		}
 
@@ -520,7 +520,7 @@ public class Vala.GVariantModule : GAsyncModule {
 
 		var variant_expr = new CCodeIdentifier (temp_name);
 
-		ccode.add_expression (new CCodeAssignment (variant_expr, iter_call));
+		ccode.add_assignment (variant_expr, iter_call);
 
 		var result = deserialize_expression (type, variant_expr, target_expr, error_expr, out may_fail);
 		if (result == null) {
@@ -528,7 +528,7 @@ public class Vala.GVariantModule : GAsyncModule {
 			return;
 		}
 
-		ccode.add_expression (new CCodeAssignment (target_expr, result));
+		ccode.add_assignment (target_expr, result);
 
 		var unref = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_unref"));
 		unref.add_argument (variant_expr);
@@ -591,7 +591,7 @@ public class Vala.GVariantModule : GAsyncModule {
 		string array_iter_name = "_tmp%d_".printf (next_temp_var_id++);
 
 		ccode.add_declaration (array_type.get_cname (), new CCodeVariableDeclarator (array_iter_name));
-		ccode.add_expression (new CCodeAssignment (new CCodeIdentifier (array_iter_name), array_expr));
+		ccode.add_assignment (new CCodeIdentifier (array_iter_name), array_expr);
 
 		return serialize_array_dim (array_type, 1, array_expr, new CCodeIdentifier (array_iter_name));
 	}
@@ -711,8 +711,8 @@ public class Vala.GVariantModule : GAsyncModule {
 		ccode.add_declaration (key_type.get_cname (), new CCodeVariableDeclarator ("_key"));
 		ccode.add_declaration (value_type.get_cname (), new CCodeVariableDeclarator ("_value"));
 
-		ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_key"), convert_from_generic_pointer (new CCodeIdentifier (key_name), key_type)));
-		ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_value"), convert_from_generic_pointer (new CCodeIdentifier (value_name), value_type)));
+		ccode.add_assignment (new CCodeIdentifier ("_key"), convert_from_generic_pointer (new CCodeIdentifier (key_name), key_type));
+		ccode.add_assignment (new CCodeIdentifier ("_value"), convert_from_generic_pointer (new CCodeIdentifier (value_name), value_type));
 
 		var serialized_key =  serialize_expression (key_type, new CCodeIdentifier ("_key"));
 		var serialized_value = serialize_expression (value_type, new CCodeIdentifier ("_value"));

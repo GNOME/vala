@@ -689,7 +689,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			// set state before calling async function to support immediate callbacks
 			int state = next_coroutine_state++;
 
-			ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_state_"), new CCodeConstant (state.to_string ())));
+			ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_state_"), new CCodeConstant (state.to_string ()));
 			ccode.add_expression (async_call);
 			ccode.add_return (new CCodeConstant ("FALSE"));
 			ccode.add_label ("_state_%d".printf (state));
@@ -721,16 +721,16 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			czero.add_argument (new CCodeConstant ("0"));
 			czero.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, csizeof, cdelta));
 
-			ccode.add_expression (new CCodeAssignment (temp_ref, new_size));
+			ccode.add_assignment (temp_ref, new_size);
 			ccode.add_expression (ccall_expr);
 			ccode.add_expression (new CCodeConditionalExpression (ccheck, czero, new CCodeConstant ("NULL")));
-			ccode.add_expression (new CCodeAssignment (get_array_length_cexpression (ma.inner, 1), temp_ref));
+			ccode.add_assignment (get_array_length_cexpression (ma.inner, 1), temp_ref);
 
 			var array_var = ma.inner.symbol_reference;
 			var array_local = array_var as LocalVariable;
 			if (array_var != null && array_var.is_internal_symbol ()
 			    && ((array_var is LocalVariable && !array_local.captured) || array_var is Field)) {
-				ccode.add_expression (new CCodeAssignment (get_array_size_cvalue (ma.inner.target_value), temp_ref));
+				ccode.add_assignment (get_array_size_cvalue (ma.inner.target_value), temp_ref);
 			}
 
 			return;
@@ -757,7 +757,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 			emit_temp_var (temp_var);
 
-			ccode.add_expression (new CCodeAssignment (temp_ref, ccall_expr));
+			ccode.add_assignment (temp_ref, ccall_expr);
 			set_cvalue (expr, temp_ref);
 		}
 
@@ -782,18 +782,18 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			}
 
 			// assign new value
-			ccode.add_expression (new CCodeAssignment (get_cvalue (unary.inner), transform_expression (get_cvalue (unary), unary.target_type, unary.inner.value_type, arg)));
+			ccode.add_assignment (get_cvalue (unary.inner), transform_expression (get_cvalue (unary), unary.target_type, unary.inner.value_type, arg));
 
 			var array_type = arg.value_type as ArrayType;
 			if (array_type != null) {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					ccode.add_expression (new CCodeAssignment (get_array_sizes (unary.inner).get (dim - 1), get_array_sizes (unary).get (dim - 1)));
+					ccode.add_assignment (get_array_sizes (unary.inner).get (dim - 1), get_array_sizes (unary).get (dim - 1));
 				}
 			}
 
 			var delegate_type = arg.value_type as DelegateType;
 			if (delegate_type != null) {
-				ccode.add_expression (new CCodeAssignment (get_delegate_target (unary.inner), get_delegate_target (unary)));
+				ccode.add_assignment (get_delegate_target (unary.inner), get_delegate_target (unary));
 			}
 		}
 	}

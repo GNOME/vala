@@ -245,6 +245,10 @@ public class Vala.CCodeFunction : CCodeNode {
 		current_block.add_statement (new CCodeExpressionStatement (expression));
 	}
 
+	public void add_assignment (CCodeExpression left, CCodeExpression right) {
+		add_expression (new CCodeAssignment (left, right));
+	}
+
 	public void add_return (CCodeExpression? expression = null) {
 		current_block.add_statement (new CCodeReturnStatement (expression));
 	}

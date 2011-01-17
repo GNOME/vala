@@ -87,7 +87,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 	public override void visit_throw_statement (ThrowStatement stmt) {
 		// method will fail
 		current_method_inner_error = true;
-		ccode.add_expression (new CCodeAssignment (get_variable_cexpression ("_inner_error_"), get_cvalue (stmt.error_expression)));
+		ccode.add_assignment (get_variable_cexpression ("_inner_error_"), get_cvalue (stmt.error_expression));
 
 		add_simple_check (stmt, true);
 	}
@@ -358,14 +358,14 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			} else {
 				ccode.add_declaration ("GError *", new CCodeVariableDeclarator (variable_name));
 			}
-			ccode.add_expression (new CCodeAssignment (get_variable_cexpression (variable_name), get_variable_cexpression ("_inner_error_")));
+			ccode.add_assignment (get_variable_cexpression (variable_name), get_variable_cexpression ("_inner_error_"));
 		} else {
 			// error object is not used within catch statement, clear it
 			var cclear = new CCodeFunctionCall (new CCodeIdentifier ("g_clear_error"));
 			cclear.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression ("_inner_error_")));
 			ccode.add_expression (cclear);
 		}
-		ccode.add_expression (new CCodeAssignment (get_variable_cexpression ("_inner_error_"), new CCodeConstant ("NULL")));
+		ccode.add_assignment (get_variable_cexpression ("_inner_error_"), new CCodeConstant ("NULL"));
 
 		clause.body.emit (this);
 

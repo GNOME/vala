@@ -291,13 +291,13 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 					array_copy_call.add_argument (size);
 					ccode.add_expression (array_copy_call);
 				} else {
-					ccode.add_expression (new CCodeAssignment (dest, copy));
+					ccode.add_assignment (dest, copy);
 
 					if (array_type != null) {
 						for (int dim = 1; dim <= array_type.rank; dim++) {
 							var len_src = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), get_array_length_cname (f.name, dim));
 							var len_dest = new CCodeMemberAccess.pointer (new CCodeIdentifier ("dest"), get_array_length_cname (f.name, dim));
-							ccode.add_expression (new CCodeAssignment (len_dest, len_src));
+							ccode.add_assignment (len_dest, len_src);
 						}
 					}
 				}

@@ -23,7 +23,7 @@
 public class Vala.DovaArrayModule : DovaMethodCallModule {
 	void append_initializer_list (CCodeExpression name_cnode, InitializerList initializer_list, ref int i) {
 		foreach (Expression e in initializer_list.get_initializers ()) {
-			ccode.add_expression (new CCodeAssignment (new CCodeElementAccess (name_cnode, new CCodeConstant (i.to_string ())), get_cvalue (e)));
+			ccode.add_assignment (new CCodeElementAccess (name_cnode, new CCodeConstant (i.to_string ())), get_cvalue (e));
 			i++;
 		}
 	}
@@ -59,7 +59,7 @@ public class Vala.DovaArrayModule : DovaMethodCallModule {
 
 		emit_temp_var (temp_var);
 
-		ccode.add_expression (new CCodeAssignment (name_cnode, array_new));
+		ccode.add_assignment (name_cnode, array_new);
 
 		set_cvalue (expr, name_cnode);
 	}

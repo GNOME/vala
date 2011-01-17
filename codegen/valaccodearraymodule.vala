@@ -32,7 +32,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			if (rank > 1) {
 				append_initializer_list (name_cnode, (InitializerList) e, rank - 1, ref i);
 			} else {
-				ccode.add_expression (new CCodeAssignment (new CCodeElementAccess (name_cnode, new CCodeConstant (i.to_string ())), get_cvalue (e)));
+				ccode.add_assignment (new CCodeElementAccess (name_cnode, new CCodeConstant (i.to_string ())), get_cvalue (e));
 				i++;
 			}
 		}
@@ -113,7 +113,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		emit_temp_var (temp_var);
 
-		ccode.add_expression (new CCodeAssignment (name_cnode, gnew));
+		ccode.add_assignment (name_cnode, gnew);
 
 		if (expr.initializer_list != null) {
 			append_initializer_list (name_cnode, expr.initializer_list, expr.rank, ref i);
@@ -514,7 +514,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			gnew.add_argument (length_expr);
 
 			ccode.add_declaration (array_type.get_cname (), cvardecl);
-			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("result"), gnew));
+			ccode.add_assignment (new CCodeIdentifier ("result"), gnew);
 
 			ccode.add_declaration ("int", new CCodeVariableDeclarator ("i"));
 
@@ -522,7 +522,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			                   new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier ("i"), new CCodeIdentifier ("length")),
 			                   new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier ("i")));
 
-			ccode.add_expression (new CCodeAssignment (new CCodeElementAccess (new CCodeIdentifier ("result"), new CCodeIdentifier ("i")), get_ref_cexpression (array_type.element_type, new CCodeElementAccess (new CCodeIdentifier ("self"), new CCodeIdentifier ("i")), null, array_type)));
+			ccode.add_assignment (new CCodeElementAccess (new CCodeIdentifier ("result"), new CCodeIdentifier ("i")), get_ref_cexpression (array_type.element_type, new CCodeElementAccess (new CCodeIdentifier ("self"), new CCodeIdentifier ("i")), null, array_type));
 			ccode.close ();
 
 			ccode.add_return (new CCodeIdentifier ("result"));
@@ -576,7 +576,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			                   new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier ("i")));
 
 
-			ccode.add_expression (new CCodeAssignment (new CCodeElementAccess (new CCodeIdentifier ("dest"), new CCodeIdentifier ("i")), get_ref_cexpression (array_type.element_type, new CCodeElementAccess (new CCodeIdentifier ("self"), new CCodeIdentifier ("i")), null, array_type)));
+			ccode.add_assignment (new CCodeElementAccess (new CCodeIdentifier ("dest"), new CCodeIdentifier ("i")), get_ref_cexpression (array_type.element_type, new CCodeElementAccess (new CCodeIdentifier ("self"), new CCodeIdentifier ("i")), null, array_type));
 		} else {
 			cfile.add_include ("string.h");
 
@@ -647,15 +647,15 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		var csizecheck = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, length, size);
 		ccode.open_if (csizecheck);
-		ccode.add_expression (new CCodeAssignment (size, new CCodeConditionalExpression (size, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeConstant ("2"), size), new CCodeConstant ("4"))));
-		ccode.add_expression (new CCodeAssignment (array, renew_call));
+		ccode.add_assignment (size, new CCodeConditionalExpression (size, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeConstant ("2"), size), new CCodeConstant ("4")));
+		ccode.add_assignment (array, renew_call);
 		ccode.close ();
 
-		ccode.add_expression (new CCodeAssignment (new CCodeElementAccess (array, new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, length)), value));
+		ccode.add_assignment (new CCodeElementAccess (array, new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, length)), value);
 
 		if (array_type.element_type.is_reference_type_or_type_parameter ()) {
 			// NULL terminate array
-			ccode.add_expression (new CCodeAssignment (new CCodeElementAccess (array, length), new CCodeConstant ("NULL")));
+			ccode.add_assignment (new CCodeElementAccess (array, length), new CCodeConstant ("NULL"));
 		}
 
 		pop_function ();

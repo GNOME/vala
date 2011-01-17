@@ -959,7 +959,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				var rhs = get_cvalue (f.initializer);
 
-				ccode.add_expression (new CCodeAssignment (lhs, rhs));
+				ccode.add_assignment (lhs, rhs);
 
 				if (f.variable_type is ArrayType && !f.no_array_length &&
 				    f.initializer is ArrayCreationExpression) {
@@ -976,13 +976,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					for (int dim = 1; dim <= array_type.rank; dim++) {
 						var array_len_lhs = get_array_length_cexpression (ma, dim);
 						var size = sizes[dim - 1];
-						ccode.add_expression (new CCodeAssignment (array_len_lhs, get_cvalue (size)));
+						ccode.add_assignment (array_len_lhs, get_cvalue (size));
 					}
 
 					if (array_type.rank == 1 && f.is_internal_symbol ()) {
 						var lhs_array_size = get_array_size_cvalue (ma.target_value);
 						var rhs_array_len = get_array_length_cexpression (ma, 1);
-						ccode.add_expression (new CCodeAssignment (lhs_array_size, rhs_array_len));
+						ccode.add_assignment (lhs_array_size, rhs_array_len);
 					}
 				}
 
@@ -1038,7 +1038,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				var rhs = get_cvalue (f.initializer);
 
-				ccode.add_expression (new CCodeAssignment (lhs, rhs));
+				ccode.add_assignment (lhs, rhs);
 
 				foreach (LocalVariable local in temp_ref_vars) {
 					ccode.add_expression (get_unref_expression_ (local));
@@ -1154,11 +1154,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 							ccode.add_declaration (temp_decl.variable_type.get_cname (), vardecl);
 
 							var tmp = get_variable_cexpression (get_variable_cname (temp_decl.name));
-							ccode.add_expression (new CCodeAssignment (lhs, tmp));
+							ccode.add_assignment (lhs, tmp);
 
 							ccode.close ();
 						} else {
-							ccode.add_expression (new CCodeAssignment (lhs, rhs));
+							ccode.add_assignment (lhs, rhs);
 						}
 
 						if (f.variable_type is ArrayType && !f.no_array_length &&
@@ -1173,7 +1173,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 							for (int dim = 1; dim <= array_type.rank; dim++) {
 								var array_len_lhs = get_array_length_cexpression (ma, dim);
 								var size = sizes[dim - 1];
-								ccode.add_expression (new CCodeAssignment (array_len_lhs, get_cvalue (size)));
+								ccode.add_assignment (array_len_lhs, get_cvalue (size));
 							}
 						}
 					} else {
@@ -1605,7 +1605,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			if (is_virtual) {
 				ccode.add_declaration (this_type.get_cname (), new CCodeVariableDeclarator ("self"));
-				ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("self"), transform_expression (new CCodeIdentifier ("base"), base_type, this_type)));
+				ccode.add_assignment (new CCodeIdentifier ("self"), transform_expression (new CCodeIdentifier ("base"), base_type, this_type));
 			}
 
 			acc.body.emit (this);
@@ -1672,13 +1672,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			param.captured = true;
 		}
 
-		ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_variable_cname (param.name)), cparam));
+		ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_variable_cname (param.name)), cparam);
 
 		if (param.variable_type is ArrayType) {
 			var array_type = (ArrayType) param.variable_type;
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				data.add_field ("gint", get_parameter_array_length_cname (param, dim));
-				ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_array_length_cname (get_variable_cname (param.name), dim)), new CCodeIdentifier (get_array_length_cname (get_variable_cname (param.name), dim))));
+				ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_array_length_cname (get_variable_cname (param.name), dim)), new CCodeIdentifier (get_array_length_cname (get_variable_cname (param.name), dim)));
 			}
 		} else if (param.variable_type is DelegateType) {
 			CCodeExpression target_expr;
@@ -1692,10 +1692,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 
 			data.add_field ("gpointer", get_delegate_target_cname (get_variable_cname (param.name)));
-			ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_delegate_target_cname (get_variable_cname (param.name))), target_expr));
+			ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_delegate_target_cname (get_variable_cname (param.name))), target_expr);
 			if (param.variable_type.value_owned) {
 				data.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
-				ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_delegate_target_destroy_notify_cname (get_variable_cname (param.name))), delegate_target_destroy_notify));
+				ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_delegate_target_destroy_notify_cname (get_variable_cname (param.name))), delegate_target_destroy_notify);
 			}
 		}
 
@@ -1815,10 +1815,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			} else {
 				ccode.add_declaration (struct_name + "*", new CCodeVariableDeclarator ("_data%d_".printf (block_id)));
 			}
-			ccode.add_expression (new CCodeAssignment (get_variable_cexpression ("_data%d_".printf (block_id)), data_alloc));
+			ccode.add_assignment (get_variable_cexpression ("_data%d_".printf (block_id)), data_alloc);
 
 			// initialize ref_count
-			ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), "_ref_count_"), new CCodeIdentifier ("1")));
+			ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), "_ref_count_"), new CCodeIdentifier ("1"));
 
 			if (parent_block != null) {
 				int parent_block_id = get_block_id (parent_block);
@@ -1826,7 +1826,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				var ref_call = new CCodeFunctionCall (new CCodeIdentifier ("block%d_data_ref".printf (parent_block_id)));
 				ref_call.add_argument (get_variable_cexpression ("_data%d_".printf (parent_block_id)));
 
-				ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), "_data%d_".printf (parent_block_id)), ref_call));
+				ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), "_data%d_".printf (parent_block_id)), ref_call);
 			} else {
 				if (in_constructor || (current_method != null && current_method.binding == MemberBinding.INSTANCE &&
 				                              (!(current_method is CreationMethod) || current_method.body != b)) ||
@@ -1834,7 +1834,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					var ref_call = new CCodeFunctionCall (get_dup_func_expression (new ObjectType (current_class), b.source_reference));
 					ref_call.add_argument (get_result_cexpression ("self"));
 
-					ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), "self"), ref_call));
+					ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), "self"), ref_call);
 				}
 
 				if (current_method != null) {
@@ -1843,13 +1843,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						string func_name;
 
 						func_name = "%s_type".printf (type_param.name.down ());
-						ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name), new CCodeIdentifier (func_name)));
+						ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name), new CCodeIdentifier (func_name));
 
 						func_name = "%s_dup_func".printf (type_param.name.down ());
-						ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name), new CCodeIdentifier (func_name)));
+						ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name), new CCodeIdentifier (func_name));
 
 						func_name = "%s_destroy_func".printf (type_param.name.down ());
-						ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name), new CCodeIdentifier (func_name)));
+						ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name), new CCodeIdentifier (func_name));
 					}
 				}
 			}
@@ -1870,7 +1870,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 					// async method is suspended while waiting for callback,
 					// so we never need to care about memory management of async data
-					ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), "_async_data_"), new CCodeIdentifier ("data")));
+					ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), "_async_data_"), new CCodeIdentifier ("data"));
 				}
 			} else if (b.parent_symbol is PropertyAccessor) {
 				var acc = (PropertyAccessor) b.parent_symbol;
@@ -2059,17 +2059,17 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				} else {
 					var temp_var = get_temp_variable (local.variable_type, true, local, false);
 					emit_temp_var (temp_var);
-					ccode.add_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), rhs));
+					ccode.add_assignment (get_variable_cexpression (temp_var.name), rhs);
 
 					for (int dim = 1; dim <= array_type.rank; dim++) {
 						var lhs_array_len = get_array_length_cvalue (target_value, dim);
 						var rhs_array_len = get_array_length_cexpression (local.initializer, dim);
-						ccode.add_expression (new CCodeAssignment (lhs_array_len, rhs_array_len));
+						ccode.add_assignment (lhs_array_len, rhs_array_len);
 					}
 					if (array_type.rank == 1 && !local.captured) {
 						var lhs_array_size = get_array_size_cvalue (target_value);
 						var rhs_array_len = get_array_length_cvalue (target_value, 1);
-						ccode.add_expression (new CCodeAssignment (lhs_array_size, rhs_array_len));
+						ccode.add_assignment (lhs_array_size, rhs_array_len);
 					}
 
 					rhs = get_variable_cexpression (temp_var.name);
@@ -2080,17 +2080,17 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				if (d.has_target) {
 					var temp_var = get_temp_variable (local.variable_type, true, local, false);
 					emit_temp_var (temp_var);
-					ccode.add_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), rhs));
+					ccode.add_assignment (get_variable_cexpression (temp_var.name), rhs);
 
 					var lhs_delegate_target = get_delegate_target_cvalue (target_value);
 					var lhs_delegate_target_destroy_notify = get_delegate_target_destroy_notify_cvalue (target_value);
 
 					CCodeExpression rhs_delegate_target_destroy_notify;
 					var rhs_delegate_target = get_delegate_target_cexpression (local.initializer, out rhs_delegate_target_destroy_notify);
-					ccode.add_expression (new CCodeAssignment (lhs_delegate_target, rhs_delegate_target));
+					ccode.add_assignment (lhs_delegate_target, rhs_delegate_target);
 
 					if (deleg_type.value_owned) {
-						ccode.add_expression (new CCodeAssignment (lhs_delegate_target_destroy_notify, rhs_delegate_target_destroy_notify));
+						ccode.add_assignment (lhs_delegate_target_destroy_notify, rhs_delegate_target_destroy_notify);
 					}
 
 					rhs = get_variable_cexpression (temp_var.name);
@@ -2107,7 +2107,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					rhs = null;
 				} else {
 					for (int dim = 1; dim <= array_type.rank; dim++) {
-						ccode.add_expression (new CCodeAssignment (get_variable_cexpression (get_array_length_cname (get_variable_cname (local.name), dim)), new CCodeConstant ("0")));
+						ccode.add_assignment (get_variable_cexpression (get_array_length_cname (get_variable_cname (local.name), dim)), new CCodeConstant ("0"));
 					}
 				}
 			}
@@ -2118,7 +2118,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				if (has_simple_struct_initializer (local)) {
 					ccode.add_expression (rhs);
 				} else {
-					ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id ((Block) local.parent_symbol))), get_variable_cname (local.name)), rhs));
+					ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id ((Block) local.parent_symbol))), get_variable_cname (local.name)), rhs);
 				}
 			}
 		} else if (current_method != null && current_method.coroutine) {
@@ -2128,7 +2128,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				if (has_simple_struct_initializer (local)) {
 					ccode.add_expression (rhs);
 				} else {
-					ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_variable_cname (local.name)), rhs));
+					ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_variable_cname (local.name)), rhs);
 				}
 			}
 		} else {
@@ -2154,7 +2154,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			if (cvar.initializer != null && !cvar.init0) {
 				cvar.initializer = null;
-				ccode.add_expression (new CCodeAssignment (get_variable_cexpression (local.name), rhs));
+				ccode.add_assignment (get_variable_cexpression (local.name), rhs);
 			}
 
 			if (post_rhs != null) {
@@ -2588,7 +2588,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var creation_call = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
 			creation_call.add_argument (new CCodeConstant (value_type.data_type.get_cname ()));
 			creation_call.add_argument (new CCodeConstant ("1"));
-			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("dup"), creation_call));
+			ccode.add_assignment (new CCodeIdentifier ("dup"), creation_call);
 
 			var st = value_type.data_type as Struct;
 			if (st != null && st.is_disposable ()) {
@@ -3144,7 +3144,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				memset_call.add_argument (new CCodeIdentifier ("sizeof (%s)".printf (local.variable_type.get_cname ())));
 				ccode.add_expression (memset_call);
 			} else if (vardecl.initializer != null) {
-				ccode.add_expression (new CCodeAssignment (get_variable_cexpression (local.name), vardecl.initializer));
+				ccode.add_assignment (get_variable_cexpression (local.name), vardecl.initializer);
 			}
 		} else {
 			ccode.add_declaration (local.variable_type.get_cname (), vardecl);
@@ -3242,12 +3242,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var delegate_type = param.variable_type as DelegateType;
 
 		ccode.open_if (get_variable_cexpression (param.name));
-		ccode.add_expression (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (param.name)), get_variable_cexpression ("_" + param.name)));
+		ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (param.name)), get_variable_cexpression ("_" + param.name));
 
 		if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
-			ccode.add_expression (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (get_delegate_target_cname (param.name))), new CCodeIdentifier (get_delegate_target_cname (get_variable_cname ("_" + param.name)))));
+			ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (get_delegate_target_cname (param.name))), new CCodeIdentifier (get_delegate_target_cname (get_variable_cname ("_" + param.name))));
 			if (delegate_type.value_owned) {
-				ccode.add_expression (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (get_delegate_target_destroy_notify_cname (param.name))), new CCodeIdentifier (get_delegate_target_destroy_notify_cname (get_variable_cname ("_" + param.name)))));
+				ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (get_delegate_target_destroy_notify_cname (param.name))), new CCodeIdentifier (get_delegate_target_destroy_notify_cname (get_variable_cname ("_" + param.name))));
 			}
 		}
 
@@ -3261,7 +3261,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (array_type != null && !array_type.fixed_length && !param.no_array_length) {
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				ccode.open_if (get_variable_cexpression (get_parameter_array_length_cname (param, dim)));
-				ccode.add_expression (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (get_parameter_array_length_cname (param, dim))), new CCodeIdentifier (get_array_length_cname (get_variable_cname ("_" + param.name), dim))));
+				ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (get_parameter_array_length_cname (param, dim))), new CCodeIdentifier (get_array_length_cname (get_variable_cname ("_" + param.name), dim)));
 				ccode.close ();
 			}
 		}
@@ -3288,7 +3288,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (((current_method != null && !current_method.no_array_length) || current_property_accessor != null) && current_return_type is ArrayType) {
 			var return_expr_decl = get_temp_variable (stmt.return_expression.value_type, true, stmt, false);
 
-			ccode.add_expression (new CCodeAssignment (get_variable_cexpression (return_expr_decl.name), get_cvalue (stmt.return_expression)));
+			ccode.add_assignment (get_variable_cexpression (return_expr_decl.name), get_cvalue (stmt.return_expression));
 
 			var array_type = (ArrayType) current_return_type;
 
@@ -3298,7 +3298,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					len_l = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, len_l);
 				}
 				var len_r = get_array_length_cexpression (stmt.return_expression, dim);
-				ccode.add_expression (new CCodeAssignment (len_l, len_r));
+				ccode.add_assignment (len_l, len_r);
 			}
 
 			set_cvalue (stmt.return_expression, get_variable_cexpression (return_expr_decl.name));
@@ -3309,7 +3309,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (delegate_type.delegate_symbol.has_target) {
 				var return_expr_decl = get_temp_variable (stmt.return_expression.value_type, true, stmt, false);
 
-				ccode.add_expression (new CCodeAssignment (get_variable_cexpression (return_expr_decl.name), get_cvalue (stmt.return_expression)));
+				ccode.add_assignment (get_variable_cexpression (return_expr_decl.name), get_cvalue (stmt.return_expression));
 
 				var target_l = get_result_cexpression (get_delegate_target_cname ("result"));
 				if (current_method == null || !current_method.coroutine) {
@@ -3317,13 +3317,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				}
 				CCodeExpression target_r_destroy_notify;
 				var target_r = get_delegate_target_cexpression (stmt.return_expression, out target_r_destroy_notify);
-				ccode.add_expression (new CCodeAssignment (target_l, target_r));
+				ccode.add_assignment (target_l, target_r);
 				if (delegate_type.value_owned) {
 					var target_l_destroy_notify = get_result_cexpression (get_delegate_target_destroy_notify_cname ("result"));
 					if (current_method == null || !current_method.coroutine) {
 						target_l_destroy_notify = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, target_l_destroy_notify);
 					}
-					ccode.add_expression (new CCodeAssignment (target_l_destroy_notify, target_r_destroy_notify));
+					ccode.add_assignment (target_l_destroy_notify, target_r_destroy_notify);
 				}
 
 				set_cvalue (stmt.return_expression, get_variable_cexpression (return_expr_decl.name));
@@ -3338,7 +3338,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (current_return_type.is_real_non_null_struct_type () && (current_method == null || !current_method.coroutine)) {
 				result_lhs = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, result_lhs);
 			}
-			ccode.add_expression (new CCodeAssignment (result_lhs, get_cvalue (stmt.return_expression)));
+			ccode.add_assignment (result_lhs, get_cvalue (stmt.return_expression));
 		}
 
 		// free local variables
@@ -3567,7 +3567,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			regex_new_call.add_argument (new CCodeConstant ("match_options"));
 			regex_new_call.add_argument (new CCodeConstant ("0"));
 			regex_new_call.add_argument (new CCodeConstant ("NULL"));
-			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("GRegex* val"), regex_new_call));
+			ccode.add_assignment (new CCodeIdentifier ("GRegex* val"), regex_new_call);
 
 			var once_leave_call = new CCodeFunctionCall (new CCodeIdentifier ("g_once_init_leave"));
 			once_leave_call.add_argument (new CCodeConstant ("(volatile gsize*) re"));
@@ -3656,7 +3656,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			// assign current value to temp variable
 			var temp_decl = get_temp_variable (prop.property_type, true, expr, false);
 			emit_temp_var (temp_decl);
-			ccode.add_expression (new CCodeAssignment (get_variable_cexpression (temp_decl.name), get_cvalue (expr.inner)));
+			ccode.add_assignment (get_variable_cexpression (temp_decl.name), get_cvalue (expr.inner));
 			
 			// increment/decrement property
 			var op = expr.increment ? CCodeBinaryOperator.PLUS : CCodeBinaryOperator.MINUS;
@@ -3676,12 +3676,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			// assign current value to temp variable
 			var temp_decl = get_temp_variable (expr.inner.value_type, true, expr, false);
 			emit_temp_var (temp_decl);
-			ccode.add_expression (new CCodeAssignment (get_variable_cexpression (temp_decl.name), get_cvalue (expr.inner)));
+			ccode.add_assignment (get_variable_cexpression (temp_decl.name), get_cvalue (expr.inner));
 
 			// increment/decrement variable
 			var op = expr.increment ? CCodeBinaryOperator.PLUS : CCodeBinaryOperator.MINUS;
 			var cexpr = new CCodeBinaryExpression (op, get_variable_cexpression (temp_decl.name), new CCodeConstant ("1"));
-			ccode.add_expression (new CCodeAssignment (get_cvalue (expr.inner), cexpr));
+			ccode.add_assignment (get_cvalue (expr.inner), cexpr);
 
 			// return previous value
 			set_cvalue (expr, get_variable_cexpression (temp_decl.name));
@@ -4335,7 +4335,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (expr.type_reference.data_type is Struct) {
 				ccode.add_expression (creation_expr);
 			} else {
-				ccode.add_expression (new CCodeAssignment (instance, creation_expr));
+				ccode.add_assignment (instance, creation_expr);
 			}
 
 			foreach (MemberInitializer init in expr.get_object_initializer ()) {
@@ -4349,7 +4349,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					} else {
 						lhs = new CCodeMemberAccess.pointer (typed_inst, f.get_cname ());
 					}
-					ccode.add_expression (new CCodeAssignment (lhs, get_cvalue (init.initializer)));
+					ccode.add_assignment (lhs, get_cvalue (init.initializer));
 
 					if (f.variable_type is ArrayType && !f.no_array_length) {
 						var array_type = (ArrayType) f.variable_type;
@@ -4360,7 +4360,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 								lhs = new CCodeMemberAccess.pointer (typed_inst, get_array_length_cname (f.get_cname (), dim));
 							}
 							var rhs_array_len = get_array_length_cexpression (init.initializer, dim);
-							ccode.add_expression (new CCodeAssignment (lhs, rhs_array_len));
+							ccode.add_assignment (lhs, rhs_array_len);
 						}
 					} else if (f.variable_type is DelegateType && (f.variable_type as DelegateType).delegate_symbol.has_target && !f.no_delegate_target) {
 						if (expr.type_reference.data_type is Struct) {
@@ -4370,7 +4370,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						}
 						CCodeExpression rhs_delegate_target_destroy_notify;
 						var rhs_delegate_target = get_delegate_target_cexpression (init.initializer, out rhs_delegate_target_destroy_notify);
-						ccode.add_expression (new CCodeAssignment (lhs, rhs_delegate_target));
+						ccode.add_assignment (lhs, rhs_delegate_target);
 					}
 
 					var cl = f.parent_symbol as Class;
@@ -4394,7 +4394,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			emit_temp_var (temp_var);
 
-			ccode.add_expression (new CCodeAssignment (temp_ref, creation_expr));
+			ccode.add_assignment (temp_ref, creation_expr);
 			set_cvalue (expr, temp_ref);
 		}
 	}
@@ -4699,9 +4699,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		emit_temp_var (temp_decl);
 		var cvar = get_variable_cexpression (temp_decl.name);
 
-		ccode.add_expression (new CCodeAssignment (cvar, get_cvalue (expr.inner)));
+		ccode.add_assignment (cvar, get_cvalue (expr.inner));
 		if (!(expr.value_type is DelegateType)) {
-			ccode.add_expression (new CCodeAssignment (get_cvalue (expr.inner), new CCodeConstant ("NULL")));
+			ccode.add_assignment (get_cvalue (expr.inner), new CCodeConstant ("NULL"));
 		}
 
 		set_cvalue (expr, cvar);
@@ -4720,14 +4720,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var target_cvar = get_variable_cexpression (temp_target_decl.name);
 			CCodeExpression target_destroy_notify;
 			var target = get_delegate_target_cexpression (expr.inner, out target_destroy_notify);
-			ccode.add_expression (new CCodeAssignment (target_cvar, target));
+			ccode.add_assignment (target_cvar, target);
 			set_delegate_target (expr, target_cvar);
 			if (target_destroy_notify != null) {
 				var temp_target_destroy_notify_decl = get_temp_variable (gdestroynotify_type, true, expr, false);
 				emit_temp_var (temp_target_destroy_notify_decl);
 				var target_destroy_notify_cvar = get_variable_cexpression (temp_target_destroy_notify_decl.name);
-				ccode.add_expression (new CCodeAssignment (target_destroy_notify_cvar, target_destroy_notify));
-				ccode.add_expression (new CCodeAssignment (target_destroy_notify, new CCodeConstant ("NULL")));
+				ccode.add_assignment (target_destroy_notify_cvar, target_destroy_notify);
+				ccode.add_assignment (target_destroy_notify, new CCodeConstant ("NULL"));
 				set_delegate_target_destroy_notify (expr, target_destroy_notify_cvar);
 			}
 		}
@@ -5166,7 +5166,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				var decl = get_temp_variable (expression_type, true, expression_type, false);
 				emit_temp_var (decl);
 				temp_ref_vars.insert (0, decl);
-				ccode.add_expression (new CCodeAssignment (get_variable_cexpression (decl.name), cexpr));
+				ccode.add_assignment (get_variable_cexpression (decl.name), cexpr);
 				cexpr = get_variable_cexpression (decl.name);
 
 				if (expression_type is ArrayType && expr != null) {
@@ -5174,7 +5174,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					for (int dim = 1; dim <= array_type.rank; dim++) {
 						var len_decl = new LocalVariable (int_type.copy (), get_array_length_cname (decl.name, dim));
 						emit_temp_var (len_decl);
-						ccode.add_expression (new CCodeAssignment (get_variable_cexpression (len_decl.name), get_array_length_cexpression (expr, dim)));
+						ccode.add_assignment (get_variable_cexpression (len_decl.name), get_array_length_cexpression (expr, dim));
 					}
 				} else if (expression_type is DelegateType && expr != null) {
 					var target_decl = new LocalVariable (new PointerType (new VoidType ()), get_delegate_target_cname (decl.name));
@@ -5182,8 +5182,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					var target_destroy_notify_decl = new LocalVariable (gdestroynotify_type, get_delegate_target_destroy_notify_cname (decl.name));
 					emit_temp_var (target_destroy_notify_decl);
 					CCodeExpression target_destroy_notify;
-					ccode.add_expression (new CCodeAssignment (get_variable_cexpression (target_decl.name), get_delegate_target_cexpression (expr, out target_destroy_notify)));
-					ccode.add_expression (new CCodeAssignment (get_variable_cexpression (target_destroy_notify_decl.name), target_destroy_notify));
+					ccode.add_assignment (get_variable_cexpression (target_decl.name), get_delegate_target_cexpression (expr, out target_destroy_notify));
+					ccode.add_assignment (get_variable_cexpression (target_destroy_notify_decl.name), target_destroy_notify);
 
 				}
 			}
@@ -5314,7 +5314,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				var decl = get_temp_variable (target_type, true, node, false);
 				emit_temp_var (decl);
-				ccode.add_expression (new CCodeAssignment (get_variable_cexpression (decl.name), get_ref_cexpression (target_type, cexpr, expr, node)));
+				ccode.add_assignment (get_variable_cexpression (decl.name), get_ref_cexpression (target_type, cexpr, expr, node));
 				cexpr = get_variable_cexpression (decl.name);
 			}
 		}
@@ -5426,7 +5426,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 					var temp_var = get_temp_variable (instance.target_type, true, null, false);
 					emit_temp_var (temp_var);
-					ccode.add_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), cinstance));
+					ccode.add_assignment (get_variable_cexpression (temp_var.name), cinstance);
 
 					cinstance = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_var.name));
 				}
@@ -5451,7 +5451,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (array_type != null && !prop.no_array_length) {
 			var temp_var = get_temp_variable (prop.property_type, true, null, false);
 			emit_temp_var (temp_var);
-			ccode.add_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), cexpr));
+			ccode.add_assignment (get_variable_cexpression (temp_var.name), cexpr);
 			ccall.add_argument (get_variable_cexpression (temp_var.name));
 		} else {
 			ccall.add_argument (cexpr);
@@ -5773,13 +5773,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					array_copy_call.add_argument (size);
 					ccode.add_expression (array_copy_call);
 				} else {
-					ccode.add_expression (new CCodeAssignment (dest, copy));
+					ccode.add_assignment (dest, copy);
 
 					if (array_type != null && !f.no_array_length) {
 						for (int dim = 1; dim <= array_type.rank; dim++) {
 							var len_src = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), get_array_length_cname (f.name, dim));
 							var len_dest = new CCodeMemberAccess.pointer (new CCodeIdentifier ("dest"), get_array_length_cname (f.name, dim));
-							ccode.add_expression (new CCodeAssignment (len_dest, len_src));
+							ccode.add_assignment (len_dest, len_src);
 						}
 					}
 				}

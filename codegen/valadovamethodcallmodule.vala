@@ -226,7 +226,7 @@ public class Vala.DovaMethodCallModule : DovaAssignmentModule {
 
 			emit_temp_var (temp_var);
 
-			ccode.add_expression (new CCodeAssignment (temp_ref, ccall_expr));
+			ccode.add_assignment (temp_ref, ccall_expr);
 			set_cvalue (expr, temp_ref);
 		}
 	}

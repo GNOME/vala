@@ -771,7 +771,7 @@ public class Vala.GSignalModule : GObjectModule {
 
 			emit_temp_var (temp_var);
 
-			ccode.add_expression (new CCodeAssignment (temp_ref, ccall));
+			ccode.add_assignment (temp_ref, ccall);
 
 			return temp_ref;
 		}

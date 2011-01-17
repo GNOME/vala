@@ -217,7 +217,7 @@ public class Vala.GDBusModule : GVariantModule {
 			get_fd.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_fd_index")));
 			ccode.add_expression (get_fd);
 
-			ccode.add_expression (new CCodeAssignment (target_expr, stream));
+			ccode.add_assignment (target_expr, stream);
 		} else {
 			read_expression (type, iter_expr, target_expr, sym, error_expr, out may_fail);
 		}

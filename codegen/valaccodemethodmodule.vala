@@ -391,7 +391,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 						var parent_data = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "_data%d_".printf (parent_block_id));
 						ccode.add_declaration ("Block%dData*".printf (parent_block_id), new CCodeVariableDeclarator ("_data%d_".printf (parent_block_id)));
-						ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_data%d_".printf (parent_block_id)), parent_data));
+						ccode.add_assignment (new CCodeIdentifier ("_data%d_".printf (parent_block_id)), parent_data);
 
 						closure_block = parent_closure_block;
 						block_id = parent_block_id;
@@ -402,7 +402,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 					if (m.binding == MemberBinding.INSTANCE) {
 						var cself = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "self");
 						ccode.add_declaration ("%s *".printf (current_class.get_cname ()), new CCodeVariableDeclarator ("self"));
-						ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("self"), cself));
+						ccode.add_assignment (new CCodeIdentifier ("self"), cself);
 					}
 
 					// allow capturing generic type parameters
@@ -411,15 +411,15 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 						func_name = "%s_type".printf (type_param.name.down ());
 						ccode.add_declaration ("GType", new CCodeVariableDeclarator (func_name));
-						ccode.add_expression (new CCodeAssignment (new CCodeIdentifier (func_name), new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name)));
+						ccode.add_assignment (new CCodeIdentifier (func_name), new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name));
 
 						func_name = "%s_dup_func".printf (type_param.name.down ());
 						ccode.add_declaration ("GBoxedCopyFunc", new CCodeVariableDeclarator (func_name));
-						ccode.add_expression (new CCodeAssignment (new CCodeIdentifier (func_name), new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name)));
+						ccode.add_assignment (new CCodeIdentifier (func_name), new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name));
 
 						func_name = "%s_destroy_func".printf (type_param.name.down ());
 						ccode.add_declaration ("GDestroyNotify", new CCodeVariableDeclarator (func_name));
-						ccode.add_expression (new CCodeAssignment (new CCodeIdentifier (func_name), new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name)));
+						ccode.add_assignment (new CCodeIdentifier (func_name), new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name));
 					}
 				} else if (m.parent_symbol is Class && !m.coroutine) {
 					var cl = (Class) m.parent_symbol;
@@ -437,7 +437,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 						CCodeExpression cself = transform_expression (new CCodeIdentifier ("base"), base_expression_type, self_target_type);
 
 						ccode.add_declaration ("%s *".printf (cl.get_cname ()), new CCodeVariableDeclarator ("self"));
-						ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("self"), cself));
+						ccode.add_assignment (new CCodeIdentifier ("self"), cself);
 					} else if (m.binding == MemberBinding.INSTANCE
 						   && !(m is CreationMethod)) {
 						create_method_type_check_statement (m, creturn_type, cl, true, "self");
@@ -502,7 +502,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 						if (cl.is_fundamental ()) {
 							var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_create_instance"));
 							ccall.add_argument (new CCodeIdentifier ("object_type"));
-							ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("self"), new CCodeCastExpression (ccall, cl.get_cname () + "*")));
+							ccode.add_assignment (new CCodeIdentifier ("self"), new CCodeCastExpression (ccall, cl.get_cname () + "*"));
 
 							/* type, dup func, and destroy func fields for generic types */
 							foreach (TypeParameter type_param in current_class.get_type_parameters ()) {
@@ -532,7 +532,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 							// TODO implicitly chain up to base class as in add_object_creation
 							var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_new0"));
 							ccall.add_argument (new CCodeIdentifier (cl.get_cname ()));
-							ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("self"), ccall));
+							ccode.add_assignment (new CCodeIdentifier ("self"), ccall);
 						}
 
 						if (cl.base_class == null) {
@@ -945,7 +945,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		} else {
 			/* store method return value for postconditions */
 			ccode.add_declaration (get_creturn_type (m, return_type.get_cname ()), new CCodeVariableDeclarator ("result"));
-			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("result"), vcall));
+			ccode.add_assignment (new CCodeIdentifier ("result"), vcall);
 		}
 
 		if (m.get_postconditions ().size > 0) {

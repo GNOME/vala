@@ -625,7 +625,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 			param.captured = true;
 		}
 
-		ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_variable_cname (param.name)), cparam));
+		ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_variable_cname (param.name)), cparam);
 
 		if (requires_destroy (param_type)) {
 			var ma = new MemberAccess.simple (param.name);
@@ -864,7 +864,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 
 		if (local.captured) {
 			if (local.initializer != null) {
-				ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id ((Block) local.parent_symbol))), get_variable_cname (local.name)), rhs));
+				ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id ((Block) local.parent_symbol))), get_variable_cname (local.name)), rhs);
 			}
 		} else {
 			var cvar = new CCodeVariableDeclarator (get_variable_cname (local.name), rhs, local.variable_type.get_cdeclarator_suffix ());
@@ -1356,7 +1356,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 			// assign current value to temp variable
 			var temp_decl = get_temp_variable (prop.property_type, true, expr);
 			emit_temp_var (temp_decl);
-			ccode.add_expression (new CCodeAssignment (get_variable_cexpression (temp_decl.name), get_cvalue (expr.inner)));
+			ccode.add_assignment (get_variable_cexpression (temp_decl.name), get_cvalue (expr.inner));
 
 			// increment/decrement property
 			var op = expr.increment ? CCodeBinaryOperator.PLUS : CCodeBinaryOperator.MINUS;
@@ -1661,7 +1661,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 			if (expr.type_reference.data_type is Struct) {
 				ccode.add_expression (creation_expr);
 			} else {
-				ccode.add_expression (new CCodeAssignment (instance, creation_expr));
+				ccode.add_assignment (instance, creation_expr);
 			}
 
 			foreach (MemberInitializer init in expr.get_object_initializer ()) {
@@ -1675,7 +1675,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 					} else {
 						lhs = new CCodeMemberAccess.pointer (typed_inst, f.get_cname ());
 					}
-					ccode.add_expression (new CCodeAssignment (lhs, get_cvalue (init.initializer)));
+					ccode.add_assignment (lhs, get_cvalue (init.initializer));
 				} else if (init.symbol_reference is Property) {
 					var inst_ma = new MemberAccess.simple ("new");
 					inst_ma.value_type = expr.type_reference;
@@ -1693,7 +1693,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 
 			emit_temp_var (temp_var);
 
-			ccode.add_expression (new CCodeAssignment (temp_ref, creation_expr));
+			ccode.add_assignment (temp_ref, creation_expr);
 			set_cvalue (expr, temp_ref);
 		}
 	}

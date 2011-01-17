@@ -37,13 +37,13 @@ public class Vala.DovaAssignmentModule : DovaMemberAccessModule {
 				string lhs_temp_name = "_tmp%d_".printf (next_temp_var_id++);
 				var lhs_temp = new LocalVariable (lhs_value_type, "*" + lhs_temp_name);
 				emit_temp_var (lhs_temp);
-				ccode.add_expression (new CCodeAssignment (get_variable_cexpression (lhs_temp_name), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, lhs)));
+				ccode.add_assignment (get_variable_cexpression (lhs_temp_name), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, lhs));
 				lhs = new CCodeParenthesizedExpression (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (lhs_temp_name)));
 			}
 
 			var temp_decl = get_temp_variable (assignment.left.value_type);
 			emit_temp_var (temp_decl);
-			ccode.add_expression (new CCodeAssignment (get_variable_cexpression (temp_decl.name), rhs));
+			ccode.add_assignment (get_variable_cexpression (temp_decl.name), rhs);
 			if (unref_old) {
 				/* unref old value */
 				ccode.add_expression (get_unref_expression (lhs, assignment.left.value_type, assignment.left));
@@ -138,7 +138,7 @@ public class Vala.DovaAssignmentModule : DovaMemberAccessModule {
 			ccode.add_expression (destroy_value (lvalue));
 		}
 
-		ccode.add_expression (new CCodeAssignment (get_cvalue_ (lvalue), get_cvalue_ (value)));
+		ccode.add_assignment (get_cvalue_ (lvalue), get_cvalue_ (value));
 	}
 
 	public override void store_local (LocalVariable local, TargetValue value) {

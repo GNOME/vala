@@ -436,7 +436,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
 					ccode.add_expression (ccall);
 				} else {
-					ccode.add_expression (new CCodeAssignment (ctemp, ccall));
+					ccode.add_assignment (ctemp, ccall);
 
 					array_type = base_property.property_type as ArrayType;
 					if (array_type != null && !base_property.no_array_length) {

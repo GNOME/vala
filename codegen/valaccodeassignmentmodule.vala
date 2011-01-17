@@ -55,13 +55,13 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 				string lhs_temp_name = "_tmp%d_".printf (next_temp_var_id++);
 				var lhs_temp = new LocalVariable (lhs_value_type, "*" + lhs_temp_name);
 				emit_temp_var (lhs_temp);
-				ccode.add_expression (new CCodeAssignment (get_variable_cexpression (lhs_temp_name), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, lhs)));
+				ccode.add_assignment (get_variable_cexpression (lhs_temp_name), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, lhs));
 				lhs = new CCodeParenthesizedExpression (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (lhs_temp_name)));
 			}
 
 			var temp_decl = get_temp_variable (assignment.left.value_type, true, null, false);
 			emit_temp_var (temp_decl);
-			ccode.add_expression (new CCodeAssignment (get_variable_cexpression (temp_decl.name), rhs));
+			ccode.add_assignment (get_variable_cexpression (temp_decl.name), rhs);
 			if (unref_old) {
 				/* unref old value */
 				ccode.add_expression (get_unref_expression (lhs, assignment.left.value_type, assignment.left));
@@ -72,7 +72,7 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					var lhs_array_len = get_array_length_cexpression (assignment.left, dim);
 					var rhs_array_len = get_array_length_cexpression (assignment.right, dim);
-					ccode.add_expression (new CCodeAssignment (lhs_array_len, rhs_array_len));
+					ccode.add_assignment (lhs_array_len, rhs_array_len);
 				}
 				if (array_type.rank == 1) {
 					var array_var = assignment.left.symbol_reference;
@@ -81,16 +81,16 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 					    && ((array_var is LocalVariable && !array_local.captured) || array_var is Field)) {
 						var lhs_array_size = get_array_size_cvalue (assignment.left.target_value);
 						var rhs_array_len = get_array_length_cexpression (assignment.left, 1);
-						ccode.add_expression (new CCodeAssignment (lhs_array_size, rhs_array_len));
+						ccode.add_assignment (lhs_array_size, rhs_array_len);
 					}
 				}
 			} else if (instance_delegate) {
 				CCodeExpression lhs_delegate_target_destroy_notify, rhs_delegate_target_destroy_notify;
 				var lhs_delegate_target = get_delegate_target_cexpression (assignment.left, out lhs_delegate_target_destroy_notify);
 				var rhs_delegate_target = get_delegate_target_cexpression (assignment.right, out rhs_delegate_target_destroy_notify);
-				ccode.add_expression (new CCodeAssignment (lhs_delegate_target, rhs_delegate_target));
+				ccode.add_assignment (lhs_delegate_target, rhs_delegate_target);
 				if (assignment.right.target_type.value_owned) {
-					ccode.add_expression (new CCodeAssignment (lhs_delegate_target_destroy_notify, rhs_delegate_target_destroy_notify));
+					ccode.add_assignment (lhs_delegate_target_destroy_notify, rhs_delegate_target_destroy_notify);
 				}
 			}
 
@@ -177,21 +177,21 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 			ccode.add_expression (destroy_value (lvalue));
 		}
 
-		ccode.add_expression (new CCodeAssignment (get_cvalue_ (lvalue), get_cvalue_ (value)));
+		ccode.add_assignment (get_cvalue_ (lvalue), get_cvalue_ (value));
 
 		var array_type = variable.variable_type as ArrayType;
 		if (array_type != null) {
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				if (get_array_length_cvalue (lvalue, dim) != null) {
-					ccode.add_expression (new CCodeAssignment (get_array_length_cvalue (lvalue, dim), get_array_length_cvalue (value, dim)));
+					ccode.add_assignment (get_array_length_cvalue (lvalue, dim), get_array_length_cvalue (value, dim));
 				}
 			}
 			if (array_type.rank == 1) {
 				if (get_array_size_cvalue (lvalue) != null) {
 					if (get_array_size_cvalue (value) != null) {
-						ccode.add_expression (new CCodeAssignment (get_array_size_cvalue (lvalue), get_array_size_cvalue (value)));
+						ccode.add_assignment (get_array_size_cvalue (lvalue), get_array_size_cvalue (value));
 					} else {
-						ccode.add_expression (new CCodeAssignment (get_array_size_cvalue (lvalue), get_array_length_cvalue (value, 1)));
+						ccode.add_assignment (get_array_size_cvalue (lvalue), get_array_length_cvalue (value, 1));
 					}
 				}
 			}
@@ -200,9 +200,9 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 		var delegate_type = variable.variable_type as DelegateType;
 		if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
 			if (get_delegate_target_cvalue (lvalue) != null) {
-				ccode.add_expression (new CCodeAssignment (get_delegate_target_cvalue (lvalue), get_delegate_target_cvalue (value)));
+				ccode.add_assignment (get_delegate_target_cvalue (lvalue), get_delegate_target_cvalue (value));
 				if (get_delegate_target_destroy_notify_cvalue (lvalue) != null) {
-					ccode.add_expression (new CCodeAssignment (get_delegate_target_destroy_notify_cvalue (lvalue), get_delegate_target_destroy_notify_cvalue (value)));
+					ccode.add_assignment (get_delegate_target_destroy_notify_cvalue (lvalue), get_delegate_target_destroy_notify_cvalue (value));
 				}
 			}
 		}

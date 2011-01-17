@@ -243,7 +243,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			if (m.return_type is VoidType || m.return_type.is_real_non_null_struct_type ()) {
 				ccode.add_expression (ccall);
 			} else {
-				ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("result"), ccall));
+				ccode.add_assignment (new CCodeIdentifier ("result"), ccall);
 			}
 
 			if (m.get_error_types ().size > 0) {
@@ -266,7 +266,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 			ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_message_new_method_reply"));
 			ccall.add_argument (message_expr);
-			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_reply_message"), ccall));
+			ccode.add_assignment (new CCodeIdentifier ("_reply_message"), ccall);
 
 			ccode.add_declaration ("GVariant*", new CCodeVariableDeclarator ("_reply"));
 			ccode.add_declaration ("GVariantBuilder", new CCodeVariableDeclarator ("_reply_builder"));
@@ -278,7 +278,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 			if (uses_fd) {
 				ccode.add_declaration ("GUnixFDList", new CCodeVariableDeclarator ("*_fd_list"));
-				ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_fd_list"), new CCodeFunctionCall (new CCodeIdentifier ("g_unix_fd_list_new"))));
+				ccode.add_assignment (new CCodeIdentifier ("_fd_list"), new CCodeFunctionCall (new CCodeIdentifier ("g_unix_fd_list_new")));
 			}
 
 			foreach (Parameter param in m.get_parameters ()) {
@@ -350,7 +350,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 			var builder_end = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_end"));
 			builder_end.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_reply_builder")));
-			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_reply"), builder_end));
+			ccode.add_assignment (new CCodeIdentifier ("_reply"), builder_end);
 
 			var set_body = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_message_set_body"));
 			set_body.add_argument (new CCodeIdentifier ("_reply_message"));
@@ -471,7 +471,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 		var builder_end = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_end"));
 		builder_end.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_arguments_builder")));
-		ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_arguments"), builder_end));
+		ccode.add_assignment (new CCodeIdentifier ("_arguments"), builder_end);
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_connection_emit_signal"));
 		ccall.add_argument (new CCodeIdentifier ("_connection"));
@@ -510,7 +510,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			ccode.add_expression (ccall);
 		} else {
 			ccode.add_declaration (prop.get_accessor.value_type.get_cname (), new CCodeVariableDeclarator ("result"));
-			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("result"), ccall));
+			ccode.add_assignment (new CCodeIdentifier ("result"), ccall);
 
 			var array_type = prop.get_accessor.value_type as ArrayType;
 			if (array_type != null) {
@@ -526,7 +526,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		var reply_expr = serialize_expression (prop.get_accessor.value_type, new CCodeIdentifier ("result"));
 
 		ccode.add_declaration ("GVariant*", new CCodeVariableDeclarator ("_reply"));
-		ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("_reply"), reply_expr));
+		ccode.add_assignment (new CCodeIdentifier ("_reply"), reply_expr);
 
 		if (requires_destroy (prop.get_accessor.value_type)) {
 			// keep local alive (symbol_reference is weak)
@@ -585,7 +585,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 		var target = new CCodeIdentifier ("value");
 		var expr = deserialize_expression (prop.property_type, new CCodeIdentifier ("_value"), target);
-		ccode.add_expression (new CCodeAssignment (target, expr));
+		ccode.add_assignment (target, expr);
 
 		ccode.add_expression (ccall);
 
@@ -1080,7 +1080,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		get_qdata.add_argument (quark);
 
 		ccode.add_declaration ("void", new CCodeVariableDeclarator ("*func"));
-		ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("func"), get_qdata));
+		ccode.add_assignment (new CCodeIdentifier ("func"), get_qdata);
 
 		ccode.open_if (new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeIdentifier ("func")));
 		// no D-Bus interface
@@ -1161,7 +1161,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 			emit_temp_var (temp_var);
 
-			ccode.add_expression (new CCodeAssignment (temp_ref, cregister));
+			ccode.add_assignment (temp_ref, cregister);
 			set_cvalue (expr, temp_ref);
 		}
 	}

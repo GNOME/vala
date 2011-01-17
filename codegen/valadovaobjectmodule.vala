@@ -1245,7 +1245,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 
 			vcast = get_type_private_from_type ((ObjectTypeSymbol) prop.parent_symbol, new CCodeIdentifier ("type"));
 
-			ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (vcast, "%s_%s".printf (acc.readable ? "get" : "set", prop.name)), new CCodeIdentifier ("function")));
+			ccode.add_assignment (new CCodeMemberAccess.pointer (vcast, "%s_%s".printf (acc.readable ? "get" : "set", prop.name)), new CCodeIdentifier ("function"));
 
 			pop_function ();
 
@@ -1982,7 +1982,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 			var lhs = new CCodeIdentifier (field.get_cname ());
 			var rhs = get_cvalue (field.initializer);
 
-			ccode.add_expression (new CCodeAssignment (lhs, rhs));
+			ccode.add_assignment (lhs, rhs);
 		}
 	}
 }

@@ -1252,10 +1252,10 @@ public class Vala.GTypeModule : GErrorModule {
 				var ccast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (((Class) base_type).get_upper_case_cname (null))));
 				ccast.add_argument (new CCodeIdentifier ("klass"));
 
-				ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, m.base_method.vfunc_name), new CCodeIdentifier (m.get_real_cname ())));
+				ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, m.base_method.vfunc_name), new CCodeIdentifier (m.get_real_cname ()));
 
 				if (m.coroutine) {
-					ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, m.base_method.get_finish_vfunc_name ()), new CCodeIdentifier (m.get_finish_real_cname ())));
+					ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, m.base_method.get_finish_vfunc_name ()), new CCodeIdentifier (m.get_finish_real_cname ()));
 				}
 			}
 		}
@@ -1267,7 +1267,7 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (cl.get_upper_case_cname (null))));
 			ccast.add_argument (new CCodeIdentifier ("klass"));
-			ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, sig.default_handler.vfunc_name), new CCodeIdentifier (sig.default_handler.get_real_cname ())));
+			ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, sig.default_handler.vfunc_name), new CCodeIdentifier (sig.default_handler.get_real_cname ()));
 		}
 
 		/* connect overridden properties */
@@ -1282,11 +1282,11 @@ public class Vala.GTypeModule : GErrorModule {
 
 			if (prop.get_accessor != null) {
 				string cname = "%s_real_get_%s".printf (cl.get_lower_case_cname (null), prop.name);
-				ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, "get_%s".printf (prop.name)), new CCodeIdentifier (cname)));
+				ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, "get_%s".printf (prop.name)), new CCodeIdentifier (cname));
 			}
 			if (prop.set_accessor != null) {
 				string cname = "%s_real_set_%s".printf (cl.get_lower_case_cname (null), prop.name);
-				ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, "set_%s".printf (prop.name)), new CCodeIdentifier (cname)));
+				ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, "set_%s".printf (prop.name)), new CCodeIdentifier (cname));
 			}
 		}
 
@@ -1538,7 +1538,7 @@ public class Vala.GTypeModule : GErrorModule {
 		if (!cl.is_compact && (cl.has_private_fields || cl.get_type_parameters ().size > 0)) {
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_PRIVATE".printf (cl.get_upper_case_cname (null))));
 			ccall.add_argument (new CCodeIdentifier ("self"));
-			func.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), ccall));
+			func.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), ccall);
 		}
 
 		pop_context ();
@@ -1633,7 +1633,7 @@ public class Vala.GTypeModule : GErrorModule {
 			CCodeFunctionCall ccall = generate_instance_cast (new CCodeIdentifier ("obj"), cl);
 
 			ccode.add_declaration ("%s *".printf (cl.get_cname ()), new CCodeVariableDeclarator ("self"));
-			ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("self"), ccall));
+			ccode.add_assignment (new CCodeIdentifier ("self"), ccall);
 		} else {
 			var function = new CCodeFunction (cl.get_lower_case_cprefix () + "free", "void");
 			if (cl.access == SymbolAccessibility.PRIVATE) {
@@ -2021,7 +2021,7 @@ public class Vala.GTypeModule : GErrorModule {
 		ccode.add_declaration (bool_type.get_cname (), new CCodeVariableDeclarator ("initialized", new CCodeConstant ("FALSE")), CCodeModifiers.STATIC);
 		ccode.open_if (new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeIdentifier ("initialized")));
 
-		ccode.add_expression (new CCodeAssignment (new CCodeIdentifier ("initialized"), new CCodeConstant ("TRUE")));
+		ccode.add_assignment (new CCodeIdentifier ("initialized"), new CCodeConstant ("TRUE"));
 
 		if (iface.is_subtype_of (gobject_type)) {
 			/* create properties */
@@ -2058,7 +2058,7 @@ public class Vala.GTypeModule : GErrorModule {
 			if (m.is_virtual) {
 				var ciface = new CCodeIdentifier ("iface");
 				var cname = m.get_real_cname ();
-				ccode.add_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, m.vfunc_name), new CCodeIdentifier (cname)));
+				ccode.add_assignment (new CCodeMemberAccess.pointer (ciface, m.vfunc_name), new CCodeIdentifier (cname));
 			}
 		}
 

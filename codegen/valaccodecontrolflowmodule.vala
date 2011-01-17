@@ -236,7 +236,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			var ccolvardecl = new CCodeVariableDeclarator (collection_backup.name);
 			ccode.add_declaration (collection_type.get_cname (), ccolvardecl);
 		}
-		ccode.add_expression (new CCodeAssignment (get_variable_cexpression (collection_backup.name), get_cvalue (stmt.collection)));
+		ccode.add_assignment (get_variable_cexpression (collection_backup.name), get_cvalue (stmt.collection));
 		
 		if (stmt.tree_can_fail && stmt.collection.tree_can_fail) {
 			// exception handling
@@ -254,7 +254,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			} else {
 				ccode.add_declaration ("int", new CCodeVariableDeclarator (get_array_length_cname (collection_backup.name, 1)));
 			}
-			ccode.add_expression (new CCodeAssignment (get_variable_cexpression (get_array_length_cname (collection_backup.name, 1)), array_len));
+			ccode.add_assignment (get_variable_cexpression (get_array_length_cname (collection_backup.name, 1)), array_len);
 
 			var it_name = (stmt.variable_name + "_it");
 		
@@ -281,7 +281,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			} else {
 				ccode.add_declaration (stmt.type_reference.get_cname (), new CCodeVariableDeclarator (stmt.variable_name));
 			}
-			ccode.add_expression (new CCodeAssignment (get_variable_cexpression (stmt.variable_name), element_expr));
+			ccode.add_assignment (get_variable_cexpression (stmt.variable_name), element_expr);
 
 			// add array length variable for stacked arrays
 			if (stmt.type_reference is ArrayType) {
@@ -289,7 +289,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 				for (int dim = 1; dim <= inner_array_type.rank; dim++) {
 					if (current_method != null && current_method.coroutine) {
 						closure_struct.add_field ("int", get_array_length_cname (stmt.variable_name, dim));
-						ccode.add_expression (new CCodeAssignment (get_variable_cexpression (get_array_length_cname (stmt.variable_name, dim)), new CCodeConstant ("-1")));
+						ccode.add_assignment (get_variable_cexpression (get_array_length_cname (stmt.variable_name, dim)), new CCodeConstant ("-1"));
 					} else {
 						ccode.add_declaration ("int", new CCodeVariableDeclarator (get_array_length_cname (stmt.variable_name, dim), new CCodeConstant ("-1")));
 					}
@@ -334,7 +334,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			} else {
 				ccode.add_declaration (stmt.type_reference.get_cname (), new CCodeVariableDeclarator (stmt.variable_name));
 			}
-			ccode.add_expression (new CCodeAssignment (get_variable_cexpression (stmt.variable_name), element_expr));
+			ccode.add_assignment (get_variable_cexpression (stmt.variable_name), element_expr);
 
 			stmt.body.emit (this);
 
@@ -371,7 +371,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			} else {
 				ccode.add_declaration (stmt.type_reference.get_cname (), new CCodeVariableDeclarator (stmt.variable_name));
 			}
-			ccode.add_expression (new CCodeAssignment (get_variable_cexpression (stmt.variable_name), element_expr));
+			ccode.add_assignment (get_variable_cexpression (stmt.variable_name), element_expr);
 
 			stmt.body.emit (this);
 
