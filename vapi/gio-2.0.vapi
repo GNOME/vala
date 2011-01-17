@@ -1135,7 +1135,7 @@ namespace GLib {
 		public int get_int (string key);
 		public void* get_mapped (string key, GLib.SettingsGetMapping mapping);
 		public unowned GLib.Variant get_range (string key);
-		public unowned string get_string (string key);
+		public string get_string (string key);
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] get_strv (string key);
 		public GLib.Variant get_value (string key);
