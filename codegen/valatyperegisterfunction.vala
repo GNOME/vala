@@ -35,7 +35,7 @@ public abstract class Vala.TypeRegisterFunction {
 	/**
 	 * Constructs the C function from the specified type.
 	 */
-	public void init_from_type (bool plugin) {
+	public void init_from_type (bool plugin, bool declaration_only) {
 		bool use_thread_safe = !plugin;
 
 		bool fundamental = false;
@@ -222,7 +222,9 @@ public abstract class Vala.TypeRegisterFunction {
 			type_init.add_statement (new CCodeExpressionStatement (add_class_private_call));
 		}
 
-		get_type_interface_init_statements (type_init, plugin);
+		if (!declaration_only) {
+			get_type_interface_init_statements (type_init, plugin);
+		}
 
 		if (!plugin) {
 			CCodeExpression condition; // the condition that guards the type initialisation

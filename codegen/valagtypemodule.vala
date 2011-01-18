@@ -172,7 +172,7 @@ public class Vala.GTypeModule : GErrorModule {
 			decl_space.add_type_declaration (new CCodeTypeDefinition ("struct _%sClass".printf (cl.get_cname ()), new CCodeVariableDeclarator ("%sClass".printf (cl.get_cname ()))));
 
 			var type_fun = new ClassRegisterFunction (cl, context);
-			type_fun.init_from_type (in_plugin);
+			type_fun.init_from_type (in_plugin, true);
 			decl_space.add_type_member_declaration (type_fun.get_declaration ());
 		}
 	}
@@ -626,7 +626,7 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 
 			var type_fun = new ClassRegisterFunction (cl, context);
-			type_fun.init_from_type (in_plugin);
+			type_fun.init_from_type (in_plugin, false);
 			cfile.add_type_member_declaration (type_fun.get_source_declaration ());
 			cfile.add_type_member_definition (type_fun.get_definition ());
 
@@ -1971,7 +1971,7 @@ public class Vala.GTypeModule : GErrorModule {
 		decl_space.add_type_definition (type_struct);
 
 		var type_fun = new InterfaceRegisterFunction (iface, context);
-		type_fun.init_from_type (in_plugin);
+		type_fun.init_from_type (in_plugin, true);
 		decl_space.add_type_member_declaration (type_fun.get_declaration ());
 	}
 
@@ -2001,7 +2001,7 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 
 		var type_fun = new InterfaceRegisterFunction (iface, context);
-		type_fun.init_from_type (in_plugin);
+		type_fun.init_from_type (in_plugin, false);
 		cfile.add_type_member_declaration (type_fun.get_source_declaration ());
 		cfile.add_type_member_definition (type_fun.get_definition ());
 
@@ -2074,7 +2074,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 		if (st.has_type_id) {
 			var type_fun = new StructRegisterFunction (st, context);
-			type_fun.init_from_type (false);
+			type_fun.init_from_type (false, false);
 			cfile.add_type_member_definition (type_fun.get_definition ());
 		}
 	}
@@ -2084,7 +2084,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 		if (en.has_type_id) {
 			var type_fun = new EnumRegisterFunction (en, context);
-			type_fun.init_from_type (false);
+			type_fun.init_from_type (false, false);
 			cfile.add_type_member_definition (type_fun.get_definition ());
 		}
 	}
