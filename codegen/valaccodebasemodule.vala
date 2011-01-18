@@ -136,6 +136,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
+	public bool is_in_coroutine () {
+		return current_method != null && current_method.coroutine;
+	}
+
 	public bool is_in_constructor () {
 		if (current_method != null) {
 			// make sure to not return true in lambda expression inside constructor
@@ -1683,7 +1687,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		} else if (param.variable_type is DelegateType) {
 			CCodeExpression target_expr;
 			CCodeExpression delegate_target_destroy_notify;
-			if (current_method != null && current_method.coroutine) {
+			if (is_in_coroutine ()) {
 				target_expr = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_delegate_target_cname (get_variable_cname (param.name)));
 				delegate_target_destroy_notify = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
 			} else {
@@ -1810,7 +1814,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var data_alloc = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_new0"));
 			data_alloc.add_argument (new CCodeIdentifier (struct_name));
 
-			if (current_method != null && current_method.coroutine) {
+			if (is_in_coroutine ()) {
 				closure_struct.add_field (struct_name + "*", "_data%d_".printf (block_id));
 			} else {
 				ccode.add_declaration (struct_name + "*", new CCodeVariableDeclarator ("_data%d_".printf (block_id)));
@@ -1959,7 +1963,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public CCodeExpression get_variable_cexpression (string name) {
-		if (current_method != null && current_method.coroutine) {
+		if (is_in_coroutine ()) {
 			return new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_variable_cname (name));
 		} else {
 			return new CCodeIdentifier (get_variable_cname (name));
@@ -1985,7 +1989,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public CCodeExpression get_result_cexpression (string cname = "result") {
-		if (current_method != null && current_method.coroutine) {
+		if (is_in_coroutine ()) {
 			return new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), cname);
 		} else {
 			return new CCodeIdentifier (cname);
@@ -3023,7 +3027,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			vardecl.init0 = true;
 		}
 
-		if (current_method != null && current_method.coroutine) {
+		if (is_in_coroutine ()) {
 			closure_struct.add_field (local.variable_type.get_cname (), local.name);
 
 			// even though closure struct is zerod, we need to initialize temporary variables
@@ -3188,7 +3192,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				var len_l = get_result_cexpression (get_array_length_cname ("result", dim));
-				if (current_method == null || !current_method.coroutine) {
+				if (!is_in_coroutine ()) {
 					len_l = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, len_l);
 				}
 				var len_r = get_array_length_cexpression (stmt.return_expression, dim);
@@ -3206,7 +3210,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccode.add_assignment (get_variable_cexpression (return_expr_decl.name), get_cvalue (stmt.return_expression));
 
 				var target_l = get_result_cexpression (get_delegate_target_cname ("result"));
-				if (current_method == null || !current_method.coroutine) {
+				if (!is_in_coroutine ()) {
 					target_l = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, target_l);
 				}
 				CCodeExpression target_r_destroy_notify;
@@ -3214,7 +3218,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccode.add_assignment (target_l, target_r);
 				if (delegate_type.value_owned) {
 					var target_l_destroy_notify = get_result_cexpression (get_delegate_target_destroy_notify_cname ("result"));
-					if (current_method == null || !current_method.coroutine) {
+					if (!is_in_coroutine ()) {
 						target_l_destroy_notify = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, target_l_destroy_notify);
 					}
 					ccode.add_assignment (target_l_destroy_notify, target_r_destroy_notify);
@@ -3229,7 +3233,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (stmt.return_expression != null) {
 			// assign method result to `result'
 			CCodeExpression result_lhs = get_result_cexpression ();
-			if (current_return_type.is_real_non_null_struct_type () && (current_method == null || !current_method.coroutine)) {
+			if (current_return_type.is_real_non_null_struct_type () && !is_in_coroutine ()) {
 				result_lhs = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, result_lhs);
 			}
 			ccode.add_assignment (result_lhs, get_cvalue (stmt.return_expression));
@@ -3265,7 +3269,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			ccode.add_goto ("_return");
 		} else if (current_method is CreationMethod) {
 			ccode.add_return (new CCodeIdentifier ("self"));
-		} else if (current_method != null && current_method.coroutine) {
+		} else if (is_in_coroutine ()) {
 		} else if (current_return_type is VoidType || current_return_type.is_real_non_null_struct_type ()) {
 			// structs are returned via out parameter
 			ccode.add_return ();
@@ -3531,7 +3535,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public override void visit_base_access (BaseAccess expr) {
 		CCodeExpression this_access;
-		if (current_method != null && current_method.coroutine) {
+		if (is_in_coroutine ()) {
 			// use closure
 			this_access = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "self");
 		} else {

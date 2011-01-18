@@ -230,7 +230,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			array_type.fixed_length = false;
 		}
 
-		if (current_method != null && current_method.coroutine) {
+		if (is_in_coroutine ()) {
 			closure_struct.add_field (collection_type.get_cname (), collection_backup.name);
 		} else {
 			var ccolvardecl = new CCodeVariableDeclarator (collection_backup.name);
@@ -249,7 +249,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			var array_len = get_array_length_cexpression (stmt.collection);
 
 			// store array length for use by _vala_array_free
-			if (current_method != null && current_method.coroutine) {
+			if (is_in_coroutine ()) {
 				closure_struct.add_field ("int", get_array_length_cname (collection_backup.name, 1));
 			} else {
 				ccode.add_declaration ("int", new CCodeVariableDeclarator (get_array_length_cname (collection_backup.name, 1)));
@@ -258,7 +258,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 
 			var it_name = (stmt.variable_name + "_it");
 		
-			if (current_method != null && current_method.coroutine) {
+			if (is_in_coroutine ()) {
 				closure_struct.add_field ("int", it_name);
 			} else {
 				ccode.add_declaration ("int", new CCodeVariableDeclarator (it_name));
@@ -276,7 +276,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			element_type.value_owned = false;
 			element_expr = transform_expression (element_expr, element_type, stmt.type_reference);
 
-			if (current_method != null && current_method.coroutine) {
+			if (is_in_coroutine ()) {
 				closure_struct.add_field (stmt.type_reference.get_cname (), stmt.variable_name);
 			} else {
 				ccode.add_declaration (stmt.type_reference.get_cname (), new CCodeVariableDeclarator (stmt.variable_name));
@@ -287,7 +287,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			if (stmt.type_reference is ArrayType) {
 				var inner_array_type = (ArrayType) stmt.type_reference;
 				for (int dim = 1; dim <= inner_array_type.rank; dim++) {
-					if (current_method != null && current_method.coroutine) {
+					if (is_in_coroutine ()) {
 						closure_struct.add_field ("int", get_array_length_cname (stmt.variable_name, dim));
 						ccode.add_assignment (get_variable_cexpression (get_array_length_cname (stmt.variable_name, dim)), new CCodeConstant ("-1"));
 					} else {
@@ -304,7 +304,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 
 			var it_name = "%s_it".printf (stmt.variable_name);
 		
-			if (current_method != null && current_method.coroutine) {
+			if (is_in_coroutine ()) {
 				closure_struct.add_field (collection_type.get_cname (), it_name);
 			} else {
 				ccode.add_declaration (collection_type.get_cname (), new CCodeVariableDeclarator (it_name));
@@ -329,7 +329,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			element_expr = convert_from_generic_pointer (element_expr, element_data_type);
 			element_expr = transform_expression (element_expr, element_data_type, stmt.type_reference);
 
-			if (current_method != null && current_method.coroutine) {
+			if (is_in_coroutine ()) {
 				closure_struct.add_field (stmt.type_reference.get_cname (), stmt.variable_name);
 			} else {
 				ccode.add_declaration (stmt.type_reference.get_cname (), new CCodeVariableDeclarator (stmt.variable_name));
@@ -344,7 +344,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 
 			var arr_index = "%s_index".printf (stmt.variable_name);
 
-			if (current_method != null && current_method.coroutine) {
+			if (is_in_coroutine ()) {
 				closure_struct.add_field (uint_type.get_cname (), arr_index);
 			} else {
 				ccode.add_declaration (uint_type.get_cname (), new CCodeVariableDeclarator (arr_index));
@@ -366,7 +366,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 				element_expr = get_ref_cexpression (stmt.type_reference, element_expr, null, new StructValueType (gvalue_type));
 			}
 
-			if (current_method != null && current_method.coroutine) {
+			if (is_in_coroutine ()) {
 				closure_struct.add_field (stmt.type_reference.get_cname (), stmt.variable_name);
 			} else {
 				ccode.add_declaration (stmt.type_reference.get_cname (), new CCodeVariableDeclarator (stmt.variable_name));

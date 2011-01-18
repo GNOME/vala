@@ -560,7 +560,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					result.array_size_cvalue = get_variable_cexpression (get_array_size_cname (get_variable_cname (local.name)));
 				}
 			} else if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
-				if (current_method != null && current_method.coroutine) {
+				if (is_in_coroutine ()) {
 					result.delegate_target_cvalue = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_delegate_target_cname (get_variable_cname (local.name)));
 					result.delegate_target_destroy_notify_cvalue = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_delegate_target_destroy_notify_cname (get_variable_cname (local.name)));
 				} else {
@@ -578,7 +578,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 	/* Returns access values to the given parameter */
 	public TargetValue get_parameter_cvalue (Parameter param) {
 		var result = new GLibValue (param.variable_type.copy ());
-		if (param.captured || current_method != null && current_method.coroutine) {
+		if (param.captured || is_in_coroutine ()) {
 			result.value_type.value_owned = true;
 		}
 
@@ -586,7 +586,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 		var delegate_type = result.value_type as DelegateType;
 
 		if (param.name == "this") {
-			if (current_method != null && current_method.coroutine) {
+			if (is_in_coroutine ()) {
 				// use closure
 				result.cvalue = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "self");
 			} else {
@@ -615,7 +615,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					result.delegate_target_cvalue = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_cname (get_variable_cname (param.name)));
 					result.delegate_target_destroy_notify_cvalue = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
 				}
-			} else if (current_method != null && current_method.coroutine) {
+			} else if (is_in_coroutine ()) {
 				// use closure
 				result.cvalue = get_variable_cexpression (param.name);
 				if (delegate_type != null && delegate_type.delegate_symbol.has_target) {

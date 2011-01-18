@@ -107,7 +107,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			var unref_call = get_unref_expression (new CCodeIdentifier ("self"), new ObjectType (cl), null);
 			ccode.add_expression (unref_call);
 			ccode.add_return (new CCodeConstant ("NULL"));
-		} else if (current_method != null && current_method.coroutine) {
+		} else if (is_in_coroutine ()) {
 			ccode.add_return (new CCodeConstant ("FALSE"));
 		} else {
 			return_default_value (current_return_type);
@@ -143,7 +143,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			} else {
 				ccode.add_return (new CCodeConstant ("NULL"));
 			}
-		} else if (current_method != null && current_method.coroutine) {
+		} else if (is_in_coroutine ()) {
 			ccode.add_return (new CCodeConstant ("FALSE"));
 		} else if (current_return_type != null) {
 			return_default_value (current_return_type);
@@ -353,7 +353,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		}
 
 		if (clause.variable_name != null) {
-			if (current_method != null && current_method.coroutine) {
+			if (is_in_coroutine ()) {
 				closure_struct.add_field ("GError *", variable_name);
 			} else {
 				ccode.add_declaration ("GError *", new CCodeVariableDeclarator (variable_name));

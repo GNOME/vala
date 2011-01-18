@@ -556,7 +556,7 @@ public class Vala.GAsyncModule : GSignalModule {
 	}
 
 	public override void visit_yield_statement (YieldStatement stmt) {
-		if (current_method == null || !current_method.coroutine) {
+		if (!is_in_coroutine ()) {
 			return;
 		}
 
@@ -595,7 +595,7 @@ public class Vala.GAsyncModule : GSignalModule {
 
 	public override void return_with_exception (CCodeExpression error_expr)
 	{
-		if (!current_method.coroutine) {
+		if (!is_in_coroutine ()) {
 			base.return_with_exception (error_expr);
 			return;
 		}
@@ -617,7 +617,7 @@ public class Vala.GAsyncModule : GSignalModule {
 	public override void visit_return_statement (ReturnStatement stmt) {
 		base.visit_return_statement (stmt);
 
-		if (current_method == null || !current_method.coroutine) {
+		if (!is_in_coroutine ()) {
 			return;
 		}
 
