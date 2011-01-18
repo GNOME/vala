@@ -1704,17 +1704,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 
 		if (requires_destroy (param_type) && !is_unowned_delegate) {
-			bool old_coroutine = false;
-			if (current_method != null) {
-				old_coroutine = current_method.coroutine;
-				current_method.coroutine = false;
-			}
-
-			free_block.add_statement (new CCodeExpressionStatement (get_unref_expression_ (param)));
-
-			if (old_coroutine) {
-				current_method.coroutine = true;
-			}
+			free_block.add_statement (new CCodeExpressionStatement (destroy_value (get_variable_cvalue (param, null, true))));
 		}
 	}
 
@@ -1794,20 +1784,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			// free in reverse order
 			for (int i = local_vars.size - 1; i >= 0; i--) {
 				var local = local_vars[i];
-				if (local.captured) {
-					if (requires_destroy (local.variable_type)) {
-						bool old_coroutine = false;
-						if (current_method != null) {
-							old_coroutine = current_method.coroutine;
-							current_method.coroutine = false;
-						}
-
-						free_block.add_statement (new CCodeExpressionStatement (get_unref_expression_ (local)));
-
-						if (old_coroutine) {
-							current_method.coroutine = true;
-						}
-					}
+				if (local.captured && requires_destroy (local.variable_type)) {
+					free_block.add_statement (new CCodeExpressionStatement(destroy_value (get_variable_cvalue (local, null, true))));
 				}
 			}
 
@@ -3509,7 +3487,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
-	public virtual TargetValue get_variable_cvalue (Variable variable, CCodeExpression? inner = null) {
+	public virtual TargetValue get_variable_cvalue (Variable variable, CCodeExpression? inner = null, bool not_in_coroutine = false) {
 		assert_not_reached ();
 	}
 
