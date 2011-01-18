@@ -162,7 +162,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 						requires_array_length = true;
 						var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
 						len_call.add_argument (carray_expr);
-						append_array_size (expr, len_call);
+						append_array_length (expr, len_call);
 					} else if (!field.no_array_length) {
 						for (int dim = 1; dim <= array_type.rank; dim++) {
 							CCodeExpression length_expr = null;
@@ -196,7 +196,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 									}
 								}
 							}
-							append_array_size (expr, length_expr);
+							append_array_length (expr, length_expr);
 						}
 						if (array_type.rank == 1 && field.is_internal_symbol ()) {
 							string size_cname = get_array_size_cname (field.name);
@@ -209,7 +209,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 						}
 					} else {
 						for (int dim = 1; dim <= array_type.rank; dim++) {
-							append_array_size (expr, new CCodeConstant ("-1"));
+							append_array_length (expr, new CCodeConstant ("-1"));
 						}
 					}
 				} else if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
@@ -274,13 +274,13 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 						requires_array_length = true;
 						var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
 						len_call.add_argument (new CCodeIdentifier (field.get_cname ()));
-						append_array_size (expr, len_call);
+						append_array_length (expr, len_call);
 					} else if (!field.no_array_length) {
 						for (int dim = 1; dim <= array_type.rank; dim++) {
 							if (field.has_array_length_cexpr) {
-								append_array_size (expr, new CCodeConstant (field.get_array_length_cexpr ()));
+								append_array_length (expr, new CCodeConstant (field.get_array_length_cexpr ()));
 							} else {
-								append_array_size (expr, new CCodeIdentifier (get_array_length_cname (field.get_cname (), dim)));
+								append_array_length (expr, new CCodeIdentifier (get_array_length_cname (field.get_cname (), dim)));
 							}
 						}
 						if (array_type.rank == 1 && field.is_internal_symbol ()) {
@@ -288,7 +288,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 						}
 					} else {
 						for (int dim = 1; dim <= array_type.rank; dim++) {
-							append_array_size (expr, new CCodeConstant ("-1"));
+							append_array_length (expr, new CCodeConstant ("-1"));
 						}
 					}
 				} else if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
@@ -336,7 +336,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			if (array_type != null) {
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("G_N_ELEMENTS"));
 				ccall.add_argument (new CCodeIdentifier (c.get_cname ()));
-				append_array_size (expr, ccall);
+				append_array_length (expr, ccall);
 			}
 		} else if (expr.symbol_reference is Property) {
 			var prop = (Property) expr.symbol_reference;
@@ -445,7 +445,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 							ctemp = get_variable_cexpression (temp_var.name);
 							emit_temp_var (temp_var);
 							ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
-							append_array_size (expr, ctemp);
+							append_array_length (expr, ctemp);
 						}
 					} else {
 						delegate_type = base_property.property_type as DelegateType;

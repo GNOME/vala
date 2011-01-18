@@ -412,8 +412,8 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 							for (int dim = 1; dim <= array_type.rank; dim++) {
 								var temp_array_length = get_temp_variable (array_length_type);
 								emit_temp_var (temp_array_length);
-								append_array_size (arg, get_variable_cexpression (temp_array_length.name));
-								carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_array_sizes (arg).get (dim - 1)));
+								append_array_length (arg, get_variable_cexpression (temp_array_length.name));
+								carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_array_lengths (arg).get (dim - 1)));
 							}
 						} else if (param.variable_type is DelegateType) {
 							var deleg_type = (DelegateType) param.variable_type;
@@ -484,7 +484,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
 					len_call.add_argument (temp_ref);
 
-					append_array_size (expr, len_call);
+					append_array_length (expr, len_call);
 				} else if (!m.no_array_length) {
 					LocalVariable temp_var;
 
@@ -499,9 +499,9 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 					out_arg_map.set (get_param_pos (m.carray_length_parameter_position + 0.01 * dim), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
 
-					append_array_size (expr, temp_ref);
+					append_array_length (expr, temp_ref);
 				} else {
-					append_array_size (expr, new CCodeConstant ("-1"));
+					append_array_length (expr, new CCodeConstant ("-1"));
 				}
 			}
 		} else if (m != null && m.return_type is DelegateType && async_call != ccall) {
@@ -548,7 +548,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
 					len_call.add_argument (temp_ref);
 
-					append_array_size (expr, len_call);
+					append_array_length (expr, len_call);
 				} else if (!deleg.no_array_length) {
 					var temp_var = get_temp_variable (int_type);
 					var temp_ref = get_variable_cexpression (temp_var.name);
@@ -557,9 +557,9 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 					out_arg_map.set (get_param_pos (deleg.carray_length_parameter_position + 0.01 * dim), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
 
-					append_array_size (expr, temp_ref);
+					append_array_length (expr, temp_ref);
 				} else {
-					append_array_size (expr, new CCodeConstant ("-1"));
+					append_array_length (expr, new CCodeConstant ("-1"));
 				}
 			}
 		} else if (deleg != null && deleg.return_type is DelegateType) {
@@ -787,7 +787,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			var array_type = arg.value_type as ArrayType;
 			if (array_type != null) {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					ccode.add_assignment (get_array_sizes (unary.inner).get (dim - 1), get_array_sizes (unary).get (dim - 1));
+					ccode.add_assignment (get_array_lengths (unary.inner).get (dim - 1), get_array_lengths (unary).get (dim - 1));
 				}
 			}
 

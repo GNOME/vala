@@ -81,9 +81,9 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 				csize = new CCodeAssignment (name_cnode, csize);
 
-				append_array_size (expr, name_cnode);
+				append_array_length (expr, name_cnode);
 			} else {
-				append_array_size (expr, csize);
+				append_array_length (expr, csize);
 			}
 
 			if (first) {
@@ -202,7 +202,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var splicelen = new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, cstop, cstart);
 
 		set_cvalue (expr, cstartpointer);
-		append_array_size (expr, splicelen);
+		append_array_length (expr, splicelen);
 	}
 
 	void append_struct_array_free_loop (Struct st) {

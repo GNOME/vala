@@ -3479,7 +3479,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var delegate_type = expr.target_type as DelegateType;
 		if (array_type != null) {
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				append_array_size (expr, new CCodeConstant ("0"));
+				append_array_length (expr, new CCodeConstant ("0"));
 			}
 		} else if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
 			set_delegate_target (expr, new CCodeConstant ("NULL"));
@@ -4331,7 +4331,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var array_type = expr.value_type as ArrayType;
 			if (array_type != null) {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					append_array_size (expr, new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_array_length_cexpression (expr.inner, dim)));
+					append_array_length (expr, new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_array_length_cexpression (expr.inner, dim)));
 				}
 			}
 
@@ -4387,7 +4387,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			// null-terminated string array
 			var len_call = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
 			len_call.add_argument (rv);
-			append_array_size (expr, len_call);
+			append_array_length (expr, len_call);
 		} else if (to is StructValueType) {
 			var temp_decl = get_temp_variable (to, true, null, true);
 			emit_temp_var (temp_decl);
@@ -4442,7 +4442,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_decl.name)));
 				cfunc.add_parameter (new CCodeParameter (get_array_length_cname ("result", dim), "int*"));
-				append_array_size (expr, get_variable_cexpression (temp_decl.name));
+				append_array_length (expr, get_variable_cexpression (temp_decl.name));
 			}
 		}
 
@@ -4516,13 +4516,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var array_type = expr.type_reference as ArrayType;
 			if (array_type != null && expr.inner.value_type is ArrayType) {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					append_array_size (expr, get_array_length_cexpression (expr.inner, dim));
+					append_array_length (expr, get_array_length_cexpression (expr.inner, dim));
 				}
 			} else if (array_type != null) {
 				// cast from non-array to array, set invalid length
 				// required by string.data, e.g.
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					append_array_size (expr, new CCodeConstant ("-1"));
+					append_array_length (expr, new CCodeConstant ("-1"));
 				}
 			}
 
@@ -4585,7 +4585,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var array_type = expr.value_type as ArrayType;
 		if (array_type != null) {
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				append_array_size (expr, get_array_length_cexpression (expr.inner, dim));
+				append_array_length (expr, get_array_length_cexpression (expr.inner, dim));
 			}
 		}
 
@@ -5821,7 +5821,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		glib_value.delegate_target_destroy_notify_cvalue = destroy_notify;
 	}
 
-	public void append_array_size (Expression expr, CCodeExpression size) {
+	public void append_array_length (Expression expr, CCodeExpression size) {
 		var glib_value = (GLibValue) expr.target_value;
 		if (glib_value == null) {
 			glib_value = new GLibValue (expr.value_type);
@@ -5830,7 +5830,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		glib_value.append_array_length_cvalue (size);
 	}
 
-	public List<CCodeExpression>? get_array_sizes (Expression expr) {
+	public List<CCodeExpression>? get_array_lengths (Expression expr) {
 		var glib_value = (GLibValue) expr.target_value;
 		if (glib_value == null) {
 			glib_value = new GLibValue (expr.value_type);
