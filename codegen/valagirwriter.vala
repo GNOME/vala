@@ -631,7 +631,8 @@ public class Vala.GIRWriter : CodeVisitor {
 
 	private void write_params_and_return (List<Parameter> params, DataType? return_type, bool return_array_length, bool constructor = false, DataType? instance_type = null, bool user_data = false) {
 		int last_index = 0;
-		if (params.size != 0 || instance_type != null || (return_type is ArrayType && return_array_length) || (return_type is DelegateType)) {
+		bool ret_is_struct = return_type != null && return_type.is_real_non_null_struct_type ();
+		if (params.size != 0 || instance_type != null || (return_type is ArrayType && return_array_length) || (return_type is DelegateType) || ret_is_struct) {
 			write_indent ();
 			buffer.append_printf ("<parameters>\n");
 			indent++;
@@ -645,6 +646,11 @@ public class Vala.GIRWriter : CodeVisitor {
 				write_param_or_return (param.variable_type, "parameter", ref index, !param.no_array_length, param.name, param.direction);
 
 				write_implicit_params (param.variable_type, ref index, !param.no_array_length, param.name, param.direction);
+			}
+
+			if (ret_is_struct) {
+				// struct returns are converted to parameters
+				write_param_or_return (return_type, "parameter", ref index, return_array_length, "result", ParameterDirection.OUT, constructor, true);
 			}
 
 			last_index = index - 1;
@@ -666,8 +672,10 @@ public class Vala.GIRWriter : CodeVisitor {
 			buffer.append_printf ("</parameters>\n");
 		}
 
-		if (return_type != null) {
+		if (return_type != null && !ret_is_struct) {
 			write_param_or_return (return_type, "return-value", ref last_index, return_array_length, null, ParameterDirection.IN, constructor);
+		} else if (ret_is_struct) {
+			write_param_or_return (new VoidType (), "return-value", ref last_index, return_array_length, null, ParameterDirection.IN);
 		}
 	}
 
@@ -891,7 +899,7 @@ public class Vala.GIRWriter : CodeVisitor {
 	}
 
 
-	private void write_param_or_return (DataType type, string tag, ref int index, bool has_array_length, string? name = null, ParameterDirection direction = ParameterDirection.IN, bool constructor = false) {
+	private void write_param_or_return (DataType type, string tag, ref int index, bool has_array_length, string? name = null, ParameterDirection direction = ParameterDirection.IN, bool constructor = false, bool caller_allocates = false) {
 		write_indent ();
 		buffer.append_printf ("<%s", tag);
 		if (name != null) {
@@ -909,6 +917,9 @@ public class Vala.GIRWriter : CodeVisitor {
 			buffer.append_printf (" transfer-ownership=\"full\"");
 		} else {
 			buffer.append_printf (" transfer-ownership=\"none\"");
+		}
+		if (caller_allocates) {
+			buffer.append_printf (" caller-allocates=\"1\"");
 		}
 		if (type.nullable) {
 			buffer.append_printf (" allow-none=\"1\"");
