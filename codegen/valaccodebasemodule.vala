@@ -2132,33 +2132,23 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				}
 			}
 		} else {
-			CCodeExpression post_rhs = null;
-			if (has_simple_struct_initializer (local)) {
-				post_rhs = rhs;
-				rhs = null;
-			}
-
-			var cvar = new CCodeVariableDeclarator (get_variable_cname (local.name), rhs, local.variable_type.get_cdeclarator_suffix ());
-			if (rhs != null) {
-				cvar.line = rhs.line;
-			}
+			var cvar = new CCodeVariableDeclarator (get_variable_cname (local.name), null, local.variable_type.get_cdeclarator_suffix ());
 
 			// try to initialize uninitialized variables
 			// initialization not necessary for variables stored in closure
-			if (cvar.initializer == null) {
+			if (rhs == null || has_simple_struct_initializer (local)) {
 				cvar.initializer = default_value_for_type (local.variable_type, true);
 				cvar.init0 = true;
 			}
 
 			ccode.add_declaration (local.variable_type.get_cname (), cvar);
 
-			if (cvar.initializer != null && !cvar.init0) {
-				cvar.initializer = null;
-				ccode.add_assignment (get_variable_cexpression (local.name), rhs);
-			}
-
-			if (post_rhs != null) {
-				ccode.add_expression (post_rhs);
+			if (rhs != null) {
+				if (has_simple_struct_initializer (local)) {
+					ccode.add_expression (rhs);
+				} else {
+					ccode.add_assignment (get_variable_cexpression (local.name), rhs);
+				}
 			}
 		}
 
