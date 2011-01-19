@@ -2057,10 +2057,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				if (array_type.fixed_length) {
 					rhs = null;
 				} else {
-					var temp_var = get_temp_variable (local.variable_type, true, local, false);
-					emit_temp_var (temp_var);
-					ccode.add_assignment (get_variable_cexpression (temp_var.name), rhs);
-
 					for (int dim = 1; dim <= array_type.rank; dim++) {
 						var lhs_array_len = get_array_length_cvalue (target_value, dim);
 						var rhs_array_len = get_array_length_cexpression (local.initializer, dim);
@@ -2071,17 +2067,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						var rhs_array_len = get_array_length_cvalue (target_value, 1);
 						ccode.add_assignment (lhs_array_size, rhs_array_len);
 					}
-
-					rhs = get_variable_cexpression (temp_var.name);
 				}
 			} else if (local.variable_type is DelegateType) {
 				var deleg_type = (DelegateType) local.variable_type;
 				var d = deleg_type.delegate_symbol;
 				if (d.has_target) {
-					var temp_var = get_temp_variable (local.variable_type, true, local, false);
-					emit_temp_var (temp_var);
-					ccode.add_assignment (get_variable_cexpression (temp_var.name), rhs);
-
 					var lhs_delegate_target = get_delegate_target_cvalue (target_value);
 					var lhs_delegate_target_destroy_notify = get_delegate_target_destroy_notify_cvalue (target_value);
 
@@ -2092,8 +2082,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					if (deleg_type.value_owned) {
 						ccode.add_assignment (lhs_delegate_target_destroy_notify, rhs_delegate_target_destroy_notify);
 					}
-
-					rhs = get_variable_cexpression (temp_var.name);
 				}
 			}
 		} else if (local.variable_type.is_reference_type_or_type_parameter ()) {
