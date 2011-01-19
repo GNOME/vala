@@ -128,6 +128,13 @@ namespace LibUSB {
 		OTHER
 	}
 
+	[CCode (cname = "enum libusb_transfer_flags", cprefix = "LIBUSB_TRANSFER_")]
+	public enum TransferFlags {
+		SHORT_NOT_OK,
+		FREE_BUFFER,
+		FREE_TRANSFER
+	}
+
 	[CCode (cname = "struct libusb_device_descriptor")]
 	public struct DeviceDescriptor {
 		public uint8 bLength;
@@ -211,7 +218,7 @@ namespace LibUSB {
 		}
 
 		[CCode (cname = "libusb_open_device_with_vid_pid")]
-		public DeviceHandle.from_vid_pid (Context context, uint16 vendor_id, uint16 product_id);
+		public DeviceHandle.from_vid_pid (Context? context, uint16 vendor_id, uint16 product_id);
 		public unowned Device get_device ();
 		public int get_configuration (out int config);
 		public int set_configuration (int configuration);
@@ -261,10 +268,10 @@ namespace LibUSB {
 		public int event_handler_active ();
 		public void lock_event_waiters ();
 		public void unlock_event_waiters ();
-		public int wait_for_event (GLib.TimeVal tv);
-		public int handle_events_timeout (GLib.TimeVal tv);
+		public int wait_for_event (Posix.timeval tv);
+		public int handle_events_timeout (Posix.timeval tv);
 		public int handle_events ();
-		public int handle_events_locked (GLib.TimeVal tv);
+		public int handle_events_locked (Posix.timeval tv);
 		public int get_next_timeout (out Posix.timeval tv);
 		public void set_pollfd_notifiers (pollfd_added_cb added_cb, pollfd_removed_cb removed_cb, void* user_data);
 		[CCode (array_length = false)]
