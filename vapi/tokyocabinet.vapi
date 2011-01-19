@@ -354,7 +354,7 @@ namespace TokyoCabinet {
 		public TokyoCabinet.Tree.Record cur;
 		public uint64 rnum;
 		public uint64 msiz;
-		[CCode (deletage_target_cname = "cmpop")]
+		[CCode (delegate_target = "cmpop")]
 		public TokyoCabinet.Tree.Compare cmp;
 	}
 
