@@ -35,6 +35,7 @@ namespace Gst {
 		public Gst.ClockTime get_duration ();
 		public unowned Gst.Structure get_misc ();
 		public Gst.DiscovererResult get_result ();
+		public bool get_seekable ();
 		public Gst.DiscovererStreamInfo get_stream_info ();
 		public GLib.List<Gst.DiscovererStreamInfo> get_stream_list ();
 		public GLib.List<Gst.MiniObject> get_streams (GLib.Type streamtype);
@@ -65,6 +66,64 @@ namespace Gst {
 		public uint get_width ();
 		public bool is_image ();
 		public bool is_interlaced ();
+	}
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
+	public class EncodingAudioProfile : Gst.EncodingProfile {
+		[CCode (has_construct_function = false)]
+		public EncodingAudioProfile (Gst.Caps format, string? preset, Gst.Caps? restriction, uint presence);
+	}
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
+	public class EncodingContainerProfile : Gst.EncodingProfile {
+		[CCode (has_construct_function = false)]
+		public EncodingContainerProfile (string? name, string? description, Gst.Caps format, string? preset);
+		public bool add_profile (owned Gst.EncodingProfile profile);
+		public bool contains_profile (Gst.EncodingProfile profile);
+		public unowned GLib.List<Gst.EncodingProfile> get_profiles ();
+	}
+	[CCode (ref_function = "gst_encoding_profile_ref", unref_function = "gst_encoding_profile_unref", cheader_filename = "gst/pbutils/pbutils.h")]
+	public class EncodingProfile : Gst.MiniObject {
+		public static Gst.EncodingProfile find (string targetname, string profilename, string category);
+		public unowned string get_description ();
+		public unowned Gst.Caps get_format ();
+		public Gst.Caps get_input_caps ();
+		public unowned string get_name ();
+		public uint get_presence ();
+		public unowned string get_preset ();
+		public unowned Gst.Caps get_restriction ();
+		public unowned string get_type_nick ();
+		public bool is_equal (Gst.EncodingProfile b);
+		public unowned Gst.EncodingProfile @ref ();
+		public void set_description (string description);
+		public void set_format (Gst.Caps format);
+		public void set_name (string name);
+		public void set_presence (uint presence);
+		public void set_preset (string preset);
+		public void set_restriction (Gst.Caps restriction);
+		public void unref ();
+	}
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
+	public class EncodingTarget : Gst.MiniObject {
+		[CCode (has_construct_function = false)]
+		public EncodingTarget (string name, string category, string description, GLib.List<Gst.EncodingProfile> profiles);
+		public bool add_profile (owned Gst.EncodingProfile profile);
+		public unowned string get_category ();
+		public unowned string get_description ();
+		public unowned string get_name ();
+		public Gst.EncodingProfile get_profile (string name);
+		public unowned GLib.List<Gst.EncodingProfile> get_profiles ();
+		public static Gst.EncodingTarget load (string name, string category) throws GLib.Error;
+		public static Gst.EncodingTarget load_from_file (string filepath) throws GLib.Error;
+		public bool save () throws GLib.Error;
+		public bool save_to_file (string filepath) throws GLib.Error;
+	}
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
+	public class EncodingVideoProfile : Gst.EncodingProfile {
+		[CCode (has_construct_function = false)]
+		public EncodingVideoProfile (Gst.Caps format, string? preset, Gst.Caps? restriction, uint presence);
+		public uint get_pass ();
+		public bool get_variableframerate ();
+		public void set_pass (uint pass);
+		public void set_variableframerate (bool variableframerate);
 	}
 	[Compact]
 	[CCode (type_id = "GST_TYPE_INSTALL_PLUGINS_CONTEXT", cheader_filename = "gst/pbutils/pbutils.h")]
@@ -99,6 +158,14 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public delegate void InstallPluginsResultFunc (Gst.InstallPluginsReturn result);
 	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
+	public const string ENCODING_CATEGORY_CAPTURE;
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
+	public const string ENCODING_CATEGORY_DEVICE;
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
+	public const string ENCODING_CATEGORY_ONLINE_SERVICE;
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
+	public const string ENCODING_CATEGORY_STORAGE_EDITING;
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public const int PLUGINS_BASE_VERSION_MAJOR;
 	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public const int PLUGINS_BASE_VERSION_MICRO;
@@ -126,6 +193,10 @@ namespace Gst {
 	public static unowned string codec_utils_mpeg4video_get_level ([CCode (array_length_pos = 1.9)] uchar[] vis_obj_seq);
 	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public static unowned string codec_utils_mpeg4video_get_profile ([CCode (array_length_pos = 1.9)] uchar[] vis_obj_seq);
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
+	public static GLib.List<Gst.EncodingTarget> encoding_list_all_targets (string categoryname);
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
+	public static GLib.List<string> encoding_list_available_categories ();
 	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public static Gst.InstallPluginsReturn install_plugins_async ([CCode (array_length = false)] string[] details, Gst.InstallPluginsContext? ctx, Gst.InstallPluginsResultFunc func);
 	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]

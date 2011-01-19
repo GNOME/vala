@@ -73,6 +73,15 @@
 				<parameter name="len" type="guint"/>
 			</parameters>
 		</function>
+		<function name="encoding_list_all_targets" symbol="gst_encoding_list_all_targets">
+			<return-type type="GList*"/>
+			<parameters>
+				<parameter name="categoryname" type="gchar*"/>
+			</parameters>
+		</function>
+		<function name="encoding_list_available_categories" symbol="gst_encoding_list_available_categories">
+			<return-type type="GList*"/>
+		</function>
 		<function name="install_plugins_async" symbol="gst_install_plugins_async">
 			<return-type type="GstInstallPluginsReturn"/>
 			<parameters>
@@ -331,6 +340,12 @@
 					<parameter name="info" type="GstDiscovererInfo*"/>
 				</parameters>
 			</method>
+			<method name="get_seekable" symbol="gst_discoverer_info_get_seekable">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="info" type="GstDiscovererInfo*"/>
+				</parameters>
+			</method>
 			<method name="get_stream_info" symbol="gst_discoverer_info_get_stream_info">
 				<return-type type="GstDiscovererStreamInfo*"/>
 				<parameters>
@@ -487,6 +502,281 @@
 		</struct>
 		<struct name="GstDiscovererVideoInfoClass">
 		</struct>
+		<struct name="GstEncodingAudioProfile">
+			<method name="new" symbol="gst_encoding_audio_profile_new">
+				<return-type type="GstEncodingAudioProfile*"/>
+				<parameters>
+					<parameter name="format" type="GstCaps*"/>
+					<parameter name="preset" type="gchar*"/>
+					<parameter name="restriction" type="GstCaps*"/>
+					<parameter name="presence" type="guint"/>
+				</parameters>
+			</method>
+		</struct>
+		<struct name="GstEncodingAudioProfileClass">
+		</struct>
+		<struct name="GstEncodingContainerProfile">
+			<method name="add_profile" symbol="gst_encoding_container_profile_add_profile">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="container" type="GstEncodingContainerProfile*"/>
+					<parameter name="profile" type="GstEncodingProfile*"/>
+				</parameters>
+			</method>
+			<method name="contains_profile" symbol="gst_encoding_container_profile_contains_profile">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="container" type="GstEncodingContainerProfile*"/>
+					<parameter name="profile" type="GstEncodingProfile*"/>
+				</parameters>
+			</method>
+			<method name="get_profiles" symbol="gst_encoding_container_profile_get_profiles">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="profile" type="GstEncodingContainerProfile*"/>
+				</parameters>
+			</method>
+			<method name="new" symbol="gst_encoding_container_profile_new">
+				<return-type type="GstEncodingContainerProfile*"/>
+				<parameters>
+					<parameter name="name" type="gchar*"/>
+					<parameter name="description" type="gchar*"/>
+					<parameter name="format" type="GstCaps*"/>
+					<parameter name="preset" type="gchar*"/>
+				</parameters>
+			</method>
+		</struct>
+		<struct name="GstEncodingContainerProfileClass">
+		</struct>
+		<struct name="GstEncodingProfile">
+			<method name="find" symbol="gst_encoding_profile_find">
+				<return-type type="GstEncodingProfile*"/>
+				<parameters>
+					<parameter name="targetname" type="gchar*"/>
+					<parameter name="profilename" type="gchar*"/>
+					<parameter name="category" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_description" symbol="gst_encoding_profile_get_description">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="profile" type="GstEncodingProfile*"/>
+				</parameters>
+			</method>
+			<method name="get_format" symbol="gst_encoding_profile_get_format">
+				<return-type type="GstCaps*"/>
+				<parameters>
+					<parameter name="profile" type="GstEncodingProfile*"/>
+				</parameters>
+			</method>
+			<method name="get_input_caps" symbol="gst_encoding_profile_get_input_caps">
+				<return-type type="GstCaps*"/>
+				<parameters>
+					<parameter name="profile" type="GstEncodingProfile*"/>
+				</parameters>
+			</method>
+			<method name="get_name" symbol="gst_encoding_profile_get_name">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="profile" type="GstEncodingProfile*"/>
+				</parameters>
+			</method>
+			<method name="get_presence" symbol="gst_encoding_profile_get_presence">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="profile" type="GstEncodingProfile*"/>
+				</parameters>
+			</method>
+			<method name="get_preset" symbol="gst_encoding_profile_get_preset">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="profile" type="GstEncodingProfile*"/>
+				</parameters>
+			</method>
+			<method name="get_restriction" symbol="gst_encoding_profile_get_restriction">
+				<return-type type="GstCaps*"/>
+				<parameters>
+					<parameter name="profile" type="GstEncodingProfile*"/>
+				</parameters>
+			</method>
+			<method name="get_type_nick" symbol="gst_encoding_profile_get_type_nick">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="profile" type="GstEncodingProfile*"/>
+				</parameters>
+			</method>
+			<method name="is_equal" symbol="gst_encoding_profile_is_equal">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="a" type="GstEncodingProfile*"/>
+					<parameter name="b" type="GstEncodingProfile*"/>
+				</parameters>
+			</method>
+			<method name="set_description" symbol="gst_encoding_profile_set_description">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="profile" type="GstEncodingProfile*"/>
+					<parameter name="description" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_format" symbol="gst_encoding_profile_set_format">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="profile" type="GstEncodingProfile*"/>
+					<parameter name="format" type="GstCaps*"/>
+				</parameters>
+			</method>
+			<method name="set_name" symbol="gst_encoding_profile_set_name">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="profile" type="GstEncodingProfile*"/>
+					<parameter name="name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_presence" symbol="gst_encoding_profile_set_presence">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="profile" type="GstEncodingProfile*"/>
+					<parameter name="presence" type="guint"/>
+				</parameters>
+			</method>
+			<method name="set_preset" symbol="gst_encoding_profile_set_preset">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="profile" type="GstEncodingProfile*"/>
+					<parameter name="preset" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_restriction" symbol="gst_encoding_profile_set_restriction">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="profile" type="GstEncodingProfile*"/>
+					<parameter name="restriction" type="GstCaps*"/>
+				</parameters>
+			</method>
+		</struct>
+		<struct name="GstEncodingProfileClass">
+		</struct>
+		<struct name="GstEncodingTarget">
+			<method name="add_profile" symbol="gst_encoding_target_add_profile">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="target" type="GstEncodingTarget*"/>
+					<parameter name="profile" type="GstEncodingProfile*"/>
+				</parameters>
+			</method>
+			<method name="get_category" symbol="gst_encoding_target_get_category">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="target" type="GstEncodingTarget*"/>
+				</parameters>
+			</method>
+			<method name="get_description" symbol="gst_encoding_target_get_description">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="target" type="GstEncodingTarget*"/>
+				</parameters>
+			</method>
+			<method name="get_name" symbol="gst_encoding_target_get_name">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="target" type="GstEncodingTarget*"/>
+				</parameters>
+			</method>
+			<method name="get_profile" symbol="gst_encoding_target_get_profile">
+				<return-type type="GstEncodingProfile*"/>
+				<parameters>
+					<parameter name="target" type="GstEncodingTarget*"/>
+					<parameter name="name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_profiles" symbol="gst_encoding_target_get_profiles">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="target" type="GstEncodingTarget*"/>
+				</parameters>
+			</method>
+			<method name="load" symbol="gst_encoding_target_load">
+				<return-type type="GstEncodingTarget*"/>
+				<parameters>
+					<parameter name="name" type="gchar*"/>
+					<parameter name="category" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="load_from_file" symbol="gst_encoding_target_load_from_file">
+				<return-type type="GstEncodingTarget*"/>
+				<parameters>
+					<parameter name="filepath" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="new" symbol="gst_encoding_target_new">
+				<return-type type="GstEncodingTarget*"/>
+				<parameters>
+					<parameter name="name" type="gchar*"/>
+					<parameter name="category" type="gchar*"/>
+					<parameter name="description" type="gchar*"/>
+					<parameter name="profiles" type="GList*"/>
+				</parameters>
+			</method>
+			<method name="save" symbol="gst_encoding_target_save">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="target" type="GstEncodingTarget*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="save_to_file" symbol="gst_encoding_target_save_to_file">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="target" type="GstEncodingTarget*"/>
+					<parameter name="filepath" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+		</struct>
+		<struct name="GstEncodingTargetClass">
+		</struct>
+		<struct name="GstEncodingVideoProfile">
+			<method name="get_pass" symbol="gst_encoding_video_profile_get_pass">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="prof" type="GstEncodingVideoProfile*"/>
+				</parameters>
+			</method>
+			<method name="get_variableframerate" symbol="gst_encoding_video_profile_get_variableframerate">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="prof" type="GstEncodingVideoProfile*"/>
+				</parameters>
+			</method>
+			<method name="new" symbol="gst_encoding_video_profile_new">
+				<return-type type="GstEncodingVideoProfile*"/>
+				<parameters>
+					<parameter name="format" type="GstCaps*"/>
+					<parameter name="preset" type="gchar*"/>
+					<parameter name="restriction" type="GstCaps*"/>
+					<parameter name="presence" type="guint"/>
+				</parameters>
+			</method>
+			<method name="set_pass" symbol="gst_encoding_video_profile_set_pass">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="prof" type="GstEncodingVideoProfile*"/>
+					<parameter name="pass" type="guint"/>
+				</parameters>
+			</method>
+			<method name="set_variableframerate" symbol="gst_encoding_video_profile_set_variableframerate">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="prof" type="GstEncodingVideoProfile*"/>
+					<parameter name="variableframerate" type="gboolean"/>
+				</parameters>
+			</method>
+		</struct>
+		<struct name="GstEncodingVideoProfileClass">
+		</struct>
 		<boxed name="GstInstallPluginsContext" type-name="GstInstallPluginsContext" get-type="gst_install_plugins_context_get_type">
 			<method name="free" symbol="gst_install_plugins_context_free">
 				<return-type type="void"/>
@@ -583,9 +873,13 @@
 				</parameters>
 			</signal>
 		</object>
+		<constant name="GST_ENCODING_CATEGORY_CAPTURE" type="char*" value="capture"/>
+		<constant name="GST_ENCODING_CATEGORY_DEVICE" type="char*" value="device"/>
+		<constant name="GST_ENCODING_CATEGORY_ONLINE_SERVICE" type="char*" value="online-service"/>
+		<constant name="GST_ENCODING_CATEGORY_STORAGE_EDITING" type="char*" value="storage-editing"/>
 		<constant name="GST_PLUGINS_BASE_VERSION_MAJOR" type="int" value="0"/>
 		<constant name="GST_PLUGINS_BASE_VERSION_MICRO" type="int" value="31"/>
 		<constant name="GST_PLUGINS_BASE_VERSION_MINOR" type="int" value="10"/>
-		<constant name="GST_PLUGINS_BASE_VERSION_NANO" type="int" value="1"/>
+		<constant name="GST_PLUGINS_BASE_VERSION_NANO" type="int" value="3"/>
 	</namespace>
 </api>
