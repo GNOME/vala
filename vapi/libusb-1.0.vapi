@@ -402,7 +402,15 @@ namespace LibUSB {
 		protected Context ();
 		public static LibUSB.Error init (out Context context);
 		public void set_debug (LogLevel level);
-		public ssize_t get_device_list ([CCode (array_length = false, array_null_terminated = true)] out Device[] list);
+		[CCode (cname = "libusb_get_device_list")]
+		public ssize_t _get_device_list ([CCode (array_length = false, array_null_terminated = true)] out Device[] list);
+		[CCode (cname = "_vala_libusb_get_device_list")]
+		public Device[] get_device_list () {
+			Device[] result;
+			var result_length = _get_device_list (out result);
+			result.length = (int) result_length;
+			return (owned) result;
+		}
 		public DeviceHandle open_device_with_vid_pid (uint16 vendor_id, uint16 product_id);
 
 		public LibUSB.Error try_lock_events ();
