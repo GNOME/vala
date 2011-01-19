@@ -2263,9 +2263,7 @@ public class Vala.GirParser : CodeVisitor {
 				int array_length_idx, closure_idx, destroy_idx;
 				string scope;
 				string default_param_name = null;
-				if (s is Delegate) {
-					default_param_name = "arg%d".printf (parameters.size);
-				}
+				default_param_name = "arg%d".printf (parameters.size);
 				var param = parse_parameter (out array_length_idx, out closure_idx, out destroy_idx, out scope, default_param_name);
 				if (array_length_idx != -1) {
 					array_length_parameters.add (array_length_idx);
