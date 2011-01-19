@@ -171,8 +171,8 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 		}
 	}
 
-	void store_variable (Variable variable, TargetValue lvalue, TargetValue value) {
-		if (requires_destroy (variable.variable_type)) {
+	void store_variable (Variable variable, TargetValue lvalue, TargetValue value, bool initializer) {
+		if (!initializer && requires_destroy (variable.variable_type)) {
 			/* unref old value */
 			ccode.add_expression (destroy_value (lvalue));
 		}
@@ -181,17 +181,33 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 
 		var array_type = variable.variable_type as ArrayType;
 		if (array_type != null) {
-			for (int dim = 1; dim <= array_type.rank; dim++) {
-				if (get_array_length_cvalue (lvalue, dim) != null) {
-					ccode.add_assignment (get_array_length_cvalue (lvalue, dim), get_array_length_cvalue (value, dim));
+			if (array_type.fixed_length) {
+				cfile.add_include ("string.h");
+
+				// it is necessary to use memcpy for fixed-length (stack-allocated) arrays
+				// simple assignments do not work in C
+				var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+				sizeof_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
+				var size = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeConstant ("%d".printf (array_type.length)), sizeof_call);
+
+				var ccopy = new CCodeFunctionCall (new CCodeIdentifier ("memcpy"));
+				ccopy.add_argument (get_cvalue_ (lvalue));
+				ccopy.add_argument (get_cvalue_ (value));
+				ccopy.add_argument (size);
+				ccode.add_expression (ccopy);
+			} else {
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					if (get_array_length_cvalue (lvalue, dim) != null) {
+						ccode.add_assignment (get_array_length_cvalue (lvalue, dim), get_array_length_cvalue (value, dim));
+					}
 				}
-			}
-			if (array_type.rank == 1) {
-				if (get_array_size_cvalue (lvalue) != null) {
-					if (get_array_size_cvalue (value) != null) {
-						ccode.add_assignment (get_array_size_cvalue (lvalue), get_array_size_cvalue (value));
-					} else {
-						ccode.add_assignment (get_array_size_cvalue (lvalue), get_array_length_cvalue (value, 1));
+				if (array_type.rank == 1) {
+					if (get_array_size_cvalue (lvalue) != null) {
+						if (get_array_size_cvalue (value) != null) {
+							ccode.add_assignment (get_array_size_cvalue (lvalue), get_array_size_cvalue (value));
+						} else {
+							ccode.add_assignment (get_array_size_cvalue (lvalue), get_array_length_cvalue (value, 1));
+						}
 					}
 				}
 			}
@@ -208,7 +224,7 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 		}
 	}
 
-	public override void store_local (LocalVariable local, TargetValue value) {
-		store_variable (local, get_local_cvalue (local), value);
+	public override void store_local (LocalVariable local, TargetValue value, bool initializer) {
+		store_variable (local, get_local_cvalue (local), value, initializer);
 	}
 }

@@ -2066,86 +2066,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	
 		if (rhs != null) {
-			var target_value = get_variable_cvalue (local);
-
-			if (local.variable_type is ArrayType) {
-				var array_type = (ArrayType) local.variable_type;
-
-				if (array_type.fixed_length) {
-					rhs = null;
-				} else {
-					for (int dim = 1; dim <= array_type.rank; dim++) {
-						var lhs_array_len = get_array_length_cvalue (target_value, dim);
-						var rhs_array_len = get_array_length_cexpression (local.initializer, dim);
-						ccode.add_assignment (lhs_array_len, rhs_array_len);
-					}
-					if (array_type.rank == 1 && !local.captured) {
-						var lhs_array_size = get_array_size_cvalue (target_value);
-						var rhs_array_len = get_array_length_cvalue (target_value, 1);
-						ccode.add_assignment (lhs_array_size, rhs_array_len);
-					}
-				}
-			} else if (local.variable_type is DelegateType) {
-				var deleg_type = (DelegateType) local.variable_type;
-				var d = deleg_type.delegate_symbol;
-				if (d.has_target) {
-					var lhs_delegate_target = get_delegate_target_cvalue (target_value);
-					var lhs_delegate_target_destroy_notify = get_delegate_target_destroy_notify_cvalue (target_value);
-
-					CCodeExpression rhs_delegate_target_destroy_notify;
-					var rhs_delegate_target = get_delegate_target_cexpression (local.initializer, out rhs_delegate_target_destroy_notify);
-					ccode.add_assignment (lhs_delegate_target, rhs_delegate_target);
-
-					if (deleg_type.value_owned) {
-						ccode.add_assignment (lhs_delegate_target_destroy_notify, rhs_delegate_target_destroy_notify);
-					}
-				}
-			}
-		}
-
-		if (local.captured) {
-			if (local.initializer != null) {
-				if (has_simple_struct_initializer (local)) {
-					ccode.add_expression (rhs);
-				} else {
-					ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id ((Block) local.parent_symbol))), get_variable_cname (local.name)), rhs);
-				}
-			}
-		} else if (current_method != null && current_method.coroutine) {
-			if (local.initializer != null) {
-				if (has_simple_struct_initializer (local)) {
-					ccode.add_expression (rhs);
-				} else {
-					ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_variable_cname (local.name)), rhs);
-				}
-			}
-		} else {
-			if (rhs != null) {
-				if (has_simple_struct_initializer (local)) {
-					ccode.add_expression (rhs);
-				} else {
-					ccode.add_assignment (get_variable_cexpression (local.name), rhs);
-				}
-			}
-		}
-
-		if (local.initializer != null && local.variable_type is ArrayType) {
-			var array_type = (ArrayType) local.variable_type;
-
-			if (array_type.fixed_length) {
-				cfile.add_include ("string.h");
-
-				// it is necessary to use memcpy for fixed-length (stack-allocated) arrays
-				// simple assignments do not work in C
-				var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
-				sizeof_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
-				var size = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeConstant ("%d".printf (array_type.length)), sizeof_call);
-
-				var ccopy = new CCodeFunctionCall (new CCodeIdentifier ("memcpy"));
-				ccopy.add_argument (get_variable_cexpression (local.name));
-				ccopy.add_argument (get_cvalue (local.initializer));
-				ccopy.add_argument (size);
-				ccode.add_expression (ccopy);
+			if (has_simple_struct_initializer (local)) {
+				ccode.add_expression (rhs);
+			} else {
+				store_local (local, local.initializer.target_value, true);
 			}
 		}
 

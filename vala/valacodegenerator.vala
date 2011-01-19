@@ -36,5 +36,5 @@ public abstract class Vala.CodeGenerator : CodeVisitor {
 
 	public abstract TargetValue load_local (LocalVariable local);
 
-	public abstract void store_local (LocalVariable local, TargetValue value);
+	public abstract void store_local (LocalVariable local, TargetValue value, bool initializer);
 }
