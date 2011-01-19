@@ -1865,7 +1865,8 @@ public class Vala.GIdlParser : CodeVisitor {
 		var type_arguments_data = match.fetch (3);
 		var pointers_data = match.fetch (4);
 		var array_data = match.fetch (5);
-		var nullable_data = match.fetch (6);
+		var array_dimension_data = match.fetch (6);
+		var nullable_data = match.fetch (7);
 
 		var nullable = nullable_data != null && nullable_data.length > 0;
 
@@ -1887,18 +1888,9 @@ public class Vala.GIdlParser : CodeVisitor {
 		bool value_owned = owned_by_default;
 
 		if (ownership_data == "owned") {
-			if (owned_by_default) {
-				Report.error (source_reference, "unexpected `owned' keyword");
-			} else {
-				value_owned = true;
-			}
+			value_owned = true;
 		} else if (ownership_data == "unowned") {
-			if (owned_by_default) {
-				value_owned = false;
-			} else {
-				Report.error (source_reference, "unexpected `unowned' keyword");
-				return null;
-			}
+			value_owned = false;
 		}
 
 		var sym = parse_symbol_from_string (type_name, source_reference);
@@ -1919,8 +1911,8 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 		}
 
-		if (array_data != null) {
-			type = new ArrayType (type, (int) array_data.length + 1, source_reference);
+		if (array_data != null && array_data.length > 0) {
+			type = new ArrayType (type, array_dimension_data.length + 1, source_reference);
 		}
 
 		type.nullable = nullable;
@@ -2029,7 +2021,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				} else if (nv[0] == "array_length_type") {
 					m.array_length_type = eval (nv[1]);
 				} else if (nv[0] == "type_name") {
-					m.return_type = return_type = parse_type_from_string (eval (nv[1]), false);
+					m.return_type = return_type = parse_type_from_string (eval (nv[1]), return_type.value_owned);
 				} else if (nv[0] == "type_arguments") {
 					parse_type_arguments_from_string (return_type, eval (nv[1]));
 				} else if (nv[0] == "deprecated") {
@@ -2069,7 +2061,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				}
 			}
 		}
-		
+
 		m.set_cname (symbol);
 		
 		bool first = true;
