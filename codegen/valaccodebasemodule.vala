@@ -2014,7 +2014,27 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		generate_type_declaration (local.variable_type, cfile);
 
+		CCodeExpression rhs = null;
+		if (local.initializer != null && get_cvalue (local.initializer) != null) {
+			rhs = get_cvalue (local.initializer);
+		}
+
 		if (!local.captured) {
+			if (current_method != null && current_method.coroutine) {
+				closure_struct.add_field (local.variable_type.get_cname (), get_variable_cname (local.name) + local.variable_type.get_cdeclarator_suffix ());
+			} else {
+				var cvar = new CCodeVariableDeclarator (get_variable_cname (local.name), null, local.variable_type.get_cdeclarator_suffix ());
+
+				// try to initialize uninitialized variables
+				// initialization not necessary for variables stored in closure
+				if (rhs == null || has_simple_struct_initializer (local)) {
+					cvar.initializer = default_value_for_type (local.variable_type, true);
+					cvar.init0 = true;
+				}
+
+				ccode.add_declaration (local.variable_type.get_cname (), cvar);
+			}
+
 			if (local.variable_type is ArrayType) {
 				// create variables to store array dimensions
 				var array_type = (ArrayType) local.variable_type;
@@ -2045,11 +2065,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 		}
 	
-		CCodeExpression rhs = null;
-		if (local.initializer != null && get_cvalue (local.initializer) != null) {
+		if (rhs != null) {
 			var target_value = get_variable_cvalue (local);
-
-			rhs = get_cvalue (local.initializer);
 
 			if (local.variable_type is ArrayType) {
 				var array_type = (ArrayType) local.variable_type;
@@ -2095,8 +2112,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				}
 			}
 		} else if (current_method != null && current_method.coroutine) {
-			closure_struct.add_field (local.variable_type.get_cname (), get_variable_cname (local.name) + local.variable_type.get_cdeclarator_suffix ());
-
 			if (local.initializer != null) {
 				if (has_simple_struct_initializer (local)) {
 					ccode.add_expression (rhs);
@@ -2105,17 +2120,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				}
 			}
 		} else {
-			var cvar = new CCodeVariableDeclarator (get_variable_cname (local.name), null, local.variable_type.get_cdeclarator_suffix ());
-
-			// try to initialize uninitialized variables
-			// initialization not necessary for variables stored in closure
-			if (rhs == null || has_simple_struct_initializer (local)) {
-				cvar.initializer = default_value_for_type (local.variable_type, true);
-				cvar.init0 = true;
-			}
-
-			ccode.add_declaration (local.variable_type.get_cname (), cvar);
-
 			if (rhs != null) {
 				if (has_simple_struct_initializer (local)) {
 					ccode.add_expression (rhs);
