@@ -1745,6 +1745,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				var unref_call = new CCodeFunctionCall (new CCodeIdentifier ("block%d_data_unref".printf (parent_block_id)));
 				unref_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "_data%d_".printf (parent_block_id)));
 				free_block.add_statement (new CCodeExpressionStatement (unref_call));
+				free_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "_data%d_".printf (parent_block_id)), new CCodeConstant ("NULL"))));
 			} else {
 				if (in_constructor || (current_method != null && current_method.binding == MemberBinding.INSTANCE) ||
 				           (current_property_accessor != null && current_property_accessor.prop.binding == MemberBinding.INSTANCE)) {
@@ -1949,6 +1950,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var data_unref = new CCodeFunctionCall (new CCodeIdentifier ("block%d_data_unref".printf (block_id)));
 			data_unref.add_argument (get_variable_cexpression ("_data%d_".printf (block_id)));
 			ccode.add_expression (data_unref);
+			ccode.add_assignment (get_variable_cexpression ("_data%d_".printf (block_id)), new CCodeConstant ("NULL"));
 		}
 
 		if (b.parent_node is Block || b.parent_node is SwitchStatement) {
@@ -3087,6 +3089,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var data_unref = new CCodeFunctionCall (new CCodeIdentifier ("block%d_data_unref".printf (block_id)));
 			data_unref.add_argument (get_variable_cexpression ("_data%d_".printf (block_id)));
 			ccode.add_expression (data_unref);
+			ccode.add_assignment (get_variable_cexpression ("_data%d_".printf (block_id)), new CCodeConstant ("NULL"));
 		}
 
 		if (stop_at_loop) {
