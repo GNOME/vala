@@ -193,7 +193,7 @@ public class Vala.SourceFile {
 	}
 
 	private string get_basename () {
-		long dot = (long) ((char*) filename.rchr (-1, '.') - (char*) filename);
+		int dot = filename.last_index_of_char ('.');
 		return Path.get_basename (filename.substring (0, dot));
 	}
 

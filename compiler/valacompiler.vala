@@ -159,8 +159,8 @@ class Vala.Compiler {
 		if (!ccode_only && !compile_only && output == null) {
 			// strip extension if there is one
 			// else we use the default output file of the C compiler
-			if (sources[0].rchr (-1, '.') != null) {
-				long dot = (long) ((char*) sources[0].rchr (-1, '.') - (char*) sources[0]);
+			if (sources[0].last_index_of_char ('.') != -1) {
+				int dot = sources[0].last_index_of_char ('.');
 				output = Path.get_basename (sources[0].substring (0, dot));
 			}
 		}
@@ -375,14 +375,13 @@ class Vala.Compiler {
 			if (gir != null) {
 				if (context.profile == Profile.GOBJECT) {
 					long gir_len = gir.length;
-					unowned string? last_hyphen = gir.rchr (gir_len, '-');
+					int last_hyphen = gir.last_index_of_char ('-');
 
-					if (last_hyphen == null || !gir.has_suffix (".gir")) {
+					if (last_hyphen == -1 || !gir.has_suffix (".gir")) {
 						Report.error (null, "GIR file name `%s' is not well-formed, expected NAME-VERSION.gir".printf (gir));
 					} else {
-						long offset = (long) ((char*) last_hyphen - (char*) gir);
-						string gir_namespace = gir.substring (0, offset);
-						string gir_version = gir.substring (offset + 1, gir_len - offset - 5);
+						string gir_namespace = gir.substring (0, last_hyphen);
+						string gir_version = gir.substring (last_hyphen + 1, gir_len - last_hyphen - 5);
 						gir_version.canon ("0123456789.", '?');
 						if (gir_namespace == "" || gir_version == "" || !gir_version[0].isdigit () || gir_version.contains ("?")) {
 							Report.error (null, "GIR file name `%s' is not well-formed, expected NAME-VERSION.gir".printf (gir));

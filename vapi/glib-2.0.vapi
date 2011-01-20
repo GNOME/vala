@@ -970,6 +970,8 @@ public class string {
 	static char* strrstr (char* haystack, char* needle);
 	[CCode (cname = "g_utf8_strchr")]
 	static char* utf8_strchr (char* str, ssize_t len, unichar c);
+	[CCode (cname = "g_utf8_strrchr")]
+	static char* utf8_strrchr (char* str, ssize_t len, unichar c);
 
 	public int index_of (string needle, int start_index = 0) {
 		char* result = strstr ((char*) this + start_index, (char*) needle);
@@ -993,6 +995,16 @@ public class string {
 
 	public int index_of_char (unichar c, int start_index = 0) {
 		char* result = utf8_strchr ((char*) this + start_index, -1, c);
+
+		if (result != null) {
+			return (int) (result - (char*) this);
+		} else {
+			return -1;
+		}
+	}
+
+	public int last_index_of_char (unichar c, int start_index = 0) {
+		char* result = utf8_strrchr ((char*) this + start_index, -1, c);
 
 		if (result != null) {
 			return (int) (result - (char*) this);
@@ -1080,6 +1092,7 @@ public class string {
 	[Deprecated (replacement = "string.index_of_char")]
 	[CCode (cname = "g_utf8_strchr")]
 	public unowned string chr (ssize_t len, unichar c);
+	[Deprecated (replacement = "string.last_index_of_char")]
 	[CCode (cname = "g_utf8_strrchr")]
 	public unowned string rchr (ssize_t len, unichar c);
 	[CCode (cname = "g_utf8_strreverse")]
