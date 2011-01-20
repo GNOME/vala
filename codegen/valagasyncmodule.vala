@@ -107,7 +107,13 @@ public class Vala.GAsyncModule : GSignalModule {
 				param_type.value_owned = true;
 
 				if (requires_destroy (param_type) && !is_unowned_delegate) {
+					// do not try to access closure blocks
+					bool old_captured = param.captured;
+					param.captured = false;
+
 					freeblock.add_statement (new CCodeExpressionStatement (get_unref_expression_ (param)));
+
+					param.captured = old_captured;
 				}
 			}
 		}

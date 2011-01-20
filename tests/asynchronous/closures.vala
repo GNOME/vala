@@ -2,10 +2,10 @@ delegate void Func ();
 
 MainLoop main_loop;
 
-async void foo () {
+async void foo (string baz) {
 	string bar = "hello";
 	Func foobar = () => {
-		bar = "world";
+		bar = baz;
 	};
 	foobar ();
 	assert (bar == "world");
@@ -17,7 +17,7 @@ async void foo () {
 }
 
 void main () {
-	foo.begin ();
+	foo.begin ("world");
 
         main_loop = new MainLoop (null, false);
         main_loop.run ();
