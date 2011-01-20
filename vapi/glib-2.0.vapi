@@ -958,6 +958,7 @@ public class string {
 	[Deprecated (replacement = "string.index_of")]
 	[CCode (cname = "strstr")]
 	public unowned string? str (string needle);
+	[Deprecated (replacement = "string.last_index_of")]
 	[CCode (cname = "g_strrstr")]
 	public unowned string? rstr (string needle);
 	[CCode (cname = "g_strrstr_len")]
@@ -965,11 +966,23 @@ public class string {
 
 	[CCode (cname = "strstr")]
 	static char* strstr (char* haystack, char* needle);
+	[CCode (cname = "g_strrstr")]
+	static char* strrstr (char* haystack, char* needle);
 	[CCode (cname = "g_utf8_strchr")]
 	static char* utf8_strchr (char* str, ssize_t len, unichar c);
 
 	public int index_of (string needle, int start_index = 0) {
 		char* result = strstr ((char*) this + start_index, (char*) needle);
+
+		if (result != null) {
+			return (int) (result - (char*) this);
+		} else {
+			return -1;
+		}
+	}
+
+	public int last_index_of (string needle, int start_index = 0) {
+		char* result = strrstr ((char*) this + start_index, (char*) needle);
 
 		if (result != null) {
 			return (int) (result - (char*) this);
