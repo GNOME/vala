@@ -618,13 +618,13 @@ public class Vala.GIRWriter : CodeVisitor {
 	private void write_implicit_params (DataType type, ref int index, bool has_array_length, string name, ParameterDirection direction) {
 		if (type is ArrayType && has_array_length) {
 			var int_type = new IntegerType (CodeContext.get ().root.scope.lookup ("int") as Struct);
-			write_param_or_return (int_type, "parameter", ref index, has_array_length, "%s_length1".printf (name), direction);
+			write_param_or_return (int_type, true, ref index, has_array_length, "%s_length1".printf (name), direction);
 		} else if (type is DelegateType) {
 			var data_type = new PointerType (new VoidType ());
-			write_param_or_return (data_type, "parameter", ref index, false, "%s_target".printf (name), direction);
+			write_param_or_return (data_type, true, ref index, false, "%s_target".printf (name), direction);
 			if (type.value_owned) {
 				var notify_type = new DelegateType (CodeContext.get ().root.scope.lookup ("GLib").scope.lookup ("DestroyNotify") as Delegate);
-				write_param_or_return (notify_type, "parameter", ref index, false, "%s_target_destroy_notify".printf (name), direction);
+				write_param_or_return (notify_type, true, ref index, false, "%s_target_destroy_notify".printf (name), direction);
 			}
 		}
 	}
@@ -636,25 +636,26 @@ public class Vala.GIRWriter : CodeVisitor {
 			write_indent ();
 			buffer.append_printf ("<parameters>\n");
 			indent++;
-			int index = 1;
+			int index = 0;
 
 			if (instance_type != null) {
-				write_param_or_return (instance_type, "parameter", ref index, false, "self");
+				write_param_or_return (instance_type, true, ref index, false, "self");
 			}
 
 			foreach (Parameter param in params) {
-				write_param_or_return (param.variable_type, "parameter", ref index, !param.no_array_length, param.name, param.direction);
+				write_param_or_return (param.variable_type, true, ref index, !param.no_array_length, param.name, param.direction);
 
 				write_implicit_params (param.variable_type, ref index, !param.no_array_length, param.name, param.direction);
 			}
 
 			if (ret_is_struct) {
 				// struct returns are converted to parameters
-				write_param_or_return (return_type, "parameter", ref index, return_array_length, "result", ParameterDirection.OUT, constructor, true);
+				write_param_or_return (return_type, true, ref index, false, "result", ParameterDirection.OUT, constructor, true);
+			} else {
+				write_implicit_params (return_type, ref index, return_array_length, "result", ParameterDirection.OUT);
 			}
 
 			last_index = index - 1;
-			write_implicit_params (return_type, ref index, return_array_length, "result", ParameterDirection.OUT);
 
 			if (user_data) {
 				write_indent ();
@@ -673,9 +674,9 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 
 		if (return_type != null && !ret_is_struct) {
-			write_param_or_return (return_type, "return-value", ref last_index, return_array_length, null, ParameterDirection.IN, constructor);
+			write_param_or_return (return_type, false, ref last_index, return_array_length, null, ParameterDirection.IN, constructor);
 		} else if (ret_is_struct) {
-			write_param_or_return (new VoidType (), "return-value", ref last_index, return_array_length, null, ParameterDirection.IN);
+			write_param_or_return (new VoidType (), false, ref last_index, false, null, ParameterDirection.IN);
 		}
 	}
 
@@ -899,8 +900,9 @@ public class Vala.GIRWriter : CodeVisitor {
 	}
 
 
-	private void write_param_or_return (DataType type, string tag, ref int index, bool has_array_length, string? name = null, ParameterDirection direction = ParameterDirection.IN, bool constructor = false, bool caller_allocates = false) {
+	private void write_param_or_return (DataType type, bool is_parameter, ref int index, bool has_array_length, string? name = null, ParameterDirection direction = ParameterDirection.IN, bool constructor = false, bool caller_allocates = false) {
 		write_indent ();
+		string tag = is_parameter ? "parameter" : "return-value";
 		buffer.append_printf ("<%s", tag);
 		if (name != null) {
 			buffer.append_printf (" name=\"%s\"", name);
@@ -935,7 +937,11 @@ public class Vala.GIRWriter : CodeVisitor {
 		buffer.append_printf (">\n");
 		indent++;
 
-		write_type (type, has_array_length ? index : -1);
+		int length_param_index = -1;
+		if (has_array_length) {
+			length_param_index = is_parameter ? index + 1 : index;
+		}
+		write_type (type, length_param_index);
 
 		indent--;
 		write_indent ();
@@ -962,7 +968,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			if (array_type.fixed_length) {
 				buffer.append_printf (" fixed-size=\"%i\"", array_type.length);
 			} else if (index != -1) {
-				buffer.append_printf (" length=\"%i\"", index + 1);
+				buffer.append_printf (" length=\"%i\"", index);
 			}
 			buffer.append_printf (">\n");
 			indent++;
