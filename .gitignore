@@ -33,3 +33,5 @@ stamp-h1
 *.gcno
 coverage
 lcov.info
+
+*~
