@@ -1,3 +1,11 @@
+Vala 0.11.5
+===========
+
+ * Add last_index_of and last_index_of_char to string class.
+ * More refactoring in the code generator (Luca Bruno).
+ * Improvements to the .gir writer (Michal Hruby).
+ * Many bug fixes and binding updates.
+
 Vala 0.11.4
 ===========
 
