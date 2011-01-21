@@ -101,7 +101,7 @@ namespace Gst {
 		public void set_restriction (Gst.Caps restriction);
 		public void unref ();
 	}
-	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
+	[CCode (ref_function = "gst_encoding_target_ref", unref_function = "gst_encoding_target_unref", cheader_filename = "gst/pbutils/pbutils.h")]
 	public class EncodingTarget : Gst.MiniObject {
 		[CCode (has_construct_function = false)]
 		public EncodingTarget (string name, string category, string description, GLib.List<Gst.EncodingProfile> profiles);
@@ -113,8 +113,10 @@ namespace Gst {
 		public unowned GLib.List<Gst.EncodingProfile> get_profiles ();
 		public static Gst.EncodingTarget load (string name, string category) throws GLib.Error;
 		public static Gst.EncodingTarget load_from_file (string filepath) throws GLib.Error;
+		public unowned Gst.EncodingTarget @ref ();
 		public bool save () throws GLib.Error;
 		public bool save_to_file (string filepath) throws GLib.Error;
+		public void unref ();
 	}
 	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public class EncodingVideoProfile : Gst.EncodingProfile {

@@ -26,4 +26,9 @@ namespace Gst {
 		public unowned EncodingProfile @ref ();
 		public void unref ();
 	}
+	[CCode (ref_function = "gst_encoding_target_ref", unref_function = "gst_encoding_target_unref")]
+	public class EncodingTarget : Gst.MiniObject {
+		public unowned EncodingTarget @ref ();
+		public void unref ();
+	}
 }
