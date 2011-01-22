@@ -449,6 +449,25 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		}
 	}
 
+	public override CCodeExpression destroy_variable (Variable variable, CCodeExpression? inner = null) {
+		var array_type = variable.variable_type as ArrayType;
+		if (array_type != null && array_type.fixed_length) {
+			requires_array_free = true;
+
+			var ccall = new CCodeFunctionCall (get_destroy_func_expression (variable.variable_type));
+			var value = get_variable_cvalue (variable);
+
+			ccall = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_destroy"));
+			ccall.add_argument (get_cvalue_ (value));
+			ccall.add_argument (new CCodeConstant ("%d".printf (array_type.length)));
+			ccall.add_argument (new CCodeCastExpression (get_destroy_func_expression (array_type.element_type), "GDestroyNotify"));
+
+			return ccall;
+		}
+
+		return base.destroy_variable (variable, inner);
+	}
+
 	public override CCodeExpression destroy_value (TargetValue value, bool is_macro_definition = false) {
 		var type = value.value_type;
 

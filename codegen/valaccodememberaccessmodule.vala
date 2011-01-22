@@ -704,7 +704,8 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 		return load_variable (local, result);
 	}
 
-	public TargetValue load_parameter (Parameter param) {
+	/* Returns unowned access to the given parameter */
+	public override TargetValue load_parameter (Parameter param) {
 		var result = (GLibValue) get_parameter_cvalue (param);
 		if (result.value_type is DelegateType) {
 			result.delegate_target_destroy_notify_cvalue = new CCodeConstant ("NULL");
