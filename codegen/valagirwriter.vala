@@ -928,9 +928,11 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 
 		if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
-			buffer.append_printf (" closure=\"%i\"", index + 1);
+			int closure_index = is_parameter ?
+				index + 1 : (type.value_owned ? index - 1 : index);
+			buffer.append_printf (" closure=\"%i\"", closure_index);
 			if (type.value_owned) {
-				buffer.append_printf (" destroy=\"%i\"", index + 2);
+				buffer.append_printf (" destroy=\"%i\"", closure_index + 1);
 			}
 		}
 
