@@ -472,14 +472,6 @@ namespace Mx {
 		public Clutter.Actor child { get; set; }
 		public bool pick_child { get; set; }
 	}
-	[Compact]
-	[CCode (type_id = "MX_TYPE_PADDING", cheader_filename = "mx/mx.h")]
-	public class Padding {
-		public float bottom;
-		public float left;
-		public float right;
-		public float top;
-	}
 	[CCode (cheader_filename = "mx/mx.h")]
 	public class PathBar : Mx.Widget, Clutter.Scriptable, Mx.Stylable, Mx.Focusable {
 		[CCode (type = "ClutterActor*", has_construct_function = false)]
@@ -804,6 +796,13 @@ namespace Mx {
 		public abstract void set_style_pseudo_class (string pseudo_class);
 		[HasEmitter]
 		public signal void style_changed (Mx.StyleChangedFlags flags);
+	}
+	[CCode (type_id = "MX_TYPE_PADDING", cheader_filename = "mx/mx.h")]
+	public struct Padding {
+		public float top;
+		public float right;
+		public float bottom;
+		public float left;
 	}
 	[CCode (cprefix = "MX_ALIGN_", cheader_filename = "mx/mx.h")]
 	public enum Align {
