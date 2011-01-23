@@ -230,7 +230,7 @@ namespace Avahi {
 		public string? escape_label(string s) {
 			size_t len = LABEL_MAX * 4;
 			char* dest = new char[len];
-			return _escape_label(s, s.size(), ref dest, ref len);
+			return _escape_label(s, s.length, ref dest, ref len);
 		}
 
 		[CCode(cname="avahi_service_name_join")]
