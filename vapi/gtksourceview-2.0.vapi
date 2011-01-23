@@ -96,7 +96,7 @@ namespace Gtk {
 	public class SourceCompletionContext : GLib.InitiallyUnowned {
 		[CCode (has_construct_function = false)]
 		protected SourceCompletionContext ();
-		public void add_proposals (void* provider, GLib.List proposals, bool finished);
+		public void add_proposals (Gtk.SourceCompletionProvider provider, GLib.List<Gtk.SourceCompletionProposal> proposals, bool finished);
 		public Gtk.SourceCompletionActivation get_activation ();
 		public void get_iter (Gtk.TextIter iter);
 		[NoAccessorMethod]
@@ -428,10 +428,10 @@ namespace Gtk {
 	public interface SourceCompletionProvider : GLib.Object {
 		public virtual bool activate_proposal (Gtk.SourceCompletionProposal proposal, Gtk.TextIter iter);
 		public virtual Gtk.SourceCompletionActivation get_activation ();
-		public virtual unowned Gdk.Pixbuf get_icon ();
-		public virtual unowned Gtk.Widget get_info_widget (Gtk.SourceCompletionProposal proposal);
+		public virtual unowned Gdk.Pixbuf? get_icon ();
+		public virtual unowned Gtk.Widget? get_info_widget (Gtk.SourceCompletionProposal proposal);
 		public virtual int get_interactive_delay ();
-		public virtual unowned string get_name ();
+		public virtual string get_name ();
 		public virtual int get_priority ();
 		public virtual bool get_start_iter (Gtk.SourceCompletionContext context, Gtk.SourceCompletionProposal proposal, Gtk.TextIter iter);
 		public virtual bool match (Gtk.SourceCompletionContext context);
