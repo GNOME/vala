@@ -29,6 +29,8 @@ using GLib;
  */
 public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 	CCodeExpression? emit_simple_assignment (Assignment assignment) {
+		Variable variable = (Variable) assignment.left.symbol_reference;
+
 		CCodeExpression rhs = get_cvalue (assignment.right);
 		CCodeExpression lhs = (CCodeExpression) get_ccodenode (assignment.left);
 
@@ -36,15 +38,11 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 		bool array = false;
 		bool instance_delegate = false;
 		if (assignment.left.value_type is ArrayType) {
-			var array_field = assignment.left.symbol_reference as Field;
-			array = (array_field == null || !array_field.no_array_length);
+			array = !(variable is Field) || !variable.no_array_length;
 		} else if (assignment.left.value_type is DelegateType) {
 			var delegate_type = (DelegateType) assignment.left.value_type;
 			if (delegate_type.delegate_symbol.has_target) {
-				var delegate_field = assignment.left.symbol_reference as Field;
-				if (delegate_field == null || !delegate_field.no_delegate_target) {
-					instance_delegate = true;
-				}
+				instance_delegate = !(variable is Field) || !variable.no_delegate_target;
 			}
 		}
 
@@ -67,7 +65,7 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 				ccode.add_expression (get_unref_expression (lhs, assignment.left.value_type, assignment.left));
 			}
 			
-			if (array) {
+			if (array && !variable.no_array_length && !variable.array_null_terminated) {
 				var array_type = (ArrayType) assignment.left.value_type;
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					var lhs_array_len = get_array_length_cexpression (assignment.left, dim);
@@ -195,11 +193,9 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 				ccopy.add_argument (get_cvalue_ (value));
 				ccopy.add_argument (size);
 				ccode.add_expression (ccopy);
-			} else {
+			} else if (!variable.no_array_length && !variable.array_null_terminated) {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					if (get_array_length_cvalue (lvalue, dim) != null) {
-						ccode.add_assignment (get_array_length_cvalue (lvalue, dim), get_array_length_cvalue (value, dim));
-					}
+					ccode.add_assignment (get_array_length_cvalue (lvalue, dim), get_array_length_cvalue (value, dim));
 				}
 				if (array_type.rank == 1) {
 					if (get_array_size_cvalue (lvalue) != null) {
