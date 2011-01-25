@@ -482,7 +482,7 @@ namespace GLib {
 		public string g_name_owner { owned get; }
 		[NoAccessorMethod]
 		public string g_object_path { owned get; construct; }
-		public virtual signal void g_properties_changed (GLib.Variant changed_properties, string[] invalidated_properties);
+		public virtual signal void g_properties_changed (GLib.Variant changed_properties, [CCode (array_length = false, array_null_terminated = true)] string[] invalidated_properties);
 		public virtual signal void g_signal (string sender_name, string signal_name, GLib.Variant parameters);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]

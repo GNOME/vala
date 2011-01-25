@@ -864,6 +864,10 @@ public class Vala.CodeWriter : CodeVisitor {
 				ccode_params.append_printf ("%sarray_length = false", separator);
 				separator = ", ";
 			}
+			if (param.array_null_terminated && param.variable_type is ArrayType) {
+				ccode_params.append_printf ("%sarray_null_terminated = true", separator);
+				separator = ", ";
+			}
 			if (param.array_length_type != null && param.variable_type is ArrayType) {
 				ccode_params.append_printf ("%sarray_length_type = \"%s\"", separator, param.array_length_type);
 				separator = ", ";

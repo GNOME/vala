@@ -2766,6 +2766,17 @@ public class Vala.GIdlParser : CodeVisitor {
 							p.variable_type = param_type;
 							p.direction = ParameterDirection.IN;
 						}
+					} else if (nv[0] == "no_array_length") {
+						if (eval (nv[1]) == "1") {
+							p.no_array_length = true;
+						}
+					} else if (nv[0] == "array_length_type") {
+						p.array_length_type = eval (nv[1]);
+					} else if (nv[0] == "array_null_terminated") {
+						if (eval (nv[1]) == "1") {
+							p.no_array_length = true;
+							p.array_null_terminated = true;
+						}
 					} else if (nv[0] == "is_out") {
 						if (eval (nv[1]) == "1") {
 							p.direction = ParameterDirection.OUT;
