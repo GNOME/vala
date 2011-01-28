@@ -493,7 +493,7 @@ public abstract class Vala.Symbol : CodeNode {
 	public bool check_deprecated (SourceReference? source_ref = null) {
 		if (deprecated) {
 			if (!CodeContext.get ().deprecated) {
-				Report.warning (source_ref, "%s %s%s".printf (get_full_name (), (deprecated_since == null) ? "is deprecated" : "has been deprecated since %s".printf (deprecated_since), (replacement == null) ? "" : ". Use %s".printf (replacement)));
+				Report.deprecated (source_ref, "%s %s%s".printf (get_full_name (), (deprecated_since == null) ? "is deprecated" : "has been deprecated since %s".printf (deprecated_since), (replacement == null) ? "" : ". Use %s".printf (replacement)));
 			}
 			return true;
 		} else {

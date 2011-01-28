@@ -114,6 +114,25 @@ public class Vala.Report : Object {
 	}
 
 	/**
+	 * Reports the specified message as deprecation warning.
+	 *
+	 * @param source  reference to source code
+	 * @param message warning message
+	 */
+	public virtual void depr (SourceReference? source, string message) {
+		if (!enable_warnings) {
+			return;
+		}
+
+		warnings++;
+		if (source == null) {
+			stderr.printf ("warning: %s\n", message);
+		} else {
+			stderr.printf ("%s: warning: %s\n", source.to_string (), message);
+		}
+	}
+
+	/**
 	 * Reports the specified message as warning.
 	 *
 	 * @param source  reference to source code
@@ -156,6 +175,9 @@ public class Vala.Report : Object {
 	/* Convenience methods calling warn and err on correct instance */
 	public static void notice (SourceReference? source, string message) {
 		CodeContext.get ().report.note (source, message);
+	}
+	public static void deprecated (SourceReference? source, string message) {
+		CodeContext.get ().report.depr (source, message);
 	}
 	public static void warning (SourceReference? source, string message) {
 		CodeContext.get ().report.warn (source, message);
