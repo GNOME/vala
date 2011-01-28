@@ -157,7 +157,7 @@ public class Vala.Delegate : TypeSymbol {
 	 * @return  true if the specified method is compatible to this callback
 	 */
 	public bool matches_method (Method m, DataType dt) {
-		if (m.coroutine) {
+		if (m.coroutine && !(parent_symbol is Signal)) {
 			// async delegates are not yet supported
 			return false;
 		}

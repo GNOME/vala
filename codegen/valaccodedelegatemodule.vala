@@ -392,6 +392,10 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			last_pos = min_pos;
 		}
 
+		if (m.coroutine) {
+			ccall.add_argument (new CCodeConstant ("NULL"));
+			ccall.add_argument (new CCodeConstant ("NULL"));
+		}
 		var block = new CCodeBlock ();
 		if (m.return_type is VoidType || m.return_type.is_real_non_null_struct_type ()) {
 			block.add_statement (new CCodeExpressionStatement (ccall));
