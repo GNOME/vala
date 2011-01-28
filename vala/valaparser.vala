@@ -511,7 +511,7 @@ public class Vala.Parser : CodeVisitor {
 				}
 
 				var length_literal = (IntegerLiteral) parse_literal ();
-				array_length = length_literal.value.to_int ();
+				array_length = int.parse (length_literal.value);
 			}
 			expect (TokenType.CLOSE_BRACKET);
 

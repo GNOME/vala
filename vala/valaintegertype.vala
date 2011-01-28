@@ -52,7 +52,7 @@ public class Vala.IntegerType : ValueType {
 			if (target_st.is_integer_type ()) {
 				var int_attr = target_st.get_attribute ("IntegerType");
 				if (int_attr != null && int_attr.has_argument ("min") && int_attr.has_argument ("max")) {
-					int val = literal_value.to_int ();
+					int val = int.parse (literal_value);
 					return (val >= int_attr.get_integer ("min") && val <= int_attr.get_integer ("max"));
 				} else {
 					// assume to be compatible if the target type doesn't specify limits
@@ -61,7 +61,7 @@ public class Vala.IntegerType : ValueType {
 			}
 		} else if (target_type.data_type is Enum && literal_type_name == "int") {
 			// allow implicit conversion from 0 to enum and flags types
-			if (literal_value.to_int () == 0) {
+			if (int.parse (literal_value) == 0) {
 				return true;
 			}
 		}

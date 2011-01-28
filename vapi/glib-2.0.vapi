@@ -40,6 +40,26 @@ public struct bool {
 			return "false";
 		}
 	}
+
+	public static bool parse (string str) {
+		if (str == "true") {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	public static bool try_parse (string str, out bool result = null) {
+		if (str == "true") {
+			result = true;
+			return true;
+		} else if (str == "false") {
+			result = false;
+			return true;
+		} else {
+			result = false;
+			return false;
+		}
+	}
 }
 
 [SimpleType]
@@ -124,6 +144,9 @@ public struct int {
 	public static int from_big_endian (int val);
 	[CCode (cname = "GINT_FROM_LE")]
 	public static int from_little_endian (int val);
+
+	[CCode (cname = "atoi", cheader_filename = "stdlib.h")]
+	public static int parse (string str);
 }
 
 [SimpleType]
@@ -233,6 +256,9 @@ public struct long {
 	public static long from_big_endian (long val);
 	[CCode (cname = "GLONG_FROM_LE")]
 	public static long from_little_endian (long val);
+
+	[CCode (cname = "atol", cheader_filename = "stdlib.h")]
+	public static long parse (string str);
 }
 
 [SimpleType]
@@ -560,6 +586,22 @@ public struct int64 {
 
 	[CCode (cname = "GUINT64_SWAP_LE_BE")]
 	public uint64 swap_little_endian_big_endian ();
+
+	[CCode (cname = "g_ascii_strtoll")]
+	static int64 ascii_strtoll (string nptr, out char* endptr, uint _base);
+
+	public static int64 parse (string str) {
+		return ascii_strtoll (str, null, 0);
+	}
+	public static bool try_parse (string str, out int64 result = null) {
+		char* endptr;
+		result = ascii_strtoll (str, out endptr, 0);
+		if (endptr == (char*) str + str.length) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
 
 [SimpleType]
@@ -596,6 +638,22 @@ public struct uint64 {
 	public static uint64 from_big_endian (uint64 val);
 	[CCode (cname = "GUINT64_FROM_LE")]
 	public static uint64 from_little_endian (uint64 val);
+
+	[CCode (cname = "g_ascii_strtoull")]
+	static uint64 ascii_strtoull (string nptr, out char* endptr, uint _base);
+
+	public static uint64 parse (string str) {
+		return ascii_strtoull (str, null, 0);
+	}
+	public static bool try_parse (string str, out uint64 result = null) {
+		char* endptr;
+		result = ascii_strtoull (str, out endptr, 0);
+		if (endptr == (char*) str + str.length) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
 
 [SimpleType]
@@ -707,6 +765,22 @@ public struct double {
 
 	public string to_string () {
 		return this.to_str(new char[DTOSTR_BUF_SIZE]);
+	}
+
+	[CCode (cname = "g_ascii_strtod")]
+	static double ascii_strtod (string nptr, out char* endptr);
+
+	public static double parse (string str) {
+		return ascii_strtod (str, null);
+	}
+	public static bool try_parse (string str, out double result = null) {
+		char* endptr;
+		result = ascii_strtod (str, out endptr);
+		if (endptr == (char*) str + str.length) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
 
@@ -1153,19 +1227,26 @@ public class string {
 	[CCode (cname = "g_str_hash")]
 	public uint hash ();
 	
+	[Deprecated (replacement = "int.parse")]
 	[CCode (cname = "atoi")]
 	public int to_int ();
+	[Deprecated (replacement = "long.parse")]
 	[CCode (cname = "strtol")]
 	public long to_long (out unowned string endptr = null, int _base = 0);
+	[Deprecated (replacement = "double.parse")]
 	[CCode (cname = "g_ascii_strtod")]
 	public double to_double (out unowned string endptr = null);
+	[Deprecated (replacement = "uint64.parse")]
 	[CCode (cname = "strtoul")]
 	public ulong to_ulong (out unowned string endptr = null, int _base = 0);
+	[Deprecated (replacement = "int64.parse")]
 	[CCode (cname = "g_ascii_strtoll")]
 	public int64 to_int64 (out unowned string endptr = null, int _base = 0);
+	[Deprecated (replacement = "uint64.parse")]
 	[CCode (cname = "g_ascii_strtoull")]
 	public uint64 to_uint64 (out unowned string endptr = null, int _base = 0);
 
+	[Deprecated (replacement = "bool.parse")]
 	public bool to_bool () {
 		if (this == "true") {
 			return true;

@@ -178,7 +178,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			var lit = indices[0] as IntegerLiteral;
 			var memberaccess = expr.container as MemberAccess;
 			if (lit != null && memberaccess != null) {
-				int dim = lit.value.to_int ();
+				int dim = int.parse (lit.value);
 				set_cvalue (expr, get_array_length_cexpression (memberaccess.inner, dim + 1));
 			} else {
 				Report.error (expr.source_reference, "only integer literals supported as index");

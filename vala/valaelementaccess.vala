@@ -156,7 +156,7 @@ public class Vala.ElementAccess : Expression {
 				Report.error (source_reference, "Element access with non-literal index is not supported for tuples");
 				return false;
 			}
-			int i = index.value.to_int ();
+			int i = int.parse (index.value);
 			if (container.value_type.get_type_arguments ().size == 0) {
 				error = true;
 				Report.error (source_reference, "Element access is not supported for untyped tuples");

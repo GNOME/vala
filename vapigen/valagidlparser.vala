@@ -484,7 +484,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				} else if (nv[0] == "type_arguments") {
 					parse_type_arguments_from_string (return_type, eval (nv[1]));
 				} else if (nv[0] == "instance_pos") {
-					cb.cinstance_parameter_position = eval (nv[1]).to_double ();
+					cb.cinstance_parameter_position = double.parse (eval (nv[1]));
 				} else if (nv[0] == "type_parameters") {
 					foreach (string type_param_name in eval (nv[1]).split (",")) {
 						cb.add_type_parameter (new TypeParameter (type_param_name, current_source_reference));
@@ -629,7 +629,7 @@ public class Vala.GIdlParser : CodeVisitor {
 						} else if (nv[0] == "base_type") {
 							st.base_type = parse_type_string (eval (nv[1]));
 						} else if (nv[0] == "rank") {
-							st.set_rank (eval (nv[1]).to_int ());
+							st.set_rank (int.parse (eval (nv[1])));
 						} else if (nv[0] == "simple_type") {
 							if (eval (nv[1]) == "1") {
 								st.set_simple_type (true);
@@ -2198,10 +2198,10 @@ public class Vala.GIdlParser : CodeVisitor {
 						}
 					} else if (nv[0] == "array_length_pos") {
 						set_array_length_pos = true;
-						array_length_pos = eval (nv[1]).to_double ();
+						array_length_pos = double.parse (eval (nv[1]));
 					} else if (nv[0] == "delegate_target_pos") {
 						set_delegate_target_pos = true;
-						delegate_target_pos = eval (nv[1]).to_double ();
+						delegate_target_pos = double.parse (eval (nv[1]));
 					} else if (nv[0] == "type_name") {
 						p.variable_type = param_type = parse_type_from_string (eval (nv[1]), false);
 					} else if (nv[0] == "ctype") {
@@ -2219,15 +2219,10 @@ public class Vala.GIdlParser : CodeVisitor {
 						} else if (val == "") {
 							p.initializer = new StringLiteral ("\"\"", param_type.source_reference);
 						} else {
-							unowned string endptr;
-							char* val_end = (char*) val + val.length;
-
-							val.to_long (out endptr);
-							if ((long)endptr == (long)val_end) {
+							if (int64.try_parse (val)) {
 								p.initializer = new IntegerLiteral (val, param_type.source_reference);
 							} else {
-								val.to_double (out endptr);
-								if ((long)endptr == (long)val_end) {
+								if (double.try_parse (val)) {
 									p.initializer = new RealLiteral (val, param_type.source_reference);
 								} else {
 									if (val.has_prefix ("\"") && val.has_suffix ("\"")) {

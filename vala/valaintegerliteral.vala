@@ -78,7 +78,7 @@ public class Vala.IntegerLiteral : Literal {
 			value = value.substring (0, value.length - 1);
 		}
 		
-		int64 n = value.to_int64 ();
+		int64 n = int64.parse (value);
 		if (!u && n > 0x7fffffff) {
 			// value doesn't fit into signed 32-bit
 			l = 2;

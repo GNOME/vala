@@ -99,7 +99,7 @@ public class Vala.Attribute : CodeNode {
 			return 0;
 		}
 
-		return value.to_int ();
+		return int.parse (value);
 	}
 
 	/**
@@ -115,7 +115,7 @@ public class Vala.Attribute : CodeNode {
 			return 0;
 		}
 
-		return value.to_double ();
+		return double.parse (value);
 	}
 
 	/**
@@ -125,6 +125,6 @@ public class Vala.Attribute : CodeNode {
 	 * @return     boolean value
 	 */
 	public bool get_bool (string name) {
-		return (args.get (name) == "true");
+		return bool.parse (args.get (name));
 	}
 }

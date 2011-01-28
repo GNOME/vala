@@ -202,7 +202,7 @@ public class Vala.GirParser : CodeVisitor {
 		public int get_integer (ArgumentType arg) {
 			var lit = get_expression (arg) as IntegerLiteral;
 			if (lit != null) {
-				return lit.value.to_int ();
+				return int.parse (lit.value);
 			}
 
 			return 0;
@@ -1630,10 +1630,10 @@ public class Vala.GirParser : CodeVisitor {
 		string closure = reader.get_attribute ("closure");
 		string destroy = reader.get_attribute ("destroy");
 		if (closure != null && &closure_idx != null) {
-			closure_idx = closure.to_int ();
+			closure_idx = int.parse (closure);
 		}
 		if (destroy != null && &destroy_idx != null) {
-			destroy_idx = destroy.to_int ();
+			destroy_idx = int.parse (destroy);
 		}
 
 		next ();
@@ -1690,7 +1690,7 @@ public class Vala.GirParser : CodeVisitor {
 			if (!(type_name == "GLib.Array" || type_name == "GLib.PtrArray")) {
 				if (reader.get_attribute ("length") != null
 				    && &array_length_index != null) {
-					array_length_index = reader.get_attribute ("length").to_int ();
+					array_length_index = int.parse (reader.get_attribute ("length"));
 				}
 				next ();
 				var element_type = parse_type ();

@@ -392,7 +392,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 				if (id == "indent") {
 					expect (TokenType.ASSIGN);
 					expect (TokenType.INTEGER_LITERAL);
-					scanner.indent_spaces = get_last_string().to_int();
+					scanner.indent_spaces = int.parse (get_last_string());
 					expect (TokenType.CLOSE_BRACKET);
 					expect (TokenType.EOL);
 				} else {
@@ -599,7 +599,7 @@ public class Vala.Genie.Parser : CodeVisitor {
  				}
 
 				var length_literal = (IntegerLiteral) parse_literal ();
-				array_length = length_literal.value.to_int ();
+				array_length = int.parse (length_literal.value);
  			}
 			expect (TokenType.CLOSE_BRACKET);
 
