@@ -371,9 +371,9 @@ namespace Gst {
 		[CCode (cname = "GST_STATE_TRANSITION")]
 		public static StateChange transition (State cur, State next);
 		[CCode (cname = "GST_STATE_TRANSITION_CURRENT")]
-		public static State transition_current ();
+		public State transition_current ();
 		[CCode (cname = "GST_STATE_TRANSITION_NEXT")]
-		public static State transition_next ();
+		public State transition_next ();
 	}
 
 	[Compact]
