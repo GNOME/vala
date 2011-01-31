@@ -416,9 +416,24 @@ public class Vala.GIRWriter : CodeVisitor {
 		buffer.append_printf (">\n");
 		indent++;
 
+		write_indent ();
+		buffer.append_printf ("<field name=\"parent_iface\">\n");
+		indent++;
+		write_indent ();
+		buffer.append_printf ("<type name=\"GObject.TypeInterface\" c:type=\"GTypeInterface\"/>\n");
+		indent--;
+		write_indent ();
+		buffer.append_printf ("</field>\n");
+
 		foreach (Method m in iface.get_methods ()) {
 			if (m.is_abstract || m.is_virtual) {
+				write_indent ();
+				buffer.append_printf("<field name=\"%s\">\n", m.name);
+				indent++;
 				write_signature(m, "callback", true);
+				indent--;
+				write_indent ();
+				buffer.append_printf ("</field>\n");
 			}
 		}
 
