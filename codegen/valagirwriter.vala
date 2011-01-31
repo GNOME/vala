@@ -821,11 +821,16 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		write_indent ();
 
+		bool is_struct = m.parent_symbol is Struct;
+		// GI doesn't like constructors that return void type
+		string tag_name = is_struct ? "function" : "constructor";
+
 		if (m.parent_symbol is Class && m == ((Class)m.parent_symbol).default_construction_method ||
 			m.parent_symbol is Struct && m == ((Struct)m.parent_symbol).default_construction_method) {
-			buffer.append_printf ("<constructor name=\"new\" c:identifier=\"%s\"", m.get_cname ());
+			string m_name = is_struct ? "init" : "new";
+			buffer.append_printf ("<%s name=\"%s\" c:identifier=\"%s\"", tag_name, m_name, m.get_cname ());
 		} else {
-			buffer.append_printf ("<constructor name=\"%s\" c:identifier=\"%s\"", m.name, m.get_cname ());
+			buffer.append_printf ("<%s name=\"%s\" c:identifier=\"%s\"", tag_name, m.name, m.get_cname ());
 		}
 
 		if (m.tree_can_fail) {
@@ -842,7 +847,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		indent--;
 		write_indent ();
-		buffer.append_printf ("</constructor>\n");
+		buffer.append_printf ("</%s>\n", tag_name);
 	}
 
 	public override void visit_property (Property prop) {
