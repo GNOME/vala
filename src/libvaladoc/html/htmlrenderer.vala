@@ -299,7 +299,25 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 	}
 
 	public override void visit_paragraph (Paragraph element) {
-		writer.start_tag ("p");
+		//FIXME: the extra-field is just a workarround for the current codegen ...
+		if (element.horizontal_align == null) {
+			writer.start_tag ("p");
+		} else {
+			HorizontalAlign tmp = element.horizontal_align;
+			switch (tmp) {
+			case HorizontalAlign.CENTER:
+				writer.start_tag ("p", {"style", "text-align: center;"});
+				break;
+
+			case HorizontalAlign.RIGHT:
+				writer.start_tag ("p", {"style", "text-align: right;"});
+				break;
+
+			default:
+				writer.start_tag ("p");
+				break;
+			}
+		}
 		element.accept_children (this);
 		writer.end_tag ("p");
 	}
