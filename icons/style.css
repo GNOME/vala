@@ -481,8 +481,8 @@ a.navi_link:hover, a.external_link:hover {
 	text-decoration: underline;
 }
 
-ul.no_bullet > li {
-	list-style-type: none;
+ul.no_bullet li {
+	list-style-type: none;
 }
 
 .main_see_list {
