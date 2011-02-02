@@ -96,7 +96,7 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 		write_taglets (
 			() => {
 				writer.start_tag ("p", {"class", "main_title"});
-				writer.start_tag ("b").text ("Deprecated:").end_tag ("b");
+				writer.start_tag ("b").text ("Deprecated: ").end_tag ("b");
 			},
 			() => {
 				writer.end_tag ("p");
