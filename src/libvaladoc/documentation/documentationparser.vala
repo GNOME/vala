@@ -803,28 +803,38 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		TokenType space = TokenType.SPACE.action (add_text);
 
 		Rule text =
-			Rule.seq ({
-				word,
-				Rule.option ({ space }),
+			Rule.many ({
+				Rule.one_of ({
+					TokenType.BREAK.action ((token) => { add_content_string ("\n"); }),
+					TokenType.CLOSED_BRACE.action (add_text),
+					TokenType.MINUS.action (add_text),
+					TokenType.ALIGN_TOP.action (add_text),
+					TokenType.GREATER_THAN.action (add_text),
+					TokenType.LESS_THAN.action (add_text),
+					TokenType.DOUBLE_PIPE.action (add_text),
+					TokenType.PIPE.action (add_text),
+					TokenType.ALIGN_RIGHT.action (add_text),
+					TokenType.ALIGN_CENTER.action (add_text),
+					TokenType.EQUAL_1.action (add_text),
+					TokenType.EQUAL_2.action (add_text),
+					TokenType.EQUAL_3.action (add_text),
+					TokenType.EQUAL_4.action (add_text),
+					TokenType.EQUAL_5.action (add_text),
+					word
+				}),
+				Rule.option ({ space })
+
+				/*
+				,
 				Rule.option ({
 					Rule.many ({
 						Rule.one_of ({
 							word,
-							TokenType.BREAK.action ((token) => { add_content_string ("\n"); }),
-							TokenType.MINUS.action (add_text),
-							TokenType.EQUAL_1.action (add_text),
-							TokenType.EQUAL_2.action (add_text),
-							TokenType.PIPE.action (add_text),
-							TokenType.DOUBLE_PIPE.action (add_text),
-							TokenType.ALIGN_TOP.action (add_text),
-							TokenType.LESS_THAN.action (add_text),
-							TokenType.GREATER_THAN.action (add_text),
-							TokenType.ALIGN_RIGHT.action (add_text),
-							TokenType.ALIGN_CENTER.action (add_text)
+							TokenType.AROBASE.action (add_text)
 						}),
 						Rule.option ({ space })
 					})
-				})
+				}) */
 			})
 			.set_name ("Text")
 			.set_start (() => { push (_factory.create_text ()); });
@@ -849,38 +859,68 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		Rule inline_taglet =
 			Rule.seq ({
 				TokenType.OPEN_BRACE,
-				TokenType.AROBASE,
-				TokenType.any_word ().action ((token) => {
-					var taglet = _factory.create_taglet (token.to_string ());
-					if (!(taglet is Inline)) {
-						_parser.error ("Invalid taglet in this context: %s".printf (token.to_string ()));
-					}
-					push (taglet);
-					Rule? taglet_rule = taglet.get_parser_rule (multiline_run);
-					if (taglet_rule != null) {
-						_parser.push_rule (Rule.seq ({ TokenType.SPACE, taglet_rule }));
-					}
-				}),
-				TokenType.CLOSED_BRACE
+				Rule.option ({
+					TokenType.AROBASE,
+					TokenType.any_word ().action ((token) => {
+						var taglet = _factory.create_taglet (token.to_string ());
+						if (!(taglet is Inline)) {
+							_parser.error ("Invalid taglet in this context: %s".printf (token.to_string ()));
+						}
+						push (taglet);
+						Rule? taglet_rule = taglet.get_parser_rule (multiline_run);
+						if (taglet_rule != null) {
+							_parser.push_rule (Rule.seq ({ TokenType.SPACE, taglet_rule }));
+						}
+					}),
+					TokenType.CLOSED_BRACE
+				})
+				.set_skip (() => { add_content_string ("{"); })
 			})
 			.set_name ("InlineTaglet");
 
+		//TODO: Find a nicer way to allow empty tags (''run?'' won't work)
 		Rule bold =
-			Rule.seq ({ TokenType.SINGLE_QUOTE_2, run, TokenType.SINGLE_QUOTE_2 })
-				.set_name ("Bold")
-				.set_start (() => { push (_factory.create_run (Run.Style.BOLD)); });
+			Rule.seq ({
+				TokenType.SINGLE_QUOTE_2, 
+				Rule.one_of ({
+					TokenType.SINGLE_QUOTE_2,
+					Rule.seq ({ run, TokenType.SINGLE_QUOTE_2 })
+				})
+			})
+			.set_name ("Bold")
+			.set_start (() => { push (_factory.create_run (Run.Style.BOLD)); });
+
 		Rule italic =
-			Rule.seq ({ TokenType.SLASH_2, run, TokenType.SLASH_2 })
-				.set_name ("Italic")
-				.set_start (() => { push (_factory.create_run (Run.Style.ITALIC)); });
+			Rule.seq ({
+				TokenType.SLASH_2,
+				Rule.one_of ({
+					TokenType.SLASH_2,
+					Rule.seq ({ run, TokenType.SLASH_2 })
+				})
+			})
+			.set_name ("Italic")
+			.set_start (() => { push (_factory.create_run (Run.Style.ITALIC)); });
+
 		Rule underlined =
-			Rule.seq ({ TokenType.UNDERSCORE_2, run, TokenType.UNDERSCORE_2 })
-				.set_name ("Underlined")
-				.set_start (() => { push (_factory.create_run (Run.Style.UNDERLINED)); });
+			Rule.seq ({
+				TokenType.UNDERSCORE_2,
+				Rule.one_of ({
+					TokenType.UNDERSCORE_2,
+					Rule.seq ({ run, TokenType.UNDERSCORE_2 })
+				})
+			})
+			.set_name ("Underlined")
+			.set_start (() => { push (_factory.create_run (Run.Style.UNDERLINED)); });
 		Rule monospace =
-			Rule.seq ({ TokenType.BACK_QUOTE_2, run, TokenType.BACK_QUOTE_2 })
-				.set_name ("Monospace")
-				.set_start (() => { push (_factory.create_run (Run.Style.MONOSPACED)); });
+			Rule.seq ({
+				TokenType.BACK_QUOTE_2,
+				Rule.one_of ({
+					TokenType.BACK_QUOTE_2,
+					Rule.seq ({ run, TokenType.BACK_QUOTE_2 })
+				})
+			})
+			.set_name ("Monospace")
+			.set_start (() => { push (_factory.create_run (Run.Style.MONOSPACED)); });
 
 		Rule embedded =
 			Rule.seq ({
@@ -917,19 +957,44 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 			.set_name ("SourceCode")
 			.set_start (() => { push (_factory.create_source_code ()); });
 
+		Rule run_subrules =
+			Rule.one_of ({
+				text, inline_taglet, bold, italic, underlined, monospace, embedded, link, source_code
+			})
+			.set_reduce (() => {
+				var head = (Inline) pop ();
+				((InlineContent) peek ()).content.add (head);
+			});
+
+		Rule run_arobase =
+			Rule.seq ({
+				TokenType.AROBASE.action (add_text)
+			})
+			.set_reduce (() => {
+				var head = (Inline) pop ();
+				((InlineContent) peek ()).content.add (head);
+			});
+
+		Rule run_optional_space = 
+			Rule.option ({ space })
+			.set_reduce (() => {
+				var head = (Inline) pop ();
+				((InlineContent) peek ()).content.add (head);
+			});
+
+
 		run.set_rule (
-			Rule.many ({
-				Rule.one_of ({
-					text, inline_taglet, bold, italic, underlined, monospace, embedded, link, source_code
-				})
-				.set_reduce (() => {
-					var head = (Inline) pop ();
-					((InlineContent) peek ()).content.add (head);
-				}),
-				Rule.option ({ space })
-				.set_reduce (() => {
-					var head = (Inline) pop ();
-					((InlineContent) peek ()).content.add (head);
+			Rule.seq ({
+				run_subrules,
+				run_optional_space,
+				Rule.option ({
+					Rule.many ({
+						Rule.one_of ({
+							run_arobase,
+							run_subrules
+						}),
+						run_optional_space
+					})
 				})
 			})
 			.set_name ("Run")
@@ -941,7 +1006,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 			Rule.seq ({
 				Rule.option ({
 					Rule.one_of ({
-						TokenType.ALIGN_CENTER.action (() => { ((Paragraph) peek ()).horizontal_align = HorizontalAlign.RIGHT; }),
+						TokenType.ALIGN_CENTER.action (() => { ((Paragraph) peek ()).horizontal_align = HorizontalAlign.CENTER; }),
 						TokenType.ALIGN_RIGHT.action (() => { ((Paragraph) peek ()).horizontal_align = HorizontalAlign.RIGHT; })
 					})
 				}),

@@ -160,12 +160,7 @@ public class Valadoc.WikiScanner : Object, Scanner {
 
 			switch (c) {
 			case '@':
-				if (get_next_char () == '@') {
-					append_char (c);
-					_skip = 1;
-				} else {
-					emit_token (TokenType.AROBASE);
-				}
+				emit_token (TokenType.AROBASE);
 				break;
 
 			case '{':
