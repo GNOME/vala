@@ -25,19 +25,7 @@ using Gee;
 
 
 public class Valadoc.Html.LinkHelper : Object {
-	private static LinkHelper _singleton;
 	private Settings _settings = null;
-
-	private LinkHelper () {
-	}
-
-	public static LinkHelper get_instance () {
-		if (_singleton == null) {
-			_singleton = new LinkHelper ();
-		}
-
-		return _singleton;
-	}
 
 	public string? get_package_link (Api.Package package, Settings settings) {
 		if (!package.is_browsable (settings)) {

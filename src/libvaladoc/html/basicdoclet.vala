@@ -26,11 +26,11 @@ using Valadoc.Api;
 
 
 public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
+	public Html.LinkHelper linker { protected set; get; }
 	public Settings settings { protected set; get; }
 	protected Api.Tree tree;
 	protected HtmlRenderer _renderer;
 	protected Html.MarkupWriter writer;
-	protected Html.LinkHelper linker;
 	protected Html.CssClassResolver cssresolver;
 	protected Charts.Factory image_factory;
 
@@ -95,15 +95,15 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	private const string css_style_content = "site_content";
 	private const string css_style_body = "site_body";
 
-	construct {
-		this.cssresolver = CssClassResolver.get_instance ();
-		this.linker = LinkHelper.get_instance ();
-	}
-
 	public virtual void process (Settings settings, Api.Tree tree) {
-		this.image_factory = new SimpleChartFactory (settings);
 		this.settings = settings;
 		this.tree = tree;
+
+		this.cssresolver = new CssClassResolver ();
+		this.linker = new LinkHelper ();
+
+		_renderer = new HtmlRenderer (settings, this.linker, this.cssresolver);
+		this.image_factory = new SimpleChartFactory (settings, linker);
 	}
 
 

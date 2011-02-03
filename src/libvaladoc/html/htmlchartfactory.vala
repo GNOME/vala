@@ -25,9 +25,11 @@
 public class Valadoc.Html.SimpleChartFactory : Charts.SimpleFactory {
 	private Settings _settings;
 	private Api.Node _container;
+	private LinkHelper _linker;
 
-	public SimpleChartFactory (Settings settings) {
+	public SimpleChartFactory (Settings settings, LinkHelper linker) {
 		_settings = settings;
+		_linker = linker;
 	}
 
 	public override Gvc.Graph create_graph (Api.Node item) {
@@ -40,8 +42,7 @@ public class Valadoc.Html.SimpleChartFactory : Charts.SimpleFactory {
 		base.configure_type (node, item);
 
 		if (_container != null) {
-			var linker = LinkHelper.get_instance ();
-			var link = linker.get_relative_link (_container, item, _settings);
+			var link = _linker.get_relative_link (_container, item, _settings);
 			if (link != null) {
 				node.safe_set ("URL", link, "");
 			}

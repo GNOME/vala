@@ -25,16 +25,16 @@ using Valadoc.Content;
 
 public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 
-	protected BasicDoclet _doclet;
 	protected Documentation? _container;
 	protected unowned MarkupWriter writer;
 	protected Html.CssClassResolver cssresolver;
 	protected LinkHelper linker;
+	protected Settings settings;
 
-	public HtmlRenderer (BasicDoclet doclet) {
-		cssresolver = CssClassResolver.get_instance ();
-		linker = LinkHelper.get_instance ();
-		_doclet = doclet;
+	public HtmlRenderer (Settings settings, LinkHelper linker, CssClassResolver cssresolver) {
+		this.cssresolver = cssresolver;
+		this.settings = settings;
+		this.linker = linker;
 	}
 
 	public void set_container (Documentation? container) {
@@ -54,7 +54,7 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 	}
 
 	private string get_url (Api.Node symbol) {
-		return linker.get_relative_link (_container, symbol, _doclet.settings);
+		return linker.get_relative_link (_container, symbol, settings);
 	}
 
 	private void write_unresolved_symbol_link (string label) {
@@ -218,7 +218,7 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 	public override void visit_embedded (Embedded element) {
 		var caption = element.caption;
 
-		var absolute_path = Path.build_filename (_doclet.settings.path, element.package.name, "img", Path.get_basename (element.url));
+		var absolute_path = Path.build_filename (settings.path, element.package.name, "img", Path.get_basename (element.url));
 		var relative_path = Path.build_filename ("img", Path.get_basename (element.url));
 
 		copy_file (element.url, absolute_path);

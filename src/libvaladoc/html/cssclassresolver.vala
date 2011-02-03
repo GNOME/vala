@@ -25,18 +25,7 @@ using Valadoc.Api;
 
 namespace Valadoc.Html {
 	public class CssClassResolver : Api.Visitor {
-		private static CssClassResolver _singleton = null;
 		private string? css_class = null;
-
-		private CssClassResolver () {
-		}
-
-		public static CssClassResolver get_instance () {
-			if (_singleton == null) {
-				_singleton = new CssClassResolver ();
-			}
-			return _singleton;
-		}
 
 		public string resolve (Api.Node node) {
 			node.accept (this);
