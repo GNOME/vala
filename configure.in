@@ -19,11 +19,6 @@ AC_SUBST(VALAC)
 
 AC_SUBST(VALAFLAGS)
 
-AC_ARG_ENABLE(valadocorg, AS_HELP_STRING([--enable-valadocorg], []), enable_valadocorg=$enableval, enable_valadocorg=no)
-AM_CONDITIONAL(ENABLE_VALADOCORG, test x$enable_valadocorg = xyes)
-
-
-
 
 VALA_PACKAGE=libvala-0.12
 LIBVALA_REQUIRED=0.11.0
@@ -71,7 +66,6 @@ AC_CONFIG_FILES([Makefile
                  src/libvaladoc/Makefile
                  src/doclets/Makefile
                  src/doclets/htm/Makefile
-                 src/doclets/valadoc.org/Makefile
                  src/doclets/devhelp/Makefile
                  src/doclets/gtkdoc/Makefile
                  src/valadoc/Makefile])

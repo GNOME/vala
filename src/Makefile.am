@@ -4,9 +4,9 @@ NULL =
 
 
 SUBDIRS = \
-    libvaladoc \
-    valadoc \
+	libvaladoc \
+	valadoc \
 	doclets \
-    $(NULL)
+	$(NULL)
 
 
