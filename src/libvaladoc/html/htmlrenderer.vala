@@ -57,16 +57,19 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 		return linker.get_relative_link (_container, symbol, _doclet.settings);
 	}
 
-	private void write_symbol_link (Api.Node? symbol, string? label) {
-		if (symbol == null && label != null) {
-			writer.start_tag ("code");
-			writer.text (label);
-			writer.end_tag ("code");
-		} else if (symbol != null) {
-			var url = get_url (symbol);
-			writer.link (url,
-				         (label == null || label == "") ? symbol.get_full_name () : label,
-				         cssresolver.resolve (symbol));
+	private void write_unresolved_symbol_link (string label) {
+		writer.start_tag ("code");
+		writer.text (label);
+		writer.end_tag ("code");
+	}
+
+	private void write_resolved_symbol_link (Api.Node symbol, string? given_label) {
+		var label = (given_label == null || given_label == "") ? symbol.get_full_name () : given_label;
+		var url = get_url (symbol);
+		if (url == null) {
+			write_unresolved_symbol_link (label);
+		} else {
+			writer.link (url, label, cssresolver.resolve (symbol));
 		}
 	}
 
@@ -204,7 +207,11 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 			taglets,
 			(taglet) => {
 				var see = taglet as Taglets.See;
-				write_symbol_link (see.symbol, see.symbol_name);
+				if (see.symbol == null) {
+					write_unresolved_symbol_link (see.symbol_name);
+				} else {
+					write_resolved_symbol_link (see.symbol, see.symbol_name);
+				}
 			});
 	}
 
@@ -236,14 +243,10 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 	}
 
 	public override void visit_symbol_link (SymbolLink element) {
-		if (element.symbol == null || element.symbol == _container
-		    || !element.symbol.is_browsable (_doclet.settings)
-		    || !element.symbol.package.is_browsable (_doclet.settings)) {
-			writer.start_tag ("code");
-			writer.text (element.label);
-			writer.end_tag ("code");
+		if (element.symbol == null) {
+			write_unresolved_symbol_link (element.label);
 		} else {
-			write_symbol_link (element.symbol, element.label);
+			write_resolved_symbol_link (element.symbol, element.label);
 		}
 	}
 
