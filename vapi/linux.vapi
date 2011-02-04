@@ -586,6 +586,201 @@ namespace Linux {
             public uint32 vcount;
             public uint32 hcount;
         }
+
+        [CCode (lower_case_cprefix = "omapfb_", cheader_filename = "linux/omapfb.h")]
+        namespace OMAP {
+            [CCode (cname = "int", cprefix = "OMAPFB_")]
+            public enum IOCTL {
+                MIRROR,
+                SYNC_GFX,
+                VSYNC,
+                SET_UPDATE_MODE,
+                GET_CAPS,
+                GET_UPDATE_MODE,
+                LCD_TEST,
+                CTRL_TEST,
+                UPDATE_WINDOW_OLD,
+                SET_COLOR_KEY,
+                GET_COLOR_KEY,
+                SETUP_PLANE,
+                QUERY_PLANE,
+                UPDATE_WINDOW,
+                SETUP_MEM,
+                QUERY_MEM,
+                WAITFORVSYNC,
+                MEMORY_READ,
+                GET_OVERLAY_COLORMODE,
+                WAITFORGO,
+                GET_VRAM_INFO,
+                SET_TEARSYNC
+            }
+
+            [Flags, CCode (cname = "int", prefix = "OMAPFB_CAPS_")]
+            public enum Caps {
+                GENERIC_MASK,
+                LCDC_MASK,
+                PANEL_MASK,
+
+                MANUAL_UPDATE,
+                TEARSYNC,
+                PLANE_RELOCATE_MEM,
+                PLANE_SCALE,
+                WINDOW_PIXEL_DOUBLE,
+                WINDOW_SCALE,
+                WINDOW_OVERLAY,
+                WINDOW_ROTATE,
+                SET_BACKLIGHT,
+            }
+
+            [Flags, CCode (cname = "int", cprefix = "OMAPFB_FORMAT_FLAG_")]
+            public enum Format {
+                [CCode (cname = "OMAPFB_FORMAT_MASK")]
+                MASK,
+
+                DOUBLE,
+                TEARSYNC,
+                FORCE_VSYNC,
+                ENABLE_OVERLAY,
+                DISABLE_OVERLAY
+            }
+
+            [CCode (cname = "int", cprefix = "OMAPFB_MEMTYPE_")]
+            public enum MemType {
+                SDRAM,
+                SRAM,
+                MAX
+            }
+
+            [CCode (cname = "enum omapfb_color_format", cprefix = "OMAPFB_COLOR_")]
+            public enum ColorFormat {
+                RGB565,
+                YUV422,
+                YUV420,
+                CLUT_8BPP,
+                CLUT_4BPP,
+                CLUT_2BPP,
+                CLUT_1BPP,
+                RGB444,
+                YUY422,
+
+                ARGB16,
+                RGB24U,
+                RGB24P,
+                ARGB32,
+                RGBA32,
+                RGBX32,
+            }
+
+            [CCode (cname = "omapfb_update_window")]
+            public struct UpdateWindow {
+                public uint32 x;
+                public uint32 y;
+                public uint32 width;
+                public uint32 height;
+                public uint32 format;
+                public uint32 out_x;
+                public uint32 out_y;
+                public uint32 out_width;
+                public uint32 out_height;
+            }
+
+            [CCode (cname = "enum omapfb_plane", cprefix = "OMAPFB_PLANE_")]
+            public enum Plane {
+                GFX,
+                VID1,
+                VID2
+            }
+
+            [CCode (cname = "enum omapfb_channel_out", cprefix = "OMAPFB_CHANNEL_OUT_")]
+            public enum ChannelOut {
+                LCD,
+                DIGIT
+            }
+
+            [CCode (cname = "struct omapfb_plane_info")]
+            public struct PlaneInfo {
+                public uint32 pos_x;
+                public uint32 pos_y;
+                public uint8 enabled;
+                public uint8 channel_out;
+                public uint8 mirror;
+                public uint32 out_width;
+                public uint32 out_height;
+            }
+
+            [CCode (cname = "struct omapfb_mem_info")]
+            public struct MemInfo {
+                public uint32 size;
+                public uint8 type;
+            }
+
+            [CCode (cname = "struct omapfb_caps")]
+            public struct Capabilities {
+                public uint32 ctrl;
+                public uint32 plane_color;
+                public uint32 wnd_color;
+            }
+
+            [CCode (cname = "enum omapfb_color_key_type", cprefix = "OMAPFB_COLOR_KEY_")]
+            public enum ColorKeyType {
+                DISABLED,
+                GFX_DST,
+                VID_SRC
+            }
+
+            [CCode (cname = "struct omapfb_color_key")]
+            public struct ColorKey {
+                public uint8 channel_out;
+                public uint32 background;
+                public uint32 trans_key;
+                public uint8 key_type;
+            }
+
+            [CCode (cname = "enum omapfb_update_mode")]
+            public enum UpdateMode {
+                [CCode (cname = "OMAPFB_UPDATE_DISABLED")]
+                DISABLED,
+                [CCode (cname = "OMAPFB_AUTO_UPDATE")]
+                AUTO,
+                [CCode (cname = "OMAPFB_MANUAL_UPDATE")]
+                MANUAL
+            }
+
+            [CCode (cname = "struct omapfb_memory_read")]
+            public struct MemoryRead {
+                public uint16 x;
+                public uint16 y;
+                public uint16 w;
+                public uint16 h;
+                public size_t buffer_size;
+                public void* buffer;
+            }
+
+            [CCode (cname = "struct omapfb_ovl_colormode")]
+            public struct OvlColorMode {
+                public uint8 overlay_idx;
+                public uint8 mode_idx;
+                public uint32 bits_per_pixel;
+                public uint32 nonstd;
+                public Framebuffer.BitField red;
+                public Framebuffer.BitField green;
+                public Framebuffer.BitField blue;
+                public Framebuffer.BitField transp;
+            }
+
+            [CCode (cname = "struct omapfb_vram_info")]
+            public struct VRamInfo {
+                public uint32 total;
+                public uint32 free;
+                public uint32 largest_free_block;
+            }
+
+            [CCode (cname = "struct omapfb_tearsync_info")]
+            public struct TearSyncInfo {
+                public uint8 enabled;
+                public uint16 line;
+            }
+        }
     }
 
     /*
