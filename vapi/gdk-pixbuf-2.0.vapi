@@ -15,7 +15,7 @@ namespace Gdk {
 		public void copy_area (int src_x, int src_y, int width, int height, Gdk.Pixbuf dest_pixbuf, int dest_x, int dest_y);
 		public static GLib.Quark error_quark ();
 		public void fill (uint32 pixel);
-		public Gdk.Pixbuf flip (bool horizontal);
+		public Gdk.Pixbuf? flip (bool horizontal);
 		[CCode (has_construct_function = false)]
 		public Pixbuf.from_data ([CCode (array_length = false)] uchar[] data, Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height, int rowstride, Gdk.PixbufDestroyNotify? destroy_fn);
 		[CCode (has_construct_function = false)]
