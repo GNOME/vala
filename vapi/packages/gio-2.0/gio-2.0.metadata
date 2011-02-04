@@ -292,6 +292,9 @@ GActionGroup::action_enabled_changed has_emitter="1"
 GActionGroup::action_state_changed has_emitter="1"
 
 g_cancellable_set_error_if_cancelled error_types="IOError"
+g_cancellable_connect.callback type_name="GLib.Func<GLib.Cancellable>" ctype="GCallback*" transfer_ownership="1"
+g_cancellable_connect.data hidden="1"
+g_cancellable_connect.data_destroy_func hidden="1"
 
 GDBusAuthObserver::authorize_authenticated_peer has_emitter="1"
 GDBusConnection:closed hidden="1"

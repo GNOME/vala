@@ -158,7 +158,7 @@ namespace GLib {
 		[CCode (has_construct_function = false)]
 		public Cancellable ();
 		public void cancel ();
-		public ulong connect (GLib.Callback callback, void* data, GLib.DestroyNotify data_destroy_func);
+		public ulong connect ([CCode (type = "GCallback*")] owned GLib.Func<GLib.Cancellable> callback);
 		public void disconnect (ulong handler_id);
 		public static unowned GLib.Cancellable get_current ();
 		public int get_fd ();
