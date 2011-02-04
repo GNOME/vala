@@ -4399,7 +4399,7 @@ namespace GLib {
 		public unowned string get_string (out size_t length = null);
 		public string dup_string (out size_t length = null);
 		public unowned string get_bytestring ();
-		public string dup_bytestring ();
+		public string dup_bytestring (out size_t length);
 
 		public Variant.strv (string[] value);
 		[CCode (array_length_type = "size_t")]
