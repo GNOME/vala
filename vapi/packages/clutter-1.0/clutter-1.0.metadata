@@ -238,6 +238,7 @@ clutter_init.argc hidden="1"
 clutter_init.argv is_array="1" is_ref="1" array_length_pos="0.9"
 clutter_init_with_args.argc hidden="1"
 clutter_init_with_args.argv is_array="1" is_ref="1" array_length_pos="0.9"
+clutter_init_with_args.entries is_array="1" no_array_length="1"
 
 clutter_interval_compute_value.value is_out="1"
 clutter_interval_get_final_value.value is_out="1"
