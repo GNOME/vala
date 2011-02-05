@@ -1866,7 +1866,7 @@ namespace Clutter {
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public static GLib.Quark init_error_quark ();
 	[CCode (cheader_filename = "clutter/clutter.h")]
-	public static Clutter.InitError init_with_args ([CCode (array_length_pos = 0.9)] ref unowned string[] argv, string parameter_string, GLib.OptionEntry entries, string translation_domain) throws GLib.Error;
+	public static Clutter.InitError init_with_args ([CCode (array_length_pos = 0.9)] ref unowned string[] argv, string parameter_string, [CCode (array_length = false)] GLib.OptionEntry[] entries, string translation_domain) throws GLib.Error;
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public static uint32 keysym_to_unicode (uint keyval);
 	[CCode (cheader_filename = "clutter/clutter.h")]
