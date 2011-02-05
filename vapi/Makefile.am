@@ -179,6 +179,7 @@ dist_vapi_DATA = \
 	pango.vapi \
 	pangocairo.deps \
 	pangocairo.vapi \
+	pixman-1.vapi \
 	poppler-glib.deps \
 	poppler-glib.vapi \
 	posix.vapi \
