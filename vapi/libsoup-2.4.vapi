@@ -2,6 +2,27 @@
 
 [CCode (cprefix = "Soup", lower_case_cprefix = "soup_")]
 namespace Soup {
+	[CCode (cprefix = "SoupForm", lower_case_cprefix = "soup_form_")]
+	namespace Form {
+		[CCode (cheader_filename = "libsoup/soup.h")]
+		public static GLib.HashTable<string,string> decode (string encoded_form);
+		[CCode (cheader_filename = "libsoup/soup.h")]
+		public static GLib.HashTable<string,string> decode_multipart (Soup.Message msg, string file_control_name, out string filename, out string content_type, out Soup.Buffer file);
+		[CCode (cheader_filename = "libsoup/soup.h")]
+		public static string encode (...);
+		[CCode (cheader_filename = "libsoup/soup.h")]
+		public static string encode_datalist (void* form_data_set);
+		[CCode (cheader_filename = "libsoup/soup.h")]
+		public static string encode_hash (GLib.HashTable<string,string> form_data_set);
+		[CCode (cheader_filename = "libsoup/soup.h")]
+		public static Soup.Message request_new (string method, string uri, ...);
+		[CCode (cheader_filename = "libsoup/soup.h")]
+		public static Soup.Message request_new_from_datalist (string method, string uri, void* form_data_set);
+		[CCode (cheader_filename = "libsoup/soup.h")]
+		public static Soup.Message request_new_from_hash (string method, string uri, GLib.HashTable<string,string> form_data_set);
+		[CCode (cheader_filename = "libsoup/soup.h")]
+		public static Soup.Message request_new_from_multipart (string uri, Soup.Multipart multipart);
+	}
 	[CCode (cprefix = "SoupXMLRPC", lower_case_cprefix = "soup_xmlrpc_")]
 	namespace XMLRPC {
 		[CCode (cprefix = "SOUP_XMLRPC_ERROR_", cheader_filename = "libsoup/soup.h")]
@@ -1031,26 +1052,36 @@ namespace Soup {
 	public static void cookies_to_request (GLib.SList<Soup.Cookie> cookies, Soup.Message msg);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static void cookies_to_response (GLib.SList<Soup.Cookie> cookies, Soup.Message msg);
+	[Deprecated (since = "vala-0.12", replacement = "Form.decode")]
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static GLib.HashTable<string,string> form_decode (string encoded_form);
+	[Deprecated (since = "vala-0.12", replacement = "Form.decode_multipart")]
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static GLib.HashTable<string,string> form_decode_multipart (Soup.Message msg, string file_control_name, out string filename, out string content_type, out Soup.Buffer file);
+	[Deprecated (since = "vala-0.12", replacement = "Form.encode")]
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static unowned string form_encode (...);
+	public static string form_encode (...);
+	[Deprecated (since = "vala-0.12", replacement = "Form.encode_datalist")]
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static unowned string form_encode_datalist (void* form_data_set);
+	public static string form_encode_datalist (void* form_data_set);
+	[Deprecated (since = "vala-0.12", replacement = "Form.encode_hash")]
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static unowned string form_encode_hash (GLib.HashTable<string,string> form_data_set);
+	public static string form_encode_hash (GLib.HashTable<string,string> form_data_set);
+	[Deprecated (since = "vala-0.12")]
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static unowned string form_encode_valist (string first_field, void* args);
+	public static string form_encode_valist (string first_field, void* args);
+	[Deprecated (since = "vala-0.12", replacement = "Form.request_new")]
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static unowned Soup.Message form_request_new (string method, string uri, ...);
+	public static Soup.Message form_request_new (string method, string uri, ...);
+	[Deprecated (since = "vala-0.12", replacement = "Form.request_new_from_datalist")]
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static unowned Soup.Message form_request_new_from_datalist (string method, string uri, void* form_data_set);
+	public static Soup.Message form_request_new_from_datalist (string method, string uri, void* form_data_set);
+	[Deprecated (since = "vala-0.12", replacement = "Form.request_new_from_hash")]
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static unowned Soup.Message form_request_new_from_hash (string method, string uri, GLib.HashTable<string,string> form_data_set);
+	public static Soup.Message form_request_new_from_hash (string method, string uri, GLib.HashTable<string,string> form_data_set);
+	[Deprecated (since = "vala-0.12", replacement = "Form.request_new_from_multipart")]
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static unowned Soup.Message form_request_new_from_multipart (string uri, Soup.Multipart multipart);
+	public static Soup.Message form_request_new_from_multipart (string uri, Soup.Multipart multipart);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static bool header_contains (string header, string token);
 	[CCode (cheader_filename = "libsoup/soup.h")]
