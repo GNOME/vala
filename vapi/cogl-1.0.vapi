@@ -257,11 +257,11 @@ namespace Cogl {
 		public weak float[] inv;
 		public uint type;
 		public uint flags;
-		public Matrix.from_array (float[] array);
+		public Matrix.from_array ([CCode (array_length = false)] float[] array);
 		public void frustum (float left, float right, float bottom, float top, float z_near, float z_far);
 		[CCode (array_length = false)]
 		public unowned float[] get_array ();
-		public bool get_inverse (Cogl.Matrix inverse);
+		public bool get_inverse (out Cogl.Matrix inverse);
 		public Matrix.identity ();
 		[CCode (cname = "cogl_matrix_multiply")]
 		public Matrix.multiply (Cogl.Matrix a, Cogl.Matrix b);
@@ -269,7 +269,7 @@ namespace Cogl {
 		public void perspective (float fov_y, float aspect, float z_near, float z_far);
 		public void rotate (float angle, float x, float y, float z);
 		public void scale (float sx, float sy, float sz);
-		public void transform_point (float x, float y, float z, float w);
+		public void transform_point (ref float x, ref float y, ref float z, ref float w);
 		public void translate (float x, float y, float z);
 	}
 	[CCode (type_id = "COGL_TYPE_TEXTURE_VERTEX", cheader_filename = "cogl/cogl.h")]
