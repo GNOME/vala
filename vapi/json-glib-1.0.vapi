@@ -122,7 +122,7 @@ namespace Json {
 		public void set_boolean_member (string member_name, bool value);
 		public void set_double_member (string member_name, double value);
 		public void set_int_member (string member_name, int64 value);
-		public void set_member (string member_name, Json.Node node);
+		public void set_member (string member_name, owned Json.Node node);
 		public void set_null_member (string member_name);
 		public void set_object_member (string member_name, owned Json.Object value);
 		public void set_string_member (string member_name, string value);
