@@ -89,7 +89,7 @@ namespace Clutter {
 		public unowned Clutter.Animation animatev (ulong mode, uint duration, [CCode (array_length_pos = 2.9)] string[] properties, [CCode (array_length_pos = 2.9)] GLib.Value[] values);
 		public void apply_relative_transform_to_point (Clutter.Actor? ancestor, Clutter.Vertex point, out Clutter.Vertex vertex);
 		[NoWrapper]
-		public virtual void apply_transform (Cogl.Matrix matrix);
+		public virtual void apply_transform (ref Cogl.Matrix matrix);
 		public void apply_transform_to_point (Clutter.Vertex point, out Clutter.Vertex vertex);
 		public unowned Pango.Context create_pango_context ();
 		public unowned Pango.Layout create_pango_layout (string text);
@@ -117,14 +117,14 @@ namespace Clutter {
 		public void get_preferred_size (out unowned float? min_width_p, out unowned float? min_height_p, out unowned float? natural_width_p, out unowned float? natural_height_p);
 		public virtual void get_preferred_width (float for_height, out float min_width_p, out float natural_width_p);
 		public Clutter.RequestMode get_request_mode ();
-		public double get_rotation (out Clutter.RotateAxis axis, out float x, out float y, out float z);
+		public double get_rotation (Clutter.RotateAxis axis, out float x, out float y, out float z);
 		public void get_scale (out double scale_x, out double scale_y);
 		public void get_scale_center (out float center_x, out float center_y);
 		public unowned Clutter.Shader get_shader ();
 		public void get_size (out float width, out float height);
 		public unowned Clutter.Stage get_stage ();
 		public Clutter.TextDirection get_text_direction ();
-		public void get_transformation_matrix (Cogl.Matrix matrix);
+		public Cogl.Matrix get_transformation_matrix ();
 		public void get_transformed_position (out float x, out float y);
 		public void get_transformed_size (out float width, out float height);
 		public Clutter.Gravity get_z_rotation_gravity ();
