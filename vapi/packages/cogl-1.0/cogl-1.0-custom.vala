@@ -176,7 +176,7 @@ namespace Cogl {
 	[CCode (type_id = "COGL_TYPE_MATRIX", cheader_filename = "cogl/cogl.h")]
 	public struct Matrix {
 		[CCode (cname = "cogl_matrix_init_from_array", array_length = false, array_null_terminated = false)]
-		public Matrix.from_array (float[] array);
+		public Matrix.from_array ([CCode (array_length = false)] float[] array);
 		[CCode (cname = "cogl_matrix_init_identity")]
 		public Matrix.identity ();
 		[CCode (cname = "cogl_matrix_multiply")]
