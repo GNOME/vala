@@ -88,7 +88,7 @@ public class Valadoc.Api.FormalParameter : Symbol {
 
 			if (has_default_value) {
 				signature.append ("=");
-				signature.append (((Vala.Parameter) symbol).initializer.to_string ());
+				signature.append_literal (((Vala.Parameter) symbol).initializer.to_string ());
 			}
 		}
 
