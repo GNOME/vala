@@ -718,6 +718,10 @@ namespace Gdk {
 	}
 	[CCode (type_id = "GDK_TYPE_RECTANGLE", cheader_filename = "gdk/gdk.h")]
 	public struct Rectangle {
+		public int x;
+		public int y;
+		public int width;
+		public int height;
 		public bool intersect (Gdk.Rectangle src2, Gdk.Rectangle dest);
 		public void union (Gdk.Rectangle src2, out Gdk.Rectangle dest);
 	}

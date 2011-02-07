@@ -29,6 +29,13 @@ namespace Gdk {
 	public class Bitmap {
 	}
 
+	public struct Rectangle {
+		public int x;
+		public int y;
+		public int width;
+		public int height;
+	}
+
 	[Deprecated (since = "vala-0.12", replacement = "Selection.convert")]
 	public static void selection_convert (Gdk.Window requestor, Gdk.Atom selection, Gdk.Atom target, uint32 time_);
 	[Deprecated (since = "vala-0.12", replacement = "Selection.owner_get")]
