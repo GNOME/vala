@@ -404,7 +404,7 @@ namespace Pixman {
 		public bool supported_source ();
 	}
 
-	[CCode (cname = "pixman_image_t", cprefix = "pixman_", has_type_id = false)]
+	[CCode (cname = "pixman_image_t", cprefix = "pixman_", ref_function = "pixman_image_ref", unref_function = "pixman_image_unref", has_type_id = false)]
 	public class Image {
 		[CCode (cname = "pixman_image_create_solid_fill")]
 		public Image.solid_fill (Pixman.Color color);
