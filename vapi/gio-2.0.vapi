@@ -74,7 +74,7 @@ namespace GLib {
 		public void hold ();
 		public static bool id_is_valid (string application_id);
 		[NoWrapper]
-		public virtual bool local_command_line (string arguments, int exit_status);
+		public virtual bool local_command_line ([CCode (array_length = false, array_null_terminated = true)] string[] arguments, int exit_status);
 		[CCode (cname = "g_application_quit_with_data")]
 		public bool quit (GLib.Variant? platform_data = null);
 		[NoWrapper]
