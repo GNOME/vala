@@ -217,7 +217,7 @@ namespace GLib {
 	[Compact]
 	[CCode (ref_function = "g_dbus_annotation_info_ref", unref_function = "g_dbus_annotation_info_unref", type_id = "G_TYPE_DBUS_ANNOTATION_INFO", cheader_filename = "gio/gio.h")]
 	public class DBusAnnotationInfo {
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public weak GLib.DBusAnnotationInfo[] annotations;
 		public weak string key;
 		public int ref_count;
@@ -227,7 +227,7 @@ namespace GLib {
 	[Compact]
 	[CCode (ref_function = "g_dbus_arg_info_ref", unref_function = "g_dbus_arg_info_unref", type_id = "G_TYPE_DBUS_ARG_INFO", cheader_filename = "gio/gio.h")]
 	public class DBusArgInfo {
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public weak GLib.DBusAnnotationInfo[] annotations;
 		public weak string name;
 		public int ref_count;
@@ -298,15 +298,15 @@ namespace GLib {
 	[Compact]
 	[CCode (ref_function = "g_dbus_interface_info_ref", unref_function = "g_dbus_interface_info_unref", type_id = "G_TYPE_DBUS_INTERFACE_INFO", cheader_filename = "gio/gio.h")]
 	public class DBusInterfaceInfo {
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public weak GLib.DBusAnnotationInfo[] annotations;
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public weak GLib.DBusMethodInfo[] methods;
 		public weak string name;
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public weak GLib.DBusPropertyInfo[] properties;
 		public int ref_count;
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public weak GLib.DBusSignalInfo[] signals;
 		public void generate_xml (uint indent, GLib.StringBuilder string_builder);
 		public unowned GLib.DBusMethodInfo lookup_method (string name);
@@ -385,12 +385,12 @@ namespace GLib {
 	[Compact]
 	[CCode (ref_function = "g_dbus_method_info_ref", unref_function = "g_dbus_method_info_unref", type_id = "G_TYPE_DBUS_METHOD_INFO", cheader_filename = "gio/gio.h")]
 	public class DBusMethodInfo {
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public weak GLib.DBusAnnotationInfo[] annotations;
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public weak GLib.DBusArgInfo[] in_args;
 		public weak string name;
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public weak GLib.DBusArgInfo[] out_args;
 		public int ref_count;
 	}
@@ -417,11 +417,11 @@ namespace GLib {
 	[Compact]
 	[CCode (ref_function = "g_dbus_node_info_ref", unref_function = "g_dbus_node_info_unref", type_id = "G_TYPE_DBUS_NODE_INFO", cheader_filename = "gio/gio.h")]
 	public class DBusNodeInfo {
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public weak GLib.DBusAnnotationInfo[] annotations;
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public weak GLib.DBusInterfaceInfo[] interfaces;
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public weak GLib.DBusNodeInfo[] nodes;
 		public weak string path;
 		public int ref_count;
@@ -433,7 +433,7 @@ namespace GLib {
 	[Compact]
 	[CCode (ref_function = "g_dbus_property_info_ref", unref_function = "g_dbus_property_info_unref", type_id = "G_TYPE_DBUS_PROPERTY_INFO", cheader_filename = "gio/gio.h")]
 	public class DBusPropertyInfo {
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public weak GLib.DBusAnnotationInfo[] annotations;
 		public GLib.DBusPropertyInfoFlags flags;
 		public weak string name;
@@ -511,9 +511,9 @@ namespace GLib {
 	[Compact]
 	[CCode (ref_function = "g_dbus_signal_info_ref", unref_function = "g_dbus_signal_info_unref", type_id = "G_TYPE_DBUS_SIGNAL_INFO", cheader_filename = "gio/gio.h")]
 	public class DBusSignalInfo {
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public weak GLib.DBusAnnotationInfo[] annotations;
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public weak GLib.DBusArgInfo[] args;
 		public weak string name;
 		public int ref_count;
