@@ -5298,11 +5298,11 @@ namespace Gtk {
 		public unowned Gdk.Window get_parent_window ();
 		public unowned Gtk.WidgetPath get_path ();
 		public void get_pointer (out int x, out int y);
-		public virtual void get_preferred_height (int minimum_height, int natural_height);
-		public virtual void get_preferred_height_for_width (int width, int minimum_height, int natural_height);
-		public void get_preferred_size (Gtk.Requisition minimum_size, Gtk.Requisition natural_size);
-		public virtual void get_preferred_width (int minimum_width, int natural_width);
-		public virtual void get_preferred_width_for_height (int height, int minimum_width, int natural_width);
+		public virtual void get_preferred_height (out int minimum_height, out int natural_height);
+		public virtual void get_preferred_height_for_width (int width, out int minimum_height, out int natural_height);
+		public void get_preferred_size (out Gtk.Requisition minimum_size, out Gtk.Requisition natural_size);
+		public virtual void get_preferred_width (out int minimum_width, int natural_width);
+		public virtual void get_preferred_width_for_height (int height, out int minimum_width, out int natural_width);
 		public bool get_realized ();
 		public bool get_receives_default ();
 		public virtual Gtk.SizeRequestMode get_request_mode ();
