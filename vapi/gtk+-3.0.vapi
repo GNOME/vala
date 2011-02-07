@@ -2151,7 +2151,7 @@ namespace Gtk {
 		public IconTheme ();
 		public static void add_builtin_icon (string icon_name, int size, Gdk.Pixbuf pixbuf);
 		public void append_search_path (string path);
-		public Gtk.IconInfo choose_icon ([CCode (array_length = false)] string[] icon_names, int size, Gtk.IconLookupFlags flags);
+		public Gtk.IconInfo choose_icon ([CCode (array_length = false, array_null_terminated = true)] string[] icon_names, int size, Gtk.IconLookupFlags flags);
 		public static GLib.Quark error_quark ();
 		public static unowned Gtk.IconTheme get_default ();
 		public unowned string get_example_icon_name ();
@@ -6191,14 +6191,14 @@ namespace Gtk {
 		public bool backward_visible_word_starts (int count);
 		public bool backward_word_start ();
 		public bool backward_word_starts (int count);
-		public bool begins_tag (Gtk.TextTag tag);
+		public bool begins_tag (Gtk.TextTag? tag);
 		public bool can_insert (bool default_editability);
 		public int compare (Gtk.TextIter rhs);
 		public Gtk.TextIter copy ();
 		public bool editable (bool default_setting);
 		public bool ends_line ();
 		public bool ends_sentence ();
-		public bool ends_tag (Gtk.TextTag tag);
+		public bool ends_tag (Gtk.TextTag? tag);
 		public bool ends_word ();
 		public bool equal (Gtk.TextIter rhs);
 		public bool forward_char ();
