@@ -1,6 +1,6 @@
 /* valaparameter.vala
  *
- * Copyright (C) 2006-2010  Jürg Billeter
+ * Copyright (C) 2006-2011  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
@@ -156,6 +156,9 @@ public class Vala.Parameter : Variable {
 			result.params_array = params_array;
 			result.direction = this.direction;
 			result.initializer = this.initializer;
+			result.no_array_length = this.no_array_length;
+			result.no_delegate_target = this.no_delegate_target;
+			result.array_null_terminated = this.array_null_terminated;
 			return result;
 		} else {
 			return new Parameter.with_ellipsis ();
