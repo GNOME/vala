@@ -1,6 +1,6 @@
 /* valamethodcall.vala
  *
- * Copyright (C) 2006-2010  Jürg Billeter
+ * Copyright (C) 2006-2011  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -157,6 +157,14 @@ public class Vala.MethodCall : Expression {
 
 			if (ma.inner != null) {
 				target_object_type = ma.inner.value_type;
+
+				// foo is relevant instance in foo.bar.connect (on_bar)
+				if (ma.inner.symbol_reference is Signal) {
+					var sig = ma.inner as MemberAccess;
+					if (sig != null) {
+						target_object_type = sig.inner.value_type;
+					}
+				}
 			}
 
 			if (ma.symbol_reference != null && ma.symbol_reference.get_attribute ("Assert") != null) {

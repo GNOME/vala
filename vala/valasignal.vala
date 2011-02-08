@@ -1,6 +1,6 @@
 /* valasignal.vala
  *
- * Copyright (C) 2006-2010  Jürg Billeter
+ * Copyright (C) 2006-2011  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -137,10 +137,31 @@ public class Vala.Signal : Symbol, Lockable {
 
 		generated_delegate.sender_type = sender_param_type;
 
+		bool is_generic = false;
+
 		foreach (Parameter param in parameters) {
 			var actual_param = param.copy ();
 			actual_param.variable_type = actual_param.variable_type.get_actual_type (sender_type, null, node_reference);
 			generated_delegate.add_parameter (actual_param);
+
+			if (actual_param.variable_type is GenericType) {
+				is_generic = true;
+			}
+		}
+
+		if (is_generic) {
+			var cl = (ObjectTypeSymbol) parent_symbol;
+			foreach (var type_param in cl.get_type_parameters ()) {
+				generated_delegate.add_type_parameter (new TypeParameter (type_param.name, type_param.source_reference));
+			}
+
+			// parameter types must refer to the delegate type parameters
+			// instead of to the class type parameters
+			foreach (var param in generated_delegate.get_parameters ()) {
+				if (param.variable_type is GenericType) {
+					param.variable_type.type_parameter = generated_delegate.get_type_parameters ().get (generated_delegate.get_type_parameter_index (param.variable_type.type_parameter.name));
+				}
+			}
 		}
 
 		scope.add (null, generated_delegate);

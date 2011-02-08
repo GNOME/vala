@@ -1,6 +1,6 @@
 /* valasignaltype.vala
  *
- * Copyright (C) 2007-2009  Jürg Billeter
+ * Copyright (C) 2007-2011  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -61,9 +61,20 @@ public class Vala.SignalType : DataType {
 	}
 
 	DelegateType get_handler_type () {
-		var sender_type = new ObjectType ((ObjectTypeSymbol) signal_symbol.parent_symbol);
+		var type_sym = (ObjectTypeSymbol) signal_symbol.parent_symbol;
+
+		var sender_type = new ObjectType (type_sym);
 		var result = new DelegateType (signal_symbol.get_delegate (sender_type, this));
 		result.value_owned = true;
+
+		if (result.delegate_symbol.get_type_parameters ().size > 0) {
+			foreach (var type_param in type_sym.get_type_parameters ()) {
+				var type_arg = new GenericType (type_param);
+				type_arg.value_owned = true;
+				result.add_type_argument (type_arg);
+			}
+		}
+
 		return result;
 	}
 
