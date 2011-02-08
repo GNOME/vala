@@ -202,17 +202,17 @@ public class Vala.GObjectModule : GTypeModule {
 				continue;
 			}
 
-			string prefix = cl.get_lower_case_cname (null);
+			Property base_prop = prop;
 			CCodeExpression cself = new CCodeIdentifier ("self");
 			if (prop.base_property != null) {
 				var base_type = (Class) prop.base_property.parent_symbol;
-				prefix = base_type.get_lower_case_cname (null);
+				base_prop = prop.base_property;
 				cself = transform_expression (cself, new ObjectType (cl), new ObjectType (base_type));
 
 				generate_property_accessor_declaration (prop.base_property.get_accessor, cfile);
 			} else if (prop.base_interface_property != null) {
 				var base_type = (Interface) prop.base_interface_property.parent_symbol;
-				prefix = base_type.get_lower_case_cname (null);
+				base_prop = prop.base_interface_property;
 				cself = transform_expression (cself, new ObjectType (cl), new ObjectType (base_type));
 
 				generate_property_accessor_declaration (prop.base_interface_property.get_accessor, cfile);
@@ -227,7 +227,7 @@ public class Vala.GObjectModule : GTypeModule {
 				cdecl.add_declarator (new CCodeVariableDeclarator (boxed));
 				block.add_statement (cdecl);
 
-				ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_get_%s".printf (prefix, prop.name)));
+				ccall = new CCodeFunctionCall (new CCodeIdentifier (base_prop.get_accessor.get_cname ()));
 				ccall.add_argument (cself);
 				var boxed_addr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (boxed));
 				ccall.add_argument (boxed_addr);
@@ -243,7 +243,7 @@ public class Vala.GObjectModule : GTypeModule {
 					cswitch.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (boxed), prop.get_accessor.value_type, null)));
 				}
 			} else {
-				ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_get_%s".printf (prefix, prop.name)));
+				ccall = new CCodeFunctionCall (new CCodeIdentifier (base_prop.get_accessor.get_cname ()));
 				ccall.add_argument (cself);
 				var array_type = prop.property_type as ArrayType;
 				if (array_type != null && array_type.element_type.data_type == string_type.data_type) {
@@ -308,24 +308,24 @@ public class Vala.GObjectModule : GTypeModule {
 				continue;
 			}
 
-			string prefix = cl.get_lower_case_cname (null);
+			Property base_prop = prop;
 			CCodeExpression cself = new CCodeIdentifier ("self");
 			if (prop.base_property != null) {
 				var base_type = (Class) prop.base_property.parent_symbol;
-				prefix = base_type.get_lower_case_cname (null);
+				base_prop = prop.base_property;
 				cself = transform_expression (cself, new ObjectType (cl), new ObjectType (base_type));
 
 				generate_property_accessor_declaration (prop.base_property.set_accessor, cfile);
 			} else if (prop.base_interface_property != null) {
 				var base_type = (Interface) prop.base_interface_property.parent_symbol;
-				prefix = base_type.get_lower_case_cname (null);
+				base_prop = prop.base_interface_property;
 				cself = transform_expression (cself, new ObjectType (cl), new ObjectType (base_type));
 
 				generate_property_accessor_declaration (prop.base_interface_property.set_accessor, cfile);
 			}
 
 			cswitch.add_statement (new CCodeCaseStatement (new CCodeIdentifier (prop.get_upper_case_cname ())));
-			ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_set_%s".printf (prefix, prop.name)));
+			ccall = new CCodeFunctionCall (new CCodeIdentifier (base_prop.set_accessor.get_cname ()));
 			ccall.add_argument (cself);
 			if (prop.property_type is ArrayType && ((ArrayType)prop.property_type).element_type.data_type == string_type.data_type) {
 				if (!boxed_declared) {
