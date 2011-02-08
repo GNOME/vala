@@ -1,6 +1,6 @@
 /* valainitializerlist.vala
  *
- * Copyright (C) 2006-2010  Jürg Billeter
+ * Copyright (C) 2006-2011  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
@@ -74,6 +74,15 @@ public class Vala.InitializerList : Expression {
 
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_initializer_list (this);
+	}
+
+	public override bool is_constant () {
+		foreach (Expression initializer in initializers) {
+			if (!initializer.is_constant ()) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public override bool is_pure () {

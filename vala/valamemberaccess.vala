@@ -1,6 +1,6 @@
 /* valamemberaccess.vala
  *
- * Copyright (C) 2006-2010  Jürg Billeter
+ * Copyright (C) 2006-2011  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -166,7 +166,11 @@ public class Vala.MemberAccess : Expression {
 	}
 
 	public override bool is_constant () {
+		var method = symbol_reference as Method;
 		if (symbol_reference is Constant) {
+			return true;
+		} else if (method != null &&
+		           (method.binding == MemberBinding.STATIC || prototype_access)) {
 			return true;
 		} else {
 			return false;

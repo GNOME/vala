@@ -1,6 +1,6 @@
 /* valaconstant.vala
  *
- * Copyright (C) 2006-2010  Jürg Billeter
+ * Copyright (C) 2006-2011  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -200,6 +200,12 @@ public class Vala.Constant : Symbol, Lockable {
 				if (!value.value_type.compatible (type_reference)) {
 					error = true;
 					Report.error (source_reference, "Cannot convert from `%s' to `%s'".printf (value.value_type.to_string (), type_reference.to_string ()));
+					return false;
+				}
+
+				if (!value.is_constant ()) {
+					error = true;
+					Report.error (value.source_reference, "Value must be constant");
 					return false;
 				}
 			}

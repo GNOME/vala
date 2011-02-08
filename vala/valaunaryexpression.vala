@@ -1,6 +1,6 @@
 /* valaunaryexpression.vala
  *
- * Copyright (C) 2006-2010  Jürg Billeter
+ * Copyright (C) 2006-2011  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -98,6 +98,15 @@ public class Vala.UnaryExpression : Expression {
 	public override bool is_constant () {
 		if (operator == UnaryOperator.INCREMENT || operator == UnaryOperator.DECREMENT) {
 			return false;
+		}
+
+		if (operator == UnaryOperator.REF || operator == UnaryOperator.OUT) {
+			var field = inner.symbol_reference as Field;
+			if (field != null && field.binding == MemberBinding.STATIC) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 
 		return inner.is_constant ();
