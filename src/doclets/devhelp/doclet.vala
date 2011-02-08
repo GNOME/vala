@@ -40,10 +40,6 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 
 	private Devhelp.MarkupWriter _devhelpwriter;
 
-	construct {
-		_renderer = new HtmlRenderer (this);
-	}
-
 	private string get_path (Api.Node element) {
 		return element.get_full_name () + ".html";
 	}

@@ -324,7 +324,7 @@ public class Valadoc.Api.Tree {
 					context.add_source_file (source_file);
 				} else if (source.has_suffix (".vapi")) {
 					string file_name = Path.get_basename (source);
-					file_name = file_name.ndup (file_name.length - ".vapi".length);
+					file_name = file_name.substring (0, file_name.length - ".vapi".length);
 
 					var vfile = new Vala.SourceFile (context, Vala.SourceFileType.PACKAGE, rpath);
 					Package vdpkg = new Package (vfile, file_name);

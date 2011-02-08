@@ -37,10 +37,6 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 	private const string js_path_wiki = "../scripts.js";
 	private const string js_path = "../scripts.js";
 
-	construct {
-		_renderer = new HtmlRenderer (this);
-	}
-
 	private string get_real_path ( Api.Node element ) {
 		return GLib.Path.build_filename ( this.settings.path, element.package.name, element.get_full_name () + ".html" );
 	}
