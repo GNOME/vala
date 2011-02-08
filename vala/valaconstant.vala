@@ -203,6 +203,21 @@ public class Vala.Constant : Symbol, Lockable {
 					return false;
 				}
 
+				// support translated string constants for efficiency / convenience
+				// even though the expression is not a compile-time constant
+				var call = value as MethodCall;
+				if (call != null) {
+					var method_type = call.call.value_type as MethodType;
+					if (method_type != null && method_type.method_symbol.get_full_name () == "GLib._") {
+						// first argument is string
+						var literal = call.get_argument_list ().get (0) as StringLiteral;
+						if (literal != null) {
+							value = literal;
+							literal.translate = true;
+						}
+					}
+				}
+
 				if (!value.is_constant ()) {
 					error = true;
 					Report.error (value.source_reference, "Value must be constant");

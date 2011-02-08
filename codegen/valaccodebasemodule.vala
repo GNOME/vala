@@ -1,6 +1,6 @@
 /* valaccodebasemodule.vala
  *
- * Copyright (C) 2006-2010  Jürg Billeter
+ * Copyright (C) 2006-2011  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
@@ -3424,6 +3424,17 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public override void visit_string_literal (StringLiteral expr) {
 		set_cvalue (expr, new CCodeConstant.string (expr.value.replace ("\n", "\\n")));
+
+		if (expr.translate) {
+			// translated string constant
+
+			var m = (Method) root_symbol.scope.lookup ("GLib").scope.lookup ("_");
+			add_symbol_declaration (cfile, m, m.get_cname ());
+
+			var translate = new CCodeFunctionCall (new CCodeIdentifier ("_"));
+			translate.add_argument (get_cvalue (expr));
+			set_cvalue (expr, translate);
+		}
 	}
 
 	public override void visit_regex_literal (RegexLiteral expr) {
