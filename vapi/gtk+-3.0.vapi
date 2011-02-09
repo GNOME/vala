@@ -3905,7 +3905,7 @@ namespace Gtk {
 		public unowned Gtk.Style attach (Gdk.Window window);
 		[NoWrapper]
 		public virtual unowned Gtk.Style clone ();
-		public virtual void copy ();
+		public virtual Gtk.Style copy ();
 		public void detach ();
 		[NoWrapper]
 		public virtual void draw_arrow (Cairo.Context cr, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gtk.Widget widget, string detail, Gtk.ArrowType arrow_type, bool fill, int x, int y, int width, int height);
