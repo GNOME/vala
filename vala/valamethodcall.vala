@@ -102,6 +102,25 @@ public class Vala.MethodCall : Expression {
 		}
 	}
 
+	public override bool is_constant () {
+		var method_type = call.value_type as MethodType;
+
+		if (method_type != null) {
+			// N_ and NC_ do not have any effect on the C code,
+			// they are only interpreted by xgettext
+			// this means that it is ok to use them in constant initializers
+			if (method_type.method_symbol.get_full_name () == "GLib.N_") {
+				// first argument is string
+				return argument_list[0].is_constant ();
+			} else if (method_type.method_symbol.get_full_name () == "GLib.NC_") {
+				// second argument is string
+				return argument_list[1].is_constant ();
+			}
+		}
+
+		return false;
+	}
+
 	public override bool is_pure () {
 		return false;
 	}
