@@ -1,0 +1,2 @@
+include/clutter-1.0/clutter-gtk
+lib/libclutter-gtk-0.10.so
