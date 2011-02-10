@@ -1277,11 +1277,20 @@ public class string {
 	[CCode (cname = "g_strndup")]
 	public string ndup (size_t n);
 
+	[CCode (cname = "strnlen")]
+	static long strnlen (char* str, size_t maxlen);
 	[CCode (cname = "g_strndup")]
 	static string strndup (char* str, size_t n);
 
 	public string substring (long offset, long len = -1) {
-		long string_length = this.length;
+		long string_length;
+		if (offset >= 0 && len >= 0) {
+			// avoid scanning whole string
+			string_length = strnlen ((char*) this, offset + len);
+		} else {
+			string_length = this.length;
+		}
+
 		if (offset < 0) {
 			offset = string_length + offset;
 			GLib.return_val_if_fail (offset >= 0, null);
