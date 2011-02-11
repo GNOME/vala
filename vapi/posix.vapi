@@ -809,9 +809,9 @@ namespace Posix {
 	}
 
 	[CCode (cheader_filename = "poll.h")]
-	public int poll (pollfd fds, nfds_t nfds, int timeout);
+	public int poll (pollfd[] fds, int timeout);
 	[CCode (cheader_filename = "poll.h")]
-	public int ppoll (pollfd fds, nfds_t nfds, timespec? timeout, sigset_t? sigmask);
+	public int ppoll (pollfd[] fds, timespec? timeout, sigset_t? sigmask);
 
 	[Compact]
 	[CCode (cname = "struct passwd", cheader_filename = "pwd.h")]
