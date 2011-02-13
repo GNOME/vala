@@ -68,7 +68,7 @@ public class Valadoc.ErrorReporter : Object {
 		this.stream.printf ("%s:%lu.%lu-%lu.%lu: %s: %s\n", file, line, startpos, line, endpos, (type == ErrorType.ERROR)? "error" : "warning", msg);
 		if (startpos <= endpos) {
 			this.stream.printf ("%s\n", errline);
-			for (int i = 0; i < errline.length; i++) {
+			for (int i = 0; i < errline.char_count ()+1; i++) {
 				if (errline[i] == '\t') {
 					this.stream.printf ("\t");
 				} else if (i >= startpos - 1 && i < endpos - 1) {

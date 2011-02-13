@@ -30,9 +30,8 @@ public class Valadoc.WikiScanner : Object, Scanner {
 	private Parser _parser;
 
 	private string _content;
-	private int _index;
+	private unowned string _index;
 	private bool _stop;
-	private int _last_index;
 	private int _last_line;
 	private int _last_column;
 	private int _line;
@@ -49,7 +48,6 @@ public class Valadoc.WikiScanner : Object, Scanner {
 
 	public virtual void reset () {
 		_stop = false;
-		_last_index = 0;
 		_last_line = 0;
 		_last_column = 0;
 		_line = 0;
@@ -61,10 +59,11 @@ public class Valadoc.WikiScanner : Object, Scanner {
 		_current_string.erase (0, -1);
 	}
 
-	public void scan (string _content) throws ParserError {
-		this._content = _content;
-		for (_index = 0; !_stop && _index < _content.length; _index++) {
-			unichar c = _content[_index];
+	public void scan (string content) throws ParserError {
+		this._content = content;
+
+		for (_index = _content; !_stop && _index.get_char () != 0; _index = _index.next_char ()) {
+			unichar c = _index.get_char ();
 			accept (c);
 		}
 	}
@@ -90,24 +89,28 @@ public class Valadoc.WikiScanner : Object, Scanner {
 	}
 
 	public virtual string get_line_content () {
-		int i = _index;
-		while (i > 0 && _content[i-1] != '\n') {
-			i--;
-		}
 		StringBuilder builder = new StringBuilder ();
-		while (i < _content.length && _content[i] != '\n') {
-			unichar c = _content[i++];
+		weak string line_start = _index;
+		unichar c;
+
+		while ((char*) line_start > (char*) _content && line_start.prev_char ().get_char () != '\n') {
+			line_start = line_start.prev_char ();
+		}
+
+		while ((c = line_start.get_char ()) != '\n' && c != '\0') {
 			if (c == '\t') {
-				builder.append (" ");
+				builder.append_c (' ');
 			} else {
 				builder.append_unichar (c);
 			}
+			line_start = line_start.next_char ();
 		}
+
 		return builder.str;
 	}
 
 	protected unichar get_next_char (int offset = 1) {
-		return _content[_index + offset];
+		return _index.get_char (_index.index_of_nth_char (offset));
 	}
 
 	protected virtual void accept (unichar c) throws ParserError {
@@ -314,7 +317,6 @@ public class Valadoc.WikiScanner : Object, Scanner {
 			_parser.accept_token (new Token.from_word (_current_string.str, get_begin (), get_end (-1)));
 			_current_string.erase (0, -1);
 
-			_last_index = _index;
 			_last_line = _line;
 			_last_column = _column - 1;
 		}
@@ -325,7 +327,6 @@ public class Valadoc.WikiScanner : Object, Scanner {
 
 		_parser.accept_token (new Token.from_type (type, get_begin (), get_end (_skip)));
 
-		_last_index = _index;
 		_last_line = _line;
 		_last_column = _column;
 	}
