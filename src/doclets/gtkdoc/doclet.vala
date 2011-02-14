@@ -101,6 +101,8 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 		DirUtils.create_with_parents (ccomments_dir, 0755);
 		DirUtils.create_with_parents (cscan_dir, 0755);
 
+		prepare_external_c_files (tree, ccomments_dir);
+
 		find_files (ccomments_dir);
 		if (vala_headers.length <= 0) {
 			warning ("GtkDoc: No vala header found");
@@ -140,6 +142,15 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 		}
 	}
 
+	private void prepare_external_c_files (Api.Tree tree, string comments_dir) {
+		foreach (string filename in tree.get_external_c_files ()) {
+			if (!copy_file (filename, Path.build_filename (comments_dir, Path.get_basename (filename)))) {
+				warning ("GtkDoc: Can't copy %s", filename);
+				return ;
+			}
+		}
+	}
+
 	private void find_files (string comments_dir) {
 		vala_headers = new string[]{};
 		c_headers = new string[]{};
@@ -169,18 +180,6 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 					vala_headers += filename;
 				} else {
 					c_headers += filename;
-				}
-			} else if (filename.has_suffix (".c")) {
-				// copy external C files for documentation
-				if (!is_generated_by_vala (filename)) {
-					try {
-						string contents;
-						FileUtils.get_contents (filename, out contents);
-						FileUtils.set_contents (Path.build_filename (comments_dir, Path.get_basename (filename)), contents);
-					} catch (Error e) {
-						warning ("GtkDoc: Can't copy %s: %s", filename, e.message);
-						return;
-					}
 				}
 			}
 		}
