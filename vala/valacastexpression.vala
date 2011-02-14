@@ -1,6 +1,6 @@
 /* valacastexpression.vala
  *
- * Copyright (C) 2006-2010  Jürg Billeter
+ * Copyright (C) 2006-2011  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -163,5 +163,9 @@ public class Vala.CastExpression : Expression {
 
 	public override void get_used_variables (Collection<LocalVariable> collection) {
 		inner.get_used_variables (collection);
+	}
+
+	public override bool is_constant () {
+		return inner.is_constant ();
 	}
 }
