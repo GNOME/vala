@@ -88,7 +88,11 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 	}
 
 	public override void visit_symbol_link (SymbolLink sl) {
-		current_builder.append (get_docbook_link (sl.symbol, is_dbus) ?? sl.label);
+		if (sl.symbol != null) {
+			current_builder.append (get_docbook_link (sl.symbol, is_dbus) ?? sl.label);
+		} else {
+			current_builder.append (sl.label);
+		}
 	}
   
 	public override void visit_list (Content.List list) {
@@ -242,7 +246,11 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 		} else if (t is Taglets.See) {
 			var see = (Taglets.See)t;
 			var see_also = this.see_also; // vala bug
-			see_also += get_docbook_link (see.symbol, is_dbus) ?? see.symbol_name;
+			if (see.symbol != null) {
+				see_also += get_docbook_link (see.symbol, is_dbus) ?? see.symbol_name;
+			} else {
+				see_also += see.symbol_name;
+			}
 			this.see_also = see_also;
 		} else if (t is Taglets.Link) {
 			((Taglets.Link)t).produce_content().accept (this);
