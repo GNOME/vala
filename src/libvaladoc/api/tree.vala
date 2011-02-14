@@ -29,6 +29,7 @@ private Valadoc.Api.Class glib_error = null;
 
 public class Valadoc.Api.Tree {
 	private Deque<Node> unbrowsable_documentation_dependencies = new LinkedList<Node>();
+	private ArrayList<string> external_c_files = new ArrayList<string>();
 	private ArrayList<Package> packages = new ArrayList<Package>();
 	private Package source_package = null;
 	private Settings settings;
@@ -44,6 +45,10 @@ public class Valadoc.Api.Tree {
 	public WikiPageTree? wikitree {
 		private set;
 		get;
+	}
+
+	public Collection<string> get_external_c_files () {
+		return external_c_files.read_only_view;
 	}
 
 	public Collection<Package> get_package_list () {
@@ -333,6 +338,7 @@ public class Valadoc.Api.Tree {
 					add_deps (Path.build_filename (Path.get_dirname (source), "%s.deps".printf (file_name)), file_name);
 				} else if (source.has_suffix (".c")) {
 					context.add_c_source_file (rpath);
+					external_c_files.add (rpath);
 				} else {
 					Vala.Report.error (null, "%s is not a supported source file type. Only .vala, .vapi, .gs, and .c files are supported.".printf (source));
 				}
