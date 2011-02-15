@@ -5382,10 +5382,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				var decl = get_temp_variable (expression_type, expression_type.value_owned, expression_type, false);
 				emit_temp_var (decl);
 
-				var ccomma = new CCodeCommaExpression ();
-				ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (decl.name), cexpr));
-				ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (decl.name)));
-				cexpr = ccomma;
+				ccode.add_assignment (get_variable_cexpression (decl.name), cexpr);
+				cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (decl.name));
 			}
 		} else if (unboxing) {
 			// unbox value
