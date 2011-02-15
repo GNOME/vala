@@ -680,7 +680,37 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 	}
 
 	TargetValue load_variable (Variable variable, TargetValue value) {
-		return value;
+		var result = (GLibValue) value;
+		var array_type = result.value_type as ArrayType;
+		if (array_type != null) {
+			if (variable.array_null_terminated) {
+				requires_array_length = true;
+				var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
+				len_call.add_argument (result.cvalue);
+
+				result.array_length_cvalues = null;
+				result.append_array_length_cvalue (len_call);
+			} else if (variable.has_array_length_cexpr) {
+				var length_expr = new CCodeConstant (variable.get_array_length_cexpr ());
+
+				result.array_length_cvalues = null;
+				result.append_array_length_cvalue (length_expr);
+			} else if (variable.no_array_length) {
+				result.array_length_cvalues = null;
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					result.append_array_length_cvalue (new CCodeConstant ("-1"));
+				}
+			} else if (variable.array_length_type != null) {
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					// cast if variable does not use int for array length
+					result.array_length_cvalues[dim - 1] = new CCodeCastExpression (result.array_length_cvalues[dim - 1], "gint");
+				}
+			}
+		} else if (result.value_type is DelegateType) {
+			result.delegate_target_destroy_notify_cvalue = new CCodeConstant ("NULL");
+		}
+		result.value_type.value_owned = false;
+		return result;
 	}
 
 	/* Returns lvalue access to the given symbol */
@@ -696,38 +726,11 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 
 	/* Returns unowned access to the given local variable */
 	public override TargetValue load_local (LocalVariable local) {
-		var result = (GLibValue) get_local_cvalue (local);
-		if (local.variable_type is DelegateType) {
-			result.delegate_target_destroy_notify_cvalue = new CCodeConstant ("NULL");
-		}
-		result.value_type.value_owned = false;
-		return load_variable (local, result);
+		return load_variable (local, get_local_cvalue (local));
 	}
 
 	/* Returns unowned access to the given parameter */
 	public override TargetValue load_parameter (Parameter param) {
-		var result = (GLibValue) get_parameter_cvalue (param);
-		if (result.value_type is DelegateType) {
-			result.delegate_target_destroy_notify_cvalue = new CCodeConstant ("NULL");
-		}
-		if (result.value_type is ArrayType) {
-			if (param.array_null_terminated) {
-				string name = param.name;
-				if (param.direction == ParameterDirection.OUT) {
-					name = "_" + name;
-				}
-				var carray_expr = get_variable_cexpression (name);
-				requires_array_length = true;
-				var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
-				len_call.add_argument (carray_expr);
-				result.append_array_length_cvalue (len_call);
-			} else if (param.no_array_length) {
-				for (int dim = 1; dim <= ((ArrayType) result.value_type).rank; dim++) {
-					result.append_array_length_cvalue (new CCodeConstant ("-1"));
-				}
-			}
-		}
-		result.value_type.value_owned = false;
-		return load_variable (param, result);
+		return load_variable (param, get_parameter_cvalue (param));
 	}
 }
