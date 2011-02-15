@@ -135,22 +135,22 @@ namespace Gtkdoc.DBus {
 			return to_docbook_id (name);
 		}
 
-		public bool write (Settings settings) {
+		public bool write (Settings settings, ErrorReporter reporter) {
 			var xml_dir = Path.build_filename (settings.path, "xml");
 			DirUtils.create_with_parents (xml_dir, 0777);
 
 			var xml_file = Path.build_filename (xml_dir, "%s.xml".printf (to_docbook_id (name)));
 			var writer = new TextWriter (xml_file, "w");
 			if (!writer.open ()) {
-				warning ("GtkDoc: unable to open %s for writing", writer.filename);
+				reporter.simple_error ("GtkDoc: unable to open %s for writing".printf (writer.filename));
 				return false;
 			}
-			writer.write_line (to_string ());
+			writer.write_line (to_string (reporter));
 			writer.close ();
 			return true;
 		}
 
-		public string to_string () {
+		public string to_string (ErrorReporter reporter) {
 			/* compute minimum indent for methods */
 			var method_indent = 0;
 			foreach (var method in methods) {
@@ -236,7 +236,7 @@ namespace Gtkdoc.DBus {
 <programlisting>%s
 </programlisting>
 %s
-</refsect2>""", docbook_id, method.get_docbook_id (), method.name, method.to_string (method_indent, false), method.comment != null ? method.comment.to_docbook () : "");
+</refsect2>""", docbook_id, method.get_docbook_id (), method.name, method.to_string (method_indent, false), method.comment != null ? method.comment.to_docbook (reporter) : "");
 				}
 
 				builder.append ("</refsect1>");
@@ -257,7 +257,7 @@ namespace Gtkdoc.DBus {
 <programlisting>%s
 </programlisting>
 %s
-</refsect2>""", docbook_id, sig.get_docbook_id (), sig.name, sig.to_string (signal_indent, false), sig.comment != null ? sig.comment.to_docbook () : "");
+</refsect2>""", docbook_id, sig.get_docbook_id (), sig.name, sig.to_string (signal_indent, false), sig.comment != null ? sig.comment.to_docbook (reporter) : "");
 				}
 
 				builder.append ("</refsect1>");

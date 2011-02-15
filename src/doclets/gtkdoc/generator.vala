@@ -35,6 +35,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 
 	public Gee.List<DBus.Interface> dbus_interfaces = new Gee.LinkedList<DBus.Interface>();
 
+	private ErrorReporter reporter;
 	private Settings settings;
 	private Gee.Map<string, FileData> files_data = new Gee.HashMap<string, FileData>();
 	private string current_cname;
@@ -57,8 +58,9 @@ public class Gtkdoc.Generator : Api.Visitor {
 		}
 	}
 
-	public bool execute (Settings settings, Api.Tree tree) {
+	public bool execute (Settings settings, Api.Tree tree, ErrorReporter reporter) {
 		this.settings = settings;
+		this.reporter = reporter;
 		tree.accept (this);
 		var code_dir = Path.build_filename (settings.path, "ccomments");
 		var sections = Path.build_filename (settings.path, "%s-sections.txt".printf (settings.pkg_name));
@@ -66,7 +68,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 
 		var sections_writer = new TextWriter (sections, "a");
 		if (!sections_writer.open ()) {
-			warning ("GtkDoc: unable to open %s for writing", sections_writer.filename);
+			reporter.simple_error ("GtkDoc: unable to open %s for writing".printf (sections_writer.filename));
 			return false;
 		}
 
@@ -76,7 +78,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 			var cwriter = new TextWriter (Path.build_filename (code_dir, "%s.c".printf (basename)), "w");
 
 			if (!cwriter.open ()) {
-				warning ("GtkDoc: unable to open %s for writing", cwriter.filename);
+				reporter.simple_error ("GtkDoc: unable to open %s for writing".printf (cwriter.filename));
 				return false;
 			}
 
@@ -182,7 +184,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 	}
 
 	private GComment create_gcomment (string symbol, Comment? comment, string[]? returns_annotations = null, bool is_dbus = false) {
-		var converter = new Gtkdoc.CommentConverter (current_method_or_delegate);
+		var converter = new Gtkdoc.CommentConverter (reporter, current_method_or_delegate);
 
 		if (comment != null) {
 			converter.convert (comment, is_dbus);
@@ -247,7 +249,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 			return null;
 		}
 
-		var converter = new Gtkdoc.CommentConverter (current_method_or_delegate);
+		var converter = new Gtkdoc.CommentConverter (reporter, current_method_or_delegate);
 		var header = new Header (name);
 		header.pos = pos;
 
@@ -305,7 +307,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 		set_section_comment (iface.get_filename(), iface.get_cname(), iface.documentation);
 
 		if (current_dbus_interface != null) {
-			current_dbus_interface.write (settings);
+			current_dbus_interface.write (settings, reporter);
 			dbus_interfaces.add (current_dbus_interface);
 		}
 
@@ -337,7 +339,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 		set_section_comment (cl.get_filename(), cl.get_cname(), cl.documentation);
 
 		if (current_dbus_interface != null) {
-			current_dbus_interface.write (settings);
+			current_dbus_interface.write (settings, reporter);
 			dbus_interfaces.add (current_dbus_interface);
 		}
 

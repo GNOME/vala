@@ -41,7 +41,7 @@ namespace Gtkdoc.Config {
 			{ null }
 		};
 
-	public static bool parse (string[] rargs) {
+	public static bool parse (string[] rargs, ErrorReporter reporter) {
 		string[] args = { "gtkdoc" };
 		foreach (var arg in rargs) {
 			args += arg;
@@ -54,8 +54,7 @@ namespace Gtkdoc.Config {
 			unowned string[] gtkdoc_args = args;
 			opt_context.parse (ref gtkdoc_args);
 		} catch (OptionError e) {
-			warning ("GtkDoc: Error: %s", e.message);
-			warning ("GtkDoc: Run '-X --help' to see a full list of available command line options.\n");
+			reporter.simple_error ("GtkDoc: Error: %s\nRun '-X --help' to see a full list of available command line options.".printf (e.message));
 			return false;
 		}
 
@@ -91,7 +90,7 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 	 */
 	public void process (Settings settings, Api.Tree tree, ErrorReporter reporter) {
 		this.settings = settings;
-		if (!Config.parse (settings.pluginargs)) {
+		if (!Config.parse (settings.pluginargs, reporter)) {
 			return;
 		}
 		this.reporter = reporter;
@@ -107,7 +106,7 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 
 		find_files (ccomments_dir);
 		if (vala_headers.length <= 0) {
-			warning ("GtkDoc: No vala header found");
+			reporter.simple_error ("GtkDoc: No vala header found");
 			return;
 		}
 
@@ -127,7 +126,7 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 						  Path.build_filename (settings.path, "%s-sections.txt".printf (settings.pkg_name)));
 
 		generator = new Gtkdoc.Generator ();
-		if (!generator.execute (settings, tree)) {
+		if (!generator.execute (settings, tree, reporter)) {
 			return;
 		}
 
@@ -147,7 +146,7 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 	private void prepare_external_c_files (Api.Tree tree, string comments_dir) {
 		foreach (string filename in tree.get_external_c_files ()) {
 			if (!copy_file (filename, Path.build_filename (comments_dir, Path.get_basename (filename)))) {
-				warning ("GtkDoc: Can't copy %s", filename);
+				reporter.simple_error ("GtkDoc: Can't copy %s".printf (filename));
 				return ;
 			}
 		}
@@ -161,7 +160,7 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 		try {
 			dir = Dir.open (dirname);
 		} catch (Error e) {
-			warning ("GtkDoc: Can't open %s: %s", settings.basedir, e.message);
+			reporter.simple_error ("GtkDoc: Can't open %s: %s".printf (settings.basedir, e.message));
 			return;
 		}
 
@@ -194,9 +193,10 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 		}
 
 		string[] args = { "gtkdoc-scan",
-						"--module", settings.pkg_name,
-						"--output-dir", output_dir,
-						"--rebuild-sections", "--rebuild-types" };
+				  "--module", settings.pkg_name,
+				  "--output-dir", output_dir,
+				  "--rebuild-sections",
+				  "--rebuild-types" };
 
 		foreach (var header in headers) {
 			args += header;
@@ -215,7 +215,7 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 		try {
 			Process.spawn_sync (settings.path, args, null, SpawnFlags.SEARCH_PATH, null, null, null);
 		} catch (Error e) {
-			warning ("gtkdoc-scan: %s", e.message);
+			reporter.simple_error ("gtkdoc-scan: %s".printf (e.message));
 			return false;
 		}
 
@@ -231,7 +231,7 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 
 		string[] pc = { "pkg-config" };
 		foreach (var package in tree.get_package_list()) {
-			if (package.is_package && package_exists (package.name)) {
+			if (package.is_package && package_exists (package.name, reporter)) {
 				pc += package.name;
 			}
 		}
@@ -248,7 +248,7 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 			string cflags;
 			Process.spawn_sync (null, pc_cflags, null, SpawnFlags.SEARCH_PATH, null, out cflags, out stderr, out status);
 			if (status != 0) {
-				warning ("GtkDoc: pkg-config cflags error: %s\n", stderr);
+				reporter.simple_error ("GtkDoc: pkg-config cflags error: %s".printf (stderr));
 				return false;
 			}
 			cflags = cflags.strip ();
@@ -256,7 +256,7 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 			string libs;
 			Process.spawn_sync (null, pc_libs, null, SpawnFlags.SEARCH_PATH, null, out libs, out stderr, out status);
 			if (status != 0) {
-				warning ("GtkDoc: pkg-config libs error: %s\n", stderr);
+				reporter.simple_error ("GtkDoc: pkg-config libs error: %s".printf (stderr));
 				return false;
 			}
 
@@ -268,11 +268,11 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 							  "--output-dir", settings.path };
 
 			string[] env = { "CFLAGS=%s %s".printf (cflags,
-													Environment.get_variable ("CFLAGS") ?? ""),
-							 "LDFLAGS=%s %s %s".printf (libs, library,
-														Environment.get_variable ("LDFLAGS") ?? ""),
-							 "LD_LIBRARY_PATH=%s:%s".printf (Path.get_dirname (library),
-															 Environment.get_variable ("LD_LIBRARY_PATH") ?? "")};
+							Environment.get_variable ("CFLAGS") ?? ""),
+							"LDFLAGS=%s %s %s".printf (libs, library,
+							Environment.get_variable ("LDFLAGS") ?? ""),
+							"LD_LIBRARY_PATH=%s:%s".printf (Path.get_dirname (library),
+							Environment.get_variable ("LD_LIBRARY_PATH") ?? "")};
 			foreach (var evar in Environment.list_variables()) {
 				if (evar != "CFLAGS" && evar != "LDFLAGS" && evar != "LD_LIBRARY_PATH")
 					env += "%s=%s".printf (evar, Environment.get_variable(evar));
@@ -280,7 +280,7 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 
 			Process.spawn_sync (settings.path, args, env, SpawnFlags.SEARCH_PATH, null, null, null);
 		} catch (Error e) {
-			warning ("gtkdoc-scangobj: %s", e.message);
+			reporter.simple_error ("gtkdoc-scangobj: %s".printf (e.message));
 			return false;
 		}
 
@@ -293,18 +293,17 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 		var must_update_main_file = !FileUtils.test (main_file, FileTest.EXISTS);
 
 		var args = new string[] { "gtkdoc-mkdb",
-								  "--module", settings.pkg_name,
-								  "--source-dir", code_dir,
-								  "--output-format", "xml",
-								  "--sgml-mode",
-								  "--main-sgml-file", "%s-docs.xml".printf (settings.pkg_name),
-								  "--name-space", settings.pkg_name };
+					  "--module", settings.pkg_name,
+					  "--source-dir", code_dir,
+					  "--output-format", "xml",
+					  "--sgml-mode",
+					  "--main-sgml-file", "%s-docs.xml".printf (settings.pkg_name),
+					  "--name-space", settings.pkg_name };
 
 		try {
-			Process.spawn_sync (settings.path, args,
-								null, SpawnFlags.SEARCH_PATH, null, null, null);
+			Process.spawn_sync (settings.path, args, null, SpawnFlags.SEARCH_PATH, null, null, null);
 		} catch (Error e) {
-			warning ("gtkdoc-mkdb: %s", e.message);
+			reporter.simple_error ("gtkdoc-mkdb: %s".printf (e.message));
 			return false;
 		}
 
@@ -314,7 +313,7 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 			try {
 				FileUtils.get_contents (main_file, out contents);
 			} catch (Error e) {
-				warning ("GtkDoc: Error while reading main file '%s' contents: %s", main_file, e.message);
+				reporter.simple_error ("GtkDoc: Error while reading main file '%s' contents: %s".printf (main_file, e.message));
 				return false;
 			}
 
@@ -346,7 +345,7 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 			try {
 				FileUtils.set_contents (main_file, contents);
 			} catch (Error e) {
-				warning ("GtkDoc: Error while writing main file '%s' contents: %s", main_file, e.message);
+				reporter.simple_error ("GtkDoc: Error while writing main file '%s' contents: %s".printf (main_file, e.message));
 				return false;
 			}
 		}
@@ -364,24 +363,24 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 
 		try {
 			Process.spawn_sync (html_dir,
-								{"gtkdoc-mkhtml",
-									settings.pkg_name, "../%s-docs.xml".printf (settings.pkg_name)},
-								null, SpawnFlags.SEARCH_PATH, null, null, null);
+						{"gtkdoc-mkhtml",
+						  settings.pkg_name, "../%s-docs.xml".printf (settings.pkg_name)},
+						null, SpawnFlags.SEARCH_PATH, null, null, null);
 		} catch (Error e) {
-			warning ("gtkdoc-mkhtml: %s", e.message);
+			reporter.simple_error ("gtkdoc-mkhtml: %s".printf (e.message));
 			return false;
 		}
 
 		/* fix xrefs for regenerated html */
 		try {
 			Process.spawn_sync (settings.path,
-								{ "gtkdoc-fixxref",
-									"--module", settings.pkg_name,
-									"--module-dir", html_dir,
-									"--html-dir", html_dir },
-								null, SpawnFlags.SEARCH_PATH, null, null, null);
+						{ "gtkdoc-fixxref",
+						  "--module", settings.pkg_name,
+						  "--module-dir", html_dir,
+						  "--html-dir", html_dir },
+						null, SpawnFlags.SEARCH_PATH, null, null, null);
 		} catch (Error e) {
-			warning ("gtkdoc-fixxref: %s", e.message);
+			reporter.simple_error ("gtkdoc-fixxref: %s".printf (e.message));
 			return false;
 		}
 
@@ -391,7 +390,7 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 
 [ModuleInit]
 public Type register_plugin (GLib.TypeModule module) {
-	return typeof ( Gtkdoc.Director );
+	return typeof (Gtkdoc.Director);
 }
 
 

@@ -128,7 +128,7 @@ public class Gtkdoc.GComment {
 		return builder.str;
 	}
 
-	public string to_docbook () {
+	public string to_docbook (Valadoc.ErrorReporter reporter) {
 		/*
 		 * FIXME: this is not how it should be.
 		 * The real solution is to create a comment like gtkdoc-mkdb does.
@@ -149,7 +149,7 @@ public class Gtkdoc.GComment {
 			} else if (header.name == "Since") {
 				since = header.value;
 			} else {
-				warning ("GtkDoc: Unknown versioning tag '%s'", header.name);
+				reporter.simple_warning ("GtkDoc: Unknown versioning tag '%s'".printf (header.name));
 			}
 		}
 

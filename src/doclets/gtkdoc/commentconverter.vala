@@ -37,9 +37,11 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 
 	private StringBuilder current_builder = new StringBuilder ();
 	private bool in_brief_comment = true;
+	private ErrorReporter reporter;
 
-	public CommentConverter (Api.Node? node_reference = null) {
+	public CommentConverter (ErrorReporter reporter, Api.Node? node_reference = null) {
 		this.node_reference = node_reference;
+		this.reporter = reporter;
 	}
 
 	public void convert (Comment comment, bool is_dbus = false) {
@@ -75,7 +77,7 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 
 	public override void visit_headline (Headline hl) {
 		// what to do here?
-		warning ("GtkDoc: Headline elements not supported");
+		reporter.simple_warning ("GtkDoc: Headline elements not supported");
 		current_builder.append ("\n");
 		hl.accept_children (this);
 		current_builder.append ("\n");
@@ -133,7 +135,7 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 			break;
 
 		default:
-			warning ("GtkDoc: unsupported list type: %s", list.bullet.to_string ());
+			reporter.simple_warning ("GtkDoc: unsupported list type: %s".printf (list.bullet.to_string ()));
 			break;
 		}
 
@@ -255,7 +257,7 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 		} else if (t is Taglets.Link) {
 			((Taglets.Link)t).produce_content().accept (this);
 		} else {
-			warning ("GtkDoc: Taglet not supported"); // TODO
+			reporter.simple_warning ("GtkDoc: Taglet not supported"); // TODO
 		}
 		current_builder = (owned)old_builder;
 	}

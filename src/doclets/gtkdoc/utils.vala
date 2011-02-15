@@ -163,7 +163,7 @@ namespace Gtkdoc {
 		return name.replace(".", "-").replace("_", "-");
 	}
 
-	public bool package_exists (string package_name) {
+	public bool package_exists (string package_name, ErrorReporter reporter) {
 		// copied from vala/codegen/valaccodecompiler.vala
 		string pc = "pkg-config --exists " + package_name;
 		int exit_status;
@@ -172,7 +172,7 @@ namespace Gtkdoc {
 			Process.spawn_command_line_sync (pc, null, null, out exit_status);
 			return (0 == exit_status);
 		} catch (SpawnError e) {
-			warning ("GtkDoc: Error pkg-config --exists %s: %s", package_name, e.message);
+			reporter.simple_warning ("GtkDoc: Error pkg-config --exists %s: %s".printf (package_name, e.message));
 			return false;
 		}
 	}
