@@ -2162,8 +2162,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				var instance = get_variable_cexpression (get_variable_cname (temp_decl.name));
 
-				var ccomma = new CCodeCommaExpression ();
-
 				var field_it = st.get_fields ().iterator ();
 				foreach (Expression expr in list.get_initializers ()) {
 					Field field = null;
@@ -2184,11 +2182,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					}
 
 					var lhs = new CCodeMemberAccess (instance, field.get_cname ());;
-					ccomma.append_expression (new CCodeAssignment (lhs, cexpr));
+					ccode.add_assignment (lhs, cexpr);
 				}
 
-				ccomma.append_expression (instance);
-				set_cvalue (list, ccomma);
+				set_cvalue (list, instance);
 			}
 		} else {
 			var clist = new CCodeInitializerList ();
