@@ -37,7 +37,7 @@ namespace Gtkdoc.Config {
 			{ "ignore-headers", 'x', 0, OptionArg.FILENAME_ARRAY, ref ignore_headers, "A list of header files to not scan", "FILES" },
 			{ "deprecated-guards", 'd', 0, OptionArg.STRING, ref deprecated_guards, "A |-separated list of symbols used as deprecation guards", "GUARDS" },
 			{ "ignore-decorators", 0, 0, OptionArg.STRING, ref ignore_decorators, "A |-separated list of addition decorators in declarations that should be ignored", "DECS" },
-			{ "nohtml", 0, 0, OptionArg.NONE, ref nohtml, "Disable HTML generation", null },
+			{ "no-html", 0, 0, OptionArg.NONE, ref nohtml, "Disable HTML generation", null },
 			{ null }
 		};
 
