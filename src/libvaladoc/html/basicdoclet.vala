@@ -95,7 +95,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	private const string css_style_content = "site_content";
 	private const string css_style_body = "site_body";
 
-	public virtual void process (Settings settings, Api.Tree tree) {
+	public virtual void process (Settings settings, Api.Tree tree, ErrorReporter reporter) {
 		this.settings = settings;
 		this.tree = tree;
 

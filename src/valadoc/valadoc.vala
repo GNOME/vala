@@ -220,7 +220,7 @@ public class ValaDoc : Object {
 			return quit (reporter);
 		}
 
-		modules.doclet.process (settings, doctree);
+		modules.doclet.process (settings, doctree, reporter);
 		return quit (reporter);
 	}
 

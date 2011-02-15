@@ -26,5 +26,5 @@ using Gee;
 public delegate Type Valadoc.DocletRegisterFunction (GLib.TypeModule module);
 
 public interface Valadoc.Doclet : GLib.Object {
-	public abstract void process (Settings settings, Api.Tree tree);
+	public abstract void process (Settings settings, Api.Tree tree, ErrorReporter reporter);
 }

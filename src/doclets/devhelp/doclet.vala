@@ -53,8 +53,8 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 	}
 
 
-	public override void process (Settings settings, Api.Tree tree) {
-		base.process (settings, tree);
+	public override void process (Settings settings, Api.Tree tree, ErrorReporter reporter) {
+		base.process (settings, tree, reporter);
 		DirUtils.create (this.settings.path, 0777);
 		write_wiki_pages (tree, css_path_wiki, js_path_wiki, Path.build_filename (this.settings.path, this.settings.pkg_name, "content"));
 		tree.accept (this);

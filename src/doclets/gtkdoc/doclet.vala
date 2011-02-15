@@ -74,6 +74,7 @@ namespace Gtkdoc.Config {
 
 
 public class Gtkdoc.Director : Valadoc.Doclet, Object {
+	private ErrorReporter reporter;
 	private Settings settings;
 	private Api.Tree tree;
 	private Gtkdoc.Generator generator;
@@ -88,11 +89,12 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 	 * Done. Now we have -decl.txt of the whole code and -sections.txt containing C sections
 	 * and Vala sections.
 	 */
-	public void process (Settings settings, Api.Tree tree) {
+	public void process (Settings settings, Api.Tree tree, ErrorReporter reporter) {
 		this.settings = settings;
 		if (!Config.parse (settings.pluginargs)) {
 			return;
 		}
+		this.reporter = reporter;
 		this.tree = tree;
 
 		var ccomments_dir = Path.build_filename (settings.path, "ccomments");
