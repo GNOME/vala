@@ -2110,9 +2110,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	
 		if (rhs != null) {
-			if (has_simple_struct_initializer (local)) {
-				ccode.add_expression (rhs);
-			} else {
+			if (!has_simple_struct_initializer (local)) {
 				store_local (local, local.initializer.target_value, true);
 			}
 		}
@@ -3146,19 +3144,15 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		 * we unref temporary variables at the end of a full
 		 * expression
 		 */
-		if (((List<LocalVariable>) temp_ref_vars).size == 0) {
+		if (temp_ref_vars.size == 0) {
 			/* nothing to do without temporary variables */
 			return;
 		}
 
-		var expr_list = new CCodeCommaExpression ();
-
 		LocalVariable full_expr_var = null;
 
 		var local_decl = expr.parent_node as LocalVariable;
-		if (local_decl != null && has_simple_struct_initializer (local_decl)) {
-			expr_list.append_expression (get_cvalue (expr));
-		} else {
+		if (!(local_decl != null && has_simple_struct_initializer (local_decl))) {
 			var expr_type = expr.value_type;
 			if (expr.target_type != null) {
 				expr_type = expr.target_type;
@@ -3167,19 +3161,17 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			full_expr_var = get_temp_variable (expr_type, true, expr, false);
 			emit_temp_var (full_expr_var);
 		
-			expr_list.append_expression (new CCodeAssignment (get_variable_cexpression (full_expr_var.name), get_cvalue (expr)));
+			ccode.add_assignment (get_variable_cexpression (full_expr_var.name), get_cvalue (expr));
 		}
 		
 		foreach (LocalVariable local in temp_ref_vars) {
-			expr_list.append_expression (destroy_variable (local));
+			ccode.add_expression (destroy_variable (local));
 		}
 
 		if (full_expr_var != null) {
-			expr_list.append_expression (get_variable_cexpression (full_expr_var.name));
+			set_cvalue (expr, get_variable_cexpression (full_expr_var.name));
 		}
 
-		set_cvalue (expr, expr_list);
-		
 		temp_ref_vars.clear ();
 	}
 	
@@ -4432,7 +4424,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var local = expr.parent_node as LocalVariable;
 		if (local != null && has_simple_struct_initializer (local)) {
 			// no temporary variable necessary
-			set_cvalue (expr, creation_expr);
+			ccode.add_expression (creation_expr);
+			set_cvalue (expr, instance);
 			return;
 		} else if (instance != null) {
 			if (expr.type_reference.data_type is Struct) {
