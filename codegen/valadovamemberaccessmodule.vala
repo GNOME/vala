@@ -98,33 +98,7 @@ public abstract class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 			set_cvalue (expr, ccall);
 		} else if (expr.symbol_reference is Field) {
 			var f = (Field) expr.symbol_reference;
-			if (f.binding == MemberBinding.INSTANCE) {
-				var instance_target_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
-
-				var cl = instance_target_type.data_type as Class;
-				bool dova_priv = false;
-				if ((f.access == SymbolAccessibility.PRIVATE || f.access == SymbolAccessibility.INTERNAL)) {
-					dova_priv = true;
-				}
-
-				CCodeExpression inst;
-				if (dova_priv) {
-					var priv_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_PRIVATE".printf (cl.get_upper_case_cname (null))));
-					priv_call.add_argument (pub_inst);
-					inst = priv_call;
-				} else {
-					inst = pub_inst;
-				}
-				if (instance_target_type.data_type.is_reference_type () || (expr.inner != null && expr.inner.value_type is PointerType)) {
-					set_cvalue (expr, new CCodeMemberAccess.pointer (inst, f.get_cname ()));
-				} else {
-					set_cvalue (expr, new CCodeMemberAccess (inst, f.get_cname ()));
-				}
-			} else {
-				generate_field_declaration (f, cfile);
-
-				set_cvalue (expr, new CCodeIdentifier (f.get_cname ()));
-			}
+			expr.target_value = load_field (f, expr.inner);
 		} else if (expr.symbol_reference is EnumValue) {
 			var ev = (EnumValue) expr.symbol_reference;
 
@@ -269,6 +243,46 @@ public abstract class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 		return result;
 	}
 
+	public TargetValue get_field_cvalue (Field f, Expression? instance) {
+		var result = new DovaValue (f.variable_type);
+
+		if (f.binding == MemberBinding.INSTANCE) {
+			CCodeExpression pub_inst = null;
+
+			if (instance != null) {
+				pub_inst = get_cvalue (instance);
+			}
+
+			var instance_target_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
+
+			var cl = instance_target_type.data_type as Class;
+			bool dova_priv = false;
+			if ((f.access == SymbolAccessibility.PRIVATE || f.access == SymbolAccessibility.INTERNAL)) {
+				dova_priv = true;
+			}
+
+			CCodeExpression inst;
+			if (dova_priv) {
+				var priv_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_PRIVATE".printf (cl.get_upper_case_cname (null))));
+				priv_call.add_argument (pub_inst);
+				inst = priv_call;
+			} else {
+				inst = pub_inst;
+			}
+			if (instance_target_type.data_type.is_reference_type () || (instance != null && instance.value_type is PointerType)) {
+				result.cvalue = new CCodeMemberAccess.pointer (inst, f.get_cname ());
+			} else {
+				result.cvalue = new CCodeMemberAccess (inst, f.get_cname ());
+			}
+		} else {
+			generate_field_declaration (f, cfile);
+
+			result.cvalue = new CCodeIdentifier (f.get_cname ());
+		}
+
+		return result;
+	}
+
 	TargetValue load_variable (Variable variable, TargetValue value) {
 		return value;
 	}
@@ -279,6 +293,10 @@ public abstract class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 
 	public TargetValue load_parameter (Parameter param) {
 		return load_variable (param, get_parameter_cvalue (param));
+	}
+
+	public TargetValue load_field (Field field, Expression? instance) {
+		return load_variable (field, get_field_cvalue (field, instance));
 	}
 }
 

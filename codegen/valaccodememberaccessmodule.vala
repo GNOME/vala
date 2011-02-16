@@ -121,188 +121,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			set_cvalue (expr, get_array_length_cexpression (expr.inner, 1));
 		} else if (expr.symbol_reference is Field) {
 			var field = (Field) expr.symbol_reference;
-			if (field.binding == MemberBinding.INSTANCE) {
-				var instance_target_type = get_data_type_for_symbol ((TypeSymbol) field.parent_symbol);
-
-				var cl = instance_target_type.data_type as Class;
-				bool is_gtypeinstance = ((instance_target_type.data_type == cl) && (cl == null || !cl.is_compact));
-
-				CCodeExpression inst;
-				if (is_gtypeinstance && field.access == SymbolAccessibility.PRIVATE) {
-					inst = new CCodeMemberAccess.pointer (pub_inst, "priv");
-				} else {
-					if (cl != null) {
-						generate_class_struct_declaration (cl, cfile);
-					}
-					inst = pub_inst;
-				}
-				if (instance_target_type.data_type.is_reference_type () || (expr.inner != null && expr.inner.value_type is PointerType)) {
-					set_cvalue (expr, new CCodeMemberAccess.pointer (inst, field.get_cname ()));
-				} else {
-					if (inst is CCodeCommaExpression) {
-						var ccomma = inst as CCodeCommaExpression;
-						var inner = ccomma.get_inner ();
-						var last = inner.get (inner.size - 1);
-						ccomma.set_expression (inner.size - 1, new CCodeMemberAccess (last, field.get_cname ()));
-						set_cvalue (expr, ccomma);
-					} else {
-						set_cvalue (expr, new CCodeMemberAccess (inst, field.get_cname ()));
-					}
-				}
-
-				if (array_type != null) {
-					if (field.array_null_terminated) {
-						CCodeExpression carray_expr = null;
-						if (instance_target_type.data_type.is_reference_type () || (expr.inner != null && expr.inner.value_type is PointerType)) {
-							carray_expr = new CCodeMemberAccess.pointer (inst, field.get_cname ());
-						} else {
-							carray_expr = new CCodeMemberAccess (inst, field.get_cname ());
-						}
-
-						requires_array_length = true;
-						var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
-						len_call.add_argument (carray_expr);
-						append_array_length (expr, len_call);
-					} else if (!field.no_array_length) {
-						for (int dim = 1; dim <= array_type.rank; dim++) {
-							CCodeExpression length_expr = null;
-
-							if (field.has_array_length_cexpr) {
-								length_expr = new CCodeConstant (field.get_array_length_cexpr ());
-							} else {
-								string length_cname;
-								if (field.has_array_length_cname) {
-									length_cname = field.get_array_length_cname ();
-								} else {
-									length_cname = get_array_length_cname (field.name, dim);
-								}
-
-								if (((TypeSymbol) field.parent_symbol).is_reference_type ()) {
-									length_expr = new CCodeMemberAccess.pointer (inst, length_cname);
-								} else {
-									length_expr = new CCodeMemberAccess (inst, length_cname);
-								}
-
-								if (field.array_length_type != null) {
-									// cast if field does not use int for array length
-									var parent_expr = expr.parent_node as Expression;
-									if (expr.lvalue) {
-										// don't cast if array is used as lvalue
-									} else if (parent_expr != null && parent_expr.symbol_reference is ArrayLengthField &&
-										   parent_expr.lvalue) {
-										// don't cast if array length is used as lvalue
-									} else {
-										length_expr = new CCodeCastExpression (length_expr, "gint");
-									}
-								}
-							}
-							append_array_length (expr, length_expr);
-						}
-						if (array_type.rank == 1 && field.is_internal_symbol ()) {
-							string size_cname = get_array_size_cname (field.name);
-
-							if (((TypeSymbol) field.parent_symbol).is_reference_type ()) {
-								set_array_size_cvalue (expr.target_value, new CCodeMemberAccess.pointer (inst, size_cname));
-							} else {
-								set_array_size_cvalue (expr.target_value, new CCodeMemberAccess (inst, size_cname));
-							}
-						}
-					} else {
-						for (int dim = 1; dim <= array_type.rank; dim++) {
-							append_array_length (expr, new CCodeConstant ("-1"));
-						}
-					}
-				} else if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
-					string target_cname = get_delegate_target_cname (field.get_cname ());
-					string target_destroy_notify_cname = get_delegate_target_destroy_notify_cname (field.get_cname ());
-
-					set_delegate_target_destroy_notify (expr, new CCodeConstant ("NULL"));
-					if (field.no_delegate_target) {
-						set_delegate_target (expr, new CCodeConstant ("NULL"));
-					} else {
-						if (((TypeSymbol) field.parent_symbol).is_reference_type ()) {
-							set_delegate_target (expr, new CCodeMemberAccess.pointer (inst, target_cname));
-							if (expr.value_type.value_owned) {
-								set_delegate_target_destroy_notify (expr, new CCodeMemberAccess.pointer (inst, target_destroy_notify_cname));
-							}
-						} else {
-							set_delegate_target (expr, new CCodeMemberAccess (inst, target_cname));
-							if (expr.value_type.value_owned) {
-								set_delegate_target_destroy_notify (expr, new CCodeMemberAccess (inst, target_destroy_notify_cname));
-							}
-						}
-					}
-				}
-			} else if (field.binding == MemberBinding.CLASS) {
-				var cl = (Class) field.parent_symbol;
-				var cast = new CCodeFunctionCall (new CCodeIdentifier (cl.get_upper_case_cname (null) + "_CLASS"));
-
-				CCodeExpression klass;
-				if (expr.inner == null) {
-					if (in_static_or_class_context) {
-						// Accessing the field from a static or class constructor
-						klass = new CCodeIdentifier ("klass");
-					} else {
-						// Accessing the field from within an instance method
-						var k = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_GET_CLASS"));
-						k.add_argument (new CCodeIdentifier ("self"));
-						klass = k;
-					}
-				} else {
-					// Accessing the field of an instance
-					var k = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_GET_CLASS"));
-					k.add_argument (get_cvalue (expr.inner));
-					klass = k;
-				}
-				cast.add_argument (klass);
-
-				if (field.access == SymbolAccessibility.PRIVATE) {
-					var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS_PRIVATE".printf (cl.get_upper_case_cname ())));
-					ccall.add_argument (klass);
-					set_cvalue (expr, new CCodeMemberAccess.pointer (ccall, field.get_cname ()));
-				} else {
-					set_cvalue (expr, new CCodeMemberAccess.pointer (cast, field.get_cname ()));
-				}
-
-			} else {
-				generate_field_declaration (field, cfile);
-
-				set_cvalue (expr, new CCodeIdentifier (field.get_cname ()));
-
-				if (array_type != null) {
-					if (field.array_null_terminated) {
-						requires_array_length = true;
-						var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
-						len_call.add_argument (new CCodeIdentifier (field.get_cname ()));
-						append_array_length (expr, len_call);
-					} else if (!field.no_array_length) {
-						for (int dim = 1; dim <= array_type.rank; dim++) {
-							if (field.has_array_length_cexpr) {
-								append_array_length (expr, new CCodeConstant (field.get_array_length_cexpr ()));
-							} else {
-								append_array_length (expr, new CCodeIdentifier (get_array_length_cname (field.get_cname (), dim)));
-							}
-						}
-						if (array_type.rank == 1 && field.is_internal_symbol ()) {
-							set_array_size_cvalue (expr.target_value, new CCodeIdentifier (get_array_size_cname (field.get_cname ())));
-						}
-					} else {
-						for (int dim = 1; dim <= array_type.rank; dim++) {
-							append_array_length (expr, new CCodeConstant ("-1"));
-						}
-					}
-				} else if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
-					set_delegate_target_destroy_notify (expr, new CCodeConstant ("NULL"));
-					if (field.no_delegate_target) {
-						set_delegate_target (expr, new CCodeConstant ("NULL"));
-					} else {
-						set_delegate_target (expr, new CCodeIdentifier (get_delegate_target_cname (field.get_cname ())));
-						if (expr.value_type.value_owned) {
-							set_delegate_target_destroy_notify (expr, new CCodeIdentifier (get_delegate_target_destroy_notify_cname (field.get_cname ())));
-						}
-					}
-				}
-			}
+			expr.target_value = load_field (field, expr.inner);
 		} else if (expr.symbol_reference is EnumValue) {
 			var ev = (EnumValue) expr.symbol_reference;
 
@@ -679,9 +498,156 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 		return result;
 	}
 
+	/* Returns lvalue access to the given field */
+	public TargetValue get_field_cvalue (Field field, Expression? instance) {
+		var result = new GLibValue (field.variable_type.copy ());
+
+		var array_type = field.variable_type as ArrayType;
+		var delegate_type = field.variable_type as DelegateType;
+		if (field.binding == MemberBinding.INSTANCE) {
+			CCodeExpression pub_inst = null;
+
+			if (instance != null) {
+				pub_inst = get_cvalue (instance);
+			}
+
+			var instance_target_type = get_data_type_for_symbol ((TypeSymbol) field.parent_symbol);
+
+			var cl = instance_target_type.data_type as Class;
+			bool is_gtypeinstance = ((instance_target_type.data_type == cl) && (cl == null || !cl.is_compact));
+
+			CCodeExpression inst;
+			if (is_gtypeinstance && field.access == SymbolAccessibility.PRIVATE) {
+				inst = new CCodeMemberAccess.pointer (pub_inst, "priv");
+			} else {
+				if (cl != null) {
+					generate_class_struct_declaration (cl, cfile);
+				}
+				inst = pub_inst;
+			}
+			if (instance_target_type.data_type.is_reference_type () || (instance != null && instance.value_type is PointerType)) {
+				result.cvalue = new CCodeMemberAccess.pointer (inst, field.get_cname ());
+			} else {
+				if (inst is CCodeCommaExpression) {
+					var ccomma = inst as CCodeCommaExpression;
+					var inner = ccomma.get_inner ();
+					var last = inner.get (inner.size - 1);
+					ccomma.set_expression (inner.size - 1, new CCodeMemberAccess (last, field.get_cname ()));
+					result.cvalue = ccomma;
+				} else {
+					result.cvalue = new CCodeMemberAccess (inst, field.get_cname ());
+				}
+			}
+
+			if (array_type != null && !field.no_array_length) {
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					CCodeExpression length_expr = null;
+
+					string length_cname;
+					if (field.has_array_length_cname) {
+						length_cname = field.get_array_length_cname ();
+					} else {
+						length_cname = get_array_length_cname (field.name, dim);
+					}
+
+					if (((TypeSymbol) field.parent_symbol).is_reference_type ()) {
+						length_expr = new CCodeMemberAccess.pointer (inst, length_cname);
+					} else {
+						length_expr = new CCodeMemberAccess (inst, length_cname);
+					}
+
+					result.append_array_length_cvalue (length_expr);
+				}
+				if (array_type.rank == 1 && field.is_internal_symbol ()) {
+					string size_cname = get_array_size_cname (field.name);
+
+					if (((TypeSymbol) field.parent_symbol).is_reference_type ()) {
+						set_array_size_cvalue (result, new CCodeMemberAccess.pointer (inst, size_cname));
+					} else {
+						set_array_size_cvalue (result, new CCodeMemberAccess (inst, size_cname));
+					}
+				}
+			} else if (delegate_type != null && delegate_type.delegate_symbol.has_target && !field.no_delegate_target) {
+				string target_cname = get_delegate_target_cname (field.get_cname ());
+				string target_destroy_notify_cname = get_delegate_target_destroy_notify_cname (field.get_cname ());
+
+				if (((TypeSymbol) field.parent_symbol).is_reference_type ()) {
+					result.delegate_target_cvalue = new CCodeMemberAccess.pointer (inst, target_cname);
+					if (field.variable_type.value_owned) {
+						result.delegate_target_destroy_notify_cvalue = new CCodeMemberAccess.pointer (inst, target_destroy_notify_cname);
+					}
+				} else {
+					result.delegate_target_cvalue = new CCodeMemberAccess (inst, target_cname);
+					if (field.variable_type.value_owned) {
+						result.delegate_target_destroy_notify_cvalue = new CCodeMemberAccess (inst, target_destroy_notify_cname);
+					}
+				}
+			}
+		} else if (field.binding == MemberBinding.CLASS) {
+			var cl = (Class) field.parent_symbol;
+			var cast = new CCodeFunctionCall (new CCodeIdentifier (cl.get_upper_case_cname (null) + "_CLASS"));
+
+			CCodeExpression klass;
+			if (instance == null) {
+				if (in_static_or_class_context) {
+					// Accessing the field from a static or class constructor
+					klass = new CCodeIdentifier ("klass");
+				} else {
+					// Accessing the field from within an instance method
+					var k = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_GET_CLASS"));
+					k.add_argument (new CCodeIdentifier ("self"));
+					klass = k;
+				}
+			} else {
+				// Accessing the field of an instance
+				var k = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_GET_CLASS"));
+				k.add_argument (get_cvalue (instance));
+				klass = k;
+			}
+			cast.add_argument (klass);
+
+			if (field.access == SymbolAccessibility.PRIVATE) {
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS_PRIVATE".printf (cl.get_upper_case_cname ())));
+				ccall.add_argument (klass);
+				result.cvalue = new CCodeMemberAccess.pointer (ccall, field.get_cname ());
+			} else {
+				result.cvalue = new CCodeMemberAccess.pointer (cast, field.get_cname ());
+			}
+
+		} else {
+			generate_field_declaration (field, cfile);
+
+			result.cvalue = new CCodeIdentifier (field.get_cname ());
+
+			if (array_type != null && !field.no_array_length) {
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					string length_cname;
+					if (field.has_array_length_cname) {
+						length_cname = field.get_array_length_cname ();
+					} else {
+						length_cname = get_array_length_cname (field.get_cname (), dim);
+					}
+
+					result.append_array_length_cvalue (new CCodeIdentifier (length_cname));
+				}
+				if (array_type.rank == 1 && field.is_internal_symbol ()) {
+					set_array_size_cvalue (result, new CCodeIdentifier (get_array_size_cname (field.get_cname ())));
+				}
+			} else if (delegate_type != null && delegate_type.delegate_symbol.has_target && !field.no_delegate_target) {
+				result.delegate_target_cvalue = new CCodeIdentifier (get_delegate_target_cname (field.get_cname ()));
+				if (field.variable_type.value_owned) {
+					result.delegate_target_destroy_notify_cvalue = new CCodeIdentifier (get_delegate_target_destroy_notify_cname (field.get_cname ()));
+				}
+			}
+		}
+
+		return result;
+	}
+
 	TargetValue load_variable (Variable variable, TargetValue value) {
 		var result = (GLibValue) value;
 		var array_type = result.value_type as ArrayType;
+		var delegate_type = result.value_type as DelegateType;
 		if (array_type != null) {
 			if (variable.array_null_terminated) {
 				requires_array_length = true;
@@ -706,7 +672,11 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					result.array_length_cvalues[dim - 1] = new CCodeCastExpression (result.array_length_cvalues[dim - 1], "gint");
 				}
 			}
-		} else if (result.value_type is DelegateType) {
+		} else if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
+			if (variable.no_delegate_target) {
+				result.delegate_target_cvalue = new CCodeConstant ("NULL");
+			}
+
 			result.delegate_target_destroy_notify_cvalue = new CCodeConstant ("NULL");
 		}
 		result.value_type.value_owned = false;
@@ -732,5 +702,10 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 	/* Returns unowned access to the given parameter */
 	public override TargetValue load_parameter (Parameter param) {
 		return load_variable (param, get_parameter_cvalue (param));
+	}
+
+	/* Returns unowned access to the given field */
+	public TargetValue load_field (Field field, Expression? instance) {
+		return load_variable (field, get_field_cvalue (field, instance));
 	}
 }
