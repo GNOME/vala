@@ -1092,11 +1092,11 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 					Rule.one_of ({
 						Rule.seq ({
 							TokenType.PIPE,
-							TokenType.any_number ().action ((token) => { ((TableCell) peek ()).colspan = token.to_int (); })
+							TokenType.any_number ().action ((token) => { ((TableCell) peek ()).rowspan = token.to_int (); })
 						}),
 						Rule.seq ({
 							TokenType.MINUS,
-							TokenType.any_number ().action ((token) => { ((TableCell) peek ()).rowspan = token.to_int (); })
+							TokenType.any_number ().action ((token) => { ((TableCell) peek ()).colspan = token.to_int (); })
 						})
 					})
 				}),

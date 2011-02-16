@@ -207,11 +207,7 @@ public class Valadoc.WikiScanner : Object, Scanner {
 				break;
 
 			case '-':
-				if (_last_char.isalnum () || get_next_char ().isalnum ()) {
-					append_char (c);
-				} else {
-					emit_token (TokenType.MINUS);
-				}
+				emit_token (TokenType.MINUS);
 				break;
 
 			case '=':
