@@ -341,7 +341,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 	}
 
 	/* Returns lvalue access to the given local variable */
-	public TargetValue get_local_cvalue (LocalVariable local) {
+	public override TargetValue get_local_cvalue (LocalVariable local) {
 		var result = new GLibValue (local.variable_type.copy ());
 
 		var array_type = local.variable_type as ArrayType;
@@ -395,7 +395,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 	}
 
 	/* Returns access values to the given parameter */
-	public TargetValue get_parameter_cvalue (Parameter param) {
+	public override TargetValue get_parameter_cvalue (Parameter param) {
 		var result = new GLibValue (param.variable_type.copy ());
 		if (param.captured || is_in_coroutine ()) {
 			result.value_type.value_owned = true;
@@ -499,7 +499,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 	}
 
 	/* Returns lvalue access to the given field */
-	public TargetValue get_field_cvalue (Field field, Expression? instance) {
+	public override TargetValue get_field_cvalue (Field field, Expression? instance) {
 		var result = new GLibValue (field.variable_type.copy ());
 
 		var array_type = field.variable_type as ArrayType;
@@ -681,17 +681,6 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 		}
 		result.value_type.value_owned = false;
 		return result;
-	}
-
-	/* Returns lvalue access to the given symbol */
-	public override TargetValue get_variable_cvalue (Variable variable, CCodeExpression? inner = null) {
-		if (variable is LocalVariable) {
-			return get_local_cvalue ((LocalVariable) variable);
-		} else if (variable is Parameter) {
-			return get_parameter_cvalue ((Parameter) variable);
-		} else {
-			assert_not_reached ();
-		}
 	}
 
 	/* Returns unowned access to the given local variable */

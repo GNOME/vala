@@ -111,7 +111,7 @@ public class Vala.GAsyncModule : GSignalModule {
 					bool old_captured = param.captured;
 					param.captured = false;
 
-					freeblock.add_statement (new CCodeExpressionStatement (destroy_variable (param)));
+					freeblock.add_statement (new CCodeExpressionStatement (destroy_parameter (param)));
 
 					param.captured = old_captured;
 				}
@@ -593,7 +593,7 @@ public class Vala.GAsyncModule : GSignalModule {
 		/* free temporary objects */
 
 		foreach (LocalVariable local in temp_ref_vars) {
-			ccode.add_expression (destroy_variable (local));
+			ccode.add_expression (destroy_local (local));
 		}
 
 		temp_ref_vars.clear ();

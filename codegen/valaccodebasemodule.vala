@@ -991,7 +991,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				}
 
 				foreach (LocalVariable local in temp_ref_vars) {
-					ccode.add_expression (destroy_variable (local));
+					ccode.add_expression (destroy_local (local));
 				}
 
 				temp_ref_vars.clear ();
@@ -1045,7 +1045,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccode.add_assignment (lhs, rhs);
 
 				foreach (LocalVariable local in temp_ref_vars) {
-					ccode.add_expression (destroy_variable (local));
+					ccode.add_expression (destroy_local (local));
 				}
 
 				temp_ref_vars.clear ();
@@ -1896,7 +1896,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 							current_method.coroutine = false;
 						}
 
-						ccode.add_expression (destroy_variable (local));
+						ccode.add_expression (destroy_local (local));
 
 						if (old_coroutine) {
 							current_method.coroutine = true;
@@ -1923,7 +1923,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 								m.coroutine = false;
 							}
 
-							ccode.add_expression (destroy_variable (param));
+							ccode.add_expression (destroy_parameter (param));
 
 							if (old_coroutine) {
 								m.coroutine = true;
@@ -1941,7 +1941,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					bool is_unowned_delegate = acc.value_parameter.variable_type is DelegateType && !acc.value_parameter.variable_type.value_owned;
 
 					if (requires_destroy (param_type) && !is_unowned_delegate) {
-						ccode.add_expression (destroy_variable (acc.value_parameter));
+						ccode.add_expression (destroy_parameter (acc.value_parameter));
 					}
 				}
 			}
@@ -1967,7 +1967,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var local = local_vars[i];
 			local.active = false;
 			if (!local.unreachable && !local.floating && !local.captured && requires_destroy (local.variable_type)) {
-				ccode.add_expression (destroy_variable (local));
+				ccode.add_expression (destroy_local (local));
 			}
 		}
 
@@ -1975,7 +1975,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var m = (Method) b.parent_symbol;
 			foreach (Parameter param in m.get_parameters ()) {
 				if (!param.captured && !param.ellipsis && requires_destroy (param.variable_type) && param.direction == ParameterDirection.IN) {
-					ccode.add_expression (destroy_variable (param));
+					ccode.add_expression (destroy_parameter (param));
 				} else if (param.direction == ParameterDirection.OUT && !m.coroutine) {
 					return_out_parameter (param);
 				}
@@ -2824,9 +2824,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	// logic in this method is temporarily duplicated in destroy_value
 	// apply changes to both methods
-	public virtual CCodeExpression destroy_variable (Variable variable, CCodeExpression? inner = null) {
+	public virtual CCodeExpression destroy_variable (Variable variable, TargetValue target_lvalue) {
 		var type = variable.variable_type;
-		var target_lvalue = get_variable_cvalue (variable, inner);
 		var cvar = get_cvalue_ (target_lvalue);
 
 		if (type is DelegateType) {
@@ -2931,19 +2930,21 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				var array_type = (ArrayType) type;
 				if (requires_destroy (array_type.element_type) && !variable.no_array_length) {
 					CCodeExpression csizeexpr = null;
-					TargetValue access_value = null;
-					if (variable is LocalVariable) {
-						access_value = load_local ((LocalVariable) variable);
-					} else if (variable is Parameter) {
-						access_value = load_parameter ((Parameter) variable);
-					}
-					bool first = true;
-					for (int dim = 1; dim <= array_type.rank; dim++) {
-						if (first) {
-							csizeexpr = get_array_length_cvalue (access_value, dim);
-							first = false;
-						} else {
-							csizeexpr = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, csizeexpr, get_array_length_cvalue (access_value, dim));
+					if (variable.array_null_terminated) {
+						var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
+						len_call.add_argument (cvar);
+						csizeexpr = len_call;
+					} else if (variable.has_array_length_cexpr) {
+						csizeexpr = new CCodeConstant (variable.get_array_length_cexpr ());
+					} else {
+						bool first = true;
+						for (int dim = 1; dim <= array_type.rank; dim++) {
+							if (first) {
+								csizeexpr = get_array_length_cvalue (target_lvalue, dim);
+								first = false;
+							} else {
+								csizeexpr = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, csizeexpr, get_array_length_cvalue (target_lvalue, dim));
+							}
 						}
 					}
 
@@ -2976,9 +2977,25 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return new CCodeConditionalExpression (cisnull, new CCodeConstant ("NULL"), cassign);
 	}
 
+	public CCodeExpression destroy_local (LocalVariable local) {
+		return destroy_variable (local, get_local_cvalue (local));
+	}
+
+	public CCodeExpression destroy_parameter (Parameter param) {
+		return destroy_variable (param, get_parameter_cvalue (param));
+	}
+
+	public CCodeExpression destroy_field (Field field, Expression? instance) {
+		return destroy_variable (field, get_field_cvalue (field, instance));
+	}
+
 	public CCodeExpression get_unref_expression (CCodeExpression cvar, DataType type, Expression? expr, bool is_macro_definition = false) {
-		if (expr != null && (expr.symbol_reference is LocalVariable || expr.symbol_reference is Parameter)) {
-			return destroy_variable ((Variable) expr.symbol_reference);
+		if (expr != null) {
+			if (expr.symbol_reference is LocalVariable) {
+				return destroy_local ((LocalVariable) expr.symbol_reference);
+			} else if (expr.symbol_reference is Parameter) {
+				return destroy_parameter ((Parameter) expr.symbol_reference);
+			}
 		}
 		var value = new GLibValue (type, cvar);
 		if (expr != null && expr.target_value != null) {
@@ -3165,7 +3182,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 		
 		foreach (LocalVariable local in temp_ref_vars) {
-			ccode.add_expression (destroy_variable (local));
+			ccode.add_expression (destroy_local (local));
 		}
 
 		if (full_expr_var != null) {
@@ -3239,7 +3256,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		/* free temporary objects and handle errors */
 
 		foreach (LocalVariable local in temp_ref_vars) {
-			ccode.add_expression (destroy_variable (local));
+			ccode.add_expression (destroy_local (local));
 		}
 
 		if (stmt.tree_can_fail && stmt.expression.tree_can_fail) {
@@ -3258,7 +3275,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		for (int i = local_vars.size - 1; i >= 0; i--) {
 			var local = local_vars[i];
 			if (!local.unreachable && local.active && !local.floating && !local.captured && requires_destroy (local.variable_type)) {
-				ccode.add_expression (destroy_variable (local));
+				ccode.add_expression (destroy_local (local));
 			}
 		}
 
@@ -3293,7 +3310,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	private void append_param_free (Method m) {
 		foreach (Parameter param in m.get_parameters ()) {
 			if (!param.ellipsis && requires_destroy (param.variable_type) && param.direction == ParameterDirection.IN) {
-				ccode.add_expression (destroy_variable (param));
+				ccode.add_expression (destroy_parameter (param));
 			}
 		}
 	}
@@ -3333,7 +3350,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		if (param.variable_type.is_disposable ()){
 			ccode.add_else ();
-			ccode.add_expression (destroy_variable (param));
+			ccode.add_expression (destroy_parameter (param));
 		}
 		ccode.close ();
 
@@ -3702,9 +3719,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
-	public virtual TargetValue get_variable_cvalue (Variable variable, CCodeExpression? inner = null) {
-		assert_not_reached ();
-	}
+	public abstract TargetValue get_local_cvalue (LocalVariable local);
+
+	public abstract TargetValue get_parameter_cvalue (Parameter param);
+
+	public abstract TargetValue get_field_cvalue (Field field, Expression? instance);
 
 	public virtual string get_delegate_target_cname (string delegate_cname) {
 		assert_not_reached ();

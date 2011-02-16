@@ -1577,7 +1577,7 @@ public class Vala.DBusClientModule : DBusModule {
 			if (requires_destroy (owned_type)) {
 				// keep local alive (symbol_reference is weak)
 				var local = new LocalVariable (owned_type, param.name);
-				var stmt = new CCodeExpressionStatement (destroy_variable (local));
+				var stmt = new CCodeExpressionStatement (destroy_local (local));
 				postfragment.append (stmt);
 			}
 		}
