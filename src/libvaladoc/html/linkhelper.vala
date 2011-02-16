@@ -78,7 +78,7 @@ public class Valadoc.Html.LinkHelper : Object {
 
 	private string translate_wiki_name (WikiPage page) {
 		var name = page.name;
-		return name.substring (name.last_index_of_char ('.')).replace ("/", ".") + ".html";
+		return name.substring (0, name.last_index_of_char ('.')).replace ("/", ".") + ".html";
 	}
 
 
