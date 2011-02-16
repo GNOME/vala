@@ -4546,24 +4546,25 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public override void visit_unary_expression (UnaryExpression expr) {
 		if (expr.operator == UnaryOperator.REF || expr.operator == UnaryOperator.OUT) {
-			set_cvalue (expr, new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_cvalue (expr.inner)));
+			var glib_value = (GLibValue) expr.inner.target_value;
 
-			var array_type = expr.value_type as ArrayType;
-			if (array_type != null) {
-				for (int dim = 1; dim <= array_type.rank; dim++) {
-					append_array_length (expr, new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_array_length_cexpression (expr.inner, dim)));
+			var ref_value = new GLibValue (glib_value.value_type);
+			ref_value.cvalue = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, glib_value.cvalue);
+
+			if (glib_value.array_length_cvalues != null) {
+				for (int i = 0; i < glib_value.array_length_cvalues.size; i++) {
+					ref_value.append_array_length_cvalue (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, glib_value.array_length_cvalues[i]));
 				}
 			}
 
-			var delegate_type = expr.value_type as DelegateType;
-			if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
-				CCodeExpression target_destroy_notify;
-				set_delegate_target (expr, new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_delegate_target_cexpression (expr.inner, out target_destroy_notify)));
-				if (target_destroy_notify != null) {
-					set_delegate_target_destroy_notify (expr, new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, target_destroy_notify));
-				}
+			if (glib_value.delegate_target_cvalue != null) {
+				ref_value.delegate_target_cvalue = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, glib_value.delegate_target_cvalue);
+			}
+			if (glib_value.delegate_target_destroy_notify_cvalue != null) {
+				ref_value.delegate_target_destroy_notify_cvalue = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, glib_value.delegate_target_destroy_notify_cvalue);
 			}
 
+			expr.target_value = ref_value;
 			return;
 		}
 
