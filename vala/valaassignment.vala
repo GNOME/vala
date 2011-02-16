@@ -466,14 +466,14 @@ public class Vala.Assignment : Expression {
 			var field = ma.symbol_reference as Field;
 			var property = ma.symbol_reference as Property;
 
-			bool instance = (field != null && field.binding == MemberBinding.INSTANCE)
-				|| (property != null && property.binding == MemberBinding.INSTANCE);
+			bool instance = (field != null && field.binding != MemberBinding.STATIC)
+				|| (property != null && property.binding != MemberBinding.STATIC);
 
 			if (operator == AssignmentOperator.SIMPLE &&
-			    (local != null || param != null) &&
+			    (local != null || param != null || field != null) &&
 			    !is_array_add ()) {
 				// visit_assignment not necessary
-				if (instance) {
+				if (instance && ma.inner != null) {
 					ma.inner.emit (codegen);
 				}
 
@@ -484,6 +484,8 @@ public class Vala.Assignment : Expression {
 					codegen.store_local (local, new_value, false);
 				} else if (param != null) {
 					codegen.store_parameter (param, new_value);
+				} else if (field != null) {
+					codegen.store_field (field, instance ? ma.inner : null, new_value);
 				}
 
 				// when load_variable is changed to use temporary
@@ -493,6 +495,8 @@ public class Vala.Assignment : Expression {
 					target_value = codegen.load_local (local);
 				} else if (param != null) {
 					target_value = codegen.load_parameter (param);
+				} else if (field != null) {
+					target_value = codegen.load_field (field, instance ? ma.inner : null);
 				}
 
 				codegen.visit_expression (this);
@@ -505,7 +509,7 @@ public class Vala.Assignment : Expression {
 				// should be removed when moving codegen from
 				// visit_assignment to emit_store_field
 				ma.emit (codegen);
-			} else if (instance) {
+			} else if (instance && ma.inner != null) {
 				ma.inner.emit (codegen);
 			}
 		} else if (ea != null) {

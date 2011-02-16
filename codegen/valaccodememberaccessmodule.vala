@@ -694,7 +694,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 	}
 
 	/* Returns unowned access to the given field */
-	public TargetValue load_field (Field field, Expression? instance) {
+	public override TargetValue load_field (Field field, Expression? instance) {
 		return load_variable (field, get_field_cvalue (field, instance));
 	}
 }

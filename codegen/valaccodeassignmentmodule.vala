@@ -170,11 +170,6 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 	}
 
 	void store_variable (Variable variable, TargetValue lvalue, TargetValue value, bool initializer) {
-		if (!initializer && requires_destroy (variable.variable_type)) {
-			/* unref old value */
-			ccode.add_expression (destroy_value (lvalue));
-		}
-
 		ccode.add_assignment (get_cvalue_ (lvalue), get_cvalue_ (value));
 
 		var array_type = variable.variable_type as ArrayType;
@@ -221,10 +216,29 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 	}
 
 	public override void store_local (LocalVariable local, TargetValue value, bool initializer) {
+		if (!initializer && requires_destroy (local.variable_type)) {
+			/* unref old value */
+			ccode.add_expression (destroy_local (local));
+		}
+
 		store_variable (local, get_local_cvalue (local), value, initializer);
 	}
 
 	public override void store_parameter (Parameter param, TargetValue value) {
+		if (requires_destroy (param.variable_type)) {
+			/* unref old value */
+			ccode.add_expression (destroy_parameter (param));
+		}
+
 		store_variable (param, get_parameter_cvalue (param), value, false);
+	}
+
+	public override void store_field (Field field, Expression? instance, TargetValue value) {
+		if (requires_destroy (field.variable_type)) {
+			/* unref old value */
+			ccode.add_expression (destroy_field (field, instance));
+		}
+
+		store_variable (field, get_field_cvalue (field, instance), value, false);
 	}
 }

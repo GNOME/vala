@@ -295,7 +295,7 @@ public abstract class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 		return load_variable (param, get_parameter_cvalue (param));
 	}
 
-	public TargetValue load_field (Field field, Expression? instance) {
+	public override TargetValue load_field (Field field, Expression? instance) {
 		return load_variable (field, get_field_cvalue (field, instance));
 	}
 }
