@@ -399,9 +399,20 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 	}
 
 	public override void visit_table_cell (TableCell element) {
+		string style = "";
+
+		if (element.horizontal_align != null) {
+			style += "text-align: "+element.horizontal_align.to_string ()+"; ";
+		}
+
+		if (element.vertical_align != null) {
+			style += "vertical-align: "+element.vertical_align.to_string ()+"; ";
+		}
+
 		writer.start_tag ("td", {"class", "main_table",
-								 "colspan", element.colspan.to_string (),
-								 "rowspan", element.rowspan.to_string ()});
+						  "colspan", element.colspan.to_string (),
+						  "rowspan", element.rowspan.to_string (),
+						  "style", style});
 		element.accept_children (this);
 		writer.end_tag ("td");
 	}
