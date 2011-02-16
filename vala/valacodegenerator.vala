@@ -1,6 +1,6 @@
 /* valacodegenerator.vala
  *
- * Copyright (C) 2007-2010  Jürg Billeter
+ * Copyright (C) 2007-2011  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -37,4 +37,8 @@ public abstract class Vala.CodeGenerator : CodeVisitor {
 	public abstract TargetValue load_local (LocalVariable local);
 
 	public abstract void store_local (LocalVariable local, TargetValue value, bool initializer);
+
+	public abstract TargetValue load_parameter (Parameter param);
+
+	public abstract void store_parameter (Parameter param, TargetValue value);
 }

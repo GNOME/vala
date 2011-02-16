@@ -223,4 +223,8 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 	public override void store_local (LocalVariable local, TargetValue value, bool initializer) {
 		store_variable (local, get_local_cvalue (local), value, initializer);
 	}
+
+	public override void store_parameter (Parameter param, TargetValue value) {
+		store_variable (param, get_parameter_cvalue (param), value, false);
+	}
 }

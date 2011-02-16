@@ -1,6 +1,6 @@
 /* valaassignment.vala
  *
- * Copyright (C) 2006-2010  Jürg Billeter
+ * Copyright (C) 2006-2011  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -443,16 +443,61 @@ public class Vala.Assignment : Expression {
 		return !error;
 	}
 
+	bool is_array_add () {
+		var binary = right as BinaryExpression;
+		if (binary != null && binary.left.value_type is ArrayType) {
+			if (binary.operator == BinaryOperator.PLUS) {
+				if (left.symbol_reference == binary.left.symbol_reference) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
 	public override void emit (CodeGenerator codegen) {
 		var ma = left as MemberAccess;
 		var ea = left as ElementAccess;
 		var pi = left as PointerIndirection;
 		if (ma != null) {
+			var local = ma.symbol_reference as LocalVariable;
+			var param = ma.symbol_reference as Parameter;
 			var field = ma.symbol_reference as Field;
 			var property = ma.symbol_reference as Property;
 
 			bool instance = (field != null && field.binding == MemberBinding.INSTANCE)
 				|| (property != null && property.binding == MemberBinding.INSTANCE);
+
+			if (operator == AssignmentOperator.SIMPLE &&
+			    (local != null || param != null) &&
+			    !is_array_add ()) {
+				// visit_assignment not necessary
+				if (instance) {
+					ma.inner.emit (codegen);
+				}
+
+				right.emit (codegen);
+				var new_value = right.target_value;
+
+				if (local != null) {
+					codegen.store_local (local, new_value, false);
+				} else if (param != null) {
+					codegen.store_parameter (param, new_value);
+				}
+
+				// when load_variable is changed to use temporary
+				// variables, replace following code with this line
+				// target_value = new_value;
+				if (local != null) {
+					target_value = codegen.load_local (local);
+				} else if (param != null) {
+					target_value = codegen.load_parameter (param);
+				}
+
+				codegen.visit_expression (this);
+				return;
+			}
 
 			if (field != null) {
 				// always process full lvalue

@@ -3706,10 +3706,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		assert_not_reached ();
 	}
 
-	public virtual TargetValue load_parameter (Parameter param) {
-		assert_not_reached ();
-	}
-
 	public virtual string get_delegate_target_cname (string delegate_cname) {
 		assert_not_reached ();
 	}

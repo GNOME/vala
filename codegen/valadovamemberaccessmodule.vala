@@ -291,7 +291,7 @@ public abstract class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 		return load_variable (local, get_local_cvalue (local));
 	}
 
-	public TargetValue load_parameter (Parameter param) {
+	public override TargetValue load_parameter (Parameter param) {
 		return load_variable (param, get_parameter_cvalue (param));
 	}
 
