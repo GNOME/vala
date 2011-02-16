@@ -192,55 +192,7 @@ public abstract class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 			expr.target_value = load_local (local);
 		} else if (expr.symbol_reference is Parameter) {
 			var p = (Parameter) expr.symbol_reference;
-			if (p.name == "this") {
-				if (current_method != null && current_method.coroutine) {
-					// use closure
-					set_cvalue (expr, new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "this"));
-				} else {
-					var st = current_type_symbol as Struct;
-					if (st != null && !st.is_boolean_type () && !st.is_integer_type () && !st.is_floating_type () && (!st.is_simple_type () || current_method is CreationMethod)) {
-						set_cvalue (expr, new CCodeIdentifier ("(*this)"));
-					} else {
-						set_cvalue (expr, new CCodeIdentifier ("this"));
-					}
-				}
-			} else {
-				if (p.captured) {
-					// captured variables are stored on the heap
-					var block = p.parent_symbol as Block;
-					if (block == null) {
-						block = ((Method) p.parent_symbol).body;
-					}
-					set_cvalue (expr, new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_variable_cname (p.name)));
-				} else {
-					if (current_method != null && current_method.coroutine) {
-						// use closure
-						set_cvalue (expr, get_variable_cexpression (p.name));
-					} else {
-						var type_as_struct = p.variable_type.data_type as Struct;
-						if (p.direction != ParameterDirection.IN
-						    || (type_as_struct != null && !type_as_struct.is_simple_type () && !p.variable_type.nullable)) {
-							if (p.variable_type is GenericType) {
-								set_cvalue (expr, get_variable_cexpression (p.name));
-							} else {
-								set_cvalue (expr, new CCodeIdentifier ("(*%s)".printf (get_variable_cname (p.name))));
-							}
-						} else {
-							// Property setters of non simple structs shall replace all occurences
-							// of the "value" formal parameter with a dereferencing version of that
-							// parameter.
-							if (current_property_accessor != null &&
-							    current_property_accessor.writable &&
-							    current_property_accessor.value_parameter == p &&
-							    current_property_accessor.prop.property_type.is_real_struct_type ()) {
-								set_cvalue (expr, new CCodeIdentifier ("(*value)"));
-							} else {
-								set_cvalue (expr, get_variable_cexpression (p.name));
-							}
-						}
-					}
-				}
-			}
+			expr.target_value = load_parameter (p);
 		}
 	}
 
@@ -261,12 +213,72 @@ public abstract class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 		return result;
 	}
 
+	public TargetValue get_parameter_cvalue (Parameter p) {
+		var result = new DovaValue (p.variable_type);
+
+		if (p.name == "this") {
+			if (current_method != null && current_method.coroutine) {
+				// use closure
+				result.cvalue = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "this");
+			} else {
+				var st = current_type_symbol as Struct;
+				if (st != null && !st.is_boolean_type () && !st.is_integer_type () && !st.is_floating_type () && (!st.is_simple_type () || current_method is CreationMethod)) {
+					result.cvalue = new CCodeIdentifier ("(*this)");
+				} else {
+					result.cvalue = new CCodeIdentifier ("this");
+				}
+			}
+		} else {
+			if (p.captured) {
+				// captured variables are stored on the heap
+				var block = p.parent_symbol as Block;
+				if (block == null) {
+					block = ((Method) p.parent_symbol).body;
+				}
+				result.cvalue = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_variable_cname (p.name));
+			} else {
+				if (current_method != null && current_method.coroutine) {
+					// use closure
+					result.cvalue = get_variable_cexpression (p.name);
+				} else {
+					var type_as_struct = p.variable_type.data_type as Struct;
+					if (p.direction != ParameterDirection.IN
+					    || (type_as_struct != null && !type_as_struct.is_simple_type () && !p.variable_type.nullable)) {
+						if (p.variable_type is GenericType) {
+							result.cvalue = get_variable_cexpression (p.name);
+						} else {
+							result.cvalue = new CCodeIdentifier ("(*%s)".printf (get_variable_cname (p.name)));
+						}
+					} else {
+						// Property setters of non simple structs shall replace all occurences
+						// of the "value" formal parameter with a dereferencing version of that
+						// parameter.
+						if (current_property_accessor != null &&
+						    current_property_accessor.writable &&
+						    current_property_accessor.value_parameter == p &&
+						    current_property_accessor.prop.property_type.is_real_struct_type ()) {
+							result.cvalue = new CCodeIdentifier ("(*value)");
+						} else {
+							result.cvalue = get_variable_cexpression (p.name);
+						}
+					}
+				}
+			}
+		}
+
+		return result;
+	}
+
 	TargetValue load_variable (Variable variable, TargetValue value) {
 		return value;
 	}
 
 	public override TargetValue load_local (LocalVariable local) {
 		return load_variable (local, get_local_cvalue (local));
+	}
+
+	public TargetValue load_parameter (Parameter param) {
+		return load_variable (param, get_parameter_cvalue (param));
 	}
 }
 
