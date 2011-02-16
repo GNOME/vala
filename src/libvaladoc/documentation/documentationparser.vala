@@ -957,31 +957,35 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 			.set_name ("SourceCode")
 			.set_start (() => { push (_factory.create_source_code ()); });
 
-		Rule run_subrules =
-			Rule.one_of ({
-				text, inline_taglet, bold, italic, underlined, monospace, embedded, link, source_code
-			})
-			.set_reduce (() => {
+		Rule.Action append_head_to_head2 = () => {
 				var head = (Inline) pop ();
 				((InlineContent) peek ()).content.add (head);
+			};
+
+		Rule run_optional_space = 
+			Rule.option ({ space })
+			.set_reduce (append_head_to_head2);
+
+		Rule run_subrules =
+			Rule.one_of ({
+				Rule.seq ({
+					text
+				})
+				.set_reduce (append_head_to_head2),
+				Rule.seq ({
+					Rule.one_of ({
+						inline_taglet, bold, italic, underlined, monospace, embedded, link, source_code
+					})
+					.set_reduce (append_head_to_head2),
+					run_optional_space
+				})
 			});
 
 		Rule run_arobase =
 			Rule.seq ({
 				TokenType.AROBASE.action (add_text)
 			})
-			.set_reduce (() => {
-				var head = (Inline) pop ();
-				((InlineContent) peek ()).content.add (head);
-			});
-
-		Rule run_optional_space = 
-			Rule.option ({ space })
-			.set_reduce (() => {
-				var head = (Inline) pop ();
-				((InlineContent) peek ()).content.add (head);
-			});
-
+			.set_reduce (append_head_to_head2);
 
 		run.set_rule (
 			Rule.seq ({
@@ -990,10 +994,9 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 				Rule.option ({
 					Rule.many ({
 						Rule.one_of ({
-							run_arobase,
+							Rule.seq ({ run_arobase, run_optional_space }),
 							run_subrules
-						}),
-						run_optional_space
+						})
 					})
 				})
 			})
