@@ -53,7 +53,7 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 		element.accept_children (this);
 	}
 
-	private string get_url (Api.Node symbol) {
+	private string get_url (Documentation symbol) {
 		return linker.get_relative_link (_container, symbol, settings);
 	}
 
@@ -230,6 +230,22 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 		writer.start_tag ("h%d".printf (element.level));
 		element.accept_children (this);
 		writer.end_tag ("h%d".printf (element.level));
+	}
+
+	public override void visit_wiki_link (WikiLink element) {
+		if (element.page != null) {
+			writer.start_tag ("a", {"href", get_url (element.page)});
+		}
+
+		if (element.content.size > 0) {
+			element.accept_children (this);
+		} else {
+			writer.text (element.name.substring (0, element.name.last_index_of_char ('.')));
+		}
+
+		if (element.page != null) {
+			writer.end_tag ("a");
+		}
 	}
 
 	public override void visit_link (Link element) {

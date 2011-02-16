@@ -37,6 +37,9 @@ public abstract class Valadoc.Content.ContentVisitor : Object {
 	public virtual void visit_link (Link element) {
 	}
 
+	public virtual void visit_wiki_link (WikiLink element) {
+	}
+
 	public virtual void visit_symbol_link (SymbolLink element) {
 	}
 

@@ -938,16 +938,25 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		Rule link =
 			Rule.seq ({
 				TokenType.DOUBLE_OPEN_BRACKET.action (() => { ((WikiScanner) _scanner).set_url_escape_mode (true); }),
-				TokenType.any_word ().action ((token) => { ((Link) peek ()).url = token.to_string (); }),
+				TokenType.any_word ().action ((token) => {
+					var url = token.to_string ();
+					if (url.has_suffix (".valadoc")) {
+						var link = _factory.create_wiki_link ();
+						link.name = url;
+						push (link);
+					} else {
+						var link = _factory.create_link ();
+						link.url = url;
+						push (link);
+					}
+				}),
 				Rule.option ({
 					TokenType.PIPE.action (() => { ((WikiScanner) _scanner).set_url_escape_mode (false); }),
 					run
 				}),
 				TokenType.DOUBLE_CLOSED_BRACKET.action (() => { ((WikiScanner) _scanner).set_url_escape_mode (false); })
 			})
-			.set_name ("Link")
-			.set_start (() => { push (_factory.create_link ()); });
-
+			.set_name ("Link");
 		Rule source_code =
 			Rule.seq ({
 				TokenType.TRIPLE_OPEN_BRACE.action ((token) => { ((WikiScanner) _scanner).set_code_escape_mode (true); }),

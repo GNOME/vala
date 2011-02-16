@@ -83,6 +83,15 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 		current_builder.append ("\n");
 	}
   
+	public override void visit_wiki_link (WikiLink link) {
+		// wiki pages are not supported right now
+		if (link.content.size > 0) {
+			link.accept_children (this);
+		} else {
+			current_builder.append (link.name);
+		}
+	}
+  
 	public override void visit_link (Link link) {
 		current_builder.append_printf ("<ulink url=\"%s\">", link.url);
 		link.accept_children (this);

@@ -85,6 +85,7 @@ libvaladoc_la_VALASOURCES = \
 	content/inline.vala \
 	content/inlinetaglet.vala \
 	content/inlinecontent.vala \
+	content/wikilink.vala \
 	content/link.vala \
 	content/list.vala \
 	content/listitem.vala \

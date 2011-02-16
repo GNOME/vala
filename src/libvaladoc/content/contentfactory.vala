@@ -56,6 +56,10 @@ public class Valadoc.Content.ContentFactory : Object {
 		return (Link) configure (new Link ());
 	}
 
+	public WikiLink create_wiki_link () {
+		return (WikiLink) configure (new WikiLink ());
+	}
+
 	public List create_list () {
 		return (List) configure (new List ());
 	}
