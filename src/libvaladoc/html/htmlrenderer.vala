@@ -388,7 +388,9 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 
 	public override void visit_source_code (SourceCode element) {
 		writer.start_tag ("pre");
-		writer.raw_text (element.code);
+		writer.set_wrap (false);
+		write_string (element.code);
+		writer.set_wrap (true);
 		writer.end_tag ("pre");
 	}
 
