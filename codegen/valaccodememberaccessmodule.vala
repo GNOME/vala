@@ -229,15 +229,10 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 							pub_inst = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, pub_inst);
 						} else {
 							// if instance is e.g. a function call, we can't take the address of the expression
-							// (tmp = expr, &tmp)
-							var ccomma = new CCodeCommaExpression ();
-
 							var temp_var = get_temp_variable (expr.inner.target_type, true, null, false);
 							emit_temp_var (temp_var);
-							ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), pub_inst));
-							ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_var.name)));
-
-							pub_inst = ccomma;
+							ccode.add_assignment (get_variable_cexpression (temp_var.name), pub_inst);
+							pub_inst = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_var.name));
 						}
 					}
 
@@ -298,15 +293,13 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					}
 				}
 
-				var ccomma = new CCodeCommaExpression ();
 				var temp_var = get_temp_variable (expr.value_type);
 				var ctemp = get_variable_cexpression (temp_var.name);
 				emit_temp_var (temp_var);
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
 				ccall.add_argument (new CCodeConstant ("NULL"));
-				ccomma.append_expression (ccall);
-				ccomma.append_expression (ctemp);
-				set_cvalue (expr, ccomma);
+				ccode.add_expression (ccall);
+				set_cvalue (expr, ctemp);
 			}
 		} else if (expr.symbol_reference is LocalVariable) {
 			var local = (LocalVariable) expr.symbol_reference;
