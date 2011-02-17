@@ -196,15 +196,10 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					instance = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance);
 				} else {
 					// if instance is e.g. a function call, we can't take the address of the expression
-					// (tmp = expr, &tmp)
-					var ccomma = new CCodeCommaExpression ();
-
 					var temp_var = get_temp_variable (ma.inner.target_type, true, null, false);
 					emit_temp_var (temp_var);
-					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), instance));
-					ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_var.name)));
-
-					instance = ccomma;
+					ccode.add_assignment (get_variable_cexpression (temp_var.name), instance);
+					instance = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_var.name));
 				}
 			}
 
@@ -287,20 +282,17 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			}
 			generate_dynamic_method_wrapper ((DynamicMethod) m);
 		} else if (m is CreationMethod && context.profile == Profile.GOBJECT && m.parent_symbol is Class) {
-			ccall_expr = new CCodeAssignment (new CCodeIdentifier ("self"), new CCodeCastExpression (ccall, current_class.get_cname () + "*"));
+			ccode.add_assignment (new CCodeIdentifier ("self"), new CCodeCastExpression (ccall, current_class.get_cname () + "*"));
 
 			if (current_method.body.captured) {
 				// capture self after setting it
 				var ref_call = new CCodeFunctionCall (get_dup_func_expression (new ObjectType (current_class), expr.source_reference));
-				ref_call.add_argument (ccall_expr);
+				ref_call.add_argument (new CCodeIdentifier ("self"));
 
-				ccall_expr = new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (current_method.body))), "self"), ref_call);
+				ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (current_method.body))), "self"), ref_call);
 			}
 
 			if (!current_class.is_compact && current_class.get_type_parameters ().size > 0) {
-				var ccomma = new CCodeCommaExpression ();
-				ccomma.append_expression (ccall_expr);
-
 				/* type, dup func, and destroy func fields for generic types */
 				foreach (TypeParameter type_param in current_class.get_type_parameters ()) {
 					CCodeIdentifier param_name;
@@ -308,17 +300,17 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					var priv_access = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv");
 
 					param_name = new CCodeIdentifier ("%s_type".printf (type_param.name.down ()));
-					ccomma.append_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (priv_access, param_name.name), param_name));
+					ccode.add_assignment (new CCodeMemberAccess.pointer (priv_access, param_name.name), param_name);
 
 					param_name = new CCodeIdentifier ("%s_dup_func".printf (type_param.name.down ()));
-					ccomma.append_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (priv_access, param_name.name), param_name));
+					ccode.add_assignment (new CCodeMemberAccess.pointer (priv_access, param_name.name), param_name);
 
 					param_name = new CCodeIdentifier ("%s_destroy_func".printf (type_param.name.down ()));
-					ccomma.append_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (priv_access, param_name.name), param_name));
+					ccode.add_assignment (new CCodeMemberAccess.pointer (priv_access, param_name.name), param_name);
 				}
-
-				ccall_expr = ccomma;
 			}
+			// object chainup can't be used as expression
+			ccall_expr = null;
 		}
 
 		bool ellipsis = false;
@@ -737,7 +729,9 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		}
 
 		if (expr.parent_node is ExpressionStatement && !expr.value_type.is_disposable ()) {
-			ccode.add_expression (ccall_expr);
+			if (ccall_expr != null) {
+				ccode.add_expression (ccall_expr);
+			}
 		} else {
 			var result_type = itype.get_return_type ();
 
