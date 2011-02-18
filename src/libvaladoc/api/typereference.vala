@@ -78,34 +78,25 @@ public class Valadoc.Api.TypeReference : Item {
 				}
 				return ((Vala.Parameter)parent).variable_type.value_owned;
 			}
+
 			return false;
 		}
 	}
 
 	public bool is_weak {
 		get {
-			return false;
-		}
-	}
-
-
-	// from vala/valacodewriter.vala
-	private bool is_weak_helper (Vala.DataType type) {
-		if (type.value_owned) {
-			return false;
-		} else if (type is Vala.VoidType || type is Vala.PointerType) {
-			return false;
-		} else if (type is Vala.ValueType) {
-			if (type.nullable) {
-				// nullable structs are heap allocated
-				return true;
+			if (vtyperef == null) {
+				return false;
 			}
 
-			// TODO return true for structs with destroy
-			return false;
-		}
+			// non ref counted types are unowned, not weak
+			if (vtyperef.data_type is Vala.TypeSymbol && ((Vala.TypeSymbol) vtyperef.data_type).is_reference_counting () == false) {
+				return false;
+			}
 
-		return true;
+			// FormalParameters are weak by default
+			return (parent is FormalParameter == false)? vtyperef.is_weak () : false;
+		}
 	}
 
 	public bool is_dynamic {
@@ -116,23 +107,17 @@ public class Valadoc.Api.TypeReference : Item {
 
 	public bool is_unowned {
 		get {
-			Vala.CodeNode parent = this.vtyperef.parent_node;
-
-			if (parent is Vala.Parameter) {
+			if (vtyperef == null) {
 				return false;
 			}
 
-			if (parent is Vala.Method == true) {
-				return this.is_weak_helper (((Vala.Method)parent).return_type);
-			}
-			else if (parent is Vala.Signal == true) {
-				return this.is_weak_helper (((Vala.Signal)parent).return_type);
-			}
-			else if (parent is Vala.Delegate == true) {
-				return this.is_weak_helper (((Vala.Delegate)parent).return_type);
+			// non ref counted types are weak, not unowned
+			if (vtyperef.data_type is Vala.TypeSymbol && ((Vala.TypeSymbol) vtyperef.data_type).is_reference_counting () == true) {
+				return false;
 			}
 
-			return ( this.vtyperef.parent_node is Field )? this.is_weak_helper(this.vtyperef) : false;
+			// FormalParameters are weak by default
+			return (parent is FormalParameter == false)? vtyperef.is_weak () : false;
 		}
 	}
 
