@@ -129,36 +129,6 @@ public class Valadoc.Api.TypeReference : Item {
 		}
 	}
 
-	// remove
-	private string extract_type_name ( Vala.DataType vdtype ) {
-		if (vdtype is Vala.VoidType) {
-			return "void";
-		}
-		else if (vdtype is Vala.PointerType) {
-			return this.extract_type_name (((Vala.PointerType)vdtype).base_type);
-		}
-		else if (vdtype is Vala.DelegateType) {
-			return ((Vala.DelegateType)this.vtyperef).delegate_symbol.name;
-		}
-		else if (vdtype is Vala.MethodType) {
-			return ((Vala.MethodType)this.vtyperef).method_symbol.name;
-		}
-		else if (vdtype is Vala.SignalType) {
-			return ((Vala.SignalType)this.vtyperef).signal_symbol.name;
-		}
-		else if (vdtype is Vala.ArrayType) {
-			this.extract_type_name (((Vala.ArrayType)vdtype).element_type);
-		}
-		return vtyperef.to_string ();
-	}
-
-	// remove
-	public string type_name {
-		owned get {
-			return this.extract_type_name (this.vtyperef);
-		}
-	}
-
 	public string? get_dbus_type_signature () {
 		return Vala.DBusModule.get_type_signature (vtyperef);
 	}
