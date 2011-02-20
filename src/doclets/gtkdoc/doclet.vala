@@ -29,6 +29,8 @@ namespace Gtkdoc.Config {
 	public static string library_filename;
 	[CCode (array_length = false, array_null_terminated = true)]
 	public static string[] ignore_headers;
+	[CCode (array_length = false, array_null_terminated = true)]
+	public static string[] source_files;
 	public static string deprecated_guards;
 	public static string ignore_decorators;
 
@@ -38,6 +40,7 @@ namespace Gtkdoc.Config {
 			{ "deprecated-guards", 'd', 0, OptionArg.STRING, ref deprecated_guards, "A |-separated list of symbols used as deprecation guards", "GUARDS" },
 			{ "ignore-decorators", 0, 0, OptionArg.STRING, ref ignore_decorators, "A |-separated list of addition decorators in declarations that should be ignored", "DECS" },
 			{ "no-html", 0, 0, OptionArg.NONE, ref nohtml, "Disable HTML generation", null },
+			{ "", 0, 0, OptionArg.FILENAME_ARRAY, ref source_files, null, "FILE..." },
 			{ null }
 		};
 
@@ -80,6 +83,14 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 	private string[] vala_headers;
 	private string[] c_headers;
 
+	private static string[] combine_string_arrays (string[] a, string[] b) {
+		string[] result = a;
+		foreach (string e in b) {
+			result += e;
+		}
+		return result;
+	}
+
 	/*
 	 * 1) Scan normal code, this generates -decl.txt for both C and Vala.
 	 * 2) Scan C code into a temp cscan directory. This generates C sections.
@@ -89,10 +100,11 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 	 * and Vala sections.
 	 */
 	public void process (Settings settings, Api.Tree tree, ErrorReporter reporter) {
-		this.settings = settings;
 		if (!Config.parse (settings.pluginargs, reporter)) {
 			return;
 		}
+
+		this.settings = settings;
 		this.reporter = reporter;
 		this.tree = tree;
 
@@ -102,18 +114,12 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 		DirUtils.create_with_parents (ccomments_dir, 0755);
 		DirUtils.create_with_parents (cscan_dir, 0755);
 
-		prepare_external_c_files (tree, ccomments_dir);
-
-		find_files (ccomments_dir);
-		if (vala_headers.length <= 0) {
-			reporter.simple_error ("GtkDoc: No vala header found");
+		var files = combine_string_arrays (Config.source_files, tree.get_external_c_files ().to_array ());
+		if (!prepare_files (files, ccomments_dir)) {
 			return;
 		}
 
-		var all_headers = vala_headers;
-		foreach (var c_header in c_headers) {
-			all_headers += c_header;
-		}
+		var all_headers = combine_string_arrays (vala_headers, c_headers);
 		if (!scan (settings.path, all_headers)) {
 			return;
 		}
@@ -123,7 +129,7 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 		}
 
 		FileUtils.rename (Path.build_filename (cscan_dir, "%s-sections.txt".printf (settings.pkg_name)),
-						  Path.build_filename (settings.path, "%s-sections.txt".printf (settings.pkg_name)));
+			Path.build_filename (settings.path, "%s-sections.txt".printf (settings.pkg_name)));
 
 		generator = new Gtkdoc.Generator ();
 		if (!generator.execute (settings, tree, reporter)) {
@@ -143,47 +149,61 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 		}
 	}
 
-	private void prepare_external_c_files (Api.Tree tree, string comments_dir) {
-		foreach (string filename in tree.get_external_c_files ()) {
-			if (!copy_file (filename, Path.build_filename (comments_dir, Path.get_basename (filename)))) {
-				reporter.simple_error ("GtkDoc: Can't copy %s".printf (filename));
-				return ;
-			}
-		}
-	}
-
-	private void find_files (string comments_dir) {
-		vala_headers = new string[]{};
-		c_headers = new string[]{};
-		Dir dir;
-		string dirname = settings.basedir ?? ".";
-		try {
-			dir = Dir.open (dirname);
-		} catch (Error e) {
-			reporter.simple_error ("GtkDoc: Can't open %s: %s".printf (settings.basedir, e.message));
+	private void prepare_c_file (string filename, string comments_dir) {
+		if (is_generated_by_vala (filename)) {
 			return;
 		}
 
-		string relative_name;
+		if (!copy_file (filename, Path.build_filename (comments_dir, Path.get_basename (filename)))) {
+			reporter.simple_error ("GtkDoc: Can't copy %s".printf (filename));
+		}
+	}
 
-		while ((relative_name = dir.read_name()) != null) {
-			var filename = realpath (Path.build_filename (dirname, relative_name));
-			if (filename == null) {
+	private void prepare_h_file (string filename) {
+		if (filename in Config.ignore_headers) {
+			return;
+		}
+
+		if (is_generated_by_vala (filename)) {
+			vala_headers += filename;
+		} else {
+			c_headers += filename;
+		}
+	}
+
+	private bool prepare_files (string[] files, string comments_dir) {
+		vala_headers = new string[]{};
+		c_headers = new string[]{};
+
+		string[] prepared = new string[]{};
+
+		foreach (string relative_filename in files) {
+			var filename = realpath (relative_filename);
+
+			if (filename in prepared) {
+				continue;
+			}
+			prepared += filename;
+
+			if (!FileUtils.test (filename, FileTest.EXISTS)) {
+				reporter.simple_error ("GtkDoc: %s not found".printf (relative_filename));
 				continue;
 			}
 
-			if (filename.has_suffix (".h")) {
-				if (filename in Config.ignore_headers) {
-					continue;
-				}
-
-				if (is_generated_by_vala (filename)) {
-					vala_headers += filename;
-				} else {
-					c_headers += filename;
-				}
+			if (filename.has_suffix (".c")) {
+				prepare_c_file (filename, comments_dir);
+			} else if (filename.has_suffix (".h")) {
+				prepare_h_file (filename);
+			} else {
+				reporter.simple_error ("GtkDoc: %s is not a supported source file type. Only .h, and .c files are supported.".printf (relative_filename));
 			}
 		}
+
+		if (vala_headers.length <= 0) {
+			reporter.simple_error ("GtkDoc: No vala header found");
+		}
+
+		return reporter.errors == 0;
 	}
 
 	private bool scan (string output_dir, string[]? headers = null) {
