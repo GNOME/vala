@@ -2,53 +2,70 @@
 
 [CCode (cprefix = "Rest", lower_case_cprefix = "rest_")]
 namespace Rest {
-	[CCode (cheader_filename = "rest/oauth-proxy.h")]
+	[CCode (cname = "OAuthProxy", cheader_filename = "rest/oauth-proxy.h")]
 	public class OAuthProxy : Rest.Proxy {
 		[CCode (cname = "oauth_proxy_new", type = "RestProxy*", has_construct_function = false)]
 		public OAuthProxy (string consumer_key, string consumer_secret, string url_format, bool binding_required);
 		[CCode (cname = "oauth_proxy_access_token")]
-		public static bool access_token (Rest.OAuthProxy proxy, string function, string verifier) throws GLib.Error;
+		public bool access_token (string function, string verifier) throws GLib.Error;
 		[CCode (cname = "oauth_proxy_access_token_async")]
-		public static bool access_token_async (Rest.OAuthProxy proxy, string function, string verifier, Rest.OAuthProxyAuthCallback callback, GLib.Object weak_object) throws GLib.Error;
+		public bool access_token_async (string function, string verifier, [CCode (delegate_target_pos = 4.9)] Rest.OAuthProxyAuthCallback callback, GLib.Object? weak_object) throws GLib.Error;
+		[Deprecated]
 		[CCode (cname = "oauth_proxy_auth_step")]
-		public static bool auth_step (Rest.OAuthProxy proxy, string function) throws GLib.Error;
+		public bool auth_step (string function) throws GLib.Error;
+		[Deprecated]
 		[CCode (cname = "oauth_proxy_auth_step_async")]
-		public static bool auth_step_async (Rest.OAuthProxy proxy, string function, Rest.OAuthProxyAuthCallback callback, GLib.Object weak_object) throws GLib.Error;
+		public bool auth_step_async (string function, [CCode (delegate_target_pos = 3.9)] Rest.OAuthProxyAuthCallback callback, GLib.Object? weak_object) throws GLib.Error;
 		[CCode (cname = "oauth_proxy_get_token")]
-		public static unowned string get_token (Rest.OAuthProxy proxy);
+		public unowned string get_token ();
 		[CCode (cname = "oauth_proxy_get_token_secret")]
-		public static unowned string get_token_secret (Rest.OAuthProxy proxy);
+		public unowned string get_token_secret ();
 		[CCode (cname = "oauth_proxy_is_oauth10a")]
-		public static bool is_oauth10a (Rest.OAuthProxy proxy);
+		public bool is_oauth10a ();
 		[CCode (cname = "oauth_proxy_request_token")]
-		public static bool request_token (Rest.OAuthProxy proxy, string function, string callback_uri) throws GLib.Error;
+		public bool request_token (string function, string callback_uri) throws GLib.Error;
 		[CCode (cname = "oauth_proxy_request_token_async")]
-		public static bool request_token_async (Rest.OAuthProxy proxy, string function, string callback_uri, Rest.OAuthProxyAuthCallback callback, GLib.Object weak_object) throws GLib.Error;
+		public bool request_token_async (string function, string callback_uri, [CCode (delegate_target_pos = 4.9)] Rest.OAuthProxyAuthCallback callback, GLib.Object? weak_object) throws GLib.Error;
 		[CCode (cname = "oauth_proxy_set_token")]
-		public static void set_token (Rest.OAuthProxy proxy, string token);
+		public void set_token (string token);
 		[CCode (cname = "oauth_proxy_set_token_secret")]
-		public static void set_token_secret (Rest.OAuthProxy proxy, string token_secret);
+		public void set_token_secret (string token_secret);
 		[CCode (cname = "oauth_proxy_new_with_token", type = "RestProxy*", has_construct_function = false)]
 		public OAuthProxy.with_token (string consumer_key, string consumer_secret, string token, string token_secret, string url_format, bool binding_required);
+		[NoAccessorMethod]
+		public string consumer_key { owned get; construct; }
+		[NoAccessorMethod]
+		public string consumer_secret { owned get; construct; }
+		public string token { get; set; }
+		public string token_secret { get; set; }
 	}
 	[CCode (cheader_filename = "rest/oauth-proxy-call.h")]
 	public class OAuthProxyCall : Rest.ProxyCall {
+		[CCode (has_construct_function = false)]
+		protected OAuthProxyCall ();
 	}
 	[CCode (cheader_filename = "rest/rest-proxy.h")]
 	public class Proxy : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Proxy (string url_format, bool binding_required);
 		public bool bind (...);
-		public bool bind_valist (void* @params);
+		public virtual bool bind_valist (void* @params);
 		public static GLib.Quark error_quark ();
 		public unowned string get_user_agent ();
 		public Rest.ProxyCall new_call ();
 		public void set_user_agent (string user_agent);
 		public bool simple_run (string payload, int64 len) throws GLib.Error;
-		public bool simple_run_valist (string payload, int64 len, void* @params) throws GLib.Error;
+		public virtual bool simple_run_valist (string payload, int64 len, void* @params) throws GLib.Error;
+		[NoAccessorMethod]
+		public bool binding_required { get; set; }
+		[NoAccessorMethod]
+		public string url_format { owned get; set; }
+		public string user_agent { get; set; }
 	}
 	[CCode (cheader_filename = "rest/rest-proxy-call.h")]
 	public class ProxyCall : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected ProxyCall ();
 		public void add_header (string header, string value);
 		public void add_headers (...);
 		public void add_headers_from_valist (void* headers);
@@ -58,7 +75,7 @@ namespace Rest {
 		public bool cancel ();
 		public static GLib.Quark error_quark ();
 		public unowned string get_method ();
-		public unowned GLib.HashTable<string,string> get_params ();
+		public GLib.HashTable<string,string> get_params ();
 		public unowned string get_payload ();
 		public int64 get_payload_length ();
 		public unowned GLib.HashTable get_response_headers ();
@@ -67,17 +84,21 @@ namespace Rest {
 		public unowned string lookup_header (string header);
 		public unowned string lookup_param (string param);
 		public unowned string lookup_response_header (string header);
+		[NoWrapper]
+		public virtual bool prepare () throws GLib.Error;
 		public void remove_header (string header);
 		public void remove_param (string param);
 		public bool run (out unowned GLib.MainLoop loop) throws GLib.Error;
 		[CCode (cname = "rest_proxy_call_async")]
-		public bool run_async (Rest.ProxyCallAsyncCallback callback, GLib.Object? weak_object) throws GLib.Error;
+		public bool run_async ([CCode (delegate_target_pos = 2.9)] Rest.ProxyCallAsyncCallback callback, GLib.Object? weak_object) throws GLib.Error;
 		public void set_function (string function);
 		public void set_method (string method);
 		public bool sync () throws GLib.Error;
+		[NoAccessorMethod]
+		public Rest.Proxy proxy { owned get; construct; }
 	}
 	[Compact]
-	[CCode (ref_function = "rest_xml_node_ref", unref_function = "rest_xml_node_unref", cheader_filename = "rest/rest-xml-parser.h")]
+	[CCode (ref_function = "rest_xml_node_ref", unref_function = "rest_xml_node_unref", type_id = "REST_TYPE_XML_NODE", cheader_filename = "rest/rest-xml-parser.h")]
 	public class XmlNode {
 		public weak GLib.HashTable attrs;
 		public weak GLib.HashTable children;

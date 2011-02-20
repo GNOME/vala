@@ -19,7 +19,94 @@
 				<parameter name="userdata" type="gpointer"/>
 			</parameters>
 		</callback>
-		<struct name="OAuthProxy">
+		<boxed name="RestXmlNode" type-name="RestXmlNode" get-type="rest_xml_node_get_type">
+			<method name="find" symbol="rest_xml_node_find">
+				<return-type type="RestXmlNode*"/>
+				<parameters>
+					<parameter name="node" type="RestXmlNode*"/>
+					<parameter name="tag" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="free" symbol="rest_xml_node_free">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="node" type="RestXmlNode*"/>
+				</parameters>
+			</method>
+			<method name="get_attr" symbol="rest_xml_node_get_attr">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="node" type="RestXmlNode*"/>
+					<parameter name="attr_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="ref" symbol="rest_xml_node_ref">
+				<return-type type="RestXmlNode*"/>
+				<parameters>
+					<parameter name="node" type="RestXmlNode*"/>
+				</parameters>
+			</method>
+			<method name="unref" symbol="rest_xml_node_unref">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="node" type="RestXmlNode*"/>
+				</parameters>
+			</method>
+			<field name="ref_count" type="int"/>
+			<field name="name" type="gchar*"/>
+			<field name="content" type="gchar*"/>
+			<field name="children" type="GHashTable*"/>
+			<field name="attrs" type="GHashTable*"/>
+			<field name="next" type="RestXmlNode*"/>
+		</boxed>
+		<enum name="OAuthSignatureMethod">
+			<member name="PLAINTEXT" value="0"/>
+			<member name="HMAC_SHA1" value="1"/>
+		</enum>
+		<enum name="RestProxyCallError">
+			<member name="REST_PROXY_CALL_FAILED" value="0"/>
+		</enum>
+		<enum name="RestProxyError">
+			<member name="REST_PROXY_ERROR_CANCELLED" value="1"/>
+			<member name="REST_PROXY_ERROR_RESOLUTION" value="2"/>
+			<member name="REST_PROXY_ERROR_CONNECTION" value="3"/>
+			<member name="REST_PROXY_ERROR_SSL" value="4"/>
+			<member name="REST_PROXY_ERROR_IO" value="5"/>
+			<member name="REST_PROXY_ERROR_FAILED" value="6"/>
+			<member name="REST_PROXY_ERROR_HTTP_MULTIPLE_CHOICES" value="300"/>
+			<member name="REST_PROXY_ERROR_HTTP_MOVED_PERMANENTLY" value="301"/>
+			<member name="REST_PROXY_ERROR_HTTP_FOUND" value="302"/>
+			<member name="REST_PROXY_ERROR_HTTP_SEE_OTHER" value="303"/>
+			<member name="REST_PROXY_ERROR_HTTP_NOT_MODIFIED" value="304"/>
+			<member name="REST_PROXY_ERROR_HTTP_USE_PROXY" value="305"/>
+			<member name="REST_PROXY_ERROR_HTTP_THREEOHSIX" value="306"/>
+			<member name="REST_PROXY_ERROR_HTTP_TEMPORARY_REDIRECT" value="307"/>
+			<member name="REST_PROXY_ERROR_HTTP_BAD_REQUEST" value="400"/>
+			<member name="REST_PROXY_ERROR_HTTP_UNAUTHORIZED" value="401"/>
+			<member name="REST_PROXY_ERROR_HTTP_FOUROHTWO" value="402"/>
+			<member name="REST_PROXY_ERROR_HTTP_FORBIDDEN" value="403"/>
+			<member name="REST_PROXY_ERROR_HTTP_NOT_FOUND" value="404"/>
+			<member name="REST_PROXY_ERROR_HTTP_METHOD_NOT_ALLOWED" value="405"/>
+			<member name="REST_PROXY_ERROR_HTTP_NOT_ACCEPTABLE" value="406"/>
+			<member name="REST_PROXY_ERROR_HTTP_PROXY_AUTHENTICATION_REQUIRED" value="407"/>
+			<member name="REST_PROXY_ERROR_HTTP_REQUEST_TIMEOUT" value="408"/>
+			<member name="REST_PROXY_ERROR_HTTP_CONFLICT" value="409"/>
+			<member name="REST_PROXY_ERROR_HTTP_GONE" value="410"/>
+			<member name="REST_PROXY_ERROR_HTTP_LENGTH_REQUIRED" value="411"/>
+			<member name="REST_PROXY_ERROR_HTTP_PRECONDITION_FAILED" value="412"/>
+			<member name="REST_PROXY_ERROR_HTTP_REQUEST_ENTITY_TOO_LARGE" value="413"/>
+			<member name="REST_PROXY_ERROR_HTTP_REQUEST_URI_TOO_LONG" value="414"/>
+			<member name="REST_PROXY_ERROR_HTTP_UNSUPPORTED_MEDIA_TYPE" value="415"/>
+			<member name="REST_PROXY_ERROR_HTTP_REQUESTED_RANGE_NOT_SATISFIABLE" value="416"/>
+			<member name="REST_PROXY_ERROR_HTTP_EXPECTATION_FAILED" value="417"/>
+			<member name="REST_PROXY_ERROR_HTTP_INTERNAL_SERVER_ERROR" value="500"/>
+			<member name="REST_PROXY_ERROR_HTTP_NOT_IMPLEMENTED" value="501"/>
+			<member name="REST_PROXY_ERROR_HTTP_BAD_GATEWAY" value="502"/>
+			<member name="REST_PROXY_ERROR_HTTP_SERVICE_UNAVAILABLE" value="503"/>
+			<member name="REST_PROXY_ERROR_HTTP_GATEWAY_TIMEOUT" value="504"/>
+			<member name="REST_PROXY_ERROR_HTTP_HTTP_VERSION_NOT_SUPPORTED" value="505"/>
+		</enum>
+		<object name="OAuthProxy" parent="RestProxy" type-name="OAuthProxy" get-type="oauth_proxy_get_type">
 			<method name="access_token" symbol="oauth_proxy_access_token">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -78,7 +165,7 @@
 					<parameter name="proxy" type="OAuthProxy*"/>
 				</parameters>
 			</method>
-			<method name="new" symbol="oauth_proxy_new">
+			<constructor name="new" symbol="oauth_proxy_new">
 				<return-type type="RestProxy*"/>
 				<parameters>
 					<parameter name="consumer_key" type="char*"/>
@@ -86,8 +173,8 @@
 					<parameter name="url_format" type="gchar*"/>
 					<parameter name="binding_required" type="gboolean"/>
 				</parameters>
-			</method>
-			<method name="new_with_token" symbol="oauth_proxy_new_with_token">
+			</constructor>
+			<constructor name="new_with_token" symbol="oauth_proxy_new_with_token">
 				<return-type type="RestProxy*"/>
 				<parameters>
 					<parameter name="consumer_key" type="char*"/>
@@ -97,7 +184,7 @@
 					<parameter name="url_format" type="gchar*"/>
 					<parameter name="binding_required" type="gboolean"/>
 				</parameters>
-			</method>
+			</constructor>
 			<method name="request_token" symbol="oauth_proxy_request_token">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -133,20 +220,14 @@
 					<parameter name="token_secret" type="char*"/>
 				</parameters>
 			</method>
-			<field name="parent" type="RestProxy"/>
-		</struct>
-		<struct name="OAuthProxyCall">
-			<field name="parent" type="RestProxyCall"/>
-		</struct>
-		<struct name="OAuthProxyCallClass">
-			<field name="parent_class" type="RestProxyCallClass"/>
-			<field name="_padding_dummy" type="gpointer[]"/>
-		</struct>
-		<struct name="OAuthProxyClass">
-			<field name="parent_class" type="RestProxyClass"/>
-			<field name="_padding_dummy" type="gpointer[]"/>
-		</struct>
-		<struct name="RestProxy">
+			<property name="consumer-key" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="consumer-secret" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="token" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="token-secret" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+		</object>
+		<object name="OAuthProxyCall" parent="RestProxyCall" type-name="OAuthProxyCall" get-type="oauth_proxy_call_get_type">
+		</object>
+		<object name="RestProxy" parent="GObject" type-name="RestProxy" get-type="rest_proxy_get_type">
 			<method name="bind" symbol="rest_proxy_bind">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -169,19 +250,19 @@
 					<parameter name="proxy" type="RestProxy*"/>
 				</parameters>
 			</method>
-			<method name="new" symbol="rest_proxy_new">
+			<constructor name="new" symbol="rest_proxy_new">
 				<return-type type="RestProxy*"/>
 				<parameters>
 					<parameter name="url_format" type="gchar*"/>
 					<parameter name="binding_required" type="gboolean"/>
 				</parameters>
-			</method>
-			<method name="new_call" symbol="rest_proxy_new_call">
+			</constructor>
+			<constructor name="new_call" symbol="rest_proxy_new_call">
 				<return-type type="RestProxyCall*"/>
 				<parameters>
 					<parameter name="proxy" type="RestProxy*"/>
 				</parameters>
-			</method>
+			</constructor>
 			<method name="set_user_agent" symbol="rest_proxy_set_user_agent">
 				<return-type type="void"/>
 				<parameters>
@@ -208,9 +289,34 @@
 					<parameter name="params" type="va_list"/>
 				</parameters>
 			</method>
-			<field name="parent" type="GObject"/>
-		</struct>
-		<struct name="RestProxyCall">
+			<property name="binding-required" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="url-format" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="user-agent" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<vfunc name="bind_valist">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="proxy" type="RestProxy*"/>
+					<parameter name="params" type="va_list"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="new_call">
+				<return-type type="RestProxyCall*"/>
+				<parameters>
+					<parameter name="proxy" type="RestProxy*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="simple_run_valist">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="proxy" type="RestProxy*"/>
+					<parameter name="payload" type="gchar**"/>
+					<parameter name="len" type="goffset*"/>
+					<parameter name="error" type="GError**"/>
+					<parameter name="params" type="va_list"/>
+				</parameters>
+			</vfunc>
+		</object>
+		<object name="RestProxyCall" parent="GObject" type-name="RestProxyCall" get-type="rest_proxy_call_get_type">
 			<method name="add_header" symbol="rest_proxy_call_add_header">
 				<return-type type="void"/>
 				<parameters>
@@ -378,65 +484,19 @@
 					<parameter name="error_out" type="GError**"/>
 				</parameters>
 			</method>
-			<field name="parent" type="GObject"/>
-			<field name="priv" type="RestProxyCallPrivate*"/>
-		</struct>
-		<struct name="RestProxyCallClass">
-			<field name="parent_class" type="GObjectClass"/>
-			<field name="prepare" type="GCallback"/>
-			<field name="_padding_dummy" type="gpointer[]"/>
-		</struct>
-		<struct name="RestProxyClass">
-			<field name="parent_class" type="GObjectClass"/>
-			<field name="bind_valist" type="GCallback"/>
-			<field name="new_call" type="GCallback"/>
-			<field name="simple_run_valist" type="GCallback"/>
-			<field name="_padding_dummy" type="gpointer[]"/>
-		</struct>
-		<struct name="RestXmlNode">
-			<method name="find" symbol="rest_xml_node_find">
-				<return-type type="RestXmlNode*"/>
+			<property name="proxy" type="RestProxy*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<vfunc name="prepare">
+				<return-type type="gboolean"/>
 				<parameters>
-					<parameter name="node" type="RestXmlNode*"/>
-					<parameter name="tag" type="gchar*"/>
+					<parameter name="call" type="RestProxyCall*"/>
+					<parameter name="error" type="GError**"/>
 				</parameters>
-			</method>
-			<method name="free" symbol="rest_xml_node_free">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="node" type="RestXmlNode*"/>
-				</parameters>
-			</method>
-			<method name="get_attr" symbol="rest_xml_node_get_attr">
-				<return-type type="gchar*"/>
-				<parameters>
-					<parameter name="node" type="RestXmlNode*"/>
-					<parameter name="attr_name" type="gchar*"/>
-				</parameters>
-			</method>
-			<method name="ref" symbol="rest_xml_node_ref">
-				<return-type type="RestXmlNode*"/>
-				<parameters>
-					<parameter name="node" type="RestXmlNode*"/>
-				</parameters>
-			</method>
-			<method name="unref" symbol="rest_xml_node_unref">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="node" type="RestXmlNode*"/>
-				</parameters>
-			</method>
-			<field name="ref_count" type="int"/>
-			<field name="name" type="gchar*"/>
-			<field name="content" type="gchar*"/>
-			<field name="children" type="GHashTable*"/>
-			<field name="attrs" type="GHashTable*"/>
-			<field name="next" type="RestXmlNode*"/>
-		</struct>
-		<struct name="RestXmlParser">
-			<method name="new" symbol="rest_xml_parser_new">
+			</vfunc>
+		</object>
+		<object name="RestXmlParser" parent="GObject" type-name="RestXmlParser" get-type="rest_xml_parser_get_type">
+			<constructor name="new" symbol="rest_xml_parser_new">
 				<return-type type="RestXmlParser*"/>
-			</method>
+			</constructor>
 			<method name="parse_from_data" symbol="rest_xml_parser_parse_from_data">
 				<return-type type="RestXmlNode*"/>
 				<parameters>
@@ -445,57 +505,6 @@
 					<parameter name="len" type="goffset"/>
 				</parameters>
 			</method>
-			<field name="parent" type="GObject"/>
-		</struct>
-		<struct name="RestXmlParserClass">
-			<field name="parent_class" type="GObjectClass"/>
-		</struct>
-		<enum name="OAuthSignatureMethod">
-			<member name="PLAINTEXT" value="0"/>
-			<member name="HMAC_SHA1" value="1"/>
-		</enum>
-		<enum name="RestProxyCallError">
-			<member name="REST_PROXY_CALL_FAILED" value="0"/>
-		</enum>
-		<enum name="RestProxyError">
-			<member name="REST_PROXY_ERROR_CANCELLED" value="1"/>
-			<member name="REST_PROXY_ERROR_RESOLUTION" value="2"/>
-			<member name="REST_PROXY_ERROR_CONNECTION" value="3"/>
-			<member name="REST_PROXY_ERROR_SSL" value="4"/>
-			<member name="REST_PROXY_ERROR_IO" value="5"/>
-			<member name="REST_PROXY_ERROR_FAILED" value="6"/>
-			<member name="REST_PROXY_ERROR_HTTP_MULTIPLE_CHOICES" value="300"/>
-			<member name="REST_PROXY_ERROR_HTTP_MOVED_PERMANENTLY" value="301"/>
-			<member name="REST_PROXY_ERROR_HTTP_FOUND" value="302"/>
-			<member name="REST_PROXY_ERROR_HTTP_SEE_OTHER" value="303"/>
-			<member name="REST_PROXY_ERROR_HTTP_NOT_MODIFIED" value="304"/>
-			<member name="REST_PROXY_ERROR_HTTP_USE_PROXY" value="305"/>
-			<member name="REST_PROXY_ERROR_HTTP_THREEOHSIX" value="306"/>
-			<member name="REST_PROXY_ERROR_HTTP_TEMPORARY_REDIRECT" value="307"/>
-			<member name="REST_PROXY_ERROR_HTTP_BAD_REQUEST" value="400"/>
-			<member name="REST_PROXY_ERROR_HTTP_UNAUTHORIZED" value="401"/>
-			<member name="REST_PROXY_ERROR_HTTP_FOUROHTWO" value="402"/>
-			<member name="REST_PROXY_ERROR_HTTP_FORBIDDEN" value="403"/>
-			<member name="REST_PROXY_ERROR_HTTP_NOT_FOUND" value="404"/>
-			<member name="REST_PROXY_ERROR_HTTP_METHOD_NOT_ALLOWED" value="405"/>
-			<member name="REST_PROXY_ERROR_HTTP_NOT_ACCEPTABLE" value="406"/>
-			<member name="REST_PROXY_ERROR_HTTP_PROXY_AUTHENTICATION_REQUIRED" value="407"/>
-			<member name="REST_PROXY_ERROR_HTTP_REQUEST_TIMEOUT" value="408"/>
-			<member name="REST_PROXY_ERROR_HTTP_CONFLICT" value="409"/>
-			<member name="REST_PROXY_ERROR_HTTP_GONE" value="410"/>
-			<member name="REST_PROXY_ERROR_HTTP_LENGTH_REQUIRED" value="411"/>
-			<member name="REST_PROXY_ERROR_HTTP_PRECONDITION_FAILED" value="412"/>
-			<member name="REST_PROXY_ERROR_HTTP_REQUEST_ENTITY_TOO_LARGE" value="413"/>
-			<member name="REST_PROXY_ERROR_HTTP_REQUEST_URI_TOO_LONG" value="414"/>
-			<member name="REST_PROXY_ERROR_HTTP_UNSUPPORTED_MEDIA_TYPE" value="415"/>
-			<member name="REST_PROXY_ERROR_HTTP_REQUESTED_RANGE_NOT_SATISFIABLE" value="416"/>
-			<member name="REST_PROXY_ERROR_HTTP_EXPECTATION_FAILED" value="417"/>
-			<member name="REST_PROXY_ERROR_HTTP_INTERNAL_SERVER_ERROR" value="500"/>
-			<member name="REST_PROXY_ERROR_HTTP_NOT_IMPLEMENTED" value="501"/>
-			<member name="REST_PROXY_ERROR_HTTP_BAD_GATEWAY" value="502"/>
-			<member name="REST_PROXY_ERROR_HTTP_SERVICE_UNAVAILABLE" value="503"/>
-			<member name="REST_PROXY_ERROR_HTTP_GATEWAY_TIMEOUT" value="504"/>
-			<member name="REST_PROXY_ERROR_HTTP_HTTP_VERSION_NOT_SUPPORTED" value="505"/>
-		</enum>
+		</object>
 	</namespace>
 </api>
