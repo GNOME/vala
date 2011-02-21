@@ -52,7 +52,7 @@ namespace Rest {
 		public virtual bool bind_valist (void* @params);
 		public static GLib.Quark error_quark ();
 		public unowned string get_user_agent ();
-		public Rest.ProxyCall new_call ();
+		public virtual Rest.ProxyCall new_call ();
 		public void set_user_agent (string user_agent);
 		public bool simple_run (string payload, int64 len) throws GLib.Error;
 		public virtual bool simple_run_valist (string payload, int64 len, void* @params) throws GLib.Error;
