@@ -2517,6 +2517,12 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "0") {
 						type.value_owned = true;
 					}
+				} else if (nv[0] == "value_owned") {
+					if (eval (nv[1]) == "0") {
+						type.value_owned = false;
+					} else if (eval (nv[1]) == "1") {
+						type.value_owned = true;
+					}
 				} else if (nv[0] == "type_name") {
 					type = parse_type_from_string (eval (nv[1]), true);
 				} else if (nv[0] == "type_arguments") {

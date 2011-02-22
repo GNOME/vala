@@ -6245,7 +6245,7 @@ namespace Gtk {
 		public weak string accelerator;
 		public weak string tooltip;
 		[CCode (type = "GCallback")]
-		public Gtk.ActionCallback callback;
+		public weak Gtk.ActionCallback callback;
 	}
 	[CCode (type_id = "GTK_TYPE_ALLOCATION", cheader_filename = "gtk/gtk.h")]
 	public struct Allocation {
