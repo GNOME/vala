@@ -2105,6 +2105,7 @@ public class Vala.GirParser : CodeVisitor {
 		var type = parse_type (null, null, false, out no_array_length, out array_null_terminated);
 		var prop = new Property (name, type, null, null, get_current_src ());
 		prop.access = SymbolAccessibility.PUBLIC;
+		prop.external = true;
 		prop.no_accessor_method = true;
 		prop.no_array_length = no_array_length;
 		prop.array_null_terminated = array_null_terminated;
@@ -2218,6 +2219,8 @@ public class Vala.GirParser : CodeVisitor {
 				((Delegate) s).set_cname (cname);
 			}
 		}
+
+		s.external = true;
 
 		if (element_name == "virtual-method" || element_name == "callback") {
 			if (s is Method) {
