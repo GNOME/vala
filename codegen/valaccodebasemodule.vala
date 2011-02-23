@@ -1012,11 +1012,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					set_cvalue (this_access, new CCodeIdentifier ("self"));
 				}
 
-				var ma = new MemberAccess (this_access, f.name);
-				ma.symbol_reference = f;
-				ma.value_type = f.variable_type.copy ();
-				visit_member_access (ma);
-				ccode.add_expression (get_unref_expression (lhs, f.variable_type, ma));
+				ccode.add_expression (destroy_field (f, this_access));
 
 				pop_context ();
 			}
@@ -5819,17 +5815,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		foreach (Field f in st.get_fields ()) {
 			if (f.binding == MemberBinding.INSTANCE) {
 				if (requires_destroy (f.variable_type)) {
-					var lhs = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), f.get_cname ());
-
 					var this_access = new MemberAccess.simple ("this");
 					this_access.value_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
 					set_cvalue (this_access, new CCodeIdentifier ("(*self)"));
 
-					var ma = new MemberAccess (this_access, f.name);
-					ma.symbol_reference = f;
-					ma.value_type = f.variable_type.copy ();
-					visit_member_access (ma);
-					ccode.add_expression (get_unref_expression (lhs, f.variable_type, ma));
+					ccode.add_expression (destroy_field (f, this_access));
 				}
 			}
 		}
