@@ -637,6 +637,7 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 	}
 
 	public override void visit_formal_parameter (Api.FormalParameter param) {
+		var param_name = param.name ?? "...";
 		var annotations = new string[]{};
 		var direction = "in";
 
@@ -656,27 +657,29 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 		}
 
 		if (param.parameter_type.data_type is Api.Array) {
-			annotations += "array length=%s_length1".printf (param.name);
-			add_custom_header ("%s_length1".printf (param.name), "length of the @%s array".printf (param.name),
-							   null, get_parameter_pos (current_method_or_delegate, param.name)+0.1);
+			annotations += "array length=%s_length1".printf (param_name);
+			add_custom_header ("%s_length1".printf (param_name), "length of the @%s array".printf (param_name),
+							   null, get_parameter_pos (current_method_or_delegate, param_name)+0.1);
 		}
 
-		if (get_cname (param.parameter_type.data_type) == "GError") {
+		if (!param.ellipsis && get_cname (param.parameter_type.data_type) == "GError") {
 			annotations += "not-error";
 		}
 
 		if (current_signal != null && param.documentation == null) {
 			// gtkdoc writes arg0, arg1 which is ugly. As a workaround, we always add an header for them.
-			add_custom_header (param.name, "", null);
+			add_custom_header (param_name, "", null);
 		} else {
-			add_header (param.name, param.documentation, annotations,
-						get_parameter_pos (current_method_or_delegate, param.name));
+			add_header (param_name, param.documentation, annotations,
+				get_parameter_pos (current_method_or_delegate, param_name));
 		}
 
 		if (param.parameter_type.data_type is Api.Delegate) {
-			add_custom_header ("%s_target".printf (param.name), "user data to pass to @%s".printf (param.name),
-							   {"allow-none", "closure"}, get_parameter_pos (current_method_or_delegate, param.name)+0.1);
-			add_custom_header ("%s_target_destroy_notify".printf (param.name), "function to call when @%s_target is no longer needed".printf (param.name), {"allow-none"}, get_parameter_pos (current_method_or_delegate, param.name)+0.2);
+			add_custom_header ("%s_target".printf (param_name), "user data to pass to @%s".printf (param_name),
+				{"allow-none", "closure"}, get_parameter_pos (current_method_or_delegate, param_name)+0.1);
+			add_custom_header ("%s_target_destroy_notify".printf (param_name), 
+				"function to call when @%s_target is no longer needed".printf (param_name), {"allow-none"},
+				get_parameter_pos (current_method_or_delegate, param_name)+0.2);
 		}
 
 		if (current_dbus_member != null) {
@@ -686,7 +689,7 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 			} else if (param.is_out) {
 				ddirection = DBus.Parameter.Direction.OUT;
 			}
-			var dparam = new DBus.Parameter (param.name, param.parameter_type.get_dbus_type_signature (), ddirection);
+			var dparam = new DBus.Parameter (param_name, param.parameter_type.get_dbus_type_signature (), ddirection);
 			current_dbus_member.add_parameter (dparam);
 		}
 		param.accept_all_children (this);
