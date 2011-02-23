@@ -471,7 +471,8 @@ public class Vala.Assignment : Expression {
 
 			if (operator == AssignmentOperator.SIMPLE &&
 			    (local != null || param != null || field != null) &&
-			    !is_array_add ()) {
+			    !is_array_add () &&
+			    !(field is ArrayLengthField)) {
 				// visit_assignment not necessary
 				if (instance && ma.inner != null) {
 					ma.inner.emit (codegen);
