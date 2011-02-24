@@ -6420,7 +6420,7 @@ namespace Gtk {
 		public weak string accelerator;
 		public weak string tooltip;
 		[CCode (type = "GCallback")]
-		public Gtk.ActionCallback callback;
+		public weak Gtk.ActionCallback callback;
 		public bool is_active;
 	}
 	[CCode (type_id = "GTK_TYPE_TREE_ITER", cheader_filename = "gtk/gtk.h")]
