@@ -51,6 +51,10 @@ public class Valadoc.Api.TypeReference : Item {
 
 	public bool pass_ownership {
 		get {
+			if (this.vtyperef == null) {
+				return false;
+			}
+
 			Vala.CodeNode? node = this.vtyperef.parent_node;
 			if (node == null) {
 				return false;
@@ -69,6 +73,10 @@ public class Valadoc.Api.TypeReference : Item {
 
 	public bool is_owned {
 		get {
+			if (this.vtyperef == null) {
+				return false;
+			}
+
 			Vala.CodeNode parent = this.vtyperef.parent_node;
 
 			// parameter:
@@ -101,7 +109,7 @@ public class Valadoc.Api.TypeReference : Item {
 
 	public bool is_dynamic {
 		get {
-			return this.vtyperef.is_dynamic;
+			return this.vtyperef != null && this.vtyperef.is_dynamic;
 		}
 	}
 
@@ -123,14 +131,19 @@ public class Valadoc.Api.TypeReference : Item {
 
 	public bool is_nullable {
 		get {
-			return this.vtyperef.nullable
+			return this.vtyperef != null
+			       && this.vtyperef.nullable
 			       && !(this.vtyperef is Vala.GenericType)
 			       && !(this.vtyperef is Vala.PointerType);
 		}
 	}
 
 	public string? get_dbus_type_signature () {
-		return Vala.DBusModule.get_type_signature (vtyperef);
+		if (vtyperef != null) {
+			return Vala.DBusModule.get_type_signature (vtyperef);
+		} else {
+			return null;
+		}
 	}
 
 	internal override void resolve_type_references (Tree root) {
