@@ -4129,7 +4129,7 @@ namespace Gtk {
 		public void get_bounds (out Gtk.TextIter start, out Gtk.TextIter end);
 		public int get_char_count ();
 		public unowned Gtk.TargetList get_copy_target_list ();
-		public Gdk.Atom get_deserialize_formats (int n_formats);
+		public Gdk.Atom[] get_deserialize_formats ();
 		public void get_end_iter (out Gtk.TextIter iter);
 		public bool get_has_selection ();
 		public unowned Gtk.TextMark get_insert ();
@@ -7202,13 +7202,13 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void ClipboardReceivedFunc (Gtk.Clipboard clipboard, Gtk.SelectionData selection_data);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public delegate void ClipboardRichTextReceivedFunc (Gtk.Clipboard clipboard, Gdk.Atom format, uchar text, size_t length);
+	public delegate void ClipboardRichTextReceivedFunc (Gtk.Clipboard clipboard, Gdk.Atom format, [CCode (array_length_type = "gsize")] uint8[] text);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public delegate void ClipboardTargetsReceivedFunc (Gtk.Clipboard clipboard, out Gdk.Atom atoms, int n_atoms);
+	public delegate void ClipboardTargetsReceivedFunc (Gtk.Clipboard clipboard, Gdk.Atom[] atoms);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public delegate void ClipboardTextReceivedFunc (Gtk.Clipboard clipboard, string text);
+	public delegate void ClipboardTextReceivedFunc (Gtk.Clipboard clipboard, string? text);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public delegate void ClipboardURIReceivedFunc (Gtk.Clipboard clipboard, string uris);
+	public delegate void ClipboardURIReceivedFunc (Gtk.Clipboard clipboard, [CCode (array_length = false, array_null_terminated = true)] string[] uris);
 	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
 	public delegate void ColorSelectionChangePaletteFunc (Gdk.Color colors, int n_colors);
 	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
@@ -7248,7 +7248,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate int RecentSortFunc (Gtk.RecentInfo a, Gtk.RecentInfo b);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public delegate bool TextBufferDeserializeFunc (Gtk.TextBuffer register_buffer, Gtk.TextBuffer content_buffer, Gtk.TextIter iter, uchar data, size_t length, bool create_tags, GLib.Error error);
+	public delegate bool TextBufferDeserializeFunc (Gtk.TextBuffer register_buffer, Gtk.TextBuffer content_buffer, Gtk.TextIter iter, [CCode (array_length_type = "gsize")] uint8[] data, bool create_tags, GLib.Error error);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate uchar TextBufferSerializeFunc (Gtk.TextBuffer register_buffer, Gtk.TextBuffer content_buffer, Gtk.TextIter start, Gtk.TextIter end, size_t length);
 	[CCode (cheader_filename = "gtk/gtk.h")]
