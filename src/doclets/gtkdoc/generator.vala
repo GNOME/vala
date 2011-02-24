@@ -418,34 +418,40 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 		add_symbol (st.get_filename(), st.get_free_function_cname ());
 	}
 
-	public override void visit_error_domain (Api.ErrorDomain edomain) {
-		if (current_method_or_delegate != null) {
-			// method throws error
-			Header? param_header = null;
-			foreach (var header in current_headers) {
-				if (header.name == "error") {
-					param_header = header;
-					break;
-				}
+	/**
+	 * Visit thrown error domains
+	 */
+	private void visit_thrown_error_domain (Api.ErrorDomain edomain) {
+		// method throws error
+		Header? param_header = null;
+		foreach (var header in current_headers) {
+			if (header.name == "error") {
+				param_header = header;
+				break;
 			}
-			if (param_header == null) {
-				add_custom_header ("error", "location to store the error occuring, or %NULL to ignore", {"error-domains %s".printf (edomain.get_cname ())}, double.MAX-1);
-			} else {
-				// assume the only annotation is error-domains
-				var annotation = param_header.annotations[0];
-				annotation += " %s".printf (edomain.get_cname ());
-				param_header.annotations[0] = annotation;
-			}
-		} else {
-			// error domain definition
-			var old_headers = current_headers;
-			current_headers = new Gee.LinkedList<Header>();
-
-			edomain.accept_all_children (this);
-			add_symbol (edomain.get_filename(), edomain.get_cname(), edomain.documentation);
-
-			current_headers = old_headers;
 		}
+		if (param_header == null) {
+			add_custom_header ("error", "location to store the error occuring, or %NULL to ignore", {"error-domains %s".printf (edomain.get_cname ())}, double.MAX-1);
+		} else {
+			// assume the only annotation is error-domains
+			var annotation = param_header.annotations[0];
+			annotation += " %s".printf (edomain.get_cname ());
+			param_header.annotations[0] = annotation;
+		}
+	}
+
+	/**
+	 * Visit error domain definitions
+	 */
+	public override void visit_error_domain (Api.ErrorDomain edomain) {
+		// error domain definition
+		var old_headers = current_headers;
+		current_headers = new Gee.LinkedList<Header>();
+
+		edomain.accept_all_children (this);
+		add_symbol (edomain.get_filename(), edomain.get_cname(), edomain.documentation);
+
+		current_headers = old_headers;
 	}
 
 	public override void visit_error_code (Api.ErrorCode ecode) {
@@ -514,7 +520,12 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 		current_headers = new Gee.LinkedList<Header>();
 		current_delegate = d;
 
-		d.accept_all_children (this);
+		d.accept_children ({NodeType.FORMAL_PARAMETER, NodeType.TYPE_PARAMETER}, this);
+		var exceptions = d.get_children_by_type (NodeType.ERROR_DOMAIN);
+		foreach (var ex in exceptions) {
+			visit_thrown_error_domain ((ErrorDomain) ex);
+		}
+
 		add_symbol (d.get_filename(), d.get_cname(), d.documentation);
 
 		current_headers = old_headers;
@@ -583,7 +594,11 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 			add_custom_header ("self", "the %s instance".printf (get_docbook_link (m.parent)), null, 0.1);
 		}
 
-		m.accept_all_children (this);
+		m.accept_children ({NodeType.FORMAL_PARAMETER, NodeType.TYPE_PARAMETER}, this);
+		var exceptions = m.get_children_by_type (NodeType.ERROR_DOMAIN);
+		foreach (var ex in exceptions) {
+			visit_thrown_error_domain ((ErrorDomain) ex);
+		}
 
 		Header error_header = null;
 		GComment gcomment = null;
@@ -659,7 +674,7 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 		if (param.parameter_type.data_type is Api.Array) {
 			annotations += "array length=%s_length1".printf (param_name);
 			add_custom_header ("%s_length1".printf (param_name), "length of the @%s array".printf (param_name),
-							   null, get_parameter_pos (current_method_or_delegate, param_name)+0.1);
+				null, get_parameter_pos (current_method_or_delegate, param_name)+0.1);
 		}
 
 		if (!param.ellipsis && get_cname (param.parameter_type.data_type) == "GError") {
