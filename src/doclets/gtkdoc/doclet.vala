@@ -249,18 +249,27 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 
 		var library = realpath (Config.library_filename);
 
-		string[] pc = { "pkg-config" };
+		string[] pc = new string[] { "pkg-config" };
+
 		foreach (var package in tree.get_package_list()) {
 			if (package.is_package && package_exists (package.name, reporter)) {
 				pc += package.name;
 			}
 		}
 
-		var pc_cflags = pc;
+		//TODO: find out why var pc_cflags = pc; fails (free, invalid next size)
+		string[] pc_cflags = new string[] {};
+		foreach (var name in pc) {
+			pc_cflags += name;
+		}
 		pc_cflags += "--cflags";
-		var pc_libs = pc;
+
+		string[] pc_libs = new string[] {};
+		foreach (var name in pc) {
+			pc_libs += name;
+		}
 		pc_libs += "--libs";
-	
+
 		try {
 			string stderr;
 			int status;
