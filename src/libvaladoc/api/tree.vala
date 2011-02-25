@@ -163,7 +163,6 @@ public class Valadoc.Api.Tree {
 
 		reporter.vreporter = this.context.report;
 
-		this.context.checking = settings.enable_checking;
 		this.context.experimental = settings.experimental;
 		this.context.experimental_non_null = settings.experimental || settings.experimental_non_null;
 		this.context.dbus_transformation = !settings.disable_dbus_transformation;

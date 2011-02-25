@@ -49,7 +49,6 @@ public class ValaDoc : Object {
 
 	private static string basedir = null;
 	private static string[] defines;
-	private static bool enable_checking;
 	private static bool experimental;
 	private static bool experimental_non_null = false;
 	private static bool disable_dbus_transformation;
@@ -68,7 +67,6 @@ public class ValaDoc : Object {
 	private const GLib.OptionEntry[] options = {
 		{ "basedir", 'b', 0, OptionArg.FILENAME, ref basedir, "Base source directory", "DIRECTORY" },
 		{ "define", 'D', 0, OptionArg.STRING_ARRAY, ref defines, "Define SYMBOL", "SYMBOL..." },
-		{ "enable-checking", 0, 0, OptionArg.NONE, ref enable_checking, "Enable additional run-time checks", null },
 		{ "enable-experimental", 0, 0, OptionArg.NONE, ref experimental, "Enable experimental features", null },
 		{ "enable-experimental-non-null", 0, 0, OptionArg.NONE, ref experimental_non_null, "Enable experimental enhancements for non-null types", null },
 		{ "disable-dbus-transformation", 0, 0, OptionArg.NONE, ref disable_dbus_transformation, "Disable transformation of D-Bus member names", null },
@@ -148,7 +146,6 @@ public class ValaDoc : Object {
 		settings.wiki_directory = this.wikidirectory;
 		settings.pluginargs = this.pluginargs;
 
-		settings.enable_checking = enable_checking;
 		settings.experimental = experimental;
 		settings.experimental_non_null = experimental_non_null;
 		settings.disable_dbus_transformation = disable_dbus_transformation;
