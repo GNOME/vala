@@ -168,6 +168,12 @@ public class Valadoc.Api.Tree {
 		this.context.dbus_transformation = !settings.disable_dbus_transformation;
 		this.context.vapi_directories = settings.vapi_directories;
 
+		if (settings.verbose) {
+			context.report.enable_warnings = true;
+		} else {
+			context.report.enable_warnings = false;
+		}
+
 		if (settings.basedir == null) {
 			context.basedir = realpath (".");
 		} else {
