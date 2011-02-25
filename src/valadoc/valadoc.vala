@@ -77,6 +77,7 @@ public class ValaDoc : Object {
 		{ "vapidir", 0, 0, OptionArg.FILENAME_ARRAY, ref vapi_directories, "Look for package bindings in DIRECTORY", "DIRECTORY..." },
 		{ "importdir", 0, 0, OptionArg.FILENAME_ARRAY, ref import_directories, "Look for external documentation in DIRECTORY", "DIRECTORY..." },
 		{ "profile", 0, 0, OptionArg.STRING, ref profile, "Use the given profile instead of the default", "PROFILE" },
+		{ "version", 0, 0, OptionArg.NONE, ref version, "Display version number", null },
 
 		{ "pkg", 0, 0, OptionArg.STRING_ARRAY, ref packages, "Include binding for PACKAGE", "PACKAGE..." },
 		{ "import", 0, 0, OptionArg.STRING_ARRAY, ref import_packages, "Include binding for PACKAGE", "PACKAGE..." },
@@ -240,8 +241,8 @@ public class ValaDoc : Object {
 		}
 
 		if (version) {
-			stdout.printf ("Valadoc %s\n", "0.1");
-			return quit (reporter);
+			stdout.printf ("Valadoc %s\n", Config.version);
+			return 0;
 		}
 
 		if (directory == null) {
