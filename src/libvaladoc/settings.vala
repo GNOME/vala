@@ -35,7 +35,6 @@ public class Valadoc.Settings : Object {
 	public bool verbose = false;
 
 	public bool enable_checking;
-	public bool deprecated;
 	public bool experimental;
 	public bool experimental_non_null;
 	public bool disable_dbus_transformation;
