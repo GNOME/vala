@@ -5245,9 +5245,9 @@ namespace Gtk {
 		public void add_events (int events);
 		public void add_mnemonic_label (Gtk.Widget label);
 		[NoWrapper]
-		public virtual void adjust_size_allocation (Gtk.Orientation orientation, int minimum_size, int natural_size, int allocated_pos, int allocated_size);
+		public virtual void adjust_size_allocation (Gtk.Orientation orientation, ref int minimum_size, ref int natural_size, ref int allocated_pos, ref int allocated_size);
 		[NoWrapper]
-		public virtual void adjust_size_request (Gtk.Orientation orientation, int minimum_size, int natural_size);
+		public virtual void adjust_size_request (Gtk.Orientation orientation, ref int minimum_size, ref int natural_size);
 		public bool child_focus (Gtk.DirectionType direction);
 		public void class_path (out uint path_length, out unowned string path, out unowned string path_reversed);
 		public virtual void compute_expand (Gtk.Orientation orientation);
