@@ -2287,7 +2287,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		}
 	}
 
-	List<Attribute>? parse_attributes () throws ParseError {
+	List<Attribute>? parse_attributes (bool parameter) throws ParseError {
 		if (current () != TokenType.OPEN_BRACKET) {
 			return null;
 		}
@@ -2311,8 +2311,8 @@ public class Vala.Genie.Parser : CodeVisitor {
 			} while (accept (TokenType.COMMA));
 			expect (TokenType.CLOSE_BRACKET);
 		}
-		expect (TokenType.EOL);
-		
+		if (!parameter)
+			expect (TokenType.EOL);		
 		return attrs;
 	}
 
@@ -2326,7 +2326,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 	Symbol parse_declaration (bool is_root = false) throws ParseError {
 		comment = scanner.pop_comment ();
-		var attrs = parse_attributes ();
+		var attrs = parse_attributes (false);
 		var begin = get_location ();
 		
 		switch (current ()) {
@@ -3049,7 +3049,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 			expect (TokenType.INDENT);
 			while (current () != TokenType.DEDENT) {
 				var accessor_begin = get_location ();
-				var attribs = parse_attributes ();
+				var attribs = parse_attributes (false);
 
 				var value_type = type.copy ();
 				value_type.value_owned = accept (TokenType.OWNED);
@@ -3376,7 +3376,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 				// allow trailing comma
 				break;
 			}
-			var value_attrs = parse_attributes ();
+			var value_attrs = parse_attributes (false);
 			var value_begin = get_location (); 
 			string id = parse_identifier ();
 			comment = scanner.pop_comment ();
@@ -3433,7 +3433,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 				// allow trailing comma
 				break;
 			}
-			var code_attrs = parse_attributes ();
+			var code_attrs = parse_attributes (false);
 			var code_begin = get_location ();
 			string id = parse_identifier ();
 			comment = scanner.pop_comment ();
@@ -3545,7 +3545,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 	}
 
 	Parameter parse_parameter () throws ParseError {
-		var attrs = parse_attributes ();
+		var attrs = parse_attributes (true);
 		var begin = get_location ();
 		if (accept (TokenType.ELLIPSIS)) {
 			// varargs
