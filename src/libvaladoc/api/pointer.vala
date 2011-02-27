@@ -23,9 +23,16 @@
 using Gee;
 using Valadoc.Content;
 
+
+/**
+ * Represents a pointer declaration.
+ */
 public class Valadoc.Api.Pointer : Item {
 	private Vala.PointerType vtype;
 
+	/**
+	 * The type the pointer is referring to.
+	 */
 	public Item data_type {
 		private set;
 		get;
@@ -45,6 +52,9 @@ public class Valadoc.Api.Pointer : Item {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	internal override void resolve_type_references (Tree root) {
 		Api.Item type = this.data_type;
 		if (type == null) {
@@ -58,6 +68,9 @@ public class Valadoc.Api.Pointer : Item {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	protected override Inline build_signature () {
 		return new SignatureBuilder ()
 			.append_content (data_type.signature)
