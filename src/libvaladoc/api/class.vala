@@ -23,6 +23,10 @@
 using Gee;
 using Valadoc.Content;
 
+
+/**
+ * Represents a class declaration.
+ */
 public class Valadoc.Api.Class : TypeSymbol {
 	private ArrayList<TypeReference> interfaces;
 	private Vala.Class vclass;
@@ -40,53 +44,101 @@ public class Valadoc.Api.Class : TypeSymbol {
 		}
 	}
 
+	/**
+	 * Specifies the base class.
+	 */
 	public TypeReference? base_type {
 		private set;
 		get;
 	}
 
+	/**
+	 * Returns the name of this class as it is used in C.
+	 */
 	public string? get_cname () {
 		return this.vclass.get_cname ();
 	}
 
+	/**
+	 * Returns the C symbol representing the runtime type id for this data type.
+	 */
 	public string? get_type_id () {
 		return this.vclass.get_type_id ();
 	}
 
+	/**
+	 * Returns the C function name that increments the reference count of
+	 * instances of this data type.
+	 *
+	 * @return the name of the C function or null if this data type does not
+	 *         support reference counting
+	 */
 	public string? get_ref_function_cname () {
 		return this.vclass.get_ref_function ();
 	}
 
+	/**
+	 * Returns the C function name that decrements the reference count of
+	 * instances of this data type.
+	 *
+	 * @return the name of the C function or null if this data type does not
+	 *         support reference counting
+	 */
 	public string? get_unref_function_cname () {
 		return this.vclass.get_unref_function ();
 	}
 
+	/**
+	 * Returns the cname of the GValue parameter spec function.
+	 */
 	public string? get_param_spec_function_cname () {
 		return this.vclass.get_param_spec_function ();
 	}
 
+	/**
+	 * Returns the cname of the GValue setter function.
+	 */
 	public string? get_set_value_function_cname () {
 		return this.vclass.get_set_value_function ();
 	}
 
+	/**
+	 * Returns the cname of the GValue getter function.
+	 */
 	public string? get_get_value_function_cname () {
 		return this.vclass.get_get_value_function ();
 	}
 
+	/**
+	 * Returns the cname of the GValue taker function.
+	 */
 	public string? get_take_value_function_cname () {
 		return this.vclass.get_take_value_function ();
 	}
 
+	/**
+	 * Returns the dbsu-name.
+	 */
 	public string? get_dbus_name () {
 		return Vala.DBusModule.get_dbus_name ((Vala.TypeSymbol) symbol);
 	}
 
+	/**
+	 * Returns a list of all newly implemented interfaces.
+	 *
+	 * @see get_full_implemented_interface_list
+	 */
 	public Collection<TypeReference> get_implemented_interface_list () {
 		return this.interfaces;
 	}
 
 	private Collection<TypeReference> _full_implemented_interfaces = null;
 
+	/**
+	 * Returns a list of all implemented interfaces.
+	 *
+	 * @see get_implemented_interface_list
+	 */
 	public Collection<TypeReference> get_full_implemented_interface_list () {
 		if (_full_implemented_interfaces == null) {
 			_full_implemented_interfaces = new HashSet<TypeReference> ();
@@ -100,20 +152,32 @@ public class Valadoc.Api.Class : TypeSymbol {
 		return _full_implemented_interfaces;
 	}
 
+	/**
+	 * Specifies whether this class is abstract.
+	 */
 	public bool is_abstract {
 		get {
 			return this.vclass.is_abstract;
 		}
 	}
 
+	/**
+	 * Specifies whether this class is fundamental.
+	 */
 	public bool is_fundamental {
 		get {
 			return this.vclass.is_fundamental ();
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override NodeType node_type { get { return NodeType.CLASS; } }
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void accept (Visitor visitor) {
 		visitor.visit_class (this);
 	}
@@ -138,10 +202,16 @@ public class Valadoc.Api.Class : TypeSymbol {
 	private Set<Interface> _known_derived_interfaces = new TreeSet<Interface> ();
 	private Set<Class> _known_child_classes = new TreeSet<Class> ();
 
+	/**
+	 * Returns a list of all known classes based on this class
+	 */
 	public Collection<Class> get_known_child_classes () {
 		return _known_child_classes.read_only_view;
 	}
 
+	/**
+	 * Returns a list of all known interfaces based on this class
+	 */
 	public Collection<Interface> get_known_derived_interfaces () {
 		return _known_derived_interfaces.read_only_view;
 	}
@@ -158,6 +228,9 @@ public class Valadoc.Api.Class : TypeSymbol {
 		_known_child_classes.add (cl);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	internal override void resolve_children (Tree root) {
 		// base class:
 		if (this.base_type != null)	{
@@ -172,6 +245,9 @@ public class Valadoc.Api.Class : TypeSymbol {
 		base.resolve_children (root);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	internal override void resolve_type_references (Tree root) {
 		var lst = this.vclass.get_base_types ();
 		this.set_parent_type_references (root, lst);
@@ -179,6 +255,9 @@ public class Valadoc.Api.Class : TypeSymbol {
 		base.resolve_type_references (root);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	protected override Inline build_signature () {
 		var signature = new SignatureBuilder ();
 
