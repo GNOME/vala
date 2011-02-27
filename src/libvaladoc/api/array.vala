@@ -23,9 +23,16 @@
 using Gee;
 using Valadoc.Content;
 
+
+/**
+ * Represents an array declaration.
+ */
 public class Valadoc.Api.Array : Item {
 	private Vala.ArrayType vtype;
 
+	/**
+	 * The element type.
+	 */
 	public Item data_type {
 		private set;
 		get;
@@ -43,6 +50,9 @@ public class Valadoc.Api.Array : Item {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	internal override void resolve_type_references (Tree root) {
 		if (this.data_type == null) {
 			/*TODO:possible?*/;
@@ -55,6 +65,9 @@ public class Valadoc.Api.Array : Item {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	protected override Inline build_signature () {
 		return new SignatureBuilder ()
 			.append_content (data_type.signature)
