@@ -23,36 +23,63 @@
 using Gee;
 using Valadoc.Content;
 
+
+/**
+ * Represents a Delegate.
+ */
 public class Valadoc.Api.Delegate : TypeSymbol {
 	public Delegate (Vala.Delegate symbol, Node parent) {
 		base (symbol, parent);
 		return_type = new TypeReference (symbol.return_type, this);
 	}
 
+	/**
+	 * Returns the name of this delegate as it is used in C.
+	 */
 	public string? get_cname () {
 		return ((Vala.Delegate) symbol).get_cname ();
 	}
 
+	/**
+	 * The return type of this callback.
+	 *
+	 * @return The return type of this callback or null for void
+	 */
 	public TypeReference? return_type { private set; get; }
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override NodeType node_type { get { return NodeType.DELEGATE; } }
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void accept (Visitor visitor) {
 		visitor.visit_delegate (this);
 	}
 
+	/**
+	 * Specifies whether this delegate is static
+	 */
 	public bool is_static {
 		get {
 			return !((Vala.Delegate) symbol).has_target;
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	internal override void resolve_type_references (Tree root) {
 		return_type.resolve_type_references (root);
 
 		base.resolve_type_references (root);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	protected override Inline build_signature () {
 		var signature = new SignatureBuilder ();
 
