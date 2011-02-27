@@ -22,10 +22,18 @@
 
 using Gee;
 
+/**
+ * Represents a node in the symbol tree.
+ */
 public abstract class Valadoc.Api.Symbol : Node {
-
+	/**
+	 * The underlining vala symbol
+	 */
 	internal Vala.Symbol symbol { private set; get; }
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override string? name {
 		owned get {
 			return symbol.name;
@@ -37,6 +45,9 @@ public abstract class Valadoc.Api.Symbol : Node {
 		this.symbol = symbol;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override string? get_filename () {
 		Vala.SourceReference? sref = symbol.source_reference;
 		if (sref == null) {
@@ -52,6 +63,9 @@ public abstract class Valadoc.Api.Symbol : Node {
 		return GLib.Path.get_basename (path);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override bool is_browsable (Settings settings) {
 		if (!settings._private && this.is_private) {
 			return false;
@@ -65,30 +79,45 @@ public abstract class Valadoc.Api.Symbol : Node {
 		return true;
 	}
 
+	/**
+	 * Specifies whether this symbol is public.
+	 */
 	public virtual bool is_public {
 		get {
 			return symbol.access == Vala.SymbolAccessibility.PUBLIC;
 		}
 	}
 
+	/**
+	 * Specifies whether this symbol is protected.
+	 */
 	public virtual bool is_protected {
 		get {
 			return symbol.access == Vala.SymbolAccessibility.PROTECTED;
 		}
 	}
 
+	/**
+	 * Specifies whether this symbol is internal.
+	 */
 	public virtual bool is_internal {
 		get {
 			return symbol.access == Vala.SymbolAccessibility.INTERNAL;
 		}
 	}
 
+	/**
+	 * Specifies whether this symbol is private.
+	 */
 	public virtual bool is_private {
 		get {
 			return symbol.access == Vala.SymbolAccessibility.PRIVATE;
 		}
 	}
 
+	/**
+	 * Returns the accessibility modifier as string
+	 */
 	protected string get_accessibility_modifier () {
 		if (is_public) {
 			return "public";
@@ -101,6 +130,9 @@ public abstract class Valadoc.Api.Symbol : Node {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	internal override void resolve_type_references (Tree root) {
 		base.resolve_type_references (root);
 
