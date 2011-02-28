@@ -23,49 +23,80 @@
 using Gee;
 using Valadoc.Content;
 
+
+/**
+ * Represents an errordomain member in the source code.
+ */
 public class Valadoc.Api.ErrorCode : TypeSymbol {
 	public ErrorCode (Vala.ErrorCode symbol, Node parent) {
 		base (symbol, parent);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override bool is_public {
 		get {
 			return ((ErrorDomain)parent).is_public;
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override bool is_protected {
 		get {
 			return ((ErrorDomain)parent).is_protected;
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override bool is_internal {
 		get {
 			return ((ErrorDomain)parent).is_internal;
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override bool is_private {
 		get {
 			return ((ErrorDomain)parent).is_private;
 		}
 	}
 
+	/**
+	 * Returns the name of this class as it is used in C.
+	 */
 	public string get_cname () {
 		return ((Vala.ErrorCode) symbol).get_cname ();
 	}
 
+	/**
+	 * Returns the dbus-name.
+	 */
 	public string get_dbus_name () {
 		return Vala.DBusModule.get_dbus_name_for_member (symbol);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override NodeType node_type { get { return NodeType.ERROR_CODE; } }
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void accept (Visitor visitor) {
 		visitor.visit_error_code (this);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	protected override Inline build_signature () {
 		return new SignatureBuilder ()
 			.append_symbol (this)
