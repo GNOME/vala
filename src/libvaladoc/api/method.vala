@@ -23,20 +23,33 @@
 using Gee;
 using Valadoc.Content;
 
+
+/**
+ * Represents a function or a method.
+ */
 public class Valadoc.Api.Method : Member {
 	public Method (Vala.Method symbol, Node parent) {
 		base (symbol, parent);
 		return_type = new TypeReference (symbol.return_type, this);
 	}
 
+	/**
+	 * Returns the name of this method as it is used in C.
+	 */
 	public string? get_cname () {
 		return ((Vala.Method) symbol).get_cname ();
 	}
 
+	/**
+	 * Returns the name of the finish function as it is used in C.
+	 */
 	public string? get_finish_function_cname () {
 		return ((Vala.Method) symbol).get_finish_cname ();
 	}
 
+	/**
+	 * Returns the dbus-name.
+	 */
 	public string get_dbus_name () {
 		return Vala.DBusModule.get_dbus_name_for_member (symbol);
 	}
@@ -45,34 +58,57 @@ public class Valadoc.Api.Method : Member {
 		return Vala.DBusServerModule.dbus_result_name ((Vala.Method) symbol);
 	}
 
+	/**
+	 * Specifies the virtual or abstract method this method overrides.
+	 */
 	public Method? base_method { private set; get; }
 
+	/**
+	 * The return type of this method.
+	 *
+	 * @return The return type of this method or null for void
+	 */
 	public TypeReference? return_type { private set; get; }
 
+	/**
+	 * Specifies whether this method is asynchronous
+	 */
 	public bool is_yields {
 		get {
 			return ((Vala.Method) symbol).coroutine;
 		}
 	}
 
+	/**
+	 * Specifies whether this method is abstract
+	 */
 	public bool is_abstract {
 		get {
 			return ((Vala.Method) symbol).is_abstract;
 		}
 	}
 
+	/**
+	 * Specifies whether this method is virtual
+	 */
 	public bool is_virtual {
 		get {
 			return ((Vala.Method) symbol).is_virtual;
 		}
 	}
 
+	/**
+	 * Specifies whether this method is static
+	 */
 	public bool is_override {
 		get {
 			return ((Vala.Method) symbol).overrides;
 		}
 	}
 
+	/**
+	 * Specifies whether this method is visible for dbus
+	 */
 	public bool is_static {
 		get {
 			if (is_constructor) {
@@ -82,24 +118,36 @@ public class Valadoc.Api.Method : Member {
 		}
 	}
 
+	/**
+	 * Specifies whether this method is a creation method
+	 */
 	public bool is_constructor {
 		get {
 			return symbol is Vala.CreationMethod;
 		}
 	}
 
+	/**
+	 * Specifies whether this method is inline
+	 */
 	public bool is_inline {
 		get {
 			return ((Vala.Method) symbol).is_inline;
 		}
 	}
 
+	/**
+	 * Specifies whether this method is visible for dbus
+	 */
 	public bool is_dbus_visible {
 		get {
 			return Vala.DBusServerModule.is_dbus_visible (symbol);
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override string? name {
 		owned get {
 			if (this.is_constructor) {
@@ -115,6 +163,9 @@ public class Valadoc.Api.Method : Member {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	internal override void resolve_type_references (Tree root) {
 		Vala.Method vala_method = symbol as Vala.Method;
 		Vala.Method? base_vala_method = null;
@@ -136,6 +187,9 @@ public class Valadoc.Api.Method : Member {
 		base.resolve_type_references (root);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	protected override Inline build_signature () {
 		var signature = new SignatureBuilder ();
 
@@ -206,6 +260,9 @@ public class Valadoc.Api.Method : Member {
 		return signature.get ();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override NodeType node_type {
 		get {
 			return is_constructor ? NodeType.CREATION_METHOD :
@@ -213,6 +270,9 @@ public class Valadoc.Api.Method : Member {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void accept (Visitor visitor) {
 		visitor.visit_method (this);
 	}
