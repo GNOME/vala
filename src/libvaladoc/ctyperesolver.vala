@@ -24,6 +24,9 @@
 using Valadoc.Api;
 using Gee;
 
+/**
+ * Resolves symbols by C-names
+ */
 public class Valadoc.CTypeResolver : Visitor {
 	private Map<string, Api.Node> nodes = new HashMap<string, Api.Node> ();
 
@@ -31,6 +34,12 @@ public class Valadoc.CTypeResolver : Visitor {
 		tree.accept (this);
 	}
 
+	/**
+	 * Resolves symbols by C-names
+	 *
+	 * @param name a C-name
+	 * @return the resolved node or null
+	 */
 	public Api.Node? resolve_symbol (string name) {
 		return nodes.get (name);
 	}
@@ -59,33 +68,54 @@ public class Valadoc.CTypeResolver : Visitor {
 		return parent_cname;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void visit_tree (Api.Tree item) {
 		item.accept_children (this);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void visit_package (Package item) {
 		item.accept_all_children (this, false);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void visit_namespace (Namespace item) {
 		item.accept_all_children (this, false);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void visit_interface (Interface item) {
 		register_symbol (item.get_cname (), item);
 		item.accept_all_children (this, false);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void visit_class (Class item) {
 		register_symbol (item.get_cname (), item);
 		item.accept_all_children (this, false);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void visit_struct (Struct item) {
 		register_symbol (item.get_cname (), item);
 		item.accept_all_children (this, false);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void visit_property (Property item) {
 		string parent_cname = get_parent_type_cname (item);
 		if (parent_cname != null) {
@@ -93,6 +123,9 @@ public class Valadoc.CTypeResolver : Visitor {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void visit_field (Field item) {
 		if (item is Namespace) {
 			register_symbol (item.get_cname (), item);
@@ -104,14 +137,23 @@ public class Valadoc.CTypeResolver : Visitor {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void visit_constant (Constant item) {
 		register_symbol (item.get_cname (), item);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void visit_delegate (Delegate item) {
 		register_symbol (item.get_cname (), item);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void visit_signal (Api.Signal item) {
 		string parent_cname = get_parent_type_cname (item);
 		if (parent_cname != null) {
@@ -119,24 +161,39 @@ public class Valadoc.CTypeResolver : Visitor {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void visit_method (Method item) {
 		register_symbol (item.get_cname (), item);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void visit_error_domain (ErrorDomain item) {
 		register_symbol (item.get_cname (), item);
 		item.accept_all_children (this, false);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void visit_error_code (ErrorCode item) {
 		register_symbol (item.get_cname (), item);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void visit_enum (Api.Enum item) {
 		register_symbol (item.get_cname (), item);
 		item.accept_all_children (this, false);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void visit_enum_value (Api.EnumValue item) {
 		register_symbol (item.get_cname (), item);
 	}
