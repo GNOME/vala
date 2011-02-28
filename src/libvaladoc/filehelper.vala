@@ -26,6 +26,12 @@ namespace Valadoc {
 	[CCode (cprefix = "", cname = "PACKAGE_ICONDIR")]
 	public extern const string icons_dir;
 
+	/**
+	 * Makes a copy of the file src to dest. 
+	 *
+	 * @param src the file to copy
+	 * @param dest the destination path
+	 */
 	public bool copy_file (string src, string dest) {
 		GLib.FileStream fsrc = GLib.FileStream.open (src, "rb");
 		if (fsrc == null) {
@@ -44,6 +50,12 @@ namespace Valadoc {
 		return true;
 	}
 
+	/**
+	 * Makes a copy of the directory src to dest. 
+	 *
+	 * @param src the directory to copy
+	 * @param dest the destination path
+	 */
 	public bool copy_directory (string src, string dest) {
 		string _src = (src.has_suffix ( "/" ))? src : src + "/";
 		string _dest = (dest.has_suffix ( "/" ))? dest : dest + "/";
@@ -62,6 +74,11 @@ namespace Valadoc {
 		return true;
 	}
 
+	/**
+	 * A recursive directory delete function
+	 *
+	 * @param rpath the directory to remove
+	 */
 	public bool remove_directory (string rpath) {
 		try {
 			GLib.Dir dir = GLib.Dir.open ( rpath );
@@ -91,6 +108,12 @@ namespace Valadoc {
 		return true;
 	}
 
+	/**
+	 * Returns canonicalized absolute pathname
+	 *
+	 * @param basedir the path being checked
+	 * @return a canonicalized absolute pathname
+	 */
 	public string realpath (string basedir) {
 		return Vala.CodeContext.realpath (basedir);
 	}
