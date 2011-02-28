@@ -22,6 +22,10 @@
 
 using Gee;
 
+
+/**
+ * Specifies the context of a node.
+ */
 public enum Valadoc.Api.NodeType {
 	CLASS,
 	CONSTANT,
@@ -45,11 +49,20 @@ public enum Valadoc.Api.NodeType {
 	TYPE_PARAMETER
 }
 
+/**
+ * Represents a node in the api tree.
+ */
 public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Comparable<Node> {
 	protected bool do_document { private set; get; default = false; }
 
+	/**
+	 * The name of the node
+	 */
 	public abstract string? name { owned get; }
 
+	/**
+	 * Returns the type of this node
+	 */
 	public abstract NodeType node_type { get; }
 
 	private Map<string,Node> per_name_children;
@@ -64,10 +77,21 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 		per_type_children = new HashMap<NodeType?, Gee.List<Node>> (int_hash, int_equal);
 	}
 
+	/**
+	 * Visits this node with the specified Visitor.
+	 *
+	 * @param visitor the visitor to be called while traversing
+	 */
 	public abstract void accept (Visitor visitor);
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public abstract bool is_browsable (Settings settings);
 
+	/**
+	 * The corresponding file name
+	 */
 	public virtual string? get_filename () {
 		return null;
 	}
@@ -84,13 +108,16 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 
 		Gee.List<Node> children = per_type_children.get (child.node_type);
 		if (children == null) {
-			per_type_children.set (child.node_type, new ArrayList<Node> ());
+			children = new ArrayList<Node> ();
+			per_type_children.set (child.node_type, children);
 		}
 
-		children = per_type_children.get (child.node_type);
 		children.add (child);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	internal override void resolve_children (Tree root) {
 		var list = per_type_children.get (NodeType.NAMESPACE);
 		if (list != null) {
@@ -121,12 +148,18 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	internal override void resolve_type_references (Tree root) {
 		foreach (Node node in per_name_children.values) {
 			node.resolve_type_references (root);
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	internal override void process_comments (Settings settings, DocumentationParser parser) {
 		do_document = true;
 
@@ -137,11 +170,21 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 		}
 	}
 
+	/**
+	 * Specifies whether this node has at least one child with the given type
+	 *
+	 * @param type a node type
+	 */
 	public bool has_children_by_type (NodeType type) {
 		Gee.List<Node> all_children = per_type_children.get (type);
 		return all_children != null && !all_children.is_empty;
 	}
 
+	/**
+	 * Specifies whether this node has at least one child with the given types
+	 *
+	 * @param type a list of node types
+	 */
 	public bool has_children (NodeType[] types) {
 		foreach (NodeType type in types) {
 			if (has_children_by_type (type)) {
@@ -151,6 +194,12 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 		return false;
 	}
 
+	/**
+	 * Returns a list of all children with the given type.
+	 *
+	 * @param type a list of node types
+	 * @param filtered specifies whether nodes which are not browsable should appear in the list
+	 */
 	public Gee.List<Node> get_children_by_type (NodeType type, bool filtered = true) {
 		var children = new ArrayList<Node> ();
 
@@ -166,6 +215,12 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 		return children;
 	}
 
+	/**
+	 * Returns a list of all children with the given types.
+	 *
+	 * @param type a list of node types
+	 * @param filtered specifies whether nodes which are not browsable should appear in the list
+	 */
 	public Gee.List<Node> get_children_by_types (NodeType[] types, bool filtered = true) {
 		var children = new ArrayList<Node> ();
 
@@ -176,6 +231,13 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 		return children;
 	}
 
+	/**
+	 * Visits all children of this node with the given type with the specified Visitor.
+	 *
+	 * @param type a node type
+	 * @param visitor the visitor to be called while traversing
+	 * @param filtered specifies whether nodes which are not browsable should appear in the list
+	 */
 	public void accept_children_by_type (NodeType type, Visitor visitor, bool filtered = true) {
 		Gee.List<Node> all_children = per_type_children.get (type);
 		if (all_children != null) {
@@ -187,12 +249,24 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 		}
 	}
 
+	/**
+	 * Visits all children of this node with the given types with the specified Visitor.
+	 *
+	 * @param type a list of node types
+	 * @param visitor the visitor to be called while traversing
+	 * @param filtered specifies whether nodes which are not browsable should appear in the list
+	 */
 	public void accept_children (NodeType[] types, Visitor visitor, bool filtered = true) {
 		foreach (NodeType type in types) {
 			accept_children_by_type (type, visitor, filtered);
 		}
 	}
 
+	/**
+	 * Visits all children of this node with the specified Visitor.
+	 *
+	 * @param visitor the visitor to be called while traversing
+	 */
 	public void accept_all_children (Visitor visitor, bool filtered = true) {
 		foreach (Gee.List<Node> children in per_type_children.values) {
 			foreach (Node node in children) {
@@ -215,6 +289,9 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 	private Package? _package = null;
 	private string _full_name = null;
 
+	/**
+	 * The corresponding namespace
+	 */
 	public Namespace? nspace {
 		get {
 			if (this._nspace == null) {
@@ -230,7 +307,9 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 		}
 	}
 
-
+	/**
+	 * The corresponding package such as a vapi or gir file
+	 */
 	public Package? package {
 		get {
 			if (this._package == null) {
@@ -250,6 +329,9 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 		get;
 	}
 
+	/**
+	 * Returns canonicalized absolute name (GLib.FileStream for instance)
+	 */
 	public string? get_full_name () {
 		if (this._full_name == null) {
 			if (this.name == null)
@@ -271,6 +353,9 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 		return this._full_name;
 	}
 
+	/**
+	 * A comparison function used to sort nodes in alphabetical order
+	 */
 	public int compare_to (Node node) {
 		return strcmp (name, node.name);
 	}
