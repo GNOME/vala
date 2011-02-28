@@ -24,25 +24,43 @@ using Gee;
 using Valadoc.Content;
 
 
+/**
+ * Represents an error domain declaration.
+ */
 public class Valadoc.Api.ErrorDomain : TypeSymbol {
 	public ErrorDomain (Vala.ErrorDomain symbol, Node parent) {
 		base (symbol, parent);
 	}
 
+	/**
+	 * Returns the name of this errordomain as it is used in C.
+	 */
 	public string? get_cname () {
 		return ((Vala.ErrorDomain) symbol).get_cname();
 	}
 
+	/**
+	 * Returns the dbus-name.
+	 */
 	public string? get_dbus_name () {
 		return Vala.DBusModule.get_dbus_name ((Vala.TypeSymbol) symbol);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override NodeType node_type { get { return NodeType.ERROR_DOMAIN; } }
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void accept (Visitor visitor) {
 		visitor.visit_error_domain (this);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	protected override Inline build_signature () {
 		return new SignatureBuilder ()
 			.append_keyword (get_accessibility_modifier ())
