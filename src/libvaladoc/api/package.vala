@@ -31,6 +31,9 @@ public class Valadoc.Api.Package : Node {
 		this.vfiles.add (vfile);
 	}
 
+	/**
+	 * Specifies whether this package is a dependency
+	 */
 	public bool is_package {
 		 private set;
 		 get;
@@ -42,6 +45,9 @@ public class Valadoc.Api.Package : Node {
 
 	private ArrayList<Package> _dependencies;
 
+	/**
+	 * Returns a list with all dependencies
+	 */
 	public Collection<Package> get_full_dependency_list () {
 		ArrayList<Package> list = new ArrayList<Package> ();
 
@@ -64,6 +70,7 @@ public class Valadoc.Api.Package : Node {
 		return list.read_only_view;
 	}
 
+	//TODO: rm
 	public Collection<Package> get_dependency_list () {
 		if (this._dependencies == null) {
 			return Collection.empty<Package> ();
@@ -84,6 +91,9 @@ public class Valadoc.Api.Package : Node {
 
 	private string package_name;
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override string? name {
 		owned get {
 			return package_name;
@@ -94,16 +104,28 @@ public class Valadoc.Api.Package : Node {
 		return this.vfiles.contains (source_file);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override bool is_browsable (Settings settings) {
 		return !(this.is_package && settings.with_deps == false);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override NodeType node_type { get { return NodeType.PACKAGE; } }
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void accept (Visitor visitor) {
 		visitor.visit_package (this);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	protected override Inline build_signature () {
 		return new SignatureBuilder ()
 			.append_keyword ("package")
