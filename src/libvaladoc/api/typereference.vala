@@ -23,6 +23,10 @@
 using Gee;
 using Valadoc.Content;
 
+
+/**
+ * A reference to a data type.
+ */
 public class Valadoc.Api.TypeReference : Item {
 	private ArrayList<TypeReference> type_arguments = new ArrayList<TypeReference> ();
 	private Vala.DataType? vtyperef;
@@ -32,6 +36,11 @@ public class Valadoc.Api.TypeReference : Item {
 		this.parent = parent;
 	}
 
+	/**
+	 * Returns a copy of the list of generic type arguments.
+	 *
+	 * @return type argument list
+	 */
 	public Gee.Collection<TypeReference> get_type_arguments () {
 		return this.type_arguments.read_only_view;
 	}
@@ -44,6 +53,9 @@ public class Valadoc.Api.TypeReference : Item {
 		}
 	}
 
+	/**
+	 * The referred data type.
+	 */
 	public Item? data_type {
 		private set;
 		get;
@@ -71,6 +83,9 @@ public class Valadoc.Api.TypeReference : Item {
 		}
 	}
 
+	/**
+	 * Specifies that the expression is owned.
+	 */
 	public bool is_owned {
 		get {
 			if (this.vtyperef == null) {
@@ -91,6 +106,9 @@ public class Valadoc.Api.TypeReference : Item {
 		}
 	}
 
+	/**
+	 * Specifies that the expression is weak.
+	 */
 	public bool is_weak {
 		get {
 			if (vtyperef == null) {
@@ -107,12 +125,18 @@ public class Valadoc.Api.TypeReference : Item {
 		}
 	}
 
+	/**
+	 * Specifies that the expression is dynamic.
+	 */
 	public bool is_dynamic {
 		get {
 			return this.vtyperef != null && this.vtyperef.is_dynamic;
 		}
 	}
 
+	/**
+	 * Specifies that the expression is unwoned.
+	 */
 	public bool is_unowned {
 		get {
 			if (vtyperef == null) {
@@ -129,6 +153,9 @@ public class Valadoc.Api.TypeReference : Item {
 		}
 	}
 
+	/**
+	 * Specifies that the expression may be null.
+	 */
 	public bool is_nullable {
 		get {
 			return this.vtyperef != null
@@ -146,6 +173,9 @@ public class Valadoc.Api.TypeReference : Item {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */ 
 	internal override void resolve_type_references (Tree root) {
 		if ( this.vtyperef is Vala.PointerType) {
 			this.data_type = new Pointer ((Vala.PointerType) this.vtyperef, this);
@@ -175,6 +205,9 @@ public class Valadoc.Api.TypeReference : Item {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */ 
 	protected override Inline build_signature () {
 		var signature = new SignatureBuilder ();
 
