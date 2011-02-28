@@ -23,18 +23,33 @@
 using Gee;
 using Valadoc.Content;
 
+
+/**
+ * Represents a field.
+ */
 public class Valadoc.Api.Field : Member {
 	public Field (Vala.Field symbol, Node parent) {
 		base (symbol, parent);
 		field_type = new TypeReference (symbol.variable_type, this);
 	}
 
+	/**
+	 * Returns the name of this field as it is used in C.
+	 */
 	public string? get_cname () {
 		return ((Vala.Field) symbol).get_cname();
 	}
 
+	/**
+	 * The field type.
+	 *
+	 * @return The field type or null for void
+	 */
 	public TypeReference? field_type { private set; get; }
 
+	/**
+	 * Specifies whether the field is static.
+	 */
 	public bool is_static {
 		get {
 			if (this.parent is Namespace) {
@@ -45,18 +60,27 @@ public class Valadoc.Api.Field : Member {
 		}
 	}
 
+	/**
+	 * Specifies whether the field is volatile.
+	 */
 	public bool is_volatile {
 		get {
 			return ((Vala.Field) symbol).is_volatile;
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	internal override void resolve_type_references (Tree root) {
 		field_type.resolve_type_references (root);
 
 		base.resolve_type_references (root);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	protected override Inline build_signature () {
 		var signature = new SignatureBuilder ();
 
@@ -73,8 +97,14 @@ public class Valadoc.Api.Field : Member {
 		return signature.get ();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override NodeType node_type { get { return NodeType.FIELD; } }
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void accept (Visitor visitor) {
 		visitor.visit_field (this);
 	}
