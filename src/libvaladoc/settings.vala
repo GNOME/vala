@@ -20,29 +20,106 @@
  * 	Brosch Florian <flo.brosch@gmail.com>
  */
 
+
+/**
+ * Contains information about output settings configuration
+ */
 public class Valadoc.Settings : Object {
+	/**
+	 * Output directory/file name.
+	 */
 	public string path = "documentation/";
+
+	/**
+	 * Package name
+	 */
 	public string pkg_name = null;
+
+	/**
+	 * Package version
+	 */
 	public string pkg_version;
+
+	/**
+	 * Wiki directory
+	 */
 	public string wiki_directory;
+
+	/**
+	 * Plugin-specific command line arguments
+	 */
 	public string[] pluginargs;
 
+
+	/**
+	 * Add private elements to documentation
+	 */
 	public bool _private = false;
+
+	/**
+	 * Add protected elements to documentation
+	 */
 	public bool _protected = false;
+
+	/**
+	 * Add internal elements to documentation
+	 */
 	public bool _internal = false;
+
+	/**
+	 * Add dependencies to the documentation
+	 */
 	public bool with_deps = false;
+
 	public bool add_inherited = false;
+
+	/**
+	 * Show all warnings
+	 */
 	public bool verbose = false;
 
+
+
+	/**
+	 * Do not warn when using experimental features.
+	 */
 	public bool experimental;
+
+	/**
+	 * Enable experimental enhancements for non-null types.
+	 */
 	public bool experimental_non_null;
+
+	/**
+	 * Enable transformation of D-Bus member names in dynamic client support.
+	 */
 	public bool disable_dbus_transformation;
 
+
+	/**
+	 * Use the given profile (dova, gobject, posix, ...) instead of the defaul
+	 */
 	public string? profile;
+
+	/**
+	 * Base source directory.
+	 */
 	public string? basedir;
+
+	/**
+	 * Output directory/file name.
+	 */
 	public string? directory;
 
+
+	/**
+	 * A list of defined symbols.
+	 */
 	public string[] defines;
+
+	/**
+	 * List of directories where to find .vapi files.
+	 */
 	public string[] vapi_directories;
 }
 
