@@ -589,6 +589,7 @@ namespace GLib {
 		public static ulong add_emission_hook (uint signal_id, Quark detail, SignalEmissionHook hook_func, DestroyNotify? data_destroy);
 		public static void remove_emission_hook (uint signal_id, ulong hook_id);
 		public static bool parse_name (string detailed_signal, Type itype, out uint signal_id, out Quark detail, bool force_detail_quark);
+		public static unowned SignalInvocationHint? get_invocation_hint (void* instance);
 	}
 
 	namespace SignalHandler {
