@@ -21,7 +21,9 @@
  */
 
 
-
+/**
+ * Writes markups and text to a file.
+ */
 public class Valadoc.MarkupWriter {
 	protected unowned FileStream stream;
 	protected int indent;
@@ -31,6 +33,12 @@ public class Valadoc.MarkupWriter {
 
 	private const int MAX_COLUMN = 150;
 
+	/**
+	 * Initializes a new instance of the MarkupWriter
+	 * 
+	 * @param stream a file stream
+	 * @param xml_delcaration specifies whether this file starts with an xml-declaration
+	 */
 	public MarkupWriter (FileStream stream, bool xml_declaration = true) {
 		this.stream = stream;
 		if (xml_declaration) {
@@ -40,7 +48,13 @@ public class Valadoc.MarkupWriter {
 		last_was_tag = true;
 	}
 
-	//TODO: rename to start_tagv, create a start_tag (string name, string[] ...)
+	/**
+	 * Writes an start tag of a markup element to the file
+	 *
+	 * @param the name of the markup
+	 * @param a list of name/value pairs
+	 * @return this
+	 */
 	public MarkupWriter start_tag (string name, string[]? attributes=null) {
 		indent++;
 		check_column (name);
@@ -64,6 +78,13 @@ public class Valadoc.MarkupWriter {
 		return this;
 	}
 
+	/**
+	 * Writes a simple tag (<name />) to the file
+	 *
+	 * @param the name of the markup
+	 * @param a list of name/value pairs
+	 * @return this
+	 */
 	public MarkupWriter simple_tag (string name, string[]? attributes=null) {
 		indent++;
 		check_column (name);
@@ -88,7 +109,12 @@ public class Valadoc.MarkupWriter {
 		return this;
 	}
 
-
+	/**
+	 * Writes an end tag of a markup element to the file
+	 *
+	 * @param the name of the markup
+	 * @return this
+	 */
 	public MarkupWriter end_tag (string name) {
 		check_column (name, true);
 		do_write ("</%s>".printf (name));
@@ -97,6 +123,12 @@ public class Valadoc.MarkupWriter {
 		return this;
 	}
 
+	/**
+	 * Writes the specified string to the output stream
+	 *
+	 * @see raw_text
+	 * @return this
+	 */
 	public MarkupWriter text (string text) {
 		if (wrap && text.length + current_column > MAX_COLUMN) {
 			long wrote = 0;
@@ -131,6 +163,12 @@ public class Valadoc.MarkupWriter {
 		return this;
 	}
 
+	/**
+	 * Writes the specified string to the output stream
+	 *
+	 * @see text
+	 * @return this
+	 */
 	public MarkupWriter raw_text (string text) {
 		do_write (text);
 		last_was_tag = false;
