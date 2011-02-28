@@ -23,20 +23,37 @@
 using Gee;
 using Valadoc.Content;
 
+
+
+/**
+ * Represents a interface declaration in the source code.
+ */
 public class Valadoc.Api.Interface : TypeSymbol {
 	public Interface (Vala.Interface symbol, Node parent) {
 		base (symbol, parent);
 	}
 
+	/**
+	 * A list of preconditioned interfaces
+	 */
 	private ArrayList<TypeReference> interfaces = new ArrayList<TypeReference> ();
 
+	/**
+	 * Returns a list of newly preconditioned interfaces
+	 */
 	public Collection<TypeReference> get_implemented_interface_list () {
 		return this.interfaces;
 	}
 
 
+	/**
+	 * A list of all preconditioned interfaces
+	 */
 	private Collection<TypeReference> _full_implemented_interfaces = null;
 
+	/**
+	 * Returns a list of all preconditioned interfaces
+	 */
 	public Collection<TypeReference> get_all_implemented_interface_list () {
 		if (_full_implemented_interfaces == null) {
 			_full_implemented_interfaces = new HashSet<TypeReference> ();
@@ -50,18 +67,33 @@ public class Valadoc.Api.Interface : TypeSymbol {
 		return _full_implemented_interfaces;
 	}
 
+	/**
+	 * Returns the name of this interface as it is used in C.
+	 */
 	public string? get_cname () {
 		return ((Vala.Interface) symbol).get_cname ();
 	}
 
+	/**
+	 * Returns the dbus-name.
+	 */
 	public string? get_dbus_name () {
 		return Vala.DBusModule.get_dbus_name ((Vala.TypeSymbol) symbol);
 	}
 
+	/**
+	 * A preconditioned class or null
+	 */
 	public TypeReference? base_type { private set; get; }
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override NodeType node_type { get { return NodeType.INTERFACE; } }
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void accept (Visitor visitor) {
 		visitor.visit_interface (this);
 	}
@@ -83,13 +115,26 @@ public class Valadoc.Api.Interface : TypeSymbol {
 		}
 	}
 
+	/**
+	 * A list of all known related (sub-)interfaces
+	 */
 	private Set<Interface> _known_related_interfaces = new TreeSet<Interface> ();
+
+	/**
+	 * A list of all known implementations of this interface
+	 */
 	private Set<Class> _known_implementations = new TreeSet<Class> ();
 
+	/**
+	 * Returns a list of all known implementations of this interface
+	 */
 	public Collection<Class> get_known_implementations () {
 		return _known_implementations;
 	}
 
+	/**
+	 * Returns a list of all known related (sub-)interfaces
+	 */
 	public Collection<Interface> get_known_related_interfaces () {
 		return _known_related_interfaces;
 	}
@@ -102,6 +147,9 @@ public class Valadoc.Api.Interface : TypeSymbol {
 		_known_implementations.add (cl);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	internal override void resolve_children (Tree root) {
 		if (base_type != null) {
 			((Class) this.base_type.data_type).register_derived_interface (this);
@@ -114,6 +162,9 @@ public class Valadoc.Api.Interface : TypeSymbol {
 		base.resolve_children (root);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	internal override void resolve_type_references (Tree root) {
 		var prerequisites = ((Vala.Interface) symbol).get_prerequisites ();
 		this.set_prerequisites (root, prerequisites);
@@ -121,6 +172,9 @@ public class Valadoc.Api.Interface : TypeSymbol {
 		base.resolve_type_references (root);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	protected override Inline build_signature () {
 		var signature = new SignatureBuilder ();
 
