@@ -23,7 +23,13 @@
 using Gee;
 
 
+/**
+ * Specifies whether users are able to browse the item.
+ */
 public interface Valadoc.Api.Browsable : Item {
 
+	/**
+	 * Specifies whether users are able to browse the item.
+	 */
 	public abstract bool is_browsable (Settings settings);
 }
