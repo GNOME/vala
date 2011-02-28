@@ -23,27 +23,51 @@
 using Gee;
 using Valadoc.Content;
 
+
+/**
+ * Represents a struct declaration.
+ */
 public class Valadoc.Api.Struct : TypeSymbol {
 	public Struct (Vala.Struct symbol, Node parent) {
 		base (symbol, parent);
 	}
 
+	/**
+	 * Specifies the base struct.
+	 */
 	public TypeReference? base_type { private set; get; }
 
+
+	/**
+	 * Returns the name of this struct as it is used in C.
+	 */
 	public string? get_cname () {
 		return ((Vala.Struct) symbol).get_cname();
 	}
 
+	/**
+	 * Returns the C function name that duplicates instances of this data
+	 * type.
+	 */
 	public string? get_dup_function_cname () {
 		return ((Vala.Struct) symbol).get_dup_function ();
 	}
 
+	/**
+	 * Returns the C function name that frees instances of this data type.
+	 */
 	public string? get_free_function_cname () {
 		return ((Vala.Struct) symbol).get_free_function ();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override NodeType node_type { get { return NodeType.STRUCT; } }
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void accept (Visitor visitor) {
 		visitor.visit_struct (this);
 	}
@@ -57,12 +81,18 @@ public class Valadoc.Api.Struct : TypeSymbol {
 		this.base_type.resolve_type_references (root);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	internal override void resolve_type_references (Tree root) {
 		this.set_parent_references (root);
 
 		base.resolve_type_references (root);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	protected override Inline build_signature () {
 		var signature = new SignatureBuilder ();
 
