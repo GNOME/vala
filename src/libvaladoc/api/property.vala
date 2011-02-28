@@ -23,6 +23,10 @@
 using Gee;
 using Valadoc.Content;
 
+
+/**
+ * Represents a property declaration.
+ */
 public class Valadoc.Api.Property : Member {
 	public Property (Vala.Property symbol, Node parent) {
 		base (symbol, parent);
@@ -38,34 +42,57 @@ public class Valadoc.Api.Property : Member {
 		}
 	}
 
+	/**
+	 * Returns the name of this method as it is used in C.
+	 */
 	public string? get_cname () {
 		return ((Vala.Property) symbol).nick;
 	}
 
+	/**
+	 * Returns the dbus-name.
+	 */
 	public string get_dbus_name () {
 		return Vala.DBusModule.get_dbus_name_for_member (symbol);
 	}
 
+	/**
+	 * The property type.
+	 *
+	 * @return The property type or null for void
+	 */
 	public TypeReference? property_type { private set; get;}
 
+	/**
+	 * Specifies whether the property is virtual.
+	 */
 	public bool is_virtual {
 		get {
 			return ((Vala.Property) symbol).is_virtual;
 		}
 	}
 
+	/**
+	 * Specifies whether the property is abstract.
+	 */
 	public bool is_abstract {
 		get {
 			return ((Vala.Property) symbol).is_abstract;
 		}
 	}
 
+	/**
+	 * Specifies whether the property is override.
+	 */
 	public bool is_override {
 		get {
 			return ((Vala.Property) symbol).overrides;
 		}
 	}
 
+	/**
+	 * Specifies whether the property is visible.
+	 */
 	public bool is_dbus_visible {
 		get {
 			return Vala.DBusServerModule.is_dbus_visible (symbol);
@@ -76,8 +103,14 @@ public class Valadoc.Api.Property : Member {
 
 	public PropertyAccessor getter { private set; get; }
 
+	/**
+	 * Specifies the virtual or abstract property this property overrides.
+	 */
 	public Property base_property { private set; get; }
 
+	/**
+	 * {@inheritDoc}
+	 */
 	internal override void resolve_type_references (Tree root) {
 		Vala.Property vala_property = symbol as Vala.Property;
 		Vala.Property? base_vala_property = null;
@@ -97,6 +130,9 @@ public class Valadoc.Api.Property : Member {
 		property_type.resolve_type_references (root);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	internal override void process_comments (Settings settings, DocumentationParser parser) {
 		if (getter != null && getter.is_browsable (settings)) {
 			getter.process_comments (settings, parser);
@@ -109,6 +145,9 @@ public class Valadoc.Api.Property : Member {
 		base.process_comments (settings, parser);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	protected override Inline build_signature () {
 		var signature = new SignatureBuilder ();
 
@@ -138,8 +177,14 @@ public class Valadoc.Api.Property : Member {
 		return signature.get ();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override NodeType node_type { get { return NodeType.PROPERTY; } }
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void accept (Visitor visitor) {
 		visitor.visit_property (this);
 	}
