@@ -27,6 +27,9 @@ using Gee;
 private Valadoc.Api.Class glib_error = null;
 
 
+/**
+ * The root of the code tree.
+ */
 public class Valadoc.Api.Tree {
 	private Deque<Node> unbrowsable_documentation_dependencies = new LinkedList<Node>();
 	private ArrayList<string> external_c_files = new ArrayList<string>();
@@ -42,15 +45,28 @@ public class Valadoc.Api.Tree {
 		get;
 	}
 
+	/**
+	 * The root of the wiki tree.
+	 */
 	public WikiPageTree? wikitree {
 		private set;
 		get;
 	}
 
+	/**
+	 * Returns a list of C source files.
+	 *
+	 * @return list of C source files
+	 */
 	public Collection<string> get_external_c_files () {
 		return external_c_files.read_only_view;
 	}
 
+	/**
+	 * Returns a list of all packages in the tree
+	 *
+	 * @return list of all packages
+	 */
 	public Collection<Package> get_package_list () {
 		return this.packages.read_only_view;
 	}
@@ -71,10 +87,20 @@ public class Valadoc.Api.Tree {
 		}
 	}
 
+	/**
+	 * Visits this node with the specified Visitor.
+	 *
+	 * @param visitor the visitor to be called while traversing
+	 */
 	public void accept (Visitor visitor) {
 		visitor.visit_tree (this);
 	}
 
+	/**
+	 * Visits all children of this node with the given types with the specified Visitor.
+	 *
+	 * @param visitor the visitor to be called while traversing
+	 */
 	public void accept_children (Visitor visitor) {
 		foreach (Node node in packages) {
 			node.accept (visitor);
@@ -291,6 +317,11 @@ public class Valadoc.Api.Tree {
 		return null;
 	}
 
+	/**
+	 * Adds the specified packages to the list of used packages.
+	 *
+	 * @param packages a list of package names
+	 */
 	public void add_depencies (string[] packages) {
 		foreach (string package in packages) {
 			if (!add_package (package)) {
@@ -299,6 +330,10 @@ public class Valadoc.Api.Tree {
 		}
 	}
 
+	/**
+	 * Add the specified source file to the context. Only .vala, .vapi, .gs,
+	 * and .c files are supported.
+	 */
 	public void add_documented_file (string[] sources) {
 		if (sources == null) {
 			return;
@@ -427,6 +462,13 @@ public class Valadoc.Api.Tree {
 		}
 	}
 
+	/**
+	 * Import documentation from various sources
+	 *
+	 * @param importers a list of importers
+	 * @param packages sources
+	 * @param import_directories List of directories where to find the files
+	 */
 	public void import_documentation (DocumentationImporter[] importers, string[] packages, string[] import_directories) {
 		foreach (string pkg_name in packages) {
 			bool imported = false;
