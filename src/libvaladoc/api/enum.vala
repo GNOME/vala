@@ -23,21 +23,37 @@
 using Gee;
 using Valadoc.Content;
 
+
+/**
+ * Represents an enum declaration.
+ */
 public class Valadoc.Api.Enum : TypeSymbol {
 	public Enum (Vala.Enum symbol, Node parent) {
 		base (symbol, parent);
 	}
 
+	/**
+	 * Returns the name of this enum as it is used in C.
+	 */
 	public string? get_cname () {
 		return ((Vala.Enum) symbol).get_cname ();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override NodeType node_type { get { return NodeType.ENUM; } }
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void accept (Visitor visitor) {
 		visitor.visit_enum (this);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	protected override Inline build_signature () {
 		return new SignatureBuilder ()
 			.append_keyword (get_accessibility_modifier ())
