@@ -22,10 +22,17 @@
 
 using Valadoc.Content;
 
+
+/**
+ * Builds up a signature from the given items.
+ */
 public class Valadoc.Api.SignatureBuilder {
 	private Run run;
 	private Inline last_appended;
 
+	/**
+	 * Creates a new SignatureBuilder
+	 */
 	public SignatureBuilder () {
 		run = new Run (Run.Style.NONE);
 	}
@@ -38,12 +45,26 @@ public class Valadoc.Api.SignatureBuilder {
 		}
 	}
 
+	/**
+	 * Adds text onto the end of the builder. 
+	 *
+	 * @param literal a string
+	 * @param spaced add a space at the front of the string if necessary
+	 * @return this
+	 */
 	public SignatureBuilder append (string text, bool spaced = true) {
 		string content = (last_appended != null && spaced ? " " : "") + text;
 		append_text (content);
 		return this;
 	}
 
+	/**
+	 * Adds a Inline onto the end of the builder. 
+	 *
+	 * @param literal a content
+	 * @param spaced add a space at the front of the inline if necessary
+	 * @return this
+	 */
 	public SignatureBuilder append_content (Inline content, bool spaced = true) {
 		if (last_appended != null && spaced) {
 			append_text (" ");
@@ -52,18 +73,39 @@ public class Valadoc.Api.SignatureBuilder {
 		return this;
 	}
 
+	/**
+	 * Adds a keyword onto the end of the builder. 
+	 *
+	 * @param literal a keyword
+	 * @param spaced add a space at the front of the keyword if necessary
+	 * @return this
+	 */
 	public SignatureBuilder append_keyword (string keyword, bool spaced = true) {
 		Run inner = new Run (Run.Style.LANG_KEYWORD);
 		inner.content.add (new Text (keyword));
 		return append_content (inner, spaced);
 	}
 
+	/**
+	 * Adds a symbol onto the end of the builder. 
+	 *
+	 * @param node a node
+	 * @param spaced add a space at the front of the node if necessary
+	 * @return this
+	 */
 	public SignatureBuilder append_symbol (Node node, bool spaced = true) {
 		Run inner = new Run (Run.Style.BOLD);
 		inner.content.add (new SymbolLink (node, node.name));
 		return append_content (inner, spaced);
 	}
 
+	/**
+	 * Adds a type onto the end of the builder. 
+	 *
+	 * @param node a node
+	 * @param spaced add a space at the front of the node if necessary
+	 * @return this
+	 */
 	public SignatureBuilder append_type (Node node, bool spaced = true) {
 		Run.Style style = Run.Style.LANG_TYPE;
 		if (node is TypeSymbol && ((TypeSymbol)node).is_basic_type) {
@@ -75,18 +117,35 @@ public class Valadoc.Api.SignatureBuilder {
 		return append_content (inner, spaced);
 	}
 
+	/**
+	 * Adds a type name onto the end of the builder. 
+	 *
+	 * @param name a type name
+	 * @param spaced add a space at the front of the type name if necessary
+	 * @return this
+	 */
 	public SignatureBuilder append_type_name (string name, bool spaced = true) {
 		Run inner = new Run (Run.Style.LANG_TYPE);
 		inner.content.add (new Text (name));
 		return append_content (inner, spaced);
 	}
 
+	/**
+	 * Adds a literal onto the end of the builder. 
+	 *
+	 * @param literal a literal
+	 * @param spaced add a space at the front of the literal if necessary
+	 * @return this
+	 */
 	public SignatureBuilder append_literal (string literal, bool spaced = true) {
 		Run inner = new Run (Run.Style.LANG_LITERAL);
 		inner.content.add (new Text (literal));
 		return append_content (inner, spaced);
 	}
 
+	/**
+	 * The content
+	 */
 	public new Run get () {
 		return run;
 	}
