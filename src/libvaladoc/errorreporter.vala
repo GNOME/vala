@@ -22,12 +22,6 @@
 
 using Gee;
 
-public enum Valadoc.ErrorLevel {
-	ASSUMPTION,
-	WARNING,
-	ERROR
-}
-
 
 public class Valadoc.ErrorReporter : Object {
 	private int _warnings = 0;
