@@ -23,44 +23,73 @@
 using Gee;
 using Valadoc.Content;
 
+/**
+ * Represents a formal parameter in method, signal and delegate signatures.
+ */
 public class Valadoc.Api.FormalParameter : Symbol {
 	public FormalParameter (Vala.Parameter symbol, Node parent) {
 		base (symbol, parent);
 		parameter_type = new TypeReference (symbol.variable_type, this);
 	}
 
+	/**
+	 * Specifies whether the parameter direction is out
+	 */
 	public bool is_out {
 		get {
 			return ((Vala.Parameter) symbol).direction == Vala.ParameterDirection.OUT;
 		}
 	}
 
+	/**
+	 * Specifies whether the parameter direction is ref
+	 */
 	public bool is_ref {
 		get {
 			return ((Vala.Parameter) symbol).direction == Vala.ParameterDirection.REF;
 		}
 	}
 
+	/**
+	 * Specifies whether the parameter has a default value
+	 */
 	public bool has_default_value {
 		get {
 			return ((Vala.Parameter) symbol).initializer != null;
 		}
 	}
 
+	/**
+	 * The parameter type.
+	 *
+	 * @return The parameter type or null for void
+	 */
 	public TypeReference? parameter_type { private set; get; }
 
+	/**
+	 * Specifies whether the methods accepts a variable number of arguments
+	 */
 	public bool ellipsis {
 		get {
 			return ((Vala.Parameter) symbol).ellipsis;
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override NodeType node_type { get { return NodeType.FORMAL_PARAMETER; } }
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void accept (Visitor visitor) {
 		visitor.visit_formal_parameter (this);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	internal override void resolve_type_references (Tree root) {
 		if (ellipsis) {
 			return;
@@ -112,6 +141,9 @@ public class Valadoc.Api.FormalParameter : Symbol {
 			}
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_array_creation_expression (Vala.ArrayCreationExpression expr) {
 			signature.append_keyword ("new");
 			write_type (expr.element_type);
@@ -139,6 +171,9 @@ public class Valadoc.Api.FormalParameter : Symbol {
 			this.root = root;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_binary_expression (Vala.BinaryExpression expr) {
 			expr.left.accept (this);
 
@@ -231,6 +266,9 @@ public class Valadoc.Api.FormalParameter : Symbol {
 			expr.right.accept (this);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_unary_expression (Vala.UnaryExpression expr) {
 			switch (expr.operator) {
 			case Vala.UnaryOperator.PLUS:
@@ -271,6 +309,9 @@ public class Valadoc.Api.FormalParameter : Symbol {
 			expr.inner.accept (this);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_assignment (Vala.Assignment a) {
 			a.left.accept (this);
 
@@ -326,6 +367,9 @@ public class Valadoc.Api.FormalParameter : Symbol {
 			a.right.accept (this);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_cast_expression (Vala.CastExpression expr) {
 			if (expr.is_non_null_cast) {
 				signature.append ("(!)");
@@ -347,6 +391,9 @@ public class Valadoc.Api.FormalParameter : Symbol {
 			}
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_initializer_list (Vala.InitializerList list) {
 			signature.append ("{", false);
 
@@ -362,6 +409,9 @@ public class Valadoc.Api.FormalParameter : Symbol {
 			signature.append ("}", false);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_member_access (Vala.MemberAccess expr) {
 			if (expr.symbol_reference != null) {
 				expr.symbol_reference.accept (this);
@@ -370,6 +420,9 @@ public class Valadoc.Api.FormalParameter : Symbol {
 			}
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_element_access (Vala.ElementAccess expr) {
 			expr.container.accept (this);
 			signature.append ("[", false);
@@ -387,27 +440,42 @@ public class Valadoc.Api.FormalParameter : Symbol {
 			signature.append ("]", false);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_pointer_indirection (Vala.PointerIndirection expr) {
 			signature.append ("*", false);
 			expr.inner.accept (this);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_addressof_expression (Vala.AddressofExpression expr) {
 			signature.append ("&", false);
 			expr.inner.accept (this);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_reference_transfer_expression (Vala.ReferenceTransferExpression expr) {
 			signature.append ("(", false).append_keyword ("owned", false).append (")", false);
 			expr.inner.accept (this);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_type_check (Vala.TypeCheck expr) {
 			expr.expression.accept (this);
 			signature.append_keyword ("is");
 			write_type (expr.type_reference);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_method_call (Vala.MethodCall expr) {
 			// symbol-name:
 			expr.call.symbol_reference.accept (this);
@@ -426,6 +494,9 @@ public class Valadoc.Api.FormalParameter : Symbol {
 			signature.append (")", false);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_slice_expression (Vala.SliceExpression expr) {
 			expr.container.accept (this);
 			signature.append ("[", false);
@@ -435,10 +506,16 @@ public class Valadoc.Api.FormalParameter : Symbol {
 			signature.append ("]", false);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_base_access (Vala.BaseAccess expr) {
 			signature.append_keyword ("base", false);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_postfix_expression (Vala.PostfixExpression expr) {
 			expr.inner.accept (this);
 			if (expr.increment) {
@@ -448,6 +525,9 @@ public class Valadoc.Api.FormalParameter : Symbol {
 			}
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_object_creation_expression (Vala.ObjectCreationExpression expr) {
 			if (!expr.struct_creation) {
 				signature.append_keyword ("new");
@@ -470,18 +550,27 @@ public class Valadoc.Api.FormalParameter : Symbol {
 			signature.append (")", false);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_sizeof_expression (Vala.SizeofExpression expr) {
 			signature.append_keyword ("sizeof", false).append (" (", false);
 			write_type (expr.type_reference);
 			signature.append (")", false);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_typeof_expression (Vala.TypeofExpression expr) {
 			signature.append_keyword ("typeof", false).append (" (", false);
 			write_type (expr.type_reference);
 			signature.append (")", false);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_lambda_expression (Vala.LambdaExpression expr) {
 			signature.append ("(", false);
 
@@ -504,97 +593,166 @@ public class Valadoc.Api.FormalParameter : Symbol {
 
 
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_boolean_literal (Vala.BooleanLiteral lit) {
 			signature.append_literal (lit.to_string (), false);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_character_literal (Vala.CharacterLiteral lit) {
 			signature.append_literal (lit.to_string (), false);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_integer_literal (Vala.IntegerLiteral lit) {
 			signature.append_literal (lit.to_string (), false);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_real_literal (Vala.RealLiteral lit) {
 			signature.append_literal (lit.to_string (), false);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_regex_literal (Vala.RegexLiteral lit) {
 			signature.append_literal (lit.to_string (), false);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_string_literal (Vala.StringLiteral lit) {
 			signature.append_literal (lit.to_string (), false);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_list_literal (Vala.ListLiteral lit) {
 			signature.append_literal (lit.to_string (), false);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_null_literal (Vala.NullLiteral lit) {
 			signature.append_literal (lit.to_string (), false);
 		}
 
 
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_field (Vala.Field field) {
 			write_node (field);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_constant (Vala.Constant constant) {
 			write_node (constant);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_enum_value (Vala.EnumValue ev) {
 			write_node (ev);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_error_code (Vala.ErrorCode ec) {
 			write_node (ec);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_delegate (Vala.Delegate d) {
 			write_node (d);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_method (Vala.Method m) {
 			write_node (m);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_creation_method (Vala.CreationMethod m) {
 			write_node (m);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_signal (Vala.Signal sig) {
 			write_node (sig);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_class (Vala.Class c) {
 			write_node (c);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_struct (Vala.Struct s) {
 			write_node (s);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_interface (Vala.Interface i) {
 			write_node (i);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_enum (Vala.Enum en) {
 			write_node (en);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_error_domain (Vala.ErrorDomain ed) {
 			write_node (ed);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void visit_property (Vala.Property prop) {
 			write_node (prop);
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	protected override Inline build_signature () {
 		var signature = new SignatureBuilder ();
 
