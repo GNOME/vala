@@ -339,7 +339,7 @@ namespace Gsf {
 		[NoAccessorMethod]
 		public Gsf.Output sink { owned get; construct; }
 	}
-	[CCode (cheader_filename = "gsf/gsf.h")]
+	[CCode (cheader_filename = "gsf/gsf-output-gio.h")]
 	public class OutputGio : Gsf.Output {
 		[CCode (type = "GsfOutput*", has_construct_function = false)]
 		public OutputGio (GLib.File file);
