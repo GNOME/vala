@@ -23,9 +23,16 @@
 using Valadoc.Content;
 using Gee;
 
+
+/**
+ * Represents a node in the api tree.
+ */
 public abstract class Valadoc.Api.Item : Object {
 	private Inline _signature;
 
+	/**
+	 * The parent of this item.
+	 */
 	public Item parent { protected set; get; }
 
 	internal virtual void resolve_type_references (Tree root) {
@@ -37,6 +44,9 @@ public abstract class Valadoc.Api.Item : Object {
 	internal virtual void process_comments (Settings settings, DocumentationParser parser) {
 	}
 
+	/**
+	 * The signature of this item.
+	 */
 	public Inline signature {
 		get {
 			if (_signature == null) {
