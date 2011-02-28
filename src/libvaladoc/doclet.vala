@@ -22,9 +22,31 @@
 
 using Gee;
 
+/**
+ * A plugin register function for doclets
+ *
+ * @see ModuleLoader
+ */
 [CCode (has_target = false)]
 public delegate Type Valadoc.DocletRegisterFunction (GLib.TypeModule module);
 
+
+
+/**
+ * Provides a mechanism to inspect the API & documentation of programs and libraries
+ */
 public interface Valadoc.Doclet : GLib.Object {
+
+	/**
+	 * Allows the doclet to inspect the given {@link Api.Tree}
+	 *
+	 * @param settings various configurations
+	 * @param tree the tree to inspect
+	 * @param reporter the reporter to use
+	 * @see Content.ContentVisitor
+	 * @see Api.Visitor
+	 */
 	public abstract void process (Settings settings, Api.Tree tree, ErrorReporter reporter);
 }
+
+
