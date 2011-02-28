@@ -22,6 +22,10 @@
 
 using Gee;
 
+
+/**
+ * Creates an simpler, minimized, more abstract AST for valacs AST.
+ */
 internal class Valadoc.Api.NodeBuilder : Vala.CodeVisitor {
 	private Tree root;
 	private Collection<Package> packages;
@@ -58,10 +62,16 @@ internal class Valadoc.Api.NodeBuilder : Vala.CodeVisitor {
 		return null;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void visit_namespace (Vala.Namespace element) {
 		element.accept_children (this);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void visit_class (Vala.Class element) {
 		Node parent = get_parent_node_for (element);
 
@@ -71,6 +81,9 @@ internal class Valadoc.Api.NodeBuilder : Vala.CodeVisitor {
 		process_children (node, element);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void visit_interface (Vala.Interface element) {
 		Node parent = get_parent_node_for (element);
 
@@ -80,6 +93,9 @@ internal class Valadoc.Api.NodeBuilder : Vala.CodeVisitor {
 		process_children (node, element);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void visit_struct (Vala.Struct element) {
 		Node parent = get_parent_node_for (element);
 
@@ -89,6 +105,9 @@ internal class Valadoc.Api.NodeBuilder : Vala.CodeVisitor {
 		process_children (node, element);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void visit_field (Vala.Field element) {
 		Node parent = get_parent_node_for (element);
 
@@ -100,6 +119,9 @@ internal class Valadoc.Api.NodeBuilder : Vala.CodeVisitor {
 		process_children (node, element);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void visit_property (Vala.Property element) {
 		Node parent = get_parent_node_for (element);
 
@@ -111,6 +133,9 @@ internal class Valadoc.Api.NodeBuilder : Vala.CodeVisitor {
 		process_children (node, element);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void visit_creation_method (Vala.CreationMethod element) {
 		Node parent = get_parent_node_for (element);
 
@@ -123,6 +148,9 @@ internal class Valadoc.Api.NodeBuilder : Vala.CodeVisitor {
 		process_children (node, element);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void visit_method (Vala.Method element) {
 		Node parent = get_parent_node_for (element);
 
@@ -135,6 +163,9 @@ internal class Valadoc.Api.NodeBuilder : Vala.CodeVisitor {
 		process_children (node, element);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void visit_signal (Vala.Signal element) {
 		Node parent = get_parent_node_for (element);
 
@@ -146,6 +177,9 @@ internal class Valadoc.Api.NodeBuilder : Vala.CodeVisitor {
 		process_children (node, element);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void visit_delegate (Vala.Delegate element) {
 		Node parent = get_parent_node_for (element);
 
@@ -158,6 +192,9 @@ internal class Valadoc.Api.NodeBuilder : Vala.CodeVisitor {
 		process_children (node, element);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void visit_enum (Vala.Enum element) {
 		Node parent = get_parent_node_for (element);
 
@@ -167,6 +204,9 @@ internal class Valadoc.Api.NodeBuilder : Vala.CodeVisitor {
 		process_children (node, element);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void visit_enum_value (Vala.EnumValue element) {
 		Node parent = get_parent_node_for (element);
 
@@ -176,6 +216,9 @@ internal class Valadoc.Api.NodeBuilder : Vala.CodeVisitor {
 		process_children (node, element);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void visit_constant (Vala.Constant element) {
 		Node parent = get_parent_node_for (element);
 
@@ -185,6 +228,9 @@ internal class Valadoc.Api.NodeBuilder : Vala.CodeVisitor {
 		process_children (node, element);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void visit_error_domain (Vala.ErrorDomain element) {
 		Node parent = get_parent_node_for (element);
 
@@ -194,6 +240,9 @@ internal class Valadoc.Api.NodeBuilder : Vala.CodeVisitor {
 		process_children (node, element);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void visit_error_code (Vala.ErrorCode element) {
 		Node parent = get_parent_node_for (element);
 
@@ -203,6 +252,9 @@ internal class Valadoc.Api.NodeBuilder : Vala.CodeVisitor {
 		process_children (node, element);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void visit_type_parameter (Vala.TypeParameter element) {
 		Node parent = get_parent_node_for (element);
 
@@ -212,6 +264,9 @@ internal class Valadoc.Api.NodeBuilder : Vala.CodeVisitor {
 		process_children (node, element);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void visit_formal_parameter (Vala.Parameter element) {
 		Node parent = get_parent_node_for (element);
 
