@@ -22,12 +22,19 @@
 
 using Gee;
 
+
+/**
+ * Represents a runtime data type.
+ */
 public abstract class Valadoc.Api.TypeSymbol : Symbol {
 
 	public TypeSymbol (Vala.TypeSymbol symbol, Node parent) {
 		base (symbol, parent);
 	}
 
+	/**
+	 * Specifies whether this symbol is a basic type (string, int, char, etc)
+	 */
 	public bool is_basic_type {
 		get {
 			if (symbol is Vala.Struct) {
@@ -41,6 +48,9 @@ public abstract class Valadoc.Api.TypeSymbol : Symbol {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	internal override void process_comments (Settings settings, DocumentationParser parser) {
 		var source_comment = ((Vala.TypeSymbol) symbol).comment;
 		if (source_comment != null) {
