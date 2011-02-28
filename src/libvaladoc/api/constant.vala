@@ -23,7 +23,13 @@
 using Gee;
 using Valadoc.Content;
 
+/**
+ * Represents a type member with a constant value.
+ */
 public class Valadoc.Api.Constant : Member {
+	/**
+	 * The data type of this constant.
+	 */
 	public TypeReference type_reference { private set; get; }
 
 	public Constant (Vala.Constant symbol, Node parent) {
@@ -31,14 +37,23 @@ public class Valadoc.Api.Constant : Member {
 		type_reference = new TypeReference (symbol.type_reference, this);
 	}
 
+	/**
+	 * Returns the name of this constant as it is used in C.
+	 */
 	public string get_cname () {
 		return ((Vala.Constant) symbol).get_cname ();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	internal override void resolve_type_references (Tree root) {
 		type_reference.resolve_type_references (root);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	protected override Inline build_signature () {
 		return new SignatureBuilder ()
 			.append_keyword (get_accessibility_modifier ())
@@ -48,8 +63,14 @@ public class Valadoc.Api.Constant : Member {
 			.get ();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override NodeType node_type { get { return NodeType.CONSTANT; } }
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void accept (Visitor visitor) {
 		visitor.visit_constant (this);
 	}
