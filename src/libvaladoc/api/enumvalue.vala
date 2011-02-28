@@ -23,35 +23,54 @@
 using Gee;
 using Valadoc.Content;
 
+
+/**
+ * Represents an enum member.
+ */
 public class Valadoc.Api.EnumValue: Symbol {
 	public EnumValue (Vala.EnumValue symbol, Node parent) {
 		base (symbol, parent);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override bool is_public {
 		get {
 			return ((Enum)parent).is_public;
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override bool is_protected {
 		get {
 			return ((Enum)parent).is_protected;
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override bool is_internal {
 		get {
 			return ((Enum)parent).is_internal;
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override bool is_private {
 		get {
 			return ((Enum)parent).is_private;
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	internal override void process_comments (Settings settings, DocumentationParser parser) {
 		var source_comment = ((Vala.EnumValue) symbol).comment;
 		if (source_comment != null) {
@@ -61,16 +80,28 @@ public class Valadoc.Api.EnumValue: Symbol {
 		base.process_comments (settings, parser);
 	}
 
+	/**
+	 * Returns the name of this enum value as it is used in C.
+	 */
 	public string get_cname () {
 		return ((Vala.EnumValue) symbol).get_cname ();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override NodeType node_type { get { return NodeType.ENUM_VALUE; } }
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void accept (Visitor visitor) {
 		visitor.visit_enum_value (this);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	protected override Inline build_signature () {
 		var builder = new SignatureBuilder ()
 				.append_symbol (this);
