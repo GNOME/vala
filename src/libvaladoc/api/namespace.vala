@@ -23,6 +23,10 @@
 using Gee;
 using Valadoc.Content;
 
+
+/**
+ * Represents a namespace declaration.
+ */
 public class Valadoc.Api.Namespace : Symbol {
 	private Vala.Comment source_comment;
 
@@ -39,6 +43,9 @@ public class Valadoc.Api.Namespace : Symbol {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	internal override void process_comments (Settings settings, DocumentationParser parser) {
 		if (source_comment != null) {
 			documentation = parser.parse (this, source_comment);
@@ -47,6 +54,9 @@ public class Valadoc.Api.Namespace : Symbol {
 		base.process_comments (settings, parser);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	protected override Inline build_signature () {
 		return new SignatureBuilder ()
 			.append_keyword (get_accessibility_modifier ())
@@ -55,8 +65,14 @@ public class Valadoc.Api.Namespace : Symbol {
 			.get ();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override NodeType node_type { get { return NodeType.NAMESPACE; } }
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void accept (Visitor visitor) {
 		visitor.visit_namespace (this);
 	}
