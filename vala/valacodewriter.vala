@@ -1034,6 +1034,10 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_indent ();
 			write_string ("[NoReturn]");
 		}
+		if (m.get_attribute ("Diagnostics") != null) {
+			write_indent ();
+			write_string ("[Diagnostics]");
+		}
 
 		emit_deprecated_attribute (m);
 
