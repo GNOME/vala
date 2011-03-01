@@ -13,9 +13,9 @@ namespace GLib {
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static GLib.DBusConnection get_sync (GLib.BusType bus_type, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		[CCode (cname = "g_bus_own_name_with_closures", cheader_filename = "gio/gio.h")]
-		public static uint own_name (GLib.BusType bus_type, string name, GLib.BusNameOwnerFlags flags, [CCode (type = "GClosure*")] owned GLib.BusAcquiredCallback bus_acquired_handler, [CCode (type = "GClosure*")] owned GLib.BusNameAcquiredCallback name_acquired_handler, [CCode (type = "GClosure*")] owned GLib.BusNameLostCallback name_lost_handler);
+		public static uint own_name (GLib.BusType bus_type, string name, GLib.BusNameOwnerFlags flags, [CCode (type = "GClosure*")] owned GLib.BusAcquiredCallback? bus_acquired_handler = null, [CCode (type = "GClosure*")] owned GLib.BusNameAcquiredCallback? name_acquired_handler = null, [CCode (type = "GClosure*")] owned GLib.BusNameLostCallback? name_lost_handler = null);
 		[CCode (cname = "g_bus_own_name_on_connection_with_closures", cheader_filename = "gio/gio.h")]
-		public static uint own_name_on_connection (GLib.DBusConnection connection, string name, GLib.BusNameOwnerFlags flags, [CCode (type = "GClosure*")] owned GLib.BusNameAcquiredCallback name_acquired_handler, [CCode (type = "GClosure*")] owned GLib.BusNameLostCallback name_lost_handler);
+		public static uint own_name_on_connection (GLib.DBusConnection connection, string name, GLib.BusNameOwnerFlags flags, [CCode (type = "GClosure*")] owned GLib.BusNameAcquiredCallback? name_acquired_handler = null, [CCode (type = "GClosure*")] owned GLib.BusNameLostCallback? name_lost_handler = null);
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static void unown_name (uint owner_id);
 		[CCode (cheader_filename = "gio/gio.h")]
