@@ -296,6 +296,55 @@ namespace Linux {
     public int eventfd_write (int fd, uint64 value);
 
     /*
+     * Epoll
+     */
+    [CCode (cprefix = "EPOLL_", cheader_filename = "sys/epoll.h")]
+    public enum EpollFdFlags {
+        CLOEXEC,
+    }
+
+    [CCode (cheader_filename = "sys/epoll.h", cname = "union epoll_data")]
+    public struct EpollData {
+        public void* ptr;
+        public int fd;
+        public uint32 u32;
+        public uint64 u64;
+    }
+
+    [CCode (cheader_filename = "sys/epoll.h", cname = "struct epoll_event")]
+    public struct EpollEvent {
+        public uint32 events;
+        public EpollData data;
+    }
+
+    [CCode (cheader_filename = "sys/epoll.h")]
+    public int epoll_create (int size = 0);
+    [CCode (cheader_filename = "sys/epoll.h")]
+    public int epoll_create1 (int flags = 0);
+    [CCode (cheader_filename = "sys/epoll.h")]
+    public int epoll_wait (int epfd, EpollEvent[] events, int timeout);
+    [CCode (cheader_filename = "sys/epoll.h")]
+    public int epoll_pwait (int epfd, EpollEvent[] events, Posix.sigset_t? sigmask, int timeout);
+    [CCode (cheader_filename = "sys/epoll.h")]
+    public int epoll_ctl (int epfd, int op, int fd, EpollEvent? ev);
+    [CCode (cheader_filename = "sys/epoll.h")]
+    public const int EPOLLIN;
+    [CCode (cheader_filename = "sys/epoll.h")]
+    public const int EPOLLOUT;
+    [CCode (cheader_filename = "sys/epoll.h")]
+    public const int EPOLLERR;
+    [CCode (cheader_filename = "sys/epoll.h")]
+    public const int EPOLLHUP;
+    [CCode (cheader_filename = "sys/epoll.h")]
+    public const int EPOLLET;
+    [CCode (cheader_filename = "sys/epoll.h")]
+    public const int EPOLL_CTL_ADD;
+    [CCode (cheader_filename = "sys/epoll.h")]
+    public const int EPOLL_CTL_MOD;
+    [CCode (cheader_filename = "sys/epoll.h")]
+    public const int EPOLL_CTL_DEL;
+
+    /*
      * Framebuffer
      */
     [CCode (cprefix = "", lower_case_cprefix = "")]
