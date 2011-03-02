@@ -4423,7 +4423,10 @@ namespace GLib {
 		public string[] dup_bytestring_array ();
 
 		public Variant (string format, ...);
+		// note: the function changes its behaviour when end_ptr is null, so 'out char *' is wrong
+		public Variant.va (string format, char **end_ptr, va_list *app);
 		public void get (string format, ...);
+		public void get_va (string format, char **end_ptr, va_list *app);
 
 		public Variant.variant (Variant value);
 		public Variant.maybe (VariantType? child_type, Variant? child);
