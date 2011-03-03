@@ -172,10 +172,8 @@ public class Vala.GSignalModule : GObjectModule {
 		ccall.add_argument (get_cvalue (detail_expr));
 		ccall.add_argument (new CCodeConstant ("NULL"));
 
-		var ccomma = new CCodeCommaExpression ();
-		ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (detail_decl.name), ccall));
-		ccomma.append_expression (get_variable_cexpression (detail_decl.name));
-		return ccomma;
+		ccode.add_assignment (get_variable_cexpression (detail_decl.name), ccall);
+		return get_variable_cexpression (detail_decl.name);
 	}
 
 	public override void visit_signal (Signal sig) {
@@ -482,7 +480,7 @@ public class Vala.GSignalModule : GObjectModule {
 	}
 
 	public override void visit_element_access (ElementAccess expr) {
-		if (expr.container is MemberAccess && expr.container.symbol_reference is Signal) {
+		if (expr.container is MemberAccess && expr.container.symbol_reference is Signal && expr.parent_node is MethodCall) {
 			// detailed signal emission
 			var sig = (Signal) expr.symbol_reference;
 			var ma = (MemberAccess) expr.container;
