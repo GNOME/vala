@@ -293,6 +293,15 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 				} else {
 					ccode.add_assignment (dest, copy);
 
+					if (f.variable_type is DelegateType) {
+						var delegate_type = (DelegateType) f.variable_type;
+						if (delegate_type.delegate_symbol.has_target) {
+							// copy field storing delegate target
+							var target_name = get_delegate_target_cname (f.name);
+							ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("dest"), target_name), new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), target_name));
+						}
+					}
+
 					if (array_type != null) {
 						for (int dim = 1; dim <= array_type.rank; dim++) {
 							var len_src = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), get_array_length_cname (f.name, dim));
