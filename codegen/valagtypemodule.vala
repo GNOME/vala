@@ -2100,7 +2100,6 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 		// to_string() on a gtype enum
 
-		var ccomma = new CCodeCommaExpression ();
 		var temp_var = get_temp_variable (new CType ("GEnumValue*"), false, expr, false);
 		emit_temp_var (temp_var);
 
@@ -2110,10 +2109,9 @@ public class Vala.GTypeModule : GErrorModule {
 		get_value.add_argument (class_ref);
 		get_value.add_argument ((CCodeExpression) get_ccodenode (((MemberAccess) expr.call).inner));
 
-		ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), get_value));
+		ccode.add_assignment (get_variable_cexpression (temp_var.name), get_value);
 		var is_null_value = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_variable_cexpression (temp_var.name), new CCodeIdentifier ("NULL"));
-		ccomma.append_expression (new CCodeConditionalExpression (is_null_value, new CCodeMemberAccess.pointer (get_variable_cexpression (temp_var.name), "value_name"), new CCodeIdentifier ("NULL")));
-		set_cvalue (expr, ccomma);
+		set_cvalue (expr, new CCodeConditionalExpression (is_null_value, new CCodeMemberAccess.pointer (get_variable_cexpression (temp_var.name), "value_name"), new CCodeIdentifier ("NULL")));
 	}
 
 	public override void visit_property (Property prop) {
