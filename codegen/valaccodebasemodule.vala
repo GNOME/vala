@@ -5582,48 +5582,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		ccode.add_expression (ccall);
 	}
 
-	/* indicates whether a given Expression eligable for an ADDRESS_OF operator
-	 * from a vala to C point of view all expressions denoting locals, fields and
-	 * parameters are eligable to an ADDRESS_OF operator */
-	public bool is_address_of_possible (Expression e) {
-		if (gvalue_type != null && e.target_type.data_type == gvalue_type && e.value_type.data_type != gvalue_type) {
-			// implicit conversion to GValue is not addressable
-			return false;
-		}
-
-		var ma = e as MemberAccess;
-
-		if (ma == null) {
-			return false;
-		}
-
-		return (ma.symbol_reference is Variable);
-	}
-
-	/* retrieve the correct address_of expression for a give expression, creates temporary variables
-	 * where necessary, ce is the corresponding ccode expression for e */
-	public CCodeExpression get_address_of_expression (Expression e, CCodeExpression ce) {
-		// is address of trivially possible?
-		if (is_address_of_possible (e)) {
-			return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ce);
-		}
-
-		var ccomma = new CCodeCommaExpression ();
-		DataType address_of_type;
-		if (gvalue_type != null && e.target_type != null && e.target_type.data_type == gvalue_type) {
-			// implicit conversion to GValue
-			address_of_type = e.target_type;
-		} else {
-			address_of_type = e.value_type;
-		}
-		var temp_decl = get_temp_variable (address_of_type, true, null, false);
-		var ctemp = get_variable_cexpression (temp_decl.name);
-		emit_temp_var (temp_decl);
-		ccomma.append_expression (new CCodeAssignment (ctemp, ce));
-		ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
-		return ccomma;
-	}
-
 	public bool add_wrapper (string wrapper_name) {
 		return wrappers.add (wrapper_name);
 	}
