@@ -626,11 +626,8 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 			out_arg_map.set (get_param_pos (-3), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
 
-			var ccomma = new CCodeCommaExpression ();
-			ccomma.append_expression ((CCodeExpression) ccall_expr);
-			ccomma.append_expression ((CCodeExpression) temp_ref);
-
-			ccall_expr = ccomma;
+			ccode.add_expression (ccall_expr);
+			ccall_expr = temp_ref;
 		}
 
 		// append C arguments in the right order
