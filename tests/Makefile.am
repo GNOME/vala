@@ -54,6 +54,7 @@ TESTS = \
 	delegates/delegates.vala \
 	delegates/bug595610.vala \
 	delegates/bug595639.vala \
+	delegates/bug639751.vala \
 	objects/classes.vala \
 	objects/fields.vala \
 	objects/interfaces.vala \
