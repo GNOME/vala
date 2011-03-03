@@ -119,6 +119,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			}
 
 			foreach (Parameter param in m.get_parameters ()) {
+				string param_name = get_variable_cname (param.name);
 				if (param.direction != ParameterDirection.IN) {
 					continue;
 				}
@@ -135,7 +136,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 				var owned_type = param.variable_type.copy ();
 				owned_type.value_owned = true;
 
-				ccode.add_declaration (owned_type.get_cname (), new CCodeVariableDeclarator.zero (param.name, default_value_for_type (param.variable_type, true)));
+				ccode.add_declaration (owned_type.get_cname (), new CCodeVariableDeclarator.zero (param_name, default_value_for_type (param.variable_type, true)));
 
 				var array_type = param.variable_type as ArrayType;
 				if (array_type != null) {
@@ -150,7 +151,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 				message_expr.add_argument (new CCodeIdentifier ("invocation"));
 
 				bool may_fail;
-				receive_dbus_value (param.variable_type, message_expr, new CCodeIdentifier ("_arguments_iter"), new CCodeIdentifier (param.name), param, new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("error")), out may_fail);
+				receive_dbus_value (param.variable_type, message_expr, new CCodeIdentifier ("_arguments_iter"), new CCodeIdentifier (param_name), param, new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("error")), out may_fail);
 
 				if (may_fail) {
 					if (!uses_error) {
@@ -173,6 +174,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		}
 
 		foreach (Parameter param in m.get_parameters ()) {
+			string param_name = get_variable_cname (param.name);
 			if (param.direction == ParameterDirection.IN && !ready) {
 				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.Cancellable") {
 					ccall.add_argument (new CCodeConstant ("NULL"));
@@ -189,12 +191,12 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 				var st = param.variable_type.data_type as Struct;
 				if (st != null && !st.is_simple_type ()) {
-					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
+					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param_name)));
 				} else {
-					ccall.add_argument (new CCodeIdentifier (param.name));
+					ccall.add_argument (new CCodeIdentifier (param_name));
 				}
 			} else if (param.direction == ParameterDirection.OUT && (!m.coroutine || ready)) {
-				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param_name)));
 			}
 
 			var array_type = param.variable_type as ArrayType;
@@ -286,10 +288,11 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 					continue;
 				}
 
+				string param_name = get_variable_cname (param.name);
 				var owned_type = param.variable_type.copy ();
 				owned_type.value_owned = true;
 
-				ccode.add_declaration (owned_type.get_cname (), new CCodeVariableDeclarator.zero (param.name, default_value_for_type (param.variable_type, true)));
+				ccode.add_declaration (owned_type.get_cname (), new CCodeVariableDeclarator.zero (param_name, default_value_for_type (param.variable_type, true)));
 
 				var array_type = param.variable_type as ArrayType;
 				if (array_type != null) {
@@ -300,7 +303,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 					}
 				}
 
-				send_dbus_value (param.variable_type, new CCodeIdentifier ("_reply_builder"), new CCodeIdentifier (param.name), param);
+				send_dbus_value (param.variable_type, new CCodeIdentifier ("_reply_builder"), new CCodeIdentifier (param_name), param);
 			}
 
 			if (!(m.return_type is VoidType)) {
@@ -388,7 +391,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 				if (requires_destroy (owned_type)) {
 					// keep local alive (symbol_reference is weak)
-					var local = new LocalVariable (owned_type, param.name);
+					var local = new LocalVariable (owned_type, get_variable_cname (param.name));
 					ccode.add_expression (destroy_local (local));
 				}
 			}
@@ -462,7 +465,8 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		ccode.add_expression (builder_init);
 
 		foreach (Parameter param in sig.get_parameters ()) {
-			CCodeExpression expr = new CCodeIdentifier (param.name);
+			string param_name = get_variable_cname (param.name);
+			CCodeExpression expr = new CCodeIdentifier (param_name);
 			if (param.variable_type.is_real_struct_type ()) {
 				expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, expr);
 			}

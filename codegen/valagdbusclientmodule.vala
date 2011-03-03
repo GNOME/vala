@@ -368,16 +368,17 @@ public class Vala.GDBusClientModule : GDBusModule {
 		ccall.add_argument (sig.get_canonical_cconstant ());
 
 		foreach (Parameter param in sig.get_parameters ()) {
+			var param_name = get_variable_cname (param.name);
 			var owned_type = param.variable_type.copy ();
 			owned_type.value_owned = true;
 
-			ccode.add_declaration (owned_type.get_cname (), new CCodeVariableDeclarator.zero (param.name, default_value_for_type (param.variable_type, true)));
+			ccode.add_declaration (owned_type.get_cname (), new CCodeVariableDeclarator.zero (param_name, default_value_for_type (param.variable_type, true)));
 
 			var st = param.variable_type.data_type as Struct;
 			if (st != null && !st.is_simple_type ()) {
-				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param_name)));
 			} else {
-				ccall.add_argument (new CCodeIdentifier (param.name));
+				ccall.add_argument (new CCodeIdentifier (param_name));
 			}
 
 			if (param.variable_type is ArrayType) {
@@ -391,7 +392,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 				}
 			}
 
-			read_expression (param.variable_type, new CCodeIdentifier ("_arguments_iter"), new CCodeIdentifier (param.name), param);
+			read_expression (param.variable_type, new CCodeIdentifier ("_arguments_iter"), new CCodeIdentifier (param_name), param);
 		}
 
 		ccode.add_expression (ccall);
@@ -527,7 +528,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 			foreach (Parameter param in m.get_parameters ()) {
 				if (param.direction == ParameterDirection.IN) {
-					CCodeExpression expr = new CCodeIdentifier (param.name);
+					CCodeExpression expr = new CCodeIdentifier (get_variable_cname (param.name));
 					if (param.variable_type.is_real_struct_type ()) {
 						expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, expr);
 					}
@@ -694,7 +695,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 						// TODO check that parameter is not NULL (out parameters are optional)
 						// free value if parameter is NULL
-						ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (param.name)), target);
+						ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (get_variable_cname (param.name))), target);
 
 						if (array_type != null) {
 							for (int dim = 1; dim <= array_type.rank; dim++) {
