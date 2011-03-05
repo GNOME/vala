@@ -4527,15 +4527,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr);
 				} else {
 					// if cexpr is e.g. a function call, we can't take the address of the expression
-					// (tmp = expr, &tmp)
-					var ccomma = new CCodeCommaExpression ();
-
 					var temp_var = get_temp_variable (type, true, null, false);
 					emit_temp_var (temp_var);
-					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), cexpr));
-					ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_var.name)));
 
-					return ccomma;
+					ccode.add_assignment (get_variable_cexpression (temp_var.name), cexpr);
+					return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_var.name));
 				}
 			}
 		}
