@@ -4778,15 +4778,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public override void visit_addressof_expression (AddressofExpression expr) {
-		if (get_cvalue (expr.inner) is CCodeCommaExpression) {
-			var ccomma = get_cvalue (expr.inner) as CCodeCommaExpression;
-			var inner = ccomma.get_inner ();
-			var last = inner.get (inner.size - 1);
-			ccomma.set_expression (inner.size - 1, new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, (CCodeExpression) last));
-			set_cvalue (expr, ccomma);
-		} else {
-			set_cvalue (expr, new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_cvalue (expr.inner)));
-		}
+		set_cvalue (expr, new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_cvalue (expr.inner)));
 	}
 
 	public override void visit_reference_transfer_expression (ReferenceTransferExpression expr) {
