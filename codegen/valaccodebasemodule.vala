@@ -4843,16 +4843,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var temp_decl = get_temp_variable (lbe.right.value_type, true, null, false);
 			emit_temp_var (temp_decl);
 			var cvar = get_variable_cexpression (temp_decl.name);
-			var ccomma = new CCodeCommaExpression ();
 			var clbe = (CCodeBinaryExpression) get_cvalue (lbe);
 			if (lbe.chained) {
 				clbe = (CCodeBinaryExpression) clbe.right;
 			}
-			ccomma.append_expression (new CCodeAssignment (cvar, get_cvalue (lbe.right)));
+			ccode.add_assignment (cvar, get_cvalue (lbe.right));
 			clbe.right = get_variable_cexpression (temp_decl.name);
-			ccomma.append_expression (cleft);
+			left_chain = cleft;
 			cleft = cvar;
-			left_chain = ccomma;
 		}
 
 		CCodeBinaryOperator op;
