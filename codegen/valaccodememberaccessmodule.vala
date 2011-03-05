@@ -521,15 +521,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			if (instance_target_type.data_type.is_reference_type () || (instance != null && instance.value_type is PointerType)) {
 				result.cvalue = new CCodeMemberAccess.pointer (inst, field.get_cname ());
 			} else {
-				if (inst is CCodeCommaExpression) {
-					var ccomma = inst as CCodeCommaExpression;
-					var inner = ccomma.get_inner ();
-					var last = inner.get (inner.size - 1);
-					ccomma.set_expression (inner.size - 1, new CCodeMemberAccess (last, field.get_cname ()));
-					result.cvalue = ccomma;
-				} else {
-					result.cvalue = new CCodeMemberAccess (inst, field.get_cname ());
-				}
+				result.cvalue = new CCodeMemberAccess (inst, field.get_cname ());
 			}
 
 			if (array_type != null && !field.no_array_length) {
