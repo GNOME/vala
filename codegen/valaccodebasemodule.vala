@@ -3881,13 +3881,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		if (expression_type is ValueType && !expression_type.nullable) {
 			// normal value type, no null check
-			// (copy (&expr, &temp), temp)
 
 			var decl = get_temp_variable (expression_type, false, node);
 			emit_temp_var (decl);
-
 			var ctemp = get_variable_cexpression (decl.name);
-			
+
 			var vt = (ValueType) expression_type;
 			var st = (Struct) vt.type_symbol;
 			var copy_call = new CCodeFunctionCall (new CCodeIdentifier (st.get_copy_function ()));
@@ -3898,33 +3896,32 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				generate_struct_copy_function (st);
 			}
 
-			var ccomma = new CCodeCommaExpression ();
+			if (gvalue_type != null && expression_type.data_type == gvalue_type) {
+				var cisvalid = new CCodeFunctionCall (new CCodeIdentifier ("G_IS_VALUE"));
+				cisvalid.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr));
 
-			if (st.get_copy_function () == "g_value_copy") {
+				ccode.open_if (cisvalid);
+
 				// GValue requires g_value_init in addition to g_value_copy
-
 				var value_type_call = new CCodeFunctionCall (new CCodeIdentifier ("G_VALUE_TYPE"));
 				value_type_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr));
 
 				var init_call = new CCodeFunctionCall (new CCodeIdentifier ("g_value_init"));
 				init_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
 				init_call.add_argument (value_type_call);
+				ccode.add_expression (init_call);
+				ccode.add_expression (copy_call);
 
-				ccomma.append_expression (init_call);
-			}
+				ccode.add_else ();
 
-			ccomma.append_expression (copy_call);
-			ccomma.append_expression (ctemp);
-
-			if (gvalue_type != null && expression_type.data_type == gvalue_type) {
 				// g_value_init/copy must not be called for uninitialized values
-				var cisvalid = new CCodeFunctionCall (new CCodeIdentifier ("G_IS_VALUE"));
-				cisvalid.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr));
-
-				return new CCodeConditionalExpression (cisvalid, ccomma, cexpr);
+				ccode.add_assignment (ctemp, cexpr);
+				ccode.close ();
 			} else {
-				return ccomma;
+				ccode.add_expression (copy_call);
 			}
+
+			return ctemp;
 		}
 
 		/* (temp = expr, temp == NULL ? NULL : ref (temp))
