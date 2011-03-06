@@ -4612,7 +4612,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public TextTagTable ();
 		public void add (Gtk.TextTag tag);
-		public void @foreach (Gtk.TextTagTableForeach func, void* data);
+		public void @foreach (Gtk.TextTagTableForeach func);
 		public int get_size ();
 		public unowned Gtk.TextTag lookup (string name);
 		public void remove (Gtk.TextTag tag);
