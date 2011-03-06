@@ -995,19 +995,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			
 			if (requires_destroy (f.variable_type) && instance_finalize_context != null) {
 				push_context (instance_finalize_context);
-
-				var this_access = new MemberAccess.simple ("this");
-				this_access.value_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
-
-				var field_st = f.parent_symbol as Struct;
-				if (field_st != null && !field_st.is_simple_type ()) {
-					set_cvalue (this_access, new CCodeIdentifier ("(*self)"));
-				} else {
-					set_cvalue (this_access, new CCodeIdentifier ("self"));
-				}
-
-				ccode.add_expression (destroy_field (f, this_access.target_value));
-
+				ccode.add_expression (destroy_field (f, load_this_parameter ((TypeSymbol) f.parent_symbol)));
 				pop_context ();
 			}
 		} else if (f.binding == MemberBinding.CLASS)  {
