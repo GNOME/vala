@@ -233,7 +233,7 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 		store_variable (param, get_parameter_cvalue (param), value, false);
 	}
 
-	public override void store_field (Field field, Expression? instance, TargetValue value) {
+	public override void store_field (Field field, TargetValue? instance, TargetValue value) {
 		if (requires_destroy (field.variable_type)) {
 			/* unref old value */
 			ccode.add_expression (destroy_field (field, instance));

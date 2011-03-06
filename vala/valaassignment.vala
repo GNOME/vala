@@ -486,7 +486,7 @@ public class Vala.Assignment : Expression {
 				} else if (param != null) {
 					codegen.store_parameter (param, new_value);
 				} else if (field != null) {
-					codegen.store_field (field, instance ? ma.inner : null, new_value);
+					codegen.store_field (field, instance && ma.inner != null ? ma.inner.target_value : null, new_value);
 				}
 
 				// when load_variable is changed to use temporary
@@ -497,7 +497,7 @@ public class Vala.Assignment : Expression {
 				} else if (param != null) {
 					target_value = codegen.load_parameter (param);
 				} else if (field != null) {
-					target_value = codegen.load_field (field, instance ? ma.inner : null);
+					target_value = codegen.load_field (field, instance && ma.inner != null ? ma.inner.target_value : null);
 				}
 
 				codegen.visit_expression (this);

@@ -149,7 +149,7 @@ public class Vala.DovaAssignmentModule : DovaMemberAccessModule {
 		store_variable (param, get_parameter_cvalue (param), value, false);
 	}
 
-	public override void store_field (Field field, Expression? instance, TargetValue value) {
+	public override void store_field (Field field, TargetValue? instance, TargetValue value) {
 		store_variable (field, get_field_cvalue (field, instance), value, false);
 	}
 }

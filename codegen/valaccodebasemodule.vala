@@ -1012,7 +1012,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					set_cvalue (this_access, new CCodeIdentifier ("self"));
 				}
 
-				ccode.add_expression (destroy_field (f, this_access));
+				ccode.add_expression (destroy_field (f, this_access.target_value));
 
 				pop_context ();
 			}
@@ -2981,7 +2981,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return destroy_variable (param, get_parameter_cvalue (param));
 	}
 
-	public CCodeExpression destroy_field (Field field, Expression? instance) {
+	public CCodeExpression destroy_field (Field field, TargetValue? instance) {
 		return destroy_variable (field, get_field_cvalue (field, instance));
 	}
 
@@ -3719,7 +3719,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public abstract TargetValue get_parameter_cvalue (Parameter param);
 
-	public abstract TargetValue get_field_cvalue (Field field, Expression? instance);
+	public abstract TargetValue get_field_cvalue (Field field, TargetValue? instance);
 
 	public virtual string get_delegate_target_cname (string delegate_cname) {
 		assert_not_reached ();
@@ -5760,7 +5760,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					this_access.value_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
 					set_cvalue (this_access, new CCodeIdentifier ("(*self)"));
 
-					ccode.add_expression (destroy_field (f, this_access));
+					ccode.add_expression (destroy_field (f, this_access.target_value));
 				}
 			}
 		}

@@ -42,7 +42,7 @@ public abstract class Vala.CodeGenerator : CodeVisitor {
 
 	public abstract void store_parameter (Parameter param, TargetValue value);
 
-	public abstract TargetValue load_field (Field field, Expression? instance);
+	public abstract TargetValue load_field (Field field, TargetValue? instance);
 
-	public abstract void store_field (Field field, Expression? instance, TargetValue value);
+	public abstract void store_field (Field field, TargetValue? instance, TargetValue value);
 }

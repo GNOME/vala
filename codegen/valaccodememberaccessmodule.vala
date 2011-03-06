@@ -121,7 +121,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			set_cvalue (expr, get_array_length_cexpression (expr.inner, 1));
 		} else if (expr.symbol_reference is Field) {
 			var field = (Field) expr.symbol_reference;
-			expr.target_value = load_field (field, expr.inner);
+			expr.target_value = load_field (field, expr.inner != null ? expr.inner.target_value : null);
 		} else if (expr.symbol_reference is EnumValue) {
 			var ev = (EnumValue) expr.symbol_reference;
 
@@ -492,7 +492,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 	}
 
 	/* Returns lvalue access to the given field */
-	public override TargetValue get_field_cvalue (Field field, Expression? instance) {
+	public override TargetValue get_field_cvalue (Field field, TargetValue? instance) {
 		var result = new GLibValue (field.variable_type.copy ());
 
 		var array_type = field.variable_type as ArrayType;
@@ -501,7 +501,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			CCodeExpression pub_inst = null;
 
 			if (instance != null) {
-				pub_inst = get_cvalue (instance);
+				pub_inst = get_cvalue_ (instance);
 			}
 
 			var instance_target_type = get_data_type_for_symbol ((TypeSymbol) field.parent_symbol);
@@ -586,7 +586,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			} else {
 				// Accessing the field of an instance
 				var k = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_GET_CLASS"));
-				k.add_argument (get_cvalue (instance));
+				k.add_argument (get_cvalue_ (instance));
 				klass = k;
 			}
 			cast.add_argument (klass);
@@ -679,7 +679,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 	}
 
 	/* Returns unowned access to the given field */
-	public override TargetValue load_field (Field field, Expression? instance) {
+	public override TargetValue load_field (Field field, TargetValue? instance) {
 		return load_variable (field, get_field_cvalue (field, instance));
 	}
 }

@@ -98,7 +98,7 @@ public abstract class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 			set_cvalue (expr, ccall);
 		} else if (expr.symbol_reference is Field) {
 			var f = (Field) expr.symbol_reference;
-			expr.target_value = load_field (f, expr.inner);
+			expr.target_value = load_field (f, expr.inner != null ? expr.inner.target_value : null);
 		} else if (expr.symbol_reference is EnumValue) {
 			var ev = (EnumValue) expr.symbol_reference;
 
@@ -243,14 +243,14 @@ public abstract class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 		return result;
 	}
 
-	public TargetValue get_field_cvalue (Field f, Expression? instance) {
+	public TargetValue get_field_cvalue (Field f, TargetValue? instance) {
 		var result = new DovaValue (f.variable_type);
 
 		if (f.binding == MemberBinding.INSTANCE) {
 			CCodeExpression pub_inst = null;
 
 			if (instance != null) {
-				pub_inst = get_cvalue (instance);
+				pub_inst = get_cvalue_ (instance);
 			}
 
 			var instance_target_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
@@ -295,7 +295,7 @@ public abstract class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 		return load_variable (param, get_parameter_cvalue (param));
 	}
 
-	public override TargetValue load_field (Field field, Expression? instance) {
+	public override TargetValue load_field (Field field, TargetValue? instance) {
 		return load_variable (field, get_field_cvalue (field, instance));
 	}
 }
