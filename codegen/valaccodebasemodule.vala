@@ -3721,6 +3721,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public abstract TargetValue get_field_cvalue (Field field, TargetValue? instance);
 
+	public abstract TargetValue load_this_parameter (TypeSymbol sym);
+
 	public virtual string get_delegate_target_cname (string delegate_cname) {
 		assert_not_reached ();
 	}

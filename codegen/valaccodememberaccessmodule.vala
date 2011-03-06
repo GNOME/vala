@@ -402,7 +402,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				// use closure
 				result.cvalue = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "self");
 			} else {
-				var st = current_type_symbol as Struct;
+				var st = result.value_type.data_type as Struct;
 				if (st != null && !st.is_simple_type ()) {
 					result.cvalue = new CCodeIdentifier ("(*self)");
 				} else {
@@ -676,6 +676,12 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 	/* Returns unowned access to the given parameter */
 	public override TargetValue load_parameter (Parameter param) {
 		return load_variable (param, get_parameter_cvalue (param));
+	}
+
+	/* Convenience method returning access to "this" */
+	public override TargetValue load_this_parameter (TypeSymbol sym) {
+		var param = new Parameter ("this", get_data_type_for_symbol (sym));
+		return load_parameter (param);
 	}
 
 	/* Returns unowned access to the given field */
