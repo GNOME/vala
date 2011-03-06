@@ -968,24 +968,18 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				if (f.variable_type is ArrayType && !f.no_array_length &&
 				    f.initializer is ArrayCreationExpression) {
 					var array_type = (ArrayType) f.variable_type;
-					var this_access = new MemberAccess.simple ("this");
-					this_access.value_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
-					set_cvalue (this_access, new CCodeIdentifier ("self"));
-					var ma = new MemberAccess (this_access, f.name);
-					ma.symbol_reference = f;
-					ma.value_type = f.variable_type.copy ();
-					visit_member_access (ma);
+					var field_value = get_field_cvalue (f, load_this_parameter ((TypeSymbol) f.parent_symbol));
 
 					List<Expression> sizes = ((ArrayCreationExpression) f.initializer).get_sizes ();
 					for (int dim = 1; dim <= array_type.rank; dim++) {
-						var array_len_lhs = get_array_length_cexpression (ma, dim);
+						var array_len_lhs = get_array_length_cvalue (field_value, dim);
 						var size = sizes[dim - 1];
 						ccode.add_assignment (array_len_lhs, get_cvalue (size));
 					}
 
 					if (array_type.rank == 1 && f.is_internal_symbol ()) {
-						var lhs_array_size = get_array_size_cvalue (ma.target_value);
-						var rhs_array_len = get_array_length_cexpression (ma, 1);
+						var lhs_array_size = get_array_size_cvalue (field_value);
+						var rhs_array_len = get_array_length_cvalue (field_value, 1);
 						ccode.add_assignment (lhs_array_size, rhs_array_len);
 					}
 				}
