@@ -473,6 +473,15 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "1") {
 						return_type.value_owned = true;
 					}
+				} else if (nv[0] == "is_array") {
+					if (eval (nv[1]) == "1") {
+						return_type = new ArrayType (return_type, 1, return_type.source_reference);
+						cb.return_type = return_type;
+					}
+				} else if (nv[0] == "array_length_type") {
+					cb.array_length_type = eval (nv[1]);
+				} else if (nv[0] == "type_name") {
+					cb.return_type = return_type = parse_type_from_string (eval (nv[1]), return_type.value_owned);
 				} else if (nv[0] == "deprecated") {
 					if (eval (nv[1]) == "1") {
 						cb.deprecated = true;
