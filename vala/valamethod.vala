@@ -176,7 +176,7 @@ public class Vala.Method : Subroutine {
 	public bool array_null_terminated { get; set; }
 
 	/**
-	 * Specified a custom type for the array length parameter.
+	 * Specifies a custom type for the array length parameter.
 	 */
 	public string? array_length_type { get; set; default = null; }
 

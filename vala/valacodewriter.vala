@@ -965,6 +965,8 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_string (", has_target = false");
 		} else if (!float_equal (cb.cinstance_parameter_position, -2)) {
 			write_string (", instance_pos = %g".printf (cb.cinstance_parameter_position));
+		} else if (cb.array_length_type != null) {
+			write_string (", array_length_type = \"%s\"".printf (cb.array_length_type));
 		}
 
 		write_string (")]");

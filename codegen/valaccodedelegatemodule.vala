@@ -83,9 +83,11 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 		if (!d.no_array_length && d.return_type is ArrayType) {
 			// return array length if appropriate
 			var array_type = (ArrayType) d.return_type;
+			var array_length_type = d.array_length_type != null ? d.array_length_type : "int";
+			array_length_type += "*";
 
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				var cparam = new CCodeParameter (get_array_length_cname ("result", dim), "int*");
+				var cparam = new CCodeParameter (get_array_length_cname ("result", dim), array_length_type);
 				cfundecl.add_parameter (cparam);
 			}
 		} else if (d.return_type is DelegateType) {
@@ -230,9 +232,11 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 		if (!d.no_array_length && d.return_type is ArrayType) {
 			// return array length if appropriate
 			var array_type = (ArrayType) d.return_type;
+			var array_length_type = d.array_length_type != null ? d.array_length_type : "int";
+			array_length_type += "*";
 
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				var cparam = new CCodeParameter (get_array_length_cname ("result", dim), "int*");
+				var cparam = new CCodeParameter (get_array_length_cname ("result", dim), array_length_type);
 				cparam_map.set (get_param_pos (d.carray_length_parameter_position + 0.01 * dim), cparam);
 			}
 		} else if (d.return_type is DelegateType) {

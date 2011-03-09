@@ -88,9 +88,11 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		} else if (!m.no_array_length && m.return_type is ArrayType) {
 			// return array length if appropriate
 			var array_type = (ArrayType) m.return_type;
+			var array_length_type = m.array_length_type != null ? m.array_length_type : "int";
+			array_length_type += "*";
 
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				var cparam = new CCodeParameter (get_array_length_cname ("result", dim), "int*");
+				var cparam = new CCodeParameter (get_array_length_cname ("result", dim), array_length_type);
 				cparam_map.set (get_param_pos (m.carray_length_parameter_position + 0.01 * dim), cparam);
 				if (carg_map != null) {
 					carg_map.set (get_param_pos (m.carray_length_parameter_position + 0.01 * dim), get_variable_cexpression (cparam.name));

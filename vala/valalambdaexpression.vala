@@ -135,6 +135,9 @@ public class Vala.LambdaExpression : Expression {
 		var cb = (Delegate) ((DelegateType) target_type).delegate_symbol;
 		var return_type = cb.return_type.get_actual_type (target_type, null, this);
 		method = new Method (get_lambda_name (context), return_type, source_reference);
+		method.no_array_length = cb.no_array_length;
+		method.array_null_terminated = cb.array_null_terminated;
+		method.array_length_type = cb.array_length_type;
 		// track usage for flow analyzer
 		method.used = true;
 		method.check_deprecated (source_reference);

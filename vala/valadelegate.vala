@@ -74,6 +74,11 @@ public class Vala.Delegate : TypeSymbol {
 	 */
 	public bool array_null_terminated { get; set; }
 
+	/**
+	 * Specifies a custom type for the array length parameter.
+	 */
+	public string? array_length_type { get; set; default = null; }
+
 	private List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
 
 	private List<Parameter> parameters = new ArrayList<Parameter> ();
@@ -286,6 +291,9 @@ public class Vala.Delegate : TypeSymbol {
 		}
 		if (a.has_argument ("array_length")) {
 			no_array_length = !a.get_bool ("array_length");
+		}
+		if (a.has_argument ("array_length_type")) {
+			array_length_type = a.get_string ("array_length_type");
 		}
 		if (a.has_argument ("array_null_terminated")) {
 			array_null_terminated = a.get_bool ("array_null_terminated");
