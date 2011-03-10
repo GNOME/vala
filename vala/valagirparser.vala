@@ -2065,6 +2065,8 @@ public class Vala.GirParser : CodeVisitor {
 			cl.add_base_type (parse_type_from_gir_name (parent));
 		}
 
+		cl.set_type_id ("%s ()".printf (reader.get_attribute ("glib:get-type")));
+
 		next ();
 		var first_field = true;
 		var old_symbol = current_symbol;
@@ -2143,6 +2145,7 @@ public class Vala.GirParser : CodeVisitor {
 		if (cname != null) {
 			iface.set_cname (cname);
 		}
+		iface.set_type_id ("%s ()".printf (reader.get_attribute ("glib:get-type")));
 
 		next ();
 		var old_symbol = current_symbol;
