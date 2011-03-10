@@ -2408,7 +2408,7 @@ namespace Gtk {
 		public uint get_mnemonic_keyval ();
 		public unowned Gtk.Widget get_mnemonic_widget ();
 		public bool get_selectable ();
-		public bool get_selection_bounds (int start, int end);
+		public bool get_selection_bounds (out int start, out int end);
 		public bool get_single_line_mode ();
 		public unowned string get_text ();
 		public bool get_track_visited_links ();
@@ -6009,7 +6009,7 @@ namespace Gtk {
 		public abstract unowned string get_chars (int start_pos, int end_pos);
 		public bool get_editable ();
 		public abstract int get_position ();
-		public abstract bool get_selection_bounds (int start_pos, int end_pos);
+		public abstract bool get_selection_bounds (out int start_pos, out int end_pos);
 		public void paste_clipboard ();
 		[CCode (vfunc_name = "set_selection_bounds")]
 		public abstract void select_region (int start_pos, int end_pos);
