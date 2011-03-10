@@ -560,12 +560,20 @@ public class Vala.Interface : ObjectTypeSymbol {
 		return null;
 	}
 
+	public string? get_default_type_id () {
+		return get_upper_case_cname ("TYPE_");
+	}
+
 	public override string? get_type_id () {
 		if (type_id == null) {
-			type_id = get_upper_case_cname ("TYPE_");
+			type_id = get_default_type_id ();
 		}
 		
 		return type_id;
+	}
+
+	public void set_type_id (string type_id) {
+		this.type_id = type_id;
 	}
 
 	public override void replace_type (DataType old_type, DataType new_type) {
