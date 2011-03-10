@@ -4824,7 +4824,7 @@ namespace Gtk {
 		[NoWrapper]
 		public virtual void modify (Gtk.TreeModel child_model, Gtk.TreeIter iter, GLib.Value value, int column);
 		public void refilter ();
-		public void set_modify_func (int n_columns, GLib.Type[] types, owned Gtk.TreeModelFilterModifyFunc func);
+		public void set_modify_func ([CCode (array_length_pos = 0.9)] GLib.Type[] types, owned Gtk.TreeModelFilterModifyFunc func);
 		public void set_visible_column (int column);
 		public void set_visible_func (owned Gtk.TreeModelFilterVisibleFunc func);
 		[NoWrapper]
