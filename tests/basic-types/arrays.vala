@@ -71,9 +71,19 @@ void test_array_pass () {
 	assert (b[0] == 42);
 }
 
+void test_static_array () {
+	int a[2];
+	assert (a.length == 2);
+	a[1] = 23;
+	assert (a[1] == 23);
+	a = { 23, 34 };
+	assert (a[0] == 23 && a[1] == 34);
+}
+
 void main () {
 	test_integer_array ();
 	test_string_array ();
 	test_array_pass ();
+	test_static_array ();
 }
 
