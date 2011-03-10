@@ -4757,7 +4757,7 @@ namespace Gtk {
 		public unowned Gtk.TreePath convert_path_to_child_path (Gtk.TreePath filter_path);
 		public unowned Gtk.TreeModel get_model ();
 		public void refilter ();
-		public void set_modify_func (int n_columns, GLib.Type[] types, owned Gtk.TreeModelFilterModifyFunc func);
+		public void set_modify_func ([CCode (array_length_pos = 0.9)] GLib.Type[] types, owned Gtk.TreeModelFilterModifyFunc func);
 		public void set_visible_column (int column);
 		public void set_visible_func (owned Gtk.TreeModelFilterVisibleFunc func);
 		[NoAccessorMethod]
