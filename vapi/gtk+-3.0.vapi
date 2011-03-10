@@ -4209,7 +4209,7 @@ namespace Gtk {
 		public void delete_mark (Gtk.TextMark mark);
 		public void delete_mark_by_name (string name);
 		public bool delete_selection (bool interactive, bool default_editable);
-		public bool deserialize (Gtk.TextBuffer content_buffer, Gdk.Atom format, Gtk.TextIter iter, uchar data, size_t length) throws GLib.Error;
+		public bool deserialize (Gtk.TextBuffer content_buffer, Gdk.Atom format, Gtk.TextIter iter, [CCode (array_length_type = "gsize")] uint8[] data) throws GLib.Error;
 		public bool deserialize_get_can_create_tags (Gdk.Atom format);
 		public void deserialize_set_can_create_tags (Gdk.Atom format, bool can_create_tags);
 		public void get_bounds (out Gtk.TextIter start, out Gtk.TextIter end);
@@ -4231,7 +4231,7 @@ namespace Gtk {
 		public unowned Gtk.TargetList get_paste_target_list ();
 		public unowned Gtk.TextMark get_selection_bound ();
 		public bool get_selection_bounds (out Gtk.TextIter start, out Gtk.TextIter end);
-		public Gdk.Atom get_serialize_formats (int n_formats);
+		public Gdk.Atom[] get_serialize_formats ();
 		public unowned string get_slice (Gtk.TextIter start, Gtk.TextIter end, bool include_hidden_chars);
 		public void get_start_iter (out Gtk.TextIter iter);
 		public unowned Gtk.TextTagTable get_tag_table ();
@@ -4256,7 +4256,8 @@ namespace Gtk {
 		public void remove_selection_clipboard (Gtk.Clipboard clipboard);
 		public void remove_tag_by_name (string name, Gtk.TextIter start, Gtk.TextIter end);
 		public void select_range (Gtk.TextIter ins, Gtk.TextIter bound);
-		public uchar serialize (Gtk.TextBuffer content_buffer, Gdk.Atom format, Gtk.TextIter start, Gtk.TextIter end, size_t length);
+		[CCode (array_length_type = "gsize")]
+		public uint8[] serialize (Gtk.TextBuffer content_buffer, Gdk.Atom format, Gtk.TextIter start, Gtk.TextIter end);
 		public void set_modified (bool setting);
 		public void set_text (string text, int len = -1);
 		public void unregister_deserialize_format (Gdk.Atom format);
