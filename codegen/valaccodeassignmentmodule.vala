@@ -170,25 +170,30 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 	}
 
 	void store_variable (Variable variable, TargetValue lvalue, TargetValue value, bool initializer) {
+		var array_type = variable.variable_type as ArrayType;
+
+		if (array_type != null && array_type.fixed_length) {
+			cfile.add_include ("string.h");
+
+			// it is necessary to use memcpy for fixed-length (stack-allocated) arrays
+			// simple assignments do not work in C
+			var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+			sizeof_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
+			var size = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeConstant ("%d".printf (array_type.length)), sizeof_call);
+
+			var ccopy = new CCodeFunctionCall (new CCodeIdentifier ("memcpy"));
+			ccopy.add_argument (get_cvalue_ (lvalue));
+			ccopy.add_argument (get_cvalue_ (value));
+			ccopy.add_argument (size);
+			ccode.add_expression (ccopy);
+
+			return;
+		}
+
 		ccode.add_assignment (get_cvalue_ (lvalue), get_cvalue_ (value));
 
-		var array_type = variable.variable_type as ArrayType;
 		if (array_type != null) {
-			if (array_type.fixed_length) {
-				cfile.add_include ("string.h");
-
-				// it is necessary to use memcpy for fixed-length (stack-allocated) arrays
-				// simple assignments do not work in C
-				var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
-				sizeof_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
-				var size = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeConstant ("%d".printf (array_type.length)), sizeof_call);
-
-				var ccopy = new CCodeFunctionCall (new CCodeIdentifier ("memcpy"));
-				ccopy.add_argument (get_cvalue_ (lvalue));
-				ccopy.add_argument (get_cvalue_ (value));
-				ccopy.add_argument (size);
-				ccode.add_expression (ccopy);
-			} else if (!variable.no_array_length && !variable.array_null_terminated) {
+			if (!variable.no_array_length && !variable.array_null_terminated) {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					ccode.add_assignment (get_array_length_cvalue (lvalue, dim), get_array_length_cvalue (value, dim));
 				}
