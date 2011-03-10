@@ -511,7 +511,7 @@ namespace Cairo {
 	[CCode (cname = "cairo_surface_t", cheader_filename = "cairo-pdf.h")]
 	public class PdfSurface : Surface {
 		[CCode (cname = "cairo_pdf_surface_create")]
-		public PdfSurface (string filename, double width_in_points, double height_in_points);
+		public PdfSurface (string? filename, double width_in_points, double height_in_points);
 		[CCode (cname = "cairo_pdf_surface_create_for_stream")]
 		public PdfSurface.for_stream (WriteFunc write_func, double width_in_points, double height_in_points);
 		public void set_size (double width_in_points, double height_in_points);
