@@ -1146,14 +1146,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						if (f.variable_type is ArrayType && !f.no_array_length &&
 						    f.initializer is ArrayCreationExpression) {
 							var array_type = (ArrayType) f.variable_type;
-							var ma = new MemberAccess.simple (f.name);
-							ma.symbol_reference = f;
-							ma.value_type = f.variable_type.copy ();
-							visit_member_access (ma);
+							var field_value = get_field_cvalue (f, null);
 
 							List<Expression> sizes = ((ArrayCreationExpression) f.initializer).get_sizes ();
 							for (int dim = 1; dim <= array_type.rank; dim++) {
-								var array_len_lhs = get_array_length_cexpression (ma, dim);
+								var array_len_lhs = get_array_length_cvalue (field_value, dim);
 								var size = sizes[dim - 1];
 								ccode.add_assignment (array_len_lhs, get_cvalue (size));
 							}
