@@ -1,0 +1,23 @@
+// Vala specific
+*.*.cancellable default=null
+Parser.load_from_data.length default=-1
+gobject_from_data.length default=-1
+Array.sized_new name="sized"
+
+// Forward Upstream
+Json cheader_filename="json-glib/json-glib.h"
+Array
+	.get_element unowned
+Node
+	.get_parent unowned
+	.get_value.value out
+Object
+	.add_member replacement="Json.Object.set_member"
+	.get_member unowned
+Serializable cheader_filename="json-glib/json-glib.h,json-glib/json-gobject.h"
+	     .deserialize_property.value out
+construct_gobject cheader_filename="json-glib/json-glib.h,json-glib/json-gobject.h" replacement="Json.gobject_from_data"
+serialize_gobject cheader_filename="json-glib/json-glib.h,json-glib/json-gobject.h" replacement="Json.gobject_to_data"
+BoxedDeserializeFunc skip=false
+boxed_register_serialize_func skip=false
+boxed_register_deserialize_func skip=false
