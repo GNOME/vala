@@ -5299,7 +5299,7 @@ namespace Gtk {
 		public float xalign;
 		[CCode (has_construct_function = false)]
 		public TreeViewColumn ();
-		public bool cell_get_position (Gtk.CellRenderer cell_renderer, out int? start_pos, out int? width);
+		public bool cell_get_position (Gtk.CellRenderer cell_renderer, out int start_pos, out int width);
 		public void cell_get_size (out Gdk.Rectangle cell_area, out int x_offset, out int y_offset, out int width, out int height);
 		public bool cell_is_visible ();
 		public void cell_set_cell_data (Gtk.TreeModel tree_model, Gtk.TreeIter iter, bool is_expander, bool is_expanded);
