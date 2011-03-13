@@ -34,7 +34,6 @@ namespace GLib {
 		public bool symbol (string symbol_name, out void* symbol);
 		public unowned string name ();
 		public void make_resident ();
-		public bool close ();
 		public static unowned string error ();
 	}
 	
