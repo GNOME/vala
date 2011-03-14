@@ -158,7 +158,7 @@ namespace Gdk {
 		public weak uint8[] pixel_data;
 		public bool deserialize ([CCode (array_length_pos = 0.9)] uint8[] stream) throws GLib.Error;
 		public void* from_pixbuf (Gdk.Pixbuf pixbuf, bool use_rle);
-		public unowned uint8[] serialize ();
+		public uint8[] serialize ();
 		public unowned GLib.StringBuilder to_csource (string name, Gdk.PixdataDumpType dump_type);
 	}
 	[CCode (cprefix = "GDK_COLORSPACE_", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
