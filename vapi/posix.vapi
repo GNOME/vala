@@ -901,6 +901,115 @@ namespace Posix {
 	[CCode (cheader_filename = "signal.h")]
 	public const int SIGSTKFLT;
 
+	[CCode (cheader_filename = "signal.h")]
+	public const int SA_NOCLDSTOP;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SA_NOCLDWAIT;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SA_NODEFER;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SA_ONSTACK;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SA_RESETHAND;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SA_RESTART;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SA_SIGINFO;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SI_USER;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SI_KERNEL;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SI_QUEUE;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SI_TIMER;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SI_MESGQ;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SI_ASYNCIO;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SI_SIGIO;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SI_TKILL;
+	[CCode (cheader_filename = "signal.h")]
+	public const int ILL_ILLOPC;
+	[CCode (cheader_filename = "signal.h")]
+	public const int ILL_ILLOPN;
+	[CCode (cheader_filename = "signal.h")]
+	public const int ILL_ILLADR;
+	[CCode (cheader_filename = "signal.h")]
+	public const int ILL_ILLTRP;
+	[CCode (cheader_filename = "signal.h")]
+	public const int ILL_PRVOPC;
+	[CCode (cheader_filename = "signal.h")]
+	public const int ILL_PRVREG;
+	[CCode (cheader_filename = "signal.h")]
+	public const int ILL_COPROC;
+	[CCode (cheader_filename = "signal.h")]
+	public const int ILL_BADSTK;
+	[CCode (cheader_filename = "signal.h")]
+	public const int FPE_INTDIV;
+	[CCode (cheader_filename = "signal.h")]
+	public const int FPE_INTOVF;
+	[CCode (cheader_filename = "signal.h")]
+	public const int FPE_FLTDIV;
+	[CCode (cheader_filename = "signal.h")]
+	public const int FPE_FLTOVF;
+	[CCode (cheader_filename = "signal.h")]
+	public const int FPE_FLTUND;
+	[CCode (cheader_filename = "signal.h")]
+	public const int FPE_FLTRES;
+	[CCode (cheader_filename = "signal.h")]
+	public const int FPE_FLTINV;
+	[CCode (cheader_filename = "signal.h")]
+	public const int FPE_FLTSUB;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SEGV_MAPERR;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SEGV_ACCERR;
+	[CCode (cheader_filename = "signal.h")]
+	public const int BUS_ADRALN;
+	[CCode (cheader_filename = "signal.h")]
+	public const int BUS_ADRERR;
+	[CCode (cheader_filename = "signal.h")]
+	public const int BUS_OBJERR;
+	[CCode (cheader_filename = "signal.h")]
+	public const int BUS_MCEERR_AR;
+	[CCode (cheader_filename = "signal.h")]
+	public const int BUS_MCEERR_AO;
+	[CCode (cheader_filename = "signal.h")]
+	public const int TRAP_BRKPT;
+	[CCode (cheader_filename = "signal.h")]
+	public const int TRAP_TRACE;
+	[CCode (cheader_filename = "signal.h")]
+	public const int TRAP_BRANCH;
+	[CCode (cheader_filename = "signal.h")]
+	public const int TRAP_HWBKPT;
+	[CCode (cheader_filename = "signal.h")]
+	public const int CLD_EXITED;
+	[CCode (cheader_filename = "signal.h")]
+	public const int CLD_KILLED;
+	[CCode (cheader_filename = "signal.h")]
+	public const int CLD_DUMPED;
+	[CCode (cheader_filename = "signal.h")]
+	public const int CLD_TRAPPED;
+	[CCode (cheader_filename = "signal.h")]
+	public const int CLD_STOPPED;
+	[CCode (cheader_filename = "signal.h")]
+	public const int CLD_CONTINUED;
+	[CCode (cheader_filename = "signal.h")]
+	public const int POLL_IN;
+	[CCode (cheader_filename = "signal.h")]
+	public const int POLL_OUT;
+	[CCode (cheader_filename = "signal.h")]
+	public const int POLL_MSG;
+	[CCode (cheader_filename = "signal.h")]
+	public const int POLL_ERR;
+	[CCode (cheader_filename = "signal.h")]
+	public const int POLL_PRI;
+	[CCode (cheader_filename = "signal.h")]
+	public const int POLL_HUP;
+
 	[SimpleType]
 	[IntegerType (rank = 6)]
 	[CCode (cname = "pid_t", default_value = "0", cheader_filename = "sys/types.h")]
@@ -909,9 +1018,38 @@ namespace Posix {
 
 	[CCode (cname = "struct sigaction", cheader_filename = "signal.h")]
 	public struct sigaction_t {
-		sighandler_t sa_handler;
-		sigset_t     sa_mask;
-		int          sa_flags;
+		sighandler_t     sa_handler;
+		siginfohandler_t sa_sigaction;
+		sigset_t         sa_mask;
+		int              sa_flags;
+	}
+
+	[CCode (cname = "sigval_t", cheader_filename = "signal.h")]
+	public struct sigval_t {
+		int   sival_int;
+		void* sival_ptr;
+	}
+
+	[CCode (cname = "siginfo_t", cheader_filename = "signal.h")]
+	public struct siginfo_t {
+		int	     si_signo;
+		int      si_errno;
+		int      si_code;
+		int      si_trapno;
+		pid_t    si_pid;
+		uid_t    si_uid;
+		int      si_status;
+		clock_t  si_utime;
+		clock_t  si_stime;
+		sigval_t si_value;
+		int      si_int;
+		void*    si_ptr;
+		int      si_overrun;
+		int      si_timerid;
+		void*    si_addr;
+		long     si_band;
+		int      si_fd;
+		short    si_addr_lsb;
 	}
 
 	[CCode (cheader_filename = "signal.h")]
@@ -943,6 +1081,9 @@ namespace Posix {
 
 	[CCode (has_target = false, cheader_filename = "signal.h")]
 	public delegate void sighandler_t (int signal);
+
+	[CCode (has_target = false, cheader_filename = "signal.h")]
+	public delegate void siginfohandler_t (int signal, siginfo_t info, void* data);
 
 	[CCode (cheader_filename = "signal.h")]
 	public sighandler_t SIG_DFL;
@@ -1517,6 +1658,13 @@ namespace Posix {
 	[IntegerType (rank = 9)]
 	[CCode (cheader_filename = "sys/types.h")]
 	public struct blkcnt_t {
+	}
+
+	[CCode (cheader_filename = "time.h")]
+	[IntegerType (rank = 8)]
+	public struct clock_t {
+		[CCode (cname = "clock")]
+		public clock_t ();
 	}
 
 	[CCode (cheader_filename = "time.h")]
