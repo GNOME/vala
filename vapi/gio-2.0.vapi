@@ -1636,7 +1636,8 @@ namespace GLib {
 		public abstract unowned GLib.Variant get_action_state_hint (string action_name);
 		public abstract unowned GLib.VariantType get_action_state_type (string action_name);
 		public abstract bool has_action (string action_name);
-		public abstract unowned string list_actions ();
+		[CCode (array_length = false)]
+		public abstract string[] list_actions ();
 		[HasEmitter]
 		public signal void action_added (string action_name);
 		[HasEmitter]
