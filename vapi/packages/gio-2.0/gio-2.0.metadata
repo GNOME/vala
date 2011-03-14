@@ -292,7 +292,7 @@ GActionGroup::action_added has_emitter="1"
 GActionGroup::action_removed has_emitter="1"
 GActionGroup::action_enabled_changed has_emitter="1"
 GActionGroup::action_state_changed has_emitter="1"
-g_action_group_list_actions is_array="1" transfer_ownership="1" no_array_length="1"
+g_action_group_list_actions is_array="1" transfer_ownership="1" no_array_length="1" array_null_terminated="1"
 
 g_cancellable_set_error_if_cancelled error_types="IOError"
 g_cancellable_connect.callback type_name="GLib.Func<GLib.Cancellable>" ctype="GCallback*" transfer_ownership="1"
