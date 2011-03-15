@@ -171,6 +171,8 @@ public abstract class Vala.DataType : CodeNode {
 	}
 
 	public virtual string to_qualified_string (Scope? scope = null) {
+		// logic temporarily duplicated in DelegateType class
+
 		string s;
 
 		if (data_type != null) {

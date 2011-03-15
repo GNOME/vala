@@ -47,7 +47,27 @@ public class Vala.DelegateType : DataType {
 	}
 
 	public override string to_qualified_string (Scope? scope) {
-		string s = delegate_symbol.get_full_name ();
+		// logic temporarily duplicated from DataType class
+
+		Symbol global_symbol = delegate_symbol;
+		while (global_symbol.parent_symbol.name != null) {
+			global_symbol = global_symbol.parent_symbol;
+		}
+
+		Symbol sym = null;
+		Scope parent_scope = scope;
+		while (sym == null && parent_scope != null) {
+			sym = parent_scope.lookup (global_symbol.name);
+			parent_scope = parent_scope.parent_scope;
+		}
+
+		string s;
+
+		if (sym != null && global_symbol != sym) {
+			s = "global::" + delegate_symbol.get_full_name ();;
+		} else {
+			s = delegate_symbol.get_full_name ();
+		}
 
 		var type_args = get_type_arguments ();
 		if (type_args.size > 0) {
