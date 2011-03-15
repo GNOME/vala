@@ -226,6 +226,14 @@ public class Vala.CodeWriter : CodeVisitor {
 		}
 	}
 
+	private void emit_experimental_attribute (Symbol symbol) {
+		if (symbol.experimental) {
+			write_indent ();
+			write_string ("[Experimental]");
+			write_newline ();
+		}
+	}
+
 	public override void visit_class (Class cl) {
 		if (cl.external_package) {
 			return;
@@ -248,6 +256,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		}
 
 		emit_deprecated_attribute (cl);
+		emit_experimental_attribute (cl);
 
 		write_indent ();
 		
@@ -407,6 +416,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		}
 
 		emit_deprecated_attribute (st);
+		emit_experimental_attribute (st);
 
 		write_indent ();
 
@@ -490,6 +500,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		}
 
 		emit_deprecated_attribute (iface);
+		emit_experimental_attribute (iface);
 
 		write_indent ();
 
@@ -568,6 +579,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		}
 
 		emit_deprecated_attribute (en);
+		emit_experimental_attribute (en);
 
 		write_indent ();
 
@@ -644,6 +656,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		}
 
 		emit_deprecated_attribute (edomain);
+		emit_experimental_attribute (edomain);
 
 		write_indent ();
 
@@ -680,6 +693,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		}
 
 		emit_deprecated_attribute (c);
+		emit_experimental_attribute (c);
 
 		bool custom_cname = (c.get_cname () != c.get_default_cname ());
 		bool custom_cheaders = (c.parent_symbol is Namespace);
@@ -728,6 +742,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		}
 
 		emit_deprecated_attribute (f);
+		emit_experimental_attribute (f);
 
 		bool custom_cname = (f.get_cname () != f.get_default_cname ());
 		bool custom_ctype = (f.get_ctype () != null);
@@ -934,6 +949,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		}
 
 		emit_deprecated_attribute (cb);
+		emit_experimental_attribute (cb);
 
 		write_indent ();
 
@@ -1040,6 +1056,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		}
 
 		emit_deprecated_attribute (m);
+		emit_experimental_attribute (m);
 
 		var ccode_params = new StringBuilder ();
 		var separator = "";
@@ -1192,6 +1209,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		}
 
 		emit_deprecated_attribute (prop);
+		emit_experimental_attribute (prop);
 
 		if (prop.no_accessor_method) {
 			write_indent ();
@@ -1290,6 +1308,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		}
 
 		emit_deprecated_attribute (sig);
+		emit_experimental_attribute (sig);
 		
 		write_indent ();
 		write_accessibility (sig);

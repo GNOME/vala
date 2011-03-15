@@ -747,6 +747,8 @@ public class Vala.Class : ObjectTypeSymbol {
 				process_deprecated_attribute (a);
 			} else if (a.name == "GIR") {
 				process_gir_attribute (a);
+			} else if (a.name == "Experimental") {
+				process_experimental_attribute (a);
 			}
 		}
 	}
@@ -1193,6 +1195,7 @@ public class Vala.Class : ObjectTypeSymbol {
 							if (sym is Method) {
 								// method is used as interface implementation, so it is not unused
 								sym.check_deprecated (source_reference);
+								sym.check_experimental (source_reference);
 								sym.used = true;
 							} else {
 								error = true;
@@ -1213,6 +1216,7 @@ public class Vala.Class : ObjectTypeSymbol {
 							if (sym is Property) {
 								// property is used as interface implementation, so it is not unused
 								sym.check_deprecated (source_reference);
+								sym.check_experimental (source_reference);
 								sym.used = true;
 							} else {
 								error = true;

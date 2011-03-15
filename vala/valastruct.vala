@@ -511,6 +511,8 @@ public class Vala.Struct : TypeSymbol {
 				process_deprecated_attribute (a);
 			} else if (a.name == "GIR") {
 				process_gir_attribute (a);
+			} else if (a.name == "Experimental") {
+				process_experimental_attribute (a);
 			}
 		}
 	}

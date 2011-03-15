@@ -142,6 +142,8 @@ public class Vala.Field : Variable, Lockable {
 				process_ccode_attribute (a);
 			} else if (a.name == "Deprecated") {
 				process_deprecated_attribute (a);
+			} else if (a.name == "Experimental") {
+				process_experimental_attribute (a);
 			}
 		}
 	}

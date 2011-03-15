@@ -5745,7 +5745,9 @@ namespace Gtk {
 		public bool urgency_hint { get; set; }
 		[NoAccessorMethod]
 		public Gtk.WindowPosition window_position { get; set; }
+		[Experimental]
 		public virtual signal void default_activated ();
+		[Experimental]
 		public virtual signal void focus_activated ();
 		public virtual signal void keys_changed ();
 		[HasEmitter]

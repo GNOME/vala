@@ -489,6 +489,10 @@ public class Vala.GIdlParser : CodeVisitor {
 					foreach (string type_param_name in eval (nv[1]).split (",")) {
 						cb.add_type_parameter (new TypeParameter (type_param_name, current_source_reference));
 					}
+				} else if (nv[0] == "experimental") {
+					if (eval (nv[1]) == "1") {
+						cb.experimental = true;
+					}
 				}
 			}
 		}
@@ -667,6 +671,10 @@ public class Vala.GIdlParser : CodeVisitor {
 							if (eval (nv[1]) == "0") {
 								st.has_destroy_function = false;
 							}
+						} else if (nv[0] == "experimental") {
+							if (eval (nv[1]) == "1") {
+								st.experimental = true;
+							}
 						}
 					}
 				}
@@ -756,6 +764,10 @@ public class Vala.GIdlParser : CodeVisitor {
 						} else if (nv[0] == "type_parameters") {
 							foreach (string type_param_name in eval (nv[1]).split (",")) {
 								cl.add_type_parameter (new TypeParameter (type_param_name, current_source_reference));
+							}
+						} else if (nv[0] == "experimental") {
+							if (eval (nv[1]) == "1") {
+								cl.experimental = true;
 							}
 						}
 					}
@@ -847,6 +859,10 @@ public class Vala.GIdlParser : CodeVisitor {
 						} else if (nv[0] == "hidden") {
 							if (eval (nv[1]) == "1") {
 								return;
+							}
+						} else if (nv[0] == "experimental") {
+							if (eval (nv[1]) == "1") {
+								st.experimental = true;
 							}
 						}
 					}
@@ -996,6 +1012,10 @@ public class Vala.GIdlParser : CodeVisitor {
 							if (eval (nv[1]) == "0") {
 								st.has_destroy_function = false;
 							}
+						} else if (nv[0] == "experimental") {
+							if (eval (nv[1]) == "1") {
+								st.experimental = true;
+							}
 						}
 					}
 				}
@@ -1070,6 +1090,10 @@ public class Vala.GIdlParser : CodeVisitor {
 						} else if (nv[0] == "ref_function_void") {
 							if (eval (nv[1]) == "1") {
 								ref_function_void = true;
+							}
+						} else if (nv[0] == "experimental") {
+							if (eval (nv[1]) == "1") {
+								cl.experimental = true;
 							}
 						}
 					}
@@ -1227,6 +1251,10 @@ public class Vala.GIdlParser : CodeVisitor {
 					m.access = SymbolAccessibility.PUBLIC;
 					m.set_cname (eval(nv[1]));
 					en.add_method (m);
+				} else if (nv[0] == "experimental") {
+					if (eval (nv[1]) == "1") {
+						en.experimental = true;
+					}
 				}
 			}
 		}
@@ -1314,6 +1342,10 @@ public class Vala.GIdlParser : CodeVisitor {
 					} else if (nv[0] == "abstract") {
 						if (eval (nv[1]) == "1") {
 							cl.is_abstract = true;
+						}
+					} else if (nv[0] == "experimental") {
+						if (eval (nv[1]) == "1") {
+							cl.experimental = true;
 						}
 					}
 				}
@@ -2065,6 +2097,10 @@ public class Vala.GIdlParser : CodeVisitor {
 						m.set_cname (m.name);
 						m.name = symbol.substring (prefix.length);
 					}
+				} else if (nv[0] == "experimental") {
+					if (eval (nv[1]) == "1") {
+						m.experimental = true;
+					}
 				}
 			}
 		}
@@ -2439,6 +2475,10 @@ public class Vala.GIdlParser : CodeVisitor {
 					}
 				} else if (nv[0] == "type_name") {
 					prop.property_type = parse_type_from_string (eval (nv[1]), false);
+				} else if (nv[0] == "experimental") {
+					if (eval (nv[1]) == "1") {
+						prop.experimental = true;
+					}
 				}
 			}
 		}
@@ -2479,6 +2519,10 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "1") {
 						return null;
 					}
+				} else if (nv[0] == "experimental") {
+					if (eval (nv[1]) == "1") {
+						c.experimental = true;
+					}
 				}
 			}
 		}
@@ -2505,6 +2549,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		bool deprecated = false;
 		string deprecated_since = null;
 		string replacement = null;
+		bool experimental = false;
 
 		var attributes = get_attributes ("%s.%s".printf (current_data_type.get_cname (), node.name));
 		if (attributes != null) {
@@ -2554,6 +2599,10 @@ public class Vala.GIdlParser : CodeVisitor {
 					array_length_cname = eval (nv[1]);
 				} else if (nv[0] == "array_length_type") {
 					array_length_type = eval (nv[1]);
+				} else if (nv[0] == "experimental") {
+					if (eval (nv[1]) == "1") {
+						experimental = true;
+					}
 				}
 			}
 		}
@@ -2589,6 +2638,10 @@ public class Vala.GIdlParser : CodeVisitor {
 			if (replacement != null) {
 				field.replacement = replacement;
 			}
+		}
+
+		if (experimental) {
+			field.experimental = true;
 		}
 
 		if (ctype != null) {
@@ -2730,6 +2783,10 @@ public class Vala.GIdlParser : CodeVisitor {
 					sig.return_type = parse_type_from_string (eval (nv[1]), false);
 				} else if (nv[0] == "type_arguments") {
 					parse_type_arguments_from_string (sig.return_type, eval (nv[1]));
+				} else if (nv[0] == "experimental") {
+					if (eval (nv[1]) == "1") {
+						sig.experimental = true;
+					}
 				}
 			}
 			if (ns_name != null) {

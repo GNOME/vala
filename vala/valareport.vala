@@ -179,6 +179,9 @@ public class Vala.Report : Object {
 	public static void deprecated (SourceReference? source, string message) {
 		CodeContext.get ().report.depr (source, message);
 	}
+	public static void experimental (SourceReference? source, string message) {
+		CodeContext.get ().report.depr (source, message);
+	}
 	public static void warning (SourceReference? source, string message) {
 		CodeContext.get ().report.warn (source, message);
 	}

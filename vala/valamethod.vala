@@ -495,6 +495,8 @@ public class Vala.Method : Subroutine {
 				process_deprecated_attribute (a);
 			} else if (a.name == "NoThrow") {
 				get_error_types ().clear ();
+			} else if (a.name == "Experimental") {
+				process_experimental_attribute (a);
 			}
 		}
 	}
