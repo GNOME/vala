@@ -5740,21 +5740,20 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		function.modifiers = CCodeModifiers.STATIC;
 		function.add_parameter (new CCodeParameter ("self", st.get_cname () + "*"));
 
+		push_context (new EmitContext ());
 		push_function (function);
 
+		var this_value = load_this_parameter (st);
 		foreach (Field f in st.get_fields ()) {
 			if (f.binding == MemberBinding.INSTANCE) {
 				if (requires_destroy (f.variable_type)) {
-					var this_access = new MemberAccess.simple ("this");
-					this_access.value_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
-					set_cvalue (this_access, new CCodeIdentifier ("(*self)"));
-
-					ccode.add_expression (destroy_field (f, this_access.target_value));
+					ccode.add_expression (destroy_field (f, this_value));
 				}
 			}
 		}
 
 		pop_function ();
+		pop_context ();
 
 		cfile.add_function_declaration (function);
 		cfile.add_function (function);
