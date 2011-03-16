@@ -1277,8 +1277,19 @@ public class string {
 	[CCode (cname = "g_strndup")]
 	public string ndup (size_t n);
 
-	[CCode (cname = "strnlen")]
-	static long strnlen (char* str, size_t maxlen);
+	[CCode (cname = "memchr")]
+	static char* memchr (char* s, int c, size_t n);
+
+	// strnlen is not available on all systems
+	static long strnlen (char* str, long maxlen) {
+		char* end = memchr (str, 0, maxlen);
+		if (end == null) {
+			return maxlen;
+		} else {
+			return (long) (end - str);
+		}
+	}
+
 	[CCode (cname = "g_strndup")]
 	static string strndup (char* str, size_t n);
 
