@@ -22,6 +22,8 @@ interface Maman.Foo : Object {
 class Maman.Bar : Object, Foo {
 	const DelegateStruct const_delegate_struct = { do_void_action };
 
+	InstanceCallback callback_field;
+
 	public Bar () {
 	}
 
@@ -66,6 +68,10 @@ class Maman.Bar : Object, Foo {
 		// http://bugzilla.gnome.org/show_bug.cgi?id=518109
 		var bar = new Bar ();
 		call_instance_delegate (bar.foo_method);
+	}
+
+	void test_field_reference_transfer () {
+		var foo = (owned) callback_field;
 	}
 
 	public static int main () {

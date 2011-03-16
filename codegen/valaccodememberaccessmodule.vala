@@ -121,7 +121,11 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			set_cvalue (expr, get_array_length_cexpression (expr.inner, 1));
 		} else if (expr.symbol_reference is Field) {
 			var field = (Field) expr.symbol_reference;
-			expr.target_value = load_field (field, expr.inner != null ? expr.inner.target_value : null);
+			if (expr.lvalue) {
+				expr.target_value = get_field_cvalue (field, expr.inner != null ? expr.inner.target_value : null);
+			} else {
+				expr.target_value = load_field (field, expr.inner != null ? expr.inner.target_value : null);
+			}
 		} else if (expr.symbol_reference is EnumValue) {
 			var ev = (EnumValue) expr.symbol_reference;
 
