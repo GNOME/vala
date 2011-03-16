@@ -164,7 +164,7 @@ EOF
 
 cat $SOURCEFILES >> main.vala
 
-if $VALAC $VALAFLAGS -o test$EXEEXT $(echo $PACKAGES | xargs -n 1 -r echo -n " --pkg") main.vala &>log; then
+if $VALAC $VALAFLAGS -o test$EXEEXT $([ -z "$PACKAGES" ] || echo $PACKAGES | xargs -n 1 echo -n " --pkg") main.vala &>log; then
 	echo -e "\033[0;32mOK\033[m"
 else
 	echo -e "\033[0;31mFAIL\033[m"
