@@ -1854,9 +1854,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			} else {
 				if (in_constructor || (current_method != null && current_method.binding == MemberBinding.INSTANCE) ||
 				           (current_property_accessor != null && current_property_accessor.prop.binding == MemberBinding.INSTANCE)) {
-					var ma = new MemberAccess.simple ("this");
-					ma.symbol_reference = current_class;
-					ccode.add_expression (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "self"), new ObjectType (current_class), ma));
+					var this_value = new GLibValue (new ObjectType (current_class), new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "self"));
+					ccode.add_expression (destroy_value (this_value));
 				}
 			}
 
