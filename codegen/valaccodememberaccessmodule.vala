@@ -340,6 +340,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 	/* Returns lvalue access to the given local variable */
 	public override TargetValue get_local_cvalue (LocalVariable local) {
 		var result = new GLibValue (local.variable_type.copy ());
+		result.array_null_terminated = local.array_null_terminated;
 
 		var array_type = local.variable_type as ArrayType;
 		var delegate_type = local.variable_type as DelegateType;
@@ -394,6 +395,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 	/* Returns access values to the given parameter */
 	public override TargetValue get_parameter_cvalue (Parameter param) {
 		var result = new GLibValue (param.variable_type.copy ());
+		result.array_null_terminated = param.array_null_terminated;
 		if (param.captured || is_in_coroutine ()) {
 			result.value_type.value_owned = true;
 		}
@@ -503,6 +505,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 		}
 
 		var result = new GLibValue (value_type);
+		result.array_null_terminated = field.array_null_terminated;
 
 		var array_type = result.value_type as ArrayType;
 		var delegate_type = result.value_type as DelegateType;

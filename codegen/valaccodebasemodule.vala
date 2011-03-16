@@ -2983,6 +2983,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var value = new GLibValue (type, cvar);
 		if (expr != null && expr.target_value != null) {
 			value.array_length_cvalues = ((GLibValue) expr.target_value).array_length_cvalues;
+			value.array_null_terminated = ((GLibValue) expr.target_value).array_null_terminated;
 			value.delegate_target_cvalue = get_delegate_target_cvalue (expr.target_value);
 			value.delegate_target_destroy_notify_cvalue = get_delegate_target_destroy_notify_cvalue (expr.target_value);
 		}
@@ -5988,6 +5989,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 		return glib_value.array_length_cvalues;
 	}
+
+	public bool get_array_null_terminated (TargetValue value) {
+		var glib_value = (GLibValue) value;
+		return glib_value.array_null_terminated;
+	}
 }
 
 public class Vala.GLibValue : TargetValue {
@@ -5995,6 +6001,7 @@ public class Vala.GLibValue : TargetValue {
 
 	public List<CCodeExpression> array_length_cvalues;
 	public CCodeExpression? array_size_cvalue;
+	public bool array_null_terminated;
 
 	public CCodeExpression? delegate_target_cvalue;
 	public CCodeExpression? delegate_target_destroy_notify_cvalue;
@@ -6020,6 +6027,7 @@ public class Vala.GLibValue : TargetValue {
 			}
 		}
 		result.array_size_cvalue = array_size_cvalue;
+		result.array_null_terminated = array_null_terminated;
 
 		result.delegate_target_cvalue = delegate_target_cvalue;
 		result.delegate_target_destroy_notify_cvalue = delegate_target_destroy_notify_cvalue;
