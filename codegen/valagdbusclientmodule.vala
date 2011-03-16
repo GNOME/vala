@@ -302,7 +302,11 @@ public class Vala.GDBusClientModule : GDBusModule {
 			ccall.add_argument (new CCodeConstant ("\"g-bus-type\""));
 			ccall.add_argument (get_cvalue (bus_type));
 		} else {
-			Expression connection = ((MemberAccess) expr.call).inner;
+			Expression connection = ma.inner;
+			if (ma.member_name == "begin" && ma.inner.symbol_reference == ma.symbol_reference) {
+				var inner_ma = (MemberAccess) ma.inner;
+				connection = inner_ma.inner;
+			}
 			ccall.add_argument (new CCodeConstant ("\"g-connection\""));
 			ccall.add_argument (get_cvalue (connection));
 		}
