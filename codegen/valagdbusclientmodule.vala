@@ -278,13 +278,17 @@ public class Vala.GDBusClientModule : GDBusModule {
 			// I/O priority
 			ccall.add_argument (new CCodeConstant ("0"));
 		}
-		cancellable.emit (this);
 		ccall.add_argument (get_cvalue (cancellable));
 		if (bus_get_proxy_async || conn_get_proxy_async) {
 			if (expr.is_yield_expression) {
 				// asynchronous call
 				ccall.add_argument (new CCodeIdentifier (generate_ready_function (current_method)));
 				ccall.add_argument (new CCodeIdentifier ("data"));
+			} else {
+				// begin
+				Expression callback = args.get (base_arg_index + 4);
+				ccall.add_argument (get_cvalue (callback));
+				ccall.add_argument (get_delegate_target (callback));
 			}
 		} else {
 			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression ("_inner_error_")));
@@ -292,21 +296,17 @@ public class Vala.GDBusClientModule : GDBusModule {
 		ccall.add_argument (new CCodeConstant ("\"g-flags\""));
 		ccall.add_argument (get_cvalue (flags));
 		ccall.add_argument (new CCodeConstant ("\"g-name\""));
-		name.emit (this);
 		ccall.add_argument (get_cvalue (name));
 		if (bus_get_proxy_async || bus_get_proxy_sync) {
 			Expression bus_type = args.get (0);
 			ccall.add_argument (new CCodeConstant ("\"g-bus-type\""));
-			bus_type.emit (this);
 			ccall.add_argument (get_cvalue (bus_type));
 		} else {
 			Expression connection = ((MemberAccess) expr.call).inner;
 			ccall.add_argument (new CCodeConstant ("\"g-connection\""));
-			connection.emit (this);
 			ccall.add_argument (get_cvalue (connection));
 		}
 		ccall.add_argument (new CCodeConstant ("\"g-object-path\""));
-		object_path.emit (this);
 		ccall.add_argument (get_cvalue (object_path));
 		ccall.add_argument (new CCodeConstant ("\"g-interface-name\""));
 		ccall.add_argument (dbus_iface_name);
@@ -326,6 +326,10 @@ public class Vala.GDBusClientModule : GDBusModule {
 				// pass GAsyncResult stored in closure to finish function
 				ccall.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_res_"));
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression ("_inner_error_")));
+			} else {
+				// begin
+				ccode.add_expression (ccall);
+				return;
 			}
 		}
 
