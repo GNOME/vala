@@ -111,24 +111,6 @@ public class Vala.Field : Variable, Lockable {
 				add_cheader_filename (filename);
 			}
 		}
-		if (a.has_argument ("array_length")) {
-			no_array_length = !a.get_bool ("array_length");
-		}
-		if (a.has_argument ("array_null_terminated")) {
-			array_null_terminated = a.get_bool ("array_null_terminated");
-		}
-		if (a.has_argument ("array_length_cname")) {
-			set_array_length_cname (a.get_string ("array_length_cname"));
-		}
-		if (a.has_argument ("array_length_cexpr")) {
-			set_array_length_cexpr (a.get_string ("array_length_cexpr"));
-		}
-		if (a.has_argument ("array_length_type")) {
-			array_length_type = a.get_string ("array_length_type");
-		}
-		if (a.has_argument ("delegate_target")) {
-			no_delegate_target = !a.get_bool ("delegate_target");
-		}
 	}
 	
 	/**
