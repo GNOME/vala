@@ -1157,12 +1157,14 @@ namespace Gtk {
 		public bool set_with_data (Gtk.TargetEntry[] targets, Gtk.ClipboardGetFunc get_func, Gtk.ClipboardClearFunc clear_func);
 		public bool set_with_owner (Gtk.TargetEntry[] targets, Gtk.ClipboardGetFunc get_func, Gtk.ClipboardClearFunc clear_func, GLib.Object owner);
 		public void store ();
-		public unowned Gtk.SelectionData wait_for_contents (Gdk.Atom target);
-		public unowned Gdk.Pixbuf wait_for_image ();
-		public uchar wait_for_rich_text (Gtk.TextBuffer buffer, out Gdk.Atom format, size_t length);
-		public bool wait_for_targets (Gdk.Atom[] targets);
-		public unowned string wait_for_text ();
-		public unowned string wait_for_uris ();
+		public Gtk.SelectionData? wait_for_contents (Gdk.Atom target);
+		public Gdk.Pixbuf? wait_for_image ();
+		[CCode (array_length_type = "gsize")]
+		public uint8[]? wait_for_rich_text (Gtk.TextBuffer buffer, out Gdk.Atom format);
+		public bool wait_for_targets (out Gdk.Atom[] targets);
+		public string? wait_for_text ();
+		[CCode (array_length = false, array_null_terminated = true)]
+		public string[]? wait_for_uris ();
 		public bool wait_is_image_available ();
 		public bool wait_is_rich_text_available (Gtk.TextBuffer buffer);
 		public bool wait_is_target_available (Gdk.Atom target);
