@@ -3461,7 +3461,7 @@ namespace GLib {
 		public int[] get_integer_list (string group_name, string key) throws KeyFileError;
 		[CCode (array_length_type = "gsize")]
 		public double[] get_double_list (string group_name, string key) throws KeyFileError;
-		public string get_comment (string group_name, string key) throws KeyFileError;
+		public string get_comment (string? group_name, string? key) throws KeyFileError;
 		public void set_value (string group_name, string key, string value);
 		public void set_string (string group_name, string key, string str);
 		public void set_locale_string (string group_name, string key, string locale, string str);
@@ -3475,7 +3475,7 @@ namespace GLib {
 		public void set_boolean_list (string group_name, string key, bool[] list);
 		public void set_integer_list (string group_name, string key, int[] list);
 		public void set_double_list (string group_name, string key, double[] list);
-		public void set_comment (string group_name, string key, string comment) throws KeyFileError;
+		public void set_comment (string? group_name, string? key, string comment) throws KeyFileError;
 		public void remove_group (string group_name) throws KeyFileError;
 		public void remove_key (string group_name, string key) throws KeyFileError;
 		public void remove_comment (string group_name, string key) throws KeyFileError;
