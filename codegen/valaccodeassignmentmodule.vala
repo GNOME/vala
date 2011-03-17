@@ -208,16 +208,26 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 
 		ccode.add_assignment (get_cvalue_ (lvalue), get_cvalue_ (value));
 
-		if (array_type != null) {
-			if (!variable.no_array_length && !variable.array_null_terminated) {
+		if (array_type != null && !variable.no_array_length) {
+			var glib_value = (GLibValue) value;
+			if (glib_value.array_length_cvalues != null) {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					ccode.add_assignment (get_array_length_cvalue (lvalue, dim), get_array_length_cvalue (value, dim));
 				}
-				if (array_type.rank == 1) {
-					if (get_array_size_cvalue (lvalue) != null) {
-						ccode.add_assignment (get_array_size_cvalue (lvalue), get_array_length_cvalue (value, 1));
-					}
+			} else if (glib_value.array_null_terminated) {
+				requires_array_length = true;
+				var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
+				len_call.add_argument (get_cvalue_ (value));
+
+				ccode.add_assignment (get_array_length_cvalue (lvalue, 1), len_call);
+			} else {
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					ccode.add_assignment (get_array_length_cvalue (lvalue, dim), new CCodeConstant ("-1"));
 				}
+			}
+
+			if (array_type.rank == 1 && get_array_size_cvalue (lvalue) != null) {
+				ccode.add_assignment (get_array_size_cvalue (lvalue), get_array_length_cvalue (lvalue, 1));
 			}
 		}
 

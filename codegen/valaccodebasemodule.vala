@@ -4775,22 +4775,39 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public override void visit_reference_transfer_expression (ReferenceTransferExpression expr) {
-		/* (tmp = var, var = null, tmp) */
+		/* tmp = expr.inner; expr.inner = NULL; expr = tmp; */
 		var temp_decl = get_temp_variable (expr.value_type, true, expr, false);
 		emit_temp_var (temp_decl);
 		var cvar = get_variable_cexpression (temp_decl.name);
 
 		ccode.add_assignment (cvar, get_cvalue (expr.inner));
-		if (!(expr.value_type is DelegateType)) {
-			ccode.add_assignment (get_cvalue (expr.inner), new CCodeConstant ("NULL"));
-		}
 
 		set_cvalue (expr, cvar);
 
 		var array_type = expr.value_type as ArrayType;
 		if (array_type != null) {
-			for (int dim = 1; dim <= array_type.rank; dim++) {
-				append_array_length (expr, get_array_length_cexpression (expr.inner, dim));
+			var value = (GLibValue) expr.inner.target_value;
+			if (value.array_length_cvalues != null) {
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					var len_decl = get_temp_variable (int_type, true, expr, false);
+					emit_temp_var (len_decl);
+					ccode.add_assignment (get_variable_cexpression (len_decl.name), get_array_length_cexpression (expr.inner, dim));
+					append_array_length (expr, get_variable_cexpression (len_decl.name));
+				}
+			} else if (value.array_null_terminated) {
+				requires_array_length = true;
+				var len_decl = get_temp_variable (int_type, true, expr, false);
+				emit_temp_var (len_decl);
+
+				var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
+				len_call.add_argument (get_cvalue_ (value));
+
+				ccode.add_assignment (get_variable_cexpression (len_decl.name), len_call);
+				append_array_length (expr, get_variable_cexpression (len_decl.name));
+			} else {
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					append_array_length (expr, new CCodeConstant ("-1"));
+				}
 			}
 		}
 
@@ -4811,6 +4828,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccode.add_assignment (target_destroy_notify, new CCodeConstant ("NULL"));
 				set_delegate_target_destroy_notify (expr, target_destroy_notify_cvar);
 			}
+		}
+
+		if (!(expr.value_type is DelegateType)) {
+			ccode.add_assignment (get_cvalue (expr.inner), new CCodeConstant ("NULL"));
 		}
 	}
 

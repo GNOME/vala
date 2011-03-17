@@ -1,3 +1,9 @@
+[CCode (array_length = false, array_null_terminated = true)]
+int[] foo;
+
+[CCode (array_length = false)]
+int[] bar;
+
 void test_integer_array () {
 	// declaration and initialization
 	int[] a = { 42 };
@@ -80,10 +86,16 @@ void test_static_array () {
 	assert (a[0] == 23 && a[1] == 34);
 }
 
+void test_reference_transfer () {
+	var baz = (owned) foo;
+	baz = (owned) bar;
+}
+
 void main () {
 	test_integer_array ();
 	test_string_array ();
 	test_array_pass ();
 	test_static_array ();
+	test_reference_transfer ();
 }
 
