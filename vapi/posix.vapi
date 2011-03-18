@@ -1325,6 +1325,12 @@ namespace Posix {
 	public void openlog (string ident, int option, int facility );
 
 	[CCode (cheader_filename = "syslog.h")]
+	public int setlogmask (int mask);
+
+	[CCode (cheader_filename = "syslog.h")]
+	public int LOG_UPTO (int pri);
+
+	[CCode (cheader_filename = "syslog.h")]
 	public void syslog (int priority, string format, ... );
 
 	[CCode (cheader_filename = "syslog.h")]
