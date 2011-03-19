@@ -732,7 +732,7 @@ namespace Gdk {
 		public static Gdk.Atom NONE;
 		public static Gdk.Atom intern (string atom_name, bool only_if_exists);
 		public static Gdk.Atom intern_static_string (string atom_name);
-		public unowned string name ();
+		public string name ();
 	}
 	[CCode (type_id = "GDK_TYPE_COLOR", cheader_filename = "gdk/gdk.h")]
 	public struct Color {
