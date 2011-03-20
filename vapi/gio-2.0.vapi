@@ -875,7 +875,7 @@ namespace GLib {
 		[CCode (has_construct_function = false)]
 		public InetAddress.any (GLib.SocketFamily family);
 		[CCode (has_construct_function = false)]
-		public InetAddress.from_bytes (uchar bytes, GLib.SocketFamily family);
+		public InetAddress.from_bytes ([CCode (array_length = false)] uint8[] bytes, GLib.SocketFamily family);
 		[CCode (has_construct_function = false)]
 		public InetAddress.from_string (string str);
 		public GLib.SocketFamily get_family ();
