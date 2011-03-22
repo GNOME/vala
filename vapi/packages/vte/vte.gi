@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 <api version="1.0">
 	<namespace name="Vte">
+		<function name="get_user_shell" symbol="vte_get_user_shell">
+			<return-type type="char*"/>
+		</function>
 		<callback name="VteSelectionFunc">
 			<return-type type="gboolean"/>
 			<parameters>
@@ -18,6 +21,12 @@
 			<field name="underline" type="guint"/>
 			<field name="strikethrough" type="guint"/>
 		</struct>
+		<struct name="VtePtyClass">
+		</struct>
+		<enum name="VtePtyError" type-name="VtePtyError" get-type="vte_pty_error_get_type">
+			<member name="VTE_PTY_ERROR_PTY_HELPER_FAILED" value="0"/>
+			<member name="VTE_PTY_ERROR_PTY98_FAILED" value="1"/>
+		</enum>
 		<enum name="VteTerminalAntiAlias" type-name="VteTerminalAntiAlias" get-type="vte_terminal_anti_alias_get_type">
 			<member name="VTE_ANTI_ALIAS_USE_DEFAULT" value="0"/>
 			<member name="VTE_ANTI_ALIAS_FORCE_ENABLE" value="1"/>
@@ -43,6 +52,90 @@
 		<enum name="VteTerminalWriteFlags" type-name="VteTerminalWriteFlags" get-type="vte_terminal_write_flags_get_type">
 			<member name="VTE_TERMINAL_WRITE_DEFAULT" value="0"/>
 		</enum>
+		<flags name="VtePtyFlags" type-name="VtePtyFlags" get-type="vte_pty_flags_get_type">
+			<member name="VTE_PTY_NO_LASTLOG" value="1"/>
+			<member name="VTE_PTY_NO_UTMP" value="2"/>
+			<member name="VTE_PTY_NO_WTMP" value="4"/>
+			<member name="VTE_PTY_NO_HELPER" value="8"/>
+			<member name="VTE_PTY_NO_FALLBACK" value="16"/>
+			<member name="VTE_PTY_DEFAULT" value="0"/>
+		</flags>
+		<object name="VtePty" parent="GObject" type-name="VtePty" get-type="vte_pty_get_type">
+			<implements>
+				<interface name="GInitable"/>
+			</implements>
+			<method name="child_setup" symbol="vte_pty_child_setup">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="pty" type="VtePty*"/>
+				</parameters>
+			</method>
+			<method name="close" symbol="vte_pty_close">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="pty" type="VtePty*"/>
+				</parameters>
+			</method>
+			<method name="error_quark" symbol="vte_pty_error_quark">
+				<return-type type="GQuark"/>
+			</method>
+			<method name="get_fd" symbol="vte_pty_get_fd">
+				<return-type type="int"/>
+				<parameters>
+					<parameter name="pty" type="VtePty*"/>
+				</parameters>
+			</method>
+			<method name="get_size" symbol="vte_pty_get_size">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="pty" type="VtePty*"/>
+					<parameter name="rows" type="int*"/>
+					<parameter name="columns" type="int*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="vte_pty_new">
+				<return-type type="VtePty*"/>
+				<parameters>
+					<parameter name="flags" type="VtePtyFlags"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_foreign" symbol="vte_pty_new_foreign">
+				<return-type type="VtePty*"/>
+				<parameters>
+					<parameter name="fd" type="int"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</constructor>
+			<method name="set_size" symbol="vte_pty_set_size">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="pty" type="VtePty*"/>
+					<parameter name="rows" type="int"/>
+					<parameter name="columns" type="int"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="set_term" symbol="vte_pty_set_term">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="pty" type="VtePty*"/>
+					<parameter name="emulation" type="char*"/>
+				</parameters>
+			</method>
+			<method name="set_utf8" symbol="vte_pty_set_utf8">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="pty" type="VtePty*"/>
+					<parameter name="utf8" type="gboolean"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<property name="fd" type="gint" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="flags" type="VtePtyFlags" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="term" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+		</object>
 		<object name="VteReaper" parent="GObject" type-name="VteReaper" get-type="vte_reaper_get_type">
 			<method name="add_child" symbol="vte_reaper_add_child">
 				<return-type type="int"/>
@@ -110,10 +203,25 @@
 					<parameter name="command" type="char*"/>
 					<parameter name="argv" type="char**"/>
 					<parameter name="envv" type="char**"/>
-					<parameter name="directory" type="char*"/>
+					<parameter name="working_directory" type="char*"/>
 					<parameter name="lastlog" type="gboolean"/>
 					<parameter name="utmp" type="gboolean"/>
 					<parameter name="wtmp" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="fork_command_full" symbol="vte_terminal_fork_command_full">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="terminal" type="VteTerminal*"/>
+					<parameter name="pty_flags" type="VtePtyFlags"/>
+					<parameter name="working_directory" type="char*"/>
+					<parameter name="argv" type="char**"/>
+					<parameter name="envv" type="char**"/>
+					<parameter name="spawn_flags" type="GSpawnFlags"/>
+					<parameter name="child_setup" type="GSpawnChildSetupFunc"/>
+					<parameter name="child_setup_data" type="gpointer"/>
+					<parameter name="child_pid" type="GPid*"/>
+					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
 			<method name="forkpty" symbol="vte_terminal_forkpty">
@@ -121,7 +229,7 @@
 				<parameters>
 					<parameter name="terminal" type="VteTerminal*"/>
 					<parameter name="envv" type="char**"/>
-					<parameter name="directory" type="char*"/>
+					<parameter name="working_directory" type="char*"/>
 					<parameter name="lastlog" type="gboolean"/>
 					<parameter name="utmp" type="gboolean"/>
 					<parameter name="wtmp" type="gboolean"/>
@@ -257,6 +365,12 @@
 					<parameter name="terminal" type="VteTerminal*"/>
 				</parameters>
 			</method>
+			<method name="get_pty_object" symbol="vte_terminal_get_pty_object">
+				<return-type type="VtePty*"/>
+				<parameters>
+					<parameter name="terminal" type="VteTerminal*"/>
+				</parameters>
+			</method>
 			<method name="get_row_count" symbol="vte_terminal_get_row_count">
 				<return-type type="glong"/>
 				<parameters>
@@ -274,7 +388,7 @@
 				<parameters>
 					<parameter name="terminal" type="VteTerminal*"/>
 					<parameter name="is_selected" type="VteSelectionFunc"/>
-					<parameter name="data" type="gpointer"/>
+					<parameter name="user_data" type="gpointer"/>
 					<parameter name="attributes" type="GArray*"/>
 				</parameters>
 			</method>
@@ -283,7 +397,7 @@
 				<parameters>
 					<parameter name="terminal" type="VteTerminal*"/>
 					<parameter name="is_selected" type="VteSelectionFunc"/>
-					<parameter name="data" type="gpointer"/>
+					<parameter name="user_data" type="gpointer"/>
 					<parameter name="attributes" type="GArray*"/>
 				</parameters>
 			</method>
@@ -296,7 +410,7 @@
 					<parameter name="end_row" type="glong"/>
 					<parameter name="end_col" type="glong"/>
 					<parameter name="is_selected" type="VteSelectionFunc"/>
-					<parameter name="data" type="gpointer"/>
+					<parameter name="user_data" type="gpointer"/>
 					<parameter name="attributes" type="GArray*"/>
 				</parameters>
 			</method>
@@ -408,12 +522,58 @@
 					<parameter name="terminal" type="VteTerminal*"/>
 				</parameters>
 			</method>
+			<method name="pty_new" symbol="vte_terminal_pty_new">
+				<return-type type="VtePty*"/>
+				<parameters>
+					<parameter name="terminal" type="VteTerminal*"/>
+					<parameter name="flags" type="VtePtyFlags"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<method name="reset" symbol="vte_terminal_reset">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="terminal" type="VteTerminal*"/>
-					<parameter name="full" type="gboolean"/>
+					<parameter name="clear_tabstops" type="gboolean"/>
 					<parameter name="clear_history" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="search_find_next" symbol="vte_terminal_search_find_next">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="terminal" type="VteTerminal*"/>
+				</parameters>
+			</method>
+			<method name="search_find_previous" symbol="vte_terminal_search_find_previous">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="terminal" type="VteTerminal*"/>
+				</parameters>
+			</method>
+			<method name="search_get_gregex" symbol="vte_terminal_search_get_gregex">
+				<return-type type="GRegex*"/>
+				<parameters>
+					<parameter name="terminal" type="VteTerminal*"/>
+				</parameters>
+			</method>
+			<method name="search_get_wrap_around" symbol="vte_terminal_search_get_wrap_around">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="terminal" type="VteTerminal*"/>
+				</parameters>
+			</method>
+			<method name="search_set_gregex" symbol="vte_terminal_search_set_gregex">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="terminal" type="VteTerminal*"/>
+					<parameter name="regex" type="GRegex*"/>
+				</parameters>
+			</method>
+			<method name="search_set_wrap_around" symbol="vte_terminal_search_set_wrap_around">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="terminal" type="VteTerminal*"/>
+					<parameter name="wrap_around" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="select_all" symbol="vte_terminal_select_all">
@@ -635,6 +795,13 @@
 					<parameter name="pty_master" type="int"/>
 				</parameters>
 			</method>
+			<method name="set_pty_object" symbol="vte_terminal_set_pty_object">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="terminal" type="VteTerminal*"/>
+					<parameter name="pty" type="VtePty*"/>
+				</parameters>
+			</method>
 			<method name="set_scroll_background" symbol="vte_terminal_set_scroll_background">
 				<return-type type="void"/>
 				<parameters>
@@ -685,6 +852,13 @@
 					<parameter name="spec" type="char*"/>
 				</parameters>
 			</method>
+			<method name="watch_child" symbol="vte_terminal_watch_child">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="terminal" type="VteTerminal*"/>
+					<parameter name="child_pid" type="GPid"/>
+				</parameters>
+			</method>
 			<method name="write_contents" symbol="vte_terminal_write_contents">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -713,6 +887,7 @@
 			<property name="icon-title" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="pointer-autohide" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="pty" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="pty-object" type="VtePty*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="scroll-background" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="scroll-on-keystroke" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="scroll-on-output" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -953,7 +1128,7 @@
 			</constructor>
 		</object>
 		<constant name="VTE_MAJOR_VERSION" type="int" value="0"/>
-		<constant name="VTE_MICRO_VERSION" type="int" value="3"/>
-		<constant name="VTE_MINOR_VERSION" type="int" value="24"/>
+		<constant name="VTE_MICRO_VERSION" type="int" value="90"/>
+		<constant name="VTE_MINOR_VERSION" type="int" value="27"/>
 	</namespace>
 </api>

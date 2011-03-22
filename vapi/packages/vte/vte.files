@@ -1,3 +1,3 @@
-include/vte/vte.h
-include/vte
+include/vte-0.0/vte/vte.h
+include/vte-0.0/vte
 lib/libvte.so

@@ -12,6 +12,30 @@ namespace Vte {
 		public uint strikethrough;
 		public uint underline;
 	}
+	[CCode (cheader_filename = "vte/vte.h")]
+	public class Pty : GLib.Object, GLib.Initable {
+		[CCode (has_construct_function = false)]
+		public Pty (Vte.PtyFlags flags) throws GLib.Error;
+		public void child_setup ();
+		public void close ();
+		public static GLib.Quark error_quark ();
+		[CCode (has_construct_function = false)]
+		public Pty.foreign (int fd) throws GLib.Error;
+		public int get_fd ();
+		public bool get_size (int rows, int columns) throws GLib.Error;
+		public bool set_size (int rows, int columns) throws GLib.Error;
+		public void set_term (string emulation);
+		public bool set_utf8 (bool utf8) throws GLib.Error;
+		public int fd { get; construct; }
+		[NoAccessorMethod]
+		public Vte.PtyFlags flags { get; construct; }
+		[NoAccessorMethod]
+		public string term { owned get; set; }
+	}
+	[Compact]
+	[CCode (cheader_filename = "vte/vte.h")]
+	public class PtyClass {
+	}
 	[CCode (cheader_filename = "vte/reaper.h")]
 	public class Reaper : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -35,8 +59,9 @@ namespace Vte {
 		public void feed (string data, long length);
 		public void feed_child (string text, long length);
 		public void feed_child_binary (string data, long length);
-		public int fork_command (string? command, [CCode (array_length = false)] string[]? argv, [CCode (array_length = false)] string[]? envv, string? directory, bool lastlog, bool utmp, bool wtmp);
-		public int forkpty (string[] envv, string directory, bool lastlog, bool utmp, bool wtmp);
+		public int fork_command (string? command, [CCode (array_length = false)] string[]? argv, [CCode (array_length = false)] string[]? envv, string? working_directory, bool lastlog, bool utmp, bool wtmp);
+		public bool fork_command_full (Vte.PtyFlags pty_flags, string? working_directory, [CCode (array_length = false)] string[]? argv, [CCode (array_length = false)] string[]? envv, GLib.SpawnFlags spawn_flags, GLib.SpawnChildSetupFunc child_setup, GLib.Pid child_pid) throws GLib.Error;
+		public int forkpty (string[] envv, string working_directory, bool lastlog, bool utmp, bool wtmp);
 		public unowned Gtk.Adjustment get_adjustment ();
 		public bool get_allow_bold ();
 		public bool get_audible_bell ();
@@ -58,11 +83,12 @@ namespace Vte {
 		public bool get_mouse_autohide ();
 		public void get_padding (int xpad, int ypad);
 		public int get_pty ();
+		public unowned Vte.Pty get_pty_object ();
 		public long get_row_count ();
 		public unowned string get_status_line ();
-		public unowned string get_text (Vte.SelectionFunc is_selected, void* data, GLib.Array attributes);
-		public unowned string get_text_include_trailing_spaces (Vte.SelectionFunc is_selected, void* data, GLib.Array attributes);
-		public unowned string get_text_range (long start_row, long start_col, long end_row, long end_col, Vte.SelectionFunc is_selected, void* data, GLib.Array attributes);
+		public unowned string get_text (Vte.SelectionFunc is_selected, GLib.Array attributes);
+		public unowned string get_text_include_trailing_spaces (Vte.SelectionFunc is_selected, GLib.Array attributes);
+		public unowned string get_text_range (long start_row, long start_col, long end_row, long end_col, Vte.SelectionFunc is_selected, GLib.Array attributes);
 		public bool get_using_xft ();
 		public bool get_visible_bell ();
 		public unowned string get_window_title ();
@@ -77,7 +103,14 @@ namespace Vte {
 		public void match_set_cursor_name (int tag, string cursor_name);
 		public void match_set_cursor_type (int tag, Gdk.CursorType cursor_type);
 		public void paste_primary ();
-		public void reset (bool full, bool clear_history);
+		public Vte.Pty pty_new (Vte.PtyFlags flags) throws GLib.Error;
+		public void reset (bool clear_tabstops, bool clear_history);
+		public bool search_find_next ();
+		public bool search_find_previous ();
+		public unowned GLib.Regex search_get_gregex ();
+		public bool search_get_wrap_around ();
+		public void search_set_gregex (GLib.Regex regex);
+		public void search_set_wrap_around (bool wrap_around);
 		public void select_all ();
 		public void select_none ();
 		public void set_allow_bold (bool allow_bold);
@@ -109,6 +142,7 @@ namespace Vte {
 		public void set_mouse_autohide (bool setting);
 		public void set_opacity (uint16 opacity);
 		public void set_pty (int pty_master);
+		public void set_pty_object (Vte.Pty pty);
 		public void set_scroll_background (bool scroll);
 		public void set_scroll_on_keystroke (bool scroll);
 		public void set_scroll_on_output (bool scroll);
@@ -120,6 +154,7 @@ namespace Vte {
 		public virtual void vte_reserved3 ();
 		[NoWrapper]
 		public virtual void vte_reserved4 ();
+		public void watch_child (GLib.Pid child_pid);
 		public bool write_contents (GLib.OutputStream stream, Vte.TerminalWriteFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
 		public bool allow_bold { get; set; }
 		public bool audible_bell { get; set; }
@@ -149,6 +184,7 @@ namespace Vte {
 		[NoAccessorMethod]
 		public bool pointer_autohide { get; set; }
 		public int pty { get; set; }
+		public Vte.Pty pty_object { get; set; }
 		[NoAccessorMethod]
 		public bool scroll_background { get; set; }
 		[NoAccessorMethod]
@@ -205,6 +241,21 @@ namespace Vte {
 		[CCode (type = "AtkObjectFactory*", has_construct_function = false)]
 		public TerminalAccessibleFactory ();
 	}
+	[CCode (cprefix = "VTE_PTY_ERROR_", cheader_filename = "vte/vte.h")]
+	public enum PtyError {
+		PTY_HELPER_FAILED,
+		PTY98_FAILED
+	}
+	[CCode (cprefix = "VTE_PTY_", cheader_filename = "vte/vte.h")]
+	[Flags]
+	public enum PtyFlags {
+		NO_LASTLOG,
+		NO_UTMP,
+		NO_WTMP,
+		NO_HELPER,
+		NO_FALLBACK,
+		DEFAULT
+	}
 	[CCode (cprefix = "VTE_ANTI_ALIAS_", cheader_filename = "vte/vte.h")]
 	public enum TerminalAntiAlias {
 		USE_DEFAULT,
@@ -243,4 +294,6 @@ namespace Vte {
 	public const int MICRO_VERSION;
 	[CCode (cheader_filename = "vte/vte.h")]
 	public const int MINOR_VERSION;
+	[CCode (cheader_filename = "vte/vte.h")]
+	public static unowned string get_user_shell ();
 }
