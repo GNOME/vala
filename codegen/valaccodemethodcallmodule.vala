@@ -618,16 +618,13 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			}
 		}
 
+		CCodeExpression out_param_ref = null;
+
 		if (return_result_via_out_param) {
-			var temp_var = get_temp_variable (itype.get_return_type ());
-			var temp_ref = get_variable_cexpression (temp_var.name);
-
-			emit_temp_var (temp_var);
-
-			out_arg_map.set (get_param_pos (-3), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
-
-			ccode.add_expression (ccall_expr);
-			ccall_expr = temp_ref;
+			var out_param_var = get_temp_variable (itype.get_return_type ());
+			out_param_ref = get_variable_cexpression (out_param_var.name);
+			emit_temp_var (out_param_var);
+			out_arg_map.set (get_param_pos (-3), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, out_param_ref));
 		}
 
 		// append C arguments in the right order
@@ -670,10 +667,6 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			}
 		}
 
-		if (m != null && m.binding == MemberBinding.INSTANCE && m.returns_modified_pointer) {
-			ccall_expr = new CCodeAssignment (instance, ccall_expr);
-		}
-
 		if (expr.is_yield_expression) {
 			// set state before calling async function to support immediate callbacks
 			int state = next_coroutine_state++;
@@ -682,6 +675,15 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			ccode.add_expression (async_call);
 			ccode.add_return (new CCodeConstant ("FALSE"));
 			ccode.add_label ("_state_%d".printf (state));
+		}
+
+		if (return_result_via_out_param) {
+			ccode.add_expression (ccall_expr);
+			ccall_expr = out_param_ref;
+		}
+
+		if (m != null && m.binding == MemberBinding.INSTANCE && m.returns_modified_pointer) {
+			ccall_expr = new CCodeAssignment (instance, ccall_expr);
 		}
 
 		if (m is ArrayResizeMethod) {
