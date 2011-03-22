@@ -3274,7 +3274,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 		}
 
-		if (b.parent_node == stop_at) {
+		if (stop_at != null && b.parent_node == stop_at) {
 			return;
 		}
 
