@@ -118,7 +118,7 @@ public class Vala.GVariantModule : GAsyncModule {
 				str.append_c ('(');
 				foreach (Field f in st.get_fields ()) {
 					if (f.binding == MemberBinding.INSTANCE) {
-						str.append (get_type_signature (f.variable_type));
+						str.append (get_type_signature (f.variable_type, f));
 					}
 				}
 				str.append_c (')');
