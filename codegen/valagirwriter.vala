@@ -1,6 +1,6 @@
 /* valagirwriter.vala
  *
- * Copyright (C) 2008-2010  Jürg Billeter
+ * Copyright (C) 2008-2011  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -733,6 +733,11 @@ public class Vala.GIRWriter : CodeVisitor {
 			return;
 		}
 
+		// check for unsupported types
+		if (!check_signature (m)) {
+			return;
+		}
+
 		string tag_name = "method";
 		var parent = this.hierarchy.get (0);
 		if (parent is Enum) {
@@ -749,6 +754,27 @@ public class Vala.GIRWriter : CodeVisitor {
 		if (m.is_abstract || m.is_virtual) {
 			write_signature (m, "virtual-method", false);
 		}
+	}
+
+	bool check_type (DataType type) {
+		// gobject-introspection does not currently support va_list parameters
+		if (type.get_cname () == "va_list") {
+			return false;
+		}
+
+		return true;
+	}
+
+	bool check_signature (Method m) {
+		if (!check_type (m.return_type)) {
+			return false;
+		}
+		foreach (var param in m.get_parameters ()) {
+			if (param.variable_type == null || !check_type (param.variable_type)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private void write_signature (Method m, string tag_name, bool instance = false) {
