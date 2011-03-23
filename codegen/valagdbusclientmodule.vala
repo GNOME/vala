@@ -182,7 +182,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 		define_type.add_argument (new CCodeConstant ("0"));
 		define_type.add_argument (new CCodeIdentifier (implement_interface (define_type, iface, iface)));
 
-		cfile.add_type_member_definition (new CCodeExpressionStatement (define_type));
+		cfile.add_type_member_definition (define_type);
 
 		var proxy_class_init = new CCodeFunction (lower_cname + "_class_init", "void");
 		proxy_class_init.add_parameter (new CCodeParameter ("klass", cname + "Class*"));
