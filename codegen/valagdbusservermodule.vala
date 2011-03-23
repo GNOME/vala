@@ -659,6 +659,8 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 				continue;
 			}
 
+			cfile.add_include ("string.h");
+
 			var ccheck = new CCodeFunctionCall (new CCodeIdentifier ("strcmp"));
 			ccheck.add_argument (new CCodeIdentifier ("method_name"));
 			ccheck.add_argument (new CCodeConstant ("\"%s\"".printf (get_dbus_name_for_member (m))));
@@ -734,6 +736,8 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 				continue;
 			}
 
+			cfile.add_include ("string.h");
+
 			var ccheck = new CCodeFunctionCall (new CCodeIdentifier ("strcmp"));
 			ccheck.add_argument (new CCodeIdentifier ("property_name"));
 			ccheck.add_argument (new CCodeConstant ("\"%s\"".printf (get_dbus_name_for_member (prop))));
@@ -799,6 +803,8 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			if (prop.set_accessor == null) {
 				continue;
 			}
+
+			cfile.add_include ("string.h");
 
 			var ccheck = new CCodeFunctionCall (new CCodeIdentifier ("strcmp"));
 			ccheck.add_argument (new CCodeIdentifier ("property_name"));

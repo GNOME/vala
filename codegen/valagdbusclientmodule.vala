@@ -436,6 +436,8 @@ public class Vala.GDBusClientModule : GDBusModule {
 				continue;
 			}
 
+			cfile.add_include ("string.h");
+
 			var ccheck = new CCodeFunctionCall (new CCodeIdentifier ("strcmp"));
 			ccheck.add_argument (new CCodeIdentifier ("signal_name"));
 			ccheck.add_argument (new CCodeConstant ("\"%s\"".printf (get_dbus_name_for_member (sig))));
