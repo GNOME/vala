@@ -4292,6 +4292,7 @@ namespace GLib {
 	}
 
 	[Compact]
+	[Immutable]
 	[CCode (copy_function = "g_variant_type_copy", free_function = "g_variant_type_free", type_id = "G_TYPE_VARIANT_TYPE")]
 	public class VariantType {
 		[CCode (cname = "G_VARIANT_TYPE_BOOLEAN")]
