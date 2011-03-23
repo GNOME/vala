@@ -445,7 +445,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 			var callblock = new CCodeBlock ();
 
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier (generate_dbus_signal_handler (sig, sym)));
-			ccall.add_argument (new CCodeIdentifier ("proxy"));
+			ccall.add_argument (new CCodeCastExpression (new CCodeIdentifier ("proxy"), sym.get_cname () + "*"));
 			ccall.add_argument (new CCodeIdentifier ("parameters"));
 
 			callblock.add_statement (new CCodeExpressionStatement (ccall));
