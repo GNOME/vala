@@ -1,14 +1,6 @@
 <?xml version="1.0"?>
 <api version="1.0">
 	<namespace name="Gdk">
-		<function name="add_client_message_filter" symbol="gdk_add_client_message_filter">
-			<return-type type="void"/>
-			<parameters>
-				<parameter name="message_type" type="GdkAtom"/>
-				<parameter name="func" type="GdkFilterFunc"/>
-				<parameter name="data" type="gpointer"/>
-			</parameters>
-		</function>
 		<function name="add_option_entries_libgtk_only" symbol="gdk_add_option_entries_libgtk_only">
 			<return-type type="void"/>
 			<parameters>
@@ -63,8 +55,8 @@
 			<parameters>
 				<parameter name="cr" type="cairo_t*"/>
 				<parameter name="pixbuf" type="GdkPixbuf*"/>
-				<parameter name="pixbuf_x" type="double"/>
-				<parameter name="pixbuf_y" type="double"/>
+				<parameter name="pixbuf_x" type="gdouble"/>
+				<parameter name="pixbuf_y" type="gdouble"/>
 			</parameters>
 		</function>
 		<function name="cairo_set_source_rgba" symbol="gdk_cairo_set_source_rgba">
@@ -79,8 +71,8 @@
 			<parameters>
 				<parameter name="cr" type="cairo_t*"/>
 				<parameter name="window" type="GdkWindow*"/>
-				<parameter name="x" type="double"/>
-				<parameter name="y" type="double"/>
+				<parameter name="x" type="gdouble"/>
+				<parameter name="y" type="gdouble"/>
 			</parameters>
 		</function>
 		<function name="disable_multidevice" symbol="gdk_disable_multidevice">
@@ -130,14 +122,6 @@
 				<parameter name="x_root" type="gint"/>
 				<parameter name="y_root" type="gint"/>
 				<parameter name="dest_window" type="GdkWindow**"/>
-				<parameter name="protocol" type="GdkDragProtocol*"/>
-			</parameters>
-		</function>
-		<function name="drag_get_protocol_for_display" symbol="gdk_drag_get_protocol_for_display">
-			<return-type type="GdkNativeWindow"/>
-			<parameters>
-				<parameter name="display" type="GdkDisplay*"/>
-				<parameter name="xid" type="GdkNativeWindow"/>
 				<parameter name="protocol" type="GdkDragProtocol*"/>
 			</parameters>
 		</function>
@@ -374,20 +358,20 @@
 			<return-type type="GdkPixbuf*"/>
 			<parameters>
 				<parameter name="surface" type="cairo_surface_t*"/>
-				<parameter name="src_x" type="int"/>
-				<parameter name="src_y" type="int"/>
-				<parameter name="width" type="int"/>
-				<parameter name="height" type="int"/>
+				<parameter name="src_x" type="gint"/>
+				<parameter name="src_y" type="gint"/>
+				<parameter name="width" type="gint"/>
+				<parameter name="height" type="gint"/>
 			</parameters>
 		</function>
 		<function name="pixbuf_get_from_window" symbol="gdk_pixbuf_get_from_window">
 			<return-type type="GdkPixbuf*"/>
 			<parameters>
 				<parameter name="window" type="GdkWindow*"/>
-				<parameter name="src_x" type="int"/>
-				<parameter name="src_y" type="int"/>
-				<parameter name="width" type="int"/>
-				<parameter name="height" type="int"/>
+				<parameter name="src_x" type="gint"/>
+				<parameter name="src_y" type="gint"/>
+				<parameter name="width" type="gint"/>
+				<parameter name="height" type="gint"/>
 			</parameters>
 		</function>
 		<function name="pre_parse_libgtk_only" symbol="gdk_pre_parse_libgtk_only">
@@ -494,7 +478,7 @@
 		<function name="selection_send_notify" symbol="gdk_selection_send_notify">
 			<return-type type="void"/>
 			<parameters>
-				<parameter name="requestor" type="GdkNativeWindow"/>
+				<parameter name="requestor" type="GdkWindow*"/>
 				<parameter name="selection" type="GdkAtom"/>
 				<parameter name="target" type="GdkAtom"/>
 				<parameter name="property" type="GdkAtom"/>
@@ -505,7 +489,7 @@
 			<return-type type="void"/>
 			<parameters>
 				<parameter name="display" type="GdkDisplay*"/>
-				<parameter name="requestor" type="GdkNativeWindow"/>
+				<parameter name="requestor" type="GdkWindow*"/>
 				<parameter name="selection" type="GdkAtom"/>
 				<parameter name="target" type="GdkAtom"/>
 				<parameter name="property" type="GdkAtom"/>
@@ -718,14 +702,6 @@
 			<field name="x_root" type="gdouble"/>
 			<field name="y_root" type="gdouble"/>
 		</struct>
-		<struct name="GdkEventClient">
-			<field name="type" type="GdkEventType"/>
-			<field name="window" type="GdkWindow*"/>
-			<field name="send_event" type="gint8"/>
-			<field name="message_type" type="GdkAtom"/>
-			<field name="data_format" type="gushort"/>
-			<field name="data" type="gpointer"/>
-		</struct>
 		<struct name="GdkEventConfigure">
 			<field name="type" type="GdkEventType"/>
 			<field name="window" type="GdkWindow*"/>
@@ -812,7 +788,7 @@
 			<field name="type" type="GdkEventType"/>
 			<field name="window" type="GdkWindow*"/>
 			<field name="send_event" type="gint8"/>
-			<field name="owner" type="GdkNativeWindow"/>
+			<field name="owner" type="GdkWindow*"/>
 			<field name="reason" type="GdkOwnerChange"/>
 			<field name="selection" type="GdkAtom"/>
 			<field name="time" type="guint32"/>
@@ -854,7 +830,7 @@
 			<field name="target" type="GdkAtom"/>
 			<field name="property" type="GdkAtom"/>
 			<field name="time" type="guint32"/>
-			<field name="requestor" type="GdkNativeWindow"/>
+			<field name="requestor" type="GdkWindow*"/>
 		</struct>
 		<struct name="GdkEventSetting">
 			<field name="type" type="GdkEventType"/>
@@ -893,8 +869,6 @@
 			<field name="keycode" type="guint"/>
 			<field name="group" type="gint"/>
 			<field name="level" type="gint"/>
-		</struct>
-		<struct name="GdkNativeWindow">
 		</struct>
 		<struct name="GdkPoint">
 			<field name="x" type="gint"/>
@@ -965,7 +939,7 @@
 			<method name="hash" symbol="gdk_color_hash">
 				<return-type type="guint"/>
 				<parameters>
-					<parameter name="colora" type="GdkColor*"/>
+					<parameter name="color" type="GdkColor*"/>
 				</parameters>
 			</method>
 			<method name="parse" symbol="gdk_color_parse">
@@ -1086,27 +1060,6 @@
 					<parameter name="event" type="GdkEventMotion*"/>
 				</parameters>
 			</method>
-			<method name="send_client_message" symbol="gdk_event_send_client_message">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="event" type="GdkEvent*"/>
-					<parameter name="winid" type="GdkNativeWindow"/>
-				</parameters>
-			</method>
-			<method name="send_client_message_for_display" symbol="gdk_event_send_client_message_for_display">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="display" type="GdkDisplay*"/>
-					<parameter name="event" type="GdkEvent*"/>
-					<parameter name="winid" type="GdkNativeWindow"/>
-				</parameters>
-			</method>
-			<method name="send_clientmessage_toall" symbol="gdk_event_send_clientmessage_toall">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="event" type="GdkEvent*"/>
-				</parameters>
-			</method>
 			<method name="set_device" symbol="gdk_event_set_device">
 				<return-type type="void"/>
 				<parameters>
@@ -1143,7 +1096,6 @@
 			<field name="selection" type="GdkEventSelection"/>
 			<field name="owner_change" type="GdkEventOwnerChange"/>
 			<field name="proximity" type="GdkEventProximity"/>
-			<field name="client" type="GdkEventClient"/>
 			<field name="dnd" type="GdkEventDND"/>
 			<field name="window_state" type="GdkEventWindowState"/>
 			<field name="setting" type="GdkEventSetting"/>
@@ -1305,10 +1257,10 @@
 			<member name="GDK_DEVICE_TYPE_FLOATING" value="2"/>
 		</enum>
 		<enum name="GdkDragProtocol" type-name="GdkDragProtocol" get-type="gdk_drag_protocol_get_type">
-			<member name="GDK_DRAG_PROTO_MOTIF" value="0"/>
-			<member name="GDK_DRAG_PROTO_XDND" value="1"/>
-			<member name="GDK_DRAG_PROTO_ROOTWIN" value="2"/>
-			<member name="GDK_DRAG_PROTO_NONE" value="3"/>
+			<member name="GDK_DRAG_PROTO_NONE" value="0"/>
+			<member name="GDK_DRAG_PROTO_MOTIF" value="1"/>
+			<member name="GDK_DRAG_PROTO_XDND" value="2"/>
+			<member name="GDK_DRAG_PROTO_ROOTWIN" value="3"/>
 			<member name="GDK_DRAG_PROTO_WIN32_DROPFILES" value="4"/>
 			<member name="GDK_DRAG_PROTO_OLE2" value="5"/>
 			<member name="GDK_DRAG_PROTO_LOCAL" value="6"/>
@@ -1944,15 +1896,6 @@
 			</signal>
 		</object>
 		<object name="GdkDisplay" parent="GObject" type-name="GdkDisplay" get-type="gdk_display_get_type">
-			<method name="add_client_message_filter" symbol="gdk_display_add_client_message_filter">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="display" type="GdkDisplay*"/>
-					<parameter name="message_type" type="GdkAtom"/>
-					<parameter name="func" type="GdkFilterFunc"/>
-					<parameter name="data" type="gpointer"/>
-				</parameters>
-			</method>
 			<method name="beep" symbol="gdk_display_beep">
 				<return-type type="void"/>
 				<parameters>
@@ -2381,13 +2324,6 @@
 			</signal>
 		</object>
 		<object name="GdkScreen" parent="GObject" type-name="GdkScreen" get-type="gdk_screen_get_type">
-			<method name="broadcast_client_message" symbol="gdk_screen_broadcast_client_message">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="screen" type="GdkScreen*"/>
-					<parameter name="event" type="GdkEvent*"/>
-				</parameters>
-			</method>
 			<method name="get_active_window" symbol="gdk_screen_get_active_window">
 				<return-type type="GdkWindow*"/>
 				<parameters>
@@ -2941,6 +2877,13 @@
 				<return-type type="GdkDisplay*"/>
 				<parameters>
 					<parameter name="window" type="GdkWindow*"/>
+				</parameters>
+			</method>
+			<method name="get_drag_protocol" symbol="gdk_window_get_drag_protocol">
+				<return-type type="GdkDragProtocol"/>
+				<parameters>
+					<parameter name="window" type="GdkWindow*"/>
+					<parameter name="target" type="GdkWindow**"/>
 				</parameters>
 			</method>
 			<method name="get_effective_parent" symbol="gdk_window_get_effective_parent">

@@ -1,2 +1,2 @@
 include/gtk-3.0/gtk
-lib/libgtk-3.0.so
+lib/libgtk-3.so

@@ -17,9 +17,9 @@ namespace Gdk {
 		[CCode (cheader_filename = "gdk/gdk.h")]
 		public static int property_get (Gdk.Window requestor, uchar[] data, Gdk.Atom prop_type, int prop_format);
 		[CCode (cheader_filename = "gdk/gdk.h")]
-		public static void send_notify (Gdk.NativeWindow requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint32 time_);
+		public static void send_notify (Gdk.Window requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint32 time_);
 		[CCode (cheader_filename = "gdk/gdk.h")]
-		public static void send_notify_for_display (Gdk.Display display, Gdk.NativeWindow requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint32 time_);
+		public static void send_notify_for_display (Gdk.Display display, Gdk.Window requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint32 time_);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class AppLaunchContext : GLib.AppLaunchContext {
@@ -114,7 +114,6 @@ namespace Gdk {
 	public class Display : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Display ();
-		public void add_client_message_filter (Gdk.Atom message_type, Gdk.FilterFunc func);
 		public void beep ();
 		public void close ();
 		public bool device_is_grabbed (Gdk.Device device);
@@ -183,7 +182,6 @@ namespace Gdk {
 	public class Event {
 		public Gdk.EventAny any;
 		public Gdk.EventButton button;
-		public Gdk.EventClient client;
 		public Gdk.EventConfigure configure;
 		public Gdk.EventCrossing crossing;
 		public Gdk.EventDND dnd;
@@ -217,9 +215,6 @@ namespace Gdk {
 		public static unowned Gdk.Event peek ();
 		public void put ();
 		public static void request_motions (Gdk.EventMotion event);
-		public bool send_client_message (Gdk.NativeWindow winid);
-		public static bool send_client_message_for_display (Gdk.Display display, Gdk.Event event, Gdk.NativeWindow winid);
-		public void send_clientmessage_toall ();
 		public void set_device (Gdk.Device device);
 		public void set_screen (Gdk.Screen screen);
 		public void set_source_device (Gdk.Device device);
@@ -248,7 +243,6 @@ namespace Gdk {
 	public class Screen : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Screen ();
-		public void broadcast_client_message (Gdk.Event event);
 		public unowned Gdk.Window get_active_window ();
 		public static unowned Gdk.Screen get_default ();
 		public unowned Gdk.Display get_display ();
@@ -347,6 +341,7 @@ namespace Gdk {
 		public Gdk.EventMask get_device_events (Gdk.Device device);
 		public unowned Gdk.Window get_device_position (Gdk.Device device, int x, int y, Gdk.ModifierType mask);
 		public unowned Gdk.Display get_display ();
+		public Gdk.DragProtocol get_drag_protocol (out unowned Gdk.Window target);
 		public unowned Gdk.Window get_effective_parent ();
 		public unowned Gdk.Window get_effective_toplevel ();
 		public Gdk.EventMask get_events ();
@@ -498,15 +493,6 @@ namespace Gdk {
 		public double y_root;
 	}
 	[CCode (has_type_id = false, cheader_filename = "gdk/gdk.h")]
-	public struct EventClient {
-		public Gdk.EventType type;
-		public weak Gdk.Window window;
-		public char send_event;
-		public Gdk.Atom message_type;
-		public ushort data_format;
-		public void* data;
-	}
-	[CCode (has_type_id = false, cheader_filename = "gdk/gdk.h")]
 	public struct EventConfigure {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
@@ -603,7 +589,7 @@ namespace Gdk {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
 		public char send_event;
-		public Gdk.NativeWindow owner;
+		public weak Gdk.Window owner;
 		public Gdk.OwnerChange reason;
 		public Gdk.Atom selection;
 		public uint32 time;
@@ -649,7 +635,7 @@ namespace Gdk {
 		public Gdk.Atom target;
 		public Gdk.Atom property;
 		public uint32 time;
-		public Gdk.NativeWindow requestor;
+		public weak Gdk.Window requestor;
 	}
 	[CCode (has_type_id = false, cheader_filename = "gdk/gdk.h")]
 	public struct EventSetting {
@@ -693,10 +679,6 @@ namespace Gdk {
 		public uint keycode;
 		public int group;
 		public int level;
-	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	[SimpleType]
-	public struct NativeWindow {
 	}
 	[CCode (type_id = "GDK_TYPE_POINT", cheader_filename = "gdk/gdk.h")]
 	public struct Point {
@@ -880,10 +862,10 @@ namespace Gdk {
 	}
 	[CCode (cprefix = "GDK_DRAG_PROTO_", cheader_filename = "gdk/gdk.h")]
 	public enum DragProtocol {
+		NONE,
 		MOTIF,
 		XDND,
 		ROOTWIN,
-		NONE,
 		WIN32_DROPFILES,
 		OLE2,
 		LOCAL
@@ -1212,8 +1194,6 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public const Gdk.Atom SELECTION_SECONDARY;
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static void add_client_message_filter (Gdk.Atom message_type, Gdk.FilterFunc func);
-	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void add_option_entries_libgtk_only (GLib.OptionGroup group);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void beep ();
@@ -1249,8 +1229,6 @@ namespace Gdk {
 	public static bool drag_drop_succeeded (Gdk.DragContext context);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void drag_find_window_for_screen (Gdk.DragContext context, Gdk.Window drag_window, Gdk.Screen screen, int x_root, int y_root, out unowned Gdk.Window dest_window, Gdk.DragProtocol protocol);
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static Gdk.NativeWindow drag_get_protocol_for_display (Gdk.Display display, Gdk.NativeWindow xid, Gdk.DragProtocol protocol);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static Gdk.Atom drag_get_selection (Gdk.DragContext context);
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -1365,10 +1343,10 @@ namespace Gdk {
 	public static int selection_property_get (Gdk.Window requestor, uchar[] data, out Gdk.Atom prop_type, int prop_format);
 	[Deprecated (since = "vala-0.12", replacement = "Selection.send_notify")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static void selection_send_notify (Gdk.NativeWindow requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint32 time_);
+	public static void selection_send_notify (Gdk.Window requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint32 time_);
 	[Deprecated (since = "vala-0.12", replacement = "Selection.send_notify_for_display")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static void selection_send_notify_for_display (Gdk.Display display, Gdk.NativeWindow requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint32 time_);
+	public static void selection_send_notify_for_display (Gdk.Display display, Gdk.Window requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint32 time_);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void set_double_click_time (uint msec);
 	[CCode (cheader_filename = "gdk/gdk.h")]

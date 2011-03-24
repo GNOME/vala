@@ -49,7 +49,7 @@ namespace Gdk {
 	[Deprecated (since = "vala-0.12", replacement = "Selection.property_get")]
 	public static int selection_property_get (Gdk.Window requestor, uchar[] data, out Gdk.Atom prop_type, int prop_format);
 	[Deprecated (since = "vala-0.12", replacement = "Selection.send_notify")]
-	public static void selection_send_notify (Gdk.NativeWindow requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint32 time_);
+	public static void selection_send_notify (Gdk.Window requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint32 time_);
 	[Deprecated (since = "vala-0.12", replacement = "Selection.send_notify_for_display")]
-	public static void selection_send_notify_for_display (Gdk.Display display, Gdk.NativeWindow requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint32 time_);
+	public static void selection_send_notify_for_display (Gdk.Display display, Gdk.Window requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint32 time_);
 }
