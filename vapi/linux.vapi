@@ -833,6 +833,32 @@ namespace Linux {
     }
 
     /*
+     * Gsm
+     */
+    namespace Gsm {
+
+        [CCode (cname = "GSMIOC_GETCONF", cheader_filename = "linux/gsmmux.h")]
+        public const int GSMIOC_GETCONF;
+        [CCode (cname = "GSMIOC_SETCONF", cheader_filename = "linux/gsmmux.h")]
+        public const int GSMIOC_SETCONF;
+
+        [CCode (cname = "struct gsm_config", cheader_filename = "linux/gsmmux.h")]
+        public struct Config {
+            public uint adaption;
+            public uint encapsulation;
+            public uint initiator;
+            public uint t1;
+            public uint t2;
+            public uint t3;
+            public uint n2;
+            public uint mru;
+            public uint mtu;
+            public uint k;
+            public uint i;
+        }
+    }
+
+    /*
      * Inotify
      */
     [CCode (cname = "struct inotify_event", cheader_filename = "sys/inotify.h")]
