@@ -975,6 +975,13 @@ namespace Linux {
     [CCode (cheader_filename = "sys/ioctl.h", sentinel = "")]
     public int ioctl (int fd, int request, ...);
 
+    [CCode (cname = "makedev", cheader_filename = "sys/types.h")]
+    public Posix.dev_t makedev (int maj, int min);
+    [CCode (cname = "major", cheader_filename = "sys/types.h")]
+    public int major (Posix.dev_t dev);
+    [CCode (cname = "minor", cheader_filename = "sys/types.h")]
+    public int minor (Posix.dev_t dev);
+
     [CCode (cname = "unsigned long int", cprefix = "MS_", cheader_filename = "sys/mount.h,linux/fs.h")]
     public enum MountFlags {
         RDONLY,
