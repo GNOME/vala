@@ -2803,7 +2803,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	// logic in this method is temporarily duplicated in destroy_value
 	// apply changes to both methods
 	public virtual CCodeExpression destroy_variable (Variable variable, TargetValue target_lvalue) {
-		var type = variable.variable_type;
+		var type = target_lvalue.value_type;
 		var cvar = get_cvalue_ (target_lvalue);
 
 		if (type is DelegateType) {

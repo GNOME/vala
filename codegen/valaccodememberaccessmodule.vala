@@ -493,10 +493,15 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 
 	/* Returns lvalue access to the given field */
 	public override TargetValue get_field_cvalue (Field field, TargetValue? instance) {
-		var result = new GLibValue (field.variable_type.copy ());
+		var value_type = field.variable_type.copy ();
+		if (instance != null) {
+			value_type = value_type.get_actual_type (instance.value_type, null, field);
+		}
 
-		var array_type = field.variable_type as ArrayType;
-		var delegate_type = field.variable_type as DelegateType;
+		var result = new GLibValue (value_type);
+
+		var array_type = result.value_type as ArrayType;
+		var delegate_type = result.value_type as DelegateType;
 		if (field.binding == MemberBinding.INSTANCE) {
 			CCodeExpression pub_inst = null;
 
@@ -558,12 +563,12 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 
 				if (((TypeSymbol) field.parent_symbol).is_reference_type ()) {
 					result.delegate_target_cvalue = new CCodeMemberAccess.pointer (inst, target_cname);
-					if (field.variable_type.value_owned) {
+					if (result.value_type.value_owned) {
 						result.delegate_target_destroy_notify_cvalue = new CCodeMemberAccess.pointer (inst, target_destroy_notify_cname);
 					}
 				} else {
 					result.delegate_target_cvalue = new CCodeMemberAccess (inst, target_cname);
-					if (field.variable_type.value_owned) {
+					if (result.value_type.value_owned) {
 						result.delegate_target_destroy_notify_cvalue = new CCodeMemberAccess (inst, target_destroy_notify_cname);
 					}
 				}
@@ -620,7 +625,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				}
 			} else if (delegate_type != null && delegate_type.delegate_symbol.has_target && !field.no_delegate_target) {
 				result.delegate_target_cvalue = new CCodeIdentifier (get_delegate_target_cname (field.get_cname ()));
-				if (field.variable_type.value_owned) {
+				if (result.value_type.value_owned) {
 					result.delegate_target_destroy_notify_cvalue = new CCodeIdentifier (get_delegate_target_destroy_notify_cname (field.get_cname ()));
 				}
 			}
