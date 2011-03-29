@@ -980,6 +980,10 @@ public class Vala.GIRWriter : CodeVisitor {
 			if (type.value_owned) {
 				buffer.append_printf (" destroy=\"%i\"", closure_index + 1);
 			}
+
+			if (delegate_type.is_called_once) {
+				buffer.append (" scope=\"async\"");
+			}
 		}
 
 		buffer.append_printf (">\n");
