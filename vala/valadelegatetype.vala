@@ -102,6 +102,8 @@ public class Vala.DelegateType : DataType {
 			result.add_type_argument (arg.copy ());
 		}
 
+		result.is_called_once = is_called_once;
+
 		return result;
 	}
 
