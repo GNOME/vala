@@ -4450,6 +4450,7 @@ namespace GLib {
 
 		public size_t n_children ();
 		public Variant get_child_value (size_t index);
+		public void get_child (size_t index, string format_string, ...);
 
 		public Variant? lookup_value (string key, VariantType? expected_type);
 		public bool lookup (string key, string format_string, ...);
