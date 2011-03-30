@@ -1490,6 +1490,8 @@ public class Vala.GIdlParser : CodeVisitor {
 					var nv = attr.split ("=", 2);
 					if (nv[0] == "cheader_filename") {
 						iface.add_cheader_filename (eval (nv[1]));
+					} else if (nv[0] == "type_cname") {
+						iface.set_type_cname (eval (nv[1]));
 					} else if (nv[0] == "lower_case_csuffix") {
 						iface.set_lower_case_csuffix (eval (nv[1]));
 					}
