@@ -3509,4 +3509,126 @@ namespace Linux {
             public uint16 v_ccol;
         }
     }
+
+    /*
+     * Wireless Extensions (WEXT) Infrastructure
+     */
+    [CCode (cprefix = "", lower_case_cprefix = "")]
+    namespace WirelessExtensions {
+
+        /* structs */
+        // TBD
+
+        /* constants */
+        // TBD
+
+        /* ioctls */
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCSIWCOMMIT;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCGIWNAME;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCSIWNWID;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCGIWNWID;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCSIWFREQ;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCGIWFREQ;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCSIWMODE;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCGIWMODE;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCSIWSENS;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCGIWSENS;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCSIWRANGE;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCGIWRANGE;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCSIWPRIV;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCGIWPRIV;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCSIWSTATS;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCGIWSTATS;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCSIWSPY;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCGIWSPY;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCSIWTHRSPY;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCGIWTHRSPY;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCSIWAP;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCGIWAP;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCGIWAPLIST;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCSIWSCAN;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCGIWSCAN;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCSIWESSID;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCGIWESSID;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCSIWNICKN;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCGIWNICKN;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCSIWRATE;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCGIWRATE;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCSIWRTS;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCGIWRTS;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCSIWFRAG;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCGIWFRAG;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCSIWTXPOW;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCGIWTXPOW;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCSIWRETRY;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCGIWRETRY;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCSIWENCODE;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCGIWENCODE;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCSIWPOWER;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCGIWPOWER;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCSIWGENIE;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCGIWGENIE;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCSIWMLME;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCSIWAUTH;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCGIWAUTH;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCSIWENCODEEXT;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCGIWENCODEEXT;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCSIWPMKSA;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCIWFIRSTPRIV;
+        [CCode (cheader_filename = "linux/wireless.h")]
+        public const int SIOCIWLASTPRIV;
+    }
+
 }
