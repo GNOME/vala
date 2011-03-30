@@ -202,7 +202,7 @@ namespace X {
 		public int select_input (Window w, long event_mask);
 
 		[CCode (cname = "XSendEvent")]
-		public void send_event (Window w, bool prpagate, long event_mask, ref Event event_send);
+		public void send_event (Window w, bool propagate, long event_mask, ref Event event_send);
 
 		[CCode (cname = "XSetCloseDownMode")]
 		public void set_close_down_mode (int close_mode);
