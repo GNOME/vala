@@ -1181,8 +1181,8 @@ namespace Linux {
     namespace Network {
 
         // interface consts, structs, and methods
-        [CCode (cheader_filename = "net/if.h")]
-        public const int IF_NAMESIZ;
+        [CCode (cname = "IFNAMSIZ", cheader_filename = "linux/if.h")]
+        public const int INTERFACE_NAME_SIZE;
 
         [CCode (cheader_filename = "net/if.h")]
         public uint if_nametoindex (string ifname);
@@ -1226,7 +1226,7 @@ namespace Linux {
             public uchar port;
         }
 
-        [CCode (cname = "struct ifreq", cheader_filename = "linux/if.h", destroy_function = "")]
+        [CCode (cname = "struct ifreq", cheader_filename = "netinet/in.h,linux/if.h", destroy_function = "")]
         public struct IfReq {
             public char[] ifr_name;
             public Posix.SockAddr ifr_addr;
