@@ -1626,15 +1626,15 @@ namespace GLib {
 		public GLib.Variant state { get; set construct; }
 		public GLib.VariantType state_type { get; }
 	}
-	[CCode (cheader_filename = "gio/gio.h")]
+	[CCode (cheader_filename = "gio/gio.h", type_cname = "GActionGroupInterface")]
 	public interface ActionGroup : GLib.Object {
-		public abstract void activate_action (string action_name, GLib.Variant parameter);
+		public abstract void activate_action (string action_name, GLib.Variant? parameter);
 		public abstract void change_action_state (string action_name, GLib.Variant value);
 		public abstract bool get_action_enabled (string action_name);
-		public abstract unowned GLib.VariantType get_action_parameter_type (string action_name);
-		public abstract unowned GLib.Variant get_action_state (string action_name);
-		public abstract unowned GLib.Variant get_action_state_hint (string action_name);
-		public abstract unowned GLib.VariantType get_action_state_type (string action_name);
+		public abstract unowned GLib.VariantType? get_action_parameter_type (string action_name);
+		public abstract GLib.Variant? get_action_state (string action_name);
+		public abstract GLib.Variant? get_action_state_hint (string action_name);
+		public abstract unowned GLib.VariantType? get_action_state_type (string action_name);
 		public abstract bool has_action (string action_name);
 		[CCode (array_length = false, array_null_terminated = true)]
 		public abstract string[] list_actions ();
