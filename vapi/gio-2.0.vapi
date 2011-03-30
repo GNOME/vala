@@ -245,7 +245,7 @@ namespace GLib {
 		[CCode (type = "void", has_construct_function = false)]
 		public async DBusConnection (GLib.IOStream stream, string guid, GLib.DBusConnectionFlags flags, GLib.DBusAuthObserver? observer = null, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public uint add_filter (owned GLib.DBusMessageFilterFunction filter_function);
-		public async GLib.Variant call (string bus_name, string object_path, string interface_name, string method_name, GLib.Variant? parameters, GLib.VariantType reply_type, GLib.DBusCallFlags flags, int timeout_msec, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async GLib.Variant call (string bus_name, string object_path, string interface_name, string method_name, GLib.Variant? parameters, GLib.VariantType? reply_type, GLib.DBusCallFlags flags, int timeout_msec, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public GLib.Variant call_sync (string bus_name, string object_path, string interface_name, string method_name, GLib.Variant? parameters, GLib.VariantType reply_type, GLib.DBusCallFlags flags, int timeout_msec, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool close (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool close_sync (GLib.Cancellable? cancellable = null) throws GLib.Error;
