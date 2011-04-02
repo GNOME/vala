@@ -815,6 +815,7 @@ public struct unichar {
 	public bool isdigit ();
 	public bool isgraph ();
 	public bool islower ();
+	public bool ismark ();
 	public bool isprint ();
 	public bool ispunct ();
 	public bool isspace ();
