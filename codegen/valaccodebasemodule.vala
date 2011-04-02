@@ -6018,4 +6018,20 @@ public class Vala.GLibValue : TargetValue {
 		}
 		array_length_cvalues.add (length_cvalue);
 	}
+
+	public GLibValue copy () {
+		var result = new GLibValue (value_type.copy (), cvalue);
+
+		if (array_length_cvalues != null) {
+			foreach (var cexpr in array_length_cvalues) {
+				result.append_array_length_cvalue (cexpr);
+			}
+		}
+		result.array_size_cvalue = array_size_cvalue;
+
+		result.delegate_target_cvalue = delegate_target_cvalue;
+		result.delegate_target_destroy_notify_cvalue = delegate_target_destroy_notify_cvalue;
+
+		return result;
+	}
 }
