@@ -199,11 +199,7 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 				}
 				if (array_type.rank == 1) {
 					if (get_array_size_cvalue (lvalue) != null) {
-						if (get_array_size_cvalue (value) != null) {
-							ccode.add_assignment (get_array_size_cvalue (lvalue), get_array_size_cvalue (value));
-						} else {
-							ccode.add_assignment (get_array_size_cvalue (lvalue), get_array_length_cvalue (value, 1));
-						}
+						ccode.add_assignment (get_array_size_cvalue (lvalue), get_array_length_cvalue (value, 1));
 					}
 				}
 			}
