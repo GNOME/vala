@@ -177,20 +177,26 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public unowned Block? next_closure_block (Symbol sym) {
-		unowned Block block = null;
 		while (true) {
-			block = sym as Block;
-			if (!(sym is Block || sym is Method)) {
+			unowned Method method = sym as Method;
+			if (method != null && !method.closure) {
+				// parent blocks are not captured by this method
+				break;
+			}
+
+			unowned Block block = sym as Block;
+			if (method == null && block == null) {
 				// no closure block
 				break;
 			}
+
 			if (block != null && block.captured) {
 				// closure block found
-				break;
+				return block;
 			}
 			sym = sym.parent_symbol;
 		}
-		return block;
+		return null;
 	}
 
 	public CCodeFile header_file;
