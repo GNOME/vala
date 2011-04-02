@@ -1132,6 +1132,17 @@ public class string {
 
 	[CCode (cname = "g_utf8_next_char")]
 	public unowned string next_char ();
+	[CCode (cname = "g_utf8_next_char")]
+	static char* utf8_next_char (char* str);
+	public bool get_next_char (ref int index, out unichar c) {
+		c = utf8_get_char ((char*) this + index);
+		if (c != 0) {
+			index = (int) (utf8_next_char ((char*) this + index) - (char*) this);
+			return true;
+		} else {
+			return false;
+		}
+	}
 	[CCode (cname = "g_utf8_get_char")]
 	static unichar utf8_get_char (char* str);
 	public unichar get_char (long index = 0) {
