@@ -135,6 +135,9 @@ namespace X {
 		[CCode (cname = "XKeysymToKeycode")]
 		public uchar keysym_to_keycode (ulong keysym);
 
+		[CCode (cname = "XKeycodeToKeysym")]
+		public ulong keycode_to_keysym (uchar keycode, int index);
+
 		[CCode (cname = "XLastKnownRequestProcessed")]
 		public ulong last_known_request_processed ();
 
@@ -948,5 +951,14 @@ namespace X {
 	public const uint XK_Scroll_Lock;
 	public const uint XK_Super_L;
 	public const uint XK_Super_R;
+
+	[CCode (cname = "XStringToKeysym")]
+	public ulong string_to_keysym (string key);
+
+	[CCode (cname = "XKeysymToString")]
+	public unowned string keysym_to_string (ulong keysym);
+
+	[CCode (cname = "XConvertCase")]
+	public void convert_case (ulong keysym, out ulong lower_return, out ulong upper_return);
 }
 
