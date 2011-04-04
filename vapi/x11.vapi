@@ -88,7 +88,7 @@ namespace X {
 		public void force_screensaver (int mode);
 
 		[CCode (cname = "XGetKeyboardMapping", array_length = false)]
-		public unowned uint[] get_keyboard_mapping (uint first_keycode, int keycode_count, ref int keysyms_per_keycode_return);
+		public ulong[] get_keyboard_mapping (uchar first_keycode, int keycode_count, ref int keysyms_per_keycode_return);
 
 		[CCode (cname = "XGetModifierMapping")]
 		public ModifierKeymap get_modifier_mapping ();
@@ -133,7 +133,7 @@ namespace X {
 		public int keycodes (ref int min_keycodes_return, ref int max_keycodes_return);
 
 		[CCode (cname = "XKeysymToKeycode")]
-		public int keysym_to_keycode (uint keysym);
+		public uchar keysym_to_keycode (ulong keysym);
 
 		[CCode (cname = "XLastKnownRequestProcessed")]
 		public ulong last_known_request_processed ();
