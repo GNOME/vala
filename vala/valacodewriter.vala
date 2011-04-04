@@ -591,6 +591,10 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_string ("has_type_id = false, ");
 		}
 
+		if (en.get_cname () != en.get_default_cname ()) {
+			write_string ("cname = \"%s\", ".printf (en.get_cname ()));
+		}
+
 		write_string ("cheader_filename = \"%s\")]".printf (get_cheaders(en)));
 
 		if (en.is_flags) {

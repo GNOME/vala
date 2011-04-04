@@ -160,10 +160,19 @@ public class Vala.Enum : TypeSymbol {
 				cname = attr.get_string ("cname");
 			}
 			if (cname == null) {
-				cname = "%s%s".printf (parent_symbol.get_cprefix (), name);
+				cname = get_default_cname ();
 			}
 		}
 		return cname;
+	}
+
+	/**
+	 * Returns the default name of this enum as it is used in C code.
+	 *
+	 * @return the name to be used in C code by default
+	 */
+	public string get_default_cname () {
+		return "%s%s".printf (parent_symbol.get_cprefix (), name);
 	}
 
 	public void set_cname (string cname) {
