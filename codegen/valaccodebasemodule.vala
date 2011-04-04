@@ -291,7 +291,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public Struct mutex_type;
 	public TypeSymbol type_module_type;
 	public TypeSymbol dbus_proxy_type;
-	public TypeSymbol dbus_object_type;
 
 	public bool in_plugin = false;
 	public string module_init_param_name;
@@ -448,11 +447,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 
 			dbus_proxy_type = (TypeSymbol) glib_ns.scope.lookup ("DBusProxy");
-
-			var dbus_ns = root_symbol.scope.lookup ("DBus");
-			if (dbus_ns != null) {
-				dbus_object_type = (TypeSymbol) dbus_ns.scope.lookup ("Object");
-			}
 		}
 
 		header_file = new CCodeFile ();
@@ -5876,13 +5870,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public virtual string get_dynamic_signal_disconnect_wrapper_name (DynamicSignal node) {
-		return "";
-	}
-
-	public virtual void generate_marshaller (List<Parameter> params, DataType return_type, bool dbus = false) {
-	}
-
-	public virtual string get_marshaller_function (List<Parameter> params, DataType return_type, string? prefix = null, bool dbus = false) {
 		return "";
 	}
 

@@ -4515,7 +4515,6 @@ namespace GLib {
 		public Variant end ();
 	}
 
-#if !DBUS_GLIB
 	[CCode (cname = "char", const_cname = "const char", copy_function = "g_strdup", free_function = "g_free", cheader_filename = "stdlib.h,string.h,glib.h", type_id = "G_TYPE_STRING", marshaller_type_name = "STRING", param_spec_function = "g_param_spec_string", get_value_function = "g_value_get_string", set_value_function = "g_value_set_string", take_value_function = "g_value_take_string", type_signature = "o")]
 	public class ObjectPath : string {
 		[CCode (cname = "g_strdup")]
@@ -4527,7 +4526,6 @@ namespace GLib {
 		[CCode (cname = "g_strdup")]
 		public BusName (string bus_name);
 	}
-#endif
 
 	[CCode (cname = "G_LIKELY", cheader_filename = "glib.h")]
 	public static bool likely (bool expression);

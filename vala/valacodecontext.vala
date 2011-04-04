@@ -52,11 +52,6 @@ public class Vala.CodeContext {
 	public bool experimental_non_null { get; set; }
 
 	/**
-	 * Enable transformation of D-Bus member names in dynamic client support.
-	 */
-	public bool dbus_transformation { get; set; }
-
-	/**
 	 * Output C code, don't compile to object code.
 	 */
 	public bool ccode_only { get; set; }

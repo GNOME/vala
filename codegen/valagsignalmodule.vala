@@ -24,51 +24,37 @@
 
 
 public class Vala.GSignalModule : GObjectModule {
-	private string get_marshaller_type_name (DataType t, bool dbus = false) {
+	private string get_marshaller_type_name (DataType t) {
 		if (t is PointerType || t.type_parameter != null) {
 			return ("POINTER");
 		} else if (t is ErrorType) {
 			return ("POINTER");
 		} else if (t is ArrayType) {
-			if (dbus) {
-				return ("BOXED");
+			if (((ArrayType) t).element_type.data_type == string_type.data_type) {
+				return ("BOXED,INT");
 			} else {
-				if (((ArrayType) t).element_type.data_type == string_type.data_type) {
-					return ("BOXED,INT");
-				} else {
-					return ("POINTER,INT");
-				}
+				return ("POINTER,INT");
 			}
 		} else if (t is VoidType) {
 			return ("VOID");
-		} else if (dbus && DBusModule.get_type_signature (t).has_prefix ("(")) {
-			return ("BOXED");
 		} else if (t.data_type is Enum) {
 			var en = (Enum) t.data_type;
-			if (dbus) {
-				if (en.is_flags) {
-					return ("UINT");
-				} else {
-					return ("INT");
-				}
-			} else {
-				return en.get_marshaller_type_name ();
-			}
+			return en.get_marshaller_type_name ();
 		} else {
 			return t.data_type.get_marshaller_type_name ();
 		}
 	}
 	
-	private string get_marshaller_type_name_for_parameter (Parameter param, bool dbus = false) {
+	private string get_marshaller_type_name_for_parameter (Parameter param) {
 		if (param.direction != ParameterDirection.IN) {
 			return ("POINTER");
 		} else {
-			return get_marshaller_type_name (param.variable_type, dbus);
+			return get_marshaller_type_name (param.variable_type);
 		}
 	}
 	
-	public override string get_marshaller_function (List<Parameter> params, DataType return_type, string? prefix = null, bool dbus = false) {
-		var signature = get_marshaller_signature (params, return_type, dbus);
+	string get_marshaller_function (List<Parameter> params, DataType return_type, string? prefix = null) {
+		var signature = get_marshaller_signature (params, return_type);
 		string ret;
 
 		if (prefix == null) {
@@ -79,13 +65,13 @@ public class Vala.GSignalModule : GObjectModule {
 			}
 		}
 		
-		ret = "%s_%s_".printf (prefix, get_marshaller_type_name (return_type, dbus));
+		ret = "%s_%s_".printf (prefix, get_marshaller_type_name (return_type));
 		
 		if (params == null || params.size == 0) {
 			ret = ret + "_VOID";
 		} else {
 			foreach (Parameter p in params) {
-				ret = "%s_%s".printf (ret, get_marshaller_type_name_for_parameter (p, dbus).replace (",", "_"));
+				ret = "%s_%s".printf (ret, get_marshaller_type_name_for_parameter (p).replace (",", "_"));
 			}
 		}
 		
@@ -127,20 +113,20 @@ public class Vala.GSignalModule : GObjectModule {
 		}
 	}
 	
-	private string get_marshaller_signature (List<Parameter> params, DataType return_type, bool dbus = false) {
+	private string get_marshaller_signature (List<Parameter> params, DataType return_type) {
 		string signature;
 		
-		signature = "%s:".printf (get_marshaller_type_name (return_type, dbus));
+		signature = "%s:".printf (get_marshaller_type_name (return_type));
 		if (params == null || params.size == 0) {
 			signature = signature + "VOID";
 		} else {
 			bool first = true;
 			foreach (Parameter p in params) {
 				if (first) {
-					signature = signature + get_marshaller_type_name_for_parameter (p, dbus);
+					signature = signature + get_marshaller_type_name_for_parameter (p);
 					first = false;
 				} else {
-					signature = "%s,%s".printf (signature, get_marshaller_type_name_for_parameter (p, dbus));
+					signature = "%s,%s".printf (signature, get_marshaller_type_name_for_parameter (p));
 				}
 			}
 		}
@@ -206,17 +192,17 @@ public class Vala.GSignalModule : GObjectModule {
 		generate_marshaller (sig.get_parameters (), sig.return_type);
 	}
 
-	public override void generate_marshaller (List<Parameter> params, DataType return_type, bool dbus = false) {
+	void generate_marshaller (List<Parameter> params, DataType return_type) {
 		string signature;
 		int n_params, i;
 		
 		/* check whether a signal with the same signature already exists for this source file (or predefined) */
-		signature = get_marshaller_signature (params, return_type, dbus);
+		signature = get_marshaller_signature (params, return_type);
 		if (predefined_marshal_set.contains (signature) || user_marshal_set.contains (signature)) {
 			return;
 		}
 		
-		var signal_marshaller = new CCodeFunction (get_marshaller_function (params, return_type, null, dbus), "void");
+		var signal_marshaller = new CCodeFunction (get_marshaller_function (params, return_type, null), "void");
 		signal_marshaller.modifiers = CCodeModifiers.STATIC;
 		
 		signal_marshaller.add_parameter (new CCodeParameter ("closure", "GClosure *"));
@@ -230,13 +216,13 @@ public class Vala.GSignalModule : GObjectModule {
 		
 		var marshaller_body = new CCodeBlock ();
 		
-		var callback_decl = new CCodeFunctionDeclarator (get_marshaller_function (params, return_type, "GMarshalFunc", dbus));
+		var callback_decl = new CCodeFunctionDeclarator (get_marshaller_function (params, return_type, "GMarshalFunc"));
 		callback_decl.add_parameter (new CCodeParameter ("data1", "gpointer"));
 		n_params = 1;
 		foreach (Parameter p in params) {
 			callback_decl.add_parameter (new CCodeParameter ("arg_%d".printf (n_params), get_value_type_name_from_parameter (p)));
 			n_params++;
-			if (p.variable_type.is_array () && !dbus) {
+			if (p.variable_type.is_array ()) {
 				callback_decl.add_parameter (new CCodeParameter ("arg_%d".printf (n_params), "gint"));
 				n_params++;
 			}
@@ -244,7 +230,7 @@ public class Vala.GSignalModule : GObjectModule {
 		callback_decl.add_parameter (new CCodeParameter ("data2", "gpointer"));
 		marshaller_body.add_statement (new CCodeTypeDefinition (get_value_type_name_from_type_reference (return_type), callback_decl));
 		
-		var var_decl = new CCodeDeclaration (get_marshaller_function (params, return_type, "GMarshalFunc", dbus));
+		var var_decl = new CCodeDeclaration (get_marshaller_function (params, return_type, "GMarshalFunc"));
 		var_decl.modifiers = CCodeModifiers.REGISTER;
 		var_decl.add_declarator (new CCodeVariableDeclarator ("callback"));
 		marshaller_body.add_statement (var_decl);
@@ -288,7 +274,7 @@ public class Vala.GSignalModule : GObjectModule {
 		false_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("data2"), data)));
 		marshaller_body.add_statement (new CCodeIfStatement (cond, true_block, false_block));
 		
-		var c_assign = new CCodeAssignment (new CCodeIdentifier ("callback"), new CCodeCastExpression (new CCodeConditionalExpression (new CCodeIdentifier ("marshal_data"), new CCodeIdentifier ("marshal_data"), new CCodeMemberAccess (new CCodeIdentifier ("cc"), "callback", true)), get_marshaller_function (params, return_type, "GMarshalFunc", dbus)));
+		var c_assign = new CCodeAssignment (new CCodeIdentifier ("callback"), new CCodeCastExpression (new CCodeConditionalExpression (new CCodeIdentifier ("marshal_data"), new CCodeIdentifier ("marshal_data"), new CCodeMemberAccess (new CCodeIdentifier ("cc"), "callback", true)), get_marshaller_function (params, return_type, "GMarshalFunc")));
 		marshaller_body.add_statement (new CCodeExpressionStatement (c_assign));
 		
 		fc = new CCodeFunctionCall (new CCodeIdentifier ("callback"));
@@ -300,28 +286,15 @@ public class Vala.GSignalModule : GObjectModule {
 			if (p.direction != ParameterDirection.IN) {
 				get_value_function = "g_value_get_pointer";
 			} else if (is_array) {
-				if (dbus) {
+				if (((ArrayType) p.variable_type).element_type.data_type == string_type.data_type) {
 					get_value_function = "g_value_get_boxed";
 				} else {
-					if (((ArrayType) p.variable_type).element_type.data_type == string_type.data_type) {
-						get_value_function = "g_value_get_boxed";
-					} else {
-						get_value_function = "g_value_get_pointer";
-					}
+					get_value_function = "g_value_get_pointer";
 				}
 			} else if (p.variable_type is PointerType || p.variable_type.type_parameter != null) {
 				get_value_function = "g_value_get_pointer";
 			} else if (p.variable_type is ErrorType) {
 				get_value_function = "g_value_get_pointer";
-			} else if (dbus && DBusModule.get_type_signature (p.variable_type).has_prefix ("(")) {
-				get_value_function = "g_value_get_boxed";
-			} else if (dbus && p.variable_type.data_type is Enum) {
-				var en = (Enum) p.variable_type.data_type;
-				if (en.is_flags) {
-					get_value_function = "g_value_get_uint";
-				} else {
-					get_value_function = "g_value_get_int";
-				}
 			} else {
 				get_value_function = p.variable_type.data_type.get_get_value_function ();
 			}
@@ -329,7 +302,7 @@ public class Vala.GSignalModule : GObjectModule {
 			inner_fc.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("param_values"), new CCodeIdentifier (i.to_string ())));
 			fc.add_argument (inner_fc);
 			i++;
-			if (is_array && !dbus) {
+			if (is_array) {
 				inner_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_get_int"));
 				inner_fc.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("param_values"), new CCodeIdentifier (i.to_string ())));
 				fc.add_argument (inner_fc);
@@ -343,14 +316,10 @@ public class Vala.GSignalModule : GObjectModule {
 			
 			CCodeFunctionCall set_fc;
 			if (return_type.is_array ()) {
-				if (dbus) {
+				if (((ArrayType) return_type).element_type.data_type == string_type.data_type) {
 					set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_boxed"));
 				} else {
-					if (((ArrayType) return_type).element_type.data_type == string_type.data_type) {
-						set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_boxed"));
-					} else {
-						set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));
-					}
+					set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));
 				}
 			} else if (return_type.type_parameter != null) {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));
@@ -360,15 +329,6 @@ public class Vala.GSignalModule : GObjectModule {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_string"));
 			} else if (return_type.data_type is Class || return_type.data_type is Interface) {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_object"));
-			} else if (dbus && DBusModule.get_type_signature (return_type).has_prefix ("(")) {
-				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_boxed"));
-			} else if (dbus && return_type.data_type is Enum) {
-				var en = (Enum) return_type.data_type;
-				if (en.is_flags) {
-					set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_uint"));
-				} else {
-					set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_int"));
-				}
 			} else {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier (return_type.data_type.get_set_value_function ()));
 			}
@@ -473,10 +433,6 @@ public class Vala.GSignalModule : GObjectModule {
 		marshal_arg.name = marshaller;
 
 		return csignew;
-	}
-
-	public virtual CCodeExpression get_dbus_g_type (DataType data_type) {
-		return new CCodeConstant (data_type.data_type.get_type_id ());
 	}
 
 	public override void visit_element_access (ElementAccess expr) {

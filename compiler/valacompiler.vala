@@ -60,7 +60,6 @@ class Vala.Compiler {
 	static bool deprecated;
 	static bool experimental;
 	static bool experimental_non_null;
-	static bool disable_dbus_transformation;
 	static bool disable_warnings;
 	static string cc_command;
 	[CCode (array_length = false, array_null_terminated = true)]
@@ -119,7 +118,6 @@ class Vala.Compiler {
 		{ "disable-warnings", 0, 0, OptionArg.NONE, ref disable_warnings, "Disable warnings", null },
 		{ "fatal-warnings", 0, 0, OptionArg.NONE, ref fatal_warnings, "Treat warnings as fatal", null },
 		{ "enable-experimental-non-null", 0, 0, OptionArg.NONE, ref experimental_non_null, "Enable experimental enhancements for non-null types", null },
-		{ "disable-dbus-transformation", 0, 0, OptionArg.NONE, ref disable_dbus_transformation, "Disable transformation of D-Bus member names", null },
 		{ "cc", 0, 0, OptionArg.STRING, ref cc_command, "Use COMMAND as C compiler command", "COMMAND" },
 		{ "Xcc", 'X', 0, OptionArg.STRING_ARRAY, ref cc_options, "Pass OPTION to the C compiler", "OPTION..." },
 		{ "dump-tree", 0, 0, OptionArg.FILENAME, ref dump_tree, "Write code tree to FILE", "FILE" },
@@ -170,7 +168,6 @@ class Vala.Compiler {
 		context.deprecated = deprecated;
 		context.experimental = experimental;
 		context.experimental_non_null = experimental_non_null;
-		context.dbus_transformation = !disable_dbus_transformation;
 		context.report.enable_warnings = !disable_warnings;
 		context.report.set_verbose_errors (!quiet_mode);
 		context.verbose_mode = verbose_mode;
@@ -270,9 +267,6 @@ class Vala.Compiler {
 		if (packages != null) {
 			foreach (string package in packages) {
 				context.add_external_package (package);
-				if (context.profile == Profile.GOBJECT && package == "dbus-glib-1") {
-					context.add_define ("DBUS_GLIB");
-				}
 			}
 			packages = null;
 		}
@@ -290,14 +284,7 @@ class Vala.Compiler {
 		}
 
 		if (context.profile == Profile.GOBJECT) {
-			if (context.has_package ("dbus-glib-1")) {
-				if (!context.deprecated) {
-					Report.warning (null, "D-Bus GLib is deprecated, use GDBus");
-				}
-				context.codegen = new DBusServerModule ();
-			} else {
-				context.codegen = new GDBusServerModule ();
-			}
+			context.codegen = new GDBusServerModule ();
 		} else if (context.profile == Profile.DOVA) {
 			context.codegen = new DovaErrorModule ();
 		} else {
