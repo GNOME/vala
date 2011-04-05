@@ -169,6 +169,9 @@ public class Vala.MemberAccess : Expression {
 		var method = symbol_reference as Method;
 		if (symbol_reference is Constant) {
 			return true;
+		} else if (symbol_reference is ArrayLengthField && inner != null && inner.symbol_reference is Constant) {
+			// length of constant array
+			return true;
 		} else if (method != null &&
 		           (method.binding == MemberBinding.STATIC || prototype_access)) {
 			return true;
