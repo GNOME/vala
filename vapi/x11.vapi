@@ -76,7 +76,7 @@ namespace X {
 		public unowned Screen screen_by_id (int screen_number);
 
 		[CCode (cname = "DisplayString")]
-		public string display_string ();
+		public unowned string display_string ();
 
 		[CCode (cname = "XQLength")]
 		public int event_queue_length ();
