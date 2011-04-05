@@ -2125,6 +2125,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					}
 
 					clist.append (cexpr);
+
+					var array_type = field.variable_type as ArrayType;
+					if (array_type != null && !field.no_array_length && !field.array_null_terminated) {
+						for (int dim = 1; dim <= array_type.rank; dim++) {
+							clist.append (get_array_length_cvalue (expr.target_value, dim));
+						}
+					}
 				}
 
 				set_cvalue (list, clist);
