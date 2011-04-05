@@ -517,9 +517,9 @@ namespace Cairo {
 		public void set_size (double width_in_points, double height_in_points);
 	}
 	
-	[CCode (instance_pos = 0)]
+	[CCode (instance_pos = 0, cname = "cairo_read_func_t")]
 	public delegate Status ReadFunc (uchar[] data);
-	[CCode (instance_pos = 0)]
+	[CCode (instance_pos = 0, cname = "cairo_write_func_t")]
 	public delegate Status WriteFunc (uchar[] data);
 	
 	[Compact]
