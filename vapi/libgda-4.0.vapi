@@ -2056,21 +2056,21 @@ namespace Gda {
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public delegate void ServerProviderExecCallback (Gda.ServerProvider provider, Gda.Connection cnc, uint task_id, GLib.Object result_obj, GLib.Error error);
 	[CCode (cheader_filename = "libgda/libgda.h", has_target = false)]
-	public delegate bool SqlForeachFunc (Gda.SqlAnyPart p1, void* p2, GLib.Error p3);
+	public delegate bool SqlForeachFunc (Gda.SqlAnyPart p1, void* p2) throws GLib.Error;
 	[CCode (cheader_filename = "libgda/libgda.h", has_target = false)]
-	public delegate unowned string SqlRenderingExpr (Gda.SqlExpr expr, Gda.SqlRenderingContext context, bool is_default, bool is_null, GLib.Error error);
+	public delegate unowned string SqlRenderingExpr (Gda.SqlExpr expr, Gda.SqlRenderingContext context, bool is_default, bool is_null) throws GLib.Error;
 	[CCode (cheader_filename = "libgda/libgda.h", has_target = false)]
-	public delegate unowned string SqlRenderingFunc (Gda.SqlAnyPart node, Gda.SqlRenderingContext context, GLib.Error error);
+	public delegate unowned string SqlRenderingFunc (Gda.SqlAnyPart node, Gda.SqlRenderingContext context) throws GLib.Error;
 	[CCode (cheader_filename = "libgda/libgda.h", has_target = false)]
-	public delegate unowned string SqlRenderingPSpecFunc (Gda.SqlParamSpec pspec, Gda.SqlExpr expr, Gda.SqlRenderingContext context, bool is_default, bool is_null, GLib.Error error);
+	public delegate unowned string SqlRenderingPSpecFunc (Gda.SqlParamSpec pspec, Gda.SqlExpr expr, Gda.SqlRenderingContext context, bool is_default, bool is_null) throws GLib.Error;
 	[CCode (cheader_filename = "libgda/libgda.h", has_target = false)]
-	public delegate unowned string SqlRenderingValue (GLib.Value value, Gda.SqlRenderingContext context, GLib.Error error);
+	public delegate unowned string SqlRenderingValue (GLib.Value value, Gda.SqlRenderingContext context) throws GLib.Error;
 	[CCode (cheader_filename = "libgda/libgda.h", has_target = false)]
 	public delegate bool SqlReservedKeywordsFunc (string word);
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public delegate void VConnectionHubFunc (Gda.Connection cnc, string ns);
 	[CCode (cheader_filename = "libgda/libgda.h", has_target = false)]
-	public delegate unowned GLib.List VconnectionDataModelCreateColumnsFunc (Gda.VconnectionDataModelSpec p1, GLib.Error p2);
+	public delegate unowned GLib.List VconnectionDataModelCreateColumnsFunc (Gda.VconnectionDataModelSpec p1) throws GLib.Error;
 	[CCode (cheader_filename = "libgda/libgda.h", has_target = false)]
 	public delegate unowned Gda.DataModel VconnectionDataModelCreateModelFunc (Gda.VconnectionDataModelSpec p1);
 	[CCode (cheader_filename = "libgda/libgda.h", has_target = false)]

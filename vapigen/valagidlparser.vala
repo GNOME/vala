@@ -452,6 +452,8 @@ public class Vala.GIdlParser : CodeVisitor {
 		cb.access = SymbolAccessibility.PUBLIC;
 
 		bool check_has_target = true;
+		bool suppress_throws = false;
+		string? error_types = null;
 
 		var attributes = get_attributes (node.name);
 		if (attributes != null) {
@@ -478,6 +480,12 @@ public class Vala.GIdlParser : CodeVisitor {
 						return_type = new ArrayType (return_type, 1, return_type.source_reference);
 						cb.return_type = return_type;
 					}
+				} else if (nv[0] == "throws") {
+					if (eval (nv[1]) == "0") {
+						suppress_throws = true;
+					}
+				} else if (nv[0] == "error_types") {
+					error_types = eval (nv[1]);
 				} else if (nv[0] == "array_length_type") {
 					cb.array_length_type = eval (nv[1]);
 				} else if (nv[0] == "type_name") {
@@ -514,6 +522,14 @@ public class Vala.GIdlParser : CodeVisitor {
 				// hide user_data parameter for instance delegates
 				cb.has_target = true;
 			} else {
+				// check for GError parameter
+				if (suppress_throws == false && param_is_exception (param)) {
+					if (error_types == null)
+						cb.add_error_type (parse_type (param.type));
+					remaining_params--;
+					continue;
+				}
+
 				string param_name = param_node.name;
 				if (param_name == "string") {
 					// avoid conflict with string type
@@ -604,7 +620,14 @@ public class Vala.GIdlParser : CodeVisitor {
 
 			remaining_params--;
 		}
-		
+
+		if (suppress_throws == false && error_types != null) {
+			var type_args = eval (error_types).split (",");
+			foreach (string type_arg in type_args) {
+				cb.add_error_type (parse_type_from_string (type_arg, true));
+			}
+		}
+
 		return cb;
 	}
 
@@ -2156,6 +2179,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				continue;
 			}
 
+			// check for GError parameter
 			if (suppress_throws == false && param_is_exception (param)) {
 				if (error_types == null)
 					m.add_error_type (parse_type (param.type));

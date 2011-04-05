@@ -2476,11 +2476,11 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public delegate bool CancellableSourceFunc (GLib.Cancellable cancellable);
 	[CCode (cheader_filename = "gio/gio.h")]
-	public delegate unowned GLib.Variant DBusInterfaceGetPropertyFunc (GLib.DBusConnection connection, string sender, string object_path, string interface_name, string property_name, GLib.Error error);
+	public delegate unowned GLib.Variant DBusInterfaceGetPropertyFunc (GLib.DBusConnection connection, string sender, string object_path, string interface_name, string property_name) throws GLib.Error;
 	[CCode (cheader_filename = "gio/gio.h")]
 	public delegate void DBusInterfaceMethodCallFunc (GLib.DBusConnection connection, string sender, string object_path, string interface_name, string method_name, GLib.Variant parameters, GLib.DBusMethodInvocation invocation);
 	[CCode (cheader_filename = "gio/gio.h")]
-	public delegate bool DBusInterfaceSetPropertyFunc (GLib.DBusConnection connection, string sender, string object_path, string interface_name, string property_name, GLib.Variant value, GLib.Error error);
+	public delegate bool DBusInterfaceSetPropertyFunc (GLib.DBusConnection connection, string sender, string object_path, string interface_name, string property_name, GLib.Variant value) throws GLib.Error;
 	[CCode (cheader_filename = "gio/gio.h")]
 	public delegate unowned GLib.DBusMessage DBusMessageFilterFunction (GLib.DBusConnection connection, GLib.DBusMessage message, bool incoming);
 	[CCode (cheader_filename = "gio/gio.h")]
