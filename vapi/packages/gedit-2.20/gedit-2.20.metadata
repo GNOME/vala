@@ -22,7 +22,7 @@ gedit_document_get_uri transfer_ownership="1"
 
 #Encoding
 #in realta' 
-GeditEncoding  base_class="GObject" cheader_filename="gedit/gedit-encodings.h"
+GeditEncoding base_class="GObject" cheader_filename="gedit/gedit-encodings.h"
 
 #EncodingsOptionMenu
 GeditEncodingsOptionMenu  base_class="GObject" cheader_filename="gedit/gedit-encodings-option-menu.h"
@@ -49,7 +49,7 @@ GeditProgressMessageArea base_class="GtkInfoBar" cheader_filename="gedit/gedit-p
 
 #Statusbar
 GeditStatusbar base_class="GtkStatusbar" cheader_filename="gedit/gedit-statusbar.h"
-gedit_statusbar_flash_message cheader_filename="gedit/gedit-statusbar.h" ellypsis="1"
+gedit_statusbar_flash_message cheader_filename="gedit/gedit-statusbar.h" ellipsis="1"
 
 #Tab
 GeditTab base_class="GtkVBox" cheader_filename="gedit/gedit-tab.h"
