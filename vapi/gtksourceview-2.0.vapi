@@ -145,7 +145,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public string text { owned get; set; }
 	}
-	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
+	[CCode (cheader_filename = "gtksourceview/completion-providers/words/gtksourcecompletionwords.h")]
 	public class SourceCompletionWords : GLib.Object, Gtk.SourceCompletionProvider {
 		[CCode (has_construct_function = false)]
 		public SourceCompletionWords (string name, Gdk.Pixbuf icon);
@@ -213,7 +213,7 @@ namespace Gtk {
 		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[]? get_search_path ();
 		public unowned Gtk.SourceLanguage? guess_language (string? filename, string? content_type);
-		public void set_search_path ([CCode (array_length = false)] string[]? dirs);
+		public void set_search_path ([CCode (array_length = false, array_null_terminated = true)] string[]? dirs);
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] language_ids { get; }
 		[CCode (array_length = false, array_null_terminated = true)]
