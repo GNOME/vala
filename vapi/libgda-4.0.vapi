@@ -1471,7 +1471,7 @@ namespace Gda {
 	public class XaTransactionId {
 		public ushort bqual_length;
 		[CCode (array_length = false)]
-		public weak GLib.ObjectPath[] data;
+		public uint8[] data;
 		public uint32 format;
 		public ushort gtrid_length;
 		public unowned string to_string ();

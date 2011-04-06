@@ -195,7 +195,7 @@ namespace Gedit {
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public Statusbar ();
 		public void clear_overwrite ();
-		public void flash_message (uint context_id, string format);
+		public void flash_message (uint context_id, string format, ...);
 		public void set_cursor_position (int line, int col);
 		public void set_overwrite (bool overwrite);
 		public void set_window_state (Gedit.WindowState state, int num_of_errors);
