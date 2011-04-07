@@ -1,6 +1,6 @@
 /* valadovaassignmentmodule.vala
  *
- * Copyright (C) 2006-2010  Jürg Billeter
+ * Copyright (C) 2006-2011  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -132,7 +132,7 @@ public class Vala.DovaAssignmentModule : DovaMemberAccessModule {
 		}
 	}
 
-	void store_variable (Variable variable, TargetValue lvalue, TargetValue value, bool initializer) {
+	public virtual void store_variable (Variable variable, TargetValue lvalue, TargetValue value, bool initializer) {
 		if (!initializer && requires_destroy (variable.variable_type)) {
 			/* unref old value */
 			ccode.add_expression (destroy_value (lvalue));

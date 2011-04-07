@@ -1,6 +1,6 @@
 /* valadovavaluemodule.vala
  *
- * Copyright (C) 2009-2010  Jürg Billeter
+ * Copyright (C) 2009-2011  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -439,6 +439,29 @@ public class Vala.DovaValueModule : DovaObjectModule {
 		ccall.add_argument (csrc);
 		ccall.add_argument (src_index);
 		set_cvalue (assignment, ccall);
+	}
+
+	public override void store_variable (Variable variable, TargetValue lvalue, TargetValue value, bool initializer) {
+		var generic_type = lvalue.value_type as GenericType;
+		if (generic_type == null) {
+			base.store_variable (variable, lvalue, value, initializer);
+			return;
+		}
+
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_value_copy"));
+		if (generic_type.type_parameter.parent_symbol is TypeSymbol) {
+			// generic type
+			ccall.add_argument (new CCodeMemberAccess.pointer (get_type_private_from_type ((ObjectTypeSymbol) generic_type.type_parameter.parent_symbol, new CCodeMemberAccess.pointer (new CCodeIdentifier ("this"), "type")), "%s_type".printf (generic_type.type_parameter.name.down ())));
+		} else {
+			// generic method
+			ccall.add_argument (new CCodeIdentifier ("%s_type".printf (generic_type.type_parameter.name.down ())));
+		}
+		ccall.add_argument (get_cvalue_ (lvalue));
+		ccall.add_argument (new CCodeConstant ("0"));
+		ccall.add_argument (get_cvalue_ (value));
+		ccall.add_argument (new CCodeConstant ("0"));
+
+		ccode.add_expression (ccall);
 	}
 
 	public override void visit_binary_expression (BinaryExpression expr) {

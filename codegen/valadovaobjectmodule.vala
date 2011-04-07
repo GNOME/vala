@@ -1952,7 +1952,15 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 			var cindex = get_cvalue (indices[0]);
 
 			if (array_type.inline_allocated) {
-				set_cvalue (expr, new CCodeElementAccess (get_cvalue (expr.container), cindex));
+				if (array_type.element_type is GenericType) {
+					// generic array
+					// calculate offset in bytes based on value size
+					var value_size = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_get_value_size"));
+					value_size.add_argument (get_type_id_expression (array_type.element_type));
+					set_cvalue (expr, new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeCastExpression (get_cvalue (expr.container), "char*"), new CCodeBinaryExpression (CCodeBinaryOperator.MUL, value_size, cindex)));
+				} else {
+					set_cvalue (expr, new CCodeElementAccess (get_cvalue (expr.container), cindex));
+				}
 			} else {
 				generate_property_accessor_declaration (((Property) array_class.scope.lookup ("data")).get_accessor, cfile);
 
