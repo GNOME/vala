@@ -28,7 +28,7 @@ namespace X {
 	public Status init_threads ();
 
 	[Compact]
-	[CCode (cname = "Display", ref_function = "", unref_function = "")]
+	[CCode (cname = "Display", free_function = "XCloseDisplay")]
 	public class Display {
 		[CCode (cname = "XOpenDisplay")]
 		public Display (string? name = null);
