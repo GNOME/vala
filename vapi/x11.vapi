@@ -147,6 +147,9 @@ namespace X {
 		[CCode (cname = "XMapWindow")]
 		public int map_window (Window w);
 
+		[CCode (cname = "XMapRaised")]
+		public int map_raised (Window w);
+
 		[CCode (cname = "XMaxRequestSize")]
 		public long max_request_size ();
 
@@ -408,6 +411,58 @@ namespace X {
 
 	[CCode (cname = "XFree")]
 	public int free (void* data);
+
+	[CCode (cprefix = "", cname = "int")]
+	public enum ErrorCode {
+		[CCode (cname = "Success")]
+		SUCCESS,
+		[CCode (cname = "BadRequest")]
+		BAD_REQUEST,
+		[CCode (cname = "BadValue")]
+		BAD_VALUE,
+		[CCode (cname = "BadWindow")]
+		BAD_WINDOW,
+		[CCode (cname = "BadPixmap")]
+		BAD_PIXMAP,
+		[CCode (cname = "BadAtom")]
+		BAD_ATOM,
+		[CCode (cname = "BadCursor")]
+		BAD_CURSOR,
+		[CCode (cname = "BadFont")]
+		BAD_FONT,
+		[CCode (cname = "BadMatch")]
+		BAD_MATCH,
+		[CCode (cname = "BadDrawable")]
+		BAD_DRAWABLE,
+		[CCode (cname = "BadAccess")]
+		BAD_ACCESS,
+		[CCode (cname = "BadAlloc")]
+		BAD_ALLOC,
+		[CCode (cname = "BadColor")]
+		BAD_COLOR,
+		[CCode (cname = "BadGC")]
+		BAD_GC,
+		[CCode (cname = "BadIDChoice")]
+		BAD_ID_CHOICE,
+		[CCode (cname = "BadName")]
+		BAD_NAME,
+		[CCode (cname = "BadLength")]
+		BAD_LENGTH,
+		[CCode (cname = "BadImplementation")]
+		BAD_IMPLEMENTATION,
+		[CCode (cname = "FirstExtensionError")]
+		FIRST_EXTENSION_ERROR,
+		[CCode (cname = "LastExtensionError")]
+		LAST_EXTENSION_ERROR
+	}
+
+	[CCode (cprefix = "", cname = "int")]
+	public enum WindowClass {
+		[CCode (cname = "InputOutput")]
+		INPUT_OUTPUT,
+		[CCode (cname = "InputOnly")]
+		INPUT_ONLY
+	}
 
 	[CCode (cprefix = "CW", cname = "int")]
 	public enum CW {
