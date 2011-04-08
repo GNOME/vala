@@ -1,6 +1,6 @@
 /* valadovabasemodule.vala
  *
- * Copyright (C) 2006-2010  Jürg Billeter
+ * Copyright (C) 2006-2011  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
@@ -182,7 +182,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 	public Class type_class;
 	public Class value_class;
 	public Class string_class;
-	public Class array_class;
+	public Struct array_struct;
 	public Class delegate_class;
 	public Class error_class;
 
@@ -255,7 +255,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 		type_class = (Class) dova_ns.scope.lookup ("Type");
 		value_class = (Class) dova_ns.scope.lookup ("Value");
 		string_class = (Class) root_symbol.scope.lookup ("string");
-		array_class = (Class) dova_ns.scope.lookup ("Array");
+		array_struct = (Struct) dova_ns.scope.lookup ("Array");
 		delegate_class = (Class) dova_ns.scope.lookup ("Delegate");
 		error_class = (Class) dova_ns.scope.lookup ("Error");
 
@@ -1177,7 +1177,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 			vardecl.init0 = true;
 		} else if (!local.variable_type.nullable &&
 		           (st != null && st.get_fields ().size > 0) ||
-		           (array_type != null && array_type.fixed_length)) {
+		           array_type != null) {
 			// 0-initialize struct with struct initializer { 0 }
 			// necessary as they will be passed by reference
 			var clist = new CCodeInitializerList ();
@@ -1279,15 +1279,29 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 	}
 
 	public override void visit_delete_statement (DeleteStatement stmt) {
-		var pointer_type = (PointerType) stmt.expression.value_type;
-		DataType type = pointer_type;
-		if (pointer_type.base_type.data_type != null && pointer_type.base_type.data_type.is_reference_type ()) {
-			type = pointer_type.base_type;
-		}
+		var pointer_type = stmt.expression.value_type as PointerType;
+		var array_type = stmt.expression.value_type as ArrayType;
 
-		var ccall = new CCodeFunctionCall (get_destroy_func_expression (type));
-		ccall.add_argument (get_cvalue (stmt.expression));
-		ccode.add_expression (ccall);
+		if (pointer_type != null) {
+			DataType type = pointer_type;
+			if (pointer_type.base_type.data_type != null && pointer_type.base_type.data_type.is_reference_type ()) {
+				type = pointer_type.base_type;
+			}
+
+			var ccall = new CCodeFunctionCall (get_destroy_func_expression (type));
+			ccall.add_argument (get_cvalue (stmt.expression));
+			ccode.add_expression (ccall);
+		} else if (array_type != null) {
+			// TODO free elements
+			var free_call = new CCodeFunctionCall (new CCodeIdentifier ("free"));
+			free_call.add_argument (new CCodeMemberAccess (get_cvalue (stmt.expression), "data"));
+			ccode.add_expression (free_call);
+
+			ccode.add_assignment (new CCodeMemberAccess (get_cvalue (stmt.expression), "data"), new CCodeConstant ("NULL"));
+			ccode.add_assignment (new CCodeMemberAccess (get_cvalue (stmt.expression), "length"), new CCodeConstant ("0"));
+		} else {
+			assert_not_reached ();
+		}
 	}
 
 	public override void visit_expression (Expression expr) {
@@ -1826,6 +1840,14 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 			return;
 		}
 
+		if (expr.inner.value_type is ArrayType && expr.type_reference is PointerType) {
+			var array_type = (ArrayType) expr.inner.value_type;
+			if (!array_type.fixed_length) {
+				set_cvalue (expr, new CCodeMemberAccess (get_cvalue (expr.inner), "data"));
+				return;
+			}
+		}
+
 		generate_type_declaration (expr.type_reference, cfile);
 
 		if (expr.inner.value_type is GenericType && !(expr.type_reference is GenericType)) {
@@ -2018,8 +2040,39 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 		}
 
 		if (expression_type is NullType) {
+			if (target_type is ArrayType) {
+				var array = new CCodeFunctionCall (new CCodeIdentifier ("dova_array"));
+				array.add_argument (new CCodeConstant ("NULL"));
+				array.add_argument (new CCodeConstant ("0"));
+				return array;
+			}
+
 			// null literal, no cast required when not converting to generic type pointer
 			return cexpr;
+		}
+
+		if (expression_type is ArrayType && target_type is PointerType) {
+			var array_type = (ArrayType) expression_type;
+			if (!array_type.inline_allocated) {
+				return new CCodeMemberAccess (cexpr, "data");
+			}
+		}
+
+		if (expression_type is ArrayType && target_type is ArrayType) {
+			var source_array_type = (ArrayType) expression_type;
+			var target_array_type = (ArrayType) target_type;
+			if (source_array_type.inline_allocated && !target_array_type.inline_allocated) {
+				var array = new CCodeFunctionCall (new CCodeIdentifier ("dova_array"));
+				array.add_argument (cexpr);
+
+				var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+				csizeof.add_argument (cexpr);
+				var csizeofelement = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+				csizeofelement.add_argument (new CCodeElementAccess (cexpr, new CCodeConstant ("0")));
+				array.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.DIV, csizeof, csizeofelement));
+
+				return array;
+			}
 		}
 
 		generate_type_declaration (target_type, cfile);
@@ -2209,7 +2262,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 			return memset_call;
 		} else if (initializer_expression && !type.nullable &&
 		    ((st != null && st.get_fields ().size > 0) ||
-		     (array_type != null && array_type.fixed_length))) {
+		     array_type != null)) {
 			// 0-initialize struct with struct initializer { 0 }
 			// only allowed as initializer expression in C
 			var clist = new CCodeInitializerList ();
@@ -2217,8 +2270,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 			return clist;
 		} else if ((type.data_type != null && type.data_type.is_reference_type ())
 		           || type.nullable
-		           || type is PointerType || type is DelegateType
-		           || (array_type != null && !array_type.fixed_length)) {
+		           || type is PointerType || type is DelegateType) {
 			return new CCodeConstant ("NULL");
 		} else if (type.data_type != null && type.data_type.get_default_value () != null) {
 			return new CCodeConstant (type.data_type.get_default_value ());

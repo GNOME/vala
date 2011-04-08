@@ -1,6 +1,6 @@
 /* valadovamemberaccessmodule.vala
  *
- * Copyright (C) 2006-2010  Jürg Billeter
+ * Copyright (C) 2006-2011  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -91,11 +91,16 @@ public abstract class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 				set_cvalue (expr, new CCodeIdentifier (m.get_cname ()));
 			}
 		} else if (expr.symbol_reference is ArrayLengthField) {
-			generate_property_accessor_declaration (((Property) array_class.scope.lookup ("length")).get_accessor, cfile);
-
-			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("dova_array_get_length"));
-			ccall.add_argument (pub_inst);
-			set_cvalue (expr, ccall);
+			var array_type = (ArrayType) expr.inner.value_type;
+			if (array_type.fixed_length) {
+				var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+				csizeof.add_argument (pub_inst);
+				var csizeofelement = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+				csizeofelement.add_argument (new CCodeElementAccess (pub_inst, new CCodeConstant ("0")));
+				set_cvalue (expr, new CCodeBinaryExpression (CCodeBinaryOperator.DIV, csizeof, csizeofelement));
+			} else {
+				set_cvalue (expr, new CCodeMemberAccess (pub_inst, "length"));
+			}
 		} else if (expr.symbol_reference is Field) {
 			var f = (Field) expr.symbol_reference;
 			expr.target_value = load_field (f, expr.inner != null ? expr.inner.target_value : null);

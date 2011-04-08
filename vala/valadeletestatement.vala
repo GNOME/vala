@@ -1,6 +1,6 @@
 /* valadeletestatement.vala
  *
- * Copyright (C) 2008-2010  Jürg Billeter
+ * Copyright (C) 2008-2011  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -54,7 +54,7 @@ public class Vala.DeleteStatement : CodeNode, Statement {
 			return false;
 		}
 
-		if (!(expression.value_type is PointerType)) {
+		if (!(expression.value_type is PointerType) && !(expression.value_type is ArrayType)) {
 			error = true;
 			Report.error (source_reference, "delete operator not supported for `%s'".printf (expression.value_type.to_string ()));
 		}

@@ -1,6 +1,6 @@
 /* valadovaarraymodule.vala
  *
- * Copyright (C) 2006-2010  Jürg Billeter
+ * Copyright (C) 2006-2011  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -46,9 +46,9 @@ public class Vala.DovaArrayModule : DovaMethodCallModule {
 			return;
 		}
 
-		generate_method_declaration (array_class.default_construction_method, cfile);
+		generate_method_declaration ((Method) array_struct.scope.lookup ("create"), cfile);
 
-		var array_new = new CCodeFunctionCall (new CCodeIdentifier ("dova_array_new"));
+		var array_new = new CCodeFunctionCall (new CCodeIdentifier ("dova_array_create"));
 		array_new.add_argument (get_type_id_expression (expr.element_type));
 
 		// length of new array
@@ -72,5 +72,19 @@ public class Vala.DovaArrayModule : DovaMethodCallModule {
 
 		// access to element in an array
 		set_cvalue (expr, new CCodeElementAccess (ccontainer, cindex));
+	}
+
+	public override void visit_slice_expression (SliceExpression expr) {
+		var ccontainer = get_cvalue (expr.container);
+		var cstart = get_cvalue (expr.start);
+		var cstop = get_cvalue (expr.stop);
+
+		var array_type = (ArrayType) expr.container.value_type;
+
+		var array = new CCodeFunctionCall (new CCodeIdentifier ("dova_array"));
+		array.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeCastExpression (new CCodeMemberAccess (ccontainer, "data"), array_type.element_type.get_cname () + "*"), cstart));
+		array.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, cstop, cstart));
+
+		set_cvalue (expr, array);
 	}
 }

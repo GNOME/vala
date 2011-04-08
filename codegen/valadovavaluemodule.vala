@@ -395,11 +395,7 @@ public class Vala.DovaValueModule : DovaObjectModule {
 
 			var array_type = dest.value_type as ArrayType;
 			if (array_type != null && !array_type.inline_allocated) {
-				generate_property_accessor_declaration (((Property) array_class.scope.lookup ("data")).get_accessor, cfile);
-
-				var data_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_array_get_data"));
-				data_call.add_argument ((CCodeExpression) get_ccodenode (dest));
-				cdest = data_call;
+				cdest = new CCodeMemberAccess ((CCodeExpression) get_ccodenode (dest), "data");
 			} else {
 				cdest = (CCodeExpression) get_ccodenode (dest);
 			}
@@ -413,11 +409,7 @@ public class Vala.DovaValueModule : DovaObjectModule {
 
 			var array_type = src.value_type as ArrayType;
 			if (array_type != null && !array_type.inline_allocated) {
-				generate_property_accessor_declaration (((Property) array_class.scope.lookup ("data")).get_accessor, cfile);
-
-				var data_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_array_get_data"));
-				data_call.add_argument ((CCodeExpression) get_ccodenode (src));
-				csrc = data_call;
+				csrc = new CCodeMemberAccess ((CCodeExpression) get_ccodenode (src), "data");
 			} else {
 				csrc = (CCodeExpression) get_ccodenode (src);
 			}
@@ -480,22 +472,14 @@ public class Vala.DovaValueModule : DovaObjectModule {
 		var right_ea = expr.right as ElementAccess;
 
 		if (left_ea != null) {
-			generate_property_accessor_declaration (((Property) array_class.scope.lookup ("data")).get_accessor, cfile);
-
-			var data_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_array_get_data"));
-			data_call.add_argument ((CCodeExpression) get_ccodenode (left_ea.container));
-			cleft = data_call;
+			cleft = new CCodeMemberAccess ((CCodeExpression) get_ccodenode (left_ea.container), "data");
 			left_index = (CCodeExpression) get_ccodenode (left_ea.get_indices ().get (0));
 		} else {
 			cleft = (CCodeExpression) get_ccodenode (expr.left);
 		}
 
 		if (right_ea != null) {
-			generate_property_accessor_declaration (((Property) array_class.scope.lookup ("data")).get_accessor, cfile);
-
-			var data_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_array_get_data"));
-			data_call.add_argument ((CCodeExpression) get_ccodenode (right_ea.container));
-			cright = data_call;
+			cright = new CCodeMemberAccess ((CCodeExpression) get_ccodenode (right_ea.container), "data");
 			right_index = (CCodeExpression) get_ccodenode (right_ea.get_indices ().get (0));
 		} else {
 			cright = (CCodeExpression) get_ccodenode (expr.right);
@@ -535,11 +519,7 @@ public class Vala.DovaValueModule : DovaObjectModule {
 			if (val_ea != null) {
 				val = val_ea.container;
 
-				generate_property_accessor_declaration (((Property) array_class.scope.lookup ("data")).get_accessor, cfile);
-
-				var data_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_array_get_data"));
-				data_call.add_argument ((CCodeExpression) get_ccodenode (val));
-				cval = data_call;
+				cval = new CCodeMemberAccess ((CCodeExpression) get_ccodenode (val), "data");
 				val_index = (CCodeExpression) get_ccodenode (val_ea.get_indices ().get (0));
 			} else {
 				cval = (CCodeExpression) get_ccodenode (val);
@@ -555,11 +535,11 @@ public class Vala.DovaValueModule : DovaObjectModule {
 	}
 
 	public override void visit_list_literal (ListLiteral expr) {
-		var ce = new CCodeCommaExpression ();
+		CCodeExpression ptr;
 		int length = expr.get_expressions ().size;
 
 		if (length == 0) {
-			ce.append_expression (new CCodeConstant ("NULL"));
+			ptr = new CCodeConstant ("NULL");
 		} else {
 			var array_type = new ArrayType (expr.element_type, 1, expr.source_reference);
 			array_type.inline_allocated = true;
@@ -573,17 +553,29 @@ public class Vala.DovaValueModule : DovaObjectModule {
 
 			int i = 0;
 			foreach (Expression e in expr.get_expressions ()) {
-				ce.append_expression (new CCodeAssignment (new CCodeElementAccess (name_cnode, new CCodeConstant (i.to_string ())), get_cvalue (e)));
+				ccode.add_assignment (new CCodeElementAccess (name_cnode, new CCodeConstant (i.to_string ())), get_cvalue (e));
 				i++;
 			}
 
-			ce.append_expression (name_cnode);
+			ptr = name_cnode;
 		}
+
+		var array_type = new ArrayType (expr.element_type, 1, expr.source_reference);
+
+		var temp_var = get_temp_variable (array_type, true, expr);
+		var name_cnode = get_variable_cexpression (temp_var.name);
+
+		emit_temp_var (temp_var);
+
+		var array_init = new CCodeFunctionCall (new CCodeIdentifier ("dova_array_init"));
+		array_init.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, name_cnode));
+		array_init.add_argument (ptr);
+		array_init.add_argument (new CCodeConstant (length.to_string ()));
+		ccode.add_expression (array_init);
 
 		var list_creation = new CCodeFunctionCall (new CCodeIdentifier ("dova_list_new"));
 		list_creation.add_argument (get_type_id_expression (expr.element_type));
-		list_creation.add_argument (new CCodeConstant (length.to_string ()));
-		list_creation.add_argument (ce);
+		list_creation.add_argument (name_cnode);
 
 		set_cvalue (expr, list_creation);
 	}

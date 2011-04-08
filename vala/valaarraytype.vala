@@ -1,6 +1,6 @@
 /* valaarraytype.vala
  *
- * Copyright (C) 2007-2010  Jürg Billeter
+ * Copyright (C) 2007-2011  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -66,9 +66,7 @@ public class Vala.ArrayType : ReferenceType {
 	}
 
 	public override Symbol? get_member (string member_name) {
-		if (CodeContext.get ().profile == Profile.DOVA) {
-			return SemanticAnalyzer.symbol_lookup_inherited (CodeContext.get ().root.scope.lookup ("Dova").scope.lookup ("Array"), member_name);
-		} else if (member_name == "length") {
+		if (member_name == "length") {
 			return get_length_field ();
 		} else if (member_name == "move") {
 			return get_move_method ();
@@ -155,7 +153,7 @@ public class Vala.ArrayType : ReferenceType {
 			return element_type.get_cname ();
 		} else {
 			if (CodeContext.get ().profile == Profile.DOVA) {
-				return "DovaArray*";
+				return "DovaArray";
 			} else {
 				return element_type.get_cname () + "*";
 			}
@@ -271,6 +269,8 @@ public class Vala.ArrayType : ReferenceType {
 	public override bool is_disposable () {
 		if (fixed_length) {
 			return element_type.is_disposable ();
+		} else if (CodeContext.get ().profile == Profile.DOVA) {
+			return false;
 		} else {
 			return base.is_disposable ();
 		}

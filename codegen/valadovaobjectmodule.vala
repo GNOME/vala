@@ -1,6 +1,6 @@
 /* valadovaobjectmodule.vala
  *
- * Copyright (C) 2009-2010  Jürg Billeter
+ * Copyright (C) 2009-2011  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -1274,10 +1274,6 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 
 			push_function (function);
 
-			if (acc.result_var != null) {
-				acc.result_var.accept (this);
-			}
-
 			acc.body.emit (this);
 
 			if (acc.readable) {
@@ -1496,10 +1492,6 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 					}
 				}
 
-				if (m.result_var != null) {
-					m.result_var.accept (this);
-				}
-
 				m.body.emit (this);
 
 				if (!(m.return_type is VoidType) && !(m.return_type is GenericType)) {
@@ -1655,7 +1647,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 		pop_context ();
 
 		if (m.entry_point) {
-			generate_type_declaration (new ObjectType (array_class), cfile);
+			generate_type_declaration (new StructValueType (array_struct), cfile);
 
 			// m is possible entry point, add appropriate startup code
 			var cmain = new CCodeFunction ("main", "int");
@@ -1962,10 +1954,7 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 					set_cvalue (expr, new CCodeElementAccess (get_cvalue (expr.container), cindex));
 				}
 			} else {
-				generate_property_accessor_declaration (((Property) array_class.scope.lookup ("data")).get_accessor, cfile);
-
-				var ccontainer = new CCodeFunctionCall (new CCodeIdentifier ("dova_array_get_data"));
-				ccontainer.add_argument (get_cvalue (expr.container));
+				var ccontainer = new CCodeMemberAccess (get_cvalue (expr.container), "data");
 
 				if (array_type.element_type is GenericType) {
 					// generic array
