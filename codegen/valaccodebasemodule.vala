@@ -4818,7 +4818,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (expr.chained) {
 			var lbe = (BinaryExpression) expr.left;
 
-			var temp_decl = get_temp_variable (lbe.right.value_type, true, null, false);
+			var temp_decl = get_temp_variable (lbe.right.target_type, true, null, false);
 			emit_temp_var (temp_decl);
 			var cvar = get_variable_cexpression (temp_decl.name);
 			var clbe = (CCodeBinaryExpression) get_cvalue (lbe);

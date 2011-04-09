@@ -243,6 +243,11 @@ public class Vala.BinaryExpression : Expression {
 			return false;
 		}
 
+		left.target_type = left.value_type.copy ();
+		left.target_type.value_owned = false;
+		right.target_type = right.value_type.copy ();
+		right.target_type.value_owned = false;
+
 		if (left.value_type.data_type == context.analyzer.string_type.data_type
 		    && operator == BinaryOperator.PLUS) {
 			// string concatenation
@@ -319,10 +324,13 @@ public class Vala.BinaryExpression : Expression {
 						value_type = context.analyzer.size_t_type;
 					}
 				}
+			} else {
+				left.target_type.nullable = false;
+				right.target_type.nullable = false;
 			}
 
 			if (value_type == null) {
-				value_type = context.analyzer.get_arithmetic_result_type (left.value_type, right.value_type);
+				value_type = context.analyzer.get_arithmetic_result_type (left.target_type, right.target_type);
 			}
 
 			if (value_type == null) {
@@ -334,7 +342,10 @@ public class Vala.BinaryExpression : Expression {
 			   || operator == BinaryOperator.SHIFT_LEFT
 			   || operator == BinaryOperator.SHIFT_RIGHT
 			   || operator == BinaryOperator.BITWISE_XOR) {
-			value_type = context.analyzer.get_arithmetic_result_type (left.value_type, right.value_type);
+			left.target_type.nullable = false;
+			right.target_type.nullable = false;
+
+			value_type = context.analyzer.get_arithmetic_result_type (left.target_type, right.target_type);
 
 			if (value_type == null) {
 				error = true;
@@ -353,11 +364,14 @@ public class Vala.BinaryExpression : Expression {
 			} else {
 				DataType resulting_type;
 
+				left.target_type.nullable = false;
+				right.target_type.nullable = false;
+
 				if (chained) {
 					var lbe = (BinaryExpression) left;
-					resulting_type = context.analyzer.get_arithmetic_result_type (lbe.right.value_type, right.value_type);
+					resulting_type = context.analyzer.get_arithmetic_result_type (lbe.right.target_type, right.target_type);
 				} else {
-					resulting_type = context.analyzer.get_arithmetic_result_type (left.value_type, right.value_type);
+					resulting_type = context.analyzer.get_arithmetic_result_type (left.target_type, right.target_type);
 				}
 
 				if (resulting_type == null) {
@@ -365,13 +379,6 @@ public class Vala.BinaryExpression : Expression {
 					Report.error (source_reference, "Relational operation not supported for types `%s' and `%s'".printf (left.value_type.to_string (), right.value_type.to_string ()));
 					return false;
 				}
-
-				left.target_type = left.value_type.copy ();
-				left.target_type.nullable = false;
-				left.target_type.value_owned = false;
-				right.target_type = right.value_type.copy ();
-				right.target_type.nullable = false;
-				right.target_type.value_owned = false;
 			}
 
 			value_type = context.analyzer.bool_type;
@@ -424,20 +431,26 @@ public class Vala.BinaryExpression : Expression {
 		} else if (operator == BinaryOperator.BITWISE_AND
 			   || operator == BinaryOperator.BITWISE_OR) {
 			// integer type or flags type
+			left.target_type.nullable = false;
+			right.target_type.nullable = false;
 
-			value_type = left.value_type;
+			value_type = left.target_type.copy ();
 		} else if (operator == BinaryOperator.AND
 			   || operator == BinaryOperator.OR) {
 			if (!left.value_type.compatible (context.analyzer.bool_type) || !right.value_type.compatible (context.analyzer.bool_type)) {
 				error = true;
 				Report.error (source_reference, "Operands must be boolean");
 			}
+			left.target_type.nullable = false;
+			right.target_type.nullable = false;
 
 			value_type = context.analyzer.bool_type;
 		} else if (operator == BinaryOperator.IN) {
 			if (left.value_type.compatible (context.analyzer.int_type)
 			    && right.value_type.compatible (context.analyzer.int_type)) {
 				// integers or enums
+				left.target_type.nullable = false;
+				right.target_type.nullable = false;
 			} else if (right.value_type is ArrayType) {
 				if (!left.value_type.compatible (((ArrayType) right.value_type).element_type)) {
 					Report.error (source_reference, "Cannot look for `%s' in `%s'".printf (left.value_type.to_string (), right.value_type.to_string ()));
