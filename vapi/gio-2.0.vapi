@@ -2277,12 +2277,6 @@ namespace GLib {
 		FOR_SESSION,
 		PERMANENTLY
 	}
-	[CCode (cprefix = "G_RESOLVER_ERROR_", cheader_filename = "gio/gio.h")]
-	public enum ResolverError {
-		NOT_FOUND,
-		TEMPORARY_FAILURE,
-		INTERNAL
-	}
 	[CCode (cprefix = "G_SETTINGS_BIND_", cheader_filename = "gio/gio.h")]
 	[Flags]
 	public enum SettingsBindFlags {
@@ -2460,6 +2454,12 @@ namespace GLib {
 		PROXY_AUTH_FAILED,
 		PROXY_NEED_AUTH,
 		PROXY_NOT_ALLOWED,
+	}
+	[CCode (cprefix = "G_RESOLVER_ERROR_", cheader_filename = "gio/gio.h")]
+	public errordomain ResolverError {
+		NOT_FOUND,
+		TEMPORARY_FAILURE,
+		INTERNAL,
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public delegate void AsyncReadyCallback (GLib.Object? source_object, GLib.AsyncResult res);
