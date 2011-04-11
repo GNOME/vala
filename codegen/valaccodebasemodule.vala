@@ -39,6 +39,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		public bool current_method_inner_error;
 		public bool current_method_return;
 		public Map<string,string> variable_name_map = new HashMap<string,string> (str_hash, str_equal);
+		public Map<string,int> closure_variable_count_map = new HashMap<string,int> (str_hash, str_equal);
+		public Map<LocalVariable,int> closure_variable_clash_map = new HashMap<LocalVariable,int> ();
 
 		public EmitContext (Symbol? symbol = null) {
 			current_symbol = symbol;
@@ -1785,18 +1787,18 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				if (local.captured) {
 					generate_type_declaration (local.variable_type, cfile);
 
-					data.add_field (get_ccode_name (local.variable_type), get_variable_cname (local.name) + get_ccode_declarator_suffix (local.variable_type));
+					data.add_field (get_ccode_name (local.variable_type), get_local_cname (local) + get_ccode_declarator_suffix (local.variable_type));
 
 					if (local.variable_type is ArrayType) {
 						var array_type = (ArrayType) local.variable_type;
 						for (int dim = 1; dim <= array_type.rank; dim++) {
-							data.add_field ("gint", get_array_length_cname (get_variable_cname (local.name), dim));
+							data.add_field ("gint", get_array_length_cname (get_local_cname (local), dim));
 						}
-						data.add_field ("gint", get_array_size_cname (get_variable_cname (local.name)));
+						data.add_field ("gint", get_array_size_cname (get_local_cname (local)));
 					} else if (local.variable_type is DelegateType) {
-						data.add_field ("gpointer", get_delegate_target_cname (get_variable_cname (local.name)));
+						data.add_field ("gpointer", get_delegate_target_cname (get_local_cname (local)));
 						if (local.variable_type.value_owned) {
-							data.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (get_variable_cname (local.name)));
+							data.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (get_local_cname (local)));
 						}
 					}
 				}
@@ -2042,12 +2044,31 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		stmt.declaration.accept (this);
 	}
 
+	public CCodeExpression get_local_cexpression (LocalVariable local) {
+		if (is_in_coroutine ()) {
+			return new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_local_cname (local));
+		} else {
+			return new CCodeIdentifier (get_local_cname (local));
+		}
+	}
+
 	public CCodeExpression get_variable_cexpression (string name) {
 		if (is_in_coroutine ()) {
 			return new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), get_variable_cname (name));
 		} else {
 			return new CCodeIdentifier (get_variable_cname (name));
 		}
+	}
+
+	public string get_local_cname (LocalVariable local) {
+		var cname = get_variable_cname (local.name);
+		if (is_in_coroutine ()) {
+			var clash_index = emit_context.closure_variable_clash_map.get (local);
+			if (clash_index > 0) {
+				cname = "_vala%d_%s".printf (clash_index, cname);
+			}
+		}
+		return cname;
 	}
 
 	public string get_variable_cname (string name) {
@@ -2104,10 +2125,16 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 
 		if (!local.captured) {
-			if (current_method != null && current_method.coroutine) {
-				closure_struct.add_field (get_ccode_name (local.variable_type), get_variable_cname (local.name) + get_ccode_declarator_suffix (local.variable_type));
+			if (is_in_coroutine ()) {
+				var count = emit_context.closure_variable_count_map.get (local.name);
+				if (count > 0) {
+					emit_context.closure_variable_clash_map.set (local, count);
+				}
+				emit_context.closure_variable_count_map.set (local.name, count + 1);
+
+				closure_struct.add_field (get_ccode_name (local.variable_type), get_local_cname (local) + get_ccode_declarator_suffix (local.variable_type));
 			} else {
-				var cvar = new CCodeVariableDeclarator (get_variable_cname (local.name), null, get_ccode_declarator_suffix (local.variable_type));
+				var cvar = new CCodeVariableDeclarator (get_local_cname (local), null, get_ccode_declarator_suffix (local.variable_type));
 
 				// try to initialize uninitialized variables
 				// initialization not necessary for variables stored in closure
@@ -2125,13 +2152,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				if (!array_type.fixed_length) {
 					for (int dim = 1; dim <= array_type.rank; dim++) {
-						var len_var = new LocalVariable (int_type.copy (), get_array_length_cname (get_variable_cname (local.name), dim));
+						var len_var = new LocalVariable (int_type.copy (), get_array_length_cname (get_local_cname (local), dim));
 						len_var.no_init = local.initializer != null;
 						emit_temp_var (len_var);
 					}
 
 					if (array_type.rank == 1) {
-						var size_var = new LocalVariable (int_type.copy (), get_array_size_cname (get_variable_cname (local.name)));
+						var size_var = new LocalVariable (int_type.copy (), get_array_size_cname (get_local_cname (local)));
 						size_var.no_init = local.initializer != null;
 						emit_temp_var (size_var);
 					}
@@ -2141,11 +2168,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				var d = deleg_type.delegate_symbol;
 				if (d.has_target) {
 					// create variable to store delegate target
-					var target_var = new LocalVariable (new PointerType (new VoidType ()), get_delegate_target_cname (get_variable_cname (local.name)));
+					var target_var = new LocalVariable (new PointerType (new VoidType ()), get_delegate_target_cname (get_local_cname (local)));
 					target_var.no_init = local.initializer != null;
 					emit_temp_var (target_var);
 					if (deleg_type.value_owned) {
-						var target_destroy_notify_var = new LocalVariable (gdestroynotify_type, get_delegate_target_destroy_notify_cname (get_variable_cname (local.name)));
+						var target_destroy_notify_var = new LocalVariable (gdestroynotify_type, get_delegate_target_destroy_notify_cname (get_local_cname (local)));
 						target_destroy_notify_var.no_init = local.initializer != null;
 						emit_temp_var (target_destroy_notify_var);
 					}

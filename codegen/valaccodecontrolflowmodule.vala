@@ -232,7 +232,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 		}
 
 		visit_local_variable (collection_backup);
-		ccode.add_assignment (get_variable_cexpression (collection_backup.name), get_cvalue (stmt.collection));
+		ccode.add_assignment (get_variable_cexpression (get_local_cname (collection_backup)), get_cvalue (stmt.collection));
 		
 		if (stmt.tree_can_fail && stmt.collection.tree_can_fail) {
 			// exception handling
@@ -245,11 +245,11 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			var array_len = get_array_length_cexpression (stmt.collection);
 
 			// store array length for use by _vala_array_free
-			ccode.add_assignment (get_variable_cexpression (get_array_length_cname (collection_backup.name, 1)), array_len);
+			ccode.add_assignment (get_variable_cexpression (get_array_length_cname (get_local_cname (collection_backup), 1)), array_len);
 
 			var iterator_variable = new LocalVariable (int_type.copy (), stmt.variable_name + "_it");
-			emit_temp_var (iterator_variable);
-			var it_name = get_variable_cname (iterator_variable.name);
+			visit_local_variable (iterator_variable);
+			var it_name = get_local_cname (iterator_variable);
 		
 			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, get_variable_cexpression (it_name), array_len);
 
@@ -257,20 +257,20 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			                   ccond,
 			                   new CCodeAssignment (get_variable_cexpression (it_name), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, get_variable_cexpression (it_name), new CCodeConstant ("1"))));
 
-			CCodeExpression element_expr = new CCodeElementAccess (get_variable_cexpression (collection_backup.name), get_variable_cexpression (it_name));
+			CCodeExpression element_expr = new CCodeElementAccess (get_variable_cexpression (get_local_cname (collection_backup)), get_variable_cexpression (it_name));
 
 			var element_type = array_type.element_type.copy ();
 			element_type.value_owned = false;
 			element_expr = get_cvalue_ (transform_value (new GLibValue (element_type, element_expr, true), stmt.type_reference, stmt));
 
 			visit_local_variable (stmt.element_variable);
-			ccode.add_assignment (get_variable_cexpression (stmt.variable_name), element_expr);
+			ccode.add_assignment (get_variable_cexpression (get_local_cname (stmt.element_variable)), element_expr);
 
 			// set array length for stacked arrays
 			if (stmt.type_reference is ArrayType) {
 				var inner_array_type = (ArrayType) stmt.type_reference;
 				for (int dim = 1; dim <= inner_array_type.rank; dim++) {
-					ccode.add_assignment (get_variable_cexpression (get_array_length_cname (stmt.variable_name, dim)), new CCodeConstant ("-1"));
+					ccode.add_assignment (get_variable_cexpression (get_array_length_cname (get_local_cname (stmt.element_variable), dim)), new CCodeConstant ("-1"));
 				}
 			}
 
@@ -281,12 +281,12 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			// iterating over a GList or GSList
 
 			var iterator_variable = new LocalVariable (collection_type.copy (), stmt.variable_name + "_it");
-			emit_temp_var (iterator_variable);
-			var it_name = get_variable_cname (iterator_variable.name);
+			visit_local_variable (iterator_variable);
+			var it_name = get_local_cname (iterator_variable);
 			
 			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_variable_cexpression (it_name), new CCodeConstant ("NULL"));
 
-			ccode.open_for (new CCodeAssignment (get_variable_cexpression (it_name), get_variable_cexpression (collection_backup.name)),
+			ccode.open_for (new CCodeAssignment (get_variable_cexpression (it_name), get_variable_cexpression (get_local_cname (collection_backup))),
 							ccond,
 							new CCodeAssignment (get_variable_cexpression (it_name), new CCodeMemberAccess.pointer (get_variable_cexpression (it_name), "next")));
 
@@ -304,7 +304,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			element_expr = get_cvalue_ (transform_value (new GLibValue (element_data_type, element_expr), stmt.type_reference, stmt));
 
 			visit_local_variable (stmt.element_variable);
-			ccode.add_assignment (get_variable_cexpression (stmt.variable_name), element_expr);
+			ccode.add_assignment (get_variable_cexpression (get_local_cname (stmt.element_variable)), element_expr);
 
 			stmt.body.emit (this);
 
@@ -313,17 +313,17 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			// iterating over a GValueArray
 
 			var iterator_variable = new LocalVariable (uint_type.copy (), "%s_index".printf (stmt.variable_name));
-			emit_temp_var (iterator_variable);
-			var arr_index = get_variable_cname (iterator_variable.name);
+			visit_local_variable (iterator_variable);
+			var arr_index = get_variable_cname (get_local_cname (iterator_variable));
 
-			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, get_variable_cexpression (arr_index), new CCodeMemberAccess.pointer (get_variable_cexpression (collection_backup.name), "n_values"));
+			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, get_variable_cexpression (arr_index), new CCodeMemberAccess.pointer (get_variable_cexpression (get_local_cname (collection_backup)), "n_values"));
 
 			ccode.open_for (new CCodeAssignment (get_variable_cexpression (arr_index), new CCodeConstant ("0")),
 			                   ccond,
 			                   new CCodeAssignment (get_variable_cexpression (arr_index), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, get_variable_cexpression (arr_index), new CCodeConstant ("1"))));
 
 			var get_item = new CCodeFunctionCall (new CCodeIdentifier ("g_value_array_get_nth"));
-			get_item.add_argument (get_variable_cexpression (collection_backup.name));
+			get_item.add_argument (get_variable_cexpression (get_local_cname (collection_backup)));
 			get_item.add_argument (get_variable_cexpression (arr_index));
 
 			CCodeExpression element_expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_item);
@@ -333,7 +333,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			}
 
 			visit_local_variable (stmt.element_variable);
-			ccode.add_assignment (get_variable_cexpression (stmt.variable_name), element_expr);
+			ccode.add_assignment (get_variable_cexpression (get_local_cname (stmt.element_variable)), element_expr);
 
 			stmt.body.emit (this);
 

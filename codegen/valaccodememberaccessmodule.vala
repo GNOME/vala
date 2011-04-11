@@ -336,39 +336,39 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 		} else if (local.captured) {
 			// captured variables are stored on the heap
 			var block = (Block) local.parent_symbol;
-			result.cvalue = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_variable_cname (local.name));
+			result.cvalue = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_local_cname (local));
 			if (array_type != null && !array_type.fixed_length) {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					result.append_array_length_cvalue (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_array_length_cname (get_variable_cname (local.name), dim)));
+					result.append_array_length_cvalue (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_array_length_cname (get_local_cname (local), dim)));
 				}
 				if (array_type.rank == 1) {
-					result.array_size_cvalue = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_array_size_cname (get_variable_cname (local.name)));
+					result.array_size_cvalue = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_array_size_cname (get_local_cname (local)));
 				}
 			} else if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
-				result.delegate_target_cvalue = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_cname (get_variable_cname (local.name)));
+				result.delegate_target_cvalue = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_cname (get_local_cname (local)));
 				if (delegate_type.value_owned) {
-					result.delegate_target_destroy_notify_cvalue = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_destroy_notify_cname (get_variable_cname (local.name)));
+					result.delegate_target_destroy_notify_cvalue = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_destroy_notify_cname (get_local_cname (local)));
 				}
 			}
 		} else {
-			result.cvalue = get_variable_cexpression (local.name);
+			result.cvalue = get_local_cexpression (local);
 			if (array_type != null && !array_type.fixed_length) {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					result.append_array_length_cvalue (get_variable_cexpression (get_array_length_cname (get_variable_cname (local.name), dim)));
+					result.append_array_length_cvalue (get_variable_cexpression (get_array_length_cname (get_local_cname (local), dim)));
 				}
 				if (array_type.rank == 1) {
-					result.array_size_cvalue = get_variable_cexpression (get_array_size_cname (get_variable_cname (local.name)));
+					result.array_size_cvalue = get_variable_cexpression (get_array_size_cname (get_local_cname (local)));
 				}
 			} else if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
 				if (is_in_coroutine ()) {
-					result.delegate_target_cvalue = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), get_delegate_target_cname (get_variable_cname (local.name)));
+					result.delegate_target_cvalue = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), get_delegate_target_cname (get_local_cname (local)));
 					if (local.variable_type.value_owned) {
-						result.delegate_target_destroy_notify_cvalue = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), get_delegate_target_destroy_notify_cname (get_variable_cname (local.name)));
+						result.delegate_target_destroy_notify_cvalue = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), get_delegate_target_destroy_notify_cname (get_local_cname (local)));
 					}
 				} else {
-					result.delegate_target_cvalue = new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (local.name)));
+					result.delegate_target_cvalue = new CCodeIdentifier (get_delegate_target_cname (get_local_cname (local)));
 					if (local.variable_type.value_owned) {
-						result.delegate_target_destroy_notify_cvalue = new CCodeIdentifier (get_delegate_target_destroy_notify_cname (get_variable_cname (local.name)));
+						result.delegate_target_destroy_notify_cvalue = new CCodeIdentifier (get_delegate_target_destroy_notify_cname (get_local_cname (local)));
 					}
 				}
 			}

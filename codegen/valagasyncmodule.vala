@@ -386,7 +386,6 @@ public class Vala.GAsyncModule : GSignalModule {
 		}
 	}
 
-
 	void generate_finish_function (Method m) {
 		push_context (new EmitContext ());
 
