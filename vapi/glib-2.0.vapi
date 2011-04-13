@@ -4349,6 +4349,8 @@ namespace GLib {
 		public static VariantType DICT_ENTRY;
 		[CCode (cname = "G_VARIANT_TYPE_DICTIONARY")]
 		public static VariantType DICTIONARY;
+		[CCode (cname = "G_VARIANT_TYPE_VARDICT")]
+		public static VariantType VARDICT;
 
 		public static bool string_is_valid (string type_string);
 		public static bool string_scan (string type_string, char *limit, out char* endptr);
