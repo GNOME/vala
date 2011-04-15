@@ -1717,8 +1717,9 @@ namespace GLib {
 
 	public delegate void ChildWatchFunc (Pid pid, int status);
 	
+	[CCode (cname = "GSource")]
 	public class ChildWatchSource : Source {
-		public ChildWatchSource (Pid pid, int status, void* data);
+		public ChildWatchSource (Pid pid);
 	}
 	
 	namespace ChildWatch {
