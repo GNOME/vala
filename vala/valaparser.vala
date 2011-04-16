@@ -1352,18 +1352,34 @@ public class Vala.Parser : CodeVisitor {
 		}
 	}
 
+	Parameter parse_lambda_parameter () throws ParseError {
+		var begin = get_location ();
+		var direction = ParameterDirection.IN;
+		if (accept (TokenType.OUT)) {
+			direction = ParameterDirection.OUT;
+		} else if (accept (TokenType.REF)) {
+			direction = ParameterDirection.REF;
+		}
+
+		string id = parse_identifier ();
+
+		var param = new Parameter (id, null, get_src (begin));
+		param.direction = direction;
+		return param;
+	}
+
 	Expression parse_lambda_expression () throws ParseError {
 		var begin = get_location ();
-		List<string> params = new ArrayList<string> ();
+		List<Parameter> params = new ArrayList<Parameter> ();
 		if (accept (TokenType.OPEN_PARENS)) {
 			if (current () != TokenType.CLOSE_PARENS) {
 				do {
-					params.add (parse_identifier ());
+					params.add (parse_lambda_parameter ());
 				} while (accept (TokenType.COMMA));
 			}
 			expect (TokenType.CLOSE_PARENS);
 		} else {
-			params.add (parse_identifier ());
+			params.add (parse_lambda_parameter ());
 		}
 		expect (TokenType.LAMBDA);
 
@@ -1375,7 +1391,7 @@ public class Vala.Parser : CodeVisitor {
 			var expr = parse_expression ();
 			lambda = new LambdaExpression (expr, get_src (begin));
 		}
-		foreach (string param in params) {
+		foreach (var param in params) {
 			lambda.add_parameter (param);
 		}
 		return lambda;
@@ -1398,14 +1414,13 @@ public class Vala.Parser : CodeVisitor {
 	}
 
 	Expression parse_expression () throws ParseError {
-		var begin = get_location ();
-		Expression expr = parse_conditional_expression ();
-
-		if (current () == TokenType.LAMBDA) {
-			rollback (begin);
-			var lambda = parse_lambda_expression ();
-			return lambda;
+		if (is_lambda_expression ()) {
+			return parse_lambda_expression ();
 		}
+
+		var begin = get_location ();
+
+		Expression expr = parse_conditional_expression ();
 
 		while (true) {
 			var operator = get_assignment_operator (current ());
@@ -1580,6 +1595,49 @@ public class Vala.Parser : CodeVisitor {
 			rollback (begin);
 			return false;
 		}
+	}
+
+	bool is_lambda_expression () {
+		var begin = get_location ();
+
+		switch (current ()) {
+		case TokenType.OUT:
+		case TokenType.REF:
+			next ();
+			if (accept (TokenType.IDENTIFIER) && accept (TokenType.LAMBDA)) {
+				rollback (begin);
+				return true;
+			}
+			break;
+		case TokenType.IDENTIFIER:
+			next ();
+			if (accept (TokenType.LAMBDA)) {
+				rollback (begin);
+				return true;
+			}
+			break;
+		case TokenType.OPEN_PARENS:
+			next ();
+			if (current () != TokenType.CLOSE_PARENS) {
+				do {
+					if (current () == TokenType.OUT || current () == TokenType.REF) {
+						next ();
+					}
+					if (!accept (TokenType.IDENTIFIER)) {
+						rollback (begin);
+						return false;
+					}
+				} while (accept (TokenType.COMMA));
+			}
+			if (accept (TokenType.CLOSE_PARENS) && accept (TokenType.LAMBDA)) {
+				rollback (begin);
+				return true;
+			}
+			break;
+		}
+
+		rollback (begin);
+		return false;
 	}
 
 	Block parse_embedded_statement () throws ParseError {

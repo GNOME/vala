@@ -1522,19 +1522,21 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 	Expression parse_lambda_expression () throws ParseError {
 		var begin = get_location ();
-		List<string> params = new ArrayList<string> ();
+		List<Parameter> params = new ArrayList<Parameter> ();
 		
 		expect (TokenType.DEF);
 		
 		if (accept (TokenType.OPEN_PARENS)) {
 			if (current () != TokenType.CLOSE_PARENS) {
 				do {
-					params.add (parse_identifier ());
+					var param = new Parameter (parse_identifier (), null, get_src (get_location ()));
+					params.add (param);
 				} while (accept (TokenType.COMMA));
 			}
 			expect (TokenType.CLOSE_PARENS);
 		} else {
-			params.add (parse_identifier ());
+			var param = new Parameter (parse_identifier (), null, get_src (get_location ()));
+			params.add (param);
 		}
 
 
@@ -1550,7 +1552,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		}
 
 
-		foreach (string param in params) {
+		foreach (var param in params) {
 			lambda.add_parameter (param);
 		}
 		return lambda;

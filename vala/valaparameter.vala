@@ -76,7 +76,7 @@ public class Vala.Parameter : Variable {
 	 * @param source reference to source code
 	 * @return       newly created formal parameter
 	 */
-	public Parameter (string name, DataType variable_type, SourceReference? source_reference = null) {
+	public Parameter (string name, DataType? variable_type, SourceReference? source_reference = null) {
 		base (variable_type, name, null, source_reference);
 
 		access = SymbolAccessibility.PUBLIC;

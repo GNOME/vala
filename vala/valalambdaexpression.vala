@@ -44,7 +44,7 @@ public class Vala.LambdaExpression : Expression {
 	 */
 	public Method method { get; set; }
 
-	private List<string> parameters = new ArrayList<string> ();
+	private List<Parameter> parameters = new ArrayList<Parameter> ();
 
 	/**
 	 * Creates a new lambda expression.
@@ -75,7 +75,7 @@ public class Vala.LambdaExpression : Expression {
 	 *
 	 * @param param parameter name
 	 */
-	public void add_parameter (string param) {
+	public void add_parameter (Parameter param) {
 		parameters.add (param);
 	}
 	
@@ -84,7 +84,7 @@ public class Vala.LambdaExpression : Expression {
 	 *
 	 * @return parameter list
 	 */
-	public List<string> get_parameters () {
+	public List<Parameter> get_parameters () {
 		return parameters;
 	}
 	
@@ -173,15 +173,15 @@ public class Vala.LambdaExpression : Expression {
 		}
 
 		var lambda_params = get_parameters ();
-		Iterator<string> lambda_param_it = lambda_params.iterator ();
+		Iterator<Parameter> lambda_param_it = lambda_params.iterator ();
 
 		if (cb.sender_type != null && lambda_params.size == cb.get_parameters ().size + 1) {
 			// lambda expression has sender parameter
 			lambda_param_it.next ();
 
-			string lambda_param = lambda_param_it.get ();
-			var param = new Parameter (lambda_param, cb.sender_type);
-			method.add_parameter (param);
+			Parameter lambda_param = lambda_param_it.get ();
+			lambda_param.variable_type = cb.sender_type;
+			method.add_parameter (lambda_param);
 		}
 
 		foreach (Parameter cb_param in cb.get_parameters ()) {
@@ -190,10 +190,9 @@ public class Vala.LambdaExpression : Expression {
 				break;
 			}
 
-			string lambda_param = lambda_param_it.get ();
-			var param_type = cb_param.variable_type.get_actual_type (target_type, null, this);
-			var param = new Parameter (lambda_param, param_type);
-			method.add_parameter (param);
+			Parameter lambda_param = lambda_param_it.get ();
+			lambda_param.variable_type = cb_param.variable_type.get_actual_type (target_type, null, this);
+			method.add_parameter (lambda_param);
 		}
 
 		if (lambda_param_it.next ()) {

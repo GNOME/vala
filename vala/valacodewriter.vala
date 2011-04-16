@@ -1924,12 +1924,21 @@ public class Vala.CodeWriter : CodeVisitor {
 	public override void visit_lambda_expression (LambdaExpression expr) {
 		write_string ("(");
 		var params = expr.get_parameters ();
-		if (params.size != 0) {
-			for (var i = 0; i < params.size - 1; ++ i) {
-				write_string (params[i]);
+		int i = 1;
+		foreach (var param in params) {
+			if (i > 1) {
 				write_string (", ");
 			}
-			write_string (params[params.size - 1]);
+
+			if (param.direction == ParameterDirection.REF) {
+				write_string ("ref ");
+			} else if (param.direction == ParameterDirection.OUT) {
+				write_string ("out ");
+			}
+
+			write_identifier (param.name);
+
+			i++;
 		}
 		write_string (") =>");
 		if (expr.statement_body != null) {
