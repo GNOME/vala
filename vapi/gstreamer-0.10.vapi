@@ -681,9 +681,9 @@ namespace Gst {
 		public void parse_error (out GLib.Error gerror, out string? debug);
 		public void parse_info (out GLib.Error gerror, out string? debug);
 		public void parse_new_clock (out unowned Gst.Clock clock);
-		public void parse_qos (bool live, uint64 running_time, uint64 stream_time, uint64 timestamp, uint64 duration);
-		public void parse_qos_stats (Gst.Format format, uint64 processed, uint64 dropped);
-		public void parse_qos_values (int64 jitter, double proportion, int quality);
+		public void parse_qos (out bool live, out uint64 running_time, out uint64 stream_time, out uint64 timestamp, out uint64 duration);
+		public void parse_qos_stats (out Gst.Format format, out uint64 processed, out uint64 dropped);
+		public void parse_qos_values (out int64 jitter, out double proportion, out int quality);
 		public void parse_request_state (out Gst.State state);
 		public void parse_segment_done (out Gst.Format format, out int64 position);
 		public void parse_segment_start (out Gst.Format format, out int64 position);
