@@ -1803,7 +1803,7 @@ public class Vala.GirParser : CodeVisitor {
 				type_name = "GLib.StringBuilder";
 			} else if (type_name == "GObject.Class") {
 				type_name = "GLib.ObjectClass";
-			} else if (type_name == "GLib.unichar") {
+			} else if (type_name == "gunichar") {
 				type_name = "unichar";
 			} else if (type_name == "GLib.Data") {
 				type_name = "GLib.Datalist";
