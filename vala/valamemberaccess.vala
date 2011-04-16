@@ -539,6 +539,12 @@ public class Vala.MemberAccess : Expression {
 				// and also for lambda expressions within async methods
 				var async_method = context.analyzer.current_async_method;
 
+				if (async_method == null || m != async_method.get_callback_method ()) {
+					error = true;
+					Report.error (source_reference, "Access to async callback `%s' not allowed in this context".printf (m.get_full_name ()));
+					return false;
+				}
+
 				if (async_method != context.analyzer.current_method) {
 					Symbol sym = context.analyzer.current_method;
 					while (sym != async_method) {
