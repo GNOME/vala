@@ -285,9 +285,6 @@ public class Vala.GirParser : CodeVisitor {
 
 		string? parse_identifier (bool is_glob) {
 			var begin = this.begin;
-			var end = this.end;
-
-			string result = null;
 
 			if (current == TokenType.DOT || current == TokenType.HASH) {
 				if (is_glob) {
