@@ -357,6 +357,7 @@ g_settings_list_keys is_array="1" no_array_length="1" array_null_terminated="1" 
 g_settings_list_schemas is_array="1" no_array_length="1" array_null_terminated="1"
 g_settings_get_strv is_array="1" no_array_length="1" array_null_terminated="1" transfer_ownership="1"
 g_settings_set_strv.value is_array="1" no_array_length="1"
+GSettingsBindSetMapping transfer_ownership="1"
 
 g_simple_async_result_new.source_object nullable="1"
 g_simple_async_result_new_take_error hidden="1"
