@@ -223,7 +223,7 @@ public class Vala.GirParser : CodeVisitor {
 		 * metadata ::= [ rule [ '\n' relativerule ]* ]
 		 * rule ::= pattern ' ' [ args ]
 		 * relativerule ::= '.' rule
-		 * pattern ::= glob [ '#' selector ] [ '.' glob ]*
+		 * pattern ::= glob [ '#' selector ] [ '.' pattern ]
 		 */
 		private Metadata tree = new Metadata ("");
 		private Scanner scanner;
@@ -1269,7 +1269,6 @@ public class Vala.GirParser : CodeVisitor {
 
 	/*
 	 * The changed is a faster way to check whether the type has changed and it may affect the C declaration.
-	 * If type arguments change, the C declaration is not affected.
 	 */
 	DataType? element_get_type (DataType orig_type, bool owned_by_default, out bool changed = null) {
 		changed = false;
@@ -1295,11 +1294,11 @@ public class Vala.GirParser : CodeVisitor {
 			changed = true;
 		}
 
-		if (owned_by_default || type.value_owned) {
+		if (type.value_owned) {
 			if (metadata.has_argument (ArgumentType.UNOWNED)) {
 				type.value_owned = !metadata.get_bool (ArgumentType.UNOWNED);
 			}
-		} else if (!owned_by_default || !type.value_owned) {
+		} else {
 			if (metadata.has_argument (ArgumentType.OWNED)) {
 				type.value_owned = metadata.get_bool (ArgumentType.OWNED);
 			}
@@ -1784,7 +1783,7 @@ public class Vala.GirParser : CodeVisitor {
 			}
 
 			bool changed;
-			type = element_get_type (type, false, out changed);
+			type = element_get_type (type, direction == "out" || direction == "ref", out changed);
 			if (!changed) {
 				// discard ctype, duplicated information
 				ctype = null;
@@ -1818,8 +1817,7 @@ public class Vala.GirParser : CodeVisitor {
 			start_element ("array");
 
 			if (type_name == null) {
-				if (reader.get_attribute ("length") != null
-				    && &array_length_index != null) {
+				if (reader.get_attribute ("length") != null) {
 					array_length_index = int.parse (reader.get_attribute ("length"));
 				}
 				next ();
