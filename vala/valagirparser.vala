@@ -42,12 +42,6 @@ using GLib;
  * - Prefer postprocessing over hardcoding the parser
  */
 public class Vala.GirParser : CodeVisitor {
-	enum MetadataType {
-		GENERIC,
-		PROPERTY,
-		SIGNAL
-	}
-
 	enum ArgumentType {
 		SKIP,
 		HIDDEN,
@@ -97,8 +91,8 @@ public class Vala.GirParser : CodeVisitor {
 	}
 
 	class MetadataSet : Metadata {
-		public MetadataSet (MetadataType type) {
-			base ("", type);
+		public MetadataSet (string? selector = null) {
+			base ("", selector);
 		}
 
 		public void add_sibling (Metadata metadata) {
@@ -123,19 +117,17 @@ public class Vala.GirParser : CodeVisitor {
 			}
 		}
 
-		public string pattern;
 		public PatternSpec pattern_spec;
-		public MetadataType type;
+		public string? selector;
 		public SourceReference source_reference;
 
 		public bool used = false;
 		public Vala.Map<ArgumentType,Argument> args = new HashMap<ArgumentType,Argument> ();
 		public ArrayList<Metadata> children = new ArrayList<Metadata> ();
 
-		public Metadata (string pattern, MetadataType type = MetadataType.GENERIC, SourceReference? source_reference = null) {
-			this.pattern = pattern;
+		public Metadata (string pattern, string? selector = null, SourceReference? source_reference = null) {
 			this.pattern_spec = new PatternSpec (pattern);
-			this.type = type;
+			this.selector = selector;
 			this.source_reference = source_reference;
 		}
 
@@ -143,19 +135,10 @@ public class Vala.GirParser : CodeVisitor {
 			children.add (metadata);
 		}
 
-		public Metadata? get_child (string pattern, MetadataType type = MetadataType.GENERIC) {
-			foreach (var metadata in children) {
-				if (metadata.type == type && metadata.pattern == pattern) {
-					return metadata;
-				}
-			}
-			return null;
-		}
-
-		public Metadata match_child (string name, MetadataType type = MetadataType.GENERIC) {
+		public Metadata match_child (string name, string? selector = null) {
 			var result = Metadata.empty;
 			foreach (var metadata in children) {
-				if (metadata.type == type && metadata.pattern_spec.match_string (name)) {
+				if ((selector == null || metadata.selector == null || metadata.selector == selector) && metadata.pattern_spec.match_string (name)) {
 					metadata.used = true;
 					if (result == Metadata.empty) {
 						// first match
@@ -164,7 +147,7 @@ public class Vala.GirParser : CodeVisitor {
 						var ms = result as MetadataSet;
 						if (ms == null) {
 							// second match
-							ms = new MetadataSet (type);
+							ms = new MetadataSet (selector);
 							ms.add_sibling (result);
 						}
 						ms.add_sibling (metadata);
@@ -239,9 +222,8 @@ public class Vala.GirParser : CodeVisitor {
 		 * Grammar:
 		 * metadata ::= [ rule [ '\n' relativerule ]* ]
 		 * rule ::= pattern ' ' [ args ]
-		 * relativerule ::= [ access ] rule
-		 * pattern ::= identifier [ access identifier ]*
-		 * access ::= '.' | ':' | '::'
+		 * relativerule ::= '.' rule
+		 * pattern ::= glob [ '#' selector ] [ '.' glob ]*
 		 */
 		private Metadata tree = new Metadata ("");
 		private Scanner scanner;
@@ -259,7 +241,10 @@ public class Vala.GirParser : CodeVisitor {
 			return new SourceReference (scanner.source_file, begin.line, begin.column, end.line, end.column);
 		}
 
-		SourceReference get_src (SourceLocation begin) {
+		SourceReference get_src (SourceLocation begin, SourceLocation? end = null) {
+			if (end == null) {
+				end = this.end;
+			}
 			return new SourceReference (scanner.source_file, begin.line, begin.column, end.line, end.column);
 		}
 
@@ -288,84 +273,75 @@ public class Vala.GirParser : CodeVisitor {
 			return old_end.line != begin.line;
 		}
 
-		string get_string () {
+		string get_string (SourceLocation? begin = null, SourceLocation? end = null) {
+			if (begin == null) {
+				begin = this.begin;
+			}
+			if (end == null) {
+				end = this.end;
+			}
 			return ((string) begin.pos).substring (0, (int) (end.pos - begin.pos));
 		}
 
-		MetadataType? parse_metadata_access () {
-			switch (current) {
-			case TokenType.DOT:
-				next ();
-				return MetadataType.GENERIC;
-			case TokenType.COLON:
-				next ();
-				return MetadataType.PROPERTY;
-			case TokenType.DOUBLE_COLON:
-				next ();
-				return MetadataType.SIGNAL;
-			default:
-				return null;
-			}
-		}
-
-		string? parse_identifier (out SourceReference source_reference, bool is_glob) {
+		string? parse_identifier (bool is_glob) {
 			var begin = this.begin;
-			var builder = new StringBuilder ();
-			do {
-				if (is_glob && current == TokenType.STAR) {
-					builder.append_c ('*');
-				} else {
-					string str = null;
-					switch (current) {
-					case TokenType.IDENTIFIER:
-					case TokenType.UNOWNED:
-					case TokenType.OWNED:
-					case TokenType.GET:
-					case TokenType.NEW:
-					case TokenType.DEFAULT:
-					case TokenType.OUT:
-					case TokenType.REF:
-					case TokenType.VIRTUAL:
-					case TokenType.ABSTRACT:
-						str = get_string ();
-						break;
-					}
-					if (str == null) {
-						break;
-					}
-					builder.append (str);
-				}
-				source_reference = get_src (begin);
-				next ();
-			} while (!has_space ());
+			var end = this.end;
 
-			if (builder.str == "") {
+			string result = null;
+
+			if (current == TokenType.DOT || current == TokenType.HASH) {
 				if (is_glob) {
-					Report.error (get_src (begin), "expected pattern");
+					Report.error (get_src (begin), "expected glob-style pattern");
 				} else {
 					Report.error (get_src (begin), "expected identifier");
 				}
 				return null;
 			}
-			return builder.str;
+
+			if (is_glob) {
+				while (current != TokenType.EOF && current != TokenType.DOT && current != TokenType.HASH) {
+					next ();
+					if (has_space ()) {
+						break;
+					}
+				}
+			} else {
+				next ();
+			}
+
+			return get_string (begin, old_end);
+		}
+
+		string? parse_selector () {
+			if (current != TokenType.HASH || has_space ()) {
+				return null;
+			}
+			next ();
+
+			var begin = this.begin;
+			if (current != TokenType.IDENTIFIER || has_space ()) {
+				Report.error (get_current_src (), "expected selector");
+				return null;
+			}
+			next ();
+
+			return get_string (begin, old_end);
 		}
 
 		Metadata? parse_pattern () {
 			Metadata metadata;
 			bool is_relative = false;
-			MetadataType? type = MetadataType.GENERIC;
 			if (current == TokenType.IDENTIFIER || current == TokenType.STAR) {
 				// absolute pattern
 				parent_metadata = tree;
 			} else {
 				// relative pattern
-				type = parse_metadata_access ();
+				if (current != TokenType.DOT) {
+					Report.error (get_current_src (), "expected pattern or `.', got %s".printf (current.to_string ()));
+					return null;
+				}
+				next ();
 				is_relative = true;
-			}
-
-			if (type == null) {
-				Report.error (get_current_src (), "expected pattern, `.', `:' or `::'");
-				return null;
 			}
 
 			if (parent_metadata == null) {
@@ -373,33 +349,28 @@ public class Vala.GirParser : CodeVisitor {
 				return null;
 			}
 
-			SourceReference src;
-			var pattern = parse_identifier (out src, true);
+			SourceLocation begin = this.begin;
+			var pattern = parse_identifier (true);
 			if (pattern == null) {
 				return null;
 			}
-			metadata = parent_metadata.get_child (pattern, type);
-			if (metadata == null) {
-				metadata = new Metadata (pattern, type, src);
-				parent_metadata.add_child (metadata);
-			}
+			metadata = new Metadata (pattern, parse_selector (), get_src (begin));
+			parent_metadata.add_child (metadata);
 
 			while (current != TokenType.EOF && !has_space ()) {
-				type = parse_metadata_access ();
-				if (type == null) {
-					Report.error (get_current_src (), "expected `.', `:' or `::'");
-					return null;
+				if (current != TokenType.DOT) {
+					Report.error (get_current_src (), "expected `.' got %s".printf (current.to_string ()));
+					break;
 				}
+				next ();
 
-				pattern = parse_identifier (out src, true);
+				begin = this.begin;
+				pattern = parse_identifier (true);
 				if (pattern == null) {
 					return null;
 				}
-				var child = metadata.get_child (pattern, type);
-				if (child == null) {
-					child = new Metadata (pattern, type, src);
-					metadata.add_child (child);
-				}
+				var child = new Metadata (pattern, parse_selector (), get_src (begin, old_end));
+				metadata.add_child (child);
 				metadata = child;
 			}
 			if (!is_relative) {
@@ -427,7 +398,7 @@ public class Vala.GirParser : CodeVisitor {
 				next ();
 				var inner = parse_expression ();
 				if (inner == null) {
-					Report.error (src, "expected expression after `-', got `%s'".printf (current.to_string ()));
+					Report.error (src, "expected expression after `-', got %s".printf (current.to_string ()));
 				} else {
 					expr = new UnaryExpression (UnaryOperator.MINUS, inner, get_src (begin));
 				}
@@ -445,14 +416,14 @@ public class Vala.GirParser : CodeVisitor {
 				expr = new MemberAccess (null, get_string (), src);
 				while (next () == TokenType.DOT) {
 					if (next () != TokenType.IDENTIFIER) {
-						Report.error (get_current_src (), "expected identifier got `%s'".printf (current.to_string ()));
+						Report.error (get_current_src (), "expected identifier got %s".printf (current.to_string ()));
 						break;
 					}
 					expr = new MemberAccess (expr, get_string (), get_current_src ());
 				}
 				return expr;
 			default:
-				Report.error (src, "expected literal or symbol got `%s'".printf (current.to_string ()));
+				Report.error (src, "expected literal or symbol got %s".printf (current.to_string ()));
 				break;
 			}
 			next ();
@@ -461,20 +432,20 @@ public class Vala.GirParser : CodeVisitor {
 
 		bool parse_args (Metadata metadata) {
 			while (current != TokenType.EOF && has_space () && !has_newline ()) {
-				SourceReference src;
-				var id = parse_identifier (out src, false);
+				SourceLocation begin = this.begin;
+				var id = parse_identifier (false);
 				if (id == null) {
 					return false;
 				}
 				var arg_type = ArgumentType.from_string (id);
 				if (arg_type == null) {
-					Report.error (src, "unknown argument");
+					Report.error (get_src (begin), "unknown argument");
 					return false;
 				}
 
 				if (current != TokenType.ASSIGN) {
 					// threat as `true'
-					metadata.add_argument (arg_type, new Argument (new BooleanLiteral (true, src), src));
+					metadata.add_argument (arg_type, new Argument (new BooleanLiteral (true, get_src (begin)), get_src (begin)));
 					continue;
 				}
 				next ();
@@ -483,7 +454,7 @@ public class Vala.GirParser : CodeVisitor {
 				if (expr == null) {
 					return false;
 				}
-				metadata.add_argument (arg_type, new Argument (expr, src));
+				metadata.add_argument (arg_type, new Argument (expr, get_src (begin)));
 			}
 
 			return true;
@@ -1127,21 +1098,17 @@ public class Vala.GirParser : CodeVisitor {
 	}
 
 	Metadata get_current_metadata () {
-		var name = reader.name;
+		var selector = reader.name;
 		var child_name = reader.get_attribute ("name");
 		if (child_name == null) {
 			return Metadata.empty;
 		}
 
-		var type = MetadataType.GENERIC;
-		if (name == "glib:signal") {
-			child_name = child_name.replace ("-", "_");
-			type = MetadataType.SIGNAL;
-		} else if (name == "property") {
-			type = MetadataType.PROPERTY;
+		if (selector.has_prefix ("glib:")) {
+			selector = selector.substring ("glib:".length);
 		}
 
-		return metadata.match_child (child_name, type);
+		return metadata.match_child (child_name, selector);
 	}
 
 	bool push_metadata () {
