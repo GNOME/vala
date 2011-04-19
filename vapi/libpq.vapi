@@ -273,30 +273,26 @@ namespace Postgres {
 		[CCode (cname = "PQexec")]
 		public Result exec (string query);
 
-		[CCode (cname = "PQexecParams", array_length = false, array_null_terminated = false)]
-		public Result exec_params (string command, int nParams, Oid[] paramTypes, string[] paramValues, int[] paramLengths,
-					   int[] paramFormats, int resultFormat);
+		[CCode (cname = "PQexecParams")]
+		public Result exec_params (string command, int n_params, [CCode (array_length = false)] Oid[]? param_types, [CCode (array_length = false)] string[]? param_values, [CCode (array_length = false)] int[]? param_lengths, [CCode (array_length = false)] int[]? param_formats, int result_format);
 
-		[CCode (cname = "PQprepare", array_length = false, array_null_terminated = false)]
-		public Result prepare (string stmtName, string query, int nParams, Oid[] paramTypes);
+		[CCode (cname = "PQprepare")]
+		public Result prepare (string stmt_name, string query, [CCode (array_length_pos = 2.9)] Oid[]? param_types);
 
-		[CCode (cname = "PQexecPrepared", array_length = false, array_null_terminated = false)]
-		public Result exec_prepared (string stmtName, int nParams, string[] paramValues, int[] paramLengths,
-					     int[] paramFormats, int resultFormat);
+		[CCode (cname = "PQexecPrepared")]
+		public Result exec_prepared (string stmt_name, int n_params, [CCode (array_length = false)] string[]? param_values, [CCode (array_length = false)] int[]? param_lengths, [CCode (array_length = false)] int[]? param_formats, int result_format);
 
 		[CCode (cname = "PQsendQuery")]
 		public int send_query (string query);
 
-		[CCode (cname = "PQsendQueryParams", array_length = false, array_null_terminated = false)]
-		public int send_query_params (string command, int nParams, Oid[] paramTypes, string[] paramValues,
-					      int[] paramLengths, int[] paramFormats, int resultFormat);
+		[CCode (cname = "PQsendQueryParams")]
+		public int send_query_params (string command, int n_params, [CCode (array_length = false)] Oid[]? param_types, [CCode (array_length = false)] string[]? param_values, [CCode (array_length = false)] int[]? param_lengths, [CCode (array_length = false)] int[]? param_formats, int result_format);
 
-		[CCode (cname = "PQsendPrepare", array_length = false, array_null_terminated = false)]
-		public int send_prepare (string stmtName, string query, int nParams, Oid[] paramTypes);
+		[CCode (cname = "PQsendPrepare")]
+		public int send_prepare (string stmt_name, string query, [CCode (array_length_pos = 2.9)] Oid[]? param_types);
 
-		[CCode (cname = "PQsendQueryPrepared", array_length = false, array_null_terminated = false)]
-		public int send_query_prepared (string stmtName, int nParams, string[] paramValues, int[] paramLengths, 
-						int[] paramFormats, int resultFormat);
+		[CCode (cname = "PQsendQueryPrepared")]
+		public int send_query_prepared (string stmt_name, int n_params, [CCode (array_length = false)] string[]? param_values, [CCode (array_length = false)] int[]? param_lengths, [CCode (array_length = false)] int[]? param_formats, int resultFormat);
 
 		[CCode (cname = "PQgetResult")]
 		public Result get_result ();
