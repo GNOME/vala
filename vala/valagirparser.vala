@@ -1780,7 +1780,7 @@ public class Vala.GirParser : CodeVisitor {
 			if (transfer == "full" || transfer == "container" || destroy != null) {
 				type.value_owned = true;
 			}
-			if (allow_none == "1") {
+			if (allow_none == "1" && direction != "out") {
 				type.nullable = true;
 			}
 
