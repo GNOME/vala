@@ -3600,7 +3600,7 @@ namespace GLib {
 		public static bool quiet ();
 		public static int run ();
 		public static void add_func (string testpath, Callback test_funcvoid);
-		public static void add_data_func (string testpath, [CCode (delegate_target_pos = 1.9)] DataTestFunc test_funcvoid);
+		public static void add_data_func (string testpath, [CCode (delegate_target_pos = 1.9)] TestDataFunc test_funcvoid);
 		[PrintfFormat]
 		public static void message (string format, ...);
 		public static void bug_base (string uri_pattern);
@@ -3648,7 +3648,7 @@ namespace GLib {
 	}
 
 	public delegate void TestFunc (void* fixture);
-	public delegate void DataTestFunc ();
+	public delegate void TestDataFunc ();
 
 	[Flags]
 	[CCode (cprefix = "G_TEST_TRAP_", has_type_id = false)]
