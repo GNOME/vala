@@ -1,6 +1,7 @@
 /* valagirparser.vala
  *
  * Copyright (C) 2008-2010  Jürg Billeter
+ * Copyright (C) 2011  Luca Bruno
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,6 +19,7 @@
  *
  * Author:
  * 	Jürg Billeter <j@bitron.ch>
+ * 	Luca Bruno <lucabru@src.gnome.org>
  */
 
 using GLib;
@@ -1025,6 +1027,7 @@ public class Vala.GirParser : CodeVisitor {
 					// array has length
 					field.set_array_length_cname (array_length.symbol.name);
 					field.no_array_length = false;
+					field.array_null_terminated = false;
 					merged.add (array_length);
 				}
 			}
@@ -1771,7 +1774,9 @@ public class Vala.GirParser : CodeVisitor {
 			end_element ("varargs");
 		} else {
 			string ctype;
-			var type = parse_type (out ctype, out array_length_idx, transfer == "full");
+			bool no_array_length;
+			bool array_null_terminated;
+			var type = parse_type (out ctype, out array_length_idx, transfer == "full", out no_array_length, out array_null_terminated);
 			if (transfer == "full" || transfer == "container" || destroy != null) {
 				type.value_owned = true;
 			}
@@ -1797,17 +1802,25 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (direction == "inout") {
 				param.direction = ParameterDirection.REF;
 			}
+			if (type is ArrayType && metadata.has_argument (ArgumentType.ARRAY_LENGTH_IDX)) {
+				array_length_idx = metadata.get_integer (ArgumentType.ARRAY_LENGTH_IDX);
+			} else {
+				param.no_array_length = no_array_length;
+				param.array_null_terminated = array_null_terminated;
+			}
 			param.initializer = metadata.get_expression (ArgumentType.DEFAULT);
 		}
 		end_element ("parameter");
 		return param;
 	}
 
-	DataType parse_type (out string? ctype = null, out int array_length_index = null, bool transfer_elements = false, out bool no_array_length = null, out bool array_null_terminated = null) {
+	DataType parse_type (out string? ctype = null, out int array_length_idx = null, bool transfer_elements = false, out bool no_array_length = null, out bool array_null_terminated = null) {
 		bool is_array = false;
 		string type_name = reader.get_attribute ("name");
 
-		array_length_index = -1;
+		array_length_idx = -1;
+		no_array_length = true;
+		array_null_terminated = true;
 
 		if (reader.name == "array") {
 			is_array = true;
@@ -1815,7 +1828,12 @@ public class Vala.GirParser : CodeVisitor {
 
 			if (type_name == null) {
 				if (reader.get_attribute ("length") != null) {
-					array_length_index = int.parse (reader.get_attribute ("length"));
+					array_length_idx = int.parse (reader.get_attribute ("length"));
+					no_array_length = false;
+					array_null_terminated = false;
+				}
+				if (reader.get_attribute ("fixed-size") != null) {
+					array_null_terminated = false;
 				}
 				next ();
 				var element_type = parse_type ();
@@ -2429,9 +2447,6 @@ public class Vala.GirParser : CodeVisitor {
 						continue;
 					}
 					set_array_ccode (info.param, parameters[info.array_length_idx]);
-				} else if (info.param.variable_type is ArrayType) {
-					info.param.no_array_length = true;
-					info.param.array_null_terminated = true;
 				}
 
 				if (info.closure_idx != -1) {
