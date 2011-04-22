@@ -345,20 +345,9 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 
 		ccode.open_block ();
 
-		string variable_name;
-		if (clause.variable_name != null) {
-			variable_name = get_variable_cname (clause.variable_name);
-		} else {
-			variable_name = "__err";
-		}
-
-		if (clause.variable_name != null) {
-			if (is_in_coroutine ()) {
-				closure_struct.add_field ("GError *", variable_name);
-			} else {
-				ccode.add_declaration ("GError *", new CCodeVariableDeclarator (variable_name));
-			}
-			ccode.add_assignment (get_variable_cexpression (variable_name), get_variable_cexpression ("_inner_error_"));
+		if (clause.error_variable != null) {
+			visit_local_variable (clause.error_variable);
+			ccode.add_assignment (get_variable_cexpression (clause.error_variable.name), get_variable_cexpression ("_inner_error_"));
 		} else {
 			// error object is not used within catch statement, clear it
 			var cclear = new CCodeFunctionCall (new CCodeIdentifier ("g_clear_error"));

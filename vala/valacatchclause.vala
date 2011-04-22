@@ -117,12 +117,14 @@ public class Vala.CatchClause : CodeNode {
 		checked = true;
 
 		if (error_type != null) {
-			error_variable = new LocalVariable (error_type.copy (), variable_name);
+			if (variable_name != null) {
+				error_variable = new LocalVariable (error_type.copy (), variable_name);
 
-			body.scope.add (variable_name, error_variable);
-			body.add_local_variable (error_variable);
+				body.scope.add (variable_name, error_variable);
+				body.add_local_variable (error_variable);
 
-			error_variable.checked = true;
+				error_variable.checked = true;
+			}
 		} else {
 			// generic catch clause
 			if (context.profile == Profile.GOBJECT) {
