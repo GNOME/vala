@@ -66,7 +66,8 @@ public class Vala.GirParser : CodeVisitor {
 		VFUNC_NAME,
 		VIRTUAL,
 		ABSTRACT,
-		SCOPE;
+		SCOPE,
+		STRUCT;
 
 		public static ArgumentType? from_string (string name) {
 			var enum_class = (EnumClass) typeof(ArgumentType).class_ref ();
@@ -1536,7 +1537,7 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (reader.name == "callback") {
 				add_symbol_info (parse_callback ());
 			} else if (reader.name == "record") {
-				if (reader.get_attribute ("glib:get-type") != null) {
+				if (reader.get_attribute ("glib:get-type") != null && !metadata.get_bool (ArgumentType.STRUCT)) {
 					add_symbol_info (parse_boxed ("record"));
 				} else {
 					if (!reader.get_attribute ("name").has_suffix ("Private")) {
