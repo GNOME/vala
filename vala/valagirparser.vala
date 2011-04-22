@@ -35,6 +35,7 @@ using GLib;
  * 5) Process callbacks/virtual
  * 6) Process aliases
  * 7) Autoreparent static methods
+ * 8) Process callables
  *
  * Best hacking practices:
  * - Keep GIR parsing bloat-free, it must contain the logic
@@ -519,6 +520,7 @@ public class Vala.GirParser : CodeVisitor {
 
 	ArrayList<UnresolvedSymbol> unresolved_gir_symbols = new ArrayList<UnresolvedSymbol> ();
 	HashMap<UnresolvedSymbol,ArrayList<Symbol>> symbol_reparent_map = new HashMap<UnresolvedSymbol,ArrayList<Symbol>> (unresolved_symbol_hash, unresolved_symbol_equal);
+	ArrayList<CallableInfo> callable_info_list = new ArrayList<CallableInfo> ();
 	HashMap<Namespace,ArrayList<Method>> namespace_methods = new HashMap<Namespace,ArrayList<Method>> ();
 	ArrayList<Alias> aliases = new ArrayList<Alias> ();
 	ArrayList<Interface> interfaces = new ArrayList<Interface> ();
@@ -542,6 +544,7 @@ public class Vala.GirParser : CodeVisitor {
 		postprocess_reparenting ();
 		postprocess_aliases ();
 		postprocess_namespace_methods ();
+		postprocess_callables ();
 	}
 
 	public override void visit_source_file (SourceFile source_file) {
@@ -2237,6 +2240,22 @@ public class Vala.GirParser : CodeVisitor {
 		return parse_function ("constructor") as CreationMethod;
 	}
 
+	class CallableInfo {
+		public Symbol symbol;
+		public List<ParameterInfo> parameters;
+		public Metadata metadata;
+
+		public ArrayList<int> array_length_parameters = new ArrayList<int> ();
+		public ArrayList<int> closure_parameters = new ArrayList<int> ();
+		public ArrayList<int> destroy_parameters = new ArrayList<int> ();
+
+		public CallableInfo (Symbol symbol, List<ParameterInfo> parameters, Metadata metadata) {
+			this.symbol = symbol;
+			this.parameters = parameters;
+			this.metadata = metadata;
+		}
+	}
+
 	class ParameterInfo {
 		public ParameterInfo (Parameter param, int array_length_idx, int closure_idx, int destroy_idx) {
 			this.param = param;
@@ -2341,10 +2360,13 @@ public class Vala.GirParser : CodeVisitor {
 			}
 		}
 
+		if (throws_string == "1") {
+			s.add_error_type (new ErrorType (null, null));
+		}
+
 		var parameters = new ArrayList<ParameterInfo> ();
-		var array_length_parameters = new ArrayList<int> ();
-		var closure_parameters = new ArrayList<int> ();
-		var destroy_parameters = new ArrayList<int> ();
+		var callable = new CallableInfo (s, parameters, metadata);
+		callable_info_list.add (callable);
 		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "parameters") {
 			start_element ("parameters");
 			next ();
@@ -2361,16 +2383,16 @@ public class Vala.GirParser : CodeVisitor {
 				default_param_name = "arg%d".printf (parameters.size);
 				var param = parse_parameter (out array_length_idx, out closure_idx, out destroy_idx, out scope, default_param_name);
 				if (array_length_idx != -1) {
-					array_length_parameters.add (array_length_idx);
+					callable.array_length_parameters.add (array_length_idx);
 				}
 				if (closure_idx != -1) {
-					closure_parameters.add (closure_idx);
+					callable.closure_parameters.add (closure_idx);
 				}
 				if (destroy_idx != -1) {
-					destroy_parameters.add (destroy_idx);
+					callable.destroy_parameters.add (destroy_idx);
 				}
 
-				var info = new ParameterInfo(param, array_length_idx, closure_idx, destroy_idx);
+				var info = new ParameterInfo (param, array_length_idx, closure_idx, destroy_idx);
 
 				if (s is Method && scope == "async") {
 					var unresolved_type = param.variable_type as UnresolvedType;
@@ -2386,107 +2408,7 @@ public class Vala.GirParser : CodeVisitor {
 			}
 			end_element ("parameters");
 		}
-		var array_length_idx = -1;
-		if (return_type is ArrayType && metadata.has_argument (ArgumentType.ARRAY_LENGTH_IDX)) {
-			array_length_idx = metadata.get_integer (ArgumentType.ARRAY_LENGTH_IDX);
-			parameters[array_length_idx].keep = false;
-			array_length_parameters.add (array_length_idx);
-		}
 
-		int i = 0, j=1;
-
-		int last = -1;
-		foreach (ParameterInfo info in parameters) {
-			if (s is Delegate && info.closure_idx == i) {
-				var d = (Delegate) s;
-				d.has_target = true;
-				d.cinstance_parameter_position = (float) j - 0.1;
-				info.keep = false;
-			} else if (info.keep
-			    && !array_length_parameters.contains (i)
-			    && !closure_parameters.contains (i)
-			    && !destroy_parameters.contains (i)) {
-				info.vala_idx = (float) j;
-				info.keep = true;
-
-				/* interpolate for vala_idx between this and last*/
-				float last_idx = 0.0F;
-				if (last != -1) {
-					last_idx = parameters[last].vala_idx;
-				}
-				for (int k=last+1; k < i; k++) {
-					parameters[k].vala_idx =  last_idx + (((j - last_idx) / (i-last)) * (k-last));
-				}
-				last = i;
-				j++;
-			} else {
-				info.keep = false;
-				// make sure that vala_idx is always set
-				// the above if branch does not set vala_idx for
-				// hidden parameters at the end of the parameter list
-				info.vala_idx = (j - 1) + (i - last) * 0.1F;
-			}
-			i++;
-		}
-
-		foreach (ParameterInfo info in parameters) {
-			if (info.keep) {
-
-				/* add_parameter sets carray_length_parameter_position and cdelegate_target_parameter_position
-				 so do it first*/
-				if (s is Method) {
-					((Method) s).add_parameter (info.param);
-				} else if (s is Delegate) {
-					((Delegate) s).add_parameter (info.param);
-				} else if (s is Signal) {
-					((Signal) s).add_parameter (info.param);
-				}
-
-				if (info.array_length_idx != -1) {
-					if ((info.array_length_idx) >= parameters.size) {
-						Report.error (get_current_src (), "invalid array_length index");
-						continue;
-					}
-					set_array_ccode (info.param, parameters[info.array_length_idx]);
-				}
-
-				if (info.closure_idx != -1) {
-					if ((info.closure_idx) >= parameters.size) {
-						Report.error (get_current_src (), "invalid closure index");
-						continue;
-					}
-					info.param.cdelegate_target_parameter_position = parameters[info.closure_idx].vala_idx;
-				}
-				if (info.destroy_idx != -1) {
-					if (info.destroy_idx >= parameters.size) {
-						Report.error (get_current_src (), "invalid destroy index");
-						continue;
-					}
-					info.param.cdestroy_notify_parameter_position = parameters[info.destroy_idx].vala_idx;
-				}
-			}
-		}
-		if (array_length_idx != -1) {
-			if (array_length_idx >= parameters.size) {
-				Report.error (get_current_src (), "invalid array_length index");
-			} else {
-				set_array_ccode (s, parameters[array_length_idx]);
-			}
-		} else if (return_type is ArrayType) {
-			if (s is Method) {
-				var m = (Method) s;
-				m.no_array_length = true;
-				m.array_null_terminated = true;
-			} else if (s is Delegate) {
-				var d = (Delegate) s;
-				d.no_array_length = true;
-				d.array_null_terminated = true;
-			}
-		}
-
-		if (throws_string == "1") {
-			s.add_error_type (new ErrorType (null, null));
-		}
 		end_element (element_name);
 		return s;
 	}
@@ -2867,6 +2789,150 @@ public class Vala.GirParser : CodeVisitor {
 			if (current_match > match) {
 				match = current_match;
 				best = current;
+			}
+		}
+	}
+
+	void postprocess_callables () {
+		foreach (var callable in callable_info_list) {
+			var s = callable.symbol;
+			List<ParameterInfo> parameters = callable.parameters;
+			Metadata metadata = callable.metadata;
+
+			DataType return_type = null;
+			if (s is Method) {
+				return_type = ((Method) s).return_type;
+			} else if (s is Delegate) {
+				return_type = ((Delegate) s).return_type;
+			} else if (s is Signal) {
+				return_type = ((Signal) s).return_type;
+			}
+
+			var array_length_idx = -1;
+			if (return_type is ArrayType && metadata.has_argument (ArgumentType.ARRAY_LENGTH_IDX)) {
+				array_length_idx = metadata.get_integer (ArgumentType.ARRAY_LENGTH_IDX);
+				parameters[array_length_idx].keep = false;
+				callable.array_length_parameters.add (array_length_idx);
+			} else if (return_type is VoidType && parameters.size > 0) {
+				int n_out_parameters = 0;
+				foreach (var info in parameters) {
+					if (info.param.direction == ParameterDirection.OUT) {
+						n_out_parameters++;
+					}
+				}
+
+				if (n_out_parameters == 1) {
+					ParameterInfo last_param = parameters[parameters.size-1];
+					if (last_param.param.direction == ParameterDirection.OUT) {
+						// use last out real-non-null-struct parameter as return type
+						if (last_param.param.variable_type is UnresolvedType) {
+							var st = resolve_symbol (s.parent_symbol.scope, ((UnresolvedType) last_param.param.variable_type).unresolved_symbol) as Struct;
+							if (st != null && !st.is_simple_type () && !last_param.param.variable_type.nullable) {
+								last_param.keep = false;
+								return_type = last_param.param.variable_type.copy ();
+							}
+						}
+					}
+				}
+			}
+
+			int i = 0, j=1;
+
+			int last = -1;
+			foreach (ParameterInfo info in parameters) {
+				if (s is Delegate && info.closure_idx == i) {
+					var d = (Delegate) s;
+					d.has_target = true;
+					d.cinstance_parameter_position = (float) j - 0.1;
+					info.keep = false;
+				} else if (info.keep
+						   && !callable.array_length_parameters.contains (i)
+						   && !callable.closure_parameters.contains (i)
+						   && !callable.destroy_parameters.contains (i)) {
+					info.vala_idx = (float) j;
+					info.keep = true;
+
+					/* interpolate for vala_idx between this and last*/
+					float last_idx = 0.0F;
+					if (last != -1) {
+						last_idx = parameters[last].vala_idx;
+					}
+					for (int k=last+1; k < i; k++) {
+						parameters[k].vala_idx =  last_idx + (((j - last_idx) / (i-last)) * (k-last));
+					}
+					last = i;
+					j++;
+				} else {
+					info.keep = false;
+					// make sure that vala_idx is always set
+					// the above if branch does not set vala_idx for
+					// hidden parameters at the end of the parameter list
+					info.vala_idx = (j - 1) + (i - last) * 0.1F;
+				}
+				i++;
+			}
+
+			foreach (ParameterInfo info in parameters) {
+				if (info.keep) {
+
+					/* add_parameter sets carray_length_parameter_position and cdelegate_target_parameter_position
+					   so do it first*/
+					if (s is Method) {
+						((Method) s).add_parameter (info.param);
+					} else if (s is Delegate) {
+						((Delegate) s).add_parameter (info.param);
+					} else if (s is Signal) {
+						((Signal) s).add_parameter (info.param);
+					}
+
+					if (info.array_length_idx != -1) {
+						if ((info.array_length_idx) >= parameters.size) {
+							Report.error (get_current_src (), "invalid array_length index");
+							continue;
+						}
+						set_array_ccode (info.param, parameters[info.array_length_idx]);
+					}
+
+					if (info.closure_idx != -1) {
+						if ((info.closure_idx) >= parameters.size) {
+							Report.error (get_current_src (), "invalid closure index");
+							continue;
+						}
+						info.param.cdelegate_target_parameter_position = parameters[info.closure_idx].vala_idx;
+					}
+					if (info.destroy_idx != -1) {
+						if (info.destroy_idx >= parameters.size) {
+							Report.error (get_current_src (), "invalid destroy index");
+							continue;
+						}
+						info.param.cdestroy_notify_parameter_position = parameters[info.destroy_idx].vala_idx;
+					}
+				}
+			}
+			if (array_length_idx != -1) {
+				if (array_length_idx >= parameters.size) {
+					Report.error (get_current_src (), "invalid array_length index");
+				} else {
+					set_array_ccode (s, parameters[array_length_idx]);
+				}
+			} else if (return_type is ArrayType) {
+				if (s is Method) {
+					var m = (Method) s;
+					m.no_array_length = true;
+					m.array_null_terminated = true;
+				} else if (s is Delegate) {
+					var d = (Delegate) s;
+					d.no_array_length = true;
+					d.array_null_terminated = true;
+				}
+			}
+
+			if (s is Method) {
+				((Method) s).return_type = return_type;
+			} else if (s is Delegate) {
+				((Delegate) s).return_type = return_type;
+			} else if (s is Signal) {
+				((Signal) s).return_type = return_type;
 			}
 		}
 	}

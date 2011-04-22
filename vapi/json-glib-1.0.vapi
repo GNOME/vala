@@ -86,7 +86,7 @@ namespace Json {
 		public unowned Json.Object get_object ();
 		public unowned Json.Node get_parent ();
 		public unowned string get_string ();
-		public void get_value (out GLib.Value value);
+		public GLib.Value get_value ();
 		public GLib.Type get_value_type ();
 		public bool is_null ();
 		public void set_array (Json.Array array);
