@@ -344,7 +344,7 @@ namespace Gst {
 		public bool skip_string_utf8 ();
 	}
 	[Compact]
-	[CCode (cheader_filename = "gst/base/gstbytewriter.h")]
+	[CCode (free_function = "gst_byte_writer_free", cheader_filename = "gst/base/gstbytewriter.h")]
 	public class ByteWriter : Gst.ByteReader {
 		public uint alloc_size;
 		public bool fixed;
