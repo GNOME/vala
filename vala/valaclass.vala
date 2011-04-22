@@ -923,14 +923,14 @@ public class Vala.Class : ObjectTypeSymbol {
 	}
 
 	public string get_default_free_function () {
+		if (base_class != null) {
+			return base_class.get_free_function ();
+		}
 		return get_lower_case_cprefix () + "free";
 	}
 
 	public override string? get_free_function () {
 		if (free_function == null) {
-			if (base_class != null) {
-				return base_class.get_free_function ();
-			}
 			free_function = get_default_free_function ();
 		}
 		return free_function;
