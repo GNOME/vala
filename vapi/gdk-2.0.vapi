@@ -636,7 +636,7 @@ namespace Gdk {
 		public unowned Gdk.Window get_parent ();
 		public unowned Gdk.Window get_pointer (out int x, out int y, out Gdk.ModifierType mask);
 		public void get_position (out int x, out int y);
-		public void get_root_coords (int x, int y, int root_x, int root_y);
+		public void get_root_coords (int x, int y, out int root_x, out int root_y);
 		public void get_root_origin (out int x, out int y);
 		public Gdk.WindowState get_state ();
 		public unowned Gdk.Window get_toplevel ();
