@@ -1482,7 +1482,7 @@ namespace Gtk {
 		public unowned Gtk.Border get_inner_border ();
 		public unichar get_invisible_char ();
 		public unowned Pango.Layout get_layout ();
-		public void get_layout_offsets (int x, int y);
+		public void get_layout_offsets (out int x, out int y);
 		public int get_max_length ();
 		public bool get_overwrite_mode ();
 		public double get_progress_fraction ();
@@ -2403,7 +2403,7 @@ namespace Gtk {
 		public Gtk.Justification get_justify ();
 		public unowned string get_label ();
 		public unowned Pango.Layout get_layout ();
-		public void get_layout_offsets (int x, int y);
+		public void get_layout_offsets (out int x, out int y);
 		public bool get_line_wrap ();
 		public Pango.WrapMode get_line_wrap_mode ();
 		public int get_max_width_chars ();
@@ -3597,7 +3597,7 @@ namespace Gtk {
 		public int get_digits ();
 		public bool get_draw_value ();
 		public unowned Pango.Layout get_layout ();
-		public virtual void get_layout_offsets (int x, int y);
+		public virtual void get_layout_offsets (out int x, out int y);
 		public Gtk.PositionType get_value_pos ();
 		public void set_digits (int digits);
 		public void set_draw_value (bool draw_value);
