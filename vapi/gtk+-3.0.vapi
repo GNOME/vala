@@ -3184,7 +3184,7 @@ namespace Gtk {
 		public bool get_restrict_to_fill_level ();
 		public int get_round_digits ();
 		public bool get_show_fill_level ();
-		public void get_slider_range (int slider_start, int slider_end);
+		public void get_slider_range (out int slider_start, out int slider_end);
 		public bool get_slider_size_fixed ();
 		public Gtk.SensitivityType get_upper_stepper_sensitivity ();
 		public double get_value ();
@@ -7141,9 +7141,9 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate int RecentSortFunc (Gtk.RecentInfo a, Gtk.RecentInfo b);
 	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
-	public delegate bool StylePropertyParser (string str, GLib.Value value, GLib.Error error);
+	public delegate bool StylePropertyParser (string str, GLib.Value value) throws GLib.Error;
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 5.9)]
-	public delegate bool TextBufferDeserializeFunc (Gtk.TextBuffer register_buffer, Gtk.TextBuffer content_buffer, Gtk.TextIter iter, [CCode (array_length_type = "gsize")] uint8[] data, bool create_tags, GLib.Error error);
+	public delegate bool TextBufferDeserializeFunc (Gtk.TextBuffer register_buffer, Gtk.TextBuffer content_buffer, Gtk.TextIter iter, [CCode (array_length_type = "gsize")] uint8[] data, bool create_tags) throws GLib.Error;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate uchar TextBufferSerializeFunc (Gtk.TextBuffer register_buffer, Gtk.TextBuffer content_buffer, Gtk.TextIter start, Gtk.TextIter end, size_t length);
 	[CCode (cheader_filename = "gtk/gtk.h")]

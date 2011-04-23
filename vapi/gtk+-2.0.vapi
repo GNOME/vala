@@ -3342,7 +3342,7 @@ namespace Gtk {
 		public void get_range_rect (Gdk.Rectangle range_rect);
 		public bool get_restrict_to_fill_level ();
 		public bool get_show_fill_level ();
-		public void get_slider_range (int slider_start, int slider_end);
+		public void get_slider_range (out int slider_start, out int slider_end);
 		public bool get_slider_size_fixed ();
 		public Gtk.UpdateType get_update_policy ();
 		public Gtk.SensitivityType get_upper_stepper_sensitivity ();
