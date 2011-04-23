@@ -876,6 +876,8 @@ public class Vala.GirParser : CodeVisitor {
 			}
 		} else if (info.symbol is Property) {
 			var prop = (Property) info.symbol;
+			var getter_name = "get_%s".printf (prop.name);
+			var setter_name = "set_%s".printf (prop.name);
 			foreach (var cinfo in colliding) {
 				var sym = cinfo.symbol;
 				if (sym is Signal || sym is Field) {
@@ -884,10 +886,9 @@ public class Vala.GirParser : CodeVisitor {
 				} else if (sym is Method) {
 					// assume method is getter
 					merged.add (cinfo);
+					getter_name = sym.name;
 				}
 			}
-			var getter_name = "get_%s".printf (prop.name);
-			var setter_name = "set_%s".printf (prop.name);
 			if (prop.get_accessor != null) {
 				var getter_method = get_current_first_symbol (getter_name) as Method;
 				if (getter_method != null) {
