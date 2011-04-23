@@ -319,14 +319,7 @@ public class Vala.GirParser : CodeVisitor {
 			}
 			next ();
 
-			var begin = this.begin;
-			if (current != TokenType.IDENTIFIER || has_space ()) {
-				Report.error (get_current_src (), "expected selector");
-				return null;
-			}
-			next ();
-
-			return get_string (begin, old_end);
+			return parse_identifier (false);
 		}
 
 		Metadata? parse_pattern () {
@@ -1108,6 +1101,8 @@ public class Vala.GirParser : CodeVisitor {
 		if (child_name == null) {
 			return Metadata.empty;
 		}
+		selector = selector.replace ("-", "_");
+		child_name = child_name.replace ("-", "_");
 
 		if (selector.has_prefix ("glib:")) {
 			selector = selector.substring ("glib:".length);
