@@ -1703,7 +1703,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			} else {
 				if (in_constructor || (current_method != null && current_method.binding == MemberBinding.INSTANCE) ||
 				           (current_property_accessor != null && current_property_accessor.prop.binding == MemberBinding.INSTANCE)) {
-					data.add_field ("%s *".printf (current_class.get_cname ()), "self");
+					data.add_field ("%s *".printf (current_type_symbol.get_cname ()), "self");
 				}
 
 				if (current_method != null) {
@@ -1767,7 +1767,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				if (in_constructor || (current_method != null && current_method.binding == MemberBinding.INSTANCE &&
 				                              (!(current_method is CreationMethod) || current_method.body != b)) ||
 				           (current_property_accessor != null && current_property_accessor.prop.binding == MemberBinding.INSTANCE)) {
-					var ref_call = new CCodeFunctionCall (get_dup_func_expression (new ObjectType (current_class), b.source_reference));
+					var ref_call = new CCodeFunctionCall (get_dup_func_expression (get_data_type_for_symbol (current_type_symbol), b.source_reference));
 					ref_call.add_argument (get_result_cexpression ("self"));
 
 					ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), "self"), ref_call);
@@ -1854,7 +1854,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			} else {
 				if (in_constructor || (current_method != null && current_method.binding == MemberBinding.INSTANCE) ||
 				           (current_property_accessor != null && current_property_accessor.prop.binding == MemberBinding.INSTANCE)) {
-					var this_value = new GLibValue (new ObjectType (current_class), new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "self"));
+					var this_value = new GLibValue (get_data_type_for_symbol (current_type_symbol), new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "self"));
 					ccode.add_expression (destroy_value (this_value));
 				}
 			}

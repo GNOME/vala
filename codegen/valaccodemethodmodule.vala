@@ -403,7 +403,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 					// as closures have block data parameter
 					if (m.binding == MemberBinding.INSTANCE) {
 						var cself = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "self");
-						ccode.add_declaration ("%s *".printf (current_class.get_cname ()), new CCodeVariableDeclarator ("self"));
+						ccode.add_declaration ("%s *".printf (current_type_symbol.get_cname ()), new CCodeVariableDeclarator ("self"));
 						ccode.add_assignment (new CCodeIdentifier ("self"), cself);
 					}
 
