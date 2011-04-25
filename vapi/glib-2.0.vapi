@@ -1824,6 +1824,7 @@ namespace GLib {
 		public void set_priority (ThreadPriority priority);
 		public static void yield ();
 		public static void exit (T retval);
+		[CCode (simple_generics = true)]
 		public static void @foreach<T> (Func<T> thread_func);
 
 		[CCode (cname = "g_usleep")]
