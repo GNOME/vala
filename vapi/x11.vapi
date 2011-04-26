@@ -267,7 +267,10 @@ namespace X {
 
 	[SimpleType]
 	[IntegerType (rank = 9)]
-	[CCode (cname = "Atom")]
+	[CCode (cname = "Atom", type_id = "G_TYPE_LONG",
+		marshaller_type_name = "LONG",
+		get_value_function = "g_value_get_long",
+		set_value_function = "g_value_set_long")]
 	public struct Atom {
 	}
 
