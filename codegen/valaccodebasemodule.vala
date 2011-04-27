@@ -3353,10 +3353,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (stmt.return_expression != null) {
 			// avoid unnecessary ref/unref pair
 			var local = stmt.return_expression.symbol_reference as LocalVariable;
-			if (current_return_type.value_owned
-			    && local != null && local.variable_type.value_owned
-			    && !local.captured
-			    && !variable_accessible_in_finally (local)) {
+			if (local != null && !local.active) {
 				/* return expression is local variable taking ownership and
 				 * current method is transferring ownership */
 
