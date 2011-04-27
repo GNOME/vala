@@ -373,6 +373,8 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 	}
 
 	public override void append_local_free (Symbol sym, bool stop_at_loop = false, CodeNode? stop_at = null) {
+		base.append_local_free (sym, stop_at_loop, stop_at);
+
 		if (!(stop_at is TryStatement || stop_at is CatchClause)) {
 			var finally_block = (Block) null;
 			if (sym.parent_node is TryStatement) {
@@ -385,8 +387,6 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 				finally_block.emit (this);
 			}
 		}
-
-		base.append_local_free (sym, stop_at_loop, stop_at);
 	}
 }
 
