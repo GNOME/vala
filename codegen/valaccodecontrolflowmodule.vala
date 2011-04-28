@@ -240,20 +240,16 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 
 		if (stmt.collection.value_type is ArrayType) {
 			array_type = (ArrayType) stmt.collection.value_type;
-			
+
 			var array_len = get_array_length_cexpression (stmt.collection);
 
 			// store array length for use by _vala_array_free
 			ccode.add_assignment (get_variable_cexpression (get_array_length_cname (collection_backup.name, 1)), array_len);
 
-			var it_name = (stmt.variable_name + "_it");
+			var iterator_variable = new LocalVariable (int_type.copy (), stmt.variable_name + "_it");
+			emit_temp_var (iterator_variable);
+			var it_name = get_variable_cname (iterator_variable.name);
 		
-			if (is_in_coroutine ()) {
-				closure_struct.add_field ("int", it_name);
-			} else {
-				ccode.add_declaration ("int", new CCodeVariableDeclarator (it_name));
-			}
-
 			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, get_variable_cexpression (it_name), array_len);
 
 			ccode.open_for (new CCodeAssignment (get_variable_cexpression (it_name), new CCodeConstant ("0")),
@@ -283,19 +279,15 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 		} else if (stmt.collection.value_type.compatible (new ObjectType (glist_type)) || stmt.collection.value_type.compatible (new ObjectType (gslist_type))) {
 			// iterating over a GList or GSList
 
-			var it_name = "%s_it".printf (stmt.variable_name);
-		
-			if (is_in_coroutine ()) {
-				closure_struct.add_field (collection_type.get_cname (), it_name);
-			} else {
-				ccode.add_declaration (collection_type.get_cname (), new CCodeVariableDeclarator (it_name));
-			}
+			var iterator_variable = new LocalVariable (collection_type.copy (), stmt.variable_name + "_it");
+			emit_temp_var (iterator_variable);
+			var it_name = get_variable_cname (iterator_variable.name);
 			
 			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_variable_cexpression (it_name), new CCodeConstant ("NULL"));
 
 			ccode.open_for (new CCodeAssignment (get_variable_cexpression (it_name), get_variable_cexpression (collection_backup.name)),
-			                   ccond,
-			                   new CCodeAssignment (get_variable_cexpression (it_name), new CCodeMemberAccess.pointer (get_variable_cexpression (it_name), "next")));
+							ccond,
+							new CCodeAssignment (get_variable_cexpression (it_name), new CCodeMemberAccess.pointer (get_variable_cexpression (it_name), "next")));
 
 			CCodeExpression element_expr = new CCodeMemberAccess.pointer (get_variable_cexpression (it_name), "data");
 
@@ -319,13 +311,9 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 		} else if (stmt.collection.value_type.compatible (new ObjectType (gvaluearray_type))) {
 			// iterating over a GValueArray
 
-			var arr_index = "%s_index".printf (stmt.variable_name);
-
-			if (is_in_coroutine ()) {
-				closure_struct.add_field (uint_type.get_cname (), arr_index);
-			} else {
-				ccode.add_declaration (uint_type.get_cname (), new CCodeVariableDeclarator (arr_index));
-			}
+			var iterator_variable = new LocalVariable (uint_type.copy (), "%s_index".printf (stmt.variable_name));
+			emit_temp_var (iterator_variable);
+			var arr_index = get_variable_cname (iterator_variable.name);
 
 			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, get_variable_cexpression (arr_index), new CCodeMemberAccess.pointer (get_variable_cexpression (collection_backup.name), "n_values"));
 
