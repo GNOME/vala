@@ -266,23 +266,14 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			element_type.value_owned = false;
 			element_expr = transform_expression (element_expr, element_type, stmt.type_reference);
 
-			if (is_in_coroutine ()) {
-				closure_struct.add_field (stmt.type_reference.get_cname (), stmt.variable_name);
-			} else {
-				ccode.add_declaration (stmt.type_reference.get_cname (), new CCodeVariableDeclarator (stmt.variable_name));
-			}
+			visit_local_variable (stmt.element_variable);
 			ccode.add_assignment (get_variable_cexpression (stmt.variable_name), element_expr);
 
-			// add array length variable for stacked arrays
+			// set array length for stacked arrays
 			if (stmt.type_reference is ArrayType) {
 				var inner_array_type = (ArrayType) stmt.type_reference;
 				for (int dim = 1; dim <= inner_array_type.rank; dim++) {
-					if (is_in_coroutine ()) {
-						closure_struct.add_field ("int", get_array_length_cname (stmt.variable_name, dim));
-						ccode.add_assignment (get_variable_cexpression (get_array_length_cname (stmt.variable_name, dim)), new CCodeConstant ("-1"));
-					} else {
-						ccode.add_declaration ("int", new CCodeVariableDeclarator (get_array_length_cname (stmt.variable_name, dim), new CCodeConstant ("-1")));
-					}
+					ccode.add_assignment (get_variable_cexpression (get_array_length_cname (stmt.variable_name, dim)), new CCodeConstant ("-1"));
 				}
 			}
 
@@ -319,11 +310,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			element_expr = convert_from_generic_pointer (element_expr, element_data_type);
 			element_expr = transform_expression (element_expr, element_data_type, stmt.type_reference);
 
-			if (is_in_coroutine ()) {
-				closure_struct.add_field (stmt.type_reference.get_cname (), stmt.variable_name);
-			} else {
-				ccode.add_declaration (stmt.type_reference.get_cname (), new CCodeVariableDeclarator (stmt.variable_name));
-			}
+			visit_local_variable (stmt.element_variable);
 			ccode.add_assignment (get_variable_cexpression (stmt.variable_name), element_expr);
 
 			stmt.body.emit (this);
@@ -356,11 +343,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 				element_expr = get_ref_cexpression (stmt.type_reference, element_expr, null, new StructValueType (gvalue_type));
 			}
 
-			if (is_in_coroutine ()) {
-				closure_struct.add_field (stmt.type_reference.get_cname (), stmt.variable_name);
-			} else {
-				ccode.add_declaration (stmt.type_reference.get_cname (), new CCodeVariableDeclarator (stmt.variable_name));
-			}
+			visit_local_variable (stmt.element_variable);
 			ccode.add_assignment (get_variable_cexpression (stmt.variable_name), element_expr);
 
 			stmt.body.emit (this);
