@@ -230,12 +230,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			array_type.fixed_length = false;
 		}
 
-		if (is_in_coroutine ()) {
-			closure_struct.add_field (collection_type.get_cname (), collection_backup.name);
-		} else {
-			var ccolvardecl = new CCodeVariableDeclarator (collection_backup.name);
-			ccode.add_declaration (collection_type.get_cname (), ccolvardecl);
-		}
+		visit_local_variable (collection_backup);
 		ccode.add_assignment (get_variable_cexpression (collection_backup.name), get_cvalue (stmt.collection));
 		
 		if (stmt.tree_can_fail && stmt.collection.tree_can_fail) {
@@ -249,11 +244,6 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			var array_len = get_array_length_cexpression (stmt.collection);
 
 			// store array length for use by _vala_array_free
-			if (is_in_coroutine ()) {
-				closure_struct.add_field ("int", get_array_length_cname (collection_backup.name, 1));
-			} else {
-				ccode.add_declaration ("int", new CCodeVariableDeclarator (get_array_length_cname (collection_backup.name, 1)));
-			}
 			ccode.add_assignment (get_variable_cexpression (get_array_length_cname (collection_backup.name, 1)), array_len);
 
 			var it_name = (stmt.variable_name + "_it");
