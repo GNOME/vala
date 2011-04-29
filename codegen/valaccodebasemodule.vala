@@ -3271,6 +3271,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			ccode.add_assignment (get_variable_cexpression ("_data%d_".printf (block_id)), new CCodeConstant ("NULL"));
 		}
 
+		append_scope_free (sym, stop_at);
+
 		if (stop_at_loop) {
 			if (b.parent_node is Loop ||
 			    b.parent_node is ForeachStatement ||
@@ -3288,6 +3290,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		} else if (sym.parent_symbol is Method) {
 			append_param_free ((Method) sym.parent_symbol);
 		}
+	}
+
+	protected virtual void append_scope_free (Symbol sym, CodeNode? stop_at = null) {
 	}
 
 	private void append_param_free (Method m) {
