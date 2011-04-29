@@ -3250,7 +3250,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		temp_ref_vars.clear ();
 	}
 
-	public virtual void append_local_free (Symbol sym, bool stop_at_loop = false, CodeNode? stop_at = null) {
+	protected virtual void append_scope_free (Symbol sym, CodeNode? stop_at = null) {
 		var b = (Block) sym;
 
 		var local_vars = b.get_local_variables ();
@@ -3270,6 +3270,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			ccode.add_expression (data_unref);
 			ccode.add_assignment (get_variable_cexpression ("_data%d_".printf (block_id)), new CCodeConstant ("NULL"));
 		}
+	}
+
+	public void append_local_free (Symbol sym, bool stop_at_loop = false, CodeNode? stop_at = null) {
+		var b = (Block) sym;
 
 		append_scope_free (sym, stop_at);
 
@@ -3290,9 +3294,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		} else if (sym.parent_symbol is Method) {
 			append_param_free ((Method) sym.parent_symbol);
 		}
-	}
-
-	protected virtual void append_scope_free (Symbol sym, CodeNode? stop_at = null) {
 	}
 
 	private void append_param_free (Method m) {

@@ -362,6 +362,8 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 	}
 
 	protected override void append_scope_free (Symbol sym, CodeNode? stop_at = null) {
+		base.append_scope_free (sym, stop_at);
+
 		if (!(stop_at is TryStatement || stop_at is CatchClause)) {
 			var finally_block = (Block) null;
 			if (sym.parent_node is TryStatement) {
