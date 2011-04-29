@@ -297,7 +297,7 @@ namespace Gst {
 		[CCode (cname = "gst_clock_new_single_shot_id")]
 		public ClockID.single_shot (Gst.Clock clock, Gst.ClockTime time);
 		public void unschedule ();
-		public Gst.ClockReturn wait (Gst.ClockTimeDiff jitter);
+		public Gst.ClockReturn wait (out Gst.ClockTimeDiff jitter);
 		public Gst.ClockReturn wait_async (Gst.ClockCallback func);
 		public Gst.ClockReturn wait_async_full (Gst.ClockCallback func, GLib.DestroyNotify destroy_data);
 	}
@@ -991,7 +991,7 @@ namespace Gst {
 	public class Plugin : Gst.Object {
 		[CCode (has_construct_function = false)]
 		protected Plugin ();
-		public void add_dependency ([CCode (array_length = false)] string?[] env_vars, [CCode (array_length = false)] string?[] paths, [CCode (array_length = false)] string?[] names, Gst.PluginDependencyFlags flags);
+		public void add_dependency ([CCode (array_length = false, array_null_terminated = true)] string?[] env_vars, [CCode (array_length = false, array_null_terminated = true)] string?[] paths, [CCode (array_length = false, array_null_terminated = true)] string?[] names, Gst.PluginDependencyFlags flags);
 		public void add_dependency_simple (string? env_vars, string? paths, string? names, Gst.PluginDependencyFlags flags);
 		public static GLib.Quark error_quark ();
 		public unowned Gst.Structure get_cache_data ();
@@ -2732,9 +2732,9 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static Gst.Element? parse_launch_full (string pipeline_description, Gst.ParseContext? context, Gst.ParseFlags flags) throws GLib.Error;
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static Gst.Element? parse_launchv ([CCode (array_length = false)] string[] argv) throws GLib.Error;
+	public static Gst.Element? parse_launchv ([CCode (array_length = false, array_null_terminated = true)] string[] argv) throws GLib.Error;
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static Gst.Element? parse_launchv_full ([CCode (array_length = false)] string[] argv, Gst.ParseContext? context, Gst.ParseFlags flags) throws GLib.Error;
+	public static Gst.Element? parse_launchv_full ([CCode (array_length = false, array_null_terminated = true)] string[] argv, Gst.ParseContext? context, Gst.ParseFlags flags) throws GLib.Error;
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void print_element_args (GLib.StringBuilder buf, int indent, Gst.Element element);
 	[CCode (cheader_filename = "gst/gst.h")]
