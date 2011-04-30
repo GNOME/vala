@@ -2139,7 +2139,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				var temp_decl = get_temp_variable (list.target_type, false, list);
 				emit_temp_var (temp_decl);
 
-				var instance = get_variable_cexpression (get_variable_cname (temp_decl.name));
+				var instance = get_local_cvalue (temp_decl);
 
 				var field_it = st.get_fields ().iterator ();
 				foreach (Expression expr in list.get_initializers ()) {
@@ -2153,18 +2153,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						}
 					}
 
-					var cexpr = get_cvalue (expr);
-
-					string ctype = field.get_ctype ();
-					if (ctype != null) {
-						cexpr = new CCodeCastExpression (cexpr, ctype);
-					}
-
-					var lhs = new CCodeMemberAccess (instance, field.get_cname ());;
-					ccode.add_assignment (lhs, cexpr);
+					store_field (field, instance, expr.target_value);
 				}
 
-				set_cvalue (list, instance);
+				list.target_value = instance;
 			}
 		} else {
 			var clist = new CCodeInitializerList ();
