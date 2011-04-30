@@ -206,7 +206,20 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 			return;
 		}
 
-		ccode.add_assignment (get_cvalue_ (lvalue), get_cvalue_ (value));
+		string ctype;
+		if (variable is Field) {
+			ctype = ((Field) variable).get_ctype ();
+		} else if (variable is Parameter) {
+			ctype = ((Parameter) variable).ctype;
+		} else {
+			ctype = null;
+		}
+		var cexpr = get_cvalue_ (value);
+		if (ctype != null) {
+			cexpr = new CCodeCastExpression (cexpr, ctype);
+		}
+
+		ccode.add_assignment (get_cvalue_ (lvalue), cexpr);
 
 		if (array_type != null && !variable.no_array_length) {
 			var glib_value = (GLibValue) value;
