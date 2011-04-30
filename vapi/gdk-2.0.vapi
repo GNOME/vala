@@ -408,7 +408,7 @@ namespace Gdk {
 		public bool get_caps_lock_state ();
 		public static unowned Gdk.Keymap get_default ();
 		public Pango.Direction get_direction ();
-		public bool get_entries_for_keycode (uint hardware_keycode, out unowned Gdk.KeymapKey[] keys, out unowned uint[] keyvals, int n_entries);
+		public bool get_entries_for_keycode (uint hardware_keycode, [CCode (array_length = false)] out Gdk.KeymapKey[] keys, [CCode (array_length = false)] out uint[] keyvals, out int n_entries);
 		public bool get_entries_for_keyval (uint keyval, out unowned Gdk.KeymapKey[] keys);
 		public static unowned Gdk.Keymap get_for_display (Gdk.Display display);
 		public bool have_bidi_layouts ();
