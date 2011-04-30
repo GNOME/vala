@@ -74,7 +74,7 @@ namespace Gdk {
 		public Gdk.InputSource get_source ();
 		public void get_state (Gdk.Window window, double axes, Gdk.ModifierType mask);
 		public unowned Gdk.Window get_window_at_position (int win_x, int win_y);
-		public Gdk.GrabStatus grab (Gdk.Window window, Gdk.GrabOwnership grab_ownership, bool owner_events, Gdk.EventMask event_mask, Gdk.Cursor cursor, uint32 time_);
+		public Gdk.GrabStatus grab (Gdk.Window window, Gdk.GrabOwnership grab_ownership, bool owner_events, Gdk.EventMask event_mask, Gdk.Cursor? cursor, uint32 time_);
 		public static bool grab_info_libgtk_only (Gdk.Display display, Gdk.Device device, out unowned Gdk.Window grab_window, bool owner_events);
 		public unowned GLib.List list_axes ();
 		public unowned GLib.List list_slave_devices ();
