@@ -60,7 +60,7 @@ namespace Vte {
 		public void feed_child (string text, long length);
 		public void feed_child_binary (string data, long length);
 		public int fork_command (string? command, [CCode (array_length = false)] string[]? argv, [CCode (array_length = false)] string[]? envv, string? working_directory, bool lastlog, bool utmp, bool wtmp);
-		public bool fork_command_full (Vte.PtyFlags pty_flags, string? working_directory, [CCode (array_length = false)] string[]? argv, [CCode (array_length = false)] string[]? envv, GLib.SpawnFlags spawn_flags, GLib.SpawnChildSetupFunc child_setup, GLib.Pid child_pid) throws GLib.Error;
+		public bool fork_command_full (Vte.PtyFlags pty_flags, string? working_directory, [CCode (array_length = false)] string[] argv, [CCode (array_length = false)] string[]? envv, GLib.SpawnFlags spawn_flags, GLib.SpawnChildSetupFunc? child_setup, out GLib.Pid child_pid) throws GLib.Error;
 		public int forkpty (string[] envv, string working_directory, bool lastlog, bool utmp, bool wtmp);
 		public unowned Gtk.Adjustment get_adjustment ();
 		public bool get_allow_bold ();
