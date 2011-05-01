@@ -753,7 +753,7 @@ public class Vala.GirParser : CodeVisitor {
 				}
 
 				var cl = symbol as Class;
-				if (cl != null && cl.default_construction_method == null) {
+				if (cl != null && !cl.is_compact && cl.default_construction_method == null) {
 					// always provide constructor in generated bindings
 					// to indicate that implicit Object () chainup is allowed
 					var cm = new CreationMethod (null, null, cl.source_reference);
