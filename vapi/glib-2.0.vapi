@@ -4101,7 +4101,7 @@ namespace GLib {
 		public int child_position (Node<G> child);
 		public unowned Node<G> first_child ();
 		public unowned Node<G> last_child ();
-		public unowned Node<G> nth_child ();
+		public unowned Node<G> nth_child (uint n);
 		public unowned Node<G> first_sibling ();
 		public unowned Node<G> next_sibling ();
 		public unowned Node<G> prev_sibling ();
@@ -4115,6 +4115,7 @@ namespace GLib {
 
 		public uint depth ();
 		public uint n_nodes (TraverseFlags flags);
+		public uint n_children ();
 		public uint max_height ();
 
 		[CCode (cname = "g_node_unlink")]
