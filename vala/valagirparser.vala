@@ -747,7 +747,7 @@ public class Vala.GirParser : CodeVisitor {
 			var ns = symbol as Namespace;
 			if (!(new_symbol && merged) && is_container (symbol)) {
 				foreach (var node in members) {
-					if (node.new_symbol && !node.merged && !metadata.get_bool (ArgumentType.HIDDEN) && !(ns != null && node.symbol is Method)) {
+					if (node.new_symbol && !node.merged && !metadata.get_bool (ArgumentType.HIDDEN) && !(ns != null && parent == parser.root && node.symbol is Method)) {
 						add_symbol_to_container (symbol, node.symbol);
 					}
 				}
@@ -760,14 +760,12 @@ public class Vala.GirParser : CodeVisitor {
 					cm.has_construct_function = false;
 					cm.access = SymbolAccessibility.PROTECTED;
 					cl.add_method (cm);
-				} else if (symbol is Namespace) {
+				} else if (symbol is Namespace && parent == parser.root) {
 					// postprocess namespace methods
-					foreach (var nodes in scope.get_values ()) {
-						foreach (var node in nodes) {
-							var m = node.symbol as Method;
-							if (m != null) {
-								parser.process_namespace_method (ns, m);
-							}
+					foreach (var node in members) {
+						var m = node.symbol as Method;
+						if (m != null) {
+							parser.process_namespace_method (ns, m);
 						}
 					}
 				}
