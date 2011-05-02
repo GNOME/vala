@@ -156,6 +156,8 @@ public class Vala.UnaryExpression : Expression {
 		if (operator == UnaryOperator.REF || operator == UnaryOperator.OUT) {
 			inner.lvalue = true;
 			inner.target_type = target_type;
+		} else if (operator == UnaryOperator.INCREMENT || operator == UnaryOperator.DECREMENT) {
+			inner.lvalue = true;
 		}
 
 		if (!inner.check (context)) {
