@@ -2988,10 +2988,30 @@ public class Vala.GirParser : CodeVisitor {
 			}
 		}
 
+		Method method = m;
+
+		// put cancellable as last parameter
+		Parameter cancellable = null;
+		bool is_cancellable_last = false;
+		double cancellable_pos = -1;
+		foreach (var param in method.get_parameters ()) {
+			if (param.name == "cancellable" && param.variable_type.to_qualified_string () == "GLib.Cancellable?" && param.direction == ParameterDirection.IN) {
+				cancellable = param;
+				cancellable.initializer = new NullLiteral (param.source_reference);
+				cancellable_pos = cancellable.cparameter_position;
+			}
+		}
+		if (cancellable != null) {
+			if (method.get_parameters().get (method.get_parameters().size - 1) == cancellable) {
+				is_cancellable_last = true;
+			}
+			method.get_parameters().remove (cancellable);
+			method.scope.remove (cancellable.name);
+		}
+
 		if (finish_method_node != null && finish_method_node.symbol is Method) {
 			finish_method_node.process (this);
 			var finish_method = (Method) finish_method_node.symbol;
-			Method method;
 			if (finish_method is CreationMethod) {
 				method = new CreationMethod (((CreationMethod) finish_method).class_name, null, m.source_reference);
 				method.access = m.access;
@@ -3011,27 +3031,10 @@ public class Vala.GirParser : CodeVisitor {
 				}
 				node.symbol = method;
 			} else {
-				method = m;
 				method.return_type = finish_method.return_type.copy ();
 				method.no_array_length = finish_method.no_array_length;
 				method.array_null_terminated = finish_method.array_null_terminated;
-				// put cancellable as last parameter
-				Parameter cancellable = null;
-				foreach (var param in method.get_parameters ()) {
-					if (param.name == "cancellable" && param.variable_type.to_qualified_string () == "GLib.Cancellable?" && param.direction == ParameterDirection.IN) {
-						cancellable = param;
-						cancellable.initializer = new NullLiteral (param.source_reference);
-					} else if (cancellable != null) {
-						param.cparameter_position--;
-						param.carray_length_parameter_position--;
-						param.cdelegate_target_parameter_position--;
-						param.cdestroy_notify_parameter_position--;
-					}
-				}
-				if (cancellable != null) {
-					method.get_parameters().remove (cancellable);
-					method.scope.remove (cancellable.name);
-				}
+
 				foreach (var param in finish_method.get_parameters ()) {
 					if (param.direction == ParameterDirection.OUT) {
 						var async_param = param.copy ();
@@ -3042,15 +3045,21 @@ public class Vala.GirParser : CodeVisitor {
 						method.add_parameter (async_param);
 					}
 				}
-				if (cancellable != null) {
-					method.add_parameter (cancellable);
-				}
 
 				foreach (DataType error_type in finish_method.get_error_types ()) {
 					method.add_error_type (error_type.copy ());
 				}
 				finish_method_node.processed = true;
 				finish_method_node.merged = true;
+			}
+		}
+
+		if (cancellable != null) {
+			method.add_parameter (cancellable);
+			if (!is_cancellable_last) {
+				cancellable.cparameter_position = cancellable_pos;
+			} else {
+				// avoid useless bloat in the vapi
 			}
 		}
 	}
