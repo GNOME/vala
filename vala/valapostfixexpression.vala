@@ -71,6 +71,7 @@ public class Vala.PostfixExpression : Expression {
 
 		checked = true;
 
+		inner.lvalue = true;
 		if (!inner.check (context)) {
 			error = true;
 			return false;
