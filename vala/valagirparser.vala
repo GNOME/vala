@@ -544,6 +544,52 @@ public class Vala.GirParser : CodeVisitor {
 			}
 		}
 
+		public string get_cprefix () {
+			if (name == null) {
+				return "";
+			}
+			if (new_symbol) {
+				var cprefix = girdata["c:identifier-prefixes"];
+				if (cprefix != null) {
+					return cprefix;
+				} else {
+					return get_cname ();
+				}
+			} else {
+				return symbol.get_cprefix ();
+			}
+		}
+
+		public string get_cname () {
+			if (name == null) {
+				return "";
+			}
+			if (new_symbol) {
+				var cname = girdata["c:identifier"];
+				if (cname == null) {
+					cname = girdata["c:type"];
+				}
+				if (cname == null) {
+					cname = "%s%s".printf (parent.get_cprefix (), name);
+				}
+				return cname;
+			} else {
+				if (symbol is TypeSymbol) {
+					return ((TypeSymbol) symbol).get_cname ();
+				} else if (symbol is Constant) {
+					return ((Constant) symbol).get_cname ();
+				} else if (symbol is Method) {
+					return ((Method) symbol).get_cname ();
+				} else if (symbol is PropertyAccessor) {
+					return ((PropertyAccessor) symbol).get_cname ();
+				} else if (symbol is Field) {
+					return ((Field) symbol).get_cname ();
+				} else {
+					assert_not_reached ();
+				}
+			}
+		}
+
 		public void process (GirParser parser) {
 			if (processed) {
 				return;
@@ -702,11 +748,10 @@ public class Vala.GirParser : CodeVisitor {
 				} else if (symbol is Struct) {
 					if (parent.symbol is Struct) {
 					// nested struct
-						var st = (Struct) parent.symbol;
 						foreach (var fn in members) {
 							var f = fn.symbol as Field;
 							if (f != null) {
-								f.set_cname (st.get_cname () + "." + f.get_cname ());
+								f.set_cname (parent.get_cname () + "." + fn.get_cname ());
 								f.name = symbol.name + "_" + f.name;
 								fn.name = f.name;
 								parent.add_member (fn);
@@ -1667,11 +1712,11 @@ public class Vala.GirParser : CodeVisitor {
 
 			if (reader.name == "member") {
 				if (error_domain) {
-					var ec = parse_error_member ();
-					calculate_common_prefix (ref common_prefix, ec.get_cname ());
+					parse_error_member ();
+					calculate_common_prefix (ref common_prefix, old_current.get_cname ());
 				} else {
-					var ev = parse_enumeration_member ();
-					calculate_common_prefix (ref common_prefix, ev.get_cname ());
+					parse_enumeration_member ();
+					calculate_common_prefix (ref common_prefix, old_current.get_cname ());
 				}
 			} else {
 				// error
@@ -1704,7 +1749,7 @@ public class Vala.GirParser : CodeVisitor {
 		parse_enumeration ("bitfield");
 	}
 
-	EnumValue parse_enumeration_member () {
+	void parse_enumeration_member () {
 		start_element ("member");
 		push_node (element_get_name().up().replace ("-", "_"), false);
 
@@ -1718,10 +1763,9 @@ public class Vala.GirParser : CodeVisitor {
 
 		pop_node ();
 		end_element ("member");
-		return ev;
 	}
 
-	ErrorCode parse_error_member () {
+	void parse_error_member () {
 		start_element ("member");
 		push_node (element_get_name().up().replace ("-", "_"), false);
 
@@ -1741,7 +1785,6 @@ public class Vala.GirParser : CodeVisitor {
 
 		pop_node ();
 		end_element ("member");
-		return ec;
 	}
 
 	DataType parse_return_value (out string? ctype = null) {
@@ -2938,7 +2981,7 @@ public class Vala.GirParser : CodeVisitor {
 		if (finish_method_node == null) {
 			var method_cname = m.get_finish_cname ();
 			foreach (var n in node.parent.members) {
-				if (n.symbol is Method && ((Method) n.symbol).get_cname () == method_cname) {
+				if (n.symbol is Method && n.get_cname () == method_cname) {
 					finish_method_node = n;
 					break;
 				}
@@ -2957,7 +3000,7 @@ public class Vala.GirParser : CodeVisitor {
 				method.coroutine = true;
 				method.has_construct_function = finish_method.has_construct_function;
 				method.attributes = m.attributes.copy ();
-				method.set_cname (m.get_cname ());
+				method.set_cname (node.get_cname ());
 				if (finish_method_base == "new") {
 					method.name = null;
 				} else if (finish_method_base.has_prefix ("new_")) {
