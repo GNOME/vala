@@ -3743,19 +3743,19 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (ma != null) {
 			// property postfix expression
 			var prop = (Property) ma.symbol_reference;
-			
+
 			// assign current value to temp variable
 			var temp_decl = get_temp_variable (prop.property_type, true, expr, false);
 			emit_temp_var (temp_decl);
-			ccode.add_assignment (get_variable_cexpression (temp_decl.name), get_cvalue (expr.inner));
-			
+			store_local (temp_decl, expr.inner.target_value, true);
+
 			// increment/decrement property
 			var op = expr.increment ? CCodeBinaryOperator.PLUS : CCodeBinaryOperator.MINUS;
 			var cexpr = new CCodeBinaryExpression (op, get_variable_cexpression (temp_decl.name), new CCodeConstant ("1"));
 			store_property (prop, ma.inner, new GLibValue (expr.value_type, cexpr));
-			
+
 			// return previous value
-			set_cvalue (expr, get_variable_cexpression (temp_decl.name));
+			expr.target_value = get_local_cvalue (temp_decl);
 			return;
 		}
 
@@ -3767,7 +3767,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			// assign current value to temp variable
 			var temp_decl = get_temp_variable (expr.inner.value_type, true, expr, false);
 			emit_temp_var (temp_decl);
-			ccode.add_assignment (get_variable_cexpression (temp_decl.name), get_cvalue (expr.inner));
+			store_local (temp_decl, expr.inner.target_value, true);
 
 			// increment/decrement variable
 			var op = expr.increment ? CCodeBinaryOperator.PLUS : CCodeBinaryOperator.MINUS;
@@ -3775,7 +3775,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			ccode.add_assignment (get_cvalue (expr.inner), cexpr);
 
 			// return previous value
-			set_cvalue (expr, get_variable_cexpression (temp_decl.name));
+			expr.target_value = get_local_cvalue (temp_decl);
 		}
 	}
 	
