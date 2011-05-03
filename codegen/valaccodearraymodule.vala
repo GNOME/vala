@@ -409,15 +409,18 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		cfile.add_function (fun);
 	}
 
-	public override CCodeExpression? get_ref_cexpression (DataType expression_type, CCodeExpression cexpr, Expression? expr, CodeNode node) {
-		if (expression_type is ArrayType) {
-			var array_type = (ArrayType) expression_type;
+	public override CCodeExpression? copy_value (TargetValue value, Expression? expr, CodeNode node) {
+		var type = value.value_type;
+		var cexpr = get_cvalue_ (value);
+
+		if (type is ArrayType) {
+			var array_type = (ArrayType) type;
 
 			if (!array_type.fixed_length) {
-				return base.get_ref_cexpression (expression_type, cexpr, expr, node);
+				return base.copy_value (value, expr, node);
 			}
 
-			var decl = get_temp_variable (expression_type, false, node);
+			var decl = get_temp_variable (type, false, node);
 			emit_temp_var (decl);
 
 			var ctemp = get_variable_cexpression (decl.name);
@@ -433,7 +436,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 			return ccomma;
 		} else {
-			return base.get_ref_cexpression (expression_type, cexpr, expr, node);
+			return base.copy_value (value, expr, node);
 		}
 	}
 

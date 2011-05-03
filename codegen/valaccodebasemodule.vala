@@ -3859,19 +3859,33 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
-	public virtual CCodeExpression? get_ref_cexpression (DataType expression_type, CCodeExpression cexpr, Expression? expr, CodeNode node) {
-		if (expression_type is DelegateType) {
+	public CCodeExpression? get_ref_cexpression (DataType expression_type, CCodeExpression cexpr, Expression? expr, CodeNode node) {
+		var value = new GLibValue (expression_type, cexpr);
+		if (expr != null && expr.target_value != null) {
+			value.array_length_cvalues = ((GLibValue) expr.target_value).array_length_cvalues;
+			value.array_null_terminated = ((GLibValue) expr.target_value).array_null_terminated;
+			value.delegate_target_cvalue = get_delegate_target_cvalue (expr.target_value);
+			value.delegate_target_destroy_notify_cvalue = get_delegate_target_destroy_notify_cvalue (expr.target_value);
+		}
+		return copy_value (value, expr, node);
+	}
+
+	public virtual CCodeExpression? copy_value (TargetValue value, Expression? expr, CodeNode node) {
+		var type = value.value_type;
+		var cexpr = get_cvalue_ (value);
+
+		if (type is DelegateType) {
 			return cexpr;
 		}
 
-		if (expression_type is ValueType && !expression_type.nullable) {
+		if (type is ValueType && !type.nullable) {
 			// normal value type, no null check
 
-			var decl = get_temp_variable (expression_type, false, node);
+			var decl = get_temp_variable (type, false, node);
 			emit_temp_var (decl);
 			var ctemp = get_variable_cexpression (decl.name);
 
-			var vt = (ValueType) expression_type;
+			var vt = (ValueType) type;
 			var st = (Struct) vt.type_symbol;
 			var copy_call = new CCodeFunctionCall (new CCodeIdentifier (st.get_copy_function ()));
 			copy_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr));
@@ -3881,7 +3895,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				generate_struct_copy_function (st);
 			}
 
-			if (gvalue_type != null && expression_type.data_type == gvalue_type) {
+			if (gvalue_type != null && type.data_type == gvalue_type) {
 				var cisvalid = new CCodeFunctionCall (new CCodeIdentifier ("G_IS_VALUE"));
 				cisvalid.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr));
 
@@ -3916,14 +3930,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		 * if static type of expr is non-null
 		 */
 		 
-		var dupexpr = get_dup_func_expression (expression_type, node.source_reference);
+		var dupexpr = get_dup_func_expression (type, node.source_reference);
 
 		if (dupexpr == null) {
 			node.error = true;
 			return null;
 		}
 
-		if (dupexpr is CCodeIdentifier && !(expression_type is ArrayType) && !(expression_type is GenericType) && !is_ref_function_void (expression_type)) {
+		if (dupexpr is CCodeIdentifier && !(type is ArrayType) && !(type is GenericType) && !is_ref_function_void (type)) {
 			// generate and call NULL-aware ref function to reduce number
 			// of temporary variables and simplify code
 
@@ -3961,42 +3975,42 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		var ccall = new CCodeFunctionCall (dupexpr);
 
-		if (!(expression_type is ArrayType) && expr != null && expr.is_non_null ()
-		    && !is_ref_function_void (expression_type)) {
+		if (!(type is ArrayType) && expr != null && expr.is_non_null ()
+		    && !is_ref_function_void (type)) {
 			// expression is non-null
 			ccall.add_argument (get_cvalue (expr));
 			
 			return ccall;
 		} else {
-			var decl = get_temp_variable (expression_type, false, node, false);
+			var decl = get_temp_variable (type, false, node, false);
 			emit_temp_var (decl);
 
 			var ctemp = get_variable_cexpression (decl.name);
 			
 			var cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ctemp, new CCodeConstant ("NULL"));
-			if (expression_type.type_parameter != null) {
+			if (type.type_parameter != null) {
 				// dup functions are optional for type parameters
-				var cdupisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, get_dup_func_expression (expression_type, node.source_reference), new CCodeConstant ("NULL"));
+				var cdupisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, get_dup_func_expression (type, node.source_reference), new CCodeConstant ("NULL"));
 				cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.OR, cisnull, cdupisnull);
 			}
 
-			if (expression_type.type_parameter != null) {
+			if (type.type_parameter != null) {
 				// cast from gconstpointer to gpointer as GBoxedCopyFunc expects gpointer
 				ccall.add_argument (new CCodeCastExpression (ctemp, "gpointer"));
 			} else {
 				ccall.add_argument (ctemp);
 			}
 
-			if (expression_type is ArrayType) {
-				var array_type = (ArrayType) expression_type;
+			if (type is ArrayType) {
+				var array_type = (ArrayType) type;
 				bool first = true;
 				CCodeExpression csizeexpr = null;
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					if (first) {
-						csizeexpr = get_array_length_cexpression (expr, dim);
+						csizeexpr = get_array_length_cvalue (value, dim);
 						first = false;
 					} else {
-						csizeexpr = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, csizeexpr, get_array_length_cexpression (expr, dim));
+						csizeexpr = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, csizeexpr, get_array_length_cvalue (value, dim));
 					}
 				}
 
@@ -4015,7 +4029,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			ccomma.append_expression (new CCodeAssignment (ctemp, cexpr));
 
 			CCodeExpression cifnull;
-			if (expression_type.data_type != null) {
+			if (type.data_type != null) {
 				cifnull = new CCodeConstant ("NULL");
 			} else {
 				// the value might be non-null even when the dup function is null,
@@ -4029,7 +4043,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			// repeat temp variable at the end of the comma expression
 			// if the ref function returns void
-			if (is_ref_function_void (expression_type)) {
+			if (is_ref_function_void (type)) {
 				ccomma.append_expression (ctemp);
 			}
 
