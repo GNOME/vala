@@ -771,7 +771,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 			if (requires_destroy (arg.value_type)) {
 				// unref old value
-				ccode.add_expression (get_unref_expression (get_cvalue (unary.inner), unary.inner.value_type, unary.inner));
+				ccode.add_expression (destroy_value (unary.inner.target_value));
 			}
 
 			// assign new value
