@@ -2807,25 +2807,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return destroy_value (get_field_cvalue (field, instance));
 	}
 
-	public CCodeExpression get_unref_expression (CCodeExpression cvar, DataType type, Expression? expr, bool is_macro_definition = false) {
-		if (expr != null) {
-			if (expr.symbol_reference is LocalVariable) {
-				return destroy_local ((LocalVariable) expr.symbol_reference);
-			} else if (expr.symbol_reference is Parameter) {
-				return destroy_parameter ((Parameter) expr.symbol_reference);
-			}
-		}
-		var value = new GLibValue (type, cvar);
-		if (expr != null && expr.target_value != null) {
-			value.array_length_cvalues = ((GLibValue) expr.target_value).array_length_cvalues;
-			value.array_null_terminated = ((GLibValue) expr.target_value).array_null_terminated;
-			value.array_length_cexpr = ((GLibValue) expr.target_value).array_length_cexpr;
-			value.delegate_target_cvalue = get_delegate_target_cvalue (expr.target_value);
-			value.delegate_target_destroy_notify_cvalue = get_delegate_target_destroy_notify_cvalue (expr.target_value);
-		}
-		return destroy_value (value, is_macro_definition);
-	}
-
 	// logic in this method is temporarily duplicated in destroy_variable
 	// apply changes to both methods
 	public virtual CCodeExpression destroy_value (TargetValue value, bool is_macro_definition = false) {
