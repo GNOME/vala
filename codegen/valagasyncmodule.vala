@@ -90,14 +90,10 @@ public class Vala.GAsyncModule : GSignalModule {
 		freefunc.modifiers = CCodeModifiers.STATIC;
 		freefunc.add_parameter (new CCodeParameter ("_data", "gpointer"));
 
-		var freeblock = new CCodeBlock ();
-		freefunc.block = freeblock;
-
-		var datadecl = new CCodeDeclaration (dataname + "*");
-		datadecl.add_declarator (new CCodeVariableDeclarator ("data", new CCodeIdentifier ("_data")));
-		freeblock.add_statement (datadecl);
-
 		push_context (new EmitContext (m));
+		push_function (freefunc);
+
+		ccode.add_declaration (dataname + "*", new CCodeVariableDeclarator ("data", new CCodeIdentifier ("_data")));
 
 		foreach (Parameter param in m.get_parameters ()) {
 			if (param.direction != ParameterDirection.OUT) {
@@ -111,7 +107,7 @@ public class Vala.GAsyncModule : GSignalModule {
 					bool old_captured = param.captured;
 					param.captured = false;
 
-					freeblock.add_statement (new CCodeExpressionStatement (destroy_parameter (param)));
+					ccode.add_expression (destroy_parameter (param));
 
 					param.captured = old_captured;
 				}
@@ -126,7 +122,7 @@ public class Vala.GAsyncModule : GSignalModule {
 			ma.value_type = v.variable_type.copy ();
 			visit_member_access (ma);
 			var unref_expr = get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "result"), m.return_type, ma);
-			freeblock.add_statement (new CCodeExpressionStatement (unref_expr));
+			ccode.add_expression (unref_expr);
 		}
 
 		if (m.binding == MemberBinding.INSTANCE) {
@@ -138,16 +134,17 @@ public class Vala.GAsyncModule : GSignalModule {
 				ma.symbol_reference = m.this_parameter;
 				ma.value_type = m.this_parameter.variable_type.copy ();
 				visit_member_access (ma);
-				freeblock.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "self"), m.this_parameter.variable_type, ma)));
+				ccode.add_expression (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "self"), m.this_parameter.variable_type, ma));
 			}
 		}
 
-		pop_context ();
 
 		var freecall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_free"));
 		freecall.add_argument (new CCodeIdentifier (dataname));
 		freecall.add_argument (new CCodeIdentifier ("data"));
-		freeblock.add_statement (new CCodeExpressionStatement (freecall));
+		ccode.add_expression (freecall);
+
+		pop_context ();
 
 		cfile.add_function_declaration (freefunc);
 		cfile.add_function (freefunc);
