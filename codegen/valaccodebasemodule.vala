@@ -2627,7 +2627,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				push_function (function);
 
-				ccode.add_expression (get_unref_expression (new CCodeIdentifier ("var"), type, null, true));
+				ccode.add_expression (destroy_value (new GLibValue (type, new CCodeIdentifier ("var")), true));
 
 				pop_function ();
 
