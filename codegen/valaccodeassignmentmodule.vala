@@ -62,7 +62,9 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 			ccode.add_assignment (get_variable_cexpression (temp_decl.name), rhs);
 			if (unref_old) {
 				/* unref old value */
-				ccode.add_expression (get_unref_expression (lhs, assignment.left.value_type, assignment.left));
+				var value = ((GLibValue) assignment.left.target_value).copy ();
+				value.cvalue = lhs;
+				ccode.add_expression (destroy_value (value));
 			}
 			
 			if (array && !variable.no_array_length && !variable.array_null_terminated) {
