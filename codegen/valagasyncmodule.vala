@@ -149,6 +149,9 @@ public class Vala.GAsyncModule : GSignalModule {
 		freecall.add_argument (new CCodeIdentifier ("data"));
 		freeblock.add_statement (new CCodeExpressionStatement (freecall));
 
+		cfile.add_function_declaration (freefunc);
+		cfile.add_function (freefunc);
+
 		return freefunc;
 	}
 
@@ -309,11 +312,6 @@ public class Vala.GAsyncModule : GSignalModule {
 		cfile.add_type_definition (structure);
 	}
 
-	void append_function (CCodeFunction function) {
-		cfile.add_function_declaration (function);
-		cfile.add_function (function);
-	}
-
 	public override void generate_method_declaration (Method m, CCodeFile decl_space) {
 		if (m.coroutine) {
 			if (add_symbol_declaration (decl_space, m, m.get_cname ())) {
@@ -361,7 +359,7 @@ public class Vala.GAsyncModule : GSignalModule {
 
 				closure_struct = data;
 
-				append_function (generate_free_function (m));
+				generate_free_function (m);
 				generate_async_function (m);
 				generate_finish_function (m);
 
@@ -519,7 +517,8 @@ public class Vala.GAsyncModule : GSignalModule {
 
 		readyfunc.block = readyblock;
 
-		append_function (readyfunc);
+		cfile.add_function_declaration (readyfunc);
+		cfile.add_function (readyfunc);
 
 		return readyfunc.name;
 	}
