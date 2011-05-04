@@ -2795,165 +2795,16 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return null;
 	}
 
-	// logic in this method is temporarily duplicated in destroy_value
-	// apply changes to both methods
-	public virtual CCodeExpression destroy_variable (Variable variable, TargetValue target_lvalue) {
-		var type = target_lvalue.value_type;
-		var cvar = get_cvalue_ (target_lvalue);
-
-		if (type is DelegateType) {
-			var delegate_target = get_delegate_target_cvalue (target_lvalue);
-			var delegate_target_destroy_notify = get_delegate_target_destroy_notify_cvalue (target_lvalue);
-
-			var ccall = new CCodeFunctionCall (delegate_target_destroy_notify);
-			ccall.add_argument (delegate_target);
-
-			var destroy_call = new CCodeCommaExpression ();
-			destroy_call.append_expression (ccall);
-			destroy_call.append_expression (new CCodeConstant ("NULL"));
-
-			var cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, delegate_target_destroy_notify, new CCodeConstant ("NULL"));
-
-			var ccomma = new CCodeCommaExpression ();
-			ccomma.append_expression (new CCodeConditionalExpression (cisnull, new CCodeConstant ("NULL"), destroy_call));
-			ccomma.append_expression (new CCodeAssignment (cvar, new CCodeConstant ("NULL")));
-			ccomma.append_expression (new CCodeAssignment (delegate_target, new CCodeConstant ("NULL")));
-			ccomma.append_expression (new CCodeAssignment (delegate_target_destroy_notify, new CCodeConstant ("NULL")));
-
-			return ccomma;
-		}
-
-		var ccall = new CCodeFunctionCall (get_destroy_func_expression (type));
-
-		if (type is ValueType && !type.nullable) {
-			// normal value type, no null check
-			var st = type.data_type as Struct;
-			if (st != null && st.is_simple_type ()) {
-				// used for va_list
-				ccall.add_argument (cvar);
-			} else {
-				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cvar));
-			}
-
-			if (gvalue_type != null && type.data_type == gvalue_type) {
-				// g_value_unset must not be called for already unset values
-				var cisvalid = new CCodeFunctionCall (new CCodeIdentifier ("G_IS_VALUE"));
-				cisvalid.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cvar));
-
-				var ccomma = new CCodeCommaExpression ();
-				ccomma.append_expression (ccall);
-				ccomma.append_expression (new CCodeConstant ("NULL"));
-
-				return new CCodeConditionalExpression (cisvalid, ccomma, new CCodeConstant ("NULL"));
-			} else {
-				return ccall;
-			}
-		}
-
-		if (ccall.call is CCodeIdentifier && !(type is ArrayType)) {
-			// generate and use NULL-aware free macro to simplify code
-
-			var freeid = (CCodeIdentifier) ccall.call;
-			string free0_func = "_%s0".printf (freeid.name);
-
-			if (add_wrapper (free0_func)) {
-				var macro = destroy_value (new GLibValue (type, new CCodeIdentifier ("var")), true);
-				cfile.add_type_declaration (new CCodeMacroReplacement.with_expression ("%s(var)".printf (free0_func), macro));
-			}
-
-			ccall = new CCodeFunctionCall (new CCodeIdentifier (free0_func));
-			ccall.add_argument (cvar);
-			return ccall;
-		}
-
-		/* (foo == NULL ? NULL : foo = (unref (foo), NULL)) */
-
-		/* can be simplified to
-		 * foo = (unref (foo), NULL)
-		 * if foo is of static type non-null
-		 */
-
-		var cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, cvar, new CCodeConstant ("NULL"));
-		if (type.type_parameter != null) {
-			if (!(current_type_symbol is Class) || current_class.is_compact) {
-				return new CCodeConstant ("NULL");
-			}
-
-			// unref functions are optional for type parameters
-			var cunrefisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, get_destroy_func_expression (type), new CCodeConstant ("NULL"));
-			cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.OR, cisnull, cunrefisnull);
-		}
-
-		ccall.add_argument (cvar);
-
-		/* set freed references to NULL to prevent further use */
-		var ccomma = new CCodeCommaExpression ();
-
-		if (context.profile == Profile.GOBJECT) {
-			if (type.data_type != null && !type.data_type.is_reference_counting () &&
-			    (type.data_type == gstringbuilder_type
-			     || type.data_type == garray_type
-			     || type.data_type == gbytearray_type
-			     || type.data_type == gptrarray_type)) {
-				ccall.add_argument (new CCodeConstant ("TRUE"));
-			} else if (type.data_type == gthreadpool_type) {
-				ccall.add_argument (new CCodeConstant ("FALSE"));
-				ccall.add_argument (new CCodeConstant ("TRUE"));
-			} else if (type is ArrayType) {
-				var array_type = (ArrayType) type;
-				if (requires_destroy (array_type.element_type)) {
-					CCodeExpression csizeexpr = null;
-					if (variable.array_null_terminated) {
-						var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
-						len_call.add_argument (cvar);
-						csizeexpr = len_call;
-					} else if (variable.has_array_length_cexpr) {
-						csizeexpr = new CCodeConstant (variable.get_array_length_cexpr ());
-					} else if (!variable.no_array_length) {
-						csizeexpr = get_array_length_cvalue (target_lvalue);
-					}
-
-					if (csizeexpr != null) {
-						var st = array_type.element_type.data_type as Struct;
-						if (st != null && !array_type.element_type.nullable) {
-							ccall.call = new CCodeIdentifier (append_struct_array_free (st));
-							ccall.add_argument (csizeexpr);
-						} else {
-							requires_array_free = true;
-							ccall.call = new CCodeIdentifier ("_vala_array_free");
-							ccall.add_argument (csizeexpr);
-							ccall.add_argument (new CCodeCastExpression (get_destroy_func_expression (array_type.element_type), "GDestroyNotify"));
-						}
-					}
-				}
-			}
-		}
-
-		ccomma.append_expression (ccall);
-		ccomma.append_expression (new CCodeConstant ("NULL"));
-
-		var cassign = new CCodeAssignment (cvar, ccomma);
-
-		// g_free (NULL) is allowed
-		bool uses_gfree = (type.data_type != null && !type.data_type.is_reference_counting () && type.data_type.get_free_function () == "g_free");
-		uses_gfree = uses_gfree || type is ArrayType;
-		if (uses_gfree) {
-			return cassign;
-		}
-
-		return new CCodeConditionalExpression (cisnull, new CCodeConstant ("NULL"), cassign);
-	}
-
 	public CCodeExpression destroy_local (LocalVariable local) {
-		return destroy_variable (local, get_local_cvalue (local));
+		return destroy_value (get_local_cvalue (local));
 	}
 
 	public CCodeExpression destroy_parameter (Parameter param) {
-		return destroy_variable (param, get_parameter_cvalue (param));
+		return destroy_value (get_parameter_cvalue (param));
 	}
 
 	public CCodeExpression destroy_field (Field field, TargetValue? instance) {
-		return destroy_variable (field, get_field_cvalue (field, instance));
+		return destroy_value (get_field_cvalue (field, instance));
 	}
 
 	public CCodeExpression get_unref_expression (CCodeExpression cvar, DataType type, Expression? expr, bool is_macro_definition = false) {
@@ -3082,17 +2933,29 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			} else if (type is ArrayType) {
 				var array_type = (ArrayType) type;
 				if (requires_destroy (array_type.element_type)) {
-					CCodeExpression csizeexpr = get_array_length_cvalue (value);
-
-					var st = array_type.element_type.data_type as Struct;
-					if (st != null && !array_type.element_type.nullable) {
-						ccall.call = new CCodeIdentifier (append_struct_array_free (st));
-						ccall.add_argument (csizeexpr);
+					CCodeExpression csizeexpr = null;
+					if (((GLibValue) value).array_length_cvalues != null) {
+						csizeexpr = get_array_length_cvalue (value);
+					} else if (get_array_null_terminated (value)) {
+						requires_array_length = true;
+						var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
+						len_call.add_argument (cvar);
+						csizeexpr = len_call;
 					} else {
-						requires_array_free = true;
-						ccall.call = new CCodeIdentifier ("_vala_array_free");
-						ccall.add_argument (csizeexpr);
-						ccall.add_argument (new CCodeCastExpression (get_destroy_func_expression (array_type.element_type), "GDestroyNotify"));
+						csizeexpr = get_array_length_cexpr (value);
+					}
+
+					if (csizeexpr != null) {
+						var st = array_type.element_type.data_type as Struct;
+						if (st != null && !array_type.element_type.nullable) {
+							ccall.call = new CCodeIdentifier (append_struct_array_free (st));
+							ccall.add_argument (csizeexpr);
+						} else {
+							requires_array_free = true;
+							ccall.call = new CCodeIdentifier ("_vala_array_free");
+							ccall.add_argument (csizeexpr);
+							ccall.add_argument (new CCodeCastExpression (get_destroy_func_expression (array_type.element_type), "GDestroyNotify"));
+						}
 					}
 				}
 			}
