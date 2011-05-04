@@ -180,18 +180,16 @@ public class Vala.GObjectModule : GTypeModule {
 		get_prop.add_parameter (new CCodeParameter ("property_id", "guint"));
 		get_prop.add_parameter (new CCodeParameter ("value", "GValue *"));
 		get_prop.add_parameter (new CCodeParameter ("pspec", "GParamSpec *"));
-		
-		var block = new CCodeBlock ();
+
+		push_function (get_prop);
 		
 		CCodeFunctionCall ccall = generate_instance_cast (new CCodeIdentifier ("object"), cl);
-		var cdecl = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
-		cdecl.add_declarator (new CCodeVariableDeclarator ("self", ccall));
-		block.add_statement (cdecl);
+		ccode.add_declaration ("%s *".printf (cl.get_cname ()), new CCodeVariableDeclarator ("self", ccall));
 
 		int boxed_name_id = 0;
 		bool length_declared = false;
 
-		var cswitch = new CCodeSwitchStatement (new CCodeIdentifier ("property_id"));
+		ccode.open_switch (new CCodeIdentifier ("property_id"));
 		var props = cl.get_properties ();
 		foreach (Property prop in props) {
 			if (prop.get_accessor == null || prop.is_abstract) {
@@ -218,29 +216,27 @@ public class Vala.GObjectModule : GTypeModule {
 				generate_property_accessor_declaration (prop.base_interface_property.get_accessor, cfile);
 			}
 
-			cswitch.add_statement (new CCodeCaseStatement (new CCodeIdentifier (prop.get_upper_case_cname ())));
+			ccode.add_case (new CCodeIdentifier (prop.get_upper_case_cname ()));
 			if (prop.property_type.is_real_struct_type ()) {
 				var st = prop.property_type.data_type as Struct;
 				var boxed = "boxed%d".printf (boxed_name_id++);
 
-				cdecl = new CCodeDeclaration (st.get_cname ());
-				cdecl.add_declarator (new CCodeVariableDeclarator (boxed));
-				block.add_statement (cdecl);
+				ccode.add_declaration (st.get_cname (), new CCodeVariableDeclarator (boxed));
 
 				ccall = new CCodeFunctionCall (new CCodeIdentifier (base_prop.get_accessor.get_cname ()));
 				ccall.add_argument (cself);
 				var boxed_addr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (boxed));
 				ccall.add_argument (boxed_addr);
-				cswitch.add_statement (new CCodeExpressionStatement (ccall));
+				ccode.add_expression (ccall);
 
 				var csetcall = new CCodeFunctionCall ();
 				csetcall.call = get_value_setter_function (prop.property_type);
 				csetcall.add_argument (new CCodeIdentifier ("value"));
 				csetcall.add_argument (boxed_addr);
-				cswitch.add_statement (new CCodeExpressionStatement (csetcall));
+				ccode.add_expression (csetcall);
 
 				if (requires_destroy (prop.get_accessor.value_type)) {
-					cswitch.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (boxed), prop.get_accessor.value_type, null)));
+					ccode.add_expression (get_unref_expression (new CCodeIdentifier (boxed), prop.get_accessor.value_type, null));
 				}
 			} else {
 				ccall = new CCodeFunctionCall (new CCodeIdentifier (base_prop.get_accessor.get_cname ()));
@@ -249,9 +245,7 @@ public class Vala.GObjectModule : GTypeModule {
 				if (array_type != null && array_type.element_type.data_type == string_type.data_type) {
 					// G_TYPE_STRV
 					if (!length_declared) {
-						cdecl = new CCodeDeclaration ("int");
-						cdecl.add_declarator (new CCodeVariableDeclarator ("length"));
-						block.add_statement (cdecl);
+						ccode.add_declaration ("int", new CCodeVariableDeclarator ("length"));
 						length_declared = true;
 					}
 					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("length")));
@@ -264,20 +258,19 @@ public class Vala.GObjectModule : GTypeModule {
 				}
 				csetcall.add_argument (new CCodeIdentifier ("value"));
 				csetcall.add_argument (ccall);
-				cswitch.add_statement (new CCodeExpressionStatement (csetcall));
+				ccode.add_expression (csetcall);
 			}
-			cswitch.add_statement (new CCodeBreakStatement ());
+			ccode.add_break ();
 		}
-		cswitch.add_statement (new CCodeLabel ("default"));
-		cswitch.add_statement (get_invalid_property_id_warn_statement ());
-		cswitch.add_statement (new CCodeBreakStatement ());
+		ccode.add_default ();
+		ccode.add_statement (get_invalid_property_id_warn_statement ());
+		ccode.add_break ();
 
-		block.add_statement (cswitch);
+		ccode.close ();
+
+		pop_function ();
 
 		cfile.add_function_declaration (get_prop);
-
-		get_prop.block = block;
-		
 		cfile.add_function (get_prop);
 	}
 	
