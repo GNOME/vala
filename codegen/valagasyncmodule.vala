@@ -117,12 +117,7 @@ public class Vala.GAsyncModule : GSignalModule {
 		if (requires_destroy (m.return_type)) {
 			/* this is very evil. */
 			var v = new LocalVariable (m.return_type, ".result");
-			var ma = new MemberAccess.simple (".result");
-			ma.symbol_reference = v;
-			ma.value_type = v.variable_type.copy ();
-			visit_member_access (ma);
-			var unref_expr = get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "result"), m.return_type, ma);
-			ccode.add_expression (unref_expr);
+			ccode.add_expression (destroy_local (v));
 		}
 
 		if (m.binding == MemberBinding.INSTANCE) {
@@ -130,11 +125,7 @@ public class Vala.GAsyncModule : GSignalModule {
 			this_type.value_owned = true;
 
 			if (requires_destroy (this_type)) {
-				var ma = new MemberAccess.simple ("this");
-				ma.symbol_reference = m.this_parameter;
-				ma.value_type = m.this_parameter.variable_type.copy ();
-				visit_member_access (ma);
-				ccode.add_expression (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "self"), m.this_parameter.variable_type, ma));
+				ccode.add_expression (destroy_parameter (m.this_parameter));
 			}
 		}
 
