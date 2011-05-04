@@ -236,7 +236,7 @@ public class Vala.GObjectModule : GTypeModule {
 				ccode.add_expression (csetcall);
 
 				if (requires_destroy (prop.get_accessor.value_type)) {
-					ccode.add_expression (get_unref_expression (new CCodeIdentifier (boxed), prop.get_accessor.value_type, null));
+					ccode.add_expression (destroy_value (new GLibValue (prop.get_accessor.value_type, new CCodeIdentifier (boxed))));
 				}
 			} else {
 				ccall = new CCodeFunctionCall (new CCodeIdentifier (base_prop.get_accessor.get_cname ()));
