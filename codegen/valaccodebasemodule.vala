@@ -2910,15 +2910,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					} else if (variable.has_array_length_cexpr) {
 						csizeexpr = new CCodeConstant (variable.get_array_length_cexpr ());
 					} else if (!variable.no_array_length) {
-						bool first = true;
-						for (int dim = 1; dim <= array_type.rank; dim++) {
-							if (first) {
-								csizeexpr = get_array_length_cvalue (target_lvalue, dim);
-								first = false;
-							} else {
-								csizeexpr = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, csizeexpr, get_array_length_cvalue (target_lvalue, dim));
-							}
-						}
+						csizeexpr = get_array_length_cvalue (target_lvalue);
 					}
 
 					if (csizeexpr != null) {
@@ -3089,16 +3081,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			} else if (type is ArrayType) {
 				var array_type = (ArrayType) type;
 				if (requires_destroy (array_type.element_type)) {
-					CCodeExpression csizeexpr = null;
-					bool first = true;
-					for (int dim = 1; dim <= array_type.rank; dim++) {
-						if (first) {
-							csizeexpr = get_array_length_cvalue (value, dim);
-							first = false;
-						} else {
-							csizeexpr = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, csizeexpr, get_array_length_cvalue (value, dim));
-						}
-					}
+					CCodeExpression csizeexpr = get_array_length_cvalue (value);
 
 					var st = array_type.element_type.data_type as Struct;
 					if (st != null && !array_type.element_type.nullable) {
@@ -4003,18 +3986,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			if (type is ArrayType) {
 				var array_type = (ArrayType) type;
-				bool first = true;
-				CCodeExpression csizeexpr = null;
-				for (int dim = 1; dim <= array_type.rank; dim++) {
-					if (first) {
-						csizeexpr = get_array_length_cvalue (value, dim);
-						first = false;
-					} else {
-						csizeexpr = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, csizeexpr, get_array_length_cvalue (value, dim));
-					}
-				}
-
-				ccall.add_argument (csizeexpr);
+				ccall.add_argument (get_array_length_cvalue (value));
 
 				if (array_type.element_type is GenericType) {
 					var elem_dupexpr = get_dup_func_expression (array_type.element_type, node.source_reference);
