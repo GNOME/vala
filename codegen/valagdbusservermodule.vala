@@ -314,14 +314,8 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 					if (requires_destroy (m.return_type)) {
 						// keep local alive (symbol_reference is weak)
-						// space before `result' is work around to not trigger
-						// variable renaming, we really mean C identifier `result' here
-						var local = new LocalVariable (m.return_type, " result");
-						var ma = new MemberAccess.simple ("result");
-						ma.symbol_reference = local;
-						ma.value_type = local.variable_type.copy ();
-						visit_member_access (ma);
-						ccode.add_expression (get_unref_expression (new CCodeIdentifier ("result"), m.return_type, ma));
+						var local = new LocalVariable (m.return_type, ".result");
+						ccode.add_expression (destroy_local (local));
 					}
 				} else {
 					ccode.add_declaration (m.return_type.get_cname (), new CCodeVariableDeclarator ("result"));
@@ -339,14 +333,8 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 					if (requires_destroy (m.return_type)) {
 						// keep local alive (symbol_reference is weak)
-						// space before `result' is work around to not trigger
-						// variable renaming, we really mean C identifier `result' here
-						var local = new LocalVariable (m.return_type, " result");
-						var ma = new MemberAccess.simple ("result");
-						ma.symbol_reference = local;
-						ma.value_type = local.variable_type.copy ();
-						visit_member_access (ma);
-						ccode.add_expression (get_unref_expression (new CCodeIdentifier ("result"), m.return_type, ma));
+						var local = new LocalVariable (m.return_type, ".result");
+						ccode.add_expression (destroy_local (local));
 					}
 				}
 			}
@@ -534,14 +522,8 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 		if (requires_destroy (prop.get_accessor.value_type)) {
 			// keep local alive (symbol_reference is weak)
-			// space before `result' is work around to not trigger
-			// variable renaming, we really mean C identifier `result' here
-			var local = new LocalVariable (prop.get_accessor.value_type, " result");
-			var ma = new MemberAccess.simple ("result");
-			ma.symbol_reference = local;
-			ma.value_type = local.variable_type.copy ();
-			visit_member_access (ma);
-			ccode.add_expression (get_unref_expression (new CCodeIdentifier ("result"), prop.get_accessor.value_type, ma));
+			var local = new LocalVariable (prop.get_accessor.value_type, ".result");
+			ccode.add_expression (destroy_local (local));
 		}
 
 		ccode.add_return (new CCodeIdentifier ("_reply"));
@@ -596,11 +578,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		if (requires_destroy (owned_type)) {
 			// keep local alive (symbol_reference is weak)
 			var local = new LocalVariable (owned_type, "value");
-			var ma = new MemberAccess.simple ("value");
-			ma.symbol_reference = local;
-			ma.value_type = local.variable_type.copy ();
-			visit_member_access (ma);
-			ccode.add_expression (get_unref_expression (new CCodeIdentifier ("value"), owned_type, ma));
+			ccode.add_expression (destroy_local (local));
 		}
 
 		pop_function ();
