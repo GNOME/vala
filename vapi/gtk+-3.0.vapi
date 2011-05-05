@@ -672,17 +672,6 @@ namespace Gtk {
 		public weak Gtk.BindingSignal next;
 		public weak string signal_name;
 	}
-	[Compact]
-	[CCode (copy_function = "gtk_border_copy", type_id = "GTK_TYPE_BORDER", cheader_filename = "gtk/gtk.h")]
-	public class Border {
-		public int16 bottom;
-		public int16 left;
-		public int16 right;
-		public int16 top;
-		[CCode (has_construct_function = false)]
-		public Border ();
-		public Gtk.Border copy ();
-	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Box : Gtk.Container, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
@@ -1580,7 +1569,7 @@ namespace Gtk {
 		public Gtk.ImageType get_icon_storage_type (Gtk.EntryIconPosition icon_pos);
 		public unowned string get_icon_tooltip_markup (Gtk.EntryIconPosition icon_pos);
 		public unowned string get_icon_tooltip_text (Gtk.EntryIconPosition icon_pos);
-		public unowned Gtk.Border get_inner_border ();
+		public unowned Gtk.Border? get_inner_border ();
 		public unichar get_invisible_char ();
 		public unowned Pango.Layout get_layout ();
 		public void get_layout_offsets (out int x, out int y);
@@ -2108,8 +2097,8 @@ namespace Gtk {
 		public bool get_embedded_rect (out Gdk.Rectangle rectangle);
 		public unowned string get_filename ();
 		public Gdk.Pixbuf load_icon () throws GLib.Error;
-		public unowned Gdk.Pixbuf load_symbolic (Gdk.RGBA fg, Gdk.RGBA success_color, Gdk.RGBA warning_color, Gdk.RGBA error_color, bool was_symbolic) throws GLib.Error;
-		public unowned Gdk.Pixbuf load_symbolic_for_context (Gtk.StyleContext context, bool was_symbolic) throws GLib.Error;
+		public Gdk.Pixbuf load_symbolic (Gdk.RGBA fg, Gdk.RGBA? success_color = null, Gdk.RGBA? warning_color = null, Gdk.RGBA? error_color = null, out bool was_symbolic = null) throws GLib.Error;
+		public Gdk.Pixbuf load_symbolic_for_context (Gtk.StyleContext context, out bool was_symbolic = null) throws GLib.Error;
 		public void set_raw_coordinates (bool raw_coordinates);
 	}
 	[Compact]
@@ -3944,15 +3933,15 @@ namespace Gtk {
 		public void add_region (string region_name, Gtk.RegionFlags flags);
 		public void cancel_animations (void* region_id);
 		public void @get (Gtk.StateFlags state);
-		public void get_background_color (Gtk.StateFlags state, Gdk.RGBA color);
-		public void get_border (Gtk.StateFlags state, Gtk.Border border);
-		public void get_border_color (Gtk.StateFlags state, Gdk.RGBA color);
-		public void get_color (Gtk.StateFlags state, Gdk.RGBA color);
+		public Gdk.RGBA get_background_color (Gtk.StateFlags state);
+		public Gtk.Border get_border (Gtk.StateFlags state);
+		public Gdk.RGBA get_border_color (Gtk.StateFlags state);
+		public Gdk.RGBA get_color (Gtk.StateFlags state);
 		public Gtk.TextDirection get_direction ();
 		public unowned Pango.FontDescription get_font (Gtk.StateFlags state);
 		public Gtk.JunctionSides get_junction_sides ();
-		public void get_margin (Gtk.StateFlags state, Gtk.Border margin);
-		public void get_padding (Gtk.StateFlags state, Gtk.Border padding);
+		public Gtk.Border get_margin (Gtk.StateFlags state);
+		public Gtk.Border get_padding (Gtk.StateFlags state);
 		public unowned Gtk.WidgetPath get_path ();
 		public void get_property (string property, Gtk.StateFlags state, GLib.Value value);
 		public unowned Gdk.Screen get_screen ();
@@ -5537,7 +5526,7 @@ namespace Gtk {
 	public class WidgetAuxInfo {
 		public uint halign;
 		public int height;
-		public weak Gtk.Border margin;
+		public Gtk.Border margin;
 		public uint valign;
 		public int width;
 	}
@@ -6072,6 +6061,13 @@ namespace Gtk {
 		public int y;
 		public int width;
 		public int height;
+	}
+	[CCode (type_id = "GTK_TYPE_BORDER", cheader_filename = "gtk/gtk.h")]
+	public struct Border {
+		public int16 left;
+		public int16 right;
+		public int16 top;
+		public int16 bottom;
 	}
 	[CCode (type_id = "GTK_TYPE_IM_CONTEXT_INFO", cheader_filename = "gtk/gtk.h")]
 	public struct IMContextInfo {
