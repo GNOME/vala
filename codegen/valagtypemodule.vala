@@ -764,7 +764,6 @@ public class Vala.GTypeModule : GErrorModule {
 		push_function (function);
 
 		var vpointer = new CCodeMemberAccess (new CCodeMemberAccess.pointer (new CCodeIdentifier ("value"), "data[0]"), "v_pointer");
-		var ret = new CCodeReturnStatement ( vpointer );
 		ccode.add_return (vpointer);
 
 		pop_function ();
