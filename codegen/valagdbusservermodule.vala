@@ -719,11 +719,13 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			ccheck.add_argument (new CCodeIdentifier ("property_name"));
 			ccheck.add_argument (new CCodeConstant ("\"%s\"".printf (get_dbus_name_for_member (prop))));
 
-			if (!firstif) {
-				ccode.add_else ();
+			var cond = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ccheck, new CCodeConstant ("0"));
+			if (firstif) {
+				ccode.open_if (cond);
+				firstif = false;
+			} else {
+				ccode.else_if (cond);
 			}
-			ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ccheck, new CCodeConstant ("0")));
-			firstif = false;
 
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier (generate_dbus_property_get_wrapper (prop, sym)));
 			ccall.add_argument (new CCodeIdentifier ("object"));
@@ -781,11 +783,13 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			ccheck.add_argument (new CCodeIdentifier ("property_name"));
 			ccheck.add_argument (new CCodeConstant ("\"%s\"".printf (get_dbus_name_for_member (prop))));
 
-			if (!firstif) {
-				ccode.add_else ();
+			var cond = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ccheck, new CCodeConstant ("0"));
+			if (firstif) {
+				ccode.open_if (cond);
+				firstif = false;
+			} else {
+				ccode.else_if (cond);
 			}
-			ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ccheck, new CCodeConstant ("0")));
-			firstif = false;
 
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier (generate_dbus_property_set_wrapper (prop, sym)));
 			ccall.add_argument (new CCodeIdentifier ("object"));
