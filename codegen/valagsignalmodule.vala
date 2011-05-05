@@ -211,11 +211,9 @@ public class Vala.GSignalModule : GObjectModule {
 		signal_marshaller.add_parameter (new CCodeParameter ("param_values", "const GValue *"));
 		signal_marshaller.add_parameter (new CCodeParameter ("invocation_hint", "gpointer"));
 		signal_marshaller.add_parameter (new CCodeParameter ("marshal_data", "gpointer"));
-		
-		cfile.add_function_declaration (signal_marshaller);
-		
-		var marshaller_body = new CCodeBlock ();
-		
+
+		push_function (signal_marshaller);
+
 		var callback_decl = new CCodeFunctionDeclarator (get_marshaller_function (params, return_type, "GMarshalFunc"));
 		callback_decl.add_parameter (new CCodeParameter ("data1", "gpointer"));
 		n_params = 1;
@@ -228,54 +226,43 @@ public class Vala.GSignalModule : GObjectModule {
 			}
 		}
 		callback_decl.add_parameter (new CCodeParameter ("data2", "gpointer"));
-		marshaller_body.add_statement (new CCodeTypeDefinition (get_value_type_name_from_type_reference (return_type), callback_decl));
-		
-		var var_decl = new CCodeDeclaration (get_marshaller_function (params, return_type, "GMarshalFunc"));
-		var_decl.modifiers = CCodeModifiers.REGISTER;
-		var_decl.add_declarator (new CCodeVariableDeclarator ("callback"));
-		marshaller_body.add_statement (var_decl);
-		
-		var_decl = new CCodeDeclaration ("GCClosure *");
-		var_decl.modifiers = CCodeModifiers.REGISTER;
-		var_decl.add_declarator (new CCodeVariableDeclarator ("cc", new CCodeCastExpression (new CCodeIdentifier ("closure"), "GCClosure *")));
-		marshaller_body.add_statement (var_decl);
-		
-		var_decl = new CCodeDeclaration ("gpointer");
-		var_decl.modifiers = CCodeModifiers.REGISTER;
-		var_decl.add_declarator (new CCodeVariableDeclarator ("data1"));
-		var_decl.add_declarator (new CCodeVariableDeclarator ("data2"));
-		marshaller_body.add_statement (var_decl);
-		
+		ccode.add_statement (new CCodeTypeDefinition (get_value_type_name_from_type_reference (return_type), callback_decl));
+
+		ccode.add_declaration (get_marshaller_function (params, return_type, "GMarshalFunc"), new CCodeVariableDeclarator ("callback"), CCodeModifiers.REGISTER);
+
+		ccode.add_declaration ("GCClosure *", new CCodeVariableDeclarator ("cc", new CCodeCastExpression (new CCodeIdentifier ("closure"), "GCClosure *")), CCodeModifiers.REGISTER);
+
+		ccode.add_declaration ("gpointer", new CCodeVariableDeclarator ("data1"), CCodeModifiers.REGISTER);
+		ccode.add_declaration ("gpointer", new CCodeVariableDeclarator ("data2"), CCodeModifiers.REGISTER);
+
 		CCodeFunctionCall fc;
-		
+
 		if (return_type.data_type != null || return_type.is_array ()) {
-			var_decl = new CCodeDeclaration (get_value_type_name_from_type_reference (return_type));
-			var_decl.add_declarator (new CCodeVariableDeclarator ("v_return"));
-			marshaller_body.add_statement (var_decl);
+			ccode.add_declaration (get_value_type_name_from_type_reference (return_type), new CCodeVariableDeclarator ("v_return"));
 			
 			fc = new CCodeFunctionCall (new CCodeIdentifier ("g_return_if_fail"));
 			fc.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("return_value"), new CCodeConstant ("NULL")));
-			marshaller_body.add_statement (new CCodeExpressionStatement (fc));
+			ccode.add_expression (fc);
 		}
-		
+
 		fc = new CCodeFunctionCall (new CCodeIdentifier ("g_return_if_fail"));
 		fc.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier ("n_param_values"), new CCodeConstant (n_params.to_string())));
-		marshaller_body.add_statement (new CCodeExpressionStatement (fc));
-		
+		ccode.add_expression (fc);
+
 		var data = new CCodeMemberAccess (new CCodeIdentifier ("closure"), "data", true);
 		var param = new CCodeMemberAccess (new CCodeMemberAccess (new CCodeIdentifier ("param_values"), "data[0]", true), "v_pointer");
 		var cond = new CCodeFunctionCall (new CCodeConstant ("G_CCLOSURE_SWAP_DATA"));
 		cond.add_argument (new CCodeIdentifier ("closure"));
-		var true_block = new CCodeBlock ();
-		true_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("data1"), data)));
-		true_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("data2"), param)));
-		var false_block = new CCodeBlock ();
-		false_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("data1"), param)));
-		false_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("data2"), data)));
-		marshaller_body.add_statement (new CCodeIfStatement (cond, true_block, false_block));
-		
-		var c_assign = new CCodeAssignment (new CCodeIdentifier ("callback"), new CCodeCastExpression (new CCodeConditionalExpression (new CCodeIdentifier ("marshal_data"), new CCodeIdentifier ("marshal_data"), new CCodeMemberAccess (new CCodeIdentifier ("cc"), "callback", true)), get_marshaller_function (params, return_type, "GMarshalFunc")));
-		marshaller_body.add_statement (new CCodeExpressionStatement (c_assign));
+		ccode.open_if (cond);
+		ccode.add_assignment (new CCodeIdentifier ("data1"), data);
+		ccode.add_assignment (new CCodeIdentifier ("data2"), param);
+		ccode.add_else ();
+		ccode.add_assignment (new CCodeIdentifier ("data1"), param);
+		ccode.add_assignment (new CCodeIdentifier ("data2"), data);
+		ccode.close ();
+
+		var c_assign_rhs =  new CCodeCastExpression (new CCodeConditionalExpression (new CCodeIdentifier ("marshal_data"), new CCodeIdentifier ("marshal_data"), new CCodeMemberAccess (new CCodeIdentifier ("cc"), "callback", true)), get_marshaller_function (params, return_type, "GMarshalFunc"));
+		ccode.add_assignment (new CCodeIdentifier ("callback"), c_assign_rhs);
 		
 		fc = new CCodeFunctionCall (new CCodeIdentifier ("callback"));
 		fc.add_argument (new CCodeIdentifier ("data1"));
@@ -312,7 +299,7 @@ public class Vala.GSignalModule : GObjectModule {
 		fc.add_argument (new CCodeIdentifier ("data2"));
 		
 		if (return_type.data_type != null || return_type.is_array ()) {
-			marshaller_body.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("v_return"), fc)));
+			ccode.add_assignment (new CCodeIdentifier ("v_return"), fc);
 			
 			CCodeFunctionCall set_fc;
 			if (return_type.is_array ()) {
@@ -335,13 +322,14 @@ public class Vala.GSignalModule : GObjectModule {
 			set_fc.add_argument (new CCodeIdentifier ("return_value"));
 			set_fc.add_argument (new CCodeIdentifier ("v_return"));
 			
-			marshaller_body.add_statement (new CCodeExpressionStatement (set_fc));
+			ccode.add_expression (set_fc);
 		} else {
-			marshaller_body.add_statement (new CCodeExpressionStatement (fc));
+			ccode.add_expression (fc);
 		}
 		
-		signal_marshaller.block = marshaller_body;
+		pop_function ();
 		
+		cfile.add_function_declaration (signal_marshaller);
 		cfile.add_function (signal_marshaller);
 		user_marshal_set.add (signature);
 	}

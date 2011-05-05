@@ -227,47 +227,38 @@ public class Vala.GVariantModule : GAsyncModule {
 		from_string_func.add_parameter (new CCodeParameter ("str", "const char*"));
 		from_string_func.add_parameter (new CCodeParameter ("error", "GError**"));
 
-		var from_string_block = new CCodeBlock ();
-		from_string_func.block = from_string_block;
+		push_function (from_string_func);
 
-		var cdecl = new CCodeDeclaration (en.get_cname ());
-		cdecl.add_declarator (new CCodeVariableDeclarator.zero ("value", new CCodeConstant ("0")));
-		from_string_block.add_statement (cdecl);
+		ccode.add_declaration (en.get_cname (), new CCodeVariableDeclarator.zero ("value", new CCodeConstant ("0")));
 
-		CCodeStatement if_else_if = null;
-		CCodeIfStatement last_statement = null;
+		bool firstif = true;
 		foreach (EnumValue enum_value in en.get_values ()) {
-			var true_block = new CCodeBlock ();
-			true_block.suppress_newline = true;
-			true_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("value"), new CCodeIdentifier (enum_value.get_cname ()))));
-
 			string dbus_value = get_dbus_value (enum_value, enum_value.name);
 			var string_comparison = new CCodeFunctionCall (new CCodeIdentifier ("strcmp"));
 			string_comparison.add_argument (new CCodeIdentifier ("str"));
 			string_comparison.add_argument (new CCodeConstant ("\"%s\"".printf (dbus_value)));
-			var stmt = new CCodeIfStatement (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, string_comparison, new CCodeConstant ("0")), true_block);
-
-			if (last_statement != null) {
-				last_statement.false_statement = stmt;
+			var cond = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, string_comparison, new CCodeConstant ("0"));
+			if (firstif) {
+				ccode.open_if (cond);
+				firstif = false;
 			} else {
-				if_else_if = stmt;
+				ccode.else_if (cond);
 			}
-			last_statement = stmt;
+			ccode.add_assignment (new CCodeIdentifier ("value"), new CCodeIdentifier (enum_value.get_cname ()));
 		}
 
+		ccode.add_else ();
 		var set_error = new CCodeFunctionCall (new CCodeIdentifier ("g_set_error"));
 		set_error.add_argument (new CCodeIdentifier ("error"));
 		set_error.add_argument (new CCodeIdentifier ("G_DBUS_ERROR"));
 		set_error.add_argument (new CCodeIdentifier ("G_DBUS_ERROR_INVALID_ARGS"));
 		set_error.add_argument (new CCodeConstant ("\"Invalid value for enum `%s'\"".printf (en.get_cname ())));
-		var error_block = new CCodeBlock ();
-		error_block.add_statement (new CCodeExpressionStatement (set_error));
-		last_statement.false_statement = error_block;
+		ccode.add_expression (set_error);
+		ccode.close ();
 
-		from_string_block.add_statement (if_else_if);
+		ccode.add_return (new CCodeIdentifier ("value"));
 
-		from_string_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("value")));
-
+		pop_function ();
 		return from_string_func;
 	}
 
@@ -560,24 +551,21 @@ public class Vala.GVariantModule : GAsyncModule {
 		var to_string_func = new CCodeFunction (to_string_name, "const char*");
 		to_string_func.add_parameter (new CCodeParameter ("value", en.get_cname ()));
 
-		var to_string_block = new CCodeBlock ();
-		to_string_func.block = to_string_block;
+		push_function (to_string_func);
 
-		var cdecl = new CCodeDeclaration ("const char *");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("str"));
-		to_string_block.add_statement (cdecl);
+		ccode.add_declaration ("const char *", new CCodeVariableDeclarator ("str"));
 
-		var cswitch = new CCodeSwitchStatement (new CCodeIdentifier ("value"));
+		ccode.open_switch (new CCodeIdentifier ("value"));
 		foreach (EnumValue enum_value in en.get_values ()) {
 			string dbus_value = get_dbus_value (enum_value, enum_value.name);
-			cswitch.add_statement (new CCodeCaseStatement (new CCodeIdentifier (enum_value.get_cname ())));
-			cswitch.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("str"), new CCodeConstant ("\"%s\"".printf (dbus_value)))));
-			cswitch.add_statement (new CCodeBreakStatement ());
+			ccode.add_case (new CCodeIdentifier (enum_value.get_cname ()));
+			ccode.add_assignment (new CCodeIdentifier ("str"), new CCodeConstant ("\"%s\"".printf (dbus_value)));
+			ccode.add_break ();
 		}
-		to_string_block.add_statement (cswitch);
 
-		to_string_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("str")));
+		ccode.add_return (new CCodeIdentifier ("str"));
 
+		pop_function ();
 		return to_string_func;
 	}
 
