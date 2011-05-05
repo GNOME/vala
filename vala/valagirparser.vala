@@ -2699,7 +2699,10 @@ public class Vala.GirParser : CodeVisitor {
 				st.base_type = base_type;
 			}
 			st.external = true;
-			st.set_cname (alias.girdata["c:type"]);
+			var cname = alias.girdata["c:type"];
+			if (cname != null) {
+				st.set_cname (cname);
+			}
 			if (simple_type) {
 				st.set_simple_type (true);
 			}
@@ -2711,7 +2714,10 @@ public class Vala.GirParser : CodeVisitor {
 				cl.add_base_type (base_type);
 			}
 			cl.external = true;
-			cl.set_cname (alias.girdata["c:type"]);
+			var cname = alias.girdata["c:type"];
+			if (cname != null) {
+				cl.set_cname (cname);
+			}
 			alias.symbol = cl;
 		}
 	}
