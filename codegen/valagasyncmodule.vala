@@ -444,7 +444,7 @@ public class Vala.GAsyncModule : GSignalModule {
 			// structs are returned via out parameter
 			CCodeExpression cexpr = new CCodeMemberAccess.pointer (data_var, "result");
 			if (requires_copy (return_type)) {
-				cexpr = get_ref_cexpression (return_type, cexpr, null, return_type);
+				cexpr = copy_value (new GLibValue (return_type, cexpr), null, return_type);
 			}
 			ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result")), cexpr);
 		} else if (!(return_type is VoidType)) {

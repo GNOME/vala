@@ -328,7 +328,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			CCodeExpression element_expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_item);
 
 			if (stmt.type_reference.value_owned) {
-				element_expr = get_ref_cexpression (stmt.type_reference, element_expr, null, new StructValueType (gvalue_type));
+				element_expr = copy_value (new GLibValue (stmt.type_reference, element_expr), null, new StructValueType (gvalue_type));
 			}
 
 			visit_local_variable (stmt.element_variable);
