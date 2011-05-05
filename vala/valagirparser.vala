@@ -681,7 +681,7 @@ public class Vala.GirParser : CodeVisitor {
 					}
 					var prop = (Property) symbol;
 					if (prop.no_accessor_method) {
-						// property getter and setter must be matched both, otherwise it's NoAccessorMethod
+						// property getter and setter must both match, otherwise it's NoAccessorMethod
 						prop.no_accessor_method = false;
 						if (prop.get_accessor != null) {
 							var m = getter != null ? getter.symbol as Method : null;
@@ -691,7 +691,11 @@ public class Vala.GirParser : CodeVisitor {
 									prop.no_accessor_method = true;
 								} else {
 									if (getter.name == name) {
-										getter.merged = true;
+										foreach (var node in colliding) {
+											if (node.symbol is Method) {
+												node.merged = true;
+											}
+										}
 									}
 									prop.get_accessor.value_type.value_owned = m.return_type.value_owned;
 								}
