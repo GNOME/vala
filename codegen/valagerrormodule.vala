@@ -73,14 +73,14 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		string quark_fun_name = edomain.get_lower_case_cprefix () + "quark";
 
 		var cquark_fun = new CCodeFunction (quark_fun_name, gquark_type.data_type.get_cname ());
-		var cquark_block = new CCodeBlock ();
+		push_function (cquark_fun);
 
 		var cquark_call = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_static_string"));
 		cquark_call.add_argument (new CCodeConstant ("\"" + edomain.get_lower_case_cname () + "-quark\""));
 
-		cquark_block.add_statement (new CCodeReturnStatement (cquark_call));
+		ccode.add_return (cquark_call);
 
-		cquark_fun.block = cquark_block;
+		pop_function ();
 		cfile.add_function (cquark_fun);
 	}
 

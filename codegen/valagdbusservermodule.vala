@@ -589,7 +589,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		return wrapper_name;
 	}
 
-	void handle_signals (ObjectTypeSymbol sym, CCodeBlock block) {
+	void handle_signals (ObjectTypeSymbol sym) {
 		string dbus_iface_name = get_dbus_name (sym);
 		if (dbus_iface_name == null) {
 			return;
@@ -608,7 +608,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			connect.add_argument (sig.get_canonical_cconstant ());
 			connect.add_argument (new CCodeCastExpression (new CCodeIdentifier (generate_dbus_signal_wrapper (sig, sym, dbus_iface_name)), "GCallback"));
 			connect.add_argument (new CCodeIdentifier ("data"));
-			block.add_statement (new CCodeExpressionStatement (connect));
+			ccode.add_expression (connect);
 		}
 	}
 
@@ -693,18 +693,13 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 		cfile.add_function_declaration (cfunc);
 
-		var block = new CCodeBlock ();
-		cfunc.block = block;
+		push_function (cfunc);
 
-		var cdecl = new CCodeDeclaration ("gpointer*");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("data", new CCodeIdentifier ("user_data")));
-		block.add_statement (cdecl);
+		ccode.add_declaration ("gpointer*", new CCodeVariableDeclarator ("data", new CCodeIdentifier ("user_data")));
 
-		cdecl = new CCodeDeclaration ("gpointer");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("object", new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("0"))));
-		block.add_statement (cdecl);
+		ccode.add_declaration ("gpointer", new CCodeVariableDeclarator ("object", new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("0"))));
 
-		CCodeIfStatement clastif = null;
+		bool firstif = true;
 
 		foreach (Property prop in sym.get_properties ()) {
 			if (prop.binding != MemberBinding.INSTANCE
@@ -724,25 +719,24 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			ccheck.add_argument (new CCodeIdentifier ("property_name"));
 			ccheck.add_argument (new CCodeConstant ("\"%s\"".printf (get_dbus_name_for_member (prop))));
 
-			var callblock = new CCodeBlock ();
+			if (!firstif) {
+				ccode.add_else ();
+			}
+			ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ccheck, new CCodeConstant ("0")));
+			firstif = false;
 
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier (generate_dbus_property_get_wrapper (prop, sym)));
 			ccall.add_argument (new CCodeIdentifier ("object"));
 
-			callblock.add_statement (new CCodeReturnStatement (ccall));
-
-			var cif = new CCodeIfStatement (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ccheck, new CCodeConstant ("0")), callblock);
-			if (clastif == null) {
-				block.add_statement (cif);
-			} else {
-				clastif.false_statement = cif;
-			}
-
-			clastif = cif;
+			ccode.add_return (ccall);
+		}
+		if (!firstif) {
+			ccode.close ();
 		}
 
-		block.add_statement (new CCodeReturnStatement (new CCodeConstant ("NULL")));
+		ccode.add_return (new CCodeConstant ("NULL"));
 
+		pop_function ();
 		cfile.add_function (cfunc);
 	}
 
@@ -761,18 +755,13 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 		cfile.add_function_declaration (cfunc);
 
-		var block = new CCodeBlock ();
-		cfunc.block = block;
+		push_function (cfunc);
 
-		var cdecl = new CCodeDeclaration ("gpointer*");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("data", new CCodeIdentifier ("user_data")));
-		block.add_statement (cdecl);
+		ccode.add_declaration ("gpointer*", new CCodeVariableDeclarator ("data", new CCodeIdentifier ("user_data")));
 
-		cdecl = new CCodeDeclaration ("gpointer");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("object", new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("0"))));
-		block.add_statement (cdecl);
+		ccode.add_declaration ("gpointer", new CCodeVariableDeclarator ("object", new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("0"))));
 
-		CCodeIfStatement clastif = null;
+		bool firstif = true;
 
 		foreach (Property prop in sym.get_properties ()) {
 			if (prop.binding != MemberBinding.INSTANCE
@@ -792,27 +781,25 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			ccheck.add_argument (new CCodeIdentifier ("property_name"));
 			ccheck.add_argument (new CCodeConstant ("\"%s\"".printf (get_dbus_name_for_member (prop))));
 
-			var callblock = new CCodeBlock ();
+			if (!firstif) {
+				ccode.add_else ();
+			}
+			ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ccheck, new CCodeConstant ("0")));
+			firstif = false;
 
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier (generate_dbus_property_set_wrapper (prop, sym)));
 			ccall.add_argument (new CCodeIdentifier ("object"));
 			ccall.add_argument (new CCodeIdentifier ("value"));
 
-			callblock.add_statement (new CCodeExpressionStatement (ccall));
-			callblock.add_statement (new CCodeReturnStatement (new CCodeConstant ("TRUE")));
-
-			var cif = new CCodeIfStatement (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ccheck, new CCodeConstant ("0")), callblock);
-			if (clastif == null) {
-				block.add_statement (cif);
-			} else {
-				clastif.false_statement = cif;
-			}
-
-			clastif = cif;
+			ccode.add_expression (ccall);
+			ccode.add_return (new CCodeConstant ("TRUE"));
 		}
+		if (!firstif) {
+			ccode.close ();
+		}
+		ccode.add_return (new CCodeConstant ("FALSE"));
 
-		block.add_statement (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
-
+		pop_function ();
 		cfile.add_function (cfunc);
 	}
 
@@ -1221,35 +1208,30 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			cfunc.modifiers |= CCodeModifiers.STATIC;
 		}
 
-		var block = new CCodeBlock ();
-		cfunc.block = block;
+		push_function (cfunc);
 
-		var cdecl = new CCodeDeclaration ("guint");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
-		block.add_statement (cdecl);
+		ccode.add_declaration ("guint", new CCodeVariableDeclarator ("result"));
 
 
 		// data consists of 3 pointers: object, connection, path
-		cdecl = new CCodeDeclaration ("gpointer");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("*data"));
-		block.add_statement (cdecl);
+		ccode.add_declaration ("gpointer", new CCodeVariableDeclarator ("*data"));
 
 		var alloc_data = new CCodeFunctionCall (new CCodeIdentifier ("g_new"));
 		alloc_data.add_argument (new CCodeIdentifier ("gpointer"));
 		alloc_data.add_argument (new CCodeConstant ("3"));
-		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("data"), alloc_data)));
+		ccode.add_assignment (new CCodeIdentifier ("data"), alloc_data);
 
 		var ref_object = new CCodeFunctionCall (new CCodeIdentifier (sym.get_ref_function ()));
 		ref_object.add_argument (new CCodeIdentifier ("object"));
-		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("0")), ref_object)));
+		ccode.add_assignment (new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("0")), ref_object);
 
 		ref_object = new CCodeFunctionCall (new CCodeIdentifier ("g_object_ref"));
 		ref_object.add_argument (new CCodeIdentifier ("connection"));
-		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("1")), ref_object)));
+		ccode.add_assignment (new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("1")), ref_object);
 
 		var dup_path = new CCodeFunctionCall (new CCodeIdentifier ("g_strdup"));
 		dup_path.add_argument (new CCodeIdentifier ("path"));
-		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("2")), dup_path)));
+		ccode.add_assignment (new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("2")), dup_path);
 
 
 		var cregister = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_connection_register_object"));
@@ -1263,47 +1245,46 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		cregister.add_argument (new CCodeIdentifier ("_" + sym.get_lower_case_cprefix () + "unregister_object"));
 		cregister.add_argument (new CCodeIdentifier ("error"));
 
-		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("result"), cregister)));
+		ccode.add_assignment (new CCodeIdentifier ("result"), cregister);
 
-		var error_block = new CCodeBlock ();
-		error_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("0")));
-		block.add_statement (new CCodeIfStatement (new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeIdentifier ("result")), error_block));
+		ccode.open_if (new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeIdentifier ("result")));
+		ccode.add_return (new CCodeConstant ("0"));
+		ccode.close ();
 
-		handle_signals (sym, block);
+		handle_signals (sym);
 
-		block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("result")));
+		ccode.add_return (new CCodeIdentifier ("result"));
 
+		pop_function ();
 		cfile.add_function (cfunc);
 
 
 		cfunc = new CCodeFunction ("_" + sym.get_lower_case_cprefix () + "unregister_object");
 		cfunc.add_parameter (new CCodeParameter ("user_data", "gpointer"));
 		cfunc.modifiers |= CCodeModifiers.STATIC;
-		cfile.add_function_declaration (cfunc);
 
-		block = new CCodeBlock ();
-		cfunc.block = block;
+		push_function (cfunc);
 
-		cdecl = new CCodeDeclaration ("gpointer*");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("data", new CCodeIdentifier ("user_data")));
-		block.add_statement (cdecl);
+		ccode.add_declaration ("gpointer*", new CCodeVariableDeclarator ("data", new CCodeIdentifier ("user_data")));
 
 		var unref_object = new CCodeFunctionCall (new CCodeIdentifier (sym.get_unref_function ()));
 		unref_object.add_argument (new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("0")));
-		block.add_statement (new CCodeExpressionStatement (unref_object));
+		ccode.add_expression (unref_object);
 
 		unref_object = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
 		unref_object.add_argument (new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("1")));
-		block.add_statement (new CCodeExpressionStatement (unref_object));
+		ccode.add_expression (unref_object);
 
 		var free_path = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
 		free_path.add_argument (new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("2")));
-		block.add_statement (new CCodeExpressionStatement (free_path));
+		ccode.add_expression (free_path);
 
 		var free_data = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
 		free_data.add_argument (new CCodeIdentifier ("data"));
-		block.add_statement (new CCodeExpressionStatement (free_data));
+		ccode.add_expression (free_data);
 
+		pop_function ();
+		cfile.add_function_declaration (cfunc);
 		cfile.add_function (cfunc);
 	}
 

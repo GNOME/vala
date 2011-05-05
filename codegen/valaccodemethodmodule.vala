@@ -614,12 +614,12 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 					    && current_class.get_type_parameters ().size > 0
 					    && !((CreationMethod) m).chain_up) {
 						var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, new CCodeIdentifier ("__params_it"), new CCodeIdentifier ("__params"));
-						var cdofreeparam = new CCodeBlock ();
-						cdofreeparam.add_statement (new CCodeExpressionStatement (new CCodeUnaryExpression (CCodeUnaryOperator.PREFIX_DECREMENT, new CCodeIdentifier ("__params_it"))));
+						ccode.open_while (ccond);
+						ccode.add_expression (new CCodeUnaryExpression (CCodeUnaryOperator.PREFIX_DECREMENT, new CCodeIdentifier ("__params_it")));
 						var cunsetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_unset"));
 						cunsetcall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeMemberAccess.pointer (new CCodeIdentifier ("__params_it"), "value")));
-						cdofreeparam.add_statement (new CCodeExpressionStatement (cunsetcall));
-						ccode.add_statement (new CCodeWhileStatement (ccond, cdofreeparam));
+						ccode.add_expression (cunsetcall);
+						ccode.close ();
 
 						var cfreeparams = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
 						cfreeparams.add_argument (new CCodeIdentifier ("__params"));
@@ -692,26 +692,24 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			cmain.line = function.line;
 			cmain.add_parameter (new CCodeParameter ("argc", "int"));
 			cmain.add_parameter (new CCodeParameter ("argv", "char **"));
-			var main_block = new CCodeBlock ();
+			push_function (cmain);
 
 			if (context.profile == Profile.GOBJECT) {
 				if (context.mem_profiler) {
 					var mem_profiler_init_call = new CCodeFunctionCall (new CCodeIdentifier ("g_mem_set_vtable"));
 					mem_profiler_init_call.line = cmain.line;
 					mem_profiler_init_call.add_argument (new CCodeConstant ("glib_mem_profiler_table"));
-					main_block.add_statement (new CCodeExpressionStatement (mem_profiler_init_call));
+					ccode.add_expression (mem_profiler_init_call);
 				}
 
 				if (context.thread) {
 					var thread_init_call = new CCodeFunctionCall (new CCodeIdentifier ("g_thread_init"));
 					thread_init_call.line = cmain.line;
 					thread_init_call.add_argument (new CCodeConstant ("NULL"));
-					main_block.add_statement (new CCodeExpressionStatement (thread_init_call));
+					ccode.add_expression (thread_init_call);
 				}
 
-				var type_init_call = new CCodeExpressionStatement (new CCodeFunctionCall (new CCodeIdentifier ("g_type_init")));
-				type_init_call.line = cmain.line;
-				main_block.add_statement (type_init_call);
+				ccode.add_expression (new CCodeFunctionCall (new CCodeIdentifier ("g_type_init")));
 			}
 
 			var main_call = new CCodeFunctionCall (new CCodeIdentifier (function.name));
@@ -721,18 +719,12 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			}
 			if (m.return_type is VoidType) {
 				// method returns void, always use 0 as exit code
-				var main_stmt = new CCodeExpressionStatement (main_call);
-				main_stmt.line = cmain.line;
-				main_block.add_statement (main_stmt);
-				var ret_stmt = new CCodeReturnStatement (new CCodeConstant ("0"));
-				ret_stmt.line = cmain.line;
-				main_block.add_statement (ret_stmt);
+				ccode.add_expression (main_call);
+				ccode.add_return (new CCodeConstant ("0"));
 			} else {
-				var main_stmt = new CCodeReturnStatement (main_call);
-				main_stmt.line = cmain.line;
-				main_block.add_statement (main_stmt);
+				ccode.add_return (main_call);
 			}
-			cmain.block = main_block;
+			pop_function ();
 			cfile.add_function (cmain);
 		}
 	}
@@ -1028,21 +1020,19 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
 			var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
 
-			var vblock = new CCodeBlock ();
+			push_function (vfunc);
 
 			var vcall = new CCodeFunctionCall (new CCodeIdentifier (m.get_real_cname ()));
 			vcall.add_argument (new CCodeIdentifier (current_class.get_type_id ()));
 
 			generate_cparameters (m, cfile, cparam_map, vfunc, null, carg_map, vcall);
-			CCodeStatement cstmt = new CCodeReturnStatement (vcall);
-			cstmt.line = vfunc.line;
-			vblock.add_statement (cstmt);
+			ccode.add_return (vcall);
 
 			if (!visible) {
 				vfunc.modifiers |= CCodeModifiers.STATIC;
 			}
 
-			vfunc.block = vblock;
+			pop_function ();
 
 			cfile.add_function (vfunc);
 		}

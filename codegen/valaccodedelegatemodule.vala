@@ -205,6 +205,8 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 		var function = new CCodeFunction (wrapper_name, return_type_cname);
 		function.modifiers = CCodeModifiers.STATIC;
 
+		push_function (function);
+
 		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
 
 		if (d.has_target) {
@@ -400,13 +402,10 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			ccall.add_argument (new CCodeConstant ("NULL"));
 			ccall.add_argument (new CCodeConstant ("NULL"));
 		}
-		var block = new CCodeBlock ();
 		if (m.return_type is VoidType || m.return_type.is_real_non_null_struct_type ()) {
-			block.add_statement (new CCodeExpressionStatement (ccall));
+			ccode.add_expression (ccall);
 		} else {
-			var cdecl = new CCodeDeclaration (return_type_cname);
-			cdecl.add_declarator (new CCodeVariableDeclarator ("result", ccall));
-			block.add_statement (cdecl);
+			ccode.add_declaration (return_type_cname, new CCodeVariableDeclarator ("result", ccall));
 		}
 
 		if (d.has_target && !dt.value_owned && dt.is_called_once && expr != null) {
@@ -434,19 +433,18 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			if (destroy_notify != null) {
 				var unref_call = new CCodeFunctionCall (destroy_notify);
 				unref_call.add_argument (new CCodeIdentifier ("self"));
-				block.add_statement (new CCodeExpressionStatement (unref_call));
+				ccode.add_expression (unref_call);
 			}
 		}
 
 		if (!(m.return_type is VoidType || m.return_type.is_real_non_null_struct_type ())) {
-			block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("result")));
+			ccode.add_return (new CCodeIdentifier ("result"));
 		}
 
+		pop_function ();
+
 		// append to file
-
 		cfile.add_function_declaration (function);
-
-		function.block = block;
 		cfile.add_function (function);
 
 		return wrapper_name;

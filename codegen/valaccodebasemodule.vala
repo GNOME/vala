@@ -1824,19 +1824,22 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var ref_fun = new CCodeFunction ("block%d_data_ref".printf (block_id), struct_name + "*");
 			ref_fun.add_parameter (new CCodeParameter ("_data%d_".printf (block_id), struct_name + "*"));
 			ref_fun.modifiers = CCodeModifiers.STATIC;
-			cfile.add_function_declaration (ref_fun);
-			ref_fun.block = new CCodeBlock ();
+
+			push_function (ref_fun);
 
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_atomic_int_inc"));
 			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "_ref_count_")));
-			ref_fun.block.add_statement (new CCodeExpressionStatement (ccall));
-			ref_fun.block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("_data%d_".printf (block_id))));
+			ccode.add_expression (ccall);
+			ccode.add_return (new CCodeIdentifier ("_data%d_".printf (block_id)));
+
+			pop_function ();
+
+			cfile.add_function_declaration (ref_fun);
 			cfile.add_function (ref_fun);
 
 			var unref_fun = new CCodeFunction ("block%d_data_unref".printf (block_id), "void");
 			unref_fun.add_parameter (new CCodeParameter ("_data%d_".printf (block_id), struct_name + "*"));
 			unref_fun.modifiers = CCodeModifiers.STATIC;
-			cfile.add_function_declaration (unref_fun);
 			
 			push_function (unref_fun);
 
@@ -1929,6 +1932,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			pop_function ();
 
+			cfile.add_function_declaration (unref_fun);
 			cfile.add_function (unref_fun);
 		}
 
@@ -2748,13 +2752,15 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			wrapper.modifiers = CCodeModifiers.STATIC;
 			wrapper.add_parameter (new CCodeParameter ("node", collection_type.get_cname ()));
 			wrapper.add_parameter (new CCodeParameter ("unused", "gpointer"));
-			var wrapper_block = new CCodeBlock ();
+			push_function (wrapper);
+
 			var free_call = new CCodeFunctionCall (element_destroy_func_expression);
 			free_call.add_argument (new CCodeMemberAccess.pointer(new CCodeIdentifier("node"), "data"));
-			wrapper_block.add_statement (new CCodeExpressionStatement (free_call));
-			wrapper_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
+			ccode.add_expression (free_call);
+			ccode.add_return (new CCodeConstant ("FALSE"));
+
+			pop_function ();
 			cfile.add_function_declaration (function);
-			wrapper.block = wrapper_block;
 			cfile.add_function (wrapper);
 
 			/* Now the code to call g_traverse with the above */

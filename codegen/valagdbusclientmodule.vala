@@ -79,7 +79,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 		var proxy_iface_init = new CCodeFunction (lower_cname + "_" + iface.get_lower_case_cprefix () + "interface_init", "void");
 		proxy_iface_init.add_parameter (new CCodeParameter ("iface", iface.get_cname () + "Iface*"));
 
-		var iface_block = new CCodeBlock ();
+		push_function (proxy_iface_init);
 
 		foreach (Method m in iface.get_methods ()) {
 			if (!m.is_abstract) {
@@ -88,11 +88,11 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 			var vfunc_entry = new CCodeMemberAccess.pointer (new CCodeIdentifier ("iface"), m.vfunc_name);
 			if (!m.coroutine) {
-				iface_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (vfunc_entry, new CCodeIdentifier (generate_dbus_proxy_method (main_iface, iface, m)))));
+				ccode.add_assignment (vfunc_entry, new CCodeIdentifier (generate_dbus_proxy_method (main_iface, iface, m)));
 			} else {
-				iface_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (vfunc_entry, new CCodeIdentifier (generate_async_dbus_proxy_method (main_iface, iface, m)))));
+				ccode.add_assignment (vfunc_entry, new CCodeIdentifier (generate_async_dbus_proxy_method (main_iface, iface, m)));
 				vfunc_entry = new CCodeMemberAccess.pointer (new CCodeIdentifier ("iface"), m.get_finish_vfunc_name ());
-				iface_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (vfunc_entry, new CCodeIdentifier (generate_finish_dbus_proxy_method (main_iface, iface, m)))));
+				ccode.add_assignment (vfunc_entry, new CCodeIdentifier (generate_finish_dbus_proxy_method (main_iface, iface, m)));
 			}
 		}
 
@@ -103,17 +103,17 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 			if (prop.get_accessor != null) {
 				var vfunc_entry = new CCodeMemberAccess.pointer (new CCodeIdentifier ("iface"), "get_" + prop.name);
-				iface_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (vfunc_entry, new CCodeIdentifier (generate_dbus_proxy_property_get (main_iface, iface, prop)))));
+				ccode.add_assignment (vfunc_entry, new CCodeIdentifier (generate_dbus_proxy_property_get (main_iface, iface, prop)));
 			}
 			if (prop.set_accessor != null) {
 				var vfunc_entry = new CCodeMemberAccess.pointer (new CCodeIdentifier ("iface"), "set_" + prop.name);
-				iface_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (vfunc_entry, new CCodeIdentifier (generate_dbus_proxy_property_set (main_iface, iface, prop)))));
+				ccode.add_assignment (vfunc_entry, new CCodeIdentifier (generate_dbus_proxy_property_set (main_iface, iface, prop)));
 			}
 		}
 
 		proxy_iface_init.modifiers = CCodeModifiers.STATIC;
+		pop_function ();
 		cfile.add_function_declaration (proxy_iface_init);
-		proxy_iface_init.block = iface_block;
 		cfile.add_function (proxy_iface_init);
 	}
 
@@ -187,10 +187,11 @@ public class Vala.GDBusClientModule : GDBusModule {
 		var proxy_class_init = new CCodeFunction (lower_cname + "_class_init", "void");
 		proxy_class_init.add_parameter (new CCodeParameter ("klass", cname + "Class*"));
 		proxy_class_init.modifiers = CCodeModifiers.STATIC;
-		proxy_class_init.block = new CCodeBlock ();
+		push_function (proxy_class_init);
 		var proxy_class = new CCodeFunctionCall (new CCodeIdentifier ("G_DBUS_PROXY_CLASS"));
 		proxy_class.add_argument (new CCodeIdentifier ("klass"));
-		proxy_class_init.block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (proxy_class, "g_signal"), new CCodeIdentifier (lower_cname + "_g_signal"))));
+		ccode.add_assignment (new CCodeMemberAccess.pointer (proxy_class, "g_signal"), new CCodeIdentifier (lower_cname + "_g_signal"));
+		pop_function ();
 		cfile.add_function (proxy_class_init);
 
 		generate_signal_handler_function (iface);
@@ -198,7 +199,6 @@ public class Vala.GDBusClientModule : GDBusModule {
 		var proxy_instance_init = new CCodeFunction (lower_cname + "_init", "void");
 		proxy_instance_init.add_parameter (new CCodeParameter ("self", cname + "*"));
 		proxy_instance_init.modifiers = CCodeModifiers.STATIC;
-		proxy_instance_init.block = new CCodeBlock ();
 		cfile.add_function (proxy_instance_init);
 
 		generate_proxy_interface_init (iface, iface);
@@ -427,10 +427,9 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		cfile.add_function_declaration (cfunc);
 
-		var block = new CCodeBlock ();
-		cfunc.block = block;
+		push_function (cfunc);
 
-		CCodeIfStatement clastif = null;
+		bool firstif = true;
 
 		foreach (Signal sig in sym.get_signals ()) {
 			if (sig.access != SymbolAccessibility.PUBLIC) {
@@ -443,23 +442,23 @@ public class Vala.GDBusClientModule : GDBusModule {
 			ccheck.add_argument (new CCodeIdentifier ("signal_name"));
 			ccheck.add_argument (new CCodeConstant ("\"%s\"".printf (get_dbus_name_for_member (sig))));
 
-			var callblock = new CCodeBlock ();
+			if (!firstif) {
+				ccode.add_else ();
+			}
+			ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ccheck, new CCodeConstant ("0")));
+			firstif = false;
 
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier (generate_dbus_signal_handler (sig, sym)));
 			ccall.add_argument (new CCodeCastExpression (new CCodeIdentifier ("proxy"), sym.get_cname () + "*"));
 			ccall.add_argument (new CCodeIdentifier ("parameters"));
 
-			callblock.add_statement (new CCodeExpressionStatement (ccall));
-
-			var cif = new CCodeIfStatement (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ccheck, new CCodeConstant ("0")), callblock);
-			if (clastif == null) {
-				block.add_statement (cif);
-			} else {
-				clastif.false_statement = cif;
-			}
-
-			clastif = cif;
+			ccode.add_expression (ccall);
 		}
+		if (!firstif) {
+			ccode.close ();
+		}
+
+		pop_function ();
 
 		cfile.add_function (cfunc);
 	}

@@ -488,22 +488,20 @@ public class Vala.GAsyncModule : GSignalModule {
 		readyfunc.add_parameter (new CCodeParameter ("_res_", "GAsyncResult*"));
 		readyfunc.add_parameter (new CCodeParameter ("_user_data_", "gpointer"));
 
-		var readyblock = new CCodeBlock ();
+		push_function (readyfunc);
 
-		var datadecl = new CCodeDeclaration (dataname + "*");
-		datadecl.add_declarator (new CCodeVariableDeclarator ("data"));
-		readyblock.add_statement (datadecl);
-		readyblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("data"), new CCodeIdentifier ("_user_data_"))));
-		readyblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_source_object_"), new CCodeIdentifier ("source_object"))));
-		readyblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_res_"), new CCodeIdentifier ("_res_"))));
+		ccode.add_declaration (dataname + "*", new CCodeVariableDeclarator ("data"));
+		ccode.add_assignment (new CCodeIdentifier ("data"), new CCodeIdentifier ("_user_data_"));
+		ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_source_object_"), new CCodeIdentifier ("source_object"));
+		ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_res_"), new CCodeIdentifier ("_res_"));
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_real_cname () + "_co"));
 		ccall.add_argument (new CCodeIdentifier ("data"));
-		readyblock.add_statement (new CCodeExpressionStatement (ccall));
+		ccode.add_expression (ccall);
 
 		readyfunc.modifiers |= CCodeModifiers.STATIC;
 
-		readyfunc.block = readyblock;
+		pop_function ();
 
 		cfile.add_function_declaration (readyfunc);
 		cfile.add_function (readyfunc);

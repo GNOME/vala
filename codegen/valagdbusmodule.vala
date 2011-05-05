@@ -87,14 +87,11 @@ public class Vala.GDBusModule : GVariantModule {
 		string quark_fun_name = edomain.get_lower_case_cprefix () + "quark";
 
 		var cquark_fun = new CCodeFunction (quark_fun_name, gquark_type.data_type.get_cname ());
-		var cquark_block = new CCodeBlock ();
+		push_function (cquark_fun);
 
 		string quark_name = "%squark_volatile".printf (edomain.get_lower_case_cprefix ());
 
-		cdecl = new CCodeDeclaration ("gsize");
-		cdecl.add_declarator (new CCodeVariableDeclarator (quark_name, new CCodeConstant ("0")));
-		cdecl.modifiers = CCodeModifiers.STATIC | CCodeModifiers.VOLATILE;
-		cquark_block.add_statement (cdecl);
+		ccode.add_declaration ("gsize", new CCodeVariableDeclarator (quark_name, new CCodeConstant ("0")), CCodeModifiers.STATIC | CCodeModifiers.VOLATILE);
 
 		var register_call = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_error_register_error_domain"));
 		register_call.add_argument (new CCodeConstant ("\"" + edomain.get_lower_case_cname () + "-quark\""));
@@ -103,11 +100,11 @@ public class Vala.GDBusModule : GVariantModule {
 		var nentries = new CCodeFunctionCall (new CCodeIdentifier ("G_N_ELEMENTS"));
 		nentries.add_argument (new CCodeIdentifier (edomain.get_lower_case_cname () + "_entries"));
 		register_call.add_argument (nentries);
-		cquark_block.add_statement (new CCodeExpressionStatement (register_call));
+		ccode.add_expression (register_call);
 
-		cquark_block.add_statement (new CCodeReturnStatement (new CCodeCastExpression (new CCodeIdentifier (quark_name), "GQuark")));
+		ccode.add_return (new CCodeCastExpression (new CCodeIdentifier (quark_name), "GQuark"));
 
-		cquark_fun.block = cquark_block;
+		pop_function ();
 		cfile.add_function (cquark_fun);
 	}
 

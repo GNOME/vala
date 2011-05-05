@@ -185,22 +185,20 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 
 		function.add_parameter (new CCodeParameter ("self", "const " + st.get_cname () + "*"));
 
-		var cblock = new CCodeBlock ();
+		push_function (function);
 
-		var cdecl = new CCodeDeclaration (st.get_cname () + "*");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("dup"));
-		cblock.add_statement (cdecl);
+		ccode.add_declaration (st.get_cname () + "*", new CCodeVariableDeclarator ("dup"));
 
 		var creation_call = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
 		creation_call.add_argument (new CCodeConstant (st.get_cname ()));
 		creation_call.add_argument (new CCodeConstant ("1"));
-		cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("dup"), creation_call)));
+		ccode.add_assignment (new CCodeIdentifier ("dup"), creation_call);
 
 		if (st.is_disposable ()) {
 			var copy_call = new CCodeFunctionCall (new CCodeIdentifier (st.get_copy_function ()));
 			copy_call.add_argument (new CCodeIdentifier ("self"));
 			copy_call.add_argument (new CCodeIdentifier ("dup"));
-			cblock.add_statement (new CCodeExpressionStatement (copy_call));
+			ccode.add_expression (copy_call);
 		} else {
 			cfile.add_include ("string.h");
 
@@ -211,12 +209,12 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 			copy_call.add_argument (new CCodeIdentifier ("dup"));
 			copy_call.add_argument (new CCodeIdentifier ("self"));
 			copy_call.add_argument (sizeof_call);
-			cblock.add_statement (new CCodeExpressionStatement (copy_call));
+			ccode.add_expression (copy_call);
 		}
 
-		cblock.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("dup")));
+		ccode.add_return (new CCodeIdentifier ("dup"));
 
-		function.block = cblock;
+		pop_function ();
 
 		cfile.add_function (function);
 	}
@@ -229,19 +227,19 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 
 		function.add_parameter (new CCodeParameter ("self", st.get_cname () + "*"));
 
-		var cblock = new CCodeBlock ();
+		push_function (function);
 
 		if (st.is_disposable ()) {
 			var destroy_call = new CCodeFunctionCall (new CCodeIdentifier (st.get_destroy_function ()));
 			destroy_call.add_argument (new CCodeIdentifier ("self"));
-			cblock.add_statement (new CCodeExpressionStatement (destroy_call));
+			ccode.add_expression (destroy_call);
 		}
 
 		var free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
 		free_call.add_argument (new CCodeIdentifier ("self"));
-		cblock.add_statement (new CCodeExpressionStatement (free_call));
+		ccode.add_expression (free_call);
 
-		function.block = cblock;
+		pop_function ();
 
 		cfile.add_function (function);
 	}
