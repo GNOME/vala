@@ -1,4 +1,28 @@
 namespace Soup {
+	[CCode (type_id = "soup_auth_domain_basic_get_type ()", cheader_filename = "libsoup/soup.h")]
+	public class AuthDomainBasic : Soup.AuthDomain {
+		public static void set_auth_callback (Soup.AuthDomain domain, owned Soup.AuthDomainBasicAuthCallback callback);
+	}
+
+	[CCode (type_id = "soup_auth_domain_digest_get_type ()", cheader_filename = "libsoup/soup.h")]
+	public class AuthDomainDigest : Soup.AuthDomain {
+		public static void set_auth_callback (Soup.AuthDomain domain, owned Soup.AuthDomainDigestAuthCallback callback);
+	}
+
+	[Compact]
+	[CCode (copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "soup_buffer_get_type ()", cheader_filename = "libsoup/soup.h")]
+	public class Buffer {
+		[CCode (has_construct_function = false)]
+		public Buffer.subbuffer (Soup.Buffer parent, size_t offset, size_t length);
+	}
+
+	[Compact]
+	[CCode (copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "soup_uri_get_type ()", cheader_filename = "libsoup/soup.h")]
+	public class URI {
+		[CCode (has_construct_function = false)]
+		public URI.with_base (Soup.URI @base, string uri_string);
+	}
+
 	[Deprecated (since = "vala-0.12", replacement = "XMLRPC.build_fault")]
 	[PrintfFormat]
 	public static unowned string xmlrpc_build_fault (int fault_code, string fault_format, ...);
@@ -50,4 +74,7 @@ namespace Soup {
 	public static Soup.Message form_request_new_from_hash (string method, string uri, GLib.HashTable<string,string> form_data_set);
 	[Deprecated (since = "vala-0.12", replacement = "Form.request_new_from_multipart")]
 	public static Soup.Message form_request_new_from_multipart (string uri, Soup.Multipart multipart);
+	[Deprecated (since = "vala-0.14", replacement = "SSLError.quark")]
+	public static GLib.Quark ssl_error_quark ();
+	public delegate void ProxyResolverCallback (Soup.ProxyResolver p1, Soup.Message p2, uint p3, Soup.Address p4);
 }
