@@ -236,11 +236,7 @@ public class Vala.GAsyncModule : GSignalModule {
 				cself = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, cself);
 			}
 			if (requires_copy (this_type))  {
-				var ma = new MemberAccess.simple ("this");
-				ma.symbol_reference = m.this_parameter;
-				ma.value_type = m.this_parameter.variable_type.copy ();
-				visit_member_access (ma);
-				cself = get_ref_cexpression (m.this_parameter.variable_type, cself, ma, m.this_parameter);
+				cself = get_cvalue_ (copy_value (new GLibValue (m.this_parameter.variable_type, cself), m.this_parameter));
 			}
 
 			ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, "self"), cself);
@@ -261,7 +257,9 @@ public class Vala.GAsyncModule : GSignalModule {
 					ma.symbol_reference = param;
 					ma.value_type = param.variable_type.copy ();
 					visit_member_access (ma);
-					cparam = get_ref_cexpression (param.variable_type, cparam, ma, param);
+					var value = load_parameter (param);
+					((GLibValue) value).cvalue = cparam;
+					cparam = get_cvalue_ (copy_value (value, param));
 				}
 
 				ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, get_variable_cname (param.name)), cparam);

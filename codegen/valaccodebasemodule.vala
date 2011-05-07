@@ -1641,13 +1641,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			cparam = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, cparam);
 		}
 		if (requires_copy (param_type) && !param.variable_type.value_owned && !is_unowned_delegate)  {
-			var ma = new MemberAccess.simple (param.name);
-			ma.symbol_reference = param;
-			ma.value_type = param.variable_type.copy ();
 			// directly access parameters in ref expressions
 			param.captured = false;
-			visit_member_access (ma);
-			cparam = get_ref_cexpression (param.variable_type, cparam, ma, param);
+			var value = load_parameter (param);
+			((GLibValue) value).cvalue = cparam;
+			cparam = get_cvalue_ (copy_value (value, param));
 			param.captured = true;
 		}
 
@@ -5255,7 +5253,15 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				var decl = get_temp_variable (target_type, true, node, false);
 				emit_temp_var (decl);
-				ccode.add_assignment (get_variable_cexpression (decl.name), get_ref_cexpression (target_type, cexpr, expr, node));
+				GLibValue value;
+				if (expr != null && expr.target_value != null) {
+					value = ((GLibValue) expr.target_value).copy ();
+					value.value_type = target_type;
+					value.cvalue = cexpr;
+				} else {
+					value = new GLibValue (target_type, cexpr);
+				}
+				ccode.add_assignment (get_variable_cexpression (decl.name), get_cvalue_ (copy_value (value, node)));
 				cexpr = get_variable_cexpression (decl.name);
 			}
 		}
@@ -5639,14 +5645,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (f.binding == MemberBinding.INSTANCE) {
 				CCodeExpression copy = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), f.name);
 				if (requires_copy (f.variable_type))  {
-					var this_access = new MemberAccess.simple ("this");
-					this_access.value_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
-					set_cvalue (this_access, new CCodeIdentifier ("(*self)"));
-					var ma = new MemberAccess (this_access, f.name);
-					ma.symbol_reference = f;
-					ma.value_type = f.variable_type.copy ();
-					visit_member_access (ma);
-					copy = get_ref_cexpression (f.variable_type, copy, ma, f);
+					var value = load_field (f, load_this_parameter ((TypeSymbol) f.parent_symbol));
+					copy = get_cvalue_ (copy_value (value, f));
 				}
 				var dest = new CCodeMemberAccess.pointer (new CCodeIdentifier ("dest"), f.name);
 

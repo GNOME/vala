@@ -259,18 +259,13 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 			if (f.binding == MemberBinding.INSTANCE) {
 				CCodeExpression copy = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), f.name);
 				if (requires_copy (f.variable_type))  {
-					var this_access = new MemberAccess.simple ("this");
-					this_access.value_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
-					set_cvalue (this_access, new CCodeIdentifier ("(*self)"));
-					var ma = new MemberAccess (this_access, f.name);
-					ma.symbol_reference = f;
-					ma.value_type = f.variable_type.copy ();
-					visit_member_access (ma);
-					copy = get_ref_cexpression (f.variable_type, copy, ma, f);
-					if (copy == null) {
+					var value = load_field (f, load_this_parameter ((TypeSymbol) f.parent_symbol));
+					var value_copy = copy_value (value, f);
+					if (value_copy == null) {
 						// error case, continue to avoid critical
 						continue;
 					}
+					copy = get_cvalue_ (value_copy);
 				}
 				var dest = new CCodeMemberAccess.pointer (new CCodeIdentifier ("dest"), f.name);
 
