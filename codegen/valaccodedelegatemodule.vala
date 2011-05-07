@@ -155,7 +155,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 		return "%s_target_destroy_notify".printf (delegate_cname);
 	}
 
-	public override CCodeExpression get_implicit_cast_expression (CCodeExpression source_cexpr, DataType? expression_type, DataType? target_type, Expression? expr = null) {
+	public override CCodeExpression get_implicit_cast_expression (CCodeExpression source_cexpr, DataType? expression_type, DataType? target_type, CodeNode? node) {
 		if (target_type is DelegateType && expression_type is MethodType) {
 			var dt = (DelegateType) target_type;
 			var mt = (MethodType) expression_type;
@@ -167,10 +167,10 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 				method = method.base_interface_method;
 			}
 
-			return new CCodeIdentifier (generate_delegate_wrapper (method, dt, expr));
+			return new CCodeIdentifier (generate_delegate_wrapper (method, dt, node));
 		}
 
-		return base.get_implicit_cast_expression (source_cexpr, expression_type, target_type, expr);
+		return base.get_implicit_cast_expression (source_cexpr, expression_type, target_type, node);
 	}
 
 	private string generate_delegate_wrapper (Method m, DelegateType dt, CodeNode? node) {

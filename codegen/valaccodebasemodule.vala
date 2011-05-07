@@ -5053,10 +5053,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		} else {
 			value = new GLibValue (expression_type, source_cexpr);
 		}
-		return get_cvalue_ (transform_value (value, target_type, expr));
+		CodeNode node = expr;
+		if (node == null) {
+			node = expression_type;
+		}
+		return get_cvalue_ (transform_value (value, target_type, node));
 	}
 
-	public TargetValue transform_value (TargetValue value, DataType? target_type, Expression? expr = null) {
+	public TargetValue transform_value (TargetValue value, DataType? target_type, CodeNode node) {
 		var type = value.value_type;
 		var result = ((GLibValue) value).copy ();
 		result.value_type = target_type;
@@ -5110,14 +5114,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccode.add_assignment (get_variable_cexpression (decl.name), result.cvalue);
 				result.cvalue = get_variable_cexpression (decl.name);
 
-				if (type is ArrayType && expr != null) {
+				if (type is ArrayType) {
 					var array_type = (ArrayType) type;
 					for (int dim = 1; dim <= array_type.rank; dim++) {
 						var len_decl = new LocalVariable (int_type.copy (), get_array_length_cname (decl.name, dim));
 						emit_temp_var (len_decl);
 						ccode.add_assignment (get_variable_cexpression (len_decl.name), get_array_length_cvalue (value, dim));
 					}
-				} else if (type is DelegateType && expr != null) {
+				} else if (type is DelegateType) {
 					var target_decl = new LocalVariable (new PointerType (new VoidType ()), get_delegate_target_cname (decl.name));
 					emit_temp_var (target_decl);
 					var target_destroy_notify_decl = new LocalVariable (gdestroynotify_type, get_delegate_target_destroy_notify_cname (decl.name));
@@ -5236,17 +5240,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			result.cvalue = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, result.cvalue);
 		} else {
-			result.cvalue = get_implicit_cast_expression (result.cvalue, type, target_type, expr);
+			result.cvalue = get_implicit_cast_expression (result.cvalue, type, target_type, node);
 		}
 
 		if (target_type.value_owned && (!type.value_owned || boxing || unboxing)) {
 			// need to copy value
 			if (requires_copy (target_type) && !(type is NullType)) {
-				CodeNode node = expr;
-				if (node == null) {
-					node = type;
-				}
-
 				var decl = get_temp_variable (target_type, true, node, false);
 				emit_temp_var (decl);
 				ccode.add_assignment (get_variable_cexpression (decl.name), get_cvalue_ (copy_value (result, node)));
@@ -5257,7 +5256,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return result;
 	}
 
-	public virtual CCodeExpression get_implicit_cast_expression (CCodeExpression source_cexpr, DataType? expression_type, DataType? target_type, Expression? expr = null) {
+	public virtual CCodeExpression get_implicit_cast_expression (CCodeExpression source_cexpr, DataType? expression_type, DataType? target_type, CodeNode? node) {
 		var cexpr = source_cexpr;
 
 		if (expression_type.data_type != null && expression_type.data_type == target_type.data_type) {
