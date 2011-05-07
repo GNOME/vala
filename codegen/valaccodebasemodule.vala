@@ -3381,11 +3381,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			// memory management, implicit casts, and boxing/unboxing
 			if (expr.value_type != null) {
-				// FIXME: temporary workaround, not all target_value have a value_type
-				var old_type = expr.target_value.value_type;
+				// FIXME: temporary workaround until the refactoring is complete, not all target_value have a value_type
 				expr.target_value.value_type = expr.value_type;
-				set_cvalue (expr, get_cvalue_ (transform_value (expr.target_value, expr.target_type, expr)));
-				expr.target_value.value_type = old_type;
+				expr.target_value = transform_value (expr.target_value, expr.target_type, expr);
 			}
 
 			if (expr.formal_target_type is GenericType && !(expr.target_type is GenericType)) {
@@ -5049,7 +5047,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public TargetValue transform_value (TargetValue value, DataType? target_type, CodeNode node) {
 		var type = value.value_type;
 		var result = ((GLibValue) value).copy ();
-		result.value_type = target_type;
+		result.value_type = target_type != null ? target_type : type;
 		result.cvalue = get_cvalue_ (value);
 
 		if (type.value_owned
