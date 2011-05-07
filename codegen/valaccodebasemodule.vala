@@ -5046,26 +5046,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return result;
 	}
 
-	// manage memory and implicit casts
-	public CCodeExpression transform_expression (CCodeExpression source_cexpr, DataType? expression_type, DataType? target_type, Expression? expr = null) {
-		if (expression_type == null) {
-			return source_cexpr;
-		}
-		GLibValue value;
-		if (expr != null && expr.target_value != null) {
-			value = ((GLibValue) expr.target_value).copy ();
-			value.value_type = expression_type;
-			value.cvalue = source_cexpr;
-		} else {
-			value = new GLibValue (expression_type, source_cexpr);
-		}
-		CodeNode node = expr;
-		if (node == null) {
-			node = expression_type;
-		}
-		return get_cvalue_ (transform_value (value, target_type, node));
-	}
-
 	public TargetValue transform_value (TargetValue value, DataType? target_type, CodeNode node) {
 		var type = value.value_type;
 		var result = ((GLibValue) value).copy ();
