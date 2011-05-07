@@ -5042,46 +5042,60 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	// manage memory and implicit casts
 	public CCodeExpression transform_expression (CCodeExpression source_cexpr, DataType? expression_type, DataType? target_type, Expression? expr = null) {
-		var cexpr = source_cexpr;
 		if (expression_type == null) {
-			return cexpr;
+			return source_cexpr;
 		}
+		GLibValue value;
+		if (expr != null && expr.target_value != null) {
+			value = ((GLibValue) expr.target_value).copy ();
+			value.value_type = expression_type;
+			value.cvalue = source_cexpr;
+		} else {
+			value = new GLibValue (expression_type, source_cexpr);
+		}
+		return get_cvalue_ (transform_value (value, target_type, expr));
+	}
 
+	public TargetValue transform_value (TargetValue value, DataType? target_type, Expression? expr = null) {
+		var type = value.value_type;
+		var result = ((GLibValue) value).copy ();
+		result.value_type = target_type;
+		result.cvalue = get_cvalue_ (value);
 
-		if (expression_type.value_owned
-		    && expression_type.floating_reference) {
+		if (type.value_owned
+		    && type.floating_reference) {
 			/* floating reference, sink it.
 			 */
-			var cl = expression_type.data_type as ObjectTypeSymbol;
+			var cl = type.data_type as ObjectTypeSymbol;
 			var sink_func = (cl != null) ? cl.get_ref_sink_function () : null;
 
 			if (sink_func != null) {
 				var csink = new CCodeFunctionCall (new CCodeIdentifier (sink_func));
-				csink.add_argument (cexpr);
+				csink.add_argument (result.cvalue);
 				
-				cexpr = csink;
+				result.cvalue = csink;
 			} else {
-				Report.error (null, "type `%s' does not support floating references".printf (expression_type.data_type.name));
+				Report.error (null, "type `%s' does not support floating references".printf (type.data_type.name));
 			}
 		}
 
-		bool boxing = (expression_type is ValueType && !expression_type.nullable
+		bool boxing = (type is ValueType && !type.nullable
 		               && target_type is ValueType && target_type.nullable);
-		bool unboxing = (expression_type is ValueType && expression_type.nullable
+		bool unboxing = (type is ValueType && type.nullable
 		                 && target_type is ValueType && !target_type.nullable);
 
 		bool gvalue_boxing = (context.profile == Profile.GOBJECT
 		                      && target_type != null
 		                      && target_type.data_type == gvalue_type
-		                      && !(expression_type is NullType)
-		                      && expression_type.get_type_id () != "G_TYPE_VALUE");
+		                      && !(type is NullType)
+		                      && type.get_type_id () != "G_TYPE_VALUE");
 		bool gvariant_boxing = (context.profile == Profile.GOBJECT
 		                        && target_type != null
 		                        && target_type.data_type == gvariant_type
-		                        && !(expression_type is NullType)
-		                        && expression_type.data_type != gvariant_type);
+		                        && !(type is NullType)
+		                        && type.data_type != gvariant_type);
 
-		if (expression_type.value_owned
+		if (type.value_owned
 		    && (target_type == null || !target_type.value_owned || boxing || unboxing)
 		    && !gvalue_boxing /* gvalue can assume ownership of value, no need to free it */) {
 			// value leaked, destroy it
@@ -5089,28 +5103,27 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (pointer_type != null && !(pointer_type.base_type is VoidType)) {
 				// manual memory management for non-void pointers
 				// treat void* special to not leak memory with void* method parameters
-			} else if (requires_destroy (expression_type)) {
-				var decl = get_temp_variable (expression_type, true, expression_type, false);
+			} else if (requires_destroy (type)) {
+				var decl = get_temp_variable (type, true, type, false);
 				emit_temp_var (decl);
 				temp_ref_vars.insert (0, decl);
-				ccode.add_assignment (get_variable_cexpression (decl.name), cexpr);
-				cexpr = get_variable_cexpression (decl.name);
+				ccode.add_assignment (get_variable_cexpression (decl.name), result.cvalue);
+				result.cvalue = get_variable_cexpression (decl.name);
 
-				if (expression_type is ArrayType && expr != null) {
-					var array_type = (ArrayType) expression_type;
+				if (type is ArrayType && expr != null) {
+					var array_type = (ArrayType) type;
 					for (int dim = 1; dim <= array_type.rank; dim++) {
 						var len_decl = new LocalVariable (int_type.copy (), get_array_length_cname (decl.name, dim));
 						emit_temp_var (len_decl);
-						ccode.add_assignment (get_variable_cexpression (len_decl.name), get_array_length_cexpression (expr, dim));
+						ccode.add_assignment (get_variable_cexpression (len_decl.name), get_array_length_cvalue (value, dim));
 					}
-				} else if (expression_type is DelegateType && expr != null) {
+				} else if (type is DelegateType && expr != null) {
 					var target_decl = new LocalVariable (new PointerType (new VoidType ()), get_delegate_target_cname (decl.name));
 					emit_temp_var (target_decl);
 					var target_destroy_notify_decl = new LocalVariable (gdestroynotify_type, get_delegate_target_destroy_notify_cname (decl.name));
 					emit_temp_var (target_destroy_notify_decl);
-					CCodeExpression target_destroy_notify;
-					ccode.add_assignment (get_variable_cexpression (target_decl.name), get_delegate_target_cexpression (expr, out target_destroy_notify));
-					ccode.add_assignment (get_variable_cexpression (target_destroy_notify_decl.name), target_destroy_notify);
+					ccode.add_assignment (get_variable_cexpression (target_decl.name), get_delegate_target_cvalue (value));
+					ccode.add_assignment (get_variable_cexpression (target_destroy_notify_decl.name), get_delegate_target_destroy_notify_cvalue (value));
 
 				}
 			}
@@ -5118,7 +5131,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		if (target_type == null) {
 			// value will be destroyed, no need for implicit casts
-			return cexpr;
+			return result;
 		}
 
 		if (gvalue_boxing) {
@@ -5145,58 +5158,54 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			} else {
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (decl.name)));
 			}
-			ccall.add_argument (new CCodeIdentifier (expression_type.get_type_id ()));
+			ccall.add_argument (new CCodeIdentifier (type.get_type_id ()));
 			ccode.add_expression (ccall);
 
-			if (requires_destroy (expression_type)) {
-				ccall = new CCodeFunctionCall (get_value_taker_function (expression_type));
+			if (requires_destroy (type)) {
+				ccall = new CCodeFunctionCall (get_value_taker_function (type));
 			} else {
-				ccall = new CCodeFunctionCall (get_value_setter_function (expression_type));
+				ccall = new CCodeFunctionCall (get_value_setter_function (type));
 			}
 			if (target_type.nullable) {
 				ccall.add_argument (get_variable_cexpression (decl.name));
 			} else {
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (decl.name)));
 			}
-			if (expression_type.is_real_non_null_struct_type ()) {
-				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr));
+			if (type.is_real_non_null_struct_type ()) {
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, result.cvalue));
 			} else {
-				ccall.add_argument (cexpr);
+				ccall.add_argument (result.cvalue);
 			}
 
 			ccode.add_expression (ccall);
 
-			cexpr = get_variable_cexpression (decl.name);
-
-			return cexpr;
+			return get_local_cvalue (decl);
 		} else if (gvariant_boxing) {
 			// implicit conversion to GVariant
 			string variant_func = "_variant_new%d".printf (++next_variant_function_id);
 
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier (variant_func));
-			ccall.add_argument (cexpr);
+			ccall.add_argument (result.cvalue);
 
 			var cfunc = new CCodeFunction (variant_func, "GVariant*");
 			cfunc.modifiers = CCodeModifiers.STATIC;
-			cfunc.add_parameter (new CCodeParameter ("value", expression_type.get_cname ()));
+			cfunc.add_parameter (new CCodeParameter ("value", type.get_cname ()));
 
-			if (expression_type is ArrayType) {
+			if (type is ArrayType) {
 				// return array length if appropriate
-				var array_type = (ArrayType) expression_type;
+				var array_type = (ArrayType) type;
 
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					ccall.add_argument (get_array_length_cexpression (expr, dim));
+					ccall.add_argument (get_array_length_cvalue (value, dim));
 					cfunc.add_parameter (new CCodeParameter (get_array_length_cname ("value", dim), "gint"));
 				}
 			}
 
 			push_function (cfunc);
 
-			var result = serialize_expression (expression_type, new CCodeIdentifier ("value"));
-
 			// sink floating reference
 			var sink = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_ref_sink"));
-			sink.add_argument (result);
+			sink.add_argument (serialize_expression (type, new CCodeIdentifier ("value")));
 			ccode.add_return (sink);
 
 			pop_function ();
@@ -5204,55 +5213,48 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			cfile.add_function_declaration (cfunc);
 			cfile.add_function (cfunc);
 
-			return ccall;
+			result.cvalue = ccall;
+			return result;
 		} else if (boxing) {
 			// value needs to be boxed
 
-			var unary = cexpr as CCodeUnaryExpression;
+			var unary = result.cvalue as CCodeUnaryExpression;
 			if (unary != null && unary.operator == CCodeUnaryOperator.POINTER_INDIRECTION) {
 				// *expr => expr
-				cexpr = unary.inner;
-			} else if (cexpr is CCodeIdentifier || cexpr is CCodeMemberAccess) {
-				cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr);
+				result.cvalue = unary.inner;
+			} else if (result.cvalue is CCodeIdentifier || result.cvalue is CCodeMemberAccess) {
+				result.cvalue = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, result.cvalue);
 			} else {
-				var decl = get_temp_variable (expression_type, expression_type.value_owned, expression_type, false);
+				var decl = get_temp_variable (type, type.value_owned, type, false);
 				emit_temp_var (decl);
 
-				ccode.add_assignment (get_variable_cexpression (decl.name), cexpr);
-				cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (decl.name));
+				ccode.add_assignment (get_variable_cexpression (decl.name), result.cvalue);
+				result.cvalue = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (decl.name));
 			}
 		} else if (unboxing) {
 			// unbox value
 
-			cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, cexpr);
+			result.cvalue = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, result.cvalue);
 		} else {
-			cexpr = get_implicit_cast_expression (cexpr, expression_type, target_type, expr);
+			result.cvalue = get_implicit_cast_expression (result.cvalue, type, target_type, expr);
 		}
 
-		if (target_type.value_owned && (!expression_type.value_owned || boxing || unboxing)) {
+		if (target_type.value_owned && (!type.value_owned || boxing || unboxing)) {
 			// need to copy value
-			if (requires_copy (target_type) && !(expression_type is NullType)) {
+			if (requires_copy (target_type) && !(type is NullType)) {
 				CodeNode node = expr;
 				if (node == null) {
-					node = expression_type;
+					node = type;
 				}
 
 				var decl = get_temp_variable (target_type, true, node, false);
 				emit_temp_var (decl);
-				GLibValue value;
-				if (expr != null && expr.target_value != null) {
-					value = ((GLibValue) expr.target_value).copy ();
-					value.value_type = target_type;
-					value.cvalue = cexpr;
-				} else {
-					value = new GLibValue (target_type, cexpr);
-				}
-				ccode.add_assignment (get_variable_cexpression (decl.name), get_cvalue_ (copy_value (value, node)));
-				cexpr = get_variable_cexpression (decl.name);
+				ccode.add_assignment (get_variable_cexpression (decl.name), get_cvalue_ (copy_value (result, node)));
+				result.cvalue = get_variable_cexpression (decl.name);
 			}
 		}
 
-		return cexpr;
+		return result;
 	}
 
 	public virtual CCodeExpression get_implicit_cast_expression (CCodeExpression source_cexpr, DataType? expression_type, DataType? target_type, Expression? expr = null) {
