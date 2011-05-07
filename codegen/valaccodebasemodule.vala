@@ -3707,11 +3707,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			value.delegate_target_cvalue = get_delegate_target_cvalue (expr.target_value);
 			value.delegate_target_destroy_notify_cvalue = get_delegate_target_destroy_notify_cvalue (expr.target_value);
 		}
-		var result = copy_value (value, expr, node);
+		var result = copy_value (value, node);
 		return get_cvalue_ (result);
 	}
 
-	public virtual TargetValue? copy_value (TargetValue value, Expression? expr, CodeNode node) {
+	public virtual TargetValue? copy_value (TargetValue value, CodeNode node) {
 		var type = value.value_type;
 		var cexpr = get_cvalue_ (value);
 
@@ -3820,7 +3820,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		if (!(type is ArrayType) && get_non_null (value) && !is_ref_function_void (type)) {
 			// expression is non-null
-			ccall.add_argument (get_cvalue (expr));
+			ccall.add_argument (cexpr);
 			
 			return new GLibValue (type, ccall);
 		} else {
