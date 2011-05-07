@@ -173,7 +173,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 		return base.get_implicit_cast_expression (source_cexpr, expression_type, target_type, expr);
 	}
 
-	private string generate_delegate_wrapper (Method m, DelegateType dt, Expression? expr) {
+	private string generate_delegate_wrapper (Method m, DelegateType dt, CodeNode? node) {
 		var d = dt.delegate_symbol;
 		string delegate_name;
 		var sig = d.parent_symbol as Signal;
@@ -293,7 +293,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			} else {
 				// use first delegate parameter as instance
 				if (d_params.size == 0) {
-					Report.error (expr != null ? expr.source_reference : null, "Cannot create delegate without target for instance method or closure");
+					Report.error (node != null ? node.source_reference : null, "Cannot create delegate without target for instance method or closure");
 					arg = new CCodeConstant ("NULL");
 				} else {
 					arg = new CCodeIdentifier (get_variable_cname (d_params.get (0).name));
@@ -408,26 +408,16 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			ccode.add_declaration (return_type_cname, new CCodeVariableDeclarator ("result", ccall));
 		}
 
-		if (d.has_target && !dt.value_owned && dt.is_called_once && expr != null) {
-			// destroy notify "self" after the call, only support lambda expressions and methods
+		if (d.has_target && !dt.value_owned && dt.is_called_once) {
+			// destroy notify "self" after the call
 			CCodeExpression? destroy_notify = null;
-			if (expr is LambdaExpression) {
-				var lambda = (LambdaExpression) expr;
-				if (lambda.method.closure) {
-					int block_id = get_block_id (current_closure_block);
-					destroy_notify = new CCodeIdentifier ("block%d_data_unref".printf (block_id));
-				} else if (get_this_type () != null) {
-					destroy_notify = get_destroy_func_expression (get_this_type ());
-				} else if (in_constructor) {
-					destroy_notify = new CCodeIdentifier ("g_object_unref");
-				}
-			} else if (expr.symbol_reference is Method) {
-				var ma = (MemberAccess) expr;
-				if (m.binding != MemberBinding.STATIC &&
-				    !m.is_async_callback &&
-				    ma.inner.value_type.data_type != null && ma.inner.value_type.data_type.is_reference_counting ()) {
-					destroy_notify = get_destroy_func_expression (ma.inner.value_type);
-				}
+			if (m.closure) {
+				int block_id = get_block_id (current_closure_block);
+				destroy_notify = new CCodeIdentifier ("block%d_data_unref".printf (block_id));
+			} else if (get_this_type () != null && m.binding != MemberBinding.STATIC && !m.is_async_callback && m.this_parameter.variable_type.data_type.is_reference_counting ()) {
+				destroy_notify = get_destroy_func_expression (m.this_parameter.variable_type);
+			} else if (in_constructor) {
+				destroy_notify = new CCodeIdentifier ("g_object_unref");
 			}
 
 			if (destroy_notify != null) {
