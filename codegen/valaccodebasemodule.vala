@@ -3695,20 +3695,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
-	public CCodeExpression? get_ref_cexpression (DataType expression_type, CCodeExpression cexpr, Expression? expr, CodeNode node) {
-		var value = new GLibValue (expression_type, cexpr);
-		if (expr != null && expr.target_value != null) {
-			value.non_null = ((GLibValue) expr.target_value).non_null;
-			value.array_length_cvalues = ((GLibValue) expr.target_value).array_length_cvalues;
-			value.array_null_terminated = ((GLibValue) expr.target_value).array_null_terminated;
-			value.array_length_cexpr = ((GLibValue) expr.target_value).array_length_cexpr;
-			value.delegate_target_cvalue = get_delegate_target_cvalue (expr.target_value);
-			value.delegate_target_destroy_notify_cvalue = get_delegate_target_destroy_notify_cvalue (expr.target_value);
-		}
-		var result = copy_value (value, node);
-		return get_cvalue_ (result);
-	}
-
 	public virtual TargetValue? copy_value (TargetValue value, CodeNode node) {
 		var type = value.value_type;
 		var cexpr = get_cvalue_ (value);
