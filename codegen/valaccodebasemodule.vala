@@ -3702,15 +3702,18 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			value.delegate_target_cvalue = get_delegate_target_cvalue (expr.target_value);
 			value.delegate_target_destroy_notify_cvalue = get_delegate_target_destroy_notify_cvalue (expr.target_value);
 		}
-		return copy_value (value, expr, node);
+		var result = copy_value (value, expr, node);
+		return get_cvalue_ (result);
 	}
 
-	public virtual CCodeExpression? copy_value (TargetValue value, Expression? expr, CodeNode node) {
+	public virtual TargetValue? copy_value (TargetValue value, Expression? expr, CodeNode node) {
 		var type = value.value_type;
 		var cexpr = get_cvalue_ (value);
 
 		if (type is DelegateType) {
-			return cexpr;
+			var result = ((GLibValue) value).copy ();
+			result.delegate_target_destroy_notify_cvalue = new CCodeConstant ("NULL");
+			return result;
 		}
 
 		if (type is ValueType && !type.nullable) {
@@ -3749,13 +3752,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccode.add_else ();
 
 				// g_value_init/copy must not be called for uninitialized values
-				ccode.add_assignment (ctemp, cexpr);
+				store_local (decl, value, true);
 				ccode.close ();
 			} else {
 				ccode.add_expression (copy_call);
 			}
 
-			return ctemp;
+			return get_local_cvalue (decl);
 		}
 
 		/* (temp = expr, temp == NULL ? NULL : ref (temp))
@@ -3805,7 +3808,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier (dup0_func));
 			ccall.add_argument (cexpr);
-			return ccall;
+			return new GLibValue (type, ccall);
 		}
 
 		var ccall = new CCodeFunctionCall (dupexpr);
@@ -3815,7 +3818,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			// expression is non-null
 			ccall.add_argument (get_cvalue (expr));
 			
-			return ccall;
+			return new GLibValue (type, ccall);
 		} else {
 			var decl = get_temp_variable (type, false, node, false);
 			emit_temp_var (decl);
@@ -3871,7 +3874,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccomma.append_expression (ctemp);
 			}
 
-			return ccomma;
+			return new GLibValue (type, ccomma);
 		}
 	}
 

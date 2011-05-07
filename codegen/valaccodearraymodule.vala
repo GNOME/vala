@@ -409,7 +409,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		cfile.add_function (fun);
 	}
 
-	public override CCodeExpression? copy_value (TargetValue value, Expression? expr, CodeNode node) {
+	public override TargetValue? copy_value (TargetValue value, Expression? expr, CodeNode node) {
 		var type = value.value_type;
 		var cexpr = get_cvalue_ (value);
 
@@ -434,7 +434,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			ccomma.append_expression (copy_call);
 			ccomma.append_expression (ctemp);
 
-			return ccomma;
+			return new GLibValue (type, ccomma);
 		} else {
 			return base.copy_value (value, expr, node);
 		}
@@ -525,7 +525,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			                   new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier ("i"), new CCodeIdentifier ("length")),
 			                   new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier ("i")));
 
-			ccode.add_assignment (new CCodeElementAccess (new CCodeIdentifier ("result"), new CCodeIdentifier ("i")), copy_value (new GLibValue (array_type.element_type, new CCodeElementAccess (new CCodeIdentifier ("self"), new CCodeIdentifier ("i"))), null, array_type));
+			ccode.add_assignment (new CCodeElementAccess (new CCodeIdentifier ("result"), new CCodeIdentifier ("i")), get_cvalue_ (copy_value (new GLibValue (array_type.element_type, new CCodeElementAccess (new CCodeIdentifier ("self"), new CCodeIdentifier ("i"))), null, array_type)));
 			ccode.close ();
 
 			ccode.add_return (new CCodeIdentifier ("result"));
@@ -579,7 +579,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			                   new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier ("i")));
 
 
-			ccode.add_assignment (new CCodeElementAccess (new CCodeIdentifier ("dest"), new CCodeIdentifier ("i")), copy_value (new GLibValue (array_type.element_type, new CCodeElementAccess (new CCodeIdentifier ("self"), new CCodeIdentifier ("i"))), null, array_type));
+			ccode.add_assignment (new CCodeElementAccess (new CCodeIdentifier ("dest"), new CCodeIdentifier ("i")), get_cvalue_ (copy_value (new GLibValue (array_type.element_type, new CCodeElementAccess (new CCodeIdentifier ("self"), new CCodeIdentifier ("i"))), null, array_type)));
 		} else {
 			cfile.add_include ("string.h");
 
