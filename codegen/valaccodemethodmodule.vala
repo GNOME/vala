@@ -436,7 +436,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 							base_expression_type = new ObjectType ((Interface) base_method.parent_symbol);
 						}
 						var self_target_type = new ObjectType (cl);
-						CCodeExpression cself = transform_expression (new CCodeIdentifier ("base"), base_expression_type, self_target_type);
+						CCodeExpression cself = get_cvalue_ (transform_value (new GLibValue (base_expression_type, new CCodeIdentifier ("base")), self_target_type, m));
 
 						ccode.add_declaration ("%s *".printf (cl.get_cname ()), new CCodeVariableDeclarator ("self"));
 						ccode.add_assignment (new CCodeIdentifier ("self"), cself);

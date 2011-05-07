@@ -775,7 +775,9 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			}
 
 			// assign new value
-			ccode.add_assignment (get_cvalue (unary.inner), transform_expression (get_cvalue (unary), unary.target_type, unary.inner.value_type, arg));
+			var value = ((GLibValue) unary.target_value).copy ();
+			value.value_type = unary.target_type;
+			ccode.add_assignment (get_cvalue (unary.inner), get_cvalue_ (transform_value (value, unary.inner.value_type, arg)));
 
 			var array_type = arg.value_type as ArrayType;
 			if (array_type != null) {

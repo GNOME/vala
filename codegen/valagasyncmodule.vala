@@ -179,7 +179,7 @@ public class Vala.GAsyncModule : GSignalModule {
 			var type_symbol = m.parent_symbol as ObjectTypeSymbol;
 
 			var self_target_type = new ObjectType (type_symbol);
-			var cself = transform_expression (new CCodeIdentifier ("base"), base_expression_type, self_target_type);
+			var cself = get_cvalue_ (transform_value (new GLibValue (base_expression_type, new CCodeIdentifier ("base")), self_target_type, m));
 			ccode.add_declaration ("%s *".printf (type_symbol.get_cname ()), new CCodeVariableDeclarator ("self"));
 			ccode.add_assignment (new CCodeIdentifier ("self"), cself);
 		}

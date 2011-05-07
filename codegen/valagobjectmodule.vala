@@ -202,13 +202,13 @@ public class Vala.GObjectModule : GTypeModule {
 			if (prop.base_property != null) {
 				var base_type = (Class) prop.base_property.parent_symbol;
 				base_prop = prop.base_property;
-				cself = transform_expression (cself, new ObjectType (cl), new ObjectType (base_type));
+				cself = get_cvalue_ (transform_value (new GLibValue (new ObjectType (cl), cself), new ObjectType (base_type), prop));
 
 				generate_property_accessor_declaration (prop.base_property.get_accessor, cfile);
 			} else if (prop.base_interface_property != null) {
 				var base_type = (Interface) prop.base_interface_property.parent_symbol;
 				base_prop = prop.base_interface_property;
-				cself = transform_expression (cself, new ObjectType (cl), new ObjectType (base_type));
+				cself = get_cvalue_ (transform_value (new GLibValue (new ObjectType (cl), cself), new ObjectType (base_type), prop));
 
 				generate_property_accessor_declaration (prop.base_interface_property.get_accessor, cfile);
 			}
@@ -301,13 +301,13 @@ public class Vala.GObjectModule : GTypeModule {
 			if (prop.base_property != null) {
 				var base_type = (Class) prop.base_property.parent_symbol;
 				base_prop = prop.base_property;
-				cself = transform_expression (cself, new ObjectType (cl), new ObjectType (base_type));
+				cself = get_cvalue_ (transform_value (new GLibValue (new ObjectType (cl), cself), new ObjectType (base_type), prop));
 
 				generate_property_accessor_declaration (prop.base_property.set_accessor, cfile);
 			} else if (prop.base_interface_property != null) {
 				var base_type = (Interface) prop.base_interface_property.parent_symbol;
 				base_prop = prop.base_interface_property;
-				cself = transform_expression (cself, new ObjectType (cl), new ObjectType (base_type));
+				cself = get_cvalue_ (transform_value (new GLibValue (new ObjectType (cl), cself), new ObjectType (base_type), prop));
 
 				generate_property_accessor_declaration (prop.base_interface_property.set_accessor, cfile);
 			}

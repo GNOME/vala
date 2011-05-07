@@ -260,7 +260,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 
 			var element_type = array_type.element_type.copy ();
 			element_type.value_owned = false;
-			element_expr = transform_expression (element_expr, element_type, stmt.type_reference);
+			element_expr = get_cvalue_ (transform_value (new GLibValue (element_type, element_expr), stmt.type_reference, stmt));
 
 			visit_local_variable (stmt.element_variable);
 			ccode.add_assignment (get_variable_cexpression (stmt.variable_name), element_expr);
@@ -300,7 +300,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			var element_data_type = collection_type.get_type_arguments ().get (0).copy ();
 			element_data_type.value_owned = false;
 			element_expr = convert_from_generic_pointer (element_expr, element_data_type);
-			element_expr = transform_expression (element_expr, element_data_type, stmt.type_reference);
+			element_expr = get_cvalue_ (transform_value (new GLibValue (element_data_type, element_expr), stmt.type_reference, stmt));
 
 			visit_local_variable (stmt.element_variable);
 			ccode.add_assignment (get_variable_cexpression (stmt.variable_name), element_expr);

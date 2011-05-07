@@ -1584,7 +1584,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			if (is_virtual) {
 				ccode.add_declaration (this_type.get_cname (), new CCodeVariableDeclarator ("self"));
-				ccode.add_assignment (new CCodeIdentifier ("self"), transform_expression (new CCodeIdentifier ("base"), base_type, this_type));
+				ccode.add_assignment (new CCodeIdentifier ("self"), get_cvalue_ (transform_value (new GLibValue (base_type, new CCodeIdentifier ("base")), this_type, acc)));
 			}
 
 			acc.body.emit (this);
@@ -3380,7 +3380,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 
 			// memory management, implicit casts, and boxing/unboxing
-			set_cvalue (expr, transform_expression (get_cvalue (expr), expr.value_type, expr.target_type, expr));
+			if (expr.value_type != null) {
+				// FIXME: temporary workaround, not all target_value have a value_type
+				var old_type = expr.target_value.value_type;
+				expr.target_value.value_type = expr.value_type;
+				set_cvalue (expr, get_cvalue_ (transform_value (expr.target_value, expr.target_type, expr)));
+				expr.target_value.value_type = old_type;
+			}
 
 			if (expr.formal_target_type is GenericType && !(expr.target_type is GenericType)) {
 				if (expr.formal_target_type.type_parameter.parent_symbol != garray_type) {
@@ -4260,7 +4266,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				if (init.symbol_reference is Field) {
 					var f = (Field) init.symbol_reference;
 					var instance_target_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
-					var typed_inst = transform_expression (instance, expr.type_reference, instance_target_type);
+					var typed_inst = get_cvalue_ (transform_value (new GLibValue (expr.type_reference, instance), instance_target_type, init));
 					CCodeExpression lhs;
 					if (expr.type_reference.data_type is Struct) {
 						lhs = new CCodeMemberAccess (typed_inst, f.get_cname ());
