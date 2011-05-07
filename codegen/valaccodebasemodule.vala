@@ -3390,6 +3390,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					set_cvalue (expr, convert_to_generic_pointer (get_cvalue (expr), expr.target_type));
 				}
 			}
+
+			if (!(expr.value_type is ValueType && !expr.value_type.nullable)) {
+				((GLibValue) expr.target_value).non_null = expr.is_non_null ();
+			}
 		}
 	}
 
@@ -3696,6 +3700,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public CCodeExpression? get_ref_cexpression (DataType expression_type, CCodeExpression cexpr, Expression? expr, CodeNode node) {
 		var value = new GLibValue (expression_type, cexpr);
 		if (expr != null && expr.target_value != null) {
+			value.non_null = ((GLibValue) expr.target_value).non_null;
 			value.array_length_cvalues = ((GLibValue) expr.target_value).array_length_cvalues;
 			value.array_null_terminated = ((GLibValue) expr.target_value).array_null_terminated;
 			value.array_length_cexpr = ((GLibValue) expr.target_value).array_length_cexpr;
@@ -3813,8 +3818,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		var ccall = new CCodeFunctionCall (dupexpr);
 
-		if (!(type is ArrayType) && expr != null && expr.is_non_null ()
-		    && !is_ref_function_void (type)) {
+		if (!(type is ArrayType) && get_non_null (value) && !is_ref_function_void (type)) {
 			// expression is non-null
 			ccall.add_argument (get_cvalue (expr));
 			
@@ -5844,6 +5848,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return glib_value.array_length_cvalues;
 	}
 
+	public bool get_non_null (TargetValue value) {
+		var glib_value = (GLibValue) value;
+		return glib_value.non_null;
+	}
+
 	public bool get_array_null_terminated (TargetValue value) {
 		var glib_value = (GLibValue) value;
 		return glib_value.array_null_terminated;
@@ -5857,6 +5866,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 public class Vala.GLibValue : TargetValue {
 	public CCodeExpression cvalue;
+	public bool non_null;
 
 	public List<CCodeExpression> array_length_cvalues;
 	public CCodeExpression? array_size_cvalue;
@@ -5880,6 +5890,7 @@ public class Vala.GLibValue : TargetValue {
 
 	public GLibValue copy () {
 		var result = new GLibValue (value_type.copy (), cvalue);
+		result.non_null = non_null;
 
 		if (array_length_cvalues != null) {
 			foreach (var cexpr in array_length_cvalues) {
