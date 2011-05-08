@@ -398,12 +398,14 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 		if (param.has_array_length_cexpr) {
 			result.array_length_cexpr = new CCodeConstant (param.get_array_length_cexpr ());
 		}
-		if (param.captured || is_in_coroutine ()) {
-			result.value_type.value_owned = true;
-		}
 
 		var array_type = result.value_type as ArrayType;
 		var delegate_type = result.value_type as DelegateType;
+
+		bool is_unowned_delegate = delegate_type != null && !param.variable_type.value_owned;
+		if ((param.captured || is_in_coroutine ()) && !is_unowned_delegate) {
+			result.value_type.value_owned = true;
+		}
 
 		if (param.name == "this") {
 			if (is_in_coroutine ()) {
@@ -433,7 +435,9 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					}
 				} else if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
 					result.delegate_target_cvalue = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_cname (get_variable_cname (param.name)));
-					result.delegate_target_destroy_notify_cvalue = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
+					if (result.value_type.value_owned) {
+						result.delegate_target_destroy_notify_cvalue = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
+					}
 				}
 			} else if (is_in_coroutine ()) {
 				// use closure
