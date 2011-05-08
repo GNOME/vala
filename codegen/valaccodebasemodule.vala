@@ -5604,40 +5604,18 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		push_context (new EmitContext ());
 		push_function (function);
 
+		var dest_struct = new GLibValue (get_data_type_for_symbol (st), new CCodeIdentifier ("(*dest)"));
 		foreach (Field f in st.get_fields ()) {
 			if (f.binding == MemberBinding.INSTANCE) {
-				CCodeExpression copy = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), f.name);
+				var value = load_field (f, load_this_parameter ((TypeSymbol) st));
 				if (requires_copy (f.variable_type))  {
-					var value = load_field (f, load_this_parameter ((TypeSymbol) f.parent_symbol));
-					copy = get_cvalue_ (copy_value (value, f));
-				}
-				var dest = new CCodeMemberAccess.pointer (new CCodeIdentifier ("dest"), f.name);
-
-				var array_type = f.variable_type as ArrayType;
-				if (array_type != null && array_type.fixed_length) {
-					// fixed-length (stack-allocated) arrays
-					cfile.add_include ("string.h");
-
-					var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
-					sizeof_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
-					var size = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeConstant ("%d".printf (array_type.length)), sizeof_call);
-
-					var array_copy_call = new CCodeFunctionCall (new CCodeIdentifier ("memcpy"));
-					array_copy_call.add_argument (dest);
-					array_copy_call.add_argument (copy);
-					array_copy_call.add_argument (size);
-					ccode.add_expression (array_copy_call);
-				} else {
-					ccode.add_assignment (dest, copy);
-
-					if (array_type != null && !f.no_array_length) {
-						for (int dim = 1; dim <= array_type.rank; dim++) {
-							var len_src = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), get_array_length_cname (f.name, dim));
-							var len_dest = new CCodeMemberAccess.pointer (new CCodeIdentifier ("dest"), get_array_length_cname (f.name, dim));
-							ccode.add_assignment (len_dest, len_src);
-						}
+					value = copy_value (value, f);
+					if (value == null) {
+						// error case, continue to avoid critical
+						continue;
 					}
 				}
+				store_field (f, dest_struct, value);
 			}
 		}
 
