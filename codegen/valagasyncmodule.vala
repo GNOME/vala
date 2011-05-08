@@ -248,34 +248,28 @@ public class Vala.GAsyncModule : GSignalModule {
 				param_type.value_owned = true;
 
 				// create copy if necessary as variables in async methods may need to be kept alive
-				CCodeExpression cparam = new CCodeIdentifier (get_variable_cname (param.name));
-				if (param.variable_type.is_real_non_null_struct_type ()) {
-					cparam = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, cparam);
-				}
+				var old_captured = param.captured;
+				param.captured = false;
+				var value = load_parameter (param);
 				if (requires_copy (param_type) && !param.variable_type.value_owned)  {
-					var ma = new MemberAccess.simple (param.name);
-					ma.symbol_reference = param;
-					ma.value_type = param.variable_type.copy ();
-					visit_member_access (ma);
-					var value = load_parameter (param);
-					((GLibValue) value).cvalue = cparam;
-					cparam = get_cvalue_ (copy_value (value, param));
+					value = copy_value (value, param);
 				}
+				param.captured = old_captured;
 
-				ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, get_variable_cname (param.name)), cparam);
+				ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, get_variable_cname (param.name)), get_cvalue_ (value));
 				if (param.variable_type is ArrayType) {
 					var array_type = (ArrayType) param.variable_type;
 					if (!param.no_array_length) {
 						for (int dim = 1; dim <= array_type.rank; dim++) {
-							ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, get_parameter_array_length_cname (param, dim)), new CCodeIdentifier (get_parameter_array_length_cname (param, dim)));
+							ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, get_parameter_array_length_cname (param, dim)), get_array_length_cvalue (value, dim));
 						}
 					}
 				} else if (param.variable_type is DelegateType) {
 					var deleg_type = (DelegateType) param.variable_type;
 					if (deleg_type.delegate_symbol.has_target) {
-						ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, get_delegate_target_cname (get_variable_cname (param.name))), new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (param.name))));
+						ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, get_delegate_target_cname (get_variable_cname (param.name))), get_delegate_target_cvalue (value));
 						if (deleg_type.value_owned) {
-							ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, get_delegate_target_destroy_notify_cname (get_variable_cname (param.name))), new CCodeIdentifier (get_delegate_target_destroy_notify_cname (get_variable_cname (param.name))));
+							ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, get_delegate_target_destroy_notify_cname (get_variable_cname (param.name))), get_delegate_target_destroy_notify_cvalue (value));
 						}
 					}
 				}
