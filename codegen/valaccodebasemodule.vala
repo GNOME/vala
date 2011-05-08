@@ -4017,12 +4017,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			var local = expr.parent_node as LocalVariable;
 			if (local != null && has_simple_struct_initializer (local)) {
-				if (local.captured) {
-					var block = (Block) local.parent_symbol;
-					instance = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_variable_cname (local.name));
-				} else {
-					instance = get_variable_cexpression (get_variable_cname (local.name));
-				}
+				instance = get_cvalue_ (get_local_cvalue (local));
 			} else {
 				var temp_decl = get_temp_variable (expr.type_reference, false, expr);
 				emit_temp_var (temp_decl);
