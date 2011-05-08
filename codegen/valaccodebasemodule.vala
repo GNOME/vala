@@ -1643,12 +1643,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			value = copy_value (value, param);
 		}
 
-		if (param.variable_type is ArrayType) {
-			var array_type = (ArrayType) param.variable_type;
+		var array_type = param.variable_type as ArrayType;
+		var deleg_type = param.variable_type as DelegateType;
+
+		if (array_type != null && !param.no_array_length) {
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				data.add_field ("gint", get_parameter_array_length_cname (param, dim));
 			}
-		} else if (param.variable_type is DelegateType) {
+		} else if (deleg_type != null && deleg_type.delegate_symbol.has_target) {
 			data.add_field ("gpointer", get_delegate_target_cname (get_variable_cname (param.name)));
 			if (param.variable_type.value_owned) {
 				data.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
