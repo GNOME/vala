@@ -255,54 +255,18 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 
 		push_function (function);
 
+		var dest_struct = new GLibValue (get_data_type_for_symbol (st), new CCodeIdentifier ("(*dest)"));
 		foreach (var f in st.get_fields ()) {
 			if (f.binding == MemberBinding.INSTANCE) {
-				CCodeExpression copy = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), f.name);
+				var value = load_field (f, load_this_parameter ((TypeSymbol) st));
 				if (requires_copy (f.variable_type))  {
-					var value = load_field (f, load_this_parameter ((TypeSymbol) f.parent_symbol));
-					var value_copy = copy_value (value, f);
-					if (value_copy == null) {
+					value = copy_value (value, f);
+					if (value == null) {
 						// error case, continue to avoid critical
 						continue;
 					}
-					copy = get_cvalue_ (value_copy);
 				}
-				var dest = new CCodeMemberAccess.pointer (new CCodeIdentifier ("dest"), f.name);
-
-				var array_type = f.variable_type as ArrayType;
-				if (array_type != null && array_type.fixed_length) {
-					// fixed-length (stack-allocated) arrays
-					cfile.add_include ("string.h");
-
-					var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
-					sizeof_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
-					var size = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeConstant ("%d".printf (array_type.length)), sizeof_call);
-
-					var array_copy_call = new CCodeFunctionCall (new CCodeIdentifier ("memcpy"));
-					array_copy_call.add_argument (dest);
-					array_copy_call.add_argument (copy);
-					array_copy_call.add_argument (size);
-					ccode.add_expression (array_copy_call);
-				} else {
-					ccode.add_assignment (dest, copy);
-
-					if (f.variable_type is DelegateType) {
-						var delegate_type = (DelegateType) f.variable_type;
-						if (delegate_type.delegate_symbol.has_target) {
-							// copy field storing delegate target
-							var target_name = get_delegate_target_cname (f.name);
-							ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("dest"), target_name), new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), target_name));
-						}
-					}
-
-					if (array_type != null) {
-						for (int dim = 1; dim <= array_type.rank; dim++) {
-							var len_src = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), get_array_length_cname (f.name, dim));
-							var len_dest = new CCodeMemberAccess.pointer (new CCodeIdentifier ("dest"), get_array_length_cname (f.name, dim));
-							ccode.add_assignment (len_dest, len_src);
-						}
-					}
-				}
+				store_field (f, dest_struct, value);
 			}
 		}
 
