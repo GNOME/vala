@@ -3702,9 +3702,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public virtual TargetValue? copy_value (TargetValue value, CodeNode node) {
 		var type = value.value_type;
 		var cexpr = get_cvalue_ (value);
+		var result = ((GLibValue) value).copy ();
 
 		if (type is DelegateType) {
-			var result = ((GLibValue) value).copy ();
 			result.delegate_target_destroy_notify_cvalue = new CCodeConstant ("NULL");
 			return result;
 		}
@@ -3751,7 +3751,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccode.add_expression (copy_call);
 			}
 
-			return get_local_cvalue (decl);
+			result.value_type = decl.variable_type;
+			result.cvalue = ctemp;
+			return result;
 		}
 
 		/* (temp = expr, temp == NULL ? NULL : ref (temp))
@@ -3801,7 +3803,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier (dup0_func));
 			ccall.add_argument (cexpr);
-			return new GLibValue (type, ccall);
+			result.cvalue = ccall;
+			return result;
 		}
 
 		var ccall = new CCodeFunctionCall (dupexpr);
@@ -3866,7 +3869,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccomma.append_expression (ctemp);
 			}
 
-			return new GLibValue (type, ccomma);
+			result.value_type = decl.variable_type;
+			result.cvalue = ccomma;
+			return result;
 		}
 	}
 
