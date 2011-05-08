@@ -1636,45 +1636,30 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		bool is_unowned_delegate = param.variable_type is DelegateType && !param.variable_type.value_owned;
 
 		// create copy if necessary as captured variables may need to be kept alive
-		CCodeExpression cparam = get_variable_cexpression (param.name);
-		if (param.variable_type.is_real_non_null_struct_type ()) {
-			cparam = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, cparam);
-		}
+		param.captured = false;
+		var value = load_parameter (param);
 		if (requires_copy (param_type) && !param.variable_type.value_owned && !is_unowned_delegate)  {
 			// directly access parameters in ref expressions
-			param.captured = false;
-			var value = load_parameter (param);
-			((GLibValue) value).cvalue = cparam;
-			cparam = get_cvalue_ (copy_value (value, param));
-			param.captured = true;
+			value = copy_value (value, param);
 		}
-
-		ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_variable_cname (param.name)), cparam);
 
 		if (param.variable_type is ArrayType) {
 			var array_type = (ArrayType) param.variable_type;
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				data.add_field ("gint", get_parameter_array_length_cname (param, dim));
-				ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_array_length_cname (get_variable_cname (param.name), dim)), new CCodeIdentifier (get_array_length_cname (get_variable_cname (param.name), dim)));
 			}
 		} else if (param.variable_type is DelegateType) {
-			CCodeExpression target_expr;
-			CCodeExpression delegate_target_destroy_notify;
-			if (is_in_coroutine ()) {
-				target_expr = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_delegate_target_cname (get_variable_cname (param.name)));
-				delegate_target_destroy_notify = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
-			} else {
-				target_expr = new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (param.name)));
-				delegate_target_destroy_notify = new CCodeIdentifier (get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
-			}
-
 			data.add_field ("gpointer", get_delegate_target_cname (get_variable_cname (param.name)));
-			ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_delegate_target_cname (get_variable_cname (param.name))), target_expr);
 			if (param.variable_type.value_owned) {
 				data.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
-				ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_delegate_target_destroy_notify_cname (get_variable_cname (param.name))), delegate_target_destroy_notify);
+				// reference transfer for delegates
+				var lvalue = get_parameter_cvalue (param);
+				((GLibValue) value).delegate_target_destroy_notify_cvalue = get_delegate_target_destroy_notify_cvalue (lvalue);
 			}
 		}
+		param.captured = true;
+
+		store_parameter (param, value);
 	}
 
 	public override void visit_block (Block b) {
