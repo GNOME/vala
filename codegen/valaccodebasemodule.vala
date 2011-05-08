@@ -4251,36 +4251,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				if (init.symbol_reference is Field) {
 					var f = (Field) init.symbol_reference;
 					var instance_target_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
-					var typed_inst = get_cvalue_ (transform_value (new GLibValue (expr.type_reference, instance), instance_target_type, init));
-					CCodeExpression lhs;
-					if (expr.type_reference.data_type is Struct) {
-						lhs = new CCodeMemberAccess (typed_inst, f.get_cname ());
-					} else {
-						lhs = new CCodeMemberAccess.pointer (typed_inst, f.get_cname ());
-					}
-					ccode.add_assignment (lhs, get_cvalue (init.initializer));
-
-					if (f.variable_type is ArrayType && !f.no_array_length) {
-						var array_type = (ArrayType) f.variable_type;
-						for (int dim = 1; dim <= array_type.rank; dim++) {
-							if (expr.type_reference.data_type is Struct) {
-								lhs = new CCodeMemberAccess (typed_inst, get_array_length_cname (f.get_cname (), dim));
-							} else {
-								lhs = new CCodeMemberAccess.pointer (typed_inst, get_array_length_cname (f.get_cname (), dim));
-							}
-							var rhs_array_len = get_array_length_cexpression (init.initializer, dim);
-							ccode.add_assignment (lhs, rhs_array_len);
-						}
-					} else if (f.variable_type is DelegateType && (f.variable_type as DelegateType).delegate_symbol.has_target && !f.no_delegate_target) {
-						if (expr.type_reference.data_type is Struct) {
-							lhs = new CCodeMemberAccess (typed_inst, get_delegate_target_cname (f.get_cname ()));
-						} else {
-							lhs = new CCodeMemberAccess.pointer (typed_inst, get_delegate_target_cname (f.get_cname ()));
-						}
-						CCodeExpression rhs_delegate_target_destroy_notify;
-						var rhs_delegate_target = get_delegate_target_cexpression (init.initializer, out rhs_delegate_target_destroy_notify);
-						ccode.add_assignment (lhs, rhs_delegate_target);
-					}
+					var typed_inst = transform_value (new GLibValue (expr.type_reference, instance), instance_target_type, init);
+					TargetValue lvalue = get_field_cvalue (f, typed_inst);
+					store_field (f, typed_inst, init.initializer.target_value);
 
 					var cl = f.parent_symbol as Class;
 					if (cl != null) {
