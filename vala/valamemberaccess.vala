@@ -804,7 +804,8 @@ public class Vala.MemberAccess : Expression {
 			} else if ((symbol_reference is Field
 			            || symbol_reference is Signal)
 			           && instance && symbol_reference.parent_symbol != null) {
-				inner.target_type = context.analyzer.get_data_type_for_symbol ((TypeSymbol) symbol_reference.parent_symbol);
+				var parent_type = context.analyzer.get_data_type_for_symbol ((TypeSymbol) symbol_reference.parent_symbol);
+				inner.target_type = parent_type.get_actual_type (inner.value_type, null, this);
 			}
 		}
 

@@ -351,8 +351,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public static DataType get_data_type_for_symbol (TypeSymbol sym) {
 		DataType type = null;
 
+		List<TypeParameter> type_parameters = null;
 		if (sym is ObjectTypeSymbol) {
 			type = new ObjectType ((ObjectTypeSymbol) sym);
+			type_parameters = ((ObjectTypeSymbol) sym).get_type_parameters ();
 		} else if (sym is Struct) {
 			var st = (Struct) sym;
 			if (st.is_boolean_type ()) {
@@ -364,6 +366,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			} else {
 				type = new StructValueType (st);
 			}
+			type_parameters = st.get_type_parameters ();
 		} else if (sym is Enum) {
 			type = new EnumValueType ((Enum) sym);
 		} else if (sym is ErrorDomain) {
@@ -373,6 +376,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		} else {
 			Report.error (null, "internal error: `%s' is not a supported type".printf (sym.get_full_name ()));
 			return new InvalidType ();
+		}
+
+		if (type_parameters != null) {
+			foreach (var type_param in type_parameters) {
+				var type_arg = new GenericType (type_param);
+				type_arg.value_owned = true;
+				type.add_type_argument (type_arg);
+			}
 		}
 
 		return type;

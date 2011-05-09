@@ -98,7 +98,12 @@ class Maman.Bar : Foo {
 	}
 }
 
-void main () {
-	Maman.Bar.main ();
+class Maman.Baz<T> {
+	public T foo;
 }
 
+void main () {
+	Maman.Bar.main ();
+	Maman.Baz<Maman.Bar> baz = new Maman.Baz<Maman.Bar> ();
+	baz.foo = null;
+}
