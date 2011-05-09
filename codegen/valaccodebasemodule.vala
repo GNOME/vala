@@ -4252,7 +4252,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					var f = (Field) init.symbol_reference;
 					var instance_target_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
 					var typed_inst = transform_value (new GLibValue (expr.type_reference, instance), instance_target_type, init);
-					TargetValue lvalue = get_field_cvalue (f, typed_inst);
 					store_field (f, typed_inst, init.initializer.target_value);
 
 					var cl = f.parent_symbol as Class;
