@@ -3,8 +3,10 @@ delegate void Func ();
 MainLoop main_loop;
 
 async void foo (string baz) {
+	unowned SourceFunc func = null;
 	string bar = "hello";
 	Func foobar = () => {
+		func = null;
 		bar = baz;
 	};
 	foobar ();
