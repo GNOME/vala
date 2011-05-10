@@ -2355,7 +2355,7 @@ public class Vala.GirParser : CodeVisitor {
 
 			string parent_ctype = null;
 			if (current.parent.symbol is Class) {
-				parent_ctype = ((Class) current.parent.symbol).get_cname ();
+				parent_ctype = current.parent.get_cname ();
 			}
 			if (return_ctype != null && (parent_ctype == null || return_ctype != parent_ctype + "*")) {
 				m.custom_return_type_cname = return_ctype;
