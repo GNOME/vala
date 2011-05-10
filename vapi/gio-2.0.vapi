@@ -160,7 +160,7 @@ namespace GLib {
 		public void cancel ();
 		public ulong connect ([CCode (type = "GCallback*")] owned GLib.Func<GLib.Cancellable> callback);
 		public void disconnect (ulong handler_id);
-		public static unowned GLib.Cancellable get_current ();
+		public static unowned GLib.Cancellable? get_current ();
 		public int get_fd ();
 		public bool is_cancelled ();
 		public bool make_pollfd (GLib.PollFD pollfd);
@@ -2474,7 +2474,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public delegate void BusNameVanishedCallback (GLib.DBusConnection connection, string name);
 	[CCode (cheader_filename = "gio/gio.h")]
-	public delegate bool CancellableSourceFunc (GLib.Cancellable cancellable);
+	public delegate bool CancellableSourceFunc (GLib.Cancellable? cancellable);
 	[CCode (cheader_filename = "gio/gio.h")]
 	public delegate unowned GLib.Variant DBusInterfaceGetPropertyFunc (GLib.DBusConnection connection, string sender, string object_path, string interface_name, string property_name) throws GLib.Error;
 	[CCode (cheader_filename = "gio/gio.h")]
@@ -2496,7 +2496,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h", has_target = false)]
 	public delegate bool FileReadMoreCallback (string file_contents, int64 file_size, void* callback_data);
 	[CCode (cheader_filename = "gio/gio.h")]
-	public delegate bool IOSchedulerJobFunc (GLib.IOSchedulerJob job, GLib.Cancellable cancellable);
+	public delegate bool IOSchedulerJobFunc (GLib.IOSchedulerJob job, GLib.Cancellable? cancellable);
 	[CCode (cheader_filename = "gio/gio.h")]
 	public delegate bool PollableSourceFunc (GLib.Object pollable_stream);
 	[CCode (cheader_filename = "gio/gio.h", has_target = false)]
@@ -2508,7 +2508,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public delegate bool SettingsGetMapping (GLib.Variant value, void* result);
 	[CCode (cheader_filename = "gio/gio.h", has_target = false)]
-	public delegate void SimpleAsyncThreadFunc (GLib.SimpleAsyncResult res, GLib.Object object, GLib.Cancellable cancellable);
+	public delegate void SimpleAsyncThreadFunc (GLib.SimpleAsyncResult res, GLib.Object object, GLib.Cancellable? cancellable);
 	[CCode (cheader_filename = "gio/gio.h")]
 	public delegate bool SocketSourceFunc (GLib.Socket socket, GLib.IOCondition condition);
 	[CCode (cheader_filename = "gio/gio.h")]
