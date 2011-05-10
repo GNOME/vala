@@ -1313,41 +1313,40 @@ public class Vala.GirParser : CodeVisitor {
 	/*
 	 * The changed is a faster way to check whether the type has changed and it may affect the C declaration.
 	 */
-	DataType? element_get_type (DataType orig_type, bool owned_by_default, out bool changed = null) {
+	DataType? element_get_type (DataType orig_type, bool owned_by_default, ref bool no_array_length, out bool changed = null) {
 		changed = false;
 		var type = orig_type;
 
 		if (metadata.has_argument (ArgumentType.TYPE)) {
-			var new_type = parse_type_from_string (metadata.get_string (ArgumentType.TYPE), owned_by_default, metadata.get_source_reference (ArgumentType.TYPE));
+			type = parse_type_from_string (metadata.get_string (ArgumentType.TYPE), owned_by_default, metadata.get_source_reference (ArgumentType.TYPE));
 			changed = true;
-			return new_type;
-		}
-
-		if (type is VoidType) {
-			return type;
-		}
-
-		if (metadata.has_argument (ArgumentType.TYPE_ARGUMENTS)) {
-			type.remove_all_type_arguments ();
-			parse_type_arguments_from_string (type, metadata.get_string (ArgumentType.TYPE_ARGUMENTS), metadata.get_source_reference (ArgumentType.TYPE_ARGUMENTS));
-		}
-
-		if (metadata.get_bool (ArgumentType.ARRAY)) {
-			type = new ArrayType (type, 1, type.source_reference);
-			changed = true;
-		}
-
-		if (type.value_owned) {
-			if (metadata.has_argument (ArgumentType.UNOWNED)) {
-				type.value_owned = !metadata.get_bool (ArgumentType.UNOWNED);
+		} else if (!(type is VoidType)) {
+			if (metadata.has_argument (ArgumentType.TYPE_ARGUMENTS)) {
+				type.remove_all_type_arguments ();
+				parse_type_arguments_from_string (type, metadata.get_string (ArgumentType.TYPE_ARGUMENTS), metadata.get_source_reference (ArgumentType.TYPE_ARGUMENTS));
 			}
-		} else {
-			if (metadata.has_argument (ArgumentType.OWNED)) {
-				type.value_owned = metadata.get_bool (ArgumentType.OWNED);
+
+			if (metadata.get_bool (ArgumentType.ARRAY)) {
+				type = new ArrayType (type, 1, type.source_reference);
+				changed = true;
+			}
+
+			if (type.value_owned) {
+				if (metadata.has_argument (ArgumentType.UNOWNED)) {
+					type.value_owned = !metadata.get_bool (ArgumentType.UNOWNED);
+				}
+			} else {
+				if (metadata.has_argument (ArgumentType.OWNED)) {
+					type.value_owned = metadata.get_bool (ArgumentType.OWNED);
+				}
+			}
+			if (metadata.has_argument (ArgumentType.NULLABLE)) {
+				type.nullable = metadata.get_bool (ArgumentType.NULLABLE);
 			}
 		}
-		if (metadata.has_argument (ArgumentType.NULLABLE)) {
-			type.nullable = metadata.get_bool (ArgumentType.NULLABLE);
+
+		if (type is ArrayType && !(orig_type is ArrayType)) {
+			no_array_length = true;
 		}
 
 		return type;
@@ -1656,7 +1655,8 @@ public class Vala.GirParser : CodeVisitor {
 		// not enough information, symbol will be created while processing the tree
 
 		next ();
-		current.base_type = element_get_type (parse_type (null, null, true), true);
+		bool no_array_length = false;
+		current.base_type = element_get_type (parse_type (null, null, true), true, ref no_array_length);
 
 		pop_node ();
 		end_element ("alias");
@@ -1866,7 +1866,7 @@ public class Vala.GirParser : CodeVisitor {
 			}
 
 			bool changed;
-			type = element_get_type (type, direction == "out" || direction == "ref", out changed);
+			type = element_get_type (type, direction == "out" || direction == "ref", ref no_array_length, out changed);
 			if (!changed) {
 				// discard ctype, duplicated information
 				ctype = null;
@@ -2248,11 +2248,12 @@ public class Vala.GirParser : CodeVisitor {
 		string allow_none = reader.get_attribute ("allow-none");
 		next ();
 		var type = parse_type ();
-		type = element_get_type (type, true);
+		bool no_array_length = true;
+		type = element_get_type (type, true, ref no_array_length);
 
 		var field = new Field (current.name, type, null, current.source_reference);
 		field.access = SymbolAccessibility.PUBLIC;
-		field.no_array_length = true;
+		field.no_array_length = no_array_length;
 		field.array_null_terminated = true;
 		if (allow_none == "1") {
 			type.nullable = true;
@@ -2338,7 +2339,8 @@ public class Vala.GirParser : CodeVisitor {
 		} else {
 			return_type = new VoidType ();
 		}
-		return_type = element_get_type (return_type, true);
+		bool no_array_length = false;
+		return_type = element_get_type (return_type, true, ref no_array_length);
 
 		Symbol s;
 
