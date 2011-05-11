@@ -2024,7 +2024,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var st = local.variable_type.data_type as Struct;
 		var initializer = local.initializer as ObjectCreationExpression;
 		if (st != null && (!st.is_simple_type () || st.get_cname () == "va_list") && !local.variable_type.nullable &&
-		    initializer != null && initializer.get_object_initializer ().size == 0) {
+		    local.variable_type.data_type != gvalue_type && initializer != null && initializer.get_object_initializer ().size == 0) {
 			return true;
 		} else {
 			return false;
