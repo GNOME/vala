@@ -1763,9 +1763,9 @@ namespace GLib {
 		public abstract bool has_uri_scheme (string uri_scheme);
 		public abstract uint hash ();
 		public abstract bool is_native ();
-		public bool load_contents (GLib.Cancellable? cancellable = null, out string contents, out size_t length = null, out string etag_out = null) throws GLib.Error;
-		public async bool load_contents_async (GLib.Cancellable? cancellable = null, out string contents, out size_t length = null, out string etag_out = null) throws GLib.Error;
-		public async bool load_partial_contents_async (GLib.Cancellable? cancellable, GLib.FileReadMoreCallback read_more_callback, out string contents, out size_t length = null, out string etag_out = null) throws GLib.Error;
+		public bool load_contents (GLib.Cancellable? cancellable = null, out uint8[] contents, out string etag_out = null) throws GLib.Error;
+		public async bool load_contents_async (GLib.Cancellable? cancellable = null, out uint8[] contents, out string etag_out = null) throws GLib.Error;
+		public async bool load_partial_contents_async (GLib.Cancellable? cancellable, GLib.FileReadMoreCallback read_more_callback, out uint8[] contents, out string etag_out = null) throws GLib.Error;
 		public abstract bool make_directory (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool make_directory_with_parents (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract bool make_symbolic_link (string symlink_value, GLib.Cancellable? cancellable = null) throws GLib.Error;
