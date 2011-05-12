@@ -544,6 +544,17 @@ public class Vala.GirParser : CodeVisitor {
 			}
 		}
 
+		public string get_lower_case_cprefix () {
+			if (name == null) {
+				return "";
+			}
+			if (new_symbol) {
+				return "%s%s_".printf (parent.get_lower_case_cprefix (), Symbol.camel_case_to_lower_case (name));
+			} else {
+				return symbol.get_lower_case_cprefix ();
+			}
+		}
+
 		public string get_cprefix () {
 			if (name == null) {
 				return "";
@@ -570,7 +581,15 @@ public class Vala.GirParser : CodeVisitor {
 					cname = girdata["c:type"];
 				}
 				if (cname == null) {
-					cname = "%s%s".printf (parent.get_cprefix (), name);
+					if (symbol is Field) {
+						if (((Field) symbol).binding == MemberBinding.STATIC) {
+							cname = parent.get_lower_case_cprefix () + name;
+						} else {
+							cname = name;
+						}
+					} else {
+						cname = "%s%s".printf (parent.get_cprefix (), name);
+					}
 				}
 				return cname;
 			} else {
@@ -750,12 +769,12 @@ public class Vala.GirParser : CodeVisitor {
 				} else if (element_type == "alias") {
 					parser.process_alias (this);
 				} else if (symbol is Struct) {
-					if (parent.symbol is Struct) {
-					// nested struct
+					if (parent.symbol is ObjectTypeSymbol || parent.symbol is Struct) {
+						// nested struct
 						foreach (var fn in members) {
 							var f = fn.symbol as Field;
 							if (f != null) {
-								f.set_cname (parent.get_cname () + "." + fn.get_cname ());
+								f.set_cname (name + "." + fn.get_cname ());
 								f.name = symbol.name + "_" + f.name;
 								fn.name = f.name;
 								parent.add_member (fn);
@@ -2514,6 +2533,8 @@ public class Vala.GirParser : CodeVisitor {
 				parse_constructor ();
 			} else if (reader.name == "method") {
 				parse_method ("method");
+			} else if (reader.name == "union") {
+				parse_union ();
 			} else {
 				// error
 				Report.error (get_current_src (), "unknown child element `%s' in `class'".printf (reader.name));
