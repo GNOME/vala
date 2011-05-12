@@ -2178,8 +2178,8 @@ namespace GLib {
 		public static void set_default_handler (LogFunc log_func);
 		[CCode (delegate_target = "NULL")]
 		public static GLib.LogFunc default_handler;
-		public static void set_fatal_mask (string log_domain, LogLevelFlags log_levels);
-		public static void set_always_fatal (LogLevelFlags log_levels);
+		public static LogLevelFlags set_fatal_mask (string log_domain, LogLevelFlags log_levels);
+		public static LogLevelFlags set_always_fatal (LogLevelFlags log_levels);
 
 		public const string FILE;
 		public const int LINE;
