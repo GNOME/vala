@@ -518,7 +518,11 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					out_arg_map.set (get_param_pos (m.cdelegate_target_parameter_position + 0.01), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
 
 					set_delegate_target_destroy_notify (expr, temp_ref);
+				} else {
+					set_delegate_target_destroy_notify (expr, new CCodeConstant ("NULL"));
 				}
+			} else {
+				set_delegate_target (expr, new CCodeConstant ("NULL"));
 			}
 		}
 

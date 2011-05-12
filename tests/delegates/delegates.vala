@@ -74,6 +74,10 @@ class Maman.Bar : Object, Foo {
 		var foo = (owned) callback_field;
 	}
 
+	static unowned Maman.VoidCallback test_unowned_delegate_return () {
+		return () => {};
+	}
+
 	public static int main () {
 		stdout.printf ("Delegate Test: 1");
 		
@@ -102,6 +106,8 @@ class Maman.Bar : Object, Foo {
 		test_function_pointers ();
 
 		test_delegates_interface_method ();
+
+		var baz = test_unowned_delegate_return ();
 
 		return 0;
 	}
