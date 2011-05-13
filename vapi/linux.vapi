@@ -141,7 +141,7 @@ namespace Linux {
 
         /* enums */
 
-        [CCode (cprefix = "KD_FONT_OP_", cheader_filename = "linux/kd.h")]
+        [CCode (cprefix = "KD_FONT_OP_", has_type_id = false, cheader_filename = "linux/kd.h")]
         public enum FontOperationCode {
             SET,
             GET,
@@ -149,7 +149,7 @@ namespace Linux {
             COPY
         }
 
-        [CCode (cprefix = "K_", cheader_filename = "linux/kd.h")]
+        [CCode (cprefix = "K_", has_type_id = false, cheader_filename = "linux/kd.h")]
         public enum KeyboardMode {
             RAW,
             XLATE,
@@ -157,27 +157,27 @@ namespace Linux {
             UNICODE
         }
 
-        [CCode (cprefix = "K_", cheader_filename = "linux/kd.h")]
+        [CCode (cprefix = "K_", has_type_id = false, cheader_filename = "linux/kd.h")]
         public enum LedMode {
             SCROLLLOCK,
             NUMLOCK,
             CAPSLOCK
         }
 
-        [CCode (cprefix = "LED_", cheader_filename = "linux/kd.h")]
+        [CCode (cprefix = "LED_", has_type_id = false, cheader_filename = "linux/kd.h")]
         public enum LedType {
             SCR,
             NUM,
             CAP
         }
 
-        [CCode (cprefix = "KD_", cheader_filename = "linux/kd.h")]
+        [CCode (cprefix = "KD_", has_type_id = false, cheader_filename = "linux/kd.h")]
         public enum TerminalMode {
             TEXT,
             GRAPHICS
         }
 
-        [CCode (cprefix = "K_", cheader_filename = "linux/kd.h")]
+        [CCode (cprefix = "K_", has_type_id = false, cheader_filename = "linux/kd.h")]
         public enum MetaMode {
             METABIT,
             ESCPREFIX
@@ -185,33 +185,33 @@ namespace Linux {
 
         /* structs */
 
-        [CCode (cname = "struct kbdiacr", cheader_filename = "linux/kd.h")]
+        [CCode (cname = "struct kbdiacr", has_type_id = false, cheader_filename = "linux/kd.h")]
         public struct Diacritic {
             public uchar diacr;
             public uchar base;
             public uchar result;
         }
 
-        [CCode (cname = "struct kbdiacrs", cheader_filename = "linux/kd.h")]
+        [CCode (cname = "struct kbdiacrs", has_type_id = false, cheader_filename = "linux/kd.h")]
         public struct Diacritics {
             public uint kb_cnt;
             public Diacritic kbdiacr[256];
         }
 
-        [CCode (cname = "struct kbdiacruc", cheader_filename = "linux/kd.h")]
+        [CCode (cname = "struct kbdiacruc", has_type_id = false, cheader_filename = "linux/kd.h")]
         public struct Diacruc {
             public uint diacr;
             public uint base;
             public uint result;
         }
 
-        [CCode (cname = "struct kbdiacrsuc", cheader_filename = "linux/kd.h")]
+        [CCode (cname = "struct kbdiacrsuc", has_type_id = false, cheader_filename = "linux/kd.h")]
         public struct Diacrucs {
             public uint kb_cnt;
             public Diacruc kbdiacruc[256];
         }
 
-        [CCode (cname = "struct console_font", cheader_filename = "linux/kd.h")]
+        [CCode (cname = "struct console_font", has_type_id = false, cheader_filename = "linux/kd.h")]
         public struct Font {
             public uint width;
             public uint height;
@@ -219,14 +219,14 @@ namespace Linux {
             public uchar* data;
         }
 
-        [CCode (cname = "struct consolefontdesc", cheader_filename = "linux/kd.h")]
+        [CCode (cname = "struct consolefontdesc", has_type_id = false, cheader_filename = "linux/kd.h")]
         public struct FontDescription {
             public uint16 charcount;
             public uint16 charheight;
             public string chardata;
         }
 
-        [CCode (cname = "struct console_font_op", cheader_filename = "linux/kd.h")]
+        [CCode (cname = "struct console_font_op", has_type_id = false, cheader_filename = "linux/kd.h")]
         public struct FontOperation {
             public FontOperationCode op;
             public uint flags;
@@ -236,44 +236,44 @@ namespace Linux {
             public uchar* data;
         }
 
-        [CCode (cname = "struct kbkeycode", cheader_filename = "linux/kd.h")]
+        [CCode (cname = "struct kbkeycode", has_type_id = false, cheader_filename = "linux/kd.h")]
         public struct KeyCode {
             public uint scancode;
             public uint keycode;
         }
 
-        [CCode (cname = "struct kbentry", cheader_filename = "linux/kd.h")]
+        [CCode (cname = "struct kbentry", has_type_id = false, cheader_filename = "linux/kd.h")]
         public struct KeyboardEntry {
             public uchar kb_table;
             public uchar kb_index;
             public uint16 kb_value;
         }
 
-        [CCode (cname = "struct kbsentry", cheader_filename = "linux/kd.h")]
+        [CCode (cname = "struct kbsentry", has_type_id = false, cheader_filename = "linux/kd.h")]
         public struct KeyboardEntries {
             public uchar kb_func;
             public uchar kb_string[512];
         }
 
-        [CCode (cname = "struct kbd_repeat", cheader_filename = "linux/kd.h")]
+        [CCode (cname = "struct kbd_repeat", has_type_id = false, cheader_filename = "linux/kd.h")]
         public struct KeyRepeat {
             public int delay;
             public int period;
         }
 
-        [CCode (cname = "struct unipair", cheader_filename = "linux/kd.h")]
+        [CCode (cname = "struct unipair", has_type_id = false, cheader_filename = "linux/kd.h")]
         public struct UniPair {
             public uint16 unicode;
             public uint16 fontpos;
         }
 
-        [CCode (cname = "struct unimapdesc", cheader_filename = "linux/kd.h")]
+        [CCode (cname = "struct unimapdesc", has_type_id = false, cheader_filename = "linux/kd.h")]
         public struct UniMapDesc {
             public uint16 entry_ct;
             UniPair entries;
         }
 
-        [CCode (cname = "struct unimapinit", cheader_filename = "linux/kd.h")]
+        [CCode (cname = "struct unimapinit", has_type_id = false, cheader_filename = "linux/kd.h")]
         public struct UniMapInit {
             public uint16 advised_hashsize;
             public uint16 advised_hashstep;
@@ -284,7 +284,7 @@ namespace Linux {
     /*
      * EventFd
      */
-    [CCode (cprefix = "EFD_", cheader_filename = "sys/eventfd.h")]
+    [CCode (cprefix = "EFD_", has_type_id = false, cheader_filename = "sys/eventfd.h")]
     public enum EventFdFlags {
         CLOEXEC,
         NONBLOCK
@@ -298,12 +298,12 @@ namespace Linux {
     /*
      * Epoll
      */
-    [CCode (cprefix = "EPOLL_", cheader_filename = "sys/epoll.h")]
+    [CCode (cprefix = "EPOLL_", has_type_id = false, cheader_filename = "sys/epoll.h")]
     public enum EpollFdFlags {
         CLOEXEC,
     }
 
-    [CCode (cheader_filename = "sys/epoll.h", cname = "union epoll_data")]
+    [CCode (cheader_filename = "sys/epoll.h", has_type_id = false, cname = "union epoll_data")]
     public struct EpollData {
         public void* ptr;
         public int fd;
@@ -311,7 +311,7 @@ namespace Linux {
         public uint64 u64;
     }
 
-    [CCode (cheader_filename = "sys/epoll.h", cname = "struct epoll_event")]
+    [CCode (cheader_filename = "sys/epoll.h", has_type_id = false, cname = "struct epoll_event")]
     public struct EpollEvent {
         public uint32 events;
         public EpollData data;
@@ -509,14 +509,14 @@ namespace Linux {
 
         /* structures */
 
-        [CCode (cname = "struct fb_bitfield", cheader_filename = "linux/fb.h")]
+        [CCode (cname = "struct fb_bitfield", has_type_id = false, cheader_filename = "linux/fb.h")]
         public struct BitField {
             public uint32 offset;
             public uint32 length;
             public uint32 msb_right;
         }
 
-        [CCode (cname = "struct fb_cmap", cheader_filename = "linux/fb.h")]
+        [CCode (cname = "struct fb_cmap", has_type_id = false, cheader_filename = "linux/fb.h")]
         public struct Cmap {
             public uint32 start;
             public uint32 len;
@@ -526,19 +526,19 @@ namespace Linux {
             public uint16* transp;
         }
 
-        [CCode (cname = "struct fb_con2fbmap", cheader_filename = "linux/fb.h")]
+        [CCode (cname = "struct fb_con2fbmap", has_type_id = false, cheader_filename = "linux/fb.h")]
         public struct Con2FbMap {
             public uint32 console;
             public uint32 framebuffer;
         }
 
-        [CCode (cname = "struct fbcurpos", cheader_filename = "linux/fb.h")]
+        [CCode (cname = "struct fbcurpos", has_type_id = false, cheader_filename = "linux/fb.h")]
         public struct CurPos {
             public uint16 x;
             public uint16 y;
         }
 
-        [CCode (cname = "struct fb_cursor", cheader_filename = "linux/fb.h")]
+        [CCode (cname = "struct fb_cursor", has_type_id = false, cheader_filename = "linux/fb.h")]
         public struct Cursor {
             public uint16 set;
             public uint16 enable;
@@ -548,7 +548,7 @@ namespace Linux {
             public Image image;
         }
 
-        [CCode (cname = "struct fb_copyarea", cheader_filename = "linux/fb.h")]
+        [CCode (cname = "struct fb_copyarea", has_type_id = false, cheader_filename = "linux/fb.h")]
         public struct CopyArea {
             public uint32 dx;
             public uint32 dy;
@@ -558,7 +558,7 @@ namespace Linux {
             public uint32 sy;
         }
 
-        [CCode (cname = "struct fb_fillrect", cheader_filename = "linux/fb.h")]
+        [CCode (cname = "struct fb_fillrect", has_type_id = false, cheader_filename = "linux/fb.h")]
         public struct FillRect {
             public uint32 dx;
             public uint32 dy;
@@ -568,7 +568,7 @@ namespace Linux {
             public Rop rop;
         }
 
-        [CCode (cname = "struct fb_image", cheader_filename = "linux/fb.h")]
+        [CCode (cname = "struct fb_image", has_type_id = false, cheader_filename = "linux/fb.h")]
         public struct Image {
             public uint32 dx;
             public uint32 dy;
@@ -581,7 +581,7 @@ namespace Linux {
             public Cmap cmap;
         }
 
-        [CCode (cname = "struct fb_fix_screeninfo", cheader_filename = "linux/fb.h")]
+        [CCode (cname = "struct fb_fix_screeninfo", has_type_id = false, cheader_filename = "linux/fb.h")]
         public struct FixScreenInfo {
             public char id[16];
             public long smem_start;
@@ -598,7 +598,7 @@ namespace Linux {
             public Accel accel;
         }
 
-        [CCode (cname = "struct fb_var_screeninfo", cheader_filename = "linux/fb.h")]
+        [CCode (cname = "struct fb_var_screeninfo", has_type_id = false, cheader_filename = "linux/fb.h")]
         public struct VarScreenInfo {
             public uint32 xres;
             public uint32 yres;
@@ -628,7 +628,7 @@ namespace Linux {
             public uint32 rotate;
         }
 
-        [CCode (cname = "struct fb_vblank", cheader_filename = "linux/fb.h")]
+        [CCode (cname = "struct fb_vblank", has_type_id = false, cheader_filename = "linux/fb.h")]
         public struct Vblank {
             public uint32 flags;
             public uint32 count;
@@ -636,9 +636,9 @@ namespace Linux {
             public uint32 hcount;
         }
 
-        [CCode (lower_case_cprefix = "omapfb_", cheader_filename = "linux/omapfb.h")]
+        [CCode (lower_case_cprefix = "omapfb_", has_type_id = false, cheader_filename = "linux/omapfb.h")]
         namespace OMAP {
-            [CCode (cname = "int", cprefix = "OMAPFB_")]
+            [CCode (cname = "int", has_type_id = false, cprefix = "OMAPFB_")]
             public enum IOCTL {
                 MIRROR,
                 SYNC_GFX,
@@ -664,7 +664,7 @@ namespace Linux {
                 SET_TEARSYNC
             }
 
-            [Flags, CCode (cname = "int", prefix = "OMAPFB_CAPS_")]
+            [Flags, CCode (cname = "int", has_type_id = false, prefix = "OMAPFB_CAPS_")]
             public enum Caps {
                 GENERIC_MASK,
                 LCDC_MASK,
@@ -681,7 +681,7 @@ namespace Linux {
                 SET_BACKLIGHT,
             }
 
-            [Flags, CCode (cname = "int", cprefix = "OMAPFB_FORMAT_FLAG_")]
+            [Flags, CCode (cname = "int", has_type_id = false, cprefix = "OMAPFB_FORMAT_FLAG_")]
             public enum Format {
                 [CCode (cname = "OMAPFB_FORMAT_MASK")]
                 MASK,
@@ -693,14 +693,14 @@ namespace Linux {
                 DISABLE_OVERLAY
             }
 
-            [CCode (cname = "int", cprefix = "OMAPFB_MEMTYPE_")]
+            [CCode (cname = "int", has_type_id = false, cprefix = "OMAPFB_MEMTYPE_")]
             public enum MemType {
                 SDRAM,
                 SRAM,
                 MAX
             }
 
-            [CCode (cname = "enum omapfb_color_format", cprefix = "OMAPFB_COLOR_")]
+            [CCode (cname = "enum omapfb_color_format", has_type_id = false, cprefix = "OMAPFB_COLOR_")]
             public enum ColorFormat {
                 RGB565,
                 YUV422,
@@ -720,7 +720,7 @@ namespace Linux {
                 RGBX32,
             }
 
-            [CCode (cname = "omapfb_update_window")]
+            [CCode (cname = "omapfb_update_window", has_type_id = false)]
             public struct UpdateWindow {
                 public uint32 x;
                 public uint32 y;
@@ -733,20 +733,20 @@ namespace Linux {
                 public uint32 out_height;
             }
 
-            [CCode (cname = "enum omapfb_plane", cprefix = "OMAPFB_PLANE_")]
+            [CCode (cname = "enum omapfb_plane", has_type_id = false, cprefix = "OMAPFB_PLANE_")]
             public enum Plane {
                 GFX,
                 VID1,
                 VID2
             }
 
-            [CCode (cname = "enum omapfb_channel_out", cprefix = "OMAPFB_CHANNEL_OUT_")]
+            [CCode (cname = "enum omapfb_channel_out", has_type_id = false, cprefix = "OMAPFB_CHANNEL_OUT_")]
             public enum ChannelOut {
                 LCD,
                 DIGIT
             }
 
-            [CCode (cname = "struct omapfb_plane_info")]
+            [CCode (cname = "struct omapfb_plane_info", has_type_id = false)]
             public struct PlaneInfo {
                 public uint32 pos_x;
                 public uint32 pos_y;
@@ -757,27 +757,27 @@ namespace Linux {
                 public uint32 out_height;
             }
 
-            [CCode (cname = "struct omapfb_mem_info")]
+            [CCode (cname = "struct omapfb_mem_info", has_type_id = false)]
             public struct MemInfo {
                 public uint32 size;
                 public uint8 type;
             }
 
-            [CCode (cname = "struct omapfb_caps")]
+            [CCode (cname = "struct omapfb_caps", has_type_id = false)]
             public struct Capabilities {
                 public uint32 ctrl;
                 public uint32 plane_color;
                 public uint32 wnd_color;
             }
 
-            [CCode (cname = "enum omapfb_color_key_type", cprefix = "OMAPFB_COLOR_KEY_")]
+            [CCode (cname = "enum omapfb_color_key_type", has_type_id = false, cprefix = "OMAPFB_COLOR_KEY_")]
             public enum ColorKeyType {
                 DISABLED,
                 GFX_DST,
                 VID_SRC
             }
 
-            [CCode (cname = "struct omapfb_color_key")]
+            [CCode (cname = "struct omapfb_color_key", has_type_id = false)]
             public struct ColorKey {
                 public uint8 channel_out;
                 public uint32 background;
@@ -785,7 +785,7 @@ namespace Linux {
                 public uint8 key_type;
             }
 
-            [CCode (cname = "enum omapfb_update_mode")]
+            [CCode (cname = "enum omapfb_update_mode", has_type_id = false)]
             public enum UpdateMode {
                 [CCode (cname = "OMAPFB_UPDATE_DISABLED")]
                 DISABLED,
@@ -795,7 +795,7 @@ namespace Linux {
                 MANUAL
             }
 
-            [CCode (cname = "struct omapfb_memory_read")]
+            [CCode (cname = "struct omapfb_memory_read", has_type_id = false)]
             public struct MemoryRead {
                 public uint16 x;
                 public uint16 y;
@@ -805,7 +805,7 @@ namespace Linux {
                 public void* buffer;
             }
 
-            [CCode (cname = "struct omapfb_ovl_colormode")]
+            [CCode (cname = "struct omapfb_ovl_colormode", has_type_id = false)]
             public struct OvlColorMode {
                 public uint8 overlay_idx;
                 public uint8 mode_idx;
@@ -817,14 +817,14 @@ namespace Linux {
                 public Framebuffer.BitField transp;
             }
 
-            [CCode (cname = "struct omapfb_vram_info")]
+            [CCode (cname = "struct omapfb_vram_info", has_type_id = false)]
             public struct VRamInfo {
                 public uint32 total;
                 public uint32 free;
                 public uint32 largest_free_block;
             }
 
-            [CCode (cname = "struct omapfb_tearsync_info")]
+            [CCode (cname = "struct omapfb_tearsync_info", has_type_id = false)]
             public struct TearSyncInfo {
                 public uint8 enabled;
                 public uint16 line;
@@ -842,7 +842,7 @@ namespace Linux {
         [CCode (cname = "GSMIOC_SETCONF", cheader_filename = "linux/gsmmux.h")]
         public const int GSMIOC_SETCONF;
 
-        [CCode (cname = "struct gsm_config", cheader_filename = "linux/gsmmux.h")]
+        [CCode (cname = "struct gsm_config", has_type_id = false, cheader_filename = "linux/gsmmux.h")]
         public struct Config {
             public uint adaption;
             public uint encapsulation;
@@ -861,7 +861,7 @@ namespace Linux {
     /*
      * Inotify
      */
-    [CCode (cname = "struct inotify_event", cheader_filename = "sys/inotify.h")]
+    [CCode (cname = "struct inotify_event", has_type_id = false, cheader_filename = "sys/inotify.h")]
     public struct InotifyEvent {
         public int wd;
         public uint32 mask;
@@ -870,13 +870,13 @@ namespace Linux {
         public string name;
     }
 
-    [CCode (cprefix = "IN_", cheader_filename = "sys/inotify.h")]
+    [CCode (cprefix = "IN_", has_type_id = false, cheader_filename = "sys/inotify.h")]
     public enum InotifyFlags {
         CLOEXEC,
         NONBLOCK
     }
 
-    [CCode (cname = "int", cprefix = "IN_", cheader_filename = "sys/inotify.h")]
+    [CCode (cname = "int", cprefix = "IN_", has_type_id = false, cheader_filename = "sys/inotify.h")]
     public enum InotifyMaskFlags {
         ACCESS,
         ATTRIB,
@@ -910,7 +910,7 @@ namespace Linux {
     /*
      * RfKill
      */
-    [CCode (cname = "struct rfkill_event", cheader_filename = "linux/rfkill.h")]
+    [CCode (cname = "struct rfkill_event", has_type_id = false, cheader_filename = "linux/rfkill.h")]
     public struct RfKillEvent {
         public uint32 idx;
         public RfKillType type;
@@ -919,7 +919,7 @@ namespace Linux {
         public uint8 hard;
     }
 
-    [CCode (cname = "guint8", cprefix = "RFKILL_OP_", cheader_filename = "linux/rfkill.h")]
+    [CCode (cname = "guint8", cprefix = "RFKILL_OP_", has_type_id = false, cheader_filename = "linux/rfkill.h")]
     public enum RfKillOp {
         ADD,
         DEL,
@@ -927,14 +927,14 @@ namespace Linux {
         CHANGE_ALL
     }
 
-    [CCode (cname = "guint8", cprefix = "RFKILL_STATE_", cheader_filename = "linux/rfkill.h")]
+    [CCode (cname = "guint8", cprefix = "RFKILL_STATE_", has_type_id = false, cheader_filename = "linux/rfkill.h")]
     public enum RfKillState {
         SOFT_BLOCKED,
         UNBLOCKED,
         HARD_BLOCKED
     }
 
-    [CCode (cname = "guint8", cprefix = "RFKILL_TYPE_", cheader_filename = "linux/rfkill.h")]
+    [CCode (cname = "guint8", cprefix = "RFKILL_TYPE_", has_type_id = false, cheader_filename = "linux/rfkill.h")]
     public enum RfKillType {
         ALL,
         WLAN,
@@ -947,7 +947,7 @@ namespace Linux {
     /*
      * SignalFd
      */
-    [CCode (cprefix = "SFD_", cheader_filename = "sys/signalfd.h")]
+    [CCode (cprefix = "SFD_", has_type_id = false, cheader_filename = "sys/signalfd.h")]
     public enum SignalFdFlags {
         CLOEXEC,
         NONBLOCK
@@ -959,7 +959,7 @@ namespace Linux {
     /*
      * Misc non-posix additions
      */
-    [CCode (cheader_filename = "dirent.h")]
+    [CCode (cheader_filename = "dirent.h", has_type_id = false)]
     public enum DirEntType {
         DT_UNKNOWN,
         DT_FIFO,
@@ -1008,7 +1008,7 @@ namespace Linux {
     [CCode (cname = "minor", cheader_filename = "sys/types.h")]
     public int minor (Posix.dev_t dev);
 
-    [CCode (cname = "unsigned long int", cprefix = "MS_", cheader_filename = "sys/mount.h,linux/fs.h")]
+    [CCode (cname = "unsigned long int", cprefix = "MS_", has_type_id = false, cheader_filename = "sys/mount.h,linux/fs.h")]
     public enum MountFlags {
         RDONLY,
         NOSUID,
@@ -1038,7 +1038,7 @@ namespace Linux {
         NOUSER
     }
 
-    [CCode (cname = "int", cprefix = "MNT_", cheader_filename = "sys/mount.h")]
+    [CCode (cname = "int", cprefix = "MNT_", has_type_id = false, cheader_filename = "sys/mount.h")]
     public enum UnmountFlags {
         FORCE,                /* Force unmounting.  */
         DETACH,               /* Just detach from the tree.  */
@@ -1052,7 +1052,7 @@ namespace Linux {
     [CCode (cheader_filename = "sys/mount.h")]
     public int umount2 (string target, UnmountFlags flags);
 
-    [CCode (cname = "struct winsize", cheader_filename = "termios.h", destroy_function = "")]
+    [CCode (cname = "struct winsize", has_type_id = false, cheader_filename = "termios.h", destroy_function = "")]
     public struct winsize {
         public ushort ws_row;
         public ushort ws_col;
@@ -1074,7 +1074,7 @@ namespace Linux {
                         Posix.termios? termp,
                         winsize? winp);
 
-    [CCode (cprefix = "RB_", cheader_filename = "unistd.h,sys/reboot.h")]
+    [CCode (cprefix = "RB_", has_type_id = false, cheader_filename = "unistd.h,sys/reboot.h")]
     public enum RebootCommands {
          AUTOBOOT,
          HALT_SYSTEM,
@@ -1086,7 +1086,7 @@ namespace Linux {
     [CCode (cheader_filename = "unistd.h,sys/reboot.h")]
     public int reboot (RebootCommands cmd);
 
-    [CCode (cprefix = "CLONE_", cheader_filename = "sched.h")]
+    [CCode (cprefix = "CLONE_", has_type_id = false, cheader_filename = "sched.h")]
     public enum CloneFlags {
         FILES,
         FS,
@@ -1100,7 +1100,7 @@ namespace Linux {
     public int adjtime (Posix.timeval delta, Posix.timeval? olddelta = null);
 
     // adjtimex(2)
-    [CCode (cprefix = "ADJ_", cheader_filename = "sys/timex.h")]
+    [CCode (cprefix = "ADJ_", has_type_id = false, cheader_filename = "sys/timex.h")]
     public enum AdjustModes {
         OFFSET,
         FREQUENCY,
@@ -1126,7 +1126,7 @@ namespace Linux {
     public const int TIME_BAD;
 
     // adjtimex(2)
-    [CCode (cname = "struct timex", cheader_filename = "sys/timex.h")]
+    [CCode (cname = "struct timex", has_type_id = false, cheader_filename = "sys/timex.h")]
     public struct timex {
         public AdjustModes modes;   /* mode selector */
         public long offset;         /* time offset (usec) */
@@ -1156,7 +1156,7 @@ namespace Linux {
     }
 
     // syscall(2)
-    [CCode (cprefix = "SYS_", cname = "int")]
+    [CCode (cprefix = "SYS_", has_type_id = false, cname = "int")]
     public enum SysCall {
         gettid
     }
@@ -1165,7 +1165,7 @@ namespace Linux {
     public int syscall (int number, ...);
 
     // mremap(2)
-    [CCode (cprefix = "MREMAP_", cheader_filename = "sys/mman.h")]
+    [CCode (cprefix = "MREMAP_", has_type_id = false, cheader_filename = "sys/mman.h")]
     public enum MremapFlags {
         MAYMOVE,
         FIXED
@@ -1191,7 +1191,7 @@ namespace Linux {
         [CCode (cheader_filename = "net/if.h")]
         public IfNameindex if_nameindex ();
 
-        [CCode (cname = "int", cprefix = "IFF_", cheader_filename = "linux/if.h")]
+        [CCode (cname = "int", cprefix = "IFF_", has_type_id = false, cheader_filename = "linux/if.h")]
         public enum IfFlag {
             UP,
             BROADCAST,
@@ -1210,13 +1210,13 @@ namespace Linux {
             DYNAMIC
         }
 
-        [CCode (cname = "struct if_nameindex", cheader_filename = "linux/if.h", destroy_function = "if_freenameindex")]
+        [CCode (cname = "struct if_nameindex", has_type_id = false, cheader_filename = "linux/if.h", destroy_function = "if_freenameindex")]
         public struct IfNameindex {
             public uint if_index;
             public string if_name;
         }
 
-        [CCode (cname = "struct ifmap", cheader_filename = "linux/if.h", destroy_function = "")]
+        [CCode (cname = "struct ifmap", has_type_id = false, cheader_filename = "linux/if.h", destroy_function = "")]
         public struct IfMap {
             public ulong mem_start;
             public ulong mem_end;
@@ -1226,7 +1226,7 @@ namespace Linux {
             public uchar port;
         }
 
-        [CCode (cname = "struct ifreq", cheader_filename = "netinet/in.h,linux/if.h", destroy_function = "")]
+        [CCode (cname = "struct ifreq", has_type_id = false, cheader_filename = "netinet/in.h,linux/if.h", destroy_function = "")]
         public struct IfReq {
             public char[] ifr_name;
             public Posix.SockAddr ifr_addr;
@@ -1246,14 +1246,14 @@ namespace Linux {
             public char[] ifr_newname;
         }
 
-        [CCode (cname = "struct ifconf", cheader_filename = "linux/if.h", destroy_function = "")]
+        [CCode (cname = "struct ifconf", has_type_id = false, cheader_filename = "linux/if.h", destroy_function = "")]
         public struct IfConf {
             public int ifc_len;
             public string ifc_buf;
             public IfReq ifc_req;
         }
 
-        [CCode (cname = "struct ifaddrmsg", cheader_filename = "linux/if_addr.h", destroy_function = "")]
+        [CCode (cname = "struct ifaddrmsg", has_type_id = false, cheader_filename = "linux/if_addr.h", destroy_function = "")]
         public struct IfAddrMsg {
             public uint8 ifa_family;
             public uint8 ifa_prefixlen;
@@ -1262,7 +1262,7 @@ namespace Linux {
             public uint32 ifa_index;
         }
 
-        [CCode (cprefix = "IFA_", cheader_filename = "linux/if_addr.h")]
+        [CCode (cprefix = "IFA_", has_type_id = false, cheader_filename = "linux/if_addr.h")]
         enum IfAddrType {
             UNSPEC,
             ADDRESS,
@@ -1279,7 +1279,7 @@ namespace Linux {
         [CCode (cheader_filename = "linux/if_addr.h")]
         public Linux.Netlink.RtAttr* IFA_RTA (Linux.Network.IfAddrMsg* msg);
 
-        [CCode (cprefix = "ARPHRD_", cheader_filename = "linux/if_arp.h")]
+        [CCode (cprefix = "ARPHRD_", has_type_id = false, cheader_filename = "linux/if_arp.h")]
         enum IfArpHeaderType {
             NETROM,
             ETHER,
@@ -1344,7 +1344,7 @@ namespace Linux {
             NONE
         }
 
-        [CCode (cprefix = "ARPOP_", cheader_filename = "linux/if_arp.h")]
+        [CCode (cprefix = "ARPOP_", has_type_id = false, cheader_filename = "linux/if_arp.h")]
         enum IfArpOpcode {
             REQUEST,
             REPLY,
@@ -1356,7 +1356,7 @@ namespace Linux {
         }
 
         // route consts, structs, and methods
-        [CCode (cname = "struct rtentry", cheader_filename = "net/route.h", destroy_function = "")]
+        [CCode (cname = "struct rtentry", has_type_id = false, cheader_filename = "net/route.h", destroy_function = "")]
         public struct RtEntry {
             public Posix.SockAddr rt_dst;
             public Posix.SockAddr rt_gateway;
@@ -1369,7 +1369,7 @@ namespace Linux {
             public ushort rt_irtt;
         }
 
-        [CCode (cname = "ushort", cprefix = "RTF_", cheader_filename = "net/route.h")]
+        [CCode (cname = "ushort", cprefix = "RTF_", has_type_id = false, cheader_filename = "net/route.h")]
         public enum RtFlag {
             UP,
             GATEWAY,
@@ -1503,7 +1503,7 @@ namespace Linux {
          * subsystem structures
          */
 
-        [CCode (cname = "struct input_event", cheader_filename = "linux/input.h")]
+        [CCode (cname = "struct input_event", has_type_id = false, cheader_filename = "linux/input.h")]
         public struct Event {
             public Posix.timeval time;
             public uint16 type;
@@ -1511,7 +1511,7 @@ namespace Linux {
             public int32 value;
         }
 
-        [CCode (cname = "struct input_id", cheader_filename = "linux/input.h")]
+        [CCode (cname = "struct input_id", has_type_id = false, cheader_filename = "linux/input.h")]
         public struct Id {
             public uint16 bustype;
             public uint16 vendor;
@@ -1519,7 +1519,7 @@ namespace Linux {
             public uint16 version;
         }
 
-        [CCode (cname = "struct input_absinfo", cheader_filename = "linux/input.h")]
+        [CCode (cname = "struct input_absinfo", has_type_id = false, cheader_filename = "linux/input.h")]
         public struct AbsInfo {
             public int32 value;
             public int32 minimum;
@@ -2886,7 +2886,7 @@ namespace Linux {
         public int NLMSG_PAYLOAD (NlMsgHdr nlh, int len);
 
         // netlink socket, can be used instead of sockaddr
-        [CCode (cname = "struct sockaddr_nl", cheader_filename = "linux/netlink.h", destroy_function = "")]
+        [CCode (cname = "struct sockaddr_nl", has_type_id = false, cheader_filename = "linux/netlink.h", destroy_function = "")]
         public struct SockAddrNl {
             public int nl_family;
             public ushort nl_pad;
@@ -2895,7 +2895,7 @@ namespace Linux {
         }
 
         // netlink message header
-        [CCode (cname = "struct nlmsghdr", cheader_filename = "linux/netlink.h", destroy_function = "")]
+        [CCode (cname = "struct nlmsghdr", has_type_id = false, cheader_filename = "linux/netlink.h", destroy_function = "")]
         public struct NlMsgHdr {
             public uint32 nlmsg_len;
             public uint16 nlmsg_type;
@@ -2905,7 +2905,7 @@ namespace Linux {
         }
 
         // netlink error message
-        [CCode (cname = "struct nlmsgerr", cheader_filename = "linux/netlink.h", destroy_function = "")]
+        [CCode (cname = "struct nlmsgerr", has_type_id = false, cheader_filename = "linux/netlink.h", destroy_function = "")]
         public struct NlMsgErr {
             public int error;
             public NlMsgHdr msg;
@@ -3015,7 +3015,7 @@ namespace Linux {
         */
 
         // rtnetlink info message
-        [CCode (cname = "struct ifinfomsg", cheader_filename = "linux/rtnetlink.h", destroy_function = "")]
+        [CCode (cname = "struct ifinfomsg", has_type_id = false, cheader_filename = "linux/rtnetlink.h", destroy_function = "")]
         public struct IfInfoMsg {
             public uchar ifi_family;
             public uchar __ifi_pad;
@@ -3026,14 +3026,14 @@ namespace Linux {
         }
 
         // rtnetlink attribute
-        [CCode (cname = "struct rtattr", cheader_filename = "linux/rtnetlink.h", destroy_function = "")]
+        [CCode (cname = "struct rtattr", has_type_id = false, cheader_filename = "linux/rtnetlink.h", destroy_function = "")]
         public struct RtAttr {
             public ushort rta_len;
             public ushort rta_type;
         }
 
         // rtnetlink routing / discovery messages
-        [CCode (cprefix = "RTM_", cheader_filename = "linux/rtnetlink.h")]
+        [CCode (cprefix = "RTM_", has_type_id = false, cheader_filename = "linux/rtnetlink.h")]
         public enum RtMessageType {
             NEWLINK,
             DELLINK,
@@ -3079,7 +3079,7 @@ namespace Linux {
     [CCode (cprefix = "", lower_case_cprefix = "")]
     namespace Rtc {
 
-        [CCode (cname = "struct rtc_wkalrm", cheader_filename = "linux/rtc.h")]
+        [CCode (cname = "struct rtc_wkalrm", has_type_id = false, cheader_filename = "linux/rtc.h")]
         public struct WakeAlarm {
             public char enabled;
             public char pending;
@@ -3112,7 +3112,7 @@ namespace Linux {
         [CCode (cheader_filename = "sys/socket.h")]
         public const int SOCK_CLOEXEC;
 
-        [CCode (cname = "struct ucred", cheader_filename = "linux/socket.h", destroy_function = "")]
+        [CCode (cname = "struct ucred", has_type_id = false, cheader_filename = "linux/socket.h", destroy_function = "")]
         public struct ucred {
             public uint32 pid;
             public uint32 uid;
@@ -3476,7 +3476,7 @@ namespace Linux {
 
         /* structs */
 
-        [CCode (cname = "struct vt_mode", cheader_filename = "linux/vt.h")]
+        [CCode (cname = "struct vt_mode", has_type_id = false, cheader_filename = "linux/vt.h")]
         public struct Mode {
             public char mode;
             public char waitv;
@@ -3485,21 +3485,21 @@ namespace Linux {
             public int16 frsig;
         }
 
-        [CCode (cname = "struct vt_stat", cheader_filename = "linux/vt.h")]
+        [CCode (cname = "struct vt_stat", has_type_id = false, cheader_filename = "linux/vt.h")]
         public struct Stat {
             public uint16 v_active;
             public uint16 v_signal;
             public uint16 v_state;
         }
 
-        [CCode (cname = "struct vt_sizes", cheader_filename = "linux/vt.h")]
+        [CCode (cname = "struct vt_sizes", has_type_id = false, cheader_filename = "linux/vt.h")]
         public struct Sizes {
             public uint16 v_rows;
             public uint16 v_cols;
             public uint16 v_scrollsize;
         }
 
-        [CCode (cname = "struct vt_consize", cheader_filename = "linux/vt.h")]
+        [CCode (cname = "struct vt_consize", has_type_id = false, cheader_filename = "linux/vt.h")]
         public struct Consize {
             public uint16 v_rows;
             public uint16 v_cols;
