@@ -870,13 +870,14 @@ namespace Linux {
         public string name;
     }
 
-    [CCode (cprefix = "IN_", has_type_id = false, cheader_filename = "sys/inotify.h")]
+    [Flags, CCode (cname = "int", cprefix = "IN_", has_type_id = false, cheader_filename = "sys/inotify.h")]
+
     public enum InotifyFlags {
         CLOEXEC,
         NONBLOCK
     }
 
-    [CCode (cname = "int", cprefix = "IN_", has_type_id = false, cheader_filename = "sys/inotify.h")]
+    [Flags, CCode (cname = "int", cprefix = "IN_", has_type_id = false, cheader_filename = "sys/inotify.h")]
     public enum InotifyMaskFlags {
         ACCESS,
         ATTRIB,
