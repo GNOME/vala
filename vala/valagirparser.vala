@@ -2790,6 +2790,15 @@ public class Vala.GirParser : CodeVisitor {
 				}
 			}
 		}
+		if (parameters.size > 1) {
+			ParameterInfo last_param = parameters[parameters.size-1];
+			if (last_param.param.ellipsis) {
+				var first_vararg_param = parameters[parameters.size-2];
+				if (first_vararg_param.param.name.has_prefix ("first_")) {
+					first_vararg_param.keep = false;
+				}
+			}
+		}
 
 		int i = 0, j=1;
 
