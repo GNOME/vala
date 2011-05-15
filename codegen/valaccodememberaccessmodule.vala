@@ -433,7 +433,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					block = ((Method) param.parent_symbol).body;
 				}
 				result.cvalue = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_variable_cname (param.name));
-				if (array_type != null) {
+				if (array_type != null && !param.no_array_length) {
 					for (int dim = 1; dim <= array_type.rank; dim++) {
 						result.append_array_length_cvalue (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_parameter_array_length_cname (param, dim)));
 					}
