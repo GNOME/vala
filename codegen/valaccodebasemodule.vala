@@ -5761,6 +5761,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return glib_value.non_null;
 	}
 
+
+	public string? get_ctype (TargetValue value) {
+		var glib_value = (GLibValue) value;
+		return glib_value.ctype;
+	}
+
 	public bool get_array_null_terminated (TargetValue value) {
 		var glib_value = (GLibValue) value;
 		return glib_value.array_null_terminated;
@@ -5775,6 +5781,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 public class Vala.GLibValue : TargetValue {
 	public CCodeExpression cvalue;
 	public bool non_null;
+	public string? ctype;
 
 	public List<CCodeExpression> array_length_cvalues;
 	public CCodeExpression? array_size_cvalue;
@@ -5799,6 +5806,7 @@ public class Vala.GLibValue : TargetValue {
 	public GLibValue copy () {
 		var result = new GLibValue (value_type.copy (), cvalue);
 		result.non_null = non_null;
+		result.ctype = ctype;
 
 		if (array_length_cvalues != null) {
 			foreach (var cexpr in array_length_cvalues) {

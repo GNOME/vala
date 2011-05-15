@@ -402,6 +402,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 		if (param.has_array_length_cexpr) {
 			result.array_length_cexpr = new CCodeConstant (param.get_array_length_cexpr ());
 		}
+		result.ctype = param.ctype;
 
 		var array_type = result.value_type as ArrayType;
 		var delegate_type = result.value_type as DelegateType;
@@ -521,6 +522,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 		if (field.has_array_length_cexpr) {
 			result.array_length_cexpr = new CCodeConstant (field.get_array_length_cexpr ());
 		}
+		result.ctype = field.get_ctype ();
 
 		var array_type = result.value_type as ArrayType;
 		var delegate_type = result.value_type as DelegateType;
