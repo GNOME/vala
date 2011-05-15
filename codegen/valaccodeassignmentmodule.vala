@@ -187,8 +187,8 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 		}
 	}
 
-	void store_variable (Variable variable, TargetValue lvalue, TargetValue value, bool initializer) {
-		var array_type = variable.variable_type as ArrayType;
+	public override void store_value (TargetValue lvalue, TargetValue value) {
+		var array_type = lvalue.value_type as ArrayType;
 
 		if (array_type != null && array_type.fixed_length) {
 			cfile.add_include ("string.h");
@@ -215,7 +215,7 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 
 		ccode.add_assignment (get_cvalue_ (lvalue), cexpr);
 
-		if (array_type != null && !variable.no_array_length) {
+		if (array_type != null && ((GLibValue) lvalue).array_length_cvalues != null) {
 			var glib_value = (GLibValue) value;
 			if (glib_value.array_length_cvalues != null) {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
@@ -238,7 +238,7 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 			}
 		}
 
-		var delegate_type = variable.variable_type as DelegateType;
+		var delegate_type = lvalue.value_type as DelegateType;
 		if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
 			if (get_delegate_target_cvalue (lvalue) != null) {
 				ccode.add_assignment (get_delegate_target_cvalue (lvalue), get_delegate_target_cvalue (value));
@@ -255,7 +255,7 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 			ccode.add_expression (destroy_local (local));
 		}
 
-		store_variable (local, get_local_cvalue (local), value, initializer);
+		store_value (get_local_cvalue (local), value);
 	}
 
 	public override void store_parameter (Parameter param, TargetValue value) {
@@ -264,7 +264,7 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 			ccode.add_expression (destroy_parameter (param));
 		}
 
-		store_variable (param, get_parameter_cvalue (param), value, false);
+		store_value (get_parameter_cvalue (param), value);
 	}
 
 	public override void store_field (Field field, TargetValue? instance, TargetValue value) {
@@ -273,6 +273,6 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 			ccode.add_expression (destroy_field (field, instance));
 		}
 
-		store_variable (field, get_field_cvalue (field, instance), value, false);
+		store_value (get_field_cvalue (field, instance), value);
 	}
 }
