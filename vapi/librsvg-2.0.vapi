@@ -22,7 +22,9 @@ namespace Rsvg {
 		public bool get_position_sub (ref Rsvg.PositionData position_data, string id);
 		public unowned string get_title ();
 		public bool has_sub (string id);
+		[CCode (cheader_filename = "librsvg/rsvg-cairo.h")]
 		public bool render_cairo (Cairo.Context cr);
+		[CCode (cheader_filename = "librsvg/rsvg-cairo.h")]
 		public bool render_cairo_sub (Cairo.Context cr, string id);
 		public void set_base_uri (string base_uri);
 		public void set_dpi (double dpi);
