@@ -392,6 +392,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 						var temp_var = get_temp_variable (param.variable_type, param.variable_type.value_owned);
 						emit_temp_var (temp_var);
 						set_cvalue (arg, get_variable_cexpression (temp_var.name));
+						arg.target_value.value_type = arg.target_type;
 
 						cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_cvalue (arg));
 
@@ -773,27 +774,13 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				continue;
 			}
 
-			if (requires_destroy (arg.value_type)) {
+			if (requires_destroy (unary.inner.value_type)) {
 				// unref old value
 				ccode.add_expression (destroy_value (unary.inner.target_value));
 			}
 
 			// assign new value
-			var value = ((GLibValue) unary.target_value).copy ();
-			value.value_type = unary.target_type;
-			ccode.add_assignment (get_cvalue (unary.inner), get_cvalue_ (transform_value (value, unary.inner.value_type, arg)));
-
-			var array_type = arg.value_type as ArrayType;
-			if (array_type != null) {
-				for (int dim = 1; dim <= array_type.rank; dim++) {
-					ccode.add_assignment (get_array_lengths (unary.inner).get (dim - 1), get_array_lengths (unary).get (dim - 1));
-				}
-			}
-
-			var delegate_type = arg.value_type as DelegateType;
-			if (delegate_type != null) {
-				ccode.add_assignment (get_delegate_target (unary.inner), get_delegate_target (unary));
-			}
+			store_value (unary.inner.target_value, transform_value (unary.target_value, unary.inner.value_type, arg));
 		}
 	}
 

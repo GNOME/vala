@@ -62,6 +62,7 @@ class Maman.SubBar : Bar {
 
 		string str, str2;
 		weak string weak_str;
+		string[] array;
 
 		test_out (out str);
 		assert (str == "hello");
@@ -77,6 +78,11 @@ class Maman.SubBar : Bar {
 
 		test_ref_weak (ref weak_str);
 		assert (weak_str == "world");
+
+		test_out_array_no_length (out array);
+		assert (array[0] == "hello");
+		assert (array[1] == "world");
+		assert (array.length < 0);
 
 		ClassTest.run_test ();
 
@@ -180,6 +186,10 @@ void test_ref (ref string bar) {
 void test_ref_weak (ref weak string bar) {
 	assert (bar == "hello");
 	bar = "world";
+}
+
+void test_out_array_no_length ([CCode (array_length = false)] out string[] bar) {
+	bar = {"hello", "world"};
 }
 
 class Maman.ClassTest {
