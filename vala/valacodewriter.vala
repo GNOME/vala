@@ -1077,7 +1077,7 @@ public class Vala.CodeWriter : CodeVisitor {
 			ccode_params.append_printf ("%scname = \"%s\"", separator, m.get_cname ());
 			separator = ", ";
 		}
-		if (m.parent_symbol is Namespace) {
+		if (m.parent_symbol is Namespace || get_cheaders (m) != get_cheaders (m.parent_symbol)) {
 			ccode_params.append_printf ("%scheader_filename = \"%s\"", separator, get_cheaders(m));
 			separator = ", ";
 		}
