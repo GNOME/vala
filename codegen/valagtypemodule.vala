@@ -2004,6 +2004,17 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 		}
 
+		var ciface = new CCodeIdentifier ("iface");
+
+		/* connect default signal handlers */
+		foreach (Signal sig in iface.get_signals ()) {
+			if (sig.default_handler == null) {
+				continue;
+			}
+			var cname = sig.default_handler.get_real_cname ();
+			ccode.add_assignment (new CCodeMemberAccess.pointer (ciface, sig.default_handler.vfunc_name), new CCodeIdentifier (cname));
+		}
+
 		/* create signals */
 		foreach (Signal sig in iface.get_signals ()) {
 			if (sig.comment != null) {
@@ -2015,7 +2026,6 @@ public class Vala.GTypeModule : GErrorModule {
 		// connect default implementations
 		foreach (Method m in iface.get_methods ()) {
 			if (m.is_virtual) {
-				var ciface = new CCodeIdentifier ("iface");
 				var cname = m.get_real_cname ();
 				ccode.add_assignment (new CCodeMemberAccess.pointer (ciface, m.vfunc_name), new CCodeIdentifier (cname));
 			}
