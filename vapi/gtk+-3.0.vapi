@@ -848,10 +848,10 @@ namespace Gtk {
 		public unowned Gtk.CellRenderer get_focus_cell ();
 		public unowned Gtk.CellRenderer get_focus_from_sibling (Gtk.CellRenderer renderer);
 		public unowned GLib.List get_focus_siblings (Gtk.CellRenderer renderer);
-		public virtual void get_preferred_height (Gtk.CellAreaContext context, Gtk.Widget widget, int minimum_height, int natural_height);
-		public virtual void get_preferred_height_for_width (Gtk.CellAreaContext context, Gtk.Widget widget, int width, int minimum_height, int natural_height);
-		public virtual void get_preferred_width (Gtk.CellAreaContext context, Gtk.Widget widget, int minimum_width, int natural_width);
-		public virtual void get_preferred_width_for_height (Gtk.CellAreaContext context, Gtk.Widget widget, int height, int minimum_width, int natural_width);
+		public virtual void get_preferred_height (Gtk.CellAreaContext context, Gtk.Widget widget, out int minimum_height, out int natural_height);
+		public virtual void get_preferred_height_for_width (Gtk.CellAreaContext context, Gtk.Widget widget, int width, out int minimum_height, out int natural_height);
+		public virtual void get_preferred_width (Gtk.CellAreaContext context, Gtk.Widget widget, out int minimum_width, out int natural_width);
+		public virtual void get_preferred_width_for_height (Gtk.CellAreaContext context, Gtk.Widget widget, int height, out int minimum_width, out int natural_width);
 		public virtual Gtk.SizeRequestMode get_request_mode ();
 		public bool has_renderer (Gtk.CellRenderer renderer);
 		public void inner_cell_area (Gtk.Widget widget, Gdk.Rectangle cell_area, Gdk.Rectangle inner_area);
@@ -893,10 +893,10 @@ namespace Gtk {
 		public virtual void allocate (int width, int height);
 		public void get_allocation (int width, int height);
 		public unowned Gtk.CellArea get_area ();
-		public void get_preferred_height (int minimum_height, int natural_height);
-		public virtual void get_preferred_height_for_width (int width, int minimum_height, int natural_height);
-		public void get_preferred_width (int minimum_width, int natural_width);
-		public virtual void get_preferred_width_for_height (int height, int minimum_width, int natural_width);
+		public void get_preferred_height (out int minimum_height, out int natural_height);
+		public virtual void get_preferred_height_for_width (int width, out int minimum_height, out int natural_height);
+		public void get_preferred_width (out int minimum_width, out int natural_width);
+		public virtual void get_preferred_width_for_height (int height, out int minimum_width, out int natural_width);
 		public void push_preferred_height (int minimum_height, int natural_height);
 		public void push_preferred_width (int minimum_width, int natural_width);
 		public virtual void reset ();
@@ -5263,7 +5263,7 @@ namespace Gtk {
 		public virtual void get_preferred_height (out int minimum_height, out int natural_height);
 		public virtual void get_preferred_height_for_width (int width, out int minimum_height, out int natural_height);
 		public void get_preferred_size (out Gtk.Requisition minimum_size, out Gtk.Requisition natural_size);
-		public virtual void get_preferred_width (out int minimum_width, int natural_width);
+		public virtual void get_preferred_width (out int minimum_width, out int natural_width);
 		public virtual void get_preferred_width_for_height (int height, out int minimum_width, out int natural_width);
 		public bool get_realized ();
 		public bool get_receives_default ();
