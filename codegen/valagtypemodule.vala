@@ -1861,6 +1861,12 @@ public class Vala.GTypeModule : GErrorModule {
 			generate_virtual_method_declaration (m, decl_space, type_struct);
 		}
 
+		foreach (Signal sig in iface.get_signals ()) {
+			if (sig.default_handler != null) {
+				generate_virtual_method_declaration (sig.default_handler, decl_space, type_struct);
+			}
+		}
+
 		foreach (Property prop in iface.get_properties ()) {
 			if (!prop.is_abstract && !prop.is_virtual) {
 				continue;

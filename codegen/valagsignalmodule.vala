@@ -336,7 +336,6 @@ public class Vala.GSignalModule : GObjectModule {
 
 	public override CCodeFunctionCall get_signal_creation (Signal sig, TypeSymbol type) {	
 		var csignew = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_new"));
-		var cl = sig.parent_symbol as Class;
 		csignew.add_argument (new CCodeConstant ("\"%s\"".printf (sig.get_cname ())));
 		csignew.add_argument (new CCodeIdentifier (type.get_type_id ()));
 		string[] flags = new string[0];
@@ -369,7 +368,12 @@ public class Vala.GSignalModule : GObjectModule {
 			csignew.add_argument (new CCodeConstant ("0"));
 		} else {
 			var struct_offset = new CCodeFunctionCall (new CCodeIdentifier ("G_STRUCT_OFFSET"));
-			struct_offset.add_argument (new CCodeIdentifier ("%sClass".printf (cl.get_cname ())));
+			if (type is Class) {
+				struct_offset.add_argument (new CCodeIdentifier ("%sClass".printf (type.get_cname ())));
+			} else {
+				// interface
+				struct_offset.add_argument (new CCodeIdentifier (((Interface) type).get_type_cname ()));
+			}
 			struct_offset.add_argument (new CCodeIdentifier (sig.default_handler.vfunc_name));
 			csignew.add_argument (struct_offset);
 		}
