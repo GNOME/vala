@@ -734,6 +734,7 @@ public class Vala.MemberAccess : Expression {
 			if (instance && inner == null) {
 				inner = new MemberAccess (null, "this", source_reference);
 				inner.value_type = this_parameter.variable_type.copy ();
+				inner.value_type.value_owned = false;
 				inner.symbol_reference = this_parameter;
 			}
 
@@ -767,6 +768,7 @@ public class Vala.MemberAccess : Expression {
 
 				if (instance && base_method.parent_symbol is TypeSymbol) {
 					inner.target_type = context.analyzer.get_data_type_for_symbol ((TypeSymbol) base_method.parent_symbol);
+					inner.target_type.value_owned = base_method.this_parameter.variable_type.value_owned;
 				}
 			} else if (symbol_reference is Property) {
 				var prop = (Property) symbol_reference;
