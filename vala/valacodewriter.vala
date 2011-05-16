@@ -1046,6 +1046,10 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_indent ();
 			write_string ("[ReturnsModifiedPointer]");
 		}
+		if (m.get_attribute ("DestroysInstance") != null) {
+			write_indent ();
+			write_string ("[DestroysInstance]");
+		}
 		if (m.printf_format) {
 			write_indent ();
 			write_string ("[PrintfFormat]");

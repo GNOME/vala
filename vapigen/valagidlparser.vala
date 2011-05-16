@@ -2069,6 +2069,10 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "1") {
 						return_type.value_owned = true;
 					}
+				} else if (nv[0] == "destroys_instance") {
+					if (eval (nv[1]) == "1") {
+						m.attributes.append (new Attribute ("DestroysInstance", m.source_reference));
+					}
 				} else if (nv[0] == "nullable") {
 					if (eval (nv[1]) == "1") {
 						return_type.nullable = true;

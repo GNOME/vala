@@ -320,6 +320,7 @@ namespace Gdk {
 		public void coords_to_parent (double x, double y, double parent_x, double parent_y);
 		public unowned Cairo.Surface create_similar_surface (Cairo.Content content, int width, int height);
 		public void deiconify ();
+		[DestroysInstance]
 		public void destroy ();
 		public void enable_synchronized_configure ();
 		public void end_paint ();
