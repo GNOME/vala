@@ -5382,7 +5382,7 @@ namespace Gtk {
 		public void set_vexpand_set (bool @set);
 		public void set_visible (bool visible);
 		public void set_visual (Gdk.Visual visual);
-		public void set_window (Gdk.Window window);
+		public void set_window (owned Gdk.Window window);
 		public void shape_combine_region (Cairo.Region region);
 		public virtual void show_all ();
 		public void show_now ();
