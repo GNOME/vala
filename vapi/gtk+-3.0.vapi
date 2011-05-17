@@ -3932,7 +3932,7 @@ namespace Gtk {
 		public static void add_provider_for_screen (Gdk.Screen screen, Gtk.StyleProvider provider, uint priority);
 		public void add_region (string region_name, Gtk.RegionFlags flags);
 		public void cancel_animations (void* region_id);
-		public void @get (Gtk.StateFlags state);
+		public void @get (Gtk.StateFlags state, ...);
 		public Gdk.RGBA get_background_color (Gtk.StateFlags state);
 		public Gtk.Border get_border (Gtk.StateFlags state);
 		public Gdk.RGBA get_border_color (Gtk.StateFlags state);
@@ -3946,7 +3946,7 @@ namespace Gtk {
 		public void get_property (string property, Gtk.StateFlags state, GLib.Value value);
 		public unowned Gdk.Screen get_screen ();
 		public Gtk.StateFlags get_state ();
-		public void get_style ();
+		public void get_style (...);
 		public void get_style_property (string property_name, GLib.Value value);
 		public void get_style_valist (void* args);
 		public void get_valist (Gtk.StateFlags state, void* args);
