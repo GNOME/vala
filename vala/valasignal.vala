@@ -317,6 +317,7 @@ public class Vala.Signal : Symbol, Lockable {
 			default_handler.owner = owner;
 			default_handler.access = access;
 			default_handler.external = external;
+			default_handler.hides = hides;
 			default_handler.is_virtual = true;
 			default_handler.vfunc_name = name;
 			default_handler.signal_reference = this;
