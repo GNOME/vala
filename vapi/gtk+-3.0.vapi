@@ -5509,7 +5509,7 @@ namespace Gtk {
 		public virtual signal void show ();
 		public virtual signal bool show_help (Gtk.WidgetHelpType help_type);
 		[HasEmitter]
-		public virtual signal void size_allocate (Gdk.Rectangle allocation);
+		public virtual signal void size_allocate (Gtk.Allocation allocation);
 		public virtual signal void state_changed (Gtk.StateType previous_state);
 		public virtual signal void state_flags_changed (Gtk.StateFlags previous_state_flags);
 		public virtual signal void style_set (Gtk.Style? previous_style);
