@@ -5471,7 +5471,7 @@ namespace Gtk {
 		public virtual signal bool focus (Gtk.DirectionType direction);
 		public virtual signal bool focus_in_event (Gdk.EventFocus event);
 		public virtual signal bool focus_out_event (Gdk.EventFocus event);
-		public virtual signal bool grab_broken_event (Gdk.Event event);
+		public virtual signal bool grab_broken_event (Gdk.EventGrabBroken event);
 		[HasEmitter]
 		public virtual signal void grab_focus ();
 		public virtual signal void grab_notify (bool was_grabbed);
