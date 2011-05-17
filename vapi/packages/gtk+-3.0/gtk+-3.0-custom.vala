@@ -53,6 +53,7 @@ namespace Gtk {
 	public class Widget {
 		[CCode (has_new_function = false, construct_function = "gtk_widget_new")]
 		public extern Widget (...);
+		public class uint activate_signal;
 	}
 
 	public interface Editable {
