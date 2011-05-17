@@ -5210,6 +5210,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Widget : GLib.InitiallyUnowned, Atk.Implementor, Gtk.Buildable {
+		public class uint activate_signal;
 		[CCode (has_new_function = false, construct_function = "gtk_widget_new")]
 		public Widget (...);
 		public bool activate ();
