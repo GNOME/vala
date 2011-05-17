@@ -3139,13 +3139,15 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	void return_out_parameter (Parameter param) {
 		var delegate_type = param.variable_type as DelegateType;
 
+		var value = load_parameter (param);
+
 		ccode.open_if (get_variable_cexpression (param.name));
-		ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (param.name)), get_variable_cexpression ("_" + param.name));
+		ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (param.name)), get_cvalue_ (value));
 
 		if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
-			ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (get_delegate_target_cname (param.name))), new CCodeIdentifier (get_delegate_target_cname (get_variable_cname ("_" + param.name))));
+			ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (get_delegate_target_cname (param.name))), get_delegate_target_cvalue (value));
 			if (delegate_type.value_owned) {
-				ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (get_delegate_target_destroy_notify_cname (param.name))), new CCodeIdentifier (get_delegate_target_destroy_notify_cname (get_variable_cname ("_" + param.name))));
+				ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (get_delegate_target_destroy_notify_cname (param.name))), get_delegate_target_destroy_notify_cvalue (get_parameter_cvalue (param)));
 			}
 		}
 
@@ -3159,7 +3161,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (array_type != null && !array_type.fixed_length && !param.no_array_length) {
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				ccode.open_if (get_variable_cexpression (get_parameter_array_length_cname (param, dim)));
-				ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (get_parameter_array_length_cname (param, dim))), new CCodeIdentifier (get_array_length_cname (get_variable_cname ("_" + param.name), dim)));
+				ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (get_parameter_array_length_cname (param, dim))), get_array_length_cvalue (value));
 				ccode.close ();
 			}
 		}
