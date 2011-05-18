@@ -61,7 +61,8 @@ public class Vala.GirParser : CodeVisitor {
 		VIRTUAL,
 		ABSTRACT,
 		SCOPE,
-		STRUCT;
+		STRUCT,
+		THROWS;
 
 		public static ArgumentType? from_string (string name) {
 			var enum_class = (EnumClass) typeof(ArgumentType).class_ref ();
@@ -2425,8 +2426,15 @@ public class Vala.GirParser : CodeVisitor {
 			}
 		}
 
-		if (throws_string == "1") {
-			s.add_error_type (new ErrorType (null, null));
+		if (!(metadata.get_expression (ArgumentType.THROWS) is NullLiteral)) {
+			if (metadata.has_argument (ArgumentType.THROWS)) {
+				var error_types = metadata.get_string(ArgumentType.THROWS).split(",");
+				foreach (var error_type in error_types) {
+					s.add_error_type (parse_type_from_string (error_type, true, metadata.get_source_reference (ArgumentType.THROWS)));
+				}
+			} else {
+				s.add_error_type (new ErrorType (null, null));
+			}
 		}
 
 		current.symbol = s;
