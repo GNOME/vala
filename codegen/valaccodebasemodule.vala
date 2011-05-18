@@ -3696,6 +3696,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var result = ((GLibValue) value).copy ();
 
 		if (type is DelegateType) {
+			var delegate_type = (DelegateType) type;
+			if (delegate_type.delegate_symbol.has_target) {
+				Report.deprecated (node.source_reference, "copying delegates is discouraged");
+			}
 			result.delegate_target_destroy_notify_cvalue = new CCodeConstant ("NULL");
 			return result;
 		}

@@ -1,6 +1,6 @@
 delegate void Deleg ();
 
-async void foo (Deleg deleg)
+async void foo (owned Deleg deleg)
 {
 	Deleg d = () => { deleg (); };
 	d = null;

@@ -1,6 +1,6 @@
 delegate void Foo ();
 
-async void do_foo (Foo f) {
+async void do_foo (owned Foo f) {
 	f ();
 }
 

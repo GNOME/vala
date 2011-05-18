@@ -1,5 +1,5 @@
 struct Foo {
-	public SourceFunc bar;
+	public unowned SourceFunc bar;
 }
 
 void main() {
