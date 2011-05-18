@@ -1816,7 +1816,7 @@ public class Vala.GirParser : CodeVisitor {
 		string transfer = reader.get_attribute ("transfer-ownership");
 		string allow_none = reader.get_attribute ("allow-none");
 		next ();
-		var transfer_elements = transfer == "full";
+		var transfer_elements = transfer != "container";
 		var type = parse_type (out ctype, null, transfer_elements);
 		if (transfer == "full" || transfer == "container") {
 			type.value_owned = true;
@@ -1876,7 +1876,7 @@ public class Vala.GirParser : CodeVisitor {
 			string ctype;
 			bool no_array_length;
 			bool array_null_terminated;
-			var type = parse_type (out ctype, out array_length_idx, transfer == "full", out no_array_length, out array_null_terminated);
+			var type = parse_type (out ctype, out array_length_idx, transfer != "container", out no_array_length, out array_null_terminated);
 			if (transfer == "full" || transfer == "container" || destroy != null) {
 				type.value_owned = true;
 			}
@@ -1914,7 +1914,7 @@ public class Vala.GirParser : CodeVisitor {
 		return param;
 	}
 
-	DataType parse_type (out string? ctype = null, out int array_length_idx = null, bool transfer_elements = false, out bool no_array_length = null, out bool array_null_terminated = null) {
+	DataType parse_type (out string? ctype = null, out int array_length_idx = null, bool transfer_elements = true, out bool no_array_length = null, out bool array_null_terminated = null) {
 		bool is_array = false;
 		string type_name = reader.get_attribute ("name");
 
