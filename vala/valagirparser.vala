@@ -2432,7 +2432,7 @@ public class Vala.GirParser : CodeVisitor {
 				foreach (var error_type in error_types) {
 					s.add_error_type (parse_type_from_string (error_type, true, metadata.get_source_reference (ArgumentType.THROWS)));
 				}
-			} else {
+			} else if (throws_string == "1") {
 				s.add_error_type (new ErrorType (null, null));
 			}
 		}
