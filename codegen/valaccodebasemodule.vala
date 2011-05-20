@@ -5197,10 +5197,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (target_type.value_owned && (!type.value_owned || boxing || unboxing)) {
 			// need to copy value
 			if (requires_copy (target_type) && !(type is NullType)) {
-				var decl = get_temp_variable (target_type, true, node, false);
-				emit_temp_var (decl);
-				ccode.add_assignment (get_variable_cexpression (decl.name), get_cvalue_ (copy_value (result, node)));
-				result.cvalue = get_variable_cexpression (decl.name);
+				result = (GLibValue) copy_value (result, node);
+				// drop this assignment when target values are guaranteed to be effect-free
+				if (!(target_type is ArrayType && ((ArrayType) target_type).fixed_length)) {
+					var decl = get_temp_variable (target_type, true, node, false);
+					emit_temp_var (decl);
+					ccode.add_assignment (get_variable_cexpression (decl.name), get_cvalue_ (result));
+					result.cvalue = get_variable_cexpression (decl.name);
+				}
 			}
 		}
 
