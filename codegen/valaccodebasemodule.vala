@@ -2690,7 +2690,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				return new CCodeConstant ("NULL");
 			}
 			return new CCodeIdentifier (unref_function);
-		} else if (type.type_parameter != null && current_type_symbol is Class) {
+		} else if (type.type_parameter != null) {
 			string func_name = "%s_destroy_func".printf (type.type_parameter.name.down ());
 			if (is_in_generic_type (type) && !is_chainup && !in_creation_method) {
 				return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (get_result_cexpression ("self"), "priv"), func_name);
