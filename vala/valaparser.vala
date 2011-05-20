@@ -375,17 +375,15 @@ public class Vala.Parser : CodeVisitor {
 	}
 
 	void skip_type () throws ParseError {
-		if (accept (TokenType.VOID)) {
-			while (accept (TokenType.STAR)) {
-			}
-			return;
-		}
 		accept (TokenType.DYNAMIC);
 		accept (TokenType.OWNED);
 		accept (TokenType.UNOWNED);
 		accept (TokenType.WEAK);
-		skip_symbol_name ();
-		skip_type_argument_list ();
+		if (accept (TokenType.VOID)) {
+		} else {
+			skip_symbol_name ();
+			skip_type_argument_list ();
+		}
 		while (accept (TokenType.STAR)) {
 		}
 		accept (TokenType.INTERR);
@@ -405,14 +403,6 @@ public class Vala.Parser : CodeVisitor {
 
 	DataType parse_type (bool owned_by_default, bool can_weak_ref) throws ParseError {
 		var begin = get_location ();
-
-		if (accept (TokenType.VOID)) {
-			DataType type = new VoidType (get_src (begin));
-			while (accept (TokenType.STAR)) {
-				type = new PointerType (type);
-			}
-			return type;
-		}
 
 		bool is_dynamic = accept (TokenType.DYNAMIC);
 
@@ -435,13 +425,19 @@ public class Vala.Parser : CodeVisitor {
 			value_owned = (context.profile != Profile.DOVA && accept (TokenType.OWNED));
 		}
 
-		var sym = parse_symbol_name ();
-		List<DataType> type_arg_list = parse_type_argument_list (false);
+		DataType type;
 
-		DataType type = new UnresolvedType.from_symbol (sym, get_src (begin));
-		if (type_arg_list != null) {
-			foreach (DataType type_arg in type_arg_list) {
-				type.add_type_argument (type_arg);
+		if (!is_dynamic && value_owned == owned_by_default && accept (TokenType.VOID)) {
+			type = new VoidType (get_src (begin));
+		} else {
+			var sym = parse_symbol_name ();
+			List<DataType> type_arg_list = parse_type_argument_list (false);
+
+			type = new UnresolvedType.from_symbol (sym, get_src (begin));
+			if (type_arg_list != null) {
+				foreach (DataType type_arg in type_arg_list) {
+					type.add_type_argument (type_arg);
+				}
 			}
 		}
 
