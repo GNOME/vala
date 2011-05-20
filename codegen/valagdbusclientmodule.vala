@@ -254,6 +254,42 @@ public class Vala.GDBusClientModule : GDBusModule {
 			dbus_iface_name = get_qdata;
 		}
 
+		if (bus_get_proxy_async || conn_get_proxy_async) {
+			if (ma.member_name == "end" && ma.inner.symbol_reference == ma.symbol_reference) {
+				// method can fail
+				current_method_inner_error = true;
+
+				var args = expr.get_argument_list ();
+				Expression res = args.get (0);
+
+				var source_var = get_temp_variable (expr.value_type, expr.value_type.value_owned);
+				var source_ref = get_variable_cexpression (source_var.name);
+				emit_temp_var (source_var);
+				var source = new CCodeFunctionCall (new CCodeIdentifier ("g_async_result_get_source_object"));
+				source.add_argument (get_cvalue (res));
+				ccode.add_assignment (source_ref, source);
+
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_async_initable_new_finish"));
+				ccall.add_argument (source_ref);
+				ccall.add_argument (get_cvalue (res));
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression ("_inner_error_")));
+
+				var temp_var = get_temp_variable (expr.value_type, expr.value_type.value_owned);
+				var temp_ref = get_variable_cexpression (temp_var.name);
+				emit_temp_var (temp_var);
+				ccode.add_assignment (temp_ref, ccall);
+
+				// g_async_result_get_source_object transfers ownership, unref after use
+				var unref_proxy = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
+				unref_proxy.add_argument (source_ref);
+				ccode.add_expression (unref_proxy);
+
+				set_cvalue (expr, temp_ref);
+
+				return;
+			}
+		}
+
 		var base_arg_index = 0;
 		if (bus_get_proxy_async || bus_get_proxy_sync)
 			base_arg_index = 1;
