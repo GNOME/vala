@@ -3124,10 +3124,6 @@ public class Vala.Parser : CodeVisitor {
 				next ();
 				flags |= ModifierFlags.SEALED;
 				break;
-			case TokenType.STATIC:
-				next ();
-				flags |= ModifierFlags.STATIC;
-				break;
 			default:
 				return flags;
 			}
