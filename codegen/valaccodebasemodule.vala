@@ -4114,6 +4114,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					param = params_it.get ();
 					ellipsis = param.ellipsis;
 					if (!ellipsis) {
+						// g_array_new: element size
+						if (cl == garray_type && param.name == "element_size") {
+							var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+							csizeof.add_argument (new CCodeIdentifier (expr.type_reference.get_type_arguments ().get (0).get_cname ()));
+							cexpr = csizeof;
+						}
+
 						if (!param.no_array_length && param.variable_type is ArrayType) {
 							var array_type = (ArrayType) param.variable_type;
 							for (int dim = 1; dim <= array_type.rank; dim++) {
@@ -4159,7 +4166,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					ellipsis = true;
 					break;
 				}
-				
+
 				if (param.initializer == null) {
 					Report.error (expr.source_reference, "no default expression for argument %d".printf (i));
 					return;

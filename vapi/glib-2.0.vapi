@@ -4177,7 +4177,7 @@ namespace GLib {
 		[CCode (cname = "len")]
 		public uint length;
 
-		public Array (bool zero_terminated, bool clear, ulong element_size);
+		public Array (bool zero_terminated = true, bool clear = true, ulong element_size = 0);
 		[CCode (cname = "g_array_sized_new")]
 		public Array.sized (bool zero_terminated, bool clear, ulong element_size, uint reserved_size);
 		public void append_val (owned G value);
