@@ -5204,7 +5204,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (target_type.value_owned && (!type.value_owned || boxing || unboxing)) {
 			// need to copy value
 			if (requires_copy (target_type) && !(type is NullType)) {
-				result = (GLibValue) copy_value (result, node);
+				var copy = (GLibValue) copy_value (result, node);
+				if (target_type.data_type is Interface && copy == null) {
+					Report.error (node.source_reference, "missing class prerequisite for interface `%s', add GLib.Object to interface declaration if unsure".printf (target_type.data_type.get_full_name ()));
+					return result;
+				}
+				result = copy;
 				// drop this assignment when target values are guaranteed to be effect-free
 				if (!(target_type is ArrayType && ((ArrayType) target_type).fixed_length)) {
 					var decl = get_temp_variable (target_type, true, node, false);

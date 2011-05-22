@@ -527,7 +527,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 				return type_name;
 			}
 		}
-		return null;
+		return "POINTER";
 	}
 
 	public override string? get_get_value_function () {
@@ -537,7 +537,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 				return get_value_func;
 			}
 		}
-		return null;
+		return "g_value_get_pointer";
 	}
 	
 	public override string? get_set_value_function () {
@@ -547,7 +547,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 				return set_value_func;
 			}
 		}
-		return null;
+		return "g_value_set_pointer";
 	}
 
 	public override string? get_take_value_function () {
@@ -557,7 +557,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 				return take_value_func;
 			}
 		}
-		return null;
+		return "g_value_set_pointer";
 	}
 
 	public string? get_default_type_id () {
@@ -601,7 +601,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 			}
 		}
 
-		return null;
+		return "g_param_spec_pointer";
 	}
 
 	public override bool check (CodeContext context) {
