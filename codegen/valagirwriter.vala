@@ -260,6 +260,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 			hierarchy.insert (0, cl);
 			cl.accept_children (this);
+			hierarchy.remove_at (0);
 
 			indent--;
 			write_indent ();
@@ -284,12 +285,37 @@ public class Vala.GIRWriter : CodeVisitor {
 			foreach (Method m in cl.get_methods ()) {
 				if (m.is_abstract || m.is_virtual) {
 					write_indent ();
-					buffer.append_printf("<field name=\"%s\">\n", m.name);
-					indent++;
-					write_signature(m, "callback", true);
-					indent--;
-					write_indent ();
-					buffer.append_printf ("</field>\n");
+					if (m.coroutine) {
+						string finish_name = m.name;
+						if (finish_name.has_suffix ("_async")) {
+							finish_name = finish_name.substring (0, finish_name.length - "_async".length);
+						}
+						finish_name += "_finish";
+
+						write_indent ();
+						buffer.append_printf("<field name=\"%s\">\n", m.name);
+						indent++;
+						do_write_signature (m, "callback", true, m.name, m.get_cname (), m.get_async_begin_parameters (), new VoidType (), false);
+						indent--;
+						write_indent ();
+						buffer.append_printf ("</field>\n");
+
+						write_indent ();
+						buffer.append_printf("<field name=\"%s\">\n", finish_name);
+						indent++;
+						do_write_signature (m, "callback", true, finish_name, m.get_finish_cname (), m.get_async_end_parameters (), m.return_type, m.tree_can_fail);
+						indent--;
+						write_indent ();
+						buffer.append_printf ("</field>\n");
+					} else {
+						write_indent ();
+						buffer.append_printf("<field name=\"%s\">\n", m.name);
+						indent++;
+						do_write_signature (m, "callback", true, m.name, m.get_cname (), m.get_parameters (), m.return_type, m.tree_can_fail);write_signature(m, "callback", true);
+						indent--;
+						write_indent ();
+						buffer.append_printf ("</field>\n");
+					}
 				}
 			}
 
@@ -304,7 +330,6 @@ public class Vala.GIRWriter : CodeVisitor {
 					buffer.append_printf ("</field>\n");
 				}
 			}
-			hierarchy.remove_at (0);
 
 			indent--;
 			write_indent ();
@@ -402,6 +427,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		hierarchy.insert (0, iface);
 		iface.accept_children (this);
+		hierarchy.remove_at (0);
 
 		indent--;
 		write_indent ();
@@ -425,16 +451,39 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		foreach (Method m in iface.get_methods ()) {
 			if (m.is_abstract || m.is_virtual) {
-				write_indent ();
-				buffer.append_printf("<field name=\"%s\">\n", m.name);
-				indent++;
-				write_signature(m, "callback", true);
-				indent--;
-				write_indent ();
-				buffer.append_printf ("</field>\n");
+				if (m.coroutine) {
+					string finish_name = m.name;
+					if (finish_name.has_suffix ("_async")) {
+						finish_name = finish_name.substring (0, finish_name.length - "_async".length);
+					}
+					finish_name += "_finish";
+
+					write_indent ();
+					buffer.append_printf("<field name=\"%s\">\n", m.name);
+					indent++;
+					do_write_signature (m, "callback", true, m.name, m.get_cname (), m.get_async_begin_parameters (), new VoidType (), false);
+					indent--;
+					write_indent ();
+					buffer.append_printf ("</field>\n");
+
+					write_indent ();
+					buffer.append_printf("<field name=\"%s\">\n", finish_name);
+					indent++;
+					do_write_signature (m, "callback", true, finish_name, m.get_finish_cname (), m.get_async_end_parameters (), m.return_type, m.tree_can_fail);
+					indent--;
+					write_indent ();
+					buffer.append_printf ("</field>\n");
+				} else {
+					write_indent ();
+					buffer.append_printf("<field name=\"%s\">\n", m.name);
+					indent++;
+					do_write_signature (m, "callback", true, m.name, m.get_cname (), m.get_parameters (), m.return_type, m.tree_can_fail);
+					indent--;
+					write_indent ();
+					buffer.append_printf ("</field>\n");
+				}
 			}
 		}
-		hierarchy.remove_at (0);
 
 		indent--;
 		write_indent ();
