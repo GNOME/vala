@@ -1841,7 +1841,11 @@ namespace Gtk {
 		public void add_pattern (string pattern);
 		public void add_pixbuf_formats ();
 		public bool filter (Gtk.FileFilterInfo filter_info);
+		[CCode (cname = "gtk_file_filter_get_name")]
+		public unowned string get_filter_name ();
 		public Gtk.FileFilterFlags get_needed ();
+		[CCode (cname = "gtk_file_filter_set_name")]
+		public void set_filter_name (string name);
 	}
 	[Compact]
 	[CCode (cheader_filename = "gtk/gtk.h")]
