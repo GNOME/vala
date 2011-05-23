@@ -775,7 +775,9 @@ public class Vala.GirParser : CodeVisitor {
 						foreach (var fn in members) {
 							var f = fn.symbol as Field;
 							if (f != null) {
-								f.set_cname (name + "." + fn.get_cname ());
+								if (f.binding == MemberBinding.INSTANCE) {
+									f.set_cname (name + "." + f.get_cname ());
+								}
 								f.name = symbol.name + "_" + f.name;
 								fn.name = f.name;
 								parent.add_member (fn);
