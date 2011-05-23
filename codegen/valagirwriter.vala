@@ -260,7 +260,6 @@ public class Vala.GIRWriter : CodeVisitor {
 
 			hierarchy.insert (0, cl);
 			cl.accept_children (this);
-			hierarchy.remove_at (0);
 
 			indent--;
 			write_indent ();
@@ -305,7 +304,7 @@ public class Vala.GIRWriter : CodeVisitor {
 					buffer.append_printf ("</field>\n");
 				}
 			}
-
+			hierarchy.remove_at (0);
 
 			indent--;
 			write_indent ();
@@ -403,7 +402,6 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		hierarchy.insert (0, iface);
 		iface.accept_children (this);
-		hierarchy.remove_at (0);
 
 		indent--;
 		write_indent ();
@@ -436,6 +434,7 @@ public class Vala.GIRWriter : CodeVisitor {
 				buffer.append_printf ("</field>\n");
 			}
 		}
+		hierarchy.remove_at (0);
 
 		indent--;
 		write_indent ();
