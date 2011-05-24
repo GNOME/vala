@@ -687,8 +687,6 @@ public class Vala.GirParser : CodeVisitor {
 						parser.process_async_method (this);
 					}
 				} else if (symbol is Property) {
-					var getter = parent.lookup ("get_%s".printf (name));
-					var setter = parent.lookup ("set_%s".printf (name));
 					var colliding = parent.lookup_all (name);
 					foreach (var node in colliding) {
 						if (node.symbol is Signal) {
@@ -696,10 +694,12 @@ public class Vala.GirParser : CodeVisitor {
 							node.processed = true;
 							node.merged = true;
 						} else if (node.symbol is Method) {
-							// try assuming it's the getter
-							getter = node;
+							// getter in C, but not in Vala
+							node.merged = true;
 						}
 					}
+					var getter = parent.lookup ("get_%s".printf (name));
+					var setter = parent.lookup ("set_%s".printf (name));
 					var prop = (Property) symbol;
 					if (prop.no_accessor_method) {
 						// property getter and setter must both match, otherwise it's NoAccessorMethod
