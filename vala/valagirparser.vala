@@ -62,7 +62,8 @@ public class Vala.GirParser : CodeVisitor {
 		ABSTRACT,
 		SCOPE,
 		STRUCT,
-		THROWS;
+		THROWS,
+		PRINTF_FORMAT;
 
 		public static ArgumentType? from_string (string name) {
 			var enum_class = (EnumClass) typeof(ArgumentType).class_ref ();
@@ -2437,6 +2438,10 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (throws_string == "1") {
 				s.add_error_type (new ErrorType (null, null));
 			}
+		}
+
+		if (s is Method && metadata.get_bool (ArgumentType.PRINTF_FORMAT)) {
+			((Method) s).printf_format = true;
 		}
 
 		current.symbol = s;
