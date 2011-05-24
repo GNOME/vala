@@ -63,7 +63,8 @@ public class Vala.GirParser : CodeVisitor {
 		SCOPE,
 		STRUCT,
 		THROWS,
-		PRINTF_FORMAT;
+		PRINTF_FORMAT,
+		ARRAY_LENGTH_FIELD;
 
 		public static ArgumentType? from_string (string name) {
 			var enum_class = (EnumClass) typeof(ArgumentType).class_ref ();
@@ -751,17 +752,28 @@ public class Vala.GirParser : CodeVisitor {
 						parser.process_virtual_method_field (this, d, parser.parse_symbol_from_string (gtype_struct_for, d.source_reference));
 						merged = true;
 					} else if (field.variable_type is ArrayType) {
-						var array_length = parent.lookup ("n_%s".printf (field.name));
-						if (array_length == null) {
-							array_length = parent.lookup ("%s_length".printf (field.name));
+						Node array_length;
+						if (metadata.has_argument (ArgumentType.ARRAY_LENGTH_FIELD)) {
+							array_length = parent.lookup (metadata.get_string (ArgumentType.ARRAY_LENGTH_FIELD));
+						} else {
+							array_length = parent.lookup ("n_%s".printf (field.name));
+							if (array_length == null) {
+								array_length = parent.lookup ("%s_length".printf (field.name));
+							}
 						}
-						if (array_length != null) {
+						if (array_length != null && array_length.symbol is Field) {
+							var length_field = (Field) array_length.symbol;
 							// array has length
-							field.set_array_length_cname (array_length.symbol.name);
+							field.set_array_length_cname (length_field.name);
+							var length_type = length_field.variable_type.to_qualified_string ();
+							if (length_type != "int") {
+								var st = parser.context.root.scope.lookup (length_type) as Struct;
+								if (st != null) {
+									field.array_length_type = st.get_cname ();
+								}
+							}
 							field.no_array_length = false;
 							field.array_null_terminated = false;
-							array_length.processed = true;
-							array_length.merged = true;
 						}
 					}
 				} else if (symbol is Signal || symbol is Delegate) {
