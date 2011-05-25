@@ -510,6 +510,16 @@ public class Vala.GirParser : CodeVisitor {
 			node.parent = this;
 		}
 
+		public void remove_member (Node node) {
+			var nodes = scope[node.name];
+			nodes.remove (node);
+			if (nodes.size == 0) {
+				scope.remove (node.name);
+			}
+			members.remove (node);
+			node.parent = null;
+		}
+
 		public Node? lookup (string name, bool create_namespace = false, SourceReference? source_reference = null) {
 			var nodes = scope[name];
 			Node node = null;
@@ -618,14 +628,23 @@ public class Vala.GirParser : CodeVisitor {
 				return;
 			}
 
-			// process children allowing node removals
-			for (int i=0; i < members.size; i++) {
-				var node = members[i];
-				node.process (parser);
-				if (i < members.size && members[i] != node) {
-					// node removed in the middle
-					i--;
+			if (symbol is Namespace && parent == parser.root) {
+				// auto reparent namespace methods, allowing node removals
+				for (int i=0; i < members.size; i++) {
+					var node = members[i];
+					if (node.symbol is Method && node.new_symbol) {
+						parser.process_namespace_method (this, node);
+						if (i < members.size && members[i] != node) {
+							// node removed in the middle
+							i--;
+						}
+					}
 				}
+			}
+
+			// process children
+			foreach (var node in members) {
+				node.process (parser);
 			}
 
 			if (girdata != null) {
@@ -832,7 +851,7 @@ public class Vala.GirParser : CodeVisitor {
 			var ns = symbol as Namespace;
 			if (!(new_symbol && merged) && is_container (symbol)) {
 				foreach (var node in members) {
-					if (node.new_symbol && !node.merged && !metadata.get_bool (ArgumentType.HIDDEN) && !(ns != null && parent == parser.root && node.symbol is Method)) {
+					if (node.new_symbol && !node.merged && !metadata.get_bool (ArgumentType.HIDDEN)) {
 						add_symbol_to_container (symbol, node.symbol);
 					}
 				}
@@ -845,14 +864,6 @@ public class Vala.GirParser : CodeVisitor {
 					cm.has_construct_function = false;
 					cm.access = SymbolAccessibility.PROTECTED;
 					cl.add_method (cm);
-				} else if (symbol is Namespace && parent == parser.root) {
-					// postprocess namespace methods
-					foreach (var node in members) {
-						var m = node.symbol as Method;
-						if (m != null) {
-							parser.process_namespace_method (ns, m);
-						}
-					}
 				}
 			}
 
@@ -2930,12 +2941,12 @@ public class Vala.GirParser : CodeVisitor {
 		}
 	}
 
-	void find_static_method_parent (string cname, Symbol current, ref Symbol best, ref int match, int match_char) {
+	void find_parent (string cname, Node current, ref Node best, ref int match) {
 		var old_best = best;
-		if (current is Namespace && current.scope.get_symbol_table () != null) {
-			foreach (var child in current.scope.get_symbol_table().get_values ()) {
-				if (is_container (child) && cname.has_prefix (child.get_lower_case_cprefix ())) {
-					find_static_method_parent (cname, child, ref best, ref match, match_char);
+		if (current.symbol is Namespace) {
+			foreach (var child in current.members) {
+				if (is_container (child.symbol) && cname.has_prefix (child.get_lower_case_cprefix ())) {
+					find_parent (cname, child, ref best, ref match);
 				}
 			}
 		}
@@ -2944,18 +2955,20 @@ public class Vala.GirParser : CodeVisitor {
 			return;
 		}
 
-		var current_match = match_char * current.get_lower_case_cprefix().length;
+		var current_match = current.get_lower_case_cprefix().length;
 		if (current_match > match) {
 			match = current_match;
 			best = current;
 		}
 	}
 
-	void process_namespace_method (Namespace ns, Method method) {
+	void process_namespace_method (Node ns, Node node) {
 		/* transform static methods into instance methods if possible.
 		   In most of cases this is a .gir fault we are going to fix */
+
 		var ns_cprefix = ns.get_lower_case_cprefix ();
-		var cname = method.get_cname ();
+		var method = (Method) node.symbol;
+		var cname = node.get_cname ();
 
 		Parameter first_param = null;
 		if (method.get_parameters ().size > 0) {
@@ -2964,38 +2977,31 @@ public class Vala.GirParser : CodeVisitor {
 		if (first_param != null && first_param.variable_type is UnresolvedType) {
 			// check if it's a missed instance method (often happens for structs)
 			var sym = ((UnresolvedType) first_param.variable_type).unresolved_symbol;
-			Symbol parent = ns;
-			if (sym.inner != null) {
-				parent = context.root.scope.lookup (sym.inner.name);
-			}
-			// ensure we don't get out of the GIR namespace
-			if (parent == ns) {
-				parent = parent.scope.lookup (sym.name);
-			}
-			if (parent != null && is_container (parent) && cname.has_prefix (parent.get_lower_case_cprefix ())) {
+			var parent = resolve_node (ns, sym);
+			if (parent != null && parent.parent == ns && is_container (parent.symbol) && cname.has_prefix (parent.get_lower_case_cprefix ())) {
 				// instance method
 				var new_name = method.name.substring (parent.get_lower_case_cprefix().length - ns_cprefix.length);
-				if (parent.scope.lookup (new_name) == null) {
+				if (parent.lookup (new_name) == null) {
+					ns.remove_member (node);
+					node.name = new_name;
 					method.name = new_name;
 					method.get_parameters().remove_at (0);
 					method.binding = MemberBinding.INSTANCE;
-					add_symbol_to_container (parent, method);
-				} else {
-					ns.add_method (method);
+					parent.add_member (node);
 				}
 				return;
 			}
 		}
 
 		int match = 0;
-		Symbol parent = ns;
-		find_static_method_parent (cname, ns, ref parent, ref match, cname.length);
+		Node parent = ns;
+		find_parent (cname, ns, ref parent, ref match);
 		var new_name = method.name.substring (parent.get_lower_case_cprefix().length - ns_cprefix.length);
-		if (parent.scope.lookup (new_name) == null) {
+		if (parent.lookup (new_name) == null) {
+			ns.remove_member (node);
+			node.name = new_name;
 			method.name = new_name;
-			add_symbol_to_container (parent, method);
-		} else {
-			ns.add_method (method);
+			parent.add_member (node);
 		}
 	}
 
