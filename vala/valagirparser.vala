@@ -2325,6 +2325,7 @@ public class Vala.GirParser : CodeVisitor {
 		bool no_array_length;
 		bool array_null_terminated;
 		var type = parse_type (null, null, false, out no_array_length, out array_null_terminated);
+		type = element_get_type (type, true, ref no_array_length);
 		var prop = new Property (current.name, type, null, null, current.source_reference);
 		prop.access = SymbolAccessibility.PUBLIC;
 		prop.external = true;
