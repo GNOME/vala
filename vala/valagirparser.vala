@@ -1572,12 +1572,14 @@ public class Vala.GirParser : CodeVisitor {
 		if (node == null || (node.symbol != null && !merge)) {
 			node = new Node (name);
 			node.new_symbol = true;
+			parent.add_member (node);
+		} else {
+			Node.new_namespaces.remove (node);
 		}
 		node.element_type = reader.name;
 		node.girdata = reader.get_attributes ();
 		node.metadata = metadata;
 		node.source_reference = get_current_src ();
-		parent.add_member (node);
 
 		var gir_name = node.girdata["name"];
 		if (gir_name == null) {
