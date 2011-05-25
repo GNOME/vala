@@ -292,7 +292,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 				arg = new CCodeIdentifier ("self");
 			} else {
 				// use first delegate parameter as instance
-				if (d_params.size == 0) {
+				if (d_params.size == 0 || m.closure) {
 					Report.error (node != null ? node.source_reference : null, "Cannot create delegate without target for instance method or closure");
 					arg = new CCodeConstant ("NULL");
 				} else {
