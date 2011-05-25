@@ -64,7 +64,8 @@ public class Vala.GirParser : CodeVisitor {
 		STRUCT,
 		THROWS,
 		PRINTF_FORMAT,
-		ARRAY_LENGTH_FIELD;
+		ARRAY_LENGTH_FIELD,
+		SENTINEL;
 
 		public static ArgumentType? from_string (string name) {
 			var enum_class = (EnumClass) typeof(ArgumentType).class_ref ();
@@ -429,7 +430,7 @@ public class Vala.GirParser : CodeVisitor {
 				}
 				var arg_type = ArgumentType.from_string (id);
 				if (arg_type == null) {
-					Report.error (get_src (begin), "unknown argument");
+					Report.error (get_src (begin, old_end), "unknown argument");
 					return false;
 				}
 
@@ -2452,8 +2453,10 @@ public class Vala.GirParser : CodeVisitor {
 			}
 		}
 
-		if (s is Method && metadata.get_bool (ArgumentType.PRINTF_FORMAT)) {
-			((Method) s).printf_format = true;
+		if (s is Method) {
+			var m = (Method) s;
+			m.printf_format = metadata.get_bool (ArgumentType.PRINTF_FORMAT);
+			m.sentinel = metadata.get_string (ArgumentType.SENTINEL);
 		}
 
 		current.symbol = s;
