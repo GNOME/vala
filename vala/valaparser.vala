@@ -489,6 +489,10 @@ public class Vala.Parser : CodeVisitor {
 			}
 		}
 
+		if (type is PointerType) {
+			value_owned = false;
+		}
+
 		type.is_dynamic = is_dynamic;
 		type.value_owned = value_owned;
 		return type;
