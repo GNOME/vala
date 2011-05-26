@@ -1669,7 +1669,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		var local_vars = b.get_local_variables ();
 
-		if (b.parent_node is Block || b.parent_node is SwitchStatement) {
+		if (b.parent_node is Block || b.parent_node is SwitchStatement || b.parent_node is TryStatement) {
 			ccode.open_block ();
 		}
 
@@ -1954,7 +1954,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			ccode.add_assignment (get_variable_cexpression ("_data%d_".printf (block_id)), new CCodeConstant ("NULL"));
 		}
 
-		if (b.parent_node is Block || b.parent_node is SwitchStatement) {
+		if (b.parent_node is Block || b.parent_node is SwitchStatement || b.parent_node is TryStatement) {
 			ccode.close ();
 		}
 
