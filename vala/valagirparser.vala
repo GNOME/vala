@@ -2953,7 +2953,8 @@ public class Vala.GirParser : CodeVisitor {
 		var old_best = best;
 		if (current.symbol is Namespace) {
 			foreach (var child in current.members) {
-				if (is_container (child.symbol) && cname.has_prefix (child.get_lower_case_cprefix ())) {
+				// symbol is null only for aliases that aren't yet processed
+				if ((child.symbol == null || is_container (child.symbol)) && cname.has_prefix (child.get_lower_case_cprefix ())) {
 					find_parent (cname, child, ref best, ref match);
 				}
 			}
