@@ -848,7 +848,6 @@ public class Vala.GirParser : CodeVisitor {
 				}
 			}
 
-			var ns = symbol as Namespace;
 			if (!(new_symbol && merged) && is_container (symbol)) {
 				foreach (var node in members) {
 					if (node.new_symbol && !node.merged && !metadata.get_bool (ArgumentType.HIDDEN)) {
@@ -1956,6 +1955,8 @@ public class Vala.GirParser : CodeVisitor {
 			is_array = true;
 			start_element ("array");
 
+			var src = get_current_src ();
+
 			if (type_name == null) {
 				if (reader.get_attribute ("length") != null) {
 					array_length_idx = int.parse (reader.get_attribute ("length"));
@@ -1965,10 +1966,14 @@ public class Vala.GirParser : CodeVisitor {
 				if (reader.get_attribute ("fixed-size") != null) {
 					array_null_terminated = false;
 				}
+				if (reader.get_attribute ("c:type") == "GStrv") {
+					no_array_length = true;
+					array_null_terminated = true;
+				}
 				next ();
 				var element_type = parse_type ();
 				end_element ("array");
-				return new ArrayType (element_type, 1, null);
+				return new ArrayType (element_type, 1, src);
 			}
 		} else if (reader.name == "callback"){
 			parse_callback ();
