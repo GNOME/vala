@@ -676,20 +676,37 @@ public class Vala.CodeWriter : CodeVisitor {
 		write_identifier (edomain.name);
 		write_begin_block ();
 
-		edomain.accept_children (this);
+		bool first = true;
+		foreach (ErrorCode ecode in edomain.get_codes ()) {
+			if (first) {
+				first = false;
+			} else {
+				write_string (",");
+				write_newline ();
+			}
+
+			if (ecode.get_cname () != ecode.get_default_cname ()) {
+				write_indent ();
+				write_string ("[CCode (cname = \"%s\")]".printf (ecode.get_cname ()));
+			}
+			write_indent ();
+			write_identifier (ecode.name);
+		}
+
+		if (!first) {
+			if (edomain.get_methods ().size > 0) {
+				write_string (";");
+			}
+			write_newline ();
+		}
+
+		current_scope = edomain.scope;
+		foreach (Method m in edomain.get_methods ()) {
+			m.accept (this);
+		}
+		current_scope = current_scope.parent_scope;
 
 		write_end_block ();
-		write_newline ();
-	}
-
-	public override void visit_error_code (ErrorCode ecode) {
-		if (ecode.get_cname () != ecode.get_default_cname ()) {
-			write_indent ();
-			write_string ("[CCode (cname = \"%s\")]".printf (ecode.get_cname ()));
-		}
-		write_indent ();
-		write_identifier (ecode.name);
-		write_string (",");
 		write_newline ();
 	}
 
