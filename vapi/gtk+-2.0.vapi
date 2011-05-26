@@ -1757,7 +1757,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Fixed : Gtk.Container, Atk.Implementor, Gtk.Buildable {
-		public weak GLib.List<Gtk.Widget> children;
+		public weak GLib.List<Gtk.FixedChild> children;
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public Fixed ();
 		public bool get_has_window ();
