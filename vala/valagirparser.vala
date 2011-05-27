@@ -1211,7 +1211,7 @@ public class Vala.GirParser : CodeVisitor {
 			if (new_metadata.get_bool (ArgumentType.SKIP)) {
 				return false;
 			}
-		} else if (reader.get_attribute ("introspectable") == "0") {
+		} else if (reader.get_attribute ("introspectable") == "0" || reader.get_attribute ("private") == "1") {
 			return false;
 		}
 
@@ -2125,6 +2125,9 @@ public class Vala.GirParser : CodeVisitor {
 		next ();
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (!push_metadata ()) {
+				if (first_field && reader.name == "field") {
+					first_field = false;
+				}
 				skip_element ();
 				continue;
 			}
@@ -2183,6 +2186,9 @@ public class Vala.GirParser : CodeVisitor {
 		var first_field = true;
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (!push_metadata ()) {
+				if (first_field && reader.name == "field") {
+					first_field = false;
+				}
 				skip_element ();
 				continue;
 			}
