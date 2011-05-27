@@ -220,6 +220,8 @@ dist_vapi_DATA = \
 	libvala@PACKAGE_SUFFIX@.vapi \
 	vte.deps \
 	vte.vapi \
+	vte-2.90.deps \
+	vte-2.90.vapi \
 	webkit-1.0.deps \
 	webkit-1.0.vapi \
 	x11.vapi \
