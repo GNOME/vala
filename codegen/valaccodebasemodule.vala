@@ -1749,8 +1749,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), "_data%d_".printf (parent_block_id)), ref_call);
 			} else {
-				if (in_constructor || (current_method != null && current_method.binding == MemberBinding.INSTANCE &&
-				                              (!(current_method is CreationMethod) || current_method.body != b)) ||
+				if (in_constructor || (current_method != null && current_method.binding == MemberBinding.INSTANCE && (!(current_method is CreationMethod && current_class != null && current_class.base_class != null) || current_method.body != b)) ||
 				           (current_property_accessor != null && current_property_accessor.prop.binding == MemberBinding.INSTANCE)) {
 					var ref_call = new CCodeFunctionCall (get_dup_func_expression (get_data_type_for_symbol (current_type_symbol), b.source_reference));
 					ref_call.add_argument (get_result_cexpression ("self"));
