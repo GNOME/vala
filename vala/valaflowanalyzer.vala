@@ -517,6 +517,8 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_declaration_statement (DeclarationStatement stmt) {
+		stmt.accept_children (this);
+
 		if (unreachable (stmt)) {
 			stmt.declaration.unreachable = true;
 			return;
@@ -531,6 +533,12 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		var local = stmt.declaration as LocalVariable;
 		if (local != null && local.initializer != null) {
 			handle_errors (local.initializer);
+		}
+	}
+
+	public override void visit_local_variable (LocalVariable local) {
+		if (local.initializer != null) {
+			local.initializer.accept (this);
 		}
 	}
 
