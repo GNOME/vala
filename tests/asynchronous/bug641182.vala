@@ -1,7 +1,7 @@
 public delegate void Bar ();
 
 class Foo {
-        public Bar bar { get; set; }
+        public unowned Bar bar { get; set; }
 }
 
 async void test () {
