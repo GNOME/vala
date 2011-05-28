@@ -268,7 +268,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					} else {
 						delegate_type = base_property.property_type as DelegateType;
 						if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
-							temp_var = get_temp_variable (new PointerType (new VoidType ()));
+							temp_var = get_temp_variable (new PointerType (new VoidType ()), false, expr, false);
 							ctemp = get_variable_cexpression (temp_var.name);
 							emit_temp_var (temp_var);
 							ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
