@@ -1785,11 +1785,19 @@ public class Vala.GirParser : CodeVisitor {
 
 		if (cname != null) {
 			if (sym is Enum) {
-				((Enum) sym).set_cname (cname);
-				((Enum) sym).set_cprefix (common_prefix);
+				if (cname != null) {
+					((Enum) sym).set_cname (cname);
+				}
+				if (common_prefix != null) {
+					((Enum) sym).set_cprefix (common_prefix);
+				}
 			} else {
-				((ErrorDomain) sym).set_cname (cname);
-				((ErrorDomain) sym).set_cprefix (common_prefix);
+				if (cname != null) {
+					((ErrorDomain) sym).set_cname (cname);
+				}
+				if (common_prefix != null) {
+					((ErrorDomain) sym).set_cprefix (common_prefix);
+				}
 			}
 		}
 
