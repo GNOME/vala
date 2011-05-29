@@ -3818,7 +3818,8 @@ namespace GLib {
 	[Compact]
 	[CCode (free_function = "g_sequence_free")]
 	public class Sequence<G> {
-		public Sequence (DestroyNotify? data_destroy);
+		[CCode (simple_generics = true)]
+		public Sequence ();
 		public int get_length ();
 		public void @foreach (Func<G> func);
 		public static void foreach_range (SequenceIter<G> begin, SequenceIter<G> end, Func<G> func);
