@@ -106,13 +106,15 @@ public abstract class Vala.DataType : CodeNode {
 	}
 
 	public override void accept (CodeVisitor visitor) {
+		visitor.visit_data_type (this);
+	}
+
+	public override void accept_children (CodeVisitor visitor) {
 		if (type_argument_list != null && type_argument_list.size > 0) {
 			foreach (DataType type_arg in type_argument_list) {
 				type_arg.accept (visitor);
 			}
 		}
-	
-		visitor.visit_data_type (this);
 	}
 
 	/**
