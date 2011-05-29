@@ -79,7 +79,13 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 						var len_type = int_type.copy ();
 
 						for (int dim = 1; dim <= array_type.rank; dim++) {
-							instance_struct.add_field (len_type.get_cname (), get_array_length_cname (f.name, dim));
+							string length_cname;
+							if (f.has_array_length_cname) {
+								length_cname = f.get_array_length_cname ();
+							} else {
+								length_cname = get_array_length_cname (f.name, dim);
+							}
+							instance_struct.add_field (len_type.get_cname (), length_cname);
 						}
 
 						if (array_type.rank == 1 && f.is_internal_symbol ()) {
