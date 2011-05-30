@@ -74,6 +74,20 @@ public class Vala.CCodeConstant : CCodeExpression {
 						p++;
 					}
 					break;
+				case '0':
+				case '1':
+				case '2':
+				case '3':
+				case '4':
+				case '5':
+				case '6':
+				case '7':
+					// octal character
+					while (p < end && p - begin_of_char <= 3 && *p >= '0' && *p <= '7') {
+						builder.append_c (*p);
+						p++;
+					}
+					break;
 				case 'n':
 					// break line at \n
 					col = LINE_LENGTH;
