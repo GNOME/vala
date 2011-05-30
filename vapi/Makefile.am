@@ -7,6 +7,7 @@ libvala@PACKAGE_SUFFIX@.vapi: ../gee/gee.vapi ../ccode/ccode.vapi ../vala/vala.v
 
 dist_vapi_DATA = \
 	alsa.vapi \
+	alsa.deps \
 	atk.vapi \
 	avahi-gobject.deps \
 	avahi-gobject.vapi \
