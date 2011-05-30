@@ -472,10 +472,17 @@ namespace Posix {
 	public unowned Group? getgrent ();
 	public void setgrent ();
 
+	[CCode (cheader_filename = "netinet/in.h")]
+	public const int INET_ADDRSTRLEN;
+	[CCode (cheader_filename = "netinet/in.h")]
+	public const int INET6_ADDRSTRLEN;
+
 	[CCode (cheader_filename = "arpa/inet.h")]
 	public uint32 inet_addr (string host);
 	[CCode (cheader_filename = "arpa/inet.h")]
 	public unowned string inet_ntoa (InAddr addr);
+	[CCode (cheader_filename = "arpa/inet.h")]
+	unowned string inet_ntop (int af, void* src, uint8[] dst);
 	[CCode (cheader_filename = "arpa/inet.h")]
 	public uint32 htonl (uint32 hostlong);
 	[CCode (cheader_filename = "arpa/inet.h")]
