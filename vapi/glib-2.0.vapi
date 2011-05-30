@@ -4519,6 +4519,8 @@ namespace GLib {
 	public class Array<G> {
 		[CCode (cname = "len")]
 		public uint length;
+		[CCode (cname = "data", array_length_cname = "len", array_length_type = "uint")]
+		public G[] data;
 
 		public Array (bool zero_terminated = true, bool clear = true, ulong element_size = 0);
 		[CCode (cname = "g_array_sized_new")]
