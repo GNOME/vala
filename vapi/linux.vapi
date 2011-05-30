@@ -3259,7 +3259,17 @@ namespace Linux {
         public const int B3500000;
         [CCode (cheader_filename = "termios.h")]
         public const int B4000000;
-
+        // misc
+        [CCode (cheader_filename = "termios.h")]
+        public const Posix.tcflag_t CBAUD;
+        [CCode (cheader_filename = "termios.h")]
+        public const Posix.tcflag_t CBAUDEX;
+        [CCode (cheader_filename = "termios.h")]
+        public const Posix.tcflag_t ECHOCTL;
+        [CCode (cheader_filename = "termios.h")]
+        public const Posix.tcflag_t ECHOPRT;
+        [CCode (cheader_filename = "termios.h")]
+        public const Posix.tcflag_t ECHOKE;
 
         /*
          * ioctls
