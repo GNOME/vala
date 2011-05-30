@@ -4305,14 +4305,15 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			type = arg.value_type;
 		}
 
+		var unary = arg as UnaryExpression;
 		// pass non-simple struct instances always by reference
 		if (!(arg.value_type is NullType) && type.is_real_struct_type ()) {
 			// we already use a reference for arguments of ref, out, and nullable parameters
-			if ((param == null || param.direction == ParameterDirection.IN) && !type.nullable) {
-				var unary = cexpr as CCodeUnaryExpression;
-				if (unary != null && unary.operator == CCodeUnaryOperator.POINTER_INDIRECTION) {
+			if (!(unary != null && (unary.operator == UnaryOperator.OUT || unary.operator == UnaryOperator.REF)) && !type.nullable) {
+				var cunary = cexpr as CCodeUnaryExpression;
+				if (cunary != null && cunary.operator == CCodeUnaryOperator.POINTER_INDIRECTION) {
 					// *expr => expr
-					return unary.inner;
+					return cunary.inner;
 				} else if (cexpr is CCodeIdentifier || cexpr is CCodeMemberAccess) {
 					return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr);
 				} else {
