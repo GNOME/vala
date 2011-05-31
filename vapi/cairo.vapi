@@ -434,21 +434,51 @@ namespace Cairo {
 		OFF,
 		ON
 	}
+
+	[CCode (cname = "cairo_device_type_t")]
+	public enum DeviceType {
+		DRM,
+		GL,
+		SCRIPT,
+		XCB,
+		XLIB,
+		XML
+	}
 	
+	[Compact]
+	[CCode (ref_function = "cairo_device_reference", unref_function = "cairo_device_destroy", cname = "cairo_device_t", cheader_filename = "cairo.h")]
+	public class Device {
+		public Status acquire ();
+		public void finish ();
+		public void flush ();
+		public uint get_reference_count  ();
+		public DeviceType get_type ();
+		public void release ();
+		public Status status ();
+    }
+
 	[Compact]
 	[CCode (ref_function = "cairo_surface_reference", unref_function = "cairo_surface_destroy", cname = "cairo_surface_t", cheader_filename = "cairo.h")]
 	public class Surface {
 		[CCode (cname = "cairo_surface_create_similar")]
 		public Surface.similar (Surface other, Content content, int width, int height);
+		[CCode (cname = "cairo_surface_create_for_rectangle")]
+		public Surface.for_rectangle (Surface target, double x, double y, double width, double height);
+		public void copy_page ();
 		public void finish ();
 		public void flush ();
 		public void get_font_options (out FontOptions options);
 		public Content get_content ();
+		public Device get_device ();
+		public void get_fallback_resolution (out double x_pixels_per_inch, out double y_pixels_per_inch);
+		public uint get_reference_count ();
+		public bool has_show_text_glyphs ();
 		public void mark_dirty ();
 		public void mark_dirty_rectangle (int x, int y, int width, int height);
 		public void set_device_offset (double x_offset, double y_offset);
 		public void get_device_offset (out double x_offset, out double y_offset);
 		public void set_fallback_resolution (double x_pixels_per_inch, double y_pixels_per_inch);
+		public void show_page ();
 		public Status status ();
 		public SurfaceType get_type ();
 
