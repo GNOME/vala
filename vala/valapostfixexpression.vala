@@ -64,6 +64,10 @@ public class Vala.PostfixExpression : Expression {
 		return false;
 	}
 
+	public override void get_used_variables (Collection<LocalVariable> collection) {
+		inner.get_used_variables (collection);
+	}
+
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
