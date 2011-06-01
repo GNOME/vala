@@ -123,11 +123,11 @@ public class Vala.ThrowStatement : CodeNode, Statement {
 		codegen.visit_throw_statement (this);
 	}
 
-	public override void get_defined_variables (Collection<LocalVariable> collection) {
+	public override void get_defined_variables (Collection<Variable> collection) {
 		error_expression.get_defined_variables (collection);
 	}
 
-	public override void get_used_variables (Collection<LocalVariable> collection) {
+	public override void get_used_variables (Collection<Variable> collection) {
 		error_expression.get_used_variables (collection);
 	}
 }

@@ -847,19 +847,22 @@ public class Vala.MemberAccess : Expression {
 		codegen.visit_expression (this);
 	}
 
-	public override void get_defined_variables (Collection<LocalVariable> collection) {
+	public override void get_defined_variables (Collection<Variable> collection) {
 		if (inner != null) {
 			inner.get_defined_variables (collection);
 		}
 	}
 
-	public override void get_used_variables (Collection<LocalVariable> collection) {
+	public override void get_used_variables (Collection<Variable> collection) {
 		if (inner != null) {
 			inner.get_used_variables (collection);
 		}
 		var local = symbol_reference as LocalVariable;
+		var param = symbol_reference as Parameter;
 		if (local != null) {
 			collection.add (local);
+		} else if (param != null && param.direction == ParameterDirection.OUT) {
+			collection.add (param);
 		}
 	}
 }

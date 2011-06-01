@@ -1164,11 +1164,11 @@ public class Vala.Method : Subroutine {
 		}
 	}
 
-	public override void get_defined_variables (Collection<LocalVariable> collection) {
+	public override void get_defined_variables (Collection<Variable> collection) {
 		// capturing variables is only supported if they are initialized
 		// therefore assume that captured variables are initialized
 		if (closure) {
-			get_captured_variables (collection);
+			get_captured_variables ((Collection<LocalVariable>) collection);
 		}
 	}
 }

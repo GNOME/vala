@@ -22,15 +22,15 @@
 
 
 public class Vala.PhiFunction {
-	public LocalVariable original_variable { get; private set; }
+	public Variable original_variable { get; private set; }
 
-	public List<LocalVariable?> operands { get; private set; }
+	public List<Variable?> operands { get; private set; }
 
-	public PhiFunction (LocalVariable variable, int num_of_ops) {
+	public PhiFunction (Variable variable, int num_of_ops) {
 		this.original_variable = variable;
-		this.operands = new ArrayList<LocalVariable?> ();
+		this.operands = new ArrayList<Variable?> ();
 		for (int i = 0; i < num_of_ops; i++) {
-			this.operands.add ((LocalVariable) null);
+			this.operands.add ((Variable) null);
 		}
 	}
 }

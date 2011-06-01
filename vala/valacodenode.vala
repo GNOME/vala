@@ -168,10 +168,10 @@ public abstract class Vala.CodeNode {
 		return str.append (" */").str;
 	}
 
-	public virtual void get_defined_variables (Collection<LocalVariable> collection) {
+	public virtual void get_defined_variables (Collection<Variable> collection) {
 	}
 
-	public virtual void get_used_variables (Collection<LocalVariable> collection) {
+	public virtual void get_used_variables (Collection<Variable> collection) {
 	}
 
 	public static string get_temp_name () {

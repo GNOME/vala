@@ -90,9 +90,9 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 	private bool unreachable_reported;
 	private List<JumpTarget> jump_stack = new ArrayList<JumpTarget> ();
 
-	Map<Symbol, List<LocalVariable>> var_map;
-	Set<LocalVariable> used_vars;
-	Map<LocalVariable, PhiFunction> phi_functions;
+	Map<Symbol, List<Variable>> var_map;
+	Set<Variable> used_vars;
+	Map<Variable, PhiFunction> phi_functions;
 
 	public FlowAnalyzer () {
 	}
@@ -198,6 +198,16 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			var result_ma = new MemberAccess.simple ("result", m.source_reference);
 			result_ma.symbol_reference = m.result_var;
 			m.return_block.add_node (result_ma);
+		}
+		if (m is Method) {
+			// ensure out parameters are defined at end of method
+			foreach (var param in ((Method) m).get_parameters ()) {
+				if (param.direction == ParameterDirection.OUT) {
+					var param_ma = new MemberAccess.simple (param.name, param.source_reference);
+					param_ma.symbol_reference = param;
+					m.return_block.add_node (param_ma);
+				}
+			}
 		}
 
 		current_block = new BasicBlock ();
@@ -330,19 +340,19 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		}
 	}
 
-	Map<LocalVariable, Set<BasicBlock>> get_assignment_map (List<BasicBlock> block_list, BasicBlock entry_block) {
-		var map = new HashMap<LocalVariable, Set<BasicBlock>> ();
+	Map<Variable, Set<BasicBlock>> get_assignment_map (List<BasicBlock> block_list, BasicBlock entry_block) {
+		var map = new HashMap<Variable, Set<BasicBlock>> ();
 		foreach (BasicBlock block in block_list) {
-			var defined_variables = new ArrayList<LocalVariable> ();
+			var defined_variables = new ArrayList<Variable> ();
 			foreach (CodeNode node in block.get_nodes ()) {
 				node.get_defined_variables (defined_variables);
 			}
 
-			foreach (LocalVariable local in defined_variables) {
-				var block_set = map.get (local);
+			foreach (Variable variable in defined_variables) {
+				var block_set = map.get (variable);
 				if (block_set == null) {
 					block_set = new HashSet<BasicBlock> ();
-					map.set (local, block_set);
+					map.set (variable, block_set);
 				}
 				block_set.add (block);
 			}
@@ -363,9 +373,9 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			phi.set (block, 0);
 		}
 
-		foreach (LocalVariable local in assign.get_keys ()) {
+		foreach (Variable variable in assign.get_keys ()) {
 			counter++;
-			foreach (BasicBlock block in assign.get (local)) {
+			foreach (BasicBlock block in assign.get (variable)) {
 				work_list.add (block);
 				added.set (block, counter);
 			}
@@ -375,7 +385,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 				foreach (BasicBlock frontier in block.get_dominator_frontier ()) {
 					int blockPhi = phi.get (frontier);
 					if (blockPhi < counter) {
-						frontier.add_phi_function (new PhiFunction (local, frontier.get_predecessors ().size));
+						frontier.add_phi_function (new PhiFunction (variable, frontier.get_predecessors ().size));
 						phi.set (frontier, counter);
 						int block_added = added.get (frontier);
 						if (block_added < counter) {
@@ -389,32 +399,37 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 	}
 
 	void check_variables (BasicBlock entry_block) {
-		var_map = new HashMap<Symbol, List<LocalVariable>>();
-		used_vars = new HashSet<LocalVariable> ();
-		phi_functions = new HashMap<LocalVariable, PhiFunction> ();
+		var_map = new HashMap<Symbol, List<Variable>>();
+		used_vars = new HashSet<Variable> ();
+		phi_functions = new HashMap<Variable, PhiFunction> ();
 
 		check_block_variables (entry_block);
 
 		// check for variables used before initialization
-		var used_vars_queue = new ArrayList<LocalVariable> ();
-		foreach (LocalVariable local in used_vars) {
-			used_vars_queue.add (local);
+		var used_vars_queue = new ArrayList<Variable> ();
+		foreach (Variable variable in used_vars) {
+			used_vars_queue.add (variable);
 		}
 		while (used_vars_queue.size > 0) {
-			LocalVariable used_var = used_vars_queue[0];
+			Variable used_var = used_vars_queue[0];
 			used_vars_queue.remove_at (0);
 
 			PhiFunction phi = phi_functions.get (used_var);
 			if (phi != null) {
-				foreach (LocalVariable local in phi.operands) {
-					if (local == null) {
-						Report.error (used_var.source_reference, "use of possibly unassigned local variable `%s'".printf (used_var.name));
+				foreach (Variable variable in phi.operands) {
+					if (variable == null) {
+						if (used_var is LocalVariable) {
+							Report.error (used_var.source_reference, "use of possibly unassigned local variable `%s'".printf (used_var.name));
+						} else {
+							// parameter
+							Report.warning (used_var.source_reference, "use of possibly unassigned parameter `%s'".printf (used_var.name));
+						}
 						continue;
 					}
-					if (!(local in used_vars)) {
-						local.source_reference = used_var.source_reference;
-						used_vars.add (local);
-						used_vars_queue.add (local);
+					if (!(variable in used_vars)) {
+						variable.source_reference = used_var.source_reference;
+						used_vars.add (variable);
+						used_vars_queue.add (variable);
 					}
 				}
 			}
@@ -423,33 +438,38 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 
 	void check_block_variables (BasicBlock block) {
 		foreach (PhiFunction phi in block.get_phi_functions ()) {
-			LocalVariable versioned_var = process_assignment (var_map, phi.original_variable);
+			Variable versioned_var = process_assignment (var_map, phi.original_variable);
 
 			phi_functions.set (versioned_var, phi);
 		}
 
 		foreach (CodeNode node in block.get_nodes ()) {
-			var used_variables = new ArrayList<LocalVariable> ();
+			var used_variables = new ArrayList<Variable> ();
 			node.get_used_variables (used_variables);
 			
-			foreach (LocalVariable var_symbol in used_variables) {
+			foreach (Variable var_symbol in used_variables) {
 				var variable_stack = var_map.get (var_symbol);
 				if (variable_stack == null || variable_stack.size == 0) {
-					Report.error (node.source_reference, "use of possibly unassigned local variable `%s'".printf (var_symbol.name));
+					if (var_symbol is LocalVariable) {
+						Report.error (node.source_reference, "use of possibly unassigned local variable `%s'".printf (var_symbol.name));
+					} else {
+						// parameter
+						Report.warning (node.source_reference, "use of possibly unassigned parameter `%s'".printf (var_symbol.name));
+					}
 					continue;
 				}
-				var versioned_local = variable_stack.get (variable_stack.size - 1);
-				if (!(versioned_local in used_vars)) {
-					versioned_local.source_reference = node.source_reference;
+				var versioned_variable = variable_stack.get (variable_stack.size - 1);
+				if (!(versioned_variable in used_vars)) {
+					versioned_variable.source_reference = node.source_reference;
 				}
-				used_vars.add (versioned_local);
+				used_vars.add (versioned_variable);
 			}
 
-			var defined_variables = new ArrayList<LocalVariable> ();
+			var defined_variables = new ArrayList<Variable> ();
 			node.get_defined_variables (defined_variables);
 
-			foreach (LocalVariable local in defined_variables) {
-				process_assignment (var_map, local);
+			foreach (Variable variable in defined_variables) {
+				process_assignment (var_map, variable);
 			}
 		}
 
@@ -479,23 +499,29 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			variable_stack.remove_at (variable_stack.size - 1);
 		}
 		foreach (CodeNode node in block.get_nodes ()) {
-			var defined_variables = new ArrayList<LocalVariable> ();
+			var defined_variables = new ArrayList<Variable> ();
 			node.get_defined_variables (defined_variables);
 
-			foreach (LocalVariable local in defined_variables) {
-				var variable_stack = var_map.get (local);
+			foreach (Variable variable in defined_variables) {
+				var variable_stack = var_map.get (variable);
 				variable_stack.remove_at (variable_stack.size - 1);
 			}
 		}
 	}
 
-	LocalVariable process_assignment (Map<Symbol, List<LocalVariable>> var_map, LocalVariable var_symbol) {
+	Variable process_assignment (Map<Symbol, List<Variable>> var_map, Variable var_symbol) {
 		var variable_stack = var_map.get (var_symbol);
 		if (variable_stack == null) {
-			variable_stack = new ArrayList<LocalVariable> ();
+			variable_stack = new ArrayList<Variable> ();
 			var_map.set (var_symbol, variable_stack);
 		}
-		LocalVariable versioned_var = new LocalVariable (var_symbol.variable_type, var_symbol.name, null, var_symbol.source_reference);
+		Variable versioned_var;
+		if (var_symbol is LocalVariable) {
+			versioned_var = new LocalVariable (var_symbol.variable_type, var_symbol.name, null, var_symbol.source_reference);
+		} else {
+			// parameter
+			versioned_var = new Parameter (var_symbol.name, var_symbol.variable_type, var_symbol.source_reference);
+		}
 		variable_stack.add (versioned_var);
 		return versioned_var;
 	}

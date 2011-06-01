@@ -536,16 +536,19 @@ public class Vala.Assignment : Expression {
 		codegen.visit_expression (this);
 	}
 
-	public override void get_defined_variables (Collection<LocalVariable> collection) {
+	public override void get_defined_variables (Collection<Variable> collection) {
 		right.get_defined_variables (collection);
 		left.get_defined_variables (collection);
 		var local = left.symbol_reference as LocalVariable;
+		var param = left.symbol_reference as Parameter;
 		if (local != null) {
 			collection.add (local);
+		} else if (param != null && param.direction == ParameterDirection.OUT) {
+			collection.add (param);
 		}
 	}
 
-	public override void get_used_variables (Collection<LocalVariable> collection) {
+	public override void get_used_variables (Collection<Variable> collection) {
 		var ma = left as MemberAccess;
 		var ea = left as ElementAccess;
 		if (ma != null && ma.inner != null) {

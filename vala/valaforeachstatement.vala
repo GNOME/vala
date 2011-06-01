@@ -403,7 +403,7 @@ public class Vala.ForeachStatement : Block {
 		codegen.visit_foreach_statement (this);
 	}
 
-	public override void get_defined_variables (Collection<LocalVariable> collection) {
+	public override void get_defined_variables (Collection<Variable> collection) {
 		collection.add (element_variable);
 	}
 }

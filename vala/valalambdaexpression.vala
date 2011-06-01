@@ -255,10 +255,10 @@ public class Vala.LambdaExpression : Expression {
 		codegen.visit_expression (this);
 	}
 
-	public override void get_used_variables (Collection<LocalVariable> collection) {
+	public override void get_used_variables (Collection<Variable> collection) {
 		// require captured variables to be initialized
 		if (method.closure) {
-			method.get_captured_variables (collection);
+			method.get_captured_variables ((Collection<LocalVariable>) collection);
 		}
 	}
 }
