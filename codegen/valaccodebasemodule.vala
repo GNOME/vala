@@ -1749,8 +1749,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), "_data%d_".printf (parent_block_id)), ref_call);
 			} else {
-				if (in_constructor || (current_method != null && current_method.binding == MemberBinding.INSTANCE && (!(current_method is CreationMethod && current_class != null && current_class.base_class != null) || current_method.body != b)) ||
-				           (current_property_accessor != null && current_property_accessor.prop.binding == MemberBinding.INSTANCE)) {
+				bool in_instance_method = (current_method != null && current_method.binding == MemberBinding.INSTANCE);
+				bool in_instance_property = (current_property_accessor != null && current_property_accessor.prop.binding == MemberBinding.INSTANCE);
+				// skip self assignment in toplevel block of creation methods with chainup as self is not set at the beginning of the method
+				// the chainup statement takes care of assigning self in the closure struct
+				bool in_creation_method_with_chainup = (current_method is CreationMethod && current_class != null && current_class.base_class != null);
+
+				if (in_constructor || (in_instance_method && (!in_creation_method_with_chainup || current_method.body != b)) || in_instance_property) {
 					var ref_call = new CCodeFunctionCall (get_dup_func_expression (get_data_type_for_symbol (current_type_symbol), b.source_reference));
 					ref_call.add_argument (get_result_cexpression ("self"));
 
