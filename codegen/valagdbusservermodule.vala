@@ -1225,7 +1225,13 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		alloc_data.add_argument (new CCodeConstant ("3"));
 		ccode.add_assignment (new CCodeIdentifier ("data"), alloc_data);
 
-		var ref_object = new CCodeFunctionCall (new CCodeIdentifier (sym.get_ref_function ()));
+		var ref_function = sym.get_ref_function ();
+		if (sym is Interface && ref_function == null) {
+			Report.error (sym.source_reference, "missing class prerequisite for interface `%s', add GLib.Object to interface declaration if unsure".printf (sym.get_full_name ()));
+			return;
+		}
+
+		var ref_object = new CCodeFunctionCall (new CCodeIdentifier (ref_function));
 		ref_object.add_argument (new CCodeIdentifier ("object"));
 		ccode.add_assignment (new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("0")), ref_object);
 
