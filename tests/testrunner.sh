@@ -30,6 +30,8 @@ export G_DEBUG=fatal_warnings
 
 VALAC=$topbuilddir/compiler/valac
 VALAFLAGS="--vapidir $vapidir --disable-warnings --main main --save-temps -X -g -X -O0 -X -pipe -X -lm -X -Werror=return-type -X -Werror=init-self -X -Werror=implicit -X -Werror=sequence-point -X -Werror=return-type -X -Werror=uninitialized -X -Werror=pointer-arith -X -Werror=int-to-pointer-cast -X -Werror=pointer-to-int-cast"
+VAPIGEN=$topbuilddir/vapigen/vapigen
+VAPIGENFLAGS="--vapidir $vapidir"
 
 function testheader() {
 	if [ "$1" = "Packages:" ]; then
@@ -38,6 +40,8 @@ function testheader() {
 	elif [ "$1" = "D-Bus" ]; then
 		echo 'eval `dbus-launch --sh-syntax`' >> prepare
 		echo 'trap "kill $DBUS_SESSION_BUS_PID" INT TERM EXIT' >> prepare
+	elif [ "$1" = "GIR" ]; then
+		GIRTEST=1
 	fi
 }
 
@@ -50,13 +54,47 @@ function sourceheader() {
 		SOURCEFILES="$SOURCEFILES $SOURCEFILE"
 		echo "	case \"/$testpath\": $ns.main (); break;" >> main.vala
 		echo "namespace $ns {" > $SOURCEFILE
+	elif [ $GIRTEST -eq 1 ]; then
+		if [ "$1" = "Input:" ]; then
+			testpath=${testfile/.test/}
+			ns=${testpath//\//.}
+			ns=${ns//-/_}
+			SOURCEFILE=$ns.gir
+			cat <<EOF > $SOURCEFILE
+<?xml version="1.0"?>
+<repository version="1.2"
+			xmlns="http://www.gtk.org/introspection/core/1.0"
+			xmlns:c="http://www.gtk.org/introspection/c/1.0"
+			xmlns:glib="http://www.gtk.org/introspection/glib/1.0">
+  <include name="GLib" version="2.0"/>
+  <include name="GObject" version="2.0"/>
+  <c:include name="test.h"/>
+  <namespace name="Test"
+			 version="1.2"
+			 c:identifier-prefixes="Test"
+			 c:symbol-prefixes="test">
+EOF
+		elif [ "$1" = "Output:" ]; then
+			testpath=${testfile/.test/}
+			ns=${testpath//\//.}
+			ns=${ns//-/_}
+			SOURCEFILE=$ns.vapi.ref
+		fi
 	fi
 }
 
 function sourceend() {
 	if [ -n "$testpath" ]; then
-		echo "}" >> $SOURCEFILE
-		echo "./test$EXEEXT /$testpath" > check
+		if [ $GIRTEST -eq 1 ]; then
+			if [ $PART -eq 1 ]; then
+				echo "  </namespace>" >> $SOURCEFILE
+				echo "</repository>" >> $SOURCEFILE
+			fi
+			echo "$VAPIGEN $VAPIGENFLAGS --library $ns $ns.gir && tail -n +5 $ns.vapi|head -n -1|diff -wu $ns.vapi.ref -" > check
+		else
+			echo "}" >> $SOURCEFILE
+			echo "./test$EXEEXT /$testpath" > check
+		fi
 	fi
 }
 
@@ -101,6 +139,7 @@ for testfile in "$@"; do
 	*.test)
 		PART=0
 		INHEADER=1
+		GIRTEST=0
 		testpath=
 		while IFS="" read -r line; do
 			if [ $PART -eq 0 ]; then
