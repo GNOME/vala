@@ -1,6 +1,6 @@
 /* valaenumvaluetype.vala
  *
- * Copyright (C) 2009  Jürg Billeter
+ * Copyright (C) 2009-2011  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -49,6 +49,8 @@ public class Vala.EnumValueType : ValueType {
 			to_string_method.access = SymbolAccessibility.PUBLIC;
 			to_string_method.external = true;
 			to_string_method.owner = type_symbol.scope;
+			to_string_method.this_parameter = new Parameter ("this", this);
+			to_string_method.scope.add (to_string_method.this_parameter.name, to_string_method.this_parameter);
 		}
 		return to_string_method;
 	}
