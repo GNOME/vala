@@ -488,6 +488,7 @@ public class Vala.GirParser : CodeVisitor {
 		public bool processed;
 
 		// function-specific
+		public int return_array_length_idx = -1;
 		public List<ParameterInfo> parameters;
 		public ArrayList<int> array_length_parameters;
 		public ArrayList<int> closure_parameters;
@@ -1855,20 +1856,21 @@ public class Vala.GirParser : CodeVisitor {
 		end_element ("member");
 	}
 
-	DataType parse_return_value (out string? ctype = null) {
+	DataType parse_return_value (out string? ctype = null, out int array_length_idx = null, out bool no_array_length = null, out bool array_null_terminated = null) {
 		start_element ("return-value");
 
 		string transfer = reader.get_attribute ("transfer-ownership");
 		string allow_none = reader.get_attribute ("allow-none");
 		next ();
 		var transfer_elements = transfer != "container";
-		var type = parse_type (out ctype, null, transfer_elements);
+		var type = parse_type (out ctype, out array_length_idx, transfer_elements, out no_array_length, out array_null_terminated);
 		if (transfer == "full" || transfer == "container") {
 			type.value_owned = true;
 		}
 		if (allow_none == "1") {
 			type.nullable = true;
 		}
+		type = element_get_type (type, true, ref no_array_length);
 		end_element ("return-value");
 		return type;
 	}
@@ -1934,10 +1936,6 @@ public class Vala.GirParser : CodeVisitor {
 			if (!changed) {
 				// discard ctype, duplicated information
 				ctype = null;
-			}
-
-			if (type is ArrayType && metadata.has_argument (ArgumentType.ARRAY_LENGTH_IDX)) {
-				array_length_idx = metadata.get_integer (ArgumentType.ARRAY_LENGTH_IDX);
 			}
 
 			param = new Parameter (name, type, get_current_src ());
@@ -2411,13 +2409,14 @@ public class Vala.GirParser : CodeVisitor {
 		next ();
 		DataType return_type;
 		string return_ctype = null;
+		int return_array_length_idx = -1;
+		bool return_no_array_length = false;
+		bool return_array_null_terminated = false;
 		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "return-value") {
-			return_type = parse_return_value (out return_ctype);
+			return_type = parse_return_value (out return_ctype, out return_array_length_idx, out return_no_array_length, out return_array_null_terminated);
 		} else {
 			return_type = new VoidType ();
 		}
-		bool no_array_length = false;
-		return_type = element_get_type (return_type, true, ref no_array_length);
 
 		Symbol s;
 
@@ -2499,6 +2498,21 @@ public class Vala.GirParser : CodeVisitor {
 			m.printf_format = metadata.get_bool (ArgumentType.PRINTF_FORMAT);
 			m.sentinel = metadata.get_string (ArgumentType.SENTINEL);
 		}
+
+		if (return_type is ArrayType && metadata.has_argument (ArgumentType.ARRAY_LENGTH_IDX)) {
+			return_array_length_idx = metadata.get_integer (ArgumentType.ARRAY_LENGTH_IDX);
+		} else {
+			if (s is Method) {
+				var m = (Method) s;
+				m.no_array_length = return_no_array_length;
+				m.array_null_terminated = return_array_null_terminated;
+			} else if (s is Delegate) {
+				var d = (Delegate) s;
+				d.no_array_length = return_no_array_length;
+				d.array_null_terminated = return_array_null_terminated;
+			}
+		}
+		current.return_array_length_idx = return_array_length_idx;
 
 		current.symbol = s;
 
@@ -2836,11 +2850,13 @@ public class Vala.GirParser : CodeVisitor {
 			return_type = ((Signal) s).return_type;
 		}
 
-		var array_length_idx = -1;
-		if (return_type is ArrayType && metadata.has_argument (ArgumentType.ARRAY_LENGTH_IDX)) {
-			array_length_idx = metadata.get_integer (ArgumentType.ARRAY_LENGTH_IDX);
-			parameters[array_length_idx].keep = false;
-			node.array_length_parameters.add (array_length_idx);
+		if (return_type is ArrayType && node.return_array_length_idx >= 0) {
+			if (node.return_array_length_idx >= parameters.size) {
+				Report.error (get_current_src (), "invalid array length index");
+			} else {
+				parameters[node.return_array_length_idx].keep = false;
+				node.array_length_parameters.add (node.return_array_length_idx);
+			}
 		} else if (return_type is VoidType && parameters.size > 0) {
 			int n_out_parameters = 0;
 			foreach (var info in parameters) {
@@ -2946,22 +2962,9 @@ public class Vala.GirParser : CodeVisitor {
 				}
 			}
 		}
-		if (array_length_idx != -1) {
-			if (array_length_idx >= parameters.size) {
-				Report.error (get_current_src (), "invalid array_length index");
-			} else {
-				set_array_ccode (s, parameters[array_length_idx]);
-			}
-		} else if (return_type is ArrayType) {
-			if (s is Method) {
-				var m = (Method) s;
-				m.no_array_length = true;
-				m.array_null_terminated = true;
-			} else if (s is Delegate) {
-				var d = (Delegate) s;
-				d.no_array_length = true;
-				d.array_null_terminated = true;
-			}
+
+		if (return_type is ArrayType && node.return_array_length_idx >= 0) {
+			set_array_ccode (s, parameters[node.return_array_length_idx]);
 		}
 
 		if (s is Method) {
