@@ -718,7 +718,13 @@ public class Vala.GirParser : CodeVisitor {
 						}
 					}
 					var getter = parent.lookup ("get_%s".printf (name));
+					if (getter != null && getter.get_cname () != parent.get_lower_case_cprefix() + "get_" + name) {
+						getter = null;
+					}
 					var setter = parent.lookup ("set_%s".printf (name));
+					if (setter != null && setter.get_cname () != parent.get_lower_case_cprefix() + "set_" + name) {
+						setter = null;
+					}
 					var prop = (Property) symbol;
 					if (prop.no_accessor_method) {
 						// property getter and setter must both match, otherwise it's NoAccessorMethod
