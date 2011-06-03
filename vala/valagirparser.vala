@@ -1674,7 +1674,7 @@ public class Vala.GirParser : CodeVisitor {
 					parse_compact_class ("record", true);
 				} else {
 					if (!reader.get_attribute ("name").has_suffix ("Private")) {
-						if (reader.get_attribute ("disguised") == "1") {
+						if (reader.get_attribute ("glib:is-gtype-struct-for") == null && reader.get_attribute ("disguised") == "1") {
 							parse_compact_class ("record", false);
 						} else {
 							parse_record ();
