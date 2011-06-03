@@ -681,14 +681,12 @@ public class Vala.GirParser : CodeVisitor {
 											m.vfunc_name = m.name;
 											m.name = invoker.symbol.name;
 											m.attributes.remove (attr);
-											invoker.processed = true;
 											invoker.merged = true;
 											different_invoker = true;
 										}
 									}
 								}
 								if (!different_invoker) {
-									node.processed = true;
 									node.merged = true;
 								}
 							}
@@ -1165,7 +1163,7 @@ public class Vala.GirParser : CodeVisitor {
 		var m = (Method) node.symbol;
 		var prefix = "%s_".printf (m.name);
 		foreach (var n in node.parent.members) {
-			if (!n.symbol.name.has_prefix (prefix)) {
+			if (!n.name.has_prefix (prefix)) {
 				continue;
 			}
 			Method? invoker = n.symbol as Method;
