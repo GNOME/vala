@@ -99,6 +99,9 @@ namespace X {
 		[CCode (cname = "XGetSelectionOwner")]
 		public Window get_selection_owner (Atom selection);
 
+		[CCode (cname = "XGetInputFocus")]
+		public void get_input_focus (out Window focus_return, out int revert_to_return);
+
 		[CCode (cname = "XGetWindowAttributes")]
 		public void get_window_attributes (Window w, out WindowAttributes window_attributes_return);
 
