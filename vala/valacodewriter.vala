@@ -1138,12 +1138,13 @@ public class Vala.CodeWriter : CodeVisitor {
 			ccode_params.append_printf ("%ssentinel = \"%s\"", separator, m.sentinel);
 			separator = ", ";
 		}
+		if (m.custom_return_type_cname != null) {
+			ccode_params.append_printf ("%stype = \"%s\"", separator, m.custom_return_type_cname);
+			separator = ", ";
+		}
+
 		var cm = m as CreationMethod;
 		if (cm != null) {
-			if (cm.custom_return_type_cname != null) {
-				ccode_params.append_printf ("%stype = \"%s\"", separator, cm.custom_return_type_cname);
-				separator = ", ";
-			}
 			if (!m.has_new_function) {
 				ccode_params.append_printf ("%shas_new_function = false", separator);
 				separator = ", ";

@@ -181,6 +181,11 @@ public class Vala.Method : Subroutine {
 	public string? array_length_type { get; set; default = null; }
 
 	/**
+	 * Specifies a custom C return type for this method.
+	 */
+	public string? custom_return_type_cname { get; set; }
+
+	/**
 	 * Specifies whether this method expects printf-style format arguments.
 	 */
 	public bool printf_format { get; set; }
@@ -470,6 +475,9 @@ public class Vala.Method : Subroutine {
 		}
 		if (a.has_argument ("returns_floating_reference")) {
 			returns_floating_reference = a.get_bool ("returns_floating_reference");
+		}
+		if (a.has_argument ("type")) {
+			custom_return_type_cname = a.get_string ("type");
 		}
 	}
 	

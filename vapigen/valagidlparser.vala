@@ -2018,7 +2018,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			// return type.
 			if (current_data_type is Class && res != null) {
 				if ("%s*".printf (current_data_type.get_cname()) != res.type.unparsed) {
-					((CreationMethod)m).custom_return_type_cname = res.type.unparsed;
+					m.custom_return_type_cname = res.type.unparsed;
 				}
 			}
 		} else {

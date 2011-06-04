@@ -32,14 +32,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 	}
 
 	public override string? get_custom_creturn_type (Method m) {
-		var attr = m.get_attribute ("CCode");
-		if (attr != null) {
-			string type = attr.get_string ("type");
-			if (type != null) {
-				return type;
-			}
-		}
-		return null;
+		return m.custom_return_type_cname;
 	}
 
 	string get_creturn_type (Method m, string default_value) {

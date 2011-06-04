@@ -34,14 +34,6 @@ public class Vala.CreationMethod : Method {
 	public string class_name { get; set; }
 
 	/**
-	 * Specifies a custom C return type for that creation method.
-	 * Only the idl parser and the interface writer should use this.
-	 * FIXME: remove this as soon the compiler has a decent attribute
-	 * handling.
-	 */
-	public string? custom_return_type_cname { get; set; }
-
-	/**
 	 * Specifies whether this constructor chains up to a base
 	 * constructor or a different constructor of the same class.
 	 */
