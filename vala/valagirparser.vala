@@ -1672,11 +1672,11 @@ public class Vala.GirParser : CodeVisitor {
 				parse_callback ();
 			} else if (reader.name == "record") {
 				if (reader.get_attribute ("glib:get-type") != null && !metadata.get_bool (ArgumentType.STRUCT)) {
-					parse_compact_class ("record", true);
+					parse_boxed ("record");
 				} else {
 					if (!reader.get_attribute ("name").has_suffix ("Private")) {
 						if (reader.get_attribute ("glib:is-gtype-struct-for") == null && reader.get_attribute ("disguised") == "1") {
-							parse_compact_class ("record", false);
+							parse_boxed ("record");
 						} else {
 							parse_record ();
 						}
@@ -1689,9 +1689,13 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (reader.name == "interface") {
 				parse_interface ();
 			} else if (reader.name == "glib:boxed") {
-				parse_compact_class ("glib:boxed", true);
+				parse_boxed ("glib:boxed");
 			} else if (reader.name == "union") {
-				parse_union ();
+				if (reader.get_attribute ("glib:get-type") != null && !metadata.get_bool (ArgumentType.STRUCT)) {
+					parse_boxed ("union");
+				} else {
+					parse_union ();
+				}
 			} else if (reader.name == "constant") {
 				parse_constant ();
 			} else {
@@ -2575,7 +2579,7 @@ public class Vala.GirParser : CodeVisitor {
 		parse_function ("glib:signal");
 	}
 
-	void parse_compact_class (string element_name, bool is_boxed) {
+	void parse_boxed (string element_name) {
 		start_element (element_name);
 		string name = reader.get_attribute ("name");
 		if (name == null) {
@@ -2594,8 +2598,6 @@ public class Vala.GirParser : CodeVisitor {
 			var typeid = reader.get_attribute ("glib:get-type");
 			if (typeid != null) {
 				cl.set_type_id ("%s ()".printf (typeid));
-			}
-			if (is_boxed) {
 				cl.set_free_function ("g_boxed_free");
 				cl.set_dup_function ("g_boxed_copy");
 			}
