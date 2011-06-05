@@ -6213,8 +6213,8 @@ namespace Gtk {
 		public abstract bool iter_next (ref Gtk.TreeIter iter);
 		public abstract bool iter_nth_child (out Gtk.TreeIter iter, Gtk.TreeIter? parent, int n);
 		public abstract bool iter_parent (out Gtk.TreeIter iter, Gtk.TreeIter child);
-		public abstract void ref_node (Gtk.TreeIter iter);
-		public abstract void unref_node (Gtk.TreeIter iter);
+		public virtual void ref_node (Gtk.TreeIter iter);
+		public virtual void unref_node (Gtk.TreeIter iter);
 		[HasEmitter]
 		public signal void row_changed (Gtk.TreePath path, Gtk.TreeIter iter);
 		[HasEmitter]
@@ -7395,7 +7395,7 @@ namespace Gtk {
 		MISSING_PROPERTY_VALUE,
 		INVALID_VALUE,
 		VERSION_MISMATCH,
-		DUPLICATE_ID,
+		DUPLICATE_ID
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void AboutDialogActivateLinkFunc (Gtk.AboutDialog about, string link_);
