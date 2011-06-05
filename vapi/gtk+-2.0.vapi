@@ -6203,7 +6203,7 @@ namespace Gtk {
 		public bool get_iter_first (out Gtk.TreeIter iter);
 		public bool get_iter_from_string (out Gtk.TreeIter iter, string path_string);
 		public abstract int get_n_columns ();
-		public abstract Gtk.TreePath get_path (Gtk.TreeIter iter);
+		public abstract Gtk.TreePath? get_path (Gtk.TreeIter iter);
 		public string get_string_from_iter (Gtk.TreeIter iter);
 		public void get_valist (Gtk.TreeIter iter, void* var_args);
 		public abstract void get_value (Gtk.TreeIter iter, int column, out GLib.Value value);
