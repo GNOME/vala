@@ -2465,6 +2465,10 @@ public class Vala.GirParser : CodeVisitor {
 				((Method) s).is_virtual = true;
 				if (invoker == null && !metadata.has_argument (ArgumentType.VFUNC_NAME)) {
 					s.attributes.append (new Attribute ("NoWrapper", s.source_reference));
+				} else {
+					if (current.girdata["name"] != name) {
+						((Method) s).vfunc_name = current.girdata["name"];
+					}
 				}
 			}
 		} else if (element_name == "function") {
