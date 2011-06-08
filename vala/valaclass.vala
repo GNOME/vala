@@ -317,7 +317,12 @@ public class Vala.Class : ObjectTypeSymbol {
 		}
 
 		methods.add (m);
-		scope.add (m.name, m);
+		if (m.base_interface_type == null) {
+			scope.add (m.name, m);
+		} else {
+			// explicit interface method implementation
+			scope.add (null, m);
+		}
 	}
 
 	/**
@@ -782,18 +787,22 @@ public class Vala.Class : ObjectTypeSymbol {
 					/* check methods */
 					foreach (Method m in iface.get_methods ()) {
 						if (m.is_abstract) {
-							Symbol sym = null;
+							var implemented = false;
 							var base_class = this;
-							while (base_class != null && !(sym is Method)) {
-								sym = base_class.scope.lookup (m.name);
+							while (base_class != null) {
+								foreach (var impl in base_class.get_methods ()) {
+									if (impl.name == m.name && (impl.base_interface_type == null || impl.base_interface_type.data_type == iface)) {
+										// method is used as interface implementation, so it is not unused
+										impl.check_deprecated (source_reference);
+										impl.check_experimental (source_reference);
+										impl.used = true;
+										implemented = true;
+										break;
+									}
+								}
 								base_class = base_class.base_class;
 							}
-							if (sym is Method) {
-								// method is used as interface implementation, so it is not unused
-								sym.check_deprecated (source_reference);
-								sym.check_experimental (source_reference);
-								sym.used = true;
-							} else {
+							if (!implemented) {
 								error = true;
 								Report.error (source_reference, "`%s' does not implement interface method `%s'".printf (get_full_name (), m.get_full_name ()));
 							}

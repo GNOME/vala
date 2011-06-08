@@ -1254,7 +1254,13 @@ public class Vala.CCodeAttribute : AttributeCache {
 		} else if (sym is Method) {
 			var m = (Method) sym;
 			if (m.base_method != null || m.base_interface_method != null) {
-				return "%sreal_%s".printf (CCodeBaseModule.get_ccode_lower_case_prefix (m.parent_symbol), m.name);
+				if (m.base_interface_type != null) {
+					return "%sreal_%s%s".printf (CCodeBaseModule.get_ccode_lower_case_prefix (m.parent_symbol),
+												 CCodeBaseModule.get_ccode_lower_case_prefix (m.base_interface_type.data_type),
+												 m.name);
+				} else {
+					return "%sreal_%s".printf (CCodeBaseModule.get_ccode_lower_case_prefix (m.parent_symbol), m.name);
+				}
 			} else {
 				return name;
 			}

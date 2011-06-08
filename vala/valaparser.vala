@@ -2619,9 +2619,12 @@ public class Vala.Parser : CodeVisitor {
 		var access = parse_access_modifier ();
 		var flags = parse_member_declaration_modifiers ();
 		var type = parse_type (true, false);
-		string id = parse_identifier ();
+		var sym = parse_symbol_name ();
 		var type_param_list = parse_type_parameter_list ();
-		var method = new Method (id, type, get_src (begin), comment);
+		var method = new Method (sym.name, type, get_src (begin), comment);
+		if (sym.inner != null) {
+			method.base_interface_type = new UnresolvedType.from_symbol (sym.inner, sym.inner.source_reference);
+		}
 		method.access = access;
 		set_attributes (method, attrs);
 		foreach (TypeParameter type_param in type_param_list) {

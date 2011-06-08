@@ -109,7 +109,7 @@ public class Vala.Method : Subroutine {
 			return _base_method;
 		}
 	}
-	
+
 	/**
 	 * Specifies the abstract interface method this method implements.
 	 */
@@ -117,6 +117,17 @@ public class Vala.Method : Subroutine {
 		get {
 			find_base_methods ();
 			return _base_interface_method;
+		}
+	}
+
+	/**
+	 * Specifies the explicit interface containing the method this method implements.
+	 */
+	public DataType base_interface_type {
+		get { return _base_interface_type; }
+		set {
+			_base_interface_type = value;
+			_base_interface_type.parent_node = this;
 		}
 	}
 
@@ -181,6 +192,7 @@ public class Vala.Method : Subroutine {
 
 	private weak Method _base_method;
 	private weak Method _base_interface_method;
+	private DataType _base_interface_type;
 	private bool base_methods_valid;
 
 	Method? callback_method;
@@ -247,6 +259,10 @@ public class Vala.Method : Subroutine {
 	public override void accept_children (CodeVisitor visitor) {
 		foreach (TypeParameter p in get_type_parameters ()) {
 			p.accept (visitor);
+		}
+
+		if (base_interface_type != null) {
+			base_interface_type.accept (visitor);
 		}
 
 		if (return_type != null) {
@@ -471,6 +487,10 @@ public class Vala.Method : Subroutine {
 	}
 
 	public override void replace_type (DataType old_type, DataType new_type) {
+		if (base_interface_type == old_type) {
+			base_interface_type = new_type;
+			return;
+		}
 		if (return_type == old_type) {
 			return_type = new_type;
 			return;
@@ -532,9 +552,12 @@ public class Vala.Method : Subroutine {
 	}
 
 	private void find_base_interface_method (Class cl) {
-		// FIXME report error if multiple possible base methods are found
 		foreach (DataType type in cl.get_base_types ()) {
 			if (type.data_type is Interface) {
+				if (base_interface_type != null && base_interface_type.data_type != type.data_type) {
+					continue;
+				}
+
 				var sym = type.data_type.scope.lookup (name);
 				if (sym is Signal) {
 					var sig = (Signal) sym;
@@ -543,18 +566,36 @@ public class Vala.Method : Subroutine {
 				if (sym is Method) {
 					var base_method = (Method) sym;
 					if (base_method.is_abstract || base_method.is_virtual) {
-						string invalid_match;
+						if (base_interface_type == null) {
+							// check for existing explicit implementation
+							var has_explicit_implementation = false;
+							foreach (var m in cl.get_methods ()) {
+								if (m.base_interface_type != null && base_method == m.base_interface_method) {
+									has_explicit_implementation = true;
+									break;
+								}
+							}
+							if (has_explicit_implementation) {
+								continue;
+							}
+						}
+						
+						string invalid_match = null;
 						if (!compatible (base_method, out invalid_match)) {
 							error = true;
 							Report.error (source_reference, "overriding method `%s' is incompatible with base method `%s': %s.".printf (get_full_name (), base_method.get_full_name (), invalid_match));
 							return;
 						}
-
+						
 						_base_interface_method = base_method;
 						return;
 					}
 				}
 			}
+		}
+
+		if (base_interface_type != null) {
+			Report.error (source_reference, "%s: no suitable interface method found to implement".printf (get_full_name ()));
 		}
 	}
 
@@ -714,6 +755,20 @@ public class Vala.Method : Subroutine {
 			error = true;
 			Report.error (source_reference, "Private member `%s' cannot be marked as override, virtual, or abstract".printf (get_full_name ()));
 			return false;
+		}
+
+		if (base_interface_type != null && base_interface_method != null && parent_symbol is Class) {
+			var cl = (Class) parent_symbol;
+			foreach (var m in cl.get_methods ()) {
+				if (m != this && m.base_interface_method == base_interface_method) {
+					m.checked = true;
+					m.error = true;
+					error = true;
+					Report.error (source_reference, "`%s' already contains an implementation for `%s'".printf (cl.get_full_name (), base_interface_method.get_full_name ()));
+					Report.notice (m.source_reference, "previous implementation of `%s' was here".printf (base_interface_method.get_full_name ()));
+					return false;
+				}
+			}
 		}
 
 		context.analyzer.current_source_file = old_source_file;
