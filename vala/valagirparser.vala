@@ -670,7 +670,7 @@ public class Vala.GirParser : CodeVisitor {
 							parser.assume_parameter_names (sig, m, false);
 							merged = true;
 						} else if (sym is Method && !(sym is CreationMethod) && node != this) {
-							if (m.is_virtual) {
+							if (m.is_virtual || m.is_abstract) {
 								bool different_invoker = false;
 								foreach (var attr in m.attributes) {
 									if (attr.name == "NoWrapper") {
@@ -2460,19 +2460,24 @@ public class Vala.GirParser : CodeVisitor {
 
 		s.external = true;
 
-		if (element_name == "virtual-method" || element_name == "callback") {
-			if (s is Method) {
-				((Method) s).is_virtual = true;
+		if (s is Method) {
+			var m = (Method) s;
+			if (element_name == "virtual-method" || element_name == "callback") {
+				if (current.parent.symbol is Interface) {
+					m.is_abstract = true;
+				} else {
+					m.is_virtual = true;
+				}
 				if (invoker == null && !metadata.has_argument (ArgumentType.VFUNC_NAME)) {
 					s.attributes.append (new Attribute ("NoWrapper", s.source_reference));
 				} else {
 					if (current.girdata["name"] != name) {
-						((Method) s).vfunc_name = current.girdata["name"];
+						m.vfunc_name = current.girdata["name"];
 					}
 				}
+			} else if (element_name == "function") {
+				m.binding = MemberBinding.STATIC;
 			}
-		} else if (element_name == "function") {
-			((Method) s).binding = MemberBinding.STATIC;
 		}
 
 		if (s is Method && !(s is CreationMethod)) {
@@ -3074,15 +3079,6 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (sym is Property) {
 				var prop = (Property) sym;
 				prop.is_virtual = true;
-			} else if (sym is Method)  {
-				var meth = (Method) sym;
-				if (gtype is Class) {
-					meth.is_virtual = true;
-				} else if (gtype is Interface) {
-					meth.is_abstract = true;
-				}
-			} else {
-				Report.error (get_current_src (), "Unknown type for member `%s'".printf (node.to_string ()));
 			}
 		}
 	}
