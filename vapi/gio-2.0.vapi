@@ -21,9 +21,9 @@ namespace GLib {
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static void unwatch_name (uint watcher_id);
 		[CCode (cname = "g_bus_watch_name_with_closures", cheader_filename = "gio/gio.h")]
-		public static uint watch_name (GLib.BusType bus_type, string name, GLib.BusNameWatcherFlags flags, [CCode (type = "GClosure*")] owned GLib.BusNameAppearedCallback name_appeared_handler, [CCode (type = "GClosure*")] owned GLib.BusNameVanishedCallback name_vanished_handler);
+		public static uint watch_name (GLib.BusType bus_type, string name, GLib.BusNameWatcherFlags flags, [CCode (type = "GClosure*")] owned GLib.BusNameAppearedCallback? name_appeared_handler, [CCode (type = "GClosure*")] owned GLib.BusNameVanishedCallback? name_vanished_handler);
 		[CCode (cname = "g_bus_watch_name_on_connection_with_closures", cheader_filename = "gio/gio.h")]
-		public static uint watch_name_on_connection (GLib.DBusConnection connection, string name, GLib.BusNameWatcherFlags flags, [CCode (type = "GClosure*")] owned GLib.BusNameAppearedCallback name_appeared_handler, [CCode (type = "GClosure*")] owned GLib.BusNameVanishedCallback name_vanished_handler);
+		public static uint watch_name_on_connection (GLib.DBusConnection connection, string name, GLib.BusNameWatcherFlags flags, [CCode (type = "GClosure*")] owned GLib.BusNameAppearedCallback? name_appeared_handler, [CCode (type = "GClosure*")] owned GLib.BusNameVanishedCallback? name_vanished_handler);
 	}
 	[CCode (cprefix = "GContentType", lower_case_cprefix = "g_content_type_")]
 	namespace ContentType {
@@ -2406,7 +2406,7 @@ namespace GLib {
 		INVALID_FILE_CONTENT,
 		SELINUX_SECURITY_CONTEXT_UNKNOWN,
 		ADT_AUDIT_DATA_UNKNOWN,
-		OBJECT_PATH_IN_USE,
+		OBJECT_PATH_IN_USE
 	}
 	[CCode (cprefix = "G_IO_ERROR_", cheader_filename = "gio/gio.h")]
 	public errordomain IOError {
@@ -2453,13 +2453,13 @@ namespace GLib {
 		PROXY_FAILED,
 		PROXY_AUTH_FAILED,
 		PROXY_NEED_AUTH,
-		PROXY_NOT_ALLOWED,
+		PROXY_NOT_ALLOWED
 	}
 	[CCode (cprefix = "G_RESOLVER_ERROR_", cheader_filename = "gio/gio.h")]
 	public errordomain ResolverError {
 		NOT_FOUND,
 		TEMPORARY_FAILURE,
-		INTERNAL,
+		INTERNAL
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public delegate void AsyncReadyCallback (GLib.Object? source_object, GLib.AsyncResult res);

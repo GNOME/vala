@@ -65,9 +65,9 @@ namespace GLib {
 		public void unown_name (uint owner_id);
 		public void unwatch_name (uint watcher_id);
 		[CCode (cname = "g_bus_watch_name_with_closures")]
-		public uint watch_name (GLib.BusType bus_type, string name, GLib.BusNameWatcherFlags flags, [CCode (type = "GClosure*")] owned GLib.BusNameAppearedCallback name_appeared_handler, [CCode (type = "GClosure*")] owned GLib.BusNameVanishedCallback name_vanished_handler);
+		public uint watch_name (GLib.BusType bus_type, string name, GLib.BusNameWatcherFlags flags, [CCode (type = "GClosure*")] owned GLib.BusNameAppearedCallback? name_appeared_handler, [CCode (type = "GClosure*")] owned GLib.BusNameVanishedCallback? name_vanished_handler);
 		[CCode (cname = "g_bus_watch_name_on_connection_with_closures")]
-		public uint watch_name_on_connection (GLib.DBusConnection connection, string name, GLib.BusNameWatcherFlags flags, [CCode (type = "GClosure*")] owned GLib.BusNameAppearedCallback name_appeared_handler, [CCode (type = "GClosure*")] owned GLib.BusNameVanishedCallback name_vanished_handler);
+		public uint watch_name_on_connection (GLib.DBusConnection connection, string name, GLib.BusNameWatcherFlags flags, [CCode (type = "GClosure*")] owned GLib.BusNameAppearedCallback? name_appeared_handler, [CCode (type = "GClosure*")] owned GLib.BusNameVanishedCallback? name_vanished_handler);
 	}
 
 	[CCode (cname = "GDBusConnection")]
