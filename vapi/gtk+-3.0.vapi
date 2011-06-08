@@ -8050,7 +8050,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void target_table_free (Gtk.TargetEntry[] targets);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static Gtk.TargetEntry target_table_new_from_list (Gtk.TargetList list, int n_targets);
+	public static Gtk.TargetEntry[] target_table_new_from_list (Gtk.TargetList list);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool targets_include_image (Gdk.Atom[] targets, bool writable);
 	[CCode (cheader_filename = "gtk/gtk.h")]
