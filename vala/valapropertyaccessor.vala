@@ -187,7 +187,11 @@ public class Vala.PropertyAccessor : Subroutine {
 						body.add_statement (new ReturnStatement (ma, source_reference));
 					}
 				} else {
-					var assignment = new Assignment (ma, new MemberAccess.simple ("value", source_reference), AssignmentOperator.SIMPLE, source_reference);
+					Expression value = new MemberAccess.simple ("value", source_reference);
+					if (value_type.value_owned) {
+						value = new ReferenceTransferExpression (value, source_reference);
+					}
+					var assignment = new Assignment (ma, value, AssignmentOperator.SIMPLE, source_reference);
 					body.add_statement (new ExpressionStatement (assignment));
 				}
 			}
