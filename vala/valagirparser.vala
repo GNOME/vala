@@ -2854,7 +2854,6 @@ public class Vala.GirParser : CodeVisitor {
 	void process_callable (Node node) {
 		var s = node.symbol;
 		List<ParameterInfo> parameters = node.parameters;
-		Metadata metadata = node.metadata;
 
 		DataType return_type = null;
 		if (s is Method) {
@@ -3061,7 +3060,6 @@ public class Vala.GirParser : CodeVisitor {
 		if (gtype_node == null || !(gtype_node.symbol is ObjectTypeSymbol)) {
 			Report.error (gtype_struct_for.source_reference, "Unknown symbol `%s' for virtual method field `%s'".printf (gtype_struct_for.to_string (), node.to_string ()));
 		}
-		var gtype = (ObjectTypeSymbol) gtype_node.symbol;
 		var nodes = gtype_node.lookup_all (d.name);
 		if (nodes == null) {
 			return;
