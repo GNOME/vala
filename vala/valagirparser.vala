@@ -65,7 +65,8 @@ public class Vala.GirParser : CodeVisitor {
 		THROWS,
 		PRINTF_FORMAT,
 		ARRAY_LENGTH_FIELD,
-		SENTINEL;
+		SENTINEL,
+		CLOSURE;
 
 		public static ArgumentType? from_string (string name) {
 			var enum_class = (EnumClass) typeof(ArgumentType).class_ref ();
@@ -1915,6 +1916,9 @@ public class Vala.GirParser : CodeVisitor {
 		}
 		if (destroy != null && &destroy_idx != null) {
 			destroy_idx = int.parse (destroy);
+		}
+		if (metadata.has_argument (ArgumentType.CLOSURE)) {
+			closure_idx = metadata.get_integer (ArgumentType.CLOSURE);
 		}
 
 		next ();
