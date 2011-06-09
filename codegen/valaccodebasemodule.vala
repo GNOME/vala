@@ -1343,6 +1343,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 		} else if ((acc.value_type is DelegateType) && ((DelegateType) acc.value_type).delegate_symbol.has_target) {
 			function.add_parameter (new CCodeParameter (get_delegate_target_cname (acc.readable ? "result" : "value"), acc.readable ? "gpointer*" : "gpointer"));
+			if (!acc.readable && acc.value_type.value_owned) {
+				function.add_parameter (new CCodeParameter (get_delegate_target_destroy_notify_cname ("value"), "GDestroyNotify"));
+			}
 		}
 
 		if (prop.is_private_symbol () || (!acc.readable && !acc.writable) || acc.access == SymbolAccessibility.PRIVATE) {
@@ -1439,6 +1442,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				}
 			} else if ((acc.value_type is DelegateType) && ((DelegateType) acc.value_type).delegate_symbol.has_target) {
 				function.add_parameter (new CCodeParameter (get_delegate_target_cname (acc.readable ? "result" : "value"), acc.readable ? "gpointer*" : "gpointer"));
+				if (!acc.readable && acc.value_type.value_owned) {
+					function.add_parameter (new CCodeParameter (get_delegate_target_destroy_notify_cname ("value"), "GDestroyNotify"));
+				}
 			}
 
 			if (prop.is_private_symbol () || !(acc.readable || acc.writable) || acc.access == SymbolAccessibility.PRIVATE) {
@@ -1494,6 +1500,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					}
 				} else if ((acc.value_type is DelegateType) && ((DelegateType) acc.value_type).delegate_symbol.has_target) {
 					vcall.add_argument (new CCodeIdentifier (get_delegate_target_cname ("value")));
+					if (!acc.readable && acc.value_type.value_owned) {
+						vcall.add_argument (new CCodeIdentifier (get_delegate_target_destroy_notify_cname ("value")));
+					}
 				}
 
 				ccode.add_expression (vcall);
@@ -1556,6 +1565,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				}
 			} else if ((acc.value_type is DelegateType) && ((DelegateType) acc.value_type).delegate_symbol.has_target) {
 				function.add_parameter (new CCodeParameter (get_delegate_target_cname (acc.readable ? "result" : "value"), acc.readable ? "gpointer*" : "gpointer"));
+				if (!acc.readable && acc.value_type.value_owned) {
+					function.add_parameter (new CCodeParameter (get_delegate_target_destroy_notify_cname ("value"), "GDestroyNotify"));
+				}
 			}
 
 			if (!is_virtual) {
@@ -5385,6 +5397,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var delegate_type = (DelegateType) prop.property_type;
 			if (delegate_type.delegate_symbol.has_target) {
 				ccall.add_argument (get_delegate_target_cvalue (value));
+				if (delegate_type.value_owned) {
+					ccall.add_argument (get_delegate_target_destroy_notify_cvalue (value));
+				}
 			}
 		}
 

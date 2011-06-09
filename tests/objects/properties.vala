@@ -1,7 +1,11 @@
 using GLib;
 
+public delegate void Delegate ();
+
 public class Sample : Object {
 	private string automatic { get; set; }
+
+	public Delegate deleg { get; owned set; }
 
 	private string _name;
 	public string name {
@@ -40,6 +44,8 @@ public class Sample : Object {
 		stdout.printf("name: %s\n", name);
 		stdout.printf("read_only: %s\n", read_only);
 		stdout.printf("automatic: %s\n", automatic);
+
+		this.deleg = null;
         }
 
 	public static int main () {
