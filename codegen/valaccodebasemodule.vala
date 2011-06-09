@@ -1947,6 +1947,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					return_out_parameter (param);
 				}
 			}
+		} else if (b.parent_symbol is PropertyAccessor) {
+			var acc = (PropertyAccessor) b.parent_symbol;
+			if (acc.value_parameter != null && !acc.value_parameter.captured && requires_destroy (acc.value_parameter.variable_type)) {
+				ccode.add_expression (destroy_parameter (acc.value_parameter));
+			}
 		}
 
 		if (b.captured) {
@@ -3109,6 +3114,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			append_local_free (sym.parent_symbol, stop_at_loop, stop_at);
 		} else if (sym.parent_symbol is Method) {
 			append_param_free ((Method) sym.parent_symbol);
+		} else if (sym.parent_symbol is PropertyAccessor) {
+			var acc = (PropertyAccessor) sym.parent_symbol;
+			if (acc.value_parameter != null && requires_destroy (acc.value_parameter.variable_type)) {
+				ccode.add_expression (destroy_parameter (acc.value_parameter));
+			}
 		}
 	}
 
