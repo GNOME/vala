@@ -129,6 +129,18 @@ namespace X {
 		[CCode (cname = "XInternAtoms")]
 		public void intern_atoms (string[] names, bool only_if_exists, [CCode (array_length = false)] Atom[] atoms_return);
 
+		[CCode (cname = "XGetAtomName")]
+		public string get_atom_name (X.Atom atom);
+
+		[CCode (cname = "XGetAtomNames")]
+		public string get_atom_names (Atom[] atoms, [CCode (array_length = false)] out string[] names);
+
+		[CCode (cname = "XDeleteProperty")]
+		public int delete_property (Window w, X.Atom property);
+
+		[CCode (cname = "XGetGeometry")]
+		public void get_geometry (Drawable d, out Window root_return, out int x_return, out int y_return, out uint width_return, out uint height_return, out uint border_width_return, out uint depth_return);
+
 		[CCode (cname = "XInternalConnectionNumbers")]
 		public Status internal_connection_numbers (ref int[] fd_return);
 
@@ -185,6 +197,15 @@ namespace X {
 
 		[CCode (cname = "XProtocolRevision")]
 		public int protocol_revision ();
+
+		[CCode (cname = "XIconifyWindow")]
+		public Status iconify_window (Window w, int screen_number);
+
+		[CCode (cname = "XWithdrawWindow")]
+		public Status withdraw_window (Window w, int screen_number);
+
+		[CCode (cname = "XLowerWindow")]
+		public int lower_window (Window w);
 
 		[CCode (cname = "XRaiseWindow")]
 		public int raise_window (Window w);
@@ -245,6 +266,33 @@ namespace X {
 
 		[CCode (cname = "XQueryTree")]
 		public void query_tree (Window w, out Window root_return, out Window parent_return, out Window[] children_return);
+
+		[CCode (cname = "XTranslateCoordinates")]
+		public bool translate_coordinates (Window src_w, Window dest_w, int src_x, int src_y, out int dest_x_return, out int dest_y_return, out Window child_return);		
+
+		[CCode (cname = "XQueryPointer")]
+		public bool query_pointer (Window w, out Window root_retur, out Window child_retur, out int root_x_return, out int root_y_return, out int win_x_return, out int win_y_return, out uint mask_return);	
+
+		[CCode (cname = "XSetWMNormalHints")]
+		public void set_wm_normal_hints (Window w, SizeHints hints);
+
+		[CCode (cname = "XSetWMProtocols")]
+		public void set_wm_protocols (Window w, Atom[] protocols);
+
+		[CCode (cname = "XSetWMProtocols")]
+		public void set_wm_protocols_n (Window w, Atom[] protocols);
+
+		[CCode (cname = "XSetTransientForHint")]
+		public int set_transient_for_hint (Window w, Window prop_window);
+
+		[CCode (cname = "XGetTransientForHint")]
+		public int get_transient_for_hint (Window w, out Window prop_window);
+
+		[CCode (cname = "XGetWMProtocols")]
+		public void get_wm_protocols (Window w, out Atom[] protocols);
+
+		[CCode (cname = "XMoveResizeWindow")]
+		public void move_resize_window (Window window, int x, int y, uint width, uint height);
 
 		[CCode (cname = "XWindowEvent")]
 		public int window_event (Window w, EventMask event_mask, out Event event_return);
