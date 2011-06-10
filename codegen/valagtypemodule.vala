@@ -2040,6 +2040,9 @@ public class Vala.GTypeModule : GErrorModule {
 			if (m.is_virtual) {
 				var cname = m.get_real_cname ();
 				ccode.add_assignment (new CCodeMemberAccess.pointer (ciface, m.vfunc_name), new CCodeIdentifier (cname));
+				if (m.coroutine) {
+					ccode.add_assignment (new CCodeMemberAccess.pointer (ciface, m.get_finish_vfunc_name ()), new CCodeIdentifier (m.get_finish_real_cname ()));
+				}
 			}
 		}
 
