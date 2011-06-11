@@ -2110,6 +2110,67 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		local.active = true;
 	}
 
+	/**
+	 * Create a temporary variable and return lvalue access to it
+	 */
+	public TargetValue create_temp_value (DataType type, bool init, CodeNode node_reference, bool? value_owned = null) {
+		var local = new LocalVariable (type.copy (), "_tmp%d_".printf (next_temp_var_id++), null, node_reference.source_reference);
+		local.no_init = !init;
+		if (value_owned != null) {
+			local.variable_type.value_owned = value_owned;
+		}
+
+		var array_type = local.variable_type as ArrayType;
+		var deleg_type = local.variable_type as DelegateType;
+
+		emit_temp_var (local);
+		if (array_type != null) {
+			for (int dim = 1; dim <= array_type.rank; dim++) {
+				var len_var = new LocalVariable (int_type.copy (), get_array_length_cname (local.name, dim), null, node_reference.source_reference);
+				len_var.no_init = !init;
+				emit_temp_var (len_var);
+			}
+		} else if (deleg_type != null && deleg_type.delegate_symbol.has_target) {
+			var target_var = new LocalVariable (new PointerType (new VoidType ()), get_delegate_target_cname (local.name), null, node_reference.source_reference);
+			target_var.no_init = !init;
+			emit_temp_var (target_var);
+			if (deleg_type.value_owned) {
+				var target_destroy_notify_var = new LocalVariable (gdestroynotify_type.copy (), get_delegate_target_destroy_notify_cname (local.name), null, node_reference.source_reference);
+				target_destroy_notify_var.no_init = !init;
+				emit_temp_var (target_destroy_notify_var);
+			}
+		}
+
+		var value = get_local_cvalue (local);
+		set_array_size_cvalue (value, null);
+		return value;
+	}
+
+	/**
+	 * Load a temporary variable returning unowned or owned rvalue access to it, depending on the ownership of the value type.
+	 */
+	public TargetValue load_temp_value (TargetValue lvalue) {
+		var value = ((GLibValue) lvalue).copy ();
+		var deleg_type = value.value_type as DelegateType;
+		if (deleg_type != null) {
+			if (!deleg_type.delegate_symbol.has_target) {
+				value.delegate_target_cvalue = new CCodeConstant ("NULL");
+			} else if (!deleg_type.value_owned) {
+				value.delegate_target_destroy_notify_cvalue = new CCodeConstant ("NULL");
+			}
+		}
+		return value;
+	}
+
+	/**
+	 * Store a value in a temporary variable and return unowned or owned rvalue access to it, depending on the ownership of the given type.
+	 */
+	public TargetValue store_temp_value (TargetValue initializer, CodeNode node_reference, bool? value_owned = null) {
+		var lvalue = create_temp_value (initializer.value_type, false, node_reference, value_owned);
+		store_value (lvalue, initializer);
+		return load_temp_value (lvalue);
+	}
+
 	public override void visit_initializer_list (InitializerList list) {
 		if (list.target_type.data_type is Struct) {
 			/* initializer is used as struct initializer */
