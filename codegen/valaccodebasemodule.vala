@@ -4801,17 +4801,15 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						set_cvalue (expr, strcat);
 					} else {
 						// convert to g_strconcat (a, b, NULL)
-						var temp_var = get_temp_variable (expr.value_type, true, null, false);
-						var temp_ref = get_variable_cexpression (temp_var.name);
-						emit_temp_var (temp_var);
+						var temp_value = create_temp_value (expr.value_type, false, expr);
 
 						var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_strconcat"));
 						ccall.add_argument (cleft);
 						ccall.add_argument (cright);
 						ccall.add_argument (new CCodeConstant("NULL"));
 
-						ccode.add_assignment (temp_ref, ccall);
-						set_cvalue (expr, temp_ref);
+						ccode.add_assignment (get_cvalue_ (temp_value), ccall);
+						expr.target_value = temp_value;
 					}
 					return;
 				}
