@@ -92,13 +92,13 @@ namespace Gdk {
 		public Gdk.AxisUse get_axis_use (uint index);
 		public static unowned Gdk.Device get_core_pointer ();
 		public bool get_has_cursor ();
-		public bool get_history (Gdk.Window window, uint32 start, uint32 stop, Gdk.TimeCoord[] events);
-		public void get_key (uint index, uint keyval, Gdk.ModifierType modifiers);
+		public bool get_history (Gdk.Window window, uint32 start, uint32 stop, out Gdk.TimeCoord[] events);
+		public void get_key (uint index, out uint keyval, out Gdk.ModifierType modifiers);
 		public Gdk.InputMode get_mode ();
 		public int get_n_axes ();
 		public unowned string get_name ();
 		public Gdk.InputSource get_source ();
-		public void get_state (Gdk.Window window, double axes, Gdk.ModifierType mask);
+		public void get_state (Gdk.Window window, [CCode (array_length = false)] double[] axes, out Gdk.ModifierType mask);
 		public void set_axis_use (uint index_, Gdk.AxisUse use);
 		public void set_key (uint index_, uint keyval, Gdk.ModifierType modifiers);
 		public bool set_mode (Gdk.InputMode mode);

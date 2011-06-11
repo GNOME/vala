@@ -57,33 +57,33 @@ namespace Gdk {
 		[CCode (has_construct_function = false)]
 		protected Device ();
 		public static void free_history (Gdk.TimeCoord[] events);
-		public unowned Gdk.Device get_associated_device ();
+		public unowned Gdk.Device? get_associated_device ();
 		public bool get_axis ([CCode (array_length = false)] double[] axes, Gdk.AxisUse use, out double value);
 		public Gdk.AxisUse get_axis_use (uint index_);
-		public bool get_axis_value (double axes, Gdk.Atom axis_label, double value);
+		public bool get_axis_value ([CCode (array_length = false)] double[] axes, Gdk.Atom axis_label, out double value);
 		public Gdk.DeviceType get_device_type ();
 		public unowned Gdk.Display get_display ();
 		public bool get_has_cursor ();
-		public bool get_history (Gdk.Window window, uint32 start, uint32 stop, Gdk.TimeCoord[] events);
-		public bool get_key (uint index_, uint keyval, Gdk.ModifierType modifiers);
+		public bool get_history (Gdk.Window window, uint32 start, uint32 stop, out Gdk.TimeCoord[] events);
+		public bool get_key (uint index_, out uint keyval, out Gdk.ModifierType modifiers);
 		public Gdk.InputMode get_mode ();
 		public int get_n_axes ();
 		public int get_n_keys ();
 		public unowned string get_name ();
-		public void get_position (out unowned Gdk.Screen screen, int x, int y);
+		public void get_position (out unowned Gdk.Screen screen, out int x, out int y);
 		public Gdk.InputSource get_source ();
-		public void get_state (Gdk.Window window, double axes, Gdk.ModifierType mask);
-		public unowned Gdk.Window get_window_at_position (int win_x, int win_y);
+		public void get_state (Gdk.Window window, [CCode (array_length = false)] double[] axes, out Gdk.ModifierType mask);
+		public unowned Gdk.Window? get_window_at_position (int win_x, int win_y);
 		public Gdk.GrabStatus grab (Gdk.Window window, Gdk.GrabOwnership grab_ownership, bool owner_events, Gdk.EventMask event_mask, Gdk.Cursor? cursor, uint32 time_);
 		public static bool grab_info_libgtk_only (Gdk.Display display, Gdk.Device device, out unowned Gdk.Window grab_window, bool owner_events);
-		public unowned GLib.List list_axes ();
-		public unowned GLib.List list_slave_devices ();
+		public GLib.List<weak Gdk.Atom> list_axes ();
+		public GLib.List<weak Gdk.Atom>? list_slave_devices ();
 		public void set_axis_use (uint index_, Gdk.AxisUse use);
 		public void set_key (uint index_, uint keyval, Gdk.ModifierType modifiers);
 		public bool set_mode (Gdk.InputMode mode);
 		public void ungrab (uint32 time_);
 		public void warp (Gdk.Screen screen, int x, int y);
-		public Gdk.Device associated_device { get; }
+		public Gdk.Device? associated_device { get; }
 		[NoAccessorMethod]
 		public Gdk.DeviceManager device_manager { owned get; construct; }
 		public Gdk.Display display { get; construct; }
@@ -93,7 +93,7 @@ namespace Gdk {
 		[NoAccessorMethod]
 		public Gdk.InputSource input_source { get; construct; }
 		public uint n_axes { get; }
-		public string name { get; construct; }
+		public string? name { get; construct; }
 		[NoAccessorMethod]
 		public Gdk.DeviceType type { get; construct; }
 		public virtual signal void changed ();
