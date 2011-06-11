@@ -3655,39 +3655,26 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			// property postfix expression
 			var prop = (Property) ma.symbol_reference;
 
-			// assign current value to temp variable
-			var temp_decl = get_temp_variable (prop.property_type, true, expr, false);
-			emit_temp_var (temp_decl);
-			store_local (temp_decl, expr.inner.target_value, true);
-
 			// increment/decrement property
 			var op = expr.increment ? CCodeBinaryOperator.PLUS : CCodeBinaryOperator.MINUS;
-			var cexpr = new CCodeBinaryExpression (op, get_variable_cexpression (temp_decl.name), new CCodeConstant ("1"));
+			var cexpr = new CCodeBinaryExpression (op, get_cvalue (expr.inner), new CCodeConstant ("1"));
 			store_property (prop, ma.inner, new GLibValue (expr.value_type, cexpr));
 
 			// return previous value
-			expr.target_value = get_local_cvalue (temp_decl);
+			expr.target_value = expr.inner.target_value;
 			return;
 		}
 
-		if (expr.parent_node is ExpressionStatement) {
-			var op = expr.increment ? CCodeUnaryOperator.POSTFIX_INCREMENT : CCodeUnaryOperator.POSTFIX_DECREMENT;
+		// assign current value to temp variable
+		var temp_value = store_temp_value (expr.inner.target_value, expr);
 
-			ccode.add_expression (new CCodeUnaryExpression (op, get_cvalue (expr.inner)));
-		} else {
-			// assign current value to temp variable
-			var temp_decl = get_temp_variable (expr.inner.value_type, true, expr, false);
-			emit_temp_var (temp_decl);
-			store_local (temp_decl, expr.inner.target_value, true);
+		// increment/decrement variable
+		var op = expr.increment ? CCodeBinaryOperator.PLUS : CCodeBinaryOperator.MINUS;
+		var cexpr = new CCodeBinaryExpression (op, get_cvalue_ (temp_value), new CCodeConstant ("1"));
+		ccode.add_assignment (get_cvalue (expr.inner), cexpr);
 
-			// increment/decrement variable
-			var op = expr.increment ? CCodeBinaryOperator.PLUS : CCodeBinaryOperator.MINUS;
-			var cexpr = new CCodeBinaryExpression (op, get_variable_cexpression (temp_decl.name), new CCodeConstant ("1"));
-			ccode.add_assignment (get_cvalue (expr.inner), cexpr);
-
-			// return previous value
-			expr.target_value = get_local_cvalue (temp_decl);
-		}
+		// return previous value
+		expr.target_value = temp_value;
 	}
 	
 	private MemberAccess? find_property_access (Expression expr) {
