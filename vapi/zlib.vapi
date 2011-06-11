@@ -91,12 +91,12 @@ namespace ZLib {
 	[CCode (cname = "z_stream", destroy_function = "deflateEnd")]
 	public struct Stream {
 		[CCode (array_length_cname = "avail_in", array_length_type = "ulong")]
-		public uint8[] next_in;
+		public unowned uint8[] next_in;
 		public uint avail_in;
 		public ulong total_in;
 
 		[CCode (array_length_cname = "avail_out", array_length_type = "ulong")]
-		public uint8[] next_out;
+		public unowned uint8[] next_out;
 		public uint avail_out;
 		public ulong total_out;
 
