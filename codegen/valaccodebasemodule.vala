@@ -4577,15 +4577,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (context.profile == Profile.GOBJECT && (iface != null || (cl != null && !cl.is_compact))) {
 			// checked cast for strict subtypes of GTypeInstance
 			if (expr.is_silent_cast) {
-				var temp_decl = get_temp_variable (expr.inner.value_type, expr.inner.value_type.value_owned, expr, false);
-				emit_temp_var (temp_decl);
-				var ctemp = get_variable_cexpression (temp_decl.name);
-
-				ccode.add_assignment (ctemp, get_cvalue (expr.inner));
-				var ccheck = create_type_check (ctemp, expr.type_reference);
-				var ccast = new CCodeCastExpression (ctemp, expr.type_reference.get_cname ());
+				var cexpr = get_cvalue (expr.inner);
+				var ccheck = create_type_check (cexpr, expr.type_reference);
+				var ccast = new CCodeCastExpression (cexpr, expr.type_reference.get_cname ());
 				var cnull = new CCodeConstant ("NULL");
-	
+
 				set_cvalue (expr, new CCodeConditionalExpression (ccheck, ccast, cnull));
 			} else {
 				set_cvalue (expr, generate_instance_cast (get_cvalue (expr.inner), expr.type_reference.data_type));
