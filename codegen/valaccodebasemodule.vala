@@ -4083,10 +4083,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (local != null && has_simple_struct_initializer (local)) {
 				instance = get_cvalue_ (get_local_cvalue (local));
 			} else {
-				var temp_decl = get_temp_variable (expr.type_reference, false, expr);
-				emit_temp_var (temp_decl);
-
-				instance = get_variable_cexpression (get_variable_cname (temp_decl.name));
+				var temp_value = create_temp_value (expr.type_reference, true, expr);
+				instance = get_cvalue_ (temp_value);
 			}
 		}
 
@@ -4341,13 +4339,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 
 		if (creation_expr != null) {
-			var temp_var = get_temp_variable (expr.value_type);
-			var temp_ref = get_variable_cexpression (temp_var.name);
-
-			emit_temp_var (temp_var);
-
-			ccode.add_assignment (temp_ref, creation_expr);
-			set_cvalue (expr, temp_ref);
+			var temp_value = create_temp_value (expr.value_type, false, expr);
+			ccode.add_assignment (get_cvalue_ (temp_value), creation_expr);
+			expr.target_value = temp_value;
 		}
 	}
 
