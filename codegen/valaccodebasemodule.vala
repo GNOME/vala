@@ -4622,62 +4622,15 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public override void visit_reference_transfer_expression (ReferenceTransferExpression expr) {
 		/* tmp = expr.inner; expr.inner = NULL; expr = tmp; */
-		var temp_decl = get_temp_variable (expr.value_type, true, expr, false);
-		emit_temp_var (temp_decl);
-		var cvar = get_variable_cexpression (temp_decl.name);
-
-		ccode.add_assignment (cvar, get_cvalue (expr.inner));
-
-		set_cvalue (expr, cvar);
-
-		var array_type = expr.value_type as ArrayType;
-		if (array_type != null) {
-			var value = (GLibValue) expr.inner.target_value;
-			if (value.array_length_cvalues != null) {
-				for (int dim = 1; dim <= array_type.rank; dim++) {
-					var len_decl = get_temp_variable (int_type, true, expr, false);
-					emit_temp_var (len_decl);
-					ccode.add_assignment (get_variable_cexpression (len_decl.name), get_array_length_cexpression (expr.inner, dim));
-					append_array_length (expr, get_variable_cexpression (len_decl.name));
-				}
-			} else if (value.array_null_terminated) {
-				requires_array_length = true;
-				var len_decl = get_temp_variable (int_type, true, expr, false);
-				emit_temp_var (len_decl);
-
-				var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
-				len_call.add_argument (get_cvalue_ (value));
-
-				ccode.add_assignment (get_variable_cexpression (len_decl.name), len_call);
-				append_array_length (expr, get_variable_cexpression (len_decl.name));
-			} else {
-				for (int dim = 1; dim <= array_type.rank; dim++) {
-					append_array_length (expr, new CCodeConstant ("-1"));
-				}
-			}
-		}
-
-		var delegate_type = expr.value_type as DelegateType;
-		if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
-			var temp_target_decl = get_temp_variable (new PointerType (new VoidType ()), true, expr, false);
-			emit_temp_var (temp_target_decl);
-			var target_cvar = get_variable_cexpression (temp_target_decl.name);
-			CCodeExpression target_destroy_notify;
-			var target = get_delegate_target_cexpression (expr.inner, out target_destroy_notify);
-			ccode.add_assignment (target_cvar, target);
-			set_delegate_target (expr, target_cvar);
-			if (target_destroy_notify != null) {
-				var temp_target_destroy_notify_decl = get_temp_variable (gdestroynotify_type, true, expr, false);
-				emit_temp_var (temp_target_destroy_notify_decl);
-				var target_destroy_notify_cvar = get_variable_cexpression (temp_target_destroy_notify_decl.name);
-				ccode.add_assignment (target_destroy_notify_cvar, target_destroy_notify);
-				ccode.add_assignment (target_destroy_notify, new CCodeConstant ("NULL"));
-				set_delegate_target_destroy_notify (expr, target_destroy_notify_cvar);
-			}
-		}
+		expr.target_value = store_temp_value (expr.inner.target_value, expr);
 
 		if (!(expr.value_type is DelegateType)) {
 			ccode.add_assignment (get_cvalue (expr.inner), new CCodeConstant ("NULL"));
+		} else {
+			var target_destroy_notify = get_delegate_target_destroy_notify_cvalue (expr.inner.target_value);
+			if (target_destroy_notify != null) {
+				ccode.add_assignment (target_destroy_notify, new CCodeConstant ("NULL"));
+			}
 		}
 	}
 
