@@ -2522,6 +2522,10 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "1") {
 						prop.experimental = true;
 					}
+				} else if (nv[0] == "nullable") {
+					if (eval (nv[1]) == "1") {
+						prop.property_type.nullable = true;
+					}
 				}
 			}
 		}
