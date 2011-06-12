@@ -355,7 +355,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			// captured variables are stored on the heap
 			var block = (Block) local.parent_symbol;
 			result.cvalue = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_variable_cname (local.name));
-			if (array_type != null) {
+			if (array_type != null && !array_type.fixed_length) {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					result.append_array_length_cvalue (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_array_length_cname (get_variable_cname (local.name), dim)));
 				}
@@ -370,7 +370,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			}
 		} else {
 			result.cvalue = get_variable_cexpression (local.name);
-			if (array_type != null) {
+			if (array_type != null && !array_type.fixed_length) {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					result.append_array_length_cvalue (get_variable_cexpression (get_array_length_cname (get_variable_cname (local.name), dim)));
 				}
@@ -663,7 +663,10 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 		var array_type = result.value_type as ArrayType;
 		var delegate_type = result.value_type as DelegateType;
 		if (array_type != null) {
-			if (variable.array_null_terminated) {
+			if (array_type.fixed_length) {
+				result.array_length_cvalues = null;
+				result.append_array_length_cvalue (new CCodeConstant (array_type.length.to_string ()));
+			} else if (variable.array_null_terminated) {
 				requires_array_length = true;
 				var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
 				len_call.add_argument (result.cvalue);

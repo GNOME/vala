@@ -26,6 +26,7 @@ TESTS = \
 	basic-types/bug596785.vala \
 	basic-types/bug632322.vala \
 	basic-types/bug650993.vala \
+	basic-types/bug652380.vala \
 	namespaces.vala \
 	methods/lambda.vala \
 	methods/closures.vala \
