@@ -5322,11 +5322,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					// if instance is e.g. a function call, we can't take the address of the expression
 					// (tmp = expr, &tmp)
 
-					var temp_var = get_temp_variable (instance.target_type, true, null, false);
-					emit_temp_var (temp_var);
-					ccode.add_assignment (get_variable_cexpression (temp_var.name), cinstance);
-
-					cinstance = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_var.name));
+					var temp_value = create_temp_value (instance.target_type, false, instance);
+					store_value (temp_value, instance.target_value);
+					cinstance = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_cvalue_ (temp_value));
 				}
 			}
 
