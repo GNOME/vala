@@ -34,7 +34,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		public CatchClause current_catch;
 		public CCodeFunction ccode;
 		public ArrayList<CCodeFunction> ccode_stack = new ArrayList<CCodeFunction> ();
-		public ArrayList<LocalVariable> temp_ref_vars = new ArrayList<LocalVariable> ();
+		public ArrayList<TargetValue> temp_ref_values = new ArrayList<TargetValue> ();
 		public int next_temp_var_id;
 		public bool current_method_inner_error;
 		public bool current_method_return;
@@ -217,7 +217,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public CCodeFunction ccode { get { return emit_context.ccode; } }
 
 	/* temporary variables that own their content */
-	public ArrayList<LocalVariable> temp_ref_vars { get { return emit_context.temp_ref_vars; } }
+	public ArrayList<TargetValue> temp_ref_values { get { return emit_context.temp_ref_values; } }
 	/* cache to check whether a certain marshaller has been created yet */
 	public Set<string> user_marshal_set;
 	/* (constant) hash table with all predefined marshallers */
@@ -984,11 +984,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					}
 				}
 
-				foreach (LocalVariable local in temp_ref_vars) {
-					ccode.add_expression (destroy_local (local));
+				foreach (var value in temp_ref_values) {
+					ccode.add_expression (destroy_value (value));
 				}
 
-				temp_ref_vars.clear ();
+				temp_ref_values.clear ();
 
 				pop_context ();
 			}
@@ -1022,11 +1022,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				ccode.add_assignment (lhs, rhs);
 
-				foreach (LocalVariable local in temp_ref_vars) {
-					ccode.add_expression (destroy_local (local));
+				foreach (var value in temp_ref_values) {
+					ccode.add_expression (destroy_value (value));
 				}
 
-				temp_ref_vars.clear ();
+				temp_ref_values.clear ();
 
 				pop_context ();
 			}
@@ -3042,7 +3042,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		 * we unref temporary variables at the end of a full
 		 * expression
 		 */
-		if (temp_ref_vars.size == 0) {
+		if (temp_ref_values.size == 0) {
 			/* nothing to do without temporary variables */
 			return;
 		}
@@ -3062,15 +3062,15 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			ccode.add_assignment (get_variable_cexpression (full_expr_var.name), get_cvalue (expr));
 		}
 		
-		foreach (LocalVariable local in temp_ref_vars) {
-			ccode.add_expression (destroy_local (local));
+		foreach (var value in temp_ref_values) {
+			ccode.add_expression (destroy_value (value));
 		}
 
 		if (full_expr_var != null) {
 			set_cvalue (expr, get_variable_cexpression (full_expr_var.name));
 		}
 
-		temp_ref_vars.clear ();
+		temp_ref_values.clear ();
 	}
 	
 	public void emit_temp_var (LocalVariable local) {
@@ -3112,8 +3112,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		/* free temporary objects and handle errors */
 
-		foreach (LocalVariable local in temp_ref_vars) {
-			ccode.add_expression (destroy_local (local));
+		foreach (var value in temp_ref_values) {
+			ccode.add_expression (destroy_value (value));
 		}
 
 		if (stmt.tree_can_fail && stmt.expression.tree_can_fail) {
@@ -3121,7 +3121,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			add_simple_check (stmt.expression);
 		}
 
-		temp_ref_vars.clear ();
+		temp_ref_values.clear ();
 	}
 
 	protected virtual void append_scope_free (Symbol sym, CodeNode? stop_at = null) {
@@ -5054,28 +5054,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				// manual memory management for non-void pointers
 				// treat void* special to not leak memory with void* method parameters
 			} else if (requires_destroy (type)) {
-				var decl = get_temp_variable (type, true, type, false);
-				emit_temp_var (decl);
-				temp_ref_vars.insert (0, decl);
-				ccode.add_assignment (get_variable_cexpression (decl.name), result.cvalue);
-				result.cvalue = get_variable_cexpression (decl.name);
-
-				if (type is ArrayType) {
-					var array_type = (ArrayType) type;
-					for (int dim = 1; dim <= array_type.rank; dim++) {
-						var len_decl = new LocalVariable (int_type.copy (), get_array_length_cname (decl.name, dim));
-						emit_temp_var (len_decl);
-						ccode.add_assignment (get_variable_cexpression (len_decl.name), get_array_length_cvalue (value, dim));
-					}
-				} else if (type is DelegateType) {
-					var target_decl = new LocalVariable (new PointerType (new VoidType ()), get_delegate_target_cname (decl.name));
-					emit_temp_var (target_decl);
-					var target_destroy_notify_decl = new LocalVariable (gdestroynotify_type, get_delegate_target_destroy_notify_cname (decl.name));
-					emit_temp_var (target_destroy_notify_decl);
-					ccode.add_assignment (get_variable_cexpression (target_decl.name), get_delegate_target_cvalue (value));
-					ccode.add_assignment (get_variable_cexpression (target_destroy_notify_decl.name), get_delegate_target_destroy_notify_cvalue (value));
-
-				}
+				var temp_value = create_temp_value (type, false, node);
+				temp_ref_values.insert (0, ((GLibValue) temp_value).copy ());
+				store_value (temp_value, value);
+				result.cvalue = get_cvalue_ (temp_value);
 				requires_temp_value = false;
 			}
 		}
@@ -5087,27 +5069,26 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		if (gvalue_boxing) {
 			// implicit conversion to GValue
-			var decl = get_temp_variable (target_type, true, target_type);
-			emit_temp_var (decl);
+			var temp_value = create_temp_value (target_type, true, node, true);
 
 			if (!target_type.value_owned) {
 				// boxed GValue leaked, destroy it
-				temp_ref_vars.insert (0, decl);
+				temp_ref_values.insert (0, ((GLibValue) temp_value).copy ());
 			}
 
 			if (target_type.nullable) {
 				var newcall = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
 				newcall.add_argument (new CCodeConstant ("GValue"));
 				newcall.add_argument (new CCodeConstant ("1"));
-				var newassignment = new CCodeAssignment (get_variable_cexpression (decl.name), newcall);
+				var newassignment = new CCodeAssignment (get_cvalue_ (temp_value), newcall);
 				ccode.add_expression (newassignment);
 			}
 
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_init"));
 			if (target_type.nullable) {
-				ccall.add_argument (get_variable_cexpression (decl.name));
+				ccall.add_argument (get_cvalue_ (temp_value));
 			} else {
-				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (decl.name)));
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_cvalue_ (temp_value)));
 			}
 			ccall.add_argument (new CCodeIdentifier (type.get_type_id ()));
 			ccode.add_expression (ccall);
@@ -5118,9 +5099,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccall = new CCodeFunctionCall (get_value_setter_function (type));
 			}
 			if (target_type.nullable) {
-				ccall.add_argument (get_variable_cexpression (decl.name));
+				ccall.add_argument (get_cvalue_ (temp_value));
 			} else {
-				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (decl.name)));
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_cvalue_ (temp_value)));
 			}
 			if (type.is_real_non_null_struct_type ()) {
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, result.cvalue));
@@ -5130,7 +5111,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			ccode.add_expression (ccall);
 
-			result = (GLibValue) get_local_cvalue (decl);
+			result = (GLibValue) temp_value;
 			requires_temp_value = false;
 		} else if (gvariant_boxing) {
 			// implicit conversion to GVariant

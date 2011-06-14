@@ -149,17 +149,16 @@ public class Vala.GSignalModule : GObjectModule {
 			return sig.get_canonical_cconstant (((StringLiteral) detail_expr).eval ());
 		}
 
-		var detail_decl = get_temp_variable (detail_expr.value_type, true, node);
-		emit_temp_var (detail_decl);
-		temp_ref_vars.insert (0, detail_decl);
+		var detail_value = create_temp_value (detail_expr.value_type, false, node, true);
+		temp_ref_values.insert (0, detail_value);
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_strconcat"));
 		ccall.add_argument (sig.get_canonical_cconstant (""));
 		ccall.add_argument (get_cvalue (detail_expr));
 		ccall.add_argument (new CCodeConstant ("NULL"));
 
-		ccode.add_assignment (get_variable_cexpression (detail_decl.name), ccall);
-		return get_variable_cexpression (detail_decl.name);
+		ccode.add_assignment (get_cvalue_ (detail_value), ccall);
+		return get_cvalue_ (detail_value);
 	}
 
 	public override void visit_signal (Signal sig) {

@@ -566,11 +566,11 @@ public class Vala.GAsyncModule : GSignalModule {
 
 		/* free temporary objects */
 
-		foreach (LocalVariable local in temp_ref_vars) {
-			ccode.add_expression (destroy_local (local));
+		foreach (var value in temp_ref_values) {
+			ccode.add_expression (destroy_value (value));
 		}
 
-		temp_ref_vars.clear ();
+		temp_ref_values.clear ();
 	}
 
 	public override void return_with_exception (CCodeExpression error_expr)
