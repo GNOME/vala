@@ -3817,7 +3817,7 @@ namespace Gtk {
 		public virtual signal bool button_release_event (Gdk.EventButton event);
 		public virtual signal void popup_menu (uint button, uint activate_time);
 		public virtual signal bool query_tooltip (int x, int y, bool keyboard_mode, Gtk.Tooltip tooltip);
-		public virtual signal bool scroll_event (Gdk.Event event);
+		public virtual signal bool scroll_event (Gdk.EventScroll event);
 		public virtual signal bool size_changed (int size);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -5451,11 +5451,11 @@ namespace Gtk {
 		public virtual signal void child_notify (GLib.ParamSpec pspec);
 		public virtual signal void composited_changed ();
 		public virtual signal bool configure_event (Gdk.EventConfigure event);
-		public virtual signal bool damage_event (Gdk.Event event);
-		public virtual signal bool delete_event (Gdk.Event event);
+		public virtual signal bool damage_event (Gdk.EventExpose event);
+		public virtual signal bool delete_event (Gdk.EventAny event);
 		[HasEmitter]
 		public virtual signal void destroy ();
-		public virtual signal bool destroy_event (Gdk.Event event);
+		public virtual signal bool destroy_event (Gdk.EventAny event);
 		public virtual signal void direction_changed (Gtk.TextDirection previous_direction);
 		public virtual signal void drag_begin (Gdk.DragContext context);
 		public virtual signal void drag_data_delete (Gdk.DragContext context);
@@ -5489,7 +5489,7 @@ namespace Gtk {
 		public virtual signal bool leave_notify_event (Gdk.EventCrossing event);
 		[HasEmitter]
 		public virtual signal void map ();
-		public virtual signal bool map_event (Gdk.Event event);
+		public virtual signal bool map_event (Gdk.EventAny event);
 		[HasEmitter]
 		public virtual signal bool mnemonic_activate (bool group_cycling);
 		public virtual signal bool motion_notify_event (Gdk.EventMotion event);
@@ -5520,10 +5520,10 @@ namespace Gtk {
 		public virtual signal void style_updated ();
 		[HasEmitter]
 		public virtual signal void unmap ();
-		public virtual signal bool unmap_event (Gdk.Event event);
+		public virtual signal bool unmap_event (Gdk.EventAny event);
 		[HasEmitter]
 		public virtual signal void unrealize ();
-		public virtual signal bool visibility_notify_event (Gdk.Event event);
+		public virtual signal bool visibility_notify_event (Gdk.EventVisibility event);
 		public virtual signal bool window_state_event (Gdk.EventWindowState event);
 	}
 	[Compact]
