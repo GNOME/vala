@@ -3489,12 +3489,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			flags += " | G_REGEX_EXTENDED";
 		}
 
-		var regex_var = get_temp_variable (regex_type, true, expr, false);
-		emit_temp_var (regex_var);
-
 		var cdecl = new CCodeDeclaration ("GRegex*");
 
-		var cname = regex_var.name + "regex_" + next_regex_id.to_string ();
+		var cname = "_tmp_regex_%d".printf (next_regex_id);
 		if (this.next_regex_id == 0) {
 			var fun = new CCodeFunction ("_thread_safe_regex_init", "GRegex*");
 			fun.modifiers = CCodeModifiers.STATIC | CCodeModifiers.INLINE;
