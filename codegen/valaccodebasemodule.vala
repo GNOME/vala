@@ -4455,9 +4455,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			len_call.add_argument (rv);
 			append_array_length (expr, len_call);
 		} else if (to is StructValueType) {
-			var temp_decl = get_temp_variable (to, true, null, true);
-			emit_temp_var (temp_decl);
-			var ctemp = get_variable_cexpression (temp_decl.name);
+			CodeNode node = expr != null ? (CodeNode) expr : to;
+			var temp_value = create_temp_value (to, true, node, true);
+			var ctemp = get_cvalue_ (temp_value);
 
 			rv = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeCastExpression (rv, (new PointerType(to)).get_cname ()));
 			var holds = new CCodeFunctionCall (new CCodeIdentifier ("G_VALUE_HOLDS"));
