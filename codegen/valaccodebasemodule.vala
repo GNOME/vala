@@ -3257,15 +3257,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		// return array length if appropriate
 		if (((current_method != null && !current_method.no_array_length) || current_property_accessor != null) && current_return_type is ArrayType) {
-			var return_expr_decl = get_temp_variable (current_return_type, true, stmt, false);
-
-			ccode.add_assignment (get_variable_cexpression (return_expr_decl.name), get_cvalue (stmt.return_expression));
+			var temp_value = store_temp_value (stmt.return_expression.target_value, stmt);
 
 			var array_type = (ArrayType) current_return_type;
-
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				var len_l = get_result_cexpression (get_array_length_cname ("result", dim));
-				var len_r = get_array_length_cexpression (stmt.return_expression, dim);
+				var len_r = get_array_length_cvalue (temp_value, dim);
 				if (!is_in_coroutine ()) {
 					ccode.open_if (len_l);
 					len_l = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, len_l);
@@ -3276,34 +3273,28 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				}
 			}
 
-			set_cvalue (stmt.return_expression, get_variable_cexpression (return_expr_decl.name));
-
-			emit_temp_var (return_expr_decl);
+			stmt.return_expression.target_value = temp_value;
 		} else if ((current_method != null || current_property_accessor != null) && current_return_type is DelegateType) {
 			var delegate_type = (DelegateType) current_return_type;
 			if (delegate_type.delegate_symbol.has_target) {
-				var return_expr_decl = get_temp_variable (stmt.return_expression.value_type, true, stmt, false);
-
-				ccode.add_assignment (get_variable_cexpression (return_expr_decl.name), get_cvalue (stmt.return_expression));
+				var temp_value = store_temp_value (stmt.return_expression.target_value, stmt);
 
 				var target_l = get_result_cexpression (get_delegate_target_cname ("result"));
 				if (!is_in_coroutine ()) {
 					target_l = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, target_l);
 				}
-				CCodeExpression target_r_destroy_notify;
-				var target_r = get_delegate_target_cexpression (stmt.return_expression, out target_r_destroy_notify);
+				var target_r = get_delegate_target_cvalue (temp_value);
 				ccode.add_assignment (target_l, target_r);
 				if (delegate_type.value_owned) {
 					var target_l_destroy_notify = get_result_cexpression (get_delegate_target_destroy_notify_cname ("result"));
 					if (!is_in_coroutine ()) {
 						target_l_destroy_notify = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, target_l_destroy_notify);
 					}
+					var target_r_destroy_notify = get_delegate_target_destroy_notify_cvalue (temp_value);
 					ccode.add_assignment (target_l_destroy_notify, target_r_destroy_notify);
 				}
 
-				set_cvalue (stmt.return_expression, get_variable_cexpression (return_expr_decl.name));
-
-				emit_temp_var (return_expr_decl);
+				stmt.return_expression.target_value = temp_value;
 			}
 		}
 
