@@ -40,10 +40,9 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 
 	void visit_string_switch_statement (SwitchStatement stmt) {
 		// we need a temporary variable to save the property value
-		var temp_var = get_temp_variable (stmt.expression.value_type, stmt.expression.value_type.value_owned, stmt, false);
-		emit_temp_var (temp_var);
+		var temp_value = create_temp_value (stmt.expression.value_type, false, stmt);
+		var ctemp = get_cvalue_ (temp_value);
 
-		var ctemp = get_variable_cexpression (temp_var.name);
 		var cinit = new CCodeAssignment (ctemp, get_cvalue (stmt.expression));
 		var czero = new CCodeConstant ("0");
 
@@ -56,8 +55,9 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 
 		var ccond = new CCodeConditionalExpression (cisnull, new CCodeConstant ("0"), cquark);
 
-		temp_var = get_temp_variable (gquark_type);
-		emit_temp_var (temp_var);
+		int label_temp_id = next_temp_var_id++;
+
+		temp_value = create_temp_value (gquark_type, true, stmt);
 
 		int label_count = 0;
 
@@ -71,7 +71,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 				var cexpr = get_cvalue (label.expression);
 
 				if (is_constant_ccode_expression (cexpr)) {
-					var cname = "%s_label%d".printf (temp_var.name, label_count++);
+					var cname = "_tmp%d_label%d".printf (label_temp_id, label_count++);
 
 					ccode.add_declaration (gquark_type.get_cname (), new CCodeVariableDeclarator (cname, czero), CCodeModifiers.STATIC);
 				}
@@ -80,7 +80,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 
 		ccode.add_expression (cinit);
 
-		ctemp = get_variable_cexpression (temp_var.name);
+		ctemp = get_cvalue_ (temp_value);
 		cinit = new CCodeAssignment (ctemp, ccond);
 
 		ccode.add_expression (cinit);
@@ -107,7 +107,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 				var cexpr = get_cvalue (label.expression);
 
 				if (is_constant_ccode_expression (cexpr)) {
-					var cname = new CCodeIdentifier ("%s_label%d".printf (temp_var.name, label_count++));
+					var cname = new CCodeIdentifier ("_tmp%d_label%d".printf (label_temp_id, label_count++));
 					var ccondition = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, czero, cname);
 					var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_static_string"));
 					cinit = new CCodeAssignment (cname, ccall);
