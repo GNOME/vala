@@ -690,6 +690,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					result.array_length_cvalues[dim - 1] = new CCodeCastExpression (result.array_length_cvalues[dim - 1], "gint");
 				}
 			}
+			result.array_size_cvalue = null;
 		} else if (delegate_type != null) {
 			if (!delegate_type.delegate_symbol.has_target || variable.no_delegate_target) {
 				result.delegate_target_cvalue = new CCodeConstant ("NULL");
