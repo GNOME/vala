@@ -699,6 +699,11 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			result.delegate_target_destroy_notify_cvalue = new CCodeConstant ("NULL");
 		}
 		result.value_type.value_owned = false;
+
+		if (!(variable is Parameter && variable.name == "this") && !(array_type != null && array_type.inline_allocated)) {
+			result = (GLibValue) store_temp_value (result, variable);
+		}
+
 		return result;
 	}
 

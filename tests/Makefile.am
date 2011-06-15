@@ -54,6 +54,7 @@ TESTS = \
 	structs/structs.vala \
 	structs/gvalue.vala \
 	structs/bug530605.vala \
+	structs/bug572091.vala \
 	structs/bug583603.vala \
 	structs/bug595587.vala \
 	structs/bug606202.vala \
@@ -91,6 +92,7 @@ TESTS = \
 	objects/bug613840.vala \
 	objects/bug620706.vala \
 	objects/bug624594.vala \
+	objects/bug626038.vala \
 	objects/bug628639.vala \
 	objects/bug642809.vala \
 	objects/bug643711.vala \
