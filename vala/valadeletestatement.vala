@@ -27,7 +27,15 @@ public class Vala.DeleteStatement : CodeNode, Statement {
 	/**
 	 * Expression representing the instance to be freed.
 	 */
-	public Expression expression { get; set; }
+	public Expression expression {
+		get { return _expression; }
+		set {
+			_expression = value;
+			_expression.parent_node = this;
+		}
+	}
+
+	private Expression _expression;
 
 	public DeleteStatement (Expression expression, SourceReference? source_reference = null) {
 		this.expression = expression;
