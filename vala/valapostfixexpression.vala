@@ -64,6 +64,14 @@ public class Vala.PostfixExpression : Expression {
 		return false;
 	}
 
+	public override void get_defined_variables (Collection<LocalVariable> collection) {
+		inner.get_defined_variables (collection);
+		var local = inner.symbol_reference as LocalVariable;
+		if (local != null) {
+			collection.add (local);
+		}
+	}
+
 	public override void get_used_variables (Collection<LocalVariable> collection) {
 		inner.get_used_variables (collection);
 	}
