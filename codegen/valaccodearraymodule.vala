@@ -686,11 +686,11 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		var binary = (BinaryExpression) assignment.right;
 
-		var array = binary.left;
+		var array = assignment.left;
 		var array_type = (ArrayType) array.value_type;
 		var element = binary.right;
 
-		var array_var = assignment.left.symbol_reference;
+		var array_var = array.symbol_reference;
 		if (array_type.rank == 1 && array_var != null && array_var.is_internal_symbol ()
 		    && (array_var is LocalVariable || array_var is Field)) {
 			// valid array add
