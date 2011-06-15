@@ -504,14 +504,14 @@ public class Vala.Assignment : Expression {
 				return;
 			}
 
-			if (field != null) {
+			if (instance && ma.inner != null && property != null) {
+				ma.inner.emit (codegen);
+			} else {
 				// always process full lvalue
 				// current codegen depends on it
 				// should be removed when moving codegen from
-				// visit_assignment to emit_store_field
+				// visit_assignment to emit_store_field/local/param
 				ma.emit (codegen);
-			} else if (instance && ma.inner != null) {
-				ma.inner.emit (codegen);
 			}
 		} else if (ea != null) {
 			// always process full lvalue
