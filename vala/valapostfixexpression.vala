@@ -29,12 +29,20 @@ public class Vala.PostfixExpression : Expression {
 	/**
 	 * The operand, must be a variable or a property.
 	 */
-	public Expression inner { get; set; }
+	public Expression inner {
+		get { return _inner; }
+		set {
+			_inner = value;
+			_inner.parent_node = this;
+		}
+	}
 	
 	/**
 	 * Specifies whether value should be incremented or decremented.
 	 */
 	public bool increment { get; set; }
+
+	private Expression _inner;
 
 	/**
 	 * Creates a new postfix expression.
