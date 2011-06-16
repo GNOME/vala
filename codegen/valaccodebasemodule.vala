@@ -2070,12 +2070,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				if (!array_type.fixed_length) {
 					for (int dim = 1; dim <= array_type.rank; dim++) {
 						var len_var = new LocalVariable (int_type.copy (), get_array_length_cname (get_variable_cname (local.name), dim));
-						emit_temp_var (len_var, local.initializer == null);
+						len_var.no_init = local.initializer != null;
+						emit_temp_var (len_var);
 					}
 
 					if (array_type.rank == 1) {
 						var size_var = new LocalVariable (int_type.copy (), get_array_size_cname (get_variable_cname (local.name)));
-						emit_temp_var (size_var, local.initializer == null);
+						size_var.no_init = local.initializer != null;
+						emit_temp_var (size_var);
 					}
 				}
 			} else if (local.variable_type is DelegateType) {
@@ -2084,10 +2086,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				if (d.has_target) {
 					// create variable to store delegate target
 					var target_var = new LocalVariable (new PointerType (new VoidType ()), get_delegate_target_cname (get_variable_cname (local.name)));
-					emit_temp_var (target_var, local.initializer == null);
+					target_var.no_init = local.initializer != null;
+					emit_temp_var (target_var);
 					if (deleg_type.value_owned) {
 						var target_destroy_notify_var = new LocalVariable (gdestroynotify_type, get_delegate_target_destroy_notify_cname (get_variable_cname (local.name)));
-						emit_temp_var (target_destroy_notify_var, local.initializer == null);
+						target_destroy_notify_var.no_init = local.initializer != null;
+						emit_temp_var (target_destroy_notify_var);
 					}
 				}
 			}
@@ -3008,58 +3012,34 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		temp_ref_vars.clear ();
 	}
 	
-	public void emit_temp_var (LocalVariable local, bool always_init = false) {
-		var vardecl = new CCodeVariableDeclarator (local.name, null, local.variable_type.get_cdeclarator_suffix ());
-
-		var st = local.variable_type.data_type as Struct;
-		var array_type = local.variable_type as ArrayType;
-
-		if (local.name.has_prefix ("*")) {
-			// do not dereference unintialized variable
-			// initialization is not needed for these special
-			// pointer temp variables
-			// used to avoid side-effects in assignments
-		} else if (local.no_init) {
-			// no initialization necessary for this temp var
-		} else if (!local.variable_type.nullable &&
-		           (st != null && !st.is_simple_type ()) ||
-		           (array_type != null && array_type.fixed_length)) {
-			// 0-initialize struct with struct initializer { 0 }
-			// necessary as they will be passed by reference
-			var clist = new CCodeInitializerList ();
-			clist.append (new CCodeConstant ("0"));
-
-			vardecl.initializer = clist;
-			vardecl.init0 = true;
-		} else if (local.variable_type.is_reference_type_or_type_parameter () ||
-		           local.variable_type.nullable ||
-		           local.variable_type is DelegateType) {
-			vardecl.initializer = new CCodeConstant ("NULL");
-			vardecl.init0 = true;
-		} else if (always_init) {
-			vardecl.initializer = default_value_for_type (local.variable_type, true);
-			vardecl.init0 = true;
-		}
-
+	public void emit_temp_var (LocalVariable local) {
+		var init = !(local.name.has_prefix ("*") || local.no_init);
 		if (is_in_coroutine ()) {
 			closure_struct.add_field (local.variable_type.get_cname (), local.name);
 
 			// even though closure struct is zerod, we need to initialize temporary variables
 			// as they might be used multiple times when declared in a loop
 
-			if (vardecl.initializer  is CCodeInitializerList) {
-				// C does not support initializer lists in assignments, use memset instead
-				cfile.add_include ("string.h");
-				var memset_call = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
-				memset_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (local.name)));
-				memset_call.add_argument (new CCodeConstant ("0"));
-				memset_call.add_argument (new CCodeIdentifier ("sizeof (%s)".printf (local.variable_type.get_cname ())));
-				ccode.add_expression (memset_call);
-			} else if (vardecl.initializer != null) {
-				ccode.add_assignment (get_variable_cexpression (local.name), vardecl.initializer);
+			if (init) {
+				var initializer = default_value_for_type (local.variable_type, false);
+				if (initializer == null) {
+					cfile.add_include ("string.h");
+					var memset_call = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
+					memset_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (local.name)));
+					memset_call.add_argument (new CCodeConstant ("0"));
+					memset_call.add_argument (new CCodeIdentifier ("sizeof (%s)".printf (local.variable_type.get_cname ())));
+					ccode.add_expression (memset_call);
+				} else {
+					ccode.add_assignment (get_variable_cexpression (local.name), initializer);
+				}
 			}
 		} else {
-			ccode.add_declaration (local.variable_type.get_cname (), vardecl);
+			var cvar = new CCodeVariableDeclarator (local.name, null, local.variable_type.get_cdeclarator_suffix ());
+			if (init) {
+				cvar.initializer = default_value_for_type (local.variable_type, true);
+				cvar.init0 = true;
+			}
+			ccode.add_declaration (local.variable_type.get_cname (), cvar);
 		}
 	}
 
