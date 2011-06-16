@@ -79,6 +79,8 @@ public class Vala.AddressofExpression : Expression {
 
 		checked = true;
 
+		inner.lvalue = true;
+
 		if (!inner.check (context)) {
 			error = true;
 			return false;
