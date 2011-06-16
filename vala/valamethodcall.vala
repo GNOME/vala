@@ -598,6 +598,9 @@ public class Vala.MethodCall : Expression {
 			if (m.returns_floating_reference) {
 				value_type.floating_reference = true;
 			}
+			if (m.returns_modified_pointer) {
+				((MemberAccess) call).inner.lvalue = true;
+			}
 
 			var dynamic_sig = m.parent_symbol as DynamicSignal;
 			if (dynamic_sig != null && dynamic_sig.handler != null) {
