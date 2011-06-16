@@ -752,6 +752,8 @@ public class Vala.MemberAccess : Expression {
 				inner.value_type = this_parameter.variable_type.copy ();
 				inner.value_type.value_owned = false;
 				inner.symbol_reference = this_parameter;
+			} else {
+				check_lvalue_struct_access ();
 			}
 
 			if (context.experimental_non_null && instance && inner.value_type.nullable &&
@@ -810,6 +812,26 @@ public class Vala.MemberAccess : Expression {
 		}
 
 		return !error;
+	}
+
+	private void check_lvalue_struct_access () {
+		if (inner == null) {
+			return;
+		}
+		var instance = symbol_reference is Field && ((Field) symbol_reference).binding == MemberBinding.INSTANCE;
+		if (!instance) {
+			instance = symbol_reference is Method && ((Method) symbol_reference).binding == MemberBinding.INSTANCE;
+		}
+		if (!instance) {
+			instance = symbol_reference is Property && ((Property) symbol_reference).binding == MemberBinding.INSTANCE;
+		}
+		var this_access = inner.symbol_reference is Parameter && inner.symbol_reference.name == "this";
+		if (instance && inner.value_type is StructValueType && !inner.value_type.nullable && (symbol_reference is Method || lvalue) && ((inner is MemberAccess && inner.symbol_reference is Variable) || inner is ElementAccess) && !this_access) {
+			inner.lvalue = true;
+			if (inner is MemberAccess) {
+				((MemberAccess) inner).check_lvalue_struct_access ();
+			}
+		}
 	}
 
 	public override void emit (CodeGenerator codegen) {
