@@ -2884,7 +2884,7 @@ namespace Gtk {
 		public void set_size (double width, double height, Gtk.Unit unit);
 		public void to_key_file (GLib.KeyFile key_file, string group_name);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
+	[CCode (cheader_filename = "gtk/gtkx.h")]
 	public class Plug : Gtk.Window, Atk.Implementor, Gtk.Buildable {
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public Plug (Gtk.Window socket_id);
@@ -3685,7 +3685,7 @@ namespace Gtk {
 		public bool ignore_hidden { get; set; }
 		public Gtk.SizeGroupMode mode { get; set; }
 	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
+	[CCode (cheader_filename = "gtk/gtkx.h")]
 	public class Socket : Gtk.Container, Atk.Implementor, Gtk.Buildable {
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public Socket ();
