@@ -185,7 +185,6 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "get_%s".printf (prop.name)));
 					ccall.add_argument (get_cvalue (expr.inner));
 					set_cvalue (expr, ccall);
-					return;
 				} else if (prop.base_interface_property != null) {
 					var base_iface = (Interface) prop.base_interface_property.parent_symbol;
 					string parent_iface_var = "%s_%s_parent_iface".printf (current_class.get_lower_case_cname (null), base_iface.get_lower_case_cname (null));
@@ -193,11 +192,8 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (new CCodeIdentifier (parent_iface_var), "get_%s".printf (prop.name)));
 					ccall.add_argument (get_cvalue (expr.inner));
 					set_cvalue (expr, ccall);
-					return;
 				}
-			}
-
-			if (prop.binding == MemberBinding.INSTANCE &&
+			} else if (prop.binding == MemberBinding.INSTANCE &&
 			    prop.get_accessor.automatic_body &&
 			    current_type_symbol == prop.parent_symbol &&
 			    current_type_symbol is Class &&
@@ -305,6 +301,8 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				ccode.add_expression (ccall);
 				set_cvalue (expr, ctemp);
 			}
+			expr.target_value.value_type = expr.value_type;
+			expr.target_value = store_temp_value (expr.target_value, expr);
 		} else if (expr.symbol_reference is LocalVariable) {
 			var local = (LocalVariable) expr.symbol_reference;
 			if (expr.lvalue) {
