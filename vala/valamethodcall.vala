@@ -184,6 +184,21 @@ public class Vala.MethodCall : Expression {
 						target_object_type = sig.inner.value_type;
 					}
 				}
+
+				// foo is relevant instance in foo.bar.begin (bar_ready) and foo.bar.end (result)
+				var m = ma.symbol_reference as Method;
+				if (m != null && m.coroutine) {
+					// begin or end call of async method
+					if (ma.member_name == "begin" || ma.member_name == "end") {
+						var method_access = ma.inner as MemberAccess;
+						if (method_access != null && method_access.inner != null) {
+							target_object_type = method_access.inner.value_type;
+						} else {
+							// static method
+							target_object_type = null;
+						}
+					}
+				}
 			}
 
 			if (ma.symbol_reference != null && ma.symbol_reference.get_attribute ("Assert") != null) {
