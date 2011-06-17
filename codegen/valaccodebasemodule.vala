@@ -2425,8 +2425,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return equal_func;
 	}
 
-	private string generate_numeric_equal_function (Struct st) {
-		string equal_func = "_%sequal".printf (st.get_lower_case_cprefix ());
+	private string generate_numeric_equal_function (TypeSymbol sym) {
+		string equal_func = "_%sequal".printf (sym.get_lower_case_cprefix ());
 
 		if (!add_wrapper (equal_func)) {
 			// wrapper already defined
@@ -2436,8 +2436,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var function = new CCodeFunction (equal_func, "gboolean");
 		function.modifiers = CCodeModifiers.STATIC;
 
-		function.add_parameter (new CCodeParameter ("s1", "const " + st.get_cname () + "*"));
-		function.add_parameter (new CCodeParameter ("s2", "const " + st.get_cname () + "*"));
+		function.add_parameter (new CCodeParameter ("s1", "const " + sym.get_cname () + "*"));
+		function.add_parameter (new CCodeParameter ("s2", "const " + sym.get_cname () + "*"));
 
 		push_function (function);
 
@@ -4772,9 +4772,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccall.add_argument (cright);
 				cleft = ccall;
 				cright = new CCodeConstant ("TRUE");
-			} else if ((left_type is IntegerType || left_type is FloatingType || left_type is BooleanType) && left_type.nullable &&
-			           (right_type is IntegerType || right_type is FloatingType || right_type is BooleanType) && right_type.nullable) {
-				var equalfunc = generate_numeric_equal_function ((Struct) left_type.data_type as Struct);
+			} else if ((left_type is IntegerType || left_type is FloatingType || left_type is BooleanType || left_type is EnumValueType) && left_type.nullable &&
+			           (right_type is IntegerType || right_type is FloatingType || right_type is BooleanType || right_type is EnumValueType) && right_type.nullable) {
+				var equalfunc = generate_numeric_equal_function ((TypeSymbol) left_type.data_type);
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier (equalfunc));
 				ccall.add_argument (cleft);
 				ccall.add_argument (cright);
