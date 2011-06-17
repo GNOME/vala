@@ -3877,7 +3877,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier (dup0_func));
 			ccall.add_argument (cexpr);
 			result.cvalue = ccall;
-			return result;
+			return store_temp_value (result, node);
 		}
 
 		var ccall = new CCodeFunctionCall (dupexpr);
@@ -3886,25 +3886,20 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			// expression is non-null
 			ccall.add_argument (cexpr);
 			
-			return new GLibValue (type, ccall);
+			return store_temp_value (new GLibValue (type, ccall), node);
 		} else {
-			var decl = get_temp_variable (type, false, node, false);
-			emit_temp_var (decl);
-
-			var ctemp = get_variable_cexpression (decl.name);
-			
-			var cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ctemp, new CCodeConstant ("NULL"));
+			var cnotnull = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, cexpr, new CCodeConstant ("NULL"));
 			if (type.type_parameter != null) {
 				// dup functions are optional for type parameters
-				var cdupisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, get_dup_func_expression (type, node.source_reference), new CCodeConstant ("NULL"));
-				cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.OR, cisnull, cdupisnull);
+				var cdupnotnull = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_dup_func_expression (type, node.source_reference), new CCodeConstant ("NULL"));
+				cnotnull = new CCodeBinaryExpression (CCodeBinaryOperator.AND, cnotnull, cdupnotnull);
 			}
 
 			if (type.type_parameter != null) {
 				// cast from gconstpointer to gpointer as GBoxedCopyFunc expects gpointer
-				ccall.add_argument (new CCodeCastExpression (ctemp, "gpointer"));
+				ccall.add_argument (new CCodeCastExpression (cexpr, "gpointer"));
 			} else {
-				ccall.add_argument (ctemp);
+				ccall.add_argument (cexpr);
 			}
 
 			if (type is ArrayType) {
@@ -3920,9 +3915,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				}
 			}
 
-			var ccomma = new CCodeCommaExpression ();
-			ccomma.append_expression (new CCodeAssignment (ctemp, cexpr));
-
 			CCodeExpression cifnull;
 			if (type.data_type != null) {
 				cifnull = new CCodeConstant ("NULL");
@@ -3932,18 +3924,18 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				// cast from gconstpointer to gpointer as methods in
 				// generic classes may not return gconstpointer
-				cifnull = new CCodeCastExpression (ctemp, "gpointer");
+				cifnull = new CCodeCastExpression (cexpr, "gpointer");
 			}
-			ccomma.append_expression (new CCodeConditionalExpression (cisnull, cifnull, ccall));
 
-			// repeat temp variable at the end of the comma expression
-			// if the ref function returns void
 			if (is_ref_function_void (type)) {
-				ccomma.append_expression (ctemp);
+				ccode.open_if (cnotnull);
+				ccode.add_expression (ccall);
+				ccode.close ();
+			} else {
+				var ccond = new CCodeConditionalExpression (cnotnull, ccall, cifnull);
+				result.cvalue = ccond;
+				result = (GLibValue) store_temp_value (result, node, true);
 			}
-
-			result.value_type = decl.variable_type;
-			result.cvalue = ccomma;
 			return result;
 		}
 	}
