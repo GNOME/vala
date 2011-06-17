@@ -5101,7 +5101,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var type = value.value_type;
 		var result = ((GLibValue) value).copy ();
 		result.value_type = target_type != null ? target_type : type;
-		result.cvalue = get_cvalue_ (value);
+		var requires_temp_value = false;
 
 		if (type.value_owned
 		    && type.floating_reference) {
@@ -5115,6 +5115,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				csink.add_argument (result.cvalue);
 				
 				result.cvalue = csink;
+				requires_temp_value = true;
 			} else {
 				Report.error (null, "type `%s' does not support floating references".printf (type.data_type.name));
 			}
@@ -5167,6 +5168,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					ccode.add_assignment (get_variable_cexpression (target_destroy_notify_decl.name), get_delegate_target_destroy_notify_cvalue (value));
 
 				}
+				requires_temp_value = false;
 			}
 		}
 
@@ -5220,7 +5222,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			ccode.add_expression (ccall);
 
-			return get_local_cvalue (decl);
+			result = (GLibValue) get_local_cvalue (decl);
+			requires_temp_value = false;
 		} else if (gvariant_boxing) {
 			// implicit conversion to GVariant
 			string variant_func = "_variant_new%d".printf (++next_variant_function_id);
@@ -5255,7 +5258,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			cfile.add_function (cfunc);
 
 			result.cvalue = ccall;
-			return result;
+			requires_temp_value = true;
 		} else if (boxing) {
 			// value needs to be boxed
 
@@ -5273,6 +5276,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				ccode.add_assignment (get_variable_cexpression (decl.name), get_implicit_cast_expression (result.cvalue, type, cast_type, node));
 				result.cvalue = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (decl.name));
+				requires_temp_value = false;
 			}
 		} else if (unboxing) {
 			// unbox value
@@ -5282,23 +5286,18 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			result.cvalue = get_implicit_cast_expression (result.cvalue, type, target_type, node);
 		}
 
-		if (target_type.value_owned && (!type.value_owned || boxing || unboxing)) {
+		if (requires_temp_value && !(target_type is ArrayType && ((ArrayType) target_type).inline_allocated)) {
+			result = (GLibValue) store_temp_value (result, node);
+		}
+
+		if (!gvalue_boxing && !gvariant_boxing && target_type.value_owned && (!type.value_owned || boxing || unboxing) && requires_copy (target_type) && !(type is NullType)) {
 			// need to copy value
-			if (requires_copy (target_type) && !(type is NullType)) {
-				var copy = (GLibValue) copy_value (result, node);
-				if (target_type.data_type is Interface && copy == null) {
-					Report.error (node.source_reference, "missing class prerequisite for interface `%s', add GLib.Object to interface declaration if unsure".printf (target_type.data_type.get_full_name ()));
-					return result;
-				}
-				result = copy;
-				// drop this assignment when target values are guaranteed to be effect-free
-				if (!(target_type is ArrayType && ((ArrayType) target_type).fixed_length)) {
-					var decl = get_temp_variable (target_type, true, node, false);
-					emit_temp_var (decl);
-					ccode.add_assignment (get_variable_cexpression (decl.name), get_cvalue_ (result));
-					result.cvalue = get_variable_cexpression (decl.name);
-				}
+			var copy = (GLibValue) copy_value (result, node);
+			if (target_type.data_type is Interface && copy == null) {
+				Report.error (node.source_reference, "missing class prerequisite for interface `%s', add GLib.Object to interface declaration if unsure".printf (target_type.data_type.get_full_name ()));
+				return result;
 			}
+			result = copy;
 		}
 
 		return result;
