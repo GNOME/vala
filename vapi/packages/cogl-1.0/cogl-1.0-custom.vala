@@ -18,6 +18,12 @@ namespace Cogl {
 		public void unmap ();
 	}
 
+	[CCode (has_type_id = false)]
+	public struct Color {
+		public Color.from_4f (float red, float green, float blue, float alpha);
+		public Color.from_4ub (uint8 red, uint8 green, uint8 blue, uint8 alpha);
+	}
+
 	[Compact]
 	[CCode (ref_function = "cogl_handle_ref", unref_function = "cogl_handle_unref")]
 	public class Handle {

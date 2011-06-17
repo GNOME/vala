@@ -54,7 +54,7 @@ namespace Cogl {
 	[Compact]
 	[CCode (ref_function = "cogl_material_ref", unref_function = "cogl_material_unref", cname = "CoglHandle", cheader_filename = "cogl/cogl.h")]
 	public class Material : Cogl.Handle {
-		[CCode (has_construct_function = false)]
+		[CCode (type = "CoglHandle*", has_construct_function = false)]
 		public Material ();
 		public static GLib.Type alpha_func_get_type ();
 		public Cogl.Material copy ();
@@ -133,7 +133,7 @@ namespace Cogl {
 		public static void push_draw_buffer ();
 		[CCode (instance_pos = -1)]
 		public void set_draw_buffer (Cogl.BufferTarget target);
-		[CCode (has_construct_function = false)]
+		[CCode (type = "CoglHandle*", has_construct_function = false)]
 		public Offscreen.to_texture (Cogl.Texture handle);
 	}
 	[Compact]
@@ -197,7 +197,7 @@ namespace Cogl {
 	[Compact]
 	[CCode (ref_function = "cogl_program_ref", unref_function = "cogl_program_unref", cname = "CoglHandle", cheader_filename = "cogl/cogl.h")]
 	public class Program : Cogl.Handle {
-		[CCode (cname = "cogl_create_program", has_construct_function = false)]
+		[CCode (cname = "cogl_create_program", type = "CoglHandle*", has_construct_function = false)]
 		public Program ();
 		public void attach_shader (Cogl.Shader shader_handle);
 		public int get_uniform_location (string uniform_name);
@@ -212,7 +212,7 @@ namespace Cogl {
 	[Compact]
 	[CCode (ref_function = "cogl_shader_ref", unref_function = "cogl_shader_unref", cname = "CoglHandle", cheader_filename = "cogl/cogl.h")]
 	public class Shader : Cogl.Handle {
-		[CCode (cname = "cogl_create_shader", has_construct_function = false)]
+		[CCode (cname = "cogl_create_shader", type = "CoglHandle*", has_construct_function = false)]
 		public Shader (Cogl.ShaderType shader_type);
 		public void compile ();
 		public string get_info_log ();
@@ -251,7 +251,7 @@ namespace Cogl {
 	[Compact]
 	[CCode (ref_function = "cogl_vertex_buffer_ref", unref_function = "cogl_vertex_buffer_unref", cname = "CoglHandle", cheader_filename = "cogl/cogl.h")]
 	public class VertexBuffer : Cogl.Handle {
-		[CCode (has_construct_function = false)]
+		[CCode (type = "CoglHandle*", has_construct_function = false)]
 		public VertexBuffer (uint n_vertices);
 		public void add (string attribute_name, uchar n_components, Cogl.AttributeType type, bool normalized, uint16 stride, void* pointer);
 		public void @delete (string attribute_name);
@@ -286,6 +286,8 @@ namespace Cogl {
 		public uint32 padding2;
 		public Cogl.Color copy ();
 		public static bool equal (void* v1, void* v2);
+		public Color.from_4f (float red, float green, float blue, float alpha);
+		public Color.from_4ub (uint8 red, uint8 green, uint8 blue, uint8 alpha);
 		public float get_alpha ();
 		public uint get_alpha_byte ();
 		public float get_alpha_float ();
@@ -571,7 +573,7 @@ namespace Cogl {
 		PARSE_ERROR,
 		ARGUMENT_PARSE_ERROR,
 		INVALID_ERROR,
-		GPU_UNSUPPORTED_ERROR,
+		GPU_UNSUPPORTED_ERROR
 	}
 	[CCode (cheader_filename = "cogl/cogl.h", has_target = false)]
 	public delegate void FuncPtr ();
