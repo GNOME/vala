@@ -3233,6 +3233,40 @@ namespace Linux {
         public const int SOL_RDS;
         [CCode (cheader_filename = "linux/socket.h")]
         public const int SOL_IUCV;
+        [CCode (cheader_filename = "sys/socket.h")]
+        public const int SOL_SOCKET;
+        [CCode (cheader_filename = "sys/socket.h")]
+        public const int SO_DEBUG;
+        [CCode (cheader_filename = "sys/socket.h")]
+        public const int SO_REUSEADDR;
+        [CCode (cheader_filename = "sys/socket.h")]
+        public const int SO_TYPE;
+        [CCode (cheader_filename = "sys/socket.h")]
+        public const int SO_ERROR;
+        [CCode (cheader_filename = "sys/socket.h")]
+        public const int SO_DONTROUTE;
+        [CCode (cheader_filename = "sys/socket.h")]
+        public const int SO_BROADCAST;
+        [CCode (cheader_filename = "sys/socket.h")]
+        public const int SO_SNDBUF;
+        [CCode (cheader_filename = "sys/socket.h")]
+        public const int SO_RCVBUF;
+        [CCode (cheader_filename = "sys/socket.h")]
+        public const int SO_SNDBUFFORCE;
+        [CCode (cheader_filename = "sys/socket.h")]
+        public const int SO_RCVBUFFORCE;
+        [CCode (cheader_filename = "sys/socket.h")]
+        public const int SO_KEEPALIVE;
+        [CCode (cheader_filename = "sys/socket.h")]
+        public const int SO_OOBINLINE;
+        [CCode (cheader_filename = "sys/socket.h")]
+        public const int SO_NO_CHECK;
+        [CCode (cheader_filename = "sys/socket.h")]
+        public const int SO_PRIORITY;
+        [CCode (cheader_filename = "sys/socket.h")]
+        public const int SO_LINGER;
+        [CCode (cheader_filename = "sys/socket.h")]
+        public const int SO_BSDCOMPAT;
     }
 
     /*
