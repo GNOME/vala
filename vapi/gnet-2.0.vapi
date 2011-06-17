@@ -114,7 +114,7 @@ namespace GNet {
 		public bool is_ipv6();
 	}
 
-	public static class IOChannel {
+	public class IOChannel {
 		[CCode(name = "gnet_io_channel_writen")]
 		public static GLib.IOError writen(GLib.IOChannel chan, string buf,
 										  size_t len, out size_t bytes_written);
@@ -257,7 +257,7 @@ namespace GNet {
 	}
 
 	#if GNET_EXPERIMENTAL
-	public static class Socks {
+	public class Socks {
 		[CCode(cname = "GNET_SOCKS_PORT")]
 		public static const int SOCKS_PORT;
 
@@ -281,7 +281,7 @@ namespace GNet {
 	}
 	#endif
 
-	public static class Pack {
+	public class Pack {
 		[CCode(cname = "gnet_pack")]
 		[PrintfFormat]
 		public static int pack(string format, string buf, int len, ...);
@@ -642,7 +642,7 @@ namespace GNet {
 		IPV6_ONLY
 	}
 
-	public static class IPv6 {
+	public class IPv6 {
 		[CCode(cname = "gnet_ipv6_get_policy")]
 		public static IPv6Policy get_policy();
 
@@ -650,7 +650,7 @@ namespace GNet {
 		public static void set_policy(IPv6Policy policy);
 	}
 
-	public static class Base64 {
+	public class Base64 {
 		[CCode(cname = "gnet_base64_encode")]
 		public static string encode(char[] src, out int dstlen, bool strict);
 		[CCode(cname = "gnet_base64_decode")]
