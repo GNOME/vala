@@ -60,7 +60,7 @@ AC_SUBST(COVERAGE_VALAFLAGS)
 AC_SUBST(COVERAGE_CFLAGS)
 AC_SUBST(COVERAGE_LIBS)
 
-AC_ARG_ENABLE(vapigen, AS_HELP_STRING([--enable-vapigen], [Enable VAPI generator]), enable_vapigen=$enableval, enable_vapigen=no)
+AC_ARG_ENABLE(vapigen, AS_HELP_STRING([--disable-vapigen], [Disable VAPI generator]), enable_vapigen=$enableval, enable_vapigen=yes)
 AM_CONDITIONAL(ENABLE_VAPIGEN, test x$enable_vapigen = xyes)
 
 if test "$enable_vapigen" = "yes"; then
