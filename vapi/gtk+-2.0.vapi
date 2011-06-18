@@ -1917,7 +1917,7 @@ namespace Gtk {
 		public bool is_adjusting ();
 		public void set_color (double h, double s, double v);
 		public void set_metrics (int size, int ring_width);
-		public static void to_rgb (double h, double s, double v, double r, double g, double b);
+		public static void to_rgb (double h, double s, double v, out double r, out double g, out double b);
 		public virtual signal void changed ();
 		public virtual signal void move (Gtk.DirectionType type);
 	}
