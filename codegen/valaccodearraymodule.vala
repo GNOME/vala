@@ -71,20 +71,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		// iterate over each dimension
 		foreach (Expression size in expr.get_sizes ()) {
 			CCodeExpression csize = get_cvalue (size);
-
-			if (!is_pure_ccode_expression (csize)) {
-				var temp_var = get_temp_variable (int_type, false, expr);
-				var name_cnode = get_variable_cexpression (temp_var.name);
-				set_cvalue (size, name_cnode);
-
-				emit_temp_var (temp_var);
-
-				csize = new CCodeAssignment (name_cnode, csize);
-
-				append_array_length (expr, name_cnode);
-			} else {
-				append_array_length (expr, csize);
-			}
+			append_array_length (expr, csize);
 
 			if (first) {
 				cexpr = csize;
