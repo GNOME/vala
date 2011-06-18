@@ -47,16 +47,6 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 		}
 
 		if (unref_old || array || instance_delegate) {
-			if (!is_pure_ccode_expression (lhs)) {
-				/* Assign lhs to temp var to avoid repeating side effect */
-				var lhs_value_type = assignment.left.value_type.copy ();
-				string lhs_temp_name = "_tmp%d_".printf (next_temp_var_id++);
-				var lhs_temp = new LocalVariable (lhs_value_type, "*" + lhs_temp_name);
-				emit_temp_var (lhs_temp);
-				ccode.add_assignment (get_variable_cexpression (lhs_temp_name), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, lhs));
-				lhs = new CCodeParenthesizedExpression (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (lhs_temp_name)));
-			}
-
 			var temp_decl = get_temp_variable (assignment.left.value_type, true, null, false);
 			emit_temp_var (temp_decl);
 			ccode.add_assignment (get_variable_cexpression (temp_decl.name), rhs);
