@@ -47,6 +47,7 @@ TESTS = \
 	control-flow/foreach.vala \
 	control-flow/switch.vala \
 	control-flow/sideeffects.vala \
+	control-flow/bug652549.vala \
 	enums/enums.vala \
 	structs/structs.vala \
 	structs/gvalue.vala \

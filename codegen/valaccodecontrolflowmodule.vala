@@ -222,11 +222,12 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 		ccode.open_block ();
 
 		var collection_backup = stmt.collection_variable;
-		var collection_type = collection_backup.variable_type.copy ();
+		var collection_type = collection_backup.variable_type;
 
 		var array_type = collection_type as ArrayType;
 		if (array_type != null) {
 			// avoid assignment issues
+			array_type.inline_allocated = false;
 			array_type.fixed_length = false;
 		}
 

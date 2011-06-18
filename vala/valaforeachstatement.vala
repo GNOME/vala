@@ -374,7 +374,7 @@ public class Vala.ForeachStatement : Block {
 
 		context.analyzer.current_symbol = context.analyzer.current_symbol.parent_symbol;
 
-		collection_variable = new LocalVariable (collection_type, "%s_collection".printf (variable_name));
+		collection_variable = new LocalVariable (collection_type.copy (), "%s_collection".printf (variable_name));
 
 		add_local_variable (collection_variable);
 		collection_variable.active = true;
