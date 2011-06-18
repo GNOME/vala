@@ -5423,14 +5423,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		var array_type = prop.property_type as ArrayType;
 
-		if (array_type != null && !prop.no_array_length) {
-			var temp_var = get_temp_variable (prop.property_type, true, null, false);
-			emit_temp_var (temp_var);
-			ccode.add_assignment (get_variable_cexpression (temp_var.name), cexpr);
-			ccall.add_argument (get_variable_cexpression (temp_var.name));
-		} else {
-			ccall.add_argument (cexpr);
-		}
+		ccall.add_argument (cexpr);
 
 		if (array_type != null && !prop.no_array_length) {
 			for (int dim = 1; dim <= array_type.rank; dim++) {

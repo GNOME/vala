@@ -85,25 +85,8 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 			var ma = assignment.left as MemberAccess;
 			var prop = (Property) assignment.left.symbol_reference;
 
-			if (assignment.parent_node is ExpressionStatement) {
-				store_property (prop, ma.inner, assignment.right.target_value);
-
-				set_cvalue (assignment, get_ccodenode (assignment.right));
-			} else {
-				// when load_variable is changed to use temporary
-				// variables, this exception is no longer necessary
-
-				var temp_decl = get_temp_variable (prop.property_type);
-				emit_temp_var (temp_decl);
-				ccode.add_assignment (get_variable_cexpression (temp_decl.name), get_cvalue_ (assignment.right.target_value));
-
-				var target_value = ((GLibValue) assignment.right.target_value).copy ();
-				target_value.cvalue = get_variable_cexpression (temp_decl.name);
-
-				store_property (prop, ma.inner, target_value);
-
-				assignment.target_value = target_value;
-			}
+			store_property (prop, ma.inner, assignment.right.target_value);
+			assignment.target_value = assignment.right.target_value;
 		} else {
 			assignment.target_value = emit_simple_assignment (assignment);
 		}
