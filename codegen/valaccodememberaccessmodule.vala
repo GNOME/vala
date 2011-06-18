@@ -67,19 +67,9 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 
 			if (m.base_method != null) {
 				if (!method_has_wrapper (m.base_method)) {
-					var inst = pub_inst;
-					if (expr.inner != null && !expr.inner.is_pure ()) {
-						// instance expression has side-effects
-						// store in temp. variable
-						var temp_var = get_temp_variable (expr.inner.value_type, true, null, false);
-						emit_temp_var (temp_var);
-						var ctemp = get_variable_cexpression (temp_var.name);
-						inst = new CCodeAssignment (ctemp, pub_inst);
-						set_cvalue (expr.inner, ctemp);
-					}
 					var base_class = (Class) m.base_method.parent_symbol;
 					var vclass = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS".printf (base_class.get_upper_case_cname (null))));
-					vclass.add_argument (inst);
+					vclass.add_argument (pub_inst);
 					set_cvalue (expr, new CCodeMemberAccess.pointer (vclass, m.name));
 				} else {
 					set_cvalue (expr, new CCodeIdentifier (m.base_method.get_cname ()));
