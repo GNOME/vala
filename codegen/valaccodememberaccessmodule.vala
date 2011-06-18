@@ -657,7 +657,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 		return result;
 	}
 
-	TargetValue load_variable (Variable variable, TargetValue value) {
+	public override TargetValue load_variable (Variable variable, TargetValue value) {
 		var result = (GLibValue) value;
 		var array_type = result.value_type as ArrayType;
 		var delegate_type = result.value_type as DelegateType;

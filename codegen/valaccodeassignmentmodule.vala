@@ -28,114 +28,51 @@ using GLib;
  * The link between an assignment and generated code.
  */
 public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
-	CCodeExpression? emit_simple_assignment (Assignment assignment) {
+	TargetValue emit_simple_assignment (Assignment assignment) {
 		Variable variable = (Variable) assignment.left.symbol_reference;
 
-		CCodeExpression rhs = get_cvalue (assignment.right);
-		CCodeExpression lhs = (CCodeExpression) get_ccodenode (assignment.left);
-
-		bool unref_old = requires_destroy (assignment.left.value_type);
-		bool array = false;
-		bool instance_delegate = false;
-		if (assignment.left.value_type is ArrayType) {
-			array = !(variable is Field) || !variable.no_array_length;
-		} else if (assignment.left.value_type is DelegateType) {
-			var delegate_type = (DelegateType) assignment.left.value_type;
-			if (delegate_type.delegate_symbol.has_target) {
-				instance_delegate = !(variable is Field) || !variable.no_delegate_target;
-			}
+		if (requires_destroy (assignment.left.value_type)) {
+			/* unref old value */
+			ccode.add_expression (destroy_value (assignment.left.target_value));
 		}
 
-		if (unref_old || array || instance_delegate) {
-			var temp_decl = get_temp_variable (assignment.left.value_type, true, null, false);
-			emit_temp_var (temp_decl);
-			ccode.add_assignment (get_variable_cexpression (temp_decl.name), rhs);
-			if (unref_old) {
-				/* unref old value */
-				var value = ((GLibValue) assignment.left.target_value).copy ();
-				value.cvalue = lhs;
-				ccode.add_expression (destroy_value (value));
-			}
-			
-			if (array && !variable.no_array_length && !variable.array_null_terminated) {
-				var array_type = (ArrayType) assignment.left.value_type;
-				for (int dim = 1; dim <= array_type.rank; dim++) {
-					var lhs_array_len = get_array_length_cexpression (assignment.left, dim);
-					var rhs_array_len = get_array_length_cexpression (assignment.right, dim);
-					ccode.add_assignment (lhs_array_len, rhs_array_len);
-				}
-				if (array_type.rank == 1) {
-					var array_var = assignment.left.symbol_reference;
-					var array_local = array_var as LocalVariable;
-					if (array_var != null && array_var.is_internal_symbol ()
-					    && ((array_var is LocalVariable && !array_local.captured) || array_var is Field)) {
-						var lhs_array_size = get_array_size_cvalue (assignment.left.target_value);
-						var rhs_array_len = get_array_length_cexpression (assignment.left, 1);
-						ccode.add_assignment (lhs_array_size, rhs_array_len);
-					}
-				}
-			} else if (instance_delegate) {
-				CCodeExpression lhs_delegate_target_destroy_notify, rhs_delegate_target_destroy_notify;
-				var lhs_delegate_target = get_delegate_target_cexpression (assignment.left, out lhs_delegate_target_destroy_notify);
-				var rhs_delegate_target = get_delegate_target_cexpression (assignment.right, out rhs_delegate_target_destroy_notify);
-				ccode.add_assignment (lhs_delegate_target, rhs_delegate_target);
-				if (assignment.right.target_type.value_owned) {
-					ccode.add_assignment (lhs_delegate_target_destroy_notify, rhs_delegate_target_destroy_notify);
-				}
+		if (assignment.operator == AssignmentOperator.SIMPLE) {
+			store_value (assignment.left.target_value, assignment.right.target_value);
+		} else {
+			CCodeAssignmentOperator cop;
+			if (assignment.operator == AssignmentOperator.BITWISE_OR) {
+				cop = CCodeAssignmentOperator.BITWISE_OR;
+			} else if (assignment.operator == AssignmentOperator.BITWISE_AND) {
+				cop = CCodeAssignmentOperator.BITWISE_AND;
+			} else if (assignment.operator == AssignmentOperator.BITWISE_XOR) {
+				cop = CCodeAssignmentOperator.BITWISE_XOR;
+			} else if (assignment.operator == AssignmentOperator.ADD) {
+				cop = CCodeAssignmentOperator.ADD;
+			} else if (assignment.operator == AssignmentOperator.SUB) {
+				cop = CCodeAssignmentOperator.SUB;
+			} else if (assignment.operator == AssignmentOperator.MUL) {
+				cop = CCodeAssignmentOperator.MUL;
+			} else if (assignment.operator == AssignmentOperator.DIV) {
+				cop = CCodeAssignmentOperator.DIV;
+			} else if (assignment.operator == AssignmentOperator.PERCENT) {
+				cop = CCodeAssignmentOperator.PERCENT;
+			} else if (assignment.operator == AssignmentOperator.SHIFT_LEFT) {
+				cop = CCodeAssignmentOperator.SHIFT_LEFT;
+			} else if (assignment.operator == AssignmentOperator.SHIFT_RIGHT) {
+				cop = CCodeAssignmentOperator.SHIFT_RIGHT;
+			} else {
+				assert_not_reached ();
 			}
 
-			rhs = get_variable_cexpression (temp_decl.name);
-		}
-		
-		var cop = CCodeAssignmentOperator.SIMPLE;
-		if (assignment.operator == AssignmentOperator.BITWISE_OR) {
-			cop = CCodeAssignmentOperator.BITWISE_OR;
-		} else if (assignment.operator == AssignmentOperator.BITWISE_AND) {
-			cop = CCodeAssignmentOperator.BITWISE_AND;
-		} else if (assignment.operator == AssignmentOperator.BITWISE_XOR) {
-			cop = CCodeAssignmentOperator.BITWISE_XOR;
-		} else if (assignment.operator == AssignmentOperator.ADD) {
-			cop = CCodeAssignmentOperator.ADD;
-		} else if (assignment.operator == AssignmentOperator.SUB) {
-			cop = CCodeAssignmentOperator.SUB;
-		} else if (assignment.operator == AssignmentOperator.MUL) {
-			cop = CCodeAssignmentOperator.MUL;
-		} else if (assignment.operator == AssignmentOperator.DIV) {
-			cop = CCodeAssignmentOperator.DIV;
-		} else if (assignment.operator == AssignmentOperator.PERCENT) {
-			cop = CCodeAssignmentOperator.PERCENT;
-		} else if (assignment.operator == AssignmentOperator.SHIFT_LEFT) {
-			cop = CCodeAssignmentOperator.SHIFT_LEFT;
-		} else if (assignment.operator == AssignmentOperator.SHIFT_RIGHT) {
-			cop = CCodeAssignmentOperator.SHIFT_RIGHT;
+			CCodeExpression codenode = new CCodeAssignment (get_cvalue (assignment.left), get_cvalue (assignment.right), cop);
+			ccode.add_expression (codenode);
 		}
 
-		CCodeExpression codenode = new CCodeAssignment (lhs, rhs, cop);
-
-		ccode.add_expression (codenode);
-
-		return lhs;
-	}
-
-	CCodeExpression? emit_fixed_length_array_assignment (Assignment assignment, ArrayType array_type) {
-		CCodeExpression rhs = get_cvalue (assignment.right);
-		CCodeExpression lhs = (CCodeExpression) get_ccodenode (assignment.left);
-
-		cfile.add_include ("string.h");
-
-		// it is necessary to use memcpy for fixed-length (stack-allocated) arrays
-		// simple assignments do not work in C
-		var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
-		sizeof_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
-		var size = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeConstant ("%d".printf (array_type.length)), sizeof_call);
-		var ccopy = new CCodeFunctionCall (new CCodeIdentifier ("memcpy"));
-		ccopy.add_argument (lhs);
-		ccopy.add_argument (rhs);
-		ccopy.add_argument (size);
-
-		ccode.add_expression (ccopy);
-
-		return lhs;
+		if (assignment.left.value_type is ArrayType && (((ArrayType) assignment.left.value_type).inline_allocated)) {
+			return load_variable (variable, assignment.left.target_value);
+		} else {
+			return store_temp_value (assignment.left.target_value, assignment);
+		}
 	}
 
 	public override void visit_assignment (Assignment assignment) {
@@ -168,12 +105,7 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 				assignment.target_value = target_value;
 			}
 		} else {
-			var array_type = assignment.left.value_type as ArrayType;
-			if (array_type != null && array_type.fixed_length) {
-				set_cvalue (assignment, emit_fixed_length_array_assignment (assignment, array_type));
-			} else {
-				set_cvalue (assignment, emit_simple_assignment (assignment));
-			}
+			assignment.target_value = emit_simple_assignment (assignment);
 		}
 	}
 
