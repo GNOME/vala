@@ -329,6 +329,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 	/* Returns lvalue access to the given local variable */
 	public override TargetValue get_local_cvalue (LocalVariable local) {
 		var result = new GLibValue (local.variable_type.copy ());
+		result.lvalue = true;
 
 		var array_type = local.variable_type as ArrayType;
 		var delegate_type = local.variable_type as DelegateType;
@@ -387,6 +388,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 	/* Returns access values to the given parameter */
 	public override TargetValue get_parameter_cvalue (Parameter param) {
 		var result = new GLibValue (param.variable_type.copy ());
+		result.lvalue = true;
 		result.array_null_terminated = param.array_null_terminated;
 		if (param.has_array_length_cexpr) {
 			result.array_length_cexpr = new CCodeConstant (param.get_array_length_cexpr ());
@@ -507,6 +509,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 		if (instance != null) {
 			result.actual_value_type = field.variable_type.get_actual_type (instance.value_type, null, field);
 		}
+		result.lvalue = true;
 		result.array_null_terminated = field.array_null_terminated;
 		if (field.has_array_length_cexpr) {
 			result.array_length_cexpr = new CCodeConstant (field.get_array_length_cexpr ());
@@ -655,6 +658,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			if (array_type.fixed_length) {
 				result.array_length_cvalues = null;
 				result.append_array_length_cvalue (new CCodeConstant (array_type.length.to_string ()));
+				result.lvalue = false;
 			} else if (variable.array_null_terminated) {
 				requires_array_length = true;
 				var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
@@ -662,21 +666,25 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 
 				result.array_length_cvalues = null;
 				result.append_array_length_cvalue (len_call);
+				result.lvalue = false;
 			} else if (variable.has_array_length_cexpr) {
 				var length_expr = new CCodeConstant (variable.get_array_length_cexpr ());
 
 				result.array_length_cvalues = null;
 				result.append_array_length_cvalue (length_expr);
+				result.lvalue = false;
 			} else if (variable.no_array_length) {
 				result.array_length_cvalues = null;
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					result.append_array_length_cvalue (new CCodeConstant ("-1"));
 				}
+				result.lvalue = false;
 			} else if (variable.array_length_type != null) {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					// cast if variable does not use int for array length
 					result.array_length_cvalues[dim - 1] = new CCodeCastExpression (result.array_length_cvalues[dim - 1], "gint");
 				}
+				result.lvalue = false;
 			}
 			result.array_size_cvalue = null;
 		} else if (delegate_type != null) {
@@ -685,6 +693,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			}
 
 			result.delegate_target_destroy_notify_cvalue = new CCodeConstant ("NULL");
+			result.lvalue = false;
 		}
 		result.value_type.value_owned = false;
 

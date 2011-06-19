@@ -261,7 +261,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 
 			var element_type = array_type.element_type.copy ();
 			element_type.value_owned = false;
-			element_expr = get_cvalue_ (transform_value (new GLibValue (element_type, element_expr), stmt.type_reference, stmt));
+			element_expr = get_cvalue_ (transform_value (new GLibValue (element_type, element_expr, true), stmt.type_reference, stmt));
 
 			visit_local_variable (stmt.element_variable);
 			ccode.add_assignment (get_variable_cexpression (stmt.variable_name), element_expr);

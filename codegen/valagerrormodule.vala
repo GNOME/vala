@@ -104,7 +104,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 
 		if (current_method is CreationMethod && current_method.parent_symbol is Class) {
 			var cl = (Class) current_method.parent_symbol;
-			ccode.add_expression (destroy_value (new GLibValue (new ObjectType (cl), new CCodeIdentifier ("self"))));
+			ccode.add_expression (destroy_value (new GLibValue (new ObjectType (cl), new CCodeIdentifier ("self"), true)));
 			ccode.add_return (new CCodeConstant ("NULL"));
 		} else if (is_in_coroutine ()) {
 			ccode.add_return (new CCodeConstant ("FALSE"));

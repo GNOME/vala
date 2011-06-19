@@ -1596,7 +1596,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			if (is_virtual) {
 				ccode.add_declaration (this_type.get_cname (), new CCodeVariableDeclarator ("self"));
-				ccode.add_assignment (new CCodeIdentifier ("self"), get_cvalue_ (transform_value (new GLibValue (base_type, new CCodeIdentifier ("base")), this_type, acc)));
+				ccode.add_assignment (new CCodeIdentifier ("self"), get_cvalue_ (transform_value (new GLibValue (base_type, new CCodeIdentifier ("base"), true), this_type, acc)));
 			}
 
 			acc.body.emit (this);
@@ -1858,7 +1858,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			} else {
 				if (in_constructor || (current_method != null && current_method.binding == MemberBinding.INSTANCE) ||
 				           (current_property_accessor != null && current_property_accessor.prop.binding == MemberBinding.INSTANCE)) {
-					var this_value = new GLibValue (get_data_type_for_symbol (current_type_symbol), new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "self"));
+					var this_value = new GLibValue (get_data_type_for_symbol (current_type_symbol), new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "self"), true);
 					ccode.add_expression (destroy_value (this_value));
 				}
 			}
@@ -2155,8 +2155,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (deleg_type != null) {
 			if (!deleg_type.delegate_symbol.has_target) {
 				value.delegate_target_cvalue = new CCodeConstant ("NULL");
+				((GLibValue) value).lvalue = false;
 			} else if (!deleg_type.value_owned) {
 				value.delegate_target_destroy_notify_cvalue = new CCodeConstant ("NULL");
+				((GLibValue) value).lvalue = false;
 			}
 		}
 		return value;
@@ -2699,7 +2701,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				push_function (function);
 
-				ccode.add_expression (destroy_value (new GLibValue (type, new CCodeIdentifier ("var")), true));
+				ccode.add_expression (destroy_value (new GLibValue (type, new CCodeIdentifier ("var"), true), true));
 
 				pop_function ();
 
@@ -2946,7 +2948,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			string free0_func = "_%s0".printf (freeid.name);
 
 			if (add_wrapper (free0_func)) {
-				var macro = destroy_value (new GLibValue (type, new CCodeIdentifier ("var")), true);
+				var macro = destroy_value (new GLibValue (type, new CCodeIdentifier ("var"), true), true);
 				cfile.add_type_declaration (new CCodeMacroReplacement.with_expression ("%s(var)".printf (free0_func), macro));
 			}
 
@@ -4294,7 +4296,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				if (init.symbol_reference is Field) {
 					var f = (Field) init.symbol_reference;
 					var instance_target_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
-					var typed_inst = transform_value (new GLibValue (expr.type_reference, instance), instance_target_type, init);
+					var typed_inst = transform_value (new GLibValue (expr.type_reference, instance, true), instance_target_type, init);
 					store_field (f, typed_inst, init.initializer.target_value);
 
 					var cl = f.parent_symbol as Class;
@@ -5540,7 +5542,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		push_context (new EmitContext ());
 		push_function (function);
 
-		var dest_struct = new GLibValue (get_data_type_for_symbol (st), new CCodeIdentifier ("(*dest)"));
+		var dest_struct = new GLibValue (get_data_type_for_symbol (st), new CCodeIdentifier ("(*dest)"), true);
 		foreach (Field f in st.get_fields ()) {
 			if (f.binding == MemberBinding.INSTANCE) {
 				var value = load_field (f, load_this_parameter ((TypeSymbol) st));
@@ -5749,6 +5751,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 public class Vala.GLibValue : TargetValue {
 	public CCodeExpression cvalue;
+	public bool lvalue;
 	public bool non_null;
 	public string? ctype;
 
@@ -5760,9 +5763,10 @@ public class Vala.GLibValue : TargetValue {
 	public CCodeExpression? delegate_target_cvalue;
 	public CCodeExpression? delegate_target_destroy_notify_cvalue;
 
-	public GLibValue (DataType? value_type = null, CCodeExpression? cvalue = null) {
+	public GLibValue (DataType? value_type = null, CCodeExpression? cvalue = null, bool lvalue = false) {
 		base (value_type);
 		this.cvalue = cvalue;
+		this.lvalue = lvalue;
 	}
 
 	public void append_array_length_cvalue (CCodeExpression length_cvalue) {
@@ -5773,7 +5777,7 @@ public class Vala.GLibValue : TargetValue {
 	}
 
 	public GLibValue copy () {
-		var result = new GLibValue (value_type.copy (), cvalue);
+		var result = new GLibValue (value_type.copy (), cvalue, lvalue);
 		result.actual_value_type = actual_value_type;
 		result.non_null = non_null;
 		result.ctype = ctype;
