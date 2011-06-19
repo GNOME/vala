@@ -4491,12 +4491,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var array_type = (ArrayType) to;
 
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				var temp_decl = get_temp_variable (int_type, false, expr);
-				emit_temp_var (temp_decl);
+				var temp_value = create_temp_value (int_type, true, expr);
 
-				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_decl.name)));
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_cvalue_ (temp_value)));
 				cfunc.add_parameter (new CCodeParameter (get_array_length_cname ("result", dim), "int*"));
-				append_array_length (expr, get_variable_cexpression (temp_decl.name));
+				append_array_length (expr, get_cvalue_ (temp_value));
 			}
 		}
 
