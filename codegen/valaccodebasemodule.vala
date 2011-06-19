@@ -5136,22 +5136,15 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		} else if (boxing) {
 			// value needs to be boxed
 
-			var unary = result.cvalue as CCodeUnaryExpression;
-			if (unary != null && unary.operator == CCodeUnaryOperator.POINTER_INDIRECTION) {
-				// *expr => expr
-				result.cvalue = unary.inner;
-			} else if (result.cvalue is CCodeIdentifier || result.cvalue is CCodeMemberAccess) {
-				result.cvalue = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, result.cvalue);
-			} else {
-				var cast_type = target_type.copy ();
-				cast_type.nullable = false;
-				var decl = get_temp_variable (cast_type, cast_type.value_owned, node, false);
-				emit_temp_var (decl);
-
-				ccode.add_assignment (get_variable_cexpression (decl.name), get_implicit_cast_expression (result.cvalue, type, cast_type, node));
-				result.cvalue = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (decl.name));
+			result.value_type.nullable = false;
+			if (!result.lvalue || !result.value_type.equals (value.value_type)) {
+				result.cvalue = get_implicit_cast_expression (result.cvalue, value.value_type, result.value_type, node);
+				result = (GLibValue) store_temp_value (result, node);
 				requires_temp_value = false;
 			}
+			result.cvalue = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, result.cvalue);
+			result.lvalue = false;
+			result.value_type.nullable = true;
 		} else if (unboxing) {
 			// unbox value
 
@@ -5269,20 +5262,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			if (prop.parent_symbol is Struct) {
 				// we need to pass struct instance by reference
-				var unary = cinstance as CCodeUnaryExpression;
-				if (unary != null && unary.operator == CCodeUnaryOperator.POINTER_INDIRECTION) {
-					// *expr => expr
-					cinstance = unary.inner;
-				} else if (cinstance is CCodeIdentifier || cinstance is CCodeMemberAccess) {
-					cinstance = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cinstance);
-				} else {
-					// if instance is e.g. a function call, we can't take the address of the expression
-					// (tmp = expr, &tmp)
-
-					var temp_value = create_temp_value (instance.target_type, false, instance);
-					store_value (temp_value, instance.target_value);
-					cinstance = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_cvalue_ (temp_value));
+				var instance_value = instance.target_value;
+				if (!get_lvalue (instance_value)) {
+					instance_value = store_temp_value (instance_value, instance);
 				}
+				cinstance = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_cvalue_ (instance_value));
 			}
 
 			ccall.add_argument (cinstance);
@@ -5728,11 +5712,15 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return glib_value.array_length_cvalues;
 	}
 
+	public bool get_lvalue (TargetValue value) {
+		var glib_value = (GLibValue) value;
+		return glib_value.lvalue;
+	}
+
 	public bool get_non_null (TargetValue value) {
 		var glib_value = (GLibValue) value;
 		return glib_value.non_null;
 	}
-
 
 	public string? get_ctype (TargetValue value) {
 		var glib_value = (GLibValue) value;

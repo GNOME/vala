@@ -178,29 +178,20 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			in_arg_map.set (get_param_pos (m.cinstance_parameter_position), instance);
 			out_arg_map.set (get_param_pos (m.cinstance_parameter_position), instance);
 		} else if (m != null && m.binding == MemberBinding.INSTANCE && !(m is CreationMethod)) {
-			instance = get_cvalue (ma.inner);
-
+			var instance_value = ma.inner.target_value;
 			if ((ma.member_name == "begin" || ma.member_name == "end") && ma.inner.symbol_reference == ma.symbol_reference) {
 				var inner_ma = (MemberAccess) ma.inner;
-				instance = get_cvalue (inner_ma.inner);
+				instance_value = inner_ma.inner.target_value;
 			}
+			instance = get_cvalue_ (instance_value);
 
 			var st = m.parent_symbol as Struct;
 			if (st != null && !st.is_simple_type ()) {
 				// we need to pass struct instance by reference
-				var unary = instance as CCodeUnaryExpression;
-				if (unary != null && unary.operator == CCodeUnaryOperator.POINTER_INDIRECTION) {
-					// *expr => expr
-					instance = unary.inner;
-				} else if (instance is CCodeIdentifier || instance is CCodeMemberAccess) {
-					instance = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance);
-				} else {
-					// if instance is e.g. a function call, we can't take the address of the expression
-					var temp_var = get_temp_variable (ma.inner.target_type, true, null, false);
-					emit_temp_var (temp_var);
-					ccode.add_assignment (get_variable_cexpression (temp_var.name), instance);
-					instance = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_var.name));
+				if (!get_lvalue (instance_value)) {
+					instance_value = store_temp_value (instance_value, expr);
 				}
+				instance = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_cvalue_ (instance_value));
 			}
 
 			in_arg_map.set (get_param_pos (m.cinstance_parameter_position), instance);
