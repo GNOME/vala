@@ -407,17 +407,14 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 				return base.copy_value (value, node);
 			}
 
-			var decl = get_temp_variable (type, false, node, false);
-			emit_temp_var (decl);
-
-			var ctemp = get_variable_cexpression (decl.name);
+			var temp_value = create_temp_value (type, false, node);
 
 			var copy_call = new CCodeFunctionCall (new CCodeIdentifier (generate_array_copy_wrapper (array_type)));
 			copy_call.add_argument (cexpr);
-			copy_call.add_argument (ctemp);
+			copy_call.add_argument (get_cvalue_ (temp_value));
 			ccode.add_expression (copy_call);
 
-			return new GLibValue (type, ctemp);
+			return temp_value;
 		} else {
 			return base.copy_value (value, node);
 		}
