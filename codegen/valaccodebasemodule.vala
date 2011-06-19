@@ -3762,9 +3762,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (type is ValueType && !type.nullable) {
 			// normal value type, no null check
 
-			var decl = get_temp_variable (type, false, node);
-			emit_temp_var (decl);
-			var ctemp = get_variable_cexpression (decl.name);
+			var temp_value = create_temp_value (type, true, node, true);
+			var ctemp = get_cvalue_ (temp_value);
 
 			var vt = (ValueType) type;
 			var st = (Struct) vt.type_symbol;
@@ -3795,15 +3794,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccode.add_else ();
 
 				// g_value_init/copy must not be called for uninitialized values
-				store_local (decl, value, true);
+				store_value (temp_value, value);
 				ccode.close ();
 			} else {
 				ccode.add_expression (copy_call);
 			}
 
-			result.value_type = decl.variable_type;
-			result.cvalue = ctemp;
-			return result;
+			return temp_value;
 		}
 
 		/* (temp = expr, temp == NULL ? NULL : ref (temp))
