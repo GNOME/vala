@@ -1361,7 +1361,7 @@ public class string {
 		if (str == null) {
 			str_size = 0;
 		} else {
-			str_size = str.length;
+			str_size = ((!)(str)).length;
 		}
 
 		string* result = GLib.malloc0 (this.length - (end - start) + str_size + 1);
@@ -3086,12 +3086,12 @@ namespace GLib {
 				if (c == '\n') {
 					break;
 				}
-				ret.append_c ((char) c);
+				((!)(ret)).append_c ((char) c);
 			}
 			if (ret == null) {
 				return null;
 			} else {
-				return ret.str;
+				return ((!)(ret)).str;
 			}
 		}
 	}
