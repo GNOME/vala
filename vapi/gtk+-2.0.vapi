@@ -7405,7 +7405,7 @@ namespace Gtk {
 	public delegate bool AccelGroupFindFunc (Gtk.AccelKey key, GLib.Closure closure);
 	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
 	public delegate void AccelMapForeach (void* data, string accel_path, uint accel_key, Gdk.ModifierType accel_mods, bool changed);
-	[CCode (cheader_filename = "gtk/gtk.h")]
+	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
 	public delegate void ActionCallback (Gtk.Action action);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate int AssistantPageFunc (int current_page);

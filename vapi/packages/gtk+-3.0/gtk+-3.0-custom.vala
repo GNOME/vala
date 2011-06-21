@@ -68,6 +68,7 @@ namespace Gtk {
 		public GLib.SList<GLib.File> get_files ();
 	}
 
+	[CCode (has_target = false)]
 	public delegate void ActionCallback (Action action);
 
 	public delegate void MenuPositionFunc (Gtk.Menu menu, out int x, out int y, out bool push_in);
