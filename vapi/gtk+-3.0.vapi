@@ -6151,7 +6151,7 @@ namespace Gtk {
 		public bool backward_chars (int count);
 		public bool backward_cursor_position ();
 		public bool backward_cursor_positions (int count);
-		public bool backward_find_char (Gtk.TextCharPredicate pred, Gtk.TextIter limit);
+		public bool backward_find_char (Gtk.TextCharPredicate pred, Gtk.TextIter? limit);
 		public bool backward_line ();
 		public bool backward_lines (int count);
 		public bool backward_search (string str, Gtk.TextSearchFlags flags, out Gtk.TextIter match_start, out Gtk.TextIter match_end, Gtk.TextIter? limit);
