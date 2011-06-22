@@ -42,6 +42,8 @@ public class Vala.GAsyncModule : GSignalModule {
 		}
 
 		foreach (Parameter param in m.get_parameters ()) {
+			bool is_unowned_delegate = param.variable_type is DelegateType && !param.variable_type.value_owned;
+
 			var param_type = param.variable_type.copy ();
 			param_type.value_owned = true;
 			data.add_field (param_type.get_cname (), get_variable_cname (param.name));
@@ -57,7 +59,9 @@ public class Vala.GAsyncModule : GSignalModule {
 				var deleg_type = (DelegateType) param.variable_type;
 				if (deleg_type.delegate_symbol.has_target) {
 					data.add_field ("gpointer", get_delegate_target_cname (get_variable_cname (param.name)));
-					data.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
+					if (!is_unowned_delegate) {
+						data.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
+					}
 				}
 			}
 		}
@@ -244,6 +248,8 @@ public class Vala.GAsyncModule : GSignalModule {
 
 		foreach (Parameter param in m.get_parameters ()) {
 			if (param.direction != ParameterDirection.OUT) {
+				bool is_unowned_delegate = param.variable_type is DelegateType && !param.variable_type.value_owned;
+
 				var param_type = param.variable_type.copy ();
 				param_type.value_owned = true;
 
@@ -251,7 +257,7 @@ public class Vala.GAsyncModule : GSignalModule {
 				var old_captured = param.captured;
 				param.captured = false;
 				var value = load_parameter (param);
-				if (requires_copy (param_type) && !param.variable_type.value_owned)  {
+				if (requires_copy (param_type) && !param.variable_type.value_owned && !is_unowned_delegate)  {
 					value = copy_value (value, param);
 				}
 				param.captured = old_captured;
