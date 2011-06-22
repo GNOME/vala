@@ -701,10 +701,6 @@ public class Vala.Struct : TypeSymbol {
 				return true;
 			}
 		}
-		if (get_attribute ("ByRef") != null) {
-			// used by time_t
-			return false;
-		}
 		if (CodeContext.get ().profile == Profile.DOVA) {
 			return true;
 		}

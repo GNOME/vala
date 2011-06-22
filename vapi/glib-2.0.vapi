@@ -2283,7 +2283,6 @@ namespace GLib {
 		public void add (long microseconds);
 		[CCode (instance_pos = -1)]
 		public bool from_iso8601 (string iso_date);
-		[InstanceByReference]
 		public string to_iso8601 ();
 	}
 
