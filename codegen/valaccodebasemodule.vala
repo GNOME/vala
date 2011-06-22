@@ -5394,7 +5394,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var delegate_type = (DelegateType) prop.property_type;
 			if (delegate_type.delegate_symbol.has_target) {
 				ccall.add_argument (get_delegate_target_cvalue (value));
-				if (delegate_type.value_owned) {
+				if (base_property.set_accessor.value_type.value_owned) {
 					ccall.add_argument (get_delegate_target_destroy_notify_cvalue (value));
 				}
 			}
