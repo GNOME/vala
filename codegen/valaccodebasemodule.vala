@@ -1362,7 +1362,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var this_type = get_data_type_for_symbol (t);
 			generate_type_declaration (this_type, decl_space);
 			var cselfparam = new CCodeParameter ("self", get_ccode_name (this_type));
-			if (t is Struct) {
+			if (t is Struct && !((Struct) t).is_simple_type ()) {
 				cselfparam.type_name += "*";
 			}
 
@@ -1450,7 +1450,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		var this_type = get_data_type_for_symbol (t);
 		var cselfparam = new CCodeParameter ("self", get_ccode_name (this_type));
-		if (t is Struct) {
+		if (t is Struct && !((Struct) t).is_simple_type ()) {
 			cselfparam.type_name += "*";
 		}
 		CCodeParameter cvalueparam;

@@ -209,7 +209,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier (getter_cname));
 
 				if (prop.binding == MemberBinding.INSTANCE) {
-					if (prop.parent_symbol is Struct) {
+					if (prop.parent_symbol is Struct && !((Struct) prop.parent_symbol).is_simple_type ()) {
 						// we need to pass struct instance by reference
 						var instance = expr.inner.target_value;
 						if (!get_lvalue (instance)) {
