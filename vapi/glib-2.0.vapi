@@ -2176,7 +2176,7 @@ namespace GLib {
 	namespace Log {
 		public static uint set_handler (string? log_domain, LogLevelFlags log_levels, LogFunc log_func);
 		public static void set_default_handler (LogFunc log_func);
-		[CCode (delegate_target = "NULL")]
+		[CCode (delegate_target = false)]
 		public static GLib.LogFunc default_handler;
 		public static LogLevelFlags set_fatal_mask (string log_domain, LogLevelFlags log_levels);
 		public static LogLevelFlags set_always_fatal (LogLevelFlags log_levels);
