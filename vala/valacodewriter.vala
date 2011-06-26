@@ -828,6 +828,14 @@ public class Vala.CodeWriter : CodeVisitor {
 						write_string ("array_length_type = \"%s\"".printf (f.array_length_type));
 					}
 				}
+			} else if (f.variable_type is DelegateType) {
+				if (f.no_delegate_target) {
+					if (custom_cname || custom_ctype || custom_cheaders) {
+						write_string (", ");
+					}
+
+					write_string ("delegate_target = false");
+				}
 			}
 
 			write_string (")]");
