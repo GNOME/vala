@@ -6057,7 +6057,7 @@ namespace Gtk {
 		public weak string label;
 		public weak string accelerator;
 		public weak string tooltip;
-		[CCode (type = "GCallback")]
+		[CCode (type = "GCallback", delegate_target = false)]
 		public weak Gtk.ActionCallback callback;
 	}
 	[CCode (type_id = "GTK_TYPE_ALLOCATION", cheader_filename = "gtk/gtk.h")]
@@ -6245,7 +6245,7 @@ namespace Gtk {
 		public weak string label;
 		public weak string accelerator;
 		public weak string tooltip;
-		[CCode (type = "GCallback")]
+		[CCode (type = "GCallback", delegate_target = false)]
 		public weak Gtk.ActionCallback callback;
 		public bool is_active;
 	}
@@ -7077,7 +7077,7 @@ namespace Gtk {
 	public delegate bool AccelGroupFindFunc (Gtk.AccelKey key, GLib.Closure closure);
 	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
 	public delegate void AccelMapForeach (void* data, string accel_path, uint accel_key, Gdk.ModifierType accel_mods, bool changed);
-	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void ActionCallback (Gtk.Action action);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate int AssistantPageFunc (int current_page);

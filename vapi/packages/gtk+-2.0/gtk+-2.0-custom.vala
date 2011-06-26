@@ -106,7 +106,6 @@ namespace Gtk {
 	[CCode (has_target = false)]
 	public delegate void CallbackMarshal (Object object, void* data, Arg[] args);
 
-	[CCode (has_target = false)]
 	public delegate void ActionCallback (Action action);
 
 	public delegate void MenuPositionFunc (Gtk.Menu menu, out int x, out int y, out bool push_in);
