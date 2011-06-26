@@ -68,6 +68,14 @@ namespace Gtk {
 		public GLib.SList<GLib.File> get_files ();
 	}
 
+	[CCode (cname = "gint")]
+	public enum SortColumn {
+		[CCode (cname = "GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID")]
+		DEFAULT,
+		[CCode (cname = "GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID")]
+		UNSORTED
+	}
+
 	public delegate void ActionCallback (Action action);
 
 	public delegate void MenuPositionFunc (Gtk.Menu menu, out int x, out int y, out bool push_in);

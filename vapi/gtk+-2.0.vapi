@@ -7172,6 +7172,13 @@ namespace Gtk {
 		VERTICAL,
 		BOTH
 	}
+	[CCode (cprefix = "GTK_SORT_COLUMN_", cname = "gint", cheader_filename = "gtk/gtk.h")]
+	public enum SortColumn {
+		[CCode (cname = "GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID")]
+		DEFAULT,
+		[CCode (cname = "GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID")]
+		UNSORTED
+	}
 	[CCode (cprefix = "GTK_SORT_", cheader_filename = "gtk/gtk.h")]
 	public enum SortType {
 		ASCENDING,

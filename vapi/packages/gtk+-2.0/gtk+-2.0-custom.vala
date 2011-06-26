@@ -103,6 +103,14 @@ namespace Gtk {
 		public GLib.SList<GLib.File> get_files ();
 	}
 
+	[CCode (cname = "gint")]
+	public enum SortColumn {
+		[CCode (cname = "GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID")]
+		DEFAULT,
+		[CCode (cname = "GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID")]
+		UNSORTED
+	}
+
 	[CCode (has_target = false)]
 	public delegate void CallbackMarshal (Object object, void* data, Arg[] args);
 
