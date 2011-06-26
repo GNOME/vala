@@ -3136,7 +3136,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	private void append_param_free (Method m) {
 		foreach (Parameter param in m.get_parameters ()) {
-			if (!param.ellipsis && requires_destroy (param.variable_type) && param.direction == ParameterDirection.IN) {
+			if (!param.captured && !param.ellipsis && requires_destroy (param.variable_type) && param.direction == ParameterDirection.IN) {
 				ccode.add_expression (destroy_parameter (param));
 			}
 		}
