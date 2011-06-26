@@ -2597,6 +2597,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		string deprecated_since = null;
 		string replacement = null;
 		bool experimental = false;
+		bool no_delegate_target = false;
 
 		var attributes = get_attributes ("%s.%s".printf (current_data_type.get_cname (), node.name));
 		if (attributes != null) {
@@ -2646,6 +2647,10 @@ public class Vala.GIdlParser : CodeVisitor {
 					array_length_cname = eval (nv[1]);
 				} else if (nv[0] == "array_length_type") {
 					array_length_type = eval (nv[1]);
+				} else if (nv[0] == "no_delegate_target") {
+					if (eval (nv[1]) == "1") {
+						no_delegate_target = true;
+					}
 				} else if (nv[0] == "experimental") {
 					if (eval (nv[1]) == "1") {
 						experimental = true;
@@ -2712,6 +2717,10 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 		} else {
 			field.no_array_length = true;
+		}
+
+		if (no_delegate_target) {
+			field.no_delegate_target = true;
 		}
 
 		return field;
