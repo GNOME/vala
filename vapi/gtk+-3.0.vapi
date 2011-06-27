@@ -916,9 +916,9 @@ namespace Gtk {
 		protected CellRenderer ();
 		public virtual bool activate (Gdk.Event event, Gtk.Widget widget, string path, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gtk.CellRendererState flags);
 		public virtual void get_aligned_area (Gtk.Widget widget, Gtk.CellRendererState flags, Gdk.Rectangle cell_area, Gdk.Rectangle aligned_area);
-		public void get_alignment (float xalign, float yalign);
+		public void get_alignment (out float xalign, out float yalign);
 		public void get_fixed_size (out int width, out int height);
-		public void get_padding (int xpad, int ypad);
+		public void get_padding (out int xpad, out int ypad);
 		public virtual void get_preferred_height (Gtk.Widget widget, out int minimum_size, out int natural_size);
 		public virtual void get_preferred_height_for_width (Gtk.Widget widget, int width, out int minimum_height, out int natural_height);
 		public void get_preferred_size (Gtk.Widget widget, out Gtk.Requisition minimum_size, out Gtk.Requisition natural_size);
