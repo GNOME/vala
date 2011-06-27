@@ -288,6 +288,10 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_string ("const_cname = \"%s\", ".printf (cl.const_cname));
 		}
 
+		if (cl.get_lower_case_cprefix () != "%s_".printf (cl.get_lower_case_cname (null))) {
+			write_string ("cprefix = \"%s\", ".printf (cl.get_lower_case_cprefix ()));
+		}
+
 		if (cl.type_check_function != null) {
 			write_string ("type_check_function = \"%s\", ".printf (cl.type_check_function ));
 		}
