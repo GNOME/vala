@@ -655,6 +655,10 @@ public class Vala.Class : ObjectTypeSymbol {
 		}
 		return lower_case_cprefix;
 	}
+
+	public void set_lower_case_cprefix (string cprefix) {
+		lower_case_cprefix = cprefix;
+	}
 	
 	public override string? get_upper_case_cname (string? infix) {
 		return get_lower_case_cname (infix).up ();
