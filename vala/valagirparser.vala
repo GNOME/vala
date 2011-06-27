@@ -66,7 +66,8 @@ public class Vala.GirParser : CodeVisitor {
 		PRINTF_FORMAT,
 		ARRAY_LENGTH_FIELD,
 		SENTINEL,
-		CLOSURE;
+		CLOSURE,
+		CPREFIX;
 
 		public static ArgumentType? from_string (string name) {
 			var enum_class = (EnumClass) typeof(ArgumentType).class_ref ();
@@ -565,6 +566,9 @@ public class Vala.GirParser : CodeVisitor {
 				return "";
 			}
 			if (new_symbol) {
+				if (metadata.has_argument (ArgumentType.CPREFIX)) {
+					return metadata.get_string (ArgumentType.CPREFIX);
+				}
 				return "%s%s_".printf (parent.get_lower_case_cprefix (), Symbol.camel_case_to_lower_case (name));
 			} else {
 				return symbol.get_lower_case_cprefix ();
@@ -2192,6 +2196,9 @@ public class Vala.GirParser : CodeVisitor {
 			var cname = reader.get_attribute ("c:type");
 			if (cname != null) {
 				cl.set_cname (cname);
+			}
+			if (metadata.has_argument (ArgumentType.CPREFIX)) {
+				cl.set_lower_case_cprefix (metadata.get_string (ArgumentType.CPREFIX));
 			}
 
 			if (parent != null) {
