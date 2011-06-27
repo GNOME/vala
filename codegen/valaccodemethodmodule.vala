@@ -292,8 +292,8 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		}
 
 		// do not declare overriding methods and interface implementations
-		if (m.is_abstract || m.is_virtual
-		    || (m.base_method == null && m.base_interface_method == null)) {
+		if ((m.is_abstract || m.is_virtual
+			 || (m.base_method == null && m.base_interface_method == null)) && m.signal_reference == null) {
 			generate_method_declaration (m, cfile);
 
 			if (!m.is_internal_symbol ()) {
