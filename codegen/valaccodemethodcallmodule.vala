@@ -688,7 +688,13 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		}
 
 		if (m != null && m.binding == MemberBinding.INSTANCE && m.returns_modified_pointer) {
-			ccall_expr = new CCodeAssignment (instance, ccall_expr);
+			if (ma != null && ma.inner.symbol_reference is Property && ma.inner is MemberAccess) {
+				var prop = (Property) ma.inner.symbol_reference;
+				store_property (prop, ((MemberAccess) ma.inner).inner, new GLibValue (expr.value_type, ccall_expr));
+				ccall_expr = null;
+			} else {
+				ccall_expr = new CCodeAssignment (instance, ccall_expr);
+			}
 		}
 
 		if (m is ArrayResizeMethod) {
