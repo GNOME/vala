@@ -371,7 +371,7 @@ public class Vala.GAsyncModule : GSignalModule {
 
 
 	void generate_finish_function (Method m) {
-		push_context (new EmitContext ());
+		push_context (new EmitContext (m));
 
 		string dataname = Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data";
 
@@ -418,7 +418,7 @@ public class Vala.GAsyncModule : GSignalModule {
 
 		foreach (Parameter param in m.get_parameters ()) {
 			if (param.direction != ParameterDirection.IN) {
-				ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (param.name)), new CCodeMemberAccess.pointer (data_var, get_variable_cname (param.name)));
+				return_out_parameter (param);
 				if (!(param.variable_type is ValueType) || param.variable_type.nullable) {
 					ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, get_variable_cname (param.name)), new CCodeConstant ("NULL"));
 				}

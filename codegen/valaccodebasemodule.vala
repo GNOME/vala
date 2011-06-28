@@ -3162,10 +3162,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return false;
 	}
 
-	void return_out_parameter (Parameter param) {
+	public void return_out_parameter (Parameter param) {
 		var delegate_type = param.variable_type as DelegateType;
 
 		var value = load_parameter (param);
+
+		var old_coroutine = is_in_coroutine ();
+		current_method.coroutine = false;
 
 		ccode.open_if (get_variable_cexpression (param.name));
 		ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (param.name)), get_cvalue_ (value));
@@ -3179,7 +3182,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		if (param.variable_type.is_disposable ()){
 			ccode.add_else ();
+			current_method.coroutine = old_coroutine;
 			ccode.add_expression (destroy_parameter (param));
+			current_method.coroutine = false;
 		}
 		ccode.close ();
 
@@ -3191,6 +3196,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccode.close ();
 			}
 		}
+
+		current_method.coroutine = old_coroutine;
 	}
 
 	public override void visit_return_statement (ReturnStatement stmt) {

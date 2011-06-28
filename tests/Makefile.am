@@ -114,6 +114,7 @@ TESTS = \
 	asynchronous/bug613484.vala \
 	asynchronous/bug620740.vala \
 	asynchronous/bug639591.vala \
+	asynchronous/bug640721.vala \
 	asynchronous/bug641182.vala \
 	asynchronous/bug646945.vala \
 	asynchronous/bug652252.vala \
