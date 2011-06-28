@@ -1807,7 +1807,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 					// async method is suspended while waiting for callback,
 					// so we never need to care about memory management of async data
-					ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), "_async_data_"), new CCodeIdentifier ("data"));
+					ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), "_async_data_"), new CCodeIdentifier ("_data_"));
 				}
 			} else if (b.parent_symbol is PropertyAccessor) {
 				var acc = (PropertyAccessor) b.parent_symbol;
@@ -1988,7 +1988,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public CCodeExpression get_variable_cexpression (string name) {
 		if (is_in_coroutine ()) {
-			return new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_variable_cname (name));
+			return new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), get_variable_cname (name));
 		} else {
 			return new CCodeIdentifier (get_variable_cname (name));
 		}
@@ -2014,7 +2014,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public CCodeExpression get_result_cexpression (string cname = "result") {
 		if (is_in_coroutine ()) {
-			return new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), cname);
+			return new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), cname);
 		} else {
 			return new CCodeIdentifier (cname);
 		}
@@ -3588,7 +3588,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		CCodeExpression this_access;
 		if (is_in_coroutine ()) {
 			// use closure
-			this_access = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "self");
+			this_access = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "self");
 		} else {
 			this_access = new CCodeIdentifier ("self");
 		}

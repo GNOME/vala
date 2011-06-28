@@ -115,7 +115,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				// output arguments used separately
 				out_arg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
 				// pass GAsyncResult stored in closure to finish function
-				out_arg_map.set (get_param_pos (0.1), new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_res_"));
+				out_arg_map.set (get_param_pos (0.1), new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_res_"));
 			}
 		}
 
@@ -172,7 +172,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				var block = ((Method) m.parent_symbol).body;
 				instance = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), "_async_data_");
 			} else {
-				instance = new CCodeIdentifier ("data");
+				instance = new CCodeIdentifier ("_data_");
 			}
 
 			in_arg_map.set (get_param_pos (m.cinstance_parameter_position), instance);
@@ -578,7 +578,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			if (expr.is_yield_expression) {
 				// asynchronous call
 				in_arg_map.set (get_param_pos (-1), new CCodeIdentifier (generate_ready_function (current_method)));
-				in_arg_map.set (get_param_pos (-0.9), new CCodeIdentifier ("data"));
+				in_arg_map.set (get_param_pos (-0.9), new CCodeIdentifier ("_data_"));
 			}
 		}
 
@@ -676,7 +676,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			// set state before calling async function to support immediate callbacks
 			int state = next_coroutine_state++;
 
-			ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_state_"), new CCodeConstant (state.to_string ()));
+			ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_state_"), new CCodeConstant (state.to_string ()));
 			ccode.add_expression (async_call);
 			ccode.add_return (new CCodeConstant ("FALSE"));
 			ccode.add_label ("_state_%d".printf (state));

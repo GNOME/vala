@@ -125,12 +125,12 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 	}
 
 	public void complete_async () {
-		var state = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_state_");
+		var state = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_state_");
 		var zero = new CCodeConstant ("0");
 		var state_is_zero = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, state, zero);
 		ccode.open_if (state_is_zero);
 
-		var async_result_expr = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_async_result");
+		var async_result_expr = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_async_result");
 
 		var idle_call = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_complete_in_idle"));
 		idle_call.add_argument (async_result_expr);
@@ -331,7 +331,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 					function = new CCodeFunction (m.get_real_cname () + "_co", "gboolean");
 
 					// data struct to hold parameters, local variables, and the return value
-					function.add_parameter (new CCodeParameter ("data", Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data*"));
+					function.add_parameter (new CCodeParameter ("_data_", Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data*"));
 
 					function.modifiers |= CCodeModifiers.STATIC;
 					cfile.add_function_declaration (function);
@@ -350,7 +350,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		if (!m.is_abstract || (m.is_abstract && current_type_symbol is Class)) {
 			if (m.body != null) {
 				if (m.coroutine) {
-					ccode.open_switch (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_state_"));
+					ccode.open_switch (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_state_"));
 
 					// initial coroutine state
 					ccode.add_case (new CCodeConstant ("0"));

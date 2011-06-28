@@ -97,7 +97,7 @@ public class Vala.GAsyncModule : GSignalModule {
 		push_context (new EmitContext (m));
 		push_function (freefunc);
 
-		ccode.add_declaration (dataname + "*", new CCodeVariableDeclarator ("data", new CCodeIdentifier ("_data")));
+		ccode.add_declaration (dataname + "*", new CCodeVariableDeclarator ("_data_", new CCodeIdentifier ("_data")));
 
 		foreach (Parameter param in m.get_parameters ()) {
 			if (param.direction != ParameterDirection.OUT) {
@@ -136,7 +136,7 @@ public class Vala.GAsyncModule : GSignalModule {
 
 		var freecall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_free"));
 		freecall.add_argument (new CCodeIdentifier (dataname));
-		freecall.add_argument (new CCodeIdentifier ("data"));
+		freecall.add_argument (new CCodeIdentifier ("_data_"));
 		ccode.add_expression (freecall);
 
 		pop_context ();
@@ -488,13 +488,13 @@ public class Vala.GAsyncModule : GSignalModule {
 
 		push_function (readyfunc);
 
-		ccode.add_declaration (dataname + "*", new CCodeVariableDeclarator ("data"));
-		ccode.add_assignment (new CCodeIdentifier ("data"), new CCodeIdentifier ("_user_data_"));
-		ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_source_object_"), new CCodeIdentifier ("source_object"));
-		ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_res_"), new CCodeIdentifier ("_res_"));
+		ccode.add_declaration (dataname + "*", new CCodeVariableDeclarator ("_data_"));
+		ccode.add_assignment (new CCodeIdentifier ("_data_"), new CCodeIdentifier ("_user_data_"));
+		ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_source_object_"), new CCodeIdentifier ("source_object"));
+		ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_res_"), new CCodeIdentifier ("_res_"));
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_real_cname () + "_co"));
-		ccall.add_argument (new CCodeIdentifier ("data"));
+		ccall.add_argument (new CCodeIdentifier ("_data_"));
 		ccode.add_expression (ccall);
 
 		readyfunc.modifiers |= CCodeModifiers.STATIC;
@@ -552,7 +552,7 @@ public class Vala.GAsyncModule : GSignalModule {
 		if (stmt.yield_expression == null) {
 			int state = next_coroutine_state++;
 
-			ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_state_"), new CCodeConstant (state.to_string ()));
+			ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_state_"), new CCodeConstant (state.to_string ()));
 			ccode.add_return (new CCodeConstant ("FALSE"));
 			ccode.add_label ("_state_%d".printf (state));
 			ccode.add_statement (new CCodeEmptyStatement ());
@@ -590,7 +590,7 @@ public class Vala.GAsyncModule : GSignalModule {
 		}
 
 		var set_error = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_set_from_error"));
-		set_error.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_async_result"));
+		set_error.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_async_result"));
 		set_error.add_argument (error_expr);
 		ccode.add_expression (set_error);
 
