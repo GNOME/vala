@@ -148,7 +148,7 @@ public class Vala.GAsyncModule : GSignalModule {
 	}
 
 	void generate_async_function (Method m) {
-		push_context (new EmitContext ());
+		push_context (new EmitContext (m));
 
 		var dataname = Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data";
 		var asyncfunc = new CCodeFunction (m.get_real_cname (), "void");
@@ -256,29 +256,16 @@ public class Vala.GAsyncModule : GSignalModule {
 				// create copy if necessary as variables in async methods may need to be kept alive
 				var old_captured = param.captured;
 				param.captured = false;
+				current_method.coroutine = false;
 				var value = load_parameter (param);
 				if (requires_copy (param_type) && !param.variable_type.value_owned && !is_unowned_delegate)  {
 					value = copy_value (value, param);
 				}
-				param.captured = old_captured;
+				current_method.coroutine = true;
 
-				ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, get_variable_cname (param.name)), get_cvalue_ (value));
-				if (param.variable_type is ArrayType) {
-					var array_type = (ArrayType) param.variable_type;
-					if (!param.no_array_length) {
-						for (int dim = 1; dim <= array_type.rank; dim++) {
-							ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, get_parameter_array_length_cname (param, dim)), get_array_length_cvalue (value, dim));
-						}
-					}
-				} else if (param.variable_type is DelegateType) {
-					var deleg_type = (DelegateType) param.variable_type;
-					if (deleg_type.delegate_symbol.has_target) {
-						ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, get_delegate_target_cname (get_variable_cname (param.name))), get_delegate_target_cvalue (value));
-						if (deleg_type.value_owned) {
-							ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, get_delegate_target_destroy_notify_cname (get_variable_cname (param.name))), get_delegate_target_destroy_notify_cvalue (value));
-						}
-					}
-				}
+				store_parameter (param, value);
+
+				param.captured = old_captured;
 			}
 		}
 
