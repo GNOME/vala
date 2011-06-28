@@ -28,24 +28,24 @@ namespace Pango {
 		public Pango.AttrType type;
 	}
 	[Compact]
-	[CCode (free_function = "pango_attribute_destroy", cheader_filename = "pango/pango.h")]
+	[CCode (cheader_filename = "pango/pango.h")]
 	public class AttrColor : Pango.Attribute {
 		public Pango.Color color;
 	}
 	[Compact]
-	[CCode (free_function = "pango_attribute_destroy", cheader_filename = "pango/pango.h")]
+	[CCode (cheader_filename = "pango/pango.h")]
 	public class AttrFloat : Pango.Attribute {
 		public double value;
 	}
 	[Compact]
-	[CCode (free_function = "pango_attribute_destroy", cheader_filename = "pango/pango.h")]
+	[CCode (cheader_filename = "pango/pango.h")]
 	public class AttrFontDesc : Pango.Attribute {
 		public weak Pango.FontDescription desc;
 		[CCode (type = "PangoAttribute*", has_construct_function = false)]
 		public AttrFontDesc (Pango.FontDescription desc);
 	}
 	[Compact]
-	[CCode (free_function = "pango_attribute_destroy", cheader_filename = "pango/pango.h")]
+	[CCode (cheader_filename = "pango/pango.h")]
 	public class AttrInt : Pango.Attribute {
 		public int value;
 	}
@@ -60,7 +60,7 @@ namespace Pango {
 		public void range (out int start, out int end);
 	}
 	[Compact]
-	[CCode (free_function = "pango_attribute_destroy", cheader_filename = "pango/pango.h")]
+	[CCode (cheader_filename = "pango/pango.h")]
 	public class AttrLanguage : Pango.Attribute {
 		public weak Pango.Language value;
 		[CCode (type = "PangoAttribute*", has_construct_function = false)]
@@ -80,21 +80,21 @@ namespace Pango {
 		public void splice (Pango.AttrList other, int pos, int len);
 	}
 	[Compact]
-	[CCode (free_function = "pango_attribute_destroy", cheader_filename = "pango/pango.h")]
-	public class AttrShape : Pango.Attribute {
+	[CCode (cheader_filename = "pango/pango.h")]
+	public class AttrShape<T> : Pango.Attribute {
 		public weak Pango.Attribute attr;
-		public weak Pango.AttrDataCopyFunc copy_func;
-		public void* data;
+		public weak Pango.AttrDataCopyFunc<T> copy_func;
+		public T data;
 		public weak GLib.DestroyNotify destroy_func;
 		public Pango.Rectangle ink_rect;
 		public Pango.Rectangle logical_rect;
 		[CCode (type = "PangoAttribute*", has_construct_function = false)]
 		public AttrShape (Pango.Rectangle ink_rect, Pango.Rectangle logical_rect);
-		[CCode (type = "PangoAttribute*", has_construct_function = false)]
-		public AttrShape.with_data (Pango.Rectangle ink_rect, Pango.Rectangle logical_rect, void* data, Pango.AttrDataCopyFunc copy_func, GLib.DestroyNotify destroy_func);
+		[CCode (type = "PangoAttribute*", simple_generics = true, has_construct_function = false)]
+		public AttrShape.with_data (Pango.Rectangle ink_rect, Pango.Rectangle logical_rect, owned T data, Pango.AttrDataCopyFunc<T> copy_func);
 	}
 	[Compact]
-	[CCode (free_function = "pango_attribute_destroy", cheader_filename = "pango/pango.h")]
+	[CCode (cheader_filename = "pango/pango.h")]
 	public class AttrSize : Pango.Attribute {
 		public uint absolute;
 		public int size;
@@ -102,7 +102,7 @@ namespace Pango {
 		public AttrSize (int size);
 	}
 	[Compact]
-	[CCode (free_function = "pango_attribute_destroy", cheader_filename = "pango/pango.h")]
+	[CCode (cheader_filename = "pango/pango.h")]
 	public class AttrString : Pango.Attribute {
 		public weak string value;
 	}
@@ -827,8 +827,8 @@ namespace Pango {
 		CHAR,
 		WORD_CHAR
 	}
-	[CCode (cheader_filename = "pango/pango.h")]
-	public delegate void* AttrDataCopyFunc ();
+	[CCode (cheader_filename = "pango/pango.h", has_target = false)]
+	public delegate T AttrDataCopyFunc<T> (T data);
 	[CCode (cheader_filename = "pango/pango.h")]
 	public delegate bool AttrFilterFunc (Pango.Attribute attribute);
 	[CCode (cheader_filename = "pango/pango.h")]
