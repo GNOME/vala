@@ -1154,6 +1154,10 @@ public class Vala.CodeWriter : CodeVisitor {
 			ccode_params.append_printf ("%stype = \"%s\"", separator, m.custom_return_type_cname);
 			separator = ", ";
 		}
+		if (m.simple_generics) {
+			ccode_params.append_printf ("%ssimple_generics = true", separator);
+			separator = ", ";
+		}
 
 		var cm = m as CreationMethod;
 		if (cm != null) {
