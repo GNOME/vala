@@ -2143,6 +2143,10 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "1") {
 						m.experimental = true;
 					}
+				} else if (nv[0] == "simple_generics") {
+					if (eval (nv[1]) == "1") {
+						m.simple_generics = true;
+					}
 				}
 			}
 		}
