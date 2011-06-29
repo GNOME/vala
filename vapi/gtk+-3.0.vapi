@@ -3995,7 +3995,7 @@ namespace Gtk {
 		public static bool lookup_property (string property_name, Gtk.StylePropertyParser parse_func, out unowned GLib.ParamSpec pspec);
 		public void map_color (string name, Gtk.SymbolicColor color);
 		public void merge (Gtk.StyleProperties props_to_merge, bool replace);
-		public static void register_property (Gtk.StylePropertyParser parse_func, GLib.ParamSpec pspec);
+		public static void register_property (Gtk.StylePropertyParser? parse_func, GLib.ParamSpec pspec);
 		public void @set (Gtk.StateFlags state);
 		public void set_property (string property, Gtk.StateFlags state, GLib.Value value);
 		public void set_valist (Gtk.StateFlags state, void* args);
