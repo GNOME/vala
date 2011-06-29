@@ -4569,7 +4569,7 @@ namespace Gtk {
 		public virtual void render_option (Cairo.Context cr, double x, double y, double width, double height);
 		[NoWrapper]
 		public virtual void render_slider (Cairo.Context cr, double x, double y, double width, double height, Gtk.Orientation orientation);
-		public bool state_is_running (Gtk.StateType state, double progress);
+		public bool state_is_running (Gtk.StateType state, out double progress);
 		[NoAccessorMethod]
 		public string name { owned get; construct; }
 	}
