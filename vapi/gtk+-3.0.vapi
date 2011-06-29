@@ -4517,7 +4517,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		protected ThemingEngine ();
 		public void @get (Gtk.StateFlags state, ...);
-		public void get_background_color (Gtk.StateFlags state, Gdk.RGBA color);
+		public Gdk.RGBA get_background_color (Gtk.StateFlags state);
 		public Gtk.Border get_border (Gtk.StateFlags state);
 		public Gdk.RGBA get_border_color (Gtk.StateFlags state);
 		public Gdk.RGBA get_color (Gtk.StateFlags state);
