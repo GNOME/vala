@@ -6032,7 +6032,7 @@ namespace Gtk {
 		[HasEmitter]
 		public signal void row_inserted (Gtk.TreePath path, Gtk.TreeIter iter);
 		[HasEmitter]
-		public signal void rows_reordered (Gtk.TreePath path, Gtk.TreeIter iter, void* new_order);
+		public signal void rows_reordered (Gtk.TreePath path, Gtk.TreeIter? iter, void* new_order);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface TreeSortable : Gtk.TreeModel, GLib.Object {
