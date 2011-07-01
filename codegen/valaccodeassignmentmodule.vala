@@ -268,11 +268,16 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 	}
 
 	public override void store_field (Field field, TargetValue? instance, TargetValue value) {
-		if (requires_destroy (get_field_cvalue (field, instance).value_type)) {
+		var lvalue = get_field_cvalue (field, instance);
+		var type = lvalue.value_type;
+		if (lvalue.actual_value_type != null) {
+			type = lvalue.actual_value_type;
+		}
+		if (requires_destroy (type)) {
 			/* unref old value */
 			ccode.add_expression (destroy_field (field, instance));
 		}
 
-		store_value (get_field_cvalue (field, instance), value);
+		store_value (lvalue, value);
 	}
 }

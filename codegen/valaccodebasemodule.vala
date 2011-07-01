@@ -2888,6 +2888,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	// apply changes to both methods
 	public virtual CCodeExpression destroy_value (TargetValue value, bool is_macro_definition = false) {
 		var type = value.value_type;
+		if (value.actual_value_type != null) {
+			type = value.actual_value_type;
+		}
 		var cvar = get_cvalue_ (value);
 
 		if (type is DelegateType) {
@@ -5910,6 +5913,7 @@ public class Vala.GLibValue : TargetValue {
 
 	public GLibValue copy () {
 		var result = new GLibValue (value_type.copy (), cvalue);
+		result.actual_value_type = actual_value_type;
 		result.non_null = non_null;
 		result.ctype = ctype;
 
