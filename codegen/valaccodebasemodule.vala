@@ -3165,7 +3165,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public void return_out_parameter (Parameter param) {
 		var delegate_type = param.variable_type as DelegateType;
 
-		var value = load_parameter (param);
+		var value = get_parameter_cvalue (param);
 
 		var old_coroutine = is_in_coroutine ();
 		current_method.coroutine = false;
