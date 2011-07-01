@@ -29,11 +29,11 @@ namespace Sqlite {
 		public int busy_timeout (int ms);
 		public int changes ();
 		[CCode (cname = "sqlite3_exec")]
-		public int _exec (string sql, Callback? sqlite3_callback = null, [CCode (type = "char**")] out unowned string errmsg = null);
+		public int _exec (string sql, Callback? callback = null, [CCode (type = "char**")] out unowned string errmsg = null);
 		[CCode (cname = "_sqlite3_exec")]
-		public int exec (string sql, Callback? sqlite3_callback = null, out string errmsg = null) {
+		public int exec (string sql, Callback? callback = null, out string errmsg = null) {
 			unowned string sqlite_errmsg;
-			var ec = this._exec (sql, sqlite3_callback, out sqlite_errmsg);
+			var ec = this._exec (sql, callback, out sqlite_errmsg);
 			if (&errmsg != null) {
 				errmsg = sqlite_errmsg;
 			}
