@@ -3047,27 +3047,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return;
 		}
 
-		LocalVariable full_expr_var = null;
-
 		var local_decl = expr.parent_node as LocalVariable;
 		if (!(local_decl != null && has_simple_struct_initializer (local_decl))) {
-			var expr_type = expr.value_type;
-			if (expr.target_type != null) {
-				expr_type = expr.target_type;
-			}
-
-			full_expr_var = get_temp_variable (expr_type, true, expr, false);
-			emit_temp_var (full_expr_var);
-		
-			ccode.add_assignment (get_variable_cexpression (full_expr_var.name), get_cvalue (expr));
+			expr.target_value = store_temp_value (expr.target_value, expr);
 		}
-		
+
 		foreach (var value in temp_ref_values) {
 			ccode.add_expression (destroy_value (value));
-		}
-
-		if (full_expr_var != null) {
-			set_cvalue (expr, get_variable_cexpression (full_expr_var.name));
 		}
 
 		temp_ref_values.clear ();
