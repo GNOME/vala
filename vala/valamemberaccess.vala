@@ -752,6 +752,9 @@ public class Vala.MemberAccess : Expression {
 				inner.value_type = this_parameter.variable_type.copy ();
 				inner.value_type.value_owned = false;
 				inner.symbol_reference = this_parameter;
+			} else if (context.profile == Profile.GOBJECT && lvalue && member is ArrayLengthField) {
+				inner.lvalue = true;
+				((MemberAccess) inner).check_lvalue_struct_access ();
 			} else {
 				check_lvalue_struct_access ();
 			}
