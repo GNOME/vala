@@ -489,15 +489,17 @@ public class Vala.Assignment : Expression {
 					codegen.store_field (field, instance && ma.inner != null ? ma.inner.target_value : null, new_value);
 				}
 
-				// when load_variable is changed to use temporary
-				// variables, replace following code with this line
-				// target_value = new_value;
-				if (local != null) {
-					target_value = codegen.load_local (local);
-				} else if (param != null) {
-					target_value = codegen.load_parameter (param);
-				} else if (field != null) {
-					target_value = codegen.load_field (field, instance && ma.inner != null ? ma.inner.target_value : null);
+				if (!(parent_node is ExpressionStatement)) {
+					// when load_variable is changed to use temporary
+					// variables, replace following code with this line
+					// target_value = new_value;
+					if (local != null) {
+						target_value = codegen.load_local (local);
+					} else if (param != null) {
+						target_value = codegen.load_parameter (param);
+					} else if (field != null) {
+						target_value = codegen.load_field (field, instance && ma.inner != null ? ma.inner.target_value : null);
+					}
 				}
 
 				codegen.visit_expression (this);
