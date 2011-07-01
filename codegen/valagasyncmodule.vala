@@ -148,7 +148,7 @@ public class Vala.GAsyncModule : GSignalModule {
 	}
 
 	void generate_async_function (Method m) {
-		push_context (new EmitContext (m));
+		push_context (new EmitContext ());
 
 		var dataname = Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data";
 		var asyncfunc = new CCodeFunction (m.get_real_cname (), "void");
@@ -246,6 +246,7 @@ public class Vala.GAsyncModule : GSignalModule {
 			ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, "self"), cself);
 		}
 
+		emit_context.push_symbol (m);
 		foreach (Parameter param in m.get_parameters ()) {
 			if (param.direction != ParameterDirection.OUT) {
 				bool is_unowned_delegate = param.variable_type is DelegateType && !param.variable_type.value_owned;
@@ -268,6 +269,7 @@ public class Vala.GAsyncModule : GSignalModule {
 				param.captured = old_captured;
 			}
 		}
+		emit_context.pop_symbol ();
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_real_cname () + "_co"));
 		ccall.add_argument (data_var);
@@ -371,7 +373,7 @@ public class Vala.GAsyncModule : GSignalModule {
 
 
 	void generate_finish_function (Method m) {
-		push_context (new EmitContext (m));
+		push_context (new EmitContext ());
 
 		string dataname = Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data";
 
@@ -416,6 +418,7 @@ public class Vala.GAsyncModule : GSignalModule {
 		ccall.add_argument (simple_async_result_cast);
 		ccode.add_assignment (data_var, ccall);
 
+		emit_context.push_symbol (m);
 		foreach (Parameter param in m.get_parameters ()) {
 			if (param.direction != ParameterDirection.IN) {
 				return_out_parameter (param);
@@ -424,6 +427,7 @@ public class Vala.GAsyncModule : GSignalModule {
 				}
 			}
 		}
+		emit_context.pop_symbol ();
 
 		if (return_type.is_real_non_null_struct_type ()) {
 			// structs are returned via out parameter
