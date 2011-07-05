@@ -227,11 +227,8 @@ namespace Gst {
 		public uint add_data_probe ([CCode (type="GCallback")] owned DataProbeCallback handler);
 		[CCode (cname = "gst_pad_add_event_probe_full")]
 		public uint add_event_probe ([CCode (type="GCallback")] owned EventProbeCallback handler);
-		[CCode (instance_pos = -1)]
-		public Gst.Caps get_fixed_caps_func (Gst.Pad pad);
-		[CCode (instance_pos = -1)]
-		public Gst.Caps proxy_getcaps (Gst.Pad pad);
-		[CCode (instance_pos = -1)]
+		public Gst.Caps get_fixed_caps_func ();
+		public Gst.Caps proxy_getcaps ();
 		public bool proxy_setcaps (Gst.Caps caps);
 		[CCode (cname = "gst_pad_set_blocked_async_full")]
 		public bool set_blocked_async (bool blocked, owned Gst.PadBlockCallback callback);

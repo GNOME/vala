@@ -844,8 +844,7 @@ namespace Gst {
 		public Gst.Caps get_caps_reffed ();
 		public Gst.PadDirection get_direction ();
 		public void* get_element_private ();
-		[CCode (instance_pos = -1)]
-		public Gst.Caps get_fixed_caps_func (Gst.Pad pad);
+		public Gst.Caps get_fixed_caps_func ();
 		public GLib.List<Gst.Pad> get_internal_links ();
 		public GLib.List<Gst.Pad> get_internal_links_default ();
 		public Gst.Caps get_negotiated_caps ();
@@ -872,9 +871,7 @@ namespace Gst {
 		public Gst.Caps peer_get_caps ();
 		public Gst.Caps peer_get_caps_reffed ();
 		public bool peer_query (Gst.Query query);
-		[CCode (instance_pos = -1)]
-		public Gst.Caps proxy_getcaps (Gst.Pad pad);
-		[CCode (instance_pos = -1)]
+		public Gst.Caps proxy_getcaps ();
 		public bool proxy_setcaps (Gst.Caps caps);
 		public Gst.FlowReturn pull_range (uint64 offset, uint size, out Gst.Buffer buffer);
 		public Gst.FlowReturn push (owned Gst.Buffer buffer);
@@ -2265,7 +2262,7 @@ namespace Gst {
 		MISSING_PLUGIN,
 		CLOCK,
 		DISABLED,
-		NUM_ERRORS,
+		NUM_ERRORS
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate unowned Gst.Buffer BufferListDoFunction (Gst.Buffer buffer);
