@@ -310,6 +310,20 @@
 		<function name="g_dbus_generate_guid" symbol="g_dbus_generate_guid">
 			<return-type type="gchar*"/>
 		</function>
+		<function name="g_dbus_gvalue_to_gvariant" symbol="g_dbus_gvalue_to_gvariant">
+			<return-type type="GVariant*"/>
+			<parameters>
+				<parameter name="gvalue" type="GValue*"/>
+				<parameter name="type" type="GVariantType*"/>
+			</parameters>
+		</function>
+		<function name="g_dbus_gvariant_to_gvalue" symbol="g_dbus_gvariant_to_gvalue">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="value" type="GVariant*"/>
+				<parameter name="out_gvalue" type="GValue*"/>
+			</parameters>
+		</function>
 		<function name="g_dbus_is_address" symbol="g_dbus_is_address">
 			<return-type type="gboolean"/>
 			<parameters>
@@ -528,6 +542,15 @@
 				<parameter name="user_data" type="gpointer"/>
 			</parameters>
 		</callback>
+		<callback name="GDBusProxyTypeFunc">
+			<return-type type="GType"/>
+			<parameters>
+				<parameter name="manager" type="GDBusObjectManagerClient*"/>
+				<parameter name="object_path" type="gchar*"/>
+				<parameter name="interface_name" type="gchar*"/>
+				<parameter name="user_data" type="gpointer"/>
+			</parameters>
+		</callback>
 		<callback name="GDBusSignalCallback">
 			<return-type type="void"/>
 			<parameters>
@@ -649,6 +672,14 @@
 				<parameter name="user_data" type="gpointer"/>
 			</parameters>
 		</callback>
+		<struct name="GActionEntry">
+			<field name="name" type="gchar*"/>
+			<field name="activate" type="GCallback"/>
+			<field name="parameter_type" type="gchar*"/>
+			<field name="state" type="gchar*"/>
+			<field name="change_state" type="GCallback"/>
+			<field name="padding" type="gsize[]"/>
+		</struct>
 		<struct name="GCredentialsClass">
 		</struct>
 		<struct name="GDBusErrorEntry">
@@ -787,12 +818,6 @@
 		</struct>
 		<struct name="GThemedIconClass">
 		</struct>
-		<struct name="GTlsClientContext">
-		</struct>
-		<struct name="GTlsContext">
-		</struct>
-		<struct name="GTlsServerContext">
-		</struct>
 		<struct name="GUnixCredentialsMessage">
 		</struct>
 		<struct name="GUnixFDList">
@@ -841,6 +866,18 @@
 			<field name="annotations" type="GDBusAnnotationInfo**"/>
 		</boxed>
 		<boxed name="GDBusInterfaceInfo" type-name="GDBusInterfaceInfo" get-type="g_dbus_interface_info_get_type">
+			<method name="cache_build" symbol="g_dbus_interface_info_cache_build">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="info" type="GDBusInterfaceInfo*"/>
+				</parameters>
+			</method>
+			<method name="cache_release" symbol="g_dbus_interface_info_cache_release">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="info" type="GDBusInterfaceInfo*"/>
+				</parameters>
+			</method>
 			<method name="generate_xml" symbol="g_dbus_interface_info_generate_xml">
 				<return-type type="void"/>
 				<parameters>
@@ -1143,6 +1180,7 @@
 			<member name="G_CREDENTIALS_TYPE_INVALID" value="0"/>
 			<member name="G_CREDENTIALS_TYPE_LINUX_UCRED" value="1"/>
 			<member name="G_CREDENTIALS_TYPE_FREEBSD_CMSGCRED" value="2"/>
+			<member name="G_CREDENTIALS_TYPE_OPENBSD_SOCKPEERCRED" value="3"/>
 		</enum>
 		<enum name="GDBusError" type-name="GDBusError" get-type="g_dbus_error_get_type">
 			<member name="G_DBUS_ERROR_FAILED" value="0"/>
@@ -1411,6 +1449,7 @@
 			<member name="G_APPLICATION_HANDLES_OPEN" value="4"/>
 			<member name="G_APPLICATION_HANDLES_COMMAND_LINE" value="8"/>
 			<member name="G_APPLICATION_SEND_ENVIRONMENT" value="16"/>
+			<member name="G_APPLICATION_NON_UNIQUE" value="32"/>
 		</flags>
 		<flags name="GAskPasswordFlags" type-name="GAskPasswordFlags" get-type="g_ask_password_flags_get_type">
 			<member name="G_ASK_PASSWORD_NEED_PASSWORD" value="1"/>
@@ -1449,10 +1488,18 @@
 			<member name="G_DBUS_CONNECTION_FLAGS_MESSAGE_BUS_CONNECTION" value="8"/>
 			<member name="G_DBUS_CONNECTION_FLAGS_DELAY_MESSAGE_PROCESSING" value="16"/>
 		</flags>
+		<flags name="GDBusInterfaceSkeletonFlags" type-name="GDBusInterfaceSkeletonFlags" get-type="g_dbus_interface_skeleton_flags_get_type">
+			<member name="G_DBUS_INTERFACE_SKELETON_FLAGS_NONE" value="0"/>
+			<member name="G_DBUS_INTERFACE_SKELETON_FLAGS_HANDLE_METHOD_INVOCATIONS_IN_THREAD" value="1"/>
+		</flags>
 		<flags name="GDBusMessageFlags" type-name="GDBusMessageFlags" get-type="g_dbus_message_flags_get_type">
 			<member name="G_DBUS_MESSAGE_FLAGS_NONE" value="0"/>
 			<member name="G_DBUS_MESSAGE_FLAGS_NO_REPLY_EXPECTED" value="1"/>
 			<member name="G_DBUS_MESSAGE_FLAGS_NO_AUTO_START" value="2"/>
+		</flags>
+		<flags name="GDBusObjectManagerClientFlags" type-name="GDBusObjectManagerClientFlags" get-type="g_dbus_object_manager_client_flags_get_type">
+			<member name="G_DBUS_OBJECT_MANAGER_CLIENT_FLAGS_NONE" value="0"/>
+			<member name="G_DBUS_OBJECT_MANAGER_CLIENT_FLAGS_DO_NOT_AUTO_START" value="1"/>
 		</flags>
 		<flags name="GDBusPropertyInfoFlags" type-name="GDBusPropertyInfoFlags" get-type="g_dbus_property_info_flags_get_type">
 			<member name="G_DBUS_PROPERTY_INFO_FLAGS_NONE" value="0"/>
@@ -2618,6 +2665,107 @@
 				</parameters>
 			</signal>
 		</object>
+		<object name="GDBusInterfaceSkeleton" parent="GObject" type-name="GDBusInterfaceSkeleton" get-type="g_dbus_interface_skeleton_get_type">
+			<implements>
+				<interface name="GDBusInterface"/>
+			</implements>
+			<method name="export" symbol="g_dbus_interface_skeleton_export">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="interface_" type="GDBusInterfaceSkeleton*"/>
+					<parameter name="connection" type="GDBusConnection*"/>
+					<parameter name="object_path" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="flush" symbol="g_dbus_interface_skeleton_flush">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="interface_" type="GDBusInterfaceSkeleton*"/>
+				</parameters>
+			</method>
+			<method name="get_connection" symbol="g_dbus_interface_skeleton_get_connection">
+				<return-type type="GDBusConnection*"/>
+				<parameters>
+					<parameter name="interface_" type="GDBusInterfaceSkeleton*"/>
+				</parameters>
+			</method>
+			<method name="get_flags" symbol="g_dbus_interface_skeleton_get_flags">
+				<return-type type="GDBusInterfaceSkeletonFlags"/>
+				<parameters>
+					<parameter name="interface_" type="GDBusInterfaceSkeleton*"/>
+				</parameters>
+			</method>
+			<method name="get_info" symbol="g_dbus_interface_skeleton_get_info">
+				<return-type type="GDBusInterfaceInfo*"/>
+				<parameters>
+					<parameter name="interface_" type="GDBusInterfaceSkeleton*"/>
+				</parameters>
+			</method>
+			<method name="get_object_path" symbol="g_dbus_interface_skeleton_get_object_path">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="interface_" type="GDBusInterfaceSkeleton*"/>
+				</parameters>
+			</method>
+			<method name="get_properties" symbol="g_dbus_interface_skeleton_get_properties">
+				<return-type type="GVariant*"/>
+				<parameters>
+					<parameter name="interface_" type="GDBusInterfaceSkeleton*"/>
+				</parameters>
+			</method>
+			<method name="get_vtable" symbol="g_dbus_interface_skeleton_get_vtable">
+				<return-type type="GDBusInterfaceVTable*"/>
+				<parameters>
+					<parameter name="interface_" type="GDBusInterfaceSkeleton*"/>
+				</parameters>
+			</method>
+			<method name="set_flags" symbol="g_dbus_interface_skeleton_set_flags">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="interface_" type="GDBusInterfaceSkeleton*"/>
+					<parameter name="flags" type="GDBusInterfaceSkeletonFlags"/>
+				</parameters>
+			</method>
+			<method name="unexport" symbol="g_dbus_interface_skeleton_unexport">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="interface_" type="GDBusInterfaceSkeleton*"/>
+				</parameters>
+			</method>
+			<property name="g-flags" type="GDBusInterfaceSkeletonFlags" readable="1" writable="1" construct="0" construct-only="0"/>
+			<signal name="g-authorize-method" when="LAST">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="interface_" type="GDBusInterfaceSkeleton*"/>
+					<parameter name="invocation" type="GDBusMethodInvocation*"/>
+				</parameters>
+			</signal>
+			<vfunc name="flush">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="interface_" type="GDBusInterfaceSkeleton*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_info">
+				<return-type type="GDBusInterfaceInfo*"/>
+				<parameters>
+					<parameter name="interface_" type="GDBusInterfaceSkeleton*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_properties">
+				<return-type type="GVariant*"/>
+				<parameters>
+					<parameter name="interface_" type="GDBusInterfaceSkeleton*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_vtable">
+				<return-type type="GDBusInterfaceVTable*"/>
+				<parameters>
+					<parameter name="interface_" type="GDBusInterfaceSkeleton*"/>
+				</parameters>
+			</vfunc>
+		</object>
 		<object name="GDBusMessage" parent="GObject" type-name="GDBusMessage" get-type="g_dbus_message_get_type">
 			<method name="bytes_needed" symbol="g_dbus_message_bytes_needed">
 				<return-type type="gssize"/>
@@ -3058,9 +3206,271 @@
 					<parameter name="parameters" type="GVariant*"/>
 				</parameters>
 			</method>
+			<method name="take_error" symbol="g_dbus_method_invocation_take_error">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="invocation" type="GDBusMethodInvocation*"/>
+					<parameter name="error" type="GError*"/>
+				</parameters>
+			</method>
+		</object>
+		<object name="GDBusObjectManagerClient" parent="GObject" type-name="GDBusObjectManagerClient" get-type="g_dbus_object_manager_client_get_type">
+			<implements>
+				<interface name="GInitable"/>
+				<interface name="GAsyncInitable"/>
+				<interface name="GDBusObjectManager"/>
+			</implements>
+			<method name="get_connection" symbol="g_dbus_object_manager_client_get_connection">
+				<return-type type="GDBusConnection*"/>
+				<parameters>
+					<parameter name="manager" type="GDBusObjectManagerClient*"/>
+				</parameters>
+			</method>
+			<method name="get_flags" symbol="g_dbus_object_manager_client_get_flags">
+				<return-type type="GDBusObjectManagerClientFlags"/>
+				<parameters>
+					<parameter name="manager" type="GDBusObjectManagerClient*"/>
+				</parameters>
+			</method>
+			<method name="get_name" symbol="g_dbus_object_manager_client_get_name">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="manager" type="GDBusObjectManagerClient*"/>
+				</parameters>
+			</method>
+			<method name="get_name_owner" symbol="g_dbus_object_manager_client_get_name_owner">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="manager" type="GDBusObjectManagerClient*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="g_dbus_object_manager_client_new">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="connection" type="GDBusConnection*"/>
+					<parameter name="flags" type="GDBusObjectManagerClientFlags"/>
+					<parameter name="name" type="gchar*"/>
+					<parameter name="object_path" type="gchar*"/>
+					<parameter name="get_proxy_type_func" type="GDBusProxyTypeFunc"/>
+					<parameter name="get_proxy_type_user_data" type="gpointer"/>
+					<parameter name="get_proxy_type_destroy_notify" type="GDestroyNotify"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_finish" symbol="g_dbus_object_manager_client_new_finish">
+				<return-type type="GDBusObjectManager*"/>
+				<parameters>
+					<parameter name="res" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_for_bus" symbol="g_dbus_object_manager_client_new_for_bus">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="bus_type" type="GBusType"/>
+					<parameter name="flags" type="GDBusObjectManagerClientFlags"/>
+					<parameter name="name" type="gchar*"/>
+					<parameter name="object_path" type="gchar*"/>
+					<parameter name="get_proxy_type_func" type="GDBusProxyTypeFunc"/>
+					<parameter name="get_proxy_type_user_data" type="gpointer"/>
+					<parameter name="get_proxy_type_destroy_notify" type="GDestroyNotify"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_for_bus_finish" symbol="g_dbus_object_manager_client_new_for_bus_finish">
+				<return-type type="GDBusObjectManager*"/>
+				<parameters>
+					<parameter name="res" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_for_bus_sync" symbol="g_dbus_object_manager_client_new_for_bus_sync">
+				<return-type type="GDBusObjectManager*"/>
+				<parameters>
+					<parameter name="bus_type" type="GBusType"/>
+					<parameter name="flags" type="GDBusObjectManagerClientFlags"/>
+					<parameter name="name" type="gchar*"/>
+					<parameter name="object_path" type="gchar*"/>
+					<parameter name="get_proxy_type_func" type="GDBusProxyTypeFunc"/>
+					<parameter name="get_proxy_type_user_data" type="gpointer"/>
+					<parameter name="get_proxy_type_destroy_notify" type="GDestroyNotify"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_sync" symbol="g_dbus_object_manager_client_new_sync">
+				<return-type type="GDBusObjectManager*"/>
+				<parameters>
+					<parameter name="connection" type="GDBusConnection*"/>
+					<parameter name="flags" type="GDBusObjectManagerClientFlags"/>
+					<parameter name="name" type="gchar*"/>
+					<parameter name="object_path" type="gchar*"/>
+					<parameter name="get_proxy_type_func" type="GDBusProxyTypeFunc"/>
+					<parameter name="get_proxy_type_user_data" type="gpointer"/>
+					<parameter name="get_proxy_type_destroy_notify" type="GDestroyNotify"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</constructor>
+			<property name="bus-type" type="GBusType" readable="0" writable="1" construct="0" construct-only="1"/>
+			<property name="connection" type="GDBusConnection*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="flags" type="GDBusObjectManagerClientFlags" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="get-proxy-type-destroy-notify" type="gpointer" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="get-proxy-type-func" type="gpointer" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="get-proxy-type-user-data" type="gpointer" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="name" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="name-owner" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="object-path" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<signal name="interface-proxy-properties-changed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="manager" type="GDBusObjectManagerClient*"/>
+					<parameter name="object_proxy" type="GDBusObjectProxy*"/>
+					<parameter name="interface_proxy" type="GDBusProxy*"/>
+					<parameter name="changed_properties" type="GVariant"/>
+					<parameter name="invalidated_properties" type="GStrv*"/>
+				</parameters>
+			</signal>
+			<signal name="interface-proxy-signal" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="manager" type="GDBusObjectManagerClient*"/>
+					<parameter name="object_proxy" type="GDBusObjectProxy*"/>
+					<parameter name="interface_proxy" type="GDBusProxy*"/>
+					<parameter name="sender_name" type="char*"/>
+					<parameter name="signal_name" type="char*"/>
+					<parameter name="parameters" type="GVariant"/>
+				</parameters>
+			</signal>
+		</object>
+		<object name="GDBusObjectManagerServer" parent="GObject" type-name="GDBusObjectManagerServer" get-type="g_dbus_object_manager_server_get_type">
+			<implements>
+				<interface name="GDBusObjectManager"/>
+			</implements>
+			<method name="export" symbol="g_dbus_object_manager_server_export">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="manager" type="GDBusObjectManagerServer*"/>
+					<parameter name="object" type="GDBusObjectSkeleton*"/>
+				</parameters>
+			</method>
+			<method name="export_uniquely" symbol="g_dbus_object_manager_server_export_uniquely">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="manager" type="GDBusObjectManagerServer*"/>
+					<parameter name="object" type="GDBusObjectSkeleton*"/>
+				</parameters>
+			</method>
+			<method name="get_connection" symbol="g_dbus_object_manager_server_get_connection">
+				<return-type type="GDBusConnection*"/>
+				<parameters>
+					<parameter name="manager" type="GDBusObjectManagerServer*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="g_dbus_object_manager_server_new">
+				<return-type type="GDBusObjectManagerServer*"/>
+				<parameters>
+					<parameter name="object_path" type="gchar*"/>
+				</parameters>
+			</constructor>
+			<method name="set_connection" symbol="g_dbus_object_manager_server_set_connection">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="manager" type="GDBusObjectManagerServer*"/>
+					<parameter name="connection" type="GDBusConnection*"/>
+				</parameters>
+			</method>
+			<method name="unexport" symbol="g_dbus_object_manager_server_unexport">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="manager" type="GDBusObjectManagerServer*"/>
+					<parameter name="object_path" type="gchar*"/>
+				</parameters>
+			</method>
+			<property name="connection" type="GDBusConnection*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="object-path" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
+		</object>
+		<object name="GDBusObjectProxy" parent="GObject" type-name="GDBusObjectProxy" get-type="g_dbus_object_proxy_get_type">
+			<implements>
+				<interface name="GDBusObject"/>
+			</implements>
+			<method name="get_connection" symbol="g_dbus_object_proxy_get_connection">
+				<return-type type="GDBusConnection*"/>
+				<parameters>
+					<parameter name="proxy" type="GDBusObjectProxy*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="g_dbus_object_proxy_new">
+				<return-type type="GDBusObjectProxy*"/>
+				<parameters>
+					<parameter name="connection" type="GDBusConnection*"/>
+					<parameter name="object_path" type="gchar*"/>
+				</parameters>
+			</constructor>
+			<property name="connection" type="GDBusConnection*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="object-path" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
+		</object>
+		<object name="GDBusObjectSkeleton" parent="GObject" type-name="GDBusObjectSkeleton" get-type="g_dbus_object_skeleton_get_type">
+			<implements>
+				<interface name="GDBusObject"/>
+			</implements>
+			<method name="add_interface" symbol="g_dbus_object_skeleton_add_interface">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GDBusObjectSkeleton*"/>
+					<parameter name="interface_" type="GDBusInterfaceSkeleton*"/>
+				</parameters>
+			</method>
+			<method name="flush" symbol="g_dbus_object_skeleton_flush">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GDBusObjectSkeleton*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="g_dbus_object_skeleton_new">
+				<return-type type="GDBusObjectSkeleton*"/>
+				<parameters>
+					<parameter name="object_path" type="gchar*"/>
+				</parameters>
+			</constructor>
+			<method name="remove_interface" symbol="g_dbus_object_skeleton_remove_interface">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GDBusObjectSkeleton*"/>
+					<parameter name="interface_" type="GDBusInterfaceSkeleton*"/>
+				</parameters>
+			</method>
+			<method name="remove_interface_by_name" symbol="g_dbus_object_skeleton_remove_interface_by_name">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GDBusObjectSkeleton*"/>
+					<parameter name="interface_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_object_path" symbol="g_dbus_object_skeleton_set_object_path">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GDBusObjectSkeleton*"/>
+					<parameter name="object_path" type="gchar*"/>
+				</parameters>
+			</method>
+			<property name="object-path" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
+			<signal name="authorize-method" when="LAST">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="object" type="GDBusObjectSkeleton*"/>
+					<parameter name="interface_" type="GDBusInterfaceSkeleton*"/>
+					<parameter name="invocation" type="GDBusMethodInvocation*"/>
+				</parameters>
+			</signal>
 		</object>
 		<object name="GDBusProxy" parent="GObject" type-name="GDBusProxy" get-type="g_dbus_proxy_get_type">
 			<implements>
+				<interface name="GDBusInterface"/>
 				<interface name="GInitable"/>
 				<interface name="GAsyncInitable"/>
 			</implements>
@@ -3416,6 +3826,24 @@
 					<parameter name="stream" type="GDataInputStream*"/>
 					<parameter name="result" type="GAsyncResult*"/>
 					<parameter name="length" type="gsize*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="read_line_finish_utf8" symbol="g_data_input_stream_read_line_finish_utf8">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="stream" type="GDataInputStream*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="length" type="gsize*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="read_line_utf8" symbol="g_data_input_stream_read_line_utf8">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="stream" type="GDataInputStream*"/>
+					<parameter name="length" type="gsize*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -4677,7 +5105,7 @@
 				</parameters>
 			</method>
 			<property name="base-stream" type="GInputStream*" readable="1" writable="1" construct="0" construct-only="1"/>
-			<property name="close-base-stream" type="gboolean" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="close-base-stream" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<field name="base_stream" type="GInputStream*"/>
 		</object>
 		<object name="GFilterOutputStream" parent="GOutputStream" type-name="GFilterOutputStream" get-type="g_filter_output_stream_get_type">
@@ -4856,6 +5284,13 @@
 			</vfunc>
 		</object>
 		<object name="GInetAddress" parent="GObject" type-name="GInetAddress" get-type="g_inet_address_get_type">
+			<method name="equal" symbol="g_inet_address_equal">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="address" type="GInetAddress*"/>
+					<parameter name="other_address" type="GInetAddress*"/>
+				</parameters>
+			</method>
 			<method name="get_family" symbol="g_inet_address_get_family">
 				<return-type type="GSocketFamily"/>
 				<parameters>
@@ -6319,6 +6754,13 @@
 					<parameter name="key" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="get_uint" symbol="g_settings_get_uint">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="settings" type="GSettings*"/>
+					<parameter name="key" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="get_value" symbol="g_settings_get_value">
 				<return-type type="GVariant*"/>
 				<parameters>
@@ -6464,6 +6906,14 @@
 					<parameter name="value" type="gchar**"/>
 				</parameters>
 			</method>
+			<method name="set_uint" symbol="g_settings_set_uint">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="settings" type="GSettings*"/>
+					<parameter name="key" type="gchar*"/>
+					<parameter name="value" type="guint"/>
+				</parameters>
+			</method>
 			<method name="set_value" symbol="g_settings_set_value">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -6543,16 +6993,30 @@
 					<parameter name="enabled" type="gboolean"/>
 				</parameters>
 			</method>
-			<property name="enabled" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
-			<property name="name" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
-			<property name="parameter-type" type="GVariantType*" readable="1" writable="1" construct="0" construct-only="1"/>
-			<property name="state" type="GVariant" readable="1" writable="1" construct="1" construct-only="0"/>
+			<method name="set_state" symbol="g_simple_action_set_state">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="simple" type="GSimpleAction*"/>
+					<parameter name="value" type="GVariant*"/>
+				</parameters>
+			</method>
+			<property name="enabled" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="name" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="parameter-type" type="GVariantType*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="state" type="GVariant" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="state-type" type="GVariantType*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<signal name="activate" when="LAST">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="simple" type="GSimpleAction*"/>
-					<parameter name="parameter" type="GVariant"/>
+					<parameter name="object" type="GSimpleAction*"/>
+					<parameter name="p0" type="GVariant"/>
+				</parameters>
+			</signal>
+			<signal name="change-state" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GSimpleAction*"/>
+					<parameter name="p0" type="GVariant"/>
 				</parameters>
 			</signal>
 		</object>
@@ -6560,6 +7024,15 @@
 			<implements>
 				<interface name="GActionGroup"/>
 			</implements>
+			<method name="add_entries" symbol="g_simple_action_group_add_entries">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="simple" type="GSimpleActionGroup*"/>
+					<parameter name="entries" type="GActionEntry*"/>
+					<parameter name="n_entries" type="gint"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
 			<method name="insert" symbol="g_simple_action_group_insert">
 				<return-type type="void"/>
 				<parameters>
@@ -7781,6 +8254,17 @@
 				</parameters>
 			</signal>
 		</object>
+		<object name="GTimeZoneMonitor" parent="GObject" type-name="GTimeZoneMonitor" get-type="g_time_zone_monitor_get_type">
+			<method name="get" symbol="g_time_zone_monitor_get">
+				<return-type type="GTimeZoneMonitor*"/>
+			</method>
+			<signal name="changed" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GTimeZoneMonitor*"/>
+				</parameters>
+			</signal>
+		</object>
 		<object name="GTlsCertificate" parent="GObject" type-name="GTlsCertificate" get-type="g_tls_certificate_get_type">
 			<method name="get_issuer" symbol="g_tls_certificate_get_issuer">
 				<return-type type="GTlsCertificate*"/>
@@ -8328,6 +8812,13 @@
 					<parameter name="parameter" type="GVariant*"/>
 				</parameters>
 			</method>
+			<method name="change_state" symbol="g_action_change_state">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="action" type="GAction*"/>
+					<parameter name="value" type="GVariant*"/>
+				</parameters>
+			</method>
 			<method name="get_enabled" symbol="g_action_get_enabled">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -8364,23 +8855,23 @@
 					<parameter name="action" type="GAction*"/>
 				</parameters>
 			</method>
-			<method name="set_state" symbol="g_action_set_state">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="action" type="GAction*"/>
-					<parameter name="value" type="GVariant*"/>
-				</parameters>
-			</method>
-			<property name="enabled" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
-			<property name="name" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
-			<property name="parameter-type" type="GVariantType*" readable="1" writable="1" construct="0" construct-only="1"/>
-			<property name="state" type="GVariant" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="enabled" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="name" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="parameter-type" type="GVariantType*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="state" type="GVariant" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="state-type" type="GVariantType*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<vfunc name="activate">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="action" type="GAction*"/>
 					<parameter name="parameter" type="GVariant*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="change_state">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="action" type="GAction*"/>
+					<parameter name="value" type="GVariant*"/>
 				</parameters>
 			</vfunc>
 			<vfunc name="get_enabled">
@@ -8417,13 +8908,6 @@
 				<return-type type="GVariantType*"/>
 				<parameters>
 					<parameter name="action" type="GAction*"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="set_state">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="action" type="GAction*"/>
-					<parameter name="value" type="GVariant*"/>
 				</parameters>
 			</vfunc>
 		</interface>
@@ -9135,6 +9619,195 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="converter" type="GConverter*"/>
+				</parameters>
+			</vfunc>
+		</interface>
+		<interface name="GDBusInterface" type-name="GDBusInterface" get-type="g_dbus_interface_get_type">
+			<requires>
+				<interface name="GObject"/>
+			</requires>
+			<method name="get_info" symbol="g_dbus_interface_get_info">
+				<return-type type="GDBusInterfaceInfo*"/>
+				<parameters>
+					<parameter name="interface_" type="GDBusInterface*"/>
+				</parameters>
+			</method>
+			<method name="get_object" symbol="g_dbus_interface_get_object">
+				<return-type type="GDBusObject*"/>
+				<parameters>
+					<parameter name="interface_" type="GDBusInterface*"/>
+				</parameters>
+			</method>
+			<method name="set_object" symbol="g_dbus_interface_set_object">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="interface_" type="GDBusInterface*"/>
+					<parameter name="object" type="GDBusObject*"/>
+				</parameters>
+			</method>
+			<vfunc name="get_info">
+				<return-type type="GDBusInterfaceInfo*"/>
+				<parameters>
+					<parameter name="interface_" type="GDBusInterface*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_object">
+				<return-type type="GDBusObject*"/>
+				<parameters>
+					<parameter name="interface_" type="GDBusInterface*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="set_object">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="interface_" type="GDBusInterface*"/>
+					<parameter name="object" type="GDBusObject*"/>
+				</parameters>
+			</vfunc>
+		</interface>
+		<interface name="GDBusObject" type-name="GDBusObject" get-type="g_dbus_object_get_type">
+			<requires>
+				<interface name="GObject"/>
+			</requires>
+			<method name="get_interface" symbol="g_dbus_object_get_interface">
+				<return-type type="GDBusInterface*"/>
+				<parameters>
+					<parameter name="object" type="GDBusObject*"/>
+					<parameter name="interface_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_interfaces" symbol="g_dbus_object_get_interfaces">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="object" type="GDBusObject*"/>
+				</parameters>
+			</method>
+			<method name="get_object_path" symbol="g_dbus_object_get_object_path">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="object" type="GDBusObject*"/>
+				</parameters>
+			</method>
+			<signal name="interface-added" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GDBusObject*"/>
+					<parameter name="interface_" type="GDBusInterface*"/>
+				</parameters>
+			</signal>
+			<signal name="interface-removed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GDBusObject*"/>
+					<parameter name="interface_" type="GDBusInterface*"/>
+				</parameters>
+			</signal>
+			<vfunc name="get_interface">
+				<return-type type="GDBusInterface*"/>
+				<parameters>
+					<parameter name="object" type="GDBusObject*"/>
+					<parameter name="interface_name" type="gchar*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_interfaces">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="object" type="GDBusObject*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_object_path">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="object" type="GDBusObject*"/>
+				</parameters>
+			</vfunc>
+		</interface>
+		<interface name="GDBusObjectManager" type-name="GDBusObjectManager" get-type="g_dbus_object_manager_get_type">
+			<requires>
+				<interface name="GObject"/>
+			</requires>
+			<method name="get_interface" symbol="g_dbus_object_manager_get_interface">
+				<return-type type="GDBusInterface*"/>
+				<parameters>
+					<parameter name="manager" type="GDBusObjectManager*"/>
+					<parameter name="object_path" type="gchar*"/>
+					<parameter name="interface_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_object" symbol="g_dbus_object_manager_get_object">
+				<return-type type="GDBusObject*"/>
+				<parameters>
+					<parameter name="manager" type="GDBusObjectManager*"/>
+					<parameter name="object_path" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_object_path" symbol="g_dbus_object_manager_get_object_path">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="manager" type="GDBusObjectManager*"/>
+				</parameters>
+			</method>
+			<method name="get_objects" symbol="g_dbus_object_manager_get_objects">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="manager" type="GDBusObjectManager*"/>
+				</parameters>
+			</method>
+			<signal name="interface-added" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="manager" type="GDBusObjectManager*"/>
+					<parameter name="object" type="GDBusObject*"/>
+					<parameter name="interface_" type="GDBusInterface*"/>
+				</parameters>
+			</signal>
+			<signal name="interface-removed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="manager" type="GDBusObjectManager*"/>
+					<parameter name="object" type="GDBusObject*"/>
+					<parameter name="interface_" type="GDBusInterface*"/>
+				</parameters>
+			</signal>
+			<signal name="object-added" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="manager" type="GDBusObjectManager*"/>
+					<parameter name="object" type="GDBusObject*"/>
+				</parameters>
+			</signal>
+			<signal name="object-removed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="manager" type="GDBusObjectManager*"/>
+					<parameter name="object" type="GDBusObject*"/>
+				</parameters>
+			</signal>
+			<vfunc name="get_interface">
+				<return-type type="GDBusInterface*"/>
+				<parameters>
+					<parameter name="manager" type="GDBusObjectManager*"/>
+					<parameter name="object_path" type="gchar*"/>
+					<parameter name="interface_name" type="gchar*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_object">
+				<return-type type="GDBusObject*"/>
+				<parameters>
+					<parameter name="manager" type="GDBusObjectManager*"/>
+					<parameter name="object_path" type="gchar*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_object_path">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="manager" type="GDBusObjectManager*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_objects">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="manager" type="GDBusObjectManager*"/>
 				</parameters>
 			</vfunc>
 		</interface>
