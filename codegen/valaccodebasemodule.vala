@@ -3216,7 +3216,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		// return array length if appropriate
 		if (((current_method != null && !current_method.no_array_length) || current_property_accessor != null) && current_return_type is ArrayType) {
-			var return_expr_decl = get_temp_variable (stmt.return_expression.value_type, true, stmt, false);
+			var return_expr_decl = get_temp_variable (current_return_type, true, stmt, false);
 
 			ccode.add_assignment (get_variable_cexpression (return_expr_decl.name), get_cvalue (stmt.return_expression));
 
