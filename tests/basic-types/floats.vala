@@ -52,6 +52,10 @@ void test_double () {
 	d = double.MAX;
 	assert (d == double.MAX);
 	assert (d > double.MIN);
+
+	// nullable
+	double? d2 = 10;
+	assert (d2 == 10);
 }
 
 void main () {

@@ -364,9 +364,6 @@ public class Vala.BinaryExpression : Expression {
 			} else {
 				DataType resulting_type;
 
-				left.target_type.nullable = false;
-				right.target_type.nullable = false;
-
 				if (chained) {
 					var lbe = (BinaryExpression) left;
 					resulting_type = context.analyzer.get_arithmetic_result_type (lbe.right.target_type, right.target_type);
@@ -379,6 +376,13 @@ public class Vala.BinaryExpression : Expression {
 					Report.error (source_reference, "Relational operation not supported for types `%s' and `%s'".printf (left.value_type.to_string (), right.value_type.to_string ()));
 					return false;
 				}
+
+				if (!chained) {
+					left.target_type = resulting_type.copy ();
+				}
+				right.target_type = resulting_type.copy ();
+				left.target_type.nullable = false;
+				right.target_type.nullable = false;
 			}
 
 			value_type = context.analyzer.bool_type;
@@ -393,9 +397,14 @@ public class Vala.BinaryExpression : Expression {
 				return false;
 			}
 
-			left.target_type = left.value_type.copy ();
+			var resulting_type = context.analyzer.get_arithmetic_result_type (left.target_type, right.target_type);
+			if (resulting_type != null) {
+				// numeric operation
+				left.target_type = resulting_type.copy ();
+				right.target_type = resulting_type.copy ();
+			}
+
 			left.target_type.value_owned = false;
-			right.target_type = right.value_type.copy ();
 			right.target_type.value_owned = false;
 
 			if (left.value_type.nullable != right.value_type.nullable) {
