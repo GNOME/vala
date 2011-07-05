@@ -5222,10 +5222,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			} else if (result.cvalue is CCodeIdentifier || result.cvalue is CCodeMemberAccess) {
 				result.cvalue = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, result.cvalue);
 			} else {
-				var decl = get_temp_variable (type, type.value_owned, type, false);
+				var cast_type = target_type.copy ();
+				cast_type.nullable = false;
+				var decl = get_temp_variable (cast_type, cast_type.value_owned, node, false);
 				emit_temp_var (decl);
 
-				ccode.add_assignment (get_variable_cexpression (decl.name), result.cvalue);
+				ccode.add_assignment (get_variable_cexpression (decl.name), get_implicit_cast_expression (result.cvalue, type, cast_type, node));
 				result.cvalue = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (decl.name));
 			}
 		} else if (unboxing) {
