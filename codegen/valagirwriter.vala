@@ -893,6 +893,10 @@ public class Vala.GIRWriter : CodeVisitor {
 			return;
 		}
 
+		if (m.parent_symbol is Class && ((Class) m.parent_symbol).is_abstract) {
+			return;
+		}
+
 		write_indent ();
 
 		bool is_struct = m.parent_symbol is Struct;
