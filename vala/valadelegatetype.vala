@@ -107,20 +107,8 @@ public class Vala.DelegateType : DataType {
 		return result;
 	}
 
-	public override string? get_cname () {
-		if (CodeContext.get ().profile == Profile.DOVA) {
-			return "%s*".printf (delegate_symbol.get_cname ());
-		} else {
-			return delegate_symbol.get_cname ();
-		}
-	}
-
 	public override bool is_accessible (Symbol sym) {
 		return delegate_symbol.is_accessible (sym);
-	}
-
-	public override string? get_type_id () {
-		return "G_TYPE_POINTER";
 	}
 
 	public override bool check (CodeContext context) {

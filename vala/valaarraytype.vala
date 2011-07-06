@@ -102,7 +102,7 @@ public class Vala.ArrayType : ReferenceType {
 			resize_method.return_type = new VoidType ();
 			resize_method.access = SymbolAccessibility.PUBLIC;
 
-			resize_method.set_cname ("g_renew");
+			resize_method.set_attribute_string ("CCode", "cname", "g_renew");
 			
 			var root_symbol = source_reference.file.context.root;
 			var int_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int"));
@@ -121,7 +121,7 @@ public class Vala.ArrayType : ReferenceType {
 			move_method.return_type = new VoidType ();
 			move_method.access = SymbolAccessibility.PUBLIC;
 
-			move_method.set_cname ("_vala_array_move");
+			move_method.set_attribute_string ("CCode", "cname", "_vala_array_move");
 
 			var root_symbol = source_reference.file.context.root;
 			var int_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int"));
@@ -148,18 +148,6 @@ public class Vala.ArrayType : ReferenceType {
 		return result;
 	}
 
-	public override string? get_cname () {
-		if (inline_allocated) {
-			return element_type.get_cname ();
-		} else {
-			if (CodeContext.get ().profile == Profile.DOVA) {
-				return "DovaArray";
-			} else {
-				return element_type.get_cname () + "*";
-			}
-		}
-	}
-
 	public override string get_cdeclarator_suffix () {
 		if (fixed_length) {
 			return "[%d]".printf (length);
@@ -179,14 +167,16 @@ public class Vala.ArrayType : ReferenceType {
 	}
 
 	public override bool compatible (DataType target_type) {
-		if (target_type.get_type_id () == "G_TYPE_VALUE" && element_type.data_type == CodeContext.get ().root.scope.lookup ("string")) {
-			// allow implicit conversion from string[] to GValue
-			return true;
-		}
+		if (CodeContext.get ().profile == Profile.GOBJECT && target_type.data_type != null) {
+			if (target_type.data_type.is_subtype_of (CodeContext.get ().analyzer.gvalue_type.data_type) && element_type.data_type == CodeContext.get ().root.scope.lookup ("string")) {
+				// allow implicit conversion from string[] to GValue
+				return true;
+			}
 
-		if (target_type.get_type_id () == "G_TYPE_VARIANT") {
-			// allow implicit conversion to GVariant
-			return true;
+			if (target_type.data_type.is_subtype_of (CodeContext.get ().analyzer.gvariant_type.data_type)) {
+				// allow implicit conversion to GVariant
+				return true;
+			}
 		}
 
 		if (target_type is PointerType || (target_type.data_type != null && target_type.data_type.get_attribute ("PointerType") != null)) {
@@ -241,14 +231,6 @@ public class Vala.ArrayType : ReferenceType {
 			return false;
 		}
 		return element_type.check (context);
-	}
-
-	public override string? get_type_id () {
-		if (element_type.data_type == CodeContext.get ().root.scope.lookup ("string")) {
-			return "G_TYPE_STRV";
-		} else {
-			return null;
-		}
 	}
 
 	public override DataType get_actual_type (DataType? derived_instance_type, MemberAccess? method_access, CodeNode node_reference) {

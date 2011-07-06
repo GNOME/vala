@@ -30,24 +30,9 @@ public class Vala.DynamicMethod : Method {
 
 	public MethodCall invocation { get; set; }
 
-	private string cname;
-	static int dynamic_method_id;
-
 	public DynamicMethod (DataType dynamic_type, string name, DataType return_type, SourceReference? source_reference = null, Comment? comment = null) {
 		base (name, return_type, source_reference, comment);
 		this.dynamic_type = dynamic_type;
-	}
-
-	public override List<string> get_cheader_filenames () {
-		return new ArrayList<string> ();
-	}
-
-	public override string get_default_cname () {
-		// return cname of wrapper method
-		if (cname == null) {
-			cname = "_dynamic_%s%d".printf (name, dynamic_method_id++);
-		}
-		return cname;
 	}
 
 	public override bool check (CodeContext context) {

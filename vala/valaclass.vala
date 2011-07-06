@@ -44,8 +44,12 @@ public class Vala.Class : ObjectTypeSymbol {
 	 */
 	public bool is_compact {
 		get {
-			if (base_class != null) {
-				return base_class.is_compact;
+			if (_is_compact == null) {
+				if (base_class != null) {
+					_is_compact = base_class.is_compact;
+				} else {
+					_is_compact = get_attribute ("Compact") != null;
+				}
 			}
 			if (_is_compact == null) {
 				_is_compact = get_attribute ("Compact") != null;
@@ -63,8 +67,12 @@ public class Vala.Class : ObjectTypeSymbol {
 	 */
 	public bool is_immutable {
 		get {
-			if (base_class != null) {
-				return base_class.is_immutable;
+			if (_is_immutable == null) {
+				if (base_class != null) {
+					_is_immutable = base_class.is_immutable;
+				} else {
+					_is_immutable = get_attribute ("Immutable") != null;
+				}
 			}
 			if (_is_immutable == null) {
 				_is_immutable = get_attribute ("Immutable") != null;
@@ -78,29 +86,6 @@ public class Vala.Class : ObjectTypeSymbol {
 	}
 
 	/**
-	 * Specifies wheather the ref function returns void instead of the
-	 * object.
-	 */
-	public bool ref_function_void {
-		get {
-			if (base_class != null) {
-				return base_class.ref_function_void;
-			}
-			return _ref_function_void;
-		}
-		set {
-			_ref_function_void = value;
-		}
-	}
-
-	/**
-	 * The name of the function to use to check whether a value is an instance of
-	 * this class. If this is null then the default type check function should be 
-	 * used instead.
-	 */
-	public string? type_check_function { get; set; }
-
-	/**
 	 * Specifies whether this class has private fields.
 	 */
 	public bool has_private_fields { get; set; }
@@ -110,30 +95,6 @@ public class Vala.Class : ObjectTypeSymbol {
 	 */
 	public bool has_class_private_fields { get; private set; }
 
-	/**
-	 * Specifies whether the free function requires the address of a
-	 * pointer instead of just the pointer.
-	 */
-	public bool free_function_address_of { get; private set; }
-
-	public bool is_gboxed { get { return (free_function == "g_boxed_free"); } }
-
-	private string cname;
-	public string const_cname { get; set; }
-	private string lower_case_cprefix;
-	private string lower_case_csuffix;
-	private string type_id;
-	private string ref_function;
-	private string unref_function;
-	private bool _ref_function_void;
-	private string ref_sink_function;
-	private string param_spec_function;
-	private string copy_function;
-	private string free_function;
-	private string marshaller_type_name;
-	private string get_value_function;
-	private string set_value_function;
-	private string take_value_function;
 	private bool? _is_compact;
 	private bool? _is_immutable;
 
@@ -592,279 +553,8 @@ public class Vala.Class : ObjectTypeSymbol {
 		}
 	}
 
-	public override string get_cprefix () {
-		return get_cname ();
-	}
-
-	public override string get_cname (bool const_type = false) {
-		if (const_type) {
-			if (const_cname != null) {
-				return const_cname;
-			} else if (is_immutable) {
-				return "const " + get_cname (false);
-			}
-		}
-
-		if (cname == null) {
-			var attr = get_attribute ("CCode");
-			if (attr != null) {
-				cname = attr.get_string ("cname");
-			}
-			if (cname == null) {
-				cname = get_default_cname ();
-			}
-		}
-		return cname;
-	}
-
-	/**
-	 * Returns the default name of this class as it is used in C code.
-	 *
-	 * @return the name to be used in C code by default
-	 */
-	public string get_default_cname () {
-		return "%s%s".printf (parent_symbol.get_cprefix (), name);
-	}
-
-	/**
-	 * Sets the name of this class as it is used in C code.
-	 *
-	 * @param cname the name to be used in C code
-	 */
-	public void set_cname (string cname) {
-		this.cname = cname;
-	}
-
-	private string get_lower_case_csuffix () {
-		if (lower_case_csuffix == null) {
-			lower_case_csuffix = camel_case_to_lower_case (name);
-
-			// remove underscores in some cases to avoid conflicts of type macros
-			if (lower_case_csuffix.has_prefix ("type_")) {
-				lower_case_csuffix = "type" + lower_case_csuffix.substring ("type_".length);
-			} else if (lower_case_csuffix.has_prefix ("is_")) {
-				lower_case_csuffix = "is" + lower_case_csuffix.substring ("is_".length);
-			}
-			if (lower_case_csuffix.has_suffix ("_class")) {
-				lower_case_csuffix = lower_case_csuffix.substring (0, lower_case_csuffix.length - "_class".length) + "class";
-			}
-		}
-		return lower_case_csuffix;
-	}
-
-	public override string? get_lower_case_cname (string? infix) {
-		if (infix == null) {
-			infix = "";
-		}
-		return "%s%s%s".printf (parent_symbol.get_lower_case_cprefix (), infix, get_lower_case_csuffix ());
-	}
-	
-	public override string get_lower_case_cprefix () {
-		if (lower_case_cprefix == null) {
-			lower_case_cprefix = "%s_".printf (get_lower_case_cname (null));
-		}
-		return lower_case_cprefix;
-	}
-
-	public void set_lower_case_cprefix (string cprefix) {
-		lower_case_cprefix = cprefix;
-	}
-	
-	public override string? get_upper_case_cname (string? infix) {
-		return get_lower_case_cname (infix).up ();
-	}
-
 	public override bool is_reference_type () {
 		return true;
-	}
-
-	private void process_gir_attribute (Attribute a) {
-		if (a.has_argument ("name")) {
-			gir_name = a.get_string ("name");
-		}
-	}
-	
-	private void process_ccode_attribute (Attribute a) {
-		if (a.has_argument ("ref_function")) {
-			set_ref_function (a.get_string ("ref_function"));
-		}
-		if (a.has_argument ("ref_function_void")) {
-			this.ref_function_void = a.get_bool ("ref_function_void");
-		}
-		if (a.has_argument ("unref_function")) {
-			set_unref_function (a.get_string ("unref_function"));
-		}
-		if (a.has_argument ("ref_sink_function")) {
-			set_ref_sink_function (a.get_string ("ref_sink_function"));
-		}
-		if (a.has_argument ("copy_function")) {
-			set_dup_function (a.get_string ("copy_function"));
-		}
-		if (a.has_argument ("free_function")) {
-			set_free_function (a.get_string ("free_function"));
-		}
-		if (a.has_argument ("free_function_address_of")) {
-			free_function_address_of = a.get_bool ("free_function_address_of");
-		}
-		if (a.has_argument ("type_id")) {
-			type_id = a.get_string ("type_id");
-		}
-		if (a.has_argument ("marshaller_type_name")) {
-			marshaller_type_name = a.get_string ("marshaller_type_name");
-		}
-		if (a.has_argument ("get_value_function")) {
-			get_value_function = a.get_string ("get_value_function");
-		}
-		if (a.has_argument ("set_value_function")) {
-			set_value_function = a.get_string ("set_value_function");
-		}
-		if (a.has_argument ("take_value_function")) {
-			take_value_function = a.get_string ("take_value_function");
-		}
-
-		if (a.has_argument ("const_cname")) {
-			const_cname = a.get_string ("const_cname");
-		}
-		if (a.has_argument ("cprefix")) {
-			lower_case_cprefix = a.get_string ("cprefix");
-		}
-		if (a.has_argument ("lower_case_csuffix")) {
-			lower_case_csuffix = a.get_string ("lower_case_csuffix");
-		}
-		if (a.has_argument ("cheader_filename")) {
-			var val = a.get_string ("cheader_filename");
-			foreach (string filename in val.split (",")) {
-				add_cheader_filename (filename);
-			}
-		}
-		if (a.has_argument ("type_check_function")) {
-			type_check_function = a.get_string ("type_check_function");
-		}
-
-		if (a.has_argument ("param_spec_function")) {
-			param_spec_function = a.get_string ("param_spec_function");
-		}
-	}
-
-	/**
-	 * Process all associated attributes.
-	 */
-	public void process_attributes () {
-		foreach (Attribute a in attributes) {
-			if (a.name == "CCode") {
-				process_ccode_attribute (a);
-			} else if (a.name == "GIR") {
-				process_gir_attribute (a);
-			}
-		}
-	}
-
-	public string? get_default_type_id () {
-		if (is_compact) {
-			return "G_TYPE_POINTER";
-		}
-
-		return get_upper_case_cname ("TYPE_");
-	}
-
-	public override string? get_type_id () {
-		if (type_id == null) {
-			type_id = get_default_type_id ();
-		}
-
-		return type_id;
-	}
-
-	public void set_type_id (string type_id) {
-		this.type_id = type_id;
-	}
-
-	public override string? get_marshaller_type_name () {
-		if (marshaller_type_name == null) {
-			if (base_class != null) {
-				marshaller_type_name = base_class.get_marshaller_type_name ();
-			} else if (!is_compact) {
-				marshaller_type_name = get_upper_case_cname ();
-			} else if (get_type_id () == "G_TYPE_POINTER") {
-				marshaller_type_name = "POINTER";
-			} else {
-				marshaller_type_name = "BOXED";
-			}
-		}
-
-		return marshaller_type_name;
-	}
-
-	public override string? get_param_spec_function () {
-		if (param_spec_function == null) {
-			param_spec_function = get_default_param_spec_function ();
-		}
-
-		return param_spec_function;
-	}
-
-	public string? get_default_param_spec_function () {
-		if (is_fundamental ()) {
-			return get_lower_case_cname ("param_spec_");
-		} else if (base_class != null) {
-			return base_class.get_param_spec_function ();
-		} else if (get_type_id () == "G_TYPE_POINTER") {
-			return "g_param_spec_pointer";
-		} else {
-			return "g_param_spec_boxed";
-		}
-	}
-
-	public override string? get_get_value_function () {
-		if (get_value_function == null) {
-			if (is_fundamental ()) {
-				get_value_function = get_lower_case_cname ("value_get_");
-			} else if (base_class != null) {
-				get_value_function = base_class.get_get_value_function ();
-			} else if (get_type_id () == "G_TYPE_POINTER") {
-				get_value_function = "g_value_get_pointer";
-			} else {
-				get_value_function = "g_value_get_boxed";
-			}
-		}
-
-		return get_value_function;
-	}
-	
-	public override string? get_set_value_function () {
-		if (set_value_function == null) {
-			if (is_fundamental ()) {
-				set_value_function = get_lower_case_cname ("value_set_");
-			} else if (base_class != null) {
-				set_value_function = base_class.get_set_value_function ();
-			} else if (get_type_id () == "G_TYPE_POINTER") {
-				set_value_function = "g_value_set_pointer";
-			} else {
-				set_value_function = "g_value_set_boxed";
-			}
-		}
-
-		return set_value_function;
-	}
-
-	public override string? get_take_value_function () {
-		if (take_value_function == null) {
-			if (is_fundamental ()) {
-				take_value_function = get_lower_case_cname ("value_take_");
-			} else if (base_class != null) {
-				take_value_function = base_class.get_take_value_function ();
-			} else if (get_type_id () == "G_TYPE_POINTER") {
-				take_value_function = "g_value_set_pointer";
-			} else {
-				take_value_function = "g_value_take_boxed";
-			}
-		}
-
-		return take_value_function;
-	}
-
-	public override bool is_reference_counting () {
-		return get_ref_function () != null;
 	}
 
 	public bool is_fundamental () {
@@ -876,76 +566,6 @@ public class Vala.Class : ObjectTypeSymbol {
 		return false;
 	}
 
-	public override string? get_ref_function () {
-		if (ref_function == null && is_fundamental ()) {
-			ref_function = get_lower_case_cprefix () + "ref";
-		}
-
-		if (ref_function == null && base_class != null) {
-			return base_class.get_ref_function ();
-		} else {
-			return ref_function;
-		}
-	}
-
-	public void set_ref_function (string? name) {
-		this.ref_function = name;
-	}
-
-	public override string? get_unref_function () {
-		if (unref_function == null && is_fundamental ()) {
-			unref_function = get_lower_case_cprefix () + "unref";
-		}
-
-		if (unref_function == null && base_class != null) {
-			return base_class.get_unref_function ();
-		} else {
-			return unref_function;
-		}
-	}
-
-	public void set_unref_function (string? name) {
-		this.unref_function = name;
-	}
-
-	public override string? get_ref_sink_function () {
-		if (ref_sink_function == null && base_class != null) {
-			return base_class.get_ref_sink_function ();
-		} else {
-			return ref_sink_function;
-		}
-	}
-
-	public void set_ref_sink_function (string? name) {
-		this.ref_sink_function = name;
-	}
-
-	public override string? get_dup_function () {
-		return copy_function;
-	}
-
-	public void set_dup_function (string? name) {
-		this.copy_function = name;
-	}
-
-	public string get_default_free_function () {
-		if (base_class != null) {
-			return base_class.get_free_function ();
-		}
-		return get_lower_case_cprefix () + "free";
-	}
-
-	public override string? get_free_function () {
-		if (free_function == null) {
-			free_function = get_default_free_function ();
-		}
-		return free_function;
-	}
-	
-	public void set_free_function (string name) {
-		this.free_function = name;
-	}
-	
 	public override bool is_subtype_of (TypeSymbol t) {
 		if (this == t) {
 			return true;
@@ -1009,8 +629,6 @@ public class Vala.Class : ObjectTypeSymbol {
 		}
 
 		checked = true;
-
-		process_attributes ();
 
 		var old_source_file = context.analyzer.current_source_file;
 		var old_symbol = context.analyzer.current_symbol;

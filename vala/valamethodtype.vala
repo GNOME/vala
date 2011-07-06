@@ -62,10 +62,6 @@ public class Vala.MethodType : DataType {
 		return method_symbol.get_full_name ();
 	}
 
-	public override string? get_cname () {
-		return "gpointer";
-	}
-
 	public override Symbol? get_member (string member_name) {
 		if (method_symbol.coroutine && member_name == "begin") {
 			return method_symbol;

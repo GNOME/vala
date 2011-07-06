@@ -593,11 +593,15 @@ public class Vala.CCodeAttribute : AttributeCache {
 		} else if (node is ErrorType) {
 			return "GError*";
 		} else if (node is GenericType) {
-			var type = (GenericType) node;
-			if (type.value_owned) {
-				return "gpointer";
+			if (CodeContext.get ().profile == Profile.GOBJECT) {
+				var type = (GenericType) node;
+				if (type.value_owned) {
+					return "gpointer";
+				} else {
+					return "gconstpointer";
+				}
 			} else {
-				return "gconstpointer";
+				return "void *";
 			}
 		} else if (node is MethodType) {
 			return "gpointer";

@@ -30,8 +30,6 @@ using GLib;
 public class Vala.Method : Subroutine {
 	List<TypeParameter> type_parameters;
 
-	public const string DEFAULT_SENTINEL = "NULL";
-
 	/**
 	 * The return type of this method.
 	 */
@@ -52,38 +50,6 @@ public class Vala.Method : Subroutine {
 	 * the contained type.
 	 */
 	public MemberBinding binding { get; set; default = MemberBinding.INSTANCE; }
-
-	/**
-	 * The name of the vfunc of this method as it is used in C code.
-	 */
-	public string vfunc_name {
-		get {
-			if (_vfunc_name == null) {
-				_vfunc_name = this.name;
-			}
-			return _vfunc_name;
-		}
-		set {
-			_vfunc_name = value;
-		}
-	}
-
-	/**
-	 * The sentinel to use for terminating variable length argument lists.
-	 */
-	public string sentinel {
-		get {
-			if (_sentinel == null) {
-				return DEFAULT_SENTINEL;
-			}
-
-			return _sentinel;
-		}
-
-		set {
-			_sentinel = value;
-		}
-	}
 	
 	/**
 	 * Specifies whether this method is abstract. Abstract methods have no
@@ -118,12 +84,19 @@ public class Vala.Method : Subroutine {
 		}
 	}
 
-	/**
+	/*
 	 * Specifies whether the C method returns a new instance pointer which
 	 * may be different from the previous instance pointer. Only valid for
 	 * imported methods.
 	 */
-	public bool returns_modified_pointer { get; set; }
+	public bool returns_modified_pointer {
+		get {
+			return get_attribute ("ReturnsModifiedPointer") != null;
+		}
+		set {
+			set_attribute ("ReturnsModifiedPointer", value);
+		}
+	}
 
 	/**
 	 * Specifies the virtual or abstract method this method overrides.
@@ -155,44 +128,6 @@ public class Vala.Method : Subroutine {
 	public Parameter this_parameter { get; set; }
 
 	/**
-	 * Specifies the position of the instance parameter in the C function.
-	 */
-	public double cinstance_parameter_position { get; set; }
-
-	/**
-	 * Specifies the position of the array length out parameter in the C
-	 * function.
-	 */
-	public double carray_length_parameter_position { get; set; }
-
-	/**
-	 * Specifies the position of the delegate target out parameter in the C
-	 * function.
-	 */
-	public double cdelegate_target_parameter_position { get; set; }
-
-	/**
-	 * Specifies whether the array length should be returned implicitly
-	 * if the return type is an array.
-	 */
-	public bool no_array_length { get; set; }
-
-	/**
-	 * Specifies whether the array is null terminated.
-	 */
-	public bool array_null_terminated { get; set; }
-
-	/**
-	 * Specifies a custom type for the array length parameter.
-	 */
-	public string? array_length_type { get; set; default = null; }
-
-	/**
-	 * Specifies a custom C return type for this method.
-	 */
-	public string? custom_return_type_cname { get; set; }
-
-	/**
 	 * Specifies whether this method expects printf-style format arguments.
 	 */
 	public bool printf_format {
@@ -217,12 +152,6 @@ public class Vala.Method : Subroutine {
 	}
 
 	/**
-	 * Specifies whether a new function without a GType parameter is
-	 * available. This is only applicable to creation methods.
-	 */
-	public bool has_new_function { get; set; default = true; }
-
-	/**
 	 * Specifies whether a construct function with a GType parameter is
 	 * available. This is only applicable to creation methods.
 	 */
@@ -235,12 +164,6 @@ public class Vala.Method : Subroutine {
 		}
 	}
 
-	public bool has_generic_type_parameter { get; set; }
-
-	public double generic_type_parameter_position { get; set; }
-
-	public bool simple_generics { get; set; }
-
 	public weak Signal signal_reference { get; set; }
 
 	public bool closure { get; set; }
@@ -252,10 +175,6 @@ public class Vala.Method : Subroutine {
 	public int yield_count { get; set; }
 
 	private List<Parameter> parameters = new ArrayList<Parameter> ();
-	private string cname;
-	private string finish_name;
-	private string _vfunc_name;
-	private string _sentinel;
 	private List<Expression> preconditions;
 	private List<Expression> postconditions;
 	private DataType _return_type;
@@ -283,9 +202,6 @@ public class Vala.Method : Subroutine {
 	public Method (string? name, DataType return_type, SourceReference? source_reference = null, Comment? comment = null) {
 		base (name, source_reference, comment);
 		this.return_type = return_type;
-
-		carray_length_parameter_position = -3;
-		cdelegate_target_parameter_position = -3;
 	}
 
 	/**
@@ -295,15 +211,8 @@ public class Vala.Method : Subroutine {
 	 */
 	public void add_parameter (Parameter param) {
 		// default C parameter position
-		param.cparameter_position = parameters.size + 1;
-		param.carray_length_parameter_position = param.cparameter_position + 0.1;
-		param.cdelegate_target_parameter_position = param.cparameter_position + 0.1;
-		param.cdestroy_notify_parameter_position = param.cparameter_position + 0.1;
-
 		parameters.add (param);
-		if (!param.ellipsis) {
-			scope.add (param.name, param);
-		}
+		scope.add (param.name, param);
 	}
 	
 	public List<Parameter> get_parameters () {
@@ -361,167 +270,6 @@ public class Vala.Method : Subroutine {
 
 		if (body != null) {
 			body.accept (visitor);
-		}
-	}
-
-	/**
-	 * Returns the interface name of this method as it is used in C code.
-	 *
-	 * @return the name to be used in C code
-	 */
-	public string get_cname () {
-		if (cname == null) {
-			cname = get_default_cname ();
-		}
-		return cname;
-	}
-
-	public string get_finish_cname () {
-		assert (coroutine);
-		if (finish_name == null) {
-			finish_name = get_default_finish_cname ();
-		}
-		return finish_name;
-	}
-
-	public void set_finish_cname (string name) {
-		finish_name = name;
-	}
-
-	/**
-	 * Returns the default interface name of this method as it is used in C
-	 * code.
-	 *
-	 * @return the name to be used in C code by default
-	 */
-	public virtual string get_default_cname () {
-		if (name == "main" && parent_symbol.name == null) {
-			// avoid conflict with generated main function
-			return "_vala_main";
-		} else if (name.has_prefix ("_")) {
-			return "_%s%s".printf (parent_symbol.get_lower_case_cprefix (), name.substring (1));
-		} else {
-			return "%s%s".printf (parent_symbol.get_lower_case_cprefix (), name);
-		}
-	}
-
-	/**
-	 * Returns the implementation name of this data type as it is used in C
-	 * code.
-	 *
-	 * @return the name to be used in C code
-	 */
-	public virtual string get_real_cname () {
-		if (base_method != null || base_interface_method != null) {
-			return "%sreal_%s".printf (parent_symbol.get_lower_case_cprefix (), name);
-		} else {
-			return get_cname ();
-		}
-	}
-
-	protected string get_finish_name_for_basename (string basename) {
-		string result = basename;
-		if (result.has_suffix ("_async")) {
-			result = result.substring (0, result.length - "_async".length);
-		}
-		result += "_finish";
-		return result;
-	}
-
-	public string get_finish_real_cname () {
-		assert (coroutine);
-		return get_finish_name_for_basename (get_real_cname ());
-	}
-
-	public string get_finish_vfunc_name () {
-		assert (coroutine);
-		return get_finish_name_for_basename (vfunc_name);
-	}
-
-	public string get_default_finish_cname () {
-		return get_finish_name_for_basename (get_cname ());
-	}
-	
-	/**
-	 * Sets the name of this method as it is used in C code.
-	 *
-	 * @param cname the name to be used in C code
-	 */
-	public void set_cname (string cname) {
-		this.cname = cname;
-	}
-	
-	private void process_ccode_attribute (Attribute a) {
-		if (a.has_argument ("cname")) {
-			set_cname (a.get_string ("cname"));
-		}
-		if (a.has_argument ("cheader_filename")) {
-			var val = a.get_string ("cheader_filename");
-			foreach (string filename in val.split (",")) {
-				add_cheader_filename (filename);
-			}
-		}
-		if (a.has_argument ("vfunc_name")) {
-			this.vfunc_name = a.get_string ("vfunc_name");
-		}
-		if (a.has_argument ("finish_name")) {
-			this.finish_name = a.get_string ("finish_name");
-		}
-		if (a.has_argument ("sentinel")) {
-			this.sentinel = a.get_string ("sentinel");
-		}
-		if (a.has_argument ("instance_pos")) {
-			cinstance_parameter_position = a.get_double ("instance_pos");
-		}
-		if (a.has_argument ("array_length")) {
-			no_array_length = !a.get_bool ("array_length");
-		}
-		if (a.has_argument ("array_length_type")) {
-			array_length_type = a.get_string ("array_length_type");
-		}
-		if (a.has_argument ("array_null_terminated")) {
-			array_null_terminated = a.get_bool ("array_null_terminated");
-		}
-		if (a.has_argument ("array_length_pos")) {
-			carray_length_parameter_position = a.get_double ("array_length_pos");
-		}
-		if (a.has_argument ("delegate_target_pos")) {
-			cdelegate_target_parameter_position = a.get_double ("delegate_target_pos");
-		}
-		if (a.has_argument ("has_new_function")) {
-			has_new_function = a.get_bool ("has_new_function");
-		}
-		if (a.has_argument ("generic_type_pos")) {
-			has_generic_type_parameter = true;
-			generic_type_parameter_position = a.get_double ("generic_type_pos");
-		}
-		if (a.has_argument ("simple_generics")) {
-			simple_generics = a.get_bool ("simple_generics");
-		}
-		if (a.has_argument ("type")) {
-			custom_return_type_cname = a.get_string ("type");
-		}
-	}
-	
-	/**
-	 * Process all associated attributes.
-	 */
-	public void process_attributes () {
-		foreach (Attribute a in attributes) {
-			if (a.name == "CCode") {
-				process_ccode_attribute (a);
-			} else if (a.name == "ReturnsModifiedPointer") {
-				returns_modified_pointer = true;
-			} else if (a.name == "FloatingReference") {
-				return_type.floating_reference = true;
-			} else if (a.name == "NoArrayLength") {
-				Report.warning (source_reference, "NoArrayLength attribute is deprecated, use [CCode (array_length = false)] instead.");
-				no_array_length = true;
-			} else if (a.name == "NoThrow") {
-				get_error_types ().clear ();
-			} else if (a.name == "DestroysInstance") {
-				this_parameter.variable_type.value_owned = true;
-			}
 		}
 	}
 
@@ -809,7 +557,12 @@ public class Vala.Method : Subroutine {
 
 		checked = true;
 
-		process_attributes ();
+		if (get_attribute ("DestroysInstance") != null) {
+			this_parameter.variable_type.value_owned = true;
+		}
+		if (get_attribute ("NoThrow") != null) {
+			get_error_types ().clear ();
+		}
 
 		if (is_abstract) {
 			if (parent_symbol is Class) {
@@ -1108,7 +861,6 @@ public class Vala.Method : Subroutine {
 			callback_method.binding = MemberBinding.INSTANCE;
 			callback_method.owner = scope;
 			callback_method.is_async_callback = true;
-			callback_method.set_cname (get_real_cname () + "_co");
 		}
 		return callback_method;
 	}
@@ -1132,8 +884,8 @@ public class Vala.Method : Subroutine {
 		var callback_param = new Parameter ("_callback_", callback_type);
 		callback_param.initializer = new NullLiteral (source_reference);
 		callback_param.initializer.target_type = callback_type.copy ();
-		callback_param.cparameter_position = -1;
-		callback_param.cdelegate_target_parameter_position = -0.9;
+		callback_param.set_attribute_double ("CCode", "pos", -1);
+		callback_param.set_attribute_double ("CCode", "delegate_target_pos", -0.9);
 
 		params.add (callback_param);
 
@@ -1149,7 +901,7 @@ public class Vala.Method : Subroutine {
 		var result_type = new ObjectType ((ObjectTypeSymbol) glib_ns.scope.lookup ("AsyncResult"));
 
 		var result_param = new Parameter ("_res_", result_type);
-		result_param.cparameter_position = 0.1;
+		result_param.set_attribute_double ("CCode", "pos", 0.1);
 		params.add (result_param);
 
 		foreach (var param in parameters) {

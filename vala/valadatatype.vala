@@ -117,55 +117,8 @@ public abstract class Vala.DataType : CodeNode {
 		}
 	}
 
-	/**
-	 * Returns the name and qualifiers of this type as it is used in C code.
-	 *
-	 * @return the type string to be used in C code
-	 */
-	public virtual string? get_cname () {
-		// raise error
-		Report.error (source_reference, "unresolved type reference");
-		return null;
-	}
-
 	public virtual string get_cdeclarator_suffix () {
 		return "";
-	}
-
-	/**
-	 * Returns the name and qualifiers of this type as it is used in C code
-	 * in a const declaration.
-	 *
-	 * @return the type string to be used in C code const declarations
-	 */
-	public string get_const_cname () {
-		string ptr;
-		TypeSymbol t;
-		// FIXME: workaround to make constant arrays possible
-		if (this is ArrayType) {
-			t = ((ArrayType) this).element_type.data_type;
-		} else {
-			t = data_type;
-		}
-		if (!t.is_reference_type ()) {
-			ptr = "";
-		} else {
-			ptr = "*";
-		}
-		
-		return "const %s%s".printf (t.get_cname (), ptr);
-	}
-
-	/**
-	 * Returns the C name of this data type in lower case. Words are
-	 * separated by underscores.
-	 *
-	 * @param infix a string to be placed between namespace and data type
-	 *              name or null
-	 * @return      the lower case name to be used in C code
-	 */
-	public virtual string? get_lower_case_cname (string? infix = null) {
-		return data_type.get_lower_case_cname (infix);
 	}
 
 	public override string to_string () {
@@ -313,14 +266,16 @@ public abstract class Vala.DataType : CodeNode {
 			return false;
 		}
 
-		if (target_type.get_type_id () == "G_TYPE_VALUE" && get_type_id () != null) {
-			// allow implicit conversion to GValue
-			return true;
-		}
+		if (CodeContext.get ().profile == Profile.GOBJECT && target_type.data_type != null) {
+			if (target_type.data_type.is_subtype_of (CodeContext.get ().analyzer.gvalue_type.data_type)) {
+				// allow implicit conversion to GValue
+				return true;
+			}
 
-		if (target_type.get_type_id () == "G_TYPE_VARIANT") {
-			// allow implicit conversion to GVariant
-			return true;
+			if (target_type.data_type.is_subtype_of (CodeContext.get ().analyzer.gvariant_type.data_type)) {
+				// allow implicit conversion to GVariant
+				return true;
+			}
 		}
 
 		if (this is ValueType && target_type.data_type != null && target_type.data_type.get_full_name () == "Dova.Value") {
@@ -472,14 +427,6 @@ public abstract class Vala.DataType : CodeNode {
 
 	public bool is_real_non_null_struct_type () {
 		return is_real_struct_type () && !nullable;
-	}
-
-	public virtual string? get_type_id () {
-		if (data_type != null) {
-			return data_type.get_type_id ();
-		} else {
-			return null;
-		}
 	}
 
 	/**

@@ -51,16 +51,6 @@ public class Vala.ObjectType : ReferenceType {
 		return result;
 	}
 
-	public override string? get_cname () {
-		if (CodeContext.get ().profile == Profile.DOVA) {
-			if (type_symbol.get_full_name () == "string") {
-				return "string_t";
-			}
-		}
-
-		return "%s*".printf (type_symbol.get_cname (!value_owned));
-	}
-
 	public override bool stricter (DataType target_type) {
 		var obj_target_type = target_type as ObjectType;
 		if (obj_target_type == null) {

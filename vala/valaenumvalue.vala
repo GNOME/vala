@@ -74,19 +74,12 @@ public class Vala.EnumValue : Constant {
 		}
 	}
 
-	public override string get_default_cname () {
-		var en = (Enum) parent_symbol;
-		return "%s%s".printf (en.get_cprefix (), name);
-	}
-
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
-
-		process_attributes ();
 
 		if (value != null) {
 			value.check (context);

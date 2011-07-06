@@ -49,8 +49,4 @@ public class Vala.InterfaceType : ReferenceType {
 		
 		return result;
 	}
-
-	public override string? get_cname () {
-		return "%s*".printf (interface_symbol.get_type_cname ());
-	}
 }

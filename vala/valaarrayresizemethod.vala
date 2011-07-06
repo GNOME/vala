@@ -34,6 +34,6 @@ public class Vala.ArrayResizeMethod : Method {
 	public ArrayResizeMethod (SourceReference source_reference) {
 		base ("resize", new VoidType (), source_reference);
 		external = true;
-		cinstance_parameter_position = 0.1;
+		set_attribute_double ("CCode", "instance_pos", 0.1);
 	}
 }

@@ -101,24 +101,6 @@ public class Vala.ErrorType : ReferenceType {
 		return result;
 	}
 
-	public override string? get_cname () {
-		return "GError*";
-	}
-
-	public override string? get_lower_case_cname (string? infix = null) {
-		if (error_domain == null) {
-			if (infix == null) {
-				return "g_error";
-			} else {
-				return "g_%s_error".printf (infix);
-			}
-		} else if (error_code == null) {
-			return error_domain.get_lower_case_cname (infix);
-		} else {
-			return error_code.get_lower_case_cname (infix);
-		}
-	}
-
 	public override bool equals (DataType type2) {
 		var et = type2 as ErrorType;
 
@@ -133,14 +115,6 @@ public class Vala.ErrorType : ReferenceType {
 		var root_symbol = source_reference.file.context.root;
 		var gerror_symbol = root_symbol.scope.lookup ("GLib").scope.lookup ("Error");
 		return gerror_symbol.scope.lookup (member_name);
-	}
-
-	public override string? get_type_id () {
-		if (source_reference != null && source_reference.file.context.require_glib_version (2, 26)) {
-			return "G_TYPE_ERROR";
-		} else {
-			return "G_TYPE_POINTER";
-		}
 	}
 
 	public override bool is_reference_type_or_type_parameter () {

@@ -38,15 +38,7 @@ public class Vala.VoidType : DataType {
 		return "void";
 	}
 
-	public override string? get_cname () {
-		return "void";
-	}
-
 	public override DataType copy () {
 		return new VoidType (source_reference);
-	}
-
-	public override string? get_type_id () {
-		return "G_TYPE_NONE";
 	}
 }

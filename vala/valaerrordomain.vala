@@ -28,10 +28,6 @@ using GLib;
 public class Vala.ErrorDomain : TypeSymbol {
 	private List<ErrorCode> codes = new ArrayList<ErrorCode> ();
 	private List<Method> methods = new ArrayList<Method> ();
-	private string cname;
-	private string cprefix;
-	private string lower_case_cprefix;
-	private string lower_case_csuffix;
 
 	/**
 	 * Creates a new error domain.
@@ -107,122 +103,16 @@ public class Vala.ErrorDomain : TypeSymbol {
 		}
 	}
 
-	public override string get_cname (bool const_type = false) {
-		if (cname == null) {
-			cname = "%s%s".printf (parent_symbol.get_cprefix (), name);
-		}
-		return cname;
-	}
-
-	public override string get_lower_case_cprefix () {
-		if (lower_case_cprefix == null) {
-			lower_case_cprefix = "%s_".printf (get_lower_case_cname (null));
-		}
-		return lower_case_cprefix;
-	}
-
-	private string get_lower_case_csuffix () {
-		if (lower_case_csuffix == null) {
-			lower_case_csuffix = camel_case_to_lower_case (name);
-		}
-		return lower_case_csuffix;
-	}
-
-	public override string? get_lower_case_cname (string? infix) {
-		if (infix == null) {
-			infix = "";
-		}
-
-		string cprefix = "";
-		if (parent_symbol != null) {
-			cprefix = parent_symbol.get_lower_case_cprefix ();
-		}
-
-		return "%s%s%s".printf (cprefix, infix, get_lower_case_csuffix ());
-	}
-
-	public override string? get_upper_case_cname (string? infix) {
-		return get_lower_case_cname (infix).up ();
-	}
-
 	public override bool is_reference_type () {
 		return false;
 	}
 	
-	public void set_cname (string cname) {
-		this.cname = cname;
-	}
-	
-	public override string get_cprefix () {
-		if (cprefix == null) {
-			cprefix = "%s_".printf (get_upper_case_cname (null));
-		}
-		return cprefix;
-	}
-	
-	/**
-	 * Sets the string to be prepended to the name of members of this error
-	 * domain when used in C code.
-	 *
-	 * @param cprefix the prefix to be used in C code
-	 */
-	public void set_cprefix (string cprefix) {
-		this.cprefix = cprefix;
-	}
-	
-	private void process_ccode_attribute (Attribute a) {
-		if (a.has_argument ("cname")) {
-			set_cname (a.get_string ("cname"));
-		}
-		if (a.has_argument ("cprefix")) {
-			set_cprefix (a.get_string ("cprefix"));
-		}
-		if (a.has_argument ("lower_case_csuffix")) {
-			lower_case_csuffix = a.get_string ("lower_case_csuffix");
-		}
-		if (a.has_argument ("cheader_filename")) {
-			var val = a.get_string ("cheader_filename");
-			foreach (string filename in val.split (",")) {
-				add_cheader_filename (filename);
-			}
-		}
-	}
-	
-	/**
-	 * Process all associated attributes.
-	 */
-	public void process_attributes () {
-		foreach (Attribute a in attributes) {
-			if (a.name == "CCode") {
-				process_ccode_attribute (a);
-			}
-		}
-	}
-
-	public override string? get_type_id () {
-		return "G_TYPE_POINTER";
-	}
-	
-	public override string? get_marshaller_type_name () {
-		return "POINTER";
-	}
-
-	public override string? get_get_value_function () {
-		return "g_value_get_pointer";
-	}
-	
-	public override string? get_set_value_function () {
-		return "g_value_set_pointer";
-	}
-
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
-
-		process_attributes ();
 
 		foreach (ErrorCode ecode in codes) {
 			ecode.check (context);

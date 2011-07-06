@@ -49,8 +49,4 @@ public class Vala.ClassType : ReferenceType {
 		
 		return result;
 	}
-
-	public override string? get_cname () {
-		return "%sClass*".printf (class_symbol.get_cname ());
-	}
 }

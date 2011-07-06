@@ -50,8 +50,6 @@ public class Vala.Constant : Symbol, Lockable {
 		}
 	}
 
-	private string cname;
-	
 	private bool lock_used = false;
 
 	private DataType _data_type;
@@ -87,37 +85,6 @@ public class Vala.Constant : Symbol, Lockable {
 		}
 	}
 
-	/**
-	 * Returns the name of this constant as it is used in C code.
-	 *
-	 * @return the name to be used in C code
-	 */
-	public string get_cname () {
-		if (cname == null) {
-			cname = get_default_cname ();
-		}
-		return cname;
-	}
-
-	/**
-	 * Returns the default name of this constant as it is used in C
-	 * code.
-	 *
-	 * @return the name to be used in C code by default
-	 */
-	public virtual string get_default_cname () {
-		if (parent_symbol == null) {
-			// global constant
-			return name;
-		} else {
-			return "%s%s".printf (parent_symbol.get_lower_case_cprefix ().up (), name);
-		}
-	}
-
-	public void set_cname (string value) {
-		this.cname = value;
-	}
-
 	public bool get_lock_used () {
 		return lock_used;
 	}
@@ -138,37 +105,12 @@ public class Vala.Constant : Symbol, Lockable {
 		}
 	}
 
-	private void process_ccode_attribute (Attribute a) {
-		if (a.has_argument ("cname")) {
-			cname = a.get_string ("cname");
-		}
-		if (a.has_argument ("cheader_filename")) {
-			var val = a.get_string ("cheader_filename");
-			foreach (string filename in val.split (",")) {
-				add_cheader_filename (filename);
-			}
-		}
-	}
-
-	/**
-	 * Process all associated attributes.
-	 */
-	public void process_attributes () {
-		foreach (Attribute a in attributes) {
-			if (a.name == "CCode") {
-				process_ccode_attribute (a);
-			}
-		}
-	}
-
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
-
-		process_attributes ();
 
 		var old_source_file = context.analyzer.current_source_file;
 		var old_symbol = context.analyzer.current_symbol;

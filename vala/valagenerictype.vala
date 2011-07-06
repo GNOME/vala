@@ -42,22 +42,6 @@ public class Vala.GenericType : DataType {
 		return result;
 	}
 
-	public override string? get_cname () {
-		if (CodeContext.get ().profile == Profile.GOBJECT) {
-			if (value_owned) {
-				return "gpointer";
-			} else {
-				return "gconstpointer";
-			}
-		} else {
-			return "void *";
-		}
-	}
-
-	public override string? get_type_id () {
-		return "G_TYPE_POINTER";
-	}
-
 	public override string to_qualified_string (Scope? scope = null) {
 		return type_parameter.name;
 	}

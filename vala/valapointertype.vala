@@ -49,14 +49,6 @@ public class Vala.PointerType : DataType {
 		return base_type.to_qualified_string (scope) + "*";
 	}
 
-	public override string? get_cname () {
-		if (base_type.data_type != null && base_type.data_type.is_reference_type ()) {
-			return base_type.get_cname ();
-		} else {
-			return base_type.get_cname () + "*";
-		}
-	}
-
 	public override DataType copy () {
 		return new PointerType (base_type.copy ());
 	}
@@ -91,7 +83,7 @@ public class Vala.PointerType : DataType {
 			return base_type.compatible (target_type);
 		}
 
-		if (target_type.get_type_id () == "G_TYPE_VALUE") {
+		if (CodeContext.get ().profile == Profile.GOBJECT && target_type.data_type != null && target_type.data_type.is_subtype_of (CodeContext.get ().analyzer.gvalue_type.data_type)) {
 			// allow implicit conversion to GValue
 			return true;
 		}
@@ -125,10 +117,6 @@ public class Vala.PointerType : DataType {
 
 	public override bool is_accessible (Symbol sym) {
 		return base_type.is_accessible (sym);
-	}
-
-	public override string? get_type_id () {
-		return "G_TYPE_POINTER";
 	}
 
 	public override void accept_children (CodeVisitor visitor) {

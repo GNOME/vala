@@ -38,9 +38,6 @@ public class Vala.Namespace : Symbol {
 
 	private List<Comment> comments = new ArrayList<Comment> ();
 
-	private List<string> cprefixes = new ArrayList<string> ();
-	private string lower_case_cprefix;
-	
 	private List<Namespace> namespaces = new ArrayList<Namespace> ();
 
 	private List<UsingDirective> using_directives = new ArrayList<UsingDirective> ();
@@ -499,112 +496,6 @@ public class Vala.Namespace : Symbol {
 			m.accept (visitor);
 		}
 	}
-	
-	public override string get_cprefix () {
-		if (cprefixes.size > 0) {
-			return cprefixes[0];
-		} else if (null != name) {
-			string parent_prefix;
-			if (parent_symbol == null) {
-				parent_prefix = "";
-			} else {
-				parent_prefix = parent_symbol.get_cprefix ();
-			}
-			return parent_prefix + name;
-		} else {
-			return "";
-		}
-	}
-
-	public List<string> get_cprefixes () {
-		if (0 == cprefixes.size && null != name)
-			cprefixes.add (name);
-
-		return cprefixes;
-	}
-
-	/**
-	 * Adds a camel case string to be prepended to the name of members of
-	 * this namespace when used in C code.
-	 *
-	 * @param cprefixes the camel case prefixes used in C code
-	 */
-	public void add_cprefix (string cprefix) {
-		cprefixes.add (cprefix);
-	}
-
-	/**
-	 * Returns the lower case string to be prepended to the name of members
-	 * of this namespace when used in C code.
-	 *
-	 * @return the lower case prefix to be used in C code
-	 */
-	public override string get_lower_case_cprefix () {
-		if (lower_case_cprefix == null) {
-			if (name == null) {
-				lower_case_cprefix = "";
-			} else {
-				string parent_prefix;
-				if (parent_symbol == null) {
-					parent_prefix = "";
-				} else {
-					parent_prefix = parent_symbol.get_lower_case_cprefix ();
-				}
-				lower_case_cprefix = "%s%s_".printf (parent_prefix, camel_case_to_lower_case (name));
-			}
-		}
-		return lower_case_cprefix;
-	}
-
-	/**
-	 * Sets the lower case string to be prepended to the name of members of
-	 * this namespace when used in C code.
-	 *
-	 * @param cprefix the lower case prefix to be used in C code
-	 */
-	public void set_lower_case_cprefix (string cprefix) {
-		this.lower_case_cprefix = cprefix;
-	}
-
-	private void process_ccode_attribute (Attribute a) {
-		if (a.has_argument ("cprefix")) {
-			string value = a.get_string ("cprefix");
-			if (value == "") {
-				// split of an empty string returns an empty array
-				add_cprefix ("");
-			} else {
-				foreach (string name in value.split (",")) {
-					add_cprefix (name);
-				}
-			}
-		}
-		if (a.has_argument ("lower_case_cprefix")) {
-			set_lower_case_cprefix (a.get_string ("lower_case_cprefix"));
-		}
-		if (a.has_argument ("cheader_filename")) {
-			var val = a.get_string ("cheader_filename");
-			foreach (string filename in val.split (",")) {
-				add_cheader_filename (filename);
-			}
-		}
-		if (a.has_argument ("gir_namespace")) {
-			source_reference.file.gir_namespace = a.get_string ("gir_namespace");
-		}
-		if (a.has_argument ("gir_version")) {
-			source_reference.file.gir_version = a.get_string ("gir_version");
-		}
-	}
-
-	/**
-	 * Process all associated attributes.
-	 */
-	public void process_attributes () {
-		foreach (Attribute a in attributes) {
-			if (a.name == "CCode") {
-				process_ccode_attribute (a);
-			}
-		}
-	}
 
 	public override bool check (CodeContext context) {
 		if (checked) {
@@ -613,7 +504,13 @@ public class Vala.Namespace : Symbol {
 
 		checked = true;
 
-		process_attributes ();
+		var a = get_attribute ("CCode");
+		if (a != null && a.has_argument ("gir_namespace")) {
+			source_reference.file.gir_namespace = a.get_string ("gir_namespace");
+		}
+		if (a != null && a.has_argument ("gir_version")) {
+			source_reference.file.gir_version = a.get_string ("gir_version");
+		}
 
 		foreach (Namespace ns in namespaces) {
 			ns.check (context);

@@ -36,14 +36,6 @@ public abstract class Vala.ValueType : DataType {
 		data_type = type_symbol;
 	}
 
-	public override string? get_cname () {
-		string ptr = "";
-		if (nullable) {
-			ptr = "*";
-		}
-		return type_symbol.get_cname () + ptr;
-	}
-
 	public override bool is_disposable () {
 		if (!value_owned) {
 			return false;

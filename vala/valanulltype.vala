@@ -62,14 +62,6 @@ public class Vala.NullType : ReferenceType {
 		return new NullType (source_reference);
 	}
 
-	public override string? get_cname () {
-		if (CodeContext.get ().profile == Profile.GOBJECT) {
-			return "gpointer";
-		} else {
-			return "void *";
-		}
-	}
-
 	public override bool is_disposable () {
 		return false;
 	}

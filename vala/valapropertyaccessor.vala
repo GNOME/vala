@@ -76,29 +76,7 @@ public class Vala.PropertyAccessor : Subroutine {
 	 */
 	public Parameter value_parameter { get; set; }
 
-	public virtual string get_default_cname () {
-		var t = (TypeSymbol) prop.parent_symbol;
-
-		if (readable) {
-			return "%sget_%s".printf (t.get_lower_case_cprefix (), prop.name);
-		} else {
-			return "%sset_%s".printf (t.get_lower_case_cprefix (), prop.name);
-		}
-	}
-
-	/**
-	 * The publicly accessible name of the function that performs the
-	 * access in C code.
-	 */
-	public string get_cname () {
-		if (_cname != null) {
-			return _cname;
-		}
-		return get_default_cname ();
-	}
-
 	private DataType _value_type;
-	private string? _cname;
 	
 	/**
 	 * Creates a new property accessor.
@@ -136,27 +114,12 @@ public class Vala.PropertyAccessor : Subroutine {
 		}
 	}
 
-	/**
-	 * Process all associated attributes.
-	 */
-	public void process_attributes () {
-		foreach (Attribute a in attributes) {
-			if (a.name == "CCode") {
-				if (a.has_argument ("cname")) {
-					_cname = a.get_string ("cname");
-				}
-			}
-		}
-	}
-
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
-
-		process_attributes ();
 
 		if (!value_type.check (context)) {
 			error = true;
@@ -228,9 +191,5 @@ public class Vala.PropertyAccessor : Subroutine {
 		if (value_type == old_type) {
 			value_type = new_type;
 		}
-	}
-
-	public override List<string> get_cheader_filenames () {
-		return parent_symbol.get_cheader_filenames ();
 	}
 }

@@ -72,18 +72,6 @@ public class Vala.Property : Symbol, Lockable {
 	public Parameter this_parameter { get; set; }
 
 	/**
-	 * Specifies whether a `notify` signal should be emitted on property
-	 * changes.
-	 */
-	public bool notify { get; set; default = true; }
-
-	/**
-	 * Specifies whether the implementation of this property does not
-	 * provide getter/setter methods.
-	 */
-	public bool no_accessor_method { get; set; }
-	
-	/**
 	 * Specifies whether automatic accessor code generation should be
 	 * disabled.
 	 */
@@ -146,42 +134,9 @@ public class Vala.Property : Symbol, Lockable {
 	 */
 	public Expression initializer { get; set; }
 
-	public bool no_array_length { get; set; }
-
-	public bool array_null_terminated { get; set; }
-
-	/**
-	 * Nickname of this property.
-	 */
-	public string nick {
-		get {
-			if (_nick == null) {
-				_nick = get_canonical_name ();
-			}
-			return _nick;
-		}
-		set { _nick = value; }
-	}
-
-	/**
-	 * The long description of this property.
-	 */
-	public string blurb {
-		get {
-			if (_blurb == null) {
-				_blurb = get_canonical_name ();
-			}
-			return _blurb;
-		}
-		set { _blurb = value; }
-	}
-
 	private bool lock_used = false;
 
 	private DataType _data_type;
-
-	private string? _nick;
-	private string? _blurb;
 
 	private weak Property _base_property;
 	private Property _base_interface_property;
@@ -225,77 +180,6 @@ public class Vala.Property : Symbol, Lockable {
 		}
 	}
 
-	/**
-	 * Returns the C name of this property in upper case. Words are
-	 * separated by underscores. The upper case C name of the class is
-	 * prefix of the result.
-	 *
-	 * @return the upper case name to be used in C code
-	 */
-	public string get_upper_case_cname () {
-		return "%s_%s".printf (parent_symbol.get_lower_case_cname (null), camel_case_to_lower_case (name)).up ();
-	}
-	
-	/**
-	 * Returns the string literal of this property to be used in C code.
-	 *
-	 * @return string literal to be used in C code
-	 */
-	public CCodeConstant get_canonical_cconstant () {
-		return new CCodeConstant ("\"%s\"".printf (get_canonical_name ()));
-	}
-
-	public string get_canonical_name () {
-		var str = new StringBuilder ();
-		
-		string i = name;
-		
-		while (i.length > 0) {
-			unichar c = i.get_char ();
-			if (c == '_') {
-				str.append_c ('-');
-			} else {
-				str.append_unichar (c);
-			}
-			
-			i = i.next_char ();
-		}
-		
-		return str.str;
-	}
-
-	void process_ccode_attribute (Attribute a) {
-		if (a.has_argument ("notify")) {
-			notify = a.get_bool ("notify");
-		}
-		if (a.has_argument ("array_length")) {
-			no_array_length = !a.get_bool ("array_length");
-		}
-		if (a.has_argument ("array_null_terminated")) {
-			array_null_terminated = a.get_bool ("array_null_terminated");
-		}
-	}
-
-	/**
-	 * Process all associated attributes.
-	 */
-	public void process_attributes () {
-		foreach (Attribute a in attributes) {
-			if (a.name == "CCode") {
-				process_ccode_attribute (a);
-			} else if (a.name == "NoAccessorMethod") {
-				no_accessor_method = true;
-			} else if (a.name == "Description") {
-				if (a.has_argument ("nick")) {
-					nick = a.get_string ("nick");
-				}
-				if (a.has_argument ("blurb")) {
-					blurb = a.get_string ("blurb");
-				}
-			}			
-		}
-	}
-	
 	public bool get_lock_used () {
 		return lock_used;
 	}
@@ -423,8 +307,6 @@ public class Vala.Property : Symbol, Lockable {
 		}
 
 		checked = true;
-
-		process_attributes ();
 
 		if (is_abstract) {
 			if (parent_symbol is Class) {

@@ -48,11 +48,6 @@ public class Vala.Signal : Symbol, Lockable {
 	}
 
 	/**
-	 * Specifies whether this signal has an emitter wrapper function.
-	 */
-	public bool has_emitter { get; set; }
-	
-	/**
 	 * Specifies whether this signal has virtual method handler.
 	 */
 	public bool is_virtual { get; set; }
@@ -64,19 +59,6 @@ public class Vala.Signal : Symbol, Lockable {
 	 * */
 	public Method default_handler { get; private set; }
 
-	public bool is_detailed { get; set; }
-
-	public bool no_recurse { get; set; }
-
-	public string run_type { get; set; }
-
-	public bool is_action { get; set; }
-
-	public bool no_hooks { get; set; }
-
-
-	private string cname;
-	
 	private bool lock_used = false;
 
 	private DataType _return_type;
@@ -94,7 +76,6 @@ public class Vala.Signal : Symbol, Lockable {
 	public Signal (string name, DataType return_type, SourceReference? source_reference = null, Comment? comment = null) {
 		base (name, source_reference, comment);
 		this.return_type = return_type;
-		this.run_type = "last";
 	}
 	
 	/**
@@ -103,12 +84,6 @@ public class Vala.Signal : Symbol, Lockable {
 	 * @param param a formal parameter
 	 */
 	public void add_parameter (Parameter param) {
-		// default C parameter position
-		param.cparameter_position = parameters.size + 1;
-		param.carray_length_parameter_position = param.cparameter_position + 0.1;
-		param.cdelegate_target_parameter_position = param.cparameter_position + 0.1;
-		param.cdestroy_notify_parameter_position = param.cparameter_position + 0.1;
-
 		parameters.add (param);
 		scope.add (param.name, param);
 	}
@@ -167,54 +142,7 @@ public class Vala.Signal : Symbol, Lockable {
 
 		return generated_delegate;
 	}
-
-	/**
-	 * Returns the name of this signal as it is used in C code.
-	 *
-	 * @return the name to be used in C code
-	 */
-	public string get_cname () {
-		if (cname == null) {
-			cname = camel_case_to_lower_case (name);
-		}
-		return cname;
-	}
 	
-	public void set_cname (string cname) {
-		this.cname = cname;
-	}
-	
-	/**
-	 * Returns the string literal of this signal to be used in C code.
-	 *
-	 * @return string literal to be used in C code
-	 */
-	public CCodeConstant get_canonical_cconstant (string? detail = null) {
-		var str = new StringBuilder ("\"");
-		
-		string i = get_cname ();
-		
-		while (i.length > 0) {
-			unichar c = i.get_char ();
-			if (c == '_') {
-				str.append_c ('-');
-			} else {
-				str.append_unichar (c);
-			}
-			
-			i = i.next_char ();
-		}
-
-		if (detail != null) {
-			str.append ("::");
-			str.append (detail);
-		}
-
-		str.append_c ('"');
-		
-		return new CCodeConstant (str.str);
-	}
-
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_signal (this);
 	}
@@ -232,46 +160,6 @@ public class Vala.Signal : Symbol, Lockable {
 		}
 	}
 
-	void process_signal_attribute (Attribute a) {
-		if (a.has_argument ("detailed")) {
-			is_detailed = a.get_bool ("detailed");
-		}
-		if (a.has_argument ("no_recurse")) {
-			no_recurse = a.get_bool ("no_recurse");
-		}
-		if (a.has_argument ("run")) {
-			var arg = a.get_string ("run");
-			if (arg == "first") {
-				run_type = "first";
-			} else if (arg == "last") {
-				run_type = "last";
-			} else if (arg == "cleanup") {
-				run_type = "cleanup";
-			}
-		}
-
-		if (a.has_argument ("action")) {
-			is_action = a.get_bool ("action");
-		}
-
-		if (a.has_argument ("no_hooks")) {
-			no_hooks = a.get_bool ("no_hooks");
-		}
-	}
-
-	/**
-	 * Process all associated attributes.
-	 */
-	public void process_attributes () {
-		foreach (Attribute a in attributes) {
-			if (a.name == "HasEmitter") {
-				has_emitter = true;
-			} else if (a.name == "Signal") {
-				process_signal_attribute (a);
-			}
-		}
-	}
-	
 	public bool get_lock_used () {
 		return lock_used;
 	}
@@ -293,8 +181,6 @@ public class Vala.Signal : Symbol, Lockable {
 
 		checked = true;
 
-		process_attributes ();
-
 		return_type.check (context);
 		
 		foreach (Parameter param in parameters) {
@@ -314,7 +200,6 @@ public class Vala.Signal : Symbol, Lockable {
 			default_handler.external = external;
 			default_handler.hides = hides;
 			default_handler.is_virtual = true;
-			default_handler.vfunc_name = name;
 			default_handler.signal_reference = this;
 			default_handler.body = body;
 

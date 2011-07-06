@@ -53,18 +53,6 @@ public abstract class Vala.Symbol : CodeNode {
 	}
 
 	/**
-	 * The GIR name.
-	 */
-	public string? gir_name {
-		get {
-			return _gir_name == null ? name : _gir_name;
-		}
-		set {
-			_gir_name = value;
-		}
-	}
-
-	/**
 	 * The symbol name.
 	 */
 	public string? name { get; set; }
@@ -150,8 +138,6 @@ public abstract class Vala.Symbol : CodeNode {
 
 	public Comment? comment { get; set; }
 
-	private List<string> cheader_filenames;
-
 	/**
 	 * Specifies whether this method explicitly hides a member of a base
 	 * type.
@@ -229,7 +215,6 @@ public abstract class Vala.Symbol : CodeNode {
 
 	private weak Scope _owner;
 	private Scope _scope;
-	private string? _gir_name = null;
 	private bool? _deprecated;
 	private bool? _experimental;
 
@@ -239,34 +224,7 @@ public abstract class Vala.Symbol : CodeNode {
 		this.comment = comment;
 		_scope = new Scope (this);
 	}
-	
-	/**
-	 * Returns the fully expanded GIR name of this symbol
-	 *
-	 * @return full GIR name
-	 */
-	public string get_full_gir_name () {
-		if (parent_symbol == null) {
-			return gir_name;
-		}
-		
-		if (name == null) {
-			return parent_symbol.get_full_gir_name ();
-		}
 
-		if (parent_symbol.get_full_gir_name () == null) {
-			return gir_name;
-		}
-
-		string parent_gir_name = parent_symbol.get_full_gir_name ();
-		string self_gir_name = gir_name.has_prefix (".") ? gir_name.substring (1) : gir_name;
-		if ("." in parent_gir_name) {
-			return "%s%s".printf (parent_gir_name, self_gir_name);
-		} else {
-			return "%s.%s".printf (parent_gir_name, self_gir_name);
-		}
-	}
-	
 	/**
 	 * Returns the fully expanded name of this symbol for use in
 	 * human-readable messages.
@@ -292,76 +250,7 @@ public abstract class Vala.Symbol : CodeNode {
 			return "%s.%s".printf (parent_symbol.get_full_name (), name);
 		}
 	}
-
-	/**
-	 * Returns the camel case string to be prepended to the name of members
-	 * of this symbol when used in C code.
-	 *
-	 * @return the camel case prefix to be used in C code
-	 */
-	public virtual string get_cprefix () {
-		if (name == null) {
-			return "";
-		} else {
-			return name;
-		}
-	}
 	
-	/**
-	 * Returns the C name of this symbol in lower case. Words are
-	 * separated by underscores. The lower case C name of the parent symbol
-	 * is prefix of the result, if there is one.
-	 *
-	 * @param infix a string to be placed between namespace and data type
-	 *              name or null
-	 * @return      the lower case name to be used in C code
-	 */
-	public virtual string? get_lower_case_cname (string? infix = null) {
-		return null;
-	}
-
-	/**
-	 * Returns the string to be prefixed to members of this symbol in
-	 * lower case when used in C code.
-	 *
-	 * @return      the lower case prefix to be used in C code
-	 */
-	public virtual string get_lower_case_cprefix () {
-		return "";
-	}
-
-	static List<string> _empty_string_list;
-
-	/**
-	 * Returns a list of C header filenames users of this symbol must
-	 * include.
-	 *
-	 * @return list of C header filenames for this symbol
-	 */
-	public virtual List<string> get_cheader_filenames () {
-		if (cheader_filenames == null || cheader_filenames.size == 0) {
-			// parent_symbol can be null on incremental parsing
-			if (parent_symbol != null) {
-				/* default to header filenames of the namespace */
-				var parent_header_filenames = parent_symbol.get_cheader_filenames ();
-				if (parent_header_filenames.size > 0) {
-					return parent_header_filenames;
-				}
-			}
-
-			if (source_reference != null && !external_package) {
-				// don't add default include directives for VAPI files
-				add_cheader_filename (source_reference.file.get_cinclude_filename ());
-			} else {
-				if (_empty_string_list == null) {
-					_empty_string_list = new ArrayList<string> ();
-				}
-				return _empty_string_list;
-			}
-		}
-		return cheader_filenames;
-	}
-
 	/**
 	 * Converts a string from CamelCase to lower_case.
 	 *
@@ -539,30 +428,6 @@ public abstract class Vala.Symbol : CodeNode {
 		} else {
 			return false;
 		}
-	}
-
-	/**
-	 * Sets the C header filename of this namespace to the specified
-	 * filename.
-	 *
-	 * @param cheader_filename header filename
-	 */
-	public void set_cheader_filename (string cheader_filename) {
-		cheader_filenames = new ArrayList<string> ();
-		cheader_filenames.add (cheader_filename);
-	}
-
-	/**
-	 * Adds a filename to the list of C header filenames users of this data
-	 * type must include.
-	 *
-	 * @param filename a C header filename
-	 */
-	public void add_cheader_filename (string filename) {
-		if (cheader_filenames == null) {
-			cheader_filenames = new ArrayList<string> ();
-		}
-		cheader_filenames.add (filename);
 	}
 
 	public Symbol? get_hidden_member () {

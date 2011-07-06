@@ -31,8 +31,6 @@ public class Vala.ErrorCode : TypeSymbol {
 	 */
 	public Expression value { get; set; }
 
-	private string cname;
-
 	/**
 	 * Creates a new enum value.
 	 *
@@ -65,51 +63,12 @@ public class Vala.ErrorCode : TypeSymbol {
 		}
 	}
 
-	public override string get_cname (bool const_type = false) {
-		if (cname == null) {
-			cname = get_default_cname ();
-		}
-		return cname;
-	}
-
-	public string get_default_cname () {
-		var edomain = (ErrorDomain) parent_symbol;
-		return "%s%s".printf (edomain.get_cprefix (), name);
-	}
-
-	public void set_cname (string value) {
-		this.cname = value;
-	}
-
-	public override string? get_lower_case_cname (string? infix) {
-		return get_cname ().down ();
-	}
-
-	private void process_ccode_attribute (Attribute a) {
-		if (a.has_argument ("cname")) {
-			cname = a.get_string ("cname");
-		}
-	}
-
-	/**
-	 * Process all associated attributes.
-	 */
-	public void process_attributes () {
-		foreach (Attribute a in attributes) {
-			if (a.name == "CCode") {
-				process_ccode_attribute (a);
-			}
-		}
-	}
-
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
-
-		process_attributes ();
 
 		if (value != null) {
 			value.check (context);

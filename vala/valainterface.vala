@@ -40,11 +40,6 @@ public class Vala.Interface : ObjectTypeSymbol {
 	private List<Enum> enums = new ArrayList<Enum> ();
 	private List<Delegate> delegates = new ArrayList<Delegate> ();
 
-	private string cname;
-	private string lower_case_csuffix;
-	private string type_cname;
-	private string type_id;
-
 	/**
 	 * Returns a copy of the list of classes.
 	 *
@@ -276,96 +271,6 @@ public class Vala.Interface : ObjectTypeSymbol {
 		scope.add (d.name, d);
 	}
 
-	public override string get_cprefix () {
-		return get_cname ();
-	}
-
-	public override string get_cname (bool const_type = false) {
-		if (cname == null) {
-			var attr = get_attribute ("CCode");
-			if (attr != null) {
-				cname = attr.get_string ("cname");
-			}
-			if (cname == null) {
-				cname = "%s%s".printf (parent_symbol.get_cprefix (), name);
-			}
-		}
-		return cname;
-	}
-
-	public void set_cname (string cname) {
-		this.cname = cname;
-	}
-	
-	/**
-	 * Returns the string to be prepended to the name of members of this
-	 * interface when used in C code.
-	 *
-	 * @return the suffix to be used in C code
-	 */
-	public string get_lower_case_csuffix () {
-		if (lower_case_csuffix == null) {
-			lower_case_csuffix = get_default_lower_case_csuffix ();
-		}
-		return lower_case_csuffix;
-	}
-
-	/**
-	 * Returns default string to be prepended to the name of members of this
-	 * interface when used in C code.
-	 *
-	 * @return the suffix to be used in C code
-	 */
-	public string get_default_lower_case_csuffix () {
-		string result = camel_case_to_lower_case (name);
-
-		// remove underscores in some cases to avoid conflicts of type macros
-		if (result.has_prefix ("type_")) {
-			result = "type" + result.substring ("type_".length);
-		} else if (result.has_prefix ("is_")) {
-			result = "is" + result.substring ("is_".length);
-		}
-		if (result.has_suffix ("_class")) {
-			result = result.substring (0, result.length - "_class".length) + "class";
-		}
-
-		return result;
-	}
-
-	/**
-	 * Returns default string for the type struct when used in C code.
-	 *
-	 * @return the type struct to be used in C code
-	 */
-	public string get_default_type_cname () {
-		return "%sIface".printf (get_cname ());
-	}
-	
-	/**
-	 * Sets the string to be prepended to the name of members of this
-	 * interface when used in C code.
-	 *
-	 * @param csuffix the suffix to be used in C code
-	 */
-	public void set_lower_case_csuffix (string csuffix) {
-		this.lower_case_csuffix = csuffix;
-	}
-	
-	public override string? get_lower_case_cname (string? infix) {
-		if (infix == null) {
-			infix = "";
-		}
-		return "%s%s%s".printf (parent_symbol.get_lower_case_cprefix (), infix, get_lower_case_csuffix ());
-	}
-	
-	public override string get_lower_case_cprefix () {
-		return "%s_".printf (get_lower_case_cname (null));
-	}
-	
-	public override string? get_upper_case_cname (string? infix) {
-		return get_lower_case_cname (infix).up ();
-	}
-
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_interface (this);
 	}
@@ -420,41 +325,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	public override bool is_reference_type () {
 		return true;
 	}
-
-	public override bool is_reference_counting () {
-		return true;
-	}
 	
-	public override string? get_ref_function () {
-		foreach (DataType prerequisite in prerequisites) {
-			string ref_func = prerequisite.data_type.get_ref_function ();
-			if (ref_func != null) {
-				return ref_func;
-			}
-		}
-		return null;
-	}
-	
-	public override string? get_unref_function () {
-		foreach (DataType prerequisite in prerequisites) {
-			string unref_func = prerequisite.data_type.get_unref_function ();
-			if (unref_func != null) {
-				return unref_func;
-			}
-		}
-		return null;
-	}
-
-	public override string? get_ref_sink_function () {
-		foreach (DataType prerequisite in prerequisites) {
-			string ref_sink_func = prerequisite.data_type.get_ref_sink_function ();
-			if (ref_sink_func != null) {
-				return ref_sink_func;
-			}
-		}
-		return null;
-	}
-
 	public override bool is_subtype_of (TypeSymbol t) {
 		if (this == t) {
 			return true;
@@ -469,109 +340,6 @@ public class Vala.Interface : ObjectTypeSymbol {
 		return false;
 	}
 	
-	private void process_ccode_attribute (Attribute a) {
-		if (a.has_argument ("type_cname")) {
-			set_type_cname (a.get_string ("type_cname"));
-		}
-		if (a.has_argument ("cheader_filename")) {
-			var val = a.get_string ("cheader_filename");
-			foreach (string filename in val.split (",")) {
-				add_cheader_filename (filename);
-			}
-		}
-		if (a.has_argument ("lower_case_csuffix")) {
-			lower_case_csuffix = a.get_string ("lower_case_csuffix");
-		}
-	}
-
-	/**
-	 * Process all associated attributes.
-	 */
-	public void process_attributes () {
-		foreach (Attribute a in attributes) {
-			if (a.name == "CCode") {
-				process_ccode_attribute (a);
-			}
-		}
-	}
-	
-	/**
-	 * Returns the name of the type struct as it is used in C code.
-	 *
-	 * @return the type struct name to be used in C code
-	 */
-	public string get_type_cname () {
-		if (type_cname == null) {
-			type_cname = get_default_type_cname ();
-		}
-		return type_cname;
-	}
-	
-	/**
-	 * Sets the name of the type struct as it is used in C code.
-	 *
-	 * @param type_cname the type struct name to be used in C code
-	 */
-	public void set_type_cname (string type_cname) {
-		this.type_cname = type_cname;
-	}
-
-	public override string? get_marshaller_type_name () {
-		foreach (DataType prerequisite in prerequisites) {
-			string type_name = prerequisite.data_type.get_marshaller_type_name ();
-			if (type_name != null) {
-				return type_name;
-			}
-		}
-		return "POINTER";
-	}
-
-	public override string? get_get_value_function () {
-		foreach (DataType prerequisite in prerequisites) {
-			string get_value_func = prerequisite.data_type.get_get_value_function ();
-			if (get_value_func != null) {
-				return get_value_func;
-			}
-		}
-		return "g_value_get_pointer";
-	}
-	
-	public override string? get_set_value_function () {
-		foreach (DataType prerequisite in prerequisites) {
-			string set_value_func = prerequisite.data_type.get_set_value_function ();
-			if (set_value_func != null) {
-				return set_value_func;
-			}
-		}
-		return "g_value_set_pointer";
-	}
-
-	public override string? get_take_value_function () {
-		foreach (DataType prerequisite in prerequisites) {
-			string take_value_func = prerequisite.data_type.get_take_value_function ();
-			if (take_value_func != null) {
-				return take_value_func;
-			}
-		}
-		return "g_value_set_pointer";
-	}
-
-	public string? get_default_type_id () {
-		return get_upper_case_cname ("TYPE_");
-	}
-
-	public override string? get_type_id () {
-		if (type_id == null) {
-			type_id = get_default_type_id ();
-		}
-		
-		return type_id;
-	}
-
-	public void set_type_id (string type_id) {
-		this.type_id = type_id;
-	}
-
 	public override void replace_type (DataType old_type, DataType new_type) {
 		for (int i = 0; i < prerequisites.size; i++) {
 			if (prerequisites[i] == old_type) {
@@ -581,33 +349,12 @@ public class Vala.Interface : ObjectTypeSymbol {
 		}
 	}
 
-	public override string? get_param_spec_function () {
-		foreach (DataType prerequisite in prerequisites) {
-			var prereq = prerequisite as ObjectType;
-			var cl = prereq.type_symbol as Class;
-			if (cl != null) {
-				return cl.get_param_spec_function ();
-			}
-			var interf = prereq.type_symbol as Interface;
-			if (interf != null) {
-				var param_spec_function = interf.get_param_spec_function ();
-				if (param_spec_function != null) {
-					return param_spec_function;
-				}
-			}
-		}
-
-		return "g_param_spec_pointer";
-	}
-
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
 		}
 
 		checked = true;
-
-		process_attributes ();
 
 		var old_source_file = context.analyzer.current_source_file;
 		var old_symbol = context.analyzer.current_symbol;

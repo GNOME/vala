@@ -61,43 +61,9 @@ public class Vala.Delegate : TypeSymbol {
 
 	public DataType? sender_type { get; set; }
 
-	/**
-	 * Specifies the position of the instance parameter in the C function.
-	 */
-	public double cinstance_parameter_position { get; set; }
-
-	/**
-	 * Specifies the position of the array length out parameter in the C
-	 * function.
-	 */
-	public double carray_length_parameter_position { get; set; }
-
-	/**
-	 * Specifies the position of the delegate target out parameter in the C
-	 * function.
-	 */
-	public double cdelegate_target_parameter_position { get; set; }
-
-	/**
-	 * Specifies whether the array length should be returned implicitly
-	 * if the return type is an array.
-	 */
-	public bool no_array_length { get; set; }
-
-	/**
-	 * Specifies whether the array is null terminated.
-	 */
-	public bool array_null_terminated { get; set; }
-
-	/**
-	 * Specifies a custom type for the array length parameter.
-	 */
-	public string? array_length_type { get; set; default = null; }
-
 	private List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
 
 	private List<Parameter> parameters = new ArrayList<Parameter> ();
-	private string cname;
 
 	private DataType _return_type;
 	private bool? _has_target;
@@ -113,11 +79,6 @@ public class Vala.Delegate : TypeSymbol {
 	public Delegate (string? name, DataType return_type, SourceReference? source_reference = null, Comment? comment = null) {
 		base (name, source_reference, comment);
 		this.return_type = return_type;
-
-		// error is -1 (right of user_data)
-		cinstance_parameter_position = -2;
-		carray_length_parameter_position = -3;
-		cdelegate_target_parameter_position = -3;
 	}
 
 	/**
@@ -151,12 +112,6 @@ public class Vala.Delegate : TypeSymbol {
 	 * @param param a formal parameter
 	 */
 	public void add_parameter (Parameter param) {
-		// default C parameter position
-		param.cparameter_position = parameters.size + 1;
-		param.carray_length_parameter_position = param.cparameter_position + 0.1;
-		param.cdelegate_target_parameter_position = param.cparameter_position + 0.1;
-		param.cdestroy_notify_parameter_position = param.cparameter_position + 0.1;
-
 		parameters.add (param);
 		scope.add (param.name, param);
 	}
@@ -268,92 +223,8 @@ public class Vala.Delegate : TypeSymbol {
 		}
 	}
 
-	public override string get_cname (bool const_type = false) {
-		if (cname == null) {
-			cname = "%s%s".printf (parent_symbol.get_cprefix (), name);
-		}
-		return cname;
-	}
-
-	/**
-	 * Sets the name of this callback as it is used in C code.
-	 *
-	 * @param cname the name to be used in C code
-	 */
-	public void set_cname (string cname) {
-		this.cname = cname;
-	}
-
-	public override string? get_lower_case_cname (string? infix) {
-		if (infix == null) {
-			infix = "";
-		}
-		return "%s%s%s".printf (parent_symbol.get_lower_case_cprefix (), infix, camel_case_to_lower_case (name));
-	}
-
-	public override string? get_upper_case_cname (string? infix) {
-		return get_lower_case_cname (infix).up ();
-	}
-
-	private void process_ccode_attribute (Attribute a) {
-		if (a.has_argument ("cname")) {
-			set_cname (a.get_string ("cname"));
-		}
-		if (a.has_argument ("instance_pos")) {
-			cinstance_parameter_position = a.get_double ("instance_pos");
-		}
-		if (a.has_argument ("array_length")) {
-			no_array_length = !a.get_bool ("array_length");
-		}
-		if (a.has_argument ("array_length_type")) {
-			array_length_type = a.get_string ("array_length_type");
-		}
-		if (a.has_argument ("array_null_terminated")) {
-			array_null_terminated = a.get_bool ("array_null_terminated");
-		}
-		if (a.has_argument ("array_length_pos")) {
-			carray_length_parameter_position = a.get_double ("array_length_pos");
-		}
-		if (a.has_argument ("delegate_target_pos")) {
-			cdelegate_target_parameter_position = a.get_double ("delegate_target_pos");
-		}
-		if (a.has_argument ("cheader_filename")) {
-			var val = a.get_string ("cheader_filename");
-			foreach (string filename in val.split (",")) {
-				add_cheader_filename (filename);
-			}
-		}
-	}
-	
-	/**
-	 * Process all associated attributes.
-	 */
-	public void process_attributes () {
-		foreach (Attribute a in attributes) {
-			if (a.name == "CCode") {
-				process_ccode_attribute (a);
-			}
-		}
-	}
-
 	public override bool is_reference_type () {
 		return false;
-	}
-
-	public override string? get_type_id () {
-		return "G_TYPE_POINTER";
-	}
-
-	public override string? get_marshaller_type_name () {
-		return "POINTER";
-	}
-
-	public override string? get_get_value_function () {
-		return "g_value_get_pointer";
-	}
-	
-	public override string? get_set_value_function () {
-		return "g_value_set_pointer";
 	}
 
 	public override void replace_type (DataType old_type, DataType new_type) {
@@ -424,8 +295,6 @@ public class Vala.Delegate : TypeSymbol {
 		}
 
 		checked = true;
-
-		process_attributes ();
 
 		var old_source_file = context.analyzer.current_source_file;
 

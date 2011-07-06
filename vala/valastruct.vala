@@ -33,11 +33,6 @@ public class Vala.Struct : TypeSymbol {
 	private List<Property> properties = new ArrayList<Property> ();
 	private DataType _base_type = null;
 
-	private string cname;
-	private string const_cname;
-	private string type_id;
-	private string lower_case_cprefix;
-	private string lower_case_csuffix;
 	private bool? boolean_type;
 	private bool? integer_type;
 	private bool? floating_type;
@@ -47,13 +42,6 @@ public class Vala.Struct : TypeSymbol {
 	private int? _width;
 	private bool? _signed;
 	private bool? _is_immutable;
-	private string marshaller_type_name;
-	private string get_value_function;
-	private string set_value_function;
-	private string take_value_function;
-	private string default_value = null;
-	private string copy_function;
-	private string destroy_function;
 
 	/**
 	 * Specifies the base type.
@@ -102,11 +90,6 @@ public class Vala.Struct : TypeSymbol {
 		}
 	}
 
-	/**
-	 * Specifies whether this struct has a registered GType.
-	 */
-	public bool has_type_id { get; set; default = true; }
-
 	public int width {
 		get {
 			if (_width == null) {
@@ -140,10 +123,6 @@ public class Vala.Struct : TypeSymbol {
 			set_attribute_bool ("IntegerType", "signed", value);
 		}
 	}
-
-	public bool has_copy_function { get; set; default = true; }
-
-	public bool has_destroy_function { get; set; default = true; }
 
 	/**
 	 * Creates a new struct.
@@ -316,70 +295,6 @@ public class Vala.Struct : TypeSymbol {
 		}
 	}
 
-	public override string get_cname (bool const_type = false) {
-		if (const_type && const_cname != null) {
-			return const_cname;
-		}
-		
-		if (cname == null) {
-			var attr = get_attribute ("CCode");
-			if (attr != null) {
-				cname = attr.get_string ("cname");
-			}
-			if (cname == null) {
-				cname = get_default_cname ();
-			}
-		}
-		return cname;
-	}
-
-	public void set_cname (string cname) {
-		this.cname = cname;
-	}
-
-	/**
-	 * Returns the default name of this struct as it is used in C code.
-	 *
-	 * @return the name to be used in C code by default
-	 */
-	public string get_default_cname () {
-		// parent_symbol may be null in GIR parser
-		if (parent_symbol != null) {
-			return "%s%s".printf (parent_symbol.get_cprefix (), name);
-		} else {
-			return name;
-		}
-	}
-
-	private void set_const_cname (string cname) {
-		this.const_cname = cname;
-	}
-	
-	public override string get_lower_case_cprefix () {
-		if (lower_case_cprefix == null) {
-			lower_case_cprefix = "%s_".printf (get_lower_case_cname (null));
-		}
-		return lower_case_cprefix;
-	}
-	
-	private string get_lower_case_csuffix () {
-		if (lower_case_csuffix == null) {
-			lower_case_csuffix = camel_case_to_lower_case (name);
-		}
-		return lower_case_csuffix;
-	}
-
-	public override string? get_lower_case_cname (string? infix) {
-		if (infix == null) {
-			infix = "";
-		}
-		return "%s%s%s".printf (parent_symbol.get_lower_case_cprefix (), infix, get_lower_case_csuffix ());
-	}
-	
-	public override string? get_upper_case_cname (string? infix) {
-		return get_lower_case_cname (infix).up ();
-	}
-
 	/**
 	 * Returns whether this is a boolean type.
 	 *
@@ -446,10 +361,15 @@ public class Vala.Struct : TypeSymbol {
 	 */
 	public int get_rank () {
 		if (rank == null) {
-			if (is_integer_type ()) {
+			if (is_integer_type () && has_attribute_argument ("IntegerType", "rank")) {
 				rank = get_attribute_integer ("IntegerType", "rank");
-			} else {
+			} else if (has_attribute_argument ("FloatingType", "rank")) {
 				rank = get_attribute_integer ("FloatingType", "rank");
+			} else {
+				var st = base_struct;
+				if (st != null) {
+					rank = st.get_rank ();
+				}
 			}
 		}
 		return rank;
@@ -467,233 +387,6 @@ public class Vala.Struct : TypeSymbol {
 		} else {
 			set_attribute_integer ("FloatingType", "rank", rank);
 		}
-	}
-
-	private void process_gir_attribute (Attribute a) {
-		if (a.has_argument ("name")) {
-			gir_name = a.get_string ("name");
-		}
-	}
-
-	private void process_ccode_attribute (Attribute a) {
-		if (a.has_argument ("const_cname")) {
-			set_const_cname (a.get_string ("const_cname"));
-		}
-		if (a.has_argument ("cprefix")) {
-			lower_case_cprefix = a.get_string ("cprefix");
-		}
-		if (a.has_argument ("cheader_filename")) {
-			var val = a.get_string ("cheader_filename");
-			foreach (string filename in val.split (",")) {
-				add_cheader_filename (filename);
-			}
-		}
-		if (a.has_argument ("has_type_id")) {
-			has_type_id = a.get_bool ("has_type_id");
-		}
-		if (a.has_argument ("type_id")) {
-			set_type_id (a.get_string ("type_id"));
-		}
-		if (a.has_argument ("marshaller_type_name")) {
-			set_marshaller_type_name (a.get_string ("marshaller_type_name"));
-		}
-		if (a.has_argument ("get_value_function")) {
-			set_get_value_function (a.get_string ("get_value_function"));
-		}
-		if (a.has_argument ("set_value_function")) {
-			set_set_value_function (a.get_string ("set_value_function"));
-		}
-		if (a.has_argument ("take_value_function")) {
-			set_take_value_function (a.get_string ("take_value_function"));
-		}
-		if (a.has_argument ("default_value")) {
-			set_default_value (a.get_string ("default_value"));
-		}
-		if (a.has_argument ("copy_function")) {
-			set_copy_function (a.get_string ("copy_function"));
-		}
-		if (a.has_argument ("has_copy_function")) {
-			has_copy_function = a.get_bool ("has_copy_function");
-		}
-		if (a.has_argument ("destroy_function")) {
-			set_destroy_function (a.get_string ("destroy_function"));
-		}
-		if (a.has_argument ("has_destroy_function")) {
-			has_destroy_function = a.get_bool ("has_destroy_function");
-		}
-	}
-
-	/**
-	 * Process all associated attributes.
-	 */
-	public void process_attributes () {
-		foreach (Attribute a in attributes) {
-			if (a.name == "CCode") {
-				process_ccode_attribute (a);
-			} else if (a.name == "GIR") {
-				process_gir_attribute (a);
-			}
-		}
-	}
-
-	public override string? get_type_id () {
-		if (type_id == null) {
-			if (!has_type_id) {
-				if (base_type != null) {
-					var st = base_struct;
-					if (st != null) {
-						return st.get_type_id ();
-					}
-				}
-				if (is_simple_type ()) {
-					return null;
-				} else {
-					return "G_TYPE_POINTER";
-				}
-			} else {
-				type_id = get_upper_case_cname ("TYPE_");
-			}
-		}
-		return type_id;
-	}
-	
-	public void set_type_id (string? name) {
-		this.type_id = name;
-	}
-
-	public override string? get_marshaller_type_name () {
-		if (marshaller_type_name == null) {
-			if (base_type != null) {
-				var st = base_struct;
-				if (st != null) {
-					return st.get_marshaller_type_name ();
-				}
-			}
-			if (is_simple_type ()) {
-				Report.error (source_reference, "The type `%s` doesn't declare a marshaller type name".printf (get_full_name ()));
-				// set marshaller_type_name to avoid multiple errors
-				marshaller_type_name = "";
-				return "";
-			} else if (has_type_id) {
-				return "BOXED";
-			} else {
-				return "POINTER";
-			}
-		}
-		return marshaller_type_name;
-	}
-	
-	private void set_marshaller_type_name (string? name) {
-		this.marshaller_type_name = name;
-	}
-	
-	public override string? get_get_value_function () {
-		if (get_value_function == null) {
-			if (base_type != null) {
-				var st = base_struct;
-				if (st != null) {
-					return st.get_get_value_function ();
-				}
-			}
-			if (is_simple_type ()) {
-				Report.error (source_reference, "The value type `%s` doesn't declare a GValue get function".printf (get_full_name ()));
-				// set get_value_function to avoid multiple errors
-				get_value_function = "";
-				return "";
-			} else if (has_type_id) {
-				return "g_value_get_boxed";
-			} else {
-				return "g_value_get_pointer";
-			}
-		} else {
-			return get_value_function;
-		}
-	}
-	
-	public override string? get_set_value_function () {
-		if (set_value_function == null) {
-			if (base_type != null) {
-				var st = base_struct;
-				if (st != null) {
-					return st.get_set_value_function ();
-				}
-			}
-			if (is_simple_type ()) {
-				Report.error (source_reference, "The value type `%s` doesn't declare a GValue set function".printf (get_full_name ()));
-				// set set_value_function to avoid multiple errors
-				set_value_function = "";
-				return "";
-			} else if (has_type_id) {
-				return "g_value_set_boxed";
-			} else {
-				return "g_value_set_pointer";
-			}
-		} else {
-			return set_value_function;
-		}
-	}
-
-	public override string? get_take_value_function () {
-		if (take_value_function == null) {
-			if (base_type != null) {
-				var st = base_struct;
-				if (st != null) {
-					return st.get_take_value_function ();
-				}
-			}
-			if (is_simple_type ()) {
-				Report.error (source_reference, "The value type `%s` doesn't declare a GValue take function".printf (get_full_name ()));
-				// set take_value_function to avoid multiple errors
-				take_value_function = "";
-				return "";
-			} else if (has_type_id) {
-				return "g_value_take_boxed";
-			} else {
-				return "g_value_take_pointer";
-			}
-		} else {
-			return take_value_function;
-		}
-	}
-
-	private void set_get_value_function (string? function) {
-		get_value_function = function;
-	}
-	
-	private void set_set_value_function (string? function) {
-		set_value_function = function;
-	}
-
-	private void set_take_value_function (string? function) {
-		take_value_function = function;
-	}
-
-	public override string? get_default_value () {
-		if (default_value != null) {
-			return default_value;
-		}
-
-		// inherit default value from base type
-		if (base_type != null) {
-			var st = base_struct;
-			if (st != null) {
-				return st.get_default_value ();
-			}
-		}
-
-		if (CodeContext.get ().profile == Profile.DOVA) {
-			if (is_boolean_type ()) {
-				return "false";
-			} else if (is_integer_type () || is_floating_type ()) {
-				return "0";
-			}
-		}
-
-		return null;
-	}
-
-	private void set_default_value (string? value) {
-		default_value = value;
 	}
 
 	public override int get_type_parameter_index (string name) {
@@ -756,54 +449,6 @@ public class Vala.Struct : TypeSymbol {
 		return false;
 	}
 
-	public override string? get_dup_function () {
-		// TODO use attribute check instead
-		if (external_package) {
-			return null;
-		} else {
-			return get_lower_case_cprefix () + "dup";
-		}
-	}
-	
-	public override string? get_free_function () {
-		// TODO use attribute check instead
-		if (external_package) {
-			return null;
-		} else {
-			return get_lower_case_cprefix () + "free";
-		}
-	}
-
-	public string get_default_copy_function () {
-		return get_lower_case_cprefix () + "copy";
-	}
-
-	public override string? get_copy_function () {
-		if (copy_function == null) {
-			copy_function = get_default_copy_function ();
-		}
-		return copy_function;
-	}
-
-	public void set_copy_function (string name) {
-		this.copy_function = name;
-	}
-
-	public string get_default_destroy_function () {
-		return get_lower_case_cprefix () + "destroy";
-	}
-
-	public override string? get_destroy_function () {
-		if (destroy_function == null) {
-			destroy_function = get_default_destroy_function ();
-		}
-		return destroy_function;
-	}
-
-	public void set_destroy_function (string name) {
-		this.destroy_function = name;
-	}
-
 	public bool is_disposable () {
 		if (get_attribute_string ("CCode", "destroy_function") != null) {
 			return true;
@@ -841,8 +486,6 @@ public class Vala.Struct : TypeSymbol {
 		}
 
 		checked = true;
-
-		process_attributes ();
 
 		var old_source_file = context.analyzer.current_source_file;
 		var old_symbol = context.analyzer.current_symbol;

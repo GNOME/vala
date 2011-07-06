@@ -33,10 +33,6 @@ public class Vala.DynamicProperty : Property {
 		this.dynamic_type = dynamic_type;
 	}
 
-	public override List<string> get_cheader_filenames () {
-		return new ArrayList<string> ();
-	}
-
 	public override bool check (CodeContext context) {
 		return true;
 	}

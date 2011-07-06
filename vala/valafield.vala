@@ -38,8 +38,6 @@ public class Vala.Field : Variable, Lockable {
 	 */
 	public bool is_volatile { get; set; }
 
-	private string cname;
-	
 	private bool lock_used = false;
 
 	/**
@@ -67,65 +65,6 @@ public class Vala.Field : Variable, Lockable {
 		}
 	}
 
-	/**
-	 * Returns the name of this field as it is used in C code.
-	 *
-	 * @return the name to be used in C code
-	 */
-	public string get_cname () {
-		if (cname == null) {
-			cname = get_default_cname ();
-		}
-		return cname;
-	}
-
-	/**
-	 * Sets the name of this field as it is used in C code.
-	 *
-	 * @param cname the name to be used in C code
-	 */
-	public void set_cname (string cname) {
-		this.cname = cname;
-	}
-
-	/**
-	 * Returns the default name of this field as it is used in C code.
-	 *
-	 * @return the name to be used in C code by default
-	 */
-	public string get_default_cname () {
-		if (binding == MemberBinding.STATIC) {
-			return parent_symbol.get_lower_case_cprefix () + name;
-		} else {
-			return name;
-		}
-	}
-
-	private void process_ccode_attribute (Attribute a) {
-		if (a.has_argument ("cname")) {
-			set_cname (a.get_string ("cname"));
-		}
-		if (a.has_argument ("cheader_filename")) {
-			var val = a.get_string ("cheader_filename");
-			foreach (string filename in val.split (",")) {
-				add_cheader_filename (filename);
-			}
-		}
-	}
-	
-	/**
-	 * Process all associated attributes.
-	 */
-	public override void process_attributes () {
-		base.process_attributes ();
-
-		foreach (Attribute a in attributes) {
-			if (a.name == "CCode") {
-				process_ccode_attribute (a);
-			}
-		}
-	}
-
 	public bool get_lock_used () {
 		return lock_used;
 	}
@@ -147,20 +86,11 @@ public class Vala.Field : Variable, Lockable {
 	}
 
 	public string? get_ctype () {
-		var attr = get_attribute ("CCode");
-		if (attr == null) {
-			return null;
-		}
-		return attr.get_string ("type");
+		return get_attribute_string ("CCode", "type");
 	}
 
 	public void set_ctype (string ctype) {
-		var attr = get_attribute ("CCode");
-		if (attr == null) {
-			attr = new Attribute ("CCode");
-			attributes.append (attr);
-		}
-		attr.add_argument ("type", "\"%s\"".printf (ctype));
+		set_attribute_string ("CCode", "type", ctype);
 	}
 
 	public override bool check (CodeContext context) {
@@ -192,8 +122,6 @@ public class Vala.Field : Variable, Lockable {
 			Report.error (source_reference, "field type `%s` is less accessible than field `%s`".printf (variable_type.to_string (), get_full_name ()));
 			return false;
 		}
-
-		process_attributes ();
 
 		if (initializer != null) {
 			initializer.target_type = variable_type;

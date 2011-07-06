@@ -42,30 +42,6 @@ public class Vala.Parameter : Variable {
 	 */
 	public bool params_array { get; set; }
 	
-	/**
-	 * Specifies the position of the parameter in the C function.
-	 */
-	public double cparameter_position { get; set; }
-
-	/**
-	 * Specifies the position of the array length parameter in the C
-	 * function.
-	 */
-	public double carray_length_parameter_position { get; set; }
-
-	/**
-	 * Specifies the position of the delegate target parameter in the C
-	 * function.
-	 */
-	public double cdelegate_target_parameter_position { get; set; }
-
-	public double cdestroy_notify_parameter_position { get; set; }
-
-	/**
-	 * Specifies the type of the parameter in the C function.
-	 */
-	public string? ctype { get; set; }
-
 	public bool captured { get; set; }
 
 	/**
@@ -119,46 +95,13 @@ public class Vala.Parameter : Variable {
 		}
 	}
 
-	private void process_ccode_attribute (Attribute a) {
-		if (a.has_argument ("type")) {
-			ctype = a.get_string ("type");
-		}
-		if (a.has_argument ("pos")) {
-			cparameter_position = a.get_double ("pos");
-		}
-		if (a.has_argument ("array_length_pos")) {
-			carray_length_parameter_position = a.get_double ("array_length_pos");
-		}
-		if (a.has_argument ("delegate_target_pos")) {
-			cdelegate_target_parameter_position = a.get_double ("delegate_target_pos");
-		}
-		if (a.has_argument ("destroy_notify_pos")) {
-			cdestroy_notify_parameter_position = a.get_double ("destroy_notify_pos");
-		}
-	}
-
-	/**
-	 * Process all associated attributes.
-	 */
-	public override void process_attributes () {
-		base.process_attributes ();
-
-		foreach (Attribute a in attributes) {
-			if (a.name == "CCode") {
-				process_ccode_attribute (a);
-			}
-		}
-	}
-
 	public Parameter copy () {
 		if (!ellipsis) {
 			var result = new Parameter (name, variable_type, source_reference);
 			result.params_array = params_array;
 			result.direction = this.direction;
 			result.initializer = this.initializer;
-			result.no_array_length = this.no_array_length;
-			result.no_delegate_target = this.no_delegate_target;
-			result.array_null_terminated = this.array_null_terminated;
+			result.attributes = this.attributes.copy ();
 			return result;
 		} else {
 			return new Parameter.with_ellipsis ();
@@ -171,8 +114,6 @@ public class Vala.Parameter : Variable {
 		}
 
 		checked = true;
-
-		process_attributes ();
 
 		var old_source_file = context.analyzer.current_source_file;
 		var old_symbol = context.analyzer.current_symbol;

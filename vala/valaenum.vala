@@ -29,21 +29,20 @@ public class Vala.Enum : TypeSymbol {
 	/**
 	 * Specifies whether this is a flags enum.
 	 */
-	public bool is_flags { get; set; }
-
-	/**
-	 * Specifies whether this enum has a registered GType.
-	 */
-	public bool has_type_id { get; set; default = true; }
+	public bool is_flags {
+		get {
+			if (_is_flags == null) {
+				_is_flags = get_attribute ("Flags") != null;
+			}
+			return _is_flags;
+		}
+	}
 
 	private List<EnumValue> values = new ArrayList<EnumValue> ();
 	private List<Method> methods = new ArrayList<Method> ();
 	private List<Constant> constants = new ArrayList<Constant> ();
-	private string cname;
-	private string cprefix;
-	private string lower_case_cprefix;
-	private string lower_case_csuffix;
-	private string type_id;
+
+	private bool? _is_flags;
 
 	/**
 	 * Creates a new enum.
@@ -153,178 +152,8 @@ public class Vala.Enum : TypeSymbol {
 		}
 	}
 
-	public override string get_cname (bool const_type = false) {
-		if (cname == null) {
-			var attr = get_attribute ("CCode");
-			if (attr != null) {
-				cname = attr.get_string ("cname");
-			}
-			if (cname == null) {
-				cname = get_default_cname ();
-			}
-		}
-		return cname;
-	}
-
-	/**
-	 * Returns the default name of this enum as it is used in C code.
-	 *
-	 * @return the name to be used in C code by default
-	 */
-	public string get_default_cname () {
-		return "%s%s".printf (parent_symbol.get_cprefix (), name);
-	}
-
-	public void set_cname (string cname) {
-		this.cname = cname;
-	}
-
-	public override string get_lower_case_cprefix () {
-		if (lower_case_cprefix == null) {
-			lower_case_cprefix = "%s_".printf (get_lower_case_cname (null));
-		}
-		return lower_case_cprefix;
-	}
-
-	private string get_lower_case_csuffix () {
-		if (lower_case_csuffix == null) {
-			lower_case_csuffix = camel_case_to_lower_case (name);
-		}
-		return lower_case_csuffix;
-	}
-
-	public override string? get_lower_case_cname (string? infix) {
-		if (infix == null) {
-			infix = "";
-		}
-		return "%s%s%s".printf (parent_symbol.get_lower_case_cprefix (), infix, get_lower_case_csuffix ());
-	}
-
-	public override string? get_upper_case_cname (string? infix = null) {
-		return get_lower_case_cname (infix).up ();
-	}
-
 	public override bool is_reference_type () {
 		return false;
-	}
-
-	public override string get_cprefix () {
-		if (cprefix == null) {
-			cprefix = "%s_".printf (get_upper_case_cname ());
-		}
-		return cprefix;
-	}
-	
-	/**
-	 * Sets the string to be prepended to the name of members of this enum
-	 * when used in C code.
-	 *
-	 * @param cprefix the prefix to be used in C code
-	 */
-	public void set_cprefix (string? cprefix) {
-		this.cprefix = cprefix;
-	}
-	
-	private void process_ccode_attribute (Attribute a) {
-		if (a.has_argument ("cprefix")) {
-			set_cprefix (a.get_string ("cprefix"));
-		}
-		if (a.has_argument ("lower_case_csuffix")) {
-			lower_case_csuffix = a.get_string ("lower_case_csuffix");
-		}
-		if (a.has_argument ("cheader_filename")) {
-			var val = a.get_string ("cheader_filename");
-			foreach (string filename in val.split (",")) {
-				add_cheader_filename (filename);
-			}
-		}
-		if (a.has_argument ("has_type_id")) {
-			has_type_id = a.get_bool ("has_type_id");
-		}
-		if (a.has_argument ("type_id")) {
-			type_id = a.get_string ("type_id");
-		}
-	}
-	
-	/**
-	 * Process all associated attributes.
-	 */
-	public void process_attributes () {
-		foreach (Attribute a in attributes) {
-			if (a.name == "CCode") {
-				process_ccode_attribute (a);
-			} else if (a.name == "Flags") {
-				is_flags = true;
-			}
-		}
-	}
-
-	public void set_type_id (string? type_id) {
-		this.type_id = type_id;
-	}
-
-	public override string? get_type_id () {
-		if (type_id == null) {
-			if (has_type_id) {
-				type_id = get_upper_case_cname ("TYPE_");
-			} else {
-				type_id = is_flags ? "G_TYPE_UINT" : "G_TYPE_INT";
-			}
-		}
-
-		return type_id;
-	}
-	
-	public override string? get_marshaller_type_name () {
-		if (has_type_id) {
-			if (is_flags) {
-				return "FLAGS";
-			} else {
-				return "ENUM";
-			}
-		} else {
-			if (is_flags) {
-				return "UINT";
-			} else {
-				return "INT";
-			}
-		}
-	}
-
-	public override string? get_get_value_function () {
-		if (has_type_id) {
-			if (is_flags) {
-				return "g_value_get_flags";
-			} else {
-				return "g_value_get_enum";
-			}
-		} else {
-			if (is_flags) {
-				return "g_value_get_uint";
-			} else {
-				return "g_value_get_int";
-			}
-		}
-	}
-	
-	public override string? get_set_value_function () {
-		if (has_type_id) {
-			if (is_flags) {
-				return "g_value_set_flags";
-			} else {
-				return "g_value_set_enum";
-			}
-		} else {
-			if (is_flags) {
-				return "g_value_set_uint";
-			} else {
-				return "g_value_set_int";
-			}
-		}
-	}
-
-	public override string? get_default_value () {
-		return "0";
 	}
 
 	public override bool check (CodeContext context) {
@@ -333,8 +162,6 @@ public class Vala.Enum : TypeSymbol {
 		}
 
 		checked = true;
-
-		process_attributes ();
 
 		var old_source_file = context.analyzer.current_source_file;
 		var old_symbol = context.analyzer.current_symbol;
