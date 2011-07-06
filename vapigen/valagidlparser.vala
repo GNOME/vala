@@ -88,8 +88,8 @@ public class Vala.GIdlParser : CodeVisitor {
 	}
 
 	private void visit_type (TypeSymbol t) {
-		if (!cname_type_map.contains (t.get_cname ())) {
-			cname_type_map[t.get_cname ()] = t;
+		if (!cname_type_map.contains (get_cname (t))) {
+			cname_type_map[get_cname (t)] = t;
 		}
 	}
 
@@ -165,23 +165,10 @@ public class Vala.GIdlParser : CodeVisitor {
 
 		if (type_name.has_prefix (container.name)) {
 			return type_name.substring (container.name.length);
-		} else if (container.name == "GLib" && type_name.has_prefix ("G")) {
-			return type_name.substring (1);
-		} else  {
-			string best_match = null;
-			if (container is Namespace) {
-				foreach (string cprefix in ((Namespace) container).get_cprefixes ()) {
-					if (type_name.has_prefix (cprefix)) {
-						if (best_match == null || cprefix.length > best_match.length)
-							best_match = cprefix;
-					}
-				}
-               } else {
-				best_match = container.get_cprefix ();
-               }
-
-			if (best_match != null) {
-				return type_name.substring (best_match.length);;
+		} else {
+			var cprefix = get_cprefix (container);
+			if (type_name.has_prefix (cprefix)) {
+				return type_name.substring (cprefix.length);;
 			}
 		}
 
@@ -189,11 +176,128 @@ public class Vala.GIdlParser : CodeVisitor {
 	}
 
 	private string fix_const_name (string const_name, Symbol container) {
-		var pref = container.get_lower_case_cprefix ().up ();
+		var pref = get_lower_case_cprefix (container).up ();
 		if (const_name.has_prefix (pref)) {
 			return const_name.substring (pref.length);
 		}
 		return const_name;
+	}
+
+	private string get_cheader_filename (Symbol sym) {
+		var cheader_filename = sym.get_attribute_string ("CCode", "cheader_filename");
+		if (cheader_filename != null) {
+			return cheader_filename;
+		}
+		if (sym.parent_symbol != null) {
+			return get_cheader_filename (sym.parent_symbol);
+		} else if (sym.source_reference != null) {
+			return sym.source_reference.file.get_cinclude_filename ();
+		}
+		return "";
+	}
+
+	private string get_cname (Symbol sym, Symbol? container = null) {
+		if (container == null) {
+			container = sym.parent_symbol;
+		}
+		var cname = sym.get_attribute_string ("CCode", "cname");
+		if (cname != null) {
+			return cname;
+		}
+		if (sym is Method) {
+			var name = sym.name;
+			if (sym is CreationMethod) {
+				if (name == null || name == ".new") {
+					name = "new";
+				} else {
+					name = "new_"+name;
+				}
+			}
+			if (container != null) {
+				return "%s%s".printf (get_lower_case_cprefix (container), name);
+			} else {
+				return name;
+			}
+		} else {
+			if (container != null) {
+				return "%s%s".printf (get_cprefix (container), sym.name);
+			} else {
+				return sym.name;
+			}
+		}
+	}
+
+	private string get_finish_cname (Method m) {
+		var finish_cname = m.get_attribute_string ("CCode", "finish_name");
+		if (finish_cname != null) {
+			return finish_cname;
+		}
+		var result = get_cname (m);
+		if (result.has_suffix ("_async")) {
+			result = result.substring (0, result.length - "_async".length);
+		}
+		return result + "_finish";
+	}
+
+	private string get_lower_case_cname (Symbol sym) {
+		var lower_case_csuffix = Symbol.camel_case_to_lower_case (sym.name);
+		if (sym is ObjectTypeSymbol) {
+			// remove underscores in some cases to avoid conflicts of type macros
+			if (lower_case_csuffix.has_prefix ("type_")) {
+				lower_case_csuffix = "type" + lower_case_csuffix.substring ("type_".length);
+			} else if (lower_case_csuffix.has_prefix ("is_")) {
+				lower_case_csuffix = "is" + lower_case_csuffix.substring ("is_".length);
+			}
+			if (lower_case_csuffix.has_suffix ("_class")) {
+				lower_case_csuffix = lower_case_csuffix.substring (0, lower_case_csuffix.length - "_class".length) + "class";
+			}
+		}
+		if (sym.parent_symbol != null) {
+			return "%s%s".printf (get_lower_case_cprefix (sym.parent_symbol), lower_case_csuffix);
+		} else {
+			return lower_case_csuffix;
+		}
+	}
+
+	private string get_lower_case_cprefix (Symbol sym) {
+		if (sym.name == null) {
+			return "";
+		}
+		string cprefix;
+		if (sym is Namespace) {
+			cprefix = sym.get_attribute_string ("CCode", "lower_case_cprefix");
+		} else {
+			cprefix = sym.get_attribute_string ("CCode", "cprefix");
+		}
+		if (cprefix != null) {
+			return cprefix;
+		}
+		return get_lower_case_cname (sym) + "_";
+	}
+
+	public string get_cprefix (Symbol sym) {
+		if (sym is ObjectTypeSymbol) {
+			return get_cname (sym);
+		} else if (sym is Enum || sym is ErrorDomain) {
+			return "%s_".printf (get_lower_case_cname (sym).up ());
+		} else if (sym is Namespace) {
+			if (sym.name != null) {
+				var cprefix = sym.get_attribute_string ("CCode", "cprefix");
+				if (cprefix != null) {
+					return cprefix;
+				}
+				if (sym.parent_symbol != null) {
+					return "%s%s".printf (get_cprefix (sym.parent_symbol), sym.name);
+				} else {
+					return sym.name;
+				}
+			} else {
+				return "";
+			}
+		} else if (sym.name != null) {
+			return sym.name;
+		}
+		return "";
 	}
 
 	private string[] get_attributes_for_node (IdlNode node) {
@@ -202,11 +306,11 @@ public class Vala.GIdlParser : CodeVisitor {
 		if (node.type == IdlNodeTypeId.FUNCTION) {
 			name = ((IdlNodeFunction) node).symbol;
 		} else if (node.type == IdlNodeTypeId.SIGNAL) {
-			name = "%s::%s".printf (current_data_type.get_cname (), node.name);
+			name = "%s::%s".printf (get_cname (current_data_type), node.name);
 		} else if (node.type == IdlNodeTypeId.PROPERTY) {
-			name = "%s:%s".printf (current_data_type.get_cname (), node.name);
+			name = "%s:%s".printf (get_cname (current_data_type), node.name);
 		} else if (node.type == IdlNodeTypeId.FIELD) {
-			name = "%s.%s".printf (current_data_type.get_cname (), node.name);
+			name = "%s.%s".printf (get_cname (current_data_type), node.name);
 		} else {
 			name = node.name;
 		}
@@ -304,6 +408,11 @@ public class Vala.GIdlParser : CodeVisitor {
 				st.add_property ((Property) sym);
 			}
 		}
+
+		if (!(sym is Namespace) && container is Namespace) {
+			// set C headers
+			sym.set_attribute_string ("CCode", "cheader_filename", get_cheader_filename (sym));
+		}
 	}
 
 	private void parse_node (IdlNode node, IdlModule module, Symbol container) {
@@ -349,13 +458,15 @@ public class Vala.GIdlParser : CodeVisitor {
 	private Symbol? get_container_from_name (string name) {
 		var path = name.split (".");
 		Symbol? cp = current_namespace;
+		if (cp.parent_symbol != context.root) {
+			cp = cp.parent_symbol;
+		}
 		Symbol? cc = null;
 
 		foreach ( unowned string tok in path ) {
 			cc = cp.scope.lookup (tok) as Symbol;
 			if ( cc == null ) {
 				cc = new Namespace (tok, current_source_reference);
-				((Namespace) cc).add_cprefix (cp.get_cprefix () + tok);
 				add_symbol_to_container (cp, cc);
 			}
 			cp = cc;
@@ -384,18 +495,17 @@ public class Vala.GIdlParser : CodeVisitor {
 			foreach (string attr in attributes) {
 				var nv = attr.split ("=", 2);
 				if (nv[0] == "cheader_filename") {
-					ns.set_cheader_filename (eval (nv[1]));
+					ns.set_attribute_string ("CCode", "cheader_filename", eval (nv[1]));
 				} else if (nv[0] == "cprefix") {
-					var cprefixes = eval (nv[1]).split (",");
-					foreach(string name in cprefixes) {
-						ns.add_cprefix (name);
-					}
+					ns.set_attribute_string ("CCode", "cprefix", eval (nv[1]));
 				} else if (nv[0] == "lower_case_cprefix") {
-					ns.set_lower_case_cprefix (eval (nv[1]));
+					ns.set_attribute_string ("CCode", "lower_case_cprefix",  eval (nv[1]));
 				} else if (nv[0] == "gir_namespace") {
 					ns.source_reference.file.gir_namespace = eval (nv[1]);
+					ns.set_attribute_string ("CCode", "gir_namespace", eval (nv[1]));
 				} else if (nv[0] == "gir_version") {
 					ns.source_reference.file.gir_version = eval (nv[1]);
+					ns.set_attribute_string ("CCode", "gir_version", eval (nv[1]));
 				}
 			}
 		}
@@ -432,7 +542,14 @@ public class Vala.GIdlParser : CodeVisitor {
 				}
 			}
 
+			if (container is Namespace) {
+				current_namespace = (Namespace) container;
+			} else {
+				current_data_type = (TypeSymbol) container;
+			}
 			parse_node (node, module, container);
+			current_namespace = ns;
+			current_data_type = null;
 		}
 
 		current_namespace = null;
@@ -465,7 +582,7 @@ public class Vala.GIdlParser : CodeVisitor {
 						return null;
 					}
 				} else if (nv[0] == "cheader_filename") {
-					cb.add_cheader_filename (eval (nv[1]));
+					cb.set_attribute_string ("CCode", "cheader_filename", eval (nv[1]));
 				} else if (nv[0] == "has_target") {
 					if (eval (nv[1]) == "0") {
 						check_has_target = false;
@@ -488,28 +605,28 @@ public class Vala.GIdlParser : CodeVisitor {
 				} else if (nv[0] == "error_types") {
 					error_types = eval (nv[1]);
 				} else if (nv[0] == "array_length_type") {
-					cb.array_length_type = eval (nv[1]);
+					cb.set_attribute_string ("CCode", "array_length_type", eval (nv[1]));
 				} else if (nv[0] == "type_name") {
 					cb.return_type = return_type = parse_type_from_string (eval (nv[1]), return_type.value_owned);
 				} else if (nv[0] == "deprecated") {
 					if (eval (nv[1]) == "1") {
-						cb.deprecated = true;
+						cb.set_attribute ("Deprecated", true);
 					}
 				} else if (nv[0] == "replacement") {
-					cb.replacement = eval (nv[1]);
+					cb.set_attribute_string ("Deprecated", "replacement", eval (nv[1]));
 				} else if (nv[0] == "deprecated_since") {
-					cb.deprecated_since = eval (nv[1]);
+					cb.set_attribute_string ("Deprecated", "since", eval (nv[1]));
 				} else if (nv[0] == "type_arguments") {
 					parse_type_arguments_from_string (return_type, eval (nv[1]));
 				} else if (nv[0] == "instance_pos") {
-					cb.cinstance_parameter_position = double.parse (eval (nv[1]));
+					cb.set_attribute_double ("CCode", "instance_pos", double.parse (eval (nv[1])));
 				} else if (nv[0] == "type_parameters") {
 					foreach (string type_param_name in eval (nv[1]).split (",")) {
 						cb.add_type_parameter (new TypeParameter (type_param_name, current_source_reference));
 					}
 				} else if (nv[0] == "experimental") {
 					if (eval (nv[1]) == "1") {
-						cb.experimental = true;
+						cb.set_attribute ("Experimental", true);
 					}
 				}
 			}
@@ -599,14 +716,14 @@ public class Vala.GIdlParser : CodeVisitor {
 							parse_type_arguments_from_string (param_type, eval (nv[1]));
 						} else if (nv[0] == "no_array_length") {
 							if (eval (nv[1]) == "1") {
-								p.no_array_length = true;
+								p.set_attribute_bool ("CCode", "array_length", false);
 							}
 						} else if (nv[0] == "array_length_type") {
-							p.array_length_type = eval (nv[1]);
+							p.set_attribute_string ("CCode", "array_length_type", eval (nv[1]));
 						} else if (nv[0] == "array_null_terminated") {
 							if (eval (nv[1]) == "1") {
-								p.no_array_length = true;
-								p.array_null_terminated = true;
+								p.set_attribute_bool ("CCode", "array_length", false);
+								p.set_attribute_bool ("CCode", "array_null_terminated", true);
 							}
 						} else if (nv[0] == "type_name") {
 							p.variable_type = param_type = parse_type_from_string (eval (nv[1]), false);
@@ -665,7 +782,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					foreach (string attr in st_attributes) {
 						var nv = attr.split ("=", 2);
 						if (nv[0] == "cheader_filename") {
-							st.add_cheader_filename (eval (nv[1]));
+							st.set_attribute_string ("CCode", "cheader_filename", eval (nv[1]));
 						} else if (nv[0] == "hidden") {
 							if (eval (nv[1]) == "1") {
 								return;
@@ -680,33 +797,33 @@ public class Vala.GIdlParser : CodeVisitor {
 							}
 						} else if (nv[0] == "immutable") {
 							if (eval (nv[1]) == "1") {
-								st.is_immutable = true;
+								st.set_attribute ("Immutable", true);
 							}
 						} else if (nv[0] == "has_type_id") {
 							if (eval (nv[1]) == "0") {
-								st.has_type_id = false;
+								st.set_attribute_bool ("CCode", "has_type_id", false);
 							}
 						} else if (nv[0] == "type_id") {
-							st.set_type_id (eval (nv[1]));
+							st.set_attribute_string ("CCode", "type_id", eval (nv[1]));
 						} else if (nv[0] == "has_copy_function") {
 							if (eval (nv[1]) == "0") {
-								st.has_copy_function = false;
+								st.set_attribute_bool ("CCode", "has_copy_function", false);
 							}
 						} else if (nv[0] == "deprecated") {
 							if (eval (nv[1]) == "1") {
-								st.deprecated = true;
+								st.set_attribute ("Deprecated", true);
 							}
 						} else if (nv[0] == "replacement") {
-							st.replacement = eval (nv[1]);
+							st.set_attribute_string ("Deprecated", "replacement", eval (nv[1]));
 						} else if (nv[0] == "deprecated_since") {
-							st.deprecated_since = eval (nv[1]);
+							st.set_attribute_string ("Deprecated", "since", eval (nv[1]));
 						} else if (nv[0] == "has_destroy_function") {
 							if (eval (nv[1]) == "0") {
-								st.has_destroy_function = false;
+								st.set_attribute_bool ("CCode", "has_destroy_function", false);
 							}
 						} else if (nv[0] == "experimental") {
 							if (eval (nv[1]) == "1") {
-								st.experimental = true;
+								st.set_attribute ("Experimental", true);
 							}
 						}
 					}
@@ -743,17 +860,17 @@ public class Vala.GIdlParser : CodeVisitor {
 			var cl = container.scope.lookup (name) as Class;
 			if (cl == null) {
 				string base_class = null;
+				bool is_fundamental = false;
 
 				cl = new Class (name, current_source_reference);
 				cl.access = SymbolAccessibility.PUBLIC;
-				cl.is_compact = true;
 
 				var cl_attributes = get_attributes (node.name);
 				if (cl_attributes != null) {
 					foreach (string attr in cl_attributes) {
 						var nv = attr.split ("=", 2);
 						if (nv[0] == "cheader_filename") {
-							cl.add_cheader_filename (eval (nv[1]));
+							cl.set_attribute_string ("CCode", "cheader_filename", eval (nv[1]));
 						} else if (nv[0] == "base_class") {
 							base_class = eval (nv[1]);
 						} else if (nv[0] == "hidden") {
@@ -765,10 +882,10 @@ public class Vala.GIdlParser : CodeVisitor {
 								cl.is_immutable = true;
 							}
 						} else if (nv[0] == "const_cname") {
-							cl.const_cname = eval (nv[1]);
+							cl.set_attribute_string ("CCode", "const_cname", eval (nv[1]));
 						} else if (nv[0] == "is_fundamental") {
 							if (eval (nv[1]) == "1") {
-								cl.is_compact = false;
+								is_fundamental = true;
 							}
 						} else if (nv[0] == "abstract" && base_class != null) {
 							if (eval (nv[1]) == "1") {
@@ -788,19 +905,19 @@ public class Vala.GIdlParser : CodeVisitor {
 							}
 						} else if (nv[0] == "deprecated") {
 							if (eval (nv[1]) == "1") {
-								cl.deprecated = true;
+								cl.set_attribute ("Deprecated", true);
 							}
 						} else if (nv[0] == "replacement") {
-							cl.replacement = eval (nv[1]);
+							cl.set_attribute_string ("Deprecated", "replacement", eval (nv[1]));
 						} else if (nv[0] == "deprecated_since") {
-							cl.deprecated_since = eval (nv[1]);
+							cl.set_attribute_string ("Deprecated", "since", eval (nv[1]));
 						} else if (nv[0] == "type_parameters") {
 							foreach (string type_param_name in eval (nv[1]).split (",")) {
 								cl.add_type_parameter (new TypeParameter (type_param_name, current_source_reference));
 							}
 						} else if (nv[0] == "experimental") {
 							if (eval (nv[1]) == "1") {
-								cl.experimental = true;
+								cl.set_attribute ("Experimental", true);
 							}
 						}
 					}
@@ -812,6 +929,9 @@ public class Vala.GIdlParser : CodeVisitor {
 				if (base_class != null) {
 					var parent = parse_type_string (base_class);
 					cl.add_base_type (parent);
+				}
+				if (base_class == null && !is_fundamental) {
+					cl.is_compact = true;
 				}
 			}
 
@@ -844,16 +964,17 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 
 			if (ref_function != null) {
-				cl.set_ref_function (ref_function);
-				cl.ref_function_void = ref_function_void;
-			}
-			if (copy_function != null) {
-				cl.set_dup_function (copy_function);
+				cl.set_attribute_string ("CCode", "ref_function", ref_function);
+				if (ref_function_void) {
+					cl.set_attribute_bool ("CCode", "ref_function_void", ref_function_void);
+				}
+			} else if (copy_function != null) {
+				cl.set_attribute_string ("CCode", "copy_function", copy_function);
 			}
 			if (unref_function != null) {
-				cl.set_unref_function (unref_function);
-			} else if (free_function != null) {
-				cl.set_free_function (free_function);
+				cl.set_attribute_string ("CCode", "unref_function", unref_function);
+			} else if (free_function != null && free_function != "%sfree".printf (get_lower_case_cprefix (cl))) {
+				cl.set_attribute_string ("CCode", "free_function", free_function);
 			}
 
 			current_data_type = null;
@@ -880,22 +1001,22 @@ public class Vala.GIdlParser : CodeVisitor {
 					foreach (string attr in st_attributes) {
 						var nv = attr.split ("=", 2);
 						if (nv[0] == "cheader_filename") {
-							st.add_cheader_filename (eval (nv[1]));
+							st.set_attribute_string ("CCode", "cheader_filename", eval (nv[1]));
 						} else if (nv[0] == "deprecated") {
 							if (eval (nv[1]) == "1") {
-								st.deprecated = true;
+								st.set_attribute ("Deprecated", true);
 							}
 						} else if (nv[0] == "replacement") {
-							st.replacement = eval (nv[1]);
+							st.set_attribute_string ("Deprecated", "replacement", eval (nv[1]));
 						} else if (nv[0] == "deprecated_since") {
-							st.deprecated_since = eval (nv[1]);
+							st.set_attribute_string ("Deprecated", "since", eval (nv[1]));
 						} else if (nv[0] == "hidden") {
 							if (eval (nv[1]) == "1") {
 								return;
 							}
 						} else if (nv[0] == "experimental") {
 							if (eval (nv[1]) == "1") {
-								st.experimental = true;
+								st.set_attribute ("Experimental", true);
 							}
 						}
 					}
@@ -934,7 +1055,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					foreach (string attr in cl_attributes) {
 						var nv = attr.split ("=", 2);
 						if (nv[0] == "cheader_filename") {
-							cl.add_cheader_filename (eval (nv[1]));
+							cl.set_attribute_string ("CCode", "cheader_filename", eval (nv[1]));
 						} else if (nv[0] == "hidden") {
 							if (eval (nv[1]) == "1") {
 								return;
@@ -982,16 +1103,17 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 
 			if (ref_function != null) {
-				cl.set_ref_function (ref_function);
-				cl.ref_function_void = ref_function_void;
-			}
-			if (copy_function != null) {
-				cl.set_dup_function (copy_function);
+				cl.set_attribute_string ("CCode", "ref_function", ref_function);
+				if (ref_function_void) {
+					cl.set_attribute_bool ("CCode", "ref_function_void", ref_function_void);
+				}
+			} else if (copy_function != null) {
+				cl.set_attribute_string ("CCode", "copy_function", copy_function);
 			}
 			if (unref_function != null) {
-				cl.set_unref_function (unref_function);
-			} else if (free_function != null) {
-				cl.set_free_function (free_function);
+				cl.set_attribute_string ("CCode", "unref_function", unref_function);
+			} else if (free_function != null && free_function != "%sfree".printf (get_lower_case_cprefix (cl))) {
+				cl.set_attribute_string ("CCode", "free_function", free_function);
 			}
 
 			current_data_type = null;
@@ -1024,37 +1146,36 @@ public class Vala.GIdlParser : CodeVisitor {
 					foreach (string attr in st_attributes) {
 						var nv = attr.split ("=", 2);
 						if (nv[0] == "cheader_filename") {
-							st.add_cheader_filename (eval (nv[1]));
+							st.set_attribute_string ("CCode", "cheader_filename", eval (nv[1]));
 						} else if (nv[0] == "deprecated") {
 							if (eval (nv[1]) == "1") {
-								st.deprecated = true;
+								st.set_attribute ("Deprecated", true);
 							}
 						} else if (nv[0] == "replacement") {
-							st.replacement = eval (nv[1]);
+							st.set_attribute_string ("Deprecated", "replacement", eval (nv[1]));
 						} else if (nv[0] == "deprecated_since") {
-							st.deprecated_since = eval (nv[1]);
+							st.set_attribute_string ("Deprecated", "since", eval (nv[1]));
 						} else if (nv[0] == "immutable") {
 							if (eval (nv[1]) == "1") {
-								st.is_immutable = true;
+								st.set_attribute ("Immutable", true);
 							}
 						} else if (nv[0] == "has_copy_function") {
 							if (eval (nv[1]) == "0") {
-								st.has_copy_function = false;
+								st.set_attribute_bool ("CCode", "has_copy_function", false);
 							}
 						} else if (nv[0] == "has_destroy_function") {
 							if (eval (nv[1]) == "0") {
-								st.has_destroy_function = false;
+								st.set_attribute_bool ("CCode", "has_destroy_function", false);
 							}
 						} else if (nv[0] == "experimental") {
 							if (eval (nv[1]) == "1") {
-								st.experimental = true;
+								st.set_attribute ("Experimental", true);
 							}
 						}
 					}
 				}
 
 				add_symbol_to_container (container, st);
-				st.set_type_id (st.get_upper_case_cname ("TYPE_"));
 				current_source_file.add_node (st);
 			}
 		
@@ -1095,7 +1216,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					foreach (string attr in cl_attributes) {
 						var nv = attr.split ("=", 2);
 						if (nv[0] == "cheader_filename") {
-							cl.add_cheader_filename (eval (nv[1]));
+							cl.set_attribute_string ("CCode", "cheader_filename", eval (nv[1]));
 						} else if (nv[0] == "base_class") {
 							base_class = eval (nv[1]);
 						} else if (nv[0] == "is_immutable") {
@@ -1104,14 +1225,14 @@ public class Vala.GIdlParser : CodeVisitor {
 							}
 						} else if (nv[0] == "deprecated") {
 							if (eval (nv[1]) == "1") {
-								cl.deprecated = true;
+								cl.set_attribute ("Deprecated", true);
 							}
 						} else if (nv[0] == "replacement") {
-							cl.replacement = eval (nv[1]);
+							cl.set_attribute_string ("Deprecated", "replacement", eval (nv[1]));
 						} else if (nv[0] == "deprecated_since") {
-							cl.deprecated_since = eval (nv[1]);
+							cl.set_attribute_string ("Deprecated", "since", eval (nv[1]));
 						} else if (nv[0] == "const_cname") {
-							cl.const_cname = eval (nv[1]);
+							cl.set_attribute_string ("CCode", "const_cname", eval (nv[1]));
 						} else if (nv[0] == "free_function") {
 							free_function = eval (nv[1]);
 						} else if (nv[0] == "ref_function") {
@@ -1126,14 +1247,13 @@ public class Vala.GIdlParser : CodeVisitor {
 							}
 						} else if (nv[0] == "experimental") {
 							if (eval (nv[1]) == "1") {
-								cl.experimental = true;
+								cl.set_attribute ("Experimental", true);
 							}
 						}
 					}
 				}
 
 				add_symbol_to_container (container, cl);
-				cl.set_type_id (cl.get_upper_case_cname ("TYPE_"));
 				current_source_file.add_node (cl);
 
 				if (base_class != null) {
@@ -1171,16 +1291,17 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 
 			if (ref_function != null) {
-				cl.set_ref_function (ref_function);
-				cl.ref_function_void = ref_function_void;
-			}
-			if (copy_function != null) {
-				cl.set_dup_function (copy_function);
+				cl.set_attribute_string ("CCode", "ref_function", ref_function);
+				if (ref_function_void) {
+					cl.set_attribute_bool ("CCode", "ref_function_void", ref_function_void);
+				}
+			} else if (copy_function != null) {
+				cl.set_attribute_string ("CCode", "copy_function", copy_function);
 			}
 			if (unref_function != null) {
-				cl.set_unref_function (unref_function);
-			} else if (free_function != null) {
-				cl.set_free_function (free_function);
+				cl.set_attribute_string ("CCode", "unref_function", unref_function);
+			} else if (free_function != null && free_function != "%sfree".printf (get_lower_case_cprefix (cl))) {
+				cl.set_attribute_string ("CCode", "free_function", free_function);
 			}
 
 			current_data_type = null;
@@ -1207,7 +1328,9 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 		}
 
-		en.has_type_id = (en_node.gtype_name != null && en_node.gtype_name != "");
+		if (en_node.gtype_name == null || en_node.gtype_name == "") {
+			en.set_attribute_bool ("CCode", "has_type_id", false);
+		}
 		
 		string common_prefix = null;
 		
@@ -1247,7 +1370,7 @@ public class Vala.GIdlParser : CodeVisitor {
 
 		bool is_errordomain = false;
 
-		var cheader_filenames = new ArrayList<string> ();
+		string cheader_filename = null;
 
 		var en_attributes = get_attributes (node.name);
 		if (en_attributes != null) {
@@ -1256,20 +1379,20 @@ public class Vala.GIdlParser : CodeVisitor {
 				if (nv[0] == "common_prefix") {
 					common_prefix = eval (nv[1]);
 				} else if (nv[0] == "cheader_filename") {
-					cheader_filenames.add (eval (nv[1]));
-					en.add_cheader_filename (eval (nv[1]));
+					cheader_filename = eval (nv[1]);
+					en.set_attribute_string ("CCode", "cheader_filename", cheader_filename);
 				} else if (nv[0] == "hidden") {
 					if (eval (nv[1]) == "1") {
 						return;
 					}
 				} else if (nv[0] == "deprecated") {
 					if (eval (nv[1]) == "1") {
-						en.deprecated = true;
+						en.set_attribute ("Deprecated", true);
 					}
 				} else if (nv[0] == "replacement") {
-					en.replacement = eval (nv[1]);
+					en.set_attribute_string ("Deprecated", "replacement", eval (nv[1]));
 				} else if (nv[0] == "deprecated_since") {
-					en.deprecated_since = eval (nv[1]);
+					en.set_attribute_string ("Deprecated", "since", eval (nv[1]));
 				} else if (nv[0] == "rename_to") {
 					en.name = eval (nv[1]);
 				} else if (nv[0] == "errordomain") {
@@ -1282,17 +1405,17 @@ public class Vala.GIdlParser : CodeVisitor {
 					return_type.value_owned = false;
 					var m = new Method ("to_string", return_type, current_source_reference);
 					m.access = SymbolAccessibility.PUBLIC;
-					m.set_cname (eval(nv[1]));
+					m.set_attribute_string ("CCode", "cname", eval(nv[1]));
 					en.add_method (m);
 				} else if (nv[0] == "experimental") {
 					if (eval (nv[1]) == "1") {
-						en.experimental = true;
+						en.set_attribute ("Experimental", true);
 					}
 				}
 			}
 		}
 
-		en.set_cprefix (common_prefix);
+		en.set_attribute_string ("CCode", "cprefix", common_prefix);
 		
 		foreach (weak IdlNode value2 in en_node.values) {
 			var val_attributes = get_attributes (value2.name);
@@ -1315,10 +1438,10 @@ public class Vala.GIdlParser : CodeVisitor {
 		if (is_errordomain) {
 			var ed = new ErrorDomain (en.name, current_source_reference);
 			ed.access = SymbolAccessibility.PUBLIC;
-			ed.set_cprefix (common_prefix);
+			ed.set_attribute_string ("CCode", "cprefix", common_prefix);
 
-			foreach (string filename in cheader_filenames) {
-				ed.add_cheader_filename (filename);
+			if (cheader_filename != null) {
+				ed.set_attribute_string ("CCode", "cheader_filename", cheader_filename);
 			}
 
 			foreach (EnumValue ev in en.get_values ()) {
@@ -1330,7 +1453,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				add_symbol_to_container (container, ed);
 			}
 		} else {
-			en.is_flags = is_flags;
+			en.set_attribute ("Flags", is_flags);
 			current_source_file.add_node (en);
 			if (!existing) {
 				add_symbol_to_container (container, en);
@@ -1353,7 +1476,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				foreach (string attr in attributes) {
 					var nv = attr.split ("=", 2);
 					if (nv[0] == "cheader_filename") {
-						cl.add_cheader_filename (eval (nv[1]));
+						cl.set_attribute_string ("CCode", "cheader_filename", eval (nv[1]));
 					} else if (nv[0] == "base_class") {
 						base_class = eval (nv[1]);
 					} else if (nv[0] == "hidden") {
@@ -1361,24 +1484,24 @@ public class Vala.GIdlParser : CodeVisitor {
 							return;
 						}
 					} else if (nv[0] == "type_check_function") {
-						cl.type_check_function = eval (nv[1]);
+						cl.set_attribute_string ("CCode", "type_check_function", eval (nv[1]));
 					} else if (nv[0] == "deprecated") {
 						if (eval (nv[1]) == "1") {
-							cl.deprecated = true;
+							cl.set_attribute ("Deprecated", true);
 						}
 					} else if (nv[0] == "replacement") {
-						cl.replacement = eval (nv[1]);
+						cl.set_attribute_string ("Deprecated", "replacement", eval (nv[1]));
 					} else if (nv[0] == "deprecated_since") {
-						cl.deprecated_since = eval (nv[1]);
+						cl.set_attribute_string ("Deprecated", "since", eval (nv[1]));
 					} else if (nv[0] == "type_id") {
-						cl.set_type_id (eval (nv[1]));
+						cl.set_attribute_string ("CCode", "type_id", eval (nv[1]));
 					} else if (nv[0] == "abstract") {
 						if (eval (nv[1]) == "1") {
 							cl.is_abstract = true;
 						}
 					} else if (nv[0] == "experimental") {
 						if (eval (nv[1]) == "1") {
-							cl.experimental = true;
+							cl.set_attribute ("Experimental", true);
 						}
 					}
 				}
@@ -1479,17 +1602,17 @@ public class Vala.GIdlParser : CodeVisitor {
 			var getter = "get_%s".printf (prop.name);
 			
 			if (prop.get_accessor != null && !current_type_symbol_set.contains (getter)) {
-				prop.no_accessor_method = true;
+				prop.set_attribute ("NoAccessorMethod", true);
 			}
 			
 			var setter = "set_%s".printf (prop.name);
 			
 			if (prop.set_accessor != null && prop.set_accessor.writable
 			    && !current_type_symbol_set.contains (setter)) {
-				prop.no_accessor_method = true;
+				prop.set_attribute ("NoAccessorMethod", true);
 			}
 
-			if (prop.no_accessor_method && prop.get_accessor != null) {
+			if (prop.get_attribute ("NoAccessorMethod") != null && prop.get_accessor != null) {
 				prop.get_accessor.value_type.value_owned = true;
 			}
 		}
@@ -1522,15 +1645,15 @@ public class Vala.GIdlParser : CodeVisitor {
 				foreach (string attr in attributes) {
 					var nv = attr.split ("=", 2);
 					if (nv[0] == "cheader_filename") {
-						iface.add_cheader_filename (eval (nv[1]));
+						iface.set_attribute_string ("CCode", "cheader_filename", eval (nv[1]));
 					} else if (nv[0] == "hidden") {
 						if (eval (nv[1]) == "1") {
 							return;
 						}
 					} else if (nv[0] == "type_cname") {
-						iface.set_type_cname (eval (nv[1]));
+						iface.set_attribute_string ("CCode", "type_cname", eval (nv[1]));
 					} else if (nv[0] == "lower_case_csuffix") {
-						iface.set_lower_case_csuffix (eval (nv[1]));
+						iface.set_attribute_string ("CCode", "lower_case_csuffix", eval (nv[1]));
 					}
 				}
 			}
@@ -1607,9 +1730,9 @@ public class Vala.GIdlParser : CodeVisitor {
 
 				// check if the method is using non-standard finish method name
 				if (finish_method == null) {
-					var method_cname = m.get_finish_cname ();
+					var method_cname = get_finish_cname (m);
 					foreach (Method method in type_symbol.get_methods ()) {
-						if (method.get_cname () == method_cname) {
+						if (get_cname (method) == method_cname) {
 							finish_method = method;
 							break;
 						}
@@ -1618,8 +1741,13 @@ public class Vala.GIdlParser : CodeVisitor {
 
 				if (finish_method != null) {
 					m.return_type = finish_method.return_type.copy ();
-					m.no_array_length = finish_method.no_array_length;
-					m.array_null_terminated = finish_method.array_null_terminated;
+					var a = finish_method.get_attribute ("CCode");
+					if (a != null && a.has_argument ("array_length")) {
+						m.set_attribute_bool ("CCode", "array_length", a.get_bool ("array_length"));
+					}
+					if (a != null && a.has_argument ("array_null_terminated")) {
+						m.set_attribute_bool ("CCode", "array_null_terminated", a.get_bool ("array_null_terminated"));
+					}
 					foreach (var param in finish_method.get_parameters ()) {
 						if (param.direction == ParameterDirection.OUT) {
 							var async_param = param.copy ();
@@ -1847,6 +1975,8 @@ public class Vala.GIdlParser : CodeVisitor {
 
 		if (n.has_prefix (current_namespace.name)) {
 			type.unresolved_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, current_namespace.name), n.substring (current_namespace.name.length));
+		} else if (current_namespace.parent_symbol != null && current_namespace.parent_symbol.name != null && n.has_prefix (current_namespace.parent_symbol.name)) {
+			type.unresolved_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, current_namespace.parent_symbol.name), n.substring (current_namespace.parent_symbol.name.length));
 		} else if (n.has_prefix ("G")) {
 			type.unresolved_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, "GLib"), n.substring (1));
 		} else {
@@ -2015,8 +2145,8 @@ public class Vala.GIdlParser : CodeVisitor {
 			// gtk widgets) add an attribute to the creation method indicating the used
 			// return type.
 			if (current_data_type is Class && res != null) {
-				if ("%s*".printf (current_data_type.get_cname()) != res.type.unparsed) {
-					m.custom_return_type_cname = res.type.unparsed;
+				if ("%s*".printf (get_cname (current_data_type)) != res.type.unparsed) {
+					m.set_attribute_string ("CCode", "type", res.type.unparsed);
 				}
 			}
 		} else {
@@ -2029,7 +2159,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 		
 		if (current_data_type != null) {
-			var sig_attributes = get_attributes ("%s::%s".printf (current_data_type.get_cname (), name));
+			var sig_attributes = get_attributes ("%s::%s".printf (get_cname (current_data_type), name));
 			if (sig_attributes != null) {
 				foreach (string attr in sig_attributes) {
 					var nv = attr.split ("=", 2);
@@ -2043,13 +2173,13 @@ public class Vala.GIdlParser : CodeVisitor {
 		bool add_ellipsis = false;
 		bool suppress_throws = false;
 		string? error_types = null;
+		Symbol? container = null;
 
 		var attributes = get_attributes (symbol);
 		if (attributes != null) {
 			foreach (string attr in attributes) {
 				var nv = attr.split ("=", 2);
 				if (nv[0] == "name") {
-					m.set_cname (m.name);
 					m.name = eval (nv[1]);
 				} else if (nv[0] == "hidden") {
 					if (eval (nv[1]) == "1") {
@@ -2061,7 +2191,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					}
 				} else if (nv[0] == "printf_format") {
 					if (eval (nv[1]) == "1") {
-						m.printf_format = true;
+						m.set_attribute ("PrintfFormat", true);
 					}
 				} else if (nv[0] == "transfer_ownership") {
 					if (eval (nv[1]) == "1") {
@@ -2069,14 +2199,14 @@ public class Vala.GIdlParser : CodeVisitor {
 					}
 				} else if (nv[0] == "destroys_instance") {
 					if (eval (nv[1]) == "1") {
-						m.attributes.append (new Attribute ("DestroysInstance", m.source_reference));
+						m.set_attribute ("DestroysInstance", true, m.source_reference);
 					}
 				} else if (nv[0] == "nullable") {
 					if (eval (nv[1]) == "1") {
 						return_type.nullable = true;
 					}
 				} else if (nv[0] == "sentinel") {
-					m.sentinel = eval (nv[1]);
+					m.set_attribute_string ("CCode", "sentinel", eval (nv[1]));
 				} else if (nv[0] == "is_array") {
 					if (eval (nv[1]) == "1") {
 						return_type = new ArrayType (return_type, 1, return_type.source_reference);
@@ -2090,29 +2220,29 @@ public class Vala.GIdlParser : CodeVisitor {
 					error_types = eval (nv[1]);
 				} else if (nv[0] == "no_array_length") {
 					if (eval (nv[1]) == "1") {
-						m.no_array_length = true;
+						m.set_attribute_bool ("CCode", "array_length", false);
 					}
 				} else if (nv[0] == "array_null_terminated") {
 					if (eval (nv[1]) == "1") {
-						m.no_array_length = true;
-						m.array_null_terminated = true;
+						m.set_attribute_bool ("CCode", "array_length", false);
+						m.set_attribute_bool ("CCode", "array_null_terminated", true);;
 					}
 				} else if (nv[0] == "array_length_type") {
-					m.array_length_type = eval (nv[1]);
+					m.set_attribute_string ("CCode", "array_length_type", eval (nv[1]));
 				} else if (nv[0] == "type_name") {
 					m.return_type = return_type = parse_type_from_string (eval (nv[1]), return_type.value_owned);
 				} else if (nv[0] == "type_arguments") {
 					parse_type_arguments_from_string (return_type, eval (nv[1]));
 				} else if (nv[0] == "deprecated") {
 					if (eval (nv[1]) == "1") {
-						m.deprecated = true;
+						m.set_attribute ("Deprecated", true);
 					}
 				} else if (nv[0] == "replacement") {
-					m.replacement = eval (nv[1]);
+					m.set_attribute_string ("Deprecated", "replacement", eval (nv[1]));
 				} else if (nv[0] == "deprecated_since") {
-					m.deprecated_since = eval (nv[1]);
+					m.set_attribute_string ("Deprecated", "since", eval (nv[1]));
 				} else if (nv[0] == "cheader_filename") {
-					m.add_cheader_filename (eval (nv[1]));
+					m.set_attribute_string ("CCode", "cheader_filename", eval (nv[1]));
 				} else if (nv[0] == "abstract") {
 					if (eval (nv[1]) == "1") {
 						m.is_abstract = true;
@@ -2122,35 +2252,32 @@ public class Vala.GIdlParser : CodeVisitor {
 						m.is_virtual = true;
 					}
 				} else if (nv[0] == "vfunc_name") {
-					m.vfunc_name = eval (nv[1]);
+					m.set_attribute_string ("CCode", "vfunc_name", eval (nv[1]));
 				} else if (nv[0] == "finish_name") {
-					m.set_finish_cname (eval (nv[1]));
+					m.set_attribute_string ("CCode", "finish_name", eval (nv[1]));
 				} else if (nv[0] == "async") {
 					if (eval (nv[1]) == "1") {
 						// force async function, even if it doesn't end in _async
 						m.coroutine = true;
 					}
 				} else if (nv[0] == "parent") {
-					Symbol container = get_container_from_name (eval (nv[1]));
-					var prefix = container.get_lower_case_cprefix ();
+					container = get_container_from_name (eval (nv[1]));
+					var prefix = get_lower_case_cprefix (container);
 					if (symbol.has_prefix (prefix)) {
-						m.set_cname (m.name);
 						m.name = symbol.substring (prefix.length);
 					}
 				} else if (nv[0] == "experimental") {
 					if (eval (nv[1]) == "1") {
-						m.experimental = true;
+						m.set_attribute ("Experimental", true);
 					}
 				} else if (nv[0] == "simple_generics") {
 					if (eval (nv[1]) == "1") {
-						m.simple_generics = true;
+						m.set_attribute_bool ("CCode", "simple_generics", true);
 					}
 				}
 			}
 		}
-
-		m.set_cname (symbol);
-		
+	
 		bool first = true;
 		Parameter last_param = null;
 		DataType last_param_type = null;
@@ -2163,14 +2290,14 @@ public class Vala.GIdlParser : CodeVisitor {
 				    current_data_type != null &&
 				    param.type.is_interface &&
 				    (param_node.name == "self" ||
-				     param.type.@interface.has_suffix (current_data_type.get_cname ()))) {
+				     param.type.@interface.has_suffix (get_cname (current_data_type)))) {
 					// instance method
 					continue;
 				} else if (!(m is CreationMethod) &&
 				    current_data_type != null &&
 				    param.type.is_interface &&
 				    (param_node.name == "klass" ||
-				     param.type.@interface.has_suffix ("%sClass".printf(current_data_type.get_cname ())))) {
+				     param.type.@interface.has_suffix ("%sClass".printf(get_cname (current_data_type))))) {
 					// class method
 					m.binding = MemberBinding.CLASS;
 					if (m.name.has_prefix ("class_")) {
@@ -2275,14 +2402,14 @@ public class Vala.GIdlParser : CodeVisitor {
 						}
 					} else if (nv[0] == "no_array_length") {
 						if (eval (nv[1]) == "1") {
-							p.no_array_length = true;
+							p.set_attribute_bool ("CCode", "array_length", false);
 						}
 					} else if (nv[0] == "array_length_type") {
-						p.array_length_type = eval (nv[1]);
+						p.set_attribute_string ("CCode", "array_length_type", eval (nv[1]));
 					} else if (nv[0] == "array_null_terminated") {
 						if (eval (nv[1]) == "1") {
-							p.no_array_length = true;
-							p.array_null_terminated = true;
+							p.set_attribute_bool ("CCode", "array_length", false);
+							p.set_attribute_bool ("CCode", "array_null_terminated", true);
 						}
 					} else if (nv[0] == "array_length_pos") {
 						set_array_length_pos = true;
@@ -2293,7 +2420,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					} else if (nv[0] == "type_name") {
 						p.variable_type = param_type = parse_type_from_string (eval (nv[1]), false);
 					} else if (nv[0] == "ctype") {
-						p.ctype = eval (nv[1]);
+						p.set_attribute_string ("CCode", "type", eval (nv[1]));
 					} else if (nv[0] == "type_arguments") {
 						parse_type_arguments_from_string (param_type, eval (nv[1]));
 					} else if (nv[0] == "default_value") {
@@ -2347,10 +2474,10 @@ public class Vala.GIdlParser : CodeVisitor {
 			if (show_param || !hide_param) {
 				m.add_parameter (p);
 				if (set_array_length_pos) {
-					p.carray_length_parameter_position = array_length_pos;
+					p.set_attribute_double ("CCode", "array_length_pos", array_length_pos);
 				}
 				if (set_delegate_target_pos) {
-					p.cdelegate_target_parameter_position = delegate_target_pos;
+					p.set_attribute_double ("CCode", "delegate_target_pos", delegate_target_pos);
 				}
 			}
 
@@ -2374,6 +2501,16 @@ public class Vala.GIdlParser : CodeVisitor {
 			last_param.ellipsis = true;
 		} else if (add_ellipsis) {
 			m.add_parameter (new Parameter.with_ellipsis ());
+		}
+
+		if (container == null) {
+			container = current_data_type;
+			if (container == null) {
+				container = current_namespace;
+			}
+		}
+		if (symbol != get_cname (m, container)) {
+			m.set_attribute_string ("CCode", "cname", symbol);
 		}
 		
 		return m;
@@ -2402,7 +2539,7 @@ public class Vala.GIdlParser : CodeVisitor {
 
 	private Method parse_virtual (IdlNodeVFunc v, IdlNodeFunction? func, bool is_interface = false) {
 		weak IdlNode node = (IdlNode) v;
-		string symbol = "%s%s".printf (current_data_type.get_lower_case_cprefix(), node.name);
+		string symbol = "%s%s".printf (get_lower_case_cprefix (current_data_type), node.name);
 
 		if (func != null) {
 			symbol = func.symbol;
@@ -2431,7 +2568,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 
 			if (func == null) {
-				m.attributes.append (new Attribute ("NoWrapper", null));
+				m.set_attribute ("NoWrapper", true);
 			}
 		}
 
@@ -2475,8 +2612,8 @@ public class Vala.GIdlParser : CodeVisitor {
 		prop.interface_only = true;
 
 		if (prop_node.type.is_interface && prop_node.type.interface == "GStrv") {
-			prop.no_array_length = true;
-			prop.array_null_terminated = true;
+			prop.set_attribute_bool ("CCode", "array_length", false);
+			prop.set_attribute_bool ("CCode", "array_null_terminated", true);
 		}
 
 		if (prop_node.readable) {
@@ -2492,7 +2629,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 		}
 
-		var attributes = get_attributes ("%s:%s".printf (current_data_type.get_cname (), node.name));
+		var attributes = get_attributes ("%s:%s".printf (get_cname (current_data_type), node.name));
 		if (attributes != null) {
 			foreach (string attr in attributes) {
 				var nv = attr.split ("=", 2);
@@ -2504,15 +2641,15 @@ public class Vala.GIdlParser : CodeVisitor {
 					parse_type_arguments_from_string (prop.property_type, eval (nv[1]));
 				} else if (nv[0] == "deprecated") {
 					if (eval (nv[1]) == "1") {
-						prop.deprecated = true;
+						prop.set_attribute ("Deprecated", true);
 					}
 				} else if (nv[0] == "replacement") {
-					prop.replacement = eval (nv[1]);
+					prop.set_attribute_string ("Deprecated", "replacement", eval (nv[1]));
 				} else if (nv[0] == "deprecated_since") {
-					prop.deprecated_since = eval (nv[1]);
+					prop.set_attribute_string ("Deprecated", "since", eval (nv[1]));
 				} else if (nv[0] == "accessor_method") {
 					if (eval (nv[1]) == "0") {
-						prop.no_accessor_method = true;
+						prop.set_attribute ("NoAccessorMethod", true);
 					}
 				} else if (nv[0] == "owned_get") {
 					if (eval (nv[1]) == "1") {
@@ -2522,7 +2659,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					prop.property_type = parse_type_from_string (eval (nv[1]), false);
 				} else if (nv[0] == "experimental") {
 					if (eval (nv[1]) == "1") {
-						prop.experimental = true;
+						prop.set_attribute ("Experimental", true);
 					}
 				} else if (nv[0] == "nullable") {
 					if (eval (nv[1]) == "1") {
@@ -2555,22 +2692,22 @@ public class Vala.GIdlParser : CodeVisitor {
 			foreach (string attr in attributes) {
 				var nv = attr.split ("=", 2);
 				if (nv[0] == "cheader_filename") {
-					c.add_cheader_filename (eval (nv[1]));
+					c.set_attribute_string ("CCode", "cheader_filename", eval (nv[1]));
 				} else if (nv[0] == "deprecated") {
 					if (eval (nv[1]) == "1") {
-						c.deprecated = true;
+						c.set_attribute ("Deprecated", true);
 					}
 				} else if (nv[0] == "replacement") {
-					c.replacement = eval (nv[1]);
+					c.set_attribute_string ("Deprecated", "replacement", eval (nv[1]));
 				} else if (nv[0] == "deprecated_since") {
-					c.deprecated_since = eval (nv[1]);
+					c.set_attribute_string ("Deprecated", "since", eval (nv[1]));
 				} else if (nv[0] == "hidden") {
 					if (eval (nv[1]) == "1") {
 						return null;
 					}
 				} else if (nv[0] == "experimental") {
 					if (eval (nv[1]) == "1") {
-						c.experimental = true;
+						c.set_attribute ("Experimental", true);
 					}
 				}
 			}
@@ -2601,7 +2738,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		bool experimental = false;
 		bool no_delegate_target = false;
 
-		var attributes = get_attributes ("%s.%s".printf (current_data_type.get_cname (), node.name));
+		var attributes = get_attributes ("%s.%s".printf (get_cname (current_data_type), node.name));
 		if (attributes != null) {
 			foreach (string attr in attributes) {
 				var nv = attr.split ("=", 2);
@@ -2679,50 +2816,50 @@ public class Vala.GIdlParser : CodeVisitor {
 		field.access = SymbolAccessibility.PUBLIC;
 
 		if (field_name != node.name) {
-			field.set_cname (node.name);
+			field.set_attribute_string ("CCode", "cname", node.name);
 		}
 
 		if (deprecated) {
-			field.deprecated = true;
+			field.set_attribute ("Deprecated", true);
 
 			if (deprecated_since != null) {
-				field.deprecated_since = deprecated_since;
+				field.set_attribute_string ("Deprecated", "since", deprecated_since);
 			}
 
 			if (replacement != null) {
-				field.replacement = replacement;
+				field.set_attribute_string ("Deprecated", "replacement", replacement);
 			}
 		}
 
 		if (experimental) {
-			field.experimental = true;
+			field.set_attribute ("Experimental", true);
 		}
 
 		if (ctype != null) {
-			field.set_ctype (ctype);
+			field.set_attribute_string ("CCode", "type", ctype);
 		}
 
 		if (cheader_filename != null) {
-			field.add_cheader_filename (cheader_filename);
+			field.set_attribute_string ("CCode", "cheader_filename", cheader_filename);
 		}
 
 		if (array_null_terminated) {
-			field.array_null_terminated = true;
+			field.set_attribute_bool ("CCode", "array_null_terminated", true);
 		}
 
 		if (array_length_cname != null || array_length_type != null) {
 			if (array_length_cname != null) {
-				field.set_array_length_cname (array_length_cname);
+				field.set_attribute_string ("CCode", "array_length_cname", array_length_cname);
 			}
 			if (array_length_type != null) {
-				field.array_length_type = array_length_type;
+				field.set_attribute_string ("CCode", "array_length_type", array_length_type);
 			}
-		} else {
-			field.no_array_length = true;
+		} else if (field.variable_type is ArrayType) {
+			field.set_attribute_bool ("CCode", "array_length", false);
 		}
 
 		if (no_delegate_target) {
-			field.no_delegate_target = true;
+			field.set_attribute_bool ("CCode", "delegate_target", false);
 		}
 
 		return field;
@@ -2809,28 +2946,28 @@ public class Vala.GIdlParser : CodeVisitor {
 		var sig = new Signal (fix_prop_name (node.name), parse_param (sig_node.result), current_source_reference);
 		sig.access = SymbolAccessibility.PUBLIC;
 		
-		var attributes = get_attributes ("%s::%s".printf (current_data_type.get_cname (), sig.name));
+		var attributes = get_attributes ("%s::%s".printf (get_cname (current_data_type), sig.name));
 		if (attributes != null) {
 			string ns_name = null;
 			foreach (string attr in attributes) {
 				var nv = attr.split ("=", 2);
 				if (nv[0] == "name") {
-					sig.set_cname (sig.name);
+					sig.set_attribute_string ("CCode", "cname", sig.name);
 					sig.name = eval (nv[1]);
 				} else if (nv[0] == "has_emitter" && eval (nv[1]) == "1") {
-					sig.has_emitter = true;
+					sig.set_attribute ("HasEmitter", true);
 				} else if (nv[0] == "hidden") {
 					if (eval (nv[1]) == "1") {
 						return null;
 					}
 				} else if (nv[0] == "deprecated") {
 					if (eval (nv[1]) == "1") {
-						sig.deprecated = true;
+						sig.set_attribute ("Deprecated", true);
 					}
 				} else if (nv[0] == "replacement") {
-					sig.replacement = eval (nv[1]);
+					sig.set_attribute_string ("Deprecated", "replacement", eval (nv[1]));
 				} else if (nv[0] == "deprecated_since") {
-					sig.deprecated_since = eval (nv[1]);
+					sig.set_attribute_string ("Deprecated", "since", eval (nv[1]));
 				} else if (nv[0] == "transfer_ownership") {
 					if (eval (nv[1]) == "1") {
 						sig.return_type.value_owned = true;
@@ -2843,7 +2980,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					parse_type_arguments_from_string (sig.return_type, eval (nv[1]));
 				} else if (nv[0] == "experimental") {
 					if (eval (nv[1]) == "1") {
-						sig.experimental = true;
+						sig.set_attribute ("Experimental", true);
 					}
 				}
 			}
@@ -2872,7 +3009,7 @@ public class Vala.GIdlParser : CodeVisitor {
 
 			bool hide_param = false;
 			bool show_param = false;
-			attributes = get_attributes ("%s::%s.%s".printf (current_data_type.get_cname (), sig.name, param_node.name));
+			attributes = get_attributes ("%s::%s.%s".printf (get_cname (current_data_type), sig.name, param_node.name));
 			if (attributes != null) {
 				string ns_name = null;
 				foreach (string attr in attributes) {
@@ -2891,14 +3028,14 @@ public class Vala.GIdlParser : CodeVisitor {
 						}
 					} else if (nv[0] == "no_array_length") {
 						if (eval (nv[1]) == "1") {
-							p.no_array_length = true;
+							p.set_attribute_bool ("CCode", "array_length", false);
 						}
 					} else if (nv[0] == "array_length_type") {
-						p.array_length_type = eval (nv[1]);
+						p.set_attribute_string ("CCode", "array_length_type", nv[1]);
 					} else if (nv[0] == "array_null_terminated") {
 						if (eval (nv[1]) == "1") {
-							p.no_array_length = true;
-							p.array_null_terminated = true;
+							p.set_attribute_bool ("CCode", "array_length", false);
+							p.set_attribute_bool ("CCode", "array_null_terminated", true);
 						}
 					} else if (nv[0] == "is_out") {
 						if (eval (nv[1]) == "1") {
