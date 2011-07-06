@@ -126,7 +126,6 @@ public class Vala.Signal : Symbol, Lockable {
 		var actual_return_type = return_type.get_actual_type (sender_type, null, node_reference);
 
 		var generated_delegate = new Delegate (null, actual_return_type);
-		generated_delegate.has_target = true;
 		generated_delegate.access = SymbolAccessibility.PUBLIC;
 		generated_delegate.owner = scope;
 

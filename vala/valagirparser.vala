@@ -2472,6 +2472,7 @@ public class Vala.GirParser : CodeVisitor {
 
 		if (element_name == "callback") {
 			s = new Delegate (name, return_type, current.source_reference);
+			((Delegate) s).has_target = false;
 		} else if (element_name == "constructor") {
 			if (name == "new") {
 				name = null;

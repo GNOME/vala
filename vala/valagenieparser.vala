@@ -3683,8 +3683,8 @@ public class Vala.Genie.Parser : CodeVisitor {
 			d.access = get_access (sym.name);
 		}
 
-		if (!(ModifierFlags.STATIC in flags)) {
-			d.has_target = true;
+		if (ModifierFlags.STATIC in flags) {
+			d.has_target = false;
 		}
 		if (ModifierFlags.EXTERN in flags || scanner.source_file.file_type == SourceFileType.PACKAGE) {
 			d.external = true;

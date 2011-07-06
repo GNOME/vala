@@ -3374,8 +3374,7 @@ public class Vala.Parser : CodeVisitor {
 				// TODO enable warning in future releases
 				Report.warning (get_last_src (), "deprecated syntax, use [CCode (has_target = false)]");
 			}
-		} else {
-			d.has_target = true;
+			d.has_target = false;
 		}
 		if (ModifierFlags.EXTERN in flags || scanner.source_file.file_type == SourceFileType.PACKAGE) {
 			d.external = true;

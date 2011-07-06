@@ -42,7 +42,22 @@ public class Vala.Delegate : TypeSymbol {
 	 * The reference to the object instance will be appended to the end of
 	 * the argument list in the generated C code.
 	 */
-	public bool has_target { get; set; }
+	public bool has_target {
+		get {
+			if (_has_target == null) {
+				_has_target = get_attribute_bool ("CCode", "has_target", true);
+			}
+			return _has_target;
+		}
+		set {
+			_has_target = value;
+			if (value) {
+				remove_attribute_argument ("CCode", "has_target");
+			} else {
+				set_attribute_bool ("CCode", "has_target", false);
+			}
+		}
+	}
 
 	public DataType? sender_type { get; set; }
 
@@ -85,6 +100,7 @@ public class Vala.Delegate : TypeSymbol {
 	private string cname;
 
 	private DataType _return_type;
+	private bool? _has_target;
 
 	/**
 	 * Creates a new delegate.
@@ -282,9 +298,6 @@ public class Vala.Delegate : TypeSymbol {
 	private void process_ccode_attribute (Attribute a) {
 		if (a.has_argument ("cname")) {
 			set_cname (a.get_string ("cname"));
-		}
-		if (a.has_argument ("has_target")) {
-			has_target = a.get_bool ("has_target");
 		}
 		if (a.has_argument ("instance_pos")) {
 			cinstance_parameter_position = a.get_double ("instance_pos");

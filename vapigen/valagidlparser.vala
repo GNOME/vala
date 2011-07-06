@@ -450,6 +450,7 @@ public class Vala.GIdlParser : CodeVisitor {
 
 		var cb = new Delegate (node.name, return_type, current_source_reference);
 		cb.access = SymbolAccessibility.PUBLIC;
+		cb.has_target = false;
 
 		bool check_has_target = true;
 		bool suppress_throws = false;
