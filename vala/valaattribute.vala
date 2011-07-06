@@ -92,11 +92,11 @@ public class Vala.Attribute : CodeNode {
 	 * @param name argument name
 	 * @return     integer value
 	 */
-	public int get_integer (string name) {
+	public int get_integer (string name, int default_value = 0) {
 		string value = args.get (name);
 
 		if (value == null) {
-			return 0;
+			return default_value;
 		}
 
 		return int.parse (value);
@@ -108,11 +108,11 @@ public class Vala.Attribute : CodeNode {
 	 * @param name argument name
 	 * @return     double value
 	 */
-	public double get_double (string name) {
+	public double get_double (string name, double default_value = 0) {
 		string value = args.get (name);
 
 		if (value == null) {
-			return 0;
+			return default_value;
 		}
 
 		return double.parse (value);
@@ -124,7 +124,13 @@ public class Vala.Attribute : CodeNode {
 	 * @param name argument name
 	 * @return     boolean value
 	 */
-	public bool get_bool (string name) {
-		return bool.parse (args.get (name));
+	public bool get_bool (string name, bool default_value = false) {
+		string value = args.get (name);
+
+		if (value == null) {
+			return default_value;
+		}
+
+		return bool.parse (value);
 	}
 }
