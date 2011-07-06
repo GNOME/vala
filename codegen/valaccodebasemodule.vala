@@ -4993,6 +4993,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var type = value.value_type;
 		var result = ((GLibValue) value).copy ();
 		result.value_type = target_type != null ? target_type : type;
+		result.value_type = result.value_type.copy ();
 		var requires_temp_value = false;
 
 		if (type.value_owned
