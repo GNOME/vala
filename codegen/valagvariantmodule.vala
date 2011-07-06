@@ -44,32 +44,21 @@ public class Vala.GVariantModule : GAsyncModule {
 
 	static bool is_string_marshalled_enum (TypeSymbol? symbol) {
 		if (symbol != null && symbol is Enum) {
-			var dbus = symbol.get_attribute ("DBus");
-			return dbus != null && dbus.get_bool ("use_string_marshalling");
+			return symbol.get_attribute_bool ("DBus", "use_string_marshalling");
 		}
 		return false;
 	}
 
 	string get_dbus_value (EnumValue value, string default_value) {
-		var dbus = value.get_attribute ("DBus");
-		if (dbus == null) {
-			return default_value;
+		var dbus_value = value.get_attribute_string ("DBus", "value");
+		if (dbus_value != null) {
+			return dbus_value;;
 		}
-
-		string dbus_value = dbus.get_string ("value");
-		if (dbus_value == null) {
-			return default_value;
-		}
-		return dbus_value;
+		return default_value;
 	}
 
 	public static string? get_dbus_signature (Symbol symbol) {
-		var dbus = symbol.get_attribute ("DBus");
-		if (dbus == null) {
-			return null;
-		}
-
-		return dbus.get_string ("signature");
+		return symbol.get_attribute_string ("DBus", "signature");
 	}
 
 	bool get_basic_type_info (string signature, out BasicTypeInfo basic_type) {
@@ -105,12 +94,7 @@ public class Vala.GVariantModule : GAsyncModule {
 		} else if (is_string_marshalled_enum (datatype.data_type)) {
 			return "s";
 		} else if (datatype.data_type != null) {
-			string sig = null;
-
-			var ccode = datatype.data_type.get_attribute ("CCode");
-			if (ccode != null) {
-				sig = ccode.get_string ("type_signature");
-			}
+			string sig = datatype.data_type.get_attribute_string ("CCode", "type_signature");
 
 			var st = datatype.data_type as Struct;
 			var en = datatype.data_type as Enum;
@@ -202,7 +186,7 @@ public class Vala.GVariantModule : GAsyncModule {
 
 	CCodeExpression? generate_enum_value_from_string (EnumValueType type, CCodeExpression? expr, CCodeExpression? error_expr) {
 		var en = type.type_symbol as Enum;
-		var from_string_name = "%s_from_string".printf (en.get_lower_case_cname (null));
+		var from_string_name = "%s_from_string".printf (get_ccode_lower_case_name (en, null));
 
 		var from_string_call = new CCodeFunctionCall (new CCodeIdentifier (from_string_name));
 		from_string_call.add_argument (expr);
@@ -212,9 +196,9 @@ public class Vala.GVariantModule : GAsyncModule {
 	}
 
 	public CCodeFunction generate_enum_from_string_function_declaration (Enum en) {
-		var from_string_name = "%s_from_string".printf (en.get_lower_case_cname (null));
+		var from_string_name = "%s_from_string".printf (get_ccode_lower_case_name (en, null));
 
-		var from_string_func = new CCodeFunction (from_string_name, en.get_cname ());
+		var from_string_func = new CCodeFunction (from_string_name, get_ccode_name (en));
 		from_string_func.add_parameter (new CCodeParameter ("str", "const char*"));
 		from_string_func.add_parameter (new CCodeParameter ("error", "GError**"));
 
@@ -222,15 +206,15 @@ public class Vala.GVariantModule : GAsyncModule {
 	}
 
 	public CCodeFunction generate_enum_from_string_function (Enum en) {
-		var from_string_name = "%s_from_string".printf (en.get_lower_case_cname (null));
+		var from_string_name = "%s_from_string".printf (get_ccode_lower_case_name (en, null));
 
-		var from_string_func = new CCodeFunction (from_string_name, en.get_cname ());
+		var from_string_func = new CCodeFunction (from_string_name, get_ccode_name (en));
 		from_string_func.add_parameter (new CCodeParameter ("str", "const char*"));
 		from_string_func.add_parameter (new CCodeParameter ("error", "GError**"));
 
 		push_function (from_string_func);
 
-		ccode.add_declaration (en.get_cname (), new CCodeVariableDeclarator.zero ("value", new CCodeConstant ("0")));
+		ccode.add_declaration (get_ccode_name (en), new CCodeVariableDeclarator.zero ("value", new CCodeConstant ("0")));
 
 		bool firstif = true;
 		foreach (EnumValue enum_value in en.get_values ()) {
@@ -245,7 +229,7 @@ public class Vala.GVariantModule : GAsyncModule {
 			} else {
 				ccode.else_if (cond);
 			}
-			ccode.add_assignment (new CCodeIdentifier ("value"), new CCodeIdentifier (enum_value.get_cname ()));
+			ccode.add_assignment (new CCodeIdentifier ("value"), new CCodeIdentifier (get_ccode_name (enum_value)));
 		}
 
 		ccode.add_else ();
@@ -253,7 +237,7 @@ public class Vala.GVariantModule : GAsyncModule {
 		set_error.add_argument (new CCodeIdentifier ("error"));
 		set_error.add_argument (new CCodeIdentifier ("G_DBUS_ERROR"));
 		set_error.add_argument (new CCodeIdentifier ("G_DBUS_ERROR_INVALID_ARGS"));
-		set_error.add_argument (new CCodeConstant ("\"Invalid value for enum `%s'\"".printf (en.get_cname ())));
+		set_error.add_argument (new CCodeConstant ("\"Invalid value for enum `%s'\"".printf (get_ccode_name (en))));
 		ccode.add_expression (set_error);
 		ccode.close ();
 
@@ -283,11 +267,11 @@ public class Vala.GVariantModule : GAsyncModule {
 		string temp_name = "_tmp%d_".printf (next_temp_var_id++);
 
 		var new_call = new CCodeFunctionCall (new CCodeIdentifier ("g_new"));
-		new_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
+		new_call.add_argument (new CCodeIdentifier (get_ccode_name (array_type.element_type)));
 		// add one extra element for NULL-termination
 		new_call.add_argument (new CCodeConstant ("5"));
 
-		ccode.add_declaration (array_type.get_cname (), new CCodeVariableDeclarator (temp_name, new_call));
+		ccode.add_declaration (get_ccode_name (array_type), new CCodeVariableDeclarator (temp_name, new_call));
 		ccode.add_declaration ("int", new CCodeVariableDeclarator (temp_name + "_length", new CCodeConstant ("0")));
 		ccode.add_declaration ("int", new CCodeVariableDeclarator (temp_name + "_size", new CCodeConstant ("4")));
 
@@ -335,7 +319,7 @@ public class Vala.GVariantModule : GAsyncModule {
 			ccode.add_assignment (new CCodeIdentifier (temp_name + "_size"), new_size);
 
 			var renew_call = new CCodeFunctionCall (new CCodeIdentifier ("g_renew"));
-			renew_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
+			renew_call.add_argument (new CCodeIdentifier (get_ccode_name (array_type.element_type)));
 			renew_call.add_argument (new CCodeIdentifier (temp_name));
 			// add one extra element for NULL-termination
 			renew_call.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier (temp_name + "_size"), new CCodeConstant ("1")));
@@ -363,7 +347,7 @@ public class Vala.GVariantModule : GAsyncModule {
 		string temp_name = "_tmp%d_".printf (next_temp_var_id++);
 		string subiter_name = "_tmp%d_".printf (next_temp_var_id++);
 
-		ccode.add_declaration (st.get_cname (), new CCodeVariableDeclarator (temp_name));
+		ccode.add_declaration (get_ccode_name (st), new CCodeVariableDeclarator (temp_name));
 		ccode.add_declaration ("GVariantIter", new CCodeVariableDeclarator (subiter_name));
 
 		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_iter_init"));
@@ -380,7 +364,7 @@ public class Vala.GVariantModule : GAsyncModule {
 
 			field_found = true;
 
-			read_expression (f.variable_type, new CCodeIdentifier (subiter_name), new CCodeMemberAccess (new CCodeIdentifier (temp_name), f.get_cname ()), f);
+			read_expression (f.variable_type, new CCodeIdentifier (subiter_name), new CCodeMemberAccess (new CCodeIdentifier (temp_name), get_ccode_name (f)), f);
 		}
 
 		if (!field_found) {
@@ -474,7 +458,7 @@ public class Vala.GVariantModule : GAsyncModule {
 			result = deserialize_struct (st, variant_expr);
 			if (result != null && type.nullable) {
 				var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
-				csizeof.add_argument (new CCodeIdentifier (st.get_cname ()));
+				csizeof.add_argument (new CCodeIdentifier (get_ccode_name (st)));
 				var cdup = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup"));
 				cdup.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, result));
 				cdup.add_argument (csizeof);
@@ -531,7 +515,7 @@ public class Vala.GVariantModule : GAsyncModule {
 
 	CCodeExpression? generate_enum_value_to_string (EnumValueType type, CCodeExpression? expr) {
 		var en = type.type_symbol as Enum;
-		var to_string_name = "%s_to_string".printf (en.get_lower_case_cname (null));
+		var to_string_name = "%s_to_string".printf (get_ccode_lower_case_name (en, null));
 
 		var to_string_call = new CCodeFunctionCall (new CCodeIdentifier (to_string_name));
 		to_string_call.add_argument (expr);
@@ -540,19 +524,19 @@ public class Vala.GVariantModule : GAsyncModule {
 	}
 
 	public CCodeFunction generate_enum_to_string_function_declaration (Enum en) {
-		var to_string_name = "%s_to_string".printf (en.get_lower_case_cname (null));
+		var to_string_name = "%s_to_string".printf (get_ccode_lower_case_name (en, null));
 
 		var to_string_func = new CCodeFunction (to_string_name, "const char*");
-		to_string_func.add_parameter (new CCodeParameter ("value", en.get_cname ()));
+		to_string_func.add_parameter (new CCodeParameter ("value", get_ccode_name (en)));
 
 		return to_string_func;
 	}
 
 	public CCodeFunction generate_enum_to_string_function (Enum en) {
-		var to_string_name = "%s_to_string".printf (en.get_lower_case_cname (null));
+		var to_string_name = "%s_to_string".printf (get_ccode_lower_case_name (en, null));
 
 		var to_string_func = new CCodeFunction (to_string_name, "const char*");
-		to_string_func.add_parameter (new CCodeParameter ("value", en.get_cname ()));
+		to_string_func.add_parameter (new CCodeParameter ("value", get_ccode_name (en)));
 
 		push_function (to_string_func);
 
@@ -561,7 +545,7 @@ public class Vala.GVariantModule : GAsyncModule {
 		ccode.open_switch (new CCodeIdentifier ("value"));
 		foreach (EnumValue enum_value in en.get_values ()) {
 			string dbus_value = get_dbus_value (enum_value, enum_value.name);
-			ccode.add_case (new CCodeIdentifier (enum_value.get_cname ()));
+			ccode.add_case (new CCodeIdentifier (get_ccode_name (enum_value)));
 			ccode.add_assignment (new CCodeIdentifier ("str"), new CCodeConstant ("\"%s\"".printf (dbus_value)));
 			ccode.add_break ();
 		}
@@ -581,7 +565,7 @@ public class Vala.GVariantModule : GAsyncModule {
 	CCodeExpression? serialize_array (ArrayType array_type, CCodeExpression array_expr) {
 		string array_iter_name = "_tmp%d_".printf (next_temp_var_id++);
 
-		ccode.add_declaration (array_type.get_cname (), new CCodeVariableDeclarator (array_iter_name));
+		ccode.add_declaration (get_ccode_name (array_type), new CCodeVariableDeclarator (array_iter_name));
 		ccode.add_assignment (new CCodeIdentifier (array_iter_name), array_expr);
 
 		return serialize_array_dim (array_type, 1, array_expr, new CCodeIdentifier (array_iter_name));
@@ -651,7 +635,7 @@ public class Vala.GVariantModule : GAsyncModule {
 
 			field_found = true;
 
-			write_expression (f.variable_type, new CCodeIdentifier (builder_name), new CCodeMemberAccess (struct_expr, f.get_cname ()), f);
+			write_expression (f.variable_type, new CCodeIdentifier (builder_name), new CCodeMemberAccess (struct_expr, get_ccode_name (f)), f);
 		}
 
 		if (!field_found) {
@@ -699,8 +683,8 @@ public class Vala.GVariantModule : GAsyncModule {
 
 		ccode.open_while (iter_next_call);
 
-		ccode.add_declaration (key_type.get_cname (), new CCodeVariableDeclarator ("_key"));
-		ccode.add_declaration (value_type.get_cname (), new CCodeVariableDeclarator ("_value"));
+		ccode.add_declaration (get_ccode_name (key_type), new CCodeVariableDeclarator ("_key"));
+		ccode.add_declaration (get_ccode_name (value_type), new CCodeVariableDeclarator ("_value"));
 
 		ccode.add_assignment (new CCodeIdentifier ("_key"), convert_from_generic_pointer (new CCodeIdentifier (key_name), key_type));
 		ccode.add_assignment (new CCodeIdentifier ("_value"), convert_from_generic_pointer (new CCodeIdentifier (value_name), value_type));

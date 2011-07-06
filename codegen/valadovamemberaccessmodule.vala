@@ -54,12 +54,12 @@ public abstract class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 				if (m.base_method != null) {
 					var base_class = (Class) m.base_method.parent_symbol;
 
-					set_cvalue (expr, new CCodeIdentifier ("%s_base_%s".printf (base_class.get_lower_case_cname (null), m.name)));
+					set_cvalue (expr, new CCodeIdentifier ("%s_base_%s".printf (get_ccode_lower_case_name (base_class, null), m.name)));
 					return;
 				} else if (m.base_interface_method != null) {
 					var base_iface = (Interface) m.base_interface_method.parent_symbol;
 
-					set_cvalue (expr, new CCodeIdentifier ("%s_base_%s".printf (base_iface.get_lower_case_cname (null), m.name)));
+					set_cvalue (expr, new CCodeIdentifier ("%s_base_%s".printf (get_ccode_lower_case_name (base_iface, null), m.name)));
 					return;
 				}
 			}
@@ -77,18 +77,18 @@ public abstract class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 						set_cvalue (expr.inner, ctemp);
 					}
 					var base_class = (Class) m.base_method.parent_symbol;
-					var vclass = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS".printf (base_class.get_upper_case_cname (null))));
+					var vclass = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS".printf (get_ccode_upper_case_name (base_class, null))));
 					vclass.add_argument (inst);
 					set_cvalue (expr, new CCodeMemberAccess.pointer (vclass, m.name));
 				} else {
-					set_cvalue (expr, new CCodeIdentifier (m.base_method.get_cname ()));
+					set_cvalue (expr, new CCodeIdentifier (get_ccode_name (m.base_method)));
 				}
 			} else if (m.base_interface_method != null) {
-				set_cvalue (expr, new CCodeIdentifier (m.base_interface_method.get_cname ()));
+				set_cvalue (expr, new CCodeIdentifier (get_ccode_name (m.base_interface_method)));
 			} else if (m is CreationMethod) {
-				set_cvalue (expr, new CCodeIdentifier (m.get_real_cname ()));
+				set_cvalue (expr, new CCodeIdentifier (get_ccode_real_name (m)));
 			} else {
-				set_cvalue (expr, new CCodeIdentifier (m.get_cname ()));
+				set_cvalue (expr, new CCodeIdentifier (get_ccode_name (m)));
 			}
 		} else if (expr.symbol_reference is ArrayLengthField) {
 			var array_type = (ArrayType) expr.inner.value_type;
@@ -109,13 +109,13 @@ public abstract class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 
 			generate_enum_declaration ((Enum) ev.parent_symbol, cfile);
 
-			set_cvalue (expr, new CCodeConstant (ev.get_cname ()));
+			set_cvalue (expr, new CCodeConstant (get_ccode_name (ev)));
 		} else if (expr.symbol_reference is Constant) {
 			var c = (Constant) expr.symbol_reference;
 
 			generate_constant_declaration (c, cfile);
 
-			set_cvalue (expr, new CCodeIdentifier (c.get_cname ()));
+			set_cvalue (expr, new CCodeIdentifier (get_ccode_name (c)));
 		} else if (expr.symbol_reference is Property) {
 			var prop = (Property) expr.symbol_reference;
 
@@ -134,8 +134,8 @@ public abstract class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 			if (expr.inner is BaseAccess) {
 				if (prop.base_property != null) {
 					var base_class = (Class) prop.base_property.parent_symbol;
-					var vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (base_class.get_upper_case_cname (null))));
-					vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (current_class.get_lower_case_cname (null))));
+					var vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (get_ccode_upper_case_name (base_class, null))));
+					vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (get_ccode_lower_case_name (current_class, null))));
 
 					var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "get_%s".printf (prop.name)));
 					ccall.add_argument (get_cvalue (expr.inner));
@@ -143,7 +143,7 @@ public abstract class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 					return;
 				} else if (prop.base_interface_property != null) {
 					var base_iface = (Interface) prop.base_interface_property.parent_symbol;
-					string parent_iface_var = "%s_%s_parent_iface".printf (current_class.get_lower_case_cname (null), base_iface.get_lower_case_cname (null));
+					string parent_iface_var = "%s_%s_parent_iface".printf (get_ccode_lower_case_name (current_class, null), get_ccode_lower_case_name (base_iface, null));
 
 					var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (new CCodeIdentifier (parent_iface_var), "get_%s".printf (prop.name)));
 					ccall.add_argument (get_cvalue (expr.inner));
@@ -158,7 +158,7 @@ public abstract class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 			} else if (prop.base_interface_property != null) {
 				base_property = prop.base_interface_property;
 			}
-			string getter_cname = base_property.get_accessor.get_cname ();
+			string getter_cname = get_ccode_name (base_property.get_accessor);
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier (getter_cname));
 
 			if (prop.binding == MemberBinding.INSTANCE) {
@@ -268,21 +268,21 @@ public abstract class Vala.DovaMemberAccessModule : DovaControlFlowModule {
 
 			CCodeExpression inst;
 			if (dova_priv) {
-				var priv_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_PRIVATE".printf (cl.get_upper_case_cname (null))));
+				var priv_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_PRIVATE".printf (get_ccode_upper_case_name (cl, null))));
 				priv_call.add_argument (pub_inst);
 				inst = priv_call;
 			} else {
 				inst = pub_inst;
 			}
 			if (instance_target_type.data_type.is_reference_type () || (instance != null && instance.value_type is PointerType)) {
-				result.cvalue = new CCodeMemberAccess.pointer (inst, f.get_cname ());
+				result.cvalue = new CCodeMemberAccess.pointer (inst, get_ccode_name (f));
 			} else {
-				result.cvalue = new CCodeMemberAccess (inst, f.get_cname ());
+				result.cvalue = new CCodeMemberAccess (inst, get_ccode_name (f));
 			}
 		} else {
 			generate_field_declaration (f, cfile);
 
-			result.cvalue = new CCodeIdentifier (f.get_cname ());
+			result.cvalue = new CCodeIdentifier (get_ccode_name (f));
 		}
 
 		return result;

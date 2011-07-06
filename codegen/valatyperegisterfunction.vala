@@ -44,7 +44,7 @@ public abstract class Vala.TypeRegisterFunction {
 			fundamental = true;
 		}
 
-		string type_id_name = "%s_type_id".printf (get_type_declaration ().get_lower_case_cname (null));
+		string type_id_name = "%s_type_id".printf (CCodeBaseModule.get_ccode_lower_case_name (get_type_declaration ()));
 
 		var type_block = new CCodeBlock ();
 		CCodeDeclaration cdecl;
@@ -67,7 +67,7 @@ public abstract class Vala.TypeRegisterFunction {
 
 		CCodeFunction fun;
 		if (!plugin) {
-			fun = new CCodeFunction ("%s_get_type".printf (get_type_declaration ().get_lower_case_cname (null)), "GType");
+			fun = new CCodeFunction ("%s_get_type".printf (CCodeBaseModule.get_ccode_lower_case_name (get_type_declaration ())), "GType");
 			fun.attributes = "G_GNUC_CONST";
 
 			/* Function will not be prototyped anyway */
@@ -77,10 +77,10 @@ public abstract class Vala.TypeRegisterFunction {
 				fun.attributes += " G_GNUC_UNUSED";
 			}
 		} else {
-			fun = new CCodeFunction ("%s_register_type".printf (get_type_declaration ().get_lower_case_cname (null)), "GType");
+			fun = new CCodeFunction ("%s_register_type".printf (CCodeBaseModule.get_ccode_lower_case_name (get_type_declaration ())), "GType");
 			fun.add_parameter (new CCodeParameter ("module", "GTypeModule *"));
 
-			var get_fun = new CCodeFunction ("%s_get_type".printf (get_type_declaration ().get_lower_case_cname (null)), "GType");
+			var get_fun = new CCodeFunction ("%s_get_type".printf (CCodeBaseModule.get_ccode_lower_case_name (get_type_declaration ())), "GType");
 			get_fun.attributes = "G_GNUC_CONST";
 
 			get_fun.is_declaration = true;
@@ -133,9 +133,9 @@ public abstract class Vala.TypeRegisterFunction {
 				quark_reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_static_string"));
 			}
 
-			quark_reg_call.add_argument (new CCodeConstant ("\"Vala%sClassPrivate\"".printf (get_type_declaration ().get_cname ())));
+			quark_reg_call.add_argument (new CCodeConstant ("\"Vala%sClassPrivate\"".printf (CCodeBaseModule.get_ccode_name (get_type_declaration ()))));
 
-			type_init.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_vala_%s_class_private_quark".printf (get_type_declaration ().get_lower_case_cname ())), quark_reg_call)));
+			type_init.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_vala_%s_class_private_quark".printf (CCodeBaseModule.get_ccode_lower_case_name (get_type_declaration ()))), quark_reg_call)));
 		}
 
 		CCodeFunctionCall reg_call;
@@ -159,11 +159,11 @@ public abstract class Vala.TypeRegisterFunction {
 			reg_call.add_argument (new CCodeIdentifier ("module"));
 			reg_call.add_argument (new CCodeIdentifier (get_parent_type_name ()));
 		}
-		reg_call.add_argument (new CCodeConstant ("\"%s\"".printf (get_type_declaration ().get_cname ())));
+		reg_call.add_argument (new CCodeConstant ("\"%s\"".printf (CCodeBaseModule.get_ccode_name (get_type_declaration ()))));
 		if (get_type_declaration () is Struct) {
 			var st = (Struct) get_type_declaration ();
-			reg_call.add_argument (new CCodeCastExpression (new CCodeIdentifier (st.get_dup_function ()), "GBoxedCopyFunc"));
-			reg_call.add_argument (new CCodeCastExpression (new CCodeIdentifier (st.get_free_function ()), "GBoxedFreeFunc"));
+			reg_call.add_argument (new CCodeCastExpression (new CCodeIdentifier (CCodeBaseModule.get_ccode_dup_function (st)), "GBoxedCopyFunc"));
+			reg_call.add_argument (new CCodeCastExpression (new CCodeIdentifier (CCodeBaseModule.get_ccode_free_function (st)), "GBoxedFreeFunc"));
 		} else if (get_type_declaration () is Enum) {
 			var en = get_type_declaration () as Enum;
 			var clist = new CCodeInitializerList (); /* or during visit time? */
@@ -171,8 +171,8 @@ public abstract class Vala.TypeRegisterFunction {
 			CCodeInitializerList clist_ev = null;
 			foreach (EnumValue ev in en.get_values ()) {
 				clist_ev = new CCodeInitializerList ();
-				clist_ev.append (new CCodeConstant (ev.get_cname ()));
-				clist_ev.append (new CCodeIdentifier ("\"%s\"".printf (ev.get_cname ())));
+				clist_ev.append (new CCodeConstant (CCodeBaseModule.get_ccode_name (ev)));
+				clist_ev.append (new CCodeIdentifier ("\"%s\"".printf (CCodeBaseModule.get_ccode_name (ev))));
 				clist_ev.append (ev.get_canonical_cconstant ());
 				clist.append (clist_ev);
 			}
@@ -218,7 +218,7 @@ public abstract class Vala.TypeRegisterFunction {
 
 			add_class_private_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_add_class_private"));
 			add_class_private_call.add_argument (new CCodeIdentifier (type_id_name));
-			add_class_private_call.add_argument (new CCodeIdentifier ("sizeof (%sClassPrivate)".printf (get_type_declaration ().get_cname ())));
+			add_class_private_call.add_argument (new CCodeIdentifier ("sizeof (%sClassPrivate)".printf (CCodeBaseModule.get_ccode_name (get_type_declaration ()))));
 			type_init.add_statement (new CCodeExpressionStatement (add_class_private_call));
 		}
 

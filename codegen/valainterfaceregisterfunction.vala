@@ -43,11 +43,11 @@ public class Vala.InterfaceRegisterFunction : TypeRegisterFunction {
 	}
 	
 	public override string get_type_struct_name () {
-		return interface_reference.get_type_cname ();
+		return CCodeBaseModule.get_ccode_type_name (interface_reference);
 	}
 
 	public override string get_base_init_func_name () {
-		return "%s_base_init".printf (interface_reference.get_lower_case_cname (null));
+		return "%s_base_init".printf (CCodeBaseModule.get_ccode_lower_case_name (interface_reference));
 	}
 
 	public override string get_class_finalize_func_name () {
@@ -84,8 +84,8 @@ public class Vala.InterfaceRegisterFunction : TypeRegisterFunction {
 			var prereq = prereq_ref.data_type;
 			
 			var func = new CCodeFunctionCall (new CCodeIdentifier ("g_type_interface_add_prerequisite"));
-			func.add_argument (new CCodeIdentifier ("%s_type_id".printf (interface_reference.get_lower_case_cname (null))));
-			func.add_argument (new CCodeIdentifier (prereq.get_type_id()));
+			func.add_argument (new CCodeIdentifier ("%s_type_id".printf (CCodeBaseModule.get_ccode_lower_case_name (interface_reference))));
+			func.add_argument (new CCodeIdentifier (CCodeBaseModule.get_ccode_type_id (prereq)));
 			
 			block.add_statement (new CCodeExpressionStatement (func));
 		}

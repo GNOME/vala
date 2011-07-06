@@ -42,10 +42,10 @@ public class Vala.DovaMethodCallModule : DovaAssignmentModule {
 			var cl = (Class) ((ObjectType) itype).type_symbol;
 			m = cl.default_construction_method;
 			generate_method_declaration (m, cfile);
-			ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_real_cname ()));
+			ccall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_real_name (m)));
 		} else if (itype is DelegateType) {
 			deleg = ((DelegateType) itype).delegate_symbol;
-			ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_invoke".printf (deleg.get_lower_case_cname ())));
+			ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_invoke".printf (get_ccode_lower_case_name (deleg))));
 			ccall.add_argument (get_cvalue (expr.call));
 		}
 
@@ -55,7 +55,7 @@ public class Vala.DovaMethodCallModule : DovaAssignmentModule {
 			if (cl == current_class) {
 				ccall.add_argument (new CCodeIdentifier ("this"));
 			} else {
-				ccall.add_argument (new CCodeCastExpression (new CCodeIdentifier ("this"), cl.get_cname () + "*"));
+				ccall.add_argument (new CCodeCastExpression (new CCodeIdentifier ("this"), get_ccode_name (cl) + "*"));
 			}
 		} else if (m != null) {
 			if (m.binding == MemberBinding.INSTANCE) {
@@ -90,7 +90,7 @@ public class Vala.DovaMethodCallModule : DovaAssignmentModule {
 				}
 
 				if (ma.inner is BaseAccess) {
-					ccall.add_argument (new CCodeFunctionCall (new CCodeIdentifier ("%s_type_get".printf (((Class) current_class.base_class).get_lower_case_cname ()))));
+					ccall.add_argument (new CCodeFunctionCall (new CCodeIdentifier ("%s_type_get".printf (get_ccode_lower_case_name (current_class.base_class)))));
 				}
 				ccall.add_argument (instance);
 			}
@@ -178,8 +178,8 @@ public class Vala.DovaMethodCallModule : DovaAssignmentModule {
 						ccall_expr = ccomma;
 					}
 
-					if (param.ctype != null) {
-						cexpr = new CCodeCastExpression (cexpr, param.ctype);
+					if (CCodeBaseModule.get_ccode_type (param) != null) {
+						cexpr = new CCodeCastExpression (cexpr, CCodeBaseModule.get_ccode_type (param));
 					}
 				}
 			}

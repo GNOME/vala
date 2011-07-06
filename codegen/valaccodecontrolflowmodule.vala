@@ -73,7 +73,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 				if (is_constant_ccode_expression (cexpr)) {
 					var cname = "_tmp%d_label%d".printf (label_temp_id, label_count++);
 
-					ccode.add_declaration (gquark_type.get_cname (), new CCodeVariableDeclarator (cname, czero), CCodeModifiers.STATIC);
+					ccode.add_declaration (get_ccode_name (gquark_type), new CCodeVariableDeclarator (cname, czero), CCodeModifiers.STATIC);
 				}
 			}
 		}

@@ -53,24 +53,24 @@ public class Vala.GObjectModule : GTypeModule {
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
 		ccall.add_argument (new CCodeIdentifier ("klass"));
 		if (class_has_readable_properties (cl) || cl.get_type_parameters ().size > 0) {
-			ccode.add_assignment (new CCodeMemberAccess.pointer (ccall, "get_property"), new CCodeIdentifier ("_vala_%s_get_property".printf (cl.get_lower_case_cname (null))));
+			ccode.add_assignment (new CCodeMemberAccess.pointer (ccall, "get_property"), new CCodeIdentifier ("_vala_%s_get_property".printf (get_ccode_lower_case_name (cl, null))));
 		}
 		if (class_has_writable_properties (cl) || cl.get_type_parameters ().size > 0) {
-			ccode.add_assignment (new CCodeMemberAccess.pointer (ccall, "set_property"), new CCodeIdentifier ("_vala_%s_set_property".printf (cl.get_lower_case_cname (null))));
+			ccode.add_assignment (new CCodeMemberAccess.pointer (ccall, "set_property"), new CCodeIdentifier ("_vala_%s_set_property".printf (get_ccode_lower_case_name (cl, null))));
 		}
 	
 		/* set constructor */
 		if (cl.constructor != null) {
 			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
 			ccast.add_argument (new CCodeIdentifier ("klass"));
-			ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, "constructor"), new CCodeIdentifier ("%s_constructor".printf (cl.get_lower_case_cname (null))));
+			ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, "constructor"), new CCodeIdentifier ("%s_constructor".printf (get_ccode_lower_case_name (cl, null))));
 		}
 
 		/* set finalize function */
 		if (cl.get_fields ().size > 0 || cl.destructor != null) {
 			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
 			ccast.add_argument (new CCodeIdentifier ("klass"));
-			ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, "finalize"), new CCodeIdentifier ("%s_finalize".printf (cl.get_lower_case_cname (null))));
+			ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, "finalize"), new CCodeIdentifier ("%s_finalize".printf (get_ccode_lower_case_name (cl, null))));
 		}
 
 		/* create type, dup_func, and destroy_func properties for generic types */
@@ -81,7 +81,7 @@ public class Vala.GObjectModule : GTypeModule {
 
 			func_name = "%s_type".printf (type_param.name.down ());
 			func_name_constant = new CCodeConstant ("\"%s-type\"".printf (type_param.name.down ()));
-			enum_value = "%s_%s".printf (cl.get_lower_case_cname (null), func_name).up ();
+			enum_value = "%s_%s".printf (get_ccode_lower_case_name (cl, null), func_name).up ();
 			cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_install_property"));
 			cinst.add_argument (ccall);
 			cinst.add_argument (new CCodeConstant (enum_value));
@@ -98,7 +98,7 @@ public class Vala.GObjectModule : GTypeModule {
 
 			func_name = "%s_dup_func".printf (type_param.name.down ());
 			func_name_constant = new CCodeConstant ("\"%s-dup-func\"".printf (type_param.name.down ()));
-			enum_value = "%s_%s".printf (cl.get_lower_case_cname (null), func_name).up ();
+			enum_value = "%s_%s".printf (get_ccode_lower_case_name (cl, null), func_name).up ();
 			cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_install_property"));
 			cinst.add_argument (ccall);
 			cinst.add_argument (new CCodeConstant (enum_value));
@@ -114,7 +114,7 @@ public class Vala.GObjectModule : GTypeModule {
 
 			func_name = "%s_destroy_func".printf (type_param.name.down ());
 			func_name_constant = new CCodeConstant ("\"%s-destroy-func\"".printf (type_param.name.down ()));
-			enum_value = "%s_%s".printf (cl.get_lower_case_cname (null), func_name).up ();
+			enum_value = "%s_%s".printf (get_ccode_lower_case_name (cl, null), func_name).up ();
 			cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_install_property"));
 			cinst.add_argument (ccall);
 			cinst.add_argument (new CCodeConstant (enum_value));
@@ -142,14 +142,14 @@ public class Vala.GObjectModule : GTypeModule {
 			if (prop.overrides || prop.base_interface_property != null) {
 				var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_override_property"));
 				cinst.add_argument (ccall);
-				cinst.add_argument (new CCodeConstant (prop.get_upper_case_cname ()));
-				cinst.add_argument (prop.get_canonical_cconstant ());
+				cinst.add_argument (new CCodeConstant (get_ccode_upper_case_name (prop)));
+				cinst.add_argument (get_property_canonical_cconstant (prop));
 			
 				ccode.add_expression (cinst);
 			} else {
 				var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_install_property"));
 				cinst.add_argument (ccall);
-				cinst.add_argument (new CCodeConstant (prop.get_upper_case_cname ()));
+				cinst.add_argument (new CCodeConstant (get_ccode_upper_case_name (prop)));
 				cinst.add_argument (get_param_spec (prop));
 			
 				ccode.add_expression (cinst);
@@ -176,7 +176,7 @@ public class Vala.GObjectModule : GTypeModule {
 	}
 
 	private void add_get_property_function (Class cl) {
-		var get_prop = new CCodeFunction ("_vala_%s_get_property".printf (cl.get_lower_case_cname (null)), "void");
+		var get_prop = new CCodeFunction ("_vala_%s_get_property".printf (get_ccode_lower_case_name (cl, null)), "void");
 		get_prop.modifiers = CCodeModifiers.STATIC;
 		get_prop.add_parameter (new CCodeParameter ("object", "GObject *"));
 		get_prop.add_parameter (new CCodeParameter ("property_id", "guint"));
@@ -186,7 +186,7 @@ public class Vala.GObjectModule : GTypeModule {
 		push_function (get_prop);
 		
 		CCodeFunctionCall ccall = generate_instance_cast (new CCodeIdentifier ("object"), cl);
-		ccode.add_declaration ("%s *".printf (cl.get_cname ()), new CCodeVariableDeclarator ("self", ccall));
+		ccode.add_declaration ("%s *".printf (get_ccode_name (cl)), new CCodeVariableDeclarator ("self", ccall));
 
 		ccode.open_switch (new CCodeIdentifier ("property_id"));
 		var props = cl.get_properties ();
@@ -215,14 +215,14 @@ public class Vala.GObjectModule : GTypeModule {
 				generate_property_accessor_declaration (prop.base_interface_property.get_accessor, cfile);
 			}
 
-			ccode.add_case (new CCodeIdentifier (prop.get_upper_case_cname ()));
+			ccode.add_case (new CCodeIdentifier (get_ccode_upper_case_name (prop)));
 			if (prop.property_type.is_real_struct_type ()) {
 				var st = prop.property_type.data_type as Struct;
 
 				ccode.open_block ();
-				ccode.add_declaration (st.get_cname (), new CCodeVariableDeclarator ("boxed"));
+				ccode.add_declaration (get_ccode_name (st), new CCodeVariableDeclarator ("boxed"));
 
-				ccall = new CCodeFunctionCall (new CCodeIdentifier (base_prop.get_accessor.get_cname ()));
+				ccall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_name (base_prop.get_accessor)));
 				ccall.add_argument (cself);
 				var boxed_addr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("boxed"));
 				ccall.add_argument (boxed_addr);
@@ -239,7 +239,7 @@ public class Vala.GObjectModule : GTypeModule {
 				}
 				ccode.close ();
 			} else {
-				ccall = new CCodeFunctionCall (new CCodeIdentifier (base_prop.get_accessor.get_cname ()));
+				ccall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_name (base_prop.get_accessor)));
 				ccall.add_argument (cself);
 				var array_type = prop.property_type as ArrayType;
 				if (array_type != null && array_type.element_type.data_type == string_type.data_type) {
@@ -276,7 +276,7 @@ public class Vala.GObjectModule : GTypeModule {
 	}
 	
 	private void add_set_property_function (Class cl) {
-		var set_prop = new CCodeFunction ("_vala_%s_set_property".printf (cl.get_lower_case_cname (null)), "void");
+		var set_prop = new CCodeFunction ("_vala_%s_set_property".printf (get_ccode_lower_case_name (cl, null)), "void");
 		set_prop.modifiers = CCodeModifiers.STATIC;
 		set_prop.add_parameter (new CCodeParameter ("object", "GObject *"));
 		set_prop.add_parameter (new CCodeParameter ("property_id", "guint"));
@@ -286,7 +286,7 @@ public class Vala.GObjectModule : GTypeModule {
 		push_function (set_prop);
 		
 		CCodeFunctionCall ccall = generate_instance_cast (new CCodeIdentifier ("object"), cl);
-		ccode.add_declaration ("%s *".printf (cl.get_cname ()), new CCodeVariableDeclarator ("self", ccall));
+		ccode.add_declaration ("%s *".printf (get_ccode_name (cl)), new CCodeVariableDeclarator ("self", ccall));
 
 		ccode.open_switch (new CCodeIdentifier ("property_id"));
 		var props = cl.get_properties ();
@@ -314,8 +314,8 @@ public class Vala.GObjectModule : GTypeModule {
 				generate_property_accessor_declaration (prop.base_interface_property.set_accessor, cfile);
 			}
 
-			ccode.add_case (new CCodeIdentifier (prop.get_upper_case_cname ()));
-			ccall = new CCodeFunctionCall (new CCodeIdentifier (base_prop.set_accessor.get_cname ()));
+			ccode.add_case (new CCodeIdentifier (get_ccode_upper_case_name (prop)));
+			ccall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_name (base_prop.set_accessor)));
 			ccall.add_argument (cself);
 			if (prop.property_type is ArrayType && ((ArrayType)prop.property_type).element_type.data_type == string_type.data_type) {
 				ccode.open_block ();
@@ -334,7 +334,7 @@ public class Vala.GObjectModule : GTypeModule {
 			} else {
 				var cgetcall = new CCodeFunctionCall ();
 				if (prop.property_type.data_type != null) {
-					cgetcall.call = new CCodeIdentifier (prop.property_type.data_type.get_get_value_function ());
+					cgetcall.call = new CCodeIdentifier (get_ccode_get_value_function (prop.property_type.data_type));
 				} else {
 					cgetcall.call = new CCodeIdentifier ("g_value_get_pointer");
 				}
@@ -352,7 +352,7 @@ public class Vala.GObjectModule : GTypeModule {
 			CCodeFunctionCall cgetcall;
 
 			func_name = "%s_type".printf (type_param.name.down ());
-			enum_value = "%s_%s".printf (cl.get_lower_case_cname (null), func_name).up ();
+			enum_value = "%s_%s".printf (get_ccode_lower_case_name (cl, null), func_name).up ();
 			ccode.add_case (new CCodeIdentifier (enum_value));
 			cfield = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
 			cgetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_get_gtype"));
@@ -361,7 +361,7 @@ public class Vala.GObjectModule : GTypeModule {
 			ccode.add_break ();
 
 			func_name = "%s_dup_func".printf (type_param.name.down ());
-			enum_value = "%s_%s".printf (cl.get_lower_case_cname (null), func_name).up ();
+			enum_value = "%s_%s".printf (get_ccode_lower_case_name (cl, null), func_name).up ();
 			ccode.add_case (new CCodeIdentifier (enum_value));
 			cfield = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
 			cgetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_get_pointer"));
@@ -370,7 +370,7 @@ public class Vala.GObjectModule : GTypeModule {
 			ccode.add_break ();
 
 			func_name = "%s_destroy_func".printf (type_param.name.down ());
-			enum_value = "%s_%s".printf (cl.get_lower_case_cname (null), func_name).up ();
+			enum_value = "%s_%s".printf (get_ccode_lower_case_name (cl, null), func_name).up ();
 			ccode.add_case (new CCodeIdentifier (enum_value));
 			cfield = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
 			cgetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_get_pointer"));
@@ -419,7 +419,7 @@ public class Vala.GObjectModule : GTypeModule {
 
 			push_context (new EmitContext (c));
 
-			var function = new CCodeFunction ("%s_constructor".printf (cl.get_lower_case_cname (null)), "GObject *");
+			var function = new CCodeFunction ("%s_constructor".printf (get_ccode_lower_case_name (cl, null)), "GObject *");
 			function.modifiers = CCodeModifiers.STATIC;
 		
 			function.add_parameter (new CCodeParameter ("type", "GType"));
@@ -434,7 +434,7 @@ public class Vala.GObjectModule : GTypeModule {
 			ccode.add_declaration ("GObjectClass *", new CCodeVariableDeclarator ("parent_class"));
 
 			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
-			ccast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (cl.get_lower_case_cname (null))));
+			ccast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (get_ccode_lower_case_name (cl, null))));
 			ccode.add_assignment (new CCodeIdentifier ("parent_class"), ccast);
 
 			var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (new CCodeIdentifier ("parent_class"), "constructor"));
@@ -446,7 +446,7 @@ public class Vala.GObjectModule : GTypeModule {
 
 			ccall = generate_instance_cast (new CCodeIdentifier ("obj"), cl);
 
-			ccode.add_declaration ("%s *".printf (cl.get_cname ()), new CCodeVariableDeclarator ("self"));
+			ccode.add_declaration ("%s *".printf (get_ccode_name (cl)), new CCodeVariableDeclarator ("self"));
 			ccode.add_assignment (new CCodeIdentifier ("self"), ccall);
 
 			c.body.emit (this);
@@ -526,18 +526,18 @@ public class Vala.GObjectModule : GTypeModule {
 
 		string getter_cname = "_dynamic_get_%s%d".printf (prop.name, dynamic_property_id++);
 
-		var func = new CCodeFunction (getter_cname, prop.property_type.get_cname ());
+		var func = new CCodeFunction (getter_cname, get_ccode_name (prop.property_type));
 		func.modifiers |= CCodeModifiers.STATIC | CCodeModifiers.INLINE;
 
-		func.add_parameter (new CCodeParameter ("obj", prop.dynamic_type.get_cname ()));
+		func.add_parameter (new CCodeParameter ("obj", get_ccode_name (prop.dynamic_type)));
 
 		push_function (func);
 
-		ccode.add_declaration (prop.property_type.get_cname (), new CCodeVariableDeclarator ("result"));
+		ccode.add_declaration (get_ccode_name (prop.property_type), new CCodeVariableDeclarator ("result"));
 
 		var call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_get"));
 		call.add_argument (new CCodeIdentifier ("obj"));
-		call.add_argument (prop.get_canonical_cconstant ());
+		call.add_argument (get_property_canonical_cconstant (prop));
 		call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("result")));
 		call.add_argument (new CCodeConstant ("NULL"));
 
@@ -564,14 +564,14 @@ public class Vala.GObjectModule : GTypeModule {
 
 		var func = new CCodeFunction (setter_cname, "void");
 		func.modifiers |= CCodeModifiers.STATIC | CCodeModifiers.INLINE;
-		func.add_parameter (new CCodeParameter ("obj", prop.dynamic_type.get_cname ()));
-		func.add_parameter (new CCodeParameter ("value", prop.property_type.get_cname ()));
+		func.add_parameter (new CCodeParameter ("obj", get_ccode_name (prop.dynamic_type)));
+		func.add_parameter (new CCodeParameter ("value", get_ccode_name (prop.property_type)));
 
 		push_function (func);
 
 		var call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_set"));
 		call.add_argument (new CCodeIdentifier ("obj"));
-		call.add_argument (prop.get_canonical_cconstant ());
+		call.add_argument (get_property_canonical_cconstant (prop));
 		call.add_argument (new CCodeIdentifier ("value"));
 		call.add_argument (new CCodeConstant ("NULL"));
 
@@ -670,7 +670,7 @@ public class Vala.GObjectModule : GTypeModule {
 		base.visit_property (prop);
 
 		if (is_gobject_property (prop) && prop.parent_symbol is Class) {
-			prop_enum.add_value (new CCodeEnumValue (prop.get_upper_case_cname ()));
+			prop_enum.add_value (new CCodeEnumValue (get_ccode_upper_case_name (prop)));
 		}
 	}
 
@@ -689,7 +689,7 @@ public class Vala.GObjectModule : GTypeModule {
 		}
 
 		var st = prop.property_type.data_type as Struct;
-		if (st != null && (!st.has_type_id || prop.property_type.nullable)) {
+		if (st != null && (!get_ccode_has_type_id (st) || prop.property_type.nullable)) {
 			return false;
 		}
 

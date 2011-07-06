@@ -333,7 +333,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 		}
 		if (sym.external_package || (!decl_space.is_header && CodeContext.get ().use_header && !sym.is_internal_symbol ())) {
 			// add appropriate include file
-			foreach (string header_filename in sym.get_cheader_filenames ()) {
+			foreach (string header_filename in CCodeBaseModule.get_ccode_header_filenames (sym).split (",")) {
 				decl_space.add_include (header_filename, !sym.external_package);
 			}
 			// declaration complete
@@ -364,18 +364,18 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 	}
 
 	public void generate_enum_declaration (Enum en, CCodeFile decl_space) {
-		if (add_symbol_declaration (decl_space, en, en.get_cname ())) {
+		if (add_symbol_declaration (decl_space, en, get_ccode_name (en))) {
 			return;
 		}
 
-		var cenum = new CCodeEnum (en.get_cname ());
+		var cenum = new CCodeEnum (get_ccode_name (en));
 
 		foreach (EnumValue ev in en.get_values ()) {
 			if (ev.value == null) {
-				cenum.add_value (new CCodeEnumValue (ev.get_cname ()));
+				cenum.add_value (new CCodeEnumValue (get_ccode_name (ev)));
 			} else {
 				ev.value.emit (this);
-				cenum.add_value (new CCodeEnumValue (ev.get_cname (), get_cvalue (ev.value)));
+				cenum.add_value (new CCodeEnumValue (get_ccode_name (ev), get_cvalue (ev.value)));
 			}
 		}
 
@@ -394,7 +394,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 	}
 
 	public void generate_constant_declaration (Constant c, CCodeFile decl_space) {
-		if (add_symbol_declaration (decl_space, c, c.get_cname ())) {
+		if (add_symbol_declaration (decl_space, c, get_ccode_name (c))) {
 			return;
 		}
 
@@ -402,17 +402,17 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 			c.value.emit (this);
 
 			if (c.value is InitializerList) {
-				var cdecl = new CCodeDeclaration (c.type_reference.get_const_cname ());
+				var cdecl = new CCodeDeclaration (get_ccode_const_name (c.type_reference));
 				var arr = "";
 				if (c.type_reference is ArrayType) {
 					arr = "[]";
 				}
-				cdecl.add_declarator (new CCodeVariableDeclarator ("%s%s".printf (c.get_cname (), arr), get_cvalue (c.value)));
+				cdecl.add_declarator (new CCodeVariableDeclarator ("%s%s".printf (get_ccode_name (c), arr), get_cvalue (c.value)));
 				cdecl.modifiers = CCodeModifiers.STATIC;
 
 				decl_space.add_constant_declaration (cdecl);
 			} else {
-				var cdefine = new CCodeMacroReplacement.with_expression (c.get_cname (), get_cvalue (c.value));
+				var cdefine = new CCodeMacroReplacement.with_expression (get_ccode_name (c), get_cvalue (c.value));
 				decl_space.add_type_member_declaration (cdefine);
 			}
 		}
@@ -427,19 +427,19 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 	}
 
 	public void generate_field_declaration (Field f, CCodeFile decl_space) {
-		if (add_symbol_declaration (decl_space, f, f.get_cname ())) {
+		if (add_symbol_declaration (decl_space, f, get_ccode_name (f))) {
 			return;
 		}
 
 		generate_type_declaration (f.variable_type, decl_space);
 
-		string field_ctype = f.variable_type.get_cname ();
+		string field_ctype = get_ccode_name (f.variable_type);
 		if (f.is_volatile) {
 			field_ctype = "volatile " + field_ctype;
 		}
 
 		var cdecl = new CCodeDeclaration (field_ctype);
-		cdecl.add_declarator (new CCodeVariableDeclarator (f.get_cname ()));
+		cdecl.add_declarator (new CCodeVariableDeclarator (get_ccode_name (f)));
 		if (f.is_internal_symbol ()) {
 			cdecl.modifiers = CCodeModifiers.STATIC;
 		} else {
@@ -461,14 +461,14 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 				generate_field_declaration (f, header_file);
 			}
 
-			var var_decl = new CCodeVariableDeclarator (f.get_cname ());
+			var var_decl = new CCodeVariableDeclarator (get_ccode_name (f));
 			var_decl.initializer = default_value_for_type (f.variable_type, true);
 
 			if (f.initializer != null) {
 				static_fields.add (f);
 			}
 
-			string field_ctype = f.variable_type.get_cname ();
+			string field_ctype = get_ccode_name (f.variable_type);
 			if (f.is_volatile) {
 				field_ctype = "volatile " + field_ctype;
 			}
@@ -612,7 +612,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 
 		var param_type = param.variable_type.copy ();
 		param_type.value_owned = true;
-		data.add_field (param_type.get_cname (), get_variable_cname (param.name));
+		data.add_field (get_ccode_name (param_type), get_variable_cname (param.name));
 
 		// create copy if necessary as captured variables may need to be kept alive
 		CCodeExpression cparam = get_variable_cexpression (param.name);
@@ -666,7 +666,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 				free_block.add_statement (new CCodeExpressionStatement (unref_call));
 			} else if ((current_method != null && current_method.binding == MemberBinding.INSTANCE) ||
 			           (current_property_accessor != null && current_property_accessor.prop.binding == MemberBinding.INSTANCE)) {
-				data.add_field ("%s *".printf (current_class.get_cname ()), "this");
+				data.add_field ("%s *".printf (get_ccode_name (current_class)), "this");
 
 				var ma = new MemberAccess.simple ("this");
 				ma.symbol_reference = current_class;
@@ -676,7 +676,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 				if (local.captured) {
 					generate_type_declaration (local.variable_type, cfile);
 
-					data.add_field (local.variable_type.get_cname (), get_variable_cname (local.name) + local.variable_type.get_cdeclarator_suffix ());
+					data.add_field (get_ccode_name (local.variable_type), get_variable_cname (local.name) + local.variable_type.get_cdeclarator_suffix ());
 				}
 			}
 			// free in reverse order
@@ -870,7 +870,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 		} else {
 			var cvar = new CCodeVariableDeclarator (get_variable_cname (local.name), rhs, local.variable_type.get_cdeclarator_suffix ());
 
-			var cdecl = new CCodeDeclaration (local.variable_type.get_cname ());
+			var cdecl = new CCodeDeclaration (get_ccode_name (local.variable_type));
 			cdecl.add_declarator (cvar);
 			ccode.add_statement (cdecl);
 
@@ -960,13 +960,13 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 	public CCodeExpression get_type_private_from_type (ObjectTypeSymbol type_symbol, CCodeExpression type_expression) {
 		if (type_symbol is Class) {
 			// class
-			return new CCodeCastExpression (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeCastExpression (type_expression, "char *"), new CCodeIdentifier ("_%s_type_offset".printf (((Class) type_symbol).get_lower_case_cname ()))), "%sTypePrivate *".printf (((Class) type_symbol).get_cname ()));
+			return new CCodeCastExpression (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeCastExpression (type_expression, "char *"), new CCodeIdentifier ("_%s_type_offset".printf (CCodeBaseModule.get_ccode_lower_case_name (type_symbol)))), "%sTypePrivate *".printf (get_ccode_name (type_symbol)));
 		} else {
 			// interface
 			var get_interface = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_get_interface"));
 			get_interface.add_argument (type_expression);
-			get_interface.add_argument (new CCodeIdentifier ("%s_type".printf (((Interface) type_symbol).get_lower_case_cname ())));
-			return new CCodeCastExpression (get_interface, "%sTypePrivate *".printf (((Interface) type_symbol).get_cname ()));
+			get_interface.add_argument (new CCodeIdentifier ("%s_type".printf (get_ccode_lower_case_name (type_symbol))));
+			return new CCodeCastExpression (get_interface, "%sTypePrivate *".printf (CCodeBaseModule.get_ccode_name (type_symbol)));
 		}
 	}
 
@@ -979,7 +979,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 				return new CCodeIdentifier (var_name);
 			}
 		} else {
-			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_type_get".printf (type.data_type.get_lower_case_cname ())));
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_type_get".printf (CCodeBaseModule.get_ccode_lower_case_name (type.data_type))));
 			var object_type_symbol = type.data_type as ObjectTypeSymbol;
 			if (object_type_symbol != null) {
 				for (int i = 0; i < object_type_symbol.get_type_parameters ().size; i++) {
@@ -997,10 +997,10 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 	public virtual CCodeExpression? get_dup_func_expression (DataType type, SourceReference? source_reference, bool is_chainup = false) {
 		if (type.data_type != null) {
 			string dup_function = "";
-			if (type.data_type.is_reference_counting ()) {
-				dup_function = type.data_type.get_ref_function ();
+			if (is_reference_counting (type.data_type)) {
+				dup_function = get_ccode_ref_function (type.data_type);
 			} else if (type is ValueType) {
-				dup_function = type.data_type.get_dup_function ();
+				dup_function = get_ccode_dup_function (type.data_type);
 				if (dup_function == null) {
 					dup_function = "";
 				}
@@ -1025,20 +1025,20 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 		if (type.data_type != null) {
 			string unref_function;
 			if (type is ReferenceType) {
-				if (type.data_type.is_reference_counting ()) {
-					unref_function = type.data_type.get_unref_function ();
+				if (is_reference_counting (type.data_type)) {
+					unref_function = get_ccode_unref_function ((ObjectTypeSymbol) type.data_type);
 				} else {
-					unref_function = type.data_type.get_free_function ();
+					unref_function = get_ccode_free_function (type.data_type);
 				}
 			} else {
 				if (type.nullable) {
-					unref_function = type.data_type.get_free_function ();
+					unref_function = get_ccode_free_function (type.data_type);
 					if (unref_function == null) {
 						unref_function = "free";
 					}
 				} else {
 					var st = (Struct) type.data_type;
-					unref_function = st.get_copy_function ();
+					unref_function = get_ccode_copy_function (st);
 				}
 			}
 			if (unref_function == null) {
@@ -1149,7 +1149,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 	}
 
 	public void emit_temp_var (LocalVariable local) {
-		var cdecl = new CCodeDeclaration (local.variable_type.get_cname ());
+		var cdecl = new CCodeDeclaration (get_ccode_name (local.variable_type));
 
 		var vardecl = new CCodeVariableDeclarator (local.name, null, local.variable_type.get_cdeclarator_suffix ());
 		cdecl.add_declarator (vardecl);
@@ -1359,7 +1359,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 
 	public override void visit_base_access (BaseAccess expr) {
 		generate_type_declaration (expr.value_type, cfile);
-		set_cvalue (expr, new CCodeCastExpression (new CCodeIdentifier ("this"), expr.value_type.get_cname ()));
+		set_cvalue (expr, new CCodeCastExpression (new CCodeIdentifier ("this"), get_ccode_name (expr.value_type)));
 	}
 
 	public override void visit_postfix_expression (PostfixExpression expr) {
@@ -1407,8 +1407,8 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 		}
 
 		var cl = type.data_type as Class;
-		if (cl != null && cl.is_reference_counting ()
-		    && cl.get_ref_function () == "") {
+		if (cl != null && is_reference_counting (cl)
+		    && get_ccode_ref_function (cl) == "") {
 			// empty ref_function => no ref necessary
 			return false;
 		}
@@ -1431,8 +1431,8 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 		}
 
 		var cl = type.data_type as Class;
-		if (cl != null && cl.is_reference_counting ()
-		    && cl.get_unref_function () == "") {
+		if (cl != null && is_reference_counting (cl)
+		    && get_ccode_unref_function (cl) == "") {
 			// empty unref_function => no unref necessary
 			return false;
 		}
@@ -1446,7 +1446,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 
 	bool is_ref_function_void (DataType type) {
 		var cl = type.data_type as Class;
-		if (cl != null && cl.ref_function_void) {
+		if (cl != null && get_ccode_ref_function_void (cl)) {
 			return true;
 		} else {
 			return false;
@@ -1465,7 +1465,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 
 			var vt = (ValueType) expression_type;
 			var st = (Struct) vt.type_symbol;
-			var copy_call = new CCodeFunctionCall (new CCodeIdentifier (st.get_copy_function ()));
+			var copy_call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_copy_function (st)));
 			copy_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
 			copy_call.add_argument (new CCodeConstant ("0"));
 			copy_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr));
@@ -1533,7 +1533,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 	}
 
 	public virtual void generate_class_declaration (Class cl, CCodeFile decl_space) {
-		if (add_symbol_declaration (decl_space, cl, cl.get_cname ())) {
+		if (add_symbol_declaration (decl_space, cl, get_ccode_name (cl))) {
 			return;
 		}
 	}
@@ -1575,7 +1575,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 				var creation_call = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
 				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance));
 				creation_call.add_argument (new CCodeConstant ("0"));
-				creation_call.add_argument (new CCodeIdentifier ("sizeof (%s)".printf (expr.type_reference.get_cname ())));
+				creation_call.add_argument (new CCodeIdentifier ("sizeof (%s)".printf (get_ccode_name (expr.type_reference))));
 
 				creation_expr = creation_call;
 			}
@@ -1589,15 +1589,15 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 
 			var cl = expr.type_reference.data_type as Class;
 
-			if (!m.has_new_function) {
+			if (!CCodeBaseModule.get_ccode_has_new_function (m)) {
 				// use construct function directly
-				creation_call = new CCodeFunctionCall (new CCodeIdentifier (m.get_real_cname ()));
-				creation_call.add_argument (new CCodeIdentifier (cl.get_type_id ()));
+				creation_call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_real_name (m)));
+				creation_call.add_argument (new CCodeIdentifier (CCodeBaseModule.get_ccode_type_id (cl)));
 			} else {
-				creation_call = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname ()));
+				creation_call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_name (m)));
 			}
 
-			if (struct_by_ref && !(m.cinstance_parameter_position < 0)) {
+			if (struct_by_ref && !(get_ccode_instance_pos (m) < 0)) {
 				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance));
 			}
 
@@ -1648,7 +1648,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 				i++;
 			}
 
-			if (struct_by_ref && m.cinstance_parameter_position < 0) {
+			if (struct_by_ref && get_ccode_instance_pos (m) < 0) {
 				// instance parameter is at the end in a struct creation method
 				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance));
 			}
@@ -1656,8 +1656,8 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 			if (ellipsis) {
 				/* ensure variable argument list ends with NULL
 				 * except when using printf-style arguments */
-				if (!m.printf_format && !m.scanf_format && m.sentinel != "") {
-					creation_call.add_argument (new CCodeConstant (m.sentinel));
+				if (!m.printf_format && !m.scanf_format && get_ccode_sentinel (m) != "") {
+					creation_call.add_argument (new CCodeConstant (get_ccode_sentinel (m)));
 				}
 			}
 
@@ -1666,7 +1666,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 			// cast the return value of the creation method back to the intended type if
 			// it requested a special C return type
 			if (get_custom_creturn_type (m) != null) {
-				creation_expr = new CCodeCastExpression (creation_expr, expr.type_reference.get_cname ());
+				creation_expr = new CCodeCastExpression (creation_expr, get_ccode_name (expr.type_reference));
 			}
 		} else {
 			assert (false);
@@ -1686,9 +1686,9 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 					var typed_inst = transform_expression (instance, expr.type_reference, instance_target_type);
 					CCodeExpression lhs;
 					if (expr.type_reference.data_type is Struct) {
-						lhs = new CCodeMemberAccess (typed_inst, f.get_cname ());
+						lhs = new CCodeMemberAccess (typed_inst, get_ccode_name (f));
 					} else {
-						lhs = new CCodeMemberAccess.pointer (typed_inst, f.get_cname ());
+						lhs = new CCodeMemberAccess.pointer (typed_inst, get_ccode_name (f));
 					}
 					ccode.add_assignment (lhs, get_cvalue (init.initializer));
 				} else if (init.symbol_reference is Property) {
@@ -1743,7 +1743,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 
 	public override void visit_sizeof_expression (SizeofExpression expr) {
 		var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
-		csizeof.add_argument (new CCodeIdentifier (expr.type_reference.get_cname ()));
+		csizeof.add_argument (new CCodeIdentifier (get_ccode_name (expr.type_reference)));
 		set_cvalue (expr, csizeof);
 	}
 
@@ -1786,7 +1786,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 				var ctemp = get_variable_cexpression (temp_decl.name);
 				var cinit = new CCodeAssignment (ctemp, get_cvalue (expr.inner));
 				var ccheck = create_type_check (ctemp, expr.type_reference);
-				var ccast = new CCodeCastExpression (ctemp, expr.type_reference.get_cname ());
+				var ccast = new CCodeCastExpression (ctemp, get_ccode_name (expr.type_reference));
 				var cnull = new CCodeConstant ("NULL");
 
 				ccomma.append_expression (cinit);
@@ -1826,7 +1826,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 			var ccomma = new CCodeCommaExpression ();
 
 			var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
-			sizeof_call.add_argument (new CCodeIdentifier (expr.type_reference.get_cname ()));
+			sizeof_call.add_argument (new CCodeIdentifier (get_ccode_name (expr.type_reference)));
 
 			var to_any  = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_value_from_any"));
 			to_any.add_argument (get_type_id_expression (expr.type_reference));
@@ -1853,9 +1853,9 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 
 		if (expr.inner.value_type is GenericType && !(expr.type_reference is GenericType)) {
 			// generic types use an extra pointer, dereference that pointer
-			set_cvalue (expr, new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeCastExpression (get_cvalue (expr.inner), expr.type_reference.get_cname () + "*")));
+			set_cvalue (expr, new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeCastExpression (get_cvalue (expr.inner), get_ccode_name (expr.type_reference) + "*")));
 		} else {
-			set_cvalue (expr, new CCodeCastExpression (get_cvalue (expr.inner), expr.type_reference.get_cname ()));
+			set_cvalue (expr, new CCodeCastExpression (get_cvalue (expr.inner), get_ccode_name (expr.type_reference)));
 		}
 	}
 
@@ -1979,13 +1979,9 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 	}
 
 	public override void visit_lambda_expression (LambdaExpression l) {
-		// use instance position from delegate
-		var dt = (DelegateType) l.target_type;
-		l.method.cinstance_parameter_position = dt.delegate_symbol.cinstance_parameter_position;
-
 		l.accept_children (this);
 
-		set_cvalue (l, new CCodeIdentifier (l.method.get_cname ()));
+		set_cvalue (l, new CCodeIdentifier (get_ccode_name (l.method)));
 	}
 
 	// manage memory and implicit casts
@@ -2117,9 +2113,9 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 			foreach (Parameter param in d.get_parameters ()) {
 				method_param_iter.next ();
 				var method_param = method_param_iter.get ();
-				string ctype = param.variable_type.get_cname ();
+				string ctype = get_ccode_name (param.variable_type);
 				if (param.variable_type is GenericType && !(method_param.variable_type is GenericType)) {
-					ctype = method_param.variable_type.get_cname () + "*";
+					ctype = get_ccode_name (method_param.variable_type) + "*";
 					call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (param.name)));
 				} else if (!(param.variable_type is GenericType) && method_param.variable_type is GenericType) {
 					call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
@@ -2136,11 +2132,11 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 			} else {
 				var method_return_type = method_type.method_symbol.return_type;
 				if (d.return_type is GenericType && !(method_return_type is GenericType)) {
-					wrapper.add_parameter (new CCodeParameter ("result", method_return_type.get_cname () + "*"));
+					wrapper.add_parameter (new CCodeParameter ("result", get_ccode_name (method_return_type) + "*"));
 					wrapper.block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result")), call)));
 				} else if (!(d.return_type is GenericType) && method_return_type is GenericType) {
-					wrapper.return_type = d.return_type.get_cname ();
-					var cdecl = new CCodeDeclaration (d.return_type.get_cname ());
+					wrapper.return_type = get_ccode_name (d.return_type);
+					var cdecl = new CCodeDeclaration (get_ccode_name (d.return_type));
 					cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
 					call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("result")));
 					wrapper.block.add_statement (new CCodeExpressionStatement (call));
@@ -2149,14 +2145,14 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 					wrapper.add_parameter (new CCodeParameter ("result", "void *"));
 					wrapper.block.add_statement (new CCodeExpressionStatement (call));
 				} else {
-					wrapper.return_type = d.return_type.get_cname ();
+					wrapper.return_type = get_ccode_name (d.return_type);
 					wrapper.block.add_statement (new CCodeReturnStatement (call));
 				}
 			}
 
 			cfile.add_function (wrapper);
 
-			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_new".printf (deleg_type.delegate_symbol.get_lower_case_cname ())));
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_new".printf (get_ccode_lower_case_name (deleg_type.delegate_symbol))));
 			ccall.add_argument (delegate_target);
 			ccall.add_argument (new CCodeIdentifier (wrapper_name));
 			return ccall;
@@ -2167,11 +2163,11 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 		if (context.checking && (iface != null || (cl != null && !cl.is_compact))) {
 			// checked cast for strict subtypes of GTypeInstance
 			return generate_instance_cast (cexpr, target_type.data_type);
-		} else if (target_type.data_type != null && expression_type.get_cname () != target_type.get_cname ()) {
+		} else if (target_type.data_type != null && get_ccode_name (expression_type) != get_ccode_name (target_type)) {
 			var st = target_type.data_type as Struct;
 			if (target_type.data_type.is_reference_type () || (st != null && st.is_simple_type ())) {
 				// don't cast non-simple structs
-				return new CCodeCastExpression (cexpr, target_type.get_cname ());
+				return new CCodeCastExpression (cexpr, get_ccode_name (target_type));
 			} else {
 				return cexpr;
 			}
@@ -2191,7 +2187,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 		}
 
 		generate_property_accessor_declaration (base_property.set_accessor, cfile);
-		set_func = base_property.set_accessor.get_cname ();
+		set_func = get_ccode_name (base_property.set_accessor);
 
 		if (!prop.external && prop.external_package) {
 			// internal VAPI properties
@@ -2273,8 +2269,8 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 		           || type.nullable
 		           || type is PointerType || type is DelegateType) {
 			return new CCodeConstant ("NULL");
-		} else if (type.data_type != null && type.data_type.get_default_value () != null) {
-			return new CCodeConstant (type.data_type.get_default_value ());
+		} else if (type.data_type != null && get_ccode_default_value (type.data_type) != "") {
+			return new CCodeConstant (get_ccode_default_value (type.data_type));
 		}
 		return null;
 	}
@@ -2284,6 +2280,74 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 			node.emit (this);
 		}
 		return get_cvalue (node);
+	}
+
+	public string get_ccode_name (CodeNode node) {
+		return CCodeBaseModule.get_ccode_name (node);
+	}
+
+	public string get_ccode_const_name (CodeNode node) {
+		return CCodeBaseModule.get_ccode_const_name (node);
+	}
+
+	public string get_ccode_copy_function (TypeSymbol node) {
+		return CCodeBaseModule.get_ccode_copy_function (node);
+	}
+
+	public string get_ccode_dup_function (TypeSymbol node) {
+		return CCodeBaseModule.get_ccode_dup_function (node);
+	}
+
+	public string get_ccode_ref_function (TypeSymbol node) {
+		return CCodeBaseModule.get_ccode_ref_function (node);
+	}
+
+	public string get_ccode_unref_function (ObjectTypeSymbol node) {
+		return CCodeBaseModule.get_ccode_unref_function (node);
+	}
+
+	public string get_ccode_free_function (TypeSymbol node) {
+		return CCodeBaseModule.get_ccode_free_function (node);
+	}
+
+	public bool is_reference_counting (TypeSymbol node) {
+		return CCodeBaseModule.is_reference_counting (node);
+	}
+
+	public bool get_ccode_ref_function_void (Class node) {
+		return CCodeBaseModule.get_ccode_ref_function_void (node);
+	}
+
+	public string get_ccode_default_value (TypeSymbol node) {
+		return CCodeBaseModule.get_ccode_default_value (node);
+	}
+
+	public string get_ccode_real_name (Method node) {
+		return CCodeBaseModule.get_ccode_real_name (node);
+	}
+
+	public string get_ccode_lower_case_name (CodeNode node, string? infix = null) {
+		return CCodeBaseModule.get_ccode_lower_case_name (node, infix);
+	}
+
+	public string get_ccode_upper_case_name (Symbol node, string? infix = null) {
+		return CCodeBaseModule.get_ccode_upper_case_name (node, infix);
+	}
+
+	public string get_ccode_lower_case_prefix (Symbol node) {
+		return CCodeBaseModule.get_ccode_lower_case_prefix (node);
+	}
+
+	public double get_ccode_instance_pos (CodeNode node) {
+		return CCodeBaseModule.get_ccode_instance_pos (node);
+	}
+
+	public string get_ccode_vfunc_name (Method node) {
+		return CCodeBaseModule.get_ccode_vfunc_name (node);
+	}
+
+	public string get_ccode_sentinel (Method m) {
+		return CCodeBaseModule.get_ccode_sentinel (m);
 	}
 
 	public DataType? get_this_type () {
@@ -2296,7 +2360,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 	}
 
 	public CCodeExpression generate_instance_cast (CCodeExpression expr, TypeSymbol type) {
-		return new CCodeCastExpression (expr, type.get_cname () + "*");
+		return new CCodeCastExpression (expr, get_ccode_name (type) + "*");
 	}
 
 	public virtual string? get_custom_creturn_type (Method m) {

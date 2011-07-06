@@ -29,29 +29,29 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 	private bool is_in_catch = false;
 
 	public override void generate_error_domain_declaration (ErrorDomain edomain, CCodeFile decl_space) {
-		if (add_symbol_declaration (decl_space, edomain, edomain.get_cname ())) {
+		if (add_symbol_declaration (decl_space, edomain, get_ccode_name (edomain))) {
 			return;
 		}
 
-		var cenum = new CCodeEnum (edomain.get_cname ());
+		var cenum = new CCodeEnum (get_ccode_name (edomain));
 
 		foreach (ErrorCode ecode in edomain.get_codes ()) {
 			if (ecode.value == null) {
-				cenum.add_value (new CCodeEnumValue (ecode.get_cname ()));
+				cenum.add_value (new CCodeEnumValue (get_ccode_name (ecode)));
 			} else {
 				ecode.value.emit (this);
-				cenum.add_value (new CCodeEnumValue (ecode.get_cname (), get_cvalue (ecode.value)));
+				cenum.add_value (new CCodeEnumValue (get_ccode_name (ecode), get_cvalue (ecode.value)));
 			}
 		}
 
 		decl_space.add_type_definition (cenum);
 
-		string quark_fun_name = edomain.get_lower_case_cprefix () + "quark";
+		string quark_fun_name = get_ccode_lower_case_prefix (edomain) + "quark";
 
-		var error_domain_define = new CCodeMacroReplacement (edomain.get_upper_case_cname (), quark_fun_name + " ()");
+		var error_domain_define = new CCodeMacroReplacement (get_ccode_upper_case_name (edomain), quark_fun_name + " ()");
 		decl_space.add_type_definition (error_domain_define);
 
-		var cquark_fun = new CCodeFunction (quark_fun_name, gquark_type.data_type.get_cname ());
+		var cquark_fun = new CCodeFunction (quark_fun_name, get_ccode_name (gquark_type.data_type));
 
 		decl_space.add_function_declaration (cquark_fun);
 	}
@@ -70,13 +70,13 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			generate_error_domain_declaration (edomain, internal_header_file);
 		}
 
-		string quark_fun_name = edomain.get_lower_case_cprefix () + "quark";
+		string quark_fun_name = get_ccode_lower_case_prefix (edomain) + "quark";
 
-		var cquark_fun = new CCodeFunction (quark_fun_name, gquark_type.data_type.get_cname ());
+		var cquark_fun = new CCodeFunction (quark_fun_name, get_ccode_name (gquark_type.data_type));
 		push_function (cquark_fun);
 
 		var cquark_call = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_static_string"));
-		cquark_call.add_argument (new CCodeConstant ("\"" + edomain.get_lower_case_cname () + "-quark\""));
+		cquark_call.add_argument (new CCodeConstant ("\"" + get_ccode_lower_case_name (edomain) + "-quark\""));
 
 		ccode.add_return (cquark_call);
 
@@ -217,15 +217,15 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 							/* catch clause specifies a specific error code */
 							var error_match = new CCodeFunctionCall (new CCodeIdentifier ("g_error_matches"));
 							error_match.add_argument (inner_error);
-							error_match.add_argument (new CCodeIdentifier (catch_type.data_type.get_upper_case_cname ()));
-							error_match.add_argument (new CCodeIdentifier (catch_type.error_code.get_cname ()));
+							error_match.add_argument (new CCodeIdentifier (get_ccode_upper_case_name (catch_type.data_type)));
+							error_match.add_argument (new CCodeIdentifier (get_ccode_name (catch_type.error_code)));
 
 							ccode.open_if (error_match);
 						} else {
 							/* catch clause specifies a full error domain */
 							var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY,
 									new CCodeMemberAccess.pointer (inner_error, "domain"), new CCodeIdentifier
-									(clause.error_type.data_type.get_upper_case_cname ()));
+									(get_ccode_upper_case_name (clause.error_type.data_type)));
 
 							ccode.open_if (ccond);
 						}
@@ -265,7 +265,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 
 				// Check the allowed error domains to propagate
 				var domain_check = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeMemberAccess.pointer
-					(inner_error, "domain"), new CCodeIdentifier (error_type.data_type.get_upper_case_cname ()));
+					(inner_error, "domain"), new CCodeIdentifier (get_ccode_upper_case_name (error_type.data_type)));
 				if (ccond == null) {
 					ccond = domain_check;
 				} else {
@@ -304,7 +304,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		is_in_catch = true;
 
 		foreach (CatchClause clause in stmt.get_catch_clauses ()) {
-			clause.clabel_name = "__catch%d_%s".printf (this_try_id, clause.error_type.get_lower_case_cname ());
+			clause.clabel_name = "__catch%d_%s".printf (this_try_id, get_ccode_lower_case_name (clause.error_type));
 		}
 
 		is_in_catch = false;

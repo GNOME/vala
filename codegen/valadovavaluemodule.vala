@@ -35,33 +35,33 @@ public class Vala.DovaValueModule : DovaObjectModule {
 	public override void generate_struct_declaration (Struct st, CCodeFile decl_space) {
 		base.generate_struct_declaration (st, decl_space);
 
-		if (add_symbol_declaration (decl_space, st, st.get_copy_function ())) {
+		if (add_symbol_declaration (decl_space, st, get_ccode_copy_function (st))) {
 			return;
 		}
 
 		generate_class_declaration (type_class, decl_space);
 
-		var type_fun = new CCodeFunction ("%s_type_get".printf (st.get_lower_case_cname ()), "DovaType *");
+		var type_fun = new CCodeFunction ("%s_type_get".printf (get_ccode_lower_case_name (st)), "DovaType *");
 		if (st.is_internal_symbol ()) {
 			type_fun.modifiers = CCodeModifiers.STATIC;
 		}
 		decl_space.add_function_declaration (type_fun);
 
-		var type_init_fun = new CCodeFunction ("%s_type_init".printf (st.get_lower_case_cname ()));
+		var type_init_fun = new CCodeFunction ("%s_type_init".printf (get_ccode_lower_case_name (st)));
 		type_init_fun.add_parameter (new CCodeParameter ("type", "DovaType *"));
 		if (st.is_internal_symbol ()) {
 			type_init_fun.modifiers = CCodeModifiers.STATIC;
 		}
 		decl_space.add_function_declaration (type_init_fun);
 
-		var function = new CCodeFunction (st.get_copy_function (), "void");
+		var function = new CCodeFunction (get_ccode_copy_function (st), "void");
 		if (st.is_internal_symbol ()) {
 			function.modifiers = CCodeModifiers.STATIC;
 		}
 
-		function.add_parameter (new CCodeParameter ("dest", st.get_cname () + "*"));
+		function.add_parameter (new CCodeParameter ("dest", get_ccode_name (st) + "*"));
 		function.add_parameter (new CCodeParameter ("dest_index", "intptr_t"));
-		function.add_parameter (new CCodeParameter ("src", st.get_cname () + "*"));
+		function.add_parameter (new CCodeParameter ("src", get_ccode_name (st) + "*"));
 		function.add_parameter (new CCodeParameter ("src_index", "intptr_t"));
 
 		decl_space.add_function_declaration (function);
@@ -71,20 +71,20 @@ public class Vala.DovaValueModule : DovaObjectModule {
 		base.visit_struct (st);
 
 		var cdecl = new CCodeDeclaration ("intptr_t");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("_%s_object_offset".printf (st.get_lower_case_cname ()), new CCodeConstant ("0")));
+		cdecl.add_declarator (new CCodeVariableDeclarator ("_%s_object_offset".printf (get_ccode_lower_case_name (st)), new CCodeConstant ("0")));
 		cdecl.modifiers = CCodeModifiers.STATIC;
 		cfile.add_type_member_declaration (cdecl);
 
-		string macro = "((%s *) (((char *) o) + _%s_object_offset))".printf (st.get_cname (), st.get_lower_case_cname ());
-		cfile.add_type_member_declaration (new CCodeMacroReplacement ("%s_GET_PRIVATE(o)".printf (st.get_upper_case_cname (null)), macro));
+		string macro = "((%s *) (((char *) o) + _%s_object_offset))".printf (get_ccode_name (st), get_ccode_lower_case_name (st));
+		cfile.add_type_member_declaration (new CCodeMacroReplacement ("%s_GET_PRIVATE(o)".printf (get_ccode_upper_case_name (st, null)), macro));
 
 
 		cdecl = new CCodeDeclaration ("DovaType *");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("%s_type".printf (st.get_lower_case_cname ()), new CCodeConstant ("NULL")));
+		cdecl.add_declarator (new CCodeVariableDeclarator ("%s_type".printf (get_ccode_lower_case_name (st)), new CCodeConstant ("NULL")));
 		cdecl.modifiers = CCodeModifiers.STATIC;
 		cfile.add_type_member_declaration (cdecl);
 
-		var type_fun = new CCodeFunction ("%s_type_get".printf (st.get_lower_case_cname ()), "DovaType *");
+		var type_fun = new CCodeFunction ("%s_type_get".printf (get_ccode_lower_case_name (st)), "DovaType *");
 		type_fun.block = new CCodeBlock ();
 
 		var type_init_block = new CCodeBlock ();
@@ -109,56 +109,56 @@ public class Vala.DovaValueModule : DovaObjectModule {
 		calloc_call.add_argument (new CCodeConstant ("1"));
 		calloc_call.add_argument (base_type_size);
 
-		type_init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("%s_type".printf (st.get_lower_case_cname ())), calloc_call)));
+		type_init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("%s_type".printf (get_ccode_lower_case_name (st))), calloc_call)));
 
 		generate_class_declaration ((Class) object_class, cfile);
 
-		type_init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeCastExpression (new CCodeIdentifier ("%s_type".printf (st.get_lower_case_cname ())), "DovaObject *"), "type"), new CCodeFunctionCall (new CCodeIdentifier ("dova_type_type_get")))));
+		type_init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeCastExpression (new CCodeIdentifier ("%s_type".printf (get_ccode_lower_case_name (st))), "DovaObject *"), "type"), new CCodeFunctionCall (new CCodeIdentifier ("dova_type_type_get")))));
 
 		var set_base_type = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_set_base_type"));
-		set_base_type.add_argument (new CCodeIdentifier ("%s_type".printf (st.get_lower_case_cname ())));
+		set_base_type.add_argument (new CCodeIdentifier ("%s_type".printf (get_ccode_lower_case_name (st))));
 		set_base_type.add_argument (base_type);
 		type_init_block.add_statement (new CCodeExpressionStatement (set_base_type));
 
 		var base_size = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_get_object_size"));
 		base_size.add_argument (base_type);
 
-		type_init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_%s_object_offset".printf (st.get_lower_case_cname ())), base_size)));
+		type_init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_%s_object_offset".printf (get_ccode_lower_case_name (st))), base_size)));
 
 		var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
-		sizeof_call.add_argument (new CCodeIdentifier (st.get_cname ()));
+		sizeof_call.add_argument (new CCodeIdentifier (get_ccode_name (st)));
 		var set_size = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_set_object_size"));
-		set_size.add_argument (new CCodeIdentifier ("%s_type".printf (st.get_lower_case_cname ())));
+		set_size.add_argument (new CCodeIdentifier ("%s_type".printf (get_ccode_lower_case_name (st))));
 		set_size.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, base_size, sizeof_call));
 		type_init_block.add_statement (new CCodeExpressionStatement (set_size));
 
 		set_size = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_set_value_size"));
-		set_size.add_argument (new CCodeIdentifier ("%s_type".printf (st.get_lower_case_cname ())));
+		set_size.add_argument (new CCodeIdentifier ("%s_type".printf (get_ccode_lower_case_name (st))));
 		set_size.add_argument (sizeof_call);
 		type_init_block.add_statement (new CCodeExpressionStatement (set_size));
 
 		set_size = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_set_type_size"));
-		set_size.add_argument (new CCodeIdentifier ("%s_type".printf (st.get_lower_case_cname ())));
+		set_size.add_argument (new CCodeIdentifier ("%s_type".printf (get_ccode_lower_case_name (st))));
 		set_size.add_argument (base_type_size);
 		type_init_block.add_statement (new CCodeExpressionStatement (set_size));
 
-		var type_init_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_type_init".printf (st.get_lower_case_cname ())));
-		type_init_call.add_argument (new CCodeIdentifier ("%s_type".printf (st.get_lower_case_cname ())));
+		var type_init_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_type_init".printf (get_ccode_lower_case_name (st))));
+		type_init_call.add_argument (new CCodeIdentifier ("%s_type".printf (get_ccode_lower_case_name (st))));
 		type_init_block.add_statement (new CCodeExpressionStatement (type_init_call));
 
 		// workaround: set value_size again as it is currently overwritten by dova_object_type_init
 		set_size = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_set_value_size"));
-		set_size.add_argument (new CCodeIdentifier ("%s_type".printf (st.get_lower_case_cname ())));
+		set_size.add_argument (new CCodeIdentifier ("%s_type".printf (get_ccode_lower_case_name (st))));
 		set_size.add_argument (sizeof_call);
 		type_init_block.add_statement (new CCodeExpressionStatement (set_size));
 
-		type_fun.block.add_statement (new CCodeIfStatement (new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeIdentifier ("%s_type".printf (st.get_lower_case_cname ()))), type_init_block));
+		type_fun.block.add_statement (new CCodeIfStatement (new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeIdentifier ("%s_type".printf (get_ccode_lower_case_name (st)))), type_init_block));
 
-		type_fun.block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("%s_type".printf (st.get_lower_case_cname ()))));
+		type_fun.block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("%s_type".printf (get_ccode_lower_case_name (st)))));
 
 		cfile.add_function (type_fun);
 
-		var type_init_fun = new CCodeFunction ("%s_type_init".printf (st.get_lower_case_cname ()));
+		var type_init_fun = new CCodeFunction ("%s_type_init".printf (get_ccode_lower_case_name (st)));
 		type_init_fun.add_parameter (new CCodeParameter ("type", "DovaType *"));
 		type_init_fun.block = new CCodeBlock ();
 
@@ -170,20 +170,20 @@ public class Vala.DovaValueModule : DovaObjectModule {
 
 		var value_copy_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_set_value_copy"));
 		value_copy_call.add_argument (new CCodeIdentifier ("type"));
-		value_copy_call.add_argument (new CCodeCastExpression (new CCodeIdentifier ("%s_copy".printf (st.get_lower_case_cname ())), "void (*)(void *, intptr_t,  void *, intptr_t)"));
+		value_copy_call.add_argument (new CCodeCastExpression (new CCodeIdentifier ("%s_copy".printf (get_ccode_lower_case_name (st))), "void (*)(void *, intptr_t,  void *, intptr_t)"));
 		type_init_fun.block.add_statement (new CCodeExpressionStatement (value_copy_call));
 
 		if (st.scope.lookup ("equals") is Method) {
-			var value_equals_fun = new CCodeFunction ("%s_value_equals".printf (st.get_lower_case_cname ()), "bool");
+			var value_equals_fun = new CCodeFunction ("%s_value_equals".printf (get_ccode_lower_case_name (st)), "bool");
 			value_equals_fun.modifiers = CCodeModifiers.STATIC;
-			value_equals_fun.add_parameter (new CCodeParameter ("value", st.get_cname () + "*"));
+			value_equals_fun.add_parameter (new CCodeParameter ("value", get_ccode_name (st) + "*"));
 			value_equals_fun.add_parameter (new CCodeParameter ("value_index", "intptr_t"));
-			value_equals_fun.add_parameter (new CCodeParameter ("other", st.get_cname () + "*"));
+			value_equals_fun.add_parameter (new CCodeParameter ("other", get_ccode_name (st) + "*"));
 			value_equals_fun.add_parameter (new CCodeParameter ("other_index", "intptr_t"));
 			value_equals_fun.block = new CCodeBlock ();
 			var val = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("value"), new CCodeIdentifier ("value_index"));
 			var other = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("other"), new CCodeIdentifier ("other_index"));
-			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_equals".printf (st.get_lower_case_cname ())));
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_equals".printf (get_ccode_lower_case_name (st))));
 			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, val));
 			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, other));
 			value_equals_fun.block.add_statement (new CCodeReturnStatement (ccall));
@@ -193,18 +193,18 @@ public class Vala.DovaValueModule : DovaObjectModule {
 
 			var value_equals_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_set_value_equals"));
 			value_equals_call.add_argument (new CCodeIdentifier ("type"));
-			value_equals_call.add_argument (new CCodeCastExpression (new CCodeIdentifier ("%s_value_equals".printf (st.get_lower_case_cname ())), "bool (*)(void *, intptr_t,  void *, intptr_t)"));
+			value_equals_call.add_argument (new CCodeCastExpression (new CCodeIdentifier ("%s_value_equals".printf (get_ccode_lower_case_name (st))), "bool (*)(void *, intptr_t,  void *, intptr_t)"));
 			type_init_fun.block.add_statement (new CCodeExpressionStatement (value_equals_call));
 		}
 
 		if (st.scope.lookup ("hash") is Method) {
-			var value_hash_fun = new CCodeFunction ("%s_value_hash".printf (st.get_lower_case_cname ()), "uintptr_t");
+			var value_hash_fun = new CCodeFunction ("%s_value_hash".printf (get_ccode_lower_case_name (st)), "uintptr_t");
 			value_hash_fun.modifiers = CCodeModifiers.STATIC;
-			value_hash_fun.add_parameter (new CCodeParameter ("value", st.get_cname () + "*"));
+			value_hash_fun.add_parameter (new CCodeParameter ("value", get_ccode_name (st) + "*"));
 			value_hash_fun.add_parameter (new CCodeParameter ("value_index", "intptr_t"));
 			value_hash_fun.block = new CCodeBlock ();
 			var val = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("value"), new CCodeIdentifier ("value_index"));
-			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_hash".printf (st.get_lower_case_cname ())));
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_hash".printf (get_ccode_lower_case_name (st))));
 			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, val));
 			value_hash_fun.block.add_statement (new CCodeReturnStatement (ccall));
 			cfile.add_function (value_hash_fun);
@@ -213,24 +213,24 @@ public class Vala.DovaValueModule : DovaObjectModule {
 
 			var value_hash_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_set_value_hash"));
 			value_hash_call.add_argument (new CCodeIdentifier ("type"));
-			value_hash_call.add_argument (new CCodeCastExpression (new CCodeIdentifier ("%s_value_hash".printf (st.get_lower_case_cname ())), "uintptr_t (*)(void *, intptr_t)"));
+			value_hash_call.add_argument (new CCodeCastExpression (new CCodeIdentifier ("%s_value_hash".printf (get_ccode_lower_case_name (st))), "uintptr_t (*)(void *, intptr_t)"));
 			type_init_fun.block.add_statement (new CCodeExpressionStatement (value_hash_call));
 		}
 
 		// generate method to box values
-		var value_to_any_fun = new CCodeFunction ("%s_value_to_any".printf (st.get_lower_case_cname ()), "DovaObject*");
+		var value_to_any_fun = new CCodeFunction ("%s_value_to_any".printf (get_ccode_lower_case_name (st)), "DovaObject*");
 		value_to_any_fun.modifiers = CCodeModifiers.STATIC;
 		value_to_any_fun.add_parameter (new CCodeParameter ("value", "void *"));
 		value_to_any_fun.add_parameter (new CCodeParameter ("value_index", "intptr_t"));
 		value_to_any_fun.block = new CCodeBlock ();
 		var alloc_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_object_alloc"));
-		alloc_call.add_argument (new CCodeFunctionCall (new CCodeIdentifier ("%s_type_get".printf (st.get_lower_case_cname ()))));
+		alloc_call.add_argument (new CCodeFunctionCall (new CCodeIdentifier ("%s_type_get".printf (get_ccode_lower_case_name (st)))));
 		cdecl = new CCodeDeclaration ("DovaObject *");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("result", alloc_call));
 		value_to_any_fun.block.add_statement (cdecl);
-		var priv_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_PRIVATE".printf (st.get_upper_case_cname (null))));
+		var priv_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_PRIVATE".printf (get_ccode_upper_case_name (st, null))));
 		priv_call.add_argument (new CCodeIdentifier ("result"));
-		var copy_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_copy".printf (st.get_lower_case_cname ())));
+		var copy_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_copy".printf (get_ccode_lower_case_name (st))));
 		copy_call.add_argument (priv_call);
 		copy_call.add_argument (new CCodeConstant ("0"));
 		copy_call.add_argument (new CCodeIdentifier ("value"));
@@ -243,19 +243,19 @@ public class Vala.DovaValueModule : DovaObjectModule {
 
 		var value_to_any_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_set_value_to_any"));
 		value_to_any_call.add_argument (new CCodeIdentifier ("type"));
-		value_to_any_call.add_argument (new CCodeIdentifier ("%s_value_to_any".printf (st.get_lower_case_cname ())));
+		value_to_any_call.add_argument (new CCodeIdentifier ("%s_value_to_any".printf (get_ccode_lower_case_name (st))));
 		type_init_fun.block.add_statement (new CCodeExpressionStatement (value_to_any_call));
 
 		// generate method to unbox values
-		var value_from_any_fun = new CCodeFunction ("%s_value_from_any".printf (st.get_lower_case_cname ()));
+		var value_from_any_fun = new CCodeFunction ("%s_value_from_any".printf (get_ccode_lower_case_name (st)));
 		value_from_any_fun.modifiers = CCodeModifiers.STATIC;
 		value_from_any_fun.add_parameter (new CCodeParameter ("any_", "any *"));
-		value_from_any_fun.add_parameter (new CCodeParameter ("value", st.get_cname () + "*"));
+		value_from_any_fun.add_parameter (new CCodeParameter ("value", get_ccode_name (st) + "*"));
 		value_from_any_fun.add_parameter (new CCodeParameter ("value_index", "intptr_t"));
 		value_from_any_fun.block = new CCodeBlock ();
-		priv_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_PRIVATE".printf (st.get_upper_case_cname (null))));
+		priv_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_PRIVATE".printf (get_ccode_upper_case_name (st, null))));
 		priv_call.add_argument (new CCodeIdentifier ("any_"));
-		copy_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_copy".printf (st.get_lower_case_cname ())));
+		copy_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_copy".printf (get_ccode_lower_case_name (st))));
 		copy_call.add_argument (new CCodeIdentifier ("value"));
 		copy_call.add_argument (new CCodeIdentifier ("value_index"));
 		copy_call.add_argument (priv_call);
@@ -267,7 +267,7 @@ public class Vala.DovaValueModule : DovaObjectModule {
 
 		var value_from_any_call = new CCodeFunctionCall (new CCodeIdentifier ("dova_type_set_value_from_any"));
 		value_from_any_call.add_argument (new CCodeIdentifier ("type"));
-		value_from_any_call.add_argument (new CCodeIdentifier ("%s_value_from_any".printf (st.get_lower_case_cname ())));
+		value_from_any_call.add_argument (new CCodeIdentifier ("%s_value_from_any".printf (get_ccode_lower_case_name (st))));
 		type_init_fun.block.add_statement (new CCodeExpressionStatement (value_from_any_call));
 
 		cfile.add_function (type_init_fun);
@@ -276,14 +276,14 @@ public class Vala.DovaValueModule : DovaObjectModule {
 	}
 
 	void add_struct_copy_function (Struct st) {
-		var function = new CCodeFunction (st.get_copy_function (), "void");
+		var function = new CCodeFunction (get_ccode_copy_function (st), "void");
 		if (st.is_internal_symbol ()) {
 			function.modifiers = CCodeModifiers.STATIC;
 		}
 
-		function.add_parameter (new CCodeParameter ("dest", st.get_cname () + "*"));
+		function.add_parameter (new CCodeParameter ("dest", get_ccode_name (st) + "*"));
 		function.add_parameter (new CCodeParameter ("dest_index", "intptr_t"));
-		function.add_parameter (new CCodeParameter ("src", st.get_cname () + "*"));
+		function.add_parameter (new CCodeParameter ("src", get_ccode_name (st) + "*"));
 		function.add_parameter (new CCodeParameter ("src_index", "intptr_t"));
 
 		var cblock = new CCodeBlock ();

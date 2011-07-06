@@ -62,7 +62,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			gnew = new CCodeFunctionCall (new CCodeIdentifier ("calloc"));
 		} else {
 			gnew = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
-			gnew.add_argument (new CCodeIdentifier (expr.element_type.get_cname ()));
+			gnew.add_argument (new CCodeIdentifier (get_ccode_name (expr.element_type)));
 		}
 
 		bool first = true;
@@ -90,7 +90,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		if (context.profile == Profile.POSIX) {
 			var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
-			csizeof.add_argument (new CCodeIdentifier (expr.element_type.get_cname ()));
+			csizeof.add_argument (new CCodeIdentifier (get_ccode_name (expr.element_type)));
 			gnew.add_argument (csizeof);
 		}
 
@@ -114,8 +114,8 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 	}
 
 	public override string get_parameter_array_length_cname (Parameter param, int dim) {
-		if (param.has_array_length_cname) {
-			return param.get_array_length_cname ();
+		if (get_ccode_array_length_name (param) != null) {
+			return get_ccode_array_length_name (param);
 		} else {
 			return get_array_length_cname (get_variable_cname (param.name), dim);
 		}
@@ -215,7 +215,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 	}
 
 	public override string? append_struct_array_free (Struct st) {
-		string cname = "_vala_%s_array_free".printf (st.get_cname ());;
+		string cname = "_vala_%s_array_free".printf (get_ccode_name (st));
 
 		if (cfile.add_declaration (cname)) {
 			return cname;
@@ -223,7 +223,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		var fun = new CCodeFunction (cname, "void");
 		fun.modifiers = CCodeModifiers.STATIC;
-		fun.add_parameter (new CCodeParameter ("array", "%s*".printf (st.get_cname ())));
+		fun.add_parameter (new CCodeParameter ("array", "%s*".printf (get_ccode_name (st))));
 		fun.add_parameter (new CCodeParameter ("array_length", "gint"));
 
 		push_function (fun);
@@ -473,10 +473,10 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		// declaration
 
-		var function = new CCodeFunction (dup_func, array_type.get_cname ());
+		var function = new CCodeFunction (dup_func, get_ccode_name (array_type));
 		function.modifiers = CCodeModifiers.STATIC;
 
-		function.add_parameter (new CCodeParameter ("self", array_type.get_cname ()));
+		function.add_parameter (new CCodeParameter ("self", get_ccode_name (array_type)));
 		// total length over all dimensions
 		function.add_parameter (new CCodeParameter ("length", "int"));
 		if (array_type.element_type is GenericType) {
@@ -493,7 +493,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		if (requires_copy (array_type.element_type)) {
 			var cvardecl = new CCodeVariableDeclarator ("result");
 			var gnew = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
-			gnew.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
+			gnew.add_argument (new CCodeIdentifier (get_ccode_name (array_type.element_type)));
 
 			CCodeExpression length_expr = new CCodeIdentifier ("length");
 			// add extra item to have array NULL-terminated for all reference types
@@ -502,7 +502,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			}
 			gnew.add_argument (length_expr);
 
-			ccode.add_declaration (array_type.get_cname (), cvardecl);
+			ccode.add_declaration (get_ccode_name (array_type), cvardecl);
 			ccode.add_assignment (new CCodeIdentifier ("result"), gnew);
 
 			ccode.add_declaration ("int", new CCodeVariableDeclarator ("i"));
@@ -520,7 +520,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			dup_call.add_argument (new CCodeIdentifier ("self"));
 
 			var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
-			sizeof_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
+			sizeof_call.add_argument (new CCodeIdentifier (get_ccode_name (array_type.element_type)));
 			dup_call.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeIdentifier ("length"), sizeof_call));
 
 			ccode.add_return (dup_call);
@@ -549,8 +549,8 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var function = new CCodeFunction (dup_func, "void");
 		function.modifiers = CCodeModifiers.STATIC;
 
-		function.add_parameter (new CCodeParameter ("self", array_type.get_cname () + "*"));
-		function.add_parameter (new CCodeParameter ("dest", array_type.get_cname () + "*"));
+		function.add_parameter (new CCodeParameter ("self", get_ccode_name (array_type) + "*"));
+		function.add_parameter (new CCodeParameter ("dest", get_ccode_name (array_type) + "*"));
 
 		// definition
 
@@ -574,7 +574,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			dup_call.add_argument (new CCodeIdentifier ("self"));
 
 			var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
-			sizeof_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
+			sizeof_call.add_argument (new CCodeIdentifier (get_ccode_name (array_type.element_type)));
 			dup_call.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeConstant ("%d".printf (array_type.length)), sizeof_call));
 
 			ccode.add_expression (dup_call);
@@ -601,13 +601,13 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var function = new CCodeFunction (add_func, "void");
 		function.modifiers = CCodeModifiers.STATIC;
 
-		function.add_parameter (new CCodeParameter ("array", array_type.get_cname () + "*"));
+		function.add_parameter (new CCodeParameter ("array", get_ccode_name (array_type) + "*"));
 		function.add_parameter (new CCodeParameter ("length", "int*"));
 		function.add_parameter (new CCodeParameter ("size", "int*"));
 
 		push_function (function);
 
-		string typename = array_type.element_type.get_cname ();
+		string typename = get_ccode_name (array_type.element_type);
 		CCodeExpression value = new CCodeIdentifier ("value");
 		if (array_type.element_type.is_real_struct_type ()) {
 			if (!array_type.element_type.nullable || !array_type.element_type.value_owned) {
@@ -625,7 +625,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var size = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("size"));
 
 		var renew_call = new CCodeFunctionCall (new CCodeIdentifier ("g_renew"));
-		renew_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
+		renew_call.add_argument (new CCodeIdentifier (get_ccode_name (array_type.element_type)));
 		renew_call.add_argument (array);
 		if (array_type.element_type.is_reference_type_or_type_parameter ()) {
 			// NULL terminate array
@@ -705,7 +705,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			return base.generate_parameter (param, decl_space, cparam_map, carg_map);
 		}
 
-		string ctypename = param.variable_type.get_cname ();
+		string ctypename = get_ccode_name (param.variable_type);
 
 		if (param.direction != ParameterDirection.IN) {
 			ctypename += "*";
@@ -717,15 +717,15 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		generate_type_declaration (array_type.element_type, decl_space);
 
-		cparam_map.set (get_param_pos (param.cparameter_position), main_cparam);
+		cparam_map.set (get_param_pos (get_ccode_pos (param)), main_cparam);
 		if (carg_map != null) {
-			carg_map.set (get_param_pos (param.cparameter_position), get_variable_cexpression (param.name));
+			carg_map.set (get_param_pos (get_ccode_pos (param)), get_variable_cexpression (param.name));
 		}
 
-		if (!param.no_array_length) {
+		if (get_ccode_array_length (param)) {
 			string length_ctype = "int";
-			if (param.array_length_type != null) {
-				length_ctype = param.array_length_type;
+			if (get_ccode_array_length_type (param) != null) {
+				length_ctype = get_ccode_array_length_type (param);
 			}
 			if (param.direction != ParameterDirection.IN) {
 				length_ctype = "%s*".printf (length_ctype);
@@ -733,9 +733,9 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				var cparam = new CCodeParameter (get_parameter_array_length_cname (param, dim), length_ctype);
-				cparam_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), cparam);
+				cparam_map.set (get_param_pos (get_ccode_array_length_pos (param) + 0.01 * dim), cparam);
 				if (carg_map != null) {
-					carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), get_variable_cexpression (cparam.name));
+					carg_map.set (get_param_pos (get_ccode_array_length_pos (param) + 0.01 * dim), get_variable_cexpression (cparam.name));
 				}
 			}
 		}

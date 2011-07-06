@@ -82,7 +82,7 @@ public class Vala.DovaArrayModule : DovaMethodCallModule {
 		var array_type = (ArrayType) expr.container.value_type;
 
 		var array = new CCodeFunctionCall (new CCodeIdentifier ("dova_array"));
-		array.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeCastExpression (new CCodeMemberAccess (ccontainer, "data"), array_type.element_type.get_cname () + "*"), cstart));
+		array.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeCastExpression (new CCodeMemberAccess (ccontainer, "data"), get_ccode_name (array_type.element_type) + "*"), cstart));
 		array.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, cstop, cstart));
 
 		set_cvalue (expr, array);

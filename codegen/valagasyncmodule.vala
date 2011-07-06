@@ -24,7 +24,7 @@ using GLib;
 
 public class Vala.GAsyncModule : GSignalModule {
 	CCodeStruct generate_data_struct (Method m) {
-		string dataname = Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data";
+		string dataname = Symbol.lower_case_to_camel_case (get_ccode_name (m)) + "Data";
 		var data = new CCodeStruct ("_" + dataname);
 
 		data.add_field ("int", "_state_");
@@ -35,9 +35,9 @@ public class Vala.GAsyncModule : GSignalModule {
 		if (m.binding == MemberBinding.INSTANCE) {
 			var type_sym = (TypeSymbol) m.parent_symbol;
 			if (type_sym is ObjectTypeSymbol) {
-				data.add_field (type_sym.get_cname () + "*", "self");
+				data.add_field (get_ccode_name (type_sym) + "*", "self");
 			} else {
-				data.add_field (type_sym.get_cname (), "self");
+				data.add_field (get_ccode_name (type_sym), "self");
 			}
 		}
 
@@ -46,11 +46,11 @@ public class Vala.GAsyncModule : GSignalModule {
 
 			var param_type = param.variable_type.copy ();
 			param_type.value_owned = true;
-			data.add_field (param_type.get_cname (), get_variable_cname (param.name));
+			data.add_field (get_ccode_name (param_type), get_variable_cname (param.name));
 
 			if (param.variable_type is ArrayType) {
 				var array_type = (ArrayType) param.variable_type;
-				if (!param.no_array_length) {
+				if (get_ccode_array_length (param)) {
 					for (int dim = 1; dim <= array_type.rank; dim++) {
 						data.add_field ("gint", get_parameter_array_length_cname (param, dim));
 					}
@@ -73,10 +73,10 @@ public class Vala.GAsyncModule : GSignalModule {
 		}
 
 		if (!(m.return_type is VoidType)) {
-			data.add_field (m.return_type.get_cname (), "result");
+			data.add_field (get_ccode_name (m.return_type), "result");
 			if (m.return_type is ArrayType) {
 				var array_type = (ArrayType) m.return_type;
-				if (!m.no_array_length) {
+				if (get_ccode_array_length (m)) {
 					for (int dim = 1; dim <= array_type.rank; dim++) {
 						data.add_field ("gint", get_array_length_cname ("result", dim));
 					}
@@ -94,9 +94,9 @@ public class Vala.GAsyncModule : GSignalModule {
 	}
 
 	CCodeFunction generate_free_function (Method m) {
-		var dataname = Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data";
+		var dataname = Symbol.lower_case_to_camel_case (get_ccode_name (m)) + "Data";
 
-		var freefunc = new CCodeFunction (m.get_real_cname () + "_data_free", "void");
+		var freefunc = new CCodeFunction (get_ccode_real_name (m) + "_data_free", "void");
 		freefunc.modifiers = CCodeModifiers.STATIC;
 		freefunc.add_parameter (new CCodeParameter ("_data", "gpointer"));
 
@@ -156,8 +156,8 @@ public class Vala.GAsyncModule : GSignalModule {
 	void generate_async_function (Method m) {
 		push_context (new EmitContext ());
 
-		var dataname = Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data";
-		var asyncfunc = new CCodeFunction (m.get_real_cname (), "void");
+		var dataname = Symbol.lower_case_to_camel_case (get_ccode_name (m)) + "Data";
+		var asyncfunc = new CCodeFunction (get_ccode_real_name (m), "void");
 		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
 
 		cparam_map.set (get_param_pos (-1), new CCodeParameter ("_callback_", "GAsyncReadyCallback"));
@@ -190,7 +190,7 @@ public class Vala.GAsyncModule : GSignalModule {
 
 			var self_target_type = new ObjectType (type_symbol);
 			var cself = get_cvalue_ (transform_value (new GLibValue (base_expression_type, new CCodeIdentifier ("base"), true), self_target_type, m));
-			ccode.add_declaration ("%s *".printf (type_symbol.get_cname ()), new CCodeVariableDeclarator ("self"));
+			ccode.add_declaration ("%s *".printf (get_ccode_name (type_symbol)), new CCodeVariableDeclarator ("self"));
 			ccode.add_assignment (new CCodeIdentifier ("self"), cself);
 		}
 
@@ -226,14 +226,14 @@ public class Vala.GAsyncModule : GSignalModule {
 
 		create_result.add_argument (new CCodeIdentifier ("_callback_"));
 		create_result.add_argument (new CCodeIdentifier ("_user_data_"));
-		create_result.add_argument (new CCodeIdentifier (m.get_real_cname ()));
+		create_result.add_argument (new CCodeIdentifier (get_ccode_real_name (m)));
 
 		ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, "_async_result"), create_result);
 
 		var set_op_res_call = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_set_op_res_gpointer"));
 		set_op_res_call.add_argument (new CCodeMemberAccess.pointer (data_var, "_async_result"));
 		set_op_res_call.add_argument (data_var);
-		set_op_res_call.add_argument (new CCodeIdentifier (m.get_real_cname () + "_data_free"));
+		set_op_res_call.add_argument (new CCodeIdentifier (get_ccode_real_name (m) + "_data_free"));
 		ccode.add_expression (set_op_res_call);
 
 		if (m.binding == MemberBinding.INSTANCE) {
@@ -286,7 +286,7 @@ public class Vala.GAsyncModule : GSignalModule {
 			ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, destroy_func), new CCodeIdentifier (destroy_func));
 		}
 
-		var ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_real_cname () + "_co"));
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_real_name (m) + "_co"));
 		ccall.add_argument (data_var);
 		ccode.add_expression (ccall);
 
@@ -304,11 +304,11 @@ public class Vala.GAsyncModule : GSignalModule {
 
 	public override void generate_method_declaration (Method m, CCodeFile decl_space) {
 		if (m.coroutine) {
-			if (add_symbol_declaration (decl_space, m, m.get_cname ())) {
+			if (add_symbol_declaration (decl_space, m, get_ccode_name (m))) {
 				return;
 			}
 
-			var asyncfunc = new CCodeFunction (m.get_cname (), "void");
+			var asyncfunc = new CCodeFunction (get_ccode_name (m), "void");
 			var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
 			cparam_map.set (get_param_pos (-1), new CCodeParameter ("_callback_", "GAsyncReadyCallback"));
 			cparam_map.set (get_param_pos (-0.9), new CCodeParameter ("_user_data_", "gpointer"));
@@ -321,7 +321,7 @@ public class Vala.GAsyncModule : GSignalModule {
 
 			decl_space.add_function_declaration (asyncfunc);
 
-			var finishfunc = new CCodeFunction (m.get_finish_cname ());
+			var finishfunc = new CCodeFunction (get_ccode_finish_name (m));
 			cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
 			cparam_map.set (get_param_pos (0.1), new CCodeParameter ("_res_", "GAsyncResult*"));
 
@@ -390,9 +390,9 @@ public class Vala.GAsyncModule : GSignalModule {
 	void generate_finish_function (Method m) {
 		push_context (new EmitContext ());
 
-		string dataname = Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data";
+		string dataname = Symbol.lower_case_to_camel_case (get_ccode_name (m)) + "Data";
 
-		var finishfunc = new CCodeFunction (m.get_finish_real_cname ());
+		var finishfunc = new CCodeFunction (get_ccode_finish_real_name (m));
 
 		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
 
@@ -408,7 +408,7 @@ public class Vala.GAsyncModule : GSignalModule {
 
 		var return_type = m.return_type;
 		if (!(return_type is VoidType) && !return_type.is_real_non_null_struct_type ()) {
-			ccode.add_declaration (m.return_type.get_cname (), new CCodeVariableDeclarator ("result"));
+			ccode.add_declaration (get_ccode_name (m.return_type), new CCodeVariableDeclarator ("result"));
 		}
 
 		var data_var = new CCodeIdentifier ("_data_");
@@ -455,7 +455,7 @@ public class Vala.GAsyncModule : GSignalModule {
 			ccode.add_assignment (new CCodeIdentifier ("result"), new CCodeMemberAccess.pointer (data_var, "result"));
 			if (return_type is ArrayType) {
 				var array_type = (ArrayType) return_type;
-				if (!m.no_array_length) {
+				if (get_ccode_array_length (m)) {
 					for (int dim = 1; dim <= array_type.rank; dim++) {
 						ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (get_array_length_cname ("result", dim))), new CCodeMemberAccess.pointer (data_var, get_array_length_cname ("result", dim)));
 					}
@@ -479,9 +479,9 @@ public class Vala.GAsyncModule : GSignalModule {
 	public override string generate_ready_function (Method m) {
 		// generate ready callback handler
 
-		var dataname = Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data";
+		var dataname = Symbol.lower_case_to_camel_case (get_ccode_name (m)) + "Data";
 
-		var readyfunc = new CCodeFunction (m.get_cname () + "_ready", "void");
+		var readyfunc = new CCodeFunction (get_ccode_name (m) + "_ready", "void");
 
 		if (!add_wrapper (readyfunc.name)) {
 			// wrapper already defined
@@ -499,7 +499,7 @@ public class Vala.GAsyncModule : GSignalModule {
 		ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_source_object_"), new CCodeIdentifier ("source_object"));
 		ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_res_"), new CCodeIdentifier ("_res_"));
 
-		var ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_real_cname () + "_co"));
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_real_name (m) + "_co"));
 		ccall.add_argument (new CCodeIdentifier ("_data_"));
 		ccode.add_expression (ccall);
 
@@ -530,7 +530,7 @@ public class Vala.GAsyncModule : GSignalModule {
 		}
 
 		// add vfunc field to the type struct
-		var vdeclarator = new CCodeFunctionDeclarator (m.vfunc_name);
+		var vdeclarator = new CCodeFunctionDeclarator (get_ccode_vfunc_name (m));
 		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
 
 		generate_cparameters (m, decl_space, cparam_map, new CCodeFunction ("fake"), vdeclarator, null, null, 1);
@@ -540,12 +540,12 @@ public class Vala.GAsyncModule : GSignalModule {
 		type_struct.add_declaration (vdecl);
 
 		// add vfunc field to the type struct
-		vdeclarator = new CCodeFunctionDeclarator (m.get_finish_vfunc_name ());
+		vdeclarator = new CCodeFunctionDeclarator (get_ccode_finish_vfunc_name (m));
 		cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
 
 		generate_cparameters (m, decl_space, cparam_map, new CCodeFunction ("fake"), vdeclarator, null, null, 2);
 
-		vdecl = new CCodeDeclaration (creturn_type.get_cname ());
+		vdecl = new CCodeDeclaration (get_ccode_name (creturn_type));
 		vdecl.add_declarator (vdeclarator);
 		type_struct.add_declaration (vdecl);
 	}

@@ -36,8 +36,4 @@ public class Vala.CType : DataType {
 	public override DataType copy () {
 		return new CType (ctype_name);
 	}
-
-	public override string? get_cname () {
-		return ctype_name;
-	}
 }

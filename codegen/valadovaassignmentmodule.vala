@@ -93,7 +93,7 @@ public class Vala.DovaAssignmentModule : DovaMemberAccessModule {
 		// it is necessary to use memcpy for fixed-length (stack-allocated) arrays
 		// simple assignments do not work in C
 		var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
-		sizeof_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
+		sizeof_call.add_argument (new CCodeIdentifier (get_ccode_name (array_type.element_type)));
 		var size = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeConstant ("%d".printf (array_type.length)), sizeof_call);
 		var ccopy = new CCodeFunctionCall (new CCodeIdentifier ("memcpy"));
 		ccopy.add_argument (lhs);

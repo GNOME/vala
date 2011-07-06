@@ -22,32 +22,20 @@
 
 public class Vala.GDBusModule : GVariantModule {
 	public static string? get_dbus_name (TypeSymbol symbol) {
-		var dbus = symbol.get_attribute ("DBus");
-		if (dbus == null) {
-			return null;
-		}
-
-		return dbus.get_string ("name");
+		return symbol.get_attribute_string ("DBus", "name");
 	}
 
 	public static string get_dbus_name_for_member (Symbol symbol) {
-		var dbus = symbol.get_attribute ("DBus");
-		if (dbus != null && dbus.has_argument ("name")) {
-			return dbus.get_string ("name");
+		var dbus_name = symbol.get_attribute_string ("DBus", "name");
+		if (dbus_name != null) {
+			return dbus_name;
 		}
 
 		return Symbol.lower_case_to_camel_case (symbol.name);
 	}
 
 	public static bool is_dbus_no_reply (Method m) {
-		var dbus_attribute = m.get_attribute ("DBus");
-		if (dbus_attribute != null
-		    && dbus_attribute.has_argument ("no_reply")
-		    && dbus_attribute.get_bool ("no_reply")) {
-			return true;
-		}
-
-		return false;
+		return m.get_attribute_bool ("DBus", "no_reply");
 	}
 
 	public override void visit_error_domain (ErrorDomain edomain) {
@@ -74,31 +62,31 @@ public class Vala.GDBusModule : GVariantModule {
 			}
 
 			var error_entry = new CCodeInitializerList ();
-			error_entry.append (new CCodeIdentifier (ecode.get_cname ()));
+			error_entry.append (new CCodeIdentifier (get_ccode_name (ecode)));
 			error_entry.append (new CCodeConstant ("\"%s.%s\"".printf (edomain_dbus_name, ecode_dbus_name)));
 			error_entries.append (error_entry);
 		}
 
 		var cdecl = new CCodeDeclaration ("const GDBusErrorEntry");
-		cdecl.add_declarator (new CCodeVariableDeclarator (edomain.get_lower_case_cname () + "_entries[]", error_entries));
+		cdecl.add_declarator (new CCodeVariableDeclarator (get_ccode_lower_case_name (edomain) + "_entries[]", error_entries));
 		cdecl.modifiers = CCodeModifiers.STATIC;
 		cfile.add_constant_declaration (cdecl);
 
-		string quark_fun_name = edomain.get_lower_case_cprefix () + "quark";
+		string quark_fun_name = get_ccode_lower_case_prefix (edomain) + "quark";
 
-		var cquark_fun = new CCodeFunction (quark_fun_name, gquark_type.data_type.get_cname ());
+		var cquark_fun = new CCodeFunction (quark_fun_name, get_ccode_name (gquark_type.data_type));
 		push_function (cquark_fun);
 
-		string quark_name = "%squark_volatile".printf (edomain.get_lower_case_cprefix ());
+		string quark_name = "%squark_volatile".printf (get_ccode_lower_case_prefix (edomain));
 
 		ccode.add_declaration ("gsize", new CCodeVariableDeclarator (quark_name, new CCodeConstant ("0")), CCodeModifiers.STATIC | CCodeModifiers.VOLATILE);
 
 		var register_call = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_error_register_error_domain"));
-		register_call.add_argument (new CCodeConstant ("\"" + edomain.get_lower_case_cname () + "-quark\""));
+		register_call.add_argument (new CCodeConstant ("\"" + get_ccode_lower_case_name (edomain) + "-quark\""));
 		register_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (quark_name)));
-		register_call.add_argument (new CCodeIdentifier (edomain.get_lower_case_cname () + "_entries"));
+		register_call.add_argument (new CCodeIdentifier (get_ccode_lower_case_name (edomain) + "_entries"));
 		var nentries = new CCodeFunctionCall (new CCodeIdentifier ("G_N_ELEMENTS"));
-		nentries.add_argument (new CCodeIdentifier (edomain.get_lower_case_cname () + "_entries"));
+		nentries.add_argument (new CCodeIdentifier (get_ccode_lower_case_name (edomain) + "_entries"));
 		register_call.add_argument (nentries);
 		ccode.add_expression (register_call);
 

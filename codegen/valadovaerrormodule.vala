@@ -41,7 +41,7 @@ public class Vala.DovaErrorModule : DovaDelegateModule {
 
 		if (current_method is CreationMethod && current_method.parent_symbol is Class) {
 			var cl = current_method.parent_symbol as Class;
-			var unref_call = new CCodeFunctionCall (new CCodeIdentifier (cl.get_unref_function ()));
+			var unref_call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_unref_function (cl)));
 			unref_call.add_argument (new CCodeIdentifier ("this"));
 			ccode.add_expression (unref_call);
 			ccode.add_return ();
@@ -125,7 +125,7 @@ public class Vala.DovaErrorModule : DovaDelegateModule {
 
 						var type_check = new CCodeFunctionCall (new CCodeIdentifier ("any_is_a"));
 						type_check.add_argument (new CCodeIdentifier ("dova_error"));
-						type_check.add_argument (new CCodeFunctionCall (new CCodeIdentifier ("%s_type_get".printf (catch_type.type_symbol.get_lower_case_cname ()))));
+						type_check.add_argument (new CCodeFunctionCall (new CCodeIdentifier ("%s_type_get".printf (get_ccode_lower_case_name (catch_type.type_symbol)))));
 
 						ccode.open_if (type_check);
 
@@ -164,7 +164,7 @@ public class Vala.DovaErrorModule : DovaDelegateModule {
 				// Check the allowed error domains to propagate
 				var type_check = new CCodeFunctionCall (new CCodeIdentifier ("any_is_a"));
 				type_check.add_argument (new CCodeIdentifier ("dova_error"));
-				type_check.add_argument (new CCodeFunctionCall (new CCodeIdentifier ("%s_type_get".printf (error_class.get_lower_case_cname ()))));
+				type_check.add_argument (new CCodeFunctionCall (new CCodeIdentifier ("%s_type_get".printf (get_ccode_lower_case_name (error_class)))));
 				if (ccond == null) {
 					ccond = type_check;
 				} else {
@@ -201,7 +201,7 @@ public class Vala.DovaErrorModule : DovaDelegateModule {
 		is_in_catch = true;
 
 		foreach (CatchClause clause in stmt.get_catch_clauses ()) {
-			clause.clabel_name = "__catch%d_%s".printf (this_try_id, clause.error_type.get_lower_case_cname ());
+			clause.clabel_name = "__catch%d_%s".printf (this_try_id, get_ccode_lower_case_name (clause.error_type));
 		}
 
 		is_in_catch = false;
@@ -242,7 +242,7 @@ public class Vala.DovaErrorModule : DovaDelegateModule {
 		}
 
 		if (clause.variable_name != null) {
-			var cdecl = new CCodeDeclaration (clause.error_type.get_cname ());
+			var cdecl = new CCodeDeclaration (get_ccode_name (clause.error_type));
 			cdecl.add_declarator (new CCodeVariableDeclarator (variable_name, new CCodeIdentifier ("dova_error")));
 			ccode.add_statement (cdecl);
 		} else {

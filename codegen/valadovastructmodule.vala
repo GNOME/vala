@@ -24,14 +24,14 @@ using GLib;
 
 public abstract class Vala.DovaStructModule : DovaBaseModule {
 	public override void generate_struct_declaration (Struct st, CCodeFile decl_space) {
-		if (add_symbol_declaration (decl_space, st, st.get_cname ())) {
+		if (add_symbol_declaration (decl_space, st, get_ccode_name (st))) {
 			return;
 		}
 
 		if (st.base_struct != null) {
 			generate_struct_declaration (st.base_struct, decl_space);
 
-			decl_space.add_type_declaration (new CCodeTypeDefinition (st.base_struct.get_cname (), new CCodeVariableDeclarator (st.get_cname ())));
+			decl_space.add_type_declaration (new CCodeTypeDefinition (get_ccode_name (st.base_struct), new CCodeVariableDeclarator (get_ccode_name (st))));
 			return;
 		}
 
@@ -49,10 +49,10 @@ public abstract class Vala.DovaStructModule : DovaBaseModule {
 			return;
 		}
 
-		var instance_struct = new CCodeStruct ("_%s".printf (st.get_cname ()));
+		var instance_struct = new CCodeStruct ("_%s".printf (get_ccode_name (st)));
 
 		foreach (Field f in st.get_fields ()) {
-			string field_ctype = f.variable_type.get_cname ();
+			string field_ctype = get_ccode_name (f.variable_type);
 			if (f.is_volatile) {
 				field_ctype = "volatile " + field_ctype;
 			}
@@ -60,11 +60,11 @@ public abstract class Vala.DovaStructModule : DovaBaseModule {
 			if (f.binding == MemberBinding.INSTANCE)  {
 				generate_type_declaration (f.variable_type, decl_space);
 
-				instance_struct.add_field (field_ctype, f.get_cname () + f.variable_type.get_cdeclarator_suffix ());
+				instance_struct.add_field (field_ctype, get_ccode_name (f) + f.variable_type.get_cdeclarator_suffix ());
 			}
 		}
 
-		decl_space.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (st.get_cname ()), new CCodeVariableDeclarator (st.get_cname ())));
+		decl_space.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (get_ccode_name (st)), new CCodeVariableDeclarator (get_ccode_name (st))));
 
 		decl_space.add_type_definition (instance_struct);
 	}
