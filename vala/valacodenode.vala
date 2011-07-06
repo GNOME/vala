@@ -154,6 +154,187 @@ public abstract class Vala.CodeNode {
 	}
 
 	/**
+	 * Returns true if the specified attribute argument is set.
+	 *
+	 * @param  attribute attribute name
+	 * @param  argument  argument name
+	 * @return           true if the attribute has the given argument
+	 */
+	public bool has_attribute_argument (string attribute, string argument) {
+		var a = get_attribute (attribute);
+		if (a == null) {
+			return false;
+		}
+		return a.has_argument (argument);
+	}
+
+	/**
+	 * Sets the specified named attribute to this code node.
+	 *
+	 * @param name  attribute name
+	 * @param value true to add the attribute, false to remove it
+	 */
+	public void set_attribute (string name, bool value, SourceReference? source_reference = null) {
+		var a = get_attribute (name);
+		if (value && a == null) {
+			attributes.append (new Attribute (name, source_reference));
+		} else if (!value && a != null) {
+			attributes.remove (a);
+		}
+	}
+
+	/**
+	 * Remove the specified named attribute argument
+	 *
+	 * @param attribute attribute name
+	 * @param argument  argument name
+	 */
+	public void remove_attribute_argument (string attribute, string argument) {
+		var a = get_attribute (attribute);
+		if (a != null) {
+			a.args.remove (argument);
+			if (a.args.size == 0) {
+				attributes.remove (a);
+			}
+		}
+	}
+
+	/**
+	 * Returns the string value of the specified attribute argument.
+	 *
+	 * @param attribute attribute name
+	 * @param argument  argument name
+	 * @return          string value
+	 */
+	public string? get_attribute_string (string attribute, string argument) {
+		var a = get_attribute (attribute);
+		if (a == null) {
+			return null;
+		}
+		return a.get_string (argument);
+	}
+
+	/**
+	 * Returns the integer value of the specified attribute argument.
+	 *
+	 * @param attribute attribute name
+	 * @param argument  argument name
+	 * @return          integer value
+	 */
+	public int get_attribute_integer (string attribute, string argument, int default_value = 0) {
+		var a = get_attribute (attribute);
+		if (a == null) {
+			return default_value;
+		}
+		return a.get_integer (argument, default_value);
+	}
+
+	/**
+	 * Returns the double value of the specified attribute argument.
+	 *
+	 * @param attribute attribute name
+	 * @param argument  argument name
+	 * @return          double value
+	 */
+	public double get_attribute_double (string attribute, string argument, double default_value = 0) {
+		if (attributes == null) {
+			return default_value;
+		}
+		var a = get_attribute (attribute);
+		if (a == null) {
+			return default_value;
+		}
+		return a.get_double (argument, default_value);
+	}
+
+	/**
+	 * Returns the bool value of the specified attribute argument.
+	 *
+	 * @param attribute attribute name
+	 * @param argument  argument name
+	 * @return          bool value
+	 */
+	public bool get_attribute_bool (string attribute, string argument, bool default_value = false) {
+		if (attributes == null) {
+			return default_value;
+		}
+		var a = get_attribute (attribute);
+		if (a == null) {
+			return default_value;
+		}
+		return a.get_bool (argument, default_value);
+	}
+
+	/**
+	 * Sets the string value of the specified attribute argument.
+	 *
+	 * @param attribute attribute name
+	 * @param argument  argument name
+	 * @param value     string value
+	 */
+	public void set_attribute_string (string attribute, string argument, string? value, SourceReference? source_reference = null) {
+		if (value == null) {
+			remove_attribute_argument (attribute, argument);
+			return;
+		}
+
+		var a = get_attribute (attribute);
+		if (a == null) {
+			a = new Attribute (attribute, source_reference);
+			attributes.append (a);
+		}
+		a.add_argument (argument, "\"%s\"".printf (value));
+	}
+
+	/**
+	 * Sets the integer value of the specified attribute argument.
+	 *
+	 * @param attribute attribute name
+	 * @param argument  argument name
+	 * @param value     integer value
+	 */
+	public void set_attribute_integer (string attribute, string argument, int value, SourceReference? source_reference = null) {
+		var a = get_attribute (attribute);
+		if (a == null) {
+			a = new Attribute (attribute, source_reference);
+			attributes.append (a);
+		}
+		a.add_argument (argument, value.to_string ());
+	}
+
+	/**
+	 * Sets the integer value of the specified attribute argument.
+	 *
+	 * @param attribute attribute name
+	 * @param argument  argument name
+	 * @param value     double value
+	 */
+	public void set_attribute_double (string attribute, string argument, double value, SourceReference? source_reference = null) {
+		var a = get_attribute (attribute);
+		if (a == null) {
+			a = new Attribute (attribute, source_reference);
+			attributes.append (a);
+		}
+		a.add_argument (argument, "%g".printf (value));
+	}
+
+	/**
+	 * Sets the boolean value of the specified attribute argument.
+	 *
+	 * @param attribute attribute name
+	 * @param argument  argument name
+	 * @param value     bool value
+	 */
+	public void set_attribute_bool (string attribute, string argument, bool value, SourceReference? source_reference = null) {
+		var a = get_attribute (attribute);
+		if (a == null) {
+			a = new Attribute (attribute, source_reference);
+			attributes.append (a);
+		}
+		a.add_argument (argument, value.to_string ());
+	}
+
+	/**
 	 * Returns the attribute cache at the specified index.
 	 *
 	 * @param index attribute cache index
