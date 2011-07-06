@@ -67,8 +67,10 @@ public abstract class Vala.CodeNode {
 
 	private List<DataType> _error_types;
 	private static List<DataType> _empty_type_list;
+	private AttributeCache[] attributes_cache;
 
 	static int last_temp_nr = 0;
+	static int next_attribute_cache_index = 0;
 
 	/**
 	 * Specifies the exceptions that can be thrown by this node or a child node
@@ -147,8 +149,34 @@ public abstract class Vala.CodeNode {
 				return a;
 			}
 		}
-		
+
 		return null;
+	}
+
+	/**
+	 * Returns the attribute cache at the specified index.
+	 *
+	 * @param index attribute cache index
+	 * @return      attribute cache
+	 */
+	public AttributeCache? get_attribute_cache (int index) {
+		if (index >= attributes_cache.length) {
+			return null;
+		}
+		return attributes_cache[index];
+	}
+
+	/**
+	 * Sets the specified attribute cache to this code node.
+	 *
+	 * @param index attribute cache index
+	 * @param cache attribute cache
+	 */
+	public void set_attribute_cache (int index, AttributeCache cache) {
+		if (index >= attributes_cache.length) {
+			attributes_cache.resize (index * 2 + 1);
+		}
+		attributes_cache[index] = cache;
 	}
 
 	/**
@@ -177,4 +205,16 @@ public abstract class Vala.CodeNode {
 	public static string get_temp_name () {
 		return "." + (++last_temp_nr).to_string ();
 	}
+
+	/**
+	 * Returns a new cache index for accessing the attributes cache of code nodes
+	 *
+	 * @return a new cache index
+	 */
+	public static int get_attribute_cache_index () {
+		return next_attribute_cache_index++;
+	}
+}
+
+public class Vala.AttributeCache {
 }
