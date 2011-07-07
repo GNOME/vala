@@ -38,7 +38,7 @@ public class Vala.Struct : TypeSymbol {
 	private string type_id;
 	private string lower_case_cprefix;
 	private string lower_case_csuffix;
-	private bool boolean_type;
+	private bool? boolean_type;
 	private bool integer_type;
 	private bool floating_type;
 	private bool decimal_floating_type;
@@ -342,11 +342,12 @@ public class Vala.Struct : TypeSymbol {
 	 * @return true if this is a boolean type, false otherwise
 	 */
 	public bool is_boolean_type () {
-		if (base_type != null) {
-			var st = base_struct;
-			if (st != null && st.is_boolean_type ()) {
-				return true;
-			}
+		var st = base_struct;
+		if (st != null && st.is_boolean_type ()) {
+			return true;
+		}
+		if (boolean_type == null) {
+			boolean_type = get_attribute ("BooleanType") != null;
 		}
 		return boolean_type;
 	}
@@ -463,10 +464,6 @@ public class Vala.Struct : TypeSymbol {
 		}
 	}
 
-	private void process_boolean_type_attribute (Attribute a) {
-		boolean_type = true;
-	}
-
 	private void process_integer_type_attribute (Attribute a) {
 		integer_type = true;
 		if (a.has_argument ("rank")) {
@@ -500,8 +497,6 @@ public class Vala.Struct : TypeSymbol {
 		foreach (Attribute a in attributes) {
 			if (a.name == "CCode") {
 				process_ccode_attribute (a);
-			} else if (a.name == "BooleanType") {
-				process_boolean_type_attribute (a);
 			} else if (a.name == "IntegerType") {
 				process_integer_type_attribute (a);
 			} else if (a.name == "FloatingType") {
@@ -664,7 +659,7 @@ public class Vala.Struct : TypeSymbol {
 		}
 
 		if (CodeContext.get ().profile == Profile.DOVA) {
-			if (boolean_type) {
+			if (is_boolean_type ()) {
 				return "false";
 			} else if (integer_type || floating_type) {
 				return "0";
