@@ -156,6 +156,7 @@ dist_vapi_DATA = \
 	libosso.vapi \
 	libpanelapplet-2.0.deps \
 	libpanelapplet-2.0.vapi \
+	libpeas-1.0.vapi \
 	libpq.vapi \
 	librsvg-2.0.vapi \
 	librsvg-2.0.deps \
