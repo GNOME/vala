@@ -41,7 +41,7 @@ public class Vala.Struct : TypeSymbol {
 	private bool? boolean_type;
 	private bool? integer_type;
 	private bool? floating_type;
-	private bool decimal_floating_type;
+	private bool? decimal_floating_type;
 	private bool? simple_type;
 	private int? rank;
 	private int? _width;
@@ -418,11 +418,12 @@ public class Vala.Struct : TypeSymbol {
 	}
 
 	public bool is_decimal_floating_type () {
-		if (base_type != null) {
-			var st = base_struct;
-			if (st != null && st.is_decimal_floating_type ()) {
-				return true;
-			}
+		var st = base_struct;
+		if (st != null && st.is_decimal_floating_type ()) {
+			return true;
+		}
+		if (decimal_floating_type == null) {
+			decimal_floating_type = get_attribute_bool ("FloatingType", "decimal");
 		}
 		return decimal_floating_type;
 	}
@@ -511,12 +512,6 @@ public class Vala.Struct : TypeSymbol {
 		}
 	}
 
-	private void process_floating_type_attribute (Attribute a) {
-		if (a.has_argument ("decimal")) {
-			decimal_floating_type = a.get_bool ("decimal");
-		}
-	}
-	
 	/**
 	 * Process all associated attributes.
 	 */
@@ -524,8 +519,6 @@ public class Vala.Struct : TypeSymbol {
 		foreach (Attribute a in attributes) {
 			if (a.name == "CCode") {
 				process_ccode_attribute (a);
-			} else if (a.name == "FloatingType") {
-				process_floating_type_attribute (a);
 			} else if (a.name == "Immutable") {
 				is_immutable = true;
 			} else if (a.name == "Deprecated") {
