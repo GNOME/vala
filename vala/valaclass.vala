@@ -47,10 +47,14 @@ public class Vala.Class : ObjectTypeSymbol {
 			if (base_class != null) {
 				return base_class.is_compact;
 			}
+			if (_is_compact == null) {
+				_is_compact = get_attribute ("Compact") != null;
+			}
 			return _is_compact;
 		}
 		set {
 			_is_compact = value;
+			set_attribute ("Compact", value);
 		}
 	}
 
@@ -126,7 +130,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	private string get_value_function;
 	private string set_value_function;
 	private string take_value_function;
-	private bool _is_compact;
+	private bool? _is_compact;
 	private bool _is_immutable;
 
 	private List<DataType> base_types = new ArrayList<DataType> ();
@@ -745,8 +749,6 @@ public class Vala.Class : ObjectTypeSymbol {
 		foreach (Attribute a in attributes) {
 			if (a.name == "CCode") {
 				process_ccode_attribute (a);
-			} else if (a.name == "Compact") {
-				is_compact = true;
 			} else if (a.name == "Immutable") {
 				is_immutable = true;
 			} else if (a.name == "Deprecated") {
