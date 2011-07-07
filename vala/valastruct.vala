@@ -45,7 +45,7 @@ public class Vala.Struct : TypeSymbol {
 	private bool? simple_type;
 	private int? rank;
 	private int? _width;
-	private bool? signed;
+	private bool? _signed;
 	private bool? _is_immutable;
 	private string marshaller_type_name;
 	private string get_value_function;
@@ -117,7 +117,18 @@ public class Vala.Struct : TypeSymbol {
 		}
 	}
 
-	public bool signed { get; set; default = true; }
+	public bool signed {
+		get {
+			if (_signed == null) {
+				_signed = get_attribute_bool ("IntegerType", "signed", true);
+			}
+			return _signed;
+		}
+		set {
+			_signed = value;
+			set_attribute_bool ("IntegerType", "signed", value);
+		}
+	}
 
 	public bool has_copy_function { get; set; default = true; }
 
@@ -500,12 +511,6 @@ public class Vala.Struct : TypeSymbol {
 		}
 	}
 
-	private void process_integer_type_attribute (Attribute a) {
-		if (a.has_argument ("signed")) {
-			signed = a.get_bool ("signed");
-		}
-	}
-
 	private void process_floating_type_attribute (Attribute a) {
 		if (a.has_argument ("decimal")) {
 			decimal_floating_type = a.get_bool ("decimal");
@@ -519,8 +524,6 @@ public class Vala.Struct : TypeSymbol {
 		foreach (Attribute a in attributes) {
 			if (a.name == "CCode") {
 				process_ccode_attribute (a);
-			} else if (a.name == "IntegerType") {
-				process_integer_type_attribute (a);
 			} else if (a.name == "FloatingType") {
 				process_floating_type_attribute (a);
 			} else if (a.name == "Immutable") {
