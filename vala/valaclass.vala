@@ -66,10 +66,14 @@ public class Vala.Class : ObjectTypeSymbol {
 			if (base_class != null) {
 				return base_class.is_immutable;
 			}
+			if (_is_immutable == null) {
+				_is_immutable = get_attribute ("Immutable") != null;
+			}
 			return _is_immutable;
 		}
 		set {
 			_is_immutable = value;
+			set_attribute ("Immutable", value);
 		}
 	}
 
@@ -131,7 +135,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	private string set_value_function;
 	private string take_value_function;
 	private bool? _is_compact;
-	private bool _is_immutable;
+	private bool? _is_immutable;
 
 	private List<DataType> base_types = new ArrayList<DataType> ();
 
@@ -749,8 +753,6 @@ public class Vala.Class : ObjectTypeSymbol {
 		foreach (Attribute a in attributes) {
 			if (a.name == "CCode") {
 				process_ccode_attribute (a);
-			} else if (a.name == "Immutable") {
-				is_immutable = true;
 			} else if (a.name == "Deprecated") {
 				process_deprecated_attribute (a);
 			} else if (a.name == "GIR") {
