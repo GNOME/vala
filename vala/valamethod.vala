@@ -205,7 +205,14 @@ public class Vala.Method : Subroutine {
 	 * Specifies whether a construct function with a GType parameter is
 	 * available. This is only applicable to creation methods.
 	 */
-	public bool has_construct_function { get; set; default = true; }
+	public bool has_construct_function {
+		get {
+			return get_attribute_bool ("CCode", "has_construct_function", true);
+		}
+		set {
+			set_attribute_bool ("CCode", "has_construct_function", value);
+		}
+	}
 
 	public bool has_generic_type_parameter { get; set; }
 
@@ -462,9 +469,6 @@ public class Vala.Method : Subroutine {
 		}
 		if (a.has_argument ("has_new_function")) {
 			has_new_function = a.get_bool ("has_new_function");
-		}
-		if (a.has_argument ("has_construct_function")) {
-			has_construct_function = a.get_bool ("has_construct_function");
 		}
 		if (a.has_argument ("generic_type_pos")) {
 			has_generic_type_parameter = true;
