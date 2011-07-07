@@ -67,7 +67,8 @@ public class Vala.GirParser : CodeVisitor {
 		ARRAY_LENGTH_FIELD,
 		SENTINEL,
 		CLOSURE,
-		CPREFIX;
+		CPREFIX,
+		ERRORDOMAIN;
 
 		public static ArgumentType? from_string (string name) {
 			var enum_class = (EnumClass) typeof(ArgumentType).class_ref ();
@@ -1664,10 +1665,18 @@ public class Vala.GirParser : CodeVisitor {
 			if (reader.name == "alias") {
 				parse_alias ();
 			} else if (reader.name == "enumeration") {
-				if (reader.get_attribute ("glib:error-quark") != null) {
-					parse_error_domain ();
+				if (metadata.has_argument (ArgumentType.ERRORDOMAIN)) {
+					if (metadata.get_bool (ArgumentType.ERRORDOMAIN)) {
+						parse_error_domain ();
+					} else {
+						parse_enumeration ();
+					}
 				} else {
-					parse_enumeration ();
+					if (reader.get_attribute ("glib:error-quark") != null) {
+						parse_error_domain ();
+					} else {
+						parse_enumeration ();
+					}
 				}
 			} else if (reader.name == "bitfield") {
 				parse_bitfield ();
