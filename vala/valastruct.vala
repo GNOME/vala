@@ -43,7 +43,7 @@ public class Vala.Struct : TypeSymbol {
 	private bool? floating_type;
 	private bool decimal_floating_type;
 	private bool? simple_type;
-	private int rank;
+	private int? rank;
 	private string marshaller_type_name;
 	private string get_value_function;
 	private string set_value_function;
@@ -400,6 +400,13 @@ public class Vala.Struct : TypeSymbol {
 	 * @return the rank if this is an integer or floating point type
 	 */
 	public int get_rank () {
+		if (rank == null) {
+			if (is_integer_type ()) {
+				rank = get_attribute_integer ("IntegerType", "rank");
+			} else {
+				rank = get_attribute_integer ("FloatingType", "rank");
+			}
+		}
 		return rank;
 	}
 
@@ -410,6 +417,11 @@ public class Vala.Struct : TypeSymbol {
 	 */
 	public void set_rank (int rank) {
 		this.rank = rank;
+		if (is_integer_type ()) {
+			set_attribute_integer ("IntegerType", "rank", rank);
+		} else {
+			set_attribute_integer ("FloatingType", "rank", rank);
+		}
 	}
 
 	private void process_gir_attribute (Attribute a) {
@@ -467,9 +479,6 @@ public class Vala.Struct : TypeSymbol {
 	}
 
 	private void process_integer_type_attribute (Attribute a) {
-		if (a.has_argument ("rank")) {
-			rank = a.get_integer ("rank");
-		}
 		if (a.has_argument ("width")) {
 			width = a.get_integer ("width");
 		}
@@ -479,9 +488,6 @@ public class Vala.Struct : TypeSymbol {
 	}
 
 	private void process_floating_type_attribute (Attribute a) {
-		if (a.has_argument ("rank")) {
-			rank = a.get_integer ("rank");
-		}
 		if (a.has_argument ("decimal")) {
 			decimal_floating_type = a.get_bool ("decimal");
 		}
