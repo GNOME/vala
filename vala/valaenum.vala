@@ -255,8 +255,6 @@ public class Vala.Enum : TypeSymbol {
 				process_ccode_attribute (a);
 			} else if (a.name == "Flags") {
 				is_flags = true;
-			} else if (a.name == "Deprecated") {
-				process_deprecated_attribute (a);
 			}
 		}
 	}

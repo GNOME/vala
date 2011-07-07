@@ -292,8 +292,6 @@ public class Vala.Property : Symbol, Lockable {
 				if (a.has_argument ("blurb")) {
 					blurb = a.get_string ("blurb");
 				}
-			} else if (a.name == "Deprecated") {
-				process_deprecated_attribute (a);
 			}			
 		}
 	}

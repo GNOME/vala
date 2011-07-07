@@ -500,15 +500,6 @@ public abstract class Vala.Symbol : CodeNode {
 	}
 
 	/**
-	 * Process a [Deprecated] attribute
-	 */
-	public virtual void process_deprecated_attribute (Attribute attr) {
-		if (attr.name != "Deprecated") {
-			return;
-		}
-	}
-
-	/**
 	 * Check to see if the symbol has been deprecated, and emit a warning
 	 * if it has.
 	 */

@@ -499,8 +499,6 @@ public class Vala.Method : Subroutine {
 			} else if (a.name == "NoArrayLength") {
 				Report.warning (source_reference, "NoArrayLength attribute is deprecated, use [CCode (array_length = false)] instead.");
 				no_array_length = true;
-			} else if (a.name == "Deprecated") {
-				process_deprecated_attribute (a);
 			} else if (a.name == "NoThrow") {
 				get_error_types ().clear ();
 			} else if (a.name == "Experimental") {
