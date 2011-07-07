@@ -110,7 +110,14 @@ public abstract class Vala.Symbol : CodeNode {
 	/**
 	 * Specifies the replacement if this symbol has been deprecated.
 	 */
-	public string? replacement { get; set; default = null; }
+	public string? replacement {
+		owned get {
+			return get_attribute_string ("Deprecated", "replacement");
+		}
+		set {
+			set_attribute_string ("Deprecated", "replacement", value);
+		}
+	}
 
 	/**
 	 * Specifies whether this symbol is experimental.
@@ -498,10 +505,6 @@ public abstract class Vala.Symbol : CodeNode {
 	public virtual void process_deprecated_attribute (Attribute attr) {
 		if (attr.name != "Deprecated") {
 			return;
-		}
-
-		if (attr.has_argument ("replacement")) {
-			replacement = attr.get_string ("replacement");
 		}
 	}
 
