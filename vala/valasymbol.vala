@@ -122,7 +122,18 @@ public abstract class Vala.Symbol : CodeNode {
 	/**
 	 * Specifies whether this symbol is experimental.
 	 */
-	public bool experimental { get; set; default = false; }
+	public bool experimental {
+		get {
+			if (_experimental == null) {
+				_experimental = get_attribute ("Experimental") != null;
+			}
+			return _experimental;
+		}
+		set {
+			_experimental = value;
+			set_attribute ("Experimental", value);
+		}
+	}
 
 	/**
 	 * Specifies whether this symbol has been accessed.
@@ -220,6 +231,7 @@ public abstract class Vala.Symbol : CodeNode {
 	private Scope _scope;
 	private string? _gir_name = null;
 	private bool? _deprecated;
+	private bool? _experimental;
 
 	public Symbol (string? name, SourceReference? source_reference, Comment? comment = null) {
 		this.name = name;
@@ -521,8 +533,6 @@ public abstract class Vala.Symbol : CodeNode {
 		if (attr.name != "Experimental") {
 			return;
 		}
-
-		experimental = true;
 	}
 
 	/**
