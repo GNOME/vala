@@ -195,12 +195,26 @@ public class Vala.Method : Subroutine {
 	/**
 	 * Specifies whether this method expects printf-style format arguments.
 	 */
-	public bool printf_format { get; set; }
+	public bool printf_format {
+		get {
+			return get_attribute ("PrintfFormat") != null;
+		}
+		set {
+			set_attribute ("PrintfFormat", value);
+		}
+	}
 
 	/**
 	 * Specifies whether this method expects scanf-style format arguments.
 	 */
-	public bool scanf_format { get; set; }
+	public bool scanf_format {
+		get {
+			return get_attribute ("ScanfFormat") != null;
+		}
+		set {
+			set_attribute ("ScanfFormat", value);
+		}
+	}
 
 	/**
 	 * Specifies whether a new function without a GType parameter is
@@ -500,10 +514,6 @@ public class Vala.Method : Subroutine {
 				returns_modified_pointer = true;
 			} else if (a.name == "FloatingReference") {
 				return_type.floating_reference = true;
-			} else if (a.name == "PrintfFormat") {
-				printf_format = true;
-			} else if (a.name == "ScanfFormat") {
-				scanf_format = true;
 			} else if (a.name == "NoArrayLength") {
 				Report.warning (source_reference, "NoArrayLength attribute is deprecated, use [CCode (array_length = false)] instead.");
 				no_array_length = true;
