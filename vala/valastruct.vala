@@ -89,7 +89,18 @@ public class Vala.Struct : TypeSymbol {
 	 * Specifies if 'const' should be emitted for input parameters
 	 * of this type.
 	 */
-	public bool is_immutable { get; set; }
+	public bool is_immutable {
+		get {
+			if (_is_immutable == null) {
+				_is_immutable = get_attribute ("Immutable") != null;
+			}
+			return _is_immutable;
+		}
+		set {
+			_is_immutable = value;
+			set_attribute ("Immutable", value);
+		}
+	}
 
 	/**
 	 * Specifies whether this struct has a registered GType.
@@ -519,8 +530,6 @@ public class Vala.Struct : TypeSymbol {
 		foreach (Attribute a in attributes) {
 			if (a.name == "CCode") {
 				process_ccode_attribute (a);
-			} else if (a.name == "Immutable") {
-				is_immutable = true;
 			} else if (a.name == "Deprecated") {
 				process_deprecated_attribute (a);
 			} else if (a.name == "GIR") {
