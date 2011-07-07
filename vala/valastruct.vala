@@ -42,6 +42,7 @@ public class Vala.Struct : TypeSymbol {
 	private bool integer_type;
 	private bool floating_type;
 	private bool decimal_floating_type;
+	private bool? simple_type;
 	private int rank;
 	private string marshaller_type_name;
 	private string get_value_function;
@@ -695,17 +696,17 @@ public class Vala.Struct : TypeSymbol {
 	 * instances are passed by value.
 	 */
 	public bool is_simple_type () {
-		if (base_type != null) {
-			var st = base_struct;
-			if (st != null && st.is_simple_type ()) {
-				return true;
-			}
-		}
 		if (CodeContext.get ().profile == Profile.DOVA) {
 			return true;
 		}
-		return (boolean_type || integer_type || floating_type
-		        || get_attribute ("SimpleType") != null);
+		var st = base_struct;
+		if (st != null && st.is_simple_type ()) {
+			return true;
+		}
+		if (simple_type == null) {
+			simple_type = get_attribute ("SimpleType") != null || get_attribute ("BooleanType") != null || get_attribute ("IntegerType") != null || get_attribute ("FloatingType") != null;
+		}
+		return simple_type;
 	}
 
 	/**
@@ -713,7 +714,8 @@ public class Vala.Struct : TypeSymbol {
 	 * value.
 	 */
 	public void set_simple_type (bool simple_type) {
-		attributes.append (new Attribute ("SimpleType"));
+		this.simple_type = simple_type;
+		set_attribute ("SimpleType", simple_type);
 	}
 
 	public override void replace_type (DataType old_type, DataType new_type) {
