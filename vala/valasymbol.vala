@@ -98,7 +98,14 @@ public abstract class Vala.Symbol : CodeNode {
 	/**
 	 * Specifies what version this symbol has been deprecated since.
 	 */
-	public string? deprecated_since { get; set; default = null; }
+	public string? deprecated_since {
+		owned get {
+			return get_attribute_string ("Deprecated", "since");
+		}
+		set {
+			set_attribute_string ("Deprecated", "since", value);
+		}
+	}
 
 	/**
 	 * Specifies the replacement if this symbol has been deprecated.
@@ -493,9 +500,6 @@ public abstract class Vala.Symbol : CodeNode {
 			return;
 		}
 
-		if (attr.has_argument ("since")) {
-			deprecated_since = attr.get_string ("since");
-		}
 		if (attr.has_argument ("replacement")) {
 			replacement = attr.get_string ("replacement");
 		}
