@@ -78,7 +78,7 @@ public class Valadoc.Api.Interface : TypeSymbol {
 	 * Returns the dbus-name.
 	 */
 	public string? get_dbus_name () {
-		return Vala.DBusModule.get_dbus_name ((Vala.TypeSymbol) symbol);
+		return Vala.GDBusModule.get_dbus_name ((Vala.TypeSymbol) symbol);
 	}
 
 	/**

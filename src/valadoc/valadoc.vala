@@ -51,7 +51,6 @@ public class ValaDoc : Object {
 	private static string[] defines;
 	private static bool experimental;
 	private static bool experimental_non_null = false;
-	private static bool disable_dbus_transformation;
 	private static string profile;
 	[CCode (array_length = false, array_null_terminated = true)]
 	private static string[] import_packages;
@@ -69,7 +68,6 @@ public class ValaDoc : Object {
 		{ "define", 'D', 0, OptionArg.STRING_ARRAY, ref defines, "Define SYMBOL", "SYMBOL..." },
 		{ "enable-experimental", 0, 0, OptionArg.NONE, ref experimental, "Enable experimental features", null },
 		{ "enable-experimental-non-null", 0, 0, OptionArg.NONE, ref experimental_non_null, "Enable experimental enhancements for non-null types", null },
-		{ "disable-dbus-transformation", 0, 0, OptionArg.NONE, ref disable_dbus_transformation, "Disable transformation of D-Bus member names", null },
 		{ "vapidir", 0, 0, OptionArg.FILENAME_ARRAY, ref vapi_directories, "Look for package bindings in DIRECTORY", "DIRECTORY..." },
 		{ "importdir", 0, 0, OptionArg.FILENAME_ARRAY, ref import_directories, "Look for external documentation in DIRECTORY", "DIRECTORY..." },
 		{ "profile", 0, 0, OptionArg.STRING, ref profile, "Use the given profile instead of the default", "PROFILE" },
@@ -148,7 +146,6 @@ public class ValaDoc : Object {
 
 		settings.experimental = experimental;
 		settings.experimental_non_null = experimental_non_null;
-		settings.disable_dbus_transformation = disable_dbus_transformation;
 		settings.basedir = basedir;
 		settings.directory = directory;
 		settings.vapi_directories = vapi_directories;

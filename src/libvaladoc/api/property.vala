@@ -53,7 +53,7 @@ public class Valadoc.Api.Property : Member {
 	 * Returns the dbus-name.
 	 */
 	public string get_dbus_name () {
-		return Vala.DBusModule.get_dbus_name_for_member (symbol);
+		return Vala.GDBusModule.get_dbus_name_for_member (symbol);
 	}
 
 	/**
@@ -95,7 +95,7 @@ public class Valadoc.Api.Property : Member {
 	 */
 	public bool is_dbus_visible {
 		get {
-			return Vala.DBusServerModule.is_dbus_visible (symbol);
+			return Vala.GDBusServerModule.is_dbus_visible (symbol);
 		}
 	}
 

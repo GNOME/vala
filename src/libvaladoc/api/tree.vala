@@ -191,7 +191,6 @@ public class Valadoc.Api.Tree {
 
 		this.context.experimental = settings.experimental;
 		this.context.experimental_non_null = settings.experimental || settings.experimental_non_null;
-		this.context.dbus_transformation = !settings.disable_dbus_transformation;
 		this.context.vapi_directories = settings.vapi_directories;
 
 		if (settings.verbose) {

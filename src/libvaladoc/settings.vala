@@ -91,12 +91,6 @@ public class Valadoc.Settings : Object {
 	public bool experimental_non_null;
 
 	/**
-	 * Enable transformation of D-Bus member names in dynamic client support.
-	 */
-	public bool disable_dbus_transformation;
-
-
-	/**
 	 * Use the given profile (dova, gobject, posix, ...) instead of the defaul
 	 */
 	public string? profile;

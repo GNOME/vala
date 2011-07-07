@@ -575,11 +575,11 @@ public class Valadoc.Api.FormalParameter : Symbol {
 			signature.append ("(", false);
 
 			bool first = true;
-			foreach (string param in expr.get_parameters ()) {
+			foreach (Vala.Parameter param in expr.get_parameters ()) {
 				if (!first) {
 					signature.append (", ", false);
 				}
-				signature.append (param, false);
+				signature.append (param.name, false);
 				first = false;
 			}
 

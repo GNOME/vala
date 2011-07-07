@@ -167,7 +167,7 @@ public class Valadoc.Api.TypeReference : Item {
 
 	public string? get_dbus_type_signature () {
 		if (vtyperef != null) {
-			return Vala.DBusModule.get_type_signature (vtyperef);
+			return Vala.GVariantModule.get_dbus_signature (vtyperef.data_type);
 		} else {
 			return null;
 		}
