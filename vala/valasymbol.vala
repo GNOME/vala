@@ -527,15 +527,6 @@ public abstract class Vala.Symbol : CodeNode {
 	}
 
 	/**
-	 * Process a [Experimental] attribute
-	 */
-	public virtual void process_experimental_attribute (Attribute attr) {
-		if (attr.name != "Experimental") {
-			return;
-		}
-	}
-
-	/**
 	 * Check to see if the symbol is experimental, and emit a warning
 	 * if it is.
 	 */

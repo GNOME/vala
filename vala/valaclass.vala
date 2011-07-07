@@ -755,8 +755,6 @@ public class Vala.Class : ObjectTypeSymbol {
 				process_ccode_attribute (a);
 			} else if (a.name == "GIR") {
 				process_gir_attribute (a);
-			} else if (a.name == "Experimental") {
-				process_experimental_attribute (a);
 			}
 		}
 	}

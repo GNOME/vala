@@ -501,8 +501,6 @@ public class Vala.Method : Subroutine {
 				no_array_length = true;
 			} else if (a.name == "NoThrow") {
 				get_error_types ().clear ();
-			} else if (a.name == "Experimental") {
-				process_experimental_attribute (a);
 			} else if (a.name == "DestroysInstance") {
 				this_parameter.variable_type.value_owned = true;
 			}

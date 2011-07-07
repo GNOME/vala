@@ -122,8 +122,6 @@ public class Vala.Field : Variable, Lockable {
 		foreach (Attribute a in attributes) {
 			if (a.name == "CCode") {
 				process_ccode_attribute (a);
-			} else if (a.name == "Experimental") {
-				process_experimental_attribute (a);
 			}
 		}
 	}
