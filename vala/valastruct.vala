@@ -44,6 +44,9 @@ public class Vala.Struct : TypeSymbol {
 	private bool decimal_floating_type;
 	private bool? simple_type;
 	private int? rank;
+	private int? _width;
+	private bool? signed;
+	private bool? _is_immutable;
 	private string marshaller_type_name;
 	private string get_value_function;
 	private string set_value_function;
@@ -93,7 +96,26 @@ public class Vala.Struct : TypeSymbol {
 	 */
 	public bool has_type_id { get; set; default = true; }
 
-	public int width { get; set; default = 32; }
+	public int width {
+		get {
+			if (_width == null) {
+				if (is_integer_type ()) {
+					_width = get_attribute_integer ("IntegerType", "width", 32);
+				} else {
+					_width = get_attribute_integer ("FloatingType", "width", 32);
+				}
+			}
+			return _width;
+		}
+		set {
+			_width = value;
+			if (is_integer_type ()) {
+				set_attribute_integer ("IntegerType", "width", value);
+			} else {
+				set_attribute_integer ("FloatingType", "width", value);
+			}
+		}
+	}
 
 	public bool signed { get; set; default = true; }
 
@@ -479,9 +501,6 @@ public class Vala.Struct : TypeSymbol {
 	}
 
 	private void process_integer_type_attribute (Attribute a) {
-		if (a.has_argument ("width")) {
-			width = a.get_integer ("width");
-		}
 		if (a.has_argument ("signed")) {
 			signed = a.get_bool ("signed");
 		}
@@ -490,9 +509,6 @@ public class Vala.Struct : TypeSymbol {
 	private void process_floating_type_attribute (Attribute a) {
 		if (a.has_argument ("decimal")) {
 			decimal_floating_type = a.get_bool ("decimal");
-		}
-		if (a.has_argument ("width")) {
-			width = a.get_integer ("width");
 		}
 	}
 	
