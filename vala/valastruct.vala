@@ -40,7 +40,7 @@ public class Vala.Struct : TypeSymbol {
 	private string lower_case_csuffix;
 	private bool? boolean_type;
 	private bool? integer_type;
-	private bool floating_type;
+	private bool? floating_type;
 	private bool decimal_floating_type;
 	private bool? simple_type;
 	private int rank;
@@ -374,11 +374,12 @@ public class Vala.Struct : TypeSymbol {
 	 * @return true if this is a floating point type, false otherwise
 	 */
 	public bool is_floating_type () {
-		if (base_type != null) {
-			var st = base_struct;
-			if (st != null && st.is_floating_type ()) {
-				return true;
-			}
+		var st = base_struct;
+		if (st != null && st.is_floating_type ()) {
+			return true;
+		}
+		if (floating_type == null) {
+			floating_type = get_attribute ("FloatingType") != null;
 		}
 		return floating_type;
 	}
@@ -478,7 +479,6 @@ public class Vala.Struct : TypeSymbol {
 	}
 
 	private void process_floating_type_attribute (Attribute a) {
-		floating_type = true;
 		if (a.has_argument ("rank")) {
 			rank = a.get_integer ("rank");
 		}
@@ -661,7 +661,7 @@ public class Vala.Struct : TypeSymbol {
 		if (CodeContext.get ().profile == Profile.DOVA) {
 			if (is_boolean_type ()) {
 				return "false";
-			} else if (is_integer_type () || floating_type) {
+			} else if (is_integer_type () || is_floating_type ()) {
 				return "0";
 			}
 		}
