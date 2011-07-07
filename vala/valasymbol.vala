@@ -82,7 +82,18 @@ public abstract class Vala.Symbol : CodeNode {
 	/**
 	 * Specifies whether this symbol has been deprecated.
 	 */
-	public bool deprecated { get; set; default = false; }
+	public bool deprecated {
+		get {
+			if (_deprecated == null) {
+				_deprecated = get_attribute ("Deprecated") != null;
+			}
+			return _deprecated;
+		}
+		set {
+			_deprecated = value;
+			set_attribute ("Deprecated", _deprecated);
+		}
+	}
 
 	/**
 	 * Specifies what version this symbol has been deprecated since.
@@ -194,6 +205,7 @@ public abstract class Vala.Symbol : CodeNode {
 	private weak Scope _owner;
 	private Scope _scope;
 	private string? _gir_name = null;
+	private bool? _deprecated;
 
 	public Symbol (string? name, SourceReference? source_reference, Comment? comment = null) {
 		this.name = name;
@@ -480,8 +492,6 @@ public abstract class Vala.Symbol : CodeNode {
 		if (attr.name != "Deprecated") {
 			return;
 		}
-
-		deprecated = true;
 
 		if (attr.has_argument ("since")) {
 			deprecated_since = attr.get_string ("since");
