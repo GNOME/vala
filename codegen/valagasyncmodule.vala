@@ -66,6 +66,12 @@ public class Vala.GAsyncModule : GSignalModule {
 			}
 		}
 
+		foreach (var type_param in m.get_type_parameters ()) {
+			data.add_field ("GType", "%s_type".printf (type_param.name.down ()));
+			data.add_field ("GBoxedCopyFunc", "%s_dup_func".printf (type_param.name.down ()));
+			data.add_field ("GDestroyNotify", "%s_destroy_func".printf (type_param.name.down ()));
+		}
+
 		if (!(m.return_type is VoidType)) {
 			data.add_field (m.return_type.get_cname (), "result");
 			if (m.return_type is ArrayType) {
@@ -270,6 +276,15 @@ public class Vala.GAsyncModule : GSignalModule {
 			}
 		}
 		emit_context.pop_symbol ();
+
+		foreach (var type_param in m.get_type_parameters ()) {
+			var type = "%s_type".printf (type_param.name.down ());
+			var dup_func = "%s_dup_func".printf (type_param.name.down ());
+			var destroy_func = "%s_destroy_func".printf (type_param.name.down ());
+			ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, type), new CCodeIdentifier (type));
+			ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, dup_func), new CCodeIdentifier (dup_func));
+			ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, destroy_func), new CCodeIdentifier (destroy_func));
+		}
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_real_cname () + "_co"));
 		ccall.add_argument (data_var);

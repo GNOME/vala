@@ -2277,7 +2277,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (is_in_generic_type (type) && !is_chainup && !in_creation_method) {
 				return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (get_result_cexpression ("self"), "priv"), var_name);
 			} else {
-				return new CCodeIdentifier (var_name);
+				return get_variable_cexpression (var_name);
 			}
 		} else {
 			string type_id = type.get_type_id ();
@@ -2333,7 +2333,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (is_in_generic_type (type) && !is_chainup && !in_creation_method) {
 				return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (get_result_cexpression ("self"), "priv"), func_name);
 			} else {
-				return new CCodeIdentifier (func_name);
+				return get_variable_cexpression (func_name);
 			}
 		} else if (type is PointerType) {
 			var pointer_type = (PointerType) type;
@@ -2780,7 +2780,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (is_in_generic_type (type) && !is_chainup && !in_creation_method) {
 				return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (get_result_cexpression ("self"), "priv"), func_name);
 			} else {
-				return new CCodeIdentifier (func_name);
+				return get_variable_cexpression (func_name);
 			}
 		} else if (type is ArrayType) {
 			if (context.profile == Profile.POSIX) {
