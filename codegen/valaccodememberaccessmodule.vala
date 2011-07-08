@@ -221,10 +221,9 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					ccall.add_argument (pub_inst);
 				}
 
-				var temp_var = get_temp_variable (base_property.get_accessor.value_type, base_property.get_accessor.value_type.value_owned);
-				emit_temp_var (temp_var);
-				var ctemp = get_variable_cexpression (temp_var.name);
-				set_cvalue (expr, ctemp);
+				var temp_value = create_temp_value (base_property.get_accessor.value_type, false, expr);
+				expr.target_value = load_temp_value (temp_value);
+				var ctemp = get_cvalue_ (temp_value);
 
 				// Property access to real struct types is handled differently
 				// The value is returned by out parameter
@@ -237,21 +236,12 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					array_type = base_property.property_type as ArrayType;
 					if (array_type != null && !base_property.no_array_length) {
 						for (int dim = 1; dim <= array_type.rank; dim++) {
-							temp_var = get_temp_variable (int_type);
-							ctemp = get_variable_cexpression (temp_var.name);
-							emit_temp_var (temp_var);
-							ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
-							append_array_length (expr, ctemp);
+							ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_array_length_cvalue (temp_value, dim)));
 						}
 					} else {
 						delegate_type = base_property.property_type as DelegateType;
 						if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
-							temp_var = get_temp_variable (new PointerType (new VoidType ()), false, expr, false);
-							ctemp = get_variable_cexpression (temp_var.name);
-							emit_temp_var (temp_var);
-							ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
-							set_delegate_target (expr, ctemp);
-							set_delegate_target_destroy_notify (expr, new CCodeConstant ("NULL"));
+							ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_delegate_target_cvalue (temp_value)));
 						}
 					}
 				}
