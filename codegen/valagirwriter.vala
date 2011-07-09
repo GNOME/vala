@@ -128,11 +128,11 @@ public class Vala.GIRWriter : CodeVisitor {
 	private void write_c_includes (Namespace ns) {
 		// Collect C header filenames
 		Set<string> header_filenames = new HashSet<string> (str_hash, str_equal);
-		foreach (string c_header_filename in ns.get_cheader_filenames ()) {
+		foreach (string c_header_filename in CCodeBaseModule.get_ccode_header_filenames (ns).split (",")) {
 			header_filenames.add (c_header_filename);
 		}
 		foreach (Symbol symbol in ns.scope.get_symbol_table ().get_values ()) {
-			foreach (string c_header_filename in symbol.get_cheader_filenames ()) {
+			foreach (string c_header_filename in CCodeBaseModule.get_ccode_header_filenames (symbol).split (",")) {
 				header_filenames.add (c_header_filename);
 			}
 		}
@@ -170,7 +170,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		write_indent ();
 		buffer.append_printf ("<namespace name=\"%s\" version=\"%s\"", gir_namespace, gir_version);
-		string? cprefix = ns.get_cprefix ();
+		string? cprefix = CCodeBaseModule.get_ccode_prefix (ns);
 		if (cprefix != null) {
 			buffer.append_printf (" c:prefix=\"%s\"", cprefix);
 		}
@@ -244,7 +244,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			buffer.append_printf ("<field name=\"parent_instance\">\n");
 			indent++;
 			write_indent ();
-			buffer.append_printf ("<type name=\"%s\" c:type=\"%s\"/>\n", gi_type_name (cl.base_class), cl.base_class.get_cname ());
+			buffer.append_printf ("<type name=\"%s\" c:type=\"%s\"/>\n", gi_type_name (cl.base_class), CCodeBaseModule.get_ccode_name (cl.base_class));
 			indent--;
 			write_indent ();
 			buffer.append_printf("</field>\n");
@@ -253,7 +253,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			buffer.append_printf ("<field name=\"priv\">\n");
 			indent++;
 			write_indent ();
-			buffer.append_printf ("<type name=\"%sPrivate\" c:type=\"%sPrivate*\"/>\n", cl.name, cl.get_cname ());
+			buffer.append_printf ("<type name=\"%sPrivate\" c:type=\"%sPrivate*\"/>\n", cl.name, CCodeBaseModule.get_ccode_name (cl));
 			indent--;
 			write_indent ();
 			buffer.append_printf("</field>\n");
@@ -277,7 +277,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			buffer.append_printf ("<field name=\"parent_class\">\n");
 			indent++;
 			write_indent ();
-			buffer.append_printf ("<type name=\"%sClass\" c:type=\"%sClass\"/>\n", gi_type_name (cl.base_class), cl.base_class.get_cname ());
+			buffer.append_printf ("<type name=\"%sClass\" c:type=\"%sClass\"/>\n", gi_type_name (cl.base_class), CCodeBaseModule.get_ccode_name (cl.base_class));
 			indent--;
 			write_indent ();
 			buffer.append_printf ("</field>\n");
@@ -295,7 +295,7 @@ public class Vala.GIRWriter : CodeVisitor {
 						write_indent ();
 						buffer.append_printf("<field name=\"%s\">\n", m.name);
 						indent++;
-						do_write_signature (m, "callback", true, m.name, m.get_cname (), m.get_async_begin_parameters (), new VoidType (), false);
+						do_write_signature (m, "callback", true, m.name, CCodeBaseModule.get_ccode_name (m), m.get_async_begin_parameters (), new VoidType (), false);
 						indent--;
 						write_indent ();
 						buffer.append_printf ("</field>\n");
@@ -303,7 +303,7 @@ public class Vala.GIRWriter : CodeVisitor {
 						write_indent ();
 						buffer.append_printf("<field name=\"%s\">\n", finish_name);
 						indent++;
-						do_write_signature (m, "callback", true, finish_name, m.get_finish_cname (), m.get_async_end_parameters (), m.return_type, m.tree_can_fail);
+						do_write_signature (m, "callback", true, finish_name, CCodeBaseModule.get_ccode_finish_name (m), m.get_async_end_parameters (), m.return_type, m.tree_can_fail);
 						indent--;
 						write_indent ();
 						buffer.append_printf ("</field>\n");
@@ -311,7 +311,7 @@ public class Vala.GIRWriter : CodeVisitor {
 						write_indent ();
 						buffer.append_printf("<field name=\"%s\">\n", m.name);
 						indent++;
-						do_write_signature (m, "callback", true, m.name, m.get_cname (), m.get_parameters (), m.return_type, m.tree_can_fail);write_signature(m, "callback", true);
+						do_write_signature (m, "callback", true, m.name, CCodeBaseModule.get_ccode_name (m), m.get_parameters (), m.return_type, m.tree_can_fail);write_signature(m, "callback", true);
 						indent--;
 						write_indent ();
 						buffer.append_printf ("</field>\n");
@@ -336,7 +336,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			buffer.append_printf ("</record>\n");
 
 			write_indent ();
-			buffer.append_printf ("<record name=\"%sPrivate\" c:type=\"%sPrivate\" disguised=\"1\"/>\n", cl.name, cl.get_cname ());
+			buffer.append_printf ("<record name=\"%sPrivate\" c:type=\"%sPrivate\" disguised=\"1\"/>\n", cl.name, CCodeBaseModule.get_ccode_name (cl));
 		} else {
 			write_indent ();
 			buffer.append_printf ("<record name=\"%s\"", get_gir_name (cl));
@@ -461,7 +461,7 @@ public class Vala.GIRWriter : CodeVisitor {
 					write_indent ();
 					buffer.append_printf("<field name=\"%s\">\n", m.name);
 					indent++;
-					do_write_signature (m, "callback", true, m.name, m.get_cname (), m.get_async_begin_parameters (), new VoidType (), false);
+					do_write_signature (m, "callback", true, m.name, CCodeBaseModule.get_ccode_name (m), m.get_async_begin_parameters (), new VoidType (), false);
 					indent--;
 					write_indent ();
 					buffer.append_printf ("</field>\n");
@@ -469,7 +469,7 @@ public class Vala.GIRWriter : CodeVisitor {
 					write_indent ();
 					buffer.append_printf("<field name=\"%s\">\n", finish_name);
 					indent++;
-					do_write_signature (m, "callback", true, finish_name, m.get_finish_cname (), m.get_async_end_parameters (), m.return_type, m.tree_can_fail);
+					do_write_signature (m, "callback", true, finish_name, CCodeBaseModule.get_ccode_finish_name (m), m.get_async_end_parameters (), m.return_type, m.tree_can_fail);
 					indent--;
 					write_indent ();
 					buffer.append_printf ("</field>\n");
@@ -477,7 +477,7 @@ public class Vala.GIRWriter : CodeVisitor {
 					write_indent ();
 					buffer.append_printf("<field name=\"%s\">\n", m.name);
 					indent++;
-					do_write_signature (m, "callback", true, m.name, m.get_cname (), m.get_parameters (), m.return_type, m.tree_can_fail);
+					do_write_signature (m, "callback", true, m.name, CCodeBaseModule.get_ccode_name (m), m.get_parameters (), m.return_type, m.tree_can_fail);
 					indent--;
 					write_indent ();
 					buffer.append_printf ("</field>\n");
@@ -510,7 +510,11 @@ public class Vala.GIRWriter : CodeVisitor {
 				break;
 			}
 
-			gir_name = cur_sym.gir_name.concat (gir_name);
+			var cur_name = cur_sym.get_attribute_string ("GIR", "name");
+			if (cur_name == null) {
+				cur_name = cur_sym.name;
+			}
+			gir_name = cur_name.concat (gir_name);
 		}
 
 		return gir_name;
@@ -558,7 +562,7 @@ public class Vala.GIRWriter : CodeVisitor {
 	public override void visit_enum_value (EnumValue ev) {
 		write_indent ();
 		var en = (Enum) hierarchy[0];
-		buffer.append_printf ("<member name=\"%s\" c:identifier=\"%s\"", ev.name.down (), ev.get_cname ());
+		buffer.append_printf ("<member name=\"%s\" c:identifier=\"%s\"", ev.name.down (), CCodeBaseModule.get_ccode_name (ev));
 		if (ev.value != null) {
 			string value = literal_expression_to_value_string (ev.value);
 			buffer.append_printf (" value=\"%s\"", value);
@@ -584,7 +588,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		write_indent ();
 		buffer.append_printf ("<errordomain name=\"%s\"", edomain.name);
-		buffer.append_printf (" get-quark=\"%squark\"", edomain.get_lower_case_cprefix ());
+		buffer.append_printf (" get-quark=\"%squark\"", CCodeBaseModule.get_ccode_lower_case_prefix (edomain));
 		buffer.append_printf (" codes=\"%s\"", edomain.name);
 		write_symbol_attributes (edomain);
 		buffer.append_printf (">\n");
@@ -613,7 +617,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 	public override void visit_error_code (ErrorCode ecode) {
 		write_indent ();
-		buffer.append_printf ("<member name=\"%s\" c:identifier=\"%s\"", ecode.name.down (), ecode.get_cname ());
+		buffer.append_printf ("<member name=\"%s\" c:identifier=\"%s\"", ecode.name.down (), CCodeBaseModule.get_ccode_name (ecode));
 		if (ecode.value != null) {
 			string value = literal_expression_to_value_string (ecode.value);
 			buffer.append_printf (" value=\"%s\"", value);
@@ -638,7 +642,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		string value = literal_expression_to_value_string (initializer);
 
 		write_indent ();
-		buffer.append_printf ("<constant name=\"%s\" c:identifier=\"%s\"", c.name, c.get_cname ());
+		buffer.append_printf ("<constant name=\"%s\" c:identifier=\"%s\"", c.name, CCodeBaseModule.get_ccode_name (c));
 		buffer.append_printf (" value=\"%s\"", value);
 		write_symbol_attributes (c);
 		buffer.append_printf (">\n");
@@ -661,7 +665,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 
 		write_indent ();
-		buffer.append_printf ("<field name=\"%s\"", f.get_cname ());
+		buffer.append_printf ("<field name=\"%s\"", CCodeBaseModule.get_ccode_name (f));
 		if (f.variable_type.nullable) {
 			buffer.append_printf (" allow-none=\"1\"");
 		}
@@ -706,9 +710,9 @@ public class Vala.GIRWriter : CodeVisitor {
 			}
 
 			foreach (Parameter param in params) {
-				write_param_or_return (param.variable_type, true, ref index, !param.no_array_length, param.name, param.direction);
+				write_param_or_return (param.variable_type, true, ref index, CCodeBaseModule.get_ccode_array_length (param), param.name, param.direction);
 
-				write_implicit_params (param.variable_type, ref index, !param.no_array_length, param.name, param.direction);
+				write_implicit_params (param.variable_type, ref index, CCodeBaseModule.get_ccode_array_length (param), param.name, param.direction);
 			}
 
 			if (ret_is_struct) {
@@ -754,7 +758,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		write_indent ();
 		buffer.append_printf ("<callback name=\"%s\"", cb.name);
-		buffer.append_printf (" c:type=\"%s\"", cb.get_cname ());
+		buffer.append_printf (" c:type=\"%s\"", CCodeBaseModule.get_ccode_name (cb));
 		if (cb.tree_can_fail) {
 			buffer.append_printf (" throws=\"1\"");
 		}
@@ -764,7 +768,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		write_annotations (cb);
 
-		write_params_and_return (cb.get_parameters (), cb.return_type, !cb.no_array_length, false, null, cb.has_target);
+		write_params_and_return (cb.get_parameters (), cb.return_type, CCodeBaseModule.get_ccode_array_length (cb), false, null, cb.has_target);
 
 		indent--;
 		write_indent ();
@@ -806,7 +810,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 	bool check_type (DataType type) {
 		// gobject-introspection does not currently support va_list parameters
-		if (type.get_cname () == "va_list") {
+		if (CCodeBaseModule.get_ccode_name (type) == "va_list") {
 			return false;
 		}
 
@@ -830,8 +834,8 @@ public class Vala.GIRWriter : CodeVisitor {
 		string name;
 		if (m.parent_symbol != parent) {
 			instance = false;
-			name = m.get_cname ();
-			var parent_prefix = parent.get_lower_case_cprefix ();
+			name = CCodeBaseModule.get_ccode_name (m);
+			var parent_prefix = CCodeBaseModule.get_ccode_lower_case_prefix (parent);
 			if (name.has_prefix (parent_prefix)) {
 				name = name.substring (parent_prefix.length);
 			}
@@ -845,10 +849,10 @@ public class Vala.GIRWriter : CodeVisitor {
 				finish_name = finish_name.substring (0, finish_name.length - "_async".length);
 			}
 			finish_name += "_finish";
-			do_write_signature (m, tag_name, instance, name, m.get_cname (), m.get_async_begin_parameters (), new VoidType (), false);
-			do_write_signature (m, tag_name, instance, finish_name, m.get_finish_cname (), m.get_async_end_parameters (), m.return_type, m.tree_can_fail);
+			do_write_signature (m, tag_name, instance, name, CCodeBaseModule.get_ccode_name (m), m.get_async_begin_parameters (), new VoidType (), false);
+			do_write_signature (m, tag_name, instance, finish_name, CCodeBaseModule.get_ccode_finish_name (m), m.get_async_end_parameters (), m.return_type, m.tree_can_fail);
 		} else {
-			do_write_signature (m, tag_name, instance, name, m.get_cname (), m.get_parameters (), m.return_type, m.tree_can_fail);
+			do_write_signature (m, tag_name, instance, name, CCodeBaseModule.get_ccode_name (m), m.get_parameters (), m.return_type, m.tree_can_fail);
 		}
 	}
 
@@ -877,7 +881,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			instance_type = CCodeBaseModule.get_data_type_for_symbol ((TypeSymbol) m.parent_symbol);
 		}
 
-		write_params_and_return (params, return_type, !m.no_array_length, false, instance_type);
+		write_params_and_return (params, return_type, CCodeBaseModule.get_ccode_array_length (m), false, instance_type);
 
 		indent--;
 		write_indent ();
@@ -906,9 +910,9 @@ public class Vala.GIRWriter : CodeVisitor {
 		if (m.parent_symbol is Class && m == ((Class)m.parent_symbol).default_construction_method ||
 			m.parent_symbol is Struct && m == ((Struct)m.parent_symbol).default_construction_method) {
 			string m_name = is_struct ? "init" : "new";
-			buffer.append_printf ("<%s name=\"%s\" c:identifier=\"%s\"", tag_name, m_name, m.get_cname ());
+			buffer.append_printf ("<%s name=\"%s\" c:identifier=\"%s\"", tag_name, m_name, CCodeBaseModule.get_ccode_name (m));
 		} else {
-			buffer.append_printf ("<%s name=\"%s\" c:identifier=\"%s\"", tag_name, m.name, m.get_cname ());
+			buffer.append_printf ("<%s name=\"%s\" c:identifier=\"%s\"", tag_name, m.name, CCodeBaseModule.get_ccode_name (m));
 		}
 
 		if (m.tree_can_fail) {
@@ -934,7 +938,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 
 		write_indent ();
-		buffer.append_printf ("<property name=\"%s\"", prop.get_canonical_name ());
+		buffer.append_printf ("<property name=\"%s\"", prop.name.replace ("_", "-"));
 		if (prop.get_accessor == null) {
 			buffer.append_printf (" readable=\"0\"");
 		}
@@ -967,7 +971,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 		
 		write_indent ();
-		buffer.append_printf ("<glib:signal name=\"%s\"", sig.get_cname ());
+		buffer.append_printf ("<glib:signal name=\"%s\"", CCodeBaseModule.get_ccode_name (sig));
 		write_symbol_attributes (sig);
 		buffer.append_printf (">\n");
 		indent++;
@@ -1054,13 +1058,13 @@ public class Vala.GIRWriter : CodeVisitor {
 	}
 
 	private void write_ctype_attributes (TypeSymbol symbol, string suffix = "") {
-		buffer.append_printf (" c:type=\"%s%s\"", symbol.get_cname (), suffix);
+		buffer.append_printf (" c:type=\"%s%s\"", CCodeBaseModule.get_ccode_name (symbol), suffix);
 	}
 
 	private void write_gtype_attributes (TypeSymbol symbol) {
 		write_ctype_attributes(symbol);
-		buffer.append_printf (" glib:type-name=\"%s\"", symbol.get_cname ());
-		buffer.append_printf (" glib:get-type=\"%sget_type\"", symbol.get_lower_case_cprefix ());
+		buffer.append_printf (" glib:type-name=\"%s\"", CCodeBaseModule.get_ccode_name (symbol));
+		buffer.append_printf (" glib:get-type=\"%sget_type\"", CCodeBaseModule.get_ccode_lower_case_prefix (symbol));
 	}
 
 	private void write_type (DataType type, int index = -1) {
@@ -1087,10 +1091,10 @@ public class Vala.GIRWriter : CodeVisitor {
 			buffer.append_printf ("<type name=\"none\"/>\n");
 		} else if (type is PointerType) {
 			write_indent ();
-			buffer.append_printf ("<type name=\"gpointer\" c:type=\"%s\"/>\n", type.get_cname ());
+			buffer.append_printf ("<type name=\"gpointer\" c:type=\"%s\"/>\n", CCodeBaseModule.get_ccode_name (type));
 		} else if (type.data_type != null) {
 			write_indent ();
-			buffer.append_printf ("<type name=\"%s\" c:type=\"%s\"", gi_type_name (type.data_type), type.get_cname ());
+			buffer.append_printf ("<type name=\"%s\" c:type=\"%s\"", gi_type_name (type.data_type), CCodeBaseModule.get_ccode_name (type));
 
 			List<DataType> type_arguments = type.get_type_arguments ();
 			if (type_arguments.size == 0) {
@@ -1110,7 +1114,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		} else if (type is DelegateType) {
 			var deleg_type = (DelegateType) type;
 			write_indent ();
-			buffer.append_printf ("<type name=\"%s\" c:type=\"%s\"/>\n", gi_type_name (deleg_type.delegate_symbol), type.get_cname ());
+			buffer.append_printf ("<type name=\"%s\" c:type=\"%s\"/>\n", gi_type_name (deleg_type.delegate_symbol), CCodeBaseModule.get_ccode_name (type));
 		} else if (type is GenericType) {
 			// generic type parameters not supported in GIR
 			write_indent ();
@@ -1138,24 +1142,49 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 	}
 
+	private string? get_full_gir_name (Symbol sym) {
+		var gir_name = sym.get_attribute_string ("GIR", "name") ?? sym.name;
+		if (sym.parent_symbol == null) {
+			return gir_name;
+		}
+
+		if (sym.name == null) {
+			return get_full_gir_name (sym.parent_symbol);
+		}
+
+		string parent_gir_name = get_full_gir_name (sym.parent_symbol);
+		if (parent_gir_name == null) {
+			return gir_name;
+		}
+
+		string self_gir_name = gir_name.has_prefix (".") ? gir_name.substring (1) : gir_name;
+		if ("." in parent_gir_name) {
+			return "%s%s".printf (parent_gir_name, self_gir_name);
+		} else {
+			return "%s.%s".printf (parent_gir_name, self_gir_name);
+		}
+	}
+
 	private string gi_type_name (TypeSymbol type_symbol) {
 		Symbol parent = type_symbol.parent_symbol;
 		if (parent is Namespace) {
 			Namespace ns = parent as Namespace;
-			if (ns.gir_name != null) {
+			var ns_gir_name = ns.get_attribute_string ("GIR", "name") ?? ns.name;
+			if (ns_gir_name != null) {
 				if (type_symbol.source_reference.file.gir_namespace != null) {
 					GIRNamespace external = GIRNamespace (type_symbol.source_reference.file.gir_namespace, type_symbol.source_reference.file.gir_version);
 					if (!externals.contains (external)) {
 						externals.add (external);
 					}
-					return "%s.%s".printf (type_symbol.source_reference.file.gir_namespace, type_symbol.gir_name);
+					var type_name = type_symbol.get_attribute_string ("GIR", "name") ?? type_symbol.name;
+					return "%s.%s".printf (type_symbol.source_reference.file.gir_namespace, type_name);
 				} else {
 					unannotated_namespaces.add(ns);
 				}
 			}
 		}
 
-		return type_symbol.get_full_gir_name();
+		return get_full_gir_name (type_symbol);
 	}
 
 	private string? literal_expression_to_value_string (Expression literal) {
