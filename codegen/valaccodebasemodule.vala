@@ -4597,13 +4597,21 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		/* tmp = expr.inner; expr.inner = NULL; expr = tmp; */
 		expr.target_value = store_temp_value (expr.inner.target_value, expr);
 
-		if (!(expr.value_type is DelegateType)) {
-			ccode.add_assignment (get_cvalue (expr.inner), new CCodeConstant ("NULL"));
-		} else {
+		if (expr.inner.value_type is StructValueType && !expr.inner.value_type.nullable) {
+			// memset needs string.h
+			cfile.add_include ("string.h");
+			var creation_call = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
+			creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_cvalue (expr.inner)));
+			creation_call.add_argument (new CCodeConstant ("0"));
+			creation_call.add_argument (new CCodeIdentifier ("sizeof (%s)".printf (expr.inner.value_type.get_cname ())));
+			ccode.add_expression (creation_call);
+		} else if (expr.value_type is DelegateType) {
 			var target_destroy_notify = get_delegate_target_destroy_notify_cvalue (expr.inner.target_value);
 			if (target_destroy_notify != null) {
 				ccode.add_assignment (target_destroy_notify, new CCodeConstant ("NULL"));
 			}
+		} else {
+			ccode.add_assignment (get_cvalue (expr.inner), new CCodeConstant ("NULL"));
 		}
 	}
 
