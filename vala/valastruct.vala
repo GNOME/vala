@@ -805,7 +805,7 @@ public class Vala.Struct : TypeSymbol {
 	}
 
 	public bool is_disposable () {
-		if (destroy_function != null) {
+		if (get_attribute_string ("CCode", "destroy_function") != null) {
 			return true;
 		}
 
