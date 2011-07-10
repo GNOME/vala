@@ -1780,13 +1780,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						string func_name;
 
 						func_name = "%s_type".printf (type_param.name.down ());
-						ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name), new CCodeIdentifier (func_name));
+						ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name), get_variable_cexpression (func_name));
 
 						func_name = "%s_dup_func".printf (type_param.name.down ());
-						ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name), new CCodeIdentifier (func_name));
+						ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name), get_variable_cexpression (func_name));
 
 						func_name = "%s_destroy_func".printf (type_param.name.down ());
-						ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name), new CCodeIdentifier (func_name));
+						ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name), get_variable_cexpression (func_name));
 					}
 				}
 			}
