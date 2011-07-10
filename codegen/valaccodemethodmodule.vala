@@ -826,7 +826,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 				}
 				type_param_index++;
 			}
-		} else if (!m.closure) {
+		} else if (!m.closure && (direction & 1) == 1) {
 			int type_param_index = 0;
 			foreach (var type_param in m.get_type_parameters ()) {
 				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.01), new CCodeParameter ("%s_type".printf (type_param.name.down ()), "GType"));
