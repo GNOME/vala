@@ -277,11 +277,6 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			expr.target_value = store_temp_value (expr.target_value, expr);
 		} else if (expr.symbol_reference is LocalVariable) {
 			var local = (LocalVariable) expr.symbol_reference;
-			if (expr.lvalue) {
-				expr.target_value = get_local_cvalue (local);
-			} else {
-				expr.target_value = load_local (local);
-			}
 
 			if (expr.parent_node is ReturnStatement &&
 			    current_return_type.value_owned &&
@@ -297,6 +292,21 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 
 				// don't unref variable
 				local.active = false;
+
+				var glib_value = (GLibValue) get_local_cvalue (local);
+				expr.target_value = glib_value;
+				if (glib_value.delegate_target_cvalue == null) {
+					glib_value.delegate_target_cvalue = new CCodeConstant ("NULL");
+				}
+				if (glib_value.delegate_target_destroy_notify_cvalue == null) {
+					glib_value.delegate_target_destroy_notify_cvalue = new CCodeConstant ("NULL");
+				}
+			} else {
+				if (expr.lvalue) {
+					expr.target_value = get_local_cvalue (local);
+				} else {
+					expr.target_value = load_local (local);
+				}
 			}
 		} else if (expr.symbol_reference is Parameter) {
 			var param = (Parameter) expr.symbol_reference;
