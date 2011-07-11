@@ -137,6 +137,14 @@ public class Vala.CastExpression : Expression {
 
 		// FIXME: check whether cast is allowed
 
+		if (type_reference is DelegateType && inner.value_type is MethodType) {
+			if (target_type != null) {
+				inner.value_type.value_owned = target_type.value_owned;
+			} else {
+				inner.value_type.value_owned = true;
+			}
+		}
+
 		value_type = type_reference;
 		value_type.value_owned = inner.value_type.value_owned;
 
