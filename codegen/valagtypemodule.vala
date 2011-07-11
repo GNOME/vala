@@ -1477,7 +1477,13 @@ public class Vala.GTypeModule : GErrorModule {
 				if (min_pos == -1) {
 					break;
 				}
-				cast_args += " ," + cparam_map.get (min_pos).type_name;
+
+				var tmp = cparam_map.get (min_pos);
+				if (tmp.ellipsis) {
+					cast_args += ", " + " ...";
+				} else {
+					cast_args += ", " + tmp.type_name;
+				}
 			}
 			last_pos = min_pos;
 		}
