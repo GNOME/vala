@@ -69,7 +69,7 @@ public class Valadoc.Parser : ParserCallback {
 			_scanner.end ();
 
 			if (rule_stack.size != 0) {
-				error ("Rule stack is not empty!");
+				error (null, "Rule stack is not empty!");
 			}
 		} catch (ParserError e) {
 			#if DEBUG
@@ -100,7 +100,7 @@ public class Valadoc.Parser : ParserCallback {
 
 			// Check for invalid recursion
 			if (rule_depth != rule_stack.size && peek_rule () == rule) {
-				error ("Parser state error");
+				error (null, "Parser state error");
 				break;
 			}
 			rule = peek_rule ();
@@ -224,8 +224,16 @@ public class Valadoc.Parser : ParserCallback {
 		return false;
 	}
 
-	public void warning (string message, Token? token = null) {
-		string error_message = message + (token != null ? ": " + token.to_pretty_string () : "");
+	public void warning (Token? token, string message, ...) {
+		va_list args = va_list ();
+		string error_message;
+
+		if (token == null) {
+			error_message = message.vprintf (args) + ": " + token.to_pretty_string ();
+		} else {
+			error_message = message;
+		}
+
 		_reporter.warning (_filename,
 		                   get_line (token),
 		                   get_start_column (token),
@@ -234,13 +242,23 @@ public class Valadoc.Parser : ParserCallback {
 		                   error_message);
 	}
 
-	public void error (string message, Token? token = null) throws ParserError {
-		string error_message = message + (token != null ? ": " + token.to_pretty_string () : "");
-		_reporter.error (_filename, get_line (token),
+	public void error (Token? token, string message, ...) throws ParserError {
+		va_list args = va_list ();
+		string error_message;
+
+		if (token == null) {
+			error_message = message.vprintf (args) + ": " + token.to_pretty_string ();
+		} else {
+			error_message = message;
+		}
+
+		_reporter.error (_filename,
+						 get_line (token),
 		                 get_start_column (token),
 		                 get_end_column (token),
 		                 _scanner.get_line_content (),
 		                 error_message);
+
 		throw new ParserError.UNEXPECTED_TOKEN (error_message);
 	}
 

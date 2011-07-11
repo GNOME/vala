@@ -144,7 +144,7 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 			break;
 
 		default:
-			reporter.simple_warning ("GtkDoc: unsupported list type: %s".printf (list.bullet.to_string ()));
+			reporter.simple_warning ("GtkDoc: unsupported list type: %s", list.bullet.to_string ());
 			break;
 		}
 

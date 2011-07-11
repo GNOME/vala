@@ -218,7 +218,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 					((InlineContent) peek ()).content.add (_factory.create_text (" "));
 					return;
 				} else if (list.bullet != bullet) {
-					_parser.error ("Invalid bullet type '%s': expected '%s'".printf (bullet_type_string (bullet), bullet_type_string (list.bullet)));
+					_parser.error (null, "Invalid bullet type '%s': expected '%s'", bullet_type_string (bullet), bullet_type_string (list.bullet));
 					return;
 				}
 
@@ -278,7 +278,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 	private void gir_append_link (Token token) throws ParserError {
 		var taglet = _factory.create_taglet ("link") as Taglets.Link;
 		if (!(taglet is Inline)) {
-			_parser.error ("Invalid taglet in this context: link");
+			_parser.error (null, "Invalid taglet in this context: link");
 		}
 		taglet.symbol_name = "c::"+token.to_string ();
 		push (taglet);
@@ -864,7 +864,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 					TokenType.any_word ().action ((token) => {
 						var taglet = _factory.create_taglet (token.to_string ());
 						if (!(taglet is Inline)) {
-							_parser.error ("Invalid taglet in this context: %s".printf (token.to_string ()));
+							_parser.error (null, "Invalid taglet in this context: %s".printf (token.to_string ()));
 						}
 						push (taglet);
 						Rule? taglet_rule = taglet.get_parser_rule (multiline_run);
@@ -1229,7 +1229,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 				TokenType.any_word ().action ((token) => {
 					var taglet = _factory.create_taglet (token.to_string ());
 					if (!(taglet is Block)) {
-						_parser.error ("Invalid taglet in this context", token);
+						_parser.error (token, "Invalid taglet in this context");
 					}
 					push (taglet);
 					Rule? taglet_rule = taglet.get_parser_rule (multiline_run);

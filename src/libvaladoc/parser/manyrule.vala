@@ -78,9 +78,9 @@ internal class Valadoc.ManyRule : Rule {
 		}
 
 		if (_scheme is TokenType) {
-			parser.error ("expected %s".printf (((TokenType) _scheme).to_pretty_string ()), token);
+			parser.error (null, "expected %s", ((TokenType) _scheme).to_pretty_string ());
 		} else {
-			parser.error ("unexpected token", token);
+			parser.error (token, "unexpected token");
 		}
 		assert_not_reached ();
 	}

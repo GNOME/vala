@@ -44,7 +44,7 @@ public class Valadoc.Content.Embedded : ContentElement, Inline, StyleAttributes 
 
 	public override void check (Api.Tree api_root, Api.Node container, ErrorReporter reporter, Settings settings) {
 		if (!FileUtils.test (url, FileTest.EXISTS | FileTest.IS_REGULAR)) {
-			reporter.simple_error ("%s does not exist".printf (url));
+			reporter.simple_error ("%s does not exist", url);
 		} else {
 			package = container.package;
 		}

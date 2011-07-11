@@ -39,7 +39,7 @@ public class Valadoc.Taglets.Throws : InlineContent, Taglet, Block {
 		error_domain = api_root.search_symbol_str (container, error_domain_name);
 		if (error_domain == null) {
 			// TODO use ContentElement's source reference
-			reporter.simple_error ("%s does not exist".printf (error_domain_name));
+			reporter.simple_error ("%s does not exist", error_domain_name);
 		}
 
 		base.check (api_root, container, reporter, settings);

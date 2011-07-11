@@ -84,7 +84,9 @@ public abstract class Valadoc.Rule : Object {
 	}
 
 	public enum Forward {
-		NONE, PARENT, CHILD
+		NONE,
+		PARENT,
+		CHILD
 	}
 
 	public abstract bool is_optional ();

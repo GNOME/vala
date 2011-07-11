@@ -48,7 +48,7 @@ public class Valadoc.Taglets.Link : InlineTaglet {
 
 		if (_symbol == null) {
 			// TODO use ContentElement's source reference
-			reporter.simple_warning ("%s does not exist".printf (symbol_name));
+			reporter.simple_warning ("%s does not exist", symbol_name);
 		}
 
 		base.check (api_root, container, reporter, settings);

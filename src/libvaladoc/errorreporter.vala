@@ -55,11 +55,26 @@ public class Valadoc.ErrorReporter : Object {
 
 	private enum ErrorType {
 		WARNING,
-		ERROR
+		ERROR;
+
+		public string to_string () {
+			switch (this) {
+			case ErrorType.WARNING:
+				return "warning";
+
+			case ErrorType.ERROR:
+				return "error";
+			}
+
+			assert_not_reached ();
+		}
 	}
 
-	private inline void msg (ErrorType type, string file, long line, long startpos, long endpos, string errline, string msg) {
-		this.stream.printf ("%s:%lu.%lu-%lu.%lu: %s: %s\n", file, line, startpos, line, endpos, (type == ErrorType.ERROR)? "error" : "warning", msg);
+	private inline void msg (ErrorType type, string file, long line, long startpos, long endpos, string errline, string msg_format, va_list args) {
+		this.stream.printf ("%s:%lu.%lu-%lu.%lu: %s: ", file, line, startpos, line, endpos, type.to_string ());
+		this.stream.vprintf (msg_format, args);
+		this.stream.putc ('\n');
+
 		if (startpos <= endpos) {
 			this.stream.printf ("%s\n", errline);
 			for (int i = 0; i < errline.char_count ()+1; i++) {
@@ -75,25 +90,31 @@ public class Valadoc.ErrorReporter : Object {
 		}
 	}
 
-	public void simple_warning (string msg) {
-		this.stream.puts (msg);
+	public void simple_warning (string msg_format, ...) {
+		var args = va_list();
+		this.stream.vprintf (msg_format, args);
 		this.stream.putc ('\n');
 		this._warnings++;
 	}
 
-	public void simple_error (string msg) {
-		this.stream.puts (msg);
+	public void simple_error (string msg_format, ...) {
+		var args = va_list();
+		this.stream.vprintf (msg_format, args);
 		this.stream.putc ('\n');
 		this._errors++;
 	}
 
-	public void error (string file, long line, long startpos, long endpos, string errline, string msg) {
-		this.msg (ErrorType.ERROR, file, line, startpos, endpos, errline, msg);
+	//TODO
+	public void error (string file, long line, long startpos, long endpos, string errline, string msg_format, ...) {
+		var args = va_list();
+		this.msg (ErrorType.ERROR, file, line, startpos, endpos, errline, msg_format, args);
 		this._errors++;
 	}
 
-	public void warning (string file, long line, long startpos, long endpos, string errline, string msg) {
-		this.msg (ErrorType.WARNING, file, line, startpos, endpos, errline, msg);
+	//TODO
+	public void warning (string file, long line, long startpos, long endpos, string errline, string msg_format, ...) {
+		var args = va_list();
+		this.msg (ErrorType.WARNING, file, line, startpos, endpos, errline, msg_format, args);
 		this._warnings++;
 	}
 }

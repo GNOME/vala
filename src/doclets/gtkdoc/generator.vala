@@ -68,7 +68,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 
 		var sections_writer = new TextWriter (sections, "a");
 		if (!sections_writer.open ()) {
-			reporter.simple_error ("GtkDoc: unable to open %s for writing".printf (sections_writer.filename));
+			reporter.simple_error ("GtkDoc: unable to open %s for writing", sections_writer.filename);
 			return false;
 		}
 
@@ -78,7 +78,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 			var cwriter = new TextWriter (Path.build_filename (code_dir, "%s.c".printf (basename)), "w");
 
 			if (!cwriter.open ()) {
-				reporter.simple_error ("GtkDoc: unable to open %s for writing".printf (cwriter.filename));
+				reporter.simple_error ("GtkDoc: unable to open %s for writing", cwriter.filename);
 				return false;
 			}
 

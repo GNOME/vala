@@ -103,9 +103,9 @@ internal class Valadoc.SequenceRule : Rule {
 		}
 
 		if (scheme_element is TokenType) {
-			parser.error ("expected %s".printf (((TokenType) scheme_element).to_pretty_string ()), token);
+			parser.error (token, "expected %s", ((TokenType) scheme_element).to_pretty_string ());
 		} else {
-			parser.error ("unexpected token", token);
+			parser.error (token, "unexpected token");
 		}
 		assert_not_reached ();
 	}

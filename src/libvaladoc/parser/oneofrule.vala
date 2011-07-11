@@ -70,7 +70,7 @@ internal class Valadoc.OneOfRule : Rule {
 			return false;
 		}
 
-		parser.error ("unexpected token", token);
+		parser.error (token, "unexpected token");
 		assert_not_reached ();
 	}
 

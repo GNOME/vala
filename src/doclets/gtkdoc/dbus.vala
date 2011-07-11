@@ -142,7 +142,7 @@ namespace Gtkdoc.DBus {
 			var xml_file = Path.build_filename (xml_dir, "%s.xml".printf (to_docbook_id (name)));
 			var writer = new TextWriter (xml_file, "w");
 			if (!writer.open ()) {
-				reporter.simple_error ("GtkDoc: unable to open %s for writing".printf (writer.filename));
+				reporter.simple_error ("GtkDoc: unable to open %s for writing", writer.filename);
 				return false;
 			}
 			writer.write_line (to_string (reporter));

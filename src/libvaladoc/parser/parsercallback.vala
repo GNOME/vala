@@ -32,6 +32,6 @@ public interface Valadoc.ParserCallback {
 	public abstract bool would_parent_accept_token (Token token);
 	public abstract bool would_parent_reduce_to_rule (Token token, Rule rule);
 
-	public abstract void warning (string message, Token? token = null);
-	public abstract void error (string message, Token? token = null) throws ParserError;
+	public abstract void warning (Token? token, string message, ...);
+	public abstract void error (Token? token, string message, ...) throws ParserError;
 }

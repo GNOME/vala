@@ -121,7 +121,7 @@ public class Valadoc.Importer.ValadocDocumentationImporter : DocumentationImport
 		}
 
 		if (symbol == null) {
-			reporter.simple_warning ("%s does not exist".printf (symbol_name));
+			reporter.simple_warning ("%s does not exist", symbol_name);
 			return ;
 		}
 
@@ -142,7 +142,7 @@ public class Valadoc.Importer.ValadocDocumentationImporter : DocumentationImport
 				_parser.parse ((string) content, filename, 0, 0);
 			}
 		} catch (FileError err) {
-			reporter.simple_error ("Unable to map file `%s': %s".printf (filename, err.message));
+			reporter.simple_error ("Unable to map file `%s': %s", filename, err.message);
 		} catch (ParserError err) {
 		}
 	}
