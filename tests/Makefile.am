@@ -15,6 +15,7 @@ noinst_PROGRAMS = \
 TESTS_ENVIRONMENT = EXEEXT=$(EXEEXT) $(srcdir)/testrunner.sh
 
 TESTS = \
+	libvaladoc/errorreporter.vala \
 	$(NULL)
 
 check-TESTS: $(TESTS)

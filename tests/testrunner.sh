@@ -27,11 +27,12 @@ topsrcdir=$srcdir/..
 vapidir=$topsrcdir/vapi
 
 export G_DEBUG=fatal_warnings
+export PKG_CONFIG_PATH=../../src/libvaladoc
 
 VALAC=valac
-VALAFLAGS="--vapidir $vapidir --disable-warnings --main main --save-temps -X -g -X -O0 -X -pipe -X -lm -X -Werror=return-type -X -Werror=init-self -X -Werror=implicit -X -Werror=sequence-point -X -Werror=return-type -X -Werror=uninitialized -X -Werror=pointer-arith -X -Werror=int-to-pointer-cast -X -Werror=pointer-to-int-cast"
+VALAFLAGS="--vapidir ../../src/libvaladoc --pkg valadoc-1.0 --pkg gee-1.0 --disable-warnings --main main --save-temps -X -g -X -O0 -X -pipe -X -lm -X -Werror=return-type -X -Werror=init-self -X -Werror=implicit -X -Werror=sequence-point -X -Werror=return-type -X -Werror=uninitialized -X -Werror=pointer-arith -X -Werror=int-to-pointer-cast -X -Werror=pointer-to-int-cast -X -L../../src/libvaladoc/.libs -X -I../../src/libvaladoc"
 VAPIGEN=$topbuilddir/vapigen/vapigen
-VAPIGENFLAGS="--vapidir $vapidir"
+VAPIGENFLAGS=
 
 function testheader() {
 	if [ "$1" = "Packages:" ]; then
