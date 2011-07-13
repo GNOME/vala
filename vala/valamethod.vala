@@ -591,6 +591,7 @@ public class Vala.Method : Subroutine {
 			return false;
 		}
 
+		invalid_match = null;
 		return true;
 	}
 

@@ -79,6 +79,7 @@ public class Vala.GVariantModule : GAsyncModule {
 				return true;
 			}
 		}
+		basic_type = BasicTypeInfo ();
 		return false;
 	}
 
@@ -458,6 +459,7 @@ public class Vala.GVariantModule : GAsyncModule {
 	public override CCodeExpression? deserialize_expression (DataType type, CCodeExpression variant_expr, CCodeExpression? expr, CCodeExpression? error_expr = null, out bool may_fail = null) {
 		BasicTypeInfo basic_type;
 		CCodeExpression result = null;
+		may_fail = false;
 		if (is_string_marshalled_enum (type.data_type)) {
 			get_basic_type_info ("s", out basic_type);
 			result = deserialize_basic (basic_type, variant_expr, true);
@@ -502,6 +504,7 @@ public class Vala.GVariantModule : GAsyncModule {
 		if (sym != null && get_dbus_signature (sym) != null) {
 			// raw GVariant
 			ccode.add_assignment (target_expr, iter_call);
+			may_fail = false;
 			return;
 		}
 

@@ -215,6 +215,7 @@ public class Vala.GDBusModule : GVariantModule {
 			ccode.add_expression (get_fd);
 
 			ccode.add_assignment (target_expr, stream);
+			may_fail = false;
 		} else {
 			read_expression (type, iter_expr, target_expr, sym, error_expr, out may_fail);
 		}

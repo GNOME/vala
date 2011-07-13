@@ -103,6 +103,8 @@ public class Vala.MarkupReader : Object {
 
 		if (empty_element) {
 			empty_element = false;
+			token_begin = SourceLocation (begin, line, column);
+			token_end = SourceLocation (begin, line, column);
 			return MarkupTokenType.END_ELEMENT;
 		}
 
@@ -110,9 +112,7 @@ public class Vala.MarkupReader : Object {
 
 		MarkupTokenType type = MarkupTokenType.NONE;
 		char* begin = current;
-		token_begin.pos = begin;
-		token_begin.line = line;
-		token_begin.column = column;
+		token_begin = SourceLocation (begin, line, column);
 
 		if (current >= end) {
 			type = MarkupTokenType.EOF;
@@ -202,9 +202,7 @@ public class Vala.MarkupReader : Object {
 			type = MarkupTokenType.TEXT;
 		}
 
-		token_end.pos = current;
-		token_end.line = line;
-		token_end.column = column - 1;
+		token_end = SourceLocation (current, line, column - 1);
 
 		return type;
 	}

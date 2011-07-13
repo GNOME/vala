@@ -4501,11 +4501,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public virtual CCodeExpression? deserialize_expression (DataType type, CCodeExpression variant_expr, CCodeExpression? expr, CCodeExpression? error_expr = null, out bool may_fail = null) {
-		return null;
+		assert_not_reached ();
 	}
 
 	public virtual CCodeExpression? serialize_expression (DataType type, CCodeExpression expr) {
-		return null;
+		assert_not_reached ();
 	}
 
 	public override void visit_cast_expression (CastExpression expr) {

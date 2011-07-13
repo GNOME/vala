@@ -1984,6 +1984,7 @@ public class Vala.GirParser : CodeVisitor {
 	DataType parse_type (out string? ctype = null, out int array_length_idx = null, bool transfer_elements = true, out bool no_array_length = null, out bool array_null_terminated = null) {
 		bool is_array = false;
 		string type_name = reader.get_attribute ("name");
+		ctype = null;
 
 		array_length_idx = -1;
 		no_array_length = true;

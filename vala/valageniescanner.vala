@@ -113,9 +113,7 @@ public class Vala.Genie.Scanner {
 	public TokenType read_regex_token (out SourceLocation token_begin, out SourceLocation token_end) {
 		TokenType type;
 		char* begin = current;
-		token_begin.pos = begin;
-		token_begin.line = line;
-		token_begin.column = column;
+		token_begin = SourceLocation (begin, line, column);
 
 		int token_length_in_chars = -1;
 
@@ -267,9 +265,7 @@ public class Vala.Genie.Scanner {
 			column += token_length_in_chars;
 		}
 
-		token_end.pos = current;
-		token_end.line = line;
-		token_end.column = column - 1;
+		token_end = SourceLocation (current, line, column - 1);
 
 		return type;
 	}
@@ -661,9 +657,7 @@ public class Vala.Genie.Scanner {
 	public TokenType read_template_token (out SourceLocation token_begin, out SourceLocation token_end) {
 		TokenType type;
 		char* begin = current;
-		token_begin.pos = begin;
-		token_begin.line = line;
-		token_begin.column = column;
+		token_begin = SourceLocation (begin, line, column);
 
 		int token_length_in_chars = -1;
 
@@ -767,9 +761,7 @@ public class Vala.Genie.Scanner {
 			column += token_length_in_chars;
 		}
 
-		token_end.pos = current;
-		token_end.line = line;
-		token_end.column = column - 1;
+		token_end = SourceLocation (current, line, column - 1);
 
 		return type;
 	}
@@ -783,13 +775,8 @@ public class Vala.Genie.Scanner {
 		} else if (in_template_part ()) {
 			state_stack.length--;
 
-			token_begin.pos = current;
-			token_begin.line = line;
-			token_begin.column = column;
-
-			token_end.pos = current;
-			token_end.line = line;
-			token_end.column = column - 1;
+			token_begin = SourceLocation (current, line, column);
+			token_end = SourceLocation (current, line, column - 1);
 
 			return TokenType.COMMA;
 		} else if (in_regex_literal ()) {
@@ -804,14 +791,8 @@ public class Vala.Genie.Scanner {
 			pending_dedents--;
 			indent_level--;
 
-
-			token_begin.pos = current;
-			token_begin.line = line;
-			token_begin.column = column;
-
-			token_end.pos = current;
-			token_end.line = line;
-			token_end.column = column;
+			token_begin = SourceLocation (current, line, column);
+			token_end = SourceLocation (current, line, column);
 
 			last_token = TokenType.DEDENT;
 
@@ -841,13 +822,8 @@ public class Vala.Genie.Scanner {
 
 		/* handle non-consecutive new line once parsing is underway - EOL */
 		if (newline () && parse_started && last_token != TokenType.EOL && last_token != TokenType.SEMICOLON) {
-			token_begin.pos = current;
-			token_begin.line = line;
-			token_begin.column = column;
-
-			token_end.pos = current;
-			token_end.line = line;
-			token_end.column = column;
+			token_begin = SourceLocation (current, line, column);
+			token_end = SourceLocation (current, line, column);
 
 			last_token = TokenType.EOL;
 
@@ -856,9 +832,7 @@ public class Vala.Genie.Scanner {
 
 
 		while (skip_newlines ()) {
-			token_begin.pos = current;
-			token_begin.line = line;
-			token_begin.column = column;
+			token_begin = SourceLocation (current, line, column);
 
 			current_indent_level = count_tabs ();
 
@@ -870,9 +844,7 @@ public class Vala.Genie.Scanner {
 			if (current_indent_level > indent_level) {
 				indent_level = current_indent_level;
 
-				token_end.pos = current;
-				token_end.line = line;
-				token_end.column = column;
+				token_end = SourceLocation (current, line, column);
 
 				last_token = TokenType.INDENT;
 
@@ -881,10 +853,7 @@ public class Vala.Genie.Scanner {
 				indent_level--;
 
 				pending_dedents = (indent_level - current_indent_level);
-
-				token_end.pos = current;
-				token_end.line = line;
-				token_end.column = column;
+				token_end = SourceLocation (current, line, column);
 
 				last_token = TokenType.DEDENT;
 
@@ -894,9 +863,7 @@ public class Vala.Genie.Scanner {
 
 		TokenType type;
 		char* begin = current;
-		token_begin.pos = begin;
-		token_begin.line = line;
-		token_begin.column = column;
+		token_begin = SourceLocation (begin, line, column);
 
 		int token_length_in_chars = -1;
 
@@ -1354,9 +1321,7 @@ public class Vala.Genie.Scanner {
 			column += token_length_in_chars;
 		}
 
-		token_end.pos = current;
-		token_end.line = line;
-		token_end.column = column - 1;
+		token_end = SourceLocation (current, line, column - 1);
 		last_token = type;
 
 		return type;

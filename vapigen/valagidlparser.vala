@@ -1645,7 +1645,7 @@ public class Vala.GIdlParser : CodeVisitor {
 	}
 	
 	private DataType? parse_type (IdlNodeType type_node, out ParameterDirection direction = null) {
-		ParameterDirection dir = ParameterDirection.IN;
+		direction = ParameterDirection.IN;
 
 		var type = new UnresolvedType ();
 		if (type_node.tag == TypeTag.VOID) {
@@ -1722,7 +1722,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			    (n == "gchar" || n == "char")) {
 				type.unresolved_symbol = new UnresolvedSymbol (null, "string");
 				if (type_node.unparsed.has_suffix ("**")) {
-					dir = ParameterDirection.OUT;
+					direction = ParameterDirection.OUT;
 				}
 			} else if (n == "gunichar") {
 				type.unresolved_symbol = new UnresolvedSymbol (null, "unichar");
@@ -1775,17 +1775,14 @@ public class Vala.GIdlParser : CodeVisitor {
 				}
 				if (is_simple_type (n)) {
 					if (type_node.is_pointer) {
-						dir = ParameterDirection.OUT;
+						direction = ParameterDirection.OUT;
 					}
 				} else if (type_node.unparsed.has_suffix ("**")) {
-					dir = ParameterDirection.OUT;
+					direction = ParameterDirection.OUT;
 				}
 			}
 		} else {
 			stdout.printf ("%d\n", type_node.tag);
-		}
-		if (&direction != null) {
-			direction = dir;
 		}
 		return type;
 	}
