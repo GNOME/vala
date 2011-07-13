@@ -246,10 +246,11 @@ public class Vala.GirParser : CodeVisitor {
 		}
 
 		SourceReference get_src (SourceLocation begin, SourceLocation? end = null) {
-			if (end == null) {
-				end = this.end;
+			var e = this.end;
+			if (end != null) {
+				e = end;
 			}
-			return new SourceReference (scanner.source_file, begin.line, begin.column, end.line, end.column);
+			return new SourceReference (scanner.source_file, begin.line, begin.column, e.line, e.column);
 		}
 
 		public Metadata parse_metadata (SourceFile metadata_file) {
@@ -278,13 +279,15 @@ public class Vala.GirParser : CodeVisitor {
 		}
 
 		string get_string (SourceLocation? begin = null, SourceLocation? end = null) {
-			if (begin == null) {
-				begin = this.begin;
+			var b = this.begin;
+			var e = this.end;
+			if (begin != null) {
+				b = begin;
 			}
-			if (end == null) {
-				end = this.end;
+			if (end != null) {
+				e = end;
 			}
-			return ((string) begin.pos).substring (0, (int) (end.pos - begin.pos));
+			return ((string) b.pos).substring (0, (int) (e.pos - b.pos));
 		}
 
 		string? parse_identifier (bool is_glob) {
