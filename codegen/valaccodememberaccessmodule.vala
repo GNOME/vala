@@ -689,7 +689,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 		}
 		result.value_type.value_owned = false;
 
-		if (!(variable is Parameter && variable.name == "this") && !(array_type != null && array_type.inline_allocated)) {
+		if (!(variable is Parameter && variable.name == "this") && is_lvalue_access_allowed (result.value_type)) {
 			result = (GLibValue) store_temp_value (result, variable);
 		}
 

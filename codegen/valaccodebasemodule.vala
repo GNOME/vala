@@ -5460,6 +5460,20 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return get_cvalue (node);
 	}
 
+	public bool is_lvalue_access_allowed (DataType type) {
+		var array_type = type as ArrayType;
+		if (array_type != null && array_type.inline_allocated) {
+			return false;
+		}
+		if (type.data_type != null) {
+			var a = type.data_type.get_attribute ("CCode");
+			if (a != null && a.has_argument ("lvalue_access")) {
+				return a.get_bool ("lvalue_access");
+			}
+		}
+		return true;
+	}
+
 	public override void visit_class (Class cl) {
 	}
 
