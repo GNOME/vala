@@ -1016,6 +1016,12 @@ namespace Posix {
 	public const int POLL_PRI;
 	[CCode (cheader_filename = "signal.h")]
 	public const int POLL_HUP;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SIG_BLOCK;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SIG_UNBLOCK;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SIG_SETMASK;
 
 	[SimpleType]
 	[IntegerType (rank = 6)]
