@@ -787,7 +787,7 @@ namespace Gst {
 		public void sink ();
 		public void unparent ();
 		public void unref ();
-		public string name { get; set construct; }
+		public string name { owned get; set construct; }
 		public virtual signal void deep_notify (Gst.Object orig, GLib.ParamSpec pspec);
 		public virtual signal void object_saved (void* parent);
 		public virtual signal void parent_set (Gst.Object parent);
