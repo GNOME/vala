@@ -574,6 +574,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 			generate_struct_declaration ((Struct) value_type.type_symbol, decl_space);
 		} else if (type is ArrayType) {
 			var array_type = (ArrayType) type;
+			generate_struct_declaration (array_struct, decl_space);
 			generate_type_declaration (array_type.element_type, decl_space);
 		} else if (type is PointerType) {
 			var pointer_type = (PointerType) type;
