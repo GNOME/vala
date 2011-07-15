@@ -40,6 +40,8 @@ header_parse_quality_list type_arguments="string"
 Message
 	.add_header_handler skip=false
 	.add_status_code_handler skip=false
+	.request_*#property skip
+	.response_*#property skip
 	.set_request.req_body type="uint8[]" array_length_idx=3
 	.set_response.resp_body type="uint8[]" array_length_idx=3
 MessageHeaders

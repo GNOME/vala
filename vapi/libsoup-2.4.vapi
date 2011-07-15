@@ -323,6 +323,10 @@ namespace Soup {
 	}
 	[CCode (type_id = "soup_message_get_type ()", cheader_filename = "libsoup/soup.h")]
 	public class Message : GLib.Object {
+		public weak Soup.MessageBody request_body;
+		public weak Soup.MessageHeaders request_headers;
+		public weak Soup.MessageBody response_body;
+		public weak Soup.MessageHeaders response_headers;
 		[CCode (has_construct_function = false)]
 		public Message (string method, string uri_string);
 		public uint add_header_handler (string @signal, string header, [CCode (delegate_target_pos = 3.1)] GLib.Callback callback);
@@ -352,14 +356,6 @@ namespace Soup {
 		public string method { owned get; set; }
 		[NoAccessorMethod]
 		public string reason_phrase { owned get; set; }
-		[NoAccessorMethod]
-		public Soup.MessageBody request_body { owned get; }
-		[NoAccessorMethod]
-		public Soup.MessageHeaders request_headers { owned get; }
-		[NoAccessorMethod]
-		public Soup.MessageBody response_body { owned get; }
-		[NoAccessorMethod]
-		public Soup.MessageHeaders response_headers { owned get; }
 		[NoAccessorMethod]
 		public bool server_side { get; construct; }
 		[NoAccessorMethod]
