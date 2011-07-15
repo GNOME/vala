@@ -793,7 +793,7 @@ public struct time_t {
 }
 
 [SimpleType]
-[CCode (cheader_filename="stdarg.h", cprefix="va_", has_type_id = false, destroy_function = "va_end")]
+[CCode (cheader_filename="stdarg.h", cprefix="va_", has_type_id = false, destroy_function = "va_end", lvalue_access = false)]
 public struct va_list {
 	[CCode (cname = "va_start")]
 	public va_list ();
