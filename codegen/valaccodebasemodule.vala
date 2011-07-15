@@ -5049,7 +5049,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			} else if (requires_destroy (type)) {
 				var temp_value = create_temp_value (type, false, node);
 				temp_ref_values.insert (0, ((GLibValue) temp_value).copy ());
-				store_value (temp_value, value);
+				store_value (temp_value, result);
 				result.cvalue = get_cvalue_ (temp_value);
 				requires_temp_value = false;
 			}
