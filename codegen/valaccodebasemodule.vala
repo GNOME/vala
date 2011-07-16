@@ -4024,10 +4024,17 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public virtual void generate_error_domain_declaration (ErrorDomain edomain, CCodeFile decl_space) {
 	}
 
-	public void add_generic_type_arguments (Map<int,CCodeExpression> arg_map, List<DataType> type_args, CodeNode expr, bool is_chainup = false) {
+	public void add_generic_type_arguments (Map<int,CCodeExpression> arg_map, List<DataType> type_args, CodeNode expr, bool is_chainup = false, List<TypeParameter>? type_parameters = null) {
 		int type_param_index = 0;
 		foreach (var type_arg in type_args) {
-			arg_map.set (get_param_pos (0.1 * type_param_index + 0.01), get_type_id_expression (type_arg, is_chainup));
+			if (type_parameters != null) {
+				var type_param_name = type_parameters.get (type_param_index).name.down ();
+				arg_map.set (get_param_pos (0.1 * type_param_index + 0.01), new CCodeConstant ("\"%s_type\"".printf (type_param_name)));
+				arg_map.set (get_param_pos (0.1 * type_param_index + 0.03), new CCodeConstant ("\"%s_dup_func\"".printf (type_param_name)));
+				arg_map.set (get_param_pos (0.1 * type_param_index + 0.05), new CCodeConstant ("\"%s_destroy_func\"".printf (type_param_name)));
+			}
+
+			arg_map.set (get_param_pos (0.1 * type_param_index + 0.02), get_type_id_expression (type_arg, is_chainup));
 			if (requires_copy (type_arg)) {
 				var dup_func = get_dup_func_expression (type_arg, type_arg.source_reference, is_chainup);
 				if (dup_func == null) {
@@ -4035,11 +4042,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					expr.error = true;
 					return;
 				}
-				arg_map.set (get_param_pos (0.1 * type_param_index + 0.02), new CCodeCastExpression (dup_func, "GBoxedCopyFunc"));
-				arg_map.set (get_param_pos (0.1 * type_param_index + 0.03), get_destroy_func_expression (type_arg, is_chainup));
+				arg_map.set (get_param_pos (0.1 * type_param_index + 0.04), new CCodeCastExpression (dup_func, "GBoxedCopyFunc"));
+				arg_map.set (get_param_pos (0.1 * type_param_index + 0.06), get_destroy_func_expression (type_arg, is_chainup));
 			} else {
-				arg_map.set (get_param_pos (0.1 * type_param_index + 0.02), new CCodeConstant ("NULL"));
-				arg_map.set (get_param_pos (0.1 * type_param_index + 0.03), new CCodeConstant ("NULL"));
+				arg_map.set (get_param_pos (0.1 * type_param_index + 0.04), new CCodeConstant ("NULL"));
+				arg_map.set (get_param_pos (0.1 * type_param_index + 0.06), new CCodeConstant ("NULL"));
 			}
 			type_param_index++;
 		}

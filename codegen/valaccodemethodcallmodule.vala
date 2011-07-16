@@ -133,7 +133,12 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					// chain up to base class
 					foreach (DataType base_type in current_class.get_base_types ()) {
 						if (base_type.data_type is Class) {
-							add_generic_type_arguments (in_arg_map, base_type.get_type_arguments (), expr, true);
+							List<TypeParameter> type_parameters = null;
+							if (m.get_real_cname () == "g_object_new") {
+								// gobject-style chainup
+								type_parameters = ((Class) base_type.data_type).get_type_parameters ();
+							}
+							add_generic_type_arguments (in_arg_map, base_type.get_type_arguments (), expr, true, type_parameters);
 							break;
 						}
 					}
