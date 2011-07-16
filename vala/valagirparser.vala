@@ -204,12 +204,12 @@ public class Vala.GirParser : CodeVisitor {
 			return 0;
 		}
 
-		public bool get_bool (ArgumentType arg) {
+		public bool get_bool (ArgumentType arg, bool default_value = false) {
 			var lit = get_expression (arg) as BooleanLiteral;
 			if (lit != null) {
 				return lit.value;
 			}
-			return false;
+			return default_value;
 		}
 
 		public SourceReference? get_source_reference (ArgumentType arg) {
@@ -1400,9 +1400,7 @@ public class Vala.GirParser : CodeVisitor {
 					type.value_owned = metadata.get_bool (ArgumentType.OWNED);
 				}
 			}
-			if (metadata.has_argument (ArgumentType.NULLABLE)) {
-				type.nullable = metadata.get_bool (ArgumentType.NULLABLE);
-			}
+			type.nullable = metadata.get_bool (ArgumentType.NULLABLE, type.nullable);
 		}
 
 		if (type is ArrayType && !(orig_type is ArrayType)) {
