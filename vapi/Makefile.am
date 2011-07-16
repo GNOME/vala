@@ -245,3 +245,9 @@ clutter-1.0:
 
 json-glib-1.0:
 	$(VAPIGEN) --library $(srcdir)/json-glib-1.0 --metadatadir $(METADATADIR) $(METADATADIR)/Json-1.0-custom.vala --pkg gio-2.0 $(GIRDIR)/Json-1.0.gir
+
+libsoup-2.4:
+	$(VAPIGEN) --library $(srcdir)/libsoup-2.4 --metadatadir $(METADATADIR) $(METADATADIR)/Soup-2.4-custom.vala --pkg gio-2.0 $(GIRDIR)/Soup-2.4.gir
+
+libpeas-1.0:
+	$(VAPIGEN) --library $(srcdir)/libpeas-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/Peas-1.0.gir
