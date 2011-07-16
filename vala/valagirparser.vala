@@ -1956,7 +1956,7 @@ public class Vala.GirParser : CodeVisitor {
 			}
 
 			bool changed;
-			type = element_get_type (type, direction == "out" || direction == "ref", ref no_array_length, out changed);
+			type = element_get_type (type, direction == "out" || direction == "inout", ref no_array_length, out changed);
 			if (!changed) {
 				// discard ctype, duplicated information
 				ctype = null;
