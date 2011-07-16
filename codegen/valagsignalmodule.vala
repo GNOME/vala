@@ -427,20 +427,24 @@ public class Vala.GSignalModule : GObjectModule {
 	}
 
 	public override void visit_element_access (ElementAccess expr) {
-		if (expr.container is MemberAccess && expr.container.symbol_reference is Signal && expr.parent_node is MethodCall) {
-			// detailed signal emission
-			var sig = (Signal) expr.symbol_reference;
-			var ma = (MemberAccess) expr.container;
+		if (expr.container is MemberAccess && expr.container.symbol_reference is Signal) {
+			if (expr.parent_node is MethodCall) {
+				// detailed signal emission
+				var sig = (Signal) expr.symbol_reference;
+				var ma = (MemberAccess) expr.container;
 
-			var detail_expr = expr.get_indices ().get (0);
-			var signal_name_cexpr = get_signal_name_cexpression (sig, detail_expr, expr);
+				var detail_expr = expr.get_indices ().get (0);
+				var signal_name_cexpr = get_signal_name_cexpression (sig, detail_expr, expr);
 			
-			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_emit_by_name"));
-			ccall.add_argument (get_cvalue (ma.inner));
-			if (signal_name_cexpr != null) {
-				ccall.add_argument (signal_name_cexpr);
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_emit_by_name"));
+				ccall.add_argument (get_cvalue (ma.inner));
+				if (signal_name_cexpr != null) {
+					ccall.add_argument (signal_name_cexpr);
+				}
+				set_cvalue (expr, ccall);
+			} else {
+				// signal connect or disconnect
 			}
-			set_cvalue (expr, ccall);
 		} else {
 			base.visit_element_access (expr);
 		}

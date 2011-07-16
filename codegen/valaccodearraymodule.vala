@@ -178,6 +178,12 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			}
 			set_cvalue (expr, new CCodeElementAccess (ccontainer, cindex));
 		}
+
+		expr.target_value.value_type = expr.value_type.copy ();
+		if (!expr.lvalue) {
+			expr.target_value = store_temp_value (expr.target_value, expr);
+		}
+		((GLibValue) expr.target_value).lvalue = true;
 	}
 
 	public override void visit_slice_expression (SliceExpression expr) {
