@@ -1,5 +1,5 @@
 Engine
-	.create_extension skip=false owned=true
+	.create_extension skip=false unowned=false
 	.get_plugin_info unowned=true
 ExtensionBase
 	.get_plugin_info unowned=true

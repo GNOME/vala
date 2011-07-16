@@ -19,7 +19,7 @@ feature_available skip
 feature_get_all skip
 frame_source_* name="frame_source_(.+)" parent="Clutter.FrameSource" skip=false
 InitError errordomain=false
-Stage.read_pixels owned
+Stage.read_pixels unowned=false
 	.width default=-1
 	.height default=-1
 threads_* name="threads_(.+)" parent="Clutter.Threads" skip=false
@@ -34,7 +34,7 @@ value_get_color nullable
 value_get_fixed nullable
 value_get_shader_float array array_length_idx=1
 value_get_shader_int array array_length_idx=1
-value_get_units owned
+value_get_units unowned=false
 value_set_shader_float.floats array array_length_idx=1
 value_set_shader_int.ints array array_length_idx=1
 value_set_shader_matrix.matrix array array_length_idx=1
@@ -67,14 +67,14 @@ PRIORITY_REDRAW skip=false
 // Forward upstream
 Actor
 	.animate* skip=false
-	.apply_relative_transform_to_point.vertex out owned
+	.apply_relative_transform_to_point.vertex out unowned=false
 	.apply_transform.matrix ref
-	.apply_transform_to_point.vertex out owned
+	.apply_transform_to_point.vertex out unowned=false
 	.button_*.event type="Clutter.ButtonEvent"
-	.get_abs_allocation_vertices.verts owned
-	.get_allocation_box.box owned
-	.get_allocation_geometry.geom owned
-	.get_allocation_vertices.verts owned
+	.get_abs_allocation_vertices.verts unowned=false
+	.get_allocation_box.box unowned=false
+	.get_allocation_geometry.geom unowned=false
+	.get_allocation_vertices.verts unowned=false
 	.get_parent nullable
 	.get_stage type="unowned Clutter.Stage"
 	.enter_event.event type="Clutter.CrossingEvent"

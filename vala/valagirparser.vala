@@ -1391,14 +1391,10 @@ public class Vala.GirParser : CodeVisitor {
 				changed = true;
 			}
 
-			if (type.value_owned) {
-				if (metadata.has_argument (ArgumentType.UNOWNED)) {
-					type.value_owned = !metadata.get_bool (ArgumentType.UNOWNED);
-				}
+			if (owned_by_default) {
+				type.value_owned = !metadata.get_bool (ArgumentType.UNOWNED, !type.value_owned);
 			} else {
-				if (metadata.has_argument (ArgumentType.OWNED)) {
-					type.value_owned = metadata.get_bool (ArgumentType.OWNED);
-				}
+				type.value_owned = metadata.get_bool (ArgumentType.OWNED, type.value_owned);
 			}
 			type.nullable = metadata.get_bool (ArgumentType.NULLABLE, type.nullable);
 		}

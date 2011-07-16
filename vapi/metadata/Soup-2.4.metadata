@@ -32,7 +32,7 @@ Buffer.new_with_owner.data type="uint8[]" array_length_idx=1
 Buffer.new_subbuffer skip
 Buffer.new_with_owner.owner_dnotify nullable
 CookieJar.all_cookies type_arguments="Cookie"
-ContentSniffer.sniff.params type_arguments="string,string" nullable out owned
+ContentSniffer.sniff.params type_arguments="string,string" nullable out unowned=false
 form_* skip=false
 header_parse_list type_arguments="string"
 header_parse_quality_list type_arguments="string"
@@ -45,8 +45,8 @@ Message
 	.set_request.req_body type="uint8[]" array_length_idx=3
 	.set_response.resp_body type="uint8[]" array_length_idx=3
 MessageHeaders
-	.get_content_disposition.* out owned
-	.get_content_type.* out owned
+	.get_content_disposition.* out unowned=false
+	.get_content_type.* out unowned=false
 	.get_content_*.params type_arguments="string,string"
 	.get_ranges.ranges out
 	.set_content_disposition.params type_arguments="string,string" nullable
