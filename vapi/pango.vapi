@@ -308,7 +308,7 @@ namespace Pango {
 	[Compact]
 	[CCode (type_id = "PANGO_TYPE_LANGUAGE", cheader_filename = "pango/pango.h")]
 	public class Language {
-		public static Pango.Language? from_string (string language);
+		public static unowned Pango.Language? from_string (string language);
 		public static unowned Pango.Language get_default ();
 		public unowned string get_sample_string ();
 		public unowned Pango.Script[] get_scripts ();
