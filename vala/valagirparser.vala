@@ -2207,6 +2207,7 @@ public class Vala.GirParser : CodeVisitor {
 			if (metadata.has_argument (ArgumentType.CPREFIX)) {
 				cl.set_lower_case_cprefix (metadata.get_string (ArgumentType.CPREFIX));
 			}
+			cl.is_abstract = reader.get_attribute ("abstract") == "1";
 
 			if (parent != null) {
 				cl.add_base_type (parse_type_from_gir_name (parent));
