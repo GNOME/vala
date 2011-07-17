@@ -129,7 +129,7 @@ namespace Pango {
 		public unowned Pango.Language get_language ();
 		public Pango.Matrix get_matrix ();
 		public Pango.FontMetrics get_metrics (Pango.FontDescription? desc, Pango.Language? language);
-		public void list_families (Pango.FontFamily[] families);
+		public void list_families (out Pango.FontFamily[] families);
 		public unowned Pango.Font load_font (Pango.FontDescription desc);
 		public unowned Pango.Fontset load_fontset (Pango.FontDescription desc, Pango.Language language);
 		public void set_base_dir (Pango.Direction direction);
@@ -234,7 +234,7 @@ namespace Pango {
 		[CCode (has_construct_function = false)]
 		protected FontMap ();
 		public Pango.Context create_context ();
-		public void list_families (Pango.FontFamily[] families);
+		public void list_families (out Pango.FontFamily[] families);
 		public unowned Pango.Font load_font (Pango.Context context, Pango.FontDescription desc);
 		public unowned Pango.Fontset load_fontset (Pango.Context context, Pango.FontDescription desc, Pango.Language language);
 	}
