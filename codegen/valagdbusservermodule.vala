@@ -1040,6 +1040,8 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			return register_object_func;
 		}
 
+		cfile.add_include ("gio/gio.h");
+
 		var function = new CCodeFunction (register_object_func, "guint");
 		function.modifiers = CCodeModifiers.STATIC;
 
@@ -1180,6 +1182,8 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		if (add_symbol_declaration (decl_space, sym, register_object_name)) {
 			return;
 		}
+
+		decl_space.add_include ("gio/gio.h");
 
 		// declare register_object function
 		var cfunc = new CCodeFunction (register_object_name, "guint");
