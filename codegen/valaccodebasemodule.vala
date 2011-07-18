@@ -63,6 +63,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	List<EmitContext> emit_context_stack = new ArrayList<EmitContext> ();
 
+	public CCodeLineDirective? current_line = null;
+
+	List<CCodeLineDirective> line_directive_stack = new ArrayList<CCodeLineDirective> ();
+
 	public Symbol current_symbol { get { return emit_context.current_symbol; } }
 
 	public TryStatement current_try {
@@ -512,25 +516,53 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 
 		this.emit_context = emit_context;
+		if (ccode != null) {
+			ccode.current_line = current_line;
+		}
 	}
 
 	public void pop_context () {
 		if (emit_context_stack.size > 0) {
 			this.emit_context = emit_context_stack[emit_context_stack.size - 1];
 			emit_context_stack.remove_at (emit_context_stack.size - 1);
+			if (ccode != null) {
+				ccode.current_line = current_line;
+			}
 		} else {
 			this.emit_context = null;
+		}
+	}
+
+	public void push_line (SourceReference? source_reference) {
+		line_directive_stack.add (current_line);
+		if (source_reference != null) {
+			current_line = new CCodeLineDirective (source_reference.file.filename, source_reference.first_line);
+			if (ccode != null) {
+				ccode.current_line = current_line;
+			}
+		}
+	}
+
+	public void pop_line () {
+		current_line = line_directive_stack[line_directive_stack.size - 1];
+		line_directive_stack.remove_at (line_directive_stack.size - 1);
+		if (ccode != null) {
+			ccode.current_line = current_line;
 		}
 	}
 
 	public void push_function (CCodeFunction func) {
 		emit_context.ccode_stack.add (ccode);
 		emit_context.ccode = func;
+		ccode.current_line = current_line;
 	}
 
 	public void pop_function () {
 		emit_context.ccode = emit_context.ccode_stack[emit_context.ccode_stack.size - 1];
 		emit_context.ccode_stack.remove_at (emit_context.ccode_stack.size - 1);
+		if (ccode != null) {
+			ccode.current_line = current_line;
+		}
 	}
 
 	public bool add_symbol_declaration (CCodeFile decl_space, Symbol sym, string name) {
@@ -717,6 +749,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public override void visit_enum (Enum en) {
+		push_line (en.source_reference);
+
 		en.accept_children (this);
 
 		if (en.comment != null) {
@@ -731,6 +765,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (!en.is_private_symbol ()) {
 			generate_enum_declaration (en, internal_header_file);
 		}
+
+		pop_line ();
 	}
 
 	public void visit_member (Symbol m) {
@@ -816,6 +852,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public override void visit_constant (Constant c) {
+		push_line (c.source_reference);
+
 		if (c.parent_symbol is Block) {
 			// local constant
 
@@ -837,18 +875,18 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var cinitializer = get_cvalue (c.value);
 
 			ccode.add_declaration (type_name, new CCodeVariableDeclarator ("%s%s".printf (c.get_cname (), arr), cinitializer), CCodeModifiers.STATIC);
+		} else {
+			generate_constant_declaration (c, cfile, true);
 
-			return;
+			if (!c.is_internal_symbol ()) {
+				generate_constant_declaration (c, header_file);
+			}
+			if (!c.is_private_symbol ()) {
+				generate_constant_declaration (c, internal_header_file);
+			}
 		}
 
-		generate_constant_declaration (c, cfile, true);
-
-		if (!c.is_internal_symbol ()) {
-			generate_constant_declaration (c, header_file);
-		}
-		if (!c.is_private_symbol ()) {
-			generate_constant_declaration (c, internal_header_file);
-		}
+		pop_line ();
 	}
 
 	public void generate_field_declaration (Field f, CCodeFile decl_space) {
@@ -935,6 +973,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public override void visit_field (Field f) {
+		push_line (f.source_reference);
 		visit_member (f);
 
 		check_type (f.variable_type);
@@ -1165,6 +1204,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			pop_context ();
 		}
+
+		pop_line ();
 	}
 
 	public bool is_constant_ccode_expression (CCodeExpression cexpr) {
@@ -1356,6 +1397,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public override void visit_property_accessor (PropertyAccessor acc) {
 		push_context (new EmitContext (acc));
+		push_line (acc.source_reference);
 
 		var prop = (Property) acc.prop;
 
@@ -1400,6 +1442,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 
 		if (acc.source_type == SourceFileType.FAST) {
+			pop_line ();
 			return;
 		}
 
@@ -1618,6 +1661,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			cfile.add_function (function);
 		}
 
+		pop_line ();
 		pop_context ();
 	}
 
@@ -1938,7 +1982,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 
 		foreach (Statement stmt in b.get_statements ()) {
+			push_line (stmt.source_reference);
 			stmt.emit (this);
+			pop_line ();
 		}
 
 		// free in reverse order

@@ -147,6 +147,7 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 
 	public override void visit_struct (Struct st) {
 		push_context (new EmitContext (st));
+		push_line (st.source_reference);
 
 		var old_instance_finalize_context = instance_finalize_context;
 		instance_finalize_context = new EmitContext ();
@@ -180,6 +181,7 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 
 		instance_finalize_context = old_instance_finalize_context;
 
+		pop_line ();
 		pop_context ();
 	}
 

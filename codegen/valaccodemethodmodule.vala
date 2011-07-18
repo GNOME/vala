@@ -255,6 +255,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 	public override void visit_method (Method m) {
 		push_context (new EmitContext (m));
+		push_line (m.source_reference);
 
 		bool in_gobject_creation_method = false;
 		bool in_fundamental_creation_method = false;
@@ -720,6 +721,8 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			pop_function ();
 			cfile.add_function (cmain);
 		}
+
+		pop_line ();
 	}
 
 	public virtual CCodeParameter generate_parameter (Parameter param, CCodeFile decl_space, Map<int,CCodeParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
@@ -998,6 +1001,8 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 	}
 
 	public override void visit_creation_method (CreationMethod m) {
+		push_line (m.source_reference);
+
 		bool visible = !m.is_private_symbol ();
 
 		visit_method (m);
@@ -1029,6 +1034,8 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 			cfile.add_function (vfunc);
 		}
+
+		pop_line ();
 	}
 }
 

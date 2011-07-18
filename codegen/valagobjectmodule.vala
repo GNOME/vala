@@ -34,12 +34,14 @@ public class Vala.GObjectModule : GTypeModule {
 			return;
 		}
 
+		push_line (cl.source_reference);
 		if (class_has_readable_properties (cl) || cl.get_type_parameters ().size > 0) {
 			add_get_property_function (cl);
 		}
 		if (class_has_writable_properties (cl) || cl.get_type_parameters ().size > 0) {
 			add_set_property_function (cl);
 		}
+		pop_line ();
 	}
 
 	public override void generate_class_init (Class cl) {
@@ -398,6 +400,8 @@ public class Vala.GObjectModule : GTypeModule {
 	}
 
 	public override void visit_constructor (Constructor c) {
+		push_line (c.source_reference);
+
 		if (c.binding == MemberBinding.CLASS || c.binding == MemberBinding.STATIC) {
 			in_static_or_class_context = true;
 		} else {
@@ -510,6 +514,8 @@ public class Vala.GObjectModule : GTypeModule {
 		in_static_or_class_context = false;
 
 		in_constructor = false;
+
+		pop_line ();
 	}
 
 	public override string get_dynamic_property_getter_cname (DynamicProperty prop) {
@@ -716,6 +722,8 @@ public class Vala.GObjectModule : GTypeModule {
 
 	public override void visit_method_call (MethodCall expr) {
 		if (expr.call is MemberAccess) {
+			push_line (expr.source_reference);
+
 			var ma = expr.call as MemberAccess;
 			if (ma.inner != null && ma.inner.symbol_reference == gobject_type &&
 			    (ma.member_name == "new" || ma.member_name == "newv")) {
@@ -758,6 +766,8 @@ public class Vala.GObjectModule : GTypeModule {
 					}
 				}
 			}
+
+			pop_line ();
 		}
 
 		base.visit_method_call (expr);

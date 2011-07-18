@@ -525,6 +525,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 	public override void visit_class (Class cl) {
 		push_context (new EmitContext (cl));
+		push_line (cl.source_reference);
 
 		var old_param_spec_struct = param_spec_struct;
 		var old_prop_enum = prop_enum;
@@ -604,7 +605,9 @@ public class Vala.GTypeModule : GErrorModule {
 				add_g_value_take_function (cl);
 
 				var ref_count = new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "ref_count"), new CCodeConstant ("1"));
-				instance_init_context.ccode.add_expression (ref_count);
+				push_context (instance_init_context);
+				ccode.add_expression (ref_count);
+				pop_context ();
 			}
 
 
@@ -711,6 +714,7 @@ public class Vala.GTypeModule : GErrorModule {
 		instance_init_context = old_instance_init_context;
 		instance_finalize_context = old_instance_finalize_context;
 
+		pop_line ();
 		pop_context ();
 	}
 
@@ -1645,7 +1649,9 @@ public class Vala.GTypeModule : GErrorModule {
 				ccast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (cl.get_lower_case_cname (null))));
 				var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (ccast, "finalize"));
 				ccall.add_argument (new CCodeIdentifier ("obj"));
-				instance_finalize_context.ccode.add_expression (ccall);
+				push_context (instance_finalize_context);
+				ccode.add_expression (ccall);
+				pop_context ();
 			}
 
 			cfile.add_function_declaration (instance_finalize_context.ccode);
@@ -1653,7 +1659,9 @@ public class Vala.GTypeModule : GErrorModule {
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_free"));
 			ccall.add_argument (new CCodeIdentifier (cl.get_cname ()));
 			ccall.add_argument (new CCodeIdentifier ("self"));
-			instance_finalize_context.ccode.add_expression (ccall);
+			push_context (instance_finalize_context);
+			ccode.add_expression (ccall);
+			pop_context ();
 		}
 
 		cfile.add_function (instance_finalize_context.ccode);
@@ -1954,6 +1962,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 	public override void visit_interface (Interface iface) {
 		push_context (new EmitContext (iface));
+		push_line (iface.source_reference);
 
 		if (iface.get_cname().length < 3) {
 			iface.error = true;
@@ -1982,6 +1991,7 @@ public class Vala.GTypeModule : GErrorModule {
 		cfile.add_type_member_declaration (type_fun.get_source_declaration ());
 		cfile.add_type_member_definition (type_fun.get_definition ());
 
+		pop_line ();
 		pop_context ();
 	}
 
@@ -2063,9 +2073,11 @@ public class Vala.GTypeModule : GErrorModule {
 		base.visit_struct (st);
 
 		if (st.has_type_id) {
+			push_line (st.source_reference);
 			var type_fun = new StructRegisterFunction (st, context);
 			type_fun.init_from_type (false, false);
 			cfile.add_type_member_definition (type_fun.get_definition ());
+			pop_line ();
 		}
 	}
 
@@ -2073,9 +2085,11 @@ public class Vala.GTypeModule : GErrorModule {
 		base.visit_enum (en);
 
 		if (en.has_type_id) {
+			push_line (en.source_reference);
 			var type_fun = new EnumRegisterFunction (en, context);
 			type_fun.init_from_type (false, false);
 			cfile.add_type_member_definition (type_fun.get_definition ());
+			pop_line ();
 		}
 	}
 
@@ -2090,6 +2104,7 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 		// to_string() on a gtype enum
 
+		push_line (expr.source_reference);
 		var temp_var = get_temp_variable (new CType ("GEnumValue*"), false, expr, false);
 		emit_temp_var (temp_var);
 
@@ -2102,6 +2117,7 @@ public class Vala.GTypeModule : GErrorModule {
 		ccode.add_assignment (get_variable_cexpression (temp_var.name), get_value);
 		var is_null_value = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_variable_cexpression (temp_var.name), new CCodeIdentifier ("NULL"));
 		set_cvalue (expr, new CCodeConditionalExpression (is_null_value, new CCodeMemberAccess.pointer (get_variable_cexpression (temp_var.name), "value_name"), new CCodeIdentifier ("NULL")));
+		pop_line ();
 	}
 
 	public override void visit_property (Property prop) {
