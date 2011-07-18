@@ -50,6 +50,11 @@ public class Vala.CCodeFunction : CCodeNode {
 	 */
 	public CCodeBlock block { get; set; }
 
+	/**
+	 * The current line directive.
+	 */
+	public CCodeLineDirective current_line { get; set; }
+
 	private List<CCodeParameter> parameters = new ArrayList<CCodeParameter> ();
 
 	CCodeBlock current_block;
@@ -144,6 +149,7 @@ public class Vala.CCodeFunction : CCodeNode {
 	}
 
 	public void add_statement (CCodeNode stmt) {
+		stmt.line = current_line;
 		current_block.add_statement (stmt);
 	}
 
@@ -163,6 +169,7 @@ public class Vala.CCodeFunction : CCodeNode {
 		current_block = new CCodeBlock ();
 
 		var cif = new CCodeIfStatement (condition, current_block);
+		cif.line = current_line;
 		statement_stack.add (cif);
 
 		parent_block.add_statement (cif);
@@ -172,6 +179,7 @@ public class Vala.CCodeFunction : CCodeNode {
 		current_block = new CCodeBlock ();
 
 		var cif = (CCodeIfStatement) statement_stack[statement_stack.size - 1];
+		cif.line = current_line;
 		assert (cif.false_statement == null);
 		cif.false_statement = current_block;
 	}
@@ -185,6 +193,7 @@ public class Vala.CCodeFunction : CCodeNode {
 		current_block = new CCodeBlock ();
 
 		var cif = new CCodeIfStatement (condition, current_block);
+		cif.line = current_line;
 		parent_if.false_statement = cif;
 		statement_stack.add (cif);
 	}
@@ -195,7 +204,9 @@ public class Vala.CCodeFunction : CCodeNode {
 
 		current_block = new CCodeBlock ();
 
-		parent_block.add_statement (new CCodeWhileStatement (condition, current_block));
+		var cwhile = new CCodeWhileStatement (condition, current_block);
+		cwhile.line = current_line;
+		parent_block.add_statement (cwhile);
 	}
 
 	public void open_for (CCodeExpression? initializer, CCodeExpression condition, CCodeExpression? iterator) {
@@ -205,6 +216,7 @@ public class Vala.CCodeFunction : CCodeNode {
 		current_block = new CCodeBlock ();
 
 		var cfor = new CCodeForStatement (condition, current_block);
+		cfor.line = current_line;
 		if (initializer != null) {
 			cfor.add_initializer (initializer);
 		}
@@ -220,29 +232,30 @@ public class Vala.CCodeFunction : CCodeNode {
 		var parent_block = current_block;
 
 		var cswitch = new CCodeSwitchStatement (expression);
+		cswitch.line = current_line;
 		current_block = cswitch;
 
 		parent_block.add_statement (cswitch);
 	}
 
 	public void add_label (string label) {
-		current_block.add_statement (new CCodeLabel (label));
+		add_statement (new CCodeLabel (label));
 	}
 
 	public void add_case (CCodeExpression expression) {
-		current_block.add_statement (new CCodeCaseStatement (expression));
+		add_statement (new CCodeCaseStatement (expression));
 	}
 
 	public void add_default () {
-		current_block.add_statement (new CCodeLabel ("default"));
+		add_statement (new CCodeLabel ("default"));
 	}
 
 	public void add_goto (string target) {
-		current_block.add_statement (new CCodeGotoStatement (target));
+		add_statement (new CCodeGotoStatement (target));
 	}
 
 	public void add_expression (CCodeExpression expression) {
-		current_block.add_statement (new CCodeExpressionStatement (expression));
+		add_statement (new CCodeExpressionStatement (expression));
 	}
 
 	public void add_assignment (CCodeExpression left, CCodeExpression right) {
@@ -250,22 +263,22 @@ public class Vala.CCodeFunction : CCodeNode {
 	}
 
 	public void add_return (CCodeExpression? expression = null) {
-		current_block.add_statement (new CCodeReturnStatement (expression));
+		add_statement (new CCodeReturnStatement (expression));
 	}
 
 	public void add_break () {
-		current_block.add_statement (new CCodeBreakStatement ());
+		add_statement (new CCodeBreakStatement ());
 	}
 
 	public void add_continue () {
-		current_block.add_statement (new CCodeContinueStatement ());
+		add_statement (new CCodeContinueStatement ());
 	}
 
 	public void add_declaration (string type_name, CCodeDeclarator declarator, CCodeModifiers modifiers = 0) {
 		var stmt = new CCodeDeclaration (type_name);
 		stmt.add_declarator (declarator);
 		stmt.modifiers = modifiers;
-		current_block.add_statement (stmt);
+		add_statement (stmt);
 	}
 
 	public void close () {
