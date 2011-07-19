@@ -1,6 +1,6 @@
 /* interface.vala
  *
- * Copyright (C) 2008  Florian Brosch
+ * Copyright (C) 2008-2011  Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -29,14 +29,27 @@ using Valadoc.Content;
  * Represents a interface declaration in the source code.
  */
 public class Valadoc.Api.Interface : TypeSymbol {
-	public Interface (Vala.Interface symbol, Node parent) {
-		base (symbol, parent);
+	private string? dbus_name;
+	private string? cname;
+
+	public Interface (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, string? cname, string? dbus_name, void* data) {
+		base (parent, file, name, accessibility, comment, false, data);
+
+		this.dbus_name = dbus_name;
+		this.cname = cname;
 	}
 
 	/**
 	 * A list of preconditioned interfaces
 	 */
 	private ArrayList<TypeReference> interfaces = new ArrayList<TypeReference> ();
+
+	/**
+	 * Add a newpreconditioned interface to the list
+	 */
+	public void add_interface (TypeReference iface) {
+		interfaces.add (iface);
+	}
 
 	/**
 	 * Returns a list of newly preconditioned interfaces
@@ -71,48 +84,36 @@ public class Valadoc.Api.Interface : TypeSymbol {
 	 * Returns the name of this interface as it is used in C.
 	 */
 	public string? get_cname () {
-		return ((Vala.Interface) symbol).get_cname ();
+		return cname;
 	}
 
 	/**
 	 * Returns the dbus-name.
 	 */
 	public string? get_dbus_name () {
-		return Vala.GDBusModule.get_dbus_name ((Vala.TypeSymbol) symbol);
+		return dbus_name;
 	}
 
 	/**
 	 * A preconditioned class or null
 	 */
-	public TypeReference? base_type { private set; get; }
+	public TypeReference? base_type {
+		set;
+		get;
+	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public override NodeType node_type { get { return NodeType.INTERFACE; } }
+	public override NodeType node_type {
+		get { return NodeType.INTERFACE; }
+	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public override void accept (Visitor visitor) {
 		visitor.visit_interface (this);
-	}
-
-	private void set_prerequisites (Tree root, Vala.Collection<Vala.DataType> lst) {
-		if (this.interfaces.size != 0) {
-			return;
-		}
-
-		foreach (Vala.DataType vtyperef in lst) {
-			var inherited = new TypeReference (vtyperef, this);
-			inherited.resolve_type_references (root);
-
-			if (inherited.data_type is Class) {
-				this.base_type = inherited;
-			} else {
-				this.interfaces.add (inherited);
-			}
-		}
 	}
 
 	/**
@@ -145,31 +146,6 @@ public class Valadoc.Api.Interface : TypeSymbol {
 
 	internal void register_implementation (Class cl) {
 		_known_implementations.add (cl);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	internal override void resolve_children (Tree root) {
-		if (base_type != null) {
-			((Class) this.base_type.data_type).register_derived_interface (this);
-		}
-
-		foreach (var iface in get_all_implemented_interface_list ()) {
-			((Interface) iface.data_type).register_related_interface (this);
-		}
-
-		base.resolve_children (root);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	internal override void resolve_type_references (Tree root) {
-		var prerequisites = ((Vala.Interface) symbol).get_prerequisites ();
-		this.set_prerequisites (root, prerequisites);
-
-		base.resolve_type_references (root);
 	}
 
 	/**

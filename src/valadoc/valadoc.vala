@@ -129,30 +129,7 @@ public class ValaDoc : Object {
 		return this.pkg_name;
 	}
 
-
-	private int run (ErrorReporter reporter) {
-		var settings = new Valadoc.Settings ();
-		settings.pkg_name = this.get_pkg_name ();
-		settings.pkg_version = this.pkg_version;
-		settings.add_inherited = this.add_inherited;
-		settings._protected = this._protected;
-		settings._internal = this._internal;
-		settings.with_deps = this.with_deps;
-		settings._private = this._private;
-		settings.path = realpath (this.directory);
-		settings.verbose = this.verbose;
-		settings.wiki_directory = this.wikidirectory;
-		settings.pluginargs = this.pluginargs;
-
-		settings.experimental = experimental;
-		settings.experimental_non_null = experimental_non_null;
-		settings.basedir = basedir;
-		settings.directory = directory;
-		settings.vapi_directories = vapi_directories;
-
-		settings.profile = profile;
-		settings.defines = defines;
-
+	private ModuleLoader? create_module_loader (ErrorReporter reporter) {
 		string fulldirpath = "";
 		if (pluginpath == null) {
 			fulldirpath = build_filename (Config.plugin_dir, "html");
@@ -175,23 +152,56 @@ public class ValaDoc : Object {
 		bool tmp = modules.load_doclet (fulldirpath);
 		if (tmp == false) {
 			reporter.simple_error ("failed to load plugin");
+			return null;
+		}
+
+		return modules;
+	}
+
+	private int run (ErrorReporter reporter) {
+		// settings:
+		var settings = new Valadoc.Settings ();
+		settings.pkg_name = this.get_pkg_name ();
+		settings.pkg_version = this.pkg_version;
+		settings.add_inherited = this.add_inherited;
+		settings._protected = this._protected;
+		settings._internal = this._internal;
+		settings.with_deps = this.with_deps;
+		settings._private = this._private;
+		settings.path = realpath (this.directory);
+		settings.verbose = this.verbose;
+		settings.wiki_directory = this.wikidirectory;
+		settings.pluginargs = this.pluginargs;
+
+		settings.experimental = experimental;
+		settings.experimental_non_null = experimental_non_null;
+		settings.basedir = basedir;
+		settings.directory = directory;
+		settings.vapi_directories = vapi_directories;
+
+		settings.source_files = tsources;
+		settings.packages = packages;
+
+		settings.profile = profile;
+		settings.defines = defines;
+
+
+		// Create tree:
+		Valadoc.Api.Driver driver = new Valadoc.Api.Driver ();
+		Valadoc.Api.Tree doctree = driver.build (settings, reporter);
+
+		if (reporter.errors > 0) {
 			return quit (reporter);
 		}
 
 
-		Valadoc.Api.Tree doctree = new Valadoc.Api.Tree (reporter, settings);
+		// process documentation
+		ModuleLoader? modules = create_module_loader (reporter);
+		if (reporter.errors > 0 || modules == null) {
+			return quit (reporter);
+		}
+
 		Valadoc.DocumentationParser docparser = new Valadoc.DocumentationParser (settings, reporter, doctree, modules);
-
-		doctree.add_depencies (packages);
-		if (reporter.errors > 0) {
-			return quit (reporter);
-		}
-
-		doctree.add_documented_file (tsources);
-		if (reporter.errors > 0) {
-			return quit (reporter);
-		}
-
 		if (!doctree.create_tree()) {
 			return quit (reporter);
 		}
@@ -200,7 +210,6 @@ public class ValaDoc : Object {
 		if (reporter.errors > 0) {
 			return quit (reporter);
 		}
-
 
 		DocumentationImporter[] importers = {
 			new GirDocumentationImporter (doctree, docparser, modules, settings),

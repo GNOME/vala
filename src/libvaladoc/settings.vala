@@ -115,6 +115,16 @@ public class Valadoc.Settings : Object {
 	 * List of directories where to find .vapi files.
 	 */
 	public string[] vapi_directories;
+
+	/**
+	 * A list of all packages
+	 */
+	public string[] packages;
+
+	/**
+	 * A list of all source files.
+	 */
+	public string[] source_files;
 }
 
 

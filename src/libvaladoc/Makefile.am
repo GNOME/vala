@@ -42,6 +42,9 @@ libvaladoc_la_VALASOURCES = \
 	importer/girdocumentationbuilder.vala \
 	importer/valadocdocumentationimporter.vala \
 	importer/valadocdocumentationimporterscanner.vala \
+	api/symbolaccessibility.vala \
+	api/symbolresolver.vala \
+	api/sourcecomment.vala \
 	api/array.vala \
 	api/class.vala \
 	api/constant.vala \
@@ -52,19 +55,25 @@ libvaladoc_la_VALASOURCES = \
 	api/errordomain.vala \
 	api/field.vala \
 	api/formalparameter.vala \
+	api/formalparametertype.vala \
 	api/interface.vala \
+	api/initializerbuilder.vala \
 	api/item.vala \
 	api/member.vala \
 	api/method.vala \
+	api/methodbindingtype.vala \
 	api/namespace.vala \
 	api/node.vala \
-	api/nodebuilder.vala \
+	api/ownership.vala \
 	api/package.vala \
 	api/pointer.vala \
 	api/property.vala \
 	api/propertyaccessor.vala \
+	api/propertyaccessortype.vala \
+	api/propertybindingtype.vala \
 	api/signal.vala \
 	api/signaturebuilder.vala \
+	api/sourcefile.vala \
 	api/struct.vala \
 	api/symbol.vala \
 	api/tree.vala \
@@ -73,6 +82,7 @@ libvaladoc_la_VALASOURCES = \
 	api/typesymbol.vala \
 	api/browsable.vala \
 	api/visitor.vala \
+	api/driver.vala \
 	content/block.vala \
 	content/blockcontent.vala \
 	content/comment.vala \

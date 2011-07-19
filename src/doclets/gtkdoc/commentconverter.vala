@@ -44,7 +44,7 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 		this.reporter = reporter;
 	}
 
-	public void convert (Comment comment, bool is_dbus = false) {
+	public void convert (Content.Comment comment, bool is_dbus = false) {
 		this.is_dbus = is_dbus;
 		comment.accept (this);
 
@@ -54,7 +54,7 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 		}
 	}
 
-	public override void visit_comment (Comment c) {
+	public override void visit_comment (Content.Comment c) {
 		c.accept_children (this);
 	}
   

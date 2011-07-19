@@ -1,6 +1,6 @@
 /* errorcode.vala
  *
- * Copyright (C) 2008  Florian Brosch
+ * Copyright (C) 2008-2011  Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,65 +27,50 @@ using Valadoc.Content;
 /**
  * Represents an errordomain member in the source code.
  */
-public class Valadoc.Api.ErrorCode : TypeSymbol {
-	public ErrorCode (Vala.ErrorCode symbol, Node parent) {
-		base (symbol, parent);
+public class Valadoc.Api.ErrorCode : Symbol {
+	private SourceComment? source_comment;
+	private string? dbus_name;
+	private string? cname;
+
+	public ErrorCode (ErrorDomain parent, SourceFile file, string name, SourceComment? comment, string? cname, string? dbus_name, void* data) {
+		base (parent, file, name, parent.accessibility, data);
+
+		this.source_comment = comment;
+		this.dbus_name = dbus_name;
+		this.cname = cname;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public override bool is_public {
-		get {
-			return ((ErrorDomain)parent).is_public;
+	internal override void process_comments (Settings settings, DocumentationParser parser) {
+		if (source_comment != null) {
+			documentation = parser.parse (this, source_comment);
 		}
-	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public override bool is_protected {
-		get {
-			return ((ErrorDomain)parent).is_protected;
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public override bool is_internal {
-		get {
-			return ((ErrorDomain)parent).is_internal;
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public override bool is_private {
-		get {
-			return ((ErrorDomain)parent).is_private;
-		}
+		base.process_comments (settings, parser);
 	}
 
 	/**
 	 * Returns the name of this class as it is used in C.
 	 */
 	public string get_cname () {
-		return ((Vala.ErrorCode) symbol).get_cname ();
+		return cname;
 	}
 
 	/**
 	 * Returns the dbus-name.
 	 */
 	public string get_dbus_name () {
-		return Vala.GDBusModule.get_dbus_name_for_member (symbol);
+		return dbus_name;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public override NodeType node_type { get { return NodeType.ERROR_CODE; } }
+	public override NodeType node_type {
+		get { return NodeType.ERROR_CODE; }
+	}
 
 	/**
 	 * {@inheritDoc}

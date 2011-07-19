@@ -1,6 +1,6 @@
 /* class.vala
  *
- * Copyright (C) 2008  Florian Brosch
+ * Copyright (C) 2008-2011  Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -29,13 +29,38 @@ using Valadoc.Content;
  */
 public class Valadoc.Api.Class : TypeSymbol {
 	private ArrayList<TypeReference> interfaces;
-	private Vala.Class vclass;
 
-	public Class (Vala.Class symbol, Node parent) {
-		base (symbol, parent);
+	private string? dbus_name;
+	private string? take_value_function_cname;
+	private string? get_value_function_cname;
+	private string? set_value_function_cname;
+	private string? unref_function_name;
+	private string? param_spec_function_name;
+	private string? ref_function_name;
+	private string? type_id;
+	private string? cname;
+
+
+	public Class (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, string? cname, string? dbus_name, string? type_id, string? param_spec_function_name, string? ref_function_name, string? unref_function_name, string? take_value_function_cname, string? get_value_function_cname, string? set_value_function_cname, bool is_fundamental, bool is_abstract, bool is_basic_type, void* data) {
+		base (parent, file, name, accessibility, comment, is_basic_type, data);
+
 		this.interfaces = new ArrayList<TypeReference> ();
 
-		this.vclass = symbol;
+		this.dbus_name = dbus_name;
+		this.type_id = type_id;
+		this.cname = cname;
+
+		this.param_spec_function_name = param_spec_function_name;
+
+		this.unref_function_name = unref_function_name;
+		this.ref_function_name = ref_function_name;
+
+		this.take_value_function_cname = take_value_function_cname;
+		this.get_value_function_cname = get_value_function_cname;
+		this.set_value_function_cname = set_value_function_cname;
+
+		this.is_fundamental = is_fundamental;
+		this.is_abstract = is_abstract;
 
 		if (glib_error == null) {
 			if (this.get_full_name () == "GLib.Error") {
@@ -48,7 +73,7 @@ public class Valadoc.Api.Class : TypeSymbol {
 	 * Specifies the base class.
 	 */
 	public TypeReference? base_type {
-		private set;
+		set;
 		get;
 	}
 
@@ -56,14 +81,14 @@ public class Valadoc.Api.Class : TypeSymbol {
 	 * Returns the name of this class as it is used in C.
 	 */
 	public string? get_cname () {
-		return this.vclass.get_cname ();
+		return cname;
 	}
 
 	/**
 	 * Returns the C symbol representing the runtime type id for this data type.
 	 */
 	public string? get_type_id () {
-		return this.vclass.get_type_id ();
+		return type_id;
 	}
 
 	/**
@@ -74,7 +99,7 @@ public class Valadoc.Api.Class : TypeSymbol {
 	 *         support reference counting
 	 */
 	public string? get_ref_function_cname () {
-		return this.vclass.get_ref_function ();
+		return ref_function_name;
 	}
 
 	/**
@@ -85,42 +110,42 @@ public class Valadoc.Api.Class : TypeSymbol {
 	 *         support reference counting
 	 */
 	public string? get_unref_function_cname () {
-		return this.vclass.get_unref_function ();
+		return unref_function_name;
 	}
 
 	/**
 	 * Returns the cname of the GValue parameter spec function.
 	 */
 	public string? get_param_spec_function_cname () {
-		return this.vclass.get_param_spec_function ();
+		return param_spec_function_name;
 	}
 
 	/**
 	 * Returns the cname of the GValue setter function.
 	 */
 	public string? get_set_value_function_cname () {
-		return this.vclass.get_set_value_function ();
+		return set_value_function_cname;
 	}
 
 	/**
 	 * Returns the cname of the GValue getter function.
 	 */
 	public string? get_get_value_function_cname () {
-		return this.vclass.get_get_value_function ();
+		return get_value_function_cname;
 	}
 
 	/**
 	 * Returns the cname of the GValue taker function.
 	 */
 	public string? get_take_value_function_cname () {
-		return this.vclass.get_take_value_function ();
+		return take_value_function_cname;
 	}
 
 	/**
 	 * Returns the dbus-name.
 	 */
 	public string? get_dbus_name () {
-		return Vala.GDBusModule.get_dbus_name ((Vala.TypeSymbol) symbol);
+		return dbus_name;
 	}
 
 	/**
@@ -152,22 +177,24 @@ public class Valadoc.Api.Class : TypeSymbol {
 		return _full_implemented_interfaces;
 	}
 
+	public void add_interface (TypeReference iface) {
+		interfaces.add (iface);
+	}
+
 	/**
 	 * Specifies whether this class is abstract.
 	 */
 	public bool is_abstract {
-		get {
-			return this.vclass.is_abstract;
-		}
+		private set;
+		get;
 	}
 
 	/**
 	 * Specifies whether this class is fundamental.
 	 */
 	public bool is_fundamental {
-		get {
-			return this.vclass.is_fundamental ();
-		}
+		private set;
+		get;
 	}
 
 	/**
@@ -180,23 +207,6 @@ public class Valadoc.Api.Class : TypeSymbol {
 	 */
 	public override void accept (Visitor visitor) {
 		visitor.visit_class (this);
-	}
-
-	private void set_parent_type_references (Tree root, Vala.Collection<Vala.DataType> lst) {
-		if (this.interfaces.size != 0) {
-			return;
-		}
-
-		foreach (Vala.DataType vtyperef in lst) {
-			var inherited = new TypeReference (vtyperef, this);
-			inherited.resolve_type_references (root);
-
-			if (inherited.data_type is Class) {
-				this.base_type = inherited;
-			} else {
-				this.interfaces.add (inherited);
-			}
-		}
 	}
 
 	private Set<Interface> _known_derived_interfaces = new TreeSet<Interface> ();
@@ -226,33 +236,6 @@ public class Valadoc.Api.Class : TypeSymbol {
 		}
 
 		_known_child_classes.add (cl);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	internal override void resolve_children (Tree root) {
-		// base class:
-		if (this.base_type != null)	{
-			((Class) this.base_type.data_type).register_child_class (this);
-		}
-
-		// implemented interfaces:
-		foreach (var iface in get_full_implemented_interface_list ()) {
-			((Interface) iface.data_type).register_implementation (this);
-		}
-
-		base.resolve_children (root);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	internal override void resolve_type_references (Tree root) {
-		var lst = this.vclass.get_base_types ();
-		this.set_parent_type_references (root, lst);
-
-		base.resolve_type_references (root);
 	}
 
 	/**

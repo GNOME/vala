@@ -1,6 +1,6 @@
 /* typereference.vala
  *
- * Copyright (C) 2008  Florian Brosch
+ * Copyright (C) 2008-2011  Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -29,10 +29,17 @@ using Valadoc.Content;
  */
 public class Valadoc.Api.TypeReference : Item {
 	private ArrayList<TypeReference> type_arguments = new ArrayList<TypeReference> ();
-	private Vala.DataType? vtyperef;
+	private string? dbus_type_signature;
+	private Ownership ownership;
 
-	public TypeReference (Vala.DataType? vtyperef, Item parent) {
-		this.vtyperef = vtyperef;
+	public TypeReference (Item parent, Ownership ownership, bool pass_ownership, bool is_dynamic, bool is_nullable, string? dbus_type_signature, void* data) {
+		base (data);
+
+		this.dbus_type_signature = dbus_type_signature;
+		this.pass_ownership = pass_ownership;
+		this.is_nullable = is_nullable;
+		this.is_dynamic = is_dynamic;
+		this.ownership = ownership;
 		this.parent = parent;
 	}
 
@@ -45,42 +52,21 @@ public class Valadoc.Api.TypeReference : Item {
 		return this.type_arguments.read_only_view;
 	}
 
-	private void set_template_argument_list (Tree root, Vala.Collection<Vala.DataType> varguments) {
-		foreach (Vala.DataType vdtype in varguments) {
-			var dtype = new TypeReference (vdtype, this);
-			dtype.resolve_type_references (root);
-			this.type_arguments.add (dtype);
-		}
+	public void add_type_argument (TypeReference type_ref) {
+		type_arguments.add (type_ref);
 	}
 
 	/**
 	 * The referred data type.
 	 */
 	public Item? data_type {
-		private set;
+		set;
 		get;
 	}
 
 	public bool pass_ownership {
-		get {
-			if (this.vtyperef == null) {
-				return false;
-			}
-
-			Vala.CodeNode? node = this.vtyperef.parent_node;
-			if (node == null) {
-				return false;
-			}
-			if (node is Vala.Parameter) {
-				return (((Vala.Parameter)node).direction == Vala.ParameterDirection.IN &&
-					((Vala.Parameter)node).variable_type.value_owned);
-			}
-			if (node is Vala.Property) {
-				return ((Vala.Property)node).property_type.value_owned;
-			}
-
-			return false;
-		}
+		private set;
+		get;
 	}
 
 	/**
@@ -88,21 +74,7 @@ public class Valadoc.Api.TypeReference : Item {
 	 */
 	public bool is_owned {
 		get {
-			if (this.vtyperef == null) {
-				return false;
-			}
-
-			Vala.CodeNode parent = this.vtyperef.parent_node;
-
-			// parameter:
-			if (parent is Vala.Parameter) {
-				if (((Vala.Parameter)parent).direction != Vala.ParameterDirection.IN) {
-					return false;
-				}
-				return ((Vala.Parameter)parent).variable_type.value_owned;
-			}
-
-			return false;
+			return ownership == Ownership.OWNED;
 		}
 	}
 
@@ -111,26 +83,7 @@ public class Valadoc.Api.TypeReference : Item {
 	 */
 	public bool is_weak {
 		get {
-			if (vtyperef == null) {
-				return false;
-			}
-
-			// non ref counted types are unowned, not weak
-			if (vtyperef.data_type is Vala.TypeSymbol && ((Vala.TypeSymbol) vtyperef.data_type).is_reference_counting () == false) {
-				return false;
-			}
-
-			// FormalParameters are weak by default
-			return (parent is FormalParameter == false)? vtyperef.is_weak () : false;
-		}
-	}
-
-	/**
-	 * Specifies that the expression is dynamic.
-	 */
-	public bool is_dynamic {
-		get {
-			return this.vtyperef != null && this.vtyperef.is_dynamic;
+			return ownership == Ownership.WEAK;
 		}
 	}
 
@@ -139,70 +92,29 @@ public class Valadoc.Api.TypeReference : Item {
 	 */
 	public bool is_unowned {
 		get {
-			if (vtyperef == null) {
-				return false;
-			}
-
-			// non ref counted types are weak, not unowned
-			if (vtyperef.data_type is Vala.TypeSymbol && ((Vala.TypeSymbol) vtyperef.data_type).is_reference_counting () == true) {
-				return false;
-			}
-
-			// FormalParameters are weak by default
-			return (parent is FormalParameter == false)? vtyperef.is_weak () : false;
+			return ownership == Ownership.UNOWNED;
 		}
+	}
+
+
+	/**
+	 * Specifies that the expression is dynamic.
+	 */
+	public bool is_dynamic {
+		private set;
+		get;
 	}
 
 	/**
 	 * Specifies that the expression may be null.
 	 */
 	public bool is_nullable {
-		get {
-			return this.vtyperef != null
-			       && this.vtyperef.nullable
-			       && !(this.vtyperef is Vala.GenericType)
-			       && !(this.vtyperef is Vala.PointerType);
-		}
+		private set;
+		get;
 	}
 
 	public string? get_dbus_type_signature () {
-		if (vtyperef != null) {
-			return Vala.GVariantModule.get_dbus_signature (vtyperef.data_type);
-		} else {
-			return null;
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */ 
-	internal override void resolve_type_references (Tree root) {
-		if ( this.vtyperef is Vala.PointerType) {
-			this.data_type = new Pointer ((Vala.PointerType) this.vtyperef, this);
-		} else if (vtyperef is Vala.ArrayType) {
-			this.data_type = new Array ((Vala.ArrayType) this.vtyperef, this);
-		} else if (vtyperef is Vala.GenericType) {
-			 this.data_type = root.search_vala_symbol (((Vala.GenericType) this.vtyperef).type_parameter);
-		} else if (vtyperef is Vala.ErrorType) {
-			Vala.ErrorDomain verrdom = ((Vala.ErrorType) vtyperef).error_domain;
-			if (verrdom != null) {
-				this.data_type = root.search_vala_symbol (verrdom);
-			} else {
-				this.data_type = glib_error;
-			}
-		} else if (vtyperef is Vala.DelegateType) {
-			this.data_type = root.search_vala_symbol (((Vala.DelegateType) vtyperef).delegate_symbol);
-		} else if (vtyperef.data_type != null) {
-			this.data_type = root.search_vala_symbol (vtyperef.data_type);
-		}
-
-		this.set_template_argument_list (root, vtyperef.get_type_arguments ());
-
-		if (this.data_type is Pointer) {
-			((Pointer)this.data_type).resolve_type_references (root);
-		} else if (this.data_type is Array) {
-			((Array)this.data_type).resolve_type_references (root);
-		}
+		return dbus_type_signature;
 	}
 
 	/**

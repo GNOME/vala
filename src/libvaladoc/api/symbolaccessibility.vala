@@ -1,6 +1,6 @@
-/* item.vala
+/* SymbolAccessibility.vala
  *
- * Copyright (C) 2008  Florian Brosch
+ * Copyright (C) 2011 Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,48 +20,32 @@
  * 	Florian Brosch <flo.brosch@gmail.com>
  */
 
-using Valadoc.Content;
-using Gee;
-
 
 /**
- * Represents a node in the api tree.
+ * The access modifier
  */
-public abstract class Valadoc.Api.Item : Object {
-	private Inline _signature;
+public enum Valadoc.Api.SymbolAccessibility {
+	PROTECTED,
+	INTERNAL,
+	PRIVATE,
+	PUBLIC;
 
-	public void* data {
-		private set;
-		get;
-	}
+	public string to_string () {
+		switch (this) {
+		case SymbolAccessibility.PROTECTED:
+			return "protected";
 
-	/**
-	 * The parent of this item.
-	 */
-	public Item parent {
-		protected set;
-		get;
-	}
+		case SymbolAccessibility.INTERNAL:
+			return "internal";
 
-	public Item (void* data) {
-		this.data = data;
-	}
+		case SymbolAccessibility.PRIVATE:
+			return "private";
 
-	internal virtual void process_comments (Settings settings, DocumentationParser parser) {
-	}
+		case SymbolAccessibility.PUBLIC:
+			return "public";
 
-	/**
-	 * The signature of this item.
-	 */
-	public Inline signature {
-		get {
-			if (_signature == null) {
-				_signature = build_signature ();
-			}
-			return _signature;
+		default:
+			assert_not_reached ();
 		}
 	}
-
-	protected abstract Inline build_signature ();
 }
-

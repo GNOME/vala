@@ -256,7 +256,7 @@ public class Valadoc.TokenType : Object {
 	private TokenType (string string_value, int basic_value, Action? action) {
 		_string_value = string_value;
 		_basic_value = basic_value;
-		if (_action != null) {
+		if (action != null) {
 			_action = (token) => { action (token); };
 		} else {
 			_action = null;

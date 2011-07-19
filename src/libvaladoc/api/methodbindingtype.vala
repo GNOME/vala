@@ -1,6 +1,6 @@
-/* item.vala
+/* methodbindingtype.vala
  *
- * Copyright (C) 2008  Florian Brosch
+ * Copyright (C) 2011 Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -17,51 +17,39 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
  *
  * Author:
- * 	Florian Brosch <flo.brosch@gmail.com>
+ * 	Brosch Florian <flo.brosch@gmail.com>
  */
 
-using Valadoc.Content;
-using Gee;
 
+public enum Valadoc.MethodBindingType {
+	UNMODIFIED,
+	OVERRIDE,
+	ABSTRACT,
+	VIRTUAL,
+	INLINE,
+	STATIC;
 
-/**
- * Represents a node in the api tree.
- */
-public abstract class Valadoc.Api.Item : Object {
-	private Inline _signature;
+	public string to_string () {
+		switch (this) {
+		case OVERRIDE:
+			return "override";
 
-	public void* data {
-		private set;
-		get;
-	}
+		case ABSTRACT:
+			return "abstract";
 
-	/**
-	 * The parent of this item.
-	 */
-	public Item parent {
-		protected set;
-		get;
-	}
+		case VIRTUAL:
+			return "virtual";
 
-	public Item (void* data) {
-		this.data = data;
-	}
+		case INLINE:
+			return "inline";
 
-	internal virtual void process_comments (Settings settings, DocumentationParser parser) {
-	}
+		case STATIC:
+			return "static";
 
-	/**
-	 * The signature of this item.
-	 */
-	public Inline signature {
-		get {
-			if (_signature == null) {
-				_signature = build_signature ();
-			}
-			return _signature;
+		case UNMODIFIED:
+			return "";
 		}
+
+		assert_not_reached ();
 	}
-
-	protected abstract Inline build_signature ();
 }
-

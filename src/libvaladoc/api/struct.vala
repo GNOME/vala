@@ -1,6 +1,6 @@
 /* struct.vala
  *
- * Copyright (C) 2008  Florian Brosch
+ * Copyright (C) 2011  Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,21 +28,33 @@ using Valadoc.Content;
  * Represents a struct declaration.
  */
 public class Valadoc.Api.Struct : TypeSymbol {
-	public Struct (Vala.Struct symbol, Node parent) {
-		base (symbol, parent);
+	private string? dup_function_cname;
+	private string? free_function_cname;
+	private string? cname;
+
+	public Struct (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, string? cname, string? dup_function_cname, string? free_function_cname, bool is_basic_type, void* data) {
+		base (parent, file, name, accessibility, comment, is_basic_type, data);
+
+		this.dup_function_cname = dup_function_cname;
+		this.free_function_cname = free_function_cname;
+
+		this.cname = cname;
 	}
 
 	/**
 	 * Specifies the base struct.
 	 */
-	public TypeReference? base_type { private set; get; }
+	public TypeReference? base_type {
+		set;
+		get;
+	}
 
 
 	/**
 	 * Returns the name of this struct as it is used in C.
 	 */
 	public string? get_cname () {
-		return ((Vala.Struct) symbol).get_cname();
+		return cname;
 	}
 
 	/**
@@ -50,44 +62,28 @@ public class Valadoc.Api.Struct : TypeSymbol {
 	 * type.
 	 */
 	public string? get_dup_function_cname () {
-		return ((Vala.Struct) symbol).get_dup_function ();
+		return dup_function_cname;
 	}
 
 	/**
 	 * Returns the C function name that frees instances of this data type.
 	 */
 	public string? get_free_function_cname () {
-		return ((Vala.Struct) symbol).get_free_function ();
+		return free_function_cname;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public override NodeType node_type { get { return NodeType.STRUCT; } }
+	public override NodeType node_type {
+		get { return NodeType.STRUCT; }
+	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public override void accept (Visitor visitor) {
 		visitor.visit_struct (this);
-	}
-
-	private void set_parent_references (Tree root) {
-		Vala.ValueType? basetype = ((Vala.Struct) symbol).base_type as Vala.ValueType;
-		if (basetype == null) {
-			return ;
-		}
-		this.base_type = new TypeReference (basetype, this);
-		this.base_type.resolve_type_references (root);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	internal override void resolve_type_references (Tree root) {
-		this.set_parent_references (root);
-
-		base.resolve_type_references (root);
 	}
 
 	/**

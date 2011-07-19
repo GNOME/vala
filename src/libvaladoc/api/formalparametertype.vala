@@ -1,6 +1,6 @@
-/* item.vala
+/* formalparametertype.vala
  *
- * Copyright (C) 2008  Florian Brosch
+ * Copyright (C) 2011  Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,48 +20,25 @@
  * 	Florian Brosch <flo.brosch@gmail.com>
  */
 
-using Valadoc.Content;
-using Gee;
+public enum Valadoc.Api.FormalParameterType {
+	IN,
+	OUT,
+	REF;
 
+	public string to_string () {
+		switch (this) {
+		case FormalParameterType.OUT:
+			return "out";
 
-/**
- * Represents a node in the api tree.
- */
-public abstract class Valadoc.Api.Item : Object {
-	private Inline _signature;
+		case FormalParameterType.REF:
+			return "ref";
 
-	public void* data {
-		private set;
-		get;
-	}
+		case FormalParameterType.IN:
+			return "";
 
-	/**
-	 * The parent of this item.
-	 */
-	public Item parent {
-		protected set;
-		get;
-	}
-
-	public Item (void* data) {
-		this.data = data;
-	}
-
-	internal virtual void process_comments (Settings settings, DocumentationParser parser) {
-	}
-
-	/**
-	 * The signature of this item.
-	 */
-	public Inline signature {
-		get {
-			if (_signature == null) {
-				_signature = build_signature ();
-			}
-			return _signature;
 		}
-	}
 
-	protected abstract Inline build_signature ();
+		assert_not_reached ();
+	}
 }
 

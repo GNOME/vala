@@ -1,6 +1,6 @@
 /* enum.vala
  *
- * Copyright (C) 2008  Florian Brosch
+ * Copyright (C) 2008-2011  Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,15 +28,17 @@ using Valadoc.Content;
  * Represents an enum declaration.
  */
 public class Valadoc.Api.Enum : TypeSymbol {
-	public Enum (Vala.Enum symbol, Node parent) {
-		base (symbol, parent);
+	private string cname;
+
+	public Enum (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, string? cname, void* data) {
+		base (parent, file, name, accessibility, comment, false, data);
 	}
 
 	/**
 	 * Returns the name of this enum as it is used in C.
 	 */
 	public string? get_cname () {
-		return ((Vala.Enum) symbol).get_cname ();
+		return cname;
 	}
 
 	/**

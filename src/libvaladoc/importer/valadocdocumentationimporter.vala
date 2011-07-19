@@ -102,9 +102,10 @@ public class Valadoc.Importer.ValadocDocumentationImporter : DocumentationImport
 		.set_name ("Documentation");
 
 		Rule file = Rule.many ({
-			optional_empty_lines,
-			documentation,
-			optional_empty_lines
+			Rule.one_of ({
+				documentation,
+				optional_empty_lines
+			})
 		})
 		.set_name ("ValadocFile");
 

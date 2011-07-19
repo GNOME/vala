@@ -1,6 +1,6 @@
 /* array.vala
  *
- * Copyright (C) 2008  Florian Brosch
+ * Copyright (C) 2011  Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,41 +28,19 @@ using Valadoc.Content;
  * Represents an array declaration.
  */
 public class Valadoc.Api.Array : Item {
-	private Vala.ArrayType vtype;
 
 	/**
 	 * The element type.
 	 */
 	public Item data_type {
-		private set;
+		set;
 		get;
 	}
 
-	public Array (Vala.ArrayType vtyperef, Item parent) {
-		this.vtype = vtyperef;
+	public Array (Item parent, void* data) {
+		base (data);
+
 		this.parent = parent;
-
-		Vala.DataType vntype = vtyperef.element_type;
-		if (vntype is Vala.ArrayType) {
-			this.data_type = new Array ((Vala.ArrayType) vntype, this);
-		} else {
-			this.data_type = new TypeReference (vntype, this);
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	internal override void resolve_type_references (Tree root) {
-		if (this.data_type == null) {
-			/*TODO:possible?*/;
-		} else if (this.data_type is Array) {
-			((Array)this.data_type).resolve_type_references (root);
-		} else if (this.data_type is Pointer) {
-			((Pointer)this.data_type).resolve_type_references (root);
-		} else {
-			((TypeReference)this.data_type).resolve_type_references (root);
-		}
 	}
 
 	/**

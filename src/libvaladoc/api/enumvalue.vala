@@ -1,6 +1,6 @@
 /* enumvalue.vala
  *
- * Copyright (C) 2008  Florian Brosch
+ * Copyright (C) 2008-2011  Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,51 +28,34 @@ using Valadoc.Content;
  * Represents an enum member.
  */
 public class Valadoc.Api.EnumValue: Symbol {
-	public EnumValue (Vala.EnumValue symbol, Node parent) {
-		base (symbol, parent);
+	private SourceComment? source_comment;
+	private string? cname;
+
+	public Content.Run default_value {
+		get;
+		set;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Specifies whether the parameter has a default value
 	 */
-	public override bool is_public {
+	public bool has_default_value {
 		get {
-			return ((Enum)parent).is_public;
+			return default_value != null;
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public override bool is_protected {
-		get {
-			return ((Enum)parent).is_protected;
-		}
-	}
+	public EnumValue (Enum parent, SourceFile file, string name, SourceComment? comment, string? cname, void* data) {
+		base (parent, file, name, parent.accessibility, data);
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public override bool is_internal {
-		get {
-			return ((Enum)parent).is_internal;
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public override bool is_private {
-		get {
-			return ((Enum)parent).is_private;
-		}
+		this.source_comment = comment;
+		this.cname = cname;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	internal override void process_comments (Settings settings, DocumentationParser parser) {
-		var source_comment = ((Vala.EnumValue) symbol).comment;
 		if (source_comment != null) {
 			documentation = parser.parse (this, source_comment);
 		}
@@ -84,7 +67,7 @@ public class Valadoc.Api.EnumValue: Symbol {
 	 * Returns the name of this enum value as it is used in C.
 	 */
 	public string get_cname () {
-		return ((Vala.EnumValue) symbol).get_cname ();
+		return cname;
 	}
 
 	/**
@@ -106,9 +89,9 @@ public class Valadoc.Api.EnumValue: Symbol {
 		var builder = new SignatureBuilder ()
 				.append_symbol (this);
 
-		if (((Vala.EnumValue) symbol).value != null) {
-			builder.append ("=")
-				.append (((Vala.EnumValue) symbol).value.to_string ());
+		if (has_default_value) {
+			builder.append ("=");
+			builder.append_content (default_value);
 		}
 
 		return builder.get ();

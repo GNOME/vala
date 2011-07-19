@@ -1,6 +1,7 @@
 /* symbol.vala
  *
  * Copyright (C) 2008-2009 Florian Brosch, Didier Villevalois
+ * Copyright (C) 2011      Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,41 +27,11 @@ using Gee;
  * Represents a node in the symbol tree.
  */
 public abstract class Valadoc.Api.Symbol : Node {
-	/**
-	 * The underlining vala symbol
-	 */
-	internal Vala.Symbol symbol { private set; get; }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public override string? name {
-		owned get {
-			return symbol.name;
-		}
-	}
+	public Symbol (Node parent, SourceFile file, string? name, SymbolAccessibility accessibility, void* data) {
+		base (parent, file, name, data);
 
-	public Symbol (Vala.Symbol symbol, Node parent) {
-		base (parent);
-		this.symbol = symbol;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public override string? get_filename () {
-		Vala.SourceReference? sref = symbol.source_reference;
-		if (sref == null) {
-			return null;
-		}
-
-		Vala.SourceFile? file = sref.file;
-		if (file == null) {
-			return null;
-		}
-
-		string path = sref.file.filename;
-		return GLib.Path.get_basename (path);
+		this.accessibility = accessibility;
 	}
 
 	/**
@@ -79,71 +50,55 @@ public abstract class Valadoc.Api.Symbol : Node {
 		return true;
 	}
 
+	public SymbolAccessibility accessibility {
+		private set;
+		get;
+	}
+
 	/**
 	 * Specifies whether this symbol is public.
 	 */
-	public virtual bool is_public {
+	public bool is_public {
 		get {
-			return symbol.access == Vala.SymbolAccessibility.PUBLIC;
+			return accessibility == SymbolAccessibility.PUBLIC;
 		}
 	}
 
 	/**
 	 * Specifies whether this symbol is protected.
 	 */
-	public virtual bool is_protected {
+	public bool is_protected {
 		get {
-			return symbol.access == Vala.SymbolAccessibility.PROTECTED;
+			return accessibility == SymbolAccessibility.PROTECTED;
 		}
 	}
 
 	/**
 	 * Specifies whether this symbol is internal.
 	 */
-	public virtual bool is_internal {
+	public bool is_internal {
 		get {
-			return symbol.access == Vala.SymbolAccessibility.INTERNAL;
+			return accessibility == SymbolAccessibility.INTERNAL;
 		}
 	}
 
 	/**
 	 * Specifies whether this symbol is private.
 	 */
-	public virtual bool is_private {
+	public bool is_private {
 		get {
-			return symbol.access == Vala.SymbolAccessibility.PRIVATE;
+			return accessibility == SymbolAccessibility.PRIVATE;
 		}
 	}
 
 	/**
 	 * Returns the accessibility modifier as string
+	 *
+	 * @deprecated
 	 */
+	//TODO: rm
 	protected string get_accessibility_modifier () {
-		if (is_public) {
-			return "public";
-		} else if (is_protected) {
-			return "protected";
-		} else if (is_internal) {
-			return "internal";
-		} else {
-			return "private";
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	internal override void resolve_type_references (Tree root) {
-		base.resolve_type_references (root);
-
-		foreach (Vala.DataType type in symbol.get_error_types ()) {
-			var error_type = type as Vala.ErrorType;
-			if (error_type.error_domain == null) {
-				add_child (glib_error);
-			} else {
-				add_child (root.search_vala_symbol (error_type.error_domain));
-			}
-		}
+		return accessibility.to_string ();
 	}
 }
 

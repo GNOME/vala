@@ -1,6 +1,6 @@
-/* item.vala
+/* ownership.vala
  *
- * Copyright (C) 2008  Florian Brosch
+ * Copyright (C) 2011  Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,48 +20,28 @@
  * 	Florian Brosch <flo.brosch@gmail.com>
  */
 
-using Valadoc.Content;
-using Gee;
 
+public enum Valadoc.Api.Ownership {
+	DEFAULT,
+	UNOWNED,
+	OWNED,
+	WEAK;
 
-/**
- * Represents a node in the api tree.
- */
-public abstract class Valadoc.Api.Item : Object {
-	private Inline _signature;
+	public string to_string () {
+		switch (this) {
+		case Ownership.UNOWNED:
+			return "unowned";
 
-	public void* data {
-		private set;
-		get;
-	}
+		case Ownership.OWNED:
+			return "owned";
 
-	/**
-	 * The parent of this item.
-	 */
-	public Item parent {
-		protected set;
-		get;
-	}
+		case Ownership.WEAK:
+			return "weak";
 
-	public Item (void* data) {
-		this.data = data;
-	}
-
-	internal virtual void process_comments (Settings settings, DocumentationParser parser) {
-	}
-
-	/**
-	 * The signature of this item.
-	 */
-	public Inline signature {
-		get {
-			if (_signature == null) {
-				_signature = build_signature ();
-			}
-			return _signature;
+		case Ownership.DEFAULT:
+			return "";
 		}
+
+		assert_not_reached ();
 	}
-
-	protected abstract Inline build_signature ();
 }
-

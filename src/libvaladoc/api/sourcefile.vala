@@ -1,6 +1,6 @@
-/* item.vala
+/* sourcefile.vala
  *
- * Copyright (C) 2008  Florian Brosch
+ * Copyright (C) 2011 Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -17,51 +17,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
  *
  * Author:
- * 	Florian Brosch <flo.brosch@gmail.com>
+ * 	Brosch Florian <flo.brosch@gmail.com>
  */
-
-using Valadoc.Content;
-using Gee;
-
 
 /**
- * Represents a node in the api tree.
+ * Represents a source file
  */
-public abstract class Valadoc.Api.Item : Object {
-	private Inline _signature;
-
-	public void* data {
+public class SourceFile : Object {
+	public string relative_path {
 		private set;
 		get;
 	}
 
-	/**
-	 * The parent of this item.
-	 */
-	public Item parent {
-		protected set;
+	public string relative_c_path {
+		private set;
 		get;
 	}
 
-	public Item (void* data) {
-		this.data = data;
+	public string get_name () {
+		return Path.get_basename (relative_path);
 	}
 
-	internal virtual void process_comments (Settings settings, DocumentationParser parser) {
+	public SourceFile (string relative_path, string relative_c_path) {
+		this.relative_c_path = relative_c_path;
+		this.relative_path = relative_path;
 	}
-
-	/**
-	 * The signature of this item.
-	 */
-	public Inline signature {
-		get {
-			if (_signature == null) {
-				_signature = build_signature ();
-			}
-			return _signature;
-		}
-	}
-
-	protected abstract Inline build_signature ();
 }
+
 

@@ -352,7 +352,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	}
 
 	private void write_brief_description (Api.Node element , Api.Node? pos) {
-		Comment? doctree = element.documentation;
+		Content.Comment? doctree = element.documentation;
 		if (doctree == null) {
 			return;
 		}
@@ -369,7 +369,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	}
 
 	private void write_documentation (Api.Node element , Api.Node? pos) {
-		Comment? doctree = element.documentation;
+		Content.Comment? doctree = element.documentation;
 		if (doctree == null) {
 			return;
 		}

@@ -1,6 +1,6 @@
 /* errorreporter.vala
  *
- * Copyright (C) 2008-2009 Florian Brosch
+ * Copyright (C) 2008-2011 Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,6 +27,16 @@ public class Valadoc.ErrorReporter : Object {
 	private int _warnings = 0;
 	private int _errors = 0;
 
+	public int warnings_offset {
+		get;
+		set;
+	}
+
+	public int errors_offset {
+		get;
+		set;
+	}
+
 	public unowned GLib.FileStream stream {
 		get; set;
 	}
@@ -41,15 +51,13 @@ public class Valadoc.ErrorReporter : Object {
 
 	public int errors {
 		get {
-			int verrors = (this.vreporter != null)? this.vreporter.get_errors () : 0;
-			return this._errors + verrors;
+			return this._errors + errors_offset;
 		}
 	}
 
 	public int warnings {
 		get {
-			int vwarnings = (this.vreporter != null)? this.vreporter.get_warnings () : 0;
-			return this._warnings + vwarnings;
+			return this._warnings + warnings_offset;
 		}
 	}
 

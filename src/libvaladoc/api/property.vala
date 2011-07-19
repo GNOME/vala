@@ -1,6 +1,6 @@
 /* property.vala
  *
- * Copyright (C) 2008  Florian Brosch
+ * Copyright (C) 2008-2011  Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,32 +28,32 @@ using Valadoc.Content;
  * Represents a property declaration.
  */
 public class Valadoc.Api.Property : Member {
-	public Property (Vala.Property symbol, Node parent) {
-		base (symbol, parent);
+	private PropertyBindingType binding_type;
+	private string? dbus_name;
+	private string? cname;
 
-		property_type = new TypeReference (symbol.property_type, this);
+	public Property (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, string? cname, string? dbus_name, bool is_dbus_visible, PropertyBindingType binding_type, void* data) {
+		base (parent, file, name, accessibility, comment, data);
 
-		if (symbol.get_accessor != null) {
-			this.getter = new PropertyAccessor (symbol.get_accessor, this);
-		}
+		this.is_dbus_visible = is_dbus_visible;
+		this.binding_type = binding_type;
 
-		if (symbol.set_accessor != null) {
-			this.setter = new PropertyAccessor (symbol.set_accessor, this);
-		}
+		this.dbus_name = dbus_name;
+		this.cname = cname;
 	}
 
 	/**
 	 * Returns the name of this method as it is used in C.
 	 */
 	public string? get_cname () {
-		return ((Vala.Property) symbol).nick;
+		return cname;
 	}
 
 	/**
 	 * Returns the dbus-name.
 	 */
 	public string get_dbus_name () {
-		return Vala.GDBusModule.get_dbus_name_for_member (symbol);
+		return dbus_name;
 	}
 
 	/**
@@ -61,14 +61,17 @@ public class Valadoc.Api.Property : Member {
 	 *
 	 * @return The property type or null for void
 	 */
-	public TypeReference? property_type { private set; get;}
+	public TypeReference? property_type {
+		set;
+		get;
+	}
 
 	/**
 	 * Specifies whether the property is virtual.
 	 */
 	public bool is_virtual {
 		get {
-			return ((Vala.Property) symbol).is_virtual;
+			return binding_type == PropertyBindingType.VIRTUAL;
 		}
 	}
 
@@ -77,7 +80,7 @@ public class Valadoc.Api.Property : Member {
 	 */
 	public bool is_abstract {
 		get {
-			return ((Vala.Property) symbol).is_abstract;
+			return binding_type == PropertyBindingType.ABSTRACT;
 		}
 	}
 
@@ -86,7 +89,7 @@ public class Valadoc.Api.Property : Member {
 	 */
 	public bool is_override {
 		get {
-			return ((Vala.Property) symbol).overrides;
+			return binding_type == PropertyBindingType.OVERRIDE;
 		}
 	}
 
@@ -94,40 +97,26 @@ public class Valadoc.Api.Property : Member {
 	 * Specifies whether the property is visible.
 	 */
 	public bool is_dbus_visible {
-		get {
-			return Vala.GDBusServerModule.is_dbus_visible (symbol);
-		}
+		private set;
+		get;
 	}
 
-	public PropertyAccessor setter { private set; get; }
+	public PropertyAccessor? setter {
+		internal set;
+		get;
+	}
 
-	public PropertyAccessor getter { private set; get; }
+	public PropertyAccessor? getter {
+		internal set;
+		get;
+	}
 
 	/**
 	 * Specifies the virtual or abstract property this property overrides.
 	 */
-	public Property base_property { private set; get; }
-
-	/**
-	 * {@inheritDoc}
-	 */
-	internal override void resolve_type_references (Tree root) {
-		Vala.Property vala_property = symbol as Vala.Property;
-		Vala.Property? base_vala_property = null;
-		if (vala_property.base_property != null) {
-			base_vala_property = vala_property.base_property;
-		} else if (vala_property.base_interface_property != null) {
-			base_vala_property = vala_property.base_interface_property;
-		}
-		if (base_vala_property == vala_property
-		    && vala_property.base_interface_property != null) {
-			base_vala_property = vala_property.base_interface_property;
-		}
-		if (base_vala_property != null) {
-			base_property = (Property?) root.search_vala_symbol (base_vala_property);
-		}
-
-		property_type.resolve_type_references (root);
+	public Property base_property {
+		set;
+		get;
 	}
 
 	/**
@@ -180,7 +169,9 @@ public class Valadoc.Api.Property : Member {
 	/**
 	 * {@inheritDoc}
 	 */
-	public override NodeType node_type { get { return NodeType.PROPERTY; } }
+	public override NodeType node_type {
+		get { return NodeType.PROPERTY; }
+	}
 
 	/**
 	 * {@inheritDoc}

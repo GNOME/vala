@@ -1,6 +1,7 @@
 /* member.vala
  *
  * Copyright (C) 2008-2009 Florian Brosch, Didier Villevalois
+ * Copyright (C) 2011      Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,13 +24,15 @@
 using Gee;
 
 public abstract class Valadoc.Api.Member : Symbol {
+	private SourceComment? source_comment;
 
-	public Member (Vala.Symbol symbol, Node parent) {
-		base (symbol, parent);
+	public Member (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, void* data) {
+		base (parent, file, name, accessibility, data);
+
+		this.source_comment = comment;
 	}
 
 	internal override void process_comments (Settings settings, DocumentationParser parser) {
-		var source_comment = symbol.comment;
 		if (source_comment != null) {
 			documentation = parser.parse (this, source_comment);
 		}

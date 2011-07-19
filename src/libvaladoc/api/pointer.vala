@@ -28,44 +28,19 @@ using Valadoc.Content;
  * Represents a pointer declaration.
  */
 public class Valadoc.Api.Pointer : Item {
-	private Vala.PointerType vtype;
 
 	/**
 	 * The type the pointer is referring to.
 	 */
 	public Item data_type {
-		private set;
+		set;
 		get;
 	}
 
-	public Pointer (Vala.PointerType vtyperef, Item parent) {
-		this.vtype = vtyperef;
+	public Pointer (Item parent, void* data) {
+		base (data);
+
 		this.parent = parent;
-
-		Vala.DataType vntype = vtype.base_type;
-		if (vntype is Vala.PointerType) {
-			this.data_type = new Pointer ((Vala.PointerType) vntype, this);
-		} else if (vntype is Vala.ArrayType) {
-			this.data_type = new Array ((Vala.ArrayType) vntype, this);
-		} else {
-			this.data_type = new TypeReference (vntype, this);
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	internal override void resolve_type_references (Tree root) {
-		Api.Item type = this.data_type;
-		if (type == null) {
-			;
-		} else if (type is Array) {
-			((Array) type).resolve_type_references (root);
-		} else if (type is Pointer) {
-			((Pointer) type ).resolve_type_references (root);
-		} else {
-			((TypeReference) type).resolve_type_references (root);
-		}
 	}
 
 	/**

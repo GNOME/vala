@@ -1,6 +1,6 @@
 /* propertyaccessor.vala
  *
- * Copyright (C) 2008  Florian Brosch
+ * Copyright (C) 2008-2011  Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,23 +28,30 @@ using Valadoc.Content;
  * Represents a get or set accessor of a property.
  */
 public class Valadoc.Api.PropertyAccessor : Symbol {
-	private Vala.PropertyAccessor vpropacc;
+	private PropertyAccessorType type;
+	private Ownership ownership;
+	private string? cname;
 
-	public PropertyAccessor (Vala.PropertyAccessor symbol, Property parent) {
-		base (symbol, parent);
-		this.vpropacc = symbol;
+	public PropertyAccessor (Property parent, SourceFile file, string name, SymbolAccessibility accessibility, string? cname, PropertyAccessorType type, Ownership ownership, void* data) {
+		base (parent, file, name, accessibility, data);
+
+		this.ownership = ownership;
+		this.cname = cname;
+		this.type = type;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public override NodeType node_type { get { return NodeType.PROPERTY_ACCESSOR; } }
+	public override NodeType node_type {
+		get { return NodeType.PROPERTY_ACCESSOR; }
+	}
 
 	/**
 	 * Returns the name of this property accessor as it is used in C.
 	 */
 	public string? get_cname () {
-		return vpropacc.get_cname ();
+		return cname;
 	}
 
 	/**
@@ -58,7 +65,7 @@ public class Valadoc.Api.PropertyAccessor : Symbol {
 	 */
 	public bool is_construct {
 		get {
-			return this.vpropacc.construction;
+			return type == PropertyAccessorType.CONSTRUCT;
 		}
 	}
 
@@ -67,7 +74,7 @@ public class Valadoc.Api.PropertyAccessor : Symbol {
 	 */
 	public bool is_set {
 		get {
-			return this.vpropacc.writable;
+			return type == PropertyAccessorType.SET || type == PropertyAccessorType.CONSTRUCT;
 		}
 	}
 
@@ -76,7 +83,7 @@ public class Valadoc.Api.PropertyAccessor : Symbol {
 	 */
 	public bool is_get {
 		get {
-			return this.vpropacc.readable;
+			return type == PropertyAccessorType.GET;
 		}
 	}
 
@@ -85,7 +92,7 @@ public class Valadoc.Api.PropertyAccessor : Symbol {
 	 */
 	public bool is_owned {
 		get {
-			return this.vpropacc.value_type.value_owned;
+			return ownership == Ownership.OWNED;
 		}
 	}
 

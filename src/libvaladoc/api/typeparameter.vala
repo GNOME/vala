@@ -1,6 +1,6 @@
 /* typeparameter.vala
  *
- * Copyright (C) 2008  Florian Brosch
+ * Copyright (C) 2008-2011  Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -29,8 +29,8 @@ using Valadoc.Content;
  */
 public class Valadoc.Api.TypeParameter : Symbol {
 
-	public TypeParameter (Vala.TypeParameter symbol, Node parent) {
-		base (symbol, parent);
+	public TypeParameter (Node parent, SourceFile file, string name, void* data) {
+		base (parent, file, name, SymbolAccessibility.PUBLIC, data);
 	}
 
 	/**

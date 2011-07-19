@@ -1,6 +1,7 @@
 /* node.vala
  *
  * Copyright (C) 2008-2009 Florian Brosch, Didier Villevalois
+ * Copyright (C) 20011 Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -54,11 +55,19 @@ public enum Valadoc.Api.NodeType {
  */
 public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Comparable<Node> {
 	protected bool do_document { private set; get; default = false; }
+	private SourceFile file;
 
 	/**
 	 * The name of the node
 	 */
-	public abstract string? name { owned get; }
+	public string? name {
+		private set;
+		get;
+	}
+
+	public SourceFile get_source_file () {
+		return file;
+	}
 
 	/**
 	 * Returns the type of this node
@@ -66,15 +75,17 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 	public abstract NodeType node_type { get; }
 
 	private Map<string,Node> per_name_children;
-	private Map<Vala.Symbol, Node> per_symbol_children;
 	private Map<NodeType?, Gee.List<Node>> per_type_children;
 
-	public Node (Node? parent) {
-		this.parent = parent;
+	public Node (Node? parent, SourceFile? file, string? name, void* data) {
+		base (data);
 
 		per_name_children = new HashMap<string,Node> ();
-		per_symbol_children = new HashMap<Vala.Symbol, Node> ();
 		per_type_children = new HashMap<NodeType?, Gee.List<Node>> (int_hash, int_equal);
+
+		this.parent = parent;
+		this.name = name;
+		this.file = file;
 	}
 
 	/**
@@ -91,9 +102,16 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 
 	/**
 	 * The corresponding file name
+	 *
+	 * @deprecated
 	 */
-	public virtual string? get_filename () {
-		return null;
+	//TODO: rm
+	public string? get_filename () {
+		if (file == null) {
+			return null;
+		}
+
+		return file.relative_path;
 	}
 
 	internal void add_child (Symbol child) {
@@ -103,8 +121,6 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 			// Special case for the root namespace
 			per_name_children.set ("", child);
 		}
-
-		per_symbol_children.set (child.symbol, child);
 
 		Gee.List<Node> children = per_type_children.get (child.node_type);
 		if (children == null) {
@@ -118,52 +134,10 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 	/**
 	 * {@inheritDoc}
 	 */
-	internal override void resolve_children (Tree root) {
-		var list = per_type_children.get (NodeType.NAMESPACE);
-		if (list != null) {
-			foreach (Node node in list) {
-				node.resolve_children (root);
-			}
-		}
-
-		list = per_type_children.get (NodeType.STRUCT);
-		if (list != null) {
-			foreach (Node node in list) {
-				node.resolve_children (root);
-			}
-		}
-
-		list = per_type_children.get (NodeType.CLASS);
-		if (list != null) {
-			foreach (Node node in list) {
-				node.resolve_children (root);
-			}
-		}
-
-		list = per_type_children.get (NodeType.INTERFACE);
-		if (list != null) {
-			foreach (Node node in list) {
-				node.resolve_children (root);
-			}
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	internal override void resolve_type_references (Tree root) {
-		foreach (Node node in per_name_children.values) {
-			node.resolve_type_references (root);
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	internal override void process_comments (Settings settings, DocumentationParser parser) {
 		do_document = true;
 
-		foreach (Node node in per_symbol_children.values) {
+		foreach (Node node in per_name_children.values) {
 			if (node.is_browsable (settings)) {
 				node.process_comments (settings, parser);
 			}
@@ -281,10 +255,6 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 		return per_name_children.get (name);
 	}
 
-	public Node? find_by_symbol (Vala.Symbol symbol) {
-		return per_symbol_children.get (symbol);
-	}
-
 	private Namespace? _nspace = null;
 	private Package? _package = null;
 	private string _full_name = null;
@@ -298,8 +268,9 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 				Api.Item ast = this;
 				while (ast is Valadoc.Api.Namespace == false) {
 					ast = ast.parent;
-					if (ast == null)
+					if (ast == null) {
 						return null;
+					}
 				}
 				this._nspace = (Valadoc.Api.Namespace)ast;
 			}
@@ -316,10 +287,12 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 				Api.Item ast = this;
 				while (ast is Valadoc.Api.Package == false) {
 					ast = ast.parent;
-					if (ast == null)
+					if (ast == null) {
 						return null;
+					}
 				}
-				this._package = (Valadoc.Api.Package)ast;			}
+				this._package = (Valadoc.Api.Package)ast;
+			}
 			return this._package;
 		}
 	}
@@ -334,8 +307,9 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 	 */
 	public string? get_full_name () {
 		if (this._full_name == null) {
-			if (this.name == null)
+			if (this.name == null) {
 				return null;
+			}
 
 			GLib.StringBuilder full_name = new GLib.StringBuilder (this.name);
 
@@ -360,3 +334,4 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 		return strcmp (name, node.name);
 	}
 }
+

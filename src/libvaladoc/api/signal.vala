@@ -1,6 +1,6 @@
 /* signal.vala
  *
- * Copyright (C) 2008  Florian Brosch
+ * Copyright (C) 2008-2011  Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,23 +28,31 @@ using Valadoc.Content;
  * Represents an signal.
  */
 public class Valadoc.Api.Signal : Member {
-	public Signal (Vala.Signal symbol, Node parent) {
-		base (symbol, parent);
-		return_type = new TypeReference (symbol.return_type, this);
+	private string? dbus_name;
+	private string? cname;
+
+	public Signal (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, string? cname, string? dbus_name, bool is_dbus_visible, bool is_virtual, void* data) {
+		base (parent, file, name, accessibility, comment, data);
+
+		this.dbus_name = dbus_name;
+		this.cname = cname;
+
+		this.is_dbus_visible = is_dbus_visible;
+		this.is_virtual = is_virtual;
 	}
 
 	/**
 	 * Returns the name of this signal as it is used in C.
 	 */
 	public string? get_cname () {
-		return ((Vala.Signal) symbol).get_cname();
+		return cname;
 	}
 
 	/**
 	 * Returns the dbus-name.
 	 */
 	public string get_dbus_name () {
-		return Vala.GDBusModule.get_dbus_name_for_member (symbol);
+		return dbus_name;
 	}
 
 	/**
@@ -52,33 +60,25 @@ public class Valadoc.Api.Signal : Member {
 	 *
 	 * @return The return type of this signal or null for void
 	 */
-	public TypeReference? return_type { protected set; get; }
-
-	/**
-	 * {@inheritDoc}
-	 */
-	internal override void resolve_type_references (Tree root) {
-		return_type.resolve_type_references (root);
-
-		base.resolve_type_references (root);
+	public TypeReference? return_type {
+		set;
+		get;
 	}
 
 	/**
 	 * Specifies whether this signal is virtual
 	 */
 	public bool is_virtual {
-		get {
-			return ((Vala.Signal) symbol).is_virtual;
-		}
+		private set;
+		get;
 	}
 
 	/**
 	 * Specifies whether this signal is visible for dbus
 	 */
 	public bool is_dbus_visible {
-		get {
-			return Vala.GDBusServerModule.is_dbus_visible (symbol);
-		}
+		private set;
+		get;
 	}
 
 	/**
@@ -113,7 +113,9 @@ public class Valadoc.Api.Signal : Member {
 	/**
 	 * {@inheritDoc}
 	 */
-	public override NodeType node_type { get { return NodeType.SIGNAL; } }
+	public override NodeType node_type {
+		get { return NodeType.SIGNAL; }
+	}
 
 	/**
 	 * {@inheritDoc}

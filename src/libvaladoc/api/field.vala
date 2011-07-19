@@ -1,6 +1,6 @@
 /* field.vala
  *
- * Copyright (C) 2008  Florian Brosch
+ * Copyright (C) 2008-2011  Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,16 +28,22 @@ using Valadoc.Content;
  * Represents a field.
  */
 public class Valadoc.Api.Field : Member {
-	public Field (Vala.Field symbol, Node parent) {
-		base (symbol, parent);
-		field_type = new TypeReference (symbol.variable_type, this);
+	private string? cname;
+
+	public Field (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, string? cname, bool is_static, bool is_volatile, void* data) {
+		base (parent, file, name, accessibility, comment, data);
+
+		this.is_static = !(parent is Namespace) && is_static;
+		this.is_volatile = is_volatile;
+
+		this.cname = cname;
 	}
 
 	/**
 	 * Returns the name of this field as it is used in C.
 	 */
 	public string? get_cname () {
-		return ((Vala.Field) symbol).get_cname();
+		return cname;
 	}
 
 	/**
@@ -45,37 +51,25 @@ public class Valadoc.Api.Field : Member {
 	 *
 	 * @return The field type or null for void
 	 */
-	public TypeReference? field_type { private set; get; }
+	public TypeReference? field_type {
+		set;
+		get;
+	}
 
 	/**
 	 * Specifies whether the field is static.
 	 */
 	public bool is_static {
-		get {
-			if (this.parent is Namespace) {
-				return false;
-			}
-
-			return ((Vala.Field) symbol).binding == Vala.MemberBinding.STATIC;
-		}
+		private set;
+		get;
 	}
 
 	/**
 	 * Specifies whether the field is volatile.
 	 */
 	public bool is_volatile {
-		get {
-			return ((Vala.Field) symbol).is_volatile;
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	internal override void resolve_type_references (Tree root) {
-		field_type.resolve_type_references (root);
-
-		base.resolve_type_references (root);
+		private set;
+		get;
 	}
 
 	/**
@@ -100,7 +94,9 @@ public class Valadoc.Api.Field : Member {
 	/**
 	 * {@inheritDoc}
 	 */
-	public override NodeType node_type { get { return NodeType.FIELD; } }
+	public override NodeType node_type {
+		get { return NodeType.FIELD; }
+	}
 
 	/**
 	 * {@inheritDoc}

@@ -1,6 +1,6 @@
 /* errordomain.vala
  *
- * Copyright (C) 2008  Florian Brosch
+ * Copyright (C) 2008-2011  Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,28 +28,36 @@ using Valadoc.Content;
  * Represents an error domain declaration.
  */
 public class Valadoc.Api.ErrorDomain : TypeSymbol {
-	public ErrorDomain (Vala.ErrorDomain symbol, Node parent) {
-		base (symbol, parent);
+	private string? dbus_name;
+	private string? cname;
+
+	public ErrorDomain (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, string? cname, string? dbus_name, void* data) {
+		base (parent, file, name, accessibility, comment, false, data);
+
+		this.dbus_name = dbus_name;
+		this.cname = cname;
 	}
 
 	/**
 	 * Returns the name of this errordomain as it is used in C.
 	 */
 	public string? get_cname () {
-		return ((Vala.ErrorDomain) symbol).get_cname();
+		return this.cname;
 	}
 
 	/**
 	 * Returns the dbus-name.
 	 */
 	public string? get_dbus_name () {
-		return Vala.GDBusModule.get_dbus_name ((Vala.TypeSymbol) symbol);
+		return dbus_name;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public override NodeType node_type { get { return NodeType.ERROR_DOMAIN; } }
+	public override NodeType node_type {
+		get { return NodeType.ERROR_DOMAIN; }
+	}
 
 	/**
 	 * {@inheritDoc}

@@ -1,6 +1,6 @@
 /* namespace.vala
  *
- * Copyright (C) 2008  Florian Brosch
+ * Copyright (C) 2008-2011  Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,19 +28,12 @@ using Valadoc.Content;
  * Represents a namespace declaration.
  */
 public class Valadoc.Api.Namespace : Symbol {
-	private Vala.Comment source_comment;
+	private SourceComment? source_comment;
 
-	public Namespace (Vala.Namespace symbol, Api.Node parent) {
-		base (symbol, parent);
+	public Namespace (Api.Node parent, SourceFile file, string? name, SourceComment? comment, void* data) {
+		base (parent, file, name, SymbolAccessibility.PUBLIC, data);
 
-		if (symbol.source_reference != null) {
-			foreach (Vala.Comment c in symbol.get_comments()) {
-				if (package.is_package_for_file (c.source_reference.file)) {
-					source_comment = c;
-					break;
-				}
-			}
-		}
+		this.source_comment = comment;
 	}
 
 	/**

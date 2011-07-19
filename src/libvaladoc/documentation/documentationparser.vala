@@ -1,6 +1,6 @@
 /* documentationparser.vala
  *
- * Copyright (C) 2008-2009 Florian Brosch, Didier Villevalois
+ * Copyright (C) 2008-2011 Florian Brosch, Didier Villevalois
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -73,9 +73,8 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 	private Parser _parser;
 	private Scanner _scanner;
 
-	public Comment? parse (Api.Node element, Vala.Comment source_comment) {
-		var source_ref = source_comment.source_reference;
-		return parse_comment_str (element, source_comment.content, source_ref.file.filename, source_ref.first_line, source_ref.first_column);
+	public Comment? parse (Api.Node element, Api.SourceComment comment) {
+		return parse_comment_str (element, comment.content, comment.file.get_name (), comment.first_line, comment.first_column);
 	}
 
 	public Comment? parse_comment_str (Api.Node element, string content, string filename, int first_line, int first_column) {

@@ -1,6 +1,6 @@
 /* method.vala
  *
- * Copyright (C) 2008  Florian Brosch
+ * Copyright (C) 2008-2011  Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,55 +28,76 @@ using Valadoc.Content;
  * Represents a function or a method.
  */
 public class Valadoc.Api.Method : Member {
-	public Method (Vala.Method symbol, Node parent) {
-		base (symbol, parent);
-		return_type = new TypeReference (symbol.return_type, this);
+	private string? finish_function_cname;
+	private string? dbus_result_name;
+	private string? dbus_name;
+	private string? cname;
+
+	private MethodBindingType binding_type;
+
+	public Method (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, string? cname, string? dbus_name, string? dbus_result_name, string? finish_function_cname, MethodBindingType binding_type, bool is_yields, bool is_dbus_visible, bool is_constructor, void* data) {
+		base (parent, file, name, accessibility, comment, data);
+
+		this.finish_function_cname = finish_function_cname;
+		this.dbus_result_name = dbus_result_name;
+		this.dbus_name = dbus_name;
+		this.cname = cname;
+
+		this.binding_type = binding_type;
+		this.is_dbus_visible = is_dbus_visible;
+		this.is_constructor = is_constructor;
+		this.is_yields = is_yields;
 	}
 
 	/**
 	 * Returns the name of this method as it is used in C.
 	 */
 	public string? get_cname () {
-		return ((Vala.Method) symbol).get_cname ();
+		return cname;
 	}
 
 	/**
 	 * Returns the name of the finish function as it is used in C.
 	 */
 	public string? get_finish_function_cname () {
-		return ((Vala.Method) symbol).get_finish_cname ();
+		return finish_function_cname;
 	}
 
 	/**
 	 * Returns the dbus-name.
 	 */
 	public string get_dbus_name () {
-		return Vala.GDBusModule.get_dbus_name_for_member (symbol);
+		return dbus_name;
 	}
 
 	public string get_dbus_result_name () {
-		return Vala.GDBusServerModule.dbus_result_name ((Vala.Method) symbol);
+		return dbus_result_name;
 	}
 
 	/**
 	 * Specifies the virtual or abstract method this method overrides.
 	 */
-	public Method? base_method { private set; get; }
+	public Method? base_method {
+		set;
+		get;
+	}
 
 	/**
 	 * The return type of this method.
 	 *
 	 * @return The return type of this method or null for void
 	 */
-	public TypeReference? return_type { private set; get; }
+	public TypeReference? return_type {
+		set;
+		get;
+	}
 
 	/**
 	 * Specifies whether this method is asynchronous
 	 */
 	public bool is_yields {
-		get {
-			return ((Vala.Method) symbol).coroutine;
-		}
+		private set;
+		get;
 	}
 
 	/**
@@ -84,7 +105,7 @@ public class Valadoc.Api.Method : Member {
 	 */
 	public bool is_abstract {
 		get {
-			return ((Vala.Method) symbol).is_abstract;
+			return binding_type == MethodBindingType.ABSTRACT;
 		}
 	}
 
@@ -93,7 +114,7 @@ public class Valadoc.Api.Method : Member {
 	 */
 	public bool is_virtual {
 		get {
-			return ((Vala.Method) symbol).is_virtual;
+			return binding_type == MethodBindingType.VIRTUAL;
 		}
 	}
 
@@ -102,7 +123,7 @@ public class Valadoc.Api.Method : Member {
 	 */
 	public bool is_override {
 		get {
-			return ((Vala.Method) symbol).overrides;
+			return binding_type == MethodBindingType.OVERRIDE;
 		}
 	}
 
@@ -111,10 +132,7 @@ public class Valadoc.Api.Method : Member {
 	 */
 	public bool is_static {
 		get {
-			if (is_constructor) {
-				return false;
-			}
-			return ((Vala.Method) symbol).binding == Vala.MemberBinding.STATIC;
+			return !is_constructor && binding_type == MethodBindingType.STATIC;
 		}
 	}
 
@@ -122,9 +140,8 @@ public class Valadoc.Api.Method : Member {
 	 * Specifies whether this method is a creation method
 	 */
 	public bool is_constructor {
-		get {
-			return symbol is Vala.CreationMethod;
-		}
+		private set;
+		get;
 	}
 
 	/**
@@ -132,7 +149,7 @@ public class Valadoc.Api.Method : Member {
 	 */
 	public bool is_inline {
 		get {
-			return ((Vala.Method) symbol).is_inline;
+			return binding_type == MethodBindingType.INLINE;
 		}
 	}
 
@@ -140,51 +157,8 @@ public class Valadoc.Api.Method : Member {
 	 * Specifies whether this method is visible for dbus
 	 */
 	public bool is_dbus_visible {
-		get {
-			return Vala.GDBusServerModule.is_dbus_visible (symbol);
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public override string? name {
-		owned get {
-			if (this.is_constructor) {
-				if (symbol.name == ".new") {
-					return ((Node) parent).name;
-				} else {
-					return ((Node) parent).name + "." + symbol.name;
-				}
-			}
-			else {
-				return symbol.name;
-			}
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	internal override void resolve_type_references (Tree root) {
-		Vala.Method vala_method = symbol as Vala.Method;
-		Vala.Method? base_vala_method = null;
-		if (vala_method.base_method != null) {
-			base_vala_method = vala_method.base_method;
-		} else if (vala_method.base_interface_method != null) {
-			base_vala_method = vala_method.base_interface_method;
-		}
-		if (base_vala_method == vala_method
-		    && vala_method.base_interface_method != null) {
-			base_vala_method = vala_method.base_interface_method;
-		}
-		if (base_vala_method != null) {
-			this.base_method = (Method?) root.search_vala_symbol (base_vala_method);
-		}
-
-		return_type.resolve_type_references (root);
-
-		base.resolve_type_references (root);
+		private set;
+		get;
 	}
 
 	/**

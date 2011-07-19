@@ -1,6 +1,6 @@
-/* item.vala
+/* propertyaccessor.vala
  *
- * Copyright (C) 2008  Florian Brosch
+ * Copyright (C) 2011  Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,48 +20,23 @@
  * 	Florian Brosch <flo.brosch@gmail.com>
  */
 
-using Valadoc.Content;
-using Gee;
+public enum Valadoc.Api.PropertyAccessorType {
+	CONSTRUCT,
+	SET,
+	GET;
 
+	public string to_string () {
+		switch (this) {
+		case PropertyAccessorType.CONSTRUCT:
+			return "construct";
 
-/**
- * Represents a node in the api tree.
- */
-public abstract class Valadoc.Api.Item : Object {
-	private Inline _signature;
+		case PropertyAccessorType.SET:
+			return "set";
 
-	public void* data {
-		private set;
-		get;
-	}
-
-	/**
-	 * The parent of this item.
-	 */
-	public Item parent {
-		protected set;
-		get;
-	}
-
-	public Item (void* data) {
-		this.data = data;
-	}
-
-	internal virtual void process_comments (Settings settings, DocumentationParser parser) {
-	}
-
-	/**
-	 * The signature of this item.
-	 */
-	public Inline signature {
-		get {
-			if (_signature == null) {
-				_signature = build_signature ();
-			}
-			return _signature;
+		case PropertyAccessorType.GET:
+			return "get";
 		}
+
+		assert_not_reached ();
 	}
-
-	protected abstract Inline build_signature ();
 }
-

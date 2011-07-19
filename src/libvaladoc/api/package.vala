@@ -1,6 +1,6 @@
 /* package.vala
  *
- * Copyright (C) 2008  Florian Brosch
+ * Copyright (C) 2008-2011  Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,12 +25,6 @@ using Valadoc.Content;
 using Valadoc.Importer;
 
 public class Valadoc.Api.Package : Node {
-	private ArrayList<Vala.SourceFile> vfiles = new ArrayList<Vala.SourceFile> ();
-
-	internal void add_file (Vala.SourceFile vfile) {
-		this.vfiles.add (vfile);
-	}
-
 	/**
 	 * Specifies whether this package is a dependency
 	 */
@@ -70,7 +64,6 @@ public class Valadoc.Api.Package : Node {
 		return list.read_only_view;
 	}
 
-	//TODO: rm
 	public Collection<Package> get_dependency_list () {
 		if (this._dependencies == null) {
 			return Collection.empty<Package> ();
@@ -79,29 +72,11 @@ public class Valadoc.Api.Package : Node {
 		return this._dependencies.read_only_view;
 	}
 
-	public Package (Vala.SourceFile vfile, string name, bool is_package = false) {
-		base (null);
+	public Package (Vala.SourceFile vfile, string name, bool is_package, void* data) {
+		base (null, null, name, data);
+
 		this.is_package = is_package;
-
-		this.package_name = name;
-
-		this.vfiles.add (vfile);
 		this.parent = null;
-	}
-
-	private string package_name;
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public override string? name {
-		owned get {
-			return package_name;
-		}
-	}
-
-	internal bool is_package_for_file (Vala.SourceFile source_file) {
-		return this.vfiles.contains (source_file);
 	}
 
 	/**
@@ -114,7 +89,9 @@ public class Valadoc.Api.Package : Node {
 	/**
 	 * {@inheritDoc}
 	 */
-	public override NodeType node_type { get { return NodeType.PACKAGE; } }
+	public override NodeType node_type {
+		get { return NodeType.PACKAGE; }
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -131,36 +108,6 @@ public class Valadoc.Api.Package : Node {
 			.append_keyword ("package")
 			.append (name)
 			.get ();
-	}
-
-	internal Namespace get_namespace (Tree root, Vala.Symbol symbol) {
-		Vala.Symbol namespace_symbol = symbol;
-		while (!(namespace_symbol is Vala.Namespace)) {
-			namespace_symbol = namespace_symbol.parent_symbol;
-		}
-
-		// Try to find it first
-		var ns = (Namespace) root.search_vala_symbol_in (namespace_symbol, this);
-		if (ns != null) {
-			return ns;
-		}
-
-		// Find parent namespace and use it as parent if existing
-		var parent_namespace_symbol = namespace_symbol.parent_symbol;
-
-		if (parent_namespace_symbol != null) {
-			ns = (Namespace) get_namespace (root, parent_namespace_symbol);
-			if (ns != null) {
-				var new_namespace = new Namespace ((Vala.Namespace) namespace_symbol, ns);
-				ns.add_child (new_namespace);
-				return new_namespace;
-			}
-		}
-
-		// Else take this package as parent
-		var new_namespace = new Namespace ((Vala.Namespace) namespace_symbol, this);
-		add_child (new_namespace);
-		return new_namespace;
 	}
 }
 

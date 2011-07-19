@@ -165,7 +165,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 		return headers;
 	}
 
-	private void set_section_comment (string filename, string section_name, Comment? comment) {
+	private void set_section_comment (string filename, string section_name, Content.Comment? comment) {
 		var file_data = get_file_data (filename);
 		if (file_data.title == null) {
 			file_data.title = section_name;
@@ -183,7 +183,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 		file_data.section_comment = gcomment;
 	}
 
-	private GComment create_gcomment (string symbol, Comment? comment, string[]? returns_annotations = null, bool is_dbus = false) {
+	private GComment create_gcomment (string symbol, Content.Comment? comment, string[]? returns_annotations = null, bool is_dbus = false) {
 		var converter = new Gtkdoc.CommentConverter (reporter, current_method_or_delegate);
 
 		if (comment != null) {
@@ -204,14 +204,14 @@ public class Gtkdoc.Generator : Api.Visitor {
 		return gcomment;
 	}
 
-	private GComment add_comment (string filename, string symbol, Comment? comment = null) {
+	private GComment add_comment (string filename, string symbol, Content.Comment? comment = null) {
 		var file_data = get_file_data (filename);
 		var gcomment = create_gcomment (symbol, comment);
 		file_data.comments.add (gcomment);
 		return gcomment;
 	}
 
-	private GComment add_symbol (string filename, string cname, Comment? comment = null, string? symbol = null, string[]? returns_annotations = null) {
+	private GComment add_symbol (string filename, string cname, Content.Comment? comment = null, string? symbol = null, string[]? returns_annotations = null) {
 		var file_data = get_file_data (filename);
 
 		file_data.section_lines.add (cname);
@@ -244,7 +244,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 		return null;
 	}
 
-	private Header? add_header (string name, Comment? comment, string[]? annotations = null, double pos = double.MAX) {
+	private Header? add_header (string name, Content.Comment? comment, string[]? annotations = null, double pos = double.MAX) {
 		if (comment == null && annotations == null) {
 			return null;
 		}

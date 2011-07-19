@@ -1,6 +1,6 @@
 /* delegate.vala
  *
- * Copyright (C) 2008  Florian Brosch
+ * Copyright (C) 2008-2011  Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,16 +28,20 @@ using Valadoc.Content;
  * Represents a Delegate.
  */
 public class Valadoc.Api.Delegate : TypeSymbol {
-	public Delegate (Vala.Delegate symbol, Node parent) {
-		base (symbol, parent);
-		return_type = new TypeReference (symbol.return_type, this);
+	private string? cname;
+
+	public Delegate (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, string? cname, bool is_static, void* data) {
+		base (parent, file, name, accessibility, comment, false, data);
+
+		this.is_static = is_static;
+		this.cname = cname;
 	}
 
 	/**
 	 * Returns the name of this delegate as it is used in C.
 	 */
 	public string? get_cname () {
-		return ((Vala.Delegate) symbol).get_cname ();
+		return cname;
 	}
 
 	/**
@@ -45,12 +49,17 @@ public class Valadoc.Api.Delegate : TypeSymbol {
 	 *
 	 * @return The return type of this callback or null for void
 	 */
-	public TypeReference? return_type { private set; get; }
+	public TypeReference? return_type {
+		set;
+		get;
+	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public override NodeType node_type { get { return NodeType.DELEGATE; } }
+	public override NodeType node_type {
+		get { return NodeType.DELEGATE; }
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -63,18 +72,8 @@ public class Valadoc.Api.Delegate : TypeSymbol {
 	 * Specifies whether this delegate is static
 	 */
 	public bool is_static {
-		get {
-			return !((Vala.Delegate) symbol).has_target;
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	internal override void resolve_type_references (Tree root) {
-		return_type.resolve_type_references (root);
-
-		base.resolve_type_references (root);
+		private set;
+		get;
 	}
 
 	/**

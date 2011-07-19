@@ -1,6 +1,6 @@
 /* constant.vala
  *
- * Copyright (C) 2008  Florian Brosch
+ * Copyright (C) 2008-2011  Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,28 +27,27 @@ using Valadoc.Content;
  * Represents a type member with a constant value.
  */
 public class Valadoc.Api.Constant : Member {
+	private string? cname;
+
 	/**
 	 * The data type of this constant.
 	 */
-	public TypeReference type_reference { private set; get; }
+	public TypeReference constant_type {
+		set;
+		get;
+	}
 
-	public Constant (Vala.Constant symbol, Node parent) {
-		base (symbol, parent);
-		type_reference = new TypeReference (symbol.type_reference, this);
+	public Constant (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, string? cname, void* data) {
+		base (parent, file, name, accessibility, comment, data);
+
+		this.cname = cname;
 	}
 
 	/**
 	 * Returns the name of this constant as it is used in C.
 	 */
 	public string get_cname () {
-		return ((Vala.Constant) symbol).get_cname ();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	internal override void resolve_type_references (Tree root) {
-		type_reference.resolve_type_references (root);
+		return cname;
 	}
 
 	/**
@@ -58,7 +57,7 @@ public class Valadoc.Api.Constant : Member {
 		return new SignatureBuilder ()
 			.append_keyword (get_accessibility_modifier ())
 			.append_keyword ("const")
-			.append_content (type_reference.signature)
+			.append_content (constant_type.signature)
 			.append_symbol (this)
 			.get ();
 	}
@@ -66,7 +65,9 @@ public class Valadoc.Api.Constant : Member {
 	/**
 	 * {@inheritDoc}
 	 */
-	public override NodeType node_type { get { return NodeType.CONSTANT; } }
+	public override NodeType node_type {
+		get { return NodeType.CONSTANT; }
+	}
 
 	/**
 	 * {@inheritDoc}

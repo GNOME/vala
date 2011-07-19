@@ -1,6 +1,7 @@
 /* typesymbol.vala
  *
  * Copyright (C) 2008-2009 Florian Brosch, Didier Villevalois
+ * Copyright (C) 2011      Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,32 +28,27 @@ using Gee;
  * Represents a runtime data type.
  */
 public abstract class Valadoc.Api.TypeSymbol : Symbol {
+	private SourceComment? source_comment;
 
-	public TypeSymbol (Vala.TypeSymbol symbol, Node parent) {
-		base (symbol, parent);
+	public TypeSymbol (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, bool is_basic_type, void* data) {
+		base (parent, file, name, accessibility, data);
+
+		this.is_basic_type = is_basic_type;
+		this.source_comment = comment;
 	}
 
 	/**
 	 * Specifies whether this symbol is a basic type (string, int, char, etc)
 	 */
 	public bool is_basic_type {
-		get {
-			if (symbol is Vala.Struct) {
-				var vala_struct = symbol as Vala.Struct;
-				return vala_struct.base_type == null && (vala_struct.is_boolean_type () || vala_struct.is_floating_type () || vala_struct.is_integer_type ());
-			} else if (symbol is Vala.Class) {
-				var vala_class = symbol as Vala.Class;
-				return vala_class.base_class == null && vala_class.name == "string";
-			}
-			return false;
-		}
+		private set;
+		get;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	internal override void process_comments (Settings settings, DocumentationParser parser) {
-		var source_comment = ((Vala.TypeSymbol) symbol).comment;
 		if (source_comment != null) {
 			documentation = parser.parse (this, source_comment);
 		}
