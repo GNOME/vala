@@ -3267,7 +3267,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (array_type != null && !array_type.fixed_length && !param.no_array_length) {
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				ccode.open_if (get_variable_cexpression (get_parameter_array_length_cname (param, dim)));
-				ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (get_parameter_array_length_cname (param, dim))), get_array_length_cvalue (value));
+				ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (get_parameter_array_length_cname (param, dim))), get_array_length_cvalue (value, dim));
 				ccode.close ();
 			}
 		}
