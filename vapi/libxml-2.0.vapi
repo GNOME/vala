@@ -339,6 +339,7 @@ namespace Xml {
 		public Ns* old_ns;
 		public weak string version;
 		public weak string encoding;
+		[CCode (cname = "URL")]
 		public weak string url;
 		public int charset;
 
