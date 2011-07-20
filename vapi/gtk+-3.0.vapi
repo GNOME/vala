@@ -5356,7 +5356,7 @@ namespace Gtk {
 		public bool get_realized ();
 		public bool get_receives_default ();
 		public virtual Gtk.SizeRequestMode get_request_mode ();
-		public void get_requisition (Gtk.Requisition requisition);
+		public Gtk.Requisition get_requisition ();
 		public unowned Gdk.Window get_root_window ();
 		public unowned Gdk.Screen get_screen ();
 		public bool get_sensitive ();

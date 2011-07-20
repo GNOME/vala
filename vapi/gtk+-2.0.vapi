@@ -5514,7 +5514,7 @@ namespace Gtk {
 		public void get_pointer (out int x, out int y);
 		public bool get_realized ();
 		public bool get_receives_default ();
-		public void get_requisition (Gtk.Requisition requisition);
+		public Gtk.Requisition get_requisition ();
 		public unowned Gdk.Window get_root_window ();
 		public unowned Gdk.Screen get_screen ();
 		public bool get_sensitive ();
