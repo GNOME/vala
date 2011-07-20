@@ -456,7 +456,7 @@ namespace WebKit {
 		public virtual signal bool download_requested (GLib.Object p0);
 		public virtual signal void geolocation_policy_decision_cancelled (WebKit.WebFrame p0);
 		public virtual signal bool geolocation_policy_decision_requested (WebKit.WebFrame p0, WebKit.GeolocationPolicyDecision p1);
-		public virtual signal void hovering_over_link (string? p0, string p1);
+		public virtual signal void hovering_over_link (string? p0, string? p1);
 		public virtual signal void icon_loaded (string p0);
 		public virtual signal void load_committed (WebKit.WebFrame p0);
 		public virtual signal bool load_error (WebKit.WebFrame p0, string p1, GLib.Error p2);
