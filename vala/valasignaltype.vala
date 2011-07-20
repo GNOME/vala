@@ -62,8 +62,7 @@ public class Vala.SignalType : DataType {
 
 	DelegateType get_handler_type () {
 		var type_sym = (ObjectTypeSymbol) signal_symbol.parent_symbol;
-
-		var sender_type = new ObjectType (type_sym);
+		var sender_type = SemanticAnalyzer.get_data_type_for_symbol (type_sym);
 		var result = new DelegateType (signal_symbol.get_delegate (sender_type, this));
 		result.value_owned = true;
 
