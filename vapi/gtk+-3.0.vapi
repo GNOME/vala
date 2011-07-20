@@ -6194,8 +6194,6 @@ namespace Gtk {
 	public struct Requisition {
 		public int width;
 		public int height;
-		[CCode (cname = "gtk_requisition_new", has_construct_function = false)]
-		public Requisition ();
 		public Gtk.Requisition copy ();
 		public void free ();
 	}
