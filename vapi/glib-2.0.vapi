@@ -3031,7 +3031,7 @@ namespace GLib {
 		[CCode (cname = "ungetc", instance_pos = -1)]
 		public int ungetc (int c);
 		[CCode (cname = "fgets", instance_pos = -1)]
-		public unowned string gets (char[] s);
+		public unowned string? gets (char[] s);
 		[CCode (cname = "feof")]
 		public bool eof ();
 		[CCode (cname = "fscanf"), ScanfFormat]
