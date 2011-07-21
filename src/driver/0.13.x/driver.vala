@@ -40,6 +40,9 @@ public class Valadoc.Drivers.Driver : Object, Valadoc.Driver {
 		SymbolResolver resolver = new SymbolResolver (builder);
 		tree.accept (resolver);
 
+		ChildSymbolRegistrar registrar = new ChildSymbolRegistrar ();
+		tree.accept (registrar);
+
 		return tree;
 	}
 }

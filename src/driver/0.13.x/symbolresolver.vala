@@ -123,13 +123,10 @@ public class Valadoc.Drivers.SymbolResolver : Visitor {
 		Collection<TypeReference> interfaces = item.get_implemented_interface_list ();
 		foreach (var type_ref in interfaces) {
 			resolve_type_reference (type_ref);
-			((Interface) type_ref.data_type).register_related_interface (item);
 		}
-
 
 		if (item.base_type != null) {
 			resolve_type_reference (item.base_type);
-			((Class) item.base_type.data_type).register_derived_interface (item);
 		}
 
 		item.accept_all_children (this, false);
@@ -142,12 +139,10 @@ public class Valadoc.Drivers.SymbolResolver : Visitor {
 		Collection<TypeReference> interfaces = item.get_implemented_interface_list ();
 		foreach (TypeReference type_ref in interfaces) {
 			resolve_type_reference (type_ref);
-			((Interface) type_ref.data_type).register_implementation (item);
 		}
 
 		if (item.base_type != null)	{
 			resolve_type_reference (item.base_type);
-			((Class) item.base_type.data_type).register_child_class (item);
 		}
 
 		item.accept_all_children (this, false);

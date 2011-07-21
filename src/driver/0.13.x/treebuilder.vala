@@ -689,8 +689,10 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 
 			if (vala_type_ref.data_type is Vala.Interface) {
 				node.add_interface (type_ref);
-			} else {
+			} else if (vala_type_ref.data_type is Vala.Class) {
 				node.base_type = type_ref;
+			} else {
+				assert_not_reached ();
 			}
 		}
 
