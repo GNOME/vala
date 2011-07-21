@@ -525,10 +525,14 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 					file_name = file_name.substring (0, file_name.length - ".vapi".length);
 
 					var vfile = new Vala.SourceFile (context, Vala.SourceFileType.PACKAGE, rpath);
-					Package vdpkg = new Package (file_name, true, null);
 					context.add_source_file (vfile);
 
-					register_source_file (register_package (vdpkg), vfile);
+					if (source_package == null) {
+						source_package = register_package (new Package (settings.pkg_name, false, null));
+					}
+
+					register_source_file (source_package, vfile);
+
 
 					add_deps (context, Path.build_filename (Path.get_dirname (source), "%s.deps".printf (file_name)), file_name);
 				} else if (source.has_suffix (".c")) {
@@ -691,8 +695,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 				node.add_interface (type_ref);
 			} else if (vala_type_ref.data_type is Vala.Class) {
 				node.base_type = type_ref;
-			} else {
-				assert_not_reached ();
 			}
 		}
 
