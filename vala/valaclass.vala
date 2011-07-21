@@ -296,10 +296,12 @@ public class Vala.Class : ObjectTypeSymbol {
 
 			var get_type = prop.property_type.copy ();
 			get_type.value_owned = true;
+			var set_type = prop.property_type.copy ();
+			set_type.value_owned = false;
 
 			prop.get_accessor = new PropertyAccessor (true, false, false, get_type, null, f.source_reference);
 
-			prop.set_accessor = new PropertyAccessor (false, true, false, prop.property_type.copy (), null, f.source_reference);
+			prop.set_accessor = new PropertyAccessor (false, true, false, set_type, null, f.source_reference);
 
 			f.name = "_%s".printf (f.name);
 			f.access = SymbolAccessibility.PRIVATE;
