@@ -43,7 +43,6 @@ libvaladoc_la_VALASOURCES = \
 	importer/valadocdocumentationimporter.vala \
 	importer/valadocdocumentationimporterscanner.vala \
 	api/symbolaccessibility.vala \
-	api/symbolresolver.vala \
 	api/sourcecomment.vala \
 	api/array.vala \
 	api/class.vala \
@@ -57,7 +56,6 @@ libvaladoc_la_VALASOURCES = \
 	api/formalparameter.vala \
 	api/formalparametertype.vala \
 	api/interface.vala \
-	api/initializerbuilder.vala \
 	api/item.vala \
 	api/member.vala \
 	api/method.vala \

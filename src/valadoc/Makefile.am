@@ -2,7 +2,7 @@ NULL =
 
 
 AM_CFLAGS =                             \
-	-DPACKAGE_DATADIR=\"$(libdir)/valadoc/plugins\" \
+	-DPACKAGE_DATADIR=\"$(libdir)/valadoc\" \
 	-DPACKAGE_VERSION=\"$(VERSION)\"    \
 	-I ../libvaladoc/                   \
 	$(GLIB_CFLAGS)                      \

@@ -24,19 +24,29 @@ using Valadoc.Api;
 using Gee;
 
 
+
 /**
- * A plugin register function for drivers
- *
- * @see ModuleLoader
+ * Creates an simpler, minimized, more abstract AST for valacs AST.
  */
-[CCode (has_target = false)]
-public delegate Type Valadoc.DriverRegisterFunction (GLib.TypeModule module);
+public class Valadoc.Drivers.Driver : Object, Valadoc.Driver {
 
+	public Api.Tree? build (Settings settings, ErrorReporter reporter) {
+		TreeBuilder builder = new TreeBuilder ();
+		Api.Tree? tree = builder.build (settings, reporter);
+		if (reporter.errors > 0) {
+			return null;
+		}
 
+		SymbolResolver resolver = new SymbolResolver (builder);
+		tree.accept (resolver);
 
-public interface Valadoc.Driver : Object {
-
-	public abstract Api.Tree? build (Settings settings, ErrorReporter reporter);
+		return tree;
+	}
 }
 
+
+[ModuleInit]
+public Type register_plugin (GLib.TypeModule module) {
+	return typeof (Valadoc.Drivers.Driver);
+}
 

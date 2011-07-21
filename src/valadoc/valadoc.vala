@@ -31,11 +31,12 @@ using Gee;
 public class ValaDoc : Object {
 	private static string wikidirectory = null;
 	private static string pkg_version = null;
-	private static string pluginpath = null;
+	private static string docletpath = null;
 	[CCode (array_length = false, array_null_terminated = true)]
 	private static string[] pluginargs;
 	private static string directory = null;
 	private static string pkg_name = null;
+	private static string driverpath = null;
 
 	private static bool add_inherited = false;
 	private static bool _protected = true;
@@ -71,7 +72,7 @@ public class ValaDoc : Object {
 		{ "vapidir", 0, 0, OptionArg.FILENAME_ARRAY, ref vapi_directories, "Look for package bindings in DIRECTORY", "DIRECTORY..." },
 		{ "importdir", 0, 0, OptionArg.FILENAME_ARRAY, ref import_directories, "Look for external documentation in DIRECTORY", "DIRECTORY..." },
 		{ "profile", 0, 0, OptionArg.STRING, ref profile, "Use the given profile instead of the default", "PROFILE" },
-		{ "version", 0, 0, OptionArg.NONE, ref version, "Display version number", null },
+		{ "driver", 0, 0, OptionArg.NONE, ref driverpath, "Display version number", null },
 
 		{ "pkg", 0, 0, OptionArg.STRING_ARRAY, ref packages, "Include binding for PACKAGE", "PACKAGE..." },
 		{ "import", 0, 0, OptionArg.STRING_ARRAY, ref import_packages, "Include binding for PACKAGE", "PACKAGE..." },
@@ -79,81 +80,105 @@ public class ValaDoc : Object {
 
 		{ "wiki", 0, 0, OptionArg.FILENAME, ref wikidirectory, "Wiki directory", "DIRECTORY" },
 		{ "deps", 0, 0, OptionArg.NONE, ref with_deps, "Adds packages to the documentation", null },
+
 		{ "doclet-arg", 'X', 0, OptionArg.STRING_ARRAY, ref pluginargs, "Pass arguments to the doclet", "ARG" },
-		{ "doclet", 0, 0, OptionArg.STRING, ref pluginpath, "Name of an included doclet or path to custom doclet", "PLUGIN"},
+		{ "doclet", 0, 0, OptionArg.STRING, ref docletpath, "Name of an included doclet or path to custom doclet", "PLUGIN"},
+
 		{ "no-protected", 0, OptionFlags.REVERSE, OptionArg.NONE, ref _protected, "Removes protected elements from documentation", null },
 		{ "internal", 0, 0, OptionArg.NONE, ref _internal, "Adds internal elements to documentation", null },
 		{ "private", 0, 0, OptionArg.NONE, ref _private, "Adds private elements to documentation", null },
 //		{ "inherit", 0, 0, OptionArg.NONE, ref add_inherited, "Adds inherited elements to a class", null },
+
 		{ "package-name", 0, 0, OptionArg.STRING, ref pkg_name, "package name", "NAME" },
 		{ "package-version", 0, 0, OptionArg.STRING, ref pkg_version, "package version", "VERSION" },
+
 		{ "force", 0, 0, OptionArg.NONE, ref force, "force", null },
 		{ "verbose", 0, 0, OptionArg.NONE, ref verbose, "Show all warnings", null },
 		{ "", 0, 0, OptionArg.FILENAME_ARRAY, ref tsources, null, "FILE..." },
+
 		{ null }
 	};
 
 	private static int quit (ErrorReporter reporter) {
-		if ( reporter.errors == 0) {
+		if (reporter.errors == 0) {
 			stdout.printf ("Succeeded - %d warning(s)\n", reporter.warnings);
 			return 0;
-		}
-		else {
+		} else {
 			stdout.printf ("Failed: %d error(s), %d warning(s)\n", reporter.errors, reporter.warnings);
 			return 1;
 		}
 	}
 
 	private static bool check_pkg_name () {
-		if (pkg_name == null)
+		if (pkg_name == null) {
 			return true;
+		}
 
-		if (pkg_name == "glib-2.0" || pkg_name == "gobject-2.0")
+		if (pkg_name == "glib-2.0" || pkg_name == "gobject-2.0") {
 			return false;
+		}
 
 		foreach (string package in tsources) {
-			if (pkg_name == package)
+			if (pkg_name == package) {
 				return false;
+			}
 		}
 		return true;
 	}
 
 	private string get_pkg_name () {
 		if (this.pkg_name == null) {
-			if (this.directory.has_suffix ("/"))
+			if (this.directory.has_suffix ("/")) {
 				this.pkg_name = GLib.Path.get_dirname (this.directory);
-			else
+			} else {
 				this.pkg_name = GLib.Path.get_basename (this.directory);
+			}
 		}
 
 		return this.pkg_name;
 	}
 
-	private ModuleLoader? create_module_loader (ErrorReporter reporter) {
-		string fulldirpath = "";
+	private string get_plugin_dir (string? pluginpath, string subdir, string default_pkg) {
 		if (pluginpath == null) {
-			fulldirpath = build_filename (Config.plugin_dir, "html");
-		} else if (is_absolute (pluginpath ) == false) {
+			return build_filename (Config.plugin_dir, subdir, default_pkg);
+		}
+
+		if (is_absolute (pluginpath) == false) {
 			// Test to see if the plugin exists in the expanded path and then fallback
 			// to using the configured plugin directory
 			string local_path = build_filename (Environment.get_current_dir(), pluginpath);
-			if ( FileUtils.test(local_path, FileTest.EXISTS)) {
-				fulldirpath = local_path;
+			if (FileUtils.test(local_path, FileTest.EXISTS)) {
+				return local_path;
 			} else {
-				fulldirpath = build_filename (Config.plugin_dir, pluginpath);
+				return build_filename (Config.plugin_dir, subdir, pluginpath);
 			}
-		} else {
-			fulldirpath = pluginpath;
 		}
 
+		return pluginpath;
+	}
 
+	private ModuleLoader? create_module_loader (ErrorReporter reporter) {
 		ModuleLoader modules = new ModuleLoader ();
 		Taglets.init (modules);
-		bool tmp = modules.load_doclet (fulldirpath);
+
+		// doclet:
+		string pluginpath = get_plugin_dir (docletpath, "doclets", "html");
+		bool tmp = modules.load_doclet (pluginpath);
 		if (tmp == false) {
-			reporter.simple_error ("failed to load plugin");
+			reporter.simple_error ("failed to load doclet");
 			return null;
 		}
+
+
+		// driver:
+		pluginpath = get_plugin_dir (driverpath, "drivers", "0.13.x");
+		tmp = modules.load_driver (pluginpath);
+		if (tmp == false) {
+			reporter.simple_error ("failed to load driver");
+			return null;
+		}
+
+		assert (modules.driver != null && modules.doclet != null);
 
 		return modules;
 	}
@@ -186,8 +211,15 @@ public class ValaDoc : Object {
 		settings.defines = defines;
 
 
+		// load plugins:
+		ModuleLoader? modules = create_module_loader (reporter);
+		if (reporter.errors > 0 || modules == null) {
+			return quit (reporter);
+		}
+
+
 		// Create tree:
-		Valadoc.Api.Driver driver = new Valadoc.Api.Driver ();
+		Valadoc.Driver driver = modules.driver;
 		Valadoc.Api.Tree doctree = driver.build (settings, reporter);
 
 		if (reporter.errors > 0) {
@@ -196,11 +228,6 @@ public class ValaDoc : Object {
 
 
 		// process documentation
-		ModuleLoader? modules = create_module_loader (reporter);
-		if (reporter.errors > 0 || modules == null) {
-			return quit (reporter);
-		}
-
 		Valadoc.DocumentationParser docparser = new Valadoc.DocumentationParser (settings, reporter, doctree, modules);
 		if (!doctree.create_tree()) {
 			return quit (reporter);
@@ -233,8 +260,7 @@ public class ValaDoc : Object {
 			opt_context.set_help_enabled (true);
 			opt_context.add_main_entries (options, null);
 			opt_context.parse (ref args);
-		}
-		catch (OptionError e) {
+		} catch (OptionError e) {
 			reporter.simple_error (e.message);
 			stdout.printf ("Run '%s --help' to see a full list of available command line options.\n", args[0]);
 			return quit (reporter);
@@ -262,8 +288,7 @@ public class ValaDoc : Object {
 					reporter.simple_error ("Can't remove directory.");
 					return quit (reporter);
 				}
-			}
-			else {
+			} else {
 				reporter.simple_error ("File already exists");
 				return quit (reporter);
 			}

@@ -140,11 +140,11 @@ public class Valadoc.Api.Interface : TypeSymbol {
 		return _known_related_interfaces;
 	}
 
-	internal void register_related_interface (Interface iface) {
+	public void register_related_interface (Interface iface) {
 		_known_related_interfaces.add (iface);
 	}
 
-	internal void register_implementation (Class cl) {
+	public void register_implementation (Class cl) {
 		_known_implementations.add (cl);
 	}
 

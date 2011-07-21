@@ -20,31 +20,32 @@
  * 	Florian Brosch <flo.brosch@gmail.com>
  */
 
+using Valadoc.Api;
 using Gee;
 
 
-public class Valadoc.Api.SymbolResolver : Visitor {
+public class Valadoc.Drivers.SymbolResolver : Visitor {
 	private HashMap<Vala.Symbol, Symbol> symbol_map;
 	private Valadoc.Api.Class glib_error;
-	private Tree root;
+	private Api.Tree root;
 
-	public SymbolResolver (HashMap<Vala.Symbol, Symbol> symbol_map, Valadoc.Api.Class glib_error) {
-		this.symbol_map = symbol_map;
-		this.glib_error = glib_error;
+	public SymbolResolver (TreeBuilder builder) {
+		this.symbol_map = builder.get_symbol_map ();
+		this.glib_error = builder.get_glib_error ();
 	}
 
 	private Symbol? resolve (Vala.Symbol symbol) {
 		return symbol_map.get (symbol);
 	}
 
-	private void resolve_array_type_references (Array ptr) {
+	private void resolve_array_type_references (Api.Array ptr) {
 		Api.Item data_type = ptr.data_type;
 		if (data_type == null) {
 			// void
-		} else if (data_type is Array) {
-			resolve_array_type_references ((Array) data_type);
+		} else if (data_type is Api.Array) {
+			resolve_array_type_references ((Api.Array) data_type);
 		} else if (data_type is Pointer) {
-			resolve_pointer_type_references ((Pointer) data_type);
+			resolve_pointer_type_references ((Api.Pointer) data_type);
 		} else {
 			resolve_type_reference ((TypeReference) data_type);
 		}
@@ -54,8 +55,8 @@ public class Valadoc.Api.SymbolResolver : Visitor {
 		Api.Item type = ptr.data_type;
 		if (type == null) {
 			// void
-		} else if (type is Array) {
-			resolve_array_type_references ((Array) type);
+		} else if (type is Api.Array) {
+			resolve_array_type_references ((Api.Array) type);
 		} else if (type is Pointer) {
 			resolve_pointer_type_references ((Pointer) type);
 		} else {
@@ -87,15 +88,15 @@ public class Valadoc.Api.SymbolResolver : Visitor {
 
 		if (reference.data_type is Pointer) {
 			resolve_pointer_type_references ((Pointer)reference.data_type);
-		} else if (reference.data_type is Array) {
-			resolve_array_type_references ((Array)reference.data_type);
+		} else if (reference.data_type is Api.Array) {
+			resolve_array_type_references ((Api.Array)reference.data_type);
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public override void visit_tree (Tree item) {
+	public override void visit_tree (Api.Tree item) {
 		this.root = item;
 		item.accept_children (this);
 		this.root = null;
@@ -217,7 +218,7 @@ public class Valadoc.Api.SymbolResolver : Visitor {
 	/**
 	 * {@inheritDoc}
 	 */
-	public override void visit_signal (Signal item) {
+	public override void visit_signal (Api.Signal item) {
 		resolve_type_reference (item.return_type);
 
 		item.accept_all_children (this, false);
@@ -296,7 +297,7 @@ public class Valadoc.Api.SymbolResolver : Visitor {
 	/**
 	 * {@inheritDoc}
 	 */
-	public override void visit_enum_value (EnumValue item) {
+	public override void visit_enum_value (Api.EnumValue item) {
 
 		if (((Vala.EnumValue) item.data).value != null) {
 			SignatureBuilder signature = new SignatureBuilder ();
@@ -308,3 +309,6 @@ public class Valadoc.Api.SymbolResolver : Visitor {
 		item.accept_all_children (this, false);
 	}
 }
+
+
+

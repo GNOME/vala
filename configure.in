@@ -64,6 +64,8 @@ AC_CONFIG_FILES([Makefile
                  icons/Makefile
                  doc/Makefile
                  src/libvaladoc/Makefile
+                 src/driver/Makefile
+                 src/driver/0.13.x/Makefile
                  src/doclets/Makefile
                  src/doclets/htm/Makefile
                  src/doclets/devhelp/Makefile

@@ -4,10 +4,7 @@ NULL =
 
 
 SUBDIRS = \
-	libvaladoc \
-	valadoc \
-	doclets \
-	driver \
+	0.13.x \
 	$(NULL)
 
 

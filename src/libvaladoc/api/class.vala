@@ -226,11 +226,11 @@ public class Valadoc.Api.Class : TypeSymbol {
 		return _known_derived_interfaces.read_only_view;
 	}
 
-	internal void register_derived_interface (Interface iface) {
+	public void register_derived_interface (Interface iface) {
 		_known_derived_interfaces.add (iface);
 	}
 
-	internal void register_child_class (Class cl) {
+	public void register_child_class (Class cl) {
 		if (this.base_type != null) {
 			((Class) this.base_type.data_type).register_child_class (cl);
 		}

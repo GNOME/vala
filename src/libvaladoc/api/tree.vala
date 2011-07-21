@@ -40,8 +40,7 @@ public class Valadoc.Api.Tree {
 	private ErrorReporter reporter;
 	private CTypeResolver _cresolver = null;
 
-	// TODO schöner machen
-	internal void add_package(Package package) {
+	public void add_package(Package package) {
 		this.packages.add (package);
 	}
 
@@ -67,7 +66,7 @@ public class Valadoc.Api.Tree {
 		return external_c_files.read_only_view;
 	}
 
-	internal void add_external_c_files (string name) {
+	public void add_external_c_files (string name) {
 		external_c_files.add (name);
 	}
 

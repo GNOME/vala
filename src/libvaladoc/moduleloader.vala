@@ -1,6 +1,7 @@
 /* moduleloader.vala
  *
  * Copyright (C) 2008-2009 Florian Brosch
+ * Copyright (C) 2011      Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,16 +25,21 @@ using Gee;
 
 
 [CCode (has_target = false)]
-public delegate  void Valadoc.TagletRegisterFunction (ModuleLoader loader);
+public delegate void Valadoc.TagletRegisterFunction (ModuleLoader loader);
+
+
 
 
 public class Valadoc.ModuleLoader : TypeModule {
-	public Doclet doclet;
-
 	public HashMap<string, GLib.Type> taglets = new HashMap<string, Type> (GLib.str_hash, GLib.str_equal);
+
+	private Module drivermodule;
+	private Type drivertype;
+	public Driver driver;
 
 	private Module docletmodule;
 	private Type doclettype;
+	public Doclet doclet;
 
 	public ModuleLoader () {
 		Object ();
@@ -65,7 +71,27 @@ public class Valadoc.ModuleLoader : TypeModule {
 
 		Valadoc.DocletRegisterFunction doclet_register_function = (Valadoc.DocletRegisterFunction) function;
 		doclettype = doclet_register_function (this);
-		this.doclet = (Doclet)GLib.Object.new (doclettype);
+		this.doclet = (Doclet) GLib.Object.new (doclettype);
+		return true;
+	}
+
+
+	public bool load_driver (string path) {
+		void* function;
+
+		drivermodule = Module.open (Module.build_path (path, "libdriver"), ModuleFlags.BIND_LAZY | ModuleFlags.BIND_LOCAL);
+		if (drivermodule == null) {
+			return false;
+		}
+
+		drivermodule.symbol("register_plugin", out function);
+		if (function == null) {
+			return false;
+		}
+
+		Valadoc.DriverRegisterFunction driver_register_function = (Valadoc.DriverRegisterFunction) function;
+		drivertype = driver_register_function (this);
+		this.driver = (Driver) GLib.Object.new (drivertype);
 		return true;
 	}
 }

@@ -509,11 +509,9 @@ private class Valadoc.Api.InitializerBuilder : Vala.CodeVisitor {
 			first = false;
 		}
 
-		var run = new Run (Run.Style.ITALIC);
-		run.content.add (new Text (" [...] "));
 
 		signature.append (") => {", false);
-		signature.append_content (run, false);
+		signature.append_highlighted (" [...] ", false);
 		signature.append ("}", false);
 	}
 

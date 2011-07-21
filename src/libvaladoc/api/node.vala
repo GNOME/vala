@@ -114,7 +114,7 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 		return file.relative_path;
 	}
 
-	internal void add_child (Symbol child) {
+	public void add_child (Symbol child) {
 		if (child.name != null) {
 			per_name_children.set (child.name, child);
 		} else {

@@ -59,6 +59,20 @@ public class Valadoc.Api.SignatureBuilder {
 	}
 
 	/**
+	 * Adds highlighted text onto the end of the builder. 
+	 *
+	 * @param literal a string
+	 * @param spaced add a space at the front of the string if necessary
+	 * @return this
+	 */
+	public SignatureBuilder append_highlighted (string text, bool spaced = true) {
+		string content = (last_appended != null && spaced ? " " : "") + text;
+		Run inner = new Run (Run.Style.ITALIC);
+		inner.content.add (new Text (content));
+		return append_content (inner, spaced);
+	}
+
+	/**
 	 * Adds a Inline onto the end of the builder. 
 	 *
 	 * @param literal a content

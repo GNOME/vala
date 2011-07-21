@@ -14,7 +14,7 @@ AM_CFLAGS =  -g \
 BUILT_SOURCES = libdoclet.vala.stamp
 
 
-docletdir = $(libdir)/valadoc/plugins/gtkdoc
+docletdir = $(libdir)/valadoc/doclets/gtkdoc
 
 
 libdoclet_la_LDFLAGS = -module -avoid-version -no-undefined
