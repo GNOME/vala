@@ -445,7 +445,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 
 		var vfile = new Vala.SourceFile (context, Vala.SourceFileType.PACKAGE, package_path);
 		context.add_source_file (vfile);
-		Package vdpkg = new Package (vfile, pkg, true, null);
+		Package vdpkg = new Package (pkg, true, null);
 		register_source_file (register_package (vdpkg), vfile);
 
 		add_deps (context, Path.build_filename (Path.get_dirname (package_path), "%s.deps".printf (pkg)), pkg);
@@ -502,7 +502,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 					var source_file = new Vala.SourceFile (context, Vala.SourceFileType.SOURCE, rpath);
 
 					if (source_package == null) {
-						source_package = register_package (new Package (source_file, settings.pkg_name, false, null));
+						source_package = register_package (new Package (settings.pkg_name, false, null));
 					}
 
 					register_source_file (source_package, source_file);
@@ -525,7 +525,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 					file_name = file_name.substring (0, file_name.length - ".vapi".length);
 
 					var vfile = new Vala.SourceFile (context, Vala.SourceFileType.PACKAGE, rpath);
-					Package vdpkg = new Package (vfile, file_name, true, null);
+					Package vdpkg = new Package (file_name, true, null);
 					context.add_source_file (vfile);
 
 					register_source_file (register_package (vdpkg), vfile);

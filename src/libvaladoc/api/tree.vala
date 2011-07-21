@@ -44,11 +44,6 @@ public class Valadoc.Api.Tree {
 		this.packages.add (package);
 	}
 
-	internal Vala.CodeContext context {
-		private set;
-		get;
-	}
-
 	/**
 	 * The root of the wiki tree.
 	 */
@@ -276,7 +271,7 @@ public class Valadoc.Api.Tree {
 			}
 
 			if (imported == false) {
-				Vala.Report.error (null, "%s not found in specified import directories".printf (pkg_name));
+				reporter.simple_error ("%s not found in specified import directories", pkg_name);
 			}
 		}
 	}

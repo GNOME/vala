@@ -9,7 +9,6 @@ AM_CFLAGS = \
 	$(LIBGVC_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(LIBGEE_CFLAGS) \
-	$(LIBVALA_CFLAGS) \
 	$(GMODULE_CFLAGS) \
 	$(NULL)
 
@@ -31,6 +30,9 @@ libvaladoc_la_VALASOURCES = \
 	markupwriter.vala \
 	devhelp-markupwriter.vala \
 	ctyperesolver.vala \
+	markupsourcelocation.vala \
+	markuptokentype.vala \
+	markupreader.vala \
 	documentation/girdocumentationscanner.vala \
 	documentation/commentscanner.vala \
 	documentation/documentation.vala \
@@ -39,7 +41,7 @@ libvaladoc_la_VALASOURCES = \
 	documentation/wikiscanner.vala \
 	importer/girdocumentationimporter.vala \
 	importer/documentationimporter.vala \
-	importer/girdocumentationbuilder.vala \
+	importer/gircomment.vala \
 	importer/valadocdocumentationimporter.vala \
 	importer/valadocdocumentationimporterscanner.vala \
 	api/symbolaccessibility.vala \
@@ -158,7 +160,7 @@ libvaladocincludedir = $(includedir)/
 
 
 libvaladoc.vala.stamp: $(libvaladoc_la_VALASOURCES)
-	$(VALAC) $(VALAFLAGS) -C -H valadoc-1.0.h --pkg gee-1.0 --pkg $(VALA_PACKAGE) --pkg libgvc --pkg gmodule-2.0 --pkg libgvc --vapidir $(top_srcdir)/src/vapi --pkg config --library valadoc-1.0 --basedir $(top_srcdir)/src/libvaladoc/ --save-temps $^
+	$(VALAC) $(VALAFLAGS) -C -H valadoc-1.0.h --pkg gee-1.0 --pkg libgvc --pkg gmodule-2.0 --pkg libgvc --vapidir $(top_srcdir)/src/vapi --pkg config --library valadoc-1.0 --basedir $(top_srcdir)/src/libvaladoc/ --save-temps $^
 	touch $@
 
 
@@ -169,7 +171,6 @@ libvaladoc_la_LIBADD = \
 	$(LIBGVC_LIBS)     \
 	$(LIBGEE_LIBS)     \
 	$(GLIB_LIBS)       \
-	$(LIBVALA_LIBS)    \
 	$(GMODULE_LIBS)    \
 	$(NULL)
 
@@ -192,9 +193,6 @@ MAINTAINERCLEANFILES =                        \
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = valadoc-1.0.pc
 
-valadoc-1.0.deps: valadoc-1.0.deps.in
-	cat $^ > $@
-	echo $(VALA_PACKAGE) >> $@
 
 vapidir = $(datadir)/vala/vapi
 vapi_DATA =     \

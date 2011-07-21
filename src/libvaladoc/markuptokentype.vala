@@ -1,6 +1,6 @@
-/* sourcefile.vala
+/* markuptokentype.vala
  *
- * Copyright (C) 2011 Florian Brosch
+ * Copyright (C) 2008-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -17,31 +17,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
  *
  * Author:
- * 	Brosch Florian <flo.brosch@gmail.com>
+ * 	Jürg Billeter <j@bitron.ch>
  */
 
-/**
- * Represents a source file
- */
-public class Valadoc.Api.SourceFile : Object {
-	public string relative_path {
-		private set;
-		get;
-	}
 
-	public string? relative_c_path {
-		private set;
-		get;
-	}
+public enum Valadoc.MarkupTokenType {
+	NONE,
+	START_ELEMENT,
+	END_ELEMENT,
+	TEXT,
+	EOF;
 
-	public string get_name () {
-		return Path.get_basename (relative_path);
-	}
+	public string to_string () {
+		switch (this) {
+		case START_ELEMENT:
+			return "start element";
 
-	public SourceFile (string relative_path, string? relative_c_path) {
-		this.relative_c_path = relative_c_path;
-		this.relative_path = relative_path;
+		case END_ELEMENT:
+			return "end element";
+
+		case TEXT:
+			return "text";
+
+		case EOF:
+			return "end of file";
+
+		default:
+			return "unknown token type";
+		}
 	}
 }
-
 

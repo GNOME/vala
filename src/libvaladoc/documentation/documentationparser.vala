@@ -87,14 +87,14 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		}
 	}
 
-	public Comment? parse_gir_comment (Api.Node element, GirDocumentationBuilder doc) {
+	public Comment? parse_gir_comment (Api.Node element, GirComment doc) {
 		try {
 			_stack.clear ();
 
 			if (doc.content != null) {
 				_parser = _gir_parser;
 				_scanner = _gir_scanner;
-				_gir_parser.parse (doc.content, doc.source_reference.file.filename, doc.source_reference.first_line, doc.source_reference.first_column);
+				_gir_parser.parse (doc.content, doc.file.get_name (), doc.first_line, doc.first_column);
 			} else {
 				push (_factory.create_comment ());
 			}
@@ -105,7 +105,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 
 			if (doc.return_value != null && !(element is Api.Method && ((Api.Method) element).is_constructor)) {
 				push (_factory.create_taglet ("return"));
-				_gir_taglet_parser.parse (doc.return_value.content, doc.return_value.source_reference.file.filename, doc.return_value.source_reference.first_line, doc.return_value.source_reference.first_column);
+				_gir_taglet_parser.parse (doc.return_value.content, doc.return_value.file.get_name (), doc.return_value.first_line, doc.return_value.first_column);
 			}
 
 			var iter = doc.parameters.map_iterator ();
@@ -116,7 +116,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 					var param = _factory.create_taglet ("param") as Taglets.Param;
 					param.parameter_name = key;
 					push (param);
-					_gir_taglet_parser.parse (val.content, val.source_reference.file.filename, val.source_reference.first_line, val.source_reference.first_column);
+					_gir_taglet_parser.parse (val.content, val.file.get_name (), val.first_line, val.first_column);
 				}
 			}
 

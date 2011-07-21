@@ -38,11 +38,8 @@ public class Valadoc.ErrorReporter : Object {
 	}
 
 	public unowned GLib.FileStream stream {
-		get; set;
-	}
-
-	public Vala.Report? vreporter {
-		get; set;
+		get;
+		set;
 	}
 
 	public ErrorReporter () {
@@ -112,14 +109,12 @@ public class Valadoc.ErrorReporter : Object {
 		this._errors++;
 	}
 
-	//TODO
 	public void error (string file, long line, long startpos, long endpos, string errline, string msg_format, ...) {
 		var args = va_list();
 		this.msg (ErrorType.ERROR, file, line, startpos, endpos, errline, msg_format, args);
 		this._errors++;
 	}
 
-	//TODO
 	public void warning (string file, long line, long startpos, long endpos, string errline, string msg_format, ...) {
 		var args = va_list();
 		this.msg (ErrorType.WARNING, file, line, startpos, endpos, errline, msg_format, args);

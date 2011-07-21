@@ -1,6 +1,6 @@
 /* DocumentationBuilderimporter.vala
  *
- * Copyright (C) 2010 Florian Brosch
+ * Copyright (C) 2010-2011 Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,31 +28,24 @@ using Gee;
 /**
  * A documentation comment used by valadoc
  */
-public class Valadoc.Importer.GirComment : Valadoc.Api.Comment {
-	private HashMap<string, Api.Comment> _parameters = new HashMap<string, APi.Comment> ();
+public class Valadoc.Importer.GirComment : Valadoc.Api.SourceComment {
+	private HashMap<string, Api.SourceComment> _parameters = new HashMap<string, Api.SourceComment> ();
 
-	public Map<string, Api.Comment> parameters {
+	public Map<string, Api.SourceComment> parameters {
 		owned get { return _parameters.read_only_view; }
 	}
 
-	public Api.Comment? return_value {
+	public Api.SourceComment? return_value {
 		internal set;
 		get;
 	}
-	
-	//TODO
-	public GirComment.empty (Api.SourceReference _source_reference) {
-		base ("", _source_reference);
+
+	public GirComment (string content, Api.SourceFile file, int first_line, int first_column, int last_line, int last_column) {
+		base (content, file, first_line, first_column, last_line, last_column);
 		return_value = null;
 	}
 
-	//TODO
-	public GirComment (Api.Comment comment) {
-		base (comment.content, comment.source_reference);
-		return_value = null;
-	}
-
-	internal void add_parameter (string name, Api.Comment comment) {
+	internal void add_parameter (string name, Api.SourceComment comment) {
 		_parameters.set (name, comment);
 	}
 

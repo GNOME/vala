@@ -1,6 +1,6 @@
 /* DocumentationBuilderimporter.vala
  *
- * Copyright (C) 2010 Florian Brosch
+ * Copyright (C) 2010-2011 Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,25 +26,52 @@ using Gee;
 
 public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 	DocumentationParser docparser;
-	Vala.MarkupReader reader;
+	MarkupReader reader;
 
-	Vala.SourceFile current_source_file;
-	Vala.SourceLocation begin;
-	Vala.SourceLocation end;
-	Vala.MarkupTokenType current_token;
+	ErrorReporter reporter;
 
-	Vala.DataType dummy_type;
+	Api.SourceFile current_source_file;
+	MarkupSourceLocation begin;
+	MarkupSourceLocation end;
+	MarkupTokenType current_token;
 
 	LinkedList<string> type_cname_stack = new LinkedList<string> ();
 
 	int anonymous_param_count = 0;
 
-	public override string file_extension { get { return "gir"; } }
+	public override string file_extension {
+		get { return "gir"; }
+	}
 
-	public GirDocumentationImporter (Api.Tree tree, DocumentationParser docparser, ModuleLoader modules, Settings settings) {
+	private GirComment create_empty_gir_comment () {
+		return new GirComment ("", current_source_file, begin.line, begin.column, end.line, end.column);
+	}
+
+	private GirComment create_gir_comment (Api.SourceComment sc) {
+		return new GirComment (sc.content, sc.file, sc.first_line, sc.first_column, sc.last_line, sc.last_column);
+	}
+
+	private void error (string msg_format, ...) {
+		va_list args = va_list();
+		string msg = msg_format.vprintf (args);
+
+		string code_line = null;
+
+		unowned string start_src_line = ((string) begin.pos).utf8_offset (-begin.column);
+		int offset = start_src_line.index_of_char ('\n');
+		if (offset == -1) {
+			code_line = start_src_line;
+		} else {
+			code_line = start_src_line.substring (0, offset);
+		}
+
+		reporter.error (current_source_file.get_name (), begin.line, begin.column, end.column, code_line, msg);
+	}
+
+	public GirDocumentationImporter (Api.Tree tree, DocumentationParser docparser, ModuleLoader modules, Settings settings, ErrorReporter reporter) {
 		base (tree, modules, settings);
-		this.dummy_type = new Vala.StructValueType (new Vala.Struct ("Dummy"));
 		this.docparser = docparser;
+		this.reporter = reporter;
 	}
 
 	public override void process (string filename) {
@@ -52,8 +79,8 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 	}
 
 	void parse_file (string gir_file) {
-		reader = new Vala.MarkupReader (gir_file);
-		this.current_source_file = new Vala.SourceFile (tree.context, Vala.SourceFileType.PACKAGE, GLib.Path.get_basename (gir_file));
+		this.current_source_file = new Api.SourceFile (gir_file, null);
+		reader = new MarkupReader (gir_file, reporter);
 
 		// xml prolog
 		next ();
@@ -64,14 +91,14 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		this.current_source_file = null;
 	}
 
-	Vala.Comment? parse_doc () {
+	Api.SourceComment? parse_doc () {
 		start_element ("doc");
 
-		Vala.Comment comment = null;
+		Api.SourceComment comment = null;
 		next ();
 
-		if (current_token == Vala.MarkupTokenType.TEXT) {
-			comment = new Vala.Comment (reader.content, get_current_src ());
+		if (current_token == MarkupTokenType.TEXT) {
+			comment = new Api.SourceComment (reader.content, current_source_file, begin.line, begin.column, end.line, end.column);
 			next ();
 		}
 
@@ -84,28 +111,22 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 	}
 
 	void start_element (string name) {
-		if (current_token != Vala.MarkupTokenType.START_ELEMENT || reader.name != name) {
-			// error
-			Vala.Report.error (get_current_src (), "expected start element of `%s' instead of `%s'".printf (name, reader.name));
+		if (current_token != MarkupTokenType.START_ELEMENT || reader.name != name) {
+			error ("expected start element of `%s' instead of `%s'", name, reader.name);
 		}
 	}
 
 	void end_element (string name) {
-		if (current_token != Vala.MarkupTokenType.END_ELEMENT || reader.name != name) {
-			// error
-			Vala.Report.error (get_current_src (), "expected end element of `%s' instead of `%s'".printf (name, reader.name));
+		if (current_token != MarkupTokenType.END_ELEMENT || reader.name != name) {
+			error ("expected end element of `%s' instead of `%s'", name, reader.name);
 		}
 		next ();
-	}
-
-	Vala.SourceReference get_current_src () {
-		return new Vala.SourceReference (this.current_source_file, begin.line, begin.column, end.line, end.column);
 	}
 
 	void parse_repository () {
 		start_element ("repository");
 		next ();
-		while (current_token == Vala.MarkupTokenType.START_ELEMENT) {
+		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (reader.name == "namespace") {
 				parse_namespace ();
 			} else if (reader.name == "include") {
@@ -115,8 +136,7 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 			} else if (reader.name == "c:include") {
 				parse_c_include ();
 			} else {
-				// error
-				Vala.Report.error (get_current_src (), "unknown child element `%s' in `repository'".printf (reader.name));
+				error ("unknown child element `%s' in `repository'", reader.name);
 				break;
 			}
 		}
@@ -146,12 +166,12 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 
 		int level = 1;
 		while (level > 0) {
-			if (current_token == Vala.MarkupTokenType.START_ELEMENT) {
+			if (current_token == MarkupTokenType.START_ELEMENT) {
 				level++;
-			} else if (current_token == Vala.MarkupTokenType.END_ELEMENT) {
+			} else if (current_token == MarkupTokenType.END_ELEMENT) {
 				level--;
-			} else if (current_token == Vala.MarkupTokenType.EOF) {
-				Vala.Report.error (get_current_src (), "unexpected end of file");
+			} else if (current_token == MarkupTokenType.EOF) {
+				error ("unexpected end of file");
 				break;
 			}
 			next ();
@@ -162,7 +182,7 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		start_element ("namespace");
 		next ();
 
-		while (current_token == Vala.MarkupTokenType.START_ELEMENT) {
+		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (reader.get_attribute ("introspectable") == "0") {
 				skip_element ();
 				continue;
@@ -195,8 +215,7 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 			} else if (reader.name == "constant") {
 				parse_constant ();
 			} else {
-				// error
-				Vala.Report.error (get_current_src (), "unknown child element `%s' in `namespace'".printf (reader.name));
+				error ("unknown child element `%s' in `namespace'", reader.name);
 				break;
 			}
 		}
@@ -206,6 +225,13 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 	void parse_alias () {
 		start_element ("alias");
 		next ();
+
+		while (current_token == MarkupTokenType.START_ELEMENT) {
+			if (reader.name != "alias") {
+				skip_element ();
+			}
+		}
+
 		end_element ("alias");
 	}
 
@@ -215,11 +241,11 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		type_cname_stack.add (cname);
 		next ();
 
-		if (current_token == Vala.MarkupTokenType.START_ELEMENT && reader.name == "doc") {
-			process_documentation (cname, new GirDocumentationBuilder (parse_doc ()));
+		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "doc") {
+			process_documentation (cname, create_gir_comment (parse_doc ()));
 		}
 
-		while (current_token == Vala.MarkupTokenType.START_ELEMENT) {
+		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (reader.get_attribute ("introspectable") == "0") {
 				skip_element ();
 				continue;
@@ -243,11 +269,11 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		type_cname_stack.add (cname);
 		next ();
 
-		if (current_token == Vala.MarkupTokenType.START_ELEMENT && reader.name == "doc") {
-			process_documentation (cname, new GirDocumentationBuilder (parse_doc ()));
+		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "doc") {
+			process_documentation (cname, create_gir_comment (parse_doc ()));
 		}
 
-		while (current_token == Vala.MarkupTokenType.START_ELEMENT) {
+		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (reader.get_attribute ("introspectable") == "0") {
 				skip_element ();
 				continue;
@@ -270,18 +296,18 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		string cname = reader.get_attribute ("c:identifier");
 		next ();
 
-		if (current_token == Vala.MarkupTokenType.START_ELEMENT && reader.name == "doc") {
-			process_documentation (cname, new GirDocumentationBuilder (parse_doc ()));
+		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "doc") {
+			process_documentation (cname, create_gir_comment (parse_doc ()));
 		}
 
 		end_element ("member");
 	}
 
-	void parse_return_value (GirDocumentationBuilder doc) {
+	void parse_return_value (GirComment doc) {
 		start_element ("return-value");
 		next ();
 
-		if (current_token == Vala.MarkupTokenType.START_ELEMENT && reader.name == "doc") {
+		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "doc") {
 			doc.return_value = parse_doc ();
 		}
 
@@ -290,7 +316,7 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		end_element ("return-value");
 	}
 
-	void parse_parameter (GirDocumentationBuilder doc) {
+	void parse_parameter (GirComment doc) {
 		start_element ("parameter");
 		string name = reader.get_attribute ("name");
 
@@ -301,7 +327,7 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 
 		next ();
 
-		if (current_token == Vala.MarkupTokenType.START_ELEMENT && reader.name == "doc") {
+		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "doc") {
 			doc.add_parameter (name, parse_doc ());
 		}
 
@@ -329,11 +355,11 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		type_cname_stack.add (cname);
 		next ();
 
-		if (current_token == Vala.MarkupTokenType.START_ELEMENT && reader.name == "doc") {
-			process_documentation (cname, new GirDocumentationBuilder (parse_doc ()));
+		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "doc") {
+			process_documentation (cname, create_gir_comment (parse_doc ()));
 		}
 
-		while (current_token == Vala.MarkupTokenType.START_ELEMENT) {
+		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (reader.get_attribute ("introspectable") == "0") {
 				skip_element ();
 				continue;
@@ -354,8 +380,7 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 			} else if (reader.name == "union") {
 				parse_union ();
 			} else {
-				// error
-				Vala.Report.error (get_current_src (), "unknown child element `%s' in `record'".printf (reader.name));
+				error ("unknown child element `%s' in `record'", reader.name);
 				break;
 			}
 		}
@@ -370,11 +395,11 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		type_cname_stack.add (cname);
 		next ();
 
-		if (current_token == Vala.MarkupTokenType.START_ELEMENT && reader.name == "doc") {
-			process_documentation (cname, new GirDocumentationBuilder (parse_doc ()));
+		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "doc") {
+			process_documentation (cname, create_gir_comment (parse_doc ()));
 		}
 
-		while (current_token == Vala.MarkupTokenType.START_ELEMENT) {
+		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (reader.get_attribute ("introspectable") == "0") {
 				skip_element ();
 				continue;
@@ -403,8 +428,7 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 			} else if (reader.name == "glib:signal") {
 				parse_signal ();
 			} else {
-				// error
-				Vala.Report.error (get_current_src (), "unknown child element `%s' in `class'".printf (reader.name));
+				error ("unknown child element `%s' in `class'", reader.name);
 				break;
 			}
 		}
@@ -419,11 +443,11 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		type_cname_stack.add (cname);
 		next ();
 
-		if (current_token == Vala.MarkupTokenType.START_ELEMENT && reader.name == "doc") {
-			process_documentation (cname, new GirDocumentationBuilder (parse_doc ()));
+		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "doc") {
+			process_documentation (cname, create_gir_comment (parse_doc ()));
 		}
 
-		while (current_token == Vala.MarkupTokenType.START_ELEMENT) {
+		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (reader.get_attribute ("introspectable") == "0") {
 				skip_element ();
 				continue;
@@ -446,8 +470,7 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 			} else if (reader.name == "glib:signal") {
 				parse_signal ();
 			} else {
-				// error
-				Vala.Report.error (get_current_src (), "unknown child element `%s' in `interface'".printf (reader.name));
+				error ("unknown child element `%s' in `interface'", reader.name);
 				break;
 			}
 		}
@@ -461,10 +484,10 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		string cname = reader.get_attribute ("name");
 		next ();
 
-		if (current_token == Vala.MarkupTokenType.START_ELEMENT && reader.name == "doc" && cname != null) {
+		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "doc" && cname != null) {
 			string real_cname = type_cname_stack.peek();
 			real_cname = (real_cname == null)? cname : real_cname+"."+cname;
-			process_documentation (real_cname, new GirDocumentationBuilder (parse_doc ()));
+			process_documentation (real_cname, create_gir_comment (parse_doc ()));
 		}
 
 		parse_type ();
@@ -477,8 +500,8 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		string cname = reader.get_attribute ("name");
 		next ();
 
-		if (current_token == Vala.MarkupTokenType.START_ELEMENT && reader.name == "doc" && cname != null) {
-			process_documentation (type_cname_stack.peek()+":"+cname, new GirDocumentationBuilder (parse_doc ()));
+		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "doc" && cname != null) {
+			process_documentation (type_cname_stack.peek()+":"+cname, create_gir_comment (parse_doc ()));
 		}
 
 		parse_type ();
@@ -495,20 +518,20 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		string cname = reader.get_attribute ("c:identifier");
 		next ();
 
-		GirDocumentationBuilder doc;
+		GirComment doc;
 
-		if (current_token == Vala.MarkupTokenType.START_ELEMENT && reader.name == "doc") {
-			doc = new GirDocumentationBuilder (parse_doc ());
+		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "doc") {
+			doc = create_gir_comment (parse_doc ());
 		} else {
-			doc = new GirDocumentationBuilder.empty (get_current_src ());
+			doc = create_empty_gir_comment ();
 		}
 
 		parse_return_value (doc);
 
-		if (current_token == Vala.MarkupTokenType.START_ELEMENT && reader.name == "parameters") {
+		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "parameters") {
 			start_element ("parameters");
 			next ();
-			while (current_token == Vala.MarkupTokenType.START_ELEMENT) {
+			while (current_token == MarkupTokenType.START_ELEMENT) {
 				parse_parameter (doc);
 			}
 			end_element ("parameters");
@@ -526,23 +549,23 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		string cname = reader.get_attribute ("c:identifier");
 		next ();
 
-		GirDocumentationBuilder doc;
+		GirComment doc;
 
-		if (current_token == Vala.MarkupTokenType.START_ELEMENT && reader.name == "doc") {
-			doc = new GirDocumentationBuilder (parse_doc ());
+		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "doc") {
+			doc = create_gir_comment (parse_doc ());
 		} else {
-			doc = new GirDocumentationBuilder.empty (get_current_src ());
+			doc = create_empty_gir_comment ();
 		}
 
-		if (current_token == Vala.MarkupTokenType.START_ELEMENT && reader.name == "return-value") {
+		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "return-value") {
 			parse_return_value (doc);
 		}
 
-		if (current_token == Vala.MarkupTokenType.START_ELEMENT && reader.name == "parameters") {
+		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "parameters") {
 			start_element ("parameters");
 			next ();
 
-			while (current_token == Vala.MarkupTokenType.START_ELEMENT) {
+			while (current_token == MarkupTokenType.START_ELEMENT) {
 				parse_parameter (doc);
 			}
 
@@ -565,22 +588,22 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		string cname = reader.get_attribute ("name");
 		next ();
 
-		GirDocumentationBuilder doc;
+		GirComment doc;
 
-		if (current_token == Vala.MarkupTokenType.START_ELEMENT && reader.name == "doc") {
-			doc = new GirDocumentationBuilder (parse_doc ());
+		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "doc") {
+			doc = create_gir_comment (parse_doc ());
 		} else {
-			doc = new GirDocumentationBuilder.empty (get_current_src ());
+			doc = create_empty_gir_comment ();
 		}
 
-		if (current_token == Vala.MarkupTokenType.START_ELEMENT && reader.name == "return-value") {
+		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "return-value") {
 			parse_return_value (doc);
 		}
 
-		if (current_token == Vala.MarkupTokenType.START_ELEMENT && reader.name == "parameters") {
+		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "parameters") {
 			start_element ("parameters");
 			next ();
-			while (current_token == Vala.MarkupTokenType.START_ELEMENT) {
+			while (current_token == MarkupTokenType.START_ELEMENT) {
 				parse_parameter (doc);
 			}
 			end_element ("parameters");
@@ -595,11 +618,11 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		string cname = reader.get_attribute ("c:type");
 		next ();
 
-		if (current_token == Vala.MarkupTokenType.START_ELEMENT && reader.name == "doc") {
-			process_documentation (cname, new GirDocumentationBuilder (parse_doc ()));
+		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "doc") {
+			process_documentation (cname, create_gir_comment (parse_doc ()));
 		}
 
-		while (current_token == Vala.MarkupTokenType.START_ELEMENT) {
+		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (reader.get_attribute ("introspectable") == "0") {
 				skip_element ();
 				continue;
@@ -614,15 +637,13 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 			} else if (reader.name == "method") {
 				parse_method ("method");
 			} else {
-				// error
-				Vala.Report.error (get_current_src (), "unknown child element `%s' in `class'".printf (reader.name));
+				error ("unknown child element `%s' in `class'", reader.name);
 				break;
 			}
 		}
 
-		if (current_token != Vala.MarkupTokenType.END_ELEMENT) {
-			// error
-			Vala.Report.error (get_current_src (), "expected end element");
+		if (current_token != MarkupTokenType.END_ELEMENT) {
+			error ("expected end element");
 		}
 		next ();
 	}
@@ -633,11 +654,11 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		type_cname_stack.add (cname);
 		next ();
 
-		if (current_token == Vala.MarkupTokenType.START_ELEMENT && reader.name == "doc") {
-			process_documentation (cname, new GirDocumentationBuilder (parse_doc ()));
+		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "doc") {
+			process_documentation (cname, create_gir_comment (parse_doc ()));
 		}
 
-		while (current_token == Vala.MarkupTokenType.START_ELEMENT) {
+		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (reader.get_attribute ("introspectable") == "0") {
 				skip_element ();
 				continue;
@@ -663,8 +684,8 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		string name = reader.get_attribute ("name");
 		next ();
 
-		if (current_token == Vala.MarkupTokenType.START_ELEMENT && reader.name == "doc") {
-			process_documentation (name, new GirDocumentationBuilder (parse_doc ()));
+		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "doc") {
+			process_documentation (name, create_gir_comment (parse_doc ()));
 		}
 
 		parse_type ();
@@ -672,7 +693,7 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		end_element ("constant");
 	}
 
-	void process_documentation (string? cname, GirDocumentationBuilder? doc) {
+	void process_documentation (string? cname, GirComment? doc) {
 		if (cname == null || doc == null) {
 			return;
 		}

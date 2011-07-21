@@ -1,47 +1,39 @@
-/* sourcefile.vala
+/* valasourcelocation.vala
  *
- * Copyright (C) 2011 Florian Brosch
+ * Copyright (C) 2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- *
+
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *
+
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
  *
  * Author:
- * 	Brosch Florian <flo.brosch@gmail.com>
+ * 	Jürg Billeter <j@bitron.ch>
  */
+
+using GLib;
 
 /**
- * Represents a source file
+ * Represents a position in a source file.
  */
-public class Valadoc.Api.SourceFile : Object {
-	public string relative_path {
-		private set;
-		get;
-	}
+public struct Valadoc.MarkupSourceLocation {
+	public char* pos;
+	public int line;
+	public int column;
 
-	public string? relative_c_path {
-		private set;
-		get;
-	}
-
-	public string get_name () {
-		return Path.get_basename (relative_path);
-	}
-
-	public SourceFile (string relative_path, string? relative_c_path) {
-		this.relative_c_path = relative_c_path;
-		this.relative_path = relative_path;
+	public MarkupSourceLocation (char* _pos, int _line, int _column) {
+		pos = _pos;
+		line = _line;
+		column = _column;
 	}
 }
-
 

@@ -239,7 +239,7 @@ public class ValaDoc : Object {
 		}
 
 		DocumentationImporter[] importers = {
-			new GirDocumentationImporter (doctree, docparser, modules, settings),
+			new GirDocumentationImporter (doctree, docparser, modules, settings, reporter),
 			new ValadocDocumentationImporter (doctree, docparser, modules, settings, reporter)
 		};
 

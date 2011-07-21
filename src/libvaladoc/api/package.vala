@@ -72,7 +72,7 @@ public class Valadoc.Api.Package : Node {
 		return this._dependencies.read_only_view;
 	}
 
-	public Package (Vala.SourceFile vfile, string name, bool is_package, void* data) {
+	public Package (string name, bool is_package, void* data) {
 		base (null, null, name, data);
 
 		this.is_package = is_package;
