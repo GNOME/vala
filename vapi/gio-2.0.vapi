@@ -41,8 +41,8 @@ namespace GLib {
 		public static string get_mime_type (string type);
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static string guess (string? filename, uchar[]? data, out bool result_uncertain);
-		[CCode (cheader_filename = "gio/gio.h")]
-		public static string guess_for_tree (GLib.File root);
+		[CCode (cheader_filename = "gio/gio.h", array_length = false, array_null_terminated = true)]
+		public static string[] guess_for_tree (GLib.File root);
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static bool is_a (string type, string supertype);
 		[CCode (cheader_filename = "gio/gio.h")]
