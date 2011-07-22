@@ -15,7 +15,7 @@ namespace Gdk {
 		[CCode (cheader_filename = "gdk/gdk.h")]
 		public static bool owner_set_for_display (Gdk.Display display, Gdk.Window owner, Gdk.Atom selection, uint32 time_, bool send_event);
 		[CCode (cheader_filename = "gdk/gdk.h")]
-		public static int property_get (Gdk.Window requestor, uchar[] data, Gdk.Atom prop_type, int prop_format);
+		public static int property_get (Gdk.Window requestor, uchar[] data, out Gdk.Atom prop_type, int prop_format);
 		[CCode (cheader_filename = "gdk/gdk.h")]
 		public static void send_notify (Gdk.Window requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint32 time_);
 		[CCode (cheader_filename = "gdk/gdk.h")]
@@ -454,6 +454,8 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	[SimpleType]
 	public struct Atom {
+		[CCode (cname = "GDK_NONE")]
+		public static Gdk.Atom NONE;
 		public static Gdk.Atom intern (string atom_name, bool only_if_exists);
 		public static Gdk.Atom intern_static_string (string atom_name);
 		public string name ();
