@@ -1,12 +1,15 @@
 NULL =
 
 
+VERSIONED_VAPI_DIR=`pkg-config libvala-0.12 --variable vapidir`
+
+
 AM_CFLAGS =  -g \
 	-DPACKAGE_ICONDIR=\"$(datadir)/valadoc/icons/\" \
 	-I ../../libvaladoc/ \
 	$(GLIB_CFLAGS) \
 	$(LIBGEE_CFLAGS) \
-	$(LIBVALA_0_13_CFLAGS) \
+	$(LIBVALA_0_12_CFLAGS) \
 	$(NULL)
 
 
@@ -14,7 +17,7 @@ AM_CFLAGS =  -g \
 BUILT_SOURCES = libdriver.vala.stamp
 
 
-driverdir = $(libdir)/valadoc/drivers/0.13.x
+driverdir = $(libdir)/valadoc/drivers/0.12.x
 
 
 libdriver_la_LDFLAGS = -module -avoid-version -no-undefined
@@ -41,14 +44,14 @@ libdriver_la_SOURCES =      \
 
 
 libdriver.vala.stamp: $(libdriver_la_VALASOURCES)
-	$(VALAC) -C --vapidir $(top_srcdir)/src/vapi --vapidir $(top_srcdir)/src/libvaladoc --pkg libvala-0.14 --pkg gee-1.0 --pkg valadoc-1.0 --basedir . $^
+	$(VALAC) -C --vapidir $(top_srcdir)/src/vapi --vapidir $(top_srcdir)/src/libvaladoc --pkg libvala-0.12 --pkg gee-1.0 --pkg valadoc-1.0 --vapidir $(VERSIONED_VAPI_DIR) --basedir . $^
 	touch $@
 
 
 libdriver_la_LIBADD = \
 	../../libvaladoc/libvaladoc.la \
 	$(GLIB_LIBS) \
-	$(LIBVALA_0_13_LIBS) \
+	$(LIBVALA_0_12_LIBS) \
 	$(LIBGEE_LIBS) \
 	$(NULL)
 

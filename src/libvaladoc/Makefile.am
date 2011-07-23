@@ -1,11 +1,9 @@
 NULL =
 
-globalvapidir = `pkg-config $(VALA_PACKAGE) --variable vapidir`
 
 
 AM_CFLAGS = \
 	-DPACKAGE_ICONDIR=\"$(datadir)/valadoc/icons/\" \
-	-DPACKAGE_VAPIDIR=\"$(globalvapidir)\" \
 	$(LIBGVC_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(LIBGEE_CFLAGS) \

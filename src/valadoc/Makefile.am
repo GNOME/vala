@@ -7,7 +7,6 @@ AM_CFLAGS =                             \
 	-I ../libvaladoc/                   \
 	$(GLIB_CFLAGS)                      \
 	$(LIBGEE_CFLAGS)                    \
-	$(LIBVALA_CFLAGS)                   \
 	$(GMODULE_CFLAGS)                   \
 	$(LIBGVC_CFLAGS)                    \
 	$(NULL)
@@ -32,7 +31,6 @@ valadoc_SOURCES = \
 valadoc_LDADD =                 \
 	../libvaladoc/libvaladoc.la \
 	$(GLIB_LIBS)                \
-	$(LIBVALA_LIBS)             \
 	$(GMODULE_LIBS)             \
 	$(LIBGVC_LIBS)              \
 	$(LIBGEE_LIBS)              \
@@ -40,7 +38,7 @@ valadoc_LDADD =                 \
 
 
 valadoc.vala.stamp: $(valadoc_VALASOURCES)
-	$(VALAC) -C --pkg config --pkg $(VALA_PACKAGE) --pkg gee-1.0 --pkg gmodule-2.0 --vapidir $(top_srcdir)/src/vapi/ --vapidir ../libvaladoc/ --pkg valadoc-1.0 $^
+	$(VALAC) -C --pkg config --pkg gee-1.0 --pkg gmodule-2.0 --vapidir $(top_srcdir)/src/vapi/ --vapidir ../libvaladoc/ --pkg valadoc-1.0 $^
 	touch $@
 
 

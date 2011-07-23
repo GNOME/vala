@@ -30,7 +30,8 @@ LIBGDKPIXBUF_REQUIRED=2.0
 
 
 
-PKG_CHECK_MODULES(LIBGVC, libgvc >= $LIBGVC_REQUIRED )
+
+PKG_CHECK_MODULES(LIBGVC, libgvc >= $LIBGVC_REQUIRED)
 AC_SUBST(LIBGVC_CFLAGS)
 AC_SUBST(LIBGVC_LIBS)
 
@@ -42,11 +43,6 @@ PKG_CHECK_MODULES(GMODULE, gmodule-2.0 >= $GLIB_REQUIRED)
 AC_SUBST(GMODULE_CFLAGS)
 AC_SUBST(GMODULE_LIBS)
 
-PKG_CHECK_MODULES(LIBVALA, $VALA_PACKAGE >= $LIBVALA_REQUIRED)
-AC_SUBST(LIBVALA_CFLAGS)
-AC_SUBST(LIBVALA_LIBS)
-AC_SUBST(VALA_PACKAGE)
-
 PKG_CHECK_MODULES(LIBGEE, gee-1.0 >= $LIBGEE_REQUIRED)
 AC_SUBST(LIBGEE_CFLAGS)
 AC_SUBST(LIBGEE_LIBS)
@@ -54,6 +50,37 @@ AC_SUBST(LIBGEE_LIBS)
 PKG_CHECK_MODULES(LIBGDKPIXBUF, gdk-pixbuf-2.0 >= $LIBGDKPIXBUF_REQUIRED)
 AC_SUBST(LIBGDKPIXBUF_CFLAGS)
 AC_SUBST(LIBGDKPIXBUF_LIBS)
+
+
+
+
+##
+## Drivers:
+##
+
+PKG_CHECK_MODULES(LIBVALA_0_13, libvala-0.14 >= 0.13, have_libvala_0_13="yes", have_libvala_0_13="no")
+AM_CONDITIONAL(HAVE_LIBVALA_0_13, test "$have_libvala_0_13" = "yes")
+AC_SUBST(LIBVALA_0_13_CFLAGS)
+AC_SUBST(LIBVALA_0_13_LIBS)
+
+
+PKG_CHECK_MODULES(LIBVALA_0_12, libvala-0.12 >= 0.12, have_libvala_0_12="yes", have_libvala_0_12="no")
+AM_CONDITIONAL(HAVE_LIBVALA_0_12, test "$have_libvala_0_12" = "yes")
+AC_SUBST(LIBVALA_0_12_CFLAGS)
+AC_SUBST(LIBVALA_0_12_LIBS)
+
+
+
+
+#if test "$have_libvala_0_12" = "yes" ; then
+#	AC_SUBST(LIBVALA_0_12_CFLAGS)
+#	AC_SUBST(LIBVALA_0_12_LIBS)
+#	echo "AAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+#fi
+
+
+
+
 
 
 
@@ -65,12 +92,14 @@ AC_CONFIG_FILES([Makefile
                  doc/Makefile
                  src/libvaladoc/Makefile
                  src/driver/Makefile
-                 src/driver/0.13.x/Makefile
+				 src/driver/0.12.x/Makefile
+				 src/driver/0.13.x/Makefile
                  src/doclets/Makefile
                  src/doclets/htm/Makefile
                  src/doclets/devhelp/Makefile
                  src/doclets/gtkdoc/Makefile
                  src/valadoc/Makefile
-                 tests/Makefile])
+                 tests/Makefile
+				 ])
 
 AC_OUTPUT
