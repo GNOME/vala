@@ -1206,6 +1206,9 @@ public class Vala.GirParser : CodeVisitor {
 		var selector = reader.name;
 		var child_name = reader.get_attribute ("name");
 		if (child_name == null) {
+			child_name = reader.get_attribute ("glib:name");
+		}
+		if (child_name == null) {
 			return Metadata.empty;
 		}
 		selector = selector.replace ("-", "_");
