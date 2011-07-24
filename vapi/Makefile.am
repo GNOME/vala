@@ -234,11 +234,14 @@ dist_noinst_DATA = \
 	config.vapi \
 	$(NULL)
 
-.PHONY: clutter-1.0 json-glib-1.0 libsoup-2.4 libpeas-1.0 vte-2.90
-
+BINDINGS = clutter-1.0 json-glib-1.0 libsoup-2.4 libpeas-1.0 vte-2.90
 VAPIGEN = $(top_builddir)/vapigen/vapigen
 METADATADIR = $(srcdir)/metadata
 GIRDIR = $$($(PKG_CONFIG) gobject-introspection-1.0 --variable=girdir)
+
+.PHONY: all-bindings $(BINDINGS)
+
+all-bindings: $(BINDINGS)
 
 clutter-1.0:
 	$(VAPIGEN) --library $(srcdir)/clutter-1.0 --metadatadir $(METADATADIR) $(METADATADIR)/Clutter-1.0-custom.vala --pkg atk --pkg cairo --pkg pango --pkg cogl-1.0 --pkg json-glib-1.0 $(GIRDIR)/Clutter-1.0.gir
