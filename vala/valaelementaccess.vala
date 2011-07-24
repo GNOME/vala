@@ -142,6 +142,12 @@ public class Vala.ElementAccess : Expression {
 			if (!lvalue) {
 				value_type.value_owned = false;
 			}
+
+			if (array_type.rank < get_indices ().size) {
+				Report.error (source_reference, "%d extra indices for element access".printf (get_indices ().size - array_type.rank));
+			} else if (array_type.rank > get_indices ().size) {
+				Report.error (source_reference, "%d missing indices for element access".printf (array_type.rank - get_indices ().size));
+			}
 		} else if (pointer_type != null && !pointer_type.base_type.is_reference_type_or_type_parameter ()) {
 			value_type = pointer_type.base_type.copy ();
 		} else if (context.profile == Profile.DOVA && container_type == context.analyzer.tuple_type.data_type) {
