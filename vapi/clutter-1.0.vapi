@@ -78,12 +78,12 @@ namespace Clutter {
 		public static void set_units (GLib.Value value, Clutter.Units units);
 	}
 	[CCode (type_id = "clutter_action_get_type ()", cheader_filename = "clutter/clutter.h")]
-	public class Action : Clutter.ActorMeta {
+	public abstract class Action : Clutter.ActorMeta {
 		[CCode (has_construct_function = false)]
 		protected Action ();
 	}
 	[CCode (type_id = "clutter_actor_get_type ()", cheader_filename = "clutter/clutter.h")]
-	public class Actor : GLib.InitiallyUnowned, Atk.Implementor, Clutter.Animatable, Clutter.Scriptable {
+	public abstract class Actor : GLib.InitiallyUnowned, Atk.Implementor, Clutter.Animatable, Clutter.Scriptable {
 		public uint32 flags;
 		[CCode (has_construct_function = false)]
 		protected Actor ();
@@ -348,7 +348,7 @@ namespace Clutter {
 		public virtual signal void unrealize ();
 	}
 	[CCode (type_id = "clutter_actor_meta_get_type ()", cheader_filename = "clutter/clutter.h")]
-	public class ActorMeta : GLib.InitiallyUnowned {
+	public abstract class ActorMeta : GLib.InitiallyUnowned {
 		[CCode (has_construct_function = false)]
 		protected ActorMeta ();
 		public unowned Clutter.Actor get_actor ();
@@ -508,7 +508,7 @@ namespace Clutter {
 		public signal void settings_changed ();
 	}
 	[CCode (type_id = "clutter_behaviour_get_type ()", cheader_filename = "clutter/clutter.h")]
-	public class Behaviour : GLib.Object, Clutter.Scriptable {
+	public abstract class Behaviour : GLib.Object, Clutter.Scriptable {
 		[CCode (has_construct_function = false)]
 		protected Behaviour ();
 		public void actors_foreach (Clutter.BehaviourForeachFunc func);
@@ -757,7 +757,7 @@ namespace Clutter {
 		public virtual signal Cairo.Surface create_surface (uint width, uint height);
 	}
 	[CCode (type_id = "clutter_child_meta_get_type ()", cheader_filename = "clutter/clutter.h")]
-	public class ChildMeta : GLib.Object {
+	public abstract class ChildMeta : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected ChildMeta ();
 		public unowned Clutter.Actor get_actor ();
@@ -795,14 +795,14 @@ namespace Clutter {
 		public Clutter.Color tint { get; set; }
 	}
 	[CCode (type_id = "clutter_constraint_get_type ()", cheader_filename = "clutter/clutter.h")]
-	public class Constraint : Clutter.ActorMeta {
+	public abstract class Constraint : Clutter.ActorMeta {
 		[CCode (has_construct_function = false)]
 		protected Constraint ();
 		[NoWrapper]
 		public virtual void update_allocation (Clutter.Actor actor, Clutter.ActorBox allocation);
 	}
 	[CCode (type_id = "clutter_deform_effect_get_type ()", cheader_filename = "clutter/clutter.h")]
-	public class DeformEffect : Clutter.OffscreenEffect {
+	public abstract class DeformEffect : Clutter.OffscreenEffect {
 		[CCode (has_construct_function = false)]
 		protected DeformEffect ();
 		[NoWrapper]
@@ -826,7 +826,7 @@ namespace Clutter {
 		public double factor { get; set; }
 	}
 	[CCode (type_id = "clutter_device_manager_get_type ()", cheader_filename = "clutter/clutter.h")]
-	public class DeviceManager : GLib.Object {
+	public abstract class DeviceManager : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected DeviceManager ();
 		[NoWrapper]
@@ -868,7 +868,7 @@ namespace Clutter {
 		public virtual signal void drag_motion (Clutter.Actor actor, float delta_x, float delta_y);
 	}
 	[CCode (type_id = "clutter_effect_get_type ()", cheader_filename = "clutter/clutter.h")]
-	public class Effect : Clutter.ActorMeta {
+	public abstract class Effect : Clutter.ActorMeta {
 		[CCode (has_construct_function = false)]
 		protected Effect ();
 		[NoWrapper]
@@ -1022,7 +1022,7 @@ namespace Clutter {
 		public GLib.Type value_type { get; construct; }
 	}
 	[CCode (type_id = "clutter_layout_manager_get_type ()", cheader_filename = "clutter/clutter.h")]
-	public class LayoutManager : GLib.InitiallyUnowned {
+	public abstract class LayoutManager : GLib.InitiallyUnowned {
 		[CCode (has_construct_function = false)]
 		protected LayoutManager ();
 		public virtual void allocate (Clutter.Container container, Clutter.ActorBox allocation, Clutter.AllocationFlags flags);
@@ -1048,7 +1048,7 @@ namespace Clutter {
 		public virtual signal void layout_changed ();
 	}
 	[CCode (type_id = "clutter_layout_meta_get_type ()", cheader_filename = "clutter/clutter.h")]
-	public class LayoutMeta : Clutter.ChildMeta {
+	public abstract class LayoutMeta : Clutter.ChildMeta {
 		[CCode (has_construct_function = false)]
 		protected LayoutMeta ();
 		public unowned Clutter.LayoutManager get_manager ();
@@ -1062,7 +1062,7 @@ namespace Clutter {
 		public ListModel.newv ([CCode (array_length_pos = 0.9)] GLib.Type[] types, [CCode (array_length_pos = 0.9)] string[] names);
 	}
 	[CCode (type_id = "clutter_model_get_type ()", cheader_filename = "clutter/clutter.h")]
-	public class Model : GLib.Object, Clutter.Scriptable {
+	public abstract class Model : GLib.Object, Clutter.Scriptable {
 		[CCode (has_construct_function = false)]
 		protected Model ();
 		public void append (...);
@@ -1103,7 +1103,7 @@ namespace Clutter {
 		public virtual signal void sort_changed ();
 	}
 	[CCode (type_id = "clutter_model_iter_get_type ()", cheader_filename = "clutter/clutter.h")]
-	public class ModelIter : GLib.Object {
+	public abstract class ModelIter : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected ModelIter ();
 		public virtual Clutter.ModelIter copy ();
@@ -1123,7 +1123,7 @@ namespace Clutter {
 		public uint row { get; set; }
 	}
 	[CCode (type_id = "clutter_offscreen_effect_get_type ()", cheader_filename = "clutter/clutter.h")]
-	public class OffscreenEffect : Clutter.Effect {
+	public abstract class OffscreenEffect : Clutter.Effect {
 		[CCode (has_construct_function = false)]
 		protected OffscreenEffect ();
 		public virtual Cogl.Handle create_texture (float width, float height);
@@ -1160,7 +1160,7 @@ namespace Clutter {
 		public void set_width (float width);
 		public void union (Clutter.PaintVolume another_pv);
 	}
-	[CCode (ref_function = "clutter_param_spec_unit_ref", unref_function = "clutter_param_spec_unit_unref", type_id = "clutter_param_units_get_type ()", cheader_filename = "clutter/clutter.h")]
+	[CCode (ref_function = "clutter_param_units_ref", unref_function = "clutter_param_units_unref", cprefix = "clutter_param_units_", type_id = "clutter_param_units_get_type ()", cheader_filename = "clutter/clutter.h")]
 	public class ParamSpecUnit {
 		[CCode (has_construct_function = false)]
 		protected ParamSpecUnit ();
@@ -1323,7 +1323,7 @@ namespace Clutter {
 		public string vertex_source { get; set; }
 	}
 	[CCode (type_id = "clutter_shader_effect_get_type ()", cheader_filename = "clutter/clutter.h")]
-	public class ShaderEffect : Clutter.OffscreenEffect {
+	public abstract class ShaderEffect : Clutter.OffscreenEffect {
 		[CCode (has_construct_function = false)]
 		protected ShaderEffect ();
 		public unowned Cogl.Handle get_program ();

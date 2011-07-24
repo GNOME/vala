@@ -101,7 +101,7 @@ namespace Soup {
 		public void* sockaddr { get; construct; }
 	}
 	[CCode (type_id = "soup_auth_get_type ()", cheader_filename = "libsoup/soup.h")]
-	public class Auth : GLib.Object {
+	public abstract class Auth : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Auth (GLib.Type type, Soup.Message msg, string auth_header);
 		public virtual void authenticate (string username, string password);
@@ -122,7 +122,7 @@ namespace Soup {
 		public signal void save_password (string object, string p0);
 	}
 	[CCode (type_id = "soup_auth_domain_get_type ()", cheader_filename = "libsoup/soup.h")]
-	public class AuthDomain : GLib.Object {
+	public abstract class AuthDomain : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected AuthDomain ();
 		[NoWrapper]
@@ -496,7 +496,7 @@ namespace Soup {
 		public virtual signal void request_started (Soup.Message msg, Soup.ClientContext client);
 	}
 	[CCode (type_id = "soup_session_get_type ()", cheader_filename = "libsoup/soup.h")]
-	public class Session : GLib.Object {
+	public abstract class Session : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Session ();
 		public void abort ();
