@@ -23,6 +23,7 @@
  *	Ondřej Jirman <megous@megous.com>
  */
 
+[CCode (gir_namespace = "libxml2", gir_version = "2.0")]
 namespace Xml {
 	/* nanoftp - minimal FTP implementation */
 
