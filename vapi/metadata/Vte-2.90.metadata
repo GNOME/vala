@@ -3,7 +3,7 @@ Terminal.pty skip
 
 // Report upstream
 Vte cheader_filename="vte/vte.h"
-Pty.new_foreign.fd unowned
+Pty.new_foreign.fd owned=false
 Terminal.get_cursor_position.* out
 Terminal.match_set_cursor.cursor nullable
 TerminalWriteFlags.terminal_write_default name="DEFAULT"
