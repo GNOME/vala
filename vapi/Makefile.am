@@ -234,7 +234,7 @@ dist_noinst_DATA = \
 	config.vapi \
 	$(NULL)
 
-.PHONY: clutter-1.0 json-glib-1.0
+.PHONY: clutter-1.0 json-glib-1.0 libsoup-2.4 libpeas-1.0 vte-2.90
 
 VAPIGEN = $(top_builddir)/vapigen/vapigen
 METADATADIR = $(srcdir)/metadata
@@ -251,3 +251,6 @@ libsoup-2.4:
 
 libpeas-1.0:
 	$(VAPIGEN) --library $(srcdir)/libpeas-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/Peas-1.0.gir
+
+vte-2.90:
+	$(VAPIGEN) --library $(srcdir)/vte-2.90 --metadatadir $(METADATADIR) --pkg atk --pkg gdk-3.0 --pkg gtk+-3.0 --pkg gio-2.0 --pkg pango $(GIRDIR)/Vte-2.90.gir $(METADATADIR)/Vte-2.90-custom.vala
