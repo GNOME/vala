@@ -1,0 +1,12 @@
+Color struct
+*.*_async skip=false
+*.*_finish skip=false
+ContactsContact.get_photo type="uint8[]" array_length_idx=1
+ContactsContact.get_photo_async type="uint8[]" array_length_idx=1
+DOCUMENTS_PRESENTATION_* name="DOCUMENTS_PRESENTATION_(.+)" parent="GData.DocumentsPresentationFormat"
+DOCUMENTS_TEXT_* name="DOCUMENTS_TEXT_(.+)" parent="GData.DocumentsTextFormat"
+DOCUMENTS_SPREADSHEET_* name="DOCUMENTS_SPREADSHEET_(.+)" parent="GData.DocumentsSpreadsheetFormat"
+CONTACTS_GENDER_* name="CONTACTS_GENDER_(.+)" parent="GData.ContactsGender"
+CONTACTS_GROUP_* name="CONTACTS_GROUP_(.+)" parent="GData.ContactsGroupType"
+CONTACTS_PRIORITY_* name="CONTACTS_PRIORITY_(.+)" parent="GData.ContactsPriority"
+CONTACTS_SENSITIVITY_* name="CONTACTS_SENSITIVITY_(.+)" parent="GData.ContactsSensitivity"

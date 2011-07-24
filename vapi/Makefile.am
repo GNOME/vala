@@ -410,7 +410,7 @@ libgda-report-4.0:
 	$(GENVAPI) --library $(srcdir)/libgda-report-4.0 $(PACKAGESDIR)/libgda-report-4.0/libgda-report-4.0.gi
 
 libgdata:
-	$(GENVAPI) --library $(srcdir)/libgdata $(PACKAGESDIR)/libgdata/libgdata-custom.vala $(PACKAGESDIR)/libgdata/libgdata.gi
+	$(GENVAPI) --library $(srcdir)/libgdata --metadatadir $(METADATADIR) $(GIRDIR)/GData-0.0.gir
 
 libglade-2.0:
 	$(GENVAPI) --library $(srcdir)/libglade-2.0 $(PACKAGESDIR)/libglade-2.0/libglade-2.0.gi
