@@ -573,7 +573,11 @@ public class Vala.GirParser : CodeVisitor {
 				if (metadata.has_argument (ArgumentType.CPREFIX)) {
 					return metadata.get_string (ArgumentType.CPREFIX);
 				}
-				return "%s%s_".printf (parent.get_lower_case_cprefix (), Symbol.camel_case_to_lower_case (name));
+				if (girdata != null && girdata["c:symbol-prefix"] != null) {
+					return "%s%s_".printf (parent.get_lower_case_cprefix (), girdata["c:symbol-prefix"]);
+				} else {
+					return "%s%s_".printf (parent.get_lower_case_cprefix (), Symbol.camel_case_to_lower_case (name));
+				}
 			} else {
 				return symbol.get_lower_case_cprefix ();
 			}
@@ -859,6 +863,11 @@ public class Vala.GirParser : CodeVisitor {
 					foreach (string filename in cheader_filename.split (",")) {
 						symbol.add_cheader_filename (filename);
 					}
+				}
+
+				// lower_case_cprefix
+				if (symbol is Class) {
+					((Class) symbol).set_lower_case_cprefix (get_lower_case_cprefix ());
 				}
 			}
 
@@ -2206,9 +2215,6 @@ public class Vala.GirParser : CodeVisitor {
 			var cname = reader.get_attribute ("c:type");
 			if (cname != null) {
 				cl.set_cname (cname);
-			}
-			if (metadata.has_argument (ArgumentType.CPREFIX)) {
-				cl.set_lower_case_cprefix (metadata.get_string (ArgumentType.CPREFIX));
 			}
 			cl.is_abstract = reader.get_attribute ("abstract") == "1";
 
