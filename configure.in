@@ -82,6 +82,13 @@ AC_SUBST(LIBVALA_0_11_0_CFLAGS)
 AC_SUBST(LIBVALA_0_11_0_LIBS)
 
 
+PKG_CHECK_MODULES(LIBVALA_0_10_X, vala-0.10 >= 0.10, have_libvala_0_10_x="yes", have_libvala_0_10_x="no")
+AM_CONDITIONAL(HAVE_LIBVALA_0_10_X, test "$have_libvala_0_10_x" = "yes")
+AC_SUBST(LIBVALA_0_10_X_CFLAGS)
+AC_SUBST(LIBVALA_0_10_X_LIBS)
+
+
+
 
 AC_CONFIG_FILES([Makefile
                  src/libvaladoc/valadoc-1.0.pc
@@ -91,6 +98,7 @@ AC_CONFIG_FILES([Makefile
                  doc/Makefile
                  src/libvaladoc/Makefile
                  src/driver/Makefile
+				 src/driver/0.10.x/Makefile
 				 src/driver/0.11.0/Makefile
 				 src/driver/0.11.x/Makefile
 				 src/driver/0.12.x/Makefile
