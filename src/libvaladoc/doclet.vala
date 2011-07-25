@@ -28,7 +28,7 @@ using Gee;
  * @see ModuleLoader
  */
 [CCode (has_target = false)]
-public delegate Type Valadoc.DocletRegisterFunction (GLib.TypeModule module);
+public delegate Type Valadoc.DocletRegisterFunction (ModuleLoader module_loader);
 
 
 

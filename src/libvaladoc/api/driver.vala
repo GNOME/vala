@@ -30,7 +30,7 @@ using Gee;
  * @see ModuleLoader
  */
 [CCode (has_target = false)]
-public delegate Type Valadoc.DriverRegisterFunction (GLib.TypeModule module);
+public delegate Type Valadoc.DriverRegisterFunction (ModuleLoader module_loader);
 
 
 
