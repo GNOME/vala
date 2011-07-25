@@ -26,4 +26,11 @@ namespace Gda {
 		Gda.SqlParser    parser;
 		Gda.SqlStatement parsed_statement;
 	}
+
+	public errordomain SqlError {
+		STRUCTURE_CONTENTS_ERROR,
+		MALFORMED_IDENTIFIER_ERROR,
+		MISSING_IDENTIFIER_ERROR,
+		VALIDATION_ERROR
+	}
 }

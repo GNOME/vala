@@ -44,6 +44,16 @@
 				<parameter name="error" type="GError**"/>
 			</parameters>
 		</function>
+		<function name="compute_unique_table_row_condition_with_cnc" symbol="gda_compute_unique_table_row_condition_with_cnc">
+			<return-type type="GdaSqlExpr*"/>
+			<parameters>
+				<parameter name="cnc" type="GdaConnection*"/>
+				<parameter name="stsel" type="GdaSqlStatementSelect*"/>
+				<parameter name="mtable" type="GdaMetaTable*"/>
+				<parameter name="require_pk" type="gboolean"/>
+				<parameter name="error" type="GError**"/>
+			</parameters>
+		</function>
 		<function name="default_escape_string" symbol="gda_default_escape_string">
 			<return-type type="gchar*"/>
 			<parameters>
@@ -161,6 +171,9 @@
 				<parameter name="error" type="GError**"/>
 			</parameters>
 		</function>
+		<function name="locale_changed" symbol="gda_locale_changed">
+			<return-type type="void"/>
+		</function>
 		<function name="log_disable" symbol="gda_log_disable">
 			<return-type type="void"/>
 		</function>
@@ -201,6 +214,15 @@
 			<parameters>
 				<parameter name="timestamp" type="GdaTimestamp*"/>
 				<parameter name="value" type="gchar*"/>
+			</parameters>
+		</function>
+		<function name="parse_sql_string" symbol="gda_parse_sql_string">
+			<return-type type="GdaStatement*"/>
+			<parameters>
+				<parameter name="cnc" type="GdaConnection*"/>
+				<parameter name="sql" type="gchar*"/>
+				<parameter name="params" type="GdaSet**"/>
+				<parameter name="error" type="GError**"/>
 			</parameters>
 		</function>
 		<function name="perform_create_database" symbol="gda_perform_create_database">
@@ -752,6 +774,50 @@
 				<parameter name="word" type="gchar*"/>
 			</parameters>
 		</callback>
+		<callback name="GdaThreadWrapperCallback">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="wrapper" type="GdaThreadWrapper*"/>
+				<parameter name="instance" type="gpointer"/>
+				<parameter name="signame" type="gchar*"/>
+				<parameter name="n_param_values" type="gint"/>
+				<parameter name="param_values" type="GValue*"/>
+				<parameter name="gda_reserved" type="gpointer"/>
+				<parameter name="data" type="gpointer"/>
+			</parameters>
+		</callback>
+		<callback name="GdaThreadWrapperFunc">
+			<return-type type="gpointer"/>
+			<parameters>
+				<parameter name="arg" type="gpointer"/>
+				<parameter name="error" type="GError**"/>
+			</parameters>
+		</callback>
+		<callback name="GdaThreadWrapperVoidFunc">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="arg" type="gpointer"/>
+				<parameter name="error" type="GError**"/>
+			</parameters>
+		</callback>
+		<callback name="GdaTreeManagerNodeFunc">
+			<return-type type="GdaTreeNode*"/>
+			<parameters>
+				<parameter name="manager" type="GdaTreeManager*"/>
+				<parameter name="parent" type="GdaTreeNode*"/>
+				<parameter name="name" type="gchar*"/>
+			</parameters>
+		</callback>
+		<callback name="GdaTreeManagerNodesFunc">
+			<return-type type="GSList*"/>
+			<parameters>
+				<parameter name="manager" type="GdaTreeManager*"/>
+				<parameter name="node" type="GdaTreeNode*"/>
+				<parameter name="children_nodes" type="GSList*"/>
+				<parameter name="out_error" type="gboolean*"/>
+				<parameter name="error" type="GError**"/>
+			</parameters>
+		</callback>
 		<callback name="GdaVConnectionHubFunc">
 			<return-type type="void"/>
 			<parameters>
@@ -767,6 +833,16 @@
 				<parameter name="p2" type="GError**"/>
 			</parameters>
 		</callback>
+		<callback name="GdaVconnectionDataModelCreateFModelFunc">
+			<return-type type="GdaDataModel*"/>
+			<parameters>
+				<parameter name="p1" type="GdaVconnectionDataModelSpec*"/>
+				<parameter name="p2" type="int"/>
+				<parameter name="p3" type="char*"/>
+				<parameter name="p4" type="int"/>
+				<parameter name="p5" type="GValue**"/>
+			</parameters>
+		</callback>
 		<callback name="GdaVconnectionDataModelCreateModelFunc">
 			<return-type type="GdaDataModel*"/>
 			<parameters>
@@ -779,6 +855,13 @@
 				<parameter name="p1" type="GdaDataModel*"/>
 				<parameter name="p2" type="gchar*"/>
 				<parameter name="p3" type="gpointer"/>
+			</parameters>
+		</callback>
+		<callback name="GdaVconnectionDataModelParseFilterFunc">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="p1" type="GdaVconnectionDataModelSpec*"/>
+				<parameter name="p2" type="GdaVconnectionDataModelFilter*"/>
 			</parameters>
 		</callback>
 		<struct name="GdaAttributesManager">
@@ -961,10 +1044,10 @@
 			<field name="fk_names_array" type="gchar**"/>
 			<field name="ref_pk_cols_array" type="gint*"/>
 			<field name="ref_pk_names_array" type="gchar**"/>
-			<field name="_gda_reserved1" type="gpointer"/>
-			<field name="_gda_reserved2" type="gpointer"/>
-			<field name="_gda_reserved3" type="gpointer"/>
-			<field name="_gda_reserved4" type="gpointer"/>
+			<field name="on_update_policy" type="gpointer"/>
+			<field name="on_delete_policy" type="gpointer"/>
+			<field name="declared" type="gpointer"/>
+			<field name="fk_name" type="gchar*"/>
 		</struct>
 		<struct name="GdaMetaView">
 			<field name="table" type="GdaMetaTable"/>
@@ -1140,6 +1223,8 @@
 			<field name="type" type="GdaSqlAnyPartType"/>
 			<field name="parent" type="GdaSqlAnyPart*"/>
 		</struct>
+		<struct name="GdaSqlBuilderId">
+		</struct>
 		<struct name="GdaSqlCase">
 			<method name="copy" symbol="gda_sql_case_copy">
 				<return-type type="GdaSqlCase*"/>
@@ -1173,48 +1258,7 @@
 			<field name="_gda_reserved1" type="gpointer"/>
 			<field name="_gda_reserved2" type="gpointer"/>
 		</struct>
-		<struct name="GdaSqlExpr">
-			<method name="copy" symbol="gda_sql_expr_copy">
-				<return-type type="GdaSqlExpr*"/>
-				<parameters>
-					<parameter name="expr" type="GdaSqlExpr*"/>
-				</parameters>
-			</method>
-			<method name="free" symbol="gda_sql_expr_free">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="expr" type="GdaSqlExpr*"/>
-				</parameters>
-			</method>
-			<method name="new" symbol="gda_sql_expr_new">
-				<return-type type="GdaSqlExpr*"/>
-				<parameters>
-					<parameter name="parent" type="GdaSqlAnyPart*"/>
-				</parameters>
-			</method>
-			<method name="serialize" symbol="gda_sql_expr_serialize">
-				<return-type type="gchar*"/>
-				<parameters>
-					<parameter name="expr" type="GdaSqlExpr*"/>
-				</parameters>
-			</method>
-			<method name="take_select" symbol="gda_sql_expr_take_select">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="expr" type="GdaSqlExpr*"/>
-					<parameter name="stmt" type="GdaSqlStatement*"/>
-				</parameters>
-			</method>
-			<field name="any" type="GdaSqlAnyPart"/>
-			<field name="value" type="GValue*"/>
-			<field name="param_spec" type="GdaSqlParamSpec*"/>
-			<field name="func" type="GdaSqlFunction*"/>
-			<field name="cond" type="GdaSqlOperation*"/>
-			<field name="select" type="GdaSqlAnyPart*"/>
-			<field name="case_s" type="GdaSqlCase*"/>
-			<field name="cast_as" type="gchar*"/>
-			<field name="value_is_ident" type="gpointer"/>
-			<field name="_gda_reserved2" type="gpointer"/>
+		<struct name="GdaSqlErrorType">
 		</struct>
 		<struct name="GdaSqlField">
 			<method name="copy" symbol="gda_sql_field_copy">
@@ -1676,106 +1720,6 @@
 			<field name="_gda_reserved1" type="gpointer"/>
 			<field name="_gda_reserved2" type="gpointer"/>
 		</struct>
-		<struct name="GdaSqlStatement">
-			<method name="check_clean" symbol="gda_sql_statement_check_clean">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="stmt" type="GdaSqlStatement*"/>
-				</parameters>
-			</method>
-			<method name="check_structure" symbol="gda_sql_statement_check_structure">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="stmt" type="GdaSqlStatement*"/>
-					<parameter name="error" type="GError**"/>
-				</parameters>
-			</method>
-			<method name="check_validity" symbol="gda_sql_statement_check_validity">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="stmt" type="GdaSqlStatement*"/>
-					<parameter name="cnc" type="GdaConnection*"/>
-					<parameter name="error" type="GError**"/>
-				</parameters>
-			</method>
-			<method name="copy" symbol="gda_sql_statement_copy">
-				<return-type type="GdaSqlStatement*"/>
-				<parameters>
-					<parameter name="stmt" type="GdaSqlStatement*"/>
-				</parameters>
-			</method>
-			<method name="free" symbol="gda_sql_statement_free">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="stmt" type="GdaSqlStatement*"/>
-				</parameters>
-			</method>
-			<method name="get_contents_infos" symbol="gda_sql_statement_get_contents_infos">
-				<return-type type="GdaSqlStatementContentsInfo*"/>
-				<parameters>
-					<parameter name="type" type="GdaSqlStatementType"/>
-				</parameters>
-			</method>
-			<method name="new" symbol="gda_sql_statement_new">
-				<return-type type="GdaSqlStatement*"/>
-				<parameters>
-					<parameter name="type" type="GdaSqlStatementType"/>
-				</parameters>
-			</method>
-			<method name="normalize" symbol="gda_sql_statement_normalize">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="stmt" type="GdaSqlStatement*"/>
-					<parameter name="cnc" type="GdaConnection*"/>
-					<parameter name="error" type="GError**"/>
-				</parameters>
-			</method>
-			<method name="serialize" symbol="gda_sql_statement_serialize">
-				<return-type type="gchar*"/>
-				<parameters>
-					<parameter name="stmt" type="GdaSqlStatement*"/>
-				</parameters>
-			</method>
-			<method name="string_to_type" symbol="gda_sql_statement_string_to_type">
-				<return-type type="GdaSqlStatementType"/>
-				<parameters>
-					<parameter name="type" type="gchar*"/>
-				</parameters>
-			</method>
-			<method name="trans_set_isol_level" symbol="gda_sql_statement_trans_set_isol_level">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="stmt" type="GdaSqlStatement*"/>
-					<parameter name="level" type="GdaTransactionIsolation"/>
-				</parameters>
-			</method>
-			<method name="trans_take_mode" symbol="gda_sql_statement_trans_take_mode">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="stmt" type="GdaSqlStatement*"/>
-					<parameter name="value" type="GValue*"/>
-				</parameters>
-			</method>
-			<method name="trans_take_name" symbol="gda_sql_statement_trans_take_name">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="stmt" type="GdaSqlStatement*"/>
-					<parameter name="value" type="GValue*"/>
-				</parameters>
-			</method>
-			<method name="type_to_string" symbol="gda_sql_statement_type_to_string">
-				<return-type type="gchar*"/>
-				<parameters>
-					<parameter name="type" type="GdaSqlStatementType"/>
-				</parameters>
-			</method>
-			<field name="sql" type="gchar*"/>
-			<field name="stmt_type" type="GdaSqlStatementType"/>
-			<field name="contents" type="gpointer"/>
-			<field name="validity_meta_struct" type="GdaMetaStruct*"/>
-			<field name="_gda_reserved1" type="gpointer"/>
-			<field name="_gda_reserved2" type="gpointer"/>
-		</struct>
 		<struct name="GdaSqlStatementCheckValidityData">
 			<field name="cnc" type="GdaConnection*"/>
 			<field name="store" type="GdaMetaStore*"/>
@@ -2072,14 +2016,35 @@
 			<field name="_gda_reserved1" type="gpointer"/>
 			<field name="_gda_reserved2" type="gpointer"/>
 		</struct>
+		<struct name="GdaTreeMgrColumnsPriv">
+		</struct>
+		<struct name="GdaTreeMgrLabelPriv">
+		</struct>
+		<struct name="GdaTreeMgrSchemasPriv">
+		</struct>
+		<struct name="GdaTreeMgrSelectPriv">
+		</struct>
+		<struct name="GdaTreeMgrTablesPriv">
+		</struct>
 		<struct name="GdaValueList">
+		</struct>
+		<struct name="GdaVconnectionDataModelFilter">
+			<field name="nConstraint" type="int"/>
+			<field name="aConstraint" type="struct GdaVirtualConstraint*"/>
+			<field name="nOrderBy" type="int"/>
+			<field name="aOrderBy" type="struct GdaVirtualOrderby*"/>
+			<field name="aConstraintUsage" type="struct GdaVirtualConstraintUsage*"/>
+			<field name="idxNum" type="int"/>
+			<field name="idxPointer" type="gpointer"/>
+			<field name="orderByConsumed" type="gboolean"/>
+			<field name="estimatedCost" type="double"/>
 		</struct>
 		<struct name="GdaVconnectionDataModelSpec">
 			<field name="data_model" type="GdaDataModel*"/>
 			<field name="create_columns_func" type="GdaVconnectionDataModelCreateColumnsFunc"/>
 			<field name="create_model_func" type="GdaVconnectionDataModelCreateModelFunc"/>
-			<field name="_gda_reserved1" type="GCallback"/>
-			<field name="_gda_reserved2" type="GCallback"/>
+			<field name="create_filter_func" type="GdaVconnectionDataModelParseFilterFunc"/>
+			<field name="create_filtered_model_func" type="GdaVconnectionDataModelCreateFModelFunc"/>
 		</struct>
 		<struct name="GdaXaTransactionId">
 			<method name="to_string" symbol="gda_xa_transaction_id_to_string">
@@ -2239,6 +2204,157 @@
 				</parameters>
 			</method>
 		</boxed>
+		<boxed name="GdaSqlExpr" type-name="GdaSqlExpr" get-type="gda_sql_expr_get_type">
+			<method name="copy" symbol="gda_sql_expr_copy">
+				<return-type type="GdaSqlExpr*"/>
+				<parameters>
+					<parameter name="expr" type="GdaSqlExpr*"/>
+				</parameters>
+			</method>
+			<method name="free" symbol="gda_sql_expr_free">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="expr" type="GdaSqlExpr*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gda_sql_expr_new">
+				<return-type type="GdaSqlExpr*"/>
+				<parameters>
+					<parameter name="parent" type="GdaSqlAnyPart*"/>
+				</parameters>
+			</constructor>
+			<method name="serialize" symbol="gda_sql_expr_serialize">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="expr" type="GdaSqlExpr*"/>
+				</parameters>
+			</method>
+			<method name="take_select" symbol="gda_sql_expr_take_select">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="expr" type="GdaSqlExpr*"/>
+					<parameter name="stmt" type="GdaSqlStatement*"/>
+				</parameters>
+			</method>
+			<field name="any" type="GdaSqlAnyPart"/>
+			<field name="value" type="GValue*"/>
+			<field name="param_spec" type="GdaSqlParamSpec*"/>
+			<field name="func" type="GdaSqlFunction*"/>
+			<field name="cond" type="GdaSqlOperation*"/>
+			<field name="select" type="GdaSqlAnyPart*"/>
+			<field name="case_s" type="GdaSqlCase*"/>
+			<field name="cast_as" type="gchar*"/>
+			<field name="value_is_ident" type="gpointer"/>
+			<field name="_gda_reserved2" type="gpointer"/>
+		</boxed>
+		<boxed name="GdaSqlStatement" type-name="GdaSqlStatement" get-type="gda_sql_statement_get_type">
+			<method name="check_clean" symbol="gda_sql_statement_check_clean">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="stmt" type="GdaSqlStatement*"/>
+				</parameters>
+			</method>
+			<method name="check_structure" symbol="gda_sql_statement_check_structure">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="stmt" type="GdaSqlStatement*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="check_validity" symbol="gda_sql_statement_check_validity">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="stmt" type="GdaSqlStatement*"/>
+					<parameter name="cnc" type="GdaConnection*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="check_validity_m" symbol="gda_sql_statement_check_validity_m">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="stmt" type="GdaSqlStatement*"/>
+					<parameter name="mstruct" type="GdaMetaStruct*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="copy" symbol="gda_sql_statement_copy">
+				<return-type type="GdaSqlStatement*"/>
+				<parameters>
+					<parameter name="stmt" type="GdaSqlStatement*"/>
+				</parameters>
+			</method>
+			<method name="free" symbol="gda_sql_statement_free">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="stmt" type="GdaSqlStatement*"/>
+				</parameters>
+			</method>
+			<method name="get_contents_infos" symbol="gda_sql_statement_get_contents_infos">
+				<return-type type="GdaSqlStatementContentsInfo*"/>
+				<parameters>
+					<parameter name="type" type="GdaSqlStatementType"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gda_sql_statement_new">
+				<return-type type="GdaSqlStatement*"/>
+				<parameters>
+					<parameter name="type" type="GdaSqlStatementType"/>
+				</parameters>
+			</constructor>
+			<method name="normalize" symbol="gda_sql_statement_normalize">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="stmt" type="GdaSqlStatement*"/>
+					<parameter name="cnc" type="GdaConnection*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="serialize" symbol="gda_sql_statement_serialize">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="stmt" type="GdaSqlStatement*"/>
+				</parameters>
+			</method>
+			<method name="string_to_type" symbol="gda_sql_statement_string_to_type">
+				<return-type type="GdaSqlStatementType"/>
+				<parameters>
+					<parameter name="type" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="trans_set_isol_level" symbol="gda_sql_statement_trans_set_isol_level">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="stmt" type="GdaSqlStatement*"/>
+					<parameter name="level" type="GdaTransactionIsolation"/>
+				</parameters>
+			</method>
+			<method name="trans_take_mode" symbol="gda_sql_statement_trans_take_mode">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="stmt" type="GdaSqlStatement*"/>
+					<parameter name="value" type="GValue*"/>
+				</parameters>
+			</method>
+			<method name="trans_take_name" symbol="gda_sql_statement_trans_take_name">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="stmt" type="GdaSqlStatement*"/>
+					<parameter name="value" type="GValue*"/>
+				</parameters>
+			</method>
+			<method name="type_to_string" symbol="gda_sql_statement_type_to_string">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="type" type="GdaSqlStatementType"/>
+				</parameters>
+			</method>
+			<field name="sql" type="gchar*"/>
+			<field name="stmt_type" type="GdaSqlStatementType"/>
+			<field name="contents" type="gpointer"/>
+			<field name="validity_meta_struct" type="GdaMetaStruct*"/>
+			<field name="_gda_reserved1" type="gpointer"/>
+			<field name="_gda_reserved2" type="gpointer"/>
+		</boxed>
 		<boxed name="GdaTime" type-name="GdaTime" get-type="gda_time_get_type">
 			<method name="copy" symbol="gda_time_copy">
 				<return-type type="gpointer"/>
@@ -2250,6 +2366,12 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="boxed" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="valid" symbol="gda_time_valid">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="time" type="GdaTime*"/>
 				</parameters>
 			</method>
 			<field name="hour" type="gushort"/>
@@ -2271,6 +2393,12 @@
 					<parameter name="boxed" type="gpointer"/>
 				</parameters>
 			</method>
+			<method name="valid" symbol="gda_timestamp_valid">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="timestamp" type="GdaTimestamp*"/>
+				</parameters>
+			</method>
 			<field name="year" type="gshort"/>
 			<field name="month" type="gushort"/>
 			<field name="day" type="gushort"/>
@@ -2282,6 +2410,9 @@
 		</boxed>
 		<boxed name="GdaValueList" type-name="GdaValueList" get-type="gda_value_list_get_type">
 		</boxed>
+		<enum name="GdaBatchError" type-name="GdaBatchError" get-type="gda_batch_error_get_type">
+			<member name="GDA_BATCH_CONFLICTING_PARAMETER_ERROR" value="0"/>
+		</enum>
 		<enum name="GdaConfigError" type-name="GdaConfigError" get-type="gda_config_error_get_type">
 			<member name="GDA_CONFIG_DSN_NOT_FOUND_ERROR" value="0"/>
 			<member name="GDA_CONFIG_PERMISSION_ERROR" value="1"/>
@@ -2296,6 +2427,10 @@
 			<member name="GDA_CONNECTION_NO_PROVIDER_SPEC_ERROR" value="4"/>
 			<member name="GDA_CONNECTION_OPEN_ERROR" value="5"/>
 			<member name="GDA_CONNECTION_STATEMENT_TYPE_ERROR" value="6"/>
+			<member name="GDA_CONNECTION_CANT_LOCK_ERROR" value="7"/>
+			<member name="GDA_CONNECTION_TASK_NOT_FOUND_ERROR" value="8"/>
+			<member name="GDA_CONNECTION_UNSUPPORTED_THREADS_ERROR" value="9"/>
+			<member name="GDA_CONNECTION_CLOSED_ERROR" value="10"/>
 		</enum>
 		<enum name="GdaConnectionEventCode" type-name="GdaConnectionEventCode" get-type="gda_connection_event_code_get_type">
 			<member name="GDA_CONNECTION_EVENT_CODE_CONSTRAINT_VIOLATION" value="0"/>
@@ -2341,7 +2476,8 @@
 			<member name="GDA_CONNECTION_FEATURE_USERS" value="13"/>
 			<member name="GDA_CONNECTION_FEATURE_VIEWS" value="14"/>
 			<member name="GDA_CONNECTION_FEATURE_XA_TRANSACTIONS" value="15"/>
-			<member name="GDA_CONNECTION_FEATURE_LAST" value="16"/>
+			<member name="GDA_CONNECTION_FEATURE_MULTI_THREADING" value="16"/>
+			<member name="GDA_CONNECTION_FEATURE_LAST" value="17"/>
 		</enum>
 		<enum name="GdaConnectionMetaType" type-name="GdaConnectionMetaType" get-type="gda_connection_meta_type_get_type">
 			<member name="GDA_CONNECTION_META_NAMESPACES" value="0"/>
@@ -2405,10 +2541,27 @@
 			<member name="GDA_DATA_PROXY_READ_ONLY_ROW" value="3"/>
 			<member name="GDA_DATA_PROXY_FILTER_ERROR" value="4"/>
 		</enum>
+		<enum name="GdaDataSelectError" type-name="GdaDataSelectError" get-type="gda_data_select_error_get_type">
+			<member name="GDA_DATA_SELECT_MODIFICATION_STATEMENT_ERROR" value="0"/>
+			<member name="GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR" value="1"/>
+			<member name="GDA_DATA_SELECT_CONNECTION_ERROR" value="2"/>
+			<member name="GDA_DATA_SELECT_ACCESS_ERROR" value="3"/>
+			<member name="GDA_DATA_SELECT_SQL_ERROR" value="4"/>
+			<member name="GDA_DATA_SELECT_SAFETY_LOCKED_ERROR" value="5"/>
+		</enum>
 		<enum name="GdaDiffType" type-name="GdaDiffType" get-type="gda_diff_type_get_type">
 			<member name="GDA_DIFF_ADD_ROW" value="0"/>
 			<member name="GDA_DIFF_REMOVE_ROW" value="1"/>
 			<member name="GDA_DIFF_MODIFY_ROW" value="2"/>
+		</enum>
+		<enum name="GdaEasyCreateTableFlag" type-name="GdaEasyCreateTableFlag" get-type="gda_easy_create_table_flag_get_type">
+			<member name="GDA_EASY_CREATE_TABLE_NOTHING_FLAG" value="1"/>
+			<member name="GDA_EASY_CREATE_TABLE_PKEY_FLAG" value="2"/>
+			<member name="GDA_EASY_CREATE_TABLE_NOT_NULL_FLAG" value="4"/>
+			<member name="GDA_EASY_CREATE_TABLE_UNIQUE_FLAG" value="8"/>
+			<member name="GDA_EASY_CREATE_TABLE_AUTOINC_FLAG" value="16"/>
+			<member name="GDA_EASY_CREATE_TABLE_FKEY_FLAG" value="32"/>
+			<member name="GDA_EASY_CREATE_TABLE_PKEY_AUTOINC_FLAG" value="18"/>
 		</enum>
 		<enum name="GdaEasyError" type-name="GdaEasyError" get-type="gda_easy_error_get_type">
 			<member name="GDA_EASY_OBJECT_NAME_ERROR" value="0"/>
@@ -2424,6 +2577,15 @@
 			<member name="GDA_META_DB_UNKNOWN" value="0"/>
 			<member name="GDA_META_DB_TABLE" value="1"/>
 			<member name="GDA_META_DB_VIEW" value="2"/>
+		</enum>
+		<enum name="GdaMetaForeignKeyPolicy" type-name="GdaMetaForeignKeyPolicy" get-type="gda_meta_foreign_key_policy_get_type">
+			<member name="GDA_META_FOREIGN_KEY_UNKNOWN" value="0"/>
+			<member name="GDA_META_FOREIGN_KEY_NONE" value="1"/>
+			<member name="GDA_META_FOREIGN_KEY_NO_ACTION" value="2"/>
+			<member name="GDA_META_FOREIGN_KEY_RESTRICT" value="3"/>
+			<member name="GDA_META_FOREIGN_KEY_CASCADE" value="4"/>
+			<member name="GDA_META_FOREIGN_KEY_SET_NULL" value="5"/>
+			<member name="GDA_META_FOREIGN_KEY_SET_DEFAULT" value="6"/>
 		</enum>
 		<enum name="GdaMetaSortType" type-name="GdaMetaSortType" get-type="gda_meta_sort_type_get_type">
 			<member name="GDA_META_SORT_ALHAPETICAL" value="0"/>
@@ -2463,6 +2625,10 @@
 			<member name="GDA_LIBEXEC_DIR" value="6"/>
 			<member name="GDA_ETC_DIR" value="7"/>
 		</enum>
+		<enum name="GdaServerOperationError" type-name="GdaServerOperationError" get-type="gda_server_operation_error_get_type">
+			<member name="GDA_SERVER_OPERATION_OBJECT_NAME_ERROR" value="0"/>
+			<member name="GDA_SERVER_OPERATION_INCORRECT_VALUE_ERROR" value="1"/>
+		</enum>
 		<enum name="GdaServerOperationNodeStatus" type-name="GdaServerOperationNodeStatus" get-type="gda_server_operation_node_status_get_type">
 			<member name="GDA_SERVER_OPERATION_STATUS_OPTIONAL" value="0"/>
 			<member name="GDA_SERVER_OPERATION_STATUS_REQUIRED" value="1"/>
@@ -2489,7 +2655,12 @@
 			<member name="GDA_SERVER_OPERATION_DROP_INDEX" value="8"/>
 			<member name="GDA_SERVER_OPERATION_CREATE_VIEW" value="9"/>
 			<member name="GDA_SERVER_OPERATION_DROP_VIEW" value="10"/>
-			<member name="GDA_SERVER_OPERATION_LAST" value="11"/>
+			<member name="GDA_SERVER_OPERATION_COMMENT_TABLE" value="11"/>
+			<member name="GDA_SERVER_OPERATION_COMMENT_COLUMN" value="12"/>
+			<member name="GDA_SERVER_OPERATION_CREATE_USER" value="13"/>
+			<member name="GDA_SERVER_OPERATION_ALTER_USER" value="14"/>
+			<member name="GDA_SERVER_OPERATION_DROP_USER" value="15"/>
+			<member name="GDA_SERVER_OPERATION_LAST" value="16"/>
 		</enum>
 		<enum name="GdaServerProviderError" type-name="GdaServerProviderError" get-type="gda_server_provider_error_get_type">
 			<member name="GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR" value="0"/>
@@ -2503,11 +2674,13 @@
 			<member name="GDA_SERVER_PROVIDER_NON_SUPPORTED_ERROR" value="8"/>
 			<member name="GDA_SERVER_PROVIDER_SERVER_VERSION_ERROR" value="9"/>
 			<member name="GDA_SERVER_PROVIDER_DATA_ERROR" value="10"/>
+			<member name="GDA_SERVER_PROVIDER_DEFAULT_VALUE_HANDLING_ERROR" value="11"/>
 		</enum>
 		<enum name="GdaSetError" type-name="GdaSetError" get-type="gda_set_error_get_type">
 			<member name="GDA_SET_XML_SPEC_ERROR" value="0"/>
 			<member name="GDA_SET_HOLDER_NOT_FOUND_ERROR" value="1"/>
 			<member name="GDA_SET_INVALID_ERROR" value="2"/>
+			<member name="GDA_SET_READ_ONLY_ERROR" value="3"/>
 		</enum>
 		<enum name="GdaSqlAnyPartType" type-name="GdaSqlAnyPartType" get-type="gda_sql_any_part_type_get_type">
 			<member name="GDA_SQL_ANY_STMT_SELECT" value="0"/>
@@ -2534,7 +2707,17 @@
 			<member name="GDA_SQL_ANY_SQL_SELECT_FROM" value="509"/>
 			<member name="GDA_SQL_ANY_SQL_SELECT_ORDER" value="510"/>
 		</enum>
-		<enum name="GdaSqlErrorType" type-name="GdaSqlErrorType" get-type="gda_sql_error_type_get_type">
+		<enum name="GdaSqlBuilderError" type-name="GdaSqlBuilderError" get-type="gda_sql_builder_error_get_type">
+			<member name="GDA_SQL_BUILDER_WRONG_TYPE_ERROR" value="0"/>
+			<member name="GDA_SQL_BUILDER_MISUSE_ERROR" value="1"/>
+		</enum>
+		<enum name="GdaSqlError" type-name="GdaSqlError" get-type="gda_sql_error_type_get_type">
+			<member name="GDA_SQL_STRUCTURE_CONTENTS_ERROR" value="0"/>
+			<member name="GDA_SQL_MALFORMED_IDENTIFIER_ERROR" value="1"/>
+			<member name="GDA_SQL_MISSING_IDENTIFIER_ERROR" value="2"/>
+			<member name="GDA_SQL_VALIDATION_ERROR" value="3"/>
+		</enum>
+		<enum name="GdaSqlError" type-name="GdaSqlError" get-type="gda_sql_error_get_type">
 			<member name="GDA_SQL_STRUCTURE_CONTENTS_ERROR" value="0"/>
 			<member name="GDA_SQL_MALFORMED_IDENTIFIER_ERROR" value="1"/>
 			<member name="GDA_SQL_MISSING_IDENTIFIER_ERROR" value="2"/>
@@ -2628,6 +2811,9 @@
 			<member name="GDA_STATEMENT_PARAM_TYPE_ERROR" value="5"/>
 			<member name="GDA_STATEMENT_PARAM_ERROR" value="6"/>
 		</enum>
+		<enum name="GdaThreadWrapperError">
+			<member name="GDA_THREAD_WRAPPER_UNKNOWN_ERROR" value="0"/>
+		</enum>
 		<enum name="GdaTransactionIsolation" type-name="GdaTransactionIsolation" get-type="gda_transaction_isolation_get_type">
 			<member name="GDA_TRANSACTION_ISOLATION_UNKNOWN" value="0"/>
 			<member name="GDA_TRANSACTION_ISOLATION_READ_COMMITTED" value="1"/>
@@ -2644,14 +2830,27 @@
 			<member name="GDA_TRANSACTION_STATUS_STATE_OK" value="0"/>
 			<member name="GDA_TRANSACTION_STATUS_STATE_FAILED" value="1"/>
 		</enum>
+		<enum name="GdaTreeError" type-name="GdaTreeError" get-type="gda_tree_error_get_type">
+			<member name="GDA_TREE_UNKNOWN_ERROR" value="0"/>
+		</enum>
+		<enum name="GdaTreeManagerError" type-name="GdaTreeManagerError" get-type="gda_tree_manager_error_get_type">
+			<member name="GDA_TREE_MANAGER_UNKNOWN_ERROR" value="0"/>
+		</enum>
+		<enum name="GdaTreeNodeError" type-name="GdaTreeNodeError" get-type="gda_tree_node_error_get_type">
+			<member name="GDA_TREE_NODE_UNKNOWN_ERROR" value="0"/>
+		</enum>
 		<enum name="GdaXaTransactionError" type-name="GdaXaTransactionError" get-type="gda_xa_transaction_error_get_type">
 			<member name="GDA_XA_TRANSACTION_ALREADY_REGISTERED_ERROR" value="0"/>
 			<member name="GDA_XA_TRANSACTION_DTP_NOT_SUPPORTED_ERROR" value="1"/>
+			<member name="GDA_XA_TRANSACTION_CONNECTION_BRANCH_LENGTH_ERROR" value="2"/>
 		</enum>
 		<flags name="GdaConnectionOptions" type-name="GdaConnectionOptions" get-type="gda_connection_options_get_type">
 			<member name="GDA_CONNECTION_OPTIONS_NONE" value="0"/>
 			<member name="GDA_CONNECTION_OPTIONS_READ_ONLY" value="1"/>
 			<member name="GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE" value="2"/>
+			<member name="GDA_CONNECTION_OPTIONS_THREAD_SAFE" value="4"/>
+			<member name="GDA_CONNECTION_OPTIONS_THREAD_ISOLATED" value="8"/>
+			<member name="GDA_CONNECTION_OPTIONS_AUTO_META_DATA" value="16"/>
 		</flags>
 		<flags name="GdaDataModelAccessFlags" type-name="GdaDataModelAccessFlags" get-type="gda_data_model_access_flags_get_type">
 			<member name="GDA_DATA_MODEL_ACCESS_RANDOM" value="1"/>
@@ -2664,15 +2863,6 @@
 			<member name="GDA_DATA_MODEL_ACCESS_WRITE" value="56"/>
 			<member name="GDA_DATA_MODEL_ACCESS_DELETE" value="32"/>
 		</flags>
-		<flags name="GdaEasyCreateTableFlag" type-name="GdaEasyCreateTableFlag" get-type="gda_easy_create_table_flag_get_type">
-			<member name="GDA_EASY_CREATE_TABLE_NOTHING_FLAG" value="1"/>
-			<member name="GDA_EASY_CREATE_TABLE_PKEY_FLAG" value="2"/>
-			<member name="GDA_EASY_CREATE_TABLE_NOT_NULL_FLAG" value="4"/>
-			<member name="GDA_EASY_CREATE_TABLE_UNIQUE_FLAG" value="8"/>
-			<member name="GDA_EASY_CREATE_TABLE_AUTOINC_FLAG" value="16"/>
-			<member name="GDA_EASY_CREATE_TABLE_FKEY_FLAG" value="32"/>
-			<member name="GDA_EASY_CREATE_TABLE_PKEY_AUTOINC_FLAG" value="18"/>
-		</flags>
 		<flags name="GdaMetaGraphInfo" type-name="GdaMetaGraphInfo" get-type="gda_meta_graph_info_get_type">
 			<member name="GDA_META_GRAPH_COLUMNS" value="1"/>
 		</flags>
@@ -2682,6 +2872,15 @@
 			<member name="GDA_META_STRUCT_FEATURE_VIEW_DEPENDENCIES" value="2"/>
 			<member name="GDA_META_STRUCT_FEATURE_ALL" value="3"/>
 			<member name="GDA_META_STRUCT_FEATURE_VIEW_DEPENDENCIES" value="2"/>
+		</flags>
+		<flags name="GdaServerOperationCreateTableFlag" type-name="GdaServerOperationCreateTableFlag" get-type="gda_server_operation_create_table_flag_get_type">
+			<member name="GDA_SERVER_OPERATION_CREATE_TABLE_NOTHING_FLAG" value="1"/>
+			<member name="GDA_SERVER_OPERATION_CREATE_TABLE_PKEY_FLAG" value="2"/>
+			<member name="GDA_SERVER_OPERATION_CREATE_TABLE_NOT_NULL_FLAG" value="4"/>
+			<member name="GDA_SERVER_OPERATION_CREATE_TABLE_UNIQUE_FLAG" value="8"/>
+			<member name="GDA_SERVER_OPERATION_CREATE_TABLE_AUTOINC_FLAG" value="16"/>
+			<member name="GDA_SERVER_OPERATION_CREATE_TABLE_FKEY_FLAG" value="32"/>
+			<member name="GDA_SERVER_OPERATION_CREATE_TABLE_PKEY_AUTOINC_FLAG" value="18"/>
 		</flags>
 		<flags name="GdaSqlIdentifierStyle" type-name="GdaSqlIdentifierStyle" get-type="gda_sql_identifier_style_get_type">
 			<member name="GDA_SQL_IDENTIFIERS_LOWER_CASE" value="1"/>
@@ -2695,6 +2894,7 @@
 			<member name="GDA_STATEMENT_MODEL_ALLOW_NOPARAM" value="8"/>
 		</flags>
 		<flags name="GdaStatementSqlFlag" type-name="GdaStatementSqlFlag" get-type="gda_statement_sql_flag_get_type">
+			<member name="GDA_STATEMENT_SQL_PARAMS_AS_VALUES" value="0"/>
 			<member name="GDA_STATEMENT_SQL_PRETTY" value="1"/>
 			<member name="GDA_STATEMENT_SQL_PARAMS_LONG" value="2"/>
 			<member name="GDA_STATEMENT_SQL_PARAMS_SHORT" value="4"/>
@@ -3100,6 +3300,35 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<method name="async_cancel" symbol="gda_connection_async_cancel">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="cnc" type="GdaConnection*"/>
+					<parameter name="task_id" type="guint"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="async_fetch_result" symbol="gda_connection_async_fetch_result">
+				<return-type type="GObject*"/>
+				<parameters>
+					<parameter name="cnc" type="GdaConnection*"/>
+					<parameter name="task_id" type="guint"/>
+					<parameter name="last_insert_row" type="GdaSet**"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="async_statement_execute" symbol="gda_connection_async_statement_execute">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="cnc" type="GdaConnection*"/>
+					<parameter name="stmt" type="GdaStatement*"/>
+					<parameter name="params" type="GdaSet*"/>
+					<parameter name="model_usage" type="GdaStatementModelUsage"/>
+					<parameter name="col_types" type="GType*"/>
+					<parameter name="need_last_insert_row" type="gboolean"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<method name="batch_execute" symbol="gda_connection_batch_execute">
 				<return-type type="GSList*"/>
 				<parameters>
@@ -3154,6 +3383,16 @@
 					<parameter name="cnc" type="GdaConnection*"/>
 				</parameters>
 			</method>
+			<method name="delete_row_from_table" symbol="gda_connection_delete_row_from_table">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="cnc" type="GdaConnection*"/>
+					<parameter name="table" type="gchar*"/>
+					<parameter name="condition_column_name" type="gchar*"/>
+					<parameter name="condition_value" type="GValue*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<method name="delete_savepoint" symbol="gda_connection_delete_savepoint">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -3164,6 +3403,22 @@
 			</method>
 			<method name="error_quark" symbol="gda_connection_error_quark">
 				<return-type type="GQuark"/>
+			</method>
+			<method name="execute_non_select_command" symbol="gda_connection_execute_non_select_command">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="cnc" type="GdaConnection*"/>
+					<parameter name="sql" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="execute_select_command" symbol="gda_connection_execute_select_command">
+				<return-type type="GdaDataModel*"/>
+				<parameters>
+					<parameter name="cnc" type="GdaConnection*"/>
+					<parameter name="sql" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
 			</method>
 			<method name="get_authentication" symbol="gda_connection_get_authentication">
 				<return-type type="gchar*"/>
@@ -3237,6 +3492,24 @@
 					<parameter name="cnc" type="GdaConnection*"/>
 				</parameters>
 			</method>
+			<method name="insert_row_into_table" symbol="gda_connection_insert_row_into_table">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="cnc" type="GdaConnection*"/>
+					<parameter name="table" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="insert_row_into_table_v" symbol="gda_connection_insert_row_into_table_v">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="cnc" type="GdaConnection*"/>
+					<parameter name="table" type="gchar*"/>
+					<parameter name="col_names" type="GSList*"/>
+					<parameter name="values" type="GSList*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<method name="is_opened" symbol="gda_connection_is_opened">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -3269,6 +3542,15 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<method name="parse_sql_string" symbol="gda_connection_parse_sql_string">
+				<return-type type="GdaStatement*"/>
+				<parameters>
+					<parameter name="cnc" type="GdaConnection*"/>
+					<parameter name="sql" type="gchar*"/>
+					<parameter name="params" type="GdaSet**"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<method name="perform_operation" symbol="gda_connection_perform_operation">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -3282,6 +3564,17 @@
 				<parameters>
 					<parameter name="cnc" type="GdaConnection*"/>
 					<parameter name="id" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="repetitive_statement_execute" symbol="gda_connection_repetitive_statement_execute">
+				<return-type type="GSList*"/>
+				<parameters>
+					<parameter name="cnc" type="GdaConnection*"/>
+					<parameter name="rstmt" type="GdaRepetitiveStatement*"/>
+					<parameter name="model_usage" type="GdaStatementModelUsage"/>
+					<parameter name="col_types" type="GType*"/>
+					<parameter name="stop_on_error" type="gboolean"/>
+					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
 			<method name="rollback_savepoint" symbol="gda_connection_rollback_savepoint">
@@ -3395,6 +3688,28 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<method name="update_row_in_table" symbol="gda_connection_update_row_in_table">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="cnc" type="GdaConnection*"/>
+					<parameter name="table" type="gchar*"/>
+					<parameter name="condition_column_name" type="gchar*"/>
+					<parameter name="condition_value" type="GValue*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="update_row_in_table_v" symbol="gda_connection_update_row_in_table_v">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="cnc" type="GdaConnection*"/>
+					<parameter name="table" type="gchar*"/>
+					<parameter name="condition_column_name" type="gchar*"/>
+					<parameter name="condition_value" type="GValue*"/>
+					<parameter name="col_names" type="GSList*"/>
+					<parameter name="values" type="GSList*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<method name="value_to_sql_string" symbol="gda_connection_value_to_sql_string">
 				<return-type type="gchar*"/>
 				<parameters>
@@ -3405,7 +3720,10 @@
 			<property name="auth-string" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="cnc-string" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="dsn" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="events-history-size" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="is-wrapper" type="gboolean" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="meta-store" type="GdaMetaStore*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="monitor-wrapped-in-mainloop" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="options" type="GdaConnectionOptions" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="provider" type="GdaServerProvider*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="thread-owner" type="gpointer" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -3642,84 +3960,6 @@
 			<property name="n-columns" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="read-only" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
-		<object name="GdaDataModelBdb" parent="GObject" type-name="GdaDataModelBdb" get-type="gda_data_model_bdb_get_type">
-			<implements>
-				<interface name="GdaDataModel"/>
-			</implements>
-			<method name="clean_errors" symbol="gda_data_model_bdb_clean_errors">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="model" type="GdaDataModelBdb*"/>
-				</parameters>
-			</method>
-			<method name="get_errors" symbol="gda_data_model_bdb_get_errors">
-				<return-type type="GSList*"/>
-				<parameters>
-					<parameter name="model" type="GdaDataModelBdb*"/>
-				</parameters>
-			</method>
-			<constructor name="new" symbol="gda_data_model_bdb_new">
-				<return-type type="GdaDataModel*"/>
-				<parameters>
-					<parameter name="filename" type="gchar*"/>
-					<parameter name="db_name" type="gchar*"/>
-				</parameters>
-			</constructor>
-			<property name="db-name" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
-			<property name="filename" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
-			<vfunc name="create_data_columns">
-				<return-type type="GSList*"/>
-				<parameters>
-					<parameter name="model" type="GdaDataModelBdb*"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="create_key_columns">
-				<return-type type="GSList*"/>
-				<parameters>
-					<parameter name="model" type="GdaDataModelBdb*"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="get_data_part">
-				<return-type type="GValue*"/>
-				<parameters>
-					<parameter name="model" type="GdaDataModelBdb*"/>
-					<parameter name="data" type="gpointer"/>
-					<parameter name="length" type="gint"/>
-					<parameter name="part" type="gint"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="get_key_part">
-				<return-type type="GValue*"/>
-				<parameters>
-					<parameter name="model" type="GdaDataModelBdb*"/>
-					<parameter name="data" type="gpointer"/>
-					<parameter name="length" type="gint"/>
-					<parameter name="part" type="gint"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="update_data_part">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="model" type="GdaDataModelBdb*"/>
-					<parameter name="data" type="gpointer"/>
-					<parameter name="length" type="gint"/>
-					<parameter name="part" type="gint"/>
-					<parameter name="value" type="GValue*"/>
-					<parameter name="error" type="GError**"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="update_key_part">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="model" type="GdaDataModelBdb*"/>
-					<parameter name="data" type="gpointer"/>
-					<parameter name="length" type="gint"/>
-					<parameter name="part" type="gint"/>
-					<parameter name="value" type="GValue*"/>
-					<parameter name="error" type="GError**"/>
-				</parameters>
-			</vfunc>
-		</object>
 		<object name="GdaDataModelDir" parent="GObject" type-name="GdaDataModelDir" get-type="gda_data_model_dir_get_type">
 			<implements>
 				<interface name="GdaDataModel"/>
@@ -3816,6 +4056,7 @@
 			<property name="filename" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="options" type="GdaSet*" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="random-access" type="gboolean" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="strict" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="xml-node" type="gpointer" readable="1" writable="1" construct="0" construct-only="1"/>
 		</object>
 		<object name="GdaDataModelIter" parent="GdaSet" type-name="GdaDataModelIter" get-type="gda_data_model_iter_get_type">
@@ -4230,6 +4471,20 @@
 				<parameters>
 					<parameter name="model" type="GdaDataSelect*"/>
 					<parameter name="rownum" type="gint"/>
+				</parameters>
+			</method>
+			<method name="rerun" symbol="gda_data_select_rerun">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="model" type="GdaDataSelect*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="set_columns" symbol="gda_data_select_set_columns">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="model" type="GdaDataSelect*"/>
+					<parameter name="columns" type="GSList*"/>
 				</parameters>
 			</method>
 			<method name="set_modification_statement" symbol="gda_data_select_set_modification_statement">
@@ -4649,6 +4904,24 @@
 					<parameter name="table_name" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="declare_foreign_key" symbol="gda_meta_store_declare_foreign_key">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="store" type="GdaMetaStore*"/>
+					<parameter name="mstruct" type="GdaMetaStruct*"/>
+					<parameter name="fk_name" type="gchar*"/>
+					<parameter name="catalog" type="gchar*"/>
+					<parameter name="schema" type="gchar*"/>
+					<parameter name="table" type="gchar*"/>
+					<parameter name="ref_catalog" type="gchar*"/>
+					<parameter name="ref_schema" type="gchar*"/>
+					<parameter name="ref_table" type="gchar*"/>
+					<parameter name="nb_cols" type="guint"/>
+					<parameter name="colnames" type="gchar**"/>
+					<parameter name="ref_colnames" type="gchar**"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<method name="error_quark" symbol="gda_meta_store_error_quark">
 				<return-type type="GQuark"/>
 			</method>
@@ -4757,6 +5030,13 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<method name="set_identifiers_style" symbol="gda_meta_store_set_identifiers_style">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="store" type="GdaMetaStore*"/>
+					<parameter name="style" type="GdaSqlIdentifierStyle"/>
+				</parameters>
+			</method>
 			<method name="set_reserved_keywords_func" symbol="gda_meta_store_set_reserved_keywords_func">
 				<return-type type="void"/>
 				<parameters>
@@ -4769,6 +5049,21 @@
 				<parameters>
 					<parameter name="id" type="gchar*"/>
 					<parameter name="cnc" type="GdaConnection*"/>
+				</parameters>
+			</method>
+			<method name="undeclare_foreign_key" symbol="gda_meta_store_undeclare_foreign_key">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="store" type="GdaMetaStore*"/>
+					<parameter name="mstruct" type="GdaMetaStruct*"/>
+					<parameter name="fk_name" type="gchar*"/>
+					<parameter name="catalog" type="gchar*"/>
+					<parameter name="schema" type="gchar*"/>
+					<parameter name="table" type="gchar*"/>
+					<parameter name="ref_catalog" type="gchar*"/>
+					<parameter name="ref_schema" type="gchar*"/>
+					<parameter name="ref_table" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
 			<property name="catalog" type="char*" readable="0" writable="1" construct="0" construct-only="1"/>
@@ -4918,6 +5213,37 @@
 			<field name="types" type="GType*"/>
 			<field name="tmpl_columns" type="GSList*"/>
 		</object>
+		<object name="GdaRepetitiveStatement" parent="GObject" type-name="GdaRepetitiveStatement" get-type="gda_repetitive_statement_get_type">
+			<method name="append_set" symbol="gda_repetitive_statement_append_set">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="rstmt" type="GdaRepetitiveStatement*"/>
+					<parameter name="values" type="GdaSet*"/>
+					<parameter name="make_copy" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="get_all_sets" symbol="gda_repetitive_statement_get_all_sets">
+				<return-type type="GSList*"/>
+				<parameters>
+					<parameter name="rstmt" type="GdaRepetitiveStatement*"/>
+				</parameters>
+			</method>
+			<method name="get_template_set" symbol="gda_repetitive_statement_get_template_set">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="rstmt" type="GdaRepetitiveStatement*"/>
+					<parameter name="set" type="GdaSet**"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gda_repetitive_statement_new">
+				<return-type type="GdaRepetitiveStatement*"/>
+				<parameters>
+					<parameter name="stmt" type="GdaStatement*"/>
+				</parameters>
+			</constructor>
+			<property name="statement" type="GdaStatement*" readable="1" writable="1" construct="0" construct-only="1"/>
+		</object>
 		<object name="GdaRow" parent="GObject" type-name="GdaRow" get-type="gda_row_get_type">
 			<method name="get_length" symbol="gda_row_get_length">
 				<return-type type="gint"/>
@@ -4959,7 +5285,7 @@
 				<return-type type="guint"/>
 				<parameters>
 					<parameter name="op" type="GdaServerOperation*"/>
-					<parameter name="path" type="gchar*"/>
+					<parameter name="seq_path" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="del_item_from_sequence" symbol="gda_server_operation_del_item_from_sequence">
@@ -4968,6 +5294,9 @@
 					<parameter name="op" type="GdaServerOperation*"/>
 					<parameter name="item_path" type="gchar*"/>
 				</parameters>
+			</method>
+			<method name="error_quark" symbol="gda_server_operation_error_quark">
+				<return-type type="GQuark"/>
 			</method>
 			<method name="get_node_info" symbol="gda_server_operation_get_node_info">
 				<return-type type="GdaServerOperationNode*"/>
@@ -5090,6 +5419,68 @@
 					<parameter name="type" type="GdaServerOperationType"/>
 				</parameters>
 			</method>
+			<method name="perform_create_database" symbol="gda_server_operation_perform_create_database">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="op" type="GdaServerOperation*"/>
+					<parameter name="provider" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="perform_create_table" symbol="gda_server_operation_perform_create_table">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="op" type="GdaServerOperation*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="perform_drop_database" symbol="gda_server_operation_perform_drop_database">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="op" type="GdaServerOperation*"/>
+					<parameter name="provider" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="perform_drop_table" symbol="gda_server_operation_perform_drop_table">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="op" type="GdaServerOperation*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="prepare_create_database" symbol="gda_server_operation_prepare_create_database">
+				<return-type type="GdaServerOperation*"/>
+				<parameters>
+					<parameter name="provider" type="gchar*"/>
+					<parameter name="db_name" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="prepare_create_table" symbol="gda_server_operation_prepare_create_table">
+				<return-type type="GdaServerOperation*"/>
+				<parameters>
+					<parameter name="cnc" type="GdaConnection*"/>
+					<parameter name="table_name" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="prepare_drop_database" symbol="gda_server_operation_prepare_drop_database">
+				<return-type type="GdaServerOperation*"/>
+				<parameters>
+					<parameter name="provider" type="gchar*"/>
+					<parameter name="db_name" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="prepare_drop_table" symbol="gda_server_operation_prepare_drop_table">
+				<return-type type="GdaServerOperation*"/>
+				<parameters>
+					<parameter name="cnc" type="GdaConnection*"/>
+					<parameter name="table_name" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<method name="save_data_to_xml" symbol="gda_server_operation_save_data_to_xml">
 				<return-type type="xmlNodePtr"/>
 				<parameters>
@@ -5104,6 +5495,12 @@
 					<parameter name="value" type="gchar*"/>
 					<parameter name="error" type="GError**"/>
 					<parameter name="path_format" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="string_to_op_type" symbol="gda_server_operation_string_to_op_type">
+				<return-type type="GdaServerOperationType"/>
+				<parameters>
+					<parameter name="str" type="gchar*"/>
 				</parameters>
 			</method>
 			<property name="connection" type="GdaConnection*" readable="1" writable="1" construct="0" construct-only="1"/>
@@ -5483,6 +5880,14 @@
 					<parameter name="provider" type="GdaServerProvider*"/>
 				</parameters>
 			</vfunc>
+			<vfunc name="handle_async">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="provider" type="GdaServerProvider*"/>
+					<parameter name="cnc" type="GdaConnection*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
 			<vfunc name="identifier_quote">
 				<return-type type="gchar*"/>
 				<parameters>
@@ -5577,6 +5982,16 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</vfunc>
+			<vfunc name="statement_rewrite">
+				<return-type type="GdaSqlStatement*"/>
+				<parameters>
+					<parameter name="provider" type="GdaServerProvider*"/>
+					<parameter name="cnc" type="GdaConnection*"/>
+					<parameter name="stmt" type="GdaStatement*"/>
+					<parameter name="params" type="GdaSet*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
 			<vfunc name="statement_to_sql">
 				<return-type type="gchar*"/>
 				<parameters>
@@ -5660,6 +6075,13 @@
 					<parameter name="holder" type="GdaHolder*"/>
 				</parameters>
 			</method>
+			<method name="get_nth_holder" symbol="gda_set_get_nth_holder">
+				<return-type type="GdaHolder*"/>
+				<parameters>
+					<parameter name="set" type="GdaSet*"/>
+					<parameter name="pos" type="gint"/>
+				</parameters>
+			</method>
 			<method name="get_source" symbol="gda_set_get_source">
 				<return-type type="GdaSetSource*"/>
 				<parameters>
@@ -5714,11 +6136,25 @@
 					<parameter name="nb" type="gint"/>
 				</parameters>
 			</constructor>
+			<constructor name="new_read_only" symbol="gda_set_new_read_only">
+				<return-type type="GdaSet*"/>
+				<parameters>
+					<parameter name="holders" type="GSList*"/>
+				</parameters>
+			</constructor>
 			<method name="remove_holder" symbol="gda_set_remove_holder">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="set" type="GdaSet*"/>
 					<parameter name="holder" type="GdaHolder*"/>
+				</parameters>
+			</method>
+			<method name="replace_source_model" symbol="gda_set_replace_source_model">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="set" type="GdaSet*"/>
+					<parameter name="source" type="GdaSetSource*"/>
+					<parameter name="model" type="GdaDataModel*"/>
 				</parameters>
 			</method>
 			<method name="set_holder_value" symbol="gda_set_set_holder_value">
@@ -5749,10 +6185,24 @@
 					<parameter name="holder" type="GdaHolder*"/>
 				</parameters>
 			</signal>
+			<signal name="holder-type-set" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="set" type="GdaSet*"/>
+					<parameter name="holder" type="GdaHolder*"/>
+				</parameters>
+			</signal>
 			<signal name="public-data-changed" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="set" type="GdaSet*"/>
+				</parameters>
+			</signal>
+			<signal name="source-model-changed" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="set" type="GdaSet*"/>
+					<parameter name="source" type="gpointer"/>
 				</parameters>
 			</signal>
 			<signal name="validate-holder-change" when="LAST">
@@ -5773,6 +6223,280 @@
 			<field name="nodes_list" type="GSList*"/>
 			<field name="sources_list" type="GSList*"/>
 			<field name="groups_list" type="GSList*"/>
+		</object>
+		<object name="GdaSqlBuilder" parent="GObject" type-name="GdaSqlBuilder" get-type="gda_sql_builder_get_type">
+			<method name="add_case" symbol="gda_sql_builder_add_case">
+				<return-type type="GdaSqlBuilderId"/>
+				<parameters>
+					<parameter name="builder" type="GdaSqlBuilder*"/>
+					<parameter name="test_expr" type="GdaSqlBuilderId"/>
+					<parameter name="else_expr" type="GdaSqlBuilderId"/>
+				</parameters>
+			</method>
+			<method name="add_case_v" symbol="gda_sql_builder_add_case_v">
+				<return-type type="GdaSqlBuilderId"/>
+				<parameters>
+					<parameter name="builder" type="GdaSqlBuilder*"/>
+					<parameter name="test_expr" type="GdaSqlBuilderId"/>
+					<parameter name="else_expr" type="GdaSqlBuilderId"/>
+					<parameter name="when_array" type="GdaSqlBuilderId*"/>
+					<parameter name="then_array" type="GdaSqlBuilderId*"/>
+					<parameter name="args_size" type="gint"/>
+				</parameters>
+			</method>
+			<method name="add_cond" symbol="gda_sql_builder_add_cond">
+				<return-type type="GdaSqlBuilderId"/>
+				<parameters>
+					<parameter name="builder" type="GdaSqlBuilder*"/>
+					<parameter name="op" type="GdaSqlOperatorType"/>
+					<parameter name="op1" type="GdaSqlBuilderId"/>
+					<parameter name="op2" type="GdaSqlBuilderId"/>
+					<parameter name="op3" type="GdaSqlBuilderId"/>
+				</parameters>
+			</method>
+			<method name="add_cond_v" symbol="gda_sql_builder_add_cond_v">
+				<return-type type="GdaSqlBuilderId"/>
+				<parameters>
+					<parameter name="builder" type="GdaSqlBuilder*"/>
+					<parameter name="op" type="GdaSqlOperatorType"/>
+					<parameter name="op_ids" type="GdaSqlBuilderId*"/>
+					<parameter name="op_ids_size" type="gint"/>
+				</parameters>
+			</method>
+			<method name="add_expr" symbol="gda_sql_builder_add_expr">
+				<return-type type="GdaSqlBuilderId"/>
+				<parameters>
+					<parameter name="builder" type="GdaSqlBuilder*"/>
+					<parameter name="dh" type="GdaDataHandler*"/>
+					<parameter name="type" type="GType"/>
+				</parameters>
+			</method>
+			<method name="add_expr_value" symbol="gda_sql_builder_add_expr_value">
+				<return-type type="GdaSqlBuilderId"/>
+				<parameters>
+					<parameter name="builder" type="GdaSqlBuilder*"/>
+					<parameter name="dh" type="GdaDataHandler*"/>
+					<parameter name="value" type="GValue*"/>
+				</parameters>
+			</method>
+			<method name="add_field_id" symbol="gda_sql_builder_add_field_id">
+				<return-type type="GdaSqlBuilderId"/>
+				<parameters>
+					<parameter name="builder" type="GdaSqlBuilder*"/>
+					<parameter name="field_name" type="gchar*"/>
+					<parameter name="table_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="add_field_value" symbol="gda_sql_builder_add_field_value">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="builder" type="GdaSqlBuilder*"/>
+					<parameter name="field_name" type="gchar*"/>
+					<parameter name="type" type="GType"/>
+				</parameters>
+			</method>
+			<method name="add_field_value_as_gvalue" symbol="gda_sql_builder_add_field_value_as_gvalue">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="builder" type="GdaSqlBuilder*"/>
+					<parameter name="field_name" type="gchar*"/>
+					<parameter name="value" type="GValue*"/>
+				</parameters>
+			</method>
+			<method name="add_field_value_id" symbol="gda_sql_builder_add_field_value_id">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="builder" type="GdaSqlBuilder*"/>
+					<parameter name="field_id" type="GdaSqlBuilderId"/>
+					<parameter name="value_id" type="GdaSqlBuilderId"/>
+				</parameters>
+			</method>
+			<method name="add_function" symbol="gda_sql_builder_add_function">
+				<return-type type="GdaSqlBuilderId"/>
+				<parameters>
+					<parameter name="builder" type="GdaSqlBuilder*"/>
+					<parameter name="func_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="add_function_v" symbol="gda_sql_builder_add_function_v">
+				<return-type type="GdaSqlBuilderId"/>
+				<parameters>
+					<parameter name="builder" type="GdaSqlBuilder*"/>
+					<parameter name="func_name" type="gchar*"/>
+					<parameter name="args" type="GdaSqlBuilderId*"/>
+					<parameter name="args_size" type="gint"/>
+				</parameters>
+			</method>
+			<method name="add_id" symbol="gda_sql_builder_add_id">
+				<return-type type="GdaSqlBuilderId"/>
+				<parameters>
+					<parameter name="builder" type="GdaSqlBuilder*"/>
+					<parameter name="string" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="add_param" symbol="gda_sql_builder_add_param">
+				<return-type type="GdaSqlBuilderId"/>
+				<parameters>
+					<parameter name="builder" type="GdaSqlBuilder*"/>
+					<parameter name="param_name" type="gchar*"/>
+					<parameter name="type" type="GType"/>
+					<parameter name="nullok" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="add_sub_select" symbol="gda_sql_builder_add_sub_select">
+				<return-type type="GdaSqlBuilderId"/>
+				<parameters>
+					<parameter name="builder" type="GdaSqlBuilder*"/>
+					<parameter name="sqlst" type="GdaSqlStatement*"/>
+				</parameters>
+			</method>
+			<method name="compound_add_sub_select" symbol="gda_sql_builder_compound_add_sub_select">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="builder" type="GdaSqlBuilder*"/>
+					<parameter name="sqlst" type="GdaSqlStatement*"/>
+				</parameters>
+			</method>
+			<method name="compound_set_type" symbol="gda_sql_builder_compound_set_type">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="builder" type="GdaSqlBuilder*"/>
+					<parameter name="compound_type" type="GdaSqlStatementCompoundType"/>
+				</parameters>
+			</method>
+			<method name="error_quark" symbol="gda_sql_builder_error_quark">
+				<return-type type="GQuark"/>
+			</method>
+			<method name="export_expression" symbol="gda_sql_builder_export_expression">
+				<return-type type="GdaSqlExpr*"/>
+				<parameters>
+					<parameter name="builder" type="GdaSqlBuilder*"/>
+					<parameter name="id" type="GdaSqlBuilderId"/>
+				</parameters>
+			</method>
+			<method name="get_sql_statement" symbol="gda_sql_builder_get_sql_statement">
+				<return-type type="GdaSqlStatement*"/>
+				<parameters>
+					<parameter name="builder" type="GdaSqlBuilder*"/>
+				</parameters>
+			</method>
+			<method name="get_statement" symbol="gda_sql_builder_get_statement">
+				<return-type type="GdaStatement*"/>
+				<parameters>
+					<parameter name="builder" type="GdaSqlBuilder*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="import_expression" symbol="gda_sql_builder_import_expression">
+				<return-type type="GdaSqlBuilderId"/>
+				<parameters>
+					<parameter name="builder" type="GdaSqlBuilder*"/>
+					<parameter name="expr" type="GdaSqlExpr*"/>
+				</parameters>
+			</method>
+			<method name="join_add_field" symbol="gda_sql_builder_join_add_field">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="builder" type="GdaSqlBuilder*"/>
+					<parameter name="join_id" type="GdaSqlBuilderId"/>
+					<parameter name="field_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gda_sql_builder_new">
+				<return-type type="GdaSqlBuilder*"/>
+				<parameters>
+					<parameter name="stmt_type" type="GdaSqlStatementType"/>
+				</parameters>
+			</constructor>
+			<method name="select_add_field" symbol="gda_sql_builder_select_add_field">
+				<return-type type="GdaSqlBuilderId"/>
+				<parameters>
+					<parameter name="builder" type="GdaSqlBuilder*"/>
+					<parameter name="field_name" type="gchar*"/>
+					<parameter name="table_name" type="gchar*"/>
+					<parameter name="alias" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="select_add_target" symbol="gda_sql_builder_select_add_target">
+				<return-type type="GdaSqlBuilderId"/>
+				<parameters>
+					<parameter name="builder" type="GdaSqlBuilder*"/>
+					<parameter name="table_name" type="gchar*"/>
+					<parameter name="alias" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="select_add_target_id" symbol="gda_sql_builder_select_add_target_id">
+				<return-type type="GdaSqlBuilderId"/>
+				<parameters>
+					<parameter name="builder" type="GdaSqlBuilder*"/>
+					<parameter name="table_id" type="GdaSqlBuilderId"/>
+					<parameter name="alias" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="select_group_by" symbol="gda_sql_builder_select_group_by">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="builder" type="GdaSqlBuilder*"/>
+					<parameter name="expr_id" type="GdaSqlBuilderId"/>
+				</parameters>
+			</method>
+			<method name="select_join_targets" symbol="gda_sql_builder_select_join_targets">
+				<return-type type="GdaSqlBuilderId"/>
+				<parameters>
+					<parameter name="builder" type="GdaSqlBuilder*"/>
+					<parameter name="left_target_id" type="GdaSqlBuilderId"/>
+					<parameter name="right_target_id" type="GdaSqlBuilderId"/>
+					<parameter name="join_type" type="GdaSqlSelectJoinType"/>
+					<parameter name="join_expr" type="GdaSqlBuilderId"/>
+				</parameters>
+			</method>
+			<method name="select_order_by" symbol="gda_sql_builder_select_order_by">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="builder" type="GdaSqlBuilder*"/>
+					<parameter name="expr_id" type="GdaSqlBuilderId"/>
+					<parameter name="asc" type="gboolean"/>
+					<parameter name="collation_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="select_set_distinct" symbol="gda_sql_builder_select_set_distinct">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="builder" type="GdaSqlBuilder*"/>
+					<parameter name="distinct" type="gboolean"/>
+					<parameter name="expr_id" type="GdaSqlBuilderId"/>
+				</parameters>
+			</method>
+			<method name="select_set_having" symbol="gda_sql_builder_select_set_having">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="builder" type="GdaSqlBuilder*"/>
+					<parameter name="cond_id" type="GdaSqlBuilderId"/>
+				</parameters>
+			</method>
+			<method name="select_set_limit" symbol="gda_sql_builder_select_set_limit">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="builder" type="GdaSqlBuilder*"/>
+					<parameter name="limit_count_expr_id" type="GdaSqlBuilderId"/>
+					<parameter name="limit_offset_expr_id" type="GdaSqlBuilderId"/>
+				</parameters>
+			</method>
+			<method name="set_table" symbol="gda_sql_builder_set_table">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="builder" type="GdaSqlBuilder*"/>
+					<parameter name="table_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_where" symbol="gda_sql_builder_set_where">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="builder" type="GdaSqlBuilder*"/>
+					<parameter name="cond_id" type="GdaSqlBuilderId"/>
+				</parameters>
+			</method>
+			<property name="stmt-type" type="GdaSqlStatementType" readable="0" writable="1" construct="0" construct-only="1"/>
 		</object>
 		<object name="GdaSqlParser" parent="GObject" type-name="GdaSqlParser" get-type="gda_sql_parser_get_type">
 			<implements>
@@ -5943,6 +6667,15 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<method name="rewrite_for_default_values" symbol="gda_statement_rewrite_for_default_values">
+				<return-type type="GdaSqlStatement*"/>
+				<parameters>
+					<parameter name="stmt" type="GdaStatement*"/>
+					<parameter name="params" type="GdaSet*"/>
+					<parameter name="remove" type="gboolean"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<method name="serialize" symbol="gda_statement_serialize">
 				<return-type type="gchar*"/>
 				<parameters>
@@ -5984,6 +6717,89 @@
 				</parameters>
 			</signal>
 		</object>
+		<object name="GdaThreadWrapper" parent="GObject" type-name="GdaThreadWrapper" get-type="gda_thread_wrapper_get_type">
+			<method name="cancel" symbol="gda_thread_wrapper_cancel">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="wrapper" type="GdaThreadWrapper*"/>
+					<parameter name="id" type="guint"/>
+				</parameters>
+			</method>
+			<method name="connect_raw" symbol="gda_thread_wrapper_connect_raw">
+				<return-type type="gulong"/>
+				<parameters>
+					<parameter name="wrapper" type="GdaThreadWrapper*"/>
+					<parameter name="instance" type="gpointer"/>
+					<parameter name="sig_name" type="gchar*"/>
+					<parameter name="private_thread" type="gboolean"/>
+					<parameter name="private_job" type="gboolean"/>
+					<parameter name="callback" type="GdaThreadWrapperCallback"/>
+					<parameter name="data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="disconnect" symbol="gda_thread_wrapper_disconnect">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="wrapper" type="GdaThreadWrapper*"/>
+					<parameter name="id" type="gulong"/>
+				</parameters>
+			</method>
+			<method name="error_quark" symbol="gda_thread_wrapper_error_quark">
+				<return-type type="GQuark"/>
+			</method>
+			<method name="execute" symbol="gda_thread_wrapper_execute">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="wrapper" type="GdaThreadWrapper*"/>
+					<parameter name="func" type="GdaThreadWrapperFunc"/>
+					<parameter name="arg" type="gpointer"/>
+					<parameter name="arg_destroy_func" type="GDestroyNotify"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="execute_void" symbol="gda_thread_wrapper_execute_void">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="wrapper" type="GdaThreadWrapper*"/>
+					<parameter name="func" type="GdaThreadWrapperVoidFunc"/>
+					<parameter name="arg" type="gpointer"/>
+					<parameter name="arg_destroy_func" type="GDestroyNotify"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="fetch_result" symbol="gda_thread_wrapper_fetch_result">
+				<return-type type="gpointer"/>
+				<parameters>
+					<parameter name="wrapper" type="GdaThreadWrapper*"/>
+					<parameter name="may_lock" type="gboolean"/>
+					<parameter name="exp_id" type="guint"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="get_waiting_size" symbol="gda_thread_wrapper_get_waiting_size">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="wrapper" type="GdaThreadWrapper*"/>
+				</parameters>
+			</method>
+			<method name="iterate" symbol="gda_thread_wrapper_iterate">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="wrapper" type="GdaThreadWrapper*"/>
+					<parameter name="may_block" type="gboolean"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gda_thread_wrapper_new">
+				<return-type type="GdaThreadWrapper*"/>
+			</constructor>
+			<method name="steal_signal" symbol="gda_thread_wrapper_steal_signal">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="wrapper" type="GdaThreadWrapper*"/>
+					<parameter name="id" type="gulong"/>
+				</parameters>
+			</method>
+		</object>
 		<object name="GdaTransactionStatus" parent="GObject" type-name="GdaTransactionStatus" get-type="gda_transaction_status_get_type">
 			<constructor name="new" symbol="gda_transaction_status_new">
 				<return-type type="GdaTransactionStatus*"/>
@@ -5995,6 +6811,344 @@
 			<field name="isolation_level" type="GdaTransactionIsolation"/>
 			<field name="state" type="GdaTransactionStatusState"/>
 			<field name="events" type="GList*"/>
+		</object>
+		<object name="GdaTree" parent="GObject" type-name="GdaTree" get-type="gda_tree_get_type">
+			<method name="add_manager" symbol="gda_tree_add_manager">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="tree" type="GdaTree*"/>
+					<parameter name="manager" type="GdaTreeManager*"/>
+				</parameters>
+			</method>
+			<method name="clean" symbol="gda_tree_clean">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="tree" type="GdaTree*"/>
+				</parameters>
+			</method>
+			<method name="dump" symbol="gda_tree_dump">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="tree" type="GdaTree*"/>
+					<parameter name="node" type="GdaTreeNode*"/>
+					<parameter name="stream" type="FILE*"/>
+				</parameters>
+			</method>
+			<method name="error_quark" symbol="gda_tree_error_quark">
+				<return-type type="GQuark"/>
+			</method>
+			<method name="get_node" symbol="gda_tree_get_node">
+				<return-type type="GdaTreeNode*"/>
+				<parameters>
+					<parameter name="tree" type="GdaTree*"/>
+					<parameter name="tree_path" type="gchar*"/>
+					<parameter name="use_names" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="get_node_manager" symbol="gda_tree_get_node_manager">
+				<return-type type="GdaTreeManager*"/>
+				<parameters>
+					<parameter name="tree" type="GdaTree*"/>
+					<parameter name="node" type="GdaTreeNode*"/>
+				</parameters>
+			</method>
+			<method name="get_node_path" symbol="gda_tree_get_node_path">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="tree" type="GdaTree*"/>
+					<parameter name="node" type="GdaTreeNode*"/>
+				</parameters>
+			</method>
+			<method name="get_nodes_in_path" symbol="gda_tree_get_nodes_in_path">
+				<return-type type="GSList*"/>
+				<parameters>
+					<parameter name="tree" type="GdaTree*"/>
+					<parameter name="tree_path" type="gchar*"/>
+					<parameter name="use_names" type="gboolean"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gda_tree_new">
+				<return-type type="GdaTree*"/>
+			</constructor>
+			<method name="set_attribute" symbol="gda_tree_set_attribute">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="tree" type="GdaTree*"/>
+					<parameter name="attribute" type="gchar*"/>
+					<parameter name="value" type="GValue*"/>
+					<parameter name="destroy" type="GDestroyNotify"/>
+				</parameters>
+			</method>
+			<method name="update_all" symbol="gda_tree_update_all">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="tree" type="GdaTree*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="update_part" symbol="gda_tree_update_part">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="tree" type="GdaTree*"/>
+					<parameter name="node" type="GdaTreeNode*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<property name="is-list" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<signal name="node-changed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="tree" type="GdaTree*"/>
+					<parameter name="node" type="GdaTreeNode*"/>
+				</parameters>
+			</signal>
+			<signal name="node-deleted" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="tree" type="GdaTree*"/>
+					<parameter name="node_path" type="char*"/>
+				</parameters>
+			</signal>
+			<signal name="node-has-child-toggled" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="tree" type="GdaTree*"/>
+					<parameter name="node" type="GdaTreeNode*"/>
+				</parameters>
+			</signal>
+			<signal name="node-inserted" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="tree" type="GdaTree*"/>
+					<parameter name="node" type="GdaTreeNode*"/>
+				</parameters>
+			</signal>
+		</object>
+		<object name="GdaTreeManager" parent="GObject" type-name="GdaTreeManager" get-type="gda_tree_manager_get_type">
+			<method name="add_manager" symbol="gda_tree_manager_add_manager">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="manager" type="GdaTreeManager*"/>
+					<parameter name="sub" type="GdaTreeManager*"/>
+				</parameters>
+			</method>
+			<method name="add_new_node_attribute" symbol="gda_tree_manager_add_new_node_attribute">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="manager" type="GdaTreeManager*"/>
+					<parameter name="attribute" type="gchar*"/>
+					<parameter name="value" type="GValue*"/>
+				</parameters>
+			</method>
+			<method name="create_node" symbol="gda_tree_manager_create_node">
+				<return-type type="GdaTreeNode*"/>
+				<parameters>
+					<parameter name="manager" type="GdaTreeManager*"/>
+					<parameter name="parent" type="GdaTreeNode*"/>
+					<parameter name="name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="error_quark" symbol="gda_tree_manager_error_quark">
+				<return-type type="GQuark"/>
+			</method>
+			<method name="get_managers" symbol="gda_tree_manager_get_managers">
+				<return-type type="GSList*"/>
+				<parameters>
+					<parameter name="manager" type="GdaTreeManager*"/>
+				</parameters>
+			</method>
+			<method name="get_node_create_func" symbol="gda_tree_manager_get_node_create_func">
+				<return-type type="GdaTreeManagerNodeFunc"/>
+				<parameters>
+					<parameter name="manager" type="GdaTreeManager*"/>
+				</parameters>
+			</method>
+			<constructor name="new_with_func" symbol="gda_tree_manager_new_with_func">
+				<return-type type="GdaTreeManager*"/>
+				<parameters>
+					<parameter name="update_func" type="GdaTreeManagerNodesFunc"/>
+				</parameters>
+			</constructor>
+			<method name="set_node_create_func" symbol="gda_tree_manager_set_node_create_func">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="manager" type="GdaTreeManager*"/>
+					<parameter name="func" type="GdaTreeManagerNodeFunc"/>
+				</parameters>
+			</method>
+			<property name="func" type="gpointer" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="recursive" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<vfunc name="update_children">
+				<return-type type="GSList*"/>
+				<parameters>
+					<parameter name="manager" type="GdaTreeManager*"/>
+					<parameter name="node" type="GdaTreeNode*"/>
+					<parameter name="children_nodes" type="GSList*"/>
+					<parameter name="out_error" type="gboolean*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+		</object>
+		<object name="GdaTreeMgrColumns" parent="GdaTreeManager" type-name="GdaTreeMgrColumns" get-type="gda_tree_mgr_columns_get_type">
+			<constructor name="new" symbol="gda_tree_mgr_columns_new">
+				<return-type type="GdaTreeManager*"/>
+				<parameters>
+					<parameter name="cnc" type="GdaConnection*"/>
+					<parameter name="schema" type="gchar*"/>
+					<parameter name="table_name" type="gchar*"/>
+				</parameters>
+			</constructor>
+			<property name="connection" type="GdaConnection*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="meta-store" type="GdaMetaStore*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="schema" type="char*" readable="0" writable="1" construct="0" construct-only="1"/>
+			<property name="table-name" type="char*" readable="0" writable="1" construct="0" construct-only="1"/>
+		</object>
+		<object name="GdaTreeMgrLabel" parent="GdaTreeManager" type-name="GdaTreeMgrLabel" get-type="gda_tree_mgr_label_get_type">
+			<constructor name="new" symbol="gda_tree_mgr_label_new">
+				<return-type type="GdaTreeManager*"/>
+				<parameters>
+					<parameter name="label" type="gchar*"/>
+				</parameters>
+			</constructor>
+			<property name="label" type="char*" readable="0" writable="1" construct="0" construct-only="1"/>
+		</object>
+		<object name="GdaTreeMgrSchemas" parent="GdaTreeManager" type-name="GdaTreeMgrSchemas" get-type="gda_tree_mgr_schemas_get_type">
+			<constructor name="new" symbol="gda_tree_mgr_schemas_new">
+				<return-type type="GdaTreeManager*"/>
+				<parameters>
+					<parameter name="cnc" type="GdaConnection*"/>
+				</parameters>
+			</constructor>
+			<property name="connection" type="GdaConnection*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="meta-store" type="GdaMetaStore*" readable="1" writable="1" construct="0" construct-only="1"/>
+		</object>
+		<object name="GdaTreeMgrSelect" parent="GdaTreeManager" type-name="GdaTreeMgrSelect" get-type="gda_tree_mgr_select_get_type">
+			<constructor name="new" symbol="gda_tree_mgr_select_new">
+				<return-type type="GdaTreeManager*"/>
+				<parameters>
+					<parameter name="cnc" type="GdaConnection*"/>
+					<parameter name="stmt" type="GdaStatement*"/>
+					<parameter name="params" type="GdaSet*"/>
+				</parameters>
+			</constructor>
+			<property name="connection" type="GdaConnection*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="params" type="GdaSet*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="statement" type="GdaStatement*" readable="1" writable="1" construct="0" construct-only="1"/>
+		</object>
+		<object name="GdaTreeMgrTables" parent="GdaTreeManager" type-name="GdaTreeMgrTables" get-type="gda_tree_mgr_tables_get_type">
+			<constructor name="new" symbol="gda_tree_mgr_tables_new">
+				<return-type type="GdaTreeManager*"/>
+				<parameters>
+					<parameter name="cnc" type="GdaConnection*"/>
+					<parameter name="schema" type="gchar*"/>
+				</parameters>
+			</constructor>
+			<property name="connection" type="GdaConnection*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="meta-store" type="GdaMetaStore*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="schema" type="char*" readable="0" writable="1" construct="0" construct-only="1"/>
+		</object>
+		<object name="GdaTreeNode" parent="GObject" type-name="GdaTreeNode" get-type="gda_tree_node_get_type">
+			<method name="error_quark" symbol="gda_tree_node_error_quark">
+				<return-type type="GQuark"/>
+			</method>
+			<method name="fetch_attribute" symbol="gda_tree_node_fetch_attribute">
+				<return-type type="GValue*"/>
+				<parameters>
+					<parameter name="node" type="GdaTreeNode*"/>
+					<parameter name="attribute" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_child_index" symbol="gda_tree_node_get_child_index">
+				<return-type type="GdaTreeNode*"/>
+				<parameters>
+					<parameter name="node" type="GdaTreeNode*"/>
+					<parameter name="index" type="gint"/>
+				</parameters>
+			</method>
+			<method name="get_child_name" symbol="gda_tree_node_get_child_name">
+				<return-type type="GdaTreeNode*"/>
+				<parameters>
+					<parameter name="node" type="GdaTreeNode*"/>
+					<parameter name="name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_children" symbol="gda_tree_node_get_children">
+				<return-type type="GSList*"/>
+				<parameters>
+					<parameter name="node" type="GdaTreeNode*"/>
+				</parameters>
+			</method>
+			<method name="get_node_attribute" symbol="gda_tree_node_get_node_attribute">
+				<return-type type="GValue*"/>
+				<parameters>
+					<parameter name="node" type="GdaTreeNode*"/>
+					<parameter name="attribute" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_parent" symbol="gda_tree_node_get_parent">
+				<return-type type="GdaTreeNode*"/>
+				<parameters>
+					<parameter name="node" type="GdaTreeNode*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gda_tree_node_new">
+				<return-type type="GdaTreeNode*"/>
+				<parameters>
+					<parameter name="name" type="gchar*"/>
+				</parameters>
+			</constructor>
+			<method name="set_node_attribute" symbol="gda_tree_node_set_node_attribute">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="node" type="GdaTreeNode*"/>
+					<parameter name="attribute" type="gchar*"/>
+					<parameter name="value" type="GValue*"/>
+					<parameter name="destroy" type="GDestroyNotify"/>
+				</parameters>
+			</method>
+			<property name="name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<signal name="node-changed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="reporting" type="GdaTreeNode*"/>
+					<parameter name="node" type="GdaTreeNode*"/>
+				</parameters>
+			</signal>
+			<signal name="node-deleted" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="reporting" type="GdaTreeNode*"/>
+					<parameter name="relative_path" type="char*"/>
+				</parameters>
+			</signal>
+			<signal name="node-has-child-toggled" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="reporting" type="GdaTreeNode*"/>
+					<parameter name="node" type="GdaTreeNode*"/>
+				</parameters>
+			</signal>
+			<signal name="node-inserted" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="reporting" type="GdaTreeNode*"/>
+					<parameter name="node" type="GdaTreeNode*"/>
+				</parameters>
+			</signal>
+			<vfunc name="dump_children">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="node" type="GdaTreeNode*"/>
+					<parameter name="prefix" type="gchar*"/>
+					<parameter name="in_string" type="GString*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="dump_header">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="node" type="GdaTreeNode*"/>
+				</parameters>
+			</vfunc>
 		</object>
 		<object name="GdaVconnectionDataModel" parent="GdaVirtualConnection" type-name="GdaVconnectionDataModel" get-type="gda_vconnection_data_model_get_type">
 			<implements>
@@ -6094,7 +7248,7 @@
 			<method name="internal_get_provider_data" symbol="gda_virtual_connection_internal_get_provider_data">
 				<return-type type="gpointer"/>
 				<parameters>
-					<parameter name="cnc" type="GdaVirtualConnection*"/>
+					<parameter name="vcnc" type="GdaVirtualConnection*"/>
 				</parameters>
 			</method>
 			<method name="internal_set_provider_data" symbol="gda_virtual_connection_internal_set_provider_data">
@@ -6109,6 +7263,14 @@
 				<return-type type="GdaConnection*"/>
 				<parameters>
 					<parameter name="virtual_provider" type="GdaVirtualProvider*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="open_extended" symbol="gda_virtual_connection_open_extended">
+				<return-type type="GdaConnection*"/>
+				<parameters>
+					<parameter name="virtual_provider" type="GdaVirtualProvider*"/>
+					<parameter name="options" type="GdaConnectionOptions"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -6200,6 +7362,12 @@
 				<parameters>
 					<parameter name="dh" type="GdaDataHandler*"/>
 					<parameter name="type" type="GType"/>
+				</parameters>
+			</method>
+			<method name="get_default" symbol="gda_data_handler_get_default">
+				<return-type type="GdaDataHandler*"/>
+				<parameters>
+					<parameter name="for_type" type="GType"/>
 				</parameters>
 			</method>
 			<method name="get_descr" symbol="gda_data_handler_get_descr">
@@ -6734,12 +7902,6 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="D_COL_ERR" type="char*" value="&#x1b;[;31;1m"/>
-		<constant name="D_COL_H0" type="char*" value="&#x1b;[;34;7m"/>
-		<constant name="D_COL_H1" type="char*" value="&#x1b;[;36;7m"/>
-		<constant name="D_COL_H2" type="char*" value="&#x1b;[;36;4m"/>
-		<constant name="D_COL_NOR" type="char*" value="&#x1b;[0m"/>
-		<constant name="D_COL_OK" type="char*" value="&#x1b;[;32m"/>
 		<constant name="GDA_ATTRIBUTE_AUTO_INCREMENT" type="char*" value="__gda_attr_autoinc"/>
 		<constant name="GDA_ATTRIBUTE_DESCRIPTION" type="char*" value="__gda_attr_descr"/>
 		<constant name="GDA_ATTRIBUTE_IS_DEFAULT" type="char*" value="__gda_attr_is_default"/>
