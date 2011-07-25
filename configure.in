@@ -13,23 +13,27 @@ AC_PROG_CC
 AC_PROG_LIBTOOL
 
 
-AC_PATH_PROG(VALAC, valac, valac)
-AC_SUBST(VALAC)
 
+##
+## Settings:
+##
 
-AC_SUBST(VALAFLAGS)
-
-
-VALA_PACKAGE=libvala-0.14
-LIBVALA_REQUIRED=0.13.0
+VALA_REQUIRED=0.13.1.56
 LIBGEE_REQUIRED=0.5
 LIBGVC_REQUIRED=2.16
 GLIB_REQUIRED=2.12.0
-GTK_REQUIRED=2.10.0
 LIBGDKPIXBUF_REQUIRED=2.0
 
 
 
+##
+## Dependencies:
+##
+
+AC_PATH_PROG(VALAC, valac, valac)
+AC_SUBST(VALAC)
+AC_SUBST(VALAFLAGS)
+m4_ifdef([AM_PROG_VALAC], [AM_PROG_VALAC([$VALA_REQUIRED])])
 
 PKG_CHECK_MODULES(LIBGVC, libgvc >= $LIBGVC_REQUIRED)
 AC_SUBST(LIBGVC_CFLAGS)
@@ -89,7 +93,6 @@ AC_SUBST(LIBVALA_0_10_X_LIBS)
 
 
 
-
 AC_CONFIG_FILES([Makefile
                  src/libvaladoc/valadoc-1.0.pc
                  src/libvaladoc/valadoc-1.0.deps
@@ -110,5 +113,6 @@ AC_CONFIG_FILES([Makefile
                  src/valadoc/Makefile
                  tests/Makefile
 				 ])
+
 
 AC_OUTPUT

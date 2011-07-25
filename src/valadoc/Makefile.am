@@ -1,14 +1,17 @@
 NULL =
 
+DEFAULT_DRIVER = "`$(VALAC) --version`"
 
-AM_CFLAGS =                             \
+
+AM_CFLAGS =                                 \
 	-DPACKAGE_DATADIR=\"$(libdir)/valadoc\" \
-	-DPACKAGE_VERSION=\"$(VERSION)\"    \
-	-I ../libvaladoc/                   \
-	$(GLIB_CFLAGS)                      \
-	$(LIBGEE_CFLAGS)                    \
-	$(GMODULE_CFLAGS)                   \
-	$(LIBGVC_CFLAGS)                    \
+	-DPACKAGE_VERSION=\"$(VERSION)\"        \
+	-DDEFAULT_DRIVER=\"$(DEFAULT_DRIVER)\"         \
+	-I ../libvaladoc/                       \
+	$(GLIB_CFLAGS)                          \
+	$(LIBGEE_CFLAGS)                        \
+	$(GMODULE_CFLAGS)                       \
+	$(LIBGVC_CFLAGS)                        \
 	$(NULL)
 
 

@@ -14,5 +14,8 @@ namespace Config {
 
 	[CCode (cname = "PACKAGE_VAPIDIR")]
 	public const string vapi_dir;
+
+	[CCode (cname = "DEFAULT_DRIVER")]
+	public const string default_driver;
 }
 

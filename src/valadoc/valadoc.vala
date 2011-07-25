@@ -1,6 +1,7 @@
 /* valadoc.vala
  *
  * Copyright (C) 2008-2009 Florian Brosch
+ * Copyright (C) 2011      Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -65,32 +66,38 @@ public class ValaDoc : Object {
 	private static string[] packages;
 
 	private const GLib.OptionEntry[] options = {
-		{ "basedir", 'b', 0, OptionArg.FILENAME, ref basedir, "Base source directory", "DIRECTORY" },
-		{ "define", 'D', 0, OptionArg.STRING_ARRAY, ref defines, "Define SYMBOL", "SYMBOL..." },
-		{ "enable-experimental", 0, 0, OptionArg.NONE, ref experimental, "Enable experimental features", null },
-		{ "enable-experimental-non-null", 0, 0, OptionArg.NONE, ref experimental_non_null, "Enable experimental enhancements for non-null types", null },
-		{ "vapidir", 0, 0, OptionArg.FILENAME_ARRAY, ref vapi_directories, "Look for package bindings in DIRECTORY", "DIRECTORY..." },
-		{ "importdir", 0, 0, OptionArg.FILENAME_ARRAY, ref import_directories, "Look for external documentation in DIRECTORY", "DIRECTORY..." },
-		{ "profile", 0, 0, OptionArg.STRING, ref profile, "Use the given profile instead of the default", "PROFILE" },
-		{ "driver", 0, 0, OptionArg.NONE, ref driverpath, "Display version number", null },
-
-		{ "pkg", 0, 0, OptionArg.STRING_ARRAY, ref packages, "Include binding for PACKAGE", "PACKAGE..." },
-		{ "import", 0, 0, OptionArg.STRING_ARRAY, ref import_packages, "Include binding for PACKAGE", "PACKAGE..." },
 		{ "directory", 'o', 0, OptionArg.FILENAME, ref directory, "Output directory", "DIRECTORY" },
 
+		{ "basedir", 'b', 0, OptionArg.FILENAME, ref basedir, "Base source directory", "DIRECTORY" },
+		{ "define", 'D', 0, OptionArg.STRING_ARRAY, ref defines, "Define SYMBOL", "SYMBOL..." },
+		{ "profile", 0, 0, OptionArg.STRING, ref profile, "Use the given profile instead of the default", "PROFILE" },
+
+		{ "enable-experimental", 0, 0, OptionArg.NONE, ref experimental, "Enable experimental features", null },
+		{ "enable-experimental-non-null", 0, 0, OptionArg.NONE, ref experimental_non_null, "Enable experimental enhancements for non-null types", null },
+
+		{ "vapidir", 0, 0, OptionArg.FILENAME_ARRAY, ref vapi_directories, "Look for package bindings in DIRECTORY", "DIRECTORY..." },
+		{ "pkg", 0, 0, OptionArg.STRING_ARRAY, ref packages, "Include binding for PACKAGE", "PACKAGE..." },
+
+		{ "driver", 0, 0, OptionArg.STRING, ref driverpath, "Name of an driver or path to a custom driver", null },
+
+		{ "importdir", 0, 0, OptionArg.FILENAME_ARRAY, ref import_directories, "Look for external documentation in DIRECTORY", "DIRECTORY..." },
+		{ "import", 0, 0, OptionArg.STRING_ARRAY, ref import_packages, "Include binding for PACKAGE", "PACKAGE..." },
+
 		{ "wiki", 0, 0, OptionArg.FILENAME, ref wikidirectory, "Wiki directory", "DIRECTORY" },
+
 		{ "deps", 0, 0, OptionArg.NONE, ref with_deps, "Adds packages to the documentation", null },
 
-		{ "doclet-arg", 'X', 0, OptionArg.STRING_ARRAY, ref pluginargs, "Pass arguments to the doclet", "ARG" },
 		{ "doclet", 0, 0, OptionArg.STRING, ref docletpath, "Name of an included doclet or path to custom doclet", "PLUGIN"},
+		{ "doclet-arg", 'X', 0, OptionArg.STRING_ARRAY, ref pluginargs, "Pass arguments to the doclet", "ARG" },
 
 		{ "no-protected", 0, OptionFlags.REVERSE, OptionArg.NONE, ref _protected, "Removes protected elements from documentation", null },
 		{ "internal", 0, 0, OptionArg.NONE, ref _internal, "Adds internal elements to documentation", null },
 		{ "private", 0, 0, OptionArg.NONE, ref _private, "Adds private elements to documentation", null },
-//		{ "inherit", 0, 0, OptionArg.NONE, ref add_inherited, "Adds inherited elements to a class", null },
 
 		{ "package-name", 0, 0, OptionArg.STRING, ref pkg_name, "package name", "NAME" },
 		{ "package-version", 0, 0, OptionArg.STRING, ref pkg_version, "package version", "VERSION" },
+
+		{ "version", 0, 0, OptionArg.NONE, ref version, "Display version number", null },
 
 		{ "force", 0, 0, OptionArg.NONE, ref force, "force", null },
 		{ "verbose", 0, 0, OptionArg.NONE, ref verbose, "Show all warnings", null },
@@ -98,6 +105,30 @@ public class ValaDoc : Object {
 
 		{ null }
 	};
+
+	private struct LibvalaVersion {
+		public int segment_a;
+		public int segment_b;
+		public int segment_c;
+
+		public LibvalaVersion (int seg_a, int seg_b, int seg_c) {
+			segment_a = seg_a;
+			segment_b = seg_b;
+			segment_c = seg_c;
+		}
+	}
+
+	private struct DriverMetaData {
+		public LibvalaVersion min;
+		public LibvalaVersion max;
+		public string driver;
+
+		public DriverMetaData (LibvalaVersion min, LibvalaVersion max, string driver) {
+			this.driver = driver;
+			this.min = min;
+			this.max = max;
+		}
+	}
 
 	private static int quit (ErrorReporter reporter) {
 		if (reporter.errors == 0) {
@@ -138,11 +169,7 @@ public class ValaDoc : Object {
 		return this.pkg_name;
 	}
 
-	private string get_plugin_dir (string? pluginpath, string subdir, string default_pkg) {
-		if (pluginpath == null) {
-			return build_filename (Config.plugin_dir, subdir, default_pkg);
-		}
-
+	private string get_plugin_path (string pluginpath, string pluginsubdir) {
 		if (is_absolute (pluginpath) == false) {
 			// Test to see if the plugin exists in the expanded path and then fallback
 			// to using the configured plugin directory
@@ -150,19 +177,99 @@ public class ValaDoc : Object {
 			if (FileUtils.test(local_path, FileTest.EXISTS)) {
 				return local_path;
 			} else {
-				return build_filename (Config.plugin_dir, subdir, pluginpath);
+				return build_filename (Config.plugin_dir, pluginsubdir, pluginpath);
 			}
 		}
 
 		return pluginpath;
 	}
 
+	private string get_doclet_path (ErrorReporter reporter) {
+		if (docletpath == null) {
+			return build_filename (Config.plugin_dir, "doclets", "html");
+		}
+
+		return get_plugin_path (docletpath, "doclet");
+	}
+
+	private bool is_driver (string path) {
+		string library_path = Path.build_filename (path, "libdriver." + Module.SUFFIX);
+		return FileUtils.test (path, FileTest.EXISTS) && FileUtils.test (library_path, FileTest.EXISTS);
+	}
+
+	private string? get_driver_path (ErrorReporter reporter) {
+		// no driver selected
+		if (driverpath == null) {
+			driverpath = Config.default_driver;
+		}
+
+
+		// selected string is a plugin directory
+		string extended_driver_path = get_plugin_path (driverpath, "drivers");
+		if (is_driver (extended_driver_path)) {
+			return extended_driver_path;
+		}
+
+
+		// selected string is a version number:
+		if (driverpath.has_prefix ("Vala ")) {
+			driverpath = driverpath.substring (5);
+		}
+
+		string[] segments = driverpath.split (".");
+		if (segments.length != 3 && segments.length != 4) {
+			reporter.simple_error ("Invalid driver version format.");
+			return null;
+		}
+
+
+		//TODO: add try_parse to int
+		int64 segment_a;
+		int64 segment_b;
+		int64 segment_c;
+		bool tmp;
+
+		tmp  = int64.try_parse (segments[0], out segment_a);
+		tmp &= int64.try_parse (segments[1], out segment_b);
+		tmp &= int64.try_parse (segments[2], out segment_c);
+
+		if (!tmp) {
+			reporter.simple_error ("Invalid driver version format.");
+			return null;
+		}
+
+		DriverMetaData[] lut = {
+				DriverMetaData (LibvalaVersion (0, 10, 0), LibvalaVersion (0, 10, -4), "0.10.x"),
+				DriverMetaData (LibvalaVersion (0, 11, 0), LibvalaVersion (0, 11,  0), "0.11.0"),
+				DriverMetaData (LibvalaVersion (0, 11, 1), LibvalaVersion (0, 11, -1), "0.11.x"),
+				DriverMetaData (LibvalaVersion (0, 12, 0), LibvalaVersion (0, 12, -1), "0.12.x"),
+				DriverMetaData (LibvalaVersion (0, 13, 0), LibvalaVersion (0, 13, -1), "0.13.x")
+			};
+
+		for (int i = 0; i < lut.length ; i++) {
+			if (lut[i].min.segment_a <= segment_a && lut[i].max.segment_a >= segment_a
+				&& lut[i].min.segment_b <= segment_b && lut[i].max.segment_b >= segment_b
+				&& lut[i].min.segment_c <= segment_c && (lut[i].max.segment_c >= segment_c || lut[i].max.segment_c < 0)) {
+				return Path.build_filename (Config.plugin_dir, "drivers", lut[i].driver);
+			}
+		}
+
+		// return invalid driver path
+		reporter.simple_error ("No suitable driver found.");
+		return null;
+	}
+
 	private ModuleLoader? create_module_loader (ErrorReporter reporter) {
 		ModuleLoader modules = new ModuleLoader ();
 		Taglets.init (modules);
 
+
 		// doclet:
-		string pluginpath = get_plugin_dir (docletpath, "doclets", "html");
+		string? pluginpath = get_doclet_path (reporter);
+		if (pluginpath == null) {
+			return null;
+		}
+
 		bool tmp = modules.load_doclet (pluginpath);
 		if (tmp == false) {
 			reporter.simple_error ("failed to load doclet");
@@ -171,7 +278,11 @@ public class ValaDoc : Object {
 
 
 		// driver:
-		pluginpath = get_plugin_dir (driverpath, "drivers", "0.13.x");
+		pluginpath = get_driver_path (reporter);
+		if (pluginpath == null) {
+			return null;
+		}
+
 		tmp = modules.load_driver (pluginpath);
 		if (tmp == false) {
 			reporter.simple_error ("failed to load driver");
