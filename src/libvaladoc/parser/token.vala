@@ -97,6 +97,6 @@ public class Valadoc.Token : Object {
 
 	public int to_int () {
 		assert (is_number);
-		return _word.to_int ();
+		return int.parse (_word);
 	}
 }

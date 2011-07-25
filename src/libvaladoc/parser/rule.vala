@@ -143,6 +143,8 @@ public abstract class Valadoc.Rule : Object {
 			handled = false;
 			return true;
 		}
+
+		handled = false;
 		return false;
 	}
 

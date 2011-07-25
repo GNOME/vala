@@ -118,6 +118,8 @@ public class Valadoc.MarkupReader : Object {
 
 		if (empty_element) {
 			empty_element = false;
+			token_begin = MarkupSourceLocation (begin, line, column);
+			token_end = MarkupSourceLocation (begin, line, column);
 			return MarkupTokenType.END_ELEMENT;
 		}
 
@@ -125,9 +127,7 @@ public class Valadoc.MarkupReader : Object {
 
 		MarkupTokenType type = MarkupTokenType.NONE;
 		char* begin = current;
-		token_begin.pos = begin;
-		token_begin.line = line;
-		token_begin.column = column;
+		token_begin = MarkupSourceLocation (begin, line, column);
 
 		if (current >= end) {
 			type = MarkupTokenType.EOF;
@@ -217,9 +217,7 @@ public class Valadoc.MarkupReader : Object {
 			type = MarkupTokenType.TEXT;
 		}
 
-		token_end.pos = current;
-		token_end.line = line;
-		token_end.column = column - 1;
+		token_end = MarkupSourceLocation (current, line, column - 1);
 
 		return type;
 	}
