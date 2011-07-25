@@ -171,6 +171,13 @@
 				<parameter name="code" type="gint"/>
 			</parameters>
 		</function>
+		<function name="filename_to_uri" symbol="gst_filename_to_uri">
+			<return-type type="gchar*"/>
+			<parameters>
+				<parameter name="filename" type="gchar*"/>
+				<parameter name="error" type="GError**"/>
+			</parameters>
+		</function>
 		<function name="filter_run" symbol="gst_filter_run">
 			<return-type type="GList*"/>
 			<parameters>
@@ -260,8 +267,14 @@
 		<function name="init_get_option_group" symbol="gst_init_get_option_group">
 			<return-type type="GOptionGroup*"/>
 		</function>
+		<function name="int64_range_get_type" symbol="gst_int64_range_get_type">
+			<return-type type="GType"/>
+		</function>
 		<function name="int_range_get_type" symbol="gst_int_range_get_type">
 			<return-type type="GType"/>
+		</function>
+		<function name="is_initialized" symbol="gst_is_initialized">
+			<return-type type="gboolean"/>
 		</function>
 		<function name="is_tag_list" symbol="gst_is_tag_list">
 			<return-type type="gboolean"/>
@@ -722,6 +735,15 @@
 				<parameter name="res_d" type="gint*"/>
 			</parameters>
 		</function>
+		<function name="util_fraction_compare" symbol="gst_util_fraction_compare">
+			<return-type type="gint"/>
+			<parameters>
+				<parameter name="a_n" type="gint"/>
+				<parameter name="a_d" type="gint"/>
+				<parameter name="b_n" type="gint"/>
+				<parameter name="b_d" type="gint"/>
+			</parameters>
+		</function>
 		<function name="util_fraction_multiply" symbol="gst_util_fraction_multiply">
 			<return-type type="gboolean"/>
 			<parameters>
@@ -984,6 +1006,18 @@
 				<parameter name="value" type="GValue*"/>
 			</parameters>
 		</function>
+		<function name="value_get_int64_range_max" symbol="gst_value_get_int64_range_max">
+			<return-type type="gint64"/>
+			<parameters>
+				<parameter name="value" type="GValue*"/>
+			</parameters>
+		</function>
+		<function name="value_get_int64_range_min" symbol="gst_value_get_int64_range_min">
+			<return-type type="gint64"/>
+			<parameters>
+				<parameter name="value" type="GValue*"/>
+			</parameters>
+		</function>
 		<function name="value_get_int_range_max" symbol="gst_value_get_int_range_max">
 			<return-type type="gint"/>
 			<parameters>
@@ -1058,6 +1092,14 @@
 			<parameters>
 				<parameter name="value" type="GValue*"/>
 				<parameter name="index" type="guint"/>
+			</parameters>
+		</function>
+		<function name="value_list_merge" symbol="gst_value_list_merge">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="dest" type="GValue*"/>
+				<parameter name="value1" type="GValue*"/>
+				<parameter name="value2" type="GValue*"/>
 			</parameters>
 		</function>
 		<function name="value_list_prepend_value" symbol="gst_value_list_prepend_value">
@@ -1156,6 +1198,14 @@
 				<parameter name="denominator_start" type="gint"/>
 				<parameter name="numerator_end" type="gint"/>
 				<parameter name="denominator_end" type="gint"/>
+			</parameters>
+		</function>
+		<function name="value_set_int64_range" symbol="gst_value_set_int64_range">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="value" type="GValue*"/>
+				<parameter name="start" type="gint64"/>
+				<parameter name="end" type="gint64"/>
 			</parameters>
 		</function>
 		<function name="value_set_int_range" symbol="gst_value_set_int_range">
@@ -1352,6 +1402,13 @@
 			<return-type type="void"/>
 			<parameters>
 				<parameter name="obj" type="GstMiniObject*"/>
+			</parameters>
+		</callback>
+		<callback name="GstMiniObjectWeakNotify">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="data" type="gpointer"/>
+				<parameter name="where_the_mini_object_was" type="GstMiniObject*"/>
 			</parameters>
 		</callback>
 		<callback name="GstPadAcceptCapsFunction">
@@ -1660,6 +1717,51 @@
 			<field name="live" type="gint"/>
 			<field name="mem_live" type="GSList*"/>
 		</struct>
+		<struct name="GstAtomicQueue">
+			<method name="length" symbol="gst_atomic_queue_length">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="queue" type="GstAtomicQueue*"/>
+				</parameters>
+			</method>
+			<method name="new" symbol="gst_atomic_queue_new">
+				<return-type type="GstAtomicQueue*"/>
+				<parameters>
+					<parameter name="initial_size" type="guint"/>
+				</parameters>
+			</method>
+			<method name="peek" symbol="gst_atomic_queue_peek">
+				<return-type type="gpointer"/>
+				<parameters>
+					<parameter name="queue" type="GstAtomicQueue*"/>
+				</parameters>
+			</method>
+			<method name="pop" symbol="gst_atomic_queue_pop">
+				<return-type type="gpointer"/>
+				<parameters>
+					<parameter name="queue" type="GstAtomicQueue*"/>
+				</parameters>
+			</method>
+			<method name="push" symbol="gst_atomic_queue_push">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="queue" type="GstAtomicQueue*"/>
+					<parameter name="data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="ref" symbol="gst_atomic_queue_ref">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="queue" type="GstAtomicQueue*"/>
+				</parameters>
+			</method>
+			<method name="unref" symbol="gst_atomic_queue_unref">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="queue" type="GstAtomicQueue*"/>
+				</parameters>
+			</method>
+		</struct>
 		<struct name="GstBuffer">
 			<method name="copy_metadata" symbol="gst_buffer_copy_metadata">
 				<return-type type="void"/>
@@ -1805,78 +1907,6 @@
 		</struct>
 		<struct name="GstBufferListClass">
 		</struct>
-		<struct name="GstBufferListIterator">
-			<method name="add" symbol="gst_buffer_list_iterator_add">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="it" type="GstBufferListIterator*"/>
-					<parameter name="buffer" type="GstBuffer*"/>
-				</parameters>
-			</method>
-			<method name="add_group" symbol="gst_buffer_list_iterator_add_group">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="it" type="GstBufferListIterator*"/>
-				</parameters>
-			</method>
-			<method name="do" symbol="gst_buffer_list_iterator_do">
-				<return-type type="GstBuffer*"/>
-				<parameters>
-					<parameter name="it" type="GstBufferListIterator*"/>
-					<parameter name="do_func" type="GstBufferListDoFunction"/>
-					<parameter name="user_data" type="gpointer"/>
-				</parameters>
-			</method>
-			<method name="free" symbol="gst_buffer_list_iterator_free">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="it" type="GstBufferListIterator*"/>
-				</parameters>
-			</method>
-			<method name="merge_group" symbol="gst_buffer_list_iterator_merge_group">
-				<return-type type="GstBuffer*"/>
-				<parameters>
-					<parameter name="it" type="GstBufferListIterator*"/>
-				</parameters>
-			</method>
-			<method name="n_buffers" symbol="gst_buffer_list_iterator_n_buffers">
-				<return-type type="guint"/>
-				<parameters>
-					<parameter name="it" type="GstBufferListIterator*"/>
-				</parameters>
-			</method>
-			<method name="next" symbol="gst_buffer_list_iterator_next">
-				<return-type type="GstBuffer*"/>
-				<parameters>
-					<parameter name="it" type="GstBufferListIterator*"/>
-				</parameters>
-			</method>
-			<method name="next_group" symbol="gst_buffer_list_iterator_next_group">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="it" type="GstBufferListIterator*"/>
-				</parameters>
-			</method>
-			<method name="remove" symbol="gst_buffer_list_iterator_remove">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="it" type="GstBufferListIterator*"/>
-				</parameters>
-			</method>
-			<method name="steal" symbol="gst_buffer_list_iterator_steal">
-				<return-type type="GstBuffer*"/>
-				<parameters>
-					<parameter name="it" type="GstBufferListIterator*"/>
-				</parameters>
-			</method>
-			<method name="take" symbol="gst_buffer_list_iterator_take">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="it" type="GstBufferListIterator*"/>
-					<parameter name="buffer" type="GstBuffer*"/>
-				</parameters>
-			</method>
-		</struct>
 		<struct name="GstClockEntry">
 			<field name="refcount" type="gint"/>
 			<field name="clock" type="GstClock*"/>
@@ -1887,6 +1917,8 @@
 			<field name="func" type="GstClockCallback"/>
 			<field name="user_data" type="gpointer"/>
 			<field name="destroy_data" type="GDestroyNotify"/>
+			<field name="unscheduled" type="gboolean"/>
+			<field name="woken_up" type="gboolean"/>
 		</struct>
 		<struct name="GstClockID">
 			<method name="compare_func" symbol="gst_clock_id_compare_func">
@@ -2013,6 +2045,8 @@
 			<field name="author" type="gchar*"/>
 			<field name="_gst_reserved" type="gpointer[]"/>
 		</struct>
+		<struct name="GstElementFactoryListType">
+		</struct>
 		<struct name="GstEvent">
 			<method name="get_seqnum" symbol="gst_event_get_seqnum">
 				<return-type type="guint32"/>
@@ -2101,6 +2135,15 @@
 					<parameter name="timestamp" type="GstClockTime"/>
 				</parameters>
 			</method>
+			<method name="new_qos_full" symbol="gst_event_new_qos_full">
+				<return-type type="GstEvent*"/>
+				<parameters>
+					<parameter name="type" type="GstQOSType"/>
+					<parameter name="proportion" type="gdouble"/>
+					<parameter name="diff" type="GstClockTimeDiff"/>
+					<parameter name="timestamp" type="GstClockTime"/>
+				</parameters>
+			</method>
 			<method name="new_seek" symbol="gst_event_new_seek">
 				<return-type type="GstEvent*"/>
 				<parameters>
@@ -2181,6 +2224,16 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="event" type="GstEvent*"/>
+					<parameter name="proportion" type="gdouble*"/>
+					<parameter name="diff" type="GstClockTimeDiff*"/>
+					<parameter name="timestamp" type="GstClockTime*"/>
+				</parameters>
+			</method>
+			<method name="parse_qos_full" symbol="gst_event_parse_qos_full">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="event" type="GstEvent*"/>
+					<parameter name="type" type="GstQOSType*"/>
 					<parameter name="proportion" type="gdouble*"/>
 					<parameter name="diff" type="GstClockTimeDiff*"/>
 					<parameter name="timestamp" type="GstClockTime*"/>
@@ -2500,6 +2553,15 @@
 					<parameter name="clock" type="GstClock*"/>
 				</parameters>
 			</method>
+			<method name="new_progress" symbol="gst_message_new_progress">
+				<return-type type="GstMessage*"/>
+				<parameters>
+					<parameter name="src" type="GstObject*"/>
+					<parameter name="type" type="GstProgressType"/>
+					<parameter name="code" type="gchar*"/>
+					<parameter name="text" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="new_qos" symbol="gst_message_new_qos">
 				<return-type type="GstMessage*"/>
 				<parameters>
@@ -2682,6 +2744,15 @@
 				<parameters>
 					<parameter name="message" type="GstMessage*"/>
 					<parameter name="clock" type="GstClock**"/>
+				</parameters>
+			</method>
+			<method name="parse_progress" symbol="gst_message_parse_progress">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="message" type="GstMessage*"/>
+					<parameter name="type" type="GstProgressType*"/>
+					<parameter name="code" type="gchar**"/>
+					<parameter name="text" type="gchar**"/>
 				</parameters>
 			</method>
 			<method name="parse_qos" symbol="gst_message_parse_qos">
@@ -2921,10 +2992,26 @@
 					<parameter name="mini_object" type="GstMiniObject*"/>
 				</parameters>
 			</method>
+			<method name="weak_ref" symbol="gst_mini_object_weak_ref">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GstMiniObject*"/>
+					<parameter name="notify" type="GstMiniObjectWeakNotify"/>
+					<parameter name="data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="weak_unref" symbol="gst_mini_object_weak_unref">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GstMiniObject*"/>
+					<parameter name="notify" type="GstMiniObjectWeakNotify"/>
+					<parameter name="data" type="gpointer"/>
+				</parameters>
+			</method>
 			<field name="instance" type="GTypeInstance"/>
 			<field name="refcount" type="gint"/>
 			<field name="flags" type="guint"/>
-			<field name="_gst_reserved" type="gpointer"/>
+			<field name="priv" type="GstMiniObjectPrivate*"/>
 		</struct>
 		<struct name="GstMiniObjectClass">
 			<field name="type_class" type="GTypeClass"/>
@@ -2944,23 +3031,6 @@
 		<struct name="GstParamSpecMiniObject">
 			<field name="parent_instance" type="GParamSpec"/>
 		</struct>
-		<struct name="GstParseContext">
-			<method name="free" symbol="gst_parse_context_free">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="context" type="GstParseContext*"/>
-				</parameters>
-			</method>
-			<method name="get_missing_elements" symbol="gst_parse_context_get_missing_elements">
-				<return-type type="gchar**"/>
-				<parameters>
-					<parameter name="context" type="GstParseContext*"/>
-				</parameters>
-			</method>
-			<method name="new" symbol="gst_parse_context_new">
-				<return-type type="GstParseContext*"/>
-			</method>
-		</struct>
 		<struct name="GstPluginDesc">
 			<field name="major_version" type="gint"/>
 			<field name="minor_version" type="gint"/>
@@ -2972,6 +3042,7 @@
 			<field name="source" type="gchar*"/>
 			<field name="package" type="gchar*"/>
 			<field name="origin" type="gchar*"/>
+			<field name="release_datetime" type="gchar*"/>
 			<field name="_gst_reserved" type="gpointer[]"/>
 		</struct>
 		<struct name="GstPoll">
@@ -2986,6 +3057,13 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="set" type="GstPoll*"/>
+				</parameters>
+			</method>
+			<method name="get_read_gpollfd" symbol="gst_poll_get_read_gpollfd">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="set" type="GstPoll*"/>
+					<parameter name="fd" type="GPollFD*"/>
 				</parameters>
 			</method>
 			<method name="new" symbol="gst_poll_new">
@@ -3106,6 +3184,20 @@
 			<field name="idx" type="gint"/>
 		</struct>
 		<struct name="GstQuery">
+			<method name="add_buffering_range" symbol="gst_query_add_buffering_range">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="query" type="GstQuery*"/>
+					<parameter name="start" type="gint64"/>
+					<parameter name="stop" type="gint64"/>
+				</parameters>
+			</method>
+			<method name="get_n_buffering_ranges" symbol="gst_query_get_n_buffering_ranges">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="query" type="GstQuery*"/>
+				</parameters>
+			</method>
 			<method name="get_structure" symbol="gst_query_get_structure">
 				<return-type type="GstStructure*"/>
 				<parameters>
@@ -3234,6 +3326,15 @@
 					<parameter name="live" type="gboolean*"/>
 					<parameter name="min_latency" type="GstClockTime*"/>
 					<parameter name="max_latency" type="GstClockTime*"/>
+				</parameters>
+			</method>
+			<method name="parse_nth_buffering_range" symbol="gst_query_parse_nth_buffering_range">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="query" type="GstQuery*"/>
+					<parameter name="index" type="guint"/>
+					<parameter name="start" type="gint64*"/>
+					<parameter name="stop" type="gint64*"/>
 				</parameters>
 			</method>
 			<method name="parse_position" symbol="gst_query_parse_position">
@@ -3599,6 +3700,23 @@
 					<parameter name="tag" type="gchar*"/>
 					<parameter name="index" type="guint"/>
 					<parameter name="value" type="GDate**"/>
+				</parameters>
+			</method>
+			<method name="get_date_time" symbol="gst_tag_list_get_date_time">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="list" type="GstTagList*"/>
+					<parameter name="tag" type="gchar*"/>
+					<parameter name="value" type="GstDateTime**"/>
+				</parameters>
+			</method>
+			<method name="get_date_time_index" symbol="gst_tag_list_get_date_time_index">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="list" type="GstTagList*"/>
+					<parameter name="tag" type="gchar*"/>
+					<parameter name="index" type="guint"/>
+					<parameter name="value" type="GstDateTime**"/>
 				</parameters>
 			</method>
 			<method name="get_double" symbol="gst_tag_list_get_double">
@@ -3977,6 +4095,87 @@
 			<field name="deserialize" type="GstValueDeserializeFunc"/>
 			<field name="_gst_reserved" type="void*[]"/>
 		</struct>
+		<boxed name="GError" type-name="GError" get-type="gst_g_error_get_type">
+		</boxed>
+		<boxed name="GstBufferListIterator" type-name="GstBufferListIterator" get-type="gst_buffer_list_iterator_get_type">
+			<method name="add" symbol="gst_buffer_list_iterator_add">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="it" type="GstBufferListIterator*"/>
+					<parameter name="buffer" type="GstBuffer*"/>
+				</parameters>
+			</method>
+			<method name="add_group" symbol="gst_buffer_list_iterator_add_group">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="it" type="GstBufferListIterator*"/>
+				</parameters>
+			</method>
+			<method name="add_list" symbol="gst_buffer_list_iterator_add_list">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="it" type="GstBufferListIterator*"/>
+					<parameter name="list" type="GList*"/>
+				</parameters>
+			</method>
+			<method name="do" symbol="gst_buffer_list_iterator_do">
+				<return-type type="GstBuffer*"/>
+				<parameters>
+					<parameter name="it" type="GstBufferListIterator*"/>
+					<parameter name="do_func" type="GstBufferListDoFunction"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="free" symbol="gst_buffer_list_iterator_free">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="it" type="GstBufferListIterator*"/>
+				</parameters>
+			</method>
+			<method name="merge_group" symbol="gst_buffer_list_iterator_merge_group">
+				<return-type type="GstBuffer*"/>
+				<parameters>
+					<parameter name="it" type="GstBufferListIterator*"/>
+				</parameters>
+			</method>
+			<method name="n_buffers" symbol="gst_buffer_list_iterator_n_buffers">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="it" type="GstBufferListIterator*"/>
+				</parameters>
+			</method>
+			<method name="next" symbol="gst_buffer_list_iterator_next">
+				<return-type type="GstBuffer*"/>
+				<parameters>
+					<parameter name="it" type="GstBufferListIterator*"/>
+				</parameters>
+			</method>
+			<method name="next_group" symbol="gst_buffer_list_iterator_next_group">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="it" type="GstBufferListIterator*"/>
+				</parameters>
+			</method>
+			<method name="remove" symbol="gst_buffer_list_iterator_remove">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="it" type="GstBufferListIterator*"/>
+				</parameters>
+			</method>
+			<method name="steal" symbol="gst_buffer_list_iterator_steal">
+				<return-type type="GstBuffer*"/>
+				<parameters>
+					<parameter name="it" type="GstBufferListIterator*"/>
+				</parameters>
+			</method>
+			<method name="take" symbol="gst_buffer_list_iterator_take">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="it" type="GstBufferListIterator*"/>
+					<parameter name="buffer" type="GstBuffer*"/>
+				</parameters>
+			</method>
+		</boxed>
 		<boxed name="GstCaps" type-name="GstCaps" get-type="gst_caps_get_type">
 			<method name="append" symbol="gst_caps_append">
 				<return-type type="void"/>
@@ -4044,6 +4243,14 @@
 					<parameter name="caps2" type="GstCaps*"/>
 				</parameters>
 			</method>
+			<method name="intersect_full" symbol="gst_caps_intersect_full">
+				<return-type type="GstCaps*"/>
+				<parameters>
+					<parameter name="caps1" type="GstCaps*"/>
+					<parameter name="caps2" type="GstCaps*"/>
+					<parameter name="mode" type="GstCapsIntersectMode"/>
+				</parameters>
+			</method>
 			<method name="is_always_compatible" symbol="gst_caps_is_always_compatible">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -4088,6 +4295,13 @@
 				<parameters>
 					<parameter name="subset" type="GstCaps*"/>
 					<parameter name="superset" type="GstCaps*"/>
+				</parameters>
+			</method>
+			<method name="is_subset_structure" symbol="gst_caps_is_subset_structure">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="caps" type="GstCaps*"/>
+					<parameter name="structure" type="GstStructure*"/>
 				</parameters>
 			</method>
 			<method name="load_thyself" symbol="gst_caps_load_thyself">
@@ -4245,7 +4459,108 @@
 		</boxed>
 		<boxed name="GstDate" type-name="GstDate" get-type="gst_date_get_type">
 		</boxed>
-		<boxed name="GstGError" type-name="GstGError" get-type="gst_g_error_get_type">
+		<boxed name="GstDateTime" type-name="GstDateTime" get-type="gst_date_time_get_type">
+			<method name="get_day" symbol="gst_date_time_get_day">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="datetime" type="GstDateTime*"/>
+				</parameters>
+			</method>
+			<method name="get_hour" symbol="gst_date_time_get_hour">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="datetime" type="GstDateTime*"/>
+				</parameters>
+			</method>
+			<method name="get_microsecond" symbol="gst_date_time_get_microsecond">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="datetime" type="GstDateTime*"/>
+				</parameters>
+			</method>
+			<method name="get_minute" symbol="gst_date_time_get_minute">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="datetime" type="GstDateTime*"/>
+				</parameters>
+			</method>
+			<method name="get_month" symbol="gst_date_time_get_month">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="datetime" type="GstDateTime*"/>
+				</parameters>
+			</method>
+			<method name="get_second" symbol="gst_date_time_get_second">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="datetime" type="GstDateTime*"/>
+				</parameters>
+			</method>
+			<method name="get_time_zone_offset" symbol="gst_date_time_get_time_zone_offset">
+				<return-type type="gfloat"/>
+				<parameters>
+					<parameter name="datetime" type="GstDateTime*"/>
+				</parameters>
+			</method>
+			<method name="get_year" symbol="gst_date_time_get_year">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="datetime" type="GstDateTime*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gst_date_time_new">
+				<return-type type="GstDateTime*"/>
+				<parameters>
+					<parameter name="tzoffset" type="gfloat"/>
+					<parameter name="year" type="gint"/>
+					<parameter name="month" type="gint"/>
+					<parameter name="day" type="gint"/>
+					<parameter name="hour" type="gint"/>
+					<parameter name="minute" type="gint"/>
+					<parameter name="seconds" type="gdouble"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_from_unix_epoch_local_time" symbol="gst_date_time_new_from_unix_epoch_local_time">
+				<return-type type="GstDateTime*"/>
+				<parameters>
+					<parameter name="secs" type="gint64"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_from_unix_epoch_utc" symbol="gst_date_time_new_from_unix_epoch_utc">
+				<return-type type="GstDateTime*"/>
+				<parameters>
+					<parameter name="secs" type="gint64"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_local_time" symbol="gst_date_time_new_local_time">
+				<return-type type="GstDateTime*"/>
+				<parameters>
+					<parameter name="year" type="gint"/>
+					<parameter name="month" type="gint"/>
+					<parameter name="day" type="gint"/>
+					<parameter name="hour" type="gint"/>
+					<parameter name="minute" type="gint"/>
+					<parameter name="seconds" type="gdouble"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_now_local_time" symbol="gst_date_time_new_now_local_time">
+				<return-type type="GstDateTime*"/>
+			</constructor>
+			<constructor name="new_now_utc" symbol="gst_date_time_new_now_utc">
+				<return-type type="GstDateTime*"/>
+			</constructor>
+			<method name="ref" symbol="gst_date_time_ref">
+				<return-type type="GstDateTime*"/>
+				<parameters>
+					<parameter name="datetime" type="GstDateTime*"/>
+				</parameters>
+			</method>
+			<method name="unref" symbol="gst_date_time_unref">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="datetime" type="GstDateTime*"/>
+				</parameters>
+			</method>
 		</boxed>
 		<boxed name="GstIndexEntry" type-name="GstIndexEntry" get-type="gst_index_entry_get_type">
 			<method name="assoc_map" symbol="gst_index_entry_assoc_map">
@@ -4271,6 +4586,23 @@
 			<field name="type" type="GstIndexEntryType"/>
 			<field name="id" type="gint"/>
 			<field name="data" type="gpointer"/>
+		</boxed>
+		<boxed name="GstParseContext" type-name="GstParseContext" get-type="gst_parse_context_get_type">
+			<method name="free" symbol="gst_parse_context_free">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="context" type="GstParseContext*"/>
+				</parameters>
+			</method>
+			<method name="get_missing_elements" symbol="gst_parse_context_get_missing_elements">
+				<return-type type="gchar**"/>
+				<parameters>
+					<parameter name="context" type="GstParseContext*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gst_parse_context_new">
+				<return-type type="GstParseContext*"/>
+			</constructor>
 		</boxed>
 		<boxed name="GstSegment" type-name="GstSegment" get-type="gst_segment_get_type">
 			<method name="clip" symbol="gst_segment_clip">
@@ -4407,6 +4739,13 @@
 			<field name="_gst_reserved" type="guint8[]"/>
 		</boxed>
 		<boxed name="GstStructure" type-name="GstStructure" get-type="gst_structure_get_type">
+			<method name="can_intersect" symbol="gst_structure_can_intersect">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="struct1" type="GstStructure*"/>
+					<parameter name="struct2" type="GstStructure*"/>
+				</parameters>
+			</method>
 			<method name="copy" symbol="gst_structure_copy">
 				<return-type type="GstStructure*"/>
 				<parameters>
@@ -4510,6 +4849,14 @@
 					<parameter name="structure" type="GstStructure*"/>
 					<parameter name="fieldname" type="gchar*"/>
 					<parameter name="value" type="GDate**"/>
+				</parameters>
+			</method>
+			<method name="get_date_time" symbol="gst_structure_get_date_time">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="structure" type="GstStructure*"/>
+					<parameter name="fieldname" type="gchar*"/>
+					<parameter name="value" type="GstDateTime**"/>
 				</parameters>
 			</method>
 			<method name="get_double" symbol="gst_structure_get_double">
@@ -4698,6 +5045,35 @@
 					<parameter name="value" type="GValue*"/>
 				</parameters>
 			</method>
+			<method name="id_take_value" symbol="gst_structure_id_take_value">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="structure" type="GstStructure*"/>
+					<parameter name="field" type="GQuark"/>
+					<parameter name="value" type="GValue*"/>
+				</parameters>
+			</method>
+			<method name="intersect" symbol="gst_structure_intersect">
+				<return-type type="GstStructure*"/>
+				<parameters>
+					<parameter name="struct1" type="GstStructure*"/>
+					<parameter name="struct2" type="GstStructure*"/>
+				</parameters>
+			</method>
+			<method name="is_equal" symbol="gst_structure_is_equal">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="structure1" type="GstStructure*"/>
+					<parameter name="structure2" type="GstStructure*"/>
+				</parameters>
+			</method>
+			<method name="is_subset" symbol="gst_structure_is_subset">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="subset" type="GstStructure*"/>
+					<parameter name="superset" type="GstStructure*"/>
+				</parameters>
+			</method>
 			<method name="map_in_place" symbol="gst_structure_map_in_place">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -4799,6 +5175,14 @@
 					<parameter name="value" type="GValue*"/>
 				</parameters>
 			</method>
+			<method name="take_value" symbol="gst_structure_take_value">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="structure" type="GstStructure*"/>
+					<parameter name="fieldname" type="gchar*"/>
+					<parameter name="value" type="GValue*"/>
+				</parameters>
+			</method>
 			<method name="to_string" symbol="gst_structure_to_string">
 				<return-type type="gchar*"/>
 				<parameters>
@@ -4834,6 +5218,10 @@
 			<member name="GST_BUS_PASS" value="1"/>
 			<member name="GST_BUS_ASYNC" value="2"/>
 		</enum>
+		<enum name="GstCapsIntersectMode" type-name="GstCapsIntersectMode" get-type="gst_caps_intersect_mode_get_type">
+			<member name="GST_CAPS_INTERSECT_ZIG_ZAG" value="0"/>
+			<member name="GST_CAPS_INTERSECT_FIRST" value="1"/>
+		</enum>
 		<enum name="GstClockEntryType" type-name="GstClockEntryType" get-type="gst_clock_entry_type_get_type">
 			<member name="GST_CLOCK_ENTRY_SINGLE" value="0"/>
 			<member name="GST_CLOCK_ENTRY_PERIODIC" value="1"/>
@@ -4846,6 +5234,7 @@
 			<member name="GST_CLOCK_BADTIME" value="4"/>
 			<member name="GST_CLOCK_ERROR" value="5"/>
 			<member name="GST_CLOCK_UNSUPPORTED" value="6"/>
+			<member name="GST_CLOCK_DONE" value="7"/>
 		</enum>
 		<enum name="GstClockType" type-name="GstClockType" get-type="gst_clock_type_get_type">
 			<member name="GST_CLOCK_TYPE_REALTIME" value="0"/>
@@ -5018,6 +5407,18 @@
 			<member name="GST_PLUGIN_ERROR_DEPENDENCIES" value="1"/>
 			<member name="GST_PLUGIN_ERROR_NAME_MISMATCH" value="2"/>
 		</enum>
+		<enum name="GstProgressType" type-name="GstProgressType" get-type="gst_progress_type_get_type">
+			<member name="GST_PROGRESS_TYPE_START" value="0"/>
+			<member name="GST_PROGRESS_TYPE_CONTINUE" value="1"/>
+			<member name="GST_PROGRESS_TYPE_COMPLETE" value="2"/>
+			<member name="GST_PROGRESS_TYPE_CANCELED" value="3"/>
+			<member name="GST_PROGRESS_TYPE_ERROR" value="4"/>
+		</enum>
+		<enum name="GstQOSType" type-name="GstQOSType" get-type="gst_qos_type_get_type">
+			<member name="GST_QOS_TYPE_OVERFLOW" value="0"/>
+			<member name="GST_QOS_TYPE_UNDERFLOW" value="1"/>
+			<member name="GST_QOS_TYPE_THROTTLE" value="2"/>
+		</enum>
 		<enum name="GstQueryType" type-name="GstQueryType" get-type="gst_query_type_get_type">
 			<member name="GST_QUERY_NONE" value="0"/>
 			<member name="GST_QUERY_POSITION" value="1"/>
@@ -5171,6 +5572,7 @@
 		</flags>
 		<flags name="GstBufferFlag" type-name="GstBufferFlag" get-type="gst_buffer_flag_get_type">
 			<member name="GST_BUFFER_FLAG_READONLY" value="1"/>
+			<member name="GST_BUFFER_FLAG_MEDIA4" value="2"/>
 			<member name="GST_BUFFER_FLAG_PREROLL" value="16"/>
 			<member name="GST_BUFFER_FLAG_DISCONT" value="32"/>
 			<member name="GST_BUFFER_FLAG_IN_CAPS" value="64"/>
@@ -5208,6 +5610,7 @@
 			<member name="GST_ELEMENT_LOCKED_STATE" value="16"/>
 			<member name="GST_ELEMENT_IS_SINK" value="32"/>
 			<member name="GST_ELEMENT_UNPARENTING" value="64"/>
+			<member name="GST_ELEMENT_IS_SOURCE" value="128"/>
 			<member name="GST_ELEMENT_FLAG_LAST" value="1048576"/>
 		</flags>
 		<flags name="GstEventTypeFlags" type-name="GstEventTypeFlags" get-type="gst_event_type_flags_get_type">
@@ -5247,10 +5650,12 @@
 			<member name="GST_MESSAGE_REQUEST_STATE" value="4194304"/>
 			<member name="GST_MESSAGE_STEP_START" value="8388608"/>
 			<member name="GST_MESSAGE_QOS" value="16777216"/>
+			<member name="GST_MESSAGE_PROGRESS" value="33554432"/>
 			<member name="GST_MESSAGE_ANY" value="-1"/>
 		</flags>
 		<flags name="GstMiniObjectFlags" type-name="GstMiniObjectFlags" get-type="gst_mini_object_flags_get_type">
 			<member name="GST_MINI_OBJECT_FLAG_READONLY" value="1"/>
+			<member name="GST_MINI_OBJECT_FLAG_RESERVED1" value="2"/>
 			<member name="GST_MINI_OBJECT_FLAG_LAST" value="16"/>
 		</flags>
 		<flags name="GstObjectFlags" type-name="GstObjectFlags" get-type="gst_object_flags_get_type">
@@ -5419,6 +5824,7 @@
 				</parameters>
 			</method>
 			<property name="async-handling" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="message-forward" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="do-latency" when="LAST">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -5703,6 +6109,15 @@
 					<parameter name="time" type="GstClockTime"/>
 				</parameters>
 			</constructor>
+			<method name="periodic_id_reinit" symbol="gst_clock_periodic_id_reinit">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="clock" type="GstClock*"/>
+					<parameter name="id" type="GstClockID"/>
+					<parameter name="start_time" type="GstClockTime"/>
+					<parameter name="interval" type="GstClockTime"/>
+				</parameters>
+			</method>
 			<method name="set_calibration" symbol="gst_clock_set_calibration">
 				<return-type type="void"/>
 				<parameters>
@@ -5725,6 +6140,14 @@
 				<parameters>
 					<parameter name="clock" type="GstClock*"/>
 					<parameter name="resolution" type="GstClockTime"/>
+				</parameters>
+			</method>
+			<method name="single_shot_id_reinit" symbol="gst_clock_single_shot_id_reinit">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="clock" type="GstClock*"/>
+					<parameter name="id" type="GstClockID"/>
+					<parameter name="time" type="GstClockTime"/>
 				</parameters>
 			</method>
 			<method name="unadjust_unlocked" symbol="gst_clock_unadjust_unlocked">
@@ -5870,6 +6293,20 @@
 					<parameter name="classification" type="gchar*"/>
 					<parameter name="description" type="gchar*"/>
 					<parameter name="author" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="class_set_documentation_uri" symbol="gst_element_class_set_documentation_uri">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="klass" type="GstElementClass*"/>
+					<parameter name="uri" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="class_set_icon_name" symbol="gst_element_class_set_icon_name">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="klass" type="GstElementClass*"/>
+					<parameter name="name" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="continue_state" symbol="gst_element_continue_state">
@@ -6191,6 +6628,15 @@
 					<parameter name="pad" type="GstPad*"/>
 				</parameters>
 			</method>
+			<method name="request_pad" symbol="gst_element_request_pad">
+				<return-type type="GstPad*"/>
+				<parameters>
+					<parameter name="element" type="GstElement*"/>
+					<parameter name="templ" type="GstPadTemplate*"/>
+					<parameter name="name" type="gchar*"/>
+					<parameter name="caps" type="GstCaps*"/>
+				</parameters>
+			</method>
 			<method name="requires_clock" symbol="gst_element_requires_clock">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -6392,6 +6838,15 @@
 					<parameter name="name" type="gchar*"/>
 				</parameters>
 			</vfunc>
+			<vfunc name="request_new_pad_full">
+				<return-type type="GstPad*"/>
+				<parameters>
+					<parameter name="element" type="GstElement*"/>
+					<parameter name="templ" type="GstPadTemplate*"/>
+					<parameter name="name" type="gchar*"/>
+					<parameter name="caps" type="GstCaps*"/>
+				</parameters>
+			</vfunc>
 			<vfunc name="send_event">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -6427,6 +6882,15 @@
 					<parameter name="state" type="GstState"/>
 				</parameters>
 			</vfunc>
+			<vfunc name="state_changed">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="element" type="GstElement*"/>
+					<parameter name="oldstate" type="GstState"/>
+					<parameter name="newstate" type="GstState"/>
+					<parameter name="pending" type="GstState"/>
+				</parameters>
+			</vfunc>
 			<field name="state_lock" type="GStaticRecMutex*"/>
 			<field name="state_cond" type="GCond*"/>
 			<field name="state_cookie" type="guint32"/>
@@ -6447,7 +6911,35 @@
 			<field name="abidata" type="gpointer"/>
 		</object>
 		<object name="GstElementFactory" parent="GstPluginFeature" type-name="GstElementFactory" get-type="gst_element_factory_get_type">
+			<method name="can_sink_all_caps" symbol="gst_element_factory_can_sink_all_caps">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="factory" type="GstElementFactory*"/>
+					<parameter name="caps" type="GstCaps*"/>
+				</parameters>
+			</method>
+			<method name="can_sink_any_caps" symbol="gst_element_factory_can_sink_any_caps">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="factory" type="GstElementFactory*"/>
+					<parameter name="caps" type="GstCaps*"/>
+				</parameters>
+			</method>
 			<method name="can_sink_caps" symbol="gst_element_factory_can_sink_caps">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="factory" type="GstElementFactory*"/>
+					<parameter name="caps" type="GstCaps*"/>
+				</parameters>
+			</method>
+			<method name="can_src_all_caps" symbol="gst_element_factory_can_src_all_caps">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="factory" type="GstElementFactory*"/>
+					<parameter name="caps" type="GstCaps*"/>
+				</parameters>
+			</method>
+			<method name="can_src_any_caps" symbol="gst_element_factory_can_src_any_caps">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="factory" type="GstElementFactory*"/>
@@ -6486,8 +6978,20 @@
 					<parameter name="factory" type="GstElementFactory*"/>
 				</parameters>
 			</method>
+			<method name="get_documentation_uri" symbol="gst_element_factory_get_documentation_uri">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="factory" type="GstElementFactory*"/>
+				</parameters>
+			</method>
 			<method name="get_element_type" symbol="gst_element_factory_get_element_type">
 				<return-type type="GType"/>
+				<parameters>
+					<parameter name="factory" type="GstElementFactory*"/>
+				</parameters>
+			</method>
+			<method name="get_icon_name" symbol="gst_element_factory_get_icon_name">
+				<return-type type="gchar*"/>
 				<parameters>
 					<parameter name="factory" type="GstElementFactory*"/>
 				</parameters>
@@ -6535,6 +7039,29 @@
 					<parameter name="interfacename" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="list_filter" symbol="gst_element_factory_list_filter">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="list" type="GList*"/>
+					<parameter name="caps" type="GstCaps*"/>
+					<parameter name="direction" type="GstPadDirection"/>
+					<parameter name="subsetonly" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="list_get_elements" symbol="gst_element_factory_list_get_elements">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="type" type="GstElementFactoryListType"/>
+					<parameter name="minrank" type="GstRank"/>
+				</parameters>
+			</method>
+			<method name="list_is_type" symbol="gst_element_factory_list_is_type">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="factory" type="GstElementFactory*"/>
+					<parameter name="type" type="GstElementFactoryListType"/>
+				</parameters>
+			</method>
 			<method name="make" symbol="gst_element_factory_make">
 				<return-type type="GstElement*"/>
 				<parameters>
@@ -6549,8 +7076,23 @@
 			<field name="uri_type" type="guint"/>
 			<field name="uri_protocols" type="gchar**"/>
 			<field name="interfaces" type="GList*"/>
+			<field name="meta_data" type="gpointer"/>
 		</object>
 		<object name="GstGhostPad" parent="GstProxyPad" type-name="GstGhostPad" get-type="gst_ghost_pad_get_type">
+			<method name="activate_pull_default" symbol="gst_ghost_pad_activate_pull_default">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="pad" type="GstPad*"/>
+					<parameter name="active" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="activate_push_default" symbol="gst_ghost_pad_activate_push_default">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="pad" type="GstPad*"/>
+					<parameter name="active" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="construct" symbol="gst_ghost_pad_construct">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -6561,6 +7103,27 @@
 				<return-type type="GstPad*"/>
 				<parameters>
 					<parameter name="gpad" type="GstGhostPad*"/>
+				</parameters>
+			</method>
+			<method name="internal_activate_pull_default" symbol="gst_ghost_pad_internal_activate_pull_default">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="pad" type="GstPad*"/>
+					<parameter name="active" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="internal_activate_push_default" symbol="gst_ghost_pad_internal_activate_push_default">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="pad" type="GstPad*"/>
+					<parameter name="active" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="link_default" symbol="gst_ghost_pad_link_default">
+				<return-type type="GstPadLinkReturn"/>
+				<parameters>
+					<parameter name="pad" type="GstPad*"/>
+					<parameter name="peer" type="GstPad*"/>
 				</parameters>
 			</method>
 			<constructor name="new" symbol="gst_ghost_pad_new">
@@ -6597,6 +7160,19 @@
 				<parameters>
 					<parameter name="gpad" type="GstGhostPad*"/>
 					<parameter name="newtarget" type="GstPad*"/>
+				</parameters>
+			</method>
+			<method name="setcaps_default" symbol="gst_ghost_pad_setcaps_default">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="pad" type="GstPad*"/>
+					<parameter name="caps" type="GstCaps*"/>
+				</parameters>
+			</method>
+			<method name="unlink_default" symbol="gst_ghost_pad_unlink_default">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="pad" type="GstPad*"/>
 				</parameters>
 			</method>
 		</object>
@@ -8113,6 +8689,12 @@
 					<parameter name="list" type="GList*"/>
 				</parameters>
 			</method>
+			<method name="list_debug" symbol="gst_plugin_feature_list_debug">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="list" type="GList*"/>
+				</parameters>
+			</method>
 			<method name="list_free" symbol="gst_plugin_feature_list_free">
 				<return-type type="void"/>
 				<parameters>
@@ -8123,6 +8705,13 @@
 				<return-type type="GstPluginFeature*"/>
 				<parameters>
 					<parameter name="feature" type="GstPluginFeature*"/>
+				</parameters>
+			</method>
+			<method name="rank_compare_func" symbol="gst_plugin_feature_rank_compare_func">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="p1" type="gconstpointer"/>
+					<parameter name="p2" type="gconstpointer"/>
 				</parameters>
 			</method>
 			<method name="set_name" symbol="gst_plugin_feature_set_name">
@@ -8150,8 +8739,113 @@
 			<field name="name" type="gchar*"/>
 			<field name="rank" type="guint"/>
 			<field name="plugin_name" type="gchar*"/>
+			<field name="plugin" type="GstPlugin*"/>
 		</object>
 		<object name="GstProxyPad" parent="GstPad" type-name="GstProxyPad" get-type="gst_proxy_pad_get_type">
+			<method name="acceptcaps_default" symbol="gst_proxy_pad_acceptcaps_default">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="pad" type="GstPad*"/>
+					<parameter name="caps" type="GstCaps*"/>
+				</parameters>
+			</method>
+			<method name="bufferalloc_default" symbol="gst_proxy_pad_bufferalloc_default">
+				<return-type type="GstFlowReturn"/>
+				<parameters>
+					<parameter name="pad" type="GstPad*"/>
+					<parameter name="offset" type="guint64"/>
+					<parameter name="size" type="guint"/>
+					<parameter name="caps" type="GstCaps*"/>
+					<parameter name="buf" type="GstBuffer**"/>
+				</parameters>
+			</method>
+			<method name="chain_default" symbol="gst_proxy_pad_chain_default">
+				<return-type type="GstFlowReturn"/>
+				<parameters>
+					<parameter name="pad" type="GstPad*"/>
+					<parameter name="buffer" type="GstBuffer*"/>
+				</parameters>
+			</method>
+			<method name="chain_list_default" symbol="gst_proxy_pad_chain_list_default">
+				<return-type type="GstFlowReturn"/>
+				<parameters>
+					<parameter name="pad" type="GstPad*"/>
+					<parameter name="list" type="GstBufferList*"/>
+				</parameters>
+			</method>
+			<method name="checkgetrange_default" symbol="gst_proxy_pad_checkgetrange_default">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="pad" type="GstPad*"/>
+				</parameters>
+			</method>
+			<method name="event_default" symbol="gst_proxy_pad_event_default">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="pad" type="GstPad*"/>
+					<parameter name="event" type="GstEvent*"/>
+				</parameters>
+			</method>
+			<method name="fixatecaps_default" symbol="gst_proxy_pad_fixatecaps_default">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="pad" type="GstPad*"/>
+					<parameter name="caps" type="GstCaps*"/>
+				</parameters>
+			</method>
+			<method name="get_internal" symbol="gst_proxy_pad_get_internal">
+				<return-type type="GstProxyPad*"/>
+				<parameters>
+					<parameter name="pad" type="GstProxyPad*"/>
+				</parameters>
+			</method>
+			<method name="getcaps_default" symbol="gst_proxy_pad_getcaps_default">
+				<return-type type="GstCaps*"/>
+				<parameters>
+					<parameter name="pad" type="GstPad*"/>
+				</parameters>
+			</method>
+			<method name="getrange_default" symbol="gst_proxy_pad_getrange_default">
+				<return-type type="GstFlowReturn"/>
+				<parameters>
+					<parameter name="pad" type="GstPad*"/>
+					<parameter name="offset" type="guint64"/>
+					<parameter name="size" type="guint"/>
+					<parameter name="buffer" type="GstBuffer**"/>
+				</parameters>
+			</method>
+			<method name="iterate_internal_links_default" symbol="gst_proxy_pad_iterate_internal_links_default">
+				<return-type type="GstIterator*"/>
+				<parameters>
+					<parameter name="pad" type="GstPad*"/>
+				</parameters>
+			</method>
+			<method name="query_default" symbol="gst_proxy_pad_query_default">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="pad" type="GstPad*"/>
+					<parameter name="query" type="GstQuery*"/>
+				</parameters>
+			</method>
+			<method name="query_type_default" symbol="gst_proxy_pad_query_type_default">
+				<return-type type="GstQueryType*"/>
+				<parameters>
+					<parameter name="pad" type="GstPad*"/>
+				</parameters>
+			</method>
+			<method name="setcaps_default" symbol="gst_proxy_pad_setcaps_default">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="pad" type="GstPad*"/>
+					<parameter name="caps" type="GstCaps*"/>
+				</parameters>
+			</method>
+			<method name="unlink_default" symbol="gst_proxy_pad_unlink_default">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="pad" type="GstPad*"/>
+				</parameters>
+			</method>
 		</object>
 		<object name="GstRegistry" parent="GstObject" type-name="GstRegistry" get-type="gst_registry_get_type">
 			<method name="add_feature" symbol="gst_registry_add_feature">
@@ -9024,6 +9718,43 @@
 		<constant name="GST_DEBUG_BG_MASK" type="int" value="240"/>
 		<constant name="GST_DEBUG_FG_MASK" type="int" value="15"/>
 		<constant name="GST_DEBUG_FORMAT_MASK" type="int" value="65280"/>
+		<constant name="GST_ELEMENT_FACTORY_KLASS_DECODER" type="char*" value="Decoder"/>
+		<constant name="GST_ELEMENT_FACTORY_KLASS_DEMUXER" type="char*" value="Demuxer"/>
+		<constant name="GST_ELEMENT_FACTORY_KLASS_DEPAYLOADER" type="char*" value="Depayloader"/>
+		<constant name="GST_ELEMENT_FACTORY_KLASS_ENCODER" type="char*" value="Encoder"/>
+		<constant name="GST_ELEMENT_FACTORY_KLASS_FORMATTER" type="char*" value="Formatter"/>
+		<constant name="GST_ELEMENT_FACTORY_KLASS_MEDIA_AUDIO" type="char*" value="Audio"/>
+		<constant name="GST_ELEMENT_FACTORY_KLASS_MEDIA_IMAGE" type="char*" value="Image"/>
+		<constant name="GST_ELEMENT_FACTORY_KLASS_MEDIA_METADATA" type="char*" value="Metadata"/>
+		<constant name="GST_ELEMENT_FACTORY_KLASS_MEDIA_SUBTITLE" type="char*" value="Subtitle"/>
+		<constant name="GST_ELEMENT_FACTORY_KLASS_MEDIA_VIDEO" type="char*" value="Video"/>
+		<constant name="GST_ELEMENT_FACTORY_KLASS_MUXER" type="char*" value="Muxer"/>
+		<constant name="GST_ELEMENT_FACTORY_KLASS_PARSER" type="char*" value="Parser"/>
+		<constant name="GST_ELEMENT_FACTORY_KLASS_PAYLOADER" type="char*" value="Payloader"/>
+		<constant name="GST_ELEMENT_FACTORY_KLASS_SINK" type="char*" value="Sink"/>
+		<constant name="GST_ELEMENT_FACTORY_KLASS_SRC" type="char*" value="Source"/>
+		<constant name="GST_ELEMENT_FACTORY_TYPE_ANY" type="int" value="-1"/>
+		<constant name="GST_ELEMENT_FACTORY_TYPE_AUDIOVIDEO_SINKS" type="int" value="0"/>
+		<constant name="GST_ELEMENT_FACTORY_TYPE_AUDIO_ENCODER" type="int" value="0"/>
+		<constant name="GST_ELEMENT_FACTORY_TYPE_DECODABLE" type="int" value="0"/>
+		<constant name="GST_ELEMENT_FACTORY_TYPE_DECODER" type="int" value="0"/>
+		<constant name="GST_ELEMENT_FACTORY_TYPE_DEMUXER" type="int" value="0"/>
+		<constant name="GST_ELEMENT_FACTORY_TYPE_DEPAYLOADER" type="int" value="0"/>
+		<constant name="GST_ELEMENT_FACTORY_TYPE_ENCODER" type="int" value="0"/>
+		<constant name="GST_ELEMENT_FACTORY_TYPE_FORMATTER" type="int" value="0"/>
+		<constant name="GST_ELEMENT_FACTORY_TYPE_MAX_ELEMENTS" type="int" value="0"/>
+		<constant name="GST_ELEMENT_FACTORY_TYPE_MEDIA_ANY" type="int" value="-65536"/>
+		<constant name="GST_ELEMENT_FACTORY_TYPE_MEDIA_AUDIO" type="int" value="0"/>
+		<constant name="GST_ELEMENT_FACTORY_TYPE_MEDIA_IMAGE" type="int" value="0"/>
+		<constant name="GST_ELEMENT_FACTORY_TYPE_MEDIA_METADATA" type="int" value="0"/>
+		<constant name="GST_ELEMENT_FACTORY_TYPE_MEDIA_SUBTITLE" type="int" value="0"/>
+		<constant name="GST_ELEMENT_FACTORY_TYPE_MEDIA_VIDEO" type="int" value="0"/>
+		<constant name="GST_ELEMENT_FACTORY_TYPE_MUXER" type="int" value="0"/>
+		<constant name="GST_ELEMENT_FACTORY_TYPE_PARSER" type="int" value="0"/>
+		<constant name="GST_ELEMENT_FACTORY_TYPE_PAYLOADER" type="int" value="0"/>
+		<constant name="GST_ELEMENT_FACTORY_TYPE_SINK" type="int" value="0"/>
+		<constant name="GST_ELEMENT_FACTORY_TYPE_SRC" type="int" value="0"/>
+		<constant name="GST_ELEMENT_FACTORY_TYPE_VIDEO_ENCODER" type="int" value="0"/>
 		<constant name="GST_EVENT_TRACE_NAME" type="char*" value="GstEvent"/>
 		<constant name="GST_EVENT_TYPE_BOTH" type="int" value="0"/>
 		<constant name="GST_EVENT_TYPE_SHIFT" type="int" value="4"/>
@@ -9048,6 +9779,8 @@
 		<constant name="GST_TAG_ALBUM_SORTNAME" type="char*" value="album-sortname"/>
 		<constant name="GST_TAG_ALBUM_VOLUME_COUNT" type="char*" value="album-disc-count"/>
 		<constant name="GST_TAG_ALBUM_VOLUME_NUMBER" type="char*" value="album-disc-number"/>
+		<constant name="GST_TAG_APPLICATION_DATA" type="char*" value="application-data"/>
+		<constant name="GST_TAG_APPLICATION_NAME" type="char*" value="application-name"/>
 		<constant name="GST_TAG_ARTIST" type="char*" value="artist"/>
 		<constant name="GST_TAG_ARTIST_SORTNAME" type="char*" value="musicbrainz-sortname"/>
 		<constant name="GST_TAG_ATTACHMENT" type="char*" value="attachment"/>
@@ -9063,10 +9796,12 @@
 		<constant name="GST_TAG_COPYRIGHT" type="char*" value="copyright"/>
 		<constant name="GST_TAG_COPYRIGHT_URI" type="char*" value="copyright-uri"/>
 		<constant name="GST_TAG_DATE" type="char*" value="date"/>
+		<constant name="GST_TAG_DATE_TIME" type="char*" value="datetime"/>
 		<constant name="GST_TAG_DESCRIPTION" type="char*" value="description"/>
 		<constant name="GST_TAG_DEVICE_MANUFACTURER" type="char*" value="device-manufacturer"/>
 		<constant name="GST_TAG_DEVICE_MODEL" type="char*" value="device-model"/>
 		<constant name="GST_TAG_DURATION" type="char*" value="duration"/>
+		<constant name="GST_TAG_ENCODED_BY" type="char*" value="encoded-by"/>
 		<constant name="GST_TAG_ENCODER" type="char*" value="encoder"/>
 		<constant name="GST_TAG_ENCODER_VERSION" type="char*" value="encoder-version"/>
 		<constant name="GST_TAG_EXTENDED_COMMENT" type="char*" value="extended-comment"/>
@@ -9075,6 +9810,7 @@
 		<constant name="GST_TAG_GEO_LOCATION_CITY" type="char*" value="geo-location-city"/>
 		<constant name="GST_TAG_GEO_LOCATION_COUNTRY" type="char*" value="geo-location-country"/>
 		<constant name="GST_TAG_GEO_LOCATION_ELEVATION" type="char*" value="geo-location-elevation"/>
+		<constant name="GST_TAG_GEO_LOCATION_HORIZONTAL_ERROR" type="char*" value="geo-location-horizontal-error"/>
 		<constant name="GST_TAG_GEO_LOCATION_LATITUDE" type="char*" value="geo-location-latitude"/>
 		<constant name="GST_TAG_GEO_LOCATION_LONGITUDE" type="char*" value="geo-location-longitude"/>
 		<constant name="GST_TAG_GEO_LOCATION_MOVEMENT_DIRECTION" type="char*" value="geo-location-movement-direction"/>
@@ -9121,7 +9857,7 @@
 		<constant name="GST_VALUE_LESS_THAN" type="int" value="-1"/>
 		<constant name="GST_VALUE_UNORDERED" type="int" value="2"/>
 		<constant name="GST_VERSION_MAJOR" type="int" value="0"/>
-		<constant name="GST_VERSION_MICRO" type="int" value="30"/>
+		<constant name="GST_VERSION_MICRO" type="int" value="35"/>
 		<constant name="GST_VERSION_MINOR" type="int" value="10"/>
 		<constant name="GST_VERSION_NANO" type="int" value="1"/>
 	</namespace>

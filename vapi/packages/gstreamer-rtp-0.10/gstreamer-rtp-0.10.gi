@@ -85,6 +85,25 @@
 				<parameter name="unixtime" type="guint64"/>
 			</parameters>
 		</function>
+		<function name="rtp_buffer_add_extension_onebyte_header" symbol="gst_rtp_buffer_add_extension_onebyte_header">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="buffer" type="GstBuffer*"/>
+				<parameter name="id" type="guint8"/>
+				<parameter name="data" type="gpointer"/>
+				<parameter name="size" type="guint"/>
+			</parameters>
+		</function>
+		<function name="rtp_buffer_add_extension_twobytes_header" symbol="gst_rtp_buffer_add_extension_twobytes_header">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="buffer" type="GstBuffer*"/>
+				<parameter name="appbits" type="guint8"/>
+				<parameter name="id" type="guint8"/>
+				<parameter name="data" type="gpointer"/>
+				<parameter name="size" type="guint"/>
+			</parameters>
+		</function>
 		<function name="rtp_buffer_allocate_data" symbol="gst_rtp_buffer_allocate_data">
 			<return-type type="void"/>
 			<parameters>
@@ -162,6 +181,27 @@
 				<parameter name="bits" type="guint16*"/>
 				<parameter name="data" type="gpointer*"/>
 				<parameter name="wordlen" type="guint*"/>
+			</parameters>
+		</function>
+		<function name="rtp_buffer_get_extension_onebyte_header" symbol="gst_rtp_buffer_get_extension_onebyte_header">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="buffer" type="GstBuffer*"/>
+				<parameter name="id" type="guint8"/>
+				<parameter name="nth" type="guint"/>
+				<parameter name="data" type="gpointer*"/>
+				<parameter name="size" type="guint*"/>
+			</parameters>
+		</function>
+		<function name="rtp_buffer_get_extension_twobytes_header" symbol="gst_rtp_buffer_get_extension_twobytes_header">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="buffer" type="GstBuffer*"/>
+				<parameter name="appbits" type="guint8*"/>
+				<parameter name="id" type="guint8"/>
+				<parameter name="nth" type="guint"/>
+				<parameter name="data" type="gpointer*"/>
+				<parameter name="size" type="guint*"/>
 			</parameters>
 		</function>
 		<function name="rtp_buffer_get_header_len" symbol="gst_rtp_buffer_get_header_len">
@@ -242,6 +282,54 @@
 			<return-type type="guint8"/>
 			<parameters>
 				<parameter name="buffer" type="GstBuffer*"/>
+			</parameters>
+		</function>
+		<function name="rtp_buffer_list_add_extension_onebyte_header" symbol="gst_rtp_buffer_list_add_extension_onebyte_header">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="it" type="GstBufferListIterator*"/>
+				<parameter name="id" type="guint8"/>
+				<parameter name="data" type="gpointer"/>
+				<parameter name="size" type="guint"/>
+			</parameters>
+		</function>
+		<function name="rtp_buffer_list_add_extension_twobytes_header" symbol="gst_rtp_buffer_list_add_extension_twobytes_header">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="it" type="GstBufferListIterator*"/>
+				<parameter name="appbits" type="guint8"/>
+				<parameter name="id" type="guint8"/>
+				<parameter name="data" type="gpointer"/>
+				<parameter name="size" type="guint"/>
+			</parameters>
+		</function>
+		<function name="rtp_buffer_list_from_buffer" symbol="gst_rtp_buffer_list_from_buffer">
+			<return-type type="GstBufferList*"/>
+			<parameters>
+				<parameter name="buffer" type="GstBuffer*"/>
+			</parameters>
+		</function>
+		<function name="rtp_buffer_list_get_extension_onebyte_header" symbol="gst_rtp_buffer_list_get_extension_onebyte_header">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="bufferlist" type="GstBufferList*"/>
+				<parameter name="group_idx" type="guint"/>
+				<parameter name="id" type="guint8"/>
+				<parameter name="nth" type="guint"/>
+				<parameter name="data" type="gpointer*"/>
+				<parameter name="size" type="guint*"/>
+			</parameters>
+		</function>
+		<function name="rtp_buffer_list_get_extension_twobytes_header" symbol="gst_rtp_buffer_list_get_extension_twobytes_header">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="bufferlist" type="GstBufferList*"/>
+				<parameter name="group_idx" type="guint"/>
+				<parameter name="appbits" type="guint8*"/>
+				<parameter name="id" type="guint8"/>
+				<parameter name="nth" type="guint"/>
+				<parameter name="data" type="gpointer*"/>
+				<parameter name="size" type="guint*"/>
 			</parameters>
 		</function>
 		<function name="rtp_buffer_list_get_payload_len" symbol="gst_rtp_buffer_list_get_payload_len">
@@ -498,6 +586,18 @@
 					<parameter name="reason" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="fb_get_fci" symbol="gst_rtcp_packet_fb_get_fci">
+				<return-type type="guint8*"/>
+				<parameters>
+					<parameter name="packet" type="GstRTCPPacket*"/>
+				</parameters>
+			</method>
+			<method name="fb_get_fci_length" symbol="gst_rtcp_packet_fb_get_fci_length">
+				<return-type type="guint16"/>
+				<parameters>
+					<parameter name="packet" type="GstRTCPPacket*"/>
+				</parameters>
+			</method>
 			<method name="fb_get_media_ssrc" symbol="gst_rtcp_packet_fb_get_media_ssrc">
 				<return-type type="guint32"/>
 				<parameters>
@@ -514,6 +614,13 @@
 				<return-type type="GstRTCPFBType"/>
 				<parameters>
 					<parameter name="packet" type="GstRTCPPacket*"/>
+				</parameters>
+			</method>
+			<method name="fb_set_fci_length" symbol="gst_rtcp_packet_fb_set_fci_length">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="packet" type="GstRTCPPacket*"/>
+					<parameter name="wordlen" type="guint16"/>
 				</parameters>
 			</method>
 			<method name="fb_set_media_ssrc" symbol="gst_rtcp_packet_fb_set_media_ssrc">
@@ -867,6 +974,13 @@
 					<parameter name="out_buf" type="GstBuffer*"/>
 				</parameters>
 			</method>
+			<method name="push_list" symbol="gst_base_rtp_depayload_push_list">
+				<return-type type="GstFlowReturn"/>
+				<parameters>
+					<parameter name="filter" type="GstBaseRTPDepayload*"/>
+					<parameter name="out_list" type="GstBufferList*"/>
+				</parameters>
+			</method>
 			<method name="push_ts" symbol="gst_base_rtp_depayload_push_ts">
 				<return-type type="GstFlowReturn"/>
 				<parameters>
@@ -881,6 +995,13 @@
 				<parameters>
 					<parameter name="filter" type="GstBaseRTPDepayload*"/>
 					<parameter name="in" type="GstBuffer*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="handle_event">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="filter" type="GstBaseRTPDepayload*"/>
+					<parameter name="event" type="GstEvent*"/>
 				</parameters>
 			</vfunc>
 			<vfunc name="packet_lost">
@@ -968,6 +1089,7 @@
 			<property name="mtu" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="perfect-rtptime" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="pt" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="ptime-multiple" type="gint64" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="seqnum" type="guint" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="seqnum-offset" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="ssrc" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>

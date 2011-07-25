@@ -12,12 +12,62 @@ namespace Gst {
 		public void copy (uchar dest, uint offset, uint size);
 		public void flush (uint flush);
 		public uint masked_scan_uint32 (uint32 mask, uint32 pattern, uint offset, uint size);
+		public uint masked_scan_uint32_peek (uint32 mask, uint32 pattern, uint offset, uint size, uint32 value);
 		[CCode (array_length = false)]
 		public unowned uchar[] peek (uint size);
 		public Gst.ClockTime prev_timestamp (uint64 distance);
 		public void push (owned Gst.Buffer buf);
 		public uchar take (uint nbytes);
 		public Gst.Buffer take_buffer (uint nbytes);
+		public unowned GLib.List take_list (uint nbytes);
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class BaseParse : Gst.Element {
+		public uint flags;
+		public weak Gst.Segment segment;
+		public weak Gst.Pad sinkpad;
+		public weak Gst.Pad srcpad;
+		[CCode (has_construct_function = false)]
+		protected BaseParse ();
+		public bool add_index_entry (uint64 offset, Gst.ClockTime ts, bool key, bool force);
+		[NoWrapper]
+		public virtual bool check_valid_frame (Gst.BaseParseFrame frame, uint framesize, int skipsize);
+		[NoWrapper]
+		public virtual bool convert (Gst.Format src_format, int64 src_value, Gst.Format dest_format, int64 dest_value);
+		public bool convert_default (Gst.Format src_format, int64 src_value, Gst.Format dest_format, int64 dest_value);
+		[NoWrapper]
+		public virtual bool event (Gst.Event event);
+		[NoWrapper]
+		public virtual Gst.FlowReturn parse_frame (Gst.BaseParseFrame frame);
+		[NoWrapper]
+		public virtual Gst.FlowReturn pre_push_frame (Gst.BaseParseFrame frame);
+		public Gst.FlowReturn push_frame (Gst.BaseParseFrame frame);
+		public void set_average_bitrate (uint bitrate);
+		public void set_duration (Gst.Format fmt, int64 duration, int interval);
+		public void set_frame_rate (uint fps_num, uint fps_den, uint lead_in, uint lead_out);
+		public void set_has_timing_info (bool has_timing);
+		public void set_latency (Gst.ClockTime min_latency, Gst.ClockTime max_latency);
+		public void set_min_frame_size (uint min_size);
+		public void set_passthrough (bool passthrough);
+		[NoWrapper]
+		public virtual bool set_sink_caps (Gst.Caps caps);
+		public void set_syncable (bool syncable);
+		[NoWrapper]
+		public virtual bool src_event (Gst.Event event);
+		[NoWrapper]
+		public virtual bool start ();
+		[NoWrapper]
+		public virtual bool stop ();
+	}
+	[Compact]
+	[CCode (type_id = "GST_TYPE_BASE_PARSE_FRAME", cheader_filename = "gst/gst.h")]
+	public class BaseParseFrame {
+		public weak Gst.Buffer buffer;
+		public uint flags;
+		public int overhead;
+		[CCode (has_construct_function = false)]
+		public BaseParseFrame (Gst.Buffer buffer, Gst.BaseParseFrameFlags flags, int overhead);
+		public void init ();
 	}
 	[CCode (cheader_filename = "gst/base/gstbasesink.h")]
 	public class BaseSink : Gst.Element {
@@ -62,10 +112,12 @@ namespace Gst {
 		public int64 get_max_lateness ();
 		public Gst.ClockTime get_render_delay ();
 		public bool get_sync ();
+		public uint64 get_throttle_time ();
 		[NoWrapper]
 		public virtual void get_times (Gst.Buffer buffer, out Gst.ClockTime start, out Gst.ClockTime end);
 		public Gst.ClockTimeDiff get_ts_offset ();
 		public bool is_async_enabled ();
+		public bool is_last_buffer_enabled ();
 		public bool is_qos_enabled ();
 		[NoWrapper]
 		public virtual Gst.FlowReturn preroll (Gst.Buffer buffer);
@@ -78,10 +130,12 @@ namespace Gst {
 		public void set_blocksize (uint blocksize);
 		[NoWrapper]
 		public virtual bool set_caps (Gst.Caps caps);
+		public void set_last_buffer_enabled (bool enabled);
 		public void set_max_lateness (int64 max_lateness);
 		public void set_qos_enabled (bool enabled);
 		public void set_render_delay (Gst.ClockTime delay);
 		public void set_sync (bool sync);
+		public void set_throttle_time (uint64 throttle);
 		public void set_ts_offset (Gst.ClockTimeDiff offset);
 		[NoWrapper]
 		public virtual bool start ();
@@ -97,6 +151,8 @@ namespace Gst {
 		[NoAccessorMethod]
 		public bool @async { get; set; }
 		public uint blocksize { get; set; }
+		[NoAccessorMethod]
+		public bool enable_last_buffer { get; set; }
 		public Gst.Buffer last_buffer { get; }
 		public int64 max_lateness { get; set; }
 		[NoAccessorMethod]
@@ -105,6 +161,7 @@ namespace Gst {
 		public bool qos { get; set; }
 		public uint64 render_delay { get; set; }
 		public bool sync { get; set; }
+		public uint64 throttle_time { get; set; }
 		public int64 ts_offset { get; set; }
 	}
 	[CCode (cheader_filename = "gst/base/gstbasesrc.h")]
@@ -163,6 +220,7 @@ namespace Gst {
 		[NoWrapper]
 		public virtual bool set_caps (Gst.Caps caps);
 		public void set_do_timestamp (bool timestamp);
+		public void set_dynamic_size (bool @dynamic);
 		public void set_format (Gst.Format format);
 		public void set_live (bool live);
 		[NoWrapper]
@@ -202,6 +260,8 @@ namespace Gst {
 		public const string SRC_NAME;
 		[CCode (has_construct_function = false)]
 		protected BaseTransform ();
+		[NoWrapper]
+		public virtual bool accept_caps (Gst.PadDirection direction, Gst.Caps caps);
 		[NoWrapper]
 		public virtual void before_transform (Gst.Buffer buffer);
 		[NoWrapper]
@@ -439,6 +499,7 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/base/gstdataqueue.h")]
 	public class DataQueue : GLib.Object {
+		public void* abidata;
 		public void* checkdata;
 		public weak Gst.DataQueueCheckFullFunction checkfull;
 		public weak Gst.DataQueueSize cur_level;
@@ -494,6 +555,12 @@ namespace Gst {
 		[NoWrapper]
 		public virtual Gst.FlowReturn create (out unowned Gst.Buffer buf);
 	}
+	[CCode (cprefix = "GST_BASE_PARSE_FRAME_FLAG_", has_type_id = false, cheader_filename = "gst/gst.h")]
+	public enum BaseParseFrameFlags {
+		NONE,
+		NO_FRAME,
+		CLIP
+	}
 	[CCode (cprefix = "GST_BASE_SRC_", has_type_id = false, cheader_filename = "gst/base/gstbasesrc.h")]
 	public enum BaseSrcFlags {
 		STARTED,
@@ -513,6 +580,10 @@ namespace Gst {
 	public delegate void DataQueueFullCallback (Gst.DataQueue queue, void* checkdata);
 	[CCode (cheader_filename = "gst/base/gsttypefindhelper.h", has_target = false)]
 	public delegate Gst.FlowReturn TypeFindHelperGetRangeFunction (Gst.Object obj, uint64 offset, uint length, out unowned Gst.Buffer buffer);
+	[CCode (cheader_filename = "gst/gst.h")]
+	public const int BASE_PARSE_FLAG_DRAINING;
+	[CCode (cheader_filename = "gst/gst.h")]
+	public const int BASE_PARSE_FLAG_LOST_SYNC;
 	[CCode (cheader_filename = "gst/base/gsttypefindhelper.h")]
 	public static unowned Gst.Caps type_find_helper (Gst.Pad src, uint64 size);
 	[CCode (cheader_filename = "gst/base/gsttypefindhelper.h")]

@@ -63,7 +63,7 @@ namespace Gst {
 		public weak GLib.Callback need_data;
 		public weak GLib.Callback seek_data;
 	}
-	[CCode (cprefix = "GST_APP_STREAM_TYPE_", has_type_id = false, cheader_filename = "gst/app/gstappsrc.h")]
+	[CCode (cprefix = "GST_APP_STREAM_TYPE_", cheader_filename = "gst/app/gstappsrc.h")]
 	public enum AppStreamType {
 		STREAM,
 		SEEKABLE,

@@ -626,11 +626,18 @@
 			<field name="tunnel_start" type="GCallback"/>
 			<field name="tunnel_complete" type="GCallback"/>
 			<field name="error_full" type="GCallback"/>
+			<field name="tunnel_lost" type="GCallback"/>
 			<field name="_gst_reserved" type="gpointer[]"/>
 		</struct>
 		<boxed name="GstRTSPUrl" type-name="GstRTSPUrl" get-type="gst_rtsp_url_get_type">
 			<method name="copy" symbol="gst_rtsp_url_copy">
 				<return-type type="GstRTSPUrl*"/>
+				<parameters>
+					<parameter name="url" type="GstRTSPUrl*"/>
+				</parameters>
+			</method>
+			<method name="decode_path_components" symbol="gst_rtsp_url_decode_path_components">
+				<return-type type="gchar**"/>
 				<parameters>
 					<parameter name="url" type="GstRTSPUrl*"/>
 				</parameters>
@@ -771,13 +778,6 @@
 			<member name="GST_RTSP_HDR_X_SESSIONCOOKIE" value="80"/>
 			<member name="GST_RTSP_HDR_LAST" value="81"/>
 		</enum>
-		<enum name="GstRTSPLowerTrans">
-			<member name="GST_RTSP_LOWER_TRANS_UNKNOWN" value="0"/>
-			<member name="GST_RTSP_LOWER_TRANS_UDP" value="1"/>
-			<member name="GST_RTSP_LOWER_TRANS_UDP_MCAST" value="2"/>
-			<member name="GST_RTSP_LOWER_TRANS_TCP" value="4"/>
-			<member name="GST_RTSP_LOWER_TRANS_HTTP" value="16"/>
-		</enum>
 		<enum name="GstRTSPMsgType">
 			<member name="GST_RTSP_MESSAGE_INVALID" value="0"/>
 			<member name="GST_RTSP_MESSAGE_REQUEST" value="1"/>
@@ -891,6 +891,12 @@
 		<flags name="GstRTSPEvent" type-name="GstRTSPEvent" get-type="gst_rtsp_event_get_type">
 			<member name="GST_RTSP_EV_READ" value="1"/>
 			<member name="GST_RTSP_EV_WRITE" value="2"/>
+		</flags>
+		<flags name="GstRTSPLowerTrans" type-name="GstRTSPLowerTrans" get-type="gst_rtsp_lower_trans_get_type">
+			<member name="GST_RTSP_LOWER_TRANS_UDP" value="1"/>
+			<member name="GST_RTSP_LOWER_TRANS_UDP_MCAST" value="2"/>
+			<member name="GST_RTSP_LOWER_TRANS_TCP" value="4"/>
+			<member name="GST_RTSP_LOWER_TRANS_HTTP" value="16"/>
 		</flags>
 		<flags name="GstRTSPMethod" type-name="GstRTSPMethod" get-type="gst_rtsp_method_get_type">
 			<member name="GST_RTSP_INVALID" value="0"/>

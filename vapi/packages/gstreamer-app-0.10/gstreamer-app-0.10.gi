@@ -37,7 +37,7 @@
 			<field name="seek_data" type="GCallback"/>
 			<field name="_gst_reserved" type="gpointer[]"/>
 		</struct>
-		<enum name="GstAppStreamType">
+		<enum name="GstAppStreamType" type-name="GstAppStreamType" get-type="gst_app_stream_type_get_type">
 			<member name="GST_APP_STREAM_TYPE_STREAM" value="0"/>
 			<member name="GST_APP_STREAM_TYPE_SEEKABLE" value="1"/>
 			<member name="GST_APP_STREAM_TYPE_RANDOM_ACCESS" value="2"/>

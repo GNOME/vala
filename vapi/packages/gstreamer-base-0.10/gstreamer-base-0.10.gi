@@ -1027,6 +1027,39 @@
 			<field name="bytes" type="guint"/>
 			<field name="time" type="guint64"/>
 		</struct>
+		<boxed name="GstBaseParseFrame" type-name="GstBaseParseFrame" get-type="gst_base_parse_frame_get_type">
+			<method name="free" symbol="gst_base_parse_frame_free">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="frame" type="GstBaseParseFrame*"/>
+				</parameters>
+			</method>
+			<method name="init" symbol="gst_base_parse_frame_init">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="frame" type="GstBaseParseFrame*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gst_base_parse_frame_new">
+				<return-type type="GstBaseParseFrame*"/>
+				<parameters>
+					<parameter name="buffer" type="GstBuffer*"/>
+					<parameter name="flags" type="GstBaseParseFrameFlags"/>
+					<parameter name="overhead" type="gint"/>
+				</parameters>
+			</constructor>
+			<field name="buffer" type="GstBuffer*"/>
+			<field name="flags" type="guint"/>
+			<field name="overhead" type="gint"/>
+			<field name="_gst_reserved_i" type="guint[]"/>
+			<field name="_gst_reserved_p" type="gpointer[]"/>
+			<field name="_private_flags" type="guint"/>
+		</boxed>
+		<enum name="GstBaseParseFrameFlags">
+			<member name="GST_BASE_PARSE_FRAME_FLAG_NONE" value="0"/>
+			<member name="GST_BASE_PARSE_FRAME_FLAG_NO_FRAME" value="1"/>
+			<member name="GST_BASE_PARSE_FRAME_FLAG_CLIP" value="2"/>
+		</enum>
 		<enum name="GstBaseSrcFlags">
 			<member name="GST_BASE_SRC_STARTED" value="1048576"/>
 			<member name="GST_BASE_SRC_FLAG_LAST" value="4194304"/>
@@ -1076,6 +1109,17 @@
 					<parameter name="size" type="guint"/>
 				</parameters>
 			</method>
+			<method name="masked_scan_uint32_peek" symbol="gst_adapter_masked_scan_uint32_peek">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="adapter" type="GstAdapter*"/>
+					<parameter name="mask" type="guint32"/>
+					<parameter name="pattern" type="guint32"/>
+					<parameter name="offset" type="guint"/>
+					<parameter name="size" type="guint"/>
+					<parameter name="value" type="guint32*"/>
+				</parameters>
+			</method>
 			<constructor name="new" symbol="gst_adapter_new">
 				<return-type type="GstAdapter*"/>
 			</constructor>
@@ -1114,6 +1158,13 @@
 					<parameter name="nbytes" type="guint"/>
 				</parameters>
 			</method>
+			<method name="take_list" symbol="gst_adapter_take_list">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="adapter" type="GstAdapter*"/>
+					<parameter name="nbytes" type="guint"/>
+				</parameters>
+			</method>
 			<field name="buflist" type="GSList*"/>
 			<field name="size" type="guint"/>
 			<field name="skip" type="guint"/>
@@ -1121,6 +1172,167 @@
 			<field name="assembled_size" type="guint"/>
 			<field name="assembled_len" type="guint"/>
 			<field name="buflist_end" type="GSList*"/>
+		</object>
+		<object name="GstBaseParse" parent="GstElement" type-name="GstBaseParse" get-type="gst_base_parse_get_type">
+			<method name="add_index_entry" symbol="gst_base_parse_add_index_entry">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="parse" type="GstBaseParse*"/>
+					<parameter name="offset" type="guint64"/>
+					<parameter name="ts" type="GstClockTime"/>
+					<parameter name="key" type="gboolean"/>
+					<parameter name="force" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="convert_default" symbol="gst_base_parse_convert_default">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="parse" type="GstBaseParse*"/>
+					<parameter name="src_format" type="GstFormat"/>
+					<parameter name="src_value" type="gint64"/>
+					<parameter name="dest_format" type="GstFormat"/>
+					<parameter name="dest_value" type="gint64*"/>
+				</parameters>
+			</method>
+			<method name="push_frame" symbol="gst_base_parse_push_frame">
+				<return-type type="GstFlowReturn"/>
+				<parameters>
+					<parameter name="parse" type="GstBaseParse*"/>
+					<parameter name="frame" type="GstBaseParseFrame*"/>
+				</parameters>
+			</method>
+			<method name="set_average_bitrate" symbol="gst_base_parse_set_average_bitrate">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="parse" type="GstBaseParse*"/>
+					<parameter name="bitrate" type="guint"/>
+				</parameters>
+			</method>
+			<method name="set_duration" symbol="gst_base_parse_set_duration">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="parse" type="GstBaseParse*"/>
+					<parameter name="fmt" type="GstFormat"/>
+					<parameter name="duration" type="gint64"/>
+					<parameter name="interval" type="gint"/>
+				</parameters>
+			</method>
+			<method name="set_frame_rate" symbol="gst_base_parse_set_frame_rate">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="parse" type="GstBaseParse*"/>
+					<parameter name="fps_num" type="guint"/>
+					<parameter name="fps_den" type="guint"/>
+					<parameter name="lead_in" type="guint"/>
+					<parameter name="lead_out" type="guint"/>
+				</parameters>
+			</method>
+			<method name="set_has_timing_info" symbol="gst_base_parse_set_has_timing_info">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="parse" type="GstBaseParse*"/>
+					<parameter name="has_timing" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_latency" symbol="gst_base_parse_set_latency">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="parse" type="GstBaseParse*"/>
+					<parameter name="min_latency" type="GstClockTime"/>
+					<parameter name="max_latency" type="GstClockTime"/>
+				</parameters>
+			</method>
+			<method name="set_min_frame_size" symbol="gst_base_parse_set_min_frame_size">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="parse" type="GstBaseParse*"/>
+					<parameter name="min_size" type="guint"/>
+				</parameters>
+			</method>
+			<method name="set_passthrough" symbol="gst_base_parse_set_passthrough">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="parse" type="GstBaseParse*"/>
+					<parameter name="passthrough" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_syncable" symbol="gst_base_parse_set_syncable">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="parse" type="GstBaseParse*"/>
+					<parameter name="syncable" type="gboolean"/>
+				</parameters>
+			</method>
+			<vfunc name="check_valid_frame">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="parse" type="GstBaseParse*"/>
+					<parameter name="frame" type="GstBaseParseFrame*"/>
+					<parameter name="framesize" type="guint*"/>
+					<parameter name="skipsize" type="gint*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="convert">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="parse" type="GstBaseParse*"/>
+					<parameter name="src_format" type="GstFormat"/>
+					<parameter name="src_value" type="gint64"/>
+					<parameter name="dest_format" type="GstFormat"/>
+					<parameter name="dest_value" type="gint64*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="event">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="parse" type="GstBaseParse*"/>
+					<parameter name="event" type="GstEvent*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="parse_frame">
+				<return-type type="GstFlowReturn"/>
+				<parameters>
+					<parameter name="parse" type="GstBaseParse*"/>
+					<parameter name="frame" type="GstBaseParseFrame*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="pre_push_frame">
+				<return-type type="GstFlowReturn"/>
+				<parameters>
+					<parameter name="parse" type="GstBaseParse*"/>
+					<parameter name="frame" type="GstBaseParseFrame*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="set_sink_caps">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="parse" type="GstBaseParse*"/>
+					<parameter name="caps" type="GstCaps*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="src_event">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="parse" type="GstBaseParse*"/>
+					<parameter name="event" type="GstEvent*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="start">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="parse" type="GstBaseParse*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="stop">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="parse" type="GstBaseParse*"/>
+				</parameters>
+			</vfunc>
+			<field name="sinkpad" type="GstPad*"/>
+			<field name="srcpad" type="GstPad*"/>
+			<field name="flags" type="guint"/>
+			<field name="segment" type="GstSegment"/>
 		</object>
 		<object name="GstBaseSink" parent="GstElement" type-name="GstBaseSink" get-type="gst_base_sink_get_type">
 			<method name="do_preroll" symbol="gst_base_sink_do_preroll">
@@ -1166,6 +1378,12 @@
 					<parameter name="sink" type="GstBaseSink*"/>
 				</parameters>
 			</method>
+			<method name="get_throttle_time" symbol="gst_base_sink_get_throttle_time">
+				<return-type type="guint64"/>
+				<parameters>
+					<parameter name="sink" type="GstBaseSink*"/>
+				</parameters>
+			</method>
 			<method name="get_ts_offset" symbol="gst_base_sink_get_ts_offset">
 				<return-type type="GstClockTimeDiff"/>
 				<parameters>
@@ -1173,6 +1391,12 @@
 				</parameters>
 			</method>
 			<method name="is_async_enabled" symbol="gst_base_sink_is_async_enabled">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="sink" type="GstBaseSink*"/>
+				</parameters>
+			</method>
+			<method name="is_last_buffer_enabled" symbol="gst_base_sink_is_last_buffer_enabled">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="sink" type="GstBaseSink*"/>
@@ -1208,6 +1432,13 @@
 					<parameter name="blocksize" type="guint"/>
 				</parameters>
 			</method>
+			<method name="set_last_buffer_enabled" symbol="gst_base_sink_set_last_buffer_enabled">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="sink" type="GstBaseSink*"/>
+					<parameter name="enabled" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="set_max_lateness" symbol="gst_base_sink_set_max_lateness">
 				<return-type type="void"/>
 				<parameters>
@@ -1234,6 +1465,13 @@
 				<parameters>
 					<parameter name="sink" type="GstBaseSink*"/>
 					<parameter name="sync" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_throttle_time" symbol="gst_base_sink_set_throttle_time">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="sink" type="GstBaseSink*"/>
+					<parameter name="throttle" type="guint64"/>
 				</parameters>
 			</method>
 			<method name="set_ts_offset" symbol="gst_base_sink_set_ts_offset">
@@ -1267,12 +1505,14 @@
 			</method>
 			<property name="async" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="blocksize" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="enable-last-buffer" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="last-buffer" type="GstBuffer" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="max-lateness" type="gint64" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="preroll-queue-len" type="guint" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="qos" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="render-delay" type="guint64" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="sync" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="throttle-time" type="guint64" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="ts-offset" type="gint64" readable="1" writable="1" construct="0" construct-only="0"/>
 			<vfunc name="activate_pull">
 				<return-type type="gboolean"/>
@@ -1450,6 +1690,13 @@
 				<parameters>
 					<parameter name="src" type="GstBaseSrc*"/>
 					<parameter name="timestamp" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_dynamic_size" symbol="gst_base_src_set_dynamic_size">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="src" type="GstBaseSrc*"/>
+					<parameter name="dynamic" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="set_format" symbol="gst_base_src_set_format">
@@ -1689,6 +1936,14 @@
 				</parameters>
 			</method>
 			<property name="qos" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<vfunc name="accept_caps">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="trans" type="GstBaseTransform*"/>
+					<parameter name="direction" type="GstPadDirection"/>
+					<parameter name="caps" type="GstCaps*"/>
+				</parameters>
+			</vfunc>
 			<vfunc name="before_transform">
 				<return-type type="void"/>
 				<parameters>
@@ -2056,6 +2311,7 @@
 			<field name="flushing" type="gboolean"/>
 			<field name="fullcallback" type="GstDataQueueFullCallback"/>
 			<field name="emptycallback" type="GstDataQueueEmptyCallback"/>
+			<field name="abidata" type="gpointer"/>
 		</object>
 		<object name="GstPushSrc" parent="GstBaseSrc" type-name="GstPushSrc" get-type="gst_push_src_get_type">
 			<vfunc name="create">
@@ -2066,6 +2322,8 @@
 				</parameters>
 			</vfunc>
 		</object>
+		<constant name="GST_BASE_PARSE_FLAG_DRAINING" type="int" value="2"/>
+		<constant name="GST_BASE_PARSE_FLAG_LOST_SYNC" type="int" value="1"/>
 		<constant name="GST_BASE_TRANSFORM_SINK_NAME" type="char*" value="sink"/>
 		<constant name="GST_BASE_TRANSFORM_SRC_NAME" type="char*" value="src"/>
 	</namespace>

@@ -51,7 +51,7 @@
 			<field name="sock" type="int"/>
 			<field name="control_sock" type="int[]"/>
 			<field name="current_timeout" type="GstClockTime"/>
-			<field name="servaddr" type="struct sockaddr_id*"/>
+			<field name="servaddr" type="struct sockaddr_in*"/>
 			<field name="thread" type="GThread*"/>
 		</object>
 		<object name="GstNetTimeProvider" parent="GstObject" type-name="GstNetTimeProvider" get-type="gst_net_time_provider_get_type">

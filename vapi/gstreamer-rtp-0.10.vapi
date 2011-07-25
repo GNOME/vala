@@ -37,10 +37,13 @@ namespace Gst {
 		[NoWrapper]
 		public virtual Gst.FlowReturn add_to_queue (Gst.Buffer @in);
 		[NoWrapper]
+		public virtual bool handle_event (Gst.Event event);
+		[NoWrapper]
 		public virtual bool packet_lost (Gst.Event event);
 		[NoWrapper]
 		public virtual unowned Gst.Buffer process (Gst.Buffer @in);
 		public Gst.FlowReturn push (Gst.Buffer out_buf);
+		public Gst.FlowReturn push_list (Gst.BufferList out_list);
 		public Gst.FlowReturn push_ts (uint32 timestamp, Gst.Buffer out_buf);
 		[NoWrapper]
 		public virtual bool set_caps (Gst.Caps caps);
@@ -97,6 +100,8 @@ namespace Gst {
 		[NoAccessorMethod]
 		public uint pt { get; set; }
 		[NoAccessorMethod]
+		public int64 ptime_multiple { get; set; }
+		[NoAccessorMethod]
 		public uint seqnum { get; }
 		[NoAccessorMethod]
 		public int seqnum_offset { get; set; }
@@ -138,9 +143,12 @@ namespace Gst {
 		public uchar bye_get_reason_len ();
 		public uint bye_get_ssrc_count ();
 		public bool bye_set_reason (string reason);
+		public uchar fb_get_fci ();
+		public uint16 fb_get_fci_length ();
 		public uint32 fb_get_media_ssrc ();
 		public uint32 fb_get_sender_ssrc ();
 		public Gst.RTCPFBType fb_get_type ();
+		public bool fb_set_fci_length (uint16 wordlen);
 		public void fb_set_media_ssrc (uint32 ssrc);
 		public void fb_set_sender_ssrc (uint32 ssrc);
 		public void fb_set_type (Gst.RTCPFBType type);
@@ -342,6 +350,10 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h")]
 	public static uint64 rtcp_unix_to_ntp (uint64 unixtime);
 	[CCode (cheader_filename = "gst/rtp/gstrtpbuffer.h")]
+	public static bool rtp_buffer_add_extension_onebyte_header (Gst.Buffer buffer, uchar id, void* data, uint size);
+	[CCode (cheader_filename = "gst/rtp/gstrtpbuffer.h")]
+	public static bool rtp_buffer_add_extension_twobytes_header (Gst.Buffer buffer, uchar appbits, uchar id, void* data, uint size);
+	[CCode (cheader_filename = "gst/rtp/gstrtpbuffer.h")]
 	public static void rtp_buffer_allocate_data (Gst.Buffer buffer, uint payload_len, uchar pad_len, uchar csrc_count);
 	[CCode (cheader_filename = "gst/rtp/gstrtpbuffer.h")]
 	public static uint rtp_buffer_calc_header_len (uchar csrc_count);
@@ -363,6 +375,10 @@ namespace Gst {
 	public static bool rtp_buffer_get_extension (Gst.Buffer buffer);
 	[CCode (cheader_filename = "gst/rtp/gstrtpbuffer.h")]
 	public static bool rtp_buffer_get_extension_data (Gst.Buffer buffer, out uint16 bits, out void* data, out uint wordlen);
+	[CCode (cheader_filename = "gst/rtp/gstrtpbuffer.h")]
+	public static bool rtp_buffer_get_extension_onebyte_header (Gst.Buffer buffer, uchar id, uint nth, void* data, uint size);
+	[CCode (cheader_filename = "gst/rtp/gstrtpbuffer.h")]
+	public static bool rtp_buffer_get_extension_twobytes_header (Gst.Buffer buffer, uchar appbits, uchar id, uint nth, void* data, uint size);
 	[CCode (cheader_filename = "gst/rtp/gstrtpbuffer.h")]
 	public static uint rtp_buffer_get_header_len (Gst.Buffer buffer);
 	[CCode (cheader_filename = "gst/rtp/gstrtpbuffer.h")]
@@ -389,6 +405,16 @@ namespace Gst {
 	public static uint32 rtp_buffer_get_timestamp (Gst.Buffer buffer);
 	[CCode (cheader_filename = "gst/rtp/gstrtpbuffer.h")]
 	public static uchar rtp_buffer_get_version (Gst.Buffer buffer);
+	[CCode (cheader_filename = "gst/rtp/gstrtpbuffer.h")]
+	public static bool rtp_buffer_list_add_extension_onebyte_header (Gst.BufferListIterator it, uchar id, void* data, uint size);
+	[CCode (cheader_filename = "gst/rtp/gstrtpbuffer.h")]
+	public static bool rtp_buffer_list_add_extension_twobytes_header (Gst.BufferListIterator it, uchar appbits, uchar id, void* data, uint size);
+	[CCode (cheader_filename = "gst/rtp/gstrtpbuffer.h")]
+	public static unowned Gst.BufferList rtp_buffer_list_from_buffer (Gst.Buffer buffer);
+	[CCode (cheader_filename = "gst/rtp/gstrtpbuffer.h")]
+	public static bool rtp_buffer_list_get_extension_onebyte_header (Gst.BufferList bufferlist, uint group_idx, uchar id, uint nth, void* data, uint size);
+	[CCode (cheader_filename = "gst/rtp/gstrtpbuffer.h")]
+	public static bool rtp_buffer_list_get_extension_twobytes_header (Gst.BufferList bufferlist, uint group_idx, uchar appbits, uchar id, uint nth, void* data, uint size);
 	[CCode (cheader_filename = "gst/rtp/gstrtpbuffer.h")]
 	public static uint rtp_buffer_list_get_payload_len (Gst.BufferList list);
 	[CCode (cheader_filename = "gst/rtp/gstrtpbuffer.h")]

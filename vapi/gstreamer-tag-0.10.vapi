@@ -14,6 +14,15 @@ namespace Gst {
 		[NoWrapper]
 		public virtual Gst.TagDemuxResult parse_tag (Gst.Buffer buffer, bool start_tag, out uint tag_size, out Gst.TagList tags);
 	}
+	[CCode (cheader_filename = "gst/tag/tag.h")]
+	public interface TagXmpWriter : Gst.Element {
+		public void add_all_schemas ();
+		public void add_schema (string schema);
+		public bool has_schema (string schema);
+		public void remove_all_schemas ();
+		public void remove_schema (string schema);
+		public unowned Gst.Buffer tag_list_to_xmp_buffer (Gst.TagList taglist, bool read_only);
+	}
 	[CCode (cprefix = "GST_TAG_DEMUX_RESULT_", cheader_filename = "gst/tag/gsttagdemux.h")]
 	public enum TagDemuxResult {
 		BROKEN_TAG,
@@ -44,6 +53,42 @@ namespace Gst {
 		PUBLISHER_STUDIO_LOGO
 	}
 	[CCode (cheader_filename = "gst/tag/tag.h")]
+	public const string TAG_CAPTURING_CONTRAST;
+	[CCode (cheader_filename = "gst/tag/tag.h")]
+	public const string TAG_CAPTURING_DIGITAL_ZOOM_RATIO;
+	[CCode (cheader_filename = "gst/tag/tag.h")]
+	public const string TAG_CAPTURING_EXPOSURE_COMPENSATION;
+	[CCode (cheader_filename = "gst/tag/tag.h")]
+	public const string TAG_CAPTURING_EXPOSURE_MODE;
+	[CCode (cheader_filename = "gst/tag/tag.h")]
+	public const string TAG_CAPTURING_EXPOSURE_PROGRAM;
+	[CCode (cheader_filename = "gst/tag/tag.h")]
+	public const string TAG_CAPTURING_FLASH_FIRED;
+	[CCode (cheader_filename = "gst/tag/tag.h")]
+	public const string TAG_CAPTURING_FLASH_MODE;
+	[CCode (cheader_filename = "gst/tag/tag.h")]
+	public const string TAG_CAPTURING_FOCAL_LENGTH;
+	[CCode (cheader_filename = "gst/tag/tag.h")]
+	public const string TAG_CAPTURING_FOCAL_RATIO;
+	[CCode (cheader_filename = "gst/tag/tag.h")]
+	public const string TAG_CAPTURING_GAIN_ADJUSTMENT;
+	[CCode (cheader_filename = "gst/tag/tag.h")]
+	public const string TAG_CAPTURING_ISO_SPEED;
+	[CCode (cheader_filename = "gst/tag/tag.h")]
+	public const string TAG_CAPTURING_METERING_MODE;
+	[CCode (cheader_filename = "gst/tag/tag.h")]
+	public const string TAG_CAPTURING_SATURATION;
+	[CCode (cheader_filename = "gst/tag/tag.h")]
+	public const string TAG_CAPTURING_SCENE_CAPTURE_TYPE;
+	[CCode (cheader_filename = "gst/tag/tag.h")]
+	public const string TAG_CAPTURING_SHARPNESS;
+	[CCode (cheader_filename = "gst/tag/tag.h")]
+	public const string TAG_CAPTURING_SHUTTER_SPEED;
+	[CCode (cheader_filename = "gst/tag/tag.h")]
+	public const string TAG_CAPTURING_SOURCE;
+	[CCode (cheader_filename = "gst/tag/tag.h")]
+	public const string TAG_CAPTURING_WHITE_BALANCE;
+	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public const string TAG_CDDA_CDDB_DISCID;
 	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public const string TAG_CDDA_CDDB_DISCID_FULL;
@@ -57,6 +102,10 @@ namespace Gst {
 	public const string TAG_CMML_HEAD;
 	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public const string TAG_CMML_STREAM;
+	[CCode (cheader_filename = "gst/tag/tag.h")]
+	public const string TAG_IMAGE_HORIZONTAL_PPI;
+	[CCode (cheader_filename = "gst/tag/tag.h")]
+	public const string TAG_IMAGE_VERTICAL_PPI;
 	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public const string TAG_MUSICBRAINZ_ALBUMARTISTID;
 	[CCode (cheader_filename = "gst/tag/tag.h")]
@@ -94,11 +143,25 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public static bool tag_list_add_id3_image (Gst.TagList tag_list, uchar image_data, uint image_data_len, uint id3_picture_type);
 	[CCode (cheader_filename = "gst/tag/tag.h")]
+	public static unowned Gst.TagList tag_list_from_exif_buffer (Gst.Buffer buffer, int byte_order, uint32 base_offset);
+	[CCode (cheader_filename = "gst/tag/tag.h")]
+	public static unowned Gst.TagList tag_list_from_exif_buffer_with_tiff_header (Gst.Buffer buffer);
+	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public static Gst.TagList tag_list_from_vorbiscomment_buffer (Gst.Buffer buffer, uchar id_data, uint id_data_length, out string vendor_string);
+	[CCode (cheader_filename = "gst/tag/tag.h")]
+	public static unowned Gst.TagList tag_list_from_xmp_buffer (Gst.Buffer buffer);
 	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public static Gst.TagList tag_list_new_from_id3v1 (uchar data);
 	[CCode (cheader_filename = "gst/tag/tag.h")]
+	public static unowned Gst.Buffer tag_list_to_exif_buffer (Gst.TagList taglist, int byte_order, uint32 base_offset);
+	[CCode (cheader_filename = "gst/tag/tag.h")]
+	public static unowned Gst.Buffer tag_list_to_exif_buffer_with_tiff_header (Gst.TagList taglist);
+	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public static Gst.Buffer tag_list_to_vorbiscomment_buffer (Gst.TagList list, uchar id_data, uint id_data_length, string vendor_string);
+	[CCode (cheader_filename = "gst/tag/tag.h")]
+	public static unowned Gst.Buffer tag_list_to_xmp_buffer (Gst.TagList list, bool read_only);
+	[CCode (cheader_filename = "gst/tag/tag.h")]
+	public static unowned Gst.Buffer tag_list_to_xmp_buffer_full (Gst.TagList list, bool read_only, string schemas);
 	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public static bool tag_parse_extended_comment (string ext_comment, out string key, out string lang, out string value, bool fail_if_no_key);
 	[CCode (cheader_filename = "gst/tag/tag.h")]
@@ -109,6 +172,8 @@ namespace Gst {
 	public static GLib.List<string> tag_to_vorbis_comments (Gst.TagList list, string tag);
 	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public static unowned string tag_to_vorbis_tag (string gst_tag);
+	[CCode (cheader_filename = "gst/tag/tag.h")]
+	public static unowned string tag_xmp_list_schemas ();
 	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public static void vorbis_tag_add (Gst.TagList list, string tag, string value);
 }

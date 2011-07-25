@@ -100,6 +100,7 @@ namespace Gst {
 		public Gst.SDPResult add_time (string start, string stop, string repeat);
 		public Gst.SDPResult add_zone (string adj_time, string typed_time);
 		public unowned string as_text ();
+		public static unowned string as_uri (string scheme, Gst.SDPMessage msg);
 		public uint attributes_len ();
 		public uint bandwidths_len ();
 		public Gst.SDPResult dump ();
@@ -123,6 +124,7 @@ namespace Gst {
 		public Gst.SDPResult init ();
 		public uint medias_len ();
 		public static Gst.SDPResult parse_buffer (uchar data, uint size, Gst.SDPMessage msg);
+		public static Gst.SDPResult parse_uri (string uri, Gst.SDPMessage msg);
 		public uint phones_len ();
 		public Gst.SDPResult set_connection (string nettype, string addrtype, string address, uint ttl, uint addr_number);
 		public Gst.SDPResult set_information (string information);
@@ -173,4 +175,8 @@ namespace Gst {
 	public const string SDP_BWTYPE_RR;
 	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
 	public const string SDP_BWTYPE_RS;
+	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
+	public const string SDP_BWTYPE_TIAS;
+	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
+	public static bool sdp_address_is_multicast (string nettype, string addrtype, string addr);
 }

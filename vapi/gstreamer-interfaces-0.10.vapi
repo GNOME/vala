@@ -87,14 +87,6 @@ namespace Gst {
 		public abstract void set_option (Gst.MixerOptions opts, string value);
 		public abstract void set_record (Gst.MixerTrack track, bool record);
 		public abstract void set_volume (Gst.MixerTrack track, int volumes);
-		[HasEmitter]
-		public signal void mute_toggled (Gst.MixerTrack channel, bool mute);
-		[HasEmitter]
-		public signal void option_changed (Gst.MixerOptions opts, string option);
-		[HasEmitter]
-		public signal void record_toggled (Gst.MixerTrack channel, bool record);
-		[HasEmitter]
-		public signal void volume_changed (Gst.MixerTrack channel, void* volumes);
 	}
 	[CCode (cheader_filename = "gst/interfaces/navigation.h")]
 	public interface Navigation : Gst.Element {
@@ -181,9 +173,12 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/interfaces/xoverlay.h", lower_case_csuffix = "x_overlay")]
 	public interface XOverlay : Gst.ImplementsInterface, Gst.Element {
 		public abstract void expose ();
+		public void got_window_handle (uint handle);
 		public void got_xwindow_id (ulong xwindow_id);
 		public abstract void handle_events (bool handle_events);
 		public void prepare_xwindow_id ();
+		public abstract void set_render_rectangle (int x, int y, int width, int height);
+		public abstract void set_window_handle (uint handle);
 		public abstract void set_xwindow_id (ulong xwindow_id);
 	}
 	[CCode (cprefix = "GST_COLOR_BALANCE_", cheader_filename = "gst/interfaces/colorbalance.h")]

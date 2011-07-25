@@ -157,10 +157,35 @@ namespace Gst {
 		v210,
 		v216,
 		NV12,
-		NV21
+		NV21,
+		GRAY8,
+		GRAY16_BE,
+		GRAY16_LE,
+		v308,
+		Y800,
+		Y16,
+		RGB16,
+		BGR16,
+		RGB15,
+		BGR15,
+		UYVP,
+		A420,
+		RGB8_PALETTED,
+		YUV9,
+		YVU9,
+		IYU1,
+		ARGB64,
+		AYUV64,
+		r210
 	}
 	[CCode (cheader_filename = "gst/video/video.h")]
+	public delegate void VideoConvertFrameCallback (Gst.Buffer buf, GLib.Error error);
+	[CCode (cheader_filename = "gst/video/video.h")]
 	public static bool video_calculate_display_ratio (ref uint dar_n, ref uint dar_d, uint video_width, uint video_height, uint video_par_n, uint video_par_d, uint display_par_n, uint display_par_d);
+	[CCode (cheader_filename = "gst/video/video.h")]
+	public static unowned Gst.Buffer video_convert_frame (Gst.Buffer buf, Gst.Caps to_caps, Gst.ClockTime timeout) throws GLib.Error;
+	[CCode (cheader_filename = "gst/video/video.h")]
+	public static void video_convert_frame_async (Gst.Buffer buf, Gst.Caps to_caps, Gst.ClockTime timeout, Gst.VideoConvertFrameCallback callback, GLib.DestroyNotify destroy_notify);
 	[CCode (cheader_filename = "gst/video/video.h")]
 	public static unowned Gst.Event video_event_new_still_frame (bool in_still);
 	[CCode (cheader_filename = "gst/video/video.h")]
@@ -169,6 +194,8 @@ namespace Gst {
 	public static bool video_format_convert (Gst.VideoFormat format, int width, int height, int fps_n, int fps_d, Gst.Format src_format, int64 src_value, Gst.Format dest_format, ref int64 dest_value);
 	[CCode (cheader_filename = "gst/video/video.h")]
 	public static Gst.VideoFormat video_format_from_fourcc (uint32 fourcc);
+	[CCode (cheader_filename = "gst/video/video.h")]
+	public static int video_format_get_component_depth (Gst.VideoFormat format, ref int component);
 	[CCode (cheader_filename = "gst/video/video.h")]
 	public static int video_format_get_component_height (Gst.VideoFormat format, ref int component, ref int height);
 	[CCode (cheader_filename = "gst/video/video.h")]
@@ -184,6 +211,8 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/video/video.h")]
 	public static bool video_format_has_alpha (Gst.VideoFormat format);
 	[CCode (cheader_filename = "gst/video/video.h")]
+	public static bool video_format_is_gray (Gst.VideoFormat format);
+	[CCode (cheader_filename = "gst/video/video.h")]
 	public static bool video_format_is_rgb (Gst.VideoFormat format);
 	[CCode (cheader_filename = "gst/video/video.h")]
 	public static bool video_format_is_yuv (Gst.VideoFormat format);
@@ -191,6 +220,8 @@ namespace Gst {
 	public static Gst.Caps video_format_new_caps (Gst.VideoFormat format, int width, int height, int framerate_n, int framerate_d, int par_n, int par_d);
 	[CCode (cheader_filename = "gst/video/video.h")]
 	public static Gst.Caps video_format_new_caps_interlaced (Gst.VideoFormat format, int width, int height, int framerate_n, int framerate_d, int par_n, int par_d, bool interlaced);
+	[CCode (cheader_filename = "gst/video/video.h")]
+	public static unowned Gst.Caps video_format_new_template_caps (Gst.VideoFormat format);
 	[CCode (cheader_filename = "gst/video/video.h")]
 	public static bool video_format_parse_caps (Gst.Caps caps, ref Gst.VideoFormat format, ref int width, ref int height);
 	[CCode (cheader_filename = "gst/video/video.h")]
@@ -202,7 +233,15 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/video/video.h")]
 	public static bool video_get_size (Gst.Pad pad, ref int width, ref int height);
 	[CCode (cheader_filename = "gst/video/video.h")]
+	public static bool video_get_size_from_caps (Gst.Caps caps, int size);
+	[CCode (cheader_filename = "gst/video/video.h")]
+	public static unowned string video_parse_caps_chroma_site (Gst.Caps caps);
+	[CCode (cheader_filename = "gst/video/video.h")]
+	public static unowned string video_parse_caps_color_matrix (Gst.Caps caps);
+	[CCode (cheader_filename = "gst/video/video.h")]
 	public static bool video_parse_caps_framerate (Gst.Caps caps, ref int fps_n, ref int fps_d);
+	[CCode (cheader_filename = "gst/video/video.h")]
+	public static unowned Gst.Buffer video_parse_caps_palette (Gst.Caps caps);
 	[CCode (cheader_filename = "gst/video/video.h")]
 	public static bool video_parse_caps_pixel_aspect_ratio (Gst.Caps caps, ref int par_n, ref int par_d);
 }

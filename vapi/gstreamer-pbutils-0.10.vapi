@@ -188,6 +188,8 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public static unowned string codec_utils_h264_get_level ([CCode (array_length_pos = 1.9)] uchar[] sps);
 	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
+	public static uchar codec_utils_h264_get_level_idc (string level);
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public static unowned string codec_utils_h264_get_profile ([CCode (array_length_pos = 1.9)] uchar[] sps);
 	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public static bool codec_utils_mpeg4video_caps_set_level_and_profile (Gst.Caps caps, [CCode (array_length_pos = 2.9)] uchar[] vis_obj_seq);

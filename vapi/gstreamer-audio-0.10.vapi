@@ -11,7 +11,10 @@ namespace Gst {
 		[CCode (type = "GstClock*", has_construct_function = false)]
 		public AudioClock (string name, Gst.AudioClockGetTimeFunc func);
 		public static Gst.ClockTime adjust (Gst.Clock clock, Gst.ClockTime time);
+		[CCode (type = "GstClock*", has_construct_function = false)]
+		public AudioClock.full (string name, Gst.AudioClockGetTimeFunc func, GLib.DestroyNotify destroy_notify);
 		public static Gst.ClockTime get_time (Gst.Clock clock);
+		public static void invalidate (Gst.Clock clock);
 		public void reset (Gst.ClockTime time);
 	}
 	[CCode (cheader_filename = "gst/audio/gstaudiofilter.h")]
@@ -66,21 +69,25 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/audio/gstaudiosink.h")]
 	public class BaseAudioSink : Gst.BaseSink {
+		public void* abidata;
 		public uint64 next_sample;
 		public weak Gst.Clock provided_clock;
 		public weak Gst.RingBuffer ringbuffer;
 		[CCode (has_construct_function = false)]
 		protected BaseAudioSink ();
 		public virtual unowned Gst.RingBuffer create_ringbuffer ();
+		public int64 get_drift_tolerance ();
 		public bool get_provide_clock ();
 		public Gst.BaseAudioSinkSlaveMethod get_slave_method ();
+		[NoWrapper]
+		public virtual unowned Gst.Buffer payload (Gst.Buffer buffer);
+		public void set_drift_tolerance (int64 drift_tolerance);
 		public void set_provide_clock (bool provide);
 		public void set_slave_method (Gst.BaseAudioSinkSlaveMethod method);
 		[NoAccessorMethod]
 		public int64 buffer_time { get; set; }
 		[NoAccessorMethod]
 		public bool can_activate_pull { get; set; }
-		[NoAccessorMethod]
 		public int64 drift_tolerance { get; set; }
 		[NoAccessorMethod]
 		public int64 latency_time { get; set; }
@@ -262,7 +269,9 @@ namespace Gst {
 		IEC958,
 		AC3,
 		EAC3,
-		DTS
+		DTS,
+		MPEG2_AAC,
+		MPEG4_AAC
 	}
 	[CCode (cprefix = "GST_BUFTYPE_", cheader_filename = "gst/audio/gstringbuffer.h")]
 	public enum BufferFormatType {
@@ -276,7 +285,9 @@ namespace Gst {
 		IEC958,
 		AC3,
 		EAC3,
-		DTS
+		DTS,
+		MPEG2_AAC,
+		MPEG4_AAC
 	}
 	[CCode (cprefix = "GST_SEGSTATE_", cheader_filename = "gst/audio/gstringbuffer.h")]
 	public enum RingBufferSegState {
@@ -323,6 +334,10 @@ namespace Gst {
 	public static long audio_frame_length (Gst.Pad pad, Gst.Buffer buf);
 	[CCode (cheader_filename = "gst/audio/audio.h")]
 	public static Gst.AudioChannelPosition audio_get_channel_positions (Gst.Structure str);
+	[CCode (cheader_filename = "gst/audio/audio.h")]
+	public static uint audio_iec61937_frame_size (Gst.RingBufferSpec spec);
+	[CCode (cheader_filename = "gst/audio/audio.h")]
+	public static bool audio_iec61937_payload (uchar src, uint src_n, uchar dst, uint dst_n, Gst.RingBufferSpec spec);
 	[CCode (cheader_filename = "gst/audio/audio.h")]
 	public static bool audio_is_buffer_framed (Gst.Pad pad, Gst.Buffer buf);
 	[CCode (cheader_filename = "gst/audio/multichannel.h")]

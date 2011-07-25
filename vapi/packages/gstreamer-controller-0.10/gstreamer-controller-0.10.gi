@@ -125,11 +125,11 @@
 			<member name="GST_INTERPOLATE_USER" value="5"/>
 		</enum>
 		<enum name="GstLFOWaveform" type-name="GstLFOWaveform" get-type="gst_lfo_waveform_get_type">
-			<member name="Sine waveform (default)" value="0"/>
-			<member name="Square waveform" value="1"/>
-			<member name="Saw waveform" value="2"/>
-			<member name="Reverse saw waveform" value="3"/>
-			<member name="Triangle waveform" value="4"/>
+			<member name="GST_LFO_WAVEFORM_SINE" value="0"/>
+			<member name="GST_LFO_WAVEFORM_SQUARE" value="1"/>
+			<member name="GST_LFO_WAVEFORM_SAW" value="2"/>
+			<member name="GST_LFO_WAVEFORM_REVERSE_SAW" value="3"/>
+			<member name="GST_LFO_WAVEFORM_TRIANGLE" value="4"/>
 		</enum>
 		<object name="GstControlSource" parent="GObject" type-name="GstControlSource" get-type="gst_control_source_get_type">
 			<method name="bind" symbol="gst_control_source_bind">

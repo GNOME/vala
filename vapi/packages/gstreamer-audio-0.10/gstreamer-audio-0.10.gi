@@ -57,6 +57,22 @@
 				<parameter name="str" type="GstStructure*"/>
 			</parameters>
 		</function>
+		<function name="audio_iec61937_frame_size" symbol="gst_audio_iec61937_frame_size">
+			<return-type type="guint"/>
+			<parameters>
+				<parameter name="spec" type="GstRingBufferSpec*"/>
+			</parameters>
+		</function>
+		<function name="audio_iec61937_payload" symbol="gst_audio_iec61937_payload">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="src" type="guint8*"/>
+				<parameter name="src_n" type="guint"/>
+				<parameter name="dst" type="guint8*"/>
+				<parameter name="dst_n" type="guint"/>
+				<parameter name="spec" type="GstRingBufferSpec*"/>
+			</parameters>
+		</function>
 		<function name="audio_is_buffer_framed" symbol="gst_audio_is_buffer_framed">
 			<return-type type="gboolean"/>
 			<parameters>
@@ -162,15 +178,15 @@
 			<member name="GST_AUDIO_FIELD_SIGNED" value="32"/>
 		</enum>
 		<enum name="GstBaseAudioSinkSlaveMethod" type-name="GstBaseAudioSinkSlaveMethod" get-type="gst_base_audio_sink_slave_method_get_type">
-                       <member name="GST_BASE_AUDIO_SINK_SLAVE_RESAMPLE" value="0"/>
-                       <member name="GST_BASE_AUDIO_SINK_SLAVE_SKEW" value="1"/>
-                       <member name="GST_BASE_AUDIO_SINK_SLAVE_NONE" value="2"/>
+			<member name="GST_BASE_AUDIO_SINK_SLAVE_RESAMPLE" value="0"/>
+			<member name="GST_BASE_AUDIO_SINK_SLAVE_SKEW" value="1"/>
+			<member name="GST_BASE_AUDIO_SINK_SLAVE_NONE" value="2"/>
 		</enum>
 		<enum name="GstBaseAudioSrcSlaveMethod" type-name="GstBaseAudioSrcSlaveMethod" get-type="gst_base_audio_src_slave_method_get_type">
-                       <member name="GST_BASE_AUDIO_SRC_SLAVE_RESAMPLE" value="0"/>
-                       <member name="GST_BASE_AUDIO_SRC_SLAVE_RETIMESTAMP" value="1"/>
-                       <member name="GST_BASE_AUDIO_SRC_SLAVE_SKEW" value="2"/>
-                       <member name="GST_BASE_AUDIO_SRC_SLAVE_NONE" value="3"/>
+			<member name="GST_BASE_AUDIO_SRC_SLAVE_RESAMPLE" value="0"/>
+			<member name="GST_BASE_AUDIO_SRC_SLAVE_RETIMESTAMP" value="1"/>
+			<member name="GST_BASE_AUDIO_SRC_SLAVE_SKEW" value="2"/>
+			<member name="GST_BASE_AUDIO_SRC_SLAVE_NONE" value="3"/>
 		</enum>
 		<enum name="GstBufferFormat" type-name="GstBufferFormat" get-type="gst_buffer_format_get_type">
 			<member name="GST_UNKNOWN" value="0"/>
@@ -213,6 +229,8 @@
 			<member name="GST_AC3" value="37"/>
 			<member name="GST_EAC3" value="38"/>
 			<member name="GST_DTS" value="39"/>
+			<member name="GST_MPEG2_AAC" value="40"/>
+			<member name="GST_MPEG4_AAC" value="41"/>
 		</enum>
 		<enum name="GstBufferFormatType" type-name="GstBufferFormatType" get-type="gst_buffer_format_type_get_type">
 			<member name="GST_BUFTYPE_LINEAR" value="0"/>
@@ -226,6 +244,8 @@
 			<member name="GST_BUFTYPE_AC3" value="8"/>
 			<member name="GST_BUFTYPE_EAC3" value="9"/>
 			<member name="GST_BUFTYPE_DTS" value="10"/>
+			<member name="GST_BUFTYPE_MPEG2_AAC" value="11"/>
+			<member name="GST_BUFTYPE_MPEG4_AAC" value="12"/>
 		</enum>
 		<enum name="GstRingBufferSegState" type-name="GstRingBufferSegState" get-type="gst_ring_buffer_seg_state_get_type">
 			<member name="GST_SEGSTATE_INVALID" value="0"/>
@@ -252,12 +272,27 @@
 					<parameter name="clock" type="GstClock*"/>
 				</parameters>
 			</method>
+			<method name="invalidate" symbol="gst_audio_clock_invalidate">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="clock" type="GstClock*"/>
+				</parameters>
+			</method>
 			<constructor name="new" symbol="gst_audio_clock_new">
 				<return-type type="GstClock*"/>
 				<parameters>
 					<parameter name="name" type="gchar*"/>
 					<parameter name="func" type="GstAudioClockGetTimeFunc"/>
 					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_full" symbol="gst_audio_clock_new_full">
+				<return-type type="GstClock*"/>
+				<parameters>
+					<parameter name="name" type="gchar*"/>
+					<parameter name="func" type="GstAudioClockGetTimeFunc"/>
+					<parameter name="user_data" type="gpointer"/>
+					<parameter name="destroy_notify" type="GDestroyNotify"/>
 				</parameters>
 			</constructor>
 			<method name="reset" symbol="gst_audio_clock_reset">
@@ -392,6 +427,12 @@
 					<parameter name="sink" type="GstBaseAudioSink*"/>
 				</parameters>
 			</method>
+			<method name="get_drift_tolerance" symbol="gst_base_audio_sink_get_drift_tolerance">
+				<return-type type="gint64"/>
+				<parameters>
+					<parameter name="sink" type="GstBaseAudioSink*"/>
+				</parameters>
+			</method>
 			<method name="get_provide_clock" symbol="gst_base_audio_sink_get_provide_clock">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -402,6 +443,13 @@
 				<return-type type="GstBaseAudioSinkSlaveMethod"/>
 				<parameters>
 					<parameter name="sink" type="GstBaseAudioSink*"/>
+				</parameters>
+			</method>
+			<method name="set_drift_tolerance" symbol="gst_base_audio_sink_set_drift_tolerance">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="sink" type="GstBaseAudioSink*"/>
+					<parameter name="drift_tolerance" type="gint64"/>
 				</parameters>
 			</method>
 			<method name="set_provide_clock" symbol="gst_base_audio_sink_set_provide_clock">
@@ -430,12 +478,20 @@
 					<parameter name="sink" type="GstBaseAudioSink*"/>
 				</parameters>
 			</vfunc>
+			<vfunc name="payload">
+				<return-type type="GstBuffer*"/>
+				<parameters>
+					<parameter name="sink" type="GstBaseAudioSink*"/>
+					<parameter name="buffer" type="GstBuffer*"/>
+				</parameters>
+			</vfunc>
 			<field name="ringbuffer" type="GstRingBuffer*"/>
 			<field name="buffer_time" type="guint64"/>
 			<field name="latency_time" type="guint64"/>
 			<field name="next_sample" type="guint64"/>
 			<field name="provide_clock" type="gboolean"/>
 			<field name="provided_clock" type="GstClock*"/>
+			<field name="abidata" type="gpointer"/>
 		</object>
 		<object name="GstBaseAudioSrc" parent="GstPushSrc" type-name="GstBaseAudioSrc" get-type="gst_base_audio_src_get_type">
 			<method name="create_ringbuffer" symbol="gst_base_audio_src_create_ringbuffer">

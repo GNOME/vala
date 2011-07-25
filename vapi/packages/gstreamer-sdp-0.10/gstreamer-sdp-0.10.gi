@@ -1,6 +1,14 @@
 <?xml version="1.0"?>
 <api version="1.0">
 	<namespace name="Gst">
+		<function name="sdp_address_is_multicast" symbol="gst_sdp_address_is_multicast">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="nettype" type="gchar*"/>
+				<parameter name="addrtype" type="gchar*"/>
+				<parameter name="addr" type="gchar*"/>
+			</parameters>
+		</function>
 		<struct name="GstSDPAttribute">
 			<field name="key" type="gchar*"/>
 			<field name="value" type="gchar*"/>
@@ -297,6 +305,13 @@
 					<parameter name="msg" type="GstSDPMessage*"/>
 				</parameters>
 			</method>
+			<method name="as_uri" symbol="gst_sdp_message_as_uri">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="scheme" type="gchar*"/>
+					<parameter name="msg" type="GstSDPMessage*"/>
+				</parameters>
+			</method>
 			<method name="attributes_len" symbol="gst_sdp_message_attributes_len">
 				<return-type type="guint"/>
 				<parameters>
@@ -459,6 +474,13 @@
 					<parameter name="msg" type="GstSDPMessage*"/>
 				</parameters>
 			</method>
+			<method name="parse_uri" symbol="gst_sdp_message_parse_uri">
+				<return-type type="GstSDPResult"/>
+				<parameters>
+					<parameter name="uri" type="gchar*"/>
+					<parameter name="msg" type="GstSDPMessage*"/>
+				</parameters>
+			</method>
 			<method name="phones_len" symbol="gst_sdp_message_phones_len">
 				<return-type type="guint"/>
 				<parameters>
@@ -583,5 +605,6 @@
 		<constant name="GST_SDP_BWTYPE_EXT_PREFIX" type="char*" value="X-"/>
 		<constant name="GST_SDP_BWTYPE_RR" type="char*" value="RR"/>
 		<constant name="GST_SDP_BWTYPE_RS" type="char*" value="RS"/>
+		<constant name="GST_SDP_BWTYPE_TIAS" type="char*" value="TIAS"/>
 	</namespace>
 </api>

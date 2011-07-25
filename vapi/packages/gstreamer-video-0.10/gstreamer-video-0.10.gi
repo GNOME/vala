@@ -14,6 +14,26 @@
 				<parameter name="display_par_d" type="guint"/>
 			</parameters>
 		</function>
+		<function name="video_convert_frame" symbol="gst_video_convert_frame">
+			<return-type type="GstBuffer*"/>
+			<parameters>
+				<parameter name="buf" type="GstBuffer*"/>
+				<parameter name="to_caps" type="GstCaps*"/>
+				<parameter name="timeout" type="GstClockTime"/>
+				<parameter name="error" type="GError**"/>
+			</parameters>
+		</function>
+		<function name="video_convert_frame_async" symbol="gst_video_convert_frame_async">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="buf" type="GstBuffer*"/>
+				<parameter name="to_caps" type="GstCaps*"/>
+				<parameter name="timeout" type="GstClockTime"/>
+				<parameter name="callback" type="GstVideoConvertFrameCallback"/>
+				<parameter name="user_data" type="gpointer"/>
+				<parameter name="destroy_notify" type="GDestroyNotify"/>
+			</parameters>
+		</function>
 		<function name="video_event_new_still_frame" symbol="gst_video_event_new_still_frame">
 			<return-type type="GstEvent*"/>
 			<parameters>
@@ -45,6 +65,13 @@
 			<return-type type="GstVideoFormat"/>
 			<parameters>
 				<parameter name="fourcc" type="guint32"/>
+			</parameters>
+		</function>
+		<function name="video_format_get_component_depth" symbol="gst_video_format_get_component_depth">
+			<return-type type="int"/>
+			<parameters>
+				<parameter name="format" type="GstVideoFormat"/>
+				<parameter name="component" type="int"/>
 			</parameters>
 		</function>
 		<function name="video_format_get_component_height" symbol="gst_video_format_get_component_height">
@@ -101,6 +128,12 @@
 				<parameter name="format" type="GstVideoFormat"/>
 			</parameters>
 		</function>
+		<function name="video_format_is_gray" symbol="gst_video_format_is_gray">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="format" type="GstVideoFormat"/>
+			</parameters>
+		</function>
 		<function name="video_format_is_rgb" symbol="gst_video_format_is_rgb">
 			<return-type type="gboolean"/>
 			<parameters>
@@ -136,6 +169,12 @@
 				<parameter name="par_n" type="int"/>
 				<parameter name="par_d" type="int"/>
 				<parameter name="interlaced" type="gboolean"/>
+			</parameters>
+		</function>
+		<function name="video_format_new_template_caps" symbol="gst_video_format_new_template_caps">
+			<return-type type="GstCaps*"/>
+			<parameters>
+				<parameter name="format" type="GstVideoFormat"/>
 			</parameters>
 		</function>
 		<function name="video_format_parse_caps" symbol="gst_video_format_parse_caps">
@@ -174,12 +213,37 @@
 				<parameter name="height" type="gint*"/>
 			</parameters>
 		</function>
+		<function name="video_get_size_from_caps" symbol="gst_video_get_size_from_caps">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="caps" type="GstCaps*"/>
+				<parameter name="size" type="gint*"/>
+			</parameters>
+		</function>
+		<function name="video_parse_caps_chroma_site" symbol="gst_video_parse_caps_chroma_site">
+			<return-type type="char*"/>
+			<parameters>
+				<parameter name="caps" type="GstCaps*"/>
+			</parameters>
+		</function>
+		<function name="video_parse_caps_color_matrix" symbol="gst_video_parse_caps_color_matrix">
+			<return-type type="char*"/>
+			<parameters>
+				<parameter name="caps" type="GstCaps*"/>
+			</parameters>
+		</function>
 		<function name="video_parse_caps_framerate" symbol="gst_video_parse_caps_framerate">
 			<return-type type="gboolean"/>
 			<parameters>
 				<parameter name="caps" type="GstCaps*"/>
 				<parameter name="fps_n" type="int*"/>
 				<parameter name="fps_d" type="int*"/>
+			</parameters>
+		</function>
+		<function name="video_parse_caps_palette" symbol="gst_video_parse_caps_palette">
+			<return-type type="GstBuffer*"/>
+			<parameters>
+				<parameter name="caps" type="GstCaps*"/>
 			</parameters>
 		</function>
 		<function name="video_parse_caps_pixel_aspect_ratio" symbol="gst_video_parse_caps_pixel_aspect_ratio">
@@ -190,6 +254,14 @@
 				<parameter name="par_d" type="int*"/>
 			</parameters>
 		</function>
+		<callback name="GstVideoConvertFrameCallback">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="buf" type="GstBuffer*"/>
+				<parameter name="error" type="GError*"/>
+				<parameter name="user_data" type="gpointer"/>
+			</parameters>
+		</callback>
 		<struct name="GstVideoRectangle">
 			<field name="x" type="gint"/>
 			<field name="y" type="gint"/>
@@ -221,6 +293,25 @@
 			<member name="GST_VIDEO_FORMAT_v216" value="21"/>
 			<member name="GST_VIDEO_FORMAT_NV12" value="22"/>
 			<member name="GST_VIDEO_FORMAT_NV21" value="23"/>
+			<member name="GST_VIDEO_FORMAT_GRAY8" value="24"/>
+			<member name="GST_VIDEO_FORMAT_GRAY16_BE" value="25"/>
+			<member name="GST_VIDEO_FORMAT_GRAY16_LE" value="26"/>
+			<member name="GST_VIDEO_FORMAT_v308" value="27"/>
+			<member name="GST_VIDEO_FORMAT_Y800" value="28"/>
+			<member name="GST_VIDEO_FORMAT_Y16" value="29"/>
+			<member name="GST_VIDEO_FORMAT_RGB16" value="30"/>
+			<member name="GST_VIDEO_FORMAT_BGR16" value="31"/>
+			<member name="GST_VIDEO_FORMAT_RGB15" value="32"/>
+			<member name="GST_VIDEO_FORMAT_BGR15" value="33"/>
+			<member name="GST_VIDEO_FORMAT_UYVP" value="34"/>
+			<member name="GST_VIDEO_FORMAT_A420" value="35"/>
+			<member name="GST_VIDEO_FORMAT_RGB8_PALETTED" value="36"/>
+			<member name="GST_VIDEO_FORMAT_YUV9" value="37"/>
+			<member name="GST_VIDEO_FORMAT_YVU9" value="38"/>
+			<member name="GST_VIDEO_FORMAT_IYU1" value="39"/>
+			<member name="GST_VIDEO_FORMAT_ARGB64" value="40"/>
+			<member name="GST_VIDEO_FORMAT_AYUV64" value="41"/>
+			<member name="GST_VIDEO_FORMAT_r210" value="42"/>
 		</enum>
 		<object name="GstVideoFilter" parent="GstBaseTransform" type-name="GstVideoFilter" get-type="gst_video_filter_get_type">
 			<field name="inited" type="gboolean"/>
@@ -246,10 +337,6 @@
 			<field name="width" type="gint"/>
 			<field name="height" type="gint"/>
 		</object>
-		<constant name="GST_VIDEO_BLUE_MASK_15" type="char*" value="0x001f"/>
-		<constant name="GST_VIDEO_BLUE_MASK_15_INT" type="int" value="31"/>
-		<constant name="GST_VIDEO_BLUE_MASK_16" type="char*" value="0x001f"/>
-		<constant name="GST_VIDEO_BLUE_MASK_16_INT" type="int" value="31"/>
 		<constant name="GST_VIDEO_BYTE1_MASK_24" type="char*" value="0x00FF0000"/>
 		<constant name="GST_VIDEO_BYTE1_MASK_24_INT" type="int" value="16711680"/>
 		<constant name="GST_VIDEO_BYTE1_MASK_32" type="char*" value="0xFF000000"/>
@@ -264,17 +351,22 @@
 		<constant name="GST_VIDEO_BYTE3_MASK_32_INT" type="int" value="65280"/>
 		<constant name="GST_VIDEO_BYTE4_MASK_32" type="char*" value="0x000000FF"/>
 		<constant name="GST_VIDEO_BYTE4_MASK_32_INT" type="int" value="255"/>
-		<constant name="GST_VIDEO_CAPS_RGB_15" type="char*" value="video/x-raw-rgb, bpp = (int) 16, depth = (int) 15, endianness = (int) BYTE_ORDER, red_mask = (int) "/>
-		<constant name="GST_VIDEO_CAPS_RGB_16" type="char*" value="video/x-raw-rgb, bpp = (int) 16, depth = (int) 16, endianness = (int) BYTE_ORDER, red_mask = (int) "/>
+		<constant name="GST_VIDEO_CAPS_GRAY8" type="char*" value="video/x-raw-gray, bpp = (int) 8, depth = (int) 8, width = "/>
+		<constant name="GST_VIDEO_CAPS_RGB8_PALETTED" type="char*" value="video/x-raw-rgb, bpp = (int)8, depth = (int)8, width = "/>
+		<constant name="GST_VIDEO_CAPS_r210" type="char*" value="video/x-raw-rgb, bpp = (int) 32, depth = (int) 30, endianness = (int) BIG_ENDIAN, red_mask = (int) 0x3ff00000, green_mask = (int) 0x000ffc00, blue_mask = (int) 0x000003ff, width = "/>
+		<constant name="GST_VIDEO_COMP1_MASK_15" type="char*" value="0x7c00"/>
+		<constant name="GST_VIDEO_COMP1_MASK_15_INT" type="int" value="31744"/>
+		<constant name="GST_VIDEO_COMP1_MASK_16" type="char*" value="0xf800"/>
+		<constant name="GST_VIDEO_COMP1_MASK_16_INT" type="int" value="63488"/>
+		<constant name="GST_VIDEO_COMP2_MASK_15" type="char*" value="0x03e0"/>
+		<constant name="GST_VIDEO_COMP2_MASK_15_INT" type="int" value="992"/>
+		<constant name="GST_VIDEO_COMP2_MASK_16" type="char*" value="0x07e0"/>
+		<constant name="GST_VIDEO_COMP2_MASK_16_INT" type="int" value="2016"/>
+		<constant name="GST_VIDEO_COMP3_MASK_15" type="char*" value="0x001f"/>
+		<constant name="GST_VIDEO_COMP3_MASK_15_INT" type="int" value="31"/>
+		<constant name="GST_VIDEO_COMP3_MASK_16" type="char*" value="0x001f"/>
+		<constant name="GST_VIDEO_COMP3_MASK_16_INT" type="int" value="31"/>
 		<constant name="GST_VIDEO_FPS_RANGE" type="char*" value="(fraction) [ 0, max ]"/>
-		<constant name="GST_VIDEO_GREEN_MASK_15" type="char*" value="0x03e0"/>
-		<constant name="GST_VIDEO_GREEN_MASK_15_INT" type="int" value="992"/>
-		<constant name="GST_VIDEO_GREEN_MASK_16" type="char*" value="0x07e0"/>
-		<constant name="GST_VIDEO_GREEN_MASK_16_INT" type="int" value="2016"/>
-		<constant name="GST_VIDEO_RED_MASK_15" type="char*" value="0x7c00"/>
-		<constant name="GST_VIDEO_RED_MASK_15_INT" type="int" value="31744"/>
-		<constant name="GST_VIDEO_RED_MASK_16" type="char*" value="0xf800"/>
-		<constant name="GST_VIDEO_RED_MASK_16_INT" type="int" value="63488"/>
 		<constant name="GST_VIDEO_SIZE_RANGE" type="char*" value="(int) [ 1, max ]"/>
 	</namespace>
 </api>

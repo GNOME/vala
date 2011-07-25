@@ -398,38 +398,6 @@
 					<parameter name="volumes" type="gint*"/>
 				</parameters>
 			</method>
-			<signal name="mute-toggled" when="LAST">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="mixer" type="GstMixer*"/>
-					<parameter name="channel" type="GstMixerTrack*"/>
-					<parameter name="mute" type="gboolean"/>
-				</parameters>
-			</signal>
-			<signal name="option-changed" when="LAST">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="mixer" type="GstMixer*"/>
-					<parameter name="opts" type="GstMixerOptions*"/>
-					<parameter name="option" type="char*"/>
-				</parameters>
-			</signal>
-			<signal name="record-toggled" when="LAST">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="mixer" type="GstMixer*"/>
-					<parameter name="channel" type="GstMixerTrack*"/>
-					<parameter name="record" type="gboolean"/>
-				</parameters>
-			</signal>
-			<signal name="volume-changed" when="LAST">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="mixer" type="GstMixer*"/>
-					<parameter name="channel" type="GstMixerTrack*"/>
-					<parameter name="volumes" type="gpointer"/>
-				</parameters>
-			</signal>
 			<vfunc name="get_mixer_flags">
 				<return-type type="GstMixerFlags"/>
 				<parameters>
@@ -455,6 +423,30 @@
 				<return-type type="GList*"/>
 				<parameters>
 					<parameter name="mixer" type="GstMixer*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="mute_toggled">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="mixer" type="GstMixer*"/>
+					<parameter name="channel" type="GstMixerTrack*"/>
+					<parameter name="mute" type="gboolean"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="option_changed">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="mixer" type="GstMixer*"/>
+					<parameter name="opts" type="GstMixerOptions*"/>
+					<parameter name="option" type="gchar*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="record_toggled">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="mixer" type="GstMixer*"/>
+					<parameter name="channel" type="GstMixerTrack*"/>
+					<parameter name="record" type="gboolean"/>
 				</parameters>
 			</vfunc>
 			<vfunc name="set_mute">
@@ -486,6 +478,14 @@
 				<parameters>
 					<parameter name="mixer" type="GstMixer*"/>
 					<parameter name="track" type="GstMixerTrack*"/>
+					<parameter name="volumes" type="gint*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="volume_changed">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="mixer" type="GstMixer*"/>
+					<parameter name="channel" type="GstMixerTrack*"/>
 					<parameter name="volumes" type="gint*"/>
 				</parameters>
 			</vfunc>
@@ -1134,6 +1134,13 @@
 					<parameter name="overlay" type="GstXOverlay*"/>
 				</parameters>
 			</method>
+			<method name="got_window_handle" symbol="gst_x_overlay_got_window_handle">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="overlay" type="GstXOverlay*"/>
+					<parameter name="handle" type="guintptr"/>
+				</parameters>
+			</method>
 			<method name="got_xwindow_id" symbol="gst_x_overlay_got_xwindow_id">
 				<return-type type="void"/>
 				<parameters>
@@ -1154,6 +1161,23 @@
 					<parameter name="overlay" type="GstXOverlay*"/>
 				</parameters>
 			</method>
+			<method name="set_render_rectangle" symbol="gst_x_overlay_set_render_rectangle">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="overlay" type="GstXOverlay*"/>
+					<parameter name="x" type="gint"/>
+					<parameter name="y" type="gint"/>
+					<parameter name="width" type="gint"/>
+					<parameter name="height" type="gint"/>
+				</parameters>
+			</method>
+			<method name="set_window_handle" symbol="gst_x_overlay_set_window_handle">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="overlay" type="GstXOverlay*"/>
+					<parameter name="handle" type="guintptr"/>
+				</parameters>
+			</method>
 			<method name="set_xwindow_id" symbol="gst_x_overlay_set_xwindow_id">
 				<return-type type="void"/>
 				<parameters>
@@ -1172,6 +1196,23 @@
 				<parameters>
 					<parameter name="overlay" type="GstXOverlay*"/>
 					<parameter name="handle_events" type="gboolean"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="set_render_rectangle">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="overlay" type="GstXOverlay*"/>
+					<parameter name="x" type="gint"/>
+					<parameter name="y" type="gint"/>
+					<parameter name="width" type="gint"/>
+					<parameter name="height" type="gint"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="set_window_handle">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="overlay" type="GstXOverlay*"/>
+					<parameter name="handle" type="guintptr"/>
 				</parameters>
 			</vfunc>
 			<vfunc name="set_xwindow_id">

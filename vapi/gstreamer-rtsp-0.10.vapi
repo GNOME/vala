@@ -123,6 +123,7 @@ namespace Gst {
 		public Gst.RTSPLowerTrans transports;
 		public string user;
 		public Gst.RTSPUrl copy ();
+		public unowned string decode_path_components ();
 		public Gst.RTSPResult get_port (uint16 port);
 		public string get_request_uri ();
 		public static Gst.RTSPResult parse (string urlstr, out Gst.RTSPUrl url);
@@ -149,6 +150,7 @@ namespace Gst {
 		public weak GLib.Callback message_received;
 		public weak GLib.Callback message_sent;
 		public weak GLib.Callback tunnel_complete;
+		public weak GLib.Callback tunnel_lost;
 		public weak GLib.Callback tunnel_start;
 	}
 	[CCode (cheader_filename = "gst/rtsp/gstrtspextension.h")]
@@ -268,9 +270,9 @@ namespace Gst {
 		X_SESSIONCOOKIE,
 		LAST
 	}
-	[CCode (cprefix = "GST_RTSP_LOWER_TRANS_", has_type_id = false, cheader_filename = "gst/rtsp/gstrtspextension.h")]
+	[CCode (cprefix = "GST_RTSP_LOWER_TRANS_", cheader_filename = "gst/rtsp/gstrtspextension.h")]
+	[Flags]
 	public enum RTSPLowerTrans {
-		UNKNOWN,
 		UDP,
 		UDP_MCAST,
 		TCP,

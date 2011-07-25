@@ -44,6 +44,12 @@
 				<parameter name="len" type="guint"/>
 			</parameters>
 		</function>
+		<function name="codec_utils_h264_get_level_idc" symbol="gst_codec_utils_h264_get_level_idc">
+			<return-type type="guint8"/>
+			<parameters>
+				<parameter name="level" type="gchar*"/>
+			</parameters>
+		</function>
 		<function name="codec_utils_h264_get_profile" symbol="gst_codec_utils_h264_get_profile">
 			<return-type type="gchar*"/>
 			<parameters>
@@ -878,8 +884,8 @@
 		<constant name="GST_ENCODING_CATEGORY_ONLINE_SERVICE" type="char*" value="online-service"/>
 		<constant name="GST_ENCODING_CATEGORY_STORAGE_EDITING" type="char*" value="storage-editing"/>
 		<constant name="GST_PLUGINS_BASE_VERSION_MAJOR" type="int" value="0"/>
-		<constant name="GST_PLUGINS_BASE_VERSION_MICRO" type="int" value="31"/>
+		<constant name="GST_PLUGINS_BASE_VERSION_MICRO" type="int" value="35"/>
 		<constant name="GST_PLUGINS_BASE_VERSION_MINOR" type="int" value="10"/>
-		<constant name="GST_PLUGINS_BASE_VERSION_NANO" type="int" value="3"/>
+		<constant name="GST_PLUGINS_BASE_VERSION_NANO" type="int" value="1"/>
 	</namespace>
 </api>
