@@ -1956,12 +1956,12 @@ namespace GLib {
 	public interface Icon : GLib.Object {
 		public abstract bool equal (GLib.Icon icon2);
 		[NoWrapper]
-		public abstract unowned GLib.Icon from_tokens (string tokens, int num_tokens, int version) throws GLib.Error;
-		public abstract uint hash (void* icon);
+		public virtual GLib.Icon? from_tokens (string[] tokens, int version) throws GLib.Error;
+		public abstract uint hash ();
 		public static GLib.Icon? new_for_string (string str) throws GLib.Error;
-		public string to_string ();
+		public string? to_string ();
 		[NoWrapper]
-		public abstract bool to_tokens (GLib.GenericArray tokens, int out_version);
+		public virtual bool to_tokens (GLib.GenericArray tokens, out int out_version);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface Initable : GLib.Object {
@@ -1972,8 +1972,8 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface LoadableIcon : GLib.Icon, GLib.Object {
-		public abstract unowned GLib.InputStream load (int size, out unowned string? type, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public abstract async unowned GLib.InputStream load_async (int size, GLib.Cancellable? cancellable, out unowned string? type) throws GLib.Error;
+		public abstract GLib.InputStream load (int size, out string? type, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public abstract async GLib.InputStream load_async (int size, GLib.Cancellable? cancellable, out string? type) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface Mount : GLib.Object {
