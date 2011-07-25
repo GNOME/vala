@@ -122,7 +122,8 @@ namespace GLib {
 		public ParamFlags flags;
 		public Type value_type;
 		public Type owner_type;
-		public ParamSpec.internal (string name, string nick, string blurb);
+		[CCode (cname = "g_param_spec_internal")]
+		public ParamSpec.internal (GLib.Type param_type, string name, string nick, string blurb, GLib.ParamFlags flags);
 		public ParamSpec ref ();
 		public void unref ();
 		public void sink ();
