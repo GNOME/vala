@@ -575,7 +575,8 @@ public class Vala.GirParser : CodeVisitor {
 				if (metadata.has_argument (ArgumentType.CPREFIX)) {
 					return metadata.get_string (ArgumentType.CPREFIX);
 				}
-				if (girdata != null && girdata["c:symbol-prefix"] != null) {
+				// gir doesn't use the full C prefix in c:symbol-prefix
+				if (girdata != null && girdata["c:symbol-prefix"] != null && !parent.metadata.has_argument (ArgumentType.CPREFIX)) {
 					return "%s%s_".printf (parent.get_lower_case_cprefix (), girdata["c:symbol-prefix"]);
 				} else {
 					return "%s%s_".printf (parent.get_lower_case_cprefix (), Symbol.camel_case_to_lower_case (name));
@@ -860,7 +861,7 @@ public class Vala.GirParser : CodeVisitor {
 
 				// cheader filename
 				var cheader_filename = metadata.get_string (ArgumentType.CHEADER_FILENAME);
-				if (cheader_filename != null) {
+				if (parent != parser.root && cheader_filename != null) {
 					foreach (string filename in cheader_filename.split (",")) {
 						symbol.add_cheader_filename (filename);
 					}
@@ -1647,6 +1648,11 @@ public class Vala.GirParser : CodeVisitor {
 			ns = (Namespace) current.symbol;
 			ns.attributes = null;
 			ns.source_reference = current.source_reference;
+		}
+		current.metadata = ns_metadata;
+
+		if (ns_metadata.has_argument (ArgumentType.CPREFIX)) {
+			cprefix = ns_metadata.get_string (ArgumentType.CPREFIX);
 		}
 
 		if (cprefix != null) {
