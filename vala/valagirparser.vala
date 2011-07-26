@@ -734,6 +734,22 @@ public class Vala.GirParser : CodeVisitor {
 							node.merged = true;
 						}
 					}
+
+					var prop = (Property) symbol;
+
+					// add accessors, can't do this before gir symbol resolution
+					var readable = girdata["readable"];
+					var writable = girdata["writable"];
+					var construct_ = girdata["construct"];
+					var construct_only = girdata["construct-only"];
+					if (readable != "0") {
+						prop.get_accessor = new PropertyAccessor (true, false, false, prop.property_type.copy (), null, null);
+						prop.get_accessor.value_type.value_owned = true;
+					}
+					if (writable == "1" || construct_only == "1") {
+						prop.set_accessor = new PropertyAccessor (false, (construct_only != "1") && (writable == "1"), (construct_only == "1") || (construct_ == "1"), prop.property_type.copy (), null, null);
+					}
+
 					var getter = parent.lookup ("get_%s".printf (name));
 					if (getter != null && getter.get_cname () != parent.get_lower_case_cprefix() + "get_" + name) {
 						getter = null;
@@ -742,7 +758,7 @@ public class Vala.GirParser : CodeVisitor {
 					if (setter != null && setter.get_cname () != parent.get_lower_case_cprefix() + "set_" + name) {
 						setter = null;
 					}
-					var prop = (Property) symbol;
+
 					if (prop.no_accessor_method) {
 						// property getter and setter must both match, otherwise it's NoAccessorMethod
 						prop.no_accessor_method = false;
@@ -2386,10 +2402,6 @@ public class Vala.GirParser : CodeVisitor {
 		start_element ("property");
 		push_node (element_get_name().replace ("-", "_"), false);
 
-		string readable = reader.get_attribute ("readable");
-		string writable = reader.get_attribute ("writable");
-		string construct_ = reader.get_attribute ("construct");
-		string construct_only = reader.get_attribute ("construct-only");
 		next ();
 		bool no_array_length;
 		bool array_null_terminated;
@@ -2401,13 +2413,6 @@ public class Vala.GirParser : CodeVisitor {
 		prop.no_accessor_method = true;
 		prop.no_array_length = no_array_length;
 		prop.array_null_terminated = array_null_terminated;
-		if (readable != "0") {
-			prop.get_accessor = new PropertyAccessor (true, false, false, prop.property_type.copy (), null, null);
-			prop.get_accessor.value_type.value_owned = true;
-		}
-		if (writable == "1" || construct_only == "1") {
-			prop.set_accessor = new PropertyAccessor (false, (construct_only != "1") && (writable == "1"), (construct_only == "1") || (construct_ == "1"), prop.property_type.copy (), null, null);
-		}
 		current.symbol = prop;
 
 		pop_node ();
