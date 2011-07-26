@@ -144,9 +144,9 @@ namespace Archive {
 		public Result support_format_gnutar ();
 		public Result support_format_iso9660 ();
 		public Result support_format_mtree ();
+		public Result support_format_raw ();
 		public Result support_format_tar ();
 		public Result support_format_zip ();
-
 
 		public Result open (
 			[CCode (delegate_target_pos = 0.9)] OpenCallback ocb,
