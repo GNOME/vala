@@ -1443,21 +1443,22 @@ public class Vala.GirParser : CodeVisitor {
 		}
 		var pattern = metadata.get_string (ArgumentType.NAME);
 		if (pattern != null) {
-			try {
-				var regex = new Regex (pattern, RegexCompileFlags.ANCHORED, RegexMatchFlags.ANCHORED);
-				GLib.MatchInfo match;
-				if (!regex.match (name, 0, out match)) {
-					name = pattern;
-				} else {
-					var matched = match.fetch (1);
-					if (matched != null && matched.length > 0) {
-						name = matched;
-					} else {
-						name = pattern;
-					}
-				}
-			} catch (Error e) {
+			if (pattern.index_of_char ('(') < 0) {
+				// shortcut for "(.+)/replacement"
 				name = pattern;
+			} else {
+				try {
+					string replacement = "\\1"; // replace the whole name with the match by default
+					var split = pattern.split ("/");
+					if (split.length > 1) {
+						pattern = split[0];
+						replacement = split[1];
+					}
+					var regex = new Regex (pattern, RegexCompileFlags.ANCHORED, RegexMatchFlags.ANCHORED);
+					name = regex.replace (name, -1, 0, replacement);
+				} catch (Error e) {
+					name = pattern;
+				}
 			}
 		} else {
 			if (name != null && name.has_suffix ("Enum")) {
