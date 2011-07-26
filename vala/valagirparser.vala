@@ -499,6 +499,8 @@ public class Vala.GirParser : CodeVisitor {
 		public ArrayList<int> array_length_parameters;
 		public ArrayList<int> closure_parameters;
 		public ArrayList<int> destroy_parameters;
+		// record-specific
+		public UnresolvedSymbol gtype_struct_for;
 		// alias-specific
 		public DataType base_type;
 
@@ -783,11 +785,10 @@ public class Vala.GirParser : CodeVisitor {
 						merged = true;
 					}
 
-					var gtype_struct_for = parent.girdata["glib:is-gtype-struct-for"];
-					if (field.variable_type is DelegateType && gtype_struct_for != null) {
+					if (field.variable_type is DelegateType && parent.gtype_struct_for != null) {
 						// virtual method field
 						var d = ((DelegateType) field.variable_type).delegate_symbol;
-						parser.process_virtual_method_field (this, d, parser.parse_symbol_from_string (gtype_struct_for, d.source_reference));
+						parser.process_virtual_method_field (this, d, parent.gtype_struct_for);
 						merged = true;
 					} else if (field.variable_type is ArrayType) {
 						Node array_length;
@@ -2166,6 +2167,11 @@ public class Vala.GirParser : CodeVisitor {
 		st.access = SymbolAccessibility.PUBLIC;
 
 		var gtype_struct_for = reader.get_attribute ("glib:is-gtype-struct-for");
+		if (gtype_struct_for != null) {
+			current.gtype_struct_for = parse_symbol_from_string (gtype_struct_for, current.source_reference);
+			unresolved_gir_symbols.add (current.gtype_struct_for);
+		}
+
 		bool first_field = true;
 		next ();
 		while (current_token == MarkupTokenType.START_ELEMENT) {
