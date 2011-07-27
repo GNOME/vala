@@ -1,0 +1,46 @@
+OAuthProxy cheader_filename="rest/oauth-proxy.h" cprefix="oauth_proxy_"
+OAuthProxyCall cheader_filename="rest/oauth-proxy-call.h" cprefix="oauth_proxy_call_"
+OAuthSignatureMethod cheader_filename="rest/oauth-proxy.h"
+OAuth2Proxy cheader_filename="rest/oauth2-proxy.h" cprefix="oauth2_proxy_"
+OAuth2ProxyCall cheader_filename="rest/oauth2-proxy-call.h" cprefix="oauth2_proxy_call_"
+Proxy cheader_filename="rest/rest-proxy.h"
+	.new_call skip=false owned=true
+	.bind skip=false
+ProxyCall cheader_filename="rest/rest-proxy-call.h"
+	.run.loop out=true default=null
+	.get_params skip=false
+	.get_response_headers skip=false
+	.add_headers skip=false
+	.add_params skip=false
+	.continuous skip=false
+	.upload skip=false
+	.async skip=false name="run_async"
+	.async.weak_object nullable default=null
+MemoryUse cheader_filename="rest/rest-param.h"
+ProxyError cheader_filename="rest/rest-proxy.h"
+ProxyCallError cheader_filename="rest/rest-proxy-call.h"
+Param cheader_filename="rest/rest-param.h"
+Params cheader_filename="rest/rest-params.h"
+	.as_string_hash_table skip=false owned=true type_arguments="string,string"
+ParamsIter cheader_filename="rest/rest-params.h"
+XmlNode cheader_filename="rest/rest-xml-node.h"
+XmlParser cheader_filename="rest/rest-xml-parser.h"
+
+OAuthProxyAuthCallback cheader_filename="rest/oauth-proxy.h"
+	.error nullable=true
+	.weak_object nullable=true
+	.userdata closure=3
+ProxyCallAsyncCallback cheader_filename="rest/rest-proxy-call.h"
+	.error nullable=true
+	.weak_object nullable=true
+	.userdata closure=3
+ProxyCallContinuousCallback cheader_filename="rest/rest-proxy-call.h"
+	.error nullable=true
+	.weak_object nullable=true
+	.userdata closure=5
+ProxyCallUploadCallback cheader_filename="rest/rest-proxy-call.h"
+	.error nullable=true
+	.weak_object nullable=true
+	.userdata closure=5
+
+hmac_sha1 skip=true

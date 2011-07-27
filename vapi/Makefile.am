@@ -199,6 +199,7 @@ dist_vapi_DATA = \
 	rest-0.6.vapi \
 	rest-extras-0.6.deps \
 	rest-extras-0.6.vapi \
+	rest-0.7.vapi \
 	sdl.vapi \
 	sdl-gfx.vapi \
 	sdl-gfx.deps \
@@ -259,6 +260,9 @@ libsoup-2.4:
 
 libpeas-1.0:
 	$(VAPIGEN) --library $(srcdir)/libpeas-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/Peas-1.0.gir
+
+rest-0.7:
+	$(VAPIGEN) --library $(srcdir)/rest-0.7 --metadatadir $(METADATADIR) $(GIRDIR)/Rest-0.7.gir
 
 vte-2.90:
 	$(VAPIGEN) --library $(srcdir)/vte-2.90 --metadatadir $(METADATADIR) --pkg atk --pkg gdk-3.0 --pkg gtk+-3.0 --pkg gio-2.0 --pkg pango $(GIRDIR)/Vte-2.90.gir $(METADATADIR)/Vte-2.90-custom.vala
