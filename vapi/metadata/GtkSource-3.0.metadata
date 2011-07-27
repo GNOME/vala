@@ -1,0 +1,12 @@
+* name="(.+)/Source\\1"
+GtkSource name="Gtk" cprefix="Gtk"
+CompletionProvider
+        .*#virtual_method virtual
+        .get_icon nullable
+        .get_info_widget nullable
+CompletionProposal
+        .equal#virtual_method virtual
+        .get_icon#virtual_method virtual
+        .hash#virtual_method virtual
+COMPLETION_CAPABILITY_INTERACTIVE name="INTERACTIVE" parent="Gtk.SourceCompletionCapability"
+COMPLETION_CAPABILITY_AUTOMATIC name="AUTOMATIC" parent="Gtk.SourceCompletionCapability"
