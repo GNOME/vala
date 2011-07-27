@@ -28,14 +28,14 @@ namespace Peas {
 		public virtual signal void unload_plugin (Peas.PluginInfo info);
 	}
 	[CCode (type_id = "peas_extension_get_type ()", cheader_filename = "libpeas/peas.h")]
-	public class Extension : GLib.Object {
+	public abstract class Extension : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Extension ();
 		public GLib.Type get_extension_type ();
 		public GLib.Type extension_type { get; construct; }
 	}
 	[CCode (type_id = "peas_extension_base_get_type ()", cheader_filename = "libpeas/peas.h")]
-	public class ExtensionBase : GLib.Object {
+	public abstract class ExtensionBase : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected ExtensionBase ();
 		public string get_data_dir ();
