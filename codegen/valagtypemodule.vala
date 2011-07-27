@@ -1459,7 +1459,12 @@ public class Vala.GTypeModule : GErrorModule {
 
 	CCodeExpression cast_method_pointer (Method m, CCodeExpression cfunc, ObjectTypeSymbol base_type) {
 		// Cast the function pointer to match the interface
-		string cast = m.return_type.get_cname () + " (*)";
+		string cast;
+		if (m.return_type.is_real_non_null_struct_type ()) {
+			cast = "void (*)";
+		} else {
+			cast = m.return_type.get_cname () + " (*)";
+		}
 		string cast_args = base_type.get_cname () + "*";
 
 		var vdeclarator = new CCodeFunctionDeclarator (m.vfunc_name);
