@@ -697,9 +697,11 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 		if (param.parameter_type.data_type is Api.Delegate) {
 			add_custom_header ("%s_target".printf (param_name), "user data to pass to @%s".printf (param_name),
 				{"allow-none", "closure"}, get_parameter_pos (current_method_or_delegate, param_name)+0.1);
-			add_custom_header ("%s_target_destroy_notify".printf (param_name), 
-				"function to call when @%s_target is no longer needed".printf (param_name), {"allow-none"},
-				get_parameter_pos (current_method_or_delegate, param_name)+0.2);
+			if (param.parameter_type.is_owned) {
+				add_custom_header ("%s_target_destroy_notify".printf (param_name),
+								   "function to call when @%s_target is no longer needed".printf (param_name), {"allow-none"},
+								   get_parameter_pos (current_method_or_delegate, param_name)+0.2);
+			}
 		}
 
 		if (current_dbus_member != null) {
