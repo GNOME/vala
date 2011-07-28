@@ -31,15 +31,12 @@ libvaladoc_la_VALASOURCES = \
 	markupsourcelocation.vala \
 	markuptokentype.vala \
 	markupreader.vala \
-	documentation/girdocumentationscanner.vala \
 	documentation/commentscanner.vala \
 	documentation/documentation.vala \
 	documentation/documentationparser.vala \
 	documentation/wiki.vala \
 	documentation/wikiscanner.vala \
-	importer/girdocumentationimporter.vala \
 	importer/documentationimporter.vala \
-	importer/gircomment.vala \
 	importer/valadocdocumentationimporter.vala \
 	importer/valadocdocumentationimporterscanner.vala \
 	api/symbolaccessibility.vala \
