@@ -91,6 +91,11 @@ public class Vala.PointerType : DataType {
 			return base_type.compatible (target_type);
 		}
 
+		if (target_type.get_type_id () == "G_TYPE_VALUE") {
+			// allow implicit conversion to GValue
+			return true;
+		}
+
 		return false;
 	}
 
