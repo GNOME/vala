@@ -92,7 +92,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				} else {
 					set_delegate_target (expr, new CCodeIdentifier ("_data_"));
 				}
-			} else if (expr.inner != null) {
+			} else if (expr.inner != null && !expr.prototype_access) {
 				// expr.inner is null in the special case of referencing the method in a constant initializer
 				var delegate_target = (CCodeExpression) get_ccodenode (expr.inner);
 				delegate_type = expr.target_type as DelegateType;
