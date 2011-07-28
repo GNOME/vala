@@ -440,7 +440,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				var type_as_struct = result.value_type.data_type as Struct;
 
 				if (param.direction == ParameterDirection.OUT) {
-					name = "_" + name;
+					name = "_vala_" + name;
 				}
 
 				if (param.direction == ParameterDirection.REF ||

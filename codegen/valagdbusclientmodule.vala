@@ -716,17 +716,17 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 				foreach (Parameter param in m.get_parameters ()) {
 					if (param.direction == ParameterDirection.OUT) {
-						ccode.add_declaration (param.variable_type.get_cname (), new CCodeVariableDeclarator ("_" + param.name));
+						ccode.add_declaration (param.variable_type.get_cname (), new CCodeVariableDeclarator ("_vala_" + param.name));
 
 						var array_type = param.variable_type as ArrayType;
 
 						if (array_type != null) {
 							for (int dim = 1; dim <= array_type.rank; dim++) {
-								ccode.add_declaration ("int", new CCodeVariableDeclarator ("_%s_length%d".printf (param.name, dim), new CCodeConstant ("0")));
+								ccode.add_declaration ("int", new CCodeVariableDeclarator ("_vala_%s_length%d".printf (param.name, dim), new CCodeConstant ("0")));
 							}
 						}
 
-						var target = new CCodeIdentifier ("_" + param.name);
+						var target = new CCodeIdentifier ("_vala_" + param.name);
 						bool may_fail;
 						receive_dbus_value (param.variable_type, new CCodeIdentifier ("_reply_message"), new CCodeIdentifier ("_reply_iter"), target, param, new CCodeIdentifier ("error"), out may_fail);
 
@@ -737,7 +737,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 						if (array_type != null) {
 							for (int dim = 1; dim <= array_type.rank; dim++) {
 								// TODO check that parameter is not NULL (out parameters are optional)
-								ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("%s_length%d".printf (param.name, dim))), new CCodeIdentifier ("_%s_length%d".printf (param.name, dim)));
+								ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("%s_length%d".printf (param.name, dim))), new CCodeIdentifier ("_vala_%s_length%d".printf (param.name, dim)));
 							}
 						}
 

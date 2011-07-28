@@ -452,7 +452,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 						}
 					} else if (!m.coroutine) {
 						// declare local variable for out parameter to allow assignment even when caller passes NULL
-						var vardecl = new CCodeVariableDeclarator.zero (get_variable_cname ("_" + param.name), default_value_for_type (param.variable_type, true));
+						var vardecl = new CCodeVariableDeclarator.zero (get_variable_cname ("_vala_" + param.name), default_value_for_type (param.variable_type, true));
 						ccode.add_declaration (param.variable_type.get_cname (), vardecl);
 
 						if (param.variable_type is ArrayType) {
@@ -461,7 +461,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 							if (!array_type.fixed_length) {
 								for (int dim = 1; dim <= array_type.rank; dim++) {
-									vardecl = new CCodeVariableDeclarator.zero (get_array_length_cname (get_variable_cname ("_" + param.name), dim), new CCodeConstant ("0"));
+									vardecl = new CCodeVariableDeclarator.zero (get_array_length_cname (get_variable_cname ("_vala_" + param.name), dim), new CCodeConstant ("0"));
 									ccode.add_declaration ("int", vardecl);
 								}
 							}
@@ -470,11 +470,11 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 							var d = deleg_type.delegate_symbol;
 							if (d.has_target) {
 								// create variable to store delegate target
-								vardecl = new CCodeVariableDeclarator.zero (get_delegate_target_cname (get_variable_cname ("_" + param.name)), new CCodeConstant ("NULL"));
+								vardecl = new CCodeVariableDeclarator.zero (get_delegate_target_cname (get_variable_cname ("_vala_" + param.name)), new CCodeConstant ("NULL"));
 								ccode.add_declaration ("void *", vardecl);
 
 								if (deleg_type.value_owned) {
-									vardecl = new CCodeVariableDeclarator.zero (get_delegate_target_destroy_notify_cname (get_variable_cname ("_" + param.name)), new CCodeConstant ("NULL"));
+									vardecl = new CCodeVariableDeclarator.zero (get_delegate_target_destroy_notify_cname (get_variable_cname ("_vala_" + param.name)), new CCodeConstant ("NULL"));
 									ccode.add_declaration ("GDestroyNotify", vardecl);
 								}
 							}
