@@ -421,7 +421,7 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 	/**
 	 * Visit thrown error domains
 	 */
-	private void visit_thrown_error_domain (Api.ErrorDomain edomain) {
+	private void visit_thrown_error_domain (Api.Node error) {
 		// method throws error
 		Header? param_header = null;
 		foreach (var header in current_headers) {
@@ -430,13 +430,18 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 				break;
 			}
 		}
-		if (param_header == null) {
-			add_custom_header ("error", "location to store the error occuring, or %NULL to ignore", {"error-domains %s".printf (edomain.get_cname ())}, double.MAX-1);
-		} else {
-			// assume the only annotation is error-domains
-			var annotation = param_header.annotations[0];
-			annotation += " %s".printf (edomain.get_cname ());
-			param_header.annotations[0] = annotation;
+		var edomain = error as Api.ErrorDomain;
+		if (edomain != null) {
+			if (param_header == null) {
+				add_custom_header ("error", "location to store the error occuring, or %NULL to ignore", {"error-domains %s".printf (edomain.get_cname ())}, double.MAX-1);
+			} else {
+				// assume the only annotation is error-domains
+				var annotation = param_header.annotations[0];
+				annotation += " %s".printf (edomain.get_cname ());
+				param_header.annotations[0] = annotation;
+			}
+		} else if (param_header == null) {
+			add_custom_header ("error", "location to store the error occuring, or %NULL to ignore", null, double.MAX-1);
 		}
 	}
 
@@ -521,9 +526,9 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 		current_delegate = d;
 
 		d.accept_children ({NodeType.FORMAL_PARAMETER, NodeType.TYPE_PARAMETER}, this);
-		var exceptions = d.get_children_by_type (NodeType.ERROR_DOMAIN);
+		var exceptions = d.get_children_by_types ({NodeType.ERROR_DOMAIN, NodeType.CLASS});
 		foreach (var ex in exceptions) {
-			visit_thrown_error_domain ((ErrorDomain) ex);
+			visit_thrown_error_domain (ex);
 		}
 
 		add_symbol (d.get_filename(), d.get_cname(), d.documentation);
@@ -595,9 +600,9 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 		}
 
 		m.accept_children ({NodeType.FORMAL_PARAMETER, NodeType.TYPE_PARAMETER}, this);
-		var exceptions = m.get_children_by_type (NodeType.ERROR_DOMAIN);
+		var exceptions = m.get_children_by_types ({NodeType.ERROR_DOMAIN, NodeType.CLASS});
 		foreach (var ex in exceptions) {
-			visit_thrown_error_domain ((ErrorDomain) ex);
+			visit_thrown_error_domain (ex);
 		}
 
 		Header error_header = null;
