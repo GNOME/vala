@@ -5205,7 +5205,7 @@ namespace Gtk {
 	public class UIManager : GLib.Object, Gtk.Buildable {
 		[CCode (has_construct_function = false)]
 		public UIManager ();
-		public void add_ui (uint merge_id, string path, string name, string action, Gtk.UIManagerItemType type, bool top);
+		public void add_ui (uint merge_id, string path, string name, string? action, Gtk.UIManagerItemType type, bool top);
 		public uint add_ui_from_file (string filename) throws GLib.Error;
 		public uint add_ui_from_string (string buffer, ssize_t length) throws GLib.Error;
 		public void ensure_update ();
