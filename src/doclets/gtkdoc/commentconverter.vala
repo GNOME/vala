@@ -209,7 +209,7 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
   
 	public override void visit_source_code (SourceCode code) {
 		current_builder.append ("<programlisting>");
-		code.accept_children (this);
+		current_builder.append (code.code);
 		current_builder.append ("</programlisting>");
 	}
   
