@@ -29,8 +29,12 @@ public class Valadoc.Taglets.See : ContentElement, Taglet, Block {
 	public Api.Node symbol { private set; get; }
 
 	public Rule? get_parser_rule (Rule run_rule) {
+		Rule optional_spaces = Rule.option ({ Rule.many ({ TokenType.SPACE }) });
+
 		return Rule.seq ({
-			TokenType.any_word ().action ((token) => { symbol_name = token.to_string (); })
+			optional_spaces,
+			TokenType.any_word ().action ((token) => { symbol_name = token.to_string (); }),
+			optional_spaces
 		});
 	}
 

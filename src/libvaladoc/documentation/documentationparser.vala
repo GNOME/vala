@@ -274,6 +274,25 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		text.content += str;
 	}
 
+	private void add_content_space () {
+		// avoid double spaces
+		var head = peek ();
+		Text text_node = null;
+
+		if (head is Text) {
+			text_node = (Text) head;
+		} else if (head is InlineContent && ((InlineContent) head).content.size > 0 && ((InlineContent) head).content.last () is Text) {
+			text_node = (Text) ((InlineContent) head).content.last ();
+		} else {
+			text_node = _factory.create_text ();
+			((InlineContent) peek ()).content.add (text_node);
+		}
+
+		if (!text_node.content.has_suffix (" ")) {
+			text_node.content += " ";
+		}
+	}
+
 	private void gir_append_link (Token token) throws ParserError {
 		var taglet = _factory.create_taglet ("link") as Taglets.Link;
 		if (!(taglet is Inline)) {
@@ -798,8 +817,21 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 			add_content_string (token.to_string ());
 		};
 
+		TokenType space = TokenType.SPACE.action ((token) => { add_content_space (); });
 		TokenType word = TokenType.any_word ().action (add_text);
-		TokenType space = TokenType.SPACE.action (add_text);
+
+		Rule optional_invisible_spaces =
+			Rule.option ({
+				Rule.many ({ TokenType.SPACE })
+			});
+
+		Rule optional_spaces = 
+			Rule.option ({
+				Rule.many ({
+					TokenType.SPACE.action ((token) => { add_content_space (); })
+				})
+			});
+
 
 		Rule text =
 			Rule.many ({
@@ -822,18 +854,6 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 					word
 				}),
 				Rule.option ({ space })
-
-				/*
-				,
-				Rule.option ({
-					Rule.many ({
-						Rule.one_of ({
-							word,
-							TokenType.AROBASE.action (add_text)
-						}),
-						Rule.option ({ space })
-					})
-				}) */
 			})
 			.set_name ("Text")
 			.set_start (() => { push (_factory.create_text ()); });
@@ -841,17 +861,17 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		Rule run_with_spaces =
 			Rule.seq ({
 				Rule.many ({
-					Rule.option ({
-						Rule.many ({ TokenType.SPACE })
-					}),
-					run
+					Rule.one_of ({
+						optional_invisible_spaces,
+						run
+					})
 				})
 			})
 			.set_name ("RunWithSpaces");
 
 		multiline_run = Rule.many ({
 				run_with_spaces,
-				TokenType.EOL.action (() => { ((InlineContent) peek ()).content.add (_factory.create_text (" ")); })
+				TokenType.EOL.action (() => { add_content_space (); })
 			})
 			.set_name ("MultiLineRun");
 
@@ -883,7 +903,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 				TokenType.SINGLE_QUOTE_2, 
 				Rule.one_of ({
 					TokenType.SINGLE_QUOTE_2,
-					Rule.seq ({ run, TokenType.SINGLE_QUOTE_2 })
+					Rule.seq ({ optional_spaces, run, TokenType.SINGLE_QUOTE_2 })
 				})
 			})
 			.set_name ("Bold")
@@ -894,7 +914,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 				TokenType.SLASH_2,
 				Rule.one_of ({
 					TokenType.SLASH_2,
-					Rule.seq ({ run, TokenType.SLASH_2 })
+					Rule.seq ({ optional_spaces, run, TokenType.SLASH_2 })
 				})
 			})
 			.set_name ("Italic")
@@ -905,17 +925,18 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 				TokenType.UNDERSCORE_2,
 				Rule.one_of ({
 					TokenType.UNDERSCORE_2,
-					Rule.seq ({ run, TokenType.UNDERSCORE_2 })
+					Rule.seq ({ optional_spaces, run, TokenType.UNDERSCORE_2 })
 				})
 			})
 			.set_name ("Underlined")
 			.set_start (() => { push (_factory.create_run (Run.Style.UNDERLINED)); });
+
 		Rule monospace =
 			Rule.seq ({
 				TokenType.BACK_QUOTE_2,
 				Rule.one_of ({
 					TokenType.BACK_QUOTE_2,
-					Rule.seq ({ run, TokenType.BACK_QUOTE_2 })
+					Rule.seq ({ optional_spaces, run, TokenType.BACK_QUOTE_2 })
 				})
 			})
 			.set_name ("Monospace")
@@ -934,6 +955,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 			})
 			.set_name ("Embedded")
 			.set_start (() => { push (_factory.create_embedded ()); });
+
 		Rule link =
 			Rule.seq ({
 				TokenType.DOUBLE_OPEN_BRACKET.action (() => { ((WikiScanner) _scanner).set_url_escape_mode (true); }),
@@ -970,10 +992,6 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 				((InlineContent) peek ()).content.add (head);
 			};
 
-		Rule run_optional_space = 
-			Rule.option ({ space })
-			.set_reduce (append_head_to_head2);
-
 		Rule run_subrules =
 			Rule.one_of ({
 				Rule.seq ({
@@ -985,7 +1003,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 						inline_taglet, bold, italic, underlined, monospace, embedded, link, source_code
 					})
 					.set_reduce (append_head_to_head2),
-					run_optional_space
+					optional_spaces
 				})
 			});
 
@@ -998,18 +1016,20 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		run.set_rule (
 			Rule.seq ({
 				run_subrules,
-				run_optional_space,
+				optional_spaces,
 				Rule.option ({
 					Rule.many ({
 						Rule.one_of ({
-							Rule.seq ({ run_arobase, run_optional_space }),
-							run_subrules
+							run_arobase,
+							run_subrules,
+							optional_spaces
 						})
 					})
 				})
 			})
 			.set_name ("Run")
 		);
+
 
 		// Block rules
 
@@ -1023,14 +1043,19 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 				}),
 				Rule.many ({
 					run,
-					TokenType.EOL.action (() => { ((Paragraph) peek ()).content.add (_factory.create_text (" ")); })
+					TokenType.EOL.action (() => { add_content_space (); })
 				})
 			})
 			.set_name ("Paragraph")
 			.set_start (() => { push (_factory.create_paragraph ()); })
 			.set_reduce (() => {
-				var head = (Block) pop ();
+				var head = (Paragraph) pop ();
 				((BlockContent) peek ()).content.add (head);
+
+				Text last_element = head.content.last () as Text;
+				if (last_element != null) {
+					last_element.content._chomp ();
+				}
 			});
 
 		Rule indented_item =
@@ -1049,14 +1074,20 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 						TokenType.str ("i.").action ((token) => { new_list_item (Content.List.Bullet.ORDERED_LOWER_CASE_ROMAN); }),
 						TokenType.str ("I.").action ((token) => { new_list_item (Content.List.Bullet.ORDERED_UPPER_CASE_ROMAN); })
 					}),
-					TokenType.SPACE
+					optional_invisible_spaces
 				})
 				.set_skip (() => { new_list_item (Content.List.Bullet.NONE); }),
 				run,
 				TokenType.EOL
 			})
 			.set_name ("IndentedItem")
-			.set_start (() => { current_level = 0; });
+			.set_start (() => { current_level = 0; })
+			.set_reduce (() => {
+				var content_list = ((ListItem) peek ()).content;
+				if (content_list.size > 0 && content_list.last () is Text) {
+					((Text) content_list.last ()).content._chomp ();
+				}
+			});
 
 		Rule indented_blocks =
 			Rule.many ({
@@ -1108,10 +1139,8 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 					Rule.option ({
 						table_cell_attributes
 					}),
-					run_with_spaces,
-					Rule.option ({
-						Rule.many ({ TokenType.SPACE })
-					})
+					optional_invisible_spaces,
+					run
 				}),
 				TokenType.DOUBLE_PIPE
 			})
@@ -1120,6 +1149,10 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 			.set_reduce (() => {
 				var head = (TableCell) pop ();
 				((TableRow) peek ()).cells.add (head);
+
+				if (head.content.size > 0 && head.content.last () is Text) {
+					((Text) head.content.last ()).content._chomp ();
+				}
 			});
 		Rule table_row =
 			Rule.seq ({

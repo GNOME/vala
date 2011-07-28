@@ -28,8 +28,12 @@ public class Valadoc.Taglets.Since : ContentElement, Taglet, Block {
 	public string version;
 
 	public Rule? get_parser_rule (Rule run_rule) {
+		Rule optional_spaces = Rule.option ({ Rule.many ({ TokenType.SPACE }) });
+
 		return Rule.seq ({
-			TokenType.any_word ().action ((token) => { version = token.to_string (); })
+			optional_spaces,
+			TokenType.any_word ().action ((token) => { version = token.to_string (); }),
+			optional_spaces
 		});
 	}
 

@@ -29,8 +29,8 @@ public class Valadoc.Taglets.Param : InlineContent, Taglet, Block {
 
 	public Rule? get_parser_rule (Rule run_rule) {
 		return Rule.seq ({
+			Rule.option ({ Rule.many ({ TokenType.SPACE }) }),
 			TokenType.any_word ().action ((token) => { parameter_name = token.to_string (); }),
-			Rule.many ({ TokenType.SPACE }),
 			run_rule
 		});
 	}
