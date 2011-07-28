@@ -282,7 +282,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 	}
 
 	public override void visit_namespace (Api.Namespace ns) {
-		if (ns.get_filename () != null) {
+		if (ns.get_filename () != null && ns.documentation != null) {
 			set_section_comment (ns.get_filename (), get_section (ns.get_filename ()), ns.documentation);
 		}
 
