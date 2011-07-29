@@ -792,14 +792,59 @@ namespace Xml {
 	}
 
 	[Compact]
-	[CCode (cname = "xmlParserCtxt")]
+	[CCode (cname = "xmlParserCtxt", free_function = "xmlFreeParserCtxt", cheader_filename = "libxml/parser.h")]
 	public class ParserCtxt {
 		public SAXHandler* sax;
 		[CCode (cname = "userData")]
 		public void* user_data;
 
+		[CCode (cname = "xmlNewParserCtxt")]
+		public ParserCtxt ();
+
+		[CCode (cname = "xmlCreatePushParserCtxt")]
+		public ParserCtxt.create_push (Xml.SAXHandler* sax, void* user_data, [CCode (array_length = false)] char[] data, int len, string? filename = null);
+
+		[CCode (cname = "xmlCreateIOParserCtxt")]
+		public ParserCtxt.create_io (Xml.SAXHandler* sax, void* user_data, Xml.InputReadCallback ioread, Xml.InputCloseCallback ioclose, void* ioctx, string? encoding = null);
+
+		[CCode (cname = "xmlCreateDocParserCtxt")]
+		public ParserCtxt.create_doc (string cur);
+
+		[CCode (cname = "xmlParseChunk")]
+		public int parse_chunk ([CCode (array_length = false)] char[] data, int size, bool terminate);
+
 		[CCode (cname = "xmlParseDocument")]
 		public int parse_document ();
+
+		[CCode (cname = "xmlCtxtResetPush")]
+		public void reset_push ([CCode (array_length = false)] char[] data, int len, string? filename = null, string? encoding = null);
+
+		[CCode (cname = "xmlCtxtReset")]
+		public void reset ();
+
+		[CCode (cname = "xmlCtxtInit")]
+		public void init ();
+
+		[CCode (cname = "xmlCtxtClear")]
+		public void clear ();
+
+		[CCode (cname = "xmlCtxtUseOptions")]
+		public int use_options (int options);
+
+		[CCode (cname = "xmlCtxtReadDoc")]
+		public Doc* read_doc (string cur, string url, string? encoding = null, int options = 0);
+
+		[CCode (cname = "xmlCtxtReadFile")]
+		public Doc* read_file (string filename, string? encoding = null, int options = 0);
+
+		[CCode (cname = "xmlCtxtReadMemory")]
+		public Doc* read_memory ([CCode (array_length = false)] char[] buffer, int size, string url, string? encoding = null, int options = 0);
+
+		[CCode (cname = "xmlCtxtReadFd")]
+		public Doc* read_fd (int fd, string url, string? encoding = null, int options = 0);
+
+		[CCode (cname = "xmlCtxtReadIO")]
+		public Doc* read_io (Xml.InputReadCallback ioread, Xml.InputCloseCallback ioclose, void* ioctx, string url, string? encoding = null, int options = 0);
 	}
 
 
