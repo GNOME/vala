@@ -191,6 +191,13 @@ void test_void_array () {
 	assert ((void*) null in a);
 }
 
+void test_explicit_copying () {
+	int[] a0 = { 1, 2, 3};
+	var a1 = a0.copy ();
+	assert (a1.length == 3);
+	assert (a0[1] == a1[1]);
+}
+
 void main () {
 	test_integer_array ();
 	test_string_array ();
@@ -202,4 +209,5 @@ void main () {
 	test_delegate_array ();
 	test_generics_array ();
 	test_void_array ();
+	test_explicit_copying ();
 }

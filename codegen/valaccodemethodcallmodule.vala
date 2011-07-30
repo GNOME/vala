@@ -188,6 +188,9 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			in_arg_map.set (get_param_pos (0), new CCodeIdentifier (get_ccode_name (array_type.element_type)));
 		} else if (m is ArrayMoveMethod) {
 			requires_array_move = true;
+		} else if (m is ArrayCopyMethod) {
+			expr.target_value = copy_value (ma.inner.target_value, expr);
+			return;
 		}
 
 		CCodeExpression instance = null;

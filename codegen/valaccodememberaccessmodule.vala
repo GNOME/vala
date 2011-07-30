@@ -36,7 +36,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 		if (expr.symbol_reference is Method) {
 			var m = (Method) expr.symbol_reference;
 
-			if (!(m is DynamicMethod || m is ArrayMoveMethod || m is ArrayResizeMethod)) {
+			if (!(m is DynamicMethod || m is ArrayMoveMethod || m is ArrayResizeMethod || m is ArrayCopyMethod)) {
 				generate_method_declaration (m, cfile);
 
 				if (!m.external && m.external_package) {
