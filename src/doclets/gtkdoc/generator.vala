@@ -682,7 +682,7 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 				null, get_parameter_pos (current_method_or_delegate, param_name)+0.1);
 		}
 
-		if (!param.ellipsis && get_cname (param.parameter_type.data_type) == "GError") {
+		if (!param.ellipsis && param.parameter_type.data_type != null && get_cname (param.parameter_type.data_type) == "GError") {
 			annotations += "not-error";
 		}
 
