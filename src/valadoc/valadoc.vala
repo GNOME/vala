@@ -189,7 +189,7 @@ public class ValaDoc : Object {
 			return build_filename (Config.plugin_dir, "doclets", "html");
 		}
 
-		return get_plugin_path (docletpath, "doclet");
+		return get_plugin_path (docletpath, "doclets");
 	}
 
 	private bool is_driver (string path) {
