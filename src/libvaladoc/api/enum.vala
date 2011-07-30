@@ -32,6 +32,7 @@ public class Valadoc.Api.Enum : TypeSymbol {
 
 	public Enum (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, string? cname, void* data) {
 		base (parent, file, name, accessibility, comment, false, data);
+		this.cname = cname;
 	}
 
 	/**
