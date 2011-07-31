@@ -17,6 +17,7 @@ lib_LTLIBRARIES = \
 libvala_la_VALASOURCES = \
 	valaccodearraymodule.vala \
 	valaccodeassignmentmodule.vala \
+	valaccodeattribute.vala \
 	valaccodebasemodule.vala \
 	valaccodecompiler.vala \
 	valaccodecontrolflowmodule.vala \
