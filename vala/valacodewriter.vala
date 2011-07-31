@@ -139,7 +139,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		}
 
 		write_indent ();
-		write_string ("[CCode (cprefix = \"%s\", lower_case_cprefix = \"%s\"".printf (ns.get_cprefix (), ns.get_lower_case_cprefix ()));
+		write_string ("[CCode (cprefix = \"%s\"".printf (ns.get_cprefix ()));
 
 		if (ns.source_reference != null && ns.parent_symbol == context.root) {
 			// Set GIR information only for the main namespace of the file.
@@ -152,6 +152,7 @@ public class Vala.CodeWriter : CodeVisitor {
 				write_string ("gir_version = \"%s\"".printf (ns.source_reference.file.gir_version));
 			}
 		}
+		write_string (", lower_case_cprefix = \"%s\"".printf (ns.get_lower_case_cprefix ()));
 
 		write_string (")]");
 		write_newline ();
@@ -211,14 +212,14 @@ public class Vala.CodeWriter : CodeVisitor {
 
 			if (since != null || replacement != null) {
 				write_string (" (");
-				if (since != null) {
-					write_string ("since = \"%s\"".printf (since));
+				if (replacement != null) {
+					write_string ("replacement = \"%s\"".printf (replacement));
 				}
 				if (since != null && replacement != null) {
 					write_string (", ");
 				}
-				if (replacement != null) {
-					write_string ("replacement = \"%s\"".printf (replacement));
+				if (since != null) {
+					write_string ("since = \"%s\"".printf (since));
 				}
 				write_string (")");
 			}
@@ -243,69 +244,70 @@ public class Vala.CodeWriter : CodeVisitor {
 			return;
 		}
 
+		write_indent ();
+
+		write_string ("[CCode (cheader_filename = \"%s\"".printf (get_cheaders(cl)));
+
+		bool is_refcounting = cl.is_reference_counting () && type != CodeWriterType.FAST;
+
+		if (cl.get_cname () != cl.get_default_cname ()) {
+			write_string (", cname = \"%s\"".printf (cl.get_cname ()));
+		}
+		if (cl.const_cname != null) {
+			write_string (", const_cname = \"%s\"".printf (cl.const_cname));
+		}
+		if (!is_refcounting && cl.get_dup_function () != null) {
+			write_string (", copy_function = \"%s\"".printf (cl.get_dup_function ()));
+		}
+		if (cl.get_lower_case_cprefix () != "%s_".printf (cl.get_lower_case_cname (null))) {
+			write_string (", cprefix = \"%s\"".printf (cl.get_lower_case_cprefix ()));
+		}
+
+		if (!is_refcounting && cl.get_free_function () != cl.get_default_free_function ()) {
+			write_string (", free_function = \"%s\"".printf (cl.get_free_function ()));
+		}
+
+		if (cl.get_param_spec_function () != cl.get_default_param_spec_function ()) {
+			write_string (", param_spec_function = \"%s\"".printf (cl.get_param_spec_function ()));
+		}
+
+		if (is_refcounting) {
+			if (cl.base_class == null || cl.base_class.get_ref_function () == null || cl.base_class.get_ref_function () != cl.get_ref_function ()) {
+				write_string (", ref_function = \"%s\"".printf (cl.get_ref_function ()));
+				if (cl.ref_function_void) {
+					write_string (", ref_function_void = true");
+				}
+			}
+		}
+
+		if (cl.type_check_function != null) {
+			write_string (", type_check_function = \"%s\"".printf (cl.type_check_function ));
+		}
+
+		if (cl.get_type_id () != cl.get_default_type_id ()) {
+			write_string (", type_id = \"%s\"".printf (cl.get_type_id ()));
+		}
+
+		if (is_refcounting && (cl.base_class == null || cl.base_class.get_unref_function () == null || cl.base_class.get_unref_function () != cl.get_unref_function ())) {
+			write_string (", unref_function = \"%s\"".printf (cl.get_unref_function ()));
+		}
+
+		write_string (")]");
+
 		if (cl.is_compact) {
 			write_indent ();
 			write_string ("[Compact]");
 			write_newline ();
 		}
 
+		emit_deprecated_attribute (cl);
+		emit_experimental_attribute (cl);
+
 		if (cl.is_immutable) {
 			write_indent ();
 			write_string ("[Immutable]");
 			write_newline ();
 		}
-
-		emit_deprecated_attribute (cl);
-		emit_experimental_attribute (cl);
-
-		write_indent ();
-		
-		write_string ("[CCode (");
-
-		if (cl.is_reference_counting () && type != CodeWriterType.FAST) {
-			if (cl.base_class == null || cl.base_class.get_ref_function () == null || cl.base_class.get_ref_function () != cl.get_ref_function ()) {
-				write_string ("ref_function = \"%s\", ".printf (cl.get_ref_function ()));
-				if (cl.ref_function_void) {
-					write_string ("ref_function_void = true, ");
-				}
-			}
-			if (cl.base_class == null || cl.base_class.get_unref_function () == null || cl.base_class.get_unref_function () != cl.get_unref_function ()) {
-				write_string ("unref_function = \"%s\", ".printf (cl.get_unref_function ()));
-			}
-		} else {
-			if (cl.get_dup_function () != null) {
-				write_string ("copy_function = \"%s\", ".printf (cl.get_dup_function ()));
-			}
-			if (cl.get_free_function () != cl.get_default_free_function ()) {
-				write_string ("free_function = \"%s\", ".printf (cl.get_free_function ()));
-			}
-		}
-
-		if (cl.get_cname () != cl.get_default_cname ()) {
-			write_string ("cname = \"%s\", ".printf (cl.get_cname ()));
-		}
-		if (cl.const_cname != null) {
-			write_string ("const_cname = \"%s\", ".printf (cl.const_cname));
-		}
-
-		if (cl.get_lower_case_cprefix () != "%s_".printf (cl.get_lower_case_cname (null))) {
-			write_string ("cprefix = \"%s\", ".printf (cl.get_lower_case_cprefix ()));
-		}
-
-		if (cl.type_check_function != null) {
-			write_string ("type_check_function = \"%s\", ".printf (cl.type_check_function ));
-		}
-
-		if (cl.get_type_id () != cl.get_default_type_id ()) {
-			write_string ("type_id = \"%s\", ".printf (cl.get_type_id ()));
-		}
-
-		if (cl.get_param_spec_function () != cl.get_default_param_spec_function ()) {
-			write_string ("param_spec_function = \"%s\", ".printf (cl.get_param_spec_function ()));
-		}
-
-		write_string ("cheader_filename = \"%s\")]".printf (get_cheaders(cl)));
-		write_newline ();
 
 		write_attributes (cl);
 		
@@ -412,44 +414,45 @@ public class Vala.CodeWriter : CodeVisitor {
 		if (!check_accessibility (st)) {
 			return;
 		}
-		
-		if (st.is_immutable) {
-			write_indent ();
-			write_string ("[Immutable]");
-			write_newline ();
+
+		write_indent ();
+
+		write_string ("[CCode (cheader_filename = \"%s\"".printf (get_cheaders(st)));
+
+		if (st.get_cname () != st.get_default_cname ()) {
+			write_string (", cname = \"%s\"".printf (st.get_cname ()));
 		}
+
+		if (!st.has_copy_function) {
+			write_string (", has_copy_function = false");
+		}
+
+		if (!st.has_destroy_function) {
+			write_string (", has_destroy_function = false");
+		}
+
+		if (!st.has_type_id) {
+			write_string (", has_type_id = false");
+		} else if (!st.is_simple_type () && st.get_type_id () != "G_TYPE_POINTER") {
+			write_string (", type_id = \"%s\"".printf (st.get_type_id ()));
+		}
+
+		write_string (")]");
+
+		write_newline ();
 
 		emit_deprecated_attribute (st);
 		emit_experimental_attribute (st);
 
-		write_indent ();
-
-		write_string ("[CCode (");
-
-		if (st.get_cname () != st.get_default_cname ()) {
-			write_string ("cname = \"%s\", ".printf (st.get_cname ()));
-		}
-
-		if (!st.has_type_id) {
-			write_string ("has_type_id = false, ");
-		} else if (!st.is_simple_type () && st.get_type_id () != "G_TYPE_POINTER") {
-			write_string ("type_id = \"%s\", ".printf (st.get_type_id ()));
-		}
-
-		if (!st.has_copy_function) {
-			write_string ("has_copy_function = false, ");
-		}
-
-		if (!st.has_destroy_function) {
-			write_string ("has_destroy_function = false, ");
-		}
-
-		write_string ("cheader_filename = \"%s\")]".printf (get_cheaders(st)));
-		write_newline ();
-
-		if (st.is_simple_type ()) {
+		if (st.is_floating_type ()) {
 			write_indent ();
-			write_string ("[SimpleType]");
+			write_string ("[FloatingType (rank = %d)]".printf (st.get_rank ()));
+			write_newline ();
+		}
+
+		if (st.is_immutable) {
+			write_indent ();
+			write_string ("[Immutable]");
 			write_newline ();
 		}
 
@@ -459,9 +462,9 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_newline ();
 		}
 
-		if (st.is_floating_type ()) {
+		if (st.is_simple_type ()) {
 			write_indent ();
-			write_string ("[FloatingType (rank = %d)]".printf (st.get_rank ()));
+			write_string ("[SimpleType]");
 			write_newline ();
 		}
 
@@ -503,11 +506,7 @@ public class Vala.CodeWriter : CodeVisitor {
 			return;
 		}
 
-		emit_deprecated_attribute (iface);
-		emit_experimental_attribute (iface);
-
 		write_indent ();
-
 		write_string ("[CCode (cheader_filename = \"%s\"".printf (get_cheaders(iface)));
 		if (iface.get_lower_case_csuffix () != iface.get_default_lower_case_csuffix ())
 			write_string (", lower_case_csuffix = \"%s\"".printf (iface.get_lower_case_csuffix ()));
@@ -515,9 +514,11 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_string (", type_cname = \"%s\"".printf (iface.get_type_cname ()));
 		if (iface.get_type_id () != iface.get_default_type_id ())
 			write_string (", type_id = \"%s\"".printf (iface.get_type_id ()));
-
 		write_string (")]");
 		write_newline ();
+
+		emit_deprecated_attribute (iface);
+		emit_experimental_attribute (iface);
 
 		write_attributes (iface);
 
@@ -584,22 +585,24 @@ public class Vala.CodeWriter : CodeVisitor {
 			return;
 		}
 
-		emit_deprecated_attribute (en);
-		emit_experimental_attribute (en);
-
 		write_indent ();
 
-		write_string ("[CCode (cprefix = \"%s\", ".printf (en.get_cprefix ()));
-
-		if (!en.has_type_id) {
-			write_string ("has_type_id = false, ");
-		}
+		write_string ("[CCode (cheader_filename = \"%s\"".printf (get_cheaders(en)));
 
 		if (en.get_cname () != en.get_default_cname ()) {
-			write_string ("cname = \"%s\", ".printf (en.get_cname ()));
+			write_string (", cname = \"%s\"".printf (en.get_cname ()));
 		}
 
-		write_string ("cheader_filename = \"%s\")]".printf (get_cheaders(en)));
+		write_string (", cprefix = \"%s\"".printf (en.get_cprefix ()));
+
+		if (!en.has_type_id) {
+			write_string (", has_type_id = false");
+		}
+
+		write_string (")]");
+
+		emit_deprecated_attribute (en);
+		emit_experimental_attribute (en);
 
 		if (en.is_flags) {
 			write_indent ();
@@ -665,12 +668,12 @@ public class Vala.CodeWriter : CodeVisitor {
 			return;
 		}
 
-		emit_deprecated_attribute (edomain);
-		emit_experimental_attribute (edomain);
-
 		write_indent ();
 
-		write_string ("[CCode (cprefix = \"%s\", cheader_filename = \"%s\")]".printf (edomain.get_cprefix (), get_cheaders(edomain)));
+		write_string ("[CCode (cheader_filename = \"%s\", cprefix = \"%s\")]".printf (get_cheaders (edomain), edomain.get_cprefix ()));
+
+		emit_deprecated_attribute (edomain);
+		emit_experimental_attribute (edomain);
 
 		write_attributes (edomain);
 
@@ -723,29 +726,30 @@ public class Vala.CodeWriter : CodeVisitor {
 			return;
 		}
 
-		emit_deprecated_attribute (c);
-		emit_experimental_attribute (c);
-
 		bool custom_cname = (c.get_cname () != c.get_default_cname ());
 		bool custom_cheaders = (c.parent_symbol is Namespace);
 		if (custom_cname || custom_cheaders) {
 			write_indent ();
 			write_string ("[CCode (");
 
-			if (custom_cname) {
-				write_string ("cname = \"%s\"".printf (c.get_cname ()));
-			}
-
 			if (custom_cheaders) {
-				if (custom_cname) {
-					write_string (", ");
-				}
-
 				write_string ("cheader_filename = \"%s\"".printf (get_cheaders(c)));
 			}
 
+			if (custom_cname) {
+				if (custom_cheaders) {
+					write_string (", ");
+				}
+
+				write_string ("cname = \"%s\"".printf (c.get_cname ()));
+			}
+
+
 			write_string (")]");
 		}
+
+		emit_deprecated_attribute (c);
+		emit_experimental_attribute (c);
 
 		write_indent ();
 		write_accessibility (c);
@@ -783,63 +787,50 @@ public class Vala.CodeWriter : CodeVisitor {
 		if (custom_cname || custom_ctype || custom_cheaders || custom_array_length_cname || custom_array_length_type || (f.no_array_length && f.variable_type is ArrayType)) {
 			write_indent ();
 			write_string ("[CCode (");
-
-			if (custom_cname) {
-				write_string ("cname = \"%s\"".printf (f.get_cname ()));
-			}
-
-			if (custom_ctype) {
-				if (custom_cname) {
-					write_string (", ");
-				}
-
-				write_string ("type = \"%s\"".printf (f.get_ctype ()));
-			}
-
-			if (custom_cheaders) {
-				if (custom_cname || custom_ctype) {
-					write_string (", ");
-				}
-
-				write_string ("cheader_filename = \"%s\"".printf (get_cheaders(f)));
-			}
+			var separator = "";
 
 			if (f.variable_type is ArrayType) {
 				if (f.no_array_length) {
-					if (custom_cname || custom_ctype || custom_cheaders) {
-						write_string (", ");
-					}
+					write_string ("%sarray_length = false".printf (separator));
+					separator = ", ";
 
-					write_string ("array_length = false");
-
-					if (f.array_null_terminated) {
-						write_string (", array_null_terminated = true");
-					}
 				} else {
 					if (custom_array_length_cname) {
-						if (custom_cname || custom_ctype || custom_cheaders) {
-							write_string (", ");
-						}
-
-						write_string ("array_length_cname = \"%s\"".printf (f.get_array_length_cname ()));
+						write_string ("%sarray_length_cname = \"%s\"".printf (separator, f.get_array_length_cname ()));
+						separator = ", ";
 					}
 
 					if (custom_array_length_type) {
-						if (custom_cname || custom_ctype || custom_cheaders || custom_array_length_cname) {
-							write_string (", ");
-						}
-
-						write_string ("array_length_type = \"%s\"".printf (f.array_length_type));
+						write_string ("%sarray_length_type = \"%s\"".printf (separator, f.array_length_type));
+						separator = ", ";
 					}
 				}
-			} else if (f.variable_type is DelegateType) {
+				if (f.no_array_length && f.array_null_terminated) {
+					write_string (", array_null_terminated = true");
+					separator = ", ";
+				}
+			}
+
+			if (custom_cheaders) {
+				write_string ("%scheader_filename = \"%s\"".printf (separator, get_cheaders(f)));
+				separator = ", ";
+			}
+
+			if (custom_cname) {
+				write_string ("%scname = \"%s\"".printf (separator, f.get_cname ()));
+				separator = ", ";
+			}
+
+			if (f.variable_type is DelegateType) {
 				if (f.no_delegate_target) {
-					if (custom_cname || custom_ctype || custom_cheaders) {
-						write_string (", ");
-					}
-
-					write_string ("delegate_target = false");
+					write_string ("%sdelegate_target = false".printf (separator));
+					separator = ", ";
 				}
+			}
+
+			if (custom_ctype) {
+				write_string ("%stype = \"%s\"".printf (separator, f.get_ctype ()));
+				separator = ", ";
 			}
 
 			write_string (")]");
@@ -906,24 +897,12 @@ public class Vala.CodeWriter : CodeVisitor {
 			var ccode_params = new StringBuilder ();
 			var separator = "";
 
-			if (!float_equal (param.cparameter_position, i)) {
-				ccode_params.append_printf ("%spos = %g", separator, param.cparameter_position);
-				separator = ", ";
-			}
-			if (param.ctype != null) {
-				ccode_params.append_printf ("%stype = \"%s\"", separator, param.ctype);
-				separator = ", ";
-			}
 			if (param.no_array_length && param.variable_type is ArrayType) {
 				ccode_params.append_printf ("%sarray_length = false", separator);
 				separator = ", ";
 			}
 			if (param.array_null_terminated && param.variable_type is ArrayType) {
 				ccode_params.append_printf ("%sarray_null_terminated = true", separator);
-				separator = ", ";
-			}
-			if (param.array_length_type != null && param.variable_type is ArrayType) {
-				ccode_params.append_printf ("%sarray_length_type = \"%s\"", separator, param.array_length_type);
 				separator = ", ";
 			}
 			if (param.get_array_length_cname () != null && param.variable_type is ArrayType) {
@@ -934,8 +913,20 @@ public class Vala.CodeWriter : CodeVisitor {
 				ccode_params.append_printf ("%sarray_length_pos = %g", separator, param.carray_length_parameter_position);
 				separator = ", ";
 			}
+			if (param.array_length_type != null && param.variable_type is ArrayType) {
+				ccode_params.append_printf ("%sarray_length_type = \"%s\"", separator, param.array_length_type);
+				separator = ", ";
+			}
 			if (!float_equal (param.cdelegate_target_parameter_position, i + 0.1)) {
 				ccode_params.append_printf ("%sdelegate_target_pos = %g", separator, param.cdelegate_target_parameter_position);
+				separator = ", ";
+			}
+			if (!float_equal (param.cparameter_position, i)) {
+				ccode_params.append_printf ("%spos = %g", separator, param.cparameter_position);
+				separator = ", ";
+			}
+			if (param.ctype != null) {
+				ccode_params.append_printf ("%stype = \"%s\"", separator, param.ctype);
 				separator = ", ";
 			}
 
@@ -987,22 +978,23 @@ public class Vala.CodeWriter : CodeVisitor {
 			return;
 		}
 
-		emit_deprecated_attribute (cb);
-		emit_experimental_attribute (cb);
-
 		write_indent ();
 
 		write_string ("[CCode (cheader_filename = \"%s\"".printf (get_cheaders(cb)));
 
+		if (cb.array_length_type != null) {
+			write_string (", array_length_type = \"%s\"".printf (cb.array_length_type));
+		}
 		if (!cb.has_target) {
 			write_string (", has_target = false");
 		} else if (!float_equal (cb.cinstance_parameter_position, -2)) {
 			write_string (", instance_pos = %g".printf (cb.cinstance_parameter_position));
-		} else if (cb.array_length_type != null) {
-			write_string (", array_length_type = \"%s\"".printf (cb.array_length_type));
 		}
 
 		write_string (")]");
+
+		emit_deprecated_attribute (cb);
+		emit_experimental_attribute (cb);
 
 		write_indent ();
 
@@ -1063,61 +1055,11 @@ public class Vala.CodeWriter : CodeVisitor {
 			}
 		}
 
-		if (m.get_attribute ("NoWrapper") != null) {
-			write_indent ();
-			write_string ("[NoWrapper]");
-		}
-		if (m.get_attribute ("NoThrow") != null) {
-			write_indent ();
-			write_string ("[NoThrow]");
-		}
-		if (m.returns_modified_pointer) {
-			write_indent ();
-			write_string ("[ReturnsModifiedPointer]");
-		}
-		if (m.get_attribute ("DestroysInstance") != null) {
-			write_indent ();
-			write_string ("[DestroysInstance]");
-		}
-		if (m.printf_format) {
-			write_indent ();
-			write_string ("[PrintfFormat]");
-		}
-		if (m.scanf_format) {
-			write_indent ();
-			write_string ("[ScanfFormat]");
-		}
-		if (m.get_attribute ("Print") != null) {
-			write_indent ();
-			write_string ("[Print]");
-		}
-		if (m.get_attribute ("NoReturn") != null) {
-			write_indent ();
-			write_string ("[NoReturn]");
-		}
-		if (m.get_attribute ("Diagnostics") != null) {
-			write_indent ();
-			write_string ("[Diagnostics]");
-		}
-
-		emit_deprecated_attribute (m);
-		emit_experimental_attribute (m);
-
 		var ccode_params = new StringBuilder ();
 		var separator = "";
 
-		if (m.get_cname () != m.get_default_cname ()) {
-			ccode_params.append_printf ("%scname = \"%s\"", separator, m.get_cname ());
-			separator = ", ";
-		}
-		if (m.parent_symbol is Namespace || get_cheaders (m) != get_cheaders (m.parent_symbol)) {
-			ccode_params.append_printf ("%scheader_filename = \"%s\"", separator, get_cheaders(m));
-			separator = ", ";
-		}
-		if (!float_equal (m.cinstance_parameter_position, 0)) {
-			ccode_params.append_printf ("%sinstance_pos = %g", separator, m.cinstance_parameter_position);
-			separator = ", ";
-		}
+		var cm = m as CreationMethod;
+
 		if (m.no_array_length && m.return_type is ArrayType) {
 			ccode_params.append_printf ("%sarray_length = false", separator);
 			separator = ", ";
@@ -1126,59 +1068,107 @@ public class Vala.CodeWriter : CodeVisitor {
 			ccode_params.append_printf ("%sarray_length_pos = %g", separator, m.carray_length_parameter_position);
 			separator = ", ";
 		}
+		if (m.array_length_type != null && m.return_type is ArrayType) {
+			ccode_params.append_printf ("%sarray_length_type = \"%s\"", separator, m.array_length_type);
+			separator = ", ";
+		}
 		if (m.array_null_terminated && m.return_type is ArrayType) {
 			ccode_params.append_printf ("%sarray_null_terminated = true", separator);
 			separator = ", ";
 		}
-		if (m.array_length_type != null && m.return_type is ArrayType) {
-			ccode_params.append_printf ("%sarray_length_type = \"%s\"", separator, m.array_length_type);
+		if (m.parent_symbol is Namespace || get_cheaders (m) != get_cheaders (m.parent_symbol)) {
+			ccode_params.append_printf ("%scheader_filename = \"%s\"", separator, get_cheaders(m));
+			separator = ", ";
+		}
+		if (m.get_cname () != m.get_default_cname ()) {
+			ccode_params.append_printf ("%scname = \"%s\"", separator, m.get_cname ());
+			separator = ", ";
+		}
+		if (cm != null && m.has_construct_function && (m.name == ".new" && m.get_real_cname () != cm.get_default_construct_function ())) {
+			ccode_params.append_printf ("%sconstruct_function = \"%s\"", separator, m.get_real_cname ());
 			separator = ", ";
 		}
 		if (!float_equal (m.cdelegate_target_parameter_position, -3)) {
 			ccode_params.append_printf ("%sdelegate_target_pos = %g", separator, m.cdelegate_target_parameter_position);
 			separator = ", ";
 		}
-		if (m.vfunc_name != m.name) {
-			ccode_params.append_printf ("%svfunc_name = \"%s\"", separator, m.vfunc_name);
-			separator = ", ";
-		}
 		if (m.coroutine && m.get_finish_cname () != m.get_default_finish_cname ()) {
 			ccode_params.append_printf ("%sfinish_name = \"%s\"", separator, m.get_finish_cname ());
+			separator = ", ";
+		}
+		if (cm != null && !m.has_construct_function) {
+			ccode_params.append_printf ("%shas_construct_function = false", separator);
+			separator = ", ";
+		}
+		if (cm != null && !m.has_new_function) {
+			ccode_params.append_printf ("%shas_new_function = false", separator);
+			separator = ", ";
+		}
+		if (!float_equal (m.cinstance_parameter_position, 0)) {
+			ccode_params.append_printf ("%sinstance_pos = %g", separator, m.cinstance_parameter_position);
 			separator = ", ";
 		}
 		if (m.sentinel != m.DEFAULT_SENTINEL) {
 			ccode_params.append_printf ("%ssentinel = \"%s\"", separator, m.sentinel);
 			separator = ", ";
 		}
-		if (m.custom_return_type_cname != null) {
-			ccode_params.append_printf ("%stype = \"%s\"", separator, m.custom_return_type_cname);
-			separator = ", ";
-		}
 		if (m.simple_generics) {
 			ccode_params.append_printf ("%ssimple_generics = true", separator);
 			separator = ", ";
 		}
-
-		var cm = m as CreationMethod;
-		if (cm != null) {
-			if (!m.has_new_function) {
-				ccode_params.append_printf ("%shas_new_function = false", separator);
-				separator = ", ";
-			}
-			if (!m.has_construct_function) {
-				ccode_params.append_printf ("%shas_construct_function = false", separator);
-				separator = ", ";
-			} else if (m.name == ".new" && m.get_real_cname () != cm.get_default_construct_function ()) {
-				ccode_params.append_printf ("%sconstruct_function = \"%s\"", separator, m.get_real_cname ());
-				separator = ", ";
-			}
+		if (m.custom_return_type_cname != null) {
+			ccode_params.append_printf ("%stype = \"%s\"", separator, m.custom_return_type_cname);
+			separator = ", ";
+		}
+		if (m.vfunc_name != m.name) {
+			ccode_params.append_printf ("%svfunc_name = \"%s\"", separator, m.vfunc_name);
+			separator = ", ";
 		}
 
 		if (ccode_params.len > 0) {
 			write_indent ();
 			write_string ("[CCode (%s)]".printf (ccode_params.str));
 		}
-		
+
+		emit_deprecated_attribute (m);
+		if (m.get_attribute ("DestroysInstance") != null) {
+			write_indent ();
+			write_string ("[DestroysInstance]");
+		}
+		if (m.get_attribute ("Diagnostics") != null) {
+			write_indent ();
+			write_string ("[Diagnostics]");
+		}
+		emit_experimental_attribute (m);
+		if (m.get_attribute ("NoReturn") != null) {
+			write_indent ();
+			write_string ("[NoReturn]");
+		}
+		if (m.get_attribute ("NoThrow") != null) {
+			write_indent ();
+			write_string ("[NoThrow]");
+		}
+		if (m.get_attribute ("NoWrapper") != null) {
+			write_indent ();
+			write_string ("[NoWrapper]");
+		}
+		if (m.get_attribute ("Print") != null) {
+			write_indent ();
+			write_string ("[Print]");
+		}
+		if (m.printf_format) {
+			write_indent ();
+			write_string ("[PrintfFormat]");
+		}
+		if (m.returns_modified_pointer) {
+			write_indent ();
+			write_string ("[ReturnsModifiedPointer]");
+		}
+		if (m.scanf_format) {
+			write_indent ();
+			write_string ("[ScanfFormat]");
+		}
+
 		write_indent ();
 		write_accessibility (m);
 		
@@ -1261,10 +1251,6 @@ public class Vala.CodeWriter : CodeVisitor {
 		emit_deprecated_attribute (prop);
 		emit_experimental_attribute (prop);
 
-		if (prop.no_accessor_method) {
-			write_indent ();
-			write_string ("[NoAccessorMethod]");
-		}
 		if (prop.property_type is ArrayType && prop.no_array_length) {
 			write_indent ();
 			write_string ("[CCode (array_length = false");
@@ -1274,6 +1260,10 @@ public class Vala.CodeWriter : CodeVisitor {
 			}
 
 			write_string (")]");
+		}
+		if (prop.no_accessor_method) {
+			write_indent ();
+			write_string ("[NoAccessorMethod]");
 		}
 
 		write_indent ();
@@ -1352,13 +1342,13 @@ public class Vala.CodeWriter : CodeVisitor {
 			return;
 		}
 		
+		emit_deprecated_attribute (sig);
+		emit_experimental_attribute (sig);
+
 		if (sig.has_emitter) {
 			write_indent ();
 			write_string ("[HasEmitter]");
 		}
-
-		emit_deprecated_attribute (sig);
-		emit_experimental_attribute (sig);
 		
 		write_indent ();
 		write_accessibility (sig);
