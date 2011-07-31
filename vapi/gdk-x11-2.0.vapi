@@ -62,7 +62,7 @@ namespace Gdk {
 	public static void* x11_image_get_ximage (Gdk.Image image);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static unowned Gdk.Display x11_lookup_xdisplay (X.Display xdisplay);
-	[CCode (cname = "gdk_net_wm_supports", cheader_filename = "gdk/gdkx.h")]
+	[CCode (cheader_filename = "gdk/gdkx.h", cname = "gdk_net_wm_supports")]
 	public static bool x11_net_wm_supports (Gdk.Atom property);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static unowned Gdk.Drawable x11_pixmap_get_drawable_impl (Gdk.Pixmap pixmap);
@@ -82,7 +82,7 @@ namespace Gdk {
 	public static bool x11_screen_supports_net_wm_hint (Gdk.Screen screen, Gdk.Atom property);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static void x11_ungrab_server ();
-	[CCode (cname = "gdkx_visual_get", cheader_filename = "gdk/gdkx.h")]
+	[CCode (cheader_filename = "gdk/gdkx.h", cname = "gdkx_visual_get")]
 	public static unowned Gdk.Visual x11_visual_get (uint32 xvisualid);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static unowned Gdk.Visual x11_visual_get_xvisual (Gdk.Visual visual);
@@ -96,8 +96,8 @@ namespace Gdk {
 	public static Gdk.Atom x11_xatom_to_atom (X.Atom xatom);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static Gdk.Atom x11_xatom_to_atom_for_display (Gdk.Display display, X.Atom xatom);
-	[CCode (cname = "gdk_xid_table_lookup", cheader_filename = "gdk/gdkx.h")]
+	[CCode (cheader_filename = "gdk/gdkx.h", cname = "gdk_xid_table_lookup")]
 	public static void* x11_xid_table_lookup (X.ID xid);
-	[CCode (cname = "gdk_xid_table_lookup_for_display", cheader_filename = "gdk/gdkx.h")]
+	[CCode (cheader_filename = "gdk/gdkx.h", cname = "gdk_xid_table_lookup_for_display")]
 	public static void* x11_xid_table_lookup_for_display (Gdk.Display display, X.ID xid);
 }

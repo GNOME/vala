@@ -20,8 +20,8 @@ namespace Gst {
 		public virtual signal void new_buffer_list ();
 		public virtual signal void new_preroll ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/app/gstappsink.h")]
+	[Compact]
 	public class AppSinkCallbacks {
 		public weak GLib.Callback eos;
 		public weak GLib.Callback new_buffer;
@@ -56,14 +56,14 @@ namespace Gst {
 		public virtual signal void need_data (uint length);
 		public virtual signal bool seek_data (uint64 offset);
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/app/gstappsrc.h")]
+	[Compact]
 	public class AppSrcCallbacks {
 		public weak GLib.Callback enough_data;
 		public weak GLib.Callback need_data;
 		public weak GLib.Callback seek_data;
 	}
-	[CCode (cprefix = "GST_APP_STREAM_TYPE_", cheader_filename = "gst/app/gstappsrc.h")]
+	[CCode (cheader_filename = "gst/app/gstappsrc.h", cprefix = "GST_APP_STREAM_TYPE_")]
 	public enum AppStreamType {
 		STREAM,
 		SEEKABLE,

@@ -2,20 +2,20 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
-	[Compact]
 	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
+	[Compact]
 	public class SDPAttribute {
 		public weak string key;
 		public weak string value;
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
+	[Compact]
 	public class SDPBandwidth {
 		public uint bandwidth;
 		public weak string bwtype;
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
+	[Compact]
 	public class SDPConnection {
 		public uint addr_number;
 		public weak string address;
@@ -23,14 +23,14 @@ namespace Gst {
 		public weak string nettype;
 		public uint ttl;
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
+	[Compact]
 	public class SDPKey {
 		public weak string data;
 		public weak string type;
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
+	[Compact]
 	public class SDPMedia {
 		public weak GLib.Array<Gst.SDPAttribute> attributes;
 		public weak GLib.Array<Gst.SDPBandwidth> bandwidths;
@@ -42,7 +42,7 @@ namespace Gst {
 		public uint num_ports;
 		public uint port;
 		public weak string proto;
-		[CCode (type = "GstSDPResult", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GstSDPResult")]
 		public SDPMedia (out unowned Gst.SDPMedia media);
 		public Gst.SDPResult add_attribute (string key, string value);
 		public Gst.SDPResult add_bandwidth (string bwtype, uint bandwidth);
@@ -73,8 +73,8 @@ namespace Gst {
 		public Gst.SDPResult set_proto (string proto);
 		public Gst.SDPResult uninit ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
+	[Compact]
 	public class SDPMessage {
 		public weak GLib.Array<Gst.SDPAttribute> attributes;
 		public weak GLib.Array<Gst.SDPBandwidth> bandwidths;
@@ -90,7 +90,7 @@ namespace Gst {
 		public weak string uri;
 		public weak string version;
 		public weak GLib.Array<Gst.SDPZone> zones;
-		[CCode (type = "GstSDPResult", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GstSDPResult")]
 		public SDPMessage (out unowned Gst.SDPMessage msg);
 		public Gst.SDPResult add_attribute (string key, string value);
 		public Gst.SDPResult add_bandwidth (string bwtype, uint bandwidth);
@@ -137,8 +137,8 @@ namespace Gst {
 		public Gst.SDPResult uninit ();
 		public uint zones_len ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
+	[Compact]
 	public class SDPOrigin {
 		public weak string addr;
 		public weak string addrtype;
@@ -147,20 +147,20 @@ namespace Gst {
 		public weak string sess_version;
 		public weak string username;
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
+	[Compact]
 	public class SDPTime {
 		public weak GLib.Array<Gst.SDPTime> repeat;
 		public weak string start;
 		public weak string stop;
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
+	[Compact]
 	public class SDPZone {
 		public weak string time;
 		public weak string typed_time;
 	}
-	[CCode (cprefix = "GST_SDP_", has_type_id = false, cheader_filename = "gst/sdp/gstsdp.h")]
+	[CCode (cheader_filename = "gst/sdp/gstsdp.h", cprefix = "GST_SDP_", has_type_id = false)]
 	public enum SDPResult {
 		OK,
 		EINVAL

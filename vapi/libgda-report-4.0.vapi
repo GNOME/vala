@@ -4,7 +4,7 @@
 namespace Gda {
 	[CCode (cheader_filename = "libgda-report/libgda-report.h")]
 	public class ReportDocbookDocument : Gda.ReportDocument {
-		[CCode (type = "GdaReportDocument*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GdaReportDocument*")]
 		public ReportDocbookDocument (Gda.ReportEngine engine);
 		[NoAccessorMethod]
 		public string fo_stylesheet { owned get; set; }
@@ -47,7 +47,7 @@ namespace Gda {
 	}
 	[CCode (cheader_filename = "libgda-report/libgda-report.h")]
 	public class ReportRmlDocument : Gda.ReportDocument {
-		[CCode (type = "GdaReportDocument*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GdaReportDocument*")]
 		public ReportRmlDocument (Gda.ReportEngine engine);
 	}
 }

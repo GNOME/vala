@@ -73,21 +73,21 @@ namespace Gst {
 		[NoAccessorMethod]
 		public Gst.LFOWaveform waveform { get; set; }
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
+	[Compact]
 	public class TimedValue {
 		public Gst.ClockTime timestamp;
 		public Gst.Value value;
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
+	[Compact]
 	public class ValueArray {
 		public int nbsamples;
 		public weak string property_name;
 		public Gst.ClockTime sample_interval;
 		public void* values;
 	}
-	[CCode (cprefix = "GST_INTERPOLATE_", has_type_id = false, cheader_filename = "gst/controller/gstcontroller.h")]
+	[CCode (cheader_filename = "gst/controller/gstcontroller.h", cprefix = "GST_INTERPOLATE_", has_type_id = false)]
 	public enum InterpolateMode {
 		NONE,
 		TRIGGER,
@@ -96,7 +96,7 @@ namespace Gst {
 		CUBIC,
 		USER
 	}
-	[CCode (cprefix = "GST_LFO_WAVEFORM_", cheader_filename = "gst/controller/gstlfocontrolsource.h")]
+	[CCode (cheader_filename = "gst/controller/gstlfocontrolsource.h", cprefix = "GST_LFO_WAVEFORM_")]
 	public enum LFOWaveform {
 		SINE,
 		SQUARE,

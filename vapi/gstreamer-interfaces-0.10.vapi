@@ -181,12 +181,12 @@ namespace Gst {
 		public abstract void set_window_handle (uint handle);
 		public abstract void set_xwindow_id (ulong xwindow_id);
 	}
-	[CCode (cprefix = "GST_COLOR_BALANCE_", cheader_filename = "gst/interfaces/colorbalance.h")]
+	[CCode (cheader_filename = "gst/interfaces/colorbalance.h", cprefix = "GST_COLOR_BALANCE_")]
 	public enum ColorBalanceType {
 		HARDWARE,
 		SOFTWARE
 	}
-	[CCode (cprefix = "GST_MIXER_FLAG_", cheader_filename = "gst/interfaces/mixer.h")]
+	[CCode (cheader_filename = "gst/interfaces/mixer.h", cprefix = "GST_MIXER_FLAG_")]
 	[Flags]
 	public enum MixerFlags {
 		NONE,
@@ -194,7 +194,7 @@ namespace Gst {
 		HAS_WHITELIST,
 		GROUPING
 	}
-	[CCode (cprefix = "GST_MIXER_MESSAGE_", cheader_filename = "gst/interfaces/mixer.h")]
+	[CCode (cheader_filename = "gst/interfaces/mixer.h", cprefix = "GST_MIXER_MESSAGE_")]
 	public enum MixerMessageType {
 		INVALID,
 		MUTE_TOGGLED,
@@ -204,7 +204,7 @@ namespace Gst {
 		OPTIONS_LIST_CHANGED,
 		MIXER_CHANGED
 	}
-	[CCode (cprefix = "GST_MIXER_TRACK_", cheader_filename = "gst/interfaces/mixertrack.h")]
+	[CCode (cheader_filename = "gst/interfaces/mixertrack.h", cprefix = "GST_MIXER_TRACK_")]
 	[Flags]
 	public enum MixerTrackFlags {
 		INPUT,
@@ -219,12 +219,12 @@ namespace Gst {
 		READONLY,
 		WRITEONLY
 	}
-	[CCode (cprefix = "GST_MIXER_", cheader_filename = "gst/interfaces/mixer.h")]
+	[CCode (cheader_filename = "gst/interfaces/mixer.h", cprefix = "GST_MIXER_")]
 	public enum MixerType {
 		HARDWARE,
 		SOFTWARE
 	}
-	[CCode (cprefix = "GST_NAVIGATION_COMMAND_", cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_NAVIGATION_COMMAND_")]
 	public enum NavigationCommand {
 		INVALID,
 		MENU1,
@@ -242,7 +242,7 @@ namespace Gst {
 		PREV_ANGLE,
 		NEXT_ANGLE
 	}
-	[CCode (cprefix = "GST_NAVIGATION_EVENT_", cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_NAVIGATION_EVENT_")]
 	public enum NavigationEventType {
 		INVALID,
 		KEY_PRESS,
@@ -252,26 +252,26 @@ namespace Gst {
 		MOUSE_MOVE,
 		COMMAND
 	}
-	[CCode (cprefix = "GST_NAVIGATION_MESSAGE_", cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_NAVIGATION_MESSAGE_")]
 	public enum NavigationMessageType {
 		INVALID,
 		MOUSE_OVER,
 		COMMANDS_CHANGED,
 		ANGLES_CHANGED
 	}
-	[CCode (cprefix = "GST_NAVIGATION_QUERY_", cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_NAVIGATION_QUERY_")]
 	public enum NavigationQueryType {
 		INVALID,
 		COMMANDS,
 		ANGLES
 	}
-	[CCode (cprefix = "GST_STREAM_VOLUME_FORMAT_", cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_STREAM_VOLUME_FORMAT_")]
 	public enum StreamVolumeFormat {
 		LINEAR,
 		CUBIC,
 		DB
 	}
-	[CCode (cprefix = "GST_TUNER_CHANNEL_", cheader_filename = "gst/interfaces/tuner.h")]
+	[CCode (cheader_filename = "gst/interfaces/tuner.h", cprefix = "GST_TUNER_CHANNEL_")]
 	[Flags]
 	public enum TunerChannelFlags {
 		INPUT,

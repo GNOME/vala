@@ -112,8 +112,8 @@ namespace Gst {
 		[NoAccessorMethod]
 		public uint timestamp_offset { get; set; }
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/rtp/gstrtppayloads.h")]
+	[Compact]
 	public class RTPPayloadInfo {
 		public uint bitrate;
 		public uint clock_rate;
@@ -124,7 +124,7 @@ namespace Gst {
 		public static unowned Gst.RTPPayloadInfo for_name (string media, string encoding_name);
 		public static unowned Gst.RTPPayloadInfo for_pt (uchar payload_type);
 	}
-	[CCode (type_id = "GST_TYPE_RTCP_PACKET", cheader_filename = "gst/rtp/gstrtcpbuffer.h")]
+	[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h", type_id = "GST_TYPE_RTCP_PACKET")]
 	public struct RTCPPacket {
 		public weak Gst.Buffer buffer;
 		public uint offset;
@@ -175,7 +175,7 @@ namespace Gst {
 		public void sr_get_sender_info (uint32 ssrc, uint64 ntptime, uint32 rtptime, uint32 packet_count, uint32 octet_count);
 		public void sr_set_sender_info (uint32 ssrc, uint64 ntptime, uint32 rtptime, uint32 packet_count, uint32 octet_count);
 	}
-	[CCode (cprefix = "GST_RTCP_", has_type_id = false, cheader_filename = "gst/rtp/gstrtcpbuffer.h")]
+	[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h", cprefix = "GST_RTCP_", has_type_id = false)]
 	public enum RTCPFBType {
 		FB_TYPE_INVALID,
 		RTPFB_TYPE_NACK,
@@ -184,7 +184,7 @@ namespace Gst {
 		PSFB_TYPE_RPSI,
 		PSFB_TYPE_AFB
 	}
-	[CCode (cprefix = "GST_RTCP_SDES_", has_type_id = false, cheader_filename = "gst/rtp/gstrtcpbuffer.h")]
+	[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h", cprefix = "GST_RTCP_SDES_", has_type_id = false)]
 	public enum RTCPSDESType {
 		INVALID,
 		END,
@@ -197,7 +197,7 @@ namespace Gst {
 		NOTE,
 		PRIV
 	}
-	[CCode (cprefix = "GST_RTCP_TYPE_", has_type_id = false, cheader_filename = "gst/rtp/gstrtcpbuffer.h")]
+	[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h", cprefix = "GST_RTCP_TYPE_", has_type_id = false)]
 	public enum RTCPType {
 		INVALID,
 		SR,
@@ -208,7 +208,7 @@ namespace Gst {
 		RTPFB,
 		PSFB
 	}
-	[CCode (cprefix = "GST_RTP_PAYLOAD_", has_type_id = false, cheader_filename = "gst/rtp/gstbasertpaudiopayload.h")]
+	[CCode (cheader_filename = "gst/rtp/gstbasertpaudiopayload.h", cprefix = "GST_RTP_PAYLOAD_", has_type_id = false)]
 	public enum RTPPayload {
 		PCMU,
 		@1016,

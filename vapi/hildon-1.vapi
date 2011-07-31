@@ -4,7 +4,7 @@
 namespace Hildon {
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class AnimationActor : Gtk.Window, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public AnimationActor ();
 		public void send_message (uint32 message_type, uint32 l0, uint32 l1, uint32 l2, uint32 l3, uint32 l4);
 		public void set_anchor (int x, int y);
@@ -23,7 +23,7 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class AppMenu : Gtk.Window, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public AppMenu ();
 		public void add_filter (Gtk.Button filter);
 		public void append (Gtk.Button item);
@@ -59,7 +59,7 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class BreadCrumbTrail : Gtk.Container, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public BreadCrumbTrail ();
 		public void clear ();
 		public void pop ();
@@ -71,7 +71,7 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class Button : Gtk.Button, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Button (Hildon.SizeType size, Hildon.ButtonArrangement arrangement);
 		public void add_image_size_group (Gtk.SizeGroup size_group);
 		public void add_size_groups (Gtk.SizeGroup title_size_group, Gtk.SizeGroup value_size_group, Gtk.SizeGroup image_size_group);
@@ -91,7 +91,7 @@ namespace Hildon {
 		public void set_title_alignment (float xalign, float yalign);
 		public void set_value (string value);
 		public void set_value_alignment (float xalign, float yalign);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Button.with_text (Hildon.SizeType size, Hildon.ButtonArrangement arrangement, string title, string value);
 		public Hildon.ButtonArrangement arrangement { construct; }
 		public Hildon.SizeType size { construct; }
@@ -120,7 +120,7 @@ namespace Hildon {
 		public int num_marked_dates;
 		public int selected_day;
 		public weak Gdk.GC xor_gc;
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Calendar ();
 		public void clear_marks ();
 		public void freeze ();
@@ -164,7 +164,7 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class CalendarPopup : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public CalendarPopup (Gtk.Window parent, uint year, uint month, uint day);
 		public void get_date (uint year, uint month, uint day);
 		public void set_date (uint year, uint month, uint day);
@@ -181,7 +181,7 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class Caption : Gtk.EventBox, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Caption (Gtk.SizeGroup group, string value, Gtk.Widget control, Gtk.Widget icon, Hildon.CaptionStatus flag);
 		public bool get_child_expand ();
 		public unowned Gtk.Widget get_icon_image ();
@@ -214,7 +214,7 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class CheckButton : Gtk.Button, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public CheckButton (Hildon.SizeType size);
 		public bool get_active ();
 		public void set_active (bool is_active);
@@ -224,7 +224,7 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class CodeDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public CodeDialog ();
 		public void clear_code ();
 		public unowned string get_code ();
@@ -234,13 +234,13 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class ColorButton : Gtk.Button, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ColorButton ();
 		public void get_color (out Gdk.Color color);
 		public bool get_popup_shown ();
 		public void popdown ();
 		public void set_color (Gdk.Color color);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ColorButton.with_color (Gdk.Color color);
 		public Gdk.Color color { get; set; }
 		public bool popup_shown { get; }
@@ -248,7 +248,7 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class ColorChooser : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ColorChooser ();
 		public void get_color (out Gdk.Color color);
 		public virtual void set_color (Gdk.Color color);
@@ -257,14 +257,14 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class ColorChooserDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ColorChooserDialog ();
 		public void get_color (out Gdk.Color color);
 		public void set_color (Gdk.Color color);
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class Controlbar : Gtk.Scale, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Controlbar ();
 		public int get_max ();
 		public int get_min ();
@@ -280,16 +280,16 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class DateButton : Hildon.PickerButton, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public DateButton (Hildon.SizeType size, Hildon.ButtonArrangement arrangement);
 		public void get_date (uint year, uint month, uint day);
 		public void set_date (uint year, uint month, uint day);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public DateButton.with_year_range (Hildon.SizeType size, Hildon.ButtonArrangement arrangement, int min_year, int max_year);
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class DateEditor : Gtk.Container, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public DateEditor ();
 		public void get_date (uint year, uint month, uint day);
 		public uint get_day ();
@@ -310,13 +310,13 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class DateSelector : Hildon.TouchSelector, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public DateSelector ();
 		public void get_date (uint year, uint month, uint day);
 		public bool select_current_date (uint year, uint month, uint day);
 		public void select_day (uint day);
 		public bool select_month (uint month, uint year);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public DateSelector.with_year_range (int min_year, int max_year);
 		[NoAccessorMethod]
 		public int max_year { get; construct; }
@@ -325,27 +325,27 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class Dialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Dialog ();
 		public unowned Gtk.Widget add_button (string button_text, int response_id);
 		public void add_buttons (...);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Dialog.with_buttons (string title, Gtk.Window parent, Gtk.DialogFlags flags, ...);
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class EditToolbar : Gtk.HBox, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public EditToolbar ();
 		public void set_button_label (string label);
 		public void set_label (string label);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public EditToolbar.with_text (string label, string button);
 		public virtual signal void arrow_clicked ();
 		public virtual signal void button_clicked ();
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class Entry : Gtk.Entry, Atk.Implementor, Gtk.Buildable, Gtk.Editable, Gtk.CellEditable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Entry (Hildon.SizeType size);
 		public unowned string get_text ();
 		public void set_placeholder (string text);
@@ -355,7 +355,7 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class FindToolbar : Gtk.Toolbar, Atk.Implementor, Gtk.Buildable, Gtk.ToolShell {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public FindToolbar (string label);
 		public int get_active ();
 		public bool get_active_iter (out Gtk.TreeIter iter);
@@ -363,7 +363,7 @@ namespace Hildon {
 		public void highlight_entry (bool get_focus);
 		public void set_active (int index);
 		public void set_active_iter (Gtk.TreeIter iter);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public FindToolbar.with_model (string label, Gtk.ListStore model, int column);
 		[NoAccessorMethod]
 		public int column { get; set; }
@@ -384,7 +384,7 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class FontSelectionDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public FontSelectionDialog (Gtk.Window parent, string title);
 		public unowned string get_preview_text ();
 		public void set_preview_text (string text);
@@ -426,13 +426,13 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class GetPasswordDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public GetPasswordDialog (Gtk.Window parent, bool get_old);
 		public unowned string get_password ();
 		public void set_caption (string new_caption);
 		public void set_max_characters (int max_characters);
 		public void set_message (string message);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public GetPasswordDialog.with_default (Gtk.Window parent, string password, bool get_old);
 		[NoAccessorMethod]
 		public string caption_label { owned get; set; }
@@ -449,17 +449,17 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class HVolumebar : Hildon.Volumebar, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public HVolumebar ();
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class LoginDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public LoginDialog (Gtk.Window parent);
 		public unowned string get_password ();
 		public unowned string get_username ();
 		public void set_message (string msg);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public LoginDialog.with_default (Gtk.Window parent, string name, string password);
 		[NoAccessorMethod]
 		public string message { owned get; set; }
@@ -472,17 +472,17 @@ namespace Hildon {
 	public class Note : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false)]
 		protected Note ();
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Note.cancel_with_progress_bar (Gtk.Window parent, string description, Gtk.ProgressBar progressbar);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Note.confirmation (Gtk.Window parent, string description);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Note.confirmation_add_buttons (Gtk.Window parent, string description);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Note.confirmation_with_icon_name (Gtk.Window parent, string description, string icon_name);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Note.information (Gtk.Window parent, string description);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Note.information_with_icon_name (Gtk.Window parent, string description, string icon_name);
 		public void set_button_text (string text);
 		public void set_button_texts (string text_ok, string text_cancel);
@@ -499,7 +499,7 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class NumberEditor : Gtk.Container, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public NumberEditor (int min, int max);
 		public int get_value ();
 		public void set_range (int min, int max);
@@ -509,10 +509,10 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class PannableArea : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public PannableArea ();
 		public void add_with_viewport (Gtk.Widget child);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public PannableArea.full (int mode, bool enabled, double vel_min, double vel_max, double decel, uint sps);
 		public unowned Gtk.Adjustment get_hadjustment ();
 		public Hildon.SizeRequestPolicy get_size_request_policy ();
@@ -576,7 +576,7 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class PickerButton : Hildon.Button, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public PickerButton (Hildon.SizeType size, Hildon.ButtonArrangement arrangement);
 		public int get_active ();
 		public unowned string get_done_button_text ();
@@ -591,7 +591,7 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class PickerDialog : Hildon.Dialog, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public PickerDialog (Gtk.Window parent);
 		public unowned string get_done_label ();
 		public unowned Hildon.TouchSelector get_selector ();
@@ -626,7 +626,7 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class RangeEditor : Gtk.Container, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public RangeEditor ();
 		public int get_higher ();
 		public int get_lower ();
@@ -641,7 +641,7 @@ namespace Hildon {
 		public void set_min (int value);
 		public void set_range (int start, int end);
 		public void set_separator (string separator);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public RangeEditor.with_separator (string separator);
 		public int higher { get; set construct; }
 		public int lower { get; set construct; }
@@ -651,7 +651,7 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class RemoteTexture : Gtk.Window, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public RemoteTexture ();
 		public void send_message (uint32 message_type, uint32 l0, uint32 l1, uint32 l2, uint32 l3, uint32 l4);
 		public void set_image (uint32 key, uint width, uint height, uint bpp);
@@ -666,7 +666,7 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class Seekbar : Gtk.Scale, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Seekbar ();
 		public uint get_fraction ();
 		public int get_position ();
@@ -680,12 +680,12 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class SetPasswordDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public SetPasswordDialog (Gtk.Window parent, bool modify_protection);
 		public unowned string get_password ();
 		public bool get_protected ();
 		public void set_message (string message);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public SetPasswordDialog.with_default (Gtk.Window parent, string password, bool modify_protection);
 		[NoAccessorMethod]
 		public string message { owned get; set; }
@@ -696,7 +696,7 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class SortDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public SortDialog (Gtk.Window parent);
 		public int add_sort_key (string sort_key);
 		public int add_sort_key_reversed (string sort_key);
@@ -709,14 +709,14 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class StackableWindow : Hildon.Window, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public StackableWindow ();
 		public unowned Hildon.WindowStack get_stack ();
 		public void set_main_menu (Hildon.AppMenu menu);
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class TextView : Gtk.TextView, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public TextView ();
 		public unowned Gtk.TextBuffer get_buffer ();
 		public void set_buffer (Gtk.TextBuffer buffer);
@@ -724,16 +724,16 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class TimeButton : Hildon.PickerButton, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public TimeButton (Hildon.SizeType size, Hildon.ButtonArrangement arrangement);
 		public void get_time (uint hours, uint minutes);
 		public void set_time (uint hours, uint minutes);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public TimeButton.step (Hildon.SizeType size, Hildon.ButtonArrangement arrangement, uint minutes_step);
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class TimeEditor : Gtk.Container, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public TimeEditor ();
 		public uint get_duration_max ();
 		public uint get_duration_min ();
@@ -762,7 +762,7 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class TimePicker : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public TimePicker (Gtk.Window parent);
 		public void get_time (uint hours, uint minutes);
 		public void set_time (uint hours, uint minutes);
@@ -771,11 +771,11 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class TimeSelector : Hildon.TouchSelector, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public TimeSelector ();
 		public void get_time (uint hours, uint minutes);
 		public bool set_time (uint hours, uint minutes);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public TimeSelector.step (uint minutes_step);
 		[NoAccessorMethod]
 		public uint minutes_step { get; construct; }
@@ -784,7 +784,7 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class TouchSelector : Gtk.VBox, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public TouchSelector ();
 		public unowned Hildon.TouchSelectorColumn append_column (Gtk.TreeModel model, Gtk.CellRenderer cell_renderer);
 		public void append_text (string text);
@@ -813,7 +813,7 @@ namespace Hildon {
 		public virtual void set_model (int column, Gtk.TreeModel model);
 		public void set_print_func (Hildon.TouchSelectorPrintFunc func);
 		public void set_print_func_full (owned Hildon.TouchSelectorPrintFunc func);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public TouchSelector.text ();
 		public void unselect_all (int column);
 		public void unselect_iter (int column, Gtk.TreeIter iter);
@@ -835,20 +835,20 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class TouchSelectorEntry : Hildon.TouchSelector, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public TouchSelectorEntry ();
 		public unowned Hildon.Entry get_entry ();
 		public Hildon.GtkInputMode get_input_mode ();
 		public int get_text_column ();
 		public void set_input_mode (Hildon.GtkInputMode input_mode);
 		public void set_text_column (int text_column);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public TouchSelectorEntry.text ();
 		public int text_column { get; set; }
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class VVolumebar : Hildon.Volumebar, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public VVolumebar ();
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
@@ -871,7 +871,7 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class VolumebarRange : Gtk.Scale, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public VolumebarRange (Gtk.Orientation orientation);
 		public double get_level ();
 		public void set_level (double level);
@@ -879,7 +879,7 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class WeekdayPicker : Gtk.Container, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public WeekdayPicker ();
 		public bool isset_day (GLib.DateWeekday day);
 		public void set_all ();
@@ -891,7 +891,7 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class Window : Gtk.Window, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Window ();
 		public void add_toolbar (Gtk.Toolbar toolbar);
 		public void add_with_scrollbar (Gtk.Widget child);
@@ -932,7 +932,7 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class WizardDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public WizardDialog (Gtk.Window parent, string wizard_name, Gtk.Notebook notebook);
 		public void set_forward_page_func (owned Hildon.WizardDialogPageFunc page_func);
 		[NoAccessorMethod]
@@ -948,17 +948,17 @@ namespace Hildon {
 		public abstract void get_natural_size (int width, int height);
 		public signal void crumb_activated ();
 	}
-	[CCode (cprefix = "HILDON_BUTTON_ARRANGEMENT_", cheader_filename = "hildon/hildon.h")]
+	[CCode (cheader_filename = "hildon/hildon.h", cprefix = "HILDON_BUTTON_ARRANGEMENT_")]
 	public enum ButtonArrangement {
 		HORIZONTAL,
 		VERTICAL
 	}
-	[CCode (cprefix = "HILDON_BUTTON_STYLE_", cheader_filename = "hildon/hildon.h")]
+	[CCode (cheader_filename = "hildon/hildon.h", cprefix = "HILDON_BUTTON_STYLE_")]
 	public enum ButtonStyle {
 		NORMAL,
 		PICKER
 	}
-	[CCode (cprefix = "HILDON_CALENDAR_", cheader_filename = "hildon/hildon.h")]
+	[CCode (cheader_filename = "hildon/hildon.h", cprefix = "HILDON_CALENDAR_")]
 	[Flags]
 	public enum CalendarDisplayOptions {
 		SHOW_HEADING,
@@ -967,17 +967,17 @@ namespace Hildon {
 		SHOW_WEEK_NUMBERS,
 		WEEK_START_MONDAY
 	}
-	[CCode (cprefix = "HILDON_CAPTION_POSITION_", cheader_filename = "hildon/hildon.h")]
+	[CCode (cheader_filename = "hildon/hildon.h", cprefix = "HILDON_CAPTION_POSITION_")]
 	public enum CaptionIconPosition {
 		LEFT,
 		RIGHT
 	}
-	[CCode (cprefix = "HILDON_CAPTION_", cheader_filename = "hildon/hildon.h")]
+	[CCode (cheader_filename = "hildon/hildon.h", cprefix = "HILDON_CAPTION_")]
 	public enum CaptionStatus {
 		OPTIONAL,
 		MANDATORY
 	}
-	[CCode (cprefix = "HILDON_DATE_TIME_ERROR_", cheader_filename = "hildon/hildon.h")]
+	[CCode (cheader_filename = "hildon/hildon.h", cprefix = "HILDON_DATE_TIME_ERROR_")]
 	public enum DateTimeError {
 		NO_ERROR,
 		MAX_HOURS,
@@ -1004,7 +1004,7 @@ namespace Hildon {
 		INVALID_DATE,
 		INVALID_TIME
 	}
-	[CCode (cprefix = "HILDON_GTK_INPUT_MODE_", has_type_id = false, cheader_filename = "gtk/gtk.h")]
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "HILDON_GTK_INPUT_MODE_", has_type_id = false)]
 	public enum GtkInputMode {
 		ALPHA,
 		NUMERIC,
@@ -1017,26 +1017,26 @@ namespace Hildon {
 		AUTOCAP,
 		DICTIONARY
 	}
-	[CCode (cprefix = "HILDON_", has_type_id = false, cheader_filename = "gtk/gtk.h")]
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "HILDON_", has_type_id = false)]
 	public enum Mode {
 		DIABLO,
 		FREMANTLE
 	}
-	[CCode (cprefix = "HILDON_MOVEMENT_", cheader_filename = "hildon/hildon.h")]
+	[CCode (cheader_filename = "hildon/hildon.h", cprefix = "HILDON_MOVEMENT_")]
 	public enum MovementDirection {
 		UP,
 		DOWN,
 		LEFT,
 		RIGHT
 	}
-	[CCode (cprefix = "HILDON_MOVEMENT_MODE_", cheader_filename = "hildon/hildon.h")]
+	[CCode (cheader_filename = "hildon/hildon.h", cprefix = "HILDON_MOVEMENT_MODE_")]
 	[Flags]
 	public enum MovementMode {
 		HORIZ,
 		VERT,
 		BOTH
 	}
-	[CCode (cprefix = "HILDON_NOTE_TYPE_", cheader_filename = "hildon/hildon.h")]
+	[CCode (cheader_filename = "hildon/hildon.h", cprefix = "HILDON_NOTE_TYPE_")]
 	public enum NoteType {
 		CONFIRMATION,
 		CONFIRMATION_BUTTON,
@@ -1044,30 +1044,30 @@ namespace Hildon {
 		INFORMATION_THEME,
 		PROGRESSBAR
 	}
-	[CCode (cprefix = "HILDON_NUMBER_EDITOR_ERROR_", cheader_filename = "hildon/hildon.h")]
+	[CCode (cheader_filename = "hildon/hildon.h", cprefix = "HILDON_NUMBER_EDITOR_ERROR_")]
 	public enum NumberEditorErrorType {
 		MAXIMUM_VALUE_EXCEED,
 		MINIMUM_VALUE_EXCEED,
 		ERRONEOUS_VALUE
 	}
-	[CCode (cprefix = "HILDON_PANNABLE_AREA_MODE_", cheader_filename = "hildon/hildon.h")]
+	[CCode (cheader_filename = "hildon/hildon.h", cprefix = "HILDON_PANNABLE_AREA_MODE_")]
 	public enum PannableAreaMode {
 		PUSH,
 		ACCEL,
 		AUTO
 	}
-	[CCode (cprefix = "HILDON_PORTRAIT_MODE_", cheader_filename = "hildon/hildon.h")]
+	[CCode (cheader_filename = "hildon/hildon.h", cprefix = "HILDON_PORTRAIT_MODE_")]
 	[Flags]
 	public enum PortraitFlags {
 		REQUEST,
 		SUPPORT
 	}
-	[CCode (cprefix = "HILDON_SIZE_REQUEST_", cheader_filename = "hildon/hildon.h")]
+	[CCode (cheader_filename = "hildon/hildon.h", cprefix = "HILDON_SIZE_REQUEST_")]
 	public enum SizeRequestPolicy {
 		MINIMUM,
 		CHILDREN
 	}
-	[CCode (cprefix = "HILDON_SIZE_", has_type_id = false, cheader_filename = "gtk/gtk.h")]
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "HILDON_SIZE_", has_type_id = false)]
 	public enum SizeType {
 		AUTO_WIDTH,
 		HALFSCREEN_WIDTH,
@@ -1077,29 +1077,29 @@ namespace Hildon {
 		THUMB_HEIGHT,
 		AUTO
 	}
-	[CCode (cprefix = "HILDON_TIME_SELECTOR_FORMAT_POLICY_", cheader_filename = "hildon/hildon.h")]
+	[CCode (cheader_filename = "hildon/hildon.h", cprefix = "HILDON_TIME_SELECTOR_FORMAT_POLICY_")]
 	public enum TimeSelectorFormatPolicy {
 		AMPM,
 		@24H,
 		AUTOMATIC
 	}
-	[CCode (cprefix = "HILDON_TOUCH_SELECTOR_SELECTION_MODE_", cheader_filename = "hildon/hildon.h")]
+	[CCode (cheader_filename = "hildon/hildon.h", cprefix = "HILDON_TOUCH_SELECTOR_SELECTION_MODE_")]
 	public enum TouchSelectorSelectionMode {
 		SINGLE,
 		MULTIPLE
 	}
-	[CCode (cprefix = "HILDON_UI_MODE_", has_type_id = false, cheader_filename = "gtk/gtk.h")]
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "HILDON_UI_MODE_", has_type_id = false)]
 	public enum UIMode {
 		NORMAL,
 		EDIT
 	}
-	[CCode (cprefix = "HILDON_WINDOW_CO_", cheader_filename = "hildon/hildon.h")]
+	[CCode (cheader_filename = "hildon/hildon.h", cprefix = "HILDON_WINDOW_CO_")]
 	public enum WindowClipboardOperation {
 		COPY,
 		CUT,
 		PASTE
 	}
-	[CCode (cprefix = "HILDON_WIZARD_DIALOG_", cheader_filename = "hildon/hildon.h")]
+	[CCode (cheader_filename = "hildon/hildon.h", cprefix = "HILDON_WIZARD_DIALOG_")]
 	public enum WizardDialogResponse {
 		CANCEL,
 		PREVIOUS,

@@ -59,8 +59,8 @@ namespace Gst {
 		[NoWrapper]
 		public virtual bool stop ();
 	}
+	[CCode (cheader_filename = "gst/gst.h", type_id = "GST_TYPE_BASE_PARSE_FRAME")]
 	[Compact]
-	[CCode (type_id = "GST_TYPE_BASE_PARSE_FRAME", cheader_filename = "gst/gst.h")]
 	public class BaseParseFrame {
 		public weak Gst.Buffer buffer;
 		public uint flags;
@@ -214,7 +214,7 @@ namespace Gst {
 		[NoWrapper]
 		public virtual bool query (Gst.Query query);
 		public bool query_latency (bool live, out Gst.ClockTime min_latency, out Gst.ClockTime max_latency);
-		[CCode (type = "gboolean", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "gboolean")]
 		public BaseSrc.seamless_segment (Gst.BaseSrc src, int64 start, int64 stop, int64 position);
 		public void set_blocksize (ulong blocksize);
 		[NoWrapper]
@@ -301,8 +301,8 @@ namespace Gst {
 		[NoAccessorMethod]
 		public bool qos { get; set; }
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/base/gstbitreader.h")]
+	[Compact]
 	public class BitReader {
 		public uint bit;
 		public uint byte;
@@ -329,8 +329,8 @@ namespace Gst {
 		public bool skip (uint nbits);
 		public bool skip_to_byte ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/base/gstbytereader.h")]
+	[Compact]
 	public class ByteReader {
 		public uint byte;
 		public uchar data;
@@ -403,8 +403,8 @@ namespace Gst {
 		public bool skip_string_utf32 ();
 		public bool skip_string_utf8 ();
 	}
+	[CCode (cheader_filename = "gst/base/gstbytewriter.h", free_function = "gst_byte_writer_free")]
 	[Compact]
-	[CCode (free_function = "gst_byte_writer_free", cheader_filename = "gst/base/gstbytewriter.h")]
 	public class ByteWriter : Gst.ByteReader {
 		public uint alloc_size;
 		public bool fixed;
@@ -456,8 +456,8 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public ByteWriter.with_size (uint size, bool fixed);
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/base/gstcollectpads.h")]
+	[Compact]
 	public class CollectData {
 		public Gst.Buffer buffer;
 		public weak Gst.CollectPads collect;
@@ -532,8 +532,8 @@ namespace Gst {
 		public virtual signal void empty ();
 		public virtual signal void full ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/base/gstdataqueue.h")]
+	[Compact]
 	public class DataQueueItem {
 		public weak GLib.DestroyNotify destroy;
 		public uint64 duration;
@@ -541,8 +541,8 @@ namespace Gst {
 		public uint size;
 		public bool visible;
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/base/gstdataqueue.h")]
+	[Compact]
 	public class DataQueueSize {
 		public uint bytes;
 		public uint64 time;
@@ -555,13 +555,13 @@ namespace Gst {
 		[NoWrapper]
 		public virtual Gst.FlowReturn create (out unowned Gst.Buffer buf);
 	}
-	[CCode (cprefix = "GST_BASE_PARSE_FRAME_FLAG_", has_type_id = false, cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_BASE_PARSE_FRAME_FLAG_", has_type_id = false)]
 	public enum BaseParseFrameFlags {
 		NONE,
 		NO_FRAME,
 		CLIP
 	}
-	[CCode (cprefix = "GST_BASE_SRC_", has_type_id = false, cheader_filename = "gst/base/gstbasesrc.h")]
+	[CCode (cheader_filename = "gst/base/gstbasesrc.h", cprefix = "GST_BASE_SRC_", has_type_id = false)]
 	public enum BaseSrcFlags {
 		STARTED,
 		FLAG_LAST

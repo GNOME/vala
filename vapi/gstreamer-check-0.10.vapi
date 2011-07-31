@@ -2,8 +2,8 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
-	[Compact]
 	[CCode (cheader_filename = "gst/gst.h")]
+	[Compact]
 	public class CheckABIStruct {
 		public int abi_size;
 		public weak string name;

@@ -271,8 +271,8 @@ namespace Tracker {
 		public bool store_metadata { get; set; }
 		public int weight { get; set; }
 	}
-	[Compact]
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
+	[Compact]
 	public class File {
 		public void* data;
 		public weak string path;
@@ -300,8 +300,8 @@ namespace Tracker {
 		public Tracker.Config config { get; set; }
 		public GLib.HashTable stop_words { get; }
 	}
-	[Compact]
 	[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-metadata.h")]
+	[Compact]
 	public class Metadata {
 		[CCode (has_construct_function = false)]
 		public Metadata ();
@@ -313,8 +313,8 @@ namespace Tracker {
 		public static unowned Tracker.Metadata utils_get_data (string path);
 		public static unowned string utils_get_text (string path);
 	}
-	[Compact]
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
+	[Compact]
 	public class Parser {
 		[CCode (has_construct_function = false)]
 		public Parser (Tracker.Language language, int max_word_length, int min_word_length);
@@ -375,7 +375,7 @@ namespace Tracker {
 		public bool show_service_directories { get; set; }
 		public bool show_service_files { get; set; }
 	}
-	[CCode (cprefix = "TRACKER_DB_TYPE_", cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
+	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h", cprefix = "TRACKER_DB_TYPE_")]
 	public enum DBType {
 		UNKNOWN,
 		DATA,
@@ -388,7 +388,7 @@ namespace Tracker {
 		CACHE,
 		USER
 	}
-	[CCode (cprefix = "TRACKER_FIELD_TYPE_", cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
+	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h", cprefix = "TRACKER_FIELD_TYPE_")]
 	public enum FieldType {
 		KEYWORD,
 		INDEX,

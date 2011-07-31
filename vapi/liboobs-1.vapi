@@ -204,8 +204,8 @@ namespace Oobs {
 		public void @set (Oobs.ListIter iter, void* data);
 		public void* contained_type { construct; }
 	}
+	[CCode (cheader_filename = "oobs/oobs.h", copy_function = "oobs_list_iter_copy", type_id = "OOBS_TYPE_LIST_ITER")]
 	[Compact]
-	[CCode (copy_function = "oobs_list_iter_copy", type_id = "OOBS_TYPE_LIST_ITER", cheader_filename = "oobs/oobs.h")]
 	public class ListIter {
 		public void* data;
 		public uint stamp;
@@ -257,8 +257,8 @@ namespace Oobs {
 		public virtual signal void committed ();
 		public virtual signal void updated ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "oobs/oobs.h")]
+	[Compact]
 	public class Platform {
 		public weak string codename;
 		public weak string id;
@@ -313,8 +313,8 @@ namespace Oobs {
 		public unowned GLib.List get_runlevels ();
 		public unowned Oobs.List get_services ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "oobs/oobs.h")]
+	[Compact]
 	public class ServicesRunlevel {
 		public weak string name;
 		public uint role;
@@ -341,15 +341,15 @@ namespace Oobs {
 		public void set_path (string path);
 		public string path { get; set; }
 	}
-	[Compact]
 	[CCode (cheader_filename = "oobs/oobs.h")]
+	[Compact]
 	public class ShareAclElement {
 		public weak string element;
 		public bool read_only;
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class ShareNFS : Oobs.Share {
-		[CCode (type = "OobsShare*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "OobsShare*")]
 		public ShareNFS (string path);
 		public void add_acl_element (string element, bool read_only);
 		public unowned GLib.SList get_acl ();
@@ -357,7 +357,7 @@ namespace Oobs {
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class ShareSMB : Oobs.Share {
-		[CCode (type = "OobsShare*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "OobsShare*")]
 		public ShareSMB (string path, string name, string comment, Oobs.ShareSMBFlags flags);
 		public unowned string get_comment ();
 		public Oobs.ShareSMBFlags get_flags ();
@@ -489,17 +489,17 @@ namespace Oobs {
 		[NoAccessorMethod]
 		public uint minimum_uid { get; set; }
 	}
-	[CCode (cprefix = "OOBS_DIAL_TYPE_", cheader_filename = "oobs/oobs.h")]
+	[CCode (cheader_filename = "oobs/oobs.h", cprefix = "OOBS_DIAL_TYPE_")]
 	public enum DialType {
 		TONES,
 		PULSES
 	}
-	[CCode (cprefix = "OOBS_ERROR_AUTHENTICATION_", cheader_filename = "oobs/oobs.h")]
+	[CCode (cheader_filename = "oobs/oobs.h", cprefix = "OOBS_ERROR_AUTHENTICATION_")]
 	public enum Error {
 		FAILED,
 		CANCELLED
 	}
-	[CCode (cprefix = "OOBS_IFACE_TYPE_", cheader_filename = "oobs/oobs.h")]
+	[CCode (cheader_filename = "oobs/oobs.h", cprefix = "OOBS_IFACE_TYPE_")]
 	public enum IfaceType {
 		ETHERNET,
 		WIRELESS,
@@ -507,14 +507,14 @@ namespace Oobs {
 		PLIP,
 		PPP
 	}
-	[CCode (cprefix = "OOBS_MODEM_VOLUME_", cheader_filename = "oobs/oobs.h")]
+	[CCode (cheader_filename = "oobs/oobs.h", cprefix = "OOBS_MODEM_VOLUME_")]
 	public enum ModemVolume {
 		SILENT,
 		LOW,
 		MEDIUM,
 		LOUD
 	}
-	[CCode (cprefix = "OOBS_RESULT_", cheader_filename = "oobs/oobs.h")]
+	[CCode (cheader_filename = "oobs/oobs.h", cprefix = "OOBS_RESULT_")]
 	public enum Result {
 		OK,
 		ACCESS_DENIED,
@@ -522,20 +522,20 @@ namespace Oobs {
 		MALFORMED_DATA,
 		ERROR
 	}
-	[CCode (cprefix = "OOBS_RUNLEVEL_", cheader_filename = "oobs/oobs.h")]
+	[CCode (cheader_filename = "oobs/oobs.h", cprefix = "OOBS_RUNLEVEL_")]
 	public enum RunlevelRole {
 		HALT,
 		REBOOT,
 		MONOUSER,
 		MULTIUSER
 	}
-	[CCode (cprefix = "OOBS_SERVICE_", cheader_filename = "oobs/oobs.h")]
+	[CCode (cheader_filename = "oobs/oobs.h", cprefix = "OOBS_SERVICE_")]
 	public enum ServiceStatus {
 		START,
 		STOP,
 		IGNORE
 	}
-	[CCode (cprefix = "OOBS_SHARE_SMB_", cheader_filename = "oobs/oobs.h")]
+	[CCode (cheader_filename = "oobs/oobs.h", cprefix = "OOBS_SHARE_SMB_")]
 	[Flags]
 	public enum ShareSMBFlags {
 		ENABLED,
@@ -543,7 +543,7 @@ namespace Oobs {
 		PUBLIC,
 		WRITABLE
 	}
-	[CCode (cprefix = "OOBS_USER_", cheader_filename = "oobs/oobs.h")]
+	[CCode (cheader_filename = "oobs/oobs.h", cprefix = "OOBS_USER_")]
 	[Flags]
 	public enum UserHomeFlags {
 		REMOVE_HOME,

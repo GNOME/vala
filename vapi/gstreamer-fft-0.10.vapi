@@ -2,8 +2,8 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
-	[Compact]
 	[CCode (cheader_filename = "gst/fft/gstfftf32.h")]
+	[Compact]
 	public class FFTF32 {
 		public void* cfg;
 		public bool inverse;
@@ -14,14 +14,14 @@ namespace Gst {
 		public void inverse_fft (Gst.FFTF32Complex freqdata, float timedata);
 		public void window (float timedata, Gst.FFTWindow window);
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/fft/gstfftf32.h")]
+	[Compact]
 	public class FFTF32Complex {
 		public float i;
 		public float r;
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/fft/gstfftf64.h")]
+	[Compact]
 	public class FFTF64 {
 		public void* cfg;
 		public bool inverse;
@@ -32,14 +32,14 @@ namespace Gst {
 		public void inverse_fft (Gst.FFTF64Complex freqdata, double timedata);
 		public void window (double timedata, Gst.FFTWindow window);
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/fft/gstfftf64.h")]
+	[Compact]
 	public class FFTF64Complex {
 		public double i;
 		public double r;
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/fft/gstffts16.h")]
+	[Compact]
 	public class FFTS16 {
 		public void* cfg;
 		public bool inverse;
@@ -50,14 +50,14 @@ namespace Gst {
 		public void inverse_fft (Gst.FFTS16Complex freqdata, int16 timedata);
 		public void window (int16 timedata, Gst.FFTWindow window);
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/fft/gstffts16.h")]
+	[Compact]
 	public class FFTS16Complex {
 		public int16 i;
 		public int16 r;
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/fft/gstffts32.h")]
+	[Compact]
 	public class FFTS32 {
 		public void* cfg;
 		public bool inverse;
@@ -68,13 +68,13 @@ namespace Gst {
 		public void inverse_fft (Gst.FFTS32Complex freqdata, int32 timedata);
 		public void window (int32 timedata, Gst.FFTWindow window);
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/fft/gstffts32.h")]
+	[Compact]
 	public class FFTS32Complex {
 		public int32 i;
 		public int32 r;
 	}
-	[CCode (cprefix = "GST_FFT_WINDOW_", has_type_id = false, cheader_filename = "gst/fft/gstfft.h")]
+	[CCode (cheader_filename = "gst/fft/gstfft.h", cprefix = "GST_FFT_WINDOW_", has_type_id = false)]
 	public enum FFTWindow {
 		RECTANGULAR,
 		HAMMING,

@@ -30,8 +30,8 @@ namespace Gsf {
 		public unowned Gsf.DocProp? steal (string name);
 		public void store (Gsf.DocProp prop);
 	}
-	[Compact]
 	[CCode (cheader_filename = "gsf/gsf-doc-meta-data.h")]
+	[Compact]
 	public class DocProp {
 		[CCode (has_construct_function = false)]
 		public DocProp (owned string name);
@@ -66,33 +66,33 @@ namespace Gsf {
 	}
 	[CCode (cheader_filename = "gsf/gsf-infile-msole.h")]
 	public class InfileMSOle : Gsf.Infile {
-		[CCode (cname = "gsf_infile_msole_new", type = "GsfInfile*", has_construct_function = false)]
+		[CCode (cname = "gsf_infile_msole_new", has_construct_function = false, type = "GsfInfile*")]
 		public InfileMSOle (Gsf.Input source) throws GLib.Error;
 		[CCode (cname = "gsf_infile_msole_get_class_id")]
 		public bool get_class_id (uchar res);
 	}
 	[CCode (cheader_filename = "gsf/gsf-infile-msvba.h")]
 	public class InfileMSVBA : Gsf.Infile {
-		[CCode (type = "GsfInfile*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GsfInfile*")]
 		public InfileMSVBA (Gsf.Infile source) throws GLib.Error;
 		public unowned GLib.HashTable get_modules ();
 		public unowned GLib.HashTable steal_modules ();
 	}
 	[CCode (cheader_filename = "gsf/gsf-infile-stdio.h")]
 	public class InfileStdio : Gsf.Infile {
-		[CCode (type = "GsfInfile*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GsfInfile*")]
 		public InfileStdio (string root) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gsf/gsf.h")]
 	public class InfileTar : Gsf.Infile {
-		[CCode (type = "GsfInfile*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GsfInfile*")]
 		public InfileTar (Gsf.Input source) throws GLib.Error;
 		[NoAccessorMethod]
 		public Gsf.Input source { owned get; construct; }
 	}
 	[CCode (cheader_filename = "gsf/gsf-infile-zip.h")]
 	public class InfileZip : Gsf.Infile {
-		[CCode (type = "GsfInfile*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GsfInfile*")]
 		public InfileZip (Gsf.Input source) throws GLib.Error;
 		[NoAccessorMethod]
 		public int compression_level { get; }
@@ -109,8 +109,8 @@ namespace Gsf {
 		public virtual Gsf.Input Dup () throws GLib.Error;
 		[NoWrapper]
 		public virtual Gsf.Input OpenSibling (string path) throws GLib.Error;
-		[NoWrapper]
 		[CCode (array_length = false)]
+		[NoWrapper]
 		public virtual unowned uchar[]? Read (size_t num_bytes, [CCode (array_length = false)] uchar[]? optional_buffer);
 		[NoWrapper]
 		public virtual bool Seek (Gsf.off_t offset, GLib.SeekType whence);
@@ -142,7 +142,7 @@ namespace Gsf {
 	}
 	[CCode (cheader_filename = "gsf/gsf-input-gzip.h")]
 	public class InputGZip : Gsf.Input {
-		[CCode (type = "GsfInput*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GsfInput*")]
 		public InputGZip (Gsf.Input source) throws GLib.Error;
 		[NoAccessorMethod]
 		public bool raw { get; construct; }
@@ -153,16 +153,16 @@ namespace Gsf {
 	}
 	[CCode (cheader_filename = "gsf/gsf.h")]
 	public class InputGio : Gsf.Input {
-		[CCode (type = "GsfInput*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GsfInput*")]
 		public InputGio (GLib.File file) throws GLib.Error;
-		[CCode (type = "GsfInput*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GsfInput*")]
 		public InputGio.for_path (string path) throws GLib.Error;
-		[CCode (type = "GsfInput*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GsfInput*")]
 		public InputGio.for_uri (string uri) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gsf/gsf-input-http.h")]
 	public class InputHTTP : Gsf.Input {
-		[CCode (type = "GsfInput*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GsfInput*")]
 		public InputHTTP (string url) throws GLib.Error;
 		public unowned string get_content_type ();
 		public unowned string get_url ();
@@ -171,44 +171,44 @@ namespace Gsf {
 	}
 	[CCode (cheader_filename = "gsf/gsf-input-memory.h")]
 	public class InputMemory : Gsf.Input {
-		[CCode (type = "GsfInput*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GsfInput*")]
 		public InputMemory (uchar buf, Gsf.off_t length, bool needs_free);
-		[CCode (type = "GsfInput*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GsfInput*")]
 		public InputMemory.clone (uchar buf, Gsf.off_t length);
-		[CCode (type = "GsfInput*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GsfInput*")]
 		public InputMemory.from_bzip (Gsf.Input source) throws GLib.Error;
-		[CCode (type = "GsfInput*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GsfInput*")]
 		public InputMemory.from_iochannel (GLib.IOChannel channel) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gsf/gsf-input-proxy.h")]
 	public class InputProxy : Gsf.Input {
-		[CCode (type = "GsfInput*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GsfInput*")]
 		public InputProxy (Gsf.Input source);
-		[CCode (type = "GsfInput*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GsfInput*")]
 		public InputProxy.section (Gsf.Input source, Gsf.off_t offset, Gsf.off_t size);
 	}
 	[CCode (cheader_filename = "gsf/gsf-input-stdio.h")]
 	public class InputStdio : Gsf.Input {
-		[CCode (type = "GsfInput*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GsfInput*")]
 		public InputStdio (string filename) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gsf/gsf-input-textline.h")]
 	public class InputTextline : Gsf.Input {
-		[CCode (type = "GsfInput*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GsfInput*")]
 		public InputTextline (Gsf.Input source);
 		[CCode (array_length = false)]
 		public unowned uint[]? ascii_gets ();
 		[CCode (array_length = false)]
 		public unowned uchar[]? utf8_gets ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "gsf/gsf-open-pkg-utils.h")]
+	[Compact]
 	public class OpenPkgRel {
 		public unowned string get_target ();
 		public bool is_extern ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "gsf/gsf-open-pkg-utils.h")]
+	[Compact]
 	public class OpenPkgRels {
 	}
 	[CCode (cheader_filename = "gsf/gsf-outfile-impl.h")]
@@ -220,16 +220,16 @@ namespace Gsf {
 	}
 	[CCode (cheader_filename = "gsf/gsf-outfile-msole.h")]
 	public class OutfileMSOle : Gsf.Outfile {
-		[CCode (cname = "gsf_outfile_msole_new", type = "GsfOutfile*", has_construct_function = false)]
+		[CCode (cname = "gsf_outfile_msole_new", has_construct_function = false, type = "GsfOutfile*")]
 		public OutfileMSOle (Gsf.Output sink);
-		[CCode (cname = "gsf_outfile_msole_new_full", type = "GsfOutfile*", has_construct_function = false)]
+		[CCode (cname = "gsf_outfile_msole_new_full", has_construct_function = false, type = "GsfOutfile*")]
 		public OutfileMSOle.full (Gsf.Output sink, uint bb_size, uint sb_size);
 		[CCode (cname = "gsf_outfile_msole_set_class_id")]
 		public bool set_class_id (uchar clsid);
 	}
 	[CCode (cheader_filename = "gsf/gsf-open-pkg-utils.h")]
 	public class OutfileOpenPkg : Gsf.Outfile {
-		[CCode (type = "GsfOutfile*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GsfOutfile*")]
 		public OutfileOpenPkg (Gsf.Outfile sink);
 		public unowned string add_extern_rel (string target, string content_type);
 		public static Gsf.Output add_rel (Gsf.Outfile dir, string name, string content_type, Gsf.Outfile parent, string type);
@@ -245,14 +245,14 @@ namespace Gsf {
 	}
 	[CCode (cheader_filename = "gsf/gsf-outfile-stdio.h")]
 	public class OutfileStdio : Gsf.Outfile {
-		[CCode (type = "GsfOutfile*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GsfOutfile*")]
 		public OutfileStdio (string root) throws GLib.Error;
-		[CCode (type = "GsfOutfile*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GsfOutfile*")]
 		public OutfileStdio.full (string root, ...) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gsf/gsf-outfile-zip.h")]
 	public class OutfileZip : Gsf.Outfile {
-		[CCode (type = "GsfOutfile*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GsfOutfile*")]
 		public OutfileZip (Gsf.Output sink) throws GLib.Error;
 		public bool set_compression_method (Gsf.ZipCompressionMethod method);
 		[NoAccessorMethod]
@@ -301,7 +301,7 @@ namespace Gsf {
 	}
 	[CCode (cheader_filename = "gsf/gsf-output-bzip.h")]
 	public class OutputBzip : Gsf.Output {
-		[CCode (type = "GsfOutput*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GsfOutput*")]
 		public OutputBzip (Gsf.Output sink) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gsf/gsf-output-csv.h")]
@@ -332,7 +332,7 @@ namespace Gsf {
 	}
 	[CCode (cheader_filename = "gsf/gsf-output-gzip.h")]
 	public class OutputGZip : Gsf.Output {
-		[CCode (type = "GsfOutput*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GsfOutput*")]
 		public OutputGZip (Gsf.Output sink) throws GLib.Error;
 		[NoAccessorMethod]
 		public bool raw { get; construct; }
@@ -341,21 +341,21 @@ namespace Gsf {
 	}
 	[CCode (cheader_filename = "gsf/gsf-output-gio.h")]
 	public class OutputGio : Gsf.Output {
-		[CCode (type = "GsfOutput*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GsfOutput*")]
 		public OutputGio (GLib.File file);
-		[CCode (type = "GsfOutput*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GsfOutput*")]
 		public OutputGio.for_path (string path) throws GLib.Error;
-		[CCode (type = "GsfOutput*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GsfOutput*")]
 		public OutputGio.for_uri (string uri) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gsf/gsf-output-iochannel.h")]
 	public class OutputIOChannel : Gsf.Output {
-		[CCode (cname = "gsf_output_iochannel_new", type = "GsfOutput*", has_construct_function = false)]
+		[CCode (cname = "gsf_output_iochannel_new", has_construct_function = false, type = "GsfOutput*")]
 		public OutputIOChannel (GLib.IOChannel channel);
 	}
 	[CCode (cheader_filename = "gsf/gsf-output-iconv.h")]
 	public class OutputIconv : Gsf.Output {
-		[CCode (type = "GsfOutput*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GsfOutput*")]
 		public OutputIconv (Gsf.Output sink, string dst, string src);
 		[NoAccessorMethod]
 		public string fallback { owned get; set; }
@@ -368,16 +368,16 @@ namespace Gsf {
 	}
 	[CCode (cheader_filename = "gsf/gsf-output-memory.h")]
 	public class OutputMemory : Gsf.Output {
-		[CCode (type = "GsfOutput*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GsfOutput*")]
 		public OutputMemory ();
 		[CCode (array_length = false)]
 		public unowned uchar[] get_bytes ();
 	}
 	[CCode (cheader_filename = "gsf/gsf-output-stdio.h")]
 	public class OutputStdio : Gsf.Output {
-		[CCode (type = "GsfOutput*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GsfOutput*")]
 		public OutputStdio (string filename) throws GLib.Error;
-		[CCode (type = "GsfOutput*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GsfOutput*")]
 		public OutputStdio.full (string filename, ...) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gsf/gsf-infile-msvba.h")]
@@ -397,8 +397,8 @@ namespace Gsf {
 		public static Gsf.StructuredBlob read (Gsf.Input input);
 		public bool write (Gsf.Outfile container);
 	}
+	[CCode (cheader_filename = "gsf/gsf-timestamp.h", copy_function = "gsf_timestamp_copy", type_id = "GSF_TYPE_TIMESTAMP")]
 	[Compact]
-	[CCode (copy_function = "gsf_timestamp_copy", type_id = "GSF_TYPE_TIMESTAMP", cheader_filename = "gsf/gsf-timestamp.h")]
 	public class Timestamp {
 		public GLib.Date date;
 		public long seconds;
@@ -414,12 +414,12 @@ namespace Gsf {
 		public static int parse (string spec, Gsf.Timestamp stamp);
 		public void set_time (uint64 t);
 	}
-	[Compact]
 	[CCode (cheader_filename = "gsf/gsf-libxml.h")]
+	[Compact]
 	public class XMLBlob {
 	}
-	[Compact]
 	[CCode (cheader_filename = "gsf/gsf-libxml.h")]
+	[Compact]
 	public class XMLIn {
 		public weak GLib.StringBuilder content;
 		public weak Gsf.XMLInDoc doc;
@@ -431,8 +431,8 @@ namespace Gsf {
 		public bool namecmp (string str, uint ns_id, string name);
 		public void push_state (Gsf.XMLInDoc doc, void* new_state, Gsf.XMLInExtDtor dtor, [CCode (array_length = false)] string[] attrs);
 	}
-	[Compact]
 	[CCode (cheader_filename = "gsf/gsf-libxml.h")]
+	[Compact]
 	public class XMLInDoc {
 		[CCode (has_construct_function = false)]
 		public XMLInDoc ([CCode (array_length = false)] Gsf.XMLInNode[] nodes, Gsf.XMLInNS ns);
@@ -440,14 +440,14 @@ namespace Gsf {
 		public bool parse (Gsf.Input input, void* user_state);
 		public void set_unknown_handler (Gsf.XMLInUnknownFunc handler);
 	}
-	[Compact]
 	[CCode (cheader_filename = "gsf/gsf-libxml.h")]
+	[Compact]
 	public class XMLInNS {
 		public uint ns_id;
 		public weak string uri;
 	}
-	[Compact]
 	[CCode (cheader_filename = "gsf/gsf-libxml.h")]
+	[Compact]
 	public class XMLInNode {
 		public uint check_children_for_ns;
 		public weak GLib.Callback end;
@@ -484,12 +484,12 @@ namespace Gsf {
 		[NoAccessorMethod]
 		public bool pretty_print { get; set; }
 	}
-	[CCode (cname = "gint64", cheader_filename = "glib.h")]
-	[SimpleType]
+	[CCode (cheader_filename = "glib.h", cname = "gint64")]
 	[IntegerType (rank = 10)]
+	[SimpleType]
 	public struct off_t : int64 {
 	}
-	[CCode (cprefix = "GSF_CLIP_FORMAT_", has_type_id = false, cheader_filename = "gsf/gsf-clip-data.h")]
+	[CCode (cheader_filename = "gsf/gsf-clip-data.h", cprefix = "GSF_CLIP_FORMAT_", has_type_id = false)]
 	public enum ClipFormat {
 		WINDOWS_CLIPBOARD,
 		MACINTOSH_CLIPBOARD,
@@ -498,7 +498,7 @@ namespace Gsf {
 		CLIPBOARD_FORMAT_NAME,
 		UNKNOWN
 	}
-	[CCode (cprefix = "GSF_CLIP_FORMAT_WINDOWS_", has_type_id = false, cheader_filename = "gsf/gsf-clip-data.h")]
+	[CCode (cheader_filename = "gsf/gsf-clip-data.h", cprefix = "GSF_CLIP_FORMAT_WINDOWS_", has_type_id = false)]
 	public enum ClipFormatWindows {
 		ERROR,
 		UNKNOWN,
@@ -506,19 +506,19 @@ namespace Gsf {
 		DIB,
 		ENHANCED_METAFILE
 	}
-	[CCode (cprefix = "GSF_OUTPUT_CSV_QUOTING_MODE_", cheader_filename = "gsf/gsf-output-csv.h")]
+	[CCode (cheader_filename = "gsf/gsf-output-csv.h", cprefix = "GSF_OUTPUT_CSV_QUOTING_MODE_")]
 	public enum OutputCsvQuotingMode {
 		NEVER,
 		AUTO,
 		ALWAYS
 	}
-	[CCode (cprefix = "GSF_XML_", has_type_id = false, cheader_filename = "gsf/gsf-libxml.h")]
+	[CCode (cheader_filename = "gsf/gsf-libxml.h", cprefix = "GSF_XML_", has_type_id = false)]
 	public enum XMLContent {
 		NO_CONTENT,
 		CONTENT,
 		SHARED_CONTENT
 	}
-	[CCode (cprefix = "GSF_ZIP_", has_type_id = false, cheader_filename = "gsf/gsf-outfile-zip.h")]
+	[CCode (cheader_filename = "gsf/gsf-outfile-zip.h", cprefix = "GSF_ZIP_", has_type_id = false)]
 	public enum ZipCompressionMethod {
 		STORED,
 		SHRUNK,
@@ -532,7 +532,7 @@ namespace Gsf {
 		DEFLATED_BETTER,
 		IMPLODED_BETTER
 	}
-	[CCode (cprefix = "GSF_ERROR_", cheader_filename = "gsf/gsf-utils.h")]
+	[CCode (cheader_filename = "gsf/gsf-utils.h", cprefix = "GSF_ERROR_")]
 	public errordomain Error {
 		OUT_OF_MEMORY,
 		INVALID_DATA
@@ -663,7 +663,7 @@ namespace Gsf {
 	public static size_t base64_decode_step ([CCode (array_length = false)] uchar[] @in, size_t len, [CCode (array_length = false)] uchar[] @out, out int state, out uint save);
 	[CCode (cheader_filename = "gsf/gsf-utils.h")]
 	public static size_t base64_encode_close ([CCode (array_length = false)] uchar[] @in, size_t inlen, bool break_lines, [CCode (array_length = false)] uchar[] @out, out int state, out uint save);
-	[CCode (cheader_filename = "gsf/gsf-utils.h", array_length = false)]
+	[CCode (array_length = false, cheader_filename = "gsf/gsf-utils.h")]
 	public static unowned uchar[] base64_encode_simple ([CCode (array_length = false)] uchar[] data, size_t len);
 	[CCode (cheader_filename = "gsf/gsf-utils.h")]
 	public static size_t base64_encode_step ([CCode (array_length = false)] uchar[] @in, size_t len, bool break_lines, [CCode (array_length = false)] uchar[] @out, out int state, out uint save);
@@ -675,11 +675,11 @@ namespace Gsf {
 	public static unowned string extension_pointer (string path);
 	[CCode (cheader_filename = "gsf/gsf-utils.h")]
 	public static string filename_to_utf8 (string filename, bool quoted);
-	[CCode (cname = "get_gsf_odf_version", cheader_filename = "gsf/gsf.h")]
+	[CCode (cheader_filename = "gsf/gsf.h", cname = "get_gsf_odf_version")]
 	public static short get_gsf_odf_version ();
-	[CCode (cname = "get_gsf_odf_version_string", cheader_filename = "gsf/gsf.h")]
+	[CCode (cheader_filename = "gsf/gsf.h", cname = "get_gsf_odf_version_string")]
 	public static unowned string get_gsf_odf_version_string ();
-	[CCode (cname = "get_gsf_ooo_ns", cheader_filename = "gsf/gsf.h")]
+	[CCode (cheader_filename = "gsf/gsf.h", cname = "get_gsf_ooo_ns")]
 	public static unowned Gsf.XMLInNS get_gsf_ooo_ns ();
 	[CCode (cheader_filename = "gsf/gsf-utils.h")]
 	public static void iconv_close (GLib.IConv handle);

@@ -67,7 +67,7 @@ namespace Gedit {
 	}
 	[CCode (cheader_filename = "gedit-2.20.h")]
 	public class EncodingsComboBox : GLib.Object {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public EncodingsComboBox (bool save_mode);
 		public unowned Gedit.Encoding get_selected_encoding ();
 		public void set_selected_encoding (Gedit.Encoding encoding);
@@ -111,7 +111,7 @@ namespace Gedit {
 		public void unregister (Gedit.MessageType message_type);
 		public void unregister_all (string object_path);
 	}
-	[CCode (ref_function = "gedit_message_type_ref", unref_function = "gedit_message_type_unref", cheader_filename = "gedit-2.20.h")]
+	[CCode (cheader_filename = "gedit-2.20.h", ref_function = "gedit_message_type_ref", unref_function = "gedit_message_type_unref")]
 	public class MessageType : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public MessageType (string object_path, string method, uint num_optional);
@@ -131,7 +131,7 @@ namespace Gedit {
 	}
 	[CCode (cheader_filename = "gedit/gedit-notebook.h")]
 	public class Notebook : Gtk.Notebook {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Notebook ();
 		public void add_tab (Gedit.Tab tab, int position, bool jump_to);
 		public bool get_close_buttons_sensitive ();
@@ -146,7 +146,7 @@ namespace Gedit {
 	}
 	[CCode (cheader_filename = "gedit/gedit-panel.h")]
 	public class Panel : Gtk.VBox {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Panel (Gtk.Orientation orientation);
 		public bool activate_item (Gtk.Widget item);
 		public void add_item (Gtk.Widget item, string name, Gtk.Widget? image);
@@ -168,7 +168,7 @@ namespace Gedit {
 	}
 	[CCode (cheader_filename = "gedit/gedit-progress-message-area.h")]
 	public class ProgressMessageArea : Gtk.InfoBar {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ProgressMessageArea (string stock_id, string markup, bool has_cancel);
 		public void pulse ();
 		public void set_fraction (double fraction);
@@ -178,7 +178,7 @@ namespace Gedit {
 	}
 	[CCode (cheader_filename = "gedit-2.20.h")]
 	public class StatusComboBox : GLib.Object {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public StatusComboBox (string label);
 		public void add_item (Gtk.MenuItem item, string text);
 		public unowned Gtk.Label get_item_label ();
@@ -192,7 +192,7 @@ namespace Gedit {
 	}
 	[CCode (cheader_filename = "gedit/gedit-statusbar.h")]
 	public class Statusbar : Gtk.Statusbar {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Statusbar ();
 		public void clear_overwrite ();
 		public void flash_message (uint context_id, string format, ...);
@@ -215,7 +215,7 @@ namespace Gedit {
 	}
 	[CCode (cheader_filename = "gedit/gedit-view.h")]
 	public class View : Gtk.SourceView {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public View (Gedit.Document doc);
 		public void copy_clipboard ();
 		public void cut_clipboard ();
@@ -249,7 +249,7 @@ namespace Gedit {
 		public unowned GLib.List<Gedit.View> get_views ();
 		public void set_active_tab (Gedit.Tab tab);
 	}
-	[CCode (cprefix = "GEDIT_", has_type_id = false, cheader_filename = "gedit/gedit-debug.h")]
+	[CCode (cheader_filename = "gedit/gedit-debug.h", cprefix = "GEDIT_", has_type_id = false)]
 	public enum DebugSection {
 		NO_DEBUG,
 		DEBUG_VIEW,
@@ -268,19 +268,19 @@ namespace Gedit {
 		DEBUG_LOADER,
 		DEBUG_SAVER
 	}
-	[CCode (cprefix = "GEDIT_DOCUMENT_NEWLINE_TYPE_", has_type_id = false, cheader_filename = "gedit-2.20.h")]
+	[CCode (cheader_filename = "gedit-2.20.h", cprefix = "GEDIT_DOCUMENT_NEWLINE_TYPE_", has_type_id = false)]
 	public enum DocumentNewlineType {
 		LF,
 		CR,
 		CR_LF
 	}
-	[CCode (cprefix = "GEDIT_DOCUMENT_SAVE_", has_type_id = false, cheader_filename = "gedit/gedit-document.h")]
+	[CCode (cheader_filename = "gedit/gedit-document.h", cprefix = "GEDIT_DOCUMENT_SAVE_", has_type_id = false)]
 	public enum DocumentSaveFlags {
 		IGNORE_MTIME,
 		IGNORE_BACKUP,
 		PRESERVE_BACKUP
 	}
-	[CCode (cprefix = "GEDIT_LOCKDOWN_", has_type_id = false, cheader_filename = "gedit/gedit-app.h")]
+	[CCode (cheader_filename = "gedit/gedit-app.h", cprefix = "GEDIT_LOCKDOWN_", has_type_id = false)]
 	public enum LockdownMask {
 		COMMAND_LINE,
 		PRINTING,
@@ -288,13 +288,13 @@ namespace Gedit {
 		SAVE_TO_DISK,
 		ALL
 	}
-	[CCode (cprefix = "GEDIT_SEARCH_", has_type_id = false, cheader_filename = "gedit/gedit-document.h")]
+	[CCode (cheader_filename = "gedit/gedit-document.h", cprefix = "GEDIT_SEARCH_", has_type_id = false)]
 	public enum SearchFlags {
 		DONT_SET_FLAGS,
 		ENTIRE_WORD,
 		CASE_SENSITIVE
 	}
-	[CCode (cprefix = "GEDIT_TAB_", has_type_id = false, cheader_filename = "gedit/gedit-tab.h")]
+	[CCode (cheader_filename = "gedit/gedit-tab.h", cprefix = "GEDIT_TAB_", has_type_id = false)]
 	public enum TabState {
 		STATE_NORMAL,
 		STATE_LOADING,
@@ -312,14 +312,14 @@ namespace Gedit {
 		STATE_EXTERNALLY_MODIFIED_NOTIFICATION,
 		NUM_OF_STATES
 	}
-	[CCode (cprefix = "GEDIT_TOOLBAR_", has_type_id = false, cheader_filename = "gedit/gedit-prefs-manager.h")]
+	[CCode (cheader_filename = "gedit/gedit-prefs-manager.h", cprefix = "GEDIT_TOOLBAR_", has_type_id = false)]
 	public enum ToolbarSetting {
 		SYSTEM,
 		ICONS,
 		ICONS_AND_TEXT,
 		ICONS_BOTH_HORIZ
 	}
-	[CCode (cprefix = "GEDIT_WINDOW_STATE_", has_type_id = false, cheader_filename = "gedit/gedit-window.h")]
+	[CCode (cheader_filename = "gedit/gedit-window.h", cprefix = "GEDIT_WINDOW_STATE_", has_type_id = false)]
 	public enum WindowState {
 		NORMAL,
 		SAVING,
@@ -424,7 +424,7 @@ namespace Gedit {
 	public static void debug_message (Gedit.DebugSection section, string file, int line, string function, string format, ...);
 	[CCode (cheader_filename = "gedit/gedit-utils.h")]
 	public static unowned Gtk.Widget dialog_add_button (Gtk.Dialog dialog, string text, string stock_id, int response_id);
-	[CCode (cname = "g_utf8_caselessnmatch", cheader_filename = "gedit/gedit-utils.h")]
+	[CCode (cheader_filename = "gedit/gedit-utils.h", cname = "g_utf8_caselessnmatch")]
 	public static bool g_utf8_caselessnmatch (string s1, string s2, ssize_t n1, ssize_t n2);
 	[CCode (cheader_filename = "gedit/gedit-utils.h")]
 	public static unowned string gdk_color_to_string (Gdk.Color color);

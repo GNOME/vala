@@ -2,8 +2,8 @@
 
 [CCode (cprefix = "GConf", lower_case_cprefix = "gconf_")]
 namespace GConf {
+	[CCode (cheader_filename = "gconf/gconf.h", ref_function = "gconf_change_set_ref", ref_function_void = true, type_id = "GCONF_TYPE_CHANGE_SET", unref_function = "gconf_change_set_unref")]
 	[Compact]
-	[CCode (ref_function = "gconf_change_set_ref", ref_function_void = true, unref_function = "gconf_change_set_unref", type_id = "GCONF_TYPE_CHANGE_SET", cheader_filename = "gconf/gconf.h")]
 	public class ChangeSet {
 		[CCode (has_construct_function = false)]
 		public ChangeSet ();
@@ -87,8 +87,8 @@ namespace GConf {
 		[HasEmitter]
 		public virtual signal void value_changed (string key, void* value);
 	}
+	[CCode (cheader_filename = "gconf/gconf.h", ref_function = "gconf_engine_ref", ref_function_void = true, unref_function = "gconf_engine_unref")]
 	[Compact]
-	[CCode (ref_function = "gconf_engine_ref", ref_function_void = true, unref_function = "gconf_engine_unref", cheader_filename = "gconf/gconf.h")]
 	public class Engine {
 		public GLib.SList<string> all_dirs (string dir) throws GLib.Error;
 		public GLib.SList<GConf.Entry> all_entries (string dir) throws GLib.Error;
@@ -130,8 +130,8 @@ namespace GConf {
 		public void suggest_sync () throws GLib.Error;
 		public bool unset (string key) throws GLib.Error;
 	}
+	[CCode (cheader_filename = "gconf/gconf.h", ref_function = "gconf_entry_ref", ref_function_void = true, unref_function = "gconf_entry_unref")]
 	[Compact]
-	[CCode (ref_function = "gconf_entry_ref", ref_function_void = true, unref_function = "gconf_entry_unref", cheader_filename = "gconf/gconf.h")]
 	public class Entry {
 		public weak string key;
 		public weak GConf.Value value;
@@ -153,14 +153,14 @@ namespace GConf {
 		public void set_value_nocopy (GConf.Value val);
 		public unowned GConf.Value steal_value ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "gconf/gconf.h")]
+	[Compact]
 	public class EnumStringPair {
 		public int enum_value;
 		public weak string str;
 	}
-	[Compact]
 	[CCode (cheader_filename = "gconf/gconf.h")]
+	[Compact]
 	public class Listeners {
 		[CCode (has_construct_function = false)]
 		public Listeners ();
@@ -172,8 +172,8 @@ namespace GConf {
 		public void remove (uint cnxn_id);
 		public void remove_if (GConf.ListenersPredicate predicate);
 	}
-	[Compact]
 	[CCode (cheader_filename = "gconf/gconf.h")]
+	[Compact]
 	public class MetaInfo {
 		public GLib.Time mod_time;
 		public weak string mod_user;
@@ -188,8 +188,8 @@ namespace GConf {
 		public void set_mod_user (string mod_user);
 		public void set_schema (string schema_name);
 	}
+	[CCode (cheader_filename = "gconf/gconf.h", copy_function = "gconf_schema_copy")]
 	[Compact]
-	[CCode (copy_function = "gconf_schema_copy", cheader_filename = "gconf/gconf.h")]
 	public class Schema {
 		[CCode (has_construct_function = false)]
 		public Schema ();
@@ -213,8 +213,8 @@ namespace GConf {
 		public void set_short_desc (string desc);
 		public void set_type (GConf.ValueType type);
 	}
+	[CCode (cheader_filename = "gconf/gconf.h", copy_function = "gconf_value_copy")]
 	[Compact]
-	[CCode (copy_function = "gconf_value_copy", cheader_filename = "gconf/gconf.h")]
 	public class Value {
 		public GConf.ValueType type;
 		[CCode (has_construct_function = false)]
@@ -249,19 +249,19 @@ namespace GConf {
 		public void set_string (string the_str);
 		public unowned string to_string ();
 	}
-	[CCode (cprefix = "GCONF_CLIENT_HANDLE_", cheader_filename = "gconf/gconf.h")]
+	[CCode (cheader_filename = "gconf/gconf.h", cprefix = "GCONF_CLIENT_HANDLE_")]
 	public enum ClientErrorHandlingMode {
 		NONE,
 		UNRETURNED,
 		ALL
 	}
-	[CCode (cprefix = "GCONF_CLIENT_PRELOAD_", cheader_filename = "gconf/gconf.h")]
+	[CCode (cheader_filename = "gconf/gconf.h", cprefix = "GCONF_CLIENT_PRELOAD_")]
 	public enum ClientPreloadType {
 		NONE,
 		ONELEVEL,
 		RECURSIVE
 	}
-	[CCode (cprefix = "GCONF_ERROR_", cheader_filename = "gconf/gconf.h")]
+	[CCode (cheader_filename = "gconf/gconf.h", cprefix = "GCONF_ERROR_")]
 	public enum Error {
 		SUCCESS,
 		FAILED,
@@ -281,12 +281,12 @@ namespace GConf {
 		NO_WRITABLE_DATABASE,
 		IN_SHUTDOWN
 	}
-	[CCode (cprefix = "GCONF_UNSET_INCLUDING_SCHEMA_", cheader_filename = "gconf/gconf.h")]
+	[CCode (cheader_filename = "gconf/gconf.h", cprefix = "GCONF_UNSET_INCLUDING_SCHEMA_")]
 	[Flags]
 	public enum UnsetFlags {
 		NAMES
 	}
-	[CCode (cprefix = "GCONF_VALUE_", cheader_filename = "gconf/gconf.h")]
+	[CCode (cheader_filename = "gconf/gconf.h", cprefix = "GCONF_VALUE_")]
 	public enum ValueType {
 		INVALID,
 		STRING,

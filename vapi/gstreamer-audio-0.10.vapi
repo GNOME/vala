@@ -8,10 +8,10 @@ namespace Gst {
 		public weak Gst.AudioClockGetTimeFunc func;
 		public Gst.ClockTime last_time;
 		public void* user_data;
-		[CCode (type = "GstClock*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GstClock*")]
 		public AudioClock (string name, Gst.AudioClockGetTimeFunc func);
 		public static Gst.ClockTime adjust (Gst.Clock clock, Gst.ClockTime time);
-		[CCode (type = "GstClock*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GstClock*")]
 		public AudioClock.full (string name, Gst.AudioClockGetTimeFunc func, GLib.DestroyNotify destroy_notify);
 		public static Gst.ClockTime get_time (Gst.Clock clock);
 		public static void invalidate (Gst.Clock clock);
@@ -167,8 +167,8 @@ namespace Gst {
 		public virtual bool start ();
 		public virtual bool stop ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/audio/gstaudiofilter.h")]
+	[Compact]
 	public class RingBufferSpec {
 		public bool bigend;
 		public uint64 buffer_time;
@@ -188,7 +188,7 @@ namespace Gst {
 		public Gst.BufferFormatType type;
 		public int width;
 	}
-	[CCode (cprefix = "GST_AUDIO_CHANNEL_POSITION_", cheader_filename = "gst/audio/multichannel.h")]
+	[CCode (cheader_filename = "gst/audio/multichannel.h", cprefix = "GST_AUDIO_CHANNEL_POSITION_")]
 	public enum AudioChannelPosition {
 		INVALID,
 		FRONT_MONO,
@@ -206,7 +206,7 @@ namespace Gst {
 		NONE,
 		NUM
 	}
-	[CCode (cprefix = "GST_AUDIO_FIELD_", has_type_id = false, cheader_filename = "gst/audio/audio.h")]
+	[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_FIELD_", has_type_id = false)]
 	public enum AudioFieldFlag {
 		RATE,
 		CHANNELS,
@@ -215,20 +215,20 @@ namespace Gst {
 		DEPTH,
 		SIGNED
 	}
-	[CCode (cprefix = "GST_BASE_AUDIO_SINK_SLAVE_", cheader_filename = "gst/audio/gstbaseaudiosink.h")]
+	[CCode (cheader_filename = "gst/audio/gstbaseaudiosink.h", cprefix = "GST_BASE_AUDIO_SINK_SLAVE_")]
 	public enum BaseAudioSinkSlaveMethod {
 		RESAMPLE,
 		SKEW,
 		NONE
 	}
-	[CCode (cprefix = "GST_BASE_AUDIO_SRC_SLAVE_", cheader_filename = "gst/audio/audio.h")]
+	[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_BASE_AUDIO_SRC_SLAVE_")]
 	public enum BaseAudioSrcSlaveMethod {
 		RESAMPLE,
 		RETIMESTAMP,
 		SKEW,
 		NONE
 	}
-	[CCode (cprefix = "GST_", cheader_filename = "gst/audio/gstringbuffer.h")]
+	[CCode (cheader_filename = "gst/audio/gstringbuffer.h", cprefix = "GST_")]
 	public enum BufferFormat {
 		UNKNOWN,
 		S8,
@@ -273,7 +273,7 @@ namespace Gst {
 		MPEG2_AAC,
 		MPEG4_AAC
 	}
-	[CCode (cprefix = "GST_BUFTYPE_", cheader_filename = "gst/audio/gstringbuffer.h")]
+	[CCode (cheader_filename = "gst/audio/gstringbuffer.h", cprefix = "GST_BUFTYPE_")]
 	public enum BufferFormatType {
 		LINEAR,
 		FLOAT,
@@ -289,14 +289,14 @@ namespace Gst {
 		MPEG2_AAC,
 		MPEG4_AAC
 	}
-	[CCode (cprefix = "GST_SEGSTATE_", cheader_filename = "gst/audio/gstringbuffer.h")]
+	[CCode (cheader_filename = "gst/audio/gstringbuffer.h", cprefix = "GST_SEGSTATE_")]
 	public enum RingBufferSegState {
 		INVALID,
 		EMPTY,
 		FILLED,
 		PARTIAL
 	}
-	[CCode (cprefix = "GST_RING_BUFFER_STATE_", cheader_filename = "gst/audio/gstringbuffer.h")]
+	[CCode (cheader_filename = "gst/audio/gstringbuffer.h", cprefix = "GST_RING_BUFFER_STATE_")]
 	public enum RingBufferState {
 		STOPPED,
 		PAUSED,

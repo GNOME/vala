@@ -114,8 +114,8 @@ namespace Soup {
 		[HasEmitter]
 		public virtual signal void wrote_informational ();
 	}
+	[CCode (cheader_filename = "libsoup/soup.h", free_function = "soup_message_queue_destroy")]
 	[Compact]
-	[CCode (free_function = "soup_message_queue_destroy", cheader_filename = "libsoup/soup.h")]
 	public class MessageQueue {
 		[CCode (has_construct_function = false)]
 		public MessageQueue ();
@@ -126,14 +126,14 @@ namespace Soup {
 		public unowned Soup.Message remove (Soup.MessageQueueIter iter);
 		public void remove_message (Soup.Message msg);
 	}
-	[Compact]
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Compact]
 	public class MessageQueueIter {
 		public weak GLib.List cur;
 		public weak GLib.List next;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Compact]
 	public class Protocol {
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
@@ -160,8 +160,8 @@ namespace Soup {
 		[NoAccessorMethod]
 		public string ssl_key_file { owned get; construct; }
 	}
-	[Compact]
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Compact]
 	public class ServerAuth {
 		public weak Soup.ServerAuthBasic basic;
 		public weak Soup.ServerAuthDigest digest;
@@ -171,15 +171,15 @@ namespace Soup {
 		public bool check_passwd (string passwd);
 		public unowned string get_user ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Compact]
 	public class ServerAuthBasic {
 		public weak string passwd;
 		public Soup.AuthType type;
 		public weak string user;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Compact]
 	public class ServerAuthContext {
 		public void* basic_info;
 		public weak Soup.ServerAuthCallbackFn callback;
@@ -188,8 +188,8 @@ namespace Soup {
 		public void* user_data;
 		public void challenge (Soup.Message msg, string header_name);
 	}
-	[Compact]
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Compact]
 	public class ServerAuthDigest {
 		public Soup.DigestAlgorithm algorithm;
 		public weak string cnonce;
@@ -203,8 +203,8 @@ namespace Soup {
 		public Soup.AuthType type;
 		public weak string user;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Compact]
 	public class ServerContext {
 		public weak Soup.ServerAuth auth;
 		public weak Soup.ServerHandler handler;
@@ -216,8 +216,8 @@ namespace Soup {
 		public unowned Soup.Address get_client_address ();
 		public unowned string get_client_host ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Compact]
 	public class ServerHandler {
 		public weak Soup.ServerAuthContext auth_ctx;
 		public weak Soup.ServerCallbackFn callback;
@@ -270,20 +270,20 @@ namespace Soup {
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class SessionAsync : Soup.Session, Soup.MessageFilter {
-		[CCode (type = "SoupSession*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "SoupSession*")]
 		public SessionAsync ();
-		[CCode (type = "SoupSession*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "SoupSession*")]
 		public SessionAsync.with_options (string optname1);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class SessionSync : Soup.Session, Soup.MessageFilter {
-		[CCode (type = "SoupSession*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "SoupSession*")]
 		public SessionSync ();
-		[CCode (type = "SoupSession*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "SoupSession*")]
 		public SessionSync.with_options (string optname1);
 	}
-	[Compact]
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Compact]
 	public class SoapParameter {
 		public unowned Soup.SoapParameter get_first_child ();
 		public unowned Soup.SoapParameter get_first_child_by_name (string name);
@@ -334,8 +334,8 @@ namespace Soup {
 		public virtual signal void readable ();
 		public virtual signal void writable ();
 	}
+	[CCode (cheader_filename = "libsoup/soup.h", copy_function = "soup_uri_copy")]
 	[Compact]
-	[CCode (copy_function = "soup_uri_copy", cheader_filename = "libsoup/soup.h")]
 	public class Uri {
 		public bool broken_encoding;
 		public weak string fragment;
@@ -358,8 +358,8 @@ namespace Soup {
 		[CCode (has_construct_function = false)]
 		public Uri.with_base (Soup.Uri @base, string uri_string);
 	}
-	[Compact]
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Compact]
 	public class XmlrpcValue {
 		public bool array_get_iterator (out unowned Soup.XmlrpcValueArrayIterator iter);
 		public void dump ();
@@ -371,8 +371,8 @@ namespace Soup {
 		public bool get_string (out unowned string str);
 		public bool get_struct (GLib.HashTable table);
 	}
-	[Compact]
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Compact]
 	public class XmlrpcValueArrayIterator {
 		public bool get_value (out unowned Soup.XmlrpcValue value);
 		public unowned Soup.XmlrpcValueArrayIterator next ();
@@ -382,40 +382,40 @@ namespace Soup {
 	public interface MessageFilter {
 		public abstract void setup_message (Soup.Message msg);
 	}
-	[CCode (type_id = "SOUP_TYPE_DATA_BUFFER", cheader_filename = "libsoup/soup.h")]
+	[CCode (cheader_filename = "libsoup/soup.h", type_id = "SOUP_TYPE_DATA_BUFFER")]
 	public struct DataBuffer {
 		public Soup.Ownership owner;
 		public string body;
 		public uint length;
 	}
-	[CCode (cprefix = "SOUP_ADDRESS_FAMILY_", has_type_id = false, cheader_filename = "libsoup/soup.h")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_ADDRESS_FAMILY_", has_type_id = false)]
 	public enum AddressFamily {
 		IPV4,
 		IPV6
 	}
-	[CCode (cprefix = "SOUP_AUTH_TYPE_", has_type_id = false, cheader_filename = "libsoup/soup.h")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_AUTH_TYPE_", has_type_id = false)]
 	public enum AuthType {
 		BASIC,
 		DIGEST
 	}
-	[CCode (cprefix = "SOUP_ALGORITHM_", has_type_id = false, cheader_filename = "libsoup/soup.h")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_ALGORITHM_", has_type_id = false)]
 	public enum DigestAlgorithm {
 		MD5,
 		MD5_SESS
 	}
-	[CCode (cprefix = "SOUP_HANDLER_", has_type_id = false, cheader_filename = "libsoup/soup.h")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_HANDLER_", has_type_id = false)]
 	public enum HandlerPhase {
 		POST_REQUEST,
 		PRE_BODY,
 		BODY_CHUNK,
 		POST_BODY
 	}
-	[CCode (cprefix = "SOUP_HTTP_", has_type_id = false, cheader_filename = "libsoup/soup.h")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_HTTP_", has_type_id = false)]
 	public enum HttpVersion {
 		@1_0,
 		@1_1
 	}
-	[CCode (cprefix = "SOUP_STATUS_", has_type_id = false, cheader_filename = "libsoup/soup.h")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_STATUS_", has_type_id = false)]
 	public enum KnownStatusCode {
 		NONE,
 		CANCELLED,
@@ -479,13 +479,13 @@ namespace Soup {
 		INSUFFICIENT_STORAGE,
 		NOT_EXTENDED
 	}
-	[CCode (cprefix = "SOUP_MESSAGE_", has_type_id = false, cheader_filename = "libsoup/soup.h")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_MESSAGE_", has_type_id = false)]
 	public enum MessageFlags {
 		NO_REDIRECT,
 		OVERWRITE_CHUNKS,
 		EXPECT_CONTINUE
 	}
-	[CCode (cprefix = "SOUP_MESSAGE_STATUS_", has_type_id = false, cheader_filename = "libsoup/soup.h")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_MESSAGE_STATUS_", has_type_id = false)]
 	public enum MessageStatus {
 		IDLE,
 		QUEUED,
@@ -493,7 +493,7 @@ namespace Soup {
 		RUNNING,
 		FINISHED
 	}
-	[CCode (cprefix = "SOUP_METHOD_ID_", has_type_id = false, cheader_filename = "libsoup/soup.h")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_METHOD_ID_", has_type_id = false)]
 	public enum MethodId {
 		UNKNOWN,
 		POST,
@@ -513,20 +513,20 @@ namespace Soup {
 		LOCK,
 		UNLOCK
 	}
-	[CCode (cprefix = "SOUP_BUFFER_", has_type_id = false, cheader_filename = "libsoup/soup.h")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_BUFFER_", has_type_id = false)]
 	public enum Ownership {
 		SYSTEM_OWNED,
 		USER_OWNED,
 		STATIC
 	}
-	[CCode (cprefix = "SOUP_SOCKET_", has_type_id = false, cheader_filename = "libsoup/soup.h")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_SOCKET_", has_type_id = false)]
 	public enum SocketIOStatus {
 		OK,
 		WOULD_BLOCK,
 		EOF,
 		ERROR
 	}
-	[CCode (cprefix = "SOUP_STATUS_CLASS_", has_type_id = false, cheader_filename = "libsoup/soup.h")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_STATUS_CLASS_", has_type_id = false)]
 	public enum StatusClass {
 		TRANSPORT_ERROR,
 		INFORMATIONAL,
@@ -535,7 +535,7 @@ namespace Soup {
 		CLIENT_ERROR,
 		SERVER_ERROR
 	}
-	[CCode (cprefix = "SOUP_TRANSFER_", has_type_id = false, cheader_filename = "libsoup/soup.h")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_TRANSFER_", has_type_id = false)]
 	public enum TransferEncoding {
 		UNKNOWN,
 		CHUNKED,
@@ -544,7 +544,7 @@ namespace Soup {
 		NONE,
 		EOF
 	}
-	[CCode (cprefix = "SOUP_XMLRPC_VALUE_TYPE_", has_type_id = false, cheader_filename = "libsoup/soup.h")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_XMLRPC_VALUE_TYPE_", has_type_id = false)]
 	public enum XmlrpcValueType {
 		BAD,
 		INT,

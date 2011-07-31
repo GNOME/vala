@@ -2,8 +2,8 @@
 
 [CCode (cprefix = "Gda", lower_case_cprefix = "gda_")]
 namespace Gda {
+	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_attributes_manager_copy")]
 	[Compact]
-	[CCode (copy_function = "gda_attributes_manager_copy", cheader_filename = "libgda/libgda.h")]
 	public class AttributesManager {
 		[CCode (has_construct_function = false)]
 		public AttributesManager (bool for_objects, Gda.AttributesManagerSignal signal_func, void* signal_data);
@@ -27,8 +27,8 @@ namespace Gda {
 		public unowned string serialize ();
 		public virtual signal void changed (GLib.Object changed_stmt);
 	}
+	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_binary_copy", type_id = "GDA_TYPE_BINARY")]
 	[Compact]
-	[CCode (copy_function = "gda_binary_copy", type_id = "GDA_TYPE_BINARY", cheader_filename = "libgda/libgda.h")]
 	public class Binary {
 		public long binary_length;
 		[CCode (array_length = false)]
@@ -36,8 +36,8 @@ namespace Gda {
 		public static void* copy (void* boxed);
 		public unowned string to_string (uint maxlen);
 	}
+	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_blob_copy", type_id = "GDA_TYPE_BLOB")]
 	[Compact]
-	[CCode (copy_function = "gda_blob_copy", type_id = "GDA_TYPE_BLOB", cheader_filename = "libgda/libgda.h")]
 	public class Blob {
 		public weak Gda.Binary data;
 		public weak Gda.BlobOp op;
@@ -214,14 +214,14 @@ namespace Gda {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public class DataAccessWrapper : GLib.Object, Gda.DataModel {
-		[CCode (type = "GdaDataModel*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GdaDataModel*")]
 		public DataAccessWrapper (Gda.DataModel model);
 		[NoAccessorMethod]
 		public Gda.DataModel model { owned get; construct; }
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public class DataComparator : GLib.Object {
-		[CCode (type = "GObject*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GObject*")]
 		public DataComparator (Gda.DataModel old_model, Gda.DataModel new_model);
 		public bool compute_diff () throws GLib.Error;
 		public static GLib.Quark error_quark ();
@@ -236,13 +236,13 @@ namespace Gda {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public class DataModelArray : GLib.Object, Gda.DataModel {
-		[CCode (type = "GdaDataModel*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GdaDataModel*")]
 		public DataModelArray (int cols);
 		public void clear ();
 		public static unowned Gda.DataModelArray copy_model (Gda.DataModel src) throws GLib.Error;
 		public unowned Gda.Row get_row (int row) throws GLib.Error;
 		public void set_n_columns (int cols);
-		[CCode (sentinel = "", type = "GdaDataModel*", has_construct_function = false)]
+		[CCode (has_construct_function = false, sentinel = "", type = "GdaDataModel*")]
 		public DataModelArray.with_g_types (int cols, ...);
 		[NoAccessorMethod]
 		public uint n_columns { get; set; }
@@ -251,7 +251,7 @@ namespace Gda {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public class DataModelDir : GLib.Object, Gda.DataModel {
-		[CCode (type = "GdaDataModel*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GdaDataModel*")]
 		public DataModelDir (string basedir);
 		public void clean_errors ();
 		public unowned GLib.SList<GLib.Error> get_errors ();
@@ -263,15 +263,15 @@ namespace Gda {
 		[CCode (has_construct_function = false)]
 		protected DataModelImport ();
 		public void clean_errors ();
-		[CCode (type = "GdaDataModel*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GdaDataModel*")]
 		public DataModelImport.file (string filename, bool random_access, Gda.Set options);
 		public static bool from_file (Gda.DataModel model, string file, GLib.HashTable cols_trans, Gda.Set options) throws GLib.Error;
 		public static bool from_model (Gda.DataModel to, Gda.DataModel from, bool overwrite, GLib.HashTable cols_trans) throws GLib.Error;
 		public static bool from_string (Gda.DataModel model, string str, GLib.HashTable cols_trans, Gda.Set options) throws GLib.Error;
-		[CCode (cname = "gda_data_model_import_new_xml_node", type = "GdaDataModel*", has_construct_function = false)]
+		[CCode (cname = "gda_data_model_import_new_xml_node", has_construct_function = false, type = "GdaDataModel*")]
 		public DataModelImport.from_xml_node (Xml.Node node);
 		public unowned GLib.SList<GLib.Error> get_errors ();
-		[CCode (type = "GdaDataModel*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GdaDataModel*")]
 		public DataModelImport.mem (string data, bool random_access, Gda.Set options);
 		[NoAccessorMethod]
 		public string data_string { owned get; construct; }
@@ -317,7 +317,7 @@ namespace Gda {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public class DataProxy : GLib.Object, Gda.DataModel {
-		[CCode (type = "GObject*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GObject*")]
 		public DataProxy (Gda.DataModel model);
 		public void alter_value_attributes (int proxy_row, int col, Gda.ValueAttribute alter_flags);
 		public bool apply_all_changes () throws GLib.Error;
@@ -415,16 +415,16 @@ namespace Gda {
 		[NoAccessorMethod]
 		public Gda.Statement update_stmt { owned get; set; }
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class Diff {
 		public int new_row;
 		public int old_row;
 		public Gda.DiffType type;
 		public weak GLib.HashTable values;
 	}
+	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_geometricpoint_copy", free_function = "gda_geometricpoint_free", type_id = "GDA_TYPE_GEOMETRIC_POINT")]
 	[Compact]
-	[CCode (copy_function = "gda_geometricpoint_copy", free_function = "gda_geometricpoint_free", type_id = "GDA_TYPE_GEOMETRIC_POINT", cheader_filename = "libgda/libgda.h")]
 	public class GeometricPoint {
 		public double x;
 		public double y;
@@ -433,63 +433,63 @@ namespace Gda {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public class HandlerBin : GLib.Object, Gda.DataHandler {
-		[CCode (type = "GdaDataHandler*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GdaDataHandler*")]
 		public HandlerBin ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class HandlerBinPriv {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public class HandlerBoolean : GLib.Object, Gda.DataHandler {
-		[CCode (type = "GdaDataHandler*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GdaDataHandler*")]
 		public HandlerBoolean ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class HandlerBooleanPriv {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public class HandlerNumerical : GLib.Object, Gda.DataHandler {
-		[CCode (type = "GdaDataHandler*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GdaDataHandler*")]
 		public HandlerNumerical ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class HandlerNumericalPriv {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public class HandlerString : GLib.Object, Gda.DataHandler {
-		[CCode (type = "GdaDataHandler*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GdaDataHandler*")]
 		public HandlerString ();
-		[CCode (type = "GdaDataHandler*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GdaDataHandler*")]
 		public HandlerString.with_provider (Gda.ServerProvider prov, Gda.Connection cnc);
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class HandlerStringPriv {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public class HandlerTime : GLib.Object, Gda.DataHandler {
-		[CCode (type = "GdaDataHandler*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GdaDataHandler*")]
 		public HandlerTime ();
 		public unowned string get_format (GLib.Type type);
 		public unowned string get_no_locale_str_from_value (GLib.Value value);
-		[CCode (type = "GdaDataHandler*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GdaDataHandler*")]
 		public HandlerTime.no_locale ();
 		public void set_sql_spec (GLib.DateDMY first, GLib.DateDMY sec, GLib.DateDMY third, char separator, bool twodigits_years);
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class HandlerTimePriv {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public class HandlerType : GLib.Object, Gda.DataHandler {
-		[CCode (type = "GdaDataHandler*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GdaDataHandler*")]
 		public HandlerType ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class HandlerTypePriv {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
@@ -545,16 +545,16 @@ namespace Gda {
 		public virtual signal void source_changed ();
 		public virtual signal unowned GLib.Error validate_change (GLib.Value new_value);
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class MetaContext {
 		public weak string column_names;
 		public GLib.Value column_values;
 		public int size;
 		public weak string table_name;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class MetaDbObject {
 		public weak GLib.SList depend_list;
 		public void* extra;
@@ -601,8 +601,8 @@ namespace Gda {
 		public virtual signal void meta_reset ();
 		public virtual signal unowned GLib.Error suggest_update (Gda.MetaContext suggest);
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class MetaStoreChange {
 		public Gda.MetaStoreChangeType c_type;
 		public weak GLib.HashTable keys;
@@ -628,8 +628,8 @@ namespace Gda {
 		[NoAccessorMethod]
 		public Gda.MetaStore meta_store { owned get; construct; }
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class MetaTable {
 		public weak GLib.SList columns;
 		public weak GLib.SList fk_list;
@@ -637,8 +637,8 @@ namespace Gda {
 		public int pk_cols_nb;
 		public weak GLib.SList reverse_fk_list;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class MetaTableColumn {
 		public weak string column_name;
 		public weak string column_type;
@@ -650,8 +650,8 @@ namespace Gda {
 		public GLib.Value get_attribute (string attribute);
 		public void set_attribute (string attribute, GLib.Value value, GLib.DestroyNotify destroy);
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class MetaTableForeignKey {
 		public int cols_nb;
 		public void* declared;
@@ -665,15 +665,15 @@ namespace Gda {
 		public int ref_pk_cols_array;
 		public weak string ref_pk_names_array;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class MetaView {
 		public bool is_updatable;
 		public weak Gda.MetaTable table;
 		public weak string view_def;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class Mutex {
 		[CCode (has_construct_function = false)]
 		public Mutex ();
@@ -681,8 +681,8 @@ namespace Gda {
 		public bool trylock ();
 		public void unlock ();
 	}
+	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_numeric_copy", type_id = "GDA_TYPE_NUMERIC")]
 	[Compact]
-	[CCode (copy_function = "gda_numeric_copy", type_id = "GDA_TYPE_NUMERIC", cheader_filename = "libgda/libgda.h")]
 	public class Numeric {
 		public weak string number;
 		public long precision;
@@ -704,8 +704,8 @@ namespace Gda {
 		public unowned Gda.Statement get_gda_statement ();
 		public void set_gda_statement (Gda.Statement stmt);
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class ProviderInfo {
 		public weak Gda.Set auth_params;
 		public weak string description;
@@ -713,8 +713,8 @@ namespace Gda {
 		public weak string id;
 		public weak string location;
 	}
+	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_quark_list_copy", type_id = "GDA_TYPE_QUARK_LIST")]
 	[Compact]
-	[CCode (copy_function = "gda_quark_list_copy", type_id = "GDA_TYPE_QUARK_LIST", cheader_filename = "libgda/libgda.h")]
 	public class QuarkList {
 		[CCode (has_construct_function = false)]
 		public QuarkList ();
@@ -795,8 +795,8 @@ namespace Gda {
 		public virtual signal void sequence_item_added (string p0, int p1);
 		public virtual signal void sequence_item_remove (string p0, int p1);
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class ServerOperationNode {
 		public weak Gda.Column column;
 		public weak Gda.DataModel model;
@@ -878,19 +878,19 @@ namespace Gda {
 		public virtual unowned string unescape_string (Gda.Connection cnc, string str);
 		public unowned string value_to_sql_string (Gda.Connection cnc, GLib.Value from);
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class ServerProviderHandlerInfo {
 		public weak Gda.Connection cnc;
 		public weak string dbms_type;
 		public GLib.Type g_type;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class ServerProviderInfo {
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class ServerProviderMeta {
 		public weak GLib.Callback character_sets;
 		public weak GLib.Callback check_columns;
@@ -915,8 +915,8 @@ namespace Gda {
 		public weak GLib.Callback udt_cols;
 		public weak GLib.Callback view_cols;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class ServerProviderXa {
 		public weak GLib.Callback xa_commit;
 		public weak GLib.Callback xa_end;
@@ -970,27 +970,27 @@ namespace Gda {
 		public virtual signal unowned GLib.Error validate_holder_change (Gda.Holder holder, GLib.Value new_value);
 		public virtual signal unowned GLib.Error validate_set ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class SetGroup {
 		public weak GLib.SList nodes;
 		public weak Gda.SetSource nodes_source;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class SetNode {
 		public weak Gda.Holder holder;
 		public int source_column;
 		public weak Gda.DataModel source_model;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class SetSource {
 		public weak Gda.DataModel data_model;
 		public weak GLib.SList nodes;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class SqlAnyPart {
 		public weak Gda.SqlAnyPart parent;
 		public Gda.SqlAnyPartType type;
@@ -1041,8 +1041,8 @@ namespace Gda {
 		public void set_where (Gda.SqlBuilderId cond_id);
 		public Gda.SqlStatementType stmt_type { construct; }
 	}
+	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_sql_case_copy")]
 	[Compact]
-	[CCode (copy_function = "gda_sql_case_copy", cheader_filename = "libgda/libgda.h")]
 	public class SqlCase {
 		public weak Gda.SqlAnyPart any;
 		public weak Gda.SqlExpr base_expr;
@@ -1054,12 +1054,12 @@ namespace Gda {
 		public unowned Gda.SqlCase copy ();
 		public unowned string serialize ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class SqlErrorType {
 	}
+	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_sql_expr_copy", type_id = "GDA_TYPE_SQL_EXPR")]
 	[Compact]
-	[CCode (copy_function = "gda_sql_expr_copy", type_id = "GDA_TYPE_SQL_EXPR", cheader_filename = "libgda/libgda.h")]
 	public class SqlExpr {
 		public weak Gda.SqlAnyPart any;
 		public weak Gda.SqlCase case_s;
@@ -1076,8 +1076,8 @@ namespace Gda {
 		public unowned string serialize ();
 		public void take_select (Gda.SqlStatement stmt);
 	}
+	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_sql_field_copy")]
 	[Compact]
-	[CCode (copy_function = "gda_sql_field_copy", cheader_filename = "libgda/libgda.h")]
 	public class SqlField {
 		public weak Gda.SqlAnyPart any;
 		public weak string field_name;
@@ -1088,8 +1088,8 @@ namespace Gda {
 		public unowned string serialize ();
 		public void take_name (GLib.Value value);
 	}
+	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_sql_function_copy")]
 	[Compact]
-	[CCode (copy_function = "gda_sql_function_copy", cheader_filename = "libgda/libgda.h")]
 	public class SqlFunction {
 		public weak Gda.SqlAnyPart any;
 		public weak GLib.SList args_list;
@@ -1102,8 +1102,8 @@ namespace Gda {
 		public void take_args_list (owned GLib.SList args);
 		public void take_name (GLib.Value value);
 	}
+	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_sql_operation_copy")]
 	[Compact]
-	[CCode (copy_function = "gda_sql_operation_copy", cheader_filename = "libgda/libgda.h")]
 	public class SqlOperation {
 		public weak Gda.SqlAnyPart any;
 		public weak GLib.SList operands;
@@ -1115,8 +1115,8 @@ namespace Gda {
 		public static unowned string operator_to_string (Gda.SqlOperatorType op);
 		public unowned string serialize ();
 	}
+	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_sql_param_spec_copy")]
 	[Compact]
-	[CCode (copy_function = "gda_sql_param_spec_copy", cheader_filename = "libgda/libgda.h")]
 	public class SqlParamSpec {
 		public weak string descr;
 		public GLib.Type g_type;
@@ -1168,8 +1168,8 @@ namespace Gda {
 		[NoAccessorMethod]
 		public int tokenizer_flavour { get; set; }
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class SqlRenderingContext {
 		public weak Gda.Connection cnc;
 		public Gda.StatementSqlFlag flags;
@@ -1202,8 +1202,8 @@ namespace Gda {
 		public weak Gda.SqlRenderingFunc render_update;
 		public weak Gda.SqlRenderingValue render_value;
 	}
+	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_sql_select_field_copy")]
 	[Compact]
-	[CCode (copy_function = "gda_sql_select_field_copy", cheader_filename = "libgda/libgda.h")]
 	public class SqlSelectField {
 		public weak Gda.SqlAnyPart any;
 		public weak string @as;
@@ -1220,8 +1220,8 @@ namespace Gda {
 		public void take_expr (Gda.SqlExpr expr);
 		public void take_star_value (GLib.Value value);
 	}
+	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_sql_select_from_copy")]
 	[Compact]
-	[CCode (copy_function = "gda_sql_select_from_copy", cheader_filename = "libgda/libgda.h")]
 	public class SqlSelectFrom {
 		public weak Gda.SqlAnyPart any;
 		public weak GLib.SList joins;
@@ -1233,8 +1233,8 @@ namespace Gda {
 		public void take_new_join (Gda.SqlSelectJoin join);
 		public void take_new_target (Gda.SqlSelectTarget target);
 	}
+	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_sql_select_join_copy")]
 	[Compact]
-	[CCode (copy_function = "gda_sql_select_join_copy", cheader_filename = "libgda/libgda.h")]
 	public class SqlSelectJoin {
 		public weak Gda.SqlAnyPart any;
 		public weak Gda.SqlExpr expr;
@@ -1247,8 +1247,8 @@ namespace Gda {
 		public unowned string serialize ();
 		public static unowned string type_to_string (Gda.SqlSelectJoinType type);
 	}
+	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_sql_select_order_copy")]
 	[Compact]
-	[CCode (copy_function = "gda_sql_select_order_copy", cheader_filename = "libgda/libgda.h")]
 	public class SqlSelectOrder {
 		public weak Gda.SqlAnyPart any;
 		public bool asc;
@@ -1259,8 +1259,8 @@ namespace Gda {
 		public unowned Gda.SqlSelectOrder copy ();
 		public unowned string serialize ();
 	}
+	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_sql_select_target_copy")]
 	[Compact]
-	[CCode (copy_function = "gda_sql_select_target_copy", cheader_filename = "libgda/libgda.h")]
 	public class SqlSelectTarget {
 		public weak Gda.SqlAnyPart any;
 		public weak string @as;
@@ -1275,8 +1275,8 @@ namespace Gda {
 		public void take_select (Gda.SqlStatement stmt);
 		public void take_table_name (GLib.Value value);
 	}
+	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_sql_statement_copy", type_id = "GDA_TYPE_SQL_STATEMENT")]
 	[Compact]
-	[CCode (copy_function = "gda_sql_statement_copy", type_id = "GDA_TYPE_SQL_STATEMENT", cheader_filename = "libgda/libgda.h")]
 	public class SqlStatement {
 		public void* contents;
 		public weak string sql;
@@ -1298,15 +1298,15 @@ namespace Gda {
 		public void trans_take_name (GLib.Value value);
 		public static unowned string type_to_string (Gda.SqlStatementType type);
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class SqlStatementCheckValidityData {
 		public weak Gda.Connection cnc;
 		public weak Gda.MetaStruct mstruct;
 		public weak Gda.MetaStore store;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class SqlStatementCompound {
 		public weak Gda.SqlAnyPart any;
 		public Gda.SqlStatementCompoundType compound_type;
@@ -1314,8 +1314,8 @@ namespace Gda {
 		public static void set_type (Gda.SqlStatement stmt, Gda.SqlStatementCompoundType type);
 		public static void take_stmt (Gda.SqlStatement stmt, Gda.SqlStatement s);
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class SqlStatementContentsInfo {
 		public weak Gda.SqlForeachFunc check_structure_func;
 		public weak Gda.SqlForeachFunc check_validity_func;
@@ -1326,8 +1326,8 @@ namespace Gda {
 		public weak GLib.Callback serialize;
 		public Gda.SqlStatementType type;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class SqlStatementDelete {
 		public weak Gda.SqlAnyPart any;
 		public weak Gda.SqlExpr cond;
@@ -1335,8 +1335,8 @@ namespace Gda {
 		public static void take_condition (Gda.SqlStatement stmt, Gda.SqlExpr cond);
 		public static void take_table_name (Gda.SqlStatement stmt, GLib.Value value);
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class SqlStatementInsert {
 		public weak Gda.SqlAnyPart any;
 		public weak GLib.SList fields_list;
@@ -1351,8 +1351,8 @@ namespace Gda {
 		public static void take_select (Gda.SqlStatement stmt, Gda.SqlStatement select);
 		public static void take_table_name (Gda.SqlStatement stmt, GLib.Value value);
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class SqlStatementSelect {
 		public weak Gda.SqlAnyPart any;
 		public bool distinct;
@@ -1374,23 +1374,23 @@ namespace Gda {
 		public static void take_order_by (Gda.SqlStatement stmt, owned GLib.SList<Gda.SqlSelectOrder> order_by);
 		public static void take_where_cond (Gda.SqlStatement stmt, owned Gda.SqlExpr expr);
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class SqlStatementTransaction {
 		public weak Gda.SqlAnyPart any;
 		public Gda.TransactionIsolation isolation_level;
 		public weak string trans_mode;
 		public weak string trans_name;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class SqlStatementUnknown {
 		public weak Gda.SqlAnyPart any;
 		public weak GLib.SList expressions;
 		public static void take_expressions (Gda.SqlStatement stmt, owned GLib.SList<Gda.SqlExpr> expressions);
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class SqlStatementUpdate {
 		public weak Gda.SqlAnyPart any;
 		public weak Gda.SqlExpr cond;
@@ -1403,8 +1403,8 @@ namespace Gda {
 		public static void take_set_value (Gda.SqlStatement stmt, GLib.Value fname, Gda.SqlExpr expr);
 		public static void take_table_name (Gda.SqlStatement stmt, GLib.Value value);
 	}
+	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_sql_table_copy")]
 	[Compact]
-	[CCode (copy_function = "gda_sql_table_copy", cheader_filename = "libgda/libgda.h")]
 	public class SqlTable {
 		public weak Gda.SqlAnyPart any;
 		public weak string table_name;
@@ -1456,8 +1456,8 @@ namespace Gda {
 		public void iterate (bool may_block);
 		public void steal_signal (ulong id);
 	}
+	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_time_copy", type_id = "GDA_TYPE_TIME")]
 	[Compact]
-	[CCode (copy_function = "gda_time_copy", type_id = "GDA_TYPE_TIME", cheader_filename = "libgda/libgda.h")]
 	public class Time {
 		public ulong fraction;
 		public ushort hour;
@@ -1467,8 +1467,8 @@ namespace Gda {
 		public static void* copy (void* boxed);
 		public bool valid ();
 	}
+	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_timestamp_copy", type_id = "GDA_TYPE_TIMESTAMP")]
 	[Compact]
-	[CCode (copy_function = "gda_timestamp_copy", type_id = "GDA_TYPE_TIMESTAMP", cheader_filename = "libgda/libgda.h")]
 	public class Timestamp {
 		public ushort day;
 		public ulong fraction;
@@ -1490,8 +1490,8 @@ namespace Gda {
 		[CCode (has_construct_function = false)]
 		public TransactionStatus (string name);
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class TransactionStatusEvent {
 		public weak Gda.ConnectionEvent conn_event;
 		public void* pl;
@@ -1542,7 +1542,7 @@ namespace Gda {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public class TreeMgrColumns : Gda.TreeManager {
-		[CCode (type = "GdaTreeManager*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GdaTreeManager*")]
 		public TreeMgrColumns (Gda.Connection cnc, string schema, string table_name);
 		[NoAccessorMethod]
 		public Gda.Connection connection { owned get; construct; }
@@ -1551,36 +1551,36 @@ namespace Gda {
 		public string schema { construct; }
 		public string table_name { construct; }
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class TreeMgrColumnsPriv {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public class TreeMgrLabel : Gda.TreeManager {
-		[CCode (type = "GdaTreeManager*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GdaTreeManager*")]
 		public TreeMgrLabel (string label);
 		public string label { construct; }
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class TreeMgrLabelPriv {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public class TreeMgrSchemas : Gda.TreeManager {
-		[CCode (type = "GdaTreeManager*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GdaTreeManager*")]
 		public TreeMgrSchemas (Gda.Connection cnc);
 		[NoAccessorMethod]
 		public Gda.Connection connection { owned get; construct; }
 		[NoAccessorMethod]
 		public Gda.MetaStore meta_store { owned get; construct; }
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class TreeMgrSchemasPriv {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public class TreeMgrSelect : Gda.TreeManager {
-		[CCode (type = "GdaTreeManager*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GdaTreeManager*")]
 		public TreeMgrSelect (Gda.Connection cnc, Gda.Statement stmt, Gda.Set @params);
 		[NoAccessorMethod]
 		public Gda.Connection connection { owned get; construct; }
@@ -1589,13 +1589,13 @@ namespace Gda {
 		[NoAccessorMethod]
 		public Gda.Statement statement { owned get; construct; }
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class TreeMgrSelectPriv {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public class TreeMgrTables : Gda.TreeManager {
-		[CCode (type = "GdaTreeManager*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GdaTreeManager*")]
 		public TreeMgrTables (Gda.Connection cnc, string schema);
 		[NoAccessorMethod]
 		public Gda.Connection connection { owned get; construct; }
@@ -1603,8 +1603,8 @@ namespace Gda {
 		public Gda.MetaStore meta_store { owned get; construct; }
 		public string schema { construct; }
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class TreeMgrTablesPriv {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
@@ -1630,8 +1630,8 @@ namespace Gda {
 		public virtual signal void node_has_child_toggled (Gda.TreeNode node);
 		public virtual signal void node_inserted (Gda.TreeNode node);
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class ValueList {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
@@ -1645,8 +1645,8 @@ namespace Gda {
 		public unowned string get_table_name (Gda.DataModel model);
 		public bool remove (string table_name) throws GLib.Error;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class VconnectionDataModelFilter {
 		public void* aConstraint;
 		public void* aConstraintUsage;
@@ -1658,8 +1658,8 @@ namespace Gda {
 		public int nOrderBy;
 		public bool orderByConsumed;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class VconnectionDataModelSpec {
 		public weak Gda.VconnectionDataModelCreateColumnsFunc create_columns_func;
 		public weak Gda.VconnectionDataModelParseFilterFunc create_filter_func;
@@ -1692,12 +1692,12 @@ namespace Gda {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public class VproviderDataModel : Gda.VirtualProvider {
-		[CCode (type = "GdaVirtualProvider*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GdaVirtualProvider*")]
 		public VproviderDataModel ();
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public class VproviderHub : Gda.VproviderDataModel {
-		[CCode (type = "GdaVirtualProvider*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GdaVirtualProvider*")]
 		public VproviderHub ();
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
@@ -1717,8 +1717,8 @@ namespace Gda {
 		[NoAccessorMethod]
 		public string transaction_id { owned get; construct; }
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgda/libgda.h")]
+	[Compact]
 	public class XaTransactionId {
 		public ushort bqual_length;
 		[CCode (array_length = false)]
@@ -1794,7 +1794,7 @@ namespace Gda {
 		[CCode (vfunc_name = "i_unlock")]
 		public virtual void unlock ();
 	}
-	[CCode (type_id = "GDA_TYPE_DSN_INFO", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", type_id = "GDA_TYPE_DSN_INFO")]
 	public struct DsnInfo {
 		public weak string name;
 		public weak string provider;
@@ -1804,27 +1804,27 @@ namespace Gda {
 		public bool is_system;
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
-	[SimpleType]
 	[IntegerType (rank = 7)]
+	[SimpleType]
 	public struct SqlBuilderId : uint {
 	}
-	[CCode (type_id = "GDA_TYPE_SQL_PARSER_IFACE", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", type_id = "GDA_TYPE_SQL_PARSER_IFACE")]
 	protected struct SqlParserIface {
 		public Gda.SqlParser parser;
 		public Gda.SqlStatement parsed_statement;
 	}
-	[CCode (cprefix = "GDA_BATCH_CONFLICTING_PARAMETER_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_BATCH_CONFLICTING_PARAMETER_")]
 	public enum BatchError {
 		ERROR
 	}
-	[CCode (cprefix = "GDA_CONFIG_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_CONFIG_")]
 	public enum ConfigError {
 		DSN_NOT_FOUND_ERROR,
 		PERMISSION_ERROR,
 		PROVIDER_NOT_FOUND_ERROR,
 		PROVIDER_CREATION_ERROR
 	}
-	[CCode (cprefix = "GDA_CONNECTION_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_CONNECTION_")]
 	public enum ConnectionError {
 		DSN_NOT_FOUND_ERROR,
 		PROVIDER_NOT_FOUND_ERROR,
@@ -1838,7 +1838,7 @@ namespace Gda {
 		UNSUPPORTED_THREADS_ERROR,
 		CLOSED_ERROR
 	}
-	[CCode (cprefix = "GDA_CONNECTION_EVENT_CODE_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_CONNECTION_EVENT_CODE_")]
 	public enum ConnectionEventCode {
 		CONSTRAINT_VIOLATION,
 		RESTRICT_VIOLATION,
@@ -1860,14 +1860,14 @@ namespace Gda {
 		SYNTAX_ERROR,
 		UNKNOWN
 	}
-	[CCode (cprefix = "GDA_CONNECTION_EVENT_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_CONNECTION_EVENT_")]
 	public enum ConnectionEventType {
 		NOTICE,
 		WARNING,
 		ERROR,
 		COMMAND
 	}
-	[CCode (cprefix = "GDA_CONNECTION_FEATURE_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_CONNECTION_FEATURE_")]
 	public enum ConnectionFeature {
 		AGGREGATES,
 		BLOBS,
@@ -1888,7 +1888,7 @@ namespace Gda {
 		MULTI_THREADING,
 		LAST
 	}
-	[CCode (cprefix = "GDA_CONNECTION_META_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_CONNECTION_META_")]
 	public enum ConnectionMetaType {
 		NAMESPACES,
 		TYPES,
@@ -1897,7 +1897,7 @@ namespace Gda {
 		FIELDS,
 		INDEXES
 	}
-	[CCode (cprefix = "GDA_CONNECTION_OPTIONS_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_CONNECTION_OPTIONS_")]
 	[Flags]
 	public enum ConnectionOptions {
 		NONE,
@@ -1907,7 +1907,7 @@ namespace Gda {
 		THREAD_ISOLATED,
 		AUTO_META_DATA
 	}
-	[CCode (cprefix = "GDA_CONNECTION_SCHEMA_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_CONNECTION_SCHEMA_")]
 	public enum ConnectionSchema {
 		AGGREGATES,
 		DATABASES,
@@ -1926,14 +1926,14 @@ namespace Gda {
 		CONSTRAINTS,
 		TABLE_CONTENTS
 	}
-	[CCode (cprefix = "GDA_DATA_COMPARATOR_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_DATA_COMPARATOR_")]
 	public enum DataComparatorError {
 		MISSING_DATA_MODEL_ERROR,
 		COLUMN_TYPES_MISMATCH_ERROR,
 		MODEL_ACCESS_ERROR,
 		USER_CANCELLED_ERROR
 	}
-	[CCode (cprefix = "GDA_DATA_MODEL_ACCESS_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_DATA_MODEL_ACCESS_")]
 	[Flags]
 	public enum DataModelAccessFlags {
 		RANDOM,
@@ -1945,7 +1945,7 @@ namespace Gda {
 		DELETE,
 		WRITE
 	}
-	[CCode (cprefix = "GDA_DATA_MODEL_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_DATA_MODEL_")]
 	public enum DataModelError {
 		ROW_OUT_OF_RANGE_ERROR,
 		COLUMN_OUT_OF_RANGE_ERROR,
@@ -1957,22 +1957,22 @@ namespace Gda {
 		FILE_EXIST_ERROR,
 		XML_FORMAT_ERROR
 	}
-	[CCode (cprefix = "GDA_DATA_MODEL_HINT_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_DATA_MODEL_HINT_")]
 	public enum DataModelHint {
 		START_BATCH_UPDATE,
 		END_BATCH_UPDATE,
 		REFRESH
 	}
-	[CCode (cprefix = "GDA_DATA_MODEL_IO_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_DATA_MODEL_IO_")]
 	public enum DataModelIOFormat {
 		DATA_ARRAY_XML,
 		TEXT_SEPARATED
 	}
-	[CCode (cprefix = "GDA_DATA_MODEL_ITER_COLUMN_OUT_OF_RANGE_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_DATA_MODEL_ITER_COLUMN_OUT_OF_RANGE_")]
 	public enum DataModelIterError {
 		ERROR
 	}
-	[CCode (cprefix = "GDA_DATA_PROXY_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_DATA_PROXY_")]
 	public enum DataProxyError {
 		COMMIT_ERROR,
 		COMMIT_CANCELLED,
@@ -1980,7 +1980,7 @@ namespace Gda {
 		READ_ONLY_ROW,
 		FILTER_ERROR
 	}
-	[CCode (cprefix = "GDA_DATA_SELECT_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_DATA_SELECT_")]
 	public enum DataSelectError {
 		MODIFICATION_STATEMENT_ERROR,
 		MISSING_MODIFICATION_STATEMENT_ERROR,
@@ -1989,13 +1989,13 @@ namespace Gda {
 		SQL_ERROR,
 		SAFETY_LOCKED_ERROR
 	}
-	[CCode (cprefix = "GDA_DIFF_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_DIFF_")]
 	public enum DiffType {
 		ADD_ROW,
 		REMOVE_ROW,
 		MODIFY_ROW
 	}
-	[CCode (cprefix = "GDA_EASY_CREATE_TABLE_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_EASY_CREATE_TABLE_")]
 	public enum EasyCreateTableFlag {
 		NOTHING_FLAG,
 		PKEY_FLAG,
@@ -2005,25 +2005,25 @@ namespace Gda {
 		FKEY_FLAG,
 		PKEY_AUTOINC_FLAG
 	}
-	[CCode (cprefix = "GDA_EASY_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_EASY_")]
 	public enum EasyError {
 		OBJECT_NAME_ERROR,
 		INCORRECT_VALUE_ERROR,
 		OPERATION_ERROR
 	}
-	[CCode (cprefix = "GDA_HOLDER_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_HOLDER_")]
 	public enum HolderError {
 		STRING_CONVERSION_ERROR,
 		VALUE_TYPE_ERROR,
 		VALUE_NULL_ERROR
 	}
-	[CCode (cprefix = "GDA_META_DB_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_META_DB_")]
 	public enum MetaDbObjectType {
 		UNKNOWN,
 		TABLE,
 		VIEW
 	}
-	[CCode (cprefix = "GDA_META_FOREIGN_KEY_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_META_FOREIGN_KEY_")]
 	public enum MetaForeignKeyPolicy {
 		UNKNOWN,
 		NONE,
@@ -2033,23 +2033,23 @@ namespace Gda {
 		SET_NULL,
 		SET_DEFAULT
 	}
-	[CCode (cprefix = "GDA_META_GRAPH_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_META_GRAPH_")]
 	[Flags]
 	public enum MetaGraphInfo {
 		COLUMNS
 	}
-	[CCode (cprefix = "GDA_META_SORT_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_META_SORT_")]
 	public enum MetaSortType {
 		ALHAPETICAL,
 		DEPENDENCIES
 	}
-	[CCode (cprefix = "GDA_META_STORE_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_META_STORE_")]
 	public enum MetaStoreChangeType {
 		ADD,
 		REMOVE,
 		MODIFY
 	}
-	[CCode (cprefix = "GDA_META_STORE_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_META_STORE_")]
 	public enum MetaStoreError {
 		INCORRECT_SCHEMA_ERROR,
 		UNSUPPORTED_PROVIDER_ERROR,
@@ -2064,13 +2064,13 @@ namespace Gda {
 		SCHEMA_OBJECT_DESCR_ERROR,
 		TRANSACTION_ALREADY_STARTED_ERROR
 	}
-	[CCode (cprefix = "GDA_META_STRUCT_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_META_STRUCT_")]
 	public enum MetaStructError {
 		UNKNOWN_OBJECT_ERROR,
 		DUPLICATE_OBJECT_ERROR,
 		INCOHERENCE_ERROR
 	}
-	[CCode (cprefix = "GDA_META_STRUCT_FEATURE_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_META_STRUCT_FEATURE_")]
 	[Flags]
 	public enum MetaStructFeature {
 		NONE,
@@ -2078,7 +2078,7 @@ namespace Gda {
 		VIEW_DEPENDENCIES,
 		ALL
 	}
-	[CCode (cprefix = "GDA_", has_type_id = false, cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_", has_type_id = false)]
 	public enum PrefixDir {
 		NO_DIR,
 		BIN_DIR,
@@ -2089,7 +2089,7 @@ namespace Gda {
 		LIBEXEC_DIR,
 		ETC_DIR
 	}
-	[CCode (cprefix = "GDA_SERVER_OPERATION_CREATE_TABLE_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_SERVER_OPERATION_CREATE_TABLE_")]
 	[Flags]
 	public enum ServerOperationCreateTableFlag {
 		NOTHING_FLAG,
@@ -2100,18 +2100,18 @@ namespace Gda {
 		FKEY_FLAG,
 		PKEY_AUTOINC_FLAG
 	}
-	[CCode (cprefix = "GDA_SERVER_OPERATION_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_SERVER_OPERATION_")]
 	public enum ServerOperationError {
 		OBJECT_NAME_ERROR,
 		INCORRECT_VALUE_ERROR
 	}
-	[CCode (cprefix = "GDA_SERVER_OPERATION_STATUS_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_SERVER_OPERATION_STATUS_")]
 	public enum ServerOperationNodeStatus {
 		OPTIONAL,
 		REQUIRED,
 		UNKNOWN
 	}
-	[CCode (cprefix = "GDA_SERVER_OPERATION_NODE_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_SERVER_OPERATION_NODE_")]
 	public enum ServerOperationNodeType {
 		PARAMLIST,
 		DATA_MODEL,
@@ -2121,7 +2121,7 @@ namespace Gda {
 		DATA_MODEL_COLUMN,
 		UNKNOWN
 	}
-	[CCode (cprefix = "GDA_SERVER_OPERATION_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_SERVER_OPERATION_")]
 	public enum ServerOperationType {
 		CREATE_DB,
 		DROP_DB,
@@ -2141,7 +2141,7 @@ namespace Gda {
 		DROP_USER,
 		LAST
 	}
-	[CCode (cprefix = "GDA_SERVER_PROVIDER_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_SERVER_PROVIDER_")]
 	public enum ServerProviderError {
 		METHOD_NON_IMPLEMENTED_ERROR,
 		PREPARE_STMT_ERROR,
@@ -2156,14 +2156,14 @@ namespace Gda {
 		DATA_ERROR,
 		DEFAULT_VALUE_HANDLING_ERROR
 	}
-	[CCode (cprefix = "GDA_SET_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_SET_")]
 	public enum SetError {
 		XML_SPEC_ERROR,
 		HOLDER_NOT_FOUND_ERROR,
 		INVALID_ERROR,
 		READ_ONLY_ERROR
 	}
-	[CCode (cprefix = "GDA_SQL_ANY_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_SQL_ANY_")]
 	public enum SqlAnyPartType {
 		STMT_SELECT,
 		STMT_INSERT,
@@ -2189,18 +2189,18 @@ namespace Gda {
 		SQL_SELECT_FROM,
 		SQL_SELECT_ORDER
 	}
-	[CCode (cprefix = "GDA_SQL_BUILDER_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_SQL_BUILDER_")]
 	public enum SqlBuilderError {
 		WRONG_TYPE_ERROR,
 		MISUSE_ERROR
 	}
-	[CCode (cprefix = "GDA_SQL_IDENTIFIERS_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_SQL_IDENTIFIERS_")]
 	[Flags]
 	public enum SqlIdentifierStyle {
 		LOWER_CASE,
 		UPPER_CASE
 	}
-	[CCode (cprefix = "GDA_SQL_OPERATOR_TYPE_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_SQL_OPERATOR_TYPE_")]
 	public enum SqlOperatorType {
 		AND,
 		OR,
@@ -2233,13 +2233,13 @@ namespace Gda {
 		BITOR,
 		BITNOT
 	}
-	[CCode (cprefix = "GDA_SQL_PARSER_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_SQL_PARSER_")]
 	public enum SqlParserError {
 		SYNTAX_ERROR,
 		OVERFLOW_ERROR,
 		EMPTY_SQL_ERROR
 	}
-	[CCode (cprefix = "GDA_SQL_PARSER_FLAVOUR_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_SQL_PARSER_FLAVOUR_")]
 	public enum SqlParserFlavour {
 		STANDARD,
 		SQLITE,
@@ -2247,12 +2247,12 @@ namespace Gda {
 		ORACLE,
 		POSTGRESQL
 	}
-	[CCode (cprefix = "GDA_SQL_PARSER_MODE_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_SQL_PARSER_MODE_")]
 	public enum SqlParserMode {
 		PARSE,
 		DELIMIT
 	}
-	[CCode (cprefix = "GDA_SQL_SELECT_JOIN_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_SQL_SELECT_JOIN_")]
 	public enum SqlSelectJoinType {
 		CROSS,
 		NATURAL,
@@ -2261,7 +2261,7 @@ namespace Gda {
 		RIGHT,
 		FULL
 	}
-	[CCode (cprefix = "GDA_SQL_STATEMENT_COMPOUND_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_SQL_STATEMENT_COMPOUND_")]
 	public enum SqlStatementCompoundType {
 		UNION,
 		UNION_ALL,
@@ -2270,7 +2270,7 @@ namespace Gda {
 		EXCEPT,
 		EXCEPT_ALL
 	}
-	[CCode (cprefix = "GDA_SQL_STATEMENT_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_SQL_STATEMENT_")]
 	public enum SqlStatementType {
 		SELECT,
 		INSERT,
@@ -2286,7 +2286,7 @@ namespace Gda {
 		UNKNOWN,
 		NONE
 	}
-	[CCode (cprefix = "GDA_STATEMENT_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_STATEMENT_")]
 	public enum StatementError {
 		PARSE_ERROR,
 		SYNTAX_ERROR,
@@ -2296,7 +2296,7 @@ namespace Gda {
 		PARAM_TYPE_ERROR,
 		PARAM_ERROR
 	}
-	[CCode (cprefix = "GDA_STATEMENT_MODEL_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_STATEMENT_MODEL_")]
 	[Flags]
 	public enum StatementModelUsage {
 		RANDOM_ACCESS,
@@ -2305,7 +2305,7 @@ namespace Gda {
 		CURSOR,
 		ALLOW_NOPARAM
 	}
-	[CCode (cprefix = "GDA_STATEMENT_SQL_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_STATEMENT_SQL_")]
 	[Flags]
 	public enum StatementSqlFlag {
 		PARAMS_AS_VALUES,
@@ -2317,11 +2317,11 @@ namespace Gda {
 		PARAMS_AS_QMARK,
 		PARAMS_AS_UQMARK
 	}
-	[CCode (cprefix = "GDA_THREAD_WRAPPER_UNKNOWN_", has_type_id = false, cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_THREAD_WRAPPER_UNKNOWN_", has_type_id = false)]
 	public enum ThreadWrapperError {
 		ERROR
 	}
-	[CCode (cprefix = "GDA_TRANSACTION_ISOLATION_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_TRANSACTION_ISOLATION_")]
 	public enum TransactionIsolation {
 		UNKNOWN,
 		READ_COMMITTED,
@@ -2329,30 +2329,30 @@ namespace Gda {
 		REPEATABLE_READ,
 		SERIALIZABLE
 	}
-	[CCode (cprefix = "GDA_TRANSACTION_STATUS_EVENT_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_TRANSACTION_STATUS_EVENT_")]
 	public enum TransactionStatusEventType {
 		SAVEPOINT,
 		SQL,
 		SUB_TRANSACTION
 	}
-	[CCode (cprefix = "GDA_TRANSACTION_STATUS_STATE_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_TRANSACTION_STATUS_STATE_")]
 	public enum TransactionStatusState {
 		OK,
 		FAILED
 	}
-	[CCode (cprefix = "GDA_TREE_UNKNOWN_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_TREE_UNKNOWN_")]
 	public enum TreeError {
 		ERROR
 	}
-	[CCode (cprefix = "GDA_TREE_MANAGER_UNKNOWN_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_TREE_MANAGER_UNKNOWN_")]
 	public enum TreeManagerError {
 		ERROR
 	}
-	[CCode (cprefix = "GDA_TREE_NODE_UNKNOWN_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_TREE_NODE_UNKNOWN_")]
 	public enum TreeNodeError {
 		ERROR
 	}
-	[CCode (cprefix = "GDA_VALUE_ATTR_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_VALUE_ATTR_")]
 	[Flags]
 	public enum ValueAttribute {
 		NONE,
@@ -2367,13 +2367,13 @@ namespace Gda {
 		NO_MODIF,
 		UNUSED
 	}
-	[CCode (cprefix = "GDA_XA_TRANSACTION_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_XA_TRANSACTION_")]
 	public enum XaTransactionError {
 		ALREADY_REGISTERED_ERROR,
 		DTP_NOT_SUPPORTED_ERROR,
 		CONNECTION_BRANCH_LENGTH_ERROR
 	}
-	[CCode (cprefix = "GDA_SQL_ERROR_", cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_SQL_ERROR_")]
 	public errordomain SqlError {
 		STRUCTURE_CONTENTS_ERROR,
 		MALFORMED_IDENTIFIER_ERROR,

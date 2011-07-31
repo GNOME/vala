@@ -405,13 +405,13 @@ namespace Gdu {
 		public signal void job_changed ();
 		public signal void removed ();
 	}
-	[CCode (cprefix = "GDU_CREATE_VOLUME_FLAGS_", has_type_id = false, cheader_filename = "gdu/gdu.h")]
+	[CCode (cheader_filename = "gdu/gdu.h", cprefix = "GDU_CREATE_VOLUME_FLAGS_", has_type_id = false)]
 	public enum CreateVolumeFlags {
 		NONE,
 		LINUX_MD,
 		LINUX_LVM2
 	}
-	[CCode (cprefix = "GDU_ERROR_", has_type_id = false, cheader_filename = "gdu/gdu.h")]
+	[CCode (cheader_filename = "gdu/gdu.h", cprefix = "GDU_ERROR_", has_type_id = false)]
 	public enum Error {
 		FAILED,
 		BUSY,
@@ -424,20 +424,20 @@ namespace Gdu {
 		FILESYSTEM_DRIVER_MISSING,
 		FILESYSTEM_TOOLS_MISSING
 	}
-	[CCode (cprefix = "GDU_HUB_USAGE_", has_type_id = false, cheader_filename = "gdu/gdu.h")]
+	[CCode (cheader_filename = "gdu/gdu.h", cprefix = "GDU_HUB_USAGE_", has_type_id = false)]
 	public enum HubUsage {
 		ADAPTER,
 		EXPANDER,
 		MULTI_DISK_DEVICES,
 		MULTI_PATH_DEVICES
 	}
-	[CCode (cprefix = "GDU_LINUX_LVM2_VOLUME_GROUP_STATE_", has_type_id = false, cheader_filename = "gdu/gdu.h")]
+	[CCode (cheader_filename = "gdu/gdu.h", cprefix = "GDU_LINUX_LVM2_VOLUME_GROUP_STATE_", has_type_id = false)]
 	public enum LinuxLvm2VolumeGroupState {
 		NOT_RUNNING,
 		PARTIALLY_RUNNING,
 		RUNNING
 	}
-	[CCode (cprefix = "GDU_LINUX_MD_DRIVE_SLAVE_FLAGS_", has_type_id = false, cheader_filename = "gdu/gdu.h")]
+	[CCode (cheader_filename = "gdu/gdu.h", cprefix = "GDU_LINUX_MD_DRIVE_SLAVE_FLAGS_", has_type_id = false)]
 	public enum LinuxMdDriveSlaveFlags {
 		NONE,
 		NOT_ATTACHED,
@@ -447,7 +447,7 @@ namespace Gdu {
 		BLOCKED,
 		SPARE
 	}
-	[CCode (cprefix = "GDU_VOLUME_FLAGS_", has_type_id = false, cheader_filename = "gdu/gdu.h")]
+	[CCode (cheader_filename = "gdu/gdu.h", cprefix = "GDU_VOLUME_FLAGS_", has_type_id = false)]
 	public enum VolumeFlags {
 		NONE,
 		PARTITION,

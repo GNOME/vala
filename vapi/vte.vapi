@@ -2,8 +2,8 @@
 
 [CCode (cprefix = "Vte", lower_case_cprefix = "vte_")]
 namespace Vte {
-	[Compact]
 	[CCode (cheader_filename = "vte/vte.h")]
+	[Compact]
 	public class CharAttributes {
 		public Gdk.Color back;
 		public long column;
@@ -32,8 +32,8 @@ namespace Vte {
 		[NoAccessorMethod]
 		public string term { owned get; set; }
 	}
-	[Compact]
 	[CCode (cheader_filename = "vte/vte.h")]
+	[Compact]
 	public class PtyClass {
 	}
 	[CCode (cheader_filename = "vte/reaper.h")]
@@ -53,7 +53,7 @@ namespace Vte {
 		public long char_width;
 		public long column_count;
 		public long row_count;
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Terminal ();
 		public void copy_primary ();
 		public void feed (string data, long length);
@@ -233,20 +233,20 @@ namespace Vte {
 	}
 	[CCode (cheader_filename = "vte/vteaccess.h")]
 	public class TerminalAccessible : Gtk.Accessible, Atk.Text, Atk.Component, Atk.Action {
-		[CCode (type = "AtkObject*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "AtkObject*")]
 		public TerminalAccessible (Vte.Terminal terminal);
 	}
 	[CCode (cheader_filename = "vte/vte.h")]
 	public class TerminalAccessibleFactory : Atk.ObjectFactory {
-		[CCode (type = "AtkObjectFactory*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "AtkObjectFactory*")]
 		public TerminalAccessibleFactory ();
 	}
-	[CCode (cprefix = "VTE_PTY_ERROR_", cheader_filename = "vte/vte.h")]
+	[CCode (cheader_filename = "vte/vte.h", cprefix = "VTE_PTY_ERROR_")]
 	public enum PtyError {
 		PTY_HELPER_FAILED,
 		PTY98_FAILED
 	}
-	[CCode (cprefix = "VTE_PTY_", cheader_filename = "vte/vte.h")]
+	[CCode (cheader_filename = "vte/vte.h", cprefix = "VTE_PTY_")]
 	[Flags]
 	public enum PtyFlags {
 		NO_LASTLOG,
@@ -256,25 +256,25 @@ namespace Vte {
 		NO_FALLBACK,
 		DEFAULT
 	}
-	[CCode (cprefix = "VTE_ANTI_ALIAS_", cheader_filename = "vte/vte.h")]
+	[CCode (cheader_filename = "vte/vte.h", cprefix = "VTE_ANTI_ALIAS_")]
 	public enum TerminalAntiAlias {
 		USE_DEFAULT,
 		FORCE_ENABLE,
 		FORCE_DISABLE
 	}
-	[CCode (cprefix = "VTE_CURSOR_BLINK_", cheader_filename = "vte/vte.h")]
+	[CCode (cheader_filename = "vte/vte.h", cprefix = "VTE_CURSOR_BLINK_")]
 	public enum TerminalCursorBlinkMode {
 		SYSTEM,
 		ON,
 		OFF
 	}
-	[CCode (cprefix = "VTE_CURSOR_SHAPE_", cheader_filename = "vte/vte.h")]
+	[CCode (cheader_filename = "vte/vte.h", cprefix = "VTE_CURSOR_SHAPE_")]
 	public enum TerminalCursorShape {
 		BLOCK,
 		IBEAM,
 		UNDERLINE
 	}
-	[CCode (cprefix = "VTE_ERASE_", cheader_filename = "vte/vte.h")]
+	[CCode (cheader_filename = "vte/vte.h", cprefix = "VTE_ERASE_")]
 	public enum TerminalEraseBinding {
 		AUTO,
 		ASCII_BACKSPACE,
@@ -282,7 +282,7 @@ namespace Vte {
 		DELETE_SEQUENCE,
 		TTY
 	}
-	[CCode (cprefix = "VTE_TERMINAL_WRITE_", cheader_filename = "vte/vte.h")]
+	[CCode (cheader_filename = "vte/vte.h", cprefix = "VTE_TERMINAL_WRITE_")]
 	public enum TerminalWriteFlags {
 		DEFAULT
 	}

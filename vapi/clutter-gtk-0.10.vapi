@@ -4,13 +4,13 @@
 namespace GtkClutter {
 	[CCode (cheader_filename = "clutter-gtk/clutter-gtk.h")]
 	public class Embed : Gtk.Container, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Embed ();
 		public unowned Clutter.Actor get_stage ();
 	}
 	[CCode (cheader_filename = "clutter-gtk/clutter-gtk.h")]
 	public class Viewport : Clutter.Actor, GtkClutter.Zoomable, GtkClutter.Scrollable, Clutter.Container, Clutter.Scriptable {
-		[CCode (type = "ClutterActor*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "ClutterActor*")]
 		public Viewport (Gtk.Adjustment h_adjust, Gtk.Adjustment v_adjust, Gtk.Adjustment z_adjust);
 		public void get_origin (float x, float y, float z);
 		[NoAccessorMethod]
@@ -27,12 +27,12 @@ namespace GtkClutter {
 		public abstract unowned Gtk.Adjustment get_adjustment ();
 		public abstract void set_adjustment (Gtk.Adjustment z_adjust);
 	}
-	[CCode (cprefix = "CLUTTER_INIT_ERROR_", has_type_id = false, cheader_filename = "clutter-gtk/clutter-gtk.h")]
+	[CCode (cheader_filename = "clutter-gtk/clutter-gtk.h", cprefix = "CLUTTER_INIT_ERROR_", has_type_id = false)]
 	public enum ClutterGtkInitError {
 		LAST,
 		GTK
 	}
-	[CCode (cprefix = "CLUTTER_GTK_TEXTURE_", has_type_id = false, cheader_filename = "clutter-gtk/clutter-gtk.h")]
+	[CCode (cheader_filename = "clutter-gtk/clutter-gtk.h", cprefix = "CLUTTER_GTK_TEXTURE_", has_type_id = false)]
 	public enum ClutterGtkTextureError {
 		INVALID_STOCK_ID,
 		ERROR_LAST

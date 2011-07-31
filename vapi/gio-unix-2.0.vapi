@@ -26,18 +26,18 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gunixfdmessage.h")]
 	public class UnixFDMessage : GLib.SocketControlMessage {
-		[CCode (type = "GSocketControlMessage*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GSocketControlMessage*")]
 		public UnixFDMessage ();
 		public bool append_fd (int fd) throws GLib.Error;
 		public unowned GLib.UnixFDList get_fd_list ();
 		public int steal_fds (int length);
-		[CCode (type = "GSocketControlMessage*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GSocketControlMessage*")]
 		public UnixFDMessage.with_fd_list (GLib.UnixFDList fd_list);
 		public GLib.UnixFDList fd_list { get; construct; }
 	}
 	[CCode (cheader_filename = "gio/gunixinputstream.h")]
 	public class UnixInputStream : GLib.InputStream, GLib.PollableInputStream {
-		[CCode (type = "GInputStream*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GInputStream*")]
 		public UnixInputStream (int fd, bool close_fd);
 		public bool get_close_fd ();
 		public int get_fd ();
@@ -45,8 +45,8 @@ namespace GLib {
 		public bool close_fd { get; set; }
 		public int fd { get; construct; }
 	}
+	[CCode (cheader_filename = "gio/gunixmounts.h", free_function = "g_unix_mount_free")]
 	[Compact]
-	[CCode (free_function = "g_unix_mount_free", cheader_filename = "gio/gunixmounts.h")]
 	public class UnixMountEntry {
 		[CCode (cname = "g_unix_mount_at")]
 		public UnixMountEntry (string mount_path, uint64 time_read);
@@ -81,12 +81,12 @@ namespace GLib {
 		public virtual signal void mountpoints_changed ();
 		public virtual signal void mounts_changed ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "gio/gunixmounts.h")]
+	[Compact]
 	public class UnixMountMonitorClass {
 	}
-	[Compact]
 	[CCode (cheader_filename = "gio/gunixmounts.h")]
+	[Compact]
 	public class UnixMountPoint {
 		public int compare (GLib.UnixMountPoint mount2);
 		public unowned string get_device_path ();
@@ -101,7 +101,7 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gunixoutputstream.h")]
 	public class UnixOutputStream : GLib.OutputStream, GLib.PollableOutputStream {
-		[CCode (type = "GOutputStream*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GOutputStream*")]
 		public UnixOutputStream (int fd, bool close_fd);
 		public bool get_close_fd ();
 		public int get_fd ();
@@ -111,16 +111,16 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gunixsocketaddress.h")]
 	public class UnixSocketAddress : GLib.SocketAddress, GLib.SocketConnectable {
-		[CCode (type = "GSocketAddress*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GSocketAddress*")]
 		public UnixSocketAddress (string path);
 		public static bool abstract_names_supported ();
-		[CCode (cname = "g_unix_socket_address_new_abstract", type = "GSocketAddress*", has_construct_function = false)]
+		[CCode (cname = "g_unix_socket_address_new_abstract", has_construct_function = false, type = "GSocketAddress*")]
 		public UnixSocketAddress.as_abstract (string path, int path_len);
 		public GLib.UnixSocketAddressType get_address_type ();
 		public bool get_is_abstract ();
 		public unowned string get_path ();
 		public size_t get_path_len ();
-		[CCode (type = "GSocketAddress*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GSocketAddress*")]
 		public UnixSocketAddress.with_type (string path, int path_len, GLib.UnixSocketAddressType type);
 		[NoAccessorMethod]
 		public bool @abstract { get; construct; }
@@ -141,10 +141,10 @@ namespace GLib {
 	public delegate void DesktopAppLaunchCallback (GLib.DesktopAppInfo appinfo, GLib.Pid pid);
 	[CCode (cheader_filename = "gio/gunixmounts.h")]
 	public const string DESKTOP_APP_INFO_LOOKUP_EXTENSION_POINT_NAME;
-	[CCode (cname = "g_unix_is_mount_path_system_internal", cheader_filename = "gio/gunixmounts.h")]
+	[CCode (cheader_filename = "gio/gunixmounts.h", cname = "g_unix_is_mount_path_system_internal")]
 	public static bool is_mount_path_system_internal (string mount_path);
-	[CCode (cname = "g_unix_mount_points_changed_since", cheader_filename = "gio/gunixmounts.h")]
+	[CCode (cheader_filename = "gio/gunixmounts.h", cname = "g_unix_mount_points_changed_since")]
 	public static bool mount_points_changed_since (uint64 time);
-	[CCode (cname = "g_unix_mounts_changed_since", cheader_filename = "gio/gunixmounts.h")]
+	[CCode (cheader_filename = "gio/gunixmounts.h", cname = "g_unix_mounts_changed_since")]
 	public static bool mounts_changed_since (uint64 time);
 }

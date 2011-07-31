@@ -5,11 +5,11 @@ namespace Gdl {
 	[CCode (cheader_filename = "gdl/gdl.h")]
 	public class Dock : Gdl.DockObject, Atk.Implementor, Gtk.Buildable {
 		public weak Gdl.DockObject root;
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Dock ();
 		public void add_floating_item (Gdl.DockItem item, int x, int y, int width, int height);
 		public void add_item (Gdl.DockItem item, Gdl.DockPlacement place);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Dock.from (Gdl.Dock original, bool floating);
 		public unowned Gdl.DockItem get_item_by_name (string name);
 		public unowned GLib.List get_named_items ();
@@ -33,7 +33,7 @@ namespace Gdl {
 	[CCode (cheader_filename = "gdl/gdl.h")]
 	public class DockBar : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
 		public weak Gdl.Dock dock;
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public DockBar (Gdl.Dock dock);
 		public Gtk.Orientation get_orientation ();
 		public Gdl.DockBarStyle get_style ();
@@ -49,7 +49,7 @@ namespace Gdl {
 		public weak Gtk.Widget child;
 		public int dragoff_x;
 		public int dragoff_y;
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public DockItem (string name, string long_name, Gdl.DockItemBehavior behavior);
 		public void bind (Gtk.Widget dock);
 		public void dock_to (Gdl.DockItem? target, Gdl.DockPlacement position, int docking_param);
@@ -68,7 +68,7 @@ namespace Gdl {
 		public void show_item ();
 		public void unbind ();
 		public void unlock ();
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public DockItem.with_stock (string name, string long_name, string stock_id, Gdl.DockItemBehavior behavior);
 		[NoAccessorMethod]
 		public Gdl.DockItemBehavior behavior { get; set; }
@@ -90,7 +90,7 @@ namespace Gdl {
 	[CCode (cheader_filename = "gdl/gdl.h")]
 	public class DockItemGrip : Gtk.Container, Atk.Implementor, Gtk.Buildable {
 		public weak Gdk.Window title_window;
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public DockItemGrip (Gdl.DockItem item);
 		public void hide_handle ();
 		public void set_label (Gtk.Widget label);
@@ -193,7 +193,7 @@ namespace Gdl {
 	}
 	[CCode (cheader_filename = "gdl/gdl.h")]
 	public class DockPlaceholder : Gdl.DockObject, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public DockPlaceholder (string name, Gdl.DockObject object, Gdl.DockPlacement position, bool sticky);
 		public void attach (Gdl.DockObject object);
 		[NoAccessorMethod]
@@ -213,8 +213,8 @@ namespace Gdl {
 		[NoAccessorMethod]
 		public int width { get; set construct; }
 	}
-	[Compact]
 	[CCode (cheader_filename = "gdl/gdl.h")]
+	[Compact]
 	public class DockRequest {
 		public weak Gdl.DockObject applicant;
 		public GLib.Value extra;
@@ -222,21 +222,21 @@ namespace Gdl {
 		public Gdk.Rectangle rect;
 		public weak Gdl.DockObject target;
 	}
-	[Compact]
 	[CCode (cheader_filename = "gdl/gdl.h")]
+	[Compact]
 	public class Pixmap {
 		public weak string fname;
 		public weak string path;
 		public weak string pixbuf;
 	}
-	[CCode (cprefix = "GDL_DOCK_BAR_", cheader_filename = "gdl/gdl.h")]
+	[CCode (cheader_filename = "gdl/gdl.h", cprefix = "GDL_DOCK_BAR_")]
 	public enum DockBarStyle {
 		ICONS,
 		TEXT,
 		BOTH,
 		AUTO
 	}
-	[CCode (cprefix = "GDL_DOCK_ITEM_BEH_", cheader_filename = "gdl/gdl.h")]
+	[CCode (cheader_filename = "gdl/gdl.h", cprefix = "GDL_DOCK_ITEM_BEH_")]
 	[Flags]
 	public enum DockItemBehavior {
 		NORMAL,
@@ -253,7 +253,7 @@ namespace Gdl {
 		CANT_ICONIFY,
 		NO_GRIP
 	}
-	[CCode (cprefix = "GDL_DOCK_", cheader_filename = "gdl/gdl.h")]
+	[CCode (cheader_filename = "gdl/gdl.h", cprefix = "GDL_DOCK_")]
 	[Flags]
 	public enum DockItemFlags {
 		IN_DRAG,
@@ -261,7 +261,7 @@ namespace Gdl {
 		ICONIFIED,
 		USER_ACTION
 	}
-	[CCode (cprefix = "GDL_DOCK_", cheader_filename = "gdl/gdl.h")]
+	[CCode (cheader_filename = "gdl/gdl.h", cprefix = "GDL_DOCK_")]
 	[Flags]
 	public enum DockObjectFlags {
 		AUTOMATIC,
@@ -269,13 +269,13 @@ namespace Gdl {
 		IN_REFLOW,
 		IN_DETACH
 	}
-	[CCode (cprefix = "GDL_DOCK_PARAM_", cheader_filename = "gdl/gdl.h")]
+	[CCode (cheader_filename = "gdl/gdl.h", cprefix = "GDL_DOCK_PARAM_")]
 	[Flags]
 	public enum DockParamFlags {
 		EXPORT,
 		AFTER
 	}
-	[CCode (cprefix = "GDL_DOCK_", cheader_filename = "gdl/gdl.h")]
+	[CCode (cheader_filename = "gdl/gdl.h", cprefix = "GDL_DOCK_")]
 	public enum DockPlacement {
 		NONE,
 		TOP,
@@ -285,7 +285,7 @@ namespace Gdl {
 		CENTER,
 		FLOATING
 	}
-	[CCode (cprefix = "GDL_SWITCHER_STYLE_", cheader_filename = "gdl/gdl.h")]
+	[CCode (cheader_filename = "gdl/gdl.h", cprefix = "GDL_SWITCHER_STYLE_")]
 	public enum SwitcherStyle {
 		TEXT,
 		ICON,

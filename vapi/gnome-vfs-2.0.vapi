@@ -46,18 +46,18 @@ namespace GnomeVFS {
 		public void @set (GnomeVFS.ACE ace);
 		public void unset (GnomeVFS.ACE ace);
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class ACLKind {
 		public unowned string to_string ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class ACLPerm {
 		public unowned string to_string ();
 	}
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", type_id = "GNOME_VFS_TYPE_ADDRESS")]
 	[Compact]
-	[CCode (type_id = "GNOME_VFS_TYPE_ADDRESS", cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class Address {
 		public unowned GnomeVFS.Address dup ();
 		public bool equal (GnomeVFS.Address b);
@@ -71,12 +71,12 @@ namespace GnomeVFS {
 		public bool match (GnomeVFS.Address b, uint prefix);
 		public unowned string to_string ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class AsyncHandle {
 	}
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", free_function = "gnome_vfs_cancellation_destroy")]
 	[Compact]
-	[CCode (free_function = "gnome_vfs_cancellation_destroy", cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class Cancellation {
 		[CCode (has_construct_function = false)]
 		public Cancellation ();
@@ -85,8 +85,8 @@ namespace GnomeVFS {
 		public bool check ();
 		public int get_fd ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class Context {
 		[CCode (has_construct_function = false)]
 		public Context ();
@@ -94,16 +94,16 @@ namespace GnomeVFS {
 		public unowned GnomeVFS.Cancellation get_cancellation ();
 		public static unowned GnomeVFS.Context peek_current ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class DNSSDBrowseHandle {
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class DNSSDResolveHandle {
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class DNSSDService {
 		public weak string domain;
 		public weak string name;
@@ -111,11 +111,11 @@ namespace GnomeVFS {
 		[CCode (cname = "gnome_vfs_dns_sd_service_list_free")]
 		public void list_free (int n_services);
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class DirectoryHandle {
 	}
-	[CCode (type_check_function = "GNOME_IS_VFS_DRIVE", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", type_check_function = "GNOME_IS_VFS_DRIVE")]
 	public class Drive : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Drive ();
@@ -143,8 +143,8 @@ namespace GnomeVFS {
 		public virtual signal void volume_pre_unmount (GnomeVFS.Volume volume);
 		public virtual signal void volume_unmounted (GnomeVFS.Volume volume);
 	}
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", ref_function = "gnome_vfs_file_info_ref", ref_function_void = true, type_id = "GNOME_VFS_TYPE_FILE_INFO", unref_function = "gnome_vfs_file_info_unref")]
 	[Compact]
-	[CCode (ref_function = "gnome_vfs_file_info_ref", ref_function_void = true, unref_function = "gnome_vfs_file_info_unref", type_id = "GNOME_VFS_TYPE_FILE_INFO", cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class FileInfo {
 		public weak GnomeVFS.ACL acl;
 		public ulong atime;
@@ -181,12 +181,12 @@ namespace GnomeVFS {
 		public static unowned GLib.List list_unref (GLib.List list);
 		public bool matches (GnomeVFS.FileInfo b);
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class FileOffset {
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class FindDirectoryResult {
 		public void* reserved1;
 		public void* reserved2;
@@ -194,28 +194,28 @@ namespace GnomeVFS {
 		public weak GnomeVFS.URI uri;
 		public unowned GnomeVFS.FindDirectoryResult dup ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class GetFileInfoResult {
 		public weak GnomeVFS.FileInfo file_info;
 		public GnomeVFS.Result result;
 		public weak GnomeVFS.URI uri;
 		public unowned GnomeVFS.GetFileInfoResult dup ();
 	}
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", type_id = "GNOME_VFS_TYPE_GNOME_VFS_FIND_DIRECTORY_RESULT")]
 	[Compact]
-	[CCode (type_id = "GNOME_VFS_TYPE_GNOME_VFS_FIND_DIRECTORY_RESULT", cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class GnomeVfsFindDirectoryResult {
 	}
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", type_id = "GNOME_VFS_TYPE_GNOME_VFS_GET_FILE_INFO_RESULT")]
 	[Compact]
-	[CCode (type_id = "GNOME_VFS_TYPE_GNOME_VFS_GET_FILE_INFO_RESULT", cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class GnomeVfsGetFileInfoResult {
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class Handle {
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class InodeNumber {
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
@@ -225,12 +225,12 @@ namespace GnomeVFS {
 		public static unowned GnomeVFS.MIMEMonitor @get ();
 		public virtual signal void data_changed ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class MethodHandle {
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class MimeAction {
 		public void* action;
 		public GnomeVFS.MimeActionType action_type;
@@ -238,8 +238,8 @@ namespace GnomeVFS {
 		public GnomeVFS.Result launch (GLib.List uris);
 		public GnomeVFS.Result launch_with_env (GLib.List uris, out unowned string envp);
 	}
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs-mime-handlers.h", copy_function = "gnome_vfs_mime_application_copy")]
 	[Compact]
-	[CCode (copy_function = "gnome_vfs_mime_application_copy", cheader_filename = "libgnomevfs/gnome-vfs-mime-handlers.h")]
 	public class MimeApplication {
 		public bool can_open_multiple_files;
 		public weak string command;
@@ -269,22 +269,22 @@ namespace GnomeVFS {
 		public bool supports_startup_notification ();
 		public bool supports_uris ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class ModuleCallbackAdditionalHeadersIn {
 		public void* reserved1;
 		public void* reserved2;
 		public weak GnomeVFS.URI uri;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class ModuleCallbackAdditionalHeadersOut {
 		public weak GLib.List headers;
 		public void* reserved1;
 		public void* reserved2;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class ModuleCallbackAuthenticationIn {
 		public GnomeVFS.ModuleCallbackAuthenticationAuthType auth_type;
 		public bool previous_attempt_failed;
@@ -293,16 +293,16 @@ namespace GnomeVFS {
 		public void* reserved2;
 		public weak string uri;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class ModuleCallbackAuthenticationOut {
 		public weak string password;
 		public void* reserved1;
 		public void* reserved2;
 		public weak string username;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class ModuleCallbackFillAuthenticationIn {
 		public weak string authtype;
 		public weak string domain;
@@ -315,8 +315,8 @@ namespace GnomeVFS {
 		public weak string uri;
 		public weak string username;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class ModuleCallbackFillAuthenticationOut {
 		public weak string domain;
 		public weak string password;
@@ -325,8 +325,8 @@ namespace GnomeVFS {
 		public weak string username;
 		public bool valid;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class ModuleCallbackFullAuthenticationIn {
 		public weak string authtype;
 		public weak string default_domain;
@@ -342,8 +342,8 @@ namespace GnomeVFS {
 		public weak string uri;
 		public weak string username;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class ModuleCallbackFullAuthenticationOut {
 		public bool abort_auth;
 		public weak string domain;
@@ -354,8 +354,8 @@ namespace GnomeVFS {
 		public bool save_password;
 		public weak string username;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class ModuleCallbackQuestionIn {
 		public weak string choices;
 		public weak string primary_message;
@@ -363,30 +363,30 @@ namespace GnomeVFS {
 		public void* reserved2;
 		public weak string secondary_message;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class ModuleCallbackQuestionOut {
 		public int answer;
 		public void* reserved1;
 		public void* reserved2;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class ModuleCallbackReceivedHeadersIn {
 		public weak GLib.List headers;
 		public void* reserved1;
 		public void* reserved2;
 		public weak GnomeVFS.URI uri;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class ModuleCallbackReceivedHeadersOut {
 		public int dummy;
 		public void* reserved1;
 		public void* reserved2;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class ModuleCallbackSaveAuthenticationIn {
 		public weak string authtype;
 		public weak string domain;
@@ -401,14 +401,14 @@ namespace GnomeVFS {
 		public weak string uri;
 		public weak string username;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class ModuleCallbackSaveAuthenticationOut {
 		public void* reserved1;
 		public void* reserved2;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class ModuleCallbackStatusMessageIn {
 		public weak string message;
 		public int percentage;
@@ -416,19 +416,19 @@ namespace GnomeVFS {
 		public void* reserved2;
 		public weak string uri;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class ModuleCallbackStatusMessageOut {
 		public int dummy;
 		public void* reserved1;
 		public void* reserved2;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class MonitorHandle {
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class ProgressCallbackState {
 		public void* async_job_data;
 		public int64 next_text_update_callback_time;
@@ -441,12 +441,12 @@ namespace GnomeVFS {
 		public int64 update_callback_period;
 		public void* user_data;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class ResolveHandle {
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class ToplevelURI {
 		public weak string host_name;
 		public uint host_port;
@@ -457,8 +457,8 @@ namespace GnomeVFS {
 		public weak string urn;
 		public weak string user_name;
 	}
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", ref_function = "gnome_vfs_uri_ref", unref_function = "gnome_vfs_uri_unref")]
 	[Compact]
-	[CCode (ref_function = "gnome_vfs_uri_ref", unref_function = "gnome_vfs_uri_unref", cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class URI {
 		public weak string fragment_id;
 		public void* method;
@@ -507,7 +507,7 @@ namespace GnomeVFS {
 		public void set_user_name (string user_name);
 		public unowned string to_string (GnomeVFS.URIHideOptions hide_options);
 	}
-	[CCode (type_check_function = "GNOME_IS_VFS_VOLUME", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", type_check_function = "GNOME_IS_VFS_VOLUME")]
 	public class Volume : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Volume ();
@@ -531,7 +531,7 @@ namespace GnomeVFS {
 		public void unmount (GnomeVFS.VolumeOpCallback callback);
 		public void unref ();
 	}
-	[CCode (type_check_function = "GNOME_IS_VFS_VOLUME_MONITOR", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", type_check_function = "GNOME_IS_VFS_VOLUME_MONITOR")]
 	public class VolumeMonitor : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected VolumeMonitor ();
@@ -548,8 +548,8 @@ namespace GnomeVFS {
 		public virtual signal void volume_pre_unmount (GnomeVFS.Volume volume);
 		public virtual signal void volume_unmounted (GnomeVFS.Volume volume);
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Compact]
 	public class XferProgressInfo {
 		public GnomeVFS.FileSize bytes_copied;
 		public GnomeVFS.FileSize bytes_total;
@@ -569,16 +569,16 @@ namespace GnomeVFS {
 		public GnomeVFS.Result vfs_status;
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	[SimpleType]
 	[IntegerType (rank = 0)]
+	[SimpleType]
 	public struct FileSize : uint64 {
 	}
-	[CCode (cprefix = "GNOME_VFS_DNS_SD_SERVICE_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", cprefix = "GNOME_VFS_DNS_SD_SERVICE_")]
 	public enum DNSSDServiceStatus {
 		ADDED,
 		REMOVED
 	}
-	[CCode (cprefix = "GNOME_VFS_DEVICE_TYPE_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", cprefix = "GNOME_VFS_DEVICE_TYPE_")]
 	public enum DeviceType {
 		UNKNOWN,
 		AUDIO_CD,
@@ -599,7 +599,7 @@ namespace GnomeVFS {
 		LOOPBACK,
 		NETWORK
 	}
-	[CCode (cprefix = "GNOME_VFS_DIRECTORY_VISIT_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", cprefix = "GNOME_VFS_DIRECTORY_VISIT_")]
 	[Flags]
 	public enum DirectoryVisitOptions {
 		DEFAULT,
@@ -607,14 +607,14 @@ namespace GnomeVFS {
 		LOOPCHECK,
 		IGNORE_RECURSE_ERROR
 	}
-	[CCode (cprefix = "GNOME_VFS_FILE_FLAGS_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", cprefix = "GNOME_VFS_FILE_FLAGS_")]
 	[Flags]
 	public enum FileFlags {
 		NONE,
 		SYMLINK,
 		LOCAL
 	}
-	[CCode (cprefix = "GNOME_VFS_FILE_INFO_FIELDS_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", cprefix = "GNOME_VFS_FILE_INFO_FIELDS_")]
 	[Flags]
 	public enum FileInfoFields {
 		NONE,
@@ -637,7 +637,7 @@ namespace GnomeVFS {
 		ACL,
 		SELINUX_CONTEXT
 	}
-	[CCode (cprefix = "GNOME_VFS_FILE_INFO_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", cprefix = "GNOME_VFS_FILE_INFO_")]
 	[Flags]
 	public enum FileInfoOptions {
 		DEFAULT,
@@ -650,7 +650,7 @@ namespace GnomeVFS {
 		GET_ACL,
 		GET_SELINUX_CONTEXT
 	}
-	[CCode (cprefix = "GNOME_VFS_PERM_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", cprefix = "GNOME_VFS_PERM_")]
 	[Flags]
 	public enum FilePermissions {
 		SUID,
@@ -672,7 +672,7 @@ namespace GnomeVFS {
 		ACCESS_WRITABLE,
 		ACCESS_EXECUTABLE
 	}
-	[CCode (cprefix = "GNOME_VFS_FILE_TYPE_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", cprefix = "GNOME_VFS_FILE_TYPE_")]
 	public enum FileType {
 		UNKNOWN,
 		REGULAR,
@@ -683,42 +683,42 @@ namespace GnomeVFS {
 		BLOCK_DEVICE,
 		SYMBOLIC_LINK
 	}
-	[CCode (cprefix = "GNOME_VFS_DIRECTORY_KIND_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", cprefix = "GNOME_VFS_DIRECTORY_KIND_")]
 	public enum FindDirectoryKind {
 		DESKTOP,
 		TRASH
 	}
-	[CCode (cprefix = "GNOME_VFS_MAKE_URI_DIR_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", cprefix = "GNOME_VFS_MAKE_URI_DIR_")]
 	[Flags]
 	public enum MakeURIDirs {
 		NONE,
 		HOMEDIR,
 		CURRENT
 	}
-	[CCode (cprefix = "GNOME_VFS_MIME_ACTION_TYPE_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", cprefix = "GNOME_VFS_MIME_ACTION_TYPE_")]
 	public enum MimeActionType {
 		NONE,
 		APPLICATION,
 		COMPONENT
 	}
-	[CCode (cprefix = "GNOME_VFS_MIME_APPLICATION_ARGUMENT_TYPE_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", cprefix = "GNOME_VFS_MIME_APPLICATION_ARGUMENT_TYPE_")]
 	public enum MimeApplicationArgumentType {
 		URIS,
 		PATHS,
 		URIS_FOR_NON_FILES
 	}
-	[CCode (cprefix = "GNOME_VFS_MIME_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", cprefix = "GNOME_VFS_MIME_")]
 	public enum MimeEquivalence {
 		UNRELATED,
 		IDENTICAL,
 		PARENT
 	}
-	[CCode (cprefix = "", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", cprefix = "")]
 	public enum ModuleCallbackAuthenticationAuthType {
 		AuthTypeBasic,
 		AuthTypeDigest
 	}
-	[CCode (cprefix = "GNOME_VFS_MODULE_CALLBACK_FULL_AUTHENTICATION_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", cprefix = "GNOME_VFS_MODULE_CALLBACK_FULL_AUTHENTICATION_")]
 	[Flags]
 	public enum ModuleCallbackFullAuthenticationFlags {
 		PREVIOUS_ATTEMPT_FAILED,
@@ -728,12 +728,12 @@ namespace GnomeVFS {
 		SAVING_SUPPORTED,
 		ANON_SUPPORTED
 	}
-	[CCode (cprefix = "GNOME_VFS_MODULE_CALLBACK_FULL_AUTHENTICATION_OUT_ANON_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", cprefix = "GNOME_VFS_MODULE_CALLBACK_FULL_AUTHENTICATION_OUT_ANON_")]
 	[Flags]
 	public enum ModuleCallbackFullAuthenticationOutFlags {
 		SELECTED
 	}
-	[CCode (cprefix = "GNOME_VFS_MONITOR_EVENT_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", cprefix = "GNOME_VFS_MONITOR_EVENT_")]
 	public enum MonitorEventType {
 		CHANGED,
 		DELETED,
@@ -742,12 +742,12 @@ namespace GnomeVFS {
 		CREATED,
 		METADATA_CHANGED
 	}
-	[CCode (cprefix = "GNOME_VFS_MONITOR_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", cprefix = "GNOME_VFS_MONITOR_")]
 	public enum MonitorType {
 		FILE,
 		DIRECTORY
 	}
-	[CCode (cprefix = "GNOME_VFS_OPEN_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", cprefix = "GNOME_VFS_OPEN_")]
 	[Flags]
 	public enum OpenMode {
 		NONE,
@@ -756,7 +756,7 @@ namespace GnomeVFS {
 		RANDOM,
 		TRUNCATE
 	}
-	[CCode (cprefix = "GNOME_VFS_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", cprefix = "GNOME_VFS_")]
 	public enum Result {
 		OK,
 		ERROR_NOT_FOUND,
@@ -812,13 +812,13 @@ namespace GnomeVFS {
 		ERROR_NOT_A_SYMBOLIC_LINK,
 		NUM_ERRORS
 	}
-	[CCode (cprefix = "GNOME_VFS_SEEK_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", cprefix = "GNOME_VFS_SEEK_")]
 	public enum SeekPosition {
 		START,
 		CURRENT,
 		END
 	}
-	[CCode (cprefix = "GNOME_VFS_SET_FILE_INFO_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", cprefix = "GNOME_VFS_SET_FILE_INFO_")]
 	[Flags]
 	public enum SetFileInfoMask {
 		NONE,
@@ -830,7 +830,7 @@ namespace GnomeVFS {
 		SELINUX_CONTEXT,
 		SYMLINK_NAME
 	}
-	[CCode (cprefix = "GNOME_VFS_URI_HIDE_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", cprefix = "GNOME_VFS_URI_HIDE_")]
 	[Flags]
 	public enum URIHideOptions {
 		NONE,
@@ -841,24 +841,24 @@ namespace GnomeVFS {
 		TOPLEVEL_METHOD,
 		FRAGMENT_IDENTIFIER
 	}
-	[CCode (cprefix = "GNOME_VFS_VOLUME_TYPE_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", cprefix = "GNOME_VFS_VOLUME_TYPE_")]
 	public enum VolumeType {
 		MOUNTPOINT,
 		VFS_MOUNT,
 		CONNECTED_SERVER
 	}
-	[CCode (cprefix = "GNOME_VFS_XFER_ERROR_ACTION_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", cprefix = "GNOME_VFS_XFER_ERROR_ACTION_")]
 	public enum XferErrorAction {
 		ABORT,
 		RETRY,
 		SKIP
 	}
-	[CCode (cprefix = "GNOME_VFS_XFER_ERROR_MODE_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", cprefix = "GNOME_VFS_XFER_ERROR_MODE_")]
 	public enum XferErrorMode {
 		ABORT,
 		QUERY
 	}
-	[CCode (cprefix = "GNOME_VFS_XFER_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", cprefix = "GNOME_VFS_XFER_")]
 	[Flags]
 	public enum XferOptions {
 		DEFAULT,
@@ -876,7 +876,7 @@ namespace GnomeVFS {
 		FOLLOW_LINKS_RECURSIVE,
 		TARGET_DEFAULT_PERMS
 	}
-	[CCode (cprefix = "GNOME_VFS_XFER_OVERWRITE_ACTION_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", cprefix = "GNOME_VFS_XFER_OVERWRITE_ACTION_")]
 	public enum XferOverwriteAction {
 		ABORT,
 		REPLACE,
@@ -884,14 +884,14 @@ namespace GnomeVFS {
 		SKIP,
 		SKIP_ALL
 	}
-	[CCode (cprefix = "GNOME_VFS_XFER_OVERWRITE_MODE_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", cprefix = "GNOME_VFS_XFER_OVERWRITE_MODE_")]
 	public enum XferOverwriteMode {
 		ABORT,
 		QUERY,
 		REPLACE,
 		SKIP
 	}
-	[CCode (cprefix = "GNOME_VFS_XFER_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", cprefix = "GNOME_VFS_XFER_")]
 	public enum XferPhase {
 		PHASE_INITIAL,
 		CHECKING_DESTINATION,
@@ -912,7 +912,7 @@ namespace GnomeVFS {
 		PHASE_COMPLETED,
 		NUM_PHASES
 	}
-	[CCode (cprefix = "GNOME_VFS_XFER_PROGRESS_STATUS_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", cprefix = "GNOME_VFS_XFER_PROGRESS_STATUS_")]
 	public enum XferProgressStatus {
 		OK,
 		VFSERROR,

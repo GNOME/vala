@@ -2,8 +2,8 @@
 
 [CCode (cprefix = "Gnome", lower_case_cprefix = "gnome_")]
 namespace Gnome {
+	[CCode (cheader_filename = "libgnome/libgnome.h", type_id = "GNOME_TYPE_MODULE_INFO")]
 	[Compact]
-	[CCode (type_id = "GNOME_TYPE_MODULE_INFO", cheader_filename = "libgnome/libgnome.h")]
 	public class ModuleInfo {
 		public weak Gnome.ModuleClassInitHook class_init;
 		public weak string description;
@@ -17,8 +17,8 @@ namespace Gnome {
 		public weak Gnome.ModuleRequirement requirements;
 		public weak string version;
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
+	[Compact]
 	public class ModuleRequirement {
 		public weak Gnome.ModuleInfo module_info;
 		public weak string required_version;
@@ -73,14 +73,14 @@ namespace Gnome {
 		public int popt_flags { construct; }
 		public void* popt_table { construct; }
 	}
-	[Compact]
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
+	[Compact]
 	public class Trigger {
 		public weak string level;
 		public Gnome.TriggerType type;
 		public void* u;
 	}
-	[CCode (cprefix = "GNOME_FILE_DOMAIN_", has_type_id = false, cheader_filename = "libgnome/libgnome.h")]
+	[CCode (cheader_filename = "libgnome/libgnome.h", cprefix = "GNOME_FILE_DOMAIN_", has_type_id = false)]
 	public enum FileDomain {
 		UNKNOWN,
 		LIBDIR,
@@ -96,19 +96,19 @@ namespace Gnome {
 		APP_CONFIG,
 		APP_HELP
 	}
-	[CCode (cprefix = "GNOME_HELP_ERROR_", has_type_id = false, cheader_filename = "libgnome/libgnome.h")]
+	[CCode (cheader_filename = "libgnome/libgnome.h", cprefix = "GNOME_HELP_ERROR_", has_type_id = false)]
 	public enum HelpError {
 		INTERNAL,
 		NOT_FOUND
 	}
-	[CCode (cprefix = "GTRIG_", has_type_id = false, cheader_filename = "libgnome/libgnome.h")]
+	[CCode (cheader_filename = "libgnome/libgnome.h", cprefix = "GTRIG_", has_type_id = false)]
 	public enum TriggerType {
 		NONE,
 		FUNCTION,
 		COMMAND,
 		MEDIAPLAY
 	}
-	[CCode (cprefix = "GNOME_URL_ERROR_", has_type_id = false, cheader_filename = "libgnome/libgnome.h")]
+	[CCode (cheader_filename = "libgnome/libgnome.h", cprefix = "GNOME_URL_ERROR_", has_type_id = false)]
 	public enum URLError {
 		PARSE,
 		LAUNCH,
@@ -190,7 +190,7 @@ namespace Gnome {
 	public static int execute_terminal_shell (string dir, string commandline);
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static int execute_terminal_shell_fds (string dir, string commandline, bool close_fds);
-	[CCode (cname = "g_extension_pointer", cheader_filename = "libgnome/libgnome.h")]
+	[CCode (cheader_filename = "libgnome/libgnome.h", cname = "g_extension_pointer")]
 	public static unowned string g_extension_pointer (string path);
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static unowned string gconf_get_app_settings_relative (Gnome.Program program, string subkey);
@@ -212,7 +212,7 @@ namespace Gnome {
 	public static bool help_display_with_doc_id_and_env (Gnome.Program program, string doc_id, string file_name, string link_id, out unowned string envp) throws GLib.Error;
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static GLib.Quark help_error_quark ();
-	[CCode (cname = "libgnome_module_info_get", cheader_filename = "libgnome/libgnome.h")]
+	[CCode (cheader_filename = "libgnome/libgnome.h", cname = "libgnome_module_info_get")]
 	public static unowned Gnome.ModuleInfo libgnome_module_info_get ();
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static void prepend_terminal_to_vector (int argc, out unowned string argv);

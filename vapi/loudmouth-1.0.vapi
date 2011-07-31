@@ -2,8 +2,8 @@
 
 [CCode (cprefix = "Lm", lower_case_cprefix = "lm_")]
 namespace Lm {
+	[CCode (cheader_filename = "loudmouth/loudmouth.h", ref_function = "lm_connection_ref", unref_function = "lm_connection_unref")]
 	[Compact]
-	[CCode (ref_function = "lm_connection_ref", unref_function = "lm_connection_unref", cheader_filename = "loudmouth/loudmouth.h")]
 	public class Connection {
 		public const int DEFAULT_PORT;
 		public const int DEFAULT_PORT_SSL;
@@ -42,8 +42,8 @@ namespace Lm {
 		[CCode (has_construct_function = false)]
 		public Connection.with_context (string server, GLib.MainContext context);
 	}
+	[CCode (cheader_filename = "loudmouth/loudmouth.h", ref_function = "lm_message_ref", unref_function = "lm_message_unref")]
 	[Compact]
-	[CCode (ref_function = "lm_message_ref", unref_function = "lm_message_unref", cheader_filename = "loudmouth/loudmouth.h")]
 	public class Message {
 		public Lm.MessageNode node;
 		[CCode (has_construct_function = false)]
@@ -54,16 +54,16 @@ namespace Lm {
 		[CCode (has_construct_function = false)]
 		public Message.with_sub_type (string? to, Lm.MessageType type, Lm.MessageSubType sub_type);
 	}
+	[CCode (cheader_filename = "loudmouth/loudmouth.h", ref_function = "lm_message_handler_ref", unref_function = "lm_message_handler_unref")]
 	[Compact]
-	[CCode (ref_function = "lm_message_handler_ref", unref_function = "lm_message_handler_unref", cheader_filename = "loudmouth/loudmouth.h")]
 	public class MessageHandler {
 		[CCode (has_construct_function = false)]
 		public MessageHandler (Lm.HandleMessageFunction function, GLib.DestroyNotify? notify);
 		public void invalidate ();
 		public bool is_valid ();
 	}
+	[CCode (cheader_filename = "loudmouth/loudmouth.h", ref_function = "lm_message_node_ref", unref_function = "lm_message_node_unref")]
 	[Compact]
-	[CCode (ref_function = "lm_message_node_ref", unref_function = "lm_message_node_unref", cheader_filename = "loudmouth/loudmouth.h")]
 	public class MessageNode {
 		public Lm.MessageNode children;
 		public string name;
@@ -84,8 +84,8 @@ namespace Lm {
 		public void set_value (string value);
 		public string to_string ();
 	}
+	[CCode (cheader_filename = "loudmouth/loudmouth.h", ref_function = "lm_proxy_ref", unref_function = "lm_proxy_unref")]
 	[Compact]
-	[CCode (ref_function = "lm_proxy_ref", unref_function = "lm_proxy_unref", cheader_filename = "loudmouth/loudmouth.h")]
 	public class Proxy {
 		[CCode (has_construct_function = false)]
 		public Proxy (Lm.ProxyType type);
@@ -101,8 +101,8 @@ namespace Lm {
 		[CCode (has_construct_function = false)]
 		public Proxy.with_server (Lm.ProxyType type, string server, uint port);
 	}
+	[CCode (cheader_filename = "loudmouth/loudmouth.h", ref_function = "lm_ssl_ref", unref_function = "lm_ssl_unref")]
 	[Compact]
-	[CCode (ref_function = "lm_ssl_ref", unref_function = "lm_ssl_unref", cheader_filename = "loudmouth/loudmouth.h")]
 	public class SSL {
 		[CCode (has_construct_function = false)]
 		public SSL (string expected_fingerprint, Lm.SSLFunction ssl_function, GLib.DestroyNotify? notify);
@@ -112,13 +112,13 @@ namespace Lm {
 		public static bool is_supported ();
 		public void use_starttls (bool use_starttls, bool require);
 	}
-	[CCode (cprefix = "LM_CERT_", has_type_id = false, cheader_filename = "loudmouth/loudmouth.h")]
+	[CCode (cheader_filename = "loudmouth/loudmouth.h", cprefix = "LM_CERT_", has_type_id = false)]
 	public enum CertificateStatus {
 		INVALID,
 		ISSUER_NOT_FOUND,
 		REVOKED
 	}
-	[CCode (cprefix = "LM_CONNECTION_STATE_", has_type_id = false, cheader_filename = "loudmouth/loudmouth.h")]
+	[CCode (cheader_filename = "loudmouth/loudmouth.h", cprefix = "LM_CONNECTION_STATE_", has_type_id = false)]
 	public enum ConnectionState {
 		CLOSED,
 		OPENING,
@@ -126,7 +126,7 @@ namespace Lm {
 		AUTHENTICATING,
 		AUTHENTICATED
 	}
-	[CCode (cprefix = "LM_DISCONNECT_REASON_", has_type_id = false, cheader_filename = "loudmouth/loudmouth.h")]
+	[CCode (cheader_filename = "loudmouth/loudmouth.h", cprefix = "LM_DISCONNECT_REASON_", has_type_id = false)]
 	public enum DisconnectReason {
 		OK,
 		PING_TIME_OUT,
@@ -136,25 +136,25 @@ namespace Lm {
 		INVALID_XML,
 		UNKNOWN
 	}
-	[CCode (cprefix = "LM_ERROR_", has_type_id = false, cheader_filename = "loudmouth/loudmouth.h")]
+	[CCode (cheader_filename = "loudmouth/loudmouth.h", cprefix = "LM_ERROR_", has_type_id = false)]
 	public enum Error {
 		CONNECTION_NOT_OPEN,
 		CONNECTION_OPEN,
 		AUTH_FAILED,
 		CONNECTION_FAILED
 	}
-	[CCode (cprefix = "LM_HANDLER_PRIORITY_", has_type_id = false, cheader_filename = "loudmouth/loudmouth.h")]
+	[CCode (cheader_filename = "loudmouth/loudmouth.h", cprefix = "LM_HANDLER_PRIORITY_", has_type_id = false)]
 	public enum HandlerPriority {
 		LAST,
 		NORMAL,
 		FIRST
 	}
-	[CCode (cprefix = "LM_HANDLER_RESULT_", has_type_id = false, cheader_filename = "loudmouth/loudmouth.h")]
+	[CCode (cheader_filename = "loudmouth/loudmouth.h", cprefix = "LM_HANDLER_RESULT_", has_type_id = false)]
 	public enum HandlerResult {
 		REMOVE_MESSAGE,
 		ALLOW_MORE_HANDLERS
 	}
-	[CCode (cprefix = "LM_MESSAGE_SUB_TYPE_", has_type_id = false, cheader_filename = "loudmouth/loudmouth.h")]
+	[CCode (cheader_filename = "loudmouth/loudmouth.h", cprefix = "LM_MESSAGE_SUB_TYPE_", has_type_id = false)]
 	public enum MessageSubType {
 		NOT_SET,
 		AVAILABLE,
@@ -173,7 +173,7 @@ namespace Lm {
 		RESULT,
 		ERROR
 	}
-	[CCode (cprefix = "LM_MESSAGE_TYPE_", has_type_id = false, cheader_filename = "loudmouth/loudmouth.h")]
+	[CCode (cheader_filename = "loudmouth/loudmouth.h", cprefix = "LM_MESSAGE_TYPE_", has_type_id = false)]
 	public enum MessageType {
 		MESSAGE,
 		PRESENCE,
@@ -190,17 +190,17 @@ namespace Lm {
 		STARTTLS,
 		UNKNOWN
 	}
-	[CCode (cprefix = "LM_PROXY_TYPE_", has_type_id = false, cheader_filename = "loudmouth/loudmouth.h")]
+	[CCode (cheader_filename = "loudmouth/loudmouth.h", cprefix = "LM_PROXY_TYPE_", has_type_id = false)]
 	public enum ProxyType {
 		NONE,
 		HTTP
 	}
-	[CCode (cprefix = "LM_SSL_RESPONSE_", has_type_id = false, cheader_filename = "loudmouth/loudmouth.h")]
+	[CCode (cheader_filename = "loudmouth/loudmouth.h", cprefix = "LM_SSL_RESPONSE_", has_type_id = false)]
 	public enum SSLResponse {
 		CONTINUE,
 		STOP
 	}
-	[CCode (cprefix = "LM_SSL_STATUS_", has_type_id = false, cheader_filename = "loudmouth/loudmouth.h")]
+	[CCode (cheader_filename = "loudmouth/loudmouth.h", cprefix = "LM_SSL_STATUS_", has_type_id = false)]
 	public enum SSLStatus {
 		NO_CERT_FOUND,
 		UNTRUSTED_CERT,

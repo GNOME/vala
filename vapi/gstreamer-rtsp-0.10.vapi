@@ -2,8 +2,8 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
-	[Compact]
 	[CCode (cheader_filename = "gst/rtsp/gstrtspconnection.h")]
+	[Compact]
 	public class RTSPConnection {
 		public static Gst.RTSPResult accept (int sock, out unowned Gst.RTSPConnection conn);
 		public void clear_auth_params ();
@@ -34,8 +34,8 @@ namespace Gst {
 		public void set_tunneled (bool tunneled);
 		public Gst.RTSPResult write (uchar data, uint size, GLib.TimeVal timeout);
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/rtsp/gstrtspmessage.h")]
+	[Compact]
 	public class RTSPMessage {
 		public uchar body;
 		public uint body_size;
@@ -65,29 +65,29 @@ namespace Gst {
 		public Gst.RTSPResult take_header (Gst.RTSPHeaderField field, owned string value);
 		public Gst.RTSPResult unset ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/rtsp/gstrtsprange.h")]
+	[Compact]
 	public class RTSPRange {
 		public int max;
 		public int min;
 		public static Gst.RTSPResult parse (string rangestr, out Gst.RTSPTimeRange range);
 		public static string to_string (Gst.RTSPTimeRange range);
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/rtsp/gstrtsprange.h")]
+	[Compact]
 	public class RTSPTime {
 		public double seconds;
 		public Gst.RTSPTimeType type;
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/rtsp/gstrtsprange.h")]
+	[Compact]
 	public class RTSPTimeRange {
 		public Gst.RTSPTime max;
 		public Gst.RTSPTime min;
 		public Gst.RTSPRangeUnit unit;
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/rtsp/gstrtsptransport.h")]
+	[Compact]
 	public class RTSPTransport {
 		public bool append;
 		public Gst.RTSPRange client_port;
@@ -111,8 +111,8 @@ namespace Gst {
 		public static Gst.RTSPResult @new (out Gst.RTSPTransport transport);
 		public static Gst.RTSPResult parse (string str, Gst.RTSPTransport transport);
 	}
+	[CCode (cheader_filename = "gst/rtsp/gstrtspconnection.h", copy_function = "gst_rtsp_url_copy", type_id = "GST_TYPE_RTSP_URL")]
 	[Compact]
-	[CCode (copy_function = "gst_rtsp_url_copy", type_id = "GST_TYPE_RTSP_URL", cheader_filename = "gst/rtsp/gstrtspconnection.h")]
 	public class RTSPUrl {
 		public string abspath;
 		public Gst.RTSPFamily family;
@@ -129,8 +129,8 @@ namespace Gst {
 		public static Gst.RTSPResult parse (string urlstr, out Gst.RTSPUrl url);
 		public Gst.RTSPResult set_port (uint16 port);
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/rtsp/gstrtspconnection.h")]
+	[Compact]
 	public class RTSPWatch {
 		[CCode (has_construct_function = false)]
 		public RTSPWatch (Gst.RTSPConnection conn, Gst.RTSPWatchFuncs funcs, GLib.DestroyNotify notify);
@@ -141,8 +141,8 @@ namespace Gst {
 		public Gst.RTSPResult send_message (Gst.RTSPMessage message, uint id);
 		public Gst.RTSPResult write_data (uchar data, uint size, uint id);
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/rtsp/gstrtspconnection.h")]
+	[Compact]
 	public class RTSPWatchFuncs {
 		public weak GLib.Callback closed;
 		public weak GLib.Callback error;
@@ -167,25 +167,25 @@ namespace Gst {
 		[HasEmitter]
 		public signal Gst.RTSPResult send (void* req, void* resp);
 	}
-	[CCode (cprefix = "GST_RTSP_AUTH_", cheader_filename = "gst/rtsp/gstrtspconnection.h")]
+	[CCode (cheader_filename = "gst/rtsp/gstrtspconnection.h", cprefix = "GST_RTSP_AUTH_")]
 	public enum RTSPAuthMethod {
 		NONE,
 		BASIC,
 		DIGEST
 	}
-	[CCode (cprefix = "GST_RTSP_EV_", cheader_filename = "gst/rtsp/gstrtspconnection.h")]
+	[CCode (cheader_filename = "gst/rtsp/gstrtspconnection.h", cprefix = "GST_RTSP_EV_")]
 	[Flags]
 	public enum RTSPEvent {
 		READ,
 		WRITE
 	}
-	[CCode (cprefix = "GST_RTSP_FAM_", cheader_filename = "gst/rtsp/gstrtspdefs.h")]
+	[CCode (cheader_filename = "gst/rtsp/gstrtspdefs.h", cprefix = "GST_RTSP_FAM_")]
 	public enum RTSPFamily {
 		NONE,
 		INET,
 		INET6
 	}
-	[CCode (cprefix = "GST_RTSP_HDR_", cheader_filename = "gst/rtsp/gstrtspdefs.h")]
+	[CCode (cheader_filename = "gst/rtsp/gstrtspdefs.h", cprefix = "GST_RTSP_HDR_")]
 	public enum RTSPHeaderField {
 		INVALID,
 		ACCEPT,
@@ -270,7 +270,7 @@ namespace Gst {
 		X_SESSIONCOOKIE,
 		LAST
 	}
-	[CCode (cprefix = "GST_RTSP_LOWER_TRANS_", cheader_filename = "gst/rtsp/gstrtspextension.h")]
+	[CCode (cheader_filename = "gst/rtsp/gstrtspextension.h", cprefix = "GST_RTSP_LOWER_TRANS_")]
 	[Flags]
 	public enum RTSPLowerTrans {
 		UDP,
@@ -278,7 +278,7 @@ namespace Gst {
 		TCP,
 		HTTP
 	}
-	[CCode (cprefix = "GST_RTSP_", cheader_filename = "gst/rtsp/gstrtspdefs.h")]
+	[CCode (cheader_filename = "gst/rtsp/gstrtspdefs.h", cprefix = "GST_RTSP_")]
 	[Flags]
 	public enum RTSPMethod {
 		INVALID,
@@ -296,7 +296,7 @@ namespace Gst {
 		GET,
 		POST
 	}
-	[CCode (cprefix = "GST_RTSP_MESSAGE_", has_type_id = false, cheader_filename = "gst/rtsp/gstrtspmessage.h")]
+	[CCode (cheader_filename = "gst/rtsp/gstrtspmessage.h", cprefix = "GST_RTSP_MESSAGE_", has_type_id = false)]
 	public enum RTSPMsgType {
 		INVALID,
 		REQUEST,
@@ -305,13 +305,13 @@ namespace Gst {
 		HTTP_RESPONSE,
 		DATA
 	}
-	[CCode (cprefix = "GST_RTSP_PROFILE_", has_type_id = false, cheader_filename = "gst/rtsp/gstrtsptransport.h")]
+	[CCode (cheader_filename = "gst/rtsp/gstrtsptransport.h", cprefix = "GST_RTSP_PROFILE_", has_type_id = false)]
 	public enum RTSPProfile {
 		UNKNOWN,
 		AVP,
 		SAVP
 	}
-	[CCode (cprefix = "GST_RTSP_RANGE_", has_type_id = false, cheader_filename = "gst/rtsp/gstrtsprange.h")]
+	[CCode (cheader_filename = "gst/rtsp/gstrtsprange.h", cprefix = "GST_RTSP_RANGE_", has_type_id = false)]
 	public enum RTSPRangeUnit {
 		SMPTE,
 		SMPTE_30_DROP,
@@ -319,7 +319,7 @@ namespace Gst {
 		NPT,
 		CLOCK
 	}
-	[CCode (cprefix = "GST_RTSP_", cheader_filename = "gst/rtsp/gstrtspconnection.h")]
+	[CCode (cheader_filename = "gst/rtsp/gstrtspconnection.h", cprefix = "GST_RTSP_")]
 	public enum RTSPResult {
 		OK,
 		ERROR,
@@ -340,7 +340,7 @@ namespace Gst {
 		ETPOST,
 		ELAST
 	}
-	[CCode (cprefix = "GST_RTSP_STATE_", cheader_filename = "gst/rtsp/gstrtspdefs.h")]
+	[CCode (cheader_filename = "gst/rtsp/gstrtspdefs.h", cprefix = "GST_RTSP_STATE_")]
 	public enum RTSPState {
 		INVALID,
 		INIT,
@@ -349,7 +349,7 @@ namespace Gst {
 		PLAYING,
 		RECORDING
 	}
-	[CCode (cprefix = "GST_RTSP_STS_", cheader_filename = "gst/rtsp/gstrtspdefs.h")]
+	[CCode (cheader_filename = "gst/rtsp/gstrtspdefs.h", cprefix = "GST_RTSP_STS_")]
 	public enum RTSPStatusCode {
 		INVALID,
 		CONTINUE,
@@ -397,19 +397,19 @@ namespace Gst {
 		RTSP_VERSION_NOT_SUPPORTED,
 		OPTION_NOT_SUPPORTED
 	}
-	[CCode (cprefix = "GST_RTSP_TIME_", has_type_id = false, cheader_filename = "gst/rtsp/gstrtsprange.h")]
+	[CCode (cheader_filename = "gst/rtsp/gstrtsprange.h", cprefix = "GST_RTSP_TIME_", has_type_id = false)]
 	public enum RTSPTimeType {
 		SECONDS,
 		NOW,
 		END
 	}
-	[CCode (cprefix = "GST_RTSP_TRANS_", has_type_id = false, cheader_filename = "gst/rtsp/gstrtsptransport.h")]
+	[CCode (cheader_filename = "gst/rtsp/gstrtsptransport.h", cprefix = "GST_RTSP_TRANS_", has_type_id = false)]
 	public enum RTSPTransMode {
 		UNKNOWN,
 		RTP,
 		RDT
 	}
-	[CCode (cprefix = "GST_RTSP_VERSION_", cheader_filename = "gst/rtsp/gstrtspdefs.h")]
+	[CCode (cheader_filename = "gst/rtsp/gstrtspdefs.h", cprefix = "GST_RTSP_VERSION_")]
 	public enum RTSPVersion {
 		INVALID,
 		@1_0,

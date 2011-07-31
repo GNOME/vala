@@ -2,35 +2,35 @@
 
 [CCode (cprefix = "Glade", lower_case_cprefix = "glade_")]
 namespace Glade {
-	[Compact]
 	[CCode (cheader_filename = "glade/glade.h")]
+	[Compact]
 	public class AccelInfo {
 		public uint key;
 		public Gdk.ModifierType modifiers;
 		public weak string @signal;
 	}
-	[Compact]
 	[CCode (cheader_filename = "glade/glade.h")]
+	[Compact]
 	public class AtkActionInfo {
 		public weak string action_name;
 		public weak string description;
 	}
-	[Compact]
 	[CCode (cheader_filename = "glade/glade.h")]
+	[Compact]
 	public class AtkRelationInfo {
 		public weak string target;
 		public weak string type;
 	}
-	[Compact]
 	[CCode (cheader_filename = "glade/glade.h")]
+	[Compact]
 	public class ChildInfo {
 		public weak Glade.WidgetInfo child;
 		public weak string internal_child;
 		public uint n_properties;
 		public weak Glade.Property properties;
 	}
+	[CCode (cheader_filename = "glade/glade.h", free_function = "glade_interface_destroy")]
 	[Compact]
-	[CCode (free_function = "glade_interface_destroy", cheader_filename = "glade/glade.h")]
 	public class Interface {
 		public uint n_requires;
 		public uint n_toplevels;
@@ -40,22 +40,22 @@ namespace Glade {
 		public weak Glade.WidgetInfo toplevels;
 		public void dump (string filename);
 	}
-	[Compact]
 	[CCode (cheader_filename = "glade/glade.h")]
+	[Compact]
 	public class Property {
 		public weak string name;
 		public weak string value;
 	}
-	[Compact]
 	[CCode (cheader_filename = "glade/glade.h")]
+	[Compact]
 	public class SignalInfo {
 		public uint after;
 		public weak string handler;
 		public weak string name;
 		public weak string object;
 	}
-	[Compact]
 	[CCode (cheader_filename = "glade/glade.h")]
+	[Compact]
 	public class WidgetInfo {
 		public weak Glade.AccelInfo accels;
 		public weak Glade.AtkActionInfo atk_actions;

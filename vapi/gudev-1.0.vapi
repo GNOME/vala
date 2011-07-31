@@ -27,8 +27,8 @@ namespace GUdev {
 		public virtual void reserved7 ();
 		[NoWrapper]
 		public virtual void reserved8 ();
-		[NoAccessorMethod]
 		[CCode (array_length = false, array_null_terminated = true)]
+		[NoAccessorMethod]
 		public string[] subsystems { owned get; construct; }
 		public virtual signal void uevent (string action, GUdev.Device device);
 	}
@@ -86,11 +86,11 @@ namespace GUdev {
 		public virtual void reserved8 ();
 	}
 	[CCode (cheader_filename = "gudev/gudev.h")]
-	[SimpleType]
 	[IntegerType (rank = 9)]
+	[SimpleType]
 	public struct DeviceNumber : Posix.dev_t {
 	}
-	[CCode (cprefix = "G_UDEV_DEVICE_TYPE_", cheader_filename = "gudev/gudev.h")]
+	[CCode (cheader_filename = "gudev/gudev.h", cprefix = "G_UDEV_DEVICE_TYPE_")]
 	public enum DeviceType {
 		NONE,
 		BLOCK,

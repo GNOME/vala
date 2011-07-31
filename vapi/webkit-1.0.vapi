@@ -360,7 +360,7 @@ namespace WebKit {
 	}
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public class WebView : Gtk.Container, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public WebView ();
 		public bool can_copy_clipboard ();
 		public bool can_cut_clipboard ();
@@ -516,18 +516,18 @@ namespace WebKit {
 		[NoAccessorMethod]
 		public int y { get; set construct; }
 	}
-	[CCode (cprefix = "WEBKIT_CACHE_MODEL_", cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit/webkit.h", cprefix = "WEBKIT_CACHE_MODEL_")]
 	public enum CacheModel {
 		DOCUMENT_VIEWER,
 		WEB_BROWSER
 	}
-	[CCode (cprefix = "WEBKIT_DOWNLOAD_ERROR_", cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit/webkit.h", cprefix = "WEBKIT_DOWNLOAD_ERROR_")]
 	public enum DownloadError {
 		CANCELLED_BY_USER,
 		DESTINATION,
 		NETWORK
 	}
-	[CCode (cprefix = "WEBKIT_DOWNLOAD_STATUS_", cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit/webkit.h", cprefix = "WEBKIT_DOWNLOAD_STATUS_")]
 	public enum DownloadStatus {
 		ERROR,
 		CREATED,
@@ -535,12 +535,12 @@ namespace WebKit {
 		CANCELLED,
 		FINISHED
 	}
-	[CCode (cprefix = "WEBKIT_EDITING_BEHAVIOR_", cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit/webkit.h", cprefix = "WEBKIT_EDITING_BEHAVIOR_")]
 	public enum EditingBehavior {
 		MAC,
 		WINDOWS
 	}
-	[CCode (cprefix = "WEBKIT_HIT_TEST_RESULT_CONTEXT_", cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit/webkit.h", cprefix = "WEBKIT_HIT_TEST_RESULT_CONTEXT_")]
 	[Flags]
 	public enum HitTestResultContext {
 		DOCUMENT,
@@ -550,7 +550,7 @@ namespace WebKit {
 		SELECTION,
 		EDITABLE
 	}
-	[CCode (cprefix = "WEBKIT_LOAD_", cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit/webkit.h", cprefix = "WEBKIT_LOAD_")]
 	public enum LoadStatus {
 		PROVISIONAL,
 		COMMITTED,
@@ -558,13 +558,13 @@ namespace WebKit {
 		FIRST_VISUALLY_NON_EMPTY_LAYOUT,
 		FAILED
 	}
-	[CCode (cprefix = "WEBKIT_NAVIGATION_RESPONSE_", cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit/webkit.h", cprefix = "WEBKIT_NAVIGATION_RESPONSE_")]
 	public enum NavigationResponse {
 		ACCEPT,
 		IGNORE,
 		DOWNLOAD
 	}
-	[CCode (cprefix = "WEBKIT_NETWORK_ERROR_", cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit/webkit.h", cprefix = "WEBKIT_NETWORK_ERROR_")]
 	public enum NetworkError {
 		FAILED,
 		TRANSPORT,
@@ -572,7 +572,7 @@ namespace WebKit {
 		CANCELLED,
 		FILE_DOES_NOT_EXIST
 	}
-	[CCode (cprefix = "WEBKIT_PLUGIN_ERROR_", cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit/webkit.h", cprefix = "WEBKIT_PLUGIN_ERROR_")]
 	public enum PluginError {
 		FAILED,
 		CANNOT_FIND_PLUGIN,
@@ -581,7 +581,7 @@ namespace WebKit {
 		CONNECTION_CANCELLED,
 		WILL_HANDLE_LOAD
 	}
-	[CCode (cprefix = "WEBKIT_POLICY_ERROR_", cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit/webkit.h", cprefix = "WEBKIT_POLICY_ERROR_")]
 	public enum PolicyError {
 		FAILED,
 		CANNOT_SHOW_MIME_TYPE,
@@ -589,7 +589,7 @@ namespace WebKit {
 		FRAME_LOAD_INTERRUPTED_BY_POLICY_CHANGE,
 		CANNOT_USE_RESTRICTED_PORT
 	}
-	[CCode (cprefix = "WEBKIT_WEB_NAVIGATION_REASON_", cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit/webkit.h", cprefix = "WEBKIT_WEB_NAVIGATION_REASON_")]
 	public enum WebNavigationReason {
 		LINK_CLICKED,
 		FORM_SUBMITTED,
@@ -598,7 +598,7 @@ namespace WebKit {
 		FORM_RESUBMITTED,
 		OTHER
 	}
-	[CCode (cprefix = "WEBKIT_WEB_VIEW_TARGET_INFO_", cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit/webkit.h", cprefix = "WEBKIT_WEB_VIEW_TARGET_INFO_")]
 	public enum WebViewTargetInfo {
 		HTML,
 		TEXT,

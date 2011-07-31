@@ -32,78 +32,78 @@ namespace Gst {
 		public const string xRGB;
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public const string xRGB_HOST_ENDIAN;
-		[CCode (cname = "GST_VIDEO_CAPS_YUV", cheader_filename = "gst/video/video.h")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_CAPS_YUV")]
 		public static unowned string YUV (string fourcc);
 	}
 	[CCode (cprefix = "GstVideoMask15", lower_case_cprefix = "gst_video_mask15_")]
 	namespace VideoMask15 {
-		[CCode (cname = "GST_VIDEO_BLUE_MASK_15", cheader_filename = "gst/video/video.h")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_BLUE_MASK_15")]
 		public const string BLUE;
-		[CCode (cname = "GST_VIDEO_BLUE_MASK_15_INT", cheader_filename = "gst/video/video.h")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_BLUE_MASK_15_INT")]
 		public const int BLUE_INT;
-		[CCode (cname = "GST_VIDEO_GREEN_MASK_15", cheader_filename = "gst/video/video.h")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_GREEN_MASK_15")]
 		public const string GREEN;
-		[CCode (cname = "GST_VIDEO_GREEN_MASK_15_INT", cheader_filename = "gst/video/video.h")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_GREEN_MASK_15_INT")]
 		public const int GREEN_INT;
-		[CCode (cname = "GST_VIDEO_RED_MASK_15", cheader_filename = "gst/video/video.h")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_RED_MASK_15")]
 		public const string RED;
-		[CCode (cname = "GST_VIDEO_RED_MASK_15_INT", cheader_filename = "gst/video/video.h")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_RED_MASK_15_INT")]
 		public const int RED_INT;
 	}
 	[CCode (cprefix = "GstVideoMask16", lower_case_cprefix = "gst_video_mask16_")]
 	namespace VideoMask16 {
-		[CCode (cname = "GST_VIDEO_BLUE_MASK_16", cheader_filename = "gst/video/video.h")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_BLUE_MASK_16")]
 		public const string BLUE;
-		[CCode (cname = "GST_VIDEO_BLUE_MASK_16_INT", cheader_filename = "gst/video/video.h")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_BLUE_MASK_16_INT")]
 		public const int BLUE_INT;
-		[CCode (cname = "GST_VIDEO_GREEN_MASK_16", cheader_filename = "gst/video/video.h")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_GREEN_MASK_16")]
 		public const string GREEN;
-		[CCode (cname = "GST_VIDEO_GREEN_MASK_16_INT", cheader_filename = "gst/video/video.h")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_GREEN_MASK_16_INT")]
 		public const int GREEN_INT;
-		[CCode (cname = "GST_VIDEO_RED_MASK_16", cheader_filename = "gst/video/video.h")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_RED_MASK_16")]
 		public const string RED;
-		[CCode (cname = "GST_VIDEO_RED_MASK_16_INT", cheader_filename = "gst/video/video.h")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_RED_MASK_16_INT")]
 		public const int RED_INT;
 	}
 	[CCode (cprefix = "GstVideoMask24", lower_case_cprefix = "gst_video_mask24_")]
 	namespace VideoMask24 {
-		[CCode (cname = "GST_VIDEO_BYTE1_MASK_24", cheader_filename = "gst/video/video.h")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_BYTE1_MASK_24")]
 		public const string BYTE1;
-		[CCode (cname = "GST_VIDEO_BYTE1_MASK_24_INT", cheader_filename = "gst/video/video.h")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_BYTE1_MASK_24_INT")]
 		public const int BYTE1_INT;
-		[CCode (cname = "GST_VIDEO_BYTE2_MASK_24", cheader_filename = "gst/video/video.h")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_BYTE2_MASK_24")]
 		public const string BYTE2;
-		[CCode (cname = "GST_VIDEO_BYTE2_MASK_24_INT", cheader_filename = "gst/video/video.h")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_BYTE2_MASK_24_INT")]
 		public const int BYTE2_INT;
-		[CCode (cname = "GST_VIDEO_BYTE3_MASK_24", cheader_filename = "gst/video/video.h")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_BYTE3_MASK_24")]
 		public const string BYTE3;
-		[CCode (cname = "GST_VIDEO_BYTE3_MASK_24_INT", cheader_filename = "gst/video/video.h")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_BYTE3_MASK_24_INT")]
 		public const int BYTE3_INT;
 	}
 	[CCode (cprefix = "GstVideoMask32", lower_case_cprefix = "gst_video_mask32_")]
 	namespace VideoMask32 {
-		[CCode (cname = "GST_VIDEO_BYTE1_MASK_32", cheader_filename = "gst/video/video.h")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_BYTE1_MASK_32")]
 		public const string BYTE1;
-		[CCode (cname = "GST_VIDEO_BYTE1_MASK_32_INT", cheader_filename = "gst/video/video.h")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_BYTE1_MASK_32_INT")]
 		public const int BYTE1_INT;
-		[CCode (cname = "GST_VIDEO_BYTE2_MASK_32", cheader_filename = "gst/video/video.h")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_BYTE2_MASK_32")]
 		public const string BYTE2;
-		[CCode (cname = "GST_VIDEO_BYTE2_MASK_32_INT", cheader_filename = "gst/video/video.h")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_BYTE2_MASK_32_INT")]
 		public const int BYTE2_INT;
-		[CCode (cname = "GST_VIDEO_BYTE3_MASK_32", cheader_filename = "gst/video/video.h")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_BYTE3_MASK_32")]
 		public const string BYTE3;
-		[CCode (cname = "GST_VIDEO_BYTE3_MASK_32_INT", cheader_filename = "gst/video/video.h")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_BYTE3_MASK_32_INT")]
 		public const int BYTE3_INT;
-		[CCode (cname = "GST_VIDEO_BYTE4_MASK_32", cheader_filename = "gst/video/video.h")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_BYTE4_MASK_32")]
 		public const string BYTE4;
-		[CCode (cname = "GST_VIDEO_BYTE4_MASK_32_INT", cheader_filename = "gst/video/video.h")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_BYTE4_MASK_32_INT")]
 		public const int BYTE4_INT;
 	}
 	[CCode (cprefix = "GstVideoRange", lower_case_cprefix = "gst_video_range_")]
 	namespace VideoRange {
-		[CCode (cname = "GST_VIDEO_FPS_RANGE", cheader_filename = "gst/video/video.h")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_FPS_RANGE")]
 		public const string FPS;
-		[CCode (cname = "GST_VIDEO_SIZE_RANGE", cheader_filename = "gst/video/video.h")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_SIZE_RANGE")]
 		public const string SIZE;
 	}
 	[CCode (cheader_filename = "gst/video/gstvideofilter.h")]
@@ -112,8 +112,8 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		protected VideoFilter ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/video/gstvideosink.h")]
+	[Compact]
 	public class VideoRectangle {
 		public int h;
 		public int w;
@@ -132,7 +132,7 @@ namespace Gst {
 		[NoAccessorMethod]
 		public bool show_preroll_frame { get; set construct; }
 	}
-	[CCode (cprefix = "GST_VIDEO_FORMAT_", cheader_filename = "gst/video/video.h")]
+	[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_FORMAT_")]
 	public enum VideoFormat {
 		UNKNOWN,
 		I420,

@@ -4,7 +4,7 @@
 namespace Gdu {
 	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h")]
 	public class AddComponentLinuxMdDialog : Gdu.Dialog, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public AddComponentLinuxMdDialog (Gtk.Window parent, Gdu.AddComponentLinuxMdFlags flags, Gdu.LinuxMdDrive linux_md_drive);
 		public unowned GLib.GenericArray<Gdu.Drive> get_drives ();
 		public uint64 get_size ();
@@ -15,7 +15,7 @@ namespace Gdu {
 	}
 	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h")]
 	public class AddPvLinuxLvm2Dialog : Gdu.Dialog, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public AddPvLinuxLvm2Dialog (Gtk.Window parent, Gdu.LinuxLvm2VolumeGroup vg);
 		public unowned Gdu.Drive get_drive ();
 		public uint64 get_size ();
@@ -24,7 +24,7 @@ namespace Gdu {
 	}
 	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h")]
 	public class AtaSmartDialog : Gdu.Dialog, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public AtaSmartDialog (Gtk.Window parent, Gdu.Drive drive);
 	}
 	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h")]
@@ -48,7 +48,7 @@ namespace Gdu {
 	}
 	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h")]
 	public class ButtonTable : Gtk.HBox, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ButtonTable (uint num_columns, GLib.GenericArray<Gdu.ButtonElement> elements);
 		public GLib.GenericArray<Gdu.ButtonElement> get_elements ();
 		public uint get_num_columns ();
@@ -57,17 +57,17 @@ namespace Gdu {
 		public GLib.GenericArray<Gdu.ButtonElement> elements { get; set construct; }
 		public uint num_columns { get; set construct; }
 	}
-	[Compact]
 	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h")]
+	[Compact]
 	public class Color {
 	}
 	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h")]
 	public class ConfirmationDialog : Gdu.Dialog, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ConfirmationDialog (Gtk.Window parent, Gdu.Presentable presentable, string message, string button_text);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ConfirmationDialog.for_drive (Gtk.Window parent, Gdu.Device device, string message, string button_text);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ConfirmationDialog.for_volume (Gtk.Window parent, Gdu.Device device, string message, string button_text);
 		[NoAccessorMethod]
 		public string button_text { owned get; construct; }
@@ -76,7 +76,7 @@ namespace Gdu {
 	}
 	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h")]
 	public class ConnectToServerDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ConnectToServerDialog (Gtk.Window parent);
 		public unowned string get_address ();
 		public unowned string get_user_name ();
@@ -85,7 +85,7 @@ namespace Gdu {
 	}
 	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h")]
 	public class CreateLinuxLvm2VolumeDialog : Gdu.FormatDialog, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public CreateLinuxLvm2VolumeDialog (Gtk.Window parent, Gdu.Presentable presentable, uint64 max_size, Gdu.FormatDialogFlags flags);
 		public uint64 get_max_size ();
 		public uint64 get_size ();
@@ -94,7 +94,7 @@ namespace Gdu {
 	}
 	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h")]
 	public class CreateLinuxMdDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public CreateLinuxMdDialog (Gtk.Window parent, Gdu.Pool pool);
 		public uint64 get_component_size ();
 		public GLib.GenericArray<Gdu.Drive> get_drives ();
@@ -112,17 +112,17 @@ namespace Gdu {
 	}
 	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h")]
 	public class CreatePartitionDialog : Gdu.FormatDialog, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public CreatePartitionDialog (Gtk.Window parent, Gdu.Presentable presentable, uint64 max_size, Gdu.FormatDialogFlags flags);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public CreatePartitionDialog.for_drive (Gtk.Window parent, Gdu.Device device, uint64 max_size, Gdu.FormatDialogFlags flags);
 		public uint64 get_max_size ();
 		public uint64 get_size ();
 		public uint64 max_size { get; construct; }
 		public uint64 size { get; }
 	}
-	[Compact]
 	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h")]
+	[Compact]
 	public class Curve {
 	}
 	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h")]
@@ -167,7 +167,7 @@ namespace Gdu {
 	}
 	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h")]
 	public class DetailsTable : Gtk.HBox, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public DetailsTable (uint num_columns, GLib.GenericArray<Gdu.DetailsElement> elements);
 		public GLib.GenericArray<Gdu.DetailsElement> get_elements ();
 		public uint get_num_columns ();
@@ -189,7 +189,7 @@ namespace Gdu {
 	}
 	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h")]
 	public class DiskSelectionWidget : Gtk.VBox, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public DiskSelectionWidget (Gdu.Pool pool, Gdu.DiskSelectionWidgetFlags flags);
 		public uint64 get_component_size ();
 		public uint64 get_largest_segment_for_all ();
@@ -211,19 +211,19 @@ namespace Gdu {
 	}
 	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h")]
 	public class DriveBenchmarkDialog : Gdu.Dialog, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public DriveBenchmarkDialog (Gtk.Window parent, Gdu.Drive drive);
 	}
 	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h")]
 	public class EditLinuxLvm2Dialog : Gdu.Dialog, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public EditLinuxLvm2Dialog (Gtk.Window parent, Gdu.LinuxLvm2VolumeGroup vg);
 		public virtual signal void new_button_clicked ();
 		public virtual signal void remove_button_clicked (string pv_uuid);
 	}
 	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h")]
 	public class EditLinuxMdDialog : Gdu.Dialog, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public EditLinuxMdDialog (Gtk.Window parent, Gdu.LinuxMdDrive linux_md_drive);
 		public virtual signal void add_spare_button_clicked ();
 		public virtual signal void attach_button_clicked (Gdu.Device slave);
@@ -232,7 +232,7 @@ namespace Gdu {
 	}
 	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h")]
 	public class EditNameDialog : Gdu.Dialog, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public EditNameDialog (Gtk.Window parent, Gdu.Presentable presentable, string name, uint name_max_bytes, string message, string entry_mnemonic);
 		[NoAccessorMethod]
 		public string entry_mnemonic { owned get; construct; }
@@ -244,7 +244,7 @@ namespace Gdu {
 	}
 	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h")]
 	public class EditPartitionDialog : Gdu.Dialog, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public EditPartitionDialog (Gtk.Window parent, Gdu.Presentable volume);
 		public unowned string get_partition_flags ();
 		public unowned string get_partition_label ();
@@ -256,11 +256,11 @@ namespace Gdu {
 	}
 	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h")]
 	public class ErrorDialog : Gdu.Dialog, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ErrorDialog (Gtk.Window parent, Gdu.Presentable presentable, string message, GLib.Error error);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ErrorDialog.for_drive (Gtk.Window parent, Gdu.Device device, string message, GLib.Error error);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ErrorDialog.for_volume (Gtk.Window parent, Gdu.Device device, string message, GLib.Error error);
 		[NoAccessorMethod]
 		public Gdu.Error error { get; construct; }
@@ -269,11 +269,11 @@ namespace Gdu {
 	}
 	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h")]
 	public class FormatDialog : Gdu.Dialog, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public FormatDialog (Gtk.Window parent, Gdu.Presentable presentable, Gdu.FormatDialogFlags flags);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public FormatDialog.for_drive (Gtk.Window parent, Gdu.Device device, Gdu.FormatDialogFlags flags);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public FormatDialog.for_volume (Gtk.Window parent, Gdu.Device device, Gdu.FormatDialogFlags flags);
 		public bool get_encrypt ();
 		public unowned string get_fs_label ();
@@ -291,15 +291,15 @@ namespace Gdu {
 		public string fs_type { get; }
 		public bool take_ownership { get; }
 	}
-	[Compact]
 	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h")]
+	[Compact]
 	public class Graph {
 	}
 	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h")]
 	public class PartitionDialog : Gdu.Dialog, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public PartitionDialog (Gtk.Window parent, Gdu.Presentable presentable);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public PartitionDialog.for_drive (Gtk.Window parent, Gdu.Device device);
 		public unowned string get_scheme ();
 		public string scheme { get; }
@@ -319,7 +319,7 @@ namespace Gdu {
 	}
 	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h")]
 	public class PoolTreeView : Gtk.TreeView, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public PoolTreeView (Gdu.PoolTreeModel model, Gdu.PoolTreeViewFlags flags);
 		public unowned Gdu.Presentable get_selected_presentable ();
 		public void select_first_presentable ();
@@ -329,13 +329,13 @@ namespace Gdu {
 		[NoAccessorMethod]
 		public Gdu.PoolTreeModel pool_tree_model { owned get; construct; }
 	}
-	[Compact]
 	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h")]
+	[Compact]
 	public class Sample {
 	}
 	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h")]
 	public class SizeWidget : Gtk.HBox, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public SizeWidget (uint64 size, uint64 min_size, uint64 max_size);
 		public uint64 get_max_size ();
 		public uint64 get_min_size ();
@@ -350,7 +350,7 @@ namespace Gdu {
 	}
 	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h")]
 	public class Spinner : Gtk.DrawingArea, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Spinner ();
 		public void start ();
 		public void stop ();
@@ -360,7 +360,7 @@ namespace Gdu {
 	}
 	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h")]
 	public class TimeLabel : Gtk.Label, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public TimeLabel (GLib.TimeVal time);
 		public void set_time (GLib.TimeVal time);
 		[NoAccessorMethod]
@@ -368,7 +368,7 @@ namespace Gdu {
 	}
 	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h")]
 	public class VolumeGrid : Gtk.DrawingArea, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public VolumeGrid (Gdu.Drive drive);
 		public unowned Gdu.Presentable get_selected ();
 		public bool select (Gdu.Presentable volume);
@@ -376,21 +376,21 @@ namespace Gdu {
 		public Gdu.Drive drive { owned get; construct; }
 		public virtual signal void changed ();
 	}
-	[CCode (cprefix = "GDU_ADD_COMPONENT_LINUX_MD_FLAGS_", cheader_filename = "gdu-gtk/gdu-gtk.h")]
+	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h", cprefix = "GDU_ADD_COMPONENT_LINUX_MD_FLAGS_")]
 	[Flags]
 	public enum AddComponentLinuxMdFlags {
 		NONE,
 		SPARE,
 		EXPANSION
 	}
-	[CCode (cprefix = "GDU_DISK_SELECTION_WIDGET_FLAGS_", cheader_filename = "gdu-gtk/gdu-gtk.h")]
+	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h", cprefix = "GDU_DISK_SELECTION_WIDGET_FLAGS_")]
 	[Flags]
 	public enum DiskSelectionWidgetFlags {
 		NONE,
 		ALLOW_MULTIPLE,
 		ALLOW_DISKS_WITH_INSUFFICIENT_SPACE
 	}
-	[CCode (cprefix = "GDU_FORMAT_DIALOG_FLAGS_", cheader_filename = "gdu-gtk/gdu-gtk.h")]
+	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h", cprefix = "GDU_FORMAT_DIALOG_FLAGS_")]
 	[Flags]
 	public enum FormatDialogFlags {
 		NONE,
@@ -398,7 +398,7 @@ namespace Gdu {
 		DISK_UTILITY_BUTTON,
 		ALLOW_MSDOS_EXTENDED
 	}
-	[CCode (cprefix = "GDU_POOL_TREE_MODEL_COLUMN_", cheader_filename = "gdu-gtk/gdu-gtk.h")]
+	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h", cprefix = "GDU_POOL_TREE_MODEL_COLUMN_")]
 	public enum PoolTreeModelColumn {
 		ICON,
 		NAME,
@@ -409,14 +409,14 @@ namespace Gdu {
 		TOGGLED,
 		CAN_BE_TOGGLED
 	}
-	[CCode (cprefix = "GDU_POOL_TREE_MODEL_FLAGS_", cheader_filename = "gdu-gtk/gdu-gtk.h")]
+	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h", cprefix = "GDU_POOL_TREE_MODEL_FLAGS_")]
 	[Flags]
 	public enum PoolTreeModelFlags {
 		NONE,
 		NO_VOLUMES,
 		NO_UNALLOCATABLE_DRIVES
 	}
-	[CCode (cprefix = "GDU_POOL_TREE_VIEW_FLAGS_", cheader_filename = "gdu-gtk/gdu-gtk.h")]
+	[CCode (cheader_filename = "gdu-gtk/gdu-gtk.h", cprefix = "GDU_POOL_TREE_VIEW_FLAGS_")]
 	[Flags]
 	public enum PoolTreeViewFlags {
 		NONE,

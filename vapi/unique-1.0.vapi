@@ -41,8 +41,8 @@ namespace Unique {
 		public void set_screen (Gdk.Screen screen);
 		public void set_startup_id (string startup_id);
 	}
+	[CCode (cheader_filename = "unique/unique.h", copy_function = "unique_message_data_copy", type_id = "UNIQUE_TYPE_MESSAGE_DATA")]
 	[Compact]
-	[CCode (copy_function = "unique_message_data_copy", type_id = "UNIQUE_TYPE_MESSAGE_DATA", cheader_filename = "unique/unique.h")]
 	public class MessageData {
 		[CCode (has_construct_function = false)]
 		public MessageData ();
@@ -60,7 +60,7 @@ namespace Unique {
 		public bool set_text (string str, ssize_t length);
 		public bool set_uris ([CCode (array_length = false)] string[] uris);
 	}
-	[CCode (cprefix = "UNIQUE_", cheader_filename = "unique/unique.h")]
+	[CCode (cheader_filename = "unique/unique.h", cprefix = "UNIQUE_")]
 	public enum Command {
 		INVALID,
 		ACTIVATE,
@@ -68,7 +68,7 @@ namespace Unique {
 		OPEN,
 		CLOSE
 	}
-	[CCode (cprefix = "UNIQUE_RESPONSE_", cheader_filename = "unique/unique.h")]
+	[CCode (cheader_filename = "unique/unique.h", cprefix = "UNIQUE_RESPONSE_")]
 	public enum Response {
 		INVALID,
 		OK,

@@ -2,22 +2,22 @@
 
 [CCode (cprefix = "GnomeKeyring", lower_case_cprefix = "gnome_keyring_")]
 namespace GnomeKeyring {
+	[CCode (cheader_filename = "gnome-keyring.h", copy_function = "gnome_keyring_access_control_copy")]
 	[Compact]
-	[CCode (copy_function = "gnome_keyring_access_control_copy", cheader_filename = "gnome-keyring.h")]
 	public class AccessControl {
 		[CCode (has_construct_function = false)]
 		public AccessControl (GnomeKeyring.ApplicationRef application, GnomeKeyring.AccessType types_allowed);
 		public GnomeKeyring.AccessControl copy ();
 	}
+	[CCode (cheader_filename = "gnome-keyring.h", copy_function = "gnome_keyring_application_ref_copy")]
 	[Compact]
-	[CCode (copy_function = "gnome_keyring_application_ref_copy", cheader_filename = "gnome-keyring.h")]
 	public class ApplicationRef {
 		[CCode (has_construct_function = false)]
 		public ApplicationRef ();
 		public GnomeKeyring.ApplicationRef copy ();
 	}
+	[CCode (cheader_filename = "gnome-keyring.h", copy_function = "gnome_keyring_attribute_list_copy")]
 	[Compact]
-	[CCode (copy_function = "gnome_keyring_attribute_list_copy", cheader_filename = "gnome-keyring.h")]
 	public class AttributeList {
 		[CCode (array_length = false)]
 		public GnomeKeyring.Attribute[] data;
@@ -28,16 +28,16 @@ namespace GnomeKeyring {
 		public GnomeKeyring.AttributeList copy ();
 		public GnomeKeyring.Attribute index (int i);
 	}
-	[Compact]
 	[CCode (cheader_filename = "gnome-keyring.h")]
+	[Compact]
 	public class Found {
 		public weak GnomeKeyring.AttributeList attributes;
 		public uint item_id;
 		public weak string keyring;
 		public weak string secret;
 	}
+	[CCode (cheader_filename = "gnome-keyring.h", copy_function = "gnome_keyring_info_copy")]
 	[Compact]
-	[CCode (copy_function = "gnome_keyring_info_copy", cheader_filename = "gnome-keyring.h")]
 	public class Info {
 		public GnomeKeyring.Info copy ();
 		public ulong get_ctime ();
@@ -48,8 +48,8 @@ namespace GnomeKeyring {
 		public void set_lock_on_idle (bool value);
 		public void set_lock_timeout (uint32 value);
 	}
+	[CCode (cheader_filename = "gnome-keyring.h", copy_function = "gnome_keyring_item_info_copy")]
 	[Compact]
-	[CCode (copy_function = "gnome_keyring_item_info_copy", cheader_filename = "gnome-keyring.h")]
 	public class ItemInfo {
 		[CCode (has_construct_function = false)]
 		public ItemInfo ();
@@ -62,8 +62,8 @@ namespace GnomeKeyring {
 		public void set_secret (string value);
 		public void set_type (GnomeKeyring.ItemType type);
 	}
+	[CCode (cheader_filename = "gnome-keyring.h", free_function = "gnome_keyring_network_password_free")]
 	[Compact]
-	[CCode (free_function = "gnome_keyring_network_password_free", cheader_filename = "gnome-keyring.h")]
 	public class NetworkPasswordData {
 		public weak string authtype;
 		public weak string domain;
@@ -76,8 +76,8 @@ namespace GnomeKeyring {
 		public weak string server;
 		public weak string user;
 	}
-	[Compact]
 	[CCode (cheader_filename = "gnome-keyring.h")]
+	[Compact]
 	public class PasswordSchema {
 		public void* attributes;
 		public GnomeKeyring.ItemType item_type;
@@ -85,36 +85,36 @@ namespace GnomeKeyring {
 		public void* reserved2;
 		public void* reserved3;
 	}
-	[CCode (type_id = "GNOME_KEYRING_TYPE_ATTRIBUTE", cheader_filename = "gnome-keyring.h")]
+	[CCode (cheader_filename = "gnome-keyring.h", type_id = "GNOME_KEYRING_TYPE_ATTRIBUTE")]
 	public struct Attribute {
 		public weak string name;
 		public GnomeKeyring.AttributeType type;
 		public void* value;
 	}
-	[CCode (cprefix = "GNOME_KEYRING_ACCESS_", has_type_id = false, cheader_filename = "gnome-keyring.h")]
+	[CCode (cheader_filename = "gnome-keyring.h", cprefix = "GNOME_KEYRING_ACCESS_", has_type_id = false)]
 	public enum AccessRestriction {
 		ASK,
 		DENY,
 		ALLOW
 	}
-	[CCode (cprefix = "GNOME_KEYRING_ACCESS_", has_type_id = false, cheader_filename = "gnome-keyring.h")]
+	[CCode (cheader_filename = "gnome-keyring.h", cprefix = "GNOME_KEYRING_ACCESS_", has_type_id = false)]
 	public enum AccessType {
 		READ,
 		WRITE,
 		REMOVE
 	}
-	[CCode (cprefix = "GNOME_KEYRING_ATTRIBUTE_TYPE_", has_type_id = false, cheader_filename = "gnome-keyring.h")]
+	[CCode (cheader_filename = "gnome-keyring.h", cprefix = "GNOME_KEYRING_ATTRIBUTE_TYPE_", has_type_id = false)]
 	public enum AttributeType {
 		STRING,
 		UINT32
 	}
-	[CCode (cprefix = "GNOME_KEYRING_ITEM_INFO_", has_type_id = false, cheader_filename = "gnome-keyring.h")]
+	[CCode (cheader_filename = "gnome-keyring.h", cprefix = "GNOME_KEYRING_ITEM_INFO_", has_type_id = false)]
 	public enum ItemInfoFlags {
 		ALL,
 		BASICS,
 		SECRET
 	}
-	[CCode (cprefix = "GNOME_KEYRING_ITEM_", has_type_id = false, cheader_filename = "gnome-keyring.h")]
+	[CCode (cheader_filename = "gnome-keyring.h", cprefix = "GNOME_KEYRING_ITEM_", has_type_id = false)]
 	public enum ItemType {
 		APPLICATION_SECRET,
 		ITEM_TYPE_MASK,
@@ -126,7 +126,7 @@ namespace GnomeKeyring {
 		PK_STORAGE,
 		LAST_TYPE
 	}
-	[CCode (cprefix = "GNOME_KEYRING_RESULT_", has_type_id = false, cheader_filename = "gnome-keyring.h")]
+	[CCode (cheader_filename = "gnome-keyring.h", cprefix = "GNOME_KEYRING_RESULT_", has_type_id = false)]
 	public enum Result {
 		OK,
 		DENIED,
@@ -153,7 +153,7 @@ namespace GnomeKeyring {
 	public delegate void OperationGetListCallback (GnomeKeyring.Result result, GLib.List<GnomeKeyring.NetworkPasswordData> list);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public delegate void OperationGetStringCallback (GnomeKeyring.Result result, string? str);
-	[CCode (cname = "GNOME_KEYRING_NETWORK_PASSWORD", cheader_filename = "gnome-keyring.h")]
+	[CCode (cheader_filename = "gnome-keyring.h", cname = "GNOME_KEYRING_NETWORK_PASSWORD")]
 	public static GnomeKeyring.PasswordSchema NETWORK_PASSWORD;
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public const string DEFAULT;

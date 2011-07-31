@@ -10,15 +10,15 @@ namespace Gst {
 		public void* servaddr;
 		public int sock;
 		public weak GLib.Thread thread;
-		[CCode (type = "GstClock*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GstClock*")]
 		public NetClientClock (string name, string remote_address, int remote_port, Gst.ClockTime base_time);
 		[NoAccessorMethod]
 		public string address { owned get; set; }
 		[NoAccessorMethod]
 		public int port { get; set; }
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/net/gstnet.h")]
+	[Compact]
 	public class NetTimePacket {
 		public Gst.ClockTime local_time;
 		public Gst.ClockTime remote_time;

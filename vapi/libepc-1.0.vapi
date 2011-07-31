@@ -2,8 +2,8 @@
 
 [CCode (cprefix = "Epc", lower_case_cprefix = "epc_")]
 namespace Epc {
-	[Compact]
 	[CCode (cheader_filename = "libepc/publisher.h")]
+	[Compact]
 	public class AuthContext {
 		public bool check_password (string password);
 		public unowned string get_key ();
@@ -46,8 +46,8 @@ namespace Epc {
 		public virtual signal bool authenticate (string realm);
 		public virtual signal void publisher_resolved (Epc.Protocol protocol, string hostname, uint port);
 	}
+	[CCode (cheader_filename = "libepc/contents.h", ref_function = "epc_contents_ref", unref_function = "epc_contents_unref")]
 	[Compact]
-	[CCode (ref_function = "epc_contents_ref", unref_function = "epc_contents_unref", cheader_filename = "libepc/contents.h")]
 	public class Contents {
 		[CCode (has_construct_function = false)]
 		public Contents (string type, void* data, ssize_t length, GLib.DestroyNotify destroy_data);
@@ -128,8 +128,8 @@ namespace Epc {
 		public string service_domain { owned get; set construct; }
 		public string service_name { get; set construct; }
 	}
+	[CCode (cheader_filename = "libepc/service-info.h", ref_function = "epc_service_info_ref", type_id = "EPC_TYPE_SERVICE_INFO", unref_function = "epc_service_info_unref")]
 	[Compact]
-	[CCode (ref_function = "epc_service_info_ref", unref_function = "epc_service_info_unref", type_id = "EPC_TYPE_SERVICE_INFO", cheader_filename = "libepc/service-info.h")]
 	public class ServiceInfo {
 		public Epc.AddressFamily get_address_family ();
 		public unowned string get_detail (string name);
@@ -152,33 +152,33 @@ namespace Epc {
 		public string application { owned get; construct; }
 		[NoAccessorMethod]
 		public string domain { owned get; construct; }
-		[NoAccessorMethod]
 		[CCode (array_length = false, array_null_terminated = true)]
+		[NoAccessorMethod]
 		public string[] service_types { owned get; construct; }
 		public bool skip_our_own { get; set construct; }
 		public virtual signal void scanning_done (string type);
 		public virtual signal void service_found (string name, Epc.ServiceInfo info);
 		public virtual signal void service_removed (string name, string type);
 	}
-	[CCode (cprefix = "EPC_ADDRESS_", cheader_filename = "libepc/enums.h")]
+	[CCode (cheader_filename = "libepc/enums.h", cprefix = "EPC_ADDRESS_")]
 	public enum AddressFamily {
 		UNSPEC,
 		IPV4,
 		IPV6
 	}
-	[CCode (cprefix = "EPC_AUTH_", cheader_filename = "libepc/enums.h")]
+	[CCode (cheader_filename = "libepc/enums.h", cprefix = "EPC_AUTH_")]
 	[Flags]
 	public enum AuthFlags {
 		DEFAULT,
 		PASSWORD_TEXT_NEEDED
 	}
-	[CCode (cprefix = "EPC_COLLISIONS_", cheader_filename = "libepc/enums.h")]
+	[CCode (cheader_filename = "libepc/enums.h", cprefix = "EPC_COLLISIONS_")]
 	public enum CollisionHandling {
 		IGNORE,
 		CHANGE_NAME,
 		UNIQUE_SERVICE
 	}
-	[CCode (cprefix = "EPC_PROTOCOL_", cheader_filename = "libepc/enums.h")]
+	[CCode (cheader_filename = "libepc/enums.h", cprefix = "EPC_PROTOCOL_")]
 	public enum Protocol {
 		UNKNOWN,
 		HTTP,

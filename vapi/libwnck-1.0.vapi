@@ -4,7 +4,7 @@
 namespace Wnck {
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public class ActionMenu : Gtk.Menu, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ActionMenu (Wnck.Window window);
 		[NoWrapper]
 		public virtual void pad1 ();
@@ -66,7 +66,7 @@ namespace Wnck {
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public class Pager : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Pager (Wnck.Screen screen);
 		[NoWrapper]
 		public virtual void pad1 ();
@@ -83,8 +83,8 @@ namespace Wnck {
 		public void set_shadow_type (Gtk.ShadowType shadow_type);
 		public void set_show_all (bool show_all_workspaces);
 	}
-	[Compact]
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
+	[Compact]
 	public class ResourceUsage {
 		public uint n_colormap_entries;
 		public uint n_cursors;
@@ -168,7 +168,7 @@ namespace Wnck {
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public class Selector : Gtk.MenuBar, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Selector ();
 		[NoWrapper]
 		public virtual void pad1 ();
@@ -181,7 +181,7 @@ namespace Wnck {
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public class Tasklist : Gtk.Container, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Tasklist (Wnck.Screen screen);
 		public int get_minimum_height ();
 		public int get_minimum_width ();
@@ -326,8 +326,8 @@ namespace Wnck {
 		public virtual void pad4 ();
 		public virtual signal void name_changed ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
+	[Compact]
 	public class WorkspaceLayout {
 		public int cols;
 		public int current_col;
@@ -336,30 +336,30 @@ namespace Wnck {
 		public int grid_area;
 		public int rows;
 	}
-	[CCode (cprefix = "WNCK_CLIENT_TYPE_", cheader_filename = "libwnck/libwnck.h")]
+	[CCode (cheader_filename = "libwnck/libwnck.h", cprefix = "WNCK_CLIENT_TYPE_")]
 	public enum ClientType {
 		APPLICATION,
 		PAGER
 	}
-	[CCode (cprefix = "WNCK_MOTION_", cheader_filename = "libwnck/libwnck.h")]
+	[CCode (cheader_filename = "libwnck/libwnck.h", cprefix = "WNCK_MOTION_")]
 	public enum MotionDirection {
 		UP,
 		DOWN,
 		LEFT,
 		RIGHT
 	}
-	[CCode (cprefix = "WNCK_PAGER_DISPLAY_", cheader_filename = "libwnck/libwnck.h")]
+	[CCode (cheader_filename = "libwnck/libwnck.h", cprefix = "WNCK_PAGER_DISPLAY_")]
 	public enum PagerDisplayMode {
 		NAME,
 		CONTENT
 	}
-	[CCode (cprefix = "WNCK_TASKLIST_", cheader_filename = "libwnck/libwnck.h")]
+	[CCode (cheader_filename = "libwnck/libwnck.h", cprefix = "WNCK_TASKLIST_")]
 	public enum TasklistGroupingType {
 		NEVER_GROUP,
 		AUTO_GROUP,
 		ALWAYS_GROUP
 	}
-	[CCode (cprefix = "WNCK_WINDOW_ACTION_", cheader_filename = "libwnck/libwnck.h")]
+	[CCode (cheader_filename = "libwnck/libwnck.h", cprefix = "WNCK_WINDOW_ACTION_")]
 	[Flags]
 	public enum WindowActions {
 		MOVE,
@@ -382,7 +382,7 @@ namespace Wnck {
 		ABOVE,
 		BELOW
 	}
-	[CCode (cprefix = "WNCK_WINDOW_GRAVITY_", cheader_filename = "libwnck/libwnck.h")]
+	[CCode (cheader_filename = "libwnck/libwnck.h", cprefix = "WNCK_WINDOW_GRAVITY_")]
 	public enum WindowGravity {
 		CURRENT,
 		NORTHWEST,
@@ -396,7 +396,7 @@ namespace Wnck {
 		SOUTHEAST,
 		STATIC
 	}
-	[CCode (cprefix = "WNCK_WINDOW_CHANGE_", cheader_filename = "libwnck/libwnck.h")]
+	[CCode (cheader_filename = "libwnck/libwnck.h", cprefix = "WNCK_WINDOW_CHANGE_")]
 	[Flags]
 	public enum WindowMoveResizeMask {
 		X,
@@ -404,7 +404,7 @@ namespace Wnck {
 		WIDTH,
 		HEIGHT
 	}
-	[CCode (cprefix = "WNCK_WINDOW_STATE_", cheader_filename = "libwnck/libwnck.h")]
+	[CCode (cheader_filename = "libwnck/libwnck.h", cprefix = "WNCK_WINDOW_STATE_")]
 	[Flags]
 	public enum WindowState {
 		MINIMIZED,
@@ -421,7 +421,7 @@ namespace Wnck {
 		ABOVE,
 		BELOW
 	}
-	[CCode (cprefix = "WNCK_WINDOW_", cheader_filename = "libwnck/libwnck.h")]
+	[CCode (cheader_filename = "libwnck/libwnck.h", cprefix = "WNCK_WINDOW_")]
 	public enum WindowType {
 		NORMAL,
 		DESKTOP,

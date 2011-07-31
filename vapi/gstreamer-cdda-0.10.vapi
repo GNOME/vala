@@ -41,8 +41,8 @@ namespace Gst {
 		[NoAccessorMethod]
 		public uint track { get; set; }
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/cdda/gstcddabasesrc.h")]
+	[Compact]
 	public class CddaBaseSrcTrack {
 		public uint end;
 		public bool is_audio;
@@ -50,7 +50,7 @@ namespace Gst {
 		public uint start;
 		public weak Gst.TagList tags;
 	}
-	[CCode (cprefix = "GST_CDDA_BASE_SRC_MODE_", cheader_filename = "gst/cdda/gstcddabasesrc.h")]
+	[CCode (cheader_filename = "gst/cdda/gstcddabasesrc.h", cprefix = "GST_CDDA_BASE_SRC_MODE_")]
 	public enum CddaBaseSrcMode {
 		NORMAL,
 		CONTINUOUS

@@ -7,8 +7,8 @@ namespace Gdk {
 		[CCode (has_construct_function = false)]
 		protected X11AppLaunchContext ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "gdk/gdkx.h")]
+	[Compact]
 	public class X11AppLaunchContextClass {
 	}
 	[CCode (cheader_filename = "gdk/gdkx.h")]
@@ -18,8 +18,8 @@ namespace Gdk {
 		public static unowned Gdk.Cursor get_xcursor (Gdk.Cursor cursor);
 		public static unowned X.Display get_xdisplay (Gdk.Cursor cursor);
 	}
-	[Compact]
 	[CCode (cheader_filename = "gdk/gdkx.h")]
+	[Compact]
 	public class X11CursorClass {
 	}
 	[CCode (cheader_filename = "gdk/gdkx.h")]
@@ -41,8 +41,8 @@ namespace Gdk {
 		public static void ungrab (Gdk.Display display);
 		public static bool utf8_to_compound_text (Gdk.Display display, string str, out Gdk.Atom encoding, int format, uchar[] ctext, int length);
 	}
-	[Compact]
 	[CCode (cheader_filename = "gdk/gdkx.h")]
+	[Compact]
 	public class X11DisplayClass {
 	}
 	[CCode (cheader_filename = "gdk/gdkx.h")]
@@ -50,8 +50,8 @@ namespace Gdk {
 		[CCode (has_construct_function = false)]
 		protected X11DisplayManager ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "gdk/gdkx.h")]
+	[Compact]
 	public class X11DisplayManagerClass {
 	}
 	[CCode (cheader_filename = "gdk/gdkx.h")]
@@ -59,8 +59,8 @@ namespace Gdk {
 		[CCode (has_construct_function = false)]
 		protected X11DragContext ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "gdk/gdkx.h")]
+	[Compact]
 	public class X11DragContextClass {
 	}
 	[CCode (cheader_filename = "gdk/gdkx.h")]
@@ -68,8 +68,8 @@ namespace Gdk {
 		[CCode (has_construct_function = false)]
 		protected X11Keymap ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "gdk/gdkx.h")]
+	[Compact]
 	public class X11KeymapClass {
 	}
 	[CCode (cheader_filename = "gdk/gdkx.h")]
@@ -84,8 +84,8 @@ namespace Gdk {
 		public static bool supports_net_wm_hint (Gdk.Screen screen, Gdk.Atom property);
 		public virtual signal void window_manager_changed ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "gdk/gdkx.h")]
+	[Compact]
 	public class X11ScreenClass {
 	}
 	[CCode (cheader_filename = "gdk/gdkx.h")]
@@ -94,8 +94,8 @@ namespace Gdk {
 		protected X11Visual ();
 		public static unowned Gdk.Visual get_xvisual (Gdk.Visual visual);
 	}
-	[Compact]
 	[CCode (cheader_filename = "gdk/gdkx.h")]
+	[Compact]
 	public class X11VisualClass {
 	}
 	[CCode (cheader_filename = "gdk/gdkx.h")]
@@ -108,8 +108,8 @@ namespace Gdk {
 		public static void move_to_current_desktop (Gdk.Window window);
 		public static void set_user_time (Gdk.Window window, uint32 timestamp);
 	}
-	[Compact]
 	[CCode (cheader_filename = "gdk/gdkx.h")]
+	[Compact]
 	public class X11WindowClass {
 	}
 	[CCode (cheader_filename = "gdk/gdkx.h")]

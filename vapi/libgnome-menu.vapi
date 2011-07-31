@@ -2,8 +2,8 @@
 
 [CCode (cprefix = "GMenu", lower_case_cprefix = "gmenu_")]
 namespace GMenu {
+	[CCode (cheader_filename = "gnome-menus/gmenu-tree.h", ref_function = "gmenu_tree_ref", unref_function = "gmenu_tree_unref")]
 	[Compact]
-	[CCode (ref_function = "gmenu_tree_ref", unref_function = "gmenu_tree_unref", cheader_filename = "gnome-menus/gmenu-tree.h")]
 	public class Tree {
 		public void add_monitor (GMenu.TreeChangedFunc callback);
 		public unowned GMenu.TreeDirectory get_directory_from_path (string path);
@@ -16,14 +16,14 @@ namespace GMenu {
 		public void set_sort_key (GMenu.TreeSortKey sort_key);
 		public void set_user_data (void* user_data, GLib.DestroyNotify dnotify);
 	}
-	[Compact]
 	[CCode (cheader_filename = "gnome-menus/gmenu-tree.h")]
+	[Compact]
 	public class TreeAlias : GMenu.TreeItem {
 		public unowned GMenu.TreeDirectory get_directory ();
 		public unowned GMenu.TreeItem get_item ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "gnome-menus/gmenu-tree.h")]
+	[Compact]
 	public class TreeDirectory : GMenu.TreeItem {
 		public unowned string get_comment ();
 		public unowned GLib.SList<GMenu.TreeItem> get_contents ();
@@ -35,8 +35,8 @@ namespace GMenu {
 		public unowned GMenu.Tree get_tree ();
 		public unowned string make_path (GMenu.TreeEntry entry);
 	}
-	[Compact]
 	[CCode (cheader_filename = "gnome-menus/gmenu-tree.h")]
+	[Compact]
 	public class TreeEntry : GMenu.TreeItem {
 		public unowned string get_comment ();
 		public unowned string get_desktop_file_id ();
@@ -50,24 +50,24 @@ namespace GMenu {
 		public bool get_launch_in_terminal ();
 		public unowned string get_name ();
 	}
-	[Compact]
 	[CCode (cheader_filename = "gnome-menus/gmenu-tree.h")]
+	[Compact]
 	public class TreeHeader : GMenu.TreeItem {
 		public unowned GMenu.TreeDirectory get_directory ();
 	}
+	[CCode (cheader_filename = "gnome-menus/gmenu-tree.h", ref_function = "gmenu_tree_item_ref", unref_function = "gmenu_tree_item_unref")]
 	[Compact]
-	[CCode (ref_function = "gmenu_tree_item_ref", unref_function = "gmenu_tree_item_unref", cheader_filename = "gnome-menus/gmenu-tree.h")]
 	public class TreeItem {
 		public unowned GMenu.TreeDirectory get_parent ();
 		public GMenu.TreeItemType get_type ();
 		public void* get_user_data ();
 		public void set_user_data (void* user_data, GLib.DestroyNotify dnotify);
 	}
-	[Compact]
 	[CCode (cheader_filename = "gnome-menus/gmenu-tree.h")]
+	[Compact]
 	public class TreeSeparator : GMenu.TreeItem {
 	}
-	[CCode (cprefix = "GMENU_TREE_FLAGS_", has_type_id = false, cheader_filename = "gnome-menus/gmenu-tree.h")]
+	[CCode (cheader_filename = "gnome-menus/gmenu-tree.h", cprefix = "GMENU_TREE_FLAGS_", has_type_id = false)]
 	public enum TreeFlags {
 		NONE,
 		INCLUDE_EXCLUDED,
@@ -76,7 +76,7 @@ namespace GMenu {
 		SHOW_ALL_SEPARATORS,
 		MASK
 	}
-	[CCode (cprefix = "GMENU_TREE_ITEM_", has_type_id = false, cheader_filename = "gnome-menus/gmenu-tree.h")]
+	[CCode (cheader_filename = "gnome-menus/gmenu-tree.h", cprefix = "GMENU_TREE_ITEM_", has_type_id = false)]
 	public enum TreeItemType {
 		INVALID,
 		DIRECTORY,
@@ -85,7 +85,7 @@ namespace GMenu {
 		HEADER,
 		ALIAS
 	}
-	[CCode (cprefix = "GMENU_TREE_SORT_", has_type_id = false, cheader_filename = "gnome-menus/gmenu-tree.h")]
+	[CCode (cheader_filename = "gnome-menus/gmenu-tree.h", cprefix = "GMENU_TREE_SORT_", has_type_id = false)]
 	public enum TreeSortKey {
 		NAME,
 		DISPLAY_NAME

@@ -23,13 +23,13 @@ namespace Gst {
 		public void remove_schema (string schema);
 		public unowned Gst.Buffer tag_list_to_xmp_buffer (Gst.TagList taglist, bool read_only);
 	}
-	[CCode (cprefix = "GST_TAG_DEMUX_RESULT_", cheader_filename = "gst/tag/gsttagdemux.h")]
+	[CCode (cheader_filename = "gst/tag/gsttagdemux.h", cprefix = "GST_TAG_DEMUX_RESULT_")]
 	public enum TagDemuxResult {
 		BROKEN_TAG,
 		AGAIN,
 		OK
 	}
-	[CCode (cprefix = "GST_TAG_IMAGE_TYPE_", cheader_filename = "gst/tag/tag.h")]
+	[CCode (cheader_filename = "gst/tag/tag.h", cprefix = "GST_TAG_IMAGE_TYPE_")]
 	public enum TagImageType {
 		NONE,
 		UNDEFINED,

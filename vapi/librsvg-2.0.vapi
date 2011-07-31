@@ -48,19 +48,19 @@ namespace Rsvg {
 		[NoAccessorMethod]
 		public int width { get; }
 	}
-	[CCode (has_type_id = false, cheader_filename = "librsvg/rsvg.h")]
+	[CCode (cheader_filename = "librsvg/rsvg.h", has_type_id = false)]
 	public struct DimensionData {
 		public int width;
 		public int height;
 		public double em;
 		public double ex;
 	}
-	[CCode (has_type_id = false, cheader_filename = "librsvg/rsvg.h")]
+	[CCode (cheader_filename = "librsvg/rsvg.h", has_type_id = false)]
 	public struct PositionData {
 		public int x;
 		public int y;
 	}
-	[CCode (cprefix = "RSVG_ERROR_", cheader_filename = "librsvg/rsvg.h")]
+	[CCode (cheader_filename = "librsvg/rsvg.h", cprefix = "RSVG_ERROR_")]
 	public enum Error {
 		FAILED
 	}
@@ -84,9 +84,9 @@ namespace Rsvg {
 	public static GLib.Quark error_quark ();
 	[CCode (cheader_filename = "librsvg/rsvg.h")]
 	public static void init ();
-	[CCode (cname = "librsvg_postinit", cheader_filename = "librsvg/rsvg.h")]
+	[CCode (cheader_filename = "librsvg/rsvg.h", cname = "librsvg_postinit")]
 	public static void librsvg_postinit (void* app, void* modinfo);
-	[CCode (cname = "librsvg_preinit", cheader_filename = "librsvg/rsvg.h")]
+	[CCode (cheader_filename = "librsvg/rsvg.h", cname = "librsvg_preinit")]
 	public static void librsvg_preinit (void* app, void* modinfo);
 	[CCode (cheader_filename = "librsvg/rsvg.h")]
 	public static unowned Gdk.Pixbuf pixbuf_from_file (string file_name) throws GLib.Error;

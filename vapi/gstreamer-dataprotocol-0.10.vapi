@@ -2,8 +2,8 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
-	[Compact]
 	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]
+	[Compact]
 	public class DPPacketizer {
 		public weak Gst.DPHeaderFromBufferFunction header_from_buffer;
 		public weak Gst.DPPacketFromCapsFunction packet_from_caps;
@@ -12,21 +12,21 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public DPPacketizer (Gst.DPVersion version);
 	}
-	[CCode (cprefix = "GST_DP_HEADER_FLAG_", has_type_id = false, cheader_filename = "gst/dataprotocol/dataprotocol.h")]
+	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h", cprefix = "GST_DP_HEADER_FLAG_", has_type_id = false)]
 	public enum DPHeaderFlag {
 		NONE,
 		CRC_HEADER,
 		CRC_PAYLOAD,
 		CRC
 	}
-	[CCode (cprefix = "GST_DP_PAYLOAD_", has_type_id = false, cheader_filename = "gst/dataprotocol/dataprotocol.h")]
+	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h", cprefix = "GST_DP_PAYLOAD_", has_type_id = false)]
 	public enum DPPayloadType {
 		NONE,
 		BUFFER,
 		CAPS,
 		EVENT_NONE
 	}
-	[CCode (cprefix = "GST_DP_VERSION_", cheader_filename = "gst/dataprotocol/dataprotocol.h")]
+	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h", cprefix = "GST_DP_VERSION_")]
 	public enum DPVersion {
 		@0_2,
 		@1_0

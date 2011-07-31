@@ -4,7 +4,7 @@
 namespace Hildon {
 	[CCode (cheader_filename = "hildon/hildon-file-chooser-dialog.h")]
 	public class FileChooserDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable, Gtk.FileChooser {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public FileChooserDialog (Gtk.Window parent, Gtk.FileChooserAction action);
 		public unowned Gtk.Widget add_extensions_combo (out unowned string extensions, out unowned string ext_names);
 		public void add_extra (Gtk.Widget widget);
@@ -17,7 +17,7 @@ namespace Hildon {
 		public void set_safe_folder (string local_path);
 		public void set_safe_folder_uri (string uri);
 		public void set_show_upnp (bool value);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public FileChooserDialog.with_properties (Gtk.Window parent, ...);
 		[NoAccessorMethod]
 		public bool autonaming { get; set; }
@@ -42,11 +42,11 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon-file-details-dialog.h")]
 	public class FileDetailsDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public FileDetailsDialog (Gtk.Window parent, string filename);
 		public bool get_file_iter (out Gtk.TreeIter iter);
 		public void set_file_iter (Gtk.TreeIter iter);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public FileDetailsDialog.with_model (Gtk.Window parent, Hildon.FileSystemModel model);
 		[NoAccessorMethod]
 		public Gtk.Widget additional_tab { owned get; set construct; }
@@ -94,7 +94,7 @@ namespace Hildon {
 		public void undim_all ();
 		public void unselect_all ();
 		public void unselect_uri (string uri);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public FileSelection.with_model (Hildon.FileSystemModel model);
 		[NoAccessorMethod]
 		public int active_pane { get; set; }
@@ -124,8 +124,8 @@ namespace Hildon {
 		public virtual signal void selection_changed ();
 		public virtual signal void uris_dropped (string destination, void* sources);
 	}
-	[Compact]
 	[CCode (cheader_filename = "hildon/hildon-file-system-info.h")]
+	[Compact]
 	public class FileSystemInfo {
 		[CCode (has_construct_function = false)]
 		public FileSystemInfo (string uri) throws GLib.Error;
@@ -135,8 +135,8 @@ namespace Hildon {
 		public unowned Gdk.Pixbuf get_icon (Gtk.Widget ref_widget);
 		public unowned Gdk.Pixbuf get_icon_at_size (Gtk.Widget ref_widget, int size);
 	}
-	[Compact]
 	[CCode (cheader_filename = "hildon/hildon-file-system-info.h")]
+	[Compact]
 	public class FileSystemInfoHandle {
 	}
 	[CCode (cheader_filename = "hildon/hildon-file-system-model.h")]
@@ -144,7 +144,7 @@ namespace Hildon {
 		[CCode (has_construct_function = false)]
 		protected FileSystemModel ();
 		public unowned string autoname_uri (string uri) throws GLib.Error;
-		[CCode (type = "gchar*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "gchar*")]
 		public FileSystemModel.item (Hildon.FileSystemModel model, Gtk.TreeIter parent, string stub_name, string extension);
 		public void iter_available (Gtk.TreeIter iter, bool available);
 		public bool load_local_path (string path, Gtk.TreeIter iter);
@@ -169,35 +169,35 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon-file-system-storage-dialog.h")]
 	public class FileSystemStorageDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public FileSystemStorageDialog (Gtk.Window parent, string uri_str);
 		public static void set_uri (Gtk.Widget widget, string uri_str);
 	}
-	[CCode (cprefix = "HILDON_FILE_SELECTION_MODE_", has_type_id = false, cheader_filename = "hildon/hildon-file-selection.h")]
+	[CCode (cheader_filename = "hildon/hildon-file-selection.h", cprefix = "HILDON_FILE_SELECTION_MODE_", has_type_id = false)]
 	public enum FileSelectionMode {
 		LIST,
 		THUMBNAILS
 	}
-	[CCode (cprefix = "HILDON_FILE_SELECTION_PANE_", has_type_id = false, cheader_filename = "hildon/hildon-file-selection.h")]
+	[CCode (cheader_filename = "hildon/hildon-file-selection.h", cprefix = "HILDON_FILE_SELECTION_PANE_", has_type_id = false)]
 	public enum FileSelectionPane {
 		NAVIGATION,
 		CONTENT
 	}
-	[CCode (cprefix = "HILDON_FILE_SELECTION_SORT_", has_type_id = false, cheader_filename = "hildon/hildon-file-selection.h")]
+	[CCode (cheader_filename = "hildon/hildon-file-selection.h", cprefix = "HILDON_FILE_SELECTION_SORT_", has_type_id = false)]
 	public enum FileSelectionSortKey {
 		NAME,
 		TYPE,
 		MODIFIED,
 		SIZE
 	}
-	[CCode (cprefix = "HILDON_FILE_SELECTION_SHOW_", has_type_id = false, cheader_filename = "hildon/hildon-file-selection.h")]
+	[CCode (cheader_filename = "hildon/hildon-file-selection.h", cprefix = "HILDON_FILE_SELECTION_SHOW_", has_type_id = false)]
 	public enum FileSelectionVisibleColumns {
 		NAME,
 		MODIFIED,
 		SIZE,
 		ALL
 	}
-	[CCode (cprefix = "HILDON_FILE_SYSTEM_MODEL_", has_type_id = false, cheader_filename = "hildon/hildon-file-system-model.h")]
+	[CCode (cheader_filename = "hildon/hildon-file-system-model.h", cprefix = "HILDON_FILE_SYSTEM_MODEL_", has_type_id = false)]
 	public enum FileSystemModelColumns {
 		COLUMN_GTK_PATH_INTERNAL,
 		COLUMN_LOCAL_PATH,
@@ -228,7 +228,7 @@ namespace Hildon {
 		COLUMN_IS_DRIVE,
 		NUM_COLUMNS
 	}
-	[CCode (cprefix = "HILDON_FILE_SYSTEM_MODEL_", has_type_id = false, cheader_filename = "hildon/hildon-file-system-model.h")]
+	[CCode (cheader_filename = "hildon/hildon-file-system-model.h", cprefix = "HILDON_FILE_SYSTEM_MODEL_", has_type_id = false)]
 	public enum FileSystemModelItemType {
 		UNKNOWN,
 		FILE,

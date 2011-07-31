@@ -80,7 +80,7 @@ namespace Gst {
 		public bool contains_profile (Gst.EncodingProfile profile);
 		public unowned GLib.List<Gst.EncodingProfile> get_profiles ();
 	}
-	[CCode (ref_function = "gst_encoding_profile_ref", unref_function = "gst_encoding_profile_unref", cheader_filename = "gst/pbutils/pbutils.h")]
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h", ref_function = "gst_encoding_profile_ref", unref_function = "gst_encoding_profile_unref")]
 	public class EncodingProfile : Gst.MiniObject {
 		public static Gst.EncodingProfile find (string targetname, string profilename, string category);
 		public unowned string get_description ();
@@ -101,7 +101,7 @@ namespace Gst {
 		public void set_restriction (Gst.Caps restriction);
 		public void unref ();
 	}
-	[CCode (ref_function = "gst_encoding_target_ref", unref_function = "gst_encoding_target_unref", cheader_filename = "gst/pbutils/pbutils.h")]
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h", ref_function = "gst_encoding_target_ref", unref_function = "gst_encoding_target_unref")]
 	public class EncodingTarget : Gst.MiniObject {
 		[CCode (has_construct_function = false)]
 		public EncodingTarget (string name, string category, string description, GLib.List<Gst.EncodingProfile> profiles);
@@ -127,14 +127,14 @@ namespace Gst {
 		public void set_pass (uint pass);
 		public void set_variableframerate (bool variableframerate);
 	}
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h", type_id = "GST_TYPE_INSTALL_PLUGINS_CONTEXT")]
 	[Compact]
-	[CCode (type_id = "GST_TYPE_INSTALL_PLUGINS_CONTEXT", cheader_filename = "gst/pbutils/pbutils.h")]
 	public class InstallPluginsContext {
 		[CCode (has_construct_function = false)]
 		public InstallPluginsContext ();
 		public void set_xid (uint xid);
 	}
-	[CCode (cprefix = "GST_DISCOVERER_", cheader_filename = "gst/pbutils/pbutils.h")]
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h", cprefix = "GST_DISCOVERER_")]
 	public enum DiscovererResult {
 		OK,
 		URI_INVALID,
@@ -143,7 +143,7 @@ namespace Gst {
 		BUSY,
 		MISSING_PLUGINS
 	}
-	[CCode (cprefix = "GST_INSTALL_PLUGINS_", cheader_filename = "gst/pbutils/pbutils.h")]
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h", cprefix = "GST_INSTALL_PLUGINS_")]
 	public enum InstallPluginsReturn {
 		SUCCESS,
 		NOT_FOUND,

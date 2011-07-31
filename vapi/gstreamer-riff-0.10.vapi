@@ -2,8 +2,8 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
-	[Compact]
 	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
+	[Compact]
 	public class gst_riff_acid {
 		public uint32 loop_type;
 		public uint16 meter_d;
@@ -14,21 +14,21 @@ namespace Gst {
 		public uint16 unknown1;
 		public float unknown2;
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
+	[Compact]
 	public class gst_riff_dmlh {
 		public uint32 totalframes;
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
+	[Compact]
 	public class gst_riff_index_entry {
 		public uint32 flags;
 		public uint32 id;
 		public uint32 offset;
 		public uint32 size;
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
+	[Compact]
 	public class gst_riff_strf_auds {
 		public uint32 av_bps;
 		public uint16 blockalign;
@@ -37,8 +37,8 @@ namespace Gst {
 		public uint32 rate;
 		public uint16 size;
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
+	[Compact]
 	public class gst_riff_strf_iavs {
 		public uint32 DVAAuxCtl;
 		public uint32 DVAAuxCtl1;
@@ -49,8 +49,8 @@ namespace Gst {
 		public uint32 DVVAuxCtl;
 		public uint32 DVVAuxSrc;
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
+	[Compact]
 	public class gst_riff_strf_vids {
 		public uint16 bit_cnt;
 		public uint32 compression;
@@ -64,8 +64,8 @@ namespace Gst {
 		public uint32 xpels_meter;
 		public uint32 ypels_meter;
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
+	[Compact]
 	public class gst_riff_strh {
 		public uint32 bufsize;
 		public uint32 fcc_handler;

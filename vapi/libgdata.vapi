@@ -175,8 +175,8 @@ namespace GData {
 		public string scheme { get; set; }
 		public string term { get; set; }
 	}
+	[CCode (cheader_filename = "gdata/gdata.h", type_id = "GDATA_TYPE_COLOR")]
 	[Compact]
-	[CCode (type_id = "GDATA_TYPE_COLOR", cheader_filename = "gdata/gdata.h")]
 	public class Color {
 		public uint16 blue;
 		public uint16 green;
@@ -374,7 +374,7 @@ namespace GData {
 	}
 	[CCode (cheader_filename = "gdata/gdata.h")]
 	public class DownloadStream : GLib.InputStream, GLib.Seekable {
-		[CCode (type = "GInputStream*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GInputStream*")]
 		public DownloadStream (GData.Service service, string download_uri);
 		public ssize_t get_content_length ();
 		public unowned string get_content_type ();
@@ -549,8 +549,8 @@ namespace GData {
 		public string label { get; set; }
 		public string relation_type { get; set; }
 	}
-	[Compact]
 	[CCode (cheader_filename = "gdata/gdata.h")]
+	[Compact]
 	public class GDFeedLink {
 		public uint count_hint;
 		public weak string href;
@@ -725,8 +725,8 @@ namespace GData {
 		public string subregion { get; set; }
 		public string usage { get; set; }
 	}
-	[Compact]
 	[CCode (cheader_filename = "gdata/gdata.h")]
+	[Compact]
 	public class GDRating {
 		public double average;
 		public uint max;
@@ -803,8 +803,8 @@ namespace GData {
 		public string relation_type { get; set; }
 		public string value_string { get; set; }
 	}
+	[CCode (cheader_filename = "gdata/gdata.h", type_id = "GDATA_TYPE_GTIME_VAL")]
 	[Compact]
-	[CCode (type_id = "GDATA_TYPE_GTIME_VAL", cheader_filename = "gdata/gdata.h")]
 	public class GTimeVal {
 	}
 	[CCode (cheader_filename = "gdata/gdata.h")]
@@ -892,16 +892,16 @@ namespace GData {
 		public string role { get; }
 		public string scheme { get; }
 	}
-	[Compact]
 	[CCode (cheader_filename = "gdata/gdata.h")]
+	[Compact]
 	public class MediaRating {
 		public weak string country;
 		public weak string scheme;
 		[CCode (has_construct_function = false)]
 		public MediaRating (string scheme, string country);
 	}
-	[Compact]
 	[CCode (cheader_filename = "gdata/gdata.h")]
+	[Compact]
 	public class MediaRestriction {
 		public weak string countries;
 		public bool relationship;
@@ -942,7 +942,7 @@ namespace GData {
 		[NoWrapper]
 		public virtual bool pre_parse_xml (Xml.Doc doc, Xml.Node root_node) throws GLib.Error;
 	}
-	[CCode (type_check_function = "GDATA_IS_PICASAWEB_ALBUM",cprefix="gdata_picasaweb_album_", cheader_filename = "gdata/gdata.h")]
+	[CCode (cheader_filename = "gdata/gdata.h", type_check_function = "GDATA_IS_PICASAWEB_ALBUM",cprefix="gdata_picasaweb_album_")]
 	public class PicasaWebAlbum : GData.Entry {
 		[CCode (cname = "gdata_picasaweb_album_new", has_construct_function = false)]
 		public PicasaWebAlbum (string id);
@@ -1014,7 +1014,7 @@ namespace GData {
 		[CCode (has_construct_function = false)]
 		protected PicasaWebFeed ();
 	}
-	[CCode (type_check_function = "GDATA_IS_PICASAWEB_FILE",cprefix="gdata_picasaweb_file_",type_id="GDATA_TYPE_PICASAWEB_FILE", cheader_filename = "gdata/gdata.h")]
+	[CCode (cheader_filename = "gdata/gdata.h", type_check_function = "GDATA_IS_PICASAWEB_FILE",cprefix="gdata_picasaweb_file_",type_id="GDATA_TYPE_PICASAWEB_FILE")]
 	public class PicasaWebFile : GData.Entry {
 		[CCode (cname = "gdata_picasaweb_file_new", has_construct_function = false)]
 		public PicasaWebFile (string id);
@@ -1131,7 +1131,7 @@ namespace GData {
 		public string video_status { get; }
 		public uint width { get; }
 	}
-	[CCode (type_check_function = "GDATA_IS_PICASAWEB_QUERY", cheader_filename = "gdata/gdata.h")]
+	[CCode (cheader_filename = "gdata/gdata.h", type_check_function = "GDATA_IS_PICASAWEB_QUERY")]
 	public class PicasaWebQuery : GData.Query {
 		[CCode (cname = "gdata_picasaweb_query_new", has_construct_function = false)]
 		public PicasaWebQuery (string q);
@@ -1167,7 +1167,7 @@ namespace GData {
 		public string thumbnail_size { get; set; }
 		public int visibility { get; set; }
 	}
-	[CCode (type_check_function = "GDATA_IS_PICASAWEB_SERVICE", cheader_filename = "gdata/gdata.h")]
+	[CCode (cheader_filename = "gdata/gdata.h", type_check_function = "GDATA_IS_PICASAWEB_SERVICE")]
 	public class PicasaWebService : GData.Service {
 		[CCode (cname = "gdata_picasaweb_service_new", has_construct_function = false)]
 		public PicasaWebService (string client_id);
@@ -1291,7 +1291,7 @@ namespace GData {
 	}
 	[CCode (cheader_filename = "gdata/gdata.h")]
 	public class UploadStream : GLib.OutputStream {
-		[CCode (type = "GOutputStream*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GOutputStream*")]
 		public UploadStream (GData.Service service, string method, string upload_uri, GData.Entry entry, string slug, string content_type);
 		public unowned string get_content_type ();
 		public unowned GData.Entry get_entry ();
@@ -1305,7 +1305,7 @@ namespace GData {
 		public string slug { get; construct; }
 		public string upload_uri { get; construct; }
 	}
-	[CCode (type_check_function = "GDATA_IS_YOUTUBE_CONTENT", cheader_filename = "gdata/gdata.h")]
+	[CCode (cheader_filename = "gdata/gdata.h", type_check_function = "GDATA_IS_YOUTUBE_CONTENT")]
 	public class YouTubeContent : GData.MediaContent {
 		[CCode (has_construct_function = false)]
 		protected YouTubeContent ();
@@ -1313,7 +1313,7 @@ namespace GData {
 		public GData.YouTubeFormat get_format ();
 		public GData.YouTubeFormat format { get; }
 	}
-	[CCode (type_check_function = "GDATA_IS_YOUTUBE_CREDIT", cheader_filename = "gdata/gdata.h")]
+	[CCode (cheader_filename = "gdata/gdata.h", type_check_function = "GDATA_IS_YOUTUBE_CREDIT")]
 	public class YouTubeCredit : GData.MediaCredit {
 		[CCode (has_construct_function = false)]
 		protected YouTubeCredit ();
@@ -1321,7 +1321,7 @@ namespace GData {
 		public unowned string get_entity_type ();
 		public string entity_type { get; }
 	}
-	[CCode (type_check_function = "GDATA_IS_YOUTUBE_QUERY", cheader_filename = "gdata/gdata.h")]
+	[CCode (cheader_filename = "gdata/gdata.h", type_check_function = "GDATA_IS_YOUTUBE_QUERY")]
 	public class YouTubeQuery : GData.Query {
 		[CCode (cname = "gdata_youtube_query_new", has_construct_function = false)]
 		public YouTubeQuery (string q);
@@ -1378,7 +1378,7 @@ namespace GData {
 		public GData.YouTubeSortOrder sort_order { get; set; }
 		public GData.YouTubeUploader uploader { get; set; }
 	}
-	[CCode (type_check_function = "GDATA_IS_YOUTUBE_SERVICE", cheader_filename = "gdata/gdata.h")]
+	[CCode (cheader_filename = "gdata/gdata.h", type_check_function = "GDATA_IS_YOUTUBE_SERVICE")]
 	public class YouTubeService : GData.Service {
 		[CCode (cname = "gdata_youtube_service_new", has_construct_function = false)]
 		public YouTubeService (string developer_key, string client_id);
@@ -1405,7 +1405,7 @@ namespace GData {
 		public string developer_key { get; construct; }
 		public string youtube_user { get; }
 	}
-	[CCode (type_check_function = "GDATA_IS_YOUTUBE_STATE", cheader_filename = "gdata/gdata.h")]
+	[CCode (cheader_filename = "gdata/gdata.h", type_check_function = "GDATA_IS_YOUTUBE_STATE")]
 	public class YouTubeState : GData.Parsable {
 		[CCode (cname = "gdata_youtube_state_new", has_construct_function = false)]
 		public YouTubeState (string name, string message, string reason_code, string help_uri);
@@ -1422,7 +1422,7 @@ namespace GData {
 		public string name { get; }
 		public string reason_code { get; }
 	}
-	[CCode (type_check_function = "GDATA_IS_YOUTUBE_VIDEO", cheader_filename = "gdata/gdata.h")]
+	[CCode (cheader_filename = "gdata/gdata.h", type_check_function = "GDATA_IS_YOUTUBE_VIDEO")]
 	public class YouTubeVideo : GData.Entry {
 		[CCode (cname = "gdata_youtube_video_new", has_construct_function = false)]
 		public YouTubeVideo (string id);
@@ -1521,7 +1521,7 @@ namespace GData {
 		public abstract bool is_owner_rule (GData.AccessRule rule);
 		public unowned GData.AccessRule update_rule (GData.Service service, GData.AccessRule rule, GLib.Cancellable cancellable) throws GLib.Error;
 	}
-	[CCode (cprefix = "GDATA_AUTHENTICATION_ERROR_", cheader_filename = "gdata/gdata.h")]
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_AUTHENTICATION_ERROR_")]
 	public enum AuthenticationError {
 		BAD_AUTHENTICATION,
 		NOT_VERIFIED,
@@ -1531,7 +1531,7 @@ namespace GData {
 		ACCOUNT_DISABLED,
 		SERVICE_DISABLED
 	}
-	[CCode (cprefix = "GDATA_DOCUMENTS_PRESENTATION_", cheader_filename = "gdata/gdata.h")]
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_DOCUMENTS_PRESENTATION_")]
 	public enum DocumentsPresentationFormat {
 		PDF,
 		PNG,
@@ -1539,11 +1539,11 @@ namespace GData {
 		SWF,
 		TXT
 	}
-	[CCode (cprefix = "GDATA_DOCUMENTS_SERVICE_ERROR_INVALID_CONTENT_", cheader_filename = "gdata/gdata.h")]
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_DOCUMENTS_SERVICE_ERROR_INVALID_CONTENT_")]
 	public enum DocumentsServiceError {
 		TYPE
 	}
-	[CCode (cprefix = "GDATA_DOCUMENTS_SPREADSHEET_", cheader_filename = "gdata/gdata.h")]
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_DOCUMENTS_SPREADSHEET_")]
 	public enum DocumentsSpreadsheetFormat {
 		XLS,
 		CSV,
@@ -1552,7 +1552,7 @@ namespace GData {
 		TSV,
 		HTML
 	}
-	[CCode (cprefix = "GDATA_DOCUMENTS_TEXT_", cheader_filename = "gdata/gdata.h")]
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_DOCUMENTS_TEXT_")]
 	public enum DocumentsTextFormat {
 		DOC,
 		HTML,
@@ -1563,13 +1563,13 @@ namespace GData {
 		TXT,
 		ZIP
 	}
-	[CCode (cprefix = "GDATA_MEDIA_EXPRESSION_", cheader_filename = "gdata/gdata.h")]
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_MEDIA_EXPRESSION_")]
 	public enum MediaExpression {
 		SAMPLE,
 		FULL,
 		NONSTOP
 	}
-	[CCode (cprefix = "GDATA_MEDIA_", cheader_filename = "gdata/gdata.h")]
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_MEDIA_")]
 	public enum MediaMedium {
 		UNKNOWN,
 		IMAGE,
@@ -1578,7 +1578,7 @@ namespace GData {
 		DOCUMENT,
 		EXECUTABLE
 	}
-	[CCode (cprefix = "GDATA_OPERATION_", cheader_filename = "gdata/gdata.h")]
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_OPERATION_")]
 	public enum OperationType {
 		QUERY,
 		INSERTION,
@@ -1588,17 +1588,17 @@ namespace GData {
 		UPLOAD,
 		AUTHENTICATION
 	}
-	[CCode (cprefix = "GDATA_PARSER_ERROR_", cheader_filename = "gdata/gdata.h")]
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_PARSER_ERROR_")]
 	public enum ParserError {
 		PARSING_STRING,
 		EMPTY_DOCUMENT
 	}
-	[CCode (cprefix = "GDATA_PICASAWEB_", cheader_filename = "gdata/gdata.h")]
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_PICASAWEB_")]
 	public enum PicasaWebVisibility {
 		PUBLIC,
 		PRIVATE
 	}
-	[CCode (cprefix = "GDATA_SERVICE_ERROR_", cheader_filename = "gdata/gdata.h")]
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_SERVICE_ERROR_")]
 	public enum ServiceError {
 		UNAVAILABLE,
 		PROTOCOL_ERROR,
@@ -1611,44 +1611,44 @@ namespace GData {
 		NETWORK_ERROR,
 		PROXY_ERROR
 	}
-	[CCode (cprefix = "GDATA_YOUTUBE_AGE_", cheader_filename = "gdata/gdata.h")]
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_YOUTUBE_AGE_")]
 	public enum YouTubeAge {
 		ALL_TIME,
 		TODAY,
 		THIS_WEEK,
 		THIS_MONTH
 	}
-	[CCode (cprefix = "GDATA_YOUTUBE_FORMAT_", cheader_filename = "gdata/gdata.h")]
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_YOUTUBE_FORMAT_")]
 	public enum YouTubeFormat {
 		UNKNOWN,
 		RTSP_H263_AMR,
 		HTTP_SWF,
 		RTSP_MPEG4_AAC
 	}
-	[CCode (cprefix = "GDATA_YOUTUBE_PERMISSION_", cheader_filename = "gdata/gdata.h")]
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_YOUTUBE_PERMISSION_")]
 	public enum YouTubePermission {
 		ALLOWED,
 		DENIED,
 		MODERATED
 	}
-	[CCode (cprefix = "GDATA_YOUTUBE_SAFE_SEARCH_", cheader_filename = "gdata/gdata.h")]
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_YOUTUBE_SAFE_SEARCH_")]
 	public enum YouTubeSafeSearch {
 		NONE,
 		MODERATE,
 		STRICT
 	}
-	[CCode (cprefix = "GDATA_YOUTUBE_SERVICE_ERROR_", cheader_filename = "gdata/gdata.h")]
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_YOUTUBE_SERVICE_ERROR_")]
 	public enum YouTubeServiceError {
 		API_QUOTA_EXCEEDED,
 		ENTRY_QUOTA_EXCEEDED
 	}
-	[CCode (cprefix = "GDATA_YOUTUBE_SORT_", cheader_filename = "gdata/gdata.h")]
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_YOUTUBE_SORT_")]
 	public enum YouTubeSortOrder {
 		NONE,
 		ASCENDING,
 		DESCENDING
 	}
-	[CCode (cprefix = "GDATA_YOUTUBE_", cheader_filename = "gdata/gdata.h")]
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_YOUTUBE_")]
 	public enum YouTubeStandardFeedType {
 		TOP_RATED_FEED,
 		TOP_FAVORITES_FEED,
@@ -1661,7 +1661,7 @@ namespace GData {
 		RECENTLY_FEATURED_FEED,
 		WATCH_ON_MOBILE_FEED
 	}
-	[CCode (cprefix = "GDATA_YOUTUBE_UPLOADER_", cheader_filename = "gdata/gdata.h")]
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_YOUTUBE_UPLOADER_")]
 	public enum YouTubeUploader {
 		ALL,
 		PARTNER

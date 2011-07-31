@@ -4,24 +4,24 @@
 namespace GtkClutter {
 	[CCode (cheader_filename = "clutter-gtk/clutter-gtk.h")]
 	public class Actor : Clutter.Actor, Clutter.Scriptable, Clutter.Animatable, Atk.Implementor, Clutter.Container {
-		[CCode (type = "ClutterActor*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "ClutterActor*")]
 		public Actor ();
 		public unowned Gtk.Widget get_contents ();
 		public unowned Gtk.Widget get_widget ();
-		[CCode (type = "ClutterActor*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "ClutterActor*")]
 		public Actor.with_contents (Gtk.Widget contents);
 		[NoAccessorMethod]
 		public Gtk.Widget contents { owned get; set construct; }
 	}
 	[CCode (cheader_filename = "clutter-gtk/clutter-gtk.h")]
 	public class Embed : Gtk.Container, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Embed ();
 		public unowned Clutter.Actor get_stage ();
 	}
 	[CCode (cheader_filename = "clutter-gtk/clutter-gtk.h")]
 	public class Texture : Clutter.Texture, Clutter.Scriptable, Clutter.Animatable, Atk.Implementor {
-		[CCode (type = "ClutterActor*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "ClutterActor*")]
 		public Texture ();
 		public static GLib.Quark error_quark ();
 		public bool set_from_icon_name (Gtk.Widget widget, string icon_name, Gtk.IconSize icon_size) throws GLib.Error;
@@ -30,11 +30,11 @@ namespace GtkClutter {
 	}
 	[CCode (cheader_filename = "clutter-gtk/clutter-gtk.h")]
 	public class Window : Gtk.Window, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Window ();
 		public unowned Clutter.Actor get_stage ();
 	}
-	[CCode (cprefix = "GTK_CLUTTER_TEXTURE_ERROR_INVALID_STOCK_", has_type_id = false, cheader_filename = "clutter-gtk/clutter-gtk.h")]
+	[CCode (cheader_filename = "clutter-gtk/clutter-gtk.h", cprefix = "GTK_CLUTTER_TEXTURE_ERROR_INVALID_STOCK_", has_type_id = false)]
 	public enum TextureError {
 		ID
 	}

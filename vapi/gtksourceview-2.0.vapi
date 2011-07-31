@@ -352,7 +352,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public class SourceView : Gtk.TextView, Atk.Implementor, Gtk.Buildable {
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public SourceView ();
 		public bool get_auto_indent ();
 		public unowned Gtk.SourceCompletion get_completion ();
@@ -391,7 +391,7 @@ namespace Gtk {
 		public void set_show_right_margin (bool show);
 		public void set_smart_home_end (Gtk.SourceSmartHomeEndType smart_he);
 		public void set_tab_width (uint width);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public SourceView.with_buffer (Gtk.SourceBuffer buffer);
 		public bool auto_indent { get; set; }
 		public Gtk.SourceCompletion completion { get; }
@@ -451,19 +451,19 @@ namespace Gtk {
 		[HasEmitter]
 		public signal void can_undo_changed ();
 	}
-	[CCode (cprefix = "GTK_SOURCE_COMPLETION_ACTIVATION_", cheader_filename = "gtksourceview/gtksourceview.h")]
+	[CCode (cheader_filename = "gtksourceview/gtksourceview.h", cprefix = "GTK_SOURCE_COMPLETION_ACTIVATION_")]
 	[Flags]
 	public enum SourceCompletionActivation {
 		NONE,
 		INTERACTIVE,
 		USER_REQUESTED
 	}
-	[CCode (cprefix = "GTK_SOURCE_COMPLETION_ERROR_", cheader_filename = "gtksourceview/gtksourceview.h")]
+	[CCode (cheader_filename = "gtksourceview/gtksourceview.h", cprefix = "GTK_SOURCE_COMPLETION_ERROR_")]
 	public enum SourceCompletionError {
 		ALREADY_BOUND,
 		NOT_BOUND
 	}
-	[CCode (cprefix = "GTK_SOURCE_DRAW_SPACES_", cheader_filename = "gtksourceview/gtksourceview.h")]
+	[CCode (cheader_filename = "gtksourceview/gtksourceview.h", cprefix = "GTK_SOURCE_DRAW_SPACES_")]
 	[Flags]
 	public enum SourceDrawSpacesFlags {
 		SPACE,
@@ -475,21 +475,21 @@ namespace Gtk {
 		TRAILING,
 		ALL
 	}
-	[CCode (cprefix = "GTK_SOURCE_SEARCH_", cheader_filename = "gtksourceview/gtksourceiter.h")]
+	[CCode (cheader_filename = "gtksourceview/gtksourceiter.h", cprefix = "GTK_SOURCE_SEARCH_")]
 	[Flags]
 	public enum SourceSearchFlags {
 		VISIBLE_ONLY,
 		TEXT_ONLY,
 		CASE_INSENSITIVE
 	}
-	[CCode (cprefix = "GTK_SOURCE_SMART_HOME_END_", cheader_filename = "gtksourceview/gtksourceview.h")]
+	[CCode (cheader_filename = "gtksourceview/gtksourceview.h", cprefix = "GTK_SOURCE_SMART_HOME_END_")]
 	public enum SourceSmartHomeEndType {
 		DISABLED,
 		BEFORE,
 		AFTER,
 		ALWAYS
 	}
-	[CCode (cprefix = "GTK_SOURCE_VIEW_GUTTER_POSITION_", cheader_filename = "gtksourceview/gtksourceview.h")]
+	[CCode (cheader_filename = "gtksourceview/gtksourceview.h", cprefix = "GTK_SOURCE_VIEW_GUTTER_POSITION_")]
 	public enum SourceViewGutterPosition {
 		LINES,
 		MARKS

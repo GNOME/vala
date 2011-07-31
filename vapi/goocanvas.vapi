@@ -2,8 +2,8 @@
 
 [CCode (cprefix = "Goo", lower_case_cprefix = "goo_")]
 namespace Goo {
+	[CCode (cheader_filename = "goocanvas.h", copy_function = "goo_cairo_matrix_copy", type_id = "GOO_TYPE_CAIRO_MATRIX")]
 	[Compact]
-	[CCode (copy_function = "goo_cairo_matrix_copy", type_id = "GOO_TYPE_CAIRO_MATRIX", cheader_filename = "goocanvas.h")]
 	public class CairoMatrix {
 		public double x0;
 		public double xx;
@@ -13,8 +13,8 @@ namespace Goo {
 		public double yy;
 		public static Cairo.Matrix copy (Cairo.Matrix matrix);
 	}
+	[CCode (cheader_filename = "goocanvas.h", type_id = "GOO_TYPE_CAIRO_PATTERN")]
 	[Compact]
-	[CCode (type_id = "GOO_TYPE_CAIRO_PATTERN", cheader_filename = "goocanvas.h")]
 	public class CairoPattern {
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
@@ -456,8 +456,8 @@ namespace Goo {
 		[NoAccessorMethod]
 		public Gdk.Pixbuf stroke_pixbuf { set; }
 	}
+	[CCode (cheader_filename = "goocanvas.h", ref_function = "goo_canvas_line_dash_ref", type_id = "GOO_TYPE_CANVAS_LINE_DASH", unref_function = "goo_canvas_line_dash_unref")]
 	[Compact]
-	[CCode (ref_function = "goo_canvas_line_dash_ref", unref_function = "goo_canvas_line_dash_unref", type_id = "GOO_TYPE_CANVAS_LINE_DASH", cheader_filename = "goocanvas.h")]
 	public class CanvasLineDash {
 		public double dash_offset;
 		public double* dashes;
@@ -502,8 +502,8 @@ namespace Goo {
 		[NoAccessorMethod]
 		public double y { get; set; }
 	}
+	[CCode (cheader_filename = "goocanvas.h", ref_function = "goo_canvas_points_ref", type_id = "GOO_TYPE_CANVAS_POINTS", unref_function = "goo_canvas_points_unref")]
 	[Compact]
-	[CCode (ref_function = "goo_canvas_points_ref", unref_function = "goo_canvas_points_unref", type_id = "GOO_TYPE_CANVAS_POINTS", cheader_filename = "goocanvas.h")]
 	public class CanvasPoints {
 		public double* coords;
 		public int num_points;
@@ -542,8 +542,8 @@ namespace Goo {
 		[NoAccessorMethod]
 		public double y { get; set; }
 	}
-	[Compact]
 	[CCode (cheader_filename = "goocanvas.h")]
+	[Compact]
 	public class CanvasPolylineArrowData {
 		public double arrow_length;
 		public double arrow_tip_length;
@@ -887,14 +887,14 @@ namespace Goo {
 		public signal void child_notify (GLib.ParamSpec pspec);
 		public signal void child_removed (int child_num);
 	}
-	[CCode (type_id = "GOO_TYPE_CANVAS_BOUNDS", cheader_filename = "goocanvas.h")]
+	[CCode (cheader_filename = "goocanvas.h", type_id = "GOO_TYPE_CANVAS_BOUNDS")]
 	public struct CanvasBounds {
 		public double x1;
 		public double y1;
 		public double x2;
 		public double y2;
 	}
-	[CCode (type_id = "GOO_TYPE_CANVAS_ITEM_SIMPLE_DATA", cheader_filename = "goocanvas.h")]
+	[CCode (cheader_filename = "goocanvas.h", type_id = "GOO_TYPE_CANVAS_ITEM_SIMPLE_DATA")]
 	public struct CanvasItemSimpleData {
 		public Cairo.Matrix? transform;
 		public weak GLib.Array<Goo.CanvasPathCommand> clip_path_commands;
@@ -910,13 +910,13 @@ namespace Goo {
 		public uint cache_setting;
 		public uint has_tooltip;
 	}
-	[CCode (type_id = "GOO_TYPE_CANVAS_PATH_COMMAND", cheader_filename = "goocanvas.h")]
+	[CCode (cheader_filename = "goocanvas.h", type_id = "GOO_TYPE_CANVAS_PATH_COMMAND")]
 	public struct CanvasPathCommand {
 		public Goo.CanvasPathCommandSimple simple;
 		public Goo.CanvasPathCommandCurve curve;
 		public Goo.CanvasPathCommandArc arc;
 	}
-	[CCode (type_id = "GOO_TYPE_CANVAS_PATH_COMMAND_ARC", cheader_filename = "goocanvas.h")]
+	[CCode (cheader_filename = "goocanvas.h", type_id = "GOO_TYPE_CANVAS_PATH_COMMAND_ARC")]
 	public struct CanvasPathCommandArc {
 		public uint type;
 		public uint relative;
@@ -928,7 +928,7 @@ namespace Goo {
 		public double x;
 		public double y;
 	}
-	[CCode (type_id = "GOO_TYPE_CANVAS_PATH_COMMAND_CURVE", cheader_filename = "goocanvas.h")]
+	[CCode (cheader_filename = "goocanvas.h", type_id = "GOO_TYPE_CANVAS_PATH_COMMAND_CURVE")]
 	public struct CanvasPathCommandCurve {
 		public uint type;
 		public uint relative;
@@ -939,49 +939,49 @@ namespace Goo {
 		public double x2;
 		public double y2;
 	}
-	[CCode (type_id = "GOO_TYPE_CANVAS_PATH_COMMAND_SIMPLE", cheader_filename = "goocanvas.h")]
+	[CCode (cheader_filename = "goocanvas.h", type_id = "GOO_TYPE_CANVAS_PATH_COMMAND_SIMPLE")]
 	public struct CanvasPathCommandSimple {
 		public uint type;
 		public uint relative;
 		public double x;
 		public double y;
 	}
-	[CCode (type_id = "GOO_TYPE_CANVAS_STYLE_PROPERTY", cheader_filename = "goocanvas.h")]
+	[CCode (cheader_filename = "goocanvas.h", type_id = "GOO_TYPE_CANVAS_STYLE_PROPERTY")]
 	public struct CanvasStyleProperty {
 		public GLib.Quark id;
 		public GLib.Value value;
 	}
-	[CCode (cprefix = "CAIRO_ANTIALIAS_", cheader_filename = "goocanvas.h")]
+	[CCode (cheader_filename = "goocanvas.h", cprefix = "CAIRO_ANTIALIAS_")]
 	public enum CairoAntialias {
 		DEFAULT,
 		NONE,
 		GRAY,
 		SUBPIXEL
 	}
-	[CCode (cprefix = "CAIRO_FILL_RULE_", cheader_filename = "goocanvas.h")]
+	[CCode (cheader_filename = "goocanvas.h", cprefix = "CAIRO_FILL_RULE_")]
 	public enum CairoFillRule {
 		WINDING,
 		EVEN_ODD
 	}
-	[CCode (cprefix = "CAIRO_HINT_METRICS_", cheader_filename = "goocanvas.h")]
+	[CCode (cheader_filename = "goocanvas.h", cprefix = "CAIRO_HINT_METRICS_")]
 	public enum CairoHintMetrics {
 		DEFAULT,
 		OFF,
 		ON
 	}
-	[CCode (cprefix = "CAIRO_LINE_CAP_", cheader_filename = "goocanvas.h")]
+	[CCode (cheader_filename = "goocanvas.h", cprefix = "CAIRO_LINE_CAP_")]
 	public enum CairoLineCap {
 		BUTT,
 		ROUND,
 		SQUARE
 	}
-	[CCode (cprefix = "CAIRO_LINE_JOIN_", cheader_filename = "goocanvas.h")]
+	[CCode (cheader_filename = "goocanvas.h", cprefix = "CAIRO_LINE_JOIN_")]
 	public enum CairoLineJoin {
 		MITER,
 		ROUND,
 		BEVEL
 	}
-	[CCode (cprefix = "CAIRO_OPERATOR_", cheader_filename = "goocanvas.h")]
+	[CCode (cheader_filename = "goocanvas.h", cprefix = "CAIRO_OPERATOR_")]
 	public enum CairoOperator {
 		CLEAR,
 		SOURCE,
@@ -998,21 +998,21 @@ namespace Goo {
 		ADD,
 		SATURATE
 	}
-	[CCode (cprefix = "GOO_CANVAS_ANIMATE_", cheader_filename = "goocanvas.h")]
+	[CCode (cheader_filename = "goocanvas.h", cprefix = "GOO_CANVAS_ANIMATE_")]
 	public enum CanvasAnimateType {
 		FREEZE,
 		RESET,
 		RESTART,
 		BOUNCE
 	}
-	[CCode (cprefix = "GOO_CANVAS_ITEM_", cheader_filename = "goocanvas.h")]
+	[CCode (cheader_filename = "goocanvas.h", cprefix = "GOO_CANVAS_ITEM_")]
 	public enum CanvasItemVisibility {
 		HIDDEN,
 		INVISIBLE,
 		VISIBLE,
 		VISIBLE_ABOVE_THRESHOLD
 	}
-	[CCode (cprefix = "GOO_CANVAS_PATH_", cheader_filename = "goocanvas.h")]
+	[CCode (cheader_filename = "goocanvas.h", cprefix = "GOO_CANVAS_PATH_")]
 	public enum CanvasPathCommandType {
 		MOVE_TO,
 		CLOSE_PATH,
@@ -1025,7 +1025,7 @@ namespace Goo {
 		SMOOTH_QUADRATIC_CURVE_TO,
 		ELLIPTICAL_ARC
 	}
-	[CCode (cprefix = "GOO_CANVAS_EVENTS_", cheader_filename = "goocanvas.h")]
+	[CCode (cheader_filename = "goocanvas.h", cprefix = "GOO_CANVAS_EVENTS_")]
 	[Flags]
 	public enum CanvasPointerEvents {
 		VISIBLE_MASK,

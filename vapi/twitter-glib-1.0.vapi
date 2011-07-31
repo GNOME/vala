@@ -150,20 +150,20 @@ namespace Twitter {
 		public Twitter.User get_pos (int index_);
 		public bool load_from_data (string buffer) throws GLib.Error;
 	}
-	[CCode (cprefix = "TWITTER_AUTH_", cheader_filename = "twitter-glib/twitter-glib.h")]
+	[CCode (cheader_filename = "twitter-glib/twitter-glib.h", cprefix = "TWITTER_AUTH_")]
 	public enum AuthState {
 		NEGOTIATING,
 		RETRY,
 		FAILED,
 		SUCCESS
 	}
-	[CCode (cprefix = "TWITTER_", cheader_filename = "twitter-glib/twitter-glib.h")]
+	[CCode (cheader_filename = "twitter-glib/twitter-glib.h", cprefix = "TWITTER_")]
 	public enum Provider {
 		CUSTOM_PROVIDER,
 		DEFAULT_PROVIDER,
 		IDENTI_CA
 	}
-	[CCode (cprefix = "TWITTER_ERROR_", cheader_filename = "twitter-glib/twitter-glib.h")]
+	[CCode (cheader_filename = "twitter-glib/twitter-glib.h", cprefix = "TWITTER_ERROR_")]
 	public errordomain Error {
 		HOST_NOT_FOUND,
 		CANCELLED,

@@ -2,9 +2,9 @@
 
 [CCode (cprefix = "Rest", lower_case_cprefix = "rest_")]
 namespace Rest {
-	[CCode (cname = "FacebookProxy", cheader_filename = "rest-extras/facebook-proxy.h")]
+	[CCode (cheader_filename = "rest-extras/facebook-proxy.h", cname = "FacebookProxy")]
 	public class FacebookProxy : Rest.Proxy {
-		[CCode (cname = "facebook_proxy_new", type = "RestProxy*", has_construct_function = false)]
+		[CCode (cname = "facebook_proxy_new", has_construct_function = false, type = "RestProxy*")]
 		public FacebookProxy (string api_key, string app_secret);
 		[CCode (cname = "facebook_proxy_build_login_url")]
 		public unowned string build_login_url (string frob);
@@ -22,15 +22,15 @@ namespace Rest {
 		public void set_session_key (string session_key);
 		[CCode (cname = "facebook_proxy_sign")]
 		public unowned string sign (GLib.HashTable @params);
-		[CCode (cname = "facebook_proxy_new_with_session", type = "RestProxy*", has_construct_function = false)]
+		[CCode (cname = "facebook_proxy_new_with_session", has_construct_function = false, type = "RestProxy*")]
 		public FacebookProxy.with_session (string api_key, string app_secret, string session_key);
 	}
-	[CCode (cname = "FacebookProxyCall", cheader_filename = "rest-extras/facebook-proxy-call.h")]
+	[CCode (cheader_filename = "rest-extras/facebook-proxy-call.h", cname = "FacebookProxyCall")]
 	public class FacebookProxyCall : Rest.ProxyCall {
 	}
-	[CCode (cname = "FlickrProxy", cheader_filename = "rest-extras/flickr-proxy.h")]
+	[CCode (cheader_filename = "rest-extras/flickr-proxy.h", cname = "FlickrProxy")]
 	public class FlickrProxy : Rest.Proxy {
-		[CCode (cname = "flickr_proxy_new", type = "RestProxy*", has_construct_function = false)]
+		[CCode (cname = "flickr_proxy_new", has_construct_function = false, type = "RestProxy*")]
 		public FlickrProxy (string api_key, string shared_secret);
 		[CCode (cname = "flickr_proxy_build_login_url")]
 		public unowned string build_login_url (string frob);
@@ -46,10 +46,10 @@ namespace Rest {
 		public void set_token (string token);
 		[CCode (cname = "flickr_proxy_sign")]
 		public unowned string sign (GLib.HashTable @params);
-		[CCode (cname = "flickr_proxy_new_with_token", type = "RestProxy*", has_construct_function = false)]
+		[CCode (cname = "flickr_proxy_new_with_token", has_construct_function = false, type = "RestProxy*")]
 		public FlickrProxy.with_token (string api_key, string shared_secret, string token);
 	}
-	[CCode (cname = "FlickrProxyCall", cheader_filename = "rest-extras/flickr-proxy-call.h")]
+	[CCode (cheader_filename = "rest-extras/flickr-proxy-call.h", cname = "FlickrProxyCall")]
 	public class FlickrProxyCall : Rest.ProxyCall {
 	}
 }
