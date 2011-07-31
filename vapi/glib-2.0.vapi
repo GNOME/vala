@@ -3878,6 +3878,10 @@ namespace GLib {
 		public bool lookup_extended (K lookup_key, out unowned K orig_key, out unowned V value);
 		public bool remove (K key);
 		public void remove_all ();
+		[CCode (cname = "g_hash_table_lookup")]
+		public unowned V? @get (K key);
+		[CCode (cname = "g_hash_table_insert")]
+		public void @set (owned K key, owned V value);
 		public List<unowned K> get_keys ();
 		public List<unowned V> get_values ();
 		public void @foreach (HFunc<K,V> func);
