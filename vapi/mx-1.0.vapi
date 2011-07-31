@@ -546,7 +546,7 @@ namespace Mx {
 		public Style ();
 		public void @get (Mx.Stylable stylable, ...);
 		public static unowned Mx.Style get_default ();
-		public void get_property (Mx.Stylable stylable, Clutter.ParamSpecColor pspec, GLib.Value value);
+		public void get_property (Mx.Stylable stylable, GLib.ParamSpec pspec, GLib.Value value);
 		public void get_valist (Mx.Stylable stylable, string first_property_name, void* va_args);
 		public bool load_from_file (string filename) throws GLib.Error;
 		public virtual signal void changed ();
@@ -783,14 +783,14 @@ namespace Mx {
 	public interface Stylable {
 		public void apply_clutter_text_attributes (Clutter.Text text);
 		public void connect_change_notifiers ();
-		public unowned Clutter.ParamSpecColor find_property (string property_name);
+		public unowned GLib.ParamSpec find_property (string property_name);
 		public void @get (...);
 		public bool get_default_value (string property_name, GLib.Value value_out);
 		public void get_property (string property_name, GLib.Value value);
 		public abstract unowned Mx.Style get_style ();
 		public abstract unowned string get_style_class ();
 		public abstract unowned string get_style_pseudo_class ();
-		public unowned Clutter.ParamSpecColor list_properties (uint n_props);
+		public unowned GLib.ParamSpec list_properties (uint n_props);
 		public abstract void set_style (Mx.Style style);
 		public abstract void set_style_class (string style_class);
 		public abstract void set_style_pseudo_class (string pseudo_class);

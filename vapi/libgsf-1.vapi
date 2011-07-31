@@ -535,7 +535,7 @@ namespace Gsf {
 	[CCode (cprefix = "GSF_ERROR_", cheader_filename = "gsf/gsf-utils.h")]
 	public errordomain Error {
 		OUT_OF_MEMORY,
-		INVALID_DATA,
+		INVALID_DATA
 	}
 	[CCode (cheader_filename = "gsf/gsf.h")]
 	public delegate void OpenPkgIter (Gsf.Input opkg, Gsf.OpenPkgRel rel);

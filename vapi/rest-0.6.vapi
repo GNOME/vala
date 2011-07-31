@@ -122,7 +122,7 @@ namespace Rest {
 	}
 	[CCode (cprefix = "REST_PROXY_CALL_", cheader_filename = "rest/rest-proxy-call.h")]
 	public errordomain ProxyCallError {
-		FAILED,
+		FAILED
 	}
 	[CCode (cprefix = "REST_PROXY_ERROR_", cheader_filename = "rest/rest-proxy.h")]
 	public errordomain ProxyError {
@@ -163,7 +163,7 @@ namespace Rest {
 		HTTP_BAD_GATEWAY,
 		HTTP_SERVICE_UNAVAILABLE,
 		HTTP_GATEWAY_TIMEOUT,
-		HTTP_HTTP_VERSION_NOT_SUPPORTED,
+		HTTP_HTTP_VERSION_NOT_SUPPORTED
 	}
 	[CCode (cheader_filename = "rest/oauth-proxy.h")]
 	public delegate void OAuthProxyAuthCallback (Rest.OAuthProxy proxy, GLib.Error? error, GLib.Object? weak_object);

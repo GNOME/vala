@@ -172,7 +172,7 @@ namespace Twitter {
 		TIMED_OUT,
 		FAILED,
 		NOT_MODIFIED,
-		PARSE_ERROR,
+		PARSE_ERROR
 	}
 	[CCode (cheader_filename = "twitter-glib/twitter-glib.h")]
 	public const string GLIB_API_VERSION_S;

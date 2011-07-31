@@ -618,7 +618,7 @@ namespace Poppler {
 		DIRECTION_RTL
 	}
 	[CCode (cheader_filename = "poppler.h", has_target = false)]
-	public delegate bool AttachmentSaveFunc (string buf, size_t count, void* data, GLib.Error error);
+	public delegate bool AttachmentSaveFunc (string buf, size_t count, void* data) throws GLib.Error;
 	[CCode (cheader_filename = "poppler.h")]
 	public const int HAS_CAIRO;
 	[CCode (cheader_filename = "poppler.h")]
