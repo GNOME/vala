@@ -250,7 +250,7 @@ clutter-1.0:
 	$(VAPIGEN) --library $(srcdir)/clutter-1.0 --metadatadir $(METADATADIR) $(METADATADIR)/Clutter-1.0-custom.vala --pkg atk --pkg cairo --pkg pango --pkg cogl-1.0 --pkg json-glib-1.0 $(GIRDIR)/Clutter-1.0.gir
 
 gtksourceview-3.0:
-	$(VAPIGEN) --library gtksourceview-3.0 --pkg atk --pkg gdk-3.0 --pkg gdk-pixbuf-2.0 --pkg gio-2.0 --pkg gtk+-3.0 --pkg pango --pkg cairo --metadatadir $(METADATADIR) $(GIRDIR)/GtkSource-3.0.gir
+	$(VAPIGEN) --library $(srcdir)/gtksourceview-3.0 --pkg atk --pkg gdk-3.0 --pkg gdk-pixbuf-2.0 --pkg gio-2.0 --pkg gtk+-3.0 --pkg pango --pkg cairo --metadatadir $(METADATADIR) $(GIRDIR)/GtkSource-3.0.gir
 
 json-glib-1.0:
 	$(VAPIGEN) --library $(srcdir)/json-glib-1.0 --metadatadir $(METADATADIR) $(METADATADIR)/Json-1.0-custom.vala --pkg gio-2.0 $(GIRDIR)/Json-1.0.gir
