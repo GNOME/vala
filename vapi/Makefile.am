@@ -237,32 +237,253 @@ dist_noinst_DATA = \
 	config.vapi \
 	$(NULL)
 
-BINDINGS = clutter-1.0 gtksourceview-3.0 json-glib-1.0 libsoup-2.4 libpeas-1.0 vte-2.90
+BINDINGS = atk clutter-1.0 clutter-gtk-0.10 clutter-gtk-1.0 cogl-1.0 gconf-2.0 gdk-2.0 gdk-3.0 gdk-pixbuf-2.0 gdk-x11-2.0 gdk-x11-3.0 gdl-1.0 gdu gdu-gtk gedit-2.20 gio-2.0 gio-unix-2.0 gnome-desktop-2.0 gnome-keyring-1 gnome-vfs-2.0 goocanvas gstreamer-0.10 gstreamer-app-0.10 gstreamer-audio-0.10 gstreamer-base-0.10 gstreamer-cdda-0.10 gstreamer-check-0.10 gstreamer-controller-0.10 gstreamer-dataprotocol-0.10 gstreamer-fft-0.10 gstreamer-interfaces-0.10 gstreamer-net-0.10 gstreamer-netbuffer-0.10 gstreamer-pbutils-0.10 gstreamer-riff-0.10 gstreamer-rtp-0.10 gstreamer-rtsp-0.10 gstreamer-sdp-0.10 gstreamer-tag-0.10 gstreamer-video-0.10 gtk+-2.0 gtk+-3.0 gtksourceview-2.0 gtksourceview-3.0 gudev-1.0 hildon-1 hildon-fm-2 json-glib-1.0 libepc-1.0 libgda-4.0 libgda-report-4.0 libgdata libglade-2.0 libgnome-2.0 libgnome-menu libgnomeui-2.0 libgsf-1 libnotify liboobs-1 libpeas-1.0 librsvg-2.0 libsexy libsoup-2.2 libsoup-2.4 libwnck-1.0 loudmouth-1.0 mx-1.0 pango pangocairo poppler-glib purple rest-0.6 rest-extras-0.6 rest-0.7 tracker-indexer-module-1.0 twitter-glib-1.0 unique-1.0 vte vte-2.90 webkit-1.0
+
 VAPIGEN = $(top_builddir)/vapigen/vapigen
 METADATADIR = $(srcdir)/metadata
+PACKAGESDIR = $(srcdir)/packages
 GIRDIR = $$($(PKG_CONFIG) gobject-introspection-1.0 --variable=girdir)
 
 .PHONY: all-bindings $(BINDINGS)
 
 all-bindings: $(BINDINGS)
 
+atk:
+	$(VAPIGEN) --library $(srcdir)/atk $(PACKAGESDIR)/atk/atk.gi
+
 clutter-1.0:
 	$(VAPIGEN) --library $(srcdir)/clutter-1.0 --metadatadir $(METADATADIR) $(METADATADIR)/Clutter-1.0-custom.vala --pkg atk --pkg cairo --pkg pango --pkg cogl-1.0 --pkg json-glib-1.0 $(GIRDIR)/Clutter-1.0.gir
+
+clutter-gtk-0.10:
+	$(VAPIGEN) --library $(srcdir)/clutter-gtk-0.10 $(PACKAGESDIR)/clutter-gtk-0.10/clutter-gtk-0.10.gi
+
+clutter-gtk-1.0:
+	$(VAPIGEN) --library $(srcdir)/clutter-gtk-1.0 $(PACKAGESDIR)/clutter-gtk-1.0/clutter-gtk-1.0.gi
+
+cogl-1.0:
+	$(VAPIGEN) --library $(srcdir)/cogl-1.0 $(PACKAGESDIR)/cogl-1.0/cogl-1.0-custom.vala $(PACKAGESDIR)/cogl-1.0/cogl-1.0.gi
+
+gconf-2.0:
+	$(VAPIGEN) --library $(srcdir)/gconf-2.0 $(PACKAGESDIR)/gconf-2.0/gconf-2.0.gi
+
+gdk-2.0:
+	$(VAPIGEN) --library $(srcdir)/gdk-2.0 $(PACKAGESDIR)/gdk-2.0/gdk-2.0-custom.vala $(PACKAGESDIR)/gdk-2.0/gdk-2.0.gi
+
+gdk-3.0:
+	$(VAPIGEN) --library $(srcdir)/gdk-3.0 $(PACKAGESDIR)/gdk-3.0/gdk-3.0-custom.vala $(PACKAGESDIR)/gdk-3.0/gdk-3.0.gi
+
+gdk-pixbuf-2.0:
+	$(VAPIGEN) --library $(srcdir)/gdk-pixbuf-2.0 $(PACKAGESDIR)/gdk-pixbuf-2.0/gdk-pixbuf-2.0.gi
+
+gdk-x11-2.0:
+	$(VAPIGEN) --library $(srcdir)/gdk-x11-2.0 $(PACKAGESDIR)/gdk-x11-2.0/gdk-x11-2.0.gi
+
+gdk-x11-3.0:
+	$(VAPIGEN) --library $(srcdir)/gdk-x11-3.0 $(PACKAGESDIR)/gdk-x11-3.0/gdk-x11-3.0.gi
+
+gdl-1.0:
+	$(VAPIGEN) --library $(srcdir)/gdl-1.0 $(PACKAGESDIR)/gdl-1.0/gdl-1.0-custom.vala $(PACKAGESDIR)/gdl-1.0/gdl-1.0.gi
+
+gdu:
+	$(VAPIGEN) --library $(srcdir)/gdu $(PACKAGESDIR)/gdu/gdu.gi
+
+gdu-gtk:
+	$(VAPIGEN) --library $(srcdir)/gdu-gtk $(PACKAGESDIR)/gdu-gtk/gdu-gtk.gi
+
+gedit-2.20:
+	$(VAPIGEN) --library $(srcdir)/gedit-2.20 $(PACKAGESDIR)/gedit-2.20/gedit-2.20.gi
+
+gio-2.0:
+	$(VAPIGEN) --library $(srcdir)/gio-2.0 $(PACKAGESDIR)/gio-2.0/gio-2.0-custom.vala $(PACKAGESDIR)/gio-2.0/gio-2.0.gi
+
+gio-unix-2.0:
+	$(VAPIGEN) --library $(srcdir)/gio-unix-2.0 $(PACKAGESDIR)/gio-unix-2.0/gio-unix-2.0-custom.vala $(PACKAGESDIR)/gio-unix-2.0/gio-unix-2.0.gi
+
+gnome-desktop-2.0:
+	$(VAPIGEN) --library $(srcdir)/gnome-desktop-2.0 $(PACKAGESDIR)/gnome-desktop-2.0/gnome-desktop-2.0.gi
+
+gnome-keyring-1:
+	$(VAPIGEN) --library $(srcdir)/gnome-keyring-1 $(PACKAGESDIR)/gnome-keyring-1/gnome-keyring-1-custom.vala $(PACKAGESDIR)/gnome-keyring-1/gnome-keyring-1.gi
+
+gnome-vfs-2.0:
+	$(VAPIGEN) --library $(srcdir)/gnome-vfs-2.0 $(PACKAGESDIR)/gnome-vfs-2.0/gnome-vfs-2.0-custom.vala $(PACKAGESDIR)/gnome-vfs-2.0/gnome-vfs-2.0.gi
+
+goocanvas:
+	$(VAPIGEN) --library $(srcdir)/goocanvas $(PACKAGESDIR)/goocanvas/goocanvas-custom.vala $(PACKAGESDIR)/goocanvas/goocanvas.gi
+
+gstreamer-0.10:
+	$(VAPIGEN) --library $(srcdir)/gstreamer-0.10 $(PACKAGESDIR)/gstreamer-0.10/gstreamer-0.10-custom.vala $(PACKAGESDIR)/gstreamer-0.10/gstreamer-0.10.gi
+
+gstreamer-app-0.10:
+	$(VAPIGEN) --library $(srcdir)/gstreamer-app-0.10 $(PACKAGESDIR)/gstreamer-app-0.10/gstreamer-app-0.10.gi
+
+gstreamer-audio-0.10:
+	$(VAPIGEN) --library $(srcdir)/gstreamer-audio-0.10 $(PACKAGESDIR)/gstreamer-audio-0.10/gstreamer-audio-0.10.gi
+
+gstreamer-base-0.10:
+	$(VAPIGEN) --library $(srcdir)/gstreamer-base-0.10 $(PACKAGESDIR)/gstreamer-base-0.10/gstreamer-base-0.10-custom.vala $(PACKAGESDIR)/gstreamer-base-0.10/gstreamer-base-0.10.gi
+
+gstreamer-cdda-0.10:
+	$(VAPIGEN) --library $(srcdir)/gstreamer-cdda-0.10 $(PACKAGESDIR)/gstreamer-cdda-0.10/gstreamer-cdda-0.10-custom.vala $(PACKAGESDIR)/gstreamer-cdda-0.10/gstreamer-cdda-0.10.gi
+
+gstreamer-check-0.10:
+	$(VAPIGEN) --library $(srcdir)/gstreamer-check-0.10 $(PACKAGESDIR)/gstreamer-check-0.10/gstreamer-check-0.10.gi
+
+gstreamer-controller-0.10:
+	$(VAPIGEN) --library $(srcdir)/gstreamer-controller-0.10 $(PACKAGESDIR)/gstreamer-controller-0.10/gstreamer-controller-0.10-custom.vala $(PACKAGESDIR)/gstreamer-controller-0.10/gstreamer-controller-0.10.gi
+
+gstreamer-dataprotocol-0.10:
+	$(VAPIGEN) --library $(srcdir)/gstreamer-dataprotocol-0.10 $(PACKAGESDIR)/gstreamer-dataprotocol-0.10/gstreamer-dataprotocol-0.10-custom.vala $(PACKAGESDIR)/gstreamer-dataprotocol-0.10/gstreamer-dataprotocol-0.10.gi
+
+gstreamer-fft-0.10:
+	$(VAPIGEN) --library $(srcdir)/gstreamer-fft-0.10 $(PACKAGESDIR)/gstreamer-fft-0.10/gstreamer-fft-0.10.gi
+
+gstreamer-interfaces-0.10:
+	$(VAPIGEN) --library $(srcdir)/gstreamer-interfaces-0.10 $(PACKAGESDIR)/gstreamer-interfaces-0.10/gstreamer-interfaces-0.10-custom.vala $(PACKAGESDIR)/gstreamer-interfaces-0.10/gstreamer-interfaces-0.10.gi
+
+gstreamer-net-0.10:
+	$(VAPIGEN) --library $(srcdir)/gstreamer-net-0.10 $(PACKAGESDIR)/gstreamer-net-0.10/gstreamer-net-0.10.gi
+
+gstreamer-netbuffer-0.10:
+	$(VAPIGEN) --library $(srcdir)/gstreamer-netbuffer-0.10 $(PACKAGESDIR)/gstreamer-netbuffer-0.10/gstreamer-netbuffer-0.10.gi
+
+gstreamer-pbutils-0.10:
+	$(VAPIGEN) --library $(srcdir)/gstreamer-pbutils-0.10 $(PACKAGESDIR)/gstreamer-pbutils-0.10/gstreamer-pbutils-0.10-custom.vala $(PACKAGESDIR)/gstreamer-pbutils-0.10/gstreamer-pbutils-0.10.gi
+
+gstreamer-riff-0.10:
+	$(VAPIGEN) --library $(srcdir)/gstreamer-riff-0.10 $(PACKAGESDIR)/gstreamer-riff-0.10/gstreamer-riff-0.10.gi
+
+gstreamer-rtp-0.10:
+	$(VAPIGEN) --library $(srcdir)/gstreamer-rtp-0.10 $(PACKAGESDIR)/gstreamer-rtp-0.10/gstreamer-rtp-0.10.gi
+
+gstreamer-rtsp-0.10:
+	$(VAPIGEN) --library $(srcdir)/gstreamer-rtsp-0.10 $(PACKAGESDIR)/gstreamer-rtsp-0.10/gstreamer-rtsp-0.10-custom.vala $(PACKAGESDIR)/gstreamer-rtsp-0.10/gstreamer-rtsp-0.10.gi
+
+gstreamer-sdp-0.10:
+	$(VAPIGEN) --library $(srcdir)/gstreamer-sdp-0.10 $(PACKAGESDIR)/gstreamer-sdp-0.10/gstreamer-sdp-0.10.gi
+
+gstreamer-tag-0.10:
+	$(VAPIGEN) --library $(srcdir)/gstreamer-tag-0.10 $(PACKAGESDIR)/gstreamer-tag-0.10/gstreamer-tag-0.10.gi
+
+gstreamer-video-0.10:
+	$(VAPIGEN) --library $(srcdir)/gstreamer-video-0.10 $(PACKAGESDIR)/gstreamer-video-0.10/gstreamer-video-0.10-custom.vala $(PACKAGESDIR)/gstreamer-video-0.10/gstreamer-video-0.10.gi
+
+gtk+-2.0:
+	$(VAPIGEN) --library $(srcdir)/gtk+-2.0 $(PACKAGESDIR)/gtk+-2.0/gtk+-2.0-custom.vala $(PACKAGESDIR)/gtk+-2.0/gtk+-2.0.gi
+
+gtk+-3.0:
+	$(VAPIGEN) --library $(srcdir)/gtk+-3.0 $(PACKAGESDIR)/gtk+-3.0/gtk+-3.0-custom.vala $(PACKAGESDIR)/gtk+-3.0/gtk+-3.0.gi
+
+gtksourceview-2.0:
+	$(VAPIGEN) --library $(srcdir)/gtksourceview-2.0 $(PACKAGESDIR)/gtksourceview-2.0/gtksourceview-2.0.gi
 
 gtksourceview-3.0:
 	$(VAPIGEN) --library $(srcdir)/gtksourceview-3.0 --pkg atk --pkg gdk-3.0 --pkg gdk-pixbuf-2.0 --pkg gio-2.0 --pkg gtk+-3.0 --pkg pango --pkg cairo --metadatadir $(METADATADIR) $(GIRDIR)/GtkSource-3.0.gir
 
+gudev-1.0:
+	$(VAPIGEN) --library $(srcdir)/gudev-1.0 $(PACKAGESDIR)/gudev-1.0/gudev-1.0.gi
+
+hildon-1:
+	$(VAPIGEN) --library $(srcdir)/hildon-1 $(PACKAGESDIR)/hildon-1/hildon-1-custom.vala $(PACKAGESDIR)/hildon-1/hildon-1.gi
+
+hildon-fm-2:
+	$(VAPIGEN) --library $(srcdir)/hildon-fm-2 $(PACKAGESDIR)/hildon-fm-2/hildon-fm-2.gi
+
 json-glib-1.0:
 	$(VAPIGEN) --library $(srcdir)/json-glib-1.0 --metadatadir $(METADATADIR) $(METADATADIR)/Json-1.0-custom.vala --pkg gio-2.0 $(GIRDIR)/Json-1.0.gir
 
-libsoup-2.4:
-	$(VAPIGEN) --library $(srcdir)/libsoup-2.4 --metadatadir $(METADATADIR) $(METADATADIR)/Soup-2.4-custom.vala --pkg gio-2.0 $(GIRDIR)/Soup-2.4.gir
+libepc-1.0:
+	$(VAPIGEN) --library $(srcdir)/libepc-1.0 $(PACKAGESDIR)/libepc-1.0/libepc-1.0.gi
+
+libgda-4.0:
+	$(VAPIGEN) --library $(srcdir)/libgda-4.0 $(PACKAGESDIR)/libgda-4.0/libgda-4.0-custom.vala $(PACKAGESDIR)/libgda-4.0/libgda-4.0.gi
+
+libgda-report-4.0:
+	$(VAPIGEN) --library $(srcdir)/libgda-report-4.0 $(PACKAGESDIR)/libgda-report-4.0/libgda-report-4.0.gi
+
+libgdata:
+	$(VAPIGEN) --library $(srcdir)/libgdata $(PACKAGESDIR)/libgdata/libgdata-custom.vala $(PACKAGESDIR)/libgdata/libgdata.gi
+
+libglade-2.0:
+	$(VAPIGEN) --library $(srcdir)/libglade-2.0 $(PACKAGESDIR)/libglade-2.0/libglade-2.0.gi
+
+libgnome-2.0:
+	$(VAPIGEN) --library $(srcdir)/libgnome-2.0 $(PACKAGESDIR)/libgnome-2.0/libgnome-2.0.gi
+
+libgnome-menu:
+	$(VAPIGEN) --library $(srcdir)/libgnome-menu $(PACKAGESDIR)/libgnome-menu/libgnome-menu-custom.vala $(PACKAGESDIR)/libgnome-menu/libgnome-menu.gi
+
+libgnomeui-2.0:
+	$(VAPIGEN) --library $(srcdir)/libgnomeui-2.0 $(PACKAGESDIR)/libgnomeui-2.0/libgnomeui-2.0-custom.vala $(PACKAGESDIR)/libgnomeui-2.0/libgnomeui-2.0.gi
+
+libgsf-1:
+	$(VAPIGEN) --library $(srcdir)/libgsf-1 $(PACKAGESDIR)/libgsf-1/libgsf-1-custom.vala $(PACKAGESDIR)/libgsf-1/libgsf-1.gi
+
+libnotify:
+	$(VAPIGEN) --library $(srcdir)/libnotify $(PACKAGESDIR)/libnotify/libnotify.gi
+
+liboobs-1:
+	$(VAPIGEN) --library $(srcdir)/liboobs-1 $(PACKAGESDIR)/liboobs-1/liboobs-1.gi
 
 libpeas-1.0:
 	$(VAPIGEN) --library $(srcdir)/libpeas-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/Peas-1.0.gir
 
+librsvg-2.0:
+	$(VAPIGEN) --library $(srcdir)/librsvg-2.0 $(PACKAGESDIR)/librsvg-2.0/librsvg-2.0.gi
+
+libsexy:
+	$(VAPIGEN) --library $(srcdir)/libsexy $(PACKAGESDIR)/libsexy/libsexy.gi
+
+libsoup-2.2:
+	$(VAPIGEN) --library $(srcdir)/libsoup-2.2 $(PACKAGESDIR)/libsoup-2.2/libsoup-2.2.gi
+
+libsoup-2.4:
+	$(VAPIGEN) --library $(srcdir)/libsoup-2.4 --metadatadir $(METADATADIR) $(METADATADIR)/Soup-2.4-custom.vala --pkg gio-2.0 $(GIRDIR)/Soup-2.4.gir
+
+libwnck-1.0:
+	$(VAPIGEN) --library $(srcdir)/libwnck-1.0 $(PACKAGESDIR)/libwnck-1.0/libwnck-1.0.gi
+
+loudmouth-1.0:
+	$(VAPIGEN) --library $(srcdir)/loudmouth-1.0 $(PACKAGESDIR)/loudmouth-1.0/loudmouth-1.0-custom.vala $(PACKAGESDIR)/loudmouth-1.0/loudmouth-1.0.gi
+
+mx-1.0:
+	$(VAPIGEN) --library $(srcdir)/mx-1.0 $(PACKAGESDIR)/mx-1.0/mx-1.0.gi
+
+pango:
+	$(VAPIGEN) --library $(srcdir)/pango $(PACKAGESDIR)/pango/pango-custom.vala $(PACKAGESDIR)/pango/pango.gi
+
+pangocairo:
+	$(VAPIGEN) --library $(srcdir)/pangocairo $(PACKAGESDIR)/pangocairo/pangocairo.gi
+
+poppler-glib:
+	$(VAPIGEN) --library $(srcdir)/poppler-glib $(PACKAGESDIR)/poppler-glib/poppler-glib.gi
+
+purple:
+	$(VAPIGEN) --library $(srcdir)/purple $(PACKAGESDIR)/purple/purple-custom.vala $(PACKAGESDIR)/purple/purple.gi
+
+rest-0.6:
+	$(VAPIGEN) --library $(srcdir)/rest-0.6 $(PACKAGESDIR)/rest-0.6/rest-0.6-custom.vala $(PACKAGESDIR)/rest-0.6/rest-0.6.gi
+
+rest-extras-0.6:
+	$(VAPIGEN) --library $(srcdir)/rest-extras-0.6 $(PACKAGESDIR)/rest-extras-0.6/rest-extras-0.6-custom.vala $(PACKAGESDIR)/rest-extras-0.6/rest-extras-0.6.gi
+
 rest-0.7:
 	$(VAPIGEN) --library $(srcdir)/rest-0.7 --metadatadir $(METADATADIR) $(GIRDIR)/Rest-0.7.gir
 
+tracker-indexer-module-1.0:
+	$(VAPIGEN) --library $(srcdir)/tracker-indexer-module-1.0 $(PACKAGESDIR)/tracker-indexer-module-1.0/tracker-indexer-module-1.0-custom.vala $(PACKAGESDIR)/tracker-indexer-module-1.0/tracker-indexer-module-1.0.gi
+
+twitter-glib-1.0:
+	$(VAPIGEN) --library $(srcdir)/twitter-glib-1.0 $(PACKAGESDIR)/twitter-glib-1.0/twitter-glib-1.0.gi
+
+unique-1.0:
+	$(VAPIGEN) --library $(srcdir)/unique-1.0 $(PACKAGESDIR)/unique-1.0/unique-1.0.gi
+
+vte:
+	$(VAPIGEN) --library $(srcdir)/vte $(PACKAGESDIR)/vte/vte.gi
+
 vte-2.90:
 	$(VAPIGEN) --library $(srcdir)/vte-2.90 --metadatadir $(METADATADIR) --pkg atk --pkg gdk-3.0 --pkg gtk+-3.0 --pkg gio-2.0 --pkg pango $(GIRDIR)/Vte-2.90.gir $(METADATADIR)/Vte-2.90-custom.vala
+
+webkit-1.0:
+	$(VAPIGEN) --library $(srcdir)/webkit-1.0 $(PACKAGESDIR)/webkit-1.0/webkit-1.0.gi
