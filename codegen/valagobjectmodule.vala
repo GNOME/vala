@@ -731,16 +731,13 @@ public class Vala.GObjectModule : GTypeModule {
 				// runtime check to ref_sink the instance if it's a floating type
 				base.visit_method_call (expr);
 
-				var temp_var = get_temp_variable (expr.value_type, false, expr, false);
-				emit_temp_var (temp_var);
-				ccode.add_assignment (get_variable_cexpression (temp_var.name), get_cvalue (expr));
-
 				var initiallyunowned_ccall = new CCodeFunctionCall (new CCodeIdentifier ("G_IS_INITIALLY_UNOWNED"));
-				initiallyunowned_ccall.add_argument (get_variable_cexpression (temp_var.name));
+				initiallyunowned_ccall.add_argument (get_cvalue (expr));
 				var sink_ref_ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_ref_sink"));
-				sink_ref_ccall.add_argument (get_variable_cexpression (temp_var.name));
+				sink_ref_ccall.add_argument (get_cvalue (expr));
+				var cexpr = new CCodeConditionalExpression (initiallyunowned_ccall, sink_ref_ccall, get_cvalue (expr));
 
-				set_cvalue (expr, new CCodeConditionalExpression (initiallyunowned_ccall, sink_ref_ccall, get_variable_cexpression (temp_var.name)));
+				expr.target_value = store_temp_value (new GLibValue (expr.value_type, cexpr), expr);
 				return;
 			} else if (ma.symbol_reference == gobject_type) {
 				// Object (...) chain up
