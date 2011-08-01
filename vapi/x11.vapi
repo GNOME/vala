@@ -982,67 +982,67 @@ namespace X {
 		public int width;
 		public int height;
 
-		[CCode (cname = "XScreenOfDisplay")]
+		[CCode (cname = "ScreenOfDisplay")]
 		public static unowned Screen get_screen (Display disp, int screen_number);
 
-		[CCode (cname = "XBlackPixelOfScreen")]
+		[CCode (cname = "BlackPixelOfScreen")]
 		public ulong black_pixel_of_screen ();
 
-		[CCode (cname = "XCellsOfScreen")]
+		[CCode (cname = "CellsOfScreen")]
 		public int cells_of_screen ();
 
-		[CCode (cname = "XDefaultColormapOfScreen")]
+		[CCode (cname = "DefaultColormapOfScreen")]
 		public Colormap default_colormap_of_screen ();
 
-		[CCode (cname = "XDefaultDepthOfScreen")]
+		[CCode (cname = "DefaultDepthOfScreen")]
 		public int default_depth_of_screen ();
 
-		[CCode (cname = "XDefaultGCOfScreen")]
+		[CCode (cname = "DefaultGCOfScreen")]
 		public GC default_gc_of_screen ();
 
-		[CCode (cname = "XDefaultVisualOfScreen")]
+		[CCode (cname = "DefaultVisualOfScreen")]
 		public Visual default_visual_of_screen ();
 
-		[CCode (cname = "XDisplayOfScreen")]
+		[CCode (cname = "DisplayOfScreen")]
 		public unowned Display display_of_screen ();
 
-		[CCode (cname = "XDoesBackingStore")]
+		[CCode (cname = "DoesBackingStore")]
 		public int does_backing_store ();
 
-		[CCode (cname = "XDoesSaveUnders")]
+		[CCode (cname = "DoesSaveUnders")]
 		public bool does_save_unders ();
 
-		[CCode (cname = "XEventMaskOfScreen")]
+		[CCode (cname = "EventMaskOfScreen")]
 		public long event_mask_of_Screen ();
 
-		[CCode (cname = "XHeightMMOfScreen")]
+		[CCode (cname = "HeightMMOfScreen")]
 		public int height_in_mm_of_screen ();
 
-		[CCode (cname = "XHeightOfScreen")]
+		[CCode (cname = "HeightOfScreen")]
 		public int height_of_screen ();
 
-		[CCode (cname = "XMaxCmapsOfScreen")]
+		[CCode (cname = "MaxCmapsOfScreen")]
 		public int max_colormaps_of_screen ();
 
-		[CCode (cname = "XMinCmapsOfScreen")]
+		[CCode (cname = "MinCmapsOfScreen")]
 		public int min_colormaps_of_screen ();
 
-		[CCode (cname = "XPlanesOfScreen")]
+		[CCode (cname = "PlanesOfScreen")]
 		public int planes_of_screen ();
 
-		[CCode (cname = "XRootWindowOfScreen")]
+		[CCode (cname = "RootWindowOfScreen")]
 		public Window root_window_of_screen ();
 
-		[CCode (cname = "XScreenNumberOfScreen")]
+		[CCode (cname = "ScreenNumberOfScreen")]
 		public int screen_number_of_screen ();
 
-		[CCode (cname = "XWhitePixelOfScreen")]
+		[CCode (cname = "WhitePixelOfScreen")]
 		public ulong white_pixel_of_screen ();
 
-		[CCode (cname = "XWidthMMOfScreen")]
+		[CCode (cname = "WidthMMOfScreen")]
 		public int width_in_mm_of_screen ();
 
-		[CCode (cname = "XWidthOfScreen")]
+		[CCode (cname = "WidthOfScreen")]
 		public int width_of_screen ();
 	}
 
