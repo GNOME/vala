@@ -581,11 +581,6 @@ public class Vala.GirParser : CodeVisitor {
 				}
 			}
 
-			/* gir doesn't use the full C prefix in c:symbol-prefix
-			 * so we can't rely on it if parent changed prefix */
-			if (prefix == null && girdata != null && girdata["c:symbol-prefix"] != null && !parent.metadata.has_argument (ArgumentType.CPREFIX)) {
-				prefix = "%s%s_".printf (parent.get_lower_case_cprefix (), girdata["c:symbol-prefix"]);
-			}
 			if (prefix == null) {
 				prefix = get_default_lower_case_cprefix ();
 			}
@@ -593,7 +588,24 @@ public class Vala.GirParser : CodeVisitor {
 		}
 
 		public string get_default_lower_case_cprefix () {
-			return "%s%s_".printf (parent.get_lower_case_cprefix (), Symbol.camel_case_to_lower_case (name));
+			return "%s%s_".printf (parent.get_lower_case_cprefix (), get_lower_case_csuffix ());
+		}
+
+		public string get_lower_case_csuffix () {
+			var suffix = symbol.get_attribute_string ("CCode", "lower_case_csuffix");
+
+			// we can't rely on gir suffix if metadata changed the name
+			if (suffix == null && girdata != null && girdata["c:symbol-prefix"] != null && !metadata.has_argument (ArgumentType.NAME)) {
+				suffix = girdata["c:symbol-prefix"];
+			}
+			if (suffix == null) {
+				suffix = get_default_lower_case_csuffix ();
+			}
+			return suffix;
+		}
+
+		public string get_default_lower_case_csuffix () {
+			return Symbol.camel_case_to_lower_case (name);
 		}
 
 		public string get_cprefix () {
@@ -946,6 +958,10 @@ public class Vala.GirParser : CodeVisitor {
 					} else {
 						symbol.set_attribute_string ("CCode", "lower_case_cprefix", get_lower_case_cprefix ());
 					}
+				}
+				// lower_case_csuffix
+				if (get_lower_case_csuffix () != get_default_lower_case_csuffix ()) {
+					symbol.set_attribute_string ("CCode", "lower_case_csuffix", get_lower_case_csuffix ());
 				}
 			}
 

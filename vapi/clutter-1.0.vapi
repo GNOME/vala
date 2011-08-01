@@ -1153,7 +1153,7 @@ namespace Clutter {
 		public void set_width (float width);
 		public void union (Clutter.PaintVolume another_pv);
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "clutter_param_units_", type_id = "clutter_param_units_get_type ()")]
+	[CCode (cheader_filename = "clutter/clutter.h", lower_case_csuffix = "param_units", type_id = "clutter_param_units_get_type ()")]
 	public class ParamSpecUnit {
 		[CCode (has_construct_function = false)]
 		protected ParamSpecUnit ();
