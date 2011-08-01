@@ -290,19 +290,14 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 			if (!current_class.is_compact && current_class.get_type_parameters ().size > 0) {
 				/* type, dup func, and destroy func fields for generic types */
+				var suffices = new string[] {"type", "dup_func", "destroy_func"};
 				foreach (TypeParameter type_param in current_class.get_type_parameters ()) {
-					CCodeIdentifier param_name;
-
 					var priv_access = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv");
 
-					param_name = new CCodeIdentifier ("%s_type".printf (type_param.name.down ()));
-					ccode.add_assignment (new CCodeMemberAccess.pointer (priv_access, param_name.name), param_name);
-
-					param_name = new CCodeIdentifier ("%s_dup_func".printf (type_param.name.down ()));
-					ccode.add_assignment (new CCodeMemberAccess.pointer (priv_access, param_name.name), param_name);
-
-					param_name = new CCodeIdentifier ("%s_destroy_func".printf (type_param.name.down ()));
-					ccode.add_assignment (new CCodeMemberAccess.pointer (priv_access, param_name.name), param_name);
+					foreach (string suffix in suffices) {
+						var param_name = new CCodeIdentifier ("%s_%s".printf (type_param.name.down (), suffix));
+						ccode.add_assignment (new CCodeMemberAccess.pointer (priv_access, param_name.name), param_name);
+					}
 				}
 			}
 			// object chainup can't be used as expression

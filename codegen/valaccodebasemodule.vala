@@ -1822,17 +1822,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				if (current_method != null) {
 					// allow capturing generic type parameters
+					var suffices = new string[] {"type", "dup_func", "destroy_func"};
 					foreach (var type_param in current_method.get_type_parameters ()) {
-						string func_name;
-
-						func_name = "%s_type".printf (type_param.name.down ());
-						ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name), get_variable_cexpression (func_name));
-
-						func_name = "%s_dup_func".printf (type_param.name.down ());
-						ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name), get_variable_cexpression (func_name));
-
-						func_name = "%s_destroy_func".printf (type_param.name.down ());
-						ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name), get_variable_cexpression (func_name));
+						foreach (string suffix in suffices) {
+							string func_name = "%s_%s".printf (type_param.name.down (), suffix);
+							ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name), get_variable_cexpression (func_name));
+						}
 					}
 				}
 			}
