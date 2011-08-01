@@ -514,6 +514,9 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		if (variable_stack == null) {
 			variable_stack = new ArrayList<Variable> ();
 			var_map.set (var_symbol, variable_stack);
+			var_symbol.single_assignment = true;
+		} else {
+			var_symbol.single_assignment = false;
 		}
 		Variable versioned_var;
 		if (var_symbol is LocalVariable) {

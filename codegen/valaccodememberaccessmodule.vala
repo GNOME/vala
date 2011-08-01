@@ -689,7 +689,22 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 		}
 		result.value_type.value_owned = false;
 
-		if (!(variable is Parameter && variable.name == "this") && is_lvalue_access_allowed (result.value_type)) {
+		bool use_temp = true;
+		if (!is_lvalue_access_allowed (result.value_type)) {
+			// special handling for types such as va_list
+			use_temp = false;
+		}
+		if (variable is Parameter && variable.name == "this") {
+			use_temp = false;
+		}
+		if (variable.single_assignment && !result.value_type.is_real_struct_type ()) {
+			// no need to copy values from variables that are exactly once
+			// as there is no risk of modification
+			// except for structs that are always passed by reference
+			use_temp = false;
+		}
+
+		if (use_temp) {
 			result = (GLibValue) store_temp_value (result, variable);
 		}
 

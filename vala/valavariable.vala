@@ -49,6 +49,8 @@ public class Vala.Variable : Symbol {
 		}
 	}
 
+	public bool single_assignment { get; set; }
+
 	Expression? _initializer;
 	DataType? _variable_type;
 
