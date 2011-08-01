@@ -384,7 +384,9 @@ namespace X {
 	public struct Pixmap : Drawable	{
 	}
 
-	public struct Visual {
+	[CCode (ref_function = "", unref_function = "")]
+	[Compact]
+	public class Visual {
 	}
 
 	public struct WindowChanges {
