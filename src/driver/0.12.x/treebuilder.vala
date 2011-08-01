@@ -318,7 +318,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 			return false;
 		}
 
-		Vala.CodeNode? node = element.parent_node;
+		weak Vala.CodeNode? node = element.parent_node;
 		if (node == null) {
 			return false;
 		}
@@ -352,7 +352,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 			return false;
 		}
 
-		Vala.CodeNode parent = element.parent_node;
+		weak Vala.CodeNode parent = element.parent_node;
 
 		// parameter:
 		if (parent is Vala.Parameter) {
