@@ -84,7 +84,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdkx.h", cname = "gdkx_visual_get")]
 	public static unowned Gdk.Visual x11_visual_get (uint32 xvisualid);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static X.Visual x11_visual_get_xvisual (Gdk.Visual visual);
+	public static unowned X.Visual x11_visual_get_xvisual (Gdk.Visual visual);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static unowned Gdk.Drawable x11_window_get_drawable_impl (Gdk.Window window);
 	[CCode (cheader_filename = "gdk/gdkx.h")]

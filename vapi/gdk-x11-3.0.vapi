@@ -91,7 +91,7 @@ namespace Gdk {
 	public class X11Visual : Gdk.Visual {
 		[CCode (has_construct_function = false)]
 		protected X11Visual ();
-		public static X.Visual get_xvisual (Gdk.Visual visual);
+		public static unowned X.Visual get_xvisual (Gdk.Visual visual);
 	}
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	[Compact]
