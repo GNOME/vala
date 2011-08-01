@@ -10,7 +10,7 @@ namespace Gst {
 		[CCode (cname = "gst_netbuffer_new", has_construct_function = false)]
 		public NetBuffer ();
 	}
-	[CCode (cheader_filename = "gst/netbuffer/gstnetbuffer.h", type_id = "GST_TYPE_NET_ADDRESS")]
+	[CCode (cheader_filename = "gst/netbuffer/gstnetbuffer.h")]
 	public struct NetAddress {
 		public Gst.NetType type;
 		public void* address;

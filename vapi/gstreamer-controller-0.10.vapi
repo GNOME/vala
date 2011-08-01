@@ -8,7 +8,7 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		protected ControlSource ();
 		public bool bind (GLib.ParamSpec pspec);
-		public bool get_value (Gst.ClockTime timestamp, Gst.Value value);
+		public bool get_value (Gst.ClockTime timestamp, GLib.Value value);
 		public bool get_value_array (Gst.ClockTime timestamp, Gst.ValueArray value_array);
 	}
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
@@ -18,7 +18,7 @@ namespace Gst {
 		public weak GLib.List<Gst.TimedValue> properties;
 		[CCode (has_construct_function = false)]
 		public Controller (GLib.Object object, ...);
-		public Gst.Value @get (string property_name, Gst.ClockTime timestamp);
+		public GLib.Value @get (string property_name, Gst.ClockTime timestamp);
 		public GLib.List<weak Gst.TimedValue> get_all (string property_name);
 		public unowned Gst.ControlSource get_control_source (string property_name);
 		public bool get_value_array (Gst.ClockTime timestamp, Gst.ValueArray value_array);
@@ -29,7 +29,7 @@ namespace Gst {
 		public bool remove_properties (...);
 		public bool remove_properties_list (GLib.List<string> list);
 		public bool remove_properties_valist (void* var_args);
-		public bool @set (string property_name, Gst.ClockTime timestamp, Gst.Value value);
+		public bool @set (string property_name, Gst.ClockTime timestamp, GLib.Value value);
 		public bool set_control_source (string property_name, Gst.ControlSource csource);
 		public void set_disabled (bool disabled);
 		public bool set_from_list (string property_name, GLib.SList<Gst.TimedValue> timedvalues);
@@ -51,7 +51,7 @@ namespace Gst {
 		public InterpolationControlSource ();
 		public GLib.List<weak Gst.TimedValue> get_all ();
 		public int get_count ();
-		public bool @set (Gst.ClockTime timestamp, Gst.Value value);
+		public bool @set (Gst.ClockTime timestamp, GLib.Value value);
 		public bool set_from_list (GLib.SList<Gst.TimedValue> timedvalues);
 		public bool set_interpolation_mode (Gst.InterpolateMode mode);
 		public bool unset (Gst.ClockTime timestamp);
@@ -63,11 +63,11 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public LFOControlSource ();
 		[NoAccessorMethod]
-		public Gst.Value amplitude { get; set; }
+		public Gst.Value amplitude { owned get; set; }
 		[NoAccessorMethod]
 		public double frequency { get; set; }
 		[NoAccessorMethod]
-		public Gst.Value offset { get; set; }
+		public Gst.Value offset { owned get; set; }
 		[NoAccessorMethod]
 		public uint64 timeshift { get; set; }
 		[NoAccessorMethod]
@@ -96,7 +96,7 @@ namespace Gst {
 		CUBIC,
 		USER
 	}
-	[CCode (cheader_filename = "gst/controller/gstlfocontrolsource.h", cprefix = "GST_LFO_WAVEFORM_")]
+	[CCode (cheader_filename = "gst/controller/gstlfocontrolsource.h")]
 	public enum LFOWaveform {
 		SINE,
 		SQUARE,

@@ -34,7 +34,7 @@ namespace Gst {
 		public void set_tunneled (bool tunneled);
 		public Gst.RTSPResult write (uchar data, uint size, GLib.TimeVal timeout);
 	}
-	[CCode (cheader_filename = "gst/rtsp/gstrtspmessage.h")]
+	[CCode (cheader_filename = "gst/rtsp/gstrtspmessage.h", free_function = "gst_rtsp_message_free")]
 	[Compact]
 	public class RTSPMessage {
 		public uchar body;
@@ -86,7 +86,7 @@ namespace Gst {
 		public Gst.RTSPTime min;
 		public Gst.RTSPRangeUnit unit;
 	}
-	[CCode (cheader_filename = "gst/rtsp/gstrtsptransport.h")]
+	[CCode (cheader_filename = "gst/rtsp/gstrtsptransport.h", free_function = "gst_rtsp_transport_free")]
 	[Compact]
 	public class RTSPTransport {
 		public bool append;
@@ -111,7 +111,7 @@ namespace Gst {
 		public static Gst.RTSPResult @new (out Gst.RTSPTransport transport);
 		public static Gst.RTSPResult parse (string str, Gst.RTSPTransport transport);
 	}
-	[CCode (cheader_filename = "gst/rtsp/gstrtspconnection.h", copy_function = "gst_rtsp_url_copy", type_id = "GST_TYPE_RTSP_URL")]
+	[CCode (cheader_filename = "gst/rtsp/gstrtspconnection.h", copy_function = "gst_rtsp_url_copy")]
 	[Compact]
 	public class RTSPUrl {
 		public string abspath;
@@ -129,7 +129,7 @@ namespace Gst {
 		public static Gst.RTSPResult parse (string urlstr, out Gst.RTSPUrl url);
 		public Gst.RTSPResult set_port (uint16 port);
 	}
-	[CCode (cheader_filename = "gst/rtsp/gstrtspconnection.h")]
+	[CCode (cheader_filename = "gst/rtsp/gstrtspconnection.h", unref_function = "gst_rtsp_watch_unref")]
 	[Compact]
 	public class RTSPWatch {
 		[CCode (has_construct_function = false)]

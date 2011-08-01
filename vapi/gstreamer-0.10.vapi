@@ -141,7 +141,7 @@ namespace Gst {
 		public unowned Gst.BufferList @ref ();
 		public void unref ();
 	}
-	[CCode (cheader_filename = "gst/gst.h", type_id = "GST_TYPE_BUFFER_LIST_ITERATOR")]
+	[CCode (cheader_filename = "gst/gst.h")]
 	[Compact]
 	public class BufferListIterator {
 		public void add (owned Gst.Buffer buffer);
@@ -230,7 +230,7 @@ namespace Gst {
 		public void* save_thyself (void* parent);
 		public void set_simple (string field, ...);
 		public void set_simple_valist (string field, void* varargs);
-		public void set_value (string field, Gst.Value value);
+		public void set_value (string field, GLib.Value value);
 		[CCode (has_construct_function = false)]
 		public Caps.simple (string media_type, string fieldname, ...);
 		public unowned Gst.Structure steal_structure (uint index);
@@ -320,11 +320,11 @@ namespace Gst {
 		public Gst.ClockReturn wait_async (Gst.ClockCallback func);
 		public Gst.ClockReturn wait_async_full (Gst.ClockCallback func, GLib.DestroyNotify destroy_data);
 	}
-	[CCode (cheader_filename = "gst/gst.h", type_id = "GST_TYPE_DATE")]
+	[CCode (cheader_filename = "gst/gst.h")]
 	[Compact]
 	public class Date {
 	}
-	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_date_time_ref", type_id = "GST_TYPE_DATE_TIME", unref_function = "gst_date_time_unref")]
+	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_date_time_ref", unref_function = "gst_date_time_unref")]
 	[Compact]
 	public class DateTime {
 		[CCode (has_construct_function = false)]
@@ -405,7 +405,7 @@ namespace Gst {
 		public weak GLib.List<Gst.Pad> srcpads;
 		public weak GLib.Cond state_cond;
 		public uint32 state_cookie;
-		public void* state_lock;
+		public GLib.StaticRecMutex state_lock;
 		[CCode (cname = "abidata.ABI.target_state")]
 		public Gst.State target_state;
 		[CCode (has_construct_function = false)]
@@ -599,7 +599,7 @@ namespace Gst {
 		public static GLib.Quark type_to_quark (Gst.EventType type);
 		public void unref ();
 	}
-	[CCode (cheader_filename = "gst/gst.h", type_id = "GST_TYPE_GERROR")]
+	[CCode (cheader_filename = "gst/gst.h")]
 	[Compact]
 	public class GError {
 	}
@@ -830,7 +830,7 @@ namespace Gst {
 		public void weak_ref (Gst.MiniObjectWeakNotify notify, void* data);
 		public void weak_unref (Gst.MiniObjectWeakNotify notify, void* data);
 	}
-	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_object_ref", unref_function = "gst_object_unref")]
+	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_object_ref", ref_sink_function = "gst_object_ref_sink", unref_function = "gst_object_unref")]
 	public abstract class Object : GLib.Object {
 		public Gst.ObjectFlags flags;
 		public weak GLib.Mutex @lock;
@@ -1038,7 +1038,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class ParamSpecMiniObject : GLib.ParamSpec {
 	}
-	[CCode (cheader_filename = "gst/gst.h", type_id = "GST_TYPE_PARSE_CONTEXT")]
+	[CCode (cheader_filename = "gst/gst.h")]
 	[Compact]
 	public class ParseContext {
 		[CCode (has_construct_function = false)]
@@ -1231,7 +1231,7 @@ namespace Gst {
 		public virtual signal void feature_added (void* feature);
 		public virtual signal void plugin_added (void* plugin);
 	}
-	[CCode (cheader_filename = "gst/gst.h", copy_function = "gst_segment_copy", type_id = "GST_TYPE_SEGMENT")]
+	[CCode (cheader_filename = "gst/gst.h", copy_function = "gst_segment_copy")]
 	[Compact]
 	public class Segment {
 		public double abs_rate;
@@ -1308,8 +1308,8 @@ namespace Gst {
 		public bool id_has_field_typed (GLib.Quark field, GLib.Type type);
 		public void id_set (GLib.Quark fieldname, ...);
 		public void id_set_valist (GLib.Quark fieldname, va_list varargs);
-		public void id_set_value (GLib.Quark field, Gst.Value value);
-		public void id_take_value (GLib.Quark field, Gst.Value value);
+		public void id_set_value (GLib.Quark field, GLib.Value value);
+		public void id_take_value (GLib.Quark field, GLib.Value value);
 		public unowned Gst.Structure intersect (Gst.Structure struct2);
 		public bool is_equal (Gst.Structure structure2);
 		public bool is_subset (Gst.Structure superset);
@@ -1324,8 +1324,8 @@ namespace Gst {
 		public void set_name (string name);
 		public void set_parent_refcount (ref int refcount);
 		public void set_valist (string fieldname, va_list varargs);
-		public void set_value (string fieldname, Gst.Value value);
-		public void take_value (string fieldname, Gst.Value value);
+		public void set_value (string fieldname, GLib.Value value);
+		public void take_value (string fieldname, GLib.Value value);
 		public string to_string ();
 		[CCode (has_construct_function = false)]
 		public Structure.valist (string name, string firstfield, va_list varargs);
@@ -1346,7 +1346,7 @@ namespace Gst {
 		public void add (Gst.TagMergeMode mode, string tag, ...);
 		public void add_valist (Gst.TagMergeMode mode, string tag, void* var_args);
 		public void add_valist_values (Gst.TagMergeMode mode, string tag, void* var_args);
-		public void add_value (Gst.TagMergeMode mode, string tag, Gst.Value value);
+		public void add_value (Gst.TagMergeMode mode, string tag, GLib.Value value);
 		public void add_values (Gst.TagMergeMode mode, string tag, ...);
 		public Gst.TagList copy ();
 		public static bool copy_value (out Gst.Value dest, Gst.TagList list, string tag);
@@ -1401,7 +1401,7 @@ namespace Gst {
 		public weak GLib.Cond cond;
 		public void* data;
 		public weak Gst.TaskFunction func;
-		public void* @lock;
+		public GLib.StaticRecMutex @lock;
 		public bool running;
 		public Gst.TaskState state;
 		[CCode (has_construct_function = false)]
@@ -1412,7 +1412,7 @@ namespace Gst {
 		public Gst.TaskState get_state ();
 		public bool join ();
 		public bool pause ();
-		public void set_lock (void* mutex);
+		public void set_lock (GLib.StaticRecMutex mutex);
 		public void set_pool (Gst.TaskPool pool);
 		public void set_priority (GLib.ThreadPriority priority);
 		public bool set_state (Gst.TaskState state);
@@ -1566,7 +1566,7 @@ namespace Gst {
 	public interface TagSetter : Gst.Element {
 		public void add_tag_valist (Gst.TagMergeMode mode, string tag, void* var_args);
 		public void add_tag_valist_values (Gst.TagMergeMode mode, string tag, void* var_args);
-		public void add_tag_value (Gst.TagMergeMode mode, string tag, Gst.Value value);
+		public void add_tag_value (Gst.TagMergeMode mode, string tag, GLib.Value value);
 		public void add_tag_values (Gst.TagMergeMode mode, string tag, ...);
 		public void add_tags (Gst.TagMergeMode mode, string tag, ...);
 		public unowned Gst.TagList get_tag_list ();
@@ -1590,12 +1590,10 @@ namespace Gst {
 		[HasEmitter]
 		public signal void new_uri (string uri);
 	}
-	[CCode (cheader_filename = "gst/gst.h", type_id = "GST_TYPE_ARRAY")]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct Array {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
-	[IntegerType (rank = 0)]
-	[SimpleType]
 	public struct ClockTime : uint64 {
 		[CCode (cname = "GST_TIME_ARGS")]
 		public unowned string args ();
@@ -1603,45 +1601,43 @@ namespace Gst {
 		public bool is_valid ();
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
-	[IntegerType (rank = 0)]
-	[SimpleType]
 	public struct ClockTimeDiff : int64 {
 	}
-	[CCode (cheader_filename = "gst/gst.h", type_id = "GST_TYPE_DOUBLE_RANGE")]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct DoubleRange {
 	}
-	[CCode (cheader_filename = "gst/gst.h", type_id = "GST_TYPE_ELEMENT_DETAILS")]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct ElementDetails {
 		public weak string longname;
 		public weak string klass;
 		public weak string description;
 		public weak string author;
 	}
-	[CCode (cheader_filename = "gst/gst.h", type_id = "GST_TYPE_FORMAT_DEFINITION")]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct FormatDefinition {
 		public Gst.Format value;
 		public weak string nick;
 		public weak string description;
 		public GLib.Quark quark;
 	}
-	[CCode (cheader_filename = "gst/gst.h", type_id = "GST_TYPE_FRACTION")]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct Fraction {
 	}
-	[CCode (cheader_filename = "gst/gst.h", type_id = "GST_TYPE_FRACTION_RANGE")]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct FractionRange {
 	}
-	[CCode (cheader_filename = "gst/gst.h", type_id = "GST_TYPE_INDEX_ASSOCIATION")]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct IndexAssociation {
 		public Gst.Format format;
 		public int64 value;
 	}
-	[CCode (cheader_filename = "gst/gst.h", type_id = "GST_TYPE_INT_RANGE")]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct IntRange {
 	}
-	[CCode (cheader_filename = "gst/gst.h", type_id = "GST_TYPE_LIST")]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct List {
 	}
-	[CCode (cheader_filename = "gst/gst.h", type_id = "GST_TYPE_PLUGIN_DESC")]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct PluginDesc {
 		public int major_version;
 		public int minor_version;
@@ -1655,7 +1651,7 @@ namespace Gst {
 		public weak string origin;
 		public weak void*[] _gst_reserved;
 	}
-	[CCode (cheader_filename = "gst/gst.h", type_id = "GST_TYPE_POLL_FD")]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct PollFD {
 		public int fd;
 		public int idx;
@@ -1668,20 +1664,20 @@ namespace Gst {
 		public static void ignored (Gst.Poll @set, Gst.PollFD fd);
 		public void init ();
 	}
-	[CCode (cheader_filename = "gst/gst.h", type_id = "GST_TYPE_QUERY_TYPE_DEFINITION")]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct QueryTypeDefinition {
 		public weak string description;
 		public weak string nick;
 		public GLib.Quark quark;
 		public Gst.QueryType value;
 	}
-	[CCode (cheader_filename = "gst/gst.h", type_id = "GST_TYPE_STATIC_CAPS")]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct StaticCaps {
 		[CCode (cname = "string")]
 		public weak string str;
 		public Gst.Caps @get ();
 	}
-	[CCode (cheader_filename = "gst/gst.h", type_id = "GST_TYPE_STATIC_PAD_TEMPLATE")]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct StaticPadTemplate {
 		public weak string name_template;
 		public Gst.PadDirection direction;
@@ -1938,8 +1934,11 @@ namespace Gst {
 		CUSTOM_DOWNSTREAM_OOB,
 		CUSTOM_BOTH,
 		CUSTOM_BOTH_OOB;
+		[CCode (cname = "gst_event_type_get_flags")]
 		public Gst.EventTypeFlags get_flags ();
+		[CCode (cname = "gst_event_type_to_quark")]
 		public GLib.Quark to_quark ();
+		[CCode (cname = "gst_event_type_get_name")]
 		public unowned string get_name ();
 		[CCode (cname = "gst_event_type_get_name")]
 		public unowned string to_string ();
@@ -1982,12 +1981,17 @@ namespace Gst {
 		TIME,
 		BUFFERS,
 		PERCENT;
+		[CCode (cname = "gst_format_get_details")]
 		public Gst.FormatDefinition get_details ();
+		[CCode (cname = "gst_format_to_quark")]
 		public GLib.Quark to_quark ();
+		[CCode (cname = "gst_format_get_name")]
 		public unowned string get_name ();
 		[CCode (cname = "gst_format_get_name")]
 		public unowned string to_string ();
+		[CCode (cname = "GST_FORMAT_PERCENT_MAX")]
 		public const int64 PERCENT_MAX;
+		[CCode (cname = "GST_FORMAT_PERCENT_SCALE")]
 		public const int64 PERCENT_SCALE;
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_INDEX_")]
@@ -2402,7 +2406,7 @@ namespace Gst {
 	public delegate unowned Gst.Buffer BufferListDoFunction (Gst.Buffer buffer);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate Gst.BufferListItem BufferListFunc (out unowned Gst.Buffer buffer, uint group, uint idx);
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/gst.h", cname = "GCallback")]
 	public delegate bool BufferProbeCallback (Gst.Pad pad, Gst.Buffer buffer);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate bool BusFunc (Gst.Bus bus, Gst.Message message);
@@ -2412,11 +2416,11 @@ namespace Gst {
 	public delegate bool ClockCallback (Gst.Clock clock, Gst.ClockTime time, Gst.ClockID id);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate void* CopyFunction (void* object);
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/gst.h", cname = "GCallback")]
 	public delegate bool DataProbeCallback (Gst.Pad pad, Gst.MiniObject data);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate void DebugFuncPtr ();
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/gst.h", cname = "GCallback")]
 	public delegate bool EventProbeCallback (Gst.Pad pad, Gst.Event event);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate bool FilterFunc (void* obj);
@@ -2909,37 +2913,37 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static GLib.Quark library_error_quark ();
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void marshal_BOOLEAN__POINTER (GLib.Closure closure, Gst.Value return_value, uint n_param_values, Gst.Value param_values, void* invocation_hint, void* marshal_data);
+	public static void marshal_BOOLEAN__POINTER (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void marshal_BOOLEAN__VOID (GLib.Closure closure, Gst.Value return_value, uint n_param_values, Gst.Value param_values, void* invocation_hint, void* marshal_data);
+	public static void marshal_BOOLEAN__VOID (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void marshal_BOXED__BOXED (GLib.Closure closure, Gst.Value return_value, uint n_param_values, Gst.Value param_values, void* invocation_hint, void* marshal_data);
+	public static void marshal_BOXED__BOXED (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void marshal_POINTER__POINTER (GLib.Closure closure, Gst.Value return_value, uint n_param_values, Gst.Value param_values, void* invocation_hint, void* marshal_data);
+	public static void marshal_POINTER__POINTER (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void marshal_VOID__BOXED_OBJECT (GLib.Closure closure, Gst.Value return_value, uint n_param_values, Gst.Value param_values, void* invocation_hint, void* marshal_data);
+	public static void marshal_VOID__BOXED_OBJECT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void marshal_VOID__INT64 (GLib.Closure closure, Gst.Value return_value, uint n_param_values, Gst.Value param_values, void* invocation_hint, void* marshal_data);
+	public static void marshal_VOID__INT64 (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void marshal_VOID__INT_INT (GLib.Closure closure, Gst.Value return_value, uint n_param_values, Gst.Value param_values, void* invocation_hint, void* marshal_data);
+	public static void marshal_VOID__INT_INT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void marshal_VOID__OBJECT_BOXED (GLib.Closure closure, Gst.Value return_value, uint n_param_values, Gst.Value param_values, void* invocation_hint, void* marshal_data);
+	public static void marshal_VOID__OBJECT_BOXED (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void marshal_VOID__OBJECT_BOXED_STRING (GLib.Closure closure, Gst.Value return_value, uint n_param_values, Gst.Value param_values, void* invocation_hint, void* marshal_data);
+	public static void marshal_VOID__OBJECT_BOXED_STRING (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void marshal_VOID__OBJECT_OBJECT (GLib.Closure closure, Gst.Value return_value, uint n_param_values, Gst.Value param_values, void* invocation_hint, void* marshal_data);
+	public static void marshal_VOID__OBJECT_OBJECT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void marshal_VOID__OBJECT_OBJECT_STRING (GLib.Closure closure, Gst.Value return_value, uint n_param_values, Gst.Value param_values, void* invocation_hint, void* marshal_data);
+	public static void marshal_VOID__OBJECT_OBJECT_STRING (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void marshal_VOID__OBJECT_PARAM (GLib.Closure closure, Gst.Value return_value, uint n_param_values, Gst.Value param_values, void* invocation_hint, void* marshal_data);
+	public static void marshal_VOID__OBJECT_PARAM (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void marshal_VOID__OBJECT_POINTER (GLib.Closure closure, Gst.Value return_value, uint n_param_values, Gst.Value param_values, void* invocation_hint, void* marshal_data);
+	public static void marshal_VOID__OBJECT_POINTER (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void marshal_VOID__OBJECT_STRING (GLib.Closure closure, Gst.Value return_value, uint n_param_values, Gst.Value param_values, void* invocation_hint, void* marshal_data);
+	public static void marshal_VOID__OBJECT_STRING (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void marshal_VOID__POINTER_OBJECT (GLib.Closure closure, Gst.Value return_value, uint n_param_values, Gst.Value param_values, void* invocation_hint, void* marshal_data);
+	public static void marshal_VOID__POINTER_OBJECT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void marshal_VOID__UINT_BOXED (GLib.Closure closure, Gst.Value return_value, uint n_param_values, Gst.Value param_values, void* invocation_hint, void* marshal_data);
+	public static void marshal_VOID__UINT_BOXED (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static unowned GLib.ParamSpec param_spec_fraction (string name, string nick, string blurb, int min_num, int min_denom, int max_num, int max_denom, int default_num, int default_denom, GLib.ParamFlags flags);
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -2983,9 +2987,9 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static bool tag_is_fixed (string tag);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void tag_merge_strings_with_comma (Gst.Value dest, Gst.Value src);
+	public static void tag_merge_strings_with_comma (GLib.Value dest, GLib.Value src);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void tag_merge_use_first (Gst.Value dest, Gst.Value src);
+	public static void tag_merge_use_first (GLib.Value dest, GLib.Value src);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void tag_register (string name, Gst.TagFlag flag, GLib.Type type, string nick, string blurb, Gst.TagMergeFunc func);
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -3033,7 +3037,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void util_set_object_arg (GLib.Object object, string name, string value);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void util_set_value_from_string (Gst.Value value, string value_str);
+	public static void util_set_value_from_string (GLib.Value value, string value_str);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static uint64 util_uint64_scale (uint64 val, uint64 num, uint64 denom);
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -3047,15 +3051,15 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static uint64 util_uint64_scale_round (uint64 val, uint64 num, uint64 denom);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static unowned Gst.MiniObject value_dup_mini_object (Gst.Value value);
+	public static unowned Gst.MiniObject value_dup_mini_object (GLib.Value value);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static int64 value_get_int64_range_max (Gst.Value value);
+	public static int64 value_get_int64_range_max (GLib.Value value);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static int64 value_get_int64_range_min (Gst.Value value);
+	public static int64 value_get_int64_range_min (GLib.Value value);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void value_list_merge (Gst.Value dest, Gst.Value value1, Gst.Value value2);
+	public static void value_list_merge (GLib.Value dest, GLib.Value value1, GLib.Value value2);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void value_set_int64_range (Gst.Value value, int64 start, int64 end);
+	public static void value_set_int64_range (GLib.Value value, int64 start, int64 end);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void version (out uint major, out uint minor, out uint micro, out uint nano);
 	[CCode (cheader_filename = "gst/gst.h")]

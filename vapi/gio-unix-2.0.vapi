@@ -45,14 +45,14 @@ namespace GLib {
 		public bool close_fd { get; set; }
 		public int fd { get; construct; }
 	}
-	[CCode (cheader_filename = "gio/gunixmounts.h", free_function = "g_unix_mount_free")]
+	[CCode (cheader_filename = "gio/gunixmounts.h", cname = "GUnixMountEntry", free_function = "g_unix_mount_free", lower_case_prefix = "g_unix_mount_")]
 	[Compact]
 	public class UnixMountEntry {
 		[CCode (cname = "g_unix_mount_at")]
 		public UnixMountEntry (string mount_path, uint64 time_read);
 		[CCode (cname = "g_unix_mount_compare")]
 		public int compare (GLib.UnixMountEntry mount);
-		[CCode (cname = "g_unix_mounts_get")]
+		[CCode (cheader_filename = "gio/gunixmounts.h", cname = "g_unix_mounts_get")]
 		public static GLib.List<GLib.UnixMountEntry> @get (out uint64 time_read = null);
 		[CCode (cname = "g_unix_mount_get_device_path")]
 		public unowned string get_device_path ();

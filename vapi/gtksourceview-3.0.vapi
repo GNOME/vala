@@ -2,7 +2,6 @@
 
 [CCode (cprefix = "Gtk", gir_namespace = "GtkSource", gir_version = "3.0", lower_case_cprefix = "gtk_")]
 namespace Gtk {
-	[CCode (cprefix = "GtkSourceCompletionCapability", lower_case_cprefix = "gtk_source_completion_capability_")]
 	namespace SourceCompletionCapability {
 		[CCode (cheader_filename = "gtksourceview/gtksource.h")]
 		public const string AUTOMATIC;

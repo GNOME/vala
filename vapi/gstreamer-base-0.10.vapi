@@ -59,7 +59,7 @@ namespace Gst {
 		[NoWrapper]
 		public virtual bool stop ();
 	}
-	[CCode (cheader_filename = "gst/gst.h", type_id = "GST_TYPE_BASE_PARSE_FRAME")]
+	[CCode (cheader_filename = "gst/gst.h")]
 	[Compact]
 	public class BaseParseFrame {
 		public weak Gst.Buffer buffer;
@@ -256,7 +256,9 @@ namespace Gst {
 		public Gst.Pad sinkpad;
 		public Gst.Pad srcpad;
 		public GLib.Mutex transform_lock;
+		[CCode (cname = "GST_BASE_TRANSFORM_SINK_NAME")]
 		public const string SINK_NAME;
+		[CCode (cname = "GST_BASE_TRANSFORM_SRC_NAME")]
 		public const string SRC_NAME;
 		[CCode (has_construct_function = false)]
 		protected BaseTransform ();
@@ -403,8 +405,7 @@ namespace Gst {
 		public bool skip_string_utf32 ();
 		public bool skip_string_utf8 ();
 	}
-	[CCode (cheader_filename = "gst/base/gstbytewriter.h", free_function = "gst_byte_writer_free")]
-	[Compact]
+	[CCode (cheader_filename = "gst/base/gstbytewriter.h")]
 	public class ByteWriter : Gst.ByteReader {
 		public uint alloc_size;
 		public bool fixed;

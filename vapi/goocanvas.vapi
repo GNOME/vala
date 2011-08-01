@@ -13,7 +13,7 @@ namespace Goo {
 		public double yy;
 		public static Cairo.Matrix copy (Cairo.Matrix matrix);
 	}
-	[CCode (cheader_filename = "goocanvas.h", type_id = "GOO_TYPE_CAIRO_PATTERN")]
+	[CCode (cheader_filename = "goocanvas.h")]
 	[Compact]
 	public class CairoPattern {
 	}
@@ -887,14 +887,14 @@ namespace Goo {
 		public signal void child_notify (GLib.ParamSpec pspec);
 		public signal void child_removed (int child_num);
 	}
-	[CCode (cheader_filename = "goocanvas.h", type_id = "GOO_TYPE_CANVAS_BOUNDS")]
+	[CCode (cheader_filename = "goocanvas.h")]
 	public struct CanvasBounds {
 		public double x1;
 		public double y1;
 		public double x2;
 		public double y2;
 	}
-	[CCode (cheader_filename = "goocanvas.h", type_id = "GOO_TYPE_CANVAS_ITEM_SIMPLE_DATA")]
+	[CCode (cheader_filename = "goocanvas.h")]
 	public struct CanvasItemSimpleData {
 		public Cairo.Matrix? transform;
 		public weak GLib.Array<Goo.CanvasPathCommand> clip_path_commands;
@@ -916,7 +916,7 @@ namespace Goo {
 		public Goo.CanvasPathCommandCurve curve;
 		public Goo.CanvasPathCommandArc arc;
 	}
-	[CCode (cheader_filename = "goocanvas.h", type_id = "GOO_TYPE_CANVAS_PATH_COMMAND_ARC")]
+	[CCode (cheader_filename = "goocanvas.h")]
 	public struct CanvasPathCommandArc {
 		public uint type;
 		public uint relative;
@@ -928,7 +928,7 @@ namespace Goo {
 		public double x;
 		public double y;
 	}
-	[CCode (cheader_filename = "goocanvas.h", type_id = "GOO_TYPE_CANVAS_PATH_COMMAND_CURVE")]
+	[CCode (cheader_filename = "goocanvas.h")]
 	public struct CanvasPathCommandCurve {
 		public uint type;
 		public uint relative;
@@ -939,14 +939,14 @@ namespace Goo {
 		public double x2;
 		public double y2;
 	}
-	[CCode (cheader_filename = "goocanvas.h", type_id = "GOO_TYPE_CANVAS_PATH_COMMAND_SIMPLE")]
+	[CCode (cheader_filename = "goocanvas.h")]
 	public struct CanvasPathCommandSimple {
 		public uint type;
 		public uint relative;
 		public double x;
 		public double y;
 	}
-	[CCode (cheader_filename = "goocanvas.h", type_id = "GOO_TYPE_CANVAS_STYLE_PROPERTY")]
+	[CCode (cheader_filename = "goocanvas.h")]
 	public struct CanvasStyleProperty {
 		public GLib.Quark id;
 		public GLib.Value value;

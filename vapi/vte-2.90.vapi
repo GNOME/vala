@@ -179,7 +179,7 @@ namespace Vte {
 		public virtual signal void text_scrolled (int delta);
 		public virtual signal void window_title_changed ();
 	}
-	[CCode (cheader_filename = "vte/vte.h", cname = "_VteCharAttributes", type_id = "VTE_TYPE__CHARATTRIBUTES")]
+	[CCode (cheader_filename = "vte/vte.h", cname = "_VteCharAttributes")]
 	public struct _CharAttributes {
 	}
 	[CCode (cheader_filename = "vte/vte.h", cprefix = "VTE_PTY_ERROR_")]

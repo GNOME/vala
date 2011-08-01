@@ -26,7 +26,7 @@ namespace Gst {
 		public uint clock_rate;
 		public bool need_newsegment;
 		public weak GLib.Queue queue;
-		public void* queuelock;
+		public GLib.StaticRecMutex queuelock;
 		public weak Gst.Segment segment;
 		public weak Gst.Pad sinkpad;
 		public weak Gst.Pad srcpad;
@@ -124,7 +124,7 @@ namespace Gst {
 		public static unowned Gst.RTPPayloadInfo for_name (string media, string encoding_name);
 		public static unowned Gst.RTPPayloadInfo for_pt (uchar payload_type);
 	}
-	[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h", type_id = "GST_TYPE_RTCP_PACKET")]
+	[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h")]
 	public struct RTCPPacket {
 		public weak Gst.Buffer buffer;
 		public uint offset;

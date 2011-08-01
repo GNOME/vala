@@ -2,7 +2,6 @@
 
 [CCode (cprefix = "Soup", gir_namespace = "Soup", gir_version = "2.4", lower_case_cprefix = "soup_")]
 namespace Soup {
-	[CCode (cprefix = "SoupForm", lower_case_cprefix = "soup_form_")]
 	namespace Form {
 		[CCode (cheader_filename = "libsoup/soup.h")]
 		public static GLib.HashTable<string,string> decode (string encoded_form);
@@ -25,7 +24,6 @@ namespace Soup {
 		[CCode (cheader_filename = "libsoup/soup.h")]
 		public static Soup.Message request_new_from_multipart (string uri, Soup.Multipart multipart);
 	}
-	[CCode (cprefix = "SoupXMLRPC", lower_case_cprefix = "soup_xmlrpc_")]
 	namespace XMLRPC {
 		[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_XMLRPC_ERROR_")]
 		public errordomain Error {
@@ -90,7 +88,7 @@ namespace Soup {
 		public static uint hash_by_ip (void* addr);
 		public static uint hash_by_name (void* addr);
 		public bool is_resolved ();
-		public void resolve_async (GLib.MainContext? async_context, GLib.Cancellable? cancellable, [CCode (delegate_target_pos = 3.1)] Soup.AddressCallback callback);
+		public void resolve_async (GLib.MainContext? async_context, GLib.Cancellable? cancellable, Soup.AddressCallback callback);
 		public uint resolve_sync (GLib.Cancellable? cancellable);
 		[NoAccessorMethod]
 		public Soup.AddressFamily family { get; construct; }
@@ -128,6 +126,7 @@ namespace Soup {
 		[NoWrapper]
 		public virtual string accepts (Soup.Message msg, string header);
 		public void add_path (string path);
+		[CCode (vfunc_name = "challenge")]
 		public virtual string challenge (Soup.Message msg);
 		public virtual bool check_password (Soup.Message msg, string username, string password);
 		public bool covers (Soup.Message msg);
@@ -179,12 +178,12 @@ namespace Soup {
 		public Buffer (Soup.MemoryUse use, [CCode (array_length_cname = "length", array_length_pos = 2.1, array_length_type = "gsize", type = "gconstpointer")] uint8[] data);
 		public Soup.Buffer copy ();
 		public void free ();
-		public void get_data ([CCode (array_length_cname = "length", array_length_type = "gsize")] out unowned uint8[] data);
+		public void get_data ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "gsize")] out unowned uint8[] data);
 		public void* get_owner ();
 		[CCode (has_construct_function = false)]
 		public Buffer.subbuffer (Soup.Buffer parent, size_t offset, size_t length);
 		[CCode (has_construct_function = false)]
-		public Buffer.take ([CCode (array_length_cname = "length", array_length_type = "gsize")] owned uint8[] data);
+		public Buffer.take ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "gsize")] owned uint8[] data);
 		[CCode (has_construct_function = false)]
 		public Buffer.with_owner ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gsize", type = "gconstpointer")] uint8[] data, void* owner, GLib.DestroyNotify? owner_dnotify);
 	}
@@ -329,8 +328,8 @@ namespace Soup {
 		public weak Soup.MessageHeaders response_headers;
 		[CCode (has_construct_function = false)]
 		public Message (string method, string uri_string);
-		public uint add_header_handler (string @signal, string header, [CCode (delegate_target_pos = 3.1)] GLib.Callback callback);
-		public uint add_status_code_handler (string @signal, uint status_code, [CCode (delegate_target_pos = 3.1)] GLib.Callback callback);
+		public uint add_header_handler (string @signal, string header, GLib.Callback callback);
+		public uint add_status_code_handler (string @signal, uint status_code, GLib.Callback callback);
 		public void disable_feature (GLib.Type feature_type);
 		[CCode (has_construct_function = false)]
 		public Message.from_uri (string method, Soup.URI uri);
@@ -396,7 +395,7 @@ namespace Soup {
 		public MessageBody ();
 		public void append (Soup.MemoryUse use, [CCode (array_length_cname = "length", array_length_pos = 2.1, array_length_type = "gsize")] uint8[] data);
 		public void append_buffer (Soup.Buffer buffer);
-		public void append_take ([CCode (array_length_cname = "length", array_length_type = "gsize")] owned uint8[] data);
+		public void append_take ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "gsize")] owned uint8[] data);
 		public void complete ();
 		public Soup.Buffer flatten ();
 		public void free ();
@@ -466,7 +465,7 @@ namespace Soup {
 		[CCode (has_construct_function = false)]
 		public Server (string optname1, ...);
 		public void add_auth_domain (Soup.AuthDomain auth_domain);
-		public void add_handler (string? path, [CCode (delegate_target_pos = 2.1)] owned Soup.ServerCallback callback);
+		public void add_handler (string? path, owned Soup.ServerCallback callback);
 		public unowned GLib.MainContext get_async_context ();
 		public unowned Soup.Socket get_listener ();
 		public uint get_port ();
@@ -509,7 +508,7 @@ namespace Soup {
 		public GLib.SList<Soup.SessionFeature> get_features (GLib.Type feature_type);
 		public void pause_message (Soup.Message msg);
 		public void prepare_for_uri (Soup.URI uri);
-		public virtual void queue_message (owned Soup.Message msg, [CCode (delegate_target_pos = 2.1)] Soup.SessionCallback? callback);
+		public virtual void queue_message (owned Soup.Message msg, Soup.SessionCallback? callback);
 		public void remove_feature (Soup.SessionFeature feature);
 		public virtual void requeue_message (Soup.Message msg);
 		public virtual uint send_message (Soup.Message msg);
@@ -568,7 +567,7 @@ namespace Soup {
 	public class Socket : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Socket (string optname1, ...);
-		public void connect_async (GLib.Cancellable? cancellable, [CCode (delegate_target_pos = 2.1)] Soup.SocketCallback callback);
+		public void connect_async (GLib.Cancellable? cancellable, Soup.SocketCallback callback);
 		public uint connect_sync (GLib.Cancellable? cancellable);
 		public void disconnect ();
 		public int get_fd ();
@@ -583,7 +582,7 @@ namespace Soup {
 		public bool start_ssl (GLib.Cancellable? cancellable);
 		public Soup.SocketIOStatus write ([CCode (array_length_cname = "len", array_length_pos = 1.5, array_length_type = "gsize", type = "gconstpointer")] uint8[] buffer, out size_t nwrote, GLib.Cancellable? cancellable) throws GLib.Error;
 		[NoAccessorMethod]
-		public GLib.MainContext async_context { owned get; owned construct; }
+		public GLib.MainContext async_context { owned get; construct; }
 		public bool clean_dispose { construct; }
 		[NoAccessorMethod]
 		public bool is_server { get; }
@@ -651,12 +650,12 @@ namespace Soup {
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_cname = "SoupProxyResolverInterface", type_id = "soup_proxy_resolver_get_type ()")]
 	public interface ProxyResolver : Soup.SessionFeature, GLib.Object {
-		public abstract void get_proxy_async (Soup.Message msg, GLib.MainContext async_context, GLib.Cancellable? cancellable, [CCode (delegate_target_pos = 4.1)] Soup.ProxyResolverCallback callaback);
+		public abstract void get_proxy_async (Soup.Message msg, GLib.MainContext async_context, GLib.Cancellable? cancellable, Soup.ProxyResolverCallback callaback);
 		public abstract uint get_proxy_sync (Soup.Message msg, GLib.Cancellable? cancellable, out unowned Soup.Address addr);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_cname = "SoupProxyURIResolverInterface", type_id = "soup_proxy_uri_resolver_get_type ()")]
 	public interface ProxyURIResolver : GLib.Object {
-		public abstract void get_proxy_uri_async (Soup.URI uri, GLib.MainContext? async_context, GLib.Cancellable? cancellable, [CCode (delegate_target_pos = 4.1)] Soup.ProxyURIResolverCallback callback);
+		public abstract void get_proxy_uri_async (Soup.URI uri, GLib.MainContext? async_context, GLib.Cancellable? cancellable, Soup.ProxyURIResolverCallback callback);
 		public abstract uint get_proxy_uri_sync (Soup.URI uri, GLib.Cancellable? cancellable, out unowned Soup.URI proxy_uri);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_cname = "SoupSessionFeatureInterface", type_id = "soup_session_feature_get_type ()")]
@@ -670,14 +669,14 @@ namespace Soup {
 		[NoWrapper]
 		public abstract void request_unqueued (Soup.Session session, Soup.Message msg);
 	}
-	[CCode (cheader_filename = "libsoup/soup.h", type_id = "SOUP_TYPE_MESSAGE_HEADERS_ITER")]
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public struct MessageHeadersIter {
 		[CCode (array_length = false, array_null_terminated = true)]
 		public weak void*[] dummy;
 		public void init (Soup.MessageHeaders hdrs);
 		public bool next (out unowned string name, out unowned string value);
 	}
-	[CCode (cheader_filename = "libsoup/soup.h", type_id = "SOUP_TYPE_RANGE")]
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public struct Range {
 		public int64 start;
 		public int64 end;
@@ -1096,13 +1095,13 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const int XMLRPC_H;
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static unowned GLib.TimeoutSource add_completion (GLib.MainContext? async_context, [CCode (delegate_target_pos = 2.1)] GLib.SourceFunc function);
+	public static unowned GLib.TimeoutSource add_completion (GLib.MainContext? async_context, GLib.SourceFunc function);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static unowned GLib.TimeoutSource add_idle (GLib.MainContext? async_context, [CCode (delegate_target_pos = 2.1)] GLib.SourceFunc function);
+	public static unowned GLib.TimeoutSource add_idle (GLib.MainContext? async_context, GLib.SourceFunc function);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static unowned GLib.TimeoutSource add_io_watch (GLib.MainContext? async_context, GLib.IOChannel chan, GLib.IOCondition condition, [CCode (delegate_target_pos = 4.1)] GLib.IOFunc function);
+	public static unowned GLib.TimeoutSource add_io_watch (GLib.MainContext? async_context, GLib.IOChannel chan, GLib.IOCondition condition, GLib.IOFunc function);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static unowned GLib.TimeoutSource add_timeout (GLib.MainContext? async_context, uint interval, [CCode (delegate_target_pos = 3.1)] GLib.SourceFunc function);
+	public static unowned GLib.TimeoutSource add_timeout (GLib.MainContext? async_context, uint interval, GLib.SourceFunc function);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static GLib.SList<Soup.Cookie> cookies_from_request (Soup.Message msg);
 	[CCode (cheader_filename = "libsoup/soup.h")]

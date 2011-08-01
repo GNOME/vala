@@ -28,7 +28,7 @@ namespace Gst {
 	public class DiscovererContainerInfo : Gst.DiscovererStreamInfo {
 		public GLib.List<Gst.MiniObject> get_streams ();
 	}
-	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h", copy_function = "gst_discoverer_info_copy")]
 	public class DiscovererInfo : Gst.MiniObject {
 		public GLib.List<Gst.DiscovererAudioInfo> get_audio_streams ();
 		public GLib.List<Gst.DiscovererVideoInfo> get_container_streams ();
@@ -127,7 +127,7 @@ namespace Gst {
 		public void set_pass (uint pass);
 		public void set_variableframerate (bool variableframerate);
 	}
-	[CCode (cheader_filename = "gst/pbutils/pbutils.h", type_id = "GST_TYPE_INSTALL_PLUGINS_CONTEXT")]
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	[Compact]
 	public class InstallPluginsContext {
 		[CCode (has_construct_function = false)]
