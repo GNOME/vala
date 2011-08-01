@@ -698,9 +698,15 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			use_temp = false;
 		}
 		if (variable.single_assignment && !result.value_type.is_real_struct_type ()) {
-			// no need to copy values from variables that are exactly once
+			// no need to copy values from variables that are assigned exactly once
 			// as there is no risk of modification
 			// except for structs that are always passed by reference
+			use_temp = false;
+		}
+		var local = variable as LocalVariable;
+		if (local != null && local.floating) {
+			// floating locals are generated internally and safe to
+			// access without temporary variable
 			use_temp = false;
 		}
 
