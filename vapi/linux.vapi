@@ -1200,6 +1200,9 @@ namespace Linux {
     [CCode (cheader_filename = "time.h")]
     public time_t timegm (GLib.Time t);
 
+    [CCode (cheader_filename = "time.h")]
+    public const clockid_t CLOCK_MONOTONIC_RAW;
+
     [CCode (cheader_filename = "utmp.h")]
     public int login_tty (int fd);
 

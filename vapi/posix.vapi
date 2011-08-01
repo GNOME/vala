@@ -1705,6 +1705,28 @@ namespace Posix {
 		public long tv_nsec;
 	}
 
+	[SimpleType]
+	[IntegerType]
+	[CCode (cheader_filename = "time.h")]
+	public struct clockid_t {
+	}
+
+	[CCode (cheader_filename = "time.h")]
+	public const clockid_t CLOCK_REALTIME;
+	[CCode (cheader_filename = "time.h")]
+	public const clockid_t CLOCK_MONOTONIC;
+	[CCode (cheader_filename = "time.h")]
+	public const clockid_t CLOCK_PROCESS_CPUTIME_ID;
+	[CCode (cheader_filename = "time.h")]
+	public const clockid_t CLOCK_THREAD_CPUTIME_ID;
+	[CCode (cheader_filename = "time.h")]
+	public const clockid_t CLOCK_REALTIME_COARSE;
+	[CCode (cheader_filename = "time.h")]
+	public const clockid_t CLOCK_MONOTONIC_COARSE;
+
+	[CCode (cheader_filename = "time.h")]
+	int clock_gettime (clockid_t clk_id, out timespec tp);
+
 	[CCode (cheader_filename = "sys/time.h,sys/resource.h")]
 	public int getpriority (int which, int who);
 	[CCode (cheader_filename = "sys/time.h,sys/resource.h")]
