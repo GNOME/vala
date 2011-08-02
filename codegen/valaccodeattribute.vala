@@ -493,6 +493,10 @@ public class Vala.CCodeAttribute : AttributeCache {
 		var sym = node as Symbol;
 		if (sym != null) {
 			if (sym is Constant && !(sym is EnumValue)) {
+				if (sym.parent_symbol is Block) {
+					// local constant
+					return sym.name;
+				}
 				return "%s%s".printf (CCodeBaseModule.get_ccode_lower_case_prefix (sym.parent_symbol).up (), sym.name);
 			} else if (sym is Field) {
 				if (((Field) sym).binding == MemberBinding.STATIC) {

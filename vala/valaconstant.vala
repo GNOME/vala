@@ -118,7 +118,10 @@ public class Vala.Constant : Symbol, Lockable {
 		if (source_reference != null) {
 			context.analyzer.current_source_file = source_reference.file;
 		}
-		context.analyzer.current_symbol = this;
+		if (!(parent_symbol is Block)) {
+			// non-local constant
+			context.analyzer.current_symbol = this;
+		}
 
 		type_reference.check (context);
 

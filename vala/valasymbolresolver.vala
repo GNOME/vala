@@ -159,7 +159,10 @@ public class Vala.SymbolResolver : CodeVisitor {
 
 	public override void visit_constant (Constant c) {
 		var old_scope = current_scope;
-		current_scope = c.scope;
+		if (!(c.parent_symbol is Block)) {
+			// non-local constant
+			current_scope = c.scope;
+		}
 
 		c.accept_children (this);
 

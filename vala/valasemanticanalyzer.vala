@@ -59,7 +59,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public Method? current_method {
 		get {
 			unowned Symbol sym = current_symbol;
-			while (sym is Block || sym is Constant) {
+			while (sym is Block) {
 				sym = sym.parent_symbol;
 			}
 			return sym as Method;
@@ -69,7 +69,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public Method? current_async_method {
 		get {
 			unowned Symbol sym = current_symbol;
-			while (sym is Block || sym is Constant || sym is Method) {
+			while (sym is Block || sym is Method) {
 				var m = sym as Method;
 				if (m != null && m.coroutine) {
 					break;
@@ -84,7 +84,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public PropertyAccessor? current_property_accessor {
 		get {
 			unowned Symbol sym = current_symbol;
-			while (sym is Block || sym is Constant) {
+			while (sym is Block) {
 				sym = sym.parent_symbol;
 			}
 			return sym as PropertyAccessor;
@@ -94,7 +94,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public Symbol? current_method_or_property_accessor {
 		get {
 			unowned Symbol sym = current_symbol;
-			while (sym is Block || sym is Constant) {
+			while (sym is Block) {
 				sym = sym.parent_symbol;
 			}
 			if (sym is Method) {
@@ -873,14 +873,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public Method? find_parent_method (Symbol sym) {
-		while (sym is Block || sym is Constant) {
+		while (sym is Block) {
 			sym = sym.parent_symbol;
 		}
 		return sym as Method;
 	}
 
 	public Symbol? find_parent_method_or_property_accessor (Symbol sym) {
-		while (sym is Block || sym is Constant) {
+		while (sym is Block) {
 			sym = sym.parent_symbol;
 		}
 		if (sym is Method) {

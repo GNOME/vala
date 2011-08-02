@@ -42,6 +42,7 @@ TESTS = \
 	methods/bug642899.vala \
 	methods/bug646345.vala \
 	methods/bug648320.vala \
+	methods/bug649562.vala \
 	methods/bug653391.vala \
 	methods/bug653908.vala \
 	control-flow/break.vala \
