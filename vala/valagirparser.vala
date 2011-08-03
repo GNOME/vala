@@ -1051,18 +1051,32 @@ public class Vala.GirParser : CodeVisitor {
 
 	void map_vala_to_gir () {
 		foreach (var source_file in context.get_source_files ()) {
-			foreach (var node in source_file.get_nodes ()) {
-				if (node is Namespace) {
-					var ns = (Namespace) node;
-					var gir_namespace = source_file.gir_namespace;
-					if (gir_namespace == null) {
+			string gir_namespace = source_file.gir_namespace;
+			Namespace ns = null;
+			if (gir_namespace == null) {
+				foreach (var node in source_file.get_nodes ()) {
+					if (node is Namespace) {
+						ns = (Namespace) node;
 						gir_namespace = ns.get_attribute_string ("CCode", "gir_namespace");
+						if (gir_namespace != null) {
+							break;
+						}
 					}
-					if (gir_namespace != null && gir_namespace != ns.name) {
-						var map_from = new UnresolvedSymbol (null, gir_namespace);
-						set_symbol_mapping (map_from, ns);
-						break;
-					}
+				}
+			}
+			if (gir_namespace == null) {
+				continue;
+			}
+
+			var gir_symbol = new UnresolvedSymbol (null, gir_namespace);
+			if (gir_namespace != ns.name) {
+				set_symbol_mapping (gir_symbol, ns);
+			}
+
+			foreach (var node in source_file.get_nodes ()) {
+				if (node.has_attribute_argument ("GIR", "name")) {
+					var map_from = new UnresolvedSymbol (gir_symbol, node.get_attribute_string ("GIR", "name"));
+					set_symbol_mapping (map_from, (Symbol) node);
 				}
 			}
 		}
