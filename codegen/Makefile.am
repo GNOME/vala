@@ -77,6 +77,7 @@ libvala@PACKAGE_SUFFIX@_la_LIBADD = \
 	$(COVERAGE_LIBS) \
 	$(GLIB_LIBS) \
 	../vala/libvalacore.la \
+	../ccode/libvalaccode.la \
 	$(NULL)
 
 EXTRA_DIST = $(libvala_la_VALASOURCES) codegen.vapi codegen.vala.stamp
