@@ -676,7 +676,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 				if (local.captured) {
 					generate_type_declaration (local.variable_type, cfile);
 
-					data.add_field (get_ccode_name (local.variable_type), get_variable_cname (local.name) + local.variable_type.get_cdeclarator_suffix ());
+					data.add_field (get_ccode_name (local.variable_type), get_variable_cname (local.name) + get_ccode_declarator_suffix (local.variable_type));
 				}
 			}
 			// free in reverse order
@@ -868,7 +868,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 				ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id ((Block) local.parent_symbol))), get_variable_cname (local.name)), rhs);
 			}
 		} else {
-			var cvar = new CCodeVariableDeclarator (get_variable_cname (local.name), rhs, local.variable_type.get_cdeclarator_suffix ());
+			var cvar = new CCodeVariableDeclarator (get_variable_cname (local.name), rhs, get_ccode_declarator_suffix (local.variable_type));
 
 			var cdecl = new CCodeDeclaration (get_ccode_name (local.variable_type));
 			cdecl.add_declarator (cvar);
@@ -1151,7 +1151,7 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 	public void emit_temp_var (LocalVariable local) {
 		var cdecl = new CCodeDeclaration (get_ccode_name (local.variable_type));
 
-		var vardecl = new CCodeVariableDeclarator (local.name, null, local.variable_type.get_cdeclarator_suffix ());
+		var vardecl = new CCodeVariableDeclarator (local.name, null, get_ccode_declarator_suffix (local.variable_type));
 		cdecl.add_declarator (vardecl);
 
 		var st = local.variable_type.data_type as Struct;
@@ -2348,6 +2348,10 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 
 	public string get_ccode_sentinel (Method m) {
 		return CCodeBaseModule.get_ccode_sentinel (m);
+	}
+
+	public string get_ccode_declarator_suffix (DataType type) {
+		return CCodeBaseModule.get_ccode_declarator_suffix (type);
 	}
 
 	public DataType? get_this_type () {

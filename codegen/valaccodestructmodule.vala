@@ -64,7 +64,7 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 			if (f.binding == MemberBinding.INSTANCE)  {
 				generate_type_declaration (f.variable_type, decl_space);
 
-				instance_struct.add_field (field_ctype, get_ccode_name (f) + f.variable_type.get_cdeclarator_suffix (), f.deprecated ? " G_GNUC_DEPRECATED" : null);
+				instance_struct.add_field (field_ctype, get_ccode_name (f) + get_ccode_declarator_suffix (f.variable_type), f.deprecated ? " G_GNUC_DEPRECATED" : null);
 				if (f.variable_type is ArrayType && get_ccode_array_length (f)) {
 					// create fields to store array dimensions
 					var array_type = (ArrayType) f.variable_type;

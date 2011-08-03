@@ -117,10 +117,6 @@ public abstract class Vala.DataType : CodeNode {
 		}
 	}
 
-	public virtual string get_cdeclarator_suffix () {
-		return "";
-	}
-
 	public override string to_string () {
 		return to_qualified_string (null);
 	}

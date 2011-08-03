@@ -312,7 +312,7 @@ public class Vala.GTypeModule : GErrorModule {
 				if (f.binding == MemberBinding.INSTANCE) {
 					generate_type_declaration (f.variable_type, decl_space);
 
-					instance_struct.add_field (field_ctype, get_ccode_name (f), f.variable_type.get_cdeclarator_suffix ());
+					instance_struct.add_field (field_ctype, get_ccode_name (f), get_ccode_declarator_suffix (f.variable_type));
 					if (f.variable_type is ArrayType && get_ccode_array_length (f)) {
 						// create fields to store array dimensions
 						var array_type = (ArrayType) f.variable_type;
@@ -419,7 +419,7 @@ public class Vala.GTypeModule : GErrorModule {
 				if (f.access == SymbolAccessibility.PRIVATE)  {
 					generate_type_declaration (f.variable_type, decl_space);
 
-					instance_priv_struct.add_field (field_ctype, get_ccode_name (f), f.variable_type.get_cdeclarator_suffix ());
+					instance_priv_struct.add_field (field_ctype, get_ccode_name (f), get_ccode_declarator_suffix (f.variable_type));
 					if (f.variable_type is ArrayType && get_ccode_array_length (f)) {
 						// create fields to store array dimensions
 						var array_type = (ArrayType) f.variable_type;

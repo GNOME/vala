@@ -60,7 +60,7 @@ public abstract class Vala.DovaStructModule : DovaBaseModule {
 			if (f.binding == MemberBinding.INSTANCE)  {
 				generate_type_declaration (f.variable_type, decl_space);
 
-				instance_struct.add_field (field_ctype, get_ccode_name (f) + f.variable_type.get_cdeclarator_suffix ());
+				instance_struct.add_field (field_ctype, get_ccode_name (f) + get_ccode_declarator_suffix (f.variable_type));
 			}
 		}
 

@@ -148,16 +148,6 @@ public class Vala.ArrayType : ReferenceType {
 		return result;
 	}
 
-	public override string get_cdeclarator_suffix () {
-		if (fixed_length) {
-			return "[%d]".printf (length);
-		} else if (inline_allocated) {
-			return "[]";
-		} else {
-			return "";
-		}
-	}
-
 	public override bool is_array () {
 		return true;
 	}

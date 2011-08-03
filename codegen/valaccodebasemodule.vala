@@ -904,7 +904,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 
 		var cdecl = new CCodeDeclaration (field_ctype);
-		cdecl.add_declarator (new CCodeVariableDeclarator (get_ccode_name (f), null, f.variable_type.get_cdeclarator_suffix ()));
+		cdecl.add_declarator (new CCodeVariableDeclarator (get_ccode_name (f), null, get_ccode_declarator_suffix (f.variable_type)));
 		if (f.is_private_symbol ()) {
 			cdecl.modifiers = CCodeModifiers.STATIC;
 		} else {
@@ -1083,7 +1083,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			lhs = new CCodeIdentifier (get_ccode_name (f));
 
-			var var_decl = new CCodeVariableDeclarator (get_ccode_name (f), null, f.variable_type.get_cdeclarator_suffix ());
+			var var_decl = new CCodeVariableDeclarator (get_ccode_name (f), null, get_ccode_declarator_suffix (f.variable_type));
 			var_decl.initializer = default_value_for_type (f.variable_type, true);
 
 			if (class_init_context != null) {
@@ -1769,7 +1769,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				if (local.captured) {
 					generate_type_declaration (local.variable_type, cfile);
 
-					data.add_field (get_ccode_name (local.variable_type), get_variable_cname (local.name) + local.variable_type.get_cdeclarator_suffix ());
+					data.add_field (get_ccode_name (local.variable_type), get_variable_cname (local.name) + get_ccode_declarator_suffix (local.variable_type));
 
 					if (local.variable_type is ArrayType) {
 						var array_type = (ArrayType) local.variable_type;
@@ -2092,9 +2092,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		if (!local.captured) {
 			if (current_method != null && current_method.coroutine) {
-				closure_struct.add_field (get_ccode_name (local.variable_type), get_variable_cname (local.name) + local.variable_type.get_cdeclarator_suffix ());
+				closure_struct.add_field (get_ccode_name (local.variable_type), get_variable_cname (local.name) + get_ccode_declarator_suffix (local.variable_type));
 			} else {
-				var cvar = new CCodeVariableDeclarator (get_variable_cname (local.name), null, local.variable_type.get_cdeclarator_suffix ());
+				var cvar = new CCodeVariableDeclarator (get_variable_cname (local.name), null, get_ccode_declarator_suffix (local.variable_type));
 
 				// try to initialize uninitialized variables
 				// initialization not necessary for variables stored in closure
@@ -3119,7 +3119,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				}
 			}
 		} else {
-			var cvar = new CCodeVariableDeclarator (local.name, null, local.variable_type.get_cdeclarator_suffix ());
+			var cvar = new CCodeVariableDeclarator (local.name, null, get_ccode_declarator_suffix (local.variable_type));
 			if (init) {
 				cvar.initializer = default_value_for_type (local.variable_type, true);
 				cvar.init0 = true;
@@ -5812,6 +5812,18 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public static bool get_ccode_notify (Property prop) {
 		return prop.get_attribute_bool ("CCode", "notify", true);
+	}
+
+	public static string get_ccode_declarator_suffix (DataType type) {
+		var array_type = type as ArrayType;
+		if (array_type != null) {
+			if (array_type.fixed_length) {
+				return "[%d]".printf (array_type.length);
+			} else if (array_type.inline_allocated) {
+				return "[]";
+			}
+		}
+		return "";
 	}
 
 	public CCodeConstant get_signal_canonical_constant (Signal sig, string? detail = null) {
