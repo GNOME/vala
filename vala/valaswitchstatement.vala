@@ -116,6 +116,7 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 
 		// ensure that possibly owned (string) expression stays alive
 		expression.target_type = expression.value_type.copy ();
+		expression.target_type.nullable = false;
 
 		var labelset = new HashSet<string> (str_hash, str_equal);
 		foreach (SwitchSection section in sections) {
