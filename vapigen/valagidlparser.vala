@@ -264,9 +264,8 @@ public class Vala.GIdlParser : CodeVisitor {
 			return "";
 		}
 		string cprefix;
-		if (sym is Namespace) {
-			cprefix = sym.get_attribute_string ("CCode", "lower_case_cprefix");
-		} else {
+		cprefix = sym.get_attribute_string ("CCode", "lower_case_cprefix");
+		if (cprefix == null && (sym is ObjectTypeSymbol || sym is Struct)) {
 			cprefix = sym.get_attribute_string ("CCode", "cprefix");
 		}
 		if (cprefix != null) {
