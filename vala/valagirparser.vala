@@ -1035,6 +1035,8 @@ public class Vala.GirParser : CodeVisitor {
 		tree_stack = new ArrayList<Node> ();
 		current = root;
 
+		map_vala_to_gir ();
+
 		context.accept (this);
 
 		resolve_gir_symbols ();
@@ -1047,23 +1049,26 @@ public class Vala.GirParser : CodeVisitor {
 		}
 	}
 
-	public override void visit_source_file (SourceFile source_file) {
-		// collect gir namespaces
-		foreach (var node in source_file.get_nodes ()) {
-			if (node is Namespace) {
-				var ns = (Namespace) node;
-				var gir_namespace = source_file.gir_namespace;
-				if (gir_namespace == null) {
-					gir_namespace = ns.get_attribute_string ("CCode", "gir_namespace");
-				}
-				if (gir_namespace != null && gir_namespace != ns.name) {
-					var map_from = new UnresolvedSymbol (null, gir_namespace);
-					set_symbol_mapping (map_from, ns);
-					break;
+	void map_vala_to_gir () {
+		foreach (var source_file in context.get_source_files ()) {
+			foreach (var node in source_file.get_nodes ()) {
+				if (node is Namespace) {
+					var ns = (Namespace) node;
+					var gir_namespace = source_file.gir_namespace;
+					if (gir_namespace == null) {
+						gir_namespace = ns.get_attribute_string ("CCode", "gir_namespace");
+					}
+					if (gir_namespace != null && gir_namespace != ns.name) {
+						var map_from = new UnresolvedSymbol (null, gir_namespace);
+						set_symbol_mapping (map_from, ns);
+						break;
+					}
 				}
 			}
 		}
+	}
 
+	public override void visit_source_file (SourceFile source_file) {
 		if (source_file.filename.has_suffix (".gir")) {
 			parse_file (source_file);
 		}
