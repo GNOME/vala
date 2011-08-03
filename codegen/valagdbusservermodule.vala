@@ -585,7 +585,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		return wrapper_name;
 	}
 
-	void handle_signals (ObjectTypeSymbol sym) {
+	void handle_signals (ObjectTypeSymbol sym, bool connect) {
 		string dbus_iface_name = get_dbus_name (sym);
 		if (dbus_iface_name == null) {
 			return;
@@ -599,12 +599,21 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 				continue;
 			}
 
-			var connect = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_connect"));
-			connect.add_argument (new CCodeIdentifier ("object"));
-			connect.add_argument (get_signal_canonical_constant (sig));
-			connect.add_argument (new CCodeCastExpression (new CCodeIdentifier (generate_dbus_signal_wrapper (sig, sym, dbus_iface_name)), "GCallback"));
-			connect.add_argument (new CCodeIdentifier ("data"));
-			ccode.add_expression (connect);
+			if (connect) {
+				var connect_call = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_connect"));
+				connect_call.add_argument (new CCodeIdentifier ("object"));
+				connect_call.add_argument (get_signal_canonical_constant (sig));
+				connect_call.add_argument (new CCodeCastExpression (new CCodeIdentifier (generate_dbus_signal_wrapper (sig, sym, dbus_iface_name)), "GCallback"));
+				connect_call.add_argument (new CCodeIdentifier ("data"));
+				ccode.add_expression (connect_call);
+			} else {
+				// disconnect the signals
+				var disconnect_call = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_handlers_disconnect_by_func"));
+				disconnect_call.add_argument (new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("0")));
+				disconnect_call.add_argument (new CCodeIdentifier ("_dbus_%s_%s".printf (get_ccode_lower_case_name (sym), get_ccode_name (sig))));
+				disconnect_call.add_argument (new CCodeIdentifier ("data"));
+				ccode.add_expression (disconnect_call);
+			}
 		}
 	}
 
@@ -1261,7 +1270,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		ccode.add_return (new CCodeConstant ("0"));
 		ccode.close ();
 
-		handle_signals (sym);
+		handle_signals (sym, true);
 
 		ccode.add_return (new CCodeIdentifier ("result"));
 
@@ -1276,6 +1285,8 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		push_function (cfunc);
 
 		ccode.add_declaration ("gpointer*", new CCodeVariableDeclarator ("data", new CCodeIdentifier ("user_data")));
+
+		handle_signals (sym, false);
 
 		var unref_object = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_unref_function (sym)));
 		unref_object.add_argument (new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("0")));
