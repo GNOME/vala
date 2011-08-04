@@ -743,7 +743,7 @@ public class Vala.GirParser : CodeVisitor {
 							merged = true;
 						} else if (sym is Signal) {
 							var sig = (Signal) sym;
-							if (m.is_virtual) {
+							if (m.is_virtual || m.is_abstract) {
 								sig.is_virtual = true;
 							} else {
 								sig.set_attribute ("HasEmitter", true);
