@@ -4951,13 +4951,19 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public override void visit_lambda_expression (LambdaExpression lambda) {
+		var delegate_type = (DelegateType) lambda.target_type;
+		var d = delegate_type.delegate_symbol;
+
+		lambda.method.set_attribute_bool ("CCode", "array_length", d.get_attribute_bool ("CCode", "array_length"));
+		lambda.method.set_attribute_bool ("CCode", "array_null_terminated", d.get_attribute_bool ("CCode", "array_null_terminated"));
+		lambda.method.set_attribute_string ("CCode", "array_length_type", d.get_attribute_string ("CCode", "array_length_type"));
+
 		lambda.accept_children (this);
 
 		bool expr_owned = lambda.value_type.value_owned;
 
 		set_cvalue (lambda, new CCodeIdentifier (get_ccode_name (lambda.method)));
 
-		var delegate_type = (DelegateType) lambda.target_type;
 		if (lambda.method.closure) {
 			int block_id = get_block_id (current_closure_block);
 			var delegate_target = get_variable_cexpression ("_data%d_".printf (block_id));
