@@ -567,6 +567,14 @@ public class Vala.GirParser : CodeVisitor {
 			}
 		}
 
+		public string get_gir_name () {
+			var gir_name = girdata["name"];
+			if (gir_name == null) {
+				gir_name = girdata["glib:name"];
+			}
+			return gir_name;
+		}
+
 		public string get_lower_case_cprefix () {
 			if (name == null) {
 				return "";
@@ -962,6 +970,11 @@ public class Vala.GirParser : CodeVisitor {
 				// lower_case_csuffix
 				if (get_lower_case_csuffix () != get_default_lower_case_csuffix ()) {
 					symbol.set_attribute_string ("CCode", "lower_case_csuffix", get_lower_case_csuffix ());
+				}
+
+				// set gir name if the symbol has been renamed
+				if (is_container (symbol) && !(symbol is Namespace) && name != get_gir_name ()) {
+					symbol.set_attribute_string ("GIR", "name", get_gir_name ());
 				}
 			}
 
@@ -1704,10 +1717,7 @@ public class Vala.GirParser : CodeVisitor {
 		node.metadata = metadata;
 		node.source_reference = get_current_src ();
 
-		var gir_name = node.girdata["name"];
-		if (gir_name == null) {
-			gir_name = node.girdata["glib:name"];
-		}
+		var gir_name = node.get_gir_name ();
 		if (parent != current || gir_name != name) {
 			set_symbol_mapping (new UnresolvedSymbol (null, gir_name), node.get_unresolved_symbol ());
 		}

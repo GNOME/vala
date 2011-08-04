@@ -26,11 +26,13 @@ namespace Soup {
 	}
 	namespace XMLRPC {
 		[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_XMLRPC_ERROR_")]
+		[GIR (name = "XMLRPCError")]
 		public errordomain Error {
 			ARGUMENTS,
 			RETVAL
 		}
 		[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_XMLRPC_FAULT_")]
+		[GIR (name = "XMLRPCFault")]
 		public errordomain Fault {
 			PARSE_ERROR_NOT_WELL_FORMED,
 			PARSE_ERROR_UNSUPPORTED_ENCODING,
