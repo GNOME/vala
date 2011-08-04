@@ -1030,6 +1030,7 @@ public class Vala.GirParser : CodeVisitor {
 	Node current;
 	Node old_current;
 
+	Set<string> provided_namespaces = new HashSet<string> (str_hash, str_equal);
 	HashMap<UnresolvedSymbol,Symbol> unresolved_symbols_map = new HashMap<UnresolvedSymbol,Symbol> (unresolved_symbol_hash, unresolved_symbol_equal);
 	ArrayList<UnresolvedSymbol> unresolved_gir_symbols = new ArrayList<UnresolvedSymbol> ();
 
@@ -1065,6 +1066,7 @@ public class Vala.GirParser : CodeVisitor {
 	void map_vala_to_gir () {
 		foreach (var source_file in context.get_source_files ()) {
 			string gir_namespace = source_file.gir_namespace;
+			string gir_version = source_file.gir_version;
 			Namespace ns = null;
 			if (gir_namespace == null) {
 				foreach (var node in source_file.get_nodes ()) {
@@ -1072,6 +1074,7 @@ public class Vala.GirParser : CodeVisitor {
 						ns = (Namespace) node;
 						gir_namespace = ns.get_attribute_string ("CCode", "gir_namespace");
 						if (gir_namespace != null) {
+							gir_version = ns.get_attribute_string ("CCode", "gir_version");
 							break;
 						}
 					}
@@ -1080,6 +1083,8 @@ public class Vala.GirParser : CodeVisitor {
 			if (gir_namespace == null) {
 				continue;
 			}
+
+			provided_namespaces.add ("%s-%s".printf (gir_namespace, gir_version));
 
 			var gir_symbol = new UnresolvedSymbol (null, gir_namespace);
 			if (gir_namespace != ns.name) {
@@ -1739,6 +1744,11 @@ public class Vala.GirParser : CodeVisitor {
 		string vala_namespace = cprefix;
 		string gir_namespace = reader.get_attribute ("name");
 		string gir_version = reader.get_attribute ("version");
+
+		if (provided_namespaces.contains ("%s-%s".printf (gir_namespace, gir_version))) {
+			skip_element ();
+			return;
+		}
 
 		var ns_metadata = metadata.match_child (gir_namespace);
 		if (ns_metadata.has_argument (ArgumentType.NAME)) {
