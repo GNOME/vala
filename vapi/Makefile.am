@@ -52,6 +52,8 @@ dist_vapi_DATA = \
 	gdu-gtk.vapi \
 	gedit-2.20.vapi \
 	gedit-2.20.deps \
+	gedit.vapi \
+	gedit.deps \
 	gio-2.0.vapi \
 	gio-unix-2.0.deps \
 	gio-unix-2.0.vapi \
@@ -237,7 +239,7 @@ dist_noinst_DATA = \
 	config.vapi \
 	$(NULL)
 
-BINDINGS = atk clutter-1.0 clutter-gtk-0.10 clutter-gtk-1.0 cogl-1.0 gconf-2.0 gdk-2.0 gdk-3.0 gdk-pixbuf-2.0 gdk-x11-2.0 gdk-x11-3.0 gdl-1.0 gdu gdu-gtk gedit-2.20 gio-2.0 gio-unix-2.0 gnome-desktop-2.0 gnome-keyring-1 gnome-vfs-2.0 goocanvas gstreamer-0.10 gstreamer-app-0.10 gstreamer-audio-0.10 gstreamer-base-0.10 gstreamer-cdda-0.10 gstreamer-check-0.10 gstreamer-controller-0.10 gstreamer-dataprotocol-0.10 gstreamer-fft-0.10 gstreamer-interfaces-0.10 gstreamer-net-0.10 gstreamer-netbuffer-0.10 gstreamer-pbutils-0.10 gstreamer-riff-0.10 gstreamer-rtp-0.10 gstreamer-rtsp-0.10 gstreamer-sdp-0.10 gstreamer-tag-0.10 gstreamer-video-0.10 gtk+-2.0 gtk+-3.0 gtksourceview-2.0 gtksourceview-3.0 gudev-1.0 hildon-1 hildon-fm-2 json-glib-1.0 libepc-1.0 libgda-4.0 libgda-report-4.0 libgdata libglade-2.0 libgnome-2.0 libgnome-menu libgnomeui-2.0 libgsf-1 libnotify liboobs-1 libpeas-1.0 librsvg-2.0 libsexy libsoup-2.2 libsoup-2.4 libwnck-1.0 loudmouth-1.0 mx-1.0 pango pangocairo poppler-glib purple rest-0.6 rest-extras-0.6 rest-0.7 tracker-indexer-module-1.0 twitter-glib-1.0 unique-1.0 vte vte-2.90 webkit-1.0
+BINDINGS = atk clutter-1.0 clutter-gtk-0.10 clutter-gtk-1.0 cogl-1.0 gconf-2.0 gdk-2.0 gdk-3.0 gdk-pixbuf-2.0 gdk-x11-2.0 gdk-x11-3.0 gdl-1.0 gdu gdu-gtk gedit-2.20 gedit gio-2.0 gio-unix-2.0 gnome-desktop-2.0 gnome-keyring-1 gnome-vfs-2.0 goocanvas gstreamer-0.10 gstreamer-app-0.10 gstreamer-audio-0.10 gstreamer-base-0.10 gstreamer-cdda-0.10 gstreamer-check-0.10 gstreamer-controller-0.10 gstreamer-dataprotocol-0.10 gstreamer-fft-0.10 gstreamer-interfaces-0.10 gstreamer-net-0.10 gstreamer-netbuffer-0.10 gstreamer-pbutils-0.10 gstreamer-riff-0.10 gstreamer-rtp-0.10 gstreamer-rtsp-0.10 gstreamer-sdp-0.10 gstreamer-tag-0.10 gstreamer-video-0.10 gtk+-2.0 gtk+-3.0 gtksourceview-2.0 gtksourceview-3.0 gudev-1.0 hildon-1 hildon-fm-2 json-glib-1.0 libepc-1.0 libgda-4.0 libgda-report-4.0 libgdata libglade-2.0 libgnome-2.0 libgnome-menu libgnomeui-2.0 libgsf-1 libnotify liboobs-1 libpeas-1.0 librsvg-2.0 libsexy libsoup-2.2 libsoup-2.4 libwnck-1.0 loudmouth-1.0 mx-1.0 pango pangocairo poppler-glib purple rest-0.6 rest-extras-0.6 rest-0.7 tracker-indexer-module-1.0 twitter-glib-1.0 unique-1.0 vte vte-2.90 webkit-1.0
 
 VAPIGEN = $(top_builddir)/vapigen/vapigen
 VAPIGENFLAGS = --vapidir $(srcdir)
@@ -245,6 +247,7 @@ GENVAPI = $(VAPIGEN) $(VAPIGENFLAGS)
 METADATADIR = $(srcdir)/metadata
 PACKAGESDIR = $(srcdir)/packages
 GIRDIR = $$($(PKG_CONFIG) gobject-introspection-1.0 --variable=girdir)
+GEDIT_GIRDIR=$$($(PKG_CONFIG) gedit --variable=prefix)/share/gedit/gir-1.0
 
 .PHONY: all-bindings $(BINDINGS)
 
@@ -294,6 +297,9 @@ gdu-gtk:
 
 gedit-2.20:
 	$(GENVAPI) --library $(srcdir)/gedit-2.20 $(PACKAGESDIR)/gedit-2.20/gedit-2.20.gi
+
+gedit:
+	$(GENVAPI) --library $(srcdir)/gedit --metadatadir $(METADATADIR) $(GEDIT_GIRDIR)/Gedit-3.0.gir
 
 gio-2.0:
 	$(GENVAPI) --library $(srcdir)/gio-2.0 $(PACKAGESDIR)/gio-2.0/gio-2.0-custom.vala $(PACKAGESDIR)/gio-2.0/gio-2.0.gi
