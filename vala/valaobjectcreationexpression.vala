@@ -500,7 +500,6 @@ public class Vala.ObjectCreationExpression : Expression {
 				local.initializer = this;
 				decl.check (context);
 
-
 				// move temp variable to insert block to ensure the
 				// variable is in the same block as the declaration
 				// otherwise there will be scoping issues in the generated code
