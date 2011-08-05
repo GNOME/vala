@@ -6045,7 +6045,7 @@ namespace Gtk {
 		public signal void item_activated ();
 		public signal void selection_changed ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
+	[CCode (cheader_filename = "gtk/gtk.h", type_cname = "GtkScrollableInterface")]
 	public interface Scrollable : GLib.Object {
 		public unowned Gtk.Adjustment get_hadjustment ();
 		public Gtk.ScrollablePolicy get_hscroll_policy ();
