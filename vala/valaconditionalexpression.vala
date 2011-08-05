@@ -173,20 +173,20 @@ public class Vala.ConditionalExpression : Expression {
 		false_expression.target_type = value_type;
 
 		var true_stmt = new ExpressionStatement (new Assignment (new MemberAccess.simple (local.name, true_expression.source_reference), true_expression, AssignmentOperator.SIMPLE, true_expression.source_reference), true_expression.source_reference);
-		true_stmt.check (context);
 
 		var false_stmt = new ExpressionStatement (new Assignment (new MemberAccess.simple (local.name, false_expression.source_reference), false_expression, AssignmentOperator.SIMPLE, false_expression.source_reference), false_expression.source_reference);
-		false_stmt.check (context);
 
 		true_block.replace_statement (true_decl, true_stmt);
 		false_block.replace_statement (false_decl, false_stmt);
+		true_stmt.check (context);
+		false_stmt.check (context);
 
 		var ma = new MemberAccess.simple (local.name, source_reference);
 		ma.formal_target_type = formal_target_type;
 		ma.target_type = target_type;
-		ma.check (context);
 
 		parent_node.replace_expression (this, ma);
+		ma.check (context);
 
 		return true;
 	}

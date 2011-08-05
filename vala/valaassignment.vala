@@ -113,15 +113,15 @@ public class Vala.Assignment : Expression {
 
 			var local = new LocalVariable (null, get_temp_name (), right, right.source_reference);
 			var decl = new DeclarationStatement (local, source_reference);
-			decl.check (context);
 			insert_statement (context.analyzer.insert_block, decl);
+			decl.check (context);
 
 			int i = 0;
 			ExpressionStatement stmt = null;
 			foreach (var expr in tuple.get_expressions ()) {
 				if (stmt != null) {
-					stmt.check (context);
 					insert_statement (context.analyzer.insert_block, stmt);
+					stmt.check (context);
 				}
 
 				var temp_access = new MemberAccess.simple (local.name, right.source_reference);
