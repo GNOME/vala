@@ -5813,6 +5813,22 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return prop.get_attribute_bool ("CCode", "notify", true);
 	}
 
+	public static string get_ccode_nick (Property prop) {
+		var nick = prop.get_attribute_string ("Description", "nick");
+		if (nick == null) {
+			nick = prop.name.replace ("_", "-");
+		}
+		return nick;
+	}
+
+	public static string get_ccode_blurb (Property prop) {
+		var blurb = prop.get_attribute_string ("Description", "blurb");
+		if (blurb == null) {
+			blurb = prop.name.replace ("_", "-");
+		}
+		return blurb;
+	}
+
 	public static string get_ccode_declarator_suffix (DataType type) {
 		var array_type = type as ArrayType;
 		if (array_type != null) {
