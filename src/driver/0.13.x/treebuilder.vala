@@ -273,7 +273,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 
 	private string get_nick (Vala.Property prop) {
 #if VALA_0_13_X
-		return prop.get_attribute_string ("Description", "nick") ?? prop.name.replace ("_", "-");
+		return Vala.CCodeBaseModule.get_ccode_nick (prop);
 #else
 		return prop.nick;
 #endif
