@@ -293,12 +293,6 @@ public class Vala.Delegate : TypeSymbol, Callable {
 
 		checked = true;
 
-		var old_source_file = context.analyzer.current_source_file;
-
-		if (source_reference != null) {
-			context.analyzer.current_source_file = source_reference.file;
-		}
-
 		foreach (TypeParameter p in type_parameters) {
 			p.check (context);
 		}
@@ -314,8 +308,6 @@ public class Vala.Delegate : TypeSymbol, Callable {
 				error_type.check (context);
 			}
 		}
-
-		context.analyzer.current_source_file = old_source_file;
 
 		return !error;
 	}
