@@ -2066,6 +2066,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface TlsServerConnection : GLib.TlsConnection {
 		public static unowned GLib.IOStream @new (GLib.IOStream base_io_stream, GLib.TlsCertificate certificate) throws GLib.Error;
+		[NoAccessorMethod]
 		public GLib.TlsAuthenticationMode authentication_mode { get; set; }
 	}
 	[CCode (cheader_filename = "gio/gio.h")]

@@ -811,14 +811,21 @@ namespace Goo {
 		public void stop_animation ();
 		public void translate (double tx, double ty);
 		public abstract void update (bool entire_tree, Cairo.Context cr, Goo.CanvasBounds bounds);
+		[NoAccessorMethod]
 		public bool can_focus { get; set; }
-		public string description { get; set; }
+		[NoAccessorMethod]
+		public string description { owned get; set; }
 		public Goo.CanvasItem parent { get; set; }
+		[NoAccessorMethod]
 		public Goo.CanvasPointerEvents pointer_events { get; set; }
-		public string title { get; set; }
-		public string tooltip { get; set; }
+		[NoAccessorMethod]
+		public string title { owned get; set; }
+		[NoAccessorMethod]
+		public string tooltip { owned get; set; }
 		public Goo.CairoMatrix transform { get; set; }
+		[NoAccessorMethod]
 		public Goo.CanvasItemVisibility visibility { get; set; }
+		[NoAccessorMethod]
 		public double visibility_threshold { get; set; }
 		public signal void animation_finished (bool stopped);
 		public signal bool button_press_event (Goo.CanvasItem target, Gdk.EventButton event);
@@ -871,14 +878,21 @@ namespace Goo {
 		public void skew_y (double degrees, double cx, double cy);
 		public void stop_animation ();
 		public void translate (double tx, double ty);
+		[NoAccessorMethod]
 		public bool can_focus { get; set; }
-		public string description { get; set; }
+		[NoAccessorMethod]
+		public string description { owned get; set; }
 		public Goo.CanvasItemModel parent { get; set; }
+		[NoAccessorMethod]
 		public Goo.CanvasPointerEvents pointer_events { get; set; }
-		public string title { get; set; }
-		public string tooltip { get; set; }
+		[NoAccessorMethod]
+		public string title { owned get; set; }
+		[NoAccessorMethod]
+		public string tooltip { owned get; set; }
 		public Goo.CairoMatrix transform { get; set; }
+		[NoAccessorMethod]
 		public Goo.CanvasItemVisibility visibility { get; set; }
+		[NoAccessorMethod]
 		public double visibility_threshold { get; set; }
 		public signal void animation_finished (bool stopped);
 		public signal void changed (bool recompute_bounds);

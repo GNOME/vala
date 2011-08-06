@@ -747,6 +747,7 @@ namespace Mx {
 		public void set_drag_threshold (uint threshold);
 		public Mx.DragAxis axis { get; set; }
 		public Clutter.Actor drag_actor { get; set; }
+		[NoAccessorMethod]
 		public bool drag_enabled { get; set; }
 		public uint drag_threshold { get; set; }
 		public signal void drag_begin (float event_x, float event_y, int event_button, Clutter.ModifierType modifiers);
@@ -759,6 +760,7 @@ namespace Mx {
 		public void disable ();
 		public void enable ();
 		public bool is_enabled ();
+		[NoAccessorMethod]
 		public bool drop_enabled { get; set; }
 		public signal void drop (Clutter.Actor draggable, float event_x, float event_y, int button, Clutter.ModifierType modifiers);
 		public signal void over_in (Clutter.Actor draggable);

@@ -1668,6 +1668,7 @@ public class Vala.GIdlParser : CodeVisitor {
 
 		current_data_type = iface;
 
+		current_type_symbol_set = new HashSet<string> (str_hash, str_equal);
 		var current_type_func_map = new HashMap<string,weak IdlNodeFunction> (str_hash, str_equal);
 		var current_type_vfunc_map = new HashMap<string,string> (str_hash, str_equal);
 
@@ -1705,6 +1706,25 @@ public class Vala.GIdlParser : CodeVisitor {
 					iface.add_signal (sig);
 					sig.is_virtual = false;
 				}
+			}
+		}
+
+		foreach (Property prop in iface.get_properties ()) {
+			var getter = "get_%s".printf (prop.name);
+
+			if (prop.get_accessor != null && !current_type_symbol_set.contains (getter)) {
+				prop.set_attribute ("NoAccessorMethod", true);
+			}
+
+			var setter = "set_%s".printf (prop.name);
+
+			if (prop.set_accessor != null && prop.set_accessor.writable
+			    && !current_type_symbol_set.contains (setter)) {
+				prop.set_attribute ("NoAccessorMethod", true);
+			}
+
+			if (prop.get_attribute ("NoAccessorMethod") != null && prop.get_accessor != null) {
+				prop.get_accessor.value_type.value_owned = true;
 			}
 		}
 
