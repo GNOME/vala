@@ -532,14 +532,6 @@ public class Vala.Class : ObjectTypeSymbol {
 
 		checked = true;
 
-		var old_source_file = context.analyzer.current_source_file;
-		var old_symbol = context.analyzer.current_symbol;
-
-		if (source_reference != null) {
-			context.analyzer.current_source_file = source_reference.file;
-		}
-		context.analyzer.current_symbol = this;
-
 		foreach (DataType base_type_reference in get_base_types ()) {
 			if (!base_type_reference.check (context)) {
 				error = true;
@@ -828,9 +820,6 @@ public class Vala.Class : ObjectTypeSymbol {
 				}
 			}
 		}
-
-		context.analyzer.current_source_file = old_source_file;
-		context.analyzer.current_symbol = old_symbol;
 
 		return !error;
 	}

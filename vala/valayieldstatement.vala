@@ -42,7 +42,8 @@ public class Vala.YieldStatement : CodeNode, Statement {
 
 		checked = true;
 
-		if (context.analyzer.current_method == null || !context.analyzer.current_method.coroutine) {
+		unowned Method? current_method = context.analyzer.get_current_method (this);
+		if (current_method == null || !current_method.coroutine) {
 			error = true;
 			Report.error (source_reference, "yield statement not available outside async method");
 		}
