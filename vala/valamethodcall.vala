@@ -257,7 +257,7 @@ public class Vala.MethodCall : Expression {
 		unowned CreationMethod? base_cm = null;
 
 		if (is_chainup) {
-			unowned CreationMethod? cm = context.analyzer.find_current_method () as CreationMethod;
+			unowned CreationMethod? cm = context.analyzer.get_current_method (this) as CreationMethod;
 			if (cm == null) {
 				error = true;
 				Report.error (source_reference, "invocation not supported in this context");
@@ -517,7 +517,8 @@ public class Vala.MethodCall : Expression {
 					error = true;
 					Report.error (source_reference, "yield expression requires async method");
 				}
-				if (context.analyzer.current_method == null || !context.analyzer.current_method.coroutine) {
+				unowned Method? current_method = context.analyzer.get_current_method (this);
+				if (current_method == null || !current_method.coroutine) {
 					error = true;
 					Report.error (source_reference, "yield expression not available outside async method");
 				}
@@ -654,7 +655,7 @@ public class Vala.MethodCall : Expression {
 		if (tree_can_fail) {
 			if (parent_node is LocalVariable || parent_node is ExpressionStatement) {
 				// simple statements, no side effects after method call
-			} else if (!(context.analyzer.current_symbol is Block)) {
+			} else if (!(context.analyzer.get_current_non_local_symbol (this) is Block)) {
 				// can't handle errors in field initializers
 				error = true;
 				Report.error (source_reference, "Field initializers must not throw errors");
@@ -665,7 +666,7 @@ public class Vala.MethodCall : Expression {
 				var local = new LocalVariable (value_type.copy (), get_temp_name (), null, source_reference);
 				var decl = new DeclarationStatement (local, source_reference);
 
-				insert_statement (context.analyzer.insert_block, decl);
+				insert_statement (context.analyzer.get_insert_block (this), decl);
 
 				var temp_access = SemanticAnalyzer.create_temp_access (local, target_type);
 				temp_access.formal_target_type = formal_target_type;
@@ -677,9 +678,9 @@ public class Vala.MethodCall : Expression {
 				// move temp variable to insert block to ensure the
 				// variable is in the same block as the declaration
 				// otherwise there will be scoping issues in the generated code
-				var block = (Block) context.analyzer.current_symbol;
+				var block = context.analyzer.get_current_block (this);
 				block.remove_local_variable (local);
-				context.analyzer.insert_block.add_local_variable (local);
+				context.analyzer.get_insert_block (this).add_local_variable (local);
 
 				old_parent_node.replace_expression (this, temp_access);
 				temp_access.check (context);

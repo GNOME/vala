@@ -97,10 +97,12 @@ public class Vala.Block : Symbol, Statement {
 			parent_block = parent_block.parent_symbol;
 		}
 		local_variables.add (local);
+		scope.add (local.name, local);
 	}
 
 	public void remove_local_variable (LocalVariable local) {
 		local_variables.remove (local);
+		scope.remove (local.name);
 	}
 
 	/**
@@ -151,12 +153,7 @@ public class Vala.Block : Symbol, Statement {
 
 		checked = true;
 
-		owner = context.analyzer.current_symbol.scope;
-
-		var old_symbol = context.analyzer.current_symbol;
-		var old_insert_block = context.analyzer.insert_block;
-		context.analyzer.current_symbol = this;
-		context.analyzer.insert_block = this;
+		owner = context.analyzer.get_current_non_local_symbol (parent_node).scope;
 
 		for (int i = 0; i < statement_list.size; i++) {
 			if (!statement_list[i].check (context)) {
@@ -171,9 +168,6 @@ public class Vala.Block : Symbol, Statement {
 		foreach (Constant constant in local_constants) {
 			constant.active = false;
 		}
-
-		context.analyzer.current_symbol = old_symbol;
-		context.analyzer.insert_block = old_insert_block;
 
 		return !error;
 	}

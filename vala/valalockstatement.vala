@@ -114,7 +114,7 @@ public class Vala.LockStatement : CodeNode, Statement {
 		}
 
 		/* parent symbol must be the current class */
-		if (resource.symbol_reference.parent_symbol != context.analyzer.current_class) {
+		if (resource.symbol_reference.parent_symbol != context.analyzer.get_current_class (this)) {
 			error = true;
 			resource.error = true;
 			Report.error (resource.source_reference, "Only members of the current class are lockable");
@@ -122,7 +122,7 @@ public class Vala.LockStatement : CodeNode, Statement {
 		}
 
 		/* parent class must not be compact */
-		if (context.analyzer.current_class.is_compact) {
+		if (context.analyzer.get_current_class (this).is_compact) {
 			error = true;
 			resource.error = true;
 			Report.error (resource.source_reference, "Only members of the non-compact classes are lockable");

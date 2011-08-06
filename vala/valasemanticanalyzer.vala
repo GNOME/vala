@@ -30,108 +30,6 @@ using GLib;
 public class Vala.SemanticAnalyzer : CodeVisitor {
 	CodeContext context;
 
-	public Symbol? current_symbol { get; set; }
-	public SourceFile current_source_file { get; set; }
-
-	public TypeSymbol? current_type_symbol {
-		get {
-			unowned Symbol? sym = current_symbol;
-			while (sym != null) {
-				if (sym is TypeSymbol) {
-					return (TypeSymbol) sym;
-				}
-				sym = sym.parent_symbol;
-			}
-			return null;
-		}
-	}
-
-	public Class? current_class {
-		get { return current_type_symbol as Class; }
-	}
-
-
-	public Struct? current_struct {
-		get { return current_type_symbol as Struct; }
-	}
-
-	public Method? current_method {
-		get {
-			unowned Symbol? sym = current_symbol;
-			while (sym is Block) {
-				sym = sym.parent_symbol;
-			}
-			return sym as Method;
-		}
-	}
-
-	public Method? current_async_method {
-		get {
-			unowned Symbol? sym = current_symbol;
-			while (sym is Block || sym is Method) {
-				unowned Method? m = sym as Method;
-				if (m != null && m.coroutine) {
-					break;
-				}
-
-				sym = sym.parent_symbol;
-			}
-			return sym as Method;
-		}
-	}
-
-	public PropertyAccessor? current_property_accessor {
-		get {
-			unowned Symbol? sym = current_symbol;
-			while (sym is Block) {
-				sym = sym.parent_symbol;
-			}
-			return sym as PropertyAccessor;
-		}
-	}
-
-	public Symbol? current_method_or_property_accessor {
-		get {
-			unowned Symbol? sym = current_symbol;
-			while (sym is Block) {
-				sym = sym.parent_symbol;
-			}
-			if (sym is Method) {
-				return sym;
-			} else if (sym is PropertyAccessor) {
-				return sym;
-			} else {
-				return null;
-			}
-		}
-	}
-
-	public DataType? current_return_type {
-		get {
-			unowned Method? m = current_method;
-			if (m != null) {
-				return m.return_type;
-			}
-
-			unowned PropertyAccessor? acc = current_property_accessor;
-			if (acc != null) {
-				if (acc.readable) {
-					return acc.value_type;
-				} else {
-					return void_type;
-				}
-			}
-
-			if (is_in_constructor () || is_in_destructor ()) {
-				return void_type;
-			}
-
-			return null;
-		}
-	}
-
-	public Block insert_block;
-
 	public DataType void_type = new VoidType ();
 	public DataType bool_type;
 	public DataType char_type;
@@ -175,7 +73,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	// keep replaced alive to make sure they remain valid
 	// for the whole execution of CodeNode.accept
-	public List<CodeNode> replaced_nodes = new ArrayList<CodeNode> ();
+	public Set<CodeNode> replaced_nodes = new HashSet<CodeNode> (direct_hash, direct_equal);
 
 	public SemanticAnalyzer () {
 	}
@@ -248,7 +146,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			delegate_target_destroy_type = new DelegateType (destroy_notify);
 		}
 
-		current_symbol = root_symbol;
 		context.root.check (context);
 		context.accept (this);
 
@@ -256,9 +153,128 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_source_file (SourceFile file) {
-		current_source_file = file;
-
 		file.check (context);
+	}
+
+	public unowned Symbol? get_current_symbol (CodeNode node) {
+		while (node != null && !(node is Symbol)) {
+			node = node.parent_node;
+		}
+		return (Symbol) node;
+	}
+
+	public unowned Symbol? get_current_non_local_symbol (CodeNode node) {
+		while (node != null && (!(node is Symbol) || is_local_symbol ((Symbol) node))) {
+			node = node.parent_node;
+		}
+		return (Symbol) node;
+		}
+
+	public bool is_local_symbol (Symbol sym) {
+		if (sym is LocalVariable || (sym is Constant && sym.parent_symbol is Block)) {
+			return true;
+		}
+		return false;
+	}
+
+	public unowned TypeSymbol? get_current_type_symbol (CodeNode node) {
+		unowned Symbol sym = get_current_symbol (node);
+		while (sym != null && !(sym is TypeSymbol)) {
+			sym = sym.parent_symbol;
+		}
+		return (TypeSymbol) sym;
+	}
+
+	public unowned Namespace? get_current_namespace (CodeNode node) {
+		unowned Symbol sym = get_current_symbol (node);
+		while (sym != null && !(sym is Namespace)) {
+			sym = sym.parent_symbol;
+		}
+		return (Namespace) sym;
+	}
+
+	public unowned Class? get_current_class (CodeNode node) {
+		return get_current_type_symbol (node) as Class;
+	}
+
+
+	public unowned Struct? get_current_struct (CodeNode node) {
+		return get_current_type_symbol (node) as Struct;
+	}
+
+	public unowned Method? get_current_method (CodeNode node) {
+		unowned Symbol sym = get_current_symbol (node);
+		while (sym != null && !(sym is Method)) {
+			sym = sym.parent_symbol;
+		}
+		return sym as Method;
+	}
+
+	public unowned Method? get_current_async_method (CodeNode node) {
+		unowned Method m = get_current_method (node);
+		while (m != null && !m.coroutine) {
+			m = get_current_method (m.parent_symbol);
+		}
+		return m;
+	}
+
+	public unowned PropertyAccessor? get_current_property_accessor (CodeNode node) {
+		unowned Symbol sym = get_current_symbol (node);
+		while (sym != null && !(sym is PropertyAccessor)) {
+			sym = sym.parent_symbol;
+		}
+		return sym as PropertyAccessor;
+	}
+
+	public unowned Symbol? get_current_method_or_property_accessor (CodeNode node) {
+		unowned Symbol sym = get_current_symbol (node);
+		while (sym != null && !(sym is Method) && !(sym is PropertyAccessor)) {
+			sym = sym.parent_symbol;
+		}
+		if (sym is Method) {
+			return sym;
+		} else if (sym is PropertyAccessor) {
+			return sym;
+		} else {
+			return null;
+		}
+	}
+
+	public unowned DataType? get_current_return_type (CodeNode node) {
+		unowned Method m = get_current_method (node);
+		if (m != null) {
+			return m.return_type;
+		}
+
+		unowned PropertyAccessor acc = get_current_property_accessor (node);
+		if (acc != null) {
+			if (acc.readable) {
+				return acc.value_type;
+			} else {
+				return void_type;
+			}
+		}
+
+		if (is_in_constructor (node) || is_in_destructor (node)) {
+			return void_type;
+		}
+
+		return null;
+	}
+
+	public unowned Block? get_current_block (CodeNode node) {
+		while (node != null && !(node is Block)) {
+			node = node.parent_node;
+		}
+		return (Block) node;
+	}
+
+	public unowned Block? get_insert_block (CodeNode node) {
+		unowned Block? block = get_current_block (node);
+		if (block is ForeachStatement) {
+			block = block.parent_symbol as Block;
+		}
+		return block;
 	}
 
 	// check whether type is at least as accessible as the specified symbol
@@ -1005,8 +1021,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return actual_type;
 	}
 
-	public bool is_in_instance_method () {
-		unowned Symbol? sym = current_symbol;
+	public bool is_in_instance_method (CodeNode node) {
+		unowned Symbol? sym = get_current_symbol (node);
 		while (sym != null) {
 			if (sym is CreationMethod) {
 				return true;
@@ -1125,37 +1141,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 	}
 
-	public unowned Method? find_current_method () {
-		unowned Symbol? sym = current_symbol;
-		while (sym != null) {
-			if (sym is Method) {
-				return (Method) sym;
-			}
-			sym = sym.parent_symbol;
-		}
-		return null;
-	}
-
-	public static unowned Method? find_parent_method (Symbol sym) {
-		while (sym is Block) {
-			sym = sym.parent_symbol;
-		}
-		return sym as Method;
-	}
-
-	public static unowned Symbol? find_parent_method_or_property_accessor (Symbol sym) {
-		while (sym is Block) {
-			sym = sym.parent_symbol;
-		}
-		if (sym is Method) {
-			return sym;
-		} else if (sym is PropertyAccessor) {
-			return sym;
-		} else {
-			return null;
-		}
-	}
-
 	public static unowned TypeSymbol? find_parent_type_symbol (Symbol sym) {
 		while (sym != null) {
 			if (sym is TypeSymbol) {
@@ -1235,8 +1220,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return this_type;
 	}
 
-	public bool is_in_constructor () {
-		unowned Symbol? sym = current_symbol;
+	public bool is_in_constructor (CodeNode node) {
+		unowned Symbol? sym = get_current_symbol (node);
 		while (sym != null) {
 			if (sym is Constructor) {
 				return true;
@@ -1246,8 +1231,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return false;
 	}
 
-	public bool is_in_destructor () {
-		unowned Symbol? sym = current_symbol;
+	public bool is_in_destructor (CodeNode node) {
+		unowned Symbol? sym = get_current_symbol (node);
 		while (sym != null) {
 			if (sym is Destructor) {
 				return true;

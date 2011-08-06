@@ -145,10 +145,10 @@ public class Vala.LambdaExpression : Expression {
 			method.copy_attribute_bool (cb, "CCode", "delegate_target");
 		}
 
-		if (!cb.has_target || !context.analyzer.is_in_instance_method ()) {
+		if (!cb.has_target || !context.analyzer.is_in_instance_method (this)) {
 			method.binding = MemberBinding.STATIC;
 		} else {
-			var sym = context.analyzer.current_symbol;
+			var sym = context.analyzer.get_current_symbol (this);
 			while (method.this_parameter == null) {
 				if (sym is Property) {
 					var prop = (Property) sym;
@@ -167,7 +167,7 @@ public class Vala.LambdaExpression : Expression {
 				sym = sym.parent_symbol;
 			}
 		}
-		method.owner = context.analyzer.current_symbol.scope;
+		method.owner = context.analyzer.get_current_non_local_symbol (this).scope;
 
 		var lambda_params = get_parameters ();
 		Iterator<Parameter> lambda_param_it = lambda_params.iterator ();
@@ -229,7 +229,7 @@ public class Vala.LambdaExpression : Expression {
 		method.body.owner = method.scope;
 
 		// support use of generics in closures
-		unowned Method? m = SemanticAnalyzer.find_parent_method (context.analyzer.current_symbol);
+		unowned Method? m = context.analyzer.get_current_method (this);
 		if (m != null) {
 			foreach (var type_param in m.get_type_parameters ()) {
 				method.add_type_parameter (new TypeParameter (type_param.name, type_param.source_reference));

@@ -131,7 +131,6 @@ public class Vala.CatchClause : CodeNode {
 			if (variable_name != null) {
 				error_variable = new LocalVariable (error_type.copy (), variable_name, null, source_reference);
 
-				body.scope.add (variable_name, error_variable);
 				body.add_local_variable (error_variable);
 
 				error_variable.checked = true;

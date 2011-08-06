@@ -227,20 +227,20 @@ public class Vala.MemberAccess : Expression {
 			symbol_reference = base_symbol.scope.lookup (member_name);
 		} else if (inner == null) {
 			if (member_name == "this") {
-				if (!context.analyzer.is_in_instance_method ()) {
+				if (!context.analyzer.is_in_instance_method (this)) {
 					error = true;
 					Report.error (source_reference, "This access invalid outside of instance methods");
 					return false;
 				}
 			}
 
-			base_symbol = context.analyzer.current_symbol;
+			base_symbol = context.analyzer.get_current_non_local_symbol (this);
 
 			// track whether method has been found to make sure that access
 			// to instance member is denied from within static lambda expressions
 			bool method_found = false;
 
-			unowned Symbol? sym = context.analyzer.current_symbol;
+			unowned Symbol? sym = base_symbol;
 			while (sym != null && symbol_reference == null) {
 				if (!method_found) {
 					if (sym is CreationMethod) {
@@ -522,13 +522,15 @@ public class Vala.MemberAccess : Expression {
 			return false;
 		}
 
+		unowned Symbol? current_method_or_property_accessor = context.analyzer.get_current_method_or_property_accessor (this);
+
 		if (member is LocalVariable) {
 			unowned LocalVariable local = (LocalVariable) member;
 			unowned Block? block = local.parent_symbol as Block;
-			if (block != null && SemanticAnalyzer.find_parent_method_or_property_accessor (block) != context.analyzer.current_method_or_property_accessor) {
+			if (block != null && context.analyzer.get_current_method_or_property_accessor (block) != current_method_or_property_accessor) {
 				// mark all methods between current method and the captured
 				// block as closures (to support nested closures)
-				unowned Symbol? sym = context.analyzer.current_method_or_property_accessor;
+				unowned Symbol? sym = current_method_or_property_accessor;
 				while (sym != block) {
 					unowned Method? method = sym as Method;
 					if (method != null) {
@@ -546,10 +548,10 @@ public class Vala.MemberAccess : Expression {
 		} else if (member is Parameter) {
 			unowned Parameter param = (Parameter) member;
 			unowned Method? m = param.parent_symbol as Method;
-			if (m != null && m != context.analyzer.current_method_or_property_accessor && param != m.this_parameter) {
+			if (m != null && m != current_method_or_property_accessor && param != m.this_parameter) {
 				// mark all methods between current method and the captured
 				// parameter as closures (to support nested closures)
-				unowned Symbol? sym = context.analyzer.current_method_or_property_accessor;
+				unowned Symbol? sym = current_method_or_property_accessor;
 				while (sym != m) {
 					unowned Method? method = sym as Method;
 					if (method != null) {
@@ -567,10 +569,10 @@ public class Vala.MemberAccess : Expression {
 				}
 			} else {
 				unowned PropertyAccessor? acc = param.parent_symbol.parent_symbol as PropertyAccessor;
-				if (acc != null && acc != context.analyzer.current_method_or_property_accessor && param != acc.prop.this_parameter) {
+				if (acc != null && acc != current_method_or_property_accessor && param != acc.prop.this_parameter) {
 					// mark all methods between current method and the captured
 					// parameter as closures (to support nested closures)
-					unowned Symbol? sym = context.analyzer.current_method_or_property_accessor;
+					unowned Symbol? sym = current_method_or_property_accessor;
 					while (sym != m) {
 						unowned Method? method = sym as Method;
 						if (method != null) {
@@ -599,7 +601,7 @@ public class Vala.MemberAccess : Expression {
 			access = c.access;
 
 			unowned Block? block = c.parent_symbol as Block;
-			if (block != null && SemanticAnalyzer.find_parent_method_or_property_accessor (block) != context.analyzer.current_method_or_property_accessor) {
+			if (block != null && context.analyzer.get_current_method_or_property_accessor (block) != current_method_or_property_accessor) {
 				error = true;
 				Report.error (source_reference, "internal error: accessing local constants of outer methods is not supported yet");
 				return false;
@@ -609,7 +611,7 @@ public class Vala.MemberAccess : Expression {
 			if (m.is_async_callback) {
 				// ensure to use right callback method for virtual/abstract async methods
 				// and also for lambda expressions within async methods
-				unowned Method? async_method = context.analyzer.current_async_method;
+				unowned Method? async_method = context.analyzer.get_current_async_method (this);
 
 				bool is_valid_access = false;
 				if (async_method != null) {
@@ -627,14 +629,11 @@ public class Vala.MemberAccess : Expression {
 					return false;
 				}
 
-				if (async_method != context.analyzer.current_method) {
-					unowned Symbol? sym = context.analyzer.current_method;
-					while (sym != async_method) {
-						unowned Method? method = sym as Method;
-						if (method != null) {
-							method.closure = true;
-						}
-						sym = sym.parent_symbol;
+				unowned Method? current_method = context.analyzer.get_current_method (this);
+				if (async_method != current_method) {
+					while (current_method != async_method) {
+						current_method.closure = true;
+						current_method = context.analyzer.get_current_method (current_method.parent_symbol);
 					}
 					async_method.body.captured = true;
 				}
@@ -763,7 +762,7 @@ public class Vala.MemberAccess : Expression {
 			unowned TypeSymbol target_type = (TypeSymbol) member.parent_symbol;
 
 			bool in_subtype = false;
-			for (Symbol this_symbol = context.analyzer.current_symbol; this_symbol != null; this_symbol = this_symbol.parent_symbol) {
+			for (Symbol this_symbol = context.analyzer.get_current_non_local_symbol (this); this_symbol != null; this_symbol = this_symbol.parent_symbol) {
 				if (this_symbol == target_type) {
 					// required for interfaces with non-abstract methods
 					// accessing protected interface members
@@ -787,7 +786,7 @@ public class Vala.MemberAccess : Expression {
 			unowned Symbol? target_type = member.parent_symbol;
 
 			bool in_target_type = false;
-			for (Symbol this_symbol = context.analyzer.current_symbol; this_symbol != null; this_symbol = this_symbol.parent_symbol) {
+			for (Symbol this_symbol = context.analyzer.get_current_non_local_symbol (this); this_symbol != null; this_symbol = this_symbol.parent_symbol) {
 				if (target_type == this_symbol) {
 					in_target_type = true;
 					break;

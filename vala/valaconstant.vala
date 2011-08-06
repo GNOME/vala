@@ -102,17 +102,6 @@ public class Vala.Constant : Symbol {
 
 		checked = true;
 
-		var old_source_file = context.analyzer.current_source_file;
-		var old_symbol = context.analyzer.current_symbol;
-
-		if (source_reference != null) {
-			context.analyzer.current_source_file = source_reference.file;
-		}
-		if (!(parent_symbol is Block)) {
-			// non-local constant
-			context.analyzer.current_symbol = this;
-		}
-
 		type_reference.check (context);
 
 		if (!check_const_type (type_reference, context)) {
@@ -173,9 +162,6 @@ public class Vala.Constant : Symbol {
 		if (!external_package && !hides && get_hidden_member () != null) {
 			Report.warning (source_reference, "%s hides inherited constant `%s'. Use the `new' keyword if hiding was intentional".printf (get_full_name (), get_hidden_member ().get_full_name ()));
 		}
-
-		context.analyzer.current_source_file = old_source_file;
-		context.analyzer.current_symbol = old_symbol;
 
 		active = true;
 

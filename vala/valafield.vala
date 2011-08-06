@@ -84,14 +84,6 @@ public class Vala.Field : Variable, Lockable {
 
 		checked = true;
 
-		var old_source_file = context.analyzer.current_source_file;
-		var old_symbol = context.analyzer.current_symbol;
-
-		if (source_reference != null) {
-			context.analyzer.current_source_file = source_reference.file;
-		}
-		context.analyzer.current_symbol = this;
-
 		if (variable_type is VoidType) {
 			error = true;
 			Report.error (source_reference, "'void' not supported as field type");
@@ -223,9 +215,6 @@ public class Vala.Field : Variable, Lockable {
 		if (!external_package && !hides && get_hidden_member () != null) {
 			Report.warning (source_reference, "%s hides inherited field `%s'. Use the `new' keyword if hiding was intentional".printf (get_full_name (), get_hidden_member ().get_full_name ()));
 		}
-
-		context.analyzer.current_source_file = old_source_file;
-		context.analyzer.current_symbol = old_symbol;
 
 		return !error;
 	}

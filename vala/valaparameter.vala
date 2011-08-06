@@ -132,14 +132,6 @@ public class Vala.Parameter : Variable {
 
 		checked = true;
 
-		var old_source_file = context.analyzer.current_source_file;
-		var old_symbol = context.analyzer.current_symbol;
-
-		if (source_reference != null) {
-			context.analyzer.current_source_file = source_reference.file;
-		}
-		context.analyzer.current_symbol = parent_symbol;
-
 		if (variable_type != null) {
 			if (variable_type is VoidType) {
 				error = true;
@@ -223,9 +215,6 @@ public class Vala.Parameter : Variable {
 				}
 			}
 		}
-
-		context.analyzer.current_source_file = old_source_file;
-		context.analyzer.current_symbol = old_symbol;
 
 		return !error;
 	}

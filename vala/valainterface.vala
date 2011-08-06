@@ -158,14 +158,6 @@ public class Vala.Interface : ObjectTypeSymbol {
 
 		checked = true;
 
-		var old_source_file = context.analyzer.current_source_file;
-		var old_symbol = context.analyzer.current_symbol;
-
-		if (source_reference != null) {
-			context.analyzer.current_source_file = source_reference.file;
-		}
-		context.analyzer.current_symbol = this;
-
 		foreach (DataType prerequisite_reference in get_prerequisites ()) {
 			// check whether prerequisite is at least as accessible as the interface
 			if (!context.analyzer.is_type_accessible (this, prerequisite_reference)) {
@@ -324,9 +316,6 @@ public class Vala.Interface : ObjectTypeSymbol {
 				}
 			}
 		}
-
-		context.analyzer.current_source_file = old_source_file;
-		context.analyzer.current_symbol = old_symbol;
 
 		return !error;
 	}

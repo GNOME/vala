@@ -88,6 +88,8 @@ public class Vala.SwitchSection : Block {
 			return !error;
 		}
 
+		owner = context.analyzer.get_current_non_local_symbol (parent_node).scope;
+
 		foreach (SwitchLabel label in get_labels ()) {
 			label.check (context);
 		}

@@ -145,7 +145,7 @@ public class Vala.ConditionalExpression : Expression {
 
 		checked = true;
 
-		if (!(context.analyzer.current_symbol is Block)) {
+		if (!(context.analyzer.get_current_non_local_symbol (this) is Block)) {
 			Report.error (source_reference, "Conditional expressions may only be used in blocks");
 			error = true;
 			return false;
@@ -174,8 +174,8 @@ public class Vala.ConditionalExpression : Expression {
 
 		var if_stmt = new IfStatement (condition, true_block, false_block, source_reference);
 
-		insert_statement (context.analyzer.insert_block, decl);
-		insert_statement (context.analyzer.insert_block, if_stmt);
+		insert_statement (context.analyzer.get_insert_block (this), decl);
+		insert_statement (context.analyzer.get_insert_block (this), if_stmt);
 
 		if (!if_stmt.check (context) || true_expression.error || false_expression.error) {
 			error = true;

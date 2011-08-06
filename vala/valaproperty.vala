@@ -454,14 +454,6 @@ public class Vala.Property : Symbol, Lockable {
 			}
 		}
 
-		var old_source_file = context.analyzer.current_source_file;
-		var old_symbol = context.analyzer.current_symbol;
-
-		if (source_reference != null) {
-			context.analyzer.current_source_file = source_reference.file;
-		}
-		context.analyzer.current_symbol = this;
-
 		if (property_type is VoidType) {
 			error = true;
 			Report.error (source_reference, "'void' not supported as property type");
@@ -520,9 +512,6 @@ public class Vala.Property : Symbol, Lockable {
 			error = true;
 			Report.error (initializer.source_reference, "Expected initializer of type `%s' but got `%s'".printf (property_type.to_string (), initializer.value_type.to_string ()));
 		}
-
-		context.analyzer.current_source_file = old_source_file;
-		context.analyzer.current_symbol = old_symbol;
 
 		return !error;
 	}
