@@ -1747,9 +1747,7 @@ namespace Clutter {
 		public abstract void remove_actor (Clutter.Actor actor);
 		public void remove_valist (Clutter.Actor first_actor, va_list var_args);
 		public abstract void sort_depth_order ();
-		[HasEmitter]
 		public virtual signal void actor_added (Clutter.Actor actor);
-		[HasEmitter]
 		public virtual signal void actor_removed (Clutter.Actor actor);
 		[HasEmitter]
 		public virtual signal void child_notify (Clutter.Actor child, GLib.ParamSpec pspec);
@@ -1781,9 +1779,7 @@ namespace Clutter {
 		public string subtitle_font_name { owned get; set; }
 		public string subtitle_uri { owned get; set; }
 		public string uri { owned get; set; }
-		[HasEmitter]
 		public virtual signal void eos ();
-		[HasEmitter]
 		public virtual signal void error (GLib.Error error);
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_scriptable_get_type ()")]
