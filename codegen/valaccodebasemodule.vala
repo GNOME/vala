@@ -5634,13 +5634,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public static string get_ccode_type_id (CodeNode node) {
-		if (node is DataType) {
-			var type = (DataType) node;
-			if (type.data_type != null) {
-				return get_ccode_type_id (type.data_type);
-			}
-			return "";
-		}
 		return get_ccode_attribute(node).type_id;
 	}
 
