@@ -2947,13 +2947,13 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtkx.h")]
 	public class Plug : Gtk.Window, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public Plug (Gtk.Window socket_id);
-		public void @construct (Gtk.Window socket_id);
-		public void construct_for_display (Gdk.Display display, Gtk.Window socket_id);
+		public Plug (X.Window socket_id);
+		public void @construct (X.Window socket_id);
+		public void construct_for_display (Gdk.Display display, X.Window socket_id);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public Plug.for_display (Gdk.Display display, Gtk.Window socket_id);
+		public Plug.for_display (Gdk.Display display, X.Window socket_id);
 		public bool get_embedded ();
-		public unowned Gtk.Window get_id ();
+		public X.Window get_id ();
 		public unowned Gdk.Window get_socket_window ();
 		public bool embedded { get; }
 		public Gdk.Window socket_window { get; }
@@ -3749,8 +3749,8 @@ namespace Gtk {
 	public class Socket : Gtk.Container, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Socket ();
-		public void add_id (Gtk.Window window);
-		public unowned Gtk.Window get_id ();
+		public void add_id (X.Window window);
+		public X.Window get_id ();
 		public unowned Gdk.Window get_plug_window ();
 		public virtual signal void plug_added ();
 		public virtual signal bool plug_removed ();
