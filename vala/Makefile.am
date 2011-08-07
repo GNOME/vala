@@ -51,6 +51,7 @@ libvala_la_VALASOURCES = \
 	valacodecontext.vala \
 	valacodegenerator.vala \
 	valacodenode.vala \
+	valacodetransformer.vala \
 	valacodevisitor.vala \
 	valacodewriter.vala \
 	valacomment.vala \
