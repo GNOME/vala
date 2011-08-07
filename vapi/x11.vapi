@@ -20,7 +20,7 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-[CCode (cprefix = "", lower_case_cprefix = "", cheader_filename = "X11/Xlib.h,X11/Xatom.h,X11/Xutil.h,X11/Xregion.h")]
+[CCode (gir_namespace = "xlib", gir_version = "2.0", cprefix = "", lower_case_cprefix = "", cheader_filename = "X11/Xlib.h,X11/Xatom.h,X11/Xutil.h,X11/Xregion.h")]
 namespace X {
 	// Note: must be called before opening a display or calling any other Xlib function,
 	// see http://tronche.com/gui/x/xlib/display/XInitThreads.html
