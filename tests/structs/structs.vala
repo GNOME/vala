@@ -68,6 +68,7 @@ void main () {
 	stdout.printf ("simple_struct.field = %d\n", simple_struct.field);
 
 	test_in_parameter (simple_struct);
+	test_in_parameter ({1});
 	test_in_nullable_parameter (simple_struct);
 	test_ref_parameter (ref simple_struct);
 	stdout.printf ("after test_ref_parameter: st.field = %d\n", simple_struct.field);

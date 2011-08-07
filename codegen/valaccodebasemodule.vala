@@ -2256,7 +2256,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				set_cvalue (list, clist);
 			} else {
 				// used as expression
-				var instance = create_temp_value (list.target_type, true, list);
+				var instance = create_temp_value (list.value_type, true, list);
 
 				var field_it = st.get_fields ().iterator ();
 				foreach (Expression expr in list.get_initializers ()) {

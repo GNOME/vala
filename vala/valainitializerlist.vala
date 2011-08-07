@@ -74,6 +74,8 @@ public class Vala.InitializerList : Expression {
 
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_initializer_list (this);
+
+		visitor.visit_expression (this);
 	}
 
 	public override bool is_constant () {
@@ -203,7 +205,8 @@ public class Vala.InitializerList : Expression {
 
 		if (!error) {
 			/* everything seems to be correct */
-			value_type = target_type;
+			value_type = target_type.copy ();
+			value_type.nullable = false;
 		}
 
 		return !error;
@@ -215,5 +218,7 @@ public class Vala.InitializerList : Expression {
 		}
 
 		codegen.visit_initializer_list (this);
+
+		codegen.visit_expression (this);
 	}
 }
