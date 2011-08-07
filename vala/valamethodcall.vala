@@ -142,6 +142,27 @@ public class Vala.MethodCall : Expression {
 		return call.is_accessible (sym);
 	}
 
+	public override void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
+		if (source_reference == null) {
+			source_reference = this.source_reference;
+		}
+		var mtype = call.value_type;
+		if (mtype is MethodType) {
+			var m = ((MethodType) mtype).method_symbol;
+			if (!(m != null && m.coroutine && !is_yield_expression && ((MemberAccess) call).member_name != "end")) {
+				m.get_error_types (collection, source_reference);
+			}
+		} else if (mtype is ObjectType) {
+			// constructor
+			var cl = (Class) ((ObjectType) mtype).type_symbol;
+			var m = cl.default_construction_method;
+			m.get_error_types (collection, source_reference);
+		} else if (mtype is DelegateType) {
+			var d = ((DelegateType) mtype).delegate_symbol;
+			d.get_error_types (collection, source_reference);
+		}
+	}
+
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
@@ -471,8 +492,6 @@ public class Vala.MethodCall : Expression {
 		formal_value_type = ret_type.copy ();
 		value_type = formal_value_type.get_actual_type (target_object_type, method_type_args, this);
 
-		bool may_throw = false;
-
 		if (mtype is MethodType) {
 			var m = ((MethodType) mtype).method_symbol;
 			if (is_yield_expression) {
@@ -485,19 +504,7 @@ public class Vala.MethodCall : Expression {
 					Report.error (source_reference, "yield expression not available outside async method");
 				}
 			}
-			if (m != null && m.coroutine && !is_yield_expression && ((MemberAccess) call).member_name != "end") {
-				// .begin call of async method, no error can happen here
-			} else {
-				foreach (DataType error_type in m.get_error_types ()) {
-					may_throw = true;
 
-					// ensure we can trace back which expression may throw errors of this type
-					var call_error_type = error_type.copy ();
-					call_error_type.source_reference = source_reference;
-
-					add_error_type (call_error_type);
-				}
-			}
 			if (m.returns_floating_reference) {
 				value_type.floating_reference = true;
 			}
@@ -505,7 +512,7 @@ public class Vala.MethodCall : Expression {
 				((MemberAccess) call).inner.lvalue = true;
 			}
 			// avoid passing possible null to ref_sink_function without checking
-			if (may_throw && !value_type.nullable && value_type.floating_reference && ret_type is ObjectType) {
+			if (tree_can_fail && !value_type.nullable && value_type.floating_reference && ret_type is ObjectType) {
 				value_type.nullable = true;
 			}
 
@@ -589,30 +596,6 @@ public class Vala.MethodCall : Expression {
 					mtype = new MethodType (m.get_end_method ());
 				}
 			}
-		} else if (mtype is ObjectType) {
-			// constructor
-			var cl = (Class) ((ObjectType) mtype).type_symbol;
-			var m = cl.default_construction_method;
-			foreach (DataType error_type in m.get_error_types ()) {
-				may_throw = true;
-
-				// ensure we can trace back which expression may throw errors of this type
-				var call_error_type = error_type.copy ();
-				call_error_type.source_reference = source_reference;
-
-				add_error_type (call_error_type);
-			}
-		} else if (mtype is DelegateType) {
-			var d = ((DelegateType) mtype).delegate_symbol;
-			foreach (DataType error_type in d.get_error_types ()) {
-				may_throw = true;
-
-				// ensure we can trace back which expression may throw errors of this type
-				var call_error_type = error_type.copy ();
-				call_error_type.source_reference = source_reference;
-
-				add_error_type (call_error_type);
-			}
 		}
 
 		if (!context.analyzer.check_arguments (this, mtype, params, get_argument_list ())) {
@@ -628,7 +611,7 @@ public class Vala.MethodCall : Expression {
 			}
 		}
 
-		if (may_throw) {
+		if (tree_can_fail) {
 			if (parent_node is LocalVariable || parent_node is ExpressionStatement) {
 				// simple statements, no side effects after method call
 			} else if (!(context.analyzer.current_symbol is Block)) {

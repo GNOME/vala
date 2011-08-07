@@ -380,10 +380,15 @@ public class Vala.ForeachStatement : Block {
 		add_local_variable (collection_variable);
 		collection_variable.active = true;
 
-		add_error_types (collection.get_error_types ());
-		add_error_types (body.get_error_types ());
-
 		return !error;
+	}
+
+	public override void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
+		if (source_reference == null) {
+			source_reference = this.source_reference;
+		}
+		this.collection.get_error_types (collection, source_reference);
+		body.get_error_types (collection, source_reference);
 	}
 
 	public override void emit (CodeGenerator codegen) {

@@ -2805,7 +2805,7 @@ public class Vala.Parser : CodeVisitor {
 
 		if (accept (TokenType.THROWS)) {
 			do {
-				prop.add_error_type (parse_type (true, false));
+				parse_type (true, false);
 			} while (accept (TokenType.COMMA));
 			Report.error (prop.source_reference, "properties throwing errors are not supported yet");
 		}

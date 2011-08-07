@@ -61,6 +61,10 @@ public class Vala.Loop : CodeNode, Statement {
 		body.accept (visitor);
 	}
 
+	public override void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
+		body.get_error_types (collection, source_reference);
+	}
+
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
@@ -69,8 +73,6 @@ public class Vala.Loop : CodeNode, Statement {
 		checked = true;
 
 		body.check (context);
-
-		add_error_types (body.get_error_types ());
 
 		return !error;
 	}

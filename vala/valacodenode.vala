@@ -62,50 +62,17 @@ public abstract class Vala.CodeNode {
 	 * Specifies that this node or a child node may throw an exception.
 	 */
 	public bool tree_can_fail {
-		get { return _error_types != null && _error_types.size > 0; }
+		get {
+			var error_types = new ArrayList<DataType> ();
+			get_error_types (error_types);
+			return error_types.size > 0;
+		}
 	}
 
-	private List<DataType> _error_types;
-	private static List<DataType> _empty_type_list;
 	private AttributeCache[] attributes_cache;
 
 	static int last_temp_nr = 0;
 	static int next_attribute_cache_index = 0;
-
-	/**
-	 * Specifies the exceptions that can be thrown by this node or a child node
-	 */
-	public List<DataType> get_error_types () {
-		if (_error_types != null) {
-			return _error_types;
-		}
-		if (_empty_type_list == null) {
-			_empty_type_list = new ArrayList<DataType> ();
-		}
-		return _empty_type_list;
-	}
-
-	/**
-	 * Adds an error type to the exceptions that can be thrown by this node
-	 * or a child node
-	 */
-	public void add_error_type (DataType error_type) {
-		if (_error_types == null) {
-			_error_types = new ArrayList<DataType> ();
-		}
-		_error_types.add (error_type);
-		error_type.parent_node = this;
-	}
-
-	/**
-	 * Adds a collection of error types to the exceptions that can be thrown by this node
-	 * or a child node
-	 */
-	public void add_error_types (List<DataType> error_types) {
-		foreach (DataType error_type in error_types) {
-			add_error_type (error_type);
-		}
-	}
 
 	/**
 	 * Visits this code node with the specified CodeVisitor.
@@ -375,6 +342,9 @@ public abstract class Vala.CodeNode {
 	}
 
 	public virtual void get_used_variables (Collection<Variable> collection) {
+	}
+
+	public virtual void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
 	}
 
 	public static string get_temp_name () {

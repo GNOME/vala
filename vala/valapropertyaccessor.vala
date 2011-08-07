@@ -197,7 +197,9 @@ public class Vala.PropertyAccessor : Subroutine {
 
 			body.check (context);
 
-			foreach (DataType body_error_type in body.get_error_types ()) {
+			var error_types = new ArrayList<DataType> ();
+			body.get_error_types (error_types);
+			foreach (DataType body_error_type in error_types) {
 				if (!((ErrorType) body_error_type).dynamic_error) {
 					Report.warning (body_error_type.source_reference, "unhandled error `%s'".printf (body_error_type.to_string()));
 				}

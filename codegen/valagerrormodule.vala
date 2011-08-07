@@ -191,9 +191,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			}
 
 			var error_types = new ArrayList<DataType> ();
-			foreach (DataType node_error_type in node.get_error_types ()) {
-				error_types.add (node_error_type);
-			}
+			node.get_error_types (error_types);
 
 			bool has_general_catch_clause = false;
 
@@ -258,11 +256,13 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 				// should never happen with correct bindings
 				uncaught_error_statement (inner_error, true);
 			}
-		} else if (current_method != null && current_method.get_error_types ().size > 0) {
+		} else if (current_method != null && current_method.tree_can_fail) {
 			// current method can fail, propagate error
 			CCodeBinaryExpression ccond = null;
 
-			foreach (DataType error_type in current_method.get_error_types ()) {
+			var error_types = new ArrayList<DataType> ();
+			current_method.get_error_types (error_types);
+			foreach (DataType error_type in error_types) {
 				// If GLib.Error is allowed we propagate everything
 				if (error_type.equals (gerror_type)) {
 					ccond = null;

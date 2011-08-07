@@ -102,6 +102,14 @@ public class Vala.IfStatement : CodeNode, Statement {
 		}
 	}
 
+	public override void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
+		condition.get_error_types (collection, source_reference);
+		true_statement.get_error_types (collection, source_reference);
+		if (false_statement != null) {
+			false_statement.get_error_types (collection, source_reference);
+		}
+	}
+
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
@@ -128,13 +136,6 @@ public class Vala.IfStatement : CodeNode, Statement {
 			error = true;
 			Report.error (condition.source_reference, "Condition must be boolean");
 			return false;
-		}
-
-		add_error_types (condition.get_error_types ());
-		add_error_types (true_statement.get_error_types ());
-
-		if (false_statement != null) {
-			add_error_types (false_statement.get_error_types ());
 		}
 
 		return !error;

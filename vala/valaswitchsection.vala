@@ -85,6 +85,13 @@ public class Vala.SwitchSection : Block {
 		}
 	}
 
+	public override void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
+		// use get_statements () instead of statement_list to not miss errors within StatementList objects
+		foreach (var stmt in get_statements ()) {
+			stmt.get_error_types (collection, source_reference);
+		}
+	}
+
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
@@ -109,11 +116,6 @@ public class Vala.SwitchSection : Block {
 
 		foreach (LocalVariable local in get_local_variables ()) {
 			local.active = false;
-		}
-
-		// use get_statements () instead of statement_list to not miss errors within StatementList objects
-		foreach (Statement stmt in get_statements ()) {
-			add_error_types (stmt.get_error_types ());
 		}
 
 		context.analyzer.current_symbol = old_symbol;

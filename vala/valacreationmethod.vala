@@ -60,8 +60,10 @@ public class Vala.CreationMethod : Method {
 			param.accept (visitor);
 		}
 
-		foreach (DataType error_type in get_error_types ()) {
-			error_type.accept (visitor);
+		if (error_types != null) {
+			foreach (DataType error_type in error_types) {
+				error_type.accept (visitor);
+			}
 		}
 
 		foreach (Expression precondition in get_preconditions ()) {
@@ -109,8 +111,10 @@ public class Vala.CreationMethod : Method {
 			i++;
 		}
 
-		foreach (DataType error_type in get_error_types ()) {
-			error_type.check (context);
+		if (error_types != null) {
+			foreach (DataType error_type in error_types) {
+				error_type.check (context);
+			}
 		}
 
 		foreach (Expression precondition in get_preconditions ()) {
@@ -172,11 +176,15 @@ public class Vala.CreationMethod : Method {
 
 		// check that all errors that can be thrown in the method body are declared
 		if (body != null) {
-			foreach (DataType body_error_type in body.get_error_types ()) {
+			var body_errors = new ArrayList<DataType> ();
+			body.get_error_types (body_errors);
+			foreach (DataType body_error_type in body_errors) {
 				bool can_propagate_error = false;
-				foreach (DataType method_error_type in get_error_types ()) {
-					if (body_error_type.compatible (method_error_type)) {
-						can_propagate_error = true;
+				if (error_types != null) {
+					foreach (DataType method_error_type in error_types) {
+						if (body_error_type.compatible (method_error_type)) {
+							can_propagate_error = true;
+						}
 					}
 				}
 				if (!can_propagate_error && !((ErrorType) body_error_type).dynamic_error) {

@@ -80,9 +80,11 @@ public class Vala.ExpressionStatement : CodeNode, Statement {
 			return false;
 		}
 
-		add_error_types (expression.get_error_types ());
-
 		return !error;
+	}
+
+	public override void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
+		expression.get_error_types (collection, source_reference);
 	}
 
 	public override void emit (CodeGenerator codegen) {

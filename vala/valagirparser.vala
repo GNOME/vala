@@ -1007,7 +1007,7 @@ public class Vala.GirParser : CodeVisitor {
 						// ensure getter vfunc if the property is abstract
 						if (m != null) {
 							getter.process (parser);
-							if (m.return_type is VoidType || m.get_parameters().size != 0 || m.get_error_types ().size > 0) {
+							if (m.return_type is VoidType || m.get_parameters().size != 0 || m.tree_can_fail) {
 								prop.set_attribute ("NoAccessorMethod", true);
 							} else {
 								if (getter.name == name) {
@@ -1034,7 +1034,7 @@ public class Vala.GirParser : CodeVisitor {
 						// ensure setter vfunc if the property is abstract
 						if (m != null) {
 							setter.process (parser);
-							if (!(m.return_type is VoidType || m.return_type is BooleanType) || m.get_parameters ().size != 1 || m.get_error_types ().size > 0) {
+							if (!(m.return_type is VoidType || m.return_type is BooleanType) || m.get_parameters ().size != 1 || m.tree_can_fail) {
 								prop.set_attribute ("NoAccessorMethod", true);
 								prop.set_attribute ("ConcreteAccessor", false);
 							} else {
@@ -3188,12 +3188,21 @@ public class Vala.GirParser : CodeVisitor {
 
 		if (!(metadata.get_expression (ArgumentType.THROWS) is NullLiteral)) {
 			if (metadata.has_argument (ArgumentType.THROWS)) {
-				var error_types = metadata.get_string(ArgumentType.THROWS).split(",");
-				foreach (var error_type in error_types) {
-					s.add_error_type (parse_type_from_string (error_type, true, metadata.get_source_reference (ArgumentType.THROWS)));
+				var error_types = metadata.get_string (ArgumentType.THROWS).split(",");
+				foreach (var error_type_name in error_types) {
+					var error_type = parse_type_from_string (error_type_name, true, metadata.get_source_reference (ArgumentType.THROWS));
+					if (s is Method) {
+						((Method) s).add_error_type (error_type);
+					} else {
+						((Delegate) s).add_error_type (error_type);
+					}
 				}
 			} else if (throws_string == "1") {
-				s.add_error_type (new ErrorType (null, null));
+				if (s is Method) {
+					((Method) s).add_error_type (new ErrorType (null, null));
+				} else {
+					((Delegate) s).add_error_type (new ErrorType (null, null));
+				}
 			}
 		}
 
@@ -3710,7 +3719,9 @@ public class Vala.GirParser : CodeVisitor {
 				deleg.add_parameter (param.copy ());
 			}
 
-			foreach (var error_type in orig.get_error_types ()) {
+			var error_types = new ArrayList<DataType> ();
+			orig.get_error_types (error_types, alias.source_reference);
+			foreach (var error_type in error_types) {
 				deleg.add_error_type (error_type.copy ());
 			}
 
@@ -4118,8 +4129,10 @@ public class Vala.GirParser : CodeVisitor {
 				}
 			}
 
-			foreach (DataType error_type in finish_method.get_error_types ()) {
-				method.add_error_type (error_type.copy ());
+			var error_types = new ArrayList<DataType> ();
+			finish_method.get_error_types (error_types, method.source_reference);
+			foreach (DataType error_type in error_types) {
+				method.add_error_type (error_type);
 			}
 			finish_method_node.processed = true;
 			finish_method_node.merged = true;

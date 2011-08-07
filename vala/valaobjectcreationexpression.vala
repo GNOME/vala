@@ -246,8 +246,6 @@ public class Vala.ObjectCreationExpression : Expression {
 		value_type = type_reference.copy ();
 		value_type.value_owned = true;
 
-		bool may_throw = false;
-
 		int given_num_type_args = type_reference.get_type_arguments ().size;
 		int expected_num_type_args = 0;
 
@@ -423,16 +421,6 @@ public class Vala.ObjectCreationExpression : Expression {
 			}
 
 			context.analyzer.check_arguments (this, new MethodType (m), m.get_parameters (), args);
-
-			foreach (DataType error_type in m.get_error_types ()) {
-				may_throw = true;
-
-				// ensure we can trace back which expression may throw errors of this type
-				var call_error_type = error_type.copy ();
-				call_error_type.source_reference = source_reference;
-
-				add_error_type (call_error_type);
-			}
 		} else if (type_reference is ErrorType) {
 			if (type_reference != null) {
 				type_reference.check (context);
@@ -484,7 +472,7 @@ public class Vala.ObjectCreationExpression : Expression {
 			context.analyzer.visit_member_initializer (init, type_reference);
 		}
 
-		if (may_throw) {
+		if (tree_can_fail) {
 			if (parent_node is LocalVariable || parent_node is ExpressionStatement) {
 				// simple statements, no side effects after method call
 			} else if (!(context.analyzer.current_symbol is Block)) {
@@ -517,6 +505,16 @@ public class Vala.ObjectCreationExpression : Expression {
 		}
 
 		return !error;
+	}
+
+	public override void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
+		if (symbol_reference is Method) {
+			if (source_reference == null) {
+				source_reference = this.source_reference;
+			}
+			var m = (Method) symbol_reference;
+			m.get_error_types (collection, source_reference);
+		}
 	}
 
 	public override void emit (CodeGenerator codegen) {

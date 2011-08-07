@@ -273,7 +273,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		}
 
 		if (!m.coroutine || ready) {
-			if (m.get_error_types ().size > 0) {
+			if (m.tree_can_fail) {
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("error")));
 			}
 		}
@@ -285,7 +285,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 				ccode.add_assignment (new CCodeIdentifier ("result"), ccall);
 			}
 
-			if (m.get_error_types ().size > 0) {
+			if (m.tree_can_fail) {
 				ccode.open_if (new CCodeIdentifier ("error"));
 
 				var return_error = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_method_invocation_return_gerror"));

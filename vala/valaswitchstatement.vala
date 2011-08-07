@@ -93,6 +93,12 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 		}
 	}
 
+	public override void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
+		foreach (SwitchSection section in sections) {
+			section.get_error_types (collection, source_reference);
+		}
+	}
+
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
@@ -140,7 +146,6 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 					}
 				}
 			}
-			add_error_types (section.get_error_types ());
 		}
 
 		return !error;

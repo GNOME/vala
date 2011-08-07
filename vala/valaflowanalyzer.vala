@@ -870,7 +870,9 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			var last_block = current_block;
 
 			// exceptional control flow
-			foreach (DataType error_data_type in node.get_error_types()) {
+			var error_types = new ArrayList<DataType> ();
+			node.get_error_types (error_types);
+			foreach (DataType error_data_type in error_types) {
 				var error_type = error_data_type as ErrorType;
 				var error_class = error_data_type.data_type as Class;
 				current_block = last_block;

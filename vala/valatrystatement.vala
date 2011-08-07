@@ -104,6 +104,31 @@ public class Vala.TryStatement : CodeNode, Statement {
 		}
 	}
 
+	public override void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
+		var error_types = new ArrayList<DataType> ();
+		body.get_error_types (error_types, source_reference);
+
+		foreach (CatchClause clause in catch_clauses) {
+			for (int i=0; i < error_types.size; i++) {
+				var error_type = error_types[i];
+				if (clause.error_type == null || error_type.compatible (clause.error_type)) {
+					error_types.remove_at (i);
+					i--;
+				}
+			}
+
+			clause.body.get_error_types (collection, source_reference);
+		}
+
+		if (finally_body != null) {
+			finally_body.get_error_types (collection, source_reference);
+		}
+
+		foreach (var error_type in error_types) {
+			collection.add (error_type);
+		}
+	}
+
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
@@ -119,37 +144,13 @@ public class Vala.TryStatement : CodeNode, Statement {
 
 		body.check (context);
 
-		var error_types = new ArrayList<DataType> ();
-		foreach (DataType body_error_type in body.get_error_types ()) {
-			error_types.add (body_error_type);
-		}
-
-		var handled_error_types = new ArrayList<DataType> ();
 		foreach (CatchClause clause in catch_clauses) {
-			foreach (DataType body_error_type in error_types) {
-				if (clause.error_type == null || body_error_type.compatible (clause.error_type)) {
-					handled_error_types.add (body_error_type);
-				}
-			}
-			foreach (DataType handled_error_type in handled_error_types) {
-				error_types.remove (handled_error_type);
-			}
-			handled_error_types.clear ();
-
 			clause.check (context);
-			foreach (DataType body_error_type in clause.body.get_error_types ()) {
-				error_types.add (body_error_type);
-			}
 		}
 
 		if (finally_body != null) {
 			finally_body.check (context);
-			foreach (DataType body_error_type in finally_body.get_error_types ()) {
-				error_types.add (body_error_type);
-			}
 		}
-
-		add_error_types (error_types);
 
 		return !error;
 	}

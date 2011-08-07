@@ -615,7 +615,7 @@ public class Vala.GAsyncModule : GtkModule {
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_task_propagate_pointer"));
 		ccall.add_argument (async_result_cast);
 
-		if (m.get_error_types ().size > 0) {
+		if (m.tree_can_fail) {
 			ccall.add_argument (new CCodeIdentifier ("error"));
 		} else {
 			ccall.add_argument (new CCodeConstant ("NULL"));
@@ -633,7 +633,7 @@ public class Vala.GAsyncModule : GtkModule {
 		}
 
 		// If a task is cancelled, g_task_propagate_pointer returns NULL
-		if (m.get_error_types ().size > 0 || has_cancellable) {
+		if (m.tree_can_fail || has_cancellable) {
 			var is_null = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeConstant ("NULL"), data_var);
 
 			ccode.open_if (is_null);

@@ -62,6 +62,16 @@ public class Vala.DeclarationStatement : CodeNode, Statement {
 		declaration.accept (visitor);
 	}
 
+	public override void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
+		if (source_reference == null) {
+			source_reference = this.source_reference;
+		}
+		var local = declaration as LocalVariable;
+		if (local != null && local.initializer != null) {
+			local.initializer.get_error_types (collection, source_reference);
+		}
+	}
+
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
@@ -70,17 +80,6 @@ public class Vala.DeclarationStatement : CodeNode, Statement {
 		checked = true;
 
 		declaration.check (context);
-
-		var local = declaration as LocalVariable;
-		if (local != null && local.initializer != null) {
-			foreach (DataType error_type in local.initializer.get_error_types ()) {
-				// ensure we can trace back which expression may throw errors of this type
-				var initializer_error_type = error_type.copy ();
-				initializer_error_type.source_reference = local.initializer.source_reference;
-
-				add_error_type (initializer_error_type);
-			}
-		}
 
 		return !error;
 	}

@@ -68,6 +68,8 @@ public class Vala.Delegate : TypeSymbol, Callable {
 	private DataType _return_type;
 	private bool? _has_target;
 
+	private List<DataType> error_types;
+
 	/**
 	 * Creates a new delegate.
 	 *
@@ -185,21 +187,23 @@ public class Vala.Delegate : TypeSymbol, Callable {
 			return false;
 		}
 
-		var error_types = get_error_types ();
-		var method_error_types = m.get_error_types ();
+		var method_error_types = new ArrayList<DataType> ();
+		m.get_error_types (method_error_types);
 
 		// method must throw error if the delegate does
-		if (error_types.size > 0 && method_error_types.size == 0) {
+		if (error_types != null && error_types.size > 0 && method_error_types.size == 0) {
 			return false;
 		}
 
 		// method may throw less but not more errors than the delegate
 		foreach (DataType method_error_type in method_error_types) {
 			bool match = false;
-			foreach (DataType delegate_error_type in error_types) {
-				if (method_error_type.compatible (delegate_error_type)) {
-					match = true;
-					break;
+			if (error_types != null) {
+				foreach (DataType delegate_error_type in error_types) {
+					if (method_error_type.compatible (delegate_error_type)) {
+						match = true;
+						break;
+					}
 				}
 			}
 
@@ -226,8 +230,10 @@ public class Vala.Delegate : TypeSymbol, Callable {
 			param.accept (visitor);
 		}
 
-		foreach (DataType error_type in get_error_types ()) {
-			error_type.accept (visitor);
+		if (error_types != null) {
+			foreach (DataType error_type in error_types) {
+				error_type.accept (visitor);
+			}
 		}
 	}
 
@@ -235,16 +241,43 @@ public class Vala.Delegate : TypeSymbol, Callable {
 		return false;
 	}
 
+	/**
+	 * Adds an error type to the exceptions that can be
+	 * thrown by this delegate.
+	 */
+	public void add_error_type (DataType error_type) {
+		if (error_types == null) {
+			error_types = new ArrayList<DataType> ();
+		}
+		error_types.add (error_type);
+		error_type.parent_node = this;
+	}
+
+	public override void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
+		if (error_types != null) {
+			foreach (var error_type in error_types) {
+				if (source_reference != null) {
+					var type = error_type.copy ();
+					type.source_reference = source_reference;
+					collection.add (type);
+				} else {
+					collection.add (error_type);
+				}
+			}
+		}
+	}
+
 	public override void replace_type (DataType old_type, DataType new_type) {
 		if (return_type == old_type) {
 			return_type = new_type;
 			return;
 		}
-		var error_types = get_error_types ();
-		for (int i = 0; i < error_types.size; i++) {
-			if (error_types[i] == old_type) {
-				error_types[i] = new_type;
-				return;
+		if (error_types != null) {
+			for (int i = 0; i < error_types.size; i++) {
+				if (error_types[i] == old_type) {
+					error_types[i] = new_type;
+					return;
+				}
 			}
 		}
 	}
@@ -272,8 +305,10 @@ public class Vala.Delegate : TypeSymbol, Callable {
 			param.check (context);
 		}
 
-		foreach (DataType error_type in get_error_types ()) {
-			error_type.check (context);
+		if (error_types != null) {
+			foreach (DataType error_type in error_types) {
+				error_type.check (context);
+			}
 		}
 
 		context.analyzer.current_source_file = old_source_file;
