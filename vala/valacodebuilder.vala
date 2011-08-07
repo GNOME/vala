@@ -99,6 +99,16 @@ public class Vala.CodeBuilder {
 		statement_stack.add (stmt);
 	}
 
+	public void open_loop () {
+		statement_stack.add (current_block);
+		var parent_block = current_block;
+
+		current_block = new Block (source_reference);
+
+		var stmt = new Loop (current_block, source_reference);
+		parent_block.add_statement (stmt);
+	}
+
 	public void open_while (Expression condition) {
 		statement_stack.add (current_block);
 		var parent_block = current_block;
@@ -233,9 +243,8 @@ public class Vala.CodeBuilder {
 		add_statement (new ContinueStatement (source_reference));
 	}
 
-	public string add_temp_declaration (DataType? type, Expression? initializer = null, bool floating = false) {
+	public string add_temp_declaration (DataType? type, Expression? initializer = null) {
 		var local = new LocalVariable (type, CodeNode.get_temp_name (), initializer, source_reference);
-		// FIXME: use create_temp_access behavior
 		var stmt = new DeclarationStatement (local, source_reference);
 		insert_block.insert_before (insert_statement, stmt);
 		check_nodes.insert (0, stmt);
@@ -254,6 +263,10 @@ public class Vala.CodeBuilder {
 
 	public Expression expression (string str) {
 		return new Parser().parse_expression_string (str, source_reference);
+	}
+
+	public void statements (string str) {
+		new Parser().parse_statements_string (str, current_block, source_reference);
 	}
 
 	// only qualified types, will slightly simplify the work of SymbolResolver

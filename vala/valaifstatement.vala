@@ -55,7 +55,7 @@ public class Vala.IfStatement : CodeNode, Statement {
 	 */
 	public Block? false_statement {
 		get { return _false_statement; }
-		private set {
+		set {
 			_false_statement = value;
 			if (_false_statement != null)
 				_false_statement.parent_node = this;

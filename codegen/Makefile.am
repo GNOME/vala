@@ -37,6 +37,7 @@ libvalaccodegen_la_VALASOURCES = \
 	valaccodemethodcallmodule.vala \
 	valaccodemethodmodule.vala \
 	valaccodestructmodule.vala \
+	valaccodetransformer.vala \
 	valaclassregisterfunction.vala \
 	valactype.vala \
 	valaenumregisterfunction.vala \
