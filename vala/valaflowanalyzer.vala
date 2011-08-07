@@ -1093,6 +1093,14 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		}
 	}
 
+	public override void visit_method_call (MethodCall expr) {
+		if (unreachable (expr)) {
+			return;
+		}
+
+		handle_errors (expr);
+	}
+
 	private bool unreachable (CodeNode node) {
 		if (current_block == null) {
 			node.unreachable = true;
