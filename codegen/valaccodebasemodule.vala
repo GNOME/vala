@@ -3769,6 +3769,15 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
+	bool is_ref_sink_function_void (DataType type) {
+		var cl = type.data_type as Class;
+		if (cl != null) {
+			return get_ccode_ref_sink_function_void (cl);
+		} else {
+			return false;
+		}
+	}
+
 	public virtual TargetValue? copy_value (TargetValue value, CodeNode node) {
 		var type = value.value_type;
 		var cexpr = get_cvalue_ (value);
@@ -5048,9 +5057,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (sink_func != "") {
 				var csink = new CCodeFunctionCall (new CCodeIdentifier (sink_func));
 				csink.add_argument (result.cvalue);
-				
-				result.cvalue = csink;
-				requires_temp_value = true;
+				if (!is_ref_sink_function_void (type)) {
+					result.cvalue = csink;
+					requires_temp_value = true;
+				} else {
+					ccode.add_expression (csink);
+				}
 			} else {
 				Report.error (null, "type `%s' does not support floating references".printf (type.data_type.name));
 			}
@@ -5596,6 +5608,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public static bool get_ccode_ref_function_void (Class cl) {
 		return get_ccode_attribute(cl).ref_function_void;
+	}
+
+	public static bool get_ccode_ref_sink_function_void (Class cl) {
+		return get_ccode_attribute(cl).ref_sink_function_void;
 	}
 
 	public static string get_ccode_unref_function (ObjectTypeSymbol sym) {
