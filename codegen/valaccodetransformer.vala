@@ -68,4 +68,25 @@ public class Vala.CCodeTransformer : CodeTransformer {
 
 		base.visit_expression (expr);
 	}
+
+	public override void visit_method_call (MethodCall expr) {
+		if (expr.tree_can_fail) {
+			if (expr.parent_node is LocalVariable || expr.parent_node is ExpressionStatement) {
+				// simple statements, no side effects after method call
+			} else if (!(context.analyzer.get_current_non_local_symbol (expr) is Block)) {
+				// can't handle errors in field initializers
+				expr.error = true;
+				Report.error (expr.source_reference, "Field initializers must not throw errors");
+			} else {
+				var formal_target_type = copy_type (expr.target_type);
+				var target_type = copy_type (expr.target_type);
+				begin_replace_expression (expr);
+
+				var local = b.add_temp_declaration (copy_type (expr.value_type), expr);
+				var replacement = return_temp_access (local, expr.value_type, target_type, formal_target_type);
+
+				end_replace_expression (replacement);
+			}
+		}
+	}
 }
