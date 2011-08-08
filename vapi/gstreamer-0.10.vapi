@@ -830,7 +830,7 @@ namespace Gst {
 		public void weak_ref (Gst.MiniObjectWeakNotify notify, void* data);
 		public void weak_unref (Gst.MiniObjectWeakNotify notify, void* data);
 	}
-	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_object_ref", ref_sink_function = "gst_object_ref_sink", unref_function = "gst_object_unref")]
+	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_object_ref", ref_sink_function = "gst_object_ref_sink", ref_sink_function_void = true, unref_function = "gst_object_unref")]
 	public abstract class Object : GLib.Object {
 		public Gst.ObjectFlags flags;
 		public weak GLib.Mutex @lock;
