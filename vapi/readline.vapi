@@ -43,23 +43,23 @@ namespace Readline {
 	public delegate int      GetcFunc (GLib.FileStream s);
 	[CCode (cname = "rl_linebuf_func_t", has_target = false)]
 	public delegate int      LinebufFunc (string s, int a);
-	[CCode (cname = "rl_int_func_t", has_target = false)]
+	[CCode (cname = "rl_intfunc_t", has_target = false)]
 	public delegate int      IntFunc (int a);
-	[CCode (cname = "rl_icp_func_t", has_target = false)]
+	[CCode (cname = "rl_icpfunc_t", has_target = false)]
 	public delegate int      IcpFunc (string s);
-	[CCode (cname = "rl_icpp_func_t", has_target = false)]
+	[CCode (cname = "rl_icppfunc_t", has_target = false)]
 	public delegate int      IcppFunc (string[] s);
-	[CCode (cname = "rl_void_func_t", has_target = false)]
+	[CCode (cname = "rl_voidfunc_t", has_target = false)]
 	public delegate void     VoidFunc ();
-	[CCode (cname = "rl_vint_func_t", has_target = false)]
+	[CCode (cname = "rl_vintfunc_t", has_target = false)]
 	public delegate void     VintFunc (int a);
-	[CCode (cname = "rl_vcp_func_t", has_target = false)]
+	[CCode (cname = "rl_vcpfunc_t", has_target = false)]
 	public delegate void     VcpFunc (string s);
-	[CCode (cname = "rl_vcpp_func_t", has_target = false)]
+	[CCode (cname = "rl_vcppfunc_t", has_target = false)]
 	public delegate void     VcppFunc (string[] s);
-	[CCode (cname = "rl_cpv_func_t", has_target = false)]
+	[CCode (cname = "rl_cpvfunc_t", has_target = false)]
 	public delegate unowned string?   CpvFunc ();
-	[CCode (cname = "rl_cpi_func_t", has_target = false)]
+	[CCode (cname = "rl_cpifunc_t", has_target = false)]
 	public delegate unowned string?   CpiFunc (int s);
 
 	[CCode (cname = "KEYMAP_ENTRY")]
