@@ -1673,16 +1673,15 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 			if (m.get_parameters ().size == 1) {
 				// create Dova array from C array
 				// should be replaced by Dova list
-				var array_creation = new CCodeFunctionCall (new CCodeIdentifier ("dova_array_new"));
+				var array_creation = new CCodeFunctionCall (new CCodeIdentifier ("dova_array_create"));
 				array_creation.add_argument (new CCodeFunctionCall (new CCodeIdentifier ("string_type_get")));
 				array_creation.add_argument (new CCodeIdentifier ("argc"));
 
-				cdecl = new CCodeDeclaration ("DovaArray*");
+				cdecl = new CCodeDeclaration ("DovaArray");
 				cdecl.add_declarator (new CCodeVariableDeclarator ("args", array_creation));
 				ccode.add_statement (cdecl);
 
-				var array_data = new CCodeFunctionCall (new CCodeIdentifier ("dova_array_get_data"));
-				array_data.add_argument (new CCodeIdentifier ("args"));
+				var array_data = new CCodeMemberAccess (new CCodeIdentifier ("args"), "data");
 
 				cdecl = new CCodeDeclaration ("string_t*");
 				cdecl.add_declarator (new CCodeVariableDeclarator ("args_data", array_data));
@@ -1715,13 +1714,6 @@ public class Vala.DovaObjectModule : DovaArrayModule {
 				var main_stmt = new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("result"), main_call));
 				main_stmt.line = cmain.line;
 				ccode.add_statement (main_stmt);
-			}
-
-			if (m.get_parameters ().size == 1) {
-				// destroy Dova array
-				var unref = new CCodeFunctionCall (new CCodeIdentifier ("dova_object_unref"));
-				unref.add_argument (new CCodeIdentifier ("args"));
-				ccode.add_statement (new CCodeExpressionStatement (unref));
 			}
 
 			var ret_stmt = new CCodeReturnStatement (new CCodeIdentifier ("result"));
