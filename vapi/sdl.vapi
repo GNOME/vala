@@ -121,19 +121,19 @@ namespace SDL {
 
 		// Instance methods
 		[CCode (cname="SDL_UpdateRects")]
-		public void update_rects(int numrects, Rect* rects);
+		public void update_rects ([CCode (array_length_pos=0.9)] Rect[] rects);
 
 		[CCode (cname="SDL_UpdateRect")]
-		public void update_rect(int32 x, int32 y, uint32 w, uint32 h);
+		public void update_rect (int32 x, int32 y, uint32 w, uint32 h);
 
 		[CCode (cname="SDL_Flip")]
 		public int flip();
 
 		[CCode (cname="SDL_SetColors")]
-		public int set_colors(Color* colors, int firstcolor, int ncolors);
+		public int set_colors ([CCode (array_length_pos=-1)] Color[] colors, int firstcolor = 0);
 
 		[CCode (cname="SDL_SetPalette")]
-		public int set_palette(int flags, Color* colors, int firstcolor, int ncolors);
+		public int set_palette (PaletteFlags flags, [CCode (array_length_pos=-1)] Color[] colors, int firstcolor = 0);
 
 		[CCode (cname="SDL_LockSurface")]
 		public int do_lock();
@@ -207,11 +207,11 @@ namespace SDL {
 		[CCode (cname="SDL_MapRGBA")]
 		public uint32 map_rgba(uchar r, uchar g, uchar b, uchar a);
 
-		[CCode (cname="SDL_GetRGB")]
-		public static void get_rgb(uint32 pixel, PixelFormat fmt, ref uchar r, ref uchar g, ref uchar b);
+		[CCode (cname="SDL_GetRGB", instance_pos=1.2)]
+		public void get_rgb (uint32 pixel, ref uchar r, ref uchar g, ref uchar b);
 
-		[CCode (cname="SDL_GetRGBA")]
-		public static void get_rgba(uint32 pixel, PixelFormat fmt, ref uchar r, ref uchar g, ref uchar b, ref uchar a);
+		[CCode (cname="SDL_GetRGBA", instance_pos=1.2)]
+		public void get_rgba (uint32 pixel, ref uchar r, ref uchar g, ref uchar b, ref uchar a);
 	}// PixelFormat
 
 	[CCode (cname="SDL_Rect", has_type_id=false)]
@@ -238,9 +238,8 @@ namespace SDL {
 
 	[CCode (cname="SDL_Palette")]
 	public class Palette {
-		public int ncolors;
-
-		public Color* colors;
+		[CCode (array_length_cname="ncolors")]
+		public Color[] colors;
 	}// Palette
 
 	[CCode (cname="SDL_VideoInfo")]
@@ -1057,16 +1056,19 @@ namespace SDL {
 	///
 	/// Threading
 	///
-	public delegate int ThreadFunc(void* data);
+	public delegate int ThreadFunc ();
 
-	[CCode (cname="SDL_Thread", free_function="SDL_WaitThread")]
+	[CCode (cname="SDL_Thread", ref_function="", unref_function="")]
 	[Compact]
 	public class Thread {
 		[CCode (cname="SDL_ThreadID")]
 		public static uint32 id();
 
 		[CCode (cname="SDL_CreateThread")]
-		public Thread(ThreadFunc f, void* data);
+		public Thread (ThreadFunc f);
+
+		[CCode (cname="SDL_WaitThread")]
+		public void wait (out int status = null);
 	}// Thread
 
 	[CCode (cname="SDL_mutex", free_function="SDL_DestroyMutex")]
@@ -1127,11 +1129,14 @@ namespace SDL {
 	///
 	/// Timers
 	///
-	public delegate uint32 TimerCallback(uint32 interval, void* param);
+	public delegate uint32 TimerCallback (uint32 interval);
 
-	[CCode (cname="struct _SDL_TimerID", free_function="SDL_RemoveTimer")]
+	[CCode (cname="struct _SDL_TimerID", ref_function="", unref_function="")]
 	[Compact]
 	public class Timer {
+		[CCode (cname="SDL_RemoveTimer")]
+		public bool remove ();
+
 		[CCode (cname="SDL_GetTicks")]
 		public static uint32 get_ticks();
 
@@ -1139,6 +1144,6 @@ namespace SDL {
 		public static void delay(uint32 ms);
 
 		[CCode (cname="SDL_AddTimer")]
-		public Timer(uint32 interval, TimerCallback callback, void* param);
+		public Timer (uint32 interval, TimerCallback callback);
 	}// Timer
 }// SDL
