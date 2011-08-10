@@ -83,10 +83,7 @@ public class Valadoc.Api.Delegate : TypeSymbol {
 		var signature = new SignatureBuilder ();
 
 		signature.append_keyword (get_accessibility_modifier ());
-		if (is_static) {
-			signature.append_keyword ("static");
-		}
-
+		signature.append_keyword ("delegate");
 		signature.append_content (return_type.signature);
 		signature.append_symbol (this);
 
