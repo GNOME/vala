@@ -1820,18 +1820,22 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (reader.name == "callback") {
 				parse_callback ();
 			} else if (reader.name == "record") {
-				if (reader.get_attribute ("glib:get-type") != null && !metadata.get_bool (ArgumentType.STRUCT)) {
-					parse_boxed ("record");
-				} else {
-					if (!reader.get_attribute ("name").has_suffix ("Private")) {
-						if (reader.get_attribute ("glib:is-gtype-struct-for") == null && reader.get_attribute ("disguised") == "1") {
-							parse_boxed ("record");
-						} else {
-							parse_record ();
-						}
+				if (metadata.has_argument (ArgumentType.STRUCT)) {
+					if (metadata.get_bool (ArgumentType.STRUCT)) {
+						parse_record ();
 					} else {
-						skip_element ();
+						parse_boxed ("record");
 					}
+				} else if (reader.get_attribute ("glib:get-type") != null) {
+					parse_boxed ("record");
+				} else if (!reader.get_attribute ("name").has_suffix ("Private")) {
+					if (reader.get_attribute ("glib:is-gtype-struct-for") == null && reader.get_attribute ("disguised") == "1") {
+						parse_boxed ("record");
+					} else {
+						parse_record ();
+					}
+				} else {
+					skip_element ();
 				}
 			} else if (reader.name == "class") {
 				parse_class ();
