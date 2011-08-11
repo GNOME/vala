@@ -3213,26 +3213,6 @@ public class Vala.GirParser : CodeVisitor {
 
 		Method method = m;
 
-		// put cancellable as last parameter
-		Parameter cancellable = null;
-		bool is_cancellable_last = false;
-		double cancellable_pos = 1;
-		foreach (var param in method.get_parameters ()) {
-			if (param.name == "cancellable" && param.variable_type.to_qualified_string () == "GLib.Cancellable?" && param.direction == ParameterDirection.IN) {
-				cancellable = param;
-				cancellable.initializer = new NullLiteral (param.source_reference);
-				break;
-			}
-			cancellable_pos++;
-		}
-		if (cancellable != null) {
-			if (method.get_parameters().get (method.get_parameters().size - 1) == cancellable) {
-				is_cancellable_last = true;
-			}
-			method.get_parameters().remove (cancellable);
-			method.scope.remove (cancellable.name);
-		}
-
 		if (finish_method_node != null && finish_method_node.symbol is Method) {
 			finish_method_node.process (this);
 			var finish_method = (Method) finish_method_node.symbol;
@@ -3280,15 +3260,6 @@ public class Vala.GirParser : CodeVisitor {
 				}
 				finish_method_node.processed = true;
 				finish_method_node.merged = true;
-			}
-		}
-
-		if (cancellable != null) {
-			method.add_parameter (cancellable);
-			if (!is_cancellable_last) {
-				cancellable.set_attribute_double ("CCode", "pos", cancellable_pos);
-			} else {
-				// avoid useless bloat in the vapi
 			}
 		}
 	}
