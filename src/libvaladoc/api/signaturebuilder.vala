@@ -59,6 +59,19 @@ public class Valadoc.Api.SignatureBuilder {
 	}
 
 	/**
+	 * Adds text onto the end of the builder. 
+	 *
+	 * @param literal a string
+	 * @param spaced add a space at the front of the string if necessary
+	 * @return this
+	 */
+	public SignatureBuilder append_attribute (string text, bool spaced = true) {
+		string content = (last_appended != null && spaced ? " " : "") + text;
+		append_text (content);
+		return this;
+	}
+
+	/**
 	 * Adds highlighted text onto the end of the builder. 
 	 *
 	 * @param literal a string

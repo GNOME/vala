@@ -27,11 +27,28 @@ using Gee;
  * Represents a node in the symbol tree.
  */
 public abstract class Valadoc.Api.Symbol : Node {
+	private ArrayList<Attribute> attributes;
 
 	public Symbol (Node parent, SourceFile file, string? name, SymbolAccessibility accessibility, void* data) {
 		base (parent, file, name, data);
 
 		this.accessibility = accessibility;
+	}
+
+	public void add_attribute (Attribute att) {
+		if (attributes == null) {
+			attributes = new ArrayList<Attribute> ();
+		}
+
+		attributes.add (att);
+	}
+
+	public Collection<Attribute> get_attributes () {
+		if (attributes == null) {
+			return Collection<Attribute>.empty<Attribute> ();
+		} else {
+			return attributes;
+		}
 	}
 
 	/**

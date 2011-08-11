@@ -382,6 +382,16 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		writer.end_tag ("div");
 	}
 
+	private void write_attributes (Api.Symbol element, Api.Node? pos) {
+		writer.set_wrap (false);
+		_renderer.set_container (pos);
+		foreach (Attribute att in element.get_attributes ()) {
+			_renderer.render (att.signature);
+			writer.simple_tag ("br");
+		}
+		writer.set_wrap (true);
+	}
+
 	private void write_signature (Api.Node element , Api.Node? pos) {
 		writer.set_wrap (false);
 		_renderer.set_container (pos);
@@ -518,6 +528,9 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		this.write_image_block (node);
 		writer.start_tag ("h2", {"class", css_title}).text ("Description:").end_tag ("h2");
 		writer.start_tag ("div", {"class", css_code_definition});
+		if (node is Symbol) {
+			this.write_attributes ((Symbol) node, node);
+		}
 		this.write_signature (node, node);
 		writer.end_tag ("div");
 		this.write_documentation (node, node);

@@ -41,6 +41,8 @@ libvaladoc_la_VALASOURCES = \
 	importer/valadocdocumentationimporterscanner.vala \
 	api/symbolaccessibility.vala \
 	api/sourcecomment.vala \
+	api/attributeargument.vala \
+	api/attribute.vala \
 	api/array.vala \
 	api/class.vala \
 	api/constant.vala \
