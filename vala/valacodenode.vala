@@ -315,7 +315,7 @@ public abstract class Vala.CodeNode {
 			a = new Attribute (attribute, source_reference);
 			attributes.append (a);
 		}
-		a.add_argument (argument, "%g".printf (value));
+		a.add_argument (argument, value.format (new char[double.DTOSTR_BUF_SIZE]));
 	}
 
 	/**
