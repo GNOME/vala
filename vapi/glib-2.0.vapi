@@ -1607,19 +1607,19 @@ namespace GLib {
 	/* Atomic Operations */
 
 	namespace AtomicInt {
-		public static int get (ref int atomic);
-		public static void set (ref int atomic, int newval);
-		public static void add (ref int atomic, int val);
-		public static int exchange_and_add (ref int atomic, int val);
-		public static bool compare_and_exchange (ref int atomic, int oldval, int newval);
-		public static void inc (ref int atomic);
-		public static bool dec_and_test (ref int atomic);
+		public static int get ([CCode (type = "volatile gint *")] ref int atomic);
+		public static void set ([CCode (type = "volatile gint *")] ref int atomic, int newval);
+		public static void add ([CCode (type = "volatile gint *")] ref int atomic, int val);
+		public static int exchange_and_add ([CCode (type = "volatile gint *")] ref int atomic, int val);
+		public static bool compare_and_exchange ([CCode (type = "volatile gint *")] ref int atomic, int oldval, int newval);
+		public static void inc ([CCode (type = "volatile gint *")] ref int atomic);
+		public static bool dec_and_test ([CCode (type = "volatile gint *")] ref int atomic);
 	}
 
 	namespace AtomicPointer {
-		public static void* get (void** atomic);
-		public static void set (void** atomic, void* newval);
-		public static bool compare_and_exchange (void** atomic, void* oldval, void* newval);
+		public static void* get ([CCode (type = "volatile gpointer *")] void** atomic);
+		public static void set ([CCode (type = "volatile gpointer *")] void** atomic, void* newval);
+		public static bool compare_and_exchange ([CCode (type = "volatile gpointer *")] void** atomic, void* oldval, void* newval);
 	}
 
 	/* The Main Event Loop */
