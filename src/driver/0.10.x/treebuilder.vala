@@ -184,6 +184,53 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 	// Translation helpers:
 	//
 
+	private void process_attributes (Api.Symbol parent, GLib.List<Vala.Attribute> lst) {
+		// attributes wihtout arguments:
+		string[] attributes = {
+				"ReturnsModifiedPointer",
+				"DestroysInstance",
+				"NoAccessorMethod",
+				"NoArrayLength",
+				"Experimental",
+				"Diagnostics",
+				"PrintfFormat",
+				"PointerType",
+				"ScanfFormat",
+				"ThreadLocal",
+				"SimpleType",
+				"HasEmitter",
+				"ModuleInit",
+				"NoWrapper",
+				"Immutable",
+				"ErrorBase",
+				"NoReturn",
+				"NoThrow",
+				"Assert",
+				"Flags"
+			};
+
+		foreach (Vala.Attribute att in lst) {
+			if (att.name == "CCode" && att.has_argument ("has_target") && att.get_bool ("has_target") == false) {
+				Attribute new_attribute = new Attribute (parent, parent.get_source_file (), att.name, att);
+				new_attribute.add_boolean ("has_target", false, att);
+				parent.add_attribute (new_attribute);
+			} else if (att.name == "Deprecated") {
+				Attribute new_attribute = new Attribute (parent, parent.get_source_file (), att.name, att);
+				parent.add_attribute (new_attribute);
+				if (att.has_argument ("since")) {
+					new_attribute.add_string ("since", att.get_string ("since"), att);
+				}
+
+				if (att.has_argument ("replacement")) {
+					new_attribute.add_string ("replacement", att.get_string ("replacement"), att);
+				}
+			} else if (att.name in attributes) {
+				Attribute new_attribute = new Attribute (parent, parent.get_source_file (), att.name, att);
+				parent.add_attribute (new_attribute);
+			}
+		}
+	}
+
 	private SourceComment? create_comment (Vala.Comment? comment) {
 		if (comment != null) {
 			Vala.SourceReference pos = comment.source_reference;
@@ -737,6 +784,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 			}
 		}
 
+		process_attributes (node, element.attributes);
 		process_children (node, element);
 
 		// save GLib.Error
@@ -767,6 +815,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 			}
 		}
 
+		process_attributes (node, element.attributes);
 		process_children (node, element);
 	}
 
@@ -790,6 +839,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 			node.base_type = create_type_reference (basetype, node, node);
 		}
 
+		process_attributes (node, element.attributes);
 		process_children (node, element);
 	}
 
@@ -806,6 +856,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
+		process_attributes (node, element.attributes);
 		process_children (node, element);
 	}
 
@@ -833,6 +884,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 			node.setter = new PropertyAccessor (node, file, element.name, get_access_modifier(element), accessor.get_cname(), get_property_accessor_type (accessor), get_property_ownership (accessor), accessor);
 		}
 
+		process_attributes (node, element.attributes);
 		process_children (node, element);
 	}
 
@@ -849,6 +901,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
+		process_attributes (node, element.attributes);
 		process_children (node, element);
 	}
 
@@ -865,6 +918,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
+		process_attributes (node, element.attributes);
 		process_children (node, element);
 	}
 
@@ -881,6 +935,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
+		process_attributes (node, element.attributes);
 		process_children (node, element);
 	}
 
@@ -897,6 +952,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
+		process_attributes (node, element.attributes);
 		process_children (node, element);
 	}
 
@@ -912,6 +968,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
+		process_attributes (node, element.attributes);
 		process_children (node, element);
 	}
 
@@ -927,6 +984,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
+		process_attributes (node, element.attributes);
 		process_children (node, element);
 	}
 
@@ -943,6 +1001,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
+		process_attributes (node, element.attributes);
 		process_children (node, element);
 	}
 
@@ -958,6 +1017,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
+		process_attributes (node, element.attributes);
 		process_children (node, element);
 	}
 
@@ -973,6 +1033,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
+		process_attributes (node, element.attributes);
 		process_children (node, element);
 	}
 
