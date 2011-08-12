@@ -779,7 +779,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		write_children (node, Api.NodeType.ERROR_DOMAIN, "Error domains", parent);
 		write_children (node, Api.NodeType.CONSTANT, "Constants", parent);
 		write_children (node, Api.NodeType.DELEGATE, "Delegates", parent);
-		write_children (node, Api.NodeType.STATIC_METHOD, "Functions", parent);
+		write_children (node, Api.NodeType.METHOD, "Functions", parent);
 		write_children (node, Api.NodeType.FIELD, "Fields", parent);
 		writer.end_tag ("div");
 	}
