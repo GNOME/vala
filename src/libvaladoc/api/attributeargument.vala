@@ -127,14 +127,8 @@ public class Valadoc.Api.AttributeArgument : Item {
 		SignatureBuilder builder = new SignatureBuilder ();
 
 		builder.append_attribute (name);
-
 		builder.append_attribute ("=");
-
-		if (argument_type == Type.STRING) {
-			builder.append_literal ("\"" + value + "\"");
-		} else {
-			builder.append_literal (value);
-		}
+		builder.append_literal (value);
 
 		return builder.get ();
 	}

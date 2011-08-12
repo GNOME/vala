@@ -495,3 +495,6 @@ ul.no_bullet li {
 	color: #ff01ff;
 }
 
+.deprecated {
+	text-decoration:line-through;
+}

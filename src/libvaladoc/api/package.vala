@@ -25,6 +25,7 @@ using Valadoc.Content;
 using Valadoc.Importer;
 
 public class Valadoc.Api.Package : Node {
+
 	/**
 	 * Specifies whether this package is a dependency
 	 */
@@ -77,6 +78,51 @@ public class Valadoc.Api.Package : Node {
 
 		this.is_package = is_package;
 		this.parent = null;
+	}
+
+	// <version, symbols>
+	private HashMap<string?, ArrayList<Symbol>> deprecated;
+
+	internal void register_deprecated_symbol (Symbol symbol, string? version) {
+		if (deprecated == null) {
+			// some libgee-versions do not like nullable strings
+
+			EqualFunc<string?> str_eq0 = (a, b) => { 
+				if (a == null && b == null) {
+					return true;
+				} else if (a == null || b == null) {
+					return false;
+				}
+
+				return a == b;
+			};
+
+			HashFunc<string?> str_hash0 = (a) => {
+				if (a == null) {
+					return 0;
+				}
+
+				return a.hash ();
+			};
+
+			deprecated = new HashMap<string?, ArrayList<Symbol>> (str_hash0, str_eq0);
+		}
+
+		ArrayList<Symbol> list = deprecated.get (version);
+		if (list == null) {
+			list = new ArrayList<Symbol> ();
+			deprecated.set (version, list);
+		}
+
+		list.add (symbol);
+	}
+
+	public Map<string?, Collection<Symbol>> get_deprecated_symbols () {
+		if (deprecated == null) {
+			return Map<string?, Collection<Symbol>>.empty<string?, Collection<Symbol>> ();
+		}
+
+		return deprecated;
 	}
 
 	/**

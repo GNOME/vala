@@ -41,6 +41,18 @@ public class Valadoc.Api.Attribute : Item {
 		this.file = file;
 	}
 
+	public AttributeArgument? get_argument (string name) {
+		if (args != null) {
+			foreach (AttributeArgument arg in args) {
+				if (arg.name == name) {
+					return arg;
+				}
+			}
+		}
+
+		return null;
+	}
+
 	public AttributeArgument add_boolean (string name, bool value, void* data = null) {
 		AttributeArgument arg = new AttributeArgument.boolean (this, file, name, value, data);
 		args.add (arg);

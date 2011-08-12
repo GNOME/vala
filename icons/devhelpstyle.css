@@ -530,3 +530,6 @@ ul.no_bullet li {
 .package_note {
 }
 
+.deprecated {
+	text-decoration:line-through;
+}

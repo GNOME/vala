@@ -94,6 +94,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	private const string css_style_navigation = "site_navigation";
 	private const string css_style_content = "site_content";
 	private const string css_style_body = "site_body";
+	private const string css_deprecated = "deprecated";
 
 	public virtual void process (Settings settings, Api.Tree tree, ErrorReporter reporter) {
 		this.settings = settings;
@@ -126,15 +127,31 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 
 
-	protected void write_navi_entry_html_template (string style, string content) {
+	protected void write_navi_entry_html_template (string style, string content, bool is_deprecated) {
 		writer.start_tag ("li", {"class", style});
-		writer.text (content);
+
+		if (is_deprecated) {
+			writer.start_tag ("span", {"class", css_deprecated});
+			writer.text (content);
+			writer.end_tag ("span");
+		} else {
+			writer.text (content);
+		}
+
 		writer.end_tag ("li");
 	}
 
-	protected void write_navi_entry_html_template_with_link (string style, string link, string content) {
+	protected void write_navi_entry_html_template_with_link (string style, string link, string content, bool is_deprecated) {
 		writer.start_tag ("li", {"class", style});
-		writer.link (link, content);
+
+		if (is_deprecated) {
+			writer.start_tag ("span", {"class", css_deprecated});
+			writer.link (link, content);
+			writer.end_tag ("span");
+		} else {
+			writer.link (link, content);
+		}
+
 		writer.end_tag ("li");
 	}
 
@@ -149,10 +166,12 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			name = (tmp == null)? "Global Namespace" : tmp;
 		}
 
+		bool is_deprecated = element is Symbol && ((Symbol) element).is_deprecated;
+
 		if (link == true) {
-			this.write_navi_entry_html_template_with_link (style, this.get_link (element, pos), name);
+			this.write_navi_entry_html_template_with_link (style, this.get_link (element, pos), name, is_deprecated);
 		} else {
-			this.write_navi_entry_html_template (style, name);
+			this.write_navi_entry_html_template (style, name, is_deprecated);
 		}
 	}
 
@@ -370,14 +389,54 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 	private void write_documentation (Api.Node element , Api.Node? pos) {
 		Content.Comment? doctree = element.documentation;
-		if (doctree == null) {
+		Attribute? deprecated = (element is Symbol)? ((Symbol) element).get_attribute ("Deprecated") : null;
+
+		// avoid empty divs
+		if (doctree == null && deprecated == null) {
 			return;
 		}
 
+
 		writer.start_tag ("div", {"class", css_description});
 
-		_renderer.set_container (pos);
-		_renderer.render (doctree);
+		// deprecation warning:
+		if (deprecated != null) {
+			AttributeArgument? replacement = deprecated.get_argument ("replacement");
+			AttributeArgument? version = deprecated.get_argument ("version");
+
+			writer.start_tag ("p");
+			writer.start_tag ("b");
+			writer.text ("Warning:");
+			writer.end_tag ("b");
+			writer.text (" %s is deprecated".printf (element.name));
+
+			if (version != null) {
+				writer.text (" since %s".printf (version.get_value_as_string ()));
+			}
+
+			writer.text (".");
+
+			if (replacement != null) {
+				string replacement_name = replacement.get_value_as_string ();
+				Api.Node? replacement_node = tree.search_symbol_str (pos, replacement_name.substring (1, replacement_name.length - 2));
+
+				writer.text (" Use ");
+				if (replacement_node == null) {
+					writer.text (replacement_name);
+				} else {
+					string css = cssresolver.resolve (replacement_node);
+					writer.link (get_link (replacement_node, pos), replacement_node.get_full_name (), css);
+				}
+				writer.text (".");
+			}
+
+			writer.end_tag ("p");
+		}
+
+		if (doctree != null) {
+			_renderer.set_container (pos);
+			_renderer.render (doctree);
+		}
 
 		writer.end_tag ("div");
 	}
@@ -655,12 +714,24 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			foreach (Api.Node child in children) {
 				writer.start_tag ("li", {"class", cssresolver.resolve (child)});
 				if (is_internal_node (child)) {
-					writer.link (get_link (child, container), child.name);
+					if (child is Symbol && ((Symbol) child).is_deprecated) {
+						writer.start_tag ("span", {"class", css_deprecated});
+						writer.link (get_link (child, container), child.name);
+						writer.end_tag ("span");
+					} else {
+						writer.link (get_link (child, container), child.name);
+					}
 					writer.text (" - ");
 					write_brief_description (child, container);
 				} else {
 					writer.start_tag ("span", {"class", css_leaf_code_definition});
-					write_signature (child, container);
+					if (child is Symbol && ((Symbol) child).is_deprecated) {
+						writer.start_tag ("span", {"class", css_deprecated});
+						write_signature (child, container);
+						writer.end_tag ("span");
+					} else {
+						write_signature (child, container);
+					}
 					writer.end_tag ("span");
 
 					writer.start_tag ("div", {"class", css_leaf_brief_description});

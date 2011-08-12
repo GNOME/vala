@@ -29,6 +29,12 @@ using Gee;
 public abstract class Valadoc.Api.Symbol : Node {
 	private ArrayList<Attribute> attributes;
 
+	public bool is_deprecated {
+		default = false;
+		private set;
+		get;
+	}
+
 	public Symbol (Node parent, SourceFile file, string? name, SymbolAccessibility accessibility, void* data) {
 		base (parent, file, name, data);
 
@@ -40,6 +46,15 @@ public abstract class Valadoc.Api.Symbol : Node {
 			attributes = new ArrayList<Attribute> ();
 		}
 
+		// register deprecated symbols:
+		if (att.name == "Deprecated") {
+			AttributeArgument? version = att.get_argument ("version");
+			string? version_str = (version == null)? null : version.get_value_as_string ();
+
+			package.register_deprecated_symbol (this, version_str);
+			is_deprecated = true;
+		}
+
 		attributes.add (att);
 	}
 
@@ -49,6 +64,18 @@ public abstract class Valadoc.Api.Symbol : Node {
 		} else {
 			return attributes;
 		}
+	}
+
+	public Attribute? get_attribute (string name) {
+		if (attributes != null) {
+			foreach (Attribute att in attributes) {
+				if (att.name == name) {
+					return att;
+				}
+			}
+		}
+
+		return null;
 	}
 
 	/**
