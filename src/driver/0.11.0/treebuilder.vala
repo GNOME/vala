@@ -122,35 +122,35 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 	// Type constructor translation helpers:
 	//
 
-	private Pointer create_pointer (Vala.PointerType vtyperef, Item parent) {
+	private Pointer create_pointer (Vala.PointerType vtyperef, Item parent, Symbol caller) {
 		Pointer ptr = new Pointer (parent, vtyperef);
 
 		Vala.DataType vntype = vtyperef.base_type;
 		if (vntype is Vala.PointerType) {
-			ptr.data_type = create_pointer ((Vala.PointerType) vntype, ptr);
+			ptr.data_type = create_pointer ((Vala.PointerType) vntype, ptr, caller);
 		} else if (vntype is Vala.ArrayType) {
-			ptr.data_type = create_array ((Vala.ArrayType) vntype, ptr);
+			ptr.data_type = create_array ((Vala.ArrayType) vntype, ptr, caller);
 		} else {
-			ptr.data_type = create_type_reference (vntype, ptr);
+			ptr.data_type = create_type_reference (vntype, ptr, caller);
 		}
 
 		return ptr;
 	}
 
-	private Api.Array create_array (Vala.ArrayType vtyperef, Item parent) {
+	private Api.Array create_array (Vala.ArrayType vtyperef, Item parent, Symbol caller) {
 		Api.Array arr = new Api.Array (parent, vtyperef);
 
 		Vala.DataType vntype = vtyperef.element_type;
 		if (vntype is Vala.ArrayType) {
-			arr.data_type = create_array ((Vala.ArrayType) vntype, arr);
+			arr.data_type = create_array ((Vala.ArrayType) vntype, arr, caller);
 		} else {
-			arr.data_type = create_type_reference (vntype, arr);
+			arr.data_type = create_type_reference (vntype, arr, caller);
 		}
 
 		return arr;
 	}
 
-	private TypeReference create_type_reference (Vala.DataType? vtyperef, Item parent) {
+	private TypeReference create_type_reference (Vala.DataType? vtyperef, Item parent, Symbol caller) {
 		bool is_nullable = vtyperef != null && vtyperef.nullable && !(vtyperef is Vala.GenericType) && !(vtyperef is Vala.PointerType);
 		string? signature = (vtyperef != null && vtyperef.data_type != null)? Vala.GVariantModule.get_dbus_signature (vtyperef.data_type) : null;
 		bool pass_ownership = type_reference_pass_ownership (vtyperef);
@@ -160,15 +160,17 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		TypeReference type_ref = new TypeReference (parent, ownership, pass_ownership, is_dynamic, is_nullable, signature, vtyperef);
 
 		if (vtyperef is Vala.PointerType) {
-			type_ref.data_type = create_pointer ((Vala.PointerType) vtyperef,  type_ref);
+			type_ref.data_type = create_pointer ((Vala.PointerType) vtyperef,  type_ref, caller);
 		} else if (vtyperef is Vala.ArrayType) {
-			type_ref.data_type = create_array ((Vala.ArrayType) vtyperef,  type_ref);
+			type_ref.data_type = create_array ((Vala.ArrayType) vtyperef,  type_ref, caller);
+		} else if (vtyperef is Vala.GenericType) {
+			type_ref.data_type = new TypeParameter (caller, caller.get_source_file (), ((Vala.GenericType) vtyperef).type_parameter.name, vtyperef);
 		}
 
 		// type parameters:
 		if (vtyperef != null) {
 			foreach (Vala.DataType vdtype in vtyperef.get_type_arguments ()) {
-				var type_param = create_type_reference (vdtype, type_ref);
+				var type_param = create_type_reference (vdtype, type_ref, caller);
 				type_ref.add_type_argument (type_param);
 			}
 		}
@@ -726,7 +728,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 
 		// relations
 		foreach (Vala.DataType vala_type_ref in element.get_base_types ()) {
-			var type_ref = create_type_reference (vala_type_ref, node);
+			var type_ref = create_type_reference (vala_type_ref, node, node);
 
 			if (vala_type_ref.data_type is Vala.Interface) {
 				node.add_interface (type_ref);
@@ -757,7 +759,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 
 		// prerequisites:
 		foreach (Vala.DataType vala_type_ref in element.get_prerequisites ()) {
-			TypeReference type_ref = create_type_reference (vala_type_ref, node);
+			TypeReference type_ref = create_type_reference (vala_type_ref, node, node);
 			if (vala_type_ref.data_type is Vala.Interface) {
 				node.add_interface (type_ref);
 			} else {
@@ -785,7 +787,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		// parent type:
 		Vala.ValueType? basetype = element.base_type as Vala.ValueType;
 		if (basetype != null) {
-			node.base_type = create_type_reference (basetype, node);
+			node.base_type = create_type_reference (basetype, node, node);
 		}
 
 		process_children (node, element);
@@ -800,7 +802,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		SourceComment? comment = create_comment (element.comment);
 
 		Field node = new Field (parent, file, element.name, get_access_modifier(element), comment, element.get_cname (), element.binding == MemberBinding.STATIC, element.is_volatile, element);
-		node.field_type = create_type_reference (element.variable_type, node);
+		node.field_type = create_type_reference (element.variable_type, node, node);
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
@@ -816,7 +818,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		SourceComment? comment = create_comment (element.comment);
 
 		Property node = new Property (parent, file, element.name, get_access_modifier(element), comment, element.nick, Vala.GDBusModule.get_dbus_name_for_member (element), Vala.GDBusServerModule.is_dbus_visible (element), get_property_binding_type (element), element);
-		node.property_type = create_type_reference (element.property_type, node);
+		node.property_type = create_type_reference (element.property_type, node, node);
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
@@ -843,7 +845,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		SourceComment? comment = create_comment (element.comment);
 
 		Method node = new Method (parent, file, get_method_name (element), get_access_modifier(element), comment, element.get_cname (), Vala.GDBusModule.get_dbus_name_for_member (element), Vala.GDBusServerModule.dbus_result_name (element), (element.coroutine)? element.get_finish_cname () : null, get_method_binding_type (element), element.coroutine, Vala.GDBusServerModule.is_dbus_visible (element), element is Vala.CreationMethod, element);
-		node.return_type = create_type_reference (element.return_type, node);
+		node.return_type = create_type_reference (element.return_type, node, node);
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
@@ -859,7 +861,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		SourceComment? comment = create_comment (element.comment);
 
 		Method node = new Method (parent, file, get_method_name (element), get_access_modifier(element), comment, element.get_cname (), Vala.GDBusModule.get_dbus_name_for_member (element), Vala.GDBusServerModule.dbus_result_name (element), (element.coroutine)? element.get_finish_cname () : null, get_method_binding_type (element), element.coroutine, Vala.GDBusServerModule.is_dbus_visible (element), element is Vala.CreationMethod, element);
-		node.return_type = create_type_reference (element.return_type, node);
+		node.return_type = create_type_reference (element.return_type, node, node);
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
@@ -875,7 +877,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		SourceComment? comment = create_comment (element.comment);
 
 		Api.Signal node = new Api.Signal (parent, file, element.name, get_access_modifier(element), comment, element.get_cname(), Vala.GDBusModule.get_dbus_name_for_member (element), Vala.GDBusServerModule.is_dbus_visible (element), element.is_virtual, element);
-		node.return_type = create_type_reference (element.return_type, node);
+		node.return_type = create_type_reference (element.return_type, node, node);
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
@@ -891,7 +893,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		SourceComment? comment = create_comment (element.comment);
 
 		Delegate node = new Delegate (parent, file, element.name, get_access_modifier(element), comment, element.get_cname (), element.has_target, element);
-		node.return_type = create_type_reference (element.return_type, node);
+		node.return_type = create_type_reference (element.return_type, node, node);
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
@@ -937,7 +939,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		SourceComment? comment = create_comment (element.comment);
 
 		Constant node = new Constant (parent, file, element.name, get_access_modifier(element), comment, element.get_cname (), element);
-		node.constant_type = create_type_reference (element.type_reference, node);
+		node.constant_type = create_type_reference (element.type_reference, node, node);
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
@@ -995,7 +997,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		SourceFile? file = get_source_file (element);
 
 		FormalParameter node = new FormalParameter (parent, file, element.name, get_access_modifier(element), get_formal_parameter_type (element), element.ellipsis, element);
-		node.parameter_type = create_type_reference (element.variable_type, node);
+		node.parameter_type = create_type_reference (element.variable_type, node, node);
 		parent.add_child (node);
 
 		process_children (node, element);

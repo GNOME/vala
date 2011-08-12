@@ -66,9 +66,7 @@ public class Valadoc.Drivers.SymbolResolver : Visitor {
 
 	private void resolve_type_reference (TypeReference reference) {
 		Vala.DataType vtyperef = (Vala.DataType) reference.data;
-		if (vtyperef is Vala.GenericType) {
-			 reference.data_type = resolve (((Vala.GenericType) vtyperef).type_parameter);
-		} else if (vtyperef is Vala.ErrorType) {
+		if (vtyperef is Vala.ErrorType) {
 			Vala.ErrorDomain verrdom = ((Vala.ErrorType) vtyperef).error_domain;
 			if (verrdom != null) {
 				reference.data_type = resolve (verrdom);
