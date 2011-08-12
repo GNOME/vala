@@ -324,7 +324,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 			return MethodBindingType.OVERRIDE;
 		} else if (element.is_inline) {
 			return MethodBindingType.INLINE;
-		} else if (element.binding == MemberBinding.INSTANCE) {
+		} else if (element.binding != MemberBinding.INSTANCE) {
 			return MethodBindingType.STATIC;
 		}
 		return MethodBindingType.UNMODIFIED;
