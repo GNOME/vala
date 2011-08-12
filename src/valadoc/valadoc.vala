@@ -337,6 +337,9 @@ public class ValaDoc : Object {
 			return quit (reporter);
 		}
 
+		// register child symbols:
+		Valadoc.Api.ChildSymbolRegistrar registrar = new Valadoc.Api.ChildSymbolRegistrar ();
+		doctree.accept (registrar);
 
 		// process documentation
 		Valadoc.DocumentationParser docparser = new Valadoc.DocumentationParser (settings, reporter, doctree, modules);

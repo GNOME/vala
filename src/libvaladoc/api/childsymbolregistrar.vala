@@ -24,26 +24,26 @@ using Valadoc.Api;
 using Gee;
 
 
-public class Valadoc.Drivers.ChildSymbolRegistrar : Visitor {
+public class Valadoc.Api.ChildSymbolRegistrar : Visitor {
 	/**
 	 * {@inheritDoc}
 	 */
 	public override void visit_tree (Api.Tree item) {
-		item.accept_children (this);			
+		item.accept_children (this);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public override void visit_package (Package item) {
-		item.accept_all_children (this);
+		item.accept_all_children (this, false);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public override void visit_namespace (Namespace item) {
-		item.accept_all_children (this);
+		item.accept_all_children (this, false);
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class Valadoc.Drivers.ChildSymbolRegistrar : Visitor {
 			((Class) item.base_type.data_type).register_derived_interface (item);
 		}
 
-		item.accept_all_children (this);
+		item.accept_all_children (this, false);
 	}
 
 	/**
@@ -75,21 +75,21 @@ public class Valadoc.Drivers.ChildSymbolRegistrar : Visitor {
 			((Class) item.base_type.data_type).register_child_class (item);
 		}
 
-		item.accept_all_children (this);
+		item.accept_all_children (this, false);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public override void visit_struct (Struct item) {
-		item.accept_all_children (this);
+		item.accept_all_children (this, false);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public override void visit_property (Property item) {
-		item.accept_all_children (this);
+		item.accept_all_children (this, false);
 	}
 }
 

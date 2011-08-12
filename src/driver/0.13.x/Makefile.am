@@ -32,7 +32,6 @@ driver_LTLIBRARIES =  \
 
 libdriver_la_VALASOURCES = \
 	initializerbuilder.vala \
-	childsymbolregistrar.vala \
 	symbolresolver.vala \
 	treebuilder.vala \
 	driver.vala \
