@@ -132,7 +132,7 @@ public class Valadoc.Api.Method : Member {
 	 */
 	public bool is_static {
 		get {
-			return !is_constructor && binding_type == MethodBindingType.STATIC;
+			return !is_constructor && binding_type == MethodBindingType.STATIC && parent is Namespace == false;
 		}
 	}
 
