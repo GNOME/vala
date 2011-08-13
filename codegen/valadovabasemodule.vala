@@ -176,8 +176,6 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 	public DataType int_type;
 	public DataType uint_type;
 	public DataType string_type;
-	public DataType float_type;
-	public DataType double_type;
 	public Class object_class;
 	public Class type_class;
 	public Class value_class;
@@ -246,8 +244,6 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 		char_type = new IntegerType ((Struct) root_symbol.scope.lookup ("char"));
 		int_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int"));
 		uint_type = new IntegerType ((Struct) root_symbol.scope.lookup ("uint"));
-		float_type = new FloatingType ((Struct) root_symbol.scope.lookup ("float"));
-		double_type = new FloatingType ((Struct) root_symbol.scope.lookup ("double"));
 		string_type = new ObjectType ((Class) root_symbol.scope.lookup ("string"));
 
 		var dova_ns = (Namespace) root_symbol.scope.lookup ("Dova");

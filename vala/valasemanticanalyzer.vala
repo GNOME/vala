@@ -185,7 +185,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		string_type = new ObjectType ((Class) root_symbol.scope.lookup ("string"));
 		int_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int"));
 		uint_type = new IntegerType ((Struct) root_symbol.scope.lookup ("uint"));
-		double_type = new FloatingType ((Struct) root_symbol.scope.lookup ("double"));
 
 		if (context.profile != Profile.DOVA) {
 			uchar_type = new IntegerType ((Struct) root_symbol.scope.lookup ("uchar"));
@@ -196,6 +195,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			ulong_type = new IntegerType ((Struct) root_symbol.scope.lookup ("ulong"));
 			size_t_type = new IntegerType ((Struct) root_symbol.scope.lookup ("size_t"));
 			ssize_t_type = new IntegerType ((Struct) root_symbol.scope.lookup ("ssize_t"));
+			double_type = new FloatingType ((Struct) root_symbol.scope.lookup ("double"));
 		} else {
 			long_type = int_type;
 			ulong_type = uint_type;
