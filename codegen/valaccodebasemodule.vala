@@ -4505,15 +4505,17 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	int next_variant_function_id = 0;
 
-	public CCodeExpression? try_cast_variant_to_type (CCodeExpression ccodeexpr, DataType from, DataType to, Expression? expr = null) {
-		if (from == null || gvariant_type == null || from.data_type != gvariant_type) {
+	public TargetValue? try_cast_variant_to_type (TargetValue value, DataType to, CodeNode? node = null) {
+		if (value.value_type == null || gvariant_type == null || value.value_type.data_type != gvariant_type) {
 			return null;
 		}
 
 		string variant_func = "_variant_get%d".printf (++next_variant_function_id);
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (variant_func));
-		ccall.add_argument (ccodeexpr);
+		ccall.add_argument (get_cvalue_ (value));
+
+		var result = create_temp_value (to, false, node);
 
 		var cfunc = new CCodeFunction (variant_func);
 		cfunc.modifiers = CCodeModifiers.STATIC;
@@ -4528,28 +4530,27 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			cfunc.add_parameter (new CCodeParameter ("result", get_ccode_name (to) + "*"));
 		} else if (to is ArrayType) {
 			// return array length if appropriate
+			// tmp = _variant_get (variant, &tmp_length);
 			var array_type = (ArrayType) to;
 
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				var temp_value = create_temp_value (int_type, true, expr);
-
-				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_cvalue_ (temp_value)));
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_array_length_cvalue (result, dim)));
 				cfunc.add_parameter (new CCodeParameter (get_array_length_cname ("result", dim), "int*"));
-				append_array_length (expr, get_cvalue_ (temp_value));
 			}
 		}
 
+		ccode.add_assignment (get_cvalue_ (result), ccall);
+
 		push_function (cfunc);
 
-		var result = deserialize_expression (to, new CCodeIdentifier ("value"), new CCodeIdentifier ("*result"));
-		ccode.add_return (result);
+		ccode.add_return (deserialize_expression (to, new CCodeIdentifier ("value"), new CCodeIdentifier ("*result")));
 
 		pop_function ();
 
 		cfile.add_function_declaration (cfunc);
 		cfile.add_function (cfunc);
 
-		return ccall;
+		return load_temp_value (result);
 	}
 
 	public virtual CCodeExpression? deserialize_expression (DataType type, CCodeExpression variant_expr, CCodeExpression? expr, CCodeExpression? error_expr = null, out bool may_fail = null) {
@@ -4567,9 +4568,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return;
 		}
 
-		var variantcast = try_cast_variant_to_type (get_cvalue (expr.inner), expr.inner.value_type, expr.type_reference, expr);
+		var variantcast = try_cast_variant_to_type (expr.inner.target_value, expr.type_reference, expr);
 		if (variantcast != null) {
-			set_cvalue (expr, variantcast);
+			expr.target_value = variantcast;
 			return;
 		}
 
