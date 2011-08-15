@@ -4512,8 +4512,16 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		string variant_func = "_variant_get%d".printf (++next_variant_function_id);
 
+		var variant = value;
+		if (value.value_type.value_owned) {
+			// value leaked, destroy it
+			var temp_value = store_temp_value (value, node);
+			temp_ref_values.insert (0, ((GLibValue) temp_value).copy ());
+			variant = temp_value;
+		}
+
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (variant_func));
-		ccall.add_argument (get_cvalue_ (value));
+		ccall.add_argument (get_cvalue_ (variant));
 
 		var result = create_temp_value (to, false, node);
 
