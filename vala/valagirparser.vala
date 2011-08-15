@@ -1935,6 +1935,8 @@ public class Vala.GirParser : CodeVisitor {
 					parse_enumeration_member ();
 					calculate_common_prefix (ref common_prefix, old_current.get_cname ());
 				}
+			} else if (reader.name == "function") {
+				skip_element ();
 			} else {
 				// error
 				Report.error (get_current_src (), "unknown child element `%s' in `%s'".printf (reader.name, element_name));
@@ -2304,6 +2306,8 @@ public class Vala.GirParser : CodeVisitor {
 				parse_constructor ();
 			} else if (reader.name == "method") {
 				parse_method ("method");
+			} else if (reader.name == "function") {
+				skip_element ();
 			} else if (reader.name == "union") {
 				parse_union ();
 			} else {
@@ -2750,6 +2754,8 @@ public class Vala.GirParser : CodeVisitor {
 				parse_constructor ();
 			} else if (reader.name == "method") {
 				parse_method ("method");
+			} else if (reader.name == "function") {
+				skip_element ();
 			} else if (reader.name == "union") {
 				parse_union ();
 			} else {
@@ -2792,6 +2798,8 @@ public class Vala.GirParser : CodeVisitor {
 				parse_constructor ();
 			} else if (reader.name == "method") {
 				parse_method ("method");
+			} else if (reader.name == "function") {
+				skip_element ();
 			} else if (reader.name == "record") {
 				parse_record ();
 			} else {
