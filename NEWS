@@ -1,3 +1,17 @@
+Vala 0.13.2
+===========
+
+ * Enable flow analysis for out parameters.
+ * Refactor attribute handling.
+ * Add gedit-3.0 bindings.
+ * Add gtksourceview-3.0 bindings.
+ * Add rest-0.7 bindings.
+ * Add vte-2.90 bindings.
+ * Switch clutter-1.0 bindings to .gir.
+ * Switch libgdata bindings to .gir.
+ * Switch libsoup bindings to .gir.
+ * Many bug fixes and binding updates.
+
 Vala 0.13.1
 ===========
 
