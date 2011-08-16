@@ -843,11 +843,16 @@ public class Vala.Parser : CodeVisitor {
 		if (accept (TokenType.OPEN_PARENS)) {
 			var expr = parse_object_creation_expression (begin, member);
 			return expr;
-		} else if (accept (TokenType.OPEN_BRACKET)) {
-			var expr = parse_array_creation_expression (begin, member);
-			return expr;
 		} else {
-			throw new ParseError.SYNTAX (get_error ("expected ( or ["));
+			while (accept (TokenType.STAR)) {
+			}
+			if (accept (TokenType.OPEN_BRACKET)) {
+				rollback (begin);
+				var expr = parse_array_creation_expression ();
+				return expr;
+			} else {
+				throw new ParseError.SYNTAX (get_error ("expected ( or ["));
+			}
 		}
 	}
 
@@ -888,11 +893,19 @@ public class Vala.Parser : CodeVisitor {
 		return expr;
 	}
 
-	Expression parse_array_creation_expression (SourceLocation begin, MemberAccess member) throws ParseError {
+	Expression parse_array_creation_expression () throws ParseError {
+		var begin = get_location ();
+		expect (TokenType.NEW);
+		var member = parse_member_name ();
+		DataType element_type = UnresolvedType.new_from_expression (member);
+		while (accept (TokenType.STAR)) {
+			element_type = new PointerType (element_type, get_src (begin));
+		}
+		expect (TokenType.OPEN_BRACKET);
+
 		bool size_specified = false;
 		List<Expression> size_specifier_list = null;
 		bool first = true;
-		DataType element_type = UnresolvedType.new_from_expression (member);
 		do {
 			if (!first) {
 				// array of arrays: new T[][42]
