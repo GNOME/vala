@@ -420,11 +420,6 @@ public class Vala.CodeContext {
 			source_file.relative_filename = filename;
 
 			add_source_file (source_file);
-			// look for a local .deps
-			var deps_filename = "%s.deps".printf (filename.substring (0, filename.length - ".vapi".length));
-			if (!add_packages_from_file (deps_filename)) {
-				return false;
-			}
 		} else if (filename.has_suffix (".c")) {
 			add_c_source_file (rpath);
 		} else {
