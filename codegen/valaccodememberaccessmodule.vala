@@ -697,7 +697,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 		if (variable is Parameter && variable.name == "this") {
 			use_temp = false;
 		}
-		if (variable.single_assignment && !result.value_type.is_real_struct_type ()) {
+		if (variable.single_assignment && !result.value_type.is_real_non_null_struct_type ()) {
 			// no need to copy values from variables that are assigned exactly once
 			// as there is no risk of modification
 			// except for structs that are always passed by reference
