@@ -4388,10 +4388,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			// we already use a reference for arguments of ref, out, and nullable parameters
 			if (!(unary != null && (unary.operator == UnaryOperator.OUT || unary.operator == UnaryOperator.REF)) && !type.nullable) {
 				var cunary = cexpr as CCodeUnaryExpression;
-				if (cunary != null && cunary.operator == CCodeUnaryOperator.POINTER_INDIRECTION) {
-					// *expr => expr
-					return cunary.inner;
-				} else if (cexpr is CCodeIdentifier || cexpr is CCodeMemberAccess) {
+				if (cexpr is CCodeIdentifier || cexpr is CCodeMemberAccess) {
 					return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr);
 				} else {
 					// if cexpr is e.g. a function call, we can't take the address of the expression
