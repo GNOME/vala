@@ -5446,51 +5446,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
-	public void create_type_check_statement (CodeNode method_node, DataType ret_type, TypeSymbol t, bool non_null, string var_name) {
-		var ccheck = new CCodeFunctionCall ();
-
-		if (!context.assert) {
-			return;
-		} else if (context.checking && ((t is Class && !((Class) t).is_compact) || t is Interface)) {
-			var ctype_check = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_check_function (t)));
-			ctype_check.add_argument (new CCodeIdentifier (var_name));
-			
-			CCodeExpression cexpr = ctype_check;
-			if (!non_null) {
-				var cnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier (var_name), new CCodeConstant ("NULL"));
-			
-				cexpr = new CCodeBinaryExpression (CCodeBinaryOperator.OR, cnull, ctype_check);
-			}
-			ccheck.add_argument (cexpr);
-		} else if (!non_null) {
-			return;
-		} else if (t == glist_type || t == gslist_type) {
-			// NULL is empty list
-			return;
-		} else {
-			var cnonnull = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier (var_name), new CCodeConstant ("NULL"));
-			ccheck.add_argument (cnonnull);
-		}
-
-		var cm = method_node as CreationMethod;
-		if (cm != null && cm.parent_symbol is ObjectTypeSymbol) {
-			ccheck.call = new CCodeIdentifier ("g_return_val_if_fail");
-			ccheck.add_argument (new CCodeConstant ("NULL"));
-		} else if (ret_type is VoidType) {
-			/* void function */
-			ccheck.call = new CCodeIdentifier ("g_return_if_fail");
-		} else {
-			ccheck.call = new CCodeIdentifier ("g_return_val_if_fail");
-
-			var cdefault = default_value_for_type (ret_type, false);
-			if (cdefault != null) {
-				ccheck.add_argument (cdefault);
-			} else {
-				return;
-			}
-		}
-		
-		ccode.add_expression (ccheck);
+	public virtual void create_type_check_statement (CodeNode method_node, DataType ret_type, TypeSymbol t, bool non_null, string var_name) {
 	}
 
 	public int get_param_pos (double param_pos, bool ellipsis = false) {
