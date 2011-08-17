@@ -291,6 +291,8 @@ public class Vala.CodeWriter : CodeVisitor {
 		write_string ("struct ");
 		write_identifier (st.name);
 
+		write_type_parameters (st.get_type_parameters ());
+
 		if (st.base_type != null) {
 			write_string (" : ");
 			write_type (st.base_type);
