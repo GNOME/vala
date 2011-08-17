@@ -446,7 +446,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 					if (param.direction != ParameterDirection.OUT) {
 						var t = param.variable_type.data_type;
-						if (t != null && t.is_reference_type ()) {
+						if (t != null && (t.is_reference_type () || param.variable_type.is_real_struct_type ())) {
 							create_method_type_check_statement (m, creturn_type, t, !param.variable_type.nullable, get_variable_cname (param.name));
 						}
 					} else if (!m.coroutine) {
