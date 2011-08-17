@@ -4181,7 +4181,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Table : Gtk.Container, Atk.Implementor, Gtk.Buildable {
-		public weak GLib.List children;
+		public weak GLib.List<Gtk.TableChild> children;
 		public weak Gtk.TableRowCol cols;
 		public uint16 ncols;
 		public uint16 nrows;
