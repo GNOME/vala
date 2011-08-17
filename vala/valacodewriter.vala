@@ -201,20 +201,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		write_string ("class ");
 		write_identifier (cl.name);
 
-		var type_params = cl.get_type_parameters ();
-		if (type_params.size > 0) {
-			write_string ("<");
-			bool first = true;
-			foreach (TypeParameter type_param in type_params) {
-				if (first) {
-					first = false;
-				} else {
-					write_string (",");
-				}
-				write_identifier (type_param.name);
-			}
-			write_string (">");
-		}
+		write_type_parameters (cl.get_type_parameters ());
 
 		var base_types = cl.get_base_types ();
 		if (base_types.size > 0) {
@@ -342,20 +329,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		write_string ("interface ");
 		write_identifier (iface.name);
 
-		var type_params = iface.get_type_parameters ();
-		if (type_params.size > 0) {
-			write_string ("<");
-			bool first = true;
-			foreach (TypeParameter type_param in type_params) {
-				if (first) {
-					first = false;
-				} else {
-					write_string (",");
-				}
-				write_identifier (type_param.name);
-			}
-			write_string (">");
-		}
+		write_type_parameters (iface.get_type_parameters ());
 
 		var prerequisites = iface.get_prerequisites ();
 		if (prerequisites.size > 0) {
@@ -645,20 +619,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		write_string (" ");
 		write_identifier (cb.name);
 
-		var type_params = cb.get_type_parameters ();
-		if (type_params.size > 0) {
-			write_string ("<");
-			bool first = true;
-			foreach (TypeParameter type_param in type_params) {
-				if (first) {
-					first = false;
-				} else {
-					write_string (",");
-				}
-				write_identifier (type_param.name);
-			}
-			write_string (">");
-		}
+		write_type_parameters (cb.get_type_parameters ());
 
 		write_string (" ");
 		
@@ -737,20 +698,7 @@ public class Vala.CodeWriter : CodeVisitor {
 
 			write_identifier (m.name);
 
-			var type_params = m.get_type_parameters ();
-			if (type_params.size > 0) {
-				write_string ("<");
-				bool first = true;
-				foreach (TypeParameter type_param in type_params) {
-					if (first) {
-						first = false;
-					} else {
-						write_string (",");
-					}
-					write_identifier (type_param.name);
-				}
-				write_string (">");
-			}
+			write_type_parameters (m.get_type_parameters ());
 
 			write_string (" ");
 		}
@@ -1627,6 +1575,22 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_string (" internal");
 		} else if (sym.access == SymbolAccessibility.PRIVATE) {
 			write_string (" private");
+		}
+	}
+
+	void write_type_parameters (List<TypeParameter> type_params) {
+		if (type_params.size > 0) {
+			write_string ("<");
+			bool first = true;
+			foreach (TypeParameter type_param in type_params) {
+				if (first) {
+					first = false;
+				} else {
+					write_string (",");
+				}
+				write_identifier (type_param.name);
+			}
+			write_string (">");
 		}
 	}
 }
