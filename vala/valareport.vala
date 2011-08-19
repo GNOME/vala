@@ -26,8 +26,8 @@ using GLib;
  * Namespace to centralize reporting warnings and errors.
  */
 public class Vala.Report : Object {
-	int warnings;
-	int errors;
+	protected int warnings;
+	protected int errors;
 
 	bool verbose_errors;
 
