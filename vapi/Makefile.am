@@ -461,7 +461,7 @@ pango:
 	$(GENVAPI) --library $(srcdir)/pango $(PACKAGESDIR)/pango/pango-custom.vala $(PACKAGESDIR)/pango/pango.gi
 
 pangocairo:
-	$(GENVAPI) --library $(srcdir)/pangocairo $(PACKAGESDIR)/pangocairo/pangocairo.gi
+	$(GENVAPI) --library $(srcdir)/pangocairo --metadatadir $(METADATADIR) $(GIRDIR)/PangoCairo-1.0.gir
 
 poppler-glib:
 	$(GENVAPI) --library $(srcdir)/poppler-glib $(PACKAGESDIR)/poppler-glib/poppler-glib.gi
