@@ -389,7 +389,7 @@ gtksourceview-3.0:
 	$(GENVAPI) --library $(srcdir)/gtksourceview-3.0 --pkg atk --pkg gdk-3.0 --pkg gdk-pixbuf-2.0 --pkg gio-2.0 --pkg gtk+-3.0 --pkg pango --pkg cairo --metadatadir $(METADATADIR) $(GIRDIR)/GtkSource-3.0.gir
 
 gudev-1.0:
-	$(GENVAPI) --library $(srcdir)/gudev-1.0 $(PACKAGESDIR)/gudev-1.0/gudev-1.0.gi
+	$(GENVAPI) --library $(srcdir)/gudev-1.0 --metadatadir $(METADATADIR) $(METADATADIR)/GUdev-1.0-custom.vala $(GIRDIR)/GUdev-1.0.gir
 
 hildon-1:
 	$(GENVAPI) --library $(srcdir)/hildon-1 $(PACKAGESDIR)/hildon-1/hildon-1-custom.vala $(PACKAGESDIR)/hildon-1/hildon-1.gi
