@@ -1,6 +1,6 @@
 * name="(.+)/Cairo\\1"
 *#function name="(.+)/cairo_\\1" skip=false
-PangoCairo name="Pango" cprefix="Pango"
+PangoCairo name="Pango" cprefix="Pango" lower_case_cprefix="pango_"
 
 // Report upstream
 PangoCairo cheader_filename="pango/pangocairo.h"

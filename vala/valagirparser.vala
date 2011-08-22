@@ -68,6 +68,7 @@ public class Vala.GirParser : CodeVisitor {
 		SENTINEL,
 		CLOSURE,
 		CPREFIX,
+		LOWER_CASE_CPREFIX,
 		ERRORDOMAIN;
 
 		public static ArgumentType? from_string (string name) {
@@ -1741,6 +1742,7 @@ public class Vala.GirParser : CodeVisitor {
 		start_element ("namespace");
 
 		string? cprefix = reader.get_attribute ("c:identifier-prefixes");
+		string? lower_case_cprefix = reader.get_attribute ("c:symbol-prefixes");
 		string vala_namespace = cprefix;
 		string gir_namespace = reader.get_attribute ("name");
 		string gir_version = reader.get_attribute ("version");
@@ -1778,12 +1780,24 @@ public class Vala.GirParser : CodeVisitor {
 			cprefix = ns_metadata.get_string (ArgumentType.CPREFIX);
 		}
 
+		if (ns_metadata.has_argument (ArgumentType.LOWER_CASE_CPREFIX)) {
+			lower_case_cprefix = ns_metadata.get_string (ArgumentType.LOWER_CASE_CPREFIX);
+		} else if (lower_case_cprefix != null) {
+			lower_case_cprefix += "_";
+		}
+
 		ns.set_attribute_string ("CCode", "gir_namespace", gir_namespace);
 		ns.set_attribute_string ("CCode", "gir_version", gir_version);
 
 		if (cprefix != null) {
 			ns.set_attribute_string ("CCode", "cprefix", cprefix);
-			ns.set_attribute_string ("CCode", "lower_case_cprefix", Symbol.camel_case_to_lower_case (cprefix) + "_");
+			if (lower_case_cprefix == null) {
+				ns.set_attribute_string ("CCode", "lower_case_cprefix", Symbol.camel_case_to_lower_case (cprefix) + "_");
+			}
+		}
+
+		if (lower_case_cprefix != null) {
+			ns.set_attribute_string ("CCode", "lower_case_cprefix", lower_case_cprefix);
 		}
 
 		if (cheader_filenames != null) {
