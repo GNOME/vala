@@ -4387,7 +4387,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (!(arg.value_type is NullType) && type.is_real_struct_type ()) {
 			// we already use a reference for arguments of ref, out, and nullable parameters
 			if (!(unary != null && (unary.operator == UnaryOperator.OUT || unary.operator == UnaryOperator.REF)) && !type.nullable) {
-				var cunary = cexpr as CCodeUnaryExpression;
 				if (cexpr is CCodeIdentifier || cexpr is CCodeMemberAccess) {
 					return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr);
 				} else {
