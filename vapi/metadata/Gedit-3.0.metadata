@@ -10,7 +10,6 @@ Encoding  cheader_filename="gedit/gedit-encodings.h"
 EncodingsComboBox cheader_filename="gedit/gedit-encodings-combo-box.h"
 Message cheader_filename="gedit/gedit-message.h"
 MessageBus cheader_filename="gedit/gedit-message-bus.h"
-MessageType cheader_filename="gedit/gedit-message-type.h"
 // present in the gir but the header is missing
 NotebookShowTabsModeType skip=true
 Panel cheader_filename="gedit/gedit-panel.h"
@@ -35,4 +34,3 @@ METADATA_* cheader_filename="gedit/gedit-document.h"
 
 MessageBusForeach cheader_filename="gedit/gedit-message-bus.h"
 MessageCallback cheader_filename="gedit/gedit-message-bus.h"
-MessageTypeForeach cheader_filename="gedit/gedit-message-type.h"

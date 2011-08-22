@@ -1018,6 +1018,7 @@ public class Vala.GirParser : CodeVisitor {
 
 	SourceFile current_source_file;
 	Node root;
+	ArrayList<Metadata> metadata_roots = new ArrayList<Metadata> ();
 
 	SourceLocation begin;
 	SourceLocation end;
@@ -1059,8 +1060,8 @@ public class Vala.GirParser : CodeVisitor {
 
 		root.process (this);
 
-		foreach (var node in root.members) {
-			report_unused_metadata (node.metadata);
+		foreach (var metadata in metadata_roots) {
+			report_unused_metadata (metadata);
 		}
 	}
 
@@ -1110,15 +1111,6 @@ public class Vala.GirParser : CodeVisitor {
 	public void parse_file (SourceFile source_file) {
 		metadata_stack = new ArrayList<Metadata> ();
 		metadata = Metadata.empty;
-
-		// load metadata, first look into metadata directories then in the same directory of the .gir.
-		string? metadata_filename = context.get_metadata_path (source_file.filename);
-		if (metadata_filename != null && FileUtils.test (metadata_filename, FileTest.EXISTS)) {
-			var metadata_parser = new MetadataParser ();
-			var metadata_file = new SourceFile (context, source_file.file_type, metadata_filename);
-			context.add_source_file (metadata_file);
-			metadata = metadata_parser.parse_metadata (metadata_file);
-		}
 
 		this.current_source_file = source_file;
 		reader = new MarkupReader (source_file.filename);
@@ -1750,6 +1742,16 @@ public class Vala.GirParser : CodeVisitor {
 		if (provided_namespaces.contains ("%s-%s".printf (gir_namespace, gir_version))) {
 			skip_element ();
 			return;
+		}
+
+		// load metadata, first look into metadata directories then in the same directory of the .gir.
+		string? metadata_filename = context.get_metadata_path (current_source_file.filename);
+		if (metadata_filename != null && FileUtils.test (metadata_filename, FileTest.EXISTS)) {
+			var metadata_parser = new MetadataParser ();
+			var metadata_file = new SourceFile (context, current_source_file.file_type, metadata_filename);
+			context.add_source_file (metadata_file);
+			metadata = metadata_parser.parse_metadata (metadata_file);
+			metadata_roots.add (metadata);
 		}
 
 		var ns_metadata = metadata.match_child (gir_namespace);
