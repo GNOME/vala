@@ -1,3 +1,9 @@
+Vala 0.13.3
+===========
+
+ * Switch pangocairo bindings to .gir.
+ * Bug fixes.
+
 Vala 0.13.2
 ===========
 
