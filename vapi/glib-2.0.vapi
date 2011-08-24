@@ -3400,10 +3400,15 @@ namespace GLib {
 	public delegate void MarkupParserErrorFunc (MarkupParseContext context, Error error);
 	
 	public struct MarkupParser {
+		[CCode (delegate_target = false)]
 		public unowned MarkupParserStartElementFunc start_element;
+		[CCode (delegate_target = false)]
 		public unowned MarkupParserEndElementFunc end_element;
+		[CCode (delegate_target = false)]
 		public unowned MarkupParserTextFunc text;
+		[CCode (delegate_target = false)]
 		public unowned MarkupParserPassthroughFunc passthrough;
+		[CCode (delegate_target = false)]
 		public unowned MarkupParserErrorFunc error;
 	}
 
