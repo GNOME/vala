@@ -405,7 +405,7 @@ public abstract class Vala.Symbol : CodeNode {
 	 * if it has.
 	 */
 	public bool check_deprecated (SourceReference? source_ref = null) {
-		if (deprecated) {
+		if (external_package && deprecated) {
 			if (!CodeContext.get ().deprecated) {
 				Report.deprecated (source_ref, "%s %s%s".printf (get_full_name (), (deprecated_since == null) ? "is deprecated" : "has been deprecated since %s".printf (deprecated_since), (replacement == null) ? "" : ". Use %s".printf (replacement)));
 			}
@@ -420,7 +420,7 @@ public abstract class Vala.Symbol : CodeNode {
 	 * if it is.
 	 */
 	public bool check_experimental (SourceReference? source_ref = null) {
-		if (experimental) {
+		if (external_package && experimental) {
 			if (!CodeContext.get ().experimental) {
 				Report.experimental (source_ref, "%s is experimental".printf (get_full_name ()));
 			}
