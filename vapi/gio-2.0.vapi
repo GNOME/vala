@@ -2001,16 +2001,16 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface PollableInputStream : GLib.InputStream {
 		public abstract bool can_poll ();
-		public abstract unowned GLib.TimeoutSource create_source (GLib.Cancellable? cancellable = null);
+		public abstract GLib.TimeoutSource create_source (GLib.Cancellable? cancellable = null);
 		public abstract bool is_readable ();
-		public abstract ssize_t read_nonblocking (void* buffer, size_t size, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public abstract ssize_t read_nonblocking ([CCode (array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface PollableOutputStream : GLib.OutputStream {
 		public abstract bool can_poll ();
-		public abstract unowned GLib.TimeoutSource create_source (GLib.Cancellable? cancellable = null);
+		public abstract GLib.TimeoutSource create_source (GLib.Cancellable? cancellable = null);
 		public abstract bool is_writable ();
-		public abstract ssize_t write_nonblocking (void* buffer, size_t size, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public abstract ssize_t write_nonblocking ([CCode (array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface Proxy : GLib.Object {
