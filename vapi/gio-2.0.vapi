@@ -1811,7 +1811,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface DBusObject : GLib.Object {
 		public abstract unowned GLib.DBusInterface get_interface (string interface_name);
-		public abstract unowned GLib.List get_interfaces ();
+		public abstract GLib.List<GLib.DBusInterface> get_interfaces ();
 		public abstract unowned string get_object_path ();
 		public signal void interface_added (GLib.DBusInterface interface_);
 		public signal void interface_removed (GLib.DBusInterface interface_);

@@ -410,6 +410,7 @@ uid_t name="uint"
 g_bus_* hidden="1"
 g_dbus_connection_register_object hidden="1"
 g_dbus_connection_emit_signal.destination_bus_name nullable="1"
+g_dbus_object_get_interfaces transfer_ownership="1" type_arguments="DBusInterface"
 g_dbus_server_new_sync.observer nullable="1" default_value="null"
 
 GSettingsBackend base_class="GObject"
