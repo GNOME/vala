@@ -4368,6 +4368,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			ccode.add_assignment (get_cvalue_ (temp_value), creation_expr);
 			expr.target_value = temp_value;
 		}
+
+		((GLibValue) expr.target_value).lvalue = true;
 	}
 
 	public CCodeExpression? handle_struct_argument (Parameter? param, Expression arg, CCodeExpression? cexpr) {
