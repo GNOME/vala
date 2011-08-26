@@ -4336,7 +4336,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			// no temporary variable necessary
 			ccode.add_expression (creation_expr);
 			set_cvalue (expr, instance);
-			return;
 		} else if (instance != null) {
 			if (expr.type_reference.data_type is Struct) {
 				ccode.add_expression (creation_expr);
@@ -4363,10 +4362,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				}
 			}
 
-			creation_expr = instance;
-		}
-
-		if (creation_expr != null) {
+			set_cvalue (expr, instance);
+		} else if (creation_expr != null) {
 			var temp_value = create_temp_value (expr.value_type, false, expr);
 			ccode.add_assignment (get_cvalue_ (temp_value), creation_expr);
 			expr.target_value = temp_value;
