@@ -747,13 +747,18 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				}
 			}
 
-			var temp_var = get_temp_variable (result_type, result_type.value_owned);
-			var temp_ref = get_variable_cexpression (temp_var.name);
+			if (!return_result_via_out_param) {
+				var temp_var = get_temp_variable (result_type, result_type.value_owned);
+				var temp_ref = get_variable_cexpression (temp_var.name);
 
-			emit_temp_var (temp_var);
+				emit_temp_var (temp_var);
 
-			ccode.add_assignment (temp_ref, ccall_expr);
-			set_cvalue (expr, temp_ref);
+				ccode.add_assignment (temp_ref, ccall_expr);
+				set_cvalue (expr, temp_ref);
+			} else {
+				set_cvalue (expr, ccall_expr);
+			}
+			((GLibValue) expr.target_value).lvalue = true;
 		}
 
 		params_it = params.iterator ();
