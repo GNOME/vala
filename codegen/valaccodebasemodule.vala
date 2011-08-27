@@ -3476,6 +3476,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				expr.target_value = transform_value (expr.target_value, expr.target_type, expr);
 			}
 
+			if (expr.target_value == null) {
+				return;
+			}
+
 			if (expr.formal_target_type is GenericType && !(expr.target_type is GenericType)) {
 				if (expr.formal_target_type.type_parameter.parent_symbol != garray_type) {
 					// GArray doesn't use pointer-based generics
