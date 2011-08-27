@@ -5425,9 +5425,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public CCodeExpression? default_value_for_type (DataType type, bool initializer_expression) {
 		var st = type.data_type as Struct;
 		var array_type = type as ArrayType;
-		if (initializer_expression && !type.nullable &&
-		    ((st != null && !st.is_simple_type ()) ||
-		     (array_type != null && array_type.fixed_length))) {
+		if (type.data_type != null && get_ccode_default_value (type.data_type) != "") {
+			return new CCodeConstant (get_ccode_default_value (type.data_type));
+		} else if (initializer_expression && !type.nullable &&
+				   (st != null || (array_type != null && array_type.fixed_length))) {
 			// 0-initialize struct with struct initializer { 0 }
 			// only allowed as initializer expression in C
 			var clist = new CCodeInitializerList ();
@@ -5438,8 +5439,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		           || type is PointerType || type is DelegateType
 		           || (array_type != null && !array_type.fixed_length)) {
 			return new CCodeConstant ("NULL");
-		} else if (type.data_type != null && get_ccode_default_value (type.data_type) != "") {
-			return new CCodeConstant (get_ccode_default_value (type.data_type));
 		} else if (type.type_parameter != null) {
 			return new CCodeConstant ("NULL");
 		} else if (type is ErrorType) {
