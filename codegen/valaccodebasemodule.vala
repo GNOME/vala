@@ -1499,6 +1499,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			push_function (function);
 
+			if (prop.binding == MemberBinding.INSTANCE) {
+				if (!acc.readable || returns_real_struct) {
+					create_property_type_check_statement (prop, false, t, true, "self");
+				} else {
+					create_property_type_check_statement (prop, true, t, true, "self");
+				}
+			}
+
 			CCodeFunctionCall vcast = null;
 			if (prop.parent_symbol is Interface) {
 				var iface = (Interface) prop.parent_symbol;
