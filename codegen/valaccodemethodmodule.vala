@@ -434,7 +434,8 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 						ccode.add_declaration ("%s *".printf (get_ccode_name (cl)), new CCodeVariableDeclarator ("self"));
 						ccode.add_assignment (new CCodeIdentifier ("self"), cself);
 					} else if (m.binding == MemberBinding.INSTANCE
-						   && !(m is CreationMethod)) {
+							   && !(m is CreationMethod)
+							   && m.base_method == null && m.base_interface_method == null) {
 						create_method_type_check_statement (m, creturn_type, cl, true, "self");
 					}
 				}
@@ -637,9 +638,6 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			// generate helpful error message if a sublcass does not implement an abstract method.
 			// This is only meaningful for subclasses implemented in C since the vala compiler would
 			// complain during compile time of such en error.
-
-			// add a typecheck statement for "self"
-			create_method_type_check_statement (m, creturn_type, current_type_symbol, true, "self");
 
 			// add critical warning that this method should not have been called
 			var type_from_instance_call = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_FROM_INSTANCE"));
@@ -921,6 +919,9 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		generate_cparameters (m, cfile, cparam_map, vfunc, null, carg_map, vcall, direction);
 
 		push_function (vfunc);
+
+		// add a typecheck statement for "self"
+		create_method_type_check_statement (m, return_type, (TypeSymbol) m.parent_symbol, true, "self");
 
 		foreach (Expression precondition in m.get_preconditions ()) {
 			create_precondition_statement (m, return_type, precondition);
