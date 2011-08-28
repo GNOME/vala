@@ -341,6 +341,10 @@ public class Vala.CodeContext {
 
 		add_source_file (new SourceFile (this, SourceFileType.PACKAGE, path));
 
+		if (verbose_mode) {
+			stdout.printf ("Loaded package `%s'\n", path);
+		}
+
 		var deps_filename = Path.build_filename (Path.get_dirname (path), "%s.deps".printf (pkg));
 		if (!add_packages_from_file (deps_filename)) {
 			return false;
