@@ -1908,7 +1908,7 @@ namespace GLib {
 		public static GLib.File new_for_uri (string uri);
 		public abstract unowned GLib.FileIOStream open_readwrite (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract async unowned GLib.FileIOStream open_readwrite_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public static unowned GLib.File parse_name (string parse_name);
+		public static GLib.File parse_name (string parse_name);
 		public abstract async bool poll_mountable (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[NoWrapper]
 		public abstract bool prefix_matches (GLib.File file);
