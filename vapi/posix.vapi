@@ -1991,7 +1991,7 @@ namespace Posix {
 		public tcflag_t c_cflag;
 		public tcflag_t c_lflag;
 		public cc_t c_line;
-		public unowned cc_t[] c_cc;
+		public cc_t c_cc[32];
 		public speed_t c_ispeed;
 		public speed_t c_ospeed;
 	}
