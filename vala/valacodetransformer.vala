@@ -203,7 +203,44 @@ public class Vala.CodeTransformer : CodeVisitor {
 	}
 
 	public override void visit_do_statement (DoStatement stmt) {
-		stmt.accept_children (this);
+		// convert to simple loop
+
+		// do not generate variable and if block if condition is always true
+		if (always_true (stmt.condition)) {
+			var loop = new Loop (stmt.body, stmt.source_reference);
+
+			var parent_block = (Block) stmt.parent_node;
+			parent_block.replace_statement (stmt, loop);
+
+			check (loop);
+			return;
+		}
+
+		var block = new Block (stmt.source_reference);
+
+		var first_local = new LocalVariable (context.analyzer.bool_type.copy (), stmt.get_temp_name (), new BooleanLiteral (true, stmt.source_reference), stmt.source_reference);
+		block.add_statement (new DeclarationStatement (first_local, stmt.source_reference));
+
+		var if_condition = new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, stmt.condition, stmt.condition.source_reference);
+		var true_block = new Block (stmt.condition.source_reference);
+		true_block.add_statement (new BreakStatement (stmt.condition.source_reference));
+		var if_stmt = new IfStatement (if_condition, true_block, null, stmt.condition.source_reference);
+
+		var condition_block = new Block (stmt.condition.source_reference);
+		condition_block.add_statement (if_stmt);
+
+		var first_if = new IfStatement (new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, new MemberAccess.simple (first_local.name, stmt.source_reference), stmt.source_reference), condition_block, null, stmt.source_reference);
+		stmt.body.insert_statement (0, first_if);
+		var first_assign = new ExpressionStatement (new Assignment (new MemberAccess.simple (first_local.name, stmt.source_reference), new BooleanLiteral (false, stmt.source_reference), AssignmentOperator.SIMPLE, stmt.source_reference), stmt.source_reference);
+		stmt.body.insert_statement (1, first_assign);
+
+		block.add_statement (new Loop (stmt.body, stmt.source_reference));
+
+		var parent_block = (Block) stmt.parent_node;
+		parent_block.replace_statement (stmt, block);
+
+		stmt.body.checked = false;
+		check (block);
 	}
 
 	public override void visit_for_statement (ForStatement stmt) {
