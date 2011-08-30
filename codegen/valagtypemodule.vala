@@ -2153,7 +2153,7 @@ public class Vala.GTypeModule : GErrorModule {
 				cexpr = new CCodeBinaryExpression (CCodeBinaryOperator.OR, cnull, ctype_check);
 			}
 			ccheck.add_argument (cexpr);
-		} else if (!non_null) {
+		} else if (!non_null || (t is Struct && ((Struct) t).is_simple_type ())) {
 			return;
 		} else if (t == glist_type || t == gslist_type) {
 			// NULL is empty list
