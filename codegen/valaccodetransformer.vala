@@ -61,6 +61,26 @@ public class Vala.CCodeTransformer : CodeTransformer {
 		local.accept_children (this);
 	}
 
+	public override void visit_while_statement (WhileStatement stmt) {
+		// convert to simple loop
+		begin_replace_statement (stmt);
+
+		if (!always_false (stmt.condition)) {
+			b.open_loop ();
+			if (!always_true (stmt.condition)) {
+				var cond = expression (@"!$(stmt.condition)");
+				b.open_if (cond);
+				b.add_break ();
+				b.close ();
+			}
+			b.add_statement (stmt.body);
+			b.close ();
+		}
+
+		stmt.body.checked = false;
+		end_replace_statement ();
+	}
+
 	public override void visit_expression (Expression expr) {
 		if (expr in context.analyzer.replaced_nodes) {
 			return;
