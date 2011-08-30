@@ -81,6 +81,29 @@ public class Vala.CCodeTransformer : CodeTransformer {
 		end_replace_statement ();
 	}
 
+	public override void visit_do_statement (DoStatement stmt) {
+		// convert to simple loop
+		begin_replace_statement (stmt);
+
+		b.open_loop ();
+		// do not generate variable and if block if condition is always true
+		if (!stmt.condition.is_always_true ()) {
+			var notfirst = b.add_temp_declaration (null, expression ("false"));
+			b.open_if (expression (notfirst));
+			b.open_if (new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, stmt.condition, stmt.source_reference));
+			b.add_break ();
+			b.close ();
+			b.add_else ();
+			b.add_assignment (expression (notfirst), expression ("true"));
+			b.close ();
+		}
+		stmt.body.checked = false;
+		b.add_statement (stmt.body);
+		b.close ();
+
+		end_replace_statement ();
+	}
+
 	public override void visit_expression (Expression expr) {
 		if (expr in context.analyzer.replaced_nodes) {
 			return;

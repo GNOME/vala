@@ -791,6 +791,57 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		jump_stack.remove_at (jump_stack.size - 1);
 	}
 
+	public override void visit_do_statement (DoStatement stmt) {
+		if (unreachable (stmt)) {
+			return;
+		}
+
+		var body_block = new BasicBlock ();
+		all_basic_blocks.add (body_block);
+		current_block.connect (body_block);
+		current_block = body_block;
+
+		var loop_block = new BasicBlock ();
+		all_basic_blocks.add (loop_block);
+		jump_stack.add (new JumpTarget.continue_target (loop_block));
+		var after_loop_block = new BasicBlock ();
+		all_basic_blocks.add (after_loop_block);
+		jump_stack.add (new JumpTarget.break_target (after_loop_block));
+
+		// body
+		stmt.body.accept (this);
+
+		// end of loop block reachable?
+		if (current_block != null) {
+			current_block.connect (loop_block);
+		}
+
+		// condition
+		current_block = loop_block;
+		loop_block.add_node (stmt.condition);
+		handle_errors (stmt.condition);
+
+		if (!stmt.condition.is_always_false ()) {
+			loop_block.connect (body_block);
+		}
+
+		if (!stmt.condition.is_always_true ()) {
+			loop_block.connect (after_loop_block);
+		}
+
+		// after loop block reachable?
+		if (after_loop_block.get_predecessors ().size == 0) {
+			// after loop block not reachable
+			mark_unreachable ();
+		} else {
+			// after loop block reachable
+			current_block = after_loop_block;
+		}
+
+		jump_stack.remove_at (jump_stack.size - 1);
+		jump_stack.remove_at (jump_stack.size - 1);
+	}
+
 	public override void visit_foreach_statement (ForeachStatement stmt) {
 		if (unreachable (stmt)) {
 			return;
