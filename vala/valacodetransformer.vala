@@ -167,8 +167,39 @@ public class Vala.CodeTransformer : CodeVisitor {
 		label.accept_children (this);
 	}
 
+	bool always_true (Expression condition) {
+		var literal = condition as BooleanLiteral;
+		return (literal != null && literal.value);
+	}
+
+	bool always_false (Expression condition) {
+		var literal = condition as BooleanLiteral;
+		return (literal != null && !literal.value);
+	}
+
 	public override void visit_while_statement (WhileStatement stmt) {
-		stmt.accept_children (this);
+		// convert to simple loop
+
+		if (always_true (stmt.condition)) {
+			// do not generate if block if condition is always true
+		} else if (always_false (stmt.condition)) {
+			// do not generate if block if condition is always false
+			stmt.body.insert_statement (0, new BreakStatement (stmt.condition.source_reference));
+		} else {
+			var if_condition = new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, stmt.condition, stmt.condition.source_reference);
+			var true_block = new Block (stmt.condition.source_reference);
+			true_block.add_statement (new BreakStatement (stmt.condition.source_reference));
+			var if_stmt = new IfStatement (if_condition, true_block, null, stmt.condition.source_reference);
+			stmt.body.insert_statement (0, if_stmt);
+		}
+
+		var loop = new Loop (stmt.body, stmt.source_reference);
+
+		var parent_block = (Block) stmt.parent_node;
+		parent_block.replace_statement (stmt, loop);
+
+		stmt.body.checked = false;
+		check (loop);
 	}
 
 	public override void visit_do_statement (DoStatement stmt) {
