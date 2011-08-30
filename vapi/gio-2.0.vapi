@@ -121,10 +121,12 @@ namespace GLib {
 		public bool get_is_remote ();
 		public GLib.Variant? get_platform_data ();
 		public unowned string getenv (string name);
-		public void print (string format);
+		[PrintfFormat]
+		public void print (string format, ...);
 		[NoWrapper]
 		public virtual void print_literal (string message);
-		public void printerr (string format);
+		[PrintfFormat]
+		public void printerr (string format, ...);
 		[NoWrapper]
 		public virtual void printerr_literal (string message);
 		public void set_exit_status (int exit_status);
