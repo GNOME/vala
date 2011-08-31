@@ -104,6 +104,38 @@ public class Vala.CCodeTransformer : CodeTransformer {
 		end_replace_statement ();
 	}
 
+	public override void visit_for_statement (ForStatement stmt) {
+		// convert to simple loop
+		begin_replace_statement (stmt);
+
+		// initializer
+		foreach (var init_expr in stmt.get_initializer ()) {
+			b.add_expression (init_expr);
+		}
+
+		if (stmt.condition == null || !stmt.condition.is_always_false ()) {
+			b.open_loop ();
+			var notfirst = b.add_temp_declaration (null, expression ("false"));
+			b.open_if (expression (notfirst));
+			foreach (var it_expr in stmt.get_iterator ()) {
+				b.add_expression (it_expr);
+			}
+			b.add_else ();
+			statements (@"$notfirst = true;");
+			b.close ();
+
+			if (stmt.condition != null && !stmt.condition.is_always_true ()) {
+				statements (@"if (!$(stmt.condition)) break;");
+			}
+			b.add_statement (stmt.body);
+
+			b.close ();
+		}
+
+		stmt.body.checked = false;
+		end_replace_statement ();
+	}
+
 	public override void visit_expression (Expression expr) {
 		if (expr in context.analyzer.replaced_nodes) {
 			return;

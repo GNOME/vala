@@ -161,48 +161,35 @@ public class Vala.ForStatement : CodeNode, Statement {
 
 		checked = true;
 
-		// convert to simple loop
-
-		var block = new Block (source_reference);
-
 		// initializer
 		foreach (var init_expr in initializer) {
-			block.add_statement (new ExpressionStatement (init_expr, init_expr.source_reference));
+			if (!init_expr.check (context)) {
+				error = true;
+			}
 		}
 
-		// do not generate if block if condition is always true
-		if (condition == null || condition.is_always_true ()) {
-		} else if (condition.is_always_false ()) {
-			// do not generate if block if condition is always false
-			body.insert_statement (0, new BreakStatement (condition.source_reference));
-		} else {
-			// condition
-			var if_condition = new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, condition, condition.source_reference);
-			var true_block = new Block (condition.source_reference);
-			true_block.add_statement (new BreakStatement (condition.source_reference));
-			var if_stmt = new IfStatement (if_condition, true_block, null, condition.source_reference);
-			body.insert_statement (0, if_stmt);
+		// condition
+		if (condition != null) {
+			condition.target_type = context.analyzer.bool_type.copy ();
+			if (!condition.check (context)) {
+				error = true;
+			}
+
+			if (condition.value_type == null || !condition.value_type.compatible (context.analyzer.bool_type)) {
+				error = true;
+				Report.error (condition.source_reference, "Condition must be boolean");
+			}
 		}
 
 		// iterator
-		var first_local = new LocalVariable (context.analyzer.bool_type.copy (), get_temp_name (), new BooleanLiteral (true, source_reference), source_reference);
-		block.add_statement (new DeclarationStatement (first_local, source_reference));
-
-		var iterator_block = new Block (source_reference);
 		foreach (var it_expr in iterator) {
-			iterator_block.add_statement (new ExpressionStatement (it_expr, it_expr.source_reference));
+			if (!it_expr.check (context)) {
+				error = true;
+			}
 		}
 
-		var first_if = new IfStatement (new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, new MemberAccess.simple (first_local.name, source_reference), source_reference), iterator_block, null, source_reference);
-		body.insert_statement (0, first_if);
-		body.insert_statement (1, new ExpressionStatement (new Assignment (new MemberAccess.simple (first_local.name, source_reference), new BooleanLiteral (false, source_reference), AssignmentOperator.SIMPLE, source_reference), source_reference));
-
-		block.add_statement (new Loop (body, source_reference));
-
-		unowned Block parent_block = (Block) parent_node;
-		parent_block.replace_statement (this, block);
-
-		if (!block.check (context)) {
+		// body
+		if (!body.check (context)) {
 			error = true;
 		}
 
