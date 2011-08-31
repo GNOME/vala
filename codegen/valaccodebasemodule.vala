@@ -2487,11 +2487,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			ccode.close ();
 		}
 
+		bool has_instance_fields = false;
 		foreach (Field f in st.get_fields ()) {
 			if (f.binding != MemberBinding.INSTANCE) {
 				// we only compare instance fields
 				continue;
 			}
+
+			has_instance_fields = true;
 
 			CCodeExpression cexp; // if (cexp) return FALSE;
 			var s1 = (CCodeExpression) new CCodeMemberAccess.pointer (new CCodeIdentifier ("s1"), f.name); // s1->f
@@ -2520,7 +2523,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			ccode.close ();
 		}
 
-		if (st.get_fields().size == 0) {
+		if (!has_instance_fields) {
 			// either opaque structure or simple type
 			if (st.is_simple_type ()) {
 				var cexp = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("s1")), new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("s2")));
