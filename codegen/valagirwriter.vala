@@ -311,7 +311,7 @@ public class Vala.GIRWriter : CodeVisitor {
 						write_indent ();
 						buffer.append_printf("<field name=\"%s\">\n", m.name);
 						indent++;
-						do_write_signature (m, "callback", true, m.name, CCodeBaseModule.get_ccode_name (m), m.get_parameters (), m.return_type, m.tree_can_fail);write_signature(m, "callback", true);
+						do_write_signature (m, "callback", true, m.name, CCodeBaseModule.get_ccode_name (m), m.get_parameters (), m.return_type, m.tree_can_fail);
 						indent--;
 						write_indent ();
 						buffer.append_printf ("</field>\n");
