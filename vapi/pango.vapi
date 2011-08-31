@@ -404,8 +404,8 @@ namespace Pango {
 		public void get_extents (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
 		public void get_pixel_extents (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
 		public void get_x_ranges (int start_index, int end_index, int[] ranges);
-		public void index_to_x (int index_, bool trailing, int x_pos);
-		public bool x_to_index (int x_pos, int index_, int trailing);
+		public void index_to_x (int index_, bool trailing, out int x_pos);
+		public bool x_to_index (int x_pos, out int index_, out int trailing);
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
 	[Compact]
