@@ -244,7 +244,49 @@ public class Vala.CodeTransformer : CodeVisitor {
 	}
 
 	public override void visit_for_statement (ForStatement stmt) {
-		stmt.accept_children (this);
+		// convert to simple loop
+
+		var block = new Block (stmt.source_reference);
+
+		// initializer
+		foreach (var init_expr in stmt.get_initializer ()) {
+			block.add_statement (new ExpressionStatement (init_expr, init_expr.source_reference));
+		}
+
+		// do not generate if block if condition is always true
+		if (stmt.condition == null || always_true (stmt.condition)) {
+		} else if (always_false (stmt.condition)) {
+			// do not generate if block if condition is always false
+			stmt.body.insert_statement (0, new BreakStatement (stmt.condition.source_reference));
+		} else {
+			// condition
+			var if_condition = new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, stmt.condition, stmt.condition.source_reference);
+			var true_block = new Block (stmt.condition.source_reference);
+			true_block.add_statement (new BreakStatement (stmt.condition.source_reference));
+			var if_stmt = new IfStatement (if_condition, true_block, null, stmt.condition.source_reference);
+			stmt.body.insert_statement (0, if_stmt);
+		}
+
+		// iterator
+		var first_local = new LocalVariable (context.analyzer.bool_type.copy (), stmt.get_temp_name (), new BooleanLiteral (true, stmt.source_reference), stmt.source_reference);
+		block.add_statement (new DeclarationStatement (first_local, stmt.source_reference));
+
+		var iterator_block = new Block (stmt.source_reference);
+		foreach (var it_expr in stmt.get_iterator ()) {
+			iterator_block.add_statement (new ExpressionStatement (it_expr, it_expr.source_reference));
+		}
+
+		var first_if = new IfStatement (new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, new MemberAccess.simple (first_local.name, stmt.source_reference), stmt.source_reference), iterator_block, null, stmt.source_reference);
+		stmt.body.insert_statement (0, first_if);
+		stmt.body.insert_statement (1, new ExpressionStatement (new Assignment (new MemberAccess.simple (first_local.name, stmt.source_reference), new BooleanLiteral (false, stmt.source_reference), AssignmentOperator.SIMPLE, stmt.source_reference), stmt.source_reference));
+
+		block.add_statement (new Loop (stmt.body, stmt.source_reference));
+
+		var parent_block = (Block) stmt.parent_node;
+		parent_block.replace_statement (stmt, block);
+
+		stmt.body.checked = false;
+		check (block);
 	}
 
 	public override void visit_foreach_statement (ForeachStatement stmt) {
