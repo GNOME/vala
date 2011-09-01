@@ -1879,14 +1879,23 @@ namespace Clutter {
 		public void set_subtitle_font_name (string font_name);
 		public void set_subtitle_uri (string uri);
 		public void set_uri (string uri);
+		[NoAccessorMethod]
 		public abstract double audio_volume { get; set; }
+		[NoAccessorMethod]
 		public abstract double buffer_fill { get; }
+		[NoAccessorMethod]
 		public abstract bool can_seek { get; }
+		[NoAccessorMethod]
 		public abstract double duration { get; }
+		[NoAccessorMethod]
 		public abstract bool playing { get; set; }
+		[NoAccessorMethod]
 		public abstract double progress { get; set; }
+		[NoAccessorMethod]
 		public abstract string subtitle_font_name { owned get; set; }
+		[NoAccessorMethod]
 		public abstract string subtitle_uri { owned get; set; }
+		[NoAccessorMethod]
 		public abstract string uri { owned get; set; }
 		public virtual signal void eos ();
 		public virtual signal void error (GLib.Error error);

@@ -814,19 +814,33 @@ public class Vala.GirParser : CodeVisitor {
 						prop.set_accessor = new PropertyAccessor (false, (construct_only != "1") && (writable == "1"), (construct_only == "1") || (construct_ == "1"), prop.property_type.copy (), null, null);
 					}
 
-					var getter = parent.lookup ("get_%s".printf (name));
-					if (getter != null && getter.get_cname () != parent.get_lower_case_cprefix() + "get_" + name) {
-						getter = null;
+					// find virtual/abstract accessors to handle abstract properties properly
+
+					Node getter = null;
+					var getters = parent.lookup_all ("get_%s".printf (name));
+					if (getters != null) {
+						foreach (var g in getters) {
+							if ((getter == null || !g.merged) && g.get_cname () == parent.get_lower_case_cprefix() + "get_" + name) {
+								getter = g;
+							}
+						}
 					}
-					var setter = parent.lookup ("set_%s".printf (name));
-					if (setter != null && setter.get_cname () != parent.get_lower_case_cprefix() + "set_" + name) {
-						setter = null;
+
+					Node setter = null;
+					var setters = parent.lookup_all ("set_%s".printf (name));
+					if (setters != null) {
+						foreach (var s in setters) {
+							if ((setter == null || !s.merged) && s.get_cname () == parent.get_lower_case_cprefix() + "set_" + name) {
+								setter = s;
+							}
+						}
 					}
 
 					prop.set_attribute ("NoAccessorMethod", false);
 					if (prop.get_accessor != null) {
 						var m = getter != null ? getter.symbol as Method : null;
-						if (m != null) {
+						// ensure getter vfunc if the property is abstract
+						if (m != null && (m.is_abstract || m.is_virtual || !prop.is_abstract)) {
 							getter.process (parser);
 							if (m.return_type is VoidType || m.get_parameters().size != 0) {
 								prop.set_attribute ("NoAccessorMethod", true);
@@ -846,7 +860,8 @@ public class Vala.GirParser : CodeVisitor {
 					}
 					if (prop.get_attribute ("NoAccessorMethod") == null && prop.set_accessor != null && prop.set_accessor.writable) {
 						var m = setter != null ? setter.symbol as Method : null;
-						if (m != null) {
+						// ensure setter vfunc if the property is abstract
+						if (m != null && (m.is_abstract || m.is_virtual || !prop.is_abstract)) {
 							setter.process (parser);
 							if (!(m.return_type is VoidType) || m.get_parameters().size != 1) {
 								prop.set_attribute ("NoAccessorMethod", true);
