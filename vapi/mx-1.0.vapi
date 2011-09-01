@@ -1038,11 +1038,11 @@ namespace Mx {
 		public void set_axis (Mx.DragAxis axis);
 		public void set_drag_actor (Clutter.Actor actor);
 		public void set_drag_threshold (uint threshold);
-		public Mx.DragAxis axis { get; set; }
-		public Clutter.Actor drag_actor { get; set; }
+		public abstract Mx.DragAxis axis { get; set; }
+		public abstract Clutter.Actor drag_actor { get; set; }
 		[NoAccessorMethod]
-		public bool drag_enabled { get; set; }
-		public uint drag_threshold { get; set; }
+		public abstract bool drag_enabled { get; set; }
+		public abstract uint drag_threshold { get; set; }
 		public virtual signal void drag_begin (float event_x, float event_y, int event_button, Clutter.ModifierType modifiers);
 		public virtual signal void drag_end (float event_x, float event_y);
 		public virtual signal void drag_motion (float delta_x, float delta_y);
@@ -1054,7 +1054,7 @@ namespace Mx {
 		public abstract void enable ();
 		public bool is_enabled ();
 		[NoAccessorMethod]
-		public bool drop_enabled { get; set; }
+		public abstract bool drop_enabled { get; set; }
 		public virtual signal void drop (Clutter.Actor draggable, float event_x, float event_y, int button, Clutter.ModifierType modifiers);
 		public virtual signal void over_in (Clutter.Actor draggable);
 		public virtual signal void over_out (Clutter.Actor draggable);
@@ -1073,9 +1073,9 @@ namespace Mx {
 		public abstract void get_adjustments (out Mx.Adjustment? hadjustment, out Mx.Adjustment? vadjustment);
 		public abstract void set_adjustments (Mx.Adjustment hadjustment, Mx.Adjustment vadjustment);
 		[NoAccessorMethod]
-		public Mx.Adjustment horizontal_adjustment { owned get; set; }
+		public abstract Mx.Adjustment horizontal_adjustment { owned get; set; }
 		[NoAccessorMethod]
-		public Mx.Adjustment vertical_adjustment { owned get; set; }
+		public abstract Mx.Adjustment vertical_adjustment { owned get; set; }
 	}
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_stylable_get_type ()")]
 	public interface Stylable : GLib.Object {
@@ -1095,9 +1095,9 @@ namespace Mx {
 		public void style_pseudo_class_add (string new_class);
 		public bool style_pseudo_class_contains (string pseudo_class);
 		public void style_pseudo_class_remove (string remove_class);
-		public Mx.Style style { get; set; }
-		public string style_class { get; set; }
-		public string style_pseudo_class { get; set; }
+		public abstract Mx.Style style { get; set; }
+		public abstract string style_class { get; set; }
+		public abstract string style_pseudo_class { get; set; }
 		[HasEmitter]
 		public virtual signal void style_changed (Mx.StyleChangedFlags flags);
 	}

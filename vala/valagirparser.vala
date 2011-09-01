@@ -2514,6 +2514,9 @@ public class Vala.GirParser : CodeVisitor {
 		var prop = new Property (current.name, type, null, null, current.source_reference);
 		prop.access = SymbolAccessibility.PUBLIC;
 		prop.external = true;
+		if (current.parent.symbol is Interface) {
+			prop.is_abstract = true;
+		}
 		if (no_array_length) {
 			prop.set_attribute_bool ("CCode", "array_length", false);
 		}

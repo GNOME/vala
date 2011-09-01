@@ -254,14 +254,14 @@ namespace Gedit {
 		public abstract void activate ();
 		public abstract void deactivate ();
 		[NoAccessorMethod]
-		public Gedit.App app { owned get; construct; }
+		public abstract Gedit.App app { owned get; construct; }
 	}
 	[CCode (cheader_filename = "gedit/gedit-view-activatable.h", type_cname = "GeditViewActivatableInterface", type_id = "gedit_view_activatable_get_type ()")]
 	public interface ViewActivatable : GLib.Object {
 		public abstract void activate ();
 		public abstract void deactivate ();
 		[NoAccessorMethod]
-		public Gedit.View view { owned get; construct; }
+		public abstract Gedit.View view { owned get; construct; }
 	}
 	[CCode (cheader_filename = "gedit/gedit-window-activatable.h", type_cname = "GeditWindowActivatableInterface", type_id = "gedit_window_activatable_get_type ()")]
 	public interface WindowActivatable : GLib.Object {
@@ -269,7 +269,7 @@ namespace Gedit {
 		public abstract void deactivate ();
 		public abstract void update_state ();
 		[NoAccessorMethod]
-		public Gedit.Window window { owned get; construct; }
+		public abstract Gedit.Window window { owned get; construct; }
 	}
 	[CCode (cheader_filename = "gedit/gedit-debug.h", cprefix = "GEDIT_")]
 	[Flags]
