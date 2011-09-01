@@ -32,7 +32,15 @@ public class Valadoc.Taglets.Link : InlineTaglet {
 	public override Rule? get_parser_rule (Rule run_rule) {
 		return Rule.seq ({
 			Rule.option ({ Rule.many ({ TokenType.SPACE }) }),
-			TokenType.any_word ().action ((token) => { symbol_name = token.to_string (); })
+			TokenType.any_word ().action ((token) => { symbol_name = token.to_string (); }),
+			Rule.option ({
+				Rule.many ({
+					Rule.one_of ({
+						TokenType.any_word ().action ((token) => { symbol_name += token.to_string (); }),
+						TokenType.MINUS.action ((token => { symbol_name += token.to_string (); }))
+					})
+				})
+			})
 		});
 	}
 
@@ -49,7 +57,7 @@ public class Valadoc.Taglets.Link : InlineTaglet {
 
 		if (_symbol == null) {
 			// TODO use ContentElement's source reference
-			reporter.simple_warning ("%s does not exist", symbol_name);
+			reporter.simple_warning ("%s: %s does not exist", container.get_full_name (), symbol_name);
 		}
 
 		base.check (api_root, container, reporter, settings);

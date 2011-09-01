@@ -34,6 +34,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	protected Html.CssClassResolver cssresolver;
 	protected Charts.Factory image_factory;
 
+	protected string package_list_link = "../index.html";
 
 	// CSS:
 	private const string css_inline_navigation = "navi_inline";
@@ -238,7 +239,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		Gee.ArrayList<Api.Node> lst = new Gee.ArrayList<Api.Node> ();
 		Api.Node pos = element;
 
-		this.write_top_element_template ("../index.html");
+		this.write_top_element_template (package_list_link);
 
 		while (pos != null) {
 			lst.add (pos);

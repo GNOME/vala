@@ -40,13 +40,40 @@ public class Valadoc.CTypeResolver : Visitor {
 	 * @param name a C-name
 	 * @return the resolved node or null
 	 */
-	public Api.Node? resolve_symbol (string name) {
-		return nodes.get (name);
+	public Api.Node? resolve_symbol (string _name) {
+		string name = _name.replace ("-", "_");
+
+		Api.Node? node = nodes.get (name);
+		if (node != null) {
+			return node;
+		}
+
+		var name_length = name.length;
+		if (name_length > 5 && name.has_suffix ("Class")) {
+			return nodes.get (name.substring (0, name_length - 5));
+		}
+
+		/*
+		for (int i = 0; name[i] != '\0' ; i++) {
+			if (name[i] == ':' && name[i+1] == ':') {
+				string first_part = name.substring (0, i - 1);
+				string second_part = name.substring (i + 2, -1);
+				string nick = first_part + ":" + second_part;
+				return nodes.get (nick);
+			} else if (name[i] == ':') {
+				string first_part = name.substring (0, i);
+				string second_part = name.substring (i + 1, -1);
+				string nick = first_part + "::" + second_part;
+				return nodes.get (nick);
+			}
+		} */
+
+		return null;
 	}
 
 	private void register_symbol (string? name, Api.Node node) {
 		if (name != null) {
-			nodes.set (name, node);
+			nodes.set (name.replace ("-", "_"), node);
 		}
 	}
 
@@ -118,8 +145,29 @@ public class Valadoc.CTypeResolver : Visitor {
 	 */
 	public override void visit_property (Property item) {
 		string parent_cname = get_parent_type_cname (item);
-		if (parent_cname != null) {
-			register_symbol (parent_cname+":"+item.get_cname (), item);
+		assert (parent_cname != null);
+
+		string cname = item.get_cname ();
+		register_symbol (parent_cname+":"+cname, item);
+
+
+		Collection<Interface> interfaces = null;
+		Collection<Class> classes = null;
+
+		if (item.parent is Interface) {
+			interfaces = ((Api.Interface) item.parent).get_known_related_interfaces ();
+			classes = ((Api.Interface) item.parent).get_known_implementations ();
+		} else if (item.parent is Class) {
+			interfaces = ((Api.Class) item.parent).get_known_derived_interfaces ();
+			classes = ((Api.Class) item.parent).get_known_child_classes ();
+		}
+
+		foreach (Interface iface in interfaces) {
+			register_symbol (iface.get_cname () + ":" + cname, item);
+		}
+
+		foreach (Class cl in classes) {
+			register_symbol (cl.get_cname () + ":" + cname, item);
 		}
 	}
 
@@ -127,7 +175,7 @@ public class Valadoc.CTypeResolver : Visitor {
 	 * {@inheritDoc}
 	 */
 	public override void visit_field (Field item) {
-		if (item is Namespace) {
+		if (item.parent is Namespace || item.is_static) {
 			register_symbol (item.get_cname (), item);
 		} else {
 			string parent_cname = get_parent_type_cname (item);
@@ -156,8 +204,29 @@ public class Valadoc.CTypeResolver : Visitor {
 	 */
 	public override void visit_signal (Api.Signal item) {
 		string parent_cname = get_parent_type_cname (item);
-		if (parent_cname != null) {
-			register_symbol (parent_cname+"::"+item.get_cname (), item);
+		assert (parent_cname != null);
+
+		string cname = item.get_cname ();
+		register_symbol (parent_cname+"::"+cname, item);
+
+
+		Collection<Interface> interfaces = null;
+		Collection<Class> classes = null;
+
+		if (item.parent is Interface) {
+			interfaces = ((Api.Interface) item.parent).get_known_related_interfaces ();
+			classes = ((Api.Interface) item.parent).get_known_implementations ();
+		} else if (item.parent is Class) {
+			interfaces = ((Api.Class) item.parent).get_known_derived_interfaces ();
+			classes = ((Api.Class) item.parent).get_known_child_classes ();
+		}
+
+		foreach (Interface iface in interfaces) {
+			register_symbol (iface.get_cname () + "::" + cname, item);
+		}
+
+		foreach (Class cl in classes) {
+			register_symbol (cl.get_cname () + "::" + cname, item);
 		}
 	}
 
@@ -165,6 +234,30 @@ public class Valadoc.CTypeResolver : Visitor {
 	 * {@inheritDoc}
 	 */
 	public override void visit_method (Method item) {
+		if (item.is_abstract || item.is_virtual || item.is_override) {
+			string parent_cname = get_parent_type_cname (item);
+			register_symbol (parent_cname + "->" + item.name, item);
+
+			Collection<Interface> interfaces = null;
+			Collection<Class> classes = null;
+
+			if (item.parent is Interface) {
+				interfaces = ((Api.Interface) item.parent).get_known_related_interfaces ();
+				classes = ((Api.Interface) item.parent).get_known_implementations ();
+			} else if (item.parent is Class) {
+				interfaces = ((Api.Class) item.parent).get_known_derived_interfaces ();
+				classes = ((Api.Class) item.parent).get_known_child_classes ();
+			}
+
+			foreach (Interface iface in interfaces) {
+				register_symbol (iface.get_cname () + "->" + item.name, item);
+			}
+
+			foreach (Class cl in classes) {
+				register_symbol (cl.get_cname () + "->" + item.name, item);
+			}
+		}
+
 		register_symbol (item.get_cname (), item);
 	}
 

@@ -270,6 +270,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 					TokenType.BREAK.action ((token) => { add_content_string ("\n"); }),
 					TokenType.CLOSED_BRACE.action (add_text),
 					TokenType.MINUS.action (add_text),
+					TokenType.ALIGN_BOTTOM.action (add_text),
 					TokenType.ALIGN_TOP.action (add_text),
 					TokenType.GREATER_THAN.action (add_text),
 					TokenType.LESS_THAN.action (add_text),
@@ -713,7 +714,9 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		Rule comment =
 			Rule.seq ({
 				TokenType.EOL,
-				description,
+				Rule.option ({
+					description
+				}),
 				Rule.option ({
 					Rule.many ({ taglet })
 				})

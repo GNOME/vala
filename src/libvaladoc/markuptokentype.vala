@@ -23,6 +23,7 @@
 
 public enum Valadoc.MarkupTokenType {
 	NONE,
+	COMMENT,
 	START_ELEMENT,
 	END_ELEMENT,
 	TEXT,

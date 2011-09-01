@@ -58,6 +58,18 @@ public class Valadoc.MarkupReader : Object {
 
 	private ErrorReporter reporter;
 
+	public MarkupReader.from_string (string filename, string content, ErrorReporter reporter) {
+		this.filename = filename;
+		this.reporter = reporter;
+
+		begin = content;
+		end = begin + content.size ();
+		current = begin;
+
+		column = 1;
+		line = 1;
+	}
+
 	public MarkupReader (string filename, ErrorReporter reporter) {
 		this.filename = filename;
 		this.reporter = reporter;
@@ -257,6 +269,11 @@ public class Valadoc.MarkupReader : Object {
 					content.append (((string) text_begin).substring (0, (int) (current - text_begin)));
 					content.append_c ('>');
 					current += 4;
+					text_begin = current;
+				} else if (((string) next_pos).has_prefix ("percnt;")) {
+					content.append (((string) text_begin).substring (0, (int) (current - text_begin)));
+					content.append_c ('>');
+					current += 8;
 					text_begin = current;
 				} else {
 					current += u.to_utf8 (null);

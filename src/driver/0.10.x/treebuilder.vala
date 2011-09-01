@@ -479,9 +479,16 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 	//
 
 	private bool add_package (Vala.CodeContext context, string pkg) {
+		// ignore multiple occurences of the same package
 		if (context.has_package (pkg)) {
-			// ignore multiple occurences of the same package
 			return true;
+		}
+
+		string vapi_name = pkg + ".vapi";
+		foreach (string source_file in settings.source_files) {
+			if (Path.get_basename (source_file) == vapi_name) {
+				return true;
+			}
 		}
 
 

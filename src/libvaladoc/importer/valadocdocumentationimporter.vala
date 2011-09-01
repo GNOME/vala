@@ -122,7 +122,10 @@ public class Valadoc.Importer.ValadocDocumentationImporter : DocumentationImport
 		}
 
 		if (symbol == null) {
-			reporter.simple_warning ("%s does not exist", symbol_name);
+			if (settings.verbose) {
+				reporter.simple_warning ("Node %s does not exist", symbol_name);
+			}
+
 			return ;
 		}
 
