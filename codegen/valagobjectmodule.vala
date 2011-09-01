@@ -215,6 +215,14 @@ public class Vala.GObjectModule : GTypeModule {
 				generate_property_accessor_declaration (prop.base_interface_property.get_accessor, cfile);
 			}
 
+			CCodeExpression cfunc;
+			if (!get_ccode_no_accessor_method (base_prop)) {
+				cfunc = new CCodeIdentifier (get_ccode_name (base_prop.get_accessor));
+			} else {
+				// use the static real function as helper
+				cfunc = new CCodeIdentifier (get_ccode_real_name (prop.get_accessor));
+			}
+
 			ccode.add_case (new CCodeIdentifier (get_ccode_upper_case_name (prop)));
 			if (prop.property_type.is_real_struct_type ()) {
 				var st = prop.property_type.data_type as Struct;
@@ -222,7 +230,7 @@ public class Vala.GObjectModule : GTypeModule {
 				ccode.open_block ();
 				ccode.add_declaration (get_ccode_name (st), new CCodeVariableDeclarator ("boxed"));
 
-				ccall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_name (base_prop.get_accessor)));
+				ccall = new CCodeFunctionCall (cfunc);
 				ccall.add_argument (cself);
 				var boxed_addr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("boxed"));
 				ccall.add_argument (boxed_addr);
@@ -239,7 +247,7 @@ public class Vala.GObjectModule : GTypeModule {
 				}
 				ccode.close ();
 			} else {
-				ccall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_name (base_prop.get_accessor)));
+				ccall = new CCodeFunctionCall (cfunc);
 				ccall.add_argument (cself);
 				var array_type = prop.property_type as ArrayType;
 				if (array_type != null && array_type.element_type.data_type == string_type.data_type) {
@@ -314,8 +322,16 @@ public class Vala.GObjectModule : GTypeModule {
 				generate_property_accessor_declaration (prop.base_interface_property.set_accessor, cfile);
 			}
 
+			CCodeExpression cfunc;
+			if (!get_ccode_no_accessor_method (base_prop)) {
+				cfunc = new CCodeIdentifier (get_ccode_name (base_prop.set_accessor));
+			} else {
+				// use the static real function as helper
+				cfunc = new CCodeIdentifier (get_ccode_real_name (prop.set_accessor));
+			}
+
 			ccode.add_case (new CCodeIdentifier (get_ccode_upper_case_name (prop)));
-			ccall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_name (base_prop.set_accessor)));
+			ccall = new CCodeFunctionCall (cfunc);
 			ccall.add_argument (cself);
 			if (prop.property_type is ArrayType && ((ArrayType)prop.property_type).element_type.data_type == string_type.data_type) {
 				ccode.open_block ();
