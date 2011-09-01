@@ -1374,7 +1374,7 @@ public class Vala.GTypeModule : GErrorModule {
 			if (prop.get_accessor != null) {
 				string cname = CCodeBaseModule.get_ccode_real_name (prop.get_accessor);
 				if (prop.is_abstract || prop.is_virtual) {
-					cname = "%s_get_%s".printf (get_ccode_lower_case_name (cl, null), prop.name);
+					cname = CCodeBaseModule.get_ccode_name (prop.get_accessor);
 				}
 
 				CCodeExpression cfunc = new CCodeIdentifier (cname);
@@ -1386,7 +1386,7 @@ public class Vala.GTypeModule : GErrorModule {
 			if (prop.set_accessor != null) {
 				string cname = CCodeBaseModule.get_ccode_real_name (prop.set_accessor);
 				if (prop.is_abstract || prop.is_virtual) {
-					cname = "%s_set_%s".printf (get_ccode_lower_case_name (cl, null), prop.name);
+					cname = CCodeBaseModule.get_ccode_name (prop.set_accessor);
 				}
 
 				CCodeExpression cfunc = new CCodeIdentifier (cname);
