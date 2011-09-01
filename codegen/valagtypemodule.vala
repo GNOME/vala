@@ -1250,13 +1250,15 @@ public class Vala.GTypeModule : GErrorModule {
 			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (get_ccode_upper_case_name (base_type))));
 			ccast.add_argument (new CCodeIdentifier ("klass"));
 
-			if (prop.get_accessor != null) {
-				string cname = CCodeBaseModule.get_ccode_real_name (prop.get_accessor);
-				ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, "get_%s".printf (prop.name)), new CCodeIdentifier (cname));
-			}
-			if (prop.set_accessor != null) {
-				string cname = CCodeBaseModule.get_ccode_real_name (prop.set_accessor);
-				ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, "set_%s".printf (prop.name)), new CCodeIdentifier (cname));
+			if (!get_ccode_no_accessor_method (prop.base_property)) {
+				if (prop.get_accessor != null) {
+					string cname = CCodeBaseModule.get_ccode_real_name (prop.get_accessor);
+					ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, "get_%s".printf (prop.name)), new CCodeIdentifier (cname));
+				}
+				if (prop.set_accessor != null) {
+					string cname = CCodeBaseModule.get_ccode_real_name (prop.set_accessor);
+					ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, "set_%s".printf (prop.name)), new CCodeIdentifier (cname));
+				}
 			}
 		}
 
@@ -1371,29 +1373,31 @@ public class Vala.GTypeModule : GErrorModule {
 			
 			var ciface = new CCodeIdentifier ("iface");
 
-			if (prop.get_accessor != null) {
-				string cname = CCodeBaseModule.get_ccode_real_name (prop.get_accessor);
-				if (prop.is_abstract || prop.is_virtual) {
-					cname = CCodeBaseModule.get_ccode_name (prop.get_accessor);
-				}
+			if (!get_ccode_no_accessor_method (prop.base_interface_property)) {
+				if (prop.get_accessor != null) {
+					string cname = CCodeBaseModule.get_ccode_real_name (prop.get_accessor);
+					if (prop.is_abstract || prop.is_virtual) {
+						cname = CCodeBaseModule.get_ccode_name (prop.get_accessor);
+					}
 
-				CCodeExpression cfunc = new CCodeIdentifier (cname);
-				if (prop.is_abstract || prop.is_virtual) {
-					cfunc = cast_property_accessor_pointer (prop.get_accessor, cfunc, base_type);
+					CCodeExpression cfunc = new CCodeIdentifier (cname);
+					if (prop.is_abstract || prop.is_virtual) {
+						cfunc = cast_property_accessor_pointer (prop.get_accessor, cfunc, base_type);
+					}
+					ccode.add_assignment (new CCodeMemberAccess.pointer (ciface, "get_%s".printf (prop.name)), cfunc);
 				}
-				ccode.add_assignment (new CCodeMemberAccess.pointer (ciface, "get_%s".printf (prop.name)), cfunc);
-			}
-			if (prop.set_accessor != null) {
-				string cname = CCodeBaseModule.get_ccode_real_name (prop.set_accessor);
-				if (prop.is_abstract || prop.is_virtual) {
-					cname = CCodeBaseModule.get_ccode_name (prop.set_accessor);
-				}
+				if (prop.set_accessor != null) {
+					string cname = CCodeBaseModule.get_ccode_real_name (prop.set_accessor);
+					if (prop.is_abstract || prop.is_virtual) {
+						cname = CCodeBaseModule.get_ccode_name (prop.set_accessor);
+					}
 
-				CCodeExpression cfunc = new CCodeIdentifier (cname);
-				if (prop.is_abstract || prop.is_virtual) {
-					cfunc = cast_property_accessor_pointer (prop.set_accessor, cfunc, base_type);
+					CCodeExpression cfunc = new CCodeIdentifier (cname);
+					if (prop.is_abstract || prop.is_virtual) {
+						cfunc = cast_property_accessor_pointer (prop.set_accessor, cfunc, base_type);
+					}
+					ccode.add_assignment (new CCodeMemberAccess.pointer (ciface, "set_%s".printf (prop.name)), cfunc);
 				}
-				ccode.add_assignment (new CCodeMemberAccess.pointer (ciface, "set_%s".printf (prop.name)), cfunc);
 			}
 		}
 
