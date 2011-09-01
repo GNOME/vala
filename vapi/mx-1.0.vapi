@@ -6,6 +6,8 @@ namespace Mx {
 	public class Action : GLib.InitiallyUnowned {
 		[CCode (has_construct_function = false)]
 		public Action ();
+		[CCode (has_construct_function = false)]
+		public Action.full (string name, string display_name, Mx.ActionCallbackFunc? activated_cb);
 		public bool get_active ();
 		public unowned string get_display_name ();
 		public unowned string get_icon ();
@@ -29,13 +31,13 @@ namespace Mx {
 		public void cancel_operations (Clutter.Actor actor);
 		public static unowned Mx.ActorManager get_for_stage (Clutter.Stage stage);
 		public uint get_n_operations ();
+		public unowned Clutter.Stage get_stage ();
 		public uint get_time_slice ();
 		public ulong remove_actor (Clutter.Container container, Clutter.Actor actor);
 		public void remove_container (Clutter.Container container);
 		public void set_time_slice (uint msecs);
 		public uint n_operations { get; }
-		[NoAccessorMethod]
-		public Clutter.Stage stage { owned get; construct; }
+		public Clutter.Stage stage { get; construct; }
 		public uint time_slice { get; set; }
 		public virtual signal void actor_added (ulong id, Clutter.Actor container, Clutter.Actor actor);
 		public virtual signal void actor_created (ulong id, Clutter.Actor actor);
@@ -870,6 +872,7 @@ namespace Mx {
 		[NoWrapper]
 		public virtual void error_loading (GLib.Error error);
 		public unowned Clutter.Actor get_actor (string uri);
+		public unowned Cogl.Handle get_cogl_texture (string uri);
 		public static unowned Mx.TextureCache get_default ();
 		public Cogl.Handle get_meta_cogl_texture (string uri, void* ident);
 		public Clutter.Texture get_meta_texture (string uri, void* ident);
@@ -1155,14 +1158,6 @@ namespace Mx {
 		LIGHTER;
 		public static void set_from_string (GLib.Value value, string str);
 	}
-	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_IMAGE_ERROR_")]
-	public enum ImageError {
-		BAD_FORMAT,
-		NO_ASYNC,
-		INTERNAL,
-		INVALID_PARAMETER;
-		public static GLib.Quark quark ();
-	}
 	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_IMAGE_SCALE_")]
 	public enum ImageScaleMode {
 		NONE,
@@ -1222,6 +1217,16 @@ namespace Mx {
 		[CCode (cname = "MX_WINDOW_ROTATION_270")]
 		@270
 	}
+	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_IMAGE_ERROR_")]
+	public errordomain ImageError {
+		BAD_FORMAT,
+		NO_ASYNC,
+		INTERNAL,
+		INVALID_PARAMETER;
+		public static GLib.Quark quark ();
+	}
+	[CCode (cheader_filename = "mx/mx.h", instance_pos = 1.9)]
+	public delegate void ActionCallbackFunc (Mx.Action action);
 	[CCode (cheader_filename = "mx/mx.h", instance_pos = 2.9)]
 	public delegate void ClipboardCallbackFunc (Mx.Clipboard clipboard, string text);
 	[CCode (cheader_filename = "mx/mx.h")]
