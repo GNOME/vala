@@ -55,18 +55,21 @@ namespace Json {
 	public class Generator : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Generator ();
+		public uint get_indent ();
+		public unichar get_indent_char ();
+		public bool get_pretty ();
+		public unowned Json.Node get_root ();
+		public void set_indent (uint indent_level);
+		public void set_indent_char (unichar indent_char);
+		public void set_pretty (bool is_pretty);
 		public void set_root (Json.Node node);
 		public string to_data (out size_t length);
 		public bool to_file (string filename) throws GLib.Error;
 		public bool to_stream (GLib.OutputStream stream, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		[NoAccessorMethod]
 		public uint indent { get; set; }
-		[NoAccessorMethod]
 		public uint indent_char { get; set; }
-		[NoAccessorMethod]
 		public bool pretty { get; set; }
-		[NoAccessorMethod]
-		public Json.Node root { owned get; set; }
+		public Json.Node root { get; set; }
 	}
 	[CCode (cheader_filename = "json-glib/json-glib.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "json_node_get_type ()")]
 	[Compact]
@@ -157,6 +160,15 @@ namespace Json {
 		public virtual signal void parse_end ();
 		public virtual signal void parse_start ();
 	}
+	[CCode (cheader_filename = "json-glib/json-glib.h", type_id = "json_path_get_type ()")]
+	public class Path : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public Path ();
+		public bool compile (string expression) throws GLib.Error;
+		public static GLib.Quark error_quark ();
+		public Json.Node match (Json.Node root);
+		public static Json.Node query (string expression, Json.Node root) throws GLib.Error;
+	}
 	[CCode (cheader_filename = "json-glib/json-glib.h", type_id = "json_reader_get_type ()")]
 	public class Reader : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -170,12 +182,15 @@ namespace Json {
 		public double get_double_value ();
 		public unowned GLib.Error get_error ();
 		public int64 get_int_value ();
+		public unowned string get_member_name ();
 		public bool get_null_value ();
 		public unowned string get_string_value ();
 		public unowned Json.Node get_value ();
 		public bool is_array ();
 		public bool is_object ();
 		public bool is_value ();
+		[CCode (array_length = false, array_null_terminated = true)]
+		public string[] list_members ();
 		public bool read_element (uint index_);
 		public bool read_member (string member_name);
 		public void set_root (Json.Node? root);
@@ -187,7 +202,12 @@ namespace Json {
 		public bool default_deserialize_property (string property_name, GLib.Value value, GLib.ParamSpec pspec, Json.Node property_node);
 		public Json.Node default_serialize_property (string property_name, GLib.Value value, GLib.ParamSpec pspec);
 		public abstract bool deserialize_property (string property_name, out GLib.Value value, GLib.ParamSpec pspec, Json.Node property_node);
+		public abstract unowned GLib.ParamSpec find_property (string name);
+		public abstract void get_property (GLib.ParamSpec pspec, GLib.Value value);
+		[CCode (array_length_pos = 0.1, array_length_type = "guint")]
+		public GLib.ParamSpec[] list_properties ();
 		public abstract Json.Node serialize_property (string property_name, GLib.Value value, GLib.ParamSpec pspec);
+		public abstract void set_property (GLib.ParamSpec pspec, GLib.Value value);
 	}
 	[CCode (cheader_filename = "json-glib/json-glib.h", cprefix = "JSON_NODE_")]
 	public enum NodeType {
@@ -204,6 +224,11 @@ namespace Json {
 		MISSING_COLON,
 		INVALID_BAREWORD,
 		UNKNOWN
+	}
+	[CCode (cheader_filename = "json-glib/json-glib.h", cprefix = "JSON_PATH_ERROR_INVALID_")]
+	public enum PathError {
+		[CCode (cname = "JSON_PATH_ERROR_INVALID_QUERY")]
+		PATH_ERROR_INVALID_QUERY
 	}
 	[CCode (cheader_filename = "json-glib/json-glib.h", cprefix = "JSON_READER_ERROR_")]
 	public enum ReaderError {
@@ -253,6 +278,14 @@ namespace Json {
 	public static Json.Node gobject_serialize (GLib.Object gobject);
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	public static string gobject_to_data (GLib.Object gobject, out size_t length);
+	[CCode (cheader_filename = "json-glib/json-glib.h")]
+	public static GLib.Variant gvariant_deserialize (Json.Node json_node, string? signature) throws GLib.Error;
+	[CCode (cheader_filename = "json-glib/json-glib.h")]
+	public static GLib.Variant gvariant_deserialize_data (string json, ssize_t length, string? signature) throws GLib.Error;
+	[CCode (cheader_filename = "json-glib/json-glib.h")]
+	public static Json.Node gvariant_serialize (GLib.Variant variant);
+	[CCode (cheader_filename = "json-glib/json-glib.h")]
+	public static string gvariant_serialize_data (GLib.Variant variant, out size_t length);
 	[CCode (cheader_filename = "json-glib/json-glib.h,json-glib/json-gobject.h")]
 	[Deprecated (replacement = "Json.gobject_to_data", since = "0.10")]
 	public static string serialize_gobject (GLib.Object gobject, out size_t length);
