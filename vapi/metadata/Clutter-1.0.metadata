@@ -31,10 +31,11 @@ threads_add_timeout name="add" parent="Clutter.Threads.Timeout" skip=false
 threads_add_timeout_full name="add_full" parent="Clutter.Threads.Timeout" skip=false
 value_* name="value_(.+)" parent="Clutter.Value"
 value_get_color nullable
-value_get_fixed nullable
+value_get_fixed skip=false nullable
 value_get_shader_float array array_length_idx=1
 value_get_shader_int array array_length_idx=1
 value_get_units unowned=false
+value_set_fixed skip=false
 value_set_shader_float.floats array array_length_idx=1
 value_set_shader_int.ints array array_length_idx=1
 value_set_shader_matrix.matrix array array_length_idx=1
@@ -86,7 +87,6 @@ Actor
 Alpha.register_func skip=false
 Animator.set skip=false
 BehaviourForeachFunc.data closure=2
-BehaviourPath.new_with_knots.knots array array_length_idx=2
 BehaviourRotate.get_bounds.* out
 BindingPool
 	.install_action.callback type="owned BindingActionFunc"
@@ -133,12 +133,10 @@ ModelIter
 PathCallback.data closure=1
 Script
 	.* skip=false
-	.add_search_paths.paths array array_length_idx=1
 Stage
 	.event name="emit_event"
 	.get_default type="unowned Clutter.Stage"
 	.get_fog.fog out
-	.read_pixels array
 Text
 	.get_cursor_color.color out
 	.new_with_text.font_name nullable
