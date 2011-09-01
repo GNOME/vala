@@ -1144,8 +1144,8 @@ public class Vala.CCodeAttribute : AttributeCache {
 	}
 
 	private string get_default_real_name () {
-		var m = (Method) sym;
-		if (m is CreationMethod) {
+		if (sym is CreationMethod) {
+			var m = (CreationMethod) sym;
 			var parent = m.parent_symbol as Class;
 
 			if (parent == null || parent.is_compact) {
@@ -1163,13 +1163,27 @@ public class Vala.CCodeAttribute : AttributeCache {
 			} else {
 				return "%s%s_%s".printf (CCodeBaseModule.get_ccode_lower_case_prefix (parent), infix, m.name);
 			}
-		} else {
+		} else if (sym is Method) {
+			var m = (Method) sym;
 			if (m.base_method != null || m.base_interface_method != null) {
 				return "%sreal_%s".printf (CCodeBaseModule.get_ccode_lower_case_prefix (m.parent_symbol), m.name);
 			} else {
 				return name;
 			}
+		} else if (sym is PropertyAccessor) {
+			var acc = (PropertyAccessor) sym;
+			var prop = (Property) acc.prop;
+			if (prop.base_property != null || prop.base_interface_property != null) {
+				if (acc.readable) {
+					return "%sreal_get_%s".printf (CCodeBaseModule.get_ccode_lower_case_prefix (prop.parent_symbol), prop.name);
+				} else {
+					return "%sreal_set_%s".printf (CCodeBaseModule.get_ccode_lower_case_prefix (prop.parent_symbol), prop.name);
+				}
+			} else {
+				return name;
+			}
 		}
+		assert_not_reached ();
 	}
 
 	private string get_default_const_name () {

@@ -1251,11 +1251,11 @@ public class Vala.GTypeModule : GErrorModule {
 			ccast.add_argument (new CCodeIdentifier ("klass"));
 
 			if (prop.get_accessor != null) {
-				string cname = "%s_real_get_%s".printf (get_ccode_lower_case_name (cl, null), prop.name);
+				string cname = CCodeBaseModule.get_ccode_real_name (prop.get_accessor);
 				ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, "get_%s".printf (prop.name)), new CCodeIdentifier (cname));
 			}
 			if (prop.set_accessor != null) {
-				string cname = "%s_real_set_%s".printf (get_ccode_lower_case_name (cl, null), prop.name);
+				string cname = CCodeBaseModule.get_ccode_real_name (prop.set_accessor);
 				ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, "set_%s".printf (prop.name)), new CCodeIdentifier (cname));
 			}
 		}
@@ -1372,7 +1372,7 @@ public class Vala.GTypeModule : GErrorModule {
 			var ciface = new CCodeIdentifier ("iface");
 
 			if (prop.get_accessor != null) {
-				string cname = "%s_real_get_%s".printf (get_ccode_lower_case_name (cl, null), prop.name);
+				string cname = CCodeBaseModule.get_ccode_real_name (prop.get_accessor);
 				if (prop.is_abstract || prop.is_virtual) {
 					cname = "%s_get_%s".printf (get_ccode_lower_case_name (cl, null), prop.name);
 				}
@@ -1384,7 +1384,7 @@ public class Vala.GTypeModule : GErrorModule {
 				ccode.add_assignment (new CCodeMemberAccess.pointer (ciface, "get_%s".printf (prop.name)), cfunc);
 			}
 			if (prop.set_accessor != null) {
-				string cname = "%s_real_set_%s".printf (get_ccode_lower_case_name (cl, null), prop.name);
+				string cname = CCodeBaseModule.get_ccode_real_name (prop.set_accessor);
 				if (prop.is_abstract || prop.is_virtual) {
 					cname = "%s_set_%s".printf (get_ccode_lower_case_name (cl, null), prop.name);
 				}

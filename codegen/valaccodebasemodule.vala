@@ -1569,16 +1569,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (!prop.is_abstract) {
 			bool is_virtual = prop.base_property != null || prop.base_interface_property != null;
 
-			string cname;
-			if (is_virtual) {
-				if (acc.readable) {
-					cname = "%s_real_get_%s".printf (get_ccode_lower_case_name (t, null), prop.name);
-				} else {
-					cname = "%s_real_set_%s".printf (get_ccode_lower_case_name (t, null), prop.name);
-				}
-			} else {
-				cname = get_ccode_name (acc);
-			}
+			string cname = get_ccode_real_name (acc);
 
 			CCodeFunction function;
 			if (acc.writable || acc.construction || returns_real_struct) {
@@ -5754,8 +5745,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return m.get_attribute_bool ("CCode", "simple_generics");
 	}
 
-	public static string get_ccode_real_name (Method m) {
-		return get_ccode_attribute(m).real_name;
+	public static string get_ccode_real_name (Symbol sym) {
+		return get_ccode_attribute(sym).real_name;
 	}
 
 	public static string get_ccode_vfunc_name (Method m) {
