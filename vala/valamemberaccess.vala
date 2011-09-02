@@ -829,7 +829,7 @@ public class Vala.MemberAccess : Expression {
 			instance = symbol_reference is Property && ((Property) symbol_reference).binding == MemberBinding.INSTANCE;
 		}
 		var this_access = inner.symbol_reference is Parameter && inner.symbol_reference.name == "this";
-		if (instance && inner.value_type is StructValueType && !inner.value_type.nullable && (symbol_reference is Method || lvalue) && ((inner is MemberAccess && inner.symbol_reference is Variable) || inner is ElementAccess) && !this_access) {
+		if (instance && inner.value_type is StructValueType && !inner.value_type.nullable && (symbol_reference is Method || lvalue) && ((inner is MemberAccess && (inner.symbol_reference is Variable || inner.symbol_reference is Property)) || inner is ElementAccess) && !this_access) {
 			inner.lvalue = true;
 			if (inner is MemberAccess) {
 				((MemberAccess) inner).check_lvalue_struct_access ();
