@@ -4462,7 +4462,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public CCodeExpression? try_cast_value_to_type (CCodeExpression ccodeexpr, DataType from, DataType to, Expression? expr = null) {
-		if (from == null || gvalue_type == null || from.data_type != gvalue_type || get_ccode_type_id (to) == "") {
+		if (from == null || gvalue_type == null || from.data_type != gvalue_type || to.data_type == gvalue_type || get_ccode_type_id (to) == "") {
 			return null;
 		}
 
