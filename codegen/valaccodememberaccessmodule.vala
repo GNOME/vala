@@ -193,10 +193,6 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				CCodeExpression inst;
 				inst = new CCodeMemberAccess.pointer (pub_inst, "priv");
 				set_cvalue (expr, new CCodeMemberAccess.pointer (inst, get_ccode_name (prop.field)));
-				if (expr.lvalue) {
-					// no temp variable
-					return;
-				}
 			} else if (!get_ccode_no_accessor_method (prop)) {
 				var base_property = prop;
 				if (prop.base_property != null) {
