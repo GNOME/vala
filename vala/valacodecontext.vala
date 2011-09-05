@@ -345,7 +345,7 @@ public class Vala.CodeContext {
 			stdout.printf ("Loaded package `%s'\n", path);
 		}
 
-		var deps_filename = "%s/%s.deps".printf (Path.get_dirname (path), pkg);
+		var deps_filename = Path.build_path ("/", Path.get_dirname (path), pkg + ".deps");
 		if (!add_packages_from_file (deps_filename)) {
 			return false;
 		}
@@ -484,7 +484,7 @@ public class Vala.CodeContext {
 
 		if (path == null) {
 			/* last chance: try the package compiled-in vapi dir */
-			var filename = "%s/vapi/%s.vapi".printf (Config.PACKAGE_DATADIR, pkg);
+			var filename = Path.build_path ("/", Config.PACKAGE_DATADIR, "vapi", pkg + ".vapi");
 			if (FileUtils.test (filename, FileTest.EXISTS)) {
 				path = filename;
 			}
@@ -511,7 +511,7 @@ public class Vala.CodeContext {
 		}
 
 		// look into the same directory of .gir
-		metadata_filename = "%s/%s".printf (Path.get_dirname (gir_filename), metadata_basename);
+		metadata_filename = Path.build_path ("/", Path.get_dirname (gir_filename), metadata_basename);
 		if (FileUtils.test (metadata_filename, FileTest.EXISTS)) {
 			return metadata_filename;
 		}
@@ -524,7 +524,7 @@ public class Vala.CodeContext {
 
 		if (directories != null) {
 			foreach (string dir in directories) {
-				filename = "%s/%s".printf (dir, basename);
+				filename = Path.build_path ("/", dir, basename);
 				if (FileUtils.test (filename, FileTest.EXISTS)) {
 					return filename;
 				}
@@ -533,7 +533,7 @@ public class Vala.CodeContext {
 
 		if (versioned_data_dir != null) {
 			foreach (string dir in Environment.get_system_data_dirs ()) {
-				filename = "%s/%s/%s".printf (dir, versioned_data_dir, basename);
+				filename = Path.build_path ("/", dir, versioned_data_dir, basename);
 				if (FileUtils.test (filename, FileTest.EXISTS)) {
 					return filename;
 				}
@@ -542,7 +542,7 @@ public class Vala.CodeContext {
 
 		if (data_dir != null) {
 			foreach (string dir in Environment.get_system_data_dirs ()) {
-				filename = "%s/%s/%s".printf (dir, data_dir, basename);
+				filename = Path.build_path ("/", dir, data_dir, basename);
 				if (FileUtils.test (filename, FileTest.EXISTS)) {
 					return filename;
 				}

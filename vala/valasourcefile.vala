@@ -189,7 +189,7 @@ public class Vala.SourceFile {
 		if (context.directory == null) {
 			return get_subdir ();
 		}
-		return "%s/%s".printf (context.directory, get_subdir ());
+		return Path.build_path ("/", context.directory, get_subdir ());
 	}
 
 	private string get_basename () {
@@ -215,10 +215,10 @@ public class Vala.SourceFile {
 			if (context.run_output) {
 				csource_filename = context.output + ".c";
 			} else if (context.ccode_only || context.save_csources) {
-				csource_filename = "%s%s.c".printf (get_destination_directory (), get_basename ());
+				csource_filename = Path.build_path ("/", get_destination_directory (), get_basename () + ".c");
 			} else {
 				// temporary file
-				csource_filename = "%s%s.vala.c".printf (get_destination_directory (), get_basename ());
+				csource_filename = Path.build_path ("/", get_destination_directory (), get_basename () + ".vala.c");
 			}
 		}
 		return csource_filename;
@@ -235,10 +235,10 @@ public class Vala.SourceFile {
 			if (context.header_filename != null) {
 				cinclude_filename = Path.get_basename (context.header_filename);
 				if (context.includedir != null) {
-					cinclude_filename = "%s/%s".printf (context.includedir, cinclude_filename);
+					cinclude_filename = Path.build_path (context.includedir, cinclude_filename);
 				}
 			} else {
-				cinclude_filename = "%s%s.h".printf (get_subdir (), get_basename ());
+				cinclude_filename = Path.build_path ("/", get_subdir (), get_basename () + ".h");
 			}
 		}
 		return cinclude_filename;
