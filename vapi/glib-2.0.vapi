@@ -4252,6 +4252,10 @@ namespace GLib {
 	public static unowned string Q_ (string str);
 	[CCode (cname = "N_", cheader_filename = "glib.h,glib/gi18n-lib.h")]
 	public static unowned string N_ (string str);
+	[CCode (cname = "C_", cheader_filename = "glib.h,glib/gi18n-lib.h")]
+	public static unowned string C_ (string context, string str);
+	[CCode (cname = "NC_", cheader_filename = "glib.h,glib/gi18n-lib.h")]
+	public static unowned string NC_ (string context, string str);
 	[CCode (cname = "ngettext", cheader_filename = "glib.h,glib/gi18n-lib.h")]
 	public static unowned string ngettext (string msgid, string msgid_plural, ulong n);
 	[CCode (cname = "g_dgettext", cheader_filename = "glib/gi18n-lib.h")]
