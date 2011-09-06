@@ -1,5 +1,13 @@
-BoxLayout.add_actor name="add_child"
-Table.add_actor name="add_child"
+Application.new.argv unowned
+BoxLayout
+	.add_actor name="add_child"
+	.add_actor_with_properties skip=false
+Padding struct
+Style.* skip=false
+Stylable.get skip=false
+Table
+	.add_actor name="add_child"
+	.add_actor_with_properties skip=false
 
 // Fixed upstream in mx 1.3.1
 ButtonGroup
@@ -13,8 +21,8 @@ ItemFactory.create skip=false unowned=false
 Notebook.get_current_page skip=false
 Offscreen.buffer type="Cogl.Handle"
 Scrollable.get_adjustments
-        .hadjustment out nullable unowned=false
-        .vadjustment out nullable unowned=false
+        .hadjustment out nullable
+        .vadjustment out nullable
 TextureCache
         .get_meta_texture skip=false unowned=false
         .get_meta_cogl_texture skip=false unowned=false

@@ -455,7 +455,7 @@ loudmouth-1.0:
 	$(GENVAPI) --library $(srcdir)/loudmouth-1.0 $(PACKAGESDIR)/loudmouth-1.0/loudmouth-1.0-custom.vala $(PACKAGESDIR)/loudmouth-1.0/loudmouth-1.0.gi
 
 mx-1.0:
-	$(GENVAPI) --library $(srcdir)/mx-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/Mx-1.0.gir
+	$(GENVAPI) --library $(srcdir)/mx-1.0 --metadatadir $(METADATADIR) $(METADATADIR)/Mx-1.0-custom.vala $(GIRDIR)/Mx-1.0.gir
 
 pango:
 	$(GENVAPI) --library $(srcdir)/pango $(PACKAGESDIR)/pango/pango-custom.vala $(PACKAGESDIR)/pango/pango.gi

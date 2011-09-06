@@ -87,7 +87,7 @@ namespace Mx {
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_application_get_type ()")]
 	public class Application : GLib.Object {
 		[CCode (has_construct_function = false)]
-		public Application ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] ref string[]? argv, string name, Mx.ApplicationFlags flags);
+		public Application ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] ref unowned string[]? argv, string name, Mx.ApplicationFlags flags);
 		public void add_action (Mx.Action action);
 		public void add_window (owned Mx.Window window);
 		public virtual unowned Mx.Window create_window ();
@@ -142,6 +142,7 @@ namespace Mx {
 	public class BoxLayout : Mx.Widget, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable, Mx.Focusable, Mx.Scrollable, Mx.Stylable {
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
 		public BoxLayout ();
+		public void add_actor_with_properties (Clutter.Actor actor, int position, ...);
 		[CCode (cname = "mx_box_layout_add_actor")]
 		public void add_child (Clutter.Actor actor, int position);
 		public bool child_get_expand (Clutter.Actor child);
@@ -171,6 +172,26 @@ namespace Mx {
 	public class BoxLayoutChild : Clutter.ChildMeta {
 		[CCode (has_construct_function = false)]
 		protected BoxLayoutChild ();
+		[Deprecated (replacement = "BoxLayout.child_get_expand", since = "vala-0.14")]
+		public static bool get_expand (Mx.BoxLayout box_layout, Clutter.Actor child);
+		[Deprecated (replacement = "BoxLayout.child_get_x_align", since = "vala-0.14")]
+		public static Mx.Align get_x_align (Mx.BoxLayout box_layout, Clutter.Actor child);
+		[Deprecated (replacement = "BoxLayout.child_get_x_fill", since = "vala-0.14")]
+		public static bool get_x_fill (Mx.BoxLayout box_layout, Clutter.Actor child);
+		[Deprecated (replacement = "BoxLayout.child_get_y_align", since = "vala-0.14")]
+		public static Mx.Align get_y_align (Mx.BoxLayout box_layout, Clutter.Actor child);
+		[Deprecated (replacement = "BoxLayout.child_get_y_fill", since = "vala-0.14")]
+		public static bool get_y_fill (Mx.BoxLayout box_layout, Clutter.Actor child);
+		[Deprecated (replacement = "BoxLayout.child_set_expand", since = "vala-0.14")]
+		public static void set_expand (Mx.BoxLayout box_layout, Clutter.Actor child, bool expand);
+		[Deprecated (replacement = "BoxLayout.child_set_x_align", since = "vala-0.14")]
+		public static void set_x_align (Mx.BoxLayout box_layout, Clutter.Actor child, Mx.Align x_align);
+		[Deprecated (replacement = "BoxLayout.child_set_x_fill", since = "vala-0.14")]
+		public static void set_x_fill (Mx.BoxLayout box_layout, Clutter.Actor child, bool x_fill);
+		[Deprecated (replacement = "BoxLayout.child_set_y_align", since = "vala-0.14")]
+		public static void set_y_align (Mx.BoxLayout box_layout, Clutter.Actor child, Mx.Align y_align);
+		[Deprecated (replacement = "BoxLayout.child_set_y_fill", since = "vala-0.14")]
+		public static void set_y_fill (Mx.BoxLayout box_layout, Clutter.Actor child, bool y_fill);
 		[NoAccessorMethod]
 		public bool expand { get; set; }
 		[NoAccessorMethod]
@@ -399,6 +420,10 @@ namespace Mx {
 	public abstract class FloatingWidget : Mx.Widget, Atk.Implementor, Clutter.Animatable, Clutter.Scriptable, Mx.Stylable {
 		[CCode (has_construct_function = false)]
 		protected FloatingWidget ();
+		[NoWrapper]
+		public virtual void floating_paint (Clutter.Actor actor);
+		[NoWrapper]
+		public virtual void floating_pick (Clutter.Actor actor, Clutter.Color color);
 	}
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_focus_manager_get_type ()")]
 	public class FocusManager : GLib.Object {
@@ -650,14 +675,6 @@ namespace Mx {
 		public bool pick_child { get; set; }
 		public bool redirect_enabled { get; set; }
 	}
-	[CCode (cheader_filename = "mx/mx.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "mx_padding_get_type ()")]
-	[Compact]
-	public class Padding {
-		public float bottom;
-		public float left;
-		public float right;
-		public float top;
-	}
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_path_bar_get_type ()")]
 	public class PathBar : Mx.Widget, Atk.Implementor, Clutter.Animatable, Clutter.Scriptable, Mx.Focusable, Mx.Stylable {
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
@@ -796,8 +813,10 @@ namespace Mx {
 	public class Style : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Style ();
+		public void @get (Mx.Stylable stylable, ...);
 		public static unowned Mx.Style get_default ();
 		public GLib.Value get_property (Mx.Stylable stylable, GLib.ParamSpec pspec);
+		public void get_valist (Mx.Stylable stylable, string first_property_name, va_list va_args);
 		public bool load_from_file (string filename) throws GLib.Error;
 		public virtual signal void changed ();
 	}
@@ -805,6 +824,7 @@ namespace Mx {
 	public class Table : Mx.Widget, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable, Mx.Focusable, Mx.Stylable {
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
 		public Table ();
+		public void add_actor_with_properties (Clutter.Actor actor, int row, int column, ...);
 		[CCode (cname = "mx_table_add_actor")]
 		public void add_child (Clutter.Actor actor, int row, int column);
 		public int child_get_column (Clutter.Actor child);
@@ -842,6 +862,46 @@ namespace Mx {
 	public class TableChild : Clutter.ChildMeta {
 		[CCode (has_construct_function = false)]
 		protected TableChild ();
+		[Deprecated (replacement = "Table.child_get_column", since = "vala-0.14")]
+		public static int get_column (Mx.Table table, Clutter.Actor child);
+		[Deprecated (replacement = "Table.child_get_column_span", since = "vala-0.14")]
+		public static int get_column_span (Mx.Table table, Clutter.Actor child);
+		[Deprecated (replacement = "Table.child_get_row", since = "vala-0.14")]
+		public static int get_row (Mx.Table table, Clutter.Actor child);
+		[Deprecated (replacement = "Table.child_get_row_span", since = "vala-0.14")]
+		public static int get_row_span (Mx.Table table, Clutter.Actor child);
+		[Deprecated (replacement = "Table.child_get_x_align", since = "vala-0.14")]
+		public static Mx.Align get_x_align (Mx.Table table, Clutter.Actor child);
+		[Deprecated (replacement = "Table.child_get_x_expand", since = "vala-0.14")]
+		public static bool get_x_expand (Mx.Table table, Clutter.Actor child);
+		[Deprecated (replacement = "Table.child_get_x_fill", since = "vala-0.14")]
+		public static bool get_x_fill (Mx.Table table, Clutter.Actor child);
+		[Deprecated (replacement = "Table.child_get_y_align", since = "vala-0.14")]
+		public static Mx.Align get_y_align (Mx.Table table, Clutter.Actor child);
+		[Deprecated (replacement = "Table.child_get_y_expand", since = "vala-0.14")]
+		public static bool get_y_expand (Mx.Table table, Clutter.Actor child);
+		[Deprecated (replacement = "Table.child_get_y_fill", since = "vala-0.14")]
+		public static bool get_y_fill (Mx.Table table, Clutter.Actor child);
+		[Deprecated (replacement = "Table.child_set_column", since = "vala-0.14")]
+		public static void set_column (Mx.Table table, Clutter.Actor child, int col);
+		[Deprecated (replacement = "Table.child_set_column_span", since = "vala-0.14")]
+		public static void set_column_span (Mx.Table table, Clutter.Actor child, int span);
+		[Deprecated (replacement = "Table.child_set_row", since = "vala-0.14")]
+		public static void set_row (Mx.Table table, Clutter.Actor child, int row);
+		[Deprecated (replacement = "Table.child_set_row_span", since = "vala-0.14")]
+		public static void set_row_span (Mx.Table table, Clutter.Actor child, int span);
+		[Deprecated (replacement = "Table.child_set_x_align", since = "vala-0.14")]
+		public static void set_x_align (Mx.Table table, Clutter.Actor child, Mx.Align align);
+		[Deprecated (replacement = "Table.child_set_x_expand", since = "vala-0.14")]
+		public static void set_x_expand (Mx.Table table, Clutter.Actor child, bool expand);
+		[Deprecated (replacement = "Table.child_set_x_fill", since = "vala-0.14")]
+		public static void set_x_fill (Mx.Table table, Clutter.Actor child, bool fill);
+		[Deprecated (replacement = "Table.child_set_y_align", since = "vala-0.14")]
+		public static void set_y_align (Mx.Table table, Clutter.Actor child, Mx.Align align);
+		[Deprecated (replacement = "Table.child_set_y_expand", since = "vala-0.14")]
+		public static void set_y_expand (Mx.Table table, Clutter.Actor child, bool expand);
+		[Deprecated (replacement = "Table.child_set_y_fill", since = "vala-0.14")]
+		public static void set_y_fill (Mx.Table table, Clutter.Actor child, bool fill);
 		[NoAccessorMethod]
 		public int column { get; set; }
 		[NoAccessorMethod]
@@ -1073,7 +1133,7 @@ namespace Mx {
 	}
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_scrollable_get_type ()")]
 	public interface Scrollable : GLib.Object {
-		public abstract void get_adjustments (out Mx.Adjustment? hadjustment, out Mx.Adjustment? vadjustment);
+		public abstract void get_adjustments (out unowned Mx.Adjustment? hadjustment, out unowned Mx.Adjustment? vadjustment);
 		public abstract void set_adjustments (Mx.Adjustment hadjustment, Mx.Adjustment vadjustment);
 		[NoAccessorMethod]
 		public abstract Mx.Adjustment horizontal_adjustment { owned get; set; }
@@ -1085,6 +1145,7 @@ namespace Mx {
 		public void apply_clutter_text_attributes (Clutter.Text text);
 		public void connect_change_notifiers ();
 		public unowned GLib.ParamSpec find_property (string property_name);
+		public void @get (...);
 		public bool get_default_value (string property_name, out GLib.Value value_out);
 		public GLib.Value get_property (string property_name);
 		public abstract unowned Mx.Style get_style ();
@@ -1103,6 +1164,13 @@ namespace Mx {
 		public abstract string style_pseudo_class { get; set; }
 		[HasEmitter]
 		public virtual signal void style_changed (Mx.StyleChangedFlags flags);
+	}
+	[CCode (cheader_filename = "mx/mx.h")]
+	public struct Padding {
+		public float top;
+		public float right;
+		public float bottom;
+		public float left;
 	}
 	[CCode (cheader_filename = "mx/mx.h")]
 	public struct SettingsProviderIface {
@@ -1201,6 +1269,8 @@ namespace Mx {
 	}
 	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_STYLE_ERROR_INVALID_")]
 	public enum StyleError {
+		[Deprecated (replacement = "StyleError.INVALID_FILE", since = "vala-0.14")]
+		FILE,
 		[CCode (cname = "MX_STYLE_ERROR_INVALID_FILE")]
 		INVALID_FILE
 	}
@@ -1248,6 +1318,9 @@ namespace Mx {
 	public static void actor_box_clamp_to_pixels (Clutter.ActorBox box);
 	[CCode (cheader_filename = "mx/mx.h")]
 	public static void allocate_align_fill (Clutter.Actor child, Clutter.ActorBox childbox, Mx.Align x_alignment, Mx.Align y_alignment, bool x_fill, bool y_fill);
+	[CCode (cheader_filename = "mx/mx.h")]
+	[Deprecated (replacement = "FontWeight.set_from_string", since = "vala-0.14")]
+	public static void font_weight_set_from_string (GLib.Value value, string str);
 	[CCode (cheader_filename = "mx/mx.h")]
 	public static void set_locale ();
 	[CCode (cheader_filename = "mx/mx.h")]
