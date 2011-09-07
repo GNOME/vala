@@ -698,9 +698,9 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 					}
 
 					context.add_source_file (source_file);
-				} else if (source.has_suffix (".vapi")) {
+				} else if (source.has_suffix (".vapi") || source.has_suffix (".gir")) {
 					string file_name = Path.get_basename (source);
-					file_name = file_name.substring (0, file_name.length - ".vapi".length);
+					file_name = file_name.substring (0, file_name.last_index_of_char ('.'));
 
 					var vfile = new Vala.SourceFile (context, Vala.SourceFileType.PACKAGE, rpath);
 					context.add_source_file (vfile);
@@ -710,7 +710,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 					}
 
 					register_source_file (source_package, vfile);
-
 
 					add_deps (context, Path.build_filename (Path.get_dirname (source), "%s.deps".printf (file_name)), file_name);
 				} else if (source.has_suffix (".c")) {
@@ -808,6 +807,15 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		if (context.report.get_errors () > 0) {
 			return context;
 		}
+
+		// parse gir:
+		Vala.GirParser gir_parser = new Vala.GirParser ();
+
+		gir_parser.parse (context);
+		if (context.report.get_errors () > 0) {
+			return context;
+		}
+
 
 
 		// check context:
