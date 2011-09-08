@@ -91,11 +91,21 @@ void test_reference_transfer () {
 	baz = (owned) bar;
 }
 
+void test_length_assignment () {
+	var a = new int[10];
+	var b = new int[20,30];
+	a.length = 8;
+	b.length[0] = 5;
+	assert (a.length == 8);
+	assert (b.length[0] == 5);
+}
+
 void main () {
 	test_integer_array ();
 	test_string_array ();
 	test_array_pass ();
 	test_static_array ();
 	test_reference_transfer ();
+	test_length_assignment ();
 }
 

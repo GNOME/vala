@@ -2,6 +2,7 @@ using GLib;
 
 struct SimpleStruct {
 	public int field;
+	public int array[10];
 }
 
 public struct PublicStruct {
@@ -44,6 +45,7 @@ void test_in_nullable_parameter (SimpleStruct? st) {
 void test_ref_parameter (ref SimpleStruct st) {
 	stdout.printf ("test_ref_parameter: st.field = %d\n", st.field);
 	st.field++;
+	st.array[0] = 10;
 }
 
 void test_out_parameter (out SimpleStruct st) {
@@ -72,6 +74,7 @@ void main () {
 	test_in_nullable_parameter (simple_struct);
 	test_ref_parameter (ref simple_struct);
 	stdout.printf ("after test_ref_parameter: st.field = %d\n", simple_struct.field);
+	assert (simple_struct.array[0] == 10);
 	test_out_parameter (out simple_struct);
 	stdout.printf ("after test_out_parameter: st.field = %d\n", simple_struct.field);
 
