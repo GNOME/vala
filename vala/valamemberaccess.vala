@@ -817,7 +817,7 @@ public class Vala.MemberAccess : Expression {
 		return !error;
 	}
 
-	private void check_lvalue_struct_access () {
+	public void check_lvalue_struct_access () {
 		if (inner == null) {
 			return;
 		}

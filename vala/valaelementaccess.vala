@@ -141,6 +141,19 @@ public class Vala.ElementAccess : Expression {
 			value_type = array_type.element_type.copy ();
 			if (!lvalue) {
 				value_type.value_owned = false;
+			} else {
+				var ma = container as MemberAccess;
+				if (context.profile == Profile.GOBJECT && ma != null && ma.symbol_reference is ArrayLengthField) {
+					// propagate lvalue for gobject length access
+					ma.inner.lvalue = true;
+					((MemberAccess) ma.inner).check_lvalue_struct_access ();
+				} else if (ma != null && ma.symbol_reference is Field &&
+					ma.inner != null && ma.inner.symbol_reference is Variable &&
+					ma.inner.value_type is StructValueType && !ma.inner.value_type.nullable) {
+					// propagate lvalue if container is a field and container.inner is a struct variable
+					ma.lvalue = true;
+					ma.check_lvalue_struct_access ();
+				}
 			}
 
 			if (array_type.rank < get_indices ().size) {
