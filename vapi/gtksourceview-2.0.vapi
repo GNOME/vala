@@ -97,7 +97,7 @@ namespace Gtk {
 		protected SourceCompletionContext ();
 		public void add_proposals (Gtk.SourceCompletionProvider provider, GLib.List<Gtk.SourceCompletionProposal> proposals, bool finished);
 		public Gtk.SourceCompletionActivation get_activation ();
-		public void get_iter (Gtk.TextIter iter);
+		public Gtk.TextIter get_iter ();
 		[NoAccessorMethod]
 		public Gtk.SourceCompletionActivation activation { get; set; }
 		[NoAccessorMethod]
