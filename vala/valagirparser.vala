@@ -1838,7 +1838,7 @@ public class Vala.GirParser : CodeVisitor {
 						parse_enumeration ();
 					}
 				} else {
-					if (reader.get_attribute ("glib:error-quark") != null) {
+					if ((reader.get_attribute ("glib:error-quark") != null) || (reader.get_attribute ("glib:error-domain") != null)) {
 						parse_error_domain ();
 					} else {
 						parse_enumeration ();
