@@ -2163,6 +2163,9 @@ public class Vala.GirParser : CodeVisitor {
 					no_array_length = true;
 					array_null_terminated = true;
 				}
+				if (reader.get_attribute ("zero-terminated") != null) {
+					array_null_terminated = int.parse (reader.get_attribute ("zero-terminated")) != 0;
+				}
 				next ();
 				var element_type = parse_type ();
 				end_element ("array");
