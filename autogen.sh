@@ -25,5 +25,5 @@ autoreconf -v --install || exit 1
 cd $ORIGDIR || exit $?
 
 if test -z "$NOCONFIGURE"; then
-    $srcdir/configure --enable-maintainer-mode "$@"
+    $srcdir/configure "$@"
 fi
