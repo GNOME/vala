@@ -1538,8 +1538,8 @@ public class Vala.GTypeModule : GErrorModule {
 
 		push_function (function);
 
-		if (cl.class_destructor != null) {
-			cl.class_destructor.body.emit (this);
+		if (cl.static_destructor != null) {
+			cl.static_destructor.body.emit (this);
 		}
 
 		pop_context ();
