@@ -772,7 +772,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				var c = (Constructor) sym;
 				return c.binding == MemberBinding.INSTANCE;
 			} else if (sym is Destructor) {
-				return true;
+				var d = (Destructor) sym;
+				return d.binding == MemberBinding.INSTANCE;
 			} else if (sym is Property) {
 				var p = (Property) sym;
 				return p.binding == MemberBinding.INSTANCE;
