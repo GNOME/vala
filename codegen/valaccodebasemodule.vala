@@ -126,6 +126,16 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
+	public Destructor? current_destructor {
+		get {
+			var sym = current_symbol;
+			while (sym is Block) {
+				sym = sym.parent_symbol;
+			}
+			return sym as Destructor;
+		}
+	}
+
 	public DataType? current_return_type {
 		get {
 			var m = current_method;
@@ -5903,6 +5913,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return current_property_accessor.prop.this_parameter.variable_type;
 		} else if (current_constructor != null && current_constructor.binding == MemberBinding.INSTANCE) {
 			return current_constructor.this_parameter.variable_type;
+		} else if (current_destructor != null && current_destructor.binding == MemberBinding.INSTANCE) {
+			return current_destructor.this_parameter.variable_type;
 		}
 		return null;
 	}
