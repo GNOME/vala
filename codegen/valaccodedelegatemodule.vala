@@ -416,8 +416,6 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 				destroy_notify = new CCodeIdentifier ("block%d_data_unref".printf (block_id));
 			} else if (get_this_type () != null && m.binding != MemberBinding.STATIC && !m.is_async_callback && is_reference_counting (m.this_parameter.variable_type.data_type)) {
 				destroy_notify = get_destroy_func_expression (m.this_parameter.variable_type);
-			} else if (in_constructor) {
-				destroy_notify = new CCodeIdentifier ("g_object_unref");
 			}
 
 			if (destroy_notify != null) {

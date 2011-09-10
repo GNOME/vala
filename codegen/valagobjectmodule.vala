@@ -402,12 +402,6 @@ public class Vala.GObjectModule : GTypeModule {
 	public override void visit_constructor (Constructor c) {
 		push_line (c.source_reference);
 
-		if (c.binding == MemberBinding.CLASS || c.binding == MemberBinding.STATIC) {
-			in_static_or_class_context = true;
-		} else {
-			in_constructor = true;
-		}
-
 		var cl = (Class) c.parent_symbol;
 
 		if (c.binding == MemberBinding.INSTANCE) {
@@ -510,10 +504,6 @@ public class Vala.GObjectModule : GTypeModule {
 		} else {
 			Report.error (c.source_reference, "internal error: constructors must have instance, class, or static binding");
 		}
-
-		in_static_or_class_context = false;
-
-		in_constructor = false;
 
 		pop_line ();
 	}

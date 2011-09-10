@@ -116,6 +116,16 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
+	public Constructor? current_constructor {
+		get {
+			var sym = current_symbol;
+			while (sym is Block) {
+				sym = sym.parent_symbol;
+			}
+			return sym as Constructor;
+		}
+	}
+
 	public DataType? current_return_type {
 		get {
 			var m = current_method;
@@ -236,8 +246,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public int next_regex_id = 0;
 	public bool in_creation_method { get { return current_method is CreationMethod; } }
-	public bool in_constructor = false;
-	public bool in_static_or_class_context = false;
 
 	public bool current_method_inner_error {
 		get { return emit_context.current_method_inner_error; }
@@ -1743,8 +1751,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				data.add_field ("Block%dData *".printf (parent_block_id), "_data%d_".printf (parent_block_id));
 			} else {
-				if (in_constructor || (current_method != null && current_method.binding == MemberBinding.INSTANCE) ||
-				           (current_property_accessor != null && current_property_accessor.prop.binding == MemberBinding.INSTANCE)) {
+				if (get_this_type () != null) {
 					data.add_field ("%s *".printf (get_ccode_name (current_type_symbol)), "self");
 				}
 
@@ -1806,13 +1813,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), "_data%d_".printf (parent_block_id)), ref_call);
 			} else {
-				bool in_instance_method = (current_method != null && current_method.binding == MemberBinding.INSTANCE);
-				bool in_instance_property = (current_property_accessor != null && current_property_accessor.prop.binding == MemberBinding.INSTANCE);
 				// skip self assignment in toplevel block of creation methods with chainup as self is not set at the beginning of the method
 				// the chainup statement takes care of assigning self in the closure struct
 				bool in_creation_method_with_chainup = (current_method is CreationMethod && current_class != null && current_class.base_class != null);
 
-				if (in_constructor || (in_instance_method && (!in_creation_method_with_chainup || current_method.body != b)) || in_instance_property) {
+				if (get_this_type () != null && (!in_creation_method_with_chainup || current_method.body != b)) {
 					var ref_call = new CCodeFunctionCall (get_dup_func_expression (get_data_type_for_symbol (current_type_symbol), b.source_reference));
 					ref_call.add_argument (get_result_cexpression ("self"));
 
@@ -1896,8 +1901,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccode.add_expression (unref_call);
 				ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "_data%d_".printf (parent_block_id)), new CCodeConstant ("NULL"));
 			} else {
-				if (in_constructor || (current_method != null && current_method.binding == MemberBinding.INSTANCE) ||
-				           (current_property_accessor != null && current_property_accessor.prop.binding == MemberBinding.INSTANCE)) {
+				if (get_this_type () != null) {
 					var this_value = new GLibValue (get_data_type_for_symbol (current_type_symbol), new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "self"), true);
 					ccode.add_expression (destroy_value (this_value));
 				}
@@ -3402,9 +3406,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		} else if (member.is_class_member ()) {
 			CCodeExpression klass;
 
-			if (current_method != null && current_method.binding == MemberBinding.INSTANCE ||
-			    current_property_accessor != null && current_property_accessor.prop.binding == MemberBinding.INSTANCE ||
-			    (in_constructor && !in_static_or_class_context)) {
+			if (get_this_type () != null) {
 				var k = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_GET_CLASS"));
 				k.add_argument (new CCodeIdentifier ("self"));
 				klass = k;
@@ -4995,7 +4997,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				set_delegate_target_destroy_notify (lambda, new CCodeConstant ("NULL"));
 			}
 			set_delegate_target (lambda, delegate_target);
-		} else if (get_this_type () != null || in_constructor) {
+		} else if (get_this_type () != null) {
 			CCodeExpression delegate_target = get_result_cexpression ("self");
 			if (expr_owned || delegate_type.is_called_once) {
 				if (get_this_type () != null) {
@@ -5899,6 +5901,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return current_method.this_parameter.variable_type;
 		} else if (current_property_accessor != null && current_property_accessor.prop.binding == MemberBinding.INSTANCE) {
 			return current_property_accessor.prop.this_parameter.variable_type;
+		} else if (current_constructor != null && current_constructor.binding == MemberBinding.INSTANCE) {
+			return current_constructor.this_parameter.variable_type;
 		}
 		return null;
 	}

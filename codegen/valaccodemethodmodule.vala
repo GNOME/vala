@@ -283,11 +283,6 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			creturn_type = new VoidType ();
 		}
 
-		if (m.binding == MemberBinding.CLASS || m.binding == MemberBinding.STATIC) {
-			in_static_or_class_context = true;
-		}
-
-
 		foreach (Parameter param in m.get_parameters ()) {
 			param.accept (this);
 		}
@@ -659,9 +654,6 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 			cfile.add_function (ccode);
 		}
-
-
-		in_static_or_class_context = false;
 
 		pop_context ();
 

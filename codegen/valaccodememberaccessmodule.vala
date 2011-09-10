@@ -587,7 +587,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 
 			CCodeExpression klass;
 			if (instance == null) {
-				if (in_static_or_class_context) {
+				if (get_this_type () == null) {
 					// Accessing the field from a static or class constructor
 					klass = new CCodeIdentifier ("klass");
 				} else {
