@@ -4046,6 +4046,9 @@ namespace GLib {
 			set { this.set_size (value); }
 		}
 
+		[CCode (cname = "pdata", array_length_cname = "len", array_length_type = "guint")]
+		public G[] data;
+
 		private uint len;
 	}
 
