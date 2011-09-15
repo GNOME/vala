@@ -2489,5 +2489,59 @@ namespace Posix {
 			return cpus;
 		}
 	}
+
+	[CCode (has_target = false)]
+	public delegate int GlobErrorFunction (string filename, int errcode);
+
+	[CCode (cheader_filename = "glob.h")]
+	public const int GLOB_ERR;
+	[CCode (cheader_filename = "glob.h")]
+	public const int GLOB_MARK;
+	[CCode (cheader_filename = "glob.h")]
+	public const int GLOB_NOSORT;
+	[CCode (cheader_filename = "glob.h")]
+	public const int GLOB_DOOFFS;
+	[CCode (cheader_filename = "glob.h")]
+	public const int GLOB_NOCHECK;
+	[CCode (cheader_filename = "glob.h")]
+	public const int GLOB_APPEND;
+	[CCode (cheader_filename = "glob.h")]
+	public const int GLOB_NOESCAPE;
+	[CCode (cheader_filename = "glob.h")]
+	public const int GLOB_PERIOD;
+	[CCode (cheader_filename = "glob.h")]
+	public const int GLOB_MAGCHAR;
+	[CCode (cheader_filename = "glob.h")]
+	public const int GLOB_ALTDIRFUNC;
+	[CCode (cheader_filename = "glob.h")]
+	public const int GLOB_BRACE;
+	[CCode (cheader_filename = "glob.h")]
+	public const int GLOB_NOMAGIC;
+	[CCode (cheader_filename = "glob.h")]
+	public const int GLOB_TILDE;
+	[CCode (cheader_filename = "glob.h")]
+	public const int GLOB_ONLYDIR;
+	[CCode (cheader_filename = "glob.h")]
+	public const int GLOB_TILDE_CHECK;
+
+	[CCode (cheader_filename = "glob.h")]
+	public const int GLOB_NOSPACE;
+	[CCode (cheader_filename = "glob.h")]
+	public const int GLOB_ABORTED;
+	[CCode (cheader_filename = "glob.h")]
+	public const int GLOB_NOMATCH;
+
+	[CCode (cheader_filename = "glob.h", cname = "glob_t", destroy_function = "globfree")]
+	public struct Glob {
+		[CCode (cname = "gl_pathc")]
+		public size_t pathc;
+		[CCode (cname = "gl_pathv", array_length = false, array_null_terminated = true)]
+		public string[] pathv;
+		[CCode (cname = "gl_offs")]
+		public size_t offs;
+
+		[CCode (cname = "glob", instance_pos = -1)]
+		public int glob (string pattern, int flags = 0, GlobErrorFunction? errfunc = null);
+	}
 }
 
