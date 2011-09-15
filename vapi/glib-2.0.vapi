@@ -843,6 +843,10 @@ public struct unichar {
 		return str;
 	}
 
+	public bool compose (unichar b, out unichar ch);
+	public bool decompose (out unichar a, out unichar b);
+	public size_t fully_decompose (bool compat, unichar[] result);
+
 	[CCode (cname = "MIN")]
 	public static unichar min (unichar a, unichar b);
 	[CCode (cname = "MAX")]
