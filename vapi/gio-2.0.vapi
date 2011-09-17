@@ -257,7 +257,9 @@ namespace GLib {
 		public async DBusConnection (GLib.IOStream stream, string guid, GLib.DBusConnectionFlags flags, GLib.DBusAuthObserver? observer = null, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public uint add_filter (owned GLib.DBusMessageFilterFunction filter_function);
 		public async GLib.Variant call (string bus_name, string object_path, string interface_name, string method_name, GLib.Variant? parameters, GLib.VariantType? reply_type, GLib.DBusCallFlags flags, int timeout_msec, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public GLib.Variant call_sync (string bus_name, string object_path, string interface_name, string method_name, GLib.Variant? parameters, GLib.VariantType reply_type, GLib.DBusCallFlags flags, int timeout_msec, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public GLib.Variant call_sync (string bus_name, string object_path, string interface_name, string method_name, GLib.Variant? parameters, GLib.VariantType? reply_type, GLib.DBusCallFlags flags, int timeout_msec, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async GLib.Variant call_with_unix_fd_list (string bus_name, string object_path, string interface_name, string method_name, GLib.Variant? parameters, GLib.VariantType? reply_type, GLib.DBusCallFlags flags, int timeout_msec, GLib.UnixFDList? fd_list, GLib.Cancellable? cancellable = null, out GLib.UnixFDList? out_fd_list) throws GLib.Error;
+		public GLib.Variant call_with_unix_fd_list_sync (string bus_name, string object_path, string interface_name, string method_name, GLib.Variant? parameters, GLib.VariantType? reply_type, GLib.DBusCallFlags flags, int timeout_msec, GLib.UnixFDList? fd_list, out GLib.UnixFDList? out_fd_list, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool close (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool close_sync (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool emit_signal (string? destination_bus_name, string object_path, string interface_name, string signal_name, GLib.Variant parameters) throws GLib.Error;
@@ -443,7 +445,8 @@ namespace GLib {
 		public void return_error_literal (GLib.Quark domain, int code, string message);
 		public void return_error_valist (GLib.Quark domain, int code, string format, void* var_args);
 		public void return_gerror (GLib.Error error);
-		public void return_value (GLib.Variant parameters);
+		public void return_value (GLib.Variant? parameters);
+		public void return_value_with_unix_fd_list (GLib.Variant? parameters, GLib.UnixFDList? fd_list);
 		public void take_error (GLib.Error error);
 	}
 	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_dbus_node_info_ref", unref_function = "g_dbus_node_info_unref")]
@@ -547,6 +550,8 @@ namespace GLib {
 		public async DBusProxy (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, GLib.DBusInterfaceInfo? info, string name, string object_path, string interface_name, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async GLib.Variant call (string method_name, GLib.Variant? parameters, GLib.DBusCallFlags flags, int timeout_msec, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public GLib.Variant call_sync (string method_name, GLib.Variant? parameters, GLib.DBusCallFlags flags, int timeout_msec, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async GLib.Variant call_with_unix_fd_list (string method_name, GLib.Variant? parameters, GLib.DBusCallFlags flags, int timeout_msec, GLib.UnixFDList? fd_list, GLib.Cancellable? cancellable = null, out GLib.UnixFDList? out_fd_list) throws GLib.Error;
+		public GLib.Variant call_with_unix_fd_list_sync (string method_name, GLib.Variant? parameters, GLib.DBusCallFlags flags, int timeout_msec, GLib.UnixFDList? fd_list, out GLib.UnixFDList? out_fd_list, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (has_construct_function = false, type = "void")]
 		public async DBusProxy.for_bus (GLib.BusType bus_type, GLib.DBusProxyFlags flags, GLib.DBusInterfaceInfo? info, string name, string object_path, string interface_name, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (has_construct_function = false)]
@@ -940,6 +945,13 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	[Compact]
 	public class IOModuleClass {
+	}
+	[CCode (cheader_filename = "gio/gio.h")]
+	[Compact]
+	public class IOModuleScope {
+		[CCode (has_construct_function = false)]
+		public IOModuleScope (GLib.IOModuleScopeFlags flags);
+		public void block (string basename);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	[Compact]
@@ -1583,13 +1595,6 @@ namespace GLib {
 		public virtual signal bool run (GLib.SocketConnection connection, GLib.Object source_object);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
-	public class TimeZoneMonitor : GLib.Object {
-		[CCode (has_construct_function = false)]
-		protected TimeZoneMonitor ();
-		public static unowned GLib.TimeZoneMonitor @get ();
-		public virtual signal void changed ();
-	}
-	[CCode (cheader_filename = "gio/gio.h")]
 	public class TlsCertificate : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected TlsCertificate ();
@@ -1616,6 +1621,8 @@ namespace GLib {
 		protected TlsConnection ();
 		public bool emit_accept_certificate (GLib.TlsCertificate peer_cert, GLib.TlsCertificateFlags errors);
 		public unowned GLib.TlsCertificate get_certificate ();
+		public unowned GLib.TlsDatabase get_database ();
+		public unowned GLib.TlsInteraction get_interaction ();
 		public unowned GLib.TlsCertificate get_peer_certificate ();
 		public GLib.TlsCertificateFlags get_peer_certificate_errors ();
 		public GLib.TlsRehandshakeMode get_rehandshake_mode ();
@@ -1624,18 +1631,63 @@ namespace GLib {
 		public virtual bool handshake (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public virtual async bool handshake_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void set_certificate (GLib.TlsCertificate certificate);
+		public void set_database (GLib.TlsDatabase database);
+		public void set_interaction (GLib.TlsInteraction interaction);
 		public void set_rehandshake_mode (GLib.TlsRehandshakeMode mode);
 		public void set_require_close_notify (bool require_close_notify);
 		public void set_use_system_certdb (bool use_system_certdb);
 		[NoAccessorMethod]
 		public GLib.IOStream base_io_stream { owned get; construct; }
 		public GLib.TlsCertificate certificate { get; set; }
+		public GLib.TlsDatabase database { get; set; }
+		public GLib.TlsInteraction interaction { get; set; }
 		public GLib.TlsCertificate peer_certificate { get; }
 		public GLib.TlsCertificateFlags peer_certificate_errors { get; }
 		public GLib.TlsRehandshakeMode rehandshake_mode { get; set construct; }
 		public bool require_close_notify { get; set construct; }
 		public bool use_system_certdb { get; set construct; }
 		public virtual signal bool accept_certificate (GLib.TlsCertificate peer_cert, GLib.TlsCertificateFlags errors);
+	}
+	[CCode (cheader_filename = "gio/gio.h")]
+	public class TlsDatabase : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected TlsDatabase ();
+		public virtual string? create_certificate_handle (GLib.TlsCertificate certificate);
+		public virtual GLib.TlsCertificate lookup_certificate_for_handle (string handle, GLib.TlsInteraction interaction, GLib.TlsDatabaseLookupFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public virtual async GLib.TlsCertificate lookup_certificate_for_handle_async (string handle, GLib.TlsInteraction interaction, GLib.TlsDatabaseLookupFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public virtual GLib.TlsCertificate lookup_certificate_issuer (GLib.TlsCertificate certificate, GLib.TlsInteraction interaction, GLib.TlsDatabaseLookupFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public virtual async GLib.TlsCertificate lookup_certificate_issuer_async (GLib.TlsCertificate certificate, GLib.TlsInteraction interaction, GLib.TlsDatabaseLookupFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public virtual GLib.List<GLib.TlsCertificate> lookup_certificates_issued_by (GLib.ByteArray issuer_raw_dn, GLib.TlsInteraction interaction, GLib.TlsDatabaseLookupFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public virtual async GLib.List<GLib.TlsCertificate> lookup_certificates_issued_by_async (GLib.ByteArray issuer_raw_dn, GLib.TlsInteraction interaction, GLib.TlsDatabaseLookupFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public virtual GLib.TlsCertificateFlags verify_chain (GLib.TlsCertificate chain, string purpose, GLib.SocketConnectable identity, GLib.TlsInteraction interaction, GLib.TlsDatabaseVerifyFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public virtual async GLib.TlsCertificateFlags verify_chain_async (GLib.TlsCertificate chain, string purpose, GLib.SocketConnectable identity, GLib.TlsInteraction interaction, GLib.TlsDatabaseVerifyFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
+	}
+	[CCode (cheader_filename = "gio/gio.h")]
+	public class TlsInteraction : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected TlsInteraction ();
+		public virtual GLib.TlsInteractionResult ask_password (GLib.TlsPassword password, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public virtual async GLib.TlsInteractionResult ask_password_async (GLib.TlsPassword password, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public GLib.TlsInteractionResult invoke_ask_password (GLib.TlsPassword password, GLib.Cancellable? cancellable = null) throws GLib.Error;
+	}
+	[CCode (cheader_filename = "gio/gio.h")]
+	public class TlsPassword : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public TlsPassword (GLib.TlsPasswordFlags flags, string description);
+		[NoWrapper]
+		public virtual unowned string get_default_warning ();
+		public unowned string get_description ();
+		public GLib.TlsPasswordFlags get_flags ();
+		public virtual unowned uchar[] get_value (size_t length);
+		public unowned string get_warning ();
+		public void set_description (string description);
+		public void set_flags (GLib.TlsPasswordFlags flags);
+		public virtual void set_value (uchar[] value, ssize_t length);
+		public void set_value_full (uchar[] value, ssize_t length, GLib.DestroyNotify destroy);
+		public void set_warning (string warning);
+		public string description { get; set; }
+		public GLib.TlsPasswordFlags flags { get; set; }
+		public string warning { get; set; }
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	[Compact]
@@ -1749,7 +1801,7 @@ namespace GLib {
 		[HasEmitter]
 		public signal void action_removed (string action_name);
 		[HasEmitter]
-		public signal void action_state_changed (string action_name, GLib.Variant value);
+		public signal void action_state_changed (string action_name, GLib.Variant state);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface AppInfo : GLib.Object {
@@ -2047,6 +2099,8 @@ namespace GLib {
 		public abstract GLib.Type get_certificate_type ();
 		public abstract GLib.Type get_client_connection_type ();
 		public static unowned GLib.TlsBackend get_default ();
+		public abstract unowned GLib.TlsDatabase get_default_database ();
+		public abstract GLib.Type get_file_database_type ();
 		public abstract GLib.Type get_server_connection_type ();
 		public abstract bool supports_tls ();
 	}
@@ -2064,6 +2118,12 @@ namespace GLib {
 		public GLib.SocketConnectable server_identity { get; set construct; }
 		public bool use_ssl3 { get; set construct; }
 		public GLib.TlsCertificateFlags validation_flags { get; set construct; }
+	}
+	[CCode (cheader_filename = "gio/gio.h")]
+	public interface TlsFileDatabase : GLib.TlsDatabase {
+		public static unowned GLib.TlsDatabase @new (string anchors) throws GLib.Error;
+		[NoAccessorMethod]
+		public string anchors { owned get; set construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface TlsServerConnection : GLib.TlsConnection {
@@ -2384,6 +2444,11 @@ namespace GLib {
 		IF_LOCAL,
 		NEVER
 	}
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_IO_MODULE_SCOPE_")]
+	public enum IOModuleScopeFlags {
+		NONE,
+		BLOCK_DUPLICATES
+	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_IO_STREAM_SPLICE_")]
 	[Flags]
 	public enum IOStreamSpliceFlags {
@@ -2478,6 +2543,15 @@ namespace GLib {
 		GENERIC_ERROR,
 		VALIDATE_ALL
 	}
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TLS_DATABASE_LOOKUP_")]
+	public enum TlsDatabaseLookupFlags {
+		NONE,
+		KEYPAIR
+	}
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TLS_DATABASE_VERIFY_")]
+	public enum TlsDatabaseVerifyFlags {
+		NONE
+	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TLS_ERROR_")]
 	public enum TlsError {
 		UNAVAILABLE,
@@ -2487,6 +2561,20 @@ namespace GLib {
 		HANDSHAKE,
 		CERTIFICATE_REQUIRED,
 		EOF
+	}
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TLS_INTERACTION_")]
+	public enum TlsInteractionResult {
+		UNHANDLED,
+		HANDLED,
+		FAILED
+	}
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TLS_PASSWORD_")]
+	[Flags]
+	public enum TlsPasswordFlags {
+		NONE,
+		RETRY,
+		MANY_TRIES,
+		FINAL_TRY
 	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TLS_REHANDSHAKE_")]
 	public enum TlsRehandshakeMode {
@@ -2820,6 +2908,10 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public const string TLS_BACKEND_EXTENSION_POINT_NAME;
 	[CCode (cheader_filename = "gio/gio.h")]
+	public const string TLS_DATABASE_PURPOSE_AUTHENTICATE_CLIENT;
+	[CCode (cheader_filename = "gio/gio.h")]
+	public const string TLS_DATABASE_PURPOSE_AUTHENTICATE_SERVER;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string VFS_EXTENSION_POINT_NAME;
 	[CCode (cheader_filename = "gio/gio.h")]
 	public const string VOLUME_IDENTIFIER_KIND_HAL_UDI;
@@ -2921,8 +3013,12 @@ namespace GLib {
 	public static GLib.Quark g_io_error_quark ();
 	[CCode (cheader_filename = "gio/gio.h", cname = "g_io_modules_load_all_in_directory")]
 	public static GLib.List<weak GLib.TypeModule> g_io_modules_load_all_in_directory (string dirname);
+	[CCode (cheader_filename = "gio/gio.h", cname = "g_io_modules_load_all_in_directory_with_scope")]
+	public static unowned GLib.List g_io_modules_load_all_in_directory_with_scope (string dirname, GLib.IOModuleScope scope);
 	[CCode (cheader_filename = "gio/gio.h", cname = "g_io_modules_scan_all_in_directory")]
 	public static void g_io_modules_scan_all_in_directory (string dirname);
+	[CCode (cheader_filename = "gio/gio.h", cname = "g_io_modules_scan_all_in_directory_with_scope")]
+	public static void g_io_modules_scan_all_in_directory_with_scope (string dirname, GLib.IOModuleScope scope);
 	[CCode (cheader_filename = "gio/gio.h", cname = "g_io_scheduler_cancel_all_jobs")]
 	public static void g_io_scheduler_cancel_all_jobs ();
 	[CCode (cheader_filename = "gio/gio.h", cname = "g_io_scheduler_push_job")]

@@ -190,7 +190,19 @@
 			<implements>
 				<interface name="GAppInfo"/>
 			</implements>
+			<method name="get_categories" symbol="g_desktop_app_info_get_categories">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="info" type="GDesktopAppInfo*"/>
+				</parameters>
+			</method>
 			<method name="get_filename" symbol="g_desktop_app_info_get_filename">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="info" type="GDesktopAppInfo*"/>
+				</parameters>
+			</method>
+			<method name="get_generic_name" symbol="g_desktop_app_info_get_generic_name">
 				<return-type type="char*"/>
 				<parameters>
 					<parameter name="info" type="GDesktopAppInfo*"/>
@@ -200,6 +212,19 @@
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="info" type="GDesktopAppInfo*"/>
+				</parameters>
+			</method>
+			<method name="get_nodisplay" symbol="g_desktop_app_info_get_nodisplay">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="info" type="GDesktopAppInfo*"/>
+				</parameters>
+			</method>
+			<method name="get_show_in" symbol="g_desktop_app_info_get_show_in">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="info" type="GDesktopAppInfo*"/>
+					<parameter name="desktop_env" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="launch_uris_as_manager" symbol="g_desktop_app_info_launch_uris_as_manager">
@@ -240,6 +265,7 @@
 					<parameter name="desktop_env" type="char*"/>
 				</parameters>
 			</method>
+			<property name="filename" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
 		</object>
 		<object name="GUnixConnection" parent="GSocketConnection" type-name="GUnixConnection" get-type="g_unix_connection_get_type">
 			<method name="receive_credentials" symbol="g_unix_connection_receive_credentials">

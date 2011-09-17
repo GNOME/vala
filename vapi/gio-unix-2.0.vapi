@@ -10,10 +10,15 @@ namespace GLib {
 		public DesktopAppInfo.from_filename (string filename);
 		[CCode (has_construct_function = false)]
 		public DesktopAppInfo.from_keyfile (GLib.KeyFile key_file);
+		public unowned string get_categories ();
 		public unowned string get_filename ();
+		public unowned string get_generic_name ();
 		public bool get_is_hidden ();
+		public bool get_nodisplay ();
+		public bool get_show_in (string desktop_env);
 		public bool launch_uris_as_manager (GLib.List uris, GLib.AppLaunchContext launch_context, GLib.SpawnFlags spawn_flags, GLib.SpawnChildSetupFunc user_setup, void* user_setup_data, GLib.DesktopAppLaunchCallback pid_callback, void* pid_callback_data) throws GLib.Error;
 		public static void set_desktop_env (string desktop_env);
+		public string filename { get; construct; }
 	}
 	[CCode (cheader_filename = "gio/gunixconnection.h")]
 	public class UnixConnection : GLib.SocketConnection {

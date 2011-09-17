@@ -382,10 +382,24 @@
 				<parameter name="dirname" type="gchar*"/>
 			</parameters>
 		</function>
+		<function name="g_io_modules_load_all_in_directory_with_scope" symbol="g_io_modules_load_all_in_directory_with_scope">
+			<return-type type="GList*"/>
+			<parameters>
+				<parameter name="dirname" type="gchar*"/>
+				<parameter name="scope" type="GIOModuleScope*"/>
+			</parameters>
+		</function>
 		<function name="g_io_modules_scan_all_in_directory" symbol="g_io_modules_scan_all_in_directory">
 			<return-type type="void"/>
 			<parameters>
 				<parameter name="dirname" type="char*"/>
+			</parameters>
+		</function>
+		<function name="g_io_modules_scan_all_in_directory_with_scope" symbol="g_io_modules_scan_all_in_directory_with_scope">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="dirname" type="gchar*"/>
+				<parameter name="scope" type="GIOModuleScope*"/>
 			</parameters>
 		</function>
 		<function name="g_io_scheduler_cancel_all_jobs" symbol="g_io_scheduler_cancel_all_jobs">
@@ -781,6 +795,27 @@
 			</method>
 		</struct>
 		<struct name="GIOModuleClass">
+		</struct>
+		<struct name="GIOModuleScope">
+			<method name="block" symbol="g_io_module_scope_block">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="scope" type="GIOModuleScope*"/>
+					<parameter name="basename" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="free" symbol="g_io_module_scope_free">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="scope" type="GIOModuleScope*"/>
+				</parameters>
+			</method>
+			<method name="new" symbol="g_io_module_scope_new">
+				<return-type type="GIOModuleScope*"/>
+				<parameters>
+					<parameter name="flags" type="GIOModuleScopeFlags"/>
+				</parameters>
+			</method>
 		</struct>
 		<struct name="GIOSchedulerJob">
 			<method name="send_to_mainloop" symbol="g_io_scheduler_job_send_to_mainloop">
@@ -1362,6 +1397,10 @@
 			<member name="G_IO_ERROR_PROXY_NEED_AUTH" value="42"/>
 			<member name="G_IO_ERROR_PROXY_NOT_ALLOWED" value="43"/>
 		</enum>
+		<enum name="GIOModuleScopeFlags" type-name="GIOModuleScopeFlags" get-type="g_io_module_scope_flags_get_type">
+			<member name="G_IO_MODULE_SCOPE_NONE" value="0"/>
+			<member name="G_IO_MODULE_SCOPE_BLOCK_DUPLICATES" value="1"/>
+		</enum>
 		<enum name="GMountMountFlags" type-name="GMountMountFlags" get-type="g_mount_mount_flags_get_type">
 			<member name="G_MOUNT_MOUNT_NONE" value="0"/>
 		</enum>
@@ -1410,6 +1449,13 @@
 			<member name="G_TLS_AUTHENTICATION_REQUESTED" value="1"/>
 			<member name="G_TLS_AUTHENTICATION_REQUIRED" value="2"/>
 		</enum>
+		<enum name="GTlsDatabaseLookupFlags" type-name="GTlsDatabaseLookupFlags" get-type="g_tls_database_lookup_flags_get_type">
+			<member name="G_TLS_DATABASE_LOOKUP_NONE" value="0"/>
+			<member name="G_TLS_DATABASE_LOOKUP_KEYPAIR" value="1"/>
+		</enum>
+		<enum name="GTlsDatabaseVerifyFlags" type-name="GTlsDatabaseVerifyFlags" get-type="g_tls_database_verify_flags_get_type">
+			<member name="G_TLS_DATABASE_VERIFY_NONE" value="0"/>
+		</enum>
 		<enum name="GTlsError" type-name="GTlsError" get-type="g_tls_error_get_type">
 			<member name="G_TLS_ERROR_UNAVAILABLE" value="0"/>
 			<member name="G_TLS_ERROR_MISC" value="1"/>
@@ -1418,6 +1464,11 @@
 			<member name="G_TLS_ERROR_HANDSHAKE" value="4"/>
 			<member name="G_TLS_ERROR_CERTIFICATE_REQUIRED" value="5"/>
 			<member name="G_TLS_ERROR_EOF" value="6"/>
+		</enum>
+		<enum name="GTlsInteractionResult" type-name="GTlsInteractionResult" get-type="g_tls_interaction_result_get_type">
+			<member name="G_TLS_INTERACTION_UNHANDLED" value="0"/>
+			<member name="G_TLS_INTERACTION_HANDLED" value="1"/>
+			<member name="G_TLS_INTERACTION_FAILED" value="2"/>
 		</enum>
 		<enum name="GTlsRehandshakeMode" type-name="GTlsRehandshakeMode" get-type="g_tls_rehandshake_mode_get_type">
 			<member name="G_TLS_REHANDSHAKE_NEVER" value="0"/>
@@ -1589,6 +1640,12 @@
 			<member name="G_TLS_CERTIFICATE_INSECURE" value="32"/>
 			<member name="G_TLS_CERTIFICATE_GENERIC_ERROR" value="64"/>
 			<member name="G_TLS_CERTIFICATE_VALIDATE_ALL" value="127"/>
+		</flags>
+		<flags name="GTlsPasswordFlags" type-name="GTlsPasswordFlags" get-type="g_tls_password_flags_get_type">
+			<member name="G_TLS_PASSWORD_NONE" value="0"/>
+			<member name="G_TLS_PASSWORD_RETRY" value="2"/>
+			<member name="G_TLS_PASSWORD_MANY_TRIES" value="4"/>
+			<member name="G_TLS_PASSWORD_FINAL_TRY" value="8"/>
 		</flags>
 		<object name="GAppLaunchContext" parent="GObject" type-name="GAppLaunchContext" get-type="g_app_launch_context_get_type">
 			<method name="get_display" symbol="g_app_launch_context_get_display">
@@ -2358,6 +2415,51 @@
 					<parameter name="reply_type" type="GVariantType*"/>
 					<parameter name="flags" type="GDBusCallFlags"/>
 					<parameter name="timeout_msec" type="gint"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="call_with_unix_fd_list" symbol="g_dbus_connection_call_with_unix_fd_list">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="connection" type="GDBusConnection*"/>
+					<parameter name="bus_name" type="gchar*"/>
+					<parameter name="object_path" type="gchar*"/>
+					<parameter name="interface_name" type="gchar*"/>
+					<parameter name="method_name" type="gchar*"/>
+					<parameter name="parameters" type="GVariant*"/>
+					<parameter name="reply_type" type="GVariantType*"/>
+					<parameter name="flags" type="GDBusCallFlags"/>
+					<parameter name="timeout_msec" type="gint"/>
+					<parameter name="fd_list" type="GUnixFDList*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="call_with_unix_fd_list_finish" symbol="g_dbus_connection_call_with_unix_fd_list_finish">
+				<return-type type="GVariant*"/>
+				<parameters>
+					<parameter name="connection" type="GDBusConnection*"/>
+					<parameter name="out_fd_list" type="GUnixFDList**"/>
+					<parameter name="res" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="call_with_unix_fd_list_sync" symbol="g_dbus_connection_call_with_unix_fd_list_sync">
+				<return-type type="GVariant*"/>
+				<parameters>
+					<parameter name="connection" type="GDBusConnection*"/>
+					<parameter name="bus_name" type="gchar*"/>
+					<parameter name="object_path" type="gchar*"/>
+					<parameter name="interface_name" type="gchar*"/>
+					<parameter name="method_name" type="gchar*"/>
+					<parameter name="parameters" type="GVariant*"/>
+					<parameter name="reply_type" type="GVariantType*"/>
+					<parameter name="flags" type="GDBusCallFlags"/>
+					<parameter name="timeout_msec" type="gint"/>
+					<parameter name="fd_list" type="GUnixFDList*"/>
+					<parameter name="out_fd_list" type="GUnixFDList**"/>
 					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
@@ -3206,6 +3308,14 @@
 					<parameter name="parameters" type="GVariant*"/>
 				</parameters>
 			</method>
+			<method name="return_value_with_unix_fd_list" symbol="g_dbus_method_invocation_return_value_with_unix_fd_list">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="invocation" type="GDBusMethodInvocation*"/>
+					<parameter name="parameters" type="GVariant*"/>
+					<parameter name="fd_list" type="GUnixFDList*"/>
+				</parameters>
+			</method>
 			<method name="take_error" symbol="g_dbus_method_invocation_take_error">
 				<return-type type="void"/>
 				<parameters>
@@ -3503,6 +3613,43 @@
 					<parameter name="parameters" type="GVariant*"/>
 					<parameter name="flags" type="GDBusCallFlags"/>
 					<parameter name="timeout_msec" type="gint"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="call_with_unix_fd_list" symbol="g_dbus_proxy_call_with_unix_fd_list">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="proxy" type="GDBusProxy*"/>
+					<parameter name="method_name" type="gchar*"/>
+					<parameter name="parameters" type="GVariant*"/>
+					<parameter name="flags" type="GDBusCallFlags"/>
+					<parameter name="timeout_msec" type="gint"/>
+					<parameter name="fd_list" type="GUnixFDList*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="call_with_unix_fd_list_finish" symbol="g_dbus_proxy_call_with_unix_fd_list_finish">
+				<return-type type="GVariant*"/>
+				<parameters>
+					<parameter name="proxy" type="GDBusProxy*"/>
+					<parameter name="out_fd_list" type="GUnixFDList**"/>
+					<parameter name="res" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="call_with_unix_fd_list_sync" symbol="g_dbus_proxy_call_with_unix_fd_list_sync">
+				<return-type type="GVariant*"/>
+				<parameters>
+					<parameter name="proxy" type="GDBusProxy*"/>
+					<parameter name="method_name" type="gchar*"/>
+					<parameter name="parameters" type="GVariant*"/>
+					<parameter name="flags" type="GDBusCallFlags"/>
+					<parameter name="timeout_msec" type="gint"/>
+					<parameter name="fd_list" type="GUnixFDList*"/>
+					<parameter name="out_fd_list" type="GUnixFDList**"/>
 					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
@@ -8254,17 +8401,6 @@
 				</parameters>
 			</signal>
 		</object>
-		<object name="GTimeZoneMonitor" parent="GObject" type-name="GTimeZoneMonitor" get-type="g_time_zone_monitor_get_type">
-			<method name="get" symbol="g_time_zone_monitor_get">
-				<return-type type="GTimeZoneMonitor*"/>
-			</method>
-			<signal name="changed" when="FIRST">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="object" type="GTimeZoneMonitor*"/>
-				</parameters>
-			</signal>
-		</object>
 		<object name="GTlsCertificate" parent="GObject" type-name="GTlsCertificate" get-type="g_tls_certificate_get_type">
 			<method name="get_issuer" symbol="g_tls_certificate_get_issuer">
 				<return-type type="GTlsCertificate*"/>
@@ -8339,6 +8475,18 @@
 					<parameter name="conn" type="GTlsConnection*"/>
 				</parameters>
 			</method>
+			<method name="get_database" symbol="g_tls_connection_get_database">
+				<return-type type="GTlsDatabase*"/>
+				<parameters>
+					<parameter name="conn" type="GTlsConnection*"/>
+				</parameters>
+			</method>
+			<method name="get_interaction" symbol="g_tls_connection_get_interaction">
+				<return-type type="GTlsInteraction*"/>
+				<parameters>
+					<parameter name="conn" type="GTlsConnection*"/>
+				</parameters>
+			</method>
 			<method name="get_peer_certificate" symbol="g_tls_connection_get_peer_certificate">
 				<return-type type="GTlsCertificate*"/>
 				<parameters>
@@ -8402,6 +8550,20 @@
 					<parameter name="certificate" type="GTlsCertificate*"/>
 				</parameters>
 			</method>
+			<method name="set_database" symbol="g_tls_connection_set_database">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="conn" type="GTlsConnection*"/>
+					<parameter name="database" type="GTlsDatabase*"/>
+				</parameters>
+			</method>
+			<method name="set_interaction" symbol="g_tls_connection_set_interaction">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="conn" type="GTlsConnection*"/>
+					<parameter name="interaction" type="GTlsInteraction*"/>
+				</parameters>
+			</method>
 			<method name="set_rehandshake_mode" symbol="g_tls_connection_set_rehandshake_mode">
 				<return-type type="void"/>
 				<parameters>
@@ -8425,6 +8587,8 @@
 			</method>
 			<property name="base-io-stream" type="GIOStream*" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="certificate" type="GTlsCertificate*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="database" type="GTlsDatabase*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="interaction" type="GTlsInteraction*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="peer-certificate" type="GTlsCertificate*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="peer-certificate-errors" type="GTlsCertificateFlags" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="rehandshake-mode" type="GTlsRehandshakeMode" readable="1" writable="1" construct="1" construct-only="0"/>
@@ -8462,6 +8626,440 @@
 					<parameter name="conn" type="GTlsConnection*"/>
 					<parameter name="result" type="GAsyncResult*"/>
 					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+		</object>
+		<object name="GTlsDatabase" parent="GObject" type-name="GTlsDatabase" get-type="g_tls_database_get_type">
+			<method name="create_certificate_handle" symbol="g_tls_database_create_certificate_handle">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="GTlsDatabase*"/>
+					<parameter name="certificate" type="GTlsCertificate*"/>
+				</parameters>
+			</method>
+			<method name="lookup_certificate_for_handle" symbol="g_tls_database_lookup_certificate_for_handle">
+				<return-type type="GTlsCertificate*"/>
+				<parameters>
+					<parameter name="self" type="GTlsDatabase*"/>
+					<parameter name="handle" type="gchar*"/>
+					<parameter name="interaction" type="GTlsInteraction*"/>
+					<parameter name="flags" type="GTlsDatabaseLookupFlags"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="lookup_certificate_for_handle_async" symbol="g_tls_database_lookup_certificate_for_handle_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GTlsDatabase*"/>
+					<parameter name="handle" type="gchar*"/>
+					<parameter name="interaction" type="GTlsInteraction*"/>
+					<parameter name="flags" type="GTlsDatabaseLookupFlags"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="lookup_certificate_for_handle_finish" symbol="g_tls_database_lookup_certificate_for_handle_finish">
+				<return-type type="GTlsCertificate*"/>
+				<parameters>
+					<parameter name="self" type="GTlsDatabase*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="lookup_certificate_issuer" symbol="g_tls_database_lookup_certificate_issuer">
+				<return-type type="GTlsCertificate*"/>
+				<parameters>
+					<parameter name="self" type="GTlsDatabase*"/>
+					<parameter name="certificate" type="GTlsCertificate*"/>
+					<parameter name="interaction" type="GTlsInteraction*"/>
+					<parameter name="flags" type="GTlsDatabaseLookupFlags"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="lookup_certificate_issuer_async" symbol="g_tls_database_lookup_certificate_issuer_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GTlsDatabase*"/>
+					<parameter name="certificate" type="GTlsCertificate*"/>
+					<parameter name="interaction" type="GTlsInteraction*"/>
+					<parameter name="flags" type="GTlsDatabaseLookupFlags"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="lookup_certificate_issuer_finish" symbol="g_tls_database_lookup_certificate_issuer_finish">
+				<return-type type="GTlsCertificate*"/>
+				<parameters>
+					<parameter name="self" type="GTlsDatabase*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="lookup_certificates_issued_by" symbol="g_tls_database_lookup_certificates_issued_by">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="self" type="GTlsDatabase*"/>
+					<parameter name="issuer_raw_dn" type="GByteArray*"/>
+					<parameter name="interaction" type="GTlsInteraction*"/>
+					<parameter name="flags" type="GTlsDatabaseLookupFlags"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="lookup_certificates_issued_by_async" symbol="g_tls_database_lookup_certificates_issued_by_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GTlsDatabase*"/>
+					<parameter name="issuer_raw_dn" type="GByteArray*"/>
+					<parameter name="interaction" type="GTlsInteraction*"/>
+					<parameter name="flags" type="GTlsDatabaseLookupFlags"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="lookup_certificates_issued_by_finish" symbol="g_tls_database_lookup_certificates_issued_by_finish">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="self" type="GTlsDatabase*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="verify_chain" symbol="g_tls_database_verify_chain">
+				<return-type type="GTlsCertificateFlags"/>
+				<parameters>
+					<parameter name="self" type="GTlsDatabase*"/>
+					<parameter name="chain" type="GTlsCertificate*"/>
+					<parameter name="purpose" type="gchar*"/>
+					<parameter name="identity" type="GSocketConnectable*"/>
+					<parameter name="interaction" type="GTlsInteraction*"/>
+					<parameter name="flags" type="GTlsDatabaseVerifyFlags"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="verify_chain_async" symbol="g_tls_database_verify_chain_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GTlsDatabase*"/>
+					<parameter name="chain" type="GTlsCertificate*"/>
+					<parameter name="purpose" type="gchar*"/>
+					<parameter name="identity" type="GSocketConnectable*"/>
+					<parameter name="interaction" type="GTlsInteraction*"/>
+					<parameter name="flags" type="GTlsDatabaseVerifyFlags"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="verify_chain_finish" symbol="g_tls_database_verify_chain_finish">
+				<return-type type="GTlsCertificateFlags"/>
+				<parameters>
+					<parameter name="self" type="GTlsDatabase*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<vfunc name="create_certificate_handle">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="GTlsDatabase*"/>
+					<parameter name="certificate" type="GTlsCertificate*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="lookup_certificate_for_handle">
+				<return-type type="GTlsCertificate*"/>
+				<parameters>
+					<parameter name="self" type="GTlsDatabase*"/>
+					<parameter name="handle" type="gchar*"/>
+					<parameter name="interaction" type="GTlsInteraction*"/>
+					<parameter name="flags" type="GTlsDatabaseLookupFlags"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="lookup_certificate_for_handle_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GTlsDatabase*"/>
+					<parameter name="handle" type="gchar*"/>
+					<parameter name="interaction" type="GTlsInteraction*"/>
+					<parameter name="flags" type="GTlsDatabaseLookupFlags"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="lookup_certificate_for_handle_finish">
+				<return-type type="GTlsCertificate*"/>
+				<parameters>
+					<parameter name="self" type="GTlsDatabase*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="lookup_certificate_issuer">
+				<return-type type="GTlsCertificate*"/>
+				<parameters>
+					<parameter name="self" type="GTlsDatabase*"/>
+					<parameter name="certificate" type="GTlsCertificate*"/>
+					<parameter name="interaction" type="GTlsInteraction*"/>
+					<parameter name="flags" type="GTlsDatabaseLookupFlags"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="lookup_certificate_issuer_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GTlsDatabase*"/>
+					<parameter name="certificate" type="GTlsCertificate*"/>
+					<parameter name="interaction" type="GTlsInteraction*"/>
+					<parameter name="flags" type="GTlsDatabaseLookupFlags"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="lookup_certificate_issuer_finish">
+				<return-type type="GTlsCertificate*"/>
+				<parameters>
+					<parameter name="self" type="GTlsDatabase*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="lookup_certificates_issued_by">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="self" type="GTlsDatabase*"/>
+					<parameter name="issuer_raw_dn" type="GByteArray*"/>
+					<parameter name="interaction" type="GTlsInteraction*"/>
+					<parameter name="flags" type="GTlsDatabaseLookupFlags"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="lookup_certificates_issued_by_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GTlsDatabase*"/>
+					<parameter name="issuer_raw_dn" type="GByteArray*"/>
+					<parameter name="interaction" type="GTlsInteraction*"/>
+					<parameter name="flags" type="GTlsDatabaseLookupFlags"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="lookup_certificates_issued_by_finish">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="self" type="GTlsDatabase*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="verify_chain">
+				<return-type type="GTlsCertificateFlags"/>
+				<parameters>
+					<parameter name="self" type="GTlsDatabase*"/>
+					<parameter name="chain" type="GTlsCertificate*"/>
+					<parameter name="purpose" type="gchar*"/>
+					<parameter name="identity" type="GSocketConnectable*"/>
+					<parameter name="interaction" type="GTlsInteraction*"/>
+					<parameter name="flags" type="GTlsDatabaseVerifyFlags"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="verify_chain_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GTlsDatabase*"/>
+					<parameter name="chain" type="GTlsCertificate*"/>
+					<parameter name="purpose" type="gchar*"/>
+					<parameter name="identity" type="GSocketConnectable*"/>
+					<parameter name="interaction" type="GTlsInteraction*"/>
+					<parameter name="flags" type="GTlsDatabaseVerifyFlags"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="verify_chain_finish">
+				<return-type type="GTlsCertificateFlags"/>
+				<parameters>
+					<parameter name="self" type="GTlsDatabase*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+		</object>
+		<object name="GTlsInteraction" parent="GObject" type-name="GTlsInteraction" get-type="g_tls_interaction_get_type">
+			<method name="ask_password" symbol="g_tls_interaction_ask_password">
+				<return-type type="GTlsInteractionResult"/>
+				<parameters>
+					<parameter name="interaction" type="GTlsInteraction*"/>
+					<parameter name="password" type="GTlsPassword*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="ask_password_async" symbol="g_tls_interaction_ask_password_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="interaction" type="GTlsInteraction*"/>
+					<parameter name="password" type="GTlsPassword*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="ask_password_finish" symbol="g_tls_interaction_ask_password_finish">
+				<return-type type="GTlsInteractionResult"/>
+				<parameters>
+					<parameter name="interaction" type="GTlsInteraction*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="invoke_ask_password" symbol="g_tls_interaction_invoke_ask_password">
+				<return-type type="GTlsInteractionResult"/>
+				<parameters>
+					<parameter name="interaction" type="GTlsInteraction*"/>
+					<parameter name="password" type="GTlsPassword*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<vfunc name="ask_password">
+				<return-type type="GTlsInteractionResult"/>
+				<parameters>
+					<parameter name="interaction" type="GTlsInteraction*"/>
+					<parameter name="password" type="GTlsPassword*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="ask_password_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="interaction" type="GTlsInteraction*"/>
+					<parameter name="password" type="GTlsPassword*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="ask_password_finish">
+				<return-type type="GTlsInteractionResult"/>
+				<parameters>
+					<parameter name="interaction" type="GTlsInteraction*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+		</object>
+		<object name="GTlsPassword" parent="GObject" type-name="GTlsPassword" get-type="g_tls_password_get_type">
+			<method name="get_description" symbol="g_tls_password_get_description">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="password" type="GTlsPassword*"/>
+				</parameters>
+			</method>
+			<method name="get_flags" symbol="g_tls_password_get_flags">
+				<return-type type="GTlsPasswordFlags"/>
+				<parameters>
+					<parameter name="password" type="GTlsPassword*"/>
+				</parameters>
+			</method>
+			<method name="get_value" symbol="g_tls_password_get_value">
+				<return-type type="guchar*"/>
+				<parameters>
+					<parameter name="password" type="GTlsPassword*"/>
+					<parameter name="length" type="gsize*"/>
+				</parameters>
+			</method>
+			<method name="get_warning" symbol="g_tls_password_get_warning">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="password" type="GTlsPassword*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="g_tls_password_new">
+				<return-type type="GTlsPassword*"/>
+				<parameters>
+					<parameter name="flags" type="GTlsPasswordFlags"/>
+					<parameter name="description" type="gchar*"/>
+				</parameters>
+			</constructor>
+			<method name="set_description" symbol="g_tls_password_set_description">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="password" type="GTlsPassword*"/>
+					<parameter name="description" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_flags" symbol="g_tls_password_set_flags">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="password" type="GTlsPassword*"/>
+					<parameter name="flags" type="GTlsPasswordFlags"/>
+				</parameters>
+			</method>
+			<method name="set_value" symbol="g_tls_password_set_value">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="password" type="GTlsPassword*"/>
+					<parameter name="value" type="guchar*"/>
+					<parameter name="length" type="gssize"/>
+				</parameters>
+			</method>
+			<method name="set_value_full" symbol="g_tls_password_set_value_full">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="password" type="GTlsPassword*"/>
+					<parameter name="value" type="guchar*"/>
+					<parameter name="length" type="gssize"/>
+					<parameter name="destroy" type="GDestroyNotify"/>
+				</parameters>
+			</method>
+			<method name="set_warning" symbol="g_tls_password_set_warning">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="password" type="GTlsPassword*"/>
+					<parameter name="warning" type="gchar*"/>
+				</parameters>
+			</method>
+			<property name="description" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="flags" type="GTlsPasswordFlags" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="warning" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<vfunc name="get_default_warning">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="password" type="GTlsPassword*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_value">
+				<return-type type="guchar*"/>
+				<parameters>
+					<parameter name="password" type="GTlsPassword*"/>
+					<parameter name="length" type="gsize*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="set_value">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="password" type="GTlsPassword*"/>
+					<parameter name="value" type="guchar*"/>
+					<parameter name="length" type="gssize"/>
+					<parameter name="destroy" type="GDestroyNotify"/>
 				</parameters>
 			</vfunc>
 		</object>
@@ -9036,7 +9634,7 @@
 				<parameters>
 					<parameter name="action_group" type="GActionGroup*"/>
 					<parameter name="action_name" type="char*"/>
-					<parameter name="value" type="GVariant"/>
+					<parameter name="state" type="GVariant"/>
 				</parameters>
 			</signal>
 			<vfunc name="activate_action">
@@ -12936,6 +13534,18 @@
 			<method name="get_default" symbol="g_tls_backend_get_default">
 				<return-type type="GTlsBackend*"/>
 			</method>
+			<method name="get_default_database" symbol="g_tls_backend_get_default_database">
+				<return-type type="GTlsDatabase*"/>
+				<parameters>
+					<parameter name="backend" type="GTlsBackend*"/>
+				</parameters>
+			</method>
+			<method name="get_file_database_type" symbol="g_tls_backend_get_file_database_type">
+				<return-type type="GType"/>
+				<parameters>
+					<parameter name="backend" type="GTlsBackend*"/>
+				</parameters>
+			</method>
 			<method name="get_server_connection_type" symbol="g_tls_backend_get_server_connection_type">
 				<return-type type="GType"/>
 				<parameters>
@@ -12952,6 +13562,15 @@
 				<return-type type="GType"/>
 			</vfunc>
 			<vfunc name="get_client_connection_type">
+				<return-type type="GType"/>
+			</vfunc>
+			<vfunc name="get_default_database">
+				<return-type type="GTlsDatabase*"/>
+				<parameters>
+					<parameter name="backend" type="GTlsBackend*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_file_database_type">
 				<return-type type="GType"/>
 			</vfunc>
 			<vfunc name="get_server_connection_type">
@@ -13025,6 +13644,19 @@
 			<property name="server-identity" type="GSocketConnectable*" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="use-ssl3" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="validation-flags" type="GTlsCertificateFlags" readable="1" writable="1" construct="1" construct-only="0"/>
+		</interface>
+		<interface name="GTlsFileDatabase" type-name="GTlsFileDatabase" get-type="g_tls_file_database_get_type">
+			<requires>
+				<interface name="GTlsDatabase"/>
+			</requires>
+			<method name="new" symbol="g_tls_file_database_new">
+				<return-type type="GTlsDatabase*"/>
+				<parameters>
+					<parameter name="anchors" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<property name="anchors" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
 		</interface>
 		<interface name="GTlsServerConnection" type-name="GTlsServerConnection" get-type="g_tls_server_connection_get_type">
 			<requires>
@@ -13382,6 +14014,8 @@
 		<constant name="G_PROXY_EXTENSION_POINT_NAME" type="char*" value="gio-proxy"/>
 		<constant name="G_PROXY_RESOLVER_EXTENSION_POINT_NAME" type="char*" value="gio-proxy-resolver"/>
 		<constant name="G_TLS_BACKEND_EXTENSION_POINT_NAME" type="char*" value="gio-tls-backend"/>
+		<constant name="G_TLS_DATABASE_PURPOSE_AUTHENTICATE_CLIENT" type="char*" value="1.3.6.1.5.5.7.3.2"/>
+		<constant name="G_TLS_DATABASE_PURPOSE_AUTHENTICATE_SERVER" type="char*" value="1.3.6.1.5.5.7.3.1"/>
 		<constant name="G_VFS_EXTENSION_POINT_NAME" type="char*" value="gio-vfs"/>
 		<constant name="G_VOLUME_IDENTIFIER_KIND_HAL_UDI" type="char*" value="hal-udi"/>
 		<constant name="G_VOLUME_IDENTIFIER_KIND_LABEL" type="char*" value="label"/>
