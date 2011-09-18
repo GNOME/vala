@@ -4041,8 +4041,20 @@ namespace GLib {
 			this.add ((owned) data);
 			this.remove_index_fast (index);
 		}
-		public void sort (GLib.CompareFunc<G> compare_func);
-		public void sort_with_data (GLib.CompareDataFunc<G> compare_func);
+		[CCode (cname = "vala_g_ptr_array_sort")]
+		public void sort (GLib.CompareFunc<G> compare_func) {
+			this._sort_with_data ((a, b) => {
+				return compare_func ((G**) (*a), (G**) (*b));
+			});
+		}
+		[CCode (cname = "g_ptr_array_sort_with_data")]
+		public void _sort_with_data (GLib.CompareDataFunc<G**> compare_func);
+		[CCode (cname = "vala_g_ptr_array_sort_with_data")]
+		public void sort_with_data (GLib.CompareDataFunc<G> compare_func) {
+			this._sort_with_data ((a, b) => {
+				return compare_func ((G**) (*a), (G**) (*b));
+			});
+		}
 		private void set_size (int length);
 
 		public int length {
