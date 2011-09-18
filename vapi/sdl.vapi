@@ -154,7 +154,7 @@ namespace SDL {
 		public bool set_cliprect(Rect? rect);
 
 		[CCode (cname="SDL_GetClipRect")]
-		public void get_cliprect(Rect rect);
+		public void get_cliprect(out Rect rect);
 
 		[CCode (cname="SDL_ConvertSurface")]
 		public Surface? convert(PixelFormat? fmt, uint32 flags);
@@ -535,10 +535,10 @@ namespace SDL {
 			EventAction action, EventMask mask);
 
 		[CCode (cname="SDL_PollEvent")]
-		public static int poll(Event ev);
+		public static int poll(out Event ev);
 
 		[CCode (cname="SDL_WaitEvent")]
-		public static int wait(Event ev);
+		public static int wait(out Event ev);
 
 		[CCode (cname="SDL_PushEvent")]
 		public static int push(Event ev);
