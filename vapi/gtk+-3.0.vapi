@@ -4304,7 +4304,7 @@ namespace Gtk {
 		public void get_start_iter (out Gtk.TextIter iter);
 		public unowned Gtk.TextTagTable get_tag_table ();
 		public string get_text (Gtk.TextIter start, Gtk.TextIter end, bool include_hidden_chars);
-		public void insert (Gtk.TextIter iter, string text, int len);
+		public void insert (ref Gtk.TextIter iter, string text, int len);
 		public void insert_at_cursor (string text, int len);
 		public bool insert_interactive (Gtk.TextIter iter, string text, int len, bool default_editable);
 		public bool insert_interactive_at_cursor (string text, int len, bool default_editable);
