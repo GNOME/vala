@@ -174,6 +174,8 @@ dist_vapi_DATA = \
 	libusb-1.0.vapi \
 	libwnck-1.0.deps \
 	libwnck-1.0.vapi \
+	libwnck-3.0.deps \
+	libwnck-3.0.vapi \
 	libxml-2.0.vapi \
 	linux.deps \
 	linux.vapi \
@@ -450,6 +452,9 @@ libsoup-2.4:
 
 libwnck-1.0:
 	$(GENVAPI) --library $(srcdir)/libwnck-1.0 $(PACKAGESDIR)/libwnck-1.0/libwnck-1.0.gi
+
+libwnck-3.0:
+	$(GENVAPI) --library $(srcdir)/libwnck-3.0 --metadatadir $(METADATADIR) --pkg gio-2.0 --pkg gtk+-3.0 $(GIRDIR)/Wnck-3.0.gir
 
 loudmouth-1.0:
 	$(GENVAPI) --library $(srcdir)/loudmouth-1.0 $(PACKAGESDIR)/loudmouth-1.0/loudmouth-1.0-custom.vala $(PACKAGESDIR)/loudmouth-1.0/loudmouth-1.0.gi
