@@ -1,0 +1,5 @@
+*_VERSION parent="Wnck.Version"
+pid_read_resource_usage parent="Wnck.ResourceUsage" name="pid_read"
+    .usage out unowned=false
+xid_read_resource_usage parent="Wnck.ResourceUsage" name="xid_read"
+    .usage out unowned=false
