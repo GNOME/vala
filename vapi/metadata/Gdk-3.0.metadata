@@ -1,0 +1,62 @@
+KEY_* name="KEY_(.+)" parent="Gdk.Key"
+selection_* name="selection_(.+)" parent="Gdk.Selection"
+Atom struct
+Color struct
+Cursor
+        .get_image nullable
+Device
+        .free_history skip=false
+        .get_associated_device nullable
+        .get_axis skip=false
+        .get_axis_value skip=false
+        .get_history skip=false
+        .get_state skip=false
+        .get_window_at_position skip=false
+        .list_slave_devices nullable
+        .associated_device nullable
+        .name nullable
+Event
+        ._get_angle skip
+        ._get_center skip
+        ._get_distance skip
+Screen
+        .get_window_stack nullable
+Window
+        .add_filter skip=false
+        .remove_filter skip=false
+WindowRedirect skip
+EventKey
+        .string skip
+RGBA struct
+ModifierType
+        .modifier_reserved_*_mask skip
+offscreen_window_get_embedder nullable
+pango_layout_get_clip_region skip=false
+property_change skip=false
+
+// vapigen actually generates the correctly, but in away that breaks BC
+Screen.get_monitor_geometry skip
+Window.get_frame_extents skip
+
+// Should send upstream
+Device
+        .free_history.events array array_length_idx=1
+        .get_axis_value.value out
+        .get_state.axes array
+        .get_state.mask out
+        .grab_info_libgtk_only skip
+Window
+        .destroy_notify skip
+synthesize_window_state skip
+EventMotion
+        .axes array
+FilterFunc skip
+init*.argv unowned
+parse_args.argv unowned
+property_change.data array array_length_idx=6
+selection_property_get skip=false
+        .data array
+threads_add_idle skip=false
+threads_add_timeout skip=false
+threads_add_timeout_seconds skip=false
+threads_set_lock_functions skip=false

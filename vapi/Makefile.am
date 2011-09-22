@@ -277,7 +277,7 @@ gdk-2.0:
 	$(GENVAPI) --library $(srcdir)/gdk-2.0 $(PACKAGESDIR)/gdk-2.0/gdk-2.0-custom.vala $(PACKAGESDIR)/gdk-2.0/gdk-2.0.gi
 
 gdk-3.0:
-	$(GENVAPI) --library $(srcdir)/gdk-3.0 $(PACKAGESDIR)/gdk-3.0/gdk-3.0-custom.vala $(PACKAGESDIR)/gdk-3.0/gdk-3.0.gi
+	$(GENVAPI) --library $(srcdir)/gdk-3.0 --pkg gio-2.0 --metadatadir $(METADATADIR) $(METADATADIR)/Gdk-3.0-custom.vala $(GIRDIR)/Gdk-3.0.gir
 
 gdk-pixbuf-2.0:
 	$(GENVAPI) --library $(srcdir)/gdk-pixbuf-2.0 $(PACKAGESDIR)/gdk-pixbuf-2.0/gdk-pixbuf-2.0.gi
