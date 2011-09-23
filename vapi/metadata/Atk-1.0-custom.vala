@@ -20,7 +20,16 @@ namespace Atk {
 		public static unowned string type_get_name (Atk.RelationType type);
 		[Deprecated (replacement = "RelationType.register", since = "vala-0.16")]
 		public static Atk.RelationType type_register (string name);
-     }
+	}
+	[SimpleType]
+	public struct State : uint64 {
+		[Deprecated (replacement = "StateType.for_name", since = "vala-0.16")]
+		public static Atk.StateType type_for_name (string name);
+		[Deprecated (replacement = "StateType.get_name", since = "vala-0.16")]
+		public static unowned string type_get_name (Atk.StateType type);
+		[Deprecated (replacement = "StateType.register", since = "vala-0.16")]
+		public static Atk.StateType type_register (string name);
+	}
 	[CCode (copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "atk_text_range_get_type ()", has_destroy_function = false)]
 	[Compact]
 	public class TextRange {

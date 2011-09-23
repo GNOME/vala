@@ -138,14 +138,6 @@ namespace Atk {
 		[NoWrapper]
 		public virtual string get_object_id ();
 	}
-	[CCode (cheader_filename = "atk/atk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "atk_rectangle_get_type ()")]
-	[Compact]
-	public class Rectangle {
-		public int height;
-		public int width;
-		public int x;
-		public int y;
-	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class Registry : GLib.Object {
 		[Deprecated]
@@ -269,6 +261,7 @@ namespace Atk {
 	}
 	[CCode (cheader_filename = "atk/atk.h", type_id = "atk_component_get_type ()")]
 	public interface Component : GLib.Object {
+		public abstract uint add_focus_handler (Atk.FocusHandler handler);
 		public abstract bool contains (int x, int y, Atk.CoordType coord_type);
 		public abstract double get_alpha ();
 		public abstract void get_extents (int x, int y, int width, int height, Atk.CoordType coord_type);
@@ -286,19 +279,16 @@ namespace Atk {
 	}
 	[CCode (cheader_filename = "atk/atk.h", type_id = "atk_document_get_type ()")]
 	public interface Document : GLib.Object {
-		public unowned string get_attribute_value (string attribute_name);
+		[CCode (vfunc_name = "get_document_attribute_value")]
+		public virtual unowned string get_attribute_value (string attribute_name);
 		[CCode (vfunc_name = "get_document_attributes")]
 		public virtual unowned GLib.SList<Atk.Attribute?> get_attributes ();
 		public abstract void* get_document ();
-		[NoWrapper]
-		public abstract unowned string get_document_attribute_value (string attribute_name);
-		[NoWrapper]
-		public abstract unowned string get_document_locale ();
 		public abstract unowned string get_document_type ();
-		public unowned string get_locale ();
-		public bool set_attribute_value (string attribute_name, string attribute_value);
-		[NoWrapper]
-		public abstract bool set_document_attribute (string attribute_name, string attribute_value);
+		[CCode (vfunc_name = "get_document_locale")]
+		public virtual unowned string get_locale ();
+		[CCode (vfunc_name = "set_document_attribute")]
+		public virtual bool set_attribute_value (string attribute_name, string attribute_value);
 		public signal void load_complete ();
 		public signal void load_stopped ();
 		public signal void reload ();
@@ -335,9 +325,6 @@ namespace Atk {
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Implementor : GLib.Object {
 		public abstract unowned Atk.Object ref_accessible ();
-	}
-	[CCode (cheader_filename = "atk/atk.h", lower_case_csuffix = "implementor", type_id = "atk_implementor_get_type ()")]
-	public interface ImplementorIface : GLib.Object {
 	}
 	[CCode (cheader_filename = "atk/atk.h", type_id = "atk_selection_get_type ()")]
 	public interface Selection : GLib.Object {
@@ -478,8 +465,21 @@ namespace Atk {
 		public GLib.Value new_value;
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
+	public struct Rectangle {
+		public int x;
+		public int y;
+		public int width;
+		public int height;
+	}
+	[CCode (cheader_filename = "atk/atk.h")]
 	[SimpleType]
 	public struct State : uint64 {
+		[Deprecated (replacement = "StateType.for_name", since = "vala-0.16")]
+		public static Atk.StateType type_for_name (string name);
+		[Deprecated (replacement = "StateType.get_name", since = "vala-0.16")]
+		public static unowned string type_get_name (Atk.StateType type);
+		[Deprecated (replacement = "StateType.register", since = "vala-0.16")]
+		public static Atk.StateType type_register (string name);
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public struct TextRectangle {

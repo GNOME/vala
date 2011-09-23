@@ -12,6 +12,7 @@ Text
   .get_run_attributes type="GLib.SList<Attribute?>"
 
 KeyEventStruct.string name="str"
+Rectangle struct
 TextRange.content skip
 Text.get_bounded_ranges skip
 
@@ -41,8 +42,12 @@ _PropertyValues name="PropertyValues"
 _Registry* skip
 
 // Should be fixed upstream
-Implementor skip // g-ir-scanner doesn't realize this is an interface
+Implementor* skip // g-ir-scanner doesn't realize this is an interface
+Component.add_focus_handler skip=false
 Document.get_attributes vfunc_name="get_document_attributes"
+Document.get_attribute_value vfunc_name="get_document_attribute_value"
+Document.get_locale vfunc_name="get_document_locale"
+Document.set_attribute_value vfunc_name="set_document_attribute"
 Object.connect_property_change_handler skip=false
 Relation.get_target type_arguments="Atk.Object"
 Relation.new.targets array array_length_idx=1
