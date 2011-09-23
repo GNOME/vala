@@ -4778,7 +4778,7 @@ namespace Gdk {
 		public signal void state_changed ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public class Screen {
+	public class Screen : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Screen ();
 		public Gdk.Window get_active_window ();
@@ -4842,7 +4842,7 @@ namespace Gdk {
 		public Gdk.VisualType get_visual_type ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public class Window {
+	public class Window : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Window (Gdk.Window? parent, Gdk.WindowAttr attributes, int attributes_mask);
 		public void add_filter (Gdk.FilterFunc function);

@@ -1,9 +1,9 @@
 namespace Gdk {
-	public class Screen {
+	public class Screen : GLib.Object {
 		public void get_monitor_geometry (int monitor_num, out Gdk.Rectangle dest);
 	}
 
-	public class Window {
+	public class Window : GLib.Object {
 		public void get_frame_extents (out Gdk.Rectangle rect);
 	}
 
