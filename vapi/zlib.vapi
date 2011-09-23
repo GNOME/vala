@@ -173,6 +173,7 @@ namespace ZLib {
 		public int done;
 	}
 	[CCode (cname = "gzFile", cprefix = "gz", free_function = "gzclose")]
+	[Compact]
 	public class GZFileStream {
 		public static GZFileStream open (string path, string mode = "rb");
 		public static GZFileStream dopen (int fd, string mode);
