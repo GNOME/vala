@@ -71,4 +71,14 @@ namespace BZLib {
 		[CCode (cname = "BZ2_bzDecompressEnd")]
 		public Status decompress_end ();
 	}
+
+	[CCode (cname = "BZFILE", cprefix = "BZ2_bz", free_function = "BZ2_bzclose")]
+	[Compact]
+	public class BZFileStream {
+		public static BZFileStream open (string path, string mode = "rb");
+		public static BZFileStream dopen (int fd, string mode);
+		public int read (uint8[] buf);
+		public int write (uint8[] buf);
+		public unowned string error (out Status status);
+	}
 }
