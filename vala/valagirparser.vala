@@ -2304,7 +2304,7 @@ public class Vala.GirParser : CodeVisitor {
 
 		Struct st;
 		if (current.new_symbol) {
-			st = new Struct (reader.get_attribute ("name"), current.source_reference);
+			st = new Struct (element_get_name (), current.source_reference);
 			current.symbol = st;
 		} else {
 			st = (Struct) current.symbol;
