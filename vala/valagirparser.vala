@@ -1501,7 +1501,7 @@ public class Vala.GirParser : CodeVisitor {
 			}
 		}
 
-		if (array_data != null) {
+		if (array_data != null && array_data.length != 0) {
 			type = new ArrayType (type, (int) array_data.length - 1, source_reference);
 		}
 
