@@ -1318,6 +1318,23 @@ namespace Linux {
             public uint32 ifa_index;
         }
 
+        [Compact, CCode (cname = "struct ifaddrs", cheader_filename = "sys/types.h,ifaddrs.h", free_function = "freeifaddrs", has_type_id = false)]
+        public class IfAddrs {
+                public unowned IfAddrs? ifa_next;
+                public string ifa_name;
+                public uint ifa_flags;
+                public Posix.SockAddr* ifa_addr;
+                public Posix.SockAddr* ifa_netmask;
+                [CCode (cname = "ifa_ifu.ifu_broadaddr")]
+                public Posix.SockAddr* ifa_ifu_broadaddr;
+                [CCode (cname = "ifa_ifu.ifu_dstaddr")]
+                public Posix.SockAddr* ifa_ifu_dstaddr;
+                public void* ifa_data;
+        }
+
+        [CCode (cname = "getifaddrs")]
+        public static int getifaddrs (out IfAddrs ifap);
+
         [CCode (cprefix = "IFA_", has_type_id = false, cheader_filename = "linux/if_addr.h")]
         enum IfAddrType {
             UNSPEC,
