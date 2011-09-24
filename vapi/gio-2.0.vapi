@@ -1109,10 +1109,10 @@ namespace GLib {
 		public string username { get; set; }
 		public virtual signal void aborted ();
 		public virtual signal void ask_password (string message, string default_user, string default_domain, GLib.AskPasswordFlags flags);
-		public virtual signal void ask_question (string message, string[] choices);
+		public virtual signal void ask_question (string message, [CCode (array_length = false, array_null_terminated = true)] string[] choices);
 		[HasEmitter]
 		public virtual signal void reply (GLib.MountOperationResult result);
-		public virtual signal void show_processes (string message, GLib.Array processes, string[] choices);
+		public virtual signal void show_processes (string message, GLib.Array<GLib.Pid> processes, [CCode (array_length = false, array_null_terminated = true)] string[] choices);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class NativeVolumeMonitor : GLib.VolumeMonitor {
