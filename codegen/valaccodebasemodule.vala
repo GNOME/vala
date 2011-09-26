@@ -5110,10 +5110,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		    && (target_type == null || !target_type.value_owned || boxing || unboxing)
 		    && !gvalue_boxing /* gvalue can assume ownership of value, no need to free it */) {
 			// value leaked, destroy it
-			var pointer_type = target_type as PointerType;
-			if (pointer_type != null && !(pointer_type.base_type is VoidType)) {
-				// manual memory management for non-void pointers
-				// treat void* special to not leak memory with void* method parameters
+			if (target_type is PointerType) {
+				// manual memory management for pointers
 			} else if (requires_destroy (type)) {
 				var temp_value = create_temp_value (type, false, node);
 				temp_ref_values.insert (0, ((GLibValue) temp_value).copy ());
