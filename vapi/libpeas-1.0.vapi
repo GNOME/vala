@@ -46,7 +46,7 @@ namespace Peas {
 	[CCode (cheader_filename = "libpeas/peas.h", type_id = "peas_extension_set_get_type ()")]
 	public class ExtensionSet : GLib.Object {
 		[CCode (has_construct_function = false)]
-		protected ExtensionSet ();
+		public ExtensionSet (Peas.Engine engine, GLib.Type exten_type, ...);
 		public void @foreach (Peas.ExtensionSetForeachFunc func);
 		public unowned Peas.Extension get_extension (Peas.PluginInfo info);
 		public static Peas.ExtensionSet newv (Peas.Engine? engine, GLib.Type exten_type, [CCode (array_length_cname = "n_parameters", array_length_pos = 2.5, array_length_type = "guint")] GLib.Parameter[] parameters);
