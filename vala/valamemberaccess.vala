@@ -752,11 +752,8 @@ public class Vala.MemberAccess : Expression {
 				inner.value_type = this_parameter.variable_type.copy ();
 				inner.value_type.value_owned = false;
 				inner.symbol_reference = this_parameter;
-			} else if (context.profile == Profile.GOBJECT && lvalue && member is ArrayLengthField) {
-				inner.lvalue = true;
-				((MemberAccess) inner).check_lvalue_struct_access ();
 			} else {
-				check_lvalue_struct_access ();
+				check_lvalue_access ();
 			}
 
 			if (context.experimental_non_null && instance && inner.value_type.nullable &&
@@ -817,7 +814,7 @@ public class Vala.MemberAccess : Expression {
 		return !error;
 	}
 
-	public void check_lvalue_struct_access () {
+	public void check_lvalue_access () {
 		if (inner == null) {
 			return;
 		}
@@ -828,11 +825,14 @@ public class Vala.MemberAccess : Expression {
 		if (!instance) {
 			instance = symbol_reference is Property && ((Property) symbol_reference).binding == MemberBinding.INSTANCE;
 		}
+
 		var this_access = inner.symbol_reference is Parameter && inner.symbol_reference.name == "this";
-		if (instance && inner.value_type is StructValueType && !inner.value_type.nullable && (symbol_reference is Method || lvalue) && ((inner is MemberAccess && inner.symbol_reference is Variable) || inner is ElementAccess) && !this_access) {
+		var struct_or_array = (inner.value_type is StructValueType && !inner.value_type.nullable) || (CodeContext.get ().profile == Profile.GOBJECT && inner.value_type is ArrayType);
+
+		if (instance && struct_or_array && (symbol_reference is Method || lvalue) && ((inner is MemberAccess && inner.symbol_reference is Variable) || inner is ElementAccess) && !this_access) {
 			inner.lvalue = true;
 			if (inner is MemberAccess) {
-				((MemberAccess) inner).check_lvalue_struct_access ();
+				((MemberAccess) inner).check_lvalue_access ();
 			}
 		}
 	}

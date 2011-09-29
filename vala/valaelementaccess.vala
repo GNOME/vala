@@ -146,13 +146,13 @@ public class Vala.ElementAccess : Expression {
 				if (context.profile == Profile.GOBJECT && ma != null && ma.symbol_reference is ArrayLengthField) {
 					// propagate lvalue for gobject length access
 					ma.inner.lvalue = true;
-					((MemberAccess) ma.inner).check_lvalue_struct_access ();
+					((MemberAccess) ma.inner).check_lvalue_access ();
 				} else if (ma != null && ma.symbol_reference is Field &&
 					ma.inner != null && ma.inner.symbol_reference is Variable &&
 					ma.inner.value_type is StructValueType && !ma.inner.value_type.nullable) {
 					// propagate lvalue if container is a field and container.inner is a struct variable
 					ma.lvalue = true;
-					ma.check_lvalue_struct_access ();
+					ma.check_lvalue_access ();
 				}
 			}
 
