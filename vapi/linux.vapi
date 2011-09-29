@@ -1115,7 +1115,6 @@ namespace Linux {
 
     [CCode (cheader_filename = "pty.h")]
     public Posix.pid_t forkpty (out int amaster,
-                                out int aslave,
                                 [CCode (array_length=false, array_null_terminated=true)] char[] name,
                                 Posix.termios? termp,
                                 winsize? winp);
