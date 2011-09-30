@@ -622,7 +622,7 @@ namespace Gtk {
 		public weak Gtk.BindingSignal next;
 		public weak string signal_name;
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "gtk_border_copy")]
+	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "gtk_border_copy", type_id = "gtk_border_get_type ()")]
 	[Compact]
 	public class Border {
 		public int bottom;
@@ -2023,7 +2023,7 @@ namespace Gtk {
 		public static unowned Gtk.IconSet lookup_default (string stock_id);
 		public void remove_default ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "gtk_icon_info_copy")]
+	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "gtk_icon_info_copy", type_id = "gtk_icon_info_get_type ()")]
 	[Compact]
 	public class IconInfo {
 		public Gtk.IconInfo copy ();
@@ -2038,7 +2038,7 @@ namespace Gtk {
 		public Gdk.Pixbuf load_icon () throws GLib.Error;
 		public void set_raw_coordinates (bool raw_coordinates);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", ref_function = "gtk_icon_set_ref", unref_function = "gtk_icon_set_unref")]
+	[CCode (cheader_filename = "gtk/gtk.h", ref_function = "gtk_icon_set_ref", type_id = "gtk_icon_set_get_type ()", unref_function = "gtk_icon_set_unref")]
 	[Compact]
 	public class IconSet {
 		[CCode (has_construct_function = false)]
@@ -2050,7 +2050,7 @@ namespace Gtk {
 		public void get_sizes (Gtk.IconSize[] sizes);
 		public unowned Gdk.Pixbuf render_icon (Gtk.Style style, Gtk.TextDirection direction, Gtk.StateType state, Gtk.IconSize size, Gtk.Widget widget, string detail);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "gtk_icon_source_copy")]
+	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "gtk_icon_source_copy", type_id = "gtk_icon_source_get_type ()")]
 	[Compact]
 	public class IconSource {
 		[CCode (has_construct_function = false)]
@@ -2988,7 +2988,7 @@ namespace Gtk {
 		public virtual signal bool move_handle (Gtk.ScrollType scroll);
 		public virtual signal bool toggle_handle_focus ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "gtk_paper_size_copy")]
+	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "gtk_paper_size_copy", type_id = "gtk_paper_size_get_type ()")]
 	[Compact]
 	public class PaperSize {
 		[CCode (has_construct_function = false)]
@@ -3504,7 +3504,7 @@ namespace Gtk {
 		public weak string mime_type;
 		public weak string uri;
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", ref_function = "gtk_recent_info_ref", unref_function = "gtk_recent_info_unref")]
+	[CCode (cheader_filename = "gtk/gtk.h", ref_function = "gtk_recent_info_ref", type_id = "gtk_recent_info_get_type ()", unref_function = "gtk_recent_info_unref")]
 	[Compact]
 	public class RecentInfo {
 		public bool exists ();
@@ -3676,7 +3676,7 @@ namespace Gtk {
 		public virtual signal void move_focus_out (Gtk.DirectionType direction);
 		public virtual signal bool scroll_child (Gtk.ScrollType scroll, bool horizontal);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "gtk_selection_data_copy")]
+	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "gtk_selection_data_copy", type_id = "gtk_selection_data_get_type ()")]
 	[Compact]
 	public class SelectionData {
 		[CCode (array_length = false)]
@@ -4240,7 +4240,7 @@ namespace Gtk {
 		public uint shrink;
 		public uint16 spacing;
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", ref_function = "gtk_target_list_ref", unref_function = "gtk_target_list_unref")]
+	[CCode (cheader_filename = "gtk/gtk.h", ref_function = "gtk_target_list_ref", type_id = "gtk_target_list_get_type ()", unref_function = "gtk_target_list_unref")]
 	[Compact]
 	public class TargetList {
 		public weak GLib.List<Gtk.TargetPair> list;
@@ -4288,7 +4288,7 @@ namespace Gtk {
 		public uint strikethrough;
 		public uint underline;
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", ref_function = "gtk_text_attributes_ref", unref_function = "gtk_text_attributes_unref")]
+	[CCode (cheader_filename = "gtk/gtk.h", ref_function = "gtk_text_attributes_ref", type_id = "gtk_text_attributes_get_type ()", unref_function = "gtk_text_attributes_unref")]
 	[Compact]
 	public class TextAttributes {
 		public weak Gtk.TextAppearance appearance;
@@ -5022,7 +5022,7 @@ namespace Gtk {
 		public TreeModelSort.with_model (Gtk.TreeModel child_model);
 		public Gtk.TreeModel model { get; construct; }
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", const_cname = "GtkTreePath", copy_function = "gtk_tree_path_copy")]
+	[CCode (cheader_filename = "gtk/gtk.h", const_cname = "GtkTreePath", copy_function = "gtk_tree_path_copy", type_id = "gtk_tree_path_get_type ()")]
 	[Compact]
 	[Immutable]
 	public class TreePath {
@@ -5049,7 +5049,7 @@ namespace Gtk {
 		public unowned string to_string ();
 		public bool up ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "gtk_tree_row_reference_copy")]
+	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "gtk_tree_row_reference_copy", type_id = "gtk_tree_row_reference_get_type ()")]
 	[Compact]
 	[Immutable]
 	public class TreeRowReference {

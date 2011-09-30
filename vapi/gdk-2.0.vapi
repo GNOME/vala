@@ -54,7 +54,7 @@ namespace Gdk {
 		public unowned Gdk.Visual get_visual ();
 		public void query_color (ulong pixel, out Gdk.Color _result);
 	}
-	[CCode (cheader_filename = "gdk/gdk.h", ref_function = "gdk_cursor_ref", unref_function = "gdk_cursor_unref")]
+	[CCode (cheader_filename = "gdk/gdk.h", ref_function = "gdk_cursor_ref", type_id = "gdk_cursor_get_type ()", unref_function = "gdk_cursor_unref")]
 	[Compact]
 	public class Cursor {
 		public uint ref_count;
@@ -267,7 +267,7 @@ namespace Gdk {
 		public virtual void set_cairo_clip (Cairo.Context cr);
 		public virtual void set_colormap (Gdk.Colormap colormap);
 	}
-	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "gdk_event_copy")]
+	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "gdk_event_copy", type_id = "gdk_event_get_type ()")]
 	[Compact]
 	public class Event {
 		public Gdk.EventAny any;
@@ -310,7 +310,7 @@ namespace Gdk {
 		public void send_clientmessage_toall ();
 		public void set_screen (Gdk.Screen screen);
 	}
-	[CCode (cheader_filename = "gdk/gdk.h", ref_function = "gdk_font_ref", unref_function = "gdk_font_unref")]
+	[CCode (cheader_filename = "gdk/gdk.h", ref_function = "gdk_font_ref", type_id = "gdk_font_get_type ()", unref_function = "gdk_font_unref")]
 	[Compact]
 	public class Font {
 		public int ascent;

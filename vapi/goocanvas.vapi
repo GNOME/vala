@@ -13,7 +13,7 @@ namespace Goo {
 		public double yy;
 		public static Cairo.Matrix copy (Cairo.Matrix matrix);
 	}
-	[CCode (cheader_filename = "goocanvas.h")]
+	[CCode (cheader_filename = "goocanvas.h", type_id = "goo_cairo_pattern_get_type ()")]
 	[Compact]
 	public class CairoPattern {
 	}

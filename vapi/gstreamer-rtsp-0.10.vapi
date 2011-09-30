@@ -111,7 +111,7 @@ namespace Gst {
 		public static Gst.RTSPResult @new (out Gst.RTSPTransport transport);
 		public static Gst.RTSPResult parse (string str, Gst.RTSPTransport transport);
 	}
-	[CCode (cheader_filename = "gst/rtsp/gstrtspconnection.h", copy_function = "gst_rtsp_url_copy")]
+	[CCode (cheader_filename = "gst/rtsp/gstrtspconnection.h", copy_function = "gst_rtsp_url_copy", type_id = "gst_rtsp_url_get_type ()")]
 	[Compact]
 	public class RTSPUrl {
 		public string abspath;

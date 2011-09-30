@@ -203,7 +203,7 @@ namespace Oobs {
 		public void @set (Oobs.ListIter iter, void* data);
 		public void* contained_type { construct; }
 	}
-	[CCode (cheader_filename = "oobs/oobs.h", copy_function = "oobs_list_iter_copy")]
+	[CCode (cheader_filename = "oobs/oobs.h", copy_function = "oobs_list_iter_copy", type_id = "oobs_list_iter_get_type ()")]
 	[Compact]
 	public class ListIter {
 		public void* data;

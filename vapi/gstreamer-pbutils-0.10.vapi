@@ -127,7 +127,7 @@ namespace Gst {
 		public void set_pass (uint pass);
 		public void set_variableframerate (bool variableframerate);
 	}
-	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h", type_id = "gst_install_plugins_context_get_type ()")]
 	[Compact]
 	public class InstallPluginsContext {
 		[CCode (has_construct_function = false)]

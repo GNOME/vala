@@ -225,7 +225,7 @@ namespace GLib {
 	[Compact]
 	public class CredentialsClass {
 	}
-	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_dbus_annotation_info_ref", unref_function = "g_dbus_annotation_info_unref")]
+	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_dbus_annotation_info_ref", type_id = "g_dbus_annotation_info_get_type ()", unref_function = "g_dbus_annotation_info_unref")]
 	[Compact]
 	public class DBusAnnotationInfo {
 		[CCode (array_length = false, array_null_terminated = true)]
@@ -235,7 +235,7 @@ namespace GLib {
 		public weak string value;
 		public unowned string lookup (string name);
 	}
-	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_dbus_arg_info_ref", unref_function = "g_dbus_arg_info_unref")]
+	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_dbus_arg_info_ref", type_id = "g_dbus_arg_info_get_type ()", unref_function = "g_dbus_arg_info_unref")]
 	[Compact]
 	public class DBusArgInfo {
 		[CCode (array_length = false, array_null_terminated = true)]
@@ -308,7 +308,7 @@ namespace GLib {
 		public weak string dbus_error_name;
 		public int error_code;
 	}
-	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_dbus_interface_info_ref", unref_function = "g_dbus_interface_info_unref")]
+	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_dbus_interface_info_ref", type_id = "g_dbus_interface_info_get_type ()", unref_function = "g_dbus_interface_info_unref")]
 	[Compact]
 	public class DBusInterfaceInfo {
 		[CCode (array_length = false, array_null_terminated = true)]
@@ -415,7 +415,7 @@ namespace GLib {
 		public bool to_gerror () throws GLib.Error;
 		public bool locked { get; }
 	}
-	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_dbus_method_info_ref", unref_function = "g_dbus_method_info_unref")]
+	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_dbus_method_info_ref", type_id = "g_dbus_method_info_get_type ()", unref_function = "g_dbus_method_info_unref")]
 	[Compact]
 	public class DBusMethodInfo {
 		[CCode (array_length = false, array_null_terminated = true)]
@@ -449,7 +449,7 @@ namespace GLib {
 		public void return_value_with_unix_fd_list (GLib.Variant? parameters, GLib.UnixFDList? fd_list);
 		public void take_error (GLib.Error error);
 	}
-	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_dbus_node_info_ref", unref_function = "g_dbus_node_info_unref")]
+	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_dbus_node_info_ref", type_id = "g_dbus_node_info_get_type ()", unref_function = "g_dbus_node_info_unref")]
 	[Compact]
 	public class DBusNodeInfo {
 		[CCode (array_length = false, array_null_terminated = true)]
@@ -534,7 +534,7 @@ namespace GLib {
 		public string object_path { owned get; set construct; }
 		public virtual signal bool authorize_method (GLib.DBusInterfaceSkeleton interface_, GLib.DBusMethodInvocation invocation);
 	}
-	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_dbus_property_info_ref", unref_function = "g_dbus_property_info_unref")]
+	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_dbus_property_info_ref", type_id = "g_dbus_property_info_get_type ()", unref_function = "g_dbus_property_info_unref")]
 	[Compact]
 	public class DBusPropertyInfo {
 		[CCode (array_length = false, array_null_terminated = true)]
@@ -614,7 +614,7 @@ namespace GLib {
 		public string guid { get; construct; }
 		public virtual signal bool new_connection (GLib.DBusConnection p0);
 	}
-	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_dbus_signal_info_ref", unref_function = "g_dbus_signal_info_unref")]
+	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_dbus_signal_info_ref", type_id = "g_dbus_signal_info_get_type ()", unref_function = "g_dbus_signal_info_unref")]
 	[Compact]
 	public class DBusSignalInfo {
 		[CCode (array_length = false, array_null_terminated = true)]
@@ -707,7 +707,7 @@ namespace GLib {
 		public weak string name;
 		public GLib.FileAttributeType type;
 	}
-	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_file_attribute_info_list_ref", unref_function = "g_file_attribute_info_list_unref")]
+	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_file_attribute_info_list_ref", type_id = "g_file_attribute_info_list_get_type ()", unref_function = "g_file_attribute_info_list_unref")]
 	[Compact]
 	public class FileAttributeInfoList {
 		public weak GLib.FileAttributeInfo infos;
@@ -718,7 +718,7 @@ namespace GLib {
 		public unowned GLib.FileAttributeInfoList dup ();
 		public unowned GLib.FileAttributeInfo lookup (string name);
 	}
-	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_file_attribute_matcher_ref", unref_function = "g_file_attribute_matcher_unref")]
+	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_file_attribute_matcher_ref", type_id = "g_file_attribute_matcher_get_type ()", unref_function = "g_file_attribute_matcher_unref")]
 	[Compact]
 	public class FileAttributeMatcher {
 		[CCode (has_construct_function = false)]
@@ -1537,7 +1537,7 @@ namespace GLib {
 		[CCode (cname = "g_source_set_callback")]
 		public void set_callback ([CCode (type = "GSourceFunc")] owned GLib.SocketSourceFunc func);
 	}
-	[CCode (cheader_filename = "gio/gio.h", copy_function = "g_srv_target_copy")]
+	[CCode (cheader_filename = "gio/gio.h", copy_function = "g_srv_target_copy", type_id = "g_srv_target_get_type ()")]
 	[Compact]
 	public class SrvTarget {
 		[CCode (has_construct_function = false)]

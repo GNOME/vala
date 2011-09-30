@@ -40,7 +40,7 @@ namespace Unique {
 		public void set_screen (Gdk.Screen screen);
 		public void set_startup_id (string startup_id);
 	}
-	[CCode (cheader_filename = "unique/unique.h", copy_function = "unique_message_data_copy")]
+	[CCode (cheader_filename = "unique/unique.h", copy_function = "unique_message_data_copy", type_id = "unique_message_data_get_type ()")]
 	[Compact]
 	public class MessageData {
 		[CCode (has_construct_function = false)]

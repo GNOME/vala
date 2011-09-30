@@ -96,7 +96,7 @@ namespace Rest {
 		[NoAccessorMethod]
 		public Rest.Proxy proxy { owned get; construct; }
 	}
-	[CCode (cheader_filename = "rest/rest-xml-parser.h", ref_function = "rest_xml_node_ref", unref_function = "rest_xml_node_unref")]
+	[CCode (cheader_filename = "rest/rest-xml-parser.h", ref_function = "rest_xml_node_ref", type_id = "rest_xml_node_get_type ()", unref_function = "rest_xml_node_unref")]
 	[Compact]
 	public class XmlNode {
 		public weak GLib.HashTable attrs;

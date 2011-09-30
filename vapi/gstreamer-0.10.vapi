@@ -141,7 +141,7 @@ namespace Gst {
 		public unowned Gst.BufferList @ref ();
 		public void unref ();
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_buffer_list_iterator_get_type ()")]
 	[Compact]
 	public class BufferListIterator {
 		public void add (owned Gst.Buffer buffer);
@@ -320,11 +320,11 @@ namespace Gst {
 		public Gst.ClockReturn wait_async (Gst.ClockCallback func);
 		public Gst.ClockReturn wait_async_full (Gst.ClockCallback func, GLib.DestroyNotify destroy_data);
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_date_get_type ()")]
 	[Compact]
 	public class Date {
 	}
-	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_date_time_ref", unref_function = "gst_date_time_unref")]
+	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_date_time_ref", type_id = "gst_date_time_get_type ()", unref_function = "gst_date_time_unref")]
 	[Compact]
 	public class DateTime {
 		[CCode (has_construct_function = false)]
@@ -599,7 +599,7 @@ namespace Gst {
 		public static GLib.Quark type_to_quark (Gst.EventType type);
 		public void unref ();
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_g_error_get_type ()")]
 	[Compact]
 	public class GError {
 	}
@@ -1038,7 +1038,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class ParamSpecMiniObject : GLib.ParamSpec {
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_parse_context_get_type ()")]
 	[Compact]
 	public class ParseContext {
 		[CCode (has_construct_function = false)]
@@ -1231,7 +1231,7 @@ namespace Gst {
 		public virtual signal void feature_added (void* feature);
 		public virtual signal void plugin_added (void* plugin);
 	}
-	[CCode (cheader_filename = "gst/gst.h", copy_function = "gst_segment_copy")]
+	[CCode (cheader_filename = "gst/gst.h", copy_function = "gst_segment_copy", type_id = "gst_segment_get_type ()")]
 	[Compact]
 	public class Segment {
 		public double abs_rate;
