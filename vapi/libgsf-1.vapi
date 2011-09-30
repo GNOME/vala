@@ -396,7 +396,7 @@ namespace Gsf {
 		public static Gsf.StructuredBlob read (Gsf.Input input);
 		public bool write (Gsf.Outfile container);
 	}
-	[CCode (cheader_filename = "gsf/gsf-timestamp.h", copy_function = "gsf_timestamp_copy")]
+	[CCode (cheader_filename = "gsf/gsf-timestamp.h", copy_function = "gsf_timestamp_copy", type_id = "gsf_timestamp_get_type ()")]
 	[Compact]
 	public class Timestamp {
 		public GLib.Date date;

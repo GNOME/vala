@@ -18,7 +18,7 @@ namespace Gnome {
 		public virtual signal void icon_changed ();
 		public virtual signal void name_changed ();
 	}
-	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h", ref_function = "gnome_desktop_item_ref", unref_function = "gnome_desktop_item_unref")]
+	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h", ref_function = "gnome_desktop_item_ref", type_id = "gnome_desktop_item_get_type ()", unref_function = "gnome_desktop_item_unref")]
 	[Compact]
 	public class DesktopItem {
 		[CCode (has_construct_function = false)]

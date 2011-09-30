@@ -26,7 +26,7 @@ namespace Gda {
 		public unowned string serialize ();
 		public virtual signal void changed (GLib.Object changed_stmt);
 	}
-	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_binary_copy")]
+	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_binary_copy", type_id = "gda_binary_get_type ()")]
 	[Compact]
 	public class Binary {
 		public long binary_length;
@@ -35,7 +35,7 @@ namespace Gda {
 		public static void* copy (void* boxed);
 		public unowned string to_string (uint maxlen);
 	}
-	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_blob_copy")]
+	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_blob_copy", type_id = "gda_blob_get_type ()")]
 	[Compact]
 	public class Blob {
 		public weak Gda.Binary data;
@@ -422,7 +422,7 @@ namespace Gda {
 		public Gda.DiffType type;
 		public weak GLib.HashTable values;
 	}
-	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_geometricpoint_copy", free_function = "gda_geometricpoint_free")]
+	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_geometricpoint_copy", free_function = "gda_geometricpoint_free", type_id = "gda_geometricpoint_get_type ()")]
 	[Compact]
 	public class GeometricPoint {
 		public double x;
@@ -680,7 +680,7 @@ namespace Gda {
 		public bool trylock ();
 		public void unlock ();
 	}
-	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_numeric_copy")]
+	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_numeric_copy", type_id = "gda_numeric_get_type ()")]
 	[Compact]
 	public class Numeric {
 		public weak string number;
@@ -712,7 +712,7 @@ namespace Gda {
 		public weak string id;
 		public weak string location;
 	}
-	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_quark_list_copy")]
+	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_quark_list_copy", type_id = "gda_quark_list_get_type ()")]
 	[Compact]
 	public class QuarkList {
 		[CCode (has_construct_function = false)]
@@ -1057,7 +1057,7 @@ namespace Gda {
 	[Compact]
 	public class SqlErrorType {
 	}
-	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_sql_expr_copy")]
+	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_sql_expr_copy", type_id = "gda_sql_expr_get_type ()")]
 	[Compact]
 	public class SqlExpr {
 		public weak Gda.SqlAnyPart any;
@@ -1274,7 +1274,7 @@ namespace Gda {
 		public void take_select (Gda.SqlStatement stmt);
 		public void take_table_name (GLib.Value value);
 	}
-	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_sql_statement_copy")]
+	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_sql_statement_copy", type_id = "gda_sql_statement_get_type ()")]
 	[Compact]
 	public class SqlStatement {
 		public void* contents;
@@ -1455,7 +1455,7 @@ namespace Gda {
 		public void iterate (bool may_block);
 		public void steal_signal (ulong id);
 	}
-	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_time_copy")]
+	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_time_copy", type_id = "gda_time_get_type ()")]
 	[Compact]
 	public class Time {
 		public ulong fraction;
@@ -1466,7 +1466,7 @@ namespace Gda {
 		public static void* copy (void* boxed);
 		public bool valid ();
 	}
-	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_timestamp_copy")]
+	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_timestamp_copy", type_id = "gda_timestamp_get_type ()")]
 	[Compact]
 	public class Timestamp {
 		public ushort day;

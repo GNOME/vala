@@ -59,7 +59,7 @@ namespace Gst {
 		[NoWrapper]
 		public virtual bool stop ();
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_base_parse_frame_get_type ()")]
 	[Compact]
 	public class BaseParseFrame {
 		public weak Gst.Buffer buffer;

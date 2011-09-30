@@ -60,7 +60,7 @@ namespace Pango {
 		[CCode (has_construct_function = false, type = "PangoAttribute*")]
 		public AttrLanguage (Pango.Language language);
 	}
-	[CCode (cheader_filename = "pango/pango.h", ref_function = "pango_attr_list_ref", unref_function = "pango_attr_list_unref")]
+	[CCode (cheader_filename = "pango/pango.h", ref_function = "pango_attr_list_ref", type_id = "pango_attr_list_get_type ()", unref_function = "pango_attr_list_unref")]
 	[Compact]
 	public class AttrList {
 		[CCode (has_construct_function = false)]
@@ -168,7 +168,7 @@ namespace Pango {
 		public void get_glyph_extents (Pango.Glyph glyph, out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
 		public Pango.FontMetrics get_metrics (Pango.Language? language);
 	}
-	[CCode (cheader_filename = "pango/pango.h", copy_function = "pango_font_description_copy")]
+	[CCode (cheader_filename = "pango/pango.h", copy_function = "pango_font_description_copy", type_id = "pango_font_description_get_type ()")]
 	[Compact]
 	[Immutable]
 	public class FontDescription {
@@ -229,7 +229,7 @@ namespace Pango {
 		public unowned Pango.Font load_font (Pango.Context context, Pango.FontDescription desc);
 		public unowned Pango.Fontset load_fontset (Pango.Context context, Pango.FontDescription desc, Pango.Language language);
 	}
-	[CCode (cheader_filename = "pango/pango.h", ref_function = "pango_font_metrics_ref", unref_function = "pango_font_metrics_unref")]
+	[CCode (cheader_filename = "pango/pango.h", ref_function = "pango_font_metrics_ref", type_id = "pango_font_metrics_get_type ()", unref_function = "pango_font_metrics_unref")]
 	[Compact]
 	public class FontMetrics {
 		public int get_approximate_char_width ();
@@ -249,7 +249,7 @@ namespace Pango {
 		public Pango.Font get_font (uint wc);
 		public Pango.FontMetrics get_metrics ();
 	}
-	[CCode (cheader_filename = "pango/pango.h", copy_function = "pango_glyph_item_copy")]
+	[CCode (cheader_filename = "pango/pango.h", copy_function = "pango_glyph_item_copy", type_id = "pango_glyph_item_get_type ()")]
 	[Compact]
 	public class GlyphItem {
 		public weak Pango.GlyphString glyphs;
@@ -260,7 +260,7 @@ namespace Pango {
 		public void letter_space (string text, Pango.LogAttr[] log_attrs, int letter_spacing);
 		public Pango.GlyphItem split (string text, int split_index);
 	}
-	[CCode (cheader_filename = "pango/pango.h", copy_function = "pango_glyph_string_copy")]
+	[CCode (cheader_filename = "pango/pango.h", copy_function = "pango_glyph_string_copy", type_id = "pango_glyph_string_get_type ()")]
 	[Compact]
 	public class GlyphString {
 		[CCode (array_length_cname = "num_glyphs")]
@@ -284,7 +284,7 @@ namespace Pango {
 	[Compact]
 	public class GlyphUnit {
 	}
-	[CCode (cheader_filename = "pango/pango.h", copy_function = "pango_item_copy")]
+	[CCode (cheader_filename = "pango/pango.h", copy_function = "pango_item_copy", type_id = "pango_item_get_type ()")]
 	[Compact]
 	public class Item {
 		public Pango.Analysis analysis;
@@ -296,7 +296,7 @@ namespace Pango {
 		public Pango.Item copy ();
 		public Pango.Item split (int split_index, int split_offset);
 	}
-	[CCode (cheader_filename = "pango/pango.h")]
+	[CCode (cheader_filename = "pango/pango.h", type_id = "pango_language_get_type ()")]
 	[Compact]
 	public class Language {
 		public static unowned Pango.Language? from_string (string language);
@@ -369,7 +369,7 @@ namespace Pango {
 	[Compact]
 	public class LayoutClass {
 	}
-	[CCode (cheader_filename = "pango/pango.h", copy_function = "pango_layout_iter_copy")]
+	[CCode (cheader_filename = "pango/pango.h", copy_function = "pango_layout_iter_copy", type_id = "pango_layout_iter_get_type ()")]
 	[Compact]
 	public class LayoutIter {
 		public bool at_last_line ();
@@ -392,7 +392,7 @@ namespace Pango {
 		public bool next_line ();
 		public bool next_run ();
 	}
-	[CCode (cheader_filename = "pango/pango.h", ref_function = "pango_layout_line_ref", unref_function = "pango_layout_line_unref")]
+	[CCode (cheader_filename = "pango/pango.h", ref_function = "pango_layout_line_ref", type_id = "pango_layout_line_get_type ()", unref_function = "pango_layout_line_unref")]
 	[Compact]
 	public class LayoutLine {
 		public uint is_paragraph_start;
@@ -453,7 +453,7 @@ namespace Pango {
 		public void get_range (out unowned string start, out unowned string end, Pango.Script script);
 		public bool next ();
 	}
-	[CCode (cheader_filename = "pango/pango.h", copy_function = "pango_tab_array_copy")]
+	[CCode (cheader_filename = "pango/pango.h", copy_function = "pango_tab_array_copy", type_id = "pango_tab_array_get_type ()")]
 	[Compact]
 	public class TabArray {
 		[CCode (has_construct_function = false)]

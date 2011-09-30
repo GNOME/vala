@@ -55,7 +55,7 @@ namespace GnomeVFS {
 	public class ACLPerm {
 		public unowned string to_string ();
 	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", type_id = "gnome_vfs_address_get_type ()")]
 	[Compact]
 	public class Address {
 		public unowned GnomeVFS.Address dup ();
@@ -142,7 +142,7 @@ namespace GnomeVFS {
 		public virtual signal void volume_pre_unmount (GnomeVFS.Volume volume);
 		public virtual signal void volume_unmounted (GnomeVFS.Volume volume);
 	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", ref_function = "gnome_vfs_file_info_ref", ref_function_void = true, unref_function = "gnome_vfs_file_info_unref")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", ref_function = "gnome_vfs_file_info_ref", ref_function_void = true, type_id = "gnome_vfs_file_info_get_type ()", unref_function = "gnome_vfs_file_info_unref")]
 	[Compact]
 	public class FileInfo {
 		public weak GnomeVFS.ACL acl;
@@ -201,11 +201,11 @@ namespace GnomeVFS {
 		public weak GnomeVFS.URI uri;
 		public unowned GnomeVFS.GetFileInfoResult dup ();
 	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", type_id = "gnome_vfs_find_directory_result_get_type ()")]
 	[Compact]
 	public class GnomeVfsFindDirectoryResult {
 	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h", type_id = "gnome_vfs_get_file_info_result_get_type ()")]
 	[Compact]
 	public class GnomeVfsGetFileInfoResult {
 	}

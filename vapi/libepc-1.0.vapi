@@ -127,7 +127,7 @@ namespace Epc {
 		public string service_domain { owned get; set construct; }
 		public string service_name { get; set construct; }
 	}
-	[CCode (cheader_filename = "libepc/service-info.h", ref_function = "epc_service_info_ref", unref_function = "epc_service_info_unref")]
+	[CCode (cheader_filename = "libepc/service-info.h", ref_function = "epc_service_info_ref", type_id = "epc_service_info_get_type ()", unref_function = "epc_service_info_unref")]
 	[Compact]
 	public class ServiceInfo {
 		public Epc.AddressFamily get_address_family ();

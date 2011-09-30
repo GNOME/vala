@@ -1209,6 +1209,9 @@ public class Vala.GIdlParser : CodeVisitor {
 				cl = new Class (name, current_source_reference);
 				cl.access = SymbolAccessibility.PUBLIC;
 				cl.is_compact = true;
+				if (boxed_node.gtype_init != null) {
+					cl.set_attribute_string ("CCode", "type_id", "%s ()".printf (boxed_node.gtype_init));
+				}
 
 				var cl_attributes = get_attributes (node.name);
 				if (cl_attributes != null) {
