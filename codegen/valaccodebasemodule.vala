@@ -2046,7 +2046,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public CCodeExpression get_local_cexpression (LocalVariable local) {
 		if (is_in_coroutine ()) {
-			return new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_local_cname (local));
+			return new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), get_local_cname (local));
 		} else {
 			return new CCodeIdentifier (get_local_cname (local));
 		}
