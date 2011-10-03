@@ -1843,7 +1843,7 @@ namespace GLib {
 		public void unlock ();
 	}
 
-	[CCode (destroy_function = "g_static_mutex_free")]
+	[CCode (destroy_function = "g_static_mutex_free", default_value = "G_STATIC_MUTEX_INIT")]
 	public struct StaticMutex {
 		public StaticMutex ();
 		public void lock ();
