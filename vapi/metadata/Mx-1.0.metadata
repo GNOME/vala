@@ -2,6 +2,13 @@ Application.new.argv unowned
 BoxLayout
 	.add_actor name="add_child"
 	.add_actor_with_properties skip=false
+Draggable
+	.disable#virtual_method virtual
+	.enable#virtual_method virtual
+Droppable
+	.accept_drop#virtual_method virtual
+	.disable#virtual_method virtual
+	.enable#virtual_method virtual
 Padding struct
 Style.* skip=false
 Stylable.get skip=false
