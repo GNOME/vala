@@ -1089,8 +1089,8 @@ namespace Mx {
 	}
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_draggable_get_type ()")]
 	public interface Draggable : Clutter.Actor {
-		public abstract void disable ();
-		public abstract void enable ();
+		public virtual void disable ();
+		public virtual void enable ();
 		public Mx.DragAxis get_axis ();
 		public unowned Clutter.Actor get_drag_actor ();
 		public uint get_drag_threshold ();
@@ -1112,9 +1112,9 @@ namespace Mx {
 	}
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_droppable_get_type ()")]
 	public interface Droppable : Clutter.Actor {
-		public abstract bool accept_drop (Mx.Draggable draggable);
-		public abstract void disable ();
-		public abstract void enable ();
+		public virtual bool accept_drop (Mx.Draggable draggable);
+		public virtual void disable ();
+		public virtual void enable ();
 		public bool is_enabled ();
 		[NoAccessorMethod]
 		public abstract bool drop_enabled { get; set; }
