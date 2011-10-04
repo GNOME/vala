@@ -1852,7 +1852,7 @@ namespace GLib {
 		public void lock_full ();
 	}
 
-	[CCode (destroy_function = "g_static_rec_mutex_free")]
+	[CCode (destroy_function = "g_static_rec_mutex_free", default_value = "G_STATIC_REC_MUTEX_INIT")]
 	public struct StaticRecMutex {
 		public StaticRecMutex ();
 		public void lock ();
@@ -1861,7 +1861,7 @@ namespace GLib {
 		public void lock_full ();
 	}
 
-	[CCode (destroy_function = "g_static_rw_lock_free")]
+	[CCode (destroy_function = "g_static_rw_lock_free", default_value = "G_STATIC_RW_LOCK_INIT")]
 	public struct StaticRWLock {
 		public StaticRWLock ();
 		public void reader_lock ();
@@ -1880,7 +1880,7 @@ namespace GLib {
 		public void set (void* data);
 	}
 
-	[CCode (destroy_function = "g_static_private_free")]
+	[CCode (destroy_function = "g_static_private_free", default_value = "G_STATIC_PRIVATE_INIT")]
 	public struct StaticPrivate {
 		public StaticPrivate ();
 		public void* get ();
