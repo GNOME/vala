@@ -821,7 +821,11 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	protected void write_file_header (string css, string js, string? title) {
 		writer.start_tag ("html");
 		writer.start_tag ("head");
-		writer.start_tag ("title").text ("Vala Binding Reference").end_tag ("title");
+		if (title == null) {
+			writer.start_tag ("title").text ("Vala Binding Reference").end_tag ("title");
+		} else {
+			writer.start_tag ("title").text (title).text (" -- Vala Binding Reference").end_tag ("title");
+		}
 		writer.stylesheet_link (css);
 		writer.javascript_link (js);
 		writer.end_tag ("head");
