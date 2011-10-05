@@ -44,12 +44,12 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 	public override void process (Settings settings, Api.Tree tree, ErrorReporter reporter) {
 		base.process (settings, tree, reporter);
 
-		DirUtils.create (this.settings.path, 0777);
+		DirUtils.create_with_parents (this.settings.path, 0777);
 		copy_directory (icons_dir, settings.path);
 
 		write_wiki_pages (tree, css_path_wiki, js_path_wiki, Path.build_filename(settings.path, "content"));
 
-		GLib.FileStream file = GLib.FileStream.open (GLib.Path.build_filename ( settings.path, "index.html" ), "w");
+		GLib.FileStream file = GLib.FileStream.open (GLib.Path.build_filename (settings.path, "index.html"), "w");
 		writer = new Html.MarkupWriter (file);
 		_renderer.set_writer (writer);
 		write_file_header (this.css_path_package, this.js_path_package, settings.pkg_name);
