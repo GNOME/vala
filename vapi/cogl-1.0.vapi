@@ -706,7 +706,7 @@ namespace Cogl {
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static void get_modelview_matrix (Cogl.Matrix matrix);
 	[CCode (cheader_filename = "cogl/cogl.h")]
-	public static unowned GLib.OptionGroup get_option_group ();
+	public static GLib.OptionGroup get_option_group ();
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static unowned Cogl.Path get_path ();
 	[CCode (cheader_filename = "cogl/cogl.h")]

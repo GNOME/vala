@@ -50,7 +50,7 @@ namespace GtkClutter {
 	[CCode (cheader_filename = "clutter-gtk/clutter-gtk.h")]
 	public static bool check_version (uint major, uint minor, uint micro);
 	[CCode (cheader_filename = "clutter-gtk/clutter-gtk.h")]
-	public static unowned GLib.OptionGroup get_option_group ();
+	public static GLib.OptionGroup get_option_group ();
 	[CCode (cheader_filename = "clutter-gtk/clutter-gtk.h")]
 	public static Clutter.InitError init ([CCode (array_length_pos = 0.9)] ref unowned string[] argv);
 	[CCode (cheader_filename = "clutter-gtk/clutter-gtk.h")]
