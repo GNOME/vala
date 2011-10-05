@@ -125,6 +125,17 @@ public class Valadoc.Settings : Object {
 	 * A list of all source files.
 	 */
 	public string[] source_files;
+
+
+	/**
+	 * A list of all metadata directories
+	 */
+	public string[] metadata_directories;
+
+	/**
+	 * A list of all gir directories.
+	 */
+	public string[] gir_directories;
 }
 
 

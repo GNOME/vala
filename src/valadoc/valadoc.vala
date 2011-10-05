@@ -61,6 +61,10 @@ public class ValaDoc : Object {
 	[CCode (array_length = false, array_null_terminated = true)]
 	private static string[] vapi_directories;
 	[CCode (array_length = false, array_null_terminated = true)]
+	private static string[] metadata_directories;
+	[CCode (array_length = false, array_null_terminated = true)]
+	private static string[] gir_directories;
+	[CCode (array_length = false, array_null_terminated = true)]
 	private static string[] tsources;
 	[CCode (array_length = false, array_null_terminated = true)]
 	private static string[] packages;
@@ -75,6 +79,8 @@ public class ValaDoc : Object {
 		{ "enable-experimental", 0, 0, OptionArg.NONE, ref experimental, "Enable experimental features", null },
 		{ "enable-experimental-non-null", 0, 0, OptionArg.NONE, ref experimental_non_null, "Enable experimental enhancements for non-null types", null },
 
+		{ "metadatadir", 0, 0, OptionArg.FILENAME_ARRAY, ref metadata_directories, "Look for GIR .metadata files in DIRECTORY", "DIRECTORY..." },
+		{ "girdir", 0, 0, OptionArg.FILENAME_ARRAY, ref gir_directories, "Look for .gir files in DIRECTORY", "DIRECTORY..." },
 		{ "vapidir", 0, 0, OptionArg.FILENAME_ARRAY, ref vapi_directories, "Look for package bindings in DIRECTORY", "DIRECTORY..." },
 		{ "pkg", 0, 0, OptionArg.STRING_ARRAY, ref packages, "Include binding for PACKAGE", "PACKAGE..." },
 
@@ -243,7 +249,8 @@ public class ValaDoc : Object {
 				DriverMetaData (LibvalaVersion (0, 11, 0), LibvalaVersion (0, 11,  0), "0.11.0"),
 				DriverMetaData (LibvalaVersion (0, 11, 1), LibvalaVersion (0, 11, -1), "0.11.x"),
 				DriverMetaData (LibvalaVersion (0, 12, 0), LibvalaVersion (0, 12, -1), "0.12.x"),
-				DriverMetaData (LibvalaVersion (0, 13, 0), LibvalaVersion (0, 13, -1), "0.13.x")
+				DriverMetaData (LibvalaVersion (0, 13, 0), LibvalaVersion (0, 13, -1), "0.13.x"),
+				DriverMetaData (LibvalaVersion (0, 14, 0), LibvalaVersion (0, 14, -1), "0.14.x")
 			};
 
 		for (int i = 0; i < lut.length ; i++) {
@@ -314,6 +321,8 @@ public class ValaDoc : Object {
 		settings.basedir = basedir;
 		settings.directory = directory;
 		settings.vapi_directories = vapi_directories;
+		settings.metadata_directories = metadata_directories;
+		settings.gir_directories = gir_directories;
 
 		settings.source_files = tsources;
 		settings.packages = packages;

@@ -234,122 +234,56 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 	}
 
 	private string get_ccode_type_id (Vala.Class node) {
-#if VALA_0_13_X
 		return Vala.CCodeBaseModule.get_ccode_type_id (node);
-#else
-		return node.get_type_id ();
-#endif
 	}
 
 	private bool is_reference_counting (Vala.TypeSymbol sym) {
-#if VALA_0_13_X
 		return Vala.CCodeBaseModule.is_reference_counting (sym);
-#else
-		return sym.is_reference_counting ();
-#endif
 	}
 
 	private string get_ref_function (Vala.Class sym) {
-#if VALA_0_13_X
 		return Vala.CCodeBaseModule.get_ccode_ref_function (sym);
-#else
-		return sym.get_ref_function ();
-#endif
 	}
 
 	private string get_unref_function (Vala.Class sym) {
-#if VALA_0_13_X
 		return Vala.CCodeBaseModule.get_ccode_unref_function (sym);
-#else
-		return sym.get_unref_function ();
-#endif
 	}
 
 	private string get_finish_name (Vala.Method m) {
-#if VALA_0_13_X
 		return Vala.CCodeBaseModule.get_ccode_finish_name (m);
-#else
-		return m.get_finish_cname ();
-#endif
 	}
 
 	private string get_take_value_function (Vala.Class sym) {
-#if VALA_0_13_X
 		return Vala.CCodeBaseModule.get_ccode_take_value_function (sym);
-#else
-		return sym.get_take_value_function ();
-#endif
 	}
 
 	private string get_get_value_function (Vala.Class sym) {
-#if VALA_0_13_X
 		return Vala.CCodeBaseModule.get_ccode_get_value_function (sym);
-#else
-		return sym.get_get_value_function ();
-#endif
 	}
 
 	private string get_set_value_function (Vala.Class sym) {
-#if VALA_0_13_X
 		return Vala.CCodeBaseModule.get_ccode_set_value_function (sym);
-#else
-		return sym.get_set_value_function ();
-#endif
 	}
 
 
 	private string get_param_spec_function (Vala.CodeNode sym) {
-#if VALA_0_13_X
 		return Vala.CCodeBaseModule.get_ccode_param_spec_function (sym);
-#else
-		return sym.get_param_spec_function ();
-#endif
 	}
 
 	private string? get_dup_function (Vala.TypeSymbol sym) {
-#if VALA_0_13_X
 		return Vala.CCodeBaseModule.get_ccode_dup_function (sym);
-#else
-		return sym.get_dup_function ();
-#endif
 	}
 
 	private string get_free_function (Vala.TypeSymbol sym) {
-#if VALA_0_13_X
 		return Vala.CCodeBaseModule.get_ccode_free_function (sym);
-#else
-		return sym.get_free_function ();
-#endif
 	}
 
 	private string get_nick (Vala.Property prop) {
-#if VALA_0_13_X
 		return Vala.CCodeBaseModule.get_ccode_nick (prop);
-#else
-		return prop.nick;
-#endif
 	}
 
 	private string? get_cname (Vala.Symbol symbol) {
-#if VALA_0_13_X
 		return Vala.CCodeBaseModule.get_ccode_name (symbol);
-#else
-		if (symbol is Vala.TypeSymbol) {
-			return ((Vala.TypeSymbol) symbol).get_cname ();
-		} else if (symbol is Vala.PropertyAccessor) {
-			return ((Vala.PropertyAccessor) symbol).get_cname ();
-		} else if (symbol is Vala.Method) {
-			return ((Vala.Signal) symbol).get_cname ();
-		} else if (symbol is Vala.Signal) {
-			return ((Vala.Method) symbol).get_cname ();
-		} else if (symbol is Vala.Constant) {
-			return ((Vala.Field) symbol).get_cname ();
-		} else if (symbol is Vala.Field) {
-			return ((Vala.Field) symbol).get_cname ();
-		} else {
-			assert_not_reached ();
-		}
-#endif
 	}
 
 	private SourceComment? create_comment (Vala.Comment? comment) {
