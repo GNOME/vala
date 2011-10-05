@@ -1547,7 +1547,7 @@ namespace Clutter {
 		public void remove_key (string? source_state_name, string? target_state_name, GLib.Object? object, string? property_name);
 		public void set_animator (string source_state_name, string target_state_name, Clutter.Animator? animator);
 		public void set_duration (string? source_state_name, string? target_state_name, uint duration);
-		public unowned Clutter.State set_key (string source_state_name, string target_state_name, GLib.Object object, string property_name, uint mode, GLib.Value value, double pre_delay, double post_delay);
+		public unowned Clutter.State set_key (string? source_state_name, string target_state_name, GLib.Object object, string property_name, uint mode, GLib.Value value, double pre_delay, double post_delay);
 		public unowned Clutter.Timeline set_state (string target_state_name);
 		public unowned Clutter.Timeline warp_to_state (string target_state_name);
 		[NoAccessorMethod]
