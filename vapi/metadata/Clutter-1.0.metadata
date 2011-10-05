@@ -131,6 +131,8 @@ ModelIter
 	.get skip=false
 	.set skip=false
 PathCallback.data closure=1
+State
+	.set_key.source_state_name nullable
 Script
 	.* skip=false
 Stage
