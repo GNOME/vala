@@ -1965,7 +1965,7 @@ namespace Clutter {
 		public void set_size (float width, float height);
 		public Clutter.ActorBox union (Clutter.ActorBox b);
 	}
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
 	public struct AnyEvent {
 		public Clutter.EventType type;
 		public uint32 time;
@@ -1973,7 +1973,7 @@ namespace Clutter {
 		public weak Clutter.Stage stage;
 		public weak Clutter.Actor source;
 	}
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
 	public struct ButtonEvent {
 		public Clutter.EventType type;
 		public uint32 time;
@@ -2017,7 +2017,7 @@ namespace Clutter {
 		public uint32 to_pixel ();
 		public string to_string ();
 	}
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
 	public struct CrossingEvent {
 		public Clutter.EventType type;
 		public uint32 time;
@@ -2029,12 +2029,12 @@ namespace Clutter {
 		public weak Clutter.InputDevice device;
 		public weak Clutter.Actor related;
 	}
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_fog_get_type ()")]
 	public struct Fog {
 		public float z_near;
 		public float z_far;
 	}
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_geometry_get_type ()")]
 	public struct Geometry {
 		public int x;
 		public int y;
@@ -2043,7 +2043,7 @@ namespace Clutter {
 		public bool intersects (Clutter.Geometry geometry1);
 		public Clutter.Geometry union (Clutter.Geometry geometry_b);
 	}
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
 	public struct KeyEvent {
 		public Clutter.EventType type;
 		public uint32 time;
@@ -2056,7 +2056,7 @@ namespace Clutter {
 		public unichar unicode_value;
 		public weak Clutter.InputDevice device;
 	}
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_knot_get_type ()")]
 	public struct Knot {
 		public int x;
 		public int y;
@@ -2064,7 +2064,7 @@ namespace Clutter {
 		public bool equal (Clutter.Knot knot_b);
 		public void free ();
 	}
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
 	public struct MotionEvent {
 		public Clutter.EventType type;
 		public uint32 time;
@@ -2077,7 +2077,7 @@ namespace Clutter {
 		public double axes;
 		public weak Clutter.InputDevice device;
 	}
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_path_node_get_type ()")]
 	public struct PathNode {
 		public Clutter.PathNodeType type;
 		[CCode (array_length = false, array_null_terminated = true)]
@@ -2086,14 +2086,14 @@ namespace Clutter {
 		public bool equal (Clutter.PathNode node_b);
 		public void free ();
 	}
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_perspective_get_type ()")]
 	public struct Perspective {
 		public float fovy;
 		public float aspect;
 		public float z_near;
 		public float z_far;
 	}
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
 	public struct ScrollEvent {
 		public Clutter.EventType type;
 		public uint32 time;
@@ -2107,7 +2107,7 @@ namespace Clutter {
 		public double axes;
 		public weak Clutter.InputDevice device;
 	}
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
 	public struct StageStateEvent {
 		public Clutter.EventType type;
 		public uint32 time;
@@ -2138,7 +2138,7 @@ namespace Clutter {
 		public float to_pixels ();
 		public string to_string ();
 	}
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_vertex_get_type ()")]
 	public struct Vertex {
 		public float x;
 		public float y;

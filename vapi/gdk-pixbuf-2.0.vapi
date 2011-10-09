@@ -93,7 +93,7 @@ namespace Gdk {
 		public unowned Gdk.Pixbuf get_pixbuf ();
 		public bool on_currently_loading_frame ();
 	}
-	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h", copy_function = "gdk_pixbuf_format_copy")]
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h", copy_function = "gdk_pixbuf_format_copy", type_id = "gdk_pixbuf_format_get_type ()")]
 	[Compact]
 	public class PixbufFormat {
 		public unowned Gdk.PixbufFormat copy ();

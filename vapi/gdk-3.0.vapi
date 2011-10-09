@@ -176,7 +176,7 @@ namespace Gdk {
 		public unowned GLib.List list_targets ();
 		public void set_device (Gdk.Device device);
 	}
-	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "gdk_event_copy")]
+	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "gdk_event_copy", type_id = "gdk_event_get_type ()")]
 	[Compact]
 	public class Event {
 		public Gdk.EventAny any;
