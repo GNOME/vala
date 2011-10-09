@@ -1534,7 +1534,7 @@ public class Vala.GirParser : CodeVisitor {
 				parse_type_arguments_from_string (type, metadata.get_string (ArgumentType.TYPE_ARGUMENTS), metadata.get_source_reference (ArgumentType.TYPE_ARGUMENTS));
 			}
 
-			if (metadata.get_bool (ArgumentType.ARRAY)) {
+			if (!(type is ArrayType) && metadata.get_bool (ArgumentType.ARRAY)) {
 				type = new ArrayType (type, 1, type.source_reference);
 				changed = true;
 			}
