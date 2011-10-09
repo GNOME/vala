@@ -671,14 +671,14 @@ namespace Soup {
 		[NoWrapper]
 		public abstract void request_unqueued (Soup.Session session, Soup.Message msg);
 	}
-	[CCode (cheader_filename = "libsoup/soup.h")]
+	[CCode (cheader_filename = "libsoup/soup.h", has_type_id = false)]
 	public struct MessageHeadersIter {
 		[CCode (array_length = false, array_null_terminated = true)]
 		public weak void*[] dummy;
 		public void init (Soup.MessageHeaders hdrs);
 		public bool next (out unowned string name, out unowned string value);
 	}
-	[CCode (cheader_filename = "libsoup/soup.h")]
+	[CCode (cheader_filename = "libsoup/soup.h", has_type_id = false)]
 	public struct Range {
 		public int64 start;
 		public int64 end;

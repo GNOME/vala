@@ -2306,6 +2306,12 @@ public class Vala.GirParser : CodeVisitor {
 		if (current.new_symbol) {
 			st = new Struct (element_get_name (), current.source_reference);
 			current.symbol = st;
+			var type_id = reader.get_attribute ("glib:get-type");
+			if (type_id == null) {
+				st.set_attribute_bool ("CCode", "has_type_id", false);
+			} else {
+				st.set_attribute_string ("CCode", "type_id", "%s ()".printf (type_id));
+			}
 		} else {
 			st = (Struct) current.symbol;
 		}

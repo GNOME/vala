@@ -24,7 +24,7 @@ namespace Gdk {
 		[CCode (has_construct_function = false)]
 		public Pixbuf.from_file_at_size (string filename, int width, int height) throws GLib.Error;
 		[CCode (has_construct_function = false)]
-		public Pixbuf.from_inline ([CCode (array_length_cname = "data_length", array_length_pos = 0.5, type = "guint8*")] uint8[] data, bool copy_pixels = true) throws GLib.Error;
+		public Pixbuf.from_inline ([CCode (array_length_cname = "data_length", array_length_pos = 0.5)] uint8[] data, bool copy_pixels = true) throws GLib.Error;
 		[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 		public static Gdk.Pixbuf from_pixdata (Gdk.Pixdata pixdata, bool copy_pixels = true) throws GLib.Error;
 		[CCode (has_construct_function = false)]
@@ -53,7 +53,7 @@ namespace Gdk {
 		public void saturate_and_pixelate (Gdk.Pixbuf dest, float saturation, bool pixelate);
 		public bool save (string filename, string type, ...) throws GLib.Error;
 		public bool save_to_buffer ([CCode (array_length_type = "gsize", type = "gchar**")] out uint8[] buffer, string type, ...) throws GLib.Error;
-		public bool save_to_bufferv ([CCode (array_length_cname = "buffer_size", array_length_pos = 1.5, array_length_type = "gsize", type = "gchar**")] out uint8[] buffer, string type, [CCode (array_length = false, array_null_terminated = true)] string[] option_keys, [CCode (array_length = false, array_null_terminated = true)] string[] option_values) throws GLib.Error;
+		public bool save_to_bufferv ([CCode (array_length_cname = "buffer_size", array_length_pos = 1.5, array_length_type = "gsize")] out uint8[] buffer, string type, [CCode (array_length = false, array_null_terminated = true)] string[] option_keys, [CCode (array_length = false, array_null_terminated = true)] string[] option_values) throws GLib.Error;
 		public bool save_to_callback (Gdk.PixbufSaveFunc save_func, string type, ...) throws GLib.Error;
 		public bool save_to_callbackv ([CCode (delegate_target_pos = 1.5)] Gdk.PixbufSaveFunc save_func, string type, [CCode (array_length = false, array_null_terminated = true)] string[] option_keys, [CCode (array_length = false, array_null_terminated = true)] string[] option_values) throws GLib.Error;
 		public bool save_to_stream (GLib.OutputStream stream, string type, GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -144,7 +144,7 @@ namespace Gdk {
 		[CCode (has_construct_function = false)]
 		protected PixbufSimpleAnimIter ();
 	}
-	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h", has_type_id = false)]
 	public struct Pixdata {
 		public uint32 magic;
 		public int32 length;
@@ -154,7 +154,7 @@ namespace Gdk {
 		public uint32 height;
 		[CCode (array_length = false, array_null_terminated = true)]
 		public weak uint8[] pixel_data;
-		public bool deserialize ([CCode (array_length_cname = "stream_length", array_length_pos = 0.5, array_length_type = "guint", type = "guint8*")] uint8[] stream) throws GLib.Error;
+		public bool deserialize ([CCode (array_length_cname = "stream_length", array_length_pos = 0.5, array_length_type = "guint")] uint8[] stream) throws GLib.Error;
 		[CCode (array_length_pos = 0.1, array_length_type = "guint")]
 		public uint8[] serialize ();
 		public GLib.StringBuilder to_csource (string name, Gdk.PixdataDumpType dump_type);

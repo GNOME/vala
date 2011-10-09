@@ -39,12 +39,14 @@ Screen.get_monitor_geometry skip
 Window.get_frame_extents skip
 
 // Should send upstream
+add_option_entries_libgtk_only skip=false
 Device
         .free_history.events array array_length_idx=1
         .get_axis_value.value out
         .get_state.axes array
         .get_state.mask out
         .grab_info_libgtk_only skip
+Display.open_default_libgtk_only skip=false
 Window
         .destroy_notify skip
 synthesize_window_state skip

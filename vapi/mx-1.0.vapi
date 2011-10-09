@@ -1165,14 +1165,14 @@ namespace Mx {
 		[HasEmitter]
 		public virtual signal void style_changed (Mx.StyleChangedFlags flags);
 	}
-	[CCode (cheader_filename = "mx/mx.h")]
+	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_padding_get_type ()")]
 	public struct Padding {
 		public float top;
 		public float right;
 		public float bottom;
 		public float left;
 	}
-	[CCode (cheader_filename = "mx/mx.h")]
+	[CCode (cheader_filename = "mx/mx.h", has_type_id = false)]
 	public struct SettingsProviderIface {
 	}
 	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_ACTOR_MANAGER_")]

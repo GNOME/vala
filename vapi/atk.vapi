@@ -447,7 +447,7 @@ namespace Atk {
 		public string name;
 		public string value;
 	}
-	[CCode (cheader_filename = "atk/atk.h")]
+	[CCode (cheader_filename = "atk/atk.h", has_type_id = false)]
 	public struct KeyEventStruct {
 		public int type;
 		public uint state;
@@ -457,14 +457,14 @@ namespace Atk {
 		public uint16 keycode;
 		public uint32 timestamp;
 	}
-	[CCode (cheader_filename = "atk/atk.h", cname = "_AtkPropertyValues")]
+	[CCode (cheader_filename = "atk/atk.h", cname = "_AtkPropertyValues", has_type_id = false)]
 	[GIR (name = "_PropertyValues")]
 	public struct PropertyValues {
 		public weak string property_name;
 		public GLib.Value old_value;
 		public GLib.Value new_value;
 	}
-	[CCode (cheader_filename = "atk/atk.h")]
+	[CCode (cheader_filename = "atk/atk.h", type_id = "atk_rectangle_get_type ()")]
 	public struct Rectangle {
 		public int x;
 		public int y;
@@ -481,7 +481,7 @@ namespace Atk {
 		[Deprecated (replacement = "StateType.register", since = "vala-0.16")]
 		public static Atk.StateType type_register (string name);
 	}
-	[CCode (cheader_filename = "atk/atk.h")]
+	[CCode (cheader_filename = "atk/atk.h", has_type_id = false)]
 	public struct TextRectangle {
 		public int x;
 		public int y;
@@ -766,7 +766,7 @@ namespace Atk {
 	[CCode (cheader_filename = "atk/atk.h", has_target = false)]
 	public delegate void EventListenerInit ();
 	[CCode (cheader_filename = "atk/atk.h", has_target = false)]
-	public delegate void FocusHandler (Atk.Object arg0, bool arg1);
+	public delegate void FocusHandler (Atk.Object obj, bool focus_in);
 	[CCode (cheader_filename = "atk/atk.h")]
 	public delegate bool Function ();
 	[CCode (cheader_filename = "atk/atk.h")]

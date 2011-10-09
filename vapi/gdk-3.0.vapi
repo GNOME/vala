@@ -4575,7 +4575,7 @@ namespace Gdk {
 	public abstract class Device : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Device ();
-		public static void free_history ([CCode (array_length_cname = "n_events", array_length_pos = 1.1, type = "GdkTimeCoord**")] Gdk.TimeCoord[] events);
+		public static void free_history ([CCode (array_length_cname = "n_events", array_length_pos = 1.1)] Gdk.TimeCoord[] events);
 		public unowned Gdk.Device? get_associated_device ();
 		public bool get_axis ([CCode (array_length = false)] double[] axes, Gdk.AxisUse use, out double value);
 		public Gdk.AxisUse get_axis_use (uint index_);
@@ -4591,7 +4591,7 @@ namespace Gdk {
 		public unowned string get_name ();
 		public void get_position (out unowned Gdk.Screen screen, out int x, out int y);
 		public Gdk.InputSource get_source ();
-		public void get_state (Gdk.Window window, [CCode (array_length = false, type = "gdouble*")] double[] axes, out Gdk.ModifierType mask);
+		public void get_state (Gdk.Window window, [CCode (array_length = false)] double[] axes, out Gdk.ModifierType mask);
 		public unowned Gdk.Window get_window_at_position (out int win_x, out int win_y);
 		public Gdk.GrabStatus grab (Gdk.Window window, Gdk.GrabOwnership grab_ownership, bool owner_events, Gdk.EventMask event_mask, Gdk.Cursor? cursor, uint32 time_);
 		public GLib.List<weak Gdk.Atom> list_axes ();
@@ -4999,7 +4999,7 @@ namespace Gdk {
 		public static Gdk.Atom intern_static_string (string atom_name);
 		public string name ();
 	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
+	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_color_get_type ()")]
 	public struct Color {
 		public uint32 pixel;
 		public uint16 red;
@@ -5012,13 +5012,13 @@ namespace Gdk {
 		public static bool parse (string spec, out Gdk.Color color);
 		public string to_string ();
 	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
+	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct EventAny {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
 		public int8 send_event;
 	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
+	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct EventButton {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
@@ -5033,7 +5033,7 @@ namespace Gdk {
 		public double x_root;
 		public double y_root;
 	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
+	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct EventConfigure {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
@@ -5043,7 +5043,7 @@ namespace Gdk {
 		public int width;
 		public int height;
 	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
+	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct EventCrossing {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
@@ -5059,7 +5059,7 @@ namespace Gdk {
 		public bool focus;
 		public Gdk.ModifierType state;
 	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
+	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct EventDND {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
@@ -5069,7 +5069,7 @@ namespace Gdk {
 		public short x_root;
 		public short y_root;
 	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
+	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct EventExpose {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
@@ -5078,14 +5078,14 @@ namespace Gdk {
 		public weak Cairo.Region region;
 		public int count;
 	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
+	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct EventFocus {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
 		public int8 send_event;
 		public int16 @in;
 	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
+	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct EventGrabBroken {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
@@ -5109,7 +5109,7 @@ namespace Gdk {
 		public uint8 group;
 		public uint is_modifier;
 	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
+	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct EventMotion {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
@@ -5125,7 +5125,7 @@ namespace Gdk {
 		public double x_root;
 		public double y_root;
 	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
+	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct EventOwnerChange {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
@@ -5136,7 +5136,7 @@ namespace Gdk {
 		public uint32 time;
 		public uint32 selection_time;
 	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
+	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct EventProperty {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
@@ -5145,7 +5145,7 @@ namespace Gdk {
 		public uint32 time;
 		public uint state;
 	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
+	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct EventProximity {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
@@ -5153,7 +5153,7 @@ namespace Gdk {
 		public uint32 time;
 		public weak Gdk.Device device;
 	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
+	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct EventScroll {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
@@ -5167,7 +5167,7 @@ namespace Gdk {
 		public double x_root;
 		public double y_root;
 	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
+	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct EventSelection {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
@@ -5178,7 +5178,7 @@ namespace Gdk {
 		public uint32 time;
 		public weak Gdk.Window requestor;
 	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
+	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct EventSetting {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
@@ -5186,14 +5186,14 @@ namespace Gdk {
 		public Gdk.SettingAction action;
 		public weak string name;
 	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
+	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct EventVisibility {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
 		public int8 send_event;
 		public Gdk.VisibilityState state;
 	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
+	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct EventWindowState {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
@@ -5201,7 +5201,7 @@ namespace Gdk {
 		public Gdk.WindowState changed_mask;
 		public Gdk.WindowState new_window_state;
 	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
+	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct Geometry {
 		public int min_width;
 		public int min_height;
@@ -5215,18 +5215,18 @@ namespace Gdk {
 		public double max_aspect;
 		public Gdk.Gravity win_gravity;
 	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
+	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct KeymapKey {
 		public uint keycode;
 		public int group;
 		public int level;
 	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
+	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct Point {
 		public int x;
 		public int y;
 	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
+	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_rgba_get_type ()")]
 	public struct RGBA {
 		public double red;
 		public double green;
@@ -5244,13 +5244,13 @@ namespace Gdk {
 		public bool intersect (Gdk.Rectangle src2, out Gdk.Rectangle dest);
 		public void union (Gdk.Rectangle src2, out Gdk.Rectangle dest);
 	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
+	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct TimeCoord {
 		public uint32 time;
 		[CCode (array_length = false, array_null_terminated = true)]
 		public weak double[] axes;
 	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
+	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct WindowAttr {
 		public weak string title;
 		public int event_mask;
