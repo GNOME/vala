@@ -5580,7 +5580,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public static bool is_reference_counting (TypeSymbol sym) {
-		return get_ccode_ref_function (sym) != null;
+		if (sym is Class) {
+			return get_ccode_ref_function (sym) != null;
+		} else if (sym is Interface) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public static bool get_ccode_ref_function_void (Class cl) {
