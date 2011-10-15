@@ -2290,6 +2290,9 @@ namespace GLib {
 		public string to_iso8601 ();
 	}
 
+	public static int64 get_monotonic_time ();
+	public static int64 get_real_time ();
+
 	public struct DateDay : uchar {
 		[CCode (cname = "G_DATE_BAD_DAY")]
 		public static DateDay BAD_DAY;
