@@ -2459,6 +2459,9 @@ namespace GLib {
 		public unowned string? strptime (string buf, string format);
 	}
 
+	[SimpleType]
+	[CCode (cheader_filename = "glib.h", type_id = "G_TYPE_INT64", marshaller_type_name = "INT64", get_value_function = "g_value_get_int64", set_value_function = "g_value_set_int64", default_value = "0LL", type_signature = "x")]
+	[IntegerType (rank = 10)]
 	public struct TimeSpan : int64 {
 		public const TimeSpan DAY;
 		public const TimeSpan HOUR;
