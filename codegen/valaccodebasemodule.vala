@@ -4549,6 +4549,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (to.is_real_non_null_struct_type ()) {
 			// structs are returned via out parameter
 			cfunc.add_parameter (new CCodeParameter ("result", get_ccode_name (to) + "*"));
+			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_cvalue_ (result)));
 		} else if (to is ArrayType) {
 			// return array length if appropriate
 			// tmp = _variant_get (variant, &tmp_length);
@@ -4560,11 +4561,20 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 		}
 
-		ccode.add_assignment (get_cvalue_ (result), ccall);
+		if (!to.is_real_non_null_struct_type ()) {
+			ccode.add_assignment (get_cvalue_ (result), ccall);
+		} else {
+			ccode.add_expression (ccall);
+		}
 
 		push_function (cfunc);
 
-		ccode.add_return (deserialize_expression (to, new CCodeIdentifier ("value"), new CCodeIdentifier ("*result")));
+		CCodeExpression func_result = deserialize_expression (to, new CCodeIdentifier ("value"), new CCodeIdentifier ("*result"));
+		if (to.is_real_non_null_struct_type ()) {
+			ccode.add_assignment (new CCodeIdentifier ("*result"), func_result);
+		} else {
+			ccode.add_return (func_result);
+		}
 
 		pop_function ();
 
