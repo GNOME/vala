@@ -5102,8 +5102,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public TargetValue transform_value (TargetValue value, DataType? target_type, CodeNode node) {
 		var type = value.value_type;
 		var result = ((GLibValue) value).copy ();
-		result.value_type = target_type != null ? target_type : type;
-		result.value_type = result.value_type.copy ();
 		var requires_temp_value = false;
 
 		if (type.value_owned
@@ -5150,11 +5148,16 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (target_type is PointerType) {
 				// manual memory management for pointers
 			} else if (requires_destroy (type)) {
-				var temp_value = create_temp_value (type, false, node);
-				temp_ref_values.insert (0, ((GLibValue) temp_value).copy ());
-				store_value (temp_value, result);
-				result.cvalue = get_cvalue_ (temp_value);
-				requires_temp_value = false;
+				if (!is_lvalue_access_allowed (type)) {
+					// cannot assign to a temporary variable
+					temp_ref_values.insert (0, result.copy ());
+				} else {
+					var temp_value = create_temp_value (type, false, node);
+					temp_ref_values.insert (0, ((GLibValue) temp_value).copy ());
+					store_value (temp_value, result);
+					result.cvalue = get_cvalue_ (temp_value);
+					requires_temp_value = false;
+				}
 			}
 		}
 
@@ -5162,6 +5165,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			// value will be destroyed, no need for implicit casts
 			return result;
 		}
+
+		result.value_type = target_type.copy ();
 
 		if (gvalue_boxing) {
 			// implicit conversion to GValue
