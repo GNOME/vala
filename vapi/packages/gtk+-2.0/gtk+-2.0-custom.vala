@@ -111,6 +111,13 @@ namespace Gtk {
 		UNSORTED
 	}
 
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class Style {
+		[NoWrapper]
+		[CCode (instance_pos = -1, vfunc_name = "copy")]
+		public virtual void copy_to (Gtk.Style dest);
+	}
+
 	[CCode (has_target = false)]
 	public delegate void CallbackMarshal (Object object, void* data, Arg[] args);
 

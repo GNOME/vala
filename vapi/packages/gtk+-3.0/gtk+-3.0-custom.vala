@@ -76,6 +76,13 @@ namespace Gtk {
 		UNSORTED
 	}
 
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class Style {
+		[NoWrapper]
+		[CCode (instance_pos = -1, vfunc_name = "copy")]
+		public virtual void copy_to (Gtk.Style dest);
+	}
+
 	public delegate void ActionCallback (Action action);
 
 	public delegate void MenuPositionFunc (Gtk.Menu menu, out int x, out int y, out bool push_in);
