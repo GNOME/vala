@@ -3978,7 +3978,7 @@ namespace Gtk {
 		public void apply_default_background (Cairo.Context cr, Gdk.Window window, Gtk.StateType state_type, int x, int y, int width, int height);
 		public unowned Gtk.Style attach (Gdk.Window window);
 		[NoWrapper]
-		public virtual unowned Gtk.Style clone ();
+		public virtual Gtk.Style clone ();
 		public Gtk.Style copy ();
 		[CCode (instance_pos = -1, vfunc_name = "copy")]
 		[NoWrapper]
