@@ -388,9 +388,10 @@ public class Vala.CodeContext {
 	 *
 	 * @param filename a filename
 	 * @param is_source true to force adding the file as .vala or .gs
+	 * @param cmdline true if the file came from the command line.
 	 * @return false if the file is not recognized or the file does not exist
 	 */
-	public bool add_source_filename (string filename, bool is_source = false) {
+	public bool add_source_filename (string filename, bool is_source = false, bool cmdline = false) {
 		if (!FileUtils.test (filename, FileTest.EXISTS)) {
 			Report.error (null, "%s not found".printf (filename));
 			return false;
@@ -398,7 +399,7 @@ public class Vala.CodeContext {
 
 		var rpath = realpath (filename);
 		if (is_source || filename.has_suffix (".vala") || filename.has_suffix (".gs")) {
-			var source_file = new SourceFile (this, SourceFileType.SOURCE, rpath);
+			var source_file = new SourceFile (this, SourceFileType.SOURCE, rpath, null, cmdline);
 			source_file.relative_filename = filename;
 
 			if (profile == Profile.POSIX) {
@@ -420,7 +421,7 @@ public class Vala.CodeContext {
 
 			add_source_file (source_file);
 		} else if (filename.has_suffix (".vapi") || filename.has_suffix (".gir")) {
-			var source_file = new SourceFile (this, SourceFileType.PACKAGE, rpath);
+			var source_file = new SourceFile (this, SourceFileType.PACKAGE, rpath, null, cmdline);
 			source_file.relative_filename = filename;
 
 			add_source_file (source_file);

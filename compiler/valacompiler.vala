@@ -298,7 +298,7 @@ class Vala.Compiler {
 		bool has_c_files = false;
 
 		foreach (string source in sources) {
-			if (context.add_source_filename (source, run_output)) {
+			if (context.add_source_filename (source, run_output, true)) {
 				if (source.has_suffix (".c")) {
 					has_c_files = true;
 				}

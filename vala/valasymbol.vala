@@ -200,6 +200,19 @@ public abstract class Vala.Symbol : CodeNode {
 	}
 
 	/**
+	 * Specifies whether the implementation came from the commandline.
+	 */
+	public bool from_commandline {
+		get {
+			if (source_reference != null) {
+				return source_reference.file.from_commandline;
+			} else {
+				return false;
+			}
+		}
+	}
+
+	/**
 	 * Gets the SourceFileType of the source file that this symbol
 	 * came from, or SourceFileType.NONE.
 	 */

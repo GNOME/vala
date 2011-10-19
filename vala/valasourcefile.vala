@@ -43,6 +43,11 @@ public class Vala.SourceFile {
 	public SourceFileType file_type { get; set; }
 
 	/**
+	 * Specifies whether this file came from the command line directly.
+	 */
+	public bool from_commandline { get; set; }
+
+	/**
 	 *  GIR Namespace for this source file, if it's a VAPI package
 	 */
 
@@ -97,11 +102,12 @@ public class Vala.SourceFile {
 	 * @param pkg      true if this is a VAPI package file
 	 * @return         newly created source file
 	 */
-	public SourceFile (CodeContext context, SourceFileType type, string filename, string? content = null) {
+	public SourceFile (CodeContext context, SourceFileType type, string filename, string? content = null, bool cmdline = false) {
 		this.context = context;
 		this.file_type = type;
 		this.filename = filename;
 		this.content = content;
+		this.from_commandline = cmdline;
 	}
 
 	/**
