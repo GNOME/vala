@@ -77,6 +77,7 @@ namespace Cairo {
 		public void clip_preserve ();
 		public void clip_extents (out double x1, out double y1, out double x2, out double y2);
 		public void reset_clip ();
+		public bool in_clip (double x, double y);
 
 		public void fill ();
 		public void fill_preserve ();
@@ -196,7 +197,22 @@ namespace Cairo {
 		DEST_ATOP,
 		XOR,
 		ADD,
-		SATURATE
+		SATURATE,
+		MULTIPLY,
+		SCREEN,
+		OVERLAY,
+		DARKEN,
+		LIGHTEN,
+		COLOR_DODGE,
+		COLOR_BURN,
+		HARD_LIGHT,
+		SOFT_LIGHT,
+		DIFFERENCE,
+		EXCLUSION,
+		HSL_HUE,
+		HSL_SATURATION,
+		HSL_COLOR,
+		HSL_LUMINOSITY
 	}
 	
 	[Compact]
@@ -545,6 +561,7 @@ namespace Cairo {
 		[CCode (cname = "cairo_pdf_surface_create_for_stream")]
 		public PdfSurface.for_stream (WriteFunc write_func, double width_in_points, double height_in_points);
 		public void set_size (double width_in_points, double height_in_points);
+		public static void get_versions (out unowned PdfVersion[] versions);
 	}
 	
 	[CCode (instance_pos = 0, cname = "cairo_read_func_t")]
@@ -563,6 +580,9 @@ namespace Cairo {
 		public void dsc_begin_setup ();
 		public void dsc_begin_page_setup ();
 		public void dsc_comment (string comment);
+		public bool get_eps ();
+		public void set_eps (bool eps);
+		public static void get_levels (out unowned PsLevel[] levels);
 	}
 	
 	[Compact]
@@ -573,15 +593,33 @@ namespace Cairo {
 		[CCode (cname = "cairo_svg_surface_create_for_stream")]
 		public SvgSurface.for_stream (WriteFunc write_func, double width_in_points, double height_in_points);
 		public void restrict_to_version (SvgVersion version);
-		public static void get_versions (out SvgVersion[] versions);
+		public static void get_versions (out unowned SvgVersion[] versions);
 	}
 	
 	[CCode (cname = "cairo_svg_version_t", cprefix = "CAIRO_SVG_")]
 	public enum SvgVersion {
 		VERSION_1_1,
-		VERSION_1_2
+		VERSION_1_2;
+		[CCode (cname = "cairo_svg_version_to_string")]
+		public unowned string to_string ();
 	}
-	
+
+	[CCode (cname = "cairo_pdf_version_t", cprefix = "CAIRO_PDF_")]
+	public enum PdfVersion {
+		VERSION_1_4,
+		VERSION_1_5;
+		[CCode (cname = "cairo_pdf_version_to_string")]
+		public unowned string to_string ();
+	}
+
+	[CCode (cname = "cairo_ps_level_t", cprefix = "CAIRO_PS_")]
+	public enum PsLevel {
+		LEVEL_2,
+		LEVEL_3;
+		[CCode (cname = "cairo_ps_level_to_string")]
+		public unowned string to_string ();
+	}
+
 	[Compact]
 	[CCode (cname = "cairo_surface_t", cheader_filename = "cairo-xlib.h")]
 	public class XlibSurface : Surface {
@@ -661,7 +699,24 @@ namespace Cairo {
 		INVALID_VISUAL,
 		FILE_NOT_FOUND,
 		INVALID_DASH,
-		INVALID_DSC_COMMENT
+		INVALID_DSC_COMMENT,
+		INVALID_INDEX,
+		CLIP_NOT_REPRESENTABLE,
+		TEMP_FILE_ERROR,
+		INVALID_STRIDE,
+		FONT_TYPE_MISMATCH,
+		USER_FONT_IMMUTABLE,
+		USER_FONT_ERROR,
+		NEGATIVE_COUNT,
+		INVALID_CLUSTERS,
+		INVALID_SLANT,
+		INVALID_WEIGHT,
+		INVALID_SIZE,
+		USER_FONT_NOT_IMPLEMENTED,
+		DEVICE_TYPE_MISMATCH,
+		DEVICE_ERROR;
+		[CCode (cname = "cairo_status_to_string")]
+		public unowned string to_string ();
 	}
 	
 	public int version ();
