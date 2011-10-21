@@ -568,6 +568,22 @@ public class Vala.GirParser : CodeVisitor {
 			}
 		}
 
+		public string get_full_name () {
+			if (parent == null) {
+				return name;
+			}
+
+			if (name == null) {
+				return parent.get_full_name ();
+			}
+
+			if (parent.get_full_name () == null) {
+				return name;
+			}
+
+			return "%s.%s".printf (parent.get_full_name (), name);
+		}
+
 		public string get_gir_name () {
 			var gir_name = girdata["name"];
 			if (gir_name == null) {
@@ -743,6 +759,7 @@ public class Vala.GirParser : CodeVisitor {
 							// assume method is getter
 							merged = true;
 						} else if (sym is Signal) {
+							node.process (parser);
 							var sig = (Signal) sym;
 							if (m.is_virtual || m.is_abstract) {
 								sig.is_virtual = true;
@@ -750,6 +767,9 @@ public class Vala.GirParser : CodeVisitor {
 								sig.set_attribute ("HasEmitter", true);
 							}
 							parser.assume_parameter_names (sig, m, false);
+							if (m.get_parameters().size != sig.get_parameters().size) {
+								Report.warning (symbol.source_reference, "Signal `%s' conflicts with method of the same name".printf (get_full_name ()));
+							}
 							merged = true;
 						} else if (sym is Method && !(sym is CreationMethod) && node != this) {
 							if (m.is_virtual || m.is_abstract) {
