@@ -25,6 +25,8 @@ namespace Gedit {
 	public class Document : Gtk.SourceBuffer {
 		[CCode (has_construct_function = false)]
 		public Document ();
+		[CCode (cname = "gedit_document_save")]
+		public void do_save (Gedit.DocumentSaveFlags flags);
 		public static GLib.Quark error_quark ();
 		public bool get_can_search_again ();
 		public Gedit.DocumentCompressionType get_compression_type ();
@@ -46,6 +48,7 @@ namespace Gedit {
 		public bool is_local ();
 		public bool is_untitled ();
 		public bool is_untouched ();
+		public virtual void load (GLib.File location, Gedit.Encoding? encoding, int line_pos, int column_pos, bool create);
 		public bool load_cancel ();
 		public void load_stream (GLib.InputStream stream, Gedit.Encoding? encoding, int line_pos, int column_pos);
 		public int replace_all (string find, string replace, uint flags);
@@ -73,11 +76,8 @@ namespace Gedit {
 		[NoAccessorMethod]
 		public string shortname { owned get; set; }
 		public virtual signal void cursor_moved ();
-		[HasEmitter]
-		public virtual signal void load (GLib.File location, Gedit.Encoding encoding, int line_pos, bool column_pos);
 		public virtual signal void loaded (GLib.Error error);
 		public virtual signal void loading (uint64 size, uint64 total_size);
-		[HasEmitter]
 		public virtual signal void save (GLib.File location, Gedit.Encoding encoding, Gedit.DocumentNewlineType newline_type, Gedit.DocumentCompressionType compression_type, Gedit.DocumentSaveFlags flags);
 		public virtual signal void saved (GLib.Error error);
 		public virtual signal void saving (uint64 size, uint64 total_size);
