@@ -789,6 +789,9 @@ public class Vala.GirParser : CodeVisitor {
 									}
 								}
 								if (!different_invoker) {
+									if (attr != null) {
+										Report.warning (symbol.source_reference, "Virtual method `%s' conflicts with method of the same name".printf (get_full_name ()));
+									}
 									node.merged = true;
 								}
 							}
