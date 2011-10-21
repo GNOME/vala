@@ -9,6 +9,7 @@ dist_vapi_DATA = \
 	alsa.vapi \
 	alsa.deps \
 	atk.vapi \
+	avahi-client.vapi \
 	avahi-gobject.deps \
 	avahi-gobject.vapi \
 	bzlib.vapi \
