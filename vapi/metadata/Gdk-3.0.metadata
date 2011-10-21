@@ -52,7 +52,7 @@ Window
 synthesize_window_state skip
 EventMotion
         .axes array
-FilterFunc skip
+FilterFunc.data closure=2
 init*.argv unowned
 parse_args.argv unowned
 property_change.data array array_length_idx=6
@@ -62,3 +62,4 @@ threads_add_idle skip=false
 threads_add_timeout skip=false
 threads_add_timeout_seconds skip=false
 threads_set_lock_functions skip=false
+XEvent skip

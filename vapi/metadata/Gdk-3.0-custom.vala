@@ -23,7 +23,10 @@ namespace Gdk {
 		public void union (Gdk.Rectangle src2, out Gdk.Rectangle dest);
 	}
 
-	public delegate Gdk.FilterReturn FilterFunc (Gdk.XEvent xevent, Gdk.Event event);
+	[CCode (ref_function = "", unref_function = "")]
+	[Compact]
+	public class XEvent {
+	}
 
 	public const Gdk.Atom SELECTION_CLIPBOARD;
 	[CCode (cheader_filename = "gdk/gdk.h")]

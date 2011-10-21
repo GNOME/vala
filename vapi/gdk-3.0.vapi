@@ -4990,6 +4990,10 @@ namespace Gdk {
 		public signal unowned Gdk.Window pick_embedded_child (double x, double y);
 		public virtual signal void to_embedder (double offscreen_x, double offscreen_y, out double embedder_x, out double embedder_y);
 	}
+	[CCode (cheader_filename = "gdk/gdk.h", ref_function = "", unref_function = "")]
+	[Compact]
+	public class XEvent {
+	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	[SimpleType]
 	public struct Atom {
@@ -5266,10 +5270,6 @@ namespace Gdk {
 		public weak string wmclass_class;
 		public bool override_redirect;
 		public Gdk.WindowTypeHint type_hint;
-	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	[SimpleType]
-	public struct XEvent {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_AXIS_")]
 	public enum AxisUse {
@@ -5710,7 +5710,7 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", instance_pos = 1.9)]
 	public delegate void EventFunc (Gdk.Event event);
-	[CCode (cheader_filename = "gdk/gdk.h")]
+	[CCode (cheader_filename = "gdk/gdk.h", instance_pos = 2.9)]
 	public delegate Gdk.FilterReturn FilterFunc (Gdk.XEvent xevent, Gdk.Event event);
 	[CCode (cheader_filename = "gdk/gdk.h", instance_pos = 1.9)]
 	public delegate bool WindowChildFunc (Gdk.Window window);
