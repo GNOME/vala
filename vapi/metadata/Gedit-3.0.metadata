@@ -24,6 +24,9 @@ Window cheader_filename="gedit/gedit-window.h"
 WindowActivatable cheader_filename="gedit/gedit-window-activatable.h"
 WindowState cheader_filename="gedit/gedit-window.h"
 
+Document.load#signal skip // https://bugzilla.gnome.org/show_bug.cgi?id=662145
+Document.save#method name="do_save"
+
 commands_* cheader_filename="gedit/gedit-commands.h"
 debug* cheader_filename="gedit/gedit-debug.h"
 marshal_* skip=true
