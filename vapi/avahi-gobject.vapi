@@ -277,7 +277,7 @@ namespace Avahi {
 		public EntryGroupService add_service_strlist(string name, string type, uint16 port, ...) throws Error;
 		[CCode(sentinel="")]
 		public EntryGroupService add_service_full_strlist(Interface interface, Protocol protocol, PublishFlags flags, string name, string type, string domain, string host, uint16 port, ...) throws Error;
-		public EntryGroupService add_service(string name, string type, ...) throws Error;
+		public EntryGroupService add_service(string name, string type, uint16 port, ...) throws Error;
 		public EntryGroupService add_service_full(Interface interface, Protocol protocol, PublishFlags flags, string name, string type, string domain, string host, uint16 port, ...) throws Error;
 		public void add_record(PublishFlags flags, string name, uint16 type, uint32 ttl, char[] data) throws Error;
 		public void add_record_full(Interface interface, Protocol protocol, PublishFlags flags, string name, uint16 class, uint16 type, uint32 ttl, char[] data) throws Error;
