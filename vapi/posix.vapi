@@ -2338,11 +2338,11 @@ namespace Posix {
 
 		[CCode (cname = "fprintf")]
 		[PrintfFormat ()]
-		public void printf (string format, ...);
+		public int printf (string format, ...);
 		[CCode (cname = "fputc", instance_pos = -1)]
-		public void putc (char c);
+		public int putc (char c);
 		[CCode (cname = "fputs", instance_pos = -1)]
-		public void puts (string s);
+		public int puts (string s);
 		[CCode (cname = "fgetc")]
 		public int getc ();
 		[CCode (cname = "fgets", instance_pos = -1)]
