@@ -102,7 +102,8 @@ public class Vala.GDBusModule : GVariantModule {
 		if (type is ObjectType) {
 			if (type.data_type.get_full_name () == "GLib.UnixInputStream" ||
 			    type.data_type.get_full_name () == "GLib.UnixOutputStream" ||
-			    type.data_type.get_full_name () == "GLib.Socket") {
+			    type.data_type.get_full_name () == "GLib.Socket" ||
+			    type.data_type.get_full_name () == "GLib.FileDescriptorBased") {
 				return true;
 			}
 		}
@@ -136,6 +137,10 @@ public class Vala.GDBusModule : GVariantModule {
 				return result;
 			} else if (type.data_type.get_full_name () == "GLib.Socket") {
 				var result = new CCodeFunctionCall (new CCodeIdentifier ("g_socket_get_fd"));
+				result.add_argument (expr);
+				return result;
+			} else if (type.data_type.get_full_name () == "GLib.FileDescriptorBased") {
+				var result = new CCodeFunctionCall (new CCodeIdentifier ("g_file_descriptor_based_get_fd"));
 				result.add_argument (expr);
 				return result;
 			}
