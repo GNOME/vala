@@ -921,7 +921,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		protected CellRenderer ();
 		public virtual bool activate (Gdk.Event event, Gtk.Widget widget, string path, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gtk.CellRendererState flags);
-		public virtual void get_aligned_area (Gtk.Widget widget, Gtk.CellRendererState flags, Gdk.Rectangle cell_area, Gdk.Rectangle aligned_area);
+		public virtual Gdk.Rectangle get_aligned_area (Gtk.Widget widget, Gtk.CellRendererState flags, Gdk.Rectangle cell_area);
 		public void get_alignment (out float xalign, out float yalign);
 		public void get_fixed_size (out int width, out int height);
 		public void get_padding (out int xpad, out int ypad);
@@ -2768,8 +2768,8 @@ namespace Gtk {
 	public class Misc : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false)]
 		protected Misc ();
-		public void get_alignment (float xalign, float yalign);
-		public void get_padding (int xpad, int ypad);
+		public void get_alignment (out float xalign, out float yalign);
+		public void get_padding (out int xpad, out int ypad);
 		public void set_alignment (float xalign, float yalign);
 		public void set_padding (int xpad, int ypad);
 		[NoAccessorMethod]
@@ -2798,7 +2798,7 @@ namespace Gtk {
 	public class Notebook : Gtk.Container, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Notebook ();
-		public int append_page (Gtk.Widget child, Gtk.Widget? tab_label);
+		public int append_page (Gtk.Widget child, Gtk.Widget? tab_label = null);
 		public int append_page_menu (Gtk.Widget child, Gtk.Widget? tab_label, Gtk.Widget? menu_label);
 		public unowned Gtk.Widget get_action_widget (Gtk.PackType pack_type);
 		public int get_current_page ();
@@ -2824,7 +2824,7 @@ namespace Gtk {
 		public int page_num (Gtk.Widget child);
 		public void popup_disable ();
 		public void popup_enable ();
-		public int prepend_page (Gtk.Widget child, Gtk.Widget? tab_label);
+		public int prepend_page (Gtk.Widget child, Gtk.Widget? tab_label = null);
 		public int prepend_page_menu (Gtk.Widget child, Gtk.Widget? tab_label, Gtk.Widget? menu_label);
 		public void prev_page ();
 		public void remove_page (int page_num);
@@ -5455,11 +5455,11 @@ namespace Gtk {
 		public void modify_font (Pango.FontDescription? font_desc);
 		public void modify_style (Gtk.RcStyle style);
 		public void modify_text (Gtk.StateType state, Gdk.Color? color);
-		public void override_background_color (Gtk.StateFlags state, Gdk.RGBA color);
-		public void override_color (Gtk.StateFlags state, Gdk.RGBA color);
-		public void override_cursor (Gdk.RGBA cursor, Gdk.RGBA secondary_cursor);
-		public void override_font (Pango.FontDescription font_desc);
-		public void override_symbolic_color (string name, Gdk.RGBA color);
+		public void override_background_color (Gtk.StateFlags state, Gdk.RGBA? color);
+		public void override_color (Gtk.StateFlags state, Gdk.RGBA? color);
+		public void override_cursor (Gdk.RGBA? cursor, Gdk.RGBA? secondary_cursor);
+		public void override_font (Pango.FontDescription? font_desc);
+		public void override_symbolic_color (string name, Gdk.RGBA? color);
 		public void path (out uint path_length, out unowned string path, out unowned string path_reversed);
 		public static void pop_composite_child ();
 		public static void push_composite_child ();
