@@ -796,7 +796,7 @@ namespace Pango {
 		NORMAL,
 		SMALL_CAPS
 	}
-	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_WEIGHT_")]
+	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_WEIGHT_", default_value = "PANGO_WEIGHT_NORMAL")]
 	public enum Weight {
 		THIN,
 		ULTRALIGHT,
