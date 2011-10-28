@@ -1391,6 +1391,8 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "1") {
 						en.set_attribute ("Deprecated", true);
 					}
+				} else if (nv[0] == "default_value") {
+					en.set_attribute_string ("CCode", "default_value", eval (nv[1]));
 				} else if (nv[0] == "replacement") {
 					en.set_attribute_string ("Deprecated", "replacement", eval (nv[1]));
 				} else if (nv[0] == "deprecated_since") {
