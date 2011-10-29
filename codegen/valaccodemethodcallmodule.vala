@@ -30,6 +30,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		var ccall = new CCodeFunctionCall (get_cvalue (expr.call));
 
 		CCodeFunctionCall async_call = null;
+		CCodeFunctionCall finish_call = null;
 
 		Method m = null;
 		Delegate deleg = null;
@@ -78,7 +79,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			// async call
 
 			async_call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_name (m)));
-			var finish_call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_finish_name (m)));
+			finish_call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_finish_name (m)));
 
 			if (ma.inner is BaseAccess) {
 				if (m.base_method != null) {
@@ -156,8 +157,9 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			}
 		} else if (m is CreationMethod && m.parent_symbol is Struct) {
 			ccall.add_argument (new CCodeIdentifier ("self"));
-		} else if (m != null && m.get_type_parameters ().size > 0 && !get_ccode_has_generic_type_parameter (m) && !get_ccode_simple_generics (m)) {
+		} else if (m != null && m.get_type_parameters ().size > 0 && !get_ccode_has_generic_type_parameter (m) && !get_ccode_simple_generics (m) && (ccall != finish_call || expr.is_yield_expression)) {
 			// generic method
+			// don't add generic arguments for .end() calls
 			add_generic_type_arguments (in_arg_map, ma.get_type_arguments (), expr);
 		}
 
