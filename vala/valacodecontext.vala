@@ -422,6 +422,8 @@ public class Vala.CodeContext {
 			add_source_file (source_file);
 		} else if (filename.has_suffix (".c")) {
 			add_c_source_file (rpath);
+		} else if (filename.has_suffix (".h")) {
+			/* Ignore */
 		} else {
 			Report.error (null, "%s is not a supported source file type. Only .vala, .vapi, .gs, and .c files are supported.".printf (filename));
 			return false;
