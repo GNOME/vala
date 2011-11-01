@@ -3929,6 +3929,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier (dup0_func));
 			ccall.add_argument (cexpr);
 			result.cvalue = ccall;
+			result.value_type.value_owned = true;
 			return store_temp_value (result, node);
 		}
 
