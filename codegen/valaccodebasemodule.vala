@@ -1905,18 +1905,21 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "_ref_count_")));
 			ccode.open_if (ccall);
 
-			if (parent_block != null) {
-				int parent_block_id = get_block_id (parent_block);
-
-				var unref_call = new CCodeFunctionCall (new CCodeIdentifier ("block%d_data_unref".printf (parent_block_id)));
-				unref_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "_data%d_".printf (parent_block_id)));
-				ccode.add_expression (unref_call);
-				ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "_data%d_".printf (parent_block_id)), new CCodeConstant ("NULL"));
-			} else {
-				if (get_this_type () != null) {
-					var this_value = new GLibValue (get_data_type_for_symbol (current_type_symbol), new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "self"), true);
-					ccode.add_expression (destroy_value (this_value));
+			if (get_this_type () != null) {
+				// assign "self" for type parameters
+				CCodeExpression cself = new CCodeIdentifier ("_data%d_".printf (block_id));
+				unowned Block parent_closure_block = b;
+				while (true) {
+					parent_closure_block = next_closure_block (parent_closure_block.parent_symbol);
+					if (parent_closure_block == null) {
+						break;
+					}
+					int parent_block_id = get_block_id (parent_closure_block);
+					cself = new CCodeMemberAccess.pointer (cself, "_data%d_".printf (parent_block_id));
 				}
+				cself = new CCodeMemberAccess.pointer (cself, "self");
+				ccode.add_declaration ("%s *".printf (get_ccode_name (current_type_symbol)), new CCodeVariableDeclarator ("self"));
+				ccode.add_assignment (new CCodeIdentifier ("self"), cself);
 			}
 
 			// free in reverse order
@@ -1977,6 +1980,22 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					if (requires_destroy (param_type) && !is_unowned_delegate) {
 						ccode.add_expression (destroy_parameter (acc.value_parameter));
 					}
+				}
+			}
+
+			// free parent block and "self" after captured variables
+			// because they may require type parameters
+			if (parent_block != null) {
+				int parent_block_id = get_block_id (parent_block);
+
+				var unref_call = new CCodeFunctionCall (new CCodeIdentifier ("block%d_data_unref".printf (parent_block_id)));
+				unref_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "_data%d_".printf (parent_block_id)));
+				ccode.add_expression (unref_call);
+				ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "_data%d_".printf (parent_block_id)), new CCodeConstant ("NULL"));
+			} else {
+				if (get_this_type () != null) {
+					var this_value = new GLibValue (get_data_type_for_symbol (current_type_symbol), new CCodeIdentifier ("self"), true);
+					ccode.add_expression (destroy_value (this_value));
 				}
 			}
 
