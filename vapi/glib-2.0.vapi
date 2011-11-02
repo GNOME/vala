@@ -3859,6 +3859,8 @@ namespace GLib {
 		public static unowned G get (SequenceIter<G> iter);
 		public static void set (SequenceIter<G> iter, owned G data);
 		public static SequenceIter<G> range_get_midpoint (SequenceIter<G> begin, SequenceIter<G> end);
+		public SequenceIter<G> lookup (G data, CompareDataFunc<G> cmp_func);
+		public SequenceIter<G> lookup_iter (G data, SequenceIterCompareFunc<G> iter_cmp);
 	}
 
 	[Compact]
@@ -3875,6 +3877,8 @@ namespace GLib {
 
 		[CCode (cname = "g_sequence_get")]
 		public unowned G get ();
+		[CCode (cname = "g_sequence_set")]
+		public void set (owned G data);
 	}
 
 	public delegate int SequenceIterCompareFunc<G> (SequenceIter<G> a, SequenceIter<G> b);
