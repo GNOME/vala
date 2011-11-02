@@ -3083,7 +3083,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		var cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, cvar, new CCodeConstant ("NULL"));
 		if (type.type_parameter != null) {
-			if (!(current_type_symbol is Class) || current_class.is_compact) {
+			var parent = type.type_parameter.parent_symbol;
+			var cl = parent as Class;
+			if ((!(parent is Method) && !(parent is ObjectTypeSymbol)) || (cl != null && cl.is_compact)) {
 				return new CCodeConstant ("NULL");
 			}
 
