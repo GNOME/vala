@@ -1905,21 +1905,40 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "_ref_count_")));
 			ccode.open_if (ccall);
 
+			CCodeExpression outer_block = new CCodeIdentifier ("_data%d_".printf (block_id));
+			unowned Block parent_closure_block = b;
+			while (true) {
+				parent_closure_block = next_closure_block (parent_closure_block.parent_symbol);
+				if (parent_closure_block == null) {
+					break;
+				}
+				int parent_block_id = get_block_id (parent_closure_block);
+				outer_block = new CCodeMemberAccess.pointer (outer_block, "_data%d_".printf (parent_block_id));
+			}
+
 			if (get_this_type () != null) {
 				// assign "self" for type parameters
-				CCodeExpression cself = new CCodeIdentifier ("_data%d_".printf (block_id));
-				unowned Block parent_closure_block = b;
-				while (true) {
-					parent_closure_block = next_closure_block (parent_closure_block.parent_symbol);
-					if (parent_closure_block == null) {
-						break;
-					}
-					int parent_block_id = get_block_id (parent_closure_block);
-					cself = new CCodeMemberAccess.pointer (cself, "_data%d_".printf (parent_block_id));
-				}
-				cself = new CCodeMemberAccess.pointer (cself, "self");
 				ccode.add_declaration ("%s *".printf (get_ccode_name (current_type_symbol)), new CCodeVariableDeclarator ("self"));
-				ccode.add_assignment (new CCodeIdentifier ("self"), cself);
+				ccode.add_assignment (new CCodeIdentifier ("self"), new CCodeMemberAccess.pointer (outer_block, "self"));
+			}
+
+			if (current_method != null) {
+				// assign captured generic type parameters
+				foreach (var type_param in current_method.get_type_parameters ()) {
+					string func_name;
+
+					func_name = "%s_type".printf (type_param.name.down ());
+					ccode.add_declaration ("GType", new CCodeVariableDeclarator (func_name));
+					ccode.add_assignment (new CCodeIdentifier (func_name), new CCodeMemberAccess.pointer (outer_block, func_name));
+
+					func_name = "%s_dup_func".printf (type_param.name.down ());
+					ccode.add_declaration ("GBoxedCopyFunc", new CCodeVariableDeclarator (func_name));
+					ccode.add_assignment (new CCodeIdentifier (func_name), new CCodeMemberAccess.pointer (outer_block, func_name));
+
+					func_name = "%s_destroy_func".printf (type_param.name.down ());
+					ccode.add_declaration ("GDestroyNotify", new CCodeVariableDeclarator (func_name));
+					ccode.add_assignment (new CCodeIdentifier (func_name), new CCodeMemberAccess.pointer (outer_block, func_name));
+				}
 			}
 
 			// free in reverse order
