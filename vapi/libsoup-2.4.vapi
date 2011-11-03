@@ -363,7 +363,7 @@ namespace Soup {
 		public uint status_code { get; set; }
 		public Soup.URI uri { get; set; }
 		[HasEmitter]
-		public signal void content_sniffed (string object, GLib.HashTable<void*,void*> p0);
+		public signal void content_sniffed (string content_type, GLib.HashTable<void*,void*> @params);
 		[HasEmitter]
 		public virtual signal void finished ();
 		[HasEmitter]
@@ -379,7 +379,7 @@ namespace Soup {
 		[HasEmitter]
 		public virtual signal void wrote_body ();
 		[HasEmitter]
-		public signal void wrote_body_data (Soup.Buffer object);
+		public signal void wrote_body_data (Soup.Buffer chunk);
 		[HasEmitter]
 		public virtual signal void wrote_chunk ();
 		[HasEmitter]
@@ -1198,19 +1198,19 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static bool value_array_to_args (GLib.ValueArray array, va_list args);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static void value_hash_insert (GLib.HashTable<string,GLib.Value> hash, string key, GLib.Type type, ...);
+	public static void value_hash_insert (GLib.HashTable<string,GLib.Value?> hash, string key, GLib.Type type, ...);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static void value_hash_insert_vals (GLib.HashTable<string,GLib.Value> hash, ...);
+	public static void value_hash_insert_vals (GLib.HashTable<string,GLib.Value?> hash, ...);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static void value_hash_insert_value (GLib.HashTable<string,GLib.Value> hash, string key, GLib.Value value);
+	public static void value_hash_insert_value (GLib.HashTable<string,GLib.Value?> hash, string key, GLib.Value value);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static bool value_hash_lookup (GLib.HashTable<string,GLib.Value> hash, string key, GLib.Type type, ...);
+	public static bool value_hash_lookup (GLib.HashTable<string,GLib.Value?> hash, string key, GLib.Type type, ...);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static bool value_hash_lookup_vals (GLib.HashTable<string,GLib.Value> hash, ...);
+	public static bool value_hash_lookup_vals (GLib.HashTable<string,GLib.Value?> hash, ...);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static GLib.HashTable<string,GLib.Value> value_hash_new ();
+	public static GLib.HashTable<string,GLib.Value?> value_hash_new ();
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static GLib.HashTable<string,GLib.Value> value_hash_new_with_vals (...);
+	public static GLib.HashTable<string,GLib.Value?> value_hash_new_with_vals (...);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	[Deprecated (replacement = "XMLRPC.build_fault", since = "vala-0.12")]
 	[PrintfFormat]
