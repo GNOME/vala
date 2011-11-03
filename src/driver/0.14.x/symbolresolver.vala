@@ -38,6 +38,14 @@ public class Valadoc.Drivers.SymbolResolver : Visitor {
 		return symbol_map.get (symbol);
 	}
 
+	private void resolve_thrown_list (Symbol symbol, Vala.List<Vala.DataType> types) {
+		foreach (Vala.DataType type in types) {
+			Vala.ErrorDomain vala_edom = (Vala.ErrorDomain) type.data_type;
+			Symbol? edom = symbol_map.get (vala_edom);
+			symbol.add_child (edom ?? glib_error);
+		}
+	}
+
 	private void resolve_array_type_references (Api.Array ptr) {
 		Api.Item data_type = ptr.data_type;
 		if (data_type == null) {
@@ -203,7 +211,11 @@ public class Valadoc.Drivers.SymbolResolver : Visitor {
 	 * {@inheritDoc}
 	 */
 	public override void visit_delegate (Delegate item) {
+		Vala.Delegate vala_delegate = item.data as Vala.Delegate;
+
 		resolve_type_reference (item.return_type);
+
+		resolve_thrown_list (item, vala_delegate.get_error_types ());
 
 		item.accept_all_children (this, false);
 	}
@@ -234,6 +246,8 @@ public class Valadoc.Drivers.SymbolResolver : Visitor {
 		if (base_vala_method != null) {
 			item.base_method = (Method?) resolve (base_vala_method);
 		}
+
+		resolve_thrown_list (item, vala_method.get_error_types ());
 
 		resolve_type_reference (item.return_type);
 
