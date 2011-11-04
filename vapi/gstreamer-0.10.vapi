@@ -512,6 +512,7 @@ namespace Gst {
 		public bool can_src_all_caps (Gst.Caps caps);
 		public bool can_src_any_caps (Gst.Caps caps);
 		public bool can_src_caps (Gst.Caps caps);
+		[CCode (returns_floating_reference = true)]
 		public Gst.Element? create (string? name);
 		public static Gst.ElementFactory? find (string name);
 		public unowned string get_author ();
@@ -530,6 +531,7 @@ namespace Gst {
 		public static unowned GLib.List list_filter (GLib.List list, Gst.Caps caps, Gst.PadDirection direction, bool subsetonly);
 		public static unowned GLib.List list_get_elements (Gst.ElementFactoryListType type, Gst.Rank minrank);
 		public bool list_is_type (Gst.ElementFactoryListType type);
+		[CCode (returns_floating_reference = true)]
 		public static Gst.Element? make (string factoryname, string? name);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]

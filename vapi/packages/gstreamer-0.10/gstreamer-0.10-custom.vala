@@ -219,6 +219,13 @@ namespace Gst {
 		public State target_state;
 	}
 
+	public class ElementFactory {
+		[CCode (returns_floating_reference = true)]
+		public Gst.Element? create (string? name);
+		[CCode (returns_floating_reference = true)]
+		public static Gst.Element? make (string factoryname, string? name);
+	}
+
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Pad {
 		[CCode (cname = "gst_pad_add_buffer_probe_full")]
