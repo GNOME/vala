@@ -1,5 +1,6 @@
 NULL =
 
+VERSIONED_VAPI_DIR=`pkg-config libvala-0.14 --variable vapidir`
 
 if HAVE_LIBVALA_0_13_X
 VALA_FLAGS = -D VALA_0_13_X
@@ -45,7 +46,7 @@ libdriver_la_SOURCES =      \
 
 
 libdriver.vala.stamp: $(libdriver_la_VALASOURCES)
-	$(VALAC) $(VALA_FLAGS) -C --vapidir $(top_srcdir)/src/vapi --vapidir $(top_srcdir)/src/libvaladoc --pkg libvala-0.14 --pkg gee-1.0 --pkg valadoc-1.0 --basedir . $^
+	$(VALAC) $(VALA_FLAGS) -C --vapidir $(top_srcdir)/src/vapi --vapidir $(VERSIONED_VAPI_DIR) --vapidir $(top_srcdir)/src/libvaladoc --pkg libvala-0.14 --pkg gee-1.0 --pkg valadoc-1.0 --basedir . $^
 	touch $@
 
 
