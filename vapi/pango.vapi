@@ -118,7 +118,7 @@ namespace Pango {
 		public Pango.Gravity get_gravity ();
 		public Pango.GravityHint get_gravity_hint ();
 		public unowned Pango.Language get_language ();
-		public Pango.Matrix get_matrix ();
+		public Pango.Matrix? get_matrix ();
 		public Pango.FontMetrics get_metrics (Pango.FontDescription? desc, Pango.Language? language);
 		public void list_families (out Pango.FontFamily[] families);
 		public unowned Pango.Font load_font (Pango.FontDescription desc);
