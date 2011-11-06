@@ -539,4 +539,7 @@ namespace Gst {
 		public static void ignored (Gst.Poll @set, Gst.PollFD fd);
 		public void init ();
 	}
+
+	public struct ElementFactoryListType : uint64 {
+	}
 }

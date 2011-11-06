@@ -528,15 +528,11 @@ namespace Gst {
 		public string[]? get_uri_protocols ();
 		public int get_uri_type ();
 		public bool has_interface (string interfacename);
-		public static unowned GLib.List list_filter (GLib.List list, Gst.Caps caps, Gst.PadDirection direction, bool subsetonly);
-		public static unowned GLib.List list_get_elements (Gst.ElementFactoryListType type, Gst.Rank minrank);
+		public static GLib.List<Gst.ElementFactory> list_filter (GLib.List<Gst.ElementFactory> list, Gst.Caps caps, Gst.PadDirection direction, bool subsetonly);
+		public static GLib.List<Gst.ElementFactory> list_get_elements (Gst.ElementFactoryListType type, Gst.Rank minrank);
 		public bool list_is_type (Gst.ElementFactoryListType type);
 		[CCode (returns_floating_reference = true)]
 		public static Gst.Element? make (string factoryname, string? name);
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	[Compact]
-	public class ElementFactoryListType {
 	}
 	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_event_ref", unref_function = "gst_event_unref")]
 	public class Event : Gst.MiniObject {
@@ -1614,6 +1610,9 @@ namespace Gst {
 		public weak string klass;
 		public weak string description;
 		public weak string author;
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public struct ElementFactoryListType : uint64 {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public struct FormatDefinition {
