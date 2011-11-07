@@ -339,7 +339,7 @@ public class Vala.MethodCall : Expression {
 				}
 			}
 
-			if (m != null && m.get_type_parameters ().size > 0) {
+			if (m != null) {
 				var ma = (MemberAccess) call;
 				int n_type_params = m.get_type_parameters ().size;
 				int n_type_args = ma.get_type_arguments ().size;
