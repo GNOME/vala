@@ -4424,7 +4424,7 @@ namespace Gtk {
 		public virtual signal void insert_child_anchor (Gtk.TextIter pos, Gtk.TextChildAnchor anchor);
 		[HasEmitter]
 		public virtual signal void insert_pixbuf (Gtk.TextIter pos, Gdk.Pixbuf pixbuf);
-		public virtual signal void insert_text (Gtk.TextIter pos, string text, int length);
+		public virtual signal void insert_text (ref Gtk.TextIter pos, string text, int length);
 		public virtual signal void mark_deleted (Gtk.TextMark mark);
 		public virtual signal void mark_set (Gtk.TextIter location, Gtk.TextMark mark);
 		public virtual signal void modified_changed ();
