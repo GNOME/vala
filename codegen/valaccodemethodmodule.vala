@@ -443,7 +443,11 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 					if (param.direction != ParameterDirection.OUT) {
 						var t = param.variable_type.data_type;
 						if (t != null && (t.is_reference_type () || param.variable_type.is_real_struct_type ())) {
-							create_method_type_check_statement (m, creturn_type, t, !param.variable_type.nullable, get_variable_cname (param.name));
+							var cname = get_variable_cname (param.name);
+							if (param.direction == ParameterDirection.REF && !param.variable_type.is_real_struct_type ()) {
+								cname = "*"+cname;
+							}
+							create_method_type_check_statement (m, creturn_type, t, !param.variable_type.nullable, cname);
 						}
 					} else if (!m.coroutine) {
 						// declare local variable for out parameter to allow assignment even when caller passes NULL
