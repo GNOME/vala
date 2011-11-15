@@ -1508,7 +1508,7 @@ namespace Gtk {
 		[HasEmitter]
 		public virtual signal void remove (Gtk.Widget widget);
 		[HasEmitter]
-		public virtual signal void set_focus_child (Gtk.Widget child);
+		public virtual signal void set_focus_child (Gtk.Widget? child);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class CssProvider : GLib.Object, Gtk.StyleProvider {
@@ -4076,6 +4076,38 @@ namespace Gtk {
 		public void remove_provider (Gtk.StyleProvider provider);
 		public static void remove_provider_for_screen (Gdk.Screen screen, Gtk.StyleProvider provider);
 		public void remove_region (string region_name);
+		[CCode (cname = "gtk_render_activity")]
+		public void render_activity (Cairo.Context cr, double x, double y, double width, double height);
+		[CCode (cname = "gtk_render_arrow")]
+		public void render_arrow (Cairo.Context cr, double angle, double x, double y, double size);
+		[CCode (cname = "gtk_render_background")]
+		public void render_background (Cairo.Context cr, double x, double y, double width, double height);
+		[CCode (cname = "gtk_render_check")]
+		public void render_check (Cairo.Context cr, double x, double y, double width, double height);
+		[CCode (cname = "gtk_render_expander")]
+		public void render_expander (Cairo.Context cr, double x, double y, double width, double height);
+		[CCode (cname = "gtk_render_extension")]
+		public void render_extension (Cairo.Context cr, double x, double y, double width, double height, Gtk.PositionType gap_side);
+		[CCode (cname = "gtk_render_focus")]
+		public void render_focus (Cairo.Context cr, double x, double y, double width, double height);
+		[CCode (cname = "gtk_render_frame")]
+		public void render_frame (Cairo.Context cr, double x, double y, double width, double height);
+		[CCode (cname = "gtk_render_frame_gap")]
+		public void render_frame_gap (Cairo.Context cr, double x, double y, double width, double height, Gtk.PositionType gap_side, double xy0_gap, double xy1_gap);
+		[CCode (cname = "gtk_render_handle")]
+		public void render_handle (Cairo.Context cr, double x, double y, double width, double height);
+		[CCode (cname = "gtk_render_icon")]
+		public void render_icon (Cairo.Context cr, Gdk.Pixbuf pixbuf, double x, double y);
+		[CCode (cname = "gtk_render_icon_pixbuf")]
+		public unowned Gdk.Pixbuf render_icon_pixbuf (Gtk.IconSource source, Gtk.IconSize size);
+		[CCode (cname = "gtk_render_layout")]
+		public void render_layout (Cairo.Context cr, double x, double y, Pango.Layout layout);
+		[CCode (cname = "gtk_render_line")]
+		public void render_line (Cairo.Context cr, double x0, double y0, double x1, double y1);
+		[CCode (cname = "gtk_render_option")]
+		public void render_option (Cairo.Context cr, double x, double y, double width, double height);
+		[CCode (cname = "gtk_render_slider")]
+		public void render_slider (Cairo.Context cr, double x, double y, double width, double height, Gtk.Orientation orientation);
 		public static void reset_widgets (Gdk.Screen screen);
 		public void restore ();
 		public void save ();
@@ -8174,36 +8206,52 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void rc_set_default_files (string filenames);
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Deprecated (replacement = "StyleContext.render_activity", since = "vala-0.16")]
 	public static void render_activity (Gtk.StyleContext context, Cairo.Context cr, double x, double y, double width, double height);
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Deprecated (replacement = "StyleContext.render_arrow", since = "vala-0.16")]
 	public static void render_arrow (Gtk.StyleContext context, Cairo.Context cr, double angle, double x, double y, double size);
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Deprecated (replacement = "StyleContext.render_background", since = "vala-0.16")]
 	public static void render_background (Gtk.StyleContext context, Cairo.Context cr, double x, double y, double width, double height);
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Deprecated (replacement = "StyleContext.render_check", since = "vala-0.16")]
 	public static void render_check (Gtk.StyleContext context, Cairo.Context cr, double x, double y, double width, double height);
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Deprecated (replacement = "StyleContext.render_expander", since = "vala-0.16")]
 	public static void render_expander (Gtk.StyleContext context, Cairo.Context cr, double x, double y, double width, double height);
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Deprecated (replacement = "StyleContext.render_extension", since = "vala-0.16")]
 	public static void render_extension (Gtk.StyleContext context, Cairo.Context cr, double x, double y, double width, double height, Gtk.PositionType gap_side);
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Deprecated (replacement = "StyleContext.render_focus", since = "vala-0.16")]
 	public static void render_focus (Gtk.StyleContext context, Cairo.Context cr, double x, double y, double width, double height);
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Deprecated (replacement = "StyleContext.render_frame", since = "vala-0.16")]
 	public static void render_frame (Gtk.StyleContext context, Cairo.Context cr, double x, double y, double width, double height);
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Deprecated (replacement = "StyleContext.render_frame_gap", since = "vala-0.16")]
 	public static void render_frame_gap (Gtk.StyleContext context, Cairo.Context cr, double x, double y, double width, double height, Gtk.PositionType gap_side, double xy0_gap, double xy1_gap);
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Deprecated (replacement = "StyleContext.render_handle", since = "vala-0.16")]
 	public static void render_handle (Gtk.StyleContext context, Cairo.Context cr, double x, double y, double width, double height);
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Deprecated (replacement = "StyleContext.render_icon", since = "vala-0.16")]
 	public static void render_icon (Gtk.StyleContext context, Cairo.Context cr, Gdk.Pixbuf pixbuf, double x, double y);
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Deprecated (replacement = "StyleContext.render_icon_pixbuf", since = "vala-0.16")]
 	public static unowned Gdk.Pixbuf render_icon_pixbuf (Gtk.StyleContext context, Gtk.IconSource source, Gtk.IconSize size);
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Deprecated (replacement = "StyleContext.render_layout", since = "vala-0.16")]
 	public static void render_layout (Gtk.StyleContext context, Cairo.Context cr, double x, double y, Pango.Layout layout);
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Deprecated (replacement = "StyleContext.render_line", since = "vala-0.16")]
 	public static void render_line (Gtk.StyleContext context, Cairo.Context cr, double x0, double y0, double x1, double y1);
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Deprecated (replacement = "StyleContext.render_option", since = "vala-0.16")]
 	public static void render_option (Gtk.StyleContext context, Cairo.Context cr, double x, double y, double width, double height);
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Deprecated (replacement = "StyleContext.render_slider", since = "vala-0.16")]
 	public static void render_slider (Gtk.StyleContext context, Cairo.Context cr, double x, double y, double width, double height, Gtk.Orientation orientation);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void rgb_to_hsv (double r, double g, double b, double h, double s, double v);
