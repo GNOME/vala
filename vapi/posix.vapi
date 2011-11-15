@@ -1461,7 +1461,7 @@ namespace Posix {
 	[CCode (cheader_filename = "sys/socket.h")]
 	public int socket (int domain, int type, int protocol);
 	[CCode (cheader_filename = "sys/socket.h")]
-	public int socketpair (int domain, int type, int protocol, int[] sv);
+	public int socketpair (int domain, int type, int protocol, [CCode (array_length = false)] int[] sv);
 
     [SimpleType]
     [IntegerType]
