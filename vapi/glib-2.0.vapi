@@ -2184,6 +2184,7 @@ namespace GLib {
 		public static GLib.LogFunc default_handler;
 		public static LogLevelFlags set_fatal_mask (string log_domain, LogLevelFlags log_levels);
 		public static LogLevelFlags set_always_fatal (LogLevelFlags log_levels);
+		public static void remove_handler (string? log_domain, uint handler_id);
 
 		public const string FILE;
 		public const int LINE;
