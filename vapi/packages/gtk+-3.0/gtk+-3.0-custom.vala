@@ -92,6 +92,42 @@ namespace Gtk {
 		public virtual void copy_to (Gtk.Style dest);
 	}
 
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class StyleContext {
+		[CCode (cname = "gtk_render_activity")]
+		public void render_activity (Cairo.Context cr, double x, double y, double width, double height);
+		[CCode (cname = "gtk_render_arrow")]
+		public void render_arrow (Cairo.Context cr, double angle, double x, double y, double size);
+		[CCode (cname = "gtk_render_background")]
+		public void render_background (Cairo.Context cr, double x, double y, double width, double height);
+		[CCode (cname = "gtk_render_check")]
+		public void render_check (Cairo.Context cr, double x, double y, double width, double height);
+		[CCode (cname = "gtk_render_expander")]
+		public void render_expander (Cairo.Context cr, double x, double y, double width, double height);
+		[CCode (cname = "gtk_render_extension")]
+		public void render_extension (Cairo.Context cr, double x, double y, double width, double height, Gtk.PositionType gap_side);
+		[CCode (cname = "gtk_render_focus")]
+		public void render_focus (Cairo.Context cr, double x, double y, double width, double height);
+		[CCode (cname = "gtk_render_frame")]
+		public void render_frame (Cairo.Context cr, double x, double y, double width, double height);
+		[CCode (cname = "gtk_render_frame_gap")]
+		public void render_frame_gap (Cairo.Context cr, double x, double y, double width, double height, Gtk.PositionType gap_side, double xy0_gap, double xy1_gap);
+		[CCode (cname = "gtk_render_handle")]
+		public void render_handle (Cairo.Context cr, double x, double y, double width, double height);
+		[CCode (cname = "gtk_render_icon")]
+		public void render_icon (Cairo.Context cr, Gdk.Pixbuf pixbuf, double x, double y);
+		[CCode (cname = "gtk_render_icon_pixbuf")]
+		public unowned Gdk.Pixbuf render_icon_pixbuf (Gtk.IconSource source, Gtk.IconSize size);
+		[CCode (cname = "gtk_render_layout")]
+		public void render_layout (Cairo.Context cr, double x, double y, Pango.Layout layout);
+		[CCode (cname = "gtk_render_line")]
+		public void render_line (Cairo.Context cr, double x0, double y0, double x1, double y1);
+		[CCode (cname = "gtk_render_option")]
+		public void render_option (Cairo.Context cr, double x, double y, double width, double height);
+		[CCode (cname = "gtk_render_slider")]
+		public void render_slider (Cairo.Context cr, double x, double y, double width, double height, Gtk.Orientation orientation);
+	}
+
 	public delegate void ActionCallback (Action action);
 
 	public delegate void MenuPositionFunc (Gtk.Menu menu, out int x, out int y, out bool push_in);
