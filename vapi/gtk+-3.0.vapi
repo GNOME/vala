@@ -632,11 +632,6 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Compact]
-	public class BindingArg {
-		public GLib.Type arg_type;
-	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	[Compact]
 	public class BindingEntry {
 		public weak Gtk.BindingSet binding_set;
 		public uint destroyed;
@@ -647,9 +642,9 @@ namespace Gtk {
 		public Gdk.ModifierType modifiers;
 		public weak Gtk.BindingEntry set_next;
 		public weak Gtk.BindingSignal signals;
-		public static void add_signal (Gtk.BindingSet binding_set, uint keyval, Gdk.ModifierType modifiers, string signal_name, uint n_args);
+		public static void add_signal (Gtk.BindingSet binding_set, uint keyval, Gdk.ModifierType modifiers, string signal_name, uint n_args, ...);
 		public static GLib.TokenType add_signal_from_string (Gtk.BindingSet binding_set, string signal_desc);
-		public static void add_signall (Gtk.BindingSet binding_set, uint keyval, Gdk.ModifierType modifiers, string signal_name, GLib.SList<Gtk.BindingArg> binding_args);
+		public static void add_signall (Gtk.BindingSet binding_set, uint keyval, Gdk.ModifierType modifiers, string signal_name, GLib.SList<Gtk.BindingArg?> binding_args);
 		public static void remove (Gtk.BindingSet binding_set, uint keyval, Gdk.ModifierType modifiers);
 		public static void skip (Gtk.BindingSet binding_set, uint keyval, Gdk.ModifierType modifiers);
 	}
@@ -671,7 +666,8 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Compact]
 	public class BindingSignal {
-		public weak Gtk.BindingArg args;
+		[CCode (array_length_cname = "n_args")]
+		public weak Gtk.BindingArg[] args;
 		public uint n_args;
 		public weak Gtk.BindingSignal next;
 		public weak string signal_name;
@@ -6216,6 +6212,16 @@ namespace Gtk {
 		public int y;
 		public int width;
 		public int height;
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public struct BindingArg {
+		[CCode (cname = "d.long_data")]
+		public long long_data;
+		[CCode (cname = "d.double_data")]
+		public double double_data;
+		[CCode (cname = "d.string_data")]
+		public weak string string_data;
+		public GLib.Type arg_type;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct Border {
