@@ -25,6 +25,15 @@ namespace Gtk {
 		public Gtk.AccelKey* find (Gtk.AccelGroupFindFunc find_func);
 	}
 
+	public struct BindingArg {
+		[CCode (cname = "d.long_data")]
+		public long long_data;
+		[CCode (cname = "d.double_data")]
+		public double double_data;
+		[CCode (cname = "d.string_data")]
+		public weak string string_data;
+	}
+
 	public struct Allocation {
 		public int x;
 		public int y;
