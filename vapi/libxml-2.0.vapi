@@ -869,10 +869,10 @@ namespace Xml {
 		public static int normalize_uri_path (string path);
 
 		[CCode (cname = "xmlParseURI")]
-		public static URI parse (string str);
+		public static URI? parse (string str);
 
 		[CCode (cname = "xmlParseURIRaw")]
-		public static URI parse_raw (string str, bool raw);
+		public static URI? parse_raw (string str, bool raw);
 
 		[CCode (cname = "xmlParseURIReference")]
 		public int parse_reference (string str);
