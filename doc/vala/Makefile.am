@@ -1,6 +1,8 @@
 NULL =
 
-bookdir=$(datadir)/devhelp/books/vala@PACKAGE_SUFFIX@
+book_name=vala@PACKAGE_SUFFIX@
+
+bookdir=$(datadir)/devhelp/books/$(book_name)
 
 chapter_data = \
 	overview.html \
@@ -21,7 +23,7 @@ chapter_data = \
 built_data = \
 	index.html \
 	$(chapter_data) \
-	vala.devhelp2 \
+	$(book_name).devhelp2 \
 	$(NULL)
 
 if HAVE_XSLTPROC
@@ -36,8 +38,8 @@ index.html: $(book_sources) xhtml.xsl
 
 $(chapter_data): index.html
 
-vala.devhelp2: $(book_sources) devhelp.xsl
-	$(AM_V_GEN)$(XSLTPROC) --xinclude $(srcdir)/devhelp.xsl $(srcdir)/index.xml > vala.devhelp2
+$(book_name).devhelp2: $(book_sources) devhelp.xsl
+	$(AM_V_GEN)$(XSLTPROC) --xinclude $(srcdir)/devhelp.xsl $(srcdir)/index.xml > $(book_name).devhelp2
 
 book_sources = \
 	index.xml \
