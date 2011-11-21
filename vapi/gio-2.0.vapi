@@ -960,7 +960,7 @@ namespace GLib {
 		public void send_to_mainloop_async (owned GLib.SourceFunc func);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
-	public class IOStream : GLib.Object {
+	public abstract class IOStream : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected IOStream ();
 		public void clear_pending ();
@@ -976,8 +976,8 @@ namespace GLib {
 		public async bool splice_async (GLib.IOStream stream2, GLib.IOStreamSpliceFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[NoAccessorMethod]
 		public bool closed { get; set; }
-		public GLib.InputStream input_stream { get; }
-		public GLib.OutputStream output_stream { get; }
+		public abstract GLib.InputStream input_stream { get; }
+		public abstract GLib.OutputStream output_stream { get; }
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	[Compact]
