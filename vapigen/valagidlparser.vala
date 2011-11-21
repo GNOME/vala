@@ -2687,6 +2687,10 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "1") {
 						prop.property_type.nullable = true;
 					}
+				} else if (nv[0] == "abstract") {
+					if (eval (nv[1]) == "1") {
+						prop.is_abstract = true;
+					}
 				}
 			}
 		}
