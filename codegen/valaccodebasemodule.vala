@@ -302,6 +302,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public Class glist_type;
 	public Class gslist_type;
 	public Class gnode_type;
+	public Class gqueue_type;
 	public Class gvaluearray_type;
 	public TypeSymbol gstringbuilder_type;
 	public TypeSymbol garray_type;
@@ -442,6 +443,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			glist_type = (Class) glib_ns.scope.lookup ("List");
 			gslist_type = (Class) glib_ns.scope.lookup ("SList");
 			gnode_type = (Class) glib_ns.scope.lookup ("Node");
+			gqueue_type = (Class) glib_ns.scope.lookup ("Queue");
 			gvaluearray_type = (Class) glib_ns.scope.lookup ("ValueArray");
 			gstringbuilder_type = (TypeSymbol) glib_ns.scope.lookup ("StringBuilder");
 			garray_type = (TypeSymbol) glib_ns.scope.lookup ("Array");
@@ -2835,7 +2837,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public CCodeExpression? get_destroy_func_expression (DataType type, bool is_chainup = false) {
-		if (context.profile == Profile.GOBJECT && (type.data_type == glist_type || type.data_type == gslist_type || type.data_type == gnode_type)) {
+		if (context.profile == Profile.GOBJECT && (type.data_type == glist_type || type.data_type == gslist_type || type.data_type == gnode_type || type.data_type == gqueue_type)) {
 			// create wrapper function to free list elements if necessary
 
 			bool elements_require_free = false;
@@ -2963,8 +2965,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		} else {
 			if (collection_type.data_type == glist_type) {
 				element_free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_list_foreach"));
-			} else {
+			} else if (collection_type.data_type == gslist_type) {
 				element_free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_slist_foreach"));
+			} else {
+				element_free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_queue_foreach"));
 			}
 
 			element_free_call.add_argument (new CCodeIdentifier ("self"));
