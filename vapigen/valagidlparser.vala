@@ -2234,6 +2234,11 @@ public class Vala.GIdlParser : CodeVisitor {
 						return_type = new ArrayType (return_type, 1, return_type.source_reference);
 						m.return_type = return_type;
 					}
+				} else if (nv[0] == "is_pointer") {
+					if (eval (nv[1]) == "1") {
+						return_type = new PointerType (return_type, return_type.source_reference);
+						m.return_type = return_type;
+					}
 				} else if (nv[0] == "throws") {
 					if (eval (nv[1]) == "0") {
 						suppress_throws = true;
@@ -2378,6 +2383,14 @@ public class Vala.GIdlParser : CodeVisitor {
 								p.direction = ParameterDirection.IN;
 							}
 							array_requested = true;
+						}
+					} else if (nv[0] == "is_pointer") {
+						if (eval (nv[1]) == "1") {
+							param_type = new PointerType (param_type, return_type.source_reference);
+							p.variable_type = param_type;
+							if (!out_requested) {
+								p.direction = ParameterDirection.IN;
+							}
 						}
 					} else if (nv[0] == "is_out") {
 						if (eval (nv[1]) == "1") {

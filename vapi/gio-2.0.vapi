@@ -282,7 +282,7 @@ namespace GLib {
 		public uint register_subtree (string object_path, GLib.DBusSubtreeVTable vtable, GLib.DBusSubtreeFlags flags, GLib.DestroyNotify user_data_free_func) throws GLib.Error;
 		public void remove_filter (uint filter_id);
 		public bool send_message (GLib.DBusMessage message, GLib.DBusSendMessageFlags flags, out uint32 out_serial) throws GLib.Error;
-		public async GLib.DBusMessage send_message_with_reply (GLib.DBusMessage message, GLib.DBusSendMessageFlags flags, int timeout_msec, out uint32 out_serial, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async GLib.DBusMessage send_message_with_reply (GLib.DBusMessage message, GLib.DBusSendMessageFlags flags, int timeout_msec, uint32* out_serial = null, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public GLib.DBusMessage send_message_with_reply_sync (GLib.DBusMessage message, GLib.DBusSendMessageFlags flags, int timeout_msec, out uint32 out_serial, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void set_exit_on_close (bool exit_on_close);
 		public uint signal_subscribe (string? sender, string? interface_name, string? member, string? object_path, string? arg0, GLib.DBusSignalFlags flags, owned GLib.DBusSignalCallback callback);
@@ -1693,9 +1693,15 @@ namespace GLib {
 	[Compact]
 	public class UnixCredentialsMessage {
 	}
-	[CCode (cheader_filename = "gio/gio.h")]
-	[Compact]
-	public class UnixFDList {
+	[CCode (cheader_filename = "gio/gunixfdlist.h")]
+	public class UnixFDList : GLib.Object {
+		public UnixFDList ();
+		public int append (int fd) throws GLib.IOError;
+		public UnixFDList.from_array (int[] fds);
+		public int @get (int index) throws GLib.IOError;
+		public unowned int[] peek_fds ();
+		public int[] steal_fds ();
+		public int length { get; }
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class Vfs : GLib.Object {

@@ -90,7 +90,7 @@ g_dbus_connection_send_message.out_serial is_out="1"
 g_dbus_connection_new_for_address async="1"
 g_dbus_connection_new.observer nullable="1" default_value="null"
 g_dbus_connection_send_message_with_reply async="1"
-g_dbus_connection_send_message_with_reply.out_serial is_out="1"
+g_dbus_connection_send_message_with_reply.out_serial is_pointer="1" default_value="null"
 g_dbus_connection_send_message_with_reply_sync.out_serial is_out="1"
 g_dbus_connection_send_message_with_reply_finish transfer_ownership="1"
 g_dbus_connection_send_message_with_reply_sync transfer_ownership="1"
@@ -453,3 +453,5 @@ g_dbus_object_get_interfaces transfer_ownership="1" type_arguments="DBusInterfac
 g_dbus_server_new_sync.observer nullable="1" default_value="null"
 
 GSettingsBackend base_class="GObject"
+
+GUnixFDList hidden="1"
