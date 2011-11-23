@@ -33,6 +33,12 @@ VALAFLAGS="--vapidir $vapidir --disable-warnings --main main --save-temps -X -g 
 VAPIGEN=$topbuilddir/vapigen/vapigen
 VAPIGENFLAGS="--vapidir $vapidir"
 
+# Incorporate the user's CFLAGS. Matters if the user decided to insert
+# -m32 in CFLAGS, for example.
+for cflag in ${CFLAGS} ${CPPFLAGS} ${LDFLAGS}; do
+    VALAFLAGS="${VALAFLAGS} -X ${cflag}"
+done
+
 function testheader() {
 	if [ "$1" = "Packages:" ]; then
 		shift
