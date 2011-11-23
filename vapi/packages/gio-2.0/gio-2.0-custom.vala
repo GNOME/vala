@@ -106,4 +106,15 @@ namespace GLib {
 	[Deprecated (since = "vala-0.12", replacement = "GLib.ContentType.is_unknown")]
 	[CCode (cname = "g_content_type_is_unknown", cheader_filename = "gio/gio.h")]
 	public static bool g_content_type_is_unknown (string type);
+
+	[CCode (cheader_filename = "gio/gunixfdlist.h")]
+	public class UnixFDList : GLib.Object {
+		public UnixFDList ();
+		public UnixFDList.from_array (int[] fds);
+		public int length { get; }
+		public int get (int index) throws GLib.IOError;
+		public unowned int[] peek_fds ();
+		public int[] steal_fds ();
+		public int append (int fd) throws GLib.IOError;
+	}
 }
