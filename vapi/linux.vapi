@@ -1028,8 +1028,7 @@ namespace Linux {
     [CCode (cheader_filename = "execinfo.h")]
     public int backtrace (void* buffer, int size);
 
-    [CCode (cheader_filename = "execinfo.h")]
-    [CCode (array_length = false)]
+    [CCode (cheader_filename = "execinfo.h", array_length = false)]
     public string[] backtrace_symbols (void* buffer, int size);
 
     [CCode (cheader_filename = "execinfo.h")]
