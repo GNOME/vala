@@ -1035,7 +1035,7 @@ namespace GLib {
 		public uint port { get; construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
-	public class InputStream : GLib.Object {
+	public abstract class InputStream : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected InputStream ();
 		public void clear_pending ();
@@ -1046,7 +1046,7 @@ namespace GLib {
 		public bool has_pending ();
 		public bool is_closed ();
 		[CCode (vfunc_name = "read_fn")]
-		public virtual ssize_t read ([CCode (array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.IOError;
+		public abstract ssize_t read ([CCode (array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public bool read_all ([CCode (array_length_type = "gsize")] uint8[] buffer, out size_t bytes_read, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public virtual async ssize_t read_async ([CCode (array_length_type = "gsize")] uint8[] buffer, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public bool set_pending () throws GLib.Error;
@@ -1149,7 +1149,7 @@ namespace GLib {
 		public string service { get; construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
-	public class OutputStream : GLib.Object {
+	public abstract class OutputStream : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected OutputStream ();
 		public void clear_pending ();
@@ -1166,7 +1166,7 @@ namespace GLib {
 		public virtual ssize_t splice (GLib.InputStream source, GLib.OutputStreamSpliceFlags flags, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public virtual async ssize_t splice_async (GLib.InputStream source, GLib.OutputStreamSpliceFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		[CCode (vfunc_name = "write_fn")]
-		public virtual ssize_t write ([CCode (array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.IOError;
+		public abstract ssize_t write ([CCode (array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public bool write_all ([CCode (array_length_type = "gsize")] uint8[] buffer, out size_t bytes_written, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public virtual async ssize_t write_async ([CCode (array_length_type = "gsize")] uint8[] buffer, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 	}
