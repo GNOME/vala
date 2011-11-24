@@ -2014,7 +2014,7 @@ namespace GLib {
 		public IOStatus seek_position (int64 offset, SeekType type) throws IOChannelError;
 		public IOStatus shutdown (bool flush) throws IOChannelError;
 		[CCode (cname = "g_io_create_watch")]
-		public GLib.Source create_watch (IOCondition condition);
+		public IOSource create_watch (IOCondition condition);
 		[CCode (cname = "g_io_add_watch")]
 		public uint add_watch (IOCondition condition, IOFunc func);
 		[CCode (cname = "g_io_add_watch_full")]
@@ -2032,6 +2032,15 @@ namespace GLib {
 		public IOStatus set_encoding (string? encoding) throws IOChannelError;
 		public bool get_close_on_unref ();
 		public void set_close_on_unref (bool do_close);
+	}
+
+	[Compact]
+	[CCode (cname = "GSource")]
+	public class IOSource : Source {
+		[CCode (cname = "g_io_create_watch")]
+		public IOSource (IOChannel channel, IOCondition condition);
+		[CCode (cname = "g_source_set_callback")]
+		public void set_callback ([CCode (type = "GSourceFunc")] owned IOFunc func);
 	}
 
 	[CCode (cprefix = "G_SEEK_", has_type_id = false)]
