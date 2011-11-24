@@ -1283,6 +1283,7 @@ namespace Linux {
 
         [CCode (cname = "struct ifreq", has_type_id = false, cheader_filename = "netinet/in.h,linux/if.h", destroy_function = "")]
         public struct IfReq {
+            [CCode (array_length = false)]
             public char[] ifr_name;
             public Posix.SockAddr ifr_addr;
             public Posix.SockAddr ifr_dstaddr;
