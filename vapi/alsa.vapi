@@ -709,7 +709,7 @@ namespace Alsa {
         public int load ();
 
         [CCode (cname = "snd_mixer_selem_register")]
-        public int register (MixerRegistrationOptions? options = 0, out MixerClass classp = null );
+        public int register (MixerRegistrationOptions? options = null, out MixerClass classp = null );
 
         public MixerElement first_elem ();
         public MixerElement last_elem ();
