@@ -1686,7 +1686,7 @@ namespace Posix {
 		public clock_t ();
 	}
 
-	[CCode (cheader_filename = "time.h")]
+	[CCode (cname = "struct tm", cheader_filename = "time.h", has_type_id = false)]
 	public struct tm {
 		public int tm_sec;
 		public int tm_min;
