@@ -550,6 +550,8 @@ public class Vala.GVariantModule : GAsyncModule {
 			ccode.add_break ();
 		}
 
+		ccode.close();
+
 		ccode.add_return (new CCodeIdentifier ("str"));
 
 		pop_function ();
