@@ -34,39 +34,98 @@ public class Valadoc.CTypeResolver : Visitor {
 		tree.accept (this);
 	}
 
+
+	private string convert_array_to_camelcase (string[] elements) {
+		StringBuilder builder = new StringBuilder ();
+
+		foreach (string element in elements) {
+			builder.append_c (((char[])element)[0].toupper ());
+			builder.append (element.next_char ().down ());
+		}
+
+		return (owned) builder.str;
+	}
+
+	private bool is_capitalized_and_underscored (string name) {
+		unowned string pos;
+
+		unichar c = name.get_char ();
+
+
+		if (c < 'A' || c > 'Z') {
+			return false;
+		}
+
+		bool last_was_underscore = false;
+		for (c = (pos = name).get_char (); c != '\0' ; c = (pos = pos.next_char ()).get_char ()) {
+			if ((c != '_'  && !(c >= 'A' && c <= 'Z')) || (last_was_underscore && c == '_')) {
+				return false;
+			}
+
+			last_was_underscore = (c == '_');
+		}
+
+		return !last_was_underscore;
+	}
+
+	private string? translate_cname (string name) {
+		if (is_capitalized_and_underscored (name)) {
+			string[] segments = name.split ("_");
+			unowned string last_segment = segments[segments.length - 1];
+			if (last_segment == "ERROR") {
+			} else if (last_segment == "TYPE") {
+				segments.resize (segments.length - 1);
+			} else {
+				return null;
+			}
+
+			return convert_array_to_camelcase (segments);
+		}
+
+		int length = name.length;
+		if (length > 5 && name.has_suffix ("Iface")) {
+			return name.substring (0, length - 5);
+		} else if (length > 5 && name.has_suffix ("Class")) {
+			return name.substring (0, length - 5);
+		}
+
+		return null;
+	}
+
 	/**
 	 * Resolves symbols by C-names
 	 *
 	 * @param name a C-name
 	 * @return the resolved node or null
 	 */
-	public Api.Node? resolve_symbol (string _name) {
+	public Api.Node? resolve_symbol (Api.Node? element, string _name) {
 		string name = _name.replace ("-", "_");
+
+		if (element != null && _name.has_prefix (":")) {
+			Item parent = element;
+			while (parent != null && !(parent is Class || parent is Interface)) {
+				parent = parent.parent;
+			}
+
+			if (parent is Class && ((Class) parent).get_cname () != null) {
+				name = ((Class) parent).get_cname () + name;
+			} else if (parent is Interface && ((Interface) parent).get_cname () != null) {
+				name = ((Interface) parent).get_cname () + name;
+			} else {
+				return null;
+			}
+
+		}
 
 		Api.Node? node = nodes.get (name);
 		if (node != null) {
 			return node;
 		}
 
-		var name_length = name.length;
-		if (name_length > 5 && name.has_suffix ("Class")) {
-			return nodes.get (name.substring (0, name_length - 5));
+		string? alternative = translate_cname (_name);
+		if (alternative != null) {
+			return nodes.get (alternative);
 		}
-
-		/*
-		for (int i = 0; name[i] != '\0' ; i++) {
-			if (name[i] == ':' && name[i+1] == ':') {
-				string first_part = name.substring (0, i - 1);
-				string second_part = name.substring (i + 2, -1);
-				string nick = first_part + ":" + second_part;
-				return nodes.get (nick);
-			} else if (name[i] == ':') {
-				string first_part = name.substring (0, i);
-				string second_part = name.substring (i + 1, -1);
-				string nick = first_part + "::" + second_part;
-				return nodes.get (nick);
-			}
-		} */
 
 		return null;
 	}

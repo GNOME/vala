@@ -74,9 +74,9 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		string path = GLib.Path.build_filename ( this.settings.path, pkg_name );
 
 		var rt = DirUtils.create (path, 0777);
-		rt = DirUtils.create (GLib.Path.build_filename ( path, "img" ), 0777);
+		rt = DirUtils.create (GLib.Path.build_filename (path, "img"), 0777);
 
-		GLib.FileStream file = GLib.FileStream.open (GLib.Path.build_filename ( path, "index.htm" ), "w");
+		GLib.FileStream file = GLib.FileStream.open (GLib.Path.build_filename (path, "index.htm"), "w");
 		writer = new Html.MarkupWriter (file);
 		_renderer.set_writer (writer);
 		write_file_header (this.css_path, this.js_path, pkg_name);

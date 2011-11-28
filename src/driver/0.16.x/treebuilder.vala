@@ -82,7 +82,11 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 				foreach (Vala.Comment c in vns.get_comments()) {
 					if (c.source_reference.file == vns.source_reference.file) {
 						Vala.SourceReference pos = c.source_reference;
-						comment = new SourceComment (c.content, file, pos.first_line, pos.first_column, pos.last_line, pos.last_column);
+						if (c is Vala.GirComment) {
+							comment = new GirSourceComment (c.content, file, pos.first_line, pos.first_column, pos.last_line, pos.last_column);
+						} else {
+							comment = new SourceComment (c.content, file, pos.first_line, pos.first_column, pos.last_line, pos.last_column);
+						}
 						break;
 					}
 				}
@@ -290,7 +294,24 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		if (comment != null) {
 			Vala.SourceReference pos = comment.source_reference;
 			SourceFile file = files.get (pos.file);
-			return new SourceComment (comment.content, file, pos.first_line, pos.first_column, pos.last_line, pos.last_column);
+			if (comment is Vala.GirComment) {
+				var tmp = new GirSourceComment (comment.content, file, pos.first_line, pos.first_column, pos.last_line, pos.last_column);
+				if (((Vala.GirComment) comment).return_content != null) {
+					Vala.SourceReference return_pos = ((Vala.GirComment) comment).return_content.source_reference;
+					tmp.return_comment = new SourceComment (((Vala.GirComment) comment).return_content.content, file, return_pos.first_line, return_pos.first_column, return_pos.last_line, return_pos.last_column);
+				}
+
+				Vala.MapIterator<string, Vala.Comment> it = ((Vala.GirComment) comment).parameter_iterator ();
+				while (it.next ()) {
+					Vala.Comment vala_param = it.get_value ();
+					Vala.SourceReference param_pos = vala_param.source_reference;
+					var param_comment = new SourceComment (vala_param.content, file, param_pos.first_line, param_pos.first_column, param_pos.last_line, param_pos.last_column);
+					tmp.add_parameter_content (it.get_key (), param_comment);
+				}
+				return tmp;
+			} else {
+				return new SourceComment (comment.content, file, pos.first_line, pos.first_column, pos.last_line, pos.last_column);
+			}
 		}
 
 		return null;
@@ -326,7 +347,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 	}
 
 	private SourceFile register_source_file (PackageMetaData meta_data, Vala.SourceFile source_file) {
-		SourceFile file = new SourceFile (source_file.get_relative_filename (), source_file.get_csource_filename ());
+		SourceFile file = new SourceFile (meta_data.package, source_file.get_relative_filename (), source_file.get_csource_filename ());
 		files.set (source_file, file);
 
 		meta_data.register_source_file (source_file);
@@ -340,7 +361,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		}
 
 		SourceFile? file = files.get (source_ref.file);
-
 		assert (file != null);
 		return file;
 	}
@@ -534,6 +554,11 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 	// Vala tree creation:
 	//
 
+	private string get_package_name (string path) {
+		string file_name = Path.get_basename (path);
+		return file_name.substring (0, file_name.last_index_of_char ('.'));
+	}
+
 	private bool add_package (Vala.CodeContext context, string pkg) {
 		// ignore multiple occurences of the same package
 		if (context.has_package (pkg)) {
@@ -636,8 +661,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 
 					context.add_source_file (source_file);
 				} else if (source.has_suffix (".vapi") || source.has_suffix (".gir")) {
-					string file_name = Path.get_basename (source);
-					file_name = file_name.substring (0, file_name.last_index_of_char ('.'));
+					string file_name = get_package_name (source);
 
 					var vfile = new Vala.SourceFile (context, Vala.SourceFileType.PACKAGE, rpath);
 					context.add_source_file (vfile);
@@ -1124,6 +1148,15 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 
 		if (context == null) {
 			return null;
+		}
+
+		// TODO: Register all packages here
+		// register packages included by gir-files
+		foreach (Vala.SourceFile vfile in context.get_source_files ()) {
+			if (vfile.file_type == Vala.SourceFileType.PACKAGE && vfile.get_nodes ().size > 0 && files.contains (vfile) == false) {
+				Package vdpkg = new Package (get_package_name (vfile.filename), true, null);
+				register_source_file (register_package (vdpkg), vfile);
+			}
 		}
 
 		context.accept(this);

@@ -47,7 +47,11 @@ public class Valadoc.Taglets.Link : InlineTaglet {
 	public override void check (Api.Tree api_root, Api.Node container, ErrorReporter reporter, Settings settings) {
 		if (symbol_name.has_prefix ("c::")) {
 			_symbol_name = _symbol_name.substring (3);
-			_symbol = api_root.search_symbol_cstr (symbol_name);
+			_symbol = api_root.search_symbol_cstr (container, symbol_name);
+			if (_symbol == null) {
+				
+			}
+
 			if (_symbol != null) {
 				symbol_name = _symbol.name;
 			}

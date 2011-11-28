@@ -143,21 +143,25 @@ public class Valadoc.Api.Tree {
 		// absolute
 		foreach (Package package in packages) {
 			// search in root namespace
-			node = search_relative_to (package.find_by_name (""), path);
-			if (node != null) {
-				return node;
+
+			Node? global = package.find_by_name ("");
+			if (global != null) {
+				node = search_relative_to (global, path);
+				if (node != null) {
+					return node;
+				}
 			}
 		}
 
 		return null;
 	}
 
-	public Node? search_symbol_cstr (string cname) {
+	public Node? search_symbol_cstr (Node? element, string cname) {
 		if (_cresolver == null) {
 			_cresolver = new CTypeResolver (this);
 		}
 
-		return _cresolver.resolve_symbol (cname);
+		return _cresolver.resolve_symbol (element, cname);
 	}
 
 	public Node? search_symbol_str (Node? element, string symname) {

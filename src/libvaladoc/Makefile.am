@@ -36,11 +36,14 @@ libvaladoc_la_VALASOURCES = \
 	documentation/documentationparser.vala \
 	documentation/wiki.vala \
 	documentation/wikiscanner.vala \
+	documentation/gtkdoccommentparser.vala \
+	documentation/gtkdoccommentscanner.vala \
 	importer/documentationimporter.vala \
 	importer/valadocdocumentationimporter.vala \
 	importer/valadocdocumentationimporterscanner.vala \
 	api/symbolaccessibility.vala \
 	api/sourcecomment.vala \
+	api/girsourcecomment.vala \
 	api/attributeargument.vala \
 	api/attribute.vala \
 	api/array.vala \

@@ -24,6 +24,11 @@
  * Represents a source file
  */
 public class Valadoc.Api.SourceFile : Object {
+	public Package package {
+		private set;
+		get;
+	}
+
 	public string relative_path {
 		private set;
 		get;
@@ -38,9 +43,10 @@ public class Valadoc.Api.SourceFile : Object {
 		return Path.get_basename (relative_path);
 	}
 
-	public SourceFile (string relative_path, string? relative_c_path) {
+	public SourceFile (Package package, string relative_path, string? relative_c_path) {
 		this.relative_c_path = relative_c_path;
 		this.relative_path = relative_path;
+		this.package = package;
 	}
 }
 

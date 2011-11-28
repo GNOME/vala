@@ -116,7 +116,7 @@ public class Valadoc.Importer.ValadocDocumentationImporter : DocumentationImport
 		Api.Node? symbol = null;
 
 		if (symbol_name.has_prefix ("c::")) {
-			symbol = tree.search_symbol_cstr (symbol_name.substring (3));
+			symbol = tree.search_symbol_cstr (null, symbol_name.substring (3));
 		} else {
 			symbol = tree.search_symbol_str (null, symbol_name);
 		}

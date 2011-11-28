@@ -43,8 +43,12 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		_comment_parser = new Parser (_settings, _comment_scanner, _reporter);
 		_comment_scanner.set_parser (_comment_parser);
 
+		gtkdoc_parser = new Gtkdoc.Parser (settings, reporter, tree, modules);
+
 		init_valadoc_rules ();
 	}
+
+	private Gtkdoc.Parser gtkdoc_parser;
 
 	private Settings _settings;
 	private ErrorReporter _reporter;
@@ -61,7 +65,12 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 	private Scanner _scanner;
 
 	public Comment? parse (Api.Node element, Api.SourceComment comment) {
-		return parse_comment_str (element, comment.content, comment.file.get_name (), comment.first_line, comment.first_column);
+		if (comment is Api.GirSourceComment) {
+			Comment doc_comment = gtkdoc_parser.parse (element, (Api.GirSourceComment) comment);
+			return doc_comment;
+		} else {
+			return parse_comment_str (element, comment.content, comment.file.get_name (), comment.first_line, comment.first_column);
+		}
 	}
 
 	public Comment? parse_comment_str (Api.Node element, string content, string filename, int first_line, int first_column) {

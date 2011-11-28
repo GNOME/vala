@@ -273,7 +273,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 	}
 
 	private SourceFile register_source_file (PackageMetaData meta_data, Vala.SourceFile source_file) {
-		SourceFile file = new SourceFile (source_file.get_relative_filename (), source_file.get_csource_filename ());
+		SourceFile file = new SourceFile (meta_data.package, source_file.get_relative_filename (), source_file.get_csource_filename ());
 		files.set (source_file, file);
 
 		meta_data.register_source_file (source_file);

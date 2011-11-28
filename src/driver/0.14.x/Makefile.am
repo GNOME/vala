@@ -2,8 +2,6 @@ NULL =
 
 VERSIONED_VAPI_DIR=`pkg-config libvala-0.14 --variable vapidir`
 
-
-
 AM_CFLAGS =  -g \
 	-DPACKAGE_ICONDIR=\"$(datadir)/valadoc/icons/\" \
 	-I ../../libvaladoc/ \

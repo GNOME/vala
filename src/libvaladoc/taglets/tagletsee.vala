@@ -41,7 +41,7 @@ public class Valadoc.Taglets.See : ContentElement, Taglet, Block {
 	public override void check (Api.Tree api_root, Api.Node container, ErrorReporter reporter, Settings settings) {
 		if (symbol_name.has_prefix ("c::")) {
 			symbol_name = symbol_name.substring (3);
-			symbol = api_root.search_symbol_cstr (symbol_name);
+			symbol = api_root.search_symbol_cstr (container, symbol_name);
 			if (symbol != null) {
 				symbol_name = _symbol.name;
 			}
