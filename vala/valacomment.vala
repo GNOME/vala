@@ -34,7 +34,7 @@ public class Vala.Comment {
 	/**
 	 * The text describing the referenced source code.
 	 */
-	public virtual string content { set; get; }
+	public string content { set; get; }
 
 	/**
 	 * References the location in the source file where this code node has
