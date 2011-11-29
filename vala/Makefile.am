@@ -40,6 +40,7 @@ libvalacore_la_VALASOURCES = \
 	valacodevisitor.vala \
 	valacodewriter.vala \
 	valacomment.vala \
+	valagircomment.vala \
 	valaconditionalexpression.vala \
 	valaconstant.vala \
 	valaconstructor.vala \

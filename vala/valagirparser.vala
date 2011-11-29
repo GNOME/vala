@@ -489,6 +489,7 @@ public class Vala.GirParser : CodeVisitor {
 		public ArrayList<Node> members = new ArrayList<Node> (); // guarantees fields order
 		public HashMap<string, ArrayList<Node>> scope = new HashMap<string, ArrayList<Node>> (str_hash, str_equal);
 
+		public GirComment comment;
 		public Symbol symbol;
 		public bool new_symbol;
 		public bool merged;
@@ -1168,10 +1169,6 @@ public class Vala.GirParser : CodeVisitor {
 
 	void next () {
 		current_token = reader.read_token (out begin, out end);
-
-		// Skip *all* <doc> tags
-		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "doc")
-			skip_element();
 	}
 
 	void start_element (string name) {
@@ -1925,6 +1922,13 @@ public class Vala.GirParser : CodeVisitor {
 		// not enough information, symbol will be created while processing the tree
 
 		next ();
+
+		if (current.comment == null) {
+			current.comment = parse_symbol_doc ();
+		} else {
+			parse_symbol_doc ();
+		}
+
 		bool no_array_length = false;
 		current.base_type = element_get_type (parse_type (null, null, true), true, ref no_array_length);
 
@@ -1949,6 +1953,44 @@ public class Vala.GirParser : CodeVisitor {
 			// enum values may not consist solely of digits
 			common_prefix = common_prefix.substring (0, common_prefix.length - 1);
 		}
+	}
+
+	GirComment? parse_symbol_doc () {
+		if (reader.name != "doc") {
+			return null;
+		}
+
+		start_element ("doc");
+		next ();
+
+		GirComment? comment = null;
+
+		if (current_token == MarkupTokenType.TEXT) {
+			comment = new GirComment (reader.content, current.source_reference);
+			next ();
+		}
+
+		end_element ("doc");
+		return comment;
+	}
+
+	Comment? parse_doc () {
+		if (reader.name != "doc") {
+			return null;
+		}
+
+		start_element ("doc");
+		next ();
+
+		Comment? comment = null;
+
+		if (current_token == MarkupTokenType.TEXT) {
+			comment = new Comment (reader.content, current.source_reference);
+			next ();
+		}
+
+		end_element ("doc");
+		return comment;
 	}
 
 	void parse_enumeration (string element_name = "enumeration", bool error_domain = false) {
@@ -1976,7 +2018,9 @@ public class Vala.GirParser : CodeVisitor {
 		string common_prefix = null;
 
 		next ();
-		
+
+		sym.comment = parse_symbol_doc ();
+
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (!push_metadata ()) {
 				skip_element ();
@@ -2026,6 +2070,8 @@ public class Vala.GirParser : CodeVisitor {
 		current.symbol = ev;
 		next ();
 
+		ev.comment = parse_symbol_doc ();
+
 		pop_node ();
 		end_element ("member");
 	}
@@ -2044,16 +2090,21 @@ public class Vala.GirParser : CodeVisitor {
 		current.symbol = ec;
 		next ();
 
+		ec.comment = parse_symbol_doc ();
+
 		pop_node ();
 		end_element ("member");
 	}
 
-	DataType parse_return_value (out string? ctype = null, out int array_length_idx = null, out bool no_array_length = null, out bool array_null_terminated = null) {
+	DataType parse_return_value (out string? ctype = null, out int array_length_idx = null, out bool no_array_length = null, out bool array_null_terminated = null, out Comment? comment = null) {
 		start_element ("return-value");
 
 		string transfer = reader.get_attribute ("transfer-ownership");
 		string allow_none = reader.get_attribute ("allow-none");
 		next ();
+
+		comment = parse_doc ();
+
 		var transfer_elements = transfer != "container";
 		var type = parse_type (out ctype, out array_length_idx, transfer_elements, out no_array_length, out array_null_terminated);
 		if (transfer == "full" || transfer == "container") {
@@ -2067,7 +2118,7 @@ public class Vala.GirParser : CodeVisitor {
 		return type;
 	}
 
-	Parameter parse_parameter (out int array_length_idx = null, out int closure_idx = null, out int destroy_idx = null, out string? scope = null, string? default_name = null) {
+	Parameter parse_parameter (out int array_length_idx = null, out int closure_idx = null, out int destroy_idx = null, out string? scope = null, out Comment? comment, string? default_name = null) {
 		Parameter param;
 
 		array_length_idx = -1;
@@ -2109,6 +2160,9 @@ public class Vala.GirParser : CodeVisitor {
 		}
 
 		next ();
+
+		comment = parse_doc ();
+
 		if (reader.name == "varargs") {
 			start_element ("varargs");
 			next ();
@@ -2352,6 +2406,9 @@ public class Vala.GirParser : CodeVisitor {
 
 		bool first_field = true;
 		next ();
+
+		st.comment = parse_symbol_doc ();
+
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (!push_metadata ()) {
 				if (first_field && reader.name == "field") {
@@ -2411,6 +2468,9 @@ public class Vala.GirParser : CodeVisitor {
 		cl.external = true;
 
 		next ();
+
+		cl.comment = parse_symbol_doc ();
+
 		var first_field = true;
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (!push_metadata ()) {
@@ -2489,6 +2549,9 @@ public class Vala.GirParser : CodeVisitor {
 
 
 		next ();
+
+		iface.comment = parse_symbol_doc ();
+
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (!push_metadata ()) {
 				skip_element ();
@@ -2531,12 +2594,16 @@ public class Vala.GirParser : CodeVisitor {
 
 		string allow_none = reader.get_attribute ("allow-none");
 		next ();
+
+		var comment = parse_symbol_doc ();
+
 		var type = parse_type ();
 		bool no_array_length = true;
 		type = element_get_type (type, true, ref no_array_length);
 
 		var field = new Field (current.name, type, null, current.source_reference);
 		field.access = SymbolAccessibility.PUBLIC;
+		field.comment = comment;
 		if (type is ArrayType) {
 			if (no_array_length) {
 				field.set_attribute_bool ("CCode", "array_length", false);
@@ -2558,11 +2625,15 @@ public class Vala.GirParser : CodeVisitor {
 		bool is_abstract = metadata.get_bool (ArgumentType.ABSTRACT, current.parent.symbol is Interface);
 
 		next ();
+
+		var comment = parse_symbol_doc ();
+
 		bool no_array_length;
 		bool array_null_terminated;
 		var type = parse_type (null, null, false, out no_array_length, out array_null_terminated);
 		type = element_get_type (type, true, ref no_array_length);
 		var prop = new Property (current.name, type, null, null, current.source_reference);
+		prop.comment = comment;
 		prop.access = SymbolAccessibility.PUBLIC;
 		prop.external = true;
 		prop.is_abstract = is_abstract;
@@ -2614,13 +2685,23 @@ public class Vala.GirParser : CodeVisitor {
 		string invoker = reader.get_attribute ("invoker");
 
 		next ();
+
+		var comment = parse_symbol_doc ();
+
 		DataType return_type;
 		string return_ctype = null;
 		int return_array_length_idx = -1;
 		bool return_no_array_length = false;
 		bool return_array_null_terminated = false;
 		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "return-value") {
-			return_type = parse_return_value (out return_ctype, out return_array_length_idx, out return_no_array_length, out return_array_null_terminated);
+			Comment? return_comment;
+			return_type = parse_return_value (out return_ctype, out return_array_length_idx, out return_no_array_length, out return_array_null_terminated, out return_comment);
+			if (return_comment != null) {
+				if (comment == null) {
+					comment = new GirComment (null, current.source_reference);
+				}
+				comment.return_content = return_comment;
+			}
 		} else {
 			return_type = new VoidType ();
 		}
@@ -2654,6 +2735,7 @@ public class Vala.GirParser : CodeVisitor {
 		}
 
 		s.access = SymbolAccessibility.PUBLIC;
+		s.comment = comment;
 		s.external = true;
 
 		if (s is Method) {
@@ -2741,8 +2823,9 @@ public class Vala.GirParser : CodeVisitor {
 				int array_length_idx, closure_idx, destroy_idx;
 				string scope;
 				string default_param_name = null;
+				Comment? param_comment;
 				default_param_name = "arg%d".printf (parameters.size);
-				var param = parse_parameter (out array_length_idx, out closure_idx, out destroy_idx, out scope, default_param_name);
+				var param = parse_parameter (out array_length_idx, out closure_idx, out destroy_idx, out scope, out param_comment, default_param_name);
 				if (array_length_idx != -1) {
 					current.array_length_parameters.add (array_length_idx);
 				}
@@ -2751,6 +2834,14 @@ public class Vala.GirParser : CodeVisitor {
 				}
 				if (destroy_idx != -1) {
 					current.destroy_parameters.add (destroy_idx);
+				}
+				if (param_comment != null) {
+					if (comment == null) {
+						comment = new GirComment (null, s.source_reference);
+						s.comment = comment;
+					}
+
+					comment.add_content_for_parameter ((param.ellipsis)? "..." : param.name, param_comment);
 				}
 
 				var info = new ParameterInfo (param, array_length_idx, closure_idx, destroy_idx);
@@ -2810,6 +2901,9 @@ public class Vala.GirParser : CodeVisitor {
 		cl.external = true;
 
 		next ();
+
+		cl.comment = parse_symbol_doc ();
+
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (!push_metadata ()) {
 				skip_element ();
@@ -2854,6 +2948,9 @@ public class Vala.GirParser : CodeVisitor {
 		st.external = true;
 
 		next ();
+
+		st.comment = parse_symbol_doc ();
+
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (!push_metadata ()) {
 				skip_element ();
@@ -2888,10 +2985,14 @@ public class Vala.GirParser : CodeVisitor {
 		push_node (element_get_name (), false);
 
 		next ();
+
+		var comment = parse_symbol_doc ();
+
 		var type = parse_type ();
 		var c = new Constant (current.name, type, null, current.source_reference);
 		current.symbol = c;
 		c.access = SymbolAccessibility.PUBLIC;
+		c.comment = comment;
 		c.external = true;
 
 		pop_node ();
@@ -3034,6 +3135,7 @@ public class Vala.GirParser : CodeVisitor {
 				// threat target="none" as a new struct
 				st.base_type = base_type;
 			}
+			st.comment = alias.comment;
 			st.external = true;
 			st.set_simple_type (simple_type);
 			alias.symbol = st;
@@ -3043,6 +3145,7 @@ public class Vala.GirParser : CodeVisitor {
 			if (base_type != null) {
 				cl.add_base_type (base_type);
 			}
+			cl.comment = alias.comment;
 			cl.external = true;
 			alias.symbol = cl;
 		}
