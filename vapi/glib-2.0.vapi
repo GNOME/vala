@@ -2685,7 +2685,18 @@ namespace GLib {
 	[CCode (has_target = false)]
 	public delegate void VoidFunc ();
 
+	[Deprecated (replacement = "format_size")]
 	public string format_size_for_display (int64 size);
+
+	[CCode (cname = "g_format_size_full")]
+	public string format_size (uint64 size, FormatSizeFlags flags = FormatSizeFlags.DEFAULT);
+
+	[CCode (cprefix = "G_FORMAT_SIZE_", has_type_id = false)]
+	public enum FormatSizeFlags {
+		DEFAULT,
+		LONG_FORMAT,
+		IEC_UNITS
+	}
 
 	/* Lexical Scanner */
 	[CCode (has_target = false)]
