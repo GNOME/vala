@@ -84,5 +84,14 @@ public abstract class Vala.Map<K,V> {
 	 * read-only collections.
 	 */
 	public abstract void clear ();
+
+	/**
+	 * Returns a Iterator that can be used for simple iteration over a
+	 * map.
+	 *
+	 * @return a Iterator that can be used for simple iteration over a
+	 *         map
+	 */
+	public abstract MapIterator<K,V> map_iterator ();
 }
 

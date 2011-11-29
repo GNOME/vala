@@ -74,6 +74,10 @@ public class Vala.HashMap<K,V> : Map<K,V> {
 		return new ValueCollection<K,V> (this);
 	}
 
+	public override Vala.MapIterator<K,V> map_iterator () {
+		return new MapIterator<K,V> (this);
+	}
+
 	private Node<K,V>** lookup_node (K key) {
 		uint hash_value = _key_hash_func (key);
 		Node<K,V>** node = &_nodes[hash_value % _array_size];
@@ -221,6 +225,49 @@ public class Vala.HashMap<K,V> : Map<K,V> {
 
 		public override bool contains (K key) {
 			return _map.contains (key);
+		}
+	}
+
+	private class MapIterator<K,V> : Vala.MapIterator<K, V> {
+		public HashMap<K,V> map {
+			set {
+				_map = value;
+				_stamp = _map._stamp;
+			}
+		}
+
+		private HashMap<K,V> _map;
+		private int _index = -1;
+		private weak Node<K,V> _node;
+
+		// concurrent modification protection
+		private int _stamp;
+
+		public MapIterator (HashMap map) {
+			this.map = map;
+		}
+
+		public override bool next () {
+			if (_node != null) {
+				_node = _node.next;
+			}
+			while (_node == null && _index + 1 < _map._array_size) {
+				_index++;
+				_node = _map._nodes[_index];
+			}
+			return (_node != null);
+		}
+
+		public override K? get_key () {
+			assert (_stamp == _map._stamp);
+			assert (_node != null);
+			return _node.key;
+		}
+
+		public override V? get_value () {
+			assert (_stamp == _map._stamp);
+			assert (_node != null);
+			return _node.value;
 		}
 	}
 
