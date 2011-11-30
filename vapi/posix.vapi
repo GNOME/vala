@@ -1997,9 +1997,9 @@ namespace Posix {
 	}
 
 	[CCode (cheader_filename = "termios.h")]
-	public int tcgetattr (int fd, termios termios_p);
+	public int tcgetattr (int fd, ref termios termios_p);
 	[CCode (cheader_filename = "termios.h")]
-	public int tcsetattr (int fd, int optional_actions, termios termios_p);
+	public int tcsetattr (int fd, int optional_actions, ref termios termios_p);
 	[CCode (cheader_filename = "termios.h")]
 	public int tcsendbreak (int fd, int duration);
 	[CCode (cheader_filename = "termios.h")]
@@ -2009,17 +2009,17 @@ namespace Posix {
 	[CCode (cheader_filename = "termios.h")]
 	public int tcflow (int fd, int action);
 	[CCode (cheader_filename = "termios.h")]
-	public void cfmakeraw (termios termios_p);
+	public void cfmakeraw (ref termios termios_p);
 	[CCode (cheader_filename = "termios.h")]
-	public speed_t cfgetispeed (termios termios_p);
+	public speed_t cfgetispeed (ref termios termios_p);
 	[CCode (cheader_filename = "termios.h")]
-	public speed_t cfgetospeed (termios termios_p);
+	public speed_t cfgetospeed (ref termios termios_p);
 	[CCode (cheader_filename = "termios.h")]
-	public int cfsetispeed (termios termios_p, speed_t speed);
+	public int cfsetispeed (ref termios termios_p, speed_t speed);
 	[CCode (cheader_filename = "termios.h")]
-	public int cfsetospeed (termios termios_p, speed_t speed);
+	public int cfsetospeed (ref termios termios_p, speed_t speed);
 	[CCode (cheader_filename = "termios.h")]
-	public int cfsetspeed (termios termios, speed_t speed);
+	public int cfsetspeed (ref termios termios, speed_t speed);
 
 	//c_iflag
 	[CCode (cheader_filename = "termios.h")]
@@ -2258,17 +2258,17 @@ namespace Posix {
 	}
 
 	[CCode (cheader_filename = "sys/select.h")]
-	public int select (int nfds, fd_set? readfds, fd_set? writefds, fd_set? exceptfds, timeval timeout);
+	public int select (int nfds, ref fd_set? readfds, ref fd_set? writefds, ref fd_set? exceptfds, timeval timeout);
 	[CCode (cheader_filename = "sys/select.h")]
-	public void FD_CLR (int fd, fd_set @set);
+	public void FD_CLR (int fd, ref fd_set @set);
 	[CCode (cheader_filename = "sys/select.h")]
-	public int  FD_ISSET (int fd, fd_set @set);
+	public int  FD_ISSET (int fd, ref fd_set @set);
 	[CCode (cheader_filename = "sys/select.h")]
-	public void FD_SET (int fd, fd_set @set);
+	public void FD_SET (int fd, ref fd_set @set);
 	[CCode (cheader_filename = "sys/select.h")]
 	public void FD_ZERO (fd_set @set);
 	[CCode (cheader_filename = "sys/select.h")]
-	public int pselect (int nfds, fd_set? readfds, fd_set? writefds, fd_set? exceptfds, timespec timeout, sigset_t sigmask);
+	public int pselect (int nfds, ref fd_set? readfds, ref fd_set? writefds, ref fd_set? exceptfds, timespec timeout, sigset_t sigmask);
 
 	// sys/mman.h - Posix mmap(), munmap(), mprotect()
 	[CCode (cheader_filename = "sys/mman.h")]
