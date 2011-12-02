@@ -1274,19 +1274,6 @@ namespace GnuTLS
 	[CCode (cheader_filename = "gnutls/openpgp.h")]
 	namespace OpenPGP
 	{
-		/**
-		* gnutls_openpgp_recv_key_func - Callback prototype to get OpenPGP keys
-		* @session: a TLS session
-		* @keyfpr: key fingerprint
-		* @keyfpr_length: length of key fingerprint
-		* @key: output key.
-		*
-		* A callback of this type is used to retrieve OpenPGP keys.  Only
-		* useful on the server, and will only be used if the peer send a key
-		* fingerprint instead of a full key.  See also
-		* gnutls_openpgp_set_recv_key_function().
-		*
-		*/
 		[CCode (has_target = false)]
 		public delegate int RecvKeyFunc (Session session, uint8[] keyfpr, out Datum key);
 

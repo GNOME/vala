@@ -24,24 +24,9 @@
 [CCode (cprefix = "", lower_case_cprefix = "", cheader_filename = "graphviz/gvc.h")]
 namespace Gvc {
 
-	/**
-	 * Low-level initialization function for the graphviz library, used only if
-	 * you need to explicitly control the sizes of graph, node and edge objects.
-	 *
-	 * Note: It's not necessary to call initlib() if you already called aginit()
-	 *       because aginit() makes a call to aginitlib() internally.
-	 */
 	[CCode (cname = "aginitlib", cheader_filename="gvc.h")]
 	public void initlib ( size_t graphinfo, size_t nodeinfo, size_t  edgeinfo);
 
-	/**
-	 * You must call aginit() before using the graphviz API. However, note that
-	 * both gvContext() and gvParseArgs() will call aginit() internally if necessary.
-	 * It's safe to call aginit() multiple times.
-	 *
-	 * For more information of Graphviz initialization, see documention at:
-	 * http://graphviz.org/pdf/libguide.pdf
-	 */
 	[CCode (cname = "aginit")]
 	public void init ();
 
@@ -140,7 +125,6 @@ namespace Gvc {
 		[CCode (cname = "agedge")]
 		public Edge create_edge (Node from, Node to);
 
-		/** Note: name set to "null" creates an anonymous subgraph. */
 		[CCode (cname = "agsubg")]
 		public unowned Graph create_subgraph ([CCode (type = "char*")] string? name);
 
@@ -159,7 +143,6 @@ namespace Gvc {
 		[CCode (cname = "agparent")]
 		public Graph get_parent_graph ();
 
-		/** Note: agclose() is also allowed for subgraphs and has the same effect as agdelsubg(). */
 		[CCode (cname = "agdelsubg")]
 		public int delete_subgraph (Graph subgraph);
 
@@ -189,13 +172,6 @@ namespace Gvc {
 
 	}
 
-	/**
-	 * Graphviz has this concept of "referenced counted strings" to save memory.
-	 * In addition, there is a special type of string in Graphviz called an "HTML string".
-	 * More information about graphviz "HTML strings" can be found at:
-	 * http://www.graphviz.org/doc/info/shapes.html#html
-	 * And also near the end of page 9 in:  http://graphviz.org/pdf/libguide.pdf
-	 */
 	[CCode (cname = "char", copy_function = "agdupstr_html", free_function = "agstrfree")]
 	public class HtmlString : string {
 		[CCode (cname = "agstrdup_html")]

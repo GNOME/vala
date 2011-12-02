@@ -101,15 +101,15 @@ namespace Netlink {
 
     [CCode (cprefix = "NLA_", cname = "int", cheader_filename = "netlink/attr.h")]
     public enum AttributeType {
-        UNSPEC,     /**< Unspecified type, binary data chunk */
-        U8,         /**< 8 bit integer */
-        U16,        /**< 16 bit integer */
-        U32,        /**< 32 bit integer */
-        U64,        /**< 64 bit integer */
-        STRING,     /**< NUL terminated character string */
-        FLAG,       /**< Flag */
-        MSECS,      /**< Micro seconds (64bit) */
-        NESTED,     /**< Nested attributes */
+        UNSPEC,
+        U8,
+        U16,
+        U32,
+        U64,
+        STRING,
+        FLAG,
+        MSECS,
+        NESTED,
         TYPE_MAX
     }
 
@@ -153,31 +153,31 @@ namespace Netlink {
 
     [CCode (cname = "enum nl_cb_action", cprefix = "NL_", cheader_filename = "netlink/netlink.h")]
     public enum CallbackAction {
-        OK,         //   Proceed with whatever comes next.
-        SKIP,       //   Skip this message.
-        STOP,       //   Stop parsing altogether and discard remaining messages.
+        OK,
+        SKIP,
+        STOP,
     }
 
     [CCode (cname = "enum nl_cb_kind", cprefix = "NL_CB_", cheader_filename = "netlink/netlink.h")]
     public enum CallbackKind {
-        DEFAULT,    // 	 Default handlers (quiet).
-        VERBOSE,    // 	 Verbose default handlers (error messages printed).
-        DEBUG,      // 	 Debug handlers for debugging.
-        CUSTOM,     // 	 Customized handler specified by the user.
+        DEFAULT,
+        VERBOSE,
+        DEBUG,
+        CUSTOM,
     }
 
     [CCode (cname = "enum nl_cb_type", cprefix = "NL_CB_", cheader_filename = "netlink/netlink.h")]
     public enum CallbackType {
-        VALID,      // 	 Message is valid.
-        FINISH,     // 	 Last message in a series of multi part messages received.
-        OVERRUN,    // 	 Report received that data was lost.
-        SKIPPED,    // 	 Message wants to be skipped.
-        ACK,        // 	 Message is an acknowledge.
-        MSG_IN,     // 	 Called for every message received.
-        MSG_OUT,    // 	 Called for every message sent out except for nl_sendto().
-        INVALID,    // 	 Message is malformed and invalid.
-        SEQ_CHECK,  // 	 Called instead of internal sequence number checking.
-        SEND_ACK,   // 	 Sending of an acknowledge message has been requested.
+        VALID,
+        FINISH,
+        OVERRUN,
+        SKIPPED,
+        ACK,
+        MSG_IN,
+        MSG_OUT,
+        INVALID,
+        SEQ_CHECK,
+        SEND_ACK,
     }
 
     [Compact]
@@ -305,10 +305,10 @@ namespace Netlink {
 
     [CCode (cprefix = "NL_DUMP_", cname = "int", cheader_filename = "netlink/types.h")]
     public enum DumpType {
-        LINE,           /**< Dump object briefly on one line */
-        DETAILS,        /**< Dump all attributes but no statistics */
-        STATS,          /**< Dump all attributes including statistics */
-        ENV,            /**< Dump all attribtues as env variables */
+        LINE,
+        DETAILS,
+        STATS,
+        ENV,
     }
 
     [CCode (cname = "struct nl_dump_params", free_function = "", cheader_filename = "netlink/types.h")]
