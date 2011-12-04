@@ -3289,6 +3289,80 @@ namespace Linux {
     }
 
     /*
+     * SPI (Serial Peripheral Interface)
+     */
+
+    [CCode (cprefix = "", lower_case_cprefix = "")]
+    namespace Spi {
+
+        [CCode (cname = "spi_ioc_transfer", has_type_id = false, cheader_filename = "linux/spi/spidev.h")]
+        public struct IocTransfer {
+            public uint64  tx_buf;
+            public uint64  rx_buf;
+
+            public uint32  len;
+            public uint32  speed_hz;
+
+            public uint16  delay_usecs;
+            public uint8   bits_per_word;
+            public uint8   cs_change;
+            public uint32  pad;
+        }
+
+        /* mode constants */
+        [CCode (cheader_filename = "linux/spi/spidev.h")]
+        public const int SPI_CPHA;
+        [CCode (cheader_filename = "linux/spi/spidev.h")]
+        public const int SPI_CPOL;
+
+        [CCode (cheader_filename = "linux/spi/spidev.h")]
+        public const int SPI_MODE_0;
+        [CCode (cheader_filename = "linux/spi/spidev.h")]
+        public const int SPI_MODE_1;
+        [CCode (cheader_filename = "linux/spi/spidev.h")]
+        public const int SPI_MODE_2;
+        [CCode (cheader_filename = "linux/spi/spidev.h")]
+        public const int SPI_MODE_3;
+
+        [CCode (cheader_filename = "linux/spi/spidev.h")]
+        public const int SPI_CS_HIGH;
+        [CCode (cheader_filename = "linux/spi/spidev.h")]
+        public const int SPI_LSB_FIRST;
+        [CCode (cheader_filename = "linux/spi/spidev.h")]
+        public const int SPI_3WIRE;
+        [CCode (cheader_filename = "linux/spi/spidev.h")]
+        public const int SPI_LOOP;
+        [CCode (cheader_filename = "linux/spi/spidev.h")]
+        public const int SPI_NO_CS;
+        [CCode (cheader_filename = "linux/spi/spidev.h")]
+        public const int SPI_READY;
+
+        /* size */
+        public int SPI_MSGSIZE(int N);
+        public int SPI_IOC_MESSAGE(int N);
+
+        /* ioctls */
+        [CCode (cheader_filename = "linux/spi/spidev.h")]
+        public const int SPI_IOC_RD_MODE;
+        [CCode (cheader_filename = "linux/spi/spidev.h")]
+        public const int SPI_IOC_WR_MODE;
+
+        [CCode (cheader_filename = "linux/spi/spidev.h")]
+        public const int SPI_IOC_RD_LSB_FIRST;
+        [CCode (cheader_filename = "linux/spi/spidev.h")]
+        public const int SPI_IOC_WR_LSB_FIRST;
+
+        [CCode (cheader_filename = "linux/spi/spidev.h")]
+        public const int SPI_IOC_RD_BITS_PER_WORD;
+        [CCode (cheader_filename = "linux/spi/spidev.h")]
+        public const int SPI_IOC_WR_BITS_PER_WORD;
+        [CCode (cheader_filename = "linux/spi/spidev.h")]
+        public const int SPI_IOC_RD_MAX_SPEED_HZ;
+        [CCode (cheader_filename = "linux/spi/spidev.h")]
+        public const int SPI_IOC_WR_MAX_SPEED_HZ;
+    }
+
+    /*
      * Terminal input/output
      */
     [CCode (cprefix = "", lower_case_cprefix = "")]
