@@ -754,7 +754,7 @@ namespace Gst {
 		public void parse_error (out GLib.Error gerror, out string? debug);
 		public void parse_info (out GLib.Error gerror, out string? debug);
 		public void parse_new_clock (out unowned Gst.Clock clock);
-		public void parse_progress (Gst.ProgressType type, string code, string text);
+		public void parse_progress (out Gst.ProgressType type, out string code, out string text);
 		public void parse_qos (out bool live, out uint64 running_time, out uint64 stream_time, out uint64 timestamp, out uint64 duration);
 		public void parse_qos_stats (out Gst.Format format, out uint64 processed, out uint64 dropped);
 		public void parse_qos_values (out int64 jitter, out double proportion, out int quality);
