@@ -1,3 +1,13 @@
+Vala 0.15.0
+===========
+
+ * Manage memory of GQueue elements.
+ * Switch atk bindings to .gir.
+ * Switch gdk-pixbuf-2.0 bindings to .gir.
+ * Switch gdk-3.0 bindings to .gir.
+ * Add libwnck-3.0 bindings.
+ * Many bug fixes and binding updates.
+
 Vala 0.14.0
 ===========
 
