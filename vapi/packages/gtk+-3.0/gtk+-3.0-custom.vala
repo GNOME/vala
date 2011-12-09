@@ -63,6 +63,8 @@ namespace Gtk {
 		[CCode (has_new_function = false, construct_function = "gtk_widget_new")]
 		public extern Widget (...);
 		public class uint activate_signal;
+		[CCode (vfunc_name = "compute_expand")]
+		public virtual void compute_expand_internal (out bool hexpand, out bool vexpand);
 	}
 
 	public interface Editable {
