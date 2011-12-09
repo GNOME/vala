@@ -3407,7 +3407,6 @@ namespace Linux {
         [CCode (cheader_filename = "termios.h")]
         public const int TIOCM_DSR;
         [CCode (cheader_filename = "termios.h")]
-        [CCode (cheader_filename = "termios.h")]
         public const int TIOCM_OUT1;
         [CCode (cheader_filename = "termios.h")]
         public const int TIOCM_OUT2;
