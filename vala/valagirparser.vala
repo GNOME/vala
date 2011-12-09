@@ -1932,7 +1932,7 @@ public class Vala.GirParser : CodeVisitor {
 		end_element ("alias");
 	}
 
-	private void calculate_common_prefix (ref string common_prefix, string cname) {
+	private void calculate_common_prefix (ref string? common_prefix, string cname) {
 		if (common_prefix == null) {
 			common_prefix = cname;
 			while (common_prefix.length > 0 && !common_prefix.has_suffix ("_")) {
