@@ -5378,7 +5378,9 @@ namespace Gtk {
 		public virtual void adjust_size_request (Gtk.Orientation orientation, ref int minimum_size, ref int natural_size);
 		public bool child_focus (Gtk.DirectionType direction);
 		public void class_path (out uint path_length, out unowned string path, out unowned string path_reversed);
-		public virtual void compute_expand (Gtk.Orientation orientation);
+		public virtual bool compute_expand (Gtk.Orientation orientation);
+		[CCode (vfunc_name = "compute_expand")]
+		public virtual void compute_expand_internal (out bool hexpand, out bool vexpand);
 		public Pango.Context create_pango_context ();
 		public Pango.Layout create_pango_layout (string? text);
 		public void destroyed (out unowned Gtk.Widget widget_pointer);
