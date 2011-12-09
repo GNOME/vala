@@ -96,7 +96,7 @@ namespace Osso {
 		/* Time Notification */
 		[CCode (cname = "osso_time_set_notification_cb")]
 		public Status set_time_notification_callback (TimeCallback cb, void* data);
-		[CCode (cname = "osso_time_set")]
+		//[CCode (cname = "osso_time_set")]
 		//public Status set_time (time_t new_time);
 
 		/* Locale */
