@@ -188,6 +188,10 @@ public class Vala.ArrayType : ReferenceType {
 			return false;
 		}
 
+		if (element_type.nullable != target_array_type.element_type.nullable) {
+			return false;
+		}
+
 		if (element_type.compatible (target_array_type.element_type)
 		    && target_array_type.element_type.compatible (element_type)) {
 			return true;

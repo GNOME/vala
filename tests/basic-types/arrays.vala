@@ -41,6 +41,13 @@ void test_integer_array () {
 	// in expressions
 	assert (23 in a);
 	assert (!(-1 in a));
+
+	// nullable elements
+	int?[] d = new int?[2];
+	d[0] = 10;
+	d[1] = null;
+	assert (d[0] == 10);
+	assert (d[1] == null);
 }
 
 void test_string_array () {

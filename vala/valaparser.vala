@@ -844,7 +844,12 @@ public class Vala.Parser : CodeVisitor {
 			var expr = parse_object_creation_expression (begin, member);
 			return expr;
 		} else {
+			bool is_pointer_type = false;
 			while (accept (TokenType.STAR)) {
+				is_pointer_type = true;
+			}
+			if (!is_pointer_type) {
+				accept (TokenType.INTERR);
 			}
 			if (accept (TokenType.OPEN_BRACKET)) {
 				rollback (begin);
@@ -898,8 +903,15 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.NEW);
 		var member = parse_member_name ();
 		DataType element_type = UnresolvedType.new_from_expression (member);
+		bool is_pointer_type = false;
 		while (accept (TokenType.STAR)) {
 			element_type = new PointerType (element_type, get_src (begin));
+			is_pointer_type = true;
+		}
+		if (!is_pointer_type) {
+			if (accept (TokenType.INTERR)) {
+				element_type.nullable = true;
+			}
 		}
 		expect (TokenType.OPEN_BRACKET);
 
