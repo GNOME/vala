@@ -298,7 +298,7 @@ namespace GLib {
 		INVERT_BOOLEAN
 	}
 
-	public delegate bool BindingTransformFunc (GLib.Binding binding, GLib.Value source_value, GLib.Value target_value);
+	public delegate bool BindingTransformFunc (GLib.Binding binding, GLib.Value source_value, ref GLib.Value target_value);
 
 	public class Binding : GLib.Object {
 		public weak GLib.Object source { get; }
@@ -428,7 +428,7 @@ namespace GLib {
 	}
 
 	[CCode (has_target = false)]
-	public delegate void ValueTransform (Value src_value, out Value dest_value);
+	public delegate void ValueTransform (Value src_value, ref Value dest_value);
 
 	[CCode (copy_function = "g_value_copy", destroy_function = "g_value_unset", type_id = "G_TYPE_VALUE", marshaller_type_name = "BOXED", get_value_function = "g_value_get_boxed", set_value_function = "g_value_set_boxed", take_value_function = "g_value_take_boxed", type_signature = "v")]
 	public struct Value {
