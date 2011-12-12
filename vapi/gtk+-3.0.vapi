@@ -6009,7 +6009,7 @@ namespace Gtk {
 		[HasEmitter]
 		public signal void delete_text (int start_pos, int end_pos);
 		[HasEmitter]
-		public signal void insert_text (string new_text, int new_text_length, void* position);
+		public signal void insert_text (string new_text, int new_text_length, ref int position);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface FileChooser : Gtk.Widget {
