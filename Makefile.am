@@ -33,8 +33,10 @@ DIST_SUBDIRS = \
 	vapigen \
 	$(NULL)
 
+if ENABLE_UNVERSIONED
 aclocaldir = $(datadir)/aclocal
-dist_aclocal_DATA = vala.m4
+aclocal_DATA = vala.m4
+endif
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libvala@PACKAGE_SUFFIX@.pc
@@ -104,6 +106,7 @@ EXTRA_DIST = \
 	ChangeLog.pre-0-5-7 \
 	MAINTAINERS \
 	libvala.pc.in \
+	vala.m4 \
 	.version \
 	build-aux/git-version-gen \
 	build-aux/gitlog-to-changelog \
