@@ -2214,7 +2214,7 @@ namespace Gtk {
 		public unowned string get_example_icon_name ();
 		public static unowned Gtk.IconTheme get_for_screen (Gdk.Screen screen);
 		public int get_icon_sizes (string icon_name);
-		public void get_search_path (string path, int n_elements);
+		public void get_search_path (out string[] path);
 		public bool has_icon (string icon_name);
 		public GLib.List<string> list_contexts ();
 		public GLib.List<string> list_icons (string context);
