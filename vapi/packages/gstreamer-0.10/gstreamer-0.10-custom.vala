@@ -148,7 +148,7 @@ namespace Gst {
 	}
 
 	public class Bin {
-		public void add_many (params owned Gst.Element[] elements);
+		public void add_many (params Gst.Element[] elements);
 		public void remove_many (params Gst.Element[] elements);
 	}
 

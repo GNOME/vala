@@ -43,10 +43,10 @@ namespace Gst {
 		public bool state_dirty;
 		[CCode (has_construct_function = false, type = "GstElement*")]
 		public Bin (string? name);
-		public bool add (owned Gst.Element element);
+		public bool add (Gst.Element element);
 		[NoWrapper]
 		public virtual bool add_element (Gst.Element element);
-		public void add_many (params owned Gst.Element[] elements);
+		public void add_many (params Gst.Element[] elements);
 		public Gst.Pad? find_unconnected_pad (Gst.PadDirection direction);
 		public Gst.Pad? find_unlinked_pad (Gst.PadDirection direction);
 		public Gst.Element? get_by_interface (GLib.Type iface);
@@ -411,7 +411,7 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		protected Element ();
 		public void abort_state ();
-		public bool add_pad (owned Gst.Pad pad);
+		public bool add_pad (Gst.Pad pad);
 		[CCode (cname = "gst_element_class_add_pad_template")]
 		public class void add_pad_template (Gst.PadTemplate templ);
 		public virtual Gst.StateChangeReturn change_state (Gst.StateChange transition);
