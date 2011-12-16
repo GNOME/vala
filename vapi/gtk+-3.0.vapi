@@ -1542,7 +1542,8 @@ namespace Gtk {
 		public unowned Gtk.Widget add_button (string button_text, int response_id);
 		public void add_buttons (...);
 		public unowned Gtk.Widget get_action_area ();
-		public unowned Gtk.Widget get_content_area ();
+		[CCode (type = "GtkWidget*")]
+		public unowned Gtk.Box get_content_area ();
 		public int get_response_for_widget (Gtk.Widget widget);
 		public unowned Gtk.Widget get_widget_for_response (int response_id);
 		public int run ();
