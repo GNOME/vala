@@ -155,6 +155,8 @@ dist_vapi_DATA = \
 	libnl-1.vapi \
 	libnl-2.0.deps \
 	libnl-2.0.vapi \
+	libnl-3.0.deps \
+	libnl-3.0.vapi \
 	libnotify.deps \
 	libnotify.vapi \
 	liboobs-1.vapi \
