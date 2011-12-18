@@ -109,7 +109,11 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		}
 
 		public bool is_package_for_file (Vala.SourceFile source_file) {
+#if LIBVALA_0_11_0
+			if (source_file.file_type == SourceFileType.SOURCE && !package.is_package) {
+#else
 			if (source_file.file_type == Vala.SourceFileType.SOURCE && !package.is_package) {
+#endif
 				return true;
 			}
 
@@ -326,7 +330,11 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 			return MethodBindingType.OVERRIDE;
 		} else if (element.is_inline) {
 			return MethodBindingType.INLINE;
+#if LIBVALA_0_11_0
+		} else if (element.binding != MemberBinding.INSTANCE) {
+#else
 		} else if (element.binding != Vala.MemberBinding.INSTANCE) {
+#endif
 			return MethodBindingType.STATIC;
 		}
 		return MethodBindingType.UNMODIFIED;
@@ -373,10 +381,17 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		if (node == null) {
 			return false;
 		}
+#if LIBVALA_0_11_0
+		if (node is Vala.FormalParameter) {
+			return (((Vala.FormalParameter)node).direction == Vala.ParameterDirection.IN &&
+				((Vala.FormalParameter)node).variable_type.value_owned);
+		}
+#else
 		if (node is Vala.Parameter) {
 			return (((Vala.Parameter)node).direction == Vala.ParameterDirection.IN &&
 				((Vala.Parameter)node).variable_type.value_owned);
 		}
+#endif
 		if (node is Vala.Property) {
 			return ((Vala.Property)node).property_type.value_owned;
 		}
@@ -385,17 +400,21 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 	}
 
 	private bool is_type_reference_unowned (Vala.DataType? element) {
-			if (element == null) {
-				return false;
-			}
+		if (element == null) {
+			return false;
+		}
 
-			// non ref counted types are weak, not unowned
-			if (element.data_type is Vala.TypeSymbol && ((Vala.TypeSymbol) element.data_type).is_reference_counting () == true) {
-				return false;
-			}
+		// non ref counted types are weak, not unowned
+		if (element.data_type is Vala.TypeSymbol && ((Vala.TypeSymbol) element.data_type).is_reference_counting () == true) {
+			return false;
+		}
 
-			// FormalParameters are weak by default
-			return (element.parent_node is Vala.Parameter == false)? element.is_weak () : false;
+		// FormalParameters are weak by default
+#if LIBVALA_0_11_0
+		return (element.parent_node is Vala.FormalParameter == false)? element.is_weak () : false;
+#else
+		return (element.parent_node is Vala.Parameter == false)? element.is_weak () : false;
+#endif
 	}
 
 	private bool is_type_reference_owned (Vala.DataType? element) {
@@ -404,14 +423,22 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		}
 
 		weak Vala.CodeNode parent = element.parent_node;
-
 		// parameter:
+#if LIBVALA_0_11_0
+		if (parent is Vala.FormalParameter) {
+			if (((Vala.FormalParameter)parent).direction != Vala.ParameterDirection.IN) {
+				return false;
+			}
+			return ((Vala.FormalParameter)parent).variable_type.value_owned;
+		}
+#else
 		if (parent is Vala.Parameter) {
 			if (((Vala.Parameter)parent).direction != Vala.ParameterDirection.IN) {
 				return false;
 			}
 			return ((Vala.Parameter)parent).variable_type.value_owned;
 		}
+#endif
 
 		return false;
 	}
@@ -427,7 +454,11 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		}
 
 		// FormalParameters are weak by default
+#if LIBVALA_0_11_0
+		return (element.parent_node is Vala.FormalParameter == false)? element.is_weak () : false;
+#else
 		return (element.parent_node is Vala.Parameter == false)? element.is_weak () : false;
+#endif
 	}
 
 	private Ownership get_type_reference_ownership (Vala.DataType? element) {
@@ -463,7 +494,11 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		return PropertyBindingType.UNMODIFIED;
 	}
 
+#if LIBVALA_0_11_0
+	private FormalParameterType get_formal_parameter_type (Vala.FormalParameter element) {
+#else
 	private FormalParameterType get_formal_parameter_type (Vala.Parameter element) {
+#endif
 		if (element.direction == Vala.ParameterDirection.OUT) {
 			return FormalParameterType.OUT;
 		} else if (element.direction == Vala.ParameterDirection.REF) {
@@ -474,7 +509,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 
 		error ("Unknown formal parameter type");
 	}
-
 
 	//
 	// Vala tree creation:
@@ -502,7 +536,11 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 
 		context.add_package (pkg);
 
+#if LIBVALA_0_11_0
+		var vfile = new Vala.SourceFile (context, SourceFileType.PACKAGE, package_path);
+#else
 		var vfile = new Vala.SourceFile (context, Vala.SourceFileType.PACKAGE, package_path);
+#endif
 		context.add_source_file (vfile);
 		Package vdpkg = new Package (pkg, true, null);
 		register_source_file (register_package (vdpkg), vfile);
@@ -558,8 +596,11 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 			if (FileUtils.test (source, FileTest.EXISTS)) {
 				var rpath = realpath (source);
 				if (source.has_suffix (".vala") || source.has_suffix (".gs")) {
+#if LIBVALA_0_11_0
+					var source_file = new Vala.SourceFile (context, SourceFileType.SOURCE, rpath);
+#else
 					var source_file = new Vala.SourceFile (context, Vala.SourceFileType.SOURCE, rpath);
-
+#endif
 					if (source_package == null) {
 						source_package = register_package (new Package (settings.pkg_name, false, null));
 					}
@@ -583,7 +624,11 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 					string file_name = Path.get_basename (source);
 					file_name = file_name.substring (0, file_name.length - ".vapi".length);
 
+#if LIBVALA_0_11_0
+					var vfile = new Vala.SourceFile (context, SourceFileType.PACKAGE, rpath);
+#else
 					var vfile = new Vala.SourceFile (context, Vala.SourceFileType.PACKAGE, rpath);
+#endif
 					context.add_source_file (vfile);
 
 					if (source_package == null) {
@@ -643,7 +688,11 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 				context.add_define (define);
 			}
 		}
-
+#if LIBVALA_0_11_0
+		for (int i = 2; i <= 12; i += 2) {
+			context.add_define ("VALA_0_%d".printf (i));
+		}
+#endif
 		if (context.profile == Vala.Profile.POSIX) {
 			// default package
 			if (!add_package (context, "posix")) {
@@ -681,6 +730,20 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 			return context;
 		}
 
+#if LIBVALA_0_11_0
+		// register modules
+		if (context.profile == Vala.Profile.GOBJECT) {
+			if (context.has_package ("dbus-glib-1")) {
+				context.codegen = new Vala.DBusServerModule ();
+			} else {
+				context.codegen = new Vala.GDBusServerModule ();
+			}
+		} else if (context.profile == Vala.Profile.DOVA) {
+			context.codegen = new Vala.DovaErrorModule ();
+		} else {
+			context.codegen = new Vala.CCodeDelegateModule ();
+		}
+#endif
 
 		// parse vala-code:
 		Vala.Parser parser = new Vala.Parser ();
@@ -691,11 +754,37 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		}
 
 
+#if LIBVALA_0_11_0
+		// check context:
+		var resolver = new Vala.SymbolResolver ();
+		resolver.resolve (context);
+
+		if (context.report.get_errors () > 0) {
+			return context;
+		}
+
+
+		var analyzer = new Vala.SemanticAnalyzer ();
+		analyzer.analyze (context);
+
+		if (context.report.get_errors () > 0) {
+			return context;
+		}
+
+
+		var flow_analyzer = new Vala.FlowAnalyzer ();
+		flow_analyzer.analyze (context);
+
+		if (context.report.get_errors () > 0) {
+			return context;
+		}
+#else
 		// check context:
 		context.check ();
 		if (context.report.get_errors () > 0) {
 			return context;
 		}
+#endif
 
 		return context;
 	}
@@ -742,7 +831,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 
 		bool is_basic_type = element.base_class == null && element.name == "string";
 
-		Class node = new Class (parent, file, element.name, get_access_modifier(element), comment, element.get_cname (), Vala.GDBusModule.get_dbus_name (element), element.get_param_spec_function (), element.get_type_id (), element.get_ref_function (), element.get_unref_function (), element.get_take_value_function (), element.get_get_value_function (), element.get_set_value_function (), element.is_fundamental (), element.is_abstract, is_basic_type, element);
+		Class node = new Class (parent, file, element.name, get_access_modifier(element), comment, element.get_cname (), Vala.GDBusModule.get_dbus_name (element), element.get_type_id (), element.get_param_spec_function (), element.get_ref_function (), element.get_unref_function (), element.get_take_value_function (), element.get_get_value_function (), element.get_set_value_function (), element.is_fundamental (), element.is_abstract, is_basic_type, element);
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
@@ -802,7 +891,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 
 		bool is_basic_type = element.base_type == null && (element.is_boolean_type () || element.is_floating_type () || element.is_integer_type ());
 
-		Struct node = new Struct (parent, file, element.name, get_access_modifier(element), comment, element.get_cname(), element.get_dup_function (), element.get_free_function (), is_basic_type, element);
+		Struct node = new Struct (parent, file, element.name, get_access_modifier(element), comment, element.get_cname(), element.get_type_id (), element.get_dup_function (), element.get_free_function (), is_basic_type, element);
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
@@ -824,7 +913,12 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		SourceFile? file = get_source_file (element);
 		SourceComment? comment = create_comment (element.comment);
 
+
+#if LIBVALA_0_11_0
+		Field node = new Field (parent, file, element.name, get_access_modifier(element), comment, element.get_cname (), element.binding == MemberBinding.STATIC, element.is_volatile, element);
+#else
 		Field node = new Field (parent, file, element.name, get_access_modifier(element), comment, element.get_cname (), element.binding == Vala.MemberBinding.STATIC, element.is_volatile, element);
+#endif
 		node.field_type = create_type_reference (element.variable_type, node, node);
 		symbol_map.set (element, node);
 		parent.add_child (node);
@@ -1026,7 +1120,11 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 	/**
 	 * {@inheritDoc}
 	 */
+#if LIBVALA_0_11_0
+	public override void visit_formal_parameter (Vala.FormalParameter element) {
+#else
 	public override void visit_formal_parameter (Vala.Parameter element) {
+#endif
 		Api.Node parent = get_parent_node_for (element);
 		SourceFile? file = get_source_file (element);
 

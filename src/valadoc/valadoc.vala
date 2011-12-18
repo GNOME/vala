@@ -246,9 +246,10 @@ public class ValaDoc : Object {
 
 		DriverMetaData[] lut = {
 				DriverMetaData (LibvalaVersion (0, 10, 0), LibvalaVersion (0, 10, -4), "0.10.x"),
-				DriverMetaData (LibvalaVersion (0, 11, 0), LibvalaVersion (0, 11,  0), "0.11.0"),
-				DriverMetaData (LibvalaVersion (0, 11, 1), LibvalaVersion (0, 11, -1), "0.11.x"),
-				DriverMetaData (LibvalaVersion (0, 12, 0), LibvalaVersion (0, 12, -1), "0.12.x"),
+				//DriverMetaData (LibvalaVersion (0, 11, 0), LibvalaVersion (0, 11,  0), "0.11.0"),
+				//DriverMetaData (LibvalaVersion (0, 11, 1), LibvalaVersion (0, 11, -1), "0.11.x"),
+				//DriverMetaData (LibvalaVersion (0, 12, 0), LibvalaVersion (0, 12, -1), "0.12.x"),
+				DriverMetaData (LibvalaVersion (0, 11, 0), LibvalaVersion (0, 12, -1), "0.12.x"),
 				DriverMetaData (LibvalaVersion (0, 13, 0), LibvalaVersion (0, 13, -1), "0.13.x"),
 				DriverMetaData (LibvalaVersion (0, 14, 0), LibvalaVersion (0, 14, -1), "0.14.x")
 			};
@@ -362,7 +363,8 @@ public class ValaDoc : Object {
 		}
 
 		DocumentationImporter[] importers = {
-			new ValadocDocumentationImporter (doctree, docparser, modules, settings, reporter)
+			new ValadocDocumentationImporter (doctree, docparser, modules, settings, reporter),
+			new GirDocumentationImporter (doctree, docparser, modules, settings, reporter)
 		};
 
 		doctree.import_documentation (importers, import_packages, import_directories);

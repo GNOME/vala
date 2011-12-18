@@ -255,10 +255,17 @@ public class Valadoc.Drivers.SymbolResolver : Visitor {
 			return;
 		}
 
-		if (((Vala.Parameter) item.data).initializer != null) {
+
+#if LIBVALA_0_11_0
+		var initializer = ((Vala.FormalParameter) item.data).initializer;
+#else
+		var initializer = ((Vala.Parameter) item.data).initializer;
+#endif
+
+		if (initializer != null) {
 			SignatureBuilder signature = new SignatureBuilder ();
 			InitializerBuilder ibuilder = new InitializerBuilder (signature, symbol_map);
-			((Vala.Parameter) item.data).initializer.accept (ibuilder);
+			initializer.accept (ibuilder);
 			item.default_value = signature.get ();
 		}
 
