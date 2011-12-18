@@ -41,6 +41,7 @@ libvaladoc_la_VALASOURCES = \
 	importer/documentationimporter.vala \
 	importer/valadocdocumentationimporter.vala \
 	importer/valadocdocumentationimporterscanner.vala \
+	importer/girdocumentationimporter.vala \
 	api/symbolaccessibility.vala \
 	api/sourcecomment.vala \
 	api/girsourcecomment.vala \

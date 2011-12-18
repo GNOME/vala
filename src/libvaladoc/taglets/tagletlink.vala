@@ -27,6 +27,12 @@ using Valadoc.Content;
 public class Valadoc.Taglets.Link : InlineTaglet {
 	public string symbol_name { internal set; get; }
 
+	private enum SymbolContext {
+		NORMAL,
+		TYPE
+	}
+
+	private SymbolContext _context = SymbolContext.NORMAL;
 	private Api.Node _symbol;
 
 	public override Rule? get_parser_rule (Rule run_rule) {
@@ -48,8 +54,13 @@ public class Valadoc.Taglets.Link : InlineTaglet {
 		if (symbol_name.has_prefix ("c::")) {
 			_symbol_name = _symbol_name.substring (3);
 			_symbol = api_root.search_symbol_cstr (container, symbol_name);
+			_context = SymbolContext.NORMAL;
+
 			if (_symbol == null) {
-				
+				_symbol = api_root.search_symbol_type_cstr (symbol_name);
+				if (_symbol != null) {
+					_context = SymbolContext.TYPE;
+				}
 			}
 
 			if (_symbol != null) {
@@ -59,7 +70,7 @@ public class Valadoc.Taglets.Link : InlineTaglet {
 			_symbol = api_root.search_symbol_str (container, symbol_name);
 		}
 
-		if (_symbol == null) {
+		if (_symbol == null && symbol_name != "main") {
 			// TODO use ContentElement's source reference
 			reporter.simple_warning ("%s: %s does not exist", container.get_full_name (), symbol_name);
 		}
@@ -71,6 +82,22 @@ public class Valadoc.Taglets.Link : InlineTaglet {
 		var link = new Content.SymbolLink ();
 		link.symbol = _symbol;
 		link.label = symbol_name;
-		return link;
+
+		switch (_context) {
+		case SymbolContext.TYPE:
+			Content.Run content = new Content.Run (Run.Style.MONOSPACED);
+
+			Content.Run keyword = new Content.Run (Run.Style.LANG_KEYWORD);
+			keyword.content.add (new Content.Text ("typeof"));
+			content.content.add (keyword);
+
+			content.content.add (new Content.Text (" ("));
+			content.content.add (link);
+			content.content.add (new Content.Text (")"));
+			return content;
+
+		default:
+			return link;
+		}
 	}
 }

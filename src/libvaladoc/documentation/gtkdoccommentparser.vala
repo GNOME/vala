@@ -32,6 +32,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 	private Token current;
 
 	private LinkedList<string> stack = new LinkedList<string> ();
+	private LinkedList<LinkedList<Block>> footnotes = new LinkedList<LinkedList<Block>> ();
 
 	private ContentFactory factory;
 	private ErrorReporter reporter;
@@ -47,9 +48,10 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		this.scanner.reset (comment.content);
 		this.show_warnings = !comment.file.package.is_package || settings.verbose;
 		this.comment_lines = null;
+		this.footnotes.clear ();
 		this.comment = comment;
-		current = null;
-		stack.clear ();
+		this.current = null;
+		this.stack.clear ();
 	}
 
 	private void report_unexpected_token (Token got, string expected) {
@@ -98,6 +100,21 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 
 			taglet.parameter_name = iter.get_key ();
 			comment.taglets.add (taglet);
+		}
+
+		bool first = true;
+		foreach (LinkedList<Block> note in this.footnotes) {
+			if (first == true && note.size > 0) {
+				Paragraph p = note.first () as Paragraph;
+				if (p == null) {
+					p = factory.create_paragraph ();
+					comment.content.add (p);
+				}
+
+				p.content.insert (0, factory.create_text ("\n"));
+			}
+			comment.content.add_all (note);
+			first = false;
 		}
 
 		comment.check (tree, element, reporter, settings);
@@ -234,7 +251,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		next ();
 
 		// TODO: check xml
-		while (current.type != TokenType.XML_CLOSE && current.content != tagname && current.type != TokenType.EOF) {
+		while (!(current.type == TokenType.XML_CLOSE && current.content == tagname) && current.type != TokenType.EOF) {
 			if (current.type == TokenType.XML_OPEN) {
 			} else if (current.type == TokenType.XML_CLOSE) {
 			} else if (current.type == TokenType.XML_COMMENT) {
@@ -311,22 +328,26 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		next ();
 	}
 
-	private void parse_xref () {
+	private Run? parse_xref () {
 		if (!check_xml_open_tag ("xref")) {
 			this.report_unexpected_token (current, "<xref>");
-			return;
+			return null;
 		}
 
 		string linkend = current.attributes.get ("linkend");
 		next ();
 		// TODO register xref
 
+		Run run = factory.create_run (Run.Style.ITALIC);
+		run.content.add (factory.create_text (linkend));
+
 		if (!check_xml_close_tag ("xref")) {
 			this.report_unexpected_token (current, "</xref>");
-			return;
+			return run;
 		}
 
 		next ();
+		return run;
 	}
 
 	private Run? parse_highlighted_template (string tag_name, Run.Style style) {
@@ -674,7 +695,15 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 			parse_docbook_spaces ();
 		}
 
-		append_block_content_not_null (content, parse_docbook_programlisting ());
+		if (current.type == TokenType.XML_OPEN && current.content == "programlisting") {
+			append_block_content_not_null (content, parse_docbook_programlisting ());
+		} else if (current.type == TokenType.XML_OPEN && current.content == "programlisting") {
+			Embedded? img = parse_docbook_inlinegraphic ();
+			Paragraph p = factory.create_paragraph ();
+			append_block_content_not_null (content, p);
+			p.content.add (img);
+
+		}
 
 		parse_docbook_spaces ();
 
@@ -761,6 +790,58 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		return content;
 	}
 
+	private Run? parse_docbook_footnote () {
+		if (!check_xml_open_tag ("footnote")) {
+			this.report_unexpected_token (current, "<footnote>");
+			return null;
+		}
+		next ();
+
+		int counter = this.footnotes.size + 1;
+		Run? nr = factory.create_run (Run.Style.ITALIC);
+		nr.content.add (factory.create_text ("[%d] ".printf (counter)));
+		LinkedList<Block> content = new LinkedList<Block> ();
+		this.footnotes.add (content);
+
+		Token tmp = null;
+		while (tmp != current) {
+			tmp = current;
+			parse_docbook_spaces ();
+
+			Run? run = parse_inline_content ();
+			if (run != null && run.content.size > 0) {
+				Paragraph p = factory.create_paragraph ();
+				p.content.add (run);
+				content.add (p);
+				continue;
+			}
+
+			LinkedList<Block> lst = parse_block_content ();
+			if (lst != null && run.content.size > 0) {
+				content.add_all (lst);
+				continue;
+			}
+		}
+
+		Paragraph first = content.first () as Paragraph;
+		if (first == null) {
+			first = factory.create_paragraph ();
+			content.insert (0, first);
+		}
+
+		Run entry = factory.create_run (Run.Style.ITALIC);
+		entry.content.add (factory.create_text (counter.to_string () + ": "));
+		first.content.insert (0, entry);
+
+		if (!check_xml_close_tag ("footnote")) {
+			this.report_unexpected_token (current, "</footnote>");
+			return nr;
+		}
+
+		next ();
+		return nr;
+	}
+
 	private inline void append_block_content_not_null_all (LinkedList<Block> run, LinkedList<Block>? elements) {
 		if (elements != null) {
 			run.add_all (elements);
@@ -781,6 +862,8 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 
 			if (current.type == TokenType.XML_OPEN && current.content == "itemizedlist") {
 				this.append_block_content_not_null (content, parse_docbook_itemizedlist ());
+			} else if (current.type == TokenType.XML_OPEN && current.content == "programlisting") {
+				this.append_block_content_not_null (content, parse_docbook_programlisting ());
 			} else if (current.type == TokenType.XML_OPEN && current.content == "para") {
 				this.append_block_content_not_null_all (content, parse_docbook_para ());
 			} else if (current.type == TokenType.XML_OPEN && current.content == "informalexample") {
@@ -805,6 +888,45 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		return content;
 	}
 
+	private Run? parse_xml_tag () {
+		if (!check_xml_open_tag ("tag")) {
+			this.report_unexpected_token (current, "<tag>");
+			return null;
+		}
+		string? _class = current.attributes.get ("class");
+		next ();
+
+		parse_docbook_spaces (false);
+
+		if (current.type != TokenType.WORD) {
+			this.report_unexpected_token (current, "<WORD>");
+			return null;
+		}
+
+		Run run = factory.create_run (Run.Style.MONOSPACED);
+		if (_class == null || _class == "starttag") {
+			run.content.add (factory.create_text ("<" + current.content + ">"));
+			next ();
+		} else if (_class == "endtag") {
+			run.content.add (factory.create_text ("</" + current.content + ">"));
+			next ();
+		} else {
+			this.report_unexpected_token (current, "<tag class=\"%s\">".printf (_class));
+			return run;
+		}
+
+		parse_docbook_spaces (false);
+
+
+		if (!check_xml_close_tag ("tag")) {
+			this.report_unexpected_token (current, "</tag>");
+			return run;
+		}
+
+		next ();
+		return run;
+	}
+
 	private void append_inline_content_string (Run run, string current) {
 		Text last_as_text = null;
 
@@ -824,7 +946,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 	private Inline create_type_link (string name) {
 		if (name == "TRUE" || name == "FALSE" || name == "NULL") {
 			var monospaced = factory.create_run (Run.Style.MONOSPACED);
-			monospaced.content.add (factory.create_text (name));
+			monospaced.content.add (factory.create_text (name.down ()));
 			return monospaced;
 		} else {
 			Taglets.Link? taglet = factory.create_taglet ("link") as Taglets.Link;
@@ -846,14 +968,20 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		while (current.type != TokenType.EOF) {
 			if (current.type == TokenType.XML_OPEN && current.content == "firstterm") {
 				append_inline_content_not_null (run, parse_highlighted_template ("firstterm", Run.Style.ITALIC));
+			} else if (current.type == TokenType.XML_OPEN && current.content == "term") {
+				append_inline_content_not_null (run, parse_highlighted_template ("term", Run.Style.ITALIC));
 			} else if (current.type == TokenType.XML_OPEN && current.content == "literal") {
 				append_inline_content_not_null (run, parse_highlighted_template ("literal", Run.Style.ITALIC));
 			} else if (current.type == TokenType.XML_OPEN && current.content == "application") {
 				append_inline_content_not_null (run, parse_highlighted_template ("application", Run.Style.MONOSPACED));
 			} else if (current.type == TokenType.XML_OPEN && current.content == "emphasis") {
 				append_inline_content_not_null (run, parse_highlighted_template ("emphasis", Run.Style.MONOSPACED));
+			} else if (current.type == TokenType.XML_OPEN && current.content == "pre") {
+				append_inline_content_not_null (run, parse_highlighted_template ("pre", Run.Style.MONOSPACED));
 			} else if (current.type == TokenType.XML_OPEN && current.content == "code") {
 				append_inline_content_not_null (run, parse_highlighted_template ("code", Run.Style.MONOSPACED));
+			} else if (current.type == TokenType.XML_OPEN && current.content == "guimenuitem") {
+				append_inline_content_not_null (run, parse_highlighted_template ("guimenuitem", Run.Style.MONOSPACED));
 			} else if (current.type == TokenType.XML_OPEN && current.content == "command") {
 				append_inline_content_not_null (run, parse_highlighted_template ("command", Run.Style.MONOSPACED));
 			} else if (current.type == TokenType.XML_OPEN && current.content == "option") {
@@ -866,8 +994,12 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 				append_inline_content_not_null (run, parse_highlighted_template ("envar", Run.Style.MONOSPACED));
 			} else if (current.type == TokenType.XML_OPEN && current.content == "filename") {
 				append_inline_content_not_null (run, parse_highlighted_template ("filename", Run.Style.MONOSPACED));
+			} else if (current.type == TokenType.XML_OPEN && current.content == "parameter") {
+				append_inline_content_not_null (run, parse_highlighted_template ("parameter", Run.Style.MONOSPACED));
 			} else if (current.type == TokenType.XML_OPEN && current.content == "replaceable") {
 				append_inline_content_not_null (run, parse_highlighted_template ("replaceable", Run.Style.ITALIC));
+			} else if (current.type == TokenType.XML_OPEN && current.content == "footnote") {
+				append_inline_content_not_null (run, parse_docbook_footnote ());
 			} else if (current.type == TokenType.XML_OPEN && current.content == "type") {
 				append_inline_content_not_null (run, parse_symbol_link ("type"));
 			} else if (current.type == TokenType.XML_OPEN && current.content == "function") {
@@ -889,7 +1021,9 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 			} else if (current.type == TokenType.XML_OPEN && current.content == "ulink") {
 				append_inline_content_not_null (run, parse_docbook_link_tempalte ("ulink"));
 			} else if (current.type == TokenType.XML_OPEN && current.content == "xref") {
-				parse_xref ();
+				append_inline_content_not_null (run, parse_xref ());
+			} else if (current.type == TokenType.XML_OPEN && current.content == "tag") {
+				append_inline_content_not_null (run, parse_xml_tag ());
 			} else if (current.type == TokenType.GTKDOC_FUNCTION) {
 				run.content.add (this.create_type_link (current.content));
 				next ();

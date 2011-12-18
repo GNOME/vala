@@ -37,11 +37,14 @@ public class Valadoc.Importer.ValadocDocumentationImporter : DocumentationImport
 	private string _cname;
 	private StringBuilder _comment;
 	private SourceLocation _comment_location;
+	protected Content.ContentFactory factory;
+
 
 	private ErrorReporter reporter;
 
 	public ValadocDocumentationImporter (Api.Tree tree, DocumentationParser parser, ModuleLoader modules, Settings settings, ErrorReporter reporter) {
 		base (tree, modules, settings);
+		this.factory = new Content.ContentFactory (settings, this, modules);
 		this.reporter = reporter;
 
 		_scanner = new ValadoDocumentationScanner (settings);

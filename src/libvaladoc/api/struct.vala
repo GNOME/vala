@@ -30,9 +30,10 @@ using Valadoc.Content;
 public class Valadoc.Api.Struct : TypeSymbol {
 	private string? dup_function_cname;
 	private string? free_function_cname;
+	private string? type_id;
 	private string? cname;
 
-	public Struct (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, string? cname, string? dup_function_cname, string? free_function_cname, bool is_basic_type, void* data) {
+	public Struct (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, string? cname, string? type_id, string? dup_function_cname, string? free_function_cname, bool is_basic_type, void* data) {
 		base (parent, file, name, accessibility, comment, is_basic_type, data);
 
 		this.dup_function_cname = dup_function_cname;
@@ -55,6 +56,13 @@ public class Valadoc.Api.Struct : TypeSymbol {
 	 */
 	public string? get_cname () {
 		return cname;
+	}
+
+	/**
+	 * Returns the C symbol representing the runtime type id for this data type.
+	 */
+	public string? get_type_id () {
+		return type_id;
 	}
 
 	/**

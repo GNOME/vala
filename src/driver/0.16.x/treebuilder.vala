@@ -237,7 +237,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		}
 	}
 
-	private string get_ccode_type_id (Vala.Class node) {
+	private string? get_ccode_type_id (Vala.CodeNode node) {
 		return Vala.CCodeBaseModule.get_ccode_type_id (node);
 	}
 
@@ -245,32 +245,32 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		return Vala.CCodeBaseModule.is_reference_counting (sym);
 	}
 
-	private string get_ref_function (Vala.Class sym) {
+	private string? get_ref_function (Vala.Class sym) {
 		return Vala.CCodeBaseModule.get_ccode_ref_function (sym);
 	}
 
-	private string get_unref_function (Vala.Class sym) {
+	private string? get_unref_function (Vala.Class sym) {
 		return Vala.CCodeBaseModule.get_ccode_unref_function (sym);
 	}
 
-	private string get_finish_name (Vala.Method m) {
+	private string? get_finish_name (Vala.Method m) {
 		return Vala.CCodeBaseModule.get_ccode_finish_name (m);
 	}
 
-	private string get_take_value_function (Vala.Class sym) {
+	private string? get_take_value_function (Vala.Class sym) {
 		return Vala.CCodeBaseModule.get_ccode_take_value_function (sym);
 	}
 
-	private string get_get_value_function (Vala.Class sym) {
+	private string? get_get_value_function (Vala.Class sym) {
 		return Vala.CCodeBaseModule.get_ccode_get_value_function (sym);
 	}
 
-	private string get_set_value_function (Vala.Class sym) {
+	private string? get_set_value_function (Vala.Class sym) {
 		return Vala.CCodeBaseModule.get_ccode_set_value_function (sym);
 	}
 
 
-	private string get_param_spec_function (Vala.CodeNode sym) {
+	private string? get_param_spec_function (Vala.CodeNode sym) {
 		return Vala.CCodeBaseModule.get_ccode_param_spec_function (sym);
 	}
 
@@ -278,11 +278,11 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		return Vala.CCodeBaseModule.get_ccode_dup_function (sym);
 	}
 
-	private string get_free_function (Vala.TypeSymbol sym) {
+	private string? get_free_function (Vala.TypeSymbol sym) {
 		return Vala.CCodeBaseModule.get_ccode_free_function (sym);
 	}
 
-	private string get_nick (Vala.Property prop) {
+	private string? get_nick (Vala.Property prop) {
 		return Vala.CCodeBaseModule.get_ccode_nick (prop);
 	}
 
@@ -832,7 +832,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 
 		bool is_basic_type = element.base_class == null && element.name == "string";
 
-		Class node = new Class (parent, file, element.name, get_access_modifier(element), comment, get_cname (element), Vala.GDBusModule.get_dbus_name (element), get_param_spec_function (element), get_ccode_type_id (element), get_ref_function (element), get_unref_function (element), get_take_value_function (element), get_get_value_function (element), get_set_value_function (element), element.is_fundamental (), element.is_abstract, is_basic_type, element);
+		Class node = new Class (parent, file, element.name, get_access_modifier(element), comment, get_cname (element), Vala.GDBusModule.get_dbus_name (element), get_ccode_type_id (element), get_param_spec_function (element), get_ref_function (element), get_unref_function (element), get_take_value_function (element), get_get_value_function (element), get_set_value_function (element), element.is_fundamental (), element.is_abstract, is_basic_type, element);
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
@@ -892,7 +892,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 
 		bool is_basic_type = element.base_type == null && (element.is_boolean_type () || element.is_floating_type () || element.is_integer_type ());
 
-		Struct node = new Struct (parent, file, element.name, get_access_modifier(element), comment, get_cname(element), get_dup_function (element), get_free_function (element), is_basic_type, element);
+		Struct node = new Struct (parent, file, element.name, get_access_modifier (element), comment, get_cname (element), get_ccode_type_id (element), get_dup_function (element), get_free_function (element), is_basic_type, element);
 		symbol_map.set (element, node);
 		parent.add_child (node);
 

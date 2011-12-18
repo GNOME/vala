@@ -29,13 +29,9 @@ public abstract class Valadoc.Importer.DocumentationImporter : Object, ResourceL
 	protected Settings settings;
 	protected Api.Tree tree;
 
-	protected Content.ContentFactory factory;
-
 	public abstract string file_extension { get; }
 
 	public DocumentationImporter (Api.Tree tree, ModuleLoader modules, Settings settings) {
-		factory = new Content.ContentFactory (settings, this, modules);
-
 		this.settings = settings;
 		this.modules = null;
 		this.tree = tree;

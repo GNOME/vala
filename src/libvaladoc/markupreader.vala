@@ -46,6 +46,7 @@ public class Valadoc.MarkupReader : Object {
 
 	private MappedFile mapped_file;
 
+	private string[] lines;
 	private char* begin;
 	private char* current;
 	private char* end;
@@ -62,6 +63,7 @@ public class Valadoc.MarkupReader : Object {
 		this.filename = filename;
 		this.reporter = reporter;
 
+		lines = content.split ("\n");
 		begin = content;
 		end = begin + content.size ();
 		current = begin;
@@ -77,6 +79,7 @@ public class Valadoc.MarkupReader : Object {
 		try {
 			mapped_file = new MappedFile (filename, false);
 			begin = mapped_file.get_contents ();
+			lines = ((string) begin).split ("\n");
 			end = begin + mapped_file.get_length ();
 
 			current = begin;
@@ -86,6 +89,14 @@ public class Valadoc.MarkupReader : Object {
 		} catch (FileError e) {
 			reporter.simple_error ("Unable to map file `%s': %s", filename, e.message);
 		}
+	}
+
+	public string? get_line_content (int line_nr) {
+		if (this.lines.length > line_nr) {
+			return this.lines[line_nr];
+		}
+
+		return null;
 	}
 
 	public string? get_attribute (string attr) {

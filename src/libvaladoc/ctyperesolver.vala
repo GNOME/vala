@@ -28,12 +28,14 @@ using Gee;
  * Resolves symbols by C-names
  */
 public class Valadoc.CTypeResolver : Visitor {
+	private Map<string, Api.TypeSymbol> types = new HashMap<string, Api.TypeSymbol> ();
 	private Map<string, Api.Node> nodes = new HashMap<string, Api.Node> ();
+	private Api.Tree tree;
 
 	public CTypeResolver (Api.Tree tree) {
 		tree.accept (this);
+		this.tree = tree;
 	}
-
 
 	private string convert_array_to_camelcase (string[] elements) {
 		StringBuilder builder = new StringBuilder ();
@@ -72,10 +74,7 @@ public class Valadoc.CTypeResolver : Visitor {
 		if (is_capitalized_and_underscored (name)) {
 			string[] segments = name.split ("_");
 			unowned string last_segment = segments[segments.length - 1];
-			if (last_segment == "ERROR") {
-			} else if (last_segment == "TYPE") {
-				segments.resize (segments.length - 1);
-			} else {
+			if (last_segment != "ERROR") {
 				return null;
 			}
 
@@ -87,6 +86,28 @@ public class Valadoc.CTypeResolver : Visitor {
 			return name.substring (0, length - 5);
 		} else if (length > 5 && name.has_suffix ("Class")) {
 			return name.substring (0, length - 5);
+		}
+
+		return null;
+	}
+
+	public Api.TypeSymbol? resolve_symbol_type (string name) {
+		TypeSymbol? symbol = types.get (name);
+		if (symbol != null) {
+			return symbol;
+		}
+
+		if (is_capitalized_and_underscored (name)) {
+			string[] segments = name.split ("_");
+
+			if (segments[segments.length - 1] == "TYPE") {
+				segments.resize (segments.length - 1);
+				return types.get (convert_array_to_camelcase (segments));
+			} else if (segments.length > 2 && segments[1] == "TYPE") {
+				string[] _segments = segments[1:segments.length];
+				_segments[0] = segments[0];
+				return types.get (convert_array_to_camelcase (_segments));
+			}
 		}
 
 		return null;
@@ -127,7 +148,27 @@ public class Valadoc.CTypeResolver : Visitor {
 			return nodes.get (alternative);
 		}
 
+		if (element != null && _name.has_prefix (":")) {
+			if (element is Class && ((Class) element).get_cname () != null) {
+				return nodes.get (((Class) element).get_cname () + "." + _name);
+			} else if (element is Struct && ((Struct) element).get_cname () != null) {
+				return nodes.get (((Struct) element).get_cname () + "." + _name);
+			}
+		}
+
+		if (name == "dgettext") {
+			return nodes.get ("g_dgettext");
+		} else if (name == "printf") {
+			return this.tree.search_symbol_str (null, "GLib.FileStream.printf");
+		}
+
 		return null;
+	}
+
+	private void register_symbol_type (string? name, Api.TypeSymbol symbol) {
+		if (name != null) {
+			types.set (name, symbol);
+		}
 	}
 
 	private void register_symbol (string? name, Api.Node node) {
@@ -187,6 +228,7 @@ public class Valadoc.CTypeResolver : Visitor {
 	 * {@inheritDoc}
 	 */
 	public override void visit_class (Class item) {
+		register_symbol_type (item.get_type_id (), item);
 		register_symbol (item.get_cname (), item);
 		item.accept_all_children (this, false);
 	}
@@ -195,6 +237,7 @@ public class Valadoc.CTypeResolver : Visitor {
 	 * {@inheritDoc}
 	 */
 	public override void visit_struct (Struct item) {
+		register_symbol_type (item.get_type_id (), item);
 		register_symbol (item.get_cname (), item);
 		item.accept_all_children (this, false);
 	}

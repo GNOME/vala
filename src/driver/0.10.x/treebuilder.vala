@@ -776,7 +776,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 
 		bool is_basic_type = element.base_class == null && element.name == "string";
 
-		Class node = new Class (parent, file, element.name, get_access_modifier(element), comment, element.get_cname (), Vala.GDBusModule.get_dbus_name (element), element.get_param_spec_function (), element.get_type_id (), element.get_ref_function (), element.get_unref_function (), element.get_take_value_function (), element.get_get_value_function (), element.get_set_value_function (), element.is_fundamental (), element.is_abstract, is_basic_type, element);
+		Class node = new Class (parent, file, element.name, get_access_modifier (element), comment, element.get_cname (), Vala.GDBusModule.get_dbus_name (element), element.get_type_id (), element.get_param_spec_function (), element.get_ref_function (), element.get_unref_function (), element.get_take_value_function (), element.get_get_value_function (), element.get_set_value_function (), element.is_fundamental (), element.is_abstract, is_basic_type, element);
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
@@ -836,7 +836,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 
 		bool is_basic_type = element.base_type == null && (element.is_boolean_type () || element.is_floating_type () || element.is_integer_type ());
 
-		Struct node = new Struct (parent, file, element.name, get_access_modifier(element), comment, element.get_cname(), element.get_dup_function (), element.get_free_function (), is_basic_type, element);
+		Struct node = new Struct (parent, file, element.name, get_access_modifier (element), comment, element.get_cname(), element.get_type_id (), element.get_dup_function (), element.get_free_function (), is_basic_type, element);
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
