@@ -24,15 +24,15 @@ using Gee;
 
 public abstract class Valadoc.Rule : Object {
 
-	public static Rule seq (Object?[] scheme) {
+	public static Rule seq (Object[] scheme) {
 		return new SequenceRule (scheme);
 	}
 
-	public static Rule one_of (Object?[] scheme) {
+	public static Rule one_of (Object[] scheme) {
 		return new OneOfRule (scheme);
 	}
 
-	public static Rule many (Object?[] scheme) {
+	public static Rule many (Object[] scheme) {
 		if (scheme.length == 1) {
 			return new ManyRule (scheme[0]);
 		} else {
@@ -40,7 +40,7 @@ public abstract class Valadoc.Rule : Object {
 		}
 	}
 
-	public static Rule option (Object?[] scheme) {
+	public static Rule option (Object[] scheme) {
 		if (scheme.length == 1) {
 			return new OptionalRule (scheme[0]);
 		} else {
