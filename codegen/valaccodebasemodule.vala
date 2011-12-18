@@ -1101,130 +1101,132 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				generate_field_declaration (f, internal_header_file);
 			}
 
-			lhs = new CCodeIdentifier (get_ccode_name (f));
+			if (!f.external) {
+				lhs = new CCodeIdentifier (get_ccode_name (f));
 
-			var var_decl = new CCodeVariableDeclarator (get_ccode_name (f), null, get_ccode_declarator_suffix (f.variable_type));
-			var_decl.initializer = default_value_for_type (f.variable_type, true);
+				var var_decl = new CCodeVariableDeclarator (get_ccode_name (f), null, get_ccode_declarator_suffix (f.variable_type));
+				var_decl.initializer = default_value_for_type (f.variable_type, true);
 
-			if (class_init_context != null) {
-				push_context (class_init_context);
-			} else {
-				push_context (new EmitContext ());
-			}
-
-			if (f.initializer != null) {
-				f.initializer.emit (this);
-
-				var init = get_cvalue (f.initializer);
-				if (is_constant_ccode_expression (init)) {
-					var_decl.initializer = init;
+				if (class_init_context != null) {
+					push_context (class_init_context);
+				} else {
+					push_context (new EmitContext ());
 				}
-			}
 
-			var var_def = new CCodeDeclaration (field_ctype);
-			var_def.add_declarator (var_decl);
-			if (!f.is_private_symbol ()) {
-				var_def.modifiers = CCodeModifiers.EXTERN;
-			} else {
-				var_def.modifiers = CCodeModifiers.STATIC;
-			}
-			cfile.add_type_member_declaration (var_def);
+				if (f.initializer != null) {
+					f.initializer.emit (this);
 
-			/* add array length fields where necessary */
-			if (f.variable_type is ArrayType && get_ccode_array_length (f)) {
-				var array_type = (ArrayType) f.variable_type;
-
-				if (!array_type.fixed_length) {
-					for (int dim = 1; dim <= array_type.rank; dim++) {
-						var len_type = int_type.copy ();
-
-						var len_def = new CCodeDeclaration (get_ccode_name (len_type));
-						len_def.add_declarator (new CCodeVariableDeclarator (get_array_length_cname (get_ccode_name (f), dim), new CCodeConstant ("0")));
-						if (!f.is_private_symbol ()) {
-							len_def.modifiers = CCodeModifiers.EXTERN;
-						} else {
-							len_def.modifiers = CCodeModifiers.STATIC;
-						}
-						cfile.add_type_member_declaration (len_def);
-					}
-
-					if (array_type.rank == 1 && f.is_internal_symbol ()) {
-						var len_type = int_type.copy ();
-
-						var cdecl = new CCodeDeclaration (get_ccode_name (len_type));
-						cdecl.add_declarator (new CCodeVariableDeclarator (get_array_size_cname (get_ccode_name (f)), new CCodeConstant ("0")));
-						cdecl.modifiers = CCodeModifiers.STATIC;
-						cfile.add_type_member_declaration (cdecl);
+					var init = get_cvalue (f.initializer);
+					if (is_constant_ccode_expression (init)) {
+						var_decl.initializer = init;
 					}
 				}
-			} else if (f.variable_type is DelegateType) {
-				var delegate_type = (DelegateType) f.variable_type;
-				if (delegate_type.delegate_symbol.has_target) {
-					// create field to store delegate target
 
-					var target_def = new CCodeDeclaration ("gpointer");
-					target_def.add_declarator (new CCodeVariableDeclarator (get_delegate_target_cname (get_ccode_name (f)), new CCodeConstant ("NULL")));
-					if (!f.is_private_symbol ()) {
-						target_def.modifiers = CCodeModifiers.EXTERN;
-					} else {
-						target_def.modifiers = CCodeModifiers.STATIC;
-					}
-					cfile.add_type_member_declaration (target_def);
-
-					if (delegate_type.value_owned) {
-						var target_destroy_notify_def = new CCodeDeclaration ("GDestroyNotify");
-						target_destroy_notify_def.add_declarator (new CCodeVariableDeclarator (get_delegate_target_destroy_notify_cname (get_ccode_name (f)), new CCodeConstant ("NULL")));
-						if (!f.is_private_symbol ()) {
-							target_destroy_notify_def.modifiers = CCodeModifiers.EXTERN;
-						} else {
-							target_destroy_notify_def.modifiers = CCodeModifiers.STATIC;
-						}
-						cfile.add_type_member_declaration (target_destroy_notify_def);
-
-					}
+				var var_def = new CCodeDeclaration (field_ctype);
+				var_def.add_declarator (var_decl);
+				if (!f.is_private_symbol ()) {
+					var_def.modifiers = CCodeModifiers.EXTERN;
+				} else {
+					var_def.modifiers = CCodeModifiers.STATIC;
 				}
-			}
+				cfile.add_type_member_declaration (var_def);
 
-			if (f.initializer != null) {
-				var rhs = get_cvalue (f.initializer);
-				if (!is_constant_ccode_expression (rhs)) {
-					if (f.parent_symbol is Class) {
-						if (f.initializer is InitializerList) {
-							ccode.open_block ();
+				/* add array length fields where necessary */
+				if (f.variable_type is ArrayType && get_ccode_array_length (f)) {
+					var array_type = (ArrayType) f.variable_type;
 
-							var temp_decl = get_temp_variable (f.variable_type);
-							var vardecl = new CCodeVariableDeclarator.zero (temp_decl.name, rhs);
-							ccode.add_declaration (get_ccode_name (temp_decl.variable_type), vardecl);
+					if (!array_type.fixed_length) {
+						for (int dim = 1; dim <= array_type.rank; dim++) {
+							var len_type = int_type.copy ();
 
-							var tmp = get_variable_cexpression (get_variable_cname (temp_decl.name));
-							ccode.add_assignment (lhs, tmp);
-
-							ccode.close ();
-						} else {
-							ccode.add_assignment (lhs, rhs);
-						}
-
-						if (f.variable_type is ArrayType && get_ccode_array_length (f) &&
-						    f.initializer is ArrayCreationExpression) {
-							var array_type = (ArrayType) f.variable_type;
-							var field_value = get_field_cvalue (f, null);
-
-							List<Expression> sizes = ((ArrayCreationExpression) f.initializer).get_sizes ();
-							for (int dim = 1; dim <= array_type.rank; dim++) {
-								var array_len_lhs = get_array_length_cvalue (field_value, dim);
-								var size = sizes[dim - 1];
-								ccode.add_assignment (array_len_lhs, get_cvalue (size));
+							var len_def = new CCodeDeclaration (get_ccode_name (len_type));
+							len_def.add_declarator (new CCodeVariableDeclarator (get_array_length_cname (get_ccode_name (f), dim), new CCodeConstant ("0")));
+							if (!f.is_private_symbol ()) {
+								len_def.modifiers = CCodeModifiers.EXTERN;
+							} else {
+								len_def.modifiers = CCodeModifiers.STATIC;
 							}
+							cfile.add_type_member_declaration (len_def);
 						}
-					} else {
-						f.error = true;
-						Report.error (f.source_reference, "Non-constant field initializers not supported in this context");
-						return;
+
+						if (array_type.rank == 1 && f.is_internal_symbol ()) {
+							var len_type = int_type.copy ();
+
+							var cdecl = new CCodeDeclaration (get_ccode_name (len_type));
+							cdecl.add_declarator (new CCodeVariableDeclarator (get_array_size_cname (get_ccode_name (f)), new CCodeConstant ("0")));
+							cdecl.modifiers = CCodeModifiers.STATIC;
+							cfile.add_type_member_declaration (cdecl);
+						}
+					}
+				} else if (f.variable_type is DelegateType) {
+					var delegate_type = (DelegateType) f.variable_type;
+					if (delegate_type.delegate_symbol.has_target) {
+						// create field to store delegate target
+
+						var target_def = new CCodeDeclaration ("gpointer");
+						target_def.add_declarator (new CCodeVariableDeclarator (get_delegate_target_cname (get_ccode_name (f)), new CCodeConstant ("NULL")));
+						if (!f.is_private_symbol ()) {
+							target_def.modifiers = CCodeModifiers.EXTERN;
+						} else {
+							target_def.modifiers = CCodeModifiers.STATIC;
+						}
+						cfile.add_type_member_declaration (target_def);
+
+						if (delegate_type.value_owned) {
+							var target_destroy_notify_def = new CCodeDeclaration ("GDestroyNotify");
+							target_destroy_notify_def.add_declarator (new CCodeVariableDeclarator (get_delegate_target_destroy_notify_cname (get_ccode_name (f)), new CCodeConstant ("NULL")));
+							if (!f.is_private_symbol ()) {
+								target_destroy_notify_def.modifiers = CCodeModifiers.EXTERN;
+							} else {
+								target_destroy_notify_def.modifiers = CCodeModifiers.STATIC;
+							}
+							cfile.add_type_member_declaration (target_destroy_notify_def);
+
+						}
 					}
 				}
-			}
 
-			pop_context ();
+				if (f.initializer != null) {
+					var rhs = get_cvalue (f.initializer);
+					if (!is_constant_ccode_expression (rhs)) {
+						if (f.parent_symbol is Class) {
+							if (f.initializer is InitializerList) {
+								ccode.open_block ();
+
+								var temp_decl = get_temp_variable (f.variable_type);
+								var vardecl = new CCodeVariableDeclarator.zero (temp_decl.name, rhs);
+								ccode.add_declaration (get_ccode_name (temp_decl.variable_type), vardecl);
+
+								var tmp = get_variable_cexpression (get_variable_cname (temp_decl.name));
+								ccode.add_assignment (lhs, tmp);
+
+								ccode.close ();
+							} else {
+								ccode.add_assignment (lhs, rhs);
+							}
+
+							if (f.variable_type is ArrayType && get_ccode_array_length (f) &&
+							    f.initializer is ArrayCreationExpression) {
+								var array_type = (ArrayType) f.variable_type;
+								var field_value = get_field_cvalue (f, null);
+
+								List<Expression> sizes = ((ArrayCreationExpression) f.initializer).get_sizes ();
+								for (int dim = 1; dim <= array_type.rank; dim++) {
+									var array_len_lhs = get_array_length_cvalue (field_value, dim);
+									var size = sizes[dim - 1];
+									ccode.add_assignment (array_len_lhs, get_cvalue (size));
+								}
+							}
+						} else {
+							f.error = true;
+							Report.error (f.source_reference, "Non-constant field initializers not supported in this context");
+							return;
+						}
+					}
+				}
+
+				pop_context ();
+			}
 		}
 
 		pop_line ();
