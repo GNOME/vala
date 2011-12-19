@@ -129,6 +129,11 @@ public class Vala.Namespace : Symbol {
 			foreach (Comment c in ns.get_comments ()) {
 				old_ns.add_comment (c);
 			}
+			foreach (Attribute a in ns.attributes) {
+				if (old_ns.get_attribute (a.name) == null) {
+					old_ns.attributes.append(a);
+				}
+			}
 		} else {
 			namespaces.add (ns);
 			scope.add (ns.name, ns);
