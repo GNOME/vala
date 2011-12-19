@@ -233,57 +233,134 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		}
 	}
 
-	private string get_ccode_type_id (Vala.CodeNode node) {
+	private string? get_ccode_type_id (Vala.CodeNode node) {
+#if VALA_0_13_0 || VALA_0_13_1
+		if (node is Vala.Class) {
+			return ((Vala.Class) node).get_type_id ();
+		} else if (node is Vala.Struct) {
+			return ((Vala.Struct) node).get_type_id ();
+		}
+
+		return null;
+#else
 		return Vala.CCodeBaseModule.get_ccode_type_id (node);
+#endif
 	}
 
 	private bool is_reference_counting (Vala.TypeSymbol sym) {
+#if VALA_0_13_0 || VALA_0_13_1
+		return sym.is_reference_counting ();
+#else
 		return Vala.CCodeBaseModule.is_reference_counting (sym);
+#endif
 	}
 
 	private string get_ref_function (Vala.Class sym) {
+#if VALA_0_13_0 || VALA_0_13_1
+		return sym.get_ref_function ();
+#else
 		return Vala.CCodeBaseModule.get_ccode_ref_function (sym);
+#endif
 	}
 
 	private string get_unref_function (Vala.Class sym) {
+#if VALA_0_13_0 || VALA_0_13_1
+		return sym.get_unref_function ();
+#else
 		return Vala.CCodeBaseModule.get_ccode_unref_function (sym);
+#endif
 	}
 
 	private string get_finish_name (Vala.Method m) {
+#if VALA_0_13_0 || VALA_0_13_1
+		return m.get_finish_cname ();
+#else
 		return Vala.CCodeBaseModule.get_ccode_finish_name (m);
+#endif
 	}
 
 	private string get_take_value_function (Vala.Class sym) {
+#if VALA_0_13_0 || VALA_0_13_1
+		return sym.get_take_value_function ();
+#else
 		return Vala.CCodeBaseModule.get_ccode_take_value_function (sym);
+#endif
 	}
 
 	private string get_get_value_function (Vala.Class sym) {
+#if VALA_0_13_0 || VALA_0_13_1
+		return sym.get_get_value_function ();
+#else
 		return Vala.CCodeBaseModule.get_ccode_get_value_function (sym);
+#endif
 	}
 
 	private string get_set_value_function (Vala.Class sym) {
+#if VALA_0_13_0 || VALA_0_13_1
+		return sym.get_set_value_function ();
+#else
 		return Vala.CCodeBaseModule.get_ccode_set_value_function (sym);
+#endif
 	}
 
 
-	private string get_param_spec_function (Vala.CodeNode sym) {
+	private string? get_param_spec_function (Vala.CodeNode sym) {
+#if VALA_0_13_0 || VALA_0_13_1
+		if (sym is Vala.TypeSymbol) {
+			return ((Vala.TypeSymbol) sym).get_param_spec_function ();
+		}
+
+		return null;
+#else
 		return Vala.CCodeBaseModule.get_ccode_param_spec_function (sym);
+#endif
 	}
 
 	private string? get_dup_function (Vala.TypeSymbol sym) {
+#if VALA_0_13_0 || VALA_0_13_1
+		return sym.get_dup_function ();
+#else
 		return Vala.CCodeBaseModule.get_ccode_dup_function (sym);
+#endif
 	}
 
 	private string get_free_function (Vala.TypeSymbol sym) {
+#if VALA_0_13_0 || VALA_0_13_1
+		return sym.get_free_function ();
+#else
 		return Vala.CCodeBaseModule.get_ccode_free_function (sym);
+#endif
 	}
 
 	private string get_nick (Vala.Property prop) {
+#if VALA_0_13_0 || VALA_0_13_1
+		return prop.nick;
+#else
 		return Vala.CCodeBaseModule.get_ccode_nick (prop);
+#endif
 	}
 
 	private string? get_cname (Vala.Symbol symbol) {
+#if VALA_0_13_0 || VALA_0_13_1
+		if (symbol is Vala.TypeSymbol) {
+			return ((Vala.TypeSymbol) symbol).get_cname ();
+		} else if (symbol is Vala.PropertyAccessor) {
+			return ((Vala.PropertyAccessor) symbol).get_cname ();
+		} else if (symbol is Vala.Method) {
+			return ((Vala.Method) symbol).get_cname ();
+		} else if (symbol is Vala.Signal) {
+			return ((Vala.Signal) symbol).get_cname ();
+		} else if (symbol is Vala.Constant) {
+			return ((Vala.Constant) symbol).get_cname ();
+		} else if (symbol is Vala.Field) {
+			return ((Vala.Field) symbol).get_cname ();
+		} else {
+message ("--%s--", symbol.name);
+			assert_not_reached ();
+		}
+#else
 		return Vala.CCodeBaseModule.get_ccode_name (symbol);
+#endif
 	}
 
 	private SourceComment? create_comment (Vala.Comment? comment) {
@@ -915,12 +992,12 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		// Process property type
 		if (element.get_accessor != null) {
 			var accessor = element.get_accessor;
-			node.getter = new PropertyAccessor (node, file, element.name, get_access_modifier(element), get_cname (element), get_property_accessor_type (accessor), get_property_ownership (accessor), accessor);
+			node.getter = new PropertyAccessor (node, file, element.name, get_access_modifier(element), get_cname (accessor), get_property_accessor_type (accessor), get_property_ownership (accessor), accessor);
 		}
 
 		if (element.set_accessor != null) {
 			var accessor = element.set_accessor;
-			node.setter = new PropertyAccessor (node, file, element.name, get_access_modifier(element), get_cname (element), get_property_accessor_type (accessor), get_property_ownership (accessor), accessor);
+			node.setter = new PropertyAccessor (node, file, element.name, get_access_modifier(element), get_cname (accessor), get_property_accessor_type (accessor), get_property_ownership (accessor), accessor);
 		}
 
 		process_attributes (node, element.attributes);

@@ -501,6 +501,15 @@ private class Valadoc.Api.InitializerBuilder : Vala.CodeVisitor {
 		signature.append ("(", false);
 
 		bool first = true;
+#if VALA_0_13_0
+		foreach (string param_name in expr.get_parameters ()) {
+			if (!first) {
+				signature.append (", ", false);
+			}
+			signature.append (param_name, false);
+			first = false;
+		}
+#else
 		foreach (Vala.Parameter param in expr.get_parameters ()) {
 			if (!first) {
 				signature.append (", ", false);
@@ -508,7 +517,7 @@ private class Valadoc.Api.InitializerBuilder : Vala.CodeVisitor {
 			signature.append (param.name, false);
 			first = false;
 		}
-
+#endif
 
 		signature.append (") => {", false);
 		signature.append_highlighted (" [...] ", false);

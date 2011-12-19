@@ -68,22 +68,34 @@ AC_SUBST(LIBVALA_0_16_X_CFLAGS)
 AC_SUBST(LIBVALA_0_16_X_LIBS)
 
 
-PKG_CHECK_MODULES(LIBVALA_0_14_X, libvala-0.14 >= 0.14.0, have_libvala_0_14_x="yes", have_libvala_0_14_x="no")
+PKG_CHECK_MODULES(LIBVALA_0_14_X, libvala-0.14 >= 0.13.2, have_libvala_0_14_x="yes", have_libvala_0_14_x="no")
 AM_CONDITIONAL(HAVE_LIBVALA_0_14_X, test "$have_libvala_0_14_x" = "yes")
 AC_SUBST(LIBVALA_0_14_X_CFLAGS)
 AC_SUBST(LIBVALA_0_14_X_LIBS)
 
 
-PKG_CHECK_MODULES(LIBVALA_0_13_X, libvala-0.14 >= 0.13.1 libvala-0.14 < 0.14.0, have_libvala_0_13_x="yes", have_libvala_0_13_x="no")
-AM_CONDITIONAL(HAVE_LIBVALA_0_13_X, test "$have_libvala_0_13_x" = "yes")
-AC_SUBST(LIBVALA_0_13_X_CFLAGS)
-AC_SUBST(LIBVALA_0_13_X_LIBS)
+PKG_CHECK_MODULES(LIBVALA_0_13_1, libvala-0.14 = 0.13.1, have_libvala_0_13_1="yes", have_libvala_0_13_1="no")
+AM_CONDITIONAL(HAVE_LIBVALA_0_13_1, test "$have_libvala_0_13_1" = "yes")
+AC_SUBST(LIBVALA_0_13_1_CFLAGS)
+AC_SUBST(LIBVALA_0_13_1_LIBS)
 
 
-PKG_CHECK_MODULES(LIBVALA_0_13_X, libvala-0.14 >= 0.13.0 libvala-0.14 <= 0.13.1, have_libvala_0_13_0_1="yes", have_libvala_0_13_0_1="no")
-AM_CONDITIONAL(HAVE_LIBVALA_0_13_0_1, test "$have_libvala_0_13_0_1" = "yes")
-AC_SUBST(LIBVALA_0_13_X_CFLAGS)
-AC_SUBST(LIBVALA_0_13_X_LIBS)
+PKG_CHECK_MODULES(LIBVALA_0_13_0, libvala-0.14 = 0.13.0, have_libvala_0_13_0="yes", have_libvala_0_13_0="no")
+AM_CONDITIONAL(HAVE_LIBVALA_0_13_0, test "$have_libvala_0_13_0" = "yes")
+AC_SUBST(LIBVALA_0_13_0_CFLAGS)
+AC_SUBST(LIBVALA_0_13_0_LIBS)
+
+
+#PKG_CHECK_MODULES(LIBVALA_0_13_X, libvala-0.14 >= 0.13.1 libvala-0.14 < 0.14.0, have_libvala_0_13_x="yes", have_libvala_0_13_x="no")
+#AM_CONDITIONAL(HAVE_LIBVALA_0_13_X, test "$have_libvala_0_13_x" = "yes")
+#AC_SUBST(LIBVALA_0_13_X_CFLAGS)
+#AC_SUBST(LIBVALA_0_13_X_LIBS)
+
+
+#PKG_CHECK_MODULES(LIBVALA_0_13_X, libvala-0.14 >= 0.13.0 libvala-0.14 <= 0.13.1, have_libvala_0_13_0_1="yes", have_libvala_0_13_0_1="no")
+#AM_CONDITIONAL(HAVE_LIBVALA_0_13_0_1, test "$have_libvala_0_13_0_1" = "yes")
+#AC_SUBST(LIBVALA_0_13_X_CFLAGS)
+#AC_SUBST(LIBVALA_0_13_X_LIBS)
 
 
 PKG_CHECK_MODULES(LIBVALA_0_12_X, libvala-0.12 >= 0.11.1, have_libvala_0_12_x="yes", have_libvala_0_12_x="no")
@@ -114,7 +126,6 @@ AC_CONFIG_FILES([Makefile
                  src/driver/Makefile
 				 src/driver/0.10.x/Makefile
 				 src/driver/0.12.x/Makefile
-				 src/driver/0.13.x/Makefile
 				 src/driver/0.14.x/Makefile
 				 src/driver/0.16.x/Makefile
                  src/doclets/Makefile
