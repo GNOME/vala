@@ -1701,6 +1701,7 @@
 		<object name="GApplication" parent="GObject" type-name="GApplication" get-type="g_application_get_type">
 			<implements>
 				<interface name="GActionGroup"/>
+				<interface name="GActionMap"/>
 			</implements>
 			<method name="activate" symbol="g_application_activate">
 				<return-type type="void"/>
@@ -1844,7 +1845,13 @@
 					<parameter name="hint" type="char*"/>
 				</parameters>
 			</signal>
-			<signal name="startup" when="LAST">
+			<signal name="shutdown" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="application" type="GApplication*"/>
+				</parameters>
+			</signal>
+			<signal name="startup" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="application" type="GApplication*"/>
@@ -2343,6 +2350,20 @@
 				</parameters>
 			</method>
 		</object>
+		<object name="GDBusActionGroup" parent="GObject" type-name="GDBusActionGroup" get-type="g_dbus_action_group_get_type">
+			<implements>
+				<interface name="GActionGroup"/>
+				<interface name="GRemoteActionGroup"/>
+			</implements>
+			<method name="get" symbol="g_dbus_action_group_get">
+				<return-type type="GDBusActionGroup*"/>
+				<parameters>
+					<parameter name="connection" type="GDBusConnection*"/>
+					<parameter name="bus_name" type="gchar*"/>
+					<parameter name="object_path" type="gchar*"/>
+				</parameters>
+			</method>
+		</object>
 		<object name="GDBusAuthObserver" parent="GObject" type-name="GDBusAuthObserver" get-type="g_dbus_auth_observer_get_type">
 			<method name="authorize_authenticated_peer" symbol="g_dbus_auth_observer_authorize_authenticated_peer">
 				<return-type type="gboolean"/>
@@ -2498,6 +2519,24 @@
 					<parameter name="interface_name" type="gchar*"/>
 					<parameter name="signal_name" type="gchar*"/>
 					<parameter name="parameters" type="GVariant*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="export_action_group" symbol="g_dbus_connection_export_action_group">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="connection" type="GDBusConnection*"/>
+					<parameter name="object_path" type="gchar*"/>
+					<parameter name="action_group" type="GActionGroup*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="export_menu_model" symbol="g_dbus_connection_export_menu_model">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="connection" type="GDBusConnection*"/>
+					<parameter name="object_path" type="gchar*"/>
+					<parameter name="menu" type="GMenuModel*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -2735,6 +2774,20 @@
 					<parameter name="connection" type="GDBusConnection*"/>
 				</parameters>
 			</method>
+			<method name="unexport_action_group" symbol="g_dbus_connection_unexport_action_group">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="connection" type="GDBusConnection*"/>
+					<parameter name="export_id" type="guint"/>
+				</parameters>
+			</method>
+			<method name="unexport_menu_model" symbol="g_dbus_connection_unexport_menu_model">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="connection" type="GDBusConnection*"/>
+					<parameter name="export_id" type="guint"/>
+				</parameters>
+			</method>
 			<method name="unregister_object" symbol="g_dbus_connection_unregister_object">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -2867,6 +2920,16 @@
 					<parameter name="interface_" type="GDBusInterfaceSkeleton*"/>
 				</parameters>
 			</vfunc>
+		</object>
+		<object name="GDBusMenuModel" parent="GMenuModel" type-name="GDBusMenuModel" get-type="g_dbus_menu_model_get_type">
+			<method name="get" symbol="g_dbus_menu_model_get">
+				<return-type type="GDBusMenuModel*"/>
+				<parameters>
+					<parameter name="connection" type="GDBusConnection*"/>
+					<parameter name="bus_name" type="gchar*"/>
+					<parameter name="object_path" type="gchar*"/>
+				</parameters>
+			</method>
 		</object>
 		<object name="GDBusMessage" parent="GObject" type-name="GDBusMessage" get-type="g_dbus_message_get_type">
 			<method name="bytes_needed" symbol="g_dbus_message_bytes_needed">
@@ -5872,6 +5935,458 @@
 			<property name="realloc-function" type="gpointer" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="size" type="gulong" readable="1" writable="1" construct="0" construct-only="1"/>
 		</object>
+		<object name="GMenu" parent="GMenuModel" type-name="GMenu" get-type="g_menu_get_type">
+			<method name="append" symbol="g_menu_append">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu" type="GMenu*"/>
+					<parameter name="label" type="gchar*"/>
+					<parameter name="detailed_action" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="append_item" symbol="g_menu_append_item">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu" type="GMenu*"/>
+					<parameter name="item" type="GMenuItem*"/>
+				</parameters>
+			</method>
+			<method name="append_section" symbol="g_menu_append_section">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu" type="GMenu*"/>
+					<parameter name="label" type="gchar*"/>
+					<parameter name="section" type="GMenuModel*"/>
+				</parameters>
+			</method>
+			<method name="append_submenu" symbol="g_menu_append_submenu">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu" type="GMenu*"/>
+					<parameter name="label" type="gchar*"/>
+					<parameter name="submenu" type="GMenuModel*"/>
+				</parameters>
+			</method>
+			<method name="freeze" symbol="g_menu_freeze">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu" type="GMenu*"/>
+				</parameters>
+			</method>
+			<method name="insert" symbol="g_menu_insert">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu" type="GMenu*"/>
+					<parameter name="position" type="gint"/>
+					<parameter name="label" type="gchar*"/>
+					<parameter name="detailed_action" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="insert_item" symbol="g_menu_insert_item">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu" type="GMenu*"/>
+					<parameter name="position" type="gint"/>
+					<parameter name="item" type="GMenuItem*"/>
+				</parameters>
+			</method>
+			<method name="insert_section" symbol="g_menu_insert_section">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu" type="GMenu*"/>
+					<parameter name="position" type="gint"/>
+					<parameter name="label" type="gchar*"/>
+					<parameter name="section" type="GMenuModel*"/>
+				</parameters>
+			</method>
+			<method name="insert_submenu" symbol="g_menu_insert_submenu">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu" type="GMenu*"/>
+					<parameter name="position" type="gint"/>
+					<parameter name="label" type="gchar*"/>
+					<parameter name="submenu" type="GMenuModel*"/>
+				</parameters>
+			</method>
+			<method name="markup_parser_end" symbol="g_menu_markup_parser_end">
+				<return-type type="GHashTable*"/>
+				<parameters>
+					<parameter name="context" type="GMarkupParseContext*"/>
+				</parameters>
+			</method>
+			<method name="markup_parser_end_menu" symbol="g_menu_markup_parser_end_menu">
+				<return-type type="GMenu*"/>
+				<parameters>
+					<parameter name="context" type="GMarkupParseContext*"/>
+				</parameters>
+			</method>
+			<method name="markup_parser_start" symbol="g_menu_markup_parser_start">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="context" type="GMarkupParseContext*"/>
+					<parameter name="domain" type="gchar*"/>
+					<parameter name="objects" type="GHashTable*"/>
+				</parameters>
+			</method>
+			<method name="markup_parser_start_menu" symbol="g_menu_markup_parser_start_menu">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="context" type="GMarkupParseContext*"/>
+					<parameter name="domain" type="gchar*"/>
+					<parameter name="objects" type="GHashTable*"/>
+				</parameters>
+			</method>
+			<method name="markup_print_stderr" symbol="g_menu_markup_print_stderr">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="model" type="GMenuModel*"/>
+				</parameters>
+			</method>
+			<method name="markup_print_string" symbol="g_menu_markup_print_string">
+				<return-type type="GString*"/>
+				<parameters>
+					<parameter name="string" type="GString*"/>
+					<parameter name="model" type="GMenuModel*"/>
+					<parameter name="indent" type="gint"/>
+					<parameter name="tabstop" type="gint"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="g_menu_new">
+				<return-type type="GMenu*"/>
+			</constructor>
+			<method name="prepend" symbol="g_menu_prepend">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu" type="GMenu*"/>
+					<parameter name="label" type="gchar*"/>
+					<parameter name="detailed_action" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="prepend_item" symbol="g_menu_prepend_item">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu" type="GMenu*"/>
+					<parameter name="item" type="GMenuItem*"/>
+				</parameters>
+			</method>
+			<method name="prepend_section" symbol="g_menu_prepend_section">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu" type="GMenu*"/>
+					<parameter name="label" type="gchar*"/>
+					<parameter name="section" type="GMenuModel*"/>
+				</parameters>
+			</method>
+			<method name="prepend_submenu" symbol="g_menu_prepend_submenu">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu" type="GMenu*"/>
+					<parameter name="label" type="gchar*"/>
+					<parameter name="submenu" type="GMenuModel*"/>
+				</parameters>
+			</method>
+			<method name="remove" symbol="g_menu_remove">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu" type="GMenu*"/>
+					<parameter name="position" type="gint"/>
+				</parameters>
+			</method>
+		</object>
+		<object name="GMenuAttributeIter" parent="GObject" type-name="GMenuAttributeIter" get-type="g_menu_attribute_iter_get_type">
+			<method name="get_name" symbol="g_menu_attribute_iter_get_name">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="iter" type="GMenuAttributeIter*"/>
+				</parameters>
+			</method>
+			<method name="get_next" symbol="g_menu_attribute_iter_get_next">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="iter" type="GMenuAttributeIter*"/>
+					<parameter name="out_name" type="gchar**"/>
+					<parameter name="value" type="GVariant**"/>
+				</parameters>
+			</method>
+			<method name="get_value" symbol="g_menu_attribute_iter_get_value">
+				<return-type type="GVariant*"/>
+				<parameters>
+					<parameter name="iter" type="GMenuAttributeIter*"/>
+				</parameters>
+			</method>
+			<method name="next" symbol="g_menu_attribute_iter_next">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="iter" type="GMenuAttributeIter*"/>
+				</parameters>
+			</method>
+			<vfunc name="get_next">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="iter" type="GMenuAttributeIter*"/>
+					<parameter name="out_type" type="gchar**"/>
+					<parameter name="value" type="GVariant**"/>
+				</parameters>
+			</vfunc>
+		</object>
+		<object name="GMenuItem" parent="GObject" type-name="GMenuItem" get-type="g_menu_item_get_type">
+			<constructor name="new" symbol="g_menu_item_new">
+				<return-type type="GMenuItem*"/>
+				<parameters>
+					<parameter name="label" type="gchar*"/>
+					<parameter name="detailed_action" type="gchar*"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_section" symbol="g_menu_item_new_section">
+				<return-type type="GMenuItem*"/>
+				<parameters>
+					<parameter name="label" type="gchar*"/>
+					<parameter name="section" type="GMenuModel*"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_submenu" symbol="g_menu_item_new_submenu">
+				<return-type type="GMenuItem*"/>
+				<parameters>
+					<parameter name="label" type="gchar*"/>
+					<parameter name="submenu" type="GMenuModel*"/>
+				</parameters>
+			</constructor>
+			<method name="set_action_and_target" symbol="g_menu_item_set_action_and_target">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu_item" type="GMenuItem*"/>
+					<parameter name="action" type="gchar*"/>
+					<parameter name="format_string" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_action_and_target_value" symbol="g_menu_item_set_action_and_target_value">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu_item" type="GMenuItem*"/>
+					<parameter name="action" type="gchar*"/>
+					<parameter name="target_value" type="GVariant*"/>
+				</parameters>
+			</method>
+			<method name="set_attribute" symbol="g_menu_item_set_attribute">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu_item" type="GMenuItem*"/>
+					<parameter name="attribute" type="gchar*"/>
+					<parameter name="format_string" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_attribute_value" symbol="g_menu_item_set_attribute_value">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu_item" type="GMenuItem*"/>
+					<parameter name="attribute" type="gchar*"/>
+					<parameter name="value" type="GVariant*"/>
+				</parameters>
+			</method>
+			<method name="set_detailed_action" symbol="g_menu_item_set_detailed_action">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu_item" type="GMenuItem*"/>
+					<parameter name="detailed_action" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_label" symbol="g_menu_item_set_label">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu_item" type="GMenuItem*"/>
+					<parameter name="label" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_link" symbol="g_menu_item_set_link">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu_item" type="GMenuItem*"/>
+					<parameter name="link" type="gchar*"/>
+					<parameter name="model" type="GMenuModel*"/>
+				</parameters>
+			</method>
+			<method name="set_section" symbol="g_menu_item_set_section">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu_item" type="GMenuItem*"/>
+					<parameter name="section" type="GMenuModel*"/>
+				</parameters>
+			</method>
+			<method name="set_submenu" symbol="g_menu_item_set_submenu">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu_item" type="GMenuItem*"/>
+					<parameter name="submenu" type="GMenuModel*"/>
+				</parameters>
+			</method>
+		</object>
+		<object name="GMenuLinkIter" parent="GObject" type-name="GMenuLinkIter" get-type="g_menu_link_iter_get_type">
+			<method name="get_name" symbol="g_menu_link_iter_get_name">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="iter" type="GMenuLinkIter*"/>
+				</parameters>
+			</method>
+			<method name="get_next" symbol="g_menu_link_iter_get_next">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="iter" type="GMenuLinkIter*"/>
+					<parameter name="out_link" type="gchar**"/>
+					<parameter name="value" type="GMenuModel**"/>
+				</parameters>
+			</method>
+			<method name="get_value" symbol="g_menu_link_iter_get_value">
+				<return-type type="GMenuModel*"/>
+				<parameters>
+					<parameter name="iter" type="GMenuLinkIter*"/>
+				</parameters>
+			</method>
+			<method name="next" symbol="g_menu_link_iter_next">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="iter" type="GMenuLinkIter*"/>
+				</parameters>
+			</method>
+			<vfunc name="get_next">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="iter" type="GMenuLinkIter*"/>
+					<parameter name="out_name" type="gchar**"/>
+					<parameter name="value" type="GMenuModel**"/>
+				</parameters>
+			</vfunc>
+		</object>
+		<object name="GMenuModel" parent="GObject" type-name="GMenuModel" get-type="g_menu_model_get_type">
+			<method name="get_item_attribute" symbol="g_menu_model_get_item_attribute">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="model" type="GMenuModel*"/>
+					<parameter name="item_index" type="gint"/>
+					<parameter name="attribute" type="gchar*"/>
+					<parameter name="format_string" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_item_attribute_value" symbol="g_menu_model_get_item_attribute_value">
+				<return-type type="GVariant*"/>
+				<parameters>
+					<parameter name="model" type="GMenuModel*"/>
+					<parameter name="item_index" type="gint"/>
+					<parameter name="attribute" type="gchar*"/>
+					<parameter name="expected_type" type="GVariantType*"/>
+				</parameters>
+			</method>
+			<method name="get_item_link" symbol="g_menu_model_get_item_link">
+				<return-type type="GMenuModel*"/>
+				<parameters>
+					<parameter name="model" type="GMenuModel*"/>
+					<parameter name="item_index" type="gint"/>
+					<parameter name="link" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_n_items" symbol="g_menu_model_get_n_items">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="model" type="GMenuModel*"/>
+				</parameters>
+			</method>
+			<method name="is_mutable" symbol="g_menu_model_is_mutable">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="model" type="GMenuModel*"/>
+				</parameters>
+			</method>
+			<method name="items_changed" symbol="g_menu_model_items_changed">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="model" type="GMenuModel*"/>
+					<parameter name="position" type="gint"/>
+					<parameter name="removed" type="gint"/>
+					<parameter name="added" type="gint"/>
+				</parameters>
+			</method>
+			<method name="iterate_item_attributes" symbol="g_menu_model_iterate_item_attributes">
+				<return-type type="GMenuAttributeIter*"/>
+				<parameters>
+					<parameter name="model" type="GMenuModel*"/>
+					<parameter name="item_index" type="gint"/>
+				</parameters>
+			</method>
+			<method name="iterate_item_links" symbol="g_menu_model_iterate_item_links">
+				<return-type type="GMenuLinkIter*"/>
+				<parameters>
+					<parameter name="model" type="GMenuModel*"/>
+					<parameter name="item_index" type="gint"/>
+				</parameters>
+			</method>
+			<signal name="items-changed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GMenuModel*"/>
+					<parameter name="p0" type="gint"/>
+					<parameter name="p1" type="gint"/>
+					<parameter name="p2" type="gint"/>
+				</parameters>
+			</signal>
+			<vfunc name="get_item_attribute_value">
+				<return-type type="GVariant*"/>
+				<parameters>
+					<parameter name="model" type="GMenuModel*"/>
+					<parameter name="item_index" type="gint"/>
+					<parameter name="attribute" type="gchar*"/>
+					<parameter name="expected_type" type="GVariantType*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_item_attributes">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="model" type="GMenuModel*"/>
+					<parameter name="item_index" type="gint"/>
+					<parameter name="attributes" type="GHashTable**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_item_link">
+				<return-type type="GMenuModel*"/>
+				<parameters>
+					<parameter name="model" type="GMenuModel*"/>
+					<parameter name="item_index" type="gint"/>
+					<parameter name="link" type="gchar*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_item_links">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="model" type="GMenuModel*"/>
+					<parameter name="item_index" type="gint"/>
+					<parameter name="links" type="GHashTable**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_n_items">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="model" type="GMenuModel*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="is_mutable">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="model" type="GMenuModel*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="iterate_item_attributes">
+				<return-type type="GMenuAttributeIter*"/>
+				<parameters>
+					<parameter name="model" type="GMenuModel*"/>
+					<parameter name="item_index" type="gint"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="iterate_item_links">
+				<return-type type="GMenuLinkIter*"/>
+				<parameters>
+					<parameter name="model" type="GMenuModel*"/>
+					<parameter name="item_index" type="gint"/>
+				</parameters>
+			</vfunc>
+		</object>
 		<object name="GMountOperation" parent="GObject" type-name="GMountOperation" get-type="g_mount_operation_get_type">
 			<method name="get_anonymous" symbol="g_mount_operation_get_anonymous">
 				<return-type type="gboolean"/>
@@ -7147,10 +7662,10 @@
 					<parameter name="value" type="GVariant*"/>
 				</parameters>
 			</method>
-			<property name="enabled" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="name" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="parameter-type" type="GVariantType*" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="state" type="GVariant" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="enabled" type="gboolean" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="name" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="parameter-type" type="GVariantType*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="state" type="GVariant" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="state-type" type="GVariantType*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<signal name="activate" when="LAST">
 				<return-type type="void"/>
@@ -7170,6 +7685,7 @@
 		<object name="GSimpleActionGroup" parent="GObject" type-name="GSimpleActionGroup" get-type="g_simple_action_group_get_type">
 			<implements>
 				<interface name="GActionGroup"/>
+				<interface name="GActionMap"/>
 			</implements>
 			<method name="add_entries" symbol="g_simple_action_group_add_entries">
 				<return-type type="void"/>
@@ -9453,10 +9969,10 @@
 					<parameter name="action" type="GAction*"/>
 				</parameters>
 			</method>
-			<property name="enabled" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="name" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="parameter-type" type="GVariantType*" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="state" type="GVariant" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="enabled" type="gboolean" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="name" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="parameter-type" type="GVariantType*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="state" type="GVariant" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="state-type" type="GVariantType*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<vfunc name="activate">
 				<return-type type="void"/>
@@ -9607,6 +10123,18 @@
 					<parameter name="action_group" type="GActionGroup*"/>
 				</parameters>
 			</method>
+			<method name="query_action" symbol="g_action_group_query_action">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="action_group" type="GActionGroup*"/>
+					<parameter name="action_name" type="gchar*"/>
+					<parameter name="enabled" type="gboolean*"/>
+					<parameter name="parameter_type" type="GVariantType**"/>
+					<parameter name="state_type" type="GVariantType**"/>
+					<parameter name="state_hint" type="GVariant**"/>
+					<parameter name="state" type="GVariant**"/>
+				</parameters>
+			</method>
 			<signal name="action-added" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -9699,6 +10227,75 @@
 				<return-type type="gchar**"/>
 				<parameters>
 					<parameter name="action_group" type="GActionGroup*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="query_action">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="action_group" type="GActionGroup*"/>
+					<parameter name="action_name" type="gchar*"/>
+					<parameter name="enabled" type="gboolean*"/>
+					<parameter name="parameter_type" type="GVariantType**"/>
+					<parameter name="state_type" type="GVariantType**"/>
+					<parameter name="state_hint" type="GVariant**"/>
+					<parameter name="state" type="GVariant**"/>
+				</parameters>
+			</vfunc>
+		</interface>
+		<interface name="GActionMap" type-name="GActionMap" get-type="g_action_map_get_type">
+			<requires>
+				<interface name="GActionGroup"/>
+				<interface name="GObject"/>
+			</requires>
+			<method name="add_action" symbol="g_action_map_add_action">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="action_map" type="GActionMap*"/>
+					<parameter name="action" type="GAction*"/>
+				</parameters>
+			</method>
+			<method name="add_action_entries" symbol="g_action_map_add_action_entries">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="action_map" type="GActionMap*"/>
+					<parameter name="entries" type="GActionEntry*"/>
+					<parameter name="n_entries" type="gint"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="lookup_action" symbol="g_action_map_lookup_action">
+				<return-type type="GAction*"/>
+				<parameters>
+					<parameter name="action_map" type="GActionMap*"/>
+					<parameter name="action_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="remove_action" symbol="g_action_map_remove_action">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="action_map" type="GActionMap*"/>
+					<parameter name="action_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<vfunc name="add_action">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="action_map" type="GActionMap*"/>
+					<parameter name="action" type="GAction*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="lookup_action">
+				<return-type type="GAction*"/>
+				<parameters>
+					<parameter name="action_map" type="GActionMap*"/>
+					<parameter name="action_name" type="gchar*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="remove_action">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="action_map" type="GActionMap*"/>
+					<parameter name="action_name" type="gchar*"/>
 				</parameters>
 			</vfunc>
 		</interface>
@@ -13407,6 +14004,48 @@
 				</parameters>
 			</vfunc>
 		</interface>
+		<interface name="GRemoteActionGroup" type-name="GRemoteActionGroup" get-type="g_remote_action_group_get_type">
+			<requires>
+				<interface name="GActionGroup"/>
+				<interface name="GObject"/>
+			</requires>
+			<method name="activate_action_full" symbol="g_remote_action_group_activate_action_full">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="remote" type="GRemoteActionGroup*"/>
+					<parameter name="action_name" type="gchar*"/>
+					<parameter name="parameter" type="GVariant*"/>
+					<parameter name="platform_data" type="GVariant*"/>
+				</parameters>
+			</method>
+			<method name="change_action_state_full" symbol="g_remote_action_group_change_action_state_full">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="remote" type="GRemoteActionGroup*"/>
+					<parameter name="action_name" type="gchar*"/>
+					<parameter name="value" type="GVariant*"/>
+					<parameter name="platform_data" type="GVariant*"/>
+				</parameters>
+			</method>
+			<vfunc name="activate_action_full">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="remote" type="GRemoteActionGroup*"/>
+					<parameter name="action_name" type="gchar*"/>
+					<parameter name="parameter" type="GVariant*"/>
+					<parameter name="platform_data" type="GVariant*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="change_action_state_full">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="remote" type="GRemoteActionGroup*"/>
+					<parameter name="action_name" type="gchar*"/>
+					<parameter name="value" type="GVariant*"/>
+					<parameter name="platform_data" type="GVariant*"/>
+				</parameters>
+			</vfunc>
+		</interface>
 		<interface name="GSeekable" type-name="GSeekable" get-type="g_seekable_get_type">
 			<requires>
 				<interface name="GObject"/>
@@ -14010,6 +14649,11 @@
 		<constant name="G_FILE_ATTRIBUTE_UNIX_NLINK" type="char*" value="unix::nlink"/>
 		<constant name="G_FILE_ATTRIBUTE_UNIX_RDEV" type="char*" value="unix::rdev"/>
 		<constant name="G_FILE_ATTRIBUTE_UNIX_UID" type="char*" value="unix::uid"/>
+		<constant name="G_MENU_ATTRIBUTE_ACTION" type="char*" value="action"/>
+		<constant name="G_MENU_ATTRIBUTE_LABEL" type="char*" value="label"/>
+		<constant name="G_MENU_ATTRIBUTE_TARGET" type="char*" value="target"/>
+		<constant name="G_MENU_LINK_SECTION" type="char*" value="section"/>
+		<constant name="G_MENU_LINK_SUBMENU" type="char*" value="submenu"/>
 		<constant name="G_NATIVE_VOLUME_MONITOR_EXTENSION_POINT_NAME" type="char*" value="gio-native-volume-monitor"/>
 		<constant name="G_PROXY_EXTENSION_POINT_NAME" type="char*" value="gio-proxy"/>
 		<constant name="G_PROXY_RESOLVER_EXTENSION_POINT_NAME" type="char*" value="gio-proxy-resolver"/>

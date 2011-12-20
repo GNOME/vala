@@ -66,7 +66,7 @@ namespace GLib {
 		public virtual void launch_failed (string startup_notify_id);
 	}
 	[CCode (cheader_filename = "gio/gio.h", cname = "GApplication")]
-	public class Application : GLib.Object, GLib.ActionGroup {
+	public class Application : GLib.Object, GLib.ActionGroup, GLib.ActionMap {
 		[CCode (has_construct_function = false)]
 		public Application (string application_id, GLib.ApplicationFlags flags);
 		[NoWrapper]
@@ -108,6 +108,7 @@ namespace GLib {
 		public virtual signal int command_line (GLib.ApplicationCommandLine command_line);
 		[HasEmitter]
 		public virtual signal void open (GLib.File[] files, string hint);
+		public virtual signal void shutdown ();
 		public virtual signal void startup ();
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
@@ -225,6 +226,12 @@ namespace GLib {
 	[Compact]
 	public class CredentialsClass {
 	}
+	[CCode (cheader_filename = "gio/gio.h")]
+	public class DBusActionGroup : GLib.Object, GLib.ActionGroup, GLib.RemoteActionGroup {
+		[CCode (has_construct_function = false)]
+		protected DBusActionGroup ();
+		public static GLib.DBusActionGroup @get (GLib.DBusConnection connection, string bus_name, string object_path);
+	}
 	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_dbus_annotation_info_ref", type_id = "g_dbus_annotation_info_get_type ()", unref_function = "g_dbus_annotation_info_unref")]
 	[Compact]
 	public class DBusAnnotationInfo {
@@ -263,6 +270,8 @@ namespace GLib {
 		public async bool close (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool close_sync (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool emit_signal (string? destination_bus_name, string object_path, string interface_name, string signal_name, GLib.Variant parameters) throws GLib.Error;
+		public uint export_action_group (string object_path, GLib.ActionGroup action_group) throws GLib.Error;
+		public uint export_menu_model (string object_path, GLib.MenuModel menu) throws GLib.Error;
 		public async bool flush (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool flush_sync (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (has_construct_function = false, type = "void")]
@@ -290,6 +299,8 @@ namespace GLib {
 		public void start_message_processing ();
 		[CCode (has_construct_function = false)]
 		public DBusConnection.sync (GLib.IOStream stream, string guid, GLib.DBusConnectionFlags flags, GLib.DBusAuthObserver? observer = null, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public void unexport_action_group (uint export_id);
+		public void unexport_menu_model (uint export_id);
 		public bool unregister_object (uint registration_id);
 		public bool unregister_subtree (uint registration_id);
 		public string address { construct; }
@@ -353,6 +364,12 @@ namespace GLib {
 		public weak GLib.DBusInterfaceMethodCallFunc method_call;
 		public void* padding;
 		public weak GLib.DBusInterfaceSetPropertyFunc set_property;
+	}
+	[CCode (cheader_filename = "gio/gio.h")]
+	public class DBusMenuModel : GLib.MenuModel {
+		[CCode (has_construct_function = false)]
+		protected DBusMenuModel ();
+		public static GLib.DBusMenuModel @get (GLib.DBusConnection connection, string bus_name, string object_path);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class DBusMessage : GLib.Object {
@@ -1086,6 +1103,85 @@ namespace GLib {
 		public ulong size { get; construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
+	public class Menu : GLib.MenuModel {
+		[CCode (has_construct_function = false)]
+		public Menu ();
+		public void append (string label, string detailed_action);
+		public void append_item (GLib.MenuItem item);
+		public void append_section (string label, GLib.MenuModel section);
+		public void append_submenu (string label, GLib.MenuModel submenu);
+		public void freeze ();
+		public void insert (int position, string label, string detailed_action);
+		public void insert_item (int position, GLib.MenuItem item);
+		public void insert_section (int position, string label, GLib.MenuModel section);
+		public void insert_submenu (int position, string label, GLib.MenuModel submenu);
+		public static unowned GLib.HashTable markup_parser_end (GLib.MarkupParseContext context);
+		public static unowned GLib.Menu markup_parser_end_menu (GLib.MarkupParseContext context);
+		public static void markup_parser_start (GLib.MarkupParseContext context, string domain, GLib.HashTable objects);
+		public static void markup_parser_start_menu (GLib.MarkupParseContext context, string domain, GLib.HashTable objects);
+		public static void markup_print_stderr (GLib.MenuModel model);
+		public static unowned GLib.StringBuilder markup_print_string (GLib.StringBuilder str, GLib.MenuModel model, int indent, int tabstop);
+		public void prepend (string label, string detailed_action);
+		public void prepend_item (GLib.MenuItem item);
+		public void prepend_section (string label, GLib.MenuModel section);
+		public void prepend_submenu (string label, GLib.MenuModel submenu);
+		public void remove (int position);
+	}
+	[CCode (cheader_filename = "gio/gio.h")]
+	public class MenuAttributeIter : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected MenuAttributeIter ();
+		public unowned string get_name ();
+		public virtual bool get_next (string out_name, out unowned GLib.Variant value);
+		public GLib.Variant get_value ();
+		public bool next ();
+	}
+	[CCode (cheader_filename = "gio/gio.h")]
+	public class MenuItem : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public MenuItem (string label, string detailed_action);
+		[CCode (has_construct_function = false)]
+		public MenuItem.section (string label, GLib.MenuModel section);
+		public void set_action_and_target (string action, string format_string);
+		public void set_action_and_target_value (string action, GLib.Variant target_value);
+		public void set_attribute (string attribute, string format_string);
+		public void set_attribute_value (string attribute, GLib.Variant value);
+		public void set_detailed_action (string detailed_action);
+		public void set_label (string label);
+		public void set_link (string link, GLib.MenuModel model);
+		public void set_section (GLib.MenuModel section);
+		public void set_submenu (GLib.MenuModel submenu);
+		[CCode (has_construct_function = false)]
+		public MenuItem.submenu (string label, GLib.MenuModel submenu);
+	}
+	[CCode (cheader_filename = "gio/gio.h")]
+	public class MenuLinkIter : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected MenuLinkIter ();
+		public unowned string get_name ();
+		public virtual bool get_next (string out_link, out unowned GLib.MenuModel value);
+		public GLib.MenuModel get_value ();
+		public bool next ();
+	}
+	[CCode (cheader_filename = "gio/gio.h")]
+	public class MenuModel : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected MenuModel ();
+		public bool get_item_attribute (int item_index, string attribute, string format_string);
+		public virtual GLib.Variant get_item_attribute_value (int item_index, string attribute, GLib.VariantType expected_type);
+		[NoWrapper]
+		public virtual void get_item_attributes (int item_index, GLib.HashTable attributes);
+		public virtual GLib.MenuModel get_item_link (int item_index, string link);
+		[NoWrapper]
+		public virtual void get_item_links (int item_index, GLib.HashTable links);
+		public virtual int get_n_items ();
+		public virtual bool is_mutable ();
+		public virtual GLib.MenuAttributeIter iterate_item_attributes (int item_index);
+		public virtual GLib.MenuLinkIter iterate_item_links (int item_index);
+		[HasEmitter]
+		public virtual signal void items_changed (int p0, int p1, int p2);
+	}
+	[CCode (cheader_filename = "gio/gio.h")]
 	public class MountOperation : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public MountOperation ();
@@ -1312,20 +1408,20 @@ namespace GLib {
 		[CCode (has_construct_function = false)]
 		public SimpleAction.stateful (string name, GLib.VariantType parameter_type, GLib.Variant state);
 		[NoAccessorMethod]
-		public bool enabled { get; }
+		public bool enabled { get; construct; }
 		[NoAccessorMethod]
-		public string name { owned get; }
+		public string name { owned get; construct; }
 		[NoAccessorMethod]
-		public GLib.VariantType parameter_type { owned get; }
+		public GLib.VariantType parameter_type { owned get; construct; }
 		[NoAccessorMethod]
-		public GLib.Variant state { owned get; }
+		public GLib.Variant state { owned get; construct; }
 		[NoAccessorMethod]
 		public GLib.VariantType state_type { owned get; }
 		public virtual signal void activate (GLib.Variant p0);
 		public virtual signal void change_state (GLib.Variant p0);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
-	public class SimpleActionGroup : GLib.Object, GLib.ActionGroup {
+	public class SimpleActionGroup : GLib.Object, GLib.ActionGroup, GLib.ActionMap {
 		[CCode (has_construct_function = false)]
 		public SimpleActionGroup ();
 		public void add_entries (GLib.ActionEntry[] entries);
@@ -1782,10 +1878,10 @@ namespace GLib {
 		public abstract unowned GLib.Variant get_state ();
 		public abstract unowned GLib.Variant get_state_hint ();
 		public abstract unowned GLib.VariantType get_state_type ();
-		public bool enabled { get; }
-		public string name { get; }
-		public GLib.VariantType parameter_type { get; }
-		public GLib.Variant state { get; }
+		public bool enabled { get; construct; }
+		public string name { get; construct; }
+		public GLib.VariantType parameter_type { get; construct; }
+		public GLib.Variant state { get; construct; }
 		public GLib.VariantType state_type { get; }
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_cname = "GActionGroupInterface")]
@@ -1800,6 +1896,7 @@ namespace GLib {
 		public abstract bool has_action (string action_name);
 		[CCode (array_length = false, array_null_terminated = true)]
 		public abstract string[] list_actions ();
+		public virtual bool query_action (string action_name, bool enabled, out unowned GLib.VariantType parameter_type, out unowned GLib.VariantType state_type, out GLib.Variant state_hint, out GLib.Variant state);
 		[HasEmitter]
 		public signal void action_added (string action_name);
 		[HasEmitter]
@@ -1808,6 +1905,13 @@ namespace GLib {
 		public signal void action_removed (string action_name);
 		[HasEmitter]
 		public signal void action_state_changed (string action_name, GLib.Variant state);
+	}
+	[CCode (cheader_filename = "gio/gio.h")]
+	public interface ActionMap : GLib.ActionGroup, GLib.Object {
+		public abstract void add_action (GLib.Action action);
+		public void add_action_entries (GLib.ActionEntry[] entries);
+		public abstract GLib.Action lookup_action (string action_name);
+		public abstract void remove_action (string action_name);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface AppInfo : GLib.Object {
@@ -2085,6 +2189,11 @@ namespace GLib {
 		public abstract bool is_supported ();
 		public abstract unowned string lookup (string uri, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract async unowned string lookup_async (string uri, GLib.Cancellable? cancellable = null) throws GLib.Error;
+	}
+	[CCode (cheader_filename = "gio/gio.h")]
+	public interface RemoteActionGroup : GLib.ActionGroup, GLib.Object {
+		public abstract void activate_action_full (string action_name, GLib.Variant parameter, GLib.Variant platform_data);
+		public abstract void change_action_state_full (string action_name, GLib.Variant value, GLib.Variant platform_data);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface Seekable : GLib.Object {
@@ -2905,6 +3014,16 @@ namespace GLib {
 	public const string FILE_ATTRIBUTE_UNIX_RDEV;
 	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_UNIX_UID;
+	[CCode (cheader_filename = "gio/gio.h")]
+	public const string MENU_ATTRIBUTE_ACTION;
+	[CCode (cheader_filename = "gio/gio.h")]
+	public const string MENU_ATTRIBUTE_LABEL;
+	[CCode (cheader_filename = "gio/gio.h")]
+	public const string MENU_ATTRIBUTE_TARGET;
+	[CCode (cheader_filename = "gio/gio.h")]
+	public const string MENU_LINK_SECTION;
+	[CCode (cheader_filename = "gio/gio.h")]
+	public const string MENU_LINK_SUBMENU;
 	[CCode (cheader_filename = "gio/gio.h")]
 	public const string NATIVE_VOLUME_MONITOR_EXTENSION_POINT_NAME;
 	[CCode (cheader_filename = "gio/gio.h")]
