@@ -557,14 +557,30 @@ namespace Gtk {
 		public virtual signal void populate_popup (Gtk.Menu menu, GLib.AppInfo app_info);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public class Application : GLib.Application, GLib.ActionGroup {
+	public class Application : GLib.Application, GLib.ActionGroup, GLib.ActionMap {
 		[CCode (has_construct_function = false)]
 		public Application (string application_id, GLib.ApplicationFlags flags);
+		public void add_accelerator (string accelerator, string action_name, GLib.Variant parameter);
 		public void add_window (Gtk.Window window);
+		public unowned GLib.MenuModel get_app_menu ();
+		public unowned GLib.MenuModel get_menubar ();
 		public unowned GLib.List<weak Gtk.Window> get_windows ();
+		public void remove_accelerator (string action_name, GLib.Variant parameter);
 		public void remove_window (Gtk.Window window);
+		public void set_app_menu (GLib.MenuModel model);
+		public void set_menubar (GLib.MenuModel model);
+		public GLib.MenuModel app_menu { get; set; }
+		public GLib.MenuModel menubar { get; set; }
 		public virtual signal void window_added (Gtk.Window window);
 		public virtual signal void window_removed (Gtk.Window window);
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class ApplicationWindow : Gtk.Window, Atk.Implementor, Gtk.Buildable, GLib.ActionGroup, GLib.ActionMap {
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public ApplicationWindow (Gtk.Application application);
+		public bool get_show_menubar ();
+		public void set_show_menubar (bool show_menubar);
+		public bool show_menubar { get; set construct; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Arrow : Gtk.Misc, Atk.Implementor, Gtk.Buildable {
@@ -3730,6 +3746,10 @@ namespace Gtk {
 		public int gtk_recent_files_max_age { get; set; }
 		[NoAccessorMethod]
 		public Gtk.CornerType gtk_scrolled_window_placement { get; set; }
+		[NoAccessorMethod]
+		public bool gtk_shell_shows_app_menu { get; set; }
+		[NoAccessorMethod]
+		public bool gtk_shell_shows_menubar { get; set; }
 		[NoAccessorMethod]
 		public bool gtk_show_input_method_menu { get; set; }
 		[NoAccessorMethod]

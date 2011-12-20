@@ -6666,12 +6666,34 @@
 		<object name="GtkApplication" parent="GApplication" type-name="GtkApplication" get-type="gtk_application_get_type">
 			<implements>
 				<interface name="GActionGroup"/>
+				<interface name="GActionMap"/>
 			</implements>
+			<method name="add_accelerator" symbol="gtk_application_add_accelerator">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="application" type="GtkApplication*"/>
+					<parameter name="accelerator" type="gchar*"/>
+					<parameter name="action_name" type="gchar*"/>
+					<parameter name="parameter" type="GVariant*"/>
+				</parameters>
+			</method>
 			<method name="add_window" symbol="gtk_application_add_window">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="application" type="GtkApplication*"/>
 					<parameter name="window" type="GtkWindow*"/>
+				</parameters>
+			</method>
+			<method name="get_app_menu" symbol="gtk_application_get_app_menu">
+				<return-type type="GMenuModel*"/>
+				<parameters>
+					<parameter name="application" type="GtkApplication*"/>
+				</parameters>
+			</method>
+			<method name="get_menubar" symbol="gtk_application_get_menubar">
+				<return-type type="GMenuModel*"/>
+				<parameters>
+					<parameter name="application" type="GtkApplication*"/>
 				</parameters>
 			</method>
 			<method name="get_windows" symbol="gtk_application_get_windows">
@@ -6687,6 +6709,14 @@
 					<parameter name="flags" type="GApplicationFlags"/>
 				</parameters>
 			</constructor>
+			<method name="remove_accelerator" symbol="gtk_application_remove_accelerator">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="application" type="GtkApplication*"/>
+					<parameter name="action_name" type="gchar*"/>
+					<parameter name="parameter" type="GVariant*"/>
+				</parameters>
+			</method>
 			<method name="remove_window" symbol="gtk_application_remove_window">
 				<return-type type="void"/>
 				<parameters>
@@ -6694,6 +6724,22 @@
 					<parameter name="window" type="GtkWindow*"/>
 				</parameters>
 			</method>
+			<method name="set_app_menu" symbol="gtk_application_set_app_menu">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="application" type="GtkApplication*"/>
+					<parameter name="model" type="GMenuModel*"/>
+				</parameters>
+			</method>
+			<method name="set_menubar" symbol="gtk_application_set_menubar">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="application" type="GtkApplication*"/>
+					<parameter name="model" type="GMenuModel*"/>
+				</parameters>
+			</method>
+			<property name="app-menu" type="GMenuModel*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="menubar" type="GMenuModel*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="window-added" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -6708,6 +6754,34 @@
 					<parameter name="window" type="GtkWindow*"/>
 				</parameters>
 			</signal>
+		</object>
+		<object name="GtkApplicationWindow" parent="GtkWindow" type-name="GtkApplicationWindow" get-type="gtk_application_window_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+				<interface name="GActionGroup"/>
+				<interface name="GActionMap"/>
+			</implements>
+			<method name="get_show_menubar" symbol="gtk_application_window_get_show_menubar">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="window" type="GtkApplicationWindow*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gtk_application_window_new">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="application" type="GtkApplication*"/>
+				</parameters>
+			</constructor>
+			<method name="set_show_menubar" symbol="gtk_application_window_set_show_menubar">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="window" type="GtkApplicationWindow*"/>
+					<parameter name="show_menubar" type="gboolean"/>
+				</parameters>
+			</method>
+			<property name="show-menubar" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 		</object>
 		<object name="GtkArrow" parent="GtkMisc" type-name="GtkArrow" get-type="gtk_arrow_get_type">
 			<implements>
@@ -18781,6 +18855,8 @@
 			<property name="gtk-recent-files-limit" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-recent-files-max-age" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-scrolled-window-placement" type="GtkCornerType" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-shell-shows-app-menu" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-shell-shows-menubar" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-show-input-method-menu" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-show-unicode-menu" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-sound-theme-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
