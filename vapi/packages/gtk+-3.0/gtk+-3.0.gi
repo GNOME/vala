@@ -25,10 +25,28 @@
 				<parameter name="accelerator_mods" type="GdkModifierType"/>
 			</parameters>
 		</function>
+		<function name="accelerator_get_label_with_keycode" symbol="gtk_accelerator_get_label_with_keycode">
+			<return-type type="gchar*"/>
+			<parameters>
+				<parameter name="display" type="GdkDisplay*"/>
+				<parameter name="accelerator_key" type="guint"/>
+				<parameter name="keycode" type="guint"/>
+				<parameter name="accelerator_mods" type="GdkModifierType"/>
+			</parameters>
+		</function>
 		<function name="accelerator_name" symbol="gtk_accelerator_name">
 			<return-type type="gchar*"/>
 			<parameters>
 				<parameter name="accelerator_key" type="guint"/>
+				<parameter name="accelerator_mods" type="GdkModifierType"/>
+			</parameters>
+		</function>
+		<function name="accelerator_name_with_keycode" symbol="gtk_accelerator_name_with_keycode">
+			<return-type type="gchar*"/>
+			<parameters>
+				<parameter name="display" type="GdkDisplay*"/>
+				<parameter name="accelerator_key" type="guint"/>
+				<parameter name="keycode" type="guint"/>
 				<parameter name="accelerator_mods" type="GdkModifierType"/>
 			</parameters>
 		</function>
@@ -37,6 +55,15 @@
 			<parameters>
 				<parameter name="accelerator" type="gchar*"/>
 				<parameter name="accelerator_key" type="guint*"/>
+				<parameter name="accelerator_mods" type="GdkModifierType*"/>
+			</parameters>
+		</function>
+		<function name="accelerator_parse_with_keycode" symbol="gtk_accelerator_parse_with_keycode">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="accelerator" type="gchar*"/>
+				<parameter name="accelerator_key" type="guint*"/>
+				<parameter name="accelerator_codes" type="guint**"/>
 				<parameter name="accelerator_mods" type="GdkModifierType*"/>
 			</parameters>
 		</function>
@@ -1159,6 +1186,18 @@
 				<parameter name="context" type="GtkStyleContext*"/>
 				<parameter name="source" type="GtkIconSource*"/>
 				<parameter name="size" type="GtkIconSize"/>
+			</parameters>
+		</function>
+		<function name="render_insertion_cursor" symbol="gtk_render_insertion_cursor">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="context" type="GtkStyleContext*"/>
+				<parameter name="cr" type="cairo_t*"/>
+				<parameter name="x" type="gdouble"/>
+				<parameter name="y" type="gdouble"/>
+				<parameter name="layout" type="PangoLayout*"/>
+				<parameter name="index" type="int"/>
+				<parameter name="direction" type="PangoDirection"/>
 			</parameters>
 		</function>
 		<function name="render_layout" symbol="gtk_render_layout">
@@ -3214,6 +3253,13 @@
 					<parameter name="factor" type="gdouble"/>
 				</parameters>
 			</constructor>
+			<constructor name="new_win32" symbol="gtk_symbolic_color_new_win32">
+				<return-type type="GtkSymbolicColor*"/>
+				<parameters>
+					<parameter name="theme_class" type="gchar*"/>
+					<parameter name="id" type="gint"/>
+				</parameters>
+			</constructor>
 			<method name="ref" symbol="gtk_symbolic_color_ref">
 				<return-type type="GtkSymbolicColor*"/>
 				<parameters>
@@ -5070,6 +5116,8 @@
 			<member name="GTK_CELL_RENDERER_INSENSITIVE" value="4"/>
 			<member name="GTK_CELL_RENDERER_SORTED" value="8"/>
 			<member name="GTK_CELL_RENDERER_FOCUSED" value="16"/>
+			<member name="GTK_CELL_RENDERER_EXPANDABLE" value="32"/>
+			<member name="GTK_CELL_RENDERER_EXPANDED" value="64"/>
 		</flags>
 		<flags name="GtkDebugFlag" type-name="GtkDebugFlag" get-type="gtk_debug_flag_get_type">
 			<member name="GTK_DEBUG_MISC" value="1"/>
@@ -5139,6 +5187,7 @@
 			<member name="GTK_REGION_ODD" value="2"/>
 			<member name="GTK_REGION_FIRST" value="4"/>
 			<member name="GTK_REGION_LAST" value="8"/>
+			<member name="GTK_REGION_ONLY" value="16"/>
 			<member name="GTK_REGION_SORTED" value="32"/>
 		</flags>
 		<flags name="GtkStateFlags" type-name="GtkStateFlags" get-type="gtk_state_flags_get_type">
@@ -5149,6 +5198,7 @@
 			<member name="GTK_STATE_FLAG_INSENSITIVE" value="8"/>
 			<member name="GTK_STATE_FLAG_INCONSISTENT" value="16"/>
 			<member name="GTK_STATE_FLAG_FOCUSED" value="32"/>
+			<member name="GTK_STATE_FLAG_WINDOW_UNFOCUSED" value="64"/>
 		</flags>
 		<flags name="GtkTargetFlags" type-name="GtkTargetFlags" get-type="gtk_target_flags_get_type">
 			<member name="GTK_TARGET_SAME_APP" value="1"/>
@@ -5689,7 +5739,20 @@
 					<parameter name="widget" type="GtkWidget*"/>
 				</parameters>
 			</method>
+			<property name="widget" type="GtkWidget*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<vfunc name="connect_widget_destroyed">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="accessible" type="GtkAccessible*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="widget_set">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="accessible" type="GtkAccessible*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="widget_unset">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="accessible" type="GtkAccessible*"/>
@@ -6456,6 +6519,12 @@
 					<parameter name="self" type="GtkAppChooserButton*"/>
 				</parameters>
 			</method>
+			<method name="get_show_default_item" symbol="gtk_app_chooser_button_get_show_default_item">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="GtkAppChooserButton*"/>
+				</parameters>
+			</method>
 			<method name="get_show_dialog_item" symbol="gtk_app_chooser_button_get_show_dialog_item">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -6482,6 +6551,13 @@
 					<parameter name="heading" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="set_show_default_item" symbol="gtk_app_chooser_button_set_show_default_item">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GtkAppChooserButton*"/>
+					<parameter name="setting" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="set_show_dialog_item" symbol="gtk_app_chooser_button_set_show_dialog_item">
 				<return-type type="void"/>
 				<parameters>
@@ -6490,6 +6566,7 @@
 				</parameters>
 			</method>
 			<property name="heading" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-default-item" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="show-dialog-item" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<signal name="custom-item-activated" when="FIRST">
 				<return-type type="void"/>
@@ -6738,8 +6815,6 @@
 					<parameter name="model" type="GMenuModel*"/>
 				</parameters>
 			</method>
-			<property name="app-menu" type="GMenuModel*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="menubar" type="GMenuModel*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="window-added" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -10023,6 +10098,13 @@
 					<parameter name="combo_box" type="GtkComboBox*"/>
 				</parameters>
 			</signal>
+			<signal name="format-entry-text" when="LAST">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="combo_box" type="GtkComboBox*"/>
+					<parameter name="path" type="char*"/>
+				</parameters>
+			</signal>
 			<signal name="move-active" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -11393,6 +11475,13 @@
 					<parameter name="completion" type="GtkEntryCompletion*"/>
 				</parameters>
 			</method>
+			<method name="compute_prefix" symbol="gtk_entry_completion_compute_prefix">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="completion" type="GtkEntryCompletion*"/>
+					<parameter name="key" type="char*"/>
+				</parameters>
+			</method>
 			<method name="delete_action" symbol="gtk_entry_completion_delete_action">
 				<return-type type="void"/>
 				<parameters>
@@ -11966,6 +12055,7 @@
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
 				<interface name="GtkActivatable"/>
+				<interface name="GtkFontChooser"/>
 			</implements>
 			<method name="get_font_name" symbol="gtk_font_button_get_font_name">
 				<return-type type="gchar*"/>
@@ -12067,115 +12157,12 @@
 				</parameters>
 			</signal>
 		</object>
-		<object name="GtkFontChooser" parent="GtkBox" type-name="GtkFontChooser" get-type="gtk_font_chooser_get_type">
-			<implements>
-				<interface name="AtkImplementor"/>
-				<interface name="GtkBuildable"/>
-				<interface name="GtkOrientable"/>
-			</implements>
-			<method name="get_face" symbol="gtk_font_chooser_get_face">
-				<return-type type="PangoFontFace*"/>
-				<parameters>
-					<parameter name="fontchooser" type="GtkFontChooser*"/>
-				</parameters>
-			</method>
-			<method name="get_family" symbol="gtk_font_chooser_get_family">
-				<return-type type="PangoFontFamily*"/>
-				<parameters>
-					<parameter name="fontchooser" type="GtkFontChooser*"/>
-				</parameters>
-			</method>
-			<method name="get_font_name" symbol="gtk_font_chooser_get_font_name">
-				<return-type type="gchar*"/>
-				<parameters>
-					<parameter name="fontchooser" type="GtkFontChooser*"/>
-				</parameters>
-			</method>
-			<method name="get_preview_text" symbol="gtk_font_chooser_get_preview_text">
-				<return-type type="gchar*"/>
-				<parameters>
-					<parameter name="fontchooser" type="GtkFontChooser*"/>
-				</parameters>
-			</method>
-			<method name="get_show_preview_entry" symbol="gtk_font_chooser_get_show_preview_entry">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="fontchooser" type="GtkFontChooser*"/>
-				</parameters>
-			</method>
-			<method name="get_size" symbol="gtk_font_chooser_get_size">
-				<return-type type="gint"/>
-				<parameters>
-					<parameter name="fontchooser" type="GtkFontChooser*"/>
-				</parameters>
-			</method>
-			<constructor name="new" symbol="gtk_font_chooser_new">
-				<return-type type="GtkWidget*"/>
-			</constructor>
-			<method name="set_filter_func" symbol="gtk_font_chooser_set_filter_func">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="fontchooser" type="GtkFontChooser*"/>
-					<parameter name="filter" type="GtkFontFilterFunc"/>
-					<parameter name="data" type="gpointer"/>
-					<parameter name="destroy" type="GDestroyNotify"/>
-				</parameters>
-			</method>
-			<method name="set_font_name" symbol="gtk_font_chooser_set_font_name">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="fontchooser" type="GtkFontChooser*"/>
-					<parameter name="fontname" type="gchar*"/>
-				</parameters>
-			</method>
-			<method name="set_preview_text" symbol="gtk_font_chooser_set_preview_text">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="fontchooser" type="GtkFontChooser*"/>
-					<parameter name="text" type="gchar*"/>
-				</parameters>
-			</method>
-			<method name="set_show_preview_entry" symbol="gtk_font_chooser_set_show_preview_entry">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="fontchooser" type="GtkFontChooser*"/>
-					<parameter name="show_preview_entry" type="gboolean"/>
-				</parameters>
-			</method>
-			<property name="font-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="preview-text" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="show-preview-entry" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
-			<signal name="font-activated" when="FIRST">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="chooser" type="GtkFontChooser*"/>
-					<parameter name="fontname" type="char*"/>
-				</parameters>
-			</signal>
-		</object>
 		<object name="GtkFontChooserDialog" parent="GtkDialog" type-name="GtkFontChooserDialog" get-type="gtk_font_chooser_dialog_get_type">
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
+				<interface name="GtkFontChooser"/>
 			</implements>
-			<method name="get_font_chooser" symbol="gtk_font_chooser_dialog_get_font_chooser">
-				<return-type type="GtkWidget*"/>
-				<parameters>
-					<parameter name="fcd" type="GtkFontChooserDialog*"/>
-				</parameters>
-			</method>
-			<method name="get_font_name" symbol="gtk_font_chooser_dialog_get_font_name">
-				<return-type type="gchar*"/>
-				<parameters>
-					<parameter name="fcd" type="GtkFontChooserDialog*"/>
-				</parameters>
-			</method>
-			<method name="get_preview_text" symbol="gtk_font_chooser_dialog_get_preview_text">
-				<return-type type="gchar*"/>
-				<parameters>
-					<parameter name="fcd" type="GtkFontChooserDialog*"/>
-				</parameters>
-			</method>
 			<constructor name="new" symbol="gtk_font_chooser_dialog_new">
 				<return-type type="GtkWidget*"/>
 				<parameters>
@@ -12183,20 +12170,17 @@
 					<parameter name="window" type="GtkWindow*"/>
 				</parameters>
 			</constructor>
-			<method name="set_font_name" symbol="gtk_font_chooser_dialog_set_font_name">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="fcd" type="GtkFontChooserDialog*"/>
-					<parameter name="fontname" type="gchar*"/>
-				</parameters>
-			</method>
-			<method name="set_preview_text" symbol="gtk_font_chooser_dialog_set_preview_text">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="fcd" type="GtkFontChooserDialog*"/>
-					<parameter name="text" type="gchar*"/>
-				</parameters>
-			</method>
+		</object>
+		<object name="GtkFontChooserWidget" parent="GtkBox" type-name="GtkFontChooserWidget" get-type="gtk_font_chooser_widget_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+				<interface name="GtkOrientable"/>
+				<interface name="GtkFontChooser"/>
+			</implements>
+			<constructor name="new" symbol="gtk_font_chooser_widget_new">
+				<return-type type="GtkWidget*"/>
+			</constructor>
 		</object>
 		<object name="GtkFontSelection" parent="GtkBox" type-name="GtkFontSelection" get-type="gtk_font_selection_get_type">
 			<implements>
@@ -18353,6 +18337,12 @@
 					<parameter name="scale" type="GtkScale*"/>
 				</parameters>
 			</method>
+			<method name="get_has_origin" symbol="gtk_scale_get_has_origin">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="scale" type="GtkScale*"/>
+				</parameters>
+			</method>
 			<method name="get_layout" symbol="gtk_scale_get_layout">
 				<return-type type="PangoLayout*"/>
 				<parameters>
@@ -18403,6 +18393,13 @@
 					<parameter name="draw_value" type="gboolean"/>
 				</parameters>
 			</method>
+			<method name="set_has_origin" symbol="gtk_scale_set_has_origin">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="scale" type="GtkScale*"/>
+					<parameter name="has_origin" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="set_value_pos" symbol="gtk_scale_set_value_pos">
 				<return-type type="void"/>
 				<parameters>
@@ -18412,6 +18409,7 @@
 			</method>
 			<property name="digits" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="draw-value" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="has-origin" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="value-pos" type="GtkPositionType" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="format-value" when="LAST">
 				<return-type type="char*"/>
@@ -24284,6 +24282,12 @@
 					<parameter name="tree_view" type="GtkTreeView*"/>
 				</parameters>
 			</method>
+			<method name="get_n_columns" symbol="gtk_tree_view_get_n_columns">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="tree_view" type="GtkTreeView*"/>
+				</parameters>
+			</method>
 			<method name="get_path_at_pos" symbol="gtk_tree_view_get_path_at_pos">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -25968,6 +25972,13 @@
 				<return-type type="gint"/>
 				<parameters>
 					<parameter name="widget" type="GtkWidget*"/>
+				</parameters>
+			</method>
+			<method name="get_modifier_mask" symbol="gtk_widget_get_modifier_mask">
+				<return-type type="GdkModifierType"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+					<parameter name="intent" type="GdkModifierIntent"/>
 				</parameters>
 			</method>
 			<method name="get_modifier_style" symbol="gtk_widget_get_modifier_style">
@@ -27796,6 +27807,12 @@
 					<parameter name="window" type="GtkWindow*"/>
 				</parameters>
 			</method>
+			<method name="get_hide_titlebar_when_maximized" symbol="gtk_window_get_hide_titlebar_when_maximized">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="window" type="GtkWindow*"/>
+				</parameters>
+			</method>
 			<method name="get_icon" symbol="gtk_window_get_icon">
 				<return-type type="GdkPixbuf*"/>
 				<parameters>
@@ -28186,6 +28203,13 @@
 					<parameter name="setting" type="gboolean"/>
 				</parameters>
 			</method>
+			<method name="set_hide_titlebar_when_maximized" symbol="gtk_window_set_hide_titlebar_when_maximized">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="window" type="GtkWindow*"/>
+					<parameter name="setting" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="set_icon" symbol="gtk_window_set_icon">
 				<return-type type="void"/>
 				<parameters>
@@ -28378,6 +28402,7 @@
 			<property name="gravity" type="GdkGravity" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="has-resize-grip" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="has-toplevel-focus" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="hide-titlebar-when-maximized" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="icon" type="GdkPixbuf*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="icon-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="is-active" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
@@ -29517,6 +29542,128 @@
 					<parameter name="object" type="GtkFileChooser*"/>
 				</parameters>
 			</signal>
+		</interface>
+		<interface name="GtkFontChooser" type-name="GtkFontChooser" get-type="gtk_font_chooser_get_type">
+			<requires>
+				<interface name="GObject"/>
+			</requires>
+			<method name="get_font" symbol="gtk_font_chooser_get_font">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="fontchooser" type="GtkFontChooser*"/>
+				</parameters>
+			</method>
+			<method name="get_font_desc" symbol="gtk_font_chooser_get_font_desc">
+				<return-type type="PangoFontDescription*"/>
+				<parameters>
+					<parameter name="fontchooser" type="GtkFontChooser*"/>
+				</parameters>
+			</method>
+			<method name="get_font_face" symbol="gtk_font_chooser_get_font_face">
+				<return-type type="PangoFontFace*"/>
+				<parameters>
+					<parameter name="fontchooser" type="GtkFontChooser*"/>
+				</parameters>
+			</method>
+			<method name="get_font_family" symbol="gtk_font_chooser_get_font_family">
+				<return-type type="PangoFontFamily*"/>
+				<parameters>
+					<parameter name="fontchooser" type="GtkFontChooser*"/>
+				</parameters>
+			</method>
+			<method name="get_font_size" symbol="gtk_font_chooser_get_font_size">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="fontchooser" type="GtkFontChooser*"/>
+				</parameters>
+			</method>
+			<method name="get_preview_text" symbol="gtk_font_chooser_get_preview_text">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="fontchooser" type="GtkFontChooser*"/>
+				</parameters>
+			</method>
+			<method name="get_show_preview_entry" symbol="gtk_font_chooser_get_show_preview_entry">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="fontchooser" type="GtkFontChooser*"/>
+				</parameters>
+			</method>
+			<method name="set_filter_func" symbol="gtk_font_chooser_set_filter_func">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="fontchooser" type="GtkFontChooser*"/>
+					<parameter name="filter" type="GtkFontFilterFunc"/>
+					<parameter name="user_data" type="gpointer"/>
+					<parameter name="destroy" type="GDestroyNotify"/>
+				</parameters>
+			</method>
+			<method name="set_font" symbol="gtk_font_chooser_set_font">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="fontchooser" type="GtkFontChooser*"/>
+					<parameter name="fontname" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_font_desc" symbol="gtk_font_chooser_set_font_desc">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="fontchooser" type="GtkFontChooser*"/>
+					<parameter name="font_desc" type="PangoFontDescription*"/>
+				</parameters>
+			</method>
+			<method name="set_preview_text" symbol="gtk_font_chooser_set_preview_text">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="fontchooser" type="GtkFontChooser*"/>
+					<parameter name="text" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_show_preview_entry" symbol="gtk_font_chooser_set_show_preview_entry">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="fontchooser" type="GtkFontChooser*"/>
+					<parameter name="show_preview_entry" type="gboolean"/>
+				</parameters>
+			</method>
+			<property name="font" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="font-desc" type="PangoFontDescription*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="preview-text" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-preview-entry" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<signal name="font-activated" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="chooser" type="GtkFontChooser*"/>
+					<parameter name="fontname" type="char*"/>
+				</parameters>
+			</signal>
+			<vfunc name="get_font_face">
+				<return-type type="PangoFontFace*"/>
+				<parameters>
+					<parameter name="chooser" type="GtkFontChooser*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_font_family">
+				<return-type type="PangoFontFamily*"/>
+				<parameters>
+					<parameter name="chooser" type="GtkFontChooser*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_font_size">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="chooser" type="GtkFontChooser*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="set_filter_func">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="chooser" type="GtkFontChooser*"/>
+					<parameter name="filter" type="GtkFontFilterFunc"/>
+					<parameter name="data" type="gpointer"/>
+					<parameter name="destroy" type="GDestroyNotify"/>
+				</parameters>
+			</vfunc>
 		</interface>
 		<interface name="GtkOrientable" type-name="GtkOrientable" get-type="gtk_orientable_get_type">
 			<requires>
@@ -30669,13 +30816,13 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="118"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="306"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="18"/>
-		<constant name="GTK_MINOR_VERSION" type="int" value="1"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="6"/>
+		<constant name="GTK_MINOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
 		<constant name="GTK_PAPER_NAME_A5" type="char*" value="iso_a5"/>
@@ -30821,7 +30968,9 @@
 		<constant name="GTK_STOCK_ZOOM_IN" type="char*" value="gtk-zoom-in"/>
 		<constant name="GTK_STOCK_ZOOM_OUT" type="char*" value="gtk-zoom-out"/>
 		<constant name="GTK_STYLE_CLASS_ACCELERATOR" type="char*" value="accelerator"/>
+		<constant name="GTK_STYLE_CLASS_ARROW" type="char*" value="arrow"/>
 		<constant name="GTK_STYLE_CLASS_BACKGROUND" type="char*" value="background"/>
+		<constant name="GTK_STYLE_CLASS_BOTTOM" type="char*" value="bottom"/>
 		<constant name="GTK_STYLE_CLASS_BUTTON" type="char*" value="button"/>
 		<constant name="GTK_STYLE_CLASS_CALENDAR" type="char*" value="calendar"/>
 		<constant name="GTK_STYLE_CLASS_CELL" type="char*" value="cell"/>
@@ -30841,6 +30990,8 @@
 		<constant name="GTK_STYLE_CLASS_IMAGE" type="char*" value="image"/>
 		<constant name="GTK_STYLE_CLASS_INFO" type="char*" value="info"/>
 		<constant name="GTK_STYLE_CLASS_INLINE_TOOLBAR" type="char*" value="inline-toolbar"/>
+		<constant name="GTK_STYLE_CLASS_LEFT" type="char*" value="left"/>
+		<constant name="GTK_STYLE_CLASS_LINKED" type="char*" value="linked"/>
 		<constant name="GTK_STYLE_CLASS_MARK" type="char*" value="mark"/>
 		<constant name="GTK_STYLE_CLASS_MENU" type="char*" value="menu"/>
 		<constant name="GTK_STYLE_CLASS_MENUBAR" type="char*" value="menubar"/>
@@ -30849,9 +31000,11 @@
 		<constant name="GTK_STYLE_CLASS_PANE_SEPARATOR" type="char*" value="pane-separator"/>
 		<constant name="GTK_STYLE_CLASS_PRIMARY_TOOLBAR" type="char*" value="primary-toolbar"/>
 		<constant name="GTK_STYLE_CLASS_PROGRESSBAR" type="char*" value="progressbar"/>
+		<constant name="GTK_STYLE_CLASS_PULSE" type="char*" value="pulse"/>
 		<constant name="GTK_STYLE_CLASS_QUESTION" type="char*" value="question"/>
 		<constant name="GTK_STYLE_CLASS_RADIO" type="char*" value="radio"/>
 		<constant name="GTK_STYLE_CLASS_RAISED" type="char*" value="raised"/>
+		<constant name="GTK_STYLE_CLASS_RIGHT" type="char*" value="right"/>
 		<constant name="GTK_STYLE_CLASS_RUBBERBAND" type="char*" value="rubberband"/>
 		<constant name="GTK_STYLE_CLASS_SCALE" type="char*" value="scale"/>
 		<constant name="GTK_STYLE_CLASS_SCALE_HAS_MARKS_ABOVE" type="char*" value="scale-has-marks-above"/>
@@ -30864,6 +31017,7 @@
 		<constant name="GTK_STYLE_CLASS_SPINNER" type="char*" value="spinner"/>
 		<constant name="GTK_STYLE_CLASS_TOOLBAR" type="char*" value="toolbar"/>
 		<constant name="GTK_STYLE_CLASS_TOOLTIP" type="char*" value="tooltip"/>
+		<constant name="GTK_STYLE_CLASS_TOP" type="char*" value="top"/>
 		<constant name="GTK_STYLE_CLASS_TROUGH" type="char*" value="trough"/>
 		<constant name="GTK_STYLE_CLASS_VERTICAL" type="char*" value="vertical"/>
 		<constant name="GTK_STYLE_CLASS_VIEW" type="char*" value="view"/>

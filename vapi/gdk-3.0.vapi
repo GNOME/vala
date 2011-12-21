@@ -4575,7 +4575,7 @@ namespace Gdk {
 	public abstract class Device : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Device ();
-		public static void free_history ([CCode (array_length_cname = "n_events", array_length_pos = 1.1)] Gdk.TimeCoord[] events);
+		public static void free_history ([CCode (array_length_cname = "n_events", array_length_pos = 1.1, type = "GdkTimeCoord**")] Gdk.TimeCoord[] events);
 		public unowned Gdk.Device? get_associated_device ();
 		public bool get_axis ([CCode (array_length = false)] double[] axes, Gdk.AxisUse use, out double value);
 		public Gdk.AxisUse get_axis_use (uint index_);
@@ -4591,7 +4591,7 @@ namespace Gdk {
 		public unowned string get_name ();
 		public void get_position (out unowned Gdk.Screen screen, out int x, out int y);
 		public Gdk.InputSource get_source ();
-		public void get_state (Gdk.Window window, [CCode (array_length = false)] double[] axes, out Gdk.ModifierType mask);
+		public void get_state (Gdk.Window window, [CCode (array_length = false, type = "gdouble*")] double[] axes, out Gdk.ModifierType mask);
 		public unowned Gdk.Window get_window_at_position (out int win_x, out int win_y);
 		public Gdk.GrabStatus grab (Gdk.Window window, Gdk.GrabOwnership grab_ownership, bool owner_events, Gdk.EventMask event_mask, Gdk.Cursor? cursor, uint32 time_);
 		public GLib.List<weak Gdk.Atom> list_axes ();
@@ -4756,6 +4756,7 @@ namespace Gdk {
 		public void set_device (Gdk.Device device);
 		public void set_screen (Gdk.Screen screen);
 		public void set_source_device (Gdk.Device device);
+		public bool triggers_context_menu ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_keymap_get_type ()")]
 	public class Keymap : GLib.Object {
@@ -4768,6 +4769,7 @@ namespace Gdk {
 		public bool get_entries_for_keycode (uint hardware_keycode, [CCode (array_length_cname = "n_entries", array_length_pos = 3.1)] out Gdk.KeymapKey[] keys, [CCode (array_length_cname = "n_entries", array_length_pos = 3.1)] out uint[] keyvals);
 		public bool get_entries_for_keyval (uint keyval, [CCode (array_length_cname = "n_keys", array_length_pos = 2.1)] out Gdk.KeymapKey[] keys);
 		public static unowned Gdk.Keymap get_for_display (Gdk.Display display);
+		public Gdk.ModifierType get_modifier_mask (Gdk.ModifierIntent intent);
 		public bool get_num_lock_state ();
 		public bool have_bidi_layouts ();
 		public uint lookup_key (Gdk.KeymapKey key);
@@ -4793,6 +4795,7 @@ namespace Gdk {
 		public int get_monitor_height_mm (int monitor_num);
 		public string get_monitor_plug_name (int monitor_num);
 		public int get_monitor_width_mm (int monitor_num);
+		public Gdk.Rectangle get_monitor_workarea (int monitor_num);
 		public int get_n_monitors ();
 		public int get_number ();
 		public int get_primary_monitor ();
@@ -4850,9 +4853,11 @@ namespace Gdk {
 		public static unowned Gdk.Window at_pointer (out int win_x, out int win_y);
 		public void beep ();
 		public void begin_move_drag (int button, int root_x, int root_y, uint32 timestamp);
+		public void begin_move_drag_for_device (Gdk.Device device, int button, int root_x, int root_y, uint32 timestamp);
 		public void begin_paint_rect (Gdk.Rectangle rectangle);
 		public void begin_paint_region (Cairo.Region region);
 		public void begin_resize_drag (Gdk.WindowEdge edge, int button, int root_x, int root_y, uint32 timestamp);
+		public void begin_resize_drag_for_device (Gdk.WindowEdge edge, Gdk.Device device, int button, int root_x, int root_y, uint32 timestamp);
 		public void configure_finished ();
 		public static void constrain_size (Gdk.Geometry geometry, uint flags, int width, int height, out int new_width, out int new_height);
 		public void coords_from_parent (double parent_x, double parent_y, out double x, out double y);
@@ -5525,6 +5530,15 @@ namespace Gdk {
 		CURSOR,
 		KEYBOARD
 	}
+	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_MODIFIER_INTENT_")]
+	public enum ModifierIntent {
+		PRIMARY_ACCELERATOR,
+		CONTEXT_MENU,
+		EXTEND_SELECTION,
+		MODIFY_SELECTION,
+		NO_TEXT_INPUT,
+		SHIFT_GROUP
+	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_")]
 	[Flags]
 	public enum ModifierType {
@@ -5675,7 +5689,8 @@ namespace Gdk {
 		STICKY,
 		FULLSCREEN,
 		ABOVE,
-		BELOW
+		BELOW,
+		FOCUSED
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_WINDOW_")]
 	public enum WindowType {
@@ -5705,8 +5720,10 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_INPUT_")]
 	public enum WindowWindowClass {
-		OUTPUT,
-		ONLY
+		[CCode (cname = "GDK_INPUT_OUTPUT")]
+		INPUT_OUTPUT,
+		[CCode (cname = "GDK_INPUT_ONLY")]
+		INPUT_ONLY
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", instance_pos = 1.9)]
 	public delegate void EventFunc (Gdk.Event event);
@@ -5846,10 +5863,6 @@ namespace Gdk {
 	public static Cairo.Region pango_layout_get_clip_region (Pango.Layout layout, int x_origin, int y_origin, int index_ranges, int n_ranges);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void parse_args ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] ref unowned string[] argv);
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static Gdk.Pixbuf pixbuf_get_from_surface (Cairo.Surface surface, int src_x, int src_y, int width, int height);
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static Gdk.Pixbuf pixbuf_get_from_window (Gdk.Window window, int src_x, int src_y, int width, int height);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	[Deprecated (since = "3.0")]
 	public static Gdk.GrabStatus pointer_grab (Gdk.Window window, bool owner_events, Gdk.EventMask event_mask, Gdk.Window? confine_to, Gdk.Cursor? cursor, uint32 time_);
