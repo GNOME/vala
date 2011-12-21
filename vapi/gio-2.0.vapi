@@ -1951,7 +1951,7 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface AsyncInitable : GLib.Object {
-		public abstract async bool init_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public virtual async bool init_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public static async unowned GLib.Object new_async (GLib.Type object_type, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable, ...) throws GLib.Error;
 		public static async void new_valist_async (GLib.Type object_type, string first_property_name, void* var_args, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null);
 		public static async void newv_async (GLib.Type object_type, uint n_parameters, GLib.Parameter parameters, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null);
