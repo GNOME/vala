@@ -136,7 +136,7 @@ namespace Cogl {
 		[CCode (cname = "cogl_offscreen_new_to_texture", has_construct_function = false, type = "CoglHandle*")]
 		public Offscreen.to_texture (Cogl.Texture handle);
 	}
-	[CCode (cheader_filename = "cogl/cogl.h")]
+	[CCode (cheader_filename = "cogl-pango/cogl-pango.h")]
 	[Compact]
 	public class PangoFontMap {
 		[CCode (has_construct_function = false, type = "PangoFontMap*")]
@@ -148,11 +148,11 @@ namespace Cogl {
 		public void set_resolution (double dpi);
 		public void set_use_mipmapping (bool value);
 	}
-	[CCode (cheader_filename = "cogl/cogl.h")]
+	[CCode (cheader_filename = "cogl-pango/cogl-pango.h")]
 	[Compact]
 	public class PangoRenderer {
 	}
-	[CCode (cheader_filename = "cogl/cogl.h")]
+	[CCode (cheader_filename = "cogl-pango/cogl-pango.h")]
 	[Compact]
 	public class PangoRendererClass {
 	}
@@ -723,13 +723,13 @@ namespace Cogl {
 	public static bool is_vertex_buffer_indices (Cogl.Bitmap handle);
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static void ortho (float left, float right, float bottom, float top, float near, float far);
-	[CCode (cheader_filename = "cogl/cogl.h")]
+	[CCode (cheader_filename = "cogl-pango/cogl-pango.h")]
 	public static void pango_ensure_glyph_cache_for_layout (Pango.Layout layout);
-	[CCode (cheader_filename = "cogl/cogl.h")]
+	[CCode (cheader_filename = "cogl-pango/cogl-pango.h")]
 	public static void pango_render_layout (Pango.Layout layout, int x, int y, Cogl.Color color, int flags);
-	[CCode (cheader_filename = "cogl/cogl.h")]
+	[CCode (cheader_filename = "cogl-pango/cogl-pango.h")]
 	public static void pango_render_layout_line (Pango.LayoutLine line, int x, int y, Cogl.Color color);
-	[CCode (cheader_filename = "cogl/cogl.h")]
+	[CCode (cheader_filename = "cogl-pango/cogl-pango.h")]
 	public static void pango_render_layout_subpixel (Pango.Layout layout, int x, int y, Cogl.Color color, int flags);
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static void perspective (float fovy, float aspect, float z_near, float z_far);
