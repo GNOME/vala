@@ -4552,7 +4552,7 @@ namespace Gdk {
 		public Gdk.Display display { owned get; construct; }
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_cursor_get_type ()")]
-	public abstract class Cursor : GLib.Object {
+	public class Cursor : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Cursor (Gdk.CursorType cursor_type);
 		[CCode (has_construct_function = false)]

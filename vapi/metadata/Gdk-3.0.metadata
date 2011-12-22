@@ -2,7 +2,7 @@ KEY_* name="KEY_(.+)" parent="Gdk.Key"
 selection_* name="selection_(.+)" parent="Gdk.Selection"
 Atom struct
 Color struct
-Cursor
+Cursor	abstract=false
         .get_image nullable
 Device
         .free_history skip=false
