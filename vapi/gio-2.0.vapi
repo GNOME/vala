@@ -30,13 +30,13 @@ namespace GLib {
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static bool equals (string type1, string type2);
 		[CCode (cheader_filename = "gio/gio.h")]
-		public static string from_mime_type (string mime_type);
+		public static string? from_mime_type (string mime_type);
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static string get_description (string type);
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static GLib.Icon get_icon (string type);
 		[CCode (cheader_filename = "gio/gio.h")]
-		public static string get_mime_type (string type);
+		public static string? get_mime_type (string type);
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static string guess (string? filename, uchar[]? data, out bool result_uncertain);
 		[CCode (array_length = false, array_null_terminated = true, cheader_filename = "gio/gio.h")]
@@ -2171,7 +2171,7 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface Icon : GLib.Object {
-		public abstract bool equal (GLib.Icon icon2);
+		public abstract bool equal (GLib.Icon? icon2);
 		[NoWrapper]
 		public virtual GLib.Icon? from_tokens (string[] tokens, int version) throws GLib.Error;
 		public abstract uint hash ();
@@ -3126,7 +3126,7 @@ namespace GLib {
 	public static bool g_content_type_equals (string type1, string type2);
 	[CCode (cheader_filename = "gio/gio.h", cname = "g_content_type_from_mime_type")]
 	[Deprecated (replacement = "GLib.ContentType.from_mime_type", since = "vala-0.12")]
-	public static string g_content_type_from_mime_type (string mime_type);
+	public static string? g_content_type_from_mime_type (string mime_type);
 	[CCode (cheader_filename = "gio/gio.h", cname = "g_content_type_get_description")]
 	[Deprecated (replacement = "GLib.ContentType.get_description", since = "vala-0.12")]
 	public static string g_content_type_get_description (string type);
@@ -3135,7 +3135,7 @@ namespace GLib {
 	public static GLib.Icon g_content_type_get_icon (string type);
 	[CCode (cheader_filename = "gio/gio.h", cname = "g_content_type_get_mime_type")]
 	[Deprecated (replacement = "GLib.ContentType.get_mime_type", since = "vala-0.12")]
-	public static string g_content_type_get_mime_type (string type);
+	public static string? g_content_type_get_mime_type (string type);
 	[CCode (cheader_filename = "gio/gio.h", cname = "g_content_type_guess")]
 	[Deprecated (replacement = "GLib.ContentType.guess", since = "vala-0.12")]
 	public static string g_content_type_guess (string filename, uchar[] data, out bool result_uncertain);
