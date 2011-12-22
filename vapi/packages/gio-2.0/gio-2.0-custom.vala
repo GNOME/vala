@@ -84,7 +84,7 @@ namespace GLib {
 	public static bool g_content_type_equals (string type1, string type2);
 	[Deprecated (since = "vala-0.12", replacement = "GLib.ContentType.from_mime_type")]
 	[CCode (cname = "g_content_type_from_mime_type", cheader_filename = "gio/gio.h")]
-	public static string g_content_type_from_mime_type (string mime_type);
+	public static string? g_content_type_from_mime_type (string mime_type);
 	[Deprecated (since = "vala-0.12", replacement = "GLib.ContentType.get_description")]
 	[CCode (cname = "g_content_type_get_description", cheader_filename = "gio/gio.h")]
 	public static string g_content_type_get_description (string type);
@@ -93,7 +93,7 @@ namespace GLib {
 	public static GLib.Icon g_content_type_get_icon (string type);
 	[Deprecated (since = "vala-0.12", replacement = "GLib.ContentType.get_mime_type")]
 	[CCode (cname = "g_content_type_get_mime_type", cheader_filename = "gio/gio.h")]
-	public static string g_content_type_get_mime_type (string type);
+	public static string? g_content_type_get_mime_type (string type);
 	[Deprecated (since = "vala-0.12", replacement = "GLib.ContentType.guess")]
 	[CCode (cname = "g_content_type_guess", cheader_filename = "gio/gio.h")]
 	public static string g_content_type_guess (string filename, uchar[] data, out bool result_uncertain);

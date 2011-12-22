@@ -3904,7 +3904,7 @@ namespace GLib {
 		public HashTable.full (HashFunc<K>? hash_func, EqualFunc<K>? key_equal_func, DestroyNotify? key_destroy_func, DestroyNotify? value_destroy_func);
 		public void insert (owned K key, owned V value);
 		public void replace (owned K key, owned V value);
-		public unowned V lookup (K key);
+		public unowned V? lookup (K key);
 		public bool lookup_extended (K lookup_key, out unowned K orig_key, out unowned V value);
 		public bool remove (K key);
 		public void remove_all ();
@@ -3917,7 +3917,7 @@ namespace GLib {
 		public void @foreach (HFunc<K,V> func);
 		[CCode (cname = "g_hash_table_foreach")]
 		public void for_each (HFunc<K,V> func);
-		public unowned V find (HRFunc<K,V> predicate);
+		public unowned V? find (HRFunc<K,V> predicate);
 		public uint size ();
 		public bool steal (K key);
 		public void steal_all ();
