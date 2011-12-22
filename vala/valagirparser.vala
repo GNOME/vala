@@ -2398,7 +2398,7 @@ public class Vala.GirParser : CodeVisitor {
 		if (current.new_symbol) {
 			cl = new Class (current.name, current.source_reference);
 			cl.set_attribute_string ("CCode", "type_id", "%s ()".printf (reader.get_attribute ("glib:get-type")));
-			cl.is_abstract = reader.get_attribute ("abstract") == "1";
+			cl.is_abstract = metadata.get_bool (ArgumentType.ABSTRACT, reader.get_attribute ("abstract") == "1");
 
 			if (parent != null) {
 				cl.add_base_type (parse_type_from_gir_name (parent));
