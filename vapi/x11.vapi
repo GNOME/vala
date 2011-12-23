@@ -313,6 +313,7 @@ namespace X {
 		// The server's max # of keys per modifier
 		public int max_keypermod;
 		// An 8 by max_keypermod array of modifiers
+		[CCode (array_length = false)]
 		public uchar[] modifiermap;
 	}
 
