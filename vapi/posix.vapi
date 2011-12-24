@@ -1705,6 +1705,16 @@ namespace Posix {
 		public long tv_nsec;
 	}
 
+    [CCode (array_length = false, cheader_filename = "time.h")]
+	public string[] tzname;
+	[CCode (cheader_filename = "time.h")]
+	public const long timezone;
+	[CCode (cheader_filename = "time.h")]
+	public const int daylight;
+
+	[CCode (cheader_filename = "time.h")]
+	public void tzset ();
+
 	[SimpleType]
 	[IntegerType]
 	[CCode (cheader_filename = "time.h")]
