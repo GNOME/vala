@@ -1359,6 +1359,8 @@ namespace Clutter {
 		[NoAccessorMethod]
 		public string font_subpixel_order { owned get; set; }
 		[NoAccessorMethod]
+		public uint fontconfig_timestamp { set; }
+		[NoAccessorMethod]
 		public int long_press_duration { get; set; }
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_shader_get_type ()")]
@@ -1804,7 +1806,7 @@ namespace Clutter {
 		public uint duration { get; set; }
 		public bool loop { get; set; }
 		public virtual signal void completed ();
-		public virtual signal void marker_reached (string marker_name, int frame_num);
+		public virtual signal void marker_reached (string marker_name, int msecs);
 		public virtual signal void new_frame (int msecs);
 		public virtual signal void paused ();
 		public virtual signal void started ();
@@ -2390,9 +2392,9 @@ namespace Clutter {
 		MODIFIER_MASK
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_OFFSCREEN_REDIRECT_")]
+	[Flags]
 	public enum OffscreenRedirect {
 		AUTOMATIC_FOR_OPACITY,
-		ALWAYS_FOR_OPACITY,
 		ALWAYS
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_PATH_")]
