@@ -59,6 +59,7 @@ TESTS = \
 	control-flow/switch.vala \
 	control-flow/sideeffects.vala \
 	control-flow/bug652549.vala \
+	control-flow/bug665904.vala \
 	enums/enums.vala \
 	structs/structs.vala \
 	structs/gvalue.vala \
