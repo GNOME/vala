@@ -5448,7 +5448,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public CCodeExpression? default_value_for_type (DataType type, bool initializer_expression) {
 		var st = type.data_type as Struct;
 		var array_type = type as ArrayType;
-		if (type.data_type != null && get_ccode_default_value (type.data_type) != "") {
+		if (type.data_type != null && !type.nullable && get_ccode_default_value (type.data_type) != "") {
 			return new CCodeConstant (get_ccode_default_value (type.data_type));
 		} else if (initializer_expression && !type.nullable &&
 				   (st != null || (array_type != null && array_type.fixed_length))) {
