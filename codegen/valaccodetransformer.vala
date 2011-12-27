@@ -164,4 +164,22 @@ public class Vala.CCodeTransformer : CodeTransformer {
 			}
 		}
 	}
+
+	public override void visit_conditional_expression (ConditionalExpression expr) {
+		// convert to if statement
+		Expression replacement = null;
+		var formal_target_type = copy_type (expr.target_type);
+		var target_type = copy_type (expr.target_type);
+		begin_replace_expression (expr);
+
+		var result = b.add_temp_declaration (expr.value_type);
+		statements (@"if ($(expr.condition)) {
+					$result = $(expr.true_expression);
+					} else {
+					$result = $(expr.false_expression);
+					}");
+
+		replacement = return_temp_access (result, expr.value_type, target_type, formal_target_type);
+		end_replace_expression (replacement);
+	}
 }

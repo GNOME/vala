@@ -151,42 +151,13 @@ public class Vala.ConditionalExpression : Expression {
 			return false;
 		}
 
-		// convert ternary expression into if statement
-		// required for flow analysis and exception handling
-
-		string temp_name = get_temp_name ();
-
 		true_expression.target_type = target_type;
 		false_expression.target_type = target_type;
 
-		var local = new LocalVariable (null, temp_name, null, source_reference);
-		var decl = new DeclarationStatement (local, source_reference);
-
-		var true_local = new LocalVariable (null, temp_name, true_expression, true_expression.source_reference);
-		var true_block = new Block (true_expression.source_reference);
-		var true_decl = new DeclarationStatement (true_local, true_expression.source_reference);
-		true_block.add_statement (true_decl);
-
-		var false_local = new LocalVariable (null, temp_name, false_expression, false_expression.source_reference);
-		var false_block = new Block (false_expression.source_reference);
-		var false_decl = new DeclarationStatement (false_local, false_expression.source_reference);
-		false_block.add_statement (false_decl);
-
-		var if_stmt = new IfStatement (condition, true_block, false_block, source_reference);
-
-		insert_statement (context.analyzer.get_insert_block (this), decl);
-		insert_statement (context.analyzer.get_insert_block (this), if_stmt);
-
-		if (!if_stmt.check (context) || true_expression.error || false_expression.error) {
+		if (!condition.check (context) || !true_expression.check (context) || !false_expression.check (context)) {
 			error = true;
 			return false;
 		}
-
-		true_expression = true_local.initializer;
-		false_expression = false_local.initializer;
-
-		true_block.remove_local_variable (true_local);
-		false_block.remove_local_variable (false_local);
 
 		if (false_expression.value_type.compatible (true_expression.value_type)) {
 			value_type = true_expression.value_type.copy ();
@@ -202,27 +173,8 @@ public class Vala.ConditionalExpression : Expression {
 		value_type.floating_reference = false;
 		value_type.check (context);
 
-		local.variable_type = value_type;
-		decl.check (context);
-
 		true_expression.target_type = value_type;
 		false_expression.target_type = value_type;
-
-		var true_stmt = new ExpressionStatement (new Assignment (new MemberAccess.simple (local.name, true_expression.source_reference), true_expression, AssignmentOperator.SIMPLE, true_expression.source_reference), true_expression.source_reference);
-
-		var false_stmt = new ExpressionStatement (new Assignment (new MemberAccess.simple (local.name, false_expression.source_reference), false_expression, AssignmentOperator.SIMPLE, false_expression.source_reference), false_expression.source_reference);
-
-		true_block.replace_statement (true_decl, true_stmt);
-		false_block.replace_statement (false_decl, false_stmt);
-		true_stmt.check (context);
-		false_stmt.check (context);
-
-		var ma = new MemberAccess.simple (local.name, source_reference);
-		ma.formal_target_type = formal_target_type;
-		ma.target_type = target_type;
-
-		parent_node.replace_expression (this, ma);
-		ma.check (context);
 
 		return true;
 	}
