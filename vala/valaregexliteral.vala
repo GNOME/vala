@@ -46,8 +46,6 @@ public class Vala.RegexLiteral : Literal {
 
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_regex_literal (this);
-
-		visitor.visit_expression (this);
 	}
 
 	public override bool is_pure () {

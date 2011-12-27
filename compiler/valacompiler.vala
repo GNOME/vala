@@ -403,7 +403,7 @@ class Vala.Compiler {
 			}
 		}
 
-		var transformer = new CodeTransformer ();
+		var transformer = new GVariantTransformer ();
 		transformer.transform (context);
 
 		if (context.report.get_errors () > 0 || (fatal_warnings && context.report.get_warnings () > 0)) {

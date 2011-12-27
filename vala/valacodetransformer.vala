@@ -48,7 +48,7 @@ public class Vala.CodeTransformer : CodeVisitor {
 		if (!node.check (context)) {
 			return;
 		}
-		//node.accept (this);
+		node.accept (this);
 	}
 
 	public override void visit_source_file (SourceFile source_file) {
@@ -175,6 +175,10 @@ public class Vala.CodeTransformer : CodeVisitor {
 	bool always_false (Expression condition) {
 		var literal = condition as BooleanLiteral;
 		return (literal != null && !literal.value);
+	}
+
+	public override void visit_loop (Loop loop) {
+		loop.accept_children (this);
 	}
 
 	public override void visit_while_statement (WhileStatement stmt) {
