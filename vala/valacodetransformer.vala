@@ -371,4 +371,32 @@ public class Vala.CodeTransformer : CodeVisitor {
 			}
 		}
 	}
+
+	public override void visit_conditional_expression (ConditionalExpression expr) {
+		// convert to if statement
+
+		var local = new LocalVariable (expr.value_type, expr.get_temp_name (), null, expr.source_reference);
+		var decl = new DeclarationStatement (local, expr.source_reference);
+		expr.insert_statement (context.analyzer.get_insert_block (expr), decl);
+		check (decl);
+
+		var true_stmt = new ExpressionStatement (new Assignment (new MemberAccess.simple (local.name, expr.true_expression.source_reference), expr.true_expression, AssignmentOperator.SIMPLE, expr.true_expression.source_reference), expr.true_expression.source_reference);
+		var true_block = new Block (expr.true_expression.source_reference);
+		true_block.add_statement (true_stmt);
+
+		var false_stmt = new ExpressionStatement (new Assignment (new MemberAccess.simple (local.name, expr.false_expression.source_reference), expr.false_expression, AssignmentOperator.SIMPLE, expr.false_expression.source_reference), expr.false_expression.source_reference);
+		var false_block = new Block (expr.false_expression.source_reference);
+		false_block.add_statement (false_stmt);
+
+		var if_stmt = new IfStatement (expr.condition, true_block, false_block, expr.source_reference);
+		expr.insert_statement (context.analyzer.get_insert_block (expr), if_stmt);
+		check (if_stmt);
+
+		var ma = new MemberAccess.simple (local.name, expr.source_reference);
+		ma.formal_target_type = expr.formal_target_type;
+		ma.target_type = expr.target_type;
+
+		expr.parent_node.replace_expression (expr, ma);
+		check (ma);
+	}
 }
