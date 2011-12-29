@@ -31,6 +31,74 @@ public class Vala.GIRWriter : CodeVisitor {
 	private string gir_namespace;
 	private string gir_version;
 
+	protected virtual string? get_interface_comment (Interface iface) {
+		return null;
+	}
+
+	protected virtual string? get_struct_comment (Struct st) {
+		return null;
+	}
+
+	protected virtual string? get_enum_comment (Enum en) {
+		return null;
+	}
+
+	protected virtual string? get_class_comment (Class c) {
+		return null;
+	}
+
+	protected virtual string? get_error_code_comment (ErrorCode ecode) {
+		return null;
+	}
+
+	protected virtual string? get_enum_value_comment (EnumValue ev) {
+		return null;
+	}
+
+	protected virtual string? get_constant_comment (Constant c) {
+		return null;
+	}
+
+	protected virtual string? get_error_domain_comment (ErrorDomain edomain) {
+		return null;
+	}
+
+	protected virtual string? get_field_comment (Field f) {
+		return null;
+	}
+
+	protected virtual string? get_delegate_comment (Delegate cb) {
+		return null;
+	}
+
+	protected virtual string? get_method_comment (Method m) {
+		return null;
+	}
+
+	protected virtual string? get_property_comment (Property prop) {
+		return null;
+	}
+
+	protected virtual string? get_delegate_return_comment (Delegate cb) {
+		return null;
+	}
+
+	protected virtual string? get_signal_return_comment (Signal sig) {
+		return null;
+	}
+
+	protected virtual string? get_method_return_comment (Method m) {
+		return null;
+	}
+
+	protected virtual string? get_signal_comment (Signal sig) {
+		return null;
+	}
+
+	protected virtual string? get_parameter_comment (Parameter param) {
+		return null;
+	}
+
 	StringBuilder buffer = new StringBuilder();
 	FileStream stream;
 	Vala.HashSet<Namespace> unannotated_namespaces = new Vala.HashSet<Namespace>();
@@ -119,6 +187,15 @@ public class Vala.GIRWriter : CodeVisitor {
 		foreach (var ns in our_namespaces) {
 			ns.source_reference.file.gir_namespace = gir_namespace;
 			ns.source_reference.file.gir_version = gir_version;
+		}
+	}
+
+	private void write_doc (string? comment) {
+		if (comment != null) {
+			write_indent ();
+			buffer.append ("<doc xml:whitespace=\"preserve\">");
+			buffer.append (comment);
+			buffer.append ("</doc>\n");
 		}
 	}
 
@@ -231,6 +308,8 @@ public class Vala.GIRWriter : CodeVisitor {
 			buffer.append_printf (">\n");
 			indent++;
 
+			write_doc (get_class_comment (cl));
+
 			// write implemented interfaces
 			foreach (DataType base_type in cl.get_base_types ()) {
 				var object_type = (ObjectType) base_type;
@@ -297,7 +376,7 @@ public class Vala.GIRWriter : CodeVisitor {
 						write_indent ();
 						buffer.append_printf("<field name=\"%s\">\n", m.name);
 						indent++;
-						do_write_signature (m, "callback", true, m.name, CCodeBaseModule.get_ccode_name (m), m.get_async_begin_parameters (), new VoidType (), false);
+						do_write_signature (m, "callback", true, m.name, CCodeBaseModule.get_ccode_name (m), m.get_async_begin_parameters (), new VoidType (), false, false);
 						indent--;
 						write_indent ();
 						buffer.append_printf ("</field>\n");
@@ -305,7 +384,7 @@ public class Vala.GIRWriter : CodeVisitor {
 						write_indent ();
 						buffer.append_printf("<field name=\"%s\">\n", finish_name);
 						indent++;
-						do_write_signature (m, "callback", true, finish_name, CCodeBaseModule.get_ccode_finish_name (m), m.get_async_end_parameters (), m.return_type, m.tree_can_fail);
+						do_write_signature (m, "callback", true, finish_name, CCodeBaseModule.get_ccode_finish_name (m), m.get_async_end_parameters (), m.return_type, m.tree_can_fail, false);
 						indent--;
 						write_indent ();
 						buffer.append_printf ("</field>\n");
@@ -313,7 +392,7 @@ public class Vala.GIRWriter : CodeVisitor {
 						write_indent ();
 						buffer.append_printf("<field name=\"%s\">\n", m.name);
 						indent++;
-						do_write_signature (m, "callback", true, m.name, CCodeBaseModule.get_ccode_name (m), m.get_parameters (), m.return_type, m.tree_can_fail);
+						do_write_signature (m, "callback", true, m.name, CCodeBaseModule.get_ccode_name (m), m.get_parameters (), m.return_type, m.tree_can_fail, false);
 						indent--;
 						write_indent ();
 						buffer.append_printf ("</field>\n");
@@ -326,7 +405,7 @@ public class Vala.GIRWriter : CodeVisitor {
 					write_indent ();
 					buffer.append_printf ("<field name=\"%s\">\n", sig.name);
 					indent++;
-					write_signature (sig.default_handler, "callback", true);
+					write_signature (sig.default_handler, "callback", false, true);
 					indent--;
 					write_indent ();
 					buffer.append_printf ("</field>\n");
@@ -345,6 +424,8 @@ public class Vala.GIRWriter : CodeVisitor {
 			write_symbol_attributes (cl);
 			buffer.append_printf (">\n");
 			indent++;
+
+			write_doc (get_class_comment (cl));
 
 			write_annotations (cl);
 
@@ -379,6 +460,8 @@ public class Vala.GIRWriter : CodeVisitor {
 		write_symbol_attributes (st);
 		buffer.append_printf (">\n");
 		indent++;
+
+		write_doc (get_struct_comment (st));
 
 		write_annotations (st);
 
@@ -416,6 +499,8 @@ public class Vala.GIRWriter : CodeVisitor {
 		write_symbol_attributes (iface);
 		buffer.append_printf (">\n");
 		indent++;
+
+		write_doc (get_interface_comment (iface));
 
 		// write prerequisites
 		if (iface.get_prerequisites ().size > 0) {
@@ -463,7 +548,7 @@ public class Vala.GIRWriter : CodeVisitor {
 					write_indent ();
 					buffer.append_printf("<field name=\"%s\">\n", m.name);
 					indent++;
-					do_write_signature (m, "callback", true, m.name, CCodeBaseModule.get_ccode_name (m), m.get_async_begin_parameters (), new VoidType (), false);
+					do_write_signature (m, "callback", true, m.name, CCodeBaseModule.get_ccode_name (m), m.get_async_begin_parameters (), new VoidType (), false, false);
 					indent--;
 					write_indent ();
 					buffer.append_printf ("</field>\n");
@@ -471,7 +556,7 @@ public class Vala.GIRWriter : CodeVisitor {
 					write_indent ();
 					buffer.append_printf("<field name=\"%s\">\n", finish_name);
 					indent++;
-					do_write_signature (m, "callback", true, finish_name, CCodeBaseModule.get_ccode_finish_name (m), m.get_async_end_parameters (), m.return_type, m.tree_can_fail);
+					do_write_signature (m, "callback", true, finish_name, CCodeBaseModule.get_ccode_finish_name (m), m.get_async_end_parameters (), m.return_type, m.tree_can_fail, false);
 					indent--;
 					write_indent ();
 					buffer.append_printf ("</field>\n");
@@ -479,7 +564,7 @@ public class Vala.GIRWriter : CodeVisitor {
 					write_indent ();
 					buffer.append_printf("<field name=\"%s\">\n", m.name);
 					indent++;
-					do_write_signature (m, "callback", true, m.name, CCodeBaseModule.get_ccode_name (m), m.get_parameters (), m.return_type, m.tree_can_fail);
+					do_write_signature (m, "callback", true, m.name, CCodeBaseModule.get_ccode_name (m), m.get_parameters (), m.return_type, m.tree_can_fail, false);
 					indent--;
 					write_indent ();
 					buffer.append_printf ("</field>\n");
@@ -545,6 +630,8 @@ public class Vala.GIRWriter : CodeVisitor {
 		buffer.append_printf (">\n");
 		indent++;
 
+		write_doc (get_enum_comment (en));
+
 		write_annotations (en);
 
 		enum_value = 0;
@@ -576,7 +663,20 @@ public class Vala.GIRWriter : CodeVisitor {
 			}
 		}
 		write_symbol_attributes (ev);
-		buffer.append_printf ("/>\n");
+
+		string? comment = get_enum_value_comment (ev);
+		if (comment == null) {
+			buffer.append_printf ("/>\n");
+		} else {
+			buffer.append_printf (">\n");
+			indent++;
+
+			write_doc (comment);
+
+			indent--;
+			write_indent ();
+			buffer.append_printf ("</member>\n");
+		}
 	}
 
 	public override void visit_error_domain (ErrorDomain edomain) {
@@ -605,6 +705,8 @@ public class Vala.GIRWriter : CodeVisitor {
 		buffer.append_printf (">\n");
 		indent++;
 
+		write_doc (get_error_domain_comment (edomain));
+
 		enum_value = 0;
 		hierarchy.insert (0, edomain);
 		edomain.accept_children (this);
@@ -627,7 +729,20 @@ public class Vala.GIRWriter : CodeVisitor {
 			buffer.append_printf (" value=\"%d\"", enum_value++);
 		}
 		write_symbol_attributes (ecode);
-		buffer.append_printf ("/>\n");
+
+		string? comment = get_error_code_comment (ecode);
+		if (comment == null) {
+			buffer.append_printf ("/>\n");
+		} else {
+			buffer.append_printf (">\n");
+			indent++;
+
+			write_doc (comment);
+
+			indent--;
+			write_indent ();
+			buffer.append_printf ("</member>\n");
+		}
 	}
 
 	public override void visit_constant (Constant c) {
@@ -649,6 +764,8 @@ public class Vala.GIRWriter : CodeVisitor {
 		write_symbol_attributes (c);
 		buffer.append_printf (">\n");
 		indent++;
+
+		write_doc (get_constant_comment (c));
 
 		write_type (initializer.value_type);
 
@@ -675,6 +792,8 @@ public class Vala.GIRWriter : CodeVisitor {
 		buffer.append_printf (">\n");
 		indent++;
 
+		write_doc (get_field_comment (f));
+
 		write_annotations (f);
 
 		write_type (f.variable_type);
@@ -687,18 +806,18 @@ public class Vala.GIRWriter : CodeVisitor {
 	private void write_implicit_params (DataType type, ref int index, bool has_array_length, string name, ParameterDirection direction) {
 		if (type is ArrayType && has_array_length) {
 			var int_type = new IntegerType (CodeContext.get ().root.scope.lookup ("int") as Struct);
-			write_param_or_return (int_type, true, ref index, has_array_length, "%s_length1".printf (name), direction);
+			write_param_or_return (int_type, true, ref index, has_array_length, "%s_length1".printf (name), null, direction);
 		} else if (type is DelegateType) {
 			var data_type = new PointerType (new VoidType ());
-			write_param_or_return (data_type, true, ref index, false, "%s_target".printf (name), direction);
+			write_param_or_return (data_type, true, ref index, false, "%s_target".printf (name), null, direction);
 			if (type.value_owned) {
 				var notify_type = new DelegateType (CodeContext.get ().root.scope.lookup ("GLib").scope.lookup ("DestroyNotify") as Delegate);
-				write_param_or_return (notify_type, true, ref index, false, "%s_target_destroy_notify".printf (name), direction);
+				write_param_or_return (notify_type, true, ref index, false, "%s_target_destroy_notify".printf (name), null, direction);
 			}
 		}
 	}
 
-	private void write_params_and_return (List<Parameter> params, DataType? return_type, bool return_array_length, bool constructor = false, DataType? instance_type = null, bool user_data = false) {
+	private void write_params_and_return (List<Parameter> params, DataType? return_type, bool return_array_length, string? return_comment = null, bool constructor = false, DataType? instance_type = null, bool user_data = false) {
 		int last_index = 0;
 		bool ret_is_struct = return_type != null && return_type.is_real_non_null_struct_type ();
 		if (params.size != 0 || instance_type != null || (return_type is ArrayType && return_array_length) || (return_type is DelegateType) || ret_is_struct) {
@@ -712,14 +831,14 @@ public class Vala.GIRWriter : CodeVisitor {
 			}
 
 			foreach (Parameter param in params) {
-				write_param_or_return (param.variable_type, true, ref index, CCodeBaseModule.get_ccode_array_length (param), param.name, param.direction);
+				write_param_or_return (param.variable_type, true, ref index, CCodeBaseModule.get_ccode_array_length (param), param.name, get_parameter_comment (param), param.direction);
 
 				write_implicit_params (param.variable_type, ref index, CCodeBaseModule.get_ccode_array_length (param), param.name, param.direction);
 			}
 
 			if (ret_is_struct) {
 				// struct returns are converted to parameters
-				write_param_or_return (return_type, true, ref index, false, "result", ParameterDirection.OUT, constructor, true);
+				write_param_or_return (return_type, true, ref index, false, "result", return_comment, ParameterDirection.OUT, constructor, true);
 			} else {
 				write_implicit_params (return_type, ref index, return_array_length, "result", ParameterDirection.OUT);
 			}
@@ -743,9 +862,9 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 
 		if (return_type != null && !ret_is_struct) {
-			write_param_or_return (return_type, false, ref last_index, return_array_length, null, ParameterDirection.IN, constructor);
+			write_param_or_return (return_type, false, ref last_index, return_array_length, null, return_comment, ParameterDirection.IN, constructor);
 		} else if (ret_is_struct) {
-			write_param_or_return (new VoidType (), false, ref last_index, false, null, ParameterDirection.IN);
+			write_param_or_return (new VoidType (), false, ref last_index, false, null, return_comment, ParameterDirection.IN);
 		}
 	}
 
@@ -768,9 +887,11 @@ public class Vala.GIRWriter : CodeVisitor {
 		buffer.append_printf (">\n");
 		indent++;
 
+		write_doc (get_delegate_comment (cb));
+
 		write_annotations (cb);
 
-		write_params_and_return (cb.get_parameters (), cb.return_type, CCodeBaseModule.get_ccode_array_length (cb), false, null, cb.has_target);
+		write_params_and_return (cb.get_parameters (), cb.return_type, CCodeBaseModule.get_ccode_array_length (cb), get_delegate_return_comment (cb), false, null, cb.has_target);
 
 		indent--;
 		write_indent ();
@@ -803,10 +924,10 @@ public class Vala.GIRWriter : CodeVisitor {
 			tag_name = "function";
 		}
 
-		write_signature (m, tag_name);
+		write_signature (m, tag_name, true);
 
 		if (m.is_abstract || m.is_virtual) {
-			write_signature (m, "virtual-method", false);
+			write_signature (m, "virtual-method", true, false);
 		}
 	}
 
@@ -831,7 +952,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		return true;
 	}
 
-	private void write_signature (Method m, string tag_name, bool instance = false) {
+	private void write_signature (Method m, string tag_name, bool write_doc, bool instance = false) {
 		var parent = this.hierarchy.get (0);
 		string name;
 		if (m.parent_symbol != parent) {
@@ -851,14 +972,14 @@ public class Vala.GIRWriter : CodeVisitor {
 				finish_name = finish_name.substring (0, finish_name.length - "_async".length);
 			}
 			finish_name += "_finish";
-			do_write_signature (m, tag_name, instance, name, CCodeBaseModule.get_ccode_name (m), m.get_async_begin_parameters (), new VoidType (), false);
-			do_write_signature (m, tag_name, instance, finish_name, CCodeBaseModule.get_ccode_finish_name (m), m.get_async_end_parameters (), m.return_type, m.tree_can_fail);
+			do_write_signature (m, tag_name, instance, name, CCodeBaseModule.get_ccode_name (m), m.get_async_begin_parameters (), new VoidType (), false, true);
+			do_write_signature (m, tag_name, instance, finish_name, CCodeBaseModule.get_ccode_finish_name (m), m.get_async_end_parameters (), m.return_type, m.tree_can_fail, false);
 		} else {
-			do_write_signature (m, tag_name, instance, name, CCodeBaseModule.get_ccode_name (m), m.get_parameters (), m.return_type, m.tree_can_fail);
+			do_write_signature (m, tag_name, instance, name, CCodeBaseModule.get_ccode_name (m), m.get_parameters (), m.return_type, m.tree_can_fail, true);
 		}
 	}
 
-	private void do_write_signature (Method m, string tag_name, bool instance, string name, string cname, List<Vala.Parameter> params, DataType return_type, bool can_fail) {
+	private void do_write_signature (Method m, string tag_name, bool instance, string name, string cname, List<Vala.Parameter> params, DataType return_type, bool can_fail, bool write_comment) {
 		write_indent ();
 		buffer.append_printf ("<%s name=\"%s\"", tag_name, name);
 		if (tag_name == "virtual-method") {
@@ -876,6 +997,12 @@ public class Vala.GIRWriter : CodeVisitor {
 		buffer.append_printf (">\n");
 		indent++;
 
+		string? return_comment = null;
+		if (write_comment) {
+			return_comment = get_method_return_comment (m);
+			write_doc (get_method_comment (m));
+		}
+
 		write_annotations (m);
 
 		DataType instance_type = null;
@@ -883,7 +1010,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			instance_type = CCodeBaseModule.get_data_type_for_symbol ((TypeSymbol) m.parent_symbol);
 		}
 
-		write_params_and_return (params, return_type, CCodeBaseModule.get_ccode_array_length (m), false, instance_type);
+		write_params_and_return (params, return_type, CCodeBaseModule.get_ccode_array_length (m), return_comment, false, instance_type);
 
 		indent--;
 		write_indent ();
@@ -923,11 +1050,13 @@ public class Vala.GIRWriter : CodeVisitor {
 		buffer.append_printf (">\n");
 		indent++;
 
+		write_doc (get_method_comment (m));
+
 		write_annotations (m);
 
 
 		var datatype = CCodeBaseModule.get_data_type_for_symbol ((TypeSymbol) m.parent_symbol);
-		write_params_and_return (m.get_parameters (), datatype, false, true);
+		write_params_and_return (m.get_parameters (), datatype, false, get_method_return_comment (m), true);
 
 		indent--;
 		write_indent ();
@@ -958,6 +1087,8 @@ public class Vala.GIRWriter : CodeVisitor {
 		buffer.append_printf (">\n");
 		indent++;
 
+		write_doc (get_property_comment (prop));
+
 		write_annotations (prop);
 
 		write_type (prop.property_type);
@@ -978,9 +1109,11 @@ public class Vala.GIRWriter : CodeVisitor {
 		buffer.append_printf (">\n");
 		indent++;
 
+		write_doc (get_signal_comment (sig));
+
 		write_annotations (sig);
 
-		write_params_and_return (sig.get_parameters (), sig.return_type, false);
+		write_params_and_return (sig.get_parameters (), sig.return_type, false, get_signal_return_comment (sig));
 
 		indent--;
 		write_indent ();
@@ -1004,7 +1137,7 @@ public class Vala.GIRWriter : CodeVisitor {
 	}
 
 
-	private void write_param_or_return (DataType type, bool is_parameter, ref int index, bool has_array_length, string? name = null, ParameterDirection direction = ParameterDirection.IN, bool constructor = false, bool caller_allocates = false) {
+	private void write_param_or_return (DataType type, bool is_parameter, ref int index, bool has_array_length, string? name = null, string? comment = null, ParameterDirection direction = ParameterDirection.IN, bool constructor = false, bool caller_allocates = false) {
 		write_indent ();
 		string tag = is_parameter ? "parameter" : "return-value";
 		buffer.append_printf ("<%s", tag);
@@ -1046,6 +1179,8 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		buffer.append_printf (">\n");
 		indent++;
+
+		write_doc (comment);
 
 		int length_param_index = -1;
 		if (has_array_length) {
