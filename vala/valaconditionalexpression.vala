@@ -110,6 +110,18 @@ public class Vala.ConditionalExpression : Expression {
 		false_expression.get_error_types (collection, source_reference);
 	}
 
+	public override void replace_expression (Expression old_node, Expression new_node) {
+		if (condition == old_node) {
+			condition = new_node;
+		}
+		if (true_expression == old_node) {
+			true_expression = new_node;
+		}
+		if (false_expression == old_node) {
+			false_expression = new_node;
+		}
+	}
+
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
