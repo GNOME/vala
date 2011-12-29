@@ -91,6 +91,12 @@ public class Vala.PostfixExpression : Expression {
 		inner.get_used_variables (collection);
 	}
 
+	public override void replace_expression (Expression old_node, Expression new_node) {
+		if (inner == old_node) {
+			inner = new_node;
+		}
+	}
+
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;

@@ -57,6 +57,12 @@ public class Vala.LockStatement : CodeNode, Statement {
 		visitor.visit_lock_statement (this);
 	}
 
+	public override void replace_expression (Expression old_node, Expression new_node) {
+		if (resource == old_node) {
+			resource = new_node;
+		}
+	}
+
 	public override bool check (CodeContext context) {
 		if (body != null) {
 			// if the statement isn't empty, it is converted into a try statement
