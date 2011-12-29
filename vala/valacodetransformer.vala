@@ -196,6 +196,7 @@ public class Vala.CodeTransformer : CodeVisitor {
 		var loop = new Loop (stmt.body, stmt.source_reference);
 
 		var parent_block = (Block) stmt.parent_node;
+		context.analyzer.replaced_nodes.add (stmt);
 		parent_block.replace_statement (stmt, loop);
 
 		stmt.body.checked = false;
@@ -210,6 +211,7 @@ public class Vala.CodeTransformer : CodeVisitor {
 			var loop = new Loop (stmt.body, stmt.source_reference);
 
 			var parent_block = (Block) stmt.parent_node;
+			context.analyzer.replaced_nodes.add (stmt);
 			parent_block.replace_statement (stmt, loop);
 
 			check (loop);
@@ -237,6 +239,7 @@ public class Vala.CodeTransformer : CodeVisitor {
 		block.add_statement (new Loop (stmt.body, stmt.source_reference));
 
 		var parent_block = (Block) stmt.parent_node;
+		context.analyzer.replaced_nodes.add (stmt);
 		parent_block.replace_statement (stmt, block);
 
 		stmt.body.checked = false;
@@ -283,6 +286,7 @@ public class Vala.CodeTransformer : CodeVisitor {
 		block.add_statement (new Loop (stmt.body, stmt.source_reference));
 
 		var parent_block = (Block) stmt.parent_node;
+		context.analyzer.replaced_nodes.add (stmt);
 		parent_block.replace_statement (stmt, block);
 
 		stmt.body.checked = false;
@@ -366,6 +370,7 @@ public class Vala.CodeTransformer : CodeVisitor {
 				block.remove_local_variable (local);
 				context.analyzer.get_insert_block (expr).add_local_variable (local);
 
+				context.analyzer.replaced_nodes.add (expr);
 				old_parent_node.replace_expression (expr, temp_access);
 				check (temp_access);
 			}
@@ -396,6 +401,7 @@ public class Vala.CodeTransformer : CodeVisitor {
 		ma.formal_target_type = expr.formal_target_type;
 		ma.target_type = expr.target_type;
 
+		context.analyzer.replaced_nodes.add (expr);
 		expr.parent_node.replace_expression (expr, ma);
 		check (ma);
 	}

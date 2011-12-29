@@ -85,11 +85,9 @@ public class Vala.ConditionalExpression : Expression {
 	}
 
 	public override void accept (CodeVisitor visitor) {
-		// FIXME: temporary workaround to keep alive the object
-		var self = this;
-		visitor.visit_conditional_expression (self);
+		visitor.visit_conditional_expression (this);
 
-		visitor.visit_expression (self);
+		visitor.visit_expression (this);
 	}
 
 	public override void accept_children (CodeVisitor visitor) {
