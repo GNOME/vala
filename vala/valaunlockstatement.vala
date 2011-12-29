@@ -40,6 +40,12 @@ public class Vala.UnlockStatement : CodeNode, Statement {
 		visitor.visit_unlock_statement (this);
 	}
 
+	public override void replace_expression (Expression old_node, Expression new_node) {
+		if (resource == old_node) {
+			resource = new_node;
+		}
+	}
+
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;

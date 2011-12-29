@@ -91,6 +91,12 @@ public class Vala.WhileStatement : CodeNode, Statement {
 		return (literal != null && !literal.value);
 	}
 
+	public override void replace_expression (Expression old_node, Expression new_node) {
+		if (condition == old_node) {
+			condition = new_node;
+		}
+	}
+
 	public override bool check (CodeContext context) {
 		// convert to simple loop
 
