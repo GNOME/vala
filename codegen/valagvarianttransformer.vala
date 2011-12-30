@@ -274,13 +274,89 @@ public class Vala.GVariantTransformer : CodeTransformer {
 		return new MethodCall (new MemberAccess (expr, "get_" + basic_type.type_name, b.source_reference), b.source_reference);
 	}
 
+	Expression deserialize_array (ArrayType array_type, Expression expr) {
+		var variant = b.add_temp_declaration (data_type ("GLib.Variant", true), null);
+		var iterator = b.add_temp_declaration (data_type ("GLib.VariantIter", true), null);
+		b.add_assignment (expression (variant), expr);
+		b.add_assignment (expression (iterator), expression (@"$variant.iterator ()"));
+
+		var array_new = new ArrayCreationExpression (array_type.element_type, array_type.rank, null, b.source_reference);
+		var array = b.add_temp_declaration (copy_type (array_type, true), null);
+
+		string[] indices = new string[array_type.rank];
+		for (int dim=1; dim <= array_type.rank; dim++) {
+			string length = b.add_temp_declaration (data_type ("size_t", true), null);
+			b.add_assignment (expression (length), expression (@"$iterator.n_children ()"));
+			array_new.append_size (expression (length));
+			indices[dim-1] = b.add_temp_declaration (null, expression ("0"));
+			if (dim < array_type.rank) {
+				b.add_expression (expression (@"$iterator.next_value ()"));
+			}
+		}
+		b.add_assignment (expression (array), array_new);
+
+		deserialize_array_dim (array_type, variant, indices, 1, array);
+		return expression (array);
+	}
+
+	void deserialize_array_dim (ArrayType array_type, string variant, string[] indices, int dim, string array) {
+		var iter = b.add_temp_declaration (data_type ("GLib.VariantIter", true), null);
+		b.add_assignment (expression (iter), expression (@"$variant.iterator ()"));
+		var new_variant = b.add_temp_declaration (data_type ("GLib.Variant", true), null);
+		b.open_while (expression (@"($new_variant = $iter.next_value ()) != null"));
+
+		if (dim == array_type.rank) {
+			var element_access = new ElementAccess (expression (array), b.source_reference);
+			for (int i = 0; i < array_type.rank; i++) {
+				element_access.append_index (expression (@"$(indices[i])++"));
+			}
+			b.add_assignment (element_access, deserialize_expression (array_type.element_type, expression (new_variant)));
+		} else {
+			deserialize_array_dim (array_type, new_variant, indices, dim + 1, array);
+		}
+
+		b.close ();
+	}
+
 	Expression? deserialize_expression (DataType type, Expression expr) {
 		BasicTypeInfo basic_type;
 		Expression result = null;
 		if (get_basic_type_info (get_type_signature (type), out basic_type)) {
 			result = deserialize_basic (basic_type, expr);
+		} else if (type is ArrayType) {
+			result = deserialize_array ((ArrayType) type, expr);
 		}
 		return result;
+	}
+
+	Symbol symbol_from_string (string symbol_string) {
+		Symbol sym = context.root;
+		foreach (unowned string s in symbol_string.split (".")) {
+			sym = sym.scope.lookup (s);
+		}
+		return sym;
+	}
+
+	DataType data_type (string s, bool owned_by_default) {
+		DataType type;
+		if (owned_by_default) {
+			if (s.has_prefix ("unowned ")) {
+				type = context.analyzer.get_data_type_for_symbol ((TypeSymbol) symbol_from_string (s.split (" ")[1]));
+				type.value_owned = false;
+			} else {
+				type = context.analyzer.get_data_type_for_symbol ((TypeSymbol) symbol_from_string (s));
+				type.value_owned = true;
+			}
+		} else {
+			if (s.has_prefix ("owned ")) {
+				type = context.analyzer.get_data_type_for_symbol ((TypeSymbol) symbol_from_string (s.split (" ")[1]));
+				type.value_owned = true;
+			} else {
+				type = context.analyzer.get_data_type_for_symbol ((TypeSymbol) symbol_from_string (s));
+				type.value_owned = false;
+			}
+		}
+		return type;
 	}
 
 	public override void visit_cast_expression (CastExpression expr) {
