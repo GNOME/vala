@@ -231,11 +231,19 @@ public class Vala.GVariantTransformer : CodeTransformer {
 		return expression (@"$builder.end ()");
 	}
 
-	Expression? serialize_expression (DataType type, Expression expr) {
-		if (type.data_type == context.analyzer.gvariant_type.data_type) {
-			return expr;
-		}
+	Expression? serialize_hash_table (ObjectType type, Expression expr) {
+		string temp = b.add_temp_declaration (expr.value_type, expr);
 
+		var builderinit = expression (@"new GLib.VariantBuilder (new GLib.VariantType (\"$(get_type_signature (type))\"))");
+		var builder = b.add_temp_declaration (null, builderinit);
+
+		var for_each = expression (@"$temp.for_each ((k,v) => $builder.add (\"{?*}\", k, v))");
+		b.add_expression (for_each);
+
+		return expression (@"$builder.end ()");
+	}
+
+	Expression? serialize_expression (DataType type, Expression expr) {
 		BasicTypeInfo basic_type;
 		Expression result = null;
 		if (get_basic_type_info (get_type_signature (type), out basic_type)) {
@@ -244,6 +252,14 @@ public class Vala.GVariantTransformer : CodeTransformer {
 			result = serialize_array ((ArrayType) type, expr);
 		} else if (type.data_type is Struct) {
 			result = serialize_struct ((Struct) type.data_type, expr);
+		} else if (type is ObjectType) {
+			if (type.data_type == context.analyzer.gvariant_type.data_type) {
+				var variant_new = (ObjectCreationExpression) expression ("new GLib.Variant.variant ()");
+				variant_new.add_argument (expr);
+				result = variant_new;
+			} else if (type.data_type.get_full_name () == "GLib.HashTable") {
+				result = serialize_hash_table ((ObjectType) type, expr);
+			}
 		}
 		return result;
 	}
