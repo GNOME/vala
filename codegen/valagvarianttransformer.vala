@@ -318,6 +318,34 @@ public class Vala.GVariantTransformer : CodeTransformer {
 		b.close ();
 	}
 
+	Expression? deserialize_struct (Struct st, Expression expr) {
+		var variant = b.add_temp_declaration (data_type ("GLib.Variant", true), null);
+		var iterator = b.add_temp_declaration (data_type ("GLib.VariantIter", true), null);
+		b.add_assignment (expression (variant), expr);
+		b.add_assignment (expression (iterator), expression (@"$variant.iterator ()"));
+		var type = context.analyzer.get_data_type_for_symbol (st);
+		type.value_owned = true;
+		var result = b.add_temp_declaration (type, expression ("{}"));
+
+		bool field_found = false;
+
+		foreach (var f in st.get_fields ()) {
+			if (f.binding != MemberBinding.INSTANCE) {
+				continue;
+			}
+
+			field_found = true;
+
+			b.add_assignment (expression (@"$result.$(f.name)"), deserialize_expression (f.variable_type, expression (@"$iterator.next_value ()")));
+		}
+
+		if (!field_found) {
+			return null;
+		}
+
+		return expression (result);
+	}
+
 	Expression? deserialize_expression (DataType type, Expression expr) {
 		BasicTypeInfo basic_type;
 		Expression result = null;
@@ -325,6 +353,8 @@ public class Vala.GVariantTransformer : CodeTransformer {
 			result = deserialize_basic (basic_type, expr);
 		} else if (type is ArrayType) {
 			result = deserialize_array ((ArrayType) type, expr);
+		} else if (type.data_type is Struct) {
+			result = deserialize_struct ((Struct) type.data_type, expr);
 		}
 		return result;
 	}
