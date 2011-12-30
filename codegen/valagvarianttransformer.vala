@@ -346,6 +346,44 @@ public class Vala.GVariantTransformer : CodeTransformer {
 		return expression (result);
 	}
 
+	Expression deserialize_hash_table (DataType type, Expression expr) {
+		var variant = b.add_temp_declaration (data_type ("GLib.Variant", true), null);
+		var iterator = b.add_temp_declaration (data_type ("GLib.VariantIter", true), null);
+		b.add_assignment (expression (variant), expr);
+		b.add_assignment (expression (iterator), expression (@"$variant.iterator ()"));
+
+		var type_args = type.get_type_arguments ();
+		assert (type_args.size == 2);
+		var key_type = type_args.get (0);
+		var value_type = type_args.get (1);
+
+		var hash_table_new = new ObjectCreationExpression (null, b.source_reference);
+		hash_table_new.type_reference = type.copy ();
+		if (key_type.data_type == context.analyzer.string_type.data_type) {
+			hash_table_new.add_argument (expression ("GLib.str_hash"));
+			hash_table_new.add_argument (expression ("GLib.str_equal"));
+		} else {
+			hash_table_new.add_argument (expression ("GLib.direct_hash"));
+			hash_table_new.add_argument (expression ("GLib.direct_equal"));
+		}
+
+		var hash_table = b.add_temp_declaration (copy_type (type, true), hash_table_new);
+		var new_variant = b.add_temp_declaration (data_type ("GLib.Variant", true), null);
+
+		b.open_while (expression (@"($new_variant = $iterator.next_value ()) != null"));
+
+		Expression key = deserialize_expression (key_type, expression (@"$new_variant.get_child_value (0)"));
+		Expression value = deserialize_expression (value_type, expression (@"$new_variant.get_child_value (1)"));
+		var insert = (MethodCall) expression (@"$hash_table.insert ()");
+		insert.add_argument (key);
+		insert.add_argument (value);
+		b.add_expression (insert);
+
+		b.close ();
+
+		return expression (hash_table);
+	}
+
 	Expression? deserialize_expression (DataType type, Expression expr) {
 		BasicTypeInfo basic_type;
 		Expression result = null;
@@ -355,6 +393,12 @@ public class Vala.GVariantTransformer : CodeTransformer {
 			result = deserialize_array ((ArrayType) type, expr);
 		} else if (type.data_type is Struct) {
 			result = deserialize_struct ((Struct) type.data_type, expr);
+		} else if (type is ObjectType) {
+			if (type.data_type == context.analyzer.gvariant_type.data_type) {
+				result = new MethodCall (new MemberAccess (expr, "get_variant"), b.source_reference);
+			} else if (type.data_type.get_full_name () == "GLib.HashTable") {
+				result = deserialize_hash_table ((ObjectType) type, expr);
+			}
 		}
 		return result;
 	}
