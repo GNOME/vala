@@ -203,7 +203,7 @@ public class Vala.GVariantTransformer : CodeTransformer {
 		return (MethodCall) expression (builder+".end ()");
 	}
 
-	Expression serialize_struct (Struct st, Expression expr) {
+	Expression? serialize_struct (Struct st, Expression expr) {
 		string temp = b.add_temp_declaration (expr.value_type, expr);
 
 		var builderinit = expression ("new GLib.VariantBuilder (GLib.VariantType.TUPLE)");
@@ -262,6 +262,47 @@ public class Vala.GVariantTransformer : CodeTransformer {
 			}
 		}
 		return result;
+	}
+
+	Expression deserialize_basic (BasicTypeInfo basic_type, Expression expr) {
+		if (basic_type.is_string) {
+			var call = new MethodCall (new MemberAccess (expr, "get_string", b.source_reference), b.source_reference);
+			call.add_argument (new NullLiteral ());
+			return call;
+		}
+
+		return new MethodCall (new MemberAccess (expr, "get_" + basic_type.type_name, b.source_reference), b.source_reference);
+	}
+
+	Expression? deserialize_expression (DataType type, Expression expr) {
+		BasicTypeInfo basic_type;
+		Expression result = null;
+		if (get_basic_type_info (get_type_signature (type), out basic_type)) {
+			result = deserialize_basic (basic_type, expr);
+		}
+		return result;
+	}
+
+	public override void visit_cast_expression (CastExpression expr) {
+		base.visit_cast_expression (expr);
+
+		if (!(expr.inner.value_type.data_type == context.analyzer.gvariant_type.data_type && expr.type_reference.data_type != context.analyzer.gvariant_type.data_type)) {
+			return;
+		}
+
+		b = new CodeBuilder (context, expr.parent_statement, expr.source_reference);
+		var old_parent_node = expr.parent_node;
+		var target_type = expr.target_type.copy ();
+
+		Expression result = deserialize_expression (expr.type_reference, expr.inner);
+
+		result.target_type = target_type;
+		context.analyzer.replaced_nodes.add (expr);
+		old_parent_node.replace_expression (expr, result);
+		foreach (var node in b.check_nodes) {
+			check (node);
+		}
+		check (result);
 	}
 
 	public override void visit_expression (Expression expr) {
