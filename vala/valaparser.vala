@@ -29,6 +29,8 @@ public class Vala.Parser : CodeVisitor {
 	Scanner scanner;
 
 	CodeContext context;
+	bool compiler_code = false;
+	SourceReference? from_string_reference = null;
 
 	// token buffer
 	TokenInfo[] tokens;
@@ -147,12 +149,20 @@ public class Vala.Parser : CodeVisitor {
 	SourceReference get_src (SourceLocation begin) {
 		int last_index = (index + BUFFER_SIZE - 1) % BUFFER_SIZE;
 
-		return new SourceReference (scanner.source_file, begin, tokens[last_index].end);
+		if (from_string_reference == null) {
+			return new SourceReference (scanner.source_file, begin, tokens[last_index].end);
+		} else {
+			return from_string_reference;
+		}
 	}
 
 	SourceReference get_current_src () {
-		var token = tokens[index];
-		return new SourceReference (scanner.source_file, token.begin, token.end);
+		if (from_string_reference == null) {
+			var token = tokens[index];
+			return new SourceReference (scanner.source_file, token.begin, token.end);
+		} else {
+			return from_string_reference;
+		}
 	}
 
 	SourceReference get_last_src () {
@@ -263,6 +273,11 @@ public class Vala.Parser : CodeVisitor {
 			}
 			break;
 		default:
+			if (compiler_code && current () == TokenType.DOT) {
+				next();
+				next();
+				return;
+			}
 			throw new ParseError.SYNTAX ("expected identifier");
 		}
 	}
@@ -322,6 +337,47 @@ public class Vala.Parser : CodeVisitor {
 		}
 	}
 
+	public Expression? parse_expression_string (string str, SourceReference source_reference) {
+		compiler_code = true;
+		context = source_reference.file.context;
+		from_string_reference = source_reference;
+
+		scanner = new Scanner.from_string (str, source_reference.file);
+		index = -1;
+		size = 0;
+
+		next ();
+
+		try {
+			return parse_expression ();
+		} catch (Error e) {
+			Report.error (source_reference, "Internal compiler error: %s".printf (e.message));
+		}
+
+		scanner = null;
+		return null;
+	}
+
+	public void parse_statements_string (string str, Block block, SourceReference source_reference) {
+		compiler_code = true;
+		context = source_reference.file.context;
+		from_string_reference = source_reference;
+
+		scanner = new Scanner.from_string (str, source_reference.file);
+		index = -1;
+		size = 0;
+
+		next ();
+
+		try {
+			parse_statements (block);
+		} catch (Error e) {
+			Report.error (source_reference, "Internal compiler error: %s".printf (e.message));
+		}
+
+		scanner = null;
+	}
+
 	public void parse_file (SourceFile source_file) {
 		var has_global_context = (context != null);
 		if (!has_global_context) {
@@ -361,6 +417,9 @@ public class Vala.Parser : CodeVisitor {
 	}
 
 	void skip_symbol_name () throws ParseError {
+		if (compiler_code && accept (TokenType.DOT)) {
+			// temporary variable
+		}
 		do {
 			skip_identifier ();
 		} while (accept (TokenType.DOT) || accept (TokenType.DOUBLE_COLON));
@@ -682,7 +741,14 @@ public class Vala.Parser : CodeVisitor {
 
 	Expression parse_simple_name () throws ParseError {
 		var begin = get_location ();
-		string id = parse_identifier ();
+		string id;
+		if (compiler_code && accept (TokenType.DOT)) {
+			// temporary variable
+			next ();
+			id = "."+get_last_string ();
+		} else {
+			id = parse_identifier ();
+		}
 		bool qualified = false;
 		if (id == "global" && accept (TokenType.DOUBLE_COLON)) {
 			id = parse_identifier ();
@@ -1590,6 +1656,10 @@ public class Vala.Parser : CodeVisitor {
 					break;
 				default:
 					bool is_expr = is_expression ();
+					if (!is_expr && compiler_code && current () == TokenType.DOT) {
+						// compiler variable assignment
+						is_expr = true;
+					}
 					if (is_expr) {
 						stmt = parse_expression_statement ();
 					} else {
