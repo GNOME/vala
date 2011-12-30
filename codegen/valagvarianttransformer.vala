@@ -151,8 +151,14 @@ public class Vala.GVariantTransformer : CodeTransformer {
 		}
 	}
 
+	DataType copy_type (DataType type, bool value_owned) {
+		var ret = type.copy ();
+		ret.value_owned = value_owned;
+		return ret;
+	}
+
 	Expression serialize_array (ArrayType array_type, Expression array_expr) {
-		string temp = b.add_temp_declaration (array_type, null);
+		string temp = b.add_temp_declaration (array_type, array_expr);
 
 		string[] indices = new string[array_type.rank];
 		for (int dim=1; dim <= array_type.rank; dim++) {
@@ -186,25 +192,58 @@ public class Vala.GVariantTransformer : CodeTransformer {
 			for (int i=0; i < dim; i++) {
 				element_expr.append_index (expression (indices[i]));
 			}
-			element_variant = serialize_expression (array_type.element_type, element_expr);
+			element_variant = serialize_expression (copy_type (array_type.element_type, false), element_expr);
 		}
 
-		var builder_add = new MethodCall (expression (builder+".add_value"), b.source_reference);
+		var builder_add = (MethodCall) expression (builder+".add_value ()");
 		builder_add.add_argument (element_variant);
 		b.add_expression (builder_add);
 		b.close ();
 
-		var builder_end = new MethodCall (expression (builder+".end"), b.source_reference);
-		return builder_end;
+		return (MethodCall) expression (builder+".end ()");
+	}
+
+	Expression serialize_struct (Struct st, Expression expr) {
+		string temp = b.add_temp_declaration (expr.value_type, expr);
+
+		var builderinit = expression ("new GLib.VariantBuilder (GLib.VariantType.TUPLE)");
+		var builder = b.add_temp_declaration (null, builderinit);
+
+		bool field_found = false;
+
+		foreach (Field f in st.get_fields ()) {
+			if (f.binding != MemberBinding.INSTANCE) {
+				continue;
+			}
+
+			field_found = true;
+
+			var serialized_field = serialize_expression (copy_type (f.variable_type, false), expression (@"$temp.$(f.name)"));
+			MethodCall call = (MethodCall) expression (@"$builder.add_value ()");
+			call.add_argument (serialized_field);
+			b.add_expression (call);
+		}
+
+		if (!field_found) {
+			return null;
+		}
+
+		return expression (@"$builder.end ()");
 	}
 
 	Expression? serialize_expression (DataType type, Expression expr) {
+		if (type.data_type == context.analyzer.gvariant_type.data_type) {
+			return expr;
+		}
+
 		BasicTypeInfo basic_type;
 		Expression result = null;
 		if (get_basic_type_info (get_type_signature (type), out basic_type)) {
 			result = serialize_basic (basic_type, expr);
-		} else if (expr.value_type is ArrayType) {
-			result = serialize_array ((ArrayType) expr.value_type, expr);
+		} else if (type is ArrayType) {
+			result = serialize_array ((ArrayType) type, expr);
+		} else if (type.data_type is Struct) {
+			result = serialize_struct ((Struct) type.data_type, expr);
 		}
 		return result;
 	}
