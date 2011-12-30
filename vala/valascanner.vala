@@ -28,6 +28,7 @@ using GLib;
  */
 public class Vala.Scanner {
 	public SourceFile source_file { get; private set; }
+	string buffer;
 
 	TokenType previous;
 	char* current;
@@ -62,6 +63,19 @@ public class Vala.Scanner {
 
 		char* begin = source_file.get_mapped_contents ();
 		end = begin + source_file.get_mapped_length ();
+
+		current = begin;
+
+		line = 1;
+		column = 1;
+	}
+
+	public Scanner.from_string (string str, SourceFile source_file) {
+		this.source_file = source_file;
+		buffer = str; // keep alive
+
+		char* begin = str;
+		end = begin + str.length;
 
 		current = begin;
 
