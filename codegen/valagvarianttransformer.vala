@@ -265,27 +265,6 @@ public class Vala.GVariantTransformer : CodeTransformer {
 		return call;
 	}
 
-	Expression? serialize_expression (DataType type, Expression expr) {
-		BasicTypeInfo basic_type;
-		Expression result = null;
-		if (get_basic_type_info (get_type_signature (type), out basic_type)) {
-			result = serialize_basic (basic_type, expr);
-		} else if (type is ArrayType) {
-			result = serialize_array ((ArrayType) type, expr);
-		} else if (type.data_type is Struct) {
-			result = serialize_struct ((Struct) type.data_type, expr);
-		} else if (type is ObjectType) {
-			if (type.data_type == context.analyzer.gvariant_type.data_type) {
-				var variant_new = (ObjectCreationExpression) expression ("new GLib.Variant.variant ()");
-				variant_new.add_argument (expr);
-				result = variant_new;
-			} else if (type.data_type.get_full_name () == "GLib.HashTable") {
-				result = serialize_hash_table ((ObjectType) type, expr);
-			}
-		}
-		return result;
-	}
-
 	Expression deserialize_basic (BasicTypeInfo basic_type, Expression expr) {
 		if (basic_type.is_string) {
 			var call = new MethodCall (new MemberAccess (expr, "get_string", b.source_reference), b.source_reference);
@@ -456,8 +435,25 @@ public class Vala.GVariantTransformer : CodeTransformer {
 		b = new CodeBuilder (context, expr.parent_statement, expr.source_reference);
 		var old_parent_node = expr.parent_node;
 		var target_type = expr.target_type.copy ();
+		var type = expr.value_type;
 
-		Expression result = serialize_expression (expr.value_type, expr);
+		BasicTypeInfo basic_type;
+		Expression result = null;
+		if (get_basic_type_info (get_type_signature (type), out basic_type)) {
+			result = serialize_basic (basic_type, expr);
+		} else if (type is ArrayType) {
+			result = serialize_array ((ArrayType) type, expr);
+		} else if (type.data_type is Struct) {
+			result = serialize_struct ((Struct) type.data_type, expr);
+		} else if (type is ObjectType) {
+			if (type.data_type == context.analyzer.gvariant_type.data_type) {
+				var variant_new = (ObjectCreationExpression) expression ("new GLib.Variant.variant ()");
+				variant_new.add_argument (expr);
+				result = variant_new;
+			} else if (type.data_type.get_full_name () == "GLib.HashTable") {
+				result = serialize_hash_table ((ObjectType) type, expr);
+			}
+		}
 
 		result.target_type = target_type;
 		context.analyzer.replaced_nodes.add (expr);
