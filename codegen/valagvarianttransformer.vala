@@ -157,14 +157,31 @@ public class Vala.GVariantTransformer : CodeTransformer {
 		return ret;
 	}
 
+	Method wrapper_method (DataType return_type) {
+		var name = CodeNode.get_temp_name ().replace (".", "");
+		name = "_vala_func_"+name;
+		var m = new Method (name, return_type, b.source_reference);
+		context.root.add_method (m);
+		m.access = SymbolAccessibility.PRIVATE;
+		return m;
+	}
+
 	Expression serialize_array (ArrayType array_type, Expression array_expr) {
-		string temp = b.add_temp_declaration (array_type, array_expr);
+		var m = wrapper_method (data_type ("GLib.Variant", true));
+		m.add_parameter (new Parameter ("array", copy_type (array_type, false), b.source_reference));
+		b.push_method (m);
 
 		string[] indices = new string[array_type.rank];
 		for (int dim=1; dim <= array_type.rank; dim++) {
 			indices[dim-1] = b.add_temp_declaration (null, new IntegerLiteral ("0"));
 		}
-		return serialize_array_dim (array_type, 1, indices, temp);
+		b.add_return (serialize_array_dim (array_type, 1, indices, "array"));
+
+		b.pop_method ();
+		check (m);
+		var call = (MethodCall) expression (m.name+"()");
+		call.add_argument (array_expr);
+		return call;
 	}
 
 	Expression serialize_array_dim (ArrayType array_type, int dim, string[] indices, string array_var) {
@@ -449,9 +466,7 @@ public class Vala.GVariantTransformer : CodeTransformer {
 		result.target_type = target_type;
 		context.analyzer.replaced_nodes.add (expr);
 		old_parent_node.replace_expression (expr, result);
-		foreach (var node in b.check_nodes) {
-			check (node);
-		}
+		b.check (this);
 		check (result);
 	}
 
@@ -472,9 +487,7 @@ public class Vala.GVariantTransformer : CodeTransformer {
 		result.target_type = target_type;
 		context.analyzer.replaced_nodes.add (expr);
 		old_parent_node.replace_expression (expr, result);
-		foreach (var node in b.check_nodes) {
-			check (node);
-		}
+		b.check (this);
 		check (result);
 	}
 }
