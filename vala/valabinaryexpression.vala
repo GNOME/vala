@@ -135,7 +135,7 @@ public class Vala.BinaryExpression : Expression {
 	}
 
 	public override string to_string () {
-		return _left.to_string () + get_operator_string () + _right.to_string ();
+		return "(%s %s %s)".printf (_left.to_string (), get_operator_string (), _right.to_string ());
 	}
 
 	public override bool is_constant () {

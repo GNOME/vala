@@ -523,4 +523,12 @@ public class Vala.Namespace : Symbol {
 
 		return !error;
 	}
+
+	public override string to_string () {
+		if (name == null) {
+			return "(root namespace)";
+		} else {
+			return "namespace %s".printf (name);
+		}
+	}
 }

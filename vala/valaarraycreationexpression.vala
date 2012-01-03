@@ -127,6 +127,24 @@ public class Vala.ArrayCreationExpression : Expression {
 		return true;
 	}
 
+	public override string to_string () {
+		var builder = new StringBuilder ("new ");
+		builder.append_printf ("%s[", element_type.to_string ());
+		bool first = true;
+		foreach (var size in sizes) {
+			if (first) {
+				builder.append (size.to_string ());
+				first = false;
+			} else {
+				builder.append_printf (", %s", size.to_string ());
+			}
+		}
+		if (initializer_list != null) {
+			builder.append (initializer_list.to_string ());
+		}
+		return builder.str;
+	}
+
 	public override void replace_expression (Expression old_node, Expression new_node) {
 		for (int i = 0; i < sizes.size; i++) {
 			if (sizes[i] == old_node) {

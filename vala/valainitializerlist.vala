@@ -106,6 +106,20 @@ public class Vala.InitializerList : Expression {
 		return true;
 	}
 
+	public override string to_string () {
+		var builder = new StringBuilder ("{");
+		bool first = true;
+		foreach (var initializer in initializers) {
+			if (first) {
+				builder.append (initializer.to_string ());
+				first = false;
+			} else {
+				builder.append_printf (", %s", initializer.to_string ());
+			}
+		}
+		return builder.str;
+	}
+
 	public override void replace_expression (Expression old_node, Expression new_node) {
 		for (int i = 0; i < initializers.size; i++) {
 			if (initializers[i] == old_node) {

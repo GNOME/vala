@@ -142,4 +142,8 @@ public class Vala.ReferenceTransferExpression : Expression {
 			collection.add (param);
 		}
 	}
+
+	public override string to_string () {
+		return "(owned) %s".printf (inner.to_string ());
+	}
 }
