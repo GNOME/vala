@@ -110,6 +110,10 @@ public class Vala.ConditionalExpression : Expression {
 		false_expression.get_error_types (collection, source_reference);
 	}
 
+	public override string to_string () {
+		return "(%s ? %s : %s)".printf (condition.to_string (), true_expression.to_string (), false_expression.to_string ());
+	}
+
 	public override void replace_expression (Expression old_node, Expression new_node) {
 		if (condition == old_node) {
 			condition = new_node;

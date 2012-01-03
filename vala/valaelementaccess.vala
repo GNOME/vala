@@ -75,6 +75,20 @@ public class Vala.ElementAccess : Expression {
 		}
 	}
 
+	public override string to_string () {
+		var s = "%s[".printf (container.to_string ());
+		bool first = true;
+		foreach (var index in indices) {
+			if (first) {
+				s += index.to_string ();
+				first = false;
+			} else {
+				s += ", %s".printf (index.to_string ());
+			}
+		}
+		return s + "]";
+	}
+
 	public override void replace_expression (Expression old_node, Expression new_node) {
 		if (container == old_node) {
 			container = new_node;
