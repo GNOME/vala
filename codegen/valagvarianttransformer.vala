@@ -184,7 +184,7 @@ public class Vala.GVariantTransformer : CodeTransformer {
 
 	Expression serialize_array (ArrayType array_type, Expression array_expr) {
 		Method m;
-		if (!wrapper_method (data_type ("GLib.Variant", true), "gvariant_serialize_array "+array_type.to_string(), out m)) {
+		if (!wrapper_method (data_type ("GLib.Variant"), "gvariant_serialize_array "+array_type.to_string(), out m)) {
 			m.add_parameter (new Parameter ("array", copy_type (array_type, false), b.source_reference));
 			b.push_method (m);
 
@@ -252,7 +252,7 @@ public class Vala.GVariantTransformer : CodeTransformer {
 
 		Method m;
 		var type = context.analyzer.get_data_type_for_symbol (st);
-		if (!wrapper_method (data_type ("GLib.Variant", true), "gvariant_serialize_struct "+type.to_string(), out m)) {
+		if (!wrapper_method (data_type ("GLib.Variant"), "gvariant_serialize_struct "+type.to_string(), out m)) {
 			m.add_parameter (new Parameter ("st", type, b.source_reference));
 			b.push_method (m);
 
@@ -279,7 +279,7 @@ public class Vala.GVariantTransformer : CodeTransformer {
 
 	Expression? serialize_hash_table (ObjectType type, Expression expr) {
 		Method m;
-		if (!wrapper_method (data_type ("GLib.Variant", true), "gvariant_serialize_hash_table "+type.to_string(), out m)) {
+		if (!wrapper_method (data_type ("GLib.Variant"), "gvariant_serialize_hash_table "+type.to_string(), out m)) {
 			m.add_parameter (new Parameter ("ht", copy_type (type, false), b.source_reference));
 			b.push_method (m);
 
@@ -330,17 +330,17 @@ public class Vala.GVariantTransformer : CodeTransformer {
 	}
 
 	Expression deserialize_array (ArrayType array_type, Expression expr) {
-		var variant = b.add_temp_declaration (data_type ("GLib.Variant", true), null);
-		var iterator = b.add_temp_declaration (data_type ("GLib.VariantIter", true), null);
+		var variant = b.add_temp_declaration (data_type ("GLib.Variant"));
+		var iterator = b.add_temp_declaration (data_type ("GLib.VariantIter"));
 		b.add_assignment (expression (variant), expr);
 		b.add_assignment (expression (iterator), expression (@"$variant.iterator ()"));
 
 		var array_new = new ArrayCreationExpression (array_type.element_type, array_type.rank, null, b.source_reference);
-		var array = b.add_temp_declaration (copy_type (array_type, true), null);
+		var array = b.add_temp_declaration (copy_type (array_type, true));
 
 		string[] indices = new string[array_type.rank];
 		for (int dim=1; dim <= array_type.rank; dim++) {
-			string length = b.add_temp_declaration (data_type ("size_t", true), null);
+			string length = b.add_temp_declaration (data_type ("size_t"));
 			b.add_assignment (expression (length), expression (@"$iterator.n_children ()"));
 			array_new.append_size (expression (length));
 			indices[dim-1] = b.add_temp_declaration (null, expression ("0"));
@@ -355,9 +355,9 @@ public class Vala.GVariantTransformer : CodeTransformer {
 	}
 
 	void deserialize_array_dim (ArrayType array_type, string variant, string[] indices, int dim, string array) {
-		var iter = b.add_temp_declaration (data_type ("GLib.VariantIter", true), null);
+		var iter = b.add_temp_declaration (data_type ("GLib.VariantIter"));
 		b.add_assignment (expression (iter), expression (@"$variant.iterator ()"));
-		var new_variant = b.add_temp_declaration (data_type ("GLib.Variant", true), null);
+		var new_variant = b.add_temp_declaration (data_type ("GLib.Variant"));
 		b.open_while (expression (@"($new_variant = $iter.next_value ()) != null"));
 
 		if (dim == array_type.rank) {
@@ -374,8 +374,8 @@ public class Vala.GVariantTransformer : CodeTransformer {
 	}
 
 	Expression? deserialize_struct (Struct st, Expression expr) {
-		var variant = b.add_temp_declaration (data_type ("GLib.Variant", true), null);
-		var iterator = b.add_temp_declaration (data_type ("GLib.VariantIter", true), null);
+		var variant = b.add_temp_declaration (data_type ("GLib.Variant"));
+		var iterator = b.add_temp_declaration (data_type ("GLib.VariantIter"));
 		b.add_assignment (expression (variant), expr);
 		b.add_assignment (expression (iterator), expression (@"$variant.iterator ()"));
 		var type = context.analyzer.get_data_type_for_symbol (st);
@@ -402,8 +402,8 @@ public class Vala.GVariantTransformer : CodeTransformer {
 	}
 
 	Expression deserialize_hash_table (DataType type, Expression expr) {
-		var variant = b.add_temp_declaration (data_type ("GLib.Variant", true), null);
-		var iterator = b.add_temp_declaration (data_type ("GLib.VariantIter", true), null);
+		var variant = b.add_temp_declaration (data_type ("GLib.Variant"));
+		var iterator = b.add_temp_declaration (data_type ("GLib.VariantIter"));
 		b.add_assignment (expression (variant), expr);
 		b.add_assignment (expression (iterator), expression (@"$variant.iterator ()"));
 
@@ -423,7 +423,7 @@ public class Vala.GVariantTransformer : CodeTransformer {
 		}
 
 		var hash_table = b.add_temp_declaration (copy_type (type, true), hash_table_new);
-		var new_variant = b.add_temp_declaration (data_type ("GLib.Variant", true), null);
+		var new_variant = b.add_temp_declaration (data_type ("GLib.Variant"));
 
 		b.open_while (expression (@"($new_variant = $iterator.next_value ()) != null"));
 
@@ -466,25 +466,9 @@ public class Vala.GVariantTransformer : CodeTransformer {
 		return sym;
 	}
 
-	DataType data_type (string s, bool owned_by_default) {
-		DataType type;
-		if (owned_by_default) {
-			if (s.has_prefix ("unowned ")) {
-				type = context.analyzer.get_data_type_for_symbol ((TypeSymbol) symbol_from_string (s.split (" ")[1]));
-				type.value_owned = false;
-			} else {
-				type = context.analyzer.get_data_type_for_symbol ((TypeSymbol) symbol_from_string (s));
-				type.value_owned = true;
-			}
-		} else {
-			if (s.has_prefix ("owned ")) {
-				type = context.analyzer.get_data_type_for_symbol ((TypeSymbol) symbol_from_string (s.split (" ")[1]));
-				type.value_owned = true;
-			} else {
-				type = context.analyzer.get_data_type_for_symbol ((TypeSymbol) symbol_from_string (s));
-				type.value_owned = false;
-			}
-		}
+	DataType data_type (string s, bool value_owned = true) {
+		DataType type = context.analyzer.get_data_type_for_symbol ((TypeSymbol) symbol_from_string (s));
+		type.value_owned = value_owned;
 		return type;
 	}
 
