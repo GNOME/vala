@@ -48,7 +48,7 @@ public class Vala.CodeBuilder {
 		build_context.check_nodes.add (build_context.current_block);
 	}
 
-	public CodeBuilder.for_method (Method m) {
+	public CodeBuilder.for_subroutine (Subroutine m) {
 		source_reference = m.source_reference;
 		build_context = new BuildContext ();
 		build_context.insert_block = m.body = new Block (source_reference);

@@ -49,14 +49,6 @@ public class Vala.GVariantModule : GAsyncModule {
 		return false;
 	}
 
-	string get_dbus_value (EnumValue value, string default_value) {
-		var dbus_value = value.get_attribute_string ("DBus", "value");
-		if (dbus_value != null) {
-			return dbus_value;;
-		}
-		return default_value;
-	}
-
 	public static string? get_dbus_signature (Symbol symbol) {
 		return symbol.get_attribute_string ("DBus", "signature");
 	}

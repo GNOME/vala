@@ -102,6 +102,7 @@ DBusMessage
   .new_method_error printf_format
   .get_header_fields type="uchar[]"
   .print.indent default=0
+  .to_gerror throws="GLib.IOError"
 DBus*Info
   .*#field unowned=false
 DBus*VTable

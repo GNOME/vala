@@ -62,16 +62,18 @@ public class Vala.CodeTransformer : CodeVisitor {
 		wrapper_cache.set (key, node);
 	}
 
-	public bool wrapper_method (DataType return_type, string cache_key, out Method m) {
-		CodeNode n;
-		if (get_cached_wrapper (cache_key, out n)) {
+	public string temp_func_cname () {
+		return "_vala_func_"+CodeNode.get_temp_name ().substring (1);
+	}
+
+	public bool wrapper_method (DataType return_type, string? cache_key, out Method m, Symbol? parent = null) {
+		CodeNode n = null;
+		if (cache_key != null && get_cached_wrapper (cache_key, out n)) {
 			m = (Method) n;
 			return true;
 		}
-		var name = CodeNode.get_temp_name ().replace (".", "");
-		name = "_vala_func_"+name;
-		m = new Method (name, return_type, b.source_reference);
-		context.root.add_method (m);
+		m = new Method (temp_func_cname (), return_type, b.source_reference);
+		(parent == null ? context.root : parent).add_method (m);
 		m.access = SymbolAccessibility.PRIVATE;
 		add_cached_wrapper (cache_key, m);
 		return false;

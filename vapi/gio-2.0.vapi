@@ -843,7 +843,7 @@ namespace GLib {
 		public DBusMessage.@signal (string path, string interface_, string @signal);
 		[CCode (array_length_pos = 0.5, array_length_type = "gsize")]
 		public uint8[] to_blob (GLib.DBusCapabilityFlags capabilities) throws GLib.Error;
-		public bool to_gerror () throws GLib.Error;
+		public bool to_gerror () throws GLib.IOError;
 		public bool locked { get; }
 	}
 	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_dbus_method_info_ref", type_id = "g_dbus_method_info_get_type ()", unref_function = "g_dbus_method_info_unref")]
