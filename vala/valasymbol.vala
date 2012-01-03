@@ -467,6 +467,10 @@ public abstract class Vala.Symbol : CodeNode {
 	public virtual void add_destructor (Destructor d) {
 		Report.error (d.source_reference, "unexpected declaration");
 	}
+
+	public override string to_string () {
+		return get_full_name ();
+	}
 }
 
 public enum Vala.SymbolAccessibility {

@@ -104,6 +104,10 @@ public class Vala.ConditionalExpression : Expression {
 		return condition.is_accessible (sym) && true_expression.is_accessible (sym) && false_expression.is_accessible (sym);
 	}
 
+	public override string to_string () {
+		return "(%s ? %s : %s)".printf (condition.to_string (), true_expression.to_string (), false_expression.to_string ());
+	}
+
 	public override void replace_expression (Expression old_node, Expression new_node) {
 		if (condition == old_node) {
 			condition = new_node;

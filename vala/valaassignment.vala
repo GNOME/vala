@@ -84,6 +84,27 @@ public class Vala.Assignment : Expression {
 		right.accept (visitor);
 	}
 
+	private unowned string get_operator_string () {
+		switch (_operator) {
+		case AssignmentOperator.SIMPLE: return "=";
+		case AssignmentOperator.BITWISE_OR: return "|=";
+		case AssignmentOperator.BITWISE_AND: return "&=";
+		case AssignmentOperator.BITWISE_XOR: return "^=";
+		case AssignmentOperator.ADD: return "+=";
+		case AssignmentOperator.SUB: return "-=";
+		case AssignmentOperator.MUL: return "*=";
+		case AssignmentOperator.DIV: return "/=";
+		case AssignmentOperator.PERCENT: return "%=";
+		case AssignmentOperator.SHIFT_LEFT: return "<<=";
+		case AssignmentOperator.SHIFT_RIGHT: return ">>=";
+		default: assert_not_reached ();
+		}
+	}
+
+	public override string to_string () {
+		return "(%s %s %s)".printf (_left.to_string (), get_operator_string (), _right.to_string ());
+	}
+
 	public override void replace_expression (Expression old_node, Expression new_node) {
 		if (left == old_node) {
 			left = new_node;
