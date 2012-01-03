@@ -136,7 +136,7 @@ public class Vala.MemberAccess : Expression {
 			if (inner == null) {
 				return member_name;
 			} else {
-				return "%s.%s".printf (inner.to_string (), member_name);
+				return "%s%s%s".printf (inner.to_string (), pointer_member_access ? "->" : ".", member_name);
 			}
 		} else {
 			// ensure to always use fully-qualified name

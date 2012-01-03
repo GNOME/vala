@@ -169,4 +169,8 @@ public class Vala.PostfixExpression : Expression {
 
 		codegen.visit_expression (this);
 	}
+
+	public override string to_string () {
+		return "(%s%s)".printf (inner.to_string (), increment ? "++" : "--");
+	}
 }

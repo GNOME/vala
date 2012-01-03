@@ -62,6 +62,10 @@ public class Vala.AddressofExpression : Expression {
 		inner.accept (visitor);
 	}
 
+	public override string to_string () {
+		return "&" + inner.to_string ();
+	}
+
 	public override void replace_expression (Expression old_node, Expression new_node) {
 		if (inner == old_node) {
 			inner = new_node;

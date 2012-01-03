@@ -120,4 +120,8 @@ public class Vala.PointerIndirection : Expression {
 	public override void get_used_variables (Collection<Variable> collection) {
 		inner.get_used_variables (collection);
 	}
+
+	public override string to_string () {
+		return "(*%s)".printf (inner.to_string ());
+	}
 }

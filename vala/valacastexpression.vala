@@ -102,6 +102,16 @@ public class Vala.CastExpression : Expression {
 		}
 	}
 
+	public override string to_string () {
+		if (is_non_null_cast) {
+			return "(!) %s".printf (inner.to_string ());
+		} else if (is_silent_cast) {
+			return "%s as %s".printf (inner.to_string (), type_reference.to_string ());
+		} else {
+			return "(%s) %s".printf (type_reference.to_string (), inner.to_string ());
+		}
+	}
+
 	public override void replace_expression (Expression old_node, Expression new_node) {
 		if (inner == old_node) {
 			inner = new_node;
