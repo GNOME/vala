@@ -46,6 +46,7 @@ public class Vala.GVariantTransformer : CodeTransformer {
 	};
 
 	CodeBuilder b;
+	HashMap<string, CodeNode> wrapper_cache = new HashMap<string, CodeNode> (str_hash, str_equal);
 
 	bool get_basic_type_info (string signature, out BasicTypeInfo basic_type) {
 		if (signature != null) {
@@ -157,28 +158,45 @@ public class Vala.GVariantTransformer : CodeTransformer {
 		return ret;
 	}
 
-	Method wrapper_method (DataType return_type) {
+	bool get_cached_wrapper (string key, out CodeNode node) {
+		node = wrapper_cache.get (key);
+		return node != null;
+	}
+
+	void add_cached_wrapper (string key, CodeNode node) {
+		wrapper_cache.set (key, node);
+	}
+
+	bool wrapper_method (DataType return_type, string cache_key, out Method m) {
+		CodeNode n;
+		if (get_cached_wrapper (cache_key, out n)) {
+			m = (Method) n;
+			return true;
+		}
 		var name = CodeNode.get_temp_name ().replace (".", "");
 		name = "_vala_func_"+name;
-		var m = new Method (name, return_type, b.source_reference);
+		m = new Method (name, return_type, b.source_reference);
 		context.root.add_method (m);
 		m.access = SymbolAccessibility.PRIVATE;
-		return m;
+		add_cached_wrapper (cache_key, m);
+		return false;
 	}
 
 	Expression serialize_array (ArrayType array_type, Expression array_expr) {
-		var m = wrapper_method (data_type ("GLib.Variant", true));
-		m.add_parameter (new Parameter ("array", copy_type (array_type, false), b.source_reference));
-		b.push_method (m);
+		Method m;
+		if (!wrapper_method (data_type ("GLib.Variant", true), "gvariant_serialize_array "+array_type.to_string(), out m)) {
+			m.add_parameter (new Parameter ("array", copy_type (array_type, false), b.source_reference));
+			b.push_method (m);
 
-		string[] indices = new string[array_type.rank];
-		for (int dim=1; dim <= array_type.rank; dim++) {
-			indices[dim-1] = b.add_temp_declaration (null, new IntegerLiteral ("0"));
+			string[] indices = new string[array_type.rank];
+			for (int dim=1; dim <= array_type.rank; dim++) {
+				indices[dim-1] = b.add_temp_declaration (null, new IntegerLiteral ("0"));
+			}
+			b.add_return (serialize_array_dim (array_type, 1, indices, "array"));
+
+			b.pop_method ();
+			check (m);
 		}
-		b.add_return (serialize_array_dim (array_type, 1, indices, "array"));
-
-		b.pop_method ();
-		check (m);
 		var call = (MethodCall) expression (m.name+"()");
 		call.add_argument (array_expr);
 		return call;
