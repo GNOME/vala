@@ -45,9 +45,6 @@ public class Vala.GVariantTransformer : CodeTransformer {
 		{ "g", "signature", true }
 	};
 
-	CodeBuilder b;
-	HashMap<string, CodeNode> wrapper_cache = new HashMap<string, CodeNode> (str_hash, str_equal);
-
 	bool get_basic_type_info (string signature, out BasicTypeInfo basic_type) {
 		if (signature != null) {
 			foreach (BasicTypeInfo info in basic_types) {
@@ -150,36 +147,6 @@ public class Vala.GVariantTransformer : CodeTransformer {
 		} else {
 			return null;
 		}
-	}
-
-	DataType copy_type (DataType type, bool value_owned) {
-		var ret = type.copy ();
-		ret.value_owned = value_owned;
-		return ret;
-	}
-
-	bool get_cached_wrapper (string key, out CodeNode node) {
-		node = wrapper_cache.get (key);
-		return node != null;
-	}
-
-	void add_cached_wrapper (string key, CodeNode node) {
-		wrapper_cache.set (key, node);
-	}
-
-	bool wrapper_method (DataType return_type, string cache_key, out Method m) {
-		CodeNode n;
-		if (get_cached_wrapper (cache_key, out n)) {
-			m = (Method) n;
-			return true;
-		}
-		var name = CodeNode.get_temp_name ().replace (".", "");
-		name = "_vala_func_"+name;
-		m = new Method (name, return_type, b.source_reference);
-		context.root.add_method (m);
-		m.access = SymbolAccessibility.PRIVATE;
-		add_cached_wrapper (cache_key, m);
-		return false;
 	}
 
 	Expression serialize_array (ArrayType array_type, Expression array_expr) {
@@ -456,20 +423,6 @@ public class Vala.GVariantTransformer : CodeTransformer {
 			}
 		}
 		return result;
-	}
-
-	Symbol symbol_from_string (string symbol_string) {
-		Symbol sym = context.root;
-		foreach (unowned string s in symbol_string.split (".")) {
-			sym = sym.scope.lookup (s);
-		}
-		return sym;
-	}
-
-	DataType data_type (string s, bool value_owned = true) {
-		DataType type = context.analyzer.get_data_type_for_symbol ((TypeSymbol) symbol_from_string (s));
-		type.value_owned = value_owned;
-		return type;
 	}
 
 	public override void visit_cast_expression (CastExpression expr) {

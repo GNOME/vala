@@ -26,6 +26,9 @@
 public class Vala.CodeTransformer : CodeVisitor {
 	public CodeContext context;
 
+	public CodeBuilder b;
+	public HashMap<string, CodeNode> wrapper_cache = new HashMap<string, CodeNode> (str_hash, str_equal);
+
 	/**
 	 * Transform the code tree for the specified code context.
 	 *
@@ -42,6 +45,51 @@ public class Vala.CodeTransformer : CodeVisitor {
 				file.accept (this);
 			}
 		}
+	}
+
+	public static DataType copy_type (DataType type, bool value_owned) {
+		var ret = type.copy ();
+		ret.value_owned = value_owned;
+		return ret;
+	}
+
+	public bool get_cached_wrapper (string key, out CodeNode node) {
+		node = wrapper_cache.get (key);
+		return node != null;
+	}
+
+	public void add_cached_wrapper (string key, CodeNode node) {
+		wrapper_cache.set (key, node);
+	}
+
+	public bool wrapper_method (DataType return_type, string cache_key, out Method m) {
+		CodeNode n;
+		if (get_cached_wrapper (cache_key, out n)) {
+			m = (Method) n;
+			return true;
+		}
+		var name = CodeNode.get_temp_name ().replace (".", "");
+		name = "_vala_func_"+name;
+		m = new Method (name, return_type, b.source_reference);
+		context.root.add_method (m);
+		m.access = SymbolAccessibility.PRIVATE;
+		add_cached_wrapper (cache_key, m);
+		return false;
+	}
+
+	public Symbol symbol_from_string (string symbol_string) {
+		Symbol sym = context.root;
+		foreach (unowned string s in symbol_string.split (".")) {
+			sym = sym.scope.lookup (s);
+		}
+		return sym;
+	}
+
+	// only qualified types, will slightly simplify the work of SymbolResolver
+	public DataType data_type (string s, bool value_owned = true) {
+		DataType type = context.analyzer.get_data_type_for_symbol ((TypeSymbol) symbol_from_string (s));
+		type.value_owned = value_owned;
+		return type;
 	}
 
 	public void check (CodeNode node) {
