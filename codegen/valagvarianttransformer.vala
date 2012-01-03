@@ -239,43 +239,63 @@ public class Vala.GVariantTransformer : CodeTransformer {
 	}
 
 	Expression? serialize_struct (Struct st, Expression expr) {
-		string temp = b.add_temp_declaration (expr.value_type, expr);
-
-		var builderinit = expression ("new GLib.VariantBuilder (GLib.VariantType.TUPLE)");
-		var builder = b.add_temp_declaration (null, builderinit);
-
-		bool field_found = false;
-
+		bool has_instance_field = false;
 		foreach (Field f in st.get_fields ()) {
-			if (f.binding != MemberBinding.INSTANCE) {
-				continue;
+			if (f.binding == MemberBinding.INSTANCE) {
+				has_instance_field = true;
+				break;
 			}
-
-			field_found = true;
-
-			var serialized_field = serialize_expression (copy_type (f.variable_type, false), expression (@"$temp.$(f.name)"));
-			MethodCall call = (MethodCall) expression (@"$builder.add_value ()");
-			call.add_argument (serialized_field);
-			b.add_expression (call);
 		}
-
-		if (!field_found) {
+		if (!has_instance_field) {
 			return null;
 		}
 
-		return expression (@"$builder.end ()");
+		Method m;
+		var type = context.analyzer.get_data_type_for_symbol (st);
+		if (!wrapper_method (data_type ("GLib.Variant", true), "gvariant_serialize_struct "+type.to_string(), out m)) {
+			m.add_parameter (new Parameter ("st", type, b.source_reference));
+			b.push_method (m);
+
+			var builderinit = expression ("new GLib.VariantBuilder (GLib.VariantType.TUPLE)");
+			var builder = b.add_temp_declaration (null, builderinit);
+
+			foreach (Field f in st.get_fields ()) {
+				if (f.binding != MemberBinding.INSTANCE) {
+					continue;
+				}
+
+				var serialized_field = serialize_expression (copy_type (f.variable_type, false), expression (@"st.$(f.name)"));
+				MethodCall call = (MethodCall) expression (@"$builder.add_value ()");
+				call.add_argument (serialized_field);
+				b.add_expression (call);
+			}
+			b.add_return (expression (@"$builder.end ()"));
+		}
+
+		var call = (MethodCall) expression (m.name+"()");
+		call.add_argument (expr);
+		return call;
 	}
 
 	Expression? serialize_hash_table (ObjectType type, Expression expr) {
-		string temp = b.add_temp_declaration (expr.value_type, expr);
+		Method m;
+		if (!wrapper_method (data_type ("GLib.Variant", true), "gvariant_serialize_hash_table "+type.to_string(), out m)) {
+			m.add_parameter (new Parameter ("ht", copy_type (type, false), b.source_reference));
+			b.push_method (m);
 
-		var builderinit = expression (@"new GLib.VariantBuilder (new GLib.VariantType (\"$(get_type_signature (type))\"))");
-		var builder = b.add_temp_declaration (null, builderinit);
+			var builderinit = expression (@"new GLib.VariantBuilder (new GLib.VariantType (\"$(get_type_signature (type))\"))");
+			var builder = b.add_temp_declaration (null, builderinit);
 
-		var for_each = expression (@"$temp.for_each ((k,v) => $builder.add (\"{?*}\", k, v))");
-		b.add_expression (for_each);
+			var for_each = expression (@"ht.for_each ((k,v) => $builder.add (\"{?*}\", k, v))");
+			b.add_expression (for_each);
+			b.add_return (expression (@"$builder.end ()"));
 
-		return expression (@"$builder.end ()");
+			b.pop_method ();
+			check (m);
+		}
+		var call = (MethodCall) expression (m.name+"()");
+		call.add_argument (expr);
+		return call;
 	}
 
 	Expression? serialize_expression (DataType type, Expression expr) {
