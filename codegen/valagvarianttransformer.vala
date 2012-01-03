@@ -227,7 +227,7 @@ public class Vala.GVariantTransformer : CodeTransformer {
 			for (int i=0; i < dim; i++) {
 				element_expr.append_index (expression (indices[i]));
 			}
-			element_variant = serialize_expression (copy_type (array_type.element_type, false), element_expr);
+			element_variant = element_expr;
 		}
 
 		var builder_add = (MethodCall) expression (builder+".add_value ()");
@@ -264,10 +264,7 @@ public class Vala.GVariantTransformer : CodeTransformer {
 					continue;
 				}
 
-				var serialized_field = serialize_expression (copy_type (f.variable_type, false), expression (@"st.$(f.name)"));
-				MethodCall call = (MethodCall) expression (@"$builder.add_value ()");
-				call.add_argument (serialized_field);
-				b.add_expression (call);
+				b.add_expression (expression (@"$builder.add_value (st.$(f.name))"));
 			}
 			b.add_return (expression (@"$builder.end ()"));
 
