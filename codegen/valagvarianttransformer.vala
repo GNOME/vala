@@ -45,6 +45,13 @@ public class Vala.GVariantTransformer : CodeTransformer {
 		{ "g", "signature", true }
 	};
 
+	static bool is_string_marshalled_enum (TypeSymbol? symbol) {
+		if (symbol != null && symbol is Enum) {
+			return symbol.get_attribute_bool ("DBus", "use_string_marshalling");
+		}
+		return false;
+	}
+
 	bool get_basic_type_info (string signature, out BasicTypeInfo basic_type) {
 		if (signature != null) {
 			foreach (BasicTypeInfo info in basic_types) {
@@ -58,10 +65,6 @@ public class Vala.GVariantTransformer : CodeTransformer {
 		return false;
 	}
 
-	Expression expression (string str) {
-		return new Parser().parse_expression_string (str, b.source_reference);
-	}
-
 	Expression serialize_basic (BasicTypeInfo basic_type, Expression expr) {
 		var new_call = (ObjectCreationExpression) expression (@"new GLib.Variant.$(basic_type.type_name)()");
 		new_call.add_argument (expr);
@@ -70,13 +73,6 @@ public class Vala.GVariantTransformer : CodeTransformer {
 
 	public static string? get_dbus_signature (Symbol symbol) {
 		return symbol.get_attribute_string ("DBus", "signature");
-	}
-
-	static bool is_string_marshalled_enum (TypeSymbol? symbol) {
-		if (symbol != null && symbol is Enum) {
-			return symbol.get_attribute_bool ("DBus", "use_string_marshalling");
-		}
-		return false;
 	}
 
 	public static string? get_type_signature (DataType datatype, Symbol? symbol = null) {
@@ -402,10 +398,70 @@ public class Vala.GVariantTransformer : CodeTransformer {
 		return call;
 	}
 
-	public override void visit_cast_expression (CastExpression expr) {
-		base.visit_cast_expression (expr);
+	string get_dbus_value (EnumValue value, string default_value) {
+		var dbus_value = value.get_attribute_string ("DBus", "value");
+		if (dbus_value != null) {
+			return dbus_value;;
+		}
+		return default_value;
+	}
 
+	void add_enum_from_string_method (Enum en) {
+		if (en.scope.lookup ("from_string") != null) {
+			return;
+		}
+		var m = new Method ("from_string", context.analyzer.get_data_type_for_symbol (en), en.source_reference);
+		m.add_error_type (data_type ("GLib.DBusError.INVALID_ARGS"));
+		m.add_parameter (new Parameter ("str", data_type ("string", false), en.source_reference));
+		en.add_method (m);
+		m.binding = MemberBinding.STATIC;
+		m.access = SymbolAccessibility.PUBLIC;
+		b = new CodeBuilder.for_method (m);
+
+		b.open_switch (expression ("str"), null);
+		b.add_throw (expression ("new GLib.DBusError.INVALID_ARGS (\"Invalid value for enum `%s'\")".printf (get_ccode_name (en))));
+		foreach (var enum_value in en.get_values ()) {
+			string dbus_value = get_dbus_value (enum_value, enum_value.name);
+			b.add_section (expression (@"\"$dbus_value\""));
+			b.add_return (expression (@"$(en.get_full_name()).$(enum_value.name)"));
+		}
+		b.close ();
+
+		check (m);
+	}
+
+	void add_enum_to_string_method (Enum en) {
+		if (en.scope.lookup ("to_string") != null) {
+			return;
+		}
+		var m = new Method ("to_string", data_type ("string", false, true), en.source_reference);
+		en.add_method (m);
+		m.access = SymbolAccessibility.PUBLIC;
+		b = new CodeBuilder.for_method (m);
+
+		b.open_switch (expression ("this"), null);
+		b.add_return (expression ("null"));
+		foreach (var enum_value in en.get_values ()) {
+			string dbus_value = get_dbus_value (enum_value, enum_value.name);
+			b.add_section (expression (@"$(en.get_full_name()).$(enum_value.name)"));
+			b.add_return (expression (@"\"$dbus_value\""));
+		}
+		b.close ();
+
+		check (m);
+	}
+
+	public override void visit_enum (Enum en) {
+		if (!en.external && is_string_marshalled_enum (en) && context.has_package ("gio-2.0")) {
+			add_enum_from_string_method (en);
+			add_enum_to_string_method (en);
+		}
+		base.visit_enum (en);
+	}
+
+	public override void visit_cast_expression (CastExpression expr) {
 		if (!(expr.inner.value_type.data_type == context.analyzer.gvariant_type.data_type && expr.type_reference.data_type != context.analyzer.gvariant_type.data_type)) {
+			base.visit_cast_expression (expr);
 			return;
 		}
 
@@ -416,7 +472,13 @@ public class Vala.GVariantTransformer : CodeTransformer {
 
 		BasicTypeInfo basic_type;
 		Expression result = null;
-		if (get_basic_type_info (get_type_signature (type), out basic_type)) {
+		if (is_string_marshalled_enum (type.data_type)) {
+			get_basic_type_info ("s", out basic_type);
+			result = deserialize_basic (basic_type, expr.inner);
+			var call = (MethodCall) expression (@"$(type.data_type.get_full_name()).from_string ()");
+			call.add_argument (result);
+			result = call;
+		} else if (get_basic_type_info (get_type_signature (type), out basic_type)) {
 			result = deserialize_basic (basic_type, expr.inner);
 		} else if (type is ArrayType) {
 			result = deserialize_array ((ArrayType) type, expr.inner);
@@ -438,10 +500,9 @@ public class Vala.GVariantTransformer : CodeTransformer {
 	}
 
 	public override void visit_expression (Expression expr) {
-		base.visit_expression (expr);
-
 		if (!(context.profile == Profile.GOBJECT && expr.target_type != null && expr.target_type.data_type == context.analyzer.gvariant_type.data_type && !(expr.value_type is NullType) && expr.value_type.data_type != context.analyzer.gvariant_type.data_type)) {
 			// no implicit gvariant boxing
+			base.visit_expression (expr);
 			return;
 		}
 
@@ -452,7 +513,10 @@ public class Vala.GVariantTransformer : CodeTransformer {
 
 		BasicTypeInfo basic_type;
 		Expression result = null;
-		if (get_basic_type_info (get_type_signature (type), out basic_type)) {
+		if (is_string_marshalled_enum (type.data_type)) {
+			get_basic_type_info ("s", out basic_type);
+			result = new MethodCall (new MemberAccess (expr, "to_string"), b.source_reference);
+		} else if (get_basic_type_info (get_type_signature (type), out basic_type)) {
 			result = serialize_basic (basic_type, expr);
 		} else if (type is ArrayType) {
 			result = serialize_array ((ArrayType) type, expr);

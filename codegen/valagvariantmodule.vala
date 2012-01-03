@@ -144,32 +144,6 @@ public class Vala.GVariantModule : GAsyncModule {
 		}
 	}
 
-	public override void visit_enum (Enum en) {
-		base.visit_enum (en);
-
-		if (is_string_marshalled_enum (en)) {
-			// strcmp
-			cfile.add_include ("string.h");
-
-			// for G_DBUS_ERROR
-			cfile.add_include ("gio/gio.h");
-
-			cfile.add_function (generate_enum_from_string_function (en));
-			cfile.add_function (generate_enum_to_string_function (en));
-		}
-	}
-
-	public override bool generate_enum_declaration (Enum en, CCodeFile decl_space) {
-		if (base.generate_enum_declaration (en, decl_space)) {
-			if (is_string_marshalled_enum (en)) {
-				decl_space.add_function_declaration (generate_enum_from_string_function_declaration (en));
-				decl_space.add_function_declaration (generate_enum_to_string_function_declaration (en));
-			}
-			return true;
-		}
-		return false;
-	}
-
 	CCodeExpression? get_array_length (CCodeExpression expr, int dim) {
 		var id = expr as CCodeIdentifier;
 		var ma = expr as CCodeMemberAccess;
@@ -198,58 +172,6 @@ public class Vala.GVariantModule : GAsyncModule {
 		from_string_call.add_argument (error_expr != null ? error_expr : new CCodeConstant ("NULL"));
 
 		return from_string_call;
-	}
-
-	public CCodeFunction generate_enum_from_string_function_declaration (Enum en) {
-		var from_string_name = "%s_from_string".printf (get_ccode_lower_case_name (en, null));
-
-		var from_string_func = new CCodeFunction (from_string_name, get_ccode_name (en));
-		from_string_func.add_parameter (new CCodeParameter ("str", "const char*"));
-		from_string_func.add_parameter (new CCodeParameter ("error", "GError**"));
-
-		return from_string_func;
-	}
-
-	public CCodeFunction generate_enum_from_string_function (Enum en) {
-		var from_string_name = "%s_from_string".printf (get_ccode_lower_case_name (en, null));
-
-		var from_string_func = new CCodeFunction (from_string_name, get_ccode_name (en));
-		from_string_func.add_parameter (new CCodeParameter ("str", "const char*"));
-		from_string_func.add_parameter (new CCodeParameter ("error", "GError**"));
-
-		push_function (from_string_func);
-
-		ccode.add_declaration (get_ccode_name (en), new CCodeVariableDeclarator.zero ("value", new CCodeConstant ("0")));
-
-		bool firstif = true;
-		foreach (EnumValue enum_value in en.get_values ()) {
-			string dbus_value = get_dbus_value (enum_value, enum_value.name);
-			var string_comparison = new CCodeFunctionCall (new CCodeIdentifier ("strcmp"));
-			string_comparison.add_argument (new CCodeIdentifier ("str"));
-			string_comparison.add_argument (new CCodeConstant ("\"%s\"".printf (dbus_value)));
-			var cond = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, string_comparison, new CCodeConstant ("0"));
-			if (firstif) {
-				ccode.open_if (cond);
-				firstif = false;
-			} else {
-				ccode.else_if (cond);
-			}
-			ccode.add_assignment (new CCodeIdentifier ("value"), new CCodeIdentifier (get_ccode_name (enum_value)));
-		}
-
-		ccode.add_else ();
-		var set_error = new CCodeFunctionCall (new CCodeIdentifier ("g_set_error"));
-		set_error.add_argument (new CCodeIdentifier ("error"));
-		set_error.add_argument (new CCodeIdentifier ("G_DBUS_ERROR"));
-		set_error.add_argument (new CCodeIdentifier ("G_DBUS_ERROR_INVALID_ARGS"));
-		set_error.add_argument (new CCodeConstant ("\"Invalid value for enum `%s'\"".printf (get_ccode_name (en))));
-		ccode.add_expression (set_error);
-		ccode.close ();
-
-		ccode.add_return (new CCodeIdentifier ("value"));
-
-		pop_function ();
-		return from_string_func;
 	}
 
 	CCodeExpression deserialize_basic (BasicTypeInfo basic_type, CCodeExpression variant_expr, bool transfer = false) {
@@ -567,41 +489,6 @@ public class Vala.GVariantModule : GAsyncModule {
 		to_string_call.add_argument (expr);
 
 		return to_string_call;
-	}
-
-	public CCodeFunction generate_enum_to_string_function_declaration (Enum en) {
-		var to_string_name = "%s_to_string".printf (get_ccode_lower_case_name (en, null));
-
-		var to_string_func = new CCodeFunction (to_string_name, "const char*");
-		to_string_func.add_parameter (new CCodeParameter ("value", get_ccode_name (en)));
-
-		return to_string_func;
-	}
-
-	public CCodeFunction generate_enum_to_string_function (Enum en) {
-		var to_string_name = "%s_to_string".printf (get_ccode_lower_case_name (en, null));
-
-		var to_string_func = new CCodeFunction (to_string_name, "const char*");
-		to_string_func.add_parameter (new CCodeParameter ("value", get_ccode_name (en)));
-
-		push_function (to_string_func);
-
-		ccode.add_declaration ("const char *", new CCodeVariableDeclarator ("str"));
-
-		ccode.open_switch (new CCodeIdentifier ("value"));
-		foreach (EnumValue enum_value in en.get_values ()) {
-			string dbus_value = get_dbus_value (enum_value, enum_value.name);
-			ccode.add_case (new CCodeIdentifier (get_ccode_name (enum_value)));
-			ccode.add_assignment (new CCodeIdentifier ("str"), new CCodeConstant ("\"%s\"".printf (dbus_value)));
-			ccode.add_break ();
-		}
-
-		ccode.close();
-
-		ccode.add_return (new CCodeIdentifier ("str"));
-
-		pop_function ();
-		return to_string_func;
 	}
 
 	CCodeExpression? serialize_basic (BasicTypeInfo basic_type, CCodeExpression expr) {
