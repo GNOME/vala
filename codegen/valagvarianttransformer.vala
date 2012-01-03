@@ -270,6 +270,9 @@ public class Vala.GVariantTransformer : CodeTransformer {
 				b.add_expression (call);
 			}
 			b.add_return (expression (@"$builder.end ()"));
+
+			b.pop_method ();
+			check (m);
 		}
 
 		var call = (MethodCall) expression (m.name+"()");
@@ -286,7 +289,7 @@ public class Vala.GVariantTransformer : CodeTransformer {
 			var builderinit = expression (@"new GLib.VariantBuilder (new GLib.VariantType (\"$(get_type_signature (type))\"))");
 			var builder = b.add_temp_declaration (null, builderinit);
 
-			var for_each = expression (@"ht.for_each ((k,v) => $builder.add (\"{?*}\", k, v))");
+			var for_each = expression (@"ht.for_each ((k,v) => { GLib.Variant k1 = k; GLib.Variant v1 = v; $builder.add (\"{?*}\", k, v); })");
 			b.add_expression (for_each);
 			b.add_return (expression (@"$builder.end ()"));
 

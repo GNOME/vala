@@ -45,6 +45,7 @@ public class Vala.CodeTransformer : CodeVisitor {
 	}
 
 	public void check (CodeNode node) {
+		node.accept (context.resolver);
 		if (!node.check (context)) {
 			return;
 		}
