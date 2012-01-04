@@ -158,7 +158,7 @@ public class Vala.ForeachStatement : CodeNode, Statement {
 			array_type.inline_allocated = false;
 
 			foreach_iteration = ForeachIteration.ARRAY;
-			error = !analyze_element_type (array_type.element_type);
+			error = !analyze_element_type (array_type.element_type, false);
 		} else if (context.profile == Profile.GOBJECT && collection_type.compatible (context.analyzer.glist_type) || collection_type.compatible (context.analyzer.gslist_type)) {
 			if (collection_type.get_type_arguments ().size != 1) {
 				error = true;
@@ -167,10 +167,10 @@ public class Vala.ForeachStatement : CodeNode, Statement {
 			}
 
 			foreach_iteration = ForeachIteration.GLIST;
-			error = !analyze_element_type (collection_type.get_type_arguments ().get (0));
+			error = !analyze_element_type (collection_type.get_type_arguments ().get (0), false);
 		} else if (context.profile == Profile.GOBJECT && collection_type.compatible (context.analyzer.gvaluearray_type)) {
 			foreach_iteration = ForeachIteration.GVALUE_ARRAY;
-			error = !analyze_element_type (context.analyzer.gvalue_type);
+			error = !analyze_element_type (context.analyzer.gvalue_type, false);
 		} else {
 			error = !check_with_iterator (context, collection_type);
 		}
@@ -202,7 +202,7 @@ public class Vala.ForeachStatement : CodeNode, Statement {
 			return false;
 		}
 
-		if (!analyze_element_type (element_type)) {
+		if (!analyze_element_type (element_type, element_type.value_owned)) {
 			return false;
 		}
 
@@ -253,7 +253,7 @@ public class Vala.ForeachStatement : CodeNode, Statement {
 				return false;
 			}
 
-			if (!analyze_element_type (element_type)) {
+			if (!analyze_element_type (element_type, element_type.value_owned)) {
 				return false;
 			}
 
@@ -287,7 +287,7 @@ public class Vala.ForeachStatement : CodeNode, Statement {
 				return false;
 			}
 
-			if (!analyze_element_type (element_type)) {
+			if (!analyze_element_type (element_type, element_type.value_owned)) {
 				return false;
 			}
 
@@ -297,7 +297,7 @@ public class Vala.ForeachStatement : CodeNode, Statement {
 		return true;
 	}
 
-	bool analyze_element_type (DataType element_type) {
+	bool analyze_element_type (DataType element_type, bool get_owned) {
 		// analyze element type
 		if (type_reference == null) {
 			// var type
@@ -306,7 +306,7 @@ public class Vala.ForeachStatement : CodeNode, Statement {
 			error = true;
 			Report.error (source_reference, "Foreach: Cannot convert from `%s' to `%s'".printf (element_type.to_string (), type_reference.to_string ()));
 			return false;
-		} else if (element_type.is_disposable () && element_type.value_owned && !type_reference.value_owned) {
+		} else if (get_owned && element_type.is_disposable () && element_type.value_owned && !type_reference.value_owned) {
 			error = true;
 			Report.error (source_reference, "Foreach: Invalid assignment from owned expression to unowned variable");
 			return false;

@@ -441,4 +441,50 @@ public class Vala.CCodeTransformer : CodeTransformer {
 		expr.parent_node.replace_expression (expr, ma);
 		check (ma);
 	}
+
+	public override void visit_binary_expression (BinaryExpression expr) {
+		Expression replacement = null;
+		var old_parent_node = expr.parent_node;
+		var target_type = expr.target_type != null ? expr.target_type.copy () : null;
+		push_builder (new CodeBuilder (context, expr.parent_statement, expr.source_reference));
+
+		if (context.analyzer.get_current_non_local_symbol (expr) is Block
+		    && (expr.operator == BinaryOperator.AND || expr.operator == BinaryOperator.OR)) {
+			var is_and = expr.operator == BinaryOperator.AND;
+			var result = b.add_temp_declaration (data_type ("bool"));
+			b.open_if (expr.left);
+			if (is_and) {
+				b.add_assignment (expression (result), expr.right);
+			} else {
+				b.add_expression (expression (@"$result = true"));
+			}
+			b.add_else ();
+			if (is_and) {
+				b.add_expression (expression (@"$result = false"));
+			} else {
+				b.add_assignment (expression (result), expr.right);
+			}
+			b.close ();
+			replacement = expression (result);
+		} else if (expr.operator == BinaryOperator.COALESCE) {
+			replacement = new ConditionalExpression (new BinaryExpression (BinaryOperator.EQUALITY, expr.left, new NullLiteral (expr.source_reference), expr.source_reference), expr.right, expr.left, expr.source_reference);
+		} else if (expr.operator == BinaryOperator.IN && !(expr.left.value_type.compatible (context.analyzer.int_type) && expr.right.value_type.compatible (context.analyzer.int_type)) && !(expr.right.value_type is ArrayType)) {
+			// neither enums nor array, it's contains()
+			var call = new MethodCall (new MemberAccess (expr.right, "contains", expr.source_reference), expr.source_reference);
+			call.add_argument (expr.left);
+			replacement = call;
+		}
+
+		if (replacement != null) {
+			replacement.target_type = target_type;
+			context.analyzer.replaced_nodes.add (expr);
+			old_parent_node.replace_expression (expr, replacement);
+			b.check (this);
+			pop_builder ();
+			check (replacement);
+		} else {
+			pop_builder ();
+			base.visit_binary_expression (expr);
+		}
+	}
 }
