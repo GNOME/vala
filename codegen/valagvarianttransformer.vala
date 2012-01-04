@@ -149,7 +149,7 @@ public class Vala.GVariantTransformer : CodeTransformer {
 		Method m;
 		if (!wrapper_method (data_type ("GLib.Variant"), "gvariant_serialize_array "+array_type.to_string(), out m)) {
 			m.add_parameter (new Parameter ("array", copy_type (array_type, false), b.source_reference));
-			b.push_method (m);
+			push_builder (new CodeBuilder.for_subroutine (m));
 
 			string[] indices = new string[array_type.rank];
 			for (int dim=1; dim <= array_type.rank; dim++) {
@@ -157,7 +157,7 @@ public class Vala.GVariantTransformer : CodeTransformer {
 			}
 			b.add_return (serialize_array_dim (array_type, 1, indices, "array"));
 
-			b.pop_method ();
+			pop_builder ();
 			check (m);
 		}
 		var call = (MethodCall) expression (m.name+"()");
@@ -217,7 +217,7 @@ public class Vala.GVariantTransformer : CodeTransformer {
 		var type = context.analyzer.get_data_type_for_symbol (st);
 		if (!wrapper_method (data_type ("GLib.Variant"), "gvariant_serialize_struct "+type.to_string(), out m)) {
 			m.add_parameter (new Parameter ("st", type, b.source_reference));
-			b.push_method (m);
+			push_builder (new CodeBuilder.for_subroutine (m));
 
 			var builderinit = expression ("new GLib.VariantBuilder (GLib.VariantType.TUPLE)");
 			var builder = b.add_temp_declaration (null, builderinit);
@@ -231,7 +231,7 @@ public class Vala.GVariantTransformer : CodeTransformer {
 			}
 			b.add_return (expression (@"$builder.end ()"));
 
-			b.pop_method ();
+			pop_builder ();
 			check (m);
 		}
 
@@ -244,7 +244,7 @@ public class Vala.GVariantTransformer : CodeTransformer {
 		Method m;
 		if (!wrapper_method (data_type ("GLib.Variant"), "gvariant_serialize_hash_table "+type.to_string(), out m)) {
 			m.add_parameter (new Parameter ("ht", copy_type (type, false), b.source_reference));
-			b.push_method (m);
+			push_builder (new CodeBuilder.for_subroutine (m));
 
 			var builderinit = expression (@"new GLib.VariantBuilder (new GLib.VariantType (\"$(get_type_signature (type))\"))");
 			var builder = b.add_temp_declaration (null, builderinit);
@@ -253,7 +253,7 @@ public class Vala.GVariantTransformer : CodeTransformer {
 			b.add_expression (for_each);
 			b.add_return (expression (@"$builder.end ()"));
 
-			b.pop_method ();
+			pop_builder ();
 			check (m);
 		}
 		var call = (MethodCall) expression (m.name+"()");
@@ -275,7 +275,7 @@ public class Vala.GVariantTransformer : CodeTransformer {
 		Method m;
 		if (!wrapper_method (copy_type (array_type, true), "gvariant_deserialize_array "+array_type.to_string(), out m)) {
 			m.add_parameter (new Parameter ("variant", data_type ("GLib.Variant", false), b.source_reference));
-			b.push_method (m);
+			push_builder (new CodeBuilder.for_subroutine (m));
 
 			var iterator = b.add_temp_declaration (data_type ("GLib.VariantIter"), expression ("variant.iterator ()"));
 
@@ -296,7 +296,7 @@ public class Vala.GVariantTransformer : CodeTransformer {
 			deserialize_array_dim (array_type, "variant", indices, 1, array);
 			b.add_return (expression (array));
 
-			b.pop_method ();
+			pop_builder ();
 			check (m);
 		}
 		var call = (MethodCall) expression (m.name+"()");
@@ -340,7 +340,7 @@ public class Vala.GVariantTransformer : CodeTransformer {
 		type.value_owned = true;
 		if (!wrapper_method (type, "gvariant_deserialize_struct "+type.to_string(), out m)) {
 			m.add_parameter (new Parameter ("variant", data_type ("GLib.Variant", false), b.source_reference));
-			b.push_method (m);
+			push_builder (new CodeBuilder.for_subroutine (m));
 
 			var iterator = b.add_temp_declaration (data_type ("GLib.VariantIter"), expression (@"variant.iterator ()"));
 
@@ -354,7 +354,7 @@ public class Vala.GVariantTransformer : CodeTransformer {
 				b.add_assignment (expression (@"$result.$(f.name)"), expression (@"($(f.variable_type)) ($iterator.next_value ())"));
 			}
 			b.add_return (expression (result));
-			b.pop_method ();
+			pop_builder ();
 			check (m);
 		}
 		var call = (MethodCall) expression (m.name+"()");
@@ -366,7 +366,7 @@ public class Vala.GVariantTransformer : CodeTransformer {
 		Method m;
 		if (!wrapper_method (copy_type (type, true), "gvariant_deserialize_hash_table "+type.to_string(), out m)) {
 			m.add_parameter (new Parameter ("variant", data_type ("GLib.Variant", false), b.source_reference));
-			b.push_method (m);
+			push_builder (new CodeBuilder.for_subroutine (m));
 
 			var iterator = b.add_temp_declaration (data_type ("GLib.VariantIter"), expression (@"variant.iterator ()"));
 
@@ -390,7 +390,7 @@ public class Vala.GVariantTransformer : CodeTransformer {
 			b.close ();
 
 			b.add_return (expression (hash_table));
-			b.pop_method ();
+			pop_builder ();
 			check (m);
 		}
 		var call = (MethodCall) expression (m.name+"()");

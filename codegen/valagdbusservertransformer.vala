@@ -43,7 +43,7 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 		wrapper.add_parameter (new Parameter ("object", object_type));
 		wrapper.add_parameter (new Parameter ("arguments", data_type ("GLib.Variant", false)));
 		wrapper.add_parameter (new Parameter ("invocation", data_type ("GLib.DBusMethodInvocation", false)));
-		b.push_method (wrapper);
+		push_builder (new CodeBuilder.for_subroutine (wrapper));
 
 		var iter = b.add_temp_declaration (null, expression ("arguments.iterator ()"));
 
@@ -136,7 +136,7 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 			check (ready);
 		}
 
-		b.pop_method ();
+		pop_builder ();
 		check (wrapper);
 		return wrapper.name;
 	}

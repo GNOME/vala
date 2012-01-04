@@ -188,7 +188,7 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 		m.access = SymbolAccessibility.PRIVATE;
 		m.add_parameter (new Parameter ("parameters", data_type ("GLib.Variant", false), sig.source_reference));
 		proxy_class.add_method (m);
-		b.push_method (m);
+		push_builder (new CodeBuilder.for_subroutine (m));
 
 		var iter = b.add_temp_declaration (null, expression ("parameters.iterator ()"));
 		var call = new MethodCall (expression (sig.name), sig.source_reference);
@@ -203,7 +203,7 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 		}
 		b.add_expression (call);
 
-		b.pop_method ();
+		pop_builder ();
 		return m.name;
 	}
 
