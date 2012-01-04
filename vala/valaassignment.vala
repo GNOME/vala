@@ -117,7 +117,7 @@ public class Vala.Assignment : Expression {
 
 		checked = true;
 
-		var insert_block = context.analyzer.get_insert_block (this);
+		var insert_block = context.analyzer.get_current_block (this);
 
 		if (left is Tuple && operator == AssignmentOperator.SIMPLE && parent_node is ExpressionStatement) {
 			unowned Tuple tuple = (Tuple) left;

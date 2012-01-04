@@ -2184,7 +2184,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				}
 			} else if (b.parent_symbol is ForeachStatement) {
 				var stmt = (ForeachStatement) b.parent_symbol;
-				if (!stmt.use_iterator && stmt.element_variable.captured) {
+				if (stmt.element_variable.captured) {
 					ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_local_cname (stmt.element_variable)), get_variable_cexpression (get_local_cname (stmt.element_variable)));
 				}
 			}
@@ -2510,7 +2510,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var block = local.parent_symbol;
 		if (block != null) {
 			var stmt = block.parent_symbol as ForeachStatement;
-			if (stmt != null && !stmt.use_iterator && stmt.element_variable == local) {
+			if (stmt != null && stmt.element_variable == local) {
 				return true;
 			}
 		}

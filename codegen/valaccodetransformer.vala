@@ -136,6 +136,67 @@ public class Vala.CCodeTransformer : CodeTransformer {
 		end_replace_statement ();
 	}
 
+	public override void visit_foreach_statement (ForeachStatement stmt) {
+		begin_replace_statement (stmt);
+
+		var collection = b.add_temp_declaration (stmt.collection.value_type, stmt.collection);
+
+		stmt.body.remove_local_variable (stmt.element_variable);
+		stmt.element_variable.checked = false;
+		var decl = new DeclarationStatement (stmt.element_variable, stmt.element_variable.source_reference);
+
+		switch (stmt.foreach_iteration) {
+		case ForeachIteration.ARRAY:
+		case ForeachIteration.GVALUE_ARRAY:
+			// array or GValueArray
+			var array = collection;
+			if (stmt.foreach_iteration == ForeachIteration.GVALUE_ARRAY) {
+				array = collection+".values";
+			}
+			var i = b.add_temp_declaration (null, expression ("0"));
+			b.open_for (null, expression (@"$i < $array.length"), expression (@"$i++"));
+			stmt.element_variable.initializer = expression (@"$array[$i]");
+			break;
+		case ForeachIteration.GLIST:
+			// GList or GSList
+			var iter_type = stmt.collection.value_type.copy ();
+			iter_type.value_owned = false;
+			var iter = b.add_temp_declaration (iter_type, expression (collection));
+			b.open_for (null, expression (@"$iter != null"), expression (@"$iter = $iter.next"));
+			stmt.element_variable.initializer = expression (@"$iter.data");
+			break;
+		case ForeachIteration.INDEX:
+			// get()+size
+			var size = b.add_temp_declaration (null, expression (@"$collection.size"));
+			var i = b.add_temp_declaration (null, expression ("0"));
+			b.open_for (null, expression (@"$i < $size"), expression (@"$i++"));
+			stmt.element_variable.initializer = expression (@"$collection.get ($i)");
+			break;
+		case ForeachIteration.NEXT_VALUE:
+			// iterator+next_value()
+			var iterator = b.add_temp_declaration (null, expression (@"$collection.iterator ()"));
+			var temp = b.add_temp_declaration (stmt.type_reference);
+			b.open_while (expression (@"($temp = $iterator.next_value ()) != null"));
+			stmt.element_variable.initializer = expression (temp);
+			break;
+		case ForeachIteration.NEXT_GET:
+			// iterator+next()+get()
+			var iterator = b.add_temp_declaration (null, expression (@"$collection.iterator ()"));
+			b.open_while (expression (@"$iterator.next ()"));
+			stmt.element_variable.initializer = expression (@"$iterator.get ()");
+			break;
+		default:
+			assert_not_reached ();
+		}
+
+		stmt.body.insert_statement (0, decl);
+		b.add_statement (stmt.body);
+		b.close ();
+
+		stmt.body.checked = false;
+		end_replace_statement ();
+	}
+
 	public override void visit_expression (Expression expr) {
 		if (expr in context.analyzer.replaced_nodes) {
 			return;

@@ -140,7 +140,7 @@ public class Vala.BinaryExpression : Expression {
 
 		checked = true;
 
-		var insert_block = context.analyzer.get_insert_block (this);
+		var insert_block = context.analyzer.get_current_block (this);
 
 		// some expressions are not in a block,
 		// for example, expressions in method contracts

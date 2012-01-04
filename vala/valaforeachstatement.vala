@@ -25,7 +25,7 @@
  * Represents a foreach statement in the source code. Foreach statements iterate
  * over the elements of a collection.
  */
-public class Vala.ForeachStatement : Block {
+public class Vala.ForeachStatement : CodeNode, Statement {
 	/**
 	 * Specifies the element type.
 	 */
@@ -70,22 +70,15 @@ public class Vala.ForeachStatement : Block {
 		}
 	}
 
-	public bool use_iterator { get; private set; }
+	/**
+	 * Specifies the approach used for the iteration.
+	 */
+	public ForeachIteration foreach_iteration { get; private set; }
 
 	/**
 	 * Specifies the declarator for the generated element variable.
 	 */
 	public LocalVariable element_variable { get; private set; }
-
-	/**
-	 * Specifies the declarator for the generated collection variable.
-	 */
-	public LocalVariable collection_variable { get; private set; }
-
-	/**
-	 * Specifies the declarator for the generated iterator variable.
-	 */
-	public LocalVariable iterator_variable { get; private set; }
 
 	private Expression _collection;
 	private Block _body;
@@ -103,28 +96,18 @@ public class Vala.ForeachStatement : Block {
 	 * @return                  newly created foreach statement
 	 */
 	public ForeachStatement (DataType? type_reference, string variable_name, Expression collection, Block body, SourceReference source_reference) {
-		base (source_reference);
 		this.variable_name = variable_name;
 		this.collection = collection;
 		this.body = body;
 		this.type_reference = type_reference;
+		this.source_reference = source_reference;
 	}
 
 	public override void accept (CodeVisitor visitor) {
-		if (use_iterator) {
-			base.accept (visitor);
-			return;
-		}
-
 		visitor.visit_foreach_statement (this);
 	}
 
 	public override void accept_children (CodeVisitor visitor) {
-		if (use_iterator) {
-			base.accept_children (visitor);
-			return;
-		}
-
 		collection.accept (visitor);
 		visitor.visit_end_full_expression (collection);
 
@@ -154,8 +137,6 @@ public class Vala.ForeachStatement : Block {
 
 		checked = true;
 
-		owner = context.analyzer.get_current_symbol (parent_node).scope;
-
 		// analyze collection expression first, used for type inference
 		if (!collection.check (context)) {
 			// ignore inner error
@@ -176,20 +157,34 @@ public class Vala.ForeachStatement : Block {
 			// can't use inline-allocated array for temporary variable
 			array_type.inline_allocated = false;
 
-			return check_without_iterator (context, collection_type, array_type.element_type);
-		} else if (context.profile == Profile.GOBJECT && (collection_type.compatible (context.analyzer.glist_type) || collection_type.compatible (context.analyzer.gslist_type))) {
+			foreach_iteration = ForeachIteration.ARRAY;
+			error = !analyze_element_type (array_type.element_type, false);
+		} else if (context.profile == Profile.GOBJECT && collection_type.compatible (context.analyzer.glist_type) || collection_type.compatible (context.analyzer.gslist_type)) {
 			if (collection_type.get_type_arguments ().size != 1) {
 				error = true;
 				Report.error (collection.source_reference, "missing type argument for collection");
 				return false;
 			}
 
-			return check_without_iterator (context, collection_type, collection_type.get_type_arguments ().get (0));
+			foreach_iteration = ForeachIteration.GLIST;
+			error = !analyze_element_type (collection_type.get_type_arguments ().get (0), false);
 		} else if (context.profile == Profile.GOBJECT && collection_type.compatible (context.analyzer.gvaluearray_type)) {
-			return check_without_iterator (context, collection_type, context.analyzer.gvalue_type);
+			foreach_iteration = ForeachIteration.GVALUE_ARRAY;
+			error = !analyze_element_type (context.analyzer.gvalue_type, false);
 		} else {
-			return check_with_iterator (context, collection_type);
+			error = !check_with_iterator (context, collection_type);
 		}
+
+		element_variable = new LocalVariable (type_reference, variable_name, null, source_reference);
+		element_variable.checked = true;
+		element_variable.active = true;
+		body.add_local_variable (element_variable);
+		if (!body.check (context)) {
+			error = true;
+		}
+		element_variable.active = false;
+
+		return !error;
 	}
 
 	bool check_with_index (CodeContext context, DataType collection_type) {
@@ -200,30 +195,27 @@ public class Vala.ForeachStatement : Block {
 		if (get_method.get_parameters ().size != 1) {
 			return false;
 		}
+		var element_type = get_method.return_type.get_actual_type (collection.value_type, null, this);
+		if (element_type is VoidType) {
+			Report.error (collection.source_reference, "`%s' must return an element".printf (get_method.get_full_name ()));
+			error = true;
+			return false;
+		}
+
+		if (!analyze_element_type (element_type, element_type.value_owned)) {
+			return false;
+		}
+
 		var size_property = collection_type.get_member ("size") as Property;
 		if (size_property == null) {
 			return false;
 		}
 
-		add_statement (new DeclarationStatement (new LocalVariable (null, "_%s_list".printf (variable_name), collection, source_reference), source_reference));
-		add_statement (new DeclarationStatement (new LocalVariable (null, "_%s_size".printf (variable_name), new MemberAccess (new MemberAccess.simple ("_%s_list".printf (variable_name), source_reference), "size", source_reference), source_reference), source_reference));
-		add_statement (new DeclarationStatement (new LocalVariable (null, "_%s_index".printf (variable_name), new UnaryExpression (UnaryOperator.MINUS, new IntegerLiteral ("1", source_reference), source_reference), source_reference), source_reference));
-		var next = new UnaryExpression (UnaryOperator.INCREMENT, new MemberAccess.simple ("_%s_index".printf (variable_name), source_reference), source_reference);
-		var conditional = new BinaryExpression (BinaryOperator.LESS_THAN, next, new MemberAccess.simple ("_%s_size".printf (variable_name), source_reference), source_reference);
-		var loop = new WhileStatement (conditional, body, source_reference);
-		add_statement (loop);
-
-		var get_call = new MethodCall (new MemberAccess (new MemberAccess.simple ("_%s_list".printf (variable_name), source_reference), "get", source_reference), source_reference);
-		get_call.add_argument (new MemberAccess.simple ("_%s_index".printf (variable_name), source_reference));
-		body.insert_statement (0, new DeclarationStatement (new LocalVariable (type_reference, variable_name, get_call, source_reference), source_reference));
-
-		checked = false;
-		return base.check (context);
+		foreach_iteration = ForeachIteration.INDEX;
+		return true;
 	}
 
 	bool check_with_iterator (CodeContext context, DataType collection_type) {
-		use_iterator = true;
-
 		if (check_with_index (context, collection_type)) {
 			return true;
 		}
@@ -246,9 +238,6 @@ public class Vala.ForeachStatement : Block {
 			return false;
 		}
 
-		var iterator_call = new MethodCall (new MemberAccess (collection, "iterator", source_reference), source_reference);
-		add_statement (new DeclarationStatement (new LocalVariable (iterator_type, "_%s_it".printf (variable_name), iterator_call, source_reference), source_reference));
-
 		var next_value_method = iterator_type.get_member ("next_value") as Method;
 		var next_method = iterator_type.get_member ("next") as Method;
 		if (next_value_method != null) {
@@ -264,17 +253,11 @@ public class Vala.ForeachStatement : Block {
 				return false;
 			}
 
-			if (!analyze_element_type (element_type)) {
+			if (!analyze_element_type (element_type, element_type.value_owned)) {
 				return false;
 			}
 
-			add_statement (new DeclarationStatement (new LocalVariable (type_reference, variable_name, null, source_reference), source_reference));
-
-			var next_value_call = new MethodCall (new MemberAccess (new MemberAccess.simple ("_%s_it".printf (variable_name), source_reference), "next_value", source_reference), source_reference);
-			var assignment = new Assignment (new MemberAccess (null, variable_name, source_reference), next_value_call, AssignmentOperator.SIMPLE, source_reference);
-			var conditional = new BinaryExpression (BinaryOperator.INEQUALITY, assignment, new NullLiteral (source_reference), source_reference);
-			var loop = new WhileStatement (conditional, body, source_reference);
-			add_statement (loop);
+			foreach_iteration = ForeachIteration.NEXT_VALUE;
 		} else if (next_method != null) {
 			if (next_method.get_parameters ().size != 0) {
 				Report.error (collection.source_reference, "`%s' must not have any parameters".printf (next_method.get_full_name ()));
@@ -304,27 +287,21 @@ public class Vala.ForeachStatement : Block {
 				return false;
 			}
 
-			if (!analyze_element_type (element_type)) {
+			if (!analyze_element_type (element_type, element_type.value_owned)) {
 				return false;
 			}
 
-			var next_call = new MethodCall (new MemberAccess (new MemberAccess.simple ("_%s_it".printf (variable_name), source_reference), "next", source_reference), source_reference);
-			var loop = new WhileStatement (next_call, body, source_reference);
-			add_statement (loop);
-
-			var get_call = new MethodCall (new MemberAccess (new MemberAccess.simple ("_%s_it".printf (variable_name), source_reference), "get", source_reference), source_reference);
-			body.insert_statement (0, new DeclarationStatement (new LocalVariable (type_reference, variable_name, get_call, source_reference), source_reference));
+			foreach_iteration = ForeachIteration.NEXT_GET;
 		} else {
 			Report.error (collection.source_reference, "`%s' does not have a `next_value' or `next' method".printf (iterator_type.to_string ()));
 			error = true;
 			return false;
 		}
 
-		checked = false;
-		return base.check (context);
+		return true;
 	}
 
-	bool analyze_element_type (DataType element_type) {
+	bool analyze_element_type (DataType element_type, bool get_owned) {
 		// analyze element type
 		if (type_reference == null) {
 			// var type
@@ -333,48 +310,13 @@ public class Vala.ForeachStatement : Block {
 			error = true;
 			Report.error (source_reference, "Foreach: Cannot convert from `%s' to `%s'".printf (element_type.to_string (), type_reference.to_string ()));
 			return false;
-		} else if (element_type.is_disposable () && element_type.value_owned && !type_reference.value_owned) {
+		} else if (get_owned && element_type.is_disposable () && element_type.value_owned && !type_reference.value_owned) {
 			error = true;
 			Report.error (source_reference, "Foreach: Invalid assignment from owned expression to unowned variable");
 			return false;
 		}
 
 		return true;
-	}
-
-	bool check_without_iterator (CodeContext context, DataType collection_type, DataType element_type) {
-		// analyze element type
-		if (type_reference == null) {
-			// var type
-			type_reference = element_type.copy ();
-		} else if (!element_type.compatible (type_reference)) {
-			error = true;
-			Report.error (source_reference, "Foreach: Cannot convert from `%s' to `%s'".printf (element_type.to_string (), type_reference.to_string ()));
-			return false;
-		}
-
-		element_variable = new LocalVariable (type_reference, variable_name, null, source_reference);
-
-		body.add_local_variable (element_variable);
-		element_variable.active = true;
-		element_variable.checked = true;
-
-		// call add_local_variable to check for shadowed variable
-		add_local_variable (element_variable);
-		remove_local_variable (element_variable);
-
-		body.check (context);
-
-		foreach (LocalVariable local in get_local_variables ()) {
-			local.active = false;
-		}
-
-		collection_variable = new LocalVariable (collection_type.copy (), "%s_collection".printf (variable_name));
-
-		add_local_variable (collection_variable);
-		collection_variable.active = true;
-
-		return !error;
 	}
 
 	public override void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
@@ -386,19 +328,8 @@ public class Vala.ForeachStatement : Block {
 	}
 
 	public override void emit (CodeGenerator codegen) {
-		if (use_iterator) {
-			base.emit (codegen);
-			return;
-		}
-
 		collection.emit (codegen);
 		codegen.visit_end_full_expression (collection);
-
-		element_variable.active = true;
-		collection_variable.active = true;
-		if (iterator_variable != null) {
-			iterator_variable.active = true;
-		}
 
 		codegen.visit_foreach_statement (this);
 	}
@@ -408,4 +339,14 @@ public class Vala.ForeachStatement : Block {
 			collection.add (element_variable);
 		}
 	}
+}
+
+public enum Vala.ForeachIteration {
+	NONE,
+	ARRAY,
+	GVALUE_ARRAY,
+	GLIST,
+	INDEX,
+	NEXT_VALUE,
+	NEXT_GET
 }

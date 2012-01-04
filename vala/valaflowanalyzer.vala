@@ -801,12 +801,14 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		all_basic_blocks.add (outer_block);
 		foreach (var init_expr in stmt.get_initializer ()) {
 			outer_block.add_node (init_expr);
+			handle_errors (init_expr);
 		}
 
 		var iterator_block = new BasicBlock ();
 		all_basic_blocks.add (iterator_block);
 		foreach (var it_expr in stmt.get_iterator ()) {
 			iterator_block.add_node (it_expr);
+			handle_errors (it_expr);
 		}
 
 		var loop_block = new BasicBlock ();

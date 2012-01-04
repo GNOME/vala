@@ -269,14 +269,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return (Block) node;
 	}
 
-	public unowned Block? get_insert_block (CodeNode node) {
-		unowned Block? block = get_current_block (node);
-		if (block is ForeachStatement) {
-			block = block.parent_symbol as Block;
-		}
-		return block;
-	}
-
 	// check whether type is at least as accessible as the specified symbol
 	public bool is_type_accessible (Symbol sym, DataType type) {
 		return type.is_accessible (sym);
