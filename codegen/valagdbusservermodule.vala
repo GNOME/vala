@@ -21,26 +21,6 @@
  */
 
 public class Vala.GDBusServerModule : GDBusClientModule {
-	public static bool is_dbus_visible (CodeNode node) {
-		var dbus_attribute = node.get_attribute ("DBus");
-		if (dbus_attribute != null
-		    && dbus_attribute.has_argument ("visible")
-		    && !dbus_attribute.get_bool ("visible")) {
-			return false;
-		}
-
-		return true;
-	}
-
-	public static string dbus_result_name (Method m) {
-		var dbus_name = m.get_attribute_string ("DBus", "result");
-		if (dbus_name != null && dbus_name != "") {
-			return dbus_name;
-		}
-
-		return "result";
-	}
-
 	string generate_dbus_signal_wrapper (Signal sig, ObjectTypeSymbol sym, string dbus_iface_name) {
 		return "_dbus_%s_%s".printf (get_ccode_lower_case_name (sym), get_ccode_lower_case_name (sig));
 	}
