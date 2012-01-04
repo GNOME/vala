@@ -416,7 +416,7 @@ public class Vala.GVariantTransformer : CodeTransformer {
 		en.add_method (m);
 		m.binding = MemberBinding.STATIC;
 		m.access = SymbolAccessibility.PUBLIC;
-		b = new CodeBuilder.for_subroutine (m);
+		push_builder (new CodeBuilder.for_subroutine (m));
 
 		b.open_switch (expression ("str"), null);
 		b.add_throw (expression ("new GLib.DBusError.INVALID_ARGS (\"Invalid value for enum `%s'\")".printf (get_ccode_name (en))));
@@ -426,6 +426,7 @@ public class Vala.GVariantTransformer : CodeTransformer {
 			b.add_return (expression (@"$(en.get_full_name()).$(enum_value.name)"));
 		}
 		b.close ();
+		pop_builder ();
 
 		check (m);
 	}
@@ -437,7 +438,7 @@ public class Vala.GVariantTransformer : CodeTransformer {
 		var m = new Method ("to_string", data_type ("string", false, true), en.source_reference);
 		en.add_method (m);
 		m.access = SymbolAccessibility.PUBLIC;
-		b = new CodeBuilder.for_subroutine (m);
+		push_builder (new CodeBuilder.for_subroutine (m));
 
 		b.open_switch (expression ("this"), null);
 		b.add_return (expression ("null"));
@@ -447,6 +448,7 @@ public class Vala.GVariantTransformer : CodeTransformer {
 			b.add_return (expression (@"\"$dbus_value\""));
 		}
 		b.close ();
+		pop_builder ();
 
 		check (m);
 	}
@@ -465,7 +467,7 @@ public class Vala.GVariantTransformer : CodeTransformer {
 			return;
 		}
 
-		b = new CodeBuilder (context, expr.parent_statement, expr.source_reference);
+		push_builder (new CodeBuilder (context, expr.parent_statement, expr.source_reference));
 		var old_parent_node = expr.parent_node;
 		var target_type = expr.target_type.copy ();
 		var type = expr.value_type;
@@ -496,6 +498,7 @@ public class Vala.GVariantTransformer : CodeTransformer {
 		context.analyzer.replaced_nodes.add (expr);
 		old_parent_node.replace_expression (expr, result);
 		b.check (this);
+		pop_builder ();
 		check (result);
 	}
 
@@ -506,7 +509,7 @@ public class Vala.GVariantTransformer : CodeTransformer {
 			return;
 		}
 
-		b = new CodeBuilder (context, expr.parent_statement, expr.source_reference);
+		push_builder (new CodeBuilder (context, expr.parent_statement, expr.source_reference));
 		var old_parent_node = expr.parent_node;
 		var target_type = expr.target_type.copy ();
 		var type = expr.value_type;
@@ -536,6 +539,7 @@ public class Vala.GVariantTransformer : CodeTransformer {
 		context.analyzer.replaced_nodes.add (expr);
 		old_parent_node.replace_expression (expr, result);
 		b.check (this);
+		pop_builder ();
 		check (result);
 	}
 }

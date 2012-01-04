@@ -27,7 +27,18 @@ public class Vala.CodeTransformer : CodeVisitor {
 	public CodeContext context;
 
 	public CodeBuilder b;
+	public ArrayList<CodeBuilder> builder_stack = new ArrayList<CodeBuilder> ();
 	public HashMap<string, CodeNode> wrapper_cache = new HashMap<string, CodeNode> (str_hash, str_equal);
+
+	public void push_builder (CodeBuilder builder) {
+		builder_stack.add (b);
+		b = builder;
+	}
+
+	public void pop_builder () {
+		b = builder_stack[builder_stack.size - 1];
+		builder_stack.remove_at (builder_stack.size - 1);
+	}
 
 	/**
 	 * Transform the code tree for the specified code context.

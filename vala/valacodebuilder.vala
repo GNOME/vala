@@ -196,6 +196,25 @@ public class Vala.CodeBuilder {
 		section.add_label (label);
 	}
 
+	public void open_try () {
+		build_context.statement_stack.add (build_context.current_block);
+		var parent_block = build_context.current_block;
+
+		build_context.current_block = new Block (source_reference);
+
+		var stmt = new TryStatement (build_context.current_block, null, source_reference);
+		build_context.statement_stack.add (stmt);
+
+		parent_block.add_statement (stmt);
+	}
+
+	public void add_catch (DataType? error_type, string? variable_name) {
+		build_context.current_block = new Block (source_reference);
+
+		var stmt = (TryStatement) build_context.statement_stack[build_context.statement_stack.size-1];
+		stmt.add_catch_clause (new CatchClause (error_type, variable_name, build_context.current_block, source_reference));
+	}
+
 	public void add_statement (Statement statement) {
 		build_context.current_block.add_statement (statement);
 	}

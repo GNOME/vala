@@ -403,7 +403,7 @@ class Vala.Compiler {
 			}
 		}
 
-		var transformer = new GDBusClientTransformer ();
+		var transformer = new GDBusServerTransformer ();
 		transformer.transform (context);
 
 		if (context.report.get_errors () > 0 || (fatal_warnings && context.report.get_warnings () > 0)) {

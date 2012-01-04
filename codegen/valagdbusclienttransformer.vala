@@ -41,7 +41,7 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 		return Symbol.lower_case_to_camel_case (symbol.name);
 	}
 
-	Expression read_dbus_value (DataType type, string iter, string message, ref string? fd_list, ref string? fd_index) {
+	public Expression read_dbus_value (DataType type, string iter, string message, ref string? fd_list, ref string? fd_index) {
 		string? type_name = null;
 		if (type.data_type != null) {
 			type_name = type.data_type.get_full_name ();
@@ -61,8 +61,30 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 				// socket
 				return expression (@"new GLib.Socket.from_fd ($fd_list.get ($fd_index))");
 			}
+		} else if (type_name == "GLib.Variant") {
+			return expression (@"$iter.next_value().get_variant ()");
 		} else {
 			return expression (@"($(type)) ($iter.next_value ())");
+		}
+	}
+
+	public void write_dbus_value (DataType type, string builder, string value, ref string? fd_list) {
+		string? type_name = null;
+		if (type is ObjectType) {
+			type_name = type.data_type.get_full_name ();
+		}
+		if (type_name == "GLib.Cancellable" || type_name == "GLib.BusName") {
+			return;
+		}
+		if (type_name == "GLib.UnixInputStream" || type_name == "GLib.UnixOutputStream" || type_name == "GLib.Socket") {
+			if (fd_list == null) {
+				fd_list = b.add_temp_declaration (null, expression ("new GLib.UnixFDList ()"));
+			}
+			b.add_expression (expression (@"$builder.add (\"h\", $fd_list.append ($value.get_fd ()))"));
+		} else if (type_name == "GLib.Variant") {
+			b.add_expression (expression (@"$builder.add (\"v\", $value)"));
+		} else {
+			b.add_expression (expression (@"$builder.add_value ($value)"));
 		}
 	}
 
@@ -81,21 +103,10 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 		foreach (var param in m.get_parameters ()) {
 			if (param.direction == ParameterDirection.IN) {
 				string? type_name = null;
-				if (param.variable_type.data_type != null) {
-					type_name = param.variable_type.data_type.get_full_name ();
-				}
-				if (type_name == "GLib.Cancellable") {
+				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.Cancellable") {
 					cancellable = param.name;
-				} else if (type_name == "GLib.BusName") {
-					// ignore BusName sender
-				} else if (type_name == "GLib.UnixInputStream" || type_name == "GLib.UnixOutputStream" || type_name == "GLib.Socket") {
-					if (fd_list == null) {
-						fd_list = b.add_temp_declaration (null, expression ("new GLib.UnixFDList ()"));
-					}
-					b.add_expression (expression (@"$builder.add (\"h\", $fd_list.append ($(param.name).get_fd ()))"));
-				} else {
-					b.add_expression (expression (@"$builder.add_value ($(param.name))"));
 				}
+				write_dbus_value (param.variable_type, builder, param.name, ref fd_list);
 			} else if (param.direction == ParameterDirection.OUT) {
 				has_result = true;
 			}
@@ -149,9 +160,10 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 		}
 		proxy_class.add_method (proxy);
 
-		b = new CodeBuilder.for_subroutine (proxy);
+		push_builder (new CodeBuilder.for_subroutine (proxy));
 		string dbus_iface_name = get_dbus_name (iface);
 		generate_marshalling (m, dbus_iface_name, get_dbus_name_for_member (m), GDBusModule.get_dbus_timeout_for_member (m));
+		pop_builder ();
 	}
 
 	void generate_dbus_proxy_methods (Class proxy_class, Interface iface) {
@@ -205,7 +217,7 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 		}
 		proxy_class.add_method (m);
 
-		b = new CodeBuilder.for_subroutine (m);
+		push_builder (new CodeBuilder.for_subroutine (m));
 
 		b.open_switch (expression ("signal_name"), null);
 		b.add_expression (expression ("assert_not_reached ()"));
@@ -221,6 +233,7 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 			b.add_break ();
 		}
 		b.close ();
+		pop_builder ();
 	}
 
 	public int get_dbus_timeout (Symbol symbol) {
@@ -251,7 +264,7 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 
 			proxy_get = new PropertyAccessor (true, false, false, owned_type, null, prop.get_accessor.source_reference);
 
-			b = new CodeBuilder.for_subroutine (proxy_get);
+			push_builder (new CodeBuilder.for_subroutine (proxy_get));
 			// first try cached value
 			var result = b.add_temp_declaration (null, expression (@"get_cached_property (\"$dbus_name\")"));
 			b.open_if (expression (@"$result == null"));
@@ -260,14 +273,16 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 			b.close ();
 
 			b.add_return (expression (@"($(prop.property_type)) ($result)"));
+			pop_builder ();
 		}
 
 		PropertyAccessor proxy_set = null;
 		if (prop.set_accessor != null) {
 			proxy_set = new PropertyAccessor (false, true, false, prop.set_accessor.value_type, null, prop.set_accessor.source_reference);
-			b = new CodeBuilder.for_subroutine (proxy_set);
+			push_builder (new CodeBuilder.for_subroutine (proxy_set));
 			var variant = b.add_temp_declaration (data_type ("GLib.Variant"), expression ("value"));
 			b.add_expression (expression (@"call_sync (\"org.freedesktop.DBus.Properties.Set\", new Variant (\"(ssv)\", \"$dbus_iface_name\", \"$dbus_name\", $variant), GLib.DBusCallFlags.NONE, $timeout, null)"));
+			pop_builder ();
 		}
 
 		Property proxy = new Property (prop.name, prop.property_type, proxy_get, proxy_set, prop.source_reference);
@@ -325,7 +340,7 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 			return;
 		}
 
-		b = new CodeBuilder (context, expr.parent_statement, expr.source_reference);
+		push_builder (new CodeBuilder (context, expr.parent_statement, expr.source_reference));
 
 		Method wrapper;
 		var cache_key = "gdbus_client_dynamic_method_call "+m.return_type.to_string ();
@@ -341,6 +356,7 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 			check (wrapper);
 		}
 
+		pop_builder ();
 		expr.call.symbol_reference = wrapper;
 		base.visit_method_call (expr);
 	}
