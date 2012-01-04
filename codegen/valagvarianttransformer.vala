@@ -52,6 +52,10 @@ public class Vala.GVariantTransformer : CodeTransformer {
 		return false;
 	}
 
+	public bool is_gvariant_type (DataType type) {
+		return type.data_type == context.analyzer.gvariant_type.data_type;
+	}
+
 	bool get_basic_type_info (string signature, out BasicTypeInfo basic_type) {
 		if (signature != null) {
 			foreach (BasicTypeInfo info in basic_types) {
@@ -190,7 +194,13 @@ public class Vala.GVariantTransformer : CodeTransformer {
 			for (int i=0; i < dim; i++) {
 				element_expr.append_index (expression (indices[i]));
 			}
-			element_variant = element_expr;
+			if (is_gvariant_type (array_type.element_type)) {
+				var new_variant = (ObjectCreationExpression) expression ("new GLib.Variant.variant ()");
+				new_variant.add_argument (element_expr);
+				element_variant = new_variant;
+			} else {
+				element_variant = element_expr;
+			}
 		}
 
 		var builder_add = (MethodCall) expression (builder+".add_value ()");
@@ -227,7 +237,11 @@ public class Vala.GVariantTransformer : CodeTransformer {
 					continue;
 				}
 
-				b.add_expression (expression (@"$builder.add_value (st.$(f.name))"));
+				var serialized_field = "st."+f.name;
+				if (is_gvariant_type (f.variable_type)) {
+					serialized_field = @"new GLib.Variant.variant ($serialized_field)";
+				}
+				b.add_expression (expression (@"$builder.add_value ($serialized_field)"));
 			}
 			b.add_return (expression (@"$builder.end ()"));
 
@@ -249,7 +263,14 @@ public class Vala.GVariantTransformer : CodeTransformer {
 			var builderinit = expression (@"new GLib.VariantBuilder (new GLib.VariantType (\"$(get_type_signature (type))\"))");
 			var builder = b.add_temp_declaration (null, builderinit);
 
-			var for_each = expression (@"ht.for_each ((k,v) => { GLib.Variant k1 = k; GLib.Variant v1 = v; $builder.add (\"{?*}\", k, v); })");
+			var type_args = type.get_type_arguments ();
+			assert (type_args.size == 2);
+			var key_type = type_args.get (0);
+			var value_type = type_args.get (1);
+			string serialized_key = is_gvariant_type (key_type) ? "new GLib.Variant.variant (k1)" : "k1";
+			string serialized_value = is_gvariant_type (value_type) ? "new GLib.Variant.variant (v1)" : "v1";
+
+			var for_each = expression (@"ht.for_each ((k,v) => { GLib.Variant k1 = k; GLib.Variant v1 = v; $builder.add (\"{?*}\", $serialized_key, $serialized_value); })");
 			b.add_expression (for_each);
 			b.add_return (expression (@"$builder.end ()"));
 
@@ -315,7 +336,11 @@ public class Vala.GVariantTransformer : CodeTransformer {
 			for (int i = 0; i < array_type.rank; i++) {
 				element_access.append_index (expression (@"$(indices[i])++"));
 			}
-			b.add_assignment (element_access, expression (@"($(array_type.element_type)) ($new_variant)"));
+			if (is_gvariant_type (array_type.element_type)) {
+				b.add_assignment (element_access, expression (@"$new_variant.get_variant ()"));
+			} else {
+				b.add_assignment (element_access, expression (@"($(array_type.element_type)) ($new_variant)"));
+			}
 		} else {
 			deserialize_array_dim (array_type, new_variant, indices, dim + 1, array);
 		}
@@ -351,7 +376,11 @@ public class Vala.GVariantTransformer : CodeTransformer {
 					continue;
 				}
 
-				b.add_assignment (expression (@"$result.$(f.name)"), expression (@"($(f.variable_type)) ($iterator.next_value ())"));
+				if (is_gvariant_type (f.variable_type)) {
+					b.add_expression (expression (@"$result.$(f.name) = $iterator.next_value ().get_variant ()"));
+				} else {
+					b.add_expression (expression (@"$result.$(f.name) = ($(f.variable_type)) ($iterator.next_value ())"));
+				}
 			}
 			b.add_return (expression (result));
 			pop_builder ();
@@ -386,7 +415,11 @@ public class Vala.GVariantTransformer : CodeTransformer {
 			var new_variant = b.add_temp_declaration (data_type ("GLib.Variant"));
 
 			b.open_while (expression (@"($new_variant = $iterator.next_value ()) != null"));
-			b.add_expression (expression (@"$hash_table.insert (($key_type)($new_variant.get_child_value (0)), ($(value_type))($new_variant.get_child_value (1)))"));
+			var serialized_key = @"$new_variant.get_child_value (0)";
+			serialized_key = is_gvariant_type (key_type) ? @"$serialized_key.get_variant ()" : @"($key_type)($serialized_key)";
+			var serialized_value = @"$new_variant.get_child_value (1)";
+			serialized_value = is_gvariant_type (value_type) ? @"$serialized_value.get_variant ()" : @"($value_type)($serialized_value)";
+			b.add_expression (expression (@"$hash_table.insert ($serialized_key, $serialized_value)"));
 			b.close ();
 
 			b.add_return (expression (hash_table));
@@ -462,7 +495,8 @@ public class Vala.GVariantTransformer : CodeTransformer {
 	}
 
 	public override void visit_cast_expression (CastExpression expr) {
-		if (!(expr.inner.value_type.data_type == context.analyzer.gvariant_type.data_type && expr.type_reference.data_type != context.analyzer.gvariant_type.data_type)) {
+		if (!(is_gvariant_type (expr.inner.value_type) && !is_gvariant_type (expr.type_reference))) {
+			// no explicit gvariant unboxing
 			base.visit_cast_expression (expr);
 			return;
 		}
@@ -487,9 +521,7 @@ public class Vala.GVariantTransformer : CodeTransformer {
 		} else if (type.data_type is Struct) {
 			result = deserialize_struct ((Struct) type.data_type, expr.inner);
 		} else if (type is ObjectType) {
-			if (type.data_type == context.analyzer.gvariant_type.data_type) {
-				result = new MethodCall (new MemberAccess (expr.inner, "get_variant"), b.source_reference);
-			} else if (type.data_type.get_full_name () == "GLib.HashTable") {
+			if (type.data_type.get_full_name () == "GLib.HashTable") {
 				result = deserialize_hash_table ((ObjectType) type, expr.inner);
 			}
 		}
@@ -503,7 +535,7 @@ public class Vala.GVariantTransformer : CodeTransformer {
 	}
 
 	public override void visit_expression (Expression expr) {
-		if (!(context.profile == Profile.GOBJECT && expr.target_type != null && expr.target_type.data_type == context.analyzer.gvariant_type.data_type && !(expr.value_type is NullType) && expr.value_type.data_type != context.analyzer.gvariant_type.data_type)) {
+		if (!(context.profile == Profile.GOBJECT && expr.target_type != null && is_gvariant_type (expr.target_type) && !(expr.value_type is NullType) && !is_gvariant_type (expr.value_type))) {
 			// no implicit gvariant boxing
 			base.visit_expression (expr);
 			return;
@@ -525,14 +557,8 @@ public class Vala.GVariantTransformer : CodeTransformer {
 			result = serialize_array ((ArrayType) type, expr);
 		} else if (type.data_type is Struct) {
 			result = serialize_struct ((Struct) type.data_type, expr);
-		} else if (type is ObjectType) {
-			if (type.data_type == context.analyzer.gvariant_type.data_type) {
-				var variant_new = (ObjectCreationExpression) expression ("new GLib.Variant.variant ()");
-				variant_new.add_argument (expr);
-				result = variant_new;
-			} else if (type.data_type.get_full_name () == "GLib.HashTable") {
-				result = serialize_hash_table ((ObjectType) type, expr);
-			}
+		} else if (type is ObjectType && type.data_type.get_full_name () == "GLib.HashTable") {
+			result = serialize_hash_table ((ObjectType) type, expr);
 		}
 
 		result.target_type = target_type;

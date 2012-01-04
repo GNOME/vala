@@ -284,7 +284,7 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 
 		var builder = b.add_temp_declaration (null, expression ("new GLib.VariantBuilder (GLib.VariantType.TUPLE)"));
 		foreach (var param in sig.get_parameters ()) {
-			if (param.variable_type.data_type == context.analyzer.gvariant_type.data_type) {
+			if (is_gvariant_type (param.variable_type)) {
 				b.add_expression (expression (@"$builder.add (\"v\", $(param.name))"));
 			} else {
 				b.add_expression (expression (@"$builder.add_value ($(param.name))"));

@@ -194,7 +194,7 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 		var call = new MethodCall (expression (sig.name), sig.source_reference);
 		foreach (var param in sig.get_parameters ()) {
 			var temp = b.add_temp_declaration (copy_type (param.variable_type, true));
-			if (param.variable_type.data_type == context.analyzer.gvariant_type.data_type) {
+			if (is_gvariant_type (param.variable_type)) {
 				b.add_expression (expression (@"$temp = $iter.next_value().get_variant ()"));
 			} else {
 				b.add_expression (expression (@"$temp = ($(param.variable_type)) ($iter.next_value ())"));
