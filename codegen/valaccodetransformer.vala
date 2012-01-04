@@ -243,4 +243,59 @@ public class Vala.CCodeTransformer : CodeTransformer {
 		replacement = return_temp_access (result, expr.value_type, target_type, formal_target_type);
 		end_replace_expression (replacement);
 	}
+
+	public override void visit_binary_expression (BinaryExpression expr) {
+		var parent_statement = expr.parent_statement;
+		if (parent_statement == null) {
+			base.visit_binary_expression (expr);
+			return;
+		}
+
+		Expression replacement = null;
+		var target_type = copy_type (expr.target_type);
+		begin_replace_expression (expr);
+
+		if (context.analyzer.get_current_non_local_symbol (expr) is Block
+		    && (expr.operator == BinaryOperator.AND || expr.operator == BinaryOperator.OR)) {
+			var is_and = expr.operator == BinaryOperator.AND;
+			var result = b.add_temp_declaration (data_type ("bool"));
+			b.open_if (expr.left);
+			if (is_and) {
+				b.add_assignment (expression (result), expr.right);
+			} else {
+				b.add_expression (expression (@"$result = true"));
+			}
+			b.add_else ();
+			if (is_and) {
+				b.add_expression (expression (@"$result = false"));
+			} else {
+				b.add_assignment (expression (result), expr.right);
+			}
+			b.close ();
+			replacement = expression (result);
+		} else if (expr.operator == BinaryOperator.COALESCE) {
+			var result_type = copy_type (expr.value_type);
+			result_type.nullable = true;
+			var result = b.add_temp_declaration (result_type, expr.left);
+
+			b.open_if (expression (@"$result == null"));
+			b.add_assignment (expression (result), expr.right);
+			b.close ();
+
+			replacement = return_temp_access (result, result_type, target_type);
+		} else if (expr.operator == BinaryOperator.IN && !(expr.left.value_type.compatible (context.analyzer.int_type) && expr.right.value_type.compatible (context.analyzer.int_type)) && !(expr.right.value_type is ArrayType)) {
+			// neither enums nor array, it's contains()
+			var call = new MethodCall (new MemberAccess (expr.right, "contains", expr.source_reference), expr.source_reference);
+			call.add_argument (expr.left);
+			replacement = call;
+		}
+
+		if (replacement != null) {
+			replacement.target_type = target_type;
+			end_replace_expression (replacement);
+		} else {
+			end_replace_expression (null);
+			base.visit_binary_expression (expr);
+		}
+	}
 }

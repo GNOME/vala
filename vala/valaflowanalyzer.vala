@@ -606,8 +606,8 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 
 		// condition
 		current_block.add_node (stmt.condition);
-
 		handle_errors (stmt.condition);
+		stmt.condition.accept (this);
 
 		// true block
 		var last_block = current_block;
@@ -758,6 +758,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		// condition
 		loop_block.add_node (stmt.condition);
 		handle_errors (stmt.condition);
+		stmt.condition.accept (this);
 
 		if (stmt.condition.is_always_false ()) {
 			mark_unreachable ();
@@ -1249,7 +1250,67 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 	public override void visit_expression (Expression expr) {
 		// lambda expression and conditional expression are handled separately
 		// an expression can be unreachable due to a conditional expression
-		if (!(expr is LambdaExpression) && !(expr is ConditionalExpression) && !unreachable (expr)) {
+		if (!(expr is LambdaExpression) && !(expr is ConditionalExpression)
+		    && !(expr is BinaryExpression) && !unreachable (expr)) {
+			expr.accept_children (this);
+		}
+	}
+
+	public override void visit_binary_expression (BinaryExpression expr) {
+		if (unreachable (expr)) {
+			return;
+		}
+
+		if (expr.operator == BinaryOperator.AND || expr.operator == BinaryOperator.OR) {
+			var is_and = expr.operator == BinaryOperator.AND;
+
+			// condition
+			current_block.add_node (expr.left);
+			handle_errors (expr.left);
+			expr.left.accept (this);
+
+			// true block
+			var last_block = current_block;
+			if (expr.left.is_always_false ()) {
+				mark_unreachable ();
+			} else {
+				current_block = new BasicBlock ();
+				all_basic_blocks.add (current_block);
+				last_block.connect (current_block);
+			}
+			if (is_and) {
+				expr.right.accept (this);
+			}
+
+			// false block
+			var last_true_block = current_block;
+			if (expr.left.is_always_true ()) {
+				mark_unreachable ();
+			} else {
+				current_block = new BasicBlock ();
+				all_basic_blocks.add (current_block);
+				last_block.connect (current_block);
+			}
+			if (!is_and) {
+				expr.right.accept (this);
+			}
+
+			// after if/else
+			var last_false_block = current_block;
+			// reachable?
+			if (last_true_block != null || last_false_block != null) {
+				current_block = new BasicBlock ();
+				all_basic_blocks.add (current_block);
+				if (last_true_block != null) {
+					last_true_block.connect (current_block);
+				}
+				if (last_false_block != null) {
+					last_false_block.connect (current_block);
+				}
+			}
+		} else if (expr.operator == BinaryOperator.COALESCE) {
+			//TODO
+		} else {
 			expr.accept_children (this);
 		}
 	}
@@ -1262,6 +1323,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		// condition
 		current_block.add_node (expr.condition);
 		handle_errors (expr.condition);
+		expr.condition.accept (this);
 
 		// true block
 		var last_block = current_block;

@@ -140,166 +140,6 @@ public class Vala.BinaryExpression : Expression {
 
 		checked = true;
 
-		var insert_block = context.analyzer.get_current_block (this);
-
-		// some expressions are not in a block,
-		// for example, expressions in method contracts
-		if (context.analyzer.get_current_non_local_symbol (this) is Block
-		    && (operator == BinaryOperator.AND || operator == BinaryOperator.OR)) {
-			// convert conditional expression into if statement
-			// required for flow analysis and exception handling
-
-			var local = new LocalVariable (context.analyzer.bool_type.copy (), get_temp_name (), null, source_reference);
-			var decl = new DeclarationStatement (local, source_reference);
-
-			var right_stmt = new ExpressionStatement (new Assignment (new MemberAccess.simple (local.name, right.source_reference), right, AssignmentOperator.SIMPLE, right.source_reference), right.source_reference);
-
-			var stmt = new ExpressionStatement (new Assignment (new MemberAccess.simple (local.name, left.source_reference), new BooleanLiteral ((operator == BinaryOperator.OR), left.source_reference), AssignmentOperator.SIMPLE, left.source_reference), left.source_reference);
-
-			var true_block = new Block (source_reference);
-			var false_block = new Block (source_reference);
-
-			if (operator == BinaryOperator.AND) {
-				true_block.add_statement (right_stmt);
-				false_block.add_statement (stmt);
-			} else {
-				true_block.add_statement (stmt);
-				false_block.add_statement (right_stmt);
-			}
-
-			var if_stmt = new IfStatement (left, true_block, false_block, source_reference);
-
-			insert_statement (insert_block, decl);
-			insert_statement (insert_block, if_stmt);
-
-			decl.check (context);
-
-			if (!if_stmt.check (context)) {
-				error = true;
-				return false;
-			}
-
-			var ma = new MemberAccess.simple (local.name, source_reference);
-			ma.target_type = target_type;
-			ma.formal_target_type = formal_target_type;
-
-			parent_node.replace_expression (this, ma);
-
-			ma.check (context);
-
-			return true;
-		}
-
-		if (operator == BinaryOperator.COALESCE) {
-			if (target_type != null) {
-				left.target_type = target_type.copy ();
-				right.target_type = target_type.copy ();
-			}
-
-			if (!left.check (context)) {
-				error = true;
-				return false;
-			}
-
-			string temp_name = get_temp_name ();
-
-			// right expression is checked under a block (required for short-circuiting)
-			var right_local = new LocalVariable (null, temp_name, right, right.source_reference);
-			var right_decl = new DeclarationStatement (right_local, right.source_reference);
-			var true_block = new Block (source_reference);
-			true_block.add_statement (right_decl);
-
-			if (!true_block.check (context)) {
-				error = true;
-				return false;
-			}
-
-			// right expression may have been replaced by the check
-			right = right_local.initializer;
-
-			DataType local_type = null;
-			bool cast_non_null = false;
-			if (left.value_type is NullType && right.value_type != null) {
-				Report.warning (left.source_reference, "left operand is always null");
-				local_type = right.value_type.copy ();
-				local_type.nullable = true;
-				if (!right.value_type.nullable) {
-					cast_non_null = true;
-				}
-			} else if (left.value_type != null) {
-				local_type = left.value_type.copy ();
-				if (right.value_type != null && right.value_type.value_owned) {
-					// value owned if either left or right is owned
-					local_type.value_owned = true;
-				}
-				if (context.experimental_non_null) {
-					if (!local_type.nullable) {
-						Report.warning (left.source_reference, "left operand is never null");
-						if (right.value_type != null && right.value_type.nullable) {
-							local_type.nullable = true;
-							cast_non_null = true;
-						}
-					} else if (right.value_type != null && !right.value_type.nullable) {
-						cast_non_null = true;
-					}
-				}
-			} else if (right.value_type != null) {
-				local_type = right.value_type.copy ();
-			}
-
-			if (local_type != null && right.value_type is ValueType && !right.value_type.nullable) {
-				// immediate values in the right expression must always be boxed,
-				// otherwise the local variable may receive a stale pointer to the stack
-				local_type.value_owned = true;
-			}
-
-			var local = new LocalVariable (local_type, temp_name, left, source_reference);
-			var decl = new DeclarationStatement (local, source_reference);
-
-			insert_statement (insert_block, decl);
-
-			if (!decl.check (context)) {
-				error = true;
-				return false;
-			}
-
-			// replace the temporary local variable used to compute the type of the right expression by an assignment
-			var right_stmt = new ExpressionStatement (new Assignment (new MemberAccess.simple (local.name, right.source_reference), right, AssignmentOperator.SIMPLE, right.source_reference), right.source_reference);
-
-			true_block.remove_local_variable (right_local);
-			true_block.replace_statement (right_decl, right_stmt);
-
-			if (!right_stmt.check (context)) {
-				error = true;
-				return false;
-			}
-
-			var cond = new BinaryExpression (BinaryOperator.EQUALITY, new MemberAccess.simple (local.name, left.source_reference), new NullLiteral (source_reference), source_reference);
-
-			var if_stmt = new IfStatement (cond, true_block, null, source_reference);
-
-			insert_statement (insert_block, if_stmt);
-
-			if (!if_stmt.check (context)) {
-				error = true;
-				return false;
-			}
-
-			var replace_expr = SemanticAnalyzer.create_temp_access (local, target_type);
-			if (cast_non_null && replace_expr.target_type != null) {
-				var cast = new CastExpression.non_null (replace_expr, source_reference);
-				cast.target_type = replace_expr.target_type.copy ();
-				cast.target_type.nullable = false;
-				replace_expr = cast;
-			}
-
-			parent_node.replace_expression (this, replace_expr);
-
-			replace_expr.check (context);
-
-			return true;
-		}
-
 		// enum-type inference
 		if (target_type != null && target_type.type_symbol is Enum
 		    && (operator == BinaryOperator.BITWISE_AND || operator == BinaryOperator.BITWISE_OR)) {
@@ -538,6 +378,23 @@ public class Vala.BinaryExpression : Expression {
 
 			value_type = context.analyzer.bool_type;
 			break;
+		case BinaryOperator.COALESCE:
+			if (left.target_type is NullType && right.value_type != null) {
+				Report.warning (left.source_reference, "left operand is always null");
+				left.target_type = right.value_type.copy ();
+			}
+			left.target_type.nullable = true;
+			left.target_type.value_owned = left.value_type.value_owned || right.value_type.value_owned;
+			if (right.value_type is ValueType && !right.value_type.nullable) {
+				// immediate values in the right expression must always be boxed,
+				// otherwise the local variable may receive a stale pointer to the stack
+				left.target_type.value_owned = true;
+			}
+			right.target_type = left.target_type.copy ();
+
+			value_type = left.target_type.copy ();
+			value_type.nullable = left.value_type.nullable && right.value_type.nullable;
+			break;
 		case BinaryOperator.BITWISE_AND:
 		case BinaryOperator.BITWISE_OR:
 		case BinaryOperator.BITWISE_XOR:
@@ -593,11 +450,6 @@ public class Vala.BinaryExpression : Expression {
 					error = true;
 					return false;
 				}
-
-				var contains_call = new MethodCall (new MemberAccess (right, "contains", source_reference), source_reference);
-				contains_call.add_argument (left);
-				parent_node.replace_expression (this, contains_call);
-				return contains_call.check (context);
 			}
 
 			value_type = context.analyzer.bool_type;
@@ -623,13 +475,19 @@ public class Vala.BinaryExpression : Expression {
 	}
 
 	public override void get_defined_variables (Collection<Variable> collection) {
-		left.get_defined_variables (collection);
-		right.get_defined_variables (collection);
+		//FIXME Handled special in FlowAnalyzer
+		if (operator != BinaryOperator.AND && operator != BinaryOperator.OR) {
+			left.get_defined_variables (collection);
+			right.get_defined_variables (collection);
+		}
 	}
 
 	public override void get_used_variables (Collection<Variable> collection) {
-		left.get_used_variables (collection);
-		right.get_used_variables (collection);
+		//FIXME Handled special in FlowAnalyzer
+		if (operator != BinaryOperator.AND && operator != BinaryOperator.OR) {
+			left.get_used_variables (collection);
+			right.get_used_variables (collection);
+		}
 	}
 }
 
