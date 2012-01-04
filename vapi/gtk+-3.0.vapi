@@ -4076,7 +4076,7 @@ namespace Gtk {
 		public void get_style_valist (void* args);
 		public void get_valist (Gtk.StateFlags state, void* args);
 		public bool has_class (string class_name);
-		public bool has_region (string region_name, Gtk.RegionFlags flags_return);
+		public bool has_region (string region_name, out Gtk.RegionFlags flags_return);
 		public void invalidate ();
 		public unowned GLib.List list_classes ();
 		public unowned GLib.List list_regions ();
@@ -4700,7 +4700,7 @@ namespace Gtk {
 		public void get_style_valist (void* args);
 		public void get_valist (Gtk.StateFlags state, void* args);
 		public bool has_class (string style_class);
-		public bool has_region (string style_region, Gtk.RegionFlags flags);
+		public bool has_region (string style_region, out Gtk.RegionFlags flags);
 		public static unowned Gtk.ThemingEngine load (string name);
 		public bool lookup_color (string color_name, out Gdk.RGBA color);
 		public static void register_property (string name_space, Gtk.StylePropertyParser parse_func, GLib.ParamSpec pspec);
