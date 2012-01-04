@@ -136,6 +136,86 @@ public class Vala.CCodeTransformer : CodeTransformer {
 		end_replace_statement ();
 	}
 
+	public override void visit_foreach_statement (ForeachStatement stmt) {
+		begin_replace_statement (stmt);
+
+		stmt.body.remove_local_variable (stmt.element_variable);
+		stmt.element_variable.checked = false;
+		var decl = new DeclarationStatement (stmt.element_variable, stmt.element_variable.source_reference);
+
+		switch (stmt.foreach_iteration) {
+		case ForeachIteration.ARRAY:
+			var array_type = (ArrayType) stmt.collection.value_type.copy ();
+			array_type.fixed_length = false;
+			array_type.inline_allocated = false;
+			string collection;
+			string length;
+			// multidimensonal array
+			if (array_type.rank > 1) {
+				length = @"$(stmt.collection).length[0]";
+				var dim = 1;
+				while (dim < array_type.rank) {
+					length += @" * $(stmt.collection).length[$dim]";
+					dim++;
+				}
+				collection = b.add_temp_declaration (new ArrayType (array_type.element_type, 1, null), expression (@"($(array_type.element_type)[]) ($(stmt.collection))"));
+			} else {
+				collection = b.add_temp_declaration (array_type, stmt.collection);
+				length = @"$collection.length";
+			}
+			var i = b.add_temp_declaration (array_type.length_type, expression ("0"));
+			b.open_for (null, expression (@"$i < $length"), expression (@"$i++"));
+			stmt.element_variable.initializer = expression (@"$collection[$i]");
+			break;
+		case ForeachIteration.GVALUE_ARRAY:
+			// GValueArray
+			var collection = b.add_temp_declaration (null, expression (@"$(stmt.collection).values"));
+			var i = b.add_temp_declaration (null, expression ("0"));
+			b.open_for (null, expression (@"$i < $collection.length"), expression (@"$i++"));
+			stmt.element_variable.initializer = expression (@"$collection[$i]");
+			break;
+		case ForeachIteration.GLIST:
+			// GList or GSList
+			var collection = b.add_temp_declaration (stmt.collection.value_type, stmt.collection);
+			var iter = b.add_temp_declaration (copy_type (stmt.collection.value_type, false, true), expression (collection));
+			b.open_for (null, expression (@"$iter != null"), expression (@"$iter = ((!) $iter).next"));
+			stmt.element_variable.initializer = expression (@"((!) $iter).data");
+			break;
+		case ForeachIteration.INDEX:
+			// get() + size
+			var collection = b.add_temp_declaration (stmt.collection.value_type, stmt.collection);
+			var size = b.add_temp_declaration (null, expression (@"$collection.size"));
+			var i = b.add_temp_declaration (null, expression ("0"));
+			b.open_for (null, expression (@"$i < $size"), expression (@"$i++"));
+			stmt.element_variable.initializer = expression (@"$collection.get ($i)");
+			break;
+		case ForeachIteration.NEXT_VALUE:
+			// iterator + next_value()
+			var collection = b.add_temp_declaration (stmt.collection.value_type, stmt.collection);
+			var iterator = b.add_temp_declaration (null, expression (@"$collection.iterator ()"));
+			var temp = b.add_temp_declaration (copy_type (stmt.type_reference, null, true));
+			b.open_while (expression (@"($temp = $iterator.next_value ()) != null"));
+			stmt.element_variable.initializer = expression (@"(!) $temp");
+			break;
+		case ForeachIteration.NEXT_GET:
+			// iterator + next() + get()
+			var collection = b.add_temp_declaration (stmt.collection.value_type, stmt.collection);
+			var iterator = b.add_temp_declaration (null, expression (@"$collection.iterator ()"));
+			b.open_while (expression (@"$iterator.next ()"));
+			stmt.element_variable.initializer = expression (@"$iterator.get ()");
+			break;
+		default:
+			assert_not_reached ();
+		}
+
+		stmt.body.insert_statement (0, decl);
+		b.add_statement (stmt.body);
+		b.close ();
+
+		stmt.body.checked = false;
+		end_replace_statement ();
+	}
+
 	public override void visit_expression (Expression expr) {
 		if (expr in context.analyzer.replaced_nodes) {
 			return;
