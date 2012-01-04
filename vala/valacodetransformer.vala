@@ -365,7 +365,65 @@ public class Vala.CodeTransformer : CodeVisitor {
 	}
 
 	public override void visit_foreach_statement (ForeachStatement stmt) {
-		stmt.accept_children (this);
+		push_builder (new CodeBuilder (context, stmt, stmt.source_reference));
+		var collection = b.add_temp_declaration (stmt.collection.value_type, stmt.collection);
+
+		stmt.body.remove_local_variable (stmt.element_variable);
+		stmt.element_variable.checked = false;
+		var decl = new DeclarationStatement (stmt.element_variable, stmt.element_variable.source_reference);
+
+		switch (stmt.foreach_iteration) {
+		case ForeachIteration.ARRAY:
+		case ForeachIteration.GVALUE_ARRAY:
+			// array or GValueArray
+			var array = collection;
+			if (stmt.foreach_iteration == ForeachIteration.GVALUE_ARRAY) {
+				array = collection+".values";
+			}
+			var i = b.add_temp_declaration (null, expression ("0"));
+			b.open_for (null, expression (@"$i < $array.length"), expression (@"$i++"));
+			stmt.element_variable.initializer = expression (@"$array[$i]");
+			break;
+		case ForeachIteration.GLIST:
+			// GList or GSList
+			b.open_for (null, expression (@"$collection != null"), expression (@"$collection = $collection.next"));
+			stmt.element_variable.initializer = expression (@"$collection.data");
+			break;
+		case ForeachIteration.INDEX:
+			// get()+size
+			var size = b.add_temp_declaration (null, expression (@"$collection.size"));
+			var i = b.add_temp_declaration (null, expression ("0"));
+			b.open_for (null, expression (@"$i < $size"), expression (@"$i++"));
+			stmt.element_variable.initializer = expression (@"$collection.get ($i)");
+			break;
+		case ForeachIteration.NEXT_VALUE:
+			// iterator+next_value()
+			var iterator = b.add_temp_declaration (null, expression (@"$collection.iterator ()"));
+			var temp = b.add_temp_declaration (stmt.type_reference);
+			b.open_while (expression (@"($temp = $iterator.next_value ()) != null"));
+			stmt.element_variable.initializer = expression (temp);
+			break;
+		case ForeachIteration.NEXT_GET:
+			// iterator+next()+get()
+			var iterator = b.add_temp_declaration (null, expression (@"$collection.iterator ()"));
+			b.open_while (expression (@"$iterator.next ()"));
+			stmt.element_variable.initializer = expression (@"$iterator.get ()");
+			break;
+		default:
+			assert_not_reached ();
+		}
+
+		stmt.body.insert_statement (0, decl);
+		b.add_statement (stmt.body);
+		b.close ();
+
+		var parent_block = context.analyzer.get_current_block (stmt);
+		context.analyzer.replaced_nodes.add (stmt);
+		parent_block.replace_statement (stmt, new EmptyStatement (stmt.source_reference));
+
+		stmt.body.checked = false;
+		b.check (this);
+		pop_builder ();
 	}
 
 	public override void visit_break_statement (BreakStatement stmt) {
@@ -426,7 +484,7 @@ public class Vala.CodeTransformer : CodeVisitor {
 				var local = new LocalVariable (expr.value_type, expr.get_temp_name (), null, expr.source_reference);
 				var decl = new DeclarationStatement (local, expr.source_reference);
 
-				expr.insert_statement (context.analyzer.get_insert_block (expr), decl);
+				expr.insert_statement (context.analyzer.get_current_block (expr), decl);
 
 				var temp_access = SemanticAnalyzer.create_temp_access (local, expr.target_type);
 
@@ -439,7 +497,7 @@ public class Vala.CodeTransformer : CodeVisitor {
 				// otherwise there will be scoping issues in the
 				var block = context.analyzer.get_current_block (expr);
 				block.remove_local_variable (local);
-				context.analyzer.get_insert_block (expr).add_local_variable (local);
+				context.analyzer.get_current_block (expr).add_local_variable (local);
 
 				context.analyzer.replaced_nodes.add (expr);
 				old_parent_node.replace_expression (expr, temp_access);
@@ -453,7 +511,7 @@ public class Vala.CodeTransformer : CodeVisitor {
 
 		var local = new LocalVariable (expr.value_type, expr.get_temp_name (), null, expr.source_reference);
 		var decl = new DeclarationStatement (local, expr.source_reference);
-		expr.insert_statement (context.analyzer.get_insert_block (expr), decl);
+		expr.insert_statement (context.analyzer.get_current_block (expr), decl);
 		check (decl);
 
 		var true_stmt = new ExpressionStatement (new Assignment (new MemberAccess.simple (local.name, expr.true_expression.source_reference), expr.true_expression, AssignmentOperator.SIMPLE, expr.true_expression.source_reference), expr.true_expression.source_reference);
@@ -465,7 +523,7 @@ public class Vala.CodeTransformer : CodeVisitor {
 		false_block.add_statement (false_stmt);
 
 		var if_stmt = new IfStatement (expr.condition, true_block, false_block, expr.source_reference);
-		expr.insert_statement (context.analyzer.get_insert_block (expr), if_stmt);
+		expr.insert_statement (context.analyzer.get_current_block (expr), if_stmt);
 		check (if_stmt);
 
 		var ma = new MemberAccess.simple (local.name, expr.source_reference);

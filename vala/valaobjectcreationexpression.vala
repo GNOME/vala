@@ -495,7 +495,7 @@ public class Vala.ObjectCreationExpression : Expression {
 				var local = new LocalVariable (value_type.copy (), get_temp_name (), null, source_reference);
 				var decl = new DeclarationStatement (local, source_reference);
 
-				insert_statement (context.analyzer.get_insert_block (this), decl);
+				insert_statement (context.analyzer.get_current_block (this), decl);
 
 				var temp_access = SemanticAnalyzer.create_temp_access (local, target_type);
 				// don't set initializer earlier as this changes parent_node and parent_statement
@@ -507,7 +507,7 @@ public class Vala.ObjectCreationExpression : Expression {
 				// otherwise there will be scoping issues in the generated code
 				var block = context.analyzer.get_current_block (this);
 				block.remove_local_variable (local);
-				context.analyzer.get_insert_block (this).add_local_variable (local);
+				context.analyzer.get_current_block (this).add_local_variable (local);
 
 				old_parent_node.replace_expression (this, temp_access);
 				temp_access.check (context);

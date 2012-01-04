@@ -27,19 +27,16 @@ public class Vala.CodeBuilder {
 	public Statement insert_statement;
 	public Block insert_block;
 	public ArrayList<Statement> statement_stack = new ArrayList<Statement> ();
-	public ArrayList<CodeNode> check_nodes = new ArrayList<CodeNode> ();
+	public ArrayList<CodeNode> decl_nodes = new ArrayList<CodeNode> ();
 	public SourceReference source_reference;
 
 	public CodeBuilder (CodeContext context, Statement insert_statement, SourceReference source_reference) {
-		current_block = new Block (source_reference);
-		insert_statement = insert_statement;
-		insert_block = context.analyzer.get_insert_block (insert_statement);
 		this.source_reference = source_reference;
 
-		var statement_block = context.analyzer.get_current_block (insert_statement);
-		statement_block.insert_before (insert_statement, current_block);
-		insert_statement = current_block;
-		check_nodes.add (current_block);
+		current_block = new Block (source_reference);
+		insert_block = context.analyzer.get_current_block (insert_statement);
+		insert_block.insert_before (insert_statement, current_block);
+		this.insert_statement = current_block;
 	}
 
 	public CodeBuilder.for_subroutine (Subroutine m) {
@@ -50,9 +47,10 @@ public class Vala.CodeBuilder {
 	}
 
 	public void check (CodeTransformer transformer) {
-		foreach (var node in check_nodes) {
+		foreach (var node in decl_nodes) {
 			transformer.check (node);
 		}
+		transformer.check (current_block);
 	}
 
 	public void open_block () {
@@ -227,7 +225,7 @@ public class Vala.CodeBuilder {
 		var local = new LocalVariable (type, CodeNode.get_temp_name (), initializer, source_reference);
 		var stmt = new DeclarationStatement (local, source_reference);
 		insert_block.insert_before (insert_statement, stmt);
-		check_nodes.insert (0, stmt);
+		decl_nodes.add (stmt);
 		return local.name;
 	}
 
