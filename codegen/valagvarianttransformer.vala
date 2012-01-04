@@ -23,7 +23,7 @@
 /**
  * Code visitor for transforming the code tree related to GVariant.
  */
-public class Vala.GVariantTransformer : CodeTransformer {
+public class Vala.GVariantTransformer : CCodeTransformer {
 	struct BasicTypeInfo {
 		public unowned string signature;
 		public unowned string type_name;
