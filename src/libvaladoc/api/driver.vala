@@ -35,6 +35,7 @@ public delegate Type Valadoc.DriverRegisterFunction (ModuleLoader module_loader)
 
 
 public interface Valadoc.Driver : Object {
+	public abstract void write_gir (Settings settings, ErrorReporter reporter);
 
 	public abstract Api.Tree? build (Settings settings, ErrorReporter reporter);
 }

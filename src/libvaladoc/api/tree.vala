@@ -44,6 +44,11 @@ public class Valadoc.Api.Tree {
 		this.packages.add (package);
 	}
 
+	public void* data {
+		set;
+		get;
+	}
+
 	/**
 	 * The root of the wiki tree.
 	 */
@@ -196,9 +201,10 @@ public class Valadoc.Api.Tree {
 		return params;
 	}
 
-	public Tree (ErrorReporter reporter, Settings settings) {
+	public Tree (ErrorReporter reporter, Settings settings, void* data = null) {
 		this.settings = settings;
 		this.reporter = reporter;
+		this.data = data;
 	}
 
 	// copied from valacodecontext.vala

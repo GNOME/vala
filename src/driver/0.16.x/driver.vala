@@ -29,15 +29,29 @@ using Gee;
  * Creates an simpler, minimized, more abstract AST for valacs AST.
  */
 public class Valadoc.Drivers.Driver : Object, Valadoc.Driver {
+	private SymbolResolver resolver;
+	private Api.Tree? tree;
+
+	public void write_gir (Settings settings, ErrorReporter reporter) {
+		var gir_writer = new Drivers.GirWriter (resolver);
+
+		// put .gir file in current directory unless -d has been explicitly specified
+		string gir_directory = ".";
+		if (settings.gir_directory != null) {
+			gir_directory = settings.gir_directory;
+		}
+
+		gir_writer.write_file ((Vala.CodeContext) tree.data, gir_directory, settings.gir_namespace, settings.gir_version, settings.pkg_name);
+	}
 
 	public Api.Tree? build (Settings settings, ErrorReporter reporter) {
 		TreeBuilder builder = new TreeBuilder ();
-		Api.Tree? tree = builder.build (settings, reporter);
+		tree = builder.build (settings, reporter);
 		if (reporter.errors > 0) {
 			return null;
 		}
 
-		SymbolResolver resolver = new SymbolResolver (builder);
+		resolver = new SymbolResolver (builder);
 		tree.accept (resolver);
 
 		return tree;

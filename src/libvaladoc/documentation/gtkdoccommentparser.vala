@@ -418,7 +418,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		return item;
 	}
 
-	private LinkedList<Block>? parse_docbook_information_box_template (string tagname) {
+	private BlockContent? parse_docbook_information_box_template (string tagname, BlockContent container) {
 		if (!check_xml_open_tag (tagname)) {
 			this.report_unexpected_token (current, "<%s>".printf (tagname));
 			return null;
@@ -427,60 +427,39 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		next ();
 		parse_docbook_spaces ();
 
-		LinkedList<Block> content = new LinkedList<Block> ();
-
-		var header_run = factory.create_run (Run.Style.BOLD);
-		header_run.content.add (factory.create_text ("Note:"));
-
+		Token tmp = null;
 		while (current.type != TokenType.XML_CLOSE && current.type != TokenType.EOF) {
-			if (current.type == TokenType.XML_OPEN && current.content == "para") {
-				var paragraphs = parse_docbook_para ();
-				if (header_run != null) {
-					content.add_all (paragraphs);
-				} else {
-					Paragraph fp = paragraphs.first ();
-					fp.content.insert (0, factory.create_text (" "));
-					fp.content.insert (0, header_run);
-				}
-			} else {
-				Token tmp_t = current;
-
-				Run? inline_run = parse_inline_content ();
+			tmp = current;
+			var ic = parse_inline_content ();
+			if (ic != null && ic.content.size > 0) {
 				Paragraph p = factory.create_paragraph ();
-	
-				if (content != null) {
-					p.content.add (header_run);
-					p.content.add (factory.create_text (" "));
-					header_run = null;
-				}
+				p.content.add (ic);
+				container.content.add (p);
+			}
 
-				p.content.add (inline_run);
-				content.add (p);
-
-				if (tmp_t == current) {
-					break;
-				}
+			var bc = parse_block_content ();
+			if (bc != null && bc.size > 0) {
+				container.content.add_all (bc);
 			}
 		}
 
-		//parse_block_content ();
 		parse_docbook_spaces ();
 
 		if (!check_xml_close_tag (tagname)) {
 			this.report_unexpected_token (current, "</%s>".printf (tagname));
-			return content;
+			return container;
 		}
 
 		next ();
-		return content;
+		return container;
 	}
 
-	private LinkedList<Block>? parse_docbook_note () {
-		return parse_docbook_information_box_template ("note");
+	private Note? parse_docbook_note () {
+		return (Note?) parse_docbook_information_box_template ("note", factory.create_note ());
 	}
 
-	private LinkedList<Block>? parse_docbook_warning () {
-		return parse_docbook_information_box_template ("warning");
+	private Warning? parse_docbook_warning () {
+		return (Warning?) parse_docbook_information_box_template ("warning", factory.create_warning ());
 	}
 
 	private Content.List? parse_docbook_itemizedlist () {
@@ -871,9 +850,9 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 			} else if (current.type == TokenType.XML_OPEN && current.content == "example") {
 				this.append_block_content_not_null_all (content, parse_docbook_example ());
 			} else if (current.type == TokenType.XML_OPEN && current.content == "warning") {
-				this.append_block_content_not_null_all (content, parse_docbook_warning ());
+				this.append_block_content_not_null (content, parse_docbook_warning ());
 			} else if (current.type == TokenType.XML_OPEN && current.content == "note") {
-				this.append_block_content_not_null_all (content, parse_docbook_note ());
+				this.append_block_content_not_null (content, parse_docbook_note ());
 			} else if (current.type == TokenType.XML_OPEN && current.content == "refsect2") {
 				this.append_block_content_not_null_all (content, parse_docbook_refsect2 ());
 			} else if (current.type == TokenType.GTKDOC_PARAGRAPH) {

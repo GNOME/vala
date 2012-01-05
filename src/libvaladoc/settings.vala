@@ -126,6 +126,15 @@ public class Valadoc.Settings : Object {
 	 */
 	public string[] source_files;
 
+	/**
+	 * GObject-Introspection directory
+	 */
+	public string? gir_directory;
+
+	/**
+	 * GObject-Introspection repository file name
+	 */
+	public string? gir_name;
 
 	/**
 	 * A list of all metadata directories
@@ -136,6 +145,10 @@ public class Valadoc.Settings : Object {
 	 * A list of all gir directories.
 	 */
 	public string[] gir_directories;
+
+	public string gir_namespace;
+
+	public string gir_version;
 }
 
 

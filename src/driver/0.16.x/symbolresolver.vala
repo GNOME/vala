@@ -34,7 +34,7 @@ public class Valadoc.Drivers.SymbolResolver : Visitor {
 		this.glib_error = builder.get_glib_error ();
 	}
 
-	private Symbol? resolve (Vala.Symbol symbol) {
+	public Symbol? resolve (Vala.Symbol symbol) {
 		return symbol_map.get (symbol);
 	}
 

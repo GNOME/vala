@@ -154,6 +154,30 @@ div.main_code_definition {
 	margin: 10px;
 }
 
+div.main_notification_block {
+	padding-right: 10px;
+	padding-left: 10px;
+	padding-bottom: 5px;
+	padding-top: 5px;
+
+	border-color: #d08717;
+	background-color: #fbf2c3;
+	border-style: solid;
+	border-width: 1px;
+	margin: 10px;
+}
+
+span.main_block_headline {
+	background-image:url(tip.png);
+	background-repeat:no-repeat;
+	background-position:center right;
+	font-weight:bold;
+	display:block;
+}
+
+div.main_block_content {
+	margin-left:15px;
+}
 
 span.leaf_code_definition {
 	font: monospace;

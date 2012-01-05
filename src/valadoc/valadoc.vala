@@ -35,8 +35,12 @@ public class ValaDoc : Object {
 	private static string docletpath = null;
 	[CCode (array_length = false, array_null_terminated = true)]
 	private static string[] pluginargs;
+	private static string gir_directory = null;
 	private static string directory = null;
 	private static string pkg_name = null;
+	private static string gir_name = null;
+	private static string gir_namespace = null;
+	private static string gir_version = null;
 	private static string driverpath = null;
 
 	private static bool add_inherited = false;
@@ -102,6 +106,7 @@ public class ValaDoc : Object {
 
 		{ "package-name", 0, 0, OptionArg.STRING, ref pkg_name, "package name", "NAME" },
 		{ "package-version", 0, 0, OptionArg.STRING, ref pkg_version, "package version", "VERSION" },
+		{ "gir", 0, 0, OptionArg.STRING, ref gir_name, "GObject-Introspection repository file name", "NAME-VERSION.gir" },
 
 		{ "version", 0, 0, OptionArg.NONE, ref version, "Display version number", null },
 
@@ -302,6 +307,15 @@ public class ValaDoc : Object {
 		// settings:
 		var settings = new Valadoc.Settings ();
 		settings.pkg_name = this.get_pkg_name ();
+		settings.gir_namespace = this.gir_namespace;
+		settings.gir_version = this.gir_version;
+		if (this.gir_name != null) {
+			settings.gir_name = GLib.Path.get_basename (this.gir_name);
+			settings.gir_directory = GLib.Path.get_dirname (this.gir_name);
+			if (settings.gir_directory == "") {
+				settings.gir_directory = GLib.Path.get_dirname (this.directory);
+			}
+		}
 		settings.pkg_version = this.pkg_version;
 		settings.add_inherited = this.add_inherited;
 		settings._protected = this._protected;
@@ -368,6 +382,13 @@ public class ValaDoc : Object {
 			return quit (reporter);
 		}
 
+		if (this.gir_name != null) {
+			driver.write_gir (settings, reporter);
+			if (reporter.errors > 0) {
+				return quit (reporter);
+			}
+		}
+
 		modules.doclet.process (settings, doctree, reporter);
 		return quit (reporter);
 	}
@@ -417,6 +438,39 @@ public class ValaDoc : Object {
 		if (wikidirectory != null) {
 			if (!FileUtils.test(wikidirectory, FileTest.IS_DIR)) {
 				reporter.simple_error ("Wiki-directory does not exist.");
+				return quit (reporter);
+			}
+		}
+
+		if (gir_name != null) {
+			long gir_len = gir_name.length;
+			int last_hyphen = gir_name.last_index_of_char ('-');
+
+			if (last_hyphen == -1 || !gir_name.has_suffix (".gir")) {
+				reporter.simple_error ("GIR file name `%s' is not well-formed, expected NAME-VERSION.gir", gir_name);
+				return quit (reporter);
+			}
+
+			gir_namespace = gir_name.substring (0, last_hyphen);
+			gir_version = gir_name.substring (last_hyphen + 1, gir_len - last_hyphen - 5);
+			gir_version.canon ("0123456789.", '?');
+
+			if (gir_namespace == "" || gir_version == "" || !gir_version[0].isdigit () || gir_version.contains ("?")) {
+				reporter.simple_error ("GIR file name `%s' is not well-formed, expected NAME-VERSION.gir", gir_name);
+				return quit (reporter);
+			}
+
+
+			bool report_warning = true;
+			foreach (string source in tsources) {
+				if (source.has_suffix (".vala") || source.has_suffix (".gs")) {
+					report_warning = false;
+					break;
+				}
+			}
+
+			if (report_warning == true) {
+				reporter.simple_error ("No source file specified to be compiled to gir.");
 				return quit (reporter);
 			}
 		}

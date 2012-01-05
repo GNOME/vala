@@ -1137,11 +1137,12 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 	//
 
 	public Api.Tree? build (Settings settings, ErrorReporter reporter) {
-		this.tree = new Api.Tree (reporter, settings);
 		this.settings = settings;
 		this.reporter = reporter;
 
+		this.tree = new Api.Tree (reporter, settings);
 		var context = create_valac_tree (settings);
+		this.tree.data = context;
 
 		reporter.warnings_offset = context.report.get_warnings ();
 		reporter.errors_offset = context.report.get_errors ();

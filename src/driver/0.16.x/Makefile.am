@@ -33,6 +33,7 @@ libdriver_la_VALASOURCES = \
 	initializerbuilder.vala \
 	symbolresolver.vala \
 	treebuilder.vala \
+	girwriter.vala \
 	driver.vala \
 	$(NULL)
 

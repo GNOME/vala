@@ -25,22 +25,70 @@
  * Writes markups and text to a file.
  */
 public class Valadoc.MarkupWriter {
-	protected unowned FileStream stream;
+	protected WriteFunc write;
 	protected int indent;
-	private long current_column = 0;
-	private bool last_was_tag;
+
+	protected long current_column = 0;
+	protected bool last_was_tag;
 	private bool wrap = true;
+
+	public static string escape (string txt) {
+		StringBuilder builder = new StringBuilder ();
+		unowned string start = txt;
+		unowned string pos;
+		unichar c;
+
+		for (pos = txt; (c = pos.get_char ()) != '\0'  ; pos = pos.next_char ()) {
+			switch (c) {
+			case '"':
+				builder.append_len (start, (ssize_t) ((char*) pos - (char*) start));
+				builder.append ("&quot;");
+				start = pos.next_char ();
+				break;
+
+			case '<':
+				builder.append_len (start, (ssize_t) ((char*) pos - (char*) start));
+				builder.append ("&lt;");
+				start = pos.next_char ();
+				break;
+
+			case '>':
+				builder.append_len (start, (ssize_t) ((char*) pos - (char*) start));
+				builder.append ("&gt;");
+				start = pos.next_char ();
+				break;
+
+			case '&':
+				builder.append_len (start, (ssize_t) ((char*) pos - (char*) start));
+				builder.append ("&amp;");
+				start = pos.next_char ();
+				break;
+			}
+		}
+
+		if (&txt == &start) {
+			return txt;
+		} else {
+			builder.append_len (start, (ssize_t) ((char*) pos - (char*) start));
+			return (owned) builder.str;
+		}
+	}
+
+	/**
+	 * Writes text to a desination like a {@link StringBuilder} or a {@link FileStream}
+	 */
+	public delegate void WriteFunc (string text);
 
 	private const int MAX_COLUMN = 150;
 
 	/**
 	 * Initializes a new instance of the MarkupWriter
 	 * 
-	 * @param stream a file stream
+	 * @param stream a WriteFunc
 	 * @param xml_delcaration specifies whether this file starts with an xml-declaration
 	 */
-	public MarkupWriter (FileStream stream, bool xml_declaration = true) {
-		this.stream = stream;
+	public MarkupWriter (owned WriteFunc write, bool xml_declaration = true) {
+		this.write = (owned) write;
 		if (xml_declaration) {
 			do_write ("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
 		}
@@ -180,8 +228,8 @@ public class Valadoc.MarkupWriter {
 	}
 
 	private void break_line () {
-		stream.printf ("\n");
-		stream.printf (string.nfill (indent * 2, ' '));
+		write ("\n");
+		write (string.nfill (indent * 2, ' '));
 		current_column = indent * 2;
 	}
 
@@ -189,14 +237,14 @@ public class Valadoc.MarkupWriter {
 		if (wrap && current_column + text.length > MAX_COLUMN) {
 			break_line ();
 		}
-		stream.printf (text);
+		write (text);
 		current_column += text.length;
 	}
 
 	private void check_column (string name, bool end_tag = false) {
 		if (!wrap) {
 			return;
-		} else if (!end_tag && inline_element (name) && !last_was_tag) {
+		} else if (!end_tag && inline_element (name) /*&& !last_was_tag*/) {
 			return;
 		} else if (end_tag && content_inline_element (name)) {
 			return;

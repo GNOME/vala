@@ -344,9 +344,9 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 	private void visit_notification_block (BlockContent element, string headline) {
 		writer.start_tag ("div", {"class", "main_notification_block"});
 		writer.start_tag ("span", {"class", "main_block_headline"}).text (headline).end_tag ("span").text (" ");
-		writer.start_tag ("span", {"class", "main_block_content"});
+		writer.start_tag ("div", {"class", "main_block_content"});
 		element.accept_children (this);
-		writer.end_tag ("span");
+		writer.end_tag ("div");
 		writer.end_tag ("div");
 	}
 
