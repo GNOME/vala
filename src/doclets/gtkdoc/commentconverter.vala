@@ -172,7 +172,19 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 			current_builder.append ("</para>");
 		}
 	}
-  
+
+	public override void visit_warning (Warning element) {
+		current_builder.append ("<warning>");
+		element.accept_children (this);
+		current_builder.append ("</warning>");
+	}
+
+	public override void visit_note (Note element) {
+		current_builder.append ("<note>");
+		element.accept_children (this);
+		current_builder.append ("</note>");
+	}
+
 	public override void visit_page (Page page) {
 		page.accept_children (this);
 	}

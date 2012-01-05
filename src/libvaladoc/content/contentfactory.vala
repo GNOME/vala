@@ -76,6 +76,13 @@ public class Valadoc.Content.ContentFactory : Object {
 		return (Paragraph) configure (new Paragraph ());
 	}
 
+	public Warning create_warning () {
+		return (Warning) configure (new Warning ());
+	}
+	public Note create_note () {
+		return (Note) configure (new Note ());
+	}
+
 	public Run create_run (Run.Style style) {
 		return (Run) configure (new Run (style));
 	}

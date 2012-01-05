@@ -52,6 +52,12 @@ public abstract class Valadoc.Content.ContentVisitor : Object {
 	public virtual void visit_paragraph (Paragraph element) {
 	}
 
+	public virtual void visit_warning (Warning element) {
+	}
+
+	public virtual void visit_note (Note element) {
+	}
+
 	public virtual void visit_page (Page element) {
 	}
 

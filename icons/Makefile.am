@@ -5,6 +5,7 @@ iconsdir = $(datadir)/valadoc/icons
 
 
 dist_icons_DATA =        \
+	tip.png              \
 	warning.png          \
 	abstractclass.png    \
 	abstractmethod.png   \

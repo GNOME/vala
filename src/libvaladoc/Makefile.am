@@ -26,11 +26,13 @@ libvaladoc_la_VALASOURCES = \
 	moduleloader.vala \
 	settings.vala \
 	markupwriter.vala \
+	gtkdocmarkupwriter.vala \
 	devhelp-markupwriter.vala \
 	ctyperesolver.vala \
 	markupsourcelocation.vala \
 	markuptokentype.vala \
 	markupreader.vala \
+	gtkdocrenderer.vala \
 	documentation/commentscanner.vala \
 	documentation/documentation.vala \
 	documentation/documentationparser.vala \
@@ -103,6 +105,8 @@ libvaladoc_la_VALASOURCES = \
 	content/listitem.vala \
 	content/page.vala \
 	content/paragraph.vala \
+	content/warning.vala \
+	content/note.vala \
 	content/resourcelocator.vala \
 	content/run.vala \
 	content/sourcecode.vala \

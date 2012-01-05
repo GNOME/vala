@@ -341,6 +341,23 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 		writer.end_tag ("p");
 	}
 
+	private void visit_notification_block (BlockContent element, string headline) {
+		writer.start_tag ("div", {"class", "main_notification_block"});
+		writer.start_tag ("span", {"class", "main_block_headline"}).text (headline).end_tag ("span").text (" ");
+		writer.start_tag ("span", {"class", "main_block_content"});
+		element.accept_children (this);
+		writer.end_tag ("span");
+		writer.end_tag ("div");
+	}
+
+	public override void visit_warning (Warning element) {
+		visit_notification_block (element, "Warning:");
+	}
+
+	public override void visit_note (Note element) {
+		visit_notification_block (element, "Note:");
+	}
+
 	public override void visit_run (Run element) {
 		string tag = null;
 		string css_type = null;

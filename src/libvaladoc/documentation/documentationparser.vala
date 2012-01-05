@@ -499,6 +499,50 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 				}
 			});
 
+		Rule warning =
+			Rule.seq ({
+				TokenType.str ("Warning:"),
+				optional_invisible_spaces,
+				Rule.many ({
+					Rule.seq({optional_invisible_spaces, run}),
+					TokenType.EOL.action (() => { add_content_space (); })
+				})
+			})
+			.set_name ("Warning")
+			.set_start (() => { push (_factory.create_paragraph ()); })
+			.set_reduce (() => {
+				var head = _factory.create_warning ();
+				head.content.add ((Paragraph) pop ());
+				((BlockContent) peek ()).content.add (head);
+
+				Text last_element = head.content.last () as Text;
+				if (last_element != null) {
+					last_element.content._chomp ();
+				}
+			});
+
+		Rule note =
+			Rule.seq ({
+				TokenType.str ("Note:"),
+				optional_invisible_spaces,
+				Rule.many ({
+					Rule.seq({optional_invisible_spaces, run}),
+					TokenType.EOL.action (() => { add_content_space (); })
+				})
+			})
+			.set_name ("Note")
+			.set_start (() => { push (_factory.create_paragraph ()); })
+			.set_reduce (() => {
+				var head = _factory.create_note ();
+				head.content.add ((Paragraph) pop ());
+				((BlockContent) peek ()).content.add (head);
+
+				Text last_element = head.content.last () as Text;
+				if (last_element != null) {
+					last_element.content._chomp ();
+				}
+			});
+
 		Rule indented_item =
 			Rule.seq ({
 				Rule.many ({
@@ -667,6 +711,8 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 				indented_blocks,
 				table,
 				headline,
+				warning,
+				note,
 				paragraph
 			})
 			.set_name ("Blocks");

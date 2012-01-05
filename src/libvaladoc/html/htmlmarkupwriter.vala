@@ -24,8 +24,14 @@ using GLib;
 using Valadoc.Content;
 
 public class Valadoc.Html.MarkupWriter : Valadoc.MarkupWriter {
+	private unowned FileStream stream;
+
 	public MarkupWriter (FileStream stream, bool xml_declaration = true) {
-		base (stream, xml_declaration);
+		// avoid broken implicit copy
+		unowned FileStream _stream = stream;
+
+		base ((str) => { _stream.printf (str); }, xml_declaration);
+		this.stream = stream;
 	}
 
 	public MarkupWriter add_usemap (Charts.Chart chart) {
