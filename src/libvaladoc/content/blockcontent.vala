@@ -45,5 +45,15 @@ public abstract class Valadoc.Content.BlockContent : ContentElement {
 			element.accept (visitor);
 		}
 	}
+
+	public override bool is_empty () {
+		foreach (Block item in content) {
+			if (!item.is_empty ()) {
+				return false;
+			}
+		}
+
+		return true;
+	}
 }
 

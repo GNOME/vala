@@ -58,4 +58,8 @@ public class Valadoc.Taglets.See : ContentElement, Taglet, Block {
 	public override void accept (ContentVisitor visitor) {
 		visitor.visit_taglet (this);
 	}
+
+	public override bool is_empty () {
+		return false;
+	}
 }

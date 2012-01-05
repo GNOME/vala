@@ -44,5 +44,10 @@ public class Valadoc.Content.TableCell : InlineContent, StyleAttributes {
 	public override void accept (ContentVisitor visitor) {
 		visitor.visit_table_cell (this);
 	}
+
+	public override bool is_empty () {
+		// empty cells are displayed as well
+		return false;
+	}
 }
 

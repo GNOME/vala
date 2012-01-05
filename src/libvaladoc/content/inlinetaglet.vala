@@ -57,5 +57,10 @@ public abstract class Valadoc.Content.InlineTaglet : ContentElement, Taglet, Inl
 		ContentElement element = get_content ();
 		element.accept (visitor);
 	}
+
+	public override bool is_empty () {
+		// taglets are not empty by default
+		return false;
+	}
 }
 

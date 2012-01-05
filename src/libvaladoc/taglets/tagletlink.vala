@@ -100,4 +100,8 @@ public class Valadoc.Taglets.Link : InlineTaglet {
 			return link;
 		}
 	}
+
+	public override bool is_empty () {
+		return false;
+	}
 }

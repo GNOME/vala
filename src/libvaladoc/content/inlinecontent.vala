@@ -46,5 +46,15 @@ public abstract class Valadoc.Content.InlineContent : ContentElement {
 			element.accept (visitor);
 		}
 	}
+
+	public override bool is_empty () {
+		foreach (Inline item in content) {
+			if (!item.is_empty ()) {
+				return false;
+			}
+		}
+
+		return true;
+	}
 }
 

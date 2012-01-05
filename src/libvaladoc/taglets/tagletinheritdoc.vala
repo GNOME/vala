@@ -67,4 +67,8 @@ public class Valadoc.Taglets.InheritDoc : InlineTaglet {
 		}
 		return new Text ("");
 	}
+
+	public override bool is_empty () {
+		return false;
+	}
 }

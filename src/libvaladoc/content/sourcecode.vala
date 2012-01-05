@@ -70,4 +70,9 @@ public class Valadoc.Content.SourceCode : ContentElement, Inline{
 	public override void accept (ContentVisitor visitor) {
 		visitor.visit_source_code (this);
 	}
+
+	public override bool is_empty () {
+		// empty source blocks are visible as well
+		return false;
+	}
 }

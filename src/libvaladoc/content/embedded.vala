@@ -53,4 +53,8 @@ public class Valadoc.Content.Embedded : ContentElement, Inline, StyleAttributes 
 	public override void accept (ContentVisitor visitor) {
 		visitor.visit_embedded (this);
 	}
+
+	public override bool is_empty () {
+		return false;
+	}
 }

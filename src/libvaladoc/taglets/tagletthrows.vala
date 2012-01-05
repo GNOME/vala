@@ -49,3 +49,4 @@ public class Valadoc.Taglets.Throws : InlineContent, Taglet, Block {
 		visitor.visit_taglet (this);
 	}
 }
+

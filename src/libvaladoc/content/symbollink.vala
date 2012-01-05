@@ -42,5 +42,9 @@ public class Valadoc.Content.SymbolLink : ContentElement, Inline {
 	public override void accept (ContentVisitor visitor) {
 		visitor.visit_symbol_link (this);
 	}
+
+	public override bool is_empty () {
+		return false;
+	}
 }
 

@@ -54,6 +54,116 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		this.stack.clear ();
 	}
 
+	private inline Text? split_text (Text text) {
+		int offset = 0;
+		while ((offset = text.content.index_of_char ('.', offset)) >= 0) {
+			if (offset >= 2) {
+				// ignore e.g.
+				unowned string cmp4 = ((string) (((char*) text.content) + offset - 2));
+				if (cmp4.has_prefix (" e.g.") || cmp4.has_prefix ("(e.g.")) {
+					offset = offset + 3;
+					continue;
+				}
+
+				// ignore i.e.
+				if (cmp4.has_prefix (" i.e.") || cmp4.has_prefix ("(i.e.")) {
+					offset = offset + 3;
+					continue;
+				}
+			}
+
+			Text sec = factory.create_text (text.content.substring (offset+1, -1));
+			text.content = text.content.substring (0, offset+1);
+			return sec;
+		}
+
+		return null;
+	}
+
+	private inline Run? split_run (Run run) {
+		Run? sec = null;
+
+		Iterator<Inline> iter = run.content.iterator ();
+		for (bool has_next = iter.first (); has_next; has_next = iter.next ()) {
+			Inline item = iter.get ();
+			if (sec == null) {
+				Inline? tmp = split_inline (item);
+				if (tmp != null) {
+					sec = factory.create_run (run.style);
+					sec.content.add (tmp);
+				}
+			} else {
+				sec.content.add (item);
+				iter.remove ();
+			}
+		}
+
+		return sec;
+	}
+
+	private inline Inline? split_inline (Inline item) {
+		if (item is Text) {
+			return split_text ((Text) item);
+		} else if (item is Run) {
+			return split_run ((Run) item);
+		}
+
+		return null;
+	}
+
+	private inline Paragraph? split_paragraph (Paragraph p) {
+		Paragraph? sec = null;
+
+		Iterator<Inline> iter = p.content.iterator ();
+		for (bool has_next = iter.first (); has_next; has_next = iter.next ()) {
+			Inline item = iter.get ();
+			if (sec == null) {
+				Inline? tmp = split_inline (item);
+				if (tmp != null) {
+					sec = factory.create_paragraph ();
+					sec.horizontal_align = p.horizontal_align;
+					sec.vertical_align = p.vertical_align;
+					sec.style = p.style;
+					sec.content.add (tmp);
+				}
+			} else {
+				sec.content.add (item);
+				iter.remove ();
+			}
+		}
+
+		return sec;
+	}
+
+	private void extract_short_desc (Comment comment) {
+		if (comment.content.size == 0) {
+			return ;
+		}
+
+		Paragraph? first_paragraph = comment.content[0] as Paragraph;
+		if (first_paragraph == null) {
+			// add empty paragraph to avoid non-text as short descriptions
+			comment.content.insert (1, factory.create_paragraph ());
+			return ;
+		}
+
+
+		// avoid fancy stuff in short descriptions:
+		first_paragraph.horizontal_align = null;
+		first_paragraph.vertical_align = null;
+		first_paragraph.style = null;
+
+
+		Paragraph? second_paragraph = split_paragraph (first_paragraph);
+		if (second_paragraph == null) {
+			return ;
+		}
+
+		if (second_paragraph.is_empty () == false) {
+			comment.content.insert (1, second_paragraph);
+		}
+	}
+
 	private void report_unexpected_token (Token got, string expected) {
 		if (this.show_warnings) {
 			return ;
@@ -170,6 +280,8 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 			this.report_unexpected_token (current, "<INLINE|BLOCK>");
 			return null;
 		}
+
+		extract_short_desc (comment);
 
 		return comment;
 	}

@@ -45,4 +45,9 @@ public class Valadoc.Content.WikiLink : InlineContent, Inline {
 	public override void accept (ContentVisitor visitor) {
 		visitor.visit_wiki_link (this);
 	}
+
+
+	public override bool is_empty () {
+		return false;
+	}
 }

@@ -42,5 +42,10 @@ public class Valadoc.Content.Headline : Block, InlineContent {
 	public override void accept (ContentVisitor visitor) {
 		visitor.visit_headline (this);
 	}
+
+
+	public override bool is_empty () {
+		return false;
+	}
 }
 

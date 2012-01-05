@@ -51,5 +51,9 @@ public class Valadoc.Content.Table : ContentElement, Block {
 			element.accept (visitor);
 		}
 	}
+
+	public override bool is_empty () {
+		return false;
+	}
 }
 

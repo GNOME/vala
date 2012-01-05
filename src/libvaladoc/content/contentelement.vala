@@ -32,6 +32,8 @@ public abstract class Valadoc.Content.ContentElement : Object {
 
 	public abstract void accept (ContentVisitor visitor);
 
+	public abstract bool is_empty ();
+
 	public virtual void accept_children (ContentVisitor visitor) {
 	}
 }

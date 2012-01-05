@@ -42,5 +42,10 @@ public class Valadoc.Content.Text : ContentElement, Inline {
 	public override void accept (ContentVisitor visitor) {
 		visitor.visit_text (this);
 	}
+
+
+	public override bool is_empty () {
+		return content == "";
+	}
 }
 

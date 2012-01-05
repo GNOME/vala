@@ -124,4 +124,8 @@ public class Valadoc.Content.List : ContentElement, Block {
 			element.accept (visitor);
 		}
 	}
+
+	public override bool is_empty () {
+		return _items.size == 0;
+	}
 }
