@@ -321,7 +321,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public DataType gdestroynotify_type;
 	public DataType gquark_type;
 	public Struct gvalue_type;
-	public Class gvariant_type;
 	public Struct mutex_type;
 	public Struct gmutex_type;
 	public Struct grecmutex_type;
@@ -487,7 +486,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			gerror = (Class) root_symbol.scope.lookup ("GLib").scope.lookup ("Error");
 			gquark_type = new IntegerType ((Struct) glib_ns.scope.lookup ("Quark"));
 			gvalue_type = (Struct) glib_ns.scope.lookup ("Value");
-			gvariant_type = (Class) glib_ns.scope.lookup ("Variant");
 			gsource_type = (Class) glib_ns.scope.lookup ("Source");
 
 			gmutex_type = (Struct) glib_ns.scope.lookup ("Mutex");
@@ -5295,83 +5293,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return rv;
 	}
 
-	int next_variant_function_id = 0;
-
-	public TargetValue? try_cast_variant_to_type (TargetValue value, DataType to, CodeNode? node = null) {
-		if (value.value_type == null || gvariant_type == null || value.value_type.data_type != gvariant_type) {
-			return null;
-		}
-
-		string variant_func = "_variant_get%d".printf (++next_variant_function_id);
-
-		var variant = value;
-		if (value.value_type.value_owned) {
-			// value leaked, destroy it
-			var temp_value = store_temp_value (value, node);
-			temp_ref_values.insert (0, ((GLibValue) temp_value).copy ());
-			variant = temp_value;
-		}
-
-		var ccall = new CCodeFunctionCall (new CCodeIdentifier (variant_func));
-		ccall.add_argument (get_cvalue_ (variant));
-
-		var needs_init = (to is ArrayType);
-		var result = create_temp_value (to, needs_init, node);
-
-		var cfunc = new CCodeFunction (variant_func);
-		cfunc.modifiers = CCodeModifiers.STATIC;
-		cfunc.add_parameter (new CCodeParameter ("value", "GVariant*"));
-
-		if (!to.is_real_non_null_struct_type ()) {
-			cfunc.return_type = get_ccode_name (to);
-		}
-
-		if (to.is_real_non_null_struct_type ()) {
-			// structs are returned via out parameter
-			cfunc.add_parameter (new CCodeParameter ("result", "%s *".printf (get_ccode_name (to))));
-			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_cvalue_ (result)));
-		} else if (to is ArrayType) {
-			// return array length if appropriate
-			// tmp = _variant_get (variant, &tmp_length);
-			var array_type = (ArrayType) to;
-			var length_ctype = get_ccode_array_length_type (array_type);
-			for (int dim = 1; dim <= array_type.rank; dim++) {
-				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_array_length_cvalue (result, dim)));
-				cfunc.add_parameter (new CCodeParameter (get_array_length_cname ("result", dim), length_ctype + "*"));
-			}
-		}
-
-		if (!to.is_real_non_null_struct_type ()) {
-			ccode.add_assignment (get_cvalue_ (result), ccall);
-		} else {
-			ccode.add_expression (ccall);
-		}
-
-		push_function (cfunc);
-
-		CCodeExpression func_result = deserialize_expression (to, new CCodeIdentifier ("value"), new CCodeIdentifier ("*result"));
-		if (to.is_real_non_null_struct_type ()) {
-			ccode.add_assignment (new CCodeIdentifier ("*result"), func_result);
-		} else {
-			ccode.add_return (func_result);
-		}
-
-		pop_function ();
-
-		cfile.add_function_declaration (cfunc);
-		cfile.add_function (cfunc);
-
-		return load_temp_value (result);
-	}
-
-	public virtual CCodeExpression? deserialize_expression (DataType type, CCodeExpression variant_expr, CCodeExpression? expr, CCodeExpression? error_expr = null, out bool may_fail = null) {
-		assert_not_reached ();
-	}
-
-	public virtual CCodeExpression? serialize_expression (DataType type, CCodeExpression expr) {
-		assert_not_reached ();
-	}
-
 	public override void visit_cast_expression (CastExpression expr) {
 		generate_type_declaration (expr.type_reference, cfile);
 
@@ -5381,13 +5302,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				set_cvalue (expr, valuecast);
 				return;
 			}
-
-			var variantcast = try_cast_variant_to_type (expr.inner.target_value, expr.type_reference, expr);
-			if (variantcast != null) {
-				expr.target_value = variantcast;
-				return;
-			}
 		}
+
+		generate_type_declaration (expr.type_reference, cfile);
 
 		var cl = expr.type_reference.data_type as Class;
 		var iface = expr.type_reference.data_type as Interface;
@@ -6032,14 +5949,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		                      && target_type.data_type == gvalue_type
 		                      && !(type is NullType)
 		                      && get_ccode_type_id (type) != "G_TYPE_VALUE");
-		bool gvariant_boxing = (context.profile == Profile.GOBJECT
-		                        && target_type != null
-		                        && target_type.data_type == gvariant_type
-		                        && !(type is NullType)
-		                        && type.data_type != gvariant_type);
 
 		if (type.value_owned
-		    && (target_type == null || !target_type.value_owned || boxing || unboxing || gvariant_boxing)
+		    && (target_type == null || !target_type.value_owned || boxing || unboxing)
 		    && !gvalue_boxing /* gvalue can assume ownership of value, no need to free it */) {
 			// value leaked, destroy it
 			if (target_type is PointerType) {
@@ -6113,47 +6025,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			ccode.add_expression (ccall);
 
 			result = (GLibValue) temp_value;
-		} else if (gvariant_boxing) {
-			// implicit conversion to GVariant
-			string variant_func = "_variant_new%d".printf (++next_variant_function_id);
-
-			var ccall = new CCodeFunctionCall (new CCodeIdentifier (variant_func));
-			ccall.add_argument (result.cvalue);
-
-			var cfunc = new CCodeFunction (variant_func, "GVariant*");
-			cfunc.modifiers = CCodeModifiers.STATIC;
-			cfunc.add_parameter (new CCodeParameter ("value", get_ccode_name (type)));
-
-			if (type is ArrayType) {
-				// return array length if appropriate
-				var array_type = (ArrayType) type;
-				var length_ctype = get_ccode_array_length_type (array_type);
-				for (int dim = 1; dim <= array_type.rank; dim++) {
-					ccall.add_argument (get_array_length_cvalue (value, dim));
-					cfunc.add_parameter (new CCodeParameter (get_array_length_cname ("value", dim), length_ctype));
-				}
-			}
-
-			push_function (cfunc);
-
-			// sink floating reference
-			var sink = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_ref_sink"));
-			sink.add_argument (serialize_expression (type, new CCodeIdentifier ("value")));
-			ccode.add_return (sink);
-
-			pop_function ();
-
-			cfile.add_function_declaration (cfunc);
-			cfile.add_function (cfunc);
-
-			result.cvalue = ccall;
-			result.value_type.value_owned = true;
-
-			result = (GLibValue) store_temp_value (result, node);
-			if (!target_type.value_owned) {
-				// value leaked
-				temp_ref_values.insert (0, ((GLibValue) result).copy ());
-			}
 		} else if (boxing) {
 			// value needs to be boxed
 
@@ -6185,7 +6056,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 		}
 
-		if (!gvalue_boxing && !gvariant_boxing && target_type.value_owned && (!type.value_owned || boxing || unboxing || array_needs_copy) && requires_copy (target_type) && !(type is NullType)) {
+		if (!gvalue_boxing && target_type.value_owned && (!type.value_owned || boxing || unboxing || array_needs_copy) && requires_copy (target_type) && !(type is NullType)) {
 			// need to copy value
 			var copy = (GLibValue) copy_value (result, node);
 			if (target_type.data_type is Interface && copy == null) {
