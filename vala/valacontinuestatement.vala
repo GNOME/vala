@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a continue statement in the source code.
  */
-public class Vala.ContinueStatement : CodeNode, Statement {
+public class Vala.ContinueStatement : BaseStatement {
 	/**
 	 * Creates a new continue statement.
 	 *

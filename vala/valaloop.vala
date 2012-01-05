@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents an endless loop.
  */
-public class Vala.Loop : CodeNode, Statement {
+public class Vala.Loop : BaseStatement {
 	/**
 	 * Specifies the loop body.
 	 */
