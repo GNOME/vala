@@ -668,6 +668,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			if (child.name != null) {
 				writer.start_tag ("li", {"class", cssresolver.resolve (child)});
 				writer.link (get_link (child, parent), child.name);
+				writer.text (" - ");
 				this.write_brief_description (child, parent);
 				writer.end_tag ("li");
 				if (with_childs == true) {
