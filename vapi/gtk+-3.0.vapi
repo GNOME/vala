@@ -3851,7 +3851,7 @@ namespace Gtk {
 		public double value { get; set; }
 		public bool wrap { get; set; }
 		public virtual signal void change_value (Gtk.ScrollType scroll);
-		public virtual signal int input (void* new_value);
+		public virtual signal int input (out double new_value);
 		public virtual signal bool output ();
 		public virtual signal void value_changed ();
 		public virtual signal void wrapped ();
