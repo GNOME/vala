@@ -24,7 +24,7 @@
 /**
  * Represents an unlock statement e.g. {{{ unlock (a); }}}.
  */
-public class Vala.UnlockStatement : CodeNode, Statement {
+public class Vala.UnlockStatement : BaseStatement {
 	/**
 	 * Expression representing the resource to be unlocked.
 	 */

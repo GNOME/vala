@@ -25,7 +25,7 @@
  * Represents a foreach statement in the source code. Foreach statements iterate
  * over the elements of a collection.
  */
-public class Vala.ForeachStatement : CodeNode, Statement {
+public class Vala.ForeachStatement : BaseStatement {
 	/**
 	 * Specifies the element type.
 	 */

@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents an if selection statement in the source code.
  */
-public class Vala.IfStatement : CodeNode, Statement {
+public class Vala.IfStatement : BaseStatement {
 	/**
 	 * The boolean condition to evaluate.
 	 */

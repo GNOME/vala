@@ -1,6 +1,6 @@
-/* valaemptystatement.vala
+/* valabasestatement.vala
  *
- * Copyright (C) 2006-2010  Jürg Billeter
+ * Copyright (C) 2012  Luca Bruno
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -17,30 +17,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
  *
  * Author:
- * 	Jürg Billeter <j@bitron.ch>
+ * 	Luca Bruno <lucabru@src.gnome.org>
  */
 
 using GLib;
 
 /**
- * An empty statement.
+ * Simple class implementing Statement.
  */
-public class Vala.EmptyStatement : BaseStatement {
-	/**
-	 * Creates a new empty statement.
-	 *
-	 * @param source reference to source code
-	 * @return       newly created empty statement
-	 */
-	public EmptyStatement (SourceReference source) {
-		source_reference = source;
-	}
+public class Vala.BaseStatement : CodeNode, Statement {
+	public Statement prev { get; set; }
 
-	public override void accept (CodeVisitor visitor) {
-		visitor.visit_empty_statement (this);
-	}
-
-	public override void emit (CodeGenerator codegen) {
-		codegen.visit_empty_statement (this);
-	}
+	public Statement next { get; set; }
 }

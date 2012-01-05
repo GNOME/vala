@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a do iteration statement in the source code.
  */
-public class Vala.DoStatement : CodeNode, Statement {
+public class Vala.DoStatement : BaseStatement {
 	/**
 	 * Specifies the loop body.
 	 */

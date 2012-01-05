@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a for iteration statement in the source code.
  */
-public class Vala.ForStatement : CodeNode, Statement {
+public class Vala.ForStatement : BaseStatement {
 	/**
 	 * Specifies the loop condition.
 	 */

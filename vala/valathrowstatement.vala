@@ -24,7 +24,7 @@
 /**
  * Represents a throw statement in the source code.
  */
-public class Vala.ThrowStatement : CodeNode, Statement {
+public class Vala.ThrowStatement : BaseStatement {
 	/**
 	 * The error expression to throw.
 	 */
