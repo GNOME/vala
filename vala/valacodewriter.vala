@@ -973,7 +973,7 @@ public class Vala.CodeWriter : CodeVisitor {
 	public override void visit_block (Block b) {
 		write_begin_block ();
 
-		foreach (Statement stmt in b.get_statements ()) {
+		foreach (Statement stmt in b) {
 			stmt.accept (this);
 		}
 

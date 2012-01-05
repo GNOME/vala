@@ -26,4 +26,6 @@ using GLib;
  * Interface for all statement types.
  */
 public interface Vala.Statement : CodeNode {
+	public abstract Statement prev { get; set; }
+	public abstract Statement next { get; set; }
 }

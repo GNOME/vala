@@ -2354,7 +2354,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			cfile.add_function (unref_fun);
 		}
 
-		foreach (Statement stmt in b.get_statements ()) {
+		foreach (Statement stmt in b) {
 			push_line (stmt.source_reference);
 			stmt.emit (this);
 			pop_line ();

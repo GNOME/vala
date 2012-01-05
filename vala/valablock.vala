@@ -34,7 +34,14 @@ public class Vala.Block : Symbol, Statement {
 
 	public bool captured { get; set; }
 
-	private List<Statement> statement_list = new ArrayList<Statement> ();
+	public Statement first_statement { get; private set; }
+
+	public Statement prev { get; set; }
+
+	public Statement next { get; set; }
+
+	private Statement last_statement;
+
 	private List<LocalVariable> local_variables = new ArrayList<LocalVariable> ();
 	private List<Constant> local_constants = new ArrayList<Constant> ();
 
@@ -54,32 +61,26 @@ public class Vala.Block : Symbol, Statement {
 	 */
 	public void add_statement (Statement stmt) {
 		stmt.parent_node = this;
-		statement_list.add (stmt);
+		if (last_statement == null) {
+			first_statement = last_statement = stmt;
+		} else {
+			last_statement.next = stmt;
+			stmt.prev = last_statement;
+			last_statement = stmt;
+		}
 	}
 
 	public void insert_statement (int index, Statement stmt) {
-		stmt.parent_node = this;
-		statement_list.insert (index, stmt);
-	}
-
-	/**
-	 * Returns a copy of the list of statements.
-	 *
-	 * @return statement list
-	 */
-	public List<Statement> get_statements () {
-		var list = new ArrayList<Statement> ();
-		foreach (Statement stmt in statement_list) {
-			unowned StatementList? stmt_list = stmt as StatementList;
-			if (stmt_list != null) {
-				for (int i = 0; i < stmt_list.length; i++) {
-					list.add (stmt_list.get (i));
-				}
-			} else {
-				list.add (stmt);
-			}
+		Statement iter = first_statement;
+		while (iter != null && index > 0) {
+			index--;
+			iter = iter.next;
 		}
-		return list;
+		if (iter == null) {
+			add_statement (stmt);
+		} else {
+			insert_before (iter, stmt);
+		}
 	}
 
 	/**
@@ -141,7 +142,7 @@ public class Vala.Block : Symbol, Statement {
 	}
 
 	public override void accept_children (CodeVisitor visitor) {
-		foreach (Statement stmt in statement_list) {
+		foreach (Statement stmt in this) {
 			stmt.accept (visitor);
 		}
 	}
@@ -155,8 +156,8 @@ public class Vala.Block : Symbol, Statement {
 
 		owner = context.analyzer.get_current_non_local_symbol (parent_node).scope;
 
-		for (int i = 0; i < statement_list.size; i++) {
-			if (!statement_list[i].check (context)) {
+		foreach (Statement stmt in this) {
+			if (!stmt.check (context)) {
 				error = true;
 			}
 		}
@@ -174,7 +175,7 @@ public class Vala.Block : Symbol, Statement {
 
 	public override void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
 		// use get_statements () instead of statement_list to not miss errors within StatementList objects
-		foreach (Statement stmt in get_statements ()) {
+		foreach (Statement stmt in this) {
 			stmt.get_error_types (collection, source_reference);
 		}
 	}
@@ -184,42 +185,55 @@ public class Vala.Block : Symbol, Statement {
 	}
 
 	public void insert_before (Statement stmt, Statement new_stmt) {
-		for (int i = 0; i < statement_list.size; i++) {
-			var stmt_list = statement_list[i] as StatementList;
-			if (stmt_list != null) {
-				for (int j = 0; j < stmt_list.length; j++) {
-					if (stmt_list.get (j) == stmt) {
-						stmt_list.insert (j, new_stmt);
-						new_stmt.parent_node = this;
-						break;
-					}
-				}
-			} else if (statement_list[i] == stmt) {
-				stmt_list = new StatementList (source_reference);
-				stmt_list.add (new_stmt);
-				stmt_list.add (stmt);
-				statement_list[i] = stmt_list;
-				new_stmt.parent_node = this;
-			}
+		new_stmt.parent_node = this;
+		new_stmt.prev = stmt.prev;
+		new_stmt.next = stmt;
+
+		if (stmt.prev == null) {
+			first_statement = new_stmt;
+		} else {
+			stmt.prev.next = new_stmt;
 		}
+		stmt.prev = new_stmt;
 	}
 
 	public void replace_statement (Statement old_stmt, Statement new_stmt) {
-		for (int i = 0; i < statement_list.size; i++) {
-			var stmt_list = statement_list[i] as StatementList;
-			if (stmt_list != null) {
-				for (int j = 0; j < stmt_list.length; j++) {
-					if (stmt_list.get (j) == old_stmt) {
-						stmt_list.set (j, new_stmt);
-						new_stmt.parent_node = this;
-						break;
-					}
-				}
-			} else if (statement_list[i] == old_stmt) {
-				statement_list[i] = new_stmt;
-				new_stmt.parent_node = this;
-				break;
-			}
+		new_stmt.parent_node = this;
+		new_stmt.prev = old_stmt.prev;
+		new_stmt.next = old_stmt.next;
+
+		if (old_stmt.prev == null) {
+			first_statement = new_stmt;
+		} else {
+			old_stmt.prev.next = new_stmt;
 		}
+
+		if (old_stmt.next == null) {
+			last_statement = new_stmt;
+		} else {
+			old_stmt.next.prev = new_stmt;
+		}
+	}
+
+	public StatementIterator iterator () {
+		return new StatementIterator (this);
+	}
+}
+
+public class Vala.StatementIterator {
+	private Block block;
+	private Statement next;
+
+	public StatementIterator (Block block) {
+		this.block = block;
+		this.next = block.first_statement;
+	}
+
+	public Statement? next_value () {
+		var ret = next;
+		if (ret != null) {
+			next = ret.next;
+		}
+		return ret;
 	}
 }

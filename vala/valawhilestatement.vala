@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a while iteration statement in the source code.
  */
-public class Vala.WhileStatement : CodeNode, Statement {
+public class Vala.WhileStatement : BaseStatement {
 	/**
 	 * Specifies the loop condition.
 	 */

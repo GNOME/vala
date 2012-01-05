@@ -25,7 +25,7 @@
  * A code statement that evaluates a given expression. The value computed by the
  * expression, if any, is discarded.
  */
-public class Vala.ExpressionStatement : CodeNode, Statement {
+public class Vala.ExpressionStatement : BaseStatement {
 	/**
 	 * Specifies the expression to evaluate.
 	 */

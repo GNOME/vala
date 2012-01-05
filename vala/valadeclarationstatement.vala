@@ -24,7 +24,7 @@
 /**
  * Represents a local variable or constant declaration statement in the source code.
  */
-public class Vala.DeclarationStatement : CodeNode, Statement {
+public class Vala.DeclarationStatement : BaseStatement {
 	/**
 	 * The local variable or constant declaration.
 	 */

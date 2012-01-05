@@ -32,7 +32,7 @@ using GLib;
  * occurs. Otherwise it's translated into a try/finally statement which unlocks the mutex
  * after the block is finished.
  */
-public class Vala.LockStatement : CodeNode, Statement {
+public class Vala.LockStatement : BaseStatement {
 	/**
 	 * Expression representing the resource to be locked.
 	 */

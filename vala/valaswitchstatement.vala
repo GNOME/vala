@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a switch selection statement in the source code.
  */
-public class Vala.SwitchStatement : CodeNode, Statement {
+public class Vala.SwitchStatement : BaseStatement {
 	/**
 	 * Specifies the switch expression.
 	 */

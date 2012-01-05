@@ -23,7 +23,7 @@
 /**
  * Represents a delete statement e.g. "delete a".
  */
-public class Vala.DeleteStatement : CodeNode, Statement {
+public class Vala.DeleteStatement : BaseStatement {
 	/**
 	 * Expression representing the instance to be freed.
 	 */

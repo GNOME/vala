@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a break statement in the source code.
  */
-public class Vala.BreakStatement : CodeNode, Statement {
+public class Vala.BreakStatement : BaseStatement {
 	/**
 	 * Creates a new break statement.
 	 *
