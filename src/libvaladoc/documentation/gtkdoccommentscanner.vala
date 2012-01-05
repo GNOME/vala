@@ -179,6 +179,17 @@ public class Valadoc.Gtkdoc.Scanner {
 		return (int) ((char*) a - (char*) b);
 	}
 
+	private inline int vararg_prefix () {
+		if (this.pos.has_prefix ("...")) {
+			next_char ();
+			next_char ();
+			next_char ();
+			return 3;
+		}
+
+		return 0;
+	}
+
 	private inline int id_prefix () {
 		if (!letter (get ())) {
 			return 0;
@@ -252,9 +263,11 @@ public class Valadoc.Gtkdoc.Scanner {
 		int id_len = 0;
 
 		if ((id_len = id_prefix ()) == 0) {
-			this.column = column_start;
-			this.pos = start;
-			return null;
+			if (type == TokenType.GTKDOC_PARAM && (id_len = vararg_prefix ()) == 0) {
+				this.column = column_start;
+				this.pos = start;
+				return null;
+			}
 		}
 
 		unowned string separator = this.pos;

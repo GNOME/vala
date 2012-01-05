@@ -58,18 +58,26 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		int offset = 0;
 		while ((offset = text.content.index_of_char ('.', offset)) >= 0) {
 			if (offset >= 2) {
-				// ignore e.g.
+				// ignore "e.g."
 				unowned string cmp4 = ((string) (((char*) text.content) + offset - 2));
 				if (cmp4.has_prefix (" e.g.") || cmp4.has_prefix ("(e.g.")) {
 					offset = offset + 3;
 					continue;
 				}
 
-				// ignore i.e.
+				// ignore "i.e."
 				if (cmp4.has_prefix (" i.e.") || cmp4.has_prefix ("(i.e.")) {
 					offset = offset + 3;
 					continue;
 				}
+			}
+
+			unowned string cmp0 = ((string) (((char*) text.content) + offset));
+
+			// ignore ... (varargs)
+			if (cmp0.has_prefix ("...")) {
+				offset = offset + 3;
+				continue;
 			}
 
 			Text sec = factory.create_text (text.content.substring (offset+1, -1));
