@@ -156,28 +156,26 @@ public class Vala.CCodeTransformer : CodeTransformer {
 
 	public override void visit_while_statement (WhileStatement stmt) {
 		// convert to simple loop
+		push_builder (new CodeBuilder (context, stmt, stmt.source_reference));
 
-		if (always_true (stmt.condition)) {
-			// do not generate if block if condition is always true
-		} else if (always_false (stmt.condition)) {
-			// do not generate if block if condition is always false
-			stmt.body.insert_statement (0, new BreakStatement (stmt.condition.source_reference));
-		} else {
-			var if_condition = new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, stmt.condition, stmt.condition.source_reference);
-			var true_block = new Block (stmt.condition.source_reference);
-			true_block.add_statement (new BreakStatement (stmt.condition.source_reference));
-			var if_stmt = new IfStatement (if_condition, true_block, null, stmt.condition.source_reference);
-			stmt.body.insert_statement (0, if_stmt);
+		if (!always_false (stmt.condition)) {
+			b.open_loop ();
+			if (!always_true (stmt.condition)) {
+				b.open_if (new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, stmt.condition, stmt.condition.source_reference));
+				b.add_break ();
+				b.close ();
+				b.add_statement (stmt.body);
+			}
+			b.close ();
 		}
 
-		var loop = new Loop (stmt.body, stmt.source_reference);
-
-		var parent_block = (Block) stmt.parent_node;
+		var parent_block = context.analyzer.get_current_block (stmt);
 		context.analyzer.replaced_nodes.add (stmt);
-		parent_block.replace_statement (stmt, loop);
+		parent_block.replace_statement (stmt, new EmptyStatement (stmt.source_reference));
 
 		stmt.body.checked = false;
-		check (loop);
+		b.check (this);
+		pop_builder ();
 	}
 
 	public override void visit_do_statement (DoStatement stmt) {

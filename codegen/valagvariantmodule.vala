@@ -21,27 +21,6 @@
  */
 
 public class Vala.GVariantModule : GAsyncModule {
-	struct BasicTypeInfo {
-		public unowned string signature;
-		public unowned string type_name;
-		public bool is_string;
-	}
-
-	const BasicTypeInfo[] basic_types = {
-		{ "y", "byte", false },
-		{ "b", "boolean", false },
-		{ "n", "int16", false },
-		{ "q", "uint16", false },
-		{ "i", "int32", false },
-		{ "u", "uint32", false },
-		{ "x", "int64", false },
-		{ "t", "uint64", false },
-		{ "d", "double", false },
-		{ "s", "string", true },
-		{ "o", "object_path", true },
-		{ "g", "signature", true }
-	};
-
 	static bool is_string_marshalled_enum (TypeSymbol? symbol) {
 		if (symbol != null && symbol is Enum) {
 			return symbol.get_attribute_bool ("DBus", "use_string_marshalling");

@@ -97,6 +97,16 @@ public class Vala.CodeBuilder {
 		statement_stack.add (stmt);
 	}
 
+	public void open_loop () {
+		statement_stack.add (current_block);
+		var parent_block = current_block;
+
+		current_block = new Block (source_reference);
+
+		var stmt = new Loop (current_block, source_reference);
+		parent_block.add_statement (stmt);
+	}
+
 	public void open_while (Expression condition) {
 		statement_stack.add (current_block);
 		var parent_block = current_block;

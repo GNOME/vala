@@ -102,7 +102,6 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 		string fd_list = null;
 		foreach (var param in m.get_parameters ()) {
 			if (param.direction == ParameterDirection.IN) {
-				string? type_name = null;
 				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.Cancellable") {
 					cancellable = param.name;
 				}
