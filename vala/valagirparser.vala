@@ -3214,6 +3214,12 @@ public class Vala.GirParser : CodeVisitor {
 		}
 	}
 
+	bool same_gir (Symbol gir_component, Symbol sym) {
+		var gir_name = gir_component.source_reference.file.gir_namespace;
+		var gir_version = gir_component.source_reference.file.gir_version;
+		return "%s-%s".printf (gir_name, gir_version) in sym.source_reference.file.filename;
+	}
+
 	void process_namespace_method (Node ns, Node node) {
 		/* transform static methods into instance methods if possible.
 		   In most of cases this is a .gir fault we are going to fix */
@@ -3230,7 +3236,7 @@ public class Vala.GirParser : CodeVisitor {
 			// check if it's a missed instance method (often happens for structs)
 			var sym = ((UnresolvedType) first_param.variable_type).unresolved_symbol;
 			var parent = resolve_node (ns, sym);
-			if (parent != null && parent.parent == ns && is_container (parent.symbol) && cname.has_prefix (parent.get_lower_case_cprefix ())) {
+			if (parent != null && same_gir (method, parent.symbol) && parent.parent == ns && is_container (parent.symbol) && cname.has_prefix (parent.get_lower_case_cprefix ())) {
 				// instance method
 				var new_name = method.name.substring (parent.get_lower_case_cprefix().length - ns_cprefix.length);
 				if (parent.lookup (new_name) == null) {
@@ -3249,7 +3255,7 @@ public class Vala.GirParser : CodeVisitor {
 		Node parent = ns;
 		find_parent (cname, ns, ref parent, ref match);
 		var new_name = method.name.substring (parent.get_lower_case_cprefix().length - ns_cprefix.length);
-		if (parent.lookup (new_name) == null) {
+		if (same_gir (method, parent.symbol) && parent.lookup (new_name) == null) {
 			ns.remove_member (node);
 			node.name = new_name;
 			method.name = new_name;

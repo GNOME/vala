@@ -5864,6 +5864,10 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void parse_args ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] ref unowned string[] argv);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	public static Gdk.Pixbuf pixbuf_get_from_surface (Cairo.Surface surface, int src_x, int src_y, int width, int height);
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public static Gdk.Pixbuf pixbuf_get_from_window (Gdk.Window window, int src_x, int src_y, int width, int height);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	[Deprecated (since = "3.0")]
 	public static Gdk.GrabStatus pointer_grab (Gdk.Window window, bool owner_events, Gdk.EventMask event_mask, Gdk.Window? confine_to, Gdk.Cursor? cursor, uint32 time_);
 	[CCode (cheader_filename = "gdk/gdk.h")]
