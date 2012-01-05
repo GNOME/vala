@@ -1383,6 +1383,14 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		}
 	}
 
+	public override void visit_object_creation_expression (ObjectCreationExpression expr) {
+		if (unreachable (expr)) {
+			return;
+		}
+
+		handle_errors (expr);
+	}
+
 	private bool unreachable (CodeNode node) {
 		if (current_block == null) {
 			node.unreachable = true;
