@@ -282,6 +282,7 @@ public class Valadoc.CTypeResolver : Visitor {
 		} else {
 			string parent_cname = get_parent_type_cname (item);
 			if (parent_cname != null) {
+				register_symbol (parent_cname+"->"+item.get_cname (), item);
 				register_symbol (parent_cname+"."+item.get_cname (), item);
 			}
 		}
