@@ -236,24 +236,25 @@ public class Valadoc.Gtkdoc.Scanner {
 	}
 
 	private inline int id_prefix () {
-		if (!letter (get ())) {
+		unichar c = get ();
+
+		if (!letter (c) && c != '_') {
 			return 0;
 		}
 
 		int start = this.column;
-		unichar c;
 		while ((c = next_char ()) == '_' || letter_or_number (c));
 		return this.column - start;
 	}
 
 	private inline int g_id_prefix () {
 		unowned string start = this.pos;
+		unichar c = get ();
 
-		if (!letter (get ())) {
+		if (!letter (c)) {
 			return 0;
 		}
 
-		unichar c;
 		while ((c = next_char ()) == '_' || c == '-' || letter_or_number (c));
 		return offset (this.pos, start);
 	}
@@ -271,6 +272,7 @@ public class Valadoc.Gtkdoc.Scanner {
 		unowned string start = this.pos;
 		int column_start = this.column;
 		int id_len = 0;
+
 		if ((id_len = id_prefix ()) == 0) {
 			return null;
 		}
