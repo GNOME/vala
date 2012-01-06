@@ -1128,25 +1128,25 @@ namespace GLib {
 	public class Menu : GLib.MenuModel {
 		[CCode (has_construct_function = false)]
 		public Menu ();
-		public void append (string label, string detailed_action);
+		public void append (string? label, string? detailed_action);
 		public void append_item (GLib.MenuItem item);
-		public void append_section (string label, GLib.MenuModel section);
-		public void append_submenu (string label, GLib.MenuModel submenu);
+		public void append_section (string? label, GLib.MenuModel section);
+		public void append_submenu (string? label, GLib.MenuModel submenu);
 		public void freeze ();
-		public void insert (int position, string label, string detailed_action);
+		public void insert (int position, string? label, string? detailed_action);
 		public void insert_item (int position, GLib.MenuItem item);
-		public void insert_section (int position, string label, GLib.MenuModel section);
-		public void insert_submenu (int position, string label, GLib.MenuModel submenu);
+		public void insert_section (int position, string? label, GLib.MenuModel section);
+		public void insert_submenu (int position, string? label, GLib.MenuModel submenu);
 		public static unowned GLib.HashTable markup_parser_end (GLib.MarkupParseContext context);
 		public static unowned GLib.Menu markup_parser_end_menu (GLib.MarkupParseContext context);
 		public static void markup_parser_start (GLib.MarkupParseContext context, string domain, GLib.HashTable objects);
 		public static void markup_parser_start_menu (GLib.MarkupParseContext context, string domain, GLib.HashTable objects);
 		public static void markup_print_stderr (GLib.MenuModel model);
 		public static unowned GLib.StringBuilder markup_print_string (GLib.StringBuilder str, GLib.MenuModel model, int indent, int tabstop);
-		public void prepend (string label, string detailed_action);
+		public void prepend (string? label, string? detailed_action);
 		public void prepend_item (GLib.MenuItem item);
-		public void prepend_section (string label, GLib.MenuModel section);
-		public void prepend_submenu (string label, GLib.MenuModel submenu);
+		public void prepend_section (string? label, GLib.MenuModel section);
+		public void prepend_submenu (string? label, GLib.MenuModel submenu);
 		public void remove (int position);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
@@ -1161,20 +1161,20 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class MenuItem : GLib.Object {
 		[CCode (has_construct_function = false)]
-		public MenuItem (string label, string detailed_action);
+		public MenuItem (string? label, string? detailed_action);
 		[CCode (has_construct_function = false)]
-		public MenuItem.section (string label, GLib.MenuModel section);
-		public void set_action_and_target (string action, string format_string);
-		public void set_action_and_target_value (string action, GLib.Variant target_value);
-		public void set_attribute (string attribute, string format_string);
-		public void set_attribute_value (string attribute, GLib.Variant value);
+		public MenuItem.section (string? label, GLib.MenuModel section);
+		public void set_action_and_target (string? action, string? format_string);
+		public void set_action_and_target_value (string? action, GLib.Variant? target_value);
+		public void set_attribute (string attribute, string? format_string);
+		public void set_attribute_value (string attribute, GLib.Variant? value);
 		public void set_detailed_action (string detailed_action);
-		public void set_label (string label);
-		public void set_link (string link, GLib.MenuModel model);
-		public void set_section (GLib.MenuModel section);
-		public void set_submenu (GLib.MenuModel submenu);
+		public void set_label (string? label);
+		public void set_link (string link, GLib.MenuModel? model);
+		public void set_section (GLib.MenuModel? section);
+		public void set_submenu (GLib.MenuModel? submenu);
 		[CCode (has_construct_function = false)]
-		public MenuItem.submenu (string label, GLib.MenuModel submenu);
+		public MenuItem.submenu (string? label, GLib.MenuModel submenu);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class MenuLinkIter : GLib.Object {
