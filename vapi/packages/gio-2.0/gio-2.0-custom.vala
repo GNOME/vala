@@ -117,4 +117,7 @@ namespace GLib {
 		public int[] steal_fds ();
 		public int append (int fd) throws GLib.IOError;
 	}
+
+	public delegate void SimpleActionActivateCallback (SimpleAction action, Variant? parameter);
+	public delegate void SimpleActionChangeStateCallback (SimpleAction action, Variant value);
 }

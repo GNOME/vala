@@ -379,7 +379,11 @@ g_action_group_get_action_state_hint nullable="1" transfer_ownership="1"
 g_action_group_get_action_state_type nullable="1"
 g_action_group_list_actions is_array="1" transfer_ownership="1" no_array_length="1" array_null_terminated="1"
 
-g_action_map_lookup_action transfer_ownership="1"
+GActionEntry is_value_type="1"
+GActionEntry.activate type_name="SimpleActionActivateCallback"
+GActionEntry.change_state type_name="SimpleActionChangeStateCallback"
+g_action_map_add_action_entries.user_data hidden="0"
+
 GMenuModel::items_changed has_emitter="1"
 g_menu_model_markup_parser_end transfer_ownership="1"
 g_menu_model_markup_parser_end_menu transfer_ownership="1"

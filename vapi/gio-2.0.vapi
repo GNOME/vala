@@ -47,17 +47,6 @@ namespace GLib {
 		public static bool is_unknown (string type);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
-	[Compact]
-	public class ActionEntry {
-		public weak GLib.Callback activate;
-		public weak GLib.Callback change_state;
-		public weak string name;
-		[CCode (array_length = false)]
-		public weak size_t[] padding;
-		public weak string parameter_type;
-		public weak string state;
-	}
-	[CCode (cheader_filename = "gio/gio.h")]
 	public class AppLaunchContext : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public AppLaunchContext ();
@@ -1461,13 +1450,13 @@ namespace GLib {
 		[CCode (has_construct_function = false)]
 		public SimpleAction.stateful (string name, GLib.VariantType parameter_type, GLib.Variant state);
 		[NoAccessorMethod]
-		public bool enabled { get; construct; }
+		public bool enabled { get; set; }
 		[NoAccessorMethod]
 		public string name { owned get; construct; }
 		[NoAccessorMethod]
 		public GLib.VariantType parameter_type { owned get; construct; }
 		[NoAccessorMethod]
-		public GLib.Variant state { owned get; construct; }
+		public GLib.Variant state { owned get; set; }
 		[NoAccessorMethod]
 		public GLib.VariantType state_type { owned get; }
 		public virtual signal void activate (GLib.Variant p0);
@@ -1931,10 +1920,10 @@ namespace GLib {
 		public abstract unowned GLib.Variant get_state ();
 		public abstract unowned GLib.Variant get_state_hint ();
 		public abstract unowned GLib.VariantType get_state_type ();
-		public bool enabled { get; construct; }
-		public string name { get; construct; }
-		public GLib.VariantType parameter_type { get; construct; }
-		public GLib.Variant state { get; construct; }
+		public bool enabled { get; }
+		public string name { get; }
+		public GLib.VariantType parameter_type { get; }
+		public GLib.Variant state { get; }
 		public GLib.VariantType state_type { get; }
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_cname = "GActionGroupInterface")]
@@ -1962,8 +1951,8 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface ActionMap : GLib.ActionGroup, GLib.Object {
 		public abstract void add_action (GLib.Action action);
-		public void add_action_entries (GLib.ActionEntry[] entries);
-		public abstract GLib.Action lookup_action (string action_name);
+		public void add_action_entries (GLib.ActionEntry[] entries, void* user_data);
+		public abstract unowned GLib.Action lookup_action (string action_name);
 		public abstract void remove_action (string action_name);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
@@ -2332,6 +2321,16 @@ namespace GLib {
 		public abstract bool should_automount ();
 		public signal void changed ();
 		public signal void removed ();
+	}
+	[CCode (cheader_filename = "gio/gio.h")]
+	public struct ActionEntry {
+		public weak string name;
+		public GLib.SimpleActionActivateCallback activate;
+		public weak string parameter_type;
+		public weak string state;
+		public GLib.SimpleActionChangeStateCallback change_state;
+		[CCode (array_length = false)]
+		public weak size_t[] padding;
 	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_APP_INFO_CREATE_")]
 	[Flags]
@@ -2922,6 +2921,10 @@ namespace GLib {
 	public delegate GLib.Variant SettingsBindSetMapping (GLib.Value value, GLib.VariantType expected_type);
 	[CCode (cheader_filename = "gio/gio.h")]
 	public delegate bool SettingsGetMapping (GLib.Variant value, void* result);
+	[CCode (cheader_filename = "gio/gio.h")]
+	public delegate void SimpleActionActivateCallback (GLib.SimpleAction action, GLib.Variant? parameter);
+	[CCode (cheader_filename = "gio/gio.h")]
+	public delegate void SimpleActionChangeStateCallback (GLib.SimpleAction action, GLib.Variant value);
 	[CCode (cheader_filename = "gio/gio.h", has_target = false)]
 	public delegate void SimpleAsyncThreadFunc (GLib.SimpleAsyncResult res, GLib.Object object, GLib.Cancellable? cancellable);
 	[CCode (cheader_filename = "gio/gio.h")]

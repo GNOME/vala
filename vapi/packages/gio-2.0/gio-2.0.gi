@@ -7858,10 +7858,10 @@
 					<parameter name="value" type="GVariant*"/>
 				</parameters>
 			</method>
-			<property name="enabled" type="gboolean" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="enabled" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="name" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="parameter-type" type="GVariantType*" readable="1" writable="1" construct="0" construct-only="1"/>
-			<property name="state" type="GVariant" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="state" type="GVariant" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="state-type" type="GVariantType*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<signal name="activate" when="LAST">
 				<return-type type="void"/>
@@ -10165,10 +10165,10 @@
 					<parameter name="action" type="GAction*"/>
 				</parameters>
 			</method>
-			<property name="enabled" type="gboolean" readable="1" writable="1" construct="0" construct-only="1"/>
-			<property name="name" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
-			<property name="parameter-type" type="GVariantType*" readable="1" writable="1" construct="0" construct-only="1"/>
-			<property name="state" type="GVariant" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="enabled" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="name" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="parameter-type" type="GVariantType*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="state" type="GVariant" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="state-type" type="GVariantType*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<vfunc name="activate">
 				<return-type type="void"/>
