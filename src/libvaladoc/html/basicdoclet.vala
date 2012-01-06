@@ -616,7 +616,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			write_package_note (node);
 		}
 
-		if (!(node is Method || node is Delegate)) { // avoids exception listings
+		if (!(node is Method || node is Delegate || node is Api.Signal)) { // avoids exception listings & implementations
 			if (node.has_children ({
 					Api.NodeType.ERROR_CODE,
 					Api.NodeType.ENUM_VALUE,
