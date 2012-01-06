@@ -180,92 +180,65 @@ public class Vala.CCodeTransformer : CodeTransformer {
 
 	public override void visit_do_statement (DoStatement stmt) {
 		// convert to simple loop
+		push_builder (new CodeBuilder (context, stmt, stmt.source_reference));
 
+		b.open_loop ();
 		// do not generate variable and if block if condition is always true
-		if (always_true (stmt.condition)) {
-			var loop = new Loop (stmt.body, stmt.source_reference);
-
-			var parent_block = (Block) stmt.parent_node;
-			context.analyzer.replaced_nodes.add (stmt);
-			parent_block.replace_statement (stmt, loop);
-
-			check (loop);
-			return;
+		if (!always_true (stmt.condition)) {
+			var notfirst = b.add_temp_declaration (null, expression ("false"));
+			b.open_if (expression (notfirst));
+			b.open_if (new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, stmt.condition, stmt.source_reference));
+			b.add_break ();
+			b.close ();
+			b.add_else ();
+			b.add_assignment (expression (notfirst), expression ("true"));
+			b.close ();
 		}
+		b.add_statement (stmt.body);
+		b.close ();
 
-		var block = new Block (stmt.source_reference);
-
-		var first_local = new LocalVariable (context.analyzer.bool_type.copy (), stmt.get_temp_name (), new BooleanLiteral (true, stmt.source_reference), stmt.source_reference);
-		block.add_statement (new DeclarationStatement (first_local, stmt.source_reference));
-
-		var if_condition = new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, stmt.condition, stmt.condition.source_reference);
-		var true_block = new Block (stmt.condition.source_reference);
-		true_block.add_statement (new BreakStatement (stmt.condition.source_reference));
-		var if_stmt = new IfStatement (if_condition, true_block, null, stmt.condition.source_reference);
-
-		var condition_block = new Block (stmt.condition.source_reference);
-		condition_block.add_statement (if_stmt);
-
-		var first_if = new IfStatement (new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, new MemberAccess.simple (first_local.name, stmt.source_reference), stmt.source_reference), condition_block, null, stmt.source_reference);
-		stmt.body.insert_statement (0, first_if);
-		var first_assign = new ExpressionStatement (new Assignment (new MemberAccess.simple (first_local.name, stmt.source_reference), new BooleanLiteral (false, stmt.source_reference), AssignmentOperator.SIMPLE, stmt.source_reference), stmt.source_reference);
-		stmt.body.insert_statement (1, first_assign);
-
-		block.add_statement (new Loop (stmt.body, stmt.source_reference));
-
-		var parent_block = (Block) stmt.parent_node;
+		var parent_block = context.analyzer.get_current_block (stmt);
 		context.analyzer.replaced_nodes.add (stmt);
-		parent_block.replace_statement (stmt, block);
+		parent_block.replace_statement (stmt, new EmptyStatement (stmt.source_reference));
 
 		stmt.body.checked = false;
-		check (block);
+		b.check (this);
+		pop_builder ();
 	}
 
 	public override void visit_for_statement (ForStatement stmt) {
 		// convert to simple loop
+		push_builder (new CodeBuilder (context, stmt, stmt.source_reference));
 
 		var block = new Block (stmt.source_reference);
 
 		// initializer
 		foreach (var init_expr in stmt.get_initializer ()) {
-			block.add_statement (new ExpressionStatement (init_expr, init_expr.source_reference));
+			b.add_expression (init_expr);
 		}
 
-		// do not generate if block if condition is always true
-		if (stmt.condition == null || always_true (stmt.condition)) {
-		} else if (always_false (stmt.condition)) {
-			// do not generate if block if condition is always false
-			stmt.body.insert_statement (0, new BreakStatement (stmt.condition.source_reference));
-		} else {
-			// condition
-			var if_condition = new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, stmt.condition, stmt.condition.source_reference);
-			var true_block = new Block (stmt.condition.source_reference);
-			true_block.add_statement (new BreakStatement (stmt.condition.source_reference));
-			var if_stmt = new IfStatement (if_condition, true_block, null, stmt.condition.source_reference);
-			stmt.body.insert_statement (0, if_stmt);
+		if (stmt.condition == null || !always_false (stmt.condition)) {
+			b.open_loop ();
+			if (stmt.condition != null && !always_true (stmt.condition)) {
+				b.open_if (new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, stmt.condition, stmt.source_reference));
+				b.add_break ();
+				b.close ();
+			}
+			b.add_statement (stmt.body);
+
+			foreach (var it_expr in stmt.get_iterator ()) {
+				b.add_expression (it_expr);
+			}
+			b.close ();
 		}
 
-		// iterator
-		var first_local = new LocalVariable (context.analyzer.bool_type.copy (), stmt.get_temp_name (), new BooleanLiteral (true, stmt.source_reference), stmt.source_reference);
-		block.add_statement (new DeclarationStatement (first_local, stmt.source_reference));
-
-		var iterator_block = new Block (stmt.source_reference);
-		foreach (var it_expr in stmt.get_iterator ()) {
-			iterator_block.add_statement (new ExpressionStatement (it_expr, it_expr.source_reference));
-		}
-
-		var first_if = new IfStatement (new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, new MemberAccess.simple (first_local.name, stmt.source_reference), stmt.source_reference), iterator_block, null, stmt.source_reference);
-		stmt.body.insert_statement (0, first_if);
-		stmt.body.insert_statement (1, new ExpressionStatement (new Assignment (new MemberAccess.simple (first_local.name, stmt.source_reference), new BooleanLiteral (false, stmt.source_reference), AssignmentOperator.SIMPLE, stmt.source_reference), stmt.source_reference));
-
-		block.add_statement (new Loop (stmt.body, stmt.source_reference));
-
-		var parent_block = (Block) stmt.parent_node;
+		var parent_block = context.analyzer.get_current_block (stmt);
 		context.analyzer.replaced_nodes.add (stmt);
-		parent_block.replace_statement (stmt, block);
+		parent_block.replace_statement (stmt, new EmptyStatement (stmt.source_reference));
 
 		stmt.body.checked = false;
-		check (block);
+		b.check (this);
+		pop_builder ();
 	}
 
 	public override void visit_foreach_statement (ForeachStatement stmt) {
@@ -384,60 +357,47 @@ public class Vala.CCodeTransformer : CodeTransformer {
 			} else {
 				// store parent_node as we need to replace the expression in the old parent node later on
 				var old_parent_node = expr.parent_node;
+				var formal_target_type = expr.target_type != null ? expr.target_type.copy () : null;
+				var target_type = expr.target_type != null ? expr.target_type.copy () : null;
+				push_builder (new CodeBuilder (context, expr.parent_statement, expr.source_reference));
 
-				var local = new LocalVariable (expr.value_type, expr.get_temp_name (), null, expr.source_reference);
-				var decl = new DeclarationStatement (local, expr.source_reference);
+				// FIXME: use create_temp_access behavior
+				var replacement = expression (b.add_temp_declaration (expr.value_type, expr, true));
 
-				expr.insert_statement (context.analyzer.get_current_block (expr), decl);
-
-
-				// don't set initializer earlier as this changes parent_node and parent_statement
-				local.initializer = expr;
-				check (decl);
-
-				var temp_access = SemanticAnalyzer.create_temp_access (local, expr.target_type);
-
-				// move temp variable to insert block to ensure
-				// variable is in the same block as the declarat
-				// otherwise there will be scoping issues in the
-				var block = context.analyzer.get_current_block (expr);
-				block.remove_local_variable (local);
-				context.analyzer.get_current_block (expr).add_local_variable (local);
-
+				replacement.target_type = target_type;
+				replacement.formal_target_type = formal_target_type;
 				context.analyzer.replaced_nodes.add (expr);
-				old_parent_node.replace_expression (expr, temp_access);
-				check (temp_access);
+				old_parent_node.replace_expression (expr, replacement);
+				b.check (this);
+				pop_builder ();
+				check (replacement);
 			}
 		}
 	}
 
 	public override void visit_conditional_expression (ConditionalExpression expr) {
 		// convert to if statement
+		Expression replacement = null;
+		var old_parent_node = expr.parent_node;
+		var formal_target_type = expr.target_type != null ? expr.target_type.copy () : null;
+		var target_type = expr.target_type != null ? expr.target_type.copy () : null;
+		push_builder (new CodeBuilder (context, expr.parent_statement, expr.source_reference));
 
-		var local = new LocalVariable (expr.value_type, expr.get_temp_name (), null, expr.source_reference);
-		var decl = new DeclarationStatement (local, expr.source_reference);
-		expr.insert_statement (context.analyzer.get_current_block (expr), decl);
-		check (decl);
+		var result = b.add_temp_declaration (expr.value_type);
+		b.open_if (expr.condition);
+		b.add_assignment (expression (result), expr.true_expression);
+		b.add_else ();
+		b.add_assignment (expression (result), expr.false_expression);
+		b.close ();
 
-		var true_stmt = new ExpressionStatement (new Assignment (new MemberAccess.simple (local.name, expr.true_expression.source_reference), expr.true_expression, AssignmentOperator.SIMPLE, expr.true_expression.source_reference), expr.true_expression.source_reference);
-		var true_block = new Block (expr.true_expression.source_reference);
-		true_block.add_statement (true_stmt);
-
-		var false_stmt = new ExpressionStatement (new Assignment (new MemberAccess.simple (local.name, expr.false_expression.source_reference), expr.false_expression, AssignmentOperator.SIMPLE, expr.false_expression.source_reference), expr.false_expression.source_reference);
-		var false_block = new Block (expr.false_expression.source_reference);
-		false_block.add_statement (false_stmt);
-
-		var if_stmt = new IfStatement (expr.condition, true_block, false_block, expr.source_reference);
-		expr.insert_statement (context.analyzer.get_current_block (expr), if_stmt);
-		check (if_stmt);
-
-		var ma = new MemberAccess.simple (local.name, expr.source_reference);
-		ma.formal_target_type = expr.formal_target_type;
-		ma.target_type = expr.target_type;
-
+		replacement = expression (result);
+		replacement.target_type = target_type;
+		replacement.formal_target_type = formal_target_type;
 		context.analyzer.replaced_nodes.add (expr);
-		expr.parent_node.replace_expression (expr, ma);
-		check (ma);
+		old_parent_node.replace_expression (expr, replacement);
+		b.check (this);
+		pop_builder ();
+		check (replacement);
 	}
 
 	public override void visit_binary_expression (BinaryExpression expr) {
@@ -499,7 +459,7 @@ public class Vala.CCodeTransformer : CodeTransformer {
 				push_builder (new CodeBuilder (context, expr.parent_statement, expr.source_reference));
 
 				// FIXME: use create_temp_access behavior
-				var replacement = expression (b.add_temp_declaration (expr.value_type, expr));
+				var replacement = expression (b.add_temp_declaration (expr.value_type, expr, true));
 
 				replacement.target_type = target_type;
 				context.analyzer.replaced_nodes.add (expr);
