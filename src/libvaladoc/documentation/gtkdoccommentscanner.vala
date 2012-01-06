@@ -331,25 +331,30 @@ public class Valadoc.Gtkdoc.Scanner {
 			} else {
 				id_len += id_len2 + separator_len;
 			}
-		} else if (this.pos.has_prefix ("->")) {
+		} else if (this.pos.has_prefix ("->") || this.pos.has_prefix (".")) {
 			unowned string sep_start = this.pos;
 			int sep_column_start = this.column;			
+			int separator_len = 1;
+
+			if (this.pos.has_prefix ("->")) {
+				separator_len = 2;
+				next_char ();	
+			}
 
 			next_char ();
-			next_char ();	
 
 			Token? func_token = function_prefix ();
 			if (func_token == null) {
 				int id_len2;
 
 				if ((id_len2 = id_prefix ()) > 0) {
-					id_len += 2 + id_len2;
+					id_len += separator_len + id_len2;
 				} else {
 					this.column = sep_column_start;
 					this.pos = sep_start;
 				}
 			} else {
-				id_len += 2 + func_token.content.length;
+				id_len += separator_len + func_token.content.length;
 			}
 		}
 

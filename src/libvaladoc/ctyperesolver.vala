@@ -70,7 +70,7 @@ public class Valadoc.CTypeResolver : Visitor {
 		return !last_was_underscore;
 	}
 
-	private string? translate_cname (string name) {
+	private string? translate_cname_to_g (string name) {
 		if (is_capitalized_and_underscored (name)) {
 			string[] segments = name.split ("_");
 			unowned string last_segment = segments[segments.length - 1];
@@ -143,7 +143,7 @@ public class Valadoc.CTypeResolver : Visitor {
 			return node;
 		}
 
-		string? alternative = translate_cname (_name);
+		string? alternative = translate_cname_to_g (_name);
 		if (alternative != null) {
 			return nodes.get (alternative);
 		}
@@ -160,6 +160,13 @@ public class Valadoc.CTypeResolver : Visitor {
 			return nodes.get ("g_dgettext");
 		} else if (name == "printf") {
 			return this.tree.search_symbol_str (null, "GLib.FileStream.printf");
+		}
+
+		int dotpos = _name.index_of_char ('.');
+		if (dotpos > 0) {
+			string fst = _name.substring (0, dotpos);
+			string snd = _name.substring (dotpos + 1);
+			return nodes.get (fst + ":" + snd);
 		}
 
 		return null;
@@ -283,7 +290,6 @@ public class Valadoc.CTypeResolver : Visitor {
 			string parent_cname = get_parent_type_cname (item);
 			if (parent_cname != null) {
 				register_symbol (parent_cname+"->"+item.get_cname (), item);
-				register_symbol (parent_cname+"."+item.get_cname (), item);
 			}
 		}
 	}
