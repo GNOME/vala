@@ -27,6 +27,8 @@ using Valadoc.Content;
 public class Valadoc.Taglets.Param : InlineContent, Taglet, Block {
 	public string parameter_name { internal set; get; }
 
+	public Api.Symbol? parameter { private set; get; }
+
 	public Rule? get_parser_rule (Rule run_rule) {
 		return Rule.seq ({
 			Rule.option ({ Rule.many ({ TokenType.SPACE }) }),
@@ -37,7 +39,31 @@ public class Valadoc.Taglets.Param : InlineContent, Taglet, Block {
 
 
 	public override void check (Api.Tree api_root, Api.Node container, ErrorReporter reporter, Settings settings) {
-		// TODO check for the existence of such a parameter
+		// Check for the existence of such a parameter
+
+		this.parameter = null;
+
+		if (parameter_name == "...") {
+			Gee.List<Api.Node> params = container.get_children_by_type (Api.NodeType.FORMAL_PARAMETER, false);
+			foreach (Api.Node param in params) {
+				if (((Api.FormalParameter) param).ellipsis) {
+					this.parameter = (Api.Symbol) param;
+					break;
+				}
+			}
+		} else {
+			Gee.List<Api.Node> params = container.get_children_by_types ({Api.NodeType.FORMAL_PARAMETER, Api.NodeType.TYPE_PARAMETER}, false);
+			foreach (Api.Node param in params) {
+				if (param.name == parameter_name) {
+					this.parameter = (Api.Symbol) param;
+					break;
+				}
+			}
+		}
+
+		if (this.parameter == null) {
+			reporter.simple_warning ("%s: Unknown parameter `%s'", container.get_full_name (), parameter_name);
+		}
 
 		base.check (api_root, container, reporter, settings);
 	}

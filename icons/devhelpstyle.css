@@ -202,6 +202,10 @@ h3.main_title {
 .main_parameter_table_text, .main_errordomain_table_text, .main_enum_table_text {
 }
 
+.main_parameter_table_unknown_parameter {
+	color: GREY;
+}
+
 .main_parameter_table_name, .main_errordomain_table_name, .main_enum_table_name {
 	vertical-align: top;
 	text-align: right;

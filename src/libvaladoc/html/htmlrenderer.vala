@@ -127,7 +127,12 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 			taglets,
 			(taglet) => {
 				var param = taglet as Taglets.Param;
-				writer.start_tag ("tr");
+				string[]? unknown_parameter_css = null;
+				if (param.parameter == null) {
+					unknown_parameter_css = {"class", "main_parameter_table_unknown_parameter"};
+				}
+
+				writer.start_tag ("tr", unknown_parameter_css);
 				writer.start_tag ("td", {"class", "main_parameter_table_name"}).text (param.parameter_name).end_tag ("td");
 				writer.start_tag ("td");
 				param.accept_children (this);
