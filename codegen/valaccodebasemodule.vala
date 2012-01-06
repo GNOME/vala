@@ -1709,19 +1709,27 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return result;
 	}
 
+	public bool no_implicit_copy (DataType type) {
+		// note: implicit copy of array is planned to be forbidden
+		var cl = type.data_type as Class;
+		return (type is DelegateType ||
+				type.is_array () ||
+				(cl != null && !cl.is_immutable && !is_reference_counting (cl) && !get_ccode_is_gboxed (cl)));
+	}
+
 	void capture_parameter (Parameter param, CCodeStruct data, int block_id) {
 		generate_type_declaration (param.variable_type, cfile);
 
 		var param_type = param.variable_type.copy ();
-		param_type.value_owned = true;
+		if (!param.variable_type.value_owned) {
+			param_type.value_owned = !no_implicit_copy (param.variable_type);
+		}
 		data.add_field (get_ccode_name (param_type), get_variable_cname (param.name));
-
-		bool is_unowned_delegate = param.variable_type is DelegateType && !param.variable_type.value_owned;
 
 		// create copy if necessary as captured variables may need to be kept alive
 		param.captured = false;
 		var value = load_parameter (param);
-		if (requires_copy (param_type) && !param.variable_type.value_owned && !is_unowned_delegate)  {
+		if (requires_copy (param_type) && !param.variable_type.value_owned) {
 			// directly access parameters in ref expressions
 			value = copy_value (value, param);
 		}
@@ -1974,11 +1982,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				foreach (var param in m.get_parameters ()) {
 					if (param.captured) {
 						var param_type = param.variable_type.copy ();
-						param_type.value_owned = true;
+						if (!param_type.value_owned) {
+							param_type.value_owned = !no_implicit_copy (param_type);
+						}
 
-						bool is_unowned_delegate = param.variable_type is DelegateType && !param.variable_type.value_owned;
-
-						if (requires_destroy (param_type) && !is_unowned_delegate) {
+						if (requires_destroy (param_type)) {
 							bool old_coroutine = false;
 							if (m != null) {
 								old_coroutine = m.coroutine;
@@ -1998,11 +2006,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				if (!acc.readable && acc.value_parameter.captured) {
 					var param_type = acc.value_parameter.variable_type.copy ();
-					param_type.value_owned = true;
+					if (!param_type.value_owned) {
+						param_type.value_owned = !no_implicit_copy (param_type);
+					}
 
 					bool is_unowned_delegate = acc.value_parameter.variable_type is DelegateType && !acc.value_parameter.variable_type.value_owned;
 
-					if (requires_destroy (param_type) && !is_unowned_delegate) {
+					if (requires_destroy (param_type)) {
 						ccode.add_expression (destroy_parameter (acc.value_parameter));
 					}
 				}
