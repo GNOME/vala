@@ -66,6 +66,7 @@ FLAVOUR skip=false
 *VERSION* skip=false
 PATH_RELATIVE skip=false
 PRIORITY_REDRAW skip=false
+KEY_* skip=false name="KEY_(.+)" parent="Clutter.Key"
 
 
 // Forward upstream
