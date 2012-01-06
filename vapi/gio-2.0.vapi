@@ -1444,11 +1444,11 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class SimpleAction : GLib.Object, GLib.Action {
 		[CCode (has_construct_function = false)]
-		public SimpleAction (string name, GLib.VariantType parameter_type);
+		public SimpleAction (string name, GLib.VariantType? parameter_type);
 		public void set_enabled (bool enabled);
 		public void set_state (GLib.Variant value);
 		[CCode (has_construct_function = false)]
-		public SimpleAction.stateful (string name, GLib.VariantType parameter_type, GLib.Variant state);
+		public SimpleAction.stateful (string name, GLib.VariantType? parameter_type, GLib.Variant state);
 		[NoAccessorMethod]
 		public bool enabled { get; set; }
 		[NoAccessorMethod]
@@ -1459,8 +1459,8 @@ namespace GLib {
 		public GLib.Variant state { owned get; set; }
 		[NoAccessorMethod]
 		public GLib.VariantType state_type { owned get; }
-		public virtual signal void activate (GLib.Variant p0);
-		public virtual signal void change_state (GLib.Variant p0);
+		public virtual signal void activate (GLib.Variant? p0);
+		public virtual signal void change_state (GLib.Variant? p0);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class SimpleActionGroup : GLib.Object, GLib.ActionGroup, GLib.ActionMap {

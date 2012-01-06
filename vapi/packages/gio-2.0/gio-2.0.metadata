@@ -480,3 +480,8 @@ g_dbus_server_new_sync.observer nullable="1" default_value="null"
 GSettingsBackend base_class="GObject"
 
 GUnixFDList hidden="1"
+
+g_simple_action_new.parameter_type nullable="1"
+g_simple_action_new_stateful.parameter_type nullable="1"
+GSimpleAction::activate.p0 nullable="1"
+GSimpleAction::change_state.p0 nullable="1"
