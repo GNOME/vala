@@ -32,6 +32,7 @@ namespace Clutter {
 		[CCode (cheader_filename = "clutter/clutter.h")]
 		public static void enter ();
 		[CCode (cheader_filename = "clutter/clutter.h")]
+		[Deprecated (since = "1.10")]
 		public static void init ();
 		[CCode (cheader_filename = "clutter/clutter.h")]
 		public static void leave ();
@@ -48,6 +49,7 @@ namespace Clutter {
 		[CCode (cheader_filename = "clutter/clutter.h")]
 		public static unowned Clutter.Color? get_color (GLib.Value value);
 		[CCode (cheader_filename = "clutter/clutter.h")]
+		[Deprecated (since = "1.10")]
 		public static unowned Cogl.Fixed? get_fixed (GLib.Value value);
 		[CCode (array_length_pos = 1.1, array_length_type = "gsize", cheader_filename = "clutter/clutter.h")]
 		public static unowned float[] get_shader_float (GLib.Value value);
@@ -60,6 +62,7 @@ namespace Clutter {
 		[CCode (cheader_filename = "clutter/clutter.h")]
 		public static void set_color (GLib.Value value, Clutter.Color color);
 		[CCode (cheader_filename = "clutter/clutter.h")]
+		[Deprecated (since = "1.10")]
 		public static void set_fixed (GLib.Value value, Cogl.Fixed fixed_);
 		[CCode (cheader_filename = "clutter/clutter.h")]
 		public static void set_shader_float (GLib.Value value, [CCode (array_length_cname = "size", array_length_pos = 1.5, type = "gfloat*")] float[] floats);
@@ -108,6 +111,8 @@ namespace Clutter {
 		public Pango.Context create_pango_context ();
 		public Pango.Layout create_pango_layout (string text);
 		public void detach_animation ();
+		[CCode (cname = "clutter_actor_event")]
+		public bool emit_event (Clutter.Event event, bool capture);
 		public void get_abs_allocation_vertices ([CCode (array_length = false)] out Clutter.Vertex[] verts);
 		public virtual unowned Atk.Object get_accessible ();
 		public unowned Clutter.Action get_action (string name);
@@ -130,6 +135,7 @@ namespace Clutter {
 		public GLib.List<weak Clutter.Effect> get_effects ();
 		public bool get_fixed_position_set ();
 		public Clutter.ActorFlags get_flags ();
+		[Deprecated (since = "1.10")]
 		public Clutter.Geometry get_geometry ();
 		[Deprecated (since = "1.8")]
 		public uint32 get_gid ();
@@ -170,7 +176,10 @@ namespace Clutter {
 		public float get_y ();
 		public Clutter.Gravity get_z_rotation_gravity ();
 		public void grab_key_focus ();
+		public bool has_actions ();
 		public bool has_allocation ();
+		public bool has_constraints ();
+		public bool has_effects ();
 		public bool has_key_focus ();
 		public virtual bool has_overlaps ();
 		public virtual void hide_all ();
@@ -203,6 +212,7 @@ namespace Clutter {
 		public void set_depth (float depth);
 		public void set_fixed_position_set (bool is_set);
 		public void set_flags (Clutter.ActorFlags flags);
+		[Deprecated (since = "1.10")]
 		public void set_geometry (Clutter.Geometry geometry);
 		public void set_height (float height);
 		public void set_name (string name);
@@ -328,7 +338,6 @@ namespace Clutter {
 		[HasEmitter]
 		public virtual signal void destroy ();
 		public virtual signal bool enter_event (Clutter.CrossingEvent event);
-		[HasEmitter]
 		public virtual signal bool event (Clutter.Event event);
 		[HasEmitter]
 		public virtual signal void hide ();
@@ -802,7 +811,7 @@ namespace Clutter {
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
 		public Clone (Clutter.Actor source);
 		public unowned Clutter.Actor get_source ();
-		public void set_source (Clutter.Actor source);
+		public void set_source (Clutter.Actor? source);
 		public Clutter.Actor source { get; set construct; }
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_colorize_effect_get_type ()")]
@@ -853,8 +862,6 @@ namespace Clutter {
 		public virtual unowned Clutter.InputDevice get_core_device (Clutter.InputDeviceType device_type);
 		public static unowned Clutter.DeviceManager get_default ();
 		public virtual unowned Clutter.InputDevice get_device (int device_id);
-		[NoWrapper]
-		public virtual unowned GLib.SList<Clutter.InputDevice> get_devices ();
 		public GLib.SList<weak Clutter.InputDevice> list_devices ();
 		public unowned GLib.SList<Clutter.InputDevice> peek_devices ();
 		[NoWrapper]
@@ -1024,7 +1031,7 @@ namespace Clutter {
 		protected InputDevice ();
 		public unowned Clutter.InputDevice get_associated_device ();
 		public Clutter.InputAxis get_axis (uint index_);
-		public bool get_axis_value ([CCode (array_length = false, array_null_terminated = true)] double[] axes, Clutter.InputAxis axis, out double value);
+		public bool get_axis_value ([CCode (array_length = false)] double[] axes, Clutter.InputAxis axis, out double value);
 		public void get_device_coords (out int x, out int y);
 		public int get_device_id ();
 		public Clutter.InputMode get_device_mode ();
@@ -1032,7 +1039,9 @@ namespace Clutter {
 		public Clutter.InputDeviceType get_device_type ();
 		public bool get_enabled ();
 		[CCode (cname = "clutter_get_input_device_for_id")]
+		[Deprecated (since = "1.10")]
 		public static unowned Clutter.InputDevice get_for_id (int id_);
+		public unowned Clutter.Actor get_grabbed_actor ();
 		public bool get_has_cursor ();
 		public bool get_key (uint index_, out uint keyval, out Clutter.ModifierType modifiers);
 		public uint get_n_axes ();
@@ -1040,8 +1049,10 @@ namespace Clutter {
 		public unowned Clutter.Actor get_pointer_actor ();
 		public unowned Clutter.Stage get_pointer_stage ();
 		public GLib.List<weak Clutter.InputDevice> get_slave_devices ();
+		public void grab (Clutter.Actor actor);
 		public void set_enabled (bool enabled);
 		public void set_key (uint index_, uint keyval, Clutter.ModifierType modifiers);
+		public void ungrab ();
 		public void update_from_event (Clutter.Event event, bool update_stage);
 		[NoAccessorMethod]
 		public Clutter.Backend backend { owned get; construct; }
@@ -1220,7 +1231,7 @@ namespace Clutter {
 		public void union (Clutter.PaintVolume another_pv);
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", lower_case_csuffix = "param_units", type_id = "clutter_param_units_get_type ()")]
-	public class ParamSpecUnit {
+	public class ParamSpecUnit : GLib.ParamSpec {
 		[CCode (has_construct_function = false)]
 		protected ParamSpecUnit ();
 	}
@@ -1362,6 +1373,8 @@ namespace Clutter {
 		public uint fontconfig_timestamp { set; }
 		[NoAccessorMethod]
 		public int long_press_duration { get; set; }
+		[NoAccessorMethod]
+		public uint password_hint_time { get; set; }
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_shader_get_type ()")]
 	[Deprecated (since = "1.8")]
@@ -1371,6 +1384,7 @@ namespace Clutter {
 		public Shader ();
 		[Deprecated (since = "1.8")]
 		public bool compile () throws GLib.Error;
+		public static GLib.Quark error_quark ();
 		[Deprecated (since = "1.8")]
 		public unowned Cogl.Handle get_cogl_fragment_shader ();
 		[Deprecated (since = "1.8")]
@@ -1414,24 +1428,26 @@ namespace Clutter {
 		public ShaderEffect (Clutter.ShaderType shader_type);
 		public unowned Cogl.Handle get_program ();
 		public unowned Cogl.Handle get_shader ();
+		[NoWrapper]
+		public virtual string get_static_shader_source ();
 		public bool set_shader_source (string source);
 		public void set_uniform_value (string name, GLib.Value value);
 		public Clutter.ShaderType shader_type { construct; }
 	}
-	[CCode (cheader_filename = "clutter/clutter.h")]
-	[Compact]
+	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_shader_float_get_type ()")]
 	public class ShaderFloat {
-		public static GLib.Type get_type ();
+		[CCode (has_construct_function = false)]
+		protected ShaderFloat ();
 	}
-	[CCode (cheader_filename = "clutter/clutter.h")]
-	[Compact]
+	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_shader_int_get_type ()")]
 	public class ShaderInt {
-		public static GLib.Type get_type ();
+		[CCode (has_construct_function = false)]
+		protected ShaderInt ();
 	}
-	[CCode (cheader_filename = "clutter/clutter.h")]
-	[Compact]
+	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_shader_matrix_get_type ()")]
 	public class ShaderMatrix {
-		public static GLib.Type get_type ();
+		[CCode (has_construct_function = false)]
+		protected ShaderMatrix ();
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_snap_constraint_get_type ()")]
 	public class SnapConstraint : Clutter.Constraint {
@@ -1462,6 +1478,7 @@ namespace Clutter {
 		public bool get_accept_focus ();
 		public unowned Clutter.Actor get_actor_at_pos (Clutter.PickMode pick_mode, int x, int y);
 		public Clutter.Color get_color ();
+		[Deprecated (since = "1.10")]
 		public static unowned Clutter.Stage get_default ();
 		public Clutter.Fog get_fog ();
 		public bool get_fullscreen ();
@@ -1477,9 +1494,11 @@ namespace Clutter {
 		public bool get_use_fog ();
 		public bool get_user_resizable ();
 		public void hide_cursor ();
+		[Deprecated (since = "1.10")]
 		public bool is_default ();
+		[Deprecated (since = "1.10")]
 		public void queue_redraw ();
-		[CCode (array_length = false, array_null_terminated = true)]
+		[CCode (array_length = false)]
 		public uint8[] read_pixels (int x, int y, int width = -1, int height = -1);
 		[CCode (cname = "clutter_redraw")]
 		public void redraw ();
@@ -1672,6 +1691,8 @@ namespace Clutter {
 		public void set_single_line_mode (bool single_line);
 		public void set_text (string text);
 		public void set_use_markup (bool setting);
+		[CCode (cname = "clutter_text_activate")]
+		public bool try_activate ();
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
 		public Text.with_text (string? font_name, string text);
 		public bool activatable { get; set; }
@@ -1705,7 +1726,6 @@ namespace Clutter {
 		public bool single_line_mode { get; set; }
 		public string text { get; set; }
 		public bool use_markup { get; set; }
-		[HasEmitter]
 		public virtual signal void activate ();
 		public virtual signal void cursor_event (Clutter.Geometry geometry);
 		[HasEmitter]
@@ -1733,13 +1753,13 @@ namespace Clutter {
 		public Cogl.PixelFormat get_pixel_format ();
 		public void get_repeat (out bool repeat_x, out bool repeat_y);
 		public bool get_sync_size ();
-		public bool set_area_from_rgb_data ([CCode (array_length = false, array_null_terminated = true)] uint8[] data, bool has_alpha, int x, int y, int width, int height, int rowstride, int bpp, Clutter.TextureFlags flags) throws GLib.Error;
+		public bool set_area_from_rgb_data ([CCode (array_length = false)] uint8[] data, bool has_alpha, int x, int y, int width, int height, int rowstride, int bpp, Clutter.TextureFlags flags) throws GLib.Error;
 		public void set_cogl_material (Cogl.Handle cogl_material);
 		public void set_cogl_texture (Cogl.Handle cogl_tex);
 		public void set_filter_quality (Clutter.TextureQuality filter_quality);
 		public bool set_from_file (string filename) throws GLib.Error;
-		public bool set_from_rgb_data ([CCode (array_length = false, array_null_terminated = true)] uint8[] data, bool has_alpha, int width, int height, int rowstride, int bpp, Clutter.TextureFlags flags) throws GLib.Error;
-		public bool set_from_yuv_data ([CCode (array_length = false, array_null_terminated = true)] uint8[] data, int width, int height, Clutter.TextureFlags flags) throws GLib.Error;
+		public bool set_from_rgb_data ([CCode (array_length = false)] uint8[] data, bool has_alpha, int width, int height, int rowstride, int bpp, Clutter.TextureFlags flags) throws GLib.Error;
+		public bool set_from_yuv_data ([CCode (array_length = false)] uint8[] data, int width, int height, Clutter.TextureFlags flags) throws GLib.Error;
 		public void set_keep_aspect_ratio (bool keep_aspect);
 		public void set_load_async (bool load_async);
 		public void set_load_data_async (bool load_async);
@@ -1787,7 +1807,7 @@ namespace Clutter {
 		public double get_progress ();
 		public bool has_marker (string marker_name);
 		public bool is_playing ();
-		[CCode (array_length_pos = 1.1, array_length_type = "gsize")]
+		[CCode (array_length_pos = 1.1, array_length_type = "gsize", array_null_terminated = true)]
 		public string[] list_markers (int msecs);
 		public void pause ();
 		public void remove_marker (string marker_name);
@@ -1838,6 +1858,9 @@ namespace Clutter {
 		public void child_get_property (Clutter.Actor child, string property, GLib.Value value);
 		public void child_set (Clutter.Actor actor, ...);
 		public void child_set_property (Clutter.Actor child, string property, GLib.Value value);
+		public static unowned GLib.ParamSpec class_find_child_property (GLib.ObjectClass klass, string property_name);
+		[CCode (array_length_pos = 1.1, array_length_type = "guint")]
+		public static GLib.ParamSpec[] class_list_child_properties (GLib.ObjectClass klass);
 		public virtual void create_child_meta (Clutter.Actor actor);
 		public virtual void destroy_child_meta (Clutter.Actor actor);
 		public unowned Clutter.Actor find_child_by_name (string child_name);
@@ -2161,7 +2184,8 @@ namespace Clutter {
 	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_ALIGN_")]
 	public enum AlignAxis {
 		X_AXIS,
-		Y_AXIS
+		Y_AXIS,
+		BOTH
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_")]
 	[Flags]
@@ -2436,6 +2460,12 @@ namespace Clutter {
 		LEFT,
 		RIGHT
 	}
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_SHADER_ERROR_")]
+	public enum ShaderError {
+		NO_ASM,
+		NO_GLSL,
+		COMPILE
+	}
 	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_")]
 	public enum ShaderType {
 		VERTEX_SHADER,
@@ -2572,13 +2602,6 @@ namespace Clutter {
 		VALUE;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_SHADER_ERROR_")]
-	public errordomain ShaderError {
-		NO_ASM,
-		NO_GLSL,
-		COMPILE;
-		public static GLib.Quark quark ();
-	}
 	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_TEXTURE_ERROR_")]
 	public errordomain TextureError {
 		OUT_OF_MEMORY,
@@ -2606,27 +2629,27 @@ namespace Clutter {
 	public delegate bool ProgressFunc (GLib.Value a, GLib.Value b, double progress, GLib.Value retval);
 	[CCode (cheader_filename = "clutter/clutter.h", instance_pos = 6.9)]
 	public delegate void ScriptConnectFunc (Clutter.Script script, GLib.Object object, string signal_name, string handler_name, GLib.Object connect_object, GLib.ConnectFlags flags);
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_COGL")]
 	public const string COGL;
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_CURRENT_TIME")]
 	public const int CURRENT_TIME;
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_FLAVOUR")]
 	public const string FLAVOUR;
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_MAJOR_VERSION")]
 	public const int MAJOR_VERSION;
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_MICRO_VERSION")]
 	public const int MICRO_VERSION;
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_MINOR_VERSION")]
 	public const int MINOR_VERSION;
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_PATH_RELATIVE")]
 	public const int PATH_RELATIVE;
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_PRIORITY_REDRAW")]
 	public const int PRIORITY_REDRAW;
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_VERSION")]
 	public const double VERSION;
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_VERSION_HEX")]
 	public const int VERSION_HEX;
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_VERSION_S")]
 	public const string VERSION_S;
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public static void base_init ();
@@ -2635,6 +2658,9 @@ namespace Clutter {
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public static bool check_version (uint major, uint minor, uint micro);
 	[CCode (cheader_filename = "clutter/clutter.h")]
+	public static bool check_windowing_backend (string backend_type);
+	[CCode (cheader_filename = "clutter/clutter.h")]
+	[Deprecated (since = "1.10")]
 	public static void clear_glyph_cache ();
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public static void do_event (Clutter.Event event);
@@ -2647,6 +2673,7 @@ namespace Clutter {
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public static uint32 get_current_event_time ();
 	[CCode (cheader_filename = "clutter/clutter.h")]
+	[Deprecated (since = "1.10")]
 	public static bool get_debug_enabled ();
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public static unowned Clutter.Backend get_default_backend ();
@@ -2655,6 +2682,7 @@ namespace Clutter {
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public static Clutter.TextDirection get_default_text_direction ();
 	[CCode (cheader_filename = "clutter/clutter.h")]
+	[Deprecated (since = "1.10")]
 	public static Clutter.FontFlags get_font_flags ();
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public static unowned Pango.FontMap get_font_map ();
@@ -2672,14 +2700,17 @@ namespace Clutter {
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public static unowned string get_script_id (GLib.Object gobject);
 	[CCode (cheader_filename = "clutter/clutter.h")]
+	[Deprecated (since = "1.10")]
 	public static bool get_show_fps ();
 	[CCode (cheader_filename = "clutter/clutter.h")]
+	[Deprecated (since = "1.10")]
 	public static ulong get_timestamp ();
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public static void grab_keyboard (Clutter.Actor actor);
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public static void grab_pointer (Clutter.Actor actor);
 	[CCode (cheader_filename = "clutter/clutter.h")]
+	[Deprecated (since = "1.10")]
 	public static void grab_pointer_for_device (Clutter.Actor actor, int id_);
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public static Clutter.InitError init ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] ref unowned string[]? argv);
@@ -2694,8 +2725,10 @@ namespace Clutter {
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public static void main_quit ();
 	[CCode (cheader_filename = "clutter/clutter.h")]
+	[Deprecated (since = "1.10")]
 	public static void set_default_frame_rate (uint frames_per_sec);
 	[CCode (cheader_filename = "clutter/clutter.h")]
+	[Deprecated (since = "1.10")]
 	public static void set_font_flags (Clutter.FontFlags flags);
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	[Deprecated (since = "1.8")]
@@ -2711,5 +2744,8 @@ namespace Clutter {
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public static void ungrab_pointer ();
 	[CCode (cheader_filename = "clutter/clutter.h")]
+	[Deprecated (since = "1.10")]
 	public static void ungrab_pointer_for_device (int id_);
+	[CCode (cheader_filename = "clutter/clutter.h")]
+	public static uint unicode_to_keysym (uint32 wc);
 }

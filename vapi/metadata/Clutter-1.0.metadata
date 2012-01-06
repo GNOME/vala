@@ -1,6 +1,8 @@
 // Vala specific
 Event.type#method name="get_type"
 Actor
+	.event#method name="emit_event"
+	.get_paint_volume#method skip
 	.queue_redraw#signal skip
 	.queue_redraw#virtual_method skip
 	.has_pointer#method name="get_has_pointer"
@@ -40,6 +42,7 @@ value_set_shader_float.floats array array_length_idx=1
 value_set_shader_int.ints array array_length_idx=1
 value_set_shader_matrix.matrix array array_length_idx=1
 Text
+	.activate#method name="try_activate"
 	.insert_text#signal skip
 	.position_to_coords.line_height default=null
 Vertex.new skip
