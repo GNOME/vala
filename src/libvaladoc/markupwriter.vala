@@ -38,7 +38,7 @@ public class Valadoc.MarkupWriter {
 		unowned string pos;
 		unichar c;
 
-		for (pos = txt; (c = pos.get_char ()) != '\0'  ; pos = pos.next_char ()) {
+		for (pos = txt; (c = pos.get_char ()) != '\0'; pos = pos.next_char ()) {
 			switch (c) {
 			case '"':
 				builder.append_len (start, (ssize_t) ((char*) pos - (char*) start));

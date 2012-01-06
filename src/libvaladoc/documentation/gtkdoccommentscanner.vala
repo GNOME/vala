@@ -134,6 +134,51 @@ public class Valadoc.Gtkdoc.Scanner {
 	public Scanner () {
 	}
 
+	public static string unescape (string txt) {
+		StringBuilder builder = new StringBuilder ();
+		unowned string start = txt;
+		unowned string pos;
+		unichar c;
+
+		for (pos = txt; (c = pos.get_char ()) != '\0'; pos = pos.next_char ()) {
+			if (c == '&') {
+				if (pos.has_prefix ("&solidus;")) {
+					builder.append_len (start, (ssize_t) ((char*) pos - (char*) start));
+					start = (string) ((char*) pos + 9);
+					pos = (string) ((char*) pos + 8);
+					builder.append_unichar ('⁄');
+				} else if (pos.has_prefix ("&ast;")) {
+					builder.append_len (start, (ssize_t) ((char*) pos - (char*) start));
+					start = (string) ((char*) pos + 5);
+					pos = (string) ((char*) pos + 4);
+					builder.append_c ('*');
+				} else if (pos.has_prefix ("&pi;")) {
+					builder.append_len (start, (ssize_t) ((char*) pos - (char*) start));
+					start = (string) ((char*) pos + 4);
+					pos = (string) ((char*) pos + 3);
+					builder.append_unichar ('π');
+				} else if (pos.has_prefix ("&lt;")) {
+					builder.append_len (start, (ssize_t) ((char*) pos - (char*) start));
+					start = (string) ((char*) pos + 4);
+					pos = (string) ((char*) pos + 3);
+					builder.append_c ('<');
+				} else if (pos.has_prefix ("&gt;")) {
+					builder.append_len (start, (ssize_t) ((char*) pos - (char*) start));
+					start = (string) ((char*) pos + 4);
+					pos = (string) ((char*) pos + 3);
+					builder.append_c ('>');
+				}
+			}
+		} 
+
+		if (&txt == &start) {
+			return txt;
+		} else {
+			builder.append_len (start, (ssize_t) ((char*) pos - (char*) start));
+			return (owned) builder.str;
+		}
+	}
+
 	public void reset (string content) {
 		this.content = content;
 		this.tmp_token = null;
@@ -396,7 +441,7 @@ public class Valadoc.Gtkdoc.Scanner {
 						next_char ();
 						next_char ();
 						next_char ();
-						return new Token (TokenType.WORD, content, null, start, offset (this.pos, start), this.line, column_start, this.column);
+						return new Token (TokenType.WORD, unescape (content), null, start, offset (this.pos, start), this.line, column_start, this.column);
 					}
 				}
 			}
@@ -549,7 +594,7 @@ public class Valadoc.Gtkdoc.Scanner {
 			return null;
 		}
 
-		return new Token (TokenType.WORD, start.substring (0, len), null, start, offset (this.pos, start), this.line, column_start, this.column);
+		return new Token (TokenType.WORD, unescape (start.substring (0, len)), null, start, offset (this.pos, start), this.line, column_start, this.column);
 	}
 
 	private Token? gtkdoc_source_open_prefix () {
