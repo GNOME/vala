@@ -27,7 +27,9 @@ using Valadoc.Content;
 public class Valadoc.Taglets.Param : InlineContent, Taglet, Block {
 	public string parameter_name { internal set; get; }
 
-	public Api.Symbol? parameter { private set; get; }
+	public weak Api.Symbol? parameter { private set; get; }
+
+	public int position { private set; get; default = -1; }
 
 	public Rule? get_parser_rule (Rule run_rule) {
 		return Rule.seq ({
@@ -40,7 +42,6 @@ public class Valadoc.Taglets.Param : InlineContent, Taglet, Block {
 
 	public override void check (Api.Tree api_root, Api.Node container, ErrorReporter reporter, Settings settings) {
 		// Check for the existence of such a parameter
-
 		this.parameter = null;
 
 		if (parameter_name == "...") {
@@ -48,16 +49,22 @@ public class Valadoc.Taglets.Param : InlineContent, Taglet, Block {
 			foreach (Api.Node param in params) {
 				if (((Api.FormalParameter) param).ellipsis) {
 					this.parameter = (Api.Symbol) param;
+					this.position = params.size - 1;
 					break;
 				}
 			}
 		} else {
 			Gee.List<Api.Node> params = container.get_children_by_types ({Api.NodeType.FORMAL_PARAMETER, Api.NodeType.TYPE_PARAMETER}, false);
+			int pos = 0;
+
 			foreach (Api.Node param in params) {
 				if (param.name == parameter_name) {
 					this.parameter = (Api.Symbol) param;
+					this.position = pos;
 					break;
 				}
+
+				pos++;
 			}
 		}
 

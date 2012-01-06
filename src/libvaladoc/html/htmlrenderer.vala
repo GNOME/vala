@@ -115,6 +115,38 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 		element.accept_children (this);
 
 		taglets = element.find_taglets ((Api.Node) _container, typeof (Taglets.Param));
+		taglets.sort ((_a, _b) => {
+			Taglets.Param a = _a as Taglets.Param;
+			Taglets.Param b = _b as Taglets.Param;
+
+			if (a.position < 0 && b.position < 0) {
+				int cmp = a.parameter_name.ascii_casecmp (b.parameter_name);
+				if (cmp == 0) {
+					return 0;
+				}
+
+				if (a.parameter_name == "...") {
+					return 1;
+				}
+
+				if (b.parameter_name == "...") {
+					return -1;
+				}
+
+				return cmp;
+			}
+
+			if (a.position < 0) {
+				return 1;
+			}
+
+			if (b.position < 0) {
+				return -1;
+			}
+
+			return a.position - b.position;
+		});
+
 		write_taglets (
 			() => {
 				writer.start_tag ("h2", {"class", "main_title"}).text ("Parameters:").end_tag ("h2");
