@@ -1,6 +1,6 @@
 /* htmlrenderer.vala
  *
- * Copyright (C) 2008-2009 Florian Brosch, Didier Villevalois
+ * Copyright (C) 2008-20012 Florian Brosch, Didier Villevalois
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,6 +26,7 @@ using Valadoc.Content;
 public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 
 	protected Documentation? _container;
+	protected Documentation? _owner;
 	protected unowned MarkupWriter writer;
 	protected Html.CssClassResolver cssresolver;
 	protected LinkHelper linker;
@@ -39,6 +40,10 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 
 	public void set_container (Documentation? container) {
 		_container = container;
+	}
+
+	public void set_owner (Documentation? owner) {
+		_owner = owner;
 	}
 
 	public void set_writer (MarkupWriter writer) {
@@ -64,12 +69,16 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 	}
 
 	private void write_resolved_symbol_link (Api.Node symbol, string? given_label) {
-		var label = (given_label == null || given_label == "") ? symbol.get_full_name () : given_label;
-		var url = get_url (symbol);
-		if (url == null) {
-			write_unresolved_symbol_link (label);
+		if (symbol == _container || symbol == _owner) {
+			writer.start_tag ("span", {"css", cssresolver.resolve (symbol)}).text (symbol.name).end_tag ("span");
 		} else {
-			writer.link (url, label, cssresolver.resolve (symbol));
+			var label = (given_label == null || given_label == "") ? symbol.get_full_name () : given_label;
+			var url = get_url (symbol);
+			if (url == null) {
+				write_unresolved_symbol_link (label);
+			} else {
+				writer.link (url, label, cssresolver.resolve (symbol));
+			}
 		}
 	}
 

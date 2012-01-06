@@ -382,7 +382,9 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			writer.start_tag ("span", {"class", css_brief_description});
 
 			_renderer.set_container (pos);
+			_renderer.set_owner (element);
 			_renderer.render_children (description.get (0));
+			_renderer.set_owner (null);
 
 			writer.end_tag ("span");
 		}
@@ -399,6 +401,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 
 		writer.start_tag ("div", {"class", css_description});
+		_renderer.set_owner (element);
 
 		// deprecation warning:
 		if (deprecated != null) {
@@ -439,6 +442,8 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			_renderer.render (doctree);
 		}
 
+
+		_renderer.set_owner (null);
 		writer.end_tag ("div");
 	}
 
