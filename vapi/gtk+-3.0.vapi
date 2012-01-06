@@ -5864,6 +5864,7 @@ namespace Gtk {
 		public void set_type_hint (Gdk.WindowTypeHint hint);
 		public void set_urgency_hint (bool setting);
 		public void set_wmclass (string wmclass_name, string wmclass_class);
+		public void setup_persistent_state (GLib.Settings settings, string child_name);
 		public void stick ();
 		public void unfullscreen ();
 		public void unmaximize ();

@@ -28366,6 +28366,14 @@
 					<parameter name="wmclass_class" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="setup_persistent_state" symbol="gtk_window_setup_persistent_state">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="window" type="GtkWindow*"/>
+					<parameter name="settings" type="GSettings*"/>
+					<parameter name="child_name" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="stick" symbol="gtk_window_stick">
 				<return-type type="void"/>
 				<parameters>
