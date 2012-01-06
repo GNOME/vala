@@ -31,7 +31,7 @@ public delegate void Valadoc.TagletRegisterFunction (ModuleLoader loader);
 
 
 public class Valadoc.ModuleLoader : Object {
-	public HashMap<string, GLib.Type> taglets = new HashMap<string, Type> (GLib.str_hash, GLib.str_equal);
+	public HashMap<string, GLib.Type> taglets = new HashMap<string, GLib.Type> (GLib.str_hash, GLib.str_equal);
 
 	private Module drivermodule;
 	private Type drivertype;
@@ -40,6 +40,12 @@ public class Valadoc.ModuleLoader : Object {
 	private Module docletmodule;
 	private Type doclettype;
 	public Doclet doclet;
+
+	~ModuleLoader () {
+		// TODO: Why Do I have to do this?
+		driver = null;
+		doclet = null;
+	}
 
 	public Content.Taglet? create_taglet (string keyword) {
 		return (taglets.has_key (keyword))? (Content.Taglet) GLib.Object.new (taglets.get (keyword)) : null;
