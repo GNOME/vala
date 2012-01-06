@@ -92,6 +92,8 @@ public class Valadoc.Api.Signal : Member {
 			signature.append_keyword ("virtual");
 		}
 
+		signature.append_keyword ("signal");
+
 		signature.append_content (return_type.signature);
 		signature.append_symbol (this);
 		signature.append ("(");
