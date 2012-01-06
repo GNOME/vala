@@ -582,11 +582,12 @@ public class Valadoc.Gtkdoc.Scanner {
 	private Token? word_prefix () {
 		unowned string start = this.pos;
 		int column_start = this.column;
-		if (get () == '<') {
+		unichar c = get ();
+		if (c == '<' || c == '@') {
 			next_char ();
 		}
 
-		for (unichar c = get (); c != ' ' && c != '\t' && c != '\n' && c != '\0' && c != '<'; c = next_char ());
+		for (c = get (); c != ' ' && c != '\t' && c != '\n' && c != '\0' && c != '<' && c != '@'; c = next_char ());
 		int len = offset (this.pos, start);
 		if (len == 0) {
 			this.column = column_start;

@@ -80,6 +80,13 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 				continue;
 			}
 
+			// ignore numbers
+			if (cmp0.get (1).isdigit ()) {
+				offset = offset + 2;
+				continue;
+			}
+
+
 			Text sec = factory.create_text (text.content.substring (offset+1, -1));
 			text.content = text.content.substring (0, offset+1);
 			return sec;
