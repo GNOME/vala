@@ -3914,8 +3914,10 @@ namespace GLib {
 		public HashTable.full (HashFunc<K>? hash_func, EqualFunc<K>? key_equal_func, DestroyNotify? key_destroy_func, DestroyNotify? value_destroy_func);
 		public void insert (owned K key, owned V value);
 		public void replace (owned K key, owned V value);
+		public void add (owned K key);
 		public unowned V? lookup (K key);
 		public bool lookup_extended (K lookup_key, out unowned K orig_key, out unowned V value);
+		public bool contains (K key);
 		public bool remove (K key);
 		public void remove_all ();
 		[CCode (cname = "g_hash_table_lookup")]
