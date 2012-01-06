@@ -44,6 +44,9 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 
 	private string[]? comment_lines;
 
+	private Regex? normalize_regex = null;
+
+
 	private void reset (Api.SourceComment comment) {
 		this.scanner.reset (comment.content);
 		this.show_warnings = !comment.file.package.is_package || settings.verbose;
@@ -52,6 +55,17 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		this.comment = comment;
 		this.current = null;
 		this.stack.clear ();
+	}
+
+	private string normalize (string text) {
+		try {
+			if (normalize_regex == null) {
+				normalize_regex = new Regex ("( |\n|\t)+");
+			}
+			return normalize_regex.replace (text, -1, 0, " ");
+		} catch (RegexError e) {
+			assert_not_reached ();
+		}
 	}
 
 	private inline Text? split_text (Text text) {
@@ -395,7 +409,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		if (builder.len == 0) {
 			link.content.add (factory.create_text (url));
 		} else {
-			link.content.add (factory.create_text (builder.str));
+			link.content.add (factory.create_text (normalize (builder.str)));
 		}
 
 		if (!check_xml_close_tag (tagname)) {
