@@ -147,6 +147,36 @@ public class Valadoc.Gtkdoc.Scanner {
 					start = (string) ((char*) pos + 9);
 					pos = (string) ((char*) pos + 8);
 					builder.append_unichar ('⁄');
+				} else if (pos.has_prefix ("&percnt;")) {
+					builder.append_len (start, (ssize_t) ((char*) pos - (char*) start));
+					start = (string) ((char*) pos + 8);
+					pos = (string) ((char*) pos + 7);
+					builder.append_c ('%');
+				} else if (pos.has_prefix ("&commat;")) {
+					builder.append_len (start, (ssize_t) ((char*) pos - (char*) start));
+					start = (string) ((char*) pos + 8);
+					pos = (string) ((char*) pos + 7);
+					builder.append_c ('@');
+				} else if (pos.has_prefix ("&lpar;")) {
+					builder.append_len (start, (ssize_t) ((char*) pos - (char*) start));
+					start = (string) ((char*) pos + 6);
+					pos = (string) ((char*) pos + 5);
+					builder.append_c ('(');
+				} else if (pos.has_prefix ("&rpar;")) {
+					builder.append_len (start, (ssize_t) ((char*) pos - (char*) start));
+					start = (string) ((char*) pos + 6);
+					pos = (string) ((char*) pos + 5);
+					builder.append_c (')');
+				} else if (pos.has_prefix ("&num;")) {
+					builder.append_len (start, (ssize_t) ((char*) pos - (char*) start));
+					start = (string) ((char*) pos + 5);
+					pos = (string) ((char*) pos + 4);
+					builder.append_c ('#');
+				} else if (pos.has_prefix ("&amp;")) {
+					builder.append_len (start, (ssize_t) ((char*) pos - (char*) start));
+					start = (string) ((char*) pos + 5);
+					pos = (string) ((char*) pos + 4);
+					builder.append_c ('&');
 				} else if (pos.has_prefix ("&ast;")) {
 					builder.append_len (start, (ssize_t) ((char*) pos - (char*) start));
 					start = (string) ((char*) pos + 5);
