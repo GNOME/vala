@@ -1477,6 +1477,9 @@ namespace Posix {
 
 	[CCode (cname = "struct sockaddr", cheader_filename = "sys/socket.h", destroy_function = "")]
 	public struct SockAddr {
+        public int sa_family;
+        [CCode (array_length = false)]
+        public char[] data;
 	}
 
 	[CCode (cname = "struct sockaddr_in", cheader_filename = "netinet/in.h", destroy_function = "")]
