@@ -789,6 +789,20 @@ namespace Posix {
 	[CCode (cheader_filename = "math.h")]
 	public float scalbf (float x, float n);
 
+    [CCode (cheader_filename = "netdb.h")]
+    public const int NI_NAMEREQD;
+    [CCode (cheader_filename = "netdb.h")]
+    public const int NI_DGRAM;
+    [CCode (cheader_filename = "netdb.h")]
+    public const int NI_NOFQDN;
+    [CCode (cheader_filename = "netdb.h")]
+    public const int NI_NUMERICHOST;
+    [CCode (cheader_filename = "netdb.h")]
+    public const int NI_NUMERICSERV;
+
+    [CCode (cheader_filename = "netdb.h,sys/socket.h")]
+    public int getnameinfo (ref SockAddr sa, socklen_t salen, char[] node, char[] service, socklen_t servicelen, int flags);
+
 	[CCode (cheader_filename = "poll.h", cname = "struct pollfd")]
 	public struct pollfd {
 		public int fd;
