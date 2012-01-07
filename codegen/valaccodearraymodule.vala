@@ -338,10 +338,12 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var element_size = new CCodeIdentifier ("element_size");
 		var length = new CCodeIdentifier ("length");
 		var src = new CCodeIdentifier ("src");
+		var src_end = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, src, length);
 		var dest = new CCodeIdentifier ("dest");
+		var dest_end = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, dest, length);
 		var src_address = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, array, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, src, element_size));
 		var dest_address = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, array, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, dest, element_size));
-		var dest_end_address = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, array, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, dest, length), element_size));
+		var dest_end_address = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, array, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, dest_end, element_size));
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_memmove"));
 		ccall.add_argument (dest_address);
@@ -349,7 +351,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		ccall.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, length, element_size));
 		ccode.add_expression (ccall);
 
-		ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, src, dest));
+		ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.AND, new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, src, dest), new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, src_end, dest)));
 
 		var czero1 = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
 		czero1.add_argument (src_address);
@@ -357,13 +359,21 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		czero1.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, dest, src), element_size));
 		ccode.add_expression (czero1);
 
-		ccode.add_else ();
+		ccode.else_if (new CCodeBinaryExpression (CCodeBinaryOperator.AND, new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, src, dest), new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, src, dest_end)));
 
 		var czero2 = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
 		czero2.add_argument (dest_end_address);
 		czero2.add_argument (new CCodeConstant ("0"));
 		czero2.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, src, dest), element_size));
 		ccode.add_expression (czero2);
+
+		ccode.else_if (new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, src, dest));
+
+		var czero3 = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
+		czero3.add_argument (src_address);
+		czero3.add_argument (new CCodeConstant ("0"));
+		czero3.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, length, element_size));
+		ccode.add_expression (czero3);
 
 		ccode.close ();
 
