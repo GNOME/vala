@@ -57,7 +57,7 @@ div.main_block_content {
 	margin-left:15px;
 }
 
-.main_sourcesample {
+.main_source, .main_sourcesample {
 	padding-right: 10px;
 	padding-left: 5px;
 	padding-bottom: 5px;
