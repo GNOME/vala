@@ -215,7 +215,11 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		this.tree = tree;
 	}
 
+	private Api.Node? element;
+
 	public Comment? parse (Api.Node element, Api.GirSourceComment gir_comment) {
+		this.element = element;
+
 		Comment? comment = this.parse_main_content (gir_comment);
 		if (comment == null) {
 			return null;
@@ -1082,6 +1086,77 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		}
 	}
 
+	private string[]? split_type_name (string id) {
+		unichar c;
+
+		for (unowned string pos = id; (c = pos.get_char ()) != '\0'; pos = pos.next_char ()) {
+			switch (c) {
+			case '-': // ->
+				return {id.substring (0, (long) (((char*) pos) - ((char*) id))), "->", (string) (((char*) pos) + 2)};
+
+			case ':': // : or ::
+				string sep = (pos.next_char ().get_char () == ':')? "::" : ":";
+				return {id.substring (0, (long) (((char*) pos) - ((char*) id))), sep, (string) (((char*) pos) + sep.length)};
+
+			case '.':
+				return {id.substring (0, (long) (((char*) pos) - ((char*) id))), ".", (string) (((char*) pos) + 1)};
+			}
+		}
+
+		return null;
+	}
+
+	private string? resolve_parameter_ctype (string parameter_name, out string? param_name) {
+		string[]? parts = split_type_name (current.content);
+		param_name = null;
+		if (parts == null) {
+			return null;
+		}
+
+		Api.FormalParameter? param = null; // type parameter or formal parameter
+		foreach (Api.Node node in this.element.get_children_by_type (Api.NodeType.FORMAL_PARAMETER, false)) {
+			if (node.name == parts[0]) {
+				param = node as Api.FormalParameter;
+				break;
+			}
+		}
+
+
+		Api.Item? inner = param.parameter_type;
+		while (inner != null) {
+			if (inner is Api.TypeReference) {
+				inner = ((Api.TypeReference) inner).data_type;
+			} else if (inner is Api.Pointer) {
+				inner = ((Api.Pointer) inner).data_type;
+			} else if (inner is Api.Array) {
+				inner = ((Api.Array) inner).data_type;
+			} else {
+				break ;
+			}
+		}
+
+
+		if (inner == null) {
+			return null;
+		}
+
+		string? cname = null;
+		if (inner is Api.ErrorDomain) {
+			cname = ((Api.ErrorDomain) inner).get_cname ();
+		} else if (inner is Api.Struct) {
+			cname = ((Api.Struct) inner).get_cname ();
+		} else if (inner is Api.Class) {
+			cname = ((Api.Class) inner).get_cname ();
+		} else if (inner is Api.Enum) {
+			cname = ((Api.Enum) inner).get_cname ();
+		} else {
+			assert_not_reached ();
+		}
+
+		param_name = (owned) parts[0];
+		return "c::" + cname + parts[1] + parts[2];
+	}
+
 	private Run parse_inline_content () {
 		Run run = factory.create_run (Run.Style.NONE);
 
@@ -1148,9 +1223,23 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 				run.content.add (this.create_type_link (current.content));
 				next ();
 			} else if (current.type == TokenType.GTKDOC_PARAM) {
+				string? param_name;
+				string? cname = resolve_parameter_ctype (current.content, out param_name);
 				Run current_run = factory.create_run (Run.Style.MONOSPACED);
-				current_run.content.add (factory.create_text (current.content));
-				run.content.add (current_run);
+
+				if (cname == null) {
+					current_run.content.add (factory.create_text (current.content));
+					run.content.add (current_run);
+				} else {
+					current_run.content.add (factory.create_text (param_name));
+					run.content.add (current_run);
+
+					run.content.add (factory.create_text ("."));
+
+					Taglets.Link link = factory.create_taglet ("link") as Taglets.Link;
+					link.symbol_name = cname;
+					run.content.add (link);
+				}
 				next ();
 			} else if (current.type == TokenType.GTKDOC_SIGNAL) {
 				run.content.add (this.create_type_link ("::"+current.content));
