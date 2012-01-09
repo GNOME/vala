@@ -7425,7 +7425,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate int AssistantPageFunc (int current_page);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public delegate void BuilderConnectFunc (Gtk.Builder builder, GLib.Object object, string signal_name, string handler_name, GLib.Object connect_object, GLib.ConnectFlags flags);
+	public delegate void BuilderConnectFunc (Gtk.Builder builder, GLib.Object object, string signal_name, string handler_name, GLib.Object? connect_object, GLib.ConnectFlags flags);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate string CalendarDetailFunc (Gtk.Calendar calendar, uint year, uint month, uint day);
 	[CCode (cheader_filename = "gtk/gtk.h")]
