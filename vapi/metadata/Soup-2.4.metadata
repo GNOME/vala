@@ -3,25 +3,20 @@ AuthDomain
 	.add_path#property skip
 	.remove_path#property skip
 form_* parent="Soup.Form" name="form_(.+)"
-Session
-	.add_feature#method skip
-	.add_feature_by_type#method skip
-	.remove_feature_by_type#method skip
 xmlrpc_* parent="Soup.XMLRPC" name="xmlrpc_(.+)"
-XMLRPCFault parent="Soup.XMLRPC" name="Fault"
+XMLRPCFault errordomain parent="Soup.XMLRPC" name="Fault"
 XMLRPCError parent="Soup.XMLRPC" name="Error"
 xmlrpc_set_response.type skip
-HTTPVersion
-	.0 name="1_0"
-	.1 name="1_1"
+HTTPVersion.http_* name="http_(.+)"
 
 // Report upstream
 Soup cheader_filename="libsoup/soup.h"
 add_* skip=false type="unowned GLib.TimeoutSource"
 Address.equal_by_ip.* type="Soup.Address"
 Address.equal_by_name.* type="Soup.Address"
-AddressCallback.data skip
+// AddressCallback.data skip
 AuthDomain
+	.accepts#method skip
 	.challenge#virtual_method vfunc_name="challenge"
 	.basic_set_auth_callback skip
 	.digest_set_auth_callback skip
@@ -75,18 +70,12 @@ URI
 	.new_with_base skip
 	.set_query_from_fields skip=false
 uri_encode.escape_extra nullable
-uri_host_*.* type="Soup.URI"
-ProxyResolver
-	.get_proxy_async skip=false
-	.get_proxy_sync.addr out
-	.*.cancellable nullable
-ProxyResolverCallback skip
-ProxyResolverInterface.get_proxy_async skip=false
+// uri_host_*.* type="Soup.URI"
 ProxyURIResolver
 	.get_proxy_uri_sync.proxy_uri out
 ProxyURIResolverCallback.user_data skip
 xmlrpc_* skip=false
-xmlrpc_build_method_call.params array array_length_idx=2
+// xmlrpc_build_method_call.params array array_length_idx=2
 xmlrpc_extract_method_response throws="Soup.XMLRPC.Fault"
         .error skip
 	.type skip
