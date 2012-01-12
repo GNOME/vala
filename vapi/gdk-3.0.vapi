@@ -4944,6 +4944,7 @@ namespace Gdk {
 		public void restack (Gdk.Window? sibling, bool above);
 		public void scroll (int dx, int dy);
 		public void set_accept_focus (bool accept_focus);
+		[Deprecated (since = "3.4")]
 		public void set_background (Gdk.Color color);
 		public void set_background_pattern (Cairo.Pattern? pattern);
 		public void set_background_rgba (Gdk.RGBA rgba);
@@ -5760,6 +5761,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static Cairo.Region cairo_region_create_from_surface (Cairo.Surface surface);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Deprecated (since = "3.4")]
 	public static void cairo_set_source_color (Cairo.Context cr, Gdk.Color color);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void cairo_set_source_pixbuf (Cairo.Context cr, Gdk.Pixbuf pixbuf, double pixbuf_x, double pixbuf_y);

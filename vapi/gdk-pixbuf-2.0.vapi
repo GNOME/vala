@@ -34,6 +34,7 @@ namespace Gdk {
 		[CCode (has_construct_function = false)]
 		public Pixbuf.from_xpm_data ([CCode (array_length = false, type = "char**")] string[] data);
 		public int get_bits_per_sample ();
+		public size_t get_byte_length ();
 		public Gdk.Colorspace get_colorspace ();
 		public static unowned Gdk.PixbufFormat get_file_info (string filename, out int width, out int height);
 		public static GLib.SList<weak Gdk.PixbufFormat> get_formats ();
@@ -43,6 +44,8 @@ namespace Gdk {
 		public unowned string get_option (string key);
 		[CCode (array_length = false)]
 		public unowned uint8[] get_pixels ();
+		[CCode (array_length_pos = 0.1, array_length_type = "guint")]
+		public unowned uint8[] get_pixels_with_length ();
 		public int get_rowstride ();
 		public int get_width ();
 		[CCode (cname = "gdk_pixbuf_new_from_stream_async", finish_name = "gdk_pixbuf_new_from_stream_finish")]

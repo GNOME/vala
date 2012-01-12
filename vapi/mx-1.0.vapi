@@ -3,7 +3,7 @@
 [CCode (cprefix = "Mx", gir_namespace = "Mx", gir_version = "1.0", lower_case_cprefix = "mx_")]
 namespace Mx {
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_action_get_type ()")]
-	public class Action : GLib.InitiallyUnowned {
+	public class Action : GLib.InitiallyUnowned, GLib.Action {
 		[CCode (has_construct_function = false)]
 		public Action ();
 		[CCode (has_construct_function = false)]
@@ -11,15 +11,20 @@ namespace Mx {
 		public bool get_active ();
 		public unowned string get_display_name ();
 		public unowned string get_icon ();
-		public unowned string get_name ();
 		public void set_active (bool active);
 		public void set_display_name (string name);
 		public void set_icon (string name);
 		public void set_name (string name);
+		[CCode (has_construct_function = false)]
+		public Action.stateful (string name, GLib.VariantType? parameter_type, GLib.Variant state);
+		[CCode (has_construct_function = false)]
+		public Action.with_parameter (string name, GLib.VariantType? parameter_type);
+		[Deprecated (since = "1.4")]
 		public bool active { get; set; }
 		public string display_name { get; set; }
 		public string icon { get; set; }
-		public string name { get; set; }
+		public signal void activate (GLib.Variant? parameter);
+		[Deprecated (since = "1.4")]
 		public virtual signal void activated ();
 	}
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_actor_manager_get_type ()")]
@@ -95,6 +100,7 @@ namespace Mx {
 		public Mx.ApplicationFlags get_flags ();
 		public unowned GLib.List<Mx.Window> get_windows ();
 		public void invoke_action (string name);
+		public void invoke_action_with_parameter (string name, GLib.Variant variant);
 		public bool is_running ();
 		public void quit ();
 		[NoWrapper]
@@ -163,6 +169,8 @@ namespace Mx {
 		public void set_orientation (Mx.Orientation orientation);
 		public void set_scroll_to_focused (bool scroll_to_focused);
 		public void set_spacing (uint spacing);
+		[CCode (has_construct_function = false, type = "ClutterActor*")]
+		public BoxLayout.with_orientation (Mx.Orientation orientation);
 		public bool enable_animations { get; set; }
 		public Mx.Orientation orientation { get; set; }
 		public bool scroll_to_focused { get; set; }
@@ -358,18 +366,27 @@ namespace Mx {
 		public Entry ();
 		public unowned Clutter.Actor get_clutter_text ();
 		public unowned string get_hint_text ();
+		public unowned string get_icon_highlight_suffix ();
 		public unichar get_password_char ();
 		public unowned string get_text ();
 		public void set_hint_text (string text);
+		public void set_icon_highlight_suffix (string suffix);
 		public void set_password_char (unichar password_char);
 		public void set_primary_icon_from_file (string filename);
+		public void set_primary_icon_tooltip_text (string text);
 		public void set_secondary_icon_from_file (string filename);
+		public void set_secondary_icon_tooltip_text (string text);
 		public void set_text (string text);
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
 		public Entry.with_text (string text);
 		public Clutter.Text clutter_text { get; }
 		public string hint_text { get; set; }
+		public string icon_highlight_suffix { get; set; }
 		public uint password_char { get; set; }
+		[NoAccessorMethod]
+		public string primary_icon_tooltip_text { owned get; set; }
+		[NoAccessorMethod]
+		public string secondary_icon_tooltip_text { owned get; set; }
 		public string text { get; set; }
 		public virtual signal void primary_icon_clicked ();
 		public virtual signal void secondary_icon_clicked ();
@@ -560,6 +577,7 @@ namespace Mx {
 		public double get_acceleration_factor ();
 		public uint get_clamp_duration ();
 		public ulong get_clamp_mode ();
+		public bool get_clamp_to_center ();
 		public double get_deceleration ();
 		public uint32 get_mouse_button ();
 		public double get_overshoot ();
@@ -568,6 +586,7 @@ namespace Mx {
 		public void set_acceleration_factor (double acceleration_factor);
 		public void set_clamp_duration (uint clamp_duration);
 		public void set_clamp_mode (ulong clamp_mode);
+		public void set_clamp_to_center (bool clamp_to_center);
 		public void set_deceleration (double rate);
 		public void set_mouse_button (uint32 button);
 		public void set_overshoot (double overshoot);
@@ -577,10 +596,13 @@ namespace Mx {
 		public double acceleration_factor { get; set; }
 		public uint clamp_duration { get; set; }
 		public ulong clamp_mode { get; set; }
+		public bool clamp_to_center { get; set; }
 		public double deceleration { get; set; }
 		public uint mouse_button { get; set; }
 		public double overshoot { get; set; }
 		public Mx.ScrollPolicy scroll_policy { get; set; }
+		[NoAccessorMethod]
+		public Mx.KineticScrollViewState state { get; }
 		public bool use_captured { get; set; }
 	}
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_label_get_type ()")]
@@ -590,12 +612,14 @@ namespace Mx {
 		public unowned Clutter.Actor get_clutter_text ();
 		public bool get_fade_out ();
 		public bool get_line_wrap ();
+		public bool get_show_tooltip ();
 		public unowned string get_text ();
 		public bool get_use_markup ();
 		public Mx.Align get_x_align ();
 		public Mx.Align get_y_align ();
 		public void set_fade_out (bool fade);
 		public void set_line_wrap (bool line_wrap);
+		public void set_show_tooltip (bool show_tooltip);
 		public void set_text (string text);
 		public void set_use_markup (bool use_markup);
 		public void set_x_align (Mx.Align align);
@@ -605,6 +629,7 @@ namespace Mx {
 		public Clutter.Text clutter_text { get; }
 		public bool fade_out { get; set; }
 		public bool line_wrap { get; set; }
+		public bool show_tooltip { get; set; }
 		public string text { get; set; }
 		public bool use_markup { get; set; }
 		public Mx.Align x_align { get; set; }
@@ -779,13 +804,13 @@ namespace Mx {
 	public class Stack : Mx.Widget, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable, Mx.Focusable, Mx.Stylable {
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
 		public Stack ();
-		public bool child_get_fill_space (Clutter.Actor child);
+		public bool child_get_crop (Clutter.Actor child);
 		public bool child_get_fit (Clutter.Actor child);
 		public Mx.Align child_get_x_align (Clutter.Actor child);
 		public bool child_get_x_fill (Clutter.Actor child);
 		public Mx.Align child_get_y_align (Clutter.Actor child);
 		public bool child_get_y_fill (Clutter.Actor child);
-		public void child_set_fill_space (Clutter.Actor child, bool fill_space);
+		public void child_set_crop (Clutter.Actor child, bool crop);
 		public void child_set_fit (Clutter.Actor child, bool fit);
 		public void child_set_x_align (Clutter.Actor child, Mx.Align x_align);
 		public void child_set_x_fill (Clutter.Actor child, bool x_fill);
@@ -989,6 +1014,7 @@ namespace Mx {
 		public static bool is_in_browse_mode ();
 		public void set_text (string text);
 		public void set_tip_area (Clutter.Geometry area);
+		public void set_tip_area_from_actor (Clutter.Actor actor);
 		public void show ();
 		public string text { get; set; }
 		public Clutter.Geometry tip_area { get; set; }
@@ -1027,6 +1053,8 @@ namespace Mx {
 		public void long_press_query (Clutter.ButtonEvent event);
 		[NoWrapper]
 		public virtual void paint_background (Clutter.Actor background, Clutter.Color color);
+		[CCode (cname = "mx_widget_paint_background")]
+		public void paint_background_with_defaults ();
 		public void set_disabled (bool disabled);
 		public void set_menu (Mx.Menu menu);
 		public void set_tooltip_delay (uint delay);
@@ -1235,6 +1263,13 @@ namespace Mx {
 		FIT,
 		CROP
 	}
+	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_KINETIC_SCROLL_VIEW_STATE_")]
+	public enum KineticScrollViewState {
+		IDLE,
+		PANNING,
+		SCROLLING,
+		CLAMPING
+	}
 	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_LONG_PRESS_")]
 	public enum LongPressAction {
 		QUERY,
@@ -1302,17 +1337,17 @@ namespace Mx {
 	public delegate void ActionCallbackFunc (Mx.Action action);
 	[CCode (cheader_filename = "mx/mx.h", instance_pos = 2.9)]
 	public delegate void ClipboardCallbackFunc (Mx.Clipboard clipboard, string text);
-	[CCode (cheader_filename = "mx/mx.h")]
+	[CCode (cheader_filename = "mx/mx.h", cname = "MX_MAJOR_VERSION")]
 	public const int MAJOR_VERSION;
-	[CCode (cheader_filename = "mx/mx.h")]
+	[CCode (cheader_filename = "mx/mx.h", cname = "MX_MICRO_VERSION")]
 	public const int MICRO_VERSION;
-	[CCode (cheader_filename = "mx/mx.h")]
+	[CCode (cheader_filename = "mx/mx.h", cname = "MX_MINOR_VERSION")]
 	public const int MINOR_VERSION;
-	[CCode (cheader_filename = "mx/mx.h")]
+	[CCode (cheader_filename = "mx/mx.h", cname = "MX_PARAM_TRANSLATEABLE")]
 	public const int PARAM_TRANSLATEABLE;
-	[CCode (cheader_filename = "mx/mx.h")]
+	[CCode (cheader_filename = "mx/mx.h", cname = "MX_VERSION_HEX")]
 	public const int VERSION_HEX;
-	[CCode (cheader_filename = "mx/mx.h")]
+	[CCode (cheader_filename = "mx/mx.h", cname = "MX_VERSION_S")]
 	public const string VERSION_S;
 	[CCode (cheader_filename = "mx/mx.h")]
 	public static void actor_box_clamp_to_pixels (Clutter.ActorBox box);

@@ -3,9 +3,9 @@
 [CCode (cprefix = "Gtk", gir_namespace = "GtkSource", gir_version = "3.0", lower_case_cprefix = "gtk_")]
 namespace Gtk {
 	namespace SourceCompletionCapability {
-		[CCode (cheader_filename = "gtksourceview/gtksource.h")]
+		[CCode (cheader_filename = "gtksourceview/gtksource.h", cname = "GTK_SOURCE_COMPLETION_CAPABILITY_AUTOMATIC")]
 		public const string AUTOMATIC;
-		[CCode (cheader_filename = "gtksourceview/gtksource.h")]
+		[CCode (cheader_filename = "gtksourceview/gtksource.h", cname = "GTK_SOURCE_COMPLETION_CAPABILITY_INTERACTIVE")]
 		public const string INTERACTIVE;
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksource.h", type_id = "gtk_source_buffer_get_type ()")]
@@ -74,6 +74,8 @@ namespace Gtk {
 		[NoWrapper]
 		public virtual bool proposal_activated (Gtk.SourceCompletionProvider provider, Gtk.SourceCompletionProposal proposal);
 		public bool remove_provider (Gtk.SourceCompletionProvider provider) throws GLib.Error;
+		[CCode (cname = "gtk_source_completion_show")]
+		public bool start (GLib.List<Gtk.SourceCompletionProvider>? providers, owned Gtk.SourceCompletionContext context);
 		public void unblock_interactive ();
 		[NoAccessorMethod]
 		public uint accelerators { get; set construct; }
@@ -98,7 +100,6 @@ namespace Gtk {
 		public virtual signal void move_cursor (Gtk.ScrollStep step, int num);
 		public virtual signal void move_page (Gtk.ScrollStep step, int num);
 		public virtual signal void populate_context (Gtk.SourceCompletionContext context);
-		[HasEmitter]
 		public virtual signal void show ();
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksource.h", type_id = "gtk_source_completion_context_get_type ()")]
@@ -175,6 +176,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		protected SourceGutter ();
 		public void get_padding (int xpad, int ypad);
+		public unowned Gtk.SourceGutterRenderer get_renderer_at_pos (int x, int y);
 		public unowned Gdk.Window get_window ();
 		public bool insert (Gtk.SourceGutterRenderer renderer, int position);
 		public void queue_draw ();
@@ -195,7 +197,6 @@ namespace Gtk {
 	public abstract class SourceGutterRenderer : GLib.InitiallyUnowned {
 		[CCode (has_construct_function = false)]
 		protected SourceGutterRenderer ();
-		public virtual void activate (Gtk.TextIter iter, Gdk.Rectangle area, Gdk.Event event);
 		public virtual void begin (Cairo.Context cr, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gtk.TextIter start, Gtk.TextIter end);
 		[NoWrapper]
 		public virtual void change_buffer (Gtk.TextBuffer old_buffer);
@@ -211,8 +212,6 @@ namespace Gtk {
 		public unowned Gtk.TextView get_view ();
 		public bool get_visible ();
 		public Gtk.TextWindowType get_window_type ();
-		public virtual bool query_activatable (Gtk.TextIter iter, Gdk.Rectangle area, Gdk.Event event);
-		public virtual bool query_tooltip (Gtk.TextIter iter, Gdk.Rectangle area, int x, int y, Gtk.Tooltip tooltip);
 		public void set_alignment (float xalign, float yalign);
 		public void set_alignment_mode (Gtk.SourceGutterRendererAlignmentMode mode);
 		public void set_background (Gdk.RGBA? color);
@@ -237,7 +236,13 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public int ypad { get; set construct; }
 		[HasEmitter]
+		public virtual signal void activate (Gtk.TextIter iter, Cairo.RectangleInt area, Gdk.Event event);
+		[HasEmitter]
+		public virtual signal bool query_activatable (Gtk.TextIter iter, Cairo.RectangleInt area, Gdk.Event event);
+		[HasEmitter]
 		public virtual signal void query_data (Gtk.TextIter start, Gtk.TextIter end, Gtk.SourceGutterRendererState state);
+		[HasEmitter]
+		public virtual signal bool query_tooltip (Gtk.TextIter iter, Cairo.RectangleInt area, int x, int y, Gtk.Tooltip tooltip);
 		[HasEmitter]
 		public virtual signal void queue_draw ();
 	}
@@ -287,6 +292,7 @@ namespace Gtk {
 		public string[] get_mime_types ();
 		public unowned string get_name ();
 		public unowned string get_section ();
+		public unowned string get_style_fallback (string style_id);
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] get_style_ids ();
 		public unowned string get_style_name (string style_id);

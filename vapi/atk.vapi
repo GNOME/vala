@@ -766,7 +766,7 @@ namespace Atk {
 	[CCode (cheader_filename = "atk/atk.h", has_target = false)]
 	public delegate void EventListenerInit ();
 	[CCode (cheader_filename = "atk/atk.h", has_target = false)]
-	public delegate void FocusHandler (Atk.Object obj, bool focus_in);
+	public delegate void FocusHandler (Atk.Object arg0, bool arg1);
 	[CCode (cheader_filename = "atk/atk.h")]
 	public delegate bool Function ();
 	[CCode (cheader_filename = "atk/atk.h")]

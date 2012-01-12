@@ -32,7 +32,6 @@ Pixbuf
         .from_pixdata skip=false unowned=false
 Pixdata
         .pixel_data type="unowned uint8[]"
-        .deserialize.stream array array_length_idx=0
         .serialize type="uint8[]" array_length_idx=0
 PixbufLoader
         .get_format unowned

@@ -1,5 +1,7 @@
 * name="(.+)/Source\\1"
 GtkSource name="Gtk" cprefix="Gtk" lower_case_cprefix="gtk_"
+Completion
+        .show#method name="start"
 CompletionProvider
         .*#virtual_method virtual
         .get_icon nullable
