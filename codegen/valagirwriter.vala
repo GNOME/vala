@@ -57,8 +57,10 @@ public class Vala.GIRWriter : CodeVisitor {
 
 	public void write_includes() {
 		foreach (var i in externals) {
-			write_indent_stream ();
-			stream.printf ("<include name=\"%s\" version=\"%s\"/>\n", i.ns, i.version);
+			if (i.ns != this.gir_namespace) {
+				write_indent_stream ();
+				stream.printf ("<include name=\"%s\" version=\"%s\"/>\n", i.ns, i.version);
+			}
 		}
 	}
 
