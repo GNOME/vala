@@ -307,7 +307,7 @@ gedit:
 	$(GENVAPI) --library $(srcdir)/gedit --metadatadir $(METADATADIR) $(GEDIT_GIRDIR)/Gedit-3.0.gir
 
 gio-2.0:
-	$(GENVAPI) --library $(srcdir)/gio-2.0 $(PACKAGESDIR)/gio-2.0/gio-2.0-custom.vala $(PACKAGESDIR)/gio-2.0/gio-2.0.gi
+	$(GENVAPI) --library $(srcdir)/gio-2.0 --metadatadir $(METADATADIR) $(METADATADIR)/Gio-2.0-custom.vala $(GIRDIR)/Gio-2.0.gir
 
 gio-unix-2.0:
 	$(GENVAPI) --library $(srcdir)/gio-unix-2.0 $(PACKAGESDIR)/gio-unix-2.0/gio-unix-2.0-custom.vala $(PACKAGESDIR)/gio-unix-2.0/gio-unix-2.0.gi
