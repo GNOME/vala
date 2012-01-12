@@ -2150,7 +2150,7 @@ namespace GLib {
 	public interface ActionGroup : GLib.Object {
 		public abstract void activate_action (string action_name, GLib.Variant? parameter);
 		public abstract void change_action_state (string action_name, GLib.Variant value);
-		public abstract unowned bool? get_action_enabled (string action_name);
+		public abstract bool get_action_enabled (string action_name);
 		public abstract unowned GLib.VariantType? get_action_parameter_type (string action_name);
 		public abstract GLib.Variant? get_action_state (string action_name);
 		public abstract GLib.Variant? get_action_state_hint (string action_name);
@@ -2455,8 +2455,9 @@ namespace GLib {
 		public abstract bool can_poll ();
 		public abstract GLib.PollableSource create_source (GLib.Cancellable? cancellable = null);
 		public abstract bool is_readable ();
-		[CCode (vfunc_name = "read_nonblocking_fn")]
-		public abstract ssize_t read_nonblocking ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "gsize", type = "void*")] uint8[] buffer) throws GLib.Error;
+		public ssize_t read_nonblocking ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize", type = "void*")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[CCode (vfunc_name = "read_nonblocking")]
+		public abstract ssize_t read_nonblocking_fn ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "gsize", type = "void*")] uint8[] buffer) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_cname = "GPollableOutputStreamInterface", type_id = "g_pollable_output_stream_get_type ()")]
 	public interface PollableOutputStream : GLib.OutputStream {

@@ -183,7 +183,7 @@ Initable
 PollableInputStream
   .create_source type="GLib.PollableSource"
   .read_nonblocking.buffer type="uint8[]" array_length_idx=1
-  .read_nonblocking#virtual_method vfunc_name="read_nonblocking_fn"
+  .read_nonblocking#virtual_method name="read_nonblocking_fn"
 PollableOutputStream
   .create_source type="GLib.PollableSource"
 TlsClientConnection
@@ -301,6 +301,7 @@ content_type_from_mime_type nullable
 content_type_get_mime_type nullable
 ActionGroup
   .get_action* nullable
+  .get_action_enabled nullable=false
   .get_action_state_type unowned
 ActionMap
   .add_action_entries.entries array array_length_idx=1
