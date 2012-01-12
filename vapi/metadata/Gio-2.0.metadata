@@ -9,6 +9,7 @@ DesktopAppInfo* skip
 DesktopAppLaunchCallback skip
 FileDescriptorBased* skip
 Unix* skip
+UnixSocketAddressType skip=false
 UnixFDList skip=false
 unix_* skip
 // UnixSocketAddress.abstract#property skip
@@ -173,7 +174,6 @@ File
   .load_partial_contents_async skip=false
   .move.progress_callback default=null
 Icon
-  .from_tokens#virtual_method skip=false
   .new_for_string nullable
   .to_string nullable
   .to_tokens skip

@@ -3037,6 +3037,14 @@ namespace GLib {
 		SAFELY,
 		UNSAFELY
 	}
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_UNIX_SOCKET_ADDRESS_")]
+	public enum UnixSocketAddressType {
+		INVALID,
+		ANONYMOUS,
+		PATH,
+		ABSTRACT,
+		ABSTRACT_PADDED
+	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_ZLIB_COMPRESSOR_FORMAT_")]
 	public enum ZlibCompressorFormat {
 		ZLIB,
