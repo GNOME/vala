@@ -1,0 +1,4 @@
+TextureError errordomain
+  .texture_error_invalid_stock_id name="INVALID_STOCK_ID"
+get_option_group skip=false
+init*.argv unowned

@@ -1,8 +1,0 @@
-GtkClutter cheader_filename="clutter-gtk/clutter-gtk.h"
-gtk_clutter_init.argc hidden="1"
-gtk_clutter_init.argv is_array="1" is_ref="1" array_length_pos="0.9"
-gtk_clutter_init_with_args.argc hidden="1"
-gtk_clutter_init_with_args.argv is_array="1" is_ref="1" array_length_pos="0.9"
-gtk_clutter_init_with_args.entries is_array="1" no_array_length="1"
-gtk_clutter_init_with_args.translation_domain nullable="1"
-gtk_clutter_get_option_group transfer_ownership="1"

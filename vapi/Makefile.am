@@ -270,7 +270,7 @@ clutter-gtk-0.10:
 	$(GENVAPI) --library $(srcdir)/clutter-gtk-0.10 $(PACKAGESDIR)/clutter-gtk-0.10/clutter-gtk-0.10.gi
 
 clutter-gtk-1.0:
-	$(GENVAPI) --library $(srcdir)/clutter-gtk-1.0 $(PACKAGESDIR)/clutter-gtk-1.0/clutter-gtk-1.0.gi
+	$(GENVAPI) --library $(srcdir)/clutter-gtk-1.0 --metadatadir $(METADATADIR) $(METADATADIR)/GtkClutter-1.0-custom.vala --pkg clutter-1.0 --pkg gtk+-3.0 --pkg cogl-pango-1.0 $(GIRDIR)/GtkClutter-1.0.gir
 
 cogl-1.0:
 	$(GENVAPI) --library $(srcdir)/cogl-1.0 $(PACKAGESDIR)/cogl-1.0/cogl-1.0-custom.vala $(PACKAGESDIR)/cogl-1.0/cogl-1.0.gi
