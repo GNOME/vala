@@ -228,7 +228,7 @@ namespace Wnck {
 		public bool is_virtual ();
 		public virtual signal void name_changed ();
 	}
-	[CCode (cheader_filename = "libwnck/libwnck.h")]
+	[CCode (cheader_filename = "libwnck/libwnck.h", has_type_id = false)]
 	public struct ResourceUsage {
 		public ulong total_bytes_estimate;
 		public ulong pixmap_bytes;
@@ -247,7 +247,7 @@ namespace Wnck {
 		[CCode (cname = "wnck_xid_read_resource_usage")]
 		public static Wnck.ResourceUsage xid_read (Gdk.Display gdk_display, ulong xid);
 	}
-	[CCode (cheader_filename = "libwnck/libwnck.h")]
+	[CCode (cheader_filename = "libwnck/libwnck.h", has_type_id = false)]
 	public struct WorkspaceLayout {
 		public int rows;
 		public int cols;

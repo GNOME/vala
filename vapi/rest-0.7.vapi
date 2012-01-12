@@ -89,13 +89,19 @@ namespace Rest {
 		public unowned string get_user_agent ();
 		public virtual unowned Rest.ProxyCall new_call ();
 		public void set_user_agent (string user_agent);
+		[CCode (has_construct_function = false)]
+		public Proxy.with_authentication (string url_format, bool binding_required, string username, string password);
 		[NoAccessorMethod]
 		public bool binding_required { get; set; }
 		[NoAccessorMethod]
 		public bool disable_cookies { get; construct; }
 		[NoAccessorMethod]
+		public string password { owned get; construct; }
+		[NoAccessorMethod]
 		public string url_format { owned get; set; }
 		public string user_agent { get; set; }
+		[NoAccessorMethod]
+		public string username { owned get; construct; }
 	}
 	[CCode (cheader_filename = "rest/rest-proxy-call.h", type_id = "rest_proxy_call_get_type ()")]
 	public class ProxyCall : GLib.Object {

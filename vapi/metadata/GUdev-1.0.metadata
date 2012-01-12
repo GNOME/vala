@@ -1,5 +1,4 @@
 // Report upstream
-GUdev cheader_filename="gudev/gudev.h"
 Client.query_by* nullable
 Device
 	.get_device_file nullable

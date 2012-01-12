@@ -3,6 +3,8 @@ Color struct
 *.*_finish skip=false
 ContactsContact.get_photo type="uint8[]" array_length_idx=1
 ContactsContact.get_photo_async type="uint8[]" array_length_idx=1
+Parsable.get_xml#method skip
+Query.get_query_uri#method skip
 DOCUMENTS_PRESENTATION_* name="DOCUMENTS_PRESENTATION_(.+)" parent="GData.DocumentsPresentationFormat"
 DOCUMENTS_TEXT_* name="DOCUMENTS_TEXT_(.+)" parent="GData.DocumentsTextFormat"
 DOCUMENTS_SPREADSHEET_* name="DOCUMENTS_SPREADSHEET_(.+)" parent="GData.DocumentsSpreadsheetFormat"

@@ -19,20 +19,20 @@ namespace Peas {
 		public bool provides_extension (Peas.PluginInfo info, GLib.Type extension_type);
 		public void rescan_plugins ();
 		public void set_loaded_plugins ([CCode (array_length = false, array_null_terminated = true)] string[]? plugin_names);
+		[CCode (cname = "peas_engine_load_plugin")]
+		public bool try_load_plugin (Peas.PluginInfo info);
+		[CCode (cname = "peas_engine_unload_plugin")]
+		public bool try_unload_plugin (Peas.PluginInfo info);
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] loaded_plugins { owned get; set; }
 		public void* plugin_list { get; }
-		[HasEmitter]
 		public virtual signal void load_plugin (Peas.PluginInfo info);
-		[HasEmitter]
 		public virtual signal void unload_plugin (Peas.PluginInfo info);
 	}
 	[CCode (cheader_filename = "libpeas/peas.h")]
 	public class Extension : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Extension ();
-		public static GLib.Type get_extension_type (Peas.Extension exten);
-		public static GLib.Type get_type ();
 	}
 	[CCode (cheader_filename = "libpeas/peas.h", type_id = "peas_extension_base_get_type ()")]
 	public abstract class ExtensionBase : GLib.Object {
@@ -49,7 +49,8 @@ namespace Peas {
 		public ExtensionSet (Peas.Engine engine, GLib.Type exten_type, ...);
 		public void @foreach (Peas.ExtensionSetForeachFunc func);
 		public unowned Peas.Extension get_extension (Peas.PluginInfo info);
-		public static Peas.ExtensionSet newv (Peas.Engine? engine, GLib.Type exten_type, [CCode (array_length_cname = "n_parameters", array_length_pos = 2.5, array_length_type = "guint")] GLib.Parameter[] parameters);
+		[CCode (has_construct_function = false)]
+		public ExtensionSet.newv (Peas.Engine? engine, GLib.Type exten_type, [CCode (array_length_cname = "n_parameters", array_length_pos = 2.5, array_length_type = "guint")] GLib.Parameter[] parameters);
 		public void* construct_properties { construct; }
 		[NoAccessorMethod]
 		public Peas.Engine engine { owned get; construct; }

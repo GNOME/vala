@@ -15,8 +15,8 @@ namespace Pango {
 		public static unowned Pango.FontMap get_default ();
 		public Cairo.FontType get_font_type ();
 		public double get_resolution ();
-		public static unowned Pango.FontMap @new ();
-		public static unowned Pango.FontMap new_for_font_type (Cairo.FontType fonttype);
+		public static Pango.FontMap @new ();
+		public static Pango.FontMap new_for_font_type (Cairo.FontType fonttype);
 		public void set_default ();
 		public void set_resolution (double dpi);
 	}
@@ -40,6 +40,12 @@ namespace Pango {
 	public static Pango.Layout cairo_create_layout (Cairo.Context cr);
 	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static void cairo_error_underline_path (Cairo.Context cr, double x, double y, double width, double height);
+	[CCode (cheader_filename = "pango/pangocairo.h")]
+	public static unowned Pango.FontMap cairo_font_map_get_default ();
+	[CCode (cheader_filename = "pango/pangocairo.h")]
+	public static Pango.FontMap cairo_font_map_new ();
+	[CCode (cheader_filename = "pango/pangocairo.h")]
+	public static Pango.FontMap cairo_font_map_new_for_font_type (Cairo.FontType fonttype);
 	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static void cairo_glyph_string_path (Cairo.Context cr, Pango.Font font, Pango.GlyphString glyphs);
 	[CCode (cheader_filename = "pango/pangocairo.h")]
