@@ -2555,6 +2555,7 @@ public class Vala.GirParser : CodeVisitor {
 	Property parse_property () {
 		start_element ("property");
 		push_node (element_get_name().replace ("-", "_"), false);
+		bool is_abstract = metadata.get_bool (ArgumentType.ABSTRACT, current.parent.symbol is Interface);
 
 		next ();
 		bool no_array_length;
@@ -2564,9 +2565,7 @@ public class Vala.GirParser : CodeVisitor {
 		var prop = new Property (current.name, type, null, null, current.source_reference);
 		prop.access = SymbolAccessibility.PUBLIC;
 		prop.external = true;
-		if (current.parent.symbol is Interface) {
-			prop.is_abstract = true;
-		}
+		prop.is_abstract = is_abstract;
 		if (no_array_length) {
 			prop.set_attribute_bool ("CCode", "array_length", false);
 		}

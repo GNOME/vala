@@ -9,14 +9,14 @@ DesktopAppInfo* skip
 DesktopAppLaunchCallback skip
 FileDescriptorBased* skip
 Unix* skip
+UnixFDList skip=false
 unix_* skip
-*.*unix_fd_list* skip
 // UnixSocketAddress.abstract#property skip
-// DBusConnection
-//   .call_with_unix_fd_list*.fd_list default=null
-//   .call_with_unix_fd_list*.out_fd_list nullable default=null
-// DBusProxy
-//   .call_with_unix_fd*.*fd_list nullable default=null
+DBusConnection
+	.call_with_unix_fd_list*.fd_list default=null
+	.call_with_unix_fd_list*.out_fd_list nullable default=null
+DBusProxy
+	.call_with_unix_fd*.*fd_list nullable default=null
 
 // Move constants around
 FILE_ATTRIBUTE_* parent="GLib.FileAttribute" name="FILE_ATTRIBUTE_(.*)"
@@ -52,6 +52,8 @@ dbus_address_get_for_bus_sync parent="GLib.BusType" name="get_address_sync"
 ActionEntry
   .activate type="GLib.Callback"
   .change_state type="GLib.Callback"
+ActionGroup
+  .query_action#virtual_method virtual
 Application.local_command_line
   .arguments ref type="unowned string[]"
   .exit_status out
@@ -94,6 +96,9 @@ FileAttributeInfo struct=false
 io_extension_get_type skip
 IOModuleScope
   .free skip
+IOStream
+  .input_stream abstract
+  .output_stream abstract
 InetAddress
   .to_bytes type="unowned uint8[]" skip=false
 MemoryOutputStream
@@ -101,6 +106,9 @@ MemoryOutputStream
   .steal_data type="uint8[]"
   .destroy_function skip=false type="GLib.DestroyNotify?"
   .realloc_function skip=false type="GLib.ReallocFunc?"
+MenuItem
+  .set_action_and_target skip=false
+  .set_attribute skip=false
 MenuModel
   .get_item_attribute skip=false
 Resolver
@@ -175,7 +183,7 @@ Initable
 PollableInputStream
   .create_source type="GLib.PollableSource"
   .read_nonblocking.buffer type="uint8[]" array_length_idx=1
-  .read_nonblocking#virtual_method name="read_nonblocking_fn"
+  .read_nonblocking#virtual_method vfunc_name="read_nonblocking_fn"
 PollableOutputStream
   .create_source type="GLib.PollableSource"
 TlsClientConnection
@@ -213,6 +221,7 @@ DataOutputStream
   .put_* skip
 IOStream
   .close* skip
+  .closed skip=false
 InputStream
   .close* skip
   .read* skip
@@ -289,5 +298,25 @@ DBus*Info.generate_xml.string_builder out=false
 
 // Forward upstream
 content_type_from_mime_type nullable
+content_type_get_mime_type nullable
+ActionGroup
+  .get_action* nullable
+  .get_action_state_type unowned
 ActionMap
   .add_action_entries.entries array array_length_idx=1
+AppInfo
+  .launch.files nullable
+  .launch_uris.uris nullable
+AsyncReadyCallback.source_object nullable
+DBusSubtreeDispatchFunc nullable unowned
+DBusSubtreeVTable.enumerate skip=false
+LoadableIcon
+  .load_finish.type out nullable unowned=false default=null
+Socket
+  .receive.buffer type="uint8[]" array_length_idx=1
+  .receive_with_blocking.buffer type="uint8[]" array_length_idx=1
+TlsBackend
+  .get_certificate_type abstract
+  .get_client_connection_type abstract
+  .get_file_database_type abstract
+  .get_server_connection_type abstract

@@ -26,11 +26,12 @@ namespace GLib {
 		public async T get_proxy<T> (string? name, string object_path, GLib.DBusProxyFlags flags = 0, GLib.Cancellable? cancellable = null) throws GLib.IOError; 
 		public T get_proxy_sync<T> (string? name, string object_path, GLib.DBusProxyFlags flags = 0, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public uint register_object<T> (string object_path, T object) throws GLib.IOError;
-		public async GLib.DBusMessage send_message_with_reply (GLib.DBusMessage message, GLib.DBusSendMessageFlags flags, int timeout_msec, out uint32 out_serial, GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		public GLib.DBusMessage send_message_with_reply_sync (GLib.DBusMessage message, GLib.DBusSendMessageFlags flags, int timeout_msec, out uint32 out_serial, GLib.Cancellable? cancellable = null) throws GLib.IOError;
+		public async GLib.DBusMessage send_message_with_reply (GLib.DBusMessage message, GLib.DBusSendMessageFlags flags, int timeout_msec, out uint32 out_serial = null, GLib.Cancellable? cancellable = null) throws GLib.IOError;
+		public GLib.DBusMessage send_message_with_reply_sync (GLib.DBusMessage message, GLib.DBusSendMessageFlags flags, int timeout_msec, out uint32 out_serial = null, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 	}
 
 	public class DBusMessage : GLib.Object {
+		[CCode (has_construct_function = false)]
 		public DBusMessage.method_call (string name, string path, string interface_, string method);
 		[PrintfFormat, CCode (has_construct_function = false)]
 		public DBusMessage.method_error (GLib.DBusMessage method_call_message, string error_name, string error_message_format, ...);
@@ -98,7 +99,8 @@ namespace GLib {
 	}
 
 	public abstract class IOStream : GLib.Object {
-		public bool close (GLib.Cancellable? cancellable = null) throws GLib.IOError;
+		[CCode (vfunc_name = "close_fn")]
+		public virtual bool close (GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public virtual async bool close_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 	}
 
@@ -114,7 +116,7 @@ namespace GLib {
 		public virtual async ssize_t skip_async (size_t count, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 	}
 
-	public class MemoryOutputStream : GLib.OutputStream, GLib.Seekable {
+	public class MemoryOutputStream : GLib.OutputStream {
 		[CCode (has_construct_function = false, type = "GOutputStream*")]
 		public MemoryOutputStream ([CCode (array_length_type = "gsize")] owned uint8[]? data, GLib.ReallocFunc? realloc_function, GLib.DestroyNotify? destroy_function);
 	}
@@ -162,9 +164,12 @@ namespace GLib {
 	}
 
 	public class SimpleAsyncResult : GLib.Object, GLib.AsyncResult {
+		[CCode (has_construct_function = false)]
 		public SimpleAsyncResult (GLib.Object? source_object, void* source_tag);
+		[CCode (has_construct_function = false)]
 		[PrintfFormat]
 		public SimpleAsyncResult.error (GLib.Object? source_object, GLib.Quark domain, int code, string format, ...);
+		[CCode (has_construct_function = false)]
 		public SimpleAsyncResult.from_error (GLib.Object? source_object, GLib.Error error);
 		[CCode (simple_generics = true)]
 		public unowned T get_op_res_gpointer<T> ();
@@ -172,7 +177,7 @@ namespace GLib {
 		public void set_op_res_gpointer<T> (owned T op_res);
 	}
 
-	public class Socket : GLib.Object, GLib.Initable {
+	public class Socket : GLib.Object {
 		public bool condition_wait (GLib.IOCondition condition, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 	}
 
