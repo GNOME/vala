@@ -4711,4 +4711,20 @@ namespace GLib {
 
 	[CCode (simple_generics = true)]
 	private static void qsort_with_data<T> (T[] elems, size_t size, [CCode (type = "GCompareDataFunc")] GLib.CompareDataFunc<T> compare_func);
+
+	/* Unix-specific functions. All of these have to include glib-unix.h. */
+	namespace Unix {
+		[CCode (cheader_filename = "glib-unix.h", cname = "g_unix_signal_add_full")]
+		public static uint signal_add (int signum, owned GLib.SourceFunc handler, [CCode (pos = 0.9)] int priority = Priority.DEFAULT);
+
+		[CCode (cheader_filename = "glib-unix.h", cname = "GSource")]
+		public class SignalSource : GLib.Source {
+			public SignalSource (int signum);
+		}
+
+		[CCode (cheader_filename = "glib-unix.h")]
+		public static bool open_pipe (int fds, int flags) throws GLib.Error;
+		[CCode (cheader_filename = "glib-unix.h")]
+		public static bool set_fd_nonblocking (int fd, bool nonblock) throws GLib.Error;
+	}
 }
