@@ -54,7 +54,7 @@ namespace Readline {
 	[CCode (cname = "rl_vintfunc_t", has_target = false)]
 	public delegate void     VintFunc (int a);
 	[CCode (cname = "rl_vcpfunc_t", has_target = false)]
-	public delegate void     VcpFunc (string s);
+	public delegate void     VcpFunc (string? s);
 	[CCode (cname = "rl_vcppfunc_t", has_target = false)]
 	public delegate void     VcppFunc (string[] s);
 	[CCode (cname = "rl_cpvfunc_t", has_target = false)]
