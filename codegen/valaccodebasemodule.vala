@@ -2010,8 +2010,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						param_type.value_owned = !no_implicit_copy (param_type);
 					}
 
-					bool is_unowned_delegate = acc.value_parameter.variable_type is DelegateType && !acc.value_parameter.variable_type.value_owned;
-
 					if (requires_destroy (param_type)) {
 						ccode.add_expression (destroy_parameter (acc.value_parameter));
 					}
