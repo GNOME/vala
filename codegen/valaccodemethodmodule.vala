@@ -912,6 +912,13 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 		push_function (vfunc);
 
+		if (context.assert && m.return_type.data_type is Struct && ((Struct) m.return_type.data_type).is_simple_type () && default_value_for_type (m.return_type, false) == null) {
+			// the type check will use the result variable
+			var vardecl = new CCodeVariableDeclarator ("result", default_value_for_type (m.return_type, true));
+			vardecl.init0 = true;
+			ccode.add_declaration (get_ccode_name (m.return_type), vardecl);
+		}
+
 		// add a typecheck statement for "self"
 		create_method_type_check_statement (m, return_type, (TypeSymbol) m.parent_symbol, true, "self");
 
