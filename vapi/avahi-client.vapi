@@ -123,12 +123,13 @@ namespace Avahi {
 		}
 
 		[CCode(cname="avahi_string_list_parse")]
-		private static int _parse(char[] data, out StringList dest);
-		[CCode(cname="avahi_string_list_parse_dup")]
+		public static int deserialize (char[] data, out StringList dest);
+		[Deprecated (since = "vala-0.16", replacement = "deserialize")]
+		[CCode (cname = "avahi_string_list_parse_dup")]
 		public static StringList parse(char[] data) throws Error {
 			StringList dest;
 
-			int errno = _parse(data, out dest);
+			int errno = deserialize (data, out dest);
 			if (errno < 0) {
 				var err = new Error.FAILURE(strerror(errno));
 				err.code = errno;
@@ -156,22 +157,31 @@ namespace Avahi {
 		public unowned string? get_type_from_subtype(string s);
 		public unowned string? unescape_label(ref unowned string name, char[] dest=new char[LABEL_MAX]);
 
-		[CCode(cname="avahi_escape_label")]
+		[CCode (cname="avahi_escape_label")]
 		private string? _escape_label(char* src, size_t src_len, ref char* dest, ref size_t dest_len);
-		[CCode(cname="avahi_escape_label_dup")]
+		[CCode (cname = "_vala_avahi_escape_label")]
 		public string? escape_label(string s) {
 			size_t len = LABEL_MAX * 4;
 			char* dest = new char[len];
 			return _escape_label(s, s.length, ref dest, ref len);
 		}
 
-		[CCode(cname="avahi_service_name_join")]
-		private int _service_name_join(char* dest, size_t dest_len, string name, string type, string domain);
-		[CCode(cname="avahi_service_name_join_dup")]
-		public string service_name_join(string name, string type, string domain) throws Error {
-			char* dest = new char[DOMAIN_NAME_MAX];
+		[CCode (cname = "avahi_service_name_join")]
+		public int _service_name_join ([CCode (array_length_type = "size_t")] uint8[] dest, string name, string type, string domain);
+		[CCode (cname = "_avahi_service_name_join")]
+		public int join_service_name (out string? dest, string name, string type, string domain) {
+			uint8[] dest_data = new uint8[DOMAIN_NAME_MAX];
+			int errno = _service_name_join (dest_data, name, type, domain);
+			dest = (errno >= 0) ? (string) dest_data : null;
+			return errno;
+		}
 
-			int errno = _service_name_join(dest, DOMAIN_NAME_MAX, name, type, domain);
+		[Deprecated (since = "vala-0.16", replacement = "join_service_name")]
+		[CCode (cname = "_vala_avahi_service_name_join")]
+		public string service_name_join (string name, string type, string domain) throws Error {
+			uint8[] dest = new uint8[DOMAIN_NAME_MAX];
+
+			int errno = _service_name_join(dest, name, type, domain);
 			if (errno < 0) {
 				var err = new Error.FAILURE(strerror(errno));
 				err.code = errno;
@@ -181,24 +191,44 @@ namespace Avahi {
 			return (string) dest;
 		}
 
-		[CCode(cname="avahi_service_name_split")]
-		private int _service_name_split(string src, char* name,   size_t name_len,
-													char* type,   size_t type_len,
-													char* domain, size_t domain_len);
-		[CCode(cname="avahi_service_name_split_dup")]
-		public void service_name_split(string src, out string name, out string type, out string domain) throws Error {
-			name = (string) new char[LABEL_MAX];
-			type = (string) new char[DOMAIN_NAME_MAX];
-			domain = (string) new char[DOMAIN_NAME_MAX];
+		[CCode (cname = "avahi_service_name_split")]
+		public int _service_name_split(string src, [CCode (array_length_type = "size_t")] uint8[] name, [CCode (array_length_type = "size_t")] uint8[] type, [CCode (array_length_type = "size_t")] uint8[] domain);
 
-			int errno = _service_name_split(src, name,   LABEL_MAX,
-												 type,   DOMAIN_NAME_MAX,
-												 domain, DOMAIN_NAME_MAX);
+		[CCode(cname = "_vala_avahi_service_name_split")]
+		public int split_service_name (string src, out string name, out string type, out string domain) {
+			uint8[] name_data = new uint8[LABEL_MAX];
+			uint8[] type_data = new uint8[DOMAIN_NAME_MAX];
+			uint8[] domain_data = new uint8[DOMAIN_NAME_MAX];
+
+			int errno = _service_name_split (src, name_data, type_data, domain_data);
+
+			if (errno >= 0) {
+				name = (string) name_data;
+				type = (string) type_data;
+				domain = (string) domain_data;
+			}
+
+			return errno;
+		}
+
+		[Deprecated (since = "vala-0.16", replacement = "split_service_name")]
+		[CCode (cname = "avahi_service_name_split_dup")]
+		public void service_name_split(string src, out string name, out string type, out string domain) throws Error {
+			uint8[] name_data = new uint8[LABEL_MAX];
+			uint8[] type_data = new uint8[DOMAIN_NAME_MAX];
+			uint8[] domain_data = new uint8[DOMAIN_NAME_MAX];
+
+			int errno = _service_name_split (src, name_data, type_data, domain_data);
+
 			if (errno < 0) {
 				var err = new Error.FAILURE(strerror(errno));
 				err.code = errno;
 				throw err;
 			}
+
+			name = (string) name_data;
+			type = (string) type_data;
+			domain = (string) domain_data;
 		}
 
 		public bool is_valid_service_type_generic(string s);
@@ -220,7 +250,7 @@ namespace Avahi {
 	}
 
 
-    /* Entry group */
+	/* Entry group */
 
 	[Flags]
 	[CCode(cheader_filename="avahi-common/defs.h", cname="AvahiPublishFlags", cfrefix="AVAHI_PUBLISH_")]
