@@ -31,63 +31,77 @@ public delegate void Valadoc.TagletRegisterFunction (ModuleLoader loader);
 
 
 public class Valadoc.ModuleLoader : Object {
-	public HashMap<string, GLib.Type> taglets = new HashMap<string, GLib.Type> (GLib.str_hash, GLib.str_equal);
+	private HashMap<string, ModuleData> doclets = new HashMap<string, ModuleData> ();
+	private HashMap<string, ModuleData> drivers = new HashMap<string, ModuleData> ();
+	private HashMap<string, GLib.Type> taglets = new HashMap<string, GLib.Type> ();
 
-	private Module drivermodule;
-	private Type drivertype;
-	public Driver driver;
-
-	private Module docletmodule;
-	private Type doclettype;
-	public Doclet doclet;
-
-	~ModuleLoader () {
-		// TODO: Why Do I have to do this?
-		driver = null;
-		doclet = null;
+	private class ModuleData : Object {
+		public Module module;
+		public Type type;
 	}
 
 	public Content.Taglet? create_taglet (string keyword) {
 		return (taglets.has_key (keyword))? (Content.Taglet) GLib.Object.new (taglets.get (keyword)) : null;
 	}
 
-	public bool load_doclet (string path) {
-		void* function;
-
-		docletmodule = Module.open (Module.build_path (path, "libdoclet"), ModuleFlags.BIND_LAZY | ModuleFlags.BIND_LOCAL);
-		if (docletmodule == null) {
-			return false;
-		}
-
-		docletmodule.symbol("register_plugin", out function);
-		if (function == null) {
-			return false;
-		}
-
-		Valadoc.DocletRegisterFunction doclet_register_function = (Valadoc.DocletRegisterFunction) function;
-		doclettype = doclet_register_function (this);
-		this.doclet = (Doclet) GLib.Object.new (doclettype);
-		return true;
+	public void register_taglet (string keyword, Type type) {
+		taglets.set (keyword, type);
 	}
 
+	public Doclet? create_doclet (string _path) {
+		string path = realpath (_path);
 
-	public bool load_driver (string path) {
-		void* function;
+		ModuleData? data = doclets.get (path);
+		if (data == null) {
+			void* function;
 
-		drivermodule = Module.open (Module.build_path (path, "libdriver"), ModuleFlags.BIND_LAZY | ModuleFlags.BIND_LOCAL);
-		if (drivermodule == null) {
-			return false;
+			Module? module = Module.open (Module.build_path (path, "libdoclet"), ModuleFlags.BIND_LAZY | ModuleFlags.BIND_LOCAL);
+			if (module == null) {
+				return null;
+			}
+
+			module.symbol("register_plugin", out function);
+			if (function == null) {
+				return null;
+			}
+
+			Valadoc.DocletRegisterFunction register_func = (Valadoc.DocletRegisterFunction) function;
+			data = new ModuleData ();
+			doclets.set (path, data);
+
+			data.type = register_func (this);
+			data.module = (owned) module;
 		}
 
-		drivermodule.symbol("register_plugin", out function);
-		if (function == null) {
-			return false;
+		return (Doclet) GLib.Object.new (data.type);
+	}
+
+	public Driver? create_driver (string _path) {
+		string path = realpath (_path);
+
+		ModuleData? data = drivers.get (path);
+		if (data == null) {
+			void* function;
+
+			Module? module = Module.open (Module.build_path (path, "libdriver"), ModuleFlags.BIND_LAZY | ModuleFlags.BIND_LOCAL);
+			if (module == null) {
+				return null;
+			}
+
+			module.symbol("register_plugin", out function);
+			if (function == null) {
+				return null;
+			}
+
+			Valadoc.DriverRegisterFunction register_func = (Valadoc.DriverRegisterFunction) function;
+			data = new ModuleData ();
+			drivers.set (path, data);
+
+			data.type = register_func (this);
+			data.module = (owned) module;
 		}
 
-		Valadoc.DriverRegisterFunction driver_register_function = (Valadoc.DriverRegisterFunction) function;
-		drivertype = driver_register_function (this);
-		this.driver = (Driver) GLib.Object.new (drivertype);
-		return true;
+		return (Driver) GLib.Object.new (data.type);
 	}
 }
 

@@ -268,10 +268,12 @@ public class ValaDoc : Object {
 		return null;
 	}
 
-	private ModuleLoader? create_module_loader (ErrorReporter reporter) {
+	private ModuleLoader? create_module_loader (ErrorReporter reporter, out Doclet? doclet, out Driver? driver) {
 		ModuleLoader modules = new ModuleLoader ();
 		Taglets.init (modules);
 
+		doclet = null;
+		driver = null;
 
 		// doclet:
 		string? pluginpath = get_doclet_path (reporter);
@@ -279,8 +281,8 @@ public class ValaDoc : Object {
 			return null;
 		}
 
-		bool tmp = modules.load_doclet (pluginpath);
-		if (tmp == false) {
+		doclet = modules.create_doclet (pluginpath);
+		if (doclet == null) {
 			reporter.simple_error ("failed to load doclet");
 			return null;
 		}
@@ -292,13 +294,13 @@ public class ValaDoc : Object {
 			return null;
 		}
 
-		tmp = modules.load_driver (pluginpath);
-		if (tmp == false) {
+		driver = modules.create_driver (pluginpath);
+		if (driver == null) {
 			reporter.simple_error ("failed to load driver");
 			return null;
 		}
 
-		assert (modules.driver != null && modules.doclet != null);
+		assert (driver != null && doclet != null);
 
 		return modules;
 	}
@@ -343,17 +345,20 @@ public class ValaDoc : Object {
 
 
 		// load plugins:
-		ModuleLoader? modules = create_module_loader (reporter);
+		Doclet? doclet = null;
+		Driver? driver = null;
+
+		ModuleLoader? modules = create_module_loader (reporter, out doclet, out driver);
 		if (reporter.errors > 0 || modules == null) {
 			return quit (reporter);
 		}
 
 
 		// Create tree:
-		Valadoc.Driver driver = modules.driver;
 		Valadoc.Api.Tree doctree = driver.build (settings, reporter);
-
 		if (reporter.errors > 0) {
+			driver = null;
+			doclet = null;
 			return quit (reporter);
 		}
 
@@ -389,7 +394,7 @@ public class ValaDoc : Object {
 			}
 		}
 
-		modules.doclet.process (settings, doctree, reporter);
+		doclet.process (settings, doctree, reporter);
 		return quit (reporter);
 	}
 

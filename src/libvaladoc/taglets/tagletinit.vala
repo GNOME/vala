@@ -23,13 +23,13 @@
 
 namespace Valadoc.Taglets {
 	public void init (ModuleLoader loader) {
-		loader.taglets.set ("see", typeof (Valadoc.Taglets.See));
-		loader.taglets.set ("since", typeof (Valadoc.Taglets.Since));
-		loader.taglets.set ("link", typeof (Valadoc.Taglets.Link));
-		loader.taglets.set ("throws", typeof (Valadoc.Taglets.Throws));
-		loader.taglets.set ("return", typeof (Valadoc.Taglets.Return));
-		loader.taglets.set ("param", typeof (Valadoc.Taglets.Param));
-		loader.taglets.set ("deprecated", typeof (Valadoc.Taglets.Deprecated));
-		loader.taglets.set ("inheritDoc", typeof (Valadoc.Taglets.InheritDoc));
+		loader.register_taglet ("see", typeof (Valadoc.Taglets.See));
+		loader.register_taglet ("since", typeof (Valadoc.Taglets.Since));
+		loader.register_taglet ("link", typeof (Valadoc.Taglets.Link));
+		loader.register_taglet ("throws", typeof (Valadoc.Taglets.Throws));
+		loader.register_taglet ("return", typeof (Valadoc.Taglets.Return));
+		loader.register_taglet ("param", typeof (Valadoc.Taglets.Param));
+		loader.register_taglet ("deprecated", typeof (Valadoc.Taglets.Deprecated));
+		loader.register_taglet ("inheritDoc", typeof (Valadoc.Taglets.InheritDoc));
 	}
 }
