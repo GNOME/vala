@@ -392,6 +392,11 @@ public abstract class Vala.DataType : CodeNode {
 
 	// check whether this type is at least as accessible as the specified symbol
 	public virtual bool is_accessible (Symbol sym) {
+		foreach (var type_arg in get_type_arguments ()) {
+			if (!type_arg.is_accessible (sym)) {
+				return false;
+			}
+		}
 		if (data_type != null) {
 			return data_type.is_accessible (sym);
 		}
