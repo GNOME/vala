@@ -194,17 +194,11 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				inst = new CCodeMemberAccess.pointer (pub_inst, "priv");
 				set_cvalue (expr, new CCodeMemberAccess.pointer (inst, get_ccode_name (prop.field)));
 			} else if (!get_ccode_no_accessor_method (prop)) {
-				var base_property = prop;
-				if (prop.base_property != null) {
-					base_property = prop.base_property;
-				} else if (prop.base_interface_property != null) {
-					base_property = prop.base_interface_property;
-				}
 				string getter_cname;
 				if (prop is DynamicProperty) {
 					getter_cname = get_dynamic_property_getter_cname ((DynamicProperty) prop);
 				} else {
-					getter_cname = get_ccode_name (base_property.get_accessor);
+					getter_cname = get_ccode_name (prop.get_accessor);
 				}
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier (getter_cname));
 
@@ -221,25 +215,25 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					ccall.add_argument (pub_inst);
 				}
 
-				var temp_value = create_temp_value (base_property.get_accessor.value_type, false, expr);
+				var temp_value = create_temp_value (prop.get_accessor.value_type, false, expr);
 				expr.target_value = load_temp_value (temp_value);
 				var ctemp = get_cvalue_ (temp_value);
 
 				// Property access to real struct types is handled differently
 				// The value is returned by out parameter
-				if (base_property.property_type.is_real_non_null_struct_type ()) {
+				if (prop.property_type.is_real_non_null_struct_type ()) {
 					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
 					ccode.add_expression (ccall);
 				} else {
 					ccode.add_assignment (ctemp, ccall);
 
-					array_type = base_property.property_type as ArrayType;
-					if (array_type != null && get_ccode_array_length (base_property)) {
+					array_type = prop.property_type as ArrayType;
+					if (array_type != null && get_ccode_array_length (prop)) {
 						for (int dim = 1; dim <= array_type.rank; dim++) {
 							ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_array_length_cvalue (temp_value, dim)));
 						}
 					} else {
-						delegate_type = base_property.property_type as DelegateType;
+						delegate_type = prop.property_type as DelegateType;
 						if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
 							ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_delegate_target_cvalue (temp_value)));
 						}
