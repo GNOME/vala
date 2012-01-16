@@ -4,18 +4,21 @@ NULL =
 
 AM_CFLAGS = \
 	-DPACKAGE_ICONDIR=\"$(datadir)/valadoc/icons/\" \
-	$(LIBGVC_CFLAGS) \
-	$(GLIB_CFLAGS) \
-	$(LIBGEE_CFLAGS) \
-	$(GMODULE_CFLAGS) \
+	-DPACKAGE_DATADIR=\"$(libdir)/valadoc\"         \
+	-DPACKAGE_VERSION=\"$(VERSION)\"                \
+	-DDEFAULT_DRIVER=\"$(DEFAULT_DRIVER)\"          \
+	$(LIBGVC_CFLAGS)                                \
+	$(GLIB_CFLAGS)                                  \
+	$(LIBGEE_CFLAGS)                                \
+	$(GMODULE_CFLAGS)                               \
 	$(NULL)
 
 
 BUILT_SOURCES = libvaladoc.vala.stamp
 
 
-lib_LTLIBRARIES = \
-	libvaladoc.la     \
+lib_LTLIBRARIES =   \
+	libvaladoc.la   \
 	$(NULL)
 
 
@@ -181,7 +184,7 @@ libvaladoc_la_LIBADD = \
 	$(NULL)
 
 
-EXTRA_DIST =                         \
+EXTRA_DIST =                     \
 	$(libvaladoc_la_VALASOURCES) \
 	libvaladoc.vala.stamp        \
 	valadoc-1.0.vapi             \
@@ -189,7 +192,7 @@ EXTRA_DIST =                         \
 	$(NULL)
 
 
-MAINTAINERCLEANFILES =                        \
+MAINTAINERCLEANFILES =                    \
 	valadoc-1.0.vapi                      \
 	valadoc-1.0.h                         \
 	valadoc-1.0.gir                       \

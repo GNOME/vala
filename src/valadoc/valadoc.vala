@@ -117,30 +117,6 @@ public class ValaDoc : Object {
 		{ null }
 	};
 
-	private struct LibvalaVersion {
-		public int segment_a;
-		public int segment_b;
-		public int segment_c;
-
-		public LibvalaVersion (int seg_a, int seg_b, int seg_c) {
-			segment_a = seg_a;
-			segment_b = seg_b;
-			segment_c = seg_c;
-		}
-	}
-
-	private struct DriverMetaData {
-		public LibvalaVersion min;
-		public LibvalaVersion max;
-		public string driver;
-
-		public DriverMetaData (LibvalaVersion min, LibvalaVersion max, string driver) {
-			this.driver = driver;
-			this.min = min;
-			this.max = max;
-		}
-	}
-
 	private static int quit (ErrorReporter reporter) {
 		if (reporter.errors == 0) {
 			stdout.printf ("Succeeded - %d warning(s)\n", reporter.warnings);
@@ -180,103 +156,14 @@ public class ValaDoc : Object {
 		return this.pkg_name;
 	}
 
-	private string get_plugin_path (string pluginpath, string pluginsubdir) {
-		if (is_absolute (pluginpath) == false) {
-			// Test to see if the plugin exists in the expanded path and then fallback
-			// to using the configured plugin directory
-			string local_path = build_filename (Environment.get_current_dir(), pluginpath);
-			if (FileUtils.test(local_path, FileTest.EXISTS)) {
-				return local_path;
-			} else {
-				return build_filename (Config.plugin_dir, pluginsubdir, pluginpath);
-			}
-		}
-
-		return pluginpath;
-	}
-
-	private string get_doclet_path (ErrorReporter reporter) {
-		if (docletpath == null) {
-			return build_filename (Config.plugin_dir, "doclets", "html");
-		}
-
-		return get_plugin_path (docletpath, "doclets");
-	}
-
-	private bool is_driver (string path) {
-		string library_path = Path.build_filename (path, "libdriver." + Module.SUFFIX);
-		return FileUtils.test (path, FileTest.EXISTS) && FileUtils.test (library_path, FileTest.EXISTS);
-	}
-
-	private string? get_driver_path (ErrorReporter reporter) {
-		// no driver selected
-		if (driverpath == null) {
-			driverpath = Config.default_driver;
-		}
-
-
-		// selected string is a plugin directory
-		string extended_driver_path = get_plugin_path (driverpath, "drivers");
-		if (is_driver (extended_driver_path)) {
-			return extended_driver_path;
-		}
-
-
-		// selected string is a version number:
-		if (driverpath.has_prefix ("Vala ")) {
-			driverpath = driverpath.substring (5);
-		}
-
-		string[] segments = driverpath.split (".");
-		if (segments.length != 3 && segments.length != 4) {
-			reporter.simple_error ("Invalid driver version format.");
-			return null;
-		}
-
-
-		//TODO: add try_parse to int
-		int64 segment_a;
-		int64 segment_b;
-		int64 segment_c;
-		bool tmp;
-
-		tmp  = int64.try_parse (segments[0], out segment_a);
-		tmp &= int64.try_parse (segments[1], out segment_b);
-		tmp &= int64.try_parse (segments[2], out segment_c);
-
-		if (!tmp) {
-			reporter.simple_error ("Invalid driver version format.");
-			return null;
-		}
-
-		DriverMetaData[] lut = {
-				DriverMetaData (LibvalaVersion (0, 10, 0), LibvalaVersion (0, 10, -1), "0.10.x"),
-				DriverMetaData (LibvalaVersion (0, 12, 0), LibvalaVersion (0, 12, -1), "0.12.x"),
-				DriverMetaData (LibvalaVersion (0, 14, 0), LibvalaVersion (0, 14, -1), "0.14.x")
-			};
-
-		for (int i = 0; i < lut.length ; i++) {
-			if (lut[i].min.segment_a <= segment_a && lut[i].max.segment_a >= segment_a
-				&& lut[i].min.segment_b <= segment_b && lut[i].max.segment_b >= segment_b
-				&& lut[i].min.segment_c <= segment_c && (lut[i].max.segment_c >= segment_c || lut[i].max.segment_c < 0)) {
-				return Path.build_filename (Config.plugin_dir, "drivers", lut[i].driver);
-			}
-		}
-
-		// return invalid driver path
-		reporter.simple_error ("No suitable driver found.");
-		return null;
-	}
-
 	private ModuleLoader? create_module_loader (ErrorReporter reporter, out Doclet? doclet, out Driver? driver) {
-		ModuleLoader modules = new ModuleLoader ();
-		Taglets.init (modules);
+		ModuleLoader modules = ModuleLoader.get_instance ();
 
 		doclet = null;
 		driver = null;
 
 		// doclet:
-		string? pluginpath = get_doclet_path (reporter);
+		string? pluginpath = ModuleLoader.get_doclet_path (docletpath, reporter);
 		if (pluginpath == null) {
 			return null;
 		}
@@ -289,7 +176,7 @@ public class ValaDoc : Object {
 
 
 		// driver:
-		pluginpath = get_driver_path (reporter);
+		pluginpath = ModuleLoader.get_driver_path (driverpath, reporter);
 		if (pluginpath == null) {
 			return null;
 		}
