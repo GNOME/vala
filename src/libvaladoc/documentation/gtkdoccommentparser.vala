@@ -947,7 +947,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 			}
 		}
 
-		Paragraph first = content.first () as Paragraph;
+		Paragraph? first = (content.is_empty)? null : content.first () as Paragraph;
 		if (first == null) {
 			first = factory.create_paragraph ();
 			content.insert (0, first);
