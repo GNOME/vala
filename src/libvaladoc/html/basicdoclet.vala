@@ -33,7 +33,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	protected Html.MarkupWriter writer;
 	protected Html.CssClassResolver cssresolver;
 	protected Charts.Factory image_factory;
-
+	protected ErrorReporter reporter;
 	protected string package_list_link = "../index.html";
 
 	// CSS:
@@ -98,6 +98,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	private const string css_deprecated = "deprecated";
 
 	public virtual void process (Settings settings, Api.Tree tree, ErrorReporter reporter) {
+		this.reporter = reporter;
 		this.settings = settings;
 		this.tree = tree;
 
