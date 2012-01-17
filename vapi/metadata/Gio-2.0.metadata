@@ -51,8 +51,8 @@ dbus_error_* parent="GLib.DBusError" name="dbus_error_(.*)"
 dbus_address_get_for_bus_sync parent="GLib.BusType" name="get_address_sync"
 
 ActionEntry
-  .activate type="GLib.Callback"
-  .change_state type="GLib.Callback"
+  .activate type="GLib.SimpleActionActivateCallback"
+  .change_state type="GLib.SimpleActionChangeStateCallback"
 ActionGroup
   .query_action#virtual_method virtual
 Application.local_command_line

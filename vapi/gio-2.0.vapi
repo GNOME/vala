@@ -2568,10 +2568,10 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h", has_type_id = false)]
 	public struct ActionEntry {
 		public weak string name;
-		public GLib.Callback activate;
+		public GLib.SimpleActionActivateCallback activate;
 		public weak string parameter_type;
 		public weak string state;
-		public GLib.Callback change_state;
+		public GLib.SimpleActionChangeStateCallback change_state;
 	}
 	[CCode (cheader_filename = "gio/gio.h", has_type_id = false)]
 	public struct DBusErrorEntry {
@@ -3231,6 +3231,10 @@ namespace GLib {
 	public delegate GLib.Variant SettingsBindSetMapping (GLib.Value value, GLib.VariantType expected_type);
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 2.9)]
 	public delegate bool SettingsGetMapping (GLib.Variant value, out void* result);
+	[CCode (cheader_filename = "gio/gio.h")]
+	public delegate void SimpleActionActivateCallback (GLib.SimpleAction action, GLib.Variant? parameter);
+	[CCode (cheader_filename = "gio/gio.h")]
+	public delegate void SimpleActionChangeStateCallback (GLib.SimpleAction action, GLib.Variant value);
 	[CCode (cheader_filename = "gio/gio.h", has_target = false)]
 	public delegate void SimpleAsyncThreadFunc (GLib.SimpleAsyncResult res, GLib.Object object, GLib.Cancellable? cancellable = null);
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 2.9)]
