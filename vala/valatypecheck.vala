@@ -104,6 +104,12 @@ public class Vala.TypeCheck : Expression {
 		
 		type_reference.check (context);
 
+		if (expression.value_type == null) {
+			Report.error (expression.source_reference, "invalid left operand");
+			error = true;
+			return false;
+		}
+
 		if (type_reference.data_type == null) {
 			/* if type resolving didn't succeed, skip this check */
 			error = true;
