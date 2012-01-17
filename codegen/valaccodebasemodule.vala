@@ -3101,7 +3101,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (type.type_parameter != null) {
 			var parent = type.type_parameter.parent_symbol;
 			var cl = parent as Class;
-			if ((!(parent is Method) && !(parent is ObjectTypeSymbol)) || (cl != null && cl.is_compact)) {
+			if ((!(parent is Method) && !(parent is ObjectTypeSymbol)) || (cl != null && cl.is_compact) || parent is Interface) {
 				return new CCodeConstant ("NULL");
 			}
 
