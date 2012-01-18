@@ -4101,6 +4101,43 @@ namespace GLib {
 		private uint len;
 	}
 
+	[Compact]
+	[CCode (cprefix = "g_bytes_", ref_function = "g_bytes_ref", unref_function = "g_bytes_unref", type_id = "G_TYPE_BYTES")]
+	public class Bytes {
+		public Bytes ([CCode (array_length_type = "gsize")] uint8[] data);
+		public Bytes.take ([CCode (array_length_type = "gsize")] owned uint8[] data);
+		public Bytes.static ([CCode (array_length_type = "gsize")] uint8[] data);
+		public Bytes.with_free_func ([CCode (array_length_type = "gsize")] owned uint8[] data, GLib.DestroyNotify? free_func = GLib.g_free);
+		public Bytes.from_bytes (GLib.Bytes bytes, size_t offset, size_t length);
+
+		[CCode (array_length_type = "gsize")]
+		public unowned uint8[] get_data ();
+		public size_t get_size ();
+		public uint hash ();
+		public int compare (GLib.Bytes bytes2);
+		public static uint8[] unref_to_data (owned GLib.Bytes bytes);
+		public static GLib.ByteArray unref_to_array (owned GLib.Bytes bytes);
+
+		[CCode (cname = "_vala_g_bytes_get")]
+		public uint8 get (int index) {
+			unowned uint8[] data = this.get_data ();
+			return data[index];
+		}
+
+		[CCode (cname = "_vala_g_bytes_slice")]
+		public GLib.Bytes slice (int start, int end) {
+			unowned uint8[] data = this.get_data ();
+			return new GLib.Bytes (data[start:end]);
+		}
+
+		public int length {
+			[CCode (cname = "_vala_g_bytes_get_length")]
+			get {
+				return (int) this.get_size ();
+			}
+		}
+	}
+
 	/* Byte Arrays */
 
 	[Compact]
