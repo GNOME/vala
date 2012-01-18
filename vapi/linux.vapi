@@ -1322,12 +1322,12 @@ namespace Linux {
                 public unowned IfAddrs? ifa_next;
                 public string ifa_name;
                 public uint ifa_flags;
-                public Posix.SockAddr* ifa_addr;
-                public Posix.SockAddr* ifa_netmask;
+                public Posix.SockAddr? ifa_addr;
+                public Posix.SockAddr? ifa_netmask;
                 [CCode (cname = "ifa_ifu.ifu_broadaddr")]
-                public Posix.SockAddr* ifa_ifu_broadaddr;
+                public Posix.SockAddr? ifa_ifu_broadaddr;
                 [CCode (cname = "ifa_ifu.ifu_dstaddr")]
-                public Posix.SockAddr* ifa_ifu_dstaddr;
+                public Posix.SockAddr? ifa_ifu_dstaddr;
                 public void* ifa_data;
         }
 
