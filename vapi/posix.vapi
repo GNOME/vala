@@ -801,7 +801,7 @@ namespace Posix {
     public const int NI_NUMERICSERV;
 
     [CCode (cheader_filename = "netdb.h,sys/socket.h")]
-    public int getnameinfo (ref SockAddr sa, socklen_t salen, char[] node, char[] service, socklen_t servicelen, int flags);
+    public int getnameinfo (SockAddr sa, socklen_t salen, char[] node, char[] service, int flags);
 
 	[CCode (cheader_filename = "poll.h", cname = "struct pollfd")]
 	public struct pollfd {
@@ -1477,10 +1477,8 @@ namespace Posix {
 	[CCode (cheader_filename = "sys/socket.h")]
 	public int socketpair (int domain, int type, int protocol, [CCode (array_length = false)] int[] sv);
 
-    [SimpleType]
-    [IntegerType]
     [CCode (cname = "socklen_t", cheader_filename = "sys/socket.h", default_value = "0")]
-    public struct socklen_t {
+    public struct socklen_t : int {
     }
 
 	[SimpleType]
