@@ -255,6 +255,24 @@ public class Vala.CCodeAttribute : AttributeCache {
 		}
 	}
 
+	public bool free_function_address_of {
+		get {
+			if (_free_function_address_of == null) {
+				if (ccode != null && ccode.has_argument ("free_function_address_of")) {
+					_free_function_address_of = ccode.get_bool ("free_function_address_of");
+				} else {
+					var cl = (Class) sym;
+					if (cl.base_class != null) {
+						_free_function_address_of = CCodeBaseModule.get_ccode_free_function_address_of (cl.base_class);
+					} else {
+						_free_function_address_of = false;
+					}
+				}
+			}
+			return _free_function_address_of;
+		}
+	}
+
 	public string type_id {
 		get {
 			if (_type_id == null) {
@@ -464,6 +482,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 	private bool destroy_function_set;
 	private string? _free_function;
 	private bool free_function_set;
+	private bool? _free_function_address_of;
 	private string _type_id;
 	private string _marshaller_type_name;
 	private string _get_value_function;

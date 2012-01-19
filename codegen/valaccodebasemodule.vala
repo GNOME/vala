@@ -2770,6 +2770,34 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return destroy_func;
 	}
 
+	protected string generate_free_function_address_of_wrapper (DataType type) {
+		string destroy_func = "_vala_%s_free_function_address_of".printf (get_ccode_name (type.data_type));
+
+		if (!add_wrapper (destroy_func)) {
+			// wrapper already defined
+			return destroy_func;
+		}
+
+		var function = new CCodeFunction (destroy_func, "void");
+		function.modifiers = CCodeModifiers.STATIC;
+		function.add_parameter (new CCodeParameter ("self", get_ccode_name (type)));
+
+		push_function (function);
+
+		var cl = type.data_type as Class;
+		var free_call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_free_function (cl)));
+		free_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("self")));
+
+		ccode.add_expression (free_call);
+
+		pop_function ();
+
+		cfile.add_function_declaration (function);
+		cfile.add_function (function);
+
+		return destroy_func;
+	}
+
 	protected string generate_free_func_wrapper (DataType type) {
 		string destroy_func = "_vala_%s_free".printf (get_ccode_name (type.data_type));
 
@@ -2881,7 +2909,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					if (cl != null && get_ccode_is_gboxed (cl)) {
 						unref_function = generate_free_func_wrapper (type);
 					} else {
-						unref_function = get_ccode_free_function (type.data_type);
+						if (is_free_function_address_of (type)) {
+							unref_function = generate_free_function_address_of_wrapper (type);
+						} else {
+							unref_function = get_ccode_free_function (type.data_type);
+						}
 					}
 				}
 			} else {
@@ -3874,6 +3906,15 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var cl = type.data_type as Class;
 		if (cl != null) {
 			return get_ccode_ref_sink_function_void (cl);
+		} else {
+			return false;
+		}
+	}
+
+	bool is_free_function_address_of (DataType type) {
+		var cl = type.data_type as Class;
+		if (cl != null) {
+			return get_ccode_free_function_address_of (cl);
 		} else {
 			return false;
 		}
@@ -5688,6 +5729,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public static bool get_ccode_ref_function_void (Class cl) {
 		return get_ccode_attribute(cl).ref_function_void;
+	}
+
+	public static bool get_ccode_free_function_address_of (Class cl) {
+		return get_ccode_attribute(cl).free_function_address_of;
 	}
 
 	public static bool get_ccode_ref_sink_function_void (Class cl) {
