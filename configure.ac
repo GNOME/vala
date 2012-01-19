@@ -7,6 +7,12 @@ AM_INIT_AUTOMAKE([1.11 dist-bzip2])
 AM_MAINTAINER_MODE([enable])
 
 PACKAGE_SUFFIX=-0.18
+
+dnl http://people.gnome.org/~walters/docs/build-api.txt
+dnl We don't support separate builddir when building from git
+echo \#buildapi-variable-no-builddir >/dev/null
+
+PACKAGE_SUFFIX=-0.16
 AC_SUBST(PACKAGE_SUFFIX)
 AC_DEFINE_UNQUOTED(PACKAGE_SUFFIX, "$PACKAGE_SUFFIX", [Define to the suffix of this package])
 
