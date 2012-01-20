@@ -18,6 +18,12 @@ Table
 Widget
 	.paint_background#method name="paint_background_with_defaults"
 
+// http://bugzilla.clutter-project.org/show_bug.cgi?id=2688
+Image
+	.set_from_buffer*.buffer type="owned uint8[]?" array_length_idx=1
+	.set_from_buffer*.buffer_free_func nullable
+	.set_from_data.data type="uint8[]?"
+
 // Fixed upstream in mx 1.3.1
 ButtonGroup
         .set_active_button.button nullable

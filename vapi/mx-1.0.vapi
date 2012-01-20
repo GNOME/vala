@@ -531,10 +531,10 @@ namespace Mx {
 		public uint get_scale_width_threshold ();
 		public uint get_transition_duration ();
 		public void set_allow_upscale (bool allow);
-		public bool set_from_buffer (uint8 buffer, size_t buffer_size, GLib.DestroyNotify buffer_free_func) throws GLib.Error;
-		public bool set_from_buffer_at_size (uint8 buffer, size_t buffer_size, GLib.DestroyNotify buffer_free_func, int width, int height) throws GLib.Error;
+		public bool set_from_buffer ([CCode (array_length_cname = "buffer_size", array_length_pos = 1.5, array_length_type = "gsize", type = "guchar*")] owned uint8[]? buffer, GLib.DestroyNotify? buffer_free_func) throws GLib.Error;
+		public bool set_from_buffer_at_size ([CCode (array_length_cname = "buffer_size", array_length_pos = 1.5, array_length_type = "gsize", type = "guchar*")] owned uint8[]? buffer, GLib.DestroyNotify? buffer_free_func, int width, int height) throws GLib.Error;
 		public bool set_from_cogl_texture (Cogl.Handle texture);
-		public bool set_from_data (uint8 data, Cogl.PixelFormat pixel_format, int width, int height, int rowstride) throws GLib.Error;
+		public bool set_from_data ([CCode (array_length = false, type = "guchar*")] uint8[]? data, Cogl.PixelFormat pixel_format, int width, int height, int rowstride) throws GLib.Error;
 		public bool set_from_file (string filename) throws GLib.Error;
 		public bool set_from_file_at_size (string filename, int width, int height) throws GLib.Error;
 		public void set_image_rotation (float rotation);
