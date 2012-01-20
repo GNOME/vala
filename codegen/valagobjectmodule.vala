@@ -139,21 +139,12 @@ public class Vala.GObjectModule : GTypeModule {
 				ccode.add_statement (new CCodeComment (prop.comment.content));
 			}
 
-			if (prop.overrides || prop.base_interface_property != null) {
-				var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_override_property"));
-				cinst.add_argument (ccall);
-				cinst.add_argument (new CCodeConstant (get_ccode_upper_case_name (prop)));
-				cinst.add_argument (get_property_canonical_cconstant (prop));
-			
-				ccode.add_expression (cinst);
-			} else {
-				var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_install_property"));
-				cinst.add_argument (ccall);
-				cinst.add_argument (new CCodeConstant (get_ccode_upper_case_name (prop)));
-				cinst.add_argument (get_param_spec (prop));
-			
-				ccode.add_expression (cinst);
-			}
+			var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_install_property"));
+			cinst.add_argument (ccall);
+			cinst.add_argument (new CCodeConstant (get_ccode_upper_case_name (prop)));
+			cinst.add_argument (get_param_spec (prop));
+
+			ccode.add_expression (cinst);
 		}
 	}
 
