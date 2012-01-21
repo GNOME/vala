@@ -1,0 +1,15 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+bindir=@bindir@
+datarootdir=@datarootdir@
+datadir=@datadir@
+includedir=@includedir@
+
+vapigen=${bindir}/vapigen@PACKAGE_SUFFIX@
+vapidir=${datadir}/vala/vapi
+vapidir_versioned=${datadir}/vala@PACKAGE_SUFFIX@/vapi
+
+Name: vapigen
+Description: Vala API Generator
+Version: @VERSION@

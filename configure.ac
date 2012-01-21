@@ -110,6 +110,7 @@ AC_CONFIG_FILES([Makefile
            doc/Makefile
            doc/vala/Makefile
            gobject-introspection/Makefile
+           vapigen/vapigen.pc
            vapigen/Makefile
            vapigen/vala-gen-introspect/Makefile
            vapigen/vala-gen-introspect/vala-gen-introspect])

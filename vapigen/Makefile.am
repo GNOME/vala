@@ -60,12 +60,31 @@ vapicheck_LDADD = \
 	../gobject-introspection/libgidl.la \
 	$(NULL)
 
+if ENABLE_UNVERSIONED
+makedir = $(datadir)/vala
+make_DATA = Makefile.vapigen
+
+aclocaldir = $(datadir)/aclocal
+aclocal_DATA = vapigen.m4
+endif
+
+pkgconfigdir = $(datadir)/pkgconfig
+pkgconfig_DATA = vapigen@PACKAGE_SUFFIX@.pc
+
+vapigen@PACKAGE_SUFFIX@.pc: vapigen.pc
+	cp $< $@
+
 EXTRA_DIST = $(vapigen_VALASOURCES) $(vapicheck_VALASOURCES) vapigen.vala.stamp vapicheck.vala.stamp
+
+CLEANFILES = \
+	vapigen@PACKAGE_SUFFIX@.pc
+	$(NULL)
 
 if ENABLE_UNVERSIONED
 install-exec-hook:
 	cd $(DESTDIR)$(bindir) && $(LN_S) -f vapigen@PACKAGE_SUFFIX@$(EXEEXT) vapigen$(EXEEXT)
 	cd $(DESTDIR)$(bindir) && $(LN_S) -f vapicheck@PACKAGE_SUFFIX@$(EXEEXT) vapicheck$(EXEEXT)
+	cd $(DESTDIR)$(pkgconfigdir) && $(LN_S) -f vapigen@PACKAGE_SUFFIX@.pc vapigen.pc
 endif
 
 MAINTAINERCLEANFILES = \
