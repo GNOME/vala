@@ -32,9 +32,9 @@
 #
 #       Additional location(s) to search for GIR dependencies.
 #
-#   *_GIR
+#   *_FILES
 #
-#       The GIR which should be used to generate the VAPI.
+#       The files which should be used to generate the VAPI.
 
 _vapigen_silent_prefix = $(_vapigen_silent_prefix_$(V))
 _vapigen_silent_prefix_ = $(_vapigen_silent_prefix_$(AM_DEFAULT_VERBOSITY))
@@ -54,7 +54,7 @@ $(1): $$($(_vapi_name)_GIR)
 	  $(foreach _vapi_metadatadir_name,$(if $($(_vapi_name)_METADATADIRS),$($(_vapi_name)_METADATADIRS),$(VAPIGEN_METADATADIRS)),--metadatadir $(_vapi_metadatadir_name)) \
 	  $(foreach _vapi_dir_name,$(if $($(_vapi_name)_VAPIDIRS),$($(_vapi_name)_DIRS),$(VAPIGEN_VAPIDIRS)),--vapidir $(_vapi_dir_name)) \
 	  $(foreach _vapi_dep_name,$(if $($(_vapi_name)_DEPS),$($(_vapi_name)_DEPS),$(VAPIGEN_DEPS)),--pkg $(_vapi_dep_name)) \
-	  $$($(_vapi_name)_GIR)
+	  $$($(_vapi_name)_FILES)
 endef
 
 $(foreach vapi,$(VAPIGEN_VAPIS),$(eval $(call vapigen,$(vapi))))
