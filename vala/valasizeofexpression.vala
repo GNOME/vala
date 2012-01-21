@@ -65,6 +65,10 @@ public class Vala.SizeofExpression : Expression {
 		return true;
 	}
 
+	public override bool is_constant () {
+		return true;
+	}
+
 	public override void replace_type (DataType old_type, DataType new_type) {
 		if (type_reference == old_type) {
 			type_reference = new_type;
