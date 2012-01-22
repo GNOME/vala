@@ -1,6 +1,7 @@
 /* x11.vapi
  *
  * Copyright (C) 2009  Jürg Billeter
+ * Copyright (C) 2011  Alexander Kurtz
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -16,8 +17,9 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
  *
- * Author:
+ * Authors:
  * 	Jürg Billeter <j@bitron.ch>
+ * 	Alexander Kurtz <kurtz.alex@googlemail.com>
  */
 
 [CCode (gir_namespace = "xlib", gir_version = "2.0", cprefix = "", lower_case_cprefix = "", cheader_filename = "X11/Xlib.h,X11/Xatom.h,X11/Xutil.h,X11/Xregion.h")]
@@ -383,6 +385,48 @@ namespace X {
 		set_value_function = "g_value_set_int", default_value = "0",
 		type_signature = "i")]
 	public struct Pixmap : Drawable	{
+	}
+
+	[SimpleType]
+	[IntegerType (rank = 9)]
+	[CCode (cname = "Mask")]
+	public struct Mask {
+	}
+
+	[SimpleType]
+	[IntegerType (rank = 9)]
+	[CCode (cname = "VisualID")]
+	public struct VisualID {
+	}
+
+	[SimpleType]
+	[IntegerType (rank = 9)]
+	[CCode (cname = "Time")]
+	public struct Time {
+	}
+
+	[SimpleType]
+	[IntegerType (rank = 9)]
+	[CCode (cname = "Cursor")]
+	public struct Cursor {
+	}
+
+	[SimpleType]
+	[IntegerType (rank = 9)]
+	[CCode (cname = "GContext")]
+	public struct GContext {
+	}
+
+	[SimpleType]
+	[IntegerType (rank = 9)]
+	[CCode (cname = "KeySym")]
+	public struct KeySym {
+	}
+
+	[SimpleType]
+	[IntegerType (rank = 9)]
+	[CCode (cname = "KeyCode")]
+	public struct KeyCode {
 	}
 
 	[CCode (ref_function = "", unref_function = "")]
