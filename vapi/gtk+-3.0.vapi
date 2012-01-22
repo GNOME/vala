@@ -4689,7 +4689,7 @@ namespace Gtk {
 		public bool has_region (string style_region, out Gtk.RegionFlags flags);
 		public static unowned Gtk.ThemingEngine load (string name);
 		public bool lookup_color (string color_name, out Gdk.RGBA color);
-		public static void register_property (string name_space, Gtk.StylePropertyParser parse_func, GLib.ParamSpec pspec);
+		public static void register_property (string name_space, Gtk.StylePropertyParser? parse_func, GLib.ParamSpec pspec);
 		[NoWrapper]
 		public virtual void render_activity (Cairo.Context cr, double x, double y, double width, double height);
 		[NoWrapper]
