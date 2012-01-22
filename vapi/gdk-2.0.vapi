@@ -35,7 +35,7 @@ namespace Gdk {
 	public class Bitmap {
 		public weak GLib.Object parent_instance;
 		[Deprecated (since = "2.22")]
-		public static Gdk.Bitmap create_from_data (Gdk.Drawable drawable, string data, int width, int height);
+		public static Gdk.Bitmap create_from_data (Gdk.Drawable drawable, [CCode (array_length = false)] uint8[] data, int width, int height);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Colormap : GLib.Object {
@@ -440,7 +440,7 @@ namespace Gdk {
 		[Deprecated (since = "2.22")]
 		public static unowned Gdk.Pixmap colormap_create_from_xpm_d (Gdk.Drawable drawable, Gdk.Colormap colormap, out unowned Gdk.Bitmap mask, Gdk.Color transparent_color, string data);
 		[Deprecated (since = "2.22")]
-		public static unowned Gdk.Pixmap create_from_data (Gdk.Drawable drawable, string data, int width, int height, int depth, Gdk.Color fg, Gdk.Color bg);
+		public static unowned Gdk.Pixmap create_from_data (Gdk.Drawable drawable, [CCode (array_length = false)] uint8[] data, int width, int height, int depth, Gdk.Color fg, Gdk.Color bg);
 		[Deprecated (since = "2.22")]
 		public static unowned Gdk.Pixmap create_from_xpm (Gdk.Drawable drawable, out unowned Gdk.Bitmap mask, Gdk.Color transparent_color, string filename);
 		[Deprecated (since = "2.22")]
