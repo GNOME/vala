@@ -74,7 +74,14 @@ pkgconfig_DATA = vapigen@PACKAGE_SUFFIX@.pc
 vapigen@PACKAGE_SUFFIX@.pc: vapigen.pc
 	cp $< $@
 
-EXTRA_DIST = $(vapigen_VALASOURCES) $(vapicheck_VALASOURCES) vapigen.vala.stamp vapicheck.vala.stamp
+EXTRA_DIST = \
+	$(vapigen_VALASOURCES) \
+	$(vapicheck_VALASOURCES) \
+	Makefile.vapigen \
+	vapigen.m4 \
+	vapigen.vala.stamp \
+	vapicheck.vala.stamp \
+	$(NULL)
 
 CLEANFILES = \
 	vapigen@PACKAGE_SUFFIX@.pc
