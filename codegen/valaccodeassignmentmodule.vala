@@ -87,6 +87,8 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 
 			store_property (prop, ma.inner, assignment.right.target_value);
 			assignment.target_value = assignment.right.target_value;
+		} else if (assignment.left.symbol_reference is Variable && is_simple_struct_creation ((Variable) assignment.left.symbol_reference, assignment.right)) {
+			// delegate to visit_object_creation_expression
 		} else {
 			assignment.target_value = emit_simple_assignment (assignment);
 		}

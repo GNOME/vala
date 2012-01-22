@@ -2149,11 +2149,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
-	bool has_simple_struct_initializer (LocalVariable local) {
-		var st = local.variable_type.data_type as Struct;
-		var initializer = local.initializer as ObjectCreationExpression;
-		if (st != null && (!st.is_simple_type () || get_ccode_name (st) == "va_list") && !local.variable_type.nullable &&
-		    local.variable_type.data_type != gvalue_type && initializer != null && initializer.get_object_initializer ().size == 0) {
+	public bool is_simple_struct_creation (Variable variable, Expression expr) {
+		var st = variable.variable_type.data_type as Struct;
+		var creation = expr as ObjectCreationExpression;
+		if (creation != null && st != null && (!st.is_simple_type () || get_ccode_name (st) == "va_list") && !variable.variable_type.nullable &&
+		    variable.variable_type.data_type != gvalue_type && creation.get_object_initializer ().size == 0) {
 			return true;
 		} else {
 			return false;
@@ -2190,7 +2190,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				// try to initialize uninitialized variables
 				// initialization not necessary for variables stored in closure
-				if (rhs == null || has_simple_struct_initializer (local)) {
+				if (rhs == null || is_simple_struct_creation (local, local.initializer)) {
 					cvar.initializer = default_value_for_type (local.variable_type, true);
 					cvar.init0 = true;
 				}
@@ -2233,7 +2233,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	
 		if (rhs != null) {
-			if (!has_simple_struct_initializer (local)) {
+			if (!is_simple_struct_creation (local, local.initializer)) {
 				store_local (local, local.initializer.target_value, true);
 			}
 		}
@@ -3217,7 +3217,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 
 		var local_decl = expr.parent_node as LocalVariable;
-		if (!(local_decl != null && has_simple_struct_initializer (local_decl))) {
+		if (!(local_decl != null && is_simple_struct_creation (local_decl, local_decl.initializer))) {
 			expr.target_value = store_temp_value (expr.target_value, expr);
 		}
 
@@ -4251,8 +4251,26 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			// value-type initialization or object creation expression with object initializer
 
 			var local = expr.parent_node as LocalVariable;
-			if (local != null && has_simple_struct_initializer (local)) {
+			var a = expr.parent_node as Assignment;
+			if (local != null && is_simple_struct_creation (local, local.initializer)) {
 				instance = get_cvalue_ (get_local_cvalue (local));
+			} else if (a != null && a.left.symbol_reference is Variable && is_simple_struct_creation ((Variable) a.left.symbol_reference, a.right)) {
+				if (requires_destroy (a.left.value_type)) {
+					/* unref old value */
+					ccode.add_expression (destroy_value (a.left.target_value));
+				}
+
+				local = a.left.symbol_reference as LocalVariable;
+				var field = a.left.symbol_reference as Field;
+				var param = a.left.symbol_reference as Parameter;
+				if (local != null) {
+					instance = get_cvalue_ (get_local_cvalue (local));
+				} else if (field != null) {
+					var inner = ((MemberAccess) a.left).inner;
+					instance = get_cvalue_ (get_field_cvalue (field, inner != null ? inner.target_value : null));
+				} else if (param != null) {
+					instance = get_cvalue_ (get_parameter_cvalue (param));
+				}
 			} else {
 				var temp_value = create_temp_value (expr.type_reference, true, expr);
 				instance = get_cvalue_ (temp_value);
@@ -4475,7 +4493,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 
 		var local = expr.parent_node as LocalVariable;
-		if (local != null && has_simple_struct_initializer (local)) {
+		if (local != null && is_simple_struct_creation (local, local.initializer)) {
 			// no temporary variable necessary
 			ccode.add_expression (creation_expr);
 			set_cvalue (expr, instance);
