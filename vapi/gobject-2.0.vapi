@@ -375,6 +375,13 @@ namespace GLib {
 		public unowned GLib.Binding bind_property (string source_property, GLib.Object target, string target_property, GLib.BindingFlags flags, [CCode (type = "GClosure*")] owned GLib.BindingTransformFunc? transform_to = null, [CCode (type = "GClosure*")] owned GLib.BindingTransformFunc? transform_from = null);
 	}
 
+	[CCode (destroy_function = "g_weak_ref_clear")]
+	public struct WeakRef {
+		public WeakRef (GLib.Object object);
+		public GLib.Object? get ();
+		public void set (GLib.Object object);
+	}
+
 	[CCode (instance_pos = 0)]
 	public delegate void ToggleNotify (GLib.Object object, bool is_last_ref);
 
@@ -457,6 +464,8 @@ namespace GLib {
 		public bool get_boolean ();
 		public void set_char (char v_char);
 		public char get_char ();
+		public void set_schar (int8 v_char);
+		public int8 get_schar ();
 		public void set_uchar (uchar v_uchar);
 		public uchar get_uchar ();
 		public void set_int (int v_int);

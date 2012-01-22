@@ -853,6 +853,9 @@ public struct unichar {
 	public static unichar max (unichar a, unichar b);
 	[CCode (cname = "CLAMP")]
 	public unichar clamp (unichar low, unichar high);
+
+	[CCode (cname = "G_UNICHAR_MAX_DECOMPOSITION_LENGTH")]
+	public const int MAX_DECOMPOSITION_LENGTH;
 }
 
 [CCode (cname = "GUnicodeScript", cprefix = "G_UNICODE_SCRIPT_", has_type_id = false)]
@@ -1673,7 +1676,8 @@ namespace GLib {
 		public int depth ();
 		[CCode (cname = "g_main_current_source")]
 		public static unowned Source current_source ();
-		public static unowned MainContext get_thread_default ();
+		public static unowned MainContext? get_thread_default ();
+		public static unowned MainContext ref_thread_default ();
 		public void push_thread_default ();
 		public void pop_thread_default ();
 		public unowned string? get_name ();
@@ -1816,6 +1820,9 @@ namespace GLib {
 	}
 	
 	[Compact]
+#if GLIB_2_32
+	[CCode (ref_function = "g_thread_ref", unref_function = "g_thread_unref")]
+#endif
 	public class Thread<T> {
 		public static bool supported ();
 		[CCode (simple_generics = true)]
@@ -1833,17 +1840,43 @@ namespace GLib {
 		[CCode (cname = "g_usleep")]
 		public static void usleep (ulong microseconds);
 	}
-	
+
+#if GLIB_2_32
+	[CCode (destroy_function = "g_mutex_clear")]
+	public struct Mutex {
+#else
 	[Compact]
 	[CCode (free_function = "g_mutex_free")]
+	[Deprecated (since = "glib-2.32", replacement = "Mutex (with --target-glib=2.32)")]
 	public class Mutex {
+#endif
 		public Mutex ();
 		public void @lock ();
 		public bool trylock ();
 		public void unlock ();
 	}
 
+	[CCode (destroy_function = "g_rec_mutex_clear")]
+	public struct RecMutex {
+		public RecMutex ();
+		public void lock ();
+		public bool trylock ();
+		public void unlock ();
+	}
+
+	[CCode (destroy_function = "g_rw_lock_clear")]
+	public struct RWLock {
+		public RWLock ();
+		public void writer_lock ();
+		public bool writer_trylock ();
+		public void writer_unlock ();
+		public void reader_lock ();
+		public bool reader_tryolock ();
+		public void reader_unlock ();
+	}
+
 	[CCode (destroy_function = "g_static_mutex_free", default_value = "G_STATIC_MUTEX_INIT")]
+	[Deprecated (since = "glib-2.32", replacement = "Mutex")]
 	public struct StaticMutex {
 		public StaticMutex ();
 		public void lock ();
@@ -1853,6 +1886,7 @@ namespace GLib {
 	}
 
 	[CCode (destroy_function = "g_static_rec_mutex_free", default_value = "G_STATIC_REC_MUTEX_INIT")]
+	[Deprecated (since = "glib-2.32", replacement = "RecMutex")]
 	public struct StaticRecMutex {
 		public StaticRecMutex ();
 		public void lock ();
@@ -1862,6 +1896,7 @@ namespace GLib {
 	}
 
 	[CCode (destroy_function = "g_static_rw_lock_free", default_value = "G_STATIC_RW_LOCK_INIT")]
+	[Deprecated (since = "glib-2.32", replacement = "RWLock")]
 	public struct StaticRWLock {
 		public StaticRWLock ();
 		public void reader_lock ();
@@ -1875,9 +1910,10 @@ namespace GLib {
 	[Compact]
 	[CCode (ref_function = "", unref_function = "")]
 	public class Private {
-		public Private (DestroyNotify destroy_func);
+		public Private (DestroyNotify? destroy_func = null);
 		public void* get ();
 		public void set (void* data);
+		public void replace (void* data);
 	}
 
 	[CCode (destroy_function = "g_static_private_free", default_value = "G_STATIC_PRIVATE_INIT")]
@@ -1887,9 +1923,15 @@ namespace GLib {
 		public void set (void* data, DestroyNotify? destroy_func);
 	}
 
+#if GLIB_2_32
+	[CCode (destroy_function = "g_cond_clear")]
+	public struct Cond {
+#else
 	[Compact]
 	[CCode (free_function = "g_cond_free")]
+	[Deprecated (since = "glib-2.32", replacement = "Cond (with --target-glib=2.32)")]
 	public class Cond {
+#endif
 		public Cond ();
 		public void @signal ();
 		public void broadcast ();
@@ -2632,6 +2674,17 @@ namespace GLib {
 		public static void atexit (VoidFunc func);
 		[CCode (cname = "g_chdir")]
 		public static int set_current_dir (string path);
+	}
+
+	namespace Environ {
+		[CCode (cname = "g_get_environ", array_length = false, array_null_terminated = true)]
+		public static string[] get ();
+		[CCode (cname = "g_environ_getenv")]
+		public static string? get_variable ([CCode (array_length = false, array_null_terminated = true)] string[] envp, string variable);
+		[CCode (cname = "g_environ_setenv", array_length = false, array_null_terminated = true)]
+		public static string[] set_variable ([CCode (array_length = false, array_null_terminated = true)] owned string[] envp, string variable, string value, bool overwrite = true);
+		[CCode (cname = "g_environ_unsetenv", array_length = false, array_null_terminated = true)]
+		public static string[] unset_variable ([CCode (array_length = false, array_null_terminated = true)] owned string[] envp, string variable);
 	}
 
 	[CCode (has_type_id = false)]
@@ -3474,7 +3527,11 @@ namespace GLib {
 	}
 
 	[Compact]
+#if GLIB_2_32
+	[CCode (free_function = "g_key_file_free", ref_function = "g_key_file_ref", unref_function = "g_key_file_unref", type_id = "G_KEY_FILE")]
+#else
 	[CCode (free_function = "g_key_file_free")]
+#endif
 	public class KeyFile {
 		public KeyFile ();
 		public void set_list_separator (char separator);
@@ -4150,7 +4207,9 @@ namespace GLib {
 		public ByteArray ();
 		[CCode (cname = "g_byte_array_sized_new")]
 		public ByteArray.sized (uint reserved_size);
+		public ByteArray.take (owned uint8[] data);
 		public void append (uint8[] data);
+		public static GLib.Bytes free_to_bytes (owned GLib.ByteArray array);
 		public void prepend (uint8[] data);
 		public void remove_index (uint index);
 		public void remove_index_fast (uint index);
@@ -4562,6 +4621,7 @@ namespace GLib {
 		public Variant.variant (Variant value);
 		public Variant.maybe (VariantType? child_type, Variant? child);
 		public Variant.array (VariantType? child_type, Variant[] children);
+		public Variant.fixed_array (VariantType? element_type, [CCode (array_length_type = "gsize")] Variant[] elements, size_t element_size);
 		public Variant.tuple (Variant[] children);
 		public Variant.dict_entry (Variant key, Variant value);
 		public Variant get_variant ();
