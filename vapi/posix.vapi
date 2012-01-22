@@ -1148,6 +1148,9 @@ namespace Posix {
 	public int mkostemp (string template, int flags);
 
 	[CCode (cheader_filename = "stdlib.h")]
+	public string? realpath (string path, owned uint8[]? resolved_path = null);
+
+	[CCode (cheader_filename = "stdlib.h")]
 	public int posix_openpt (int flags);
 	[CCode (cheader_filename = "stdlib.h")]
 	public int grantpt (int fd);
