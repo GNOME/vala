@@ -633,4 +633,9 @@ namespace GLib {
 	[Compact]
 	public class FileAttributeMatcher {
 	}
+
+	[CCode (ref_function = "g_resource_ref", type_id = "g_resource_get_type ()", unref_function = "g_resource_unref")]
+	[Compact]
+	public class Resource {
+	}
 }

@@ -287,15 +287,11 @@ namespace GLib {
 		public void set_flags (GLib.ApplicationFlags flags);
 		public void set_inactivity_timeout (uint inactivity_timeout);
 		public GLib.ActionGroup action_group { set; }
-		[NoAccessorMethod]
-		public GLib.MenuModel app_menu { owned get; set; }
 		public string application_id { get; set construct; }
 		public GLib.ApplicationFlags flags { get; set; }
 		public uint inactivity_timeout { get; set; }
 		public bool is_registered { get; }
 		public bool is_remote { get; }
-		[NoAccessorMethod]
-		public GLib.MenuModel menubar { owned get; set; }
 		[HasEmitter]
 		public virtual signal void activate ();
 		public virtual signal int command_line (GLib.ApplicationCommandLine command_line);
@@ -1268,9 +1264,13 @@ namespace GLib {
 		[CCode (has_construct_function = false, type = "GSocketAddress*")]
 		public InetSocketAddress (GLib.InetAddress address, uint16 port);
 		public unowned GLib.InetAddress get_address ();
+		public uint32 get_flowinfo ();
 		public uint16 get_port ();
+		public uint32 get_scope_id ();
 		public GLib.InetAddress address { get; construct; }
+		public uint flowinfo { get; construct; }
 		public uint port { get; construct; }
+		public uint scope_id { get; construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public abstract class InputStream : GLib.Object {
@@ -1557,6 +1557,23 @@ namespace GLib {
 		public void set_default ();
 		public virtual signal void reload ();
 	}
+	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_resource_ref", type_id = "g_resource_get_type ()", unref_function = "g_resource_unref")]
+	[Compact]
+	public class Resource {
+		[CCode (cname = "g_resources_register")]
+		public void _register ();
+		[CCode (cname = "g_resources_unregister")]
+		public void _unregister ();
+		[CCode (array_length = false, array_null_terminated = true)]
+		public string[] enumerate_children (string path, GLib.ResourceLookupFlags lookup_flags) throws GLib.Error;
+		[CCode (has_construct_function = false)]
+		public Resource.from_data (GLib.Bytes data) throws GLib.Error;
+		public bool get_info (string path, GLib.ResourceLookupFlags lookup_flags, out size_t size, out uint32 flags) throws GLib.Error;
+		[CCode (cheader_filename = "gio/gio.h")]
+		public static GLib.Resource load (string filename) throws GLib.Error;
+		public GLib.Bytes lookup_data (string path, GLib.ResourceLookupFlags lookup_flags) throws GLib.Error;
+		public GLib.InputStream open_stream (string path, GLib.ResourceLookupFlags lookup_flags) throws GLib.Error;
+	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class Settings : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -1728,19 +1745,26 @@ namespace GLib {
 		public GLib.SocketSource create_source (GLib.IOCondition condition, GLib.Cancellable? cancellable = null);
 		[CCode (has_construct_function = false)]
 		public Socket.from_fd (int fd) throws GLib.Error;
+		public ssize_t get_available_bytes ();
 		public bool get_blocking ();
+		public bool get_broadcast ();
 		public GLib.Credentials get_credentials () throws GLib.Error;
 		public GLib.SocketFamily get_family ();
 		public int get_fd ();
 		public bool get_keepalive ();
 		public int get_listen_backlog ();
 		public GLib.SocketAddress get_local_address () throws GLib.Error;
+		public bool get_multicast_loopback ();
+		public uint get_multicast_ttl ();
 		public GLib.SocketProtocol get_protocol ();
 		public GLib.SocketAddress get_remote_address () throws GLib.Error;
 		public GLib.SocketType get_socket_type ();
 		public uint get_timeout ();
+		public uint get_ttl ();
 		public bool is_closed ();
 		public bool is_connected ();
+		public bool join_multicast_group (GLib.InetAddress group, bool source_specific, string iface) throws GLib.Error;
+		public bool leave_multicast_group (GLib.InetAddress group, bool source_specific, string iface) throws GLib.Error;
 		public bool listen () throws GLib.Error;
 		public ssize_t receive ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize", type = "gchar*")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public ssize_t receive_from (out GLib.SocketAddress address, [CCode (array_length_cname = "size", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -1751,20 +1775,28 @@ namespace GLib {
 		public ssize_t send_to (GLib.SocketAddress address, [CCode (array_length_cname = "size", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public ssize_t send_with_blocking ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, bool blocking, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void set_blocking (bool blocking);
+		public void set_broadcast (bool broadcast);
 		public void set_keepalive (bool keepalive);
 		public void set_listen_backlog (int backlog);
+		public void set_multicast_loopback (bool loopback);
+		public void set_multicast_ttl (uint ttl);
 		public void set_timeout (uint timeout);
+		public void set_ttl (uint ttl);
 		public bool shutdown (bool shutdown_read, bool shutdown_write) throws GLib.Error;
 		public bool speaks_ipv4 ();
 		public bool blocking { get; set; }
+		public bool broadcast { get; set; }
 		public GLib.SocketFamily family { get; construct; }
 		public int fd { get; construct; }
 		public bool keepalive { get; set; }
 		public int listen_backlog { get; set; }
 		public GLib.SocketAddress local_address { owned get; }
+		public bool multicast_loopback { get; set; }
+		public uint multicast_ttl { get; set; }
 		public GLib.SocketProtocol protocol { get; construct; }
 		public GLib.SocketAddress remote_address { owned get; }
 		public uint timeout { get; set; }
+		public uint ttl { get; set; }
 		[NoAccessorMethod]
 		public GLib.SocketType type { get; construct; }
 	}
@@ -2171,7 +2203,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h", type_cname = "GActionMapInterface", type_id = "g_action_map_get_type ()")]
 	public interface ActionMap : GLib.ActionGroup, GLib.Object {
 		public abstract void add_action (GLib.Action action);
-		public void add_action_entries ([CCode (array_length_cname = "n_entries", array_length_pos = 1.5, type = "GActionEntry*")] GLib.ActionEntry[] entries, void* user_data);
+		public void add_action_entries ([CCode (array_length_cname = "n_entries", array_length_pos = 1.5)] GLib.ActionEntry[] entries, void* user_data);
 		public abstract unowned GLib.Action lookup_action (string action_name);
 		public abstract void remove_action (string action_name);
 	}
@@ -2795,6 +2827,7 @@ namespace GLib {
 		ANY
 	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DRIVE_START_")]
+	[Flags]
 	public enum DriveStartFlags {
 		NONE
 	}
@@ -2911,6 +2944,7 @@ namespace GLib {
 		WAIT_FOR_BOTH
 	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_MOUNT_MOUNT_")]
+	[Flags]
 	public enum MountMountFlags {
 		NONE
 	}
@@ -2938,6 +2972,17 @@ namespace GLib {
 		NEVER,
 		FOR_SESSION,
 		PERMANENTLY
+	}
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_RESOURCE_FLAGS_")]
+	[Flags]
+	public enum ResourceFlags {
+		NONE,
+		COMPRESSED
+	}
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_RESOURCE_LOOKUP_FLAGS_")]
+	[Flags]
+	public enum ResourceLookupFlags {
+		NONE
 	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_SETTINGS_BIND_")]
 	[Flags]
@@ -3014,6 +3059,7 @@ namespace GLib {
 		KEYPAIR
 	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TLS_DATABASE_VERIFY_")]
+	[Flags]
 	public enum TlsDatabaseVerifyFlags {
 		NONE
 	}
@@ -3169,6 +3215,13 @@ namespace GLib {
 	public errordomain ResolverError {
 		NOT_FOUND,
 		TEMPORARY_FAILURE,
+		INTERNAL;
+		[CCode (cheader_filename = "gio/gio.h")]
+		public static GLib.Quark quark ();
+	}
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_RESOURCE_ERROR_")]
+	public errordomain ResourceError {
+		NOT_FOUND,
 		INTERNAL;
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static GLib.Quark quark ();
@@ -3674,4 +3727,12 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h", cname = "g_tls_error_quark")]
 	[Deprecated (replacement = "TlsError.quark", since = "vala-0.16")]
 	public static GLib.Quark g_tls_error_quark ();
+	[CCode (array_length = false, array_null_terminated = true, cheader_filename = "gio/gio.h")]
+	public static string[] resources_enumerate_children (string path, GLib.ResourceLookupFlags lookup_flags) throws GLib.Error;
+	[CCode (cheader_filename = "gio/gio.h")]
+	public static bool resources_get_info (string path, GLib.ResourceLookupFlags lookup_flags, out size_t size, out uint32 flags) throws GLib.Error;
+	[CCode (cheader_filename = "gio/gio.h")]
+	public static GLib.Bytes resources_lookup_data (string path, GLib.ResourceLookupFlags lookup_flags) throws GLib.Error;
+	[CCode (cheader_filename = "gio/gio.h")]
+	public static GLib.InputStream resources_open_stream (string path, GLib.ResourceLookupFlags lookup_flags) throws GLib.Error;
 }

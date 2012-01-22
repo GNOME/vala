@@ -246,6 +246,9 @@ FileAttributeInfoList
 FileAttributeMatcher
   .ref skip
   .unref skip
+Resource
+  .ref skip
+  .unref skip
 
 // Bug #659886: Async constuctors don't work
 DBusConnection
@@ -303,8 +306,6 @@ ActionGroup
   .get_action* nullable
   .get_action_enabled nullable=false
   .get_action_state_type unowned
-ActionMap
-  .add_action_entries.entries array array_length_idx=1
 AppInfo
   .launch.files nullable
   .launch_uris.uris nullable
