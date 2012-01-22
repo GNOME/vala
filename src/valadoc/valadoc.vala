@@ -54,6 +54,7 @@ public class ValaDoc : Object {
 	private static bool force = false;
 
 	private static string basedir = null;
+	[CCode (array_length = false, array_null_terminated = true)]
 	private static string[] defines;
 	private static bool experimental;
 	private static bool experimental_non_null = false;
