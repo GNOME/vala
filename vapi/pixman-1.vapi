@@ -21,6 +21,10 @@ namespace Pixman {
 
 	[SimpleType, IntegerType (rank = 6), CCode (cname = "pixman_fixed_t")]
 	public struct Fixed : Fixed1616 {
+		[CCode (cname = "pixman_double_to_fixed")]
+		public Fixed.double (double val);
+		[CCode (cname = "pixman_int_to_fixed")]
+		public Fixed.int (int val);
 		public int to_int ();
 		public double to_double ();
 		public Fixed frac ();
@@ -92,10 +96,7 @@ namespace Pixman {
 
 	[CCode (cname = "pixman_region16_t", has_type_id = false, cprefix = "pixman_region_", destroy_function = "pixman_region_fini")]
 	public struct Region16 {
-		public int16 x;
-		public int16 y;
-		public uint16 width;
-		public uint16 height;
+		Pixman.Box16 extents;
 
 		public Region16 ();
 		public Region16.rect (int x, int y, uint width, uint height);
@@ -117,9 +118,10 @@ namespace Pixman {
 		public bool contains_point (int x, int y, Pixman.Box16 box);
 		public Pixman.RegionOverlap contains_rectangle (Pixman.Box16 prect);
 		public bool not_empty ();
-		public Pixman.Box16* extents ();
+		[CCode (cname = "pixman_region_extents")]
+		public unowned Pixman.Box16? get_extents ();
 		public int n_rects ();
-		public Pixman.Box16[] rectangles ();
+		public unowned Pixman.Box16[] rectangles ();
 		public bool equal (Pixman.Region16 region2);
 		public bool selfcheck ();
 		public void reset (Pixman.Box16 box);
@@ -140,10 +142,7 @@ namespace Pixman {
 
 	[CCode (cname = "pixman_region32_t", has_type_id = false, destroy_function = "pixman_region32_fini")]
 	public struct Region32 {
-		public int32 x;
-		public int32 y;
-		public uint32 width;
-		public uint32 height;
+		public Pixman.Box32 extents;
 
 		public Region32 ();
 		public Region32.rect (int x, int y, uint width, uint height);
@@ -165,9 +164,10 @@ namespace Pixman {
 		public bool contains_point (int x, int y, Pixman.Box32 box);
 		public Pixman.RegionOverlap contains_rectangle (Pixman.Box32 prect);
 		public bool not_empty ();
-		public Pixman.Box32* extents ();
+		[CCode (cname = "pixman_region32_extents")]
+		public unowned Pixman.Box32? get_extents ();
 		public int n_rects ();
-		public Pixman.Box32[] rectangles ();
+		public unowned Pixman.Box32[] rectangles ();
 		public bool equal (Pixman.Region32 region2);
 		public bool selfcheck ();
 		public void reset (Pixman.Box32 box);
