@@ -50,6 +50,17 @@ public class Valadoc.Charts.Chart : Api.Visitor {
 		context.render (graph, file_type, file);
 	}
 
+	public uint8[] write_buffer (string file_type) {
+		if (context == null) {
+			context = factory.create_context (graph);
+		}
+
+		uint8[] data;
+
+		context.render_data (graph, file_type, out data);
+		return data;
+	}
+
 	~Chart () {
 		if (context != null) {
 			context.free_layout (graph);

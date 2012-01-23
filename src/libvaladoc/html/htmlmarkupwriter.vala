@@ -24,19 +24,26 @@ using GLib;
 using Valadoc.Content;
 
 public class Valadoc.Html.MarkupWriter : Valadoc.MarkupWriter {
-	private unowned FileStream stream;
 
 	public MarkupWriter (FileStream stream, bool xml_declaration = true) {
 		// avoid broken implicit copy
 		unowned FileStream _stream = stream;
 
 		base ((str) => { _stream.printf (str); }, xml_declaration);
-		this.stream = stream;
+	}
+
+	public MarkupWriter.builder (StringBuilder builder, bool xml_declaration = true) {
+		// avoid broken implicit copy
+		unowned StringBuilder _builder = builder;
+
+		base ((str) => { _builder.append (str); }, xml_declaration);
 	}
 
 	public MarkupWriter add_usemap (Charts.Chart chart) {
-		stream.putc ('\n');
-		chart.write (stream, "cmapx");
+		string buf = (string) chart.write_buffer ("cmapx");
+		raw_text ("\n");
+		raw_text (buf);
+
 		return this;
 	}
 

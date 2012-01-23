@@ -47,7 +47,74 @@ public enum Valadoc.Api.NodeType {
 	SIGNAL,
 	STATIC_METHOD,
 	STRUCT,
-	TYPE_PARAMETER
+	TYPE_PARAMETER;
+
+	public string to_string () {
+		switch (this) {
+		case CLASS:
+			return "CLASS";
+
+		case CONSTANT:
+			return "CONSTANT";
+
+		case CREATION_METHOD:
+			return "CREATION_METHOD";
+
+		case DELEGATE:
+			return "DELEGATE";
+
+		case ENUM:
+			return "ENUM";
+
+		case ENUM_VALUE:
+			return "ENUM_VALUE";
+
+		case ERROR_CODE:
+			return "ERROR_CODE";
+
+		case ERROR_DOMAIN:
+			return "ERROR_DOMAIN";
+
+		case FIELD:
+			return "FIELD";
+
+		case FORMAL_PARAMETER:
+			return "FORMAL_PARAMETER";
+
+		case INTERFACE:
+			return "INTERFACE";
+
+		case METHOD:
+			return "METHOD";
+
+		case NAMESPACE:
+			return "NAMESPACE";
+
+		case PACKAGE:
+			return "PACKAGE";
+
+		case PROPERTY:
+			return "PROPERTY";
+
+		case PROPERTY_ACCESSOR:
+			return "PROPERTY_ACCESSOR";
+
+		case SIGNAL:
+			return "SIGNAL";
+
+		case STATIC_METHOD:
+			return "STATIC_METHOD";
+
+		case STRUCT:
+			return "STRUCT";
+
+		case TYPE_PARAMETER:
+			return "TYPE_PARAMETER";
+
+		default:
+			assert_not_reached ();
+		}
+	}
 }
 
 /**
