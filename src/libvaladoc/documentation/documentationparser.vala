@@ -171,7 +171,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 					((InlineContent) peek ()).content.add (_factory.create_text (" "));
 					return;
 				} else if (list.bullet != bullet) {
-					_parser.error (null, "Invalid bullet type '%s': expected '%s'", bullet_type_string (bullet), bullet_type_string (list.bullet));
+					_parser.error (null, "Invalid bullet type '%s': expected '%s'".printf (bullet_type_string (bullet), bullet_type_string (list.bullet)));
 					return;
 				}
 

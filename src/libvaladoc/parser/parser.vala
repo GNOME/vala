@@ -224,12 +224,11 @@ public class Valadoc.Parser : ParserCallback {
 		return false;
 	}
 
-	public void warning (Token? token, string message, ...) {
-		va_list args = va_list ();
+	public void warning (Token? token, string message) {
 		string error_message;
 
 		if (token == null) {
-			error_message = message.vprintf (args) + ": " + token.to_pretty_string ();
+			error_message = message + ": " + token.to_pretty_string ();
 		} else {
 			error_message = message;
 		}
@@ -242,12 +241,11 @@ public class Valadoc.Parser : ParserCallback {
 		                   error_message);
 	}
 
-	public void error (Token? token, string message, ...) throws ParserError {
-		va_list args = va_list ();
+	public void error (Token? token, string message) throws ParserError {
 		string error_message;
 
 		if (token == null) {
-			error_message = message.vprintf (args) + ": " + token.to_pretty_string ();
+			error_message = message + ": " + token.to_pretty_string ();
 		} else {
 			error_message = message;
 		}
