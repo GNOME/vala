@@ -227,7 +227,7 @@ public class Valadoc.Parser : ParserCallback {
 	public void warning (Token? token, string message) {
 		string error_message;
 
-		if (token == null) {
+		if (token != null) {
 			error_message = message + ": " + token.to_pretty_string ();
 		} else {
 			error_message = message;
@@ -244,7 +244,7 @@ public class Valadoc.Parser : ParserCallback {
 	public void error (Token? token, string message) throws ParserError {
 		string error_message;
 
-		if (token == null) {
+		if (token != null) {
 			error_message = message + ": " + token.to_pretty_string ();
 		} else {
 			error_message = message;
