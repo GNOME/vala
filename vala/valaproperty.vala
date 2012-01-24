@@ -240,6 +240,7 @@ public class Vala.Property : Symbol, Lockable {
 			}
 		}
 
+		invalid_match = null;
 		return true;
 	}
 
