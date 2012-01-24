@@ -154,6 +154,8 @@ public class Vala.Parameter : Variable {
 				Report.warning (source_reference, "`null' incompatible with parameter type `%s`".printf (variable_type.to_string ()));
 			} else if (!(initializer is NullLiteral) && direction == ParameterDirection.OUT) {
 				Report.error (source_reference, "only `null' is allowed as default value for out parameters");
+			} else if (direction == ParameterDirection.IN && !initializer.value_type.compatible (variable_type)) {
+				Report.error (initializer.source_reference, "Cannot convert from `%s' to `%s'".printf (initializer.value_type.to_string (), variable_type.to_string ()));
 			} else if (direction == ParameterDirection.REF) {
 				Report.error (source_reference, "default value not allowed for ref parameter");
 			}
