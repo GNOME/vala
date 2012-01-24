@@ -82,6 +82,10 @@ public class Vala.TypeofExpression : Expression {
 
 		value_type = context.analyzer.type_type;
 
+		if (context.profile == Profile.GOBJECT && type_reference.get_type_arguments ().size > 0) {
+			Report.warning (_data_type.source_reference, "Type argument list without effect");
+		}
+
 		return !error;
 	}
 
