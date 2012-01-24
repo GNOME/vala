@@ -116,6 +116,10 @@ public class Vala.TypeCheck : Expression {
 			return false;
 		}
 
+		if (context.profile == Profile.GOBJECT && type_reference.get_type_arguments ().size > 0) {
+			Report.warning (_data_type.source_reference, "Type argument list has no effect");
+		}
+
 		value_type = context.analyzer.bool_type;
 
 		return !error;
