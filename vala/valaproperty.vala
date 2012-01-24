@@ -189,28 +189,34 @@ public class Vala.Property : Symbol, Lockable {
 	}
 	
 	/**
-	 * Checks whether the accessors and type of the specified property
-	 * matches this property.
+	 * Checks whether the accessors of this property are compatible
+	 * with the specified base property.
 	 *
-	 * @param prop a property
-	 * @return     true if the specified property is compatible to this
-	 *             property
+	 * @param base_property a property
+	 * @param invalid_match error string about which check failed
+	 * @return true if the specified property is compatible to this property
 	 */
-	public bool equals (Property prop2) {
-		if ((get_accessor == null && prop2.get_accessor != null) ||
-		    (get_accessor != null && prop2.get_accessor == null)) {
+	public bool compatible (Property base_property, out string? invalid_match) {
+		if ((get_accessor == null && base_property.get_accessor != null) ||
+		    (get_accessor != null && base_property.get_accessor == null)) {
+			invalid_match = "incompatible get accessor";
 			return false;
 		}
 
-		if ((set_accessor == null && prop2.set_accessor != null) ||
-		    (set_accessor != null && prop2.set_accessor == null)) {
+		if ((set_accessor == null && base_property.set_accessor != null) ||
+		    (set_accessor != null && base_property.set_accessor == null)) {
+			invalid_match = "incompatible set accessor";
 			return false;
 		}
+
+		var object_type = CodeContext.get().analyzer.get_data_type_for_symbol ((TypeSymbol) parent_symbol);
 
 		if (get_accessor != null) {
 			// check accessor value_type instead of property_type
 			// due to possible ownership differences
-			if (!prop2.get_accessor.value_type.equals (get_accessor.value_type)) {
+			var actual_base_type = base_property.get_accessor.value_type.get_actual_type (object_type, null, this);
+			if (!actual_base_type.equals (get_accessor.value_type)) {
+				invalid_match = "incompatible get accessor type";
 				return false;
 			}
 		}
@@ -218,14 +224,18 @@ public class Vala.Property : Symbol, Lockable {
 		if (set_accessor != null) {
 			// check accessor value_type instead of property_type
 			// due to possible ownership differences
-			if (!prop2.set_accessor.value_type.equals (set_accessor.value_type)) {
+			var actual_base_type = base_property.set_accessor.value_type.get_actual_type (object_type, null, this);
+			if (!actual_base_type.equals (set_accessor.value_type)) {
+				invalid_match = "incompatible set accessor type";
 				return false;
 			}
 
-			if (set_accessor.writable != prop2.set_accessor.writable) {
+			if (set_accessor.writable != base_property.set_accessor.writable) {
+				invalid_match = "incompatible set accessor";
 				return false;
 			}
-			if (set_accessor.construction != prop2.set_accessor.construction) {
+			if (set_accessor.construction != base_property.set_accessor.construction) {
+				invalid_match = "incompatible set accessor";
 				return false;
 			}
 		}
@@ -263,9 +273,10 @@ public class Vala.Property : Symbol, Lockable {
 		if (sym is Property) {
 			var base_property = (Property) sym;
 			if (base_property.is_abstract || base_property.is_virtual) {
-				if (!equals (base_property)) {
+				string invalid_match;
+				if (!compatible (base_property, out invalid_match)) {
 					error = true;
-					Report.error (source_reference, "Type and/or accessors of overriding property `%s' do not match overridden property `%s'.".printf (get_full_name (), base_property.get_full_name ()));
+					Report.error (source_reference, "Type and/or accessors of overriding property `%s' do not match overridden property `%s': %s.".printf (get_full_name (), base_property.get_full_name (), invalid_match));
 					return;
 				}
 
@@ -287,9 +298,10 @@ public class Vala.Property : Symbol, Lockable {
 				if (sym is Property) {
 					var base_property = (Property) sym;
 					if (base_property.is_abstract) {
-						if (!equals (base_property)) {
+						string invalid_match;
+						if (!compatible (base_property, out invalid_match)) {
 							error = true;
-							Report.error (source_reference, "Type and/or accessors of overriding property `%s' do not match overridden property `%s'.".printf (get_full_name (), base_property.get_full_name ()));
+							Report.error (source_reference, "Type and/or accessors of overriding property `%s' do not match overridden property `%s': %s.".printf (get_full_name (), base_property.get_full_name (), invalid_match));
 							return;
 						}
 
