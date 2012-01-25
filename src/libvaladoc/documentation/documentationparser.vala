@@ -670,31 +670,41 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 			Rule.one_of ({
 				Rule.seq ({
 					TokenType.EQUAL_1.action ((token) => { ((Headline) peek ()).level = 1; }),
+					optional_invisible_spaces,
 					run,
+					optional_invisible_spaces,
 					TokenType.EQUAL_1,
 					TokenType.EOL
 				}),
 				Rule.seq ({
 					TokenType.EQUAL_2.action ((token) => { ((Headline) peek ()).level = 2; }),
+					optional_invisible_spaces,
 					run,
+					optional_invisible_spaces,
 					TokenType.EQUAL_2,
 					TokenType.EOL
 				}),
 				Rule.seq ({
 					TokenType.EQUAL_3.action ((token) => { ((Headline) peek ()).level = 3; }),
+					optional_invisible_spaces,
 					run,
+					optional_invisible_spaces,
 					TokenType.EQUAL_3,
 					TokenType.EOL
 				}),
 				Rule.seq ({
 					TokenType.EQUAL_4.action ((token) => { ((Headline) peek ()).level = 4; }),
+					optional_invisible_spaces,
 					run,
+					optional_invisible_spaces,
 					TokenType.EQUAL_4,
 					TokenType.EOL
 				}),
 				Rule.seq ({
 					TokenType.EQUAL_5.action ((token) => { ((Headline) peek ()).level = 5; }),
+					optional_invisible_spaces,
 					run,
+					optional_invisible_spaces,
 					TokenType.EQUAL_5,
 					TokenType.EOL
 				})
