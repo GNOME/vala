@@ -188,7 +188,7 @@ public class Vala.ArrayType : ReferenceType {
 			return false;
 		}
 
-		if (element_type.nullable != target_array_type.element_type.nullable) {
+		if (element_type is ValueType && element_type.nullable != target_array_type.element_type.nullable) {
 			return false;
 		}
 
