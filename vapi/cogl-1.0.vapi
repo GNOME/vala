@@ -714,7 +714,7 @@ namespace Cogl {
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static void get_projection_matrix (Cogl.Matrix matrix);
 	[CCode (cheader_filename = "cogl/cogl.h")]
-	public static void get_viewport (float[] v);
+	public static void get_viewport ([CCode (array_length = false)] float[] v);
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static GLib.Type indices_type_get_type ();
 	[CCode (cheader_filename = "cogl/cogl.h")]

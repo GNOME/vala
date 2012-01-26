@@ -28,6 +28,8 @@ cogl_create_shader hidden="1"
 
 CoglFixed is_value_type="1"
 
+cogl_get_viewport.v no_array_length="1"
+
 cogl_is_bitmap hidden="1"
 cogl_is_buffer hidden="1"
 cogl_is_material hidden="1"
