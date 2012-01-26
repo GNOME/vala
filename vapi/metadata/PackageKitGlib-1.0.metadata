@@ -1,0 +1,3 @@
+DistroUpgradeEnum name="DistroUpgradeEnum"
+ErrorEnum name="ErrorEnum"
+MessageEnum name="MessageEnum"
