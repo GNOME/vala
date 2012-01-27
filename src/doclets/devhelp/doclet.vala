@@ -1,6 +1,6 @@
 /* doclet.vala
  *
- * Copyright (C) 2008-2009 Florian Brosch
+ * Copyright (C) 2008-2012 Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,10 +28,10 @@ using Gee;
 
 
 public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
-	private const string css_path_wiki = "../devhelpstyle.css";
+	private const string css_path_wiki = "devhelpstyle.css";
 	private const string css_path = "devhelpstyle.css";
 
-	private const string js_path_wiki = "../scripts.js";
+	private const string js_path_wiki = "scripts.js";
 	private const string js_path = "scripts.js";
 
 
@@ -56,7 +56,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 	public override void process (Settings settings, Api.Tree tree, ErrorReporter reporter) {
 		base.process (settings, tree, reporter);
 		DirUtils.create_with_parents (this.settings.path, 0777);
-		write_wiki_pages (tree, css_path_wiki, js_path_wiki, Path.build_filename (this.settings.path, this.settings.pkg_name, "content"));
+		write_wiki_pages (tree, css_path_wiki, js_path_wiki, Path.build_filename (this.settings.path, this.settings.pkg_name));
 		tree.accept (this);
 	}
 
@@ -76,11 +76,6 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		string imgpath = GLib.Path.build_filename (path, "img");
 		string devpath = GLib.Path.build_filename (path, pkg_name + ".devhelp2");
 
-		WikiPage wikipage = null;
-		if (this.settings.pkg_name == package.name && this.tree.wikitree != null) {
-			wikipage = this.tree.wikitree.search ("index.valadoc");
-		}
-
 		this.package_dir_name = pkg_name;
 
 		var rt = DirUtils.create (path, 0777);
@@ -97,7 +92,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		writer = new Html.MarkupWriter (file);
 		_renderer.set_writer (writer);
 		write_file_header (this.css_path, this.js_path, pkg_name);
-		write_package_content (package, package, wikipage);
+		write_package_content (package, package);
 		write_file_footer ();
 		file = null;
 

@@ -1,6 +1,6 @@
 /* doclet.vala
  *
- * Copyright (C) 2008-2009 Florian Brosch
+ * Copyright (C) 2008-2012 Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -37,6 +37,36 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 	private const string js_path_wiki = "../scripts.js";
 	private const string js_path = "../scripts.js";
 
+	private class IndexLinkHelper : LinkHelper {
+		protected override string? from_wiki_to_package (WikiPage from, Api.Package to) {
+			if (from.name != "index.valadoc") {
+				return base.from_wiki_to_package (from, to);;
+			}
+
+			return Path.build_filename (to.name, to.name + ".htm");
+		}
+
+		protected override string? from_wiki_to_wiki (WikiPage from, WikiPage to) {
+			if (from.name != "index.valadoc") {
+				return base.from_wiki_to_wiki (from, to);
+			}
+
+			return Path.build_filename (_settings.pkg_name, translate_wiki_name (to));
+		}
+
+		protected override string? from_wiki_to_node (WikiPage from, Api.Node to) {
+			if (from.name != "index.valadoc") {
+				return base.from_wiki_to_node (from, to);
+			}
+
+			if (enable_browsable_check && (!to.is_browsable(_settings) || !to.package.is_browsable (_settings))) {
+				return null;
+			}
+
+			return Path.build_filename (to.package.name, to.get_full_name () + ".html");
+		}
+	}
+
 	private string get_real_path ( Api.Node element ) {
 		return GLib.Path.build_filename ( this.settings.path, element.package.name, element.get_full_name () + ".html" );
 	}
@@ -47,8 +77,10 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		DirUtils.create_with_parents (this.settings.path, 0777);
 		copy_directory (icons_dir, settings.path);
 
-		write_wiki_pages (tree, css_path_wiki, js_path_wiki, Path.build_filename(settings.path, "content"));
+		write_wiki_pages (tree, css_path_wiki, js_path_wiki, Path.build_filename(settings.path, settings.pkg_name));
 
+		var tmp = _renderer;
+		_renderer = new HtmlRenderer (settings, new IndexLinkHelper (), this.cssresolver);
 		GLib.FileStream file = GLib.FileStream.open (GLib.Path.build_filename (settings.path, "index.html"), "w");
 		writer = new Html.MarkupWriter (file);
 		_renderer.set_writer (writer);
@@ -56,6 +88,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		write_navi_packages (tree);
 		write_package_index_content (tree);
 		write_file_footer ();
+		_renderer = tmp;
 		file = null;
 
 		tree.accept (this);

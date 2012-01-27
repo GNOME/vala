@@ -1,6 +1,6 @@
 /* linkhelper.vala
  *
- * Copyright (C) 2008-2009 Florian Brosch
+ * Copyright (C) 2008-2012 Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,7 +25,7 @@ using Gee;
 
 
 public class Valadoc.Html.LinkHelper : Object {
-	private Settings _settings = null;
+	protected Settings _settings = null;
 
 	public bool enable_browsable_check {
 		default = true;
@@ -82,9 +82,9 @@ public class Valadoc.Html.LinkHelper : Object {
 		return null;
 	}
 
-	private string translate_wiki_name (WikiPage page) {
+	protected string translate_wiki_name (WikiPage page) {
 		var name = page.name;
-		return name.substring (0, name.last_index_of_char ('.')).replace ("/", ".") + ".html";
+		return name.substring (0, name.last_index_of_char ('.')).replace ("/", ".") + ".htm";
 	}
 
 
@@ -103,10 +103,10 @@ public class Valadoc.Html.LinkHelper : Object {
 	}
 
 	protected virtual string? from_package_to_wiki (Api.Package from, WikiPage to) {
-		if (from.name == "index.valadoc") {
-			return Path.build_filename ("..", "index.html");
+		if (from.is_package) {
+			return Path.build_filename ("..", _settings.pkg_name, translate_wiki_name (to));
 		} else {
-			return Path.build_filename ("..", "content", translate_wiki_name (to));
+			return translate_wiki_name (to);
 		}
 	}
 
@@ -129,23 +129,15 @@ public class Valadoc.Html.LinkHelper : Object {
 			return null;
 		}
 
-		if (from.name == "index.valadoc") {
-			return Path.build_filename (to.name, "index.htm");
-		} else {
+		if (to.is_package) {
 			return Path.build_filename ("..", to.name, "index.htm");
+		} else {
+			return "index.htm";
 		}
 	}
 
 	protected virtual string? from_wiki_to_wiki (WikiPage from, WikiPage to) {
-		if (from == to) {
-			return "#";
-		} else if (from.name == "index.valadoc") {
-			return Path.build_filename ("content", translate_wiki_name (to));
-		} else if (to.name == "index.valadoc") {
-			return Path.build_filename ("..", "index.html");
-		} else {
-			return translate_wiki_name (to);
-		}
+		return translate_wiki_name (to);
 	}
 
 	protected virtual string? from_wiki_to_node (WikiPage from, Api.Node to) {
@@ -153,10 +145,10 @@ public class Valadoc.Html.LinkHelper : Object {
 			return null;
 		}
 
-		if (from.name == "index.valadoc") {
-			return Path.build_filename (to.package.name, to.get_full_name() + ".html");
+		if (to.package.is_package) {
+			return Path.build_filename ("..", to.package.name, to.get_full_name () + ".html");
 		} else {
-			return Path.build_filename ("..", to.package.name, to.get_full_name() + ".html");
+			return to.get_full_name () + ".html";
 		}
 	}
 
@@ -175,10 +167,10 @@ public class Valadoc.Html.LinkHelper : Object {
 	}
 
 	protected virtual string? from_node_to_wiki (Api.Node from, WikiPage to) {
-		if (to.name == "index.valadoc") {
-			return Path.build_filename ("..", "index.html");
+		if (from.package.is_package) {
+			return Path.build_filename ("..", _settings.pkg_name, translate_wiki_name (to));
 		} else {
-			return Path.build_filename ("..", "content", translate_wiki_name (to));
+			return translate_wiki_name (to);
 		}
 	}
 

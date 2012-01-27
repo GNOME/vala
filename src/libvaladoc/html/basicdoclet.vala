@@ -1,6 +1,6 @@
 /* basicdoclet.vala
  *
- * Copyright (C) 2008-2009 Florian Brosch
+ * Copyright (C) 2008-2012 Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -203,7 +203,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	}
 
 	protected virtual void write_wiki_page (WikiPage page, string contentp, string css_path, string js_path, string pkg_name) {
-		GLib.FileStream file = GLib.FileStream.open (Path.build_filename(contentp, page.name.substring (0, page.name.length-7).replace ("/", ".")+"html"), "w");
+		GLib.FileStream file = GLib.FileStream.open (Path.build_filename(contentp, page.name.substring (0, page.name.length-7).replace ("/", ".")+"htm"), "w");
 		writer = new MarkupWriter (file);
 		_renderer.set_writer (writer);
 		this.write_file_header (css_path, js_path, pkg_name);
@@ -792,12 +792,14 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		writer.end_tag ("div");
 	}
 
-	protected void write_package_content (Package node, Api.Node? parent, WikiPage? wikipage = null) {
+	protected void write_package_content (Package node, Api.Node? parent) {
 		writer.start_tag ("div", {"class", css_style_content});
 		writer.start_tag ("h1", {"class", css_title, "id", node.name}).text (node.name).end_tag ("h1");
 		writer.simple_tag ("hr", {"class", css_headline_hr});
 		writer.start_tag ("h2", {"class", css_title}).text ("Description:").end_tag ("h2");
 
+
+		WikiPage? wikipage = (tree.wikitree == null)? null : tree.wikitree.search ("index.valadoc");
 		if (wikipage != null) {
 			_renderer.set_container (parent);
 			_renderer.render (wikipage.documentation);
