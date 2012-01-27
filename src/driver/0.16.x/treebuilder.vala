@@ -82,11 +82,15 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 				foreach (Vala.Comment c in vns.get_comments()) {
 					if (c.source_reference.file == vns.source_reference.file) {
 						Vala.SourceReference pos = c.source_reference;
+#if ! VALA_0_15_0
 						if (c is Vala.GirComment) {
 							comment = new GirSourceComment (c.content, file, pos.first_line, pos.first_column, pos.last_line, pos.last_column);
 						} else {
 							comment = new SourceComment (c.content, file, pos.first_line, pos.first_column, pos.last_line, pos.last_column);
 						}
+#else
+						comment = new SourceComment (c.content, file, pos.first_line, pos.first_column, pos.last_line, pos.last_column);
+#endif
 						break;
 					}
 				}
@@ -291,6 +295,13 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 	}
 
 	private SourceComment? create_comment (Vala.Comment? comment) {
+#if VALA_0_15_0
+		if (comment != null) {
+			Vala.SourceReference pos = comment.source_reference;
+			SourceFile file = files.get (pos.file);
+			return new SourceComment (comment.content, file, pos.first_line, pos.first_column, pos.last_line, pos.last_column);
+		}
+#else
 		if (comment != null) {
 			Vala.SourceReference pos = comment.source_reference;
 			SourceFile file = files.get (pos.file);
@@ -313,7 +324,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 				return new SourceComment (comment.content, file, pos.first_line, pos.first_column, pos.last_line, pos.last_column);
 			}
 		}
-
+#endif
 		return null;
 	}
 

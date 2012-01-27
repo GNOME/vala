@@ -1,5 +1,6 @@
 NULL =
 
+DEFAULT_DRIVER = "`$(VALAC) --version`"
 
 
 AM_CFLAGS = \
