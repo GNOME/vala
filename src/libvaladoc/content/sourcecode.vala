@@ -23,19 +23,38 @@
 
 using Gee;
 
-public class Valadoc.Content.SourceCode : ContentElement, Inline{
+public class Valadoc.Content.SourceCode : ContentElement, Inline {
 	public enum Language {
 		GENIE,
 		VALA,
 		C;
 
-		public static Language? from_string (string str) {
+		public static Language? from_path (string path) {
+			int pos = path.last_index_of (".");
+			if (pos < 0) {
+				return null;
+			}
+
+			string ext = path.substring (pos + 1);
+			return from_string (ext, true);
+		}
+
+		public static Language? from_string (string str, bool is_extension = false) {
 			switch (str) {
-			case "Genie":
+			case "genie":
+				if (is_extension) {
+					return null;
+				}
 				return Language.GENIE;
-			case "Vala":
+
+			case "gs":
+				return Language.GENIE;
+
+			case "vala":
 				return Language.VALA;
-			case "C":
+
+			case "c":
+			case "h":
 				return Language.C;
 			}
 
@@ -45,11 +64,13 @@ public class Valadoc.Content.SourceCode : ContentElement, Inline{
 		public unowned string to_string () {
 			switch (this) {
 			case Language.GENIE:
-				return "Genie";
+				return "genie";
+
 			case Language.VALA:
-				return "Vala";
+				return "vala";
+
 			case Language.C:
-				return "C";
+				return "c";
 			}
 
 			assert (true);
@@ -58,14 +79,68 @@ public class Valadoc.Content.SourceCode : ContentElement, Inline{
 	}
 
 	public string code { get; set; }
-	public Language language { get; set; }
+	public Language? language { get; set; }
 
 	internal SourceCode () {
 		base ();
 		_language = Language.VALA;
 	}
 
+	private string? get_path (string path, string source_file_path, ErrorReporter reporter) {
+		// search relative to our file
+		if (!Path.is_absolute (path)) {
+			string relative_to_file = Path.build_path (Path.DIR_SEPARATOR_S, Path.get_dirname (source_file_path), path);
+			if (FileUtils.test (relative_to_file, FileTest.EXISTS | FileTest.IS_REGULAR)) {
+				return (owned) relative_to_file;
+			}
+		}
+
+		// search relative to the current directory / absoulte path
+		if (!FileUtils.test (path, FileTest.EXISTS | FileTest.IS_REGULAR)) {
+			code = "File %s does not exist".printf (path);
+			reporter.simple_warning (code);
+			return null;
+		}
+
+		return path;
+	}
+
+	private void load_source_code (string _path, string source_file_path, ErrorReporter reporter) {
+		string? path = get_path (_path, source_file_path, reporter);
+		if (path == null) {
+			return ;
+		}
+
+		try {
+			string content = null;
+			FileUtils.get_contents (path, out content);
+			_language = Language.from_path (path);
+			code = (owned) content;
+		} catch (FileError err) {
+			reporter.simple_error ("Can't read file: '%s': ", path, err.message);
+		}
+	}
+
 	public override void check (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
+		string[] splitted = code.split ("\n", 2);
+		if (splitted[0].strip () == "") {
+			code = splitted[1] ?? "";
+		} else if (splitted[0].has_prefix ("#!")) {
+			unowned string start = (string) (((char*) splitted[0]) + 2);
+			if (start.has_prefix ("include:")) {
+				start = (string) (((char*) start) + 8);
+				string path = start.strip ();
+				load_source_code (path, file_path, reporter);
+			} else {
+				string name = start._strip ().down ();
+				_language = Language.from_string (name);
+				code = splitted[1] ?? "";
+				if (_language == null && name != "none") {
+					reporter.simple_warning ("Unsupported programming language '%s'", name);
+					return ;
+				}
+			}
+		}
 	}
 
 	public override void accept (ContentVisitor visitor) {
