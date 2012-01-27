@@ -1,6 +1,7 @@
 /* sourcecode.vala
  *
- * Copyright (C) 2008-2009 Florian Brosch, Didier Villevalois
+ * Copyright (C) 2008-2009 Didier Villevalois
+ * Copyright (C) 2008-2012 Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -64,7 +65,7 @@ public class Valadoc.Content.SourceCode : ContentElement, Inline{
 		_language = Language.VALA;
 	}
 
-	public override void check (Api.Tree api_root, Api.Node container, ErrorReporter reporter, Settings settings) {
+	public override void check (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
 	}
 
 	public override void accept (ContentVisitor visitor) {

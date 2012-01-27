@@ -1,6 +1,7 @@
 /* embedded.vala
  *
- * Copyright (C) 2008-2009 Florian Brosch, Didier Villevalois
+ * Copyright (C) 2008-2009 Didier Villevalois
+ * Copyright (C) 2008-2012 Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -42,7 +43,18 @@ public class Valadoc.Content.Embedded : ContentElement, Inline, StyleAttributes 
 		_locator = locator;
 	}
 
-	public override void check (Api.Tree api_root, Api.Node container, ErrorReporter reporter, Settings settings) {
+	public override void check (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
+		// search relative to our file
+		if (!Path.is_absolute (url)) {
+			string relative_to_file = Path.build_path (Path.DIR_SEPARATOR_S, Path.get_dirname (file_path), url);
+			if (FileUtils.test (relative_to_file, FileTest.EXISTS | FileTest.IS_REGULAR)) {
+				url = (owned) relative_to_file;
+				package = container.package;
+				return ;
+			}
+		}
+
+		// search relative to the current directory / absoulte path
 		if (!FileUtils.test (url, FileTest.EXISTS | FileTest.IS_REGULAR)) {
 			reporter.simple_error ("%s does not exist", url);
 		} else {

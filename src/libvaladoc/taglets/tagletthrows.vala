@@ -1,6 +1,7 @@
 /* tagletthrows.vala
  *
- * Copyright (C) 2008-2009 Florian Brosch, Didier Villevalois
+ * Copyright (C) 2008-2009 Didier Villevalois
+ * Copyright (C) 2008-2012 Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -35,14 +36,14 @@ public class Valadoc.Taglets.Throws : InlineContent, Taglet, Block {
 		});
 	}
 
-	public override void check (Api.Tree api_root, Api.Node container, ErrorReporter reporter, Settings settings) {
+	public override void check (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
 		error_domain = api_root.search_symbol_str (container, error_domain_name);
 		if (error_domain == null) {
 			// TODO use ContentElement's source reference
 			reporter.simple_error ("%s does not exist", error_domain_name);
 		}
 
-		base.check (api_root, container, reporter, settings);
+		base.check (api_root, container, file_path, reporter, settings);
 	}
 
 	public override void accept (ContentVisitor visitor) {

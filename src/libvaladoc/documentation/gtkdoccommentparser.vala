@@ -1,6 +1,6 @@
 /* gtkcommentparser.vala
  *
- * Copyright (C) 2011  Florian Brosch
+ * Copyright (C) 2011-2012  Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -260,7 +260,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 			first = false;
 		}
 
-		comment.check (tree, element, reporter, settings);
+		comment.check (tree, element, gir_comment.file.relative_path, reporter, settings);
 		return comment;
 	}
 

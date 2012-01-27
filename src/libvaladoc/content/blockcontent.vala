@@ -1,6 +1,7 @@
 /* blockcontent.vala
  *
- * Copyright (C) 2008-2009 Florian Brosch, Didier Villevalois
+ * Copyright (C) 2008-2009 Didier Villevalois
+ * Copyright (C) 2008-2012 Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -34,9 +35,9 @@ public abstract class Valadoc.Content.BlockContent : ContentElement {
 	public override void configure (Settings settings, ResourceLocator locator) {
 	}
 
-	public override void check (Api.Tree api_root, Api.Node container, ErrorReporter reporter, Settings settings) {
+	public override void check (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
 		foreach (Block element in _content) {
-			element.check (api_root, container, reporter, settings);
+			element.check (api_root, container, file_path, reporter, settings);
 		}
 	}
 

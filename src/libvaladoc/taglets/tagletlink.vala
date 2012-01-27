@@ -1,6 +1,7 @@
 /* taglet.vala
  *
- * Copyright (C) 2008-2009 Florian Brosch, Didier Villevalois
+ * Copyright (C) 2008-2009 Didier Villevalois
+ * Copyright (C) 2008-2012 Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -50,7 +51,7 @@ public class Valadoc.Taglets.Link : InlineTaglet {
 		});
 	}
 
-	public override void check (Api.Tree api_root, Api.Node container, ErrorReporter reporter, Settings settings) {
+	public override void check (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
 		if (symbol_name.has_prefix ("c::")) {
 			_symbol_name = _symbol_name.substring (3);
 			_symbol = api_root.search_symbol_cstr (container, symbol_name);
@@ -75,7 +76,7 @@ public class Valadoc.Taglets.Link : InlineTaglet {
 			reporter.simple_warning ("%s: %s does not exist", container.get_full_name (), symbol_name);
 		}
 
-		base.check (api_root, container, reporter, settings);
+		base.check (api_root, container, file_path, reporter, settings);
 	}
 
 	public override ContentElement produce_content () {
