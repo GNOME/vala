@@ -46,6 +46,23 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 
 	private Regex? normalize_regex = null;
 
+	private HashMap<Api.SourceFile, GirMetaData> metadata = new HashMap<Api.SourceFile, GirMetaData> ();
+	private GirMetaData? current_metadata = null;
+
+	private GirMetaData get_metadata_for_comment (Api.GirSourceComment gir_comment) {
+		GirMetaData metadata = metadata.get (gir_comment.file);
+		if (metadata != null) {
+			return metadata;
+		}
+
+		metadata = new GirMetaData (gir_comment.file.relative_path, settings.metadata_directories);
+		this.metadata.set (gir_comment.file, metadata);
+		return metadata;
+	}
+
+	private inline string fix_resource_path (string path) {
+		return this.current_metadata.get_resource_path (path);
+	}
 
 	private void reset (Api.SourceComment comment) {
 		this.scanner.reset (comment.content);
@@ -218,6 +235,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 	private Api.Node? element;
 
 	public Comment? parse (Api.Node element, Api.GirSourceComment gir_comment) {
+		this.current_metadata = get_metadata_for_comment (gir_comment);
 		this.element = element;
 
 		Comment? comment = this.parse_main_content (gir_comment);
@@ -756,7 +774,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		}
 
 		Embedded e = factory.create_embedded ();
-		e.url = current.attributes.get ("fileref");
+		e.url = fix_resource_path (current.attributes.get ("fileref"));
 
 		next ();
 		parse_docbook_spaces ();
@@ -821,7 +839,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 
 		if (current.type == TokenType.XML_OPEN && current.content == "programlisting") {
 			append_block_content_not_null (content, parse_docbook_programlisting ());
-		} else if (current.type == TokenType.XML_OPEN && current.content == "programlisting") {
+		} else if (current.type == TokenType.XML_OPEN && current.content == "inlinegraphic") {
 			Embedded? img = parse_docbook_inlinegraphic ();
 			Paragraph p = factory.create_paragraph ();
 			append_block_content_not_null (content, p);

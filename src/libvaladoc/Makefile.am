@@ -44,6 +44,7 @@ libvaladoc_la_VALASOURCES = \
 	documentation/wikiscanner.vala \
 	documentation/gtkdoccommentparser.vala \
 	documentation/gtkdoccommentscanner.vala \
+	documentation/girmetadata.vala \
 	importer/documentationimporter.vala \
 	importer/valadocdocumentationimporter.vala \
 	importer/valadocdocumentationimporterscanner.vala \
