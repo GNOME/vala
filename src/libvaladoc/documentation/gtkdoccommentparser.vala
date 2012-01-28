@@ -617,6 +617,10 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		return container;
 	}
 
+	private Note? parse_docbook_important () {
+		return (Note?) parse_docbook_information_box_template ("important", factory.create_note ());
+	}
+
 	private Note? parse_docbook_note () {
 		return (Note?) parse_docbook_information_box_template ("note", factory.create_note ());
 	}
@@ -1022,6 +1026,8 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 				this.append_block_content_not_null (content, parse_docbook_warning ());
 			} else if (current.type == TokenType.XML_OPEN && current.content == "note") {
 				this.append_block_content_not_null (content, parse_docbook_note ());
+			} else if (current.type == TokenType.XML_OPEN && current.content == "important") {
+				this.append_block_content_not_null (content, parse_docbook_important ());
 			} else if (current.type == TokenType.XML_OPEN && current.content == "refsect2") {
 				this.append_block_content_not_null_all (content, parse_docbook_refsect2 ());
 			} else if (current.type == TokenType.GTKDOC_PARAGRAPH) {
