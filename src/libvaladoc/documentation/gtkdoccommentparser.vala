@@ -1258,6 +1258,8 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 				append_inline_content_not_null (run, parse_highlighted_template ("literal", Run.Style.ITALIC));
 			} else if (current.type == TokenType.XML_OPEN && current.content == "application") {
 				append_inline_content_not_null (run, parse_highlighted_template ("application", Run.Style.MONOSPACED));
+			} else if (current.type == TokenType.XML_OPEN && current.content == "varname") {
+				append_inline_content_not_null (run, parse_highlighted_template ("varname", Run.Style.MONOSPACED));
 			} else if (current.type == TokenType.XML_OPEN && current.content == "emphasis") {
 				append_inline_content_not_null (run, parse_highlighted_template ("emphasis", Run.Style.MONOSPACED));
 			} else if (current.type == TokenType.XML_OPEN && current.content == "pre") {
@@ -1302,6 +1304,8 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 				append_inline_content_not_null (run, parse_symbol_link ("errorcode"));
 			} else if (current.type == TokenType.XML_OPEN && current.content == "constant") {
 				append_inline_content_not_null (run, parse_symbol_link ("constant"));
+			} else if (current.type == TokenType.XML_OPEN && current.content == "inlinegraphic") {
+				append_inline_content_not_null (run, parse_docbook_inlinegraphic ());
 			} else if (current.type == TokenType.XML_OPEN && current.content == "anchor") {
 				parse_anchor ();
 			} else if (current.type == TokenType.XML_OPEN && current.content == "link") {
