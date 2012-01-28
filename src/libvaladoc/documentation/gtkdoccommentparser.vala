@@ -1260,6 +1260,8 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 				append_inline_content_not_null (run, parse_highlighted_template ("application", Run.Style.MONOSPACED));
 			} else if (current.type == TokenType.XML_OPEN && current.content == "varname") {
 				append_inline_content_not_null (run, parse_highlighted_template ("varname", Run.Style.MONOSPACED));
+			} else if (current.type == TokenType.XML_OPEN && current.content == "computeroutput") {
+				append_inline_content_not_null (run, parse_highlighted_template ("computeroutput", Run.Style.MONOSPACED));
 			} else if (current.type == TokenType.XML_OPEN && current.content == "emphasis") {
 				append_inline_content_not_null (run, parse_highlighted_template ("emphasis", Run.Style.MONOSPACED));
 			} else if (current.type == TokenType.XML_OPEN && current.content == "pre") {
