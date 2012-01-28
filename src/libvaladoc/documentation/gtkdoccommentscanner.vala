@@ -73,7 +73,7 @@ public class Valadoc.Gtkdoc.Token {
 			return "`<%s>'".printf (this.content);
 
 		case TokenType.XML_CLOSE:
-			return "`<%s>'".printf (this.content);
+			return "`</%s>'".printf (this.content);
 
 		case TokenType.XML_COMMENT:
 			return "<XML-COMMENT>";
