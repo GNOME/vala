@@ -771,9 +771,20 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		return p;
 	}
 
-	private Embedded? parse_docbook_inlinegraphic () {
-		if (!check_xml_open_tag ("inlinegraphic")) {
-			this.report_unexpected_token (current, "<inlinegraphic>");
+	private Paragraph? parse_docbook_graphic () {
+		var tmp = parse_docbook_inlinegraphic ("graphic");
+		if (tmp == null) {
+			return null;
+		}
+
+		Paragraph? p = factory.create_paragraph ();
+		p.content.add (tmp);
+		return p;
+	}
+
+	private Embedded? parse_docbook_inlinegraphic (string tag_name = "inlinegraphic") {
+		if (!check_xml_open_tag (tag_name)) {
+			this.report_unexpected_token (current, "<%s>".printf (tag_name));
 			return null;
 		}
 
@@ -783,8 +794,8 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		next ();
 		parse_docbook_spaces ();
 
-		if (!check_xml_close_tag ("inlinegraphic")) {
-			this.report_unexpected_token (current, "</inlinegrapic>");
+		if (!check_xml_close_tag (tag_name)) {
+			this.report_unexpected_token (current, "</%s>".printf (tag_name));
 			return e;
 		}
 
@@ -942,6 +953,52 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		return content;
 	}
 
+	private LinkedList<Block>? parse_docbook_figure () {
+		if (!check_xml_open_tag ("figure")) {
+			this.report_unexpected_token (current, "<figure>");
+			return null;
+		}
+		next ();
+
+		LinkedList<Block> content = new LinkedList<Block> ();
+		parse_docbook_spaces ();
+
+		if (current.type == TokenType.XML_OPEN && current.content == "title") {
+			append_block_content_not_null (content, parse_docbook_title ());
+			parse_docbook_spaces ();
+		}
+
+		while (current.type == TokenType.XML_OPEN) {
+			if (current.content == "inlinegraphic") {
+				Paragraph p = (content.size > 0)? content[0] as Paragraph : null;
+				if (p == null) {
+					p = factory.create_paragraph ();
+				}
+
+				while (current.type == TokenType.XML_OPEN && current.content == "inlinegraphic") {
+					p.content.add (parse_docbook_inlinegraphic ());
+					next ();
+					parse_docbook_spaces ();
+				}
+			} else if (current.content == "graphic") {
+				append_block_content_not_null (content, parse_docbook_graphic ());
+				next ();
+			} else {
+				break;
+			}
+
+			parse_docbook_spaces ();
+		}
+
+		if (!check_xml_close_tag ("figure")) {
+			this.report_unexpected_token (current, "</figure>");
+			return content;
+		}
+
+		next ();
+		return content;
+	}
+
 	private Run? parse_docbook_footnote () {
 		if (!check_xml_open_tag ("footnote")) {
 			this.report_unexpected_token (current, "<footnote>");
@@ -1030,6 +1087,8 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 				this.append_block_content_not_null (content, parse_docbook_important ());
 			} else if (current.type == TokenType.XML_OPEN && current.content == "refsect2") {
 				this.append_block_content_not_null_all (content, parse_docbook_refsect2 ());
+			} else if (current.type == TokenType.XML_OPEN && current.content == "figure") {
+				this.append_block_content_not_null_all (content, parse_docbook_figure ());
 			} else if (current.type == TokenType.GTKDOC_PARAGRAPH) {
 				this.append_block_content_not_null (content, parse_gtkdoc_paragraph ());
 			} else if (current.type == TokenType.GTKDOC_SOURCE_OPEN) {
