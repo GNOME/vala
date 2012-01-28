@@ -820,6 +820,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		return p;
 	}
 
+/*
 	private LinkedList<Block>? parse_docbook_informalexample () {
 		if (!check_xml_open_tag ("informalexample")) {
 			this.report_unexpected_token (current, "<informalexample>");
@@ -857,10 +858,15 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		next ();
 		return content;
 	}
+*/
 
-	private LinkedList<Block>? parse_docbook_example () {
-		if (!check_xml_open_tag ("example")) {
-			this.report_unexpected_token (current, "<example>");
+	private inline LinkedList<Block>? parse_docbook_informalexample () {
+		return parse_docbook_example ("informalexample");
+	}
+
+	private LinkedList<Block>? parse_docbook_example (string tag_name = "example") {
+		if (!check_xml_open_tag (tag_name)) {
+			this.report_unexpected_token (current, "<%s>".printf (tag_name));
 			return null;
 		}
 
@@ -893,8 +899,8 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 			parse_docbook_spaces ();
 		}
 
-		if (!check_xml_close_tag ("example")) {
-			this.report_unexpected_token (current, "</example>");
+		if (!check_xml_close_tag (tag_name)) {
+			this.report_unexpected_token (current, "</%s>".printf (tag_name));
 			return content;
 		}
 
@@ -1211,6 +1217,10 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 				append_inline_content_not_null (run, parse_highlighted_template ("parameter", Run.Style.MONOSPACED));
 			} else if (current.type == TokenType.XML_OPEN && current.content == "replaceable") {
 				append_inline_content_not_null (run, parse_highlighted_template ("replaceable", Run.Style.ITALIC));
+			} else if (current.type == TokenType.XML_OPEN && current.content == "quote") {
+				run.content.add (factory.create_text ("“"));
+				append_inline_content_not_null (run, parse_highlighted_template ("quote", Run.Style.NONE));
+				run.content.add (factory.create_text ("”"));
 			} else if (current.type == TokenType.XML_OPEN && current.content == "footnote") {
 				append_inline_content_not_null (run, parse_docbook_footnote ());
 			} else if (current.type == TokenType.XML_OPEN && current.content == "type") {
