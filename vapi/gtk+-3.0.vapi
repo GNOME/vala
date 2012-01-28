@@ -5746,7 +5746,7 @@ namespace Gtk {
 		public bool iter_has_qclass (int pos, GLib.Quark qname);
 		public bool iter_has_qname (int pos, GLib.Quark qname);
 		public bool iter_has_qregion (int pos, GLib.Quark qname, Gtk.RegionFlags flags);
-		public bool iter_has_region (int pos, string name, Gtk.RegionFlags flags);
+		public bool iter_has_region (int pos, string name, out Gtk.RegionFlags flags);
 		public unowned GLib.SList iter_list_classes (int pos);
 		public unowned GLib.SList iter_list_regions (int pos);
 		public void iter_remove_class (int pos, string name);
