@@ -362,7 +362,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 	}
 
 	private bool check_xml_open_tag (string tagname) {
-		if (current.type == TokenType.XML_OPEN && current.content != tagname) {
+		if ((current.type == TokenType.XML_OPEN && current.content != tagname) || current.type != TokenType.XML_OPEN) {
 			return false;
 		}
 
@@ -371,7 +371,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 	}
 
 	private bool check_xml_close_tag (string tagname) {
-		if (current.type == TokenType.XML_CLOSE && current.content != tagname) {
+		if ((current.type == TokenType.XML_CLOSE && current.content != tagname) || current.type != TokenType.XML_CLOSE) {
 			return false;
 		}
 
@@ -1063,6 +1063,164 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		}
 	}
 
+	private TableRow? parse_docbook_thead () {
+		if (!check_xml_open_tag ("thead")) {
+			this.report_unexpected_token (current, "<thead>");
+			return null;
+		}
+		next ();
+
+		parse_docbook_spaces ();
+		TableRow? row = parse_docbook_row (Run.Style.BOLD);
+		parse_docbook_spaces ();
+
+		if (!check_xml_close_tag ("thead")) {
+			this.report_unexpected_token (current, "</thead>");
+			return row;
+		}
+
+		next ();
+		return row;
+	}
+
+	private TableCell? parse_docbook_entry (Run.Style default_style = Run.Style.NONE) {
+		if (!check_xml_open_tag ("entry")) {
+			this.report_unexpected_token (current, "<entry>");
+			return null;
+		}
+		next ();
+
+		TableCell cell = factory.create_table_cell ();
+		Run run = factory.create_run (default_style);
+		run.content.add (parse_inline_content ());
+		cell.content.add (run);
+
+		if (!check_xml_close_tag ("entry")) {
+			this.report_unexpected_token (current, "</entry>");
+			return cell;
+		}
+
+		next ();
+		return cell;
+	}
+
+	private TableRow? parse_docbook_row (Run.Style default_style = Run.Style.NONE) {
+		if (!check_xml_open_tag ("row")) {
+			this.report_unexpected_token (current, "<row>");
+			return null;
+		}
+		next ();
+
+		TableRow row = factory.create_table_row ();
+		parse_docbook_spaces ();
+
+		while (current.type == TokenType.XML_OPEN && current.content == "entry") {
+			TableCell? table_cell = parse_docbook_entry (default_style);
+			if (table_cell == null) {
+				break;
+			}
+
+			row.cells.add (table_cell);
+			parse_docbook_spaces ();
+		}
+
+		if (!check_xml_close_tag ("row")) {
+			this.report_unexpected_token (current, "</row>");
+			return row;
+		}
+
+		next ();
+		return row;
+	}
+
+	private LinkedList<TableRow>? parse_docbook_tbody () {
+		if (!check_xml_open_tag ("tbody")) {
+			this.report_unexpected_token (current, "<tbody>");
+			return null;
+		}
+		next ();
+
+		parse_docbook_spaces ();
+
+		LinkedList<TableRow> rows = new LinkedList<TableRow> ();
+		while (current.type == TokenType.XML_OPEN && current.content == "row") {
+			TableRow? row = parse_docbook_row ();
+			if (row == null) {
+				break;
+			}
+
+			parse_docbook_spaces ();
+			rows.add (row);
+		}
+
+
+		if (!check_xml_close_tag ("tbody")) {
+			this.report_unexpected_token (current, "</tbody>");
+			return rows;
+		}
+
+		next ();
+		return rows;
+	}
+
+	private Table? parse_docbook_tgroup () {
+		if (!check_xml_open_tag ("tgroup")) {
+			this.report_unexpected_token (current, "<tgroup>");
+			return null;
+		}
+		next ();
+
+		Table table = factory.create_table ();
+		parse_docbook_spaces ();
+
+		if (current.type == TokenType.XML_OPEN && current.content == "thead") {
+			TableRow? row = parse_docbook_thead ();
+			if (row != null) {
+				parse_docbook_spaces ();
+				table.rows.add (row);
+			}
+
+			parse_docbook_spaces ();
+		}
+
+		if (current.type == TokenType.XML_OPEN && current.content == "tbody") {
+			LinkedList<TableRow>? rows = parse_docbook_tbody ();
+			if (rows != null) {
+				table.rows.add_all (rows);
+			}
+
+			parse_docbook_spaces ();
+		}
+
+		if (!check_xml_close_tag ("tgroup")) {
+			this.report_unexpected_token (current, "</tgroup>");
+			return table;
+		}
+
+		next ();
+		return table;
+	}
+
+	private Table? parse_docbook_informaltable () {
+		if (!check_xml_open_tag ("informaltable")) {
+			this.report_unexpected_token (current, "<informaltable>");
+			return null;
+		}
+		next ();
+
+		parse_docbook_spaces ();
+		Table? table = this.parse_docbook_tgroup ();
+		parse_docbook_spaces ();
+
+		if (!check_xml_close_tag ("informaltable")) {
+			this.report_unexpected_token (current, "</informaltable>");
+			return table;
+		}
+
+		next ();
+		return table;
+	}
+
 	private LinkedList<Block> parse_block_content () {
 		LinkedList<Block> content = new LinkedList<Block> ();
 
@@ -1071,6 +1229,8 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 
 			if (current.type == TokenType.XML_OPEN && current.content == "itemizedlist") {
 				this.append_block_content_not_null (content, parse_docbook_itemizedlist ());
+			} else if (current.type == TokenType.XML_OPEN && current.content == "informaltable") {
+				this.append_block_content_not_null (content, parse_docbook_informaltable ());
 			} else if (current.type == TokenType.XML_OPEN && current.content == "programlisting") {
 				this.append_block_content_not_null (content, parse_docbook_programlisting ());
 			} else if (current.type == TokenType.XML_OPEN && current.content == "para") {
