@@ -1185,9 +1185,12 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		return table;
 	}
 
-	private LinkedList<Block> parse_docbook_section () {
+	private LinkedList<Block>? parse_docbook_section () {
 		if (!check_xml_open_tag ("section")) {
+			this.report_unexpected_token (current, "<section>");
+			return null;
 		}
+
 		string id = current.attributes.get ("id");
 		next ();
 
@@ -1195,6 +1198,166 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 
 		if (!check_xml_close_tag ("section")) {
 			this.report_unexpected_token (current, "</section>");
+			return content;
+		}
+
+		next ();
+		return content;
+	}
+
+	private ListItem? parse_docbook_member () {
+		if (!check_xml_open_tag ("member")) {
+			this.report_unexpected_token (current, "<member>");
+			return null;
+		}
+		next ();
+
+		parse_docbook_spaces ();
+
+		ListItem item = factory.create_list_item ();
+		Paragraph para = factory.create_paragraph ();
+		item.content.add (para);
+
+		para.content.add (parse_inline_content ());
+
+		parse_docbook_spaces ();
+
+		if (!check_xml_close_tag ("member")) {
+			this.report_unexpected_token (current, "</member>");
+			return item;
+		}
+
+		next ();
+		return item;
+	}
+
+	private Content.List? parse_docbook_simplelist () {
+		if (!check_xml_open_tag ("simplelist")) {
+			this.report_unexpected_token (current, "<simplelist>");
+			return null;
+		}
+		next ();
+
+		parse_docbook_spaces ();
+
+		Content.List list = factory.create_list ();
+
+		while (current.type == TokenType.XML_OPEN && current.content == "member") {
+			ListItem item = parse_docbook_member ();
+			if (item == null) {
+				break;
+			}
+
+			list.items.add (item);
+			parse_docbook_spaces ();
+		}
+
+
+		if (!check_xml_close_tag ("simplelist")) {
+			this.report_unexpected_token (current, "</simplelist>");
+			return list;
+		}
+
+		next ();
+		return list;
+	}
+
+	private Paragraph? parse_docbook_term () {
+		if (!check_xml_open_tag ("term")) {
+			this.report_unexpected_token (current, "<term>");
+			return null;
+		}
+		next ();
+
+		parse_docbook_spaces ();
+
+		Paragraph? p = factory.create_paragraph ();
+		Run run = parse_inline_content ();
+		run.style = Run.Style.ITALIC;
+		p.content.add (run);
+
+		if (!check_xml_close_tag ("term")) {
+			this.report_unexpected_token (current, "</term>");
+			return p;
+		}
+
+		next ();
+		return p;
+	}
+
+	private ListItem? parse_docbook_varlistentry () {
+		if (!check_xml_open_tag ("varlistentry")) {
+			this.report_unexpected_token (current, "<varlistentry>");
+			return null;
+		}
+		next ();
+
+		parse_docbook_spaces ();
+
+		if (current.type != TokenType.XML_OPEN || current.content != "term") {
+			return null;
+		}
+
+		Paragraph? term = parse_docbook_term ();
+		if (term == null) {
+			return null;
+		}
+
+		parse_docbook_spaces ();
+		ListItem? desc = parse_docbook_listitem ();		
+		if (desc == null) {
+			return null;
+		}
+
+		parse_docbook_spaces ();
+
+		Content.ListItem listitem = factory.create_list_item ();
+		Content.List list = factory.create_list ();
+
+		listitem.content.add (term);
+		listitem.content.add (list);
+		list.items.add (desc);
+
+		if (!check_xml_close_tag ("varlistentry")) {
+			this.report_unexpected_token (current, "</varlistentry>");
+			return listitem;
+		}
+
+		next ();
+		return listitem;
+	}
+
+	private LinkedList<Block>? parse_docbook_variablelist () {
+		if (!check_xml_open_tag ("variablelist")) {
+			this.report_unexpected_token (current, "<variablelist>");
+			return null;
+		}
+		next ();
+
+		parse_docbook_spaces ();
+
+		LinkedList<Block> content = new LinkedList<Block> ();
+
+		if (current.type == TokenType.XML_OPEN && current.content == "title") {
+			append_block_content_not_null (content, parse_docbook_title ());
+			parse_docbook_spaces ();
+		}
+
+		Content.List list = factory.create_list ();
+		content.add (list);
+
+		while (current.type == TokenType.XML_OPEN && current.content == "varlistentry") {
+			ListItem item = parse_docbook_varlistentry ();
+			if (item == null) {
+				break;
+			}
+
+			list.items.add (item);
+			parse_docbook_spaces ();
+		}
+
+		if (!check_xml_close_tag ("variablelist")) {
+			this.report_unexpected_token (current, "</variablelist>");
 			return content;
 		}
 
@@ -1210,6 +1373,10 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 
 			if (current.type == TokenType.XML_OPEN && current.content == "itemizedlist") {
 				this.append_block_content_not_null (content, parse_docbook_itemizedlist ());
+			} else if (current.type == TokenType.XML_OPEN && current.content == "variablelist") {
+				this.append_block_content_not_null_all (content, parse_docbook_variablelist ());
+			} else if (current.type == TokenType.XML_OPEN && current.content == "simplelist") {
+				this.append_block_content_not_null (content, parse_docbook_simplelist ());
 			} else if (current.type == TokenType.XML_OPEN && current.content == "informaltable") {
 				this.append_block_content_not_null (content, parse_docbook_informaltable ());
 			} else if (current.type == TokenType.XML_OPEN && current.content == "programlisting") {
