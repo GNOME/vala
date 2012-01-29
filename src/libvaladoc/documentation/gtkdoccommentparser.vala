@@ -549,27 +549,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		ListItem item = factory.create_list_item ();
 	
 		while (current.type != TokenType.XML_CLOSE && current.type != TokenType.EOF) {
-			if (current.type == TokenType.XML_OPEN && current.content == "para") {
-				foreach (Block block in parse_docbook_para ()) {
-					if (block is Paragraph) {
-						if (item.content.size > 0) {
-							item.content.add (factory.create_text ("\n"));
-						}
-
-						item.content.add_all (((Paragraph) block).content);
-					} else {
-						// TODO: extend me
-						this.report_unexpected_token (current, "<para>|</listitem>");
-						return null;
-					}
-				}
-			} else {
-				Token tmp_t = current;
-				parse_inline_content ();
-				if (tmp_t == current) {
-					break;
-				}
-			}
+			item.content.add_all (parse_mixed_content ());
 		}
 
 		if (!check_xml_close_tag ("listitem")) {
@@ -693,7 +673,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 			}
 
 			LinkedList<Block> lst = parse_block_content ();
-			if (lst != null && run.content.size > 0) {
+			if (lst != null && lst.size > 0) {
 				content.add_all (lst);
 				continue;
 			}
@@ -702,9 +682,13 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		return content;
 	}
 
-	private LinkedList<Block>? parse_docbook_para () {
-		if (!check_xml_open_tag ("para")) {
-			this.report_unexpected_token (current, "<para>");
+	private inline LinkedList<Block>? parse_docbook_simpara () {
+		return parse_docbook_para ("simpara");
+	}
+
+	private LinkedList<Block>? parse_docbook_para (string tag_name = "para") {
+		if (!check_xml_open_tag (tag_name)) {
+			this.report_unexpected_token (current, "<%s>".printf (tag_name));
 			return null;
 		}
 
@@ -712,8 +696,9 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 
 		LinkedList<Block> content = parse_mixed_content ();
 
-		if (!check_xml_close_tag ("para")) {
-			this.report_unexpected_token (current, "</para>");
+		// ignore missing </para> to match gtkdocs behaviour
+		if (!check_xml_close_tag (tag_name) && current.type != TokenType.EOF) {
+			this.report_unexpected_token (current, "</%s>".printf (tag_name));
 			return content;
 		}
 
@@ -1225,6 +1210,8 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 				this.append_block_content_not_null (content, parse_docbook_programlisting ());
 			} else if (current.type == TokenType.XML_OPEN && current.content == "para") {
 				this.append_block_content_not_null_all (content, parse_docbook_para ());
+			} else if (current.type == TokenType.XML_OPEN && current.content == "simpara") {
+				this.append_block_content_not_null_all (content, parse_docbook_simpara ());
 			} else if (current.type == TokenType.XML_OPEN && current.content == "informalexample") {
 				this.append_block_content_not_null_all (content, parse_docbook_informalexample ());
 			} else if (current.type == TokenType.XML_OPEN && current.content == "example") {

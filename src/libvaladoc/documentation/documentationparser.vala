@@ -145,15 +145,20 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 
 	private void new_list_item (Content.List.Bullet bullet) throws ParserError {
 		var new_item = _factory.create_list_item ();
+		var content = _factory.create_paragraph ();
+		new_item.content.add (content);
 
 		Content.List list = null;
 		if (levels.length >= 1) {
+			// Pop current content
+			pop ();
+
 			if (current_level > levels[levels.length - 1]) {
 				list = _factory.create_list ();
 				list.bullet = bullet;
 
 				var current_item = peek () as ListItem;
-				current_item.sub_list = list;
+				current_item.content.add (list);
 				push (list);
 
 				levels += current_level;
@@ -191,6 +196,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 
 		list.items.add (new_item);
 		push (new_item);
+		push (content);
 	}
 
 	private string bullet_type_string (Content.List.Bullet bullet) {
@@ -214,6 +220,9 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 	}
 
 	private void finish_list () {
+		// pop content
+		pop ();
+
 		while (peek () is ListItem) {
 			pop ();
 			pop ();
@@ -569,7 +578,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 			.set_name ("IndentedItem")
 			.set_start (() => { current_level = 0; })
 			.set_reduce (() => {
-				var content_list = ((ListItem) peek ()).content;
+				var content_list = ((InlineContent) peek ()).content;
 				if (content_list.size > 0 && content_list.last () is Text) {
 					((Text) content_list.last ()).content._chomp ();
 				}
@@ -795,8 +804,8 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 	}
 
 #if DEBUG
-	private void dump_stack () {
-		message ("Dumping stack");
+	private void dump_stack (string title) {
+		message ("=== Dumping stack: %s ===", title);
 		foreach (Object object in _stack) {
 			message ("%s", object.get_type ().name ());
 		}

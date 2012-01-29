@@ -24,20 +24,15 @@
 using Gee;
 
 
-public class Valadoc.Content.ListItem : InlineContent {
-	public List? sub_list { get; set; }
+public class Valadoc.Content.ListItem : BlockContent {
 
 	internal ListItem () {
 		base ();
 	}
 
 	public override void check (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
-		// Check inline content
+		// Check block content
 		base.check (api_root, container, file_path, reporter, settings);
-
-		if (sub_list != null) {
-			sub_list.check (api_root, container, file_path, reporter, settings);
-		}
 	}
 
 	public override void accept (ContentVisitor visitor) {
@@ -46,9 +41,5 @@ public class Valadoc.Content.ListItem : InlineContent {
 
 	public override void accept_children (ContentVisitor visitor) {
 		base.accept_children (visitor);
-
-		if (sub_list != null) {
-			sub_list.accept (visitor);
-		}
 	}
 }

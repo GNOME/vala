@@ -355,7 +355,20 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 
 	public override void visit_list_item (ListItem element) {
 		writer.start_tag ("li");
-		element.accept_children (this);
+		Paragraph? first_para = (element.content.size > 0)? element.content[0] as Paragraph : null;
+		if (first_para != null) {
+			// We do not pick up alignments in gir-files.
+			first_para.accept_children (this);
+			bool first_entry = true;
+			foreach (var item in element.content) {
+				if (!first_entry) {
+					item.accept (this);
+				}
+				first_entry = false;
+			}
+		} else {
+			element.accept_children (this);
+		}
 		writer.end_tag ("li");
 	}
 
