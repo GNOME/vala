@@ -952,7 +952,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 			parse_docbook_spaces ();
 		}
 
-		this.append_block_content_not_null_all (content, parse_block_content ());
+		this.append_block_content_not_null_all (content, parse_mixed_content ());
 
 		if (!check_xml_close_tag ("refsect2")) {
 			this.report_unexpected_token (current, "</refsect2>");
