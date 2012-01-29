@@ -259,6 +259,11 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					}
 				}
 
+				if (expr.value_type.is_real_struct_type ()) {
+					// gobject allocates structs on heap
+					expr.value_type.nullable = true;
+				}
+
 				var temp_var = get_temp_variable (expr.value_type);
 				var ctemp = get_variable_cexpression (temp_var.name);
 				emit_temp_var (temp_var);

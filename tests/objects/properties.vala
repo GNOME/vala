@@ -2,6 +2,15 @@ using GLib;
 
 public delegate void Delegate ();
 
+public struct RealStruct {
+	public int field;
+}
+
+public class NonPrivAccess : Object {
+	[NoAccessorMethod]
+	public RealStruct real_struct { get; set; }
+}
+
 public class Sample : Object {
 	private string automatic { get; set; }
 
@@ -61,6 +70,10 @@ public class Sample : Object {
 		ibaz.simple_method ();
 	
 		stdout.printf (" 3\n");
+
+		var nonpriv = new NonPrivAccess ();
+		nonpriv.real_struct = { 10 };
+		assert (nonpriv.real_struct.field == 10);
 
 		return 0;
 	}
