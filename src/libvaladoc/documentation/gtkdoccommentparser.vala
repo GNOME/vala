@@ -609,9 +609,13 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		return (Warning?) parse_docbook_information_box_template ("warning", factory.create_warning ());
 	}
 
-	private Content.List? parse_docbook_itemizedlist () {
-		if (!check_xml_open_tag ("itemizedlist")) {
-			this.report_unexpected_token (current, "<itemizedlist>");
+	private inline Content.List? parse_docbook_orderedlist () {
+		return parse_docbook_itemizedlist ("orderedlist", Content.List.Bullet.ORDERED);
+	}
+
+	private Content.List? parse_docbook_itemizedlist (string tag_name = "itemizedlist", Content.List.Bullet bullet_type = Content.List.Bullet.UNORDERED) {
+		if (!check_xml_open_tag (tag_name)) {
+			this.report_unexpected_token (current, "<%s>".printf (tag_name));
 			return null;
 		}
 
@@ -620,7 +624,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		parse_docbook_spaces ();
 
 		Content.List list = factory.create_list ();
-		list.bullet = Content.List.Bullet.UNORDERED;
+		list.bullet = bullet_type;
 
 		while (current.type == TokenType.XML_OPEN) {
 			if (current.content == "listitem") {
@@ -632,8 +636,8 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 			parse_docbook_spaces ();
 		}
 
-		if (!check_xml_close_tag ("itemizedlist")) {
-			this.report_unexpected_token (current, "</itemizedlist>");
+		if (!check_xml_close_tag (tag_name)) {
+			this.report_unexpected_token (current, "</%s>".printf (tag_name));
 			return list;
 		}
 
@@ -1373,6 +1377,8 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 
 			if (current.type == TokenType.XML_OPEN && current.content == "itemizedlist") {
 				this.append_block_content_not_null (content, parse_docbook_itemizedlist ());
+			} else if (current.type == TokenType.XML_OPEN && current.content == "orderedlist") {
+				this.append_block_content_not_null (content, parse_docbook_orderedlist ());
 			} else if (current.type == TokenType.XML_OPEN && current.content == "variablelist") {
 				this.append_block_content_not_null_all (content, parse_docbook_variablelist ());
 			} else if (current.type == TokenType.XML_OPEN && current.content == "simplelist") {
