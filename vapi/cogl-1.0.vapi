@@ -159,8 +159,6 @@ namespace Cogl {
 	[CCode (cheader_filename = "cogl/cogl.h", copy_function = "cogl_path_copy")]
 	[Compact]
 	public class Path {
-		[CCode (has_construct_function = false, type = "void")]
-		public Path ();
 		public static void arc (float center_x, float center_y, float radius_x, float radius_y, float angle_1, float angle_2);
 		public static void close ();
 		public unowned Cogl.Path copy ();
@@ -173,6 +171,7 @@ namespace Cogl {
 		public static void line (float x_1, float y_1, float x_2, float y_2);
 		public static void line_to (float x, float y);
 		public static void move_to (float x, float y);
+		public static void @new ();
 		public static void polygon ([CCode (array_length = false)] float[] coords, int num_points);
 		public static void polyline ([CCode (array_length = false)] float[] coords, int num_points);
 		public static void rectangle (float x_1, float y_1, float x_2, float y_2);
