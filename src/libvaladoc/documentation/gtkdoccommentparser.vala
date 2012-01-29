@@ -1412,6 +1412,8 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		while (current.type != TokenType.EOF) {
 			if (current.type == TokenType.XML_OPEN && current.content == "firstterm") {
 				append_inline_content_not_null (run, parse_highlighted_template ("firstterm", Run.Style.ITALIC));
+			} else if (current.type == TokenType.XML_OPEN && current.content == "abbrev") {
+				append_inline_content_not_null (run, parse_highlighted_template ("abbrev", Run.Style.ITALIC));
 			} else if (current.type == TokenType.XML_OPEN && current.content == "term") {
 				append_inline_content_not_null (run, parse_highlighted_template ("term", Run.Style.ITALIC));
 			} else if (current.type == TokenType.XML_OPEN && current.content == "literal") {
