@@ -882,12 +882,6 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 
 		LinkedList<Block> content = new LinkedList<Block> ();
 
-		if (current.type == TokenType.XML_OPEN && current.content == "title") {
-			append_block_content_not_null (content, parse_docbook_title ());
-			parse_docbook_spaces ();
-		}
-
-
 		content.add_all (parse_mixed_content ());
 
 		/*
@@ -931,11 +925,6 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		parse_docbook_spaces ();
 
 		LinkedList<Block> content = new LinkedList<Block> ();
-
-		if (current.type == TokenType.XML_OPEN && current.content == "title") {
-			append_block_content_not_null (content, parse_docbook_title ());
-			parse_docbook_spaces ();
-		}
 
 		this.append_block_content_not_null_all (content, parse_mixed_content ());
 
@@ -1196,6 +1185,23 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		return table;
 	}
 
+	private LinkedList<Block> parse_docbook_section () {
+		if (!check_xml_open_tag ("section")) {
+		}
+		string id = current.attributes.get ("id");
+		next ();
+
+		LinkedList<Block> content = parse_mixed_content ();
+
+		if (!check_xml_close_tag ("section")) {
+			this.report_unexpected_token (current, "</section>");
+			return content;
+		}
+
+		next ();
+		return content;
+	}
+
 	private LinkedList<Block> parse_block_content () {
 		LinkedList<Block> content = new LinkedList<Block> ();
 
@@ -1226,6 +1232,10 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 				this.append_block_content_not_null_all (content, parse_docbook_refsect2 ());
 			} else if (current.type == TokenType.XML_OPEN && current.content == "figure") {
 				this.append_block_content_not_null_all (content, parse_docbook_figure ());
+			} else if (current.type == TokenType.XML_OPEN && current.content == "title") {
+				this.append_block_content_not_null (content, parse_docbook_title ());
+			} else if (current.type == TokenType.XML_OPEN && current.content == "section") {
+				this.append_block_content_not_null_all (content, parse_docbook_section ());
 			} else if (current.type == TokenType.GTKDOC_PARAGRAPH) {
 				this.append_block_content_not_null (content, parse_gtkdoc_paragraph ());
 			} else if (current.type == TokenType.GTKDOC_SOURCE_OPEN) {
