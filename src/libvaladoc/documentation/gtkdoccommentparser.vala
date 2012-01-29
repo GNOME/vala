@@ -912,9 +912,9 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		return content;
 	}
 
-	private LinkedList<Block>? parse_docbook_refsect2 () {
-		if (!check_xml_open_tag ("refsect2")) {
-			this.report_unexpected_token (current, "<refsect2>");
+	private LinkedList<Block>? parse_docbook_refsect2 (int nr = 2) {
+		if (!check_xml_open_tag ("refsect%d".printf (nr))) {
+			this.report_unexpected_token (current, "<refsect%d>".printf (nr));
 			return null;
 		}
 
@@ -928,8 +928,8 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 
 		this.append_block_content_not_null_all (content, parse_mixed_content ());
 
-		if (!check_xml_close_tag ("refsect2")) {
-			this.report_unexpected_token (current, "</refsect2>");
+		if (!check_xml_close_tag ("refsect%d".printf (nr))) {
+			this.report_unexpected_token (current, "</refsect%d>".printf (nr));
 			return content;
 		}
 
@@ -1395,6 +1395,8 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 				this.append_block_content_not_null (content, parse_docbook_note ());
 			} else if (current.type == TokenType.XML_OPEN && current.content == "important") {
 				this.append_block_content_not_null (content, parse_docbook_important ());
+			} else if (current.type == TokenType.XML_OPEN && current.content == "refsect3") {
+				this.append_block_content_not_null_all (content, parse_docbook_refsect2 (3));
 			} else if (current.type == TokenType.XML_OPEN && current.content == "refsect2") {
 				this.append_block_content_not_null_all (content, parse_docbook_refsect2 ());
 			} else if (current.type == TokenType.XML_OPEN && current.content == "figure") {
