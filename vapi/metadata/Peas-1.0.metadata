@@ -7,3 +7,4 @@ ExtensionBase
 	.get_plugin_info unowned=true
 ExtensionSet
 	.new skip=false
+ExtensionSetForeachFunc.data closure=3

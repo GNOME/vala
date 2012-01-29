@@ -111,8 +111,8 @@ namespace Peas {
 		DEP_LOADING_FAILED;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "libpeas/peas.h", has_target = false)]
-	public delegate void ExtensionSetForeachFunc (Peas.ExtensionSet @set, Peas.PluginInfo info, Peas.Extension exten, void* data);
+	[CCode (cheader_filename = "libpeas/peas.h", instance_pos = 3.9)]
+	public delegate void ExtensionSetForeachFunc (Peas.ExtensionSet @set, Peas.PluginInfo info, Peas.Extension exten);
 	[CCode (cheader_filename = "libpeas/peas.h", instance_pos = 1.9)]
 	public delegate GLib.Object FactoryFunc ([CCode (array_length_cname = "n_parameters", array_length_pos = 0.5, array_length_type = "guint")] GLib.Parameter[] parameters);
 }
