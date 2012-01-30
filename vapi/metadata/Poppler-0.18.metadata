@@ -1,0 +1,17 @@
+Page
+  .get_image type="Cairo.Surface"
+  .get_selected_region type="Cairo.Region"
+  .get_thumbnail type="Cairo.Surface"
+  .render*.cairo type="Cairo.Context"
+
+Rectangle struct
+
+// Ownership of fields
+*.*#field unowned=false
+ActionLayer.layers unowned
+
+ANNOT_TEXT_ICON_* parent="Poppler.AnnotTextIcon" name="ANNOT_TEXT_ICON_(.+)"
+
+ActionLayer.layers type_arguments="Poppler.ActionLayer"
+ActionOCGState.state_list type_arguments="Poppler.ActionLayer"
+_AttachmentClass skip
