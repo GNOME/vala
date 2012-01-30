@@ -2949,9 +2949,9 @@ namespace Gst {
 	public static unowned GLib.ParamSpec param_spec_fraction (string name, string nick, string blurb, int min_num, int min_denom, int max_num, int max_denom, int default_num, int default_denom, GLib.ParamFlags flags);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static unowned GLib.ParamSpec param_spec_mini_object (string name, string nick, string blurb, GLib.Type object_type, GLib.ParamFlags flags);
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/gst.h", returns_floating_reference = true)]
 	public static Gst.Element? parse_bin_from_description (string bin_description, bool ghost_unlinked_pads) throws GLib.Error;
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/gst.h", returns_floating_reference = true)]
 	public static Gst.Element? parse_bin_from_description_full (string bin_description, bool ghost_unlinked_pads, Gst.ParseContext? context, Gst.ParseFlags flags) throws GLib.Error;
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static GLib.Quark parse_error_quark ();

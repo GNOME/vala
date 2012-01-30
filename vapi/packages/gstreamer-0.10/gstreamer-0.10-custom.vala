@@ -542,4 +542,9 @@ namespace Gst {
 
 	public struct ElementFactoryListType : uint64 {
 	}
+
+	[CCode (returns_floating_reference = true)]
+	public static Gst.Element? parse_bin_from_description (string bin_description, bool ghost_unlinked_pads) throws GLib.Error;
+	[CCode (returns_floating_reference = true)]
+	public static Gst.Element? parse_bin_from_description_full (string bin_description, bool ghost_unlinked_pads, Gst.ParseContext? context, Gst.ParseFlags flags) throws GLib.Error;
 }
