@@ -548,9 +548,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 
 		ListItem item = factory.create_list_item ();
 	
-		while (current.type != TokenType.XML_CLOSE && current.type != TokenType.EOF) {
-			item.content.add_all (parse_mixed_content ());
-		}
+		item.content.add_all (parse_mixed_content ());
 
 		if (!check_xml_close_tag ("listitem")) {
 			this.report_unexpected_token (current, "</listitem>");
@@ -625,6 +623,12 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 
 		Content.List list = factory.create_list ();
 		list.bullet = bullet_type;
+
+//		if (current.type == TokenType.XML_OPEN && current.content == "title") {
+			// TODO
+//			parse_docbook_title ();
+//			parse_docbook_spaces ();
+//		}
 
 		while (current.type == TokenType.XML_OPEN) {
 			if (current.content == "listitem") {
