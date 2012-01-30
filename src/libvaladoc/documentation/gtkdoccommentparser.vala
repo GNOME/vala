@@ -607,28 +607,29 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		return (Warning?) parse_docbook_information_box_template ("warning", factory.create_warning ());
 	}
 
-	private inline Content.List? parse_docbook_orderedlist () {
+	private inline LinkedList<Block>? parse_docbook_orderedlist () {
 		return parse_docbook_itemizedlist ("orderedlist", Content.List.Bullet.ORDERED);
 	}
 
-	private Content.List? parse_docbook_itemizedlist (string tag_name = "itemizedlist", Content.List.Bullet bullet_type = Content.List.Bullet.UNORDERED) {
+	private LinkedList<Block>? parse_docbook_itemizedlist (string tag_name = "itemizedlist", Content.List.Bullet bullet_type = Content.List.Bullet.UNORDERED) {
 		if (!check_xml_open_tag (tag_name)) {
 			this.report_unexpected_token (current, "<%s>".printf (tag_name));
 			return null;
 		}
-
 		next ();
 
+
+		LinkedList<Block> content = new LinkedList<Block> ();
 		parse_docbook_spaces ();
+
+		if (current.type == TokenType.XML_OPEN && current.content == "title") {
+			append_block_content_not_null (content, parse_docbook_title ());
+			parse_docbook_spaces ();
+		}
 
 		Content.List list = factory.create_list ();
 		list.bullet = bullet_type;
-
-//		if (current.type == TokenType.XML_OPEN && current.content == "title") {
-			// TODO
-//			parse_docbook_title ();
-//			parse_docbook_spaces ();
-//		}
+		content.add (list);
 
 		while (current.type == TokenType.XML_OPEN) {
 			if (current.content == "listitem") {
@@ -642,11 +643,11 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 
 		if (!check_xml_close_tag (tag_name)) {
 			this.report_unexpected_token (current, "</%s>".printf (tag_name));
-			return list;
+			return content;
 		}
 
 		next ();
-		return list;
+		return content;
 	}
 
 	private Paragraph? parse_gtkdoc_paragraph () {
@@ -1380,9 +1381,9 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 			parse_docbook_spaces (false);
 
 			if (current.type == TokenType.XML_OPEN && current.content == "itemizedlist") {
-				this.append_block_content_not_null (content, parse_docbook_itemizedlist ());
+				this.append_block_content_not_null_all (content, parse_docbook_itemizedlist ());
 			} else if (current.type == TokenType.XML_OPEN && current.content == "orderedlist") {
-				this.append_block_content_not_null (content, parse_docbook_orderedlist ());
+				this.append_block_content_not_null_all (content, parse_docbook_orderedlist ());
 			} else if (current.type == TokenType.XML_OPEN && current.content == "variablelist") {
 				this.append_block_content_not_null_all (content, parse_docbook_variablelist ());
 			} else if (current.type == TokenType.XML_OPEN && current.content == "simplelist") {
