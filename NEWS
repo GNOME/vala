@@ -1,3 +1,11 @@
+Vala 0.14.2
+===========
+
+ * Add libnl-3.0 bindings.
+ * Add packagekit-glib2 bindings.
+ * Add xtst bindings.
+ * Many bug fixes and binding updates.
+
 Vala 0.14.1
 ===========
 
