@@ -455,6 +455,15 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 
 		InlineTaglet? taglet = null;
 
+		if (current.type == TokenType.WORD && current.content == "struct") {
+			next ();
+
+			if (next ().type == TokenType.SPACE) {
+				next ();
+			}
+		}
+
+
 		if (current.type == TokenType.GTKDOC_FUNCTION || current.type == TokenType.GTKDOC_CONST || current.type == TokenType.GTKDOC_TYPE || current.type == TokenType.WORD || current.type == TokenType.GTKDOC_PROPERTY || current.type == TokenType.GTKDOC_SIGNAL) {
 			taglet = this.create_type_link (current.content) as InlineTaglet;
 			assert (taglet != null);
