@@ -345,6 +345,7 @@ namespace X {
 	public struct Status {
 	}
 
+	[GIR (name = "XID")]
 	[SimpleType]
 	[IntegerType (rank = 9)]
 	[CCode (cname = "XID", type_id = "G_TYPE_INT",
