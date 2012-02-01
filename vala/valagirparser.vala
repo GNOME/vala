@@ -2748,10 +2748,8 @@ public class Vala.GirParser : CodeVisitor {
 				}
 				if (invoker == null && !metadata.has_argument (ArgumentType.VFUNC_NAME)) {
 					s.set_attribute ("NoWrapper", true, s.source_reference);
-				} else {
-					if (current.girdata["name"] != name) {
-						m.set_attribute_string ("CCode", "vfunc_name", current.girdata["name"]);
-					}
+				} if (current.girdata["name"] != name) {
+					m.set_attribute_string ("CCode", "vfunc_name", current.girdata["name"]);
 				}
 			} else if (element_name == "function") {
 				m.binding = MemberBinding.STATIC;
