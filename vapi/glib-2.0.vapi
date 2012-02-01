@@ -1617,6 +1617,7 @@ namespace GLib {
 		public static int get ([CCode (type = "volatile gint *")] ref int atomic);
 		public static void set ([CCode (type = "volatile gint *")] ref int atomic, int newval);
 		public static void add ([CCode (type = "volatile gint *")] ref int atomic, int val);
+		[Deprecated (since = "2.30", replacement = "add")]
 		public static int exchange_and_add ([CCode (type = "volatile gint *")] ref int atomic, int val);
 		public static bool compare_and_exchange ([CCode (type = "volatile gint *")] ref int atomic, int oldval, int newval);
 		public static void inc ([CCode (type = "volatile gint *")] ref int atomic);
@@ -1936,7 +1937,9 @@ namespace GLib {
 		public void @signal ();
 		public void broadcast ();
 		public void wait (Mutex mutex);
+		[Deprecated (since = "2.32", replacement = "wait_until")]
 		public bool timed_wait (Mutex mutex, TimeVal abs_time);
+		public bool wait_until (Mutex mutex, int64 end_time);
 	}
 	
 	/* Thread Pools */
@@ -2670,6 +2673,7 @@ namespace GLib {
 		public static string get_current_dir ();
 		[CCode (cname = "g_find_program_in_path")]
 		public static string? find_program_in_path (string program);
+		[Deprecated (since = "2.32")]
 		[CCode (cname = "g_atexit")]
 		public static void atexit (VoidFunc func);
 		[CCode (cname = "g_chdir")]
@@ -2738,7 +2742,7 @@ namespace GLib {
 	[CCode (has_target = false)]
 	public delegate void VoidFunc ();
 
-	[Deprecated (replacement = "format_size")]
+	[Deprecated (since = "2.16", replacement = "format_size")]
 	public string format_size_for_display (int64 size);
 
 	[CCode (cname = "g_format_size_full")]
@@ -2903,6 +2907,7 @@ namespace GLib {
 
 	/* Automatic String Completion */
 
+	[Deprecated (since = "2.26")]
 	[Compact]
 	[CCode (free_function = "g_completion_free")]
 	public class Completion {
