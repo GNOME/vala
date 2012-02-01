@@ -30,6 +30,11 @@ namespace Clutter {
 		public virtual void redraw (Clutter.Stage stage);
 	}
 
+	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_box_get_type ()")]
+	public class Box : Clutter.Actor {
+		public Clutter.LayoutManager layout_manager { get; set; }
+	}
+
 	[CCode (type_id = "CLUTTER_TYPE_COLOR", cheader_filename = "clutter/clutter.h")]
 	public struct Color {
 		public static GLib.HashFunc hash;

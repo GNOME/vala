@@ -5322,6 +5322,7 @@ namespace Clutter {
 		public Clutter.Color color { get; set; }
 		[NoAccessorMethod]
 		public bool color_set { get; set; }
+		public Clutter.LayoutManager layout_manager { get; set; }
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_box_layout_get_type ()")]
 	public class BoxLayout : Clutter.LayoutManager {
