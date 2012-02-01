@@ -24,6 +24,7 @@ InitError errordomain=false
 Stage.read_pixels unowned=false
 	.width default=-1
 	.height default=-1
+TextBuffer.get_text#virtual_method name="get_text_with_length"
 threads_* name="threads_(.+)" parent="Clutter.Threads" skip=false
 threads_add_frame_source name="add" parent="Clutter.Threads.FrameSource" skip=false
 threads_add_frame_source_full name="add_full" parent="Clutter.Threads.FrameSource" skip=false
@@ -75,19 +76,11 @@ Actor
 	.apply_relative_transform_to_point.vertex out unowned=false
 	.apply_transform.matrix ref
 	.apply_transform_to_point.vertex out unowned=false
-	.button_*.event type="Clutter.ButtonEvent"
 	.get_abs_allocation_vertices.verts unowned=false
 	.get_allocation_box.box unowned=false
 	.get_allocation_geometry.geom unowned=false
 	.get_allocation_vertices.verts unowned=false
 	.get_parent nullable
-	.get_stage type="unowned Clutter.Stage"
-	.enter_event.event type="Clutter.CrossingEvent"
-	.key_*.event type="Clutter.KeyEvent"
-	.leave_event.event type="Clutter.CrossingEvent"
-	.motion_event.event type="Clutter.MotionEvent"
-	.parent_set.old_parent nullable
-	.scroll_event.event type="Clutter.ScrollEvent"
 Alpha.register_func skip=false
 Animator.set skip=false
 BehaviourForeachFunc.data closure=2
@@ -124,8 +117,7 @@ LayoutManager
 	.child_set skip=false
 	.create_child_meta skip=false
 ListModel
-	.* skip=false
-	.newv skip
+        .new skip=false
 Model
 	.append skip=false
 	.insert skip=false
@@ -152,7 +144,6 @@ Texture
 	.set_from_rgb_data.data type="uint8[]"
 	.set_from_yuv_data.data type="uint8[]"
 TimeoutPool skip=false
-timeout_pool_new skip
 Units.from_* skip
 
 get_actor_by_gid parent="Clutter.Actor" name="get_by_gid"

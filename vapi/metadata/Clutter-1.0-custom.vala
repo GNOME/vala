@@ -56,12 +56,6 @@ namespace Clutter {
 		public class unowned GLib.ParamSpec[] list_child_properties ();
 	}
 
-	[CCode (type_id = "clutter_list_model_get_type ()", cheader_filename = "clutter/clutter.h")]
-	public class ListModel : Clutter.Model, Clutter.Scriptable {
-		[CCode (cname = "clutter_list_model_newv", type = "ClutterModel*", has_construct_function = false)]
-		public ListModel.newv ([CCode (array_length_pos = 0.9)] GLib.Type[] types, [CCode (array_length_pos = 0.9)] string[] names);
-	}
-
 	[CCode (type_id = "clutter_stage_get_type ()", cheader_filename = "clutter/clutter.h")]
 	public class Stage : Clutter.Group, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable {
 		[CCode (cname = "clutter_redraw")]
