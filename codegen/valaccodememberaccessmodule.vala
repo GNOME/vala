@@ -70,7 +70,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					var base_class = (Class) m.base_method.parent_symbol;
 					var vclass = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS".printf (get_ccode_upper_case_name (base_class))));
 					vclass.add_argument (pub_inst);
-					set_cvalue (expr, new CCodeMemberAccess.pointer (vclass, m.name));
+					set_cvalue (expr, new CCodeMemberAccess.pointer (vclass, get_ccode_vfunc_name (m)));
 				} else {
 					set_cvalue (expr, new CCodeIdentifier (get_ccode_name (m.base_method)));
 				}
