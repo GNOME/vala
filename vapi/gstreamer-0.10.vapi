@@ -453,6 +453,7 @@ namespace Gst {
 		public bool link_pads_full (string srcpadname, Gst.Element dest, string destpadname, Gst.PadLinkCheck flags);
 		public void lost_state ();
 		public void lost_state_full (bool new_base_time);
+		[CCode (returns_floating_reference = true)]
 		public static Gst.Element? make_from_uri (Gst.URIType type, string uri, string? elementname);
 		public void message_full (Gst.MessageType type, GLib.Quark domain, int code, owned string? text, owned string? debug, string file, string function, int line);
 		public bool post_message (owned Gst.Message message);

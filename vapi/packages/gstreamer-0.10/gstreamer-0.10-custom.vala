@@ -217,6 +217,8 @@ namespace Gst {
 	public abstract class Element {
 		[CCode (cname = "abidata.ABI.target_state")]
 		public State target_state;
+		[CCode (returns_floating_reference = true)]
+		public static Gst.Element? make_from_uri (Gst.URIType type, string uri, string? elementname);
 	}
 
 	public class ElementFactory {
