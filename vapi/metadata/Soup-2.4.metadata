@@ -3,6 +3,8 @@ AuthDomain
 	.add_path#property skip
 	.remove_path#property skip
 form_* parent="Soup.Form" name="form_(.+)"
+form_encode_datalist.form_data_set type_arguments="string"
+form_request_new_from_datalist.form_data_set type_arguments="string"
 xmlrpc_* parent="Soup.XMLRPC" name="xmlrpc_(.+)"
 XMLRPCFault errordomain parent="Soup.XMLRPC" name="Fault"
 XMLRPCError parent="Soup.XMLRPC" name="Error"

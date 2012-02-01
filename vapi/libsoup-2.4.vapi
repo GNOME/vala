@@ -10,7 +10,7 @@ namespace Soup {
 		[CCode (cheader_filename = "libsoup/soup.h")]
 		public static string encode (...);
 		[CCode (cheader_filename = "libsoup/soup.h")]
-		public static string encode_datalist (GLib.Datalist form_data_set);
+		public static string encode_datalist (GLib.Datalist<string> form_data_set);
 		[CCode (cheader_filename = "libsoup/soup.h")]
 		public static string encode_hash (GLib.HashTable<string,string> form_data_set);
 		[CCode (cheader_filename = "libsoup/soup.h")]
@@ -18,7 +18,7 @@ namespace Soup {
 		[CCode (cheader_filename = "libsoup/soup.h")]
 		public static Soup.Message request_new (string method, string uri, ...);
 		[CCode (cheader_filename = "libsoup/soup.h")]
-		public static Soup.Message request_new_from_datalist (string method, string uri, GLib.Datalist form_data_set);
+		public static Soup.Message request_new_from_datalist (string method, string uri, GLib.Datalist<string> form_data_set);
 		[CCode (cheader_filename = "libsoup/soup.h")]
 		public static Soup.Message request_new_from_hash (string method, string uri, GLib.HashTable<string,string> form_data_set);
 		[CCode (cheader_filename = "libsoup/soup.h")]
