@@ -3335,7 +3335,7 @@ namespace GLib {
 		public void* arg_data;
 
 		public unowned string description;
-		public unowned string arg_description;
+		public unowned string? arg_description;
 	}
 
 	[Compact]
