@@ -1968,8 +1968,8 @@ namespace GLib {
 		public void push (owned G data);
 		public void push_sorted (owned G data, CompareDataFunc<G> func);
 		public G pop ();
-		public G try_pop ();
-		public G timed_pop (ref TimeVal end_time);
+		public G? try_pop ();
+		public G? timed_pop (ref TimeVal end_time);
 		public int length ();
 		public void sort (CompareDataFunc<G> func);
 		public void @lock ();
@@ -1979,8 +1979,8 @@ namespace GLib {
 		public void push_unlocked (owned G data);
 		public void push_sorted_unlocked (owned G data, CompareDataFunc<G> func);
 		public G pop_unlocked ();
-		public G try_pop_unlocked ();
-		public G timed_pop_unlocked (ref TimeVal end_time);
+		public G? try_pop_unlocked ();
+		public G? timed_pop_unlocked (ref TimeVal end_time);
 		public int length_unlocked ();
 		public void sort_unlocked (CompareDataFunc<G> func);
 	}
