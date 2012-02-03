@@ -4068,6 +4068,14 @@ namespace GLib {
 		public string str;
 		public ssize_t len;
 		public ssize_t allocated_len;
+
+		public uint8[] data {
+			get {
+				unowned uint8[] res = (uint8[]) this.str;
+				res.length = (int) this.len;
+				return res;
+			}
+		}
 	}
 
 	/* String Chunks */
