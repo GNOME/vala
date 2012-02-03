@@ -6805,16 +6805,18 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="application" type="GtkApplication*"/>
-					<parameter name="model" type="GMenuModel*"/>
+					<parameter name="app_menu" type="GMenuModel*"/>
 				</parameters>
 			</method>
 			<method name="set_menubar" symbol="gtk_application_set_menubar">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="application" type="GtkApplication*"/>
-					<parameter name="model" type="GMenuModel*"/>
+					<parameter name="menubar" type="GMenuModel*"/>
 				</parameters>
 			</method>
+			<property name="app-menu" type="GMenuModel*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="menubar" type="GMenuModel*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="window-added" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -7350,6 +7352,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
+				<interface name="GtkActionable"/>
 				<interface name="GtkActivatable"/>
 			</implements>
 			<method name="clicked" symbol="gtk_button_clicked">
@@ -9208,6 +9211,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
+				<interface name="GtkActionable"/>
 				<interface name="GtkActivatable"/>
 			</implements>
 			<constructor name="new" symbol="gtk_check_button_new">
@@ -9535,6 +9539,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
+				<interface name="GtkActionable"/>
 				<interface name="GtkActivatable"/>
 			</implements>
 			<method name="get_alpha" symbol="gtk_color_button_get_alpha">
@@ -12054,6 +12059,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
+				<interface name="GtkActionable"/>
 				<interface name="GtkActivatable"/>
 				<interface name="GtkFontChooser"/>
 			</implements>
@@ -14510,6 +14516,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
+				<interface name="GtkActionable"/>
 				<interface name="GtkActivatable"/>
 			</implements>
 			<method name="get_uri" symbol="gtk_link_button_get_uri">
@@ -14736,6 +14743,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
+				<interface name="GtkActionable"/>
 				<interface name="GtkActivatable"/>
 			</implements>
 			<method name="get_permission" symbol="gtk_lock_button_get_permission">
@@ -14875,6 +14883,12 @@
 			<constructor name="new" symbol="gtk_menu_new">
 				<return-type type="GtkWidget*"/>
 			</constructor>
+			<constructor name="new_from_model" symbol="gtk_menu_new_from_model">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="model" type="GMenuModel*"/>
+				</parameters>
+			</constructor>
 			<method name="popdown" symbol="gtk_menu_popdown">
 				<return-type type="void"/>
 				<parameters>
@@ -15012,6 +15026,12 @@
 			</method>
 			<constructor name="new" symbol="gtk_menu_bar_new">
 				<return-type type="GtkWidget*"/>
+			</constructor>
+			<constructor name="new_from_model" symbol="gtk_menu_bar_new_from_model">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="model" type="GMenuModel*"/>
+				</parameters>
 			</constructor>
 			<method name="set_child_pack_direction" symbol="gtk_menu_bar_set_child_pack_direction">
 				<return-type type="void"/>
@@ -15384,6 +15404,7 @@
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
 				<interface name="GtkActivatable"/>
+				<interface name="GtkActionable"/>
 			</implements>
 			<method name="get_menu" symbol="gtk_menu_tool_button_get_menu">
 				<return-type type="GtkWidget*"/>
@@ -17544,6 +17565,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
+				<interface name="GtkActionable"/>
 				<interface name="GtkActivatable"/>
 			</implements>
 			<method name="get_group" symbol="gtk_radio_button_get_group">
@@ -17686,6 +17708,7 @@
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
 				<interface name="GtkActivatable"/>
+				<interface name="GtkActionable"/>
 			</implements>
 			<method name="get_group" symbol="gtk_radio_tool_button_get_group">
 				<return-type type="GSList*"/>
@@ -18437,6 +18460,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
+				<interface name="GtkActionable"/>
 				<interface name="GtkActivatable"/>
 				<interface name="GtkOrientable"/>
 			</implements>
@@ -20520,6 +20544,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
+				<interface name="GtkActionable"/>
 				<interface name="GtkActivatable"/>
 			</implements>
 			<method name="get_active" symbol="gtk_switch_get_active">
@@ -22577,6 +22602,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
+				<interface name="GtkActionable"/>
 				<interface name="GtkActivatable"/>
 			</implements>
 			<method name="get_active" symbol="gtk_toggle_button_get_active">
@@ -22654,6 +22680,7 @@
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
 				<interface name="GtkActivatable"/>
+				<interface name="GtkActionable"/>
 			</implements>
 			<method name="get_active" symbol="gtk_toggle_tool_button_get_active">
 				<return-type type="gboolean"/>
@@ -22690,6 +22717,7 @@
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
 				<interface name="GtkActivatable"/>
+				<interface name="GtkActionable"/>
 			</implements>
 			<method name="get_icon_name" symbol="gtk_tool_button_get_icon_name">
 				<return-type type="gchar*"/>
@@ -25597,6 +25625,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
+				<interface name="GtkActionable"/>
 				<interface name="GtkActivatable"/>
 				<interface name="GtkOrientable"/>
 			</implements>
@@ -28366,14 +28395,6 @@
 					<parameter name="wmclass_class" type="gchar*"/>
 				</parameters>
 			</method>
-			<method name="setup_persistent_state" symbol="gtk_window_setup_persistent_state">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="window" type="GtkWindow*"/>
-					<parameter name="settings" type="GSettings*"/>
-					<parameter name="child_name" type="gchar*"/>
-				</parameters>
-			</method>
 			<method name="stick" symbol="gtk_window_stick">
 				<return-type type="void"/>
 				<parameters>
@@ -28494,6 +28515,79 @@
 				</parameters>
 			</method>
 		</object>
+		<interface name="GtkActionable" type-name="GtkActionable" get-type="gtk_actionable_get_type">
+			<requires>
+				<interface name="GtkWidget"/>
+			</requires>
+			<method name="get_action_name" symbol="gtk_actionable_get_action_name">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="actionable" type="GtkActionable*"/>
+				</parameters>
+			</method>
+			<method name="get_action_target_value" symbol="gtk_actionable_get_action_target_value">
+				<return-type type="GVariant*"/>
+				<parameters>
+					<parameter name="actionable" type="GtkActionable*"/>
+				</parameters>
+			</method>
+			<method name="set_action_name" symbol="gtk_actionable_set_action_name">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="actionable" type="GtkActionable*"/>
+					<parameter name="action_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_action_target" symbol="gtk_actionable_set_action_target">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="actionable" type="GtkActionable*"/>
+					<parameter name="format_string" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_action_target_value" symbol="gtk_actionable_set_action_target_value">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="actionable" type="GtkActionable*"/>
+					<parameter name="target_value" type="GVariant*"/>
+				</parameters>
+			</method>
+			<method name="set_detailed_action_name" symbol="gtk_actionable_set_detailed_action_name">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="actionable" type="GtkActionable*"/>
+					<parameter name="detailed_action_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<property name="action-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="action-target" type="GVariant" readable="1" writable="1" construct="0" construct-only="0"/>
+			<vfunc name="get_action_name">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="actionable" type="GtkActionable*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_action_target_value">
+				<return-type type="GVariant*"/>
+				<parameters>
+					<parameter name="actionable" type="GtkActionable*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="set_action_name">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="actionable" type="GtkActionable*"/>
+					<parameter name="action_name" type="gchar*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="set_action_target_value">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="actionable" type="GtkActionable*"/>
+					<parameter name="action_target_value" type="GVariant*"/>
+				</parameters>
+			</vfunc>
+		</interface>
 		<interface name="GtkActivatable" type-name="GtkActivatable" get-type="gtk_activatable_get_type">
 			<requires>
 				<interface name="GObject"/>
@@ -30824,12 +30918,12 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="306"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="313"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="6"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="13"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
