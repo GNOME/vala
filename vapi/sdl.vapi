@@ -981,9 +981,11 @@ namespace SDL {
 		STOPPED, PLAYING, PAUSED
 	}// AudioStatus
 
+	[CCode (instance_pos = 0.1)]
+	public delegate void AudioCallback(uint8[] stream);
+
 	[CCode (cname="SDL_AudioSpec")]
-	[Compact]
-	public class AudioSpec {
+	public struct AudioSpec {
 		public int freq;
 		public AudioFormat format;
 		public uchar channels;
@@ -991,8 +993,8 @@ namespace SDL {
 		public uint16 samples;
 		public uint16 padding;
 		public uint32 size;
-
-		public void* userdata;
+		[CCode (delegate_target_cname = "userdata")]
+		public unowned AudioCallback callback;
 	}// AudioSpec
 
 	[CCode (cname="SDL_AudioCVT")]
@@ -1021,11 +1023,14 @@ namespace SDL {
 
 	[Compact]
 	public class Audio {
+		[CCode (cname="SDL_MIX_MAXVOLUME")]
+		public const int MIX_MAXVOLUME;
+
 		[CCode (cname="SDL_AudioDriverName")]
 		public static unowned string driver_name(string namebuf, int maxlen);
 		
 		[CCode (cname="SDL_OpenAudio")]
-		public static int open(AudioSpec desired, AudioSpec obtained);
+		public static int open(AudioSpec desired, out AudioSpec obtained);
 
 		[CCode (cname="SDL_GetAudioStatus")]
 		public static AudioStatus status();
@@ -1034,13 +1039,13 @@ namespace SDL {
 		public static void pause(int pause_on);
 
 		[CCode (cname="SDL_LoadWAV_RW")]
-		public static AudioSpec load(RWops src, int freesrc=0, AudioSpec spec, uchar** audio_buf, ref uint32 audio_len);
+		public static unowned AudioSpec? load(RWops src, int freesrc=0, ref AudioSpec spec, out uint8[] audio_buf);
 
 		[CCode (cname="SDL_FreeWAV")]
 		public static void free(uchar* audio_buf);
 
 		[CCode (cname="SDL_MixAudio")]
-		public static void mix(uchar[] dst, uchar[] src, uint32 len, int volume);
+		public static void mix([CCode (array_length = false)] uchar[] dst, [CCode (array_length = false)] uchar[] src, uint32 len, int volume);
 
 		[CCode (cname="SDL_LockAudio")]
 		public static void do_lock();
