@@ -457,9 +457,9 @@ namespace X {
 
 	[CCode (cname = "XSetWindowAttributes")]
 	public struct SetWindowAttributes {
-		// public Pixmap background_pixmap;	/* background or None or ParentRelative */
+		public Pixmap background_pixmap;	/* background or None or ParentRelative */
 		public ulong background_pixel;	/* background pixel */
-		// public Pixmap border_pixmap;	/* border of the window */
+		public Pixmap border_pixmap;	/* border of the window */
 		public ulong border_pixel;	/* border pixel value */
 		public int bit_gravity;		/* one of bit gravity values */
 		public int win_gravity;		/* one of the window gravity values */
@@ -470,8 +470,8 @@ namespace X {
 		public long event_mask;		/* set of events that should be saved */
 		public long do_not_propagate_mask;	/* set of events that should not propagate */
 		public bool override_redirect;	/* boolean value for override-redirect */
-		// public Colormap colormap;		/* color map to be associated with window */
-		// public Cursor cursor;		/* cursor to be displayed (or None) */
+		public Colormap colormap;		/* color map to be associated with window */
+		public Cursor cursor;		/* cursor to be displayed (or None) */
 	}
 
 	[CCode(cname = "XWindowAttributes",
@@ -492,14 +492,14 @@ namespace X {
 		public ulong backing_planes;/* planes to be preserved if possible */
 		public ulong backing_pixel;/* value to be used when restoring planes */
 		public bool save_under;		/* boolean, should bits under be saved? */
-		// public Colormap colormap;		/* color map to be associated with window */
+		public Colormap colormap;		/* color map to be associated with window */
 		public bool map_installed;		/* boolean, is color map currently installed*/
 		public int map_state;		/* IsUnmapped, IsUnviewable, IsViewable */
 		public long all_event_masks;	/* set of events all people have interest in*/
 		public long your_event_mask;	/* my event mask */
 		public long do_not_propagate_mask; /* set of events that should not propagate */
 		public bool override_redirect;	/* boolean value for override-redirect */
-		// public Screen screen;		/* back pointer to correct screen */
+		public Screen screen;		/* back pointer to correct screen */
 	}
 
 	[CCode (cname = "CopyFromParent")]
