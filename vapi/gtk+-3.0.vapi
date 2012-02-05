@@ -1331,7 +1331,7 @@ namespace Gtk {
 		public ColorButton ();
 		public uint16 get_alpha ();
 		public void get_color (out Gdk.Color color);
-		public void get_rgba (Gdk.RGBA rgba);
+		public Gdk.RGBA get_rgba ();
 		public unowned string get_title ();
 		public bool get_use_alpha ();
 		public void set_alpha (uint16 alpha);
