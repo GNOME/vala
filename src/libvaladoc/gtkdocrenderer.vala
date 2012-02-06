@@ -62,6 +62,8 @@ public class Valadoc.GtkdocRenderer : ContentRenderer {
 	}
 
 	public void write_docbook_link (Api.Item item) {
+		writer.set_wrap (false);
+
 		if (item is Api.Method) {
 			writer.start_tag ("function").text (((Api.Method)item).get_cname ()).end_tag ("function");
 		} else if (item is Api.FormalParameter) {
@@ -79,6 +81,8 @@ public class Valadoc.GtkdocRenderer : ContentRenderer {
 		} else {
 			writer.start_tag ("type").text (get_cname (item)).end_tag ("type");
 		}
+
+		writer.set_wrap (true);
 	}
 
 	public GtkdocRenderer () {
