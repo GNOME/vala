@@ -454,6 +454,20 @@ public class Vala.CCodeAttribute : AttributeCache {
 		}
 	}
 
+	public string delegate_target_name {
+		get {
+			if (_delegate_target_name == null) {
+				if (ccode != null) {
+					_delegate_target_name = ccode.get_string ("delegate_target_cname");
+				}
+				if (_delegate_target_name == null) {
+					_delegate_target_name = "%s_target".printf (sym.name);
+				}
+			}
+			return _delegate_target_name;
+		}
+	}
+
 	public bool array_length { get; private set; }
 	public string? array_length_type { get; private set; }
 	public bool array_null_terminated { get; private set; }
@@ -496,6 +510,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 	private string _finish_vfunc_name;
 	private string _finish_real_name;
 	private string _real_name;
+	private string _delegate_target_name;
 
 	private static int dynamic_method_id;
 

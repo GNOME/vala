@@ -469,7 +469,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 							var d = deleg_type.delegate_symbol;
 							if (d.has_target) {
 								// create variable to store delegate target
-								vardecl = new CCodeVariableDeclarator.zero (get_delegate_target_cname (get_variable_cname ("_vala_" + param.name)), new CCodeConstant ("NULL"));
+								vardecl = new CCodeVariableDeclarator.zero ("_vala_" + get_ccode_delegate_target_name (param), new CCodeConstant ("NULL"));
 								ccode.add_declaration ("void *", vardecl);
 
 								if (deleg_type.value_owned) {

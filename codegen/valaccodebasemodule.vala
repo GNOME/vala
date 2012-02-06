@@ -976,7 +976,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				// create field to store delegate target
 
 				cdecl = new CCodeDeclaration ("gpointer");
-				cdecl.add_declarator (new CCodeVariableDeclarator (get_delegate_target_cname (get_ccode_name (f))));
+				cdecl.add_declarator (new CCodeVariableDeclarator (get_ccode_delegate_target_name (f)));
 				if (f.is_private_symbol ()) {
 					cdecl.modifiers = CCodeModifiers.STATIC;
 				} else {
@@ -1168,7 +1168,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						// create field to store delegate target
 
 						var target_def = new CCodeDeclaration ("gpointer");
-						target_def.add_declarator (new CCodeVariableDeclarator (get_delegate_target_cname (get_ccode_name (f)), new CCodeConstant ("NULL")));
+						target_def.add_declarator (new CCodeVariableDeclarator (get_ccode_delegate_target_name (f), new CCodeConstant ("NULL")));
 						if (!f.is_private_symbol ()) {
 							target_def.modifiers = CCodeModifiers.EXTERN;
 						} else {
@@ -1742,7 +1742,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				data.add_field ("gint", get_parameter_array_length_cname (param, dim));
 			}
 		} else if (deleg_type != null && deleg_type.delegate_symbol.has_target) {
-			data.add_field ("gpointer", get_delegate_target_cname (get_variable_cname (param.name)));
+			data.add_field ("gpointer", get_ccode_delegate_target_name (param));
 			if (param.variable_type.value_owned) {
 				data.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
 				// reference transfer for delegates
@@ -3370,7 +3370,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (param.name)), get_cvalue_ (value));
 
 		if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
-			ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (get_delegate_target_cname (param.name))), get_delegate_target_cvalue (value));
+			ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (get_ccode_delegate_target_name (param))), get_delegate_target_cvalue (value));
 			if (delegate_type.value_owned) {
 				ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (get_delegate_target_destroy_notify_cname (param.name))), get_delegate_target_destroy_notify_cvalue (get_parameter_cvalue (param)));
 			}
@@ -5909,6 +5909,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public static bool get_ccode_delegate_target (CodeNode node) {
 		return get_ccode_attribute(node).delegate_target;
+	}
+
+	public static string get_ccode_delegate_target_name (Variable variable) {
+		return get_ccode_attribute(variable).delegate_target_name;
 	}
 
 	public static double get_ccode_pos (Parameter param) {

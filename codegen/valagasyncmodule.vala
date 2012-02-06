@@ -58,7 +58,7 @@ public class Vala.GAsyncModule : GSignalModule {
 			} else if (param.variable_type is DelegateType) {
 				var deleg_type = (DelegateType) param.variable_type;
 				if (deleg_type.delegate_symbol.has_target) {
-					data.add_field ("gpointer", get_delegate_target_cname (get_variable_cname (param.name)));
+					data.add_field ("gpointer", get_ccode_delegate_target_name (param));
 					if (!is_unowned_delegate) {
 						data.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
 					}

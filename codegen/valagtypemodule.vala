@@ -338,7 +338,7 @@ public class Vala.GTypeModule : GErrorModule {
 						var delegate_type = (DelegateType) f.variable_type;
 						if (delegate_type.delegate_symbol.has_target) {
 							// create field to store delegate target
-							instance_struct.add_field ("gpointer", get_delegate_target_cname (f.name));
+							instance_struct.add_field ("gpointer", get_ccode_delegate_target_name (f));
 							if (delegate_type.value_owned) {
 								instance_struct.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (f.name));
 							}
@@ -444,7 +444,7 @@ public class Vala.GTypeModule : GErrorModule {
 						var delegate_type = (DelegateType) f.variable_type;
 						if (delegate_type.delegate_symbol.has_target) {
 							// create field to store delegate target
-							instance_priv_struct.add_field ("gpointer", get_delegate_target_cname (f.name));
+							instance_priv_struct.add_field ("gpointer", get_ccode_delegate_target_name (f));
 							if (delegate_type.value_owned) {
 								instance_priv_struct.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (f.name));
 							}

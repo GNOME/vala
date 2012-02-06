@@ -339,7 +339,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 				var deleg_type = (DelegateType) param.variable_type;
 
 				if (deleg_type.delegate_symbol.has_target) {
-					var ctarget = new CCodeIdentifier (get_delegate_target_cname (d_params.get (i).name));
+					var ctarget = new CCodeIdentifier (get_ccode_delegate_target_name (d_params.get (i)));
 					carg_map.set (get_param_pos (get_ccode_delegate_target_pos (param)), ctarget);
 					if (deleg_type.value_owned) {
 						var ctarget_destroy_notify = new CCodeIdentifier (get_delegate_target_destroy_notify_cname (d_params.get (i).name));
@@ -473,7 +473,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			generate_delegate_declaration (d, decl_space);
 
 			if (d.has_target) {
-				var cparam = new CCodeParameter (get_delegate_target_cname (get_variable_cname (param.name)), target_ctypename);
+				var cparam = new CCodeParameter (get_ccode_delegate_target_name (param), target_ctypename);
 				cparam_map.set (get_param_pos (get_ccode_delegate_target_pos (param)), cparam);
 				if (carg_map != null) {
 					carg_map.set (get_param_pos (get_ccode_delegate_target_pos (param)), get_variable_cexpression (cparam.name));
@@ -487,7 +487,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 				}
 			}
 		} else if (param.variable_type is MethodType) {
-			var cparam = new CCodeParameter (get_delegate_target_cname (get_variable_cname (param.name)), target_ctypename);
+			var cparam = new CCodeParameter (get_ccode_delegate_target_name (param), target_ctypename);
 			cparam_map.set (get_param_pos (get_ccode_delegate_target_pos (param)), cparam);
 			if (carg_map != null) {
 				carg_map.set (get_param_pos (get_ccode_delegate_target_pos (param)), get_variable_cexpression (cparam.name));
