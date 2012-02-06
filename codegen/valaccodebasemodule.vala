@@ -1910,11 +1910,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			cfile.add_function (ref_fun);
 
 			var unref_fun = new CCodeFunction ("block%d_data_unref".printf (block_id), "void");
-			unref_fun.add_parameter (new CCodeParameter ("_data%d_".printf (block_id), struct_name + "*"));
+			unref_fun.add_parameter (new CCodeParameter ("_userdata_", "void *"));
 			unref_fun.modifiers = CCodeModifiers.STATIC;
 			
 			push_function (unref_fun);
 
+			ccode.add_declaration (struct_name + "*", new CCodeVariableDeclarator ("_data%d_".printf (block_id), new CCodeCastExpression (new CCodeIdentifier ("_userdata_"), struct_name + "*")));
 			ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_atomic_int_dec_and_test"));
 			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "_ref_count_")));
 			ccode.open_if (ccall);
