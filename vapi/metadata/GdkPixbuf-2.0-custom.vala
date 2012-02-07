@@ -17,6 +17,6 @@ namespace Gdk {
 
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public delegate void PixbufDestroyNotify ([CCode (array_length = false)] uint8[] pixels);
-	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h", instance_pos = 3.9)]
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h", instance_pos = -0.9)]
 	public delegate bool PixbufSaveFunc ([CCode (array_length_type = "gsize")] uint8[] buf) throws GLib.Error;
 }
