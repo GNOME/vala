@@ -312,59 +312,75 @@ public class Valadoc.GtkdocRenderer : ContentRenderer {
 
 		for (i = 0; chr != '\0' ; i++, chr = content[i]) {
 			switch (chr) {
-			case '#':
-				writer.text (content.substring (lpos, i-lpos));
-				writer.simple_tag ("&num;");
-				lpos = i+1;
-				break;
-			case '%':
-				writer.text (content.substring (lpos, i-lpos));
-				writer.simple_tag ("&percnt;");
-				lpos = i+1;
-				break;
-			case '@':
-				writer.text (content.substring (lpos, i-lpos));
-				writer.simple_tag ("&commat;");
-				lpos = i+1;
-				break;
-			case '(':
-				writer.text (content.substring (lpos, i-lpos));
-				writer.simple_tag ("&lpar;");
-				lpos = i+1;
-				break;
-			case ')':
-				writer.text (content.substring (lpos, i-lpos));
-				writer.simple_tag ("&rpar;");
-				lpos = i+1;
-				break;
-			case '"':
-				writer.text (content.substring (lpos, i-lpos));
-				writer.simple_tag ("&quot;");
-				lpos = i+1;
-				break;
-			case '\n':
-				writer.text (content.substring (lpos, i-lpos));
-				writer.simple_tag ("br");
-				lpos = i+1;
-				break;
 			case '<':
-				writer.text (content.substring (lpos, i-lpos));
-				writer.text ("&lt;");
+				writer.raw_text (content.substring (lpos, i-lpos));
+				writer.raw_text ("&lt;");
 				lpos = i+1;
 				break;
+
 			case '>':
-				writer.text (content.substring (lpos, i-lpos));
-				writer.text ("&gt;");
+				writer.raw_text (content.substring (lpos, i-lpos));
+				writer.raw_text ("&gt;");
 				lpos = i+1;
 				break;
+
+			case '"':
+				writer.raw_text (content.substring (lpos, i-lpos));
+				writer.raw_text ("&quot;");
+				lpos = i+1;
+				break;
+
+			case '\'':
+				writer.raw_text (content.substring (lpos, i-lpos));
+				writer.raw_text ("&apos;");
+				lpos = i+1;
+				break;
+
 			case '&':
-				writer.text (content.substring (lpos, i-lpos));
-				writer.text ("&amp;");
+				writer.raw_text (content.substring (lpos, i-lpos));
+				writer.raw_text ("&amp;");
+				lpos = i+1;
+				break;
+
+			case '#':
+				writer.raw_text (content.substring (lpos, i-lpos));
+				writer.raw_text ("&num;");
+				lpos = i+1;
+				break;
+
+			case '%':
+				writer.raw_text (content.substring (lpos, i-lpos));
+				writer.raw_text ("&percnt;");
+				lpos = i+1;
+				break;
+
+			case '@':
+				writer.raw_text (content.substring (lpos, i-lpos));
+				writer.raw_text ("&commat;");
+				lpos = i+1;
+				break;
+
+			case '(':
+				writer.raw_text (content.substring (lpos, i-lpos));
+				writer.raw_text ("&lpar;");
+				lpos = i+1;
+				break;
+
+			case ')':
+				writer.raw_text (content.substring (lpos, i-lpos));
+				writer.raw_text ("&rpar;");
+				lpos = i+1;
+				break;
+
+			case '\n':
+				writer.raw_text (content.substring (lpos, i-lpos));
+				writer.simple_tag ("br");
 				lpos = i+1;
 				break;
 			}
 		}
-		writer.text (content.substring (lpos, i-lpos));
+
+		writer.raw_text (content.substring (lpos, i-lpos));
 	}
 
 	public void append_since (Gee.List<Content.Taglet> taglets) {

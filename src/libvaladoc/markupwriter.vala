@@ -63,6 +63,12 @@ public class Valadoc.MarkupWriter {
 				builder.append ("&amp;");
 				start = pos.next_char ();
 				break;
+
+			case '\'':
+				builder.append_len (start, (ssize_t) ((char*) pos - (char*) start));
+				builder.append ("&apos;");
+				start = pos.next_char ();
+				break;
 			}
 		}
 
