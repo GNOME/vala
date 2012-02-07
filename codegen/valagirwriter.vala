@@ -188,6 +188,10 @@ public class Vala.GIRWriter : CodeVisitor {
 			ns.source_reference.file.gir_namespace = gir_namespace;
 			ns.source_reference.file.gir_version = gir_version;
 		}
+
+		if (our_namespaces.size == 0) {
+			Report.error (null, "No suitable namespace found to export for GIR");
+		}
 	}
 
 	private void write_doc (string? comment) {
