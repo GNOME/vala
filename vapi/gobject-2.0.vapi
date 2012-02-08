@@ -324,6 +324,7 @@ namespace GLib {
 
 		public static Object @new (Type type, ...);
 		public static Object newv (Type type, [CCode (array_length_pos = 1.9)] Parameter[] parameters);
+		public static Object new_valist (Type type, string? firstprop, va_list var_args);
 
 		[CCode (cname = "G_TYPE_FROM_INSTANCE")]
 		public Type get_type ();
