@@ -3977,6 +3977,7 @@ namespace GLib {
 		public bool contains (K key);
 		public bool remove (K key);
 		public void remove_all ();
+		public uint foreach_remove (HRFunc<K,V> predicate);
 		[CCode (cname = "g_hash_table_lookup")]
 		public unowned V? @get (K key);
 		[CCode (cname = "g_hash_table_insert")]
