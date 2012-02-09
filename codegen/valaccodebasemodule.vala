@@ -2313,6 +2313,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (list.target_type.data_type is Struct) {
 			/* initializer is used as struct initializer */
 			var st = (Struct) list.target_type.data_type;
+			while (st.base_struct != null) {
+				st = st.base_struct;
+			}
 
 			if (list.parent_node is Constant || list.parent_node is Field || list.parent_node is InitializerList) {
 				var clist = new CCodeInitializerList ();

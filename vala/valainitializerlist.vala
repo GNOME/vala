@@ -153,6 +153,9 @@ public class Vala.InitializerList : Expression {
 		} else if (target_type.data_type is Struct) {
 			/* initializer is used as struct initializer */
 			var st = (Struct) target_type.data_type;
+			while (st.base_struct != null) {
+				st = st.base_struct;
+			}
 
 			var field_it = st.get_fields ().iterator ();
 			foreach (Expression e in get_initializers ()) {
