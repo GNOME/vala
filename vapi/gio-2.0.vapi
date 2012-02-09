@@ -484,7 +484,7 @@ namespace GLib {
 		public uint register_subtree (string object_path, GLib.DBusSubtreeVTable vtable, GLib.DBusSubtreeFlags flags, void* user_data, GLib.DestroyNotify user_data_free_func) throws GLib.Error;
 		public void remove_filter (uint filter_id);
 		public bool send_message (GLib.DBusMessage message, GLib.DBusSendMessageFlags flags, out uint32 out_serial) throws GLib.Error;
-		public async GLib.DBusMessage send_message_with_reply (GLib.DBusMessage message, GLib.DBusSendMessageFlags flags, int timeout_msec, out uint32 out_serial = null, GLib.Cancellable? cancellable = null) throws GLib.IOError;
+		public async GLib.DBusMessage send_message_with_reply (GLib.DBusMessage message, GLib.DBusSendMessageFlags flags, int timeout_msec, uint32* out_serial = null, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public GLib.DBusMessage send_message_with_reply_sync (GLib.DBusMessage message, GLib.DBusSendMessageFlags flags, int timeout_msec, out uint32 out_serial = null, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public void set_exit_on_close (bool exit_on_close);
 		public uint signal_subscribe (string? sender, string? interface_name, string? member, string? object_path, string? arg0, GLib.DBusSignalFlags flags, owned GLib.DBusSignalCallback callback);
