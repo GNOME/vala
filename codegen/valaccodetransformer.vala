@@ -210,8 +210,6 @@ public class Vala.CCodeTransformer : CodeTransformer {
 		// convert to simple loop
 		push_builder (new CodeBuilder (context, stmt, stmt.source_reference));
 
-		var block = new Block (stmt.source_reference);
-
 		// initializer
 		foreach (var init_expr in stmt.get_initializer ()) {
 			b.add_expression (init_expr);
@@ -401,10 +399,16 @@ public class Vala.CCodeTransformer : CodeTransformer {
 	}
 
 	public override void visit_binary_expression (BinaryExpression expr) {
+		var parent_statement = expr.parent_statement;
+		if (parent_statement == null) {
+			base.visit_binary_expression (expr);
+			return;
+		}
+
 		Expression replacement = null;
 		var old_parent_node = expr.parent_node;
 		var target_type = expr.target_type != null ? expr.target_type.copy () : null;
-		push_builder (new CodeBuilder (context, expr.parent_statement, expr.source_reference));
+		push_builder (new CodeBuilder (context, parent_statement, expr.source_reference));
 
 		if (context.analyzer.get_current_non_local_symbol (expr) is Block
 		    && (expr.operator == BinaryOperator.AND || expr.operator == BinaryOperator.OR)) {
