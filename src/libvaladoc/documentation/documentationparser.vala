@@ -145,14 +145,9 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 
 	private void new_list_item (Content.List.Bullet bullet) throws ParserError {
 		var new_item = _factory.create_list_item ();
-		var content = _factory.create_paragraph ();
-		new_item.content.add (content);
 
 		Content.List list = null;
 		if (levels.length >= 1) {
-			// Pop current content
-			pop ();
-
 			if (current_level > levels[levels.length - 1]) {
 				list = _factory.create_list ();
 				list.bullet = bullet;
@@ -174,7 +169,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 				list = peek (-2) as Content.List;
 
 				if (!poped_some_lists && bullet == Content.List.Bullet.NONE) {
-					((InlineContent) peek ()).content.add (_factory.create_text (" "));
+					((Paragraph) ((ListItem) peek ()).content[0]).content.add (_factory.create_text (" "));
 					return;
 				} else if (list.bullet != bullet) {
 					_parser.error (null, "Invalid bullet type '%s': expected '%s'".printf (bullet_type_string (bullet), bullet_type_string (list.bullet)));
@@ -196,7 +191,6 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 
 		list.items.add (new_item);
 		push (new_item);
-		push (content);
 	}
 
 	private string bullet_type_string (Content.List.Bullet bullet) {
@@ -220,9 +214,6 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 	}
 
 	private void finish_list () {
-		// pop content
-		pop ();
-
 		while (peek () is ListItem) {
 			pop ();
 			pop ();
@@ -572,13 +563,19 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 					optional_invisible_spaces
 				})
 				.set_skip (() => { new_list_item (Content.List.Bullet.NONE); }),
-				run,
+				Rule.seq ({ run })
+				.set_start (() => {
+					var content = _factory.create_paragraph ();
+					((ListItem) peek ()).content.add (content);
+					push (content);
+				})
+				.set_reduce (() => { pop (); }),
 				TokenType.EOL
 			})
 			.set_name ("IndentedItem")
 			.set_start (() => { current_level = 0; })
 			.set_reduce (() => {
-				var content_list = ((InlineContent) peek ()).content;
+				var content_list = ((ListItem) peek ()).content;
 				if (content_list.size > 0 && content_list.last () is Text) {
 					((Text) content_list.last ()).content._chomp ();
 				}
