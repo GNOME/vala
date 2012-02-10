@@ -928,8 +928,12 @@ public class Vala.CCodeAttribute : AttributeCache {
 			} else if (sym is Struct) {
 				var st = (Struct) sym;
 				var base_st = st.base_struct;
-				if (base_st != null) {
-					return CCodeBaseModule.get_ccode_marshaller_type_name (base_st);
+				while (base_st != null) {
+					if (CCodeBaseModule.get_ccode_has_type_id (base_st)) {
+						return CCodeBaseModule.get_ccode_marshaller_type_name (base_st);
+					} else {
+						base_st = base_st.base_struct;
+					}
 				}
 				if (st.is_simple_type ()) {
 					Report.error (st.source_reference, "The type `%s` doesn't declare a marshaller type name".printf (st.get_full_name ()));
@@ -1004,8 +1008,12 @@ public class Vala.CCodeAttribute : AttributeCache {
 		} else if (sym is Struct) {
 			var st = (Struct) sym;
 			var base_st = st.base_struct;
-			if (base_st != null) {
-				return CCodeBaseModule.get_ccode_get_value_function (base_st);
+			while (base_st != null) {
+				if (CCodeBaseModule.get_ccode_has_type_id (base_st)) {
+					return CCodeBaseModule.get_ccode_get_value_function (base_st);
+				} else {
+					base_st = base_st.base_struct;
+				}
 			}
 			if (st.is_simple_type ()) {
 				Report.error (st.source_reference, "The type `%s` doesn't declare a GValue get function".printf (st.get_full_name ()));
@@ -1058,8 +1066,12 @@ public class Vala.CCodeAttribute : AttributeCache {
 		} else if (sym is Struct) {
 			var st = (Struct) sym;
 			var base_st = st.base_struct;
-			if (base_st != null) {
-				return CCodeBaseModule.get_ccode_set_value_function (base_st);
+			while (base_st != null) {
+				if (CCodeBaseModule.get_ccode_has_type_id (base_st)) {
+					return CCodeBaseModule.get_ccode_set_value_function (base_st);
+				} else {
+					base_st = base_st.base_struct;
+				}
 			}
 			if (st.is_simple_type ()) {
 				Report.error (st.source_reference, "The type `%s` doesn't declare a GValue set function".printf (st.get_full_name ()));
@@ -1112,8 +1124,12 @@ public class Vala.CCodeAttribute : AttributeCache {
 		} else if (sym is Struct) {
 			var st = (Struct) sym;
 			var base_st = st.base_struct;
-			if (base_st != null) {
-				return CCodeBaseModule.get_ccode_take_value_function (base_st);
+			while (base_st != null) {
+				if (CCodeBaseModule.get_ccode_has_type_id (base_st)) {
+					return CCodeBaseModule.get_ccode_take_value_function (base_st);
+				} else {
+					base_st = base_st.base_struct;
+				}
 			}
 			if (st.is_simple_type ()) {
 				Report.error (st.source_reference, "The type `%s` doesn't declare a GValue take function".printf (st.get_full_name ()));
