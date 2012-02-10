@@ -73,6 +73,7 @@ public class ValaDoc : Object {
 	private static string[] tsources;
 	[CCode (array_length = false, array_null_terminated = true)]
 	private static string[] packages;
+	static string target_glib;
 
 	private const GLib.OptionEntry[] options = {
 		{ "directory", 'o', 0, OptionArg.FILENAME, ref directory, "Output directory", "DIRECTORY" },
@@ -113,6 +114,7 @@ public class ValaDoc : Object {
 
 		{ "force", 0, 0, OptionArg.NONE, ref force, "force", null },
 		{ "verbose", 0, 0, OptionArg.NONE, ref verbose, "Show all warnings", null },
+		{ "target-glib", 0, 0, OptionArg.STRING, ref target_glib, "Target version of glib for code generation", "MAJOR.MINOR" },
 		{ "", 0, 0, OptionArg.FILENAME_ARRAY, ref tsources, null, "FILE..." },
 
 		{ null }
@@ -224,6 +226,7 @@ public class ValaDoc : Object {
 		settings.vapi_directories = vapi_directories;
 		settings.metadata_directories = metadata_directories;
 		settings.gir_directories = gir_directories;
+		settings.target_glib = target_glib;
 
 		settings.source_files = tsources;
 		settings.packages = packages;

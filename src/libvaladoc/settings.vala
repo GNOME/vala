@@ -146,6 +146,11 @@ public class Valadoc.Settings : Object {
 	 */
 	public string[] gir_directories;
 
+	/**
+	 * GLib version to target.
+	 */
+	public string target_glib;
+
 	public string gir_namespace;
 
 	public string gir_version;

@@ -764,7 +764,6 @@ message ("--%s--", symbol.name);
 			context.directory = context.basedir;
 		}
 
-
 		// add default packages:
 		if (settings.profile == "gobject-2.0" || settings.profile == "gobject" || settings.profile == null) {
 			context.profile = Vala.Profile.GOBJECT;
@@ -791,6 +790,20 @@ message ("--%s--", symbol.name);
 			context.target_glib_minor = glib_minor;
 			if (context.target_glib_major != 2) {
 				Vala.Report.error (null, "This version of valac only supports GLib 2");
+			}
+
+			if (settings.target_glib != null && settings.target_glib.scanf ("%d.%d", out glib_major, out glib_minor) != 2) {
+				Vala.Report.error (null, "Invalid format for --target-glib");
+			}
+
+			context.target_glib_major = glib_major;
+			context.target_glib_minor = glib_minor;
+			if (context.target_glib_major != 2) {
+				Vala.Report.error (null, "This version of valac only supports GLib 2");
+			}
+
+			for (int i = 16; i <= glib_minor; i += 2) {
+				context.add_define ("GLIB_2_%d".printf (i));
 			}
 
 			// default packages
