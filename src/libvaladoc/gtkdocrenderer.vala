@@ -99,7 +99,6 @@ public class Valadoc.GtkdocRenderer : ContentRenderer {
 		append_exceptions (documentation.find_taglets (null, typeof(Taglets.Throws)));
 		append_see (documentation.find_taglets (null, typeof(Taglets.See)));
 		append_since (documentation.find_taglets (null, typeof(Taglets.Since)));
-		append_deprecated (documentation.find_taglets (null, typeof(Taglets.Deprecated)));
 	}
 
 	public override void render_children (ContentElement element) {
@@ -399,30 +398,6 @@ public class Valadoc.GtkdocRenderer : ContentRenderer {
 			writer.text ("\nSince: ").text (taglet.version);
 			writer.set_wrap (true);
 			separated = true;
-
-			// ignore multiple occurrences
-			return ;
-		}
-	}
-
-	public void append_deprecated (Gee.List<Content.Taglet> taglets) {
-		foreach (Content.Taglet _taglet in taglets) {
-			Taglets.Deprecated taglet = _taglet as Taglets.Deprecated;
-			if (taglet == null) {
-				// ignore unexpected taglets
-				continue ;
-			}
-
-			if (separated == false) {
-				writer.text ("\n");
-			}
-
-			writer.set_wrap (false);
-			writer.text ("\nDeprecated: ");
-			taglet.accept_children (this);		
-			writer.text (": ");
-			separated = true;
-			writer.set_wrap (true);
 
 			// ignore multiple occurrences
 			return ;
