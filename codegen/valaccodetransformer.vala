@@ -217,6 +217,15 @@ public class Vala.CCodeTransformer : CodeTransformer {
 
 		if (stmt.condition == null || !always_false (stmt.condition)) {
 			b.open_loop ();
+			var notfirst = b.add_temp_declaration (null, expression ("false"));
+			b.open_if (expression (notfirst));
+			foreach (var it_expr in stmt.get_iterator ()) {
+				b.add_expression (it_expr);
+			}
+			b.add_else ();
+			b.add_assignment (expression (notfirst), expression ("true"));
+			b.close ();
+
 			if (stmt.condition != null && !always_true (stmt.condition)) {
 				b.open_if (new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, stmt.condition, stmt.source_reference));
 				b.add_break ();
@@ -224,9 +233,6 @@ public class Vala.CCodeTransformer : CodeTransformer {
 			}
 			b.add_statement (stmt.body);
 
-			foreach (var it_expr in stmt.get_iterator ()) {
-				b.add_expression (it_expr);
-			}
 			b.close ();
 		}
 
@@ -261,8 +267,11 @@ public class Vala.CCodeTransformer : CodeTransformer {
 			break;
 		case ForeachIteration.GLIST:
 			// GList or GSList
-			b.open_for (null, expression (@"$collection != null"), expression (@"$collection = $collection.next"));
-			stmt.element_variable.initializer = expression (@"$collection.data");
+			var iter_type = stmt.collection.value_type.copy ();
+			iter_type.value_owned = false;
+			var iter = b.add_temp_declaration (iter_type, expression (collection));
+			b.open_for (null, expression (@"$iter != null"), expression (@"$iter = $iter.next"));
+			stmt.element_variable.initializer = expression (@"$iter.data");
 			break;
 		case ForeachIteration.INDEX:
 			// get()+size
