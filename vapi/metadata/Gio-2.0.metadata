@@ -10,7 +10,7 @@ DesktopAppLaunchCallback skip
 FileDescriptorBased* skip
 Unix* skip
 UnixSocketAddressType skip=false
-UnixFDList skip=false
+UnixFDList skip=false cheader_filename="gio/gunixfdlist.h"
 unix_* skip
 // UnixSocketAddress.abstract#property skip
 DBusConnection
