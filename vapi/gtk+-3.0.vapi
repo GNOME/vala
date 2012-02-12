@@ -226,6 +226,7 @@ namespace Gtk {
 	public class AboutDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public AboutDialog ();
+		public void add_credit_section (string section_name, string people);
 		public unowned string get_artists ();
 		public unowned string get_authors ();
 		public unowned string get_comments ();
@@ -570,15 +571,22 @@ namespace Gtk {
 		public Application (string application_id, GLib.ApplicationFlags flags);
 		public void add_accelerator (string accelerator, string action_name, GLib.Variant parameter);
 		public void add_window (Gtk.Window window);
+		public bool end_session (Gtk.ApplicationEndSessionStyle style, bool request_confirmation);
 		public unowned GLib.MenuModel get_app_menu ();
 		public unowned GLib.MenuModel get_menubar ();
 		public unowned GLib.List<weak Gtk.Window> get_windows ();
+		public uint inhibit (Gtk.Window window, Gtk.ApplicationInhibitFlags flags, string reason);
+		public bool is_inhibited (Gtk.ApplicationInhibitFlags flags);
 		public void remove_accelerator (string action_name, GLib.Variant parameter);
 		public void remove_window (Gtk.Window window);
 		public void set_app_menu (GLib.MenuModel app_menu);
 		public void set_menubar (GLib.MenuModel menubar);
+		public void uninhibit (uint cookie);
 		public GLib.MenuModel app_menu { get; set; }
 		public GLib.MenuModel menubar { get; set; }
+		[NoAccessorMethod]
+		public bool register_session { get; set; }
+		public virtual signal void quit ();
 		public virtual signal void window_added (Gtk.Window window);
 		public virtual signal void window_removed (Gtk.Window window);
 	}
@@ -717,8 +725,10 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public Builder ();
 		public uint add_from_file (string filename) throws GLib.Error;
+		public uint add_from_resource (string resource_path) throws GLib.Error;
 		public uint add_from_string (string buffer, size_t length) throws GLib.Error;
 		public uint add_objects_from_file (string filename, [CCode (array_length = false)] string[] object_ids) throws GLib.Error;
+		public uint add_objects_from_resource (string resource_path, string object_ids) throws GLib.Error;
 		public uint add_objects_from_string (string buffer, size_t length, [CCode (array_length = false)] string[] object_ids) throws GLib.Error;
 		public void connect_signals (void* user_data);
 		public void connect_signals_full (Gtk.BuilderConnectFunc func);
@@ -1949,7 +1959,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class FontChooserDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable, Gtk.FontChooser {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public FontChooserDialog (string title, Gtk.Window window);
+		public FontChooserDialog (string title, Gtk.Window parent);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class FontChooserWidget : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.Orientable, Gtk.FontChooser {
@@ -2018,6 +2028,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public Gradient.radial (double x0, double y0, double radius0, double x1, double y1, double radius1);
 		public bool resolve (Gtk.StyleProperties props, out unowned Cairo.Pattern resolved_gradient);
+		public unowned Cairo.Pattern resolve_for_context (Gtk.StyleContext context);
 		public unowned string to_string ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -2343,6 +2354,8 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Image.from_pixbuf (Gdk.Pixbuf pixbuf);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public Image.from_resource (string resource_path);
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Image.from_stock (string stock_id, Gtk.IconSize size);
 		public unowned Gdk.PixbufAnimation get_animation ();
 		public void get_gicon (out unowned GLib.Icon gicon, Gtk.IconSize size);
@@ -2358,6 +2371,7 @@ namespace Gtk {
 		public void set_from_icon_name (string icon_name, Gtk.IconSize size);
 		public void set_from_icon_set (Gtk.IconSet icon_set, Gtk.IconSize size);
 		public void set_from_pixbuf (Gdk.Pixbuf pixbuf);
+		public void set_from_resource (string resource_path);
 		public void set_from_stock (string stock_id, Gtk.IconSize size);
 		public void set_pixel_size (int pixel_size);
 		[NoAccessorMethod]
@@ -4073,9 +4087,11 @@ namespace Gtk {
 		public Gtk.JunctionSides get_junction_sides ();
 		public Gtk.Border get_margin (Gtk.StateFlags state);
 		public Gtk.Border get_padding (Gtk.StateFlags state);
+		public unowned Gtk.StyleContext get_parent ();
 		public unowned Gtk.WidgetPath get_path ();
 		public void get_property (string property, Gtk.StateFlags state, GLib.Value value);
 		public unowned Gdk.Screen get_screen ();
+		public unowned Gtk.CssSection get_section (string property);
 		public Gtk.StateFlags get_state ();
 		public void get_style (...);
 		public void get_style_property (string property_name, GLib.Value value);
@@ -4134,11 +4150,13 @@ namespace Gtk {
 		public void set_background (Gdk.Window window);
 		public void set_direction (Gtk.TextDirection direction);
 		public void set_junction_sides (Gtk.JunctionSides sides);
+		public void set_parent (Gtk.StyleContext parent);
 		public void set_path (Gtk.WidgetPath path);
 		public void set_screen (Gdk.Screen screen);
 		public void set_state (Gtk.StateFlags flags);
 		public bool state_is_running (Gtk.StateType state, double progress);
 		public Gtk.TextDirection direction { get; set; }
+		public Gtk.StyleContext parent { get; set; }
 		public Gdk.Screen screen { get; set; }
 		public virtual signal void changed ();
 	}
@@ -5308,6 +5326,7 @@ namespace Gtk {
 		public UIManager ();
 		public void add_ui (uint merge_id, string path, string name, string? action, Gtk.UIManagerItemType type, bool top);
 		public uint add_ui_from_file (string filename) throws GLib.Error;
+		public uint add_ui_from_resource (string resource_path) throws GLib.Error;
 		public uint add_ui_from_string (string buffer, ssize_t length) throws GLib.Error;
 		public void ensure_update ();
 		public unowned Gtk.AccelGroup get_accel_group ();
@@ -5778,6 +5797,7 @@ namespace Gtk {
 		public void fullscreen ();
 		public bool get_accept_focus ();
 		public unowned Gtk.Application get_application ();
+		public unowned Gtk.Widget get_attached_to ();
 		public bool get_decorated ();
 		public static GLib.List<weak Gdk.Pixbuf> get_default_icon_list ();
 		public static unowned string get_default_icon_name ();
@@ -5830,6 +5850,7 @@ namespace Gtk {
 		public void resize_to_geometry (int width, int height);
 		public void set_accept_focus (bool setting);
 		public void set_application (Gtk.Application application);
+		public void set_attached_to (Gtk.Widget attach_widget);
 		public static void set_auto_startup_notification (bool setting);
 		public void set_decorated (bool setting);
 		public void set_default (Gtk.Widget default_widget);
@@ -5876,6 +5897,7 @@ namespace Gtk {
 		public void unstick ();
 		public bool accept_focus { get; set; }
 		public Gtk.Application application { get; set; }
+		public Gtk.Widget attached_to { get; set construct; }
 		public bool decorated { get; set; }
 		[NoAccessorMethod]
 		public int default_height { get; set; }
@@ -6517,6 +6539,20 @@ namespace Gtk {
 		END,
 		CENTER
 	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_APPLICATION_")]
+	public enum ApplicationEndSessionStyle {
+		LOGOUT,
+		REBOOT,
+		SHUTDOWN
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_APPLICATION_INHIBIT_")]
+	[Flags]
+	public enum ApplicationInhibitFlags {
+		LOGOUT,
+		SWITCH,
+		SUSPEND,
+		IDLE
+	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_ARROWS_")]
 	public enum ArrowPlacement {
 		BOTH,
@@ -6552,7 +6588,13 @@ namespace Gtk {
 		NONE,
 		SOLID,
 		INSET,
-		OUTSET
+		OUTSET,
+		HIDDEN,
+		DOTTED,
+		DASHED,
+		DOUBLE,
+		GROOVE,
+		RIDGE
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_BUTTONBOX_")]
 	public enum ButtonBoxStyle {
@@ -7194,7 +7236,7 @@ namespace Gtk {
 		INSENSITIVE,
 		INCONSISTENT,
 		FOCUSED,
-		WINDOW_UNFOCUSED
+		BACKDROP
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_STATE_")]
 	public enum StateType {

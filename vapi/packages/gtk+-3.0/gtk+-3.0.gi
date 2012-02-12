@@ -2426,6 +2426,13 @@
 					<parameter name="resolved_gradient" type="cairo_pattern_t**"/>
 				</parameters>
 			</method>
+			<method name="resolve_for_context" symbol="gtk_gradient_resolve_for_context">
+				<return-type type="cairo_pattern_t*"/>
+				<parameters>
+					<parameter name="gradient" type="GtkGradient*"/>
+					<parameter name="context" type="GtkStyleContext*"/>
+				</parameters>
+			</method>
 			<method name="to_string" symbol="gtk_gradient_to_string">
 				<return-type type="char*"/>
 				<parameters>
@@ -4522,6 +4529,11 @@
 			<member name="GTK_ALIGN_END" value="2"/>
 			<member name="GTK_ALIGN_CENTER" value="3"/>
 		</enum>
+		<enum name="GtkApplicationEndSessionStyle" type-name="GtkApplicationEndSessionStyle" get-type="gtk_application_end_session_style_get_type">
+			<member name="GTK_APPLICATION_LOGOUT" value="0"/>
+			<member name="GTK_APPLICATION_REBOOT" value="1"/>
+			<member name="GTK_APPLICATION_SHUTDOWN" value="2"/>
+		</enum>
 		<enum name="GtkArrowPlacement" type-name="GtkArrowPlacement" get-type="gtk_arrow_placement_get_type">
 			<member name="GTK_ARROWS_BOTH" value="0"/>
 			<member name="GTK_ARROWS_START" value="1"/>
@@ -4547,6 +4559,12 @@
 			<member name="GTK_BORDER_STYLE_SOLID" value="1"/>
 			<member name="GTK_BORDER_STYLE_INSET" value="2"/>
 			<member name="GTK_BORDER_STYLE_OUTSET" value="3"/>
+			<member name="GTK_BORDER_STYLE_HIDDEN" value="4"/>
+			<member name="GTK_BORDER_STYLE_DOTTED" value="5"/>
+			<member name="GTK_BORDER_STYLE_DASHED" value="6"/>
+			<member name="GTK_BORDER_STYLE_DOUBLE" value="7"/>
+			<member name="GTK_BORDER_STYLE_GROOVE" value="8"/>
+			<member name="GTK_BORDER_STYLE_RIDGE" value="9"/>
 		</enum>
 		<enum name="GtkBuilderError" type-name="GtkBuilderError" get-type="gtk_builder_error_get_type">
 			<member name="GTK_BUILDER_ERROR_INVALID_TYPE_FUNCTION" value="0"/>
@@ -5098,6 +5116,12 @@
 			<member name="GTK_ACCEL_LOCKED" value="2"/>
 			<member name="GTK_ACCEL_MASK" value="7"/>
 		</flags>
+		<flags name="GtkApplicationInhibitFlags" type-name="GtkApplicationInhibitFlags" get-type="gtk_application_inhibit_flags_get_type">
+			<member name="GTK_APPLICATION_INHIBIT_LOGOUT" value="1"/>
+			<member name="GTK_APPLICATION_INHIBIT_SWITCH" value="2"/>
+			<member name="GTK_APPLICATION_INHIBIT_SUSPEND" value="4"/>
+			<member name="GTK_APPLICATION_INHIBIT_IDLE" value="8"/>
+		</flags>
 		<flags name="GtkAttachOptions" type-name="GtkAttachOptions" get-type="gtk_attach_options_get_type">
 			<member name="GTK_EXPAND" value="1"/>
 			<member name="GTK_SHRINK" value="2"/>
@@ -5198,7 +5222,7 @@
 			<member name="GTK_STATE_FLAG_INSENSITIVE" value="8"/>
 			<member name="GTK_STATE_FLAG_INCONSISTENT" value="16"/>
 			<member name="GTK_STATE_FLAG_FOCUSED" value="32"/>
-			<member name="GTK_STATE_FLAG_WINDOW_UNFOCUSED" value="64"/>
+			<member name="GTK_STATE_FLAG_BACKDROP" value="64"/>
 		</flags>
 		<flags name="GtkTargetFlags" type-name="GtkTargetFlags" get-type="gtk_target_flags_get_type">
 			<member name="GTK_TARGET_SAME_APP" value="1"/>
@@ -5237,6 +5261,14 @@
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
 			</implements>
+			<method name="add_credit_section" symbol="gtk_about_dialog_add_credit_section">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="about" type="GtkAboutDialog*"/>
+					<parameter name="section_name" type="gchar*"/>
+					<parameter name="people" type="gchar**"/>
+				</parameters>
+			</method>
 			<method name="get_artists" symbol="gtk_about_dialog_get_artists">
 				<return-type type="gchar**"/>
 				<parameters>
@@ -6761,6 +6793,14 @@
 					<parameter name="window" type="GtkWindow*"/>
 				</parameters>
 			</method>
+			<method name="end_session" symbol="gtk_application_end_session">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="application" type="GtkApplication*"/>
+					<parameter name="style" type="GtkApplicationEndSessionStyle"/>
+					<parameter name="request_confirmation" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="get_app_menu" symbol="gtk_application_get_app_menu">
 				<return-type type="GMenuModel*"/>
 				<parameters>
@@ -6777,6 +6817,22 @@
 				<return-type type="GList*"/>
 				<parameters>
 					<parameter name="application" type="GtkApplication*"/>
+				</parameters>
+			</method>
+			<method name="inhibit" symbol="gtk_application_inhibit">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="application" type="GtkApplication*"/>
+					<parameter name="window" type="GtkWindow*"/>
+					<parameter name="flags" type="GtkApplicationInhibitFlags"/>
+					<parameter name="reason" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="is_inhibited" symbol="gtk_application_is_inhibited">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="application" type="GtkApplication*"/>
+					<parameter name="flags" type="GtkApplicationInhibitFlags"/>
 				</parameters>
 			</method>
 			<constructor name="new" symbol="gtk_application_new">
@@ -6815,8 +6871,22 @@
 					<parameter name="menubar" type="GMenuModel*"/>
 				</parameters>
 			</method>
+			<method name="uninhibit" symbol="gtk_application_uninhibit">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="application" type="GtkApplication*"/>
+					<parameter name="cookie" type="guint"/>
+				</parameters>
+			</method>
 			<property name="app-menu" type="GMenuModel*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="menubar" type="GMenuModel*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="register-session" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<signal name="quit" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="application" type="GtkApplication*"/>
+				</parameters>
+			</signal>
 			<signal name="window-added" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -7237,6 +7307,14 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<method name="add_from_resource" symbol="gtk_builder_add_from_resource">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="builder" type="GtkBuilder*"/>
+					<parameter name="resource_path" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<method name="add_from_string" symbol="gtk_builder_add_from_string">
 				<return-type type="guint"/>
 				<parameters>
@@ -7251,6 +7329,15 @@
 				<parameters>
 					<parameter name="builder" type="GtkBuilder*"/>
 					<parameter name="filename" type="gchar*"/>
+					<parameter name="object_ids" type="gchar**"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="add_objects_from_resource" symbol="gtk_builder_add_objects_from_resource">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="builder" type="GtkBuilder*"/>
+					<parameter name="resource_path" type="gchar*"/>
 					<parameter name="object_ids" type="gchar**"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
@@ -10555,6 +10642,7 @@
 		<object name="GtkCssProvider" parent="GObject" type-name="GtkCssProvider" get-type="gtk_css_provider_get_type">
 			<implements>
 				<interface name="GtkStyleProvider"/>
+				<interface name="GtkStyleProviderPrivate"/>
 			</implements>
 			<method name="error_quark" symbol="gtk_css_provider_error_quark">
 				<return-type type="GQuark"/>
@@ -12173,7 +12261,7 @@
 				<return-type type="GtkWidget*"/>
 				<parameters>
 					<parameter name="title" type="gchar*"/>
-					<parameter name="window" type="GtkWindow*"/>
+					<parameter name="parent" type="GtkWindow*"/>
 				</parameters>
 			</constructor>
 		</object>
@@ -13793,6 +13881,12 @@
 					<parameter name="pixbuf" type="GdkPixbuf*"/>
 				</parameters>
 			</constructor>
+			<constructor name="new_from_resource" symbol="gtk_image_new_from_resource">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="resource_path" type="gchar*"/>
+				</parameters>
+			</constructor>
 			<constructor name="new_from_stock" symbol="gtk_image_new_from_stock">
 				<return-type type="GtkWidget*"/>
 				<parameters>
@@ -13843,6 +13937,13 @@
 				<parameters>
 					<parameter name="image" type="GtkImage*"/>
 					<parameter name="pixbuf" type="GdkPixbuf*"/>
+				</parameters>
+			</method>
+			<method name="set_from_resource" symbol="gtk_image_set_from_resource">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="image" type="GtkImage*"/>
+					<parameter name="resource_path" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="set_from_stock" symbol="gtk_image_set_from_stock">
@@ -18769,6 +18870,7 @@
 		<object name="GtkSettings" parent="GObject" type-name="GtkSettings" get-type="gtk_settings_get_type">
 			<implements>
 				<interface name="GtkStyleProvider"/>
+				<interface name="GtkStyleProviderPrivate"/>
 			</implements>
 			<method name="get_default" symbol="gtk_settings_get_default">
 				<return-type type="GtkSettings*"/>
@@ -20188,6 +20290,12 @@
 					<parameter name="padding" type="GtkBorder*"/>
 				</parameters>
 			</method>
+			<method name="get_parent" symbol="gtk_style_context_get_parent">
+				<return-type type="GtkStyleContext*"/>
+				<parameters>
+					<parameter name="context" type="GtkStyleContext*"/>
+				</parameters>
+			</method>
 			<method name="get_path" symbol="gtk_style_context_get_path">
 				<return-type type="GtkWidgetPath*"/>
 				<parameters>
@@ -20207,6 +20315,13 @@
 				<return-type type="GdkScreen*"/>
 				<parameters>
 					<parameter name="context" type="GtkStyleContext*"/>
+				</parameters>
+			</method>
+			<method name="get_section" symbol="gtk_style_context_get_section">
+				<return-type type="GtkCssSection*"/>
+				<parameters>
+					<parameter name="context" type="GtkStyleContext*"/>
+					<parameter name="property" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="get_state" symbol="gtk_style_context_get_state">
@@ -20394,6 +20509,13 @@
 					<parameter name="sides" type="GtkJunctionSides"/>
 				</parameters>
 			</method>
+			<method name="set_parent" symbol="gtk_style_context_set_parent">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="context" type="GtkStyleContext*"/>
+					<parameter name="parent" type="GtkStyleContext*"/>
+				</parameters>
+			</method>
 			<method name="set_path" symbol="gtk_style_context_set_path">
 				<return-type type="void"/>
 				<parameters>
@@ -20424,6 +20546,7 @@
 				</parameters>
 			</method>
 			<property name="direction" type="GtkTextDirection" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="parent" type="GtkStyleContext*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="screen" type="GdkScreen*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="changed" when="FIRST">
 				<return-type type="void"/>
@@ -20435,6 +20558,7 @@
 		<object name="GtkStyleProperties" parent="GObject" type-name="GtkStyleProperties" get-type="gtk_style_properties_get_type">
 			<implements>
 				<interface name="GtkStyleProvider"/>
+				<interface name="GtkStyleProviderPrivate"/>
 			</implements>
 			<method name="clear" symbol="gtk_style_properties_clear">
 				<return-type type="void"/>
@@ -25319,6 +25443,14 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<method name="add_ui_from_resource" symbol="gtk_ui_manager_add_ui_from_resource">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="manager" type="GtkUIManager*"/>
+					<parameter name="resource_path" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<method name="add_ui_from_string" symbol="gtk_ui_manager_add_ui_from_string">
 				<return-type type="guint"/>
 				<parameters>
@@ -27762,6 +27894,12 @@
 					<parameter name="window" type="GtkWindow*"/>
 				</parameters>
 			</method>
+			<method name="get_attached_to" symbol="gtk_window_get_attached_to">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="window" type="GtkWindow*"/>
+				</parameters>
+			</method>
 			<method name="get_decorated" symbol="gtk_window_get_decorated">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -28106,6 +28244,13 @@
 					<parameter name="application" type="GtkApplication*"/>
 				</parameters>
 			</method>
+			<method name="set_attached_to" symbol="gtk_window_set_attached_to">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="window" type="GtkWindow*"/>
+					<parameter name="attach_widget" type="GtkWidget*"/>
+				</parameters>
+			</method>
 			<method name="set_auto_startup_notification" symbol="gtk_window_set_auto_startup_notification">
 				<return-type type="void"/>
 				<parameters>
@@ -28421,6 +28566,7 @@
 			</method>
 			<property name="accept-focus" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="application" type="GtkApplication*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="attached-to" type="GtkWidget*" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="decorated" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="default-height" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="default-width" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -30918,12 +31064,12 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="313"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="315"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="13"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="15"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
