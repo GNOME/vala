@@ -33,7 +33,7 @@ public class Valadoc.Html.LinkHelper : Object {
 		set;
 	}
 
-	public string? get_package_link (Api.Package package, Settings settings) {
+	public virtual string? get_package_link (Api.Package package, Settings settings) {
 		if (enable_browsable_check && !package.is_browsable (settings)) {
 			return null;
 		}
