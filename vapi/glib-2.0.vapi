@@ -1779,8 +1779,7 @@ namespace GLib {
 	[CCode (has_target = false)]
 	public delegate void SourceFinalizeFunc (Source source);
 
-	[Compact]
-	public class SourceFuncs {
+	public struct SourceFuncs {
 		public SourcePrepareFunc prepare;
 		public SourceCheckFunc check;
 		public SourceDispatchFunc dispatch;
