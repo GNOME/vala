@@ -484,6 +484,8 @@ namespace Posix {
 	[CCode (cheader_filename = "arpa/inet.h")]
 	unowned string inet_ntop (int af, void* src, uint8[] dst);
 	[CCode (cheader_filename = "arpa/inet.h")]
+	public int inet_pton (int af, string src, void* dst);
+	[CCode (cheader_filename = "arpa/inet.h")]
 	public uint32 htonl (uint32 hostlong);
 	[CCode (cheader_filename = "arpa/inet.h")]
 	public uint32 ntohl (uint32 netlong);
@@ -1490,6 +1492,11 @@ namespace Posix {
 		public uint32 s_addr;
 	}
 
+	[CCode (cname = "struct in6_addr", cheader_filename = "sys/socket.h", destroy_function = "")]
+	public struct In6Addr {
+		public uchar[] s6_addr[16];
+	}
+
 	[CCode (cname = "struct sockaddr", cheader_filename = "sys/socket.h", destroy_function = "")]
 	public struct SockAddr {
         public int sa_family;
@@ -1502,6 +1509,15 @@ namespace Posix {
 		public int sin_family;
 		public uint16 sin_port;
 		public InAddr sin_addr;
+	}
+
+	[CCode (cname = "struct sockaddr_in6", cheader_filename = "netinet/in.h", destroy_function = "")]
+	public struct SockAddrIn6 {
+		public int sin6_family;
+		public uint16 sin6_port;
+		public uint32 sin6_flowinfo;
+		public In6Addr sin6_addr;
+		public uint32 sin6_scope_id;
 	}
 
 	[CCode (cheader_filename = "sys/stat.h")]
