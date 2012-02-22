@@ -450,7 +450,7 @@ namespace Soup {
 		public Soup.Expectation get_expectations ();
 		public unowned string get_list (string name);
 		public unowned string get_one (string name);
-		public bool get_ranges (int64 total_length, out Soup.Range ranges, int length);
+		public bool get_ranges (int64 total_length, [CCode (array_length_cname = "length", array_length_pos = 2.1, type = "SoupRange**")] out Soup.Range[] ranges);
 		public void remove (string name);
 		public void replace (string name, string value);
 		public void set_content_disposition (string disposition, GLib.HashTable<string,string>? @params);

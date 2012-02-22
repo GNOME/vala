@@ -45,7 +45,7 @@ MessageHeaders
 	.get_content_disposition.* out unowned=false
 	.get_content_type.* out unowned=false
 	.get_content_*.params type_arguments="string,string"
-	.get_ranges.ranges out
+	.get_ranges.ranges out type="Soup.Range[]" array_length_idx=2
 	.set_content_disposition.params type_arguments="string,string" nullable
 	.set_content_type.params type_arguments="string,string" nullable
 Multipart.get_part
