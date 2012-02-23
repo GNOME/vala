@@ -48,6 +48,7 @@ Device
         .grab_info_libgtk_only skip
 Display.open_default_libgtk_only skip=false
 Window
+        .destroy destroys_instance
         .destroy_notify skip
 synthesize_window_state skip
 EventMotion

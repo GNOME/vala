@@ -69,7 +69,8 @@ public class Vala.GirParser : CodeVisitor {
 		CLOSURE,
 		CPREFIX,
 		LOWER_CASE_CPREFIX,
-		ERRORDOMAIN;
+		ERRORDOMAIN,
+		DESTROYS_INSTANCE;
 
 		public static ArgumentType? from_string (string name) {
 			var enum_class = (EnumClass) typeof(ArgumentType).class_ref ();
@@ -799,6 +800,9 @@ public class Vala.GirParser : CodeVisitor {
 						}
 					}
 					if (!(m is CreationMethod)) {
+						if (metadata.has_argument (ArgumentType.DESTROYS_INSTANCE)) {
+							m.set_attribute ("DestroysInstance", true);
+						}
 						// merge custom vfunc
 						if (metadata.has_argument (ArgumentType.VFUNC_NAME)) {
 							var vfunc = parent.lookup (metadata.get_string (ArgumentType.VFUNC_NAME));

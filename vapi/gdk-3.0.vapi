@@ -4864,6 +4864,7 @@ namespace Gdk {
 		public void coords_to_parent (double x, double y, out double parent_x, out double parent_y);
 		public Cairo.Surface create_similar_surface (Cairo.Content content, int width, int height);
 		public void deiconify ();
+		[DestroysInstance]
 		public void destroy ();
 		public void enable_synchronized_configure ();
 		public void end_paint ();
@@ -5732,6 +5733,12 @@ namespace Gdk {
 	public delegate Gdk.FilterReturn FilterFunc (Gdk.XEvent xevent, Gdk.Event event);
 	[CCode (cheader_filename = "gdk/gdk.h", instance_pos = 1.9)]
 	public delegate bool WindowChildFunc (Gdk.Window window);
+	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_BUTTON_MIDDLE")]
+	public const int BUTTON_MIDDLE;
+	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_BUTTON_PRIMARY")]
+	public const int BUTTON_PRIMARY;
+	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_BUTTON_SECONDARY")]
+	public const int BUTTON_SECONDARY;
 	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_CURRENT_TIME")]
 	public const int CURRENT_TIME;
 	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_MAX_TIMECOORD_AXES")]
