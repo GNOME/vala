@@ -1,6 +1,6 @@
 /* valaccodetransformer.vala
  *
- * Copyright (C) 2011  Luca Bruno
+ * Copyright (C) 2012  Luca Bruno
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -105,7 +105,21 @@ public class Vala.CCodeTransformer : CodeTransformer {
 	}
 
 	public override void visit_block (Block b) {
+		foreach (LocalVariable local in b.get_local_variables ()) {
+			local.active = true;
+		}
+		foreach (Constant constant in b.get_local_constants ()) {
+			constant.active = true;
+		}
+
 		b.accept_children (this);
+
+		foreach (LocalVariable local in b.get_local_variables ()) {
+			local.active = false;
+		}
+		foreach (Constant constant in b.get_local_constants ()) {
+			constant.active = false;
+		}
 	}
 
 	public override void visit_declaration_statement (DeclarationStatement stmt) {
@@ -164,8 +178,8 @@ public class Vala.CCodeTransformer : CodeTransformer {
 				b.open_if (new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, stmt.condition, stmt.condition.source_reference));
 				b.add_break ();
 				b.close ();
-				b.add_statement (stmt.body);
 			}
+			b.add_statement (stmt.body);
 			b.close ();
 		}
 
@@ -457,6 +471,37 @@ public class Vala.CCodeTransformer : CodeTransformer {
 			pop_builder ();
 			base.visit_binary_expression (expr);
 		}
+	}
+
+	public override void visit_unary_expression (UnaryExpression expr) {
+		var parent_statement = expr.parent_statement;
+		if (parent_statement == null) {
+			base.visit_unary_expression (expr);
+			return;
+		}
+
+		if (expr.operator == UnaryOperator.INCREMENT || expr.operator == UnaryOperator.DECREMENT) {
+			var old_parent_node = expr.parent_node;
+			var target_type = expr.target_type != null ? expr.target_type.copy () : null;
+
+			push_builder (new CodeBuilder (context, parent_statement, expr.source_reference));
+			Expression replacement;
+			if (expr.operator == UnaryOperator.INCREMENT) {
+				replacement = expression (@"$(expr.inner) = $(expr.inner) + 1");
+			} else {
+				replacement = expression (@"$(expr.inner) = $(expr.inner) - 1");
+			}
+			replacement.target_type = target_type;
+			context.analyzer.replaced_nodes.add (expr);
+			old_parent_node.replace_expression (expr, replacement);
+			b.check (this);
+
+			pop_builder ();
+			check (replacement);
+			return;
+		}
+
+		base.visit_unary_expression (expr);
 	}
 
 	public override void visit_object_creation_expression (ObjectCreationExpression expr) {

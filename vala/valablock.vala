@@ -107,7 +107,7 @@ public class Vala.Block : Symbol, Statement {
 	}
 
 	/**
-	 * Returns a copy of the list of local variables.
+	 * Returns the list of local variables.
 	 *
 	 * @return variable declarator list
 	 */
