@@ -214,14 +214,7 @@ public class Vala.UnaryExpression : Expression {
 				return false;
 			}
 
-			var old_value = new MemberAccess (ma.inner, ma.member_name, inner.source_reference);
-			var bin = new BinaryExpression (operator == UnaryOperator.INCREMENT ? BinaryOperator.PLUS : BinaryOperator.MINUS, old_value, new IntegerLiteral ("1"), source_reference);
-
-			var assignment = new Assignment (ma, bin, AssignmentOperator.SIMPLE, source_reference);
-			assignment.target_type = target_type;
-			context.analyzer.replaced_nodes.add (this);
-			parent_node.replace_expression (this, assignment);
-			assignment.check (context);
+			value_type = inner.value_type.copy ();
 			return true;
 		case UnaryOperator.REF:
 		case UnaryOperator.OUT:

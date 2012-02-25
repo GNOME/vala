@@ -299,6 +299,32 @@ public class Vala.CCodeTransformer : CodeTransformer {
 		}
 	}
 
+	public override void visit_unary_expression (UnaryExpression expr) {
+		var parent_statement = expr.parent_statement;
+		if (parent_statement == null) {
+			base.visit_unary_expression (expr);
+			return;
+		}
+
+		if (expr.operator == UnaryOperator.INCREMENT || expr.operator == UnaryOperator.DECREMENT) {
+			var target_type = copy_type (expr.target_type);
+			begin_replace_expression (expr);
+
+			Expression replacement;
+			if (expr.operator == UnaryOperator.INCREMENT) {
+				replacement = expression (@"$(expr.inner) = $(expr.inner) + 1");
+			} else {
+				replacement = expression (@"$(expr.inner) = $(expr.inner) - 1");
+			}
+			replacement.target_type = target_type;
+
+			end_replace_expression (replacement);
+			return;
+		}
+
+		base.visit_unary_expression (expr);
+	}
+
 	public override void visit_object_creation_expression (ObjectCreationExpression expr) {
 		if (expr.tree_can_fail) {
 			if (expr.parent_node is LocalVariable || expr.parent_node is ExpressionStatement) {
