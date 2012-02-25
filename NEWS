@@ -1,3 +1,9 @@
+Vala 0.15.2
+===========
+
+ * Switch poppler-glib bindings to .gir.
+ * Many bug fixes and binding updates.
+
 Vala 0.15.1
 ===========
 
