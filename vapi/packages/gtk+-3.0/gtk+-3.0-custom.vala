@@ -43,6 +43,7 @@ namespace Gtk {
 
 	public class Container {
 		[CCode (vfunc_name = "forall")]
+		[NoWrapper]
 		public virtual void forall_internal(bool include_internal, Gtk.Callback callback);
 	}
 
@@ -64,7 +65,14 @@ namespace Gtk {
 		public extern Widget (...);
 		public class uint activate_signal;
 		[CCode (vfunc_name = "compute_expand")]
+		[NoWrapper]
 		public virtual void compute_expand_internal (out bool hexpand, out bool vexpand);
+		[CCode (vfunc_name = "get_preferred_width_for_height")]
+		[NoWrapper]
+		public virtual void get_preferred_width_for_height_internal (int height, out int minimum_width, out int natural_width);
+		[CCode (vfunc_name = "get_preferred_height_for_width")]
+		[NoWrapper]
+		public virtual void get_preferred_height_for_width_internal (int width, out int minimum_height, out int natural_height);
 	}
 
 	public interface Editable {

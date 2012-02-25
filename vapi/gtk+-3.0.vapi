@@ -1505,6 +1505,7 @@ namespace Gtk {
 		public virtual unowned string composite_name (Gtk.Widget child);
 		public virtual void forall (Gtk.Callback callback);
 		[CCode (vfunc_name = "forall")]
+		[NoWrapper]
 		public virtual void forall_internal (bool include_internal, Gtk.Callback callback);
 		public void @foreach (Gtk.Callback callback);
 		public uint get_border_width ();
@@ -5421,6 +5422,7 @@ namespace Gtk {
 		public void class_path (out uint path_length, out unowned string path, out unowned string path_reversed);
 		public virtual bool compute_expand (Gtk.Orientation orientation);
 		[CCode (vfunc_name = "compute_expand")]
+		[NoWrapper]
 		public virtual void compute_expand_internal (out bool hexpand, out bool vexpand);
 		public Pango.Context create_pango_context ();
 		public Pango.Layout create_pango_layout (string? text);
@@ -5473,9 +5475,15 @@ namespace Gtk {
 		public void get_pointer (out int x, out int y);
 		public virtual void get_preferred_height (out int minimum_height, out int natural_height);
 		public virtual void get_preferred_height_for_width (int width, out int minimum_height, out int natural_height);
+		[CCode (vfunc_name = "get_preferred_height_for_width")]
+		[NoWrapper]
+		public virtual void get_preferred_height_for_width_internal (int width, out int minimum_height, out int natural_height);
 		public void get_preferred_size (out Gtk.Requisition minimum_size, out Gtk.Requisition natural_size);
 		public virtual void get_preferred_width (out int minimum_width, out int natural_width);
 		public virtual void get_preferred_width_for_height (int height, out int minimum_width, out int natural_width);
+		[CCode (vfunc_name = "get_preferred_width_for_height")]
+		[NoWrapper]
+		public virtual void get_preferred_width_for_height_internal (int height, out int minimum_width, out int natural_width);
 		public bool get_realized ();
 		public bool get_receives_default ();
 		public virtual Gtk.SizeRequestMode get_request_mode ();
