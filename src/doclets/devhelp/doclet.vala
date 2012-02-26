@@ -85,7 +85,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		var devfile = FileStream.open (devpath, "w");
 		_devhelpwriter = new Devhelp.MarkupWriter (devfile);
 
-		_devhelpwriter.start_book (pkg_name+" Reference Manual", "vala", "index.htm", "", "", "");
+		_devhelpwriter.start_book (pkg_name+" Reference Manual", "vala", "index.htm", pkg_name, "", "");
 
 
 		GLib.FileStream file = GLib.FileStream.open (filepath, "w");
