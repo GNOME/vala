@@ -23,7 +23,7 @@
 /**
  * Metadata reader for GIR files
  */
-public class GirMetaData : Object {
+public class Valadoc.GirMetaData : Object {
 	private string? metadata_path = null;
 	private string? resource_dir = null;
 
@@ -75,7 +75,7 @@ public class GirMetaData : Object {
 		return null;
 	}
 
-	private void load_general_metadata (KeyFile key_file) throws KeyFileError {
+	private void load_general_metadata (KeyFile key_file, ErrorReporter reporter) throws KeyFileError {
 		foreach (string key in key_file.get_keys ("General")) {
 			switch (key) {
 			case "resources":
@@ -83,13 +83,13 @@ public class GirMetaData : Object {
 				break;
 
 			default:
-				stderr.printf ("Unknown key 'General.%s' in '%s'", key, metadata_path);
+				reporter.simple_warning ("Unknown key 'General.%s' in '%s'", key, metadata_path);
 				break;
 			}
 		}
 	}
 
-	public GirMetaData (string gir_file_path, string[] metadata_dirs) {
+	public GirMetaData (string gir_file_path, string[] metadata_dirs, ErrorReporter reporter) {
 		if (!FileUtils.test (gir_file_path, FileTest.IS_REGULAR)) {
 			return ;
 		}
@@ -105,10 +105,10 @@ public class GirMetaData : Object {
 			key_file = new KeyFile ();
 			key_file.load_from_file (metadata_path, KeyFileFlags.NONE);
 		} catch (KeyFileError e) {
-			stdout.printf ("Key file error: '%s': in %s\n", metadata_path, e.message);
+			reporter.simple_error ("Key file error: '%s': in %s\n", metadata_path, e.message);
 			return ;
 		} catch (FileError e) {
-			stdout.printf ("File error: '%s': in %s\n", metadata_path, e.message);
+			reporter.simple_error ("File error: '%s': in %s\n", metadata_path, e.message);
 			return ;
 		}
 
@@ -116,16 +116,16 @@ public class GirMetaData : Object {
 			foreach (string group in key_file.get_groups ()) {
 				switch (group) {
 				case "General":
-					load_general_metadata (key_file);
+					load_general_metadata (key_file, reporter);
 					break;
 
 				default:
-					stdout.printf ("Unknown group '%s' in %s\n", group, metadata_path);
+					reporter.simple_warning ("Unknown group '%s' in %s\n", group, metadata_path);
 					break;
 				}
 			}
 		} catch (KeyFileError e) {
-			stderr.printf ("%s: %s", metadata_path, e.message);
+			reporter.simple_error ("%s: %s", metadata_path, e.message);
 		}
 	}
 }

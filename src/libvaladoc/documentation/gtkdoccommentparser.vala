@@ -55,7 +55,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 			return metadata;
 		}
 
-		metadata = new GirMetaData (gir_comment.file.relative_path, settings.metadata_directories);
+		metadata = new GirMetaData (gir_comment.file.relative_path, settings.metadata_directories, reporter);
 		this.metadata.set (gir_comment.file, metadata);
 		return metadata;
 	}
