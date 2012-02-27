@@ -257,7 +257,11 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	}
 
 	protected void fetch_subnamespace_names (Api.Node node, Gee.ArrayList<Namespace> namespaces) {
-		foreach (Api.Node child in node.get_children_by_type (Api.NodeType.NAMESPACE)) {
+		Gee.ArrayList<Api.Node> sorted_list = new Gee.ArrayList<Api.Node> ();
+		sorted_list.add_all (node.get_children_by_type (Api.NodeType.NAMESPACE));
+		sorted_list.sort ();
+
+		foreach (Api.Node child in sorted_list) {
 			namespaces.add ((Namespace) child);
 			this.fetch_subnamespace_names (child, namespaces);
 		}
