@@ -1961,7 +1961,7 @@ namespace GLib {
 		public static int get_max_unused_threads ();
 		public static uint get_num_unused_threads ();
 		public static void stop_unused_threads ();
-		public void set_sort_function (CompareDataFunc func);
+		public void set_sort_function (CompareDataFunc<T> func);
 		public static void set_max_idle_time (uint interval);
 		public static uint get_max_idle_time ();
 	}
