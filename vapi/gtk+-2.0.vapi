@@ -1320,7 +1320,7 @@ namespace Gtk {
 		public static unowned GLib.ParamSpec class_list_child_properties (GLib.ObjectClass cclass, uint n_properties);
 		[NoWrapper]
 		public virtual unowned string composite_name (Gtk.Widget child);
-		public virtual void forall (Gtk.Callback callback);
+		public void forall (Gtk.Callback callback);
 		[CCode (vfunc_name = "forall")]
 		public virtual void forall_internal (bool include_internal, Gtk.Callback callback);
 		public void @foreach (Gtk.Callback callback);
