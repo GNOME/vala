@@ -1194,7 +1194,7 @@ namespace Posix {
 	[CCode (cheader_filename = "string.h")]
 	public unowned string strcat (string s1, string s2);
 	[CCode (cheader_filename = "string.h")]
-	public unowned string strchr (string s, int c);
+	public unowned string? strchr (string s, int c);
 	[CCode (cheader_filename = "string.h")]
 	public int strcmp (string s1, string s2);
 	[CCode (cheader_filename = "string.h")]
@@ -1204,7 +1204,7 @@ namespace Posix {
 	[CCode (cheader_filename = "string.h")]
 	public size_t strcspn (string s1, string s2);
 	[CCode (cheader_filename = "string.h")]
-	public unowned string strdup (string s1);
+	public string strdup (string s1);
 	[CCode (cheader_filename = "string.h")]
 	public unowned string strerror (int errnum);
 	[CCode (cheader_filename = "string.h")]
@@ -1218,17 +1218,17 @@ namespace Posix {
 	[CCode (cheader_filename = "string.h")]
 	public unowned string strncpy (string s1, string s2, size_t n);
 	[CCode (cheader_filename = "string.h")]
-	public unowned string strpbrk (string s1, string s2);
+	public unowned string? strpbrk (string s1, string s2);
 	[CCode (cheader_filename = "string.h")]
-	public unowned string strrchr (string s, int c);
+	public unowned string? strrchr (string s, int c);
 	[CCode (cheader_filename = "string.h")]
 	public size_t strspn (string s1, string s2);
 	[CCode (cheader_filename = "string.h")]
-	public unowned string strstr (string s1, string s2);
+	public unowned string? strstr (string s1, string s2);
 	[CCode (cheader_filename = "string.h")]
-	public unowned string strtok (string s1, string s2);
+	public unowned string? strtok (string s1, string s2);
 	[CCode (cheader_filename = "string.h")]
-	public unowned string strtok_r (string s, string sep, out string lasts);
+	public unowned string? strtok_r (string? s, string sep, out unowned string lasts);
 	[CCode (cheader_filename = "string.h")]
 	public size_t strxfrm (string s1, string s2, size_t n);
 
