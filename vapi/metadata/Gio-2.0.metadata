@@ -299,6 +299,9 @@ initable_* skip
 // Need to ask about this... annotated as out, but that seems wrong
 DBus*Info.generate_xml.string_builder out=false
 
+// Back compat
+TlsCertificate abstract=false
+
 // Forward upstream
 content_type_from_mime_type nullable
 content_type_get_mime_type nullable

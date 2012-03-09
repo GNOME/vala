@@ -1975,7 +1975,7 @@ namespace GLib {
 		public virtual signal bool run (GLib.SocketConnection connection, GLib.Object source_object);
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_tls_certificate_get_type ()")]
-	public abstract class TlsCertificate : GLib.Object {
+	public class TlsCertificate : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected TlsCertificate ();
 		[CCode (has_construct_function = false)]
