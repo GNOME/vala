@@ -229,6 +229,8 @@ dist_vapi_DATA = \
 	tracker-indexer-module-1.0.vapi \
 	twitter-glib-1.0.deps \
 	twitter-glib-1.0.vapi \
+	udisks2.deps \
+	udisks2.vapi \
 	unique-1.0.deps \
 	unique-1.0.vapi \
 	v4l2.vapi \
@@ -335,6 +337,7 @@ GIR_BINDINGS = \
 	pangocairo \
 	poppler-glib \
 	rest-0.7 \
+	udisks2 \
 	vte-2.90 \
 	$(NULL)
 
@@ -598,6 +601,9 @@ tracker-indexer-module-1.0:
 
 twitter-glib-1.0:
 	$(GENVAPI) --library $(srcdir)/twitter-glib-1.0 $(PACKAGESDIR)/twitter-glib-1.0/twitter-glib-1.0.gi
+
+udisks2:
+	$(GENVAPI) --library $(srcdir)/udisks2 --metadatadir $(METADATADIR) --pkg gio-2.0 $(GIRDIR)/UDisks-2.0.gir
 
 unique-1.0:
 	$(GENVAPI) --library $(srcdir)/unique-1.0 $(PACKAGESDIR)/unique-1.0/unique-1.0.gi
