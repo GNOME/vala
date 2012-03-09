@@ -184,6 +184,8 @@ GtkClipboardRichTextReceivedFunc.text type_name="uint8" is_array="1" array_lengt
 GtkClipboardRichTextReceivedFunc.length hidden="1"
 GtkClipboardURIReceivedFunc.uris is_array="1" no_array_length"1" array_null_terminated="1"
 gtk_color_button_get_color.color is_out="1"
+gtk_color_button_get_rgba type_name="Gdk.RGBA"
+gtk_color_button_get_rgba.rgba hidden="1"
 gtk_color_selection_get_current_color.color is_out="1"
 gtk_color_selection_get_previous_color.color is_out="1"
 gtk_combo_box_get_active_iter.iter is_out="1"
