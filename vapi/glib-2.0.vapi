@@ -3466,7 +3466,8 @@ namespace GLib {
 
 	[CCode (cprefix = "G_MARKUP_", has_type_id = false)]
 	public enum MarkupParseFlags {
-		TREAT_CDATA_AS_TEXT
+		TREAT_CDATA_AS_TEXT,
+		PREFIX_ERROR_POSITION
 	}
 
 	[Compact]
