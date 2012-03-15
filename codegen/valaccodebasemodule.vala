@@ -5292,7 +5292,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var function = new CCodeFunction (array_contains_func, "gboolean");
 		function.modifiers = CCodeModifiers.STATIC;
 
-		function.add_parameter (new CCodeParameter ("stack", get_ccode_name (array_type)));
+		function.add_parameter (new CCodeParameter ("stack", "%s*".printf (get_ccode_name (array_type.element_type))));
 		function.add_parameter (new CCodeParameter ("stack_length", "int"));
 		if (array_type.element_type is StructValueType) {
 			function.add_parameter (new CCodeParameter ("needle", get_ccode_name (array_type.element_type) + "*"));

@@ -107,6 +107,11 @@ void test_length_assignment () {
 	assert (b.length[0] == 5);
 }
 
+void test_inline_array () {
+	const int a[] = { 1, 2, 3 };
+	assert (1 in a);
+}
+
 void main () {
 	test_integer_array ();
 	test_string_array ();
@@ -114,5 +119,6 @@ void main () {
 	test_static_array ();
 	test_reference_transfer ();
 	test_length_assignment ();
+	test_inline_array ();
 }
 
