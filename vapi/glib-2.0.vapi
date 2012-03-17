@@ -1824,9 +1824,11 @@ namespace GLib {
 	[CCode (ref_function = "g_thread_ref", unref_function = "g_thread_unref")]
 #endif
 	public class Thread<T> {
+#if GLIB_2_32
 		public Thread (string? name, ThreadFunc<T> func);
 		[CCode (cname = "g_thread_try_new")]
 		public Thread.try (string? name, ThreadFunc<T> func) throws GLib.Error;
+#endif
 		public static bool supported ();
 		[Deprecated (since = "2.32", replacement = "new Thread<T> ()")]
 		[CCode (simple_generics = true)]
