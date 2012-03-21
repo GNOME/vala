@@ -461,7 +461,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 					_delegate_target_name = ccode.get_string ("delegate_target_cname");
 				}
 				if (_delegate_target_name == null) {
-					_delegate_target_name = "%s_target".printf (sym.name);
+					_delegate_target_name = "%s_target".printf (name);
 				}
 			}
 			return _delegate_target_name;
@@ -610,6 +610,8 @@ public class Vala.CCodeAttribute : AttributeCache {
 				} else {
 					return "%s%s".printf (CCodeBaseModule.get_ccode_prefix (sym.parent_symbol), sym.name);
 				}
+			} else if (sym is LocalVariable || sym is Parameter) {
+				return sym.name;
 			} else {
 				return "%s%s".printf (CCodeBaseModule.get_ccode_prefix (sym.parent_symbol), sym.name);
 			}
