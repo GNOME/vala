@@ -81,7 +81,7 @@ public class Valadoc.MarkupWriter {
 	}
 
 	/**
-	 * Writes text to a desination like a {@link StringBuilder} or a {@link FileStream}
+	 * Writes text to a desination like a {@link GLib.StringBuilder} or a {@link GLib.FileStream}
 	 */
 	public delegate void WriteFunc (string text);
 
@@ -90,8 +90,8 @@ public class Valadoc.MarkupWriter {
 	/**
 	 * Initializes a new instance of the MarkupWriter
 	 * 
-	 * @param stream a WriteFunc
-	 * @param xml_delcaration specifies whether this file starts with an xml-declaration
+	 * @param write stream a WriteFunc
+	 * @param xml_declaration specifies whether this file starts with an xml-declaration
 	 */
 	public MarkupWriter (owned WriteFunc write, bool xml_declaration = true) {
 		this.write = (owned) write;
@@ -105,8 +105,8 @@ public class Valadoc.MarkupWriter {
 	/**
 	 * Writes an start tag of a markup element to the file
 	 *
-	 * @param the name of the markup
-	 * @param a list of name/value pairs
+	 * @param name the name of the markup
+	 * @param attributes a list of name/value pairs
 	 * @return this
 	 */
 	public MarkupWriter start_tag (string name, string[]? attributes=null) {
@@ -135,8 +135,8 @@ public class Valadoc.MarkupWriter {
 	/**
 	 * Writes a simple tag (<name />) to the file
 	 *
-	 * @param the name of the markup
-	 * @param a list of name/value pairs
+	 * @param name the name of the markup
+	 * @param attributes a list of name/value pairs
 	 * @return this
 	 */
 	public MarkupWriter simple_tag (string name, string[]? attributes=null) {
@@ -166,7 +166,7 @@ public class Valadoc.MarkupWriter {
 	/**
 	 * Writes an end tag of a markup element to the file
 	 *
-	 * @param the name of the markup
+	 * @param name the name of the markup
 	 * @return this
 	 */
 	public MarkupWriter end_tag (string name) {

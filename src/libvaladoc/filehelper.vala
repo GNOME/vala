@@ -117,7 +117,7 @@ namespace Valadoc {
 	/**
 	 * Returns canonicalized absolute pathname
 	 *
-	 * @param basedir the path being checked
+	 * @param name the path being checked
 	 * @return a canonicalized absolute pathname
 	 */
 	public string realpath (string name) {

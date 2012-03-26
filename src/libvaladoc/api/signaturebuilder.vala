@@ -48,7 +48,7 @@ public class Valadoc.Api.SignatureBuilder {
 	/**
 	 * Adds text onto the end of the builder. 
 	 *
-	 * @param literal a string
+	 * @param text a string
 	 * @param spaced add a space at the front of the string if necessary
 	 * @return this
 	 */
@@ -61,7 +61,7 @@ public class Valadoc.Api.SignatureBuilder {
 	/**
 	 * Adds text onto the end of the builder. 
 	 *
-	 * @param literal a string
+	 * @param text a string
 	 * @param spaced add a space at the front of the string if necessary
 	 * @return this
 	 */
@@ -74,7 +74,7 @@ public class Valadoc.Api.SignatureBuilder {
 	/**
 	 * Adds highlighted text onto the end of the builder. 
 	 *
-	 * @param literal a string
+	 * @param text a string
 	 * @param spaced add a space at the front of the string if necessary
 	 * @return this
 	 */
@@ -88,7 +88,7 @@ public class Valadoc.Api.SignatureBuilder {
 	/**
 	 * Adds a Inline onto the end of the builder. 
 	 *
-	 * @param literal a content
+	 * @param content a content
 	 * @param spaced add a space at the front of the inline if necessary
 	 * @return this
 	 */
@@ -103,7 +103,7 @@ public class Valadoc.Api.SignatureBuilder {
 	/**
 	 * Adds a keyword onto the end of the builder. 
 	 *
-	 * @param literal a keyword
+	 * @param keyword a keyword
 	 * @param spaced add a space at the front of the keyword if necessary
 	 * @return this
 	 */

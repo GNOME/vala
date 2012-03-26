@@ -116,7 +116,7 @@ public class Valadoc.CTypeResolver : Visitor {
 	/**
 	 * Resolves symbols by C-names
 	 *
-	 * @param name a C-name
+	 * @param _name a C-name
 	 * @return the resolved node or null
 	 */
 	public Api.Node? resolve_symbol (Api.Node? element, string _name) {

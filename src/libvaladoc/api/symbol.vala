@@ -137,10 +137,9 @@ public abstract class Valadoc.Api.Symbol : Node {
 
 	/**
 	 * Returns the accessibility modifier as string
-	 *
-	 * @deprecated
 	 */
 	//TODO: rm
+	[Deprecated]
 	protected string get_accessibility_modifier () {
 		return accessibility.to_string ();
 	}

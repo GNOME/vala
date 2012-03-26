@@ -169,10 +169,9 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 
 	/**
 	 * The corresponding file name
-	 *
-	 * @deprecated
 	 */
 	//TODO: rm
+	[Deprecated]
 	public string? get_filename () {
 		if (file == null) {
 			return null;
@@ -224,7 +223,7 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 	/**
 	 * Specifies whether this node has at least one child with the given types
 	 *
-	 * @param type a list of node types
+	 * @param types a list of node types
 	 */
 	public bool has_children (NodeType[] types) {
 		foreach (NodeType type in types) {
@@ -238,7 +237,7 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 	/**
 	 * Returns a list of all children with the given type.
 	 *
-	 * @param type a list of node types
+	 * @param type a node type
 	 * @param filtered specifies whether nodes which are not browsable should appear in the list
 	 */
 	public Gee.List<Node> get_children_by_type (NodeType type, bool filtered = true) {
@@ -259,7 +258,7 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 	/**
 	 * Returns a list of all children with the given types.
 	 *
-	 * @param type a list of node types
+	 * @param types a list of node types
 	 * @param filtered specifies whether nodes which are not browsable should appear in the list
 	 */
 	public Gee.List<Node> get_children_by_types (NodeType[] types, bool filtered = true) {
@@ -293,7 +292,7 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 	/**
 	 * Visits all children of this node with the given types with the specified Visitor.
 	 *
-	 * @param type a list of node types
+	 * @param types a list of node types
 	 * @param visitor the visitor to be called while traversing
 	 * @param filtered specifies whether nodes which are not browsable should appear in the list
 	 */
