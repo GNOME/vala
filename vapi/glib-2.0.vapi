@@ -3224,6 +3224,8 @@ namespace GLib {
 		public static int create_with_parents (string pathname, int mode);
 		[CCode (cname = "mkdtemp")]
 		public static unowned string mkdtemp (string template);
+		[CCode (cname = "g_dir_make_tmp")]
+		public static string make_tmp (string tmpl) throws FileError;
 		[CCode (cname = "g_rmdir")]
 		public static int remove (string filename);
 	}
