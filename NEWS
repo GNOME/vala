@@ -1,3 +1,9 @@
+Vala 0.16.0
+===========
+
+ * Add udisks2 bindings.
+ * Bug fixes and binding updates.
+
 Vala 0.15.2
 ===========
 
