@@ -28,7 +28,7 @@ using Valadoc.Content;
 public class Valadoc.Importer.ValadocDocumentationImporter : DocumentationImporter, ResourceLocator {
 	public override string file_extension { get { return "valadoc"; } }
 
-	private ValadoDocumentationScanner _scanner;
+	private ValadocDocumentationScanner _scanner;
 	private DocumentationParser _doc_parser;
 	private Parser _parser;
 
@@ -47,10 +47,10 @@ public class Valadoc.Importer.ValadocDocumentationImporter : DocumentationImport
 		this.factory = new Content.ContentFactory (settings, this, modules);
 		this.reporter = reporter;
 
-		_scanner = new ValadoDocumentationScanner (settings);
+		_scanner = new ValadocDocumentationScanner (settings);
 		_doc_parser = parser;
 
-		_scanner = new ValadoDocumentationScanner (settings);
+		_scanner = new ValadocDocumentationScanner (settings);
 		_parser = new Parser (settings, _scanner, reporter);
 		_scanner.set_parser (_parser);
 

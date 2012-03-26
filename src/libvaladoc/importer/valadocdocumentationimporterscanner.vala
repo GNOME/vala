@@ -20,9 +20,9 @@
  * 	Florian Brosch <flo.brosch@gmail.com>
  */
 
-public class Valadoc.Importer.ValadoDocumentationScanner : Object, Scanner {
+public class Valadoc.Importer.ValadocDocumentationScanner : Object, Scanner {
 
-	public ValadoDocumentationScanner (Settings settings) {
+	public ValadocDocumentationScanner (Settings settings) {
 		_settings = settings;
 	}
 
