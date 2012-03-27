@@ -124,7 +124,24 @@ public class Vala.CodeWriter : CodeVisitor {
 
 	public override void visit_using_directive (UsingDirective ns) {
 		if (type == CodeWriterType.FAST) {
-			write_string ("using %s;\n".printf (ns.namespace_symbol.name));
+			write_string ("using ");
+
+			var symbols = new GLib.List<UnresolvedSymbol> ();
+			var sym = (UnresolvedSymbol) ns.namespace_symbol;
+			symbols.prepend (sym);
+
+			while ((sym = sym.inner) != null) {
+				symbols.prepend (sym);
+			}
+
+			write_string (symbols.nth_data (0).name);
+
+			for (int i = 1; i < symbols.length (); i++) {
+				write_string (".");
+				write_string (symbols.nth_data (i).name);
+			}
+
+			write_string (";\n");
 		}
 	}
 
