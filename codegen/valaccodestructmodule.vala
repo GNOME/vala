@@ -30,13 +30,26 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 			return;
 		}
 
-		if (st.is_boolean_type ()) {
-			// typedef for boolean types
-			decl_space.add_include ("stdbool.h");
-			return;
-		} else if (st.is_integer_type ()) {
-			// typedef for integral types
-			decl_space.add_include ("stdint.h");
+		if (st.is_boolean_type () || st.is_integer_type () || st.is_floating_type ()) {
+			if (st.base_struct != null) {
+				generate_struct_declaration (st.base_struct, decl_space);
+				decl_space.add_type_declaration (new CCodeTypeDefinition (get_ccode_name (st.base_struct), new CCodeVariableDeclarator (get_ccode_name (st))));
+			} else {
+				string typename = null;
+				if (st.is_boolean_type ()) {
+					// typedef for boolean types
+					decl_space.add_include ("stdbool.h");
+					typename = "bool";
+				} else if (st.is_integer_type ()) {
+					// typedef for integral types
+					decl_space.add_include ("stdint.h");
+					typename = "%sint%d_t".printf (st.signed ? "" : "u", st.width);
+				} else if (st.is_floating_type ()) {
+					// typedef for floating types
+					typename = (st.width == 64 ? "double" : "float");
+				}
+				decl_space.add_type_declaration (new CCodeTypeDefinition (typename, new CCodeVariableDeclarator (get_ccode_name (st))));
+			}
 			return;
 		}
 

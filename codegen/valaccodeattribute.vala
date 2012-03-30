@@ -596,20 +596,6 @@ public class Vala.CCodeAttribute : AttributeCache {
 				}
 			} else if (sym is Signal) {
 				return Symbol.camel_case_to_lower_case (sym.name);
-			} else if (sym is Struct && !sym.external) {
-				var st = (Struct) sym;
-				if (st.is_boolean_type ()) {
-					// typedef for boolean types
-					return "bool";
-				} else if (st.is_integer_type ()) {
-					// typedef for integral types
-					return "%sint%d_t".printf (st.signed ? "" : "u", st.width);
-				} else if (st.is_floating_type ()) {
-					// typedef for floating types
-					return st.width == 64 ? "double" : "float";
-				} else {
-					return "%s%s".printf (CCodeBaseModule.get_ccode_prefix (sym.parent_symbol), sym.name);
-				}
 			} else if (sym is LocalVariable || sym is Parameter) {
 				return sym.name;
 			} else {
