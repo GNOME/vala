@@ -38,6 +38,11 @@ public class Vala.SourceFile {
 	}
 
 	/**
+	 * The filename extension used for the generated output file.
+	 */
+	public string output_filename_extension { get; set; default = ".c"; }
+
+	/**
 	 * Specifies whether this file is a VAPI package file.
 	 */
 	public SourceFileType file_type { get; set; }
@@ -86,7 +91,7 @@ public class Vala.SourceFile {
 
 	string? _relative_filename;
 
-	private string csource_filename = null;
+	private string output_filename = null;
 	private string cinclude_filename = null;
 
 	private ArrayList<string> source_array = null;
@@ -212,22 +217,22 @@ public class Vala.SourceFile {
 	}
 
 	/**
-	 * Returns the filename to use when generating C source files.
+	 * Returns the filename to use when generating the output file.
 	 *
-	 * @return generated C source filename
+	 * @return generated output filename
 	 */
-	public string get_csource_filename () {
-		if (csource_filename == null) {
+	public string get_output_filename () {
+		if (output_filename == null) {
 			if (context.run_output) {
-				csource_filename = context.output + ".c";
+				output_filename = context.output + output_filename_extension;
 			} else if (context.ccode_only || context.save_csources) {
-				csource_filename = Path.build_path ("/", get_destination_directory (), get_basename () + ".c");
+				output_filename = Path.build_path ("/", get_destination_directory (), get_basename () + output_filename_extension);
 			} else {
 				// temporary file
-				csource_filename = Path.build_path ("/", get_destination_directory (), get_basename () + ".vala.c");
+				output_filename = Path.build_path ("/", get_destination_directory (), get_basename () + ".vala" + output_filename_extension);
 			}
 		}
-		return csource_filename;
+		return output_filename;
 	}
 
 	/**

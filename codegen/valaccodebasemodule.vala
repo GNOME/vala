@@ -324,6 +324,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public bool requires_array_free;
 	public bool requires_array_move;
 	public bool requires_array_length;
+	public bool requires_cpp_symbols;
 
 	public Set<string> wrappers;
 	Set<Symbol> generated_external_symbols;
@@ -667,6 +668,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		requires_array_free = false;
 		requires_array_move = false;
 		requires_array_length = false;
+		requires_cpp_symbols = false;
 
 		wrappers = new HashSet<string> (str_hash, str_equal);
 		generated_external_symbols = new HashSet<Symbol> ();
@@ -701,6 +703,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (requires_array_length) {
 			append_vala_array_length ();
 		}
+		if (requires_cpp_symbols) {
+			source_file.output_filename_extension = ".cpp";
+		}
 
 		if (gvaluecollector_h_needed) {
 			cfile.add_include ("gobject/gvaluecollector.h");
@@ -714,8 +719,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 		}
 
-		if (!cfile.store (source_file.get_csource_filename (), source_file.filename, context.version_header, context.debug)) {
-			Report.error (null, "unable to open `%s' for writing".printf (source_file.get_csource_filename ()));
+		if (!cfile.store (source_file.get_output_filename (), source_file.filename, context.version_header, context.debug)) {
+			Report.error (null, "unable to open `%s' for writing".printf (source_file.get_output_filename ()));
 		}
 
 		cfile = null;
@@ -2154,7 +2159,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var st = variable.variable_type.data_type as Struct;
 		var creation = expr as ObjectCreationExpression;
 		if (creation != null && st != null && (!st.is_simple_type () || get_ccode_name (st) == "va_list") && !variable.variable_type.nullable &&
-		    variable.variable_type.data_type != gvalue_type && creation.get_object_initializer ().size == 0) {
+		    variable.variable_type.data_type != gvalue_type && creation.get_object_initializer ().size == 0 && !get_ccode_cpp (st)) {
 			return true;
 		} else {
 			return false;
@@ -2191,7 +2196,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				// try to initialize uninitialized variables
 				// initialization not necessary for variables stored in closure
-				if (rhs == null || is_simple_struct_creation (local, local.initializer)) {
+				if (rhs == null || is_simple_struct_creation (local, local.initializer) || (local.variable_type.data_type != null && get_ccode_cpp (local.variable_type.data_type))) {
 					cvar.initializer = default_value_for_type (local.variable_type, true);
 					cvar.init0 = true;
 				}
@@ -2252,6 +2257,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public TargetValue create_temp_value (DataType type, bool init, CodeNode node_reference, bool? value_owned = null) {
 		var local = new LocalVariable (type.copy (), "_tmp%d_".printf (next_temp_var_id++), null, node_reference.source_reference);
 		local.no_init = !init;
+		if (type.data_type is Struct && get_ccode_cpp (type.data_type)) {
+			// C++ structs must be initialized to zero
+			local.no_init = false;
+		}
 		if (value_owned != null) {
 			local.variable_type.value_owned = value_owned;
 		}
@@ -2878,7 +2887,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return element_destroy_func_expression;
 	}
 
-	public CCodeExpression? get_destroy_func_expression (DataType type, bool is_chainup = false) {
+	public virtual CCodeExpression? get_destroy_func_expression (DataType type, bool is_chainup = false) {
 		if (context.profile == Profile.GOBJECT && (type.data_type == glist_type || type.data_type == gslist_type || type.data_type == gnode_type || type.data_type == gqueue_type)) {
 			// create wrapper function to free list elements if necessary
 
@@ -4307,15 +4316,28 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			var cl = expr.type_reference.data_type as Class;
 
-			if (!get_ccode_has_new_function (m)) {
+			if (get_ccode_cpp (m)) {
+				requires_cpp_symbols = true;
+			}
+
+			if (!get_ccode_has_new_function (m) && !get_ccode_cpp (m)) {
 				// use construct function directly
 				creation_call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_real_name (m)));
 				creation_call.add_argument (new CCodeIdentifier (get_ccode_type_id (cl)));
 			} else {
-				creation_call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_name (m)));
+				if (st == null && get_ccode_cpp (m)) {
+					// C++ doesn't want the final *
+					var cpp_name = get_ccode_name (expr.type_reference);
+					if (cpp_name.has_suffix ("*")) {
+						cpp_name.data[cpp_name.length-1] = '\0';
+					}
+					creation_call = new CppObjectCreation (new CCodeIdentifier (cpp_name));
+				} else {
+					creation_call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_name (m)));
+				}
 			}
 
-			if ((st != null && !st.is_simple_type ()) && !(get_ccode_instance_pos (m) < 0)) {
+			if ((st != null && !st.is_simple_type ()) && !(get_ccode_instance_pos (m) < 0) && !get_ccode_cpp (st)) {
 				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance));
 			} else if (st != null && get_ccode_name (st) == "va_list") {
 				creation_call.add_argument (instance);
@@ -4445,7 +4467,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				last_pos = min_pos;
 			}
 
-			if ((st != null && !st.is_simple_type ()) && get_ccode_instance_pos (m) < 0) {
+			if ((st != null && !st.is_simple_type ()) && get_ccode_instance_pos (m) < 0 && !get_ccode_cpp (st)) {
 				// instance parameter is at the end in a struct creation method
 				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance));
 			}
@@ -4502,7 +4524,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			ccode.add_expression (creation_expr);
 			set_cvalue (expr, instance);
 		} else if (instance != null) {
-			if (expr.type_reference.data_type is Struct) {
+			if (expr.type_reference.data_type is Struct && !get_ccode_cpp (expr.type_reference.data_type)) {
 				ccode.add_expression (creation_expr);
 			} else {
 				ccode.add_assignment (instance, creation_expr);
@@ -4538,6 +4560,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public CCodeExpression? handle_struct_argument (Parameter? param, Expression arg, CCodeExpression? cexpr) {
+		if (param != null && get_byref (param)) {
+			// no need for address of expression
+			return cexpr;
+		}
+
 		DataType type;
 		if (param != null) {
 			type = param.variable_type;
@@ -4579,6 +4606,15 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public override void visit_unary_expression (UnaryExpression expr) {
 		if (expr.operator == UnaryOperator.REF || expr.operator == UnaryOperator.OUT) {
+			if (expr.formal_target_type != null) {
+				var param = expr.formal_target_type.parent_node as Parameter;
+				if (param != null && get_byref (param)) {
+					// no need for address of expression
+					expr.target_value = expr.inner.target_value;
+					return;
+				}
+			}
+
 			var glib_value = (GLibValue) expr.inner.target_value;
 
 			var ref_value = new GLibValue (glib_value.value_type);
@@ -5597,9 +5633,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				   (st != null || (array_type != null && array_type.fixed_length))) {
 			// 0-initialize struct with struct initializer { 0 }
 			// only allowed as initializer expression in C
-			var clist = new CCodeInitializerList ();
-			clist.append (new CCodeConstant ("0"));
-			return clist;
+			if (st != null && get_ccode_cpp (st)) {
+				// c++ will call the default constructor if any
+				return null;
+			} else {
+				var clist = new CCodeInitializerList ();
+				clist.append (new CCodeConstant ("0"));
+				return clist;
+			}
 		} else if ((type.data_type != null && type.data_type.is_reference_type ())
 		           || type.nullable
 		           || type is PointerType || type is DelegateType
@@ -6006,6 +6047,18 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 		}
 		return "";
+	}
+
+	public static bool get_ccode_cpp (Symbol sym) {
+		return get_ccode_attribute(sym).cpp;
+	}
+
+	public static bool get_ccode_camelcase (Symbol sym) {
+		return get_ccode_attribute(sym).camelcase;
+	}
+
+	public static bool get_byref (Symbol sym) {
+		return sym.get_attribute ("ByRef") != null;
 	}
 
 	public CCodeConstant get_signal_canonical_constant (Signal sig, string? detail = null) {

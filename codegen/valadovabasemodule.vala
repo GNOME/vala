@@ -342,9 +342,9 @@ public abstract class Vala.DovaBaseModule : CodeGenerator {
 
 	public override void visit_source_file (SourceFile source_file) {
 		if (csource_filename == null) {
-			csource_filename = source_file.get_csource_filename ();
+			csource_filename = source_file.get_output_filename ();
 		} else {
-			var writer = new CCodeWriter (source_file.get_csource_filename ());
+			var writer = new CCodeWriter (source_file.get_output_filename ());
 			if (!writer.open (context.version_header)) {
 				Report.error (null, "unable to open `%s' for writing".printf (writer.filename));
 				return;

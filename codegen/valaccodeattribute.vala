@@ -468,6 +468,36 @@ public class Vala.CCodeAttribute : AttributeCache {
 		}
 	}
 
+	public bool cpp {
+		get {
+			if (_cpp == null) {
+				if (ccode != null && ccode.has_argument ("cpp")) {
+					_cpp = ccode.get_bool ("cpp");
+				} else if (sym.parent_symbol != null) {
+					_cpp = CCodeBaseModule.get_ccode_cpp (sym.parent_symbol);
+				} else {
+					_cpp = false;
+				}
+			}
+			return _cpp;
+		}
+	}
+
+	public bool camelcase {
+		get {
+			if (_camelcase == null) {
+				if (ccode != null && ccode.has_argument ("camelcase")) {
+					_camelcase = ccode.get_bool ("camelcase");
+				} else if (sym.parent_symbol != null) {
+					_camelcase = CCodeBaseModule.get_ccode_camelcase (sym.parent_symbol);
+				} else {
+					_camelcase = false;
+				}
+			}
+			return _camelcase;
+		}
+	}
+
 	public bool array_length { get; private set; }
 	public string? array_length_type { get; private set; }
 	public bool array_null_terminated { get; private set; }
@@ -511,6 +541,8 @@ public class Vala.CCodeAttribute : AttributeCache {
 	private string _finish_real_name;
 	private string _real_name;
 	private string _delegate_target_name;
+	private bool? _cpp;
+	private bool? _camelcase;
 
 	private static int dynamic_method_id;
 
@@ -558,6 +590,9 @@ public class Vala.CCodeAttribute : AttributeCache {
 					return sym.name;
 				}
 			} else if (sym is CreationMethod) {
+				if (cpp) {
+					return CCodeBaseModule.get_ccode_name (sym.parent_symbol);
+				}
 				var m = (CreationMethod) sym;
 				string infix;
 				if (m.parent_symbol is Struct) {
@@ -582,6 +617,18 @@ public class Vala.CCodeAttribute : AttributeCache {
 					return "_vala_main";
 				} else if (sym.name.has_prefix ("_")) {
 					return "_%s%s".printf (CCodeBaseModule.get_ccode_lower_case_prefix (sym.parent_symbol), sym.name.substring (1));
+				} else if (cpp) {
+					string cname;
+					if (!camelcase) {
+						cname = sym.name;
+					} else {
+						cname = Symbol.lower_case_to_camel_case (sym.name, false);
+					}
+					if (m.binding == MemberBinding.INSTANCE) {
+						return cname;
+					} else {
+						return "%s%s".printf (CCodeBaseModule.get_ccode_prefix (sym.parent_symbol), cname);
+					}
 				} else {
 					return "%s%s".printf (CCodeBaseModule.get_ccode_lower_case_prefix (sym.parent_symbol), sym.name);
 				}
@@ -589,17 +636,44 @@ public class Vala.CCodeAttribute : AttributeCache {
 				var acc = (PropertyAccessor) sym;
 				var t = (TypeSymbol) acc.prop.parent_symbol;
 
-				if (acc.readable) {
-					return "%sget_%s".printf (CCodeBaseModule.get_ccode_lower_case_prefix (t), acc.prop.name);
+				string cname = acc.readable ? "get" : "set";
+				if (!camelcase) {
+					cname += "_%s".printf (acc.prop.name);
 				} else {
-					return "%sset_%s".printf (CCodeBaseModule.get_ccode_lower_case_prefix (t), acc.prop.name);
+					cname += "%s".printf (Symbol.lower_case_to_camel_case (acc.prop.name, true));
+				}
+
+				if (cpp) {
+					if (acc.prop.binding == MemberBinding.INSTANCE) {
+						return cname;
+					} else {
+						return "%s%s".printf (CCodeBaseModule.get_ccode_prefix (t), cname);
+					}
+				} else {
+					return "%s%s".printf (CCodeBaseModule.get_ccode_lower_case_prefix (t), cname);
 				}
 			} else if (sym is Signal) {
 				return Symbol.camel_case_to_lower_case (sym.name);
 			} else if (sym is LocalVariable || sym is Parameter) {
 				return sym.name;
 			} else {
-				return "%s%s".printf (CCodeBaseModule.get_ccode_prefix (sym.parent_symbol), sym.name);
+				var cname = "%s%s".printf (CCodeBaseModule.get_ccode_prefix (sym.parent_symbol), sym.name);
+				var t = sym as ObjectTypeSymbol;
+				if (t != null && cpp && t.get_type_parameters().size > 0) {
+					cname += "<";
+					var first = true;
+					var size = t.get_type_parameters().size;
+					for (int i=1; i <= size; i++) {
+						if (!first) {
+							cname += ",";
+						} else {
+							first = false;
+						}
+						cname += "$%d".printf (i);
+					}
+					cname += ">";
+				}
+				return cname;
 			}
 		} else if (node is ObjectType) {
 			var type = (ObjectType) node;
@@ -614,6 +688,12 @@ public class Vala.CCodeAttribute : AttributeCache {
 				cname = CCodeBaseModule.get_ccode_const_name (type.type_symbol);
 			} else {
 				cname = CCodeBaseModule.get_ccode_name (type.type_symbol);
+			}
+			if (CCodeBaseModule.get_ccode_cpp (type.data_type)) {
+				var i = 1;
+				foreach (var type_arg in type.get_type_arguments ()) {
+					cname = cname.replace ("$%d".printf (i), CCodeBaseModule.get_ccode_name (type_arg));
+				}
 			}
 			return "%s*".printf (cname);
 		} else if (node is ArrayType) {
@@ -705,8 +785,12 @@ public class Vala.CCodeAttribute : AttributeCache {
 	}
 
 	private string get_default_prefix () {
-		if (sym is ObjectTypeSymbol) {
-			return name;
+		if (sym is ObjectTypeSymbol || sym is Struct) {
+			if (cpp) {
+				return "%s::".printf (name);
+			} else {
+				return name;
+			}
 		} else if (sym is Enum || sym is ErrorDomain) {
 			return "%s_".printf (CCodeBaseModule.get_ccode_upper_case_name (sym));
 		} else if (sym is Namespace) {
@@ -715,7 +799,11 @@ public class Vala.CCodeAttribute : AttributeCache {
 				if (sym.parent_symbol != null) {
 					parent_prefix = CCodeBaseModule.get_ccode_prefix (sym.parent_symbol);
 				}
-				return "%s%s".printf (parent_prefix, sym.name);
+				if (cpp) {
+					return "%s%s::".printf (parent_prefix, sym.name);
+				} else {
+					return "%s%s".printf (parent_prefix, sym.name);
+				}
 			} else {
 				return "";
 			}

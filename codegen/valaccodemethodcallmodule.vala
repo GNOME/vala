@@ -193,7 +193,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			instance = get_cvalue_ (instance_value);
 
 			var st = m.parent_symbol as Struct;
-			if (st != null && !st.is_simple_type ()) {
+			if (st != null && !st.is_simple_type () && !get_ccode_cpp (st)) {
 				// we need to pass struct instance by reference
 				if (!get_lvalue (instance_value)) {
 					instance_value = store_temp_value (instance_value, expr);
@@ -201,8 +201,13 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				instance = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_cvalue_ (instance_value));
 			}
 
-			in_arg_map.set (get_param_pos (get_ccode_instance_pos (m)), instance);
-			out_arg_map.set (get_param_pos (get_ccode_instance_pos (m)), instance);
+			if (get_ccode_cpp (m)) {
+				requires_cpp_symbols = true;
+				ccall.call = new CCodeMemberAccess (instance, get_ccode_name (m), st == null);
+			} else {
+				in_arg_map.set (get_param_pos (get_ccode_instance_pos (m)), instance);
+				out_arg_map.set (get_param_pos (get_ccode_instance_pos (m)), instance);
+			}
 		} else if (m != null && m.binding == MemberBinding.CLASS) {
 			var cl = (Class) m.parent_symbol;
 			var cast = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_upper_case_name (cl, null) + "_CLASS"));
@@ -376,6 +381,9 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 									}
 								}
 							}
+						} else if (param.variable_type is ObjectType && get_byref (param)) {
+							// passing an object byref in C++
+							cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, cexpr);
 						}
 
 						cexpr = handle_struct_argument (param, arg, cexpr);
@@ -387,7 +395,10 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 						set_cvalue (arg, get_variable_cexpression (temp_var.name));
 						arg.target_value.value_type = arg.target_type;
 
-						cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_cvalue (arg));
+						cexpr = get_cvalue (arg);
+						if (!get_byref (param)) {
+							cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr);
+						}
 
 						if (get_ccode_array_length (param) && param.variable_type is ArrayType) {
 							var array_type = (ArrayType) param.variable_type;
@@ -603,7 +614,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		}
 
 		// structs are returned via out parameter
-		bool return_result_via_out_param = itype.get_return_type ().is_real_non_null_struct_type ();
+		bool return_result_via_out_param = itype.get_return_type ().is_real_non_null_struct_type () && (m == null || !get_byref (m));
 
 		// pass address for the return value of non-void signals without emitter functions
 		if (itype is SignalType && !(itype.get_return_type () is VoidType)) {
@@ -752,6 +763,10 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			if (!return_result_via_out_param) {
 				var temp_var = get_temp_variable (result_type, result_type.value_owned);
 				var temp_ref = get_variable_cexpression (temp_var.name);
+				if (result_type is ObjectType && m != null && get_byref (m)) {
+					// return object byref in C++
+					temp_ref = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, temp_ref);
+				}
 
 				emit_temp_var (temp_var);
 

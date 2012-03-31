@@ -316,12 +316,12 @@ public abstract class Vala.Symbol : CodeNode {
 	 * @param lower_case a string in lower case
 	 * @return           the specified string converted to camel case
 	 */
-	public static string lower_case_to_camel_case (string lower_case) {
+	public static string lower_case_to_camel_case (string lower_case, bool first_uppercase = true) {
 		var result_builder = new StringBuilder ("");
 
 		weak string i = lower_case;
 
-		bool last_underscore = true;
+		bool last_underscore = first_uppercase;
 		while (i.length > 0) {
 			unichar c = i.get_char ();
 			if (c == '_') {

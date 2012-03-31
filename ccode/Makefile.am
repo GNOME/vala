@@ -64,6 +64,8 @@ libvalaccode_la_VALASOURCES = \
 	valaccodewhilestatement.vala \
 	valaccodewriter.vala \
 	valaccodeelementaccess.vala \
+	valacppdeletestatement.vala \
+	valacppobjectcreation.vala \
 	$(NULL)
 
 libvalaccode_la_SOURCES = \

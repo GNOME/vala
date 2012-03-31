@@ -27,6 +27,7 @@ libvala_la_VALASOURCES = \
 	valaccodemethodmodule.vala \
 	valaccodestructmodule.vala \
 	valaclassregisterfunction.vala \
+	valacppmodule.vala \
 	valactype.vala \
 	valadovaarraymodule.vala \
 	valadovaassignmentmodule.vala \

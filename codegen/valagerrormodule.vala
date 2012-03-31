@@ -23,7 +23,7 @@
 
 using GLib;
 
-public class Vala.GErrorModule : CCodeDelegateModule {
+public class Vala.GErrorModule : CppModule {
 	private int current_try_id = 0;
 	private int next_try_id = 0;
 	private bool is_in_catch = false;

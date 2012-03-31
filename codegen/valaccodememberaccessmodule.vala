@@ -203,16 +203,21 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier (getter_cname));
 
 				if (prop.binding == MemberBinding.INSTANCE) {
-					if (prop.parent_symbol is Struct && !((Struct) prop.parent_symbol).is_simple_type ()) {
-						// we need to pass struct instance by reference
-						var instance = expr.inner.target_value;
-						if (!get_lvalue (instance)) {
-							instance = store_temp_value (instance, expr);
+					if (!get_ccode_cpp (prop.get_accessor)) {
+						if (prop.parent_symbol is Struct && !((Struct) prop.parent_symbol).is_simple_type ()) {
+							// we need to pass struct instance by reference
+							var instance = expr.inner.target_value;
+							if (!get_lvalue (instance)) {
+								instance = store_temp_value (instance, expr);
+							}
+							pub_inst = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_cvalue_ (instance));
 						}
-						pub_inst = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_cvalue_ (instance));
-					}
 
-					ccall.add_argument (pub_inst);
+						ccall.add_argument (pub_inst);
+					} else {
+						requires_cpp_symbols = true;
+						ccall.call = new CCodeMemberAccess (pub_inst, get_ccode_name (prop.get_accessor), !(prop.parent_symbol is Struct));
+					}
 				}
 
 				var temp_value = create_temp_value (prop.get_accessor.value_type, false, expr);
@@ -221,7 +226,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 
 				// Property access to real struct types is handled differently
 				// The value is returned by out parameter
-				if (prop.property_type.is_real_non_null_struct_type ()) {
+				if (prop.property_type.is_real_non_null_struct_type () && !get_byref (prop)) {
 					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
 					ccode.add_expression (ccall);
 				} else {

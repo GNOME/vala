@@ -43,7 +43,7 @@ public class Vala.CCodeCompiler {
 	}
 
 	/**
-	 * Compile generated C code to object code and optionally link object
+	 * Compile generated C/C++ code to object code and optionally link object
 	 * files.
 	 *
 	 * @param context a code context
@@ -106,7 +106,7 @@ public class Vala.CCodeCompiler {
 		var source_files = context.get_source_files ();
 		foreach (SourceFile file in source_files) {
 			if (file.file_type == SourceFileType.SOURCE) {
-				cmdline += " " + Shell.quote (file.get_csource_filename ());
+				cmdline += " " + Shell.quote (file.get_output_filename ());
 			}
 		}
 		var c_source_files = context.get_c_source_files ();
@@ -135,11 +135,11 @@ public class Vala.CCodeCompiler {
 			Report.error (null, e.message);
 		}
 
-		/* remove generated C source and header files */
+		/* remove generated C/C++ source and header files */
 		foreach (SourceFile file in source_files) {
 			if (file.file_type == SourceFileType.SOURCE) {
 				if (!context.save_csources) {
-					FileUtils.unlink (file.get_csource_filename ());
+					FileUtils.unlink (file.get_output_filename ());
 				}
 			}
 		}

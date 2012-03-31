@@ -258,9 +258,9 @@ public class Vala.CodeContext {
 	}
 
 	/**
-	 * Returns a copy of the list of C source files.
+	 * Returns a copy of the list of C/C++ source files.
 	 *
-	 * @return list of C source files
+	 * @return list of C/C++ source files
 	 */
 	public List<string> get_c_source_files () {
 		return c_source_files;
@@ -276,9 +276,9 @@ public class Vala.CodeContext {
 	}
 
 	/**
-	 * Adds the specified file to the list of C source files.
+	 * Adds the specified file to the list of C/C++ source files.
 	 *
-	 * @param file a C source file
+	 * @param file a C/C++ source file
 	 */
 	public void add_c_source_file (string file) {
 		c_source_files.add (file);
@@ -425,7 +425,7 @@ public class Vala.CodeContext {
 			source_file.relative_filename = filename;
 
 			add_source_file (source_file);
-		} else if (filename.has_suffix (".c")) {
+		} else if (filename.has_suffix (".c") || filename.has_suffix (".cpp")) {
 			add_c_source_file (rpath);
 		} else {
 			Report.error (null, "%s is not a supported source file type. Only .vala, .vapi, .gs, and .c files are supported.".printf (filename));
