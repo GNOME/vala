@@ -1232,6 +1232,9 @@ namespace Posix {
 	[CCode (cheader_filename = "string.h")]
 	public size_t strxfrm (string s1, string s2, size_t n);
 
+	[CCode (cheader_filename = "strings.h")]
+	public int ffs (int i);
+
 	[CCode (cheader_filename = "stropts.h")]
 	public const int I_PUSH;
 	[CCode (cheader_filename = "stropts.h")]
