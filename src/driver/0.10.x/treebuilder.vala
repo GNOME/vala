@@ -516,7 +516,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 				ulong deps_len;
 				FileUtils.get_contents (file_path, out deps_content, out deps_len);
 				foreach (string dep in deps_content.split ("\n")) {
-					dep.strip ();
+					dep = dep.strip ();
 					if (dep != "") {
 						if (!add_package (context, dep)) {
 							Vala.Report.error (null, "%s, dependency of %s, not found in specified Vala API directories".printf (dep, pkg_name));
