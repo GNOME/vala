@@ -4380,7 +4380,7 @@ namespace GLib {
 	
 	/* GTree */
 	
-	public delegate int TraverseFunc (void* key, void* value);
+	public delegate bool TraverseFunc (void* key, void* value);
 	
 	[CCode (cprefix = "G_", has_type_id = false)]
 	public enum TraverseType {
