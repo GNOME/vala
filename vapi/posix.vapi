@@ -1621,6 +1621,11 @@ namespace Posix {
 	[CCode (cheader_filename = "sys/types.h,sys/stat.h,fcntl.h,unistd.h")]
 	public pid_t mknod (string pathname, mode_t mode, dev_t dev);
 
+	[CCode (cheader_filename = "sys/stat.h")]
+	public int utimensat (int dirfd, string pathname, [CCode (array_length = false)] timespec[] times, int flags = 0);
+	[CCode (cheader_filename = "sys/stat.h")]
+	public int futimens (int fd, [CCode (array_length = false)] timespec[] times);
+
 	[CCode (cheader_filename = "sys/wait.h")]
 	public pid_t wait (out int status);
 	[CCode (cheader_filename = "sys/wait.h")]
