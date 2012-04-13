@@ -317,6 +317,14 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 			return;
 		}
 
+		if (!context.has_package ("gio-2.0")) {
+			if (!iface.error) {
+				Report.error (iface.source_reference, "gio-2.0 package required for dbus type symbols");
+				iface.error = true;
+			}
+			return;
+		}
+
 		// create proxy class
 		var proxy = new Class (iface.name+"Proxy", iface.source_reference, null);
 		proxy.add_base_type (data_type ("GLib.DBusProxy"));

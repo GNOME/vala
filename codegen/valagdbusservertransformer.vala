@@ -301,6 +301,14 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 			return;
 		}
 
+		if (!context.has_package ("gio-2.0")) {
+			if (!sym.error) {
+				Report.error (sym.source_reference, "gio-2.0 package required for dbus type symbols");
+				sym.error = true;
+			}
+			return;
+		}
+
 		generate_interface_method_call (sym);
 		generate_interface_get_property (sym);
 		generate_interface_set_property (sym);
