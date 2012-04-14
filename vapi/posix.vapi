@@ -1599,8 +1599,11 @@ namespace Posix {
 		public gid_t st_gid;
 		public dev_t st_rdev;
 		public size_t st_size;
+		public timespec st_atim;
 		public time_t st_atime;
+		public timespec st_mtim;
 		public time_t st_mtime;
+		public timespec st_ctim;
 		public time_t st_ctime;
 		public blksize_t st_blksize;
 		public blkcnt_t st_blocks;
