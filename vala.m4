@@ -1,6 +1,7 @@
 dnl vala.m4
 dnl
 dnl Copyright 2010 Marc-Andre Lureau
+dnl Copyright 2011 Rodney Dawes <dobey.pwns@gmail.com>
 dnl
 dnl This library is free software; you can redistribute it and/or
 dnl modify it under the terms of the GNU Lesser General Public
@@ -68,3 +69,65 @@ $3])],[
 ])
 
 ])# VALA_CHECK_PACKAGES
+
+
+# Check for Vala bindings for a package, as well as the pkg-config
+# CFLAGS and LIBS for the package. The arguments here work the
+# same as those for PKG_CHECK_MODULES, which is called internally.
+# As a result, the _CFLAGS, _LIBS, and _VALAFLAGS variables will
+# all be declared, rather than only _VALAFLAGS.
+#
+# VALA_CHECK_MODULES(VARIABLE-PREFIX, MODULES, [ACTION-IF-FOUND],
+# [ACTION-IF-NOT-FOUND])
+# --------------------------------------------------------------
+AC_DEFUN([VALA_CHECK_MODULES],
+[
+		AC_REQUIRE([AM_PROG_VALAC])dnl
+		AC_REQUIRE([PKG_PROG_PKG_CONFIG])dnl
+        AC_REQUIRE([_VALA_CHECK_COMPILE_WITH_ARGS])dnl
+		AC_ARG_VAR([$1][_VALAFLAGS], [Vala compiler flags for $1])dnl
+
+        VALA_MODULES="`echo '$2' | sed -e 's/ [[=<>]]\+ [[0-9.]]\+//g'`"
+        for MODULE in $VALA_MODULES; do
+            $1[]_VALAFLAGS="$[]$1[]_VALAFLAGS --pkg $MODULE"
+        done
+
+        PKG_CHECK_MODULES([$1], [$2], [$3], [$4])
+
+        pkg_failed=no
+		AC_MSG_CHECKING([for $1 vala modules])
+
+        _VALA_CHECK_COMPILE_WITH_ARGS([$1][_VALAFLAGS],
+                                      [pkg_failed=yes],
+                                      [pkg_failed=no])
+
+		if test $pkg_failed = yes; then
+		   AC_MSG_RESULT([no])
+		   m4_default([$4], [AC_MSG_ERROR(
+		   					[Package requiresments ($2) were not met.])dnl
+		   ])
+		else
+			AC_MSG_RESULT([yes])
+			m4_default([$3], [:])
+		fi[]dnl
+])
+
+# Check whether the Vala API Generator exists in `PATH'. If it is found,
+# the variable VAPIGEN is set. Optionally a minimum release number of the
+# generator can be requested.
+#
+# VALA_PROG_VAPIGEN([MINIMUM-VERSION])
+# ------------------------------------
+AC_DEFUN([VALA_PROG_VAPIGEN],
+[AC_PATH_PROG([VAPIGEN], [vapigen], [])
+  AS_IF([test -z "$VAPIGEN"],
+    [AC_MSG_WARN([No Vala API Generator found. You will not be able to generate .vapi files.])],
+    [AS_IF([test -n "$1"],
+        [AC_MSG_CHECKING([$VAPIGEN is at least version $1])
+         am__vapigen_version=`$VAPIGEN --version | sed 's/Vala API Generator  *//'`
+         AS_VERSION_COMPARE([$1], ["$am__vapigen_version"],
+           [AC_MSG_RESULT([yes])],
+           [AC_MSG_RESULT([yes])],
+           [AC_MSG_RESULT([no])
+            AC_MSG_ERROR([Vala API Generator $1 not found.])])])])
+])
