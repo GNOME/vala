@@ -258,6 +258,8 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 		check_type (m.return_type);
 
+		bool profile = m.get_attribute ("Profile") != null;
+
 		if (m.get_attribute ("NoArrayLength") != null) {
 			Report.deprecated (m.source_reference, "NoArrayLength attribute is deprecated, use [CCode (array_length = false)] instead.");
 		}
@@ -298,6 +300,60 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			if (!m.is_private_symbol ()) {
 				generate_method_declaration (m, internal_header_file);
 			}
+		}
+
+		if (profile) {
+			string prefix = "_vala_prof_%s".printf (get_ccode_real_name (m));
+
+			cfile.add_include ("stdio.h");
+
+			var counter = new CCodeIdentifier (prefix + "_counter");
+			var counter_decl = new CCodeDeclaration ("gint");
+			counter_decl.add_declarator (new CCodeVariableDeclarator (counter.name));
+			counter_decl.modifiers = CCodeModifiers.STATIC;
+			cfile.add_type_member_declaration (counter_decl);
+
+			var timer = new CCodeIdentifier (prefix + "_timer");
+			var timer_decl = new CCodeDeclaration ("GTimer *");
+			timer_decl.add_declarator (new CCodeVariableDeclarator (timer.name));
+			timer_decl.modifiers = CCodeModifiers.STATIC;
+			cfile.add_type_member_declaration (timer_decl);
+
+			var constructor = new CCodeFunction (prefix + "_init");
+			constructor.modifiers = CCodeModifiers.STATIC;
+			constructor.attributes = "__attribute__((constructor))";
+			cfile.add_function_declaration (constructor);
+			push_function (constructor);
+
+			ccode.add_assignment (timer, new CCodeFunctionCall (new CCodeIdentifier ("g_timer_new")));
+
+			var stop_call = new CCodeFunctionCall (new CCodeIdentifier ("g_timer_stop"));
+			stop_call.add_argument (timer);
+			ccode.add_expression (stop_call);
+
+			pop_function ();
+			cfile.add_function (constructor);
+
+
+			var destructor = new CCodeFunction (prefix + "_exit");
+			destructor.modifiers = CCodeModifiers.STATIC;
+			destructor.attributes = "__attribute__((destructor))";
+			cfile.add_function_declaration (destructor);
+			push_function (destructor);
+
+			var elapsed_call = new CCodeFunctionCall (new CCodeIdentifier ("g_timer_elapsed"));
+			elapsed_call.add_argument (timer);
+			elapsed_call.add_argument (new CCodeConstant ("NULL"));
+
+			var print_call = new CCodeFunctionCall (new CCodeIdentifier ("fprintf"));
+			print_call.add_argument (new CCodeIdentifier ("stderr"));
+			print_call.add_argument (new CCodeConstant ("\"%s: %%gs (%%d calls)\\n\"".printf (m.get_full_name ())));
+			print_call.add_argument (elapsed_call);
+			print_call.add_argument (counter);
+			ccode.add_expression (print_call);
+
+			pop_function ();
+			cfile.add_function (destructor);
 		}
 
 		CCodeFunction function;
@@ -560,8 +616,30 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			}
 		}
 
+		if (profile) {
+			string prefix = "_vala_prof_%s".printf (get_ccode_real_name (m));
+
+			var counter = new CCodeIdentifier (prefix + "_counter");
+			ccode.add_expression (new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, counter));
+
+			var timer = new CCodeIdentifier (prefix + "_timer");
+			var cont_call = new CCodeFunctionCall (new CCodeIdentifier ("g_timer_continue"));
+			cont_call.add_argument (timer);
+			ccode.add_expression (cont_call);
+		}
+
 		if (m.body != null) {
 			m.body.emit (this);
+		}
+
+		if (profile) {
+			string prefix = "_vala_prof_%s".printf (get_ccode_real_name (m));
+
+			var timer = new CCodeIdentifier (prefix + "_timer");
+
+			var stop_call = new CCodeFunctionCall (new CCodeIdentifier ("g_timer_stop"));
+			stop_call.add_argument (timer);
+			ccode.add_expression (stop_call);
 		}
 
 		// generate *_real_* functions for virtual methods

@@ -3488,6 +3488,16 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 		}
 
+		if (current_method != null && current_method.get_attribute ("Profile") != null) {
+			string prefix = "_vala_prof_%s".printf (get_ccode_real_name (current_method));
+
+			var timer = new CCodeIdentifier (prefix + "_timer");
+
+			var stop_call = new CCodeFunctionCall (new CCodeIdentifier ("g_timer_stop"));
+			stop_call.add_argument (timer);
+			ccode.add_expression (stop_call);
+		}
+
 		if (is_in_constructor ()) {
 			ccode.add_return (new CCodeIdentifier ("obj"));
 		} else if (is_in_destructor ()) {
