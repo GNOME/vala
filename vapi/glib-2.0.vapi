@@ -3706,7 +3706,11 @@ namespace GLib {
 		public static bool verbose ();
 		public static bool quiet ();
 		public static int run ();
+#if GLIB_2_26
+		public static void add_func (string testpath, TestFunc test_funcvoid);
+#else
 		public static void add_func (string testpath, Callback test_funcvoid);
+#endif
 		public static void add_data_func (string testpath, [CCode (delegate_target_pos = 1.9)] TestDataFunc test_funcvoid);
 		[PrintfFormat]
 		public static void message (string format, ...);
@@ -3738,7 +3742,11 @@ namespace GLib {
 	[CCode (cname = "GTestCase", ref_function = "", unref_function = "")]
 	public class TestCase {
 		[CCode (cname = "g_test_create_case")]
+#if GLIB_2_26
+		public TestCase (string test_name, [CCode (delegate_target_pos = 1.9)] TestFixtureFunc data_setup, [CCode (delegate_target_pos = 1.9)] TestFixtureFunc data_func, [CCode (delegate_target_pos = 1.9)] TestFixtureFunc data_teardown, [CCode (pos = 1.8)] size_t data_size = 0);
+#else
 		public TestCase (string test_name, [CCode (delegate_target_pos = 1.9, type = "void (*) (void)")] TestFunc data_setup, [CCode (delegate_target_pos = 1.9, type = "void (*) (void)")] TestFunc data_func, [CCode (delegate_target_pos = 1.9, type = "void (*) (void)")] TestFunc data_teardown, [CCode (pos = 1.8)] size_t data_size = 0);
+#endif
 	}
 
 	[Compact]
@@ -3754,8 +3762,15 @@ namespace GLib {
 		public void add_suite (TestSuite test_suite);
 	}
 
+#if GLIB_2_26
+	[CCode (has_target = false)]
+	public delegate void TestFunc ();
+	public delegate void TestDataFunc ();
+	public delegate void TestFixtureFunc (void* fixture);
+#else
 	public delegate void TestFunc (void* fixture);
 	public delegate void TestDataFunc ();
+#endif
 
 	[Flags]
 	[CCode (cprefix = "G_TEST_TRAP_", has_type_id = false)]
