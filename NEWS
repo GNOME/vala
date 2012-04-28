@@ -1,3 +1,10 @@
+Vala 0.17.0
+===========
+
+ * Support simple method-level profiling.
+ * Add VALA_CHECK_MODULES and VALA_PROG_VAPIGEN to vala.m4.
+ * Bug fixes and binding updates.
+
 Vala 0.16.0
 ===========
 
