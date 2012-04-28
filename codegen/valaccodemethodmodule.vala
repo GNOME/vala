@@ -313,6 +313,13 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			counter_decl.modifiers = CCodeModifiers.STATIC;
 			cfile.add_type_member_declaration (counter_decl);
 
+			// nesting level for recursive functions
+			var level = new CCodeIdentifier (prefix + "_level");
+			var level_decl = new CCodeDeclaration ("gint");
+			level_decl.add_declarator (new CCodeVariableDeclarator (level.name));
+			level_decl.modifiers = CCodeModifiers.STATIC;
+			cfile.add_type_member_declaration (level_decl);
+
 			var timer = new CCodeIdentifier (prefix + "_timer");
 			var timer_decl = new CCodeDeclaration ("GTimer *");
 			timer_decl.add_declarator (new CCodeVariableDeclarator (timer.name));
@@ -619,6 +626,9 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		if (profile) {
 			string prefix = "_vala_prof_%s".printf (get_ccode_real_name (m));
 
+			var level = new CCodeIdentifier (prefix + "_level");
+			ccode.open_if (new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, level)));
+
 			var counter = new CCodeIdentifier (prefix + "_counter");
 			ccode.add_expression (new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, counter));
 
@@ -626,6 +636,8 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			var cont_call = new CCodeFunctionCall (new CCodeIdentifier ("g_timer_continue"));
 			cont_call.add_argument (timer);
 			ccode.add_expression (cont_call);
+
+			ccode.close ();
 		}
 
 		if (m.body != null) {
@@ -635,11 +647,16 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		if (profile) {
 			string prefix = "_vala_prof_%s".printf (get_ccode_real_name (m));
 
+			var level = new CCodeIdentifier (prefix + "_level");
+			ccode.open_if (new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeUnaryExpression (CCodeUnaryOperator.PREFIX_DECREMENT, level)));
+
 			var timer = new CCodeIdentifier (prefix + "_timer");
 
 			var stop_call = new CCodeFunctionCall (new CCodeIdentifier ("g_timer_stop"));
 			stop_call.add_argument (timer);
 			ccode.add_expression (stop_call);
+
+			ccode.close ();
 		}
 
 		// generate *_real_* functions for virtual methods
