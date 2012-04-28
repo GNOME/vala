@@ -942,7 +942,38 @@ public enum UnicodeScript {
 	VAI,
 	CARIAN,
 	LYCIAN,
-	LYDIAN
+	LYDIAN,
+
+	/* Unicode-5.2 additions */
+	AVESTAN,                /* Avst */
+	BAMUM,                  /* Bamu */
+	EGYPTIAN_HIEROGLYPHS,   /* Egyp */
+	IMPERIAL_ARAMAIC,       /* Armi */
+	INSCRIPTIONAL_PAHLAVI,  /* Phli */
+	INSCRIPTIONAL_PARTHIAN, /* Prti */
+	JAVANESE,               /* Java */
+	KAITHI,                 /* Kthi */
+	LISU,                   /* Lisu */
+	MEETEI_MAYEK,           /* Mtei */
+	OLD_SOUTH_ARABIAN,      /* Sarb */
+	OLD_TURKIC,             /* Orkh */
+	SAMARITAN,              /* Samr */
+	TAI_THAM,               /* Lana */
+	TAI_VIET,               /* Tavt */
+
+	/* Unicode-6.0 additions */
+	BATAK,                  /* Batk */
+	BRAHMI,                 /* Brah */
+	MANDAIC,                /* Mand */
+
+	/* Unicode-6.1 additions */
+	CHAKMA,                 /* Cakm */
+	MEROITIC_CURSIVE,       /* Merc */
+	MEROITIC_HIEROGLYPHS,   /* Mero */
+	MIAO,                   /* Plrd */
+	SHARADA,                /* Shrd */
+	SORA_SOMPENG,           /* Sora */
+	TAKRI                   /* Takr */
 }
 
 [CCode (cname = "GUnicodeType", cprefix = "G_UNICODE_", has_type_id = false)]
@@ -1016,7 +1047,10 @@ public enum UnicodeBreakType {
 	HANGUL_V_JAMO,
 	HANGUL_T_JAMO,
 	HANGUL_LV_SYLLABLE,
-	HANGUL_LVT_SYLLABLE
+	HANGUL_LVT_SYLLABLE,
+	CLOSE_PARANTHESIS,
+	CONDITIONAL_JAPANESE_STARTER,
+	HEBREW_LETTER
 }
 
 [CCode (cname = "GNormalizeMode", cprefix = "G_NORMALIZE_", has_type_id = false)]
