@@ -831,9 +831,9 @@ public struct unichar {
 	public unichar totitle ();
 	public int digit_value ();
 	public int xdigit_value ();
-	public UnicodeType type ();
-	public UnicodeBreakType break_type ();
-	public UnicodeScript get_script();
+	public GLib.UnicodeType type ();
+	public GLib.UnicodeBreakType break_type ();
+	public GLib.UnicodeScript get_script();
 
 	public int to_utf8 (string? outbuf);
 
@@ -857,214 +857,6 @@ public struct unichar {
 	[CCode (cname = "G_UNICHAR_MAX_DECOMPOSITION_LENGTH")]
 	public const int MAX_DECOMPOSITION_LENGTH;
 }
-
-[CCode (cname = "GUnicodeScript", cprefix = "G_UNICODE_SCRIPT_", has_type_id = false)]
-public enum UnicodeScript {
-	INVALID_CODE,
-	COMMON,
-	INHERITED,
-	ARABIC,
-	ARMENIAN,
-	BENGALI,
-	BOPOMOFO,
-	CHEROKEE,
-	COPTIC,
-	CYRILLIC,
-	DESERET,
-	DEVANAGARI,
-	ETHIOPIC,
-	GEORGIAN,
-	GOTHIC,
-	GREEK,
-	GUJARATI,
-	GURMUKHI,
-	HAN,
-	HANGUL,
-	HEBREW,
-	HIRAGANA,
-	KANNADA,
-	KATAKANA,
-	KHMER,
-	LAO,
-	LATIN,
-	MALAYALAM,
-	MONGOLIAN,
-	MYANMAR,
-	OGHAM,
-	OLD_ITALIC,
-	ORIYA,
-	RUNIC,
-	SINHALA,
-	SYRIAC,
-	TAMIL,
-	TELUGU,
-	THAANA,
-	THAI,
-	TIBETAN,
-	CANADIAN_ABORIGINAL,
-	YI,
-	TAGALOG,
-	HANUNOO,
-	BUHID,
-	TAGBANWA,
-
-	BRAILLE,
-	CYPRIOT,
-	LIMBU,
-	OSMANYA,
-	SHAVIAN,
-	LINEAR_B,
-	TAI_LE,
-	UGARITIC,
-
-	NEW_TAI_LUE,
-	BUGINESE,
-	GLAGOLITIC,
-	TIFINAGH,
-	SYLOTI_NAGRI,
-	OLD_PERSIAN,
-	KHAROSHTHI,
-
-	UNKNOWN,
-	BALINESE,
-	CUNEIFORM,
-	PHOENICIAN,
-	PHAGS_PA,
-	NKO,
-
-	KAYAH_LI,
-	LEPCHA,
-	REJANG,
-	SUNDANESE,
-	SAURASHTRA,
-	CHAM,
-	OL_CHIKI,
-	VAI,
-	CARIAN,
-	LYCIAN,
-	LYDIAN,
-
-	/* Unicode-5.2 additions */
-	AVESTAN,                /* Avst */
-	BAMUM,                  /* Bamu */
-	EGYPTIAN_HIEROGLYPHS,   /* Egyp */
-	IMPERIAL_ARAMAIC,       /* Armi */
-	INSCRIPTIONAL_PAHLAVI,  /* Phli */
-	INSCRIPTIONAL_PARTHIAN, /* Prti */
-	JAVANESE,               /* Java */
-	KAITHI,                 /* Kthi */
-	LISU,                   /* Lisu */
-	MEETEI_MAYEK,           /* Mtei */
-	OLD_SOUTH_ARABIAN,      /* Sarb */
-	OLD_TURKIC,             /* Orkh */
-	SAMARITAN,              /* Samr */
-	TAI_THAM,               /* Lana */
-	TAI_VIET,               /* Tavt */
-
-	/* Unicode-6.0 additions */
-	BATAK,                  /* Batk */
-	BRAHMI,                 /* Brah */
-	MANDAIC,                /* Mand */
-
-	/* Unicode-6.1 additions */
-	CHAKMA,                 /* Cakm */
-	MEROITIC_CURSIVE,       /* Merc */
-	MEROITIC_HIEROGLYPHS,   /* Mero */
-	MIAO,                   /* Plrd */
-	SHARADA,                /* Shrd */
-	SORA_SOMPENG,           /* Sora */
-	TAKRI                   /* Takr */
-}
-
-[CCode (cname = "GUnicodeType", cprefix = "G_UNICODE_", has_type_id = false)]
-public enum UnicodeType {
-	CONTROL,
-	FORMAT,
-	UNASSIGNED,
-	PRIVATE_USE,
-	SURROGATE,
-	LOWERCASE_LETTER,
-	MODIFIER_LETTER,
-	OTHER_LETTER,
-	TITLECASE_LETTER,
-	UPPERCASE_LETTER,
-	COMBINING_MARK,
-	ENCLOSING_MARK,
-	NON_SPACING_MARK,
-	DECIMAL_NUMBER,
-	LETTER_NUMBER,
-	OTHER_NUMBER,
-	CONNECT_PUNCTUATION,
-	DASH_PUNCTUATION,
-	CLOSE_PUNCTUATION,
-	FINAL_PUNCTUATION,
-	INITIAL_PUNCTUATION,
-	OTHER_PUNCTUATION,
-	OPEN_PUNCTUATION,
-	CURRENCY_SYMBOL,
-	MODIFIER_SYMBOL,
-	MATH_SYMBOL,
-	OTHER_SYMBOL,
-	LINE_SEPARATOR,
-	PARAGRAPH_SEPARATOR,
-	SPACE_SEPARATOR
-}
-
-[CCode (cname = "GUnicodeBreakType", cprefix = "G_UNICODE_BREAK_", has_type_id = false)]
-public enum UnicodeBreakType {
-	MANDATORY,
-	CARRIAGE_RETURN,
-	LINE_FEED,
-	COMBINING_MARK,
-	SURROGATE,
-	ZERO_WIDTH_SPACE,
-	INSEPARABLE,
-	NON_BREAKING_GLUE,
-	CONTINGENT,
-	SPACE,
-	AFTER,
-	BEFORE,
-	BEFORE_AND_AFTER,
-	HYPHEN,
-	NON_STARTER,
-	OPEN_PUNCTUATION,
-	CLOSE_PUNCTUATION,
-	QUOTATION,
-	EXCLAMATION,
-	IDEOGRAPHIC,
-	NUMERIC,
-	INFIX_SEPARATOR,
-	SYMBOL,
-	ALPHABETIC,
-	PREFIX,
-	POSTFIX,
-	COMPLEX_CONTEXT,
-	AMBIGUOUS,
-	UNKNOWN,
-	NEXT_LINE,
-	WORD_JOINER,
-	HANGUL_L_JAMO,
-	HANGUL_V_JAMO,
-	HANGUL_T_JAMO,
-	HANGUL_LV_SYLLABLE,
-	HANGUL_LVT_SYLLABLE,
-	CLOSE_PARANTHESIS,
-	CONDITIONAL_JAPANESE_STARTER,
-	HEBREW_LETTER
-}
-
-[CCode (cname = "GNormalizeMode", cprefix = "G_NORMALIZE_", has_type_id = false)]
-public enum NormalizeMode {
-	DEFAULT,
-	NFD,
-	DEFAULT_COMPOSE,
-	NFC,
-	ALL,
-	NFKD,
-	ALL_COMPOSE,
-	NFKC
-}
-
 
 [Compact]
 [Immutable]
@@ -1227,7 +1019,7 @@ public class string {
 	[CCode (cname = "g_utf8_validate")]
 	public bool validate (ssize_t max_len = -1, out char* end = null);
 	[CCode (cname = "g_utf8_normalize")]
-	public string normalize (ssize_t len = -1, NormalizeMode mode = NormalizeMode.DEFAULT);
+	public string normalize (ssize_t len = -1, GLib.NormalizeMode mode = GLib.NormalizeMode.DEFAULT);
 	
 	[CCode (cname = "g_utf8_strup")]
 	public string up (ssize_t len = -1);
@@ -4791,5 +4583,212 @@ namespace GLib {
 		public static bool open_pipe (int fds, int flags) throws GLib.Error;
 		[CCode (cheader_filename = "glib-unix.h")]
 		public static bool set_fd_nonblocking (int fd, bool nonblock) throws GLib.Error;
+	}
+
+	[CCode (cname = "GUnicodeScript", cprefix = "G_UNICODE_SCRIPT_", has_type_id = false)]
+	public enum UnicodeScript {
+		INVALID_CODE,
+		COMMON,
+		INHERITED,
+		ARABIC,
+		ARMENIAN,
+		BENGALI,
+		BOPOMOFO,
+		CHEROKEE,
+		COPTIC,
+		CYRILLIC,
+		DESERET,
+		DEVANAGARI,
+		ETHIOPIC,
+		GEORGIAN,
+		GOTHIC,
+		GREEK,
+		GUJARATI,
+		GURMUKHI,
+		HAN,
+		HANGUL,
+		HEBREW,
+		HIRAGANA,
+		KANNADA,
+		KATAKANA,
+		KHMER,
+		LAO,
+		LATIN,
+		MALAYALAM,
+		MONGOLIAN,
+		MYANMAR,
+		OGHAM,
+		OLD_ITALIC,
+		ORIYA,
+		RUNIC,
+		SINHALA,
+		SYRIAC,
+		TAMIL,
+		TELUGU,
+		THAANA,
+		THAI,
+		TIBETAN,
+		CANADIAN_ABORIGINAL,
+		YI,
+		TAGALOG,
+		HANUNOO,
+		BUHID,
+		TAGBANWA,
+
+		BRAILLE,
+		CYPRIOT,
+		LIMBU,
+		OSMANYA,
+		SHAVIAN,
+		LINEAR_B,
+		TAI_LE,
+		UGARITIC,
+
+		NEW_TAI_LUE,
+		BUGINESE,
+		GLAGOLITIC,
+		TIFINAGH,
+		SYLOTI_NAGRI,
+		OLD_PERSIAN,
+		KHAROSHTHI,
+
+		UNKNOWN,
+		BALINESE,
+		CUNEIFORM,
+		PHOENICIAN,
+		PHAGS_PA,
+		NKO,
+
+		KAYAH_LI,
+		LEPCHA,
+		REJANG,
+		SUNDANESE,
+		SAURASHTRA,
+		CHAM,
+		OL_CHIKI,
+		VAI,
+		CARIAN,
+		LYCIAN,
+		LYDIAN,
+
+		/* Unicode-5.2 additions */
+		AVESTAN,                /* Avst */
+		BAMUM,                  /* Bamu */
+		EGYPTIAN_HIEROGLYPHS,   /* Egyp */
+		IMPERIAL_ARAMAIC,       /* Armi */
+		INSCRIPTIONAL_PAHLAVI,  /* Phli */
+		INSCRIPTIONAL_PARTHIAN, /* Prti */
+		JAVANESE,               /* Java */
+		KAITHI,                 /* Kthi */
+		LISU,                   /* Lisu */
+		MEETEI_MAYEK,           /* Mtei */
+		OLD_SOUTH_ARABIAN,      /* Sarb */
+		OLD_TURKIC,             /* Orkh */
+		SAMARITAN,              /* Samr */
+		TAI_THAM,               /* Lana */
+		TAI_VIET,               /* Tavt */
+
+		/* Unicode-6.0 additions */
+		BATAK,                  /* Batk */
+		BRAHMI,                 /* Brah */
+		MANDAIC,                /* Mand */
+
+		/* Unicode-6.1 additions */
+		CHAKMA,                 /* Cakm */
+		MEROITIC_CURSIVE,       /* Merc */
+		MEROITIC_HIEROGLYPHS,   /* Mero */
+		MIAO,                   /* Plrd */
+		SHARADA,                /* Shrd */
+		SORA_SOMPENG,           /* Sora */
+		TAKRI                   /* Takr */
+	}
+
+	[CCode (cname = "GUnicodeType", cprefix = "G_UNICODE_", has_type_id = false)]
+	public enum UnicodeType {
+		CONTROL,
+		FORMAT,
+		UNASSIGNED,
+		PRIVATE_USE,
+		SURROGATE,
+		LOWERCASE_LETTER,
+		MODIFIER_LETTER,
+		OTHER_LETTER,
+		TITLECASE_LETTER,
+		UPPERCASE_LETTER,
+		COMBINING_MARK,
+		ENCLOSING_MARK,
+		NON_SPACING_MARK,
+		DECIMAL_NUMBER,
+		LETTER_NUMBER,
+		OTHER_NUMBER,
+		CONNECT_PUNCTUATION,
+		DASH_PUNCTUATION,
+		CLOSE_PUNCTUATION,
+		FINAL_PUNCTUATION,
+		INITIAL_PUNCTUATION,
+		OTHER_PUNCTUATION,
+		OPEN_PUNCTUATION,
+		CURRENCY_SYMBOL,
+		MODIFIER_SYMBOL,
+		MATH_SYMBOL,
+		OTHER_SYMBOL,
+		LINE_SEPARATOR,
+		PARAGRAPH_SEPARATOR,
+		SPACE_SEPARATOR
+	}
+
+	[CCode (cname = "GUnicodeBreakType", cprefix = "G_UNICODE_BREAK_", has_type_id = false)]
+	public enum UnicodeBreakType {
+		MANDATORY,
+		CARRIAGE_RETURN,
+		LINE_FEED,
+		COMBINING_MARK,
+		SURROGATE,
+		ZERO_WIDTH_SPACE,
+		INSEPARABLE,
+		NON_BREAKING_GLUE,
+		CONTINGENT,
+		SPACE,
+		AFTER,
+		BEFORE,
+		BEFORE_AND_AFTER,
+		HYPHEN,
+		NON_STARTER,
+		OPEN_PUNCTUATION,
+		CLOSE_PUNCTUATION,
+		QUOTATION,
+		EXCLAMATION,
+		IDEOGRAPHIC,
+		NUMERIC,
+		INFIX_SEPARATOR,
+		SYMBOL,
+		ALPHABETIC,
+		PREFIX,
+		POSTFIX,
+		COMPLEX_CONTEXT,
+		AMBIGUOUS,
+		UNKNOWN,
+		NEXT_LINE,
+		WORD_JOINER,
+		HANGUL_L_JAMO,
+		HANGUL_V_JAMO,
+		HANGUL_T_JAMO,
+		HANGUL_LV_SYLLABLE,
+		HANGUL_LVT_SYLLABLE,
+		CLOSE_PARANTHESIS,
+		CONDITIONAL_JAPANESE_STARTER,
+		HEBREW_LETTER
+	}
+
+	[CCode (cname = "GNormalizeMode", cprefix = "G_NORMALIZE_", has_type_id = false)]
+	public enum NormalizeMode {
+		DEFAULT,
+		NFD,
+		DEFAULT_COMPOSE,
+		NFC,
+		ALL,
+		NFKD,
+		ALL_COMPOSE,
+		NFKC
 	}
 }
