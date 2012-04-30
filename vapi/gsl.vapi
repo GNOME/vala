@@ -4309,7 +4309,7 @@ namespace Gsl
 	}
 	
 	[Compact]
-	[CCode (cname="gsl_multifit_linear_workspace", cheader_filename="gsl/gsl_multifit.h")]
+	[CCode (cname="gsl_multifit_linear_workspace", free_function="gsl_multifit_linear_free", cheader_filename="gsl/gsl_multifit.h")]
 	public class MultifitLinearWorkspace
 	{
 		public size_t n;
@@ -4322,7 +4322,7 @@ namespace Gsl
 		public Vector xt;
 		public Vector D;
 		
-		[CCode (cname="gsl_multifit_linear_workspace_alloc")]
+		[CCode (cname="gsl_multifit_linear_alloc")]
 		public MultifitLinearWorkspace (size_t n, size_t p);
 	}
 	
