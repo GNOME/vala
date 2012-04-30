@@ -1053,6 +1053,7 @@ namespace Posix {
 		int              sa_flags;
 	}
 
+	[SimpleType]
 	[CCode (cname = "sigval_t", cheader_filename = "signal.h")]
 	public struct sigval_t {
 		int   sival_int;
@@ -1099,6 +1100,8 @@ namespace Posix {
 	public int sigismember (sigset_t sigset, int __signo);
 	[CCode (cheader_filename = "signal.h")]
 	public int sigprocmask (int how, sigset_t sigset, sigset_t oset);
+	[CCode (cheader_filename = "signal.h")]
+	public int sigqueue (pid_t pid, int signum, sigval_t val);
 	[CCode (cheader_filename = "signal.h")]
 	public int sigsuspend (sigset_t sigset);
 	[CCode (cheader_filename = "signal.h")]
@@ -1799,6 +1802,10 @@ namespace Posix {
 	public int execl (string path, params string[] arg);
 	[CCode (cheader_filename = "unistd.h")]
 	public int execlp (string path, params string[] arg);
+	[CCode (cheader_filename = "unistd.h")]
+	public int execv (string path, [CCode (array_length = false, null_terminated = true)] string[] arg);
+	[CCode (cheader_filename = "unistd.h")]
+	public int execvp (string path, [CCode (array_length = false, null_terminated = true)] string[] arg);
 	[CCode (cheader_filename = "unistd.h")]
 	public int pipe ([CCode (array_length = false, null_terminated = false)] int[] pipefd);
 	[CCode (cheader_filename = "unistd.h")]
