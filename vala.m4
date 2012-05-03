@@ -104,7 +104,7 @@ AC_DEFUN([VALA_CHECK_MODULES],
 		if test $pkg_failed = yes; then
 		   AC_MSG_RESULT([no])
 		   m4_default([$4], [AC_MSG_ERROR(
-		   					[Package requiresments ($2) were not met.])dnl
+							[Package requirements ($2) were not met.])dnl
 		   ])
 		else
 			AC_MSG_RESULT([yes])
