@@ -42,10 +42,12 @@ _ACEOF
 #
 AC_DEFUN([VALA_CHECK_PACKAGES],
 [
+  unset vala_pkgs
+  unset vala_bindings
   ac_save_ifs="$IFS"; unset IFS
   for vala_pkg in $(echo "$1"); do
-      vala_pkgs="$vala_pkgs --pkg $vala_pkg"
-      vala_bindings="$vala_bindings $vala_pkg"
+      vala_pkgs="${vala_pkgs:+$vala_pkgs }--pkg $vala_pkg"
+      vala_bindings="${vala_bindings:+$vala_bindings }$vala_pkg"
   done
   IFS="$ac_save_ifs"
   AC_MSG_CHECKING([for $vala_bindings vala bindings])
