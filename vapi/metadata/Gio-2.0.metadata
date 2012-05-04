@@ -81,6 +81,8 @@ DBusMessage
   .print.indent default=0
 DBus*Info
   .*#field unowned=false
+DBusInterface
+  .get_object skip=false
 DBusMethodInvocation
   .get_user_data skip=false
   .return_error skip=false
@@ -94,7 +96,6 @@ DBusObjectManagerClient
 DBusServer
   .new_sync.observer default=null
 FileAttributeInfo struct=false
-io_extension_get_type skip
 IOModuleScope
   .free skip
 IOStream
@@ -146,6 +147,8 @@ SrvTarget
   .free skip
 srv_target_list_sort type_arguments="GLib.SrvTarget" skip=false
 srv_target_list_sort.targets type_arguments="GLib.SrvTarget" owned
+StaticResource
+  .next type="StaticResource*"
 TlsDatabase
   .create_certificate_handle nullable
 TlsPassword
@@ -296,6 +299,10 @@ file_* skip
 icon_* skip
 initable_* skip
 
+// Bug #: cannot set ownership of fields
+StaticResource
+  .resource unowned=false
+
 // Need to ask about this... annotated as out, but that seems wrong
 DBus*Info.generate_xml.string_builder out=false
 
@@ -309,6 +316,8 @@ ActionGroup
   .get_action* nullable
   .get_action_enabled nullable=false
   .get_action_state_type unowned
+ActionMap
+  .add_action_entries.entries type="GLib.ActionEntry[]" array_length_idx=1
 AppInfo
   .launch.files nullable
   .launch_uris.uris nullable
@@ -320,6 +329,9 @@ LoadableIcon
 Socket
   .receive.buffer type="uint8[]" array_length_idx=1
   .receive_with_blocking.buffer type="uint8[]" array_length_idx=1
+StaticResource
+  .data array array_length_field="data_len"
+  .padding skip
 TlsBackend
   .get_certificate_type abstract
   .get_client_connection_type abstract

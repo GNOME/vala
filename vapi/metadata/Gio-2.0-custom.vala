@@ -88,11 +88,6 @@ namespace GLib {
 	}
 
 	[Compact]
-	public class IOExtension {
-		public GLib.Type get_type ();
-	}
-
-	[Compact]
 	public class IOModuleScope {
 		[CCode (has_construct_function = false)]
 		public IOModuleScope (GLib.IOModuleScopeFlags flags);
