@@ -34,6 +34,7 @@ namespace Rest {
 		public unowned string get_token ();
 		public unowned string get_token_secret ();
 		public bool is_oauth10a ();
+		public Rest.Proxy new_echo_proxy (string service_url, string url_format, bool binding_required);
 		public bool request_token (string function, string callback_uri) throws GLib.Error;
 		public void set_signature_host (string signature_host);
 		public void set_token (string token);
@@ -56,23 +57,32 @@ namespace Rest {
 		protected OAuthProxyCall ();
 		public void parse_token_reponse ();
 	}
-	[CCode (cheader_filename = "rest/rest-param.h")]
+	[CCode (cheader_filename = "rest/rest-param.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "rest_param_get_type ()")]
 	[Compact]
 	public class Param {
+		[CCode (has_construct_function = false)]
+		public Param.full (global::string name, Rest.MemoryUse use, [CCode (array_length_cname = "length", array_length_pos = 3.5, array_length_type = "gsize")] uint8[] data, global::string content_type, global::string filename);
+		public void* get_content ();
 		public size_t get_content_length ();
-		public unowned string get_content_type ();
-		public unowned string get_file_name ();
-		public unowned string get_name ();
+		public unowned global::string get_content_type ();
+		public unowned global::string get_file_name ();
+		public unowned global::string get_name ();
 		public bool is_string ();
+		public Rest.Param @ref ();
+		[CCode (has_construct_function = false)]
+		public Param.string (global::string name, Rest.MemoryUse use, global::string string);
 		public void unref ();
+		[CCode (has_construct_function = false)]
+		public Param.with_owner (global::string name, [CCode (array_length_cname = "length", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] data, global::string content_type, global::string? filename, owned void* owner, GLib.DestroyNotify? owner_dnotify);
 	}
 	[CCode (cheader_filename = "rest/rest-params.h")]
 	[Compact]
 	public class Params {
 		public void add (Rest.Param param);
 		public bool are_strings ();
-		public unowned GLib.HashTable<string,string> as_string_hash_table ();
+		public GLib.HashTable<string,string> as_string_hash_table ();
 		public void free ();
+		public Rest.Param @get (string name);
 		public void remove (string name);
 	}
 	[CCode (cheader_filename = "rest/rest-params.h")]
@@ -87,7 +97,7 @@ namespace Rest {
 		public Proxy (string url_format, bool binding_required);
 		public bool bind (...);
 		public unowned string get_user_agent ();
-		public virtual unowned Rest.ProxyCall new_call ();
+		public virtual Rest.ProxyCall new_call ();
 		public void set_user_agent (string user_agent);
 		[CCode (has_construct_function = false)]
 		public Proxy.with_authentication (string url_format, bool binding_required, string username, string password);
@@ -112,16 +122,17 @@ namespace Rest {
 		public void add_param (string name, string value);
 		public void add_param_full (Rest.Param param);
 		public void add_params (...);
-		public bool cancel ();
-		public bool continuous ([CCode (delegate_target_pos = 2.1)] Rest.ProxyCallContinuousCallback cb, GLib.Object weak_object) throws GLib.Error;
+		public bool continuous ([CCode (delegate_target_pos = 2.1)] Rest.ProxyCallContinuousCallback callback, GLib.Object weak_object) throws GLib.Error;
 		public unowned string get_method ();
 		public unowned Rest.Params get_params ();
 		public unowned string get_payload ();
 		public int64 get_payload_length ();
-		public unowned GLib.HashTable<void*,void*> get_response_headers ();
+		public GLib.HashTable<weak void*,weak void*> get_response_headers ();
 		public uint get_status_code ();
 		public unowned string get_status_message ();
+		public async bool invoke_async (GLib.Cancellable? cancellable) throws GLib.Error;
 		public unowned string lookup_header (string header);
+		public Rest.Param lookup_param (string name);
 		public unowned string lookup_response_header (string header);
 		[NoWrapper]
 		public virtual bool prepare () throws GLib.Error;
@@ -134,7 +145,7 @@ namespace Rest {
 		public void set_function (string function);
 		public void set_method (string method);
 		public bool sync () throws GLib.Error;
-		public bool upload ([CCode (delegate_target_pos = 2.1)] Rest.ProxyCallUploadCallback cb, GLib.Object weak_object) throws GLib.Error;
+		public bool upload ([CCode (delegate_target_pos = 2.1)] Rest.ProxyCallUploadCallback callback, GLib.Object weak_object) throws GLib.Error;
 		[NoAccessorMethod]
 		public Rest.Proxy proxy { owned get; construct; }
 	}
@@ -152,9 +163,7 @@ namespace Rest {
 		public void free ();
 		public unowned string get_attr (string attr_name);
 		public string print ();
-		public Rest.XmlNode @ref ();
 		public void set_content (string value);
-		public void unref ();
 	}
 	[CCode (cheader_filename = "rest/rest-xml-parser.h", type_id = "rest_xml_parser_get_type ()")]
 	public class XmlParser : GLib.Object {
