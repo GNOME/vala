@@ -5116,12 +5116,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var type_domain = new CCodeIdentifier (get_ccode_upper_case_name (et.error_domain));
 			return new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, instance_domain, type_domain);
 		} else {
-			string type_check_func = get_ccode_type_check_function (type.data_type);
-			if (type_check_func == "") {
+			string type_id = get_ccode_type_id (type.data_type);
+			if (type_id == "") {
 				return new CCodeInvalidExpression ();
 			}
-			var ccheck = new CCodeFunctionCall (new CCodeIdentifier (type_check_func));
+			var ccheck = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_CHECK_INSTANCE_TYPE"));
 			ccheck.add_argument ((CCodeExpression) ccodenode);
+			ccheck.add_argument (new CCodeIdentifier (type_id));
 			return ccheck;
 		}
 	}
@@ -6149,8 +6150,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public CCodeFunctionCall generate_instance_cast (CCodeExpression expr, TypeSymbol type) {
-		var result = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_upper_case_name (type, null)));
+		var result = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_CHECK_INSTANCE_CAST"));
 		result.add_argument (expr);
+		result.add_argument (new CCodeIdentifier (get_ccode_type_id (type)));
+		result.add_argument (new CCodeIdentifier (get_ccode_name (type)));
 		return result;
 	}
 
