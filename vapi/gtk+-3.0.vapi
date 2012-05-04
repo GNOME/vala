@@ -4103,7 +4103,7 @@ namespace Gtk {
 		public void invalidate ();
 		public unowned GLib.List list_classes ();
 		public unowned GLib.List list_regions ();
-		public bool lookup_color (string color_name, Gdk.RGBA color);
+		public bool lookup_color (string color_name, out Gdk.RGBA color);
 		public unowned Gtk.IconSet lookup_icon_set (string stock_id);
 		public void notify_state_change (Gdk.Window window, void* region_id, Gtk.StateType state, bool state_value);
 		public void pop_animatable_region ();
