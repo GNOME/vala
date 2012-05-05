@@ -66,6 +66,9 @@ namespace GLib {
 		public Quark qname ();
 		public Type parent ();
 
+		public void* get_qdata (Quark quark);
+		public void set_qdata (Quark quark, void* data);
+
 		public void query (out TypeQuery query);
 
 		public TypeClass class_ref ();
