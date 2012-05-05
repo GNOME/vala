@@ -2368,6 +2368,22 @@ namespace GLib {
 		public static string compute_for_string (ChecksumType checksum_type, string str, size_t length = -1);
 	}
 
+	/* Secure HMAC Digests */
+
+	[Compact]
+	[CCode (ref_function = "g_hmac_ref", unref_function = "g_hmac_unref")]
+	public class Hmac {
+		public Hmac (ChecksumType digest_type, [CCode (array_length_type = "gsize")] uint8[] key);
+		public Hmac copy ();
+		public void update ([CCode (array_length_type = "gssize")] uint8[] data, size_t length);
+		public unowned string get_string ();
+		public void get_digest ([CCode (array_length = false)] uint8[] buffer, ref size_t digest_len);
+		[CCode (cname = "g_compute_hmac_for_data")]
+		public static string compute_for_data (ChecksumType checksum_type, uint8[] key, uint8[] data);
+		[CCode (cname = "g_compute_hmac_for_string")]
+		public static string compute_for_string (ChecksumType checksum_type, uint8[] key, string str, size_t length = -1);
+	}
+
 	/* Date and Time Functions */
 
 	[CCode (has_type_id = false)]
