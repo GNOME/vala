@@ -7,10 +7,6 @@ namespace GLib {
 		public T get_proxy_sync<T> (GLib.BusType bus_type, string name, string object_path, GLib.DBusProxyFlags flags = 0, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 	}
 
-	public class Cancellable : GLib.Object {
-		public bool set_error_if_cancelled () throws GLib.IOError;
-	}
-
 	[Compact]
 	[CCode (cname = "GSource", ref_function = "g_source_ref", unref_function = "g_source_unref")]
 	public class CancellableSource : GLib.Source {
@@ -26,8 +22,6 @@ namespace GLib {
 		public async T get_proxy<T> (string? name, string object_path, GLib.DBusProxyFlags flags = 0, GLib.Cancellable? cancellable = null) throws GLib.IOError; 
 		public T get_proxy_sync<T> (string? name, string object_path, GLib.DBusProxyFlags flags = 0, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public uint register_object<T> (string object_path, T object) throws GLib.IOError;
-		public async GLib.DBusMessage send_message_with_reply (GLib.DBusMessage message, GLib.DBusSendMessageFlags flags, int timeout_msec, uint32 *out_serial = null, GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		public GLib.DBusMessage send_message_with_reply_sync (GLib.DBusMessage message, GLib.DBusSendMessageFlags flags, int timeout_msec, out uint32 out_serial = null, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 	}
 
 	public class DBusMessage : GLib.Object {
@@ -59,32 +53,8 @@ namespace GLib {
 	}
 
 	public class DataInputStream : GLib.BufferedInputStream {
-		public uint8 read_byte (GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		public int16 read_int16 (GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		public int32 read_int32 (GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		public int64 read_int64 (GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		public string? read_line (out size_t length, GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		public async string? read_line_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null, out size_t length = null) throws GLib.IOError;
-		public unowned string read_line_finish_utf8 (GLib.AsyncResult _result, size_t length) throws GLib.Error;
-		public unowned string read_line_utf8 (size_t length, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public uint16 read_uint16 (GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		public uint32 read_uint32 (GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		public uint64 read_uint64 (GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		public string? read_until (string stop_chars, out size_t length, GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		public async string? read_until_async (string stop_chars, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null, out size_t? length = null) throws GLib.IOError;
-		public string? read_upto (string stop_chars, ssize_t stop_chars_len, out size_t length, GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		public async string? read_upto_async (string stop_chars, ssize_t stop_chars_len, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null, out size_t? length = null) throws GLib.IOError;
-	}
-
-	public class DataOutputStream : GLib.FilterOutputStream {
-		public bool put_byte (uint8 data, GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		public bool put_int16 (int16 data, GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		public bool put_int32 (int32 data, GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		public bool put_int64 (int64 data, GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		public bool put_string (string str, GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		public bool put_uint16 (uint16 data, GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		public bool put_uint32 (uint32 data, GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		public bool put_uint64 (uint64 data, GLib.Cancellable? cancellable = null) throws GLib.IOError;
+		[CCode (cname = "g_data_input_stream_read_line_async", finish_function = "g_data_input_stream_read_line_finish_utf8")]
+		public async string? read_line_utf8_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null, out size_t length) throws GLib.IOError, GLib.IOError;
 	}
 
 	[Compact]
@@ -97,18 +67,14 @@ namespace GLib {
 		[CCode (vfunc_name = "close_fn")]
 		public virtual bool close (GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public virtual async bool close_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.IOError;
+
 	}
 
 	public abstract class InputStream : GLib.Object {
 		[CCode (vfunc_name = "close_fn")]
 		public abstract bool close (GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		public virtual async bool close_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		[CCode (vfunc_name = "read_fn")]
 		public abstract ssize_t read ([CCode (array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		public bool read_all ([CCode (array_length_type = "gsize")] uint8[] buffer, out size_t bytes_read, GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		public virtual async ssize_t read_async ([CCode (array_length_type = "gsize")] uint8[] buffer, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		public virtual ssize_t skip (size_t count, GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		public virtual async ssize_t skip_async (size_t count, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 	}
 
 	public class MemoryOutputStream : GLib.OutputStream {
@@ -124,13 +90,8 @@ namespace GLib {
 	public abstract class OutputStream : GLib.Object {
 		[CCode (vfunc_name = "close_fn")]
 		public abstract bool close (GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		public virtual async bool close_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		public virtual ssize_t splice (GLib.InputStream source, GLib.OutputStreamSpliceFlags flags, GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		public virtual async ssize_t splice_async (GLib.InputStream source, GLib.OutputStreamSpliceFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		[CCode (vfunc_name = "write_fn")]
 		public abstract ssize_t write ([CCode (array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		public bool write_all ([CCode (array_length_type = "gsize")] uint8[] buffer, out size_t bytes_written, GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		public virtual async ssize_t write_async ([CCode (array_length_type = "gsize")] uint8[] buffer, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 	}
 
 	[Compact]
@@ -172,10 +133,6 @@ namespace GLib {
 		public void set_op_res_gpointer<T> (owned T op_res);
 	}
 
-	public class Socket : GLib.Object {
-		public bool condition_wait (GLib.IOCondition condition, GLib.Cancellable? cancellable = null) throws GLib.IOError;
-	}
-
 	[Compact]
 	[CCode (cname = "GSource", ref_function = "g_source_ref", unref_function = "g_source_unref")]
 	public class SocketSource : GLib.Source {
@@ -207,9 +164,6 @@ namespace GLib {
 	}
 
 	public interface File : GLib.Object {
-		[CCode (vfunc_name = "monitor_dir")]
-		public abstract GLib.FileMonitor monitor_directory (GLib.FileMonitorFlags flags, GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		public abstract GLib.FileMonitor monitor_file (GLib.FileMonitorFlags flags, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		[NoWrapper, Deprecated (since = "vala-0.16", replacement = "has_prefix")]
 		public abstract bool prefix_matches (GLib.File file);
 		[NoWrapper, Deprecated (since = "vala-0.16", replacement = "read")]

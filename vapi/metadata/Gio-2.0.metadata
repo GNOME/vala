@@ -68,12 +68,22 @@ BufferedInputStream
 Cancellable
   .connect.callback type="owned GLib.Func<GLib.Cancellable>"
   .get_current nullable
+  .set_error_if_cancelled throws="GLib.IOError"
   .source_new skip=false type="GLib.CancellableSource"
 Credentials
   .get_native skip=false
+DataInputStream
+  .read_* throws="GLib.IOError"
+  .read_line* nullable
+  .read_line_finish_utf8 skip
+DataOutputStream
+  .put_* throws="GLib.IOError"
 DBusAuthObserver.authorize_authenticated_peer virtual
 DBusConnection
   .*.observer#parameter default=null
+  .send_message_with_reply*.out_serial default=null
+  .send_message_with_reply_finish throws="GLib.IOError"
+  .send_message_with_reply_sync throws="GLib.IOError"
 DBusInterfaceSkeleton
   .get_vtable skip=false nullable unowned=false
 DBusMessage
@@ -95,14 +105,29 @@ DBusObjectManagerClient
   .name_owner nullable
 DBusServer
   .new_sync.observer default=null
+File
+  .monitor_dir* throws="GLib.IOError"
+  .monitor_file throws="GLib.IOError"
 FileAttributeInfo struct=false
 IOModuleScope
   .free skip
 IOStream
+  .close* skip
   .input_stream abstract
   .output_stream abstract
+  .closed skip=false
 InetAddress
   .to_bytes type="unowned uint8[]" skip=false
+InputStream
+  .close skip
+  .close_finish throws="GLib.IOError"
+  .close_fn skip
+  .read skip
+  .read_all throws="GLib.IOError"
+  .read_fn skip
+  .read_finish throws="GLib.IOError"
+  .skip throws="GLib.IOError"
+  .skip_finish throws="GLib.IOError"
 MemoryOutputStream
   .get_data type="unowned uint8[]"
   .steal_data type="uint8[]"
@@ -113,6 +138,16 @@ MenuItem
   .set_attribute skip=false
 MenuModel
   .get_item_attribute skip=false
+OutputStream
+  .close skip
+  .close_finish throws="GLib.IOError"
+  .close_fn skip
+  .splice throws="GLib.IOError"
+  .splice_finish throws="GLib.IOError"
+  .write skip
+  .write_finish throws="GLib.IOError"
+  .write_fn skip
+  .write_all throws="GLib.IOError"
 Resolver
   .lookup_service_async skip
   .lookup_service#virtual_method skip=false name="lookup_service_fn" type="GLib.List<GLib.SrvTarget>"
@@ -138,6 +173,7 @@ SimpleAsyncResult
   .new_error skip
   .new_from_error skip
 Socket
+  .condition_wait throws="GLib.IOError"
   .create_source skip=false type="GLib.SocketSource"
 SocketControlMessage
   .serialize.data type="uint8[]"
@@ -213,32 +249,6 @@ simple_async_report_gerror_in_idle parent="GLib.SimpleAsyncResult" name="report_
 tls_* skip
 
 
-// Bug #667448: GIR parser does not offer a way to set error domain
-Cancellable
-  .set_error_if_cancelled skip
-DBusConnection
-  .send_message_with_reply* skip
-DataInputStream
-  .read_* skip
-DataOutputStream
-  .put_* skip
-IOStream
-  .close* skip
-  .closed skip=false
-InputStream
-  .close* skip
-  .read* skip
-  .skip* skip
-OutputStream
-  .close* skip
-  .splice* skip
-  .write* skip
-Socket
-  .condition_wait skip
-File
-  .monitor_dir* skip
-  .monitor_file skip
-
 // Bug #666796: GIR parser doesn't pick up ref/unref functions
 DBus*Info
   .ref skip
@@ -308,6 +318,9 @@ DBus*Info.generate_xml.string_builder out=false
 
 // Back compat
 TlsCertificate abstract=false
+DataInputStream
+  .read_line type="string?"
+  .read_line_finish type="string?"
 
 // Forward upstream
 content_type_from_mime_type nullable
@@ -324,6 +337,8 @@ AppInfo
 AsyncReadyCallback.source_object nullable
 DBusSubtreeDispatchFunc nullable unowned
 DBusSubtreeVTable.enumerate skip=false
+InputStream
+  .read*.buffer type="uint8[]" array_length_idx=1
 LoadableIcon
   .load_finish.type out nullable unowned=false default=null
 Socket
