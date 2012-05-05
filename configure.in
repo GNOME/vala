@@ -62,6 +62,12 @@ AC_SUBST(LIBGDKPIXBUF_LIBS)
 ## Drivers:
 ##
 
+PKG_CHECK_MODULES(LIBVALA_0_18_X, libvala-0.18 >= 0.17.0, have_libvala_0_18_x="yes", have_libvala_0_18_x="no")
+AM_CONDITIONAL(HAVE_LIBVALA_0_18_X, test "$have_libvala_0_18_x" = "yes")
+AC_SUBST(LIBVALA_0_18_X_CFLAGS)
+AC_SUBST(LIBVALA_0_18_X_LIBS)
+
+
 PKG_CHECK_MODULES(LIBVALA_0_16_X, libvala-0.16 >= 0.15.1, have_libvala_0_16_x="yes", have_libvala_0_16_x="no")
 AM_CONDITIONAL(HAVE_LIBVALA_0_16_X, test "$have_libvala_0_16_x" = "yes")
 AC_SUBST(LIBVALA_0_16_X_CFLAGS)
@@ -134,6 +140,7 @@ AC_CONFIG_FILES([Makefile
 				 src/driver/0.12.x/Makefile
 				 src/driver/0.14.x/Makefile
 				 src/driver/0.16.x/Makefile
+				 src/driver/0.18.x/Makefile
                  src/doclets/Makefile
                  src/doclets/htm/Makefile
                  src/doclets/devhelp/Makefile
