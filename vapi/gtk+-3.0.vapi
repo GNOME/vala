@@ -4454,7 +4454,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class TextTag : GLib.Object {
 		[CCode (has_construct_function = false)]
-		public TextTag (string name);
+		public TextTag (string? name = null);
 		public int get_priority ();
 		public void set_priority (int priority);
 		[NoAccessorMethod]

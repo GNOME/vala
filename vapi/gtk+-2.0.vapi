@@ -4475,7 +4475,7 @@ namespace Gtk {
 		public weak Gtk.TextTagTable table;
 		public weak Gtk.TextAttributes values;
 		[CCode (has_construct_function = false)]
-		public TextTag (string name);
+		public TextTag (string? name = null);
 		public int get_priority ();
 		public void set_priority (int priority);
 		[NoAccessorMethod]
