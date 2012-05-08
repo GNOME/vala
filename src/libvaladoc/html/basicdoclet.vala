@@ -356,7 +356,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 		writer.start_tag ("div", {"class", css_package_note});
 		writer.start_tag ("b").text ("Package:").end_tag ("b");
-		writer.text (" ").text (package);
+		writer.text (" ").start_tag ("a", {"href", get_link (element.package, element)}).text (package).end_tag ("a");
 		writer.end_tag ("div");
 	}
 
@@ -372,7 +372,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 		writer.start_tag ("div", {"class", css_namespace_note});
 		writer.start_tag ("b").text ("Namespace:").end_tag ("b");
-		writer.text (" ").text (ns.get_full_name());
+		writer.text (" ").start_tag ("a", {"href", get_link (ns, element)}).text (ns.get_full_name()).end_tag ("a");
 		writer.end_tag ("div");
 	}
 
