@@ -1673,6 +1673,11 @@ namespace Posix {
 		public fsfilcnt_t f_favail;
 	}
 
+	[CCode (cheader_filename = "sys/statvfs.h", cname = "statvfs")]
+	public int statvfs_exec (string path, out statvfs buf);
+	[CCode (cheader_filename = "sys/statvfs.h")]
+	public int fstatvfs (int fs, out statvfs buf);
+
 	[SimpleType]
 	[IntegerType (rank = 9)]
 	[CCode (cname="off_t", cheader_filename = "sys/types.h")]
