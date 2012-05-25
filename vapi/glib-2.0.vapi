@@ -1790,11 +1790,18 @@ namespace GLib {
 		public void set_can_recurse (bool can_recurse);
 		public bool get_can_recurse ();
 		public uint get_id ();
+		public unowned string? get_name ();
+		public void set_name (string? name);
+		public static void set_name_by_id (uint tag, string? name);
 		public unowned MainContext get_context ();
 		public void set_callback (owned SourceFunc func);
 		public void set_callback_indirect (void* callback_data, SourceCallbackFuncs callback_funcs);
 		public void add_poll (ref PollFD fd);
 		public void remove_poll (ref PollFD fd);
+		public void add_child_source (Source child_source);
+		public void remove_child_source (Source child_source);
+		public int64 get_time ();
+		[Deprecated (since = "2.28", replacement = "get_time")]
 		public void get_current_time (out TimeVal timeval);
 		public static bool remove (uint id);
 		public static bool remove_by_funcs_user_data (void* user_data);
