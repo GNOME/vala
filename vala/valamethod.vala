@@ -493,23 +493,13 @@ public class Vala.Method : Subroutine {
 
 	private void find_base_class_method (Class cl) {
 		var sym = cl.scope.lookup (name);
+		if (sym is Signal) {
+			var sig = (Signal) sym;
+			sym = sig.default_handler;
+		}
 		if (sym is Method) {
 			var base_method = (Method) sym;
 			if (base_method.is_abstract || base_method.is_virtual) {
-				string invalid_match;
-				if (!compatible (base_method, out invalid_match)) {
-					error = true;
-					Report.error (source_reference, "overriding method `%s' is incompatible with base method `%s': %s.".printf (get_full_name (), base_method.get_full_name (), invalid_match));
-					return;
-				}
-
-				_base_method = base_method;
-				return;
-			}
-		} else if (sym is Signal) {
-			var sig = (Signal) sym;
-			if (sig.is_virtual) {
-				var base_method = sig.default_handler;
 				string invalid_match;
 				if (!compatible (base_method, out invalid_match)) {
 					error = true;
@@ -532,6 +522,10 @@ public class Vala.Method : Subroutine {
 		foreach (DataType type in cl.get_base_types ()) {
 			if (type.data_type is Interface) {
 				var sym = type.data_type.scope.lookup (name);
+				if (sym is Signal) {
+					var sig = (Signal) sym;
+					sym = sig.default_handler;
+				}
 				if (sym is Method) {
 					var base_method = (Method) sym;
 					if (base_method.is_abstract || base_method.is_virtual) {
