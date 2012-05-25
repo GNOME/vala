@@ -409,7 +409,7 @@ namespace Poppler {
 		public GLib.List<Poppler.TextAttributes> get_text_attributes ();
 		public bool get_text_layout ([CCode (array_length_cname = "n_rectangles", array_length_pos = 1.1, array_length_type = "guint")] out Poppler.Rectangle[] rectangles);
 		public Cairo.Surface get_thumbnail ();
-		public bool get_thumbnail_size (int width, int height);
+		public bool get_thumbnail_size (out int width, out int height);
 		public Poppler.PageTransition get_transition ();
 		public void render ([CCode (type = "cairo_t*")] Cairo.Context cairo);
 		public void render_for_printing ([CCode (type = "cairo_t*")] Cairo.Context cairo);
