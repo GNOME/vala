@@ -16,7 +16,7 @@ namespace Gdk {
 		public void fill (uint32 pixel);
 		public Gdk.Pixbuf? flip (bool horizontal);
 		[CCode (has_construct_function = false)]
-		public Pixbuf.from_data ([CCode (array_length = false)] uint8[] data, Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height, int rowstride, Gdk.PixbufDestroyNotify? destroy_fn);
+		public Pixbuf.from_data ([CCode (array_length = false)] owned uint8[] data, Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height, int rowstride, [CCode (type = "GdkPixbufDestroyNotify")] Gdk.PixbufDestroyNotify? destroy_fn = GLib.free);
 		[CCode (has_construct_function = false)]
 		public Pixbuf.from_file (string filename) throws GLib.Error;
 		[CCode (has_construct_function = false)]
@@ -67,6 +67,8 @@ namespace Gdk {
 		public Gdk.Pixbuf scale_simple (int dest_width, int dest_height, Gdk.InterpType interp_type);
 		[CCode (has_construct_function = false)]
 		public Pixbuf.subpixbuf (Gdk.Pixbuf src_pixbuf, int src_x, int src_y, int width, int height);
+		[CCode (cname = "gdk_pixbuf_new_from_data", has_construct_function = false)]
+		public Pixbuf.take_data ([CCode (array_length = false)] uint8[] data, Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height, int rowstride, [CCode (type = "GdkPixbufDestroyNotify")] Gdk.PixbufDestroyNotify? destroy_fn = null);
 		public int bits_per_sample { get; construct; }
 		public Gdk.Colorspace colorspace { get; construct; }
 		public bool has_alpha { get; construct; }

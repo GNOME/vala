@@ -5,7 +5,7 @@ Pixbuf
         .flip nullable
         .from_pixdata cheader_filename="gdk-pixbuf/gdk-pixdata.h"
         .from_pixdata.copy_pixels default=true
-        .new_from_data.data type="uint8[]"
+        .new_from_data skip
         .new_from_inline.copy_pixels default=true
         .new_from_stream_async skip
         .new_from_stream_finish skip
@@ -21,7 +21,6 @@ PixbufSaveFunc skip
 
 // Upstream
 Pixbuf
-        .new_from_data.destroy_fn nullable
         .new_from_inline.data type="uint8[]" array_length_idx=0
         .get_file_info unowned
         .get_file_info.width out
