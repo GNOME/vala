@@ -122,6 +122,7 @@ namespace Rest {
 		public void add_param (string name, string value);
 		public void add_param_full (Rest.Param param);
 		public void add_params (...);
+		public bool cancel ();
 		public bool continuous ([CCode (delegate_target_pos = 2.1)] Rest.ProxyCallContinuousCallback callback, GLib.Object weak_object) throws GLib.Error;
 		public unowned string get_method ();
 		public unowned Rest.Params get_params ();
@@ -163,7 +164,9 @@ namespace Rest {
 		public void free ();
 		public unowned string get_attr (string attr_name);
 		public string print ();
+		public Rest.XmlNode @ref ();
 		public void set_content (string value);
+		public void unref ();
 	}
 	[CCode (cheader_filename = "rest/rest-xml-parser.h", type_id = "rest_xml_parser_get_type ()")]
 	public class XmlParser : GLib.Object {

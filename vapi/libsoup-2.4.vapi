@@ -6,7 +6,7 @@ namespace Soup {
 		[CCode (cheader_filename = "libsoup/soup.h")]
 		public static GLib.HashTable<string,string> decode (string encoded_form);
 		[CCode (cheader_filename = "libsoup/soup.h")]
-		public static GLib.HashTable<string,string> decode_multipart (Soup.Message msg, string file_control_name, out string filename, out string content_type, out Soup.Buffer file);
+		public static GLib.HashTable<string,string> decode_multipart (Soup.Message msg, string? file_control_name, out string filename, out string content_type, out Soup.Buffer file);
 		[CCode (cheader_filename = "libsoup/soup.h")]
 		public static string encode (...);
 		[CCode (cheader_filename = "libsoup/soup.h")]
@@ -97,6 +97,8 @@ namespace Soup {
 		public string name { get; construct; }
 		public string physical { get; }
 		public int port { get; construct; }
+		[NoAccessorMethod]
+		public string protocol { owned get; construct; }
 		[NoAccessorMethod]
 		public void* sockaddr { get; construct; }
 	}
@@ -230,7 +232,6 @@ namespace Soup {
 	public class ContentSniffer : GLib.Object, Soup.SessionFeature {
 		[CCode (has_construct_function = false)]
 		public ContentSniffer ();
-		[NoWrapper]
 		public virtual size_t get_buffer_size ();
 		public virtual string sniff (Soup.Message msg, Soup.Buffer buffer, out GLib.HashTable<string,string>? @params);
 	}
@@ -279,6 +280,7 @@ namespace Soup {
 		public void delete_cookie (Soup.Cookie cookie);
 		public Soup.CookieJarAcceptPolicy get_accept_policy ();
 		public string get_cookies (Soup.URI uri, bool for_http);
+		public virtual bool is_persistent ();
 		public virtual void save ();
 		public void set_accept_policy (Soup.CookieJarAcceptPolicy policy);
 		public void set_cookie (Soup.URI uri, string cookie);
@@ -548,6 +550,8 @@ namespace Soup {
 		[NoWrapper]
 		public virtual void kick ();
 		public void pause_message (Soup.Message msg);
+		public void prefetch_dns (string hostname, GLib.Cancellable? cancellable, Soup.AddressCallback? callback);
+		[Deprecated (since = "2.38")]
 		public void prepare_for_uri (Soup.URI uri);
 		public virtual void queue_message (owned Soup.Message msg, Soup.SessionCallback? callback);
 		public bool redirect_message (Soup.Message msg);
@@ -655,6 +659,8 @@ namespace Soup {
 		[NoAccessorMethod]
 		public bool trusted_certificate { get; }
 		[NoAccessorMethod]
+		public bool use_proxy { get; construct; }
+		[NoAccessorMethod]
 		public bool use_thread_context { get; construct; }
 		public virtual signal void disconnected ();
 		public signal void event (GLib.SocketClientEvent event, GLib.IOStream connection);
@@ -674,7 +680,7 @@ namespace Soup {
 		public weak string scheme;
 		public weak string user;
 		[CCode (has_construct_function = false)]
-		public URI (string uri_string);
+		public URI (string? uri_string);
 		public Soup.URI copy ();
 		public Soup.URI copy_host ();
 		public static string decode (string part);
@@ -692,16 +698,16 @@ namespace Soup {
 		public bool host_equal (Soup.URI v2);
 		public uint host_hash ();
 		public static string normalize (string part, string unescape_extra);
-		public void set_fragment (string fragment);
-		public void set_host (string host);
-		public void set_password (string password);
+		public void set_fragment (string? fragment);
+		public void set_host (string? host);
+		public void set_password (string? password);
 		public void set_path (string path);
 		public void set_port (uint port);
-		public void set_query (string query);
+		public void set_query (string? query);
 		public void set_query_from_fields (...);
 		public void set_query_from_form (GLib.HashTable<string,string> form);
 		public void set_scheme (string scheme);
-		public void set_user (string user);
+		public void set_user (string? user);
 		public string to_string (bool just_path_and_query);
 		public bool uses_default_port ();
 		[CCode (has_construct_function = false)]
@@ -966,6 +972,8 @@ namespace Soup {
 	public const string ADDRESS_PHYSICAL;
 	[CCode (cheader_filename = "libsoup/soup.h", cname = "SOUP_ADDRESS_PORT")]
 	public const string ADDRESS_PORT;
+	[CCode (cheader_filename = "libsoup/soup.h", cname = "SOUP_ADDRESS_PROTOCOL")]
+	public const string ADDRESS_PROTOCOL;
 	[CCode (cheader_filename = "libsoup/soup.h", cname = "SOUP_ADDRESS_SOCKADDR")]
 	public const string ADDRESS_SOCKADDR;
 	[CCode (cheader_filename = "libsoup/soup.h", cname = "SOUP_AUTH_DOMAIN_ADD_PATH")]

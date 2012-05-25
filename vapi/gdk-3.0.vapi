@@ -551,6 +551,12 @@ namespace Gdk {
 		public const int C;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_CD")]
 		public const int CD;
+		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_CH")]
+		public const int CH;
+		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_C_H")]
+		public const int C_H;
+		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_C_h")]
+		public const int C_h;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_Cabovedot")]
 		public const int Cabovedot;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_Cacute")]
@@ -569,6 +575,8 @@ namespace Gdk {
 		public const int Ccedilla;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_Ccircumflex")]
 		public const int Ccircumflex;
+		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_Ch")]
+		public const int Ch;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_Clear")]
 		public const int Clear;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_ClearGrab")]
@@ -829,6 +837,8 @@ namespace Gdk {
 		public const int ENG;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_ETH")]
 		public const int ETH;
+		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_EZH")]
+		public const int EZH;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_Eabovedot")]
 		public const int Eabovedot;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_Eacute")]
@@ -1765,8 +1775,12 @@ namespace Gdk {
 		public const int Linefeed;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_LiraSign")]
 		public const int LiraSign;
+		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_LogGrabInfo")]
+		public const int LogGrabInfo;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_LogOff")]
 		public const int LogOff;
+		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_LogWindowTree")]
+		public const int LogWindowTree;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_Lstroke")]
 		public const int Lstroke;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_M")]
@@ -3383,6 +3397,8 @@ namespace Gdk {
 		public const int brokenbar;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_c")]
 		public const int c;
+		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_c_h")]
+		public const int c_h;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_cabovedot")]
 		public const int cabovedot;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_cacute")]
@@ -3403,6 +3419,8 @@ namespace Gdk {
 		public const int cedilla;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_cent")]
 		public const int cent;
+		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_ch")]
+		public const int ch;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_checkerboard")]
 		public const int checkerboard;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_checkmark")]
@@ -3499,6 +3517,8 @@ namespace Gdk {
 		public const int dead_e;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_dead_grave")]
 		public const int dead_grave;
+		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_dead_greek")]
+		public const int dead_greek;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_dead_hook")]
 		public const int dead_hook;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_dead_horn")]
@@ -3649,6 +3669,8 @@ namespace Gdk {
 		public const int exclam;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_exclamdown")]
 		public const int exclamdown;
+		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_ezh")]
+		public const int ezh;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_f")]
 		public const int f;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_fabovedot")]
@@ -4219,6 +4241,8 @@ namespace Gdk {
 		public const int period;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_periodcentered")]
 		public const int periodcentered;
+		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_permille")]
+		public const int permille;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_phonographcopyright")]
 		public const int phonographcopyright;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_plus")]
@@ -4728,6 +4752,7 @@ namespace Gdk {
 		public Gdk.EventScroll scroll;
 		public Gdk.EventSelection selection;
 		public Gdk.EventSetting setting;
+		public Gdk.EventTouch touch;
 		public Gdk.EventType type;
 		public Gdk.EventVisibility visibility;
 		public Gdk.EventWindowState window_state;
@@ -4745,6 +4770,7 @@ namespace Gdk {
 		public bool get_keyval (out uint keyval);
 		public bool get_root_coords (out double x_root, out double y_root);
 		public unowned Gdk.Screen get_screen ();
+		public bool get_scroll_deltas (double delta_x, double delta_y);
 		public bool get_scroll_direction (out Gdk.ScrollDirection direction);
 		public unowned Gdk.Device get_source_device ();
 		public bool get_state (out Gdk.ModifierType state);
@@ -4758,6 +4784,10 @@ namespace Gdk {
 		public void set_source_device (Gdk.Device device);
 		public bool triggers_context_menu ();
 	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Compact]
+	public class EventSequence {
+	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_keymap_get_type ()")]
 	public class Keymap : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -4770,6 +4800,7 @@ namespace Gdk {
 		public bool get_entries_for_keyval (uint keyval, [CCode (array_length_cname = "n_keys", array_length_pos = 2.1)] out Gdk.KeymapKey[] keys);
 		public static unowned Gdk.Keymap get_for_display (Gdk.Display display);
 		public Gdk.ModifierType get_modifier_mask (Gdk.ModifierIntent intent);
+		public uint get_modifier_state ();
 		public bool get_num_lock_state ();
 		public bool have_bidi_layouts ();
 		public uint lookup_key (Gdk.KeymapKey key);
@@ -5177,6 +5208,8 @@ namespace Gdk {
 		public weak Gdk.Device device;
 		public double x_root;
 		public double y_root;
+		public double delta_x;
+		public double delta_y;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct EventSelection {
@@ -5196,6 +5229,22 @@ namespace Gdk {
 		public int8 send_event;
 		public Gdk.SettingAction action;
 		public weak string name;
+	}
+	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
+	public struct EventTouch {
+		public Gdk.EventType type;
+		public weak Gdk.Window window;
+		public int8 send_event;
+		public uint32 time;
+		public double x;
+		public double y;
+		public double axes;
+		public Gdk.ModifierType state;
+		public weak Gdk.EventSequence sequence;
+		public bool emulating_pointer;
+		public weak Gdk.Device device;
+		public double x_root;
+		public double y_root;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct EventVisibility {
@@ -5301,7 +5350,10 @@ namespace Gdk {
 		UNGRAB,
 		GTK_GRAB,
 		GTK_UNGRAB,
-		STATE_CHANGED
+		STATE_CHANGED,
+		TOUCH_BEGIN,
+		TOUCH_END,
+		DEVICE_SWITCH
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_")]
 	public enum CursorType {
@@ -5436,6 +5488,8 @@ namespace Gdk {
 		PROXIMITY_OUT_MASK,
 		SUBSTRUCTURE_MASK,
 		SCROLL_MASK,
+		TOUCH_MASK,
+		SMOOTH_SCROLL_MASK,
 		ALL_EVENTS_MASK
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_")]
@@ -5447,7 +5501,9 @@ namespace Gdk {
 		MOTION_NOTIFY,
 		BUTTON_PRESS,
 		@2BUTTON_PRESS,
+		DOUBLE_BUTTON_PRESS,
 		@3BUTTON_PRESS,
+		TRIPLE_BUTTON_PRESS,
 		BUTTON_RELEASE,
 		KEY_PRESS,
 		KEY_RELEASE,
@@ -5477,13 +5533,11 @@ namespace Gdk {
 		OWNER_CHANGE,
 		GRAB_BROKEN,
 		DAMAGE,
+		TOUCH_BEGIN,
+		TOUCH_UPDATE,
+		TOUCH_END,
+		TOUCH_CANCEL,
 		EVENT_LAST
-	}
-	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_EXTENSION_EVENTS_")]
-	public enum ExtensionMode {
-		NONE,
-		ALL,
-		CURSOR
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_FILTER_")]
 	public enum FilterReturn {
@@ -5530,7 +5584,9 @@ namespace Gdk {
 		PEN,
 		ERASER,
 		CURSOR,
-		KEYBOARD
+		KEYBOARD,
+		TOUCHSCREEN,
+		TOUCHPAD
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_MODIFIER_INTENT_")]
 	public enum ModifierIntent {
@@ -5594,7 +5650,8 @@ namespace Gdk {
 		UP,
 		DOWN,
 		LEFT,
-		RIGHT
+		RIGHT,
+		SMOOTH
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_SETTING_ACTION_")]
 	public enum SettingAction {
