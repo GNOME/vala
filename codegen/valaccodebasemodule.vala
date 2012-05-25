@@ -1886,6 +1886,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				if (!acc.readable && acc.value_parameter.captured) {
 					capture_parameter (acc.value_parameter, data, block_id);
 				}
+			} else if (b.parent_symbol is ForeachStatement) {
+				var stmt = (ForeachStatement) b.parent_symbol;
+				if (!stmt.use_iterator && stmt.element_variable.captured) {
+					ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_local_cname (stmt.element_variable)), get_variable_cexpression (get_local_cname (stmt.element_variable)));
+				}
 			}
 
 			var typedef = new CCodeTypeDefinition ("struct _" + struct_name, new CCodeVariableDeclarator (struct_name));
@@ -2161,6 +2166,17 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
+	bool is_foreach_element_variable (LocalVariable local) {
+		var block = local.parent_symbol;
+		if (block != null) {
+			var stmt = block.parent_symbol as ForeachStatement;
+			if (stmt != null && !stmt.use_iterator && stmt.element_variable == local) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public override void visit_local_variable (LocalVariable local) {
 		check_type (local.variable_type);
 
@@ -2177,7 +2193,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			rhs = get_cvalue (local.initializer);
 		}
 
-		if (!local.captured) {
+		// captured element variables of foreach statements (without iterator) require local declaration
+		if (!local.captured || is_foreach_element_variable (local)) {
 			if (is_in_coroutine ()) {
 				var count = emit_context.closure_variable_count_map.get (local.name);
 				if (count > 0) {
