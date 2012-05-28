@@ -68,7 +68,7 @@ namespace Gdk {
 		[CCode (has_construct_function = false)]
 		public Pixbuf.subpixbuf (Gdk.Pixbuf src_pixbuf, int src_x, int src_y, int width, int height);
 		[CCode (cname = "gdk_pixbuf_new_from_data", has_construct_function = false)]
-		public Pixbuf.take_data ([CCode (array_length = false)] uint8[] data, Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height, int rowstride, [CCode (type = "GdkPixbufDestroyNotify")] Gdk.PixbufDestroyNotify? destroy_fn = null);
+		public Pixbuf.with_unowned_data ([CCode (array_length = false)] uint8[] data, Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height, int rowstride, [CCode (type = "GdkPixbufDestroyNotify")] Gdk.PixbufDestroyNotify? destroy_fn = null);
 		public int bits_per_sample { get; construct; }
 		public Gdk.Colorspace colorspace { get; construct; }
 		public bool has_alpha { get; construct; }
