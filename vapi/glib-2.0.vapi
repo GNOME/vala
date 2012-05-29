@@ -3050,7 +3050,7 @@ namespace GLib {
 		public static int close (int fd);
 	}
 
-	[CCode (cname = "struct stat", cheader_filename = "sys/stat.h")]
+	[CCode (cname = "struct stat", cheader_filename = "sys/stat.h,glib/gstdio.h")]
 	public struct Stat {
 		[CCode (cname = "g_stat", instance_pos = -1)]
 		public Stat (string filename);
@@ -3066,6 +3066,7 @@ namespace GLib {
 		public void rewind ();
 	}
 	
+	[CCode (cheader_filename = "glib/gstdio.h")]
 	namespace DirUtils {
 		[CCode (cname = "g_mkdir")]
 		public static int create (string pathname, int mode);
