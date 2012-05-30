@@ -113,7 +113,7 @@ namespace Soup {
 		public virtual GLib.SList<string> get_protection_space (Soup.URI source_uri);
 		public unowned string get_realm ();
 		public unowned string get_scheme_name ();
-		public virtual bool update (Soup.Message msg, GLib.HashTable<void*,void*> auth_params);
+		public virtual bool update (Soup.Message msg, GLib.HashTable<void*,void*> auth_header);
 		public string host { get; construct; }
 		[NoAccessorMethod]
 		public virtual bool is_authenticated { get; }
@@ -197,6 +197,7 @@ namespace Soup {
 		public Buffer (Soup.MemoryUse use, [CCode (array_length_cname = "length", array_length_pos = 2.1, array_length_type = "gsize", type = "gconstpointer")] uint8[] data);
 		public Soup.Buffer copy ();
 		public void free ();
+		public GLib.Bytes get_as_bytes ();
 		public void get_data ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "gsize")] out unowned uint8[] data);
 		public void* get_owner ();
 		[CCode (has_construct_function = false)]
@@ -209,6 +210,23 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "soup_byte_array_get_type ()")]
 	[Compact]
 	public class ByteArray {
+	}
+	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_cache_get_type ()")]
+	public class Cache : GLib.Object, Soup.SessionFeature {
+		[CCode (has_construct_function = false)]
+		public Cache (string cache_dir, Soup.CacheType cache_type);
+		public void clear ();
+		public void dump ();
+		public void flush ();
+		[NoWrapper]
+		public virtual Soup.Cacheability get_cacheability (Soup.Message msg);
+		public uint get_max_size ();
+		public void load ();
+		public void set_max_size (uint max_size);
+		[NoAccessorMethod]
+		public string cache_dir { owned get; construct; }
+		[NoAccessorMethod]
+		public Soup.CacheType cache_type { get; construct; }
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "soup_client_context_get_type ()")]
 	[Compact]
@@ -493,6 +511,45 @@ namespace Soup {
 		protected ProxyResolverDefault ();
 		[NoAccessorMethod]
 		public GLib.ProxyResolver gproxy_resolver { set; }
+	}
+	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_request_get_type ()")]
+	public class Request : GLib.Object, GLib.Initable {
+		[CCode (has_construct_function = false)]
+		protected Request ();
+		[NoWrapper]
+		public virtual bool check_uri (Soup.URI uri) throws GLib.Error;
+		public virtual int64 get_content_length ();
+		public virtual unowned string get_content_type ();
+		public unowned Soup.Session get_session ();
+		public unowned Soup.URI get_uri ();
+		public virtual GLib.InputStream send (GLib.Cancellable? cancellable) throws GLib.Error;
+		public virtual async GLib.InputStream send_async (GLib.Cancellable? cancellable) throws GLib.Error;
+		public Soup.Session session { get; construct; }
+		public Soup.URI uri { get; construct; }
+	}
+	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_request_data_get_type ()")]
+	public class RequestData : Soup.Request, GLib.Initable {
+		[CCode (has_construct_function = false)]
+		protected RequestData ();
+	}
+	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_request_file_get_type ()")]
+	public class RequestFile : Soup.Request, GLib.Initable {
+		[CCode (has_construct_function = false)]
+		protected RequestFile ();
+		public GLib.File get_file ();
+	}
+	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_request_http_get_type ()")]
+	public class RequestHTTP : Soup.Request, GLib.Initable {
+		[CCode (has_construct_function = false)]
+		protected RequestHTTP ();
+		public Soup.Message get_message ();
+	}
+	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_requester_get_type ()")]
+	public class Requester : GLib.Object, Soup.SessionFeature {
+		[CCode (has_construct_function = false)]
+		public Requester ();
+		public Soup.Request request (string uri_string) throws GLib.Error;
+		public Soup.Request request_uri (Soup.URI uri) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_server_get_type ()")]
 	public class Server : GLib.Object {
@@ -914,17 +971,18 @@ namespace Soup {
 		RESPONSE,
 		MULTIPART
 	}
-	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_REQUESTER_ERROR_")]
-	public enum RequesterError {
-		BAD_URI,
-		UNSUPPORTED_URI_SCHEME
-	}
 	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_SOCKET_")]
 	public enum SocketIOStatus {
 		OK,
 		WOULD_BLOCK,
 		EOF,
 		ERROR
+	}
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_REQUESTER_ERROR_")]
+	public errordomain RequesterError {
+		BAD_URI,
+		UNSUPPORTED_URI_SCHEME;
+		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public errordomain SSLError {

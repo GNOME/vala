@@ -99,6 +99,8 @@ namespace GLib {
 	public class PollableSource : GLib.Source {
 		[CCode (type = "GSource*")]
 		public PollableSource (GLib.Object pollable_stream);
+		[CCode (type = "GSource*")]
+		public PollableSource.full (GLib.Object pollable_stream, GLib.Source? child_source, GLib.Cancellable? cancellable = null);
 		[CCode (cname = "g_source_set_callback")]
 		public void set_callback ([CCode (type = "GSourceFunc")] owned PollableSourceFunc func);
 	}

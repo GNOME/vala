@@ -235,7 +235,10 @@ namespace Json {
 		NO_ARRAY,
 		INVALID_INDEX,
 		NO_OBJECT,
-		INVALID_MEMBER
+		INVALID_MEMBER,
+		INVALID_NODE,
+		NO_VALUE,
+		INVALID_TYPE
 	}
 	[CCode (cheader_filename = "json-glib/json-glib.h", instance_pos = 3.9)]
 	public delegate void ArrayForeach (Json.Array array, uint index_, Json.Node element_node);

@@ -67,6 +67,8 @@ namespace GData {
 		public const string DOC;
 		[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_DOCUMENTS_TEXT_HTML")]
 		public const string HTML;
+		[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_DOCUMENTS_TEXT_JPEG")]
+		public const string JPEG;
 		[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_DOCUMENTS_TEXT_ODT")]
 		public const string ODT;
 		[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_DOCUMENTS_TEXT_PDF")]
@@ -492,9 +494,9 @@ namespace GData {
 		public async void query_groups_async (GData.Query? query, GLib.Cancellable? cancellable, owned GData.QueryProgressCallback? progress_callback);
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_documents_document_get_type ()")]
-	public abstract class DocumentsDocument : GData.DocumentsEntry, GData.AccessHandler {
+	public class DocumentsDocument : GData.DocumentsEntry, GData.AccessHandler {
 		[CCode (has_construct_function = false)]
-		protected DocumentsDocument ();
+		public DocumentsDocument (string? id);
 		public GData.DownloadStream download (GData.DocumentsService service, string export_format, GLib.Cancellable? cancellable) throws GLib.Error;
 		public string get_download_uri (string export_format);
 	}
@@ -508,6 +510,7 @@ namespace GData {
 		public unowned GData.Author get_last_modified_by ();
 		public int64 get_last_viewed ();
 		public string get_path ();
+		public int64 get_quota_used ();
 		public unowned string get_resource_id ();
 		public void set_writers_can_invite (bool writers_can_invite);
 		[Deprecated (since = "This a substring of the #GDataDocumentsEntry:resource-id, which is more general and should be used instead. (Since")]
@@ -517,6 +520,7 @@ namespace GData {
 		public bool is_deleted { get; set; }
 		public GData.Author last_modified_by { get; }
 		public int64 last_viewed { get; }
+		public int64 quota_used { get; }
 		public string resource_id { get; }
 		[NoAccessorMethod]
 		public bool writers_can_invite { get; set; }
@@ -578,7 +582,9 @@ namespace GData {
 		public GData.DocumentsEntry remove_entry_from_folder (GData.DocumentsEntry entry, GData.DocumentsFolder folder, GLib.Cancellable? cancellable) throws GLib.Error;
 		public async GData.DocumentsEntry remove_entry_from_folder_async (GData.DocumentsEntry entry, GData.DocumentsFolder folder, GLib.Cancellable? cancellable) throws GLib.Error;
 		public GData.UploadStream update_document (GData.DocumentsDocument document, string slug, string content_type, GLib.Cancellable? cancellable) throws GLib.Error;
+		public GData.UploadStream update_document_resumable (GData.DocumentsDocument document, string slug, string content_type, int64 content_length, GLib.Cancellable? cancellable) throws GLib.Error;
 		public GData.UploadStream upload_document (GData.DocumentsDocument? document, string slug, string content_type, GData.DocumentsFolder? folder, GLib.Cancellable? cancellable) throws GLib.Error;
+		public GData.UploadStream upload_document_resumable (GData.DocumentsDocument? document, string slug, string content_type, int64 content_length, GData.DocumentsUploadQuery? query, GLib.Cancellable? cancellable) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_documents_spreadsheet_get_type ()")]
 	public class DocumentsSpreadsheet : GData.DocumentsDocument, GData.AccessHandler {
@@ -590,6 +596,18 @@ namespace GData {
 	public class DocumentsText : GData.DocumentsDocument, GData.AccessHandler {
 		[CCode (has_construct_function = false)]
 		public DocumentsText (string? id);
+	}
+	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_documents_upload_query_get_type ()")]
+	public class DocumentsUploadQuery : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public DocumentsUploadQuery ();
+		public string build_uri ();
+		public bool get_convert ();
+		public unowned GData.DocumentsFolder get_folder ();
+		public void set_convert (bool convert);
+		public void set_folder (GData.DocumentsFolder? folder);
+		public bool convert { get; set; }
+		public GData.DocumentsFolder folder { get; set; }
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_download_stream_get_type ()")]
 	public class DownloadStream : GLib.InputStream, GLib.Seekable {
@@ -1422,6 +1440,7 @@ namespace GData {
 		public UploadStream (GData.Service service, GData.AuthorizationDomain? domain, string method, string upload_uri, GData.Entry? entry, string slug, string content_type, GLib.Cancellable? cancellable);
 		public unowned GData.AuthorizationDomain get_authorization_domain ();
 		public unowned GLib.Cancellable get_cancellable ();
+		public int64 get_content_length ();
 		public unowned string get_content_type ();
 		public unowned GData.Entry get_entry ();
 		public unowned string get_method ();
@@ -1429,8 +1448,11 @@ namespace GData {
 		public unowned GData.Service get_service ();
 		public unowned string get_slug ();
 		public unowned string get_upload_uri ();
+		[CCode (has_construct_function = false, type = "GOutputStream*")]
+		public UploadStream.resumable (GData.Service service, GData.AuthorizationDomain? domain, string method, string upload_uri, GData.Entry? entry, string slug, string content_type, int64 content_length, GLib.Cancellable? cancellable);
 		public GData.AuthorizationDomain authorization_domain { get; construct; }
 		public GLib.Cancellable cancellable { get; construct; }
+		public int64 content_length { get; construct; }
 		public string content_type { get; construct; }
 		public GData.Entry entry { get; construct; }
 		public string method { get; construct; }
@@ -2034,6 +2056,10 @@ namespace GData {
 	public const string LINK_ENCLOSURE;
 	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_LINK_RELATED")]
 	public const string LINK_RELATED;
+	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_LINK_RESUMABLE_CREATE_MEDIA")]
+	public const string LINK_RESUMABLE_CREATE_MEDIA;
+	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_LINK_RESUMABLE_EDIT_MEDIA")]
+	public const string LINK_RESUMABLE_EDIT_MEDIA;
 	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_LINK_SELF")]
 	public const string LINK_SELF;
 	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_LINK_VIA")]

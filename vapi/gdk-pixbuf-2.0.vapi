@@ -28,6 +28,10 @@ namespace Gdk {
 		[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 		public static Gdk.Pixbuf from_pixdata (Gdk.Pixdata pixdata, bool copy_pixels = true) throws GLib.Error;
 		[CCode (has_construct_function = false)]
+		public Pixbuf.from_resource (string resource_path) throws GLib.Error;
+		[CCode (has_construct_function = false)]
+		public Pixbuf.from_resource_at_scale (string resource_path, int width, int height, bool preserve_aspect_ratio) throws GLib.Error;
+		[CCode (has_construct_function = false)]
 		public Pixbuf.from_stream (GLib.InputStream stream, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public Pixbuf.from_stream_at_scale (GLib.InputStream stream, int width, int height, bool preserve_aspect_ratio, GLib.Cancellable? cancellable = null) throws GLib.Error;

@@ -44,6 +44,7 @@ namespace Wnck {
 		public unowned string get_id ();
 		public unowned Gdk.Pixbuf get_mini_icon ();
 		public unowned string get_name ();
+		[Deprecated (since = "3.2")]
 		public unowned string get_res_class ();
 		public unowned GLib.List<Wnck.Window> get_windows ();
 		public virtual signal void icon_changed ();
@@ -366,4 +367,6 @@ namespace Wnck {
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public static void set_client_type (Wnck.ClientType ewmh_sourceindication_client_type);
+	[CCode (cheader_filename = "libwnck/libwnck.h")]
+	public static void shutdown ();
 }

@@ -169,8 +169,6 @@ namespace Mx {
 		public void set_orientation (Mx.Orientation orientation);
 		public void set_scroll_to_focused (bool scroll_to_focused);
 		public void set_spacing (uint spacing);
-		[CCode (has_construct_function = false, type = "ClutterActor*")]
-		public BoxLayout.with_orientation (Mx.Orientation orientation);
 		public bool enable_animations { get; set; }
 		public Mx.Orientation orientation { get; set; }
 		public bool scroll_to_focused { get; set; }
@@ -270,7 +268,7 @@ namespace Mx {
 		public void set_text (string text);
 	}
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_combo_box_get_type ()")]
-	public class ComboBox : Mx.Widget, Atk.Implementor, Clutter.Animatable, Clutter.Scriptable, Mx.Focusable, Mx.Stylable {
+	public class ComboBox : Mx.Widget, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable, Mx.Focusable, Mx.Stylable {
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
 		public ComboBox ();
 		public void append_text (string text);
@@ -290,7 +288,7 @@ namespace Mx {
 		public int index { get; set; }
 	}
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_deform_bow_tie_get_type ()")]
-	public class DeformBowTie : Mx.DeformTexture, Atk.Implementor, Clutter.Animatable, Clutter.Scriptable, Mx.Stylable {
+	public class DeformBowTie : Mx.DeformTexture, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable, Mx.Stylable {
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
 		public DeformBowTie ();
 		public bool get_flip_back ();
@@ -301,7 +299,7 @@ namespace Mx {
 		public double period { get; set; }
 	}
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_deform_page_turn_get_type ()")]
-	public class DeformPageTurn : Mx.DeformTexture, Atk.Implementor, Clutter.Animatable, Clutter.Scriptable, Mx.Stylable {
+	public class DeformPageTurn : Mx.DeformTexture, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable, Mx.Stylable {
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
 		public DeformPageTurn ();
 		public double get_angle ();
@@ -315,7 +313,7 @@ namespace Mx {
 		public double radius { get; set; }
 	}
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_deform_texture_get_type ()")]
-	public abstract class DeformTexture : Mx.Widget, Atk.Implementor, Clutter.Animatable, Clutter.Scriptable, Mx.Stylable {
+	public abstract class DeformTexture : Mx.Widget, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable, Mx.Stylable {
 		[CCode (has_construct_function = false)]
 		protected DeformTexture ();
 		[NoWrapper]
@@ -335,7 +333,7 @@ namespace Mx {
 		public int tiles_y { get; set; }
 	}
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_deform_waves_get_type ()")]
-	public class DeformWaves : Mx.DeformTexture, Atk.Implementor, Clutter.Animatable, Clutter.Scriptable, Mx.Stylable {
+	public class DeformWaves : Mx.DeformTexture, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable, Mx.Stylable {
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
 		public DeformWaves ();
 		public double get_amplitude ();
@@ -361,7 +359,7 @@ namespace Mx {
 		public void set_transient_parent (Clutter.Actor actor);
 	}
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_entry_get_type ()")]
-	public class Entry : Mx.Widget, Atk.Implementor, Clutter.Animatable, Clutter.Scriptable, Mx.Focusable, Mx.Stylable {
+	public class Entry : Mx.Widget, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable, Mx.Focusable, Mx.Stylable {
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
 		public Entry ();
 		public unowned Clutter.Actor get_clutter_text ();
@@ -434,7 +432,7 @@ namespace Mx {
 		public bool freeze_update { get; set; }
 	}
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_floating_widget_get_type ()")]
-	public abstract class FloatingWidget : Mx.Widget, Atk.Implementor, Clutter.Animatable, Clutter.Scriptable, Mx.Stylable {
+	public abstract class FloatingWidget : Mx.Widget, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable, Mx.Stylable {
 		[CCode (has_construct_function = false)]
 		protected FloatingWidget ();
 		[NoWrapper]
@@ -493,7 +491,7 @@ namespace Mx {
 		public float row_spacing { get; set construct; }
 	}
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_icon_get_type ()")]
-	public class Icon : Mx.Widget, Atk.Implementor, Clutter.Animatable, Clutter.Scriptable, Mx.Stylable {
+	public class Icon : Mx.Widget, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable, Mx.Stylable {
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
 		public Icon ();
 		public unowned string get_icon_name ();
@@ -518,7 +516,7 @@ namespace Mx {
 		public string theme_name { get; set; }
 	}
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_image_get_type ()")]
-	public class Image : Mx.Widget, Atk.Implementor, Clutter.Animatable, Clutter.Scriptable, Mx.Stylable {
+	public class Image : Mx.Widget, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable, Mx.Stylable {
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
 		public Image ();
 		public void animate_scale_mode (ulong mode, uint duration, Mx.ImageScaleMode scale_mode);
@@ -606,7 +604,7 @@ namespace Mx {
 		public bool use_captured { get; set; }
 	}
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_label_get_type ()")]
-	public class Label : Mx.Widget, Atk.Implementor, Clutter.Animatable, Clutter.Scriptable, Mx.Stylable {
+	public class Label : Mx.Widget, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable, Mx.Stylable {
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
 		public Label ();
 		public unowned Clutter.Actor get_clutter_text ();
@@ -653,7 +651,7 @@ namespace Mx {
 		public Clutter.Model model { get; set; }
 	}
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_menu_get_type ()")]
-	public class Menu : Mx.FloatingWidget, Atk.Implementor, Clutter.Animatable, Clutter.Scriptable, Mx.Focusable, Mx.Stylable {
+	public class Menu : Mx.FloatingWidget, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable, Mx.Focusable, Mx.Stylable {
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
 		public Menu ();
 		public void add_action (Mx.Action action);
@@ -701,7 +699,7 @@ namespace Mx {
 		public bool redirect_enabled { get; set; }
 	}
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_path_bar_get_type ()")]
-	public class PathBar : Mx.Widget, Atk.Implementor, Clutter.Animatable, Clutter.Scriptable, Mx.Focusable, Mx.Stylable {
+	public class PathBar : Mx.Widget, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable, Mx.Focusable, Mx.Stylable {
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
 		public PathBar ();
 		public void clear ();
@@ -723,7 +721,7 @@ namespace Mx {
 		public int level { get; }
 	}
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_progress_bar_get_type ()")]
-	public class ProgressBar : Mx.Widget, Atk.Implementor, Clutter.Animatable, Clutter.Scriptable, Mx.Stylable {
+	public class ProgressBar : Mx.Widget, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable, Mx.Stylable {
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
 		public ProgressBar ();
 		public double get_progress ();
@@ -781,7 +779,7 @@ namespace Mx {
 	public class SettingsProvider {
 	}
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_slider_get_type ()")]
-	public class Slider : Mx.Widget, Atk.Implementor, Clutter.Animatable, Clutter.Scriptable, Mx.Focusable, Mx.Stylable {
+	public class Slider : Mx.Widget, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable, Mx.Focusable, Mx.Stylable {
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
 		public Slider ();
 		public double get_buffer_value ();
@@ -792,7 +790,7 @@ namespace Mx {
 		public double value { get; set; }
 	}
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_spinner_get_type ()")]
-	public class Spinner : Mx.Widget, Atk.Implementor, Clutter.Animatable, Clutter.Scriptable, Mx.Stylable {
+	public class Spinner : Mx.Widget, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable, Mx.Stylable {
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
 		public Spinner ();
 		public bool get_animating ();
@@ -970,7 +968,7 @@ namespace Mx {
 		public virtual void loaded (string uri, Clutter.Texture texture);
 	}
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_texture_frame_get_type ()")]
-	public class TextureFrame : Clutter.Actor, Atk.Implementor, Clutter.Animatable, Clutter.Scriptable {
+	public class TextureFrame : Clutter.Actor, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable {
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
 		public TextureFrame (Clutter.Texture texture, float top, float right, float bottom, float left);
 		public void get_border_values (float top, float right, float bottom, float left);
@@ -988,7 +986,7 @@ namespace Mx {
 		public float top { get; set construct; }
 	}
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_toggle_get_type ()")]
-	public class Toggle : Mx.Widget, Atk.Implementor, Clutter.Animatable, Clutter.Scriptable, Mx.Stylable {
+	public class Toggle : Mx.Widget, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable, Mx.Stylable {
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
 		public Toggle ();
 		public bool get_active ();
@@ -1005,7 +1003,7 @@ namespace Mx {
 		public virtual signal bool close_button_clicked ();
 	}
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_tooltip_get_type ()")]
-	public class Tooltip : Mx.FloatingWidget, Atk.Implementor, Clutter.Animatable, Clutter.Scriptable, Mx.Stylable {
+	public class Tooltip : Mx.FloatingWidget, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable, Mx.Stylable {
 		[CCode (has_construct_function = false)]
 		protected Tooltip ();
 		public unowned string get_text ();
@@ -1036,7 +1034,7 @@ namespace Mx {
 		public float z_origin { get; set; }
 	}
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_widget_get_type ()")]
-	public abstract class Widget : Clutter.Actor, Atk.Implementor, Clutter.Animatable, Clutter.Scriptable, Mx.Stylable {
+	public abstract class Widget : Clutter.Actor, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable, Mx.Stylable {
 		[CCode (has_construct_function = false)]
 		protected Widget ();
 		public virtual void apply_style (Mx.Style style);

@@ -235,6 +235,9 @@ TlsServerConnection
 DBusError errordomain
 DBusSubtreeEnumerateFunc unowned=false skip=false
 ReallocFunc skip=false
+pollable_source_new_full skip
+pollable_stream_read
+  .buffer type="uint8[]" array_length_idx=2
 
 
 content_types_get_registered parent="GLib.ContentType" name="list_registered"

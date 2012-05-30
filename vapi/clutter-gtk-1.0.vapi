@@ -20,7 +20,7 @@ namespace GtkClutter {
 		public unowned Clutter.Actor get_stage ();
 	}
 	[CCode (cheader_filename = "clutter-gtk/clutter-gtk.h", type_id = "gtk_clutter_texture_get_type ()")]
-	public class Texture : Clutter.Texture, Atk.Implementor, Clutter.Animatable, Clutter.Scriptable {
+	public class Texture : Clutter.Texture, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable {
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
 		public Texture ();
 		public static GLib.Quark error_quark ();
