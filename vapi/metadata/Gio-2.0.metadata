@@ -138,6 +138,8 @@ MenuItem
   .set_attribute skip=false
 MenuModel
   .get_item_attribute skip=false
+Mount
+  .get_sort_key#virtual_method virtual
 OutputStream
   .close skip
   .close_finish throws="GLib.IOError"

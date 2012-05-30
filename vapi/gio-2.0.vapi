@@ -2495,7 +2495,7 @@ namespace GLib {
 		public abstract GLib.Icon get_icon ();
 		public abstract string get_name ();
 		public abstract GLib.File get_root ();
-		public abstract unowned string get_sort_key ();
+		public virtual unowned string get_sort_key ();
 		public abstract string get_uuid ();
 		public abstract GLib.Volume get_volume ();
 		[CCode (array_length = false, array_null_terminated = true)]
