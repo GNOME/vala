@@ -4559,6 +4559,35 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var temp_value = create_temp_value (expr.value_type, false, expr);
 			ccode.add_assignment (get_cvalue_ (temp_value), creation_expr);
 			expr.target_value = temp_value;
+
+			if (context.gobject_tracing) {
+				// GObject creation tracing enabled
+
+				var cl = expr.type_reference.data_type as Class;
+				if (cl != null && cl.is_subtype_of (gobject_type)) {
+					// creating GObject
+
+					// instance can be NULL in error cases
+					ccode.open_if (get_cvalue_ (expr.target_value));
+
+					var set_data_call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_set_data"));
+					set_data_call.add_argument (new CCodeCastExpression (get_cvalue_ (expr.target_value), "GObject *"));
+					set_data_call.add_argument (new CCodeConstant ("\"vala-creation-function\""));
+
+					string func_name = "";
+					if (current_method != null) {
+						func_name = current_method.get_full_name ();
+					} else if (current_property_accessor != null) {
+						func_name = current_property_accessor.get_full_name ();
+					}
+
+					set_data_call.add_argument (new CCodeConstant ("\"%s\"".printf (func_name)));
+
+					ccode.add_expression (set_data_call);
+
+					ccode.close ();
+				}
+			}
 		}
 
 		((GLibValue) expr.target_value).lvalue = true;

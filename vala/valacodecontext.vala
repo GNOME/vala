@@ -52,6 +52,11 @@ public class Vala.CodeContext {
 	public bool experimental_non_null { get; set; }
 
 	/**
+	 * Enable GObject creation tracing.
+	 */
+	public bool gobject_tracing { get; set; }
+
+	/**
 	 * Output C code, don't compile to object code.
 	 */
 	public bool ccode_only { get; set; }
