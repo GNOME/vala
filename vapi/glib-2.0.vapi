@@ -3152,7 +3152,7 @@ namespace GLib {
 		EXISTS
 	}
 
-	[CCode (cprefix = "SEEK_", has_type_id = false)]
+	[CCode (name = "int", cprefix = "SEEK_", has_type_id = false)]
 	public enum FileSeek {
 		SET,
 		CUR,
