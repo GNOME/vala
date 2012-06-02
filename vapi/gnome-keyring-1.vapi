@@ -245,7 +245,7 @@ namespace GnomeKeyring {
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result item_get_info_full_sync (string? keyring, uint32 id, uint32 flags, out unowned GnomeKeyring.ItemInfo info);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static unowned GnomeKeyring.Result? item_get_info_sync (string keyring, uint32 id, out unowned GnomeKeyring.ItemInfo info);
+	public static GnomeKeyring.Result item_get_info_sync (string keyring, uint32 id, out unowned GnomeKeyring.ItemInfo info);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static void* item_grant_access_rights (string? keyring, string display_name, string full_path, uint32 id, GnomeKeyring.AccessType rights, owned GnomeKeyring.OperationDoneCallback callback);
 	[CCode (cheader_filename = "gnome-keyring.h")]
