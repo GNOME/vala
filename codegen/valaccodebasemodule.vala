@@ -5285,7 +5285,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		                        && type.data_type != gvariant_type);
 
 		if (type.value_owned
-		    && (target_type == null || !target_type.value_owned || boxing || unboxing)
+		    && (target_type == null || !target_type.value_owned || boxing || unboxing || gvariant_boxing)
 		    && !gvalue_boxing /* gvalue can assume ownership of value, no need to free it */) {
 			// value leaked, destroy it
 			if (target_type is PointerType) {

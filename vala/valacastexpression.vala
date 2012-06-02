@@ -152,9 +152,18 @@ public class Vala.CastExpression : Expression {
 			value_type.nullable = true;
 		}
 
+		if (is_gvariant (context, inner.value_type) && !is_gvariant (context, value_type)) {
+			// GVariant unboxing returns owned value
+			value_type.value_owned = true;
+		}
+
 		inner.target_type = inner.value_type.copy ();
 
 		return !error;
+	}
+
+	bool is_gvariant (CodeContext context, DataType type) {
+		return type.data_type != null && type.data_type.is_subtype_of (context.analyzer.gvariant_type.data_type);
 	}
 
 	public override void emit (CodeGenerator codegen) {
