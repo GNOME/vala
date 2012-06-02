@@ -1847,7 +1847,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					var ref_call = new CCodeFunctionCall (get_dup_func_expression (get_data_type_for_symbol (current_type_symbol), b.source_reference));
 					ref_call.add_argument (get_result_cexpression ("self"));
 
-					ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), "self"), ref_call);
+					// never increase reference count for self in finalizers to avoid infinite recursion on following unref
+					var instance = (is_in_destructor () ? (CCodeExpression) new CCodeIdentifier ("self") : (CCodeExpression) ref_call);
+
+					ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), "self"), instance);
 				}
 
 				if (current_method != null) {
@@ -2033,8 +2036,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "_data%d_".printf (parent_block_id)), new CCodeConstant ("NULL"));
 			} else {
 				if (get_this_type () != null) {
-					var this_value = new GLibValue (get_data_type_for_symbol (current_type_symbol), new CCodeIdentifier ("self"), true);
-					ccode.add_expression (destroy_value (this_value));
+					// reference count for self is not increased in finalizers
+					if (!is_in_destructor ()) {
+						var this_value = new GLibValue (get_data_type_for_symbol (current_type_symbol), new CCodeIdentifier ("self"), true);
+						ccode.add_expression (destroy_value (this_value));
+					}
 				}
 			}
 
