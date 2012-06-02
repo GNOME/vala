@@ -134,7 +134,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				string s = Path.get_basename (expr.source_reference.file.filename);
 				set_cvalue (expr, new CCodeConstant ("\"%s\"".printf (s)));
 			} else if (fn == "GLib.Log.LINE") {
-				int i = expr.source_reference.first_line;
+				int i = expr.source_reference.begin.line;
 				set_cvalue (expr, new CCodeConstant ("%d".printf (i)));
 			} else if (fn == "GLib.Log.METHOD") {
 				string s = "";

@@ -193,11 +193,11 @@ public class Vala.Genie.Parser : CodeVisitor {
 	SourceReference get_src (SourceLocation begin) {
 		int last_index = (index + BUFFER_SIZE - 1) % BUFFER_SIZE;
 
-		return new SourceReference (scanner.source_file, begin.line, begin.column, tokens[last_index].end.line, tokens[last_index].end.column);
+		return new SourceReference (scanner.source_file, begin, tokens[last_index].end);
 	}
 
 	SourceReference get_current_src () {
-		return new SourceReference (scanner.source_file, tokens[index].begin.line, tokens[index].begin.column, tokens[index].end.line, tokens[index].end.column);
+		return new SourceReference (scanner.source_file, tokens[index].begin, tokens[index].end);
 	}
 
 	void rollback (SourceLocation location) {
@@ -1839,8 +1839,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 			}
 		}
 
-		block.source_reference.last_line = get_current_src ().last_line;
-		block.source_reference.last_column = get_current_src ().last_column;
+		block.source_reference.end = get_current_src ().end;
 		
 		return block;
 	}

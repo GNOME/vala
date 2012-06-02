@@ -58,12 +58,12 @@ public class Vala.Report : Object {
 	 * Pretty-print the actual line of offending code if possible.
 	 */
 	static void report_source (SourceReference source) {
-		if (source.first_line != source.last_line) {
+		if (source.begin.line != source.end.line) {
 			// FIXME Cannot report multi-line issues currently
 			return;
 		}
 
-		string offending_line = source.file.get_source_line (source.first_line);
+		string offending_line = source.file.get_source_line (source.begin.line);
 
 		if (offending_line != null) {
 			stderr.printf ("%s\n", offending_line);
@@ -72,7 +72,7 @@ public class Vala.Report : Object {
 			/* We loop in this manner so that we don't fall over on differing
 			 * tab widths. This means we get the ^s in the right places.
 			 */
-			for (idx = 1; idx < source.first_column; ++idx) {
+			for (idx = 1; idx < source.begin.column; ++idx) {
 				if (offending_line[idx - 1] == '\t') {
 					stderr.printf ("\t");
 				} else {
@@ -80,7 +80,7 @@ public class Vala.Report : Object {
 				}
 			}
 
-			for (idx = source.first_column; idx <= source.last_column; ++idx) {
+			for (idx = source.begin.column; idx <= source.end.column; ++idx) {
 				if (offending_line[idx - 1] == '\t') {
 					stderr.printf ("\t");
 				} else {

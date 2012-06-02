@@ -1,6 +1,6 @@
 /* valasourcereference.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2012  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -32,24 +32,14 @@ public class Vala.SourceReference {
 	public weak SourceFile file { get; set; }
 
 	/**
-	 * The first line number of the referenced source code.
+	 * The begin of the referenced source code.
 	 */
-	public int first_line { get; set; }
+	public SourceLocation begin { get; set; }
 
 	/**
-	 * The first column number of the referenced source code.
+	 * The end of the referenced source code.
 	 */
-	public int first_column { get; set; }
-
-	/**
-	 * The last line number of the referenced source code.
-	 */
-	public int last_line { get; set; }
-
-	/**
-	 * The last column number of the referenced source code.
-	 */
-	public int last_column { get; set; }
+	public SourceLocation end { get; set; }
 
 	public List<UsingDirective> using_directives { get; private set; }
 
@@ -63,12 +53,10 @@ public class Vala.SourceReference {
 	 * @param last_column  last column number
 	 * @return             newly created source reference
 	 */
-	public SourceReference (SourceFile _file, int _first_line = 0, int _first_column = 0, int _last_line = 0, int _last_column = 0) {
+	public SourceReference (SourceFile _file, SourceLocation begin, SourceLocation end) {
 		file = _file;
-		first_line = _first_line;
-		first_column = _first_column;
-		last_line = _last_line;
-		last_column = _last_column;
+		this.begin = begin;
+		this.end = end;
 		using_directives = file.current_using_directives;
 	}
 	
@@ -78,6 +66,6 @@ public class Vala.SourceReference {
 	 * @return human-readable string
 	 */
 	public string to_string () {
-		return ("%s:%d.%d-%d.%d".printf (file.get_relative_filename (), first_line, first_column, last_line, last_column));
+		return ("%s:%d.%d-%d.%d".printf (file.get_relative_filename (), begin.line, begin.column, end.line, end.column));
 	}
 }

@@ -137,7 +137,7 @@ class Vala.VAPICheck : Object {
 				var symbol = tokens[0];
 
 				if (symbol.length > 0 && !_symbols.contains (symbol)) {
-					var src = new SourceReference (metadata, lineno, 1, lineno, (int)symbol.length);
+					var src = new SourceReference (metadata, SourceLocation (null, lineno, 1), SourceLocation (null, lineno, (int)symbol.length));
 					Report.error (src, "Symbol `%s' not found".printf (symbol));
 				}
 

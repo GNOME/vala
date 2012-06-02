@@ -244,7 +244,7 @@ public class Vala.GirParser : CodeVisitor {
 		}
 
 		SourceReference get_current_src () {
-			return new SourceReference (scanner.source_file, begin.line, begin.column, end.line, end.column);
+			return new SourceReference (scanner.source_file, begin, end);
 		}
 
 		SourceReference get_src (SourceLocation begin, SourceLocation? end = null) {
@@ -252,7 +252,7 @@ public class Vala.GirParser : CodeVisitor {
 			if (end != null) {
 				e = end;
 			}
-			return new SourceReference (scanner.source_file, begin.line, begin.column, e.line, e.column);
+			return new SourceReference (scanner.source_file, begin, e);
 		}
 
 		public Metadata parse_metadata (SourceFile metadata_file) {
@@ -1191,7 +1191,7 @@ public class Vala.GirParser : CodeVisitor {
 	}
 
 	SourceReference get_current_src () {
-		return new SourceReference (this.current_source_file, begin.line, begin.column, end.line, end.column);
+		return new SourceReference (this.current_source_file, begin, end);
 	}
 
 	const string GIR_VERSION = "1.2";

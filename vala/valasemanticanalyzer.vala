@@ -499,7 +499,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		if (diag && prev_arg != null) {
 			var format_arg = prev_arg as StringLiteral;
 			if (format_arg != null) {
-				format_arg.value = "\"%s:%d: %s".printf (Path.get_basename (expr.source_reference.file.filename), expr.source_reference.first_line, format_arg.value.substring (1));
+				format_arg.value = "\"%s:%d: %s".printf (Path.get_basename (expr.source_reference.file.filename), expr.source_reference.begin.line, format_arg.value.substring (1));
 			}
 		}
 

@@ -139,7 +139,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		try {
 			var modules = Idl.parse_file (source_file.filename);
 			
-			current_source_reference = new SourceReference (source_file);
+			current_source_reference = new SourceReference (source_file, SourceLocation (null, 0, 0), SourceLocation (null, 0, 0));
 			
 			foreach (weak IdlModule module in modules) {
 				var ns = parse_module (module);

@@ -560,7 +560,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public void push_line (SourceReference? source_reference) {
 		line_directive_stack.add (current_line);
 		if (source_reference != null) {
-			current_line = new CCodeLineDirective (source_reference.file.filename, source_reference.first_line);
+			current_line = new CCodeLineDirective (source_reference.file.filename, source_reference.begin.line);
 			if (ccode != null) {
 				ccode.current_line = current_line;
 			}
