@@ -156,12 +156,12 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 
 			default_section.emit (this);
 
-			if (n > 0) {
-				ccode.close ();
-			}
+			ccode.close ();
 		}
 
-		ccode.close ();
+		if (n > 0) {
+			ccode.close ();
+		}
 	}
 
 	public override void visit_switch_statement (SwitchStatement stmt) {
