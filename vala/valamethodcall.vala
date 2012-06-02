@@ -203,6 +203,11 @@ public class Vala.MethodCall : Expression {
 
 			if (ma.symbol_reference != null && ma.symbol_reference.get_attribute ("Assert") != null) {
 				this.is_assert = true;
+
+				var args = get_argument_list ();
+				if (args.size == 1) {
+					this.source_reference = args[0].source_reference;
+				}
 			}
 		}
 

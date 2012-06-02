@@ -321,6 +321,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public string module_init_param_name;
 	
 	public bool gvaluecollector_h_needed;
+	public bool requires_assert;
 	public bool requires_array_free;
 	public bool requires_array_move;
 	public bool requires_array_length;
@@ -664,6 +665,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		next_regex_id = 0;
 		
 		gvaluecollector_h_needed = false;
+		requires_assert = false;
 		requires_array_free = false;
 		requires_array_move = false;
 		requires_array_length = false;
@@ -692,6 +694,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return;
 		}
 
+		if (requires_assert) {
+			cfile.add_type_declaration (new CCodeMacroReplacement.with_expression ("_vala_assert(expr, msg)", new CCodeConstant ("if G_LIKELY (expr) ; else g_assertion_message_expr (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, msg);")));
+		}
 		if (requires_array_free) {
 			append_vala_array_free ();
 		}

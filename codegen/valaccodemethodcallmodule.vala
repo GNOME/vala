@@ -677,6 +677,14 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			ccode.add_label ("_state_%d".printf (state));
 		}
 
+		if (expr.is_assert) {
+			string message = ((string) expr.source_reference.begin.pos).substring (0, (int) (expr.source_reference.end.pos - expr.source_reference.begin.pos));
+			ccall.call = new CCodeIdentifier ("_vala_assert");
+			ccall.add_argument (new CCodeConstant ("\"%s\"".printf (message.replace ("\n", " ").escape (""))));
+			requires_assert = true;
+
+		}
+
 		if (return_result_via_out_param) {
 			ccode.add_expression (ccall_expr);
 			ccall_expr = out_param_ref;
