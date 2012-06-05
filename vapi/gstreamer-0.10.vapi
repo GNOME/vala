@@ -167,7 +167,7 @@ namespace Gst {
 		public uint add_watch_full (int priority, owned Gst.BusFunc func);
 		[CCode (instance_pos = -1)]
 		public bool async_signal_func (Gst.Bus bus, Gst.Message message);
-		public GLib.TimeoutSource create_watch ();
+		public GLib.Source create_watch ();
 		public void disable_sync_message_emission ();
 		public void enable_sync_message_emission ();
 		public bool have_pending ();
