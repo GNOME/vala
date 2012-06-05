@@ -54,7 +54,7 @@ namespace Vte {
 		public void im_append_menuitems (Gtk.MenuShell menushell);
 		public bool is_word_char (unichar c);
 		public int match_add_gregex (GLib.Regex regex, GLib.RegexMatchFlags flags);
-		public string match_check (long column, long row, out int tag);
+		public string? match_check (long column, long row, out int tag);
 		public void match_clear_all ();
 		public void match_remove (int tag);
 		public void match_set_cursor (int tag, Gdk.Cursor? cursor);
