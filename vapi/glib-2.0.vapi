@@ -1783,11 +1783,20 @@ namespace GLib {
 	
 	/* Thread Pools */
 
+	[CCode (cname = "GFunc")]
+	public delegate void ThreadPoolFunc<G> (owned G data);
+
 	[Compact]
 	[CCode (free_function = "g_thread_pool_free")]
 	public class ThreadPool<T> {
+		[Deprecated (since = "vala-0.18", replacement = "ThreadPool.with_owned_data")]
 		public ThreadPool (Func<T> func, int max_threads, bool exclusive) throws ThreadError;
+		[CCode (cname = "g_thread_pool_new")]
+		public ThreadPool.with_owned_data (ThreadPoolFunc<T> func, int max_threads, bool exclusive) throws ThreadError;
+		[Deprecated (since = "vala-0.18", replacement = "add")]
 		public void push (T data) throws ThreadError;
+		[CCode (cname = "g_thread_pool_push")]
+		public void add (owned T data) throws ThreadError;
 		public void set_max_threads (int max_threads) throws ThreadError;
 		public int get_max_threads ();
 		public uint get_num_threads ();
