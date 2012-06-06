@@ -1,12 +1,18 @@
 #!/bin/sh
 
-srcdir=`dirname $0`
-test -z "$srcdir" && srcdir=.
+test -n "$srcdir" || srcdir=`dirname "$0"`
+test -n "$srcdir" || srcdir=.
 
-ORIGDIR=`pwd`
+olddir=`pwd`
 cd $srcdir
 
-autoreconf -v --install || exit 1
-cd $ORIGDIR || exit $?
+AUTORECONF=`which autoreconf`
+if test -z $AUTORECONF; then
+        echo "*** No autoreconf found, please install it ***"
+        exit 1
+fi
 
-$srcdir/configure --enable-maintainer-mode "$@"
+autoreconf --force --install --verbose
+
+cd $olddir
+test -n "$NOCONFIGURE" || "$srcdir/configure" "$@"
