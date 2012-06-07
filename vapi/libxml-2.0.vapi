@@ -335,8 +335,11 @@ namespace Xml {
 		public Doc* doc;
 		public int compression;
 		public int standalone;
+		[CCode (cname = "intSubset")]
 		public Dtd* int_subset;
+		[CCode (cname = "extSubset")]
 		public Dtd* ext_subset;
+		[CCode (cname = "oldNs")]
 		public Ns* old_ns;
 		public weak string version;
 		public weak string encoding;
