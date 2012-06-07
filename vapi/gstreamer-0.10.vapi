@@ -1474,7 +1474,7 @@ namespace Gst {
 		[CCode (cname = "gst_type_find_suggest_simple")]
 		public void suggest_simple (uint probability, string media_type, string fieldname);
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/gst.h", type_id = "GST_TYPE_TYPE_FIND_FACTORY")]
 	public class TypeFindFactory : Gst.PluginFeature {
 		public weak Gst.Caps caps;
 		public weak string extensions;
