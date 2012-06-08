@@ -5474,22 +5474,22 @@ namespace Gtk {
 		public unowned Gtk.WidgetPath get_path ();
 		public void get_pointer (out int x, out int y);
 		public virtual void get_preferred_height (out int minimum_height, out int natural_height);
-		[CCode (vfunc_name = "get_preferred_height")]
-		[NoWrapper]
-		public virtual void get_preferred_height_internal (out int minimum_height, out int natural_height);
 		public virtual void get_preferred_height_for_width (int width, out int minimum_height, out int natural_height);
 		[CCode (vfunc_name = "get_preferred_height_for_width")]
 		[NoWrapper]
 		public virtual void get_preferred_height_for_width_internal (int width, out int minimum_height, out int natural_height);
+		[CCode (vfunc_name = "get_preferred_height")]
+		[NoWrapper]
+		public virtual void get_preferred_height_internal (out int minimum_height, out int natural_height);
 		public void get_preferred_size (out Gtk.Requisition minimum_size, out Gtk.Requisition natural_size);
 		public virtual void get_preferred_width (out int minimum_width, out int natural_width);
-		[CCode (vfunc_name = "get_preferred_width")]
-		[NoWrapper]
-		public virtual void get_preferred_width_internal (out int minimum_width, out int natural_width);
 		public virtual void get_preferred_width_for_height (int height, out int minimum_width, out int natural_width);
 		[CCode (vfunc_name = "get_preferred_width_for_height")]
 		[NoWrapper]
 		public virtual void get_preferred_width_for_height_internal (int height, out int minimum_width, out int natural_width);
+		[CCode (vfunc_name = "get_preferred_width")]
+		[NoWrapper]
+		public virtual void get_preferred_width_internal (out int minimum_width, out int natural_width);
 		public bool get_realized ();
 		public bool get_receives_default ();
 		public virtual Gtk.SizeRequestMode get_request_mode ();

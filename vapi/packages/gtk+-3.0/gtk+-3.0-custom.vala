@@ -64,6 +64,12 @@ namespace Gtk {
 		[CCode (has_new_function = false, construct_function = "gtk_widget_new")]
 		public extern Widget (...);
 		public class uint activate_signal;
+		[CCode (vfunc_name = "get_preferred_height")]
+		[NoWrapper]
+		public virtual void get_preferred_height_internal (out int minimum_height, out int natural_height);
+		[CCode (vfunc_name = "get_preferred_width")]
+		[NoWrapper]
+		public virtual void get_preferred_width_internal (out int minimum_width, out int natural_width);
 		[CCode (vfunc_name = "compute_expand")]
 		[NoWrapper]
 		public virtual void compute_expand_internal (out bool hexpand, out bool vexpand);
