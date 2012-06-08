@@ -1967,7 +1967,7 @@ namespace Gtk {
 		public bool snap_edge_set { get; set; }
 		public virtual signal void child_attached (Gtk.Widget child);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtkimmodule.h")]
 	public class IMContext : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected IMContext ();
@@ -6267,7 +6267,7 @@ namespace Gtk {
 		public int width;
 		public int height;
 	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtkimmodule.h")]
 	public struct IMContextInfo {
 		public weak string context_id;
 		public weak string context_name;
