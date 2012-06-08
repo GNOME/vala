@@ -3609,7 +3609,7 @@ namespace Gtk {
 		[CCode (array_length = false)]
 		public unowned uchar[] get_data ();
 		public Gdk.Atom get_data_type ();
-		public unowned uchar[] get_data_with_length (int length);
+		public unowned uchar[] get_data_with_length ();
 		public unowned Gdk.Display get_display ();
 		public int get_format ();
 		public int get_length ();
