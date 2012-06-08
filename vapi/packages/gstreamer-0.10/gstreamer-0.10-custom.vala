@@ -127,7 +127,7 @@ namespace Gst {
 		public unowned string id_description ();
 	}
 
-	[CCode (ref_function = "gst_object_ref", unref_function = "gst_object_unref", ref_sink_function = "gst_object_ref_sink", ref_sink_function_void = true)]
+	[CCode (ref_function = "gst_object_ref", unref_function = "gst_object_unref", ref_sink_function = "gst_object_ref_sink")]
 	public abstract class Object {
 		public unowned Gst.Object @ref ();
 		public void unref ();

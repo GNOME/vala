@@ -163,24 +163,6 @@ public class Vala.CCodeAttribute : AttributeCache {
 		}
 	}
 
-	public bool ref_sink_function_void {
-		get {
-			if (_ref_sink_function_void == null) {
-				if (ccode != null && ccode.has_argument ("ref_sink_function_void")) {
-					_ref_sink_function_void = ccode.get_bool ("ref_sink_function_void");
-				} else {
-					var cl = (Class) sym;
-					if (cl.base_class != null) {
-						_ref_sink_function_void = CCodeBaseModule.get_ccode_ref_sink_function_void (cl.base_class);
-					} else {
-						_ref_sink_function_void = false;
-					}
-				}
-			}
-			return _ref_sink_function_void;
-		}
-	}
-
 	public string unref_function {
 		get {
 			if (!unref_function_set) {
@@ -489,7 +471,6 @@ public class Vala.CCodeAttribute : AttributeCache {
 	private string? _unref_function;
 	private bool unref_function_set;
 	private string _ref_sink_function;
-	private bool? _ref_sink_function_void;
 	private string? _copy_function;
 	private bool copy_function_set;
 	private string? _destroy_function;

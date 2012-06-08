@@ -3944,15 +3944,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
-	bool is_ref_sink_function_void (DataType type) {
-		var cl = type.data_type as Class;
-		if (cl != null) {
-			return get_ccode_ref_sink_function_void (cl);
-		} else {
-			return false;
-		}
-	}
-
 	bool is_free_function_address_of (DataType type) {
 		var cl = type.data_type as Class;
 		if (cl != null) {
@@ -5301,9 +5292,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (sink_func != "") {
 				var csink = new CCodeFunctionCall (new CCodeIdentifier (sink_func));
 				csink.add_argument (result.cvalue);
-				if (!is_ref_sink_function_void (type)) {
-					result.cvalue = csink;
-					requires_temp_value = true;
+				if (type.nullable) {
+					var is_not_null = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, result.cvalue, new CCodeIdentifier ("NULL"));
+					var csink_stat = new CCodeIfStatement (is_not_null, new CCodeExpressionStatement (csink));
+					ccode.add_statement (csink_stat);
 				} else {
 					ccode.add_expression (csink);
 				}
@@ -5822,10 +5814,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public static bool get_ccode_free_function_address_of (Class cl) {
 		return get_ccode_attribute(cl).free_function_address_of;
-	}
-
-	public static bool get_ccode_ref_sink_function_void (Class cl) {
-		return get_ccode_attribute(cl).ref_sink_function_void;
 	}
 
 	public static string get_ccode_unref_function (ObjectTypeSymbol sym) {
