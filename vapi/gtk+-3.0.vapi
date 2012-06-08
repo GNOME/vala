@@ -3562,7 +3562,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Scrollbar : Gtk.Range, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public Scrollbar (Gtk.Orientation orientation, Gtk.Adjustment adjustment);
+		public Scrollbar (Gtk.Orientation orientation, Gtk.Adjustment? adjustment);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ScrolledWindow : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
