@@ -8453,7 +8453,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static unowned Gtk.Widget test_find_widget (Gtk.Widget widget, string label_pattern, GLib.Type widget_type);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void test_init (int argcp, out unowned string argvp);
+	public static void test_init ([CCode (array_length_pos = 0.9)] ref unowned string[] argvp, ...);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static unowned GLib.Type[] test_list_all_types (uint n_types);
 	[CCode (cheader_filename = "gtk/gtk.h")]
