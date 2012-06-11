@@ -21,7 +21,7 @@
  *  Michael 'Mickey' Lauer <mlauer@vanille-media.de>
  */
 
-[CCode (cheader_filename = "dbus/dbus-glib-lowlevel.h,dbus/dbus-glib.h")]
+[CCode (cheader_filename = "dbus/dbus-glib-lowlevel.h,dbus/dbus-glib.h", gir_namespace = "DBusGLib", gir_version = "1.0")]
 namespace DBus {
 	public const string SERVICE_DBUS;
 	public const string PATH_DBUS;
