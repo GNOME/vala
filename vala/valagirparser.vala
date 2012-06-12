@@ -70,7 +70,8 @@ public class Vala.GirParser : CodeVisitor {
 		CPREFIX,
 		LOWER_CASE_CPREFIX,
 		ERRORDOMAIN,
-		DESTROYS_INSTANCE;
+		DESTROYS_INSTANCE,
+		BASE_TYPE;
 
 		public static ArgumentType? from_string (string name) {
 			var enum_class = (EnumClass) typeof(ArgumentType).class_ref ();
@@ -2901,6 +2902,10 @@ public class Vala.GirParser : CodeVisitor {
 		}
 		cl.access = SymbolAccessibility.PUBLIC;
 		cl.external = true;
+
+		if (metadata.has_argument (ArgumentType.BASE_TYPE)) {
+			cl.add_base_type (parse_type_from_string (metadata.get_string (ArgumentType.BASE_TYPE), true, metadata.get_source_reference (ArgumentType.BASE_TYPE)));
+		}
 
 		next ();
 
