@@ -109,6 +109,7 @@ public class Vala.GIRWriter : CodeVisitor {
 	int indent;
 
 	private TypeSymbol gobject_type;
+	private TypeSymbol ginitiallyunowned_type;
 
 	private struct GIRNamespace {
 		public GIRNamespace (string ns, string version) {
@@ -149,6 +150,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		var root_symbol = context.root;
 		var glib_ns = root_symbol.scope.lookup ("GLib");
 		gobject_type = (TypeSymbol) glib_ns.scope.lookup ("Object");
+		ginitiallyunowned_type = (TypeSymbol) glib_ns.scope.lookup ("InitiallyUnowned");
 
 		write_package (package);
 
@@ -1156,7 +1158,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		DelegateType delegate_type = type as DelegateType;
 
-		if ((type.value_owned && delegate_type == null) || constructor) {
+		if ((type.value_owned && delegate_type == null) || (constructor && !type.data_type.is_subtype_of (ginitiallyunowned_type))) {
 			buffer.append_printf (" transfer-ownership=\"full\"");
 		} else {
 			buffer.append_printf (" transfer-ownership=\"none\"");
