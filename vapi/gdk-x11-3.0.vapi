@@ -14,7 +14,7 @@ namespace Gdk {
 	public class X11Cursor : Gdk.Cursor {
 		[CCode (has_construct_function = false)]
 		protected X11Cursor ();
-		public static unowned Gdk.Cursor get_xcursor (Gdk.Cursor cursor);
+		public static X.Cursor get_xcursor (Gdk.Cursor cursor);
 		public static unowned X.Display get_xdisplay (Gdk.Cursor cursor);
 	}
 	[CCode (cheader_filename = "gdk/gdkx.h")]
@@ -25,7 +25,7 @@ namespace Gdk {
 	public class X11Display : Gdk.Display {
 		[CCode (has_construct_function = false)]
 		protected X11Display ();
-		public static void broadcast_startup_message (Gdk.Display display, string message_type);
+		public static void broadcast_startup_message (Gdk.Display display, string message_type, ...);
 		public static int error_trap_pop (Gdk.Display display);
 		public static void error_trap_pop_ignored (Gdk.Display display);
 		public static void error_trap_push (Gdk.Display display);
@@ -79,7 +79,7 @@ namespace Gdk {
 		public static int get_screen_number (Gdk.Screen screen);
 		public static unowned string get_window_manager_name (Gdk.Screen screen);
 		public static unowned X.Screen get_xscreen (Gdk.Screen screen);
-		public static unowned Gdk.Visual lookup_visual (Gdk.Screen screen, uint32 xvisualid);
+		public static unowned Gdk.Visual lookup_visual (Gdk.Screen screen, X.VisualID xvisualid);
 		public static bool supports_net_wm_hint (Gdk.Screen screen, Gdk.Atom property);
 		public virtual signal void window_manager_changed ();
 	}

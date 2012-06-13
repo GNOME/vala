@@ -12,11 +12,11 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static unowned X.Display x11_colormap_get_xdisplay (Gdk.Colormap colormap);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static unowned Gdk.Cursor x11_cursor_get_xcursor (Gdk.Cursor cursor);
+	public static X.Cursor x11_cursor_get_xcursor (Gdk.Cursor cursor);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static unowned X.Display x11_cursor_get_xdisplay (Gdk.Cursor cursor);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static void x11_display_broadcast_startup_message (Gdk.Display display, string message_type);
+	public static void x11_display_broadcast_startup_message (Gdk.Display display, string message_type, ...);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static unowned string x11_display_get_startup_notification_id (Gdk.Display display);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
@@ -76,13 +76,13 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static unowned X.Screen x11_screen_get_xscreen (Gdk.Screen screen);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static unowned Gdk.Visual x11_screen_lookup_visual (Gdk.Screen screen, uint32 xvisualid);
+	public static unowned Gdk.Visual x11_screen_lookup_visual (Gdk.Screen screen, X.VisualID xvisualid);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static bool x11_screen_supports_net_wm_hint (Gdk.Screen screen, Gdk.Atom property);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static void x11_ungrab_server ();
 	[CCode (cheader_filename = "gdk/gdkx.h", cname = "gdkx_visual_get")]
-	public static unowned Gdk.Visual x11_visual_get (uint32 xvisualid);
+	public static unowned Gdk.Visual x11_visual_get (X.VisualID xvisualid);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static unowned X.Visual x11_visual_get_xvisual (Gdk.Visual visual);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
