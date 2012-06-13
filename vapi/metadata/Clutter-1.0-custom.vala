@@ -37,8 +37,6 @@ namespace Clutter {
 
 	[CCode (type_id = "CLUTTER_TYPE_COLOR", cheader_filename = "clutter/clutter.h")]
 	public struct Color {
-		public static GLib.HashFunc hash;
-		public static GLib.EqualFunc equal;
 		[CCode (cname = "clutter_color_from_hls")]
 		public Color.from_hls (float hue, float luminance, float saturation);
 		[CCode (cname = "clutter_color_from_pixel")]
@@ -52,9 +50,6 @@ namespace Clutter {
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_container_get_type ()")]
 	public interface Container : GLib.Object {
 		public void add (params Clutter.Actor[] actors);
-		[CCode (vfunc_name = "add")]
-		public abstract void add_actor (Clutter.Actor actor);
-		public void add_valist (Clutter.Actor first_actor, void* var_args);
 		[CCode (cname = "clutter_container_class_find_child_property")]
 		public class unowned GLib.ParamSpec find_child_property (string property_name);
 		[CCode (cname = "clutter_container_class_list_child_properties")]

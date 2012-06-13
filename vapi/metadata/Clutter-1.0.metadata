@@ -1,53 +1,3 @@
-// Vala specific
-Event.type#method name="get_type"
-Actor
-	.event#method name="emit_event"
-	.get_paint_volume#method skip
-	.queue_redraw#signal skip
-	.queue_redraw#virtual_method skip
-	.has_pointer#method name="get_has_pointer"
-ActorBox
-	.new skip
-	.from_vertices skip
-ActorClass.queue_redraw skip
-Color.new skip
-color_hash skip
-color_equal skip
-container_class_find_child_property skip
-container_class_list_child_properties skip
-redraw skip
-util_next_p2 name="next_power_of_2" parent="Clutter.Util"
-feature_available skip
-feature_get_all skip
-frame_source_* name="frame_source_(.+)" parent="Clutter.FrameSource" skip=false
-InitError errordomain=false
-Stage.read_pixels unowned=false
-	.width default=-1
-	.height default=-1
-TextBuffer.get_text#virtual_method name="get_text_with_length"
-threads_* name="threads_(.+)" parent="Clutter.Threads" skip=false
-threads_add_frame_source name="add" parent="Clutter.Threads.FrameSource" skip=false
-threads_add_frame_source_full name="add_full" parent="Clutter.Threads.FrameSource" skip=false
-threads_add_idle name="add" parent="Clutter.Threads.Idle" skip=false
-threads_add_idle_full name="add_full" parent="Clutter.Threads.Idle" skip=false
-threads_add_timeout name="add" parent="Clutter.Threads.Timeout" skip=false
-threads_add_timeout_full name="add_full" parent="Clutter.Threads.Timeout" skip=false
-value_* name="value_(.+)" parent="Clutter.Value"
-value_get_color nullable
-value_get_fixed skip=false nullable
-value_get_shader_float array array_length_idx=1
-value_get_shader_int array array_length_idx=1
-value_get_units unowned=false
-value_set_fixed skip=false
-value_set_shader_float.floats array array_length_idx=1
-value_set_shader_int.ints array array_length_idx=1
-value_set_shader_matrix.matrix array array_length_idx=1
-Text
-	.activate#method name="try_activate"
-	.insert_text#signal skip
-	.position_to_coords.line_height default=null
-Vertex.new skip
-
 // Non mini-object
 ActorBox struct
 Color struct
@@ -59,7 +9,155 @@ Perspective struct
 Units struct
 Vertex struct
 
-// Too many constants
+init.argv unowned
+init_with_args
+	.argv unowned
+Actor
+	.apply_transform.matrix ref
+	.get_abs_allocation_vertices.verts out=false
+	.get_allocation_vertices.verts out=false
+Event.type#method name="get_type"
+
+// ???
+Actor.has_pointer#method name="get_has_pointer"
+InitError errordomain=false
+redraw skip
+
+// Nullable return values
+Actor
+	.get_parent nullable
+value_get_color nullable
+value_get_fixed nullable
+
+// method/virtual-method/signal don't match
+Actor
+	.event#method name="emit_event"
+	.get_paint_volume#method skip
+	.queue_redraw#signal skip
+	.queue_redraw#virtual_method skip
+Container
+	.add_actor skip=false
+Text
+	.activate#method name="try_activate"
+	.insert_text#signal skip
+TextBuffer.get_text#virtual_method name="get_text_with_length"
+
+// virtual/abstract distinction
+Container
+	.lower virtual
+	.raise virtual
+	.*_child_meta#virtual_method virtual
+	.foreach_with_internals#virtual_method virtual
+
+// Default values
+Container
+	.lower.sibling nullable default=null
+	.raise.sibling nullable default=null
+Stage.read_pixels
+	.width default=-1
+	.height default=-1
+Text
+	.position_to_coords.line_height default=null
+
+// Reparented funcs methods can't be instance methods
+feature_available skip
+feature_get_all skip
+FeatureFlags.texture_npot skip
+
+// Skipped by g-i for unknown reasons
+LayoutManager
+	.create_child_meta skip=false
+Model
+	.insert_row skip=false
+
+// Variadic arguments
+Actor
+	.animate skip=false
+	.animate_with_alpha skip=false
+	.animate_with_timeline skip=false
+Animator
+	.set skip=false
+Box
+	.pack skip=false
+	.pack_after skip=false
+	.pack_at skip=false
+	.pack_before skip=false
+Container
+	.add_valist skip=false
+	.child_get skip=false
+	.child_set skip=false
+	.remove skip=false
+	.remove_valist skip=false
+Interval
+	.new skip=false
+	.get_interval skip=false
+	.set_final skip=false
+	.set_initial skip=false
+	.set_interval skip=false
+LayoutManager
+	.child_get skip=false
+	.child_set skip=false
+ListModel
+	.new skip=false
+Model
+	.append skip=false
+	.insert skip=false
+	.prepend skip=false
+ModelIter
+	.get skip=false
+	.set skip=false
+Script
+	.get_objects skip=false
+
+// Changing error domains
+Texture
+	.new_from_file throws="Clutter.TextureError"
+
+// Skipped upstream for unknown reasons
+Alpha.register_func skip=false
+TimeoutPool skip=false
+Interval.register_progress_func skip=false
+frame_source_* skip=false
+get_option_group skip=false
+get_option_group_without_init skip=false
+threads_add_frame_source skip=false
+threads_add_frame_source_full skip=false
+threads_add_idle skip=false
+threads_add_idle_full skip=false
+threads_set_lock_functions skip=false
+threads_add_timeout skip=false
+threads_add_timeout_full skip=false
+value_get_fixed skip=false
+value_set_fixed skip=false
+
+// struct/class confusion
+ActorBox
+	.new skip
+	.from_vertices skip
+Units.from_* skip
+Color
+	.new skip
+	.from_* skip
+Vertex.new skip
+
+// Class methods
+container_class_find_child_property skip
+container_class_list_child_properties skip
+
+// Move symbols
+get_actor_by_gid parent="Clutter.Actor" name="get_by_gid"
+get_input_device_for_id parent="Clutter.InputDevice" name="get_for_id"
+
+// Remove for clutter-1.0
+/////////////////////////
+
+Stage
+ 	.event name="emit_event"
+
+// *Event should be compact classes derived from Clutter.Event
+Event.* skip=false
+
+// Keysyms used to be CLUTTER_X instead of CLUTTER_KEY_X
 *#constant skip
 COGL skip=false
 CURRENT_TIME skip=false
@@ -67,83 +165,18 @@ FLAVOUR skip=false
 *VERSION* skip=false
 PATH_RELATIVE skip=false
 PRIORITY_REDRAW skip=false
+
+// Clutter devs don't like us creating nested namespaces
+frame_source_* name="frame_source_(.+)" parent="Clutter.FrameSource"
+value_* name="value_(.+)" parent="Clutter.Value"
+threads_* name="threads_(.+)" parent="Clutter.Threads"
+threads_add_frame_source name="add" parent="Clutter.Threads.FrameSource"
+threads_add_frame_source_full name="add_full" parent="Clutter.Threads.FrameSource"
+threads_add_idle name="add" parent="Clutter.Threads.Idle"
+threads_add_idle_full name="add_full" parent="Clutter.Threads.Idle"
+threads_add_timeout name="add" parent="Clutter.Threads.Timeout"
+threads_add_timeout_full name="add_full" parent="Clutter.Threads.Timeout"
+util_next_p2 name="next_power_of_2" parent="Clutter.Util"
+
+// Possibly keep
 KEY_* skip=false name="KEY_(.+)" parent="Clutter.Key"
-
-
-// Forward upstream
-Actor
-	.animate* skip=false
-	.apply_relative_transform_to_point.vertex out unowned=false
-	.apply_transform.matrix ref
-	.apply_transform_to_point.vertex out unowned=false
-	.get_abs_allocation_vertices.verts unowned=false
-	.get_allocation_box.box unowned=false
-	.get_allocation_geometry.geom unowned=false
-	.get_allocation_vertices.verts unowned=false
-	.get_parent nullable
-Alpha.register_func skip=false
-Animator.set skip=false
-BehaviourForeachFunc.data closure=2
-BehaviourRotate.get_bounds.* out
-BindingPool
-	.install_action.callback type="owned BindingActionFunc"
-	.install_closure.closure type="owned BindingActionFunc"
-Box.pack* skip=false
-Callback.data closure=1
-Color
-	.from_* skip
-Container
-	.* skip=false
-	.add* skip
-	.foreach_with_internals#virtual_method virtual
-	.*_child_*#virtual_method virtual
-	.lower virtual
-	.raise virtual
-	.lower.sibling nullable default=null
-	.raise.sibling nullable default=null
-DeviceManager.get_devices type_arguments="Clutter.InputDevice"
-frame_source_add skip=false
-Event.* skip=false
-FeatureFlags.texture_npot skip
-get_input_device_for_id parent="Clutter.InputDevice" name="get_for_id"
-get_option_group* skip=false
-init.argv unowned
-init_with_args
-	.argv unowned
-	.entries array
-Interval.* skip=false
-LayoutManager
-	.child_get skip=false
-	.child_set skip=false
-	.create_child_meta skip=false
-ListModel
-        .new skip=false
-Model
-	.append skip=false
-	.insert skip=false
-	.insert_row skip=false
-	.prepend skip=false
-ModelIter
-	.get skip=false
-	.set skip=false
-PathCallback.data closure=1
-State
-	.set_key.source_state_name nullable
-Script
-	.* skip=false
-Stage
-	.event name="emit_event"
-	.get_default type="unowned Clutter.Stage"
-	.get_fog.fog out
-Text
-	.get_cursor_color.color out
-	.new_with_text.font_name nullable
-Texture
-	.new_from_file throws="Clutter.TextureError"
-	.set_area_from_rgb_data.data type="uint8[]"
-	.set_from_rgb_data.data type="uint8[]"
-	.set_from_yuv_data.data type="uint8[]"
-TimeoutPool skip=false
-Units.from_* skip
-
-get_actor_by_gid parent="Clutter.Actor" name="get_by_gid"

@@ -843,6 +843,8 @@ namespace Clutter {
 		public const int ENG;
 		[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_KEY_ETH")]
 		public const int ETH;
+		[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_KEY_EZH")]
+		public const int EZH;
 		[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_KEY_Eabovedot")]
 		public const int Eabovedot;
 		[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_KEY_Eacute")]
@@ -3521,6 +3523,8 @@ namespace Clutter {
 		public const int dead_e;
 		[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_KEY_dead_grave")]
 		public const int dead_grave;
+		[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_KEY_dead_greek")]
+		public const int dead_greek;
 		[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_KEY_dead_hook")]
 		public const int dead_hook;
 		[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_KEY_dead_horn")]
@@ -3671,6 +3675,8 @@ namespace Clutter {
 		public const int exclam;
 		[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_KEY_exclamdown")]
 		public const int exclamdown;
+		[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_KEY_ezh")]
+		public const int ezh;
 		[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_KEY_f")]
 		public const int f;
 		[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_KEY_fabovedot")]
@@ -4241,6 +4247,8 @@ namespace Clutter {
 		public const int period;
 		[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_KEY_periodcentered")]
 		public const int periodcentered;
+		[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_KEY_permille")]
+		public const int permille;
 		[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_KEY_phonographcopyright")]
 		public const int phonographcopyright;
 		[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_KEY_plus")]
@@ -4605,11 +4613,11 @@ namespace Clutter {
 		[CCode (cheader_filename = "clutter/clutter.h")]
 		public static void set_paint_node (GLib.Value value, Clutter.PaintNode? node);
 		[CCode (cheader_filename = "clutter/clutter.h")]
-		public static void set_shader_float (GLib.Value value, [CCode (array_length_cname = "size", array_length_pos = 1.5, type = "gfloat*")] float[] floats);
+		public static void set_shader_float (GLib.Value value, [CCode (array_length_cname = "size", array_length_pos = 1.5)] float[] floats);
 		[CCode (cheader_filename = "clutter/clutter.h")]
-		public static void set_shader_int (GLib.Value value, [CCode (array_length_cname = "size", array_length_pos = 1.5, type = "gint*")] int[] ints);
+		public static void set_shader_int (GLib.Value value, [CCode (array_length_cname = "size", array_length_pos = 1.5)] int[] ints);
 		[CCode (cheader_filename = "clutter/clutter.h")]
-		public static void set_shader_matrix (GLib.Value value, [CCode (array_length_cname = "size", array_length_pos = 1.5, type = "gfloat*")] float[] matrix);
+		public static void set_shader_matrix (GLib.Value value, [CCode (array_length_cname = "size", array_length_pos = 1.5)] float[] matrix);
 		[CCode (cheader_filename = "clutter/clutter.h")]
 		public static void set_units (GLib.Value value, Clutter.Units units);
 		[CCode (cheader_filename = "clutter/clutter.h")]
@@ -4665,13 +4673,13 @@ namespace Clutter {
 		public void detach_animation ();
 		[CCode (cname = "clutter_actor_event")]
 		public bool emit_event (Clutter.Event event, bool capture);
-		public void get_abs_allocation_vertices ([CCode (array_length = false)] out Clutter.Vertex[] verts);
+		public void get_abs_allocation_vertices ([CCode (array_length = false)] Clutter.Vertex[] verts);
 		public virtual unowned Atk.Object get_accessible ();
 		public unowned Clutter.Action get_action (string name);
 		public GLib.List<weak Clutter.Action> get_actions ();
 		public Clutter.ActorBox get_allocation_box ();
 		public Clutter.Geometry get_allocation_geometry ();
-		public void get_allocation_vertices (Clutter.Actor? ancestor, [CCode (array_length = false)] out Clutter.Vertex[] verts);
+		public void get_allocation_vertices (Clutter.Actor? ancestor, [CCode (array_length = false)] Clutter.Vertex[] verts);
 		public void get_anchor_point (out float anchor_x, out float anchor_y);
 		public Clutter.Gravity get_anchor_point_gravity ();
 		[Deprecated (since = "1.12")]
@@ -5402,8 +5410,8 @@ namespace Clutter {
 		public static unowned Clutter.BindingPool find (string name);
 		public unowned string find_action (uint key_val, Clutter.ModifierType modifiers);
 		public static unowned Clutter.BindingPool get_for_class (void* klass);
-		public void install_action (string action_name, uint key_val, Clutter.ModifierType modifiers, [CCode (type = "GCallback")] owned Clutter.BindingActionFunc callback);
-		public void install_closure (string action_name, uint key_val, Clutter.ModifierType modifiers, [CCode (type = "GClosure*")] owned Clutter.BindingActionFunc closure);
+		public void install_action (string action_name, uint key_val, Clutter.ModifierType modifiers, owned Clutter.BindingActionFunc callback);
+		public void install_closure (string action_name, uint key_val, Clutter.ModifierType modifiers, GLib.Closure closure);
 		public void override_action (uint key_val, Clutter.ModifierType modifiers, owned GLib.Callback callback);
 		public void override_closure (uint key_val, Clutter.ModifierType modifiers, GLib.Closure closure);
 		public void remove_action (uint key_val, Clutter.ModifierType modifiers);
@@ -6192,6 +6200,7 @@ namespace Clutter {
 		public bool equals (Clutter.Point b);
 		public void free ();
 		public unowned Clutter.Point init (float x, float y);
+		public static unowned Clutter.Point zero ();
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_property_transition_get_type ()")]
 	public class PropertyTransition : Clutter.Transition, Clutter.Scriptable {
@@ -6224,6 +6233,7 @@ namespace Clutter {
 		public Clutter.Rect normalize ();
 		public void offset (float d_x, float d_y);
 		public void union (Clutter.Rect b, out unowned Clutter.Rect res);
+		public static unowned Clutter.Rect zero ();
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_rectangle_get_type ()")]
 	public class Rectangle : Clutter.Actor, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable {
@@ -6952,8 +6962,10 @@ namespace Clutter {
 	public interface Container : GLib.Object {
 		public void add (params Clutter.Actor[] actors);
 		[CCode (vfunc_name = "add")]
+		[Deprecated (since = "1.10")]
 		public abstract void add_actor (Clutter.Actor actor);
-		public void add_valist (Clutter.Actor first_actor, void* var_args);
+		[Deprecated (since = "1.10")]
+		public void add_valist (Clutter.Actor first_actor, va_list var_args);
 		public void child_get (Clutter.Actor actor, ...);
 		public void child_get_property (Clutter.Actor child, string property, GLib.Value value);
 		public void child_set (Clutter.Actor actor, ...);
@@ -7144,8 +7156,6 @@ namespace Clutter {
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "CLUTTER_TYPE_COLOR")]
 	public struct Color {
-		public static GLib.HashFunc hash;
-		public static GLib.EqualFunc equal;
 		public uint8 red;
 		public uint8 green;
 		public uint8 blue;
@@ -7154,6 +7164,7 @@ namespace Clutter {
 		public static Clutter.Color alloc ();
 		public Clutter.Color copy ();
 		public Clutter.Color darken ();
+		public bool equal (Clutter.Color v2);
 		public void free ();
 		[CCode (cname = "clutter_color_from_hls")]
 		public Color.from_hls (float hue, float luminance, float saturation);
@@ -7162,6 +7173,7 @@ namespace Clutter {
 		[CCode (cname = "clutter_color_from_string")]
 		public Color.from_string (string str);
 		public static Clutter.Color get_static (Clutter.StaticColor color);
+		public uint hash ();
 		public Clutter.Color init (uint8 red, uint8 green, uint8 blue, uint8 alpha);
 		public Clutter.Color interpolate (Clutter.Color final, double progress);
 		public Clutter.Color lighten ();
@@ -7945,7 +7957,7 @@ namespace Clutter {
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public static Clutter.InitError init ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] ref unowned string[]? argv);
 	[CCode (cheader_filename = "clutter/clutter.h")]
-	public static Clutter.InitError init_with_args ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] ref unowned string[]? argv, string? parameter_string, [CCode (array_length = false, type = "GOptionEntry*")] GLib.OptionEntry?[] entries, string? translation_domain) throws GLib.Error;
+	public static Clutter.InitError init_with_args ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] ref unowned string[]? argv, string? parameter_string, [CCode (array_length = false)] GLib.OptionEntry[]? entries, string? translation_domain) throws GLib.Error;
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public static uint32 keysym_to_unicode (uint keyval);
 	[CCode (cheader_filename = "clutter/clutter.h")]
