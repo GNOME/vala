@@ -1781,6 +1781,13 @@ public class Vala.GirParser : CodeVisitor {
 		string gir_namespace = reader.get_attribute ("name");
 		string gir_version = reader.get_attribute ("version");
 
+		if (lower_case_cprefix != null) {
+			int idx = lower_case_cprefix.index_of (",");
+			if (idx != -1) {
+				lower_case_cprefix = lower_case_cprefix.substring (0, idx);
+			}
+		}
+
 		if (provided_namespaces.contains ("%s-%s".printf (gir_namespace, gir_version))) {
 			skip_element ();
 			return;
