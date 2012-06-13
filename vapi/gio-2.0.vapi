@@ -2343,7 +2343,7 @@ namespace GLib {
 		public abstract GLib.Icon get_icon ();
 		public abstract string get_identifier (string kind);
 		public abstract string get_name ();
-		public abstract unowned string get_sort_key ();
+		public virtual unowned string get_sort_key ();
 		public abstract GLib.DriveStartStopType get_start_stop_type ();
 		public abstract GLib.List<GLib.Volume> get_volumes ();
 		public abstract bool has_media ();
@@ -2630,7 +2630,7 @@ namespace GLib {
 		public abstract string get_identifier (string kind);
 		public abstract GLib.Mount get_mount ();
 		public abstract string get_name ();
-		public abstract unowned string get_sort_key ();
+		public virtual unowned string get_sort_key ();
 		public abstract string get_uuid ();
 		[CCode (vfunc_name = "mount_fn")]
 		public abstract async bool mount (GLib.MountMountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable = null) throws GLib.Error;

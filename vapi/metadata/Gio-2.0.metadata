@@ -105,6 +105,8 @@ DBusObjectManagerClient
   .name_owner nullable
 DBusServer
   .new_sync.observer default=null
+Drive
+  .get_sort_key#virtual_method virtual
 File
   .monitor_dir* throws="GLib.IOError"
   .monitor_file throws="GLib.IOError"
@@ -201,6 +203,8 @@ Vfs
   // TODO: should probably be a simple generic
   .local_file_add_info.extra_data default=null
   .local_file_add_info.free_extra_data nullable default=null
+Volume
+  .get_sort_key#virtual_method virtual
 ZlibCompressor
   .new.level default=-1
 Converter
