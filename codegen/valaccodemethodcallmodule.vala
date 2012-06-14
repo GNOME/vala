@@ -616,6 +616,11 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			}
 		}
 
+		if (async_call == ccall) {
+			// skip out parameter for .begin() calls
+			return_result_via_out_param = false;
+		}
+
 		CCodeExpression out_param_ref = null;
 
 		if (return_result_via_out_param) {
