@@ -1632,9 +1632,9 @@ namespace Gtk {
 		public double get_progress_fraction ();
 		public double get_progress_pulse_step ();
 		public unowned string get_text ();
-		public void get_text_area (Gdk.Rectangle text_area);
+		public void get_text_area (out Gdk.Rectangle text_area);
 		[NoWrapper]
-		public virtual void get_text_area_size (int x, int y, int width, int height);
+		public virtual void get_text_area_size (out int x, out int y, out int width, out int height);
 		public uint16 get_text_length ();
 		public bool get_visibility ();
 		public int get_width_chars ();
