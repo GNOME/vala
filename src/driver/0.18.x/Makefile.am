@@ -5,6 +5,11 @@ NULL =
 VERSIONED_VAPI_DIR=`pkg-config libvala-0.18 --variable vapidir`
 
 
+if HAVE_LIBVALA_0_17_0
+VALA_FLAGS = -D VALA_0_17_0
+endif
+
+
 
 AM_CFLAGS =  -g \
 	-DPACKAGE_ICONDIR=\"$(datadir)/valadoc/icons/\" \
@@ -12,6 +17,8 @@ AM_CFLAGS =  -g \
 	$(GLIB_CFLAGS) \
 	$(LIBGEE_CFLAGS) \
 	$(LIBVALA_0_18_X_CFLAGS) \
+	$(LIBVALA_0_17_1_CFLAGS) \
+	$(LIBVALA_0_17_0_CFLAGS) \
 	$(NULL)
 
 
@@ -54,6 +61,8 @@ libdriver_la_LIBADD = \
 	../../libvaladoc/libvaladoc.la \
 	$(GLIB_LIBS) \
 	$(LIBVALA_0_18_X_LIBS) \
+	$(LIBVALA_0_17_1_LIBS) \
+	$(LIBVALA_0_17_0_LIBS) \
 	$(LIBGEE_LIBS) \
 	$(NULL)
 

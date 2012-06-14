@@ -62,10 +62,16 @@ AC_SUBST(LIBGDKPIXBUF_LIBS)
 ## Drivers:
 ##
 
-PKG_CHECK_MODULES(LIBVALA_0_18_X, libvala-0.18 >= 0.17.0, have_libvala_0_18_x="yes", have_libvala_0_18_x="no")
+PKG_CHECK_MODULES(LIBVALA_0_18_X, libvala-0.18 >= 0.17.1, have_libvala_0_18_x="yes", have_libvala_0_18_x="no")
 AM_CONDITIONAL(HAVE_LIBVALA_0_18_X, test "$have_libvala_0_18_x" = "yes")
 AC_SUBST(LIBVALA_0_18_X_CFLAGS)
 AC_SUBST(LIBVALA_0_18_X_LIBS)
+
+
+PKG_CHECK_MODULES(LIBVALA_0_17_0, libvala-0.18 = 0.17.0, have_libvala_0_17_0="yes", have_libvala_0_17_0="no")
+AM_CONDITIONAL(HAVE_LIBVALA_0_17_0, test "$have_libvala_0_17_0" = "yes")
+AC_SUBST(LIBVALA_0_17_0_CFLAGS)
+AC_SUBST(LIBVALA_0_17_0_LIBS)
 
 
 PKG_CHECK_MODULES(LIBVALA_0_16_X, libvala-0.16 >= 0.15.1, have_libvala_0_16_x="yes", have_libvala_0_16_x="no")
