@@ -4770,7 +4770,7 @@ namespace Gdk {
 		public bool get_keyval (out uint keyval);
 		public bool get_root_coords (out double x_root, out double y_root);
 		public unowned Gdk.Screen get_screen ();
-		public bool get_scroll_deltas (double delta_x, double delta_y);
+		public bool get_scroll_deltas (out double delta_x, out double delta_y);
 		public bool get_scroll_direction (out Gdk.ScrollDirection direction);
 		public unowned Gdk.Device get_source_device ();
 		public bool get_state (out Gdk.ModifierType state);
@@ -4878,7 +4878,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Window : GLib.Object {
 		[CCode (has_construct_function = false)]
-		public Window (Gdk.Window? parent, Gdk.WindowAttr attributes, int attributes_mask);
+		public Window (Gdk.Window? parent, Gdk.WindowAttr attributes, Gdk.WindowAttributesType attributes_mask);
 		public void add_filter (Gdk.FilterFunc function);
 		[Deprecated (since = "3.0")]
 		public static unowned Gdk.Window at_pointer (out int win_x, out int win_y);
@@ -5185,7 +5185,7 @@ namespace Gdk {
 		public int8 send_event;
 		public Gdk.Atom atom;
 		public uint32 time;
-		public uint state;
+		public Gdk.PropertyState state;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct EventProximity {
