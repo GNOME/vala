@@ -266,6 +266,10 @@ namespace GLib {
 		public virtual void after_emit (GLib.Variant platform_data);
 		[NoWrapper]
 		public virtual void before_emit (GLib.Variant platform_data);
+		[NoWrapper]
+		public virtual bool dbus_register (GLib.DBusConnection connection, string object_path) throws GLib.Error;
+		[NoWrapper]
+		public virtual void dbus_unregister (GLib.DBusConnection connection, string object_path);
 		public unowned string get_application_id ();
 		public unowned GLib.DBusConnection get_dbus_connection ();
 		public unowned string get_dbus_object_path ();
@@ -478,6 +482,7 @@ namespace GLib {
 		public GLib.DBusCapabilityFlags get_capabilities ();
 		public bool get_exit_on_close ();
 		public unowned string get_guid ();
+		public uint32 get_last_serial ();
 		public unowned GLib.Credentials get_peer_credentials ();
 		public async T get_proxy<T> (string? name, string object_path, GLib.DBusProxyFlags flags = 0, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public T get_proxy_sync<T> (string? name, string object_path, GLib.DBusProxyFlags flags = 0, GLib.Cancellable? cancellable = null) throws GLib.IOError;

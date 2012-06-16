@@ -244,10 +244,12 @@ namespace Poppler {
 	public class FontsIter {
 		public Poppler.FontsIter copy ();
 		public void free ();
+		public unowned string get_encoding ();
 		public unowned string get_file_name ();
 		public Poppler.FontType get_font_type ();
 		public unowned string get_full_name ();
 		public unowned string get_name ();
+		public unowned string get_substitute_name ();
 		public bool is_embedded ();
 		public bool is_subset ();
 		public bool next ();

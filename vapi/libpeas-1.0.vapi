@@ -16,6 +16,7 @@ namespace Peas {
 		public string[] get_loaded_plugins ();
 		public unowned Peas.PluginInfo get_plugin_info (string plugin_name);
 		public unowned GLib.List<Peas.PluginInfo> get_plugin_list ();
+		public void prepend_search_path (string module_dir, string? data_dir);
 		public bool provides_extension (Peas.PluginInfo info, GLib.Type extension_type);
 		public void rescan_plugins ();
 		public void set_loaded_plugins ([CCode (array_length = false, array_null_terminated = true)] string[]? plugin_names);
@@ -82,11 +83,13 @@ namespace Peas {
 		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[] get_dependencies ();
 		public unowned string get_description ();
+		public unowned string get_external_data (string key);
 		public unowned string get_help_uri ();
 		public unowned string get_icon_name ();
 		public unowned string get_module_dir ();
 		public unowned string get_module_name ();
 		public unowned string get_name ();
+		public GLib.Settings get_settings (string? schema_id);
 		public unowned string get_version ();
 		public unowned string get_website ();
 		public bool has_dependency (string module_name);

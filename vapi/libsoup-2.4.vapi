@@ -294,9 +294,11 @@ namespace Soup {
 		[CCode (has_construct_function = false)]
 		public CookieJar ();
 		public void add_cookie (Soup.Cookie cookie);
+		public void add_cookie_with_first_party (Soup.URI first_party, Soup.Cookie cookie);
 		public GLib.SList<Soup.Cookie> all_cookies ();
 		public void delete_cookie (Soup.Cookie cookie);
 		public Soup.CookieJarAcceptPolicy get_accept_policy ();
+		public GLib.SList<Soup.Cookie> get_cookie_list (Soup.URI uri, bool for_http);
 		public string get_cookies (Soup.URI uri, bool for_http);
 		public virtual bool is_persistent ();
 		public virtual void save ();

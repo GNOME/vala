@@ -108,6 +108,8 @@ namespace Rest {
 		[NoAccessorMethod]
 		public string password { owned get; construct; }
 		[NoAccessorMethod]
+		public bool ssl_strict { get; set; }
+		[NoAccessorMethod]
 		public string url_format { owned get; set; }
 		public string user_agent { get; set; }
 		[NoAccessorMethod]
