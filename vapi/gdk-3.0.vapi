@@ -5136,7 +5136,7 @@ namespace Gdk {
 		public bool implicit;
 		public weak Gdk.Window grab_window;
 	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
+	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct EventKey {
 		[CCode (cname = "string")]
 		public weak string str;
