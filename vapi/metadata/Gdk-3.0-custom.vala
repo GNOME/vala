@@ -13,6 +13,7 @@ namespace Gdk {
 		public static Gdk.Atom NONE;
 	}
 
+	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct EventKey {
 		[CCode (cname = "string")]
 		public weak string str;
