@@ -1,4 +1,4 @@
-dnl vala.m4
+dnl vapigen.m4
 dnl
 dnl Copyright 2012 Evan Nemerson
 dnl
@@ -16,9 +16,9 @@ dnl You should have received a copy of the GNU Lesser General Public
 dnl License along with this library; if not, write to the Free Software
 dnl Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 
-# VAPIGEN_CHECK([VERSION], [API_VERSION], [FOUND-INTROSPECTION])
+# VAPIGEN_CHECK([VERSION], [API_VERSION], [FOUND-INTROSPECTION], [DEFAULT])
 # --------------------------------------
-# Check that vapigen existence and version
+# Check vapigen existence and version
 #
 # See http://live.gnome.org/Vala/UpstreamGuide for detailed documentation
 AC_DEFUN([VAPIGEN_CHECK],
@@ -27,11 +27,15 @@ AC_DEFUN([VAPIGEN_CHECK],
   AC_BEFORE([GOBJECT_INTROSPECTION_REQUIRE],[$0])
 
   AC_ARG_ENABLE([vala],
-    AS_HELP_STRING([--enable-vala[=@<:@no/auto/yes@:>@]],
-      [build Vala bindings [[default=auto]]]),,
-      [enable_vala=auto])
+    [AS_HELP_STRING([--enable-vala[=@<:@no/auto/yes@:>@]],[build Vala bindings @<:@default=]ifelse($4,,auto,$4)[@:>@])],,[
+      AS_IF([test "x$4" = "x"], [
+          enable_vala=auto
+        ], [
+          enable_vala=$4
+        ])
+    ])
 
-  AS_CASE([$enable_vala], [no], [],
+  AS_CASE([$enable_vala], [no], [enable_vala=no],
       [yes], [
         AS_IF([test "x$3" != "xyes" -a "x$found_introspection" != "xyes"], [
             AC_MSG_ERROR([Vala bindings require GObject Introspection])
@@ -69,6 +73,8 @@ AC_DEFUN([VAPIGEN_CHECK],
         ])
     ])
 
+  AC_MSG_CHECKING([for vapigen])
+
   AS_CASE([$enable_vala],
     [yes], [
       VAPIGEN=`$PKG_CONFIG --variable=vapigen vapigen`
@@ -79,6 +85,8 @@ AC_DEFUN([VAPIGEN_CHECK],
           VAPIGEN_VAPIDIR=`$PKG_CONFIG --variable=vapidir_versioned vapigen`
         ])
     ])
+
+  AC_MSG_RESULT([$enable_vala])
 
   AC_SUBST([VAPIGEN])
   AC_SUBST([VAPIGEN_VAPIDIR])
