@@ -1755,7 +1755,7 @@ namespace GLib {
 
 	[CCode (type_id = "G_TYPE_INT", marshaller_type_name = "INT", get_value_function = "g_value_get_int", set_value_function = "g_value_set_int", default_value = "0")]
 	[IntegerType (rank = 6)]
-	public struct Pid {
+	public struct Pid : int {
 	}
 
 	public delegate void ChildWatchFunc (Pid pid, int status);
