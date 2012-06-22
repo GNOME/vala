@@ -1,4 +1,4 @@
-Rsvg cheader_filename="librsvg/rsvg.h"
+Rsvg cheader_filename="librsvg/rsvg.h" deprecated_since="2.36.2" replacement="bindings distributed with librsvg-2.0"
 RsvgDimensionData is_value_type="1" has_type_id="0"
 RsvgPositionData is_value_type="1" has_type_id="0"
 RsvgSizeFunc.width is_ref="1"

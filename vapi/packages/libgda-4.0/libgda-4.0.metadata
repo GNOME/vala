@@ -1,4 +1,4 @@
-Gda cheader_filename="libgda/libgda.h"
+Gda cheader_filename="libgda/libgda.h" deprecated_since="4.2.13" replacement="bindings distributed with libgda-4.0"
 *_i_* hidden="1"
 gda_batch_get_statements type_arguments="Statement"
 gda_connection_batch_execute type_arguments="GLib.Object"
