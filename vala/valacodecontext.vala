@@ -537,18 +537,18 @@ public class Vala.CodeContext {
 			}
 		}
 
-		if (versioned_data_dir != null) {
+		if (data_dir != null) {
 			foreach (string dir in Environment.get_system_data_dirs ()) {
-				filename = Path.build_path ("/", dir, versioned_data_dir, basename);
+				filename = Path.build_path ("/", dir, data_dir, basename);
 				if (FileUtils.test (filename, FileTest.EXISTS)) {
 					return filename;
 				}
 			}
 		}
 
-		if (data_dir != null) {
+		if (versioned_data_dir != null) {
 			foreach (string dir in Environment.get_system_data_dirs ()) {
-				filename = Path.build_path ("/", dir, data_dir, basename);
+				filename = Path.build_path ("/", dir, versioned_data_dir, basename);
 				if (FileUtils.test (filename, FileTest.EXISTS)) {
 					return filename;
 				}
