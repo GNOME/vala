@@ -505,6 +505,14 @@ public class Vala.GIdlParser : CodeVisitor {
 				} else if (nv[0] == "gir_version") {
 					ns.source_reference.file.gir_version = eval (nv[1]);
 					ns.set_attribute_string ("CCode", "gir_version", eval (nv[1]));
+				} else if (nv[0] == "deprecated") {
+					if (eval (nv[1]) == "1") {
+						ns.set_attribute ("Deprecated", true);
+					}
+				} else if (nv[0] == "replacement") {
+					ns.set_attribute_string ("Deprecated", "replacement", eval (nv[1]));
+				} else if (nv[0] == "deprecated_since") {
+					ns.set_attribute_string ("Deprecated", "since", eval (nv[1]));
 				}
 			}
 		}
