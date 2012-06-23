@@ -185,6 +185,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				}
 			} else if (prop.binding == MemberBinding.INSTANCE &&
 			    prop.get_accessor.automatic_body &&
+			    !prop.get_accessor.value_type.value_owned &&
 			    current_type_symbol == prop.parent_symbol &&
 			    current_type_symbol is Class &&
 			    prop.base_property == null &&
