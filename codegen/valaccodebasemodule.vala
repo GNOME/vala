@@ -5291,14 +5291,17 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var sink_func = (cl != null) ? get_ccode_ref_sink_function (cl) : "";
 
 			if (sink_func != "") {
-				var csink = new CCodeFunctionCall (new CCodeIdentifier (sink_func));
-				csink.add_argument (result.cvalue);
 				if (type.nullable) {
 					var is_not_null = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, result.cvalue, new CCodeIdentifier ("NULL"));
-					var csink_stat = new CCodeIfStatement (is_not_null, new CCodeExpressionStatement (csink));
-					ccode.add_statement (csink_stat);
-				} else {
-					ccode.add_expression (csink);
+					ccode.open_if (is_not_null);
+				}
+
+				var csink = new CCodeFunctionCall (new CCodeIdentifier (sink_func));
+				csink.add_argument (result.cvalue);
+				ccode.add_expression (csink);
+
+				if (type.nullable) {
+					ccode.close ();
 				}
 			} else {
 				Report.error (null, "type `%s' does not support floating references".printf (type.data_type.name));
