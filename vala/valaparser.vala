@@ -978,16 +978,23 @@ public class Vala.Parser : CodeVisitor {
 
 	Expression parse_yield_expression () throws ParseError {
 		expect (TokenType.YIELD);
+
 		var expr = parse_expression ();
 
 		var call = expr as MethodCall;
-		if (call == null) {
+		var object_creation = expr as ObjectCreationExpression;
+		if (call == null && object_creation == null) {
 			Report.error (expr.source_reference, "syntax error, expected method call");
 			throw new ParseError.SYNTAX ("expected method call");
 		}
 
-		call.is_yield_expression = true;
-		return call;
+		if (call != null) {
+			call.is_yield_expression = true;
+		} else if (object_creation != null) {
+			object_creation.is_yield_expression = true;
+		}
+
+		return expr;
 	}
 
 	Expression parse_sizeof_expression () throws ParseError {

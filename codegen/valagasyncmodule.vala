@@ -32,6 +32,10 @@ public class Vala.GAsyncModule : GSignalModule {
 		data.add_field ("GAsyncResult*", "_res_");
 		data.add_field ("GSimpleAsyncResult*", "_async_result");
 
+		if (m is CreationMethod) {
+			data.add_field ("GType", "object_type");
+		}
+
 		if (m.binding == MemberBinding.INSTANCE) {
 			var type_sym = (TypeSymbol) m.parent_symbol;
 			if (type_sym is ObjectTypeSymbol) {
@@ -205,7 +209,7 @@ public class Vala.GAsyncModule : GSignalModule {
 		var create_result = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_new"));
 
 		var cl = m.parent_symbol as Class;
-		if (m.binding == MemberBinding.INSTANCE &&
+		if (!(m is CreationMethod) && m.binding == MemberBinding.INSTANCE &&
 		    cl != null && cl.is_subtype_of (gobject_type)) {
 			var gobject_cast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT"));
 			gobject_cast.add_argument (new CCodeIdentifier ("self"));
@@ -236,7 +240,9 @@ public class Vala.GAsyncModule : GSignalModule {
 		set_op_res_call.add_argument (new CCodeIdentifier (get_ccode_real_name (m) + "_data_free"));
 		ccode.add_expression (set_op_res_call);
 
-		if (m.binding == MemberBinding.INSTANCE) {
+		if (m is CreationMethod) {
+			ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, "object_type"), new CCodeIdentifier ("object_type"));
+		} else if (m.binding == MemberBinding.INSTANCE) {
 			var this_type = m.this_parameter.variable_type.copy ();
 			this_type.value_owned = true;
 
@@ -308,30 +314,62 @@ public class Vala.GAsyncModule : GSignalModule {
 				return;
 			}
 
+			var cl = m.parent_symbol as Class;
+
 			var asyncfunc = new CCodeFunction (get_ccode_name (m), "void");
 			var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
-			cparam_map.set (get_param_pos (-1), new CCodeParameter ("_callback_", "GAsyncReadyCallback"));
-			cparam_map.set (get_param_pos (-0.9), new CCodeParameter ("_user_data_", "gpointer"));
-
-			generate_cparameters (m, decl_space, cparam_map, asyncfunc, null, null, null, 1);
+			var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
 
 			if (m.is_private_symbol ()) {
 				asyncfunc.modifiers |= CCodeModifiers.STATIC;
 			}
 
-			decl_space.add_function_declaration (asyncfunc);
+			// do not generate _new functions for creation methods of abstract classes
+			if (!(m is CreationMethod && cl != null && cl.is_abstract)) {
+				generate_cparameters (m, decl_space, cparam_map, asyncfunc, null, carg_map, new CCodeFunctionCall (new CCodeIdentifier ("fake")), 1);
+
+				decl_space.add_function_declaration (asyncfunc);
+			}
 
 			var finishfunc = new CCodeFunction (get_ccode_finish_name (m));
 			cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
-			cparam_map.set (get_param_pos (0.1), new CCodeParameter ("_res_", "GAsyncResult*"));
-
-			generate_cparameters (m, decl_space, cparam_map, finishfunc, null, null, null, 2);
+			carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
 
 			if (m.is_private_symbol ()) {
 				finishfunc.modifiers |= CCodeModifiers.STATIC;
 			}
 
-			decl_space.add_function_declaration (finishfunc);
+			// do not generate _new functions for creation methods of abstract classes
+			if (!(m is CreationMethod && cl != null && cl.is_abstract)) {
+				generate_cparameters (m, decl_space, cparam_map, finishfunc, null, carg_map, new CCodeFunctionCall (new CCodeIdentifier ("fake")), 2);
+
+				decl_space.add_function_declaration (finishfunc);
+			}
+
+			if (m is CreationMethod && cl != null) {
+				// _construct function
+				var function = new CCodeFunction (get_ccode_real_name (m));
+
+				if (m.is_private_symbol ()) {
+					function.modifiers |= CCodeModifiers.STATIC;
+				}
+
+				cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
+				generate_cparameters (m, decl_space, cparam_map, function, null, null, null, 1);
+
+				decl_space.add_function_declaration (function);
+
+				function = new CCodeFunction (get_ccode_finish_real_name (m));
+
+				if (m.is_private_symbol ()) {
+					function.modifiers |= CCodeModifiers.STATIC;
+				}
+
+				cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
+				generate_cparameters (m, decl_space, cparam_map, function, null, null, null, 2);
+
+				decl_space.add_function_declaration (function);
+			}
 		} else {
 			base.generate_method_declaration (m, decl_space);
 		}
@@ -386,6 +424,69 @@ public class Vala.GAsyncModule : GSignalModule {
 		}
 	}
 
+	public override void visit_creation_method (CreationMethod m) {
+		if (!m.coroutine) {
+			base.visit_creation_method (m);
+		} else {
+			push_line (m.source_reference);
+
+			bool visible = !m.is_private_symbol ();
+
+			visit_method (m);
+
+			if (m.source_type == SourceFileType.FAST) {
+				return;
+			}
+
+			// do not generate _new functions for creation methods of abstract classes
+			if (current_type_symbol is Class && !current_class.is_compact && !current_class.is_abstract) {
+				var vfunc = new CCodeFunction (get_ccode_name (m));
+
+				var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
+				var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
+
+				push_function (vfunc);
+
+				var vcall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_real_name (m)));
+				vcall.add_argument (new CCodeIdentifier (get_ccode_type_id (current_class)));
+
+				generate_cparameters (m, cfile, cparam_map, vfunc, null, carg_map, vcall, 1);
+				ccode.add_expression (vcall);
+
+				if (!visible) {
+					vfunc.modifiers |= CCodeModifiers.STATIC;
+				}
+
+				pop_function ();
+
+				cfile.add_function (vfunc);
+
+
+				vfunc = new CCodeFunction (get_ccode_finish_name (m));
+
+				cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
+				carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
+
+				push_function (vfunc);
+
+				vcall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_finish_real_name (m)));
+
+				generate_cparameters (m, cfile, cparam_map, vfunc, null, carg_map, vcall, 2);
+				ccode.add_return (vcall);
+
+				if (!visible) {
+					vfunc.modifiers |= CCodeModifiers.STATIC;
+				}
+
+				pop_function ();
+
+				cfile.add_function (vfunc);
+			}
+
+			pop_line ();
+		}
+	}
+
 	void generate_finish_function (Method m) {
 		push_context (new EmitContext ());
 
@@ -406,7 +507,12 @@ public class Vala.GAsyncModule : GSignalModule {
 		push_function (finishfunc);
 
 		var return_type = m.return_type;
-		if (!(return_type is VoidType) && !return_type.is_real_non_null_struct_type ()) {
+		if (m is CreationMethod) {
+			var type_sym = (TypeSymbol) m.parent_symbol;
+			if (type_sym is ObjectTypeSymbol) {
+				ccode.add_declaration (get_ccode_name (type_sym) + "*", new CCodeVariableDeclarator ("result"));
+			}
+		} else if (!(return_type is VoidType) && !return_type.is_real_non_null_struct_type ()) {
 			ccode.add_declaration (get_ccode_name (m.return_type), new CCodeVariableDeclarator ("result"));
 		}
 
@@ -443,7 +549,11 @@ public class Vala.GAsyncModule : GSignalModule {
 		}
 		emit_context.pop_symbol ();
 
-		if (return_type.is_real_non_null_struct_type ()) {
+		if (m is CreationMethod) {
+			ccode.add_assignment (new CCodeIdentifier ("result"), new CCodeMemberAccess.pointer (data_var, "self"));
+			ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, "self"), new CCodeConstant ("NULL"));
+			ccode.add_return (new CCodeIdentifier ("result"));
+		} else if (return_type.is_real_non_null_struct_type ()) {
 			// structs are returned via out parameter
 			CCodeExpression cexpr = new CCodeMemberAccess.pointer (data_var, "result");
 			if (requires_copy (return_type)) {

@@ -43,6 +43,8 @@ public class Vala.ObjectCreationExpression : Expression {
 	 */
 	public MemberAccess member_name { get; set; }
 
+	public bool is_yield_expression { get; set; }
+
 	public bool struct_creation { get; set; }
 
 	private List<Expression> argument_list = new ArrayList<Expression> ();

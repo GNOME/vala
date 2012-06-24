@@ -552,15 +552,17 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 				if (m is CreationMethod) {
 					if (in_gobject_creation_method) {
-						ccode.add_declaration ("%s *".printf (get_ccode_name (current_type_symbol)), new CCodeVariableDeclarator.zero ("self", new CCodeConstant ("NULL")));
+						if (!m.coroutine) {
+							ccode.add_declaration ("%s *".printf (get_ccode_name (current_type_symbol)), new CCodeVariableDeclarator.zero ("self", new CCodeConstant ("NULL")));
+						}
 					} else if (is_gtypeinstance_creation_method (m)) {
 						var cl = (Class) m.parent_symbol;
 						ccode.add_declaration (get_ccode_name (cl) + "*", new CCodeVariableDeclarator.zero ("self", new CCodeConstant ("NULL")));
 
 						if (cl.is_fundamental ()) {
 							var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_create_instance"));
-							ccall.add_argument (new CCodeIdentifier ("object_type"));
-							ccode.add_assignment (new CCodeIdentifier ("self"), new CCodeCastExpression (ccall, get_ccode_name (cl) + "*"));
+							ccall.add_argument (get_variable_cexpression ("object_type"));
+							ccode.add_assignment (get_this_cexpression (), new CCodeCastExpression (ccall, get_ccode_name (cl) + "*"));
 
 							/* type, dup func, and destroy func fields for generic types */
 							foreach (TypeParameter type_param in current_class.get_type_parameters ()) {
@@ -584,19 +586,21 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 						}
 					} else if (current_type_symbol is Class) {
 						var cl = (Class) m.parent_symbol;
-						ccode.add_declaration (get_ccode_name (cl) + "*", new CCodeVariableDeclarator ("self"));
+						if (!m.coroutine) {
+							ccode.add_declaration (get_ccode_name (cl) + "*", new CCodeVariableDeclarator ("self"));
+						}
 
 						if (!((CreationMethod) m).chain_up) {
 							// TODO implicitly chain up to base class as in add_object_creation
 							var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_new0"));
 							ccall.add_argument (new CCodeIdentifier (get_ccode_name (cl)));
-							ccode.add_assignment (new CCodeIdentifier ("self"), ccall);
+							ccode.add_assignment (get_this_cexpression (), ccall);
 						}
 
 						if (cl.base_class == null) {
 							// derived compact classes do not have fields
 							var cinitcall = new CCodeFunctionCall (new CCodeIdentifier ("%s_instance_init".printf (get_ccode_lower_case_name (cl, null))));
-							cinitcall.add_argument (new CCodeIdentifier ("self"));
+							cinitcall.add_argument (get_this_cexpression ());
 							ccode.add_expression (cinitcall);
 						}
 					} else {
@@ -714,7 +718,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 						ccode.add_expression (cfreeparams);
 					}
 
-					if (current_type_symbol is Class) {
+					if (current_type_symbol is Class && !m.coroutine) {
 						CCodeExpression cresult = new CCodeIdentifier ("self");
 						if (get_ccode_type (m) != null) {
 							cresult = new CCodeCastExpression (cresult, get_ccode_type (m));
@@ -859,7 +863,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			cparam_map.set (get_param_pos (get_ccode_instance_pos (m)), instance_param);
 		} else if (m.parent_symbol is Class && m is CreationMethod) {
 			var cl = (Class) m.parent_symbol;
-			if (!cl.is_compact && vcall == null) {
+			if (!cl.is_compact && vcall == null && (direction & 1) == 1) {
 				cparam_map.set (get_param_pos (get_ccode_instance_pos (m)), new CCodeParameter ("object_type", "GType"));
 			}
 		} else if (m.binding == MemberBinding.INSTANCE || (m.parent_symbol is Struct && m is CreationMethod)) {

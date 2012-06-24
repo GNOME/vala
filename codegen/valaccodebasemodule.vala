@@ -2129,6 +2129,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
+	public CCodeExpression get_this_cexpression () {
+		if (is_in_coroutine ()) {
+			return new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "self");
+		} else {
+			return new CCodeIdentifier ("self");
+		}
+	}
+
 	public string get_local_cname (LocalVariable local) {
 		var cname = get_variable_cname (local.name);
 		if (is_in_coroutine ()) {
@@ -3532,9 +3540,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			// do not call return as member cleanup and chain up to base finalizer
 			// stil need to be executed
 			ccode.add_goto ("_return");
+		} else if (is_in_coroutine ()) {
 		} else if (current_method is CreationMethod) {
 			ccode.add_return (new CCodeIdentifier ("self"));
-		} else if (is_in_coroutine ()) {
 		} else if (current_return_type is VoidType || current_return_type.is_real_non_null_struct_type ()) {
 			// structs are returned via out parameter
 			ccode.add_return ();
@@ -4332,6 +4340,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var params = m.get_parameters ();
 			CCodeFunctionCall creation_call;
 
+			CCodeFunctionCall async_call = null;
+			CCodeFunctionCall finish_call = null;
+
 			generate_method_declaration (m, cfile);
 
 			var cl = expr.type_reference.data_type as Class;
@@ -4362,17 +4373,32 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			generate_type_declaration (expr.type_reference, cfile);
 
-			var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
+			var in_arg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
+			var out_arg_map = in_arg_map;
+
+			if (m != null && m.coroutine) {
+				// async call
+
+				async_call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_name (m)));
+				finish_call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_finish_name (m)));
+
+				creation_call = finish_call;
+
+				// output arguments used separately
+				out_arg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
+				// pass GAsyncResult stored in closure to finish function
+				out_arg_map.set (get_param_pos (0.1), new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_res_"));
+			}
 
 			if (cl != null && !cl.is_compact) {
-				add_generic_type_arguments (carg_map, expr.type_reference.get_type_arguments (), expr);
+				add_generic_type_arguments (in_arg_map, expr.type_reference.get_type_arguments (), expr);
 			} else if (cl != null && get_ccode_simple_generics (m)) {
 				int type_param_index = 0;
 				foreach (var type_arg in expr.type_reference.get_type_arguments ()) {
 					if (requires_copy (type_arg)) {
-						carg_map.set (get_param_pos (-1 + 0.1 * type_param_index + 0.03), get_destroy0_func_expression (type_arg));
+						in_arg_map.set (get_param_pos (-1 + 0.1 * type_param_index + 0.03), get_destroy0_func_expression (type_arg));
 					} else {
-						carg_map.set (get_param_pos (-1 + 0.1 * type_param_index + 0.03), new CCodeConstant ("NULL"));
+						in_arg_map.set (get_param_pos (-1 + 0.1 * type_param_index + 0.03), new CCodeConstant ("NULL"));
 					}
 					type_param_index++;
 				}
@@ -4385,11 +4411,18 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			Iterator<Parameter> params_it = params.iterator ();
 			foreach (Expression arg in expr.get_argument_list ()) {
 				CCodeExpression cexpr = get_cvalue (arg);
+
+				var carg_map = in_arg_map;
+
 				Parameter param = null;
 				if (params_it.next ()) {
 					param = params_it.get ();
 					ellipsis = param.ellipsis;
 					if (!ellipsis) {
+						if (param.direction == ParameterDirection.OUT) {
+							carg_map = out_arg_map;
+						}
+
 						// g_array_new: element size
 						if (cl == garray_type && param.name == "element_size") {
 							var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
@@ -4450,39 +4483,80 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				// method can fail
 				current_method_inner_error = true;
 				// add &inner_error before the ellipsis arguments
-				carg_map.set (get_param_pos (-1), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression ("_inner_error_")));
+				out_arg_map.set (get_param_pos (-1), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression ("_inner_error_")));
 			}
 
 			if (ellipsis) {
 				/* ensure variable argument list ends with NULL
 				 * except when using printf-style arguments */
 				if (m == null) {
-					carg_map.set (get_param_pos (-1, true), new CCodeConstant ("NULL"));
+					in_arg_map.set (get_param_pos (-1, true), new CCodeConstant ("NULL"));
 				} else if (!m.printf_format && !m.scanf_format && get_ccode_sentinel (m) != "") {
-					carg_map.set (get_param_pos (-1, true), new CCodeConstant (get_ccode_sentinel (m)));
+					in_arg_map.set (get_param_pos (-1, true), new CCodeConstant (get_ccode_sentinel (m)));
 				}
 			}
 
 			if ((st != null && !st.is_simple_type ()) && get_ccode_instance_pos (m) < 0) {
 				// instance parameter is at the end in a struct creation method
-				carg_map.set (get_param_pos (-3), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance));
+				out_arg_map.set (get_param_pos (-3), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance));
+			}
+
+			if (m != null && m.coroutine) {
+				if (expr.is_yield_expression) {
+					// asynchronous call
+					in_arg_map.set (get_param_pos (-1), new CCodeIdentifier (generate_ready_function (current_method)));
+					in_arg_map.set (get_param_pos (-0.9), new CCodeIdentifier ("_data_"));
+				}
 			}
 
 			// append C arguments in the right order
-			int last_pos = -1;
+
+			int last_pos;
 			int min_pos;
-			while (true) {
-				min_pos = -1;
-				foreach (int pos in carg_map.get_keys ()) {
-					if (pos > last_pos && (min_pos == -1 || pos < min_pos)) {
-						min_pos = pos;
+
+			if (async_call != creation_call) {
+				// don't append out arguments for .begin() calls
+				last_pos = -1;
+				while (true) {
+					min_pos = -1;
+					foreach (int pos in out_arg_map.get_keys ()) {
+						if (pos > last_pos && (min_pos == -1 || pos < min_pos)) {
+							min_pos = pos;
+						}
 					}
+					if (min_pos == -1) {
+						break;
+					}
+					creation_call.add_argument (out_arg_map.get (min_pos));
+					last_pos = min_pos;
 				}
-				if (min_pos == -1) {
-					break;
+			}
+
+			if (async_call != null) {
+				last_pos = -1;
+				while (true) {
+					min_pos = -1;
+					foreach (int pos in in_arg_map.get_keys ()) {
+						if (pos > last_pos && (min_pos == -1 || pos < min_pos)) {
+							min_pos = pos;
+						}
+					}
+					if (min_pos == -1) {
+						break;
+					}
+					async_call.add_argument (in_arg_map.get (min_pos));
+					last_pos = min_pos;
 				}
-				creation_call.add_argument (carg_map.get (min_pos));
-				last_pos = min_pos;
+			}
+
+			if (expr.is_yield_expression) {
+				// set state before calling async function to support immediate callbacks
+				int state = next_coroutine_state++;
+
+				ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_state_"), new CCodeConstant (state.to_string ()));
+				ccode.add_expression (async_call);
+				ccode.add_return (new CCodeConstant ("FALSE"));
+				ccode.add_label ("_state_%d".printf (state));
 			}
 
 			creation_expr = creation_call;

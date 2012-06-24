@@ -125,10 +125,10 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		if (m is CreationMethod && m.parent_symbol is Class) {
 			if (context.profile == Profile.GOBJECT) {
 				if (!((Class) m.parent_symbol).is_compact) {
-					ccall.add_argument (new CCodeIdentifier ("object_type"));
+					ccall.add_argument (get_variable_cexpression ("object_type"));
 				}
 			} else {
-				ccall.add_argument (new CCodeIdentifier ("self"));
+				ccall.add_argument (get_this_cexpression ());
 			}
 
 			if (!current_class.is_compact) {
@@ -158,7 +158,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				}
 			}
 		} else if (m is CreationMethod && m.parent_symbol is Struct) {
-			ccall.add_argument (new CCodeIdentifier ("self"));
+			ccall.add_argument (get_this_cexpression ());
 		} else if (m != null && m.get_type_parameters ().size > 0 && !get_ccode_has_generic_type_parameter (m) && !get_ccode_simple_generics (m) && (ccall != finish_call || expr.is_yield_expression)) {
 			// generic method
 			// don't add generic arguments for .end() calls
@@ -217,7 +217,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				} else {
 					// Accessing the method from within an instance method
 					var k = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_GET_CLASS"));
-					k.add_argument (new CCodeIdentifier ("self"));
+					k.add_argument (get_this_cexpression ());
 					klass = k;
 				}
 			} else {
@@ -282,12 +282,12 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			}
 			generate_dynamic_method_wrapper ((DynamicMethod) m);
 		} else if (m is CreationMethod && context.profile == Profile.GOBJECT && m.parent_symbol is Class) {
-			ccode.add_assignment (new CCodeIdentifier ("self"), new CCodeCastExpression (ccall, CCodeBaseModule.get_ccode_name (current_class) + "*"));
+			ccode.add_assignment (get_this_cexpression (), new CCodeCastExpression (ccall, CCodeBaseModule.get_ccode_name (current_class) + "*"));
 
 			if (current_method.body.captured) {
 				// capture self after setting it
 				var ref_call = new CCodeFunctionCall (get_dup_func_expression (new ObjectType (current_class), expr.source_reference));
-				ref_call.add_argument (new CCodeIdentifier ("self"));
+				ref_call.add_argument (get_this_cexpression ());
 
 				ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (current_method.body))), "self"), ref_call);
 			}
