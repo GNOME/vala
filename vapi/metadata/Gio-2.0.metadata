@@ -290,6 +290,7 @@ DBusProxy
   .new_for_bus_finish skip
 AsyncInitable
   .new* skip
+  .init_async#virtual_method virtual
 
 // Bug #666797: No support for generic methods in GIR parser
 DBusConnection
