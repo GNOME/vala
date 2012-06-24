@@ -3181,10 +3181,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		if (context.profile == Profile.GOBJECT) {
 			if (type.data_type != null && !is_reference_counting (type.data_type) &&
-			    (type.data_type == gstringbuilder_type
-			     || type.data_type == garray_type
-			     || type.data_type == gbytearray_type
-			     || type.data_type == gptrarray_type)) {
+			    (type.data_type.is_subtype_of (gstringbuilder_type)
+			     || type.data_type.is_subtype_of (garray_type)
+			     || type.data_type.is_subtype_of (gbytearray_type)
+			     || type.data_type.is_subtype_of (gptrarray_type))) {
 				ccall.add_argument (new CCodeConstant ("TRUE"));
 			} else if (type.data_type == gthreadpool_type) {
 				ccall.add_argument (new CCodeConstant ("FALSE"));
