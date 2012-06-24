@@ -4149,29 +4149,31 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	bool is_signed_integer_type_argument (DataType type_arg) {
 		var st = type_arg.data_type as Struct;
-		if (type_arg.nullable) {
+		if (type_arg is EnumValueType) {
+			return true;
+		} else if (type_arg.nullable) {
 			return false;
-		} else if (st == bool_type.data_type) {
+		} else if (st == null) {
+			return false;
+		} else if (st.is_subtype_of (bool_type.data_type)) {
 			return true;
-		} else if (st == char_type.data_type) {
+		} else if (st.is_subtype_of (char_type.data_type)) {
 			return true;
-		} else if (unichar_type != null && st == unichar_type.data_type) {
+		} else if (unichar_type != null && st.is_subtype_of (unichar_type.data_type)) {
 			return true;
-		} else if (st == short_type.data_type) {
+		} else if (st.is_subtype_of (short_type.data_type)) {
 			return true;
-		} else if (st == int_type.data_type) {
+		} else if (st.is_subtype_of (int_type.data_type)) {
 			return true;
-		} else if (st == long_type.data_type) {
+		} else if (st.is_subtype_of (long_type.data_type)) {
 			return true;
-		} else if (st == int8_type.data_type) {
+		} else if (st.is_subtype_of (int8_type.data_type)) {
 			return true;
-		} else if (st == int16_type.data_type) {
+		} else if (st.is_subtype_of (int16_type.data_type)) {
 			return true;
-		} else if (st == int32_type.data_type) {
+		} else if (st.is_subtype_of (int32_type.data_type)) {
 			return true;
-		} else if (st == gtype_type) {
-			return true;
-		} else if (type_arg is EnumValueType) {
+		} else if (st.is_subtype_of (gtype_type)) {
 			return true;
 		} else {
 			return false;
@@ -4180,21 +4182,23 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	bool is_unsigned_integer_type_argument (DataType type_arg) {
 		var st = type_arg.data_type as Struct;
-		if (type_arg.nullable) {
+		if (st == null) {
 			return false;
-		} else if (st == uchar_type.data_type) {
+		} else if (type_arg.nullable) {
+			return false;
+		} else if (st.is_subtype_of (uchar_type.data_type)) {
 			return true;
-		} else if (st == ushort_type.data_type) {
+		} else if (st.is_subtype_of (ushort_type.data_type)) {
 			return true;
-		} else if (st == uint_type.data_type) {
+		} else if (st.is_subtype_of (uint_type.data_type)) {
 			return true;
-		} else if (st == ulong_type.data_type) {
+		} else if (st.is_subtype_of (ulong_type.data_type)) {
 			return true;
-		} else if (st == uint8_type.data_type) {
+		} else if (st.is_subtype_of (uint8_type.data_type)) {
 			return true;
-		} else if (st == uint16_type.data_type) {
+		} else if (st.is_subtype_of (uint16_type.data_type)) {
 			return true;
-		} else if (st == uint32_type.data_type) {
+		} else if (st.is_subtype_of (uint32_type.data_type)) {
 			return true;
 		} else {
 			return false;
