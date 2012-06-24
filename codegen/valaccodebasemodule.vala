@@ -4435,26 +4435,37 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				i++;
 			}
-			while (params_it.next ()) {
+			if (params_it.next ()) {
 				var param = params_it.get ();
 				
-				if (param.ellipsis) {
-					ellipsis = true;
-					break;
-				}
+				/* if there are more parameters than arguments,
+				 * the additional parameter is an ellipsis parameter
+				 * otherwise there is a bug in the semantic analyzer
+				 */
+				assert (param.params_array || param.ellipsis);
+				ellipsis = true;
+			}
 
-				if (param.initializer == null) {
-					Report.error (expr.source_reference, "no default expression for argument %d".printf (i));
-					return;
+			if (expr.tree_can_fail) {
+				// method can fail
+				current_method_inner_error = true;
+				// add &inner_error before the ellipsis arguments
+				carg_map.set (get_param_pos (-1), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression ("_inner_error_")));
+			}
+
+			if (ellipsis) {
+				/* ensure variable argument list ends with NULL
+				 * except when using printf-style arguments */
+				if (m == null) {
+					carg_map.set (get_param_pos (-1, true), new CCodeConstant ("NULL"));
+				} else if (!m.printf_format && !m.scanf_format && get_ccode_sentinel (m) != "") {
+					carg_map.set (get_param_pos (-1, true), new CCodeConstant (get_ccode_sentinel (m)));
 				}
-				
-				/* evaluate default expression here as the code
-				 * generator might not have visited the formal
-				 * parameter yet */
-				param.initializer.emit (this);
-			
-				carg_map.set (get_param_pos (get_ccode_pos (param)), get_cvalue (param.initializer));
-				i++;
+			}
+
+			if ((st != null && !st.is_simple_type ()) && get_ccode_instance_pos (m) < 0) {
+				// instance parameter is at the end in a struct creation method
+				carg_map.set (get_param_pos (-3), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance));
 			}
 
 			// append C arguments in the right order
@@ -4472,25 +4483,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				}
 				creation_call.add_argument (carg_map.get (min_pos));
 				last_pos = min_pos;
-			}
-
-			if ((st != null && !st.is_simple_type ()) && get_ccode_instance_pos (m) < 0) {
-				// instance parameter is at the end in a struct creation method
-				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance));
-			}
-
-			if (expr.tree_can_fail) {
-				// method can fail
-				current_method_inner_error = true;
-				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression ("_inner_error_")));
-			}
-
-			if (ellipsis) {
-				/* ensure variable argument list ends with NULL
-				 * except when using printf-style arguments */
-				if (!m.printf_format && !m.scanf_format && get_ccode_sentinel (m) != "") {
-					creation_call.add_argument (new CCodeConstant (get_ccode_sentinel (m)));
-				}
 			}
 
 			creation_expr = creation_call;
