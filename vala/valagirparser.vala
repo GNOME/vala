@@ -71,7 +71,8 @@ public class Vala.GirParser : CodeVisitor {
 		LOWER_CASE_CPREFIX,
 		ERRORDOMAIN,
 		DESTROYS_INSTANCE,
-		BASE_TYPE;
+		BASE_TYPE,
+		FINISH_NAME;
 
 		public static ArgumentType? from_string (string name) {
 			var enum_class = (EnumClass) typeof(ArgumentType).class_ref ();
@@ -2815,6 +2816,10 @@ public class Vala.GirParser : CodeVisitor {
 		current.return_array_length_idx = return_array_length_idx;
 
 		current.symbol = s;
+
+		if (metadata.has_argument (ArgumentType.FINISH_NAME)) {
+			s.set_attribute_string ("CCode", "finish_name", metadata.get_string (ArgumentType.FINISH_NAME));
+		}
 
 		var parameters = new ArrayList<ParameterInfo> ();
 		current.array_length_parameters = new ArrayList<int> ();
