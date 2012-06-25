@@ -1,37 +1,28 @@
-*.*.cancellable default=null
-
 Pixbuf
-        .composite_color_simple nullable
-        .flip nullable
-        .from_pixdata cheader_filename="gdk-pixbuf/gdk-pixdata.h"
-        .from_pixdata.copy_pixels default=true
-        .new_from_data skip
-        .new_from_inline.copy_pixels default=true
-        .new_from_stream_async skip
-        .new_from_stream_finish skip
-        .new_from_stream_at_scale_async skip
         .new_from_xpm_data.data type="string[]"
+        .new_from_stream_at_scale_async skip
         .new_subpixbuf skip
         .save_to_stream_finish skip
         .gettext skip
-Pixdata
-        .to_csource skip=false
-Pixdata* cheader_filename="gdk-pixbuf/gdk-pixdata.h"
-PixbufSaveFunc skip
 
-// Upstream
+// gdk-pixdata.h isn't included by gdk-pixbuf.h
+Pixdata* cheader_filename="gdk-pixbuf/gdk-pixdata.h"
 Pixbuf
-        .new_from_inline.data type="uint8[]" array_length_idx=0
-        .get_file_info unowned
-        .get_file_info.width out
-        .get_file_info.height out
-        .get_pixels type="unowned uint8[]"
-        .save_to_bufferv.buffer type="uint8[]" out array_length_idx=1
-        .save_to_callbackv skip
-        .from_pixdata skip=false unowned=false
-Pixdata
-        .pixel_data type="unowned uint8[]"
-        .serialize type="uint8[]" array_length_idx=0
-PixbufLoader
-        .get_format unowned
-PixbufDestroyNotify skip
+        .from_pixdata cheader_filename="gdk-pixbuf/gdk-pixdata.h"
+
+// default values other than null
+Pixbuf
+        .new_from_data skip
+
+// Bug #558620: default values
+Pixbuf
+        .from_pixdata.copy_pixels default=true
+        .new_from_inline.copy_pixels default=true
+
+// Bug #660879: nullability of return values
+Pixbuf
+        .composite_color_simple nullable
+        .flip nullable
+
+// Bug #666798: delegates which throw exceptions
+PixbufSaveFunc skip

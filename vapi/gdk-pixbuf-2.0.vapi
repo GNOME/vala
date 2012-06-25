@@ -33,8 +33,14 @@ namespace Gdk {
 		public Pixbuf.from_resource_at_scale (string resource_path, int width, int height, bool preserve_aspect_ratio) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public Pixbuf.from_stream (GLib.InputStream stream, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[CCode (cname = "gdk_pixbuf_new_from_stream_async")]
+		public async Pixbuf.from_stream_async (GLib.InputStream stream, GLib.Cancellable? cancellable);
 		[CCode (has_construct_function = false)]
 		public Pixbuf.from_stream_at_scale (GLib.InputStream stream, int width, int height, bool preserve_aspect_ratio, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[CCode (cname = "gdk_pixbuf_new_from_stream_at_scale_async", finish_name = "gdk_pixbuf_new_from_stream_finish")]
+		public async Pixbuf.from_stream_at_scale_async (GLib.InputStream stream, int width, int height, bool preserve_aspect_ratio, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[CCode (has_construct_function = false)]
+		public Pixbuf.from_stream_finish (GLib.AsyncResult async_result) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public Pixbuf.from_xpm_data ([CCode (array_length = false, type = "char**")] string[] data);
 		public int get_bits_per_sample ();
@@ -53,8 +59,10 @@ namespace Gdk {
 		public int get_rowstride ();
 		public int get_width ();
 		[CCode (cname = "gdk_pixbuf_new_from_stream_async", finish_name = "gdk_pixbuf_new_from_stream_finish")]
+		[Deprecated (replacement = "Pixbuf.from_stream_async", since = "vala-0.18")]
 		public static async Gdk.Pixbuf new_from_stream_async (GLib.InputStream stream, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (cname = "gdk_pixbuf_new_from_stream_at_scale_async", finish_name = "gdk_pixbuf_new_from_stream_finish")]
+		[Deprecated (replacement = "Pixbuf.from_stream_at_scale_async", since = "vala-0.18")]
 		public static async Gdk.Pixbuf new_from_stream_at_scale_async (GLib.InputStream stream, int width, int height, bool preserve_aspect_ratio, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public Gdk.Pixbuf rotate_simple (Gdk.PixbufRotation angle);
 		public void saturate_and_pixelate (Gdk.Pixbuf dest, float saturation, bool pixelate);
@@ -225,7 +233,7 @@ namespace Gdk {
 		FAILED;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", instance_pos = 1.9)]
 	public delegate void PixbufDestroyNotify ([CCode (array_length = false)] uint8[] pixels);
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h", instance_pos = -0.9)]
 	public delegate bool PixbufSaveFunc ([CCode (array_length_type = "gsize")] uint8[] buf) throws GLib.Error;
