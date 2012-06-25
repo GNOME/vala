@@ -4388,6 +4388,8 @@ namespace GLib {
 		public static VariantType INT64;
 		[CCode (cname = "G_VARIANT_TYPE_UINT64")]
 		public static VariantType UINT64;
+		[CCode (cname = "G_VARIANT_TYPE_HANDLE")]
+		public static VariantType HANDLE;
 		[CCode (cname = "G_VARIANT_TYPE_DOUBLE")]
 		public static VariantType DOUBLE;
 		[CCode (cname = "G_VARIANT_TYPE_STRING")]
@@ -4414,6 +4416,14 @@ namespace GLib {
 		public static VariantType DICT_ENTRY;
 		[CCode (cname = "G_VARIANT_TYPE_DICTIONARY")]
 		public static VariantType DICTIONARY;
+		[CCode (cname = "G_VARIANT_TYPE_STRING_ARRAY")]
+		public static VariantType STRING_ARRAY;
+		[CCode (cname = "G_VARIANT_TYPE_OBJECT_PATH_ARRAY")]
+		public static VariantType OBJECT_PATH_ARRAY;
+		[CCode (cname = "G_VARIANT_TYPE_BYTESTRING")]
+		public static VariantType BYTESTRING;
+		[CCode (cname = "G_VARIANT_TYPE_BYTESTRING_ARRAY")]
+		public static VariantType BYTESTRING_ARRAY;
 		[CCode (cname = "G_VARIANT_TYPE_VARDICT")]
 		public static VariantType VARDICT;
 
