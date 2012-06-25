@@ -13344,6 +13344,15 @@
 					<parameter name="actions" type="GdkDragAction"/>
 				</parameters>
 			</method>
+			<method name="get_cell_rect" symbol="gtk_icon_view_get_cell_rect">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="icon_view" type="GtkIconView*"/>
+					<parameter name="path" type="GtkTreePath*"/>
+					<parameter name="cell" type="GtkCellRenderer*"/>
+					<parameter name="rect" type="GdkRectangle*"/>
+				</parameters>
+			</method>
 			<method name="get_column_spacing" symbol="gtk_icon_view_get_column_spacing">
 				<return-type type="gint"/>
 				<parameters>
@@ -15188,6 +15197,73 @@
 			</method>
 			<property name="child-pack-direction" type="GtkPackDirection" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="pack-direction" type="GtkPackDirection" readable="1" writable="1" construct="0" construct-only="0"/>
+		</object>
+		<object name="GtkMenuButton" parent="GtkToggleButton" type-name="GtkMenuButton" get-type="gtk_menu_button_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+				<interface name="GtkActionable"/>
+				<interface name="GtkActivatable"/>
+			</implements>
+			<method name="get_align_widget" symbol="gtk_menu_button_get_align_widget">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="menu_button" type="GtkMenuButton*"/>
+				</parameters>
+			</method>
+			<method name="get_direction" symbol="gtk_menu_button_get_direction">
+				<return-type type="GtkArrowType"/>
+				<parameters>
+					<parameter name="menu_button" type="GtkMenuButton*"/>
+				</parameters>
+			</method>
+			<method name="get_menu" symbol="gtk_menu_button_get_menu">
+				<return-type type="GtkMenu*"/>
+				<parameters>
+					<parameter name="menu_button" type="GtkMenuButton*"/>
+				</parameters>
+			</method>
+			<method name="get_menu_model" symbol="gtk_menu_button_get_menu_model">
+				<return-type type="GMenuModel*"/>
+				<parameters>
+					<parameter name="menu_button" type="GtkMenuButton*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gtk_menu_button_new">
+				<return-type type="GtkWidget*"/>
+			</constructor>
+			<method name="set_align_widget" symbol="gtk_menu_button_set_align_widget">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu_button" type="GtkMenuButton*"/>
+					<parameter name="align_widget" type="GtkWidget*"/>
+				</parameters>
+			</method>
+			<method name="set_direction" symbol="gtk_menu_button_set_direction">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu_button" type="GtkMenuButton*"/>
+					<parameter name="direction" type="GtkArrowType"/>
+				</parameters>
+			</method>
+			<method name="set_menu" symbol="gtk_menu_button_set_menu">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu_button" type="GtkMenuButton*"/>
+					<parameter name="menu" type="GtkWidget*"/>
+				</parameters>
+			</method>
+			<method name="set_menu_model" symbol="gtk_menu_button_set_menu_model">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu_button" type="GtkMenuButton*"/>
+					<parameter name="menu_model" type="GMenuModel*"/>
+				</parameters>
+			</method>
+			<property name="align-widget" type="GtkContainer*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="direction" type="GtkArrowType" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="menu" type="GtkMenu*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="menu-model" type="GMenuModel*" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="GtkMenuItem" parent="GtkBin" type-name="GtkMenuItem" get-type="gtk_menu_item_get_type">
 			<implements>
@@ -18884,6 +18960,17 @@
 					<parameter name="horizontal" type="gboolean"/>
 				</parameters>
 			</signal>
+		</object>
+		<object name="GtkSearchEntry" parent="GtkEntry" type-name="GtkSearchEntry" get-type="gtk_search_entry_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+				<interface name="GtkEditable"/>
+				<interface name="GtkCellEditable"/>
+			</implements>
+			<constructor name="new" symbol="gtk_search_entry_new">
+				<return-type type="GtkWidget*"/>
+			</constructor>
 		</object>
 		<object name="GtkSeparator" parent="GtkWidget" type-name="GtkSeparator" get-type="gtk_separator_get_type">
 			<implements>

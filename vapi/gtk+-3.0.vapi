@@ -2272,6 +2272,7 @@ namespace Gtk {
 		public unowned Cairo.Surface create_drag_icon (Gtk.TreePath path);
 		public void enable_model_drag_dest (Gtk.TargetEntry[] targets, Gdk.DragAction actions);
 		public void enable_model_drag_source (Gdk.ModifierType start_button_mask, Gtk.TargetEntry[] targets, Gdk.DragAction actions);
+		public bool get_cell_rect (Gtk.TreePath path, Gtk.CellRenderer? cell, out Gdk.Rectangle rect);
 		public int get_column_spacing ();
 		public int get_columns ();
 		public bool get_cursor (out Gtk.TreePath path, out unowned Gtk.CellRenderer cell);
@@ -2695,6 +2696,23 @@ namespace Gtk {
 		public void set_pack_direction (Gtk.PackDirection pack_dir);
 		public Gtk.PackDirection child_pack_direction { get; set; }
 		public Gtk.PackDirection pack_direction { get; set; }
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class MenuButton : Gtk.ToggleButton, Atk.Implementor, Gtk.Buildable, Gtk.Actionable, Gtk.Activatable {
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public MenuButton ();
+		public unowned Gtk.Widget get_align_widget ();
+		public Gtk.ArrowType get_direction ();
+		public unowned Gtk.Menu get_menu ();
+		public unowned GLib.MenuModel get_menu_model ();
+		public void set_align_widget (Gtk.Widget align_widget);
+		public void set_direction (Gtk.ArrowType direction);
+		public void set_menu (Gtk.Widget menu);
+		public void set_menu_model (GLib.MenuModel menu_model);
+		public Gtk.Container align_widget { get; set; }
+		public Gtk.ArrowType direction { get; set; }
+		public Gtk.Menu menu { get; set; }
+		public GLib.MenuModel menu_model { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class MenuItem : Gtk.Bin, Atk.Implementor, Gtk.Buildable, Gtk.Activatable {
@@ -3623,6 +3641,11 @@ namespace Gtk {
 		public bool window_placement_set { get; set; }
 		public virtual signal void move_focus_out (Gtk.DirectionType direction);
 		public virtual signal bool scroll_child (Gtk.ScrollType scroll, bool horizontal);
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class SearchEntry : Gtk.Entry, Atk.Implementor, Gtk.Buildable, Gtk.Editable, Gtk.CellEditable {
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public SearchEntry ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "gtk_selection_data_copy", type_id = "gtk_selection_data_get_type ()")]
 	[Compact]
