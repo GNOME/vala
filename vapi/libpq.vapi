@@ -89,11 +89,14 @@ namespace Postgres {
 		SOURCE_FUNCTION
 	}
 
-	[CCode (cname = "PGnotify")]
-	public struct Notify {
+	[Compact]
+	[CCode (cname = "PGnotify", free_function = "PQfreemem")]
+	public class Notify {
 		public string relname;
 		public int    be_pid;
 		public string extra;
+
+		private Notify ();
 	}
 
 	[CCode (cname = "PQnoticeReceiver")]
