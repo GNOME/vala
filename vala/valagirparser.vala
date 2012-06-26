@@ -2879,7 +2879,7 @@ public class Vala.GirParser : CodeVisitor {
 
 		for (int param_n = parameters.size - 1 ; param_n >= 0 ; param_n--) {
 			ParameterInfo pi = parameters[param_n];
-			if (pi.param.initializer == null) {
+			if (!pi.param.ellipsis && pi.param.initializer == null) {
 				string type_string = pi.param.variable_type.to_string ();
 				if (type_string == "Gio.Cancellable?") {
 					pi.param.initializer = new Vala.NullLiteral ();
