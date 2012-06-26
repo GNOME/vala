@@ -116,6 +116,7 @@ namespace GLib {
 		[NoAccessorMethod]
 		public GLib.SettingsBackend backend { owned get; construct; }
 		public virtual signal bool change_event (GLib.Quark[]? keys);
+		public void bind_with_mapping (string key, GLib.Object object, string property, GLib.SettingsBindFlags flags, GLib.SettingsBindGetMappingShared get_mapping, GLib.SettingsBindSetMappingShared set_mapping, void* user_data, GLib.DestroyNotify? notify);
 	}
 
 	public class SettingsBackend : GLib.Object {
@@ -589,4 +590,9 @@ namespace GLib {
 	[Compact]
 	public class Resource {
 	}
+
+	[CCode (cheader_filename = "gio/gio.h", has_target = false, cname = "GSettingsBindGetMapping")]
+	public delegate bool SettingsBindGetMappingShared (GLib.Value value, GLib.Variant variant, void* user_data);
+	[CCode (cheader_filename = "gio/gio.h", has_target = false, cname = "GSettingsBindSetMapping")]
+	public delegate GLib.Variant SettingsBindSetMappingShared (GLib.Value value, GLib.VariantType expected_type, void* user_data);
 }

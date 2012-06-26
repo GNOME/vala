@@ -158,7 +158,6 @@ Resolver
   .lookup_service_finish skip
 Settings
   .change_event skip
-  .bind_with_mapping skip=false
   .get skip=false sentinel=""
   .set skip=false sentinel=""
 SimpleAction

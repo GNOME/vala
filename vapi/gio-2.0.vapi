@@ -1607,7 +1607,7 @@ namespace GLib {
 		public Settings (string schema_id);
 		public void apply ();
 		public void bind (string key, GLib.Object object, string property, GLib.SettingsBindFlags flags);
-		public void bind_with_mapping (string key, GLib.Object object, string property, GLib.SettingsBindFlags flags, GLib.SettingsBindGetMapping get_mapping, owned GLib.SettingsBindSetMapping set_mapping);
+		public void bind_with_mapping (string key, GLib.Object object, string property, GLib.SettingsBindFlags flags, GLib.SettingsBindGetMappingShared get_mapping, GLib.SettingsBindSetMappingShared set_mapping, void* user_data, GLib.DestroyNotify? notify);
 		public void bind_writable (string key, GLib.Object object, string property, bool inverted);
 		public GLib.Action create_action (string key);
 		public void delay ();
@@ -3352,8 +3352,12 @@ namespace GLib {
 	public delegate void* ReallocFunc (void* data, size_t size);
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 2.9)]
 	public delegate bool SettingsBindGetMapping (GLib.Value value, GLib.Variant variant);
+	[CCode (cheader_filename = "gio/gio.h", cname = "GSettingsBindGetMapping", has_target = false)]
+	public delegate bool SettingsBindGetMappingShared (GLib.Value value, GLib.Variant variant, void* user_data);
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 2.9)]
 	public delegate GLib.Variant SettingsBindSetMapping (GLib.Value value, GLib.VariantType expected_type);
+	[CCode (cheader_filename = "gio/gio.h", cname = "GSettingsBindSetMapping", has_target = false)]
+	public delegate GLib.Variant SettingsBindSetMappingShared (GLib.Value value, GLib.VariantType expected_type, void* user_data);
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 2.9)]
 	public delegate bool SettingsGetMapping (GLib.Variant value, out void* result);
 	[CCode (cheader_filename = "gio/gio.h")]
