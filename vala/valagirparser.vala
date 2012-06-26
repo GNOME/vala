@@ -3429,7 +3429,10 @@ public class Vala.GirParser : CodeVisitor {
 	void process_async_method (Node node) {
 		var m = (Method) node.symbol;
 		string finish_method_base;
-		if (m.name.has_suffix ("_async")) {
+		if (m.name == null) {
+			assert (m is CreationMethod);
+			finish_method_base = "new";
+		} else if (m.name.has_suffix ("_async")) {
 			finish_method_base = m.name.substring (0, m.name.length - "_async".length);
 		} else {
 			finish_method_base = m.name;
