@@ -1,6 +1,6 @@
 /* valaparameter.vala
  *
- * Copyright (C) 2006-2011  Jürg Billeter
+ * Copyright (C) 2006-2012  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
@@ -101,7 +101,13 @@ public class Vala.Parameter : Variable {
 			result.params_array = params_array;
 			result.direction = this.direction;
 			result.initializer = this.initializer;
-			result.attributes = this.attributes.copy ();
+
+			// cannot use List.copy()
+			// as it returns a list of unowned elements
+			foreach (Attribute a in this.attributes) {
+				result.attributes.append (a);
+			}
+
 			return result;
 		} else {
 			return new Parameter.with_ellipsis ();

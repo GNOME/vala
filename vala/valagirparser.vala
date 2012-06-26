@@ -1,6 +1,6 @@
 /* valagirparser.vala
  *
- * Copyright (C) 2008-2010  Jürg Billeter
+ * Copyright (C) 2008-2012  Jürg Billeter
  * Copyright (C) 2011  Luca Bruno
  *
  * This library is free software; you can redistribute it and/or
@@ -3459,7 +3459,13 @@ public class Vala.GirParser : CodeVisitor {
 				method.external = true;
 				method.coroutine = true;
 				method.has_construct_function = finish_method.has_construct_function;
-				method.attributes = m.attributes.copy ();
+
+				// cannot use List.copy()
+				// as it returns a list of unowned elements
+				foreach (Attribute a in m.attributes) {
+					method.attributes.append (a);
+				}
+
 				method.set_attribute_string ("CCode", "cname", node.get_cname ());
 				if (finish_method_base == "new") {
 					method.name = null;
