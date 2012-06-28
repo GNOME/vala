@@ -612,7 +612,7 @@ namespace Posix {
 	[CCode (cheader_filename = "arpa/inet.h")]
 	public unowned string inet_ntoa (InAddr addr);
 	[CCode (cheader_filename = "arpa/inet.h")]
-	unowned string inet_ntop (int af, void* src, uint8[] dst);
+	public unowned string inet_ntop (int af, void* src, uint8[] dst);
 	[CCode (cheader_filename = "arpa/inet.h")]
 	public int inet_pton (int af, string src, void* dst);
 	[CCode (cheader_filename = "arpa/inet.h")]
@@ -921,19 +921,19 @@ namespace Posix {
 	[CCode (cheader_filename = "math.h")]
 	public float scalbf (float x, float n);
 
-    [CCode (cheader_filename = "netdb.h")]
-    public const int NI_NAMEREQD;
-    [CCode (cheader_filename = "netdb.h")]
-    public const int NI_DGRAM;
-    [CCode (cheader_filename = "netdb.h")]
-    public const int NI_NOFQDN;
-    [CCode (cheader_filename = "netdb.h")]
-    public const int NI_NUMERICHOST;
-    [CCode (cheader_filename = "netdb.h")]
-    public const int NI_NUMERICSERV;
+	[CCode (cheader_filename = "netdb.h")]
+	public const int NI_NAMEREQD;
+	[CCode (cheader_filename = "netdb.h")]
+	public const int NI_DGRAM;
+	[CCode (cheader_filename = "netdb.h")]
+	public const int NI_NOFQDN;
+	[CCode (cheader_filename = "netdb.h")]
+	public const int NI_NUMERICHOST;
+	[CCode (cheader_filename = "netdb.h")]
+	public const int NI_NUMERICSERV;
 
-    [CCode (cheader_filename = "netdb.h,sys/socket.h")]
-    public int getnameinfo (SockAddr sa, socklen_t salen, char[] node, char[] service, int flags);
+	[CCode (cheader_filename = "netdb.h,sys/socket.h")]
+	public int getnameinfo (SockAddr sa, socklen_t salen, char[] node, char[] service, int flags);
 
 	[CCode (cheader_filename = "poll.h", cname = "struct pollfd")]
 	public struct pollfd {
@@ -1618,9 +1618,9 @@ namespace Posix {
 	[CCode (cheader_filename = "sys/socket.h")]
 	public int socketpair (int domain, int type, int protocol, [CCode (array_length = false)] int[] sv);
 
-    [CCode (cname = "socklen_t", cheader_filename = "sys/socket.h", default_value = "0")]
-    public struct socklen_t : int {
-    }
+	[CCode (cname = "socklen_t", cheader_filename = "sys/socket.h", default_value = "0")]
+	public struct socklen_t : int {
+	}
 
 	[SimpleType]
 	[CCode (cname = "struct in_addr", cheader_filename = "sys/socket.h", destroy_function = "")]
@@ -1635,9 +1635,9 @@ namespace Posix {
 
 	[CCode (cname = "struct sockaddr", cheader_filename = "sys/socket.h", destroy_function = "")]
 	public struct SockAddr {
-        public int sa_family;
-        [CCode (array_length = false)]
-        public char[] data;
+		public int sa_family;
+		[CCode (array_length = false)]
+		public char[] data;
 	}
 
 	[CCode (cname = "struct sockaddr_in", cheader_filename = "netinet/in.h", destroy_function = "")]
