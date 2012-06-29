@@ -11,3 +11,5 @@ Pty.new_foreign.fd owned=false
 Terminal
   .get_cursor_position.* out
 SelectionFunc.data closure=3
+
+get_user_shell nullable

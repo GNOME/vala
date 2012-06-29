@@ -294,5 +294,5 @@ namespace Vte {
 	[CCode (cheader_filename = "vte/vte.h")]
 	public const int MINOR_VERSION;
 	[CCode (cheader_filename = "vte/vte.h")]
-	public static unowned string get_user_shell ();
+	public static string? get_user_shell ();
 }
