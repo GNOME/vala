@@ -588,6 +588,22 @@ public class Vala.GirParser : CodeVisitor {
 			return "%s.%s".printf (parent.get_full_name (), name);
 		}
 
+		public string get_default_gir_name () {
+			GLib.StringBuilder default_name = new GLib.StringBuilder ();
+
+			for (unowned Node? node = this ; node != null ; node = node.parent) {
+				if (node.symbol is Namespace) {
+					if (node.symbol.get_attribute_string ("CCode", "gir_namespace") != null) {
+						break;
+					}
+				}
+
+				default_name.prepend (node.name);
+			}
+
+			return default_name.str;
+		}
+
 		public string get_gir_name () {
 			var gir_name = girdata["name"];
 			if (gir_name == null) {
@@ -1019,8 +1035,10 @@ public class Vala.GirParser : CodeVisitor {
 				}
 
 				// set gir name if the symbol has been renamed
-				if (is_container (symbol) && !(symbol is Namespace) && name != get_gir_name ()) {
-					symbol.set_attribute_string ("GIR", "name", get_gir_name ());
+				string gir_name = get_gir_name ();
+				string default_gir_name = get_default_gir_name ();
+				if (is_container (symbol) && !(symbol is Namespace) && (name != gir_name || gir_name != default_gir_name)) {
+					symbol.set_attribute_string ("GIR", "name", gir_name);
 				}
 			}
 
