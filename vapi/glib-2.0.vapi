@@ -1005,6 +1005,19 @@ public class string {
 
 	[CCode (cname = "g_utf8_prev_char")]
 	public unowned string prev_char ();
+	[CCode (cname = "g_utf8_prev_char")]
+	static char* utf8_prev_char (char* str);
+	public bool get_prev_char (ref int index, out unichar c) {
+		if (0 < index) {
+			index = (int) (utf8_prev_char ((char*) this + index) - (char*) this);
+			c = utf8_get_char ((char*) this + index);
+			return true;
+		} else {
+			c = 0;
+			return false;
+		}
+	}
+
 	[Deprecated (replacement = "string.length")]
 	[CCode (cname = "strlen")]
 	public long len ();
