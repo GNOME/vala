@@ -4364,14 +4364,21 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			} else if (st != null && get_ccode_name (st) == "va_list") {
 				creation_call.add_argument (instance);
 				if (get_ccode_name (m) == "va_start") {
-					Parameter last_param = null;
-					foreach (var param in current_method.get_parameters ()) {
-						if (param.ellipsis) {
-							break;
+					if (in_creation_method) {
+						creation_call = new CCodeFunctionCall (new CCodeIdentifier ("va_copy"));
+						creation_call.add_argument (instance);
+						creation_call.add_argument (new CCodeIdentifier ("_vala_va_list"));
+					} else {
+						Parameter last_param = null;
+						// FIXME: this doesn't take into account exception handling parameters
+						foreach (var param in current_method.get_parameters ()) {
+							if (param.ellipsis) {
+								break;
+							}
+							last_param = param;
 						}
-						last_param = param;
+						creation_call.add_argument (new CCodeIdentifier (get_variable_cname (last_param.name)));
 					}
-					creation_call.add_argument (new CCodeIdentifier (get_variable_cname (last_param.name)));
 				}
 			}
 

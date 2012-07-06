@@ -231,6 +231,15 @@ public class Vala.Method : Subroutine {
 		parameters.clear ();
 	}
 
+	public bool is_variadic () {
+		foreach (Parameter param in parameters) {
+			if (param.ellipsis) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_method (this);
 	}

@@ -27,6 +27,9 @@ using GLib;
  * The link between a method and generated code.
  */
 public abstract class Vala.CCodeMethodModule : CCodeStructModule {
+
+	private bool ellipses_to_valist = false;
+
 	public override bool method_has_wrapper (Method method) {
 		return (method.get_attribute ("NoWrapper") == null);
 	}
@@ -175,7 +178,10 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 		// do not generate _new functions for creation methods of abstract classes
 		if (!(m is CreationMethod && cl != null && cl.is_abstract)) {
+			bool etv_tmp = ellipses_to_valist;
+			ellipses_to_valist = false;
 			generate_cparameters (m, decl_space, cparam_map, function, null, carg_map, new CCodeFunctionCall (new CCodeIdentifier ("fake")));
+			ellipses_to_valist = etv_tmp;
 
 			decl_space.add_function_declaration (function);
 		}
@@ -189,9 +195,35 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			}
 
 			cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
+			bool etv_tmp = ellipses_to_valist;
+			ellipses_to_valist = false;
 			generate_cparameters (m, decl_space, cparam_map, function);
+			ellipses_to_valist = etv_tmp;
 
 			decl_space.add_function_declaration (function);
+
+			if (m.is_variadic ()) {
+				// _constructv function
+				function = new CCodeFunction (get_constructv_name ((CreationMethod) m));
+				function.modifiers |= CCodeModifiers.STATIC;
+
+				cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
+				generate_cparameters (m, decl_space, cparam_map, function);
+
+				decl_space.add_function_declaration (function);
+			}
+		}
+	}
+
+	private string get_constructv_name (CreationMethod m) {
+		const string infix = "constructv";
+
+		var parent = m.parent_symbol as Class;
+
+		if (m.name == ".new") {
+			return "%s%s".printf (CCodeBaseModule.get_ccode_lower_case_prefix (parent), infix);
+		} else {
+			return "%s%s_%s".printf (CCodeBaseModule.get_ccode_lower_case_prefix (parent), infix, m.name);
 		}
 	}
 
@@ -249,7 +281,18 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		ccode.add_expression (register_call);
 	}
 
+	/**
+	 * This function generates the code the given method. If the method is
+	 * a constructor, _construct is generated, unless it's variadic, in which
+	 * case _constructv is generated (and _construct is generated together
+	 * with _new in visit_creation_method).
+	 */
 	public override void visit_method (Method m) {
+		string real_name = get_ccode_real_name (m);
+		if (m is CreationMethod && m.is_variadic ()) {
+			real_name = get_constructv_name ((CreationMethod) m);
+		}
+
 		push_context (new EmitContext (m));
 		push_line (m.source_reference);
 
@@ -303,7 +346,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		}
 
 		if (profile) {
-			string prefix = "_vala_prof_%s".printf (get_ccode_real_name (m));
+			string prefix = "_vala_prof_%s".printf (real_name);
 
 			cfile.add_include ("stdio.h");
 
@@ -364,10 +407,14 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		}
 
 		CCodeFunction function;
-		function = new CCodeFunction (get_ccode_real_name (m));
+		function = new CCodeFunction (real_name);
 
 		if (m.is_inline) {
 			function.modifiers |= CCodeModifiers.INLINE;
+		}
+
+		if (m is CreationMethod && m.is_variadic ()) {
+			function.modifiers |= CCodeModifiers.STATIC;
 		}
 
 		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
@@ -387,7 +434,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 				}
 			} else {
 				if (m.body != null) {
-					function = new CCodeFunction (get_ccode_real_name (m) + "_co", "gboolean");
+					function = new CCodeFunction (real_name + "_co", "gboolean");
 
 					// data struct to hold parameters, local variables, and the return value
 					function.add_parameter (new CCodeParameter ("_data_", Symbol.lower_case_to_camel_case (get_ccode_const_name (m)) + "Data*"));
@@ -628,7 +675,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		}
 
 		if (profile) {
-			string prefix = "_vala_prof_%s".printf (get_ccode_real_name (m));
+			string prefix = "_vala_prof_%s".printf (real_name);
 
 			var level = new CCodeIdentifier (prefix + "_level");
 			ccode.open_if (new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, level)));
@@ -649,7 +696,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		}
 
 		if (profile) {
-			string prefix = "_vala_prof_%s".printf (get_ccode_real_name (m));
+			string prefix = "_vala_prof_%s".printf (real_name);
 
 			var level = new CCodeIdentifier (prefix + "_level");
 			ccode.open_if (new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeUnaryExpression (CCodeUnaryOperator.PREFIX_DECREMENT, level)));
@@ -843,6 +890,8 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			}
 
 			cparam = new CCodeParameter (get_variable_cname (param.name), ctypename);
+		} else if (ellipses_to_valist) {
+			cparam = new CCodeParameter ("_vala_va_list", "va_list");
 		} else {
 			cparam = new CCodeParameter.with_ellipsis ();
 		}
@@ -1105,9 +1154,9 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 	public override void visit_creation_method (CreationMethod m) {
 		push_line (m.source_reference);
 
-		bool visible = !m.is_private_symbol ();
-
+		ellipses_to_valist = true;
 		visit_method (m);
+		ellipses_to_valist = false;
 
 		if (m.source_type == SourceFileType.FAST) {
 			return;
@@ -1115,29 +1164,69 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 		// do not generate _new functions for creation methods of abstract classes
 		if (current_type_symbol is Class && !current_class.is_compact && !current_class.is_abstract) {
-			var vfunc = new CCodeFunction (get_ccode_name (m));
+			// _new function
+			create_aux_constructor (m, get_ccode_name (m), false);
 
-			var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
-			var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
-
-			push_function (vfunc);
-
-			var vcall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_real_name (m)));
-			vcall.add_argument (new CCodeIdentifier (get_ccode_type_id (current_class)));
-
-			generate_cparameters (m, cfile, cparam_map, vfunc, null, carg_map, vcall);
-			ccode.add_return (vcall);
-
-			if (!visible) {
-				vfunc.modifiers |= CCodeModifiers.STATIC;
+			// _construct function (if visit_method generated _constructv)
+			if (m.is_variadic ()) {
+				create_aux_constructor (m, get_ccode_real_name (m), true);
 			}
-
-			pop_function ();
-
-			cfile.add_function (vfunc);
 		}
 
 		pop_line ();
+	}
+
+	private void create_aux_constructor (CreationMethod m, string func_name, bool self_as_first_parameter) {
+		var vfunc = new CCodeFunction (func_name);
+		if (m.is_private_symbol ()) {
+			vfunc.modifiers |= CCodeModifiers.STATIC;
+		}
+
+		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
+		var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
+
+		push_function (vfunc);
+
+		string constructor = (m.is_variadic ()) ? get_constructv_name (m) : get_ccode_real_name (m);
+		var vcall = new CCodeFunctionCall (new CCodeIdentifier (constructor));
+
+		if (self_as_first_parameter) {
+			cparam_map.set (get_param_pos (get_ccode_instance_pos (m)), new CCodeParameter ("object_type", "GType"));
+			vcall.add_argument (get_variable_cexpression ("object_type"));
+		} else {
+			vcall.add_argument (new CCodeIdentifier (get_ccode_type_id (current_class)));
+		}
+
+
+		generate_cparameters (m, cfile, cparam_map, vfunc, null, carg_map, vcall);
+
+		if (m.is_variadic ()) {
+			int last_pos = -1;
+			int second_last_pos = -1;
+			foreach (int pos in cparam_map.get_keys ()) {
+				if (pos > last_pos) {
+					second_last_pos = last_pos;
+					last_pos = pos;
+				} else if (pos > second_last_pos) {
+					second_last_pos = pos;
+				}
+			}
+
+			var va_start = new CCodeFunctionCall (new CCodeIdentifier ("va_start"));
+			va_start.add_argument (new CCodeIdentifier ("_vala_va_list_obj"));
+			va_start.add_argument (carg_map.get (second_last_pos));
+
+			ccode.add_declaration ("va_list", new CCodeVariableDeclarator ("_vala_va_list_obj"));
+			ccode.add_expression (va_start);
+
+			vcall.add_argument (new CCodeIdentifier("_vala_va_list_obj"));
+		}
+
+		ccode.add_return (vcall);
+
+		pop_function ();
+
+		cfile.add_function (vfunc);
 	}
 }
 
