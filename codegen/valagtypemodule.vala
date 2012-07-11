@@ -1281,6 +1281,27 @@ public class Vala.GTypeModule : GErrorModule {
 		cfile.add_function (class_init_context.ccode);
 	}
 	
+	private void add_generic_accessor_function (string base_name, string return_type, CCodeExpression? expression, TypeParameter p, Class cl, Interface iface) {
+		string name = "%s_%s_%s".printf (get_ccode_lower_case_name (cl), get_ccode_lower_case_name (iface), base_name);
+
+		var function = new CCodeFunction (name, return_type);
+		function.modifiers = CCodeModifiers.STATIC;
+		var this_type = get_data_type_for_symbol (cl);
+		function.add_parameter (new CCodeParameter ("self", get_ccode_name (this_type)));
+		push_function (function);
+		ccode.add_return (expression);
+		pop_function ();
+		cfile.add_function (function);
+
+		CCodeExpression cfunc = new CCodeIdentifier (function.name);
+		string cast = return_type + "(*)";
+		string cast_args = get_ccode_name (iface) + "*";
+		cast += "(" + cast_args + ")";
+		cfunc = new CCodeCastExpression (cfunc, cast);
+		var ciface = new CCodeIdentifier ("iface");
+		ccode.add_assignment (new CCodeMemberAccess.pointer (ciface, base_name), cfunc);
+	}
+
 	private void add_interface_init_function (Class cl, Interface iface) {
 		var iface_init = new CCodeFunction ("%s_%s_interface_init".printf (get_ccode_lower_case_name (cl), get_ccode_lower_case_name (iface)), "void");
 		iface_init.add_parameter (new CCodeParameter ("iface", "%s *".printf (get_ccode_type_name (iface))));
@@ -1329,6 +1350,28 @@ public class Vala.GTypeModule : GErrorModule {
 					cfunc = new CCodeIdentifier (get_ccode_finish_real_name (m));
 				}
 				ccode.add_assignment (new CCodeMemberAccess.pointer (ciface, get_ccode_finish_vfunc_name (m.base_interface_method)), cfunc);
+			}
+		}
+
+		if (iface.get_attribute ("GenericAccessors") != null) {
+			foreach (TypeParameter p in iface.get_type_parameters ()) {
+				GenericType p_type = new GenericType (p);
+				DataType p_data_type = p_type.get_actual_type (get_data_type_for_symbol (cl), null, cl);
+
+				add_generic_accessor_function ("get_%s_type".printf (p.name.down ()),
+				                               "GType",
+				                               get_type_id_expression (p_data_type),
+				                               p, cl, iface);
+
+				add_generic_accessor_function ("get_%s_dup_func".printf (p.name.down ()),
+				                               "GBoxedCopyFunc",
+				                               get_dup_func_expression (p_data_type, null),
+				                               p, cl, iface);
+
+				add_generic_accessor_function ("get_%s_destroy_func".printf (p.name.down ()),
+				                               "GDestroyNotify",
+				                               get_destroy_func_expression (p_data_type),
+				                               p, cl, iface);
 			}
 		}
 
@@ -1893,6 +1936,37 @@ public class Vala.GTypeModule : GErrorModule {
 		decl_space.add_type_declaration (new CCodeTypeDefinition ("struct %s".printf (type_struct.name), new CCodeVariableDeclarator (get_ccode_type_name (iface))));
 
 		type_struct.add_field ("GTypeInterface", "parent_iface");
+
+		if (iface.get_attribute ("GenericAccessors") != null) {
+			foreach (TypeParameter p in iface.get_type_parameters ()) {
+				string method_name = "get_%s_type".printf (p.name.down ());
+				var vdeclarator = new CCodeFunctionDeclarator (method_name);
+				var this_type = get_data_type_for_symbol (iface);
+				vdeclarator.add_parameter (new CCodeParameter ("self", get_ccode_name (this_type)));
+
+				var vdecl = new CCodeDeclaration ("GType");
+				vdecl.add_declarator (vdeclarator);
+				type_struct.add_declaration (vdecl);
+
+				method_name = "get_%s_dup_func".printf (p.name.down ());
+				vdeclarator = new CCodeFunctionDeclarator (method_name);
+				this_type = get_data_type_for_symbol (iface);
+				vdeclarator.add_parameter (new CCodeParameter ("self", get_ccode_name (this_type)));
+
+				vdecl = new CCodeDeclaration ("GBoxedCopyFunc");
+				vdecl.add_declarator (vdeclarator);
+				type_struct.add_declaration (vdecl);
+
+				method_name = "get_%s_destroy_func".printf (p.name.down ());
+				vdeclarator = new CCodeFunctionDeclarator (method_name);
+				this_type = get_data_type_for_symbol (iface);
+				vdeclarator.add_parameter (new CCodeParameter ("self", get_ccode_name (this_type)));
+
+				vdecl = new CCodeDeclaration ("GDestroyNotify");
+				vdecl.add_declarator (vdeclarator);
+				type_struct.add_declaration (vdecl);
+			}
+		}
 
 		foreach (Method m in iface.get_methods ()) {
 			generate_virtual_method_declaration (m, decl_space, type_struct);

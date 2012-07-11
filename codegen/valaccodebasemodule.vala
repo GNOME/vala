@@ -2501,9 +2501,30 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
+	void require_generic_accessors (Interface iface) {
+		if (iface.get_attribute ("GenericAccessors") == null) {
+			Report.error (iface.source_reference,
+			              "missing generic type for interface `%s', add GenericAccessors attribute to interface declaration"
+			              .printf (iface.get_full_name ()));
+		}
+	}
+
 	public CCodeExpression get_type_id_expression (DataType type, bool is_chainup = false) {
 		if (type is GenericType) {
 			string var_name = "%s_type".printf (type.type_parameter.name.down ());
+
+			if (type.type_parameter.parent_symbol is Interface) {
+				var iface = (Interface) type.type_parameter.parent_symbol;
+				require_generic_accessors (iface);
+
+				string method_name = "get_%s_type".printf (type.type_parameter.name.down ());
+				var cast_self = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_INTERFACE".printf (get_ccode_upper_case_name (iface))));
+				cast_self.add_argument (new CCodeIdentifier ("self"));
+				var function_call = new CCodeFunctionCall (new CCodeMemberAccess.pointer (cast_self, method_name));
+				function_call.add_argument (new CCodeIdentifier ("self"));
+				return function_call;
+			}
+
 			if (is_in_generic_type (type) && !is_chainup && !in_creation_method) {
 				return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (get_result_cexpression ("self"), "priv"), var_name);
 			} else {
@@ -2560,6 +2581,19 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return new CCodeIdentifier (dup_function);
 		} else if (type.type_parameter != null) {
 			string func_name = "%s_dup_func".printf (type.type_parameter.name.down ());
+
+			if (type.type_parameter.parent_symbol is Interface) {
+				var iface = (Interface) type.type_parameter.parent_symbol;
+				require_generic_accessors (iface);
+
+				string method_name = "get_%s_dup_func".printf (type.type_parameter.name.down ());
+				var cast_self = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_INTERFACE".printf (get_ccode_upper_case_name (iface))));
+				cast_self.add_argument (new CCodeIdentifier ("self"));
+				var function_call = new CCodeFunctionCall (new CCodeMemberAccess.pointer (cast_self, method_name));
+				function_call.add_argument (new CCodeIdentifier ("self"));
+				return function_call;
+			}
+
 			if (is_in_generic_type (type) && !is_chainup && !in_creation_method) {
 				return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (get_result_cexpression ("self"), "priv"), func_name);
 			} else {
@@ -3035,6 +3069,19 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return new CCodeIdentifier (unref_function);
 		} else if (type.type_parameter != null) {
 			string func_name = "%s_destroy_func".printf (type.type_parameter.name.down ());
+
+			if (type.type_parameter.parent_symbol is Interface) {
+				var iface = (Interface) type.type_parameter.parent_symbol;
+				require_generic_accessors (iface);
+
+				string method_name = "get_%s_destroy_func".printf (type.type_parameter.name.down ());
+				var cast_self = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_INTERFACE".printf (get_ccode_upper_case_name (iface))));
+				cast_self.add_argument (new CCodeIdentifier ("self"));
+				var function_call = new CCodeFunctionCall (new CCodeMemberAccess.pointer (cast_self, method_name));
+				function_call.add_argument (new CCodeIdentifier ("self"));
+				return function_call;
+			}
+
 			if (is_in_generic_type (type) && !is_chainup && !in_creation_method) {
 				return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (get_result_cexpression ("self"), "priv"), func_name);
 			} else {
@@ -3238,7 +3285,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (type.type_parameter != null) {
 			var parent = type.type_parameter.parent_symbol;
 			var cl = parent as Class;
-			if ((!(parent is Method) && !(parent is ObjectTypeSymbol)) || (cl != null && cl.is_compact) || parent is Interface) {
+			if ((!(parent is Method) && !(parent is ObjectTypeSymbol)) || (cl != null && cl.is_compact)) {
 				return new CCodeConstant ("NULL");
 			}
 
