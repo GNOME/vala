@@ -81,7 +81,7 @@ AC_SUBST(vapigen_decl)
 AC_SUBST(gen_introspect_decl)
 AC_SUBST(vala_gen_introspect_decl)
 
-GLIB_REQUIRED=2.16.0
+GLIB_REQUIRED=2.18.0
 
 PKG_CHECK_MODULES(GLIB, glib-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED)
 
