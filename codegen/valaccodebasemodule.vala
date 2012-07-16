@@ -5323,13 +5323,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (is_reference_type_argument (actual_type) || is_nullable_value_type_argument (actual_type)) {
 			result = new CCodeCastExpression (cexpr, get_ccode_name (actual_type));
 		} else if (is_signed_integer_type_argument (actual_type)) {
-			var cconv = new CCodeFunctionCall (new CCodeIdentifier ("GPOINTER_TO_INT"));
-			cconv.add_argument (cexpr);
-			result = cconv;
+			result = new CCodeCastExpression (new CCodeCastExpression (cexpr, "gintptr"), get_ccode_name (actual_type));
 		} else if (is_unsigned_integer_type_argument (actual_type)) {
-			var cconv = new CCodeFunctionCall (new CCodeIdentifier ("GPOINTER_TO_UINT"));
-			cconv.add_argument (cexpr);
-			result = cconv;
+			result = new CCodeCastExpression (new CCodeCastExpression (cexpr, "guintptr"), get_ccode_name (actual_type));
 		}
 		return result;
 	}
@@ -5337,13 +5333,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public CCodeExpression convert_to_generic_pointer (CCodeExpression cexpr, DataType actual_type) {
 		var result = cexpr;
 		if (is_signed_integer_type_argument (actual_type)) {
-			var cconv = new CCodeFunctionCall (new CCodeIdentifier ("GINT_TO_POINTER"));
-			cconv.add_argument (cexpr);
-			result = cconv;
+			result = new CCodeCastExpression (new CCodeCastExpression (cexpr, "gintptr"), "gpointer");
 		} else if (is_unsigned_integer_type_argument (actual_type)) {
-			var cconv = new CCodeFunctionCall (new CCodeIdentifier ("GUINT_TO_POINTER"));
-			cconv.add_argument (cexpr);
-			result = cconv;
+			result = new CCodeCastExpression (new CCodeCastExpression (cexpr, "guintptr"), "gpointer");
 		}
 		return result;
 	}
