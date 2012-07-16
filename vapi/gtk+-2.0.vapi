@@ -3697,7 +3697,7 @@ namespace Gtk {
 		public Gdk.Pixbuf? get_pixbuf ();
 		public Gdk.Atom get_selection ();
 		public Gdk.Atom get_target ();
-		public bool get_targets (out Gdk.Atom targets, int n_atoms);
+		public bool get_targets (out Gdk.Atom[] targets);
 		public string? get_text ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] get_uris ();
