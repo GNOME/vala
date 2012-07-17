@@ -208,7 +208,7 @@ public class Valadoc.Api.Method : Member {
 		signature.append ("(");
 
 		bool first = true;
-		foreach (Node param in get_children_by_type (NodeType.FORMAL_PARAMETER)) {
+		foreach (Node param in get_children_by_type (NodeType.FORMAL_PARAMETER, false)) {
 			if (!first) {
 				signature.append (",", false);
 			}
