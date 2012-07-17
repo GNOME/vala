@@ -1045,6 +1045,7 @@ TESTS = \
 	semantic/array-length-nullable.test \
 	semantic/array-too-few-type-arguments.test \
 	semantic/array-too-many-type-arguments.test \
+	semantic/assignment-element-getter-setter.vala \
 	semantic/assignment-element-incompatible-ownership.test \
 	semantic/assignment-element-incompatible-type.test \
 	semantic/assignment-fixed-array-length.test \
