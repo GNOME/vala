@@ -3488,24 +3488,24 @@ public class Vala.GirParser : CodeVisitor {
 				if (a != null && a.has_argument ("array_null_terminated")) {
 					method.set_attribute_bool ("CCode", "array_null_terminated", a.get_bool ("array_null_terminated"));
 				}
-
-				foreach (var param in finish_method.get_parameters ()) {
-					if (param.direction == ParameterDirection.OUT) {
-						var async_param = param.copy ();
-						if (method.scope.lookup (param.name) != null) {
-							// parameter name conflict
-							async_param.name += "_out";
-						}
-						method.add_parameter (async_param);
-					}
-				}
-
-				foreach (DataType error_type in finish_method.get_error_types ()) {
-					method.add_error_type (error_type.copy ());
-				}
-				finish_method_node.processed = true;
-				finish_method_node.merged = true;
 			}
+
+			foreach (var param in finish_method.get_parameters ()) {
+				if (param.direction == ParameterDirection.OUT) {
+					var async_param = param.copy ();
+					if (method.scope.lookup (param.name) != null) {
+						// parameter name conflict
+						async_param.name += "_out";
+					}
+					method.add_parameter (async_param);
+				}
+			}
+
+			foreach (DataType error_type in finish_method.get_error_types ()) {
+				method.add_error_type (error_type.copy ());
+			}
+			finish_method_node.processed = true;
+			finish_method_node.merged = true;
 		}
 	}
 
