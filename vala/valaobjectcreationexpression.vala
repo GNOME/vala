@@ -1,6 +1,6 @@
 /* valaobjectcreationexpression.vala
  *
- * Copyright (C) 2006-2010  Jürg Billeter
+ * Copyright (C) 2006-2012  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -324,6 +324,18 @@ public class Vala.ObjectCreationExpression : Expression {
 
 		if (symbol_reference is Method) {
 			var m = (Method) symbol_reference;
+
+			if (is_yield_expression) {
+				if (!m.coroutine) {
+					error = true;
+					Report.error (source_reference, "yield expression requires async method");
+				}
+				if (context.analyzer.current_method == null || !context.analyzer.current_method.coroutine) {
+					error = true;
+					Report.error (source_reference, "yield expression not available outside async method");
+				}
+				context.analyzer.current_method.yield_count++;
+			}
 
 			var args = get_argument_list ();
 			Iterator<Expression> arg_it = args.iterator ();
