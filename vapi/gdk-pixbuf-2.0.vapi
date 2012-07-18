@@ -33,14 +33,12 @@ namespace Gdk {
 		public Pixbuf.from_resource_at_scale (string resource_path, int width, int height, bool preserve_aspect_ratio) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public Pixbuf.from_stream (GLib.InputStream stream, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		[CCode (cname = "gdk_pixbuf_new_from_stream_async")]
-		public async Pixbuf.from_stream_async (GLib.InputStream stream, GLib.Cancellable? cancellable);
+		[CCode (cname = "gdk_pixbuf_new_from_stream_async", has_construct_function = false)]
+		public async Pixbuf.from_stream_async (GLib.InputStream stream, GLib.Cancellable? cancellable) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public Pixbuf.from_stream_at_scale (GLib.InputStream stream, int width, int height, bool preserve_aspect_ratio, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (cname = "gdk_pixbuf_new_from_stream_at_scale_async", finish_name = "gdk_pixbuf_new_from_stream_finish")]
 		public async Pixbuf.from_stream_at_scale_async (GLib.InputStream stream, int width, int height, bool preserve_aspect_ratio, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		[CCode (has_construct_function = false)]
-		public Pixbuf.from_stream_finish (GLib.AsyncResult async_result) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public Pixbuf.from_xpm_data ([CCode (array_length = false, type = "char**")] string[] data);
 		public int get_bits_per_sample ();
