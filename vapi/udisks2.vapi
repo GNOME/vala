@@ -4,18 +4,14 @@
 namespace UDisks {
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_block_proxy_get_type ()")]
 	public class BlockProxy : GLib.DBusProxy, GLib.AsyncInitable, GLib.DBusInterface, GLib.Initable, UDisks.Block {
-		[CCode (cname = "udisks_block_proxy_new")]
-		public async BlockProxy (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable);
+		[CCode (cname = "udisks_block_proxy_new", has_construct_function = false)]
+		public async BlockProxy (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
+		[CCode (cname = "udisks_block_proxy_new_for_bus", has_construct_function = false)]
+		public async BlockProxy.for_bus (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
 		[CCode (has_construct_function = false, type = "UDisksBlock*")]
-		public BlockProxy.finish (GLib.AsyncResult res) throws GLib.Error;
-		[CCode (cname = "udisks_block_proxy_new_for_bus")]
-		public async BlockProxy.for_bus (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable);
+		public BlockProxy.for_bus_sync (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (has_construct_function = false, type = "UDisksBlock*")]
-		public BlockProxy.for_bus_finish (GLib.AsyncResult res) throws GLib.Error;
-		[CCode (has_construct_function = false, type = "UDisksBlock*")]
-		public BlockProxy.for_bus_sync (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
-		[CCode (has_construct_function = false, type = "UDisksBlock*")]
-		public BlockProxy.sync (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
+		public BlockProxy.sync (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_block_skeleton_get_type ()")]
 	public class BlockSkeleton : GLib.DBusInterfaceSkeleton, GLib.DBusInterface, UDisks.Block {
@@ -24,10 +20,8 @@ namespace UDisks {
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_client_get_type ()")]
 	public class Client : GLib.Object, GLib.AsyncInitable, GLib.Initable {
-		[CCode (cname = "udisks_client_new")]
-		public async Client (GLib.Cancellable? cancellable);
-		[CCode (has_construct_function = false)]
-		public Client.finish (GLib.AsyncResult res) throws GLib.Error;
+		[CCode (cname = "udisks_client_new", has_construct_function = false)]
+		public async Client (GLib.Cancellable? cancellable) throws GLib.Error;
 		public UDisks.Block get_block_for_dev (int block_device_number);
 		public UDisks.Block get_block_for_drive (UDisks.Drive drive, bool get_physical);
 		public GLib.List<UDisks.Block> get_block_for_label (string label);
@@ -37,6 +31,7 @@ namespace UDisks {
 		public void get_drive_info (UDisks.Drive drive, out string out_name, out string out_description, out GLib.Icon out_drive_icon, out string out_media_description, out GLib.Icon out_media_icon);
 		public string get_id_for_display (string usage, string type, string version, bool long_string);
 		public GLib.List<UDisks.Job> get_jobs_for_object (UDisks.Object object);
+		public UDisks.Loop get_loop_for_block (UDisks.Block block);
 		public unowned UDisks.Manager get_manager ();
 		public string get_media_compat_for_display (string media_compat);
 		public UDisks.Object get_object (string object_path);
@@ -54,25 +49,21 @@ namespace UDisks {
 		public unowned UDisks.Object peek_object (string object_path);
 		public void settle ();
 		[CCode (has_construct_function = false)]
-		public Client.sync (GLib.Cancellable? cancellable) throws GLib.Error;
+		public Client.sync (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public UDisks.Manager manager { get; }
 		public GLib.DBusObjectManager object_manager { get; }
 		public signal void changed ();
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_drive_ata_proxy_get_type ()")]
 	public class DriveAtaProxy : GLib.DBusProxy, GLib.AsyncInitable, GLib.DBusInterface, GLib.Initable, UDisks.DriveAta {
-		[CCode (cname = "udisks_drive_ata_proxy_new")]
-		public async DriveAtaProxy (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable);
+		[CCode (cname = "udisks_drive_ata_proxy_new", has_construct_function = false)]
+		public async DriveAtaProxy (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
+		[CCode (cname = "udisks_drive_ata_proxy_new_for_bus", has_construct_function = false)]
+		public async DriveAtaProxy.for_bus (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
 		[CCode (has_construct_function = false, type = "UDisksDriveAta*")]
-		public DriveAtaProxy.finish (GLib.AsyncResult res) throws GLib.Error;
-		[CCode (cname = "udisks_drive_ata_proxy_new_for_bus")]
-		public async DriveAtaProxy.for_bus (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable);
+		public DriveAtaProxy.for_bus_sync (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (has_construct_function = false, type = "UDisksDriveAta*")]
-		public DriveAtaProxy.for_bus_finish (GLib.AsyncResult res) throws GLib.Error;
-		[CCode (has_construct_function = false, type = "UDisksDriveAta*")]
-		public DriveAtaProxy.for_bus_sync (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
-		[CCode (has_construct_function = false, type = "UDisksDriveAta*")]
-		public DriveAtaProxy.sync (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
+		public DriveAtaProxy.sync (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_drive_ata_skeleton_get_type ()")]
 	public class DriveAtaSkeleton : GLib.DBusInterfaceSkeleton, GLib.DBusInterface, UDisks.DriveAta {
@@ -81,18 +72,14 @@ namespace UDisks {
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_drive_proxy_get_type ()")]
 	public class DriveProxy : GLib.DBusProxy, GLib.AsyncInitable, GLib.DBusInterface, GLib.Initable, UDisks.Drive {
-		[CCode (cname = "udisks_drive_proxy_new")]
-		public async DriveProxy (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable);
+		[CCode (cname = "udisks_drive_proxy_new", has_construct_function = false)]
+		public async DriveProxy (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
+		[CCode (cname = "udisks_drive_proxy_new_for_bus", has_construct_function = false)]
+		public async DriveProxy.for_bus (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
 		[CCode (has_construct_function = false, type = "UDisksDrive*")]
-		public DriveProxy.finish (GLib.AsyncResult res) throws GLib.Error;
-		[CCode (cname = "udisks_drive_proxy_new_for_bus")]
-		public async DriveProxy.for_bus (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable);
+		public DriveProxy.for_bus_sync (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (has_construct_function = false, type = "UDisksDrive*")]
-		public DriveProxy.for_bus_finish (GLib.AsyncResult res) throws GLib.Error;
-		[CCode (has_construct_function = false, type = "UDisksDrive*")]
-		public DriveProxy.for_bus_sync (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
-		[CCode (has_construct_function = false, type = "UDisksDrive*")]
-		public DriveProxy.sync (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
+		public DriveProxy.sync (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_drive_skeleton_get_type ()")]
 	public class DriveSkeleton : GLib.DBusInterfaceSkeleton, GLib.DBusInterface, UDisks.Drive {
@@ -101,18 +88,14 @@ namespace UDisks {
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_encrypted_proxy_get_type ()")]
 	public class EncryptedProxy : GLib.DBusProxy, GLib.AsyncInitable, GLib.DBusInterface, GLib.Initable, UDisks.Encrypted {
-		[CCode (cname = "udisks_encrypted_proxy_new")]
-		public async EncryptedProxy (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable);
+		[CCode (cname = "udisks_encrypted_proxy_new", has_construct_function = false)]
+		public async EncryptedProxy (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
+		[CCode (cname = "udisks_encrypted_proxy_new_for_bus", has_construct_function = false)]
+		public async EncryptedProxy.for_bus (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
 		[CCode (has_construct_function = false, type = "UDisksEncrypted*")]
-		public EncryptedProxy.finish (GLib.AsyncResult res) throws GLib.Error;
-		[CCode (cname = "udisks_encrypted_proxy_new_for_bus")]
-		public async EncryptedProxy.for_bus (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable);
+		public EncryptedProxy.for_bus_sync (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (has_construct_function = false, type = "UDisksEncrypted*")]
-		public EncryptedProxy.for_bus_finish (GLib.AsyncResult res) throws GLib.Error;
-		[CCode (has_construct_function = false, type = "UDisksEncrypted*")]
-		public EncryptedProxy.for_bus_sync (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
-		[CCode (has_construct_function = false, type = "UDisksEncrypted*")]
-		public EncryptedProxy.sync (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
+		public EncryptedProxy.sync (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_encrypted_skeleton_get_type ()")]
 	public class EncryptedSkeleton : GLib.DBusInterfaceSkeleton, GLib.DBusInterface, UDisks.Encrypted {
@@ -121,18 +104,14 @@ namespace UDisks {
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_filesystem_proxy_get_type ()")]
 	public class FilesystemProxy : GLib.DBusProxy, GLib.AsyncInitable, GLib.DBusInterface, GLib.Initable, UDisks.Filesystem {
-		[CCode (cname = "udisks_filesystem_proxy_new")]
-		public async FilesystemProxy (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable);
+		[CCode (cname = "udisks_filesystem_proxy_new", has_construct_function = false)]
+		public async FilesystemProxy (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
+		[CCode (cname = "udisks_filesystem_proxy_new_for_bus", has_construct_function = false)]
+		public async FilesystemProxy.for_bus (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
 		[CCode (has_construct_function = false, type = "UDisksFilesystem*")]
-		public FilesystemProxy.finish (GLib.AsyncResult res) throws GLib.Error;
-		[CCode (cname = "udisks_filesystem_proxy_new_for_bus")]
-		public async FilesystemProxy.for_bus (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable);
+		public FilesystemProxy.for_bus_sync (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (has_construct_function = false, type = "UDisksFilesystem*")]
-		public FilesystemProxy.for_bus_finish (GLib.AsyncResult res) throws GLib.Error;
-		[CCode (has_construct_function = false, type = "UDisksFilesystem*")]
-		public FilesystemProxy.for_bus_sync (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
-		[CCode (has_construct_function = false, type = "UDisksFilesystem*")]
-		public FilesystemProxy.sync (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
+		public FilesystemProxy.sync (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_filesystem_skeleton_get_type ()")]
 	public class FilesystemSkeleton : GLib.DBusInterfaceSkeleton, GLib.DBusInterface, UDisks.Filesystem {
@@ -141,18 +120,14 @@ namespace UDisks {
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_job_proxy_get_type ()")]
 	public class JobProxy : GLib.DBusProxy, GLib.AsyncInitable, GLib.DBusInterface, GLib.Initable, UDisks.Job {
-		[CCode (cname = "udisks_job_proxy_new")]
-		public async JobProxy (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable);
+		[CCode (cname = "udisks_job_proxy_new", has_construct_function = false)]
+		public async JobProxy (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
+		[CCode (cname = "udisks_job_proxy_new_for_bus", has_construct_function = false)]
+		public async JobProxy.for_bus (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
 		[CCode (has_construct_function = false, type = "UDisksJob*")]
-		public JobProxy.finish (GLib.AsyncResult res) throws GLib.Error;
-		[CCode (cname = "udisks_job_proxy_new_for_bus")]
-		public async JobProxy.for_bus (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable);
+		public JobProxy.for_bus_sync (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (has_construct_function = false, type = "UDisksJob*")]
-		public JobProxy.for_bus_finish (GLib.AsyncResult res) throws GLib.Error;
-		[CCode (has_construct_function = false, type = "UDisksJob*")]
-		public JobProxy.for_bus_sync (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
-		[CCode (has_construct_function = false, type = "UDisksJob*")]
-		public JobProxy.sync (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
+		public JobProxy.sync (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_job_skeleton_get_type ()")]
 	public class JobSkeleton : GLib.DBusInterfaceSkeleton, GLib.DBusInterface, UDisks.Job {
@@ -161,18 +136,14 @@ namespace UDisks {
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_loop_proxy_get_type ()")]
 	public class LoopProxy : GLib.DBusProxy, GLib.AsyncInitable, GLib.DBusInterface, GLib.Initable, UDisks.Loop {
-		[CCode (cname = "udisks_loop_proxy_new")]
-		public async LoopProxy (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable);
+		[CCode (cname = "udisks_loop_proxy_new", has_construct_function = false)]
+		public async LoopProxy (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
+		[CCode (cname = "udisks_loop_proxy_new_for_bus", has_construct_function = false)]
+		public async LoopProxy.for_bus (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
 		[CCode (has_construct_function = false, type = "UDisksLoop*")]
-		public LoopProxy.finish (GLib.AsyncResult res) throws GLib.Error;
-		[CCode (cname = "udisks_loop_proxy_new_for_bus")]
-		public async LoopProxy.for_bus (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable);
+		public LoopProxy.for_bus_sync (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (has_construct_function = false, type = "UDisksLoop*")]
-		public LoopProxy.for_bus_finish (GLib.AsyncResult res) throws GLib.Error;
-		[CCode (has_construct_function = false, type = "UDisksLoop*")]
-		public LoopProxy.for_bus_sync (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
-		[CCode (has_construct_function = false, type = "UDisksLoop*")]
-		public LoopProxy.sync (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
+		public LoopProxy.sync (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_loop_skeleton_get_type ()")]
 	public class LoopSkeleton : GLib.DBusInterfaceSkeleton, GLib.DBusInterface, UDisks.Loop {
@@ -181,18 +152,14 @@ namespace UDisks {
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_manager_proxy_get_type ()")]
 	public class ManagerProxy : GLib.DBusProxy, GLib.AsyncInitable, GLib.DBusInterface, GLib.Initable, UDisks.Manager {
-		[CCode (cname = "udisks_manager_proxy_new")]
-		public async ManagerProxy (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable);
+		[CCode (cname = "udisks_manager_proxy_new", has_construct_function = false)]
+		public async ManagerProxy (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
+		[CCode (cname = "udisks_manager_proxy_new_for_bus", has_construct_function = false)]
+		public async ManagerProxy.for_bus (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
 		[CCode (has_construct_function = false, type = "UDisksManager*")]
-		public ManagerProxy.finish (GLib.AsyncResult res) throws GLib.Error;
-		[CCode (cname = "udisks_manager_proxy_new_for_bus")]
-		public async ManagerProxy.for_bus (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable);
+		public ManagerProxy.for_bus_sync (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (has_construct_function = false, type = "UDisksManager*")]
-		public ManagerProxy.for_bus_finish (GLib.AsyncResult res) throws GLib.Error;
-		[CCode (has_construct_function = false, type = "UDisksManager*")]
-		public ManagerProxy.for_bus_sync (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
-		[CCode (has_construct_function = false, type = "UDisksManager*")]
-		public ManagerProxy.sync (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
+		public ManagerProxy.sync (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_manager_skeleton_get_type ()")]
 	public class ManagerSkeleton : GLib.DBusInterfaceSkeleton, GLib.DBusInterface, UDisks.Manager {
@@ -201,19 +168,15 @@ namespace UDisks {
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_object_manager_client_get_type ()")]
 	public class ObjectManagerClient : GLib.DBusObjectManagerClient, GLib.AsyncInitable, GLib.DBusObjectManager, GLib.Initable {
-		[CCode (cname = "udisks_object_manager_client_new")]
-		public async ObjectManagerClient (GLib.DBusConnection connection, GLib.DBusObjectManagerClientFlags flags, string? name, string object_path, GLib.Cancellable? cancellable);
+		[CCode (cname = "udisks_object_manager_client_new", has_construct_function = false)]
+		public async ObjectManagerClient (GLib.DBusConnection connection, GLib.DBusObjectManagerClientFlags flags, string? name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
+		[CCode (cname = "udisks_object_manager_client_new_for_bus", has_construct_function = false)]
+		public async ObjectManagerClient.for_bus (GLib.BusType bus_type, GLib.DBusObjectManagerClientFlags flags, string name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
 		[CCode (has_construct_function = false, type = "GDBusObjectManager*")]
-		public ObjectManagerClient.finish (GLib.AsyncResult res) throws GLib.Error;
-		[CCode (cname = "udisks_object_manager_client_new_for_bus")]
-		public async ObjectManagerClient.for_bus (GLib.BusType bus_type, GLib.DBusObjectManagerClientFlags flags, string name, string object_path, GLib.Cancellable? cancellable);
-		[CCode (has_construct_function = false, type = "GDBusObjectManager*")]
-		public ObjectManagerClient.for_bus_finish (GLib.AsyncResult res) throws GLib.Error;
-		[CCode (has_construct_function = false, type = "GDBusObjectManager*")]
-		public ObjectManagerClient.for_bus_sync (GLib.BusType bus_type, GLib.DBusObjectManagerClientFlags flags, string name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
+		public ObjectManagerClient.for_bus_sync (GLib.BusType bus_type, GLib.DBusObjectManagerClientFlags flags, string name, string object_path, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public static GLib.Type get_proxy_type (GLib.DBusObjectManagerClient manager, string object_path, string? interface_name, void* user_data);
 		[CCode (has_construct_function = false, type = "GDBusObjectManager*")]
-		public ObjectManagerClient.sync (GLib.DBusConnection connection, GLib.DBusObjectManagerClientFlags flags, string? name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
+		public ObjectManagerClient.sync (GLib.DBusConnection connection, GLib.DBusObjectManagerClientFlags flags, string? name, string object_path, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_object_proxy_get_type ()")]
 	public class ObjectProxy : GLib.DBusObjectProxy, GLib.DBusObject, UDisks.Object {
@@ -238,18 +201,14 @@ namespace UDisks {
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_partition_proxy_get_type ()")]
 	public class PartitionProxy : GLib.DBusProxy, GLib.AsyncInitable, GLib.DBusInterface, GLib.Initable, UDisks.Partition {
-		[CCode (cname = "udisks_partition_proxy_new")]
-		public async PartitionProxy (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable);
+		[CCode (cname = "udisks_partition_proxy_new", has_construct_function = false)]
+		public async PartitionProxy (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
+		[CCode (cname = "udisks_partition_proxy_new_for_bus", has_construct_function = false)]
+		public async PartitionProxy.for_bus (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
 		[CCode (has_construct_function = false, type = "UDisksPartition*")]
-		public PartitionProxy.finish (GLib.AsyncResult res) throws GLib.Error;
-		[CCode (cname = "udisks_partition_proxy_new_for_bus")]
-		public async PartitionProxy.for_bus (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable);
+		public PartitionProxy.for_bus_sync (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (has_construct_function = false, type = "UDisksPartition*")]
-		public PartitionProxy.for_bus_finish (GLib.AsyncResult res) throws GLib.Error;
-		[CCode (has_construct_function = false, type = "UDisksPartition*")]
-		public PartitionProxy.for_bus_sync (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
-		[CCode (has_construct_function = false, type = "UDisksPartition*")]
-		public PartitionProxy.sync (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
+		public PartitionProxy.sync (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_partition_skeleton_get_type ()")]
 	public class PartitionSkeleton : GLib.DBusInterfaceSkeleton, GLib.DBusInterface, UDisks.Partition {
@@ -258,18 +217,14 @@ namespace UDisks {
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_partition_table_proxy_get_type ()")]
 	public class PartitionTableProxy : GLib.DBusProxy, GLib.AsyncInitable, GLib.DBusInterface, GLib.Initable, UDisks.PartitionTable {
-		[CCode (cname = "udisks_partition_table_proxy_new")]
-		public async PartitionTableProxy (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable);
+		[CCode (cname = "udisks_partition_table_proxy_new", has_construct_function = false)]
+		public async PartitionTableProxy (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
+		[CCode (cname = "udisks_partition_table_proxy_new_for_bus", has_construct_function = false)]
+		public async PartitionTableProxy.for_bus (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
 		[CCode (has_construct_function = false, type = "UDisksPartitionTable*")]
-		public PartitionTableProxy.finish (GLib.AsyncResult res) throws GLib.Error;
-		[CCode (cname = "udisks_partition_table_proxy_new_for_bus")]
-		public async PartitionTableProxy.for_bus (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable);
+		public PartitionTableProxy.for_bus_sync (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (has_construct_function = false, type = "UDisksPartitionTable*")]
-		public PartitionTableProxy.for_bus_finish (GLib.AsyncResult res) throws GLib.Error;
-		[CCode (has_construct_function = false, type = "UDisksPartitionTable*")]
-		public PartitionTableProxy.for_bus_sync (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
-		[CCode (has_construct_function = false, type = "UDisksPartitionTable*")]
-		public PartitionTableProxy.sync (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
+		public PartitionTableProxy.sync (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_partition_table_skeleton_get_type ()")]
 	public class PartitionTableSkeleton : GLib.DBusInterfaceSkeleton, GLib.DBusInterface, UDisks.PartitionTable {
@@ -287,18 +242,14 @@ namespace UDisks {
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_swapspace_proxy_get_type ()")]
 	public class SwapspaceProxy : GLib.DBusProxy, GLib.AsyncInitable, GLib.DBusInterface, GLib.Initable, UDisks.Swapspace {
-		[CCode (cname = "udisks_swapspace_proxy_new")]
-		public async SwapspaceProxy (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable);
+		[CCode (cname = "udisks_swapspace_proxy_new", has_construct_function = false)]
+		public async SwapspaceProxy (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
+		[CCode (cname = "udisks_swapspace_proxy_new_for_bus", has_construct_function = false)]
+		public async SwapspaceProxy.for_bus (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
 		[CCode (has_construct_function = false, type = "UDisksSwapspace*")]
-		public SwapspaceProxy.finish (GLib.AsyncResult res) throws GLib.Error;
-		[CCode (cname = "udisks_swapspace_proxy_new_for_bus")]
-		public async SwapspaceProxy.for_bus (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable);
+		public SwapspaceProxy.for_bus_sync (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (has_construct_function = false, type = "UDisksSwapspace*")]
-		public SwapspaceProxy.for_bus_finish (GLib.AsyncResult res) throws GLib.Error;
-		[CCode (has_construct_function = false, type = "UDisksSwapspace*")]
-		public SwapspaceProxy.for_bus_sync (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
-		[CCode (has_construct_function = false, type = "UDisksSwapspace*")]
-		public SwapspaceProxy.sync (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
+		public SwapspaceProxy.sync (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_swapspace_skeleton_get_type ()")]
 	public class SwapspaceSkeleton : GLib.DBusInterfaceSkeleton, GLib.DBusInterface, UDisks.Swapspace {
@@ -308,19 +259,19 @@ namespace UDisks {
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_block_get_type ()")]
 	public interface Block : GLib.Object {
 		public async bool call_add_configuration_item (GLib.Variant arg_item, GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
-		public bool call_add_configuration_item_sync (GLib.Variant arg_item, GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_add_configuration_item_sync (GLib.Variant arg_item, GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool call_format (string arg_type, GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
-		public bool call_format_sync (string arg_type, GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_format_sync (string arg_type, GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool call_get_secret_configuration (GLib.Variant arg_options, GLib.Cancellable? cancellable, out GLib.Variant out_configuration) throws GLib.Error;
-		public bool call_get_secret_configuration_sync (GLib.Variant arg_options, out GLib.Variant out_configuration, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_get_secret_configuration_sync (GLib.Variant arg_options, out GLib.Variant out_configuration, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool call_open_for_backup (GLib.Variant arg_options, GLib.UnixFDList? fd_list, GLib.Cancellable? cancellable, out GLib.Variant out_fd, out GLib.UnixFDList out_fd_list) throws GLib.Error;
-		public bool call_open_for_backup_sync (GLib.Variant arg_options, GLib.UnixFDList? fd_list, out GLib.Variant out_fd, out GLib.UnixFDList out_fd_list, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_open_for_backup_sync (GLib.Variant arg_options, GLib.UnixFDList? fd_list, out GLib.Variant out_fd, out GLib.UnixFDList out_fd_list, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool call_open_for_restore (GLib.Variant arg_options, GLib.UnixFDList? fd_list, GLib.Cancellable? cancellable, out GLib.Variant out_fd, out GLib.UnixFDList out_fd_list) throws GLib.Error;
-		public bool call_open_for_restore_sync (GLib.Variant arg_options, GLib.UnixFDList? fd_list, out GLib.Variant out_fd, out GLib.UnixFDList out_fd_list, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_open_for_restore_sync (GLib.Variant arg_options, GLib.UnixFDList? fd_list, out GLib.Variant out_fd, out GLib.UnixFDList out_fd_list, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool call_remove_configuration_item (GLib.Variant arg_item, GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
-		public bool call_remove_configuration_item_sync (GLib.Variant arg_item, GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_remove_configuration_item_sync (GLib.Variant arg_item, GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool call_update_configuration_item (GLib.Variant arg_old_item, GLib.Variant arg_new_item, GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
-		public bool call_update_configuration_item_sync (GLib.Variant arg_old_item, GLib.Variant arg_new_item, GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_update_configuration_item_sync (GLib.Variant arg_old_item, GLib.Variant arg_new_item, GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void complete_add_configuration_item (owned GLib.DBusMethodInvocation invocation);
 		public void complete_format (owned GLib.DBusMethodInvocation invocation);
 		public void complete_get_secret_configuration (owned GLib.DBusMethodInvocation invocation, GLib.Variant configuration);
@@ -382,7 +333,7 @@ namespace UDisks {
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_drive_get_type ()")]
 	public interface Drive : GLib.Object {
 		public async bool call_eject (GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
-		public bool call_eject_sync (GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_eject_sync (GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void complete_eject (owned GLib.DBusMethodInvocation invocation);
 		public static unowned GLib.DBusInterfaceInfo interface_info ();
 		public static uint override_properties (GLib.ObjectClass klass, uint property_id_begin);
@@ -422,6 +373,8 @@ namespace UDisks {
 		[NoAccessorMethod]
 		public abstract int rotation_rate { get; set; }
 		[NoAccessorMethod]
+		public abstract string seat { owned get; set; }
+		[NoAccessorMethod]
 		public abstract string serial { owned get; set; }
 		[NoAccessorMethod]
 		public abstract uint64 size { get; set; }
@@ -440,13 +393,13 @@ namespace UDisks {
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_drive_ata_get_type ()")]
 	public interface DriveAta : GLib.Object {
 		public async bool call_smart_get_attributes (GLib.Variant arg_options, GLib.Cancellable? cancellable, out GLib.Variant out_attributes) throws GLib.Error;
-		public bool call_smart_get_attributes_sync (GLib.Variant arg_options, out GLib.Variant out_attributes, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_smart_get_attributes_sync (GLib.Variant arg_options, out GLib.Variant out_attributes, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool call_smart_selftest_abort (GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
-		public bool call_smart_selftest_abort_sync (GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_smart_selftest_abort_sync (GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool call_smart_selftest_start (string arg_type, GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
-		public bool call_smart_selftest_start_sync (string arg_type, GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_smart_selftest_start_sync (string arg_type, GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool call_smart_update (GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
-		public bool call_smart_update_sync (GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_smart_update_sync (GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void complete_smart_get_attributes (owned GLib.DBusMethodInvocation invocation, GLib.Variant attributes);
 		public void complete_smart_selftest_abort (owned GLib.DBusMethodInvocation invocation);
 		public void complete_smart_selftest_start (owned GLib.DBusMethodInvocation invocation);
@@ -483,11 +436,11 @@ namespace UDisks {
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_encrypted_get_type ()")]
 	public interface Encrypted : GLib.Object {
 		public async bool call_change_passphrase (string arg_passphrase, string arg_new_passphrase, GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
-		public bool call_change_passphrase_sync (string arg_passphrase, string arg_new_passphrase, GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_change_passphrase_sync (string arg_passphrase, string arg_new_passphrase, GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool call_lock (GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
-		public bool call_lock_sync (GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_lock_sync (GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool call_unlock (string arg_passphrase, GLib.Variant arg_options, GLib.Cancellable? cancellable, out string out_cleartext_device) throws GLib.Error;
-		public bool call_unlock_sync (string arg_passphrase, GLib.Variant arg_options, out string out_cleartext_device, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_unlock_sync (string arg_passphrase, GLib.Variant arg_options, out string out_cleartext_device, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void complete_change_passphrase (owned GLib.DBusMethodInvocation invocation);
 		public void complete_lock (owned GLib.DBusMethodInvocation invocation);
 		public void complete_unlock (owned GLib.DBusMethodInvocation invocation, string cleartext_device);
@@ -500,11 +453,11 @@ namespace UDisks {
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_filesystem_get_type ()")]
 	public interface Filesystem : GLib.Object {
 		public async bool call_mount (GLib.Variant arg_options, GLib.Cancellable? cancellable, out string out_mount_path) throws GLib.Error;
-		public bool call_mount_sync (GLib.Variant arg_options, out string out_mount_path, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_mount_sync (GLib.Variant arg_options, out string out_mount_path, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool call_set_label (string arg_label, GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
-		public bool call_set_label_sync (string arg_label, GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_set_label_sync (string arg_label, GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool call_unmount (GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
-		public bool call_unmount_sync (GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_unmount_sync (GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void complete_mount (owned GLib.DBusMethodInvocation invocation, string mount_path);
 		public void complete_set_label (owned GLib.DBusMethodInvocation invocation);
 		public void complete_unmount (owned GLib.DBusMethodInvocation invocation);
@@ -520,7 +473,7 @@ namespace UDisks {
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_job_get_type ()")]
 	public interface Job : GLib.Object {
 		public async bool call_cancel (GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
-		public bool call_cancel_sync (GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_cancel_sync (GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void complete_cancel (owned GLib.DBusMethodInvocation invocation);
 		public void emit_completed (bool arg_success, string arg_message);
 		public static unowned GLib.DBusInterfaceInfo interface_info ();
@@ -540,18 +493,26 @@ namespace UDisks {
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_loop_get_type ()")]
 	public interface Loop : GLib.Object {
 		public async bool call_delete (GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
-		public bool call_delete_sync (GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_delete_sync (GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async bool call_set_autoclear (bool arg_value, GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_set_autoclear_sync (bool arg_value, GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void complete_delete (owned GLib.DBusMethodInvocation invocation);
+		public void complete_set_autoclear (owned GLib.DBusMethodInvocation invocation);
 		public static unowned GLib.DBusInterfaceInfo interface_info ();
 		public static uint override_properties (GLib.ObjectClass klass, uint property_id_begin);
 		[NoAccessorMethod]
+		public abstract bool autoclear { get; set; }
+		[NoAccessorMethod]
 		public abstract string backing_file { owned get; set; }
+		[NoAccessorMethod]
+		public abstract uint setup_by_uid { get; set; }
 		public virtual signal bool handle_delete (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
+		public virtual signal bool handle_set_autoclear (GLib.DBusMethodInvocation invocation, bool arg_value, GLib.Variant arg_options);
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_manager_get_type ()")]
 	public interface Manager : GLib.Object {
 		public async bool call_loop_setup (GLib.Variant arg_fd, GLib.Variant arg_options, GLib.UnixFDList? fd_list, GLib.Cancellable? cancellable, out string out_resulting_device, out GLib.UnixFDList out_fd_list) throws GLib.Error;
-		public bool call_loop_setup_sync (GLib.Variant arg_fd, GLib.Variant arg_options, GLib.UnixFDList? fd_list, out string out_resulting_device, out GLib.UnixFDList out_fd_list, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_loop_setup_sync (GLib.Variant arg_fd, GLib.Variant arg_options, GLib.UnixFDList? fd_list, out string out_resulting_device, out GLib.UnixFDList out_fd_list, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void complete_loop_setup (owned GLib.DBusMethodInvocation invocation, GLib.UnixFDList? fd_list, string resulting_device);
 		public static unowned GLib.DBusInterfaceInfo interface_info ();
 		public static uint override_properties (GLib.ObjectClass klass, uint property_id_begin);
@@ -598,13 +559,13 @@ namespace UDisks {
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_partition_get_type ()")]
 	public interface Partition : GLib.Object {
 		public async bool call_delete (GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
-		public bool call_delete_sync (GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_delete_sync (GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool call_set_flags (uint64 arg_flags, GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
-		public bool call_set_flags_sync (uint64 arg_flags, GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_set_flags_sync (uint64 arg_flags, GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool call_set_name (string arg_name, GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
-		public bool call_set_name_sync (string arg_name, GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_set_name_sync (string arg_name, GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool call_set_type (string arg_type, GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
-		public bool call_set_type_sync (string arg_type, GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_set_type_sync (string arg_type, GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void complete_delete (owned GLib.DBusMethodInvocation invocation);
 		public void complete_set_flags (owned GLib.DBusMethodInvocation invocation);
 		public void complete_set_name (owned GLib.DBusMethodInvocation invocation);
@@ -639,7 +600,7 @@ namespace UDisks {
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_partition_table_get_type ()")]
 	public interface PartitionTable : GLib.Object {
 		public async bool call_create_partition (uint64 arg_offset, uint64 arg_size, string arg_type, string arg_name, GLib.Variant arg_options, GLib.Cancellable? cancellable, out string out_created_partition) throws GLib.Error;
-		public bool call_create_partition_sync (uint64 arg_offset, uint64 arg_size, string arg_type, string arg_name, GLib.Variant arg_options, out string out_created_partition, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_create_partition_sync (uint64 arg_offset, uint64 arg_size, string arg_type, string arg_name, GLib.Variant arg_options, out string out_created_partition, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void complete_create_partition (owned GLib.DBusMethodInvocation invocation, string created_partition);
 		public static unowned GLib.DBusInterfaceInfo interface_info ();
 		public static uint override_properties (GLib.ObjectClass klass, uint property_id_begin);
@@ -650,9 +611,9 @@ namespace UDisks {
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_swapspace_get_type ()")]
 	public interface Swapspace : GLib.Object {
 		public async bool call_start (GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
-		public bool call_start_sync (GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_start_sync (GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool call_stop (GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
-		public bool call_stop_sync (GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_stop_sync (GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void complete_start (owned GLib.DBusMethodInvocation invocation);
 		public void complete_stop (owned GLib.DBusMethodInvocation invocation);
 		public static unowned GLib.DBusInterfaceInfo interface_info ();
@@ -693,6 +654,12 @@ namespace UDisks {
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", cname = "UDISKS_ERROR_NUM_ENTRIES")]
 	public const int ERROR_NUM_ENTRIES;
+	[CCode (cheader_filename = "udisks/udisks.h", cname = "UDISKS_MAJOR_VERSION")]
+	public const int MAJOR_VERSION;
+	[CCode (cheader_filename = "udisks/udisks.h", cname = "UDISKS_MICRO_VERSION")]
+	public const int MICRO_VERSION;
+	[CCode (cheader_filename = "udisks/udisks.h", cname = "UDISKS_MINOR_VERSION")]
+	public const int MINOR_VERSION;
 	[CCode (cheader_filename = "udisks/udisks.h")]
 	public static unowned GLib.DBusInterfaceInfo block_interface_info ();
 	[CCode (cheader_filename = "udisks/udisks.h")]
