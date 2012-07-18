@@ -216,7 +216,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					ccall.add_argument (pub_inst);
 				}
 
-				var temp_value = create_temp_value (prop.get_accessor.value_type, false, expr);
+				var temp_value = (GLibValue) create_temp_value (prop.get_accessor.value_type, false, expr);
 				expr.target_value = load_temp_value (temp_value);
 				var ctemp = get_cvalue_ (temp_value);
 
@@ -229,9 +229,17 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					ccode.add_assignment (ctemp, ccall);
 
 					array_type = prop.property_type as ArrayType;
-					if (array_type != null && get_ccode_array_length (prop)) {
-						for (int dim = 1; dim <= array_type.rank; dim++) {
-							ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_array_length_cvalue (temp_value, dim)));
+					if (array_type != null) {
+						if (get_ccode_array_null_terminated (prop)) {
+							requires_array_length = true;
+							var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
+							len_call.add_argument (ctemp);
+
+							ccode.add_assignment (temp_value.array_length_cvalues[0], len_call);
+						} else if (get_ccode_array_length (prop)) {
+							for (int dim = 1; dim <= array_type.rank; dim++) {
+								ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_array_length_cvalue (temp_value, dim)));
+							}
 						}
 					} else {
 						delegate_type = prop.property_type as DelegateType;
