@@ -3584,6 +3584,7 @@ namespace GLib {
 		public static void add_func (string testpath, Callback test_funcvoid);
 #endif
 		public static void add_data_func (string testpath, [CCode (delegate_target_pos = 1.9)] TestDataFunc test_funcvoid);
+		public static void fail ();
 		[PrintfFormat]
 		public static void message (string format, ...);
 		public static void bug_base (string uri_pattern);
