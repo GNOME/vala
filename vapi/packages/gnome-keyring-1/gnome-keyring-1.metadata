@@ -1,4 +1,4 @@
-GnomeKeyring cheader_filename="gnome-keyring.h"
+GnomeKeyring cheader_filename="gnome-keyring.h" deprecated_since="3.5.4" replacement="bindings distributed with libgnome-keyring"
 
 #Simple password api
 GNOME_KEYRING_SESSION hidden="1"
