@@ -330,6 +330,8 @@ TlsCertificate abstract=false
 DataInputStream
   .read_line type="string?"
   .read_line_finish type="string?"
+  .read_line_finish.length default=null
+  .read_line.length default=null
 
 // Forward upstream
 content_type_from_mime_type nullable

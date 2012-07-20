@@ -853,9 +853,9 @@ namespace GLib {
 		public int32 read_int32 (GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public int64 read_int64 (GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		[CCode (array_length = false, array_null_terminated = true)]
-		public string? read_line (out size_t length, GLib.Cancellable? cancellable = null) throws GLib.IOError;
+		public string? read_line (out size_t length = null, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		[CCode (array_length = false, array_null_terminated = true)]
-		public async string? read_line_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null, out size_t length) throws GLib.IOError, GLib.IOError;
+		public async string? read_line_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null, out size_t length = null) throws GLib.IOError, GLib.IOError;
 		public string? read_line_utf8 (out size_t length, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		[CCode (cname = "g_data_input_stream_read_line_async", finish_function = "g_data_input_stream_read_line_finish_utf8")]
 		public async string? read_line_utf8_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null, out size_t length) throws GLib.IOError, GLib.IOError;
