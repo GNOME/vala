@@ -37,13 +37,25 @@ public class Valadoc.Taglets.Throws : InlineContent, Taglet, Block {
 	}
 
 	public override void check (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
-		error_domain = api_root.search_symbol_str (container, error_domain_name);
-		if (error_domain == null) {
-			// TODO use ContentElement's source reference
-			reporter.simple_error ("%s does not exist", error_domain_name);
+		// context check:
+		if (container is Api.Method == false && container is Api.Delegate == false) {
+			reporter.simple_warning ("@throws used outside method/delegate context");
+			base.check (api_root, container, file_path, reporter, settings);
+			return ;
 		}
 
 
+		// type check:
+		error_domain = api_root.search_symbol_str (container, error_domain_name);
+		if (error_domain == null) {
+			// TODO use ContentElement's source reference
+			reporter.simple_error ("%s: %s does not exist", container.get_full_name (), error_domain_name);
+			base.check (api_root, container, file_path, reporter, settings);
+			return ;
+		}
+
+
+		// Check if the method is allowed to throw the given type:
 		Gee.List<Api.Node> exceptions = container.get_children_by_types ({Api.NodeType.ERROR_DOMAIN, Api.NodeType.CLASS}, false);
 		bool report_warning = true;
 		foreach (Api.Node exception in exceptions) {
@@ -53,9 +65,8 @@ public class Valadoc.Taglets.Throws : InlineContent, Taglet, Block {
 			}
 		}
 		if (report_warning) {
-			reporter.simple_warning ("%s does not exist in exception list", error_domain_name);			
+			reporter.simple_warning ("%s: @throws: %s does not exist in exception list", container.get_full_name (), error_domain_name);			
 		}
-
 
 		base.check (api_root, container, file_path, reporter, settings);
 	}
