@@ -837,7 +837,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		if (title == null) {
 			writer.start_tag ("title").text ("Vala Binding Reference").end_tag ("title");
 		} else {
-			writer.start_tag ("title").text (title).text (" -- Vala Binding Reference").end_tag ("title");
+			writer.start_tag ("title").text (title).text (" &ndash; Vala Binding Reference").end_tag ("title");
 		}
 		writer.stylesheet_link (css);
 		writer.javascript_link (js);
