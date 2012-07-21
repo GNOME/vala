@@ -75,12 +75,17 @@ public class Valadoc.ModuleLoader : Object {
 		return FileUtils.test (path, FileTest.EXISTS) && FileUtils.test (library_path, FileTest.EXISTS);
 	}
 
+	public static bool is_doclet (string path) {
+		string library_path = Path.build_filename (path, "libdoclet." + Module.SUFFIX);
+		return FileUtils.test (path, FileTest.EXISTS) && FileUtils.test (library_path, FileTest.EXISTS);
+	}
+
 	private static string get_plugin_path (string pluginpath, string pluginsubdir) {
 		if (Path.is_absolute (pluginpath) == false) {
 			// Test to see if the plugin exists in the expanded path and then fallback
 			// to using the configured plugin directory
 			string local_path = Path.build_filename (Environment.get_current_dir(), pluginpath);
-			if (FileUtils.test(local_path, FileTest.EXISTS)) {
+			if (is_doclet(local_path)) {
 				return local_path;
 			} else {
 				return Path.build_filename (Config.plugin_dir, pluginsubdir, pluginpath);
