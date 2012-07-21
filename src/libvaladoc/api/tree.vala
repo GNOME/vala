@@ -24,9 +24,6 @@ using Valadoc.Importer;
 using Gee;
 
 
-private Valadoc.Api.Class glib_error = null;
-
-
 
 /**
  * The root of the code tree.

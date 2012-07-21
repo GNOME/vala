@@ -61,12 +61,6 @@ public class Valadoc.Api.Class : TypeSymbol {
 
 		this.is_fundamental = is_fundamental;
 		this.is_abstract = is_abstract;
-
-		if (glib_error == null) {
-			if (this.get_full_name () == "GLib.Error") {
-				glib_error = this;
-			}
-		}
 	}
 
 	/**
