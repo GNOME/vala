@@ -556,6 +556,8 @@ namespace GLib {
 		public void set_marshal (ClosureMarshal marshal);
 		public void add_marshal_guards (void *pre_marshal_data, ClosureNotify pre_marshal_notify, void *post_marshal_data, ClosureNotify post_marshal_notify);
 		public void set_meta_marshal (void *marshal_data, ClosureMarshal meta_marshal);
+		[CCode (cname = "sizeof(GClosure)")]
+		public static size_t SIZE;
 	}
 
 	[CCode (has_target = false)]
