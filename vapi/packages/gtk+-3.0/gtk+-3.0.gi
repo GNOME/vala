@@ -4719,6 +4719,10 @@
 			<member name="GTK_JUSTIFY_CENTER" value="2"/>
 			<member name="GTK_JUSTIFY_FILL" value="3"/>
 		</enum>
+		<enum name="GtkLevelBarMode" type-name="GtkLevelBarMode" get-type="gtk_level_bar_mode_get_type">
+			<member name="GTK_LEVEL_BAR_MODE_CONTINUOUS" value="0"/>
+			<member name="GTK_LEVEL_BAR_MODE_DISCRETE" value="1"/>
+		</enum>
 		<enum name="GtkLicense" type-name="GtkLicense" get-type="gtk_license_get_type">
 			<member name="GTK_LICENSE_UNKNOWN" value="0"/>
 			<member name="GTK_LICENSE_CUSTOM" value="1"/>
@@ -14659,6 +14663,109 @@
 			</method>
 			<property name="height" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="width" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+		</object>
+		<object name="GtkLevelBar" parent="GtkWidget" type-name="GtkLevelBar" get-type="gtk_level_bar_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+				<interface name="GtkOrientable"/>
+			</implements>
+			<method name="add_offset_value" symbol="gtk_level_bar_add_offset_value">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GtkLevelBar*"/>
+					<parameter name="name" type="gchar*"/>
+					<parameter name="value" type="gdouble"/>
+				</parameters>
+			</method>
+			<method name="get_max_value" symbol="gtk_level_bar_get_max_value">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="self" type="GtkLevelBar*"/>
+				</parameters>
+			</method>
+			<method name="get_min_value" symbol="gtk_level_bar_get_min_value">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="self" type="GtkLevelBar*"/>
+				</parameters>
+			</method>
+			<method name="get_mode" symbol="gtk_level_bar_get_mode">
+				<return-type type="GtkLevelBarMode"/>
+				<parameters>
+					<parameter name="self" type="GtkLevelBar*"/>
+				</parameters>
+			</method>
+			<method name="get_offset_value" symbol="gtk_level_bar_get_offset_value">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="GtkLevelBar*"/>
+					<parameter name="name" type="gchar*"/>
+					<parameter name="value" type="gdouble*"/>
+				</parameters>
+			</method>
+			<method name="get_value" symbol="gtk_level_bar_get_value">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="self" type="GtkLevelBar*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gtk_level_bar_new">
+				<return-type type="GtkWidget*"/>
+			</constructor>
+			<constructor name="new_for_interval" symbol="gtk_level_bar_new_for_interval">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="min_value" type="gdouble"/>
+					<parameter name="max_value" type="gdouble"/>
+				</parameters>
+			</constructor>
+			<method name="remove_offset_value" symbol="gtk_level_bar_remove_offset_value">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GtkLevelBar*"/>
+					<parameter name="name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_max_value" symbol="gtk_level_bar_set_max_value">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GtkLevelBar*"/>
+					<parameter name="value" type="gdouble"/>
+				</parameters>
+			</method>
+			<method name="set_min_value" symbol="gtk_level_bar_set_min_value">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GtkLevelBar*"/>
+					<parameter name="value" type="gdouble"/>
+				</parameters>
+			</method>
+			<method name="set_mode" symbol="gtk_level_bar_set_mode">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GtkLevelBar*"/>
+					<parameter name="mode" type="GtkLevelBarMode"/>
+				</parameters>
+			</method>
+			<method name="set_value" symbol="gtk_level_bar_set_value">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GtkLevelBar*"/>
+					<parameter name="value" type="gdouble"/>
+				</parameters>
+			</method>
+			<property name="max-value" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="min-value" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="mode" type="GtkLevelBarMode" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="value" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<signal name="offset-changed" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GtkLevelBar*"/>
+					<parameter name="name" type="char*"/>
+				</parameters>
+			</signal>
 		</object>
 		<object name="GtkLinkButton" parent="GtkButton" type-name="GtkLinkButton" get-type="gtk_link_button_get_type">
 			<implements>
@@ -27419,7 +27526,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="widget" type="GtkWidget*"/>
-					<parameter name="pspec" type="GParamSpec*"/>
+					<parameter name="child_property" type="GParamSpec*"/>
 				</parameters>
 			</signal>
 			<signal name="composited-changed" when="LAST">
@@ -28890,7 +28997,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="actionable" type="GtkActionable*"/>
-					<parameter name="action_target_value" type="GVariant*"/>
+					<parameter name="target_value" type="GVariant*"/>
 				</parameters>
 			</vfunc>
 		</interface>
@@ -30123,27 +30230,27 @@
 			<vfunc name="get_font_face">
 				<return-type type="PangoFontFace*"/>
 				<parameters>
-					<parameter name="chooser" type="GtkFontChooser*"/>
+					<parameter name="fontchooser" type="GtkFontChooser*"/>
 				</parameters>
 			</vfunc>
 			<vfunc name="get_font_family">
 				<return-type type="PangoFontFamily*"/>
 				<parameters>
-					<parameter name="chooser" type="GtkFontChooser*"/>
+					<parameter name="fontchooser" type="GtkFontChooser*"/>
 				</parameters>
 			</vfunc>
 			<vfunc name="get_font_size">
 				<return-type type="gint"/>
 				<parameters>
-					<parameter name="chooser" type="GtkFontChooser*"/>
+					<parameter name="fontchooser" type="GtkFontChooser*"/>
 				</parameters>
 			</vfunc>
 			<vfunc name="set_filter_func">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="chooser" type="GtkFontChooser*"/>
+					<parameter name="fontchooser" type="GtkFontChooser*"/>
 					<parameter name="filter" type="GtkFontFilterFunc"/>
-					<parameter name="data" type="gpointer"/>
+					<parameter name="user_data" type="gpointer"/>
 					<parameter name="destroy" type="GDestroyNotify"/>
 				</parameters>
 			</vfunc>
@@ -31299,12 +31406,14 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="505"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="509"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
+		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
+		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="5"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="9"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="5"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
@@ -31477,6 +31586,7 @@
 		<constant name="GTK_STYLE_CLASS_INFO" type="char*" value="info"/>
 		<constant name="GTK_STYLE_CLASS_INLINE_TOOLBAR" type="char*" value="inline-toolbar"/>
 		<constant name="GTK_STYLE_CLASS_LEFT" type="char*" value="left"/>
+		<constant name="GTK_STYLE_CLASS_LEVEL_BAR" type="char*" value="level-bar"/>
 		<constant name="GTK_STYLE_CLASS_LINKED" type="char*" value="linked"/>
 		<constant name="GTK_STYLE_CLASS_MARK" type="char*" value="mark"/>
 		<constant name="GTK_STYLE_CLASS_MENU" type="char*" value="menu"/>

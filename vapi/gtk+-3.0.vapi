@@ -2566,6 +2566,29 @@ namespace Gtk {
 		public uint width { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class LevelBar : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public LevelBar ();
+		public void add_offset_value (string name, double value);
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public LevelBar.for_interval (double min_value, double max_value);
+		public double get_max_value ();
+		public double get_min_value ();
+		public Gtk.LevelBarMode get_mode ();
+		public bool get_offset_value (string name, double value);
+		public double get_value ();
+		public void remove_offset_value (string name);
+		public void set_max_value (double value);
+		public void set_min_value (double value);
+		public void set_mode (Gtk.LevelBarMode mode);
+		public void set_value (double value);
+		public double max_value { get; set; }
+		public double min_value { get; set; }
+		public Gtk.LevelBarMode mode { get; set; }
+		public double value { get; set; }
+		public virtual signal void offset_changed (string name);
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class LinkButton : Gtk.Button, Atk.Implementor, Gtk.Buildable, Gtk.Actionable, Gtk.Activatable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public LinkButton (string uri);
@@ -5720,7 +5743,7 @@ namespace Gtk {
 		[HasEmitter]
 		public virtual signal bool can_activate_accel (uint signal_id);
 		[HasEmitter]
-		public virtual signal void child_notify (GLib.ParamSpec pspec);
+		public virtual signal void child_notify (GLib.ParamSpec child_property);
 		public virtual signal void composited_changed ();
 		public virtual signal bool configure_event (Gdk.EventConfigure event);
 		public virtual signal bool damage_event (Gdk.EventExpose event);
@@ -6914,6 +6937,11 @@ namespace Gtk {
 		CENTER,
 		FILL
 	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_LEVEL_BAR_MODE_")]
+	public enum LevelBarMode {
+		CONTINUOUS,
+		DISCRETE
+	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_LICENSE_")]
 	public enum License {
 		UNKNOWN,
@@ -7573,6 +7601,10 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const int INTERFACE_AGE;
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	public const string LEVEL_BAR_OFFSET_HIGH;
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public const string LEVEL_BAR_OFFSET_LOW;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const int MAJOR_VERSION;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const int MAX_COMPOSE_LEN;
@@ -8027,6 +8059,8 @@ namespace Gtk {
 	public const string STYLE_CLASS_INLINE_TOOLBAR;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_LEFT;
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public const string STYLE_CLASS_LEVEL_BAR;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_LINKED;
 	[CCode (cheader_filename = "gtk/gtk.h")]
