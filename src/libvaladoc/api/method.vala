@@ -128,7 +128,7 @@ public class Valadoc.Api.Method : Member {
 	}
 
 	/**
-	 * Specifies whether this method is visible for dbus
+	 * Specifies whether this method is static
 	 */
 	public bool is_static {
 		get {
