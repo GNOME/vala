@@ -56,6 +56,10 @@ public class Valadoc.Api.EnumValue: Symbol {
 	 * {@inheritDoc}
 	 */
 	internal override void process_comments (Settings settings, DocumentationParser parser) {
+		if (documentation != null) {
+			return ;
+		}
+
 		if (source_comment != null) {
 			documentation = parser.parse (this, source_comment);
 		}

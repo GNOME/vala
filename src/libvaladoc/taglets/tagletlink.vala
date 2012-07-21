@@ -72,8 +72,7 @@ public class Valadoc.Taglets.Link : InlineTaglet {
 		}
 
 		if (_symbol == null && symbol_name != "main") {
-			// TODO use ContentElement's source reference
-			string node_segment = (container == null)? "" : container.get_full_name () + ": ";
+			string node_segment = (container is Api.Package)? "" : container.get_full_name () + ": ";
 			reporter.simple_warning ("%s: %s@link: warning: %s does not exist", file_path, node_segment, symbol_name);
 		}
 
