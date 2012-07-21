@@ -135,7 +135,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 			GLib.FileStream file = GLib.FileStream.open (rpath, "w");
 			writer = new Html.MarkupWriter (file);
 			_renderer.set_writer (writer);
-			write_file_header (css_path, js_path, node.get_full_name ());
+			write_file_header (css_path, js_path, node.get_full_name () + " &ndash; " + node.package.name);
 			write_symbol_content (node);
 			write_file_footer ();
 			file = null;
@@ -158,7 +158,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		GLib.FileStream file = GLib.FileStream.open (rpath, "w");
 		writer = new Html.MarkupWriter (file);
 		_renderer.set_writer (writer);
-		write_file_header (css_path, js_path, node.get_full_name());
+		write_file_header (css_path, js_path, node.get_full_name() + " &ndash; " + node.package.name);
 		write_symbol_content (node);
 		write_file_footer ();
 		file = null;
