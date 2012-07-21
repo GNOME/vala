@@ -70,7 +70,7 @@ public class Valadoc.Taglets.Param : InlineContent, Taglet, Block {
 		}
 
 		if (this.parameter == null) {
-			reporter.simple_warning ("%s: Unknown parameter `%s'", container.get_full_name (), parameter_name);
+			reporter.simple_warning ("%s: %s: @param: warning: Unknown parameter `%s'", file_path, container.get_full_name (), parameter_name);
 		}
 
 		base.check (api_root, container, file_path, reporter, settings);

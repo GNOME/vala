@@ -39,11 +39,11 @@ public class Valadoc.Taglets.Return : InlineContent, Taglet, Block {
 		} else if (container is Api.Signal) {
 			type_ref = ((Api.Signal) container).return_type;
 		} else {
-			reporter.simple_warning ("@return used outside method/delegate/signal context");
+			reporter.simple_warning ("%s: %s: @return: warning: @return used outside method/delegate/signal context", file_path, container.get_full_name ());
 		}
 
 		if (type_ref != null && type_ref.data_type == null) {
-			reporter.simple_warning ("Return description declared for void function");
+			reporter.simple_warning ("%s: %s: @return: warning: Return description declared for void function", file_path, container.get_full_name ());
 		}
 
 		base.check (api_root, container, file_path, reporter, settings);

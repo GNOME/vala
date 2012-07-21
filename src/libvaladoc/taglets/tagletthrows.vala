@@ -39,7 +39,7 @@ public class Valadoc.Taglets.Throws : InlineContent, Taglet, Block {
 	public override void check (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
 		// context check:
 		if (container is Api.Method == false && container is Api.Delegate == false) {
-			reporter.simple_warning ("@throws used outside method/delegate context");
+			reporter.simple_warning ("%s: %s: @throws: warning: @throws used outside method/delegate context", file_path, container.get_full_name ());
 			base.check (api_root, container, file_path, reporter, settings);
 			return ;
 		}
@@ -49,7 +49,7 @@ public class Valadoc.Taglets.Throws : InlineContent, Taglet, Block {
 		error_domain = api_root.search_symbol_str (container, error_domain_name);
 		if (error_domain == null) {
 			// TODO use ContentElement's source reference
-			reporter.simple_error ("%s: %s does not exist", container.get_full_name (), error_domain_name);
+			reporter.simple_error ("%s: %s: @throws: warning: %s does not exist", file_path, container.get_full_name (), error_domain_name);
 			base.check (api_root, container, file_path, reporter, settings);
 			return ;
 		}
@@ -65,7 +65,7 @@ public class Valadoc.Taglets.Throws : InlineContent, Taglet, Block {
 			}
 		}
 		if (report_warning) {
-			reporter.simple_warning ("%s: @throws: %s does not exist in exception list", container.get_full_name (), error_domain_name);			
+			reporter.simple_warning ("%s: %s: @throws: warning: %s does not exist in exception list", file_path, container.get_full_name (), error_domain_name);			
 		}
 
 		base.check (api_root, container, file_path, reporter, settings);

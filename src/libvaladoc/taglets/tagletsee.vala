@@ -52,7 +52,7 @@ public class Valadoc.Taglets.See : ContentElement, Taglet, Block {
 
 		if (symbol == null) {
 			// TODO use ContentElement's source reference
-			reporter.simple_warning ("%s does not exist", symbol_name);
+			reporter.simple_warning ("%s: %s: @see: warning: %s does not exist", file_path, container.get_full_name (), symbol_name);
 		}
 	}
 
