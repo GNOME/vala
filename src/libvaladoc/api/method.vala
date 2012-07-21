@@ -119,7 +119,7 @@ public class Valadoc.Api.Method : Member {
 	}
 
 	/**
-	 * Specifies whether this method is static
+	 * Specifies whether this method overrides another one
 	 */
 	public bool is_override {
 		get {
