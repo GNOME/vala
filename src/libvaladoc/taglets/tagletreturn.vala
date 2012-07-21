@@ -31,7 +31,20 @@ public class Valadoc.Taglets.Return : InlineContent, Taglet, Block {
 	}
 
 	public override void check (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
-		// TODO check for the existence of a return type
+		Api.TypeReference? type_ref = null;
+		if (container is Api.Method) {
+			type_ref = ((Api.Method) container).return_type;
+		} else if (container is Api.Delegate) {
+			type_ref = ((Api.Delegate) container).return_type;
+		} else if (container is Api.Signal) {
+			type_ref = ((Api.Signal) container).return_type;
+		} else {
+			reporter.simple_warning ("@return used outside method/delegate/signal context");
+		}
+
+		if (type_ref != null && type_ref.data_type == null) {
+			reporter.simple_warning ("Return description declared for void function");
+		}
 
 		base.check (api_root, container, file_path, reporter, settings);
 	}
