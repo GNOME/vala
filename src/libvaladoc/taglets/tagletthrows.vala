@@ -43,6 +43,20 @@ public class Valadoc.Taglets.Throws : InlineContent, Taglet, Block {
 			reporter.simple_error ("%s does not exist", error_domain_name);
 		}
 
+
+		Gee.List<Api.Node> exceptions = container.get_children_by_types ({Api.NodeType.ERROR_DOMAIN, Api.NodeType.CLASS}, false);
+		bool report_warning = true;
+		foreach (Api.Node exception in exceptions) {
+			if (exception == error_domain || exception is Api.Class) {
+				report_warning = false;
+				break;
+			}
+		}
+		if (report_warning) {
+			reporter.simple_warning ("%s does not exist in exception list", error_domain_name);			
+		}
+
+
 		base.check (api_root, container, file_path, reporter, settings);
 	}
 
